@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.QZSettingDao">
+    <select id="getAvailableQZSettings" resultType="com.keymanager.monitoring.entity.QZSetting">
+        SELECT
+              qs.fUuid            AS 'uuid',
+              qs.fCustomerUuid    AS 'customerUuid',
+              qs.fDomain          AS 'domain',
+              qs.fPcGroup         AS 'pcGroup',
+              qs.fPhoneGroup      AS 'phoneGroup',
+              qs.fType            AS 'type',
+              qs.fOperationType   AS 'operationType',
+              qs.fIgnoreNoIndex   AS 'ignoreNoIndex',
+              qs.fIgnoreNoOrder   AS 'ignoreNoOrder',
+              qs.fUpdateInterval  AS 'updateInterval',
+              qs.fUpdateStatus    AS 'updateStatus',
+              qs.fUpdateStartTime AS 'updateStartTime',
+              qs.fUpdateEndTime   AS 'updateEndTime',
+              qs.fUpdateTime      AS 'updateTime',
+              qs.fCreateTime      AS 'createTime'
+        FROM t_qz_setting qs
+        WHERE qs.fUpdateStatus IS NULL
+        OR (qs.fUpdateStatus = 'Completed'
+        AND DATE_SUB(NOW(), INTERVAL qs.fUpdateInterval DAY) > qs.fUpdateEndTime)
+        OR (qs.fUpdateStatus = 'Processing'
+        AND DATE_SUB(NOW(), INTERVAL 10 MINUTE) > qs.fUpdateStartTime)
+        order by qs.fUpdateEndTime
+    </select>
+
+    <select id="searchQZSettings" resultType="com.keymanager.monitoring.entity.QZSetting">
+        SELECT
+        qs.fUuid            AS 'uuid',
+        qs.fCustomerUuid    AS 'customerUuid',
+        c.fContactPerson    AS 'contactPerson',
+        qs.fDomain          AS 'domain',
+        qs.fPcGroup         AS 'pcGroup',
+        qs.fPhoneGroup      AS 'phoneGroup',
+        qs.fType            AS 'type',
+        qs.fOperationType   AS 'operationType',
+        qs.fIgnoreNoIndex   AS 'ignoreNoIndex',
+        qs.fIgnoreNoOrder   AS 'ignoreNoOrder',
+        qs.fUpdateInterval  AS 'updateInterval',
+        qs.fUpdateStatus    AS 'updateStatus',
+        qs.fUpdateStartTime AS 'updateStartTime',
+        qs.fUpdateEndTime   AS 'updateEndTime',
+        qs.fUpdateTime      AS 'updateTime',
+        qs.fCreateTime      AS 'createTime'
+        FROM t_qz_setting qs
+        JOIN t_customer c
+          ON qs.fCustomerUuid = c.fUuid
+        WHERE 1 = 1
+        <if test="uuid != null and uuid > 0"> AND qs.fUuid = #{uuid}  </if>
+        <if test="customerUuid != null and customerUuid > 0"> AND qs.fCustomerUuid = #{customerUuid}  </if>
+        <if test="domain != null and domain != ''"> AND qs.fDomain = #{domain}  </if>
+        <if test="group != null and group != ''"> AND (qs.fPcGroup = #{group} or qs.fPhoneGroup = #{group}) </if>
+        <if test="updateStatus != null and updateStatus != ''"> AND qs.fUpdateStatus = #{updateStatus}  </if>
+        order by qs.fUpdateEndTime
+    </select>
+
+    <select id="searchQZSettingsByUuids" resultType="com.keymanager.monitoring.entity.QZSetting">
+        SELECT
+          qs.fUuid            AS 'uuid',
+          qs.fCustomerUuid    AS 'customerUuid',
+          qs.fDomain          AS 'domain',
+          qs.fPcGroup         AS 'pcGroup',
+          qs.fPhoneGroup      AS 'phoneGroup',
+          qs.fType            AS 'type',
+          qs.fOperationType   AS 'operationType',
+          qs.fIgnoreNoIndex   AS 'ignoreNoIndex',
+          qs.fIgnoreNoOrder   AS 'ignoreNoOrder',
+          qs.fUpdateInterval  AS 'updateInterval',
+          qs.fUpdateStatus    AS 'updateStatus',
+          qs.fUpdateStartTime AS 'updateStartTime',
+          qs.fUpdateEndTime   AS 'updateEndTime',
+          qs.fUpdateTime      AS 'updateTime',
+          qs.fCreateTime      AS 'createTime'
+        FROM t_qz_setting qs
+        WHERE qs.fUuid IN (#{uuids})
+    </select>
+</mapper>

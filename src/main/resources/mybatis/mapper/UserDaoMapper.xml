@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.UserDao">
+
+	<select id="getUser" resultType="com.keymanager.monitoring.entity.User">
+		SELECT
+		  u.fUserID AS 'userID',
+		  u.fUserName AS 'userName',
+		  u.fPassword AS 'password',
+		  u.fGender AS 'gender',
+		  u.fQQ AS 'qq',
+		  u.fUserLevel AS 'userLevel',
+		  u.fSalt AS 'salt',
+		  u.fVipType AS 'vipType',
+		  u.fClientIp AS 'clientIp',
+		  u.fStatus AS 'status',
+		  u.fUpdateTime AS 'updateTime',
+		  u.fCreateTime AS 'createTime'
+		FROM t_user u
+		WHERE
+			u.fUserID = #{userID}
+		AND u.fStatus = 1
+	</select>
+
+	<select id="findActiveUsers" resultType="com.keymanager.monitoring.entity.User">
+		SELECT
+		*
+		FROM
+		t_user u
+		WHERE u.fStatus = 1
+	</select>
+
+</mapper>

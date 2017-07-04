@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.4" xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_4.xsd">
+    <jsp-config>
+        <jsp-property-group>
+            <url-pattern>*.jsp</url-pattern>
+            <el-ignored>false</el-ignored>
+            <page-encoding>utf-8</page-encoding>
+        </jsp-property-group>
+    </jsp-config>
+
+    <display-name>keyword-management-pc</display-name>
+
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:spring/spring-context.xml</param-value>
+    </context-param>
+
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+    <filter>
+        <filter-name>encodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+        <init-param>
+            <param-name>forceEncoding</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>encodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>shiroFilter</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+        <init-param>
+            <param-name>targetFilterLifecycle</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>shiroFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>sitemesh</filter-name>
+        <filter-class>com.opensymphony.sitemesh.webapp.SiteMeshFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>sitemesh</filter-name>
+        <url-pattern>/maintains/*</url-pattern>
+    </filter-mapping>
+
+    <servlet>
+        <servlet-name>springmvc</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath:spring/spring-mvc.xml</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>DownloadCustomerCollectFeeList</servlet-name>
+        <servlet-class>com.keymanager.servlet.DownloadCustomerCollectFeeList</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DownloadPositionHistoryLog</servlet-name>
+        <servlet-class>com.keymanager.servlet.DownloadPositionHistoryLog</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DownloadCustomerCollectFeeListWithLog</servlet-name>
+        <servlet-class>com.keymanager.servlet.DownloadCustomerCollectFeeListWithLog</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DownloadKeywordPositionResult</servlet-name>
+        <servlet-class>com.keymanager.servlet.DownloadKeywordPositionResult</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>DownloadCustomerKeywordInfo</servlet-name>
+        <servlet-class>com.keymanager.servlet.DownloadCustomerKeywordInfo</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>DownloadCustomerKeywordDailyReport</servlet-name>
+        <servlet-class>com.keymanager.servlet.DownloadCustomerKeywordDailyReport</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>springmvc</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>DownloadCustomerCollectFeeList</servlet-name>
+        <url-pattern>/customerkeyword/DownloadCustomerCollectFeeList.jsp</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DownloadPositionHistoryLog</servlet-name>
+        <url-pattern>/customerkeyword/DownloadPositionHistoryLog.jsp</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DownloadCustomerCollectFeeListWithLog</servlet-name>
+        <url-pattern>/customerkeyword/DownloadCustomerCollectFeeListWithLog.jsp</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DownloadKeywordPositionResult</servlet-name>
+        <url-pattern>/weibo/DownloadKeywordPositionResult.jsp</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DownloadCustomerKeywordInfo</servlet-name>
+        <url-pattern>/customerkeyword/DownloadCustomerKeywordInfo.jsp</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DownloadCustomerKeywordDailyReport</servlet-name>
+        <url-pattern>/customerkeyword/DownloadCustomerKeywordDailyReport.jsp</url-pattern>
+    </servlet-mapping>
+
+    <!-- Session会话时间设置 -->
+    <session-config>
+        <session-timeout>30</session-timeout>
+    </session-config>
+
+    <welcome-file-list>
+        <welcome-file>bd.html</welcome-file>
+    </welcome-file-list>
+
+</web-app>
