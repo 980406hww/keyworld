@@ -215,13 +215,7 @@
 			condition = condition + " AND EXISTS (SELECT 1 FROM t_user u WHERE u.fUserID = c.fUserID AND u.fUserName = '" + userName + "') ";
 		}
 	}
-	
-	if (unPaidAll != null){
-		condition = condition + " AND EXISTS (SELECT 1 FROM t_ck_account_log l WHERE l.fCustomerKeywordUuid = ck.fUuid AND l.fStatus IN ('UnPaid', 'PaidPartially')) ";
-		pageUrl = pageUrl + "&unPaidAll=unPaidAll";
-	}
-	
-	
+
 	if (pushPay != null){
 		condition = condition + " AND ((fCollectMethod = 'PerDay' and ck.fEffectiveToTime is not null) or ck.fEffectiveToTime <= STR_TO_DATE('" + Utils.formatDatetime(Utils.addDay(Utils.getCurrentTimestamp(), 3), "yyyy-MM-dd") + "', '%Y-%m-%d')) ";
 		pageUrl = pageUrl + "&pushPay=pushPay";

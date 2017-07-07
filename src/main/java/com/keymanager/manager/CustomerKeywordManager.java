@@ -184,46 +184,6 @@ public class CustomerKeywordManager {
 		}
 	}
 
-	public List fetchCustomerKeywordAccountLogs(String dataSourceName, List customerKeywords) throws Exception {
-		Connection conn = null;
-		if (!Utils.isEmpty(customerKeywords)) {
-			List<Integer> customerKeywordUuids = new ArrayList<Integer>();
-			for (Object obj : customerKeywords) {
-				CustomerKeywordVO customerKeywordVO = (CustomerKeywordVO) obj;
-				customerKeywordUuids.add(customerKeywordVO.getUuid());
-			}
-
-			try {
-				conn = DBUtil.getConnection(dataSourceName);
-				CustomerKeywordAccountLogManager manager = new CustomerKeywordAccountLogManager();
-				List customerKeywordAccountLogs = manager.getAllCustomerKeywordAccountLogs(conn, customerKeywordUuids);
-				Map<Integer, CustomerKeywordAccountLogVO> customerKeywordAccountLogMap = new HashMap<Integer, CustomerKeywordAccountLogVO>();
-				for (Object obj : customerKeywordAccountLogs) {
-					CustomerKeywordAccountLogVO customerKeywordAccountLogVO = (CustomerKeywordAccountLogVO) obj;
-					customerKeywordAccountLogMap.put(customerKeywordAccountLogVO.getCustomerKeywordUuid(),
-							customerKeywordAccountLogVO);
-				}
-
-				for (Object obj : customerKeywords) {
-					CustomerKeywordVO customerKeywordVO = (CustomerKeywordVO) obj;
-					CustomerKeywordAccountLogVO customerKeywordAccountLogVO = customerKeywordAccountLogMap.get(customerKeywordVO
-							.getUuid());
-					if (customerKeywordAccountLogVO != null) {
-						customerKeywordVO.setLatestCustomerKeywordAccountLog(customerKeywordAccountLogVO);
-					} else {
-						customerKeywordVO.setLatestCustomerKeywordAccountLog(customerKeywordVO.generateAccountLog(1, Constants.BAIDU_TYPE_PC));
-					}
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				throw new Exception("search_keyword_error");
-			} finally {
-				DBUtil.closeConnection(conn);
-			}
-		}
-		return customerKeywords;
-	}
-
 	public int getCustomerKeywordCount(Connection conn, int customerUuid) throws Exception {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -2371,73 +2331,11 @@ public class CustomerKeywordManager {
 	
 		if (customerKeywordVO.availableToAddNewAccountLog(type)) {
 			if (customerKeywordVO.getApplicableFee(customerKeywordPositionIndexLog.getPositionNumber(), type) > 0) {
-				addAccountLog(conn, customerKeywordVO, type);
+//				addAccountLog(conn, customerKeywordVO, type);
 			}
 		}
 
 		return customerKeywordPositionIndexLog;
 	}
-	
-	private CustomerKeywordAccountLogVO addAccountLog(Connection conn, CustomerKeywordVO customerKeywordVO, String type)
-			throws Exception {
-		CustomerKeywordAccountLogManager manager = new CustomerKeywordAccountLogManager();
-		CustomerKeywordAccountLogVO customerKeywordAccountLog = customerKeywordVO.generateAccountLog(type);
-		CustomerKeywordAccountLogVO result = manager.addCustomerKeywordAccountLog(conn, customerKeywordAccountLog);
-		updateAccountRange(conn, customerKeywordAccountLog.getEffectiveFromTime(),
-				customerKeywordAccountLog.getEffectiveToTime(), customerKeywordVO.getUuid(), type);
-		//setDefaultPaymentRange(conn, customerKeywordVO.getUuid());
-		return result;
-	}
 
-	public boolean payAll(String datasourceName, String customerUuid, String[] complexValues) throws Exception {
-		CustomerKeywordAccountLogManager manager = new CustomerKeywordAccountLogManager();
-		for (String complexValue : complexValues) {
-			if (!Utils.isNullOrEmpty(complexValue)) {
-				String[] elements = complexValue.split(",");
-				int customerKeywordUuid = Integer.parseInt(elements[0]);
-				int customerKeywordAccountLogUuid = Integer.parseInt(elements[1]);
-				Timestamp effectiveFromTime = Utils.parseDate(elements[3], "yyyy-MM-dd");
-				Timestamp effectiveToTime = Utils.parseDate(elements[4], "yyyy-MM-dd");
-				int receivable = Integer.parseInt(elements[5]);
-				int firstRealCollection = Integer.parseInt(elements[6]);
-				int realCollection = Integer.parseInt(elements[7]);
-				boolean payAll = "1".equals(elements[8]) ? true : false;
-				Timestamp receivedTime = Utils.parseDate(elements[9], "yyyy-MM-dd");
-				CustomerKeywordVO customerKeywordVO = this.getCustomerKeywordByUuid(datasourceName, customerKeywordUuid + "");
-				CustomerKeywordAccountLogVO customerKeywordAccountLogVO = null;
-				if (customerKeywordAccountLogUuid > 0) {
-					customerKeywordAccountLogVO = manager.getCustomerKeywordAccountLogByUuid(datasourceName,
-							customerKeywordAccountLogUuid + "");
-				} else {
-					customerKeywordAccountLogVO = customerKeywordVO.generateAccountLog(Constants.BAIDU_TYPE_PC);
-				}
-				customerKeywordAccountLogVO.setEffectiveFromTime(effectiveFromTime);
-				customerKeywordAccountLogVO.setEffectiveToTime(effectiveToTime);
-				customerKeywordAccountLogVO.setMonth(Utils.formatDatetime(effectiveFromTime, "yyyy-MM"));
-				customerKeywordAccountLogVO.setReceivable(receivable);
-				if (payAll) {
-					customerKeywordAccountLogVO.setStatus(Constants.ACCOUNT_LOG_STATUS_PAID_ALL);
-				} else if (realCollection > 0) {
-					customerKeywordAccountLogVO.setStatus(Constants.ACCOUNT_LOG_STATUS_PAID_PARTIALLY);
-				} else {
-					customerKeywordAccountLogVO.setStatus(Constants.ACCOUNT_LOG_STATUS_UN_PAID);
-				}
-
-				if (firstRealCollection > 0) {
-					customerKeywordAccountLogVO.setSecondRealCollection(realCollection);
-					customerKeywordAccountLogVO.setSecondReceivedTime(receivedTime);
-					manager.updateSecondCustomerKeywordAccountLog(customerKeywordAccountLogVO, datasourceName);
-				} else {
-					customerKeywordAccountLogVO.setFirstRealCollection(realCollection);
-					customerKeywordAccountLogVO.setFirstReceivedTime(receivedTime);
-					if (customerKeywordAccountLogUuid > 0) {
-						manager.updateFirstCustomerKeywordAccountLog(customerKeywordAccountLogVO, datasourceName);
-					} else {
-						manager.payForNewAddedCustomerKeywordAccountLog(customerKeywordAccountLogVO, datasourceName);
-					}
-				}
-			}
-		}
-		return true;
-	}
 }
