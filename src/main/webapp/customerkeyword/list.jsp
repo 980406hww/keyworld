@@ -141,11 +141,6 @@
 		}else{
 			invalidRefreshCount = "";	
 		}
-		
-	  	if (unPaidAll != null){
-	  		condition = condition + " AND EXISTS (SELECT 1 FROM t_ck_account_log l WHERE l.fCustomerKeywordUuid = ck.fUuid AND l.fStatus IN ('UnPaid', 'PaidPartially')) ";
-	  		pageUrl = pageUrl + "&unPaidAll=unPaidAll";
-	  	}
 	  	
 	  	
 	  	if (pushPay != null){

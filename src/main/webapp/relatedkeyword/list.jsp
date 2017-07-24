@@ -59,7 +59,7 @@
 	  	String creationToTime = request.getParameter("creationToTime");
 	  	String searchEngine = request.getParameter("searchEngine");
 	  	String orderElement = request.getParameter("orderElement");
-	  	String isDelete = request.getParameter("isDelete");
+	  	String status = request.getParameter("status");
 	  	String serviceProvider  = request.getParameter("serviceProvider");
 	  	String optimizeGroupName  = request.getParameter("optimizeGroupName");
 	  	
@@ -127,18 +127,12 @@
 	  		creationToTime = "";	
 	  	}	
 	  	
-	  	if (!Utils.isNullOrEmpty(isDelete)){
-	  		condition = condition + " and ck.fStatus = " + isDelete.trim() + " ";
-	  		pageUrl = pageUrl + "&isDelete=" + isDelete;
+	  	if (!Utils.isNullOrEmpty(status)){
+	  		condition = condition + " and ck.fStatus = " + status.trim() + " ";
+	  		pageUrl = pageUrl + "&status=" + status;
 	  	}else{
-	  		isDelete = "";
+	  		status = "";	
 	  	}
-	  	
-	  	if (unPaidAll != null){
-	  		condition = condition + " AND EXISTS (SELECT 1 FROM t_ck_account_log l WHERE l.fCustomerKeywordUuid = ck.fUuid AND l.fStatus IN ('UnPaid', 'PaidPartially')) ";
-	  		pageUrl = pageUrl + "&unPaidAll=unPaidAll";
-	  	}
-	  	
 	  	
 	  	if (pushPay != null){
 	  		condition = condition + " AND ((fCollectMethod = 'PerDay' and ck.fEffectiveToTime is not null) or ck.fEffectiveToTime <= STR_TO_DATE('" + Utils.formatDatetime(Utils.addDay(Utils.getCurrentTimestamp(), 3), "yyyy-MM-dd") + "', '%Y-%m-%d')) ";
@@ -202,8 +196,7 @@
       	  	</td>
       	  </tr>
       	  <tr>
-      	  	 <td colspan=13 align="right"><a href="keywordfinder.jsp?isDelete=1">关键字统计</a>
-      	  	 	| <a href="customerReceive.jsp?customerUuid=<%=customerUuid.trim()%>">收款</a>       	  	 	
+      	  	 <td colspan=13 align="right"><a href="keywordfinder.jsp?status=1">关键字统计</a>
       	  	 	| <a href="add.jsp?customerUuid=<%=customerUuid.trim()%>">增加新关键字</a>   
       	  	 	| <a target="_blank" href="/customerkeyword/uploadsimple.jsp?customerUuid=<%=customerUuid.trim()%>">关键字Excel上传(简化版)</a>
       	  	 	| <a target="_blank" href="/SuperUserSimpleKeywordList.xls">简化版模板下载</a>
@@ -242,13 +235,13 @@
 				 	   	  <td align="right">添加时间:<input name="creationFromTime" id="creationFromTime" class="Wdate" type="text" style="width:90px;"  onClick="WdatePicker()" value="<%=creationFromTime %>">到<input name="creationToTime" id="creationToTime" class="Wdate" type="text" style="width:90px;"  onClick="WdatePicker()" value="<%=creationToTime %>"></td>
 				 	   	  <td align="right">关键字状态:</td>
 	      	  	 			<td>
-	      	  	 			  <select name="isDelete" id="isDelete">
+	      	  	 			  <select name="status" id="status">		
 			          	  	 	   <%
 			          	  	 	  	 String []statusNames = {"", "新增","激活","过期"};	
 			          	  	 		 String []statusValues = {"","2","1","0"};
 			          	  	 		 for (int i = 0; i < statusNames.length; i ++)
 				          	  	     {
-				          	  	         if (statusValues[i].equals(isDelete))
+				          	  	         if (statusValues[i].equals(status))
 				          	  	         {
 				          	  	              out.println("<option selected value='" + statusValues[i] + "'>" + statusNames[i] + "</option>");
 				          	  	         }

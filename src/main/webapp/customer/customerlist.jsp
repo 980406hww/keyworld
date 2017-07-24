@@ -169,12 +169,9 @@
                       	  <a href="/customerkeyword/add.jsp?customerUuid=<%=value.getUuid()%>">增加</a> | 
                       	  <a target="_blank" href="/customerkeyword/upload.jsp?customerUuid=<%=value.getUuid()%>">上传</a>
                       	  <%if(user.isVipType()){ %>
-                      	   |                      	  
-                      	  <a target="_blank" href="/customerkeyword/customerReceive.jsp?customerUuid=<%=value.getUuid()%>">收款</a> |
+                      	   |
                       	  <a href="javascript:delItem('<%=value.getUuid()%>')">删除</a>
                       	  <%}else if(user.getUserLevel() > 1){ %>
-                      	   | 
-                      	  <a target="_blank" href="/customerkeyword/customerReceive.jsp?customerUuid=<%=value.getUuid()%>">收款</a>
                       	  <%} %>
                       </td>
                   </tr>
