@@ -7,14 +7,14 @@
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		String clientID = request.getParameter("clientID");
-	    String isDelete = request.getParameter("isDelete");
+	    String status = request.getParameter("status");
 		String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
 
 		String datasourceName = "keyword";
 		try{
 			UserVO user = um.login(datasourceName,username,password);
 			if(user != null){
-				csm.updateClientStatusRestartCount(datasourceName, terminalType, clientID, isDelete);
+				csm.updateClientStatusRestartCount(datasourceName, terminalType, clientID, status);
 				out.print("1");
 			}else{
 				out.print("0");

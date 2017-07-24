@@ -98,7 +98,7 @@
 	String creationFromTime = request.getParameter("creationFromTime");
 	String creationToTime = request.getParameter("creationToTime");
 	String orderElement = request.getParameter("orderElement");
-	String isDelete = request.getParameter("isDelete");
+	String status = request.getParameter("status");
 	String userName  = request.getParameter("userName");
 	String serviceProvider  = request.getParameter("serviceProvider");
 	String optimizeGroupName  = request.getParameter("optimizeGroupName");
@@ -203,11 +203,11 @@
 		creationToTime = "";	
 	}	
 	
-	if (!Utils.isNullOrEmpty(isDelete)){
-		condition = condition + " and ck.fStatus = " + isDelete.trim() + " ";
-		pageUrl = pageUrl + "&isDelete=" + isDelete;
+	if (!Utils.isNullOrEmpty(status)){
+		condition = condition + " and ck.fStatus = " + status.trim() + " ";
+		pageUrl = pageUrl + "&status=" + status;
 	}else{
-		isDelete = "";
+		status = "";	
 	}
 	
 	if (!"All".equals(userName)){
@@ -215,7 +215,8 @@
 			condition = condition + " AND EXISTS (SELECT 1 FROM t_user u WHERE u.fUserID = c.fUserID AND u.fUserName = '" + userName + "') ";
 		}
 	}
-
+	
+	
 	if (pushPay != null){
 		condition = condition + " AND ((fCollectMethod = 'PerDay' and ck.fEffectiveToTime is not null) or ck.fEffectiveToTime <= STR_TO_DATE('" + Utils.formatDatetime(Utils.addDay(Utils.getCurrentTimestamp(), 3), "yyyy-MM-dd") + "', '%Y-%m-%d')) ";
 		pageUrl = pageUrl + "&pushPay=pushPay";
@@ -259,13 +260,13 @@
 				 	   	  <td align="right">添加时间:<input name="creationFromTime" id="creationFromTime" class="Wdate" type="text" style="width:90px;"  onClick="WdatePicker()" value="<%=creationFromTime %>">到<input name="creationToTime" id="creationToTime" class="Wdate" type="text" style="width:90px;"  onClick="WdatePicker()" value="<%=creationToTime %>"></td>
 				 	   	  <td align="right">关键字状态:</td>
 	      	  	 			<td>
-	      	  	 			  <select name="isDelete" id="isDelete">
+	      	  	 			  <select name="status" id="status">		
 			          	  	 	   <%
 			          	  	 	  	 String []statusNames = {"", "新增","激活","过期"};	
 			          	  	 		 String []statusValues = {"","2","1","0"};
 			          	  	 		 for (int i = 0; i < statusNames.length; i ++)
 				          	  	     {
-				          	  	         if (statusValues[i].equals(isDelete))
+				          	  	         if (statusValues[i].equals(status))
 				          	  	         {
 				          	  	              out.println("<option selected value='" + statusValues[i] + "'>" + statusNames[i] + "</option>");
 				          	  	         }
@@ -397,7 +398,7 @@
                   }
           %>
                  <tr <%=trClass%> onmouseover="doOver(this);" onmouseout="doOut(this);" height=30>
-                 	 <td><a href="/customerkeyword/list.jsp?isDelete=1&customerUuid=<%=customerKeywordVO.getCustomerUuid()%>" target="_blank"><%=customerKeywordVO.getContactPerson()%></a></td>
+                 	 <td><a href="/customerkeyword/list.jsp?status=1&customerUuid=<%=customerKeywordVO.getCustomerUuid()%>" target="_blank"><%=customerKeywordVO.getContactPerson()%></a></td>                                            
                      <td>
                      	<font color="<%=keywordColor%>"><%=customerKeywordVO.getKeyword()%></font>
                      </td>

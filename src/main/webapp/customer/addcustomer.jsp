@@ -105,7 +105,7 @@
 			           
 			          <tr><td align="right">客户状态:</td> 
 			          	  <td>
-			          	  	 <select name="isDelete" id="isDelete">
+			          	  	 <select name="status" id="status">
 			          	  	 	  <option value="1">激活</option>
 			          	  	 	  <option value="2">暂停</option>			          	  	 	  
 			          	  	 </select>   

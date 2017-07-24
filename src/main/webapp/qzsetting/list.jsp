@@ -561,7 +561,6 @@
             success: function (data) {
                 if(data != null && data.length > 0){
 					var str = JSON.parse(data);
-					alert(data);
 					if(str.pcQzOperationTypeUuid != null && str.phoneQzOperationTypeUuid != null) {
 					    height = 495;
                         document.getElementById("chargeDialog").style.height = 495;

@@ -5,7 +5,7 @@
 	String username = request.getParameter("username");
 	String password = request.getParameter("password");
 	String phoneID = request.getParameter("phoneid");
-	String isDelete = request.getParameter("statue");
+	String status = request.getParameter("statue");
 	
     username = Utils.parseParam(username);
     password = Utils.parseParam(password);
@@ -17,7 +17,7 @@
 	String returnInfo = "Invalid User"; //invalid user
 	if(user != null){
 		try{
-			rdm.updatePhoneStatus(dsName, phoneID, isDelete);
+			rdm.updatePhoneStatus(dsName, phoneID, status);
 			returnInfo = "1";
 		}catch(Exception ex){
 			returnInfo = "error";

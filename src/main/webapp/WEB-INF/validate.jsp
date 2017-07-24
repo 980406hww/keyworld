@@ -32,7 +32,7 @@
 </head>
 <body class="hold-transition register-page" style="overflow-y: hidden;">
 	<c:choose>
-		<c:when test="${isDelete == 'success'}">
+		<c:when test="${status == 'success'}">
 			<div id="registerBoxSuccess" class="register-box">
 				<div class="register-box-body">
 					<div class="row" style="padding-left: 20px; padding-right: 20px; margin-bottom: 20px;">
@@ -42,7 +42,7 @@
 				</div>
 			</div>
 		</c:when>
-		<c:when test="${isDelete == 'failed'}">
+		<c:when test="${status == 'failed'}">
 			<div id="registerBoxSuccess" class="register-box">
 				<div class="register-box-body">
 					<div class="row" style="padding-left: 20px; padding-right: 20px; margin-bottom: 20px;">
@@ -66,7 +66,7 @@
 	<script src="${ctx}/resources/jquery-restful/jquery.restful.js"></script>
 
 	<c:choose>
-		<c:when test="${isDelete == 'success'}">
+		<c:when test="${status == 'success'}">
 			<script type="text/javascript">
 				window.ctx = "${ctx}";
 				$(function() {

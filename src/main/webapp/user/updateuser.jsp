@@ -230,7 +230,7 @@
 			          </tr>     
 			          <tr><td align="right">用户状态:</td> 
 			          	  <td>
-			          	  	 <select name="isDelete" id="isDelete">
+			          	  	 <select name="status" id="status">
 			          	  	 	 <%
 				          	  	     String []statusNames = {"激活","暂停"};	
 			          	  	 	     int []statusValues = {1, 0};

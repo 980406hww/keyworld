@@ -209,7 +209,7 @@
                   total = total + viewVO.getSubTotal();
           %>
                  <tr <%=trClass%> onmouseover="doOver(this);" onmouseout="doOut(this);" height=30>
-                 	 <td><a href="/customerkeyword/list.jsp?isDelete=1&customerUuid=<%=viewVO.getCustomerUuid()%>" target="_blank"><%=viewVO.getContactPerson()%></a></td>
+                 	 <td><a href="/customerkeyword/list.jsp?status=1&customerUuid=<%=viewVO.getCustomerUuid()%>" target="_blank"><%=viewVO.getContactPerson()%></a></td>                                            
                      <td><%=viewVO.getKeyword()%></td>
                      <td><%=viewVO.getApplicableUrl()%></td>
                      <td><%=viewVO.getApplicablePhoneUrl()%></td>

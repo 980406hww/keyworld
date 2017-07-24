@@ -23,9 +23,9 @@
 		UserVO user = um.login(datasourceName,username,password);
 		
 		String uuid = request.getParameter("uuid");
-		String isDelete = request.getParameter("isDelete");
+		String status = request.getParameter("status");
 		
-		ckm.updateCustomerKeywordStatus(datasourceName, terminalType, Integer.parseInt(uuid), isDelete);
+		ckm.updateCustomerKeywordStatus(datasourceName, terminalType, Integer.parseInt(uuid), status);
 		
 %>
 <script language="javascript">

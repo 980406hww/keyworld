@@ -36,7 +36,7 @@
      String contactPerson = request.getParameter("contactPerson");
      String qq = request.getParameter("qq");
      String telphone = request.getParameter("telphone");
-     String isDelete = request.getParameter("isDelete");
+     String status = request.getParameter("status");
      String type = request.getParameter("type");
      String remark = request.getParameter("remark");
      
@@ -65,8 +65,8 @@
 	     value.setAlipay("");	     
 	     value.setPaidFee(0);
 	     value.setType(type);
-	     if (isDelete.trim() != ""){
-	     	value.setStatus(Integer.parseInt(isDelete));
+	     if (status.trim() != ""){
+	     	value.setStatus(Integer.parseInt(status));
 	     }
 	     value.setRemark(remark);
 		 
@@ -75,7 +75,7 @@
 
 <script language="javascript">
 	   alert("添加完毕！");
-	   document.location.href = "/customerkeyword/list.jsp?isDelete=1&customerUuid=<%=customerUuid%>";
+	   document.location.href = "/customerkeyword/list.jsp?status=1&customerUuid=<%=customerUuid%>";
 </script>
 
 

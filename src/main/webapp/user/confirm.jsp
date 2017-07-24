@@ -34,7 +34,7 @@
 		if(user.getUserLevel() <= 1){
 %>
 		<script language="javascript">
-			  window.location.href="/customerkeyword/keywordfinder.jsp?isDelete=1";
+			  window.location.href="/customerkeyword/keywordfinder.jsp?status=1";
 		</script>
 <%
 		}else{

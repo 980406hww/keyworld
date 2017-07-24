@@ -100,7 +100,7 @@
 	<tr>
 		<td align="right">
 	     
-	 	   <div style="text-align:right;width:100%;font-size:12px;"><a href="list.jsp?isDelete=1&customerUuid=<%=customerUuid%>">返回关键字列表</a></div>
+	 	   <div style="text-align:right;width:100%;font-size:12px;"><a href="list.jsp?status=1&customerUuid=<%=customerUuid%>">返回关键字列表</a></div>
 	 	   
 	 	   <table width=80% style="font-size:12px;">
 	 	   	  <input type="hidden" name="customerUuid" value="<%=customerUuid%>">
@@ -189,12 +189,12 @@
 				          	  	 	  <option value="PerSevenDay">七天</option>
 				          	  	 	  <option value="PerDay">按天</option>			          	  	 	  
 				          	  	 </select> 
-				          	  	 <input type="hidden" id="isDelete" name="isDelete" value="1">
+				          	  	 <input type="hidden" id="status" name="status" value="1">  
 				              </td>
 				              <!-- 
 						      <td align="left" width="50">状态:</td> 
 				          	  <td align="left">
-				          	  	 <select naisDeleteatus" isDeleteatus" value="2">
+				          	  	 <select name="status" id="status" value="2">
 				          	  	 	  <option value="2">新增</option>
 				          	  	 	  <%if(user.isVipType()){ %>		          	  	 	  			          	  	 	 			          	  	 	  
 				          	  	 	  <option value="1" selected>激活</option>

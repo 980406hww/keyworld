@@ -40,7 +40,7 @@
      String telphone = request.getParameter("telphone");
      String alipay =  request.getParameter("alipay");
      String paidFee = request.getParameter("paidFee");
-     String isDelete = request.getParameter("isDelete");
+     String status = request.getParameter("status");
      String remark = request.getParameter("remark");
      String type = request.getParameter("type");
      
@@ -69,8 +69,8 @@
 	     if (paidFee != null && !paidFee.trim().equals("")){
 	     	value.setPaidFee(Integer.parseInt(paidFee.trim()));
 	     }
-	     if (isDelete.trim() != ""){
-	     	value.setStatus(Integer.parseInt(isDelete));
+	     if (status.trim() != ""){
+	     	value.setStatus(Integer.parseInt(status));
 	     }
 	     value.setRemark(remark);
 		 

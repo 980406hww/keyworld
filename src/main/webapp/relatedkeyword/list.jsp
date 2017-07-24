@@ -134,6 +134,12 @@
 	  		status = "";	
 	  	}
 	  	
+	  	if (unPaidAll != null){
+	  		condition = condition + " AND EXISTS (SELECT 1 FROM t_ck_account_log l WHERE l.fCustomerKeywordUuid = ck.fUuid AND l.fStatus IN ('UnPaid', 'PaidPartially')) ";
+	  		pageUrl = pageUrl + "&unPaidAll=unPaidAll";
+	  	}
+	  	
+	  	
 	  	if (pushPay != null){
 	  		condition = condition + " AND ((fCollectMethod = 'PerDay' and ck.fEffectiveToTime is not null) or ck.fEffectiveToTime <= STR_TO_DATE('" + Utils.formatDatetime(Utils.addDay(Utils.getCurrentTimestamp(), 3), "yyyy-MM-dd") + "', '%Y-%m-%d')) ";
 	  		pageUrl = pageUrl + "&pushPay=pushPay";
@@ -196,7 +202,8 @@
       	  	</td>
       	  </tr>
       	  <tr>
-      	  	 <td colspan=13 align="right"><a href="keywordfinder.jsp?status=1">关键字统计</a>
+      	  	 <td colspan=13 align="right"><a href="keywordfinder.jsp?status=1">关键字统计</a>       	  	 	
+      	  	 	| <a href="customerReceive.jsp?customerUuid=<%=customerUuid.trim()%>">收款</a>       	  	 	
       	  	 	| <a href="add.jsp?customerUuid=<%=customerUuid.trim()%>">增加新关键字</a>   
       	  	 	| <a target="_blank" href="/customerkeyword/uploadsimple.jsp?customerUuid=<%=customerUuid.trim()%>">关键字Excel上传(简化版)</a>
       	  	 	| <a target="_blank" href="/SuperUserSimpleKeywordList.xls">简化版模板下载</a>

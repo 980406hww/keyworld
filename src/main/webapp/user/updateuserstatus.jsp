@@ -40,10 +40,10 @@
         return;  
 		}				
 		String userID = request.getParameter("userID");
-		String isDelete = request.getParameter("isDelete");
+		String status = request.getParameter("status");		
 		
-		if(!Utils.isNullOrEmpty(isDelete)){
-			um.updateUserStatus("keyword",userID,Integer.parseInt(isDelete.trim()));
+		if(!Utils.isNullOrEmpty(status)){
+			um.updateUserStatus("keyword",userID,Integer.parseInt(status.trim()));
 		}
 %>
 <script language="javascript">

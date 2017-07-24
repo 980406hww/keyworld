@@ -29,7 +29,7 @@
 		String url = request.getParameter("url");
 		String creationFromTime = request.getParameter("creationFromTime");
 		String creationToTime = request.getParameter("creationToTime");
-		String isDelete = request.getParameter("isDelete");
+		String status = request.getParameter("status");
 		String serviceProvider  = request.getParameter("serviceProvider");
 		String optimizeGroupName  = request.getParameter("optimizeGroupName");
 
@@ -74,9 +74,9 @@
 			pageUrl = pageUrl + "&creationToTime=" + creationToTime;
 		}
 
-		if (!Utils.isNullOrEmpty(isDelete)){
-			condition = condition + " and fStatus = " + isDelete.trim() + " ";
-			pageUrl = pageUrl + "&isDelete=" + isDelete;
+		if (!Utils.isNullOrEmpty(status)){
+			condition = condition + " and fStatus = " + status.trim() + " ";
+			pageUrl = pageUrl + "&status=" + status;
 		}
 
 		if (!Utils.isNullOrEmpty(invalidRefreshCount)){
@@ -99,6 +99,6 @@
 %>
 <script language="javascript">
 	alert("清除成功！");
-    window.location.href="list.jsp?isDelete=1&<%=pageUrl%>";
+    window.location.href="list.jsp?status=1&<%=pageUrl%>";
 </script>
 

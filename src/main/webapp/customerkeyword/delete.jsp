@@ -51,6 +51,6 @@
 %>
 <script language="javascript">
 	alert("删除关键字成功！");
-    window.location.href="list.jsp?isDelete=1&customerUuid=<%=customerUuid%>";
+    window.location.href="list.jsp?status=1&customerUuid=<%=customerUuid%>";
 </script>
 

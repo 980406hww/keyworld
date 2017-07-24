@@ -116,7 +116,7 @@
      
      
      String collectMethod = request.getParameter("collectMethod");
-     String isDelete = request.getParameter("isDelete");
+     String status = request.getParameter("status"); 
      String relatedKeywords = request.getParameter("relatedKeywords");
 
      
@@ -279,8 +279,8 @@
      if (collectMethod != null && !collectMethod.trim().equals("")){
     	 customerKeyword.setCollectMethod(collectMethod.trim()); 
      }
-     if (isDelete != null && !isDelete.trim().equals("")){
-    	 customerKeyword.setStatus(Integer.parseInt(isDelete.trim()));
+     if (status != null && !status.trim().equals("")){
+    	 customerKeyword.setStatus(Integer.parseInt(status.trim())); 
      }
      if (relatedKeywords != null && relatedKeywords.trim() != ""){
     	 customerKeyword.setRelatedKeywords(relatedKeywords.trim()); 
@@ -291,7 +291,7 @@
 
 <script language="javascript">
 	   alert("关键字修改完毕！");
-	   document.location.href = "/customerkeyword/list.jsp?isDelete=1&customerUuid=<%=customerUuid%>";
+	   document.location.href = "/customerkeyword/list.jsp?status=1&customerUuid=<%=customerUuid%>";
 </script>
 
 

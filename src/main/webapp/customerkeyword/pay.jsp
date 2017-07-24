@@ -96,7 +96,7 @@
   		<div style="text-align:left;width:100%;font-size:12px;">付款记录</div>
   		<%@include file="/customerkeyword/paymentlog.jsp" %>
   		<br/>
-  		<div style="text-align:right;width:100%;font-size:12px;"><a href="list.jsp?isDelete=1&customerUuid=<%=customer.getUuid()%>">返回关键字列表</a></div>
+  		<div style="text-align:right;width:100%;font-size:12px;"><a href="list.jsp?status=1&customerUuid=<%=customer.getUuid()%>">返回关键字列表</a></div>	
   	</td>
   </tr>
 <%

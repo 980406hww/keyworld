@@ -348,7 +348,7 @@
   	</tr>
   	<tr>
   		<td colspan=2>
-	 	   <div style="text-align:right;width:100%;font-size:12px;"><a href="list.jsp?isDelete=1&customerUuid=<%=customerUuid%>">返回关键字列表</a></div>
+	 	   <div style="text-align:right;width:100%;font-size:12px;"><a href="list.jsp?status=1&customerUuid=<%=customerUuid%>">返回关键字列表</a></div>
 	  	</td>
   	</tr>
 	<tr>
@@ -463,7 +463,7 @@
 			              </td>
 			 	   	      <td align="right">状态:</td> 
 			          	  <td>
-			          	  	 <select name="isDelete" id="isDelete">
+			          	  	 <select name="status" id="status">	
 			          	  	 	<%
 				          	  	     String []statusNames = {"新增","激活","过期"};	
 			          	  	 		 int []statusValues = {2,1,0};

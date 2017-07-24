@@ -1280,10 +1280,10 @@ $.confirm({
                         <pre class="prettyprint linenums"><code>$.confirm({
     content: 'url:text.txt',
     title: 'Title',
-    contentLoaded: function(data, isDelete, xhr){
+    contentLoaded: function(data, status, xhr){
         var self = this;
         setTimeout(function(){
-            self.setContent('&lt;h1&gt;OK! the isDelete is: ' + isDelete + '&lt;/h1&gt;&lt;br&gt;' + self.content);
+            self.setContent('&lt;h1&gt;OK! the status is: ' + status + '&lt;/h1&gt;&lt;br&gt;' + self.content);
             self.setTitle('Stuff is loaded');
         }, 2000);
     }
@@ -1303,10 +1303,10 @@ $.confirm({
                                 $.confirm({
                                     title: 'Title',
                                     content: 'url:text.txt',
-                                    contentLoaded: function(data, isDelete, xhr){
+                                    contentLoaded: function(data, status, xhr){
                                         var self = this;
                                         setTimeout(function(){
-                                            self.setContent('<h1>OK! the isDelete is: ' + isDelete + '</h1><br>' + self.content); // concat content
+                                            self.setContent('<h1>OK! the status is: ' + status + '</h1><br>' + self.content); // concat content
                                             self.setTitle('Stuff is loaded');
                                         }, 2000);
                                     },

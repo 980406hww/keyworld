@@ -126,7 +126,7 @@
 		  </tr>
       	  <tr>
       	  	 <td colspan=12> 
-      	  	 	 <form method="post" action="userlist.jsp?isDelete=1" style="display:inline;height:25px;">
+      	  	 	 <form method="post" action="userlist.jsp?status=1" style="display:inline;height:25px;">
       	  	 	 邮箱账号:<input  type="text" value="<%=userID%>" name="userID" id="userID">
       	  	 	 用户名称:<input  type="text" value="<%=userFullName%>" name="userFullName" id="userFullName"> 
       	  	 	 QQ:<input  type="text" value="<%=qq%>" name="qq" id="qq"> 
@@ -182,13 +182,13 @@
 				              	 	if (value.getStatus() == 1) 
 				              	 		              	     {
 				              	 %>
-				              	         <a href="updateuserstatus.jsp?userID=<%=value.getUserID()%>&isDelete=0">暂停</a>
+				              	         <a href="updateuserstatus.jsp?userID=<%=value.getUserID()%>&status=0">暂停</a> 
 				              	 <%
  				              	 	}
  				              	 		              	     else
  				              	 		              	   	 {
  				              	 %>
-				              	        <a href="updateuserstatus.jsp?userID=<%=value.getUserID()%>&isDelete=1">激活</a>
+				              	        <a href="updateuserstatus.jsp?userID=<%=value.getUserID()%>&status=1">激活</a> 
 				              	 <%
  				              	 	}
  				              	 %>

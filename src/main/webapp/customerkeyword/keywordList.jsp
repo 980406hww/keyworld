@@ -49,7 +49,7 @@
 	  	String keyword = request.getParameter("keyword");
 	  	String url = request.getParameter("url");
 	  	String orderElement = request.getParameter("orderElement");
-	  	String isDelete = request.getParameter("isDelete");
+	  	String status = request.getParameter("status");
 	  	String positionType  = request.getParameter("positionType");
 	  	
 	  	String position = request.getParameter("position");
@@ -80,13 +80,14 @@
 	  		position = "";	
 	  	}
 	  	
-	  	if (!Utils.isNullOrEmpty(isDelete)){
-	  		condition = condition + " and ck.fStatus = " + isDelete.trim() + " ";
-	  		pageUrl = pageUrl + "&isDelete=" + isDelete;
+	  	if (!Utils.isNullOrEmpty(status)){
+	  		condition = condition + " and ck.fStatus = " + status.trim() + " ";
+	  		pageUrl = pageUrl + "&status=" + status;
 	  	}else{
-	  		isDelete = "";
+	  		status = "";	
 	  	}
-
+	  	
+	  	
 	  	if (pushPay != null){
 	  		condition = condition + " AND ((fCollectMethod = 'PerDay' and ck.fEffectiveToTime is not null) or ck.fEffectiveToTime <= STR_TO_DATE('" + Utils.formatDatetime(Utils.addDay(Utils.getCurrentTimestamp(), 3), "yyyy-MM-dd") + "', '%Y-%m-%d')) ";
 	  		pageUrl = pageUrl + "&pushPay=pushPay";
@@ -165,13 +166,13 @@
       	  	 		关键字:&nbsp;&nbsp;<input type="text" name="keyword" id="keyword" value="<%=keyword%>" style="width:120px;">
       	  	 		优化链接:&nbsp;&nbsp;<input type="text" name="url" id="url" value="<%=url%>" style="width:160px;">
       	  	 		关键字状态:&nbsp;&nbsp;
-	      	  	 			  <select name="isDelete" id="isDelete">
+	      	  	 			  <select name="status" id="status">		
 			          	  	 	   <%
 			          	  	 	  	 String []statusNames = {"", "激活","过期"};	
 			          	  	 		 String []statusValues = {"","1","0"};
 			          	  	 		 for (int i = 0; i < statusNames.length; i ++)
 				          	  	     {
-				          	  	         if (statusValues[i].equals(isDelete))
+				          	  	         if (statusValues[i].equals(status))
 				          	  	         {
 				          	  	              out.println("<option selected value='" + statusValues[i] + "'>" + statusNames[i] + "</option>");
 				          	  	         }
@@ -310,12 +311,12 @@ function doOut(obj) {
 		obj.style.backgroundColor = "#ffffff";
 	}
 }
-function changeStatus(uuid, isDelete)
+function changeStatus(uuid, status)
 {
-   if (isDelete === 0){
+   if (status === 0){
    	if (confirm("确实要暂停优化这个关键字吗?") == false) return;
    }
-   document.location = "changeStatus.jsp?uuid=" + uuid + "&isDelete=" + isDelete;
+   document.location = "changeStatus.jsp?uuid=" + uuid + "&status=" + status;
 }
 
 function showTip(content,e) 

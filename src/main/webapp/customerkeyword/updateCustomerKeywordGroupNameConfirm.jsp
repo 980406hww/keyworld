@@ -38,7 +38,7 @@
 
 <script language="javascript">
 	   alert("该用户关键字组名完毕！");
-	   document.location.href = "/customerkeyword/list.jsp?isDelete=1&customerUuid=<%=customerUuid%>";
+	   document.location.href = "/customerkeyword/list.jsp?status=1&customerUuid=<%=customerUuid%>";
 </script>
 
 
