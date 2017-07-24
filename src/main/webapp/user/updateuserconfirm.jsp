@@ -40,7 +40,7 @@
      String userLevel = request.getParameter("userLevel");
      String autoPay = request.getParameter("autoPay");
      String collectMethod = request.getParameter("collectMethod");
-     String status = request.getParameter("status");
+     String isDelete = request.getParameter("isDelete");
      
 		if (userName == null || userName.equals(""))
 		{
@@ -66,7 +66,7 @@
 	     	value.setPercentage(Integer.parseInt(percentage.trim()));
 	     }
 	     value.setUserLevel(Integer.parseInt(userLevel.trim()));
-	     value.setStatus(Integer.parseInt(status.trim()));
+	     value.setStatus(Integer.parseInt(isDelete.trim()));
 		 
 	     boolean updated = um.updateUser(datasourceName, value);
 	     if(updated){

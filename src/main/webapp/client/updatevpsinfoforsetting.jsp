@@ -12,10 +12,10 @@
 			if(user != null){
 				VPSOpenInfoVO vpsOpenInfoVO = new VPSOpenInfoVO();
 				String uuid = request.getParameter("uuid");
-				String status = request.getParameter("status");
+				String isDelete = request.getParameter("isDelete");
 
 				vpsOpenInfoVO.setUuid(Integer.parseInt(uuid));
-				vpsOpenInfoVO.setSettingStatus(status);
+				vpsOpenInfoVO.setSettingStatus(isDelete);
 				voim.updateCompleteSetting(datasourceName, vpsOpenInfoVO);
 				out.print("1");
 			}else{

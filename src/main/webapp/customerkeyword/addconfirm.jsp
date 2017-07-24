@@ -67,7 +67,7 @@
      String startOptimizedTime = request.getParameter("startOptimizedTime");
      String effectiveFromTime = request.getParameter("effectiveFromTime");
      String effectiveToTime = request.getParameter("effectiveToTime");
-     String status = request.getParameter("status");
+     String isDelete = request.getParameter("isDelete");
      
 	if (keyword == null || keyword.equals(""))
 	{
@@ -165,8 +165,8 @@
      }else{
     	 customerKeyword.setServiceProvider("");
      }
-     if (!Utils.isNullOrEmpty(status)){
-    	 customerKeyword.setStatus(Integer.parseInt(status.trim())); 
+     if (!Utils.isNullOrEmpty(isDelete)){
+    	 customerKeyword.setStatus(Integer.parseInt(isDelete.trim()));
      }
      
      if (!Utils.isNullOrEmpty(optimizeGroupName)){
@@ -182,7 +182,7 @@
 
 <script language="javascript">
 	   alert("关键字添加完毕！");
-	   document.location.href = "/customerkeyword/list.jsp?status=1&customerUuid=<%=customerUuid%>";
+	   document.location.href = "/customerkeyword/list.jsp?isDelete=1&customerUuid=<%=customerUuid%>";
 </script>
 
 

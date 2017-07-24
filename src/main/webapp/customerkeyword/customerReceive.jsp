@@ -112,7 +112,7 @@
       	  	  	|  
       	  	 	<a href="customerReceive.jsp?customerUuid=<%=customerUuid%>">显示欠费</a>       	  	 	
       	  	 	|  
-      	  	 	<a href="keywordfinder.jsp?status=1">关键字统计</a>       	  	 	
+      	  	 	<a href="keywordfinder.jsp?isDelete=1">关键字统计</a>
       	  	 	| <a href="add.jsp?customerUuid=<%=customerUuid.trim()%>">增加新关键字</a> |        	  	 	
       	  	 	<a href="/customer/customerlist.jsp">客户清单</a> | <a href="/user/updatepassword.jsp">修改密码</a> | <a href="/user/logout.jsp">退出</a>
       	  	 	</td>

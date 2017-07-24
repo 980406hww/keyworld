@@ -167,7 +167,7 @@ public class RelatedKeywordManager {
 //			ps.setDouble(i++, customer.getPaidFee());
 //			ps.setString(i++, customer.getRemark());
 //			ps.setString(i++, customer.getType());
-//			ps.setInt(i++, customer.getStatus());
+//			ps.setInt(i++, customer.getIsDelete());
 //			ps.setString(i++, customer.getUserID());
 //			ps.setInt(i++, customer.getUuid());
 //

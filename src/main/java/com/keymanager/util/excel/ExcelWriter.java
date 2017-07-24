@@ -19,16 +19,16 @@ public interface ExcelWriter {
   public void setCurrentWorkSheetWithName(String sheetName);
 
   public void createSheetWithNameAndSetAsCurrentSheet(String sheetName,
-      int index);
+                                                      int index);
 
   public void addLabelCell(int columnIndex, int rowIndex,
-      double subscriptionRecipitionNumber) throws ExcelWriteException;
+                           double subscriptionRecipitionNumber) throws ExcelWriteException;
 
   public void addDateCell(int columnIndex, int rowIndex,
-      ExcelDateFormat dateFormat, Date date) throws ExcelWriteException;
+                          ExcelDateFormat dateFormat, Date date) throws ExcelWriteException;
 
   public void addDateCell(int columnIndex, int rowIndex,
-      ExcelDateFormat dateFormat, java.sql.Date date)
+                          ExcelDateFormat dateFormat, java.sql.Date date)
       throws ExcelWriteException;
 
   public void addLabelCell(int columnIndex, int rowIndex, String labelString)
@@ -37,13 +37,13 @@ public interface ExcelWriter {
   public void setCellDateFormat(WritableCell cell, ExcelDateFormat dateFormat);
 
   public void setCellFontColor(int columnIndex, int rowIndex, int pointSize,
-      ExcelFontName fontName, ExcelFontBoldStyle boldStyle,
-      ExcelUnderlineStyle underlineStyle, ExcelColor color)
+                               ExcelFontName fontName, ExcelFontBoldStyle boldStyle,
+                               ExcelUnderlineStyle underlineStyle, ExcelColor color)
       throws ExcelWriteException;
 
   public void setCellFontColor(WritableCell cell, int pointSize,
-      ExcelFontName fontName, ExcelFontBoldStyle boldStyle,
-      ExcelUnderlineStyle underlineStyle, ExcelColor color);
+                               ExcelFontName fontName, ExcelFontBoldStyle boldStyle,
+                               ExcelUnderlineStyle underlineStyle, ExcelColor color);
 
   public void setCellFontColor(WritableCell cell, ExcelColor color)
       throws ExcelWriteException;

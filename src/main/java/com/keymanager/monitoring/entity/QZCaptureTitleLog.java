@@ -9,8 +9,8 @@ import java.util.Date;
 public class QZCaptureTitleLog extends BaseEntity{
 	private static final long serialVersionUID = -1101942701283949852L;
 
-	@TableField(value = "fQZSettingUuid")
-	private long qzSettingUuid;
+	@TableField(value = "fQZOperationTypeUuid")
+	private long qzOperationTypeUuid;
 
 	@TableField(exist=false)
 	private int customerUuid;
@@ -33,12 +33,12 @@ public class QZCaptureTitleLog extends BaseEntity{
 	@TableField(value = "fEndTime")
 	private Date endTime;
 
-	public long getQzSettingUuid() {
-		return qzSettingUuid;
+	public long getQzOperationTypeUuid() {
+		return qzOperationTypeUuid;
 	}
 
-	public void setQzSettingUuid(long qzSettingUuid) {
-		this.qzSettingUuid = qzSettingUuid;
+	public void setQzOperationTypeUuid(long qzOperationTypeUuid) {
+		this.qzOperationTypeUuid = qzOperationTypeUuid;
 	}
 
 	public int getCustomerUuid() {

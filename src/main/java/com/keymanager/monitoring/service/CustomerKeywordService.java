@@ -7,6 +7,7 @@ import com.keymanager.manager.CustomerKeywordManager;
 import com.keymanager.monitoring.dao.CustomerKeywordDao;
 import com.keymanager.monitoring.entity.CustomerKeyword;
 import com.keymanager.monitoring.entity.QZCaptureTitleLog;
+import com.keymanager.monitoring.entity.QZOperationType;
 import com.keymanager.monitoring.entity.QZSetting;
 import com.keymanager.monitoring.enums.QZCaptureTitleLogStatusEnum;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
@@ -24,6 +25,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
 	@Autowired
 	private QZSettingService qzSettingService;
+
+	@Autowired
+	private QZOperationTypeService qzOperationTypeService;
 
 	public String searchCustomerKeywordForCaptureTitle(String terminalType) throws Exception{
 		QZCaptureTitleLog qzCaptureTitleLog = qzCaptureTitleLogService.getAvailableQZSetting(QZCaptureTitleLogStatusEnum.Processing.getValue(), terminalType);
@@ -46,7 +50,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 					qzCaptureTitleLog.getType(), qzCaptureTitleLog.getGroup());
 			return "";
 		}else{
-			QZSetting qzSetting = qzSettingService.selectById(qzCaptureTitleLog.getQzSettingUuid());
+			QZOperationType qzOperationType = qzOperationTypeService.selectById(qzCaptureTitleLog.getQzOperationTypeUuid());
+			QZSetting qzSetting = qzSettingService.selectById(qzOperationType.getQzSettingUuid());
 			captureTitle.setWholeUrl(qzSetting.getDomain());
 			ObjectMapper mapper = new ObjectMapper();
 			return mapper.writeValueAsString(captureTitle);

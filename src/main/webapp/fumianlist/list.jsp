@@ -240,7 +240,7 @@ function delAllItems()
 			uuids = uuids + a[i].value + ',';	
 		}
 	}
-   document.location = "deleteAll.jsp?uuids=" + uuids;
+   document.location = "deleteOne.jsp?uuids=" + uuids;
 }
 
 function showTip(content,e) 

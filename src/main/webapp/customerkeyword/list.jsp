@@ -68,7 +68,7 @@
 	  	String creationFromTime = request.getParameter("creationFromTime");
 	  	String creationToTime = request.getParameter("creationToTime");
 	  	String orderElement = request.getParameter("orderElement");
-	  	String status = request.getParameter("status");
+	  	String isDelete = request.getParameter("isDelete");
 	  	String serviceProvider  = request.getParameter("serviceProvider");
 	  	String optimizeGroupName  = request.getParameter("optimizeGroupName");
 	  	String positionType  = "全部";
@@ -128,11 +128,11 @@
 	  		creationToTime = "";	
 	  	}	
 	  	
-	  	if (!Utils.isNullOrEmpty(status)){
-	  		condition = condition + " and ck.fStatus = " + status.trim() + " ";
-	  		pageUrl = pageUrl + "&status=" + status;
+	  	if (!Utils.isNullOrEmpty(isDelete)){
+	  		condition = condition + " and ck.fStatus = " + isDelete.trim() + " ";
+	  		pageUrl = pageUrl + "&isDelete=" + isDelete;
 	  	}else{
-	  		status = "";	
+	  		isDelete = "";
 	  	}
 	  	
 		if (!Utils.isNullOrEmpty(invalidRefreshCount)){
@@ -258,13 +258,13 @@
 				 	   	  <td align="right">添加时间:<input name="creationFromTime" id="creationFromTime" class="Wdate" type="text" style="width:90px;"  onClick="WdatePicker()" value="<%=creationFromTime %>">到<input name="creationToTime" id="creationToTime" class="Wdate" type="text" style="width:90px;"  onClick="WdatePicker()" value="<%=creationToTime %>"></td>
 				 	   	  <td align="right">关键字状态:</td>
 	      	  	 			<td>
-	      	  	 			  <select name="status" id="status">		
+	      	  	 			  <select name="isDelete" id="isDelete">
 			          	  	 	   <%
 			          	  	 	  	 String []statusNames = {"", "新增","激活","过期"};	
 			          	  	 		 String []statusValues = {"","2","1","0"};
 			          	  	 		 for (int i = 0; i < statusNames.length; i ++)
 				          	  	     {
-				          	  	         if (statusValues[i].equals(status))
+				          	  	         if (statusValues[i].equals(isDelete))
 				          	  	         {
 				          	  	              out.println("<option selected value='" + statusValues[i] + "'>" + statusNames[i] + "</option>");
 				          	  	         }
@@ -480,7 +480,7 @@ function delItem(uuid)
 function delAllItems(deleteType)
 {
 	if (confirm("确实要删除这些关键字吗?") == false) return;
-	var tmpUrl = '/customerkeyword/deleteAll.jsp?';
+	var tmpUrl = '/customerkeyword/deleteOne.jsp?';
 	if(deleteType == null){
 		var uuids = getUuids();
 		if(uuids.trim() === ''){

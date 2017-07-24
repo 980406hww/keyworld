@@ -154,7 +154,7 @@
                  	  <% if(user.isVipType()){ %>
 		          	  <td><%=value.getUserID() %></td>
 		          	  <%} %>                                           
-                      <td><a href="/customerkeyword/list.jsp?status=1&customerUuid=<%=value.getUuid()%>"><%=value.getContactPerson()%></a></td>
+                      <td><a href="/customerkeyword/list.jsp?isDelete=1&customerUuid=<%=value.getUuid()%>"><%=value.getContactPerson()%></a></td>
                       <td><%=value.getQq()%></td>
                       <td><%=value.getEmail()%></td>
                       <td><%=value.getTelphone()%></td>

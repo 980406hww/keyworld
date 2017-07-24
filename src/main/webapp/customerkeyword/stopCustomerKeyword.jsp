@@ -44,6 +44,6 @@
 		
 %>
 <script language="javascript">
-    window.location.href="list.jsp?status=1&customerUuid=<%=customerUuid%>";
+    window.location.href="list.jsp?isDelete=1&customerUuid=<%=customerUuid%>";
 </script>
 

@@ -6,7 +6,7 @@
 		SELECT
 			k.id AS 'id',
 			k.user_id as 'user_id',
-			k.status as 'status',
+			k.isDelete as 'isDelete',
 			k.keyword as 'keyword',
 			k.update_time as 'update_time',
 			k.create_time as 'create_time',

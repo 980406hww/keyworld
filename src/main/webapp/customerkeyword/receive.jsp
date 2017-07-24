@@ -108,7 +108,7 @@
   		<%@include file="/customerkeyword/accountLog.jsp" %>
   		<br/>
   		<div style="text-align:right;width:100%;font-size:12px;"><%if(customerKeywordAccountLogVO == null){ %>
-  			<a href="receive.jsp?customerUuid=<%=customer.getUuid()%>&customerKeywordUuid=<%=customerKeywordUuid%>&addNew=true">产生收款记录</a> <%} %> | <a href="list.jsp?status=1&customerUuid=<%=customer.getUuid()%>">返回关键字列表</a></div>	
+  			<a href="receive.jsp?customerUuid=<%=customer.getUuid()%>&customerKeywordUuid=<%=customerKeywordUuid%>&addNew=true">产生收款记录</a> <%} %> | <a href="list.jsp?isDelete=1&customerUuid=<%=customer.getUuid()%>">返回关键字列表</a></div>
   	</td>
   </tr>
 <%

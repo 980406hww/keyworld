@@ -4,6 +4,8 @@ import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.QZSettingCriteria;
 import com.keymanager.monitoring.entity.QZSetting;
 import com.keymanager.monitoring.entity.User;
+import com.keymanager.monitoring.service.QZChargeRuleService;
+import com.keymanager.monitoring.service.QZOperationTypeService;
 import com.keymanager.monitoring.service.QZSettingService;
 import com.keymanager.monitoring.service.UserService;
 import com.keymanager.util.PortTerminalTypeMapping;
@@ -27,6 +29,12 @@ public class QZSettingRestController extends SpringMVCBaseController {
 	private QZSettingService qzSettingService;
 
 	@Autowired
+	private QZChargeRuleService qzChargeRuleService;
+
+	@Autowired
+	private QZOperationTypeService qzOperationTypeService;
+
+	@Autowired
 	private UserService userService;
 
 	@RequestMapping(value = "/getAvailableQZSetting", method = RequestMethod.POST)
@@ -43,6 +51,31 @@ public class QZSettingRestController extends SpringMVCBaseController {
 
 	@RequestMapping(value = "/updateQZKeywords", method = RequestMethod.POST)
 	public ResponseEntity<?> updateQZKeywords(@RequestBody QZSettingCriteria qzSettingCriteria, HttpServletRequest request) throws Exception{
+		if(qzSettingCriteria.getUserName() != null && qzSettingCriteria.getPassword() != null){
+			User user = userService.getUser(qzSettingCriteria.getUserName());
+			if(user != null && user.getPassword().equals(qzSettingCriteria.getPassword())){
+				String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+				qzSettingService.updateResult(qzSettingCriteria, terminalType);
+				return new ResponseEntity<Object>(HttpStatus.OK);
+			}
+		}
+		return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+	}
+
+	@RequestMapping(value = "/captureCurrentKeyword", method = RequestMethod.POST)
+	public ResponseEntity<?> captureCurrentKeyword(@RequestBody QZSettingCriteria qzSettingCriteria) throws Exception{
+		if(qzSettingCriteria.getUserName() != null && qzSettingCriteria.getPassword() != null){
+			User user = userService.getUser(qzSettingCriteria.getUserName());
+			if(user != null && user.getPassword().equals(qzSettingCriteria.getPassword())){
+				QZSetting qzSetting = qzSettingService.captureCurrentKeyword();
+				return new ResponseEntity<Object>(qzSetting, HttpStatus.OK);
+			}
+		}
+		return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+	}
+
+	@RequestMapping(value = "/updateCurrentKeyword", method = RequestMethod.POST)
+	public ResponseEntity<?> updateCurrentKeyword(@RequestBody QZSettingCriteria qzSettingCriteria, HttpServletRequest request) throws Exception{
 		if(qzSettingCriteria.getUserName() != null && qzSettingCriteria.getPassword() != null){
 			User user = userService.getUser(qzSettingCriteria.getUserName());
 			if(user != null && user.getPassword().equals(qzSettingCriteria.getPassword())){
@@ -77,13 +110,13 @@ public class QZSettingRestController extends SpringMVCBaseController {
 
 	@RequestMapping(value ="/delete/{uuid}", method = RequestMethod.GET)
 	public ResponseEntity<?> deleteQZSetting(@PathVariable("uuid") Long uuid){
-		return new ResponseEntity<Object>(qzSettingService.deleteById(uuid), HttpStatus.OK);
+		return new ResponseEntity<Object>(qzSettingService.deleteOne(uuid), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/deleteQZSettings", method = RequestMethod.POST)
 	public ResponseEntity<?> deleteQZSettings(@RequestBody Map<String, Object> requestMap){
-		List<Long> uuids = (List<Long>) requestMap.get("uuids");
-		return new ResponseEntity<Object>(qzSettingService.deleteBatchIds(uuids), HttpStatus.OK);
+		List<String> uuids = (List<String>) requestMap.get("uuids");
+		return new ResponseEntity<Object>(qzSettingService.deleteAll(uuids) , HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/searchQZSettings", method = RequestMethod.POST)
@@ -96,6 +129,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		return new ResponseEntity<Object>(qzSettingService.searchQZSettings(uuid, customerUuid, domain, group, updateStatus), HttpStatus.OK);
 	}
 
+	//通过QZSettinguuid去查询
 	@RequestMapping(value = "/getQZSetting/{uuid}", method = RequestMethod.GET)
 	public ResponseEntity<?> findQZSettings(@PathVariable("uuid") Long uuid){
 		return new ResponseEntity<Object>(qzSettingService.searchQZSettings(uuid, null, null, null, null), HttpStatus.OK);

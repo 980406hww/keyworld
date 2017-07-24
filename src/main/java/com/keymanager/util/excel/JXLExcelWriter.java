@@ -194,9 +194,9 @@ public class JXLExcelWriter extends AbstractJXLExcel implements ExcelWriter {
       ExcelDateFormat dateFormat, java.sql.Date date)
       throws ExcelWriteException {
 
-    jxl.write.WritableCellFormat wcfDF = new jxl.write.WritableCellFormat(
-        new jxl.write.DateFormat(dateFormat.getJxlDateFormat()));
-    jxl.write.DateTime labelDTF = new jxl.write.DateTime(columnIndex, rowIndex,
+    WritableCellFormat wcfDF = new WritableCellFormat(
+        new DateFormat(dateFormat.getJxlDateFormat()));
+    DateTime labelDTF = new DateTime(columnIndex, rowIndex,
         date, wcfDF);
     try {
       currentWritableSheet.addCell(labelDTF);

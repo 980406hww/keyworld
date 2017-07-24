@@ -9,8 +9,12 @@ import java.util.List;
 public interface QZSettingDao extends BaseMapper<QZSetting> {
     List<QZSetting> getAvailableQZSettings();
 
+    List<QZSetting> captureCurrentKeyword();
+
     List<QZSetting> searchQZSettingsByUuids(@Param("uuids") String uuids);
 
     List<QZSetting> searchQZSettings(@Param("uuid") Long uuid, @Param("customerUuid") Long customerUuid, @Param("domain") String
             domain, @Param("group") String group, @Param("updateStatus") String updateStatus);
+
+    int selectLastId();
 }

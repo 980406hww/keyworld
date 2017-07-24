@@ -47,6 +47,6 @@
 %>
 <script language="javascript">
 	alert("删除终端成功！");
-    window.location.href="clientlist.jsp?status=1";
+    window.location.href="clientlist.jsp?isDelete=1";
 </script>
 

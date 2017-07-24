@@ -4,10 +4,10 @@
     <select id="getAvailableQZCaptureTitleLog" resultType="com.keymanager.monitoring.entity.QZCaptureTitleLog">
         SELECT
           qctl.fUuid          AS 'uuid',
-          qctl.fQZSettingUuid AS 'qzSettingUuid',
+          qctl.fQZOperationTypeUuid AS 'qzOperationTypeUuid',
           qs.fCustomerUuid    AS 'customerUuid',
           IF((qctl.fTerminalType = 'PC'), qs.fPcGroup, qs.fPhoneGroup) AS 'group',
-          qctl.fStatus        AS 'status',
+          qctl.fStatus        AS 'isDelete',
           qs.fType	          AS 'type',
           qctl.fTerminalType  AS 'terminalType',
           qctl.fStartTime     AS 'startTime',
@@ -17,7 +17,7 @@
         FROM t_qz_setting qs,
           t_qz_capture_title_log qctl
         WHERE qs.fUuid = qctl.fQZSettingUuid
-            AND qctl.fStatus = #{status}
+            AND qctl.fStatus = #{isDelete}
             AND qctl.fTerminalType = #{terminalType}
         ORDER BY qctl.fCreateTime
         LIMIT 1

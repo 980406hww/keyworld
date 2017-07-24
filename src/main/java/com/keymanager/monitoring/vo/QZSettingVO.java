@@ -25,6 +25,10 @@ public class QZSettingVO {
 
     private Date createTime;
 
+    private Date captureCurrentKeywordCountTime;
+
+    private String captureCurrentKeywordStatus;
+
     public Long getUuid() {
         return uuid;
     }
@@ -111,5 +115,21 @@ public class QZSettingVO {
 
     public void setContactPerson(String contactPerson) {
         this.contactPerson = contactPerson;
+    }
+
+    public Date getCaptureCurrentKeywordCountTime() {
+        return captureCurrentKeywordCountTime;
+    }
+
+    public void setCaptureCurrentKeywordCountTime(Date captureCurrentKeywordCountTime) {
+        this.captureCurrentKeywordCountTime = captureCurrentKeywordCountTime;
+    }
+
+    public String getCaptureCurrentKeywordStatus() {
+        return captureCurrentKeywordStatus;
+    }
+
+    public void setCaptureCurrentKeywordStatus(String captureCurrentKeywordStatus) {
+        this.captureCurrentKeywordStatus = captureCurrentKeywordStatus;
     }
 }

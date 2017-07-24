@@ -250,7 +250,7 @@ public class StringUtil {
     }
   }
 
-  static public java.util.Date asUtilDate(String stringValue, DateFormat format, String timeZone) {
+  static public Date asUtilDate(String stringValue, DateFormat format, String timeZone) {
     if (isNullOrEmpty(stringValue))
       return null;
     try {
@@ -262,11 +262,11 @@ public class StringUtil {
     }
   }
 
-  static public java.util.Date asUtilDate(String stringValue, String timeZone) {
+  static public Date asUtilDate(String stringValue, String timeZone) {
     return asUtilDate(stringValue, DEFAULT_UTIL_DATE_FORMAT, timeZone);
   }
 
-  static public java.util.Date asUtilDate(String stringValue, String pattern, String timeZone) {
+  static public Date asUtilDate(String stringValue, String pattern, String timeZone) {
     return asUtilDate(stringValue, new SimpleDateFormat(pattern), timeZone);
   }
 
@@ -1584,7 +1584,7 @@ public class StringUtil {
 
   /**
    * <p>
-   * Parse a {@link java.math.BigInteger} from a {@link String} value. Ignore all non-digit characters.
+   * Parse a {@link BigInteger} from a {@link String} value. Ignore all non-digit characters.
    * </p>
    *
    * @param str

@@ -19,7 +19,7 @@
 				String connUser = request.getParameter("connuser");
 				String connPassword = request.getParameter("connpass");
 				String vpsUuid = request.getParameter("vpsuuid");
-				String status = request.getParameter("status");
+				String isDelete = request.getParameter("isDelete");
 				String trial = request.getParameter("trial");
 
 				vpsOpenInfoVO.setUuid(Integer.parseInt(uuid));
@@ -30,7 +30,7 @@
 				vpsOpenInfoVO.setConnUser(connUser);
 				vpsOpenInfoVO.setConnPassword(connPassword);
 				vpsOpenInfoVO.setVpsUuid(vpsUuid);
-				vpsOpenInfoVO.setOpenStatus(status);
+				vpsOpenInfoVO.setOpenStatus(isDelete);
 				vpsOpenInfoVO.setTrival(trial);
 				voim.updateCompleteOpenInfo(datasourceName, vpsOpenInfoVO);
 				out.print("1");

@@ -13,7 +13,7 @@
 		  u.fSalt AS 'salt',
 		  u.fVipType AS 'vipType',
 		  u.fClientIp AS 'clientIp',
-		  u.fStatus AS 'status',
+		  u.fStatus AS 'isDelete',
 		  u.fUpdateTime AS 'updateTime',
 		  u.fCreateTime AS 'createTime'
 		FROM t_user u

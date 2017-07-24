@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.enums.FieldStrategy;
 
 import java.beans.Transient;
 import java.util.Date;
+import java.util.List;
 
 @TableName(value = "t_qz_setting")
 public class QZSetting extends BaseEntity{
@@ -29,9 +30,6 @@ public class QZSetting extends BaseEntity{
 	@TableField(value = "fType")
 	private String type;
 
-	@TableField(value = "fOperationType")
-	private String operationType;
-
 	@TableField(value = "fIgnoreNoIndex")
 	private boolean ignoreNoIndex;
 
@@ -49,6 +47,15 @@ public class QZSetting extends BaseEntity{
 
 	@TableField(value = "fUpdateEndTime")
 	private Date updateEndTime;
+
+	@TableField(value = "fCaptureCurrentKeywordCountTime")
+	private Date captureCurrentKeywordCountTime;
+
+	@TableField(value = "fCaptureCurrentKeywordStatus", validate= FieldStrategy.IGNORED)
+	private String captureCurrentKeywordStatus;
+
+	@TableField(exist=false)
+	private List<QZOperationType> qzOperationTypes;//qzOperationTypes为全站表子类  一对多
 
 	public int getCustomerUuid() {
 		return customerUuid;
@@ -146,11 +153,27 @@ public class QZSetting extends BaseEntity{
 		this.ignoreNoOrder = ignoreNoOrder;
 	}
 
-	public String getOperationType() {
-		return operationType;
+	public List<QZOperationType> getQzOperationTypes() {
+		return qzOperationTypes;
 	}
 
-	public void setOperationType(String operationType) {
-		this.operationType = operationType;
+	public void setQzOperationTypes(List<QZOperationType> qzOperationTypes) {
+		this.qzOperationTypes = qzOperationTypes;
+	}
+
+	public Date getCaptureCurrentKeywordCountTime() {
+		return captureCurrentKeywordCountTime;
+	}
+
+	public void setCaptureCurrentKeywordCountTime(Date captureCurrentKeywordCountTime) {
+		this.captureCurrentKeywordCountTime = captureCurrentKeywordCountTime;
+	}
+
+	public String getCaptureCurrentKeywordStatus() {
+		return captureCurrentKeywordStatus;
+	}
+
+	public void setCaptureCurrentKeywordStatus(String captureCurrentKeywordStatus) {
+		this.captureCurrentKeywordStatus = captureCurrentKeywordStatus;
 	}
 }

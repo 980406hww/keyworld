@@ -70,9 +70,11 @@ public class CustomerKeywordVO {
 
 	private String remarks;
 	private String receiveStatus;
+	private String captureCurrentKeywordStatus;
 	private int status;
 	private Timestamp updateTime;
 	private Timestamp createTime;
+	private Timestamp captureCurrentKeywordCountTime;
 	private CustomerKeywordAccountLogVO latestCustomerKeywordAccountLog;
 
 	public double getApplicableFee(int positionNumber, String type){
@@ -860,5 +862,21 @@ public class CustomerKeywordVO {
 
 	public void setTerminalType(String terminalType) {
 		this.terminalType = terminalType;
+	}
+
+	public String getCaptureCurrentKeywordStatus() {
+		return captureCurrentKeywordStatus;
+	}
+
+	public void setCaptureCurrentKeywordStatus(String captureCurrentKeywordStatus) {
+		this.captureCurrentKeywordStatus = captureCurrentKeywordStatus;
+	}
+
+	public Timestamp getCaptureCurrentKeywordCountTime() {
+		return captureCurrentKeywordCountTime;
+	}
+
+	public void setCaptureCurrentKeywordCountTime(Timestamp captureCurrentKeywordCountTime) {
+		this.captureCurrentKeywordCountTime = captureCurrentKeywordCountTime;
 	}
 }

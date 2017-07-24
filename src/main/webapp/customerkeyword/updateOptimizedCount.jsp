@@ -34,7 +34,7 @@ if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
 		String freeSpace = request.getParameter("freespace");
 		String version = request.getParameter("version");
 		String city = request.getParameter("city");
-		String status = request.getParameter("status");
+		String isDelete = request.getParameter("isDelete");
 	    String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
 
 		ip = request.getParameter("ip");
@@ -53,7 +53,7 @@ if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
 	    try
 	    {
 			ckm.updateOptimizedCount(datasourceName, terminalType, Integer.parseInt(customerKeywordUuid.trim()), Integer.parseInt(count.trim()), ip,
-					city, cookieInfo, clientID, status, freeSpace, version);
+					city, cookieInfo, clientID, isDelete, freeSpace, version);
 			out.println("1");
 		}
 		catch(Exception e)
