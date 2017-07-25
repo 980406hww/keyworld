@@ -62,25 +62,25 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
 	}
 
-	@RequestMapping(value = "/captureCurrentKeyword", method = RequestMethod.POST)
-	public ResponseEntity<?> captureCurrentKeyword(@RequestBody QZSettingCriteria qzSettingCriteria) throws Exception{
+	@RequestMapping(value = "/captureCurrentKeywordCount", method = RequestMethod.POST)
+	public ResponseEntity<?> captureCurrentKeywordCount(@RequestBody QZSettingCriteria qzSettingCriteria) throws Exception{
 		if(qzSettingCriteria.getUserName() != null && qzSettingCriteria.getPassword() != null){
 			User user = userService.getUser(qzSettingCriteria.getUserName());
 			if(user != null && user.getPassword().equals(qzSettingCriteria.getPassword())){
-				QZSetting qzSetting = qzSettingService.captureCurrentKeyword();
+				QZSetting qzSetting = qzSettingService.captureCurrentKeywordCount();
 				return new ResponseEntity<Object>(qzSetting, HttpStatus.OK);
 			}
 		}
 		return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
 	}
 
-	@RequestMapping(value = "/updateCurrentKeyword", method = RequestMethod.POST)
-	public ResponseEntity<?> updateCurrentKeyword(@RequestBody QZSettingCriteria qzSettingCriteria, HttpServletRequest request) throws Exception{
+	@RequestMapping(value = "/updateCurrentKeywordCount", method = RequestMethod.POST)
+	public ResponseEntity<?> updateCurrentKeywordCount(@RequestBody QZSettingCriteria qzSettingCriteria, HttpServletRequest request) throws Exception{
 		if(qzSettingCriteria.getUserName() != null && qzSettingCriteria.getPassword() != null){
 			User user = userService.getUser(qzSettingCriteria.getUserName());
 			if(user != null && user.getPassword().equals(qzSettingCriteria.getPassword())){
-				String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
-				qzSettingService.updateResult(qzSettingCriteria, terminalType);
+				String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());//?
+				qzSettingService.updateCurrentKeywordCount(qzSettingCriteria, terminalType);
 				return new ResponseEntity<Object>(HttpStatus.OK);
 			}
 		}
