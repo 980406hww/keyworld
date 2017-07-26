@@ -394,4 +394,5 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		}
 		return true;
 	}
+
 }

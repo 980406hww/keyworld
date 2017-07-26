@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.monitoring.dao.QZChargeLogDao">
-
+<select id="chargesList" resultType="com.keymanager.monitoring.entity.QZChargeLog">
+    SELECT
+        ql.fUuid AS 'uuid',
+        ql.fQZOperationTypeUuid AS 'qzOperationTypeUuid',
+		ql.fCreateTime AS 'createTime',
+        qt.fOperationtype AS 'operationtype',
+        ql.fAcutalChargeDate AS 'acutalChargeDate',
+        ql.fActualAmount AS 'actualAmount',
+        ql.fUserID AS 'userID',
+        us.fUserName AS 'userName'
+    FROM
+        t_qz_charge_log ql
+    JOIN t_user us ON ql.fUserID = us.fUserID
+    JOIN t_qz_operation_type qt ON qt.fUuid = ql.fQZOperationTypeUuid
+    WHERE ql.fQZOperationTypeUuid IN(
+    SELECT qt.fUuid
+    FROM t_qz_operation_type qt
+    WHERE qt.fQZSettingUuid = #{fQZSettingUuid}
+    )
+    ORDER BY ql.fCreateTime
+</select>
 </mapper>

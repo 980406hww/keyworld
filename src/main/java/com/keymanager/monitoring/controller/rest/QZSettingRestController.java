@@ -134,4 +134,5 @@ public class QZSettingRestController extends SpringMVCBaseController {
 	public ResponseEntity<?> findQZSettings(@PathVariable("uuid") Long uuid){
 		return new ResponseEntity<Object>(qzSettingService.searchQZSettings(uuid, null, null, null, null), HttpStatus.OK);
 	}
+
 }
