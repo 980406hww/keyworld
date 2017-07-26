@@ -1,7 +1,6 @@
 package com.keymanager.monitoring.entity;
 
 import com.baomidou.mybatisplus.annotations.TableField;
-import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 
 import java.math.BigDecimal;
@@ -16,8 +15,8 @@ public class QZChargeLog extends BaseEntity{
     private  Long qzOperationTypeUuid;//整站操作类型信息ID
     @TableField("fPlanChargeDate")
     private Date planChargeDate;//计划收费日期
-    @TableField("fAcutalChargeDate")
-    private Date acutalChargeDate;//实际收费日期
+    @TableField("fActualChargeDate")
+    private Date actualChargeDate;//实际收费日期
     @TableField ("fReceivableAmount")
     private BigDecimal receivableAmount;//应收金额
     @TableField("fActualAmount")
@@ -32,10 +31,10 @@ public class QZChargeLog extends BaseEntity{
     public QZChargeLog() {
     }
 
-    public QZChargeLog(Long qzOperationTypeUuid, Date planChargeDate, Date acutalChargeDate, BigDecimal receivableAmount, BigDecimal actualAmount, String userID) {
+    public QZChargeLog(Long qzOperationTypeUuid, Date planChargeDate, Date actualChargeDate, BigDecimal receivableAmount, BigDecimal actualAmount, String userID) {
         this.qzOperationTypeUuid = qzOperationTypeUuid;
         this.planChargeDate = planChargeDate;
-        this.acutalChargeDate = acutalChargeDate;
+        this.actualChargeDate = actualChargeDate;
         this.receivableAmount = receivableAmount;
         this.actualAmount = actualAmount;
         this.userID = userID;
@@ -57,12 +56,12 @@ public class QZChargeLog extends BaseEntity{
         this.planChargeDate = planChargeDate;
     }
 
-    public Date getAcutalChargeDate() {
-        return acutalChargeDate;
+    public Date getActualChargeDate() {
+        return actualChargeDate;
     }
 
-    public void setAcutalChargeDate(Date acutalChargeDate) {
-        this.acutalChargeDate = acutalChargeDate;
+    public void setActualChargeDate(Date actualChargeDate) {
+        this.actualChargeDate = actualChargeDate;
     }
 
     public BigDecimal getReceivableAmount() {
