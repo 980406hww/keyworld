@@ -15,10 +15,11 @@
         t_qz_charge_log ql
     JOIN t_user us ON ql.fUserID = us.fUserID
     JOIN t_qz_operation_type qt ON qt.fUuid = ql.fQZOperationTypeUuid
-    WHERE ql.fQZOperationTypeUuid IN(
+    WHERE EXISTS(
     SELECT qt.fUuid
     FROM t_qz_operation_type qt
     WHERE qt.fQZSettingUuid = #{fQZSettingUuid}
+	AND qt.fUuid = ql.fQZOperationTypeUuid
     )
     ORDER BY ql.fCreateTime
 </select>

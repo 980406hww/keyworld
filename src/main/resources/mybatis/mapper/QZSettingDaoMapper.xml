@@ -30,7 +30,7 @@
 
     <select id="captureCurrentKeyword" resultType="com.keymanager.monitoring.entity.QZSetting">
        SELECT
-            qs.fUuid AS 'uuid',
+            DISTINCT qs.fUuid AS 'uuid',
             qs.fCustomerUuid AS 'customerUuid',
             qs.fDomain AS 'domain',
             qs.fPcGroup AS 'pcGroup',
@@ -50,7 +50,7 @@
             t_qz_setting qs
         JOIN t_qz_operation_type qt ON qs.fUuid = qt.fQZSettingUuid
         WHERE
-            qt.fUuid IN (
+            qt.fUuid IN(
                 SELECT
                     qr.fQZOperationTypeUuid
                 FROM
