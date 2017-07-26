@@ -35,4 +35,9 @@ public class QZChargeLogRestControlller extends SpringMVCBaseController {
     public ResponseEntity<?> saveQZChargeLog(@RequestBody String chargeData,HttpServletRequest request){
         return new ResponseEntity<Object>(qzChargeLogService.saveQZChargeLog(chargeData,request), HttpStatus.OK);
     }
+    //查看收费记录
+    @RequestMapping(value = "/chargesList/{uuid}", method = RequestMethod.GET)
+    public ResponseEntity<?> chargesList(@PathVariable("uuid") Long uuid){
+        return new ResponseEntity<Object>(qzChargeLogService.chargesList(uuid), HttpStatus.OK);
+    }
 }

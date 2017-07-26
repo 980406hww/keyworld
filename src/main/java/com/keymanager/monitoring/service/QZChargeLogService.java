@@ -2,12 +2,14 @@ package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.dao.QZChargeLogDao;
-import com.keymanager.monitoring.dao.QZChargeRuleDao;
-import com.keymanager.monitoring.dao.QZOperationTypeDao;
-import com.keymanager.monitoring.dao.QZSettingDao;
+import com.keymanager.monitoring.service.QZChargeRuleService;
+import com.keymanager.monitoring.service.QZOperationTypeService;
+import com.keymanager.monitoring.service.QZSettingService;
 import com.keymanager.monitoring.entity.QZChargeLog;
 import com.keymanager.monitoring.entity.QZChargeRule;
 import com.keymanager.monitoring.entity.QZOperationType;
+import com.keymanager.monitoring.entity.QZSetting;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,13 +35,13 @@ public class QZChargeLogService extends ServiceImpl<QZChargeLogDao, QZChargeLog>
     private QZChargeLogDao qzChargeLogDao;
 
     @Autowired
-    private QZSettingDao qzSettingDao;
+    private QZSettingService qzSettingService;
 
     @Autowired
-    private QZOperationTypeDao qzOperationTypeDao;
+    private QZOperationTypeService qzOperationTypeService;
 
     @Autowired
-    private QZChargeRuleDao qzChargeRuleDao;
+    private QZChargeRuleService qzChargeRuleService;
 
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -58,7 +60,7 @@ public class QZChargeLogService extends ServiceImpl<QZChargeLogDao, QZChargeLog>
         String phonePlanChargeDate = null;
         String phoneQzOperationTypeUuid = null;
 
-        List<QZOperationType> qzOperationTypes = qzOperationTypeDao.searchQZOperationTypesByQZSettingUuid(uuid);
+        List<QZOperationType> qzOperationTypes = qzOperationTypeService.searchQZOperationTypesByQZSettingUuid(uuid);
         //通过operationTypeUuid主键去查询规则表（多条数据）
         for (QZOperationType qzOperationType : qzOperationTypes) {
             if (qzOperationType.getOperationtype().equals("PC")) {
@@ -72,7 +74,7 @@ public class QZChargeLogService extends ServiceImpl<QZChargeLogDao, QZChargeLog>
                 //计划缴费日期
                 pcPlanChargeDate = qzOperationType.getNextChargeDate() == null ? sdf.format(new Date()) : sdf.format(qzOperationType.getNextChargeDate());
 
-                List<QZChargeRule> qzChargeRules = qzChargeRuleDao.searchQZChargeRuleByqzOperationTypeUuids(qzOperationType.getUuid());
+                List<QZChargeRule> qzChargeRules = qzChargeRuleService.searchQZChargeRuleByqzOperationTypeUuids(qzOperationType.getUuid());
                 for (QZChargeRule qzChargeRule : qzChargeRules) {
                     //如果当前值在规则中的起始值-----终止值  区间内 或者比最后一条规则的初始值还大
                     if (Long.valueOf(pcCurrentKeywordCount) >= qzChargeRule.getStartKeywordCount() && null != qzChargeRule.getEndKeywordCount() && Long.valueOf(pcCurrentKeywordCount) <= qzChargeRule.getEndKeywordCount()) {
@@ -94,7 +96,7 @@ public class QZChargeLogService extends ServiceImpl<QZChargeLogDao, QZChargeLog>
                 phoneInitialKeywordCount = qzOperationType.getInitialKeywordCount().toString();//初始词量
                 //计划缴费日期
                 phonePlanChargeDate = qzOperationType.getNextChargeDate() == null ? sdf.format(new Date()) : sdf.format(qzOperationType.getNextChargeDate());
-                List<QZChargeRule> qzChargeRules = qzChargeRuleDao.searchQZChargeRuleByqzOperationTypeUuids(qzOperationType.getUuid());
+                List<QZChargeRule> qzChargeRules = qzChargeRuleService.searchQZChargeRuleByqzOperationTypeUuids(qzOperationType.getUuid());
                 for (QZChargeRule qzChargeRule : qzChargeRules) {
                     if (Long.valueOf(phoneCurrentKeywordCount) >= qzChargeRule.getStartKeywordCount() && Long.valueOf(phoneCurrentKeywordCount) <= qzChargeRule.getEndKeywordCount()) {
                         phoneReceivableAmount = qzChargeRule.getAmount().toString();
@@ -183,24 +185,33 @@ public class QZChargeLogService extends ServiceImpl<QZChargeLogDao, QZChargeLog>
         if (null != qzChargeLogPC && null != qzChargeLogPC.getQzOperationTypeUuid()) {
             qzChargeLogDao.insert(qzChargeLogPC);
             //插入时 更新 下一次的收费日期
-            QZOperationType qzOperationType = qzOperationTypeDao.selectById(qzChargeLogPC.getQzOperationTypeUuid());
+            QZOperationType qzOperationType = qzOperationTypeService.selectById(qzChargeLogPC.getQzOperationTypeUuid());
             try {
                 qzOperationType.setNextChargeDate(sdf.parse(jsonStr.get("fNextChargeDatePC").toString()));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            qzOperationTypeDao.updateById(qzOperationType);
+            qzOperationTypeService.updateById(qzOperationType);
         }
         if (null != qzChargeLogPhone && null != qzChargeLogPhone.getQzOperationTypeUuid()) {
             qzChargeLogDao.insert(qzChargeLogPhone);
-            QZOperationType qzOperationType = qzOperationTypeDao.selectById(qzChargeLogPhone.getQzOperationTypeUuid());
+            QZOperationType qzOperationType = qzOperationTypeService.selectById(qzChargeLogPhone.getQzOperationTypeUuid());
             try {
                 qzOperationType.setNextChargeDate(sdf.parse(jsonStr.get("fNextChargeDatePhone").toString()));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            qzOperationTypeDao.updateById(qzOperationType);
+            qzOperationTypeService.updateById(qzOperationType);
         }
     }
-
+    
+    //收费记录
+    public String chargesList(Long uuid){
+        List<QZChargeLog> qzChargeLogs  = qzChargeLogDao.chargesList(uuid);
+        if(qzChargeLogs.size()==0){
+            return null;
+        }
+        JSONArray jsonQZChargeLogs = JSONArray.fromObject(qzChargeLogs);
+        return jsonQZChargeLogs.toString();
+    }
 }

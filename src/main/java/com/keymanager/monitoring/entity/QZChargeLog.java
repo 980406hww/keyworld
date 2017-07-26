@@ -23,7 +23,11 @@ public class QZChargeLog extends BaseEntity{
     @TableField("fActualAmount")
     private BigDecimal actualAmount;// 实收金额
     @TableField("fUserID")
-    private String userID;// 收费人员
+    private String userID;// 收费人ID
+    @TableField(exist = false)
+    private String operationtype;//操作类型()
+    @TableField(exist = false)
+    private String userName;//收费人姓名
 
     public QZChargeLog() {
     }
@@ -83,5 +87,21 @@ public class QZChargeLog extends BaseEntity{
 
     public void setUserID(String userID) {
         this.userID = userID;
+    }
+
+    public String getOperationtype() {
+        return operationtype;
+    }
+
+    public void setOperationtype(String operationtype) {
+        this.operationtype = operationtype;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }
