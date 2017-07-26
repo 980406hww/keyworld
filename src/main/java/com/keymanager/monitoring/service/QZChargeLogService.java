@@ -131,13 +131,13 @@ public class QZChargeLogService extends ServiceImpl<QZChargeLogDao, QZChargeLog>
     public String saveQZChargeLog(String chargeData,HttpServletRequest request) {
         Long qzOperationTypeUuidPC = null;
         Date planChargeDatePC = null;
-        Date acutalChargeDatePC = null;
+        Date actualChargeDatePC = null;
         BigDecimal receivableAmountPC = null;
         BigDecimal actualAmountPC = null;
 
         Long qzOperationTypeUuidPhone = null;
         Date planChargeDatePhone = null;
-        Date acutalChargeDatePhone = null;
+        Date actualChargeDatePhone = null;
         BigDecimal receivableAmountPhone = null;
         BigDecimal actualAmountPhone = null;
         String userID = null;
@@ -157,9 +157,9 @@ public class QZChargeLogService extends ServiceImpl<QZChargeLogDao, QZChargeLog>
                 if(!StringUtils.isBlank(jsonStr.get("fReceivableAmountPC").toString())){
                     receivableAmountPC = new BigDecimal(jsonStr.get("fReceivableAmountPC").toString());
                 }
-                acutalChargeDatePC = sdf.parse(jsonStr.get("fActualChargeDatePC").toString());//实际收费日期
+                actualChargeDatePC = sdf.parse(jsonStr.get("fActualChargeDatePC").toString());//实际收费日期
                 actualAmountPC = new BigDecimal(jsonStr.get("fActualAmountPC").toString());//实际收费金额
-                qzChargeLogPC = new QZChargeLog(qzOperationTypeUuidPC, planChargeDatePC, acutalChargeDatePC, receivableAmountPC, actualAmountPC, userID);
+                qzChargeLogPC = new QZChargeLog(qzOperationTypeUuidPC, planChargeDatePC, actualChargeDatePC, receivableAmountPC, actualAmountPC, userID);
             }
             if (null != jsonStr.get("fQzOperationTypeUuidPhone") && jsonStr.size() >= 3) {
                 qzOperationTypeUuidPhone = Long.valueOf(jsonStr.get("fQzOperationTypeUuidPhone").toString());
@@ -169,9 +169,9 @@ public class QZChargeLogService extends ServiceImpl<QZChargeLogDao, QZChargeLog>
                 if(!StringUtils.isBlank(jsonStr.get("fReceivableAmountPhone").toString())){
                     receivableAmountPhone = new BigDecimal(jsonStr.get("fReceivableAmountPhone").toString());
                 }
-                acutalChargeDatePhone = sdf.parse(jsonStr.get("fActualChargeDatePhone").toString());//实际收费日期
+                actualChargeDatePhone = sdf.parse(jsonStr.get("fActualChargeDatePhone").toString());//实际收费日期
                 actualAmountPhone = new BigDecimal(jsonStr.get("fActualAmountPhone").toString());//实际收费金额
-                qzChargeLogPhone = new QZChargeLog(qzOperationTypeUuidPhone, planChargeDatePhone, acutalChargeDatePhone, receivableAmountPhone, actualAmountPhone, userID);
+                qzChargeLogPhone = new QZChargeLog(qzOperationTypeUuidPhone, planChargeDatePhone, actualChargeDatePhone, receivableAmountPhone, actualAmountPhone, userID);
             }
             //添加到数据库中
             saveQZChargeLog(qzChargeLogPC, qzChargeLogPhone,jsonStr);
