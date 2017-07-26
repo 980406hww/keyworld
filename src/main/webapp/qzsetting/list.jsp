@@ -1576,21 +1576,6 @@
 		<input type="button" id="saveChargeLog" onclick="saveChargeLog(this)" value="确认收费"/>&nbsp;&nbsp;&nbsp;<input type="button" id="cancelChargeLog" onclick="cancelChargeDialog()" value="取消"/><span style="margin-right:24px;"></span>
 	</p>
 </div>
-<%--收费详情列表--%>
-<div id="chargeLogListDiv">
-	<table id="chargeLogListTable">
-		<thead>
-		<tr>
-			<td>操作类型</td>
-			<td>收费金额</td>
-			<td>收费人员</td>
-			<td>收费时间</td>
-			<td>创建时间</td>
-		</tr>
-		</thead>
-		<tbody>
-		</tbody>
-	</table>
-</div>
+
 </body>
 </html>
