@@ -168,8 +168,8 @@
 			font-size: 12px;
 			line-height: 12px;
 			border: 2px solid #104454;
-			width: 340px;
-			height: 295px;
+			width: 375px;
+			height: 340px;
 			left: 50%;
 			top: 35%;
 			z-index: 25;
@@ -180,6 +180,21 @@
 		}
 		#PhoneChargeInfo {
 			display: none;
+		}
+		#chargeLogListDiv {
+			display: none;
+			margin: -125px 0px 0px -160px;
+			background-color: white;
+			color: #2D2A2A;
+			font-size: 12px;
+			line-height: 12px;
+			border: 2px solid #104454;
+			width: 375px;
+			height: 340px;
+			left: 50%;
+			top: 35%;
+			z-index: 25;
+			position: fixed;
 		}
 		-->
 	</style>
@@ -279,7 +294,7 @@
 			<%=value.getContactPerson()%>
 		</td>
 		<td>
-			<%=value.getDomain()%>
+			<a href="http://www.aizhan.com/cha/<%=value.getDomain()%>" style="text-decoration:none" target="_blank"><%=value.getDomain()%></a>
 		</td>
 		<td>
 			<%=value.getType()%>
@@ -314,10 +329,11 @@
 		<td>
 			<%=Utils.formatDate(value.getCreateTime(), "MM-dd HH:mm")%>
 		</td>
-		<td>
+		<td align="center">
 			<a href="javascript:showChargeDialog('<%=value.getUuid()%>','<%=value.getContactPerson()%>','<%=value.getDomain()%>',this)">收费</a> |
 			<a href="javascript:showSettingDialog('<%=value.getUuid()%>', this)">修改</a> |
-			<a href="javascript:delItem(<%=value.getUuid()%>)">删除</a>
+			<a href="javascript:delItem(<%=value.getUuid()%>)">删除</a> |
+			<a href="#">收费记录</a>
 		</td>
 	</tr>
 	<%
@@ -342,10 +358,9 @@
     var id1 = 1; // 规则表序号
     var id2 = 1; //规则表序号
     var dateStr = new Date(); // 当天日期
-    var y = dateStr.getFullYear();
     var m = dateStr.getMonth() + 1 < 10 ? "0" + (dateStr.getMonth() + 1) : (dateStr.getMonth() + 1);
     var d = dateStr.getDate() < 10 ? "0" + dateStr.getDate() : dateStr.getDate();
-    var today = y + "-" + m + "-" + d;
+    var today = dateStr.getFullYear() + "-" + m + "-" + d;
     function selectAll(self){
         var a = document.getElementsByName("uuid");
         if(self.checked){
@@ -551,7 +566,6 @@
     function showChargeDialog(uuid,contactPerson,domain,self) {
         cancelChangeSetting();
         cancelChargeDialog();
-        var height = 295;
         var chargeDialogObj = $$$("#chargeDialog");
         chargeDialogObj.find("#qzSettingCustomer").val(contactPerson);
         chargeDialogObj.find("#qzSettingDomain").val(domain);
@@ -561,12 +575,15 @@
             success: function (data) {
                 if(data != null && data.length > 0){
 					var str = JSON.parse(data);
-					if(str.pcQzOperationTypeUuid != null && str.phoneQzOperationTypeUuid != null) {
-					    height = 495;
-                        document.getElementById("chargeDialog").style.height = 495;
-					}
+                    if(str.pcQzOperationTypeUuid != null || str.phoneQzOperationTypeUuid != null) {
+                        document.getElementById("chargeDialog").style.height = 320;
+                    }
+                    var pcValue = 0;
+                    var phoneValue = 0;
+
                     var checkboxPC = document.getElementById("operationTypePC");
                     var checkboxPhone = document.getElementById("operationTypePhone");
+
                     // 电脑收费详细
                     if(str.pcQzOperationTypeUuid != null) {
                         // 存在电脑操作类型
@@ -582,24 +599,21 @@
                             var year = date.getFullYear();
                             var month = date.getMonth() + 2;
                             if(month < 10) {
-                                month = "0" + (date.getMonth() + 2);
+                                month = "0" + month;
 							} else {
                                 if(month > 12) {
                                     month = "01";
                                     year = year + 1;
-								} else {
-                                    month = date.getMonth() + 2;
 								}
 							}
                             var day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
                             var nextChargeDatePC = year + "-" + month + "-" + day;
+                            pcValue = Number(str.pcReceivableAmount);
                             chargeDialogObj.find("#fReceivableAmountPC").val(str.pcReceivableAmount);
                             chargeDialogObj.find("#fPlanChargeDatePC").val(str.pcPlanChargeDate);
                             chargeDialogObj.find("#fNextChargeDatePC").val(nextChargeDatePC);
                             chargeDialogObj.find("#fActualAmountPC").val(str.pcReceivableAmount);
                         } else {
-                            height = height - 179;
-                            document.getElementById("chargeDialog").style.height = height;
                             checkboxPC.checked = false;
                             document.getElementById("PCChargeInfo").style.display = "none";
 						}
@@ -623,23 +637,21 @@
                             var year = date.getFullYear();
                             var month = date.getMonth() + 2;
                             if(month < 10) {
-                                month = "0" + (date.getMonth() + 2);
+                                month = "0" + month;
                             } else {
                                 if(month > 12) {
                                     month = "01";
                                     year = year + 1;
-                                } else {
-                                    month = date.getMonth() + 2;
                                 }
                             }
                             var day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
                             var nextChargeDatePhone = year + "-" + month + "-" + day;
+                            phoneValue = Number(str.phoneReceivableAmount);
 							chargeDialogObj.find("#fReceivableAmountPhone").val(str.phoneReceivableAmount);
 							chargeDialogObj.find("#fPlanChargeDatePhone").val(str.phonePlanChargeDate);
 							chargeDialogObj.find("#fNextChargeDatePhone").val(nextChargeDatePhone);
 							chargeDialogObj.find("#fActualAmountPhone").val(str.phoneReceivableAmount);
 						} else {
-                            document.getElementById("chargeDialog").style.height = height - 179;
                             checkboxPhone.checked = false;
                             document.getElementById("PhoneChargeInfo").style.display = "none";
 						}
@@ -648,6 +660,10 @@
                         document.getElementById("checkChargePhone").style.display = "none";
                         document.getElementById("PhoneChargeInfo").style.display = "none";
 					}
+
+                    var s = new String(pcValue + phoneValue);
+                    var total = s.replace(/\B(?=(?:\d{3})+$)/g, ',');
+                    document.getElementById("totalAmount").innerHTML = "￥" + total + "元";
                     document.getElementById("chargeDialog").style.display = "block";
                 }else{
                     showInfo("获取信息失败！", self);
@@ -681,11 +697,6 @@
             settingDialogDiv.find("#fInitialKeywordCount" + val.operationtype).val(val.initialKeywordCount );
             settingDialogDiv.find("#fCurrentKeywordCount" + val.operationtype).val(val.currentKeywordCount);
             settingDialogDiv.find("#qzSettingUuid" + val.operationtype).val(val.uuid);
-            if(val.operationtype == "PC") {
-                PCType = true;
-			} else if(val.operationtype == "Phone") {
-                PhoneType = true;
-			}
 
             // 构造规则表
             $$$.each(val.qzChargeRules, function(chargeRuleIdx, chargeRuleVal) {
@@ -722,22 +733,20 @@
             document.getElementsByName("amount")[i].value = rule[j++];
         }
 
-        if(PCType) {
-            if(rulePC.length > 0) {
-                divHeight = divHeight + $("#groupHeightPC").height() + $("#ruleHeightPC").height() - inputHeight;
-			} else {
-                divHeight = divHeight + $("#groupHeightPC").height() + $("#ruleHeightPC").height();
-			}
-            dealSettingTable("PC");
-        }
-        if(PhoneType) {
-            if(rulePhone.length > 0) {
-                divHeight = divHeight + $("#groupHeightPhone").height() + $("#ruleHeightPhone").height() - inputHeight;
-            } else {
-                divHeight = divHeight + $("#groupHeightPhone").height() + $("#ruleHeightPhone").height();
-            }
-            dealSettingTable("Phone");
-        }
+		if(rulePC.length > 0) {
+			divHeight = divHeight + $("#groupHeightPC").height() + $("#ruleHeightPC").height() - inputHeight;
+			dealSettingTable("PC");
+		} else {
+			divHeight = divHeight + $("#groupHeightPC").height() + $("#ruleHeightPC").height();
+		}
+
+		if(rulePhone.length > 0) {
+			divHeight = divHeight + $("#groupHeightPhone").height() + $("#ruleHeightPhone").height() - inputHeight;
+			dealSettingTable("Phone");
+		} else {
+			divHeight = divHeight + $("#groupHeightPhone").height() + $("#ruleHeightPhone").height();
+		}
+
         settingDialogDiv.show();
     }
 
@@ -803,11 +812,6 @@
             if(pcOperationType.initialKeywordCount == null || pcOperationType.initialKeywordCount === ""){
                 alert("请输入初始词量");
                 settingDialogDiv.find("#fInitialKeywordCountPC").focus();
-                return;
-            }
-            if(pcOperationType.currentKeywordCount == null || pcOperationType.currentKeywordCount === ""){
-                alert("请输入当前词量");
-                settingDialogDiv.find("#fCurrentKeywordCountPC").focus();
                 return;
             }
 
@@ -888,11 +892,6 @@
             if(PhoneOperationType.initialKeywordCount == null || PhoneOperationType.initialKeywordCount === ""){
                 alert("请输入初始词量");
                 settingDialogDiv.find("#fInitialKeywordCountPhone").focus();
-                return;
-            }
-            if(PhoneOperationType.currentKeywordCount == null || PhoneOperationType.currentKeywordCount === ""){
-                alert("请输入当前词量");
-                settingDialogDiv.find("#fCurrentKeywordCountPhone").focus();
                 return;
             }
 
@@ -990,6 +989,20 @@
         });
     }
 
+    function insertChargeLog(){
+        var chargeLogListTable = document.getElementById("chargeLogListTable");
+        // 创建tr、td
+        var newTr = document.createElement("tr");
+        for(var i = 1; i <= 5; i++) {
+            var newTd = document.createElement("td");
+            newTr.appendChild(newTd);
+            newTd.innerHTML = "";
+            // 新增一行
+            var row = chargeLogListTable.lastChild;
+            row.parentNode.insertBefore(newTr,row);
+		}
+    }
+
     function saveChargeLog(self) {
         var checkboxPC = document.getElementById("operationTypePC");
         var checkboxPhone = document.getElementById("operationTypePhone");
@@ -1083,6 +1096,20 @@
                 showInfo("收费失败！", self);
             }
         });
+    }
+
+    function calTotalAmount() {
+        var pcValue = 0;
+        var phoneValue = 0;
+        if(document.getElementById("operationTypePC").checked == true) {
+            pcValue = Number(document.getElementById("fActualAmountPC").value);
+        }
+        if(document.getElementById("operationTypePhone").checked == true) {
+            phoneValue = Number(document.getElementById("fActualAmountPhone").value);
+        }
+        var str = new String(pcValue + phoneValue);
+        var total = str.replace( /\B(?=(?:\d{3})+$)/g, ',' );
+        document.getElementById("totalAmount").innerHTML = "￥" + total + "元";
     }
 
     function cancelChangeSetting(){
@@ -1214,11 +1241,17 @@
 		var chargeInfoObj = document.getElementById(operationType + "ChargeInfo");
 		var chargeDialogHeight = $("#chargeDialog").height();
         if(chargeInfoObj.style.display == "none" || checkboxObj.checked == true) {
-            document.getElementById("chargeDialog").style.height = chargeDialogHeight + 178;
+            document.getElementById("chargeDialog").style.height = 320;
             chargeInfoObj.style.display = "block";
         } else if(chargeInfoObj.style.display == "block" || checkboxObj.checked == false) {
-            document.getElementById("chargeDialog").style.height = chargeDialogHeight - 178;
             chargeInfoObj.style.display = "none";
+        }
+		calTotalAmount();
+        if(document.getElementById("operationTypePC").checked == false && document.getElementById("operationTypePhone").checked == false) {
+            document.getElementById("chargeInfoTable").style.height = 0;
+            document.getElementById("chargeDialog").style.height = chargeDialogHeight - 178;
+        } else {
+            document.getElementById("chargeInfoTable").style.height = 185;
 		}
     }
 
@@ -1287,7 +1320,7 @@
 					</tr>
 					<tr>
 						<th style="width:72px">当前词量</th>
-						<td colspan="4"><input type="text" name="fCurrentKeywordCount" id="fCurrentKeywordCountPC"  style="width:234px"/></td>
+						<td colspan="4"><input type="text" name="fCurrentKeywordCount" id="fCurrentKeywordCountPC"  style="width:234px" readonly/></td>
 					</tr>
 					<input type="hidden" id="qzSettingUuidPC" name="qzOperationTypeUuid" value="" />
 				</table>
@@ -1331,7 +1364,7 @@
 					</tr>
 					<tr>
 						<th style="width:72px">当前词量</th>
-						<td colspan="4"><input type="text" name="fCurrentKeywordCount" id="fCurrentKeywordCountPhone"  style="width:234px"/></td>
+						<td colspan="4"><input type="text" name="fCurrentKeywordCount" id="fCurrentKeywordCountPhone"  style="width:234px" readonly/></td>
 					</tr>
 					<input type="hidden" id="qzSettingUuidPhone" name="qzOperationTypeUuid" value="" />
 				</table>
@@ -1415,124 +1448,148 @@
 <div id="chargeDialog">
 	<table id="chargeDialogTable">
 		<tr>
-			<th>客户</th>
+			<td align="right">客户</td>
 			<td>
-				<span style="margin-left: 17px"></span><input type="text" name="qzSettingCustomer" id="qzSettingCustomer" style="width:240px" readonly/>
+				<input type="text" name="qzSettingCustomer" id="qzSettingCustomer" style="width: 280px" readonly/>
 			</td>
 		</tr>
 		<tr>
-			<th>域名</th>
+			<td align="right">域名</td>
 			<td>
-				<span style="margin-left: 17px"></span><input type="text" name="qzSettingDomain" id="qzSettingDomain" style="width:240px" readonly/>
+				<input type="text" name="qzSettingDomain" id="qzSettingDomain" style="width: 280px" readonly/>
 			</td>
 		</tr>
-		<table id="checkChargePC" style="display: none;font-size:12px;">
 		<tr>
-			<td colspan="2">
-				<input type="checkbox" name="fOperationType" id="operationTypePC" onclick="dealChargeTable('PC')" style="margin-left: 32px"/>电脑
+			<td>
+				<table id="checkChargePC" style="display: none;font-size:12px;">
+				<tr>
+					<input type="checkbox" name="fOperationType" id="operationTypePC" onclick="dealChargeTable('PC')" />电脑
+				</tr>
+				</table>
+			</td>
+
+			<td>
+				<table id="checkChargePhone" style="display: none;font-size:12px;">
+					<tr>
+						<input type="checkbox" name="fOperationType" id="operationTypePhone" onclick="dealChargeTable('Phone')" style="margin-left: 140px"/>手机
+					</tr>
+				</table>
 			</td>
 		</tr>
-		</table>
+	</table>
+	<table id="chargeInfoTable" style="height:185px;">
 		<%--电脑收费信息--%>
 		<tr>
-		<table style="display:none;font-size:12px;" id="PCChargeInfo">
-			<tr>
-				<th>初始词量</th>
-				<input type="hidden" name="fQzOperationTypeUuid" id="fQzOperationTypeUuidPC"/>
-				<td><input type="text" name="fInitialKeywordCount" id="fInitialKeywordCountPC"  style="width:240px" readonly/></td>
-			</tr>
-			<tr>
-				<th>当前词量</th>
-				<td><input type="text" name="fCurrentKeywordCount" id="fCurrentKeywordCountPC"  style="width:240px" readonly/></td>
-			</tr>
-			<tr>
-				<th>应收金额</th>
-				<td>
-					<input type="text" name="fReceivableAmount" id="fReceivableAmountPC" style="width:240px" readonly />
-				</td>
-			</tr>
-			<tr>
-				<th>计划收费日期</th>
-				<td>
-					<input type="text" name="fPlanChargeDate" id="fPlanChargeDatePC" style="width:240px" readonly />
-				</td>
-			</tr>
-			<tr>
-				<th>下次收费日期</th>
-				<td>
-					<input type="text" name="fNextChargeDate" id="fNextChargeDatePC" class="Wdate" onClick="WdatePicker()" style="width:240px" />
-				</td>
-			</tr>
-			<tr>
-				<th>实收金额</th>
-				<td>
-					<input type="text" name="fActualAmount" id="fActualAmountPC" style="width:240px" />
-				</td>
-			</tr>
-			<tr>
-				<th>实际收费日期</th>
-				<td>
-					<input name="fActualChargeDate" id="fActualChargeDatePC" class="Wdate" type="text" style="width:240px;" onClick="WdatePicker()" value="">
-				</td>
-			</tr>
-		</table>
-		</tr>
-		<table id="checkChargePhone" style="display: none;font-size:12px;">
-		<tr>
-			<td colspan="2">
-				<input type="checkbox" name="fOperationType" id="operationTypePhone" onclick="dealChargeTable('Phone')" style="margin-left: 32px"/>手机
-			</td>
-		</tr>
-		</table>
+		<td style="width: 182px">
+			<table style="display:none;font-size:12px;" id="PCChargeInfo">
+				<tr>
+					<td align="right">初始词量</td>
+					<input type="hidden" name="fQzOperationTypeUuid" id="fQzOperationTypeUuidPC"/>
+					<td><input type="text" name="fInitialKeywordCount" id="fInitialKeywordCountPC"  style="width:100px" readonly/></td>
+				</tr>
+				<tr>
+					<td align="right">当前词量</td>
+					<td><input type="text" name="fCurrentKeywordCount" id="fCurrentKeywordCountPC"  style="width:100px" readonly/></td>
+				</tr>
+				<tr>
+					<td align="right">应收金额</td>
+					<td>
+						<input type="text" name="fReceivableAmount" id="fReceivableAmountPC" style="width:100px" readonly />
+					</td>
+				</tr>
+				<tr>
+					<td align="right">计划收费日期</td>
+					<td>
+						<input type="text" name="fPlanChargeDate" id="fPlanChargeDatePC" style="width:100px" readonly />
+					</td>
+				</tr>
+				<tr>
+					<td align="right">下次收费日期</td>
+					<td>
+						<input type="text" name="fNextChargeDate" id="fNextChargeDatePC" class="Wdate" onClick="WdatePicker()" style="width:100px" />
+					</td>
+				</tr>
+				<tr>
+					<td align="right">实收金额</td>
+					<td>
+						<input type="text" name="fActualAmount" id="fActualAmountPC" onkeyup="calTotalAmount()" style="width:100px" />
+					</td>
+				</tr>
+				<tr>
+					<td align="right">实际收费日期</td>
+					<td>
+						<input name="fActualChargeDate" id="fActualChargeDatePC" class="Wdate" type="text" style="width:100px" onClick="WdatePicker()" value="">
+					</td>
+				</tr>
+			</table>
+		</td>
 		<%--手机收费信息--%>
-		<tr>
-		<table style="display:none;font-size:12px;margin-top: 2px;margin-bottom: 2px;" id="PhoneChargeInfo">
-			<tr>
-				<th>初始词量</th>
-				<input type="hidden" name="fQzOperationTypeUuid" id="fQzOperationTypeUuidPhone"/>
-				<td><input type="text" name="fInitialKeywordCount" id="fInitialKeywordCountPhone"  style="width:240px" readonly/></td>
-			</tr>
-			<tr>
-				<th>当前词量</th>
-				<td><input type="text" name="fCurrentKeywordCount" id="fCurrentKeywordCountPhone"  style="width:240px" readonly/></td>
-			</tr>
-			<tr>
-				<th>应收金额</th>
-				<td>
-					<input type="text" name="fReceivableAmount" id="fReceivableAmountPhone" style="width:240px" readonly />
-				</td>
-			</tr>
-			<tr>
-				<th>计划收费日期</th>
-				<td>
-					<input type="text" name="fPlanChargeDate" id="fPlanChargeDatePhone" style="width:240px" readonly />
-				</td>
-			</tr>
-			<tr>
-				<th>下次收费日期</th>
-				<td>
-					<input type="text" name="fNextChargeDate" id="fNextChargeDatePhone" class="Wdate" onClick="WdatePicker()" style="width:240px" />
-				</td>
-			</tr>
-			<tr>
-				<th>实收金额</th>
-				<td>
-					<input type="text" name="fActualAmount" id="fActualAmountPhone" style="width:240px" />
-				</td>
-			</tr>
-			<tr>
-				<th>实际收费日期</th>
-				<td>
-					<input name="fActualChargeDate" id="fActualChargeDatePhone" class="Wdate" type="text" style="width:240px;"  onClick="WdatePicker()" value="">
-				</td>
-			</tr>
-		</table>
+		<td style="width: 182px">
+			<table style="display:none;font-size:12px;margin-top: 2px;margin-bottom: 2px;" id="PhoneChargeInfo">
+				<tr>
+					<td align="right">初始词量</td>
+					<input type="hidden" name="fQzOperationTypeUuid" id="fQzOperationTypeUuidPhone"/>
+					<td><input type="text" name="fInitialKeywordCount" id="fInitialKeywordCountPhone"  style="width:100px" readonly/></td>
+				</tr>
+				<tr>
+					<td align="right">当前词量</td>
+					<td><input type="text" name="fCurrentKeywordCount" id="fCurrentKeywordCountPhone"  style="width:100px" readonly/></td>
+				</tr>
+				<tr>
+					<td align="right">应收金额</td>
+					<td>
+						<input type="text" name="fReceivableAmount" id="fReceivableAmountPhone" style="width:100px" readonly />
+					</td>
+				</tr>
+				<tr>
+					<td align="right">计划收费日期</td>
+					<td>
+						<input type="text" name="fPlanChargeDate" id="fPlanChargeDatePhone" style="width:100px" readonly />
+					</td>
+				</tr>
+				<tr>
+					<td align="right">下次收费日期</td>
+					<td>
+						<input type="text" name="fNextChargeDate" id="fNextChargeDatePhone" class="Wdate" onClick="WdatePicker()" style="width:100px" />
+					</td>
+				</tr>
+				<tr>
+					<td align="right">实收金额</td>
+					<td>
+						<input type="text" name="fActualAmount" id="fActualAmountPhone" onkeyup="calTotalAmount()" style="width:100px" />
+					</td>
+				</tr>
+				<tr>
+					<td align="right">实际收费日期</td>
+					<td>
+						<input name="fActualChargeDate" id="fActualChargeDatePhone" class="Wdate" type="text" style="width:100px"  onClick="WdatePicker()" value="">
+					</td>
+				</tr>
+			</table>
+		</td>
 		</tr>
-		<p align="right">
+	</table>
+	<p>
+		<span style="margin-left: 55px"></span>合计:<sapn id="totalAmount"></sapn>
+	</p>
+	<p align="right">
+		<input type="button" id="saveChargeLog" onclick="saveChargeLog(this)" value="确认收费"/>&nbsp;&nbsp;&nbsp;<input type="button" id="cancelChargeLog" onclick="cancelChargeDialog()" value="取消"/><span style="margin-right:24px;"></span>
+	</p>
+</div>
+<%--收费详情列表--%>
+<div id="chargeLogListDiv">
+	<table id="chargeLogListTable">
+		<thead>
 		<tr>
-			<input type="button" id="saveChargeLog" onclick="saveChargeLog(this)" value="确认收费"/>&nbsp;&nbsp;&nbsp;<input type="button" id="cancelChargeLog" onclick="cancelChargeDialog()" value="取消"/><span style="margin-right:24px;"></span>
+			<td>操作类型</td>
+			<td>收费金额</td>
+			<td>收费人员</td>
+			<td>收费时间</td>
+			<td>创建时间</td>
 		</tr>
-		</p>
+		</thead>
+		<tbody>
+		</tbody>
 	</table>
 </div>
 </body>
