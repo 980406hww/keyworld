@@ -169,7 +169,7 @@
 			line-height: 12px;
 			border: 2px solid #104454;
 			width: 375px;
-			height: 340px;
+			height: 145px;
 			left: 50%;
 			top: 35%;
 			z-index: 25;
@@ -183,18 +183,14 @@
 		}
 		#chargeLogListDiv {
 			display: none;
+			overflow-y: auto;
+			height: 400px;
+			width:400px;
 			margin: -125px 0px 0px -160px;
-			background-color: white;
-			color: #2D2A2A;
-			font-size: 12px;
-			line-height: 12px;
-			border: 2px solid #104454;
-			width: 375px;
-			height: 340px;
-			left: 50%;
+			left: 48%;
 			top: 35%;
-			z-index: 25;
-			position: fixed;
+			z-index:2;
+			position:fixed;
 		}
 		-->
 	</style>
@@ -206,19 +202,19 @@
 <body>
 <table width=100% style="font-size:12px;" cellpadding=3>
 	<tr>
-		<td colspan="16" align="left">
+		<td colspan="15" align="left">
 			<%@include file="/menu.jsp" %>
 		</td>
 	</tr>
 	<tr>
-		<td colspan="16" align="right">
+		<td colspan="15" align="right">
 			<a href="javascript:showSettingDialog(null, this)">增加全站设置</a>
 			| <a target="_blank" href="javascript:updateImmediately(this)">马上更新</a>
 			| <a target="_blank" href="javascript:delAllItems(this)">删除所选</a>
 		</td>
 	</tr>
 	<tr>
-		<td colspan="16" align="right">
+		<td colspan="15" align="right">
 			<a href="javascript:chargeRemind('-1')">过期未收费(<%=expiredCharge.size()%>)</a>
 			| <a target="_blank" href="javascript:chargeRemind('0')">当天收费提醒(<%=nowCharge.size()%>)</a>
 			| <a target="_blank" href="javascript:chargeRemind('3')">三天收费提醒(<%=threeCharge.size()%>)</a>
@@ -226,7 +222,7 @@
 		</td>
 	</tr>
 	<tr>
-		<td colspan="16">
+		<td colspan="15">
 			<form method="post" id="chargeForm" action="list.jsp">
 				<input type="hidden" id="chargeDays" name="chargeDays" value="NaN"/>
 				<table style="font-size:12px;">
@@ -272,7 +268,7 @@
 		<td align="center" width=80>更新结束时间</td>
 		<td align="center" width=80>更新时间</td>
 		<td align="center" width=80>添加时间</td>
-		<td align="center" width=100>操作</td>
+		<td align="center">操作</td>
 		<div id="div1"></div>
 		<div id="div2"></div>
 	</tr>
@@ -329,11 +325,11 @@
 		<td>
 			<%=Utils.formatDate(value.getCreateTime(), "MM-dd HH:mm")%>
 		</td>
-		<td align="center">
+		<td>
 			<a href="javascript:showChargeDialog('<%=value.getUuid()%>','<%=value.getContactPerson()%>','<%=value.getDomain()%>',this)">收费</a> |
 			<a href="javascript:showSettingDialog('<%=value.getUuid()%>', this)">修改</a> |
 			<a href="javascript:delItem(<%=value.getUuid()%>)">删除</a> |
-			<a href="#">收费记录</a>
+			<a href="javascript:insertChargeLog('<%=value.getUuid()%>', this)">收费记录</a>
 		</td>
 	</tr>
 	<%
@@ -498,11 +494,12 @@
 
     function cancelChargeDialog() {
         resetChargeDialog();
-        document.getElementById("chargeDialog").style.height = "295px"
+        document.getElementById("chargeDialog").style.height = "320px"
         document.getElementById("chargeDialog").style.display = "none";
     }
 
     function showSettingDialog(uuid, self) {
+        resetChargeList();
         cancelChargeDialog();
         if(uuid == null){
             resetSettingDialog(self);
@@ -564,6 +561,7 @@
     }
 
     function showChargeDialog(uuid,contactPerson,domain,self) {
+        resetChargeList();
         cancelChangeSetting();
         cancelChargeDialog();
         var chargeDialogObj = $$$("#chargeDialog");
@@ -575,12 +573,12 @@
             success: function (data) {
                 if(data != null && data.length > 0){
 					var str = JSON.parse(data);
-                    if(str.pcQzOperationTypeUuid != null || str.phoneQzOperationTypeUuid != null) {
-                        document.getElementById("chargeDialog").style.height = 320;
+                    if(str.pcReceivableAmount == 0 && str.pcReceivableAmount == 0) {
+                        document.getElementById("chargeInfoTable").style.height = 0;
+                        document.getElementById("chargeDialog").style.height = 145;
                     }
                     var pcValue = 0;
                     var phoneValue = 0;
-
                     var checkboxPC = document.getElementById("operationTypePC");
                     var checkboxPhone = document.getElementById("operationTypePhone");
 
@@ -989,18 +987,73 @@
         });
     }
 
-    function insertChargeLog(){
-        var chargeLogListTable = document.getElementById("chargeLogListTable");
-        // 创建tr、td
-        var newTr = document.createElement("tr");
-        for(var i = 1; i <= 5; i++) {
-            var newTd = document.createElement("td");
-            newTr.appendChild(newTd);
-            newTd.innerHTML = "";
-            // 新增一行
-            var row = chargeLogListTable.lastChild;
-            row.parentNode.insertBefore(newTr,row);
-		}
+    function formatDate(value) {
+        var date = new Date();
+        date.setTime(value.time);
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        m = m < 10 ? '0' + m : m;
+        var d = date.getDate();
+        d = d < 10 ? ("0" + d) : d;
+        var h = date.getHours();
+        h = h < 10 ? ("0" + h) : h;
+        var M = date.getMinutes();
+        M = M < 10 ? ("0" + M) : M;
+        var S = date.getSeconds();
+        S = S < 10 ? ("0" + S) : s;
+        if (M == '00' && S == '00') {
+            var str = y + "-" + m + "-" + d;
+            return str;
+        }
+        var str = y + "-" + m + "-" + d + " " + h + ":" + M + ":" + S;
+        return str;
+    }
+    
+    function resetChargeList() {
+        $("#chargeLogListDiv").hide();
+    }
+
+    function insertChargeLog(uuid, self){
+        $("#chargeLogListDiv").hide();
+        cancelChargeDialog();
+        cancelChangeSetting();
+        $("#chargeLogListTable  tr:not(:first,:last)").remove();
+        $$$.ajax({
+            url: '/spring/qzchargelog/chargesList/' + uuid,
+            type: 'Get',
+            success: function (data) {
+                if(data != null && data.length > 0) {
+                    var qzChargeLogs = eval("("+data+")");
+                    var chargeLogListTable = document.getElementById("chargeLogListTable");
+                    for (var i = 0; i < qzChargeLogs.length; i++) {
+                        var chargeLog = [
+                            formatDate(qzChargeLogs[i].actualChargeDate),
+                            qzChargeLogs[i].operationtype,
+							qzChargeLogs[i].actualAmount,
+							qzChargeLogs[i].userName,
+							formatDate(qzChargeLogs[i].createTime)
+						];
+                        // 创建tr、td
+                        var newTr = document.createElement("tr");
+                        for(var n = 0; n < 5; n++) {
+                            var newTd = document.createElement("td");
+                            newTr.appendChild(newTd);
+                            newTd.innerHTML = chargeLog[n];
+                        }
+                        // 新增一行
+						var row = document.getElementById("lastTr");
+                        row.parentNode.insertBefore(newTr,row);
+                    }
+					$("#chargeLogListDiv").show();
+                }else{
+                    alert("暂无收费记录");
+                }
+            },
+            error: function () {
+                showInfo("获取信息失败！", self);
+            }
+        });
+
     }
 
     function saveChargeLog(self) {
@@ -1462,17 +1515,17 @@
 		<tr>
 			<td>
 				<table id="checkChargePC" style="display: none;font-size:12px;">
-				<tr>
-					<input type="checkbox" name="fOperationType" id="operationTypePC" onclick="dealChargeTable('PC')" />电脑
-				</tr>
+					<tr><td>
+						<input type="checkbox" name="fOperationType" id="operationTypePC" style="margin-left: -2px" onclick="dealChargeTable('PC')" />电脑
+					</td></tr>
 				</table>
 			</td>
 
 			<td>
 				<table id="checkChargePhone" style="display: none;font-size:12px;">
-					<tr>
+					<tr><td>
 						<input type="checkbox" name="fOperationType" id="operationTypePhone" onclick="dealChargeTable('Phone')" style="margin-left: 140px"/>手机
-					</tr>
+					</td></tr>
 				</table>
 			</td>
 		</tr>
@@ -1576,6 +1629,20 @@
 		<input type="button" id="saveChargeLog" onclick="saveChargeLog(this)" value="确认收费"/>&nbsp;&nbsp;&nbsp;<input type="button" id="cancelChargeLog" onclick="cancelChargeDialog()" value="取消"/><span style="margin-right:24px;"></span>
 	</p>
 </div>
-
+<%--收费详情列表--%>
+<div id="chargeLogListDiv">
+	<table id="chargeLogListTable" border="1" cellpadding="3" style="font-size: 12px;background-color: white;border-collapse: collapse;">
+		<tr>
+			<td>收费时间</td>
+			<td>操作类型</td>
+			<td>收费金额</td>
+			<td>收费人员</td>
+			<td>创建时间</td>
+		</tr>
+		<tr id="lastTr">
+			<td colspan="5" align="right"><input type="button" onclick="resetChargeList()" value="取消"/></td>
+		</tr>
+	</table>
+</div>
 </body>
 </html>
