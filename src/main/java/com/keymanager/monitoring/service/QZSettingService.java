@@ -350,7 +350,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		if(oldOperationType.getOperationtype().equals("PC")){
 			oldOperationType.setCurrentKeywordCount(updOperationType.getCurrentKeywordCount());
 			if(null==oldOperationType.getReachTargetDate()
-					&&null!=qzChargeRuleService.searchQZChargeRuleByqzOperationTypeUuids(oldOperationType.getUuid())){
+					&&qzChargeRuleService.searchQZChargeRuleByqzOperationTypeUuids(oldOperationType.getUuid()).size()>0){
 				QZChargeRule qzChargeRulePC = qzChargeRuleService.searchQZChargeRuleByqzOperationTypeUuids(oldOperationType.getUuid()).get(0);
 				//如果比规则表中的初始词量大
 				if(updOperationType.getCurrentKeywordCount()>=qzChargeRulePC.getStartKeywordCount()){
@@ -363,7 +363,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		if(oldOperationType.getOperationtype().equals("Phone")){
 			oldOperationType.setCurrentKeywordCount(updOperationType.getCurrentKeywordCount());
 			if(null==oldOperationType.getReachTargetDate()
-					&&null!=qzChargeRuleService.searchQZChargeRuleByqzOperationTypeUuids(oldOperationType.getUuid())){
+					&&qzChargeRuleService.searchQZChargeRuleByqzOperationTypeUuids(oldOperationType.getUuid()).size()>0){
 				QZChargeRule qzChargeRulePC = qzChargeRuleService.searchQZChargeRuleByqzOperationTypeUuids(oldOperationType.getUuid()).get(0);
 				//如果比规则表中的初始词量大
 				if(updOperationType.getCurrentKeywordCount()>=qzChargeRulePC.getStartKeywordCount()){

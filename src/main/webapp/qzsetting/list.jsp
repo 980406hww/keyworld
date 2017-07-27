@@ -1000,7 +1000,7 @@
         var M = date.getMinutes();
         M = M < 10 ? ("0" + M) : M;
         var S = date.getSeconds();
-        S = S < 10 ? ("0" + S) : s;
+        S = S < 10 ? ("0" + S) : S;
         if (M == '00' && S == '00') {
             var str = y + "-" + m + "-" + d;
             return str;
