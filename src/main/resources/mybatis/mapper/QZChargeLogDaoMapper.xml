@@ -6,7 +6,7 @@
         ql.fUuid AS 'uuid',
         ql.fQZOperationTypeUuid AS 'qzOperationTypeUuid',
 		ql.fCreateTime AS 'createTime',
-        qt.fOperationtype AS 'operationtype',
+        qt.fOperationtype AS 'operationType',
         ql.fActualChargeDate AS 'actualChargeDate',
         ql.fActualAmount AS 'actualAmount',
         ql.fUserID AS 'userID',

@@ -19,6 +19,9 @@ public class QZChargeRuleService extends ServiceImpl<QZChargeRuleDao, QZChargeRu
 	public List<QZChargeRule>  searchQZChargeRuleByqzOperationTypeUuids(Long qzOperationTypeUuid) {
 		return qzChargeRuleDao.searchQZChargeRuleByqzOperationTypeUuids(qzOperationTypeUuid);
 	}
+
 	//通过QZOperationTypeUuid删除
-	public void  deleteByQZOperationTypeUuid (Long QZOperationTypeUuid ){qzChargeRuleDao.deleteByQZOperationTypeUuid(QZOperationTypeUuid);}
+	public void  deleteByQZOperationTypeUuid (Long QZOperationTypeUuid ){
+		qzChargeRuleDao.deleteByQZOperationTypeUuid(QZOperationTypeUuid);
+	}
 }

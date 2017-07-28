@@ -2,13 +2,11 @@ package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.dao.QZChargeLogDao;
-import com.keymanager.monitoring.service.QZChargeRuleService;
-import com.keymanager.monitoring.service.QZOperationTypeService;
-import com.keymanager.monitoring.service.QZSettingService;
 import com.keymanager.monitoring.entity.QZChargeLog;
 import com.keymanager.monitoring.entity.QZChargeRule;
 import com.keymanager.monitoring.entity.QZOperationType;
-import com.keymanager.monitoring.entity.QZSetting;
+import com.keymanager.monitoring.vo.QZChargeInfoVO;
+import java.util.ArrayList;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
@@ -46,85 +44,44 @@ public class QZChargeLogService extends ServiceImpl<QZChargeLogDao, QZChargeLog>
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
     //通过QZSettingUuid去
-    public String getQZChargeLog(Long uuid) {
-        Map<String, String> resultMap = new HashMap<String, String>();
-        String pcInitialKeywordCount = null;
-        String pcCurrentKeywordCount = null; //当前词量(通过爬虫抓取)
-        String pcReceivableAmount = "0";
-        String pcPlanChargeDate = null;
-        String pcQzOperationTypeUuid = null;
-        //手机规则信息
-        String phoneInitialKeywordCount = null;
-        String phoneCurrentKeywordCount = "1";
-        String phoneReceivableAmount = "0";
-        String phonePlanChargeDate = null;
-        String phoneQzOperationTypeUuid = null;
-
+    public List<QZChargeInfoVO> getQZChargeLog(Long uuid) {
         List<QZOperationType> qzOperationTypes = qzOperationTypeService.searchQZOperationTypesByQZSettingUuid(uuid);
         //通过operationTypeUuid主键去查询规则表（多条数据）
-        for (QZOperationType qzOperationType : qzOperationTypes) {
-            if (qzOperationType.getOperationtype().equals("PC")) {
-                //判断是否达标
-                if (null == qzOperationType.getReachTargetDate() && null == qzOperationType.getNextChargeDate()) {
-                    pcReceivableAmount = "0";
-                }
-                pcCurrentKeywordCount = qzOperationType.getCurrentKeywordCount().toString();
-                pcQzOperationTypeUuid = qzOperationType.getUuid().toString();
-                pcInitialKeywordCount = qzOperationType.getInitialKeywordCount().toString();//初始词量
-                //计划缴费日期
-                pcPlanChargeDate = qzOperationType.getNextChargeDate() == null ? sdf.format(new Date()) : sdf.format(qzOperationType.getNextChargeDate());
+        List<QZChargeInfoVO> qzChargeInfoVOs = new ArrayList<QZChargeInfoVO>();
 
-                List<QZChargeRule> qzChargeRules = qzChargeRuleService.searchQZChargeRuleByqzOperationTypeUuids(qzOperationType.getUuid());
-                for (QZChargeRule qzChargeRule : qzChargeRules) {
-                    //如果当前值在规则中的起始值-----终止值  区间内 或者比最后一条规则的初始值还大
-                    if (Long.valueOf(pcCurrentKeywordCount) >= qzChargeRule.getStartKeywordCount() && null != qzChargeRule.getEndKeywordCount() && Long.valueOf(pcCurrentKeywordCount) <= qzChargeRule.getEndKeywordCount()) {
-                        pcReceivableAmount = qzChargeRule.getAmount().toString();
-                        break;
-                    }
-                    if (Long.valueOf(pcCurrentKeywordCount) >= qzChargeRules.get(qzChargeRules.size() - 1).getStartKeywordCount()) {
-                        pcReceivableAmount = qzChargeRules.get(qzChargeRules.size() - 1).getAmount().toString();
-                        break;
-                    }
-                }
-            } else {
-                //判断是否达标
-                if (null == qzOperationType.getReachTargetDate() && null == qzOperationType.getNextChargeDate()) {
-                    phoneReceivableAmount = "0";
-                }
-                phoneCurrentKeywordCount = qzOperationType.getCurrentKeywordCount().toString();
-                phoneQzOperationTypeUuid = qzOperationType.getUuid().toString();
-                phoneInitialKeywordCount = qzOperationType.getInitialKeywordCount().toString();//初始词量
-                //计划缴费日期
-                phonePlanChargeDate = qzOperationType.getNextChargeDate() == null ? sdf.format(new Date()) : sdf.format(qzOperationType.getNextChargeDate());
-                List<QZChargeRule> qzChargeRules = qzChargeRuleService.searchQZChargeRuleByqzOperationTypeUuids(qzOperationType.getUuid());
-                for (QZChargeRule qzChargeRule : qzChargeRules) {
-                    if (Long.valueOf(phoneCurrentKeywordCount) >= qzChargeRule.getStartKeywordCount() && Long.valueOf(phoneCurrentKeywordCount) <= qzChargeRule.getEndKeywordCount()) {
-                        phoneReceivableAmount = qzChargeRule.getAmount().toString();
-                        break;
-                    }
-                    if (Long.valueOf(phoneCurrentKeywordCount) >= qzChargeRules.get(qzChargeRules.size() - 1).getStartKeywordCount()) {
-                        phoneReceivableAmount = qzChargeRules.get(qzChargeRules.size() - 1).getAmount().toString();
-                        break;
-                    }
+        for (QZOperationType qzOperationType : qzOperationTypes) {
+            //判断是否达标
+            QZChargeInfoVO qzChargeInfoVO = new QZChargeInfoVO();
+            if (null == qzOperationType.getReachTargetDate() && null == qzOperationType
+                .getNextChargeDate()) {
+                qzChargeInfoVO.setPcReceivableAmount("0");
+            }
+            qzChargeInfoVO
+                .setPcCurrentKeywordCount(qzOperationType.getCurrentKeywordCount().toString());
+            qzChargeInfoVO.setPcQzOperationTypeUuid(qzOperationType.getUuid().toString());
+            qzChargeInfoVO.setPcInitialKeywordCount(
+                qzOperationType.getInitialKeywordCount().toString());//初始词量
+            //计划缴费日期
+            qzChargeInfoVO.setPcPlanChargeDate(qzOperationType.getNextChargeDate() == null ? null
+                : sdf.format(qzOperationType.getNextChargeDate()));
+
+            List<QZChargeRule> qzChargeRules = qzChargeRuleService
+                .searchQZChargeRuleByqzOperationTypeUuids(qzOperationType.getUuid());
+            for (QZChargeRule qzChargeRule : qzChargeRules) {
+                //如果当前值在规则中的起始值-----终止值  区间内 或者比最后一条规则的初始值还大
+                if (qzOperationType.getCurrentKeywordCount() >= qzChargeRule.getStartKeywordCount()
+                    &&
+                    (null == qzChargeRule.getEndKeywordCount()
+                        || qzOperationType.getCurrentKeywordCount() <= qzChargeRule
+                        .getEndKeywordCount())) {
+                    qzChargeInfoVO.setPcReceivableAmount(qzChargeRule.getAmount().toString());
+                    break;
                 }
             }
+            qzChargeInfoVOs.add(qzChargeInfoVO);
         }
 
-        //向前台传一个map
-        resultMap.put("pcInitialKeywordCount", pcInitialKeywordCount);//初始词量
-        resultMap.put("pcCurrentKeywordCount", pcCurrentKeywordCount); //当前词量
-        resultMap.put("pcReceivableAmount", pcReceivableAmount);//计划收费金额
-        resultMap.put("pcPlanChargeDate", pcPlanChargeDate);//计划收费日期
-        resultMap.put("pcQzOperationTypeUuid", pcQzOperationTypeUuid);//uuid
-
-        resultMap.put("phoneInitialKeywordCount", phoneInitialKeywordCount);//初始词量
-        resultMap.put("phoneCurrentKeywordCount", phoneCurrentKeywordCount); //当前词量
-        resultMap.put("phoneReceivableAmount", phoneReceivableAmount);//计划收费金额
-        resultMap.put("phonePlanChargeDate", phonePlanChargeDate);//计划收费日期
-        resultMap.put("phoneQzOperationTypeUuid", phoneQzOperationTypeUuid);//uuid
-
-        JSONObject jsonResultMap = JSONObject.fromObject(resultMap);
-        return jsonResultMap.toString();
+        return qzChargeInfoVOs;
     }
 
     //保存收费流水表----->可能是多个对象

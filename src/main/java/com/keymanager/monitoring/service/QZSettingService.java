@@ -15,6 +15,12 @@ import com.keymanager.monitoring.enums.QZSettingStatusEnum;
 import com.keymanager.util.Constants;
 import com.keymanager.util.Utils;
 import com.keymanager.value.CustomerKeywordVO;
+import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
@@ -22,11 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 @Service
 public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
@@ -46,34 +47,27 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 
 	public QZSetting getAvailableQZSetting(){
-		List<QZSetting> qzSettings = this.getQZSettings();
+		List<QZSetting> qzSettings = qzSettingDao.getAvailableQZSettings();
 		QZSetting qzSetting = null;
 		if(CollectionUtils.isNotEmpty(qzSettings)){
 			qzSetting = qzSettings.get(0);
-			startQZSetting(qzSetting.getUuid());
+			startQZSettingForUpdateKeyword(qzSetting.getUuid());
 		}
 		return qzSetting;
 	}
 
 	//获取当前词量
-	public QZSetting captureCurrentKeywordCount(){
-		List<QZSetting> qzSettings = this.getQZSettings("CurrentKeyword");
+	public QZSetting getQZSettingsForCaptureCurrentKeyword(){
+		List<QZSetting> qzSettings = qzSettingDao.captureCurrentKeyword();
 		QZSetting qzSetting = null;
 		if(CollectionUtils.isNotEmpty(qzSettings)){
 			qzSetting = qzSettings.get(0);
-			startQZSetting(qzSetting.getUuid(),"CurrentKeyword");
+			startQZSettingForCaptureCurrentKeyword(qzSetting.getUuid());
 		}
 		return qzSetting;
 	}
 
-	public List<QZSetting> getQZSettings(){
-		return qzSettingDao.getAvailableQZSettings();
-	}
-
-	///根据捕捉时间排序ublic
-	List<QZSetting> getQZSettings(String CurrentKeyword){  return qzSettingDao.captureCurrentKeyword(); }
-
-	public void startQZSetting(Long uuid){
+	public void startQZSettingForUpdateKeyword(Long uuid){
 		QZSetting qzSetting = qzSettingDao.selectById(uuid);
 		if(qzSetting != null){
 			qzSetting.setUpdateStatus(QZSettingStatusEnum.Processing.getValue());
@@ -82,7 +76,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		}
 	}
 	//更新时间
-	public void startQZSetting(Long uuid,String CurrentKeyword){
+	public void startQZSettingForCaptureCurrentKeyword(Long uuid){
 		QZSetting qzSetting = qzSettingDao.selectById(uuid);
 		if(qzSetting != null){
 			qzSetting.setCaptureCurrentKeywordStatus(QZSettingStatusEnum.Processing.getValue());
@@ -142,96 +136,51 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 	}
 
 	public void updateOpretionTypeAndChargeRule(List<QZOperationType> oldOperationTypes, List<QZOperationType> newOperationTypes, Long qzSettingUuid ){
-		if(oldOperationTypes.size()==newOperationTypes.size()){
-			updateOpretionTypeAndChargeRuleEqual(oldOperationTypes,newOperationTypes);
-		}else if(oldOperationTypes.size()>newOperationTypes.size()){//2>1
-			//判断是否为相同类型
-			QZOperationType newOperationTypePC = newOperationTypes.get(0);
-			if(newOperationTypePC.getOperationtype().equals("PC")){
-				updateOpretionTypeAndChargeRule(oldOperationTypes,newOperationTypes);
-				qzChargeRuleService.deleteByQZOperationTypeUuid(oldOperationTypes.get(0).getUuid());
-				qzChargeRuleService.deleteByQZOperationTypeUuid(oldOperationTypes.get(1).getUuid());
-				//逻辑删除
-				oldOperationTypes.get(1).setUpdateTime(new Date());
-				oldOperationTypes.get(1).setIsDeleted(0);
-				qzOperationTypeService.updateById(oldOperationTypes.get(1));
-				//添加规则
-				for(QZChargeRule qzChargeRule : newOperationTypePC.getQzChargeRules()){
-					qzChargeRule.setQzOperationTypeUuid(oldOperationTypes.get(0).getUuid());
-					qzChargeRuleService.insert(qzChargeRule);
-				}
-			}
-			if(newOperationTypePC.getOperationtype().equals("Phone")){
-				oldOperationTypes.get(1).setUpdateTime(new Date());
-				oldOperationTypes.get(1).setOperationtype(newOperationTypePC.getOperationtype());
-				oldOperationTypes.get(1).setInitialKeywordCount(newOperationTypePC.getInitialKeywordCount());
-				oldOperationTypes.get(1).setCurrentKeywordCount(newOperationTypePC.getCurrentKeywordCount());
-				oldOperationTypes.get(1).setGroup(newOperationTypePC.getGroup());
-				qzOperationTypeService.updateById(oldOperationTypes.get(1));
-				qzChargeRuleService.deleteByQZOperationTypeUuid(oldOperationTypes.get(0).getUuid());
-				qzChargeRuleService.deleteByQZOperationTypeUuid(oldOperationTypes.get(1).getUuid());
-				//逻辑删除
-				oldOperationTypes.get(0).setUpdateTime(new Date());
-				oldOperationTypes.get(0).setIsDeleted(0);
-				qzOperationTypeService.updateById(oldOperationTypes.get(0));
-				//添加规则
-				for(QZChargeRule qzChargeRule : newOperationTypePC.getQzChargeRules()){
-					qzChargeRule.setQzOperationTypeUuid(oldOperationTypes.get(1).getUuid());
-					qzChargeRuleService.insert(qzChargeRule);
-				}
-			}
-		}else{//1<2
-			//如果数据中真的只有一条数据那么就执行添加操作,如果有2条那么就将原有的状态为0的取出进行修改操作
-			List<QZOperationType> qzOperationTypeIsDeletes = qzOperationTypeService.searchQZOperationTypesIsDelete(qzSettingUuid);
-			if(qzOperationTypeIsDeletes.size()==2){//
-				updateOpretionTypeAndChargeRuleEqual(qzOperationTypeIsDeletes,newOperationTypes);
-			}else{
-				updateOpretionTypeAndChargeRule(oldOperationTypes,newOperationTypes);
-				//删除规则
-				qzChargeRuleService.deleteByQZOperationTypeUuid(oldOperationTypes.get(0).getUuid());
+		Map<String,QZOperationType> oldOperationTypeMap = new HashMap<String, QZOperationType>();
+		for (QZOperationType qzOperationType : oldOperationTypes) {
+			oldOperationTypeMap.put(qzOperationType.getOperationType(), qzOperationType);
+		}
+
+		for(QZOperationType newOperationType : newOperationTypes) {
+			QZOperationType oldOperationType = oldOperationTypeMap.get(newOperationType.getOperationType());
+			if(oldOperationType != null) {
+				updateOpretionTypeAndChargeRuleEqual(oldOperationType, newOperationType);
+				oldOperationTypeMap.remove(newOperationType.getOperationType());
+			}else {
 				//添加一条
-				newOperationTypes.get(1).setQzSettingUuid(qzSettingUuid);
-				qzOperationTypeService.insert(newOperationTypes.get(1));
+				newOperationType.setQzSettingUuid(qzSettingUuid);
+				qzOperationTypeService.insert(newOperationType);
 				Long uuid = Long.valueOf(qzOperationTypeService.selectLastId());
-				for (QZChargeRule qzChargeRule : newOperationTypes.get(0).getQzChargeRules()){
-					qzChargeRule.setQzOperationTypeUuid(oldOperationTypes.get(0).getUuid());
-					qzChargeRuleService.insert(qzChargeRule);
-				}
-				for(QZChargeRule qzChargeRule : newOperationTypes.get(1).getQzChargeRules()){
-					qzChargeRule.setQzOperationTypeUuid(uuid);
+				for (QZChargeRule qzChargeRule : newOperationType.getQzChargeRules()){
+					qzChargeRule.setQzOperationTypeUuid(oldOperationType.getUuid());
 					qzChargeRuleService.insert(qzChargeRule);
 				}
 			}
 		}
-	}
-	public void updateOpretionTypeAndChargeRule(List<QZOperationType> oldOperationTypes, List<QZOperationType> newOperationTypes){
-		oldOperationTypes.get(0).setUpdateTime(new Date());
-		oldOperationTypes.get(0).setOperationtype(newOperationTypes.get(0).getOperationtype());
-		oldOperationTypes.get(0).setInitialKeywordCount(newOperationTypes.get(0).getInitialKeywordCount());
-		oldOperationTypes.get(0).setCurrentKeywordCount(newOperationTypes.get(0).getCurrentKeywordCount());
-		oldOperationTypes.get(0).setGroup(newOperationTypes.get(0).getGroup());
-		qzOperationTypeService.updateById(oldOperationTypes.get(0));
-	}
-	public void updateOpretionTypeAndChargeRuleEqual(List<QZOperationType> oldOperationTypes, List<QZOperationType> newOperationTypes){
-		for(int i =0 ;i<oldOperationTypes.size();i++ ){
-			oldOperationTypes.get(i).setUpdateTime(new Date());
-			oldOperationTypes.get(i).setOperationtype(newOperationTypes.get(i).getOperationtype());
-			oldOperationTypes.get(i).setInitialKeywordCount(newOperationTypes.get(i).getInitialKeywordCount());
-			oldOperationTypes.get(i).setCurrentKeywordCount(newOperationTypes.get(i).getCurrentKeywordCount());
-			oldOperationTypes.get(i).setGroup(newOperationTypes.get(i).getGroup());
-			oldOperationTypes.get(i).setIsDeleted(0);//只要是发生改变那么就让它的状态为1
-			qzOperationTypeService.updateById(oldOperationTypes.get(i));
-			//删除规则
-			qzChargeRuleService.deleteByQZOperationTypeUuid(oldOperationTypes.get(i).getUuid());
-			for(QZChargeRule qzChargeRule : newOperationTypes.get(i).getQzChargeRules()){
-				qzChargeRule.setQzOperationTypeUuid(oldOperationTypes.get(i).getUuid());
-				qzChargeRuleService.insert(qzChargeRule);
-			}
+
+		for(QZOperationType oldOperationType : oldOperationTypeMap.values()) {
+			qzChargeRuleService.deleteByQZOperationTypeUuid(oldOperationType.getUuid());
+			oldOperationType.setUpdateTime(new Date());
+			oldOperationType.setIsDeleted(1);
+			qzOperationTypeService.updateById(oldOperationType);
 		}
 	}
 
-	public List<QZSetting> searchQZSettingsByUuids(String uuids){
-		return qzSettingDao.searchQZSettingsByUuids(uuids);
+	public void updateOpretionTypeAndChargeRuleEqual(QZOperationType oldOperationType,
+			QZOperationType newOperationType) {
+		oldOperationType.setUpdateTime(new Date());
+		oldOperationType.setOperationType(newOperationType.getOperationType());
+		oldOperationType.setInitialKeywordCount(newOperationType.getInitialKeywordCount());
+		oldOperationType.setCurrentKeywordCount(newOperationType.getCurrentKeywordCount());
+		oldOperationType.setGroup(newOperationType.getGroup());
+		oldOperationType.setIsDeleted(0);//只要是发生改变那么就让它的状态为1
+		qzOperationTypeService.updateById(oldOperationType);
+		//删除规则
+		qzChargeRuleService.deleteByQZOperationTypeUuid(oldOperationType.getUuid());
+		for (QZChargeRule qzChargeRule : newOperationType.getQzChargeRules()) {
+			qzChargeRule.setQzOperationTypeUuid(oldOperationType.getUuid());
+			qzChargeRuleService.insert(qzChargeRule);
+		}
 	}
 
 	//查询QZSetting
@@ -294,11 +243,11 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 							QZCaptureTitleLog qzCaptureTitleLog = new QZCaptureTitleLog();
 							qzCaptureTitleLog.setStatus(QZCaptureTitleLogStatusEnum.New.getValue());
 							for(QZOperationType qzOperationType : qzOperationTypes){
-								qzCaptureTitleLog.setTerminalType(qzOperationType.getOperationtype());
+								qzCaptureTitleLog.setTerminalType(qzOperationType.getOperationType());
 								qzCaptureTitleLog.setQzOperationTypeUuid(qzOperationType.getUuid());
 								qzCaptureTitleLogService.addQZCaptureTitleLog(qzCaptureTitleLog);
 								for (CustomerKeywordVO customerKeywordVO : insertingCustomerKeywordVOs) {
-									customerKeywordVO.setTerminalType(qzOperationType.getOperationtype());
+									customerKeywordVO.setTerminalType(qzOperationType.getOperationType());
 									customerKeywordVO.setOptimizeGroupName(qzOperationType.getGroup());
 								}
 								manager.addCustomerKeywords(conn, insertingCustomerKeywordVOs);
@@ -318,61 +267,43 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 	}
 
 	//更新当前词量
-	public void updateCurrentKeywordCount(QZSettingCriteria qzSettingCriteria, String terminalType) {
+	public void updateCurrentKeywordCount(QZSettingCriteria qzSettingCriteria) {
 		QZSetting updQZSetting = qzSettingCriteria.getQzSetting();
-		QZSetting oleQZSetting = qzSettingDao.selectById(updQZSetting.getUuid());
-		List<QZOperationType> oldOperationTypes = qzOperationTypeService.searchQZOperationTypesByQZSettingUuid(oleQZSetting.getUuid());
-		List<QZOperationType> updOperationTypes = updQZSetting.getQzOperationTypes();
 		if(updQZSetting != null){
-			if(qzSettingCriteria.isDownloadTimesUsed()){
-				oleQZSetting.setCaptureCurrentKeywordStatus(QZSettingStatusEnum.DownloadTimesUsed.getValue());
-			}else {
-				oleQZSetting.setCaptureCurrentKeywordStatus(QZSettingStatusEnum.Completed.getValue());
+			QZSetting oldQZSetting = qzSettingDao.selectById(updQZSetting.getUuid());
+			oldQZSetting.setCaptureCurrentKeywordStatus(QZSettingStatusEnum.Completed.getValue());
+
+			List<QZOperationType> oldOperationTypes = qzOperationTypeService.searchQZOperationTypesByQZSettingUuid(oldQZSetting.getUuid());
+			List<QZOperationType> updOperationTypes = updQZSetting.getQzOperationTypes();
+
+			Map<String, Long> currentKeywordCountMap = new HashMap<String, Long>();
+			for(QZOperationType operationType : updOperationTypes){
+				currentKeywordCountMap.put(operationType.getOperationType(), operationType.getCurrentKeywordCount());
 			}
+
+			for(QZOperationType oldOperationType : oldOperationTypes){
+				this.updateQZOperationType(oldOperationType, currentKeywordCountMap.get(oldOperationType.getOperationType()));
+			}
+			qzSettingDao.updateById(oldQZSetting);
 		}
-		//如果数据库只有一条
-		if(oldOperationTypes.size()==1){
-			if(oldOperationTypes.get(0).getOperationtype().equals("PC")){
-				this.updateQZOperationType(oldOperationTypes.get(0),updOperationTypes.get(0));
-			}else{
-				this.updateQZOperationType(oldOperationTypes.get(0),updOperationTypes.get(1));
-			}
-		}else{
-			for (int i = 0; i < updOperationTypes.size(); i++) {
-				this.updateQZOperationType(oldOperationTypes.get(i),updOperationTypes.get(i));
-			}
-		}
-		qzSettingDao.updateById(oleQZSetting);
 	}
 
 	//用于更新当前词量以及达标日期
-	public void updateQZOperationType(QZOperationType oldOperationType, QZOperationType updOperationType){
-		if(oldOperationType.getOperationtype().equals("PC")){
-			oldOperationType.setCurrentKeywordCount(updOperationType.getCurrentKeywordCount());
-			if(null==oldOperationType.getReachTargetDate()
-					&&qzChargeRuleService.searchQZChargeRuleByqzOperationTypeUuids(oldOperationType.getUuid()).size()>0){
-				QZChargeRule qzChargeRulePC = qzChargeRuleService.searchQZChargeRuleByqzOperationTypeUuids(oldOperationType.getUuid()).get(0);
+	private void updateQZOperationType(QZOperationType oldOperationType, Long currentKeywordCount){
+		oldOperationType.setCurrentKeywordCount(currentKeywordCount);
+		if(currentKeywordCount != null && null == oldOperationType.getReachTargetDate()){
+			List<QZChargeRule> qzChargeRules = qzChargeRuleService.searchQZChargeRuleByqzOperationTypeUuids(oldOperationType.getUuid());
+			if(qzChargeRules.size() > 0) {
+				QZChargeRule qzChargeRulePC = qzChargeRules.get(0);
 				//如果比规则表中的初始词量大
-				if(updOperationType.getCurrentKeywordCount()>=qzChargeRulePC.getStartKeywordCount()){
+				if (currentKeywordCount >= qzChargeRulePC.getStartKeywordCount()) {
 					oldOperationType.setReachTargetDate(new Date());//达标日期
-					oldOperationType.setNextChargeDate(DateUtils.addMonths(new Date(),1));//下次收费日期:加一个月
+					oldOperationType.setNextChargeDate(DateUtils.addMonths(new Date(), 1));//下次收费日期:加一个月
 				}
 			}
-			qzOperationTypeService.updateById(oldOperationType);
 		}
-		if(oldOperationType.getOperationtype().equals("Phone")){
-			oldOperationType.setCurrentKeywordCount(updOperationType.getCurrentKeywordCount());
-			if(null==oldOperationType.getReachTargetDate()
-					&&qzChargeRuleService.searchQZChargeRuleByqzOperationTypeUuids(oldOperationType.getUuid()).size()>0){
-				QZChargeRule qzChargeRulePC = qzChargeRuleService.searchQZChargeRuleByqzOperationTypeUuids(oldOperationType.getUuid()).get(0);
-				//如果比规则表中的初始词量大
-				if(updOperationType.getCurrentKeywordCount()>=qzChargeRulePC.getStartKeywordCount()){
-					oldOperationType.setReachTargetDate(new Date());//达标日期
-					oldOperationType.setNextChargeDate(DateUtils.addMonths(new Date(),1));//下次收费日期:加一个月
-				}
-			}
-			qzOperationTypeService.updateById(oldOperationType);
-		}
+		oldOperationType.setUpdateTime(new Date());
+		qzOperationTypeService.updateById(oldOperationType);
 	}
 
 	public boolean deleteOne(Long uuid){

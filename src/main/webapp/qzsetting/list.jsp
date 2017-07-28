@@ -691,14 +691,14 @@
 
         // 操作类型表填充数据
         $$$.each(qzSetting.qzOperationTypes, function(idx, val) {
-            settingDialogDiv.find("#fGroup" + val.operationtype).val(val.group);
-            settingDialogDiv.find("#fInitialKeywordCount" + val.operationtype).val(val.initialKeywordCount );
-            settingDialogDiv.find("#fCurrentKeywordCount" + val.operationtype).val(val.currentKeywordCount);
-            settingDialogDiv.find("#qzSettingUuid" + val.operationtype).val(val.uuid);
+            settingDialogDiv.find("#fGroup" + val.operationType).val(val.group);
+            settingDialogDiv.find("#fInitialKeywordCount" + val.operationType).val(val.initialKeywordCount );
+            settingDialogDiv.find("#fCurrentKeywordCount" + val.operationType).val(val.currentKeywordCount);
+            settingDialogDiv.find("#qzSettingUuid" + val.operationType).val(val.uuid);
 
             // 构造规则表
             $$$.each(val.qzChargeRules, function(chargeRuleIdx, chargeRuleVal) {
-                if(val.operationtype == 'PC') {
+                if(val.operationType == 'PC') {
                     rulePC.push([
                         chargeRuleIdx,
                         chargeRuleVal.uuid,
@@ -707,7 +707,7 @@
                         chargeRuleVal.amount]
                     );
                 }
-                if(val.operationtype == 'Phone') {
+                if(val.operationType == 'Phone') {
                     rulePhone.push([
                         chargeRuleIdx,
                         chargeRuleVal.uuid,
@@ -716,7 +716,7 @@
                         chargeRuleVal.amount]
                     );
                 }
-                addRow("order" + val.operationtype);
+                addRow("order" + val.operationType);
             });
         });
 
@@ -797,7 +797,7 @@
         if(document.getElementById("fOperationTypePC").checked) {
             var pcOperationType = {};
             pcOperationType.qzChargeRules= [];
-            pcOperationType.operationtype ='PC';
+            pcOperationType.operationType ='PC';
             pcOperationType.group = settingDialogDiv.find("#fGroupPC").val();
             pcOperationType.initialKeywordCount = settingDialogDiv.find("#fInitialKeywordCountPC").val();
             pcOperationType.currentKeywordCount = settingDialogDiv.find("#fCurrentKeywordCountPC").val();
@@ -877,7 +877,7 @@
         if(document.getElementById("fOperationTypePhone").checked){
             var PhoneOperationType = {};
             PhoneOperationType.qzChargeRules= [];
-            PhoneOperationType.operationtype ='Phone';
+            PhoneOperationType.operationType ='Phone';
             PhoneOperationType.initialKeywordCount = settingDialogDiv.find("#fInitialKeywordCountPhone").val();
             PhoneOperationType.currentKeywordCount = settingDialogDiv.find("#fCurrentKeywordCountPhone").val();
             PhoneOperationType.group = settingDialogDiv.find("#fGroupPhone").val();
@@ -1028,7 +1028,7 @@
                     for (var i = 0; i < qzChargeLogs.length; i++) {
                         var chargeLog = [
                             formatDate(qzChargeLogs[i].actualChargeDate),
-                            qzChargeLogs[i].operationtype,
+                            qzChargeLogs[i].operationType,
 							qzChargeLogs[i].actualAmount,
 							qzChargeLogs[i].userName,
 							formatDate(qzChargeLogs[i].createTime)

@@ -12,94 +12,103 @@ import java.util.List;
  */
 @TableName(value = "t_qz_operation_type")
 public class QZOperationType extends BaseEntity {
-    @TableField(value = "fQZSettingUuid")
-    private Long qzSettingUuid;// 整站基本信息id
-    @TableField(value = "fOperationtype")
-    private String operationtype;//操作类型()
-    @TableField(value = "fInitialKeywordCount")
-    private Long initialKeywordCount;//起始首页词数()
-    @TableField(value = "fCurrentKeywordCount")
-    private Long currentKeywordCount;//当前首页词数()
-    @TableField(value = "fGroup")
-    private String group;//分组()
-    @TableField(value = "fReachTargetDate")
-    private Date reachTargetDate;// 达标日期()
-    @TableField(value = "fNextChargeDate")
-    private Date nextChargeDate;// 下次收费日期()
-    @TableField(value = "fIsDeleted")
-    private Integer isDeleted;//状态
-    @TableField(exist = false)
-    protected List<QZChargeRule> qzChargeRules;//一个操作类型对应多个规则
 
-    public Long getQzSettingUuid() {
-        return qzSettingUuid;
-    }
+  @TableField(value = "fQZSettingUuid")
+  private Long qzSettingUuid;// 整站基本信息id
 
-    public void setQzSettingUuid(Long qzSettingUuid) {
-        this.qzSettingUuid = qzSettingUuid;
-    }
+  @TableField(value = "fOperationtype")
+  private String operationType;//操作类型()
 
-    public String getOperationtype() {
-        return operationtype;
-    }
+  @TableField(value = "fInitialKeywordCount")
+  private Long initialKeywordCount;//起始首页词数()
 
-    public void setOperationtype(String operationtype) {
-        this.operationtype = operationtype;
-    }
+  @TableField(value = "fCurrentKeywordCount")
+  private Long currentKeywordCount;//当前首页词数()
 
-    public Long getInitialKeywordCount() {
-        return initialKeywordCount;
-    }
+  @TableField(value = "fGroup")
+  private String group;//分组()
 
-    public void setInitialKeywordCount(Long initialKeywordCount) {
-        this.initialKeywordCount = initialKeywordCount;
-    }
+  @TableField(value = "fReachTargetDate")
+  private Date reachTargetDate;// 达标日期()
 
-    public Long getCurrentKeywordCount() {
-        return currentKeywordCount;
-    }
+  @TableField(value = "fNextChargeDate")
+  private Date nextChargeDate;// 下次收费日期()
 
-    public void setCurrentKeywordCount(Long currentKeywordCount) {
-        this.currentKeywordCount = currentKeywordCount;
-    }
+  @TableField(value = "fIsDeleted")
+  private Integer isDeleted;//状态
 
-    public String getGroup() {
-        return group;
-    }
+  @TableField(exist = false)
+  protected List<QZChargeRule> qzChargeRules;//一个操作类型对应多个规则
 
-    public void setGroup(String group) {
-        this.group = group;
-    }
+  public Long getQzSettingUuid() {
+    return qzSettingUuid;
+  }
 
-    public Date getReachTargetDate() {
-        return reachTargetDate;
-    }
+  public void setQzSettingUuid(Long qzSettingUuid) {
+    this.qzSettingUuid = qzSettingUuid;
+  }
 
-    public void setReachTargetDate(Date reachTargetDate) {
-        this.reachTargetDate = reachTargetDate;
-    }
+  public String getOperationType() {
+    return operationType;
+  }
 
-    public Date getNextChargeDate() {
-        return nextChargeDate;
-    }
+  public void setOperationType(String operationType) {
+    this.operationType = operationType;
+  }
 
-    public void setNextChargeDate(Date nextChargeDate) {
-        this.nextChargeDate = nextChargeDate;
-    }
+  public Long getInitialKeywordCount() {
+    return initialKeywordCount;
+  }
 
-    public List<QZChargeRule> getQzChargeRules() {
-        return qzChargeRules;
-    }
+  public void setInitialKeywordCount(Long initialKeywordCount) {
+    this.initialKeywordCount = initialKeywordCount;
+  }
 
-    public void setQzChargeRules(List<QZChargeRule> qzChargeRules) {
-        this.qzChargeRules = qzChargeRules;
-    }
+  public Long getCurrentKeywordCount() {
+    return currentKeywordCount;
+  }
 
-    public Integer getIsDeleted() {
-        return isDeleted;
-    }
+  public void setCurrentKeywordCount(Long currentKeywordCount) {
+    this.currentKeywordCount = currentKeywordCount;
+  }
 
-    public void setIsDeleted(Integer isDeleted) {
-        this.isDeleted = isDeleted;
-    }
+  public String getGroup() {
+    return group;
+  }
+
+  public void setGroup(String group) {
+    this.group = group;
+  }
+
+  public Date getReachTargetDate() {
+    return reachTargetDate;
+  }
+
+  public void setReachTargetDate(Date reachTargetDate) {
+    this.reachTargetDate = reachTargetDate;
+  }
+
+  public Date getNextChargeDate() {
+    return nextChargeDate;
+  }
+
+  public void setNextChargeDate(Date nextChargeDate) {
+    this.nextChargeDate = nextChargeDate;
+  }
+
+  public List<QZChargeRule> getQzChargeRules() {
+    return qzChargeRules;
+  }
+
+  public void setQzChargeRules(List<QZChargeRule> qzChargeRules) {
+    this.qzChargeRules = qzChargeRules;
+  }
+
+  public Integer getIsDeleted() {
+    return isDeleted;
+  }
+
+  public void setIsDeleted(Integer isDeleted) {
+    this.isDeleted = isDeleted;
+  }
 }

@@ -62,12 +62,12 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
 	}
 
-	@RequestMapping(value = "/captureCurrentKeywordCount", method = RequestMethod.POST)
-	public ResponseEntity<?> captureCurrentKeywordCount(@RequestBody QZSettingCriteria qzSettingCriteria) throws Exception{
+	@RequestMapping(value = "/getQZSettingsForCaptureCurrentKeyword", method = RequestMethod.POST)
+	public ResponseEntity<?> getQZSettingsForCaptureCurrentKeyword(@RequestBody QZSettingCriteria qzSettingCriteria) throws Exception{
 		if(qzSettingCriteria.getUserName() != null && qzSettingCriteria.getPassword() != null){
 			User user = userService.getUser(qzSettingCriteria.getUserName());
 			if(user != null && user.getPassword().equals(qzSettingCriteria.getPassword())){
-				QZSetting qzSetting = qzSettingService.captureCurrentKeywordCount();
+				QZSetting qzSetting = qzSettingService.getQZSettingsForCaptureCurrentKeyword();
 				return new ResponseEntity<Object>(qzSetting, HttpStatus.OK);
 			}
 		}
@@ -75,12 +75,11 @@ public class QZSettingRestController extends SpringMVCBaseController {
 	}
 
 	@RequestMapping(value = "/updateCurrentKeywordCount", method = RequestMethod.POST)
-	public ResponseEntity<?> updateCurrentKeywordCount(@RequestBody QZSettingCriteria qzSettingCriteria, HttpServletRequest request) throws Exception{
+	public ResponseEntity<?> updateCurrentKeywordCount(@RequestBody QZSettingCriteria qzSettingCriteria) throws Exception{
 		if(qzSettingCriteria.getUserName() != null && qzSettingCriteria.getPassword() != null){
 			User user = userService.getUser(qzSettingCriteria.getUserName());
 			if(user != null && user.getPassword().equals(qzSettingCriteria.getPassword())){
-				String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());//?
-				qzSettingService.updateCurrentKeywordCount(qzSettingCriteria, terminalType);
+				qzSettingService.updateCurrentKeywordCount(qzSettingCriteria);
 				return new ResponseEntity<Object>(HttpStatus.OK);
 			}
 		}

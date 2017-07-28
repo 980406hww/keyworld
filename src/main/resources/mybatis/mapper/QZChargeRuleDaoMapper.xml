@@ -14,6 +14,7 @@
         qchru.fUpdatetime   AS 'updateTime'
         FROM t_qz_charge_rule  qchru
         WHERE  qchru.fQZOperationTypeUuid  = #{qzOperationTypeUuid}
+        order by qchru.fStartKeywordCount
     </select>
 
     <!--返回上一级插入的主键-->

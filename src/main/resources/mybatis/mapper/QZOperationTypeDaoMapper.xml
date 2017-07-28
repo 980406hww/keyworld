@@ -7,7 +7,7 @@
       SELECT
        qopty.fUuid             AS 'uuid',
        qopty.fQZSettingUuid    AS 'qzsettingUuid',
-       qopty.fOperationtype          AS 'operationtype',
+       qopty.fOperationtype          AS 'operationType',
        qopty.fInitialKeywordCount    AS 'initialKeywordCount',
        qopty.fCurrentKeywordCount    AS 'currentkeywordcount',
        qopty.fGroup            AS 'group',
@@ -24,7 +24,7 @@
       SELECT
        qopty.fUuid            AS 'uuid',
        qopty.fQZSettingUuid    AS 'qzsettingUuid',
-       qopty.fOperationtype          AS 'operationtype',
+       qopty.fOperationtype          AS 'operationType',
        qopty.fInitialKeywordCount    AS 'initialKeywordCount',
        qopty.fCurrentKeywordCount    AS 'currentkeywordcount',
        qopty.fGroup            AS 'group',
