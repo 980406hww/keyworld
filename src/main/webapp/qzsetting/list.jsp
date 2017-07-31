@@ -1189,14 +1189,14 @@
 <div id="changeSettingDialog">
 	<table style="font-size:12px" id="settingTable">
 		<tr>
-			<th>客户</th>
+			<td align="right"><span style="margin-right:4;">客户</span></td>
 			<td>
 				<input type="hidden" id="qzSettingUuid" />
 				<input type="text" list="customer_list" name="qzSettingCustomer" id="qzSettingCustomer" style="width:240px" />
 			</td>
 		</tr>
 		<tr>
-			<th>域名</th>
+			<td align="right"><span style="margin-right:4;">域名</span></td>
 			<td>
 				<input type="text" name="qzSettingDomain" id="qzSettingDomain" style="width:240px" />
 			</td>
@@ -1212,16 +1212,16 @@
 			<td colspan="2" id="groupHeightPC">
 				<table border="0" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="operationTypeSummaryInfoPC">
 					<tr>
-						<th style="width:72px">分组</th>
-						<td><input type="text" name="group" id="groupPC"  style="width:234px"/></td>
+						<td align="right" style="width:72px"><span style="margin-right:14;">分组</span></td>
+						<td><input type="text" name="group" id="groupPC"  style="width:240px;margin-left: -6;"/></td>
 					</tr>
 					<tr>
-						<th style="width:72px">初始词量</th>
-						<td colspan="4"><input type="text" name="initialKeywordCount" id="initialKeywordCountPC"  style="width:234px"/></td>
+						<td align="right" style="width:72px"><span style="margin-right:14;">初始词量</span></td>
+						<td colspan="4"><input type="text" name="initialKeywordCount" id="initialKeywordCountPC" style="width:240px;margin-left: -6;"/></td>
 					</tr>
 					<tr>
-						<th style="width:72px">当前词量</th>
-						<td colspan="4"><input type="text" name="currentKeywordCount" id="currentKeywordCountPC"  style="width:234px" readonly/></td>
+						<td align="right" style="width:72px"><span style="margin-right:14;">当前词量</span></td>
+						<td colspan="4"><input type="text" name="currentKeywordCount" id="currentKeywordCountPC" style="width:240px;margin-left: -6;" readonly/></td>
 					</tr>
 					<input type="hidden" id="qzSettingUuidPC" name="qzOperationTypeUuid" value="" />
 				</table>
@@ -1232,11 +1232,11 @@
 			<td colspan="2" id="ruleHeightPC">
 				<table border="1" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="chargeRulePC">
 					<tr>
-						<th style="width:50px">序号</th>
-						<th style="width:72px">起始词数</th>
-						<th style="width:72px">终止词数</th>
-						<th style="width:50px">价格</th>
-						<th style="width:46px">操作</th>
+						<td style="width:50px">序号</td>
+						<td style="width:72px">起始词数</td>
+						<td style="width:72px">终止词数</td>
+						<td style="width:50px">价格</td>
+						<td style="width:46px">操作</td>
 					</tr>
 					<tr>
 						<td colspan="5">
@@ -1256,16 +1256,16 @@
 			<td colspan="2" id="groupHeightPhone">
 				<table border="0" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="operationTypeSummaryInfoPhone">
 					<tr>
-						<th style="width:72px">分组</th>
-						<td><input type="text" name="group" id="groupPhone"  style="width:234px"/></td>
+						<td align="right" style="width:72px;"><span style="margin-right:14;">分组</span></td>
+						<td><input type="text" name="group" id="groupPhone" style="width:240px;margin-left: -6;"/></td>
 					</tr>
 					<tr>
-						<th style="width:72px">初始词量</th>
-						<td colspan="4"><input type="text" name="initialKeywordCount" id="initialKeywordCountPhone"  style="width:234px"/></td>
+						<td align="right" style="width:72px"><span style="margin-right:14;">初始词量</span></td>
+						<td colspan="4"><input type="text" name="initialKeywordCount" id="initialKeywordCountPhone"  style="width:240px;margin-left: -6;"/></td>
 					</tr>
 					<tr>
-						<th style="width:72px">当前词量</th>
-						<td colspan="4"><input type="text" name="currentKeywordCount" id="currentKeywordCountPhone"  style="width:234px" readonly/></td>
+						<td align="right" style="width:72px"><span style="margin-right:14;">当前词量</span></td>
+						<td colspan="4"><input type="text" name="currentKeywordCount" id="currentKeywordCountPhone"  style="width:240px;margin-left: -6;" readonly/></td>
 					</tr>
 					<input type="hidden" id="qzSettingUuidPhone" name="qzOperationTypeUuid" value="" />
 				</table>
@@ -1276,11 +1276,11 @@
 			<td colspan="2" id="ruleHeightPhone">
 				<table border="1" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="chargeRulePhone">
 					<tr>
-						<th style="width:50px">序号</th>
-						<th style="width:72px">起始词数</th>
-						<th style="width:72px">终止词数</th>
-						<th style="width:50px">价格</th>
-						<th style="width:46px">操作</th>
+						<td style="width:50px">序号</td>
+						<td style="width:72px">起始词数</td>
+						<td style="width:72px">终止词数</td>
+						<td style="width:50px">价格</td>
+						<td style="width:46px">操作</td>
 					</tr>
 					<tr>
 						<td colspan="5">
@@ -1291,7 +1291,7 @@
 		</tr>
 
 		<tr>
-			<th>入口</th>
+			<td align="right"><span style="margin-right:4;">入口</span></td>
 			<td>
 				<select name="qzSettingEntryType" id="qzSettingEntryType"  style="width:240px">
 					<option value="qz" selected>全站</option>
@@ -1302,7 +1302,7 @@
 			</td>
 		</tr>
 		<tr>
-			<th>去掉没指数</th>
+			<td>去掉没指数</td>
 			<td>
 				<select name="qzSettingIgnoreNoIndex" id="qzSettingIgnoreNoIndex"  style="width:240px">
 					<option value="1" selected>是</option>
@@ -1311,7 +1311,7 @@
 			</td>
 		</tr>
 		<tr>
-			<th>去掉没排名</th>
+			<td>去掉没排名</td>
 			<td>
 				<select name="qzSettingIgnoreNoOrder" id="qzSettingIgnoreNoOrder"  style="width:240px">
 					<option value="1" selected>是</option>
@@ -1320,7 +1320,7 @@
 			</td>
 		</tr>
 		<tr>
-			<th>更新间隔</th>
+			<td align="right"><span style="margin-right:4;">更新间隔</span></td>
 			<td>
 				<select name="qzSettingInterval" id="qzSettingInterval"  style="width:240px">
 					<option value="1">1天</option>
@@ -1474,7 +1474,7 @@
 		<span style="margin-left: 55px"></span>合计:<sapn id="totalAmount"></sapn>
 	</p>
 	<p align="right">
-		<input type="button" id="saveChargeLog" onclick="saveChargeLog(this)" value="确认收费"/>&nbsp;&nbsp;&nbsp;<input type="button" id="cancelChargeLog" onclick="cancelChargeDialog()" value="取消"/><span style="margin-right:24px;"></span>
+		<input type="button" id="saveChargeLog" onclick="saveChargeLog(this)" value="确认收费"/>&nbsp;&nbsp;&nbsp;<input type="button" id="cancelChargeLog" onclick="cancelChargeDialog()" value="取消"/><span style="margin-right:14px;"></span>
 	</p>
 </div>
 <%--收费详情列表--%>
