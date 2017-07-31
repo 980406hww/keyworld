@@ -1,51 +1,59 @@
 package com.keymanager.monitoring.vo;
 
-import java.util.Date;
-
 public class QZChargeInfoVO {
-    private String pcInitialKeywordCount;
-    private String pcCurrentKeywordCount;
-    private String pcReceivableAmount;
-    private String pcPlanChargeDate;
-    private String pcQzOperationTypeUuid;
+    private String initialKeywordCount;
+    private String currentKeywordCount;
+    private String receivableAmount;
+    private String planChargeDate;
+    private String qzOperationTypeUuid;
+    private String operationType;
 
-    public String getPcInitialKeywordCount() {
-        return pcInitialKeywordCount;
+
+    public String getInitialKeywordCount() {
+        return initialKeywordCount;
     }
 
-    public void setPcInitialKeywordCount(String pcInitialKeywordCount) {
-        this.pcInitialKeywordCount = pcInitialKeywordCount;
+    public void setInitialKeywordCount(String initialKeywordCount) {
+        this.initialKeywordCount = initialKeywordCount;
     }
 
-    public String getPcCurrentKeywordCount() {
-        return pcCurrentKeywordCount;
+    public String getCurrentKeywordCount() {
+        return currentKeywordCount;
     }
 
-    public void setPcCurrentKeywordCount(String pcCurrentKeywordCount) {
-        this.pcCurrentKeywordCount = pcCurrentKeywordCount;
+    public void setCurrentKeywordCount(String currentKeywordCount) {
+        this.currentKeywordCount = currentKeywordCount;
     }
 
-    public String getPcReceivableAmount() {
-        return pcReceivableAmount;
+    public String getReceivableAmount() {
+        return receivableAmount;
     }
 
-    public void setPcReceivableAmount(String pcReceivableAmount) {
-        this.pcReceivableAmount = pcReceivableAmount;
+    public void setReceivableAmount(String receivableAmount) {
+        this.receivableAmount = receivableAmount;
     }
 
-    public String getPcPlanChargeDate() {
-        return pcPlanChargeDate;
+    public String getPlanChargeDate() {
+        return planChargeDate;
     }
 
-    public void setPcPlanChargeDate(String pcPlanChargeDate) {
-        this.pcPlanChargeDate = pcPlanChargeDate;
+    public void setPlanChargeDate(String planChargeDate) {
+        this.planChargeDate = planChargeDate;
     }
 
-    public String getPcQzOperationTypeUuid() {
-        return pcQzOperationTypeUuid;
+    public String getQzOperationTypeUuid() {
+        return qzOperationTypeUuid;
     }
 
-    public void setPcQzOperationTypeUuid(String pcQzOperationTypeUuid) {
-        this.pcQzOperationTypeUuid = pcQzOperationTypeUuid;
+    public void setQzOperationTypeUuid(String qzOperationTypeUuid) {
+        this.qzOperationTypeUuid = qzOperationTypeUuid;
+    }
+
+    public String getOperationType() {
+        return operationType;
+    }
+
+    public void setOperationType(String operationType) {
+        this.operationType = operationType;
     }
 }

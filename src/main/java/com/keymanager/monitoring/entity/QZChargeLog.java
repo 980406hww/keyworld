@@ -24,9 +24,11 @@ public class QZChargeLog extends BaseEntity{
     @TableField("fUserID")
     private String userID;// 收费人ID
     @TableField(exist = false)
-    private String operationtype;//操作类型()
+    private String operationType;//操作类型()
     @TableField(exist = false)
     private String userName;//收费人姓名
+    @TableField(exist = false)
+    private Date nextChargeDate;
 
     public QZChargeLog() {
     }
@@ -88,12 +90,12 @@ public class QZChargeLog extends BaseEntity{
         this.userID = userID;
     }
 
-    public String getOperationtype() {
-        return operationtype;
+    public String getOperationType() {
+        return operationType;
     }
 
-    public void setOperationtype(String operationtype) {
-        this.operationtype = operationtype;
+    public void setOperationType(String operationType) {
+        this.operationType = operationType;
     }
 
     public String getUserName() {
@@ -102,5 +104,13 @@ public class QZChargeLog extends BaseEntity{
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public Date getNextChargeDate() {
+        return nextChargeDate;
+    }
+
+    public void setNextChargeDate(Date nextChargeDate) {
+        this.nextChargeDate = nextChargeDate;
     }
 }

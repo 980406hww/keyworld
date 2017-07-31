@@ -32,8 +32,9 @@ public class QZChargeLogRestControlller extends SpringMVCBaseController {
 
     //插入一条收费流水表
     @RequestMapping(value = "/save" , method = RequestMethod.POST)
-    public ResponseEntity<?> saveQZChargeLog(@RequestBody String chargeData,HttpServletRequest request){
-        return new ResponseEntity<Object>(qzChargeLogService.saveQZChargeLog(chargeData,request), HttpStatus.OK);
+    public ResponseEntity<?> saveQZChargeLog(@RequestBody List<QZChargeLog> qzChargeLogs,HttpServletRequest request){
+        qzChargeLogService.saveQZChargeLog(qzChargeLogs,request);
+        return new ResponseEntity<Object>(qzChargeLogs, HttpStatus.OK);
     }
     //查看收费记录
     @RequestMapping(value = "/chargesList/{uuid}", method = RequestMethod.GET)

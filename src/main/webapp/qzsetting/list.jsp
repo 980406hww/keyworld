@@ -210,7 +210,7 @@
 		<td colspan="15" align="right">
 			<a href="javascript:showSettingDialog(null, this)">增加全站设置</a>
 			| <a target="_blank" href="javascript:updateImmediately(this)">马上更新</a>
-			| <a target="_blank" href="javascript:delAllItems(this)">删除所选</a>
+			| <a target="_blank" href="javascript:delSelectedQZSettings(this)">删除所选</a>
 		</td>
 	</tr>
 	<tr>
@@ -328,8 +328,8 @@
 		<td>
 			<a href="javascript:showChargeDialog('<%=value.getUuid()%>','<%=value.getContactPerson()%>','<%=value.getDomain()%>',this)">收费</a> |
 			<a href="javascript:showSettingDialog('<%=value.getUuid()%>', this)">修改</a> |
-			<a href="javascript:delItem(<%=value.getUuid()%>)">删除</a> |
-			<a href="javascript:insertChargeLog('<%=value.getUuid()%>', this)">收费记录</a>
+			<a href="javascript:delQZSetting(<%=value.getUuid()%>)">删除</a> |
+			<a href="javascript:showChargeLog('<%=value.getUuid()%>', this)">收费记录</a>
 		</td>
 	</tr>
 	<%
@@ -357,6 +357,7 @@
     var m = dateStr.getMonth() + 1 < 10 ? "0" + (dateStr.getMonth() + 1) : (dateStr.getMonth() + 1);
     var d = dateStr.getDate() < 10 ? "0" + dateStr.getDate() : dateStr.getDate();
     var today = dateStr.getFullYear() + "-" + m + "-" + d;
+
     function selectAll(self){
         var a = document.getElementsByName("uuid");
         if(self.checked){
@@ -386,7 +387,7 @@
             obj.style.backgroundColor = "#ffffff";
         }
     }
-    function delItem(uuid) {
+    function delQZSetting(uuid) {
         if (confirm("确实要删除这个全站设置吗?") == false) return;
         $$$.ajax({
             url: '/spring/qzsetting/delete/' + uuid,
@@ -407,22 +408,18 @@
     }
 
     function getSelectedIDs() {
-        var a = document.getElementsByName("uuid");
-        var uuids = '';
-        for(var i = 0;i<a.length;i++){
-            //alert(a[i].value);
-            if(a[i].checked){
-                if(uuids === ''){
-                    uuids = a[i].value;
-                }else{
-                    uuids = uuids + "," + a[i].value;
-                }
-            }
-        }
-        return uuids;
+      var uuids = '';
+      $$$.each($$$("input[name=uuid]:checkbox:checked"), function(){
+        if(uuids === ''){
+          uuids = $$$(this).val();
+		}else{
+          uuids = uuids + "," + $$$(this).val();
+		}
+	  });
+	  return uuids;
     }
 
-    function delAllItems(self) {
+    function delSelectedQZSettings(self) {
         var uuids = getSelectedIDs();
         if(uuids === ''){
             alert('请选择要操作的设置信息！');
@@ -488,14 +485,19 @@
     }
 
     function chargeRemind(days) {
-        document.getElementById("chargeDays").value = days;
+        $$$("#chargeDays").val(days);
         $$$("#chargeForm").submit();
 	}
 
     function cancelChargeDialog() {
         resetChargeDialog();
-        document.getElementById("chargeDialog").style.height = "320px"
-        document.getElementById("chargeDialog").style.display = "none";
+        var chargeDialogObj = $$$("#chargeDialog");
+        chargeDialogObj.find("#checkChargePC").css("display","none");
+        chargeDialogObj.find("#checkChargePhone").css("display","none");
+        chargeDialogObj.find("#PCChargeInfo").css("display","none");
+        chargeDialogObj.find("#PhoneChargeInfo").css("display","none");
+        $$$("#chargeDialog").css("height", 320);
+        $$$("#chargeDialog").css("display", "none");
     }
 
     function showSettingDialog(uuid, self) {
@@ -538,26 +540,19 @@
     }
 
     function resetChargeDialog() {
-        var chargeDialogObj = $$$("#chargeDialog");
-        document.getElementById("operationTypePC").checked = false;
-        chargeDialogObj.find("#fQzOperationTypeUuidPC").val("");
-        chargeDialogObj.find("#fInitialKeywordCountPC").val("");
-        chargeDialogObj.find("#fCurrentKeywordCountPC").val("");
-        chargeDialogObj.find("#fReceivableAmountPC").val("");
-        chargeDialogObj.find("#fPlanChargeDatePC").val("");
-        chargeDialogObj.find("#fNextChargeDatePC").val("");
-        chargeDialogObj.find("#fActualAmountPC").val("");
-        chargeDialogObj.find("#fActualChargeDatePC").val("");
-
-        document.getElementById("operationTypePhone").checked = false;
-        chargeDialogObj.find("#fQzOperationTypeUuidPhone").val("");
-        chargeDialogObj.find("#fInitialKeywordCountPhone").val("");
-        chargeDialogObj.find("#fCurrentKeywordCountPhone").val("");
-        chargeDialogObj.find("#fReceivableAmountPhone").val("");
-        chargeDialogObj.find("#fPlanChargeDatePhone").val("");
-        chargeDialogObj.find("#fNextChargeDatePhone").val("");
-        chargeDialogObj.find("#fActualAmountPhone").val("");
-        chargeDialogObj.find("#fActualChargeDatePhone").val("");
+      var chargeDialogObj = $$$("#chargeDialog");
+      var operationTypes = chargeDialogObj.find("input[name=operationType]");
+	  $$$.each(operationTypes,function (idx, val) {
+        val.checked = false;
+        chargeDialogObj.find("#qzOperationTypeUuid" + val.id).val("");
+        chargeDialogObj.find("#initialKeywordCount" + val.id).val("");
+        chargeDialogObj.find("#currentKeywordCount" + val.id).val("");
+        chargeDialogObj.find("#receivableAmount" + val.id).val("");
+        chargeDialogObj.find("#planChargeDate" + val.id).val("");
+        chargeDialogObj.find("#nextChargeDate" + val.id).val("");
+        chargeDialogObj.find("#actualAmount" + val.id).val("");
+        chargeDialogObj.find("#actualChargeDate" + val.id).val("");
+      });
     }
 
     function showChargeDialog(uuid,contactPerson,domain,self) {
@@ -570,99 +565,63 @@
         $$$.ajax({
             url: '/spring/qzchargelog/getQZChargeLog/' + uuid,
             type: 'Get',
-            success: function (data) {
-                if(data != null && data.length > 0){
-					var str = JSON.parse(data);
-                    if(str.pcReceivableAmount == 0 && str.pcReceivableAmount == 0) {
-                        document.getElementById("chargeInfoTable").style.height = 0;
-                        document.getElementById("chargeDialog").style.height = 145;
-                    }
-                    var pcValue = 0;
-                    var phoneValue = 0;
-                    var checkboxPC = document.getElementById("operationTypePC");
-                    var checkboxPhone = document.getElementById("operationTypePhone");
+            success: function (chargeInfos) {
+                if(chargeInfos != null && chargeInfos.length > 0){
+                  var totalAmount = 0;
+                  var showFlag = false;
+                  $$$.each(chargeInfos, function(idx, val){
+                    var checkbox = chargeDialogObj.find("#" + val.operationType);
 
-                    // 电脑收费详细
-                    if(str.pcQzOperationTypeUuid != null) {
-                        // 存在电脑操作类型
-                        chargeDialogObj.find("#fQzOperationTypeUuidPC").val(str.pcQzOperationTypeUuid);
-                        chargeDialogObj.find("#fInitialKeywordCountPC").val(str.pcInitialKeywordCount);
-                        chargeDialogObj.find("#fCurrentKeywordCountPC").val(str.pcCurrentKeywordCount);
-                        document.getElementById("checkChargePC").style.display = "block";
-                        // 达标
-                        if (str.pcReceivableAmount != 0) {
-                            checkboxPC.checked = true;
-                            document.getElementById("PCChargeInfo").style.display = "block";
-                            var date = new Date(str.pcPlanChargeDate);
-                            var year = date.getFullYear();
-                            var month = date.getMonth() + 2;
-                            if(month < 10) {
-                                month = "0" + month;
-							} else {
-                                if(month > 12) {
-                                    month = "01";
-                                    year = year + 1;
-								}
-							}
-                            var day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
-                            var nextChargeDatePC = year + "-" + month + "-" + day;
-                            pcValue = Number(str.pcReceivableAmount);
-                            chargeDialogObj.find("#fReceivableAmountPC").val(str.pcReceivableAmount);
-                            chargeDialogObj.find("#fPlanChargeDatePC").val(str.pcPlanChargeDate);
-                            chargeDialogObj.find("#fNextChargeDatePC").val(nextChargeDatePC);
-                            chargeDialogObj.find("#fActualAmountPC").val(str.pcReceivableAmount);
+                    if(val.qzOperationTypeUuid != null) {
+                      // 存在此类操作类型
+                      chargeDialogObj.find("#qzOperationTypeUuid" + val.operationType).val(val.qzOperationTypeUuid);
+                      chargeDialogObj.find("#initialKeywordCount" + val.operationType).val(val.initialKeywordCount);
+                      chargeDialogObj.find("#currentKeywordCount" + val.operationType).val(val.currentKeywordCount);
+                      chargeDialogObj.find("#receivableAmount" + val.operationType).val(val.receivableAmount);
+                      chargeDialogObj.find("#actualAmount" + val.operationType).val(val.receivableAmount);
+                      totalAmount = totalAmount + Number(val.receivableAmount == null ? 0 : val.receivableAmount);
+                      chargeDialogObj.find("#checkCharge" + val.operationType).css("display","block");
+                      // 达标
+                      if(val.planChargeDate != null) {
+                        checkbox[0].checked = true;
+                        chargeDialogObj.find("#" + val.operationType + "ChargeInfo").css("display","block");
+                        var date = new Date(val.planChargeDate);
+                        var year = date.getFullYear();
+                        var month = date.getMonth() + 2;
+                        if(month < 10) {
+                          month = "0" + month;
                         } else {
-                            checkboxPC.checked = false;
-                            document.getElementById("PCChargeInfo").style.display = "none";
-						}
-                        chargeDialogObj.find("#fActualChargeDatePC").val(today);
+                          if(month > 12) {
+                            month = "01";
+                            year = year + 1;
+                          }
+                        }
+                        var day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                        var nextChargeDate = year + "-" + month + "-" + day;
+                        chargeDialogObj.find("#receivableAmount" + val.operationType).val(val.receivableAmount);
+                        chargeDialogObj.find("#planChargeDate" + val.operationType).val(val.planChargeDate);
+                        chargeDialogObj.find("#nextChargeDate" + val.operationType).val(nextChargeDate);
+                        showFlag = true;
+                      } else {
+                        checkbox[0].checked = false;
+                        chargeDialogObj.find("#" + val.operationType + "ChargeInfo").css("display","none");
+                      }
+                      chargeDialogObj.find("#actualChargeDate" + val.operationType).val(today);
                     } else {
-                        document.getElementById("checkChargePC").style.display = "none";
-                        document.getElementById("PCChargeInfo").style.display = "none";
-					}
-					// 手机收费详情
-                    if(str.phoneQzOperationTypeUuid != null) {
-                        // 存在手机操作类型
-                        chargeDialogObj.find("#fQzOperationTypeUuidPhone").val(str.phoneQzOperationTypeUuid);
-                        chargeDialogObj.find("#fInitialKeywordCountPhone").val(str.phoneInitialKeywordCount);
-                        chargeDialogObj.find("#fCurrentKeywordCountPhone").val(str.phoneCurrentKeywordCount);
-                        document.getElementById("checkChargePhone").style.display = "block";
-                        // 达标
-						if(str.phoneReceivableAmount != 0) {
-                            checkboxPhone.checked = true;
-                            document.getElementById("PhoneChargeInfo").style.display = "block";
-							var date = new Date(str.phonePlanChargeDate);
-                            var year = date.getFullYear();
-                            var month = date.getMonth() + 2;
-                            if(month < 10) {
-                                month = "0" + month;
-                            } else {
-                                if(month > 12) {
-                                    month = "01";
-                                    year = year + 1;
-                                }
-                            }
-                            var day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
-                            var nextChargeDatePhone = year + "-" + month + "-" + day;
-                            phoneValue = Number(str.phoneReceivableAmount);
-							chargeDialogObj.find("#fReceivableAmountPhone").val(str.phoneReceivableAmount);
-							chargeDialogObj.find("#fPlanChargeDatePhone").val(str.phonePlanChargeDate);
-							chargeDialogObj.find("#fNextChargeDatePhone").val(nextChargeDatePhone);
-							chargeDialogObj.find("#fActualAmountPhone").val(str.phoneReceivableAmount);
-						} else {
-                            checkboxPhone.checked = false;
-                            document.getElementById("PhoneChargeInfo").style.display = "none";
-						}
-                        chargeDialogObj.find("#fActualChargeDatePhone").val(today);
-                    } else {
-                        document.getElementById("checkChargePhone").style.display = "none";
-                        document.getElementById("PhoneChargeInfo").style.display = "none";
-					}
+                      chargeDialogObj.find("#checkCharge" + val.operationType).css("display","none");
+                      chargeDialogObj.find("#" + val.operationType + "ChargeInfo").css("display","none");
+                    }
+				  });
 
-                    var s = new String(pcValue + phoneValue);
-                    var total = s.replace(/\B(?=(?:\d{3})+$)/g, ',');
-                    document.getElementById("totalAmount").innerHTML = "￥" + total + "元";
-                    document.getElementById("chargeDialog").style.display = "block";
+                  if(!showFlag){
+                    chargeDialogObj.find("#chargeInfoTable").css("height",0);
+                    chargeDialogObj.css("height",145);
+				  }
+
+				  var s = new String(totalAmount);
+				  var total = s.replace(/\B(?=(?:\d{3})+$)/g, ',');
+                  chargeDialogObj.find("#totalAmount").html(total+"元");
+                  chargeDialogObj.css("display","block");
                 }else{
                     showInfo("获取信息失败！", self);
                 }
@@ -674,495 +633,380 @@
     }
 
     function initSettingDialog(qzSetting, self) {
-        var rulePC = new Array();
-        var rulePhone = new Array();
-        var PCType = false;
-        var PhoneType = false;
-        clearInfo("Both");
-        var settingDialogDiv = $$$("#changeSettingDialog");
-        settingDialogDiv.find("#qzSettingUuid").val(qzSetting.uuid);
-        settingDialogDiv.find("#qzSettingCustomer").val(qzSetting.contactPerson + "_____" + qzSetting.customerUuid);
-        settingDialogDiv.find("#qzSettingDomain").val(qzSetting.domain != null ? qzSetting.domain : "");
-        settingDialogDiv.find("#qzSettingIgnoreNoIndex").val(qzSetting.ignoreNoIndex ? "1" : "0");
-        settingDialogDiv.find("#qzSettingIgnoreNoOrder").val(qzSetting.ignoreNoOrder ? "1" : "0");
-        settingDialogDiv.find("#qzSettingInterval").val(qzSetting.updateInterval != null ? qzSetting.updateInterval : "");
-        settingDialogDiv.find("#qzSettingEntryType").val(qzSetting.type != null ? qzSetting.type : "");
-        settingDialogDiv[0].style.left = getTop(self); //鼠标目前在X轴上的位置，加10是为了向右边移动10个px方便看到内容
+      var PCType = false;
+      var PhoneType = false;
+      clearInfo("Both");
+      var settingDialogDiv = $$$("#changeSettingDialog");
+      settingDialogDiv.find("#qzSettingUuid").val(qzSetting.uuid);
+      settingDialogDiv.find("#qzSettingCustomer").val(
+          qzSetting.contactPerson + "_____" + qzSetting.customerUuid);
+      settingDialogDiv.find("#qzSettingDomain").val(
+          qzSetting.domain != null ? qzSetting.domain : "");
+      settingDialogDiv.find("#qzSettingIgnoreNoIndex").val(qzSetting.ignoreNoIndex ? "1" : "0");
+      settingDialogDiv.find("#qzSettingIgnoreNoOrder").val(qzSetting.ignoreNoOrder ? "1" : "0");
+      settingDialogDiv.find("#qzSettingInterval").val(
+          qzSetting.updateInterval != null ? qzSetting.updateInterval : "");
+      settingDialogDiv.find("#qzSettingEntryType").val(
+          qzSetting.type != null ? qzSetting.type : "");
+      settingDialogDiv[0].style.left = getTop(self); //鼠标目前在X轴上的位置，加10是为了向右边移动10个px方便看到内容
 
-        // 操作类型表填充数据
-        $$$.each(qzSetting.qzOperationTypes, function(idx, val) {
-            settingDialogDiv.find("#fGroup" + val.operationType).val(val.group);
-            settingDialogDiv.find("#fInitialKeywordCount" + val.operationType).val(val.initialKeywordCount );
-            settingDialogDiv.find("#fCurrentKeywordCount" + val.operationType).val(val.currentKeywordCount);
-            settingDialogDiv.find("#qzSettingUuid" + val.operationType).val(val.uuid);
+      // 操作类型表填充数据
+      $$$.each(qzSetting.qzOperationTypes, function (idx, val) {
+        settingDialogDiv.find("#group" + val.operationType).val(val.group);
+        settingDialogDiv.find("#initialKeywordCount" + val.operationType).val(
+            val.initialKeywordCount);
+        settingDialogDiv.find("#currentKeywordCount" + val.operationType).val(
+            val.currentKeywordCount);
+        settingDialogDiv.find("#qzSettingUuid" + val.operationType).val(val.uuid);
 
-            // 构造规则表
-            $$$.each(val.qzChargeRules, function(chargeRuleIdx, chargeRuleVal) {
-                if(val.operationType == 'PC') {
-                    rulePC.push([
-                        chargeRuleIdx,
-                        chargeRuleVal.uuid,
-                        chargeRuleVal.startKeywordCount,
-                        chargeRuleVal.endKeywordCount,
-                        chargeRuleVal.amount]
-                    );
-                }
-                if(val.operationType == 'Phone') {
-                    rulePhone.push([
-                        chargeRuleIdx,
-                        chargeRuleVal.uuid,
-                        chargeRuleVal.startKeywordCount,
-                        chargeRuleVal.endKeywordCount,
-                        chargeRuleVal.amount]
-                    );
-                }
-                addRow("order" + val.operationType);
-            });
+        // 构造规则表
+        $$$.each(val.qzChargeRules, function (chargeRuleIdx, chargeRuleVal) {
+          addRow("chargeRule" + val.operationType, chargeRuleVal);
+          if (val.operationType === 'PC') {
+            PCType = true;
+          }
+          if (val.operationType === 'Phone') {
+            PhoneType = true;
+          }
         });
+      });
 
-        // 规则填充数据
-        var rules = rulePC.concat(rulePhone);
-        for (var i = 0; i < rulePC.length + rulePhone.length; i++) {
-            var rule = rules[i];
-            var j = 1;
-            document.getElementsByName("qzChargeRuleUuid")[i].value = rule[j++];
-            document.getElementsByName("startKeywordCount")[i].value = rule[j++];
-            document.getElementsByName("endKeywordCount")[i].value = rule[j++];
-            document.getElementsByName("amount")[i].value = rule[j++];
-        }
+      divHeight = divHeight + $("#groupHeightPC").height() + $("#ruleHeightPC").height();
+      divHeight = divHeight + $("#groupHeightPhone").height() + $("#ruleHeightPhone").height();
+      if (PCType) {
+        divHeight = divHeight - inputHeight;
+        dealSettingTable("PC");
+      }
 
-		if(rulePC.length > 0) {
-			divHeight = divHeight + $("#groupHeightPC").height() + $("#ruleHeightPC").height() - inputHeight;
-			dealSettingTable("PC");
-		} else {
-			divHeight = divHeight + $("#groupHeightPC").height() + $("#ruleHeightPC").height();
-		}
+      if (PhoneType) {
+        divHeight = divHeight - inputHeight;
+        dealSettingTable("Phone");
+      }
 
-		if(rulePhone.length > 0) {
-			divHeight = divHeight + $("#groupHeightPhone").height() + $("#ruleHeightPhone").height() - inputHeight;
-			dealSettingTable("Phone");
-		} else {
-			divHeight = divHeight + $("#groupHeightPhone").height() + $("#ruleHeightPhone").height();
-		}
-
-        settingDialogDiv.show();
+      settingDialogDiv.show();
     }
 
     //规则表验证
     var reg = /^[1-9]\d*$/;
-    var startKeywordCount = document.getElementsByName("startKeywordCount");
-    var endKeywordCount = document.getElementsByName("endKeywordCount");
-    var amount = document.getElementsByName("amount");
-
     function saveChangeSetting(self) {
-        var settingDialogDiv = $$$("#changeSettingDialog");
-        var qzSetting = {};
-        qzSetting.uuid = settingDialogDiv.find("#qzSettingUuid").val();
-        qzSetting.domain = settingDialogDiv.find("#qzSettingDomain").val();
-        if(qzSetting.domain == null || qzSetting.domain === ""){
-            alert("请输入域名");
-            settingDialogDiv.find("#qzSettingDomain").focus();
-            return;
+      var settingDialogDiv = $$$("#changeSettingDialog");
+      var qzSetting = {};
+      qzSetting.uuid = settingDialogDiv.find("#qzSettingUuid").val();
+
+      var customer = settingDialogDiv.find("#qzSettingCustomer").val();
+      if (customer == null || customer === "") {
+        alert("请选择客户");
+        settingDialogDiv.find("#qzSettingCustomer").focus();
+        return;
+      }
+      qzSetting.domain = settingDialogDiv.find("#qzSettingDomain").val();
+      if (qzSetting.domain == null || qzSetting.domain === "") {
+        alert("请输入域名");
+        settingDialogDiv.find("#qzSettingDomain").focus();
+        return;
+      }
+      qzSetting.ignoreNoIndex = settingDialogDiv.find("#qzSettingIgnoreNoIndex").val() === "1"
+          ? true : false;
+      qzSetting.ignoreNoOrder = settingDialogDiv.find("#qzSettingIgnoreNoOrder").val() === "1"
+          ? true : false;
+      qzSetting.updateInterval = settingDialogDiv.find("#qzSettingInterval").val();
+      qzSetting.pcGroup = settingDialogDiv.find("#groupPC").val();
+      qzSetting.phoneGroup = settingDialogDiv.find("#groupPhone").val();
+
+      if (customer != null && customer != '') {
+        var customerArray = customer.split("_____");
+        if (customerArray.length == 2) {
+          qzSetting.customerUuid = customerArray[1];
+        } else {
+          alert("请从列表中选择客户");
+          settingDialogDiv.find("#qzSettingCustomer").focus();
+          return;
         }
-        qzSetting.ignoreNoIndex = settingDialogDiv.find("#qzSettingIgnoreNoIndex").val() === "1" ? true : false;
-        qzSetting.ignoreNoOrder = settingDialogDiv.find("#qzSettingIgnoreNoOrder").val() === "1" ? true : false;
-        qzSetting.updateInterval = settingDialogDiv.find("#qzSettingInterval").val();
-		qzSetting.pcGroup = settingDialogDiv.find("#fGroupPC").val();
-        qzSetting.phoneGroup = settingDialogDiv.find("#fGroupPhone").val();
-        var customer = settingDialogDiv.find("#qzSettingCustomer").val();
-        if(customer == null || customer === ""){
-            alert("请选择客户");
-            settingDialogDiv.find("#qzSettingCustomer").focus();
-            return;
+      }
+      var entryType = settingDialogDiv.find("#qzSettingEntryType").val();
+      qzSetting.type = entryType;
+      qzSetting.qzOperationTypes = [];//操作类型表
+      qzSetting.qzOperationTypes.qzChargeRules = [];//收费规则
+
+      var checkedObjs = settingDialogDiv.find("input[name=operationType]:checkbox:checked");
+      var validationFlag = true;
+      $$$.each(checkedObjs, function (idx, val) {
+        var ruleObj = settingDialogDiv.find("#chargeRule" + val.id);
+        var operationType = {};
+        operationType.qzChargeRules = [];
+        operationType.operationType = val.id;
+        operationType.group = settingDialogDiv.find("#group" + val.id).val();
+        operationType.initialKeywordCount = settingDialogDiv.find(
+            "#initialKeywordCount" + val.id).val();
+        operationType.currentKeywordCount = settingDialogDiv.find(
+            "#currentKeywordCount" + val.id).val();
+
+        if (operationType.group == null || operationType.group === "") {
+          alert("请输入分组");
+          settingDialogDiv.find("#group" + val.id).focus();
+          validationFlag = false;
+          return false;
         }
-
-        if(customer != null && customer != '' ){
-            var customerArray = customer.split("_____");
-            if(customerArray.length == 2){
-                qzSetting.customerUuid = customerArray[1];
-            }else{
-                alert("请从列表中选择客户");
-                settingDialogDiv.find("#qzSettingCustomer").focus();
-                return;
-            }
+        if (operationType.initialKeywordCount == null || operationType.initialKeywordCount === "") {
+          alert("请输入初始词量");
+          settingDialogDiv.find("#initialKeywordCount" + val.id).focus();
+          validationFlag = false;
+          return false;
         }
-        var entryType = settingDialogDiv.find("#qzSettingEntryType").val();
-        qzSetting.type = entryType;
-
-        qzSetting.qzOperationTypes = [];//操作类型表
-        qzSetting.qzOperationTypes.qzChargeRules= [];//收费规则
-
-        var pcRuleObj = document.getElementById("orderPC");
-        //pc操作类型
-        if(document.getElementById("fOperationTypePC").checked) {
-            var pcOperationType = {};
-            pcOperationType.qzChargeRules= [];
-            pcOperationType.operationType ='PC';
-            pcOperationType.group = settingDialogDiv.find("#fGroupPC").val();
-            pcOperationType.initialKeywordCount = settingDialogDiv.find("#fInitialKeywordCountPC").val();
-            pcOperationType.currentKeywordCount = settingDialogDiv.find("#fCurrentKeywordCountPC").val();
-
-            if(pcOperationType.group == null || pcOperationType.group === ""){
-                alert("请输入分组");
-                settingDialogDiv.find("#fGroupPC").focus();
-                return;
-            }
-            if(pcOperationType.initialKeywordCount == null || pcOperationType.initialKeywordCount === ""){
-                alert("请输入初始词量");
-                settingDialogDiv.find("#fInitialKeywordCountPC").focus();
-                return;
-            }
-
-            //多条pc规则
-            var endKeyWordCountValue = -1;
-            for (var i = 0; i < pcRuleObj.rows.length - 2; i++) {
-                var pcChargeRule = {};
-                pcChargeRule.startKeywordCount =  startKeywordCount[i].value;
-                pcChargeRule.endKeywordCount =  endKeywordCount[i].value;
-                pcChargeRule.amount = amount[i].value;
-                pcOperationType.qzChargeRules.push(pcChargeRule);
-
-                if(startKeywordCount[i].value == null || startKeywordCount[i].value == "") {
-                    alert("请输入起始词数");
-                    document.getElementsByName("startKeywordCount")[i].focus();
-                    return;
-                }
-                if(!reg.test(startKeywordCount[i].value)) {
-                    alert("请输入数字");
-                    document.getElementsByName("startKeywordCount")[i].focus();
-                    return;
-                }
-
-                var skc = Number(startKeywordCount[i].value);
-                if(skc <= endKeyWordCountValue) {
-                    alert("起始词数过小");
-                    document.getElementsByName("startKeywordCount")[i].focus();
-                    return;
-                }
-
-                if(i != pcRuleObj.rows.length - 3 || endKeywordCount[i].value != "") {
-                    if(endKeywordCount[i].value == null || endKeywordCount[i].value == "") {
-                        alert("请输入终止词数");
-                        document.getElementsByName("endKeywordCount")[i].focus();
-                        return;
-                    }
-                    if(!reg.test(endKeywordCount[i].value)) {
-                        alert("请输入数字");
-                        document.getElementsByName("endKeywordCount")[i].focus();
-                        return;
-                    }
-                    if(Number(endKeywordCount[i].value) <= skc) {
-                        alert("终止词数必须大于起始词数");
-                        document.getElementsByName("endKeywordCount")[i].focus();
-                        return;
-                    }
-				}
-
-                if(amount[i].value == null || amount[i].value == "") {
-                    alert("请输入价格");
-                    document.getElementsByName("amount")[i].focus();
-                    return;
-                }
-                if(!reg.test(amount[i].value)) {
-                    alert("输入的价格不合理");
-                    document.getElementsByName("amount")[i].focus();
-                    return;
-                }
-                endKeyWordCountValue = Number(endKeywordCount[i].value);
-            }
-            qzSetting.qzOperationTypes.push(pcOperationType);
+        if (!reg.test(operationType.initialKeywordCount)) {
+          alert("请输入数字");
+          settingDialogDiv.find("#initialKeywordCount" + val.id).focus();
+          validationFlag = false;
+          return false;
         }
 
-        //Phone操作类型
-        if(document.getElementById("fOperationTypePhone").checked){
-            var PhoneOperationType = {};
-            PhoneOperationType.qzChargeRules= [];
-            PhoneOperationType.operationType ='Phone';
-            PhoneOperationType.initialKeywordCount = settingDialogDiv.find("#fInitialKeywordCountPhone").val();
-            PhoneOperationType.currentKeywordCount = settingDialogDiv.find("#fCurrentKeywordCountPhone").val();
-            PhoneOperationType.group = settingDialogDiv.find("#fGroupPhone").val();
+        //多条规则
+        var endKeyWordCountValue = -1;
+        var trObjs = ruleObj.find("tr:not(:first,:last)");
+        $$$.each(trObjs, function (idx, val) {
+          var startKeywordCountObj = $$$(val).find("input[name=startKeywordCount]");
+          var endKeywordCountObj = $$$(val).find("input[name=endKeywordCount]");
+          var amountObj = $$$(val).find("input[name=amount]");
 
-            if(PhoneOperationType.group == null || PhoneOperationType.group === ""){
-                alert("请输入分组");
-                settingDialogDiv.find("#fGroupPhone").focus();
-                return;
+          var chargeRule = {};
+          chargeRule.startKeywordCount = startKeywordCountObj.val();
+          chargeRule.endKeywordCount = endKeywordCountObj.val();
+          chargeRule.amount = amountObj.val();
+          operationType.qzChargeRules.push(chargeRule);
+
+          if (startKeywordCountObj.val() == null || startKeywordCountObj.val() == "") {
+            alert("请输入起始词数");
+            startKeywordCountObj[0].focus();
+            validationFlag = false;
+            return false;
+          }
+          if (!reg.test(startKeywordCountObj.val())) {
+            alert("请输入数字");
+            startKeywordCountObj.focus();
+            validationFlag = false;
+            return false;
+          }
+
+          var skc = Number(startKeywordCountObj.val());
+          if (skc <= endKeyWordCountValue) {
+            alert("起始词数过小");
+            startKeywordCountObj.focus();
+            validationFlag = false;
+            return false;
+          }
+
+          if (idx < (trObjs.length - 1)) {
+            if (endKeywordCountObj.val() == null || endKeywordCountObj.val() == "") {
+              alert("请输入终止词数");
+              endKeywordCountObj.focus();
+              validationFlag = false;
+              return false;
             }
-            if(PhoneOperationType.initialKeywordCount == null || PhoneOperationType.initialKeywordCount === ""){
-                alert("请输入初始词量");
-                settingDialogDiv.find("#fInitialKeywordCountPhone").focus();
-                return;
+          }
+
+          if (endKeywordCountObj.val() != "") {
+            if (!reg.test(endKeywordCountObj.val())) {
+              alert("请输入数字");
+              endKeywordCountObj.focus();
+              validationFlag = false;
+              return false;
             }
-
-            //多条Phone规则信息
-            var endKeyWordCountValue = -1;
-            for (var i = pcRuleObj.rows.length - 2; i < amount.length; i++){
-                var PhoneChargeRule =  {};
-                PhoneChargeRule.startKeywordCount = startKeywordCount[i].value;
-                PhoneChargeRule.endKeywordCount =  endKeywordCount[i].value;
-                PhoneChargeRule.amount = amount[i].value;
-                PhoneOperationType.qzChargeRules.push(PhoneChargeRule);
-
-                if(startKeywordCount[i].value == null || startKeywordCount[i].value == "") {
-                    alert("请输入起始词数");
-                    document.getElementsByName("startKeywordCount")[i].focus();
-                    return;
-                }
-                if(!reg.test(startKeywordCount[i].value)) {
-                    alert("请输入数字");
-                    document.getElementsByName("startKeywordCount")[i].focus();
-                    return;
-                }
-
-                var skc = Number(startKeywordCount[i].value);
-                if(skc <= endKeyWordCountValue) {
-                    alert("起始词数过小");
-                    document.getElementsByName("startKeywordCount")[i].focus();
-                    return;
-                }
-
-                if(i != amount.length - 1 || endKeywordCount[i].value != "") {
-                    if(endKeywordCount[i].value == null || endKeywordCount[i].value == "") {
-                        alert("请输入终止词数");
-                        document.getElementsByName("endKeywordCount")[i].focus();
-                        return;
-                    }
-                    if(!reg.test(endKeywordCount[i].value)) {
-                        alert("请输入数字");
-                        document.getElementsByName("endKeywordCount")[i].focus();
-                        return;
-                    }
-                    if(Number(endKeywordCount[i].value) <= skc) {
-                        alert("终止词数必须大于起始词数");
-                        document.getElementsByName("endKeywordCount")[i].focus();
-                        return;
-                    }
-                }
-
-                if(amount[i].value == null || amount[i].value == "") {
-                    alert("请输入价格");
-                    document.getElementsByName("amount")[i].focus();
-                    return;
-                }
-                if(!reg.test(amount[i].value)) {
-                    alert("输入的价格不合理");
-                    document.getElementsByName("amount")[i].focus();
-                    return;
-                }
-                endKeyWordCountValue = Number(endKeywordCount[i].value);
+            if (Number(endKeywordCountObj.val()) <= skc) {
+              alert("终止词数必须大于起始词数");
+              endKeywordCountObj.focus();
+              validationFlag = false;
+              return false;
             }
-            qzSetting.qzOperationTypes.push(PhoneOperationType);
-        }
+          }
 
-        if(!document.getElementById("fOperationTypePhone").checked && !document.getElementById("fOperationTypePhone").checked) {
-            var len = document.getElementsByName("amount").length;
-            if(len <= 0) {
-                alert("保存失败，必须要增加一条规则");
-                return;
-            }
-        }
-
-        $$$.ajax({
-            url: '/spring/qzsetting/save',
-            data: JSON.stringify(qzSetting),
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            timeout: 5000,
-            type: 'POST',
-            success: function (data) {
-                settingDialogDiv.hide();
-                if(data != null && data != ""){
-                    showInfo("更新成功！", self);
-                    window.location.reload();
-                }else{
-                    showInfo("更新失败！", self);
-                    window.location.reload();
-                }
-            },
-            error: function () {
-                showInfo("更新失败！", self);
-                settingDialogDiv.hide();
-            }
+          if (amountObj.val() == null || amountObj.val() == "") {
+            alert("请输入价格");
+            amountObj.focus();
+            validationFlag = false;
+            return false;
+          }
+          if (!reg.test(amountObj.val())) {
+            alert("输入的价格不合理");
+            amountObj.focus();
+            validationFlag = false;
+            return false;
+          }
+          endKeyWordCountValue = Number(endKeywordCountObj.val());
         });
-    }
-
-    function formatDate(value) {
-        var date = new Date();
-        date.setTime(value.time);
-        var y = date.getFullYear();
-        var m = date.getMonth() + 1;
-        m = m < 10 ? '0' + m : m;
-        var d = date.getDate();
-        d = d < 10 ? ("0" + d) : d;
-        var h = date.getHours();
-        h = h < 10 ? ("0" + h) : h;
-        var M = date.getMinutes();
-        M = M < 10 ? ("0" + M) : M;
-        var S = date.getSeconds();
-        S = S < 10 ? ("0" + S) : S;
-        if (M == '00' && S == '00') {
-            var str = y + "-" + m + "-" + d;
-            return str;
+        if (!validationFlag) {
+          return false;
         }
-        var str = y + "-" + m + "-" + d + " " + h + ":" + M + ":" + S;
-        return str;
+        qzSetting.qzOperationTypes.push(operationType);
+      });
+
+      if (validationFlag) {
+        if (checkedObjs.length == 0) {
+          alert("保存失败，必须要增加一条规则");
+          return;
+        }
+        $$$.ajax({
+          url: '/spring/qzsetting/save',
+          data: JSON.stringify(qzSetting),
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          timeout: 5000,
+          type: 'POST',
+          success: function (data) {
+            settingDialogDiv.hide();
+            if (data != null && data != "") {
+              showInfo("更新成功！", self);
+              window.location.reload();
+            } else {
+              showInfo("更新失败！", self);
+              window.location.reload();
+            }
+          },
+          error: function () {
+            showInfo("更新失败！", self);
+            settingDialogDiv.hide();
+          }
+        });
+      }
     }
     
     function resetChargeList() {
         $("#chargeLogListDiv").hide();
     }
 
-    function insertChargeLog(uuid, self){
-        $("#chargeLogListDiv").hide();
-        cancelChargeDialog();
-        cancelChangeSetting();
-        $("#chargeLogListTable  tr:not(:first,:last)").remove();
-        $$$.ajax({
-            url: '/spring/qzchargelog/chargesList/' + uuid,
-            type: 'Get',
-            success: function (data) {
-                if(data != null && data.length > 0) {
-                    var qzChargeLogs = eval("("+data+")");
-                    var chargeLogListTable = document.getElementById("chargeLogListTable");
-                    for (var i = 0; i < qzChargeLogs.length; i++) {
-                        var chargeLog = [
-                            formatDate(qzChargeLogs[i].actualChargeDate),
-                            qzChargeLogs[i].operationType,
-							qzChargeLogs[i].actualAmount,
-							qzChargeLogs[i].userName,
-							formatDate(qzChargeLogs[i].createTime)
-						];
-                        // 创建tr、td
-                        var newTr = document.createElement("tr");
-                        for(var n = 0; n < 5; n++) {
-                            var newTd = document.createElement("td");
-                            newTr.appendChild(newTd);
-                            newTd.innerHTML = chargeLog[n];
-                        }
-                        // 新增一行
-						var row = document.getElementById("lastTr");
-                        row.parentNode.insertBefore(newTr,row);
-                    }
-					$("#chargeLogListDiv").show();
-                }else{
-                    alert("暂无收费记录");
-                }
-            },
-            error: function () {
-                showInfo("获取信息失败！", self);
-            }
-        });
+    function showChargeLog(uuid, self) {
+      $("#chargeLogListDiv").hide();
+      cancelChargeDialog();
+      cancelChangeSetting();
+      $("#chargeLogListTable  tr:not(:first,:last)").remove();
+      $$$.ajax({
+        url: '/spring/qzchargelog/chargesList/' + uuid,
+        type: 'Get',
+        success: function (qzChargeLogs) {
+          if (qzChargeLogs != null && qzChargeLogs.length > 0) {
+            $$$.each(qzChargeLogs, function (idx, val) {
+              var newTr = document.createElement("tr")
+              var chargeLogElements = [
+                toDateFormat(new Date(val.actualChargeDate)),
+                val.operationType,
+                val.actualAmount,
+                val.userName,
+                toTimeFormat(new Date(val.createTime))
+              ];
+              $$$.each(chargeLogElements, function () {
+                var newTd = document.createElement("td");
+                newTr.appendChild(newTd);
+                newTd.innerHTML = this;
+              });
 
+              // 新增一行
+              var row = document.getElementById("lastTr");
+              row.parentNode.insertBefore(newTr, row);
+            });
+            $$$("#chargeLogListDiv").show();
+          } else {
+            alert("暂无收费记录");
+          }
+        },
+        error: function () {
+          showInfo("获取信息失败！", self);
+        }
+      });
     }
 
+    function toTimeFormat(time) {
+      var date = toDateFormat(time);
+      var hours = time.getHours() < 10 ? ("0" + time.getHours()) : time.getHours();
+      var minutes = time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes();
+      var seconds = time.getSeconds() < 10 ? "0" + time.getSeconds() : time.getSeconds();
+      return date + " " + hours + ":" + minutes + ":" + seconds;
+    };
+    function toDateFormat (time) {
+      return time.getFullYear() + "-" +
+		  (time.getMonth() + 1) + "-" +
+          time.getDate();
+    };
+
     function saveChargeLog(self) {
-        var checkboxPC = document.getElementById("operationTypePC");
-        var checkboxPhone = document.getElementById("operationTypePhone");
-        var chargeData = {};
-        if (window.confirm("确认收费?")) {
-            if(checkboxPC.checked == true) {
-                chargeData.fQzOperationTypeUuidPC = $$$("#fQzOperationTypeUuidPC").val();
-                chargeData.fReceivableAmountPC = $$$("#fReceivableAmountPC").val();
-                chargeData.fPlanChargeDatePC = $$$("#fPlanChargeDatePC").val();
-                chargeData.fNextChargeDatePC = $$$("#fNextChargeDatePC").val();
-                chargeData.fActualAmountPC = $$$("#fActualAmountPC").val();
-                chargeData.fActualChargeDatePC = $$$("#fActualChargeDatePC").val();
-                if(chargeData.fNextChargeDatePC == "" || chargeData.fNextChargeDatePC == null) {
-                    alert("下次收费日期为必填");
-                    $$$("#fNextChargeDatePC").focus();
-                    return;
-                }
-                if(chargeData.fActualAmountPC == "" || chargeData.fActualAmountPC == null) {
-                    alert("实收金额为必填");
-                    $$$("#fActualAmountPC").focus();
-                    return;
-                }
-                if(!reg.test(chargeData.fActualAmountPC)) {
-                    alert("请输入合理的金额");
-                    $$$("#fActualAmountPC").focus();
-                    return;
-                }
-                if(chargeData.fActualChargeDatePC == "" || chargeData.fActualChargeDatePC == null) {
-                    alert("实际收费日期为必填");
-                    $$$("#fActualChargeDatePC").focus();
-                    return;
-                }
-            }
-            if(checkboxPhone.checked == true) {
-                chargeData.fQzOperationTypeUuidPhone = $$$("#fQzOperationTypeUuidPhone").val();
-                chargeData.fReceivableAmountPhone = $$$("#fReceivableAmountPhone").val();
-                chargeData.fPlanChargeDatePhone = $$$("#fPlanChargeDatePhone").val();
-                chargeData.fNextChargeDatePhone = $$$("#fNextChargeDatePhone").val();
-                chargeData.fActualAmountPhone = $$$("#fActualAmountPhone").val();
-                chargeData.fActualChargeDatePhone = $$$("#fActualChargeDatePhone").val();
-                if(chargeData.fNextChargeDatePhone == "" || chargeData.fNextChargeDatePhone == null) {
-                    alert("下次收费日期为必填");
-                    $$$("#fNextChargeDatePhone").focus();
-                    return;
-                }
-                if(chargeData.fActualAmountPhone == "" || chargeData.fActualAmountPhone == null) {
-                    alert("实收金额为必填");
-                    $$$("#fActualAmountPhone").focus();
-                    return;
-                }
-                if(!reg.test(chargeData.fActualAmountPhone)) {
-                    alert("请输入合理的金额");
-                    $$$("#fActualAmountPhone").focus();
-                    return;
-				}
-                if(chargeData.fActualChargeDatePhone == "" || chargeData.fActualChargeDatePhone == null) {
-                    alert("实际收费日期为必填");
-                    $$$("#fActualChargeDatePhone").focus();
-                    return;
-                }
-            }
-        } else {
-            alert("取消收费");
+      var chargeDialog = $$$("chargeDialog");
+      var selectedOperationTypes = chargeDialog.find("input[name=operationType]:checkbox:checked");
+
+      if (window.confirm("确认收费?")) {
+        if (selectedOperationTypes.length == 0) {
+          alert("必须选择一个收费项才能收费");
+          return;
         }
 
-        if(checkboxPC.checked == false && checkboxPhone.checked == false) {
-            alert("必须选择一个收费项才能收费");
+        var chargeLogs = [];
+        $$$.each(selectedOperationTypes, function (index, val) {
+          var chargeLog = {};
+          chargeLog.qzOperationTypeUuid = chargeDialog.find("#qzOperationTypeUuid" + val.id).val();
+          chargeLog.planChargeDate = chargeDialog.find("#planChargeDate" + val.id).val();
+          chargeLog.actualChargeDate = chargeDialog.find("#actualChargeDate" + val.id).val();
+          chargeLog.receivableAmount = chargeDialog.find("#receivableAmount" + val.id).val();
+          chargeLog.actualAmount = chargeDialog.find("#actualAmount" + val.id).val();
+          chargeLog.nextChargeDate = chargeDialog.find("#nextChargeDate" + val.id).val();
+          if (chargeLog.nextChargeDate == "" || chargeLog.nextChargeDate == null) {
+            alert("下次收费日期为必填");
+            chargeDialog.find("#nextChargeDate" + val.id).focus();
             return;
-        }
+          }
+          if (chargeLog.actualAmount == "" || chargeLog.actualAmount == null) {
+            alert("实收金额为必填");
+            chargeDialog.find("#actualAmount" + val.id).focus();
+            return;
+          }
+          if (!reg.test(chargeLog.actualAmount)) {
+            alert("请输入合理的金额");
+            chargeDialog.find("#actualAmount" + val.id).focus();
+            return;
+          }
+          if (chargeLog.actualChargeDate == "" || chargeLog.actualChargeDate == null) {
+            alert("实际收费日期为必填");
+            chargeDialog.find("#actualChargeDate" + val.id).focus();
+            return;
+          }
+          chargeLogs.push(chargeLog);
+        });
 
         $$$.ajax({
-            url: '/spring/qzchargelog/save',
-            data: JSON.stringify(chargeData),
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            timeout: 5000,
-            type: 'POST',
-            success: function (data) {
-                cancelChargeDialog();
-                if(data != null && data != ""){
-                    showInfo("收费成功！", self);
-                    window.location.reload();
-                }else{
-                    showInfo("收费失败！", self);
-                    window.location.reload();
-                }
-            },
-            error: function () {
-                showInfo("收费失败！", self);
+          url: '/spring/qzchargelog/save',
+          data: JSON.stringify(chargeLogs),
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          timeout: 5000,
+          type: 'POST',
+          success: function (data) {
+            cancelChargeDialog();
+            if (data != null && data != "") {
+              showInfo("收费成功！", self);
+              window.location.reload();
+            } else {
+              showInfo("收费失败！", self);
+              window.location.reload();
             }
+          },
+          error: function () {
+            showInfo("收费失败！", self);
+          }
         });
+      } else {
+        alert("取消收费");
+      }
     }
 
     function calTotalAmount() {
-        var pcValue = 0;
-        var phoneValue = 0;
-        if(document.getElementById("operationTypePC").checked == true) {
-            pcValue = Number(document.getElementById("fActualAmountPC").value);
-        }
-        if(document.getElementById("operationTypePhone").checked == true) {
-            phoneValue = Number(document.getElementById("fActualAmountPhone").value);
-        }
-        var str = new String(pcValue + phoneValue);
+      	var totalAmount = 0;
+        var chargeDialog = $$$("#chargeDialog");
+        $$$.each(chargeDialog.find("input[name=operationType]:checkbox:checked"), function(idx, val){
+          totalAmount = totalAmount + Number(chargeDialog.find("#actualAmount" + val.id).val());
+		});
+        var str = new String(totalAmount);
         var total = str.replace( /\B(?=(?:\d{3})+$)/g, ',' );
-        document.getElementById("totalAmount").innerHTML = "￥" + total + "元";
+        chargeDialog.find("#totalAmount").html(total + "元");
     }
 
     function cancelChangeSetting(){
@@ -1219,34 +1063,32 @@
         div1.style.display="none";
     }
 
-    function addRow(tableId){
-        var addTable = document.getElementById(tableId);
-        var row_index = addTable.rows.length - 1;       //新插入行在表格中的位置
-        var newRow = addTable.insertRow(row_index);     //插入新行
-        newRow.id = "row" + row_index;                  //设置新插入行的ID
+    function addRow(tableID){
+    	addRow(tableID, null);
+    }
 
-        if(tableId == "orderPC") {
-            var col1 = newRow.insertCell(0);
-            col1.innerHTML="<input type='text' name='PCId' value='"+(id1++)+"' style='width:100%'/><input type='hidden' name='qzChargeRuleUuid' />";
-        } else if(tableId == "orderPhone") {
-            var col1 = newRow.insertCell(0);
-            col1.innerHTML="<input type='text' name='PhoneId' value='"+(id2++)+"' style='width:100%'/><input type='hidden' name='qzChargeRuleUuid' />";
-        }
+    function addRow(tableID, chargeRule){
+      var tableObj = $$$("#" + tableID);
+      var rowCount = tableObj.find("tr").length;
+      var newRow = tableObj[0].insertRow(rowCount - 1);     //插入新行
 
-        var col2 = newRow.insertCell(1);
-        col2.innerHTML = "<input type='text' name='startKeywordCount' style='width:100%'/>";
+	  var col1 = newRow.insertCell(0);
+	  col1.innerHTML="<input type='text' name='sequenceID' value='"+(rowCount - 1)+"' style='width:100%'/>";
 
-        var col3 = newRow.insertCell(2);
-        col3.innerHTML = "<input type='text' name='endKeywordCount' style='width:100%'/>";
+      var col2 = newRow.insertCell(1);
+      col2.innerHTML = "<input type='text' name='startKeywordCount' value='"+(chargeRule != null ? chargeRule.startKeywordCount : '')+"' style='width:100%'/>";
 
-        var col4 = newRow.insertCell(3);
-        col4.innerHTML = "<input type='text' name='amount' style='width:100%'/>";
+      var col3 = newRow.insertCell(2);
+      col3.innerHTML = "<input type='text' name='endKeywordCount' value='"+((chargeRule != null && chargeRule.endKeywordCount != null) ? chargeRule.endKeywordCount : '')+"'  style='width:100%'/>";
 
-        var col5 = newRow.insertCell(4);
-        col5.innerHTML = "<input style='width:100%' name='del" + row_index + "' type='button' value='删除' onclick='deleteCurrentRow(this.parentNode.parentNode)' />";
+      var col4 = newRow.insertCell(3);
+      col4.innerHTML = "<input type='text' name='amount' value='"+(chargeRule != null ? chargeRule.amount : '')+"'  style='width:100%'/>";
 
-        divHeight = divHeight + inputHeight;
-        document.getElementById("changeSettingDialog").style.height = divHeight;
+      var col5 = newRow.insertCell(4);
+      col5.innerHTML = "<input style='width:100%' type='button' value='删除' onclick='deleteCurrentRow(this.parentNode.parentNode)' />";
+
+      divHeight = divHeight + inputHeight;
+      $$$("#changeSettingDialog").css("height", divHeight);
     }
 
     function deleteCurrentRow(currentRow) {
@@ -1262,23 +1104,23 @@
     }
 
     function clearInfo(type) {
-        if(type == "Both") {
-            clearInfo("PC");
-            clearInfo("Phone");
-            divHeight = 250;
-            document.getElementById("changeSettingDialog").style.height = divHeight;
+      var settingDialogObj = $$$("#changeSettingDialog");
+      if(type == "Both") {
+          clearInfo("PC");
+          clearInfo("Phone");
+          divHeight = 250;
+          settingDialogObj.css("height",divHeight);
         } else {
-            var settingDialogObj = $$$("#changeSettingDialog");
             // 清空分组表格信息
-            settingDialogObj.find("#fGroup" + type).val("");
-            settingDialogObj.find("#fInitialKeywordCount" + type).val("");
-            settingDialogObj.find("#fCurrentKeywordCount" + type).val("");
+            settingDialogObj.find("#group" + type).val("");
+            settingDialogObj.find("#initialKeywordCount" + type).val("");
+            settingDialogObj.find("#currentKeywordCount" + type).val("");
             settingDialogObj.find("#qzOperationTypeUuid" + type).val("");
             // 清空规则表格信息
-            $(document).find("input[name='"+type+"Id']").parent().parent().remove();
-            document.getElementById("fOperationType" + type).checked = false;
-            document.getElementById("group" + type).style.display = "none";
-            document.getElementById("order" + type).style.display = "none";
+            settingDialogObj.find("#chargeRule" + type).find("tr:not(:first,:last)").remove();
+            settingDialogObj.find("#" + type)[0].checked = false;
+            settingDialogObj.find("#operationTypeSummaryInfo" + type).css("display","none");
+            settingDialogObj.find("#chargeRule" + type).css("display","none");
             // 重置div高度以及规则表序号
             divHeight = divHeight - $("#groupHeight" + type).height() - $("#ruleHeight" + type).height();
             if(type == "PC") {
@@ -1290,49 +1132,55 @@
     }
 
     function dealChargeTable(operationType) {
-		var checkboxObj = document.getElementById("operationType" + operationType);
-		var chargeInfoObj = document.getElementById(operationType + "ChargeInfo");
-		var chargeDialogHeight = $("#chargeDialog").height();
-        if(chargeInfoObj.style.display == "none" || checkboxObj.checked == true) {
-            document.getElementById("chargeDialog").style.height = 320;
-            chargeInfoObj.style.display = "block";
-        } else if(chargeInfoObj.style.display == "block" || checkboxObj.checked == false) {
-            chargeInfoObj.style.display = "none";
-        }
-		calTotalAmount();
-        if(document.getElementById("operationTypePC").checked == false && document.getElementById("operationTypePhone").checked == false) {
-            document.getElementById("chargeInfoTable").style.height = 0;
-            document.getElementById("chargeDialog").style.height = chargeDialogHeight - 178;
-        } else {
-            document.getElementById("chargeInfoTable").style.height = 185;
-		}
+      var chargeDialog = $$$("#chargeDialog");
+      var checkboxObj = chargeDialog.find("#" + operationType);
+      var chargeInfoObj = chargeDialog.find("#" + operationType + "ChargeInfo");
+      var chargeDialogHeight = $("#chargeDialog").height();
+      if (chargeInfoObj.css("display") == "none" || checkboxObj[0].checked == true) {
+        chargeDialog.css("height",320);
+        chargeInfoObj.css("display", "block");
+      } else {
+        chargeInfoObj.css("display", "none");
+      }
+      calTotalAmount();
+      var selectedOperationTypes = chargeDialog.find("input[name=operationType]:checkbox:checked");
+      if (selectedOperationTypes.length == 0) {
+        chargeDialog.find("#chargeInfoTable").css("height",0);
+        chargeDialog.css("height",chargeDialogHeight - 178);
+      } else {
+        chargeDialog.find("#chargeInfoTable").css("height",185);
+      }
     }
 
     function dealSettingTable(operationType) {
-        var groupObj = document.getElementById('group' + operationType);
-        var ruleObj = document.getElementById('order' + operationType);
-        var checkboxObj = document.getElementById('fOperationType' + operationType);
+      var settingDialogDiv = $$$("#changeSettingDialog");
+      var groupObj = settingDialogDiv.find('#operationTypeSummaryInfo' + operationType);
+      var ruleObj = settingDialogDiv.find('#chargeRule' + operationType);
+      var chargeRuleRowCount = ruleObj.find("tr").length;
+      var checkboxObj = settingDialogDiv.find('#' + operationType);
 
-        if(ruleObj.style.display == "none" || checkboxObj.checked == true){
-            // 保证必须有一条规则
-            if(document.getElementsByName(operationType + "Id").length <= 0) {
-                addRow("order" + operationType);
-                divHeight = divHeight - inputHeight;
-            }
-            divHeight = divHeight + 130;
-            document.getElementById("changeSettingDialog").style.height = divHeight;
-            groupObj.style.display = "block";
-            ruleObj.style.display = "block";
-            checkboxObj.checked = true;
-        } else if(ruleObj.style.display == "block" || checkboxObj.checked == false) {
-            trHeight = $("#groupHeight" + operationType).height() + $("#ruleHeight" + operationType).height();
-            divHeight = divHeight - trHeight + space;
-            document.getElementById("changeSettingDialog").style.height = divHeight;
-            clearInfo(operationType);
-            groupObj.style.display = "none";
-            ruleObj.style.display = "none";
-            checkboxObj.checked = false;
+
+      if (ruleObj.css("display") == "none" || checkboxObj[0].checked == true) {
+        // 保证必须有一条规则
+        if (chargeRuleRowCount <= 2) {
+          addRow("chargeRule" + operationType);
+          divHeight = divHeight - inputHeight;
         }
+        divHeight = divHeight + 130;
+        document.getElementById("changeSettingDialog").style.height = divHeight;
+        groupObj.css("display","block");
+        ruleObj.css("display","block");
+        checkboxObj[0].checked = true;
+      } else {
+        trHeight = $("#groupHeight" + operationType).height() + $(
+                "#ruleHeight" + operationType).height();
+        divHeight = divHeight - trHeight + space;
+        document.getElementById("changeSettingDialog").style.height = divHeight;
+        clearInfo(operationType);
+        groupObj.css("display","none");
+        ruleObj.css("display","none");
+        checkboxObj[0].checked = false;
+      }
     }
 </script>
 
@@ -1356,33 +1204,33 @@
 
 		<tr>
 			<td colspan="2">
-				<input type="checkbox" name="fOperationType" id="fOperationTypePC" onclick="dealSettingTable('PC')" style=""/>电脑
+				<input type="checkbox" name="operationType" id="PC" onclick="dealSettingTable('PC')" style=""/>电脑
 			</td>
 		</tr>
 		<%--电脑分组信息--%>
 		<tr>
 			<td colspan="2" id="groupHeightPC">
-				<table border="0" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="groupPC">
+				<table border="0" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="operationTypeSummaryInfoPC">
 					<tr>
 						<th style="width:72px">分组</th>
-						<td><input type="text" name="fGroup" id="fGroupPC"  style="width:234px"/></td>
+						<td><input type="text" name="group" id="groupPC"  style="width:234px"/></td>
 					</tr>
 					<tr>
 						<th style="width:72px">初始词量</th>
-						<td colspan="4"><input type="text" name="fInitialKeywordCount" id="fInitialKeywordCountPC"  style="width:234px"/></td>
+						<td colspan="4"><input type="text" name="initialKeywordCount" id="initialKeywordCountPC"  style="width:234px"/></td>
 					</tr>
 					<tr>
 						<th style="width:72px">当前词量</th>
-						<td colspan="4"><input type="text" name="fCurrentKeywordCount" id="fCurrentKeywordCountPC"  style="width:234px" readonly/></td>
+						<td colspan="4"><input type="text" name="currentKeywordCount" id="currentKeywordCountPC"  style="width:234px" readonly/></td>
 					</tr>
 					<input type="hidden" id="qzSettingUuidPC" name="qzOperationTypeUuid" value="" />
 				</table>
 			</td>
 		</tr>
 		<%--电脑规则信息--%>
-		<tr id="pcTable">
+		<tr id="pcChargeRuleTable">
 			<td colspan="2" id="ruleHeightPC">
-				<table border="1" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="orderPC">
+				<table border="1" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="chargeRulePC">
 					<tr>
 						<th style="width:50px">序号</th>
 						<th style="width:72px">起始词数</th>
@@ -1392,7 +1240,7 @@
 					</tr>
 					<tr>
 						<td colspan="5">
-							<input name="addRule" type="button" value="增加规则" onclick="addRow('orderPC')" /></td>
+							<input name="addRule" type="button" value="增加规则" onclick="addRow('chargeRulePC')" /></td>
 					</tr>
 				</table>
 			</td>
@@ -1400,33 +1248,33 @@
 
 		<tr>
 			<td colspan="2">
-				<input type="checkbox" name="fOperationType" id="fOperationTypePhone" onclick="dealSettingTable('Phone')" style=""/>手机
+				<input type="checkbox" name="operationType" id="Phone" onclick="dealSettingTable('Phone')" style=""/>手机
 			</td>
 		</tr>
 		<%--手机分组信息--%>
 		<tr>
 			<td colspan="2" id="groupHeightPhone">
-				<table border="0" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="groupPhone">
+				<table border="0" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="operationTypeSummaryInfoPhone">
 					<tr>
 						<th style="width:72px">分组</th>
-						<td><input type="text" name="fGroup" id="fGroupPhone"  style="width:234px"/></td>
+						<td><input type="text" name="group" id="groupPhone"  style="width:234px"/></td>
 					</tr>
 					<tr>
 						<th style="width:72px">初始词量</th>
-						<td colspan="4"><input type="text" name="fInitialKeywordCount" id="fInitialKeywordCountPhone"  style="width:234px"/></td>
+						<td colspan="4"><input type="text" name="initialKeywordCount" id="initialKeywordCountPhone"  style="width:234px"/></td>
 					</tr>
 					<tr>
 						<th style="width:72px">当前词量</th>
-						<td colspan="4"><input type="text" name="fCurrentKeywordCount" id="fCurrentKeywordCountPhone"  style="width:234px" readonly/></td>
+						<td colspan="4"><input type="text" name="currentKeywordCount" id="currentKeywordCountPhone"  style="width:234px" readonly/></td>
 					</tr>
 					<input type="hidden" id="qzSettingUuidPhone" name="qzOperationTypeUuid" value="" />
 				</table>
 			</td>
 		</tr>
 		<%--手机规则信息--%>
-		<tr id="phoneTable">
+		<tr id="phoneChargeRuleTable">
 			<td colspan="2" id="ruleHeightPhone">
-				<table border="1" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="orderPhone">
+				<table border="1" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="chargeRulePhone">
 					<tr>
 						<th style="width:50px">序号</th>
 						<th style="width:72px">起始词数</th>
@@ -1436,7 +1284,7 @@
 					</tr>
 					<tr>
 						<td colspan="5">
-							<input name="addRule" type="button" value="增加规则" onclick="addRow('orderPhone')" /></td>
+							<input name="addRule" type="button" value="增加规则" onclick="addRow('chargeRulePhone')" /></td>
 					</tr>
 				</table>
 			</td>
@@ -1516,7 +1364,7 @@
 			<td>
 				<table id="checkChargePC" style="display: none;font-size:12px;">
 					<tr><td>
-						<input type="checkbox" name="fOperationType" id="operationTypePC" style="margin-left: -2px" onclick="dealChargeTable('PC')" />电脑
+						<input type="checkbox" name="operationType" id="PC" style="margin-left: -2px" onclick="dealChargeTable('PC')" />电脑
 					</td></tr>
 				</table>
 			</td>
@@ -1524,7 +1372,7 @@
 			<td>
 				<table id="checkChargePhone" style="display: none;font-size:12px;">
 					<tr><td>
-						<input type="checkbox" name="fOperationType" id="operationTypePhone" onclick="dealChargeTable('Phone')" style="margin-left: 140px"/>手机
+						<input type="checkbox" name="operationType" id="Phone" onclick="dealChargeTable('Phone')" style="margin-left: 140px"/>手机
 					</td></tr>
 				</table>
 			</td>
@@ -1537,41 +1385,41 @@
 			<table style="display:none;font-size:12px;" id="PCChargeInfo">
 				<tr>
 					<td align="right">初始词量</td>
-					<input type="hidden" name="fQzOperationTypeUuid" id="fQzOperationTypeUuidPC"/>
-					<td><input type="text" name="fInitialKeywordCount" id="fInitialKeywordCountPC"  style="width:100px" readonly/></td>
+					<input type="hidden" name="qzOperationTypeUuid" id="qzOperationTypeUuidPC"/>
+					<td><input type="text" name="initialKeywordCount" id="initialKeywordCountPC"  style="width:100px" readonly/></td>
 				</tr>
 				<tr>
 					<td align="right">当前词量</td>
-					<td><input type="text" name="fCurrentKeywordCount" id="fCurrentKeywordCountPC"  style="width:100px" readonly/></td>
+					<td><input type="text" name="currentKeywordCount" id="currentKeywordCountPC"  style="width:100px" readonly/></td>
 				</tr>
 				<tr>
 					<td align="right">应收金额</td>
 					<td>
-						<input type="text" name="fReceivableAmount" id="fReceivableAmountPC" style="width:100px" readonly />
+						<input type="text" name="receivableAmount" id="receivableAmountPC" style="width:100px" readonly />
 					</td>
 				</tr>
 				<tr>
 					<td align="right">计划收费日期</td>
 					<td>
-						<input type="text" name="fPlanChargeDate" id="fPlanChargeDatePC" style="width:100px" readonly />
+						<input type="text" name="planChargeDate" id="planChargeDatePC" style="width:100px" readonly />
 					</td>
 				</tr>
 				<tr>
 					<td align="right">下次收费日期</td>
 					<td>
-						<input type="text" name="fNextChargeDate" id="fNextChargeDatePC" class="Wdate" onClick="WdatePicker()" style="width:100px" />
+						<input type="text" name="nextChargeDate" id="nextChargeDatePC" class="Wdate" onClick="WdatePicker()" style="width:100px" />
 					</td>
 				</tr>
 				<tr>
 					<td align="right">实收金额</td>
 					<td>
-						<input type="text" name="fActualAmount" id="fActualAmountPC" onkeyup="calTotalAmount()" style="width:100px" />
+						<input type="text" name="actualAmount" id="actualAmountPC" onkeyup="calTotalAmount()" style="width:100px" />
 					</td>
 				</tr>
 				<tr>
 					<td align="right">实际收费日期</td>
 					<td>
-						<input name="fActualChargeDate" id="fActualChargeDatePC" class="Wdate" type="text" style="width:100px" onClick="WdatePicker()" value="">
+						<input name="actualChargeDate" id="actualChargeDatePC" class="Wdate" type="text" style="width:100px" onClick="WdatePicker()" value="">
 					</td>
 				</tr>
 			</table>
@@ -1581,41 +1429,41 @@
 			<table style="display:none;font-size:12px;margin-top: 2px;margin-bottom: 2px;" id="PhoneChargeInfo">
 				<tr>
 					<td align="right">初始词量</td>
-					<input type="hidden" name="fQzOperationTypeUuid" id="fQzOperationTypeUuidPhone"/>
-					<td><input type="text" name="fInitialKeywordCount" id="fInitialKeywordCountPhone"  style="width:100px" readonly/></td>
+					<input type="hidden" name="qzOperationTypeUuid" id="qzOperationTypeUuidPhone"/>
+					<td><input type="text" name="initialKeywordCount" id="initialKeywordCountPhone"  style="width:100px" readonly/></td>
 				</tr>
 				<tr>
 					<td align="right">当前词量</td>
-					<td><input type="text" name="fCurrentKeywordCount" id="fCurrentKeywordCountPhone"  style="width:100px" readonly/></td>
+					<td><input type="text" name="currentKeywordCount" id="currentKeywordCountPhone"  style="width:100px" readonly/></td>
 				</tr>
 				<tr>
 					<td align="right">应收金额</td>
 					<td>
-						<input type="text" name="fReceivableAmount" id="fReceivableAmountPhone" style="width:100px" readonly />
+						<input type="text" name="receivableAmount" id="receivableAmountPhone" style="width:100px" readonly />
 					</td>
 				</tr>
 				<tr>
 					<td align="right">计划收费日期</td>
 					<td>
-						<input type="text" name="fPlanChargeDate" id="fPlanChargeDatePhone" style="width:100px" readonly />
+						<input type="text" name="planChargeDate" id="planChargeDatePhone" style="width:100px" readonly />
 					</td>
 				</tr>
 				<tr>
 					<td align="right">下次收费日期</td>
 					<td>
-						<input type="text" name="fNextChargeDate" id="fNextChargeDatePhone" class="Wdate" onClick="WdatePicker()" style="width:100px" />
+						<input type="text" name="nextChargeDate" id="nextChargeDatePhone" class="Wdate" onClick="WdatePicker()" style="width:100px" />
 					</td>
 				</tr>
 				<tr>
 					<td align="right">实收金额</td>
 					<td>
-						<input type="text" name="fActualAmount" id="fActualAmountPhone" onkeyup="calTotalAmount()" style="width:100px" />
+						<input type="text" name="actualAmount" id="actualAmountPhone" onkeyup="calTotalAmount()" style="width:100px" />
 					</td>
 				</tr>
 				<tr>
 					<td align="right">实际收费日期</td>
 					<td>
-						<input name="fActualChargeDate" id="fActualChargeDatePhone" class="Wdate" type="text" style="width:100px"  onClick="WdatePicker()" value="">
+						<input name="actualChargeDate" id="actualChargeDatePhone" class="Wdate" type="text" style="width:100px"  onClick="WdatePicker()" value="">
 					</td>
 				</tr>
 			</table>

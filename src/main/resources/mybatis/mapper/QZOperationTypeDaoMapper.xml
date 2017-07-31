@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.monitoring.dao.QZOperationTypeDao">
 
-    <!--查询多条操作类型信息-->
+  <!--查询判断对应的操作类型表中是否存在IsDelete为0-->
     <select id="searchQZOperationTypesByQZSettingUuid" resultType="com.keymanager.monitoring.entity.QZOperationType">
       SELECT
        qopty.fUuid             AS 'uuid',
@@ -19,7 +19,7 @@
       FROM t_qz_operation_type  qopty
       WHERE  qopty.fQZSettingUuid  = #{qzSettingUuid}  AND qopty.fIsDeleted = 0
     </select>
-    <!--查询判断对应的操作类型表中是否存在IsDelete为0-->
+  <!--查询多条操作类型信息-->
     <select id="searchQZOperationTypesIsDelete" resultType="com.keymanager.monitoring.entity.QZOperationType">
       SELECT
        qopty.fUuid            AS 'uuid',

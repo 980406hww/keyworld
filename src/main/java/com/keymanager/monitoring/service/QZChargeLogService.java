@@ -19,9 +19,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by shunshikj01 on 2017/7/17.
@@ -54,15 +52,17 @@ public class QZChargeLogService extends ServiceImpl<QZChargeLogDao, QZChargeLog>
             QZChargeInfoVO qzChargeInfoVO = new QZChargeInfoVO();
             if (null == qzOperationType.getReachTargetDate() && null == qzOperationType
                 .getNextChargeDate()) {
-                qzChargeInfoVO.setPcReceivableAmount("0");
+                qzChargeInfoVO.setReceivableAmount("0");
             }
+            qzChargeInfoVO.setOperationType(qzOperationType.getOperationType());
+
             qzChargeInfoVO
-                .setPcCurrentKeywordCount(qzOperationType.getCurrentKeywordCount().toString());
-            qzChargeInfoVO.setPcQzOperationTypeUuid(qzOperationType.getUuid().toString());
-            qzChargeInfoVO.setPcInitialKeywordCount(
+                .setCurrentKeywordCount(qzOperationType.getCurrentKeywordCount().toString());
+            qzChargeInfoVO.setQzOperationTypeUuid(qzOperationType.getUuid().toString());
+            qzChargeInfoVO.setInitialKeywordCount(
                 qzOperationType.getInitialKeywordCount().toString());//初始词量
             //计划缴费日期
-            qzChargeInfoVO.setPcPlanChargeDate(qzOperationType.getNextChargeDate() == null ? null
+            qzChargeInfoVO.setPlanChargeDate(qzOperationType.getNextChargeDate() == null ? null
                 : sdf.format(qzOperationType.getNextChargeDate()));
 
             List<QZChargeRule> qzChargeRules = qzChargeRuleService
@@ -74,7 +74,7 @@ public class QZChargeLogService extends ServiceImpl<QZChargeLogDao, QZChargeLog>
                     (null == qzChargeRule.getEndKeywordCount()
                         || qzOperationType.getCurrentKeywordCount() <= qzChargeRule
                         .getEndKeywordCount())) {
-                    qzChargeInfoVO.setPcReceivableAmount(qzChargeRule.getAmount().toString());
+                    qzChargeInfoVO.setReceivableAmount(qzChargeRule.getAmount().toString());
                     break;
                 }
             }
@@ -85,55 +85,17 @@ public class QZChargeLogService extends ServiceImpl<QZChargeLogDao, QZChargeLog>
     }
 
     //保存收费流水表----->可能是多个对象
-    public String saveQZChargeLog(String chargeData,HttpServletRequest request) {
-        Long qzOperationTypeUuidPC = null;
-        Date planChargeDatePC = null;
-        Date actualChargeDatePC = null;
-        BigDecimal receivableAmountPC = null;
-        BigDecimal actualAmountPC = null;
-
-        Long qzOperationTypeUuidPhone = null;
-        Date planChargeDatePhone = null;
-        Date actualChargeDatePhone = null;
-        BigDecimal receivableAmountPhone = null;
-        BigDecimal actualAmountPhone = null;
-        String userID = null;
-        QZChargeLog qzChargeLogPC = null;
-        QZChargeLog qzChargeLogPhone = null;
-
-        JSONObject jsonStr = JSONObject.fromObject(chargeData);
-        HttpSession user = request.getSession();
-        userID = user.getAttribute("username").toString();
-        //转换异常
-        try {
-            if (null != jsonStr.get("fQzOperationTypeUuidPC") && jsonStr.size() >= 3) {
-                qzOperationTypeUuidPC = Long.valueOf(jsonStr.get("fQzOperationTypeUuidPC").toString());
-                if(!StringUtils.isBlank(jsonStr.get("fPlanChargeDatePC").toString())){
-                    planChargeDatePC = sdf.parse(jsonStr.get("fPlanChargeDatePC").toString());//计划收费日期
-                }
-                if(!StringUtils.isBlank(jsonStr.get("fReceivableAmountPC").toString())){
-                    receivableAmountPC = new BigDecimal(jsonStr.get("fReceivableAmountPC").toString());
-                }
-                actualChargeDatePC = sdf.parse(jsonStr.get("fActualChargeDatePC").toString());//实际收费日期
-                actualAmountPC = new BigDecimal(jsonStr.get("fActualAmountPC").toString());//实际收费金额
-                qzChargeLogPC = new QZChargeLog(qzOperationTypeUuidPC, planChargeDatePC, actualChargeDatePC, receivableAmountPC, actualAmountPC, userID);
+    public String saveQZChargeLog(List<QZChargeLog> qzChargeLogs,HttpServletRequest request) {
+        String userID = (String)request.getSession().getAttribute("userName");
+        for(QZChargeLog qzChargeLog : qzChargeLogs){
+            if (null !=qzChargeLog  && null != qzChargeLog.getQzOperationTypeUuid()) {
+                qzChargeLog.setUserID(userID);
+                qzChargeLogDao.insert(qzChargeLog);
+                //插入时 更新 下一次的收费日期
+                QZOperationType qzOperationType = qzOperationTypeService.selectById(qzChargeLog.getQzOperationTypeUuid());
+                qzOperationType.setNextChargeDate(qzChargeLog.getNextChargeDate());
+                qzOperationTypeService.updateById(qzOperationType);
             }
-            if (null != jsonStr.get("fQzOperationTypeUuidPhone") && jsonStr.size() >= 3) {
-                qzOperationTypeUuidPhone = Long.valueOf(jsonStr.get("fQzOperationTypeUuidPhone").toString());
-                if(!StringUtils.isBlank(jsonStr.get("fPlanChargeDatePhone").toString())){
-                    planChargeDatePhone = sdf.parse(jsonStr.get("fPlanChargeDatePhone").toString());//计划收费日期
-                }
-                if(!StringUtils.isBlank(jsonStr.get("fReceivableAmountPhone").toString())){
-                    receivableAmountPhone = new BigDecimal(jsonStr.get("fReceivableAmountPhone").toString());
-                }
-                actualChargeDatePhone = sdf.parse(jsonStr.get("fActualChargeDatePhone").toString());//实际收费日期
-                actualAmountPhone = new BigDecimal(jsonStr.get("fActualAmountPhone").toString());//实际收费金额
-                qzChargeLogPhone = new QZChargeLog(qzOperationTypeUuidPhone, planChargeDatePhone, actualChargeDatePhone, receivableAmountPhone, actualAmountPhone, userID);
-            }
-            //添加到数据库中
-            saveQZChargeLog(qzChargeLogPC, qzChargeLogPhone,jsonStr);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         return "{\"status\":true}";
     }
@@ -161,14 +123,13 @@ public class QZChargeLogService extends ServiceImpl<QZChargeLogDao, QZChargeLog>
             qzOperationTypeService.updateById(qzOperationType);
         }
     }
-    
+
     //收费记录
-    public String chargesList(Long uuid){
+    public List<QZChargeLog> chargesList(Long uuid){
         List<QZChargeLog> qzChargeLogs  = qzChargeLogDao.chargesList(uuid);
         if(qzChargeLogs.size()==0){
             return null;
         }
-        JSONArray jsonQZChargeLogs = JSONArray.fromObject(qzChargeLogs);
-        return jsonQZChargeLogs.toString();
+        return qzChargeLogs;
     }
 }

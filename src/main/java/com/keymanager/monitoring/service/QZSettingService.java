@@ -116,7 +116,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			existingQZSetting.setCaptureCurrentKeywordStatus(qzSetting.getCaptureCurrentKeywordStatus());
 			qzSettingDao.updateById(existingQZSetting);
 			//修改部分
-			List<QZOperationType> OldOperationTypes = qzOperationTypeService.searchQZOperationTypesByQZSettingUuid(qzSetting.getUuid());
+			List<QZOperationType> OldOperationTypes = qzOperationTypeService.searchQZOperationTypesIsDelete(qzSetting.getUuid());
 			List<QZOperationType> updOperationTypes = qzSetting.getQzOperationTypes();
 			updateOpretionTypeAndChargeRule(OldOperationTypes,updOperationTypes,qzSetting.getUuid());
 		}else{
@@ -152,7 +152,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 				qzOperationTypeService.insert(newOperationType);
 				Long uuid = Long.valueOf(qzOperationTypeService.selectLastId());
 				for (QZChargeRule qzChargeRule : newOperationType.getQzChargeRules()){
-					qzChargeRule.setQzOperationTypeUuid(oldOperationType.getUuid());
+					qzChargeRule.setQzOperationTypeUuid(uuid);
 					qzChargeRuleService.insert(qzChargeRule);
 				}
 			}
