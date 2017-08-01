@@ -351,8 +351,6 @@
     var inputHeight = 25; // 修改UI的input高度
     var space = 3; // 修改UI两个表格的间隙
     var trHeight; // 修改UI表格高度
-    var id1 = 1; // 规则表序号
-    var id2 = 1; //规则表序号
     var dateStr = new Date(); // 当天日期
     var m = dateStr.getMonth() + 1 < 10 ? "0" + (dateStr.getMonth() + 1) : (dateStr.getMonth() + 1);
     var d = dateStr.getDate() < 10 ? "0" + dateStr.getDate() : dateStr.getDate();
@@ -1084,7 +1082,7 @@
     function addRow(tableID, chargeRule){
       var tableObj = $$$("#" + tableID);
       var rowCount = tableObj.find("tr").length;
-      var newRow = tableObj[0].insertRow(rowCount - 1);     //插入新行
+      var newRow = tableObj[0].insertRow(rowCount - 1); //插入新行
 
 	  var col1 = newRow.insertCell(0);
 	  col1.innerHTML="<input type='text' name='sequenceID' value='"+(rowCount - 1)+"' style='width:100%'/>";
@@ -1112,6 +1110,9 @@
             tableObj.deleteRow(index);
             divHeight = divHeight - inputHeight;
             $$$("#changeSettingDialog").css("height", divHeight);
+            for(var i = 1; i < tableObj.rows.length - 1; i++) {
+                $$$("#"+tableObj.id).find("tr:eq("+ i +")").find("input[name=sequenceID]").val(i);
+			}
         } else {
             alert("删除失败，规则表不允许为空");
         }
@@ -1135,13 +1136,8 @@
             settingDialogObj.find("#" + type)[0].checked = false;
             settingDialogObj.find("#operationTypeSummaryInfo" + type).css("display","none");
             settingDialogObj.find("#chargeRule" + type).css("display","none");
-            // 重置div高度以及规则表序号
+            // 重置div高度
             divHeight = divHeight - $("#groupHeight" + type).height() - $("#ruleHeight" + type).height();
-            if(type == "PC") {
-                id1 = 1;
-            } else if(type == 'Phone') {
-                id2 = 1;
-            }
         }
     }
 
