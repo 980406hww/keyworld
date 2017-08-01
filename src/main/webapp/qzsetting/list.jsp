@@ -268,7 +268,7 @@
 		<td align="center" width=80>更新结束时间</td>
 		<td align="center" width=80>更新时间</td>
 		<td align="center" width=80>添加时间</td>
-		<td align="center">操作</td>
+		<td align="center" width=100>操作</td>
 		<div id="div1"></div>
 		<div id="div2"></div>
 	</tr>
@@ -802,7 +802,14 @@
               validationFlag = false;
               return false;
             }
-          }
+          } else {
+            if(endKeywordCountObj.val() != "" && operationType.currentKeywordCount>Number(endKeywordCountObj.val())){
+              alert("最后一条规则中的终止词量必须大于当前词量");
+              endKeywordCountObj.focus();
+              validationFlag = false;
+              return false;
+			}
+		  }
 
           if (endKeywordCountObj.val() != "") {
             if (!reg.test(endKeywordCountObj.val())) {
@@ -922,6 +929,7 @@
       var seconds = time.getSeconds() < 10 ? "0" + time.getSeconds() : time.getSeconds();
       return date + " " + hours + ":" + minutes + ":" + seconds;
     };
+
     function toDateFormat (time) {
       return time.getFullYear() + "-" +
 		  (time.getMonth() + 1) + "-" +
@@ -929,72 +937,78 @@
     };
 
     function saveChargeLog(self) {
-      var chargeDialog = $$$("chargeDialog");
+      var chargeDialog = $$$("#chargeDialog");
       var selectedOperationTypes = chargeDialog.find("input[name=operationType]:checkbox:checked");
-
-      if (window.confirm("确认收费?")) {
-        if (selectedOperationTypes.length == 0) {
-          alert("必须选择一个收费项才能收费");
+	  var saveChargeLogFlag = true;
+      if (selectedOperationTypes.length == 0) {
+        alert("必须选择一个收费项才能收费");
+        saveChargeLogFlag = false;
+        return;
+      }
+      var chargeLogs = [];
+      $$$.each(selectedOperationTypes, function (index, val) {
+        var chargeLog = {};
+        chargeLog.qzOperationTypeUuid = chargeDialog.find(
+            "#qzOperationTypeUuid" + val.id).val();
+        chargeLog.planChargeDate = chargeDialog.find("#planChargeDate" + val.id).val();
+        chargeLog.actualChargeDate = chargeDialog.find("#actualChargeDate" + val.id).val();
+        chargeLog.receivableAmount = chargeDialog.find("#receivableAmount" + val.id).val();
+        chargeLog.actualAmount = chargeDialog.find("#actualAmount" + val.id).val();
+        chargeLog.nextChargeDate = chargeDialog.find("#nextChargeDate" + val.id).val();
+        if (chargeLog.nextChargeDate == "" || chargeLog.nextChargeDate == null) {
+          alert("下次收费日期为必填");
+          chargeDialog.find("#nextChargeDate" + val.id).focus();
+          saveChargeLogFlag = false;
           return;
         }
-
-        var chargeLogs = [];
-        $$$.each(selectedOperationTypes, function (index, val) {
-          var chargeLog = {};
-          chargeLog.qzOperationTypeUuid = chargeDialog.find("#qzOperationTypeUuid" + val.id).val();
-          chargeLog.planChargeDate = chargeDialog.find("#planChargeDate" + val.id).val();
-          chargeLog.actualChargeDate = chargeDialog.find("#actualChargeDate" + val.id).val();
-          chargeLog.receivableAmount = chargeDialog.find("#receivableAmount" + val.id).val();
-          chargeLog.actualAmount = chargeDialog.find("#actualAmount" + val.id).val();
-          chargeLog.nextChargeDate = chargeDialog.find("#nextChargeDate" + val.id).val();
-          if (chargeLog.nextChargeDate == "" || chargeLog.nextChargeDate == null) {
-            alert("下次收费日期为必填");
-            chargeDialog.find("#nextChargeDate" + val.id).focus();
-            return;
-          }
-          if (chargeLog.actualAmount == "" || chargeLog.actualAmount == null) {
-            alert("实收金额为必填");
-            chargeDialog.find("#actualAmount" + val.id).focus();
-            return;
-          }
-          if (!reg.test(chargeLog.actualAmount)) {
-            alert("请输入合理的金额");
-            chargeDialog.find("#actualAmount" + val.id).focus();
-            return;
-          }
-          if (chargeLog.actualChargeDate == "" || chargeLog.actualChargeDate == null) {
-            alert("实际收费日期为必填");
-            chargeDialog.find("#actualChargeDate" + val.id).focus();
-            return;
-          }
-          chargeLogs.push(chargeLog);
-        });
-
-        $$$.ajax({
-          url: '/spring/qzchargelog/save',
-          data: JSON.stringify(chargeLogs),
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-          timeout: 5000,
-          type: 'POST',
-          success: function (data) {
-            cancelChargeDialog();
-            if (data != null && data != "") {
-              showInfo("收费成功！", self);
-              window.location.reload();
-            } else {
+        if (chargeLog.actualAmount == "" || chargeLog.actualAmount == null) {
+          alert("实收金额为必填");
+          chargeDialog.find("#actualAmount" + val.id).focus();
+          saveChargeLogFlag = false;
+          return;
+        }
+        if (!reg.test(chargeLog.actualAmount)) {
+          alert("请输入合理的金额");
+          chargeDialog.find("#actualAmount" + val.id).focus();
+          saveChargeLogFlag = false;
+          return;
+        }
+        if (chargeLog.actualChargeDate == "" || chargeLog.actualChargeDate == null) {
+          alert("实际收费日期为必填");
+          chargeDialog.find("#actualChargeDate" + val.id).focus();
+          saveChargeLogFlag = false;
+          return;
+        }
+        chargeLogs.push(chargeLog);
+      });
+      if(saveChargeLogFlag) {
+        if (window.confirm("确认收费?")) {
+          $$$.ajax({
+            url: '/spring/qzchargelog/save',
+            data: JSON.stringify(chargeLogs),
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            timeout: 5000,
+            type: 'POST',
+            success: function (data) {
+              cancelChargeDialog();
+              if (data != null && data != "") {
+                showInfo("收费成功！", self);
+                window.location.reload();
+              } else {
+                showInfo("收费失败！", self);
+                window.location.reload();
+              }
+            },
+            error: function () {
               showInfo("收费失败！", self);
-              window.location.reload();
             }
-          },
-          error: function () {
-            showInfo("收费失败！", self);
-          }
-        });
-      } else {
-        alert("取消收费");
+          });
+        } else {
+          alert("取消收费");
+        }
       }
     }
 
@@ -1097,7 +1111,7 @@
         if(tableObj.rows.length > 3) {
             tableObj.deleteRow(index);
             divHeight = divHeight - inputHeight;
-            document.getElementById("changeSettingDialog").style.height = divHeight;
+            $$$("#changeSettingDialog").css("height", divHeight);
         } else {
             alert("删除失败，规则表不允许为空");
         }
@@ -1167,7 +1181,7 @@
           divHeight = divHeight - inputHeight;
         }
         divHeight = divHeight + 130;
-        document.getElementById("changeSettingDialog").style.height = divHeight;
+        $$$("#changeSettingDialog").css("height" , divHeight );
         groupObj.css("display","block");
         ruleObj.css("display","block");
         checkboxObj[0].checked = true;
@@ -1175,7 +1189,7 @@
         trHeight = $("#groupHeight" + operationType).height() + $(
                 "#ruleHeight" + operationType).height();
         divHeight = divHeight - trHeight + space;
-        document.getElementById("changeSettingDialog").style.height = divHeight;
+        $$$("#changeSettingDialog").css("height" , divHeight );
         clearInfo(operationType);
         groupObj.css("display","none");
         ruleObj.css("display","none");
@@ -1189,14 +1203,14 @@
 <div id="changeSettingDialog">
 	<table style="font-size:12px" id="settingTable">
 		<tr>
-			<th>客户</th>
+			<td align="right"><span style="margin-right:4;">客户</span></td>
 			<td>
 				<input type="hidden" id="qzSettingUuid" />
 				<input type="text" list="customer_list" name="qzSettingCustomer" id="qzSettingCustomer" style="width:240px" />
 			</td>
 		</tr>
 		<tr>
-			<th>域名</th>
+			<td align="right"><span style="margin-right:4;">域名</span></td>
 			<td>
 				<input type="text" name="qzSettingDomain" id="qzSettingDomain" style="width:240px" />
 			</td>
@@ -1212,16 +1226,16 @@
 			<td colspan="2" id="groupHeightPC">
 				<table border="0" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="operationTypeSummaryInfoPC">
 					<tr>
-						<th style="width:72px">分组</th>
-						<td><input type="text" name="group" id="groupPC"  style="width:234px"/></td>
+						<td align="right" style="width:72px"><span style="margin-right:14;">分组</span></td>
+						<td><input type="text" name="group" id="groupPC"  style="width:240px;margin-left: -6;"/></td>
 					</tr>
 					<tr>
-						<th style="width:72px">初始词量</th>
-						<td colspan="4"><input type="text" name="initialKeywordCount" id="initialKeywordCountPC"  style="width:234px"/></td>
+						<td align="right" style="width:72px"><span style="margin-right:14;">初始词量</span></td>
+						<td colspan="4"><input type="text" name="initialKeywordCount" id="initialKeywordCountPC" style="width:240px;margin-left: -6;"/></td>
 					</tr>
 					<tr>
-						<th style="width:72px">当前词量</th>
-						<td colspan="4"><input type="text" name="currentKeywordCount" id="currentKeywordCountPC"  style="width:234px" readonly/></td>
+						<td align="right" style="width:72px"><span style="margin-right:14;">当前词量</span></td>
+						<td colspan="4"><input type="text" name="currentKeywordCount" id="currentKeywordCountPC" style="width:240px;margin-left: -6;" readonly/></td>
 					</tr>
 					<input type="hidden" id="qzSettingUuidPC" name="qzOperationTypeUuid" value="" />
 				</table>
@@ -1232,11 +1246,11 @@
 			<td colspan="2" id="ruleHeightPC">
 				<table border="1" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="chargeRulePC">
 					<tr>
-						<th style="width:50px">序号</th>
-						<th style="width:72px">起始词数</th>
-						<th style="width:72px">终止词数</th>
-						<th style="width:50px">价格</th>
-						<th style="width:46px">操作</th>
+						<td style="width:50px">序号</td>
+						<td style="width:72px">起始词数</td>
+						<td style="width:72px">终止词数</td>
+						<td style="width:50px">价格</td>
+						<td style="width:46px">操作</td>
 					</tr>
 					<tr>
 						<td colspan="5">
@@ -1256,16 +1270,16 @@
 			<td colspan="2" id="groupHeightPhone">
 				<table border="0" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="operationTypeSummaryInfoPhone">
 					<tr>
-						<th style="width:72px">分组</th>
-						<td><input type="text" name="group" id="groupPhone"  style="width:234px"/></td>
+						<td align="right" style="width:72px;"><span style="margin-right:14;">分组</span></td>
+						<td><input type="text" name="group" id="groupPhone" style="width:240px;margin-left: -6;"/></td>
 					</tr>
 					<tr>
-						<th style="width:72px">初始词量</th>
-						<td colspan="4"><input type="text" name="initialKeywordCount" id="initialKeywordCountPhone"  style="width:234px"/></td>
+						<td align="right" style="width:72px"><span style="margin-right:14;">初始词量</span></td>
+						<td colspan="4"><input type="text" name="initialKeywordCount" id="initialKeywordCountPhone"  style="width:240px;margin-left: -6;"/></td>
 					</tr>
 					<tr>
-						<th style="width:72px">当前词量</th>
-						<td colspan="4"><input type="text" name="currentKeywordCount" id="currentKeywordCountPhone"  style="width:234px" readonly/></td>
+						<td align="right" style="width:72px"><span style="margin-right:14;">当前词量</span></td>
+						<td colspan="4"><input type="text" name="currentKeywordCount" id="currentKeywordCountPhone"  style="width:240px;margin-left: -6;" readonly/></td>
 					</tr>
 					<input type="hidden" id="qzSettingUuidPhone" name="qzOperationTypeUuid" value="" />
 				</table>
@@ -1276,11 +1290,11 @@
 			<td colspan="2" id="ruleHeightPhone">
 				<table border="1" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="chargeRulePhone">
 					<tr>
-						<th style="width:50px">序号</th>
-						<th style="width:72px">起始词数</th>
-						<th style="width:72px">终止词数</th>
-						<th style="width:50px">价格</th>
-						<th style="width:46px">操作</th>
+						<td style="width:50px">序号</td>
+						<td style="width:72px">起始词数</td>
+						<td style="width:72px">终止词数</td>
+						<td style="width:50px">价格</td>
+						<td style="width:46px">操作</td>
 					</tr>
 					<tr>
 						<td colspan="5">
@@ -1291,7 +1305,7 @@
 		</tr>
 
 		<tr>
-			<th>入口</th>
+			<td align="right"><span style="margin-right:4;">入口</span></td>
 			<td>
 				<select name="qzSettingEntryType" id="qzSettingEntryType"  style="width:240px">
 					<option value="qz" selected>全站</option>
@@ -1302,7 +1316,7 @@
 			</td>
 		</tr>
 		<tr>
-			<th>去掉没指数</th>
+			<td>去掉没指数</td>
 			<td>
 				<select name="qzSettingIgnoreNoIndex" id="qzSettingIgnoreNoIndex"  style="width:240px">
 					<option value="1" selected>是</option>
@@ -1311,7 +1325,7 @@
 			</td>
 		</tr>
 		<tr>
-			<th>去掉没排名</th>
+			<td>去掉没排名</td>
 			<td>
 				<select name="qzSettingIgnoreNoOrder" id="qzSettingIgnoreNoOrder"  style="width:240px">
 					<option value="1" selected>是</option>
@@ -1320,7 +1334,7 @@
 			</td>
 		</tr>
 		<tr>
-			<th>更新间隔</th>
+			<td align="right"><span style="margin-right:4;">更新间隔</span></td>
 			<td>
 				<select name="qzSettingInterval" id="qzSettingInterval"  style="width:240px">
 					<option value="1">1天</option>
@@ -1474,7 +1488,7 @@
 		<span style="margin-left: 55px"></span>合计:<sapn id="totalAmount"></sapn>
 	</p>
 	<p align="right">
-		<input type="button" id="saveChargeLog" onclick="saveChargeLog(this)" value="确认收费"/>&nbsp;&nbsp;&nbsp;<input type="button" id="cancelChargeLog" onclick="cancelChargeDialog()" value="取消"/><span style="margin-right:24px;"></span>
+		<input type="button" id="saveChargeLog" onclick="saveChargeLog(this)" value="确认收费"/>&nbsp;&nbsp;&nbsp;<input type="button" id="cancelChargeLog" onclick="cancelChargeDialog()" value="取消"/><span style="margin-right:14px;"></span>
 	</p>
 </div>
 <%--收费详情列表--%>

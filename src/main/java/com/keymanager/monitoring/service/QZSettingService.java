@@ -271,14 +271,17 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		QZSetting updQZSetting = qzSettingCriteria.getQzSetting();
 		if(updQZSetting != null){
 			QZSetting oldQZSetting = qzSettingDao.selectById(updQZSetting.getUuid());
-			oldQZSetting.setCaptureCurrentKeywordStatus(QZSettingStatusEnum.Completed.getValue());
-
 			List<QZOperationType> oldOperationTypes = qzOperationTypeService.searchQZOperationTypesByQZSettingUuid(oldQZSetting.getUuid());
 			List<QZOperationType> updOperationTypes = updQZSetting.getQzOperationTypes();
 
 			Map<String, Long> currentKeywordCountMap = new HashMap<String, Long>();
 			for(QZOperationType operationType : updOperationTypes){
 				currentKeywordCountMap.put(operationType.getOperationType(), operationType.getCurrentKeywordCount());
+				if(operationType.getCurrentKeywordCount()!=null){
+					oldQZSetting.setCaptureCurrentKeywordStatus(QZSettingStatusEnum.Completed.getValue());
+				} else {
+					oldQZSetting.setCaptureCurrentKeywordStatus(QZSettingStatusEnum.Processing.getValue());
+				}
 			}
 
 			for(QZOperationType oldOperationType : oldOperationTypes){
