@@ -3,6 +3,7 @@ package com.keymanager.monitoring.entity;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 
+import com.baomidou.mybatisplus.enums.FieldStrategy;
 import java.util.Date;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class QZOperationType extends BaseEntity {
   @TableField(value = "fInitialKeywordCount")
   private Long initialKeywordCount;//起始首页词数()
 
-  @TableField(value = "fCurrentKeywordCount")
+  @TableField(value = "fCurrentKeywordCount", validate = FieldStrategy.IGNORED)
   private Long currentKeywordCount;//当前首页词数()
 
   @TableField(value = "fGroup")
