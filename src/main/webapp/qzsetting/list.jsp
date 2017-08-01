@@ -1110,9 +1110,9 @@
             tableObj.deleteRow(index);
             divHeight = divHeight - inputHeight;
             $$$("#changeSettingDialog").css("height", divHeight);
-            for(var i = 1; i < tableObj.rows.length - 1; i++) {
-                $$$("#"+tableObj.id).find("tr:eq("+ i +")").find("input[name=sequenceID]").val(i);
-			}
+            $$$.each($$$("#"+tableObj.id).find("input[name=sequenceID]"), function(idx, val){
+               $$$(val).val(idx + 1);
+            });
         } else {
             alert("删除失败，规则表不允许为空");
         }
