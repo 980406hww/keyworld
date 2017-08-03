@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.TSMainKeywordDao">
+
+    <select id="findTSMainKeywords" resultType="com.keymanager.monitoring.entity.TSMainKeyword">
+        SELECT
+            m.fUuid AS `uuid`,
+            m.fGroup AS `group`,
+            m.fKeyword AS `keyword`,
+            m.fUpdateTime AS `updateTime`,
+            m.fCreateTime AS `createTime`,
+            m.fComplaintsTime AS `complaintsTime`
+        FROM t_ts_main_keyword AS m
+        WHERE 1 = 1
+        <if test="uuid != null and uuid > 0">AND m.fUuid = #{uuid}</if>
+        <if test="keyword != null and uuid > 0">AND m.fKeyword = #{keyword}</if>
+        <if test="group != null and group != ''">AND m.fGroup = #{group}</if>
+    </select>
+
+    <select id="getTsMainKeywordsForComplaints" resultType="com.keymanager.monitoring.entity.TSMainKeyword">
+        SELECT
+            m.fUuid AS `uuid`,
+            m.fGroup AS `group`,
+            m.fKeyword AS `keyword`,
+            m.fUpdateTime AS `updateTime`,
+            m.fCreateTime AS `createTime`,
+            m.fComplaintsTime AS `complaintsTime`
+        FROM t_ts_main_keyword AS m
+        ORDER BY m.fComplaintsTime
+    </select>
+
+    <select id="selectLastId" resultType="java.lang.Integer">
+        select LAST_INSERT_ID()
+    </select>
+</mapper>

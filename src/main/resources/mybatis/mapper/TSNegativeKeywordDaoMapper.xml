@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.TSNegativeKeywordDao">
+
+    <select id="findNegativeKeywordsBymainkeyUuid" resultType="com.keymanager.monitoring.entity.TSNegativeKeyword">
+        SELECT
+            ng.fUuid AS `uuid`,
+            ng.fTSMainKeywordUuid AS `tsMainKeywordUuid`,
+            ng.fKeyword AS `keyword`,
+            ng.fPCEmailSentOver2Weeks AS `pcEmailSentOver2Weeks`,
+            ng.fPhoneEmailSentOver2Weeks AS `phoneEmailSentOver2Weeks`,
+            ng.fPCEmailSentOver3Timess AS `pcEmailSentOver3Timess`,
+            ng.fPhoneEmailSentOver3Times AS `phoneEmailSentOver3Times`,
+            ng.fPCAppeared AS `pcAppeared`,
+            ng.fPhoneAppeared AS `phoneAppeared`,
+            ng.fPCOccurTimes AS `pcOccurTimes`,
+            ng.fPhoneOccurTimes AS `phoneOccurTimes`,
+            ng.fPCComplainTime AS `pcComplainTime`,
+            ng.fPhoneComplainTime AS `phoneComplainTime`,
+            ng.fUpdateTime AS `updateTime`,
+            ng.fCreateTime AS `createTime`,
+            ng.IsDeleted AS `isDeleted`
+        FROM t_ts_negative_keyword AS ng
+        WHERE ng.fTSMainKeywordUuid = #{tsMainKeywordUuid} AND ng.IsDeleted = 0
+    </select>
+
+
+    <select id="selectLastId" resultType="int">
+        select LAST_INSERT_ID()
+    </select>
+
+    <!--删除 -->
+    <delete id="deleteByTSmainKeywordUuid">
+        DELETE FROM t_ts_negative_keyword WHERE  fTSMainKeywordUuid = #{tsMainKeywordUuid}
+    </delete>
+</mapper>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.TSComplainLogDao">
+
+    <select id="findTSComplainLogs" resultType="com.keymanager.monitoring.entity.TSComplainLog">
+        SELECT
+          fUuid AS `uuid`,
+          fTSNegativeKeywordUuid AS `tsNegativeKeywordUuid`,
+          fTerminalType AS `terminalType`,
+          fAppearedKeywordTypes AS `appearedKeywordTypes`,
+          fUpdateTime AS `updateTime`,
+          fCreateTime AS `createTime`
+        FROM t_ts_complain_log;
+    </select>
+
+    <select id="selectLastId" resultType="int">
+        select LAST_INSERT_ID()
+    </select>
+</mapper>

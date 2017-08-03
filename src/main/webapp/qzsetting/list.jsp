@@ -400,7 +400,7 @@
             },
             error: function () {
                 showInfo("删除失败！", self);
-                window.location.reload(t);
+                window.location.reload();
             }
         });
     }
