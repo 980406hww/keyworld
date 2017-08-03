@@ -1,11 +1,13 @@
 package com.keymanager.excel.operator;
 
 import com.keymanager.excel.definition.CustomerKeywordDailyReportDefinition;
-import com.keymanager.excel.definition.CustomerKeywordInfoDefinition;
+import com.keymanager.manager.CustomerManager;
+import com.keymanager.util.FileUtil;
 import com.keymanager.util.Utils;
 import com.keymanager.util.excel.ExcelWriteException;
 import com.keymanager.util.excel.JXLExcelWriter;
 import com.keymanager.value.CustomerKeywordVO;
+import com.keymanager.value.CustomerVO;
 import jxl.Sheet;
 import jxl.read.biff.BiffException;
 
@@ -28,16 +30,20 @@ public class CustomerKeywordDailyReportExcelWriter {
 	private int todayPriceWidth;
 
 	private String dailyReportFielName;
+	private long dailyReportUuid;
+	private String webRootPath = null;
 
-	public CustomerKeywordDailyReportExcelWriter(String customerUuid) throws BiffException, IOException {
+	public CustomerKeywordDailyReportExcelWriter(String terminalType, String customerUuid, long dailyReportUuid) throws BiffException, IOException {
 		super();
+		this.webRootPath = Utils.getWebRootPath();
+		this.dailyReportUuid = dailyReportUuid;
 		this.customerUuid = customerUuid;
-//		this.dailyReportFielName = "dailyreport/" + customerUuid + ".xls";
-//		File file = getTemplateFile(dailyReportFielName);
-//		if(!file.exists()){
-//			file = getTemplateFile(fileName);
-//		}
-		File file = getTemplateFile(fileName);
+		this.dailyReportFielName = "dailyreport/" + terminalType + "/" + customerUuid + ".xls";
+		File file = getTemplateFile(dailyReportFielName);
+		if(!file.exists()){
+			file = getTemplateFile(fileName);
+		}
+//		File file = getTemplateFile(fileName);
 		writer = new JXLExcelWriter(file);
 //		writer.setCurrentWorkSheetWithName("Default");
 		String sheetName = Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "";
@@ -49,36 +55,22 @@ public class CustomerKeywordDailyReportExcelWriter {
 		writer.createSheetWithNameAndSetAsCurrentSheet(sheetName, writer.getNumberOfSheets());
 		writer.removeSheet("Default");
 	}
-	
+
 	public void saveAs(String outputFileName) throws Exception{
-		writer.saveAs(getWebRootPath() + outputFileName);
+		writer.saveAs(webRootPath + outputFileName);
 	}
-	
-  public byte[] getExcelContentBytes() throws Exception {
-  	return writer.getExcelContentBytes();
-  }
-  	
+
+	public byte[] getExcelContentBytes() throws Exception {
+		return writer.getExcelContentBytes();
+	}
+
 	private File getTemplateFile(String fileName){
-		String SERVLET_CONTEXT_PATH = getWebRootPath();
+		String SERVLET_CONTEXT_PATH = webRootPath;
 
 		// 这里 SERVLET_CONTEXT_PATH 就是WebRoot的路径
 		String path = SERVLET_CONTEXT_PATH + fileName;
 		path = path.replaceAll("%20", " ");
 		return new File(path);
-	}
-
-	private String getWebRootPath() {
-		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-		if (classLoader == null) {
-			classLoader = ClassLoader.getSystemClassLoader();
-		}
-		java.net.URL url = classLoader.getResource("");
-		String ROOT_CLASS_PATH = url.getPath() + "/";
-		File rootFile = new File(ROOT_CLASS_PATH);
-		String WEB_INFO_DIRECTORY_PATH = rootFile.getParent() + "/";
-		File webInfoDir = new File(WEB_INFO_DIRECTORY_PATH);
-		String SERVLET_CONTEXT_PATH = webInfoDir.getParent() + "/";
-		return SERVLET_CONTEXT_PATH;
 	}
 
 	private void writeTitle(int rowIndex) throws ExcelWriteException{
@@ -103,7 +95,7 @@ public class CustomerKeywordDailyReportExcelWriter {
 				.TodayPrice.getTitle(), true);
 		todayPriceWidth = calculateWidth(todayPriceWidth, CustomerKeywordDailyReportDefinition.TodayPrice.getTitle());
 	}
-	
+
 	private double writeRow(int rowIndex, CustomerKeywordVO view) throws ExcelWriteException{
 		writer.addLabelCell(CustomerKeywordDailyReportDefinition.Sequence.getColumnIndex(), rowIndex, view.getSequence());
 		writer.addLabelCell(CustomerKeywordDailyReportDefinition.Keyword.getColumnIndex(), rowIndex, view.getKeyword());
@@ -137,6 +129,23 @@ public class CustomerKeywordDailyReportExcelWriter {
 		return existWidth;
 	}
 
+	public void writeSubTotal(int rowIndex) throws Exception {
+		writer.setCurrentWorkSheetWithName("小计");
+		Calendar calendar = Calendar.getInstance();
+		int day = calendar.get(Calendar.DAY_OF_MONTH);
+		int endOfMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+		writer.addLabelCell(0, day, day);
+		writer.addFormulanCell(1, day, "'" + day + "'!H" + (rowIndex + 1));
+
+		if(day == 10){
+			writer.addFormulanCell(2, day, "SUM(B2:B11)");
+		}else if(day == 20){
+			writer.addFormulanCell(2, day, "SUM(B12:B21)");
+		}else if(day == endOfMonth){
+			writer.addFormulanCell(2, day, "SUM(B22:B" + (day + 1) + ")");
+		}
+	}
+
 	public void writeDataToExcel(List<CustomerKeywordVO> views) throws Exception {
 		if(!Utils.isEmpty(views)){
 			int rowIndex = 1;
@@ -156,8 +165,18 @@ public class CustomerKeywordDailyReportExcelWriter {
 			writer.setColumnView(CustomerKeywordDailyReportDefinition.Price4.getColumnIndex(), price4Width + 6);
 			writer.setColumnView(CustomerKeywordDailyReportDefinition.CurrentPosition.getColumnIndex(), currentPositionWidth + 6);
 			writer.setColumnView(CustomerKeywordDailyReportDefinition.TodayPrice.getColumnIndex(), todayPriceWidth + 6);
-		}
-		//saveAs(dailyReportFielName);
-	}
 
+			writeSubTotal(rowIndex);
+		}
+		saveAs(dailyReportFielName);
+
+		if(dailyReportUuid > 0) {
+			CustomerManager customerManager = new CustomerManager();
+			CustomerVO customerVO = customerManager.getCustomerByUuid("keyword", customerUuid);
+			String fileName = "dailyreport/" + dailyReportUuid + "/" + customerVO.getContactPerson() + "_" + Utils.formatDatetime(Utils
+					.getCurrentTimestamp(), "yyyy.MM.dd") + ".xls";
+
+			FileUtil.copyFile(webRootPath + dailyReportFielName, webRootPath + fileName, true);
+		}
+	}
 }

@@ -11,6 +11,7 @@ import java.sql.Timestamp;
 import java.util.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.keymanager.util.FileUtil;
 import com.keymanager.value.*;
 
 import com.keymanager.db.DBUtil;
@@ -176,7 +177,7 @@ public class ClientStatusManager {
 			DBUtil.closeConnection(conn);
 		}
 	}
-	
+
 	public void updateLastSendNotificationTime(Connection conn, String clientID) throws Exception {
 		if(Utils.isNullOrEmpty(clientID)){
 			return;
@@ -196,7 +197,7 @@ public class ClientStatusManager {
 			DBUtil.closePreparedStatement(ps);
 		}
 	}
-	
+
 	private ClientStatusVO getClientStatusVO(Connection conn, ResultSet rs) throws Exception {
 		ClientStatusVO clientStatusVO = new ClientStatusVO();
 		clientStatusVO.setClientID(rs.getString("fClientID"));
@@ -289,11 +290,11 @@ public class ClientStatusManager {
 		clientStatusVO.setWaitTimeBeforeClick(rs.getInt("fWaitTimeBeforeClick"));
 		clientStatusVO.setWaitTimeAfterClick(rs.getInt("fWaitTimeAfterClick"));
 		clientStatusVO.setMaxUserCount(rs.getInt("fMaxUserCount"));
-        clientStatusVO.setUpgradeFailedReason(rs.getString("fUpgradeFailedReason"));
+		clientStatusVO.setUpgradeFailedReason(rs.getString("fUpgradeFailedReason"));
 		clientStatusVO.setValid(rs.getBoolean("fValid"));
 		return clientStatusVO;
 	}
-	
+
 	public void updateGroup(String dsName, String clientID, String group) throws Exception {
 		Connection conn = null;
 		try{
@@ -338,7 +339,7 @@ public class ClientStatusManager {
 			DBUtil.closePreparedStatement(ps);
 		}
 	}
-	
+
 	private void updateGroup(Connection conn, String clientID, String group)
 			throws Exception {
 		if(Utils.isNullOrEmpty(clientID)){
@@ -472,7 +473,7 @@ public class ClientStatusManager {
 			DBUtil.closePreparedStatement(ps);
 		}
 	}
-	
+
 	public void updateGroups(String dsName, String data) throws Exception {
 		Connection conn = null;
 		try{
@@ -489,7 +490,7 @@ public class ClientStatusManager {
 			DBUtil.closeConnection(conn);
 		}
 	}
-	
+
 	public void updateOperationType(String dsName, String data) throws Exception {
 		Connection conn = null;
 		try{
@@ -506,7 +507,7 @@ public class ClientStatusManager {
 			DBUtil.closeConnection(conn);
 		}
 	}
-	
+
 	public void updateClientStatus(String dsName, String data) throws Exception {
 		Connection conn = null;
 		try{
@@ -521,7 +522,7 @@ public class ClientStatusManager {
 			DBUtil.closeConnection(conn);
 		}
 	}
-	
+
 	public void updateClientStatusTargetVersion(String dsName, String data) throws Exception {
 		PreparedStatement ps = null;
 		Connection conn = null;
@@ -599,18 +600,18 @@ public class ClientStatusManager {
 		ResultSet rs = null;
 		String sql = "";
 		ClientStatusVO clientStatusVO = null;
-		
-		try {
-				sql = " select * from t_client_status  where fClientID = ? and fTerminalType = ? ";
 
-				ps = conn.prepareStatement(sql, 1003, 1007);
-				ps.setString(1, clientID);
-			    ps.setString(2, terminalType);
-				rs = ps.executeQuery();
-				
-				if (rs.next()) {
-					clientStatusVO = getClientStatusVO(conn, rs);
-				}
+		try {
+			sql = " select * from t_client_status  where fClientID = ? and fTerminalType = ? ";
+
+			ps = conn.prepareStatement(sql, 1003, 1007);
+			ps.setString(1, clientID);
+			ps.setString(2, terminalType);
+			rs = ps.executeQuery();
+
+			if (rs.next()) {
+				clientStatusVO = getClientStatusVO(conn, rs);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new Exception("search Customer Error!");
@@ -636,7 +637,7 @@ public class ClientStatusManager {
 		}
 		return returnStr;
 	}
-	
+
 	public String getClientStatusTargetVersion(String datasourceName, String clientID, String terminalType) throws Exception{
 		Connection conn = null;
 		String returnStr = "";
@@ -655,9 +656,9 @@ public class ClientStatusManager {
 		}
 		return returnStr;
 	}
-	
+
 	public List<ClientStatusVO> searchClientStatusVOs(String dsName, int pageSize, int curPage, String condition, String order,
-			int recCount) throws Exception {
+													  int recCount) throws Exception {
 		if (pageSize < 0) {
 			pageSize = 20;
 		}
@@ -727,7 +728,7 @@ public class ClientStatusManager {
 				sql = sql + " AND c.fContactPerson like '%" + customerName.trim() + "%' ";
 			}
 			sql =   sql
-		    		  + " ORDER BY ck.fOptimizeGroupName ";
+					+ " ORDER BY ck.fOptimizeGroupName ";
 			ps = conn.prepareStatement(sql, 1003, 1007);
 			ps.setString(1, type);
 			rs = ps.executeQuery();
@@ -744,7 +745,7 @@ public class ClientStatusManager {
 			DBUtil.closePreparedStatement(ps);
 		}
 	}
-	  
+
 	public void sendNotification(Connection conn, String terminalType) throws Exception{
 		ConfigManager configManager = new ConfigManager();
 		ConfigVO notificationEmail = configManager.getConfig(conn, "NotificationEmail", "EmailAddress");
@@ -791,9 +792,6 @@ public class ClientStatusManager {
 
 			ConfigManager configManager = new ConfigManager();
 			notificationEmail = configManager.getConfig(pcConn, "NotificationEmail", "EmailAddress");
-
-			phoneConn = DBUtil.getConnection("dsKeywordShouji");
-			clientStatusVOs.addAll(searchClientStatusVOs(phoneConn, condition));
 		}catch (Exception ex){
 			ex.printStackTrace();
 			throw new Exception("sendNotificationForRenewal error");
@@ -815,7 +813,7 @@ public class ClientStatusManager {
 			}
 		}
 	}
-	
+
 	public List<ClientStatusVO> searchClientStatusVOs(String dsName, String condition) throws Exception {
 		Connection conn = DBUtil.getConnection(dsName);
 		try {
@@ -1017,7 +1015,7 @@ public class ClientStatusManager {
 			DBUtil.closeConnection(conn);
 		}
 	}
-	
+
 	public void deleteClientStatus(String dataSourceName, String clientID) throws Exception {
 		if(Utils.isNullOrEmpty(clientID)){
 			return;
@@ -1039,7 +1037,7 @@ public class ClientStatusManager {
 			DBUtil.closeConnection(conn);
 		}
 	}
-	
+
 	public void deleteClientStatuses(String dataSourceName, String clientIDs) throws Exception {
 		if(Utils.isNullOrEmpty(clientIDs)){
 			return;
@@ -1060,7 +1058,7 @@ public class ClientStatusManager {
 			DBUtil.closeConnection(conn);
 		}
 	}
-	
+
 	public void updateVNCInfo(Connection conn, ClientStatusVO clientStatusVO) throws Exception {
 		if(clientStatusVO == null || Utils.isNullOrEmpty(clientStatusVO.getClientID())){
 			return;
@@ -1083,7 +1081,7 @@ public class ClientStatusManager {
 			DBUtil.closePreparedStatement(ps);
 		}
 	}
-	
+
 	public void writeTxtFile(ClientStatusVO clientStatusVO) throws Exception {
 		RandomAccessFile mm = null;
 		FileOutputStream o = null;
@@ -1143,7 +1141,7 @@ public class ClientStatusManager {
 			}
 		}
 	}
-	
+
 	public void parseVNCAddressBook(InputStream inputStream, String datasourceName)
 			throws Exception {
 		if(inputStream != null){
@@ -1177,7 +1175,7 @@ public class ClientStatusManager {
 			}
 		}
 	}
-	
+
 	public String downloadVNCInfo(String datasourceName) throws Exception {
 		Connection conn = null;
 		String zipFileName = null;
@@ -1287,6 +1285,11 @@ public class ClientStatusManager {
 	}
 
 	public void updateClientStatusRestartCount(String dataSourceName, String terminalType, String clientID, String status) throws Exception {
+		String content = String.format("\r\n%s ------ terminalType = %s, clientID = %s, status = %s", Utils.formatDatetime(Utils
+						.getCurrentTimestamp(),
+				"yyyy-MM-dd HH:mm:ss"), terminalType, clientID, status);
+		FileUtil.writeTxtFile(content, "utf-8", Thread.currentThread().getContextClassLoader().getResource("").toURI().getPath() +
+				"/updateRestartingStatus.log");
 		if(Utils.isNullOrEmpty(clientID)){
 			return;
 		}

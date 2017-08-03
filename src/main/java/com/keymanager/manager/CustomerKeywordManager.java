@@ -37,7 +37,7 @@ public class CustomerKeywordManager {
 	}
 
 	public ArrayList searchCustomerKeywordAssociations(String datasourceName, int pageSize, int curPage,
-			String condition, String order, int recCount) throws Exception {
+													   String condition, String order, int recCount) throws Exception {
 		if (pageSize < 0) {
 			pageSize = 20;
 		}
@@ -125,9 +125,9 @@ public class CustomerKeywordManager {
 			DBUtil.closeConnection(conn);
 		}
 	}
-	
+
 	public ArrayList searchCustomerKeywords(String dataSourceName, int pageSize, int curPage, String condition,
-			String order, int recCount) throws Exception {
+											String order, int recCount) throws Exception {
 		if (pageSize < 0) {
 			pageSize = 20;
 		}
@@ -224,7 +224,7 @@ public class CustomerKeywordManager {
 			ps.setString(i++, terminalType);
 			ps.setInt(i++, customerUuid);
 			ps.setString(i++, "%" + originalUrl);
-			
+
 			rs = ps.executeQuery();
 			if (rs.next()) {
 				return true;
@@ -279,6 +279,29 @@ public class CustomerKeywordManager {
 			DBUtil.closePreparedStatement(ps);
 		}
 		return customerKeywords;
+	}
+
+	public List<String> getCustomerUuids(Connection conn, String fTerminalType, String group) throws Exception {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		List<String> customerUuids = new ArrayList<String>();
+		String sql = "SELECT DISTINCT fCustomerUuid FROM t_customer_keyword WHERE fTerminalType = ? AND fOptimizeGroupName = ? AND fStatus = 1";
+
+		try{
+			ps = conn.prepareStatement(sql, 1003, 1007);
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				customerUuids.add(rs.getString("fCustomerUuid"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception("getCustomerUuids");
+		} finally {
+			DBUtil.closeResultSet(rs);
+			DBUtil.closePreparedStatement(ps);
+		}
+		return customerUuids;
 	}
 
 	public int getCustomerKeywordCurrentIndexCount(Connection conn, int uuid) throws Exception {
@@ -350,14 +373,14 @@ public class CustomerKeywordManager {
 	}
 
 	public List<KeywordPositionUrlVO> retrievePreviousNonBaiduWebsite(List<KeywordPositionUrlVO> keywordPositionUrlVOs,
-			int position) {
+																	  int position) {
 		if (!Utils.isEmpty(keywordPositionUrlVOs)) {
 			PreviousKeywordPositionCalculator calculator = new PreviousKeywordPositionCalculator();
 			return calculator.calculate(keywordPositionUrlVOs, position);
 		}
 		return null;
 	}
-	
+
 	public int fetchRemainingOptimizationCoount(Connection conn, String groupName, ConfigVO configVO) throws Exception {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -365,13 +388,13 @@ public class CustomerKeywordManager {
 
 		try {
 			sql = "SELECT SUM(ck.fOptimizePlanCount - ck.fOptimizedCount) as remainingCount FROM t_customer_keyword ck WHERE ck.fOptimizeGroupName = ? "
-				+ "  AND ck.fOptimizePlanCount > ck.fOptimizedCount AND ck.fInvalidRefreshCount < " + configVO.getValue();
-	
+					+ "  AND ck.fOptimizePlanCount > ck.fOptimizedCount AND ck.fInvalidRefreshCount < " + configVO.getValue();
+
 			ps = conn.prepareStatement(sql, 1003, 1007);
 			ps.setString(1, groupName);
-	
+
 			rs = ps.executeQuery();
-	
+
 			int remainingCount = 0;
 			if (rs.next()) {
 				remainingCount = rs.getInt("remainingCount");
@@ -385,7 +408,7 @@ public class CustomerKeywordManager {
 			DBUtil.closePreparedStatement(ps);
 		}
 	}
-	
+
 	public double resetBigKeywordIndicator(Connection conn, String groupName, ConfigVO configVO) throws Exception {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -400,8 +423,8 @@ public class CustomerKeywordManager {
 				return 0;
 			}
 			sql = "SELECT ck.fUuid, (ck.fOptimizePlanCount - ck.fOptimizedCount) AS remainingCount FROM t_customer_keyword ck WHERE ck.fOptimizeGroupName = ? "
-				+ " AND ck.fOptimizePlanCount > ck.fOptimizedCount and ck.fInvalidRefreshCount < " + configVO.getValue()
-				+ " ORDER BY (ck.fOptimizePlanCount - ck.fOptimizedCount) DESC";
+					+ " AND ck.fOptimizePlanCount > ck.fOptimizedCount and ck.fInvalidRefreshCount < " + configVO.getValue()
+					+ " ORDER BY (ck.fOptimizePlanCount - ck.fOptimizedCount) DESC";
 
 			ps = conn.prepareStatement(sql, 1003, 1007);
 			ps.setString(1, groupName);
@@ -414,7 +437,7 @@ public class CustomerKeywordManager {
 				uuids.add(uuid);
 				remainingCountMap.put(uuid, rs.getInt("remainingCount"));
 			}
-			
+
 			int totalCount = uuids.size();
 			int count = 0;
 			int subTotal = 0;
@@ -483,7 +506,7 @@ public class CustomerKeywordManager {
 	}
 
 	public String searchCustomerKeywordsForOptimization(String datasourceName, String terminalType, String clientID, String ip, boolean useHourRange,
-		int retrycount) throws Exception {
+														int retrycount) throws Exception {
 		Connection conn = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -517,7 +540,7 @@ public class CustomerKeywordManager {
 			}
 			String sqlFields = " * ";
 			boolean anotherRound = false;
-			KeywordFetchCountManager keywordFetchCountManager = new KeywordFetchCountManager();			
+			KeywordFetchCountManager keywordFetchCountManager = new KeywordFetchCountManager();
 			KeywordFetchCountVO keywordFetchCountVO = keywordFetchCountManager.getKeywordFetchCountVO(conn, clientStatusVO.getGroup());
 			boolean operateBigKeyword = false;
 			if(keywordFetchCountVO != null){
@@ -534,7 +557,7 @@ public class CustomerKeywordManager {
 				anotherRound = true;
 				keywordFetchCountVO = keywordFetchCountManager.initKeywordFetchCountVO(conn, clientStatusVO.getGroup());
 			}
-			
+
 			if(anotherRound){
 				//Another round, normal keyword
 				double bigKeywordPercentage = resetBigKeywordIndicator(conn, clientStatusVO.getGroup(), configVO);
@@ -542,7 +565,7 @@ public class CustomerKeywordManager {
 				keywordFetchCountVO.setBigKeywordFetchedCount(0);
 				keywordFetchCountVO.setNormalKeywordFetchedCount(1);
 			}
-			
+
 			sql = "select " + sqlFields
 					+ " from t_customer_keyword ck where ck.fOptimizeGroupName = ? and ck.fStatus = ? "
 					+ " and (ck.fQueryTime is NULL or DATE_SUB(NOW(), INTERVAL ck.fQueryInterval MINUTE) > ck.fQueryTime) "
@@ -556,9 +579,9 @@ public class CustomerKeywordManager {
 			}
 			sql = sql
 					+ " and ((ck.fOptimizedCount < ck.fOptimizePlanCount) or (ck.fOptimizeDate is null) or (ck.fOptimizeDate < current_date())) "
-					+ " order by ck.fQueryTime limit 1";	
-			
-			
+					+ " order by ck.fQueryTime limit 1";
+
+
 
 			keywordFetchCountManager.updateKeywordFetchCountVO(conn, keywordFetchCountVO);
 			ps = conn.prepareStatement(sql, 1003, 1007);
@@ -567,9 +590,9 @@ public class CustomerKeywordManager {
 //			ps.setString(i++, ip);
 			ps.setString(i++, clientStatusVO.getGroup().trim());
 			ps.setInt(i++, CustomerKeywordStatus.Active.getCode());
-			
+
 			if(useHourRange){
-				int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY); 
+				int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
 				OptimizationHourPercentageManager optimizationHourPercentageManager = new OptimizationHourPercentageManager();
 				OptimizationHourPercentageVO optimizationHourPercentageVO = optimizationHourPercentageManager.getOptimizationHourPercentageVO(conn, hour);
 				ps.setDouble(i++, optimizationHourPercentageVO.getPercentage());
@@ -584,7 +607,7 @@ public class CustomerKeywordManager {
 				customerKeywordForOptimization.setUrl(customerKeyword.getUrl());
 				customerKeywordForOptimization.setEntryType(customerKeyword.getType());
 				String relatedKeyword = "";
-				
+
 				Random rd = new Random();
 				if (!Utils.isNullOrEmpty(customerKeyword.getRelatedKeywords())) {
 					String[] keywords = customerKeyword.getRelatedKeywords().split(",");
@@ -599,7 +622,7 @@ public class CustomerKeywordManager {
 				customerKeywordForOptimization.setCurrentPosition(customerKeyword.getCurrentPosition());
 				customerKeywordForOptimization.setOriginalUrl(customerKeyword.getOriginalUrl());
 				customerKeywordForOptimization.setTitle(customerKeyword.getTitle());
-				
+
 				KeywordExcludeTitleManager manager = new KeywordExcludeTitleManager();
 				List<KeywordExcludeTitleVO> keywordExcludeTitleVOs = manager.searchKeywordExcludeTitleVOs(conn, customerKeyword.getKeyword());
 				StringBuilder sbTitle = new StringBuilder();
@@ -615,7 +638,7 @@ public class CustomerKeywordManager {
 				customerKeywordForOptimization.setBaiduAdUrl(baiduAdUrl);
 				customerKeywordForOptimization.setGroup(clientStatusVO.getGroup());
 				customerKeywordForOptimization.setOperationType(clientStatusVO.getOperationType());
-				
+
 				customerKeywordForOptimization.setPage(clientStatusVO.getPage());
 				if(clientStatusVO.getPageSize() != null) {
 					customerKeywordForOptimization.setPageSize(clientStatusVO.getPageSize());
@@ -673,8 +696,8 @@ public class CustomerKeywordManager {
 				customerKeywordForOptimization.setMaxUserCount(clientStatusVO.getMaxUserCount());
 
 				updateQueryUpdateTime(conn, customerKeyword.getUuid());
-				
-				ObjectMapper mapper = new ObjectMapper(); 
+
+				ObjectMapper mapper = new ObjectMapper();
 				returnValue = mapper.writeValueAsString(customerKeywordForOptimization);
 			}
 			if("".equals(returnValue)){
@@ -798,7 +821,7 @@ public class CustomerKeywordManager {
 			DBUtil.closePreparedStatement(ps);
 		}
 	}
-	
+
 	public String searchCustomerKeywordsForClientCache(String datasourceName, String terminalType, String keyword) throws Exception {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -808,14 +831,14 @@ public class CustomerKeywordManager {
 			List fumianList = fumianListManager.searchFumianListVO(datasourceName, 1000, 1, " and fTerminalType = '" + terminalType + "' and " +
 					" fKeyword = '" + keyword.trim() + "'",	"",	0);
 			StringBuilder sb = new StringBuilder(Constants.COLUMN_SPLITTOR);
-			
+
 			for(Object fumianListObj : fumianList) {
 				FumianListVO fumianListVO = (FumianListVO)fumianListObj;
 				sb.append(fumianListVO.getTitle());
 				sb.append(Constants.COLUMN_SPLITTOR);
 				sb.append(fumianListVO.getUrl());
 				sb.append(Constants.COLUMN_SPLITTOR);
-			}			
+			}
 			return sb.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -824,7 +847,7 @@ public class CustomerKeywordManager {
 			DBUtil.closeResultSet(rs);
 			DBUtil.closePreparedStatement(ps);
 		}
-	}	
+	}
 
 	public String fetchCustomerKeywordForAutoUpdateNegative(String dsName, String group) throws Exception
 	{
@@ -881,36 +904,36 @@ public class CustomerKeywordManager {
 		String sql = "";
 		try
 		{
-		  conn = DBUtil.getConnection(dsName);
-		  sql = "SELECT * FROM t_customer_keyword ck WHERE ck.fTerminalType = ? and ck.fOptimizeGroupName = ? AND ck.fCapturedTitle = 0 AND ck.fCaptureTitleQueryTime IS NULL AND (ck.fTitle IS NULL OR ck.fTitle = '') limit 1";
-		  ps = conn.prepareStatement(sql, 1003, 1007);
-		  int i = 1;
-		  ps.setString(i++, terminalType);
-		  ps.setString(i++, groupName);
-		  rs = ps.executeQuery();
-		  while (rs.next())
-		  {
-			CustomerKeywordVO customerKeyword = getCustomerKeyword(conn, rs);
-			CustomerKeywordForCaptureTitle captureTitle = new CustomerKeywordForCaptureTitle();
-			captureTitle.setUuid(customerKeyword.getUuid());
-			captureTitle.setKeyword(customerKeyword.getKeyword());
-			captureTitle.setUrl(customerKeyword.getUrl());
-			updateCaptureTitleQueryTime(conn, customerKeyword.getUuid());
-			ObjectMapper mapper = new ObjectMapper();
-			return mapper.writeValueAsString(captureTitle);
-		  }
-		  return "";
+			conn = DBUtil.getConnection(dsName);
+			sql = "SELECT * FROM t_customer_keyword ck WHERE ck.fTerminalType = ? and ck.fOptimizeGroupName = ? AND ck.fCapturedTitle = 0 AND ck.fCaptureTitleQueryTime IS NULL AND (ck.fTitle IS NULL OR ck.fTitle = '') limit 1";
+			ps = conn.prepareStatement(sql, 1003, 1007);
+			int i = 1;
+			ps.setString(i++, terminalType);
+			ps.setString(i++, groupName);
+			rs = ps.executeQuery();
+			while (rs.next())
+			{
+				CustomerKeywordVO customerKeyword = getCustomerKeyword(conn, rs);
+				CustomerKeywordForCaptureTitle captureTitle = new CustomerKeywordForCaptureTitle();
+				captureTitle.setUuid(customerKeyword.getUuid());
+				captureTitle.setKeyword(customerKeyword.getKeyword());
+				captureTitle.setUrl(customerKeyword.getUrl());
+				updateCaptureTitleQueryTime(conn, customerKeyword.getUuid());
+				ObjectMapper mapper = new ObjectMapper();
+				return mapper.writeValueAsString(captureTitle);
+			}
+			return "";
 		}
 		catch (Exception e)
 		{
-		  e.printStackTrace();
-		  throw new Exception("search_keyword_error");
+			e.printStackTrace();
+			throw new Exception("search_keyword_error");
 		}
 		finally
 		{
-		  DBUtil.closeResultSet(rs);
-		  DBUtil.closePreparedStatement(ps);
-		  DBUtil.closeConnection(conn);
+			DBUtil.closeResultSet(rs);
+			DBUtil.closePreparedStatement(ps);
+			DBUtil.closeConnection(conn);
 		}
 	}
 
@@ -960,12 +983,12 @@ public class CustomerKeywordManager {
 	public void updateCustomerKeywordForCaptureTitle(String datasourceName, String json) throws Exception {
 		Connection conn = null;
 		PreparedStatement ps = null;
-	    String sql = "";
-	    try
-	    {
-		  ObjectMapper mapper = new ObjectMapper();
-		  CustomerKeywordInfoJson customerKeywordInfoJson = (CustomerKeywordInfoJson)mapper.readValue(json, CustomerKeywordInfoJson.class);
-		  conn = DBUtil.getConnection(datasourceName);
+		String sql = "";
+		try
+		{
+			ObjectMapper mapper = new ObjectMapper();
+			CustomerKeywordInfoJson customerKeywordInfoJson = (CustomerKeywordInfoJson)mapper.readValue(json, CustomerKeywordInfoJson.class);
+			conn = DBUtil.getConnection(datasourceName);
 
 			if(customerKeywordInfoJson.getUrl() == null){
 				sql = "UPDATE t_customer_keyword SET fCapturedTitle = 1 WHERE fUuid = ?";
@@ -980,143 +1003,143 @@ public class CustomerKeywordManager {
 				ps.setInt(4, customerKeywordInfoJson.getOrder());
 				ps.setInt(5, customerKeywordInfoJson.getUuid());
 			}
-	      ps.executeUpdate();
-	    }
-	    catch (Exception e)
-	    {
-	      e.printStackTrace();
-	      throw new Exception("updateCustomerKeywordForCaptureTitle error");
-	    }
-	    finally
-	    {
-	      DBUtil.closePreparedStatement(ps);
-	      DBUtil.closeConnection(conn);
-	    }
+			ps.executeUpdate();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			throw new Exception("updateCustomerKeywordForCaptureTitle error");
+		}
+		finally
+		{
+			DBUtil.closePreparedStatement(ps);
+			DBUtil.closeConnection(conn);
+		}
 	}
-	  
-  public String searchCustomerKeywordForCaptureIndex(String dsName, int minutes, String type, int recCount) throws Exception
-  {
-    Connection conn = null;
-    PreparedStatement ps = null;
-    ResultSet rs = null;
-    String sql = "";
-    StringBuilder sb = new StringBuilder();
-    try
-    {
-      conn = DBUtil.getConnection(dsName);
 
-      String sqlFields = " *  ";
+	public String searchCustomerKeywordForCaptureIndex(String dsName, int minutes, String type, int recCount) throws Exception
+	{
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		String sql = "";
+		StringBuilder sb = new StringBuilder();
+		try
+		{
+			conn = DBUtil.getConnection(dsName);
 
-      sql = " select " + sqlFields + " from t_customer_keyword ck WHERE ck.fUrl is not null and ck.fStatus = 1 and (ck.fCaptureIndexQueryTime is null or ck.fCaptureIndexQueryTime" 
-       + " < ?) order by ck.fCaptureIndexQueryTime, fUpdateTime desc ";       
-      
-      sql = sql + " limit " + recCount;
+			String sqlFields = " *  ";
 
-      ps = conn.prepareStatement(sql, 1003, 1007);
-      Timestamp beforeNMinutes = new Timestamp(System.currentTimeMillis() - (minutes * 60 * 1000));       
-      ps.setTimestamp(1, beforeNMinutes);
-      rs = ps.executeQuery();
-      while (rs.next())
-      {
-      	CustomerKeywordVO customerKeyword = getCustomerKeyword(conn, rs);
-        if(sb.length() > 0){
-       	 sb.append(Constants.ROW_SPLITTOR);
-        }
-        sb.append(customerKeyword.captureIndexString(type));
-        updateCaptureIndexQueryTime(conn, type, customerKeyword.getUuid());
-      }
-      return sb.toString();
-    }
-    catch (Exception e)
-    {
-      e.printStackTrace();
-      throw new Exception("search_keyword_error");
-    }
-    finally
-    {
-      DBUtil.closeResultSet(rs);
-      DBUtil.closePreparedStatement(ps);
-      DBUtil.closeConnection(conn);
-    }
-  }
-  
-  public String searchCustomerKeywordForCapturePosition(String dsName, int minutes, String optimizeGroupName, String customerName, String type, int recCount) throws Exception
-  {
-    Connection conn = null;
-    PreparedStatement ps = null;
-    ResultSet rs = null;
-    String sql = "";
-    StringBuilder sb = new StringBuilder();
-    try
-    {
-      conn = DBUtil.getConnection(dsName);
+			sql = " select " + sqlFields + " from t_customer_keyword ck WHERE ck.fUrl is not null and ck.fStatus = 1 and (ck.fCaptureIndexQueryTime is null or ck.fCaptureIndexQueryTime"
+					+ " < ?) order by ck.fCaptureIndexQueryTime, fUpdateTime desc ";
 
-      String sqlFields = " ck.*  ";
-      sql = " select " + sqlFields + " from t_customer_keyword ck ";
-      if(!Utils.isNullOrEmpty(customerName)){
-      	sql = sql + " WHERE ck.fCustomerUuid = " + customerName.trim() + " and ";
-      }else{
-      	sql = sql + " WHERE ";
-      }
-      
+			sql = sql + " limit " + recCount;
+
+			ps = conn.prepareStatement(sql, 1003, 1007);
+			Timestamp beforeNMinutes = new Timestamp(System.currentTimeMillis() - (minutes * 60 * 1000));
+			ps.setTimestamp(1, beforeNMinutes);
+			rs = ps.executeQuery();
+			while (rs.next())
+			{
+				CustomerKeywordVO customerKeyword = getCustomerKeyword(conn, rs);
+				if(sb.length() > 0){
+					sb.append(Constants.ROW_SPLITTOR);
+				}
+				sb.append(customerKeyword.captureIndexString(type));
+				updateCaptureIndexQueryTime(conn, type, customerKeyword.getUuid());
+			}
+			return sb.toString();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			throw new Exception("search_keyword_error");
+		}
+		finally
+		{
+			DBUtil.closeResultSet(rs);
+			DBUtil.closePreparedStatement(ps);
+			DBUtil.closeConnection(conn);
+		}
+	}
+
+	public String searchCustomerKeywordForCapturePosition(String dsName, int minutes, String optimizeGroupName, String customerName, String type, int recCount) throws Exception
+	{
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		String sql = "";
+		StringBuilder sb = new StringBuilder();
+		try
+		{
+			conn = DBUtil.getConnection(dsName);
+
+			String sqlFields = " ck.*  ";
+			sql = " select " + sqlFields + " from t_customer_keyword ck ";
+			if(!Utils.isNullOrEmpty(customerName)){
+				sql = sql + " WHERE ck.fCustomerUuid = " + customerName.trim() + " and ";
+			}else{
+				sql = sql + " WHERE ";
+			}
+
 //      sql = sql + " ck.fUuid = 37559 and ";
-      
-      if(Utils.isNullOrEmpty(optimizeGroupName)){
-	      sql = sql + " ck.fOptimizeGroupName <> 'stop' and ck.fUrl " 
-	      		+ " is not null and ck.fStatus = 1 and (ck.fCapturePositionQueryTime"  
-	      		+ " is null or ck.fCapturePositionQueryTime < ?) order by ck.fCapturePositionQueryTime"  
-	      	+ " , fUpdateTime desc ";       
-      }else{
-      	String[] groupNames = optimizeGroupName.split(",");
-      	StringBuilder sbGroupName = new StringBuilder();
-      	for(String groupName : groupNames){
-      		if(sbGroupName.toString().equals("")){
-      			sbGroupName.append("'" + groupName + "'");      			
-      		}else{
-      			sbGroupName.append(", '" + groupName + "'");      			      			
-      		}
-      	}
-      	sql = sql + " ck.fOptimizeGroupName in (" + sbGroupName.toString() + ") and ck.fUrl " 
-	      		+ " is not null and ck.fStatus = 1 and (ck.fCapturePositionQueryTime" 
-	      		+ " is null or ck.fCapturePositionQueryTime < ?) order by ck.fCapturePositionQueryTime" 
-	      	+ " , fUpdateTime desc ";    
-      }
-      
-//      sql = " select " + sqlFields + " from t_customer_keyword ck WHERE ck.fUuid = 32128 "; 
-      sql = sql + " limit " + recCount;
 
-      ps = conn.prepareStatement(sql, 1003, 1007);
-      Timestamp beforeNMinutes = new Timestamp(System.currentTimeMillis() - (minutes * 60 * 1000));       
-      ps.setTimestamp(1, beforeNMinutes);
-      rs = ps.executeQuery();
-      while (rs.next())
-      {
-      	CustomerKeywordVO customerKeyword = getCustomerKeyword(conn, rs);
-        CustomerKeywordForPaiming customerKeywordForPaiming = new CustomerKeywordForPaiming();
-        customerKeywordForPaiming.setUuid(customerKeyword.getUuid());
-        customerKeywordForPaiming.setKeyword(customerKeyword.getKeyword());
-        customerKeywordForPaiming.setUrl(customerKeyword.getUrl());
-        customerKeywordForPaiming.setTitle(customerKeyword.getTitle());
-        
-        ObjectMapper mapper = new ObjectMapper(); 
-		sb.append(mapper.writeValueAsString(customerKeywordForPaiming));
-		
-        updateCapturePositionQueryTime(conn, type, customerKeyword.getUuid());
-      }
-      return sb.toString();
-    }
-    catch (Exception e)
-    {
-      e.printStackTrace();
-      throw new Exception("search_keyword_error");
-    }
-    finally
-    {
-      DBUtil.closeResultSet(rs);
-      DBUtil.closePreparedStatement(ps);
-      DBUtil.closeConnection(conn);
-    }
-  }
+			if(Utils.isNullOrEmpty(optimizeGroupName)){
+				sql = sql + " ck.fOptimizeGroupName <> 'stop' and ck.fUrl "
+						+ " is not null and ck.fStatus = 1 and (ck.fCapturePositionQueryTime"
+						+ " is null or ck.fCapturePositionQueryTime < ?) order by ck.fCapturePositionQueryTime"
+						+ " , fUpdateTime desc ";
+			}else{
+				String[] groupNames = optimizeGroupName.split(",");
+				StringBuilder sbGroupName = new StringBuilder();
+				for(String groupName : groupNames){
+					if(sbGroupName.toString().equals("")){
+						sbGroupName.append("'" + groupName + "'");
+					}else{
+						sbGroupName.append(", '" + groupName + "'");
+					}
+				}
+				sql = sql + " ck.fOptimizeGroupName in (" + sbGroupName.toString() + ") and ck.fUrl "
+						+ " is not null and ck.fStatus = 1 and (ck.fCapturePositionQueryTime"
+						+ " is null or ck.fCapturePositionQueryTime < ?) order by ck.fCapturePositionQueryTime"
+						+ " , fUpdateTime desc ";
+			}
+
+//      sql = " select " + sqlFields + " from t_customer_keyword ck WHERE ck.fUuid = 32128 ";
+			sql = sql + " limit " + recCount;
+
+			ps = conn.prepareStatement(sql, 1003, 1007);
+			Timestamp beforeNMinutes = new Timestamp(System.currentTimeMillis() - (minutes * 60 * 1000));
+			ps.setTimestamp(1, beforeNMinutes);
+			rs = ps.executeQuery();
+			while (rs.next())
+			{
+				CustomerKeywordVO customerKeyword = getCustomerKeyword(conn, rs);
+				CustomerKeywordForPaiming customerKeywordForPaiming = new CustomerKeywordForPaiming();
+				customerKeywordForPaiming.setUuid(customerKeyword.getUuid());
+				customerKeywordForPaiming.setKeyword(customerKeyword.getKeyword());
+				customerKeywordForPaiming.setUrl(customerKeyword.getUrl());
+				customerKeywordForPaiming.setTitle(customerKeyword.getTitle());
+
+				ObjectMapper mapper = new ObjectMapper();
+				sb.append(mapper.writeValueAsString(customerKeywordForPaiming));
+
+				updateCapturePositionQueryTime(conn, type, customerKeyword.getUuid());
+			}
+			return sb.toString();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			throw new Exception("search_keyword_error");
+		}
+		finally
+		{
+			DBUtil.closeResultSet(rs);
+			DBUtil.closePreparedStatement(ps);
+			DBUtil.closeConnection(conn);
+		}
+	}
 
 	public void updateCustomerKeywordPosition(String datasourceName, String data, String ip) throws Exception {
 		Connection conn = null;
@@ -1151,7 +1174,7 @@ public class CustomerKeywordManager {
 		customerKeyword.setCustomerUuid(rs.getInt("fCustomerUuid"));
 		customerKeyword.setKeyword(rs.getString("fKeyword"));
 		customerKeyword.setUrl(rs.getString("fUrl"));
-		
+
 		customerKeyword.setOriginalUrl(rs.getString("fOriginalUrl"));
 		customerKeyword.setTerminalType(rs.getString("fTerminalType"));
 
@@ -1163,10 +1186,10 @@ public class CustomerKeywordManager {
 		customerKeyword.setInitialIndexCount(rs.getInt("fInitialIndexCount"));
 		customerKeyword.setInitialPosition(rs.getInt("fInitialPosition"));
 		customerKeyword.setCurrentPosition(rs.getInt("fCurrentPosition"));
-		
-		
+
+
 		customerKeyword.setCurrentIndexCount(rs.getInt("fCurrentIndexCount"));
-		
+
 		customerKeyword.setQueryTime(rs.getTimestamp("fQueryTime"));
 		customerKeyword.setQueryDate(rs.getTimestamp("fQueryDate"));
 		customerKeyword.setQueryCount(rs.getInt("fQueryCount"));
@@ -1202,22 +1225,22 @@ public class CustomerKeywordManager {
 		customerKeyword.setPositionForthFee(rs.getDouble("fPositionForthFee"));
 		customerKeyword.setPositionFifthFee(rs.getDouble("fPositionFifthFee"));
 		customerKeyword.setPositionFirstPageFee(rs.getDouble("fPositionFirstPageFee"));
-		
+
 		customerKeyword.setCollectMethod(rs.getString("fCollectMethod"));
 
 		customerKeyword.setStartOptimizedTime(rs.getTimestamp("fStartOptimizedTime"));
 		customerKeyword.setEffectiveFromTime(rs.getTimestamp("fEffectiveFromTime"));
 		customerKeyword.setEffectiveToTime(rs.getTimestamp("fEffectiveToTime"));
-		
+
 		customerKeyword.setPaymentEffectiveFromTime(rs.getTimestamp("fPaymentEffectiveFromTime"));
 		customerKeyword.setPaymentEffectiveToTime(rs.getTimestamp("fPaymentEffectiveToTime"));
 
 		customerKeyword.setStatus(rs.getInt("fStatus"));
-		
+
 		customerKeyword.setRemarks(rs.getString("fRemarks"));
 		customerKeyword.setPaymentStatus(rs.getString("fPaymentStatus"));
 		customerKeyword.setOrderNumber(rs.getString("fOrderNumber"));
-		
+
 		customerKeyword.setAutoUpdateNegativeTime(rs.getTimestamp("fAutoUpdateNegativeDateTime"));
 
 		customerKeyword.setUpdateTime(rs.getTimestamp("fUpdateTime"));
@@ -1243,41 +1266,41 @@ public class CustomerKeywordManager {
 	private List<CustomerKeywordVO> convertToCustomerKeywords(String json) throws Exception {
 		ObjectMapper mapper = new ObjectMapper(); // can reuse, share globally
 		try{
-            CustomerKeywordListJson customerKeywordListJson = (CustomerKeywordListJson)mapper.readValue(json, CustomerKeywordListJson.class);
-            if(customerKeywordListJson != null){
-                List<CustomerKeywordVO> customerKeywordVOs = new ArrayList<CustomerKeywordVO>();
-                for(CustomerKeywordJson customerKeywordJson : customerKeywordListJson.getCapturedResults()){
-                    CustomerKeywordVO keywordVO = new CustomerKeywordVO();
-                    keywordVO.setCurrentPosition(customerKeywordJson.getOrder());
-                    keywordVO.setInitialPosition(customerKeywordJson.getOrder());
-                    keywordVO.setKeyword(customerKeywordJson.getKeyword());
-                    keywordVO.setOptimizeGroupName(customerKeywordListJson.getGroup());
-                    keywordVO.setOptimizePlanCount(customerKeywordJson.getClickCount());
-                    keywordVO.setStatus(1);
-                    keywordVO.setTitle(customerKeywordJson.getTitle());
-                    keywordVO.setType(customerKeywordJson.getType());
+			CustomerKeywordListJson customerKeywordListJson = (CustomerKeywordListJson)mapper.readValue(json, CustomerKeywordListJson.class);
+			if(customerKeywordListJson != null){
+				List<CustomerKeywordVO> customerKeywordVOs = new ArrayList<CustomerKeywordVO>();
+				for(CustomerKeywordJson customerKeywordJson : customerKeywordListJson.getCapturedResults()){
+					CustomerKeywordVO keywordVO = new CustomerKeywordVO();
+					keywordVO.setCurrentPosition(customerKeywordJson.getOrder());
+					keywordVO.setInitialPosition(customerKeywordJson.getOrder());
+					keywordVO.setKeyword(customerKeywordJson.getKeyword());
+					keywordVO.setOptimizeGroupName(customerKeywordListJson.getGroup());
+					keywordVO.setOptimizePlanCount(customerKeywordJson.getClickCount());
+					keywordVO.setStatus(1);
+					keywordVO.setTitle(customerKeywordJson.getTitle());
+					keywordVO.setType(customerKeywordJson.getType());
 					keywordVO.setOriginalUrl(customerKeywordJson.getHref());
-                    keywordVO.setServiceProvider("baidutop123");
-                    keywordVO.setSearchEngine(Constants.SEARCH_ENGINE_BAIDU);
-                    keywordVO.setUrl(customerKeywordJson.getUrl());
-                    keywordVO.setStartOptimizedTime(Utils.getCurrentTimestamp());
-                    keywordVO.setCollectMethod(CollectMethod.PerMonth.getCode());
-                    keywordVO.setPositionFirstFee(0);
-                    keywordVO.setPositionSecondFee(0);
-                    keywordVO.setPositionThirdFee(0);
-                    keywordVO.setCurrentIndexCount(20);
-                    keywordVO.setCustomerUuid(customerKeywordListJson.getCustomerUuid());
-                    keywordVO.setAutoUpdateNegativeTime(Utils.getCurrentTimestamp());
-                    keywordVO.setCreateTime(Utils.getCurrentTimestamp());
-                    keywordVO.setUpdateTime(Utils.getCurrentTimestamp());
-                    customerKeywordVOs.add(keywordVO);
-                }
+					keywordVO.setServiceProvider("baidutop123");
+					keywordVO.setSearchEngine(Constants.SEARCH_ENGINE_BAIDU);
+					keywordVO.setUrl(customerKeywordJson.getUrl());
+					keywordVO.setStartOptimizedTime(Utils.getCurrentTimestamp());
+					keywordVO.setCollectMethod(CollectMethod.PerMonth.getCode());
+					keywordVO.setPositionFirstFee(0);
+					keywordVO.setPositionSecondFee(0);
+					keywordVO.setPositionThirdFee(0);
+					keywordVO.setCurrentIndexCount(20);
+					keywordVO.setCustomerUuid(customerKeywordListJson.getCustomerUuid());
+					keywordVO.setAutoUpdateNegativeTime(Utils.getCurrentTimestamp());
+					keywordVO.setCreateTime(Utils.getCurrentTimestamp());
+					keywordVO.setUpdateTime(Utils.getCurrentTimestamp());
+					customerKeywordVOs.add(keywordVO);
+				}
 				return customerKeywordVOs;
-            }
-        } catch (IOException e){
-            e.printStackTrace();
-            throw new Exception("convertToCustomerKeywords error", e);
-        }
+			}
+		} catch (IOException e){
+			e.printStackTrace();
+			throw new Exception("convertToCustomerKeywords error", e);
+		}
 		return null;
 	}
 
@@ -1332,7 +1355,7 @@ public class CustomerKeywordManager {
 			}
 		}
 	}
-	
+
 	public void addCustomerKeywords(String datasourceName, List<CustomerKeywordVO> customerKeywords) throws Exception {
 		Connection conn = null;
 		try {
@@ -1406,8 +1429,8 @@ public class CustomerKeywordManager {
 		}else{
 			originalUrl = null;
 		}
-		if(haveDuplicatedCustomerKeyword(conn, customerKeyword.getTerminalType(), customerKeyword.getCustomerUuid(), customerKeyword.getKeyword(),
-				originalUrl)){
+		if(!"fm".equals(customerKeyword.getType()) && haveDuplicatedCustomerKeyword(conn, customerKeyword.getTerminalType(), customerKeyword
+				.getCustomerUuid(), customerKeyword.getKeyword(), originalUrl)){
 			return ;
 		}
 		PreparedStatement ps;
@@ -1417,7 +1440,7 @@ public class CustomerKeywordManager {
 				+ "fInitialPosition,fCurrentIndexCount,fCurrentPosition,"
 				+ "fQueryTime,fServiceProvider,fOptimizeGroupName,"
 				+ "fOptimizePlanCount,fOptimizedCount,fSequence,"
-				
+
 				+ "fRelatedKeywords,fPositionFirstCost,fPositionSecondCost,fPositionThirdCost,fPositionForthCost,fPositionFifthCost,"
 				+ "fPositionFirstFee,fPositionSecondFee,fPositionThirdFee,fPositionForthFee,fPositionFifthFee,fPositionFirstPageFee,"
 				+ "fCollectMethod,fStartOptimizedTime,fEffectiveFromTime,fEffectiveToTime,"
@@ -1427,7 +1450,7 @@ public class CustomerKeywordManager {
 				+ "?,?,?,"
 				+ "?,?,?,"
 				+ "?,?,?,"
-				
+
 				+ "?,?,?,?,?,?,"
 				+ "?,?,?,?,?,?,"
 				+ "?,?,?,?,"
@@ -1448,15 +1471,15 @@ public class CustomerKeywordManager {
 		ps.setString(i++, customerKeyword.getOriginalUrl() != null ? customerKeyword.getOriginalUrl().trim() : "");
 		ps.setString(i++, customerKeyword.getPaymentStatus() != null ? customerKeyword.getPaymentStatus().trim() : "");
 		ps.setString(i++, customerKeyword.getOrderNumber() != null ? customerKeyword.getOrderNumber().trim() : "");
-		
+
 		ps.setInt(i++, customerKeyword.getInitialPosition());
 		ps.setInt(i++, customerKeyword.getCurrentIndexCount());
 		ps.setInt(i++, 10);
-		
+
 		ps.setTimestamp(i++, customerKeyword.getQueryTime());
 		ps.setString(i++, customerKeyword.getServiceProvider());
 		ps.setString(i++, customerKeyword.getOptimizeGroupName());
-		
+
 		ps.setInt(i++, customerKeyword.getOptimizePlanCount());
 		ps.setInt(i++, customerKeyword.getOptimizedCount());
 		ps.setInt(i++, customerKeyword.getSequence());
@@ -1468,19 +1491,19 @@ public class CustomerKeywordManager {
 		ps.setDouble(i++, customerKeyword.getPositionForthCost());
 		ps.setDouble(i++, customerKeyword.getPositionFifthCost());
 
-		
+
 		ps.setDouble(i++, customerKeyword.getPositionFirstFee());
 		ps.setDouble(i++, customerKeyword.getPositionSecondFee());
 		ps.setDouble(i++, customerKeyword.getPositionThirdFee());
 		ps.setDouble(i++, customerKeyword.getPositionForthFee());
 		ps.setDouble(i++, customerKeyword.getPositionFifthFee());
 		ps.setDouble(i++, customerKeyword.getPositionFirstPageFee());
-		
+
 		ps.setString(i++, customerKeyword.getCollectMethod());
 		ps.setTimestamp(i++, customerKeyword.getStartOptimizedTime());
 		ps.setTimestamp(i++, customerKeyword.getEffectiveFromTime());
 		ps.setTimestamp(i++, customerKeyword.getEffectiveToTime());
-		
+
 		ps.setInt(i++, customerKeyword.getStatus());
 		ps.setString(i++, customerKeyword.getRemarks());
 		ps.executeUpdate();
@@ -1510,7 +1533,7 @@ public class CustomerKeywordManager {
 					+ "fOriginalUrl=?,fPaymentStatus=?,fOrderNumber=?,fRemarks=?,"
 					+ "fOptimizePlanCount=?,fCollectMethod=?,fStatus=?,fRelatedKeywords=?,"
 					+ "fUpdateTime=?, fSequence = ? where fUuid = ?";
-					
+
 			ps = conn.prepareStatement(preSql);
 			int i = 1;
 			ps.setInt(i++, customerKeyword.getCustomerUuid());
@@ -1522,44 +1545,44 @@ public class CustomerKeywordManager {
 			ps.setInt(i++, customerKeyword.getCurrentPosition());
 			ps.setInt(i++, customerKeyword.getCurrentIndexCount());
 			ps.setString(i++, customerKeyword.getServiceProvider());
-			
-			
+
+
 			ps.setDouble(i++, customerKeyword.getPositionFirstCost());
 			ps.setDouble(i++, customerKeyword.getPositionSecondCost());
 			ps.setDouble(i++, customerKeyword.getPositionThirdCost());
 			ps.setDouble(i++, customerKeyword.getPositionForthCost());
 			ps.setDouble(i++, customerKeyword.getPositionFifthCost());
-			
-			
+
+
 			ps.setDouble(i++, customerKeyword.getPositionFirstFee());
 			ps.setDouble(i++, customerKeyword.getPositionSecondFee());
 			ps.setDouble(i++, customerKeyword.getPositionThirdFee());
 			ps.setDouble(i++, customerKeyword.getPositionForthFee());
 			ps.setDouble(i++, customerKeyword.getPositionFifthFee());
 			ps.setDouble(i++, customerKeyword.getPositionFirstPageFee());
-			
-			
+
+
 			ps.setInt(i++, customerKeyword.getOptimizePositionFirstPercentage());
 			ps.setInt(i++, customerKeyword.getOptimizePositionSecondPercentage());
 			ps.setInt(i++, customerKeyword.getOptimizePositionThirdPercentage());
-			
-			
+
+
 			ps.setTimestamp(i++, customerKeyword.getEffectiveFromTime());
 			ps.setTimestamp(i++, customerKeyword.getEffectiveToTime());
-			
+
 			ps.setString(i++, customerKeyword.getTitle() != null ? customerKeyword.getTitle().trim() : "");
-			
+
 			ps.setString(i++, customerKeyword.getOriginalUrl() != null ? customerKeyword.getOriginalUrl().trim() : "");
 			ps.setString(i++, customerKeyword.getPaymentStatus() != null ? customerKeyword.getPaymentStatus().trim() : "");
 			ps.setString(i++, customerKeyword.getOrderNumber() != null ? customerKeyword.getOrderNumber().trim() : "");
 			ps.setString(i++, customerKeyword.getRemarks() != null ? customerKeyword.getRemarks().trim() : "");
-			
+
 			ps.setInt(i++, customerKeyword.getOptimizePlanCount());
-			
+
 			ps.setString(i++, customerKeyword.getCollectMethod());
 			ps.setInt(i++, customerKeyword.getStatus());
 			ps.setString(i++, customerKeyword.getRelatedKeywords());
-			
+
 			ps.setTimestamp(i++, new Timestamp(System.currentTimeMillis()));
 			ps.setInt(i++, customerKeyword.getSequence());
 			ps.setInt(i++, customerKeyword.getUuid());
@@ -1580,7 +1603,7 @@ public class CustomerKeywordManager {
 			DBUtil.closeConnection(conn);
 		}
 	}
-	
+
 	public void deleteCustomerKeyword(String dataSourceName, int customerKeywordUuid, String type) throws Exception {
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -1768,25 +1791,25 @@ public class CustomerKeywordManager {
 			DBUtil.closeConnection(conn);
 		}
 	}
-	
+
 	public String getCurrentIndexCountFiledName(String type){
 		return String.format("f%sCurrentIndexCount", Constants.BAIDU_TYPE_PC.equals(type) ? "" : "Phone");
 	}
-	
+
 	public String getInitialPositionFiledName(String type){
 		return String.format("f%sInitialPosition", Constants.BAIDU_TYPE_PC.equals(type) ? "" : type);
 	}
-	
+
 	public String getCurrentPositionFiledName(String type){
 		return String.format("f%sCurrentPosition", Constants.BAIDU_TYPE_PC.equals(type) ? "" : type);
 	}
-	
+
 	public String getOptimizePlanCountFiledName(String type){
 		return String.format("f%sOptimizePlanCount", Constants.BAIDU_TYPE_PC.equals(type) ? "" : "Phone");
 	}
-	
+
 	public String getPagePercentage(String type){
-		return Constants.BAIDU_TYPE_PC.equals(type) ? ConfigManager.CONFIG_KEY_PAGE_PC_PERCENTAGE : ConfigManager.CONFIG_KEY_PAGE_PHONE_PERCENTAGE; 
+		return Constants.BAIDU_TYPE_PC.equals(type) ? ConfigManager.CONFIG_KEY_PAGE_PC_PERCENTAGE : ConfigManager.CONFIG_KEY_PAGE_PHONE_PERCENTAGE;
 	}
 
 	public void updateSummaryInfoWhenCapturePosition(Connection conn, CustomerKeywordVO customerKeywordVO, String type)
@@ -1836,7 +1859,7 @@ public class CustomerKeywordManager {
 			DBUtil.closeConnection(conn);
 		}
 	}
-	
+
 	public void stopCustomerKeyword(String dataSourceName, String terminalType, int customerUuid) throws Exception {
 		Connection conn = null;
 		try {
@@ -1849,7 +1872,7 @@ public class CustomerKeywordManager {
 			DBUtil.closeConnection(conn);
 		}
 	}
-	
+
 	public void updateCustomerKeywordStatus(String dataSourceName, String terminalType, int customerUuid, String status) throws Exception {
 		PreparedStatement ps = null;
 		String preSql = null;
@@ -1911,7 +1934,7 @@ public class CustomerKeywordManager {
 			DBUtil.closePreparedStatement(ps);
 		}
 	}
-	
+
 	public void updateQueryUpdateTime(Connection conn, int customerKeywordUuid) throws Exception {
 		PreparedStatement ps = null;
 		String preSql = null;
@@ -2008,7 +2031,7 @@ public class CustomerKeywordManager {
 			DBUtil.closePreparedStatement(ps);
 		}
 	}
-	
+
 	public void updateCaptureIndexQueryTime(Connection conn, String type, int customerKeywordUuid) throws Exception {
 		PreparedStatement ps = null;
 		String preSql = null;
@@ -2026,7 +2049,7 @@ public class CustomerKeywordManager {
 			DBUtil.closePreparedStatement(ps);
 		}
 	}
-	
+
 	public void updateInvalidRefreshCount(String datasourceName, String entryType, String groupName, String customerName)
 			throws Exception {
 		PreparedStatement ps = null;
@@ -2055,7 +2078,7 @@ public class CustomerKeywordManager {
 			DBUtil.closeConnection(conn);
 		}
 	}
-	
+
 	public void cleanQueryCount(Connection conn) throws Exception {
 		PreparedStatement ps = null;
 		String preSql = null;
@@ -2070,7 +2093,7 @@ public class CustomerKeywordManager {
 			DBUtil.closePreparedStatement(ps);
 		}
 	}
-	
+
 	public void cleanOptimizedCount(Connection conn) throws Exception {
 		PreparedStatement ps = null;
 		String preSql = null;
@@ -2114,7 +2137,7 @@ public class CustomerKeywordManager {
 			ps.setInt(i++, count);
 			ps.setInt(i++, customerKeywordUuid);
 			ps.executeUpdate();
-			
+
 			if(count > 0){
 				CustomerKeywordIPManager customerKeywordIPManager = new CustomerKeywordIPManager();
 				CustomerKeywordIPVO customerKeywordIPVO = new CustomerKeywordIPVO();
@@ -2146,9 +2169,9 @@ public class CustomerKeywordManager {
 			return "";
 		}else{
 			return type;
-		} 
+		}
 	}
-	
+
 	public void cleanBigKeywordIndicator(Connection conn, String groupName) throws Exception {
 		PreparedStatement ps = null;
 
@@ -2167,7 +2190,7 @@ public class CustomerKeywordManager {
 			DBUtil.closePreparedStatement(ps);
 		}
 	}
-	
+
 	public void setBigKeywordIndicator(Connection conn, Set<Integer> uuids) throws Exception {
 		PreparedStatement ps = null;
 
@@ -2184,9 +2207,9 @@ public class CustomerKeywordManager {
 			DBUtil.closePreparedStatement(ps);
 		}
 	}
-	
+
 	public void updateAccountRange(Connection conn, Timestamp effectiveFromTime, Timestamp effectiveToTime,
-			int customerKeywordUuid, String type) throws Exception {
+								   int customerKeywordUuid, String type) throws Exception {
 		PreparedStatement ps = null;
 
 		String filedPrefix = getFieldPrefix(type);
@@ -2265,7 +2288,7 @@ public class CustomerKeywordManager {
 	}
 
 	public void updatePaymentRange(Connection conn, Timestamp effectiveFromTime, Timestamp effectiveToTime,
-			int customerKeywordUuid) throws Exception {
+								   int customerKeywordUuid) throws Exception {
 		PreparedStatement ps = null;
 
 		String preSql = null;
@@ -2313,7 +2336,7 @@ public class CustomerKeywordManager {
 //	}
 
 	public CustomerKeywordPositionIndexLogVO updateCustomerKeywordPosition(Connection conn,
-			int positionNumber, CustomerKeywordVO customerKeywordVO, String type, String ip) throws Exception {
+																		   int positionNumber, CustomerKeywordVO customerKeywordVO, String type, String ip) throws Exception {
 		int indexCount = customerKeywordVO.getCurrentIndexCount();
 		customerKeywordVO.setApplicableCurrentPosition(positionNumber, type);
 		updateSummaryInfoWhenCapturePosition(conn, customerKeywordVO, type);
@@ -2325,17 +2348,9 @@ public class CustomerKeywordManager {
 		customerKeywordPositionIndexLog.setType(type);
 		customerKeywordPositionIndexLog.setIp(ip);
 		positionIndexLogManager.addCustomerKeywordPositionIndexLog(conn, customerKeywordPositionIndexLog);
-		
+
 		CustomerKeywordPositionSummaryManager customerKeywordPositionSummaryManager = new CustomerKeywordPositionSummaryManager();
 		customerKeywordPositionSummaryManager.prepareCustomerKeywordPositionSummary(conn, customerKeywordPositionIndexLog);
-	
-		if (customerKeywordVO.availableToAddNewAccountLog(type)) {
-			if (customerKeywordVO.getApplicableFee(customerKeywordPositionIndexLog.getPositionNumber(), type) > 0) {
-//				addAccountLog(conn, customerKeywordVO, type);
-			}
-		}
-
 		return customerKeywordPositionIndexLog;
 	}
-
 }

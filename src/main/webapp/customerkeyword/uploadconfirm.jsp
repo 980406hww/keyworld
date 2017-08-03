@@ -7,7 +7,7 @@
 
 <style>
    .hiddentr {display:none;}
-   .displaytr {dislay:;}
+   .displaytr {dislay:non}
 </style>
 
 

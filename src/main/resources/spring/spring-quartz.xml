@@ -10,6 +10,7 @@
 				<ref bean="cronTriggerAdjustOptimizationCount" />
 				<ref bean="cronTriggerSwitchClientStatusGroup" />
 				<ref bean="cronTriggerRenewalNotification" />
+				<ref bean="cronTriggerGenerateDailyReport" />
 			</list>
 		</property>
 		<!-- Quartz配置, 本地运行无需单独的quartz.properties文件，在此简单配置即可 -->
@@ -56,6 +57,19 @@
 	<!-- JobDetajil, 基于MethodInvokingJobDetailFactoryBean调用普通Spring Bean -->
 	<bean id="cronJobDetailRenewalNotification" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject" ref="renewalNotificationSchedule" />
+		<property name="targetMethod" value="runTask" />
+		<!-- 同一任务在前一次执行未完成而Trigger时间又到时是否并发开始新的执行, 默认为true. -->
+		<property name="concurrent" value="false" />
+	</bean>
+
+	<bean id="cronTriggerGenerateDailyReport" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="cronJobDetailGenerateDailyReport" />
+		<property name="cronExpression" value="1/30 * * * * ?" />
+	</bean>
+
+	<!-- JobDetajil, 基于MethodInvokingJobDetailFactoryBean调用普通Spring Bean -->
+	<bean id="cronJobDetailGenerateDailyReport" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="generateDailyReportSchedule" />
 		<property name="targetMethod" value="runTask" />
 		<!-- 同一任务在前一次执行未完成而Trigger时间又到时是否并发开始新的执行, 默认为true. -->
 		<property name="concurrent" value="false" />
