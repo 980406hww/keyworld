@@ -6,7 +6,8 @@
 <%		  
 	try{
 		 String keyword = request.getParameter("keyword");
-		 String result = flm.getFumianLists("keyword", keyword);
+		 String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+		 String result = flm.getFumianLists("keyword", terminalType, keyword);
 	 	 out.print(result);
 	 }catch(Exception ex){
 	 	ex.printStackTrace();

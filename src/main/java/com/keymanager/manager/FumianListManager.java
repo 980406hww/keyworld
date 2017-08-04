@@ -272,10 +272,11 @@ public class FumianListManager {
 		}
 	}
 	
-	public String getFumianLists(String datasourceName, String keyword) throws Exception{
+	public String getFumianLists(String datasourceName, String terminalType, String keyword) throws Exception{
 		ObjectMapper mapper = new ObjectMapper();
 		try {
-			List fumianList = this.searchFumianListVO(datasourceName, 1000, 1, " and fKeyword = '" + keyword.trim() + "'", "", 0);
+			String condition = String.format(" and fKeyword = '%s' and fTerminalType = '%s' ", keyword, terminalType);
+			List fumianList = this.searchFumianListVO(datasourceName, 1000, 1, condition, "", 0);
 			if(fumianList != null){
 				FumianListVOListJson fumianListVOListJson = new FumianListVOListJson();
 				List<FumianListVOJson> fumianListVOJsons = new ArrayList<FumianListVOJson>();

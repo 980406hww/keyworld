@@ -141,6 +141,11 @@
 		}else{
 			invalidRefreshCount = "";	
 		}
+		
+	  	if (unPaidAll != null){
+	  		condition = condition + " AND EXISTS (SELECT 1 FROM t_ck_account_log l WHERE l.fCustomerKeywordUuid = ck.fUuid AND l.fStatus IN ('UnPaid', 'PaidPartially')) ";
+	  		pageUrl = pageUrl + "&unPaidAll=unPaidAll";
+	  	}
 	  	
 	  	
 	  	if (pushPay != null){
@@ -309,6 +314,8 @@
 							  <a href="javascript:delAllItems('emptyTitleAndUrl')">删除标题和网址为空的关键字</a> |
 							  <a href="javascript:delAllItems('emptyTitle')">删除标题为空的关键字</a> |
 							  <a href="javascript:resetTitle()">清空结果采集标题标志</a> |
+							  <a href="javascript:clearTitle('<%=customerUuid%>', null)">清空所选关键字标题</a> |
+							  <a href="javascript:clearTitle('<%=customerUuid%>', 'all')">清空当前客户下关键字标题</a> |
 							 <a target="_blank" href="javascript:showChangeOptimizationGroupDialog(this)">修改选中关键词分组</a>
 						  </td>
 	      	  	 		</tr>
@@ -527,6 +534,43 @@ function getUuids(){
 function resetTitle(){
 	if (confirm("确实要清除当前结果的采集标题标志?") == false) return;
 	document.location = "resetTitle.jsp?<%=pageUrl%>";
+}
+
+function clearTitle(customerUuid, clearType){
+	if (confirm("确认要清空标题吗?") == false) return;
+	var uuids = getUuids();
+	if(clearType == null){
+		if(uuids.trim() === ''){
+			alert("请选中要操作的关键词！");
+			return;
+		}
+	}
+	var postData = {};
+	postData.uuids = uuids;
+	postData.clearType = clearType;
+	postData.customerUuid = customerUuid;
+
+	$$$.ajax({
+		url: '/spring/customerkeyword/clearTitle',
+		data: JSON.stringify(postData),
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		timeout: 5000,
+		type: 'POST',
+		success: function (status) {
+			if(status){
+				showInfo("操作成功！", self);
+				window.location.reload();
+			}else{
+				showInfo("操作失败！", self);
+			}
+		},
+		error: function () {
+			showInfo("操作失败！", self);
+		}
+	});
 }
 
 function showChangeOptimizationGroupDialog(self){

@@ -55,15 +55,15 @@ public class CustomerKeywordDailyReportExcelWriter {
 		writer.createSheetWithNameAndSetAsCurrentSheet(sheetName, writer.getNumberOfSheets());
 		writer.removeSheet("Default");
 	}
-
+	
 	public void saveAs(String outputFileName) throws Exception{
 		writer.saveAs(webRootPath + outputFileName);
 	}
-
-	public byte[] getExcelContentBytes() throws Exception {
-		return writer.getExcelContentBytes();
-	}
-
+	
+  public byte[] getExcelContentBytes() throws Exception {
+  	return writer.getExcelContentBytes();
+  }
+  	
 	private File getTemplateFile(String fileName){
 		String SERVLET_CONTEXT_PATH = webRootPath;
 
@@ -95,7 +95,7 @@ public class CustomerKeywordDailyReportExcelWriter {
 				.TodayPrice.getTitle(), true);
 		todayPriceWidth = calculateWidth(todayPriceWidth, CustomerKeywordDailyReportDefinition.TodayPrice.getTitle());
 	}
-
+	
 	private double writeRow(int rowIndex, CustomerKeywordVO view) throws ExcelWriteException{
 		writer.addLabelCell(CustomerKeywordDailyReportDefinition.Sequence.getColumnIndex(), rowIndex, view.getSequence());
 		writer.addLabelCell(CustomerKeywordDailyReportDefinition.Keyword.getColumnIndex(), rowIndex, view.getKeyword());
