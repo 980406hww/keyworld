@@ -52,7 +52,7 @@ public class TSMainKeywordRestController extends SpringMVCBaseController {
     }
 
     @RequestMapping(value = "/findTSMainKeywords", method = RequestMethod.GET)
-    public ModelAndView findTSMainKeywords(@RequestParam(defaultValue = "1") int currentPage,@RequestParam(defaultValue="5") int displaysRecords,@RequestParam(defaultValue="") String keyword,@RequestParam(defaultValue="") String  group){
+    public ModelAndView findTSMainKeywords(@RequestParam(defaultValue = "1") int currentPage,@RequestParam(defaultValue="15") int displaysRecords,@RequestParam(defaultValue="") String keyword,@RequestParam(defaultValue="") String  group){
         PageInfo<TSMainKeyword> pageInfo = new PageInfo<TSMainKeyword>();
         Map<String,Object> items = new HashMap<String, Object>();
         pageInfo.setCurrentpage(currentPage);
@@ -70,10 +70,12 @@ public class TSMainKeywordRestController extends SpringMVCBaseController {
         }
         List<TSMainKeyword> tsMainKeywords = tsMainKeywordService.searchTSMainKeywords(items);
         pageInfo.setContent(tsMainKeywords);
+        Map<String,Object> searchCondition = new HashMap<String, Object>();
+        searchCondition.put("keyword",keyword);
+        searchCondition.put("group",group);
+        pageInfo.setSearchCondition(searchCondition);
         ModelAndView modelAndView = new ModelAndView("/complaints/show");
         modelAndView.addObject("pageInfo",pageInfo);
-        modelAndView.addObject("keyword",keyword);
-        modelAndView.addObject("group",group);
         return modelAndView;
     }
 
@@ -98,10 +100,12 @@ public class TSMainKeywordRestController extends SpringMVCBaseController {
         }
         List<TSMainKeyword> tsMainKeywords = tsMainKeywordService.searchTSMainKeywords(items);
         pageInfo.setContent(tsMainKeywords);
+        Map<String,Object> searchCondition = new HashMap<String, Object>();
+        searchCondition.put("keyword",keyword);
+        searchCondition.put("group",group);
+        pageInfo.setSearchCondition(searchCondition);
         ModelAndView modelAndView = new ModelAndView("/complaints/show");
         modelAndView.addObject("pageInfo",pageInfo);
-        modelAndView.addObject("keyword",keyword);
-        modelAndView.addObject("group",group);
         return modelAndView;
     }
 

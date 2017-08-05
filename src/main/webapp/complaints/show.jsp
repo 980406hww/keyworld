@@ -41,7 +41,7 @@
       $("#showAddMainKeywordDlog").dialog({
         resizable: false,
         width: 400,
-        height: 450,
+        height: 440,
         modal: true,
         //按钮
         buttons: {
@@ -77,7 +77,7 @@
         savaFlag = false;
         return false;
       }
-      if(mainkeyObj.group=="-------请选择城市-------"||mainkeyObj.keyword===""){
+      if(mainkeyObj.group=="-----------请 选 择 城 市-----------"||mainkeyObj.keyword===""){
         alert("请选择有效城市");
         $('#mainKeywordForm').find('#mGroup').focus();
         savaFlag = false;
@@ -412,8 +412,8 @@
         </div>
         <div id="serachMainKeyword">
            <form id="serachMainKeywordForm" action="/spring/complaints/findTSMainKeywords" method="post">
-               主关键词<input id="itemkeywork" name="itemkeywork" type="text" value="${keyword}"/>&nbsp;&nbsp;
-               区域分组<input id="itemGroup" name="itemGroup" type="text" value="${group}"/>&nbsp;&nbsp;
+               主关键词<input id="itemkeywork" name="itemkeywork" type="text" value="${pageInfo.searchCondition.get("keyword")}"/>&nbsp;&nbsp;
+               区域分组<input id="itemGroup" name="itemGroup" type="text" value="${pageInfo.searchCondition.get("group")}"/>&nbsp;&nbsp;
                <input type="submit" class="ui-button ui-widget ui-corner-all"
                        value="查询">&nbsp;&nbsp;&nbsp;
                <input type="button" class="ui-button ui-widget ui-corner-all"
@@ -437,7 +437,7 @@
                 <div id="div2"></div>
             </tr>
             <c:forEach items="${pageInfo.content }" var="mainkey">
-                <tr onmouseover="doOver(this)" onmouseout="doOut(this)">
+                <tr onmouseover="doOver(this)" onmouseout="doOut(this)" ondblclick="getOneMainKeyword('${mainkey.uuid}')">
                     <td><input type="checkbox" name="uuid" value="${mainkey.uuid}" /></td>
                     <input type="hidden" id="mkUuid" value="${mainkey.uuid}"/>
                     <td>${mainkey.keyword }</td>
@@ -479,13 +479,13 @@
                 <tr>
                     <input id="mUuid" type="hidden">
                     <td>主关键字</td>
-                    <td><input id="mKeyword" type="text"></td>
+                    <td><input id="mKeyword" type="text" style="width: 250px;"></td>
                 </tr>
                 <tr>
                     <td>地区分组</td>
                     <td>
-                        <select id="mGroup">
-                            <option>-------请选择城市-------</option>
+                        <select id="mGroup" style="width: 250px;">
+                            <option>-----------请 选 择 城 市-----------</option>
                             <option>北京</option>
                             <option>上海</option>
                             <option>广州</option>
@@ -496,7 +496,7 @@
                 <tr>
                     <td>负面词</td>
                     <td>
-                        <textarea id="ngKeyword" style="resize: none;height: 175px;width: 230px"
+                        <textarea id="ngKeyword" style="resize: none;height: 180px;width: 250px"
                                   placeholder="请用逗号作为分割符"></textarea>
                     </td>
                 </tr>
