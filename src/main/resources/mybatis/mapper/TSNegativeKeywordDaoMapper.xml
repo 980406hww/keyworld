@@ -9,7 +9,7 @@
             ng.fKeyword AS `keyword`,
             ng.fPCEmailSentOver2Weeks AS `pcEmailSentOver2Weeks`,
             ng.fPhoneEmailSentOver2Weeks AS `phoneEmailSentOver2Weeks`,
-            ng.fPCEmailSentOver3Timess AS `pcEmailSentOver3Timess`,
+            ng.fPCEmailSentOver3Times AS `pcEmailSentOver3Times`,
             ng.fPhoneEmailSentOver3Times AS `phoneEmailSentOver3Times`,
             ng.fPCAppeared AS `pcAppeared`,
             ng.fPhoneAppeared AS `phoneAppeared`,

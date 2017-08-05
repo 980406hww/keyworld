@@ -21,7 +21,7 @@ public class TSMainKeyword extends BaseEntity {
     @TableField(value = "fComplaintsTime")
     private Date complaintsTime;
 
-    @TableField(exist=false)
+    @TableField(exist = false)
     private List<TSNegativeKeyword> tsNegativeKeywords;
 
     public String getKeyword() {
@@ -47,6 +47,7 @@ public class TSMainKeyword extends BaseEntity {
     public void setTsNegativeKeywords(List<TSNegativeKeyword> tsNegativeKeywords) {
         this.tsNegativeKeywords = tsNegativeKeywords;
     }
+
     public Date getComplaintsTime() {
         return complaintsTime;
     }

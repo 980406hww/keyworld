@@ -2,6 +2,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<%--<script language="javascript" type="text/javascript" src="/js/slide.js"/>--%>
 <link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css">
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -22,12 +23,15 @@
             request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
                     + path + "/";
 %>
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <script type="text/javascript">
-    /*页面进入即可加载*/
+    /*页面进入即刻加载*/
     $(function() {
       $("#showAddMainKeywordDlog").hide();
+      var displaysRecords =  $('#showMainKeywordBottomDiv').find('#displaysRecords').val();
+      $('#showMainKeywordBottomDiv').find('#chooseRecords').val(displaysRecords);
     });
     //增加
     function showAddMainKeywordDlog(uuid) {
@@ -43,8 +47,6 @@
         buttons: {
           "保存": function() {
             savaMainKeyword(uuid);
-            $(this).dialog("close");
-            $('#mainKeywordForm')[0].reset();
           },
           "清空": function() {
             $('#mainKeywordForm')[0].reset();
@@ -59,15 +61,35 @@
     function savaMainKeyword(uuid) {
       var mainkeyObj = {};
       mainkeyObj.uuid = uuid;
-      mainkeyObj.keyword = $('#mainKeywordForm').find('#mKeyword').val();
+      mainkeyObj.keyword = $('#mainKeywordForm').find('#mKeyword').val().trim();
       mainkeyObj.group = $('#mainKeywordForm').find('#mGroup').val();
       mainkeyObj.tsNegativeKeywords = [];
       var ngKeywords = $('#mainKeywordForm').find('#ngKeyword').val().split(',');
       $.each(ngKeywords,function (idx,val) {
         var ngKeywordObj = {};
-        ngKeywordObj.keyword = val;
+        ngKeywordObj.keyword = val.trim();
         mainkeyObj.tsNegativeKeywords.push(ngKeywordObj);
       });
+      var savaFlag = true;
+      if(mainkeyObj.keyword==null||mainkeyObj.keyword===""){
+        alert("关键字不能为空");
+        $('#mainKeywordForm').find('#mKeyword').focus();
+        savaFlag = false;
+        return false;
+      }
+      if(mainkeyObj.group=="-------请选择城市-------"||mainkeyObj.keyword===""){
+        alert("请选择有效城市");
+        $('#mainKeywordForm').find('#mGroup').focus();
+        savaFlag = false;
+        return false;
+      }
+      if(ngKeywords==null||ngKeywords==""||ngKeywords=="null"){
+        alert("请输入需要投诉的负面词汇");
+        $('#mainKeywordForm').find('#ngKeyword').focus();
+        savaFlag = false;
+        return false;
+      }
+      if(savaFlag){
         $.ajax({
           url: '/spring/complaints/save',
           data: JSON.stringify(mainkeyObj),
@@ -79,17 +101,20 @@
           type: 'POST',
           success: function (data) {
             if (data != null && data != "") {
-              showInfo("添加成功！", self);
+              showInfo("保存成功！", self);
               window.location.reload();
             } else {
-              showInfo("添加失败！", self);
+              showInfo("保存失败！", self);
               window.location.reload();
             }
           },
           error: function () {
-            showInfo("添加失败！", self);
+            showInfo("保存失败！", self);
           }
         });
+        $("#showAddMainKeywordDlog").dialog("close");
+        $('#mainKeywordForm')[0].reset();
+      }
     }
     //通过uuid查找mainKey对象
     function getOneMainKeyword(uuid) {
@@ -97,8 +122,8 @@
         url: '/spring/complaints/findTSMainKeywordById/' + uuid,
         type: 'Get',
         success: function (data) {
-          if (data != null && data.length > 0) {
-            var mainKeyword = data[0];
+          if (data != null ) {
+            var mainKeyword = data;
             initMainKeywordDialog(mainKeyword);
             showAddMainKeywordDlog(mainKeyword.uuid);
           } else {
@@ -115,14 +140,11 @@
       $("#mainKeywordForm").find("#mKeyword").val(mainKeyword.keyword);
       $("#mainKeywordForm").find("#mGroup").val(mainKeyword.group);
       var ngKeyword =  mainKeyword.tsNegativeKeywords;
-      var info = '';
+      var str = '';
       $.each(ngKeyword,function (idx,val) {
-        if(idx==0){
-          info = info + val.keyword+',';
-        }else{
-          info = info + val.keyword;
-        }
+          str = str + val.keyword+',';
       });
+      var info = str.substring(0,str.length-1);
       $("#mainKeywordForm").find("#ngKeyword").val(info);
     }
 
@@ -146,21 +168,78 @@
         }
       });
     }
-    //查询
-    function serachMainKeywords() {
-      var termObj = $("#serachMainKeyword").find("input[name='item']");
-      $.each(termObj, function (index, val) {
-
+    function getSelectedIDs() {
+      var uuids = '';
+      $.each($("input[name=uuid]:checkbox:checked"), function(){
+        if(uuids === ''){
+          uuids = $(this).val();
+        }else{
+          uuids = uuids + "," + $(this).val();
+        }
       });
+      return uuids;
+    }
+    //删除所选
+    function deleteMainKeywords(self) {
+      var uuids = getSelectedIDs();
+      if(uuids === ''){
+        alert('请选择要操作的设置信息！');
+        return ;
+      }
+      if (confirm("确实要删除这些投诉关键字吗?") == false) return;
+      var postData = {};
+      postData.uuids = uuids.split(",");
       $.ajax({
-        url: '/spring/complaints/findTSMainKeywords',
-        data: JSON.stringify(itemObj),//传回一个查询对象
+        url: '/spring/complaints/deleteTSMainKeywords',
+        data: JSON.stringify(postData),
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
         timeout: 5000,
         type: 'POST',
+        success: function (data) {
+          if(data){
+            showInfo("操作成功！", self);
+            window.location.reload();
+          }else{
+            showInfo("操作失败！", self);
+            window.location.reload();
+          }
+        },
+        error: function () {
+          showInfo("操作失败！", self);
+          window.location.reload();
+        }
+      });
+    }
+
+    //查询
+    function serachMainKeywords(cp,ps) {
+      var tsMainKeyword = {};
+      tsMainKeyword.keyword = $("#serachMainKeyword").find("#itemkeywork").val();
+      tsMainKeyword.group = $("#serachMainKeyword").find("#itemgroup").val();
+      tsMainKeyword.tsNegativeKeywords = [];
+      var ngKeywordObj = {};
+      ngKeywordObj.keyword = '';
+      tsMainKeyword.tsNegativeKeywords.push(ngKeywordObj);
+
+      var currentPageSD=$('#showMainKeywordBottomDiv').find("#currentpage").val();
+      var displaysRecordsSD=$('#showMainKeywordBottomDiv').find("#displaysRecords").val();
+      var currentPage = cp!=currentPageSD?cp:currentPageSD;
+      var displaysRecords = ps!=displaysRecordsSD?ps:displaysRecordsSD;
+      
+     var url= '/spring/complaints/findTSMainKeywords?currentPage='+currentPage+'&displaysRecords='+displaysRecords+'&keyword='+tsMainKeyword.keyword+'&group='+tsMainKeyword.group;
+      window.location.href=url;
+     /*$.ajax({
+        url: url,
+        data: JSON.stringify(tsMainKeyword),//传回一个查询对象{'tsMainKeyword':}
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        timeout: 5000,
+        type: 'GET',
         success: function (data) {
           if (data != null && data != "") {
             showInfo("更新成功！", self);
@@ -172,10 +251,16 @@
         },
         error: function () {
           showInfo("更新失败！", self);
-          settingDialogDiv.hide();
         }
-      });
+      });*/
     }
+    //改变当前页
+    function chooseRecords(cp,ps) {
+      $('#showMainKeywordBottomDiv').find("#currentpage").val(cp);
+      $('#showMainKeywordBottomDiv').find("#displaysRecords").val(ps);
+      serachMainKeywords(cp,ps);
+    }
+
     //弹出提示框
     function getTop(e) {
       var offset = e.offsetTop;
@@ -225,22 +310,66 @@
       var div1 = document.getElementById('div1');
       div1.style.display = "none";
     }
+    function selectAll(self){
+      var a = document.getElementsByName("uuid");
+      if(self.checked){
+        for(var i = 0;i<a.length;i++){
+          if(a[i].type == "checkbox"){
+            a[i].checked = true;
+          }
+        }
+      }else{
+        for(var i = 0;i<a.length;i++){
+          if(a[i].type == "checkbox"){
+            a[i].checked = false;
+          }
+        }
+      }
+    }
+    function doOver(obj) {
+      obj.style.backgroundColor = "green";
+    }
+
+    function doOut(obj) {
+      var rowIndex = obj.rowIndex;
+      if ((rowIndex % 2) == 0) {
+        obj.style.backgroundColor = "#eeeeee";
+      } else {
+        obj.style.backgroundColor = "#ffffff";
+      }
+    }
 </script>
 <style type="text/css">
     body {
-        font-size: 15px;;
+        font-size: 15px;
+        text-align:cente;
     }
 
     #showMainKeywordTopDiv {
-
+        width: 100%;
+        margin:0 auto;
     }
 
     #showMainKeywordTableDiv {
+        width: 100%;
+        height: 650px;
+        margin:auto;
+    }
+    #showMainKeywordTable{
+        width: 100%;
+    }
+    #showMainKeywordTable td {
 
     }
 
     #showAddMainKeywordDlog {
-        align-content: center;
+        margin:0 auto;
+    }
+    #serachMainKeyword{
+        width: 100%;
+    }
+    #showMainKeywordBottomDiv{
+        margin-left: 63%;
     }
 
     #div1 {
@@ -282,12 +411,16 @@
             </table>
         </div>
         <div id="serachMainKeyword">
-            主关键词<input id="termkeywork" name="item" type="text"/>&nbsp;&nbsp;
-            区域分组<input id="termGroup" name="item" type="text"/>&nbsp;&nbsp;
-            <input type="button" class="ui-button ui-widget ui-corner-all"
-                   onclick="serachMainKeywords()" value="查询">&nbsp;&nbsp;&nbsp;
-            <input type="button" class="ui-button ui-widget ui-corner-all"
-                   onclick="showAddMainKeywordDlog(null)" value="添加"/>
+           <form id="serachMainKeywordForm" action="/spring/complaints/findTSMainKeywords" method="post">
+               主关键词<input id="itemkeywork" name="itemkeywork" type="text" value="${keyword}"/>&nbsp;&nbsp;
+               区域分组<input id="itemGroup" name="itemGroup" type="text" value="${group}"/>&nbsp;&nbsp;
+               <input type="submit" class="ui-button ui-widget ui-corner-all"
+                       value="查询">&nbsp;&nbsp;&nbsp;
+               <input type="button" class="ui-button ui-widget ui-corner-all"
+                      onclick="showAddMainKeywordDlog(null)" value="添加"/>&nbsp;&nbsp;&nbsp;
+               <input type="button" class="ui-button ui-widget ui-corner-all"
+                      onclick="deleteMainKeywords(this)" value="删除所选"/>
+           </form>
         </div>
     </div>
     <div id="showMainKeywordTableDiv">
@@ -297,15 +430,15 @@
                 <td align="center" width=150>主词</td>
                 <td align="center" width=100>分组</td>
                 <td align="center" width=200>负面语句</td>
-                <td align="center" width=100>更新时间</td>
-                <td align="center" width=100>创建时间</td>
+                <td align="center" width=250>更新时间</td>
+                <td align="center" width=250>创建时间</td>
                 <td align="center" width=150>操作</td>
                 <div id="div1"></div>
                 <div id="div2"></div>
             </tr>
-            <c:forEach items="${tsMainKeywords }" var="mainkey">
-                <tr>
-                    <td><input type="checkbox"/></td>
+            <c:forEach items="${pageInfo.content }" var="mainkey">
+                <tr onmouseover="doOver(this)" onmouseout="doOut(this)">
+                    <td><input type="checkbox" name="uuid" value="${mainkey.uuid}" /></td>
                     <input type="hidden" id="mkUuid" value="${mainkey.uuid}"/>
                     <td>${mainkey.keyword }</td>
                     <td>${mainkey.group }</td>
@@ -314,15 +447,24 @@
                             <input type="hidden" id="ngkeyUuid" value="${ngkey.uuid}"/>
                             <c:choose>
                                 <c:when test="${ngkey.pcAppeared ==1 || ngkey.phoneAppeared ==1}">
-                                        <span style="color: crimson" >${ngkey.keyword}</span>
+                                        <span style="color: crimson" >${ngkey.keyword}</span>&nbsp;&nbsp;&nbsp;
                                 </c:when>
                                 <c:otherwise>
-                                    ${ngkey.keyword}
+                                    ${ngkey.keyword}&nbsp;&nbsp;&nbsp;
                                 </c:otherwise>
                             </c:choose>
                         </c:forEach>
                     </td>
-                    <td><%--<fmt:formatDate value="${mainkey.updateTime==null?null:mainkey.updateTime}" pattern="yyyy-MM-dd mm:HH:ss"/>--%></td>
+                    <td>
+                        <c:choose>
+                            <c:when test="${mainkey.updateTime==null}">
+                                ${mainkey.updateTime}
+                            </c:when>
+                            <c:otherwise>
+                                <fmt:formatDate value="${mainkey.updateTime}" pattern="yyyy-MM-dd mm:HH:ss"/>
+                            </c:otherwise>
+                        </c:choose>
+                    </td>
                     <td><fmt:formatDate value="${mainkey.createTime}"
                                         pattern="yyyy-MM-dd mm:HH:ss"/></td>
                     <td>&nbsp;&nbsp;&nbsp;<a href="javascript:getOneMainKeyword('${mainkey.uuid}')">修改</a>&nbsp;&nbsp;&nbsp;
@@ -354,7 +496,7 @@
                 <tr>
                     <td>负面词</td>
                     <td>
-                        <textarea id="ngKeyword" style="height: 175px;width: 230px"
+                        <textarea id="ngKeyword" style="resize: none;height: 175px;width: 230px"
                                   placeholder="请用逗号作为分割符"></textarea>
                     </td>
                 </tr>
@@ -363,18 +505,21 @@
     </div>
 <hr>
     <div id="showMainKeywordBottomDiv">
-        <a class="ui-button ui-widget ui-corner-all">首页</a>&nbsp;&nbsp;&nbsp;&nbsp;
-            <a class="ui-button ui-widget ui-corner-all">上一页</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                1/4&nbsp;&nbsp;
-                <a class="ui-button ui-widget ui-corner-all">下一页</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a class="ui-button ui-widget ui-corner-all">末页</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                        总记录数:&nbsp;&nbsp;&nbsp;&nbsp;
-                        每页显示条数:<select id="selectSize">
-                            <option>5</option>
-                            <option>10</option>
-                            <option>20</option>
-                            <option>30</option>
+        <a class="ui-button ui-widget ui-corner-all" href="javascript:serachMainKeywords(1,'${pageInfo.displaysRecords}')">首页</a>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a class="ui-button ui-widget ui-corner-all" href="javascript:serachMainKeywords('${pageInfo.currentpage-1}','${pageInfo.displaysRecords}')">上一页</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                ${pageInfo.currentpage}/${pageInfo.totalPage}&nbsp;&nbsp;
+                <a class="ui-button ui-widget ui-corner-all"  href="javascript:serachMainKeywords('${pageInfo.currentpage+1}','${pageInfo.displaysRecords}')">下一页</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a class="ui-button ui-widget ui-corner-all" href="javascript:serachMainKeywords('${pageInfo.totalPage}','${pageInfo.displaysRecords}')">末页</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                        总记录数:${pageInfo.totalSize}&nbsp;&nbsp;&nbsp;&nbsp;
+                        每页显示条数:<select id="chooseRecords"  onchange="chooseRecords(${pageInfo.currentpage},this.value)">
+                            <option>15</option>
+                            <option>25</option>
+                            <option>35</option>
+                            <option>45</option>
                         </select>
+        <%--用于存储pageInfo--%>
+        <input type="hidden" id="currentpage" value="${pageInfo.currentpage}"/>
+        <input type="hidden" id="displaysRecords" value="${pageInfo.displaysRecords}"/>
     </div>
 </div>
 </body>

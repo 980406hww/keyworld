@@ -24,8 +24,8 @@ public class TSNegativeKeyword extends BaseEntity {
     @TableField(value = "fPhoneEmailSentOver2Weeks")
     private Integer phoneEmailSentOver2Weeks;
 
-    @TableField(value = "fPCEmailSentOver3Timess")
-    private Integer pcEmailSentOver3Timess;
+    @TableField(value = "fPCEmailSentOver3Times")
+    private Integer pcEmailSentOver3Times;
 
     @TableField(value = "fPhoneEmailSentOver3Times")
     private Integer phoneEmailSentOver3Times;
@@ -86,12 +86,12 @@ public class TSNegativeKeyword extends BaseEntity {
         this.phoneEmailSentOver2Weeks = phoneEmailSentOver2Weeks;
     }
 
-    public Integer getPcEmailSentOver3Timess() {
-        return pcEmailSentOver3Timess;
+    public Integer getPcEmailSentOver3Times() {
+        return pcEmailSentOver3Times;
     }
 
-    public void setPcEmailSentOver3Timess(Integer pcEmailSentOver3Timess) {
-        this.pcEmailSentOver3Timess = pcEmailSentOver3Timess;
+    public void setPcEmailSentOver3Times(Integer pcEmailSentOver3Times) {
+        this.pcEmailSentOver3Times = pcEmailSentOver3Times;
     }
 
     public Integer getPhoneEmailSentOver3Times() {

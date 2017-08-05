@@ -26,14 +26,23 @@ public class TSMainKeywordService extends ServiceImpl<TSMainKeywordDao, TSMainKe
     @Autowired
     private TSNegativeKeywordService tsNegativeKeywordService;
 
-    public List<TSMainKeyword> searchTSMainKeywords(Long uuid, String keyword, String group) {
-        List<TSMainKeyword> tsMainKeywordList = tsMainKeywordDao.findTSMainKeywords(uuid,keyword,group);
+    public List<TSMainKeyword> searchTSMainKeywords(Map<String,Object> items) {
+        List<TSMainKeyword> tsMainKeywordList = tsMainKeywordDao.findTSMainKeywords(items);
         for(TSMainKeyword tsMainKeyword : tsMainKeywordList){
             //负词需要根据mainkeyworduuid
             List<TSNegativeKeyword> tsNegativeKeywords = tsNegativeKeywordService.findNegativeKeywordsBymainkeyUuid(tsMainKeyword.getUuid());
             tsMainKeyword.setTsNegativeKeywords(tsNegativeKeywords);
         }
         return tsMainKeywordList;
+    }
+    public TSMainKeyword searchTSMainKeyword(Long uuid) {
+        TSMainKeyword tsMainKeyword = tsMainKeywordDao.selectById(uuid);
+            //负词需要根据mainkeyworduuid
+            if(null!=tsMainKeyword){
+                List<TSNegativeKeyword> tsNegativeKeywords = tsNegativeKeywordService.findNegativeKeywordsBymainkeyUuid(tsMainKeyword.getUuid());
+                tsMainKeyword.setTsNegativeKeywords(tsNegativeKeywords);
+            }
+        return tsMainKeyword;
     }
 
     public void saveTSMainKeyword(TSMainKeyword tsMainKeyword) {
@@ -94,6 +103,10 @@ public class TSMainKeywordService extends ServiceImpl<TSMainKeywordDao, TSMainKe
         }
         return true;
     }
+    //总记录数
+    public Integer getTSmainKeywordCount(TSMainKeyword tsMainKeyword){
+        return tsMainKeywordDao.getTSmainKeywordCount(tsMainKeyword);
+    }
 
     //爬虫专用
     public TSMainKeyword getTsMainKeywordsForComplaints(){
@@ -115,4 +128,5 @@ public class TSMainKeywordService extends ServiceImpl<TSMainKeywordDao, TSMainKe
             tsMainKeywordDao.updateById(tsMainKeyword);
         }
     }
+
 }

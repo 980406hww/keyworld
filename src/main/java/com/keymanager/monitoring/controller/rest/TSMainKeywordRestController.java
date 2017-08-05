@@ -10,6 +10,9 @@ import com.keymanager.monitoring.entity.User;
 import com.keymanager.monitoring.service.TSMainKeywordService;
 import com.keymanager.monitoring.service.TSNegativeKeywordService;
 import com.keymanager.monitoring.service.UserService;
+import com.keymanager.monitoring.vo.PageInfo;
+import java.util.HashMap;
+import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +43,8 @@ public class TSMainKeywordRestController extends SpringMVCBaseController {
     @Autowired
     private UserService userService;
 
+    private TSMainKeyword tsMainKeyword = new TSMainKeyword();
+
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public ResponseEntity<?> saveTSMainKeyword(@RequestBody TSMainKeyword tsMainKeyword){
         tsMainKeywordService.saveTSMainKeyword(tsMainKeyword);
@@ -47,23 +52,63 @@ public class TSMainKeywordRestController extends SpringMVCBaseController {
     }
 
     @RequestMapping(value = "/findTSMainKeywords", method = RequestMethod.GET)
-    public ModelAndView findTSMainKeywords(){
-        List<TSMainKeyword> tsMainKeywords = tsMainKeywordService.searchTSMainKeywords(null,null,null);
+    public ModelAndView findTSMainKeywords(@RequestParam(defaultValue = "1") int currentPage,@RequestParam(defaultValue="5") int displaysRecords,@RequestParam(defaultValue="") String keyword,@RequestParam(defaultValue="") String  group){
+        PageInfo<TSMainKeyword> pageInfo = new PageInfo<TSMainKeyword>();
+        Map<String,Object> items = new HashMap<String, Object>();
+        pageInfo.setCurrentpage(currentPage);
+        pageInfo.setDisplaysRecords(displaysRecords);
+        items.put("pageInfo",pageInfo);
+        tsMainKeyword.setKeyword(keyword);
+        tsMainKeyword.setGroup(group);
+        items.put("tsMainKeyword",tsMainKeyword);
+        pageInfo.setTotalSize(tsMainKeywordService.getTSmainKeywordCount(tsMainKeyword));
+        if (pageInfo.getCurrentpage()<1) {
+            pageInfo.setCurrentpage(1);
+        }
+        else if (pageInfo.getCurrentpage()>=pageInfo.getTotalPage()) {
+            pageInfo.setCurrentpage(pageInfo.getTotalPage());
+        }
+        List<TSMainKeyword> tsMainKeywords = tsMainKeywordService.searchTSMainKeywords(items);
+        pageInfo.setContent(tsMainKeywords);
         ModelAndView modelAndView = new ModelAndView("/complaints/show");
-        modelAndView.addObject("tsMainKeywords",tsMainKeywords);
+        modelAndView.addObject("pageInfo",pageInfo);
+        modelAndView.addObject("keyword",keyword);
+        modelAndView.addObject("group",group);
         return modelAndView;
     }
-//    @RequestMapping(value = "/findTSMainKeywords", method = RequestMethod.POST)
-//    public ResponseEntity<?> findTSMainKeywords(@RequestBody Map<String, Object> requestMap){
-//        Long uuid = (Long) requestMap.get("uuid");
-//        String keyword = (String) requestMap.get("keyword");
-//        String group = (String) requestMap.get("group");
-//        return new ResponseEntity<Object>(tsMainKeywordService.searchTSMainKeywords(uuid, keyword, group), HttpStatus.OK);
-//    }
+
+    @RequestMapping(value = "/findTSMainKeywords", method = RequestMethod.POST)
+    public ModelAndView findTSMainKeywords(@RequestParam(defaultValue = "1") int currentPage,@RequestParam(defaultValue="15") Integer displaysRecords,HttpServletRequest httpServletRequest){
+        PageInfo<TSMainKeyword> pageInfo = new PageInfo<TSMainKeyword>();
+        Map<String,Object> items = new HashMap<String, Object>();
+        pageInfo.setCurrentpage(currentPage);
+        pageInfo.setDisplaysRecords(displaysRecords);
+        items.put("pageInfo",pageInfo);
+        String keyword = httpServletRequest.getParameter("itemkeywork");
+        String group = httpServletRequest.getParameter("itemGroup");
+        tsMainKeyword.setKeyword(keyword);
+        tsMainKeyword.setGroup(group);
+        items.put("tsMainKeyword",tsMainKeyword);
+        pageInfo.setTotalSize(tsMainKeywordService.getTSmainKeywordCount(tsMainKeyword));
+        if (pageInfo.getCurrentpage()<1) {
+            pageInfo.setCurrentpage(1);
+        }
+        else if (pageInfo.getCurrentpage()>=pageInfo.getTotalPage()) {
+            pageInfo.setCurrentpage(pageInfo.getTotalPage());
+        }
+        List<TSMainKeyword> tsMainKeywords = tsMainKeywordService.searchTSMainKeywords(items);
+        pageInfo.setContent(tsMainKeywords);
+        ModelAndView modelAndView = new ModelAndView("/complaints/show");
+        modelAndView.addObject("pageInfo",pageInfo);
+        modelAndView.addObject("keyword",keyword);
+        modelAndView.addObject("group",group);
+        return modelAndView;
+    }
+
 
     @RequestMapping(value = "/findTSMainKeywordById/{uuid}", method = RequestMethod.GET)
     public ResponseEntity<?> findTSMainKeyword(@PathVariable("uuid") Long uuid){
-        return new ResponseEntity<Object>(tsMainKeywordService.searchTSMainKeywords(uuid, null, null), HttpStatus.OK);
+        return new ResponseEntity<Object>(tsMainKeywordService.searchTSMainKeyword(uuid), HttpStatus.OK);
     }
 
     @RequestMapping(value ="/delete/{uuid}", method = RequestMethod.GET)
