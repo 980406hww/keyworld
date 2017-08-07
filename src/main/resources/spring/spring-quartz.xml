@@ -10,7 +10,7 @@
 				<ref bean="cronTriggerAdjustOptimizationCount" />
 				<ref bean="cronTriggerSwitchClientStatusGroup" />
 				<ref bean="cronTriggerRenewalNotification" />
-				<ref bean="cronJobDetailcomplaintsReportSchedule"/>
+				<ref bean="cronTriggercomplaintsReportSchedule" />
 			</list>
 		</property>
 		<!-- Quartz配置, 本地运行无需单独的quartz.properties文件，在此简单配置即可 -->
@@ -62,11 +62,17 @@
 		<property name="concurrent" value="false" />
 	</bean>
 
+	<!--发送投诉邮件-->
+	<bean id="cronTriggercomplaintsReportSchedule" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="cronJobDetailcomplaintsReportSchedule" />
+		<!--<property name="cronExpression" value="0 0 10 * * ?" />-->
+		<property name="cronExpression" value=" 0 */1 * * * ?" />
+	</bean>
+
 	<bean id="cronJobDetailcomplaintsReportSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject" ref="complaintsReportSchedule" />
 		<property name="targetMethod" value="runTask" />
-		<!--<property name="cronExpression" value="0 0 10 * * ?" />-->
-		<property name="cronExpression" value="0 * 15 * * ?" />
+		<property name="concurrent" value="false" />
 	</bean>
 
 </beans>
