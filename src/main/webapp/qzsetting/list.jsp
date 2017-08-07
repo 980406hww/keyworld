@@ -3,6 +3,8 @@
 <%@ page import="com.keymanager.monitoring.entity.QZSetting" %>
 <%@ page import="com.keymanager.monitoring.service.QZSettingService" %>
 <%@ page import="com.keymanager.monitoring.service.QZOperationTypeService" %>
+<%@ page import="com.baomidou.mybatisplus.toolkit.StringUtils" %>
+<%@ page import="com.baomidou.mybatisplus.plugins.Page" %>
 <jsp:useBean id="um" scope="page" class="com.keymanager.manager.UserManager" />
 <jsp:useBean id="cm" scope="page" class="com.keymanager.manager.CustomerManager" />
 <jsp:useBean id="sch" scope="page" class="com.keymanager.util.SpringContextHolder" />
@@ -83,9 +85,14 @@
 	}
 
 	QZSettingService qzss = (QZSettingService)SpringContextHolder.getBean("QZSettingService");
-	List itemList = qzss.searchQZSettings(uuid != null ? Long.parseLong(uuid) : null, customerUuid != null ? Long.parseLong(customerUuid) : null,
+	Integer pageNumber = iCurPage;
+	Integer pageSize = 100;
+	Page<QZSetting> pageDefinition = new Page<QZSetting>(pageNumber, pageSize);
+	Page<QZSetting> qzSettingPage = qzss.searchQZSettings(pageDefinition, uuid != null ? Long.parseLong(uuid) : null, customerUuid != null ?
+			Long.parseLong(customerUuid) : null,
 			domain, group, updateStatus);
 
+	List<QZSetting> itemList = qzSettingPage.getRecords();
 	QZOperationTypeService qzots = (QZOperationTypeService)SpringContextHolder.getBean("QZOperationTypeService");
 	List<QZSetting> expiredCharge = qzots.expiredCharge();
 	List<QZSetting> nowCharge = qzots.nowCharge();
@@ -93,18 +100,19 @@
 	List<QZSetting> sevenCharge = qzots.sevenCharge();
 
 	String chargeDays = request.getParameter("chargeDays");
-	if(chargeDays.equals("-1")) {
+	if("-1".equals(chargeDays)) {
 		itemList = expiredCharge;
-	} else if(chargeDays.equals("0")) {
+	} else if("0".equals(chargeDays)) {
 		itemList = nowCharge;
-	} else if(chargeDays.equals("3")) {
+	} else if("3".equals(chargeDays)) {
 		itemList = threeCharge;
-	} else if(chargeDays.equals("7")) {
+	} else if("7".equals(chargeDays)) {
 		itemList = sevenCharge;
 	}
+	pageUrl = pageUrl + "&chargeDays=" + chargeDays;
 
-	int recordCount = itemList != null ? itemList.size() : 0;
-	int pageCount = recordCount / 100 + (recordCount % 100 > 0 ? 1 : 0);
+	int recordCount = qzSettingPage.getTotal();
+	int pageCount = qzSettingPage.getPages();
 
 	String fileName = "/qzsetting/list.jsp?" + pageUrl;
 	String pageInfo = Utils.getPageInfo(iCurPage, 100, recordCount, pageCount, "", fileName);
@@ -138,9 +146,12 @@
 			width: 100px;
 			height: 22px;
 		}
+		#settingTable {
+			margin: 10px 10px 10px 8px;
+		}
 		#changeSettingDialog {
 			display: none;
-			margin: -125px 0px 0px -160px;
+			margin: -125px 0px 0px -170px;
 			background-color: white;
 			color: #2D2A2A;
 			font-size: 12px;
@@ -152,9 +163,6 @@
 			top: 30%;
 			z-index: 25;
 			position: fixed;
-		}
-		#settingTable {
-			margin: 10px 10px 10px 8px;
 		}
 		#chargeDialogTable {
 			font-size:12px;
@@ -202,19 +210,19 @@
 <body>
 <table width=100% style="font-size:12px;" cellpadding=3>
 	<tr>
-		<td colspan="15" align="left">
+		<td colspan="14" align="left">
 			<%@include file="/menu.jsp" %>
 		</td>
 	</tr>
 	<tr>
-		<td colspan="15" align="right">
+		<td colspan="14" align="right">
 			<a href="javascript:showSettingDialog(null, this)">增加全站设置</a>
 			| <a target="_blank" href="javascript:updateImmediately(this)">马上更新</a>
 			| <a target="_blank" href="javascript:delSelectedQZSettings(this)">删除所选</a>
 		</td>
 	</tr>
 	<tr>
-		<td colspan="15" align="right">
+		<td colspan="14" align="right">
 			<a href="javascript:chargeRemind('-1')">过期未收费(<%=expiredCharge.size()%>)</a>
 			| <a target="_blank" href="javascript:chargeRemind('0')">当天收费提醒(<%=nowCharge.size()%>)</a>
 			| <a target="_blank" href="javascript:chargeRemind('3')">三天收费提醒(<%=threeCharge.size()%>)</a>
@@ -222,7 +230,7 @@
 		</td>
 	</tr>
 	<tr>
-		<td colspan="15">
+		<td colspan="14">
 			<form method="post" id="chargeForm" action="list.jsp">
 				<input type="hidden" id="chargeDays" name="chargeDays" value="NaN"/>
 				<table style="font-size:12px;">
@@ -255,11 +263,10 @@
 	</tr>
 	<tr bgcolor="#eeeeee" height=30>
 		<td align="center" width=10><input type="checkbox" onclick="selectAll(this)" /></td>
-		<td align="center" width=150>客户</td>
+		<td align="center" width=120>客户</td>
 		<td align="center" width=100>域名</td>
-		<td align="center" width=80>入口类型</td>
-		<td align="center" width=80>电脑分组</td>
-		<td align="center" width=80>手机分组</td>
+		<td align="center" width=50>入口类型</td>
+		<td align="center" width=80>分组</td>
 		<td align="center" width=80>去掉没指数</td>
 		<td align="center" width=80>去掉没排名</td>
 		<td align="center" width=60>更新间隔</td>
@@ -296,10 +303,9 @@
 			<%=value.getType()%>
 		</td>
 		<td>
-			<%=value.getPcGroup() == null ? "" : value.getPcGroup()%>
-		</td>
-		<td>
-			<%=value.getPhoneGroup() == null ? "" : value.getPhoneGroup()%>
+			<%=value.getPcGroup() == null ? "" : "pc: " + value.getPcGroup()%>
+			<br/>
+			<%=value.getPhoneGroup() == null ? "" : "m: " + value.getPhoneGroup()%>
 		</td>
 		<td>
 			<%=value.isIgnoreNoIndex() ? "是" : "否"%>
@@ -327,7 +333,8 @@
 		</td>
 		<td>
 			<a href="javascript:showChargeDialog('<%=value.getUuid()%>','<%=value.getContactPerson()%>','<%=value.getDomain()%>',this)">收费</a> |
-			<a href="javascript:showSettingDialog('<%=value.getUuid()%>', this)">修改</a> |
+			<a href="javascript:showSettingDialog('<%=value.getUuid()%>', this)">修改</a>
+			<br/>
 			<a href="javascript:delQZSetting(<%=value.getUuid()%>)">删除</a> |
 			<a href="javascript:showChargeLog('<%=value.getUuid()%>', this)">收费记录</a>
 		</td>
@@ -336,7 +343,7 @@
 		}
 	%>
 	<tr>
-		<td colspan="11">
+		<td colspan="14">
 			<br>
 			<%=pageInfo%>
 		</td>
@@ -510,8 +517,8 @@
             url: '/spring/qzsetting/getQZSetting/' + uuid,
             type: 'Get',
             success: function (data) {
-                if(data != null && data.length > 0){
-                    var qzSetting = data[0];
+                if(data != null && null != data.records && data.records.length > 0){
+                    var qzSetting = data.records[0];
                     initSettingDialog(qzSetting, self);
                 }else{
                     showInfo("获取信息失败！", self);
@@ -745,13 +752,13 @@
           validationFlag = false;
           return false;
         }
-        if (operationType.initialKeywordCount == null || operationType.initialKeywordCount === "") {
-          alert("请输入初始词量");
-          settingDialogDiv.find("#initialKeywordCount" + val.id).focus();
-          validationFlag = false;
-          return false;
-        }
-        if (!reg.test(operationType.initialKeywordCount)) {
+//        if (operationType.initialKeywordCount == null || operationType.initialKeywordCount === "") {
+//          alert("请输入初始词量");
+//          settingDialogDiv.find("#initialKeywordCount" + val.id).focus();
+//          validationFlag = false;
+//          return false;
+//        }
+        if (operationType.initialKeywordCount != "" && !reg.test(operationType.initialKeywordCount)) {
           alert("请输入数字");
           settingDialogDiv.find("#initialKeywordCount" + val.id).focus();
           validationFlag = false;
@@ -1101,6 +1108,9 @@
 
       divHeight = divHeight + inputHeight;
       $$$("#changeSettingDialog").css("height", divHeight);
+		var marginTop = $$$("#changeSettingDialog").css("margin-top");
+		marginTop = parseFloat(marginTop.replace("px", "")) - inputHeight / 2;
+		$$$("#changeSettingDialog").css("margin-top", marginTop + "px");
     }
 
     function deleteCurrentRow(currentRow) {
@@ -1110,6 +1120,9 @@
             tableObj.deleteRow(index);
             divHeight = divHeight - inputHeight;
             $$$("#changeSettingDialog").css("height", divHeight);
+			var marginTop = $$$("#changeSettingDialog").css("margin-top");
+			marginTop = parseFloat(marginTop.replace("px", "")) + inputHeight / 2;
+			$$$("#changeSettingDialog").css("margin-top", marginTop + "px");
             $$$.each($$$("#"+tableObj.id).find("input[name=sequenceID]"), function(idx, val){
                $$$(val).val(idx + 1);
             });
@@ -1199,14 +1212,14 @@
 <div id="changeSettingDialog">
 	<table style="font-size:12px" id="settingTable">
 		<tr>
-			<td align="right"><span style="margin-right:4;">客户</span></td>
+			<td align="right" style="margin-right:4px;width:20%;">客户</td>
 			<td>
 				<input type="hidden" id="qzSettingUuid" />
 				<input type="text" list="customer_list" name="qzSettingCustomer" id="qzSettingCustomer" style="width:240px" />
 			</td>
 		</tr>
 		<tr>
-			<td align="right"><span style="margin-right:4;">域名</span></td>
+			<td align="right" style="margin-right:4px;">域名</td>
 			<td>
 				<input type="text" name="qzSettingDomain" id="qzSettingDomain" style="width:240px" />
 			</td>
@@ -1301,7 +1314,7 @@
 		</tr>
 
 		<tr>
-			<td align="right"><span style="margin-right:4;">入口</span></td>
+			<td  align="right" style="margin-right:4px;">入口</td>
 			<td>
 				<select name="qzSettingEntryType" id="qzSettingEntryType"  style="width:240px">
 					<option value="qz" selected>全站</option>
@@ -1312,7 +1325,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td>去掉没指数</td>
+			<td align="right" style="margin-right:4px;">去掉没指数</td>
 			<td>
 				<select name="qzSettingIgnoreNoIndex" id="qzSettingIgnoreNoIndex"  style="width:240px">
 					<option value="1" selected>是</option>
@@ -1321,7 +1334,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td>去掉没排名</td>
+			<td align="right" style="margin-right:4px;">去掉没排名</td>
 			<td>
 				<select name="qzSettingIgnoreNoOrder" id="qzSettingIgnoreNoOrder"  style="width:240px">
 					<option value="1" selected>是</option>
@@ -1330,7 +1343,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td align="right"><span style="margin-right:4;">更新间隔</span></td>
+			<td align="right" style="margin-right:4px;">更新间隔</td>
 			<td>
 				<select name="qzSettingInterval" id="qzSettingInterval"  style="width:240px">
 					<option value="1">1天</option>
