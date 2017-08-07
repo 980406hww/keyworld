@@ -248,7 +248,8 @@ public class FumianListManager {
 					CustomerKeywordManager customerKeywordManager = new CustomerKeywordManager();
 
 					for(FumianListVOJson fumianListVOJson : fumianListVOListJson.getFumianListVOJsons()){
-						if(!checkFumianListExist(conn, fumianListVOJson.getKeyword(), fumianListVOJson.getTitle(), fumianListVOJson.getUrl(), fumianListVOJson.getDesc())){
+						if(!checkFumianListExist(conn, terminalType, fumianListVOJson.getKeyword(), fumianListVOJson.getTitle(), fumianListVOJson
+								.getUrl(), fumianListVOJson.getDesc())){
 							FumianListVO fumianListVO = new FumianListVO();
 							fumianListVO.setPosition(fumianListVOJson.getPosition());
 							fumianListVO.setUrl(fumianListVOJson.getUrl());
@@ -272,10 +273,11 @@ public class FumianListManager {
 		}
 	}
 	
-	public String getFumianLists(String datasourceName, String keyword) throws Exception{
+	public String getFumianLists(String datasourceName, String terminalType, String keyword) throws Exception{
 		ObjectMapper mapper = new ObjectMapper();
 		try {
-			List fumianList = this.searchFumianListVO(datasourceName, 1000, 1, " and fKeyword = '" + keyword.trim() + "'", "", 0);
+			String condition = String.format(" and fKeyword = '%s' and fTerminalType = '%s' ", keyword, terminalType);
+			List fumianList = this.searchFumianListVO(datasourceName, 1000, 1, condition, "", 0);
 			if(fumianList != null){
 				FumianListVOListJson fumianListVOListJson = new FumianListVOListJson();
 				List<FumianListVOJson> fumianListVOJsons = new ArrayList<FumianListVOJson>();
@@ -300,17 +302,18 @@ public class FumianListManager {
 		}
 	}
 
-	public boolean checkFumianListExist(Connection conn, String keyword, String title, String url, String desc) throws Exception{
+	public boolean checkFumianListExist(Connection conn, String terminalType, String keyword, String title, String url, String desc) throws Exception{
 		ObjectMapper mapper = new ObjectMapper();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
-			String sql = " select * from t_fumian_list where fKeyword = ? and fTitle = ? and fUrl = ? and fDesc = ? ";
+			String sql = " select * from t_fumian_list where fKeyword = ? and fTitle = ? and fUrl = ? and fDesc = ? and fTerminalType = ? ";
 			ps = conn.prepareStatement(sql, 1003, 1007);
 			ps.setString(1, keyword);
 			ps.setString(2, title);
 			ps.setString(3, url);
 			ps.setString(4, desc);
+			ps.setString(5, terminalType);
 			rs = ps.executeQuery();
 			if (rs.next()) {
 				return true;

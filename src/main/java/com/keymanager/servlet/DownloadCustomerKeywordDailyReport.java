@@ -1,12 +1,10 @@
 package com.keymanager.servlet;
 
 import com.keymanager.excel.operator.CustomerKeywordDailyReportExcelWriter;
-import com.keymanager.excel.operator.CustomerKeywordInfoExcelWriter;
 import com.keymanager.manager.CustomerKeywordManager;
 import com.keymanager.manager.CustomerManager;
 import com.keymanager.util.PortTerminalTypeMapping;
 import com.keymanager.util.Utils;
-import com.keymanager.util.common.StringUtil;
 import com.keymanager.value.CustomerKeywordVO;
 import com.keymanager.value.CustomerVO;
 
@@ -17,8 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.URLDecoder;
-import java.sql.Timestamp;
 import java.util.List;
 
 @SuppressWarnings("serial")
@@ -90,7 +86,8 @@ public class DownloadCustomerKeywordDailyReport extends HttpServlet {
 			List<CustomerKeywordVO> customerKeywords = customerKeywordManager.searchCustomerKeywords("keyword", 100000 , 1 , condition, " order by " +
 					"ck.fSequence, ck.fKeyword ", 1);
 			if(!Utils.isEmpty(customerKeywords)){
-				CustomerKeywordDailyReportExcelWriter excelWriter = new CustomerKeywordDailyReportExcelWriter(customerUuid);
+				String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+				CustomerKeywordDailyReportExcelWriter excelWriter = new CustomerKeywordDailyReportExcelWriter(terminalType, customerUuid, 0);
 				excelWriter.writeDataToExcel(customerKeywords);
 
 				CustomerManager customerManager = new CustomerManager();

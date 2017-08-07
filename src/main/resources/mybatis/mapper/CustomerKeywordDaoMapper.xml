@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.CustomerKeywordDao">
+
+    <select id="clearTitleByUuids">
+        UPDATE t_customer_keyword set fTitle = null where fUuid in
+        <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+          #{item}
+        </foreach>
+    </select>
+
+    <select id="clearTitleByCustomerUuidAndTerminalType">
+        UPDATE t_customer_keyword set fTitle = null where fTerminalType = #{terminalType} and fCustomerUuid = #{customerUuid}
+    </select>
+</mapper>

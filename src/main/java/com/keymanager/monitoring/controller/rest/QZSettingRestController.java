@@ -1,5 +1,6 @@
 package com.keymanager.monitoring.controller.rest;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.QZSettingCriteria;
 import com.keymanager.monitoring.entity.QZSetting;
@@ -125,13 +126,17 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		String domain = (String) requestMap.get("domain");
 		String group = (String) requestMap.get("group");
 		String updateStatus = (String) requestMap.get("updateStatus");
-		return new ResponseEntity<Object>(qzSettingService.searchQZSettings(uuid, customerUuid, domain, group, updateStatus), HttpStatus.OK);
+		Integer pageNumber = (Integer) requestMap.get("pageNumber");
+		Integer pageSize = (Integer) requestMap.get("pageSize");
+		Page<QZSetting> page = new Page<QZSetting>(pageNumber, pageSize);
+		return new ResponseEntity<Object>(qzSettingService.searchQZSettings(page, uuid, customerUuid, domain, group, updateStatus), HttpStatus.OK);
 	}
 
 	//通过QZSettinguuid去查询
 	@RequestMapping(value = "/getQZSetting/{uuid}", method = RequestMethod.GET)
 	public ResponseEntity<?> findQZSettings(@PathVariable("uuid") Long uuid){
-		return new ResponseEntity<Object>(qzSettingService.searchQZSettings(uuid, null, null, null, null), HttpStatus.OK);
+		Page<QZSetting> page = new Page<QZSetting>();
+		return new ResponseEntity<Object>(qzSettingService.searchQZSettings(page, uuid, null, null, null, null), HttpStatus.OK);
 	}
 
 }

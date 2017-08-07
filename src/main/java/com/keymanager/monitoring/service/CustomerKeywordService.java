@@ -29,6 +29,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 	@Autowired
 	private QZOperationTypeService qzOperationTypeService;
 
+	@Autowired
+	private CustomerKeywordDao customerKeywordDao;
+
 	public String searchCustomerKeywordForCaptureTitle(String terminalType) throws Exception{
 		QZCaptureTitleLog qzCaptureTitleLog = qzCaptureTitleLogService.getAvailableQZSetting(QZCaptureTitleLogStatusEnum.Processing.getValue(), terminalType);
 		if(qzCaptureTitleLog == null){
@@ -61,5 +64,13 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 	public String searchCustomerKeywordForCaptureTitle(String groupName, String terminalType) throws Exception{
 		CustomerKeywordManager manager = new CustomerKeywordManager();
 		return manager.searchCustomerKeywordForCaptureTitle("keyword", terminalType, groupName);
+	}
+
+	public void clearTitle(String uuids, String customerUuid, String terminalType){
+		if(StringUtils.isEmpty(uuids)){
+			customerKeywordDao.clearTitleByCustomerUuidAndTerminalType(terminalType, customerUuid);
+		}else{
+			customerKeywordDao.clearTitleByUuids(uuids.split(","));
+		}
 	}
 }

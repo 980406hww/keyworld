@@ -50,4 +50,17 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		}
 		return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
 	}
+
+	@RequestMapping(value = "/clearTitle", method = RequestMethod.POST)
+	public ResponseEntity<?> clearTitle(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) throws Exception{
+		String uuids = (String) requestMap.get("uuids");
+		String customerUuid = (String) requestMap.get("customerUuid");
+		String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+		try{
+			customerKeywordService.clearTitle(uuids, customerUuid, terminalType);
+			return new ResponseEntity<Object>(true, HttpStatus.OK);
+		}catch (Exception ex){
+			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+		}
+	}
 }

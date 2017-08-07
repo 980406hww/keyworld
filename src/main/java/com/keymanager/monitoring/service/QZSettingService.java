@@ -1,5 +1,6 @@
 package com.keymanager.monitoring.service;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.db.DBUtil;
 import com.keymanager.enums.CollectMethod;
@@ -15,19 +16,16 @@ import com.keymanager.monitoring.enums.QZSettingStatusEnum;
 import com.keymanager.util.Constants;
 import com.keymanager.util.Utils;
 import com.keymanager.value.CustomerKeywordVO;
-import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.sql.Connection;
+import java.util.*;
 
 @Service
 public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
@@ -184,11 +182,11 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 	}
 
 	//查询QZSetting
-	public List<QZSetting> searchQZSettings(Long uuid, Long customerUuid, String domain, String group, String updateStatus){
+	public Page<QZSetting> searchQZSettings(Page<QZSetting> page, Long uuid, Long customerUuid, String domain, String group, String updateStatus){
 		//在封装成一个	QZSetting对象
-		List<QZSetting> qzSettings  = qzSettingDao.searchQZSettings(uuid, customerUuid, domain, group, updateStatus);
+		page.setRecords(qzSettingDao.searchQZSettings(page, uuid, customerUuid, domain, group, updateStatus));
 		if(uuid!=null){
-			for(QZSetting qzSetting : qzSettings){
+			for(QZSetting qzSetting : page.getRecords()){
 				//通过uuid找到对应得操作类型表（多条数据）  ---->operationTypeUuid
 				List<QZOperationType> qzOperationTypes  =  qzOperationTypeService.searchQZOperationTypesIsDelete(qzSetting.getUuid());
 				//通过operationTypeUuid主键去查询规则表（多条数据）
@@ -199,7 +197,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 				qzSetting.setQzOperationTypes(qzOperationTypes);
 			}
 		}
-		return qzSettings;
+		return page;
 	}
 
 	public void updateImmediately(String uuids){
@@ -294,6 +292,9 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 	//用于更新当前词量以及达标日期
 	private void updateQZOperationType(QZOperationType oldOperationType, Long currentKeywordCount){
 		oldOperationType.setCurrentKeywordCount(currentKeywordCount);
+		if(oldOperationType.getInitialKeywordCount() == null){
+			oldOperationType.setInitialKeywordCount(currentKeywordCount);
+		}
 		if(currentKeywordCount != null && null == oldOperationType.getReachTargetDate()){
 			List<QZChargeRule> qzChargeRules = qzChargeRuleService.searchQZChargeRuleByqzOperationTypeUuids(oldOperationType.getUuid());
 			if(qzChargeRules.size() > 0) {

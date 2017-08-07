@@ -2,9 +2,7 @@ package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.dao.QZChargeRuleDao;
-import com.keymanager.monitoring.dao.QZOperationTypeDao;
 import com.keymanager.monitoring.entity.QZChargeRule;
-import com.keymanager.monitoring.entity.QZOperationType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

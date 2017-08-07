@@ -47,7 +47,4 @@ public class QZOperationTypeService extends ServiceImpl<QZOperationTypeDao, QZOp
 	public  List<QZSetting> sevenCharge(){
 		return qzOperationTypeDao.sevenCharge();
 	}
-
-
-
 }

@@ -88,7 +88,7 @@
                                 break;
                             }
                         }
-                        Utils.saveFile(is, Utils.getWebRootPath() + "dailyreport/" + customerUuid + ".xls");
+                        Utils.saveFile(is, Utils.getWebRootPath() + "dailyreport/" + terminalType + "/"+ customerUuid + ".xls");
                     %>
                     <script language="javascript">
                         alert("上传成功！");

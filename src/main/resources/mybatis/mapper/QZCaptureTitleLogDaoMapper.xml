@@ -6,8 +6,8 @@
           qctl.fUuid          AS 'uuid',
           qctl.fQZOperationTypeUuid AS 'qzOperationTypeUuid',
           qs.fCustomerUuid    AS 'customerUuid',
-          IF((qctl.fTerminalType = 'PC'), qs.fPcGroup, qs.fPhoneGroup) AS 'group',
-          qctl.fStatus        AS 'isDelete',
+          qot.fGroup AS 'group',
+          qctl.fStatus        AS 'status',
           qs.fType	          AS 'type',
           qctl.fTerminalType  AS 'terminalType',
           qctl.fStartTime     AS 'startTime',
@@ -15,9 +15,11 @@
           qctl.fUpdateTime    AS 'updateTime',
           qctl.fCreateTime    AS 'createTime'
         FROM t_qz_setting qs,
+          t_qz_operation_type qot,
           t_qz_capture_title_log qctl
-        WHERE qs.fUuid = qctl.fQZSettingUuid
-            AND qctl.fStatus = #{isDelete}
+        WHERE qs.fUuid = qot.fQZSettingUuid
+        AND qot.fUuid = qctl.fQZOperationTypeUuid
+            AND qctl.fStatus = #{status}
             AND qctl.fTerminalType = #{terminalType}
         ORDER BY qctl.fCreateTime
         LIMIT 1

@@ -504,6 +504,8 @@
 				<%}%>
 				&nbsp;		
 				<a href="javascript:showSettingDialog('<%=value.getClientID()%>', this)">设置</a>
+				&nbsp;
+				<a href="javascript:delItem('<%=value.getClientID()%>')">删除</a>
 				</br>
 				<%
 				if (value.isValid()) {
@@ -515,7 +517,7 @@
 				}
 				%>
 				&nbsp;
-				<a href="javascript:delItem('<%=value.getClientID()%>')">删除</a>
+				<a href="javascript:changeTerminalType('<%=value.getClientID()%>')">变更终端类型</a>
 				
 			</td>
 		</tr>
@@ -654,6 +656,32 @@
 		        }
 		    });
 		}
+		function changeTerminalType(clientID){
+			var postData = {};
+			postData.clientID = clientID;
+			$$$.ajax({
+				url: '/spring/clientStatus/changeTerminalType',
+				data: JSON.stringify(postData),
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json'
+				},
+				timeout: 5000,
+				type: 'POST',
+				success: function (status) {
+					if(status){
+						showInfo("更新成功！", self);
+						window.location.reload();
+					}else{
+						showInfo("更新失败！", self);
+					}
+				},
+				error: function () {
+					showInfo("更新失败！", self);
+				}
+			});
+		}
+
 		function updateUpgradeFailedReason(self){
 			var clientID = self.id;
 			var upgradeFailedReason = self.value.trim();
