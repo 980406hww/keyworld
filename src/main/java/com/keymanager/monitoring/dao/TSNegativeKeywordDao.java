@@ -2,6 +2,7 @@ package com.keymanager.monitoring.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.keymanager.monitoring.entity.TSNegativeKeyword;
+import com.keymanager.monitoring.vo.TSmainKeyWordVO;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
@@ -11,6 +12,10 @@ import org.apache.ibatis.annotations.Param;
 public interface TSNegativeKeywordDao extends BaseMapper<TSNegativeKeyword> {
 
     List<TSNegativeKeyword> findNegativeKeywordsBymainkeyUuid(@Param("tsMainKeywordUuid")Long tsMainKeywordUuid);
+
     int selectLastId();
+
     void deleteByTSmainKeywordUuid(@Param("tsMainKeywordUuid") Long tsMainKeywordUuid);
+
+    List<TSmainKeyWordVO> complaintsReportContent();//获取需要发送邮件的内容
 }

@@ -17,6 +17,10 @@
             ng.fPhoneOccurTimes AS `phoneOccurTimes`,
             ng.fPCComplainTime AS `pcComplainTime`,
             ng.fPhoneComplainTime AS `phoneComplainTime`,
+            ng.fpcComplained AS `pcComplained`,
+            ng.fphoneComplained  AS `phoneComplained`,
+            ng.fpcSetAppeared  AS `pcSetAppeared`,
+            ng.fphoneSetAppeared  AS `phoneSetAppeared`,
             ng.fUpdateTime AS `updateTime`,
             ng.fCreateTime AS `createTime`,
             ng.IsDeleted AS `isDeleted`
@@ -33,4 +37,33 @@
     <delete id="deleteByTSmainKeywordUuid">
         DELETE FROM t_ts_negative_keyword WHERE  fTSMainKeywordUuid = #{tsMainKeywordUuid}
     </delete>
+
+    <!--邮件内容-->
+    <select id="complaintsReportContent" resultType="com.keymanager.monitoring.vo.TSmainKeyWordVO">
+        SELECT
+              tsvo.uuid AS `uuid`,
+              tsvo.group AS `group`,
+              tsvo.keyword AS `keyword`,
+              tsvo.tsNegativeKeywordUuid AS `tsNegativeKeywordUuid`,
+              tsvo.tsNegativeKeyword AS `tsNegativeKeyword`,
+              tsvo.pcEmailSentOver2Weeks AS `pcEmailSentOver2Weeks`,
+              tsvo.phoneEmailSentOver2Weeks AS `phoneEmailSentOver2Weeks`,
+              tsvo.pcEmailSentOver3Times AS `pcEmailSentOver3Times`,
+              tsvo.phoneEmailSentOver3Times AS `phoneEmailSentOver3Times`,
+              tsvo.pcAppeared AS `pcAppeared`,
+              tsvo.phoneAppeared AS `phoneAppeared`,
+              tsvo.pcOccurTimes AS `pcOccurTimes`,
+              tsvo.phoneOccurTimes AS `phoneOccurTimes`,
+              tsvo.pcComplainTime AS `pcComplainTime`,
+              tsvo.phoneComplainTime AS `phoneComplainTime`,
+              tsvo.pcComplained AS `pcComplained`,
+              tsvo.phoneComplained AS `phoneComplained`,
+              tsvo.pcSetAppeared AS `pcSetAppeared`,
+              tsvo.phoneSetAppeared AS `phoneSetAppeared`,
+              tsvo.IsDeleted AS `isDeleted`,
+              tsvo.UpdateTime AS `updateTime`,
+              tsvo.CreateTime AS `createTime`,
+              tsvo.ComplaintsTime AS `complaintsTime`
+        FROM  t_ts_main_keywordvo tsvo
+    </select>
 </mapper>

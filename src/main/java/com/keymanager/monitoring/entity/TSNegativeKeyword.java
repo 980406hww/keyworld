@@ -48,6 +48,18 @@ public class TSNegativeKeyword extends BaseEntity {
     @TableField(value = "fPhoneComplainTime")
     private Timestamp phoneComplainTime;
 
+    @TableField(value = "fPCComplained")
+    private boolean pcComplained;
+
+    @TableField(value = "fPhoneComplained")
+    private boolean phoneComplained;
+
+    @TableField(value = "fPCSetAppeared")
+    private boolean pcSetAppeared;
+
+    @TableField(value = "fPhoneSetAppeared")
+    private boolean phoneSetAppeared;
+
     @TableField(value = "IsDeleted")
     private Integer isDeleted;
 
@@ -164,5 +176,37 @@ public class TSNegativeKeyword extends BaseEntity {
 
     public void setIsDeleted(Integer isDeleted) {
         this.isDeleted = isDeleted;
+    }
+
+    public boolean isPcComplained() {
+        return pcComplained;
+    }
+
+    public void setPcComplained(boolean pcComplained) {
+        this.pcComplained = pcComplained;
+    }
+
+    public boolean isPcSetAppeared() {
+        return pcSetAppeared;
+    }
+
+    public void setPcSetAppeared(boolean pcSetAppeared) {
+        this.pcSetAppeared = pcSetAppeared;
+    }
+
+    public boolean isPhoneComplained() {
+        return phoneComplained;
+    }
+
+    public void setPhoneComplained(boolean phoneComplained) {
+        this.phoneComplained = phoneComplained;
+    }
+
+    public boolean isPhoneSetAppeared() {
+        return phoneSetAppeared;
+    }
+
+    public void setPhoneSetAppeared(boolean phoneSetAppeared) {
+        this.phoneSetAppeared = phoneSetAppeared;
     }
 }

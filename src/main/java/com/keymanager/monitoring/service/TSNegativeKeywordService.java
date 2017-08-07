@@ -2,7 +2,9 @@ package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.dao.TSNegativeKeywordDao;
+import com.keymanager.monitoring.entity.TSMainKeyword;
 import com.keymanager.monitoring.entity.TSNegativeKeyword;
+import com.keymanager.monitoring.vo.TSmainKeyWordVO;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,5 +27,8 @@ public class TSNegativeKeywordService extends ServiceImpl<TSNegativeKeywordDao, 
     }
     public void deleteByTSmainKeywordUuid(Long uuid){
         tsNegativeKeywordDao.deleteByTSmainKeywordUuid(uuid);
+    }
+    public List<TSmainKeyWordVO> complaintsReportContent(){
+        return tsNegativeKeywordDao.complaintsReportContent();
     }
 }
