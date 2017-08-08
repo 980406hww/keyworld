@@ -1,10 +1,6 @@
 package com.keymanager.monitoring.criteria;
 
 import com.keymanager.monitoring.entity.TSMainKeyword;
-import com.keymanager.monitoring.entity.TSNegativeKeyword;
-import com.keymanager.monitoring.vo.TSMainKeywordVO;
-
-import java.util.List;
 
 public class TSMainKeywordCriteria extends BaseCriteria{
     private TSMainKeyword tsMainKeyword;
