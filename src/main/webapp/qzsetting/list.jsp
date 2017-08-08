@@ -541,6 +541,9 @@
         settingDialogDiv.find("#qzSettingEntryType").val("<%=type%>");
         settingDialogDiv[0].style.left = getTop(self); //鼠标目前在X轴上的位置，加10是为了向右边移动10个px方便看到内容
         clearInfo("Both");
+		var screenHeight = window.screen.height;
+		var settingDialogDivHeight = settingDialogDiv.css("height").replace("px");
+		settingDialogDiv.css("top", (screenHeight - parseFloat(settingDialogDivHeight))/2 + "px");
         settingDialogDiv.show();
     }
 
@@ -687,6 +690,9 @@
         divHeight = divHeight - inputHeight;
         dealSettingTable("Phone");
       }
+		var screenHeight = window.screen.height;
+		var settingDialogDivHeight = settingDialogDiv.css("height").replace("px");
+		settingDialogDiv.css("top", (screenHeight - parseFloat(settingDialogDivHeight))/2 + "px");
 
       settingDialogDiv.show();
     }
@@ -1108,9 +1114,9 @@
 
       divHeight = divHeight + inputHeight;
       $$$("#changeSettingDialog").css("height", divHeight);
-		var marginTop = $$$("#changeSettingDialog").css("margin-top");
-		marginTop = parseFloat(marginTop.replace("px", "")) - inputHeight / 2;
-		$$$("#changeSettingDialog").css("margin-top", marginTop + "px");
+		var screenHeight = window.screen.height;
+		var settingDialogDivHeight = $$$("#changeSettingDialog").css("height").replace("px");
+		$$$("#changeSettingDialog").css("top", (screenHeight - parseFloat(settingDialogDivHeight))/2 + "px");
     }
 
     function deleteCurrentRow(currentRow) {
@@ -1120,9 +1126,10 @@
             tableObj.deleteRow(index);
             divHeight = divHeight - inputHeight;
             $$$("#changeSettingDialog").css("height", divHeight);
-			var marginTop = $$$("#changeSettingDialog").css("margin-top");
-			marginTop = parseFloat(marginTop.replace("px", "")) + inputHeight / 2;
-			$$$("#changeSettingDialog").css("margin-top", marginTop + "px");
+			var screenHeight = window.screen.height;
+			var settingDialogDivHeight = $$$("#changeSettingDialog").css("height").replace("px");
+			$$$("#changeSettingDialog").css("top", (screenHeight - parseFloat(settingDialogDivHeight))/2 + "px");
+
             $$$.each($$$("#"+tableObj.id).find("input[name=sequenceID]"), function(idx, val){
                $$$(val).val(idx + 1);
             });
