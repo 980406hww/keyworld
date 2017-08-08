@@ -53,10 +53,10 @@ public class ComplaintsRestController extends SpringMVCBaseController {
             User user = userService.getUser(tsMainKeywordCriteria.getUserName());
             if (user != null && user.getPassword().equals(tsMainKeywordCriteria.getPassword())) {
                 tsMainKeywordService.saveTSMainKeyword(tsMainKeywordCriteria.getTsMainKeyword());
-                return new ResponseEntity<Object>(tsMainKeyword, HttpStatus.OK);
+                return new ResponseEntity<Object>(true, HttpStatus.OK);
             }
         }
-        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
     }
 
     @RequestMapping(value = "/findTSMainKeywords", method = RequestMethod.GET)
