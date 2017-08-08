@@ -2,12 +2,20 @@ package com.keymanager.monitoring.controller.rest;
 
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.TSMainKeywordCriteria;
+import com.keymanager.monitoring.dao.TSMainKeywordDao;
+import com.keymanager.monitoring.entity.*;
+import com.keymanager.monitoring.enums.TerminalTypeEnum;
+import com.keymanager.monitoring.service.TSComplainLogService;
 import com.keymanager.monitoring.entity.TSMainKeyword;
 import com.keymanager.monitoring.entity.User;
 import com.keymanager.monitoring.service.TSMainKeywordService;
 import com.keymanager.monitoring.service.TSNegativeKeywordService;
 import com.keymanager.monitoring.service.UserService;
 import com.keymanager.monitoring.vo.PageInfo;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -35,6 +43,9 @@ public class ComplaintsRestController extends SpringMVCBaseController {
 
     @Autowired
     private TSNegativeKeywordService tsNegativeKeywordService;
+
+    @Autowired
+    private TSComplainLogService tsComplainLogService;
 
     @Autowired
     private UserService userService;
@@ -137,19 +148,32 @@ public class ComplaintsRestController extends SpringMVCBaseController {
     //提供爬虫使用
     @RequestMapping(value = "/getTsMainKeywordsForComplaints", method = RequestMethod.POST)
     public ResponseEntity<?> getTsMainKeywordsForComplaints(@RequestBody TSMainKeywordCriteria tsMainKeywordCriteria) throws Exception{
-      if(tsMainKeywordCriteria.getUserName() != null && tsMainKeywordCriteria.getPassword() != null){
-        User user = userService.getUser(tsMainKeywordCriteria.getUserName());
-        if(user != null && user.getPassword().equals(tsMainKeywordCriteria.getPassword())){
-          TSMainKeyword tsMainKeyword = tsMainKeywordService.getTsMainKeywordsForComplaints();
-          return new ResponseEntity<Object>(tsMainKeyword, HttpStatus.OK);
+        if(tsMainKeywordCriteria.getUserName() != null && tsMainKeywordCriteria.getPassword() != null){
+            User user = userService.getUser(tsMainKeywordCriteria.getUserName());
+            if(user != null && user.getPassword().equals(tsMainKeywordCriteria.getPassword())){
+                String ipCity = tsMainKeywordCriteria.getIpCity();
+                TSMainKeyword tsMainKeyword = tsMainKeywordService.getTsMainKeywordsForComplaints(ipCity);
+                return new ResponseEntity<Object>(tsMainKeyword, HttpStatus.OK);
+            }
         }
-      }
-      return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
     @RequestMapping(value = "/updateTsMainKeywordsForComplaints", method = RequestMethod.POST)
-    public ResponseEntity<?> updateTsMainKeywordsForComplaints(){
-      return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> updateTsMainKeywordsForComplaints(@RequestBody TSMainKeywordCriteria tsMainKeywordCriteria){
+        if(tsMainKeywordCriteria.getUserName() != null && tsMainKeywordCriteria.getPassword() != null){
+            User user = userService.getUser(tsMainKeywordCriteria.getUserName());
+            if(user != null && user.getPassword().equals(tsMainKeywordCriteria.getPassword())){
+                List<TSNegativeKeyword> oldNegativeKeywordList = tsNegativeKeywordService.findNegativeKeywordsBymainkeyUuid(tsMainKeywordCriteria.getTsMainKeyword().getUuid());
+                // 更新Negative
+                tsNegativeKeywordService.exchangeNegativeKeywordsData(tsMainKeywordCriteria.getTsMainKeyword().getTsNegativeKeywords());
+                // tsMainKeywordService.updateTSnegativeKeyword(oldNegativeKeywordList, tsMainKeywordCriteria.getTsMainKeywordVO().getTsNegativeKeywords(), tsMainKeywordCriteria.getTsMainKeywordVO().getUuid());
+                // 添加Log
+                tsComplainLogService.addComplainLogByNegativeKeywords(tsMainKeywordCriteria.getTsMainKeyword().getTsNegativeKeywords());
+                return new ResponseEntity<Object>(tsMainKeyword, HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
 }

@@ -64,7 +64,10 @@ public class TSNegativeKeyword extends BaseEntity {
     private Integer isDeleted;
 
     @TableField(exist = false)
-    private List<TSComplainLog> tsComplainLogs;
+    private List<String> pcAppearedKeywordTypes;
+
+    @TableField(exist = false)
+    private List<String> phoneAppearedKeywordTypes;
 
     public Long getTsMainKeywordUuid() {
         return tsMainKeywordUuid;
@@ -162,14 +165,6 @@ public class TSNegativeKeyword extends BaseEntity {
         this.phoneComplainTime = phoneComplainTime;
     }
 
-    public List<TSComplainLog> getTsComplainLogs() {
-        return tsComplainLogs;
-    }
-
-    public void setTsComplainLogs(List<TSComplainLog> tsComplainLogs) {
-        this.tsComplainLogs = tsComplainLogs;
-    }
-
     public Integer getIsDeleted() {
         return isDeleted;
     }
@@ -208,5 +203,21 @@ public class TSNegativeKeyword extends BaseEntity {
 
     public void setPhoneSetAppeared(boolean phoneSetAppeared) {
         this.phoneSetAppeared = phoneSetAppeared;
+    }
+
+    public List<String> getPcAppearedKeywordTypes() {
+        return pcAppearedKeywordTypes;
+    }
+
+    public void setPcAppearedKeywordTypes(List<String> pcAppearedKeywordTypes) {
+        this.pcAppearedKeywordTypes = pcAppearedKeywordTypes;
+    }
+
+    public List<String> getPhoneAppearedKeywordTypes() {
+        return phoneAppearedKeywordTypes;
+    }
+
+    public void setPhoneAppearedKeywordTypes(List<String> phoneAppearedKeywordTypes) {
+        this.phoneAppearedKeywordTypes = phoneAppearedKeywordTypes;
     }
 }
