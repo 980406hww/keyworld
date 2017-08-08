@@ -31,7 +31,7 @@ public class TSMainKeywordService extends ServiceImpl<TSMainKeywordDao, TSMainKe
         List<TSMainKeyword> tsMainKeywordList = tsMainKeywordDao.findTSMainKeywords(items);
         for(TSMainKeyword tsMainKeyword : tsMainKeywordList){
             //负词需要根据mainkeyworduuid
-            List<TSNegativeKeyword> tsNegativeKeywords = tsNegativeKeywordService.findNegativeKeywordsBymainkeyUuid(tsMainKeyword.getUuid());
+            List<TSNegativeKeyword> tsNegativeKeywords = tsNegativeKeywordService.findNegativeKeywordsByMainKeywordUuid(tsMainKeyword.getUuid());
             tsMainKeyword.setTsNegativeKeywords(tsNegativeKeywords);
         }
         return tsMainKeywordList;
@@ -40,23 +40,32 @@ public class TSMainKeywordService extends ServiceImpl<TSMainKeywordDao, TSMainKe
         TSMainKeyword tsMainKeyword = tsMainKeywordDao.selectById(uuid);
             //负词需要根据mainkeyworduuid
             if(null!=tsMainKeyword){
-                List<TSNegativeKeyword> tsNegativeKeywords = tsNegativeKeywordService.findNegativeKeywordsBymainkeyUuid(tsMainKeyword.getUuid());
+                List<TSNegativeKeyword> tsNegativeKeywords = tsNegativeKeywordService.findNegativeKeywordsByMainKeywordUuid(tsMainKeyword.getUuid());
                 tsMainKeyword.setTsNegativeKeywords(tsNegativeKeywords);
             }
         return tsMainKeyword;
     }
 
     public void saveTSMainKeyword(TSMainKeyword tsMainKeyword) {
+        TSMainKeyword oldTSMainKeyword = null;
         if(tsMainKeyword.getUuid() != null) {
             // update
-            TSMainKeyword oldTSMainKeyword = tsMainKeywordDao.selectById(tsMainKeyword.getUuid());
+            oldTSMainKeyword = tsMainKeywordDao.selectById(tsMainKeyword.getUuid());
+        }else {
+            List<TSMainKeyword> existingTSMainKeywords = tsMainKeywordDao.findTSMainKeywordByMainKeyword(tsMainKeyword.getKeyword());
+            if(CollectionUtils.isNotEmpty(existingTSMainKeywords)){
+                oldTSMainKeyword = existingTSMainKeywords.get(0);
+            }
+        }
+        if(oldTSMainKeyword != null){
             oldTSMainKeyword.setKeyword(tsMainKeyword.getKeyword());
             oldTSMainKeyword.setGroup(tsMainKeyword.getGroup());
             oldTSMainKeyword.setUpdateTime(new Date());
             //修改主要针对负词表中的keyword进行逻辑删除
-            List<TSNegativeKeyword> oldNegativeKeywords = tsNegativeKeywordService.findNegativeKeywordsBymainkeyUuid(tsMainKeyword.getUuid());
+            List<TSNegativeKeyword> oldNegativeKeywords = tsNegativeKeywordService.findNegativeKeywordsByMainKeywordUuid(oldTSMainKeyword.getUuid());
             List<TSNegativeKeyword> newNegativeKeywords = tsMainKeyword.getTsNegativeKeywords();
-            updateTSnegativeKeyword(oldNegativeKeywords,newNegativeKeywords,tsMainKeyword.getUuid());
+            updateTSnegativeKeyword(oldNegativeKeywords,newNegativeKeywords,oldTSMainKeyword.getUuid());
+            oldTSMainKeyword.setUpdateTime(new Date());
             tsMainKeywordDao.updateById(oldTSMainKeyword);
         } else {
             // save
@@ -68,24 +77,25 @@ public class TSMainKeywordService extends ServiceImpl<TSMainKeywordDao, TSMainKe
             }
         }
     }
+
     public void updateTSnegativeKeyword(List<TSNegativeKeyword> oldNegativeKeywords,List<TSNegativeKeyword> newNegativeKeywords,Long tsMainKeywordUuid){
-        Map<String ,TSNegativeKeyword> oldmap = new HashMap<String, TSNegativeKeyword>();
+        Map<String ,TSNegativeKeyword> oldNegativeKeywordMap = new HashMap<String, TSNegativeKeyword>();
         for(TSNegativeKeyword oldTsNegativeKeyword :oldNegativeKeywords){
-            oldmap.put(oldTsNegativeKeyword.getKeyword(),oldTsNegativeKeyword);
+            oldNegativeKeywordMap.put(oldTsNegativeKeyword.getKeyword(),oldTsNegativeKeyword);
         }
-        for(TSNegativeKeyword newTsNegativeKeyword :newNegativeKeywords){
-           TSNegativeKeyword oldTsNegativeKeyword = oldmap.get(newTsNegativeKeyword.getKeyword());
+        for(TSNegativeKeyword newTsNegativeKeyword : newNegativeKeywords){
+           TSNegativeKeyword oldTsNegativeKeyword = oldNegativeKeywordMap.get(newTsNegativeKeyword.getKeyword());
            if(oldTsNegativeKeyword!=null){
                oldTsNegativeKeyword.setUpdateTime(new Date());
                tsNegativeKeywordService.updateById(oldTsNegativeKeyword);
-               oldmap.remove(newTsNegativeKeyword.getKeyword());
+               oldNegativeKeywordMap.remove(newTsNegativeKeyword.getKeyword());
            }else {
                newTsNegativeKeyword.setTsMainKeywordUuid(tsMainKeywordUuid);
                tsNegativeKeywordService.insert(newTsNegativeKeyword);
            }
         }
         //此时剩下在map中的对象
-        for(TSNegativeKeyword oldTsNegativeKeyword : oldmap.values()){
+        for(TSNegativeKeyword oldTsNegativeKeyword : oldNegativeKeywordMap.values()){
             oldTsNegativeKeyword.setUpdateTime(new Date());
             oldTsNegativeKeyword.setIsDeleted(1);
             tsNegativeKeywordService.updateById(oldTsNegativeKeyword);
@@ -106,16 +116,16 @@ public class TSMainKeywordService extends ServiceImpl<TSMainKeywordDao, TSMainKe
     }
     //总记录数
     public Integer getTSmainKeywordCount(TSMainKeyword tsMainKeyword){
-        return tsMainKeywordDao.getTSmainKeywordCount(tsMainKeyword);
+        return tsMainKeywordDao.getTSMainKeywordCount(tsMainKeyword);
     }
 
     //爬虫专用
     public TSMainKeyword getTsMainKeywordsForComplaints(){
-        List<TSMainKeyword> tsMainKeywords = tsMainKeywordDao.getTsMainKeywordsForComplaints();
+        List<TSMainKeyword> tsMainKeywords = tsMainKeywordDao.getTSMainKeywordsForComplaints();
         TSMainKeyword tsMainKeyword = null;
         if(CollectionUtils.isNotEmpty(tsMainKeywords)){
             tsMainKeyword=tsMainKeywords.get(0);
-            List<TSNegativeKeyword> tsNegativeKeywords = tsNegativeKeywordService.findNegativeKeywordsBymainkeyUuid(tsMainKeyword.getUuid());
+            List<TSNegativeKeyword> tsNegativeKeywords = tsNegativeKeywordService.findNegativeKeywordsByMainKeywordUuid(tsMainKeyword.getUuid());
             tsMainKeyword.setTsNegativeKeywords(tsNegativeKeywords);
             //设置更新时间
             startTsMainKeywordsForComplaints(tsMainKeyword.getUuid());

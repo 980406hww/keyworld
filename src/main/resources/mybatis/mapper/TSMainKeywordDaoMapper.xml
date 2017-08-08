@@ -17,7 +17,19 @@
         LIMIT ${(pageInfo.currentpage-1)*pageInfo.displaysRecords},${pageInfo.displaysRecords}
     </select>
 
-    <select id="getTsMainKeywordsForComplaints" resultType="com.keymanager.monitoring.entity.TSMainKeyword">
+    <select id="findTSMainKeywordByMainKeyword" resultType="com.keymanager.monitoring.entity.TSMainKeyword">
+        SELECT
+        m.fUuid AS `uuid`,
+        m.fGroup AS `group`,
+        m.fKeyword AS `keyword`,
+        m.fUpdateTime AS `updateTime`,
+        m.fCreateTime AS `createTime`,
+        m.fComplaintsTime AS `complaintsTime`
+        FROM t_ts_main_keyword m
+        WHERE m.fKeyword = #{mainKeyword}
+    </select>
+
+    <select id="getTSMainKeywordsForComplaints" resultType="com.keymanager.monitoring.entity.TSMainKeyword">
         SELECT
             m.fUuid AS `uuid`,
             m.fGroup AS `group`,
@@ -29,7 +41,7 @@
         ORDER BY m.fComplaintsTime
     </select>
 
-    <select id="getTSmainKeywordCount" parameterType="com.keymanager.monitoring.entity.TSMainKeyword" resultType="java.lang.Integer">
+    <select id="getTSMainKeywordCount" parameterType="com.keymanager.monitoring.entity.TSMainKeyword" resultType="java.lang.Integer">
         SELECT count(fUuid)
         FROM t_ts_main_keyword
         WHERE 1=1

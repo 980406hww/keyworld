@@ -12,7 +12,7 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface TSNegativeKeywordDao extends BaseMapper<TSNegativeKeyword> {
 
-    List<TSNegativeKeyword> findNegativeKeywordsBymainkeyUuid(@Param("tsMainKeywordUuid")Long tsMainKeywordUuid);
+    List<TSNegativeKeyword> findNegativeKeywordsByMainKeywordUuid(@Param("tsMainKeywordUuid")Long tsMainKeywordUuid);
 
     int selectLastId();
 

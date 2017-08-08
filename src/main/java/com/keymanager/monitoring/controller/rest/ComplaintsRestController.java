@@ -52,7 +52,7 @@ public class ComplaintsRestController extends SpringMVCBaseController {
         if(tsMainKeywordCriteria.getUserName() != null && tsMainKeywordCriteria.getPassword() != null) {
             User user = userService.getUser(tsMainKeywordCriteria.getUserName());
             if (user != null && user.getPassword().equals(tsMainKeywordCriteria.getPassword())) {
-                tsMainKeywordService.saveTSMainKeyword(tsMainKeyword);
+                tsMainKeywordService.saveTSMainKeyword(tsMainKeywordCriteria.getTsMainKeyword());
                 return new ResponseEntity<Object>(tsMainKeyword, HttpStatus.OK);
             }
         }

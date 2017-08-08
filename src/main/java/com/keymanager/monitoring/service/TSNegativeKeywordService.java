@@ -21,8 +21,8 @@ public class TSNegativeKeywordService extends ServiceImpl<TSNegativeKeywordDao, 
     @Autowired
     private TSNegativeKeywordDao tsNegativeKeywordDao;
 
-    public List<TSNegativeKeyword> findNegativeKeywordsBymainkeyUuid(Long uuid){
-        return tsNegativeKeywordDao.findNegativeKeywordsBymainkeyUuid(uuid);
+    public List<TSNegativeKeyword> findNegativeKeywordsByMainKeywordUuid(Long uuid){
+        return tsNegativeKeywordDao.findNegativeKeywordsByMainKeywordUuid(uuid);
     }
     public void deleteByTSmainKeywordUuid(Long uuid){
         tsNegativeKeywordDao.deleteByTSmainKeywordUuid(uuid);
