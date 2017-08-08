@@ -33,14 +33,14 @@
     <th>PC端投诉时间</th>
     <th>Phone端投诉时间</th>
   </tr>
-<#list tSmainKeyWordVOS as tSmainKeyWordVOS>
+<#list tsMainKeywordVOS as tsMainKeywordVO>
   <tr>
-    <td class='negative_content'>${tSmainKeyWordVOS.keyword}</td>
-    <td class='negative_content'>${tSmainKeyWordVOS.tsNegativeKeyword}</td>
-    <td class='negative_content'>${tSmainKeyWordVOS.pcOccurTimes!"3"}</td>
-    <td class='negative_content'>${tSmainKeyWordVOS.phoneOccurTimes!"3"}</td>
-    <td class='negative_content'>${tSmainKeyWordVOS.pcComplainTime!}</td>
-    <td class='negative_content'>${tSmainKeyWordVOS.phoneComplainTime!}</td>
+    <td class='negative_content'>${tsMainKeywordVO.keyword}</td>
+    <td class='negative_content'>${tsMainKeywordVO.tsNegativeKeyword}</td>
+    <td class='negative_content'>${tsMainKeywordVO.pcOccurTimes!"3"}</td>
+    <td class='negative_content'>${tsMainKeywordVO.phoneOccurTimes!"3"}</td>
+    <td class='negative_content'>${tsMainKeywordVO.pcComplainTime!}</td>
+    <td class='negative_content'>${tsMainKeywordVO.phoneComplainTime!}</td>
   </tr>
 </#list>
 </table>

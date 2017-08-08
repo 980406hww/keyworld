@@ -1,6 +1,6 @@
 package com.keymanager.monitoring.common.email;
 
-import com.keymanager.monitoring.vo.TSmainKeyWordVO;
+import com.keymanager.monitoring.vo.TSMainKeywordVO;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import java.io.IOException;
@@ -35,7 +35,7 @@ public class ComplaintsReportMailService {
 
 	private Template complaintsReportTemplate;
 
-	public void sendComplaintsReport(String username, String toEmail, List<TSmainKeyWordVO> tSmainKeyWordVOS){
+	public void sendComplaintsReport(String username, String toEmail, List<TSMainKeywordVO> TSMainKeywordVOS){
 		try {
 			MimeMessage msg = mailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(msg, true, DEFAULT_ENCODING);
@@ -45,7 +45,7 @@ public class ComplaintsReportMailService {
 			helper.setSubject("投诉未成功的反馈记录");
 			Map<String, Object> context = new HashMap<String, Object>();
 			context.put("username", username);
-			context.put("tSmainKeyWordVOS", tSmainKeyWordVOS);
+			context.put("tsMainKeywordVOS", TSMainKeywordVOS);
 			String content = FreeMarkerTemplateUtils.processTemplateIntoString(complaintsReportTemplate, context);
 			helper.setText(content, true);
 

@@ -9,7 +9,7 @@ import java.util.Date;
  * Created by shunshikj01 on 2017/8/7.
  */
 @TableName(value = "t_ts_main_keywordvo")
-public class TSmainKeyWordVO {
+public class TSMainKeywordVO {
 
   @TableField(value = "uuid")
   private String uuid;

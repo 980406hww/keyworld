@@ -1,10 +1,7 @@
 package com.keymanager.monitoring.controller.rest;
 
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
-import com.keymanager.monitoring.criteria.QZSettingCriteria;
 import com.keymanager.monitoring.criteria.TSMainKeywordCriteria;
-import com.keymanager.monitoring.dao.TSMainKeywordDao;
-import com.keymanager.monitoring.entity.QZSetting;
 import com.keymanager.monitoring.entity.TSMainKeyword;
 import com.keymanager.monitoring.entity.User;
 import com.keymanager.monitoring.service.TSMainKeywordService;
@@ -18,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,9 +26,9 @@ import org.springframework.web.servlet.ModelAndView;
  */
 @RestController
 @RequestMapping(value = "/spring/complaints")
-public class TSMainKeywordRestController extends SpringMVCBaseController {
+public class ComplaintsRestController extends SpringMVCBaseController {
 
-    private static Logger logger = LoggerFactory.getLogger(TSMainKeywordRestController.class);
+    private static Logger logger = LoggerFactory.getLogger(ComplaintsRestController.class);
 
     @Autowired
     private TSMainKeywordService tsMainKeywordService;
@@ -46,9 +42,21 @@ public class TSMainKeywordRestController extends SpringMVCBaseController {
     private TSMainKeyword tsMainKeyword = new TSMainKeyword();
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public ResponseEntity<?> saveTSMainKeyword(@RequestBody TSMainKeyword tsMainKeyword){
+    public ResponseEntity<?> saveTSMainKeywords(@RequestBody TSMainKeyword tsMainKeyword){
         tsMainKeywordService.saveTSMainKeyword(tsMainKeyword);
         return new ResponseEntity<Object>(tsMainKeyword, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/saveWithAuthentication", method = RequestMethod.POST)
+    public ResponseEntity<?> saveTSMainKeywords(@RequestBody TSMainKeywordCriteria tsMainKeywordCriteria){
+        if(tsMainKeywordCriteria.getUserName() != null && tsMainKeywordCriteria.getPassword() != null) {
+            User user = userService.getUser(tsMainKeywordCriteria.getUserName());
+            if (user != null && user.getPassword().equals(tsMainKeywordCriteria.getPassword())) {
+                tsMainKeywordService.saveTSMainKeyword(tsMainKeyword);
+                return new ResponseEntity<Object>(tsMainKeyword, HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
     @RequestMapping(value = "/findTSMainKeywords", method = RequestMethod.GET)

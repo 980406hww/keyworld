@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.dao.TSMainKeywordDao;
 import com.keymanager.monitoring.entity.TSMainKeyword;
 import com.keymanager.monitoring.entity.TSNegativeKeyword;
-import com.keymanager.monitoring.vo.TSmainKeyWordVO;
+import com.keymanager.monitoring.vo.TSMainKeywordVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -132,9 +132,9 @@ public class TSMainKeywordService extends ServiceImpl<TSMainKeywordDao, TSMainKe
     //投诉后修改数据库部分
 
     //邮件内容部分
-    public List<TSmainKeyWordVO> complaintsReportContent() {
-        List<TSmainKeyWordVO> TSmainKeyWordVOS = tsNegativeKeywordService.complaintsReportContent();
-        return TSmainKeyWordVOS;
+    public List<TSMainKeywordVO> complaintsReportContent() {
+        List<TSMainKeywordVO> TSMainKeywordVOS = tsNegativeKeywordService.complaintsReportContent();
+        return TSMainKeywordVOS;
     }
 
 }

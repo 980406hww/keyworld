@@ -39,7 +39,7 @@
     </delete>
 
     <!--邮件内容-->
-    <select id="complaintsReportContent" resultType="com.keymanager.monitoring.vo.TSmainKeyWordVO">
+    <select id="complaintsReportContent" resultType="com.keymanager.monitoring.vo.TSMainKeywordVO">
         SELECT
               tsvo.uuid AS `uuid`,
               tsvo.group AS `group`,
