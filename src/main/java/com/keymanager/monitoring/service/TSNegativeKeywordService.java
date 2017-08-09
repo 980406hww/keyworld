@@ -39,4 +39,10 @@ public class TSNegativeKeywordService extends ServiceImpl<TSNegativeKeywordDao, 
     public List<ComplaintMailVO> complaintsReportContentPhone3times(){
         return tsNegativeKeywordDao.complaintsReportContentPhone3times();
     }
+
+    public void exchangeNegativeKeywordsData(List<TSNegativeKeyword> newNegativeKeywordList) {
+        for(TSNegativeKeyword tsNegativeKeyword : newNegativeKeywordList) {
+            tsNegativeKeywordDao.updateById(tsNegativeKeyword);
+        }
+    }
 }

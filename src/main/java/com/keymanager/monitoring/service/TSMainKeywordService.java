@@ -118,8 +118,8 @@ public class TSMainKeywordService extends ServiceImpl<TSMainKeywordDao, TSMainKe
     }
 
     //爬虫专用
-    public TSMainKeyword getTsMainKeywordsForComplaints(){
-        List<TSMainKeyword> tsMainKeywords = tsMainKeywordDao.getTSMainKeywordsForComplaints();
+    public TSMainKeyword getTsMainKeywordsForComplaints(String ipCity){
+        List<TSMainKeyword> tsMainKeywords = tsMainKeywordDao.getTSMainKeywordsByCity(ipCity);
         TSMainKeyword tsMainKeyword = null;
         if(CollectionUtils.isNotEmpty(tsMainKeywords)){
             tsMainKeyword=tsMainKeywords.get(0);
