@@ -63,7 +63,7 @@ public class TSMainKeywordService extends ServiceImpl<TSMainKeywordDao, TSMainKe
             //修改主要针对负词表中的keyword进行逻辑删除
             List<TSNegativeKeyword> oldNegativeKeywords = tsNegativeKeywordService.findNegativeKeywordsByMainKeywordUuid(oldTSMainKeyword.getUuid());
             List<TSNegativeKeyword> newNegativeKeywords = tsMainKeyword.getTsNegativeKeywords();
-            updateTSnegativeKeyword(oldNegativeKeywords,newNegativeKeywords,oldTSMainKeyword.getUuid());
+            updateTSNegativeKeyword(oldNegativeKeywords,newNegativeKeywords,oldTSMainKeyword.getUuid());
             oldTSMainKeyword.setUpdateTime(new Date());
             tsMainKeywordDao.updateById(oldTSMainKeyword);
         } else {
@@ -76,7 +76,7 @@ public class TSMainKeywordService extends ServiceImpl<TSMainKeywordDao, TSMainKe
             }
         }
     }
-    public void updateTSnegativeKeyword(List<TSNegativeKeyword> oldNegativeKeywords,List<TSNegativeKeyword> newNegativeKeywords,Long tsMainKeywordUuid){
+    public void updateTSNegativeKeyword(List<TSNegativeKeyword> oldNegativeKeywords,List<TSNegativeKeyword> newNegativeKeywords,Long tsMainKeywordUuid){
         Map<String ,TSNegativeKeyword> oldNegativeKeywordMap = new HashMap<String, TSNegativeKeyword>();
         for(TSNegativeKeyword oldTsNegativeKeyword :oldNegativeKeywords){
             oldNegativeKeywordMap.put(oldTsNegativeKeyword.getKeyword(),oldTsNegativeKeyword);

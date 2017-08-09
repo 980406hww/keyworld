@@ -35,54 +35,58 @@
     <th>PC端最新投诉时间</th>
     <th>Phone端最新投诉时间</th>
   </tr>
-<#list PCOver3TimestSmainKeywordVOS as PCOver3TimestSmainKeywordVOS>
-  <#if PCOver3TimestSmainKeywordVOS ??>
+<#if PCOver3TimestSmainKeywordVOS ??>
+  <#list PCOver3TimestSmainKeywordVOS as PCOver3TimestSmainKeywordVOS>
     <tr>
-    <td class='negative_content'>${PCOver3TimestSmainKeywordVOS.keyword}</td>
-    <td class='negative_content'>${PCOver3TimestSmainKeywordVOS.group}</td>
-    <td class='negative_content'>${PCOver3TimestSmainKeywordVOS.tsNegativeKeyword}</td>
-    <td class='negative_content'style="color: red">${PCOver3TimestSmainKeywordVOS.pcOccurTimes!}</td>
-    <td class='negative_content'style="color: red">${PCOver3TimestSmainKeywordVOS.phoneOccurTimes!}</td>
+      <td class='negative_content'>${PCOver3TimestSmainKeywordVOS.keyword}</td>
+      <td class='negative_content'>${PCOver3TimestSmainKeywordVOS.group}</td>
+      <td class='negative_content'>${PCOver3TimestSmainKeywordVOS.tsNegativeKeyword}</td>
+      <td class='negative_content'
+          style="color: red">${PCOver3TimestSmainKeywordVOS.pcOccurTimes!}</td>
+      <td class='negative_content'
+          style="color: red">${PCOver3TimestSmainKeywordVOS.phoneOccurTimes!}</td>
 
-    <td class='negative_content' style="color: red">PC端</td>
+      <td class='negative_content' style="color: red">PC端</td>
 
-    <#if PCOver3TimestSmainKeywordVOS.pcComplainTime ??>
-      <td class='negative_content'>${PCOver3TimestSmainKeywordVOS.pcComplainTime}</td>
-    <#else >
-      <td class='negative_content'></td>
-    </#if>
-    <#if PCOver3TimestSmainKeywordVOS.pcComplainTime ??>
-      <td class='negative_content'>${PCOver3TimestSmainKeywordVOS.phoneComplainTime}</td>
-    <#else >
-      <td class='negative_content'></td>
-    </#if>
-  </tr>
-  </#if>
-</#list>
-<#list phoneOver3TimestSmainKeywordVOS as phoneOver3TimestSmainKeywordVOS>
-  <#if phoneOver3TimestSmainKeywordVOS ??>
+      <#if PCOver3TimestSmainKeywordVOS.pcComplainTime ??>
+        <td class='negative_content'>${PCOver3TimestSmainKeywordVOS.pcComplainTime}</td>
+      <#else >
+        <td class='negative_content'></td>
+      </#if>
+      <#if PCOver3TimestSmainKeywordVOS.pcComplainTime ??>
+        <td class='negative_content'>${PCOver3TimestSmainKeywordVOS.phoneComplainTime}</td>
+      <#else >
+        <td class='negative_content'></td>
+      </#if>
+    </tr>
+  </#list>
+</#if>
+<#if phoneOver3TimestSmainKeywordVOS ??>
+  <#list phoneOver3TimestSmainKeywordVOS as phoneOver3TimestSmainKeywordVOS>
     <tr>
-    <td class='negative_content'>${phoneOver3TimestSmainKeywordVOS.keyword}</td>
-    <td class='negative_content'>${phoneOver3TimestSmainKeywordVOS.group}</td>
-    <td class='negative_content'>${phoneOver3TimestSmainKeywordVOS.tsNegativeKeyword}</td>
-    <td class='negative_content'style="color: red">${phoneOver3TimestSmainKeywordVOS.pcOccurTimes!}</td>
-    <td class='negative_content'style="color: red">${phoneOver3TimestSmainKeywordVOS.phoneOccurTimes!}</td>
+      <td class='negative_content'>${phoneOver3TimestSmainKeywordVOS.keyword}</td>
+      <td class='negative_content'>${phoneOver3TimestSmainKeywordVOS.group}</td>
+      <td class='negative_content'>${phoneOver3TimestSmainKeywordVOS.tsNegativeKeyword}</td>
+      <td class='negative_content'
+          style="color: red">${phoneOver3TimestSmainKeywordVOS.pcOccurTimes!}</td>
+      <td class='negative_content'
+          style="color: red">${phoneOver3TimestSmainKeywordVOS.phoneOccurTimes!}</td>
 
-    <td class='negative_content' style="color: red">Phone端</td>
+      <td class='negative_content' style="color: red">Phone端</td>
 
-    <#if phoneOver3TimestSmainKeywordVOS.pcComplainTime ??>
-      <td class='negative_content'>${phoneOver3TimestSmainKeywordVOS.pcComplainTime}</td>
-    <#else >
-      <td class='negative_content'></td>
-    </#if>
-    <#if phoneOver3TimestSmainKeywordVOS.pcComplainTime ??>
-      <td class='negative_content'>${phoneOver3TimestSmainKeywordVOS.phoneComplainTime}</td>
-    <#else >
-      <td class='negative_content'></td>
-    </#if>
-  </tr>
-  </#if>
-</#list>
+      <#if phoneOver3TimestSmainKeywordVOS.pcComplainTime ??>
+        <td class='negative_content'>${phoneOver3TimestSmainKeywordVOS.pcComplainTime}</td>
+      <#else >
+        <td class='negative_content'></td>
+      </#if>
+      <#if phoneOver3TimestSmainKeywordVOS.pcComplainTime ??>
+        <td class='negative_content'>${phoneOver3TimestSmainKeywordVOS.phoneComplainTime}</td>
+      <#else >
+        <td class='negative_content'></td>
+      </#if>
+    </tr>
+  </#list>
+</#if>
 </table>
 </body>
 </html>

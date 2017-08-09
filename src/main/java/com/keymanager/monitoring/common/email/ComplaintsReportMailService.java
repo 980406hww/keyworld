@@ -1,7 +1,7 @@
 package com.keymanager.monitoring.common.email;
 
 import com.keymanager.monitoring.service.TSNegativeKeywordService;
-import com.keymanager.monitoring.vo.TSMainKeywordVO;
+import com.keymanager.monitoring.vo.ComplaintMailVO;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import java.io.IOException;
@@ -42,8 +42,8 @@ public class ComplaintsReportMailService {
   private Template complaintsReportTemplateOver3Times;
 
   public void sendComplaintsReportOver2weeks(String username, String toEmail,
-      List<TSMainKeywordVO> PCOver2WeekstSmainKeywordVOS,
-      List<TSMainKeywordVO> phoneOver2WeekstSmainKeywordVOS) {
+      List<ComplaintMailVO> PCOver2WeekstSmainKeywordVOS,
+      List<ComplaintMailVO> phoneOver2WeekstSmainKeywordVOS) {
     try {
       MimeMessage msg = mailSender.createMimeMessage();
       MimeMessageHelper helper = new MimeMessageHelper(msg, true, DEFAULT_ENCODING);
@@ -62,7 +62,7 @@ public class ComplaintsReportMailService {
       logger.info("HTML版邮件已发送");
 //      if (CollectionUtils.isNotEmpty(PCOver2WeekstSmainKeywordVOS)) {
 //        TSNegativeKeyword tsNegativeKeyword = new TSNegativeKeyword();
-//        for (TSMainKeywordVO tSmainKeyWordVO : phoneOver2WeekstSmainKeywordVOS) {
+//        for (ComplaintMailVO tSmainKeyWordVO : phoneOver2WeekstSmainKeywordVOS) {
 //          tsNegativeKeyword.setUuid(tSmainKeyWordVO.getTsNegativeKeywordUuid());
 //          if (null == tSmainKeyWordVO.getPcEmailSentOver2Weeks()
 //              || tSmainKeyWordVO.getPcEmailSentOver2Weeks() == 0) {
@@ -73,7 +73,7 @@ public class ComplaintsReportMailService {
 //      }
 //      if (CollectionUtils.isNotEmpty(phoneOver2WeekstSmainKeywordVOS)) {
 //        TSNegativeKeyword tsNegativeKeyword = new TSNegativeKeyword();
-//        for (TSMainKeywordVO tSmainKeyWordVO : phoneOver2WeekstSmainKeywordVOS) {
+//        for (ComplaintMailVO tSmainKeyWordVO : phoneOver2WeekstSmainKeywordVOS) {
 //          tsNegativeKeyword.setUuid(tSmainKeyWordVO.getTsNegativeKeywordUuid());
 //          if (null == tSmainKeyWordVO.getPcEmailSentOver2Weeks()
 //              || tSmainKeyWordVO.getPcEmailSentOver2Weeks() == 0) {
@@ -90,8 +90,8 @@ public class ComplaintsReportMailService {
   }
 
   public void sendComplaintsReportOver3Times(String username, String toEmail,
-      List<TSMainKeywordVO> PCOver3TimestSmainKeywordVOS,
-      List<TSMainKeywordVO> phoneOver3TimestSmainKeywordVOS) {
+      List<ComplaintMailVO> PCOver3TimestSmainKeywordVOS,
+      List<ComplaintMailVO> phoneOver3TimestSmainKeywordVOS) {
     try {
       MimeMessage msg = mailSender.createMimeMessage();
       MimeMessageHelper helper = new MimeMessageHelper(msg, true, DEFAULT_ENCODING);
@@ -101,8 +101,8 @@ public class ComplaintsReportMailService {
       helper.setSubject("反复出现3次投诉失败的反馈记录");
       Map<String, Object> context = new HashMap<String, Object>();
       context.put("username", username);
-      context.put("PCOver3timestSmainKeyWordVOS", PCOver3TimestSmainKeywordVOS);
-      context.put("PhoneOver3timestSmainKeyWordVOS", phoneOver3TimestSmainKeywordVOS);
+      context.put("PCOver3TimestSmainKeywordVOS", PCOver3TimestSmainKeywordVOS);
+      context.put("phoneOver3TimestSmainKeywordVOS", phoneOver3TimestSmainKeywordVOS);
       String content = FreeMarkerTemplateUtils.processTemplateIntoString(
           complaintsReportTemplateOver3Times, context);
       helper.setText(content, true);
@@ -111,7 +111,7 @@ public class ComplaintsReportMailService {
       logger.info("HTML版邮件已发送");
 //      if (CollectionUtils.isNotEmpty(PCOver3TimestSmainKeywordVOS)) {
 //        TSNegativeKeyword tsNegativeKeyword = new TSNegativeKeyword();
-//        for (TSMainKeywordVO tSmainKeyWordVO : PCOver3TimestSmainKeywordVOS) {
+//        for (ComplaintMailVO tSmainKeyWordVO : PCOver3TimestSmainKeywordVOS) {
 //          tsNegativeKeyword.setUuid(tSmainKeyWordVO.getTsNegativeKeywordUuid());
 //          if (null == tSmainKeyWordVO.getPcEmailSentOver3Times()
 //              || tSmainKeyWordVO.getPcEmailSentOver3Times() == 0) {
@@ -122,7 +122,7 @@ public class ComplaintsReportMailService {
 //      }
 //      if (CollectionUtils.isNotEmpty(phoneOver3TimestSmainKeywordVOS)) {
 //        TSNegativeKeyword tsNegativeKeyword = new TSNegativeKeyword();
-//        for (TSMainKeywordVO tSmainKeyWordVO : phoneOver3TimestSmainKeywordVOS) {
+//        for (ComplaintMailVO tSmainKeyWordVO : phoneOver3TimestSmainKeywordVOS) {
 //          tsNegativeKeyword.setUuid(tSmainKeyWordVO.getTsNegativeKeywordUuid());
 //          if (null == tSmainKeyWordVO.getPcEmailSentOver3Times()
 //              || tSmainKeyWordVO.getPcEmailSentOver3Times() == 0) {

@@ -41,30 +41,16 @@
     <!--邮件内容-->
   <sql id="Content">
     `m`.`fUuid` AS `uuid`,
-	`m`.`fKeyword` AS `keyword`,
-	`m`.`fGroup` AS `group`,
-	`ng`.`fUuid` AS `tsNegativeKeywordUuid`,
-	`ng`.`fKeyword` AS `tsNegativeKeyword`,
-	`ng`.`fPCEmailSentOver2Weeks` AS `pcEmailSentOver2Weeks`,
-	`ng`.`fPhoneEmailSentOver2Weeks` AS `phoneEmailSentOver2Weeks`,
-	`ng`.`fPCEmailSentOver3Times` AS `pcEmailSentOver3Times`,
-	`ng`.`fPhoneEmailSentOver3Times` AS `phoneEmailSentOver3Times`,
-	`ng`.`fPCAppeared` AS `pcAppeared`,
-	`ng`.`fPhoneAppeared` AS `phoneAppeared`,
-	`ng`.`fPCOccurTimes` AS `pcOccurTimes`,
-	`ng`.`fPhoneOccurTimes` AS `phoneOccurTimes`,
-	`ng`.`fPCComplainTime` AS `pcComplainTime`,
-	`ng`.`fPhoneComplainTime` AS `phoneComplainTime`,
-	`ng`.`fPCComplained` AS `pcComplained`,
-	`ng`.`fPhoneComplained` AS `phoneComplained`,
-	`ng`.`fPCSetAppeared` AS `pcSetAppeared`,
-	`ng`.`fPhoneSetAppeared` AS `phoneSetAppeared`,
-	`ng`.`IsDeleted` AS `isDeleted`,
-	`m`.`fUpdateTime` AS `updateTime`,
-	`m`.`fCreateTime` AS `createTime`,
-	`m`.`fComplaintsTime` AS `complaintsTime`
+    `m`.`fKeyword` AS `keyword`,
+    `m`.`fGroup` AS `group`,
+    `ng`.`fUuid` AS `tsNegativeKeywordUuid`,
+    `ng`.`fKeyword` AS `tsNegativeKeyword`,
+    `ng`.`fPCOccurTimes` AS `pcOccurTimes`,
+    `ng`.`fPhoneOccurTimes` AS `phoneOccurTimes`,
+    `ng`.`fPCComplainTime` AS `pcComplainTime`,
+    `ng`.`fPhoneComplainTime` AS `phoneComplainTime`
   </sql>
-  <select id="complaintsReportContentPC2weeks" resultType="com.keymanager.monitoring.vo.TSMainKeywordVO">
+  <select id="complaintsReportContentPC2weeks" resultType="com.keymanager.monitoring.vo.ComplaintMailVO">
         SELECT
             <include refid="Content"/>
         FROM
@@ -72,7 +58,7 @@
           JOIN `t_ts_negative_keyword` `ng` ON `m`.`fUuid` = `ng`.`fTSMainKeywordUuid`
           WHERE (`ng`.`fPCEmailSentOver2Weeks` =0 AND `ng`.`fPCAppeared` =1 AND NOW() >= DATE_ADD(`ng`.`fCreateTime`,INTERVAL 2 WEEK))
     </select>
-  <select id="complaintsReportContentPhone2weeks" resultType="com.keymanager.monitoring.vo.TSMainKeywordVO">
+  <select id="complaintsReportContentPhone2weeks" resultType="com.keymanager.monitoring.vo.ComplaintMailVO">
         SELECT
     <include refid="Content"/>
         FROM
@@ -80,7 +66,7 @@
           JOIN `t_ts_negative_keyword` `ng` ON `m`.`fUuid` = `ng`.`fTSMainKeywordUuid`
           WHERE (`ng`.`fPhoneEmailSentOver2Weeks` =0 AND `ng`.`fPhoneAppeared` =1 AND NOW() >= DATE_ADD(`ng`.`fCreateTime`,INTERVAL 2 WEEK))
     </select>
-  <select id="complaintsReportContentPC3times" resultType="com.keymanager.monitoring.vo.TSMainKeywordVO">
+  <select id="complaintsReportContentPC3times" resultType="com.keymanager.monitoring.vo.ComplaintMailVO">
         SELECT
             <include refid="Content"/>
         FROM
@@ -88,7 +74,7 @@
           JOIN `t_ts_negative_keyword` `ng` ON `m`.`fUuid` = `ng`.`fTSMainKeywordUuid`
           WHERE (`ng`.`fPCEmailSentOver3Times` =0 AND `ng`.`fPCOccurTimes`>=3 AND `ng`.`fPCAppeared` =1)
     </select>
-  <select id="complaintsReportContentPhone3times" resultType="com.keymanager.monitoring.vo.TSMainKeywordVO">
+  <select id="complaintsReportContentPhone3times" resultType="com.keymanager.monitoring.vo.ComplaintMailVO">
         SELECT
             <include refid="Content"/>
         FROM
