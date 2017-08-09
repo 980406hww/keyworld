@@ -3,7 +3,7 @@ package com.keymanager.monitoring.service;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.dao.TSNegativeKeywordDao;
 import com.keymanager.monitoring.entity.TSNegativeKeyword;
-import com.keymanager.monitoring.vo.TSMainKeywordVO;
+import com.keymanager.monitoring.vo.ComplaintMailVO;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,13 +22,22 @@ public class TSNegativeKeywordService extends ServiceImpl<TSNegativeKeywordDao, 
     private TSNegativeKeywordDao tsNegativeKeywordDao;
 
     public List<TSNegativeKeyword> findNegativeKeywordsByMainKeywordUuid(Long uuid){
-        return tsNegativeKeywordDao.findNegativeKeywordsByMainKeywordUuid(uuid);
+        return tsNegativeKeywordDao.findNegativeKeywordsByMainkeyUuid(uuid);
     }
     public void deleteByTSmainKeywordUuid(Long uuid){
         tsNegativeKeywordDao.deleteByTSmainKeywordUuid(uuid);
     }
-    public List<TSMainKeywordVO> complaintsReportContent(){
-        return tsNegativeKeywordDao.complaintsReportContent();
+    public List<ComplaintMailVO> complaintsReportContentPC2weeks(){
+        return tsNegativeKeywordDao.complaintsReportContentPC2weeks();
+    }
+    public List<ComplaintMailVO> complaintsReportContentPhone2weeks(){
+        return tsNegativeKeywordDao.complaintsReportContentPhone2weeks();
+    }
+    public List<ComplaintMailVO> complaintsReportContentPC3times(){
+        return tsNegativeKeywordDao.complaintsReportContentPC3times();
+    }
+    public List<ComplaintMailVO> complaintsReportContentPhone3times(){
+        return tsNegativeKeywordDao.complaintsReportContentPhone3times();
     }
 
     public void exchangeNegativeKeywordsData(List<TSNegativeKeyword> newNegativeKeywordList) {

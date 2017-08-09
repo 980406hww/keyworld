@@ -1,11 +1,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<script language="javascript" type="text/javascript" src="/common.js"></script>
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<%--<script language="javascript" type="text/javascript" src="/js/slide.js"/>--%>
 <link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css">
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script language="javascript" type="text/javascript" src="/js/slide1.12.4.js"></script>
 <link href="/css/menu.css" rel="stylesheet" type="text/css"/>
 <%@page contentType="text/html;charset=utf-8" %>
 <%@page import="com.keymanager.manager.*,com.keymanager.util.*,com.keymanager.value.*,java.util.*,java.net.URLEncoder" %>
@@ -372,6 +373,9 @@
         margin-left: 63%;
     }
 
+    #nav .mainlevel ul {display:none; position:absolute;z-index: 10;}
+    #nav .mainlevel li {border-top:1px solid #fff; background:#ffe60c; width:140px;z-index: 10;/*IE6 only*/}
+
     #div1 {
         display: none;
         background-color: #f6f7f7;
@@ -382,7 +386,6 @@
         width: 450;
         height: 50;
     }
-
     #div2 {
         display: none;
         background-color: #ACF106;
@@ -414,11 +417,11 @@
            <form id="serachMainKeywordForm" action="/spring/complaints/findTSMainKeywords" method="post">
                主关键词<input id="itemkeywork" name="itemkeywork" type="text" value="${pageInfo.searchCondition.get("keyword")}"/>&nbsp;&nbsp;
                区域分组<input id="itemGroup" name="itemGroup" type="text" value="${pageInfo.searchCondition.get("group")}"/>&nbsp;&nbsp;
-               <input type="submit" class="ui-button ui-widget ui-corner-all"
+               <input type="submit" class="ui-button ui-widget ui-corner-all" style="z-index: 0";
                        value="查询">&nbsp;&nbsp;&nbsp;
-               <input type="button" class="ui-button ui-widget ui-corner-all"
+               <input type="button" class="ui-button ui-widget ui-corner-all"  style="z-index: 0";
                       onclick="showAddMainKeywordDlog(null)" value="添加"/>&nbsp;&nbsp;&nbsp;
-               <input type="button" class="ui-button ui-widget ui-corner-all"
+               <input type="button" class="ui-button ui-widget ui-corner-all"  style="z-index: 0";
                       onclick="deleteMainKeywords(this)" value="删除所选"/>
            </form>
         </div>

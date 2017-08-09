@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.dao.TSMainKeywordDao;
 import com.keymanager.monitoring.entity.TSMainKeyword;
 import com.keymanager.monitoring.entity.TSNegativeKeyword;
-import com.keymanager.monitoring.vo.TSMainKeywordVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,7 +63,7 @@ public class TSMainKeywordService extends ServiceImpl<TSMainKeywordDao, TSMainKe
             //修改主要针对负词表中的keyword进行逻辑删除
             List<TSNegativeKeyword> oldNegativeKeywords = tsNegativeKeywordService.findNegativeKeywordsByMainKeywordUuid(oldTSMainKeyword.getUuid());
             List<TSNegativeKeyword> newNegativeKeywords = tsMainKeyword.getTsNegativeKeywords();
-            updateTSnegativeKeyword(oldNegativeKeywords,newNegativeKeywords,oldTSMainKeyword.getUuid());
+            updateTSNegativeKeyword(oldNegativeKeywords,newNegativeKeywords,oldTSMainKeyword.getUuid());
             oldTSMainKeyword.setUpdateTime(new Date());
             tsMainKeywordDao.updateById(oldTSMainKeyword);
         } else {
@@ -77,8 +76,7 @@ public class TSMainKeywordService extends ServiceImpl<TSMainKeywordDao, TSMainKe
             }
         }
     }
-
-    public void updateTSnegativeKeyword(List<TSNegativeKeyword> oldNegativeKeywords,List<TSNegativeKeyword> newNegativeKeywords,Long tsMainKeywordUuid){
+    public void updateTSNegativeKeyword(List<TSNegativeKeyword> oldNegativeKeywords,List<TSNegativeKeyword> newNegativeKeywords,Long tsMainKeywordUuid){
         Map<String ,TSNegativeKeyword> oldNegativeKeywordMap = new HashMap<String, TSNegativeKeyword>();
         for(TSNegativeKeyword oldTsNegativeKeyword :oldNegativeKeywords){
             oldNegativeKeywordMap.put(oldTsNegativeKeyword.getKeyword(),oldTsNegativeKeyword);
@@ -140,11 +138,5 @@ public class TSMainKeywordService extends ServiceImpl<TSMainKeywordDao, TSMainKe
         }
     }
     //投诉后修改数据库部分
-
-    //邮件内容部分
-    public List<TSMainKeywordVO> complaintsReportContent() {
-        List<TSMainKeywordVO> TSMainKeywordVOS = tsNegativeKeywordService.complaintsReportContent();
-        return TSMainKeywordVOS;
-    }
 
 }

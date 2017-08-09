@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.monitoring.dao.TSNegativeKeywordDao">
 
-    <select id="findNegativeKeywordsByMainKeywordUuid" resultType="com.keymanager.monitoring.entity.TSNegativeKeyword">
+    <select id="findNegativeKeywordsByMainkeyUuid" resultType="com.keymanager.monitoring.entity.TSNegativeKeyword">
         SELECT
             ng.fUuid AS `uuid`,
             ng.fTSMainKeywordUuid AS `tsMainKeywordUuid`,
@@ -39,31 +39,47 @@
     </delete>
 
     <!--邮件内容-->
-    <select id="complaintsReportContent" resultType="com.keymanager.monitoring.vo.TSMainKeywordVO">
+  <sql id="Content">
+    `m`.`fUuid` AS `uuid`,
+    `m`.`fKeyword` AS `keyword`,
+    `m`.`fGroup` AS `group`,
+    `ng`.`fUuid` AS `tsNegativeKeywordUuid`,
+    `ng`.`fKeyword` AS `tsNegativeKeyword`,
+    `ng`.`fPCOccurTimes` AS `pcOccurTimes`,
+    `ng`.`fPhoneOccurTimes` AS `phoneOccurTimes`,
+    `ng`.`fPCComplainTime` AS `pcComplainTime`,
+    `ng`.`fPhoneComplainTime` AS `phoneComplainTime`
+  </sql>
+  <select id="complaintsReportContentPC2weeks" resultType="com.keymanager.monitoring.vo.ComplaintMailVO">
         SELECT
-              tsvo.uuid AS `uuid`,
-              tsvo.group AS `group`,
-              tsvo.keyword AS `keyword`,
-              tsvo.tsNegativeKeywordUuid AS `tsNegativeKeywordUuid`,
-              tsvo.tsNegativeKeyword AS `tsNegativeKeyword`,
-              tsvo.pcEmailSentOver2Weeks AS `pcEmailSentOver2Weeks`,
-              tsvo.phoneEmailSentOver2Weeks AS `phoneEmailSentOver2Weeks`,
-              tsvo.pcEmailSentOver3Times AS `pcEmailSentOver3Times`,
-              tsvo.phoneEmailSentOver3Times AS `phoneEmailSentOver3Times`,
-              tsvo.pcAppeared AS `pcAppeared`,
-              tsvo.phoneAppeared AS `phoneAppeared`,
-              tsvo.pcOccurTimes AS `pcOccurTimes`,
-              tsvo.phoneOccurTimes AS `phoneOccurTimes`,
-              tsvo.pcComplainTime AS `pcComplainTime`,
-              tsvo.phoneComplainTime AS `phoneComplainTime`,
-              tsvo.pcComplained AS `pcComplained`,
-              tsvo.phoneComplained AS `phoneComplained`,
-              tsvo.pcSetAppeared AS `pcSetAppeared`,
-              tsvo.phoneSetAppeared AS `phoneSetAppeared`,
-              tsvo.IsDeleted AS `isDeleted`,
-              tsvo.UpdateTime AS `updateTime`,
-              tsvo.CreateTime AS `createTime`,
-              tsvo.ComplaintsTime AS `complaintsTime`
-        FROM  t_ts_main_keywordvo tsvo
+            <include refid="Content"/>
+        FROM
+            `t_ts_main_keyword` `m`
+          JOIN `t_ts_negative_keyword` `ng` ON `m`.`fUuid` = `ng`.`fTSMainKeywordUuid`
+          WHERE (`ng`.`fPCEmailSentOver2Weeks` =0 AND `ng`.`fPCAppeared` =1 AND NOW() >= DATE_ADD(`ng`.`fCreateTime`,INTERVAL 2 WEEK))
+    </select>
+  <select id="complaintsReportContentPhone2weeks" resultType="com.keymanager.monitoring.vo.ComplaintMailVO">
+        SELECT
+    <include refid="Content"/>
+        FROM
+            `t_ts_main_keyword` `m`
+          JOIN `t_ts_negative_keyword` `ng` ON `m`.`fUuid` = `ng`.`fTSMainKeywordUuid`
+          WHERE (`ng`.`fPhoneEmailSentOver2Weeks` =0 AND `ng`.`fPhoneAppeared` =1 AND NOW() >= DATE_ADD(`ng`.`fCreateTime`,INTERVAL 2 WEEK))
+    </select>
+  <select id="complaintsReportContentPC3times" resultType="com.keymanager.monitoring.vo.ComplaintMailVO">
+        SELECT
+            <include refid="Content"/>
+        FROM
+            `t_ts_main_keyword` `m`
+          JOIN `t_ts_negative_keyword` `ng` ON `m`.`fUuid` = `ng`.`fTSMainKeywordUuid`
+          WHERE (`ng`.`fPCEmailSentOver3Times` =0 AND `ng`.`fPCOccurTimes`>=3 AND `ng`.`fPCAppeared` =1)
+    </select>
+  <select id="complaintsReportContentPhone3times" resultType="com.keymanager.monitoring.vo.ComplaintMailVO">
+        SELECT
+            <include refid="Content"/>
+        FROM
+            `t_ts_main_keyword` `m`
+          JOIN `t_ts_negative_keyword` `ng` ON `m`.`fUuid` = `ng`.`fTSMainKeywordUuid`
+          WHERE (`ng`.`fPhoneEmailSentOver3Times` =0 AND  `ng`.`fPhoneOccurTimes`>=3 AND `ng`.`fPhoneAppeared` =1)
     </select>
 </mapper>
