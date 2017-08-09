@@ -1,5 +1,6 @@
 package com.keymanager.monitoring.common.email;
 
+import com.keymanager.monitoring.entity.TSNegativeKeyword;
 import com.keymanager.monitoring.service.TSNegativeKeywordService;
 import com.keymanager.monitoring.vo.ComplaintMailVO;
 import freemarker.template.Configuration;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,28 +62,22 @@ public class ComplaintsReportMailService {
       helper.setText(content, true);
       mailSender.send(msg);
       logger.info("HTML版邮件已发送");
-//      if (CollectionUtils.isNotEmpty(PCOver2WeekstSmainKeywordVOS)) {
-//        TSNegativeKeyword tsNegativeKeyword = new TSNegativeKeyword();
-//        for (ComplaintMailVO tSmainKeyWordVO : phoneOver2WeekstSmainKeywordVOS) {
-//          tsNegativeKeyword.setUuid(tSmainKeyWordVO.getTsNegativeKeywordUuid());
-//          if (null == tSmainKeyWordVO.getPcEmailSentOver2Weeks()
-//              || tSmainKeyWordVO.getPcEmailSentOver2Weeks() == 0) {
-//            tsNegativeKeyword.setPcEmailSentOver2Weeks(1);
-//          }
-//          tsNegativeKeywordService.updateById(tsNegativeKeyword);
-//        }
-//      }
-//      if (CollectionUtils.isNotEmpty(phoneOver2WeekstSmainKeywordVOS)) {
-//        TSNegativeKeyword tsNegativeKeyword = new TSNegativeKeyword();
-//        for (ComplaintMailVO tSmainKeyWordVO : phoneOver2WeekstSmainKeywordVOS) {
-//          tsNegativeKeyword.setUuid(tSmainKeyWordVO.getTsNegativeKeywordUuid());
-//          if (null == tSmainKeyWordVO.getPcEmailSentOver2Weeks()
-//              || tSmainKeyWordVO.getPcEmailSentOver2Weeks() == 0) {
-//            tsNegativeKeyword.setPcEmailSentOver2Weeks(1);
-//          }
-//          tsNegativeKeywordService.updateById(tsNegativeKeyword);
-//        }
-//      }
+      if (CollectionUtils.isNotEmpty(PCOver2WeekstSmainKeywordVOS)) {
+        TSNegativeKeyword tsNegativeKeyword = new TSNegativeKeyword();
+        for (ComplaintMailVO tSmainKeyWordVO : phoneOver2WeekstSmainKeywordVOS) {
+          tsNegativeKeyword.setUuid(tSmainKeyWordVO.getTsNegativeKeywordUuid());
+            tsNegativeKeyword.setPcEmailSentOver2Weeks(1);
+          tsNegativeKeywordService.updateById(tsNegativeKeyword);
+        }
+      }
+      if (CollectionUtils.isNotEmpty(phoneOver2WeekstSmainKeywordVOS)) {
+        TSNegativeKeyword tsNegativeKeyword = new TSNegativeKeyword();
+        for (ComplaintMailVO tSmainKeyWordVO : phoneOver2WeekstSmainKeywordVOS) {
+          tsNegativeKeyword.setUuid(tSmainKeyWordVO.getTsNegativeKeywordUuid());
+            tsNegativeKeyword.setPhoneEmailSentOver2Weeks(1);
+          tsNegativeKeywordService.updateById(tsNegativeKeyword);
+        }
+      }
     } catch (MessagingException e) {
       logger.error("构造邮件失败", e);
     } catch (Exception e) {
@@ -109,28 +105,22 @@ public class ComplaintsReportMailService {
 
       mailSender.send(msg);
       logger.info("HTML版邮件已发送");
-//      if (CollectionUtils.isNotEmpty(PCOver3TimestSmainKeywordVOS)) {
-//        TSNegativeKeyword tsNegativeKeyword = new TSNegativeKeyword();
-//        for (ComplaintMailVO tSmainKeyWordVO : PCOver3TimestSmainKeywordVOS) {
-//          tsNegativeKeyword.setUuid(tSmainKeyWordVO.getTsNegativeKeywordUuid());
-//          if (null == tSmainKeyWordVO.getPcEmailSentOver3Times()
-//              || tSmainKeyWordVO.getPcEmailSentOver3Times() == 0) {
-//            tsNegativeKeyword.setPcEmailSentOver3Times(1);
-//          }
-//          tsNegativeKeywordService.updateById(tsNegativeKeyword);
-//        }
-//      }
-//      if (CollectionUtils.isNotEmpty(phoneOver3TimestSmainKeywordVOS)) {
-//        TSNegativeKeyword tsNegativeKeyword = new TSNegativeKeyword();
-//        for (ComplaintMailVO tSmainKeyWordVO : phoneOver3TimestSmainKeywordVOS) {
-//          tsNegativeKeyword.setUuid(tSmainKeyWordVO.getTsNegativeKeywordUuid());
-//          if (null == tSmainKeyWordVO.getPcEmailSentOver3Times()
-//              || tSmainKeyWordVO.getPcEmailSentOver3Times() == 0) {
-//            tsNegativeKeyword.setPcEmailSentOver3Times(1);
-//          }
-//          tsNegativeKeywordService.updateById(tsNegativeKeyword);
-//        }
-//      }
+      if (CollectionUtils.isNotEmpty(PCOver3TimestSmainKeywordVOS)) {
+        TSNegativeKeyword tsNegativeKeyword = new TSNegativeKeyword();
+        for (ComplaintMailVO tSmainKeyWordVO : PCOver3TimestSmainKeywordVOS) {
+          tsNegativeKeyword.setUuid(tSmainKeyWordVO.getTsNegativeKeywordUuid());
+            tsNegativeKeyword.setPcEmailSentOver3Times(1);
+          tsNegativeKeywordService.updateById(tsNegativeKeyword);
+        }
+      }
+      if (CollectionUtils.isNotEmpty(phoneOver3TimestSmainKeywordVOS)) {
+        TSNegativeKeyword tsNegativeKeyword = new TSNegativeKeyword();
+        for (ComplaintMailVO tSmainKeyWordVO : phoneOver3TimestSmainKeywordVOS) {
+          tsNegativeKeyword.setUuid(tSmainKeyWordVO.getTsNegativeKeywordUuid());
+            tsNegativeKeyword.setPhoneEmailSentOver3Times(1);
+          tsNegativeKeywordService.updateById(tsNegativeKeyword);
+        }
+      }
     } catch (MessagingException e) {
       logger.error("构造邮件失败", e);
     } catch (Exception e) {

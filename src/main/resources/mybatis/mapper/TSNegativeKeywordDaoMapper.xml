@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.monitoring.dao.TSNegativeKeywordDao">
 
-    <select id="findNegativeKeywordsByMainKeywordUuid" resultType="com.keymanager.monitoring.entity.TSNegativeKeyword">
+    <select id="findNegativeKeywordsByMainkeyUuid" resultType="com.keymanager.monitoring.entity.TSNegativeKeyword">
         SELECT
             ng.fUuid AS `uuid`,
             ng.fTSMainKeywordUuid AS `tsMainKeywordUuid`,

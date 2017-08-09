@@ -77,8 +77,8 @@
 	<!--发送投诉邮件-->
 	<bean id="cronTriggercomplaintsReportSchedule" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="cronJobDetailcomplaintsReportSchedule" />
-		<!--<property name="cronExpression" value="0 0 10 * * ?" />-->
-		<property name="cronExpression" value=" 0 */1 * * * ?" />
+		<property name="cronExpression" value="0 0 10 * * ?" />
+		<!--<property name="cronExpression" value=" 0 */1 * * * ?" />-->
 	</bean>
 
 	<bean id="cronJobDetailcomplaintsReportSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
