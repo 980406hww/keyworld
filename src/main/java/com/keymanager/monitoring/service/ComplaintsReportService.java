@@ -25,14 +25,14 @@ public class ComplaintsReportService {
 
         if (CollectionUtils.isNotEmpty(PCOver2WeekstSmainKeywordVOS) || CollectionUtils.isNotEmpty(
             phoneOver2WeekstSmainKeywordVOS) ) {
-            complaintsReportMailService.sendComplaintsReportOver2weeks("郑远", "929339036@qq.com,179472582@qq.com",
+            complaintsReportMailService.sendComplaintsReportOver2weeks("郑远", "929339036@qq.com,122099546@qq.com",
                 PCOver2WeekstSmainKeywordVOS,
                 phoneOver2WeekstSmainKeywordVOS);
         }
 
         if (CollectionUtils.isNotEmpty(PCOver3TimestSmainKeywordVOS) || CollectionUtils.isNotEmpty(
             phoneOver3TimestSmainKeywordVOS)) {
-            complaintsReportMailService.sendComplaintsReportOver3Times("郑远", "929339036@qq.com,179472582@qq.com",
+            complaintsReportMailService.sendComplaintsReportOver3Times("郑远", "929339036@qq.com,122099546@qq.com",
                 PCOver3TimestSmainKeywordVOS,
                 phoneOver3TimestSmainKeywordVOS);
         }
