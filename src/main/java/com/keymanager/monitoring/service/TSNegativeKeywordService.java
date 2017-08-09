@@ -27,7 +27,16 @@ public class TSNegativeKeywordService extends ServiceImpl<TSNegativeKeywordDao, 
     public void deleteByTSmainKeywordUuid(Long uuid){
         tsNegativeKeywordDao.deleteByTSmainKeywordUuid(uuid);
     }
-    public List<TSMainKeywordVO> complaintsReportContent(){
-        return tsNegativeKeywordDao.complaintsReportContent();
+    public List<TSMainKeywordVO> complaintsReportContentPC2weeks(){
+        return tsNegativeKeywordDao.complaintsReportContentPC2weeks();
+    }
+    public List<TSMainKeywordVO> complaintsReportContentPhone2weeks(){
+        return tsNegativeKeywordDao.complaintsReportContentPhone2weeks();
+    }
+    public List<TSMainKeywordVO> complaintsReportContentPC3times(){
+        return tsNegativeKeywordDao.complaintsReportContentPC3times();
+    }
+    public List<TSMainKeywordVO> complaintsReportContentPhone3times(){
+        return tsNegativeKeywordDao.complaintsReportContentPhone3times();
     }
 }

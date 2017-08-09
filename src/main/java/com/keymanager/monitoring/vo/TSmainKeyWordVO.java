@@ -21,7 +21,7 @@ public class TSMainKeywordVO {
   private String keyword;
 
   @TableField(value = "tsNegativeKeywordUuid")
-  private String tsNegativeKeywordUuid;
+  private Long tsNegativeKeywordUuid;
 
   @TableField(value = "tsNegativeKeyword")
   private String tsNegativeKeyword;
@@ -103,11 +103,11 @@ public class TSMainKeywordVO {
     this.group = group;
   }
 
-  public String getTsNegativeKeywordUuid() {
+  public Long getTsNegativeKeywordUuid() {
     return tsNegativeKeywordUuid;
   }
 
-  public void setTsNegativeKeywordUuid(String tsNegativeKeywordUuid) {
+  public void setTsNegativeKeywordUuid(Long tsNegativeKeywordUuid) {
     this.tsNegativeKeywordUuid = tsNegativeKeywordUuid;
   }
 
