@@ -69,7 +69,6 @@ public class ComplaintsRestController extends SpringMVCBaseController {
 
     @RequestMapping(value = "/findTSMainKeywords", method = RequestMethod.GET)
     public ModelAndView findTSMainKeywords(@RequestParam(defaultValue = "1") int currentPage,@RequestParam(defaultValue="25") int displaysRecords,@RequestParam(defaultValue="") String keyword,@RequestParam(defaultValue="") String  group){
-
         return tsMainKeywordService.findTSMainKeywordsCode(currentPage,displaysRecords,keyword,group);
     }
 
@@ -79,9 +78,6 @@ public class ComplaintsRestController extends SpringMVCBaseController {
         String group = httpServletRequest.getParameter("itemGroup");
         return tsMainKeywordService.findTSMainKeywordsCode(currentPage,displaysRecords,keyword,group);
     }
-
-
-
 
     @RequestMapping(value = "/findTSMainKeywordById/{uuid}", method = RequestMethod.GET)
     public ResponseEntity<?> findTSMainKeyword(@PathVariable("uuid") Long uuid){

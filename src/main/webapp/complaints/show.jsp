@@ -10,11 +10,7 @@
 <link href="/css/menu.css" rel="stylesheet" type="text/css"/>
 <%@page contentType="text/html;charset=utf-8" %>
 <%@page import="com.keymanager.manager.*,com.keymanager.util.*,com.keymanager.value.*,java.util.*,java.net.URLEncoder" %>
-<%@page import="com.keymanager.monitoring.entity.QZSetting" %>
-<%@page import="com.keymanager.monitoring.service.QZSettingService" %>
-<%@page import="com.keymanager.monitoring.service.QZOperationTypeService" %>
 <jsp:useBean id="um" scope="page" class="com.keymanager.manager.UserManager"/>
-<jsp:useBean id="cm" scope="page" class="com.keymanager.manager.CustomerManager"/>
 <jsp:useBean id="sch" scope="page" class="com.keymanager.util.SpringContextHolder"/>
 <%@include file="/check.jsp" %>
 <%@page language="java" import="java.util.*" pageEncoding="utf-8" %>
@@ -62,71 +58,65 @@
     function savaMainKeyword(uuid) {
       var mainkeyObj = {};
       mainkeyObj.uuid = uuid;
-      mainkeyObj.keyword = $('#mainKeywordForm').find('#mKeyword').val().trim();
-      mainkeyObj.group = $('#mainKeywordForm').find('#mGroup').val();
+      var mainKeywordForm = $('#mainKeywordForm');
+      mainkeyObj.keyword = mainKeywordForm.find('#mKeyword').val().trim();
+      mainkeyObj.group = mainKeywordForm.find('#mGroup').val();
+
+      var ngKeywords = mainKeywordForm.find('#ngKeyword').val().split(',');
+      if (mainkeyObj.keyword === "") {
+        alert("关键字不能为空");
+        mainKeywordForm.find('#mKeyword').focus();
+        return false;
+      }
+      if (mainkeyObj.keyword === "") {
+        alert("请选择有效城市");
+        mainKeywordForm.find('#mGroup').focus();
+        return false;
+      }
+      if (ngKeywords === "" || ngKeywords === "null") {
+        alert("请输入需要投诉的负面词汇");
+        mainKeywordForm.find('#ngKeyword').focus();
+        return false;
+      }
       mainkeyObj.tsNegativeKeywords = [];
-      var ngKeywords = $('#mainKeywordForm').find('#ngKeyword').val().split(',');
-      $.each(ngKeywords,function (idx,val) {
-        var ngKeywordObj = {};
-        ngKeywordObj.keyword = val.trim();
+      $.each(ngKeywords, function (idx, val) {
+        var ngKeywordObj = {"keyword": val.trim()};
         mainkeyObj.tsNegativeKeywords.push(ngKeywordObj);
       });
-      var savaFlag = true;
-      if(mainkeyObj.keyword==null||mainkeyObj.keyword===""){
-        alert("关键字不能为空");
-        $('#mainKeywordForm').find('#mKeyword').focus();
-        savaFlag = false;
-        return false;
-      }
-      if(mainkeyObj.group=="-----------请 选 择 城 市-----------"||mainkeyObj.keyword===""){
-        alert("请选择有效城市");
-        $('#mainKeywordForm').find('#mGroup').focus();
-        savaFlag = false;
-        return false;
-      }
-      if(ngKeywords==null||ngKeywords==""||ngKeywords=="null"){
-        alert("请输入需要投诉的负面词汇");
-        $('#mainKeywordForm').find('#ngKeyword').focus();
-        savaFlag = false;
-        return false;
-      }
-      if(savaFlag){
-        $.ajax({
-          url: '/spring/complaints/save',
-          data: JSON.stringify(mainkeyObj),
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-          timeout: 5000,
-          type: 'POST',
-          success: function (data) {
-            if (data != null && data != "") {
-              showInfo("保存成功！", self);
-              window.location.reload();
-            } else {
-              showInfo("保存失败！", self);
-              window.location.reload();
-            }
-          },
-          error: function () {
+      $.ajax({
+        url: '/spring/complaints/save',
+        data: JSON.stringify(mainkeyObj),
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        timeout: 5000,
+        type: 'POST',
+        success: function (result) {
+          if (result) {
+            showInfo("保存成功！", self);
+            window.location.reload();
+          } else {
             showInfo("保存失败！", self);
+            window.location.reload();
           }
-        });
-        $("#showAddMainKeywordDlog").dialog("close");
-        $('#mainKeywordForm')[0].reset();
-      }
+        },
+        error: function () {
+          showInfo("保存失败！", self);
+        }
+      });
+      $("#showAddMainKeywordDlog").dialog("close");
+      $('#mainKeywordForm')[0].reset();
     }
     //通过uuid查找mainKey对象
-    function getOneMainKeyword(uuid) {
+    function getMainKeyword(uuid) {
       $.ajax({
         url: '/spring/complaints/findTSMainKeywordById/' + uuid,
         type: 'Get',
-        success: function (data) {
-          if (data != null ) {
-            var mainKeyword = data;
-            initMainKeywordDialog(mainKeyword);
-            showAddMainKeywordDlog(mainKeyword.uuid);
+        success: function (tsMainKeyword) {
+          if (tsMainKeyword != null ) {
+            initMainKeywordDialog(tsMainKeyword);
+            showAddMainKeywordDlog(tsMainKeyword.uuid);
           } else {
             showInfo("获取信息失败！", self);
           }
@@ -137,16 +127,17 @@
       });
     }
     function initMainKeywordDialog(mainKeyword) {
-      $("#mainKeywordForm").find("#mUuid").val(mainKeyword.uuid);
-      $("#mainKeywordForm").find("#mKeyword").val(mainKeyword.keyword);
-      $("#mainKeywordForm").find("#mGroup").val(mainKeyword.group);
+      var mainKeywordForm = $("#mainKeywordForm");
+      mainKeywordForm.find("#mUuid").val(mainKeyword.uuid);
+      mainKeywordForm.find("#mKeyword").val(mainKeyword.keyword);
+      mainKeywordForm.find("#mGroup").val(mainKeyword.group);
       var ngKeyword =  mainKeyword.tsNegativeKeywords;
-      var str = '';
+      var tmpNegativeKeywords = '';
       $.each(ngKeyword,function (idx,val) {
-          str = str + val.keyword+',';
+          tmpNegativeKeywords = tmpNegativeKeywords + val.keyword+',';
       });
-      var info = str.substring(0,str.length-1);
-      $("#mainKeywordForm").find("#ngKeyword").val(info);
+      var negativeKeywords = tmpNegativeKeywords.substring(0,tmpNegativeKeywords.length-1);
+      mainKeywordForm.find("#ngKeyword").val(negativeKeywords);
     }
 
     //删除
@@ -155,8 +146,8 @@
       $.ajax({
         url: '/spring/complaints/delete/' + uuid,
         type: 'Get',
-        success: function (data) {
-          if (data) {
+        success: function (result) {
+          if (result) {
             showInfo("删除成功！", self);
             window.location.reload();
           } else {
@@ -440,7 +431,7 @@
                 <div id="div2"></div>
             </tr>
             <c:forEach items="${pageInfo.content }" var="mainkey">
-                <tr onmouseover="doOver(this)" onmouseout="doOut(this)" ondblclick="getOneMainKeyword('${mainkey.uuid}')">
+                <tr onmouseover="doOver(this)" onmouseout="doOut(this)" ondblclick="getMainKeyword('${mainkey.uuid}')">
                     <td><input type="checkbox" name="uuid" value="${mainkey.uuid}" /></td>
                     <input type="hidden" id="mkUuid" value="${mainkey.uuid}"/>
                     <td>${mainkey.keyword }</td>
@@ -464,13 +455,13 @@
                                 ${mainkey.updateTime}
                             </c:when>
                             <c:otherwise>
-                                <fmt:formatDate value="${mainkey.updateTime}" pattern="yyyy-MM-dd mm:HH:ss"/>
+                                <fmt:formatDate value="${mainkey.updateTime}" type="both"/>
                             </c:otherwise>
                         </c:choose>
                     </td>
                     <td><fmt:formatDate value="${mainkey.createTime}"
-                                        pattern="yyyy-MM-dd mm:HH:ss"/></td>
-                    <td>&nbsp;&nbsp;&nbsp;<a href="javascript:getOneMainKeyword('${mainkey.uuid}')">修改</a>&nbsp;&nbsp;&nbsp;
+                                        type="both"/></td>
+                    <td>&nbsp;&nbsp;&nbsp;<a href="javascript:getMainKeyword('${mainkey.uuid}')">修改</a>&nbsp;&nbsp;&nbsp;
                     <a href="javascript:deleteMainKeyword('${mainkey.uuid}')">删除</a></td>
                 </tr>
             </c:forEach>
@@ -488,11 +479,11 @@
                     <td>地区分组</td>
                     <td>
                         <select id="mGroup" style="width: 250px;">
-                            <option>-----------请 选 择 城 市-----------</option>
-                            <option>北京</option>
-                            <option>上海</option>
-                            <option>广州</option>
-                            <option>深圳</option>
+                            <option value="">-----------请 选 择 城 市-----------</option>
+                            <option value="北京">北京</option>
+                            <option value="上海">上海</option>
+                            <option value="广州">广州</option>
+                            <option value="深圳">深圳</option>
                         </select>
                     </td>
                 </tr>
