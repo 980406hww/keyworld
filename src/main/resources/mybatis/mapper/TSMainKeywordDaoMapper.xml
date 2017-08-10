@@ -55,7 +55,7 @@
         ORDER BY m.fComplaintsTime
     </select>
 
-    <select id="getTSmainKeywordCount" parameterType="com.keymanager.monitoring.entity.TSMainKeyword" resultType="java.lang.Integer">
+    <select id="getTSMainKeywordCount" parameterType="com.keymanager.monitoring.entity.TSMainKeyword" resultType="java.lang.Integer">
         SELECT count(fUuid)
         FROM t_ts_main_keyword
         WHERE 1=1

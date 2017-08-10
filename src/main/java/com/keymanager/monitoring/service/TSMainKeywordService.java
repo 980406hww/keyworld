@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.dao.TSMainKeywordDao;
 import com.keymanager.monitoring.entity.TSMainKeyword;
 import com.keymanager.monitoring.entity.TSNegativeKeyword;
+import com.keymanager.monitoring.vo.PageInfo;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  * Created by shunshikj08 on 2017/8/1.
@@ -25,6 +27,34 @@ public class TSMainKeywordService extends ServiceImpl<TSMainKeywordDao, TSMainKe
 
     @Autowired
     private TSNegativeKeywordService tsNegativeKeywordService;
+
+    public ModelAndView findTSMainKeywordsCode(int currentPage,int displaysRecords,String keyword,String  group){
+        PageInfo<TSMainKeyword> pageInfo = new PageInfo<TSMainKeyword>();
+        Map<String,Object> items = new HashMap<String, Object>();
+        TSMainKeyword tsMainKeyword = new TSMainKeyword();
+        pageInfo.setCurrentpage(currentPage);
+        pageInfo.setDisplaysRecords(displaysRecords);
+        items.put("pageInfo",pageInfo);
+        tsMainKeyword.setKeyword(keyword);
+        tsMainKeyword.setGroup(group);
+        items.put("tsMainKeyword",tsMainKeyword);
+        pageInfo.setTotalSize(getTSmainKeywordCount(tsMainKeyword));
+        if (pageInfo.getCurrentpage()<1) {
+            pageInfo.setCurrentpage(1);
+        }
+        else if (pageInfo.getCurrentpage()>=pageInfo.getTotalPage()) {
+            pageInfo.setCurrentpage(pageInfo.getTotalPage());
+        }
+        List<TSMainKeyword> tsMainKeywords = searchTSMainKeywords(items);
+        pageInfo.setContent(tsMainKeywords);
+        Map<String,Object> searchCondition = new HashMap<String, Object>();
+        searchCondition.put("keyword",keyword);
+        searchCondition.put("group",group);
+        pageInfo.setSearchCondition(searchCondition);
+        ModelAndView modelAndView = new ModelAndView("/complaints/show");
+        modelAndView.addObject("pageInfo",pageInfo);
+        return modelAndView;
+    }
 
     public List<TSMainKeyword> searchTSMainKeywords(Map<String,Object> items) {
         List<TSMainKeyword> tsMainKeywordList = tsMainKeywordDao.findTSMainKeywords(items);
