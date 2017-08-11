@@ -64,22 +64,22 @@ public class ComplaintsReportService {
       try {
         complaintsReportMailService.sendComplaintsReportOver3Times(PCOver3TimestSmainKeywordVOS,
             phoneOver3TimestSmainKeywordVOS);
-//        if (CollectionUtils.isNotEmpty(PCOver3TimestSmainKeywordVOS)) {
-//          TSNegativeKeyword tsNegativeKeyword = new TSNegativeKeyword();
-//          for (ComplaintMailVO tSmainKeyWordVO : PCOver3TimestSmainKeywordVOS) {
-//            tsNegativeKeyword.setUuid(tSmainKeyWordVO.getTsNegativeKeywordUuid());
-//            tsNegativeKeyword.setPcEmailSentOver3Times(1);
-//            tsNegativeKeywordService.updateById(tsNegativeKeyword);
-//          }
-//        }
-//        if (CollectionUtils.isNotEmpty(phoneOver3TimestSmainKeywordVOS)) {
-//          TSNegativeKeyword tsNegativeKeyword = new TSNegativeKeyword();
-//          for (ComplaintMailVO tSmainKeyWordVO : phoneOver3TimestSmainKeywordVOS) {
-//            tsNegativeKeyword.setUuid(tSmainKeyWordVO.getTsNegativeKeywordUuid());
-//            tsNegativeKeyword.setPhoneEmailSentOver3Times(1);
-//            tsNegativeKeywordService.updateById(tsNegativeKeyword);
-//          }
-//        }
+        if (CollectionUtils.isNotEmpty(PCOver3TimestSmainKeywordVOS)) {
+          TSNegativeKeyword tsNegativeKeyword = new TSNegativeKeyword();
+          for (ComplaintMailVO tSmainKeyWordVO : PCOver3TimestSmainKeywordVOS) {
+            tsNegativeKeyword.setUuid(tSmainKeyWordVO.getTsNegativeKeywordUuid());
+            tsNegativeKeyword.setPcEmailSentOver3Times(1);
+            tsNegativeKeywordService.updateById(tsNegativeKeyword);
+          }
+        }
+        if (CollectionUtils.isNotEmpty(phoneOver3TimestSmainKeywordVOS)) {
+          TSNegativeKeyword tsNegativeKeyword = new TSNegativeKeyword();
+          for (ComplaintMailVO tSmainKeyWordVO : phoneOver3TimestSmainKeywordVOS) {
+            tsNegativeKeyword.setUuid(tSmainKeyWordVO.getTsNegativeKeywordUuid());
+            tsNegativeKeyword.setPhoneEmailSentOver3Times(1);
+            tsNegativeKeywordService.updateById(tsNegativeKeyword);
+          }
+        }
       }catch (MessagingException e){
         logger.error("构造邮件失败", e);
       } catch (Exception e) {
