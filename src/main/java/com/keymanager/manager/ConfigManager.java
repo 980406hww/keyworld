@@ -12,6 +12,8 @@ public class ConfigManager {
 	public final static String CONFIG_KEY_PAGE_PC_PERCENTAGE = "PCPercentage";
 	public final static String CONFIG_KEY_PAGE_PHONE_PERCENTAGE = "PhonePercentage";
 	public final static String CONFIG_KEY_MAX_INVALID_COUNT = "MaxInvalidCount";
+	public final static String CONFIG_KEY_VMWARE = "VMWARE";
+
 	private static int recordCount;
 	private static int currPage = 0;
 	private static int pageCount = 0;
