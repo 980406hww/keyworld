@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.monitoring.dao.TSNegativeKeywordDao">
 
-    <select id="findNegativeKeywordsByMainkeyUuid" resultType="com.keymanager.monitoring.entity.TSNegativeKeyword">
+    <select id="findNegativeKeywordsByMainKeywordUuid" resultType="com.keymanager.monitoring.entity.TSNegativeKeyword">
         SELECT
             ng.fUuid AS `uuid`,
             ng.fTSMainKeywordUuid AS `tsMainKeywordUuid`,
@@ -34,7 +34,7 @@
     </select>
 
     <!--删除 -->
-    <delete id="deleteByTSmainKeywordUuid">
+    <delete id="deleteByTSMainKeywordUuid">
         DELETE FROM t_ts_negative_keyword WHERE  fTSMainKeywordUuid = #{tsMainKeywordUuid}
     </delete>
 

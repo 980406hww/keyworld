@@ -22,10 +22,10 @@ public class TSNegativeKeywordService extends ServiceImpl<TSNegativeKeywordDao, 
     private TSNegativeKeywordDao tsNegativeKeywordDao;
 
     public List<TSNegativeKeyword> findNegativeKeywordsByMainKeywordUuid(Long uuid){
-        return tsNegativeKeywordDao.findNegativeKeywordsByMainkeyUuid(uuid);
+        return tsNegativeKeywordDao.findNegativeKeywordsByMainKeywordUuid(uuid);
     }
-    public void deleteByTSmainKeywordUuid(Long uuid){
-        tsNegativeKeywordDao.deleteByTSmainKeywordUuid(uuid);
+    public void deleteByTSMainKeywordUuid(Long uuid){
+        tsNegativeKeywordDao.deleteByTSMainKeywordUuid(uuid);
     }
     public List<ComplaintMailVO> complaintsReportContentPC2weeks(){
         return tsNegativeKeywordDao.complaintsReportContentPC2weeks();
@@ -40,7 +40,7 @@ public class TSNegativeKeywordService extends ServiceImpl<TSNegativeKeywordDao, 
         return tsNegativeKeywordDao.complaintsReportContentPhone3times();
     }
 
-    public void exchangeNegativeKeywordsData(List<TSNegativeKeyword> newNegativeKeywordList) {
+    public void updateNegativeKeywords(List<TSNegativeKeyword> newNegativeKeywordList) {
         for(TSNegativeKeyword tsNegativeKeyword : newNegativeKeywordList) {
             tsNegativeKeywordDao.updateById(tsNegativeKeyword);
         }

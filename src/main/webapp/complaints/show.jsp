@@ -27,9 +27,34 @@
     /*页面进入即刻加载*/
     $(function() {
       $("#showAddMainKeywordDlog").hide();
-      var displaysRecords =  $('#showMainKeywordBottomDiv').find('#displaysRecords').val();
-      $('#showMainKeywordBottomDiv').find('#chooseRecords').val(displaysRecords);
+      pageLoad();
     });
+    function pageLoad() {
+      var  showMainKeywordBottomDiv = $('#showMainKeywordBottomDiv');
+      var displaysRecords =  showMainKeywordBottomDiv.find('#displaysRecordsHidden').val();
+      showMainKeywordBottomDiv.find('#chooseRecords').val(displaysRecords);
+      var selectGroup = $('#serachMainKeywordForm').find("#itemGroupHidden").val();
+      $('#serachMainKeywordForm').find("#itemGroup").val(selectGroup);
+      var pages  = showMainKeywordBottomDiv.find('#pagesHidden').val();
+      showMainKeywordBottomDiv.find('#pagesHidden').val(pages);
+      var currentPage  = showMainKeywordBottomDiv.find('#currentPageHidden').val();
+      showMainKeywordBottomDiv.find('#currentPageHidden').val(currentPage);
+      if(currentPage<=1){
+        currentPage=1;
+        showMainKeywordBottomDiv.find("#fisrtButton").attr("disabled","disabled");
+        showMainKeywordBottomDiv.find("#upButton").attr("disabled","disabled");
+      }else if(currentPage>=pages){
+        currentPage=pages;
+        showMainKeywordBottomDiv.find("#nextButton").attr("disabled","disabled");
+        showMainKeywordBottomDiv.find("#lastButton").attr("disabled","disabled");
+      }else {
+        showMainKeywordBottomDiv.find("#firstButton").removeAttr("disabled");
+        showMainKeywordBottomDiv.find("#upButton").removeAttr("disabled");
+        showMainKeywordBottomDiv.find("#nextButton").removeAttr("disabled");
+        showMainKeywordBottomDiv.find("#lastButton").removeAttr("disabled");
+      }
+
+    }
     //增加
     function showAddMainKeywordDlog(uuid) {
       if(uuid==null){
@@ -207,50 +232,19 @@
     }
 
     //查询
-    function serachMainKeywords(cp,ps) {
-      var tsMainKeyword = {};
-      tsMainKeyword.keyword = $("#serachMainKeyword").find("#itemkeywork").val();
-      tsMainKeyword.group = $("#serachMainKeyword").find("#itemgroup").val();
-      tsMainKeyword.tsNegativeKeywords = [];
-      var ngKeywordObj = {};
-      ngKeywordObj.keyword = '';
-      tsMainKeyword.tsNegativeKeywords.push(ngKeywordObj);
-
-      var currentPageSD=$('#showMainKeywordBottomDiv').find("#currentpage").val();
-      var displaysRecordsSD=$('#showMainKeywordBottomDiv').find("#displaysRecords").val();
-      var currentPage = cp!=currentPageSD?cp:currentPageSD;
-      var displaysRecords = ps!=displaysRecordsSD?ps:displaysRecordsSD;
-      
-     var url= '/spring/complaints/findTSMainKeywords?currentPage='+currentPage+'&displaysRecords='+displaysRecords+'&keyword='+tsMainKeyword.keyword+'&group='+tsMainKeyword.group;
+    function serachMainKeywords(currentPage, displaysRecords) {
+      var keyword = $("#serachMainKeyword").find("#itemkeywork").val();
+      var group = $("#serachMainKeyword").find("#itemgroup").val();
+      var showMainKeywordBottomDiv = $("#showMainKeywordBottomDiv");
+      var pages = showMainKeywordBottomDiv.find("#pagesHidden").val();
+     var url= '/spring/complaints/findTSMainKeywords?currentPage='+currentPage+'&displaysRecords='+displaysRecords+'&keyword='+ keyword+'&group='+ group;
       window.location.href=url;
-     /*$.ajax({
-        url: url,
-        data: JSON.stringify(tsMainKeyword),//传回一个查询对象{'tsMainKeyword':}
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        timeout: 5000,
-        type: 'GET',
-        success: function (data) {
-          if (data != null && data != "") {
-            showInfo("更新成功！", self);
-            window.location.reload();
-          } else {
-            showInfo("更新失败！", self);
-            window.location.reload();
-          }
-        },
-        error: function () {
-          showInfo("更新失败！", self);
-        }
-      });*/
     }
     //改变当前页
-    function chooseRecords(cp,ps) {
-      $('#showMainKeywordBottomDiv').find("#currentpage").val(cp);
-      $('#showMainKeywordBottomDiv').find("#displaysRecords").val(ps);
-      serachMainKeywords(cp,ps);
+    function chooseRecords(currentPage, displayRecords) {
+      $('#showMainKeywordBottomDiv').find("#currentPageHidden").val(currentPage);
+      $('#showMainKeywordBottomDiv').find("#displaysRecordsHidden").val(displayRecords);
+      serachMainKeywords(currentPage, displayRecords);
     }
 
     //弹出提示框
@@ -406,8 +400,19 @@
         </div>
         <div id="serachMainKeyword">
            <form id="serachMainKeywordForm" action="/spring/complaints/findTSMainKeywords" method="post">
-               主关键词<input id="itemkeywork" name="itemkeywork" type="text" value="${pageInfo.searchCondition.get("keyword")}"/>&nbsp;&nbsp;
-               区域分组<input id="itemGroup" name="itemGroup" type="text" value="${pageInfo.searchCondition.get("group")}"/>&nbsp;&nbsp;
+               主关键词<input id="itemkeywork" name="itemkeywork" type="text" value="${page.condition.get("keyword")}"/>&nbsp;&nbsp;
+               <input id="itemGroupHidden" type="hidden" value="${page.condition.get("group")}"/>
+               区域分组<select id="itemGroup" name="itemGroup" style="height: 21px;">
+                           <option value="">请 选 择 城 市</option>
+                           <option value="北京">北京</option>
+                           <option value="上海">上海</option>
+                           <option value="广州">广州</option>
+                           <option value="深圳">深圳</option>
+                       </select>
+               &nbsp;&nbsp;
+               <input type="hidden" id="currentPageHidden" name="currentPageHidden" value="${page.current}"/>
+               <input type="hidden" id="displaysRecordsHidden" name="displaysRecordsHidden" value="${page.size}"/>
+
                <input type="submit" class="ui-button ui-widget ui-corner-all" style="z-index: 0";
                        value="查询">&nbsp;&nbsp;&nbsp;
                <input type="button" class="ui-button ui-widget ui-corner-all"  style="z-index: 0";
@@ -430,7 +435,7 @@
                 <div id="div1"></div>
                 <div id="div2"></div>
             </tr>
-            <c:forEach items="${pageInfo.content }" var="mainkey">
+            <c:forEach items="${page.records }" var="mainkey">
                 <tr onmouseover="doOver(this)" onmouseout="doOut(this)" ondblclick="getMainKeyword('${mainkey.uuid}')">
                     <td><input type="checkbox" name="uuid" value="${mainkey.uuid}" /></td>
                     <input type="hidden" id="mkUuid" value="${mainkey.uuid}"/>
@@ -499,21 +504,22 @@
     </div>
 <hr>
     <div id="showMainKeywordBottomDiv">
-        <a class="ui-button ui-widget ui-corner-all" href="javascript:serachMainKeywords(1,'${pageInfo.displaysRecords}')">首页</a>&nbsp;&nbsp;&nbsp;&nbsp;
-            <a class="ui-button ui-widget ui-corner-all" href="javascript:serachMainKeywords('${pageInfo.currentpage-1}','${pageInfo.displaysRecords}')">上一页</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                ${pageInfo.currentpage}/${pageInfo.totalPage}&nbsp;&nbsp;
-                <a class="ui-button ui-widget ui-corner-all"  href="javascript:serachMainKeywords('${pageInfo.currentpage+1}','${pageInfo.displaysRecords}')">下一页</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a class="ui-button ui-widget ui-corner-all" href="javascript:serachMainKeywords('${pageInfo.totalPage}','${pageInfo.displaysRecords}')">末页</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                        总记录数:${pageInfo.totalSize}&nbsp;&nbsp;&nbsp;&nbsp;
-                        每页显示条数:<select id="chooseRecords"  onchange="chooseRecords(${pageInfo.currentpage},this.value)">
-                            <option>15</option>
+        <input id="fisrtButton" class="ui-button ui-widget ui-corner-all" type="button"  onclick="serachMainKeywords(1,'${page.size}')" value="首页"/>&nbsp;&nbsp;&nbsp;&nbsp;
+        <input id="upButton" type="button" class="ui-button ui-widget ui-corner-all" onclick="serachMainKeywords('${page.current-1}','${page.size}')" value="上一页"/>&nbsp;&nbsp;&nbsp;&nbsp;
+                ${page.current}/${page.pages}&nbsp;&nbsp;
+        <input id="nextButton"  type="button" class="ui-button ui-widget ui-corner-all"  onclick="serachMainKeywords('${page.current+1>=page.pages?page.pages:page.current+1}','${page.size}')" value="下一页">&nbsp;&nbsp;&nbsp;&nbsp;
+        <input id="lastButton" type="button" class="ui-button ui-widget ui-corner-all" onclick="serachMainKeywords('${page.pages}','${page.size}')" value="末页">&nbsp;&nbsp;&nbsp;&nbsp;
+                        总记录数:${page.total}&nbsp;&nbsp;&nbsp;&nbsp;
+                        每页显示条数:<select id="chooseRecords"  onchange="chooseRecords(${page.current},this.value)">
+                            <option>3</option>
                             <option>25</option>
                             <option>35</option>
                             <option>45</option>
                         </select>
         <%--用于存储pageInfo--%>
-        <input type="hidden" id="currentpage" value="${pageInfo.currentpage}"/>
-        <input type="hidden" id="displaysRecords" value="${pageInfo.displaysRecords}"/>
+        <input type="hidden" id="currentPageHidden" value="${page.current}"/>
+        <input type="hidden" id="displaysRecordsHidden" value="${page.size}"/>
+        <input type="hidden" id="pagesHidden" value="${page.pages}"/>
     </div>
 </div>
 </body>

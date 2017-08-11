@@ -1,5 +1,6 @@
 package com.keymanager.monitoring.service;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.dao.TSMainKeywordDao;
 import com.keymanager.monitoring.entity.TSMainKeyword;
@@ -28,44 +29,19 @@ public class TSMainKeywordService extends ServiceImpl<TSMainKeywordDao, TSMainKe
     @Autowired
     private TSNegativeKeywordService tsNegativeKeywordService;
 
-    public ModelAndView findTSMainKeywordsCode(int currentPage,int displaysRecords,String keyword,String  group){
-        PageInfo<TSMainKeyword> pageInfo = new PageInfo<TSMainKeyword>();
-        Map<String,Object> items = new HashMap<String, Object>();
-        TSMainKeyword tsMainKeyword = new TSMainKeyword();
-        pageInfo.setCurrentpage(currentPage);
-        pageInfo.setDisplaysRecords(displaysRecords);
-        items.put("pageInfo",pageInfo);
-        tsMainKeyword.setKeyword(keyword);
-        tsMainKeyword.setGroup(group);
-        items.put("tsMainKeyword",tsMainKeyword);
-        pageInfo.setTotalSize(getTSmainKeywordCount(tsMainKeyword));
-        if (pageInfo.getCurrentpage()<1) {
-            pageInfo.setCurrentpage(1);
-        }
-        else if (pageInfo.getCurrentpage()>=pageInfo.getTotalPage()) {
-            pageInfo.setCurrentpage(pageInfo.getTotalPage());
-        }
-        List<TSMainKeyword> tsMainKeywords = searchTSMainKeywords(items);
-        pageInfo.setContent(tsMainKeywords);
-        Map<String,Object> searchCondition = new HashMap<String, Object>();
-        searchCondition.put("keyword",keyword);
-        searchCondition.put("group",group);
-        pageInfo.setSearchCondition(searchCondition);
-        ModelAndView modelAndView = new ModelAndView("/complaints/show");
-        modelAndView.addObject("pageInfo",pageInfo);
-        return modelAndView;
-    }
 
-    public List<TSMainKeyword> searchTSMainKeywords(Map<String,Object> items) {
-        List<TSMainKeyword> tsMainKeywordList = tsMainKeywordDao.findTSMainKeywords(items);
+    public Page<TSMainKeyword> searchTSMainKeywords(Page<TSMainKeyword> page, String keyword, String group) {
+        List<TSMainKeyword> tsMainKeywordList = tsMainKeywordDao.findTSMainKeywords(page, keyword, group);
+        page.setRecords(tsMainKeywordList);
         for(TSMainKeyword tsMainKeyword : tsMainKeywordList){
             //负词需要根据mainkeyworduuid
             List<TSNegativeKeyword> tsNegativeKeywords = tsNegativeKeywordService.findNegativeKeywordsByMainKeywordUuid(tsMainKeyword.getUuid());
             tsMainKeyword.setTsNegativeKeywords(tsNegativeKeywords);
         }
-        return tsMainKeywordList;
+        return page;
     }
-    public TSMainKeyword searchTSMainKeyword(Long uuid) {
+
+    public TSMainKeyword getTSMainKeyword(Long uuid) {
         TSMainKeyword tsMainKeyword = tsMainKeywordDao.selectById(uuid);
             //负词需要根据mainkeyworduuid
             if(null!=tsMainKeyword){
@@ -106,6 +82,7 @@ public class TSMainKeywordService extends ServiceImpl<TSMainKeywordDao, TSMainKe
             }
         }
     }
+
     public void updateTSNegativeKeyword(List<TSNegativeKeyword> oldNegativeKeywords,List<TSNegativeKeyword> newNegativeKeywords,Long tsMainKeywordUuid){
         Map<String ,TSNegativeKeyword> oldNegativeKeywordMap = new HashMap<String, TSNegativeKeyword>();
         for(TSNegativeKeyword oldTsNegativeKeyword :oldNegativeKeywords){
@@ -131,7 +108,7 @@ public class TSMainKeywordService extends ServiceImpl<TSMainKeywordDao, TSMainKe
     }
 
     public boolean deleteOne(Long uuid){//删除主词,负面词一并删除
-        tsNegativeKeywordService.deleteByTSmainKeywordUuid(uuid);
+        tsNegativeKeywordService.deleteByTSMainKeywordUuid(uuid);
         tsMainKeywordDao.deleteById(uuid);
         return true;
     }
@@ -141,10 +118,6 @@ public class TSMainKeywordService extends ServiceImpl<TSMainKeywordDao, TSMainKe
             deleteOne(Long.valueOf(uuid));
         }
         return true;
-    }
-    //总记录数
-    public Integer getTSmainKeywordCount(TSMainKeyword tsMainKeyword){
-        return tsMainKeywordDao.getTSMainKeywordCount(tsMainKeyword);
     }
 
     //爬虫专用
@@ -160,6 +133,7 @@ public class TSMainKeywordService extends ServiceImpl<TSMainKeywordDao, TSMainKe
         }
         return tsMainKeyword;
     }
+
     private void startTsMainKeywordsForComplaints(Long uuid){
         TSMainKeyword tsMainKeyword  = tsMainKeywordDao.selectById(uuid);
         if(tsMainKeyword!=null){

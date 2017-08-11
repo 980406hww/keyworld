@@ -1,5 +1,6 @@
 package com.keymanager.monitoring.controller.rest;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.TSMainKeywordCriteria;
 import com.keymanager.monitoring.entity.*;
@@ -9,9 +10,7 @@ import com.keymanager.monitoring.entity.User;
 import com.keymanager.monitoring.service.TSMainKeywordService;
 import com.keymanager.monitoring.service.TSNegativeKeywordService;
 import com.keymanager.monitoring.service.UserService;
-import com.keymanager.monitoring.vo.PageInfo;
 
-import java.util.HashMap;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,19 +68,31 @@ public class ComplaintsRestController extends SpringMVCBaseController {
 
     @RequestMapping(value = "/findTSMainKeywords", method = RequestMethod.GET)
     public ModelAndView findTSMainKeywords(@RequestParam(defaultValue = "1") int currentPage,@RequestParam(defaultValue="25") int displaysRecords,@RequestParam(defaultValue="") String keyword,@RequestParam(defaultValue="") String  group){
-        return tsMainKeywordService.findTSMainKeywordsCode(currentPage,displaysRecords,keyword,group);
+        return findTSMainKeywordsAndReturnView(currentPage,displaysRecords,keyword,group);
     }
 
     @RequestMapping(value = "/findTSMainKeywords", method = RequestMethod.POST)
-    public ModelAndView findTSMainKeywords(@RequestParam(defaultValue = "1") int currentPage,@RequestParam(defaultValue="25") int displaysRecords,HttpServletRequest httpServletRequest){
+    public ModelAndView findTSMainKeywords(HttpServletRequest httpServletRequest){
         String keyword = httpServletRequest.getParameter("itemkeywork");
         String group = httpServletRequest.getParameter("itemGroup");
-        return tsMainKeywordService.findTSMainKeywordsCode(currentPage,displaysRecords,keyword,group);
+        int currentPage  = Integer.parseInt(httpServletRequest.getParameter("currentPageHidden"));
+        int displaysRecords = Integer.parseInt(httpServletRequest.getParameter("displaysRecordsHidden"));
+        return findTSMainKeywordsAndReturnView(currentPage,displaysRecords,keyword,group);
+    }
+
+    private ModelAndView findTSMainKeywordsAndReturnView(int currentPage,int displaysRecords,String keyword,String  group){
+        Page<TSMainKeyword> page = new Page<TSMainKeyword>(currentPage, displaysRecords);
+        page.getCondition().put("keyword",keyword);
+        page.getCondition().put("group",group);
+        page = tsMainKeywordService.searchTSMainKeywords(page, keyword, group);
+        ModelAndView modelAndView = new ModelAndView("/complaints/show");
+        modelAndView.addObject("page", page);
+        return modelAndView;
     }
 
     @RequestMapping(value = "/findTSMainKeywordById/{uuid}", method = RequestMethod.GET)
     public ResponseEntity<?> findTSMainKeyword(@PathVariable("uuid") Long uuid){
-        return new ResponseEntity<Object>(tsMainKeywordService.searchTSMainKeyword(uuid), HttpStatus.OK);
+        return new ResponseEntity<Object>(tsMainKeywordService.getTSMainKeyword(uuid), HttpStatus.OK);
     }
 
     @RequestMapping(value ="/delete/{uuid}", method = RequestMethod.GET)
@@ -96,8 +107,8 @@ public class ComplaintsRestController extends SpringMVCBaseController {
     }
 
     //提供爬虫使用
-    @RequestMapping(value = "/getTsMainKeywordsForComplaints", method = RequestMethod.POST)
-    public ResponseEntity<?> getTsMainKeywordsForComplaints(@RequestBody TSMainKeywordCriteria tsMainKeywordCriteria) throws Exception{
+    @RequestMapping(value = "/getTSMainKeywordsForComplaints", method = RequestMethod.POST)
+    public ResponseEntity<?> getTSMainKeywordsForComplaints(@RequestBody TSMainKeywordCriteria tsMainKeywordCriteria) throws Exception{
         if(tsMainKeywordCriteria.getUserName() != null && tsMainKeywordCriteria.getPassword() != null){
             User user = userService.getUser(tsMainKeywordCriteria.getUserName());
             if(user != null && user.getPassword().equals(tsMainKeywordCriteria.getPassword())){
@@ -109,14 +120,14 @@ public class ComplaintsRestController extends SpringMVCBaseController {
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
-    @RequestMapping(value = "/updateTsMainKeywordsForComplaints", method = RequestMethod.POST)
+    @RequestMapping(value = "/updateTSMainKeywordsForComplaints", method = RequestMethod.POST)
     public ResponseEntity<?> updateTsMainKeywordsForComplaints(@RequestBody TSMainKeywordCriteria tsMainKeywordCriteria){
         if(tsMainKeywordCriteria.getUserName() != null && tsMainKeywordCriteria.getPassword() != null){
             User user = userService.getUser(tsMainKeywordCriteria.getUserName());
             if(user != null && user.getPassword().equals(tsMainKeywordCriteria.getPassword())){
                 List<TSNegativeKeyword> oldNegativeKeywordList = tsNegativeKeywordService.findNegativeKeywordsByMainKeywordUuid(tsMainKeywordCriteria.getTsMainKeyword().getUuid());
                 // 更新Negative
-                tsNegativeKeywordService.exchangeNegativeKeywordsData(tsMainKeywordCriteria.getTsMainKeyword().getTsNegativeKeywords());
+                tsNegativeKeywordService.updateNegativeKeywords(tsMainKeywordCriteria.getTsMainKeyword().getTsNegativeKeywords());
                 // 添加Log
                 tsComplainLogService.addComplainLogByNegativeKeywords(tsMainKeywordCriteria.getTsMainKeyword().getTsNegativeKeywords());
                 return new ResponseEntity<Object>(true, HttpStatus.OK);

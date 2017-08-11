@@ -39,93 +39,51 @@ public class ComplaintsReportMailService {
   private JavaMailSender mailSender;
 
   private String emailFrom;
+  private String name;
+  private String toEmail;
 
   private Template complaintsReportTemplateOver2weeks;
   private Template complaintsReportTemplateOver3Times;
 
-  public void sendComplaintsReportOver2weeks(String username, String toEmail,
+  public void sendComplaintsReportOver2weeks(
       List<ComplaintMailVO> PCOver2WeekstSmainKeywordVOS,
-      List<ComplaintMailVO> phoneOver2WeekstSmainKeywordVOS) {
-    try {
+      List<ComplaintMailVO> phoneOver2WeekstSmainKeywordVOS) throws Exception{
       MimeMessage msg = mailSender.createMimeMessage();
       MimeMessageHelper helper = new MimeMessageHelper(msg, true, DEFAULT_ENCODING);
-      String[] toEmailArr = toEmail.split(",");
+      String[] toEmailArr = toEmail.split(";");
       helper.setTo(toEmailArr);
       helper.setFrom(emailFrom);
       helper.setSubject("两周内投诉失败的反馈记录");
       Map<String, Object> context = new HashMap<String, Object>();
-      context.put("username", username);
+      context.put("username", new String(name.getBytes("ISO8859-1"),"utf-8"));
       context.put("PCOver2weekstSmainKeyWordVOS", PCOver2WeekstSmainKeywordVOS);
       context.put("PhoneOver2weekstSmainKeyWordVOS", phoneOver2WeekstSmainKeywordVOS);
-      String content = FreeMarkerTemplateUtils.processTemplateIntoString(
-          complaintsReportTemplateOver2weeks, context);
+      String content = FreeMarkerTemplateUtils.processTemplateIntoString(complaintsReportTemplateOver2weeks, context);
       helper.setText(content, true);
       mailSender.send(msg);
       logger.info("HTML版邮件已发送");
-      if (CollectionUtils.isNotEmpty(PCOver2WeekstSmainKeywordVOS)) {
-        TSNegativeKeyword tsNegativeKeyword = new TSNegativeKeyword();
-        for (ComplaintMailVO tSmainKeyWordVO : phoneOver2WeekstSmainKeywordVOS) {
-          tsNegativeKeyword.setUuid(tSmainKeyWordVO.getTsNegativeKeywordUuid());
-            tsNegativeKeyword.setPcEmailSentOver2Weeks(1);
-          tsNegativeKeywordService.updateById(tsNegativeKeyword);
-        }
-      }
-      if (CollectionUtils.isNotEmpty(phoneOver2WeekstSmainKeywordVOS)) {
-        TSNegativeKeyword tsNegativeKeyword = new TSNegativeKeyword();
-        for (ComplaintMailVO tSmainKeyWordVO : phoneOver2WeekstSmainKeywordVOS) {
-          tsNegativeKeyword.setUuid(tSmainKeyWordVO.getTsNegativeKeywordUuid());
-            tsNegativeKeyword.setPhoneEmailSentOver2Weeks(1);
-          tsNegativeKeywordService.updateById(tsNegativeKeyword);
-        }
-      }
-    } catch (MessagingException e) {
-      logger.error("构造邮件失败", e);
-    } catch (Exception e) {
-      logger.error("发送邮件失败", e);
-    }
+
   }
 
-  public void sendComplaintsReportOver3Times(String username, String toEmail,
+  public void sendComplaintsReportOver3Times(
       List<ComplaintMailVO> PCOver3TimestSmainKeywordVOS,
-      List<ComplaintMailVO> phoneOver3TimestSmainKeywordVOS) {
-    try {
+      List<ComplaintMailVO> phoneOver3TimestSmainKeywordVOS) throws Exception{
       MimeMessage msg = mailSender.createMimeMessage();
       MimeMessageHelper helper = new MimeMessageHelper(msg, true, DEFAULT_ENCODING);
-      String[] toEmailArr = toEmail.split(",");
+      String[] toEmailArr = toEmail.split(";");
       helper.setTo(toEmailArr);
       helper.setFrom(emailFrom);
       helper.setSubject("反复出现3次投诉失败的反馈记录");
       Map<String, Object> context = new HashMap<String, Object>();
-      context.put("username", username);
+//      context.put("username", name);
+      context.put("username", new String(name.getBytes("ISO8859-1"),"utf-8"));
       context.put("PCOver3TimestSmainKeywordVOS", PCOver3TimestSmainKeywordVOS);
       context.put("phoneOver3TimestSmainKeywordVOS", phoneOver3TimestSmainKeywordVOS);
-      String content = FreeMarkerTemplateUtils.processTemplateIntoString(
-          complaintsReportTemplateOver3Times, context);
+      String content = FreeMarkerTemplateUtils.processTemplateIntoString(complaintsReportTemplateOver3Times, context);
       helper.setText(content, true);
 
       mailSender.send(msg);
       logger.info("HTML版邮件已发送");
-      if (CollectionUtils.isNotEmpty(PCOver3TimestSmainKeywordVOS)) {
-        TSNegativeKeyword tsNegativeKeyword = new TSNegativeKeyword();
-        for (ComplaintMailVO tSmainKeyWordVO : PCOver3TimestSmainKeywordVOS) {
-          tsNegativeKeyword.setUuid(tSmainKeyWordVO.getTsNegativeKeywordUuid());
-            tsNegativeKeyword.setPcEmailSentOver3Times(1);
-          tsNegativeKeywordService.updateById(tsNegativeKeyword);
-        }
-      }
-      if (CollectionUtils.isNotEmpty(phoneOver3TimestSmainKeywordVOS)) {
-        TSNegativeKeyword tsNegativeKeyword = new TSNegativeKeyword();
-        for (ComplaintMailVO tSmainKeyWordVO : phoneOver3TimestSmainKeywordVOS) {
-          tsNegativeKeyword.setUuid(tSmainKeyWordVO.getTsNegativeKeywordUuid());
-            tsNegativeKeyword.setPhoneEmailSentOver3Times(1);
-          tsNegativeKeywordService.updateById(tsNegativeKeyword);
-        }
-      }
-    } catch (MessagingException e) {
-      logger.error("构造邮件失败", e);
-    } catch (Exception e) {
-      logger.error("发送邮件失败", e);
-    }
   }
 
 
@@ -149,5 +107,13 @@ public class ComplaintsReportMailService {
 
   public void setEmailFrom(String emailFrom) {
     this.emailFrom = emailFrom;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public void setToEmail(String toEmail) {
+    this.toEmail = toEmail;
   }
 }
