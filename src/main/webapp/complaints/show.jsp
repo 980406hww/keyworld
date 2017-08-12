@@ -109,7 +109,7 @@
         mainkeyObj.tsNegativeKeywords.push(ngKeywordObj);
       });
       $.ajax({
-        url: '/spring/complaints/save',
+        url: '/internal/complaints/save',
         data: JSON.stringify(mainkeyObj),
         headers: {
           'Accept': 'application/json',
@@ -136,7 +136,7 @@
     //通过uuid查找mainKey对象
     function getMainKeyword(uuid) {
       $.ajax({
-        url: '/spring/complaints/findTSMainKeywordById/' + uuid,
+        url: '/internal/complaints/findTSMainKeywordById/' + uuid,
         type: 'Get',
         success: function (tsMainKeyword) {
           if (tsMainKeyword != null ) {
@@ -169,7 +169,7 @@
     function deleteMainKeyword(uuid) {
       if (confirm("确实要删除这个主关键字吗?") == false) return;
       $.ajax({
-        url: '/spring/complaints/delete/' + uuid,
+        url: '/internal/complaints/delete/' + uuid,
         type: 'Get',
         success: function (result) {
           if (result) {
@@ -207,7 +207,7 @@
       var postData = {};
       postData.uuids = uuids.split(",");
       $.ajax({
-        url: '/spring/complaints/deleteTSMainKeywords',
+        url: '/internal/complaints/deleteTSMainKeywords',
         data: JSON.stringify(postData),
         headers: {
           'Accept': 'application/json',
@@ -237,7 +237,7 @@
       var group = $("#serachMainKeyword").find("#itemgroup").val();
       var showMainKeywordBottomDiv = $("#showMainKeywordBottomDiv");
       var pages = showMainKeywordBottomDiv.find("#pagesHidden").val();
-     var url= '/spring/complaints/findTSMainKeywords?currentPage='+currentPage+'&displaysRecords='+displaysRecords+'&keyword='+ keyword+'&group='+ group;
+     var url= '/internal/complaints/findTSMainKeywords?currentPage='+currentPage+'&displaysRecords='+displaysRecords+'&keyword='+ keyword+'&group='+ group;
       window.location.href=url;
     }
     //改变当前页
@@ -399,7 +399,7 @@
             </table>
         </div>
         <div id="serachMainKeyword">
-           <form id="serachMainKeywordForm" action="/spring/complaints/findTSMainKeywords" method="post">
+           <form id="serachMainKeywordForm" action="/internal/complaints/findTSMainKeywords" method="post">
                主关键词<input id="itemkeywork" name="itemkeywork" type="text" value="${page.condition.get("keyword")}"/>&nbsp;&nbsp;
                <input id="itemGroupHidden" type="hidden" value="${page.condition.get("group")}"/>
                区域分组<select id="itemGroup" name="itemGroup" style="height: 21px;">

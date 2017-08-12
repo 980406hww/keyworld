@@ -551,7 +551,7 @@ function clearTitle(customerUuid, clearType){
 	postData.customerUuid = customerUuid;
 
 	$$$.ajax({
-		url: '/spring/customerkeyword/clearTitle',
+		url: '/internal/customerkeyword/clearTitle',
 		data: JSON.stringify(postData),
 		headers: {
 			'Accept': 'application/json',

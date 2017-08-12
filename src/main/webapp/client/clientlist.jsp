@@ -660,7 +660,7 @@
 			var postData = {};
 			postData.clientID = clientID;
 			$$$.ajax({
-				url: '/spring/clientStatus/changeTerminalType',
+				url: '/internal/clientStatus/changeTerminalType',
 				data: JSON.stringify(postData),
 				headers: {
 					'Accept': 'application/json',

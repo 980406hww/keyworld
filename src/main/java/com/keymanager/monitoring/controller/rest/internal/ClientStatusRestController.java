@@ -1,4 +1,4 @@
-package com.keymanager.monitoring.controller.rest;
+package com.keymanager.monitoring.controller.rest.internal;
 
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/spring/clientStatus")
+@RequestMapping(value = "/internal/clientStatus")
 public class ClientStatusRestController extends SpringMVCBaseController {
 	private static Logger logger = LoggerFactory.getLogger(ClientStatusRestController.class);
 

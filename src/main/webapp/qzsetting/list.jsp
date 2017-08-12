@@ -395,7 +395,7 @@
     function delQZSetting(uuid) {
         if (confirm("确实要删除这个全站设置吗?") == false) return;
         $$$.ajax({
-            url: '/spring/qzsetting/delete/' + uuid,
+            url: '/internal/qzsetting/delete/' + uuid,
             type: 'Get',
             success: function (data) {
                 if(data){
@@ -434,7 +434,7 @@
         var postData = {};
         postData.uuids = uuids.split(",");
         $$$.ajax({
-            url: '/spring/qzsetting/deleteQZSettings',
+            url: '/internal/qzsetting/deleteQZSettings',
             data: JSON.stringify(postData),
             headers: {
                 'Accept': 'application/json',
@@ -467,7 +467,7 @@
         var postData = {};
         postData.uuids = uuids;
         $$$.ajax({
-            url: '/spring/qzsetting/updateImmediately',
+            url: '/internal/qzsetting/updateImmediately',
             data: JSON.stringify(postData),
             headers: {
                 'Accept': 'application/json',
@@ -514,7 +514,7 @@
         }
         //通过qzSetinguuid查询多条数据  并填充数据
         $$$.ajax({
-            url: '/spring/qzsetting/getQZSetting/' + uuid,
+            url: '/internal/qzsetting/getQZSetting/' + uuid,
             type: 'Get',
             success: function (data) {
                 if(data != null && null != data.records && data.records.length > 0){
@@ -571,7 +571,7 @@
         chargeDialogObj.find("#qzSettingCustomer").val(contactPerson);
         chargeDialogObj.find("#qzSettingDomain").val(domain);
         $$$.ajax({
-            url: '/spring/qzchargelog/getQZChargeLog/' + uuid,
+            url: '/internal/qzchargelog/getQZChargeLog/' + uuid,
             type: 'Get',
             success: function (chargeInfos) {
                 if(chargeInfos != null && chargeInfos.length > 0){
@@ -863,7 +863,7 @@
           return;
         }
         $$$.ajax({
-          url: '/spring/qzsetting/save',
+          url: '/internal/qzsetting/save',
           data: JSON.stringify(qzSetting),
           headers: {
             'Accept': 'application/json',
@@ -899,7 +899,7 @@
       cancelChangeSetting();
       $("#chargeLogListTable  tr:not(:first,:last)").remove();
       $$$.ajax({
-        url: '/spring/qzchargelog/chargesList/' + uuid,
+        url: '/internal/qzchargelog/chargesList/' + uuid,
         type: 'Get',
         success: function (qzChargeLogs) {
           if (qzChargeLogs != null && qzChargeLogs.length > 0) {
@@ -995,7 +995,7 @@
       if(saveChargeLogFlag) {
         if (window.confirm("确认收费?")) {
           $$$.ajax({
-            url: '/spring/qzchargelog/save',
+            url: '/internal/qzchargelog/save',
             data: JSON.stringify(chargeLogs),
             headers: {
               'Accept': 'application/json',

@@ -25,7 +25,7 @@
 		<li><a href="/client/clientstat_group.jsp">查看终端分组统计</a></li>
 
 	    <li><a href="/qzsetting/list.jsp?chargeDays=NaN">全站设置信息</a></li>
-	    <li><a href="/spring/complaints/findTSMainKeywords">投诉专用平台</a></li>
+	    <li><a href="/internal/complaints/findTSMainKeywords">投诉专用平台</a></li>
 		<li><a href="/client/vpslist.jsp">查看开机信息</a></li>
 	    <li><a href="/refresh/refreshstat.jsp">查看刷量统计</a></li>
 	    <li><a href="/customerkeyword/verification.jsp">验证</a></li>

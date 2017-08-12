@@ -519,7 +519,7 @@
 
 		function showVPSConfigSettingDialog(self, uuid){
 			$$$.ajax({
-				url: '/spring/vpsopeninfo/getVPSOpenInfo/' + uuid,
+				url: '/internal/vpsopeninfo/getVPSOpenInfo/' + uuid,
 				type: 'Get',
 				success: function (data) {
 					if(data == null){
@@ -566,7 +566,7 @@
 			vpsOpenSettingVO.openStatus = settingDialogDiv.find("#vpsOpenStatus").val();
 
 			$$$.ajax({
-				url: '/spring/vpsopeninfo/saveVPSOpenInfo',
+				url: '/internal/vpsopeninfo/saveVPSOpenInfo',
 				data: JSON.stringify(vpsOpenSettingVO),
 				type: 'POST',
 				headers: {

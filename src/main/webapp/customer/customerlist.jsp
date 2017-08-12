@@ -269,7 +269,7 @@
 
 	  var postData = {"customerUuids" : customerUuids}
 	  $$$.ajax({
-		  url: '/spring/dailyReport/triggerReportGeneration',
+		  url: '/internal/dailyReport/triggerReportGeneration',
 		  data: JSON.stringify(postData),
 		  type: 'POST',
 		  headers: {
@@ -294,7 +294,7 @@
   {
 	  var span = $$$("#dailyReportSpan");
 	  $$$.ajax({
-		  url: '/spring/dailyReport/searchCurrentDateCompletedReports',
+		  url: '/internal/dailyReport/searchCurrentDateCompletedReports',
 		  type: 'GET',
 		  headers: {
 			  'Accept': 'application/json',
