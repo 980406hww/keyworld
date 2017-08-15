@@ -1,9 +1,7 @@
 <%@page contentType="text/html;charset=utf-8"%>
-<%@page import="com.keymanager.manager.*,com.keymanager.util.*,com.keymanager.value.*,java.util.*"%>
-<%@ page import="com.keymanager.monitoring.service.DailyReportService" %>
-<%@ page import="com.keymanager.monitoring.entity.DailyReport" %>
-<%@ page import="com.keymanager.monitoring.enums.TerminalTypeEnum" %>
-<%@ page import="com.keymanager.monitoring.enums.EntryTypeEnum" %>
+<%@page import="com.keymanager.monitoring.enums.EntryTypeEnum,com.keymanager.util.Utils,com.keymanager.value.CustomerVO,com.keymanager.value.UserVO"%>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.List" %>
 
 <jsp:useBean id="um" scope="page" class="com.keymanager.manager.UserManager" />
 <jsp:useBean id="cm" scope="page" class="com.keymanager.manager.CustomerManager" />
