@@ -55,13 +55,14 @@ public class ComplaintsRestController extends SpringMVCBaseController {
     }
 
     @RequestMapping(value = "/findTSMainKeywords", method = RequestMethod.GET)
-    public ModelAndView findTSMainKeywords(@RequestParam(defaultValue = "1") int currentPage,@RequestParam(defaultValue="20") int displaysRecords,@RequestParam(defaultValue="") String keyword,@RequestParam(defaultValue="") String  group){
+    public ModelAndView findTSMainKeywords(@RequestParam(defaultValue = "1") int currentPage,@RequestParam(defaultValue="15") int displaysRecords,
+                                           @RequestParam(defaultValue="") String keyword,@RequestParam(defaultValue="") String  group){
         return findTSMainKeywordsAndReturnView(currentPage,displaysRecords,keyword,group);
     }
 
     @RequestMapping(value = "/findTSMainKeywords", method = RequestMethod.POST)
     public ModelAndView findTSMainKeywords(HttpServletRequest httpServletRequest){
-        String keyword = httpServletRequest.getParameter("itemkeywork");
+        String keyword = httpServletRequest.getParameter("itemKeyword");
         String group = httpServletRequest.getParameter("itemGroup");
         int currentPage  = Integer.parseInt(httpServletRequest.getParameter("currentPageHidden"));
         int displaysRecords = Integer.parseInt(httpServletRequest.getParameter("displaysRecordsHidden"));

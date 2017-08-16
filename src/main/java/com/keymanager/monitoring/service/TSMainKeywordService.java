@@ -74,6 +74,7 @@ public class TSMainKeywordService extends ServiceImpl<TSMainKeywordDao, TSMainKe
             tsMainKeywordDao.updateById(oldTSMainKeyword);
         } else {
             // save
+            tsMainKeyword.setUpdateTime(new Date());
             tsMainKeywordDao.insert(tsMainKeyword);
             Long tsMainKeywordUuid = new Long(tsMainKeywordDao.selectLastId());
             for(TSNegativeKeyword tsNegativeKeyword : tsMainKeyword.getTsNegativeKeywords()) {

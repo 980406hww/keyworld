@@ -81,19 +81,19 @@
       });
     }
     function savaMainKeyword(uuid) {
-      var mainkeyObj = {};
-      mainkeyObj.uuid = uuid;
+      var mainKeywordObj = {};
+      mainKeywordObj.uuid = uuid;
       var mainKeywordForm = $('#mainKeywordForm');
-      mainkeyObj.keyword = mainKeywordForm.find('#mKeyword').val().trim();
-      mainkeyObj.group = mainKeywordForm.find('#mGroup').val();
+      mainKeywordObj.keyword = mainKeywordForm.find('#mKeyword').val().trim();
+      mainKeywordObj.group = mainKeywordForm.find('#mGroup').val();
 
       var ngKeywords = mainKeywordForm.find('#ngKeyword').val().split(',');
-      if (mainkeyObj.keyword === "") {
+      if (mainKeywordObj.keyword === "") {
         alert("关键字不能为空");
         mainKeywordForm.find('#mKeyword').focus();
         return false;
       }
-      if (mainkeyObj.keyword === "") {
+      if (mainKeywordObj.keyword === "") {
         alert("请选择有效城市");
         mainKeywordForm.find('#mGroup').focus();
         return false;
@@ -103,14 +103,14 @@
         mainKeywordForm.find('#ngKeyword').focus();
         return false;
       }
-      mainkeyObj.tsNegativeKeywords = [];
+      mainKeywordObj.tsNegativeKeywords = [];
       $.each(ngKeywords, function (idx, val) {
         var ngKeywordObj = {"keyword": val.trim()};
-        mainkeyObj.tsNegativeKeywords.push(ngKeywordObj);
+        mainKeywordObj.tsNegativeKeywords.push(ngKeywordObj);
       });
       $.ajax({
         url: '/internal/complaints/save',
-        data: JSON.stringify(mainkeyObj),
+        data: JSON.stringify(mainKeywordObj),
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
@@ -233,7 +233,7 @@
 
     //查询
     function serachMainKeywords(currentPage, displaysRecords) {
-      var keyword = $("#serachMainKeyword").find("#itemkeywork").val();
+      var keyword = $("#serachMainKeyword").find("#itemKeyword").val();
       var group = $("#serachMainKeyword").find("#itemgroup").val();
       var showMainKeywordBottomDiv = $("#showMainKeywordBottomDiv");
       var pages = showMainKeywordBottomDiv.find("#pagesHidden").val();
@@ -327,8 +327,8 @@
 </script>
 <style type="text/css">
     body {
-        font-size: 15px;
-        text-align:cente;
+        font-size: 12px;
+        text-align:center;
     }
 
     #showMainKeywordTopDiv {
@@ -339,7 +339,7 @@
     #showMainKeywordTableDiv {
         overflow:scroll;
         width: 100%;
-        height: 75%;
+        height: 78%;
         margin:auto;
     }
     #showMainKeywordTable{
@@ -355,14 +355,17 @@
     #serachMainKeyword{
         width: 100%;
     }
+    #serachMainKeywordForm{
+        text-align: left;
+    }
     #showMainKeywordBottomDiv{
         margin-right: 2%;
         float: right;
-        width: 680px;
+        width: 550px;
     }
 
-    #nav .mainlevel ul {display:none; position:absolute;z-index: 10;}
-    #nav .mainlevel li {border-top:1px solid #fff; background:#ffe60c; width:140px;z-index: 10;/*IE6 only*/}
+    #nav .mainLevel ul {display:none; position:absolute;z-index: 10;}
+    #nav .mainLevel li {border-top:1px solid #fff; background:#ffe60c; width:140px;z-index: 10;/*IE6 only*/}
 
     #div1 {
         display: none;
@@ -371,8 +374,8 @@
         font-size: 12px;
         line-height: 18px;
         border: 1px solid #e1e3e2;
-        width: 450;
-        height: 50;
+        width: 450px;
+        height: 50px;
     }
     #div2 {
         display: none;
@@ -403,9 +406,9 @@
         </div>
         <div id="serachMainKeyword">
            <form id="serachMainKeywordForm" action="/internal/complaints/findTSMainKeywords" method="post">
-               主关键词<input id="itemkeywork" name="itemkeywork" type="text" value="${page.condition.get("keyword")}"/>&nbsp;&nbsp;
+               主关键词&nbsp;&nbsp;<input id="itemKeyword" name="itemKeyword" type="text" value="${page.condition.get("keyword")}"/>&nbsp;&nbsp;
                <input id="itemGroupHidden" type="hidden" value="${page.condition.get("group")}"/>
-               区域分组<select id="itemGroup" name="itemGroup" style="height: 21px;">
+               区域分组&nbsp;&nbsp;<select id="itemGroup" name="itemGroup" style="height: 21px;">
                            <option value="">请 选 择 城 市</option>
                            <option value="北京">北京</option>
                            <option value="上海">上海</option>
@@ -430,11 +433,11 @@
             <tr bgcolor="#eeeeee" height=30>
                 <td align="center" width=10><input type="checkbox" onclick="selectAll(this)"/></td>
                 <td align="center" width=150>主词</td>
-                <td align="center" width=100>分组</td>
-                <td align="center" width=200>负面语句</td>
-                <td align="center" width=250>更新时间</td>
-                <td align="center" width=250>创建时间</td>
-                <td align="center" width=150>操作</td>
+                <td align="center" width=60>分组</td>
+                <td align="center" width=400>负面语句</td>
+                <td align="center" width=100>更新时间</td>
+                <td align="center" width=100>创建时间</td>
+                <td align="center" width=80>操作</td>
                 <div id="div1"></div>
                 <div id="div2"></div>
             </tr>
@@ -463,12 +466,12 @@
                                 ${mainkey.updateTime}
                             </c:when>
                             <c:otherwise>
-                                <fmt:formatDate value="${mainkey.updateTime}" type="both"/>
+                                <fmt:formatDate value="${mainkey.updateTime}" pattern="yy-MM-dd HH:mm"/>
                             </c:otherwise>
                         </c:choose>
                     </td>
                     <td><fmt:formatDate value="${mainkey.createTime}"
-                                        type="both"/></td>
+                                        pattern="yy-MM-dd HH:mm"/></td>
                     <td>&nbsp;&nbsp;&nbsp;<a href="javascript:getMainKeyword('${mainkey.uuid}')">修改</a>&nbsp;&nbsp;&nbsp;
                     <a href="javascript:deleteMainKeyword('${mainkey.uuid}')">删除</a></td>
                 </tr>
@@ -514,9 +517,9 @@
         <input id="lastButton" type="button" class="ui-button ui-widget ui-corner-all" onclick="serachMainKeywords('${page.pages}','${page.size}')" value="末页">&nbsp;&nbsp;&nbsp;&nbsp;
                         总记录数:${page.total}&nbsp;&nbsp;&nbsp;&nbsp;
                         每页显示条数:<select id="chooseRecords"  onchange="chooseRecords(${page.current},this.value)">
-                            <option>3</option>
-                            <option>20</option>
-                            <option>35</option>
+                            <option>10</option>
+                            <option>15</option>
+                            <option>30</option>
                             <option>45</option>
                         </select>
         <%--用于存储pageInfo--%>
