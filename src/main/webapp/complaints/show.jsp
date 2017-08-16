@@ -337,8 +337,9 @@
     }
 
     #showMainKeywordTableDiv {
+        overflow:scroll;
         width: 100%;
-        height: 650px;
+        height: 750px;
         margin:auto;
     }
     #showMainKeywordTable{
@@ -512,7 +513,7 @@
                         总记录数:${page.total}&nbsp;&nbsp;&nbsp;&nbsp;
                         每页显示条数:<select id="chooseRecords"  onchange="chooseRecords(${page.current},this.value)">
                             <option>3</option>
-                            <option>25</option>
+                            <option>20</option>
                             <option>35</option>
                             <option>45</option>
                         </select>

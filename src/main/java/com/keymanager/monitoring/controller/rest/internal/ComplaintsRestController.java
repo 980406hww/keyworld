@@ -55,7 +55,7 @@ public class ComplaintsRestController extends SpringMVCBaseController {
     }
 
     @RequestMapping(value = "/findTSMainKeywords", method = RequestMethod.GET)
-    public ModelAndView findTSMainKeywords(@RequestParam(defaultValue = "1") int currentPage,@RequestParam(defaultValue="25") int displaysRecords,@RequestParam(defaultValue="") String keyword,@RequestParam(defaultValue="") String  group){
+    public ModelAndView findTSMainKeywords(@RequestParam(defaultValue = "1") int currentPage,@RequestParam(defaultValue="20") int displaysRecords,@RequestParam(defaultValue="") String keyword,@RequestParam(defaultValue="") String  group){
         return findTSMainKeywordsAndReturnView(currentPage,displaysRecords,keyword,group);
     }
 
