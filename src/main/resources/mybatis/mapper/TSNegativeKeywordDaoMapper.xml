@@ -17,10 +17,6 @@
             ng.fPhoneOccurTimes AS `phoneOccurTimes`,
             ng.fPCComplainTime AS `pcComplainTime`,
             ng.fPhoneComplainTime AS `phoneComplainTime`,
-            ng.fpcComplained AS `pcComplained`,
-            ng.fphoneComplained  AS `phoneComplained`,
-            ng.fpcSetAppeared  AS `pcSetAppeared`,
-            ng.fphoneSetAppeared  AS `phoneSetAppeared`,
             ng.fUpdateTime AS `updateTime`,
             ng.fCreateTime AS `createTime`,
             ng.IsDeleted AS `isDeleted`
