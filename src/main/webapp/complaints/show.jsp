@@ -26,7 +26,7 @@
 <script type="text/javascript">
     /*页面进入即刻加载*/
     $(function() {
-      $("#showAddMainKeywordDlog").hide();
+      $("#showAddMainKeywordDialog").hide();
       pageLoad();
     });
     function pageLoad() {
@@ -56,11 +56,11 @@
 
     }
     //增加
-    function showAddMainKeywordDlog(uuid) {
+    function showAddMainKeywordDialog(uuid) {
       if(uuid==null){
         $('#mainKeywordForm')[0].reset();
       }
-      $("#showAddMainKeywordDlog").dialog({
+      $("#showAddMainKeywordDialog").dialog({
         resizable: false,
         width: 400,
         height: 440,
@@ -130,7 +130,7 @@
           showInfo("保存失败！", self);
         }
       });
-      $("#showAddMainKeywordDlog").dialog("close");
+      $("#showAddMainKeywordDialog").dialog("close");
       $('#mainKeywordForm')[0].reset();
     }
     //通过uuid查找mainKey对象
@@ -141,7 +141,7 @@
         success: function (tsMainKeyword) {
           if (tsMainKeyword != null ) {
             initMainKeywordDialog(tsMainKeyword);
-            showAddMainKeywordDlog(tsMainKeyword.uuid);
+            showAddMainKeywordDialog(tsMainKeyword.uuid);
           } else {
             showInfo("获取信息失败！", self);
           }
@@ -339,7 +339,7 @@
     #showMainKeywordTableDiv {
         overflow:scroll;
         width: 100%;
-        height: 750px;
+        height: 75%;
         margin:auto;
     }
     #showMainKeywordTable{
@@ -349,14 +349,16 @@
 
     }
 
-    #showAddMainKeywordDlog {
+    #showAddMainKeywordDialog {
         margin:0 auto;
     }
     #serachMainKeyword{
         width: 100%;
     }
     #showMainKeywordBottomDiv{
-        margin-left: 63%;
+        margin-right: 2%;
+        float: right;
+        width: 680px;
     }
 
     #nav .mainlevel ul {display:none; position:absolute;z-index: 10;}
@@ -417,7 +419,7 @@
                <input type="submit" class="ui-button ui-widget ui-corner-all" style="z-index: 0";
                        value="查询">&nbsp;&nbsp;&nbsp;
                <input type="button" class="ui-button ui-widget ui-corner-all"  style="z-index: 0";
-                      onclick="showAddMainKeywordDlog(null)" value="添加"/>&nbsp;&nbsp;&nbsp;
+                      onclick="showAddMainKeywordDialog(null)" value="添加"/>&nbsp;&nbsp;&nbsp;
                <input type="button" class="ui-button ui-widget ui-corner-all"  style="z-index: 0";
                       onclick="deleteMainKeywords(this)" value="删除所选"/>
            </form>
@@ -473,7 +475,7 @@
             </c:forEach>
         </table>
     </div>
-    <div id="showAddMainKeywordDlog" title="添加投诉关键字">
+    <div id="showAddMainKeywordDialog" title="添加投诉关键字">
         <form id="mainKeywordForm" action="show.jsp">
             <table style="border-spacing:15px;">
                 <tr>

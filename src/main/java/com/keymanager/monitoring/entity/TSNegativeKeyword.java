@@ -48,16 +48,16 @@ public class TSNegativeKeyword extends BaseEntity {
     @TableField(value = "fPhoneComplainTime")
     private Timestamp phoneComplainTime;
 
-    @TableField(value = "fPCComplained")
+    @TableField(exist = false)
     private boolean pcComplained;
 
-    @TableField(value = "fPhoneComplained")
+    @TableField(exist = false)
     private boolean phoneComplained;
 
-    @TableField(value = "fPCSetAppeared")
+    @TableField(exist = false)
     private boolean pcSetAppeared;
 
-    @TableField(value = "fPhoneSetAppeared")
+    @TableField(exist = false)
     private boolean phoneSetAppeared;
 
     @TableField(value = "IsDeleted")
