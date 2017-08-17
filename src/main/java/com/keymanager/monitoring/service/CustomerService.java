@@ -48,7 +48,7 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 		return page;
 	}
 
-	public void updateCustomer(Customer customer) {
+	public Boolean updateCustomer(Customer customer) {
 		Customer oldCustomer = customerDao.selectById(customer.getUuid());
 		if (oldCustomer != null) {
 			oldCustomer.setContactPerson(customer.getContactPerson());
@@ -64,20 +64,45 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 			oldCustomer.setEntryType(customer.getEntryType());
 			oldCustomer.setUpdateTime(new Date());
 			customerDao.updateById(oldCustomer);
+			return true;
+		}
+		return false;
+	}
+
+	public Boolean addCustomer(Customer customer){
+		//修改
+		if(null!=customer.getUuid()){
+			Boolean updateflag = updateCustomer(customer);
+			return	updateflag;
+		}else{//添加
+			customer.setUpdateTime(new Date());
+			customerDao.insert(customer);
+			return true;
 		}
 	}
 
-	public int addCustomer(Customer customer){
-		customerDao.insert(customer);
-		return customerDao.selectLastId();
+	public boolean deleteCustomer(long uuid){
+		try {
+			customerDao.deleteById(uuid);
+			CustomerKeyword customerKeyword = new CustomerKeyword();
+			customerKeyword.setCustomerUuid(uuid);
+			Wrapper wrapper = new EntityWrapper(customerKeyword);
+			customerKeywordService.delete(wrapper);
+			return true;
+		}catch (Exception e){
+			return false;
+		}
 	}
 
-	public void deleteCustomer(long uuid){
-		customerDao.deleteById(uuid);
-		CustomerKeyword customerKeyword = new CustomerKeyword();
-		customerKeyword.setCustomerUuid(uuid);
-		Wrapper wrapper = new EntityWrapper(customerKeyword);
-		customerKeywordService.delete(wrapper);
+	public boolean deleteAll( List<String> uuids){
+		try {
+		for(String uuid :uuids){
+			deleteCustomer(Long.valueOf(uuid));
+		}
+			return true;
+		}catch (Exception e){
+			return false;
+		}
 	}
 
 	public List<Customer> getActiveCustomerSimpleInfo(){

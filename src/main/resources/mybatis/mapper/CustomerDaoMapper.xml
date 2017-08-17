@@ -29,7 +29,7 @@
         <if test="customerCriteria.telphone != null">AND c.fTelphone like '%#{customerCriteria.telphone}%'</if>
         <if test="customerCriteria.userID != null">AND c.fUserID = #{customerCriteria.userID}</if>
         <if test="customerCriteria.status != null">AND c.fStatus = #{customerCriteria.status}</if>
-        order by c.fUpdateTime
+        order by c.fUpdateTime DESC
     </select>
 
     <select id="getActiveCustomerSimpleInfo" resultType="com.keymanager.monitoring.entity.Customer">
