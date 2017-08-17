@@ -12,4 +12,9 @@
     <select id="clearTitleByCustomerUuidAndTerminalType">
         UPDATE t_customer_keyword set fTitle = null where fTerminalType = #{terminalType} and fCustomerUuid = #{customerUuid}
     </select>
+
+    <select id="getCustomerKeywordCount" resultType="int">
+        SELECT COUNT(1) FROM t_customer_keyword ck WHERE ck.fCustomerUuid = #{customerUuid}
+    </select>
+
 </mapper>

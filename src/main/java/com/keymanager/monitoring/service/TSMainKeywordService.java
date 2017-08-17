@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.dao.TSMainKeywordDao;
 import com.keymanager.monitoring.entity.TSMainKeyword;
 import com.keymanager.monitoring.entity.TSNegativeKeyword;
-import com.keymanager.monitoring.vo.PageInfo;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import org.springframework.web.servlet.ModelAndView;
 
 /**
  * Created by shunshikj08 on 2017/8/1.

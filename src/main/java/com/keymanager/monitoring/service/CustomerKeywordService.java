@@ -73,4 +73,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 			customerKeywordDao.clearTitleByUuids(uuids.split(","));
 		}
 	}
+
+	public int getCustomerKeywordCount(long customerUuid){
+		return customerKeywordDao.getCustomerKeywordCount(customerUuid);
+	}
 }

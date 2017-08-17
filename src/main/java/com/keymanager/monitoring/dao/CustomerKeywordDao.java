@@ -8,4 +8,6 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     public void clearTitleByUuids(String[] uuids);
 
     public void clearTitleByCustomerUuidAndTerminalType(@Param("terminalType") String terminalType, @Param("customerUuid") String customerUuid);
+
+    public int getCustomerKeywordCount(@Param("customerUuid") long customerUuid);
 }
