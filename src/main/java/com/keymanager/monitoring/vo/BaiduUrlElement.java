@@ -1,4 +1,4 @@
-package com.keymanager.value;
+package com.keymanager.monitoring.vo;
 
 public class BaiduUrlElement{
 	private int id;

@@ -6,6 +6,7 @@ import com.keymanager.enums.CollectMethod;
 import com.keymanager.enums.CustomerKeywordStatus;
 import com.keymanager.enums.KeywordType;
 import com.keymanager.excel.operator.AbstractExcelReader;
+import com.keymanager.monitoring.service.CaptureRealUrlService;
 import com.keymanager.util.*;
 import com.keymanager.util.common.StringUtil;
 import com.keymanager.value.*;
@@ -1336,10 +1337,10 @@ public class CustomerKeywordManager {
 							}
 						}
 					}
-					CaptureRealUrl captureRealUrl = new CaptureRealUrl();
+					CaptureRealUrlService captureRealUrlService = new CaptureRealUrlService();
 					for (CustomerKeywordVO customerKeywordVO : customerKeywordVOs) {
 						if(!Utils.isNullOrEmpty(customerKeywordVO.getOriginalUrl())){
-							String targetUrl = captureRealUrl.fetchSingleRealUrl(customerKeywordVO.getOriginalUrl());
+							String targetUrl = captureRealUrlService.fetchSingleRealUrl(customerKeywordVO.getOriginalUrl());
 							if(!Utils.isNullOrEmpty(targetUrl)){
 								customerKeywordVO.setOriginalUrl(targetUrl);
 							}

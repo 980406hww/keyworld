@@ -1,8 +1,9 @@
-package com.keymanager.util;
+package com.keymanager.monitoring.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.keymanager.value.BaiduUrl;
-import com.keymanager.value.BaiduUrlElement;
+import com.keymanager.util.Utils;
+import com.keymanager.monitoring.vo.BaiduUrl;
+import com.keymanager.monitoring.vo.BaiduUrlElement;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -12,16 +13,14 @@ import org.apache.http.client.params.AllClientPNames;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.impl.client.SystemDefaultCredentialsProvider;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
+import org.springframework.stereotype.Service;
 
-public class CaptureRealUrl {
+import java.io.IOException;
+
+@Service
+public class CaptureRealUrlService {
 
     public String fetch(String sourceUrls) throws Exception {
         try{
@@ -88,10 +87,10 @@ public class CaptureRealUrl {
     }
 
     public static void main(String[] args){
-        CaptureRealUrl captureRealUrl = new CaptureRealUrl();
+        CaptureRealUrlService captureRealUrlService = new CaptureRealUrlService();
         try {
 //            String realUrl = captureRealUrl.fetch("{\"baiduUrlElementList\":[{\"id\":\"1\",\"baiduUrl\":\"http://www.baidu.com/link?url=HUPn1y5JDgrWUa1ug77bAJRup3AfJzi-HYDIyDScozLebF1F2LIlfv5vtDPRApwJbj34NnnuWwaNWUD04naJ_QNKRdbmGMdj2Efdh-qRq-S\"}]}");
-            String realUrl = captureRealUrl.fetchRealUrl("http://www.aihuhua.com/index.php?app=wap&mod=Index&act=index", 0);
+            String realUrl = captureRealUrlService.fetchRealUrl("http://www.aihuhua.com/index.php?app=wap&mod=Index&act=index", 0);
             System.out.println(realUrl);
         } catch (Exception e) {
             e.printStackTrace();

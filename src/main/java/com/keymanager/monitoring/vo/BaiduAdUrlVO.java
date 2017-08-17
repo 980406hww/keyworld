@@ -1,4 +1,4 @@
-package com.keymanager.value;
+package com.keymanager.monitoring.vo;
 
 import java.sql.Timestamp;
 

@@ -1,8 +1,5 @@
-package com.keymanager.value;
+package com.keymanager.monitoring.vo;
 
-import com.keymanager.util.Utils;
-
-import java.sql.Timestamp;
 import java.util.List;
 
 public class BaiduUrl{

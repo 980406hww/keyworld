@@ -8,8 +8,6 @@ import com.keymanager.monitoring.criteria.CustomerCriteria;
 import com.keymanager.monitoring.dao.CustomerDao;
 import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.CustomerKeyword;
-import com.keymanager.monitoring.vo.CustomerSimpleVO;
-import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

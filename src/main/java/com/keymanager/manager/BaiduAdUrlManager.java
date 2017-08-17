@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.keymanager.db.DBUtil;
-import com.keymanager.value.BaiduAdUrlVO;
+import com.keymanager.monitoring.vo.BaiduAdUrlVO;
 
 public class BaiduAdUrlManager {
 	public static List<BaiduAdUrlVO> baiduAdUrlVOs = null;
