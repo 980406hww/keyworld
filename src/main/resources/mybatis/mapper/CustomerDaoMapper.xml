@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.monitoring.dao.CustomerDao">
+
+    <select id="searchCustomers" parameterType="com.keymanager.monitoring.criteria.CustomerCriteria"
+            resultType="com.keymanager.monitoring.entity.Customer">
+        SELECT * FROM t_customer c
+        WHERE 1 = 1
+        <if test="customerCriteria.contactPerson != null">AND c.fContactPerson like '%#{customerCriteria.contactPerson}%'</if>
+        <if test="customerCriteria.qq != null">AND c.fQQ like '#{customerCriteria.qq}%'</if>
+        <if test="customerCriteria.telphone != null">AND c.fTelphone like '%#{customerCriteria.telphone}%'</if>
+        <if test="customerCriteria.userID != null">AND c.fUserID = #{customerCriteria.userID}</if>
+        <if test="customerCriteria.status != null">AND c.fStatus = #{customerCriteria.status}</if>
+        order by qs.fUpdateEndTime
+    </select>
+
     <select id="selectLastId" resultType="int">
         select LAST_INSERT_ID()
     </select>

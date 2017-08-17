@@ -40,6 +40,7 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 	}
 
 	public Page<Customer> searchCustomers(Page<Customer> page, CustomerCriteria customerCriteria){
-		return null;
+		page.setRecords(customerDao.searchCustomers(page, customerCriteria));
+		return page;
 	}
 }
