@@ -70,9 +70,7 @@
 		<script language="javascript" type="text/javascript" src="/js/jquery142.js"></script>
 	    <script language="javascript" type="text/javascript" src="/js/slide.js"></script>
 	    <link href="/css/menu.css" rel="stylesheet" type="text/css" />	
-  </head>	
-  
-
+  </head>
 			
 <body>
 	

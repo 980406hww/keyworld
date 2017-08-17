@@ -36,7 +36,7 @@ public class User {
 	private String salt;
 
 	@TableField(value = "fVipType")
-	private String vipType;
+	private boolean vipType;
 
 	@TableField(value = "fClientIp")
 	private String clientIp;
@@ -99,11 +99,11 @@ public class User {
 		this.userLevel = userLevel;
 	}
 
-	public String getVipType() {
+	public boolean isVipType() {
 		return vipType;
 	}
 
-	public void setVipType(String vipType) {
+	public void setVipType(boolean vipType) {
 		this.vipType = vipType;
 	}
 
