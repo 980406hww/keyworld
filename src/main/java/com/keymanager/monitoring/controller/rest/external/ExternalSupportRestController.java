@@ -5,6 +5,7 @@ import com.keymanager.monitoring.criteria.CaptureRealUrlCriteria;
 import com.keymanager.monitoring.entity.User;
 import com.keymanager.monitoring.service.CaptureRealUrlService;
 import com.keymanager.monitoring.service.UserService;
+import com.keymanager.monitoring.vo.BaiduUrl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +32,8 @@ public class ExternalSupportRestController extends SpringMVCBaseController {
 		if(captureRealUrlCriteria.getUserName() != null && captureRealUrlCriteria.getPassword() != null){
 			User user = userService.getUser(captureRealUrlCriteria.getUserName());
 			if(user != null && user.getPassword().equals(captureRealUrlCriteria.getPassword())){
-				String realUrl = captureRealUrlService.fetch(captureRealUrlCriteria.getSourceUrl());
-				return new ResponseEntity<Object>(realUrl, HttpStatus.OK);
+				BaiduUrl baiduUrl = captureRealUrlService.fetch(captureRealUrlCriteria.getSourceUrl());
+				return new ResponseEntity<Object>(baiduUrl, HttpStatus.OK);
 			}
 		}
 		return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);

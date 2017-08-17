@@ -1,13 +1,15 @@
 package com.keymanager.monitoring.criteria;
 
-public class CaptureRealUrlCriteria extends BaseCriteria{
-    private String sourceUrl;
+import com.keymanager.monitoring.vo.BaiduUrl;
 
-    public String getSourceUrl() {
+public class CaptureRealUrlCriteria extends BaseCriteria{
+    private BaiduUrl sourceUrl;
+
+    public BaiduUrl getSourceUrl() {
         return sourceUrl;
     }
 
-    public void setSourceUrl(String sourceUrl) {
+    public void setSourceUrl(BaiduUrl sourceUrl) {
         this.sourceUrl = sourceUrl;
     }
 }

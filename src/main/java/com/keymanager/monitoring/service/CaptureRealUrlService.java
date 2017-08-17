@@ -22,19 +22,17 @@ import java.io.IOException;
 @Service
 public class CaptureRealUrlService {
 
-    public String fetch(String sourceUrls) throws Exception {
+    public BaiduUrl fetch(BaiduUrl baiduUrl) throws Exception {
         try{
-            ObjectMapper mapper = new ObjectMapper();
-            BaiduUrl baiduUrl = (BaiduUrl)mapper.readValue(sourceUrls, BaiduUrl.class);
             if(baiduUrl == null || baiduUrl.getBaiduUrlElementList() == null){
-                return "";
+                return null;
             }
 
             for(BaiduUrlElement e : baiduUrl.getBaiduUrlElementList()) {
                 String realUrl = fetchRealUrl(e.getBaiduUrl(), 0);
                 e.setRealUrl(realUrl);
             }
-            return mapper.writeValueAsString(baiduUrl);
+            return baiduUrl;
         } catch (Exception e) {
             e.printStackTrace();
             throw new Exception(e);
