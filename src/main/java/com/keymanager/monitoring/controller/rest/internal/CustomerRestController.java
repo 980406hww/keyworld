@@ -16,6 +16,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by shunshikj01 on 2017/8/17.
@@ -30,7 +32,7 @@ public class CustomerRestController {
     private UserService userService;
 
     @RequestMapping(value = "searchCustomers" ,method = RequestMethod.GET)
-    public ModelAndView searchCustomers(@RequestParam(defaultValue = "1") int currentPage,@RequestParam(defaultValue="35") int displaysRecords,HttpServletRequest request){
+    public ModelAndView searchCustomers(@RequestParam(defaultValue = "1") int currentPage,@RequestParam(defaultValue="30") int displaysRecords,HttpServletRequest request){
         ModelAndView modelAndView = new ModelAndView("/customer/customerlist");
         HttpSession session = request.getSession();
         String userID = (String) session.getAttribute("username");
@@ -44,9 +46,12 @@ public class CustomerRestController {
     }
 
 
-    @RequestMapping(value = "addCustomer" , method = RequestMethod.GET)
+    @RequestMapping(value = "addCustomer" , method = RequestMethod.POST)
     public ResponseEntity<?> addCustomer(@RequestBody Customer customer){
-        return new ResponseEntity<Object>(customerService.insert(customer), HttpStatus.OK);
+        if(customerService.addCustomer(customer)){
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        }
+        return new ResponseEntity<Object>(false, HttpStatus.OK);
     }
 
 
@@ -55,8 +60,14 @@ public class CustomerRestController {
         return new ResponseEntity<Object>(customerService.getCustomerWithKeywordCount(uuid), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "saveCustomer/{uuid}" , method = RequestMethod.GET)
-    public ResponseEntity<?> saveCustomer(@PathVariable("uuid")Long uuid){
-        return new ResponseEntity<Object>(customerService.getCustomerWithKeywordCount(uuid), HttpStatus.OK);
+    @RequestMapping(value = "delCustomer/{uuid}" , method = RequestMethod.GET)
+    public ResponseEntity<?> delCustomer(@PathVariable("uuid")Long uuid){
+        return new ResponseEntity<Object>(customerService.deleteCustomer(uuid), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "deleteCustomerForms" , method = RequestMethod.POST)
+    public ResponseEntity<?> deleteCustomerForms(@RequestBody Map<String, Object> requestMap){
+        List<String> uuids = (List<String>) requestMap.get("uuids");
+        return new ResponseEntity<Object>(customerService.deleteAll(uuids) , HttpStatus.OK);
     }
 }
