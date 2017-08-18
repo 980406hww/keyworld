@@ -2,6 +2,7 @@ package com.keymanager.monitoring.controller.rest.internal;
 
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.entity.DailyReport;
+import com.keymanager.monitoring.entity.User;
 import com.keymanager.monitoring.service.DailyReportService;
 import com.keymanager.monitoring.service.UserService;
 import com.keymanager.util.PortTerminalTypeMapping;
@@ -13,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.util.List;
 import java.util.Map;
 
@@ -52,5 +55,59 @@ public class DailyReportRestController extends SpringMVCBaseController {
 		}catch (Exception ex) {
 			return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
 		}
+	}
+
+	@RequestMapping(value = "/downloadSingleCustomerReport", method = RequestMethod.POST)
+	public ResponseEntity<?> downloadSingleCustomerReport(@RequestBody Map<String, Object> requestMap, HttpServletRequest request,
+											HttpServletResponse response){
+		Long customerUuid = (Long) requestMap.get("customerUuid");
+		Report report = reportService.selectById(reportId);
+		User currentUser = userService.selectById(getCurrentUser().getId());
+		if(UserTypeEnum.Normal.getValue().equals(currentUser.getType()) && getCurrentUser().getId().longValue() != report.getUserId().longValue()){
+			return new ResponseEntity<Object>(request, HttpStatus.BAD_REQUEST);
+		}
+		String fileName = report.getFileName();
+		FileInputStream fis = null;
+		BufferedInputStream bis = null;
+		try {
+			String realPath = Thread.currentThread().getContextClassLoader().getResource("").toURI().getPath() + report.getFileLocation();
+			File file = new File(realPath, fileName);
+			if (file.exists()) {
+				response.setContentType("application/octet-stream");
+				response.addHeader("Content-Disposition", "attachment;fileName=" + fileName);// 设置文件名
+				byte[] buffer = new byte[1024];
+
+				fis = new FileInputStream(file);
+				bis = new BufferedInputStream(fis);
+				OutputStream os = response.getOutputStream();
+				int i = bis.read(buffer);
+				while (i != -1) {
+					os.write(buffer, 0, i);
+					i = bis.read(buffer);
+				}
+				return new ResponseEntity<Object>(bis, HttpStatus.OK);
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+			if (bis != null) {
+				try {
+					bis.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (fis != null) {
+				try {
+					fis.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return new ResponseEntity<Object>(report, HttpStatus.OK);
 	}
 }
