@@ -323,7 +323,7 @@
 									<%
 										String[] operationTypeValues = {"",
 												"pc_pm","pc_pm2","pc_pm3","pc_xg","pc_xg2","pc_xg3","pc_xl","pc_pm_sogou","pc_pm_360","pc_pm_58",
-												"pc_pm_zhidao", "pc_pm_wenku", "pc_tieba"};
+												"pc_pm_zhidao", "pc_pm_wenku", "pc_tieba", "pc_kpm"};
 										if(TerminalTypeEnum.Phone.name().equals(terminalType)){
 											operationTypeValues = new String[]{"", "m_pm", "m_xl", "m_xg", "m_pm_sm", "m_xl2"};
 										}
@@ -461,7 +461,7 @@
 				<%
 					String[] operationTypes = {"",
 							"pc_pm","pc_pm2","pc_pm3","pc_xg","pc_xg2","pc_xg3","pc_xl","pc_pm_sogou","pc_pm_360","pc_pm_58",
-							"pc_pm_zhidao", "pc_pm_wenku", "pc_tieba"};
+							"pc_pm_zhidao", "pc_pm_wenku", "pc_tieba", "pc_kpm"};
 					if(TerminalTypeEnum.Phone.name().equals(terminalType)){
 						operationTypes = new String[]{"", "m_pm", "m_xl", "m_xg", "m_pm_sm", "m_xl2"};
 					}
@@ -1144,6 +1144,7 @@
 									<option value="pc_pm_zhidao">pc_pm_zhidao</option>
 									<option value="pc_pm_wenku">pc_pm_wenku</option>
 									<option value="pc_tieba">pc_tieba</option>
+									<option value="pc_kpm">pc_kpm</option>
 									<%}else{%>
 									<option value="m_pm">m_pm</option>
 									<option value="m_xl">m_xl</option>
