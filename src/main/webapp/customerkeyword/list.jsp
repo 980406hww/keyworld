@@ -239,8 +239,7 @@
       	  	 	| <a target="_blank" href="/customerkeyword/uploadfull.jsp?customerUuid=<%=customerUuid.trim()%>">关键字Excel上传(完整版)</a>
       	  	 	| <a target="_blank" href="/SuperUserFullKeywordList.xls">完整版模板下载</a>
 				 | <a target="_blank" href="/customer/uploaddailyreporttemplate.jsp?customerUuid=<%=customerUuid.trim()%>">上传日报表模板</a>
-				 | <a target="_blank" href='/customerkeyword/DownloadCustomerKeywordDailyReport.jsp?fileName=CustomerKeywordDailyReport<%="_" +
-				 Utils.getCurrentDate()%>.xls&<%=pageUrl%>'>导出日报表</a>
+				 | <a target="_blank" href='/internal/dailyReport/downloadSingleCustomerReport/<%=customerUuid.trim()%>'>导出日报表</a>
       	  	 	| <a target="_blank" href='/customerkeyword/DownloadCustomerKeywordInfo.jsp?fileName=CustomerKeywordInfo<%="_" + Utils.getCurrentDate()%>.xls&<%=pageUrl%>'>导出结果</a>
       	  	 	</td>
       	  </tr>

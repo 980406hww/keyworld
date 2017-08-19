@@ -1,11 +1,19 @@
 package com.keymanager.monitoring.controller.rest.internal;
 
+import com.keymanager.excel.operator.CustomerKeywordDailyReportExcelWriter;
+import com.keymanager.manager.CustomerKeywordManager;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
+import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.DailyReport;
 import com.keymanager.monitoring.entity.User;
+import com.keymanager.monitoring.enums.UserTypeEnum;
+import com.keymanager.monitoring.service.CustomerService;
 import com.keymanager.monitoring.service.DailyReportService;
 import com.keymanager.monitoring.service.UserService;
 import com.keymanager.util.PortTerminalTypeMapping;
+import com.keymanager.util.Utils;
+import com.keymanager.value.CustomerKeywordVO;
+import com.keymanager.value.CustomerVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +36,9 @@ public class DailyReportRestController extends SpringMVCBaseController {
 	private DailyReportService dailyReportService;
 
 	@Autowired
-	private UserService userService;
+	private CustomerService customerService;
 
-	@RequestMapping(value = "/triggerReportGeneration", method = RequestMethod.POST)
+	@RequestMapping(value = "/triggerReportGeneration/", method = RequestMethod.POST)
 	public ResponseEntity<?> triggerReportGeneration(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) throws Exception{
 		String customerUuids = (String) requestMap.get("customerUuids");
 		String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
@@ -57,57 +65,59 @@ public class DailyReportRestController extends SpringMVCBaseController {
 		}
 	}
 
-	@RequestMapping(value = "/downloadSingleCustomerReport", method = RequestMethod.POST)
-	public ResponseEntity<?> downloadSingleCustomerReport(@RequestBody Map<String, Object> requestMap, HttpServletRequest request,
-											HttpServletResponse response){
-		Long customerUuid = (Long) requestMap.get("customerUuid");
-		Report report = reportService.selectById(reportId);
-		User currentUser = userService.selectById(getCurrentUser().getId());
-		if(UserTypeEnum.Normal.getValue().equals(currentUser.getType()) && getCurrentUser().getId().longValue() != report.getUserId().longValue()){
-			return new ResponseEntity<Object>(request, HttpStatus.BAD_REQUEST);
-		}
-		String fileName = report.getFileName();
-		FileInputStream fis = null;
-		BufferedInputStream bis = null;
-		try {
-			String realPath = Thread.currentThread().getContextClassLoader().getResource("").toURI().getPath() + report.getFileLocation();
-			File file = new File(realPath, fileName);
-			if (file.exists()) {
-				response.setContentType("application/octet-stream");
-				response.addHeader("Content-Disposition", "attachment;fileName=" + fileName);// 设置文件名
-				byte[] buffer = new byte[1024];
+	@RequestMapping(value = "/downloadSingleCustomerReport/{customerUuid}", method = RequestMethod.GET)
+	public ResponseEntity<?> downloadSingleCustomerReport(@PathVariable("customerUuid")Long customerUuid, HttpServletRequest request,
+														  HttpServletResponse response) throws Exception {
+		String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+		CustomerKeywordManager customerKeywordManager = new CustomerKeywordManager();
+		String condition = String.format(" and ck.fStatus = 1 and ck.fCustomerUuid = %d and ck.fTerminalType = '%s' ", customerUuid, terminalType);
+		List<CustomerKeywordVO> customerKeywords = customerKeywordManager.searchCustomerKeywords("keyword", 10000, 1, condition,
+				"order by ck.fSequence, ck.fKeyword ", 1);
+		if (!Utils.isEmpty(customerKeywords)) {
+			CustomerKeywordDailyReportExcelWriter excelWriter = new CustomerKeywordDailyReportExcelWriter(terminalType, customerUuid + "", 0);
+			excelWriter.writeDataToExcel(customerKeywords);
 
-				fis = new FileInputStream(file);
-				bis = new BufferedInputStream(fis);
-				OutputStream os = response.getOutputStream();
-				int i = bis.read(buffer);
-				while (i != -1) {
-					os.write(buffer, 0, i);
-					i = bis.read(buffer);
+			FileInputStream fis = null;
+			BufferedInputStream bis = null;
+			try {
+				Customer customer = customerService.selectById(customerUuid);
+				String fileName = customer.getContactPerson() + Utils.formatDatetime(Utils.getCurrentTimestamp(), "yyyy.MM.dd") + ".xls";
+				fileName = new String(fileName.getBytes("gb2312"), "ISO8859-1");
+				// 以流的形式下载文件。
+				byte[] buffer = excelWriter.getExcelContentBytes();
+				// 清空response
+				response.reset();
+				// 设置response的Header
+				response.addHeader("Content-Disposition", "attachment;filename=" + fileName);//new String(fileName.getBytes("utf-8"), "ISO-8859-1"));
+				response.addHeader("Content-Length", "" + buffer.length);
+				OutputStream toClient = new BufferedOutputStream(response.getOutputStream());
+				response.setContentType("application/octet-stream;charset=utf-8");
+				response.setCharacterEncoding("UTF-8");
+				toClient.write(buffer);
+				toClient.flush();
+				toClient.close();
+			} catch (Exception e) {
+				logger.error(e.getMessage());;
+				e.printStackTrace();
+			} finally {
+				if (bis != null) {
+					try {
+						bis.close();
+					} catch (IOException e) {
+						logger.error(e.getMessage());;
+						e.printStackTrace();
+					}
 				}
-				return new ResponseEntity<Object>(bis, HttpStatus.OK);
-			}
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		} finally {
-			if (bis != null) {
-				try {
-					bis.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			if (fis != null) {
-				try {
-					fis.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				if (fis != null) {
+					try {
+						fis.close();
+					} catch (IOException e) {
+						logger.error(e.getMessage());
+						e.printStackTrace();
+					}
 				}
 			}
 		}
-		return new ResponseEntity<Object>(report, HttpStatus.OK);
+		return new ResponseEntity<Object>(HttpStatus.OK);
 	}
 }
