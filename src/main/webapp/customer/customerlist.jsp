@@ -32,13 +32,25 @@
         width: 100px;
         height: 22px;
     }
+    #showCustomerTableDiv{
+        overflow:scroll;
+        width: 100%;
+        height: 78%;
+        margin:auto;
+    }
+    #showCustomerBottomDiv{
+        margin-right: 2%;
+        float: right;
+        width: 580px;
+    }
     #showAddRuleDialog{
-
+        /*float:left;*/
     }
     #showChargeRuleCalculationDiv input{
         font-size: 12px;
-        width: 30px;
+        width: 200px;
         height: 20px;
+        margin-top: 10px;
     }
     #showChargeRuleCalculationDiv #pcOperationTypeDiv{
 
@@ -46,12 +58,41 @@
     #showChargeRuleCalculationDiv #phoneOperationTypeDiv{
 
     }
+    #customerKeywordTextarea{
+        /*margin-top: 5px;*/
+    }
 </style>
 <script type="text/javascript">
     $(function () {
         $("#showCustomerDialog").hide();
+        $("#uploadTheDailyReportTemplateDialog").hide();
+        $("#addCustomerKeywordDialog").hide();
+        $("#showRuleDialog").hide();
+        pageLoad();
     });
-
+    function pageLoad() {
+        var  showCustomerBottomDiv = $('#showCustomerBottomDiv');
+        var displaysRecords =  showCustomerBottomDiv.find('#displaysRecordsHidden').val();
+        showCustomerBottomDiv.find('#chooseRecords').val(displaysRecords);
+        var pages  = showCustomerBottomDiv.find('#pagesHidden').val();
+        showCustomerBottomDiv.find('#pagesHidden').val(pages);
+        var currentPage  = showCustomerBottomDiv.find('#currentPageHidden').val();
+        showCustomerBottomDiv.find('#currentPageHidden').val(currentPage);
+        if(parseInt(currentPage)<=1){
+            currentPage=1;
+            showCustomerBottomDiv.find("#fisrtButton").attr("disabled","disabled");
+            showCustomerBottomDiv.find("#upButton").attr("disabled","disabled");
+        }else if(parseInt(currentPage)>=parseInt(pages)){
+            currentPage=pages;
+            showCustomerBottomDiv.find("#nextButton").attr("disabled","disabled");
+            showCustomerBottomDiv.find("#lastButton").attr("disabled","disabled");
+        }else {
+            showCustomerBottomDiv.find("#firstButton").removeAttr("disabled");
+            showCustomerBottomDiv.find("#upButton").removeAttr("disabled");
+            showCustomerBottomDiv.find("#nextButton").removeAttr("disabled");
+            showCustomerBottomDiv.find("#lastButton").removeAttr("disabled");
+        }
+    }
     function selectAll(self) {
         var a = document.getElementsByName("customerUuid");
         if (self.checked) {
@@ -219,10 +260,10 @@
         if (uuid == null) {
             $('#showCustomerForm')[0].reset();
         }
-        $("#showAddRuleDialog").dialog({
+        $("#showRuleDialog").dialog({
             resizable: false,
-            width: 400,
-            height: 440,
+            width: 600,
+            height: 400,
             modal: true,
             //按钮
             buttons: {
@@ -239,6 +280,121 @@
             }
         });
     }
+    function chooseChargeType(val) {
+        alert(val);
+        switch (val){
+            case "1": alert("这"); break;
+            case "2": chargeRulePercentage(); break;
+            case "3": chargeRuleInterval(); break;
+        }
+    }
+
+    function chargeRulePercentage() {
+        alert("按照百分比收费")
+        $("#showChargeRuleCalculationDiv").show();
+        $("#showChargeRuleIntervalDiv").hide();
+    }
+    function chargeRuleInterval() {
+        alert("按照区间收费")
+        $("#showChargeRuleCalculationDiv").hide();
+        $("#showChargeRuleIntervalDiv").show();
+    }
+    /*$(document).ready(function(){
+        //<tr/>居中
+        $("#tab tr").attr("align","center");
+
+        //增加<tr/>
+
+    })*/
+    function addRowPC(){
+        var _len = $("#tabPC tr").length;
+        $("#tabPC").append("<tr id="+_len+" align='center'>"
+            +"<td>"+_len+"</td>"
+            +"<td><input type='text' name='startIndexPC"+_len+"' id='startIndexPC"+_len+"' /></td>"
+            +"<td><input type='text' name='endIndexPC"+_len+"' id='endIndexPC"+_len+"' /></td>"
+            +"<td><input type='text' name='pricePC"+_len+"' id='pricePC"+_len+"' /></td>"
+            +"<td><a href=\'#\' onclick=\'deltrPC("+_len+")\'>删除</a></td>"
+            +"</tr>");
+
+    }
+    function addRowPhone(){
+        var _len = $("#tabPhone tr").length;
+        $("#tabPhone").append("<tr id="+_len+" align='center'>"
+            +"<td>"+_len+"</td>"
+            +"<td><input type='text' name='startIndexPhone"+_len+"' id='startIndexPhone"+_len+"' /></td>"
+            +"<td><input type='text' name='endIndexPhone"+_len+"' id='endIndexPhone"+_len+"' /></td>"
+            +"<td><input type='text' name='pricePhone"+_len+"' id='pricePhone"+_len+"' /></td>"
+            +"<td><a href=\'#\' onclick=\'deltrPhone("+_len+")\'>删除</a></td>"
+            +"</tr>");
+
+    }
+    //删除<tr/>
+    function deltrPC(index)
+    {
+        var _len = $("#tabPC tr").length;
+        $("#tabPC tr[id='"+index+"']").remove();//删除当前行
+        for(var i=index+1,j=_len;i<j;i++)
+        {
+            var nextTxtVal = $("#endIndexPC"+i).val();
+            var currentIndex =$("#startIndexPC"+i).val();
+            var pricePC=$("#pricePC"+i).val();
+            $("#tabPC tr[id=\'"+i+"\']")
+                .replaceWith("<tr id="+(i-1)+" align='center'>"
+                    +"<td>"+(i-1)+"</td>"
+                    +"<td><input type='text' name='startIndexPC"+(i-1)+"' value='"+currentIndex+"' id='startIndexPC"+(i-1)+"'/></td>"
+                    +"<td><input type='text' name='endIndexPC"+(i-1)+"' value='"+nextTxtVal+"' id='endIndexPC"+(i-1)+"'/></td>"
+                    +"<td><input type='text' name='pricePC"+(i-1)+"' value='"+pricePC+"' id='pricePC"+(i-1)+"' /></td>"
+                    +"<td><a href=\'#\' onclick=\'deltrPC("+(i-1)+")\'>删除</a></td>"
+
+                    +"</tr>");
+        }
+
+    }
+
+    function deltrPhone(index)
+    {
+        var _len = $("#tabPhone tr").length;
+        $("#tabPhone tr[id='"+index+"']").remove();//删除当前行
+        for(var i=index+1,j=_len;i<j;i++)
+        {
+            var nextTxtVal = $("#endIndexPhone"+i).val();
+            var currentIndex =$("#startIndexPhone"+i).val();
+            var pricePC=$("#pricePhone"+i).val();
+            $("#tabPhone tr[id=\'"+i+"\']")
+                .replaceWith("<tr id="+(i-1)+" align='center'>"
+                    +"<td>"+(i-1)+"</td>"
+                    +"<td><input type='text' name='startIndexPhone"+(i-1)+"' value='"+currentIndex+"' id='startIndexPhone"+(i-1)+"'/></td>"
+                    +"<td><input type='text' name='endIndexPhone"+(i-1)+"' value='"+nextTxtVal+"' id='endIndexPhone"+(i-1)+"'/></td>"
+                    +"<td><input type='text' name='pricePhone"+(i-1)+"' value='"+pricePC+"' id='pricePhone"+(i-1)+"' /></td>"
+                    +"<td><a href=\'#\' onclick=\'deltrPhone("+(i-1)+")\'>删除</a></td>"
+
+                    +"</tr>");
+        }
+
+    }
+
+    //上传日报报表模板
+    function uploadTheDailyReportTemplate(uuid) {
+        $('#uploadTheDailyReportTemplateForm')[0].reset();
+        $("#uploadTheDailyReportTemplateDialog").dialog({
+            resizable: false,
+            width: 400,
+            height: 200,
+            modal: true,
+            //按钮
+            buttons: {
+                "提交": function () {
+                    $(this).dialog("close");
+                    $('#uploadTheDailyReportTemplateForm').find("#customerUuidHidden").val(uuid);
+                    $('#uploadTheDailyReportTemplateForm').submit();
+                },
+                "取消": function () {
+                    $(this).dialog("close");
+                    $('#uploadTheDailyReportTemplateForm')[0].reset();
+                }
+            }
+        });
+    }
 
     //显示添加客户是的DIV
     function showCustomer(uuid,userID) {
@@ -247,8 +403,8 @@
         }
         $("#showCustomerDialog").dialog({
             resizable: false,
-            width: 400,
-            height: 440,
+            width: 380,
+            height: 450,
             modal: true,
             //按钮
             buttons: {
@@ -319,6 +475,67 @@
             }
         });
     }
+    function showCustomerKeyword(uuid) {
+        $("#addCustomerKeywordDialog").dialog({
+            resizable: false,
+            width: 510,
+            height: 320,
+            modal: true,
+            //按钮
+            buttons: {
+                "保存": function() {
+                    addCustomerKeyword(uuid);
+                },
+                "清空": function() {
+                    $('#addCustomerKeywordForm')[0].reset();
+                },
+                "取消": function() {
+                    $(this).dialog("close");
+                    $('#addCustomerKeywordForm')[0].reset();
+                }
+            }
+        });
+    }
+    function addCustomerKeyword(uuid) {
+        var customerKeywords = [];
+        var customerKeywordTextarea = $("#customerKeywordTextarea").val().trim();
+        customerKeywordTextarea.replace("\n","");
+        var customerKeywordText = customerKeywordTextarea.split(";");
+//        var customerKeywordText = customerKeywordTextarea.split("\r\n");
+        customerKeywordText.splice(customerKeywordText.length-1,1);
+        $.each(customerKeywordText,function (idx,val) {
+            var customerKeywordsTmp= val.split(":");
+            var customerKeyword = {};
+            customerKeyword.customerUuid = uuid;
+            customerKeyword.keyword = customerKeywordsTmp[0].trim();
+            customerKeyword.url = customerKeywordsTmp[1].trim();
+            customerKeywords.push(customerKeyword);
+        });
+        alert(JSON.stringify(customerKeywords));
+
+        $.ajax({
+            url: '/internal/customerkeyword/saveCustomerKeyword/',
+            data: JSON.stringify(customerKeywords),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            timeout: 5000,
+            type: 'POST',
+            success: function (result) {
+                if (result) {
+                    showInfo("添加成功！", self);
+                    window.location.reload();
+                } else {
+                    showInfo("添加失败！", self);
+                }
+            },
+            error: function () {
+                showInfo("添加失败！", self);
+                window.location.reload();
+            }
+        });
+    }
 
     function delCustomer(uuid) {
         if (confirm("确实要删除这个客户吗?") == false) return;
@@ -351,6 +568,32 @@
             showCustomerForm.find("#remark").val(customer.remark);
             showCustomerForm.find("#entryTypeHidden").val(customer.entryType);
     }
+
+    function serachCustomers(currentPage,displaysRecords) {
+        var searchCustomerForm = $("#searchCustomerForm");
+        searchCustomerForm.append('<input value="'+currentPage+'" id="currentPage" type="hidden" name="currentPageHidden"/>');
+        searchCustomerForm.append('<input value="'+displaysRecords+'" id="currentPage" type="hidden" name="displayRerondsHidden"/>');
+        searchCustomerForm.submit();
+    }
+
+    function chooseUploadType() {
+        var uploadFile = $("#uploadTheDailyReportTemplateForm").find("#uploadFile").val();
+        var fileTypes = new Array("xls","xlsx");  //定义可支持的文件类型数组
+        var fileTypeFlag = false;
+        var newFileName = uploadFile.split('.');
+        newFileName = newFileName[newFileName.length-1];
+            for(var i=0;i<fileTypes.length;i++){
+            if(fileTypes[i] == newFileName){
+                fileTypeFlag = true;
+                break;
+            }
+        }
+        if(!fileTypeFlag){
+           alert("请提交表格文件.xls .xlsx");
+           return false;
+        }
+    }
+
     function checkinput() {
         var contactPerson = document.getElementById("contactPerson");
         if (trim(contactPerson.value) == "") {
@@ -382,6 +625,7 @@
 </head>
 
 <body>
+<div id="showCustomerTableDiv">
 <table width="100%" style="font-size:12px;" cellpadding=3>
     <tr>
         <td colspan=13 align="left">
@@ -390,22 +634,22 @@
     </tr>
     <tr>
         <td colspan=13>
-            <form method="post" action="customerlist.jsp">
+            <form method="post" id="searchCustomerForm" action="/internal/customer/searchCustomers">
                 <table style="font-size:12px;">
                     <tr>
                         <td align="right">联系人:</td>
-                        <td><input type="text" name="contactPerson" id="contactPerson" value="${contactPerson}"
+                        <td><input type="text" name="contactPerson" id="contactPerson" value="${customerCriteria.contactPerson}"
                                    style="width:200px;"></td>
                         <td align="right">QQ:</td>
-                        <td><input type="text" name="qq" id="qq" value="${qq}" style="width:200px;"></td>
+                        <td><input type="text" name="qq" id="qq" value="${customerCriteria.qq}" style="width:200px;"></td>
                         <td align="right">联系电话：</td>
-                        <td><input type="text" name="telphone" id="telphone" value="${telphone}" style="width:200px;">
+                        <td><input type="text" name="telphone" id="telphone" value="${customerCriteria.telphone}" style="width:200px;">
                         </td>
-                        <td align="right" width="100"><input type="submit" name="btnQuery" id="btnQuery" value=" 查询 ">
+                        <td align="right" width="100"><input type="submit" class="ui-button ui-widget ui-corner-all" name="btnQuery" id="btnQuery" value=" 查询 ">
                         </td>
-                        <td align="right" width="100"><input type="button"  value=" 添加客户 " onclick="showCustomer(null,'${user.userID}')" />
+                        <td align="right" width="100"><input type="button" class="ui-button ui-widget ui-corner-all"  value=" 添加客户 " onclick="showCustomer(null,'${user.userID}')" />
                         </td>
-                        <td align="right" width="100"><input type="button"  value=" 删除所选 " onclick="deleteCustomerForms(this)" />
+                        <td align="right" width="100"><input type="button"  class="ui-button ui-widget ui-corner-all" value=" 删除所选 " onclick="deleteCustomerForms(this)" />
                         </td>
                         <c:if test="${EntryTypeEnum.bc.name().equalsIgnoreCase(entryType)}">
                         <td align="right" width="100"><a target="_blank"
@@ -473,9 +717,9 @@
             <td><fmt:formatDate value="${customer.createTime}" pattern="yyyy-MM-dd"/></td>
             <td>
                 <a href="javascript:getCustomer(${customer.uuid})">修改</a> |
-                <a href="javascript:addCustomerKeyword(${customer.uuid})">增加</a> |
+                <a href="javascript:showCustomerKeyword(${customer.uuid})">增加</a> |
                 <a target="_blank"
-                   href="/customer/uploaddailyreporttemplate.jsp?customerUuid=${customer.uuid}">上传日报表模板</a>
+                   href="javascript:uploadTheDailyReportTemplate('${customer.uuid}')">上传日报表模板</a>
                 <c:if test="${user.vipType}">
                     <a href="javascript:delCustomer('${customer.uuid}')">删除</a>
                     <a href="javascript:addRule('${customer.uuid}')">添加规则</a>
@@ -501,48 +745,78 @@
 </table>
 <br><br><br>
 <br>
-
+</div>
 <br><br><br><br><br><br><br><br>
 
-<%--<div id="showAddRuleDialog">
+<div id="showRuleDialog" title="客户规则">
     <div>
-        <input type="radio" id="chargeRuleFixed" >按固定价格收费&nbsp;&nbsp;
-        <input type="radio" id="chargeRulePercentage" >按照百分比收费&nbsp;&nbsp;
-        <input type="radio" id="chargeRuleInterval" >按照区间收费
+        <input type="radio" id="chargeRuleFixed" value="1"  onclick="chooseChargeType(this.value)"  name="textbox">按固定价格收费&nbsp;&nbsp;
+        <input type="radio" id="chargeRulePercentage" onclick="chooseChargeType(this.value)"  value="2" name="textbox" checked="checked">按照百分比收费&nbsp;&nbsp;
+        <input type="radio" id="chargeRuleInterval" onclick="chooseChargeType(this.value)"  value="3" name="textbox">按照区间收费
     </div>
     <div id="showChargeRuleCalculationDiv">
-        <div id="showChargeRuleCalculationDiv">
-            <div id="pcOperationTypeDiv">
-                <input id="pcOperationType" type="checkbox" value="电脑端"/><br>
-                当指数<=0时收的费用: <input id="equalZeraCost" type="text" /><br>
-                排名第一应收金额: <input id="chargesOfFirst" type="text" /><br>
-                排名第二应收金额: <input id="chargesOfSecond " type="text" /><br>
-                排名第三应收金额: <input id="chargesOfThird" type="text" /><br>
-                排名第四应收金额: <input id="chargesOfFourth" type="text" /><br>
-                排名第五应收金额: <input id="chargesOfFifth" type="text" /><br>
-                排名上首页应收金额: <input id="chargesOfFirstPage" type="text" />
+        <div id="showChargeRuleCalculationDiv" style="float: left;width: 100%">
+            <div id="pcOperationTypeDiv" style="float: left;width: 50%">
+                <input id="pcOperationType" type="checkbox" />PC<br>
+                指数小于0: <input id="equalZeraCost" type="text" /><br>
+                排名第一: <input id="chargesOfFirst" type="text" /><br>
+                排名第二: <input id="chargesOfSecond " type="text" /><br>
+                排名第三: <input id="chargesOfThird" type="text" /><br>
+                排名第四: <input id="chargesOfFourth" type="text" /><br>
+                排名第五: <input id="chargesOfFifth" type="text" /><br>
+                排名上首页: <input id="chargesOfFirstPage" type="text" />
             </div>
-            <div id="phoneOperationTypeDiv">
-                <input id="phoneOperationType" type="checkbox" value="手机端"/><br>
-                当指数<=0时收的费用: <input id="equalZeraCost" type="text" /><br>
-                排名第一应收金额: <input id="chargesOfFirst" type="text" /><br>
-                排名第二应收金额: <input id="chargesOfSecond " type="text" /><br>
-                排名第三应收金额: <input id="chargesOfThird" type="text" /><br>
-                排名第四应收金额: <input id="chargesOfFourth" type="text" /><br>
-                排名第五应收金额: <input id="chargesOfFifth" type="text" /><br>
-                排名上首页应收金额: <input id="chargesOfFirstPage" type="text" />
+            <div id="phoneOperationTypeDiv" style="float: left;width: 50%">
+                <input id="phoneOperationType" type="checkbox" />Phone<br>
+                指数小于0: <input id="equalZeraCost" type="text" /><br>
+                排名第一: <input id="chargesOfFirst" type="text" /><br>
+                排名第二: <input id="chargesOfSecond " type="text" /><br>
+                排名第三: <input id="chargesOfThird" type="text" /><br>
+                排名第四: <input id="chargesOfFourth" type="text" /><br>
+                排名第五: <input id="chargesOfFifth" type="text" /><br>
+                排名上首页: <input id="chargesOfFirstPage" type="text" />
             </div>
     </div>
     <div id="showChargeRuleIntervalDiv">
         <div id="pcOperationTypeDiv">
-            <input id="pcOperationType" type="checkbox" value="电脑端"/><br>
+            <input id="pcOperationType" type="checkbox" value="电脑端"/>PC<br>
+            <table id="tabPC" border="1" width="60%" align="center" style="margin-top:20px">
+                <tr>
+                    <td width="20%">序号</td>
+                    <td>起始指数</td>
+                    <td>终止指数</td>
+                    <td>价格</td>
+                    <td>操作</td>
+                </tr>
+            </table>
+            <div style="border:2px;
+                border-color:#00CC00;
+                margin-left:20%;
+                margin-top:20px">
+                <input type="button" id="but" value="增加" onclick="addRowPC()" />
+            </div>
         </div>
         <div id="phoneOperationTypeDiv">
-            <input id="phoneOperationType" type="checkbox" value="手机端"/><br>
+            <input id="phoneOperationType" type="checkbox" value="手机端"/>Phone<br>
+            <table id="tabPhone" border="1" width="60%" align="center" style="margin-top:20px">
+                <tr>
+                    <td width="20%">序号</td>
+                    <td>起始指数</td>
+                    <td>终止指数</td>
+                    <td>价格</td>
+                    <td>操作</td>
+                </tr>
+            </table>
+            <div style="border:2px;
+                border-color:#00CC00;
+                margin-left:20%;
+                margin-top:20px">
+                <input type="button" id="but" value="增加" onclick="addRowPhone()" />
+            </div>
         </div>
     </div>
 </div>
-</div>--%>
+</div>
 <div id="showCustomerDialog" title="客户信息">
     <form id="showCustomerForm" method="post" onsubmit="return checkinput();" action="customerlist.jsp">
         <table   style="font-size:12px;" >
@@ -550,8 +824,8 @@
                 <td align="center">
                     <table  style="font-size:14px;" cellpadding=5>
                         <tr><td align="right">联系人:</td> <td><input type="text" name="contactPerson" id="contactPerson"  style="width:200px;"></td></tr>
-                        <tr><td align="right">QQ:</td> <td><input type="text" name="qq"  id="qq"  style="width:200px;" ><div class="hiddentr" id="qqExisting"><font color="red">该QQ在系统中已经存在！</font></div></td></tr>
-                        <tr><td align="right">联系电话：</td><td><input type="text" name="telphone" id="telphone"  style="width:200px;"><div class="hiddentr" id="telphoneExisting"><font color="red">该电话在系统中已经存在！</font></div></td></tr>
+                        <tr><td align="right">QQ:</td> <td><input type="text" name="qq"  id="qq"  style="width:200px;" ><div class="hiddentr" id="qqExisting"><%--<font color="red">该QQ在系统中已经存在！</font>--%></div></td></tr>
+                        <tr><td align="right">联系电话：</td><td><input type="text" name="telphone" id="telphone"  style="width:200px;"><div class="hiddentr" id="telphoneExisting"><%--<font color="red">该电话在系统中已经存在！</font>--%></div></td></tr>
                         <tr><td align="right">客户类型:</td>
                             <td>
                                 <select name="type" id="type">
@@ -560,7 +834,7 @@
                                 </select>
                             </td>
                         </tr>
-                        <<input type="hidden" id="entryTypeHidden" value="${entryType}">
+                        <input type="hidden" id="entryTypeHidden" value="${entryType}">
                         <tr><td align="right">客户状态:</td>
                             <td>
                                 <select name="status" id="status">
@@ -569,8 +843,28 @@
                                 </select>
                             </td>
                         </tr>
-                        <tr><td align="right">备注：</td><td><textarea name="remark" id="remark" value="" style="width:200px;height:100px"></textarea></td></tr>
-                        <tr><td align="right"></td>
+                        <tr><td align="right">备注：</td><td><textarea name="remark" id="remark" value="" placeholder="写下备注吧!" style="width:200px;height:100px;resize: none"></textarea></td></tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+<%--上传日报表模板 onsubmit="return checkinput();"--%>
+<div id="uploadTheDailyReportTemplateDialog" title="上传日报表模板">
+    <form method="post" id="uploadTheDailyReportTemplateForm" onsubmit="return chooseUploadType()" action="/internal/customer/uploadTheDailyReportTemplate" enctype="multipart/form-data">
+        <table width="100%" style="margin-top: 10px;margin-left: 10px">
+            <tr><td></td></tr>
+            <tr><td></td></tr>
+            <tr><td></td></tr>
+            <tr><td></td></tr>
+            <tr>
+                <td align="right">
+                    <table width=90% style="font-size:14px;">
+                        <tr><td>
+                            <input type="hidden" id="customerUuidHidden" name="customerUuid">
+                            <input type="file" id="uploadFile" name="file" size=50 height="50px">
+                        </td>
                         </tr>
                     </table>
                 </td>
@@ -578,7 +872,33 @@
         </table>
     </form>
 </div>
+<%--添加客户关键字--%>
+<div id="addCustomerKeywordDialog" title="客户关键字">
+ <form id="addCustomerKeywordForm">
+   <textarea id="customerKeywordTextarea" style="width:480px;height:203px;" placeholder="例:关键字:域名  以分号作为分割符&#10; xxx : baidu.com; xxx : qq.com;"></textarea>
+  </form>
+</div>
 
+
+<hr>
+<div id="showCustomerBottomDiv">
+    <input id="fisrtButton" class="ui-button ui-widget ui-corner-all" type="button"  onclick="serachCustomers(1,'${page.size}')" value="首页"/>&nbsp;&nbsp;&nbsp;&nbsp;
+    <input id="upButton" type="button" class="ui-button ui-widget ui-corner-all" onclick="serachCustomers('${page.current-1}','${page.size}')" value="上一页"/>&nbsp;&nbsp;&nbsp;&nbsp;
+    ${page.current}/${page.pages}&nbsp;&nbsp;
+    <input id="nextButton"  type="button" class="ui-button ui-widget ui-corner-all"  onclick="serachCustomers('${page.current+1>=page.pages?page.pages:page.current+1}','${page.size}')" value="下一页">&nbsp;&nbsp;&nbsp;&nbsp;
+    <input id="lastButton" type="button" class="ui-button ui-widget ui-corner-all" onclick="serachCustomers('${page.pages}','${page.size}')" value="末页">&nbsp;&nbsp;&nbsp;&nbsp;
+    总记录数:${page.total}&nbsp;&nbsp;&nbsp;&nbsp;
+    每页显示条数:<select id="chooseRecords"  onchange="chooseRecords(${page.current},this.value)">
+    <option>10</option>
+    <option>15</option>
+    <option>30</option>
+    <option>45</option>
+</select>
+    <%--用于存储pageInfo--%>
+    <input type="hidden" id="currentPageHidden" value="${page.current}"/>
+    <input type="hidden" id="displaysRecordsHidden" value="${page.size}"/>
+    <input type="hidden" id="pagesHidden" value="${page.pages}"/>
+</div>
 
 <%--<div style="display:none;">--%>
     <%--<script src="http://s84.cnzz.com/stat.php?id=4204660&web_id=4204660" language="JavaScript"></script>--%>

@@ -24,11 +24,11 @@
         <include refid="colID"/>
         FROM t_customer c
         WHERE 1 = 1
-        <if test="customerCriteria.contactPerson != null">AND c.fContactPerson like '%#{customerCriteria.contactPerson}%'</if>
-        <if test="customerCriteria.qq != null">AND c.fQQ like '#{customerCriteria.qq}%'</if>
-        <if test="customerCriteria.telphone != null">AND c.fTelphone like '%#{customerCriteria.telphone}%'</if>
-        <if test="customerCriteria.userID != null">AND c.fUserID = #{customerCriteria.userID}</if>
-        <if test="customerCriteria.status != null">AND c.fStatus = #{customerCriteria.status}</if>
+        <if test="customerCriteria.contactPerson != null and customerCriteria.contactPerson != ''">AND c.fContactPerson like '%${customerCriteria.contactPerson}%'</if>
+        <if test="customerCriteria.qq != null and customerCriteria.qq != ''">AND c.fQQ like '${customerCriteria.qq}%'</if>
+        <if test="customerCriteria.telphone != null and customerCriteria.telphone != ''">AND c.fTelphone like '%${customerCriteria.telphone}%'</if>
+        <if test="customerCriteria.userID != null and customerCriteria.userID != ''">AND c.fUserID = #{customerCriteria.userID}</if>
+        <if test="customerCriteria.status != null and customerCriteria.status != ''">AND c.fStatus = #{customerCriteria.status}</if>
         order by c.fUpdateTime DESC
     </select>
 

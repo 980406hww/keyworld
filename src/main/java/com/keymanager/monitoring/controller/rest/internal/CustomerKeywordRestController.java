@@ -1,6 +1,7 @@
 package com.keymanager.monitoring.controller.rest.internal;
 
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
+import com.keymanager.monitoring.entity.CustomerKeyword;
 import com.keymanager.monitoring.entity.User;
 import com.keymanager.monitoring.service.CustomerKeywordService;
 import com.keymanager.monitoring.service.UserService;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -39,4 +41,19 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
 		}
 	}
+
+	@RequestMapping(value = "/saveCustomerKeyword", method = RequestMethod.POST)
+	public ResponseEntity<?> saveCustomerKeywordForm(@RequestBody List<CustomerKeyword> customerKeywords) {
+		try{
+			for(CustomerKeyword customerKeyword:customerKeywords){
+				if(customerKeyword.getUrl()!=null){
+					customerKeywordService.insert(customerKeyword);
+				}
+			}
+			return new ResponseEntity<Object>(true, HttpStatus.OK);
+		}catch (Exception ex){
+			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+		}
+	}
+
 }
