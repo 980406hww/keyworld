@@ -13,6 +13,8 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,12 +32,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by shunshikj01 on 2017/8/17.
- */
 @RestController
 @RequestMapping(value = "/internal/customer")
 public class CustomerRestController {
+    private static Logger logger = LoggerFactory.getLogger(CustomerRestController.class);
+
     @Autowired
     private CustomerService customerService;
 
@@ -103,24 +104,22 @@ public class CustomerRestController {
     }
 
     @RequestMapping(value = "uploadTheDailyReportTemplate" , method = RequestMethod.POST)
-    public String uploadTheDailyReportTemplate(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request){
-       try {
-           String customerUuid = request.getParameter("customerUuid");
-           String path = Utils.getWebRootPath()+"\\temporaryImage\\";
-           String fileName = customerUuid+file.getOriginalFilename();
-           File targetFile = new File(path, fileName);
-           if(!targetFile.exists()){
-               targetFile.mkdirs();
-           }
-           //保存
-           try {
-               file.transferTo(targetFile);
-           } catch (Exception e) {
-               e.printStackTrace();
-           }
-       }catch (Exception e){
-           e.printStackTrace();
+    public boolean uploadTheDailyReportTemplate(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request){
+       String customerUuid = request.getParameter("customerUuid");
+       String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+       String path = Utils.getWebRootPath() + "dailyreport" + File.separator + terminalType + File.separator;
+       String fileName = customerUuid  + ".xls";
+       File targetFile = new File(path, fileName);
+       if(!targetFile.exists()){
+           targetFile.mkdirs();
        }
-       return "/internal/customer/customerlist";
+       //保存
+       try {
+           file.transferTo(targetFile);
+           return true;
+       } catch (Exception e) {
+           logger.error(e.getMessage());
+       }
+       return false;
     }
 }
