@@ -527,22 +527,52 @@
         function addCustomerKeyword(uuid) {
             var customerKeywords = [];
             var customerKeywordTextarea = $("#customerKeywordTextarea").val().trim();
-            customerKeywordTextarea.replace("\n", "");
-            var customerKeywordText = customerKeywordTextarea.split(";");
-//        var customerKeywordText = customerKeywordTextarea.split("\r\n");
-            customerKeywordText.splice(customerKeywordText.length - 1, 1);
-            $.each(customerKeywordText, function (idx, val) {
-                var customerKeywordsTmp = val.split(":");
+            var group = $("#group").val().trim();
+            if(group === ''){
+                alert("请输入关键字分组名称！");
+                $("#group").focus();
+                return;
+            }
+            if(customerKeywordTextarea === ''){
+                alert("请输入关键字信息！");
+                $("#customerKeywordTextarea").focus();
+                return;
+            }
+            var customerKeywordTextArray = customerKeywordTextarea.split("\n");
+            if(customerKeywordTextArray.length == 1){
+                customerKeywordTextArray = customerKeywordTextarea.split("\r\n");
+            }
+            $.each(customerKeywordTextArray, function (idx, val) {
+                val = val.trim();
+                var customerKeywordAttributes = val.split(" ");
+                if(customerKeywordAttributes.length == 1){
+                    customerKeywordAttributes = val.split(" ");
+                }
+                if(customerKeywordAttributes.length == 1){
+                    customerKeywordAttributes = val.split("	");
+                }
+
+                var tmpCustomerKeywordAttributes = [];
+                $.each(customerKeywordAttributes, function(idx, val){
+                    if(val !== ''){
+                        tmpCustomerKeywordAttributes.push(val);
+                    }
+                });
                 var customerKeyword = {};
                 customerKeyword.customerUuid = uuid;
-                customerKeyword.keyword = customerKeywordsTmp[0].trim();
-                customerKeyword.url = customerKeywordsTmp[1].trim();
+                customerKeyword.keyword = tmpCustomerKeywordAttributes[0].trim();
+                customerKeyword.url = tmpCustomerKeywordAttributes[1].trim();
+                customerKeyword.optimizeGroupName = group.trim();
+
+                customerKeyword.url = customerKeyword.url.replace("http://", "");
+                customerKeyword.url = customerKeyword.url.replace("https://", "");
+
                 customerKeywords.push(customerKeyword);
             });
             alert(JSON.stringify(customerKeywords));
 
             $.ajax({
-                url: '/internal/customerkeyword/saveCustomerKeyword/',
+                url: '/internal/customerkeyword/saveCustomerKeyword',
                 data: JSON.stringify(customerKeywords),
                 headers: {
                     'Accept': 'application/json',
@@ -597,7 +627,7 @@
             showCustomerForm.find("#entryTypeHidden").val(customer.entryType);
         }
 
-        function serachCustomers(currentPage, displaysRecords) {
+        function searchCustomers(currentPage, displaysRecords) {
             var searchCustomerForm = $("#searchCustomerForm");
             searchCustomerForm.append('<input value="' + currentPage + '" id="currentPage" type="hidden" name="currentPageHidden"/>');
             searchCustomerForm.append('<input value="' + displaysRecords + '" id="currentPage" type="hidden" name="displayRerondsHidden"/>');
@@ -644,7 +674,7 @@
             }
         }
 
-        <c:if test="${EntryTypeEnum.bc.name().equalsIgnoreCase(entryType)}">
+        <c:if test="${'bc'.equalsIgnoreCase(entryType)}">
     var intervalId = setInterval(function () {
         searchCurrentDateCompletedReports();
     }, 1000 * 30);
@@ -680,7 +710,7 @@
                         </td>
                         <td align="right" width="100"><input type="button"  class="ui-button ui-widget ui-corner-all" value=" 删除所选 " onclick="deleteCustomerForms(this)" />
                         </td>
-                        <c:if test="${EntryTypeEnum.bc.name().equalsIgnoreCase(entryType)}">
+                        <c:if test="${'bc'.equalsIgnoreCase(entryType)}">
                         <td align="right" width="100"><a target="_blank"
                                                          href='javascript:triggerDailyReportGeneration(this)'>触发日报表生成</a>
                         </td>
@@ -904,18 +934,27 @@
 <%--添加客户关键字--%>
 <div id="addCustomerKeywordDialog" title="客户关键字">
  <form id="addCustomerKeywordForm">
-   <textarea id="customerKeywordTextarea" style="width:480px;height:203px;" placeholder="例:关键字:域名  以分号作为分割符&#10; xxx : baidu.com; xxx : qq.com;"></textarea>
+   <textarea id="customerKeywordTextarea" style="width:480px;height:180px;"
+             placeholder="例:关键字 域名  关键字与域名以空格作为分割，一行一组"></textarea>
+     <c:choose>
+         <c:when test="${'PC'.equalsIgnoreCase(terminalType)}">
+             <input type="input" id="group" style="width:480px" value="pc_pm_xiaowu"/>
+         </c:when>
+         <c:otherwise>
+             <input type="input" id="group" style="width:480px" value="m_pm_xiaowu"/>
+         </c:otherwise>
+     </c:choose>
   </form>
 </div>
 
 
 <hr>
 <div id="showCustomerBottomDiv">
-    <input id="fisrtButton" class="ui-button ui-widget ui-corner-all" type="button"  onclick="serachCustomers(1,'${page.size}')" value="首页"/>&nbsp;&nbsp;&nbsp;&nbsp;
-    <input id="upButton" type="button" class="ui-button ui-widget ui-corner-all" onclick="serachCustomers('${page.current-1}','${page.size}')" value="上一页"/>&nbsp;&nbsp;&nbsp;&nbsp;
+    <input id="fisrtButton" class="ui-button ui-widget ui-corner-all" type="button" onclick="searchCustomers(1,'${page.size}')" value="首页"/>&nbsp;&nbsp;&nbsp;&nbsp;
+    <input id="upButton" type="button" class="ui-button ui-widget ui-corner-all" onclick="searchCustomers('${page.current-1}','${page.size}')" value="上一页"/>&nbsp;&nbsp;&nbsp;&nbsp;
     ${page.current}/${page.pages}&nbsp;&nbsp;
-    <input id="nextButton"  type="button" class="ui-button ui-widget ui-corner-all"  onclick="serachCustomers('${page.current+1>=page.pages?page.pages:page.current+1}','${page.size}')" value="下一页">&nbsp;&nbsp;&nbsp;&nbsp;
-    <input id="lastButton" type="button" class="ui-button ui-widget ui-corner-all" onclick="serachCustomers('${page.pages}','${page.size}')" value="末页">&nbsp;&nbsp;&nbsp;&nbsp;
+    <input id="nextButton" type="button" class="ui-button ui-widget ui-corner-all" onclick="searchCustomers('${page.current+1>=page.pages?page.pages:page.current+1}','${page.size}')" value="下一页">&nbsp;&nbsp;&nbsp;&nbsp;
+    <input id="lastButton" type="button" class="ui-button ui-widget ui-corner-all" onclick="searchCustomers('${page.pages}','${page.size}')" value="末页">&nbsp;&nbsp;&nbsp;&nbsp;
     总记录数:${page.total}&nbsp;&nbsp;&nbsp;&nbsp;
     每页显示条数:<select id="chooseRecords"  onchange="chooseRecords(${page.current},this.value)">
     <option>10</option>

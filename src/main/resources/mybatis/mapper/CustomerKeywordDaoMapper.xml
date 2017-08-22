@@ -1,6 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.monitoring.dao.CustomerKeywordDao">
+    <sql id="colID">
+        ck.fUuid	AS	'uuid',
+        ck.fTerminalType	AS	'terminalType',
+        ck.fCustomerUuid	AS	'customerUuid',
+        ck.fKeyword	AS	'keyword',
+        ck.fUrl	AS	'url',
+        ck.fType	AS	'type',
+        ck.fOriginalUrl	AS	'originalUrl',
+        ck.fTitle	AS	'title',
+        ck.fSequence	AS	'sequence',
+        ck.fCaptureTitleQueryTime	AS	'captureTitleQueryTime',
+        ck.fCapturedTitle	AS	'capturedTitle',
+        ck.fAutoUpdateNegativeDateTime	AS	'autoUpdateNegativeDateTime',
+        ck.fBigKeyword	AS	'bigKeyword',
+        ck.fSnapshotDateTime	AS	'snapshotDateTime',
+        ck.fSearchEngine	AS	'searchEngine',
+        ck.fInitialIndexCount	AS	'initialIndexCount',
+        ck.fInitialPosition	AS	'initialPosition',
+        ck.fCurrentIndexCount	AS	'currentIndexCount',
+        ck.fCurrentPosition	AS	'currentPosition',
+        ck.fQueryDate	AS	'queryDate',
+        ck.fQueryCount	AS	'queryCount',
+        ck.fInvalidRefreshCount	AS	'invalidRefreshCount',
+        ck.fQueryTime	AS	'queryTime',
+        ck.fQueryInterval	AS	'queryInterval',
+        ck.fServiceProvider	AS	'serviceProvider',
+        ck.fOptimizeGroupName	AS	'optimizeGroupName',
+        ck.fOptimizePlanCount	AS	'optimizePlanCount',
+        ck.fOptimizedCount	AS	'optimizedCount',
+        ck.fOptimizedPercentage	AS	'optimizedPercentage',
+        ck.fOptimizeDate	AS	'optimizeDate',
+        ck.fLastOptimizeDateTime	AS	'lastOptimizeDateTime',
+        ck.fOptimizePositionFirstPercentage	AS	'optimizePositionFirstPercentage',
+        ck.fOptimizePositionSecondPercentage	AS	'optimizePositionSecondPercentage',
+        ck.fOptimizePositionThirdPercentage	AS	'optimizePositionThirdPercentage',
+        ck.fPositionFirstCost	AS	'positionFirstCost',
+        ck.fPositionSecondCost	AS	'positionSecondCost',
+        ck.fPositionThirdCost	AS	'positionThirdCost',
+        ck.fPositionForthCost	AS	'positionForthCost',
+        ck.fPositionFifthCost	AS	'positionFifthCost',
+        ck.fPositionFirstFee	AS	'positionFirstFee',
+        ck.fPositionSecondFee	AS	'positionSecondFee',
+        ck.fPositionThirdFee	AS	'positionThirdFee',
+        ck.fPositionForthFee	AS	'positionForthFee',
+        ck.fPositionFifthFee	AS	'positionFifthFee',
+        ck.fPositionFirstPageFee	AS	'positionFirstPageFee',
+        ck.fCapturePositionQueryTime	AS	'capturePositionQueryTime',
+        ck.fCaptureIndexQueryTime	AS	'captureIndexQueryTime',
+        ck.fCollectMethod	AS	'collectMethod',
+        ck.fStartOptimizedTime	AS	'startOptimizedTime',
+        ck.fEffectiveFromTime	AS	'effectiveFromTime',
+        ck.fEffectiveToTime	AS	'effectiveToTime',
+        ck.fPaymentEffectiveFromTime	AS	'paymentEffectiveFromTime',
+        ck.fPaymentEffectiveToTime	AS	'paymentEffectiveToTime',
+        ck.fRelatedKeywords	AS	'relatedKeywords',
+        ck.fPaymentStatus	AS	'paymentStatus',
+        ck.fOrderNumber	AS	'orderNumber',
+        ck.fRemarks	AS	'remarks',
+        ck.fStatus	AS	'status',
+        ck.fUpdateTime	AS	'updateTime',
+        ck.fCreateTime	AS	'createTime'
+    </sql>
 
     <select id="clearTitleByUuids">
         UPDATE t_customer_keyword set fTitle = null where fUuid in
@@ -17,4 +79,14 @@
         SELECT COUNT(1) FROM t_customer_keyword ck WHERE ck.fCustomerUuid = #{customerUuid}
     </select>
 
+
+    <select id="getSimilarCustomerKeywordCount" resultType="int">
+        select Count(1) from t_customer_keyword where fKeyword = #{keyword} and fTerminalType = #{terminalType} and fCustomerUuid = #{customerUuid}
+        and fOriginalUrl <![CDATA[ <> ]]> '' and fOriginalUrl like concat('%', #{originalUrl});
+    </select>
+
+    <select id="getMaxSequence" resultType="int">
+        select max(fSequence) from t_customer_keyword where fTerminalType = #{terminalType} and fType = #{entryType} and fCustomerUuid =
+        #{customerUuid};
+    </select>
 </mapper>

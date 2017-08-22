@@ -13,6 +13,9 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(value = "fCustomerUuid")
     private long customerUuid;
 
+    @TableField(value = "fTerminalType")
+    private String terminalType;
+
     @TableField(value = "fKeyword")
     private String keyword;
 
@@ -50,16 +53,16 @@ public class CustomerKeyword extends BaseEntity {
     private String searchEngine;
 
     @TableField(value = "fInitialIndexCount")
-    private int initialIndexCount;
+    private Integer initialIndexCount;
 
     @TableField(value = "fInitialPosition")
-    private int initialPosition;
+    private Integer initialPosition;
 
     @TableField(value = "fCurrentIndexCount")
-    private int currentIndexCount;
+    private Integer currentIndexCount;
 
     @TableField(value = "fCurrentPosition")
-    private int currentPosition;
+    private Integer currentPosition;
 
     @TableField(value = "fQueryDate")
     private Date queryDate;
@@ -100,10 +103,10 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(value = "fLastOptimizeDateTime")
     private Date lastOptimizeDateTime;
 
-    @TableField(value = "fOptimizePositionThirdPercentage")
+    @TableField(value = "fOptimizePositionFirstPercentage")
     private int optimizePositionFirstPercentage;
 
-    @TableField(value = "fOptimizePositionThirdPercentage")
+    @TableField(value = "fOptimizePositionSecondPercentage")
     private int optimizePositionSecondPercentage;
 
     @TableField(value = "fOptimizePositionThirdPercentage")
@@ -187,6 +190,14 @@ public class CustomerKeyword extends BaseEntity {
 
     public void setCustomerUuid(long customerUuid) {
         this.customerUuid = customerUuid;
+    }
+
+    public String getTerminalType() {
+        return terminalType;
+    }
+
+    public void setTerminalType(String terminalType) {
+        this.terminalType = terminalType;
     }
 
     public String getKeyword() {
@@ -285,35 +296,35 @@ public class CustomerKeyword extends BaseEntity {
         this.searchEngine = searchEngine;
     }
 
-    public int getInitialIndexCount() {
+    public Integer getInitialIndexCount() {
         return initialIndexCount;
     }
 
-    public void setInitialIndexCount(int initialIndexCount) {
+    public void setInitialIndexCount(Integer initialIndexCount) {
         this.initialIndexCount = initialIndexCount;
     }
 
-    public int getInitialPosition() {
+    public Integer getInitialPosition() {
         return initialPosition;
     }
 
-    public void setInitialPosition(int initialPosition) {
+    public void setInitialPosition(Integer initialPosition) {
         this.initialPosition = initialPosition;
     }
 
-    public int getCurrentIndexCount() {
+    public Integer getCurrentIndexCount() {
         return currentIndexCount;
     }
 
-    public void setCurrentIndexCount(int currentIndexCount) {
+    public void setCurrentIndexCount(Integer currentIndexCount) {
         this.currentIndexCount = currentIndexCount;
     }
 
-    public int getCurrentPosition() {
+    public Integer getCurrentPosition() {
         return currentPosition;
     }
 
-    public void setCurrentPosition(int currentPosition) {
+    public void setCurrentPosition(Integer currentPosition) {
         this.currentPosition = currentPosition;
     }
 
