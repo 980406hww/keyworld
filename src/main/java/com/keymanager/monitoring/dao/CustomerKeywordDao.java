@@ -4,10 +4,20 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.keymanager.monitoring.entity.CustomerKeyword;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
-    public void clearTitleByUuids(String[] uuids);
+    void clearTitleByUuids(String[] uuids);
 
-    public void clearTitleByCustomerUuidAndTerminalType(@Param("terminalType") String terminalType, @Param("customerUuid") String customerUuid);
+    void clearTitleByCustomerUuidAndTerminalType(@Param("terminalType") String terminalType, @Param("customerUuid") String customerUuid);
 
-    public int getCustomerKeywordCount(@Param("customerUuid") long customerUuid);
+    int getCustomerKeywordCount(@Param("customerUuid") long customerUuid);
+
+    int getSimilarCustomerKeywordCount(@Param("terminalType") String terminalType, @Param("customerUuid") long customerUuid, @Param("keyword") String
+            keyword, @Param("originalUrl") String originalUrl);
+
+    int getMaxSequence(@Param("terminalType") String terminalType, @Param("entryType") String entryType, @Param("customerUuid") long customerUuid);
+
+    List<CustomerKeyword> searchSameCustomerKeywords(@Param("terminalType") String terminalType, @Param("customerUuid") long customerUuid,
+            @Param("keyword") String keyword);
 }

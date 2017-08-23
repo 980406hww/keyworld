@@ -1,20 +1,30 @@
 package com.keymanager.monitoring.service;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.toolkit.StringUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.keymanager.enums.CollectMethod;
 import com.keymanager.manager.CustomerKeywordManager;
 import com.keymanager.monitoring.dao.CustomerKeywordDao;
 import com.keymanager.monitoring.entity.CustomerKeyword;
 import com.keymanager.monitoring.entity.QZCaptureTitleLog;
 import com.keymanager.monitoring.entity.QZOperationType;
 import com.keymanager.monitoring.entity.QZSetting;
+import com.keymanager.monitoring.enums.EntryTypeEnum;
 import com.keymanager.monitoring.enums.QZCaptureTitleLogStatusEnum;
+import com.keymanager.util.Constants;
+import com.keymanager.util.Utils;
+import com.keymanager.util.common.StringUtil;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, CustomerKeyword> {
@@ -74,7 +84,108 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 		}
 	}
 
+	public void addCustomerKeywordsFromSimpleUI(List<CustomerKeyword> customerKeywords, String terminalType, String entryType){
+		if(CollectionUtils.isNotEmpty(customerKeywords)) {
+			long customerUuid = customerKeywords.get(0).getCustomerUuid();
+			int maxSequence = 0;
+			try {
+				maxSequence = customerKeywordDao.getMaxSequence(terminalType, entryType, customerUuid);
+			}catch (Exception ex){
+				ex.printStackTrace();
+			}
+			for (CustomerKeyword customerKeyword : customerKeywords) {
+				supplementInfoFromSimpleUI(customerKeyword, terminalType, entryType, ++maxSequence);
+				supplementIndexAndPriceFromExisting(customerKeyword);
+				addCustomerKeyword(customerKeyword);
+			}
+		}
+	}
+
+	public void addCustomerKeywords(List<CustomerKeyword> customerKeywords){
+		for(CustomerKeyword customerKeyword : customerKeywords){
+			addCustomerKeyword(customerKeyword);
+		}
+	}
+
+	private void addCustomerKeyword(CustomerKeyword customerKeyword){
+		if(StringUtil.isNullOrEmpty(customerKeyword.getOriginalUrl())){
+			customerKeyword.setOriginalUrl(customerKeyword.getUrl());
+		}
+		String originalUrl = customerKeyword.getOriginalUrl();
+		if(!StringUtil.isNullOrEmpty(originalUrl)){
+			if(originalUrl.indexOf("www.") == 0){
+				originalUrl = originalUrl.substring(4);
+			}else if(originalUrl.indexOf("m.") == 0){
+				originalUrl = originalUrl.substring(2);
+			}
+		}else{
+			originalUrl = null;
+		}
+		if(!EntryTypeEnum.fm.name().equals(customerKeyword.getType()) && haveDuplicatedCustomerKeyword(customerKeyword.getTerminalType(),
+				customerKeyword.getCustomerUuid(), customerKeyword.getKeyword(), originalUrl)){
+			return ;
+		}
+		customerKeywordDao.insert(customerKeyword);
+	}
+
+//	public List<CustomerKeyword> searchCustomerKeywords(String terminalType, long customerUuid, String keyword, String originalUrl){
+//		CustomerKeyword customerKeyword = new CustomerKeyword();
+//		customerKeyword.setCustomerUuid(customerUuid);
+//		customerKeyword.setType(terminalType);
+//		customerKeyword.setKeyword(keyword);
+//		customerKeyword.setOriginalUrl(originalUrl);
+//		Wrapper wrapper = new EntityWrapper(customerKeyword);
+//	}
+
+	public boolean haveDuplicatedCustomerKeyword(String terminalType, long customerUuid, String keyword, String originalUrl){
+		int customerKeywordCount = 0;
+		try{
+			customerKeywordCount = customerKeywordDao.getSimilarCustomerKeywordCount(terminalType, customerUuid, keyword, originalUrl);
+		} catch (Exception ex){
+			ex.printStackTrace();
+		}
+		return customerKeywordCount > 0;
+	}
+
 	public int getCustomerKeywordCount(long customerUuid){
 		return customerKeywordDao.getCustomerKeywordCount(customerUuid);
+	}
+
+	public void deleteCustomerKeywords(long customerUuid){
+		CustomerKeyword customerKeyword = new CustomerKeyword();
+		customerKeyword.setCustomerUuid(customerUuid);
+		Wrapper wrapper = new EntityWrapper(customerKeyword);
+		this.delete(wrapper);
+	}
+
+	private void supplementInfoFromSimpleUI(CustomerKeyword customerKeyword, String terminalType, String entryType, int maxSequence){
+		customerKeyword.setType(entryType);
+		customerKeyword.setStatus(1);
+		customerKeyword.setTerminalType(terminalType);
+		customerKeyword.setSearchEngine(Constants.SEARCH_ENGINE_BAIDU);
+		customerKeyword.setStartOptimizedTime(Utils.getCurrentTimestamp());
+		customerKeyword.setCollectMethod(CollectMethod.PerDay.getCode());
+		customerKeyword.setServiceProvider("baidutop123");
+		customerKeyword.setSequence(maxSequence);
+		customerKeyword.setCreateTime(Utils.getCurrentTimestamp());
+		customerKeyword.setUpdateTime(Utils.getCurrentTimestamp());
+	}
+
+	private void supplementIndexAndPriceFromExisting(CustomerKeyword customerKeyword){
+		List<CustomerKeyword> existingCustomerKeywords = customerKeywordDao.searchSameCustomerKeywords(customerKeyword.getTerminalType(),
+				customerKeyword.getCustomerUuid(), customerKeyword.getKeyword());
+		if(CollectionUtils.isNotEmpty(existingCustomerKeywords)){
+			CustomerKeyword existingCustomerKeyword = existingCustomerKeywords.get(0);
+			customerKeyword.setInitialIndexCount(existingCustomerKeyword.getInitialIndexCount());
+			customerKeyword.setCurrentIndexCount(existingCustomerKeyword.getCurrentIndexCount());
+			customerKeyword.setOptimizePlanCount(existingCustomerKeyword.getOptimizePlanCount());
+			
+			customerKeyword.setPositionFirstFee(existingCustomerKeyword.getPositionFirstFee());
+			customerKeyword.setPositionSecondFee(existingCustomerKeyword.getPositionSecondFee());
+			customerKeyword.setPositionThirdFee(existingCustomerKeyword.getPositionThirdFee());
+			customerKeyword.setPositionForthFee(existingCustomerKeyword.getPositionForthFee());
+			customerKeyword.setPositionFifthFee(existingCustomerKeyword.getPositionFifthFee());
+			customerKeyword.setPositionFirstPageFee(existingCustomerKeyword.getPositionFirstPageFee());
+		}
 	}
 }

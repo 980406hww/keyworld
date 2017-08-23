@@ -7,6 +7,8 @@ import com.keymanager.monitoring.service.CustomerKeywordService;
 import com.keymanager.monitoring.service.UserService;
 import com.keymanager.util.PortTerminalTypeMapping;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,7 @@ import java.util.Map;
 @RestController
 @RequestMapping(value = "/internal/customerkeyword")
 public class CustomerKeywordRestController extends SpringMVCBaseController {
+	private static Logger logger = LoggerFactory.getLogger(CustomerKeywordRestController.class);
 
 	@Autowired
 	private CustomerKeywordService customerKeywordService;
@@ -38,22 +41,21 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 			customerKeywordService.clearTitle(uuids, customerUuid, terminalType);
 			return new ResponseEntity<Object>(true, HttpStatus.OK);
 		}catch (Exception ex){
+			logger.error(ex.getMessage());
 			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
 		}
 	}
 
 	@RequestMapping(value = "/saveCustomerKeyword", method = RequestMethod.POST)
-	public ResponseEntity<?> saveCustomerKeywordForm(@RequestBody List<CustomerKeyword> customerKeywords) {
+	public ResponseEntity<?> saveCustomerKeywordForm(@RequestBody List<CustomerKeyword> customerKeywords, HttpServletRequest request) {
 		try{
-			for(CustomerKeyword customerKeyword:customerKeywords){
-				if(customerKeyword.getUrl()!=null){
-					customerKeywordService.insert(customerKeyword);
-				}
-			}
+			String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+			String entryType = (String)request.getSession().getAttribute("entry");
+			customerKeywordService.addCustomerKeywordsFromSimpleUI(customerKeywords, terminalType, entryType);
 			return new ResponseEntity<Object>(true, HttpStatus.OK);
 		}catch (Exception ex){
+			logger.error(ex.getMessage());
 			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
 		}
 	}
-
 }

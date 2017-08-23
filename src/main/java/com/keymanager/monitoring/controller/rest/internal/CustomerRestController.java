@@ -51,6 +51,8 @@ public class CustomerRestController {
         User user = userService.getUser(userID);
         Page<Customer> page = customerService.searchCustomers(new Page<Customer>(currentPage,displaysRecords),new CustomerCriteria());
         String entryType = (String) session.getAttribute("entry");
+        String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+        modelAndView.addObject("terminalType", terminalType);
         modelAndView.addObject("entryType",entryType);
         modelAndView.addObject("page",page);
         modelAndView.addObject("user",user);
@@ -70,10 +72,12 @@ public class CustomerRestController {
         }
         Page<Customer> page = customerService.searchCustomers(new Page<Customer>(Integer.parseInt(currentPage),Integer.parseInt(displaysRecords)),customerCriteria);
         String entryType = (String) session.getAttribute("entry");
-        modelAndView.addObject("entryType",entryType);
-        modelAndView.addObject("customerCriteria",customerCriteria);
-        modelAndView.addObject("page",page);
-        modelAndView.addObject("user",user);
+        String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+        modelAndView.addObject("entryType", entryType);
+        modelAndView.addObject("terminalType", terminalType);
+        modelAndView.addObject("customerCriteria", customerCriteria);
+        modelAndView.addObject("page", page);
+        modelAndView.addObject("user", user);
         return modelAndView;
     }
 

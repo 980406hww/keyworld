@@ -85,10 +85,7 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 	public boolean deleteCustomer(long uuid){
 		try {
 			customerDao.deleteById(uuid);
-			CustomerKeyword customerKeyword = new CustomerKeyword();
-			customerKeyword.setCustomerUuid(uuid);
-			Wrapper wrapper = new EntityWrapper(customerKeyword);
-			customerKeywordService.delete(wrapper);
+			customerKeywordService.deleteCustomerKeywords(uuid);
 			return true;
 		}catch (Exception e){
 			return false;
