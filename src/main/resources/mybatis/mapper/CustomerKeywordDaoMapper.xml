@@ -89,4 +89,14 @@
         select max(fSequence) from t_customer_keyword where fTerminalType = #{terminalType} and fType = #{entryType} and fCustomerUuid =
         #{customerUuid};
     </select>
+
+    <select id="searchSameCustomerKeywords" resultType="com.keymanager.monitoring.entity.CustomerKeyword">
+        SELECT
+        <include refid="colID"/>
+        FROM t_customer_keyword ck
+        WHERE ck.fKeyword = #{keyword} and ck.fTerminalType = #{terminalType} and ck.fCustomerUuid = #{customerUuid}
+        order by ck.fCreateTime ASC
+    </select>
+
+
 </mapper>

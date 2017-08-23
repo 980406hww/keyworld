@@ -95,6 +95,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 			}
 			for (CustomerKeyword customerKeyword : customerKeywords) {
 				supplementInfoFromSimpleUI(customerKeyword, terminalType, entryType, ++maxSequence);
+				supplementIndexAndPriceFromExisting(customerKeyword);
 				addCustomerKeyword(customerKeyword);
 			}
 		}
@@ -124,7 +125,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 				customerKeyword.getCustomerUuid(), customerKeyword.getKeyword(), originalUrl)){
 			return ;
 		}
-
 		customerKeywordDao.insert(customerKeyword);
 	}
 
@@ -169,5 +169,23 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 		customerKeyword.setSequence(maxSequence);
 		customerKeyword.setCreateTime(Utils.getCurrentTimestamp());
 		customerKeyword.setUpdateTime(Utils.getCurrentTimestamp());
+	}
+
+	private void supplementIndexAndPriceFromExisting(CustomerKeyword customerKeyword){
+		List<CustomerKeyword> existingCustomerKeywords = customerKeywordDao.searchSameCustomerKeywords(customerKeyword.getTerminalType(),
+				customerKeyword.getCustomerUuid(), customerKeyword.getKeyword());
+		if(CollectionUtils.isNotEmpty(existingCustomerKeywords)){
+			CustomerKeyword existingCustomerKeyword = existingCustomerKeywords.get(0);
+			customerKeyword.setInitialIndexCount(existingCustomerKeyword.getInitialIndexCount());
+			customerKeyword.setCurrentIndexCount(existingCustomerKeyword.getCurrentIndexCount());
+			customerKeyword.setOptimizePlanCount(existingCustomerKeyword.getOptimizePlanCount());
+			
+			customerKeyword.setPositionFirstFee(existingCustomerKeyword.getPositionFirstFee());
+			customerKeyword.setPositionSecondFee(existingCustomerKeyword.getPositionSecondFee());
+			customerKeyword.setPositionThirdFee(existingCustomerKeyword.getPositionThirdFee());
+			customerKeyword.setPositionForthFee(existingCustomerKeyword.getPositionForthFee());
+			customerKeyword.setPositionFifthFee(existingCustomerKeyword.getPositionFifthFee());
+			customerKeyword.setPositionFirstPageFee(existingCustomerKeyword.getPositionFirstPageFee());
+		}
 	}
 }
