@@ -98,5 +98,16 @@
         order by ck.fCreateTime ASC
     </select>
 
+    <select id="getCustomerKeywordsForCaptureIndex" resultType="com.keymanager.monitoring.entity.CustomerKeyword">
+        SELECT
+        <include refid="colID"/>
+        FROM t_customer_keyword ck
+        WHERE ck.fOptimizeGroupName IN ('pc_pm_xiaowu', 'm_pm_xiaowu') AND ck.fCurrentIndexCount IS NULL AND ck.fPositionFirstFee IS NULL
+        <if test="keyword != null and keyword != ''">AND ck.fKeyword = #{keyword}</if>
+        ORDER BY ck.fCaptureIndexQueryTime, ck.fCreateTime LIMIT 1
+    </select>
 
+    <select id="updateCaptureIndexQueryTime">
+        UPDATE t_customer_keyword SET fCaptureIndexQueryTime = NOW() WHERE fKeyword = #{keyword} and fOptimizeGroupName IN ('pc_pm_xiaowu', 'm_pm_xiaowu')
+    </select>
 </mapper>

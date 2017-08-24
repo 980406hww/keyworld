@@ -7,13 +7,12 @@ import com.baomidou.mybatisplus.toolkit.StringUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.keymanager.enums.CollectMethod;
 import com.keymanager.manager.CustomerKeywordManager;
+import com.keymanager.monitoring.criteria.BaiduIndexCriteria;
 import com.keymanager.monitoring.dao.CustomerKeywordDao;
-import com.keymanager.monitoring.entity.CustomerKeyword;
-import com.keymanager.monitoring.entity.QZCaptureTitleLog;
-import com.keymanager.monitoring.entity.QZOperationType;
-import com.keymanager.monitoring.entity.QZSetting;
+import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.enums.EntryTypeEnum;
 import com.keymanager.monitoring.enums.QZCaptureTitleLogStatusEnum;
+import com.keymanager.monitoring.enums.TerminalTypeEnum;
 import com.keymanager.util.Constants;
 import com.keymanager.util.Utils;
 import com.keymanager.util.common.StringUtil;
@@ -24,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -179,13 +179,40 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 			customerKeyword.setInitialIndexCount(existingCustomerKeyword.getInitialIndexCount());
 			customerKeyword.setCurrentIndexCount(existingCustomerKeyword.getCurrentIndexCount());
 			customerKeyword.setOptimizePlanCount(existingCustomerKeyword.getOptimizePlanCount());
-			
+
 			customerKeyword.setPositionFirstFee(existingCustomerKeyword.getPositionFirstFee());
 			customerKeyword.setPositionSecondFee(existingCustomerKeyword.getPositionSecondFee());
 			customerKeyword.setPositionThirdFee(existingCustomerKeyword.getPositionThirdFee());
 			customerKeyword.setPositionForthFee(existingCustomerKeyword.getPositionForthFee());
 			customerKeyword.setPositionFifthFee(existingCustomerKeyword.getPositionFifthFee());
 			customerKeyword.setPositionFirstPageFee(existingCustomerKeyword.getPositionFirstPageFee());
+		}
+	}
+
+	public CustomerKeyword getCustomerKeywordsForCaptureIndex(){
+		List<CustomerKeyword> customerKeywords = customerKeywordDao.getCustomerKeywordsForCaptureIndex(null);
+		if(CollectionUtils.isNotEmpty(customerKeywords)) {
+			CustomerKeyword customerKeyword = customerKeywords.get(0);
+			customerKeywordDao.updateCaptureIndexQueryTime(customerKeyword.getKeyword());
+			return customerKeyword;
+		}
+		return null;
+	}
+
+	public void updateCustomerKeywordIndex(BaiduIndexCriteria baiduIndexCriteria){
+		List<CustomerKeyword> customerKeywords = customerKeywordDao.getCustomerKeywordsForCaptureIndex(baiduIndexCriteria.getKeyword());
+		if(CollectionUtils.isNotEmpty(customerKeywords)) {
+			for(CustomerKeyword customerKeyword : customerKeywords){
+				if(TerminalTypeEnum.PC.name().equals(customerKeyword.getTerminalType())) {
+					customerKeyword.setInitialIndexCount(baiduIndexCriteria.getPcIndex());
+					customerKeyword.setCurrentIndexCount(baiduIndexCriteria.getPcIndex());
+				}else{
+					customerKeyword.setInitialIndexCount(baiduIndexCriteria.getPhoneIndex());
+					customerKeyword.setCurrentIndexCount(baiduIndexCriteria.getPhoneIndex());
+				}
+				customerKeyword.setUpdateTime(new Date());
+				customerKeywordDao.updateById(customerKeyword);
+			}
 		}
 	}
 }

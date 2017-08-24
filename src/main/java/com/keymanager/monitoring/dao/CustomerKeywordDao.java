@@ -20,4 +20,9 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     List<CustomerKeyword> searchSameCustomerKeywords(@Param("terminalType") String terminalType, @Param("customerUuid") long customerUuid,
             @Param("keyword") String keyword);
+
+    List<CustomerKeyword> getCustomerKeywordsForCaptureIndex(@Param("keyword") String keyword);
+
+    void updateCaptureIndexQueryTime(@Param("keyword") String keyword);
+
 }
