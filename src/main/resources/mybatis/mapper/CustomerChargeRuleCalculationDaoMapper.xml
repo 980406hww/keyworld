@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.CustomerChargeRuleCalculationDao">
+
+    <sql id="rowID">
+        t.fUuid AS `uuid`,
+        t.fCustomerChargeTypeUuid AS `customerChargeTypeUuid`,
+        t.fChargeType AS `chargeType`,
+        t.fOperationType AS `operationType`,
+        t.fCurrentIndex AS `currentIndex`,
+        t.fChargesOfFirst AS `chargesOfFirst`,
+        t.fChargesOfSecond AS `chargesOfSecond`,
+        t.fChargesOfThird AS `chargesOfThird`,
+        t.fChargesOfFourth AS `chargesOfFourth`,
+        t.fChargesOfFifth AS `chargesOfFifth`,
+        t.fChargesOfFirstPage AS `chargesOfFirstPage`
+    </sql>
+
+    <select id="selectBycustomerChargeRuleTypeUuid" resultType="com.keymanager.monitoring.entity.CustomerChargeRuleCalculation">
+        select <include refid="rowID"/>
+        FROM t_customer_charge_rule_calculation t
+        WHERE t.fCustomerChargeTypeUuid = #{uuid}
+    </select>
+
+</mapper>

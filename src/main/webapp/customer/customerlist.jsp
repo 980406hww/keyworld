@@ -7,10 +7,10 @@
     <script language="javascript" type="text/javascript" src="/common.js"></script>
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script language="javascript" type="text/javascript" src="/js/slide1.12.4.js"></script>
     <link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css">
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <script language="javascript" type="text/javascript" src="/js/slide1.12.4.js"></script>
     <link href="/css/menu.css" rel="stylesheet" type="text/css"/>
 
     <style type="text/css">
@@ -46,20 +46,29 @@
         #showAddRuleDialog {
             /*float:left;*/
         }
+        #showChargeRuleCalculationDiv{
+
+        }
 
         #showChargeRuleCalculationDiv input {
             font-size: 12px;
-            width: 200px;
+            width: 100px;
             height: 20px;
             margin-top: 10px;
         }
 
         #showChargeRuleCalculationDiv #pcOperationTypeDiv {
-
+            border-right: 1px red solid;
+            /*border-top: 1px red solid;*/
+            /*border-bottom: 1px red solid;*/
+            margin-top: 30px;
         }
 
         #showChargeRuleCalculationDiv #phoneOperationTypeDiv {
-
+            /*border-top: 1px red solid;*/
+            /*border-bottom: 1px red solid;*/
+            margin-left: 10px;
+            margin-top: 30px;
         }
 
         #customerKeywordTextarea {
@@ -73,6 +82,8 @@
             $("#addCustomerKeywordDialog").hide();
             $("#showRuleDialog").hide();
             pageLoad();
+            onlyNumber();
+//            showLine();
         });
         function pageLoad() {
             var showCustomerBottomDiv = $('#showCustomerBottomDiv');
@@ -95,6 +106,29 @@
                 showCustomerBottomDiv.find("#upButton").removeAttr("disabled");
                 showCustomerBottomDiv.find("#nextButton").removeAttr("disabled");
                 showCustomerBottomDiv.find("#lastButton").removeAttr("disabled");
+            }
+        }
+        //只能输入数字
+        function onlyNumber() {
+            var calculationInput = $("#showChargeRuleCalculationDiv").find("input[type=text]");
+            calculationInput.bind('keyup', function(k,v){
+                var obj = $(this);
+                obj.val(obj.val().replace(/[^\d]*/g, ''));
+            });
+        }
+        function showLine(obj) {
+            var obj = obj;
+            if(obj.checked&&obj.id=="PC"){
+                $("#tabPC tr:not(:first)").remove();
+                addRowPC();
+            }else {
+                $("#tabPC tr:not(:first)").remove();
+            }
+            if(obj.checked&&obj.id=="Phone"){
+                $("#tabPhone tr:not(:first)").remove();
+                addRowPhone();
+            }else {
+                $("#tabPhone tr:not(:first)").remove();
             }
         }
         function selectAll(self) {
@@ -261,9 +295,51 @@
         }
         //规则部分
         function addRule(uuid) {
-            if (uuid == null) {
-                $('#showCustomerForm')[0].reset();
-            }
+            $.ajax({
+                url: '/internal/customerChargeRuleType/getCustomerChargeRule/' + uuid,
+                type: 'Get',
+                success: function (customerChargeType) {
+                    $("#tabPC tr:not(:first)").remove();
+                    $("#tabPhone tr:not(:first)").remove();
+                    if (customerChargeType != null &&customerChargeType != "") {
+                        alert(JSON.stringify(customerChargeType));
+                        initCustomerChargeRuleDiv(customerChargeType);
+                        $("#showRuleDialog").dialog({
+                            resizable: false,
+                            width: 600,
+                            height: 400,
+                            modal: true,
+                            //按钮
+                            buttons: {
+                                "保存": function () {
+                                    saveCustomerChargeRule(customerChargeType.customerUuid);
+                                },
+                                "清空": function () {
+                                    $('#showRuleForm')[0].reset();
+                                },
+                                "取消": function () {
+                                    $(this).dialog("close");
+                                    $('#showRuleForm')[0].reset();
+                                }
+                            }
+                        });
+                    } else {
+                        $('#showRuleForm')[0].reset();
+                        showAddRuleDialog(uuid);
+                    }
+                },
+                error: function () {
+                    showInfo("获取信息失败！", self);
+                }
+            });
+        }
+
+        function showAddRuleDialog(uuid) {
+            $("#showChargeRuleCalculationDiv").show();
+            $("#showChargeRuleIntervalDiv").hide();
+            $("#chargeRuleFixed").attr("checked","checked");
+            addRowPC();
+            addRowPhone();
             $("#showRuleDialog").dialog({
                 resizable: false,
                 width: 600,
@@ -272,40 +348,170 @@
                 //按钮
                 buttons: {
                     "保存": function () {
-                        savaCustomer(uuid);
+                        saveCustomerChargeRule(uuid);
                     },
                     "清空": function () {
-                        $('#showCustomerForm')[0].reset();
+                        $('#showRuleForm')[0].reset();
                     },
                     "取消": function () {
                         $(this).dialog("close");
-                        $('#showCustomerForm')[0].reset();
+                        $('#showRuleForm')[0].reset();
                     }
                 }
             });
         }
+
+        function saveCustomerChargeRule(uuid) {
+            var showChargeRuleCalculationDiv = $("#showChargeRuleCalculationDiv");
+            var showChargeRuleIntervalDiv = $("#showChargeRuleIntervalDiv");
+            var customerChargeRuleType={};
+            customerChargeRuleType.uuid = $("#showRuleDialog").find("#customerChargeTypeUuid").val();
+            customerChargeRuleType.customerUuid = uuid;
+            customerChargeRuleType.chargeType =  $("#showRuleRadioDiv input:radio:checked").val();
+            var switchval =  $("#showRuleRadioDiv input:radio:checked").val();
+            if(switchval==1){
+                var checkedObjs = showChargeRuleCalculationDiv.find("input[name=operationType]:checkbox:checked");
+                if(checkedObjs.length==0){
+                    alert("请选择一个操作类型");
+                    return;
+                }
+                var validationFlag = true;
+                customerChargeRuleType.customerChargeRuleCalculations=[];
+                $.each(checkedObjs, function (idx, val) {
+                    var customerChargeRuleCalculationLT  = {};
+                    customerChargeRuleCalculationLT.uuid=showChargeRuleCalculationDiv.find("#chargeRuleCalculationUuid"+val.id).val();
+                    customerChargeRuleCalculationLT.chargeType=1;
+                    customerChargeRuleCalculationLT.operationType=val.id;
+                    customerChargeRuleCalculationLT.chargesOfFirst=showChargeRuleCalculationDiv.find("#chargesOfFirstLT"+val.id).val();
+                    customerChargeRuleCalculationLT.chargesOfSecond=showChargeRuleCalculationDiv.find("#chargesOfSecondLT"+val.id).val();
+                    customerChargeRuleCalculationLT.chargesOfThird=showChargeRuleCalculationDiv.find("#chargesOfThirdLT"+val.id).val();
+                    customerChargeRuleCalculationLT.chargesOfFourth=showChargeRuleCalculationDiv.find("#chargesOfFourthLT"+val.id).val();
+                    customerChargeRuleCalculationLT.chargesOfFifth=showChargeRuleCalculationDiv.find("#chargesOfFifthLT"+val.id).val();
+                    customerChargeRuleCalculationLT.chargesOfFirstPage=showChargeRuleCalculationDiv.find("#chargesOfFirstPageLT"+val.id).val();
+                    customerChargeRuleCalculationLT.uuid=showChargeRuleCalculationDiv.find("#chargeRuleCalculationUuid"+val.id).val();
+                    customerChargeRuleType.customerChargeRuleCalculations.push(customerChargeRuleCalculationLT);
+
+                    var customerChargeRuleCalculationGT  = {};
+                    customerChargeRuleCalculationGT.chargeType=2;
+                    customerChargeRuleCalculationGT.operationType=val.id;
+                    customerChargeRuleCalculationGT.chargesOfFirst=showChargeRuleCalculationDiv.find("#chargesOfFirstGT"+val.id).val();
+                    customerChargeRuleCalculationGT.chargesOfSecond=showChargeRuleCalculationDiv.find("#chargesOfSecondGT"+val.id).val();
+                    customerChargeRuleCalculationGT.chargesOfThird=showChargeRuleCalculationDiv.find("#chargesOfThirdGT"+val.id).val();
+                    customerChargeRuleCalculationGT.chargesOfFourth=showChargeRuleCalculationDiv.find("#chargesOfFourthGT"+val.id).val();
+                    customerChargeRuleCalculationGT.chargesOfFifth=showChargeRuleCalculationDiv.find("#chargesOfFifthGT"+val.id).val();
+                    customerChargeRuleCalculationGT.chargesOfFirstPage=showChargeRuleCalculationDiv.find("#chargesOfFirstPageGT"+val.id).val();
+                    customerChargeRuleType.customerChargeRuleCalculations.push(customerChargeRuleCalculationGT);
+                });
+            }else if(switchval==2){
+                var checkedObjs = showChargeRuleCalculationDiv.find("input[name=operationType]:checkbox:checked");
+                if(checkedObjs.length==0){
+                    alert("请选择一个操作类型");
+                    return;
+                }
+                customerChargeRuleType.customerChargeRuleCalculations=[];
+                var validationFlag = true;
+                $.each(checkedObjs, function (idx, val) {
+                    var customerChargeRuleCalculationLT  = {};
+                    customerChargeRuleCalculationLT.uuid=showChargeRuleCalculationDiv.find("#chargeRuleCalculationUuid"+val.id).val();
+                    customerChargeRuleCalculationLT.chargeType=1;
+                    customerChargeRuleCalculationLT.operationType=val.id;
+                    customerChargeRuleCalculationLT.chargesOfFirst=showChargeRuleCalculationDiv.find("#chargesOfFirstLT"+val.id).val();
+                    customerChargeRuleCalculationLT.chargesOfSecond=showChargeRuleCalculationDiv.find("#chargesOfSecondLT"+val.id).val();
+                    customerChargeRuleCalculationLT.chargesOfThird=showChargeRuleCalculationDiv.find("#chargesOfThirdLT"+val.id).val();
+                    customerChargeRuleCalculationLT.chargesOfFourth=showChargeRuleCalculationDiv.find("#chargesOfFourthLT"+val.id).val();
+                    customerChargeRuleCalculationLT.chargesOfFifth=showChargeRuleCalculationDiv.find("#chargesOfFifthLT"+val.id).val();
+                    customerChargeRuleCalculationLT.chargesOfFirstPage=showChargeRuleCalculationDiv.find("#chargesOfFirstPageLT"+val.id).val();
+                    customerChargeRuleCalculationLT.uuid=showChargeRuleCalculationDiv.find("#chargeRuleCalculationUuid"+val.id).val();
+                    customerChargeRuleType.customerChargeRuleCalculations.push(customerChargeRuleCalculationLT);
+
+                    var customerChargeRuleCalculationGT  = {};
+                    customerChargeRuleCalculationGT.chargeType=2;
+                    customerChargeRuleCalculationGT.operationType=val.id;
+                    customerChargeRuleCalculationGT.chargesOfFirst=showChargeRuleCalculationDiv.find("#chargesOfFirstGT"+val.id).val();
+                    customerChargeRuleCalculationGT.chargesOfSecond=showChargeRuleCalculationDiv.find("#chargesOfSecondGT"+val.id).val();
+                    customerChargeRuleCalculationGT.chargesOfThird=showChargeRuleCalculationDiv.find("#chargesOfThirdGT"+val.id).val();
+                    customerChargeRuleCalculationGT.chargesOfFourth=showChargeRuleCalculationDiv.find("#chargesOfFourthGT"+val.id).val();
+                    customerChargeRuleCalculationGT.chargesOfFifth=showChargeRuleCalculationDiv.find("#chargesOfFifthGT"+val.id).val();
+                    customerChargeRuleCalculationGT.chargesOfFirstPage=showChargeRuleCalculationDiv.find("#chargesOfFirstPageGT"+val.id).val();
+                    customerChargeRuleType.customerChargeRuleCalculations.push(customerChargeRuleCalculationGT);
+                });
+            }else {
+                var checkedObjs = showChargeRuleIntervalDiv.find("input[name=operationType]:checkbox:checked");
+                if(checkedObjs.length==0){
+                    alert("请选择一个操作类型");
+                    return;
+                }
+                var validationFlag = true;
+                customerChargeRuleType.customerChargeRuleIntervals=[];
+                $.each(checkedObjs, function (idx, val) {
+                    var trRow = showChargeRuleIntervalDiv.find("#tab"+val.id+' tr').length;
+                    for(var i=1;i<parseInt(trRow);i++){
+                        var customerChargeRuleInterval  = {};
+                        customerChargeRuleInterval.uuid=showChargeRuleIntervalDiv.find("#intervalUuid"+val.id+i).val();
+                        customerChargeRuleInterval.operationType=val.id;
+                        customerChargeRuleInterval.startIndex=showChargeRuleIntervalDiv.find("#startIndex"+val.id+i).val();
+                        customerChargeRuleInterval.endIndex=showChargeRuleIntervalDiv.find("#endIndex"+val.id+i).val();
+                        customerChargeRuleInterval.price=showChargeRuleIntervalDiv.find("#price"+val.id+i).val();
+                        customerChargeRuleType.customerChargeRuleIntervals.push(customerChargeRuleInterval);
+                    }
+                });
+            }
+            alert(JSON.stringify(customerChargeRuleType));
+            $.ajax({
+                url:'/internal/customerChargeRuleType/saveAndUpdateCustomerChargeRule',
+                data: JSON.stringify(customerChargeRuleType),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                type:'POST',
+                success: function (result) {
+                    if(result){
+                        showInfo("操作成功！", self);
+                        window.location.reload();
+                    }else{
+                        showInfo("操作失败！", self);
+                    }
+                },
+                error: function () {
+                    showInfo("操作失败！", self);
+                }
+            });
+            $("#showRuleDialog").dialog("close");
+            $('#showRuleForm')[0].reset();
+        }
+        /*function getChargeRule(customerChargeRuleCalculation,val) {
+            customerChargeRuleCalculation.operationType=val.id;
+            customerChargeRuleCalculation.equalZeroCost=showChargeRuleCalculationDiv.find("#equalZeroCost"+val.id).val();
+            customerChargeRuleCalculation.chargesOfFirst=showChargeRuleCalculationDiv.find("#chargesOfFirst"+val.id).val();
+            customerChargeRuleCalculation.chargesOfSecond=showChargeRuleCalculationDiv.find("#chargesOfSecond"+val.id).val();
+            customerChargeRuleCalculation.chargesOfThird=showChargeRuleCalculationDiv.find("#chargesOfThird"+val.id).val();
+            customerChargeRuleCalculation.chargesOfFourth=showChargeRuleCalculationDiv.find("#chargesOfFourth"+val.id).val();
+            customerChargeRuleCalculation.chargesOfFifth=showChargeRuleCalculationDiv.find("#chargesOfFifth"+val.id).val();
+            customerChargeRuleCalculation.chargesOfFirstPage=showChargeRuleCalculationDiv.find("#chargesOfFirstPage"+val.id).val();
+            customerChargeRuleType.customerChargeRuleCalculations.push(customerChargeRuleCalculation);
+        }*/
         function chooseChargeType(val) {
-            alert(val);
             switch (val) {
-                case "1":
-                    alert("这");
-                    break;
-                case "2":
-                    chargeRulePercentage();
-                    break;
-                case "3":
-                    chargeRuleInterval();
-                    break;
+                case "1":chargeRuleFix();break;
+                case "2":chargeRulePercentage();break;
+                case "3":chargeRuleInterval();break;
             }
         }
-
-        function chargeRulePercentage() {
-            alert("按照百分比收费")
+        function chargeRuleFix() {
             $("#showChargeRuleCalculationDiv").show();
             $("#showChargeRuleIntervalDiv").hide();
+            $("#showChargeRuleCalculationDiv").find("span").html("");
+        }
+        function chargeRulePercentage() {
+            $("#showChargeRuleCalculationDiv").show();
+            $("#showChargeRuleIntervalDiv").hide();
+            $("#showChargeRuleCalculationDiv").find("span").html("%");
+
+
         }
         function chargeRuleInterval() {
-            alert("按照区间收费")
             $("#showChargeRuleCalculationDiv").hide();
             $("#showChargeRuleIntervalDiv").show();
         }
@@ -316,33 +522,152 @@
          //增加<tr/>
 
          })*/
-        function addRowPC() {
-            var _len = $("#tabPC tr").length;
-            $("#tabPC").append("<tr id=" + _len + " align='center'>"
-                    + "<td>" + _len + "</td>"
-                    + "<td><input type='text' name='startIndexPC" + _len + "' id='startIndexPC" + _len + "' /></td>"
-                    + "<td><input type='text' name='endIndexPC" + _len + "' id='endIndexPC" + _len + "' /></td>"
-                    + "<td><input type='text' name='pricePC" + _len + "' id='pricePC" + _len + "' /></td>"
-                    + "<td><a href=\'#\' onclick=\'deltrPC(" + _len + ")\'>删除</a></td>"
-                    + "</tr>");
 
-        }
-        function addRowPhone() {
-            var _len = $("#tabPhone tr").length;
-            $("#tabPhone").append("<tr id=" + _len + " align='center'>"
-                    + "<td>" + _len + "</td>"
-                    + "<td><input type='text' name='startIndexPhone" + _len + "' id='startIndexPhone" + _len + "' /></td>"
-                    + "<td><input type='text' name='endIndexPhone" + _len + "' id='endIndexPhone" + _len + "' /></td>"
-                    + "<td><input type='text' name='pricePhone" + _len + "' id='pricePhone" + _len + "' /></td>"
-                    + "<td><a href=\'#\' onclick=\'deltrPhone(" + _len + ")\'>删除</a></td>"
-                    + "</tr>");
+        //填充到规则DIV中
+        function initCustomerChargeRuleDiv(customerChargeType) {
 
+            var showRuleDialog = $("#showRuleDialog");
+            var showChargeRuleCalculationDiv = $("#showChargeRuleCalculationDiv");
+            var showChargeRuleIntervalDiv = $("#showChargeRuleIntervalDiv");
+            showRuleDialog.find("#customerChargeTypeUuid").val(customerChargeType.uuid);
+            var switchType = customerChargeType.chargeType;//判断收费方式
+            var customerChargeRuleCalculations=customerChargeType.customerChargeRuleCalculations;
+            var customerChargeRuleIntervals=customerChargeType.customerChargeRuleIntervals;
+//            chooseChargeType(switchType);
+            if(switchType==1){ //判断百分比/固定
+                chargeRuleFix();
+                showRuleDialog.find("#chargeRuleFixed").attr("checked","checked");
+                $.each(customerChargeRuleCalculations,function (idx,val) {
+                    if(val.chargeType==1){
+                        showChargeRuleCalculationDiv.find("#"+val.operationType).attr("checked","checked");
+                        showChargeRuleCalculationDiv.find("#chargesOfFirstLT"+val.operationType).val(val.chargesOfFirst);
+                        showChargeRuleCalculationDiv.find("#chargesOfSecondLT"+val.operationType).val(val.chargesOfSecond);
+                        showChargeRuleCalculationDiv.find("#chargesOfThirdLT"+val.operationType).val(val.chargesOfThird);
+                        showChargeRuleCalculationDiv.find("#chargesOfFourthLT"+val.operationType).val(val.chargesOfFourth);
+                        showChargeRuleCalculationDiv.find("#chargesOfFifthLT"+val.operationType).val(val.chargesOfFifth);
+                        showChargeRuleCalculationDiv.find("#chargesOfFirstPageLT"+val.operationType).val(val.chargesOfFirstPage);
+                    }
+                    if(val.chargeType==2){
+                        showChargeRuleCalculationDiv.find("#chargesOfFirstGT"+val.operationType).val(val.chargesOfFirst);
+                        showChargeRuleCalculationDiv.find("#chargesOfSecondGT"+val.operationType).val(val.chargesOfSecond);
+                        showChargeRuleCalculationDiv.find("#chargesOfThirdGT"+val.operationType).val(val.chargesOfThird);
+                        showChargeRuleCalculationDiv.find("#chargesOfFourthGT"+val.operationType).val(val.chargesOfFourth);
+                        showChargeRuleCalculationDiv.find("#chargesOfFifthGT"+val.operationType).val(val.chargesOfFifth);
+                        showChargeRuleCalculationDiv.find("#chargesOfFirstPageGT"+val.operationType).val(val.chargesOfFirstPage);
+                    }
+                });
+            }else if(switchType==2){
+                chargeRulePercentage();
+                showRuleDialog.find("#chargeRulePercentage").attr("checked","checked");
+                $.each(customerChargeRuleCalculations,function (idx,val) {
+                    showChargeRuleCalculationDiv.find("#ChargeRuleCalculationUuid"+val.operationType).val(val.uuid);
+                    if(val.chargeType==1){
+                        showChargeRuleCalculationDiv.find("#"+val.operationType).attr("checked","checked");
+                        showChargeRuleCalculationDiv.find("#chargesOfFirstLT"+val.operationType).val(val.chargesOfFirst);
+                        showChargeRuleCalculationDiv.find("#chargesOfSecondLT"+val.operationType).val(val.chargesOfSecond);
+                        showChargeRuleCalculationDiv.find("#chargesOfThirdLT"+val.operationType).val(val.chargesOfThird);
+                        showChargeRuleCalculationDiv.find("#chargesOfFourthLT"+val.operationType).val(val.chargesOfFourth);
+                        showChargeRuleCalculationDiv.find("#chargesOfFifthLT"+val.operationType).val(val.chargesOfFifth);
+                        showChargeRuleCalculationDiv.find("#chargesOfFirstPageLT"+val.operationType).val(val.chargesOfFirstPage);
+                    }
+                    if(val.chargeType==2){
+                        showChargeRuleCalculationDiv.find("#chargesOfFirstGT"+val.operationType).val(val.chargesOfFirst);
+                        showChargeRuleCalculationDiv.find("#chargesOfSecondGT"+val.operationType).val(val.chargesOfSecond);
+                        showChargeRuleCalculationDiv.find("#chargesOfThirdGT"+val.operationType).val(val.chargesOfThird);
+                        showChargeRuleCalculationDiv.find("#chargesOfFourthGT"+val.operationType).val(val.chargesOfFourth);
+                        showChargeRuleCalculationDiv.find("#chargesOfFifthGT"+val.operationType).val(val.chargesOfFifth);
+                        showChargeRuleCalculationDiv.find("#chargesOfFirstPageGT"+val.operationType).val(val.chargesOfFirstPage);
+                    }
+                });
+            }else {
+                chargeRuleInterval();
+                showRuleDialog.find("#chargeRuleInterval").attr("checked","checked");
+                var idx = customerChargeRuleIntervals.length;
+                var customerChargeRuleIntervalPC = [];
+                var customerChargeRuleIntervalPhone = [];
+                $.each(customerChargeRuleIntervals,function (idx,val) {
+                    showChargeRuleIntervalDiv.find("#"+val.operationType).attr("checked","checked");
+                    //如果有一条PC类型就在PCtable中加一行
+                        if(val.operationType=="PC"){
+                            customerChargeRuleIntervalPC.push(val);
+                        }
+                        if(val.operationType=="Phone"){
+                            customerChargeRuleIntervalPhone.push(val);
+                        }
+                 });
+                $.each(customerChargeRuleIntervalPC,function (idx,val) {
+                    $("#tab"+val.operationType).append("<tr id="+eval(idx+1)+" align='center'>"
+                        +"<td>"+eval(idx+1)+"</td>"
+                        +"<input type='hidden' id='intervalUuid"+val.operationType+""+eval(idx+1)+"' />"
+                        +"<td><input type='text' name='startIndexPC"+eval(idx+1)+"' id='startIndex"+val.operationType+""+eval(idx+1)+"' value='"+val.startIndex+"' /></td>"
+                        +"<td><input type='text' name='endIndexPC"+eval(idx+1)+"' id='endIndex"+val.operationType+""+eval(idx+1)+"' value='"+val.endIndex+"' /></td>"
+                        +"<td><input type='text' name='pricePC"+eval(idx+1)+"' id='price"+val.operationType+""+eval(idx+1)+"' value='"+val.price+"'  /></td>"
+                        +"<td><a href=\'#\' onclick=\'deltr"+val.operationType+"("+eval(idx+1)+")\'>删除</a></td>"
+                        +"</tr>");
+                });
+                $.each(customerChargeRuleIntervalPhone,function (idx,val) {
+                    $("#tab"+val.operationType).append("<tr id="+eval(idx+1)+" align='center'>"
+                        +"<td>"+eval(idx+1)+"</td>"
+                        +"<input type='hidden' id='intervalUuid"+val.operationType+""+eval(idx+1)+"' />"
+                        +"<td><input type='text' name='startIndexPC"+eval(idx+1)+"' id='startIndex"+val.operationType+""+eval(idx+1)+"' value='"+val.startIndex+"' /></td>"
+                        +"<td><input type='text' name='endIndexPC"+eval(idx+1)+"' id='endIndex"+val.operationType+""+eval(idx+1)+"' value='"+val.endIndex+"' /></td>"
+                        +"<td><input type='text' name='pricePC"+eval(idx+1)+"' id='price"+val.operationType+""+eval(idx+1)+"' value='"+val.price+"'  /></td>"
+                        +"<td><a href=\'#\' onclick=\'deltr"+val.operationType+"("+eval(idx+1)+")\'>删除</a></td>"
+                        +"</tr>");
+                });
+                intervalInputOnlyNumber();
+            }
         }
+
+        function intervalInputOnlyNumber() {
+           var  intervalInputPC = $("#tabPC").find("input[type=text]");
+            intervalInputPC.bind("keyup",function (k,v) {
+                var obj = $(this);
+                obj.val(obj.val().replace(/[^\d]*/g, ''));
+            });
+
+           var  intervalInputPhone = $("#tabPhone").find("input[type=text]");
+            intervalInputPhone.bind("keyup",function (k,v) {
+                var obj = $(this);
+                obj.val(obj.val().replace(/[^\d]*/g, ''));
+            });
+        }
+
+        function addRowPC(){
+            var trRow = $("#tabPC tr").length;
+            $("#tabPC").append("<tr id="+trRow+" align='center'>"
+                +"<td>"+trRow+"</td>"
+                +"<input type='hidden' id='intervalUuidPC"+trRow+"' />"
+                +"<td><input type='text' name='startIndexPC"+trRow+"' id='startIndexPC"+trRow+"' /></td>"
+                +"<td><input type='text' name='endIndexPC"+trRow+"' id='endIndexPC"+trRow+"' /></td>"
+                +"<td><input type='text' name='pricePC"+trRow+"' id='pricePC"+trRow+"'/></td>"
+                +"<td><a href=\'#\' onclick=\'deltrPC("+trRow+")\'>删除</a></td>"
+                +"</tr>");
+            intervalInputOnlyNumber();
+        }
+
+        function addRowPhone(){
+            var trRow = $("#tabPhone tr").length;
+            $("#tabPhone").append("<tr id="+trRow+" align='center'>"
+                +"<td>"+trRow+"</td>"
+                +"<input type='hidden' id='intervalUuidPhone"+trRow+"' />"
+                +"<td><input type='text' name='startIndexPhone"+trRow+"' id='startIndexPhone"+trRow+"'   /></td>"
+                +"<td><input type='text' name='endIndexPhone"+trRow+"' id='endIndexPhone"+trRow+"'   /></td>"
+                +"<td><input type='text' name='pricePhone"+trRow+"' id='pricePhone"+trRow+"'   /></td>"
+                +"<td><a href=\'#\' onclick=\'deltrPhone("+trRow+")\'>删除</a></td>"
+                +"</tr>");
+            intervalInputOnlyNumber();
+        }
+
         //删除<tr/>
         function deltrPC(index) {
-            var _len = $("#tabPC tr").length;
+            var taRow = $("#tabPC tr").length;
+            if(taRow<=2){
+                alert("至少添加一条规则");
+                return;
+            }
             $("#tabPC tr[id='" + index + "']").remove();//删除当前行
-            for (var i = index + 1, j = _len; i < j; i++) {
+            for (var i = index + 1, j = taRow; i < j; i++) {
                 var nextTxtVal = $("#endIndexPC" + i).val();
                 var currentIndex = $("#startIndexPC" + i).val();
                 var pricePC = $("#pricePC" + i).val();
@@ -353,16 +678,19 @@
                                 + "<td><input type='text' name='endIndexPC" + (i - 1) + "' value='" + nextTxtVal + "' id='endIndexPC" + (i - 1) + "'/></td>"
                                 + "<td><input type='text' name='pricePC" + (i - 1) + "' value='" + pricePC + "' id='pricePC" + (i - 1) + "' /></td>"
                                 + "<td><a href=\'#\' onclick=\'deltrPC(" + (i - 1) + ")\'>删除</a></td>"
-
                                 + "</tr>");
             }
-
+            intervalInputOnlyNumber();
         }
 
         function deltrPhone(index) {
-            var _len = $("#tabPhone tr").length;
+            var taRow = $("#tabPhone tr").length;
+            if(taRow<=2){
+                alert("至少添加一条规则");
+                return;
+            }
             $("#tabPhone tr[id='" + index + "']").remove();//删除当前行
-            for (var i = index + 1, j = _len; i < j; i++) {
+            for (var i = index + 1, j = taRow; i < j; i++) {
                 var nextTxtVal = $("#endIndexPhone" + i).val();
                 var currentIndex = $("#startIndexPhone" + i).val();
                 var pricePC = $("#pricePhone" + i).val();
@@ -376,7 +704,7 @@
 
                                 + "</tr>");
             }
-
+            intervalInputOnlyNumber();
         }
 
         //上传日报报表模板
@@ -781,7 +1109,8 @@
                    href="javascript:uploadTheDailyReportTemplate('${customer.uuid}', this)">上传日报表模板</a>
                 <c:if test="${user.vipType}">
                     <a href="javascript:delCustomer('${customer.uuid}')">删除</a>
-                    <a href="javascript:addRule('${customer.uuid}')">添加规则</a>
+                    <a href="javascript:addRule('${customer.uuid}')">客户规则</a>
+                    <%--<a href="javascript:getCustomerChargeRule('${customer.uuid}')">修改规则</a>--%>
                 </c:if>
             </td>
         </tr>
@@ -808,73 +1137,104 @@
 <br><br><br><br><br><br><br><br>
 
 <div id="showRuleDialog" title="客户规则">
-    <div>
-        <input type="radio" id="chargeRuleFixed" value="1"  onclick="chooseChargeType(this.value)"  name="textbox">按固定价格收费&nbsp;&nbsp;
-        <input type="radio" id="chargeRulePercentage" onclick="chooseChargeType(this.value)"  value="2" name="textbox" checked="checked">按照百分比收费&nbsp;&nbsp;
-        <input type="radio" id="chargeRuleInterval" onclick="chooseChargeType(this.value)"  value="3" name="textbox">按照区间收费
+    <input type="hidden" id="customerChargeTypeUuid"/>
+    <form id="showRuleForm">
+    <div id="showRuleRadioDiv" class="widget" style="text-align: center">
+            <input type="radio" id="chargeRuleFixed" value="1"  onclick="chooseChargeType(this.value)"  name="textbox">按固定价格收费&nbsp;&nbsp;
+            <input type="radio" id="chargeRulePercentage" onclick="chooseChargeType(this.value)"  value="2" name="textbox" >按照百分比收费&nbsp;&nbsp;
+            <input type="radio" id="chargeRuleInterval" onclick="chooseChargeType(this.value)"  value="3" name="textbox">按照区间收费
     </div>
-    <div id="showChargeRuleCalculationDiv">
-        <div id="showChargeRuleCalculationDiv" style="float: left;width: 100%">
-            <div id="pcOperationTypeDiv" style="float: left;width: 50%">
-                <input id="pcOperationType" type="checkbox" />PC<br>
-                指数小于0: <input id="equalZeraCost" type="text" /><br>
-                排名第一: <input id="chargesOfFirst" type="text" /><br>
-                排名第二: <input id="chargesOfSecond " type="text" /><br>
-                排名第三: <input id="chargesOfThird" type="text" /><br>
-                排名第四: <input id="chargesOfFourth" type="text" /><br>
-                排名第五: <input id="chargesOfFifth" type="text" /><br>
-                排名上首页: <input id="chargesOfFirstPage" type="text" />
+        <hr>
+    <div id="showChargeRuleCalculationDiv" style="float: left;width: 100%;">
+        <div id="pcOperationTypeDiv" style="float: left;width: 50%;">
+            <input id="PC" type="checkbox" name="operationType" style="width: 13px;height: 13px; margin-left: 140px"/>电脑<br>
+            <input id="chargeRuleCalculationUuidPC" type="hidden" />
+            <%--指数小于0: <input id="equalZeroCostPC" type="text" /><br>--%>
+            <div style="float: left;width: 50%">
+                <h6 style="text-align: center">指数小于0</h6>
+                第一 <input id="chargesOfFirstLTPC" type="text" /><span></span><br>
+                第二 <input id="chargesOfSecondLTPC" type="text" /><span></span><br>
+                第三 <input id="chargesOfThirdLTPC" type="text" /><span></span><br>
+                第四 <input id="chargesOfFourthLTPC" type="text" /><span></span><br>
+                第五 <input id="chargesOfFifthLTPC" type="text" /><span></span><br>
+                首页 <input id="chargesOfFirstPageLTPC" type="text" /><span></span>
             </div>
-            <div id="phoneOperationTypeDiv" style="float: left;width: 50%">
-                <input id="phoneOperationType" type="checkbox" />Phone<br>
-                指数小于0: <input id="equalZeraCost" type="text" /><br>
-                排名第一: <input id="chargesOfFirst" type="text" /><br>
-                排名第二: <input id="chargesOfSecond " type="text" /><br>
-                排名第三: <input id="chargesOfThird" type="text" /><br>
-                排名第四: <input id="chargesOfFourth" type="text" /><br>
-                排名第五: <input id="chargesOfFifth" type="text" /><br>
-                排名上首页: <input id="chargesOfFirstPage" type="text" />
-            </div>
-    </div>
-    <div id="showChargeRuleIntervalDiv">
-        <div id="pcOperationTypeDiv">
-            <input id="pcOperationType" type="checkbox" value="电脑端"/>PC<br>
-            <table id="tabPC" border="1" width="60%" align="center" style="margin-top:20px">
-                <tr>
-                    <td width="20%">序号</td>
-                    <td>起始指数</td>
-                    <td>终止指数</td>
-                    <td>价格</td>
-                    <td>操作</td>
-                </tr>
-            </table>
-            <div style="border:2px;
-                border-color:#00CC00;
-                margin-left:20%;
-                margin-top:20px">
-                <input type="button" id="but" value="增加" onclick="addRowPC()" />
+            <div style="float: left;width: 50%">
+                <h6 style="text-align: center">指数大于0</h6>
+                第一 <input id="chargesOfFirstGTPC" type="text" /><span></span><br>
+                第二 <input id="chargesOfSecondGTPC" type="text" /><span></span><br>
+                第三 <input id="chargesOfThirdGTPC" type="text" /><span></span><br>
+                第四 <input id="chargesOfFourthGTPC" type="text" /><span></span><br>
+                第五 <input id="chargesOfFifthGTPC" type="text" /><span></span><br>
+                首页 <input id="chargesOfFirstPageGTPC" type="text" /><span></span>
             </div>
         </div>
-        <div id="phoneOperationTypeDiv">
-            <input id="phoneOperationType" type="checkbox" value="手机端"/>Phone<br>
-            <table id="tabPhone" border="1" width="60%" align="center" style="margin-top:20px">
+        <div id="phoneOperationTypeDiv" style="float: left;width: 48%;">
+            <input id="Phone" type="checkbox"  name="operationType" style="width: 13px;height: 13px;margin-left: 140px"/>手机<br>
+            <input id="chargeRuleCalculationUuidPhone" type="hidden" />
+            <div style="float: left;width: 50%">
+                <h6 style="text-align: center">指数小于0</h6>
+                第一 <input id="chargesOfFirstLTPhone" type="text" /><span></span><br>
+                第二 <input id="chargesOfSecondLTPhone" type="text" /><span></span><br>
+                第三 <input id="chargesOfThirdLTPhone" type="text" /><span></span><br>
+                第四 <input id="chargesOfFourthLTPhone" type="text" /><span></span><br>
+                第五 <input id="chargesOfFifthLTPhone" type="text" /><span></span><br>
+                首页 <input id="chargesOfFirstPageLTPhone" type="text" /><span></span>
+            </div>
+            <div style="float: left;width: 50%">
+                <h6 style="text-align: center">指数大于0</h6>
+                第一 <input id="chargesOfFirstGTPhone" type="text" /><span></span><br>
+                第二 <input id="chargesOfSecondGTPhone" type="text" /><span></span><br>
+                第三 <input id="chargesOfThirdGTPhone" type="text" /><span></span><br>
+                第四 <input id="chargesOfFourthGTPhone" type="text" /><span></span><br>
+                第五 <input id="chargesOfFifthGTPhone" type="text" /><span></span><br>
+                首页 <input id="chargesOfFirstPageGTPhone" type="text" /><span></span>
+            </div>
+        </div>
+    </div>
+
+    <div id="showChargeRuleIntervalDiv">
+        <input id="chargeRuleIntervalUuid" type="hidden" />
+        <div id="pcOperationTypeDiv">
+            <input id="PC" type="checkbox" name="operationType" onclick="showLine(this)"/>PC<br>
+            <table id="tabPC" border="1" width="100%" align="center" style="margin-top:20px" cellspacing="0">
                 <tr>
                     <td width="20%">序号</td>
-                    <td>起始指数</td>
-                    <td>终止指数</td>
-                    <td>价格</td>
-                    <td>操作</td>
+                    <td width="20%">起始指数</td>
+                    <td width="20%">终止指数</td>
+                    <td width="20%">价格</td>
+                    <td width="20%">操作</td>
                 </tr>
             </table>
-            <div style="border:2px;
+            <div style="border:1px;
                 border-color:#00CC00;
-                margin-left:20%;
+                margin-top:20px">
+                <input type="button" id="but" value="增加" onclick="addRowPC()"  />
+            </div>
+        </div>
+        <br>
+        <div id="phoneOperationTypeDiv">
+            <input id="Phone" type="checkbox" name="operationType" onclick="showLine(this)" />Phone<br>
+            <table id="tabPhone" border="1" width="100%" align="center" style="margin-top:20px" cellspacing="0">
+                <tr>
+                    <td width="20%">序号</td>
+                    <td width="20%">起始指数</td>
+                    <td width="20%">终止指数</td>
+                    <td width="20%">价格</td>
+                    <td width="20%">操作</td>
+                </tr>
+            </table>
+            <div style="border:1px;
+                border-color:#00CC00;
                 margin-top:20px">
                 <input type="button" id="but" value="增加" onclick="addRowPhone()" />
             </div>
         </div>
     </div>
+    </form>
 </div>
+
+
 </div>
 <div id="showCustomerDialog" title="客户信息">
     <form id="showCustomerForm" method="post" onsubmit="return checkinput();" action="customerlist.jsp">
@@ -973,4 +1333,3 @@
 <%--</div>--%>
 </body>
 </html>
-
