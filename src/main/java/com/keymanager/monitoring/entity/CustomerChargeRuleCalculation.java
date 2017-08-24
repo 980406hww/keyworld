@@ -19,9 +19,6 @@ public class CustomerChargeRuleCalculation extends BaseEntity{
 	@TableField(value = "fOperationType")
 	private String operationType;
 
-	@TableField(value = "fCurrentIndex")
-	private int currentIndex;
-
 	@TableField(value = "fChargesOfFirst")
 	private BigDecimal chargesOfFirst;
 
@@ -62,14 +59,6 @@ public class CustomerChargeRuleCalculation extends BaseEntity{
 
 	public void setOperationType(String operationType) {
 		this.operationType = operationType;
-	}
-
-	public int getCurrentIndex() {
-		return currentIndex;
-	}
-
-	public void setCurrentIndex(int currentIndex) {
-		this.currentIndex = currentIndex;
 	}
 
 	public BigDecimal getChargesOfFirst() {

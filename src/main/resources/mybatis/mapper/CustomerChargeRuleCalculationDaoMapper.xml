@@ -7,7 +7,6 @@
         t.fCustomerChargeTypeUuid AS `customerChargeTypeUuid`,
         t.fChargeDataType AS `chargeDataType`,
         t.fOperationType AS `operationType`,
-        t.fCurrentIndex AS `currentIndex`,
         t.fChargesOfFirst AS `chargesOfFirst`,
         t.fChargesOfSecond AS `chargesOfSecond`,
         t.fChargesOfThird AS `chargesOfThird`,
