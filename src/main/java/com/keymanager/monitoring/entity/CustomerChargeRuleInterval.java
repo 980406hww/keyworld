@@ -9,12 +9,8 @@ import java.math.BigDecimal;
 public class CustomerChargeRuleInterval extends BaseEntity{
 	protected static final long serialVersionUID = -1101942701283949852L;
 
-
 	@TableField(value="fCustomerChargeTypeUuid")
 	private int customerChargeTypeUuid;
-
-	@TableField(value = "fCurrentIndex")
-	private int currentIndex;
 
 	@TableField(value = "fOperationType")
 	private String operationType;
@@ -34,14 +30,6 @@ public class CustomerChargeRuleInterval extends BaseEntity{
 
 	public void setCustomerChargeTypeUuid(int customerChargeTypeUuid) {
 		this.customerChargeTypeUuid = customerChargeTypeUuid;
-	}
-
-	public int getCurrentIndex() {
-		return currentIndex;
-	}
-
-	public void setCurrentIndex(int currentIndex) {
-		this.currentIndex = currentIndex;
 	}
 
 	public String getOperationType() {

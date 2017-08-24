@@ -9,6 +9,7 @@ import com.keymanager.monitoring.entity.CustomerChargeRuleCalculation;
 import com.keymanager.monitoring.entity.CustomerChargeRuleInterval;
 import com.keymanager.monitoring.entity.CustomerChargeType;
 import com.keymanager.monitoring.entity.CustomerKeyword;
+import com.keymanager.monitoring.enums.ChargeTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,51 +54,30 @@ public class CustomerChargeRuleTypeService extends ServiceImpl<CustomerChargeRul
     }
 
     private Boolean addCustomerChargeRule(CustomerChargeType customerChargeType){
-        try {
-            if(customerChargeType.getChargeType()==1){
-                CustomerChargeType customerChargeTypeTmp = new CustomerChargeType();
-                customerChargeTypeTmp.setCustomerUuid(customerChargeType.getCustomerUuid());
-                customerChargeTypeTmp.setChargeType(1);
-                customerChargeRuleTypeDao.insert(customerChargeTypeTmp);
-                int customerChargeRuleTypeUuid = customerChargeRuleTypeDao.selectLastId();
-                List<CustomerChargeRuleCalculation> customerChargeRuleCalculations = customerChargeType.getCustomerChargeRuleCalculations();
-                for(CustomerChargeRuleCalculation customerChargeRuleCalculation:customerChargeRuleCalculations){
-                    customerChargeRuleCalculation.setCustomerChargeTypeUuid(customerChargeRuleTypeUuid);
-                    customerChargeRuleCalculationService.insert(customerChargeRuleCalculation);
-                }
-            }else if (customerChargeType.getChargeType()==2){
-                CustomerChargeType customerChargeTypeTmp = new CustomerChargeType();
-                customerChargeTypeTmp.setCustomerUuid(customerChargeType.getCustomerUuid());
-                customerChargeTypeTmp.setChargeType(2);
-                customerChargeRuleTypeDao.insert(customerChargeTypeTmp);
-                int customerChargeRuleTypeUuid = customerChargeRuleTypeDao.selectLastId();
-                List<CustomerChargeRuleCalculation> customerChargeRuleCalculations = customerChargeType.getCustomerChargeRuleCalculations();
-                for(CustomerChargeRuleCalculation customerChargeRuleCalculation:customerChargeRuleCalculations){
-                    customerChargeRuleCalculation.setCustomerChargeTypeUuid(customerChargeRuleTypeUuid);
-                    customerChargeRuleCalculationService.insert(customerChargeRuleCalculation);
-                }
-            }else{
-                CustomerChargeType customerChargeTypeTmp = new CustomerChargeType();
-                customerChargeTypeTmp.setCustomerUuid(customerChargeType.getCustomerUuid());
-                customerChargeTypeTmp.setChargeType(3);
-                customerChargeRuleTypeDao.insert(customerChargeTypeTmp);
-                int customerChargeRuleTypeUuid = customerChargeRuleTypeDao.selectLastId();
-                List<CustomerChargeRuleInterval> customerChargeRuleIntervals = customerChargeType.getCustomerChargeRuleIntervals();
-                for(CustomerChargeRuleInterval customerChargeRuleInterval:customerChargeRuleIntervals){
-                    customerChargeRuleInterval.setCustomerChargeTypeUuid(customerChargeRuleTypeUuid);
-                    customerChargeRuleIntervalService.insert(customerChargeRuleInterval);
-                }
+        CustomerChargeType customerChargeTypeTmp = new CustomerChargeType();
+        customerChargeTypeTmp.setCustomerUuid(customerChargeType.getCustomerUuid());
+        customerChargeTypeTmp.setChargeType(customerChargeType.getChargeType());
+        customerChargeRuleTypeDao.insert(customerChargeTypeTmp);
+        int customerChargeRuleTypeUuid = customerChargeRuleTypeDao.selectLastId();
+        if(ChargeTypeEnum.FixedPrice.name().equals(customerChargeType.getChargeType()) || ChargeTypeEnum.Percentage.name().equals(customerChargeType.getChargeType())){
+            List<CustomerChargeRuleCalculation> customerChargeRuleCalculations = customerChargeType.getCustomerChargeRuleCalculations();
+            for(CustomerChargeRuleCalculation customerChargeRuleCalculation:customerChargeRuleCalculations){
+                customerChargeRuleCalculation.setCustomerChargeTypeUuid(customerChargeRuleTypeUuid);
+                customerChargeRuleCalculationService.insert(customerChargeRuleCalculation);
             }
-            return true;
-        }catch (Exception e){
-            e.printStackTrace();
-            return false;
+        }else{
+            List<CustomerChargeRuleInterval> customerChargeRuleIntervals = customerChargeType.getCustomerChargeRuleIntervals();
+            for(CustomerChargeRuleInterval customerChargeRuleInterval:customerChargeRuleIntervals){
+                customerChargeRuleInterval.setCustomerChargeTypeUuid(customerChargeRuleTypeUuid);
+                customerChargeRuleIntervalService.insert(customerChargeRuleInterval);
+            }
         }
+        return true;
     }
 
 
-    public CustomerChargeType getCustomerChargeRule(Long uuid){
-        CustomerChargeType customerChargeType = customerChargeRuleTypeDao.selectByCustomerUuid(uuid);
+    public CustomerChargeType getCustomerChargeRule(Long customerUuid){
+        CustomerChargeType customerChargeType = customerChargeRuleTypeDao.selectByCustomerUuid(customerUuid);
         if(null!=customerChargeType){
             List<CustomerChargeRuleCalculation> customerChargeRuleCalculations = customerChargeRuleCalculationService.selectBycustomerChargeRuleTypeUuid(customerChargeType.getUuid());
             if(customerChargeRuleCalculations.size()>0){

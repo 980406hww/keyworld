@@ -9,12 +9,11 @@ import java.util.List;
 public class CustomerChargeType extends BaseEntity{
 	protected static final long serialVersionUID = -1101942701283949852L;
 
-
 	@TableField(value="fCustomerUuid")
 	private Integer customerUuid;
 
 	@TableField(value = "fChargeType")
-	private Integer chargeType;
+	private String chargeType;
 
 	@TableField(exist = false)
 	private List<CustomerChargeRuleCalculation> customerChargeRuleCalculations;
@@ -30,11 +29,11 @@ public class CustomerChargeType extends BaseEntity{
 		this.customerUuid = customerUuid;
 	}
 
-	public Integer getChargeType() {
+	public String getChargeType() {
 		return chargeType;
 	}
 
-	public void setChargeType(Integer chargeType) {
+	public void setChargeType(String chargeType) {
 		this.chargeType = chargeType;
 	}
 

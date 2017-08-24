@@ -13,8 +13,8 @@ public class CustomerChargeRuleCalculation extends BaseEntity{
 	@TableField(value="fCustomerChargeTypeUuid")
 	private int customerChargeTypeUuid;
 
-	@TableField(value = "fChargeType")
-	private int chargeType;
+	@TableField(value = "fChargeDataType")
+	private String chargeDataType;
 
 	@TableField(value = "fOperationType")
 	private String operationType;
@@ -48,12 +48,12 @@ public class CustomerChargeRuleCalculation extends BaseEntity{
 		this.customerChargeTypeUuid = customerChargeTypeUuid;
 	}
 
-	public int getChargeType() {
-		return chargeType;
+	public String getChargeDataType() {
+		return chargeDataType;
 	}
 
-	public void setChargeType(int chargeType) {
-		this.chargeType = chargeType;
+	public void setChargeDataType(String chargeDataType) {
+		this.chargeDataType = chargeDataType;
 	}
 
 	public String getOperationType() {

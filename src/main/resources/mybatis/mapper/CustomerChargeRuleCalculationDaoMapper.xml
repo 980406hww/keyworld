@@ -5,7 +5,7 @@
     <sql id="rowID">
         t.fUuid AS `uuid`,
         t.fCustomerChargeTypeUuid AS `customerChargeTypeUuid`,
-        t.fChargeType AS `chargeType`,
+        t.fChargeDataType AS `chargeDataType`,
         t.fOperationType AS `operationType`,
         t.fCurrentIndex AS `currentIndex`,
         t.fChargesOfFirst AS `chargesOfFirst`,

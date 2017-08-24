@@ -8,6 +8,6 @@ public interface CustomerChargeRuleTypeDao extends BaseMapper<CustomerChargeType
 
     int selectLastId();
 
-    CustomerChargeType selectByCustomerUuid(@Param("uuid") Long uuid);
+    CustomerChargeType selectByCustomerUuid(@Param("customerUuid") Long customerUuid);
 
 }

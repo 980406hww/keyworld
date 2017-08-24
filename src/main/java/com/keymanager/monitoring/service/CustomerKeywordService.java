@@ -40,6 +40,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 	private QZOperationTypeService qzOperationTypeService;
 
 	@Autowired
+	private CustomerChargeRuleTypeService customerChargeRuleTypeService;
+
+	@Autowired
 	private CustomerKeywordDao customerKeywordDao;
 
 	public String searchCustomerKeywordForCaptureTitle(String terminalType) throws Exception{
@@ -213,6 +216,13 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 				customerKeyword.setUpdateTime(new Date());
 				customerKeywordDao.updateById(customerKeyword);
 			}
+		}
+	}
+
+	private void calculatePrice(CustomerKeyword customerKeyword){
+		CustomerChargeType customerChargeType = customerChargeRuleTypeService.getCustomerChargeRule(customerKeyword.getCustomerUuid());
+		if(customerChargeType != null){
+
 		}
 	}
 }
