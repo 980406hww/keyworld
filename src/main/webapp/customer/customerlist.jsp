@@ -43,31 +43,11 @@
             width: 580px;
         }
 
-        #showAddRuleDialog {
-            /*float:left;*/
-        }
-
-        #showChargeRuleCalculationDiv {
-
-        }
-
         #showChargeRuleCalculationDiv input {
             font-size: 12px;
             width: 70px;
             height: 20px;
             margin-top: 10px;
-        }
-
-        #showChargeRuleCalculationDiv #pcOperationTypeDiv {
-
-        }
-
-        #showChargeRuleCalculationDiv #phoneOperationTypeDiv {
-
-        }
-
-        #customerKeywordTextarea {
-            /*margin-top: 5px;*/
         }
     </style>
     <script type="text/javascript">
@@ -353,7 +333,7 @@
         }
 
         function showAddRuleDialog(uuid) {
-            chargeRuleFix();
+            chargeRulePercentage();
             addRowPC();
             addRowPhone();
             hideOperationTypeDiv();
@@ -387,40 +367,7 @@
             customerChargeRuleType.chargeType = $("#showRuleRadioDiv input:radio:checked").val();
             var switchval = $("#showRuleRadioDiv input:radio:checked").val();
             var validationFlag = true;
-            if (switchval == "FixedPrice") {
-                var checkedObjs = showChargeRuleCalculationDiv.find("input[name=operationType]:checkbox:checked");
-                if (checkedObjs.length == 0) {
-                    alert("请选择一个操作类型,电脑或手机");
-                    validationFlag = false;
-                    return;
-                }
-                customerChargeRuleType.customerChargeRuleCalculations = [];
-                $.each(checkedObjs, function (idx, val) {
-                    var customerChargeRuleCalculationLT = {};
-                    customerChargeRuleCalculationLT.uuid = showChargeRuleCalculationDiv.find("#chargeRuleCalculationUuid" + val.id).val();
-                    customerChargeRuleCalculationLT.chargeDataType = "ZeroIndex";
-                    customerChargeRuleCalculationLT.operationType = val.id;
-                    customerChargeRuleCalculationLT.chargesOfFirst = showChargeRuleCalculationDiv.find("#chargesOfFirstLT" + val.id).val();
-                    customerChargeRuleCalculationLT.chargesOfSecond = showChargeRuleCalculationDiv.find("#chargesOfSecondLT" + val.id).val();
-                    customerChargeRuleCalculationLT.chargesOfThird = showChargeRuleCalculationDiv.find("#chargesOfThirdLT" + val.id).val();
-                    customerChargeRuleCalculationLT.chargesOfFourth = showChargeRuleCalculationDiv.find("#chargesOfFourthLT" + val.id).val();
-                    customerChargeRuleCalculationLT.chargesOfFifth = showChargeRuleCalculationDiv.find("#chargesOfFifthLT" + val.id).val();
-                    customerChargeRuleCalculationLT.chargesOfFirstPage = showChargeRuleCalculationDiv.find("#chargesOfFirstPageLT" + val.id).val();
-                    customerChargeRuleCalculationLT.uuid = showChargeRuleCalculationDiv.find("#chargeRuleCalculationUuid" + val.id).val();
-                    customerChargeRuleType.customerChargeRuleCalculations.push(customerChargeRuleCalculationLT);
-
-                    var customerChargeRuleCalculationGT = {};
-                    customerChargeRuleCalculationGT.chargeDataType = "FixedPrice";
-                    customerChargeRuleCalculationGT.operationType = val.id;
-                    customerChargeRuleCalculationGT.chargesOfFirst = showChargeRuleCalculationDiv.find("#chargesOfFirstGT" + val.id).val();
-                    customerChargeRuleCalculationGT.chargesOfSecond = showChargeRuleCalculationDiv.find("#chargesOfSecondGT" + val.id).val();
-                    customerChargeRuleCalculationGT.chargesOfThird = showChargeRuleCalculationDiv.find("#chargesOfThirdGT" + val.id).val();
-                    customerChargeRuleCalculationGT.chargesOfFourth = showChargeRuleCalculationDiv.find("#chargesOfFourthGT" + val.id).val();
-                    customerChargeRuleCalculationGT.chargesOfFifth = showChargeRuleCalculationDiv.find("#chargesOfFifthGT" + val.id).val();
-                    customerChargeRuleCalculationGT.chargesOfFirstPage = showChargeRuleCalculationDiv.find("#chargesOfFirstPageGT" + val.id).val();
-                    customerChargeRuleType.customerChargeRuleCalculations.push(customerChargeRuleCalculationGT);
-                });
-            } else if (switchval == "Percentage") {
+            if (switchval == "Percentage") {
                 var checkedObjs = showChargeRuleCalculationDiv.find("input[name=operationType]:checkbox:checked");
                 if (checkedObjs.length == 0) {
                     alert("请选择一个操作类型,电脑或手机");
@@ -535,11 +482,6 @@
 
         function chooseChargeType(val) {
             switch (val) {
-                case "FixedPrice":
-                    chargeRuleFix();
-                    $('#showRuleForm')[0].reset();
-                    hideOperationTypeDiv();
-                    break;
                 case "Percentage":
                     chargeRulePercentage();
                     $('#showRuleForm')[0].reset();
@@ -550,16 +492,6 @@
                     $('#showRuleForm')[0].reset();
                     break;
             }
-        }
-        function chargeRuleFix() {
-            $("#chargeRuleFixed").attr("checked", true);
-            $("#chargeRulePercentage").attr("checked", false);
-            $("#chargeRuleInterval").attr("checked", false);
-            $("#showChargeRuleCalculationDiv").show();
-            $("#showChargeRuleIntervalDiv").hide();
-            $("#showChargeRuleCalculationDiv").find("span").html("");
-            $("#tabPC tr:not(:first)").remove();
-            $("#tabPhone tr:not(:first)").remove();
         }
         function chargeRulePercentage() {
             $("#chargeRulePercentage").attr("checked", true);
@@ -589,31 +521,7 @@
             var switchType = customerChargeType.chargeType;//判断收费方式
             var customerChargeRuleCalculations = customerChargeType.customerChargeRuleCalculations;
             var customerChargeRuleIntervals = customerChargeType.customerChargeRuleIntervals;
-            if (switchType == "FixedPrice") { //判断百分比/固定
-                chargeRuleFix();
-                showRuleDialog.find("#chargeRuleFixed").attr("checked", "checked");
-                $.each(customerChargeRuleCalculations, function (idx, val) {
-                    showChargeRuleCalculationDiv.find("#" + val.operationType).attr("checked", "checked");
-                    if (val.chargeDataType == "ZeroIndex") {
-                        var chargesLT = showChargeRuleCalculationDiv.find("#chargesLT" + val.operationType);
-                        chargesLT.find("#chargesOfFirstLT" + val.operationType).val(val.chargesOfFirst);
-                        chargesLT.find("#chargesOfSecondLT" + val.operationType).val(val.chargesOfSecond);
-                        chargesLT.find("#chargesOfThirdLT" + val.operationType).val(val.chargesOfThird);
-                        chargesLT.find("#chargesOfFourthLT" + val.operationType).val(val.chargesOfFourth);
-                        chargesLT.find("#chargesOfFifthLT" + val.operationType).val(val.chargesOfFifth);
-                        chargesLT.find("#chargesOfFirstPageLT" + val.operationType).val(val.chargesOfFirstPage);
-                    }
-                    if (val.chargeDataType == "FixedPrice") {
-                        var chargesGT = showChargeRuleCalculationDiv.find("#chargesGT" + val.operationType);
-                        chargesGT.find("#chargesOfFirstGT" + val.operationType).val(val.chargesOfFirst);
-                        chargesGT.find("#chargesOfSecondGT" + val.operationType).val(val.chargesOfSecond);
-                        chargesGT.find("#chargesOfThirdGT" + val.operationType).val(val.chargesOfThird);
-                        chargesGT.find("#chargesOfFourthGT" + val.operationType).val(val.chargesOfFourth);
-                        chargesGT.find("#chargesOfFifthGT" + val.operationType).val(val.chargesOfFifth);
-                        chargesGT.find("#chargesOfFirstPageGT" + val.operationType).val(val.chargesOfFirstPage);
-                    }
-                });
-            } else if (switchType == "Percentage") {
+            if (switchType == "Percentage") {
                 chargeRulePercentage();
                 showRuleDialog.find("#chargeRulePercentage").attr("checked", "checked");
                 $.each(customerChargeRuleCalculations, function (idx, val) {
@@ -1253,8 +1161,6 @@
     <input type="hidden" id="customerChargeTypeUuid"/>
     <form id="showRuleForm">
         <div id="showRuleRadioDiv" class="widget" style="text-align: center">
-            <input type="radio" id="chargeRuleFixed" onclick="chooseChargeType(this.value)" value="FixedPrice"
-                   name="textbox">按固定价格收费&nbsp;&nbsp;
             <input type="radio" id="chargeRulePercentage" onclick="chooseChargeType(this.value)" value="Percentage"
                    name="textbox">按照百分比收费&nbsp;&nbsp;
             <input type="radio" id="chargeRuleInterval" onclick="chooseChargeType(this.value)" value="Range"
@@ -1490,8 +1396,5 @@
     <input type="hidden" id="pagesHidden" value="${page.pages}"/>
 </div>
 
-<%--<div style="display:none;">--%>
-<%--<script src="http://s84.cnzz.com/stat.php?id=4204660&web_id=4204660" language="JavaScript"></script>--%>
-<%--</div>--%>
 </body>
 </html>
