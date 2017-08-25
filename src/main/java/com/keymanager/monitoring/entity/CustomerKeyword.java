@@ -92,7 +92,7 @@ public class CustomerKeyword extends BaseEntity {
     private int optimizedCount;
 
     @TableField(value = "fOptimizedPercentage")
-    private double optimizedPercentage;
+    private Double optimizedPercentage;
 
     @TableField(value = "fOptimizeDate")
     private Date optimizeDate;
@@ -113,37 +113,37 @@ public class CustomerKeyword extends BaseEntity {
     private int optimizePositionThirdPercentage;
 
     @TableField(value = "fPositionFirstCost")
-    private double positionFirstCost;
+    private Double positionFirstCost;
 
     @TableField(value = "fPositionSecondCost")
-    private double positionSecondCost;
+    private Double positionSecondCost;
 
     @TableField(value = "fPositionThirdCost")
-    private double positionThirdCost;
+    private Double positionThirdCost;
 
     @TableField(value = "fPositionForthCost")
-    private double positionForthCost;
+    private Double positionForthCost;
 
     @TableField(value = "fPositionFifthCost")
-    private double positionFifthCost;
+    private Double positionFifthCost;
 
     @TableField(value = "fPositionFirstFee")
-    private double positionFirstFee;
+    private Double positionFirstFee;
 
     @TableField(value = "fPositionSecondFee")
-    private double positionSecondFee;
+    private Double positionSecondFee;
 
     @TableField(value = "fPositionThirdFee")
-    private double positionThirdFee;
+    private Double positionThirdFee;
 
     @TableField(value = "fPositionForthFee")
-    private double positionForthFee;
+    private Double positionForthFee;
 
     @TableField(value = "fPositionFifthFee")
-    private double positionFifthFee;
+    private Double positionFifthFee;
 
     @TableField(value = "fPositionFirstPageFee")
-    private double positionFirstPageFee;
+    private Double positionFirstPageFee;
 
     @TableField(value = "fCapturePositionQueryTime")
     private Date capturePositionQueryTime;
@@ -400,11 +400,11 @@ public class CustomerKeyword extends BaseEntity {
         this.optimizedCount = optimizedCount;
     }
 
-    public double getOptimizedPercentage() {
+    public Double getOptimizedPercentage() {
         return optimizedPercentage;
     }
 
-    public void setOptimizedPercentage(double optimizedPercentage) {
+    public void setOptimizedPercentage(Double optimizedPercentage) {
         this.optimizedPercentage = optimizedPercentage;
     }
 
@@ -456,91 +456,91 @@ public class CustomerKeyword extends BaseEntity {
         this.optimizePositionThirdPercentage = optimizePositionThirdPercentage;
     }
 
-    public double getPositionFirstCost() {
+    public Double getPositionFirstCost() {
         return positionFirstCost;
     }
 
-    public void setPositionFirstCost(double positionFirstCost) {
+    public void setPositionFirstCost(Double positionFirstCost) {
         this.positionFirstCost = positionFirstCost;
     }
 
-    public double getPositionSecondCost() {
+    public Double getPositionSecondCost() {
         return positionSecondCost;
     }
 
-    public void setPositionSecondCost(double positionSecondCost) {
+    public void setPositionSecondCost(Double positionSecondCost) {
         this.positionSecondCost = positionSecondCost;
     }
 
-    public double getPositionThirdCost() {
+    public Double getPositionThirdCost() {
         return positionThirdCost;
     }
 
-    public void setPositionThirdCost(double positionThirdCost) {
+    public void setPositionThirdCost(Double positionThirdCost) {
         this.positionThirdCost = positionThirdCost;
     }
 
-    public double getPositionForthCost() {
+    public Double getPositionForthCost() {
         return positionForthCost;
     }
 
-    public void setPositionForthCost(double positionForthCost) {
+    public void setPositionForthCost(Double positionForthCost) {
         this.positionForthCost = positionForthCost;
     }
 
-    public double getPositionFifthCost() {
+    public Double getPositionFifthCost() {
         return positionFifthCost;
     }
 
-    public void setPositionFifthCost(double positionFifthCost) {
+    public void setPositionFifthCost(Double positionFifthCost) {
         this.positionFifthCost = positionFifthCost;
     }
 
-    public double getPositionFirstFee() {
+    public Double getPositionFirstFee() {
         return positionFirstFee;
     }
 
-    public void setPositionFirstFee(double positionFirstFee) {
+    public void setPositionFirstFee(Double positionFirstFee) {
         this.positionFirstFee = positionFirstFee;
     }
 
-    public double getPositionSecondFee() {
+    public Double getPositionSecondFee() {
         return positionSecondFee;
     }
 
-    public void setPositionSecondFee(double positionSecondFee) {
+    public void setPositionSecondFee(Double positionSecondFee) {
         this.positionSecondFee = positionSecondFee;
     }
 
-    public double getPositionThirdFee() {
+    public Double getPositionThirdFee() {
         return positionThirdFee;
     }
 
-    public void setPositionThirdFee(double positionThirdFee) {
+    public void setPositionThirdFee(Double positionThirdFee) {
         this.positionThirdFee = positionThirdFee;
     }
 
-    public double getPositionForthFee() {
+    public Double getPositionForthFee() {
         return positionForthFee;
     }
 
-    public void setPositionForthFee(double positionForthFee) {
+    public void setPositionForthFee(Double positionForthFee) {
         this.positionForthFee = positionForthFee;
     }
 
-    public double getPositionFifthFee() {
+    public Double getPositionFifthFee() {
         return positionFifthFee;
     }
 
-    public void setPositionFifthFee(double positionFifthFee) {
+    public void setPositionFifthFee(Double positionFifthFee) {
         this.positionFifthFee = positionFifthFee;
     }
 
-    public double getPositionFirstPageFee() {
+    public Double getPositionFirstPageFee() {
         return positionFirstPageFee;
     }
 
-    public void setPositionFirstPageFee(double positionFirstPageFee) {
+    public void setPositionFirstPageFee(Double positionFirstPageFee) {
         this.positionFirstPageFee = positionFirstPageFee;
     }
 
