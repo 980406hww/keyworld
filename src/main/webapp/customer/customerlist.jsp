@@ -126,6 +126,29 @@
             }
         }
 
+        function showOperationTypeDiv(obj) {
+            var showChargeRuleCalculationDiv = $("#showChargeRuleCalculationDiv");
+            var obj = obj;
+            if (obj.checked) {
+                showChargeRuleCalculationDiv.find("#chargesLT" + obj.id).fadeIn("slow");
+                showChargeRuleCalculationDiv.find("#chargesGT" + obj.id).fadeIn("slow");
+            }
+            else {
+                showChargeRuleCalculationDiv.find("#chargesLT" + obj.id).fadeOut("slow");
+                showChargeRuleCalculationDiv.find("#chargesGT" + obj.id).fadeOut("slow");
+            }
+        }
+        function hideOperationTypeDiv() {
+            var showChargeRuleCalculationDiv = $("#showChargeRuleCalculationDiv");
+            showChargeRuleCalculationDiv.find("#PC").attr("checked",false);
+            showChargeRuleCalculationDiv.find("#Phone").attr("checked",false);
+            showChargeRuleCalculationDiv.find("#chargesLTPC").hide();
+            showChargeRuleCalculationDiv.find("#chargesGTPC").hide();
+            showChargeRuleCalculationDiv.find("#chargesLTPhone").hide();
+            showChargeRuleCalculationDiv.find("#chargesGTPhone").hide();
+        }
+
+
         function selectAll(self) {
             var a = document.getElementsByName("customerUuid");
             if (self.checked) {
@@ -297,7 +320,7 @@
                     $("#tabPC tr:not(:first)").remove();
                     $("#tabPhone tr:not(:first)").remove();
                     if (customerChargeType != null && customerChargeType != "") {
-                        alert(JSON.stringify(customerChargeType));
+//                        alert(JSON.stringify(customerChargeType));
                         initCustomerChargeRuleDiv(customerChargeType);
                         $("#showRuleDialog").dialog({
                             resizable: false,
@@ -333,6 +356,7 @@
             chargeRuleFix();
             addRowPC();
             addRowPhone();
+            hideOperationTypeDiv();
             $("#showRuleDialog").dialog({
                 resizable: false,
                 width: 500,
@@ -514,10 +538,12 @@
                 case "FixedPrice":
                     chargeRuleFix();
                     $('#showRuleForm')[0].reset();
+                    hideOperationTypeDiv();
                     break;
                 case "Percentage":
                     chargeRulePercentage();
                     $('#showRuleForm')[0].reset();
+                    hideOperationTypeDiv();
                     break;
                 case "Range":
                     chargeRuleInterval();
@@ -667,6 +693,7 @@
         }
 
         function addRowPC() {
+//            $("#showChargeRuleIntervalDiv").find("#PC").attr("checked",true);
             var trRow = $("#tabPC tr").length;
             $("#tabPC").append("<tr id=" + trRow + " align='center'>"
                 + "<td>" + trRow + "</td>"
@@ -680,6 +707,7 @@
         }
 
         function addRowPhone() {
+//            $("#showChargeRuleIntervalDiv").find("#Phone").attr("checked",true);
             var trRow = $("#tabPhone tr").length;
             $("#tabPhone").append("<tr id=" + trRow + " align='center'>"
                 + "<td>" + trRow + "</td>"
@@ -1236,7 +1264,7 @@
         <div id="showChargeRuleCalculationDiv" style="float: left;width: 100%;">
             <div id="pcOperationTypeDiv" style="float: left;width: 50%;">
                 <input id="PC" type="checkbox" name="operationType"
-                       style="width: 13px;height: 13px; margin-left: 130px"/>电脑<br>
+                       style="width: 13px;height: 13px; margin-left: 130px" onchange="showOperationTypeDiv(this)"/>电脑<br>
                 <input id="chargeRuleCalculationUuidPC" type="hidden"/>
                 <%--指数小于0: <input id="equalZeroCostPC" type="text" /><br>--%>
                 <div id="chargesLTPC" style="float: left;width: 50%">
@@ -1264,7 +1292,7 @@
             </div>
             <div id="phoneOperationTypeDiv" style="float: left;width: 48%;">
                 <input id="Phone" type="checkbox" name="operationType"
-                       style="width: 13px;height: 13px;margin-left: 130px"/>手机<br>
+                       style="width: 13px;height: 13px;margin-left: 130px" onchange="showOperationTypeDiv(this)"/>手机<br>
                 <input id="chargeRuleCalculationUuidPhone" type="hidden"/>
                 <div id="chargesLTPhone" style="float: left;width: 50%">
                     <h6 style="text-align: center">指数小于100</h6>
@@ -1293,8 +1321,8 @@
 
         <div id="showChargeRuleIntervalDiv">
             <input id="chargeRuleIntervalUuid" type="hidden"/>
+            <input id="PC" type="checkbox" name="operationType" onclick="showLine(this)"/>PC<br>
             <div id="pcOperationTypeDiv">
-                <input id="PC" type="checkbox" name="operationType" onclick="showLine(this)"/>PC<br>
                 <table id="tabPC" border="1" width="100%" align="center" style="margin-top:20px" cellspacing="0">
                     <tr style="text-align: center">
                         <td width="20%">序号</td>
@@ -1311,8 +1339,8 @@
                 </div>
             </div>
             <br>
+            <input id="Phone" type="checkbox" name="operationType" onclick="showLine(this)"/>Phone<br>
             <div id="phoneOperationTypeDiv">
-                <input id="Phone" type="checkbox" name="operationType" onclick="showLine(this)"/>Phone<br>
                 <table id="tabPhone" border="1" width="100%" align="center" style="margin-top:20px" cellspacing="0">
                     <tr style="text-align: center">
                         <td width="20%">序号</td>
