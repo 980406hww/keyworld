@@ -20,12 +20,13 @@ public class CustomerChargeRuleTypeRestController extends SpringMVCBaseControlle
 
     @RequestMapping(value = "/saveAndUpdateCustomerChargeRule" , method = RequestMethod.POST)
     public ResponseEntity<?> saveCustomerChargeRule(@RequestBody CustomerChargeType customerChargeType){
-        Boolean saveFlag = customerChargeRuleTypeService.saveAndUpdateCustomerChargeRule(customerChargeType);
-        if(saveFlag){
-            return new ResponseEntity<Object>(true, HttpStatus.OK);
-        }else {
-            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
-        }
+       try{
+           customerChargeRuleTypeService.saveAndUpdateCustomerChargeRule(customerChargeType);
+           return new ResponseEntity<Object>(true, HttpStatus.OK);
+       }catch (Exception e){
+           e.printStackTrace();
+           return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+       }
     }
 
     @RequestMapping(value = "/getCustomerChargeRule/{uuid}" , method = RequestMethod.GET)

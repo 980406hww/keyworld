@@ -33,7 +33,7 @@
         #showCustomerTableDiv {
             overflow: scroll;
             width: 100%;
-            height: 78%;
+            height: 90%;
             margin: auto;
         }
 
@@ -57,7 +57,8 @@
             $("#addCustomerKeywordDialog").hide();
             $("#showRuleDialog").hide();
             pageLoad();
-            onlyNumber();
+            onlyNumber()
+            getFoucus();
 //            showLine();
         });
         function pageLoad() {
@@ -126,6 +127,31 @@
             showChargeRuleCalculationDiv.find("#chargesGTPC").hide();
             showChargeRuleCalculationDiv.find("#chargesLTPhone").hide();
             showChargeRuleCalculationDiv.find("#chargesGTPhone").hide();
+        }
+        //
+        function getFoucus() {
+            var showChargeRuleCalculationDiv = $("#showChargeRuleCalculationDiv");
+            var showChargeRuleIntervalDiv = $("#showChargeRuleIntervalDiv");
+            var calculationInputPC = showChargeRuleCalculationDiv.find("#pcOperationTypeDiv").find("input[type=text]");
+            var calculationInputPhone = showChargeRuleCalculationDiv.find("#phoneOperationTypeDiv").find("input[type=text]");
+            var intervalInputPC = showChargeRuleIntervalDiv.find("#pcOperationTypeDiv").find("input[type=text]");
+            var intervalInputPhone = showChargeRuleIntervalDiv.find("#phoneOperationTypeDiv").find("input[type=text]");
+
+            calculationInputPC.focus(function () {
+                showChargeRuleCalculationDiv.find("#PC").attr("checked",true);
+            });
+
+            calculationInputPhone.focus(function () {
+                showChargeRuleCalculationDiv.find("#Phone").attr("checked",true);
+            });
+
+            intervalInputPC.focus(function () {
+                showChargeRuleIntervalDiv.find("#PC").attr("checked",true);
+            });
+
+            intervalInputPhone.focus(function () {
+                showChargeRuleIntervalDiv.find("#Phone").attr("checked",true);
+            });
         }
 
 
@@ -336,7 +362,7 @@
             chargeRulePercentage();
             addRowPC();
             addRowPhone();
-            hideOperationTypeDiv();
+//            hideOperationTypeDiv();
             $("#showRuleDialog").dialog({
                 resizable: false,
                 width: 500,
@@ -411,7 +437,6 @@
                 $.each(checkedObjs, function (idx, val) {
                     var interval = showChargeRuleIntervalDiv.find("#" + val.id + "OperationTypeDiv").find("input[type=text]");
                     var trRow = showChargeRuleIntervalDiv.find("#tab" + val.id + ' tr').length;
-                    []
                     for (var i = 1; i < parseInt(trRow); i++) {
                         var customerChargeRuleInterval = {};
                         customerChargeRuleInterval.uuid = showChargeRuleIntervalDiv.find("#intervalUuid" + val.id + i).val();
@@ -424,6 +449,13 @@
                             validationFlag = false;
                             break;
                         }
+                        if (parseInt(customerChargeRuleInterval.startIndex) <= parseInt(showChargeRuleIntervalDiv.find("#endIndex" + val.id + eval(i - 1)).val())) {
+                            alert("起始指数需大于前一条的终止指数");
+                            showChargeRuleIntervalDiv.find("#startIndex" + val.id + i).focus();
+                            validationFlag = false;
+                            break;
+                        }
+
                         if (i == 1 && customerChargeRuleInterval.startIndex === '') {
                             customerChargeRuleInterval.startIndex = 0;
                         }
@@ -503,6 +535,7 @@
             $("#chargesGTPhone").find("span").html("%");
             $("#tabPC tr:not(:first)").remove();
             $("#tabPhone tr:not(:first)").remove();
+            getFoucus();
         }
         function chargeRuleInterval() {
             $("#chargeRuleInterval").attr("checked", true);
@@ -510,6 +543,7 @@
             $("#chargeRulePercentage").attr("checked", false);
             $("#showChargeRuleCalculationDiv").hide();
             $("#showChargeRuleIntervalDiv").show();
+            getFoucus();
         }
 
         //填充到规则DIV中
@@ -526,7 +560,7 @@
                 showRuleDialog.find("#chargeRulePercentage").attr("checked", "checked");
                 $.each(customerChargeRuleCalculations, function (idx, val) {
                     showChargeRuleCalculationDiv.find("#ChargeRuleCalculationUuid" + val.operationType).val(val.uuid);
-                    showChargeRuleCalculationDiv.find("#" + val.operationType).attr("checked", "checked");
+                    showChargeRuleCalculationDiv.find("#" + val.operationType).attr("checked", true);
                     if (val.chargeDataType == "ZeroIndex") {
                         var chargesLT = showChargeRuleCalculationDiv.find("#chargesLT" + val.operationType);
                         chargesLT.find("#chargesOfFirstLT" + val.operationType).val(val.chargesOfFirst);
@@ -537,6 +571,7 @@
                         chargesLT.find("#chargesOfFirstPageLT" + val.operationType).val(val.chargesOfFirstPage);
                     }
                     if (val.chargeDataType == "Percentage") {
+//                        showChargeRuleCalculationDiv.find("#chargesGT" + val.operationType).show();
                         var chargesGT = showChargeRuleCalculationDiv.find("#chargesGT" + val.operationType);
                         chargesGT.find("#chargesOfFirstGT" + val.operationType).val(val.chargesOfFirst);
                         chargesGT.find("#chargesOfSecondGT" + val.operationType).val(val.chargesOfSecond);
@@ -545,6 +580,7 @@
                         chargesGT.find("#chargesOfFifthGT" + val.operationType).val(val.chargesOfFifth);
                         chargesGT.find("#chargesOfFirstPageGT" + val.operationType).val(val.chargesOfFirstPage);
                     }
+                    showLine(val.operationType);
                 });
             } else {
                 chargeRuleInterval();
@@ -563,6 +599,9 @@
                     }
                 });
                 $.each(customerChargeRuleIntervalPC, function (idx, val) {
+                    if(null==val.endIndex||val.endIndex===''){
+                        val.endIndex='';
+                    }
                     $("#tab" + val.operationType).append("<tr id=" + eval(idx + 1) + " align='center'>"
                         + "<td>" + eval(idx + 1) + "</td>"
                         + "<input type='hidden' id='intervalUuid" + val.operationType + "" + eval(idx + 1) + "' />"
@@ -612,6 +651,7 @@
                 + "<td><a href=\'#\' onclick=\'deltrPC(" + trRow + ")\'>删除</a></td>"
                 + "</tr>");
             intervalInputOnlyNumber();
+            getFoucus();
         }
 
         function addRowPhone() {
@@ -626,6 +666,7 @@
                 + "<td><a href=\'#\' onclick=\'deltrPhone(" + trRow + ")\'>删除</a></td>"
                 + "</tr>");
             intervalInputOnlyNumber();
+            getFoucus();
         }
 
         //删除<tr/>
@@ -650,6 +691,7 @@
                         + "</tr>");
             }
             intervalInputOnlyNumber();
+            getFoucus();
         }
 
         function deltrPhone(index) {
@@ -673,6 +715,7 @@
                         + "</tr>");
             }
             intervalInputOnlyNumber();
+            getFoucus();
         }
         //设置当输入框失去焦点时填充数据
         function theSamePriceFirstToThirdLTPC(obj) {
@@ -1152,11 +1195,9 @@
             </td>
         </tr>
     </table>
-    <br><br><br>
-    <br>
+    <%--<br><br><br>--%>
+    <%--<br>--%>
 </div>
-<br><br><br><br><br><br><br><br>
-
 <div id="showRuleDialog" title="客户规则">
     <input type="hidden" id="customerChargeTypeUuid"/>
     <form id="showRuleForm">
@@ -1227,9 +1268,9 @@
 
         <div id="showChargeRuleIntervalDiv">
             <input id="chargeRuleIntervalUuid" type="hidden"/>
-            <input id="PC" type="checkbox" name="operationType" onclick="showLine(this)"/>PC<br>
-            <div id="pcOperationTypeDiv">
-                <table id="tabPC" border="1" width="100%" align="center" style="margin-top:20px" cellspacing="0">
+            <input id="PC" type="checkbox" name="operationType" onclick="showLine(this)"/>PC
+            <div id="pcOperationTypeDiv" >
+                <table id="tabPC" border="1" width="100%" align="center" style="margin-top:10px" cellspacing="0">
                     <tr style="text-align: center">
                         <td width="20%">序号</td>
                         <td width="20%">起始指数</td>
@@ -1245,9 +1286,9 @@
                 </div>
             </div>
             <br>
-            <input id="Phone" type="checkbox" name="operationType" onclick="showLine(this)"/>Phone<br>
+            <input id="Phone" type="checkbox" name="operationType" onclick="showLine(this)"/>Phone
             <div id="phoneOperationTypeDiv">
-                <table id="tabPhone" border="1" width="100%" align="center" style="margin-top:20px" cellspacing="0">
+                <table id="tabPhone" border="1" width="100%" align="center" style="margin-top:10px" cellspacing="0">
                     <tr style="text-align: center">
                         <td width="20%">序号</td>
                         <td width="20%">起始指数</td>

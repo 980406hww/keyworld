@@ -30,9 +30,8 @@ public class CustomerChargeRuleTypeService extends ServiceImpl<CustomerChargeRul
     @Autowired
     private CustomerChargeRuleIntervalService customerChargeRuleIntervalService;
 
-    public Boolean saveAndUpdateCustomerChargeRule(CustomerChargeType customerChargeType){
-        try{
-            if(null!=customerChargeType.getUuid()){//修改--->直接删除在添加
+    public void saveAndUpdateCustomerChargeRule(CustomerChargeType customerChargeType) throws Exception{
+            if(null!=customerChargeType.getUuid()){
                 CustomerChargeRuleCalculation customerChargeRuleCalculation = new CustomerChargeRuleCalculation();
                 customerChargeRuleCalculation.setCustomerChargeTypeUuid(customerChargeType.getUuid().intValue());
                 Wrapper wrapperCalculation = new EntityWrapper(customerChargeRuleCalculation);
@@ -44,11 +43,6 @@ public class CustomerChargeRuleTypeService extends ServiceImpl<CustomerChargeRul
                 customerChargeRuleTypeDao.deleteById(customerChargeType.getUuid());
             }
             addCustomerChargeRule(customerChargeType);
-            return true;
-        }catch (Exception e){
-            e.printStackTrace();
-            return false;
-        }
     }
 
     private Boolean addCustomerChargeRule(CustomerChargeType customerChargeType){
