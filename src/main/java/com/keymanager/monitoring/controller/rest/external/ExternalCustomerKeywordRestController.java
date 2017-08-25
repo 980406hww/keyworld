@@ -75,10 +75,9 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
 			User user = userService.getUser(baiduIndexCriteria.getUserName());
 			if(user != null && user.getPassword().equals(baiduIndexCriteria.getPassword())){
 				customerKeywordService.updateCustomerKeywordIndex(baiduIndexCriteria);
-				return new ResponseEntity<Object>(HttpStatus.OK);
+				return new ResponseEntity<Object>(true, HttpStatus.OK);
 			}
 		}
-		return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
 	}
-
 }

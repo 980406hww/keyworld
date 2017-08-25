@@ -16,10 +16,10 @@ public class CustomerChargeRuleInterval extends BaseEntity{
 	private String operationType;
 
 	@TableField(value = "fStartIndex")
-	private int startIndex;
+	private Integer startIndex;
 
 	@TableField(value = "fEndIndex")
-	private int endIndex;
+	private Integer endIndex;
 
 	@TableField(value = "fPrice")
 	private BigDecimal price;
@@ -40,19 +40,19 @@ public class CustomerChargeRuleInterval extends BaseEntity{
 		this.operationType = operationType;
 	}
 
-	public int getStartIndex() {
+	public Integer getStartIndex() {
 		return startIndex;
 	}
 
-	public void setStartIndex(int startIndex) {
+	public void setStartIndex(Integer startIndex) {
 		this.startIndex = startIndex;
 	}
 
-	public int getEndIndex() {
+	public Integer getEndIndex() {
 		return endIndex;
 	}
 
-	public void setEndIndex(int endIndex) {
+	public void setEndIndex(Integer endIndex) {
 		this.endIndex = endIndex;
 	}
 
