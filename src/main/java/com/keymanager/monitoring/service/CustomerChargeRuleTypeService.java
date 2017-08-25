@@ -39,8 +39,6 @@ public class CustomerChargeRuleTypeService extends ServiceImpl<CustomerChargeRul
                 CustomerChargeRuleInterval customerChargeRuleInterval  = new CustomerChargeRuleInterval();
                 customerChargeRuleInterval.setCustomerChargeTypeUuid(customerChargeType.getUuid().intValue());
                 Wrapper wrapperInterval = new EntityWrapper(customerChargeRuleInterval);
-                wrapperCalculation.or("1=1");
-                wrapperInterval.or("1=1");
                 customerChargeRuleCalculationService.delete(wrapperCalculation);
                 customerChargeRuleIntervalService.delete(wrapperInterval);
                 customerChargeRuleTypeDao.deleteById(customerChargeType.getUuid());

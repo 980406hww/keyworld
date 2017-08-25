@@ -1,6 +1,6 @@
 package com.keymanager.monitoring.criteria;
 
-public abstract class BaseCriteria {
+public class BaseCriteria {
     private String userName;
     private String password;
 
