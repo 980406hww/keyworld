@@ -193,7 +193,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public CustomerKeyword getCustomerKeywordsForCaptureIndex() {
-        List<CustomerKeyword> customerKeywords = customerKeywordDao.getCustomerKeywordsForCaptureIndex(null);
+        List<CustomerKeyword> customerKeywords = customerKeywordDao.getCustomerKeywordsForCaptureIndex();
         if (CollectionUtils.isNotEmpty(customerKeywords)) {
             CustomerKeyword customerKeyword = customerKeywords.get(0);
             customerKeywordDao.updateCaptureIndexQueryTime(customerKeyword.getKeyword());
@@ -203,7 +203,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void updateCustomerKeywordIndex(BaiduIndexCriteria baiduIndexCriteria) {
-        List<CustomerKeyword> customerKeywords = customerKeywordDao.getCustomerKeywordsForCaptureIndex(baiduIndexCriteria.getKeyword());
+        List<CustomerKeyword> customerKeywords = customerKeywordDao.getCustomerKeywordsForUpdateIndex(baiduIndexCriteria.getKeyword());
         if (CollectionUtils.isNotEmpty(customerKeywords)) {
             for (CustomerKeyword customerKeyword : customerKeywords) {
                 if (TerminalTypeEnum.PC.name().equals(customerKeyword.getTerminalType())) {
@@ -228,10 +228,10 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                 CustomerChargeRuleCalculation fixedPriceCustomerChargeRuleCalculation = null;
                 for (CustomerChargeRuleCalculation tmpCustomerChargeRuleCalculation : customerChargeType.getCustomerChargeRuleCalculations()) {
                     if (tmpCustomerChargeRuleCalculation.getOperationType().equals(customerKeyword.getTerminalType())) {
-                        if (ChargeDataTypeEnum.ZeroIndex.equals(tmpCustomerChargeRuleCalculation.getChargeDataType())) {
+                        if (ChargeDataTypeEnum.ZeroIndex.name().equals(tmpCustomerChargeRuleCalculation.getChargeDataType())) {
                             fixedPriceCustomerChargeRuleCalculation = tmpCustomerChargeRuleCalculation;
                         }
-                        if (ChargeDataTypeEnum.Percentage.equals(tmpCustomerChargeRuleCalculation.getChargeDataType())) {
+                        if (ChargeDataTypeEnum.Percentage.name().equals(tmpCustomerChargeRuleCalculation.getChargeDataType())) {
                             percentageCustomerChargeRuleCalculation = tmpCustomerChargeRuleCalculation;
                         }
                     }
@@ -259,7 +259,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                                         null), percentageCustomerChargeRuleCalculation.getChargesOfFourth()));
                     }
                     if (percentageCustomerChargeRuleCalculation.getChargesOfFifth() != null) {
-                        customerKeyword.setPositionFirstFee(calculatePrice(customerKeyword.getCurrentIndexCount(),
+                        customerKeyword.setPositionFifthFee(calculatePrice(customerKeyword.getCurrentIndexCount(),
                                 (fixedPriceCustomerChargeRuleCalculation != null ? fixedPriceCustomerChargeRuleCalculation.getChargesOfFifth() :
                                         null), percentageCustomerChargeRuleCalculation.getChargesOfFifth()));
                     }
@@ -267,9 +267,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                         customerKeyword.setPositionFirstPageFee(calculatePrice(customerKeyword.getCurrentIndexCount(),
                                 fixedPriceCustomerChargeRuleCalculation.getChargesOfFirstPage(), percentageCustomerChargeRuleCalculation
                                         .getChargesOfFirstPage()));
-                        customerKeyword.setPositionFirstPageFee(calculatePrice(customerKeyword.getCurrentIndexCount(),
-                                (fixedPriceCustomerChargeRuleCalculation != null ? fixedPriceCustomerChargeRuleCalculation.getChargesOfFirstPage() :
-                                        null), percentageCustomerChargeRuleCalculation.getChargesOfFirstPage()));
                     }
                 }
             } else {
@@ -277,12 +274,13 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                     if (tmpCustomerChargeRuleInterval.getOperationType().equals(customerKeyword.getTerminalType())) {
                         if (tmpCustomerChargeRuleInterval.getStartIndex() <= customerKeyword
                                 .getCurrentIndexCount() && (tmpCustomerChargeRuleInterval.getEndIndex() == null || customerKeyword
-                                .getCurrentIndexCount() < tmpCustomerChargeRuleInterval.getEndIndex())) {
+                                .getCurrentIndexCount() <= tmpCustomerChargeRuleInterval.getEndIndex())) {
                             customerKeyword.setPositionFirstFee(tmpCustomerChargeRuleInterval.getPrice().doubleValue());
                             customerKeyword.setPositionSecondFee(tmpCustomerChargeRuleInterval.getPrice().doubleValue());
                             customerKeyword.setPositionThirdFee(tmpCustomerChargeRuleInterval.getPrice().doubleValue());
                             customerKeyword.setPositionForthFee(tmpCustomerChargeRuleInterval.getPrice().doubleValue() / 2);
                             customerKeyword.setPositionFifthFee(tmpCustomerChargeRuleInterval.getPrice().doubleValue() / 2);
+                            customerKeyword.setPositionFirstPageFee(null);
                             break;
                         }
                     }
