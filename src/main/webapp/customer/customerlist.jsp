@@ -452,6 +452,7 @@
                         if (parseInt(customerChargeRuleInterval.startIndex) <= parseInt(showChargeRuleIntervalDiv.find("#endIndex" + val.id + eval(i - 1)).val())) {
                             alert("起始指数需大于前一条的终止指数");
                             showChargeRuleIntervalDiv.find("#startIndex" + val.id + i).focus();
+                            showChargeRuleIntervalDiv.find("#startIndex" + val.id + i).val(eval(parseInt(showChargeRuleIntervalDiv.find("#endIndex" + val.id + eval(i - 1)).val())+1));
                             validationFlag = false;
                             break;
                         }
@@ -464,22 +465,26 @@
                             alert("起始指数不能为空");
                             showChargeRuleIntervalDiv.find("#startIndex" + val.id + i).focus();
                             validationFlag = false;
-                            return;
+                            break;
                         }
                         if (i < parseInt(trRow) - 1 && customerChargeRuleInterval.endIndex == '') {
                             alert("终止指数不能为空");
                             showChargeRuleIntervalDiv.find("#endIndex" + val.id + i).focus();
                             validationFlag = false;
-                            return;
+                            break;
                         }
                         if (customerChargeRuleInterval.price === '') {
                             alert("价格不能为空");
                             showChargeRuleIntervalDiv.find("#price" + val.id + i).focus();
                             validationFlag = false;
-                            return;
+                            break;
                         }
-
-                        customerChargeRuleType.customerChargeRuleIntervals.push(customerChargeRuleInterval);
+                        /*if(showChargeRuleIntervalDiv.find("#endIndex" + val.id + eval(parseInt(trRow)-1)).val()!=null){
+                            alert("最后的终止指数必须为空");
+                            showChargeRuleIntervalDiv.find("#endIndex" + val.id + eval(parseInt(trRow)-1)).focus();
+                            validationFlag = false;
+                            break;
+                        }*/
                     }
                 });
             }
