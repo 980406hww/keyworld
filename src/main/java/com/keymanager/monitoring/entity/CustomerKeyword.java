@@ -2,6 +2,7 @@ package com.keymanager.monitoring.entity;
 
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.FieldStrategy;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -142,7 +143,7 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(value = "fPositionFifthFee")
     private Double positionFifthFee;
 
-    @TableField(value = "fPositionFirstPageFee")
+    @TableField(value = "fPositionFirstPageFee", validate= FieldStrategy.IGNORED)
     private Double positionFirstPageFee;
 
     @TableField(value = "fCapturePositionQueryTime")
