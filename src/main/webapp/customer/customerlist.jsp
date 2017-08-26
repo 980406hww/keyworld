@@ -139,6 +139,7 @@
 
             calculationInputPC.focus(function () {
                 showChargeRuleCalculationDiv.find("#PC").attr("checked",true);
+//                $("#chargeRulePercentage").attr("checked",true);
             });
 
             calculationInputPhone.focus(function () {
@@ -371,6 +372,7 @@
                 //按钮
                 buttons: {
                     "保存": function () {
+                        $("#showRuleDialog").find("#customerChargeTypeUuid").val(null);
                         saveCustomerChargeRule(uuid);
                     },
                     "清空": function () {
@@ -437,24 +439,35 @@
                 $.each(checkedObjs, function (idx, val) {
                     var interval = showChargeRuleIntervalDiv.find("#" + val.id + "OperationTypeDiv").find("input[type=text]");
                     var trRow = showChargeRuleIntervalDiv.find("#tab" + val.id + ' tr').length;
+                    if(parseInt(trRow)==1){
+                        alert("请至少填一条规则");
+                        validationFlag = false;
+                        if(val.id=="PC"){
+                            addRowPC();
+                        }else {
+                            addRowPhone();
+                        }
+                        return false;
+                    }
                     for (var i = 1; i < parseInt(trRow); i++) {
                         var customerChargeRuleInterval = {};
                         customerChargeRuleInterval.uuid = showChargeRuleIntervalDiv.find("#intervalUuid" + val.id + i).val();
                         customerChargeRuleInterval.operationType = val.id;
                         customerChargeRuleInterval.startIndex = showChargeRuleIntervalDiv.find("#startIndex" + val.id + i).val();
                         customerChargeRuleInterval.endIndex = showChargeRuleIntervalDiv.find("#endIndex" + val.id + i).val();
+                        customerChargeRuleType.customerChargeRuleIntervals.push(customerChargeRuleInterval);
                         if (parseInt(customerChargeRuleInterval.startIndex) >= parseInt(customerChargeRuleInterval.endIndex)) {
                             alert("终止指数需大于起始指数");
                             showChargeRuleIntervalDiv.find("#endIndex" + val.id + i).focus();
                             validationFlag = false;
-                            break;
+                            return false ;
                         }
                         if (parseInt(customerChargeRuleInterval.startIndex) <= parseInt(showChargeRuleIntervalDiv.find("#endIndex" + val.id + eval(i - 1)).val())) {
                             alert("起始指数需大于前一条的终止指数");
                             showChargeRuleIntervalDiv.find("#startIndex" + val.id + i).focus();
                             showChargeRuleIntervalDiv.find("#startIndex" + val.id + i).val(eval(parseInt(showChargeRuleIntervalDiv.find("#endIndex" + val.id + eval(i - 1)).val())+1));
                             validationFlag = false;
-                            break;
+                            return false ;
                         }
 
                         if (i == 1 && customerChargeRuleInterval.startIndex === '') {
@@ -465,19 +478,19 @@
                             alert("起始指数不能为空");
                             showChargeRuleIntervalDiv.find("#startIndex" + val.id + i).focus();
                             validationFlag = false;
-                            break;
+                            return false ;
                         }
                         if (i < parseInt(trRow) - 1 && customerChargeRuleInterval.endIndex == '') {
                             alert("终止指数不能为空");
                             showChargeRuleIntervalDiv.find("#endIndex" + val.id + i).focus();
                             validationFlag = false;
-                            break;
+                            return false ;
                         }
                         if (customerChargeRuleInterval.price === '') {
                             alert("价格不能为空");
                             showChargeRuleIntervalDiv.find("#price" + val.id + i).focus();
                             validationFlag = false;
-                            break;
+                            return false ;
                         }
                         /*if(showChargeRuleIntervalDiv.find("#endIndex" + val.id + eval(parseInt(trRow)-1)).val()!=null){
                             alert("最后的终止指数必须为空");
@@ -1228,7 +1241,6 @@
 </div>
 <div id="showRuleDialog" title="客户规则">
     <input type="hidden" id="customerChargeTypeUuid"/>
-    <form id="showRuleForm">
         <div id="showRuleRadioDiv"  style="text-align: center">
             <input type="radio" id="chargeRulePercentage" onclick="chooseChargeType(this.value)" value="Percentage"
                    name="textbox">按照百分比收费&nbsp;&nbsp;
@@ -1236,6 +1248,7 @@
                    name="textbox">按照区间收费
         </div>
         <hr>
+    <form id="showRuleForm">
         <div id="showChargeRuleCalculationDiv" style="float: left;width: 100%;">
             <div id="pcOperationTypeDiv" style="float: left;width: 50%;">
                 <input id="PC" type="checkbox" name="operationType"
