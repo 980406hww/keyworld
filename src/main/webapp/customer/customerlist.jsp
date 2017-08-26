@@ -1034,6 +1034,12 @@
             searchCustomerForm.append('<input value="' + displaysRecords + '" id="currentPage" type="hidden" name="displayRerondsHidden"/>');
             searchCustomerForm.submit();
         }
+        //改变当前页
+        function chooseRecords(currentPage, displayRecords) {
+            $('#showMainKeywordBottomDiv').find("#currentPageHidden").val(currentPage);
+            $('#showMainKeywordBottomDiv').find("#displaysRecordsHidden").val(displayRecords);
+            searchCustomers(currentPage, displayRecords);
+        }
 
         function chooseUploadType() {
             var uploadForm = $("#uploadTheDailyReportTemplateForm");
