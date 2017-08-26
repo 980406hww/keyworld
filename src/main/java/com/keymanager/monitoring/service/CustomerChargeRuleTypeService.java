@@ -31,18 +31,26 @@ public class CustomerChargeRuleTypeService extends ServiceImpl<CustomerChargeRul
     private CustomerChargeRuleIntervalService customerChargeRuleIntervalService;
 
     public void saveAndUpdateCustomerChargeRule(CustomerChargeType customerChargeType) throws Exception{
-            if(null!=customerChargeType.getUuid()){
-                CustomerChargeRuleCalculation customerChargeRuleCalculation = new CustomerChargeRuleCalculation();
-                customerChargeRuleCalculation.setCustomerChargeTypeUuid(customerChargeType.getUuid().intValue());
-                Wrapper wrapperCalculation = new EntityWrapper(customerChargeRuleCalculation);
-                CustomerChargeRuleInterval customerChargeRuleInterval  = new CustomerChargeRuleInterval();
-                customerChargeRuleInterval.setCustomerChargeTypeUuid(customerChargeType.getUuid().intValue());
-                Wrapper wrapperInterval = new EntityWrapper(customerChargeRuleInterval);
-                customerChargeRuleCalculationService.delete(wrapperCalculation);
-                customerChargeRuleIntervalService.delete(wrapperInterval);
-                customerChargeRuleTypeDao.deleteById(customerChargeType.getUuid());
+        Long customerChargeTypeUuid = customerChargeType.getUuid();
+        if(null == customerChargeTypeUuid) {
+            CustomerChargeType existingCustomerChargeType = customerChargeRuleTypeDao.selectByCustomerUuid(customerChargeType.getCustomerUuid());
+            if(existingCustomerChargeType != null) {
+                customerChargeTypeUuid = existingCustomerChargeType.getUuid();
             }
-            addCustomerChargeRule(customerChargeType);
+        }
+
+        if(customerChargeTypeUuid != null){
+            CustomerChargeRuleCalculation customerChargeRuleCalculation = new CustomerChargeRuleCalculation();
+            customerChargeRuleCalculation.setCustomerChargeTypeUuid(customerChargeTypeUuid.intValue());
+            Wrapper wrapperCalculation = new EntityWrapper(customerChargeRuleCalculation);
+            CustomerChargeRuleInterval customerChargeRuleInterval  = new CustomerChargeRuleInterval();
+            customerChargeRuleInterval.setCustomerChargeTypeUuid(customerChargeTypeUuid.intValue());
+            Wrapper wrapperInterval = new EntityWrapper(customerChargeRuleInterval);
+            customerChargeRuleCalculationService.delete(wrapperCalculation);
+            customerChargeRuleIntervalService.delete(wrapperInterval);
+            customerChargeRuleTypeDao.deleteById(customerChargeTypeUuid);
+        }
+        addCustomerChargeRule(customerChargeType);
     }
 
     private Boolean addCustomerChargeRule(CustomerChargeType customerChargeType){
@@ -69,7 +77,7 @@ public class CustomerChargeRuleTypeService extends ServiceImpl<CustomerChargeRul
 
 
     public CustomerChargeType getCustomerChargeRule(Long customerUuid){
-        CustomerChargeType customerChargeType = customerChargeRuleTypeDao.selectByCustomerUuid(customerUuid);
+        CustomerChargeType customerChargeType = customerChargeRuleTypeDao.selectByCustomerUuid(customerUuid.intValue());
         if(null!=customerChargeType){
             List<CustomerChargeRuleCalculation> customerChargeRuleCalculations = customerChargeRuleCalculationService.selectBycustomerChargeRuleTypeUuid(customerChargeType.getUuid());
             if(customerChargeRuleCalculations.size()>0){

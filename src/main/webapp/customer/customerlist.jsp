@@ -1132,25 +1132,13 @@
             <td align="center" width=80>用户名称</td>
             <td align="center" width=80>联系人</td>
             <td align="center" width=60>QQ</td>
-            <%--<td align="center" width=100>Email</td>--%>
             <td align="center" width=100>电话</td>
-            <%--<td align="center" width=60>关键字数</td>--%>
             <td align="center" width=60>已付金额</td>
             <td align="center" width=140>备注</td>
             <td align="center" width=60>类型</td>
             <td align="center" width=40>状态</td>
             <td align="center" width=80>创建时间</td>
-            <td align="center" width=200>操作
-                (<a target="_blank" href="
-            <c:choose>
-			    <c:when test="${user.vipType}">
-				        SuperUserKeywordList.xls
-			    </c:when>
-	            <c:otherwise>
-		                AgentKeywordList.xls
-                </c:otherwise>
-			</c:choose>">下载Excel模板</a>)
-            </td>
+            <td align="center" width=200>操作</td>
             <div id="div2"></div>
         </tr>
         <c:forEach items="${page.records}" var="customer">
@@ -1163,9 +1151,7 @@
                     <a href="/customerkeyword/list.jsp?status=1&customerUuid=${customer.uuid}">${customer.contactPerson}</a>
                 </td>
                 <td>${customer.qq}</td>
-                    <%--<td>${customer.email}</td>--%>
                 <td>${customer.telphone} </td>
-                    <%--<td align="right">${customer.keywordCount} </td>--%>
                 <td align="right">${customer.paidFee} </td>
                 <td>${customer.remark}</td>
                 <td>${customer.type}</td>
@@ -1182,32 +1168,13 @@
                 <td><fmt:formatDate value="${customer.createTime}" pattern="yyyy-MM-dd"/></td>
                 <td>
                     <a href="javascript:getCustomer(${customer.uuid})">修改</a> |
-                    <a href="javascript:showCustomerKeyword(${customer.uuid})">增加</a> |
-                    <a target="_blank"
-                       href="javascript:uploadTheDailyReportTemplate('${customer.uuid}', this)">上传日报表模板</a>
-                    <c:if test="${user.vipType}">
-                        <a href="javascript:delCustomer('${customer.uuid}')">删除</a>
-                        <a href="javascript:addRule('${customer.uuid}')">客户规则</a>
-                        <%--<a href="javascript:getCustomerChargeRule('${customer.uuid}')">修改规则</a>--%>
-                    </c:if>
+                    <a href="javascript:delCustomer('${customer.uuid}')">删除</a> |
+                    <a href="javascript:addRule('${customer.uuid}')">客户规则</a> |
+                    <a href="javascript:showCustomerKeyword(${customer.uuid})">快速加词</a> |
+                    <a target="_blank" href="javascript:uploadTheDailyReportTemplate('${customer.uuid}', this)">上传日报表模板</a>
                 </td>
             </tr>
         </c:forEach>
-        <c:if test="${customerList.size<0}">
-            <tr>
-                <td colspan=10>
-                    <br>
-                    <div>我们还没有添加客户，现在就添加？<a href="addcustomer.jsp" style="color:blue;">增加新客户</a></div>
-                </td>
-            </tr>
-        </c:if>
-
-        <tr>
-            <td colspan=9>
-                <br>
-                <%--<%=pageInfo%>--%>
-            </td>
-        </tr>
     </table>
     <%--<br><br><br>--%>
     <%--<br>--%>
@@ -1424,8 +1391,6 @@
         </c:choose>
     </form>
 </div>
-
-
 <hr>
 <div id="showCustomerBottomDiv">
     <input id="fisrtButton" class="ui-button ui-widget ui-corner-all" type="button"
