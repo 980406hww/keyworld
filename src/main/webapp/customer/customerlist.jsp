@@ -607,19 +607,22 @@
                     $("#tab" + val.operationType).append("<tr id=" + eval(idx + 1) + " align='center'>"
                         + "<td>" + eval(idx + 1) + "</td>"
                         + "<input type='hidden' id='intervalUuid" + val.operationType + "" + eval(idx + 1) + "' />"
-                        + "<td><input type='text' name='startIndexPC" + eval(idx + 1) + "' id='startIndex" + val.operationType + "" + eval(idx + 1) + "' value='" + val.startIndex + "' style='width: 98;height: 98%' /></td>"
-                        + "<td><input type='text' name='endIndexPC" + eval(idx + 1) + "' id='endIndex" + val.operationType + "" + eval(idx + 1) + "' value='" + val.endIndex + "' style='width: 98;height: 98%' /></td>"
-                        + "<td><input type='text' name='pricePC" + eval(idx + 1) + "' id='price" + val.operationType + "" + eval(idx + 1) + "' value='" + val.price + "'  style='width: 98;height: 98%' /></td>"
+                        + "<td><input type='text' name='startIndexPC" + eval(idx + 1) + "' id='startIndex" + val.operationType + "" + eval(idx + 1) + "' value='" + val.startIndex + "' style='width: 100%;height: 100%' /></td>"
+                        + "<td><input type='text' name='endIndexPC" + eval(idx + 1) + "' id='endIndex" + val.operationType + "" + eval(idx + 1) + "' value='" + val.endIndex + "' style='width: 100%;height: 100%' /></td>"
+                        + "<td><input type='text' name='pricePC" + eval(idx + 1) + "' id='price" + val.operationType + "" + eval(idx + 1) + "' value='" + val.price + "'  style='width: 100%;height: 100%' /></td>"
                         + "<td><a href=\'#\' onclick=\'deltr" + val.operationType + "(" + eval(idx + 1) + ")\'>删除</a></td>"
                         + "</tr>");
                 });
                 $.each(customerChargeRuleIntervalPhone, function (idx, val) {
+                    if(null==val.endIndex||val.endIndex===''){
+                        val.endIndex='';
+                    }
                     $("#tab" + val.operationType).append("<tr id=" + eval(idx + 1) + " align='center'>"
                         + "<td>" + eval(idx + 1) + "</td>"
                         + "<input type='hidden' id='intervalUuid" + val.operationType + "" + eval(idx + 1) + "' />"
-                        + "<td><input type='text' name='startIndexPC" + eval(idx + 1) + "' id='startIndex" + val.operationType + "" + eval(idx + 1) + "' value='" + val.startIndex + "'  style='width: 98;height: 98%'/></td>"
-                        + "<td><input type='text' name='endIndexPC" + eval(idx + 1) + "' id='endIndex" + val.operationType + "" + eval(idx + 1) + "' value='" + val.endIndex + "'  style='width: 98;height: 98%'/></td>"
-                        + "<td><input type='text' name='pricePC" + eval(idx + 1) + "' id='price" + val.operationType + "" + eval(idx + 1) + "' value='" + val.price + "'   style='width: 98;height: 98%'/></td>"
+                        + "<td><input type='text' name='startIndexPC" + eval(idx + 1) + "' id='startIndex" + val.operationType + "" + eval(idx + 1) + "' value='" + val.startIndex + "'  style='width: 100%;height: 100%'/></td>"
+                        + "<td><input type='text' name='endIndexPC" + eval(idx + 1) + "' id='endIndex" + val.operationType + "" + eval(idx + 1) + "' value='" + val.endIndex + "'  style='width: 100%;height: 100%'/></td>"
+                        + "<td><input type='text' name='pricePC" + eval(idx + 1) + "' id='price" + val.operationType + "" + eval(idx + 1) + "' value='" + val.price + "'   style='width: 100%;height: 100%'/></td>"
                         + "<td><a href=\'#\' onclick=\'deltr" + val.operationType + "(" + eval(idx + 1) + ")\'>删除</a></td>"
                         + "</tr>");
                 });
@@ -647,9 +650,9 @@
             $("#tabPC").append("<tr id=" + trRow + " align='center'>"
                 + "<td>" + trRow + "</td>"
                 + "<input type='hidden' id='intervalUuidPC" + trRow + "' />"
-                + "<td><input type='text' name='startIndexPC" + trRow + "' id='startIndexPC" + trRow + "' style='width: 98;height: 98%' /></td>"
-                + "<td><input type='text' name='endIndexPC" + trRow + "' id='endIndexPC" + trRow + "'  style='width: 98;height: 98%'/></td>"
-                + "<td><input type='text' name='pricePC" + trRow + "' id='pricePC" + trRow + "' style='width: 98;height: 98%'/></td>"
+                + "<td><input type='text' name='startIndexPC" + trRow + "' id='startIndexPC" + trRow + "' style='width: 100;height: 100%' /></td>"
+                + "<td><input type='text' name='endIndexPC" + trRow + "' id='endIndexPC" + trRow + "'  style='width: 100;height: 100%'/></td>"
+                + "<td><input type='text' name='pricePC" + trRow + "' id='pricePC" + trRow + "' style='width: 100;height: 100%'/></td>"
                 + "<td><a href=\'#\' onclick=\'deltrPC(" + trRow + ")\'>删除</a></td>"
                 + "</tr>");
             intervalInputOnlyNumber();
@@ -661,10 +664,10 @@
             var trRow = $("#tabPhone tr").length;
             $("#tabPhone").append("<tr id=" + trRow + " align='center'>"
                 + "<td>" + trRow + "</td>"
-                + "<input type='hidden' id='intervalUuidPhone" + trRow + "' style='width: 98;height: 98%' />"
-                + "<td><input type='text' name='startIndexPhone" + trRow + "' id='startIndexPhone" + trRow + "'  style='width: 98;height: 98%' /></td>"
-                + "<td><input type='text' name='endIndexPhone" + trRow + "' id='endIndexPhone" + trRow + "' style='width: 98;height: 98%' /></td>"
-                + "<td><input type='text' name='pricePhone" + trRow + "' id='pricePhone" + trRow + "' style='width: 98;height: 98%'/></td>"
+                + "<input type='hidden' id='intervalUuidPhone" + trRow + "' style='width: 100;height: 100%' />"
+                + "<td><input type='text' name='startIndexPhone" + trRow + "' id='startIndexPhone" + trRow + "'  style='width: 100;height: 100%' /></td>"
+                + "<td><input type='text' name='endIndexPhone" + trRow + "' id='endIndexPhone" + trRow + "' style='width: 100;height: 100%' /></td>"
+                + "<td><input type='text' name='pricePhone" + trRow + "' id='pricePhone" + trRow + "' style='width: 100;height: 100%'/></td>"
                 + "<td><a href=\'#\' onclick=\'deltrPhone(" + trRow + ")\'>删除</a></td>"
                 + "</tr>");
             intervalInputOnlyNumber();
@@ -686,9 +689,9 @@
                 $("#tabPC tr[id=\'" + i + "\']")
                     .replaceWith("<tr id=" + (i - 1) + " align='center'>"
                         + "<td>" + (i - 1) + "</td>"
-                        + "<td><input type='text' name='startIndexPC" + (i - 1) + "' value='" + currentIndex + "' id='startIndexPC" + (i - 1) + "' style='width: 98;height: 98%'/></td>"
-                        + "<td><input type='text' name='endIndexPC" + (i - 1) + "' value='" + nextTxtVal + "' id='endIndexPC" + (i - 1) + "' style='width: 98;height: 98%'/></td>"
-                        + "<td><input type='text' name='pricePC" + (i - 1) + "' value='" + pricePC + "' id='pricePC" + (i - 1) + "'  style='width: 98;height: 98%'/></td>"
+                        + "<td><input type='text' name='startIndexPC" + (i - 1) + "' value='" + currentIndex + "' id='startIndexPC" + (i - 1) + "' style='width: 100;height: 100%'/></td>"
+                        + "<td><input type='text' name='endIndexPC" + (i - 1) + "' value='" + nextTxtVal + "' id='endIndexPC" + (i - 1) + "' style='width: 100;height: 100%'/></td>"
+                        + "<td><input type='text' name='pricePC" + (i - 1) + "' value='" + pricePC + "' id='pricePC" + (i - 1) + "'  style='width: 100;height: 100%'/></td>"
                         + "<td><a href=\'#\' onclick=\'deltrPC(" + (i - 1) + ")\'>删除</a></td>"
                         + "</tr>");
             }
@@ -710,9 +713,9 @@
                 $("#tabPhone tr[id=\'" + i + "\']")
                     .replaceWith("<tr id=" + (i - 1) + " align='center'>"
                         + "<td>" + (i - 1) + "</td>"
-                        + "<td><input type='text' name='startIndexPhone" + (i - 1) + "' value='" + currentIndex + "' id='startIndexPhone" + (i - 1) + "' style='width: 98;height: 98%'/></td>"
-                        + "<td><input type='text' name='endIndexPhone" + (i - 1) + "' value='" + nextTxtVal + "' id='endIndexPhone" + (i - 1) + "' style='width: 98;height: 98%'/></td>"
-                        + "<td><input type='text' name='pricePhone" + (i - 1) + "' value='" + pricePC + "' id='pricePhone" + (i - 1) + "' style='width: 98;height: 98%' /></td>"
+                        + "<td><input type='text' name='startIndexPhone" + (i - 1) + "' value='" + currentIndex + "' id='startIndexPhone" + (i - 1) + "' style='width: 100;height: 100%'/></td>"
+                        + "<td><input type='text' name='endIndexPhone" + (i - 1) + "' value='" + nextTxtVal + "' id='endIndexPhone" + (i - 1) + "' style='width: 100;height: 100%'/></td>"
+                        + "<td><input type='text' name='pricePhone" + (i - 1) + "' value='" + pricePC + "' id='pricePhone" + (i - 1) + "' style='width: 100;height: 100%' /></td>"
                         + "<td><a href=\'#\' onclick=\'deltrPhone(" + (i - 1) + ")\'>删除</a></td>"
                         + "</tr>");
             }
@@ -817,8 +820,8 @@
             }
             $("#showCustomerDialog").dialog({
                 resizable: false,
-                width: 380,
-                height: 410,
+                width: 330,
+                height: 400,
                 modal: true,
                 //按钮
                 buttons: {
@@ -843,12 +846,12 @@
             customer.entryType = showCustomerForm.find("#entryTypeHidden").val();
             customer.contactPerson = showCustomerForm.find("#contactPerson").val();
             customer.qq = showCustomerForm.find("#qq").val();
-            if(!(/^[1-9]\d{4,14}$/.test(customer.qq))){
+            if(!(/^[1-9]\d{4,14}$/.test(customer.qq))&&(customer.qq!='')){
                 alert("请输入正确的QQ号");
                 return;
             }
             customer.telphone = showCustomerForm.find("#telphone").val();
-            if(!(/^1[34578]\d{9}$/.test(customer.telphone))){
+            if(!(/^1[34578]\d{9}$/.test(customer.telphone))&&(customer.telphone!='')){
                 alert("请输入正确的手机号");
                 return ;
             }
@@ -1325,54 +1328,48 @@
 </div>
 <div id="showCustomerDialog" title="客户信息">
     <form id="showCustomerForm" method="post" onsubmit="return checkinput();" action="customerlist.jsp">
-        <table style="font-size:12px;">
+        <table style="font-size:14px;" cellpadding=5>
             <tr>
-                <td align="center">
-                    <table style="font-size:14px;" cellpadding=5>
-                        <tr>
-                            <td align="right">联系人:</td>
-                            <td><input type="text" name="contactPerson" id="contactPerson" style="width:200px;"></td>
-                        </tr>
-                        <tr>
-                            <td align="right">QQ:</td>
-                            <td><input type="text" name="qq" id="qq" style="width:200px;">
-                                <div class="hiddentr"
-                                     id="qqExisting"><%--<font color="red">该QQ在系统中已经存在！</font>--%></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td align="right">联系电话：</td>
-                            <td><input type="text" name="telphone" id="telphone" style="width:200px;">
-                                <div class="hiddentr"
-                                     id="telphoneExisting"><%--<font color="red">该电话在系统中已经存在！</font>--%></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td align="right">客户类型:</td>
-                            <td>
-                                <select name="type" id="type">
-                                    <option value="普通客户">普通客户</option>
-                                    <option value="代理">代理</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <input type="hidden" id="entryTypeHidden" value="${entryType}">
-                        <tr>
-                            <td align="right">客户状态:</td>
-                            <td>
-                                <select name="status" id="status">
-                                    <option value="1">激活</option>
-                                    <option value="2">暂停</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td align="right">备注：</td>
-                            <td><textarea name="remark" id="remark" value="" placeholder="写下备注吧!"
-                                          style="width:200px;height:100px;resize: none"></textarea></td>
-                        </tr>
-                    </table>
+                <td align="right">联系人:</td>
+                <td><input type="text" name="contactPerson" id="contactPerson" style="width:200px;"></td>
+            </tr>
+            <tr>
+                <td align="right">QQ:</td>
+                <td><input type="text" name="qq" id="qq" style="width:200px;">
+                    <div class="hiddentr"
+                         id="qqExisting"><%--<font color="red">该QQ在系统中已经存在！</font>--%></div>
                 </td>
+            </tr>
+            <tr>
+                <td align="right">联系电话：</td>
+                <td><input type="text" name="telphone" id="telphone" style="width:200px;">
+                    <div class="hiddentr"
+                         id="telphoneExisting"><%--<font color="red">该电话在系统中已经存在！</font>--%></div>
+                </td>
+            </tr>
+            <tr>
+                <td align="right">客户类型:</td>
+                <td>
+                    <select name="type" id="type">
+                        <option value="普通客户">普通客户</option>
+                        <option value="代理">代理</option>
+                    </select>
+                </td>
+            </tr>
+            <input type="hidden" id="entryTypeHidden" value="${entryType}">
+            <tr>
+                <td align="right">客户状态:</td>
+                <td>
+                    <select name="status" id="status">
+                        <option value="1">激活</option>
+                        <option value="2">暂停</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td align="right">备注：</td>
+                <td><textarea name="remark" id="remark" value="" placeholder="写下备注吧!"
+                              style="width:200px;height:100px;resize: none"></textarea></td>
             </tr>
         </table>
     </form>
