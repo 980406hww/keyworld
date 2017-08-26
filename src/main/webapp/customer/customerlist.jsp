@@ -517,17 +517,20 @@
                 case "Percentage":
                     chargeRulePercentage();
                     $('#showRuleForm')[0].reset();
-                    hideOperationTypeDiv();
+//                    hideOperationTypeDiv();
+                    $("#showChargeRuleIntervalDiv").find("#PC").attr("checked", false);
+                    $("#showChargeRuleIntervalDiv").find("#Phone").attr("checked", false);
                     break;
                 case "Range":
                     chargeRuleInterval();
                     $('#showRuleForm')[0].reset();
+                    $("#showChargeRuleCalculationDiv").find("#PC").attr("checked", false);
+                    $("#showChargeRuleCalculationDiv").find("#Phone").attr("checked", false);
                     break;
             }
         }
         function chargeRulePercentage() {
             $("#chargeRulePercentage").attr("checked", true);
-            $("#chargeRuleFixed").attr("checked", false);
             $("#chargeRuleInterval").attr("checked", false);
             $("#showChargeRuleCalculationDiv").show();
             $("#showChargeRuleIntervalDiv").hide();
@@ -539,7 +542,6 @@
         }
         function chargeRuleInterval() {
             $("#chargeRuleInterval").attr("checked", true);
-            $("#chargeRuleFixed").attr("checked", false);
             $("#chargeRulePercentage").attr("checked", false);
             $("#showChargeRuleCalculationDiv").hide();
             $("#showChargeRuleIntervalDiv").show();
@@ -816,7 +818,7 @@
             $("#showCustomerDialog").dialog({
                 resizable: false,
                 width: 380,
-                height: 450,
+                height: 410,
                 modal: true,
                 //按钮
                 buttons: {
@@ -841,7 +843,19 @@
             customer.entryType = showCustomerForm.find("#entryTypeHidden").val();
             customer.contactPerson = showCustomerForm.find("#contactPerson").val();
             customer.qq = showCustomerForm.find("#qq").val();
+            if(!(/^[1-9]\d{4,14}$/.test(customer.qq))){
+                alert("请输入正确的QQ号");
+                return;
+            }
             customer.telphone = showCustomerForm.find("#telphone").val();
+            if(!(/^1[34578]\d{9}$/.test(customer.telphone))){
+                alert("请输入正确的手机号");
+                return ;
+            }
+            if(customer.contactPerson===''){
+                alert("请输入联系人");
+                return;
+            }
             customer.type = showCustomerForm.find("#type").val();
             customer.status = showCustomerForm.find("#status").val();
             customer.remark = showCustomerForm.find("#remark").val();
@@ -1201,7 +1215,7 @@
 <div id="showRuleDialog" title="客户规则">
     <input type="hidden" id="customerChargeTypeUuid"/>
     <form id="showRuleForm">
-        <div id="showRuleRadioDiv" class="widget" style="text-align: center">
+        <div id="showRuleRadioDiv"  style="text-align: center">
             <input type="radio" id="chargeRulePercentage" onclick="chooseChargeType(this.value)" value="Percentage"
                    name="textbox">按照百分比收费&nbsp;&nbsp;
             <input type="radio" id="chargeRuleInterval" onclick="chooseChargeType(this.value)" value="Range"
