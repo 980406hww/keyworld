@@ -1199,7 +1199,7 @@
                     <a href="javascript:delCustomer('${customer.uuid}')">删除</a> |
                     <a href="javascript:addRule('${customer.uuid}')">客户规则</a> |
                     <a href="javascript:showCustomerKeyword(${customer.uuid})">快速加关键字</a> |
-                    <a target="_blank" href="javascript:uploadTheDailyReportTemplate('${customer.uuid}', this)">上传日报表模板</a>
+                    <a target="_blank" href="javascript:uploadDailyReportTemplate('${customer.uuid}', this)">上传日报表模板</a>
                 </td>
             </tr>
         </c:forEach>
@@ -1211,7 +1211,7 @@
     <input type="hidden" id="customerChargeTypeUuid"/>
         <div id="showRuleRadioDiv"  style="text-align: center">
             <input type="radio" id="chargeRulePercentage" onclick="chooseChargeType(this.value)" value="Percentage"
-                   name="textbox">按照百分比收"nbsp;&nbsp;
+                   name="textbox">按照百分比收 &nbsp;&nbsp;
             <input type="radio" id="chargeRuleInterval" onclick="chooseChargeType(this.value)" value="Range"
                    name="textbox">按照区间收费
         </div>
@@ -1341,23 +1341,23 @@
                 <td align="right">客户类型:</td>
                 <td>
                     <select name="type" id="type">
-                        <option value="普通客">普通客"/option>
+                        <option value="普通客">普通客户</option>
                         <option value="代理">代理</option>
                     </select>
                 </td>
             </tr>
             <input type="hidden" id="entryTypeHidden" value="${entryType}">
             <tr>
-                <td align="right">客户状"</td>
+                <td align="right">客户状态:</td>
                 <td>
                     <select name="status" id="status">
-                        <option value="1">激"/option>
+                        <option value="1">激活</option>
                         <option value="2">暂停</option>
                     </select>
                 </td>
             </tr>
             <tr>
-                <td align="right">备注"/td>
+                <td align="right">备注</td>
                 <td><textarea name="remark" id="remark" value="" placeholder="写下备注!"
                               style="width:200px;height:100px;resize: none"></textarea></td>
             </tr>
@@ -1365,7 +1365,7 @@
     </form>
 </div>
 <%--上传日报表模"onsubmit="return checkinput();"--%>
-<div id="uploadDailyReportTemplateDialog" title="上传日报表模">
+<div id="uploadDailyReportTemplateDialog" title="上传日报表模板">
     <form method="post" id="uploadDailyReportTemplateForm" onsubmit="return chooseUploadType()" action=""
           enctype="multipart/form-data">
         <table width="100%" style="margin-top: 10px;margin-left: 10px">
