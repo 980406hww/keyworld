@@ -326,7 +326,7 @@
                 success: function (customerChargeType) {
                     $("#tabPC tr:not(:first)").remove();
                     $("#tabPhone tr:not(:first)").remove();
-                    $("#showRuleDialog").find("#customerChargeTypeUuid").val("");
+                    //$("#showRuleDialog").find("#customerChargeTypeUuid").val("");
                     if (customerChargeType != null && customerChargeType != "") {
 //                        alert(JSON.stringify(customerChargeType));
                         initCustomerChargeRuleDiv(customerChargeType);
@@ -1306,9 +1306,7 @@
                         <td width="20%">操作</td>
                     </tr>
                 </table>
-                <div style="border:1px;
-                border-color:#00CC00;
-                margin-top:20px">
+                <div style="border:1px;border-color:#00CC00;margin-top:20px">
                     <input type="button" id="but" value="增加" onclick="addRowPhone()"/>
                 </div>
             </div>

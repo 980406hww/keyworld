@@ -49,15 +49,15 @@ public class CustomerChargeRuleTypeService extends ServiceImpl<CustomerChargeRul
             Wrapper wrapperInterval = new EntityWrapper(customerChargeRuleInterval);
             customerChargeRuleCalculationService.delete(wrapperCalculation);
             customerChargeRuleIntervalService.delete(wrapperInterval);
-                updateCustomerChargeRule(customerChargeType);
-                CustomerChargeType OldCustomerChargeType = customerChargeRuleTypeDao.selectById(customerChargeType.getUuid());
-                OldCustomerChargeType.setCustomerUuid(customerChargeType.getCustomerUuid());
-                OldCustomerChargeType.setChargeType(customerChargeType.getChargeType());
-                customerChargeType.setUpdateTime(new Date());
-                customerChargeRuleTypeDao.updateById(OldCustomerChargeType);
-            }else {
-                addCustomerChargeRule(customerChargeType);
-            }
+            updateCustomerChargeRule(customerChargeType);
+            CustomerChargeType oldCustomerChargeType = customerChargeRuleTypeDao.selectById(customerChargeType.getUuid());
+            oldCustomerChargeType.setCustomerUuid(customerChargeType.getCustomerUuid());
+            oldCustomerChargeType.setChargeType(customerChargeType.getChargeType());
+            customerChargeType.setUpdateTime(new Date());
+            customerChargeRuleTypeDao.updateById(oldCustomerChargeType);
+        }else {
+            addCustomerChargeRule(customerChargeType);
+        }
     }
 
     private void addCustomerChargeRule(CustomerChargeType customerChargeType){
