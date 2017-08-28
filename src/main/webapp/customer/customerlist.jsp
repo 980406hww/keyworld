@@ -405,6 +405,12 @@
                 }
                 customerChargeType.customerChargeTypeCalculations = [];
                 $.each(checkedObjs, function (idx, val) {
+                    if ($.trim(showChargeRuleCalculationDiv.find("#chargesOfFirstLT" + val.id).val()) === ''&&$.trim(showChargeRuleCalculationDiv.find("#chargesOfFirstGT" + val.id).val()) === '') {
+                        alert("至少填写一条排名第一的字段");
+                       validationFlag = false;
+                        return false;
+                    }
+                    if($.trim(showChargeRuleCalculationDiv.find("#chargesOfFirstLT" + val.id).val()) != ''){
                     var customerChargeTypeCalculationLT = {};
                     customerChargeTypeCalculationLT.uuid = showChargeRuleCalculationDiv.find("#chargeRuleCalculationUuid" + val.id).val();
                     customerChargeTypeCalculationLT.chargeDataType = "LessThanHundred";
@@ -417,7 +423,9 @@
                     customerChargeTypeCalculationLT.chargesOfFirstPage = showChargeRuleCalculationDiv.find("#chargesOfFirstPageLT" + val.id).val();
                     customerChargeTypeCalculationLT.uuid = showChargeRuleCalculationDiv.find("#chargeRuleCalculationUuid" + val.id).val();
                     customerChargeType.customerChargeTypeCalculations.push(customerChargeTypeCalculationLT);
+                    }
 
+                    if($.trim(showChargeRuleCalculationDiv.find("#chargesOfFirstGT" + val.id).val()) != ''){
                     var customerChargeTypeCalculationGT = {};
                     customerChargeTypeCalculationGT.chargeDataType = "Percentage";
                     customerChargeTypeCalculationGT.operationType = val.id;
@@ -428,6 +436,7 @@
                     customerChargeTypeCalculationGT.chargesOfFifth = showChargeRuleCalculationDiv.find("#chargesOfFifthGT" + val.id).val();
                     customerChargeTypeCalculationGT.chargesOfFirstPage = showChargeRuleCalculationDiv.find("#chargesOfFirstPageGT" + val.id).val();
                     customerChargeType.customerChargeTypeCalculations.push(customerChargeTypeCalculationGT);
+                    }
                 });
             } else {
                 var checkedObjs = showChargeRuleIntervalDiv.find("input[name=operationType]:checkbox:checked");
@@ -441,7 +450,7 @@
                     var interval = showChargeRuleIntervalDiv.find("#" + val.id + "OperationTypeDiv").find("input[type=text]");
                     var trRow = showChargeRuleIntervalDiv.find("#tab" + val.id + ' tr').length;
                     if(parseInt(trRow)==1){
-                        alert("请至少填一条规");
+                        alert("请至少填一条规则");
                         validationFlag = false;
                         if(val.id=="PC"){
                             addRowPC();
