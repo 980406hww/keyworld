@@ -546,14 +546,14 @@
                     chargeRulePercentage();
                     $('#showRuleForm')[0].reset();
 //                    hideOperationTypeDiv();
-                    $("#showChargeRuleIntervalDiv").find("#PC").attr("checked", false);
-                    $("#showChargeRuleIntervalDiv").find("#Phone").attr("checked", false);
+                    $("#showChargeRuleIntervalDiv").find("#PC").prop("checked", false);
+                    $("#showChargeRuleIntervalDiv").find("#Phone").prop("checked", false);
                     break;
                 case "Range":
                     chargeRuleInterval();
                     $('#showRuleForm')[0].reset();
-                    $("#showChargeRuleCalculationDiv").find("#PC").attr("checked", false);
-                    $("#showChargeRuleCalculationDiv").find("#Phone").attr("checked", false);
+                    $("#showChargeRuleCalculationDiv").find("#PC").prop("checked", false);
+                    $("#showChargeRuleCalculationDiv").find("#Phone").prop("checked", false);
                     break;
             }
         }
@@ -587,7 +587,7 @@
                 chargeRulePercentage();
                 $.each(customerChargeTypeCalculations, function (idx, val) {
                     showChargeRuleCalculationDiv.find("#ChargeRuleCalculationUuid" + val.operationType).val(val.uuid);
-                    showChargeRuleCalculationDiv.find("#" + val.operationType).attr("checked", true);
+                    showChargeRuleCalculationDiv.find("#" + val.operationType).prop("checked", true);
                     if (val.chargeDataType == "LessThanHundred") {
                         var chargesLT = showChargeRuleCalculationDiv.find("#chargesLT" + val.operationType);
                         chargesLT.find("#chargesOfFirstLT" + val.operationType).val(val.chargesOfFirst);
@@ -614,7 +614,7 @@
                 var customerChargeTypeIntervalPC = [];
                 var customerChargeTypeIntervalPhone = [];
                 $.each(customerChargeTypeIntervals, function (idx, val) {
-                    showChargeRuleIntervalDiv.find("#" + val.operationType).attr("checked", true);
+                    showChargeRuleIntervalDiv.find("#" + val.operationType).prop("checked", true);
                     //如果有一条PC类型就在PCtable中加一"
                     if (val.operationType == "PC") {
                         customerChargeTypeIntervalPC.push(val);
