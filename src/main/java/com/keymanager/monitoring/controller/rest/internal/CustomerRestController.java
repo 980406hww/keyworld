@@ -43,34 +43,28 @@ public class CustomerRestController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(value = "searchCustomers" ,method = RequestMethod.GET)
-    public ModelAndView searchCustomers(@RequestParam(defaultValue = "1") int currentPage,@RequestParam(defaultValue="30") int displaysRecords,HttpServletRequest request){
-        ModelAndView modelAndView = new ModelAndView("/customer/customerlist");
-        HttpSession session = request.getSession();
-        String userID = (String) session.getAttribute("username");
-        User user = userService.getUser(userID);
-        Page<Customer> page = customerService.searchCustomers(new Page<Customer>(currentPage,displaysRecords),new CustomerCriteria());
-        String entryType = (String) session.getAttribute("entry");
-        String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
-        modelAndView.addObject("terminalType", terminalType);
-        modelAndView.addObject("entryType",entryType);
-        modelAndView.addObject("page",page);
-        modelAndView.addObject("user",user);
-        return modelAndView;
+    @RequestMapping(value = "/searchCustomers", method = RequestMethod.GET)
+    public ModelAndView searchCustomers(@RequestParam(defaultValue = "1") int currentPage, @RequestParam(defaultValue = "30") int displaysRecords, HttpServletRequest request) {
+        return constructCustomerModelAndView(request, new CustomerCriteria(), currentPage + "", displaysRecords + "");
     }
-    @RequestMapping(value = "searchCustomers" ,method = RequestMethod.POST)
-    public ModelAndView searchCustomersPost(HttpServletRequest request,CustomerCriteria customerCriteria){
+
+    @RequestMapping(value = "/searchCustomers", method = RequestMethod.POST)
+    public ModelAndView searchCustomersPost(HttpServletRequest request, CustomerCriteria customerCriteria) {
+        String currentPage = request.getParameter("currentPageHidden");//
+        String displaysRecords = request.getParameter("displayRerondsHidden");
+        if (null == currentPage && null == currentPage) {
+            currentPage = "1";
+            displaysRecords = "30";
+        }
+        return constructCustomerModelAndView(request, customerCriteria, currentPage, displaysRecords);
+    }
+
+    private ModelAndView constructCustomerModelAndView(HttpServletRequest request, CustomerCriteria customerCriteria, String currentPage, String displaysRecords) {
         ModelAndView modelAndView = new ModelAndView("/customer/customerlist");
         HttpSession session = request.getSession();
         String userID = (String) session.getAttribute("username");
         User user = userService.getUser(userID);
-        String  currentPage = request.getParameter("currentPageHidden");//
-        String  displaysRecords = request.getParameter("displayRerondsHidden");
-        if(null==currentPage&&null==currentPage){
-            currentPage="1";
-            displaysRecords="30";
-        }
-        Page<Customer> page = customerService.searchCustomers(new Page<Customer>(Integer.parseInt(currentPage),Integer.parseInt(displaysRecords)),customerCriteria);
+        Page<Customer> page = customerService.searchCustomers(new Page<Customer>(Integer.parseInt(currentPage), Integer.parseInt(displaysRecords)), customerCriteria);
         String entryType = (String) session.getAttribute("entry");
         String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
         modelAndView.addObject("entryType", entryType);
@@ -82,7 +76,7 @@ public class CustomerRestController {
     }
 
 
-    @RequestMapping(value = "addCustomer" , method = RequestMethod.POST)
+    @RequestMapping(value = "/addCustomer" , method = RequestMethod.POST)
     public ResponseEntity<?> addCustomer(@RequestBody Customer customer){
         if(customerService.addCustomer(customer)){
             return new ResponseEntity<Object>(true, HttpStatus.OK);
@@ -91,24 +85,24 @@ public class CustomerRestController {
     }
 
 
-    @RequestMapping(value = "getCustomer/{uuid}" , method = RequestMethod.GET)
+    @RequestMapping(value = "/getCustomer/{uuid}" , method = RequestMethod.GET)
     public ResponseEntity<?> getCustomer(@PathVariable("uuid")Long uuid){
         return new ResponseEntity<Object>(customerService.getCustomerWithKeywordCount(uuid), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "delCustomer/{uuid}" , method = RequestMethod.GET)
+    @RequestMapping(value = "/delCustomer/{uuid}" , method = RequestMethod.GET)
     public ResponseEntity<?> delCustomer(@PathVariable("uuid")Long uuid){
         return new ResponseEntity<Object>(customerService.deleteCustomer(uuid), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "deleteCustomerForms" , method = RequestMethod.POST)
-    public ResponseEntity<?> deleteCustomerForms(@RequestBody Map<String, Object> requestMap){
+    @RequestMapping(value = "/deleteCustomers" , method = RequestMethod.POST)
+    public ResponseEntity<?> deleteCustomers(@RequestBody Map<String, Object> requestMap){
         List<String> uuids = (List<String>) requestMap.get("uuids");
         return new ResponseEntity<Object>(customerService.deleteAll(uuids) , HttpStatus.OK);
     }
 
-    @RequestMapping(value = "uploadTheDailyReportTemplate" , method = RequestMethod.POST)
-    public boolean uploadTheDailyReportTemplate(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request){
+    @RequestMapping(value = "/uploadDailyReportTemplate" , method = RequestMethod.POST)
+    public boolean uploadDailyReportTemplate(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request){
        String customerUuid = request.getParameter("customerUuid");
        String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
        String path = Utils.getWebRootPath() + "dailyreport" + File.separator + terminalType + File.separator;

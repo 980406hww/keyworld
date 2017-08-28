@@ -16,10 +16,10 @@ public class CustomerChargeType extends BaseEntity{
 	private String chargeType;
 
 	@TableField(exist = false)
-	private List<CustomerChargeRuleCalculation> customerChargeRuleCalculations;
+	private List<CustomerChargeTypeCalculation> customerChargeTypeCalculations;
 
 	@TableField(exist = false)
-	private List<CustomerChargeRuleInterval> customerChargeRuleIntervals;
+	private List<CustomerChargeTypeInterval> customerChargeTypeIntervals;
 
 	public Integer getCustomerUuid() {
 		return customerUuid;
@@ -37,19 +37,19 @@ public class CustomerChargeType extends BaseEntity{
 		this.chargeType = chargeType;
 	}
 
-	public List<CustomerChargeRuleCalculation> getCustomerChargeRuleCalculations() {
-		return customerChargeRuleCalculations;
+	public List<CustomerChargeTypeCalculation> getCustomerChargeTypeCalculations() {
+		return customerChargeTypeCalculations;
 	}
 
-	public void setCustomerChargeRuleCalculations(List<CustomerChargeRuleCalculation> customerChargeRuleCalculations) {
-		this.customerChargeRuleCalculations = customerChargeRuleCalculations;
+	public void setCustomerChargeTypeCalculations(List<CustomerChargeTypeCalculation> customerChargeTypeCalculations) {
+		this.customerChargeTypeCalculations = customerChargeTypeCalculations;
 	}
 
-	public List<CustomerChargeRuleInterval> getCustomerChargeRuleIntervals() {
-		return customerChargeRuleIntervals;
+	public List<CustomerChargeTypeInterval> getCustomerChargeTypeIntervals() {
+		return customerChargeTypeIntervals;
 	}
 
-	public void setCustomerChargeRuleIntervals(List<CustomerChargeRuleInterval> customerChargeRuleIntervals) {
-		this.customerChargeRuleIntervals = customerChargeRuleIntervals;
+	public void setCustomerChargeTypeIntervals(List<CustomerChargeTypeInterval> customerChargeTypeIntervals) {
+		this.customerChargeTypeIntervals = customerChargeTypeIntervals;
 	}
 }

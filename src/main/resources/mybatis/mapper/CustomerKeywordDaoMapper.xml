@@ -116,6 +116,6 @@
     </select>
 
     <select id="updateCaptureIndexQueryTime">
-        UPDATE t_customer_keyword SET fCaptureIndexQueryTime = NOW() WHERE fKeyword = #{keyword} and fOptimizeGroupName IN ('pc_pm_xiaowu', 'm_pm_xiaowu')
+        UPDATE t_customer_keyword SET fCaptureIndexQueryTime = NOW() WHERE fKeyword = #{keyword} and fCurrentIndexCount IS NULL and fOptimizeGroupName IN ('pc_pm_xiaowu', 'm_pm_xiaowu')
     </select>
 </mapper>

@@ -15,7 +15,6 @@ import com.keymanager.util.Constants;
 import com.keymanager.util.Utils;
 import com.keymanager.util.common.StringUtil;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
-import com.sun.xml.internal.xsom.impl.Ref;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +39,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     private QZOperationTypeService qzOperationTypeService;
 
     @Autowired
-    private CustomerChargeRuleTypeService customerChargeRuleTypeService;
+    private CustomerChargeTypeService customerChargeTypeService;
 
     @Autowired
     private CustomerKeywordDao customerKeywordDao;
@@ -94,7 +93,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             try {
                 maxSequence = customerKeywordDao.getMaxSequence(terminalType, entryType, customerUuid);
             } catch (Exception ex) {
-                ex.printStackTrace();
+//                ex.printStackTrace();
             }
             for (CustomerKeyword customerKeyword : customerKeywords) {
                 supplementInfoFromSimpleUI(customerKeyword, terminalType, entryType, ++maxSequence);
@@ -145,7 +144,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         try {
             customerKeywordCount = customerKeywordDao.getSimilarCustomerKeywordCount(terminalType, customerUuid, keyword, originalUrl);
         } catch (Exception ex) {
-            ex.printStackTrace();
+//            ex.printStackTrace();
         }
         return customerKeywordCount > 0;
     }
@@ -221,65 +220,65 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     private void calculatePrice(CustomerKeyword customerKeyword) {
-        CustomerChargeType customerChargeType = customerChargeRuleTypeService.getCustomerChargeRule(customerKeyword.getCustomerUuid());
+        CustomerChargeType customerChargeType = customerChargeTypeService.getCustomerChargeType(customerKeyword.getCustomerUuid());
         if (customerChargeType != null) {
             if (ChargeTypeEnum.Percentage.name().equals(customerChargeType.getChargeType())) {
-                CustomerChargeRuleCalculation percentageCustomerChargeRuleCalculation = null;
-                CustomerChargeRuleCalculation fixedPriceCustomerChargeRuleCalculation = null;
-                for (CustomerChargeRuleCalculation tmpCustomerChargeRuleCalculation : customerChargeType.getCustomerChargeRuleCalculations()) {
-                    if (tmpCustomerChargeRuleCalculation.getOperationType().equals(customerKeyword.getTerminalType())) {
-                        if (ChargeDataTypeEnum.ZeroIndex.name().equals(tmpCustomerChargeRuleCalculation.getChargeDataType())) {
-                            fixedPriceCustomerChargeRuleCalculation = tmpCustomerChargeRuleCalculation;
+                CustomerChargeTypeCalculation percentageCustomerChargeTypeCalculation = null;
+                CustomerChargeTypeCalculation fixedPriceCustomerChargeTypeCalculation = null;
+                for (CustomerChargeTypeCalculation tmpCustomerChargeTypeCalculation : customerChargeType.getCustomerChargeTypeCalculations()) {
+                    if (tmpCustomerChargeTypeCalculation.getOperationType().equals(customerKeyword.getTerminalType())) {
+                        if (ChargeDataTypeEnum.LessThanHundred.name().equals(tmpCustomerChargeTypeCalculation.getChargeDataType())) {
+                            fixedPriceCustomerChargeTypeCalculation = tmpCustomerChargeTypeCalculation;
                         }
-                        if (ChargeDataTypeEnum.Percentage.name().equals(tmpCustomerChargeRuleCalculation.getChargeDataType())) {
-                            percentageCustomerChargeRuleCalculation = tmpCustomerChargeRuleCalculation;
+                        if (ChargeDataTypeEnum.Percentage.name().equals(tmpCustomerChargeTypeCalculation.getChargeDataType())) {
+                            percentageCustomerChargeTypeCalculation = tmpCustomerChargeTypeCalculation;
                         }
                     }
                 }
 
-                if (percentageCustomerChargeRuleCalculation != null) {
-                    if (percentageCustomerChargeRuleCalculation.getChargesOfFirst() != null) {
+                if (percentageCustomerChargeTypeCalculation != null) {
+                    if (percentageCustomerChargeTypeCalculation.getChargesOfFirst() != null) {
                         customerKeyword.setPositionFirstFee(calculatePrice(customerKeyword.getCurrentIndexCount(),
-                                (fixedPriceCustomerChargeRuleCalculation != null ? fixedPriceCustomerChargeRuleCalculation.getChargesOfFirst() :
-                                        null), percentageCustomerChargeRuleCalculation.getChargesOfFirst()));
+                                (fixedPriceCustomerChargeTypeCalculation != null ? fixedPriceCustomerChargeTypeCalculation.getChargesOfFirst() :
+                                        null), percentageCustomerChargeTypeCalculation.getChargesOfFirst()));
                     }
-                    if (percentageCustomerChargeRuleCalculation.getChargesOfSecond() != null) {
+                    if (percentageCustomerChargeTypeCalculation.getChargesOfSecond() != null) {
                         customerKeyword.setPositionSecondFee(calculatePrice(customerKeyword.getCurrentIndexCount(),
-                                (fixedPriceCustomerChargeRuleCalculation != null ? fixedPriceCustomerChargeRuleCalculation.getChargesOfSecond() :
-                                        null), percentageCustomerChargeRuleCalculation.getChargesOfSecond()));
+                                (fixedPriceCustomerChargeTypeCalculation != null ? fixedPriceCustomerChargeTypeCalculation.getChargesOfSecond() :
+                                        null), percentageCustomerChargeTypeCalculation.getChargesOfSecond()));
                     }
-                    if (percentageCustomerChargeRuleCalculation.getChargesOfThird() != null) {
+                    if (percentageCustomerChargeTypeCalculation.getChargesOfThird() != null) {
                         customerKeyword.setPositionThirdFee(calculatePrice(customerKeyword.getCurrentIndexCount(),
-                                (fixedPriceCustomerChargeRuleCalculation != null ? fixedPriceCustomerChargeRuleCalculation.getChargesOfThird() :
-                                        null), percentageCustomerChargeRuleCalculation.getChargesOfThird()));
+                                (fixedPriceCustomerChargeTypeCalculation != null ? fixedPriceCustomerChargeTypeCalculation.getChargesOfThird() :
+                                        null), percentageCustomerChargeTypeCalculation.getChargesOfThird()));
                     }
-                    if (percentageCustomerChargeRuleCalculation.getChargesOfFourth() != null) {
+                    if (percentageCustomerChargeTypeCalculation.getChargesOfFourth() != null) {
                         customerKeyword.setPositionForthFee(calculatePrice(customerKeyword.getCurrentIndexCount(),
-                                (fixedPriceCustomerChargeRuleCalculation != null ? fixedPriceCustomerChargeRuleCalculation.getChargesOfFourth() :
-                                        null), percentageCustomerChargeRuleCalculation.getChargesOfFourth()));
+                                (fixedPriceCustomerChargeTypeCalculation != null ? fixedPriceCustomerChargeTypeCalculation.getChargesOfFourth() :
+                                        null), percentageCustomerChargeTypeCalculation.getChargesOfFourth()));
                     }
-                    if (percentageCustomerChargeRuleCalculation.getChargesOfFifth() != null) {
+                    if (percentageCustomerChargeTypeCalculation.getChargesOfFifth() != null) {
                         customerKeyword.setPositionFifthFee(calculatePrice(customerKeyword.getCurrentIndexCount(),
-                                (fixedPriceCustomerChargeRuleCalculation != null ? fixedPriceCustomerChargeRuleCalculation.getChargesOfFifth() :
-                                        null), percentageCustomerChargeRuleCalculation.getChargesOfFifth()));
+                                (fixedPriceCustomerChargeTypeCalculation != null ? fixedPriceCustomerChargeTypeCalculation.getChargesOfFifth() :
+                                        null), percentageCustomerChargeTypeCalculation.getChargesOfFifth()));
                     }
-                    if (percentageCustomerChargeRuleCalculation.getChargesOfFirstPage() != null) {
+                    if (percentageCustomerChargeTypeCalculation.getChargesOfFirstPage() != null) {
                         customerKeyword.setPositionFirstPageFee(calculatePrice(customerKeyword.getCurrentIndexCount(),
-                                fixedPriceCustomerChargeRuleCalculation.getChargesOfFirstPage(), percentageCustomerChargeRuleCalculation
+                                fixedPriceCustomerChargeTypeCalculation.getChargesOfFirstPage(), percentageCustomerChargeTypeCalculation
                                         .getChargesOfFirstPage()));
                     }
                 }
             } else {
-                for (CustomerChargeRuleInterval tmpCustomerChargeRuleInterval : customerChargeType.getCustomerChargeRuleIntervals()) {
-                    if (tmpCustomerChargeRuleInterval.getOperationType().equals(customerKeyword.getTerminalType())) {
-                        if (tmpCustomerChargeRuleInterval.getStartIndex() <= customerKeyword
-                                .getCurrentIndexCount() && (tmpCustomerChargeRuleInterval.getEndIndex() == null || customerKeyword
-                                .getCurrentIndexCount() <= tmpCustomerChargeRuleInterval.getEndIndex())) {
-                            customerKeyword.setPositionFirstFee(tmpCustomerChargeRuleInterval.getPrice().doubleValue());
-                            customerKeyword.setPositionSecondFee(tmpCustomerChargeRuleInterval.getPrice().doubleValue());
-                            customerKeyword.setPositionThirdFee(tmpCustomerChargeRuleInterval.getPrice().doubleValue());
-                            customerKeyword.setPositionForthFee(tmpCustomerChargeRuleInterval.getPrice().doubleValue() / 2);
-                            customerKeyword.setPositionFifthFee(tmpCustomerChargeRuleInterval.getPrice().doubleValue() / 2);
+                for (CustomerChargeTypeInterval tmpCustomerChargeTypeInterval : customerChargeType.getCustomerChargeTypeIntervals()) {
+                    if (tmpCustomerChargeTypeInterval.getOperationType().equals(customerKeyword.getTerminalType())) {
+                        if (tmpCustomerChargeTypeInterval.getStartIndex() <= customerKeyword
+                                .getCurrentIndexCount() && (tmpCustomerChargeTypeInterval.getEndIndex() == null || customerKeyword
+                                .getCurrentIndexCount() <= tmpCustomerChargeTypeInterval.getEndIndex())) {
+                            customerKeyword.setPositionFirstFee(tmpCustomerChargeTypeInterval.getPrice().doubleValue());
+                            customerKeyword.setPositionSecondFee(tmpCustomerChargeTypeInterval.getPrice().doubleValue());
+                            customerKeyword.setPositionThirdFee(tmpCustomerChargeTypeInterval.getPrice().doubleValue());
+                            customerKeyword.setPositionForthFee(tmpCustomerChargeTypeInterval.getPrice().doubleValue() / 2);
+                            customerKeyword.setPositionFifthFee(tmpCustomerChargeTypeInterval.getPrice().doubleValue() / 2);
                             customerKeyword.setPositionFirstPageFee(null);
                             break;
                         }
@@ -293,6 +292,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         if (fixedPrice != null && currentIndexCount <= 100) {
             return fixedPrice.doubleValue();
         }
-        return Math.round((currentIndexCount * pricePercentage.doubleValue()) / 1000) * 10;
+        return Math.round((currentIndexCount * pricePercentage.doubleValue()) / 1000 - 0.5) * 10;
     }
 }

@@ -5,8 +5,8 @@ import com.baomidou.mybatisplus.annotations.TableName;
 
 import java.math.BigDecimal;
 
-@TableName(value = "t_customer_charge_rule_interval")
-public class CustomerChargeRuleInterval extends BaseEntity{
+@TableName(value = "t_customer_charge_type_interval")
+public class CustomerChargeTypeInterval extends BaseEntity{
 	protected static final long serialVersionUID = -1101942701283949852L;
 
 	@TableField(value="fCustomerChargeTypeUuid")

@@ -53,7 +53,7 @@
     <script type="text/javascript">
         $(function () {
             $("#showCustomerDialog").hide();
-            $("#uploadTheDailyReportTemplateDialog").hide();
+            $("#uploadDailyReportTemplateDialog").hide();
             $("#addCustomerKeywordDialog").hide();
             $("#showRuleDialog").hide();
             pageLoad();
@@ -274,7 +274,7 @@
         }
 
         //删除所选
-        function deleteCustomerForms(self) {
+        function deleteCustomers(self) {
             var uuids = getSelectedIDs();
             if (uuids === '') {
                 alert('请选择要操作的设置信息！');
@@ -284,7 +284,7 @@
             var postData = {};
             postData.uuids = uuids.split(",");
             $.ajax({
-                url: '/internal/customer/deleteCustomerForms',
+                url: '/internal/customer/deleteCustomers',
                 data: JSON.stringify(postData),
                 headers: {
                     'Accept': 'application/json',
@@ -321,14 +321,14 @@
         //规则部分
         function addRule(uuid) {
             $.ajax({
-                url: '/internal/customerChargeRuleType/getCustomerChargeRule/' + uuid,
+                url: '/internal/customerChargeType/getCustomerChargeType/' + uuid,
                 type: 'Get',
                 success: function (customerChargeType) {
                     $("#tabPC tr:not(:first)").remove();
                     $("#tabPhone tr:not(:first)").remove();
                     if (customerChargeType != null && customerChargeType != "") {
-//                        alert(JSON.stringify(customerChargeType));
-                        initCustomerChargeRuleDiv(customerChargeType);
+                        alert(JSON.stringify(customerChargeType));
+                        initCustomerChargeTypeDiv(customerChargeType);
                         $("#showRuleDialog").dialog({
                             resizable: false,
                             width: 500,
@@ -337,7 +337,7 @@
                             //按钮
                             buttons: {
                                 "保存": function () {
-                                    saveCustomerChargeRule(customerChargeType.customerUuid);
+                                    saveCustomerChargeType(customerChargeType.customerUuid);
                                 },
                                 "清空": function () {
                                     $('#showRuleForm')[0].reset();
@@ -373,7 +373,7 @@
                 buttons: {
                     "保存": function () {
                         $("#showRuleDialog").find("#customerChargeTypeUuid").val(null);
-                        saveCustomerChargeRule(uuid);
+                        saveCustomerChargeType(uuid);
                     },
                     "清空": function () {
                         $('#showRuleForm')[0].reset();
@@ -386,13 +386,13 @@
             });
         }
 
-        function saveCustomerChargeRule(uuid) {
+        function saveCustomerChargeType(uuid) {
             var showChargeRuleCalculationDiv = $("#showChargeRuleCalculationDiv");
             var showChargeRuleIntervalDiv = $("#showChargeRuleIntervalDiv");
-            var customerChargeRuleType = {};
-            customerChargeRuleType.uuid = $("#showRuleDialog").find("#customerChargeTypeUuid").val();
-            customerChargeRuleType.customerUuid = uuid;
-            customerChargeRuleType.chargeType = $("#showRuleRadioDiv input:radio:checked").val();
+            var customerChargeType = {};
+            customerChargeType.uuid = $("#showRuleDialog").find("#customerChargeTypeUuid").val();
+            customerChargeType.customerUuid = uuid;
+            customerChargeType.chargeType = $("#showRuleRadioDiv input:radio:checked").val();
             var switchval = $("#showRuleRadioDiv input:radio:checked").val();
             var validationFlag = true;
             if (switchval == "Percentage") {
@@ -402,31 +402,31 @@
                     validationFlag = false;
                     return;
                 }
-                customerChargeRuleType.customerChargeRuleCalculations = [];
+                customerChargeType.customerChargeTypeCalculations = [];
                 $.each(checkedObjs, function (idx, val) {
-                    var customerChargeRuleCalculationLT = {};
-                    customerChargeRuleCalculationLT.uuid = showChargeRuleCalculationDiv.find("#chargeRuleCalculationUuid" + val.id).val();
-                    customerChargeRuleCalculationLT.chargeDataType = "ZeroIndex";
-                    customerChargeRuleCalculationLT.operationType = val.id;
-                    customerChargeRuleCalculationLT.chargesOfFirst = showChargeRuleCalculationDiv.find("#chargesOfFirstLT" + val.id).val();
-                    customerChargeRuleCalculationLT.chargesOfSecond = showChargeRuleCalculationDiv.find("#chargesOfSecondLT" + val.id).val();
-                    customerChargeRuleCalculationLT.chargesOfThird = showChargeRuleCalculationDiv.find("#chargesOfThirdLT" + val.id).val();
-                    customerChargeRuleCalculationLT.chargesOfFourth = showChargeRuleCalculationDiv.find("#chargesOfFourthLT" + val.id).val();
-                    customerChargeRuleCalculationLT.chargesOfFifth = showChargeRuleCalculationDiv.find("#chargesOfFifthLT" + val.id).val();
-                    customerChargeRuleCalculationLT.chargesOfFirstPage = showChargeRuleCalculationDiv.find("#chargesOfFirstPageLT" + val.id).val();
-                    customerChargeRuleCalculationLT.uuid = showChargeRuleCalculationDiv.find("#chargeRuleCalculationUuid" + val.id).val();
-                    customerChargeRuleType.customerChargeRuleCalculations.push(customerChargeRuleCalculationLT);
+                    var customerChargeTypeCalculationLT = {};
+                    customerChargeTypeCalculationLT.uuid = showChargeRuleCalculationDiv.find("#chargeRuleCalculationUuid" + val.id).val();
+                    customerChargeTypeCalculationLT.chargeDataType = "LessThanHundred";
+                    customerChargeTypeCalculationLT.operationType = val.id;
+                    customerChargeTypeCalculationLT.chargesOfFirst = showChargeRuleCalculationDiv.find("#chargesOfFirstLT" + val.id).val();
+                    customerChargeTypeCalculationLT.chargesOfSecond = showChargeRuleCalculationDiv.find("#chargesOfSecondLT" + val.id).val();
+                    customerChargeTypeCalculationLT.chargesOfThird = showChargeRuleCalculationDiv.find("#chargesOfThirdLT" + val.id).val();
+                    customerChargeTypeCalculationLT.chargesOfFourth = showChargeRuleCalculationDiv.find("#chargesOfFourthLT" + val.id).val();
+                    customerChargeTypeCalculationLT.chargesOfFifth = showChargeRuleCalculationDiv.find("#chargesOfFifthLT" + val.id).val();
+                    customerChargeTypeCalculationLT.chargesOfFirstPage = showChargeRuleCalculationDiv.find("#chargesOfFirstPageLT" + val.id).val();
+                    customerChargeTypeCalculationLT.uuid = showChargeRuleCalculationDiv.find("#chargeRuleCalculationUuid" + val.id).val();
+                    customerChargeType.customerChargeTypeCalculations.push(customerChargeTypeCalculationLT);
 
-                    var customerChargeRuleCalculationGT = {};
-                    customerChargeRuleCalculationGT.chargeDataType = "Percentage";
-                    customerChargeRuleCalculationGT.operationType = val.id;
-                    customerChargeRuleCalculationGT.chargesOfFirst = showChargeRuleCalculationDiv.find("#chargesOfFirstGT" + val.id).val();
-                    customerChargeRuleCalculationGT.chargesOfSecond = showChargeRuleCalculationDiv.find("#chargesOfSecondGT" + val.id).val();
-                    customerChargeRuleCalculationGT.chargesOfThird = showChargeRuleCalculationDiv.find("#chargesOfThirdGT" + val.id).val();
-                    customerChargeRuleCalculationGT.chargesOfFourth = showChargeRuleCalculationDiv.find("#chargesOfFourthGT" + val.id).val();
-                    customerChargeRuleCalculationGT.chargesOfFifth = showChargeRuleCalculationDiv.find("#chargesOfFifthGT" + val.id).val();
-                    customerChargeRuleCalculationGT.chargesOfFirstPage = showChargeRuleCalculationDiv.find("#chargesOfFirstPageGT" + val.id).val();
-                    customerChargeRuleType.customerChargeRuleCalculations.push(customerChargeRuleCalculationGT);
+                    var customerChargeTypeCalculationGT = {};
+                    customerChargeTypeCalculationGT.chargeDataType = "Percentage";
+                    customerChargeTypeCalculationGT.operationType = val.id;
+                    customerChargeTypeCalculationGT.chargesOfFirst = showChargeRuleCalculationDiv.find("#chargesOfFirstGT" + val.id).val();
+                    customerChargeTypeCalculationGT.chargesOfSecond = showChargeRuleCalculationDiv.find("#chargesOfSecondGT" + val.id).val();
+                    customerChargeTypeCalculationGT.chargesOfThird = showChargeRuleCalculationDiv.find("#chargesOfThirdGT" + val.id).val();
+                    customerChargeTypeCalculationGT.chargesOfFourth = showChargeRuleCalculationDiv.find("#chargesOfFourthGT" + val.id).val();
+                    customerChargeTypeCalculationGT.chargesOfFifth = showChargeRuleCalculationDiv.find("#chargesOfFifthGT" + val.id).val();
+                    customerChargeTypeCalculationGT.chargesOfFirstPage = showChargeRuleCalculationDiv.find("#chargesOfFirstPageGT" + val.id).val();
+                    customerChargeType.customerChargeTypeCalculations.push(customerChargeTypeCalculationGT);
                 });
             } else {
                 var checkedObjs = showChargeRuleIntervalDiv.find("input[name=operationType]:checkbox:checked");
@@ -435,7 +435,7 @@
                     validationFlag = false;
                     return;
                 }
-                customerChargeRuleType.customerChargeRuleIntervals = [];
+                customerChargeType.customerChargeTypeIntervals = [];
                 $.each(checkedObjs, function (idx, val) {
                     var interval = showChargeRuleIntervalDiv.find("#" + val.id + "OperationTypeDiv").find("input[type=text]");
                     var trRow = showChargeRuleIntervalDiv.find("#tab" + val.id + ' tr').length;
@@ -450,19 +450,19 @@
                         return false;
                     }
                     for (var i = 1; i < parseInt(trRow); i++) {
-                        var customerChargeRuleInterval = {};
-                        customerChargeRuleInterval.uuid = showChargeRuleIntervalDiv.find("#intervalUuid" + val.id + i).val();
-                        customerChargeRuleInterval.operationType = val.id;
-                        customerChargeRuleInterval.startIndex = showChargeRuleIntervalDiv.find("#startIndex" + val.id + i).val();
-                        customerChargeRuleInterval.endIndex = showChargeRuleIntervalDiv.find("#endIndex" + val.id + i).val();
-                        customerChargeRuleType.customerChargeRuleIntervals.push(customerChargeRuleInterval);
-                        if (parseInt(customerChargeRuleInterval.startIndex) >= parseInt(customerChargeRuleInterval.endIndex)) {
+                        var customerChargeTypeInterval = {};
+                        customerChargeTypeInterval.uuid = showChargeRuleIntervalDiv.find("#intervalUuid" + val.id + i).val();
+                        customerChargeTypeInterval.operationType = val.id;
+                        customerChargeTypeInterval.startIndex = showChargeRuleIntervalDiv.find("#startIndex" + val.id + i).val();
+                        customerChargeTypeInterval.endIndex = showChargeRuleIntervalDiv.find("#endIndex" + val.id + i).val();
+                        customerChargeType.customerChargeTypeIntervals.push(customerChargeTypeInterval);
+                        if (parseInt(customerChargeTypeInterval.startIndex) >= parseInt(customerChargeTypeInterval.endIndex)) {
                             alert("终止指数需大于起始指数");
                             showChargeRuleIntervalDiv.find("#endIndex" + val.id + i).focus();
                             validationFlag = false;
                             return false ;
                         }
-                        if (parseInt(customerChargeRuleInterval.startIndex) <= parseInt(showChargeRuleIntervalDiv.find("#endIndex" + val.id + eval(i - 1)).val())) {
+                        if (parseInt(customerChargeTypeInterval.startIndex) <= parseInt(showChargeRuleIntervalDiv.find("#endIndex" + val.id + eval(i - 1)).val())) {
                             alert("起始指数需大于前一条的终止指数");
                             showChargeRuleIntervalDiv.find("#startIndex" + val.id + i).focus();
                             showChargeRuleIntervalDiv.find("#startIndex" + val.id + i).val(eval(parseInt(showChargeRuleIntervalDiv.find("#endIndex" + val.id + eval(i - 1)).val())+1));
@@ -470,23 +470,23 @@
                             return false ;
                         }
 
-                        if (i == 1 && customerChargeRuleInterval.startIndex === '') {
-                            customerChargeRuleInterval.startIndex = 0;
+                        if (i == 1 && customerChargeTypeInterval.startIndex === '') {
+                            customerChargeTypeInterval.startIndex = 0;
                         }
-                        customerChargeRuleInterval.price = showChargeRuleIntervalDiv.find("#price" + val.id + i).val();
-                        if (customerChargeRuleInterval.startIndex === '') {
+                        customerChargeTypeInterval.price = showChargeRuleIntervalDiv.find("#price" + val.id + i).val();
+                        if (customerChargeTypeInterval.startIndex === '') {
                             alert("起始指数不能为空");
                             showChargeRuleIntervalDiv.find("#startIndex" + val.id + i).focus();
                             validationFlag = false;
                             return false ;
                         }
-                        if (i < parseInt(trRow) - 1 && customerChargeRuleInterval.endIndex == '') {
+                        if (i < parseInt(trRow) - 1 && customerChargeTypeInterval.endIndex == '') {
                             alert("终止指数不能为空");
                             showChargeRuleIntervalDiv.find("#endIndex" + val.id + i).focus();
                             validationFlag = false;
                             return false ;
                         }
-                        if (customerChargeRuleInterval.price === '') {
+                        if (customerChargeTypeInterval.price === '') {
                             alert("价格不能为空");
                             showChargeRuleIntervalDiv.find("#price" + val.id + i).focus();
                             validationFlag = false;
@@ -501,11 +501,11 @@
                     }
                 });
             }
-//            alert(JSON.stringify(customerChargeRuleType));
+            alert(JSON.stringify(customerChargeType));
             if (validationFlag) {
                 $.ajax({
-                    url: '/internal/customerChargeRuleType/saveAndUpdateCustomerChargeRule',
-                    data: JSON.stringify(customerChargeRuleType),
+                    url: '/internal/customerChargeType/saveCustomerChargeType',
+                    data: JSON.stringify(customerChargeType),
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json'
@@ -567,21 +567,21 @@
         }
 
         //填充到规则DIV中
-        function initCustomerChargeRuleDiv(customerChargeType) {
+        function initCustomerChargeTypeDiv(customerChargeType) {
             var showRuleDialog = $("#showRuleDialog");
             var showChargeRuleCalculationDiv = $("#showChargeRuleCalculationDiv");
             var showChargeRuleIntervalDiv = $("#showChargeRuleIntervalDiv");
             showRuleDialog.find("#customerChargeTypeUuid").val(customerChargeType.uuid);
             var switchType = customerChargeType.chargeType;//判断收费方式
-            var customerChargeRuleCalculations = customerChargeType.customerChargeRuleCalculations;
-            var customerChargeRuleIntervals = customerChargeType.customerChargeRuleIntervals;
+            var customerChargeTypeCalculations = customerChargeType.customerChargeTypeCalculations;
+            var customerChargeTypeIntervals = customerChargeType.customerChargeTypeIntervals;
             if (switchType == "Percentage") {
                 chargeRulePercentage();
                 showRuleDialog.find("#chargeRulePercentage").attr("checked", "checked");
-                $.each(customerChargeRuleCalculations, function (idx, val) {
+                $.each(customerChargeTypeCalculations, function (idx, val) {
                     showChargeRuleCalculationDiv.find("#ChargeRuleCalculationUuid" + val.operationType).val(val.uuid);
                     showChargeRuleCalculationDiv.find("#" + val.operationType).attr("checked", true);
-                    if (val.chargeDataType == "ZeroIndex") {
+                    if (val.chargeDataType == "LessThanHundred") {
                         var chargesLT = showChargeRuleCalculationDiv.find("#chargesLT" + val.operationType);
                         chargesLT.find("#chargesOfFirstLT" + val.operationType).val(val.chargesOfFirst);
                         chargesLT.find("#chargesOfSecondLT" + val.operationType).val(val.chargesOfSecond);
@@ -605,20 +605,20 @@
             } else {
                 chargeRuleInterval();
                 showRuleDialog.find("#chargeRuleInterval").attr("checked", "checked");
-                var idx = customerChargeRuleIntervals.length;
-                var customerChargeRuleIntervalPC = [];
-                var customerChargeRuleIntervalPhone = [];
-                $.each(customerChargeRuleIntervals, function (idx, val) {
+                var idx = customerChargeTypeIntervals.length;
+                var customerChargeTypeIntervalPC = [];
+                var customerChargeTypeIntervalPhone = [];
+                $.each(customerChargeTypeIntervals, function (idx, val) {
                     showChargeRuleIntervalDiv.find("#" + val.operationType).attr("checked", "checked");
                     //如果有一条PC类型就在PCtable中加一行
                     if (val.operationType == "PC") {
-                        customerChargeRuleIntervalPC.push(val);
+                        customerChargeTypeIntervalPC.push(val);
                     }
                     if (val.operationType == "Phone") {
-                        customerChargeRuleIntervalPhone.push(val);
+                        customerChargeTypeIntervalPhone.push(val);
                     }
                 });
-                $.each(customerChargeRuleIntervalPC, function (idx, val) {
+                $.each(customerChargeTypeIntervalPC, function (idx, val) {
                     if(null==val.endIndex||val.endIndex===''){
                         val.endIndex='';
                     }
@@ -631,7 +631,7 @@
                         + "<td><a href=\'#\' onclick=\'deltr" + val.operationType + "(" + eval(idx + 1) + ")\'>删除</a></td>"
                         + "</tr>");
                 });
-                $.each(customerChargeRuleIntervalPhone, function (idx, val) {
+                $.each(customerChargeTypeIntervalPhone, function (idx, val) {
                     if(null==val.endIndex||val.endIndex===''){
                         val.endIndex='';
                     }
@@ -787,9 +787,9 @@
 
 
         //上传日报报表模板
-        function uploadTheDailyReportTemplate(uuid, self) {
-            $('#uploadTheDailyReportTemplateForm')[0].reset();
-            $("#uploadTheDailyReportTemplateDialog").dialog({
+        function uploadDailyReportTemplate(uuid, self) {
+            $('#uploadDailyReportTemplateForm')[0].reset();
+            $("#uploadDailyReportTemplateDialog").dialog({
                 resizable: false,
                 width: 400,
                 height: 200,
@@ -799,13 +799,13 @@
                     "提交": function () {
                         $(this).dialog("close");
 
-                        var uploadForm = $("#uploadTheDailyReportTemplateForm");
+                        var uploadForm = $("#uploadDailyReportTemplateForm");
                         var formData = new FormData();
                         formData.append('file', uploadForm.find('#uploadFile')[0].files[0]);
                         formData.append('customerUuid', uuid);
 
                         $.ajax({
-                            url: '/internal/customer/uploadTheDailyReportTemplate',
+                            url: '/internal/customer/uploadDailyReportTemplate',
                             type: 'POST',
                             cache: false,
                             data: formData,
@@ -825,7 +825,7 @@
                     },
                     "取消": function () {
                         $(this).dialog("close");
-                        $('#uploadTheDailyReportTemplateForm')[0].reset();
+                        $('#uploadDailyReportTemplateForm')[0].reset();
                     }
                 }
             });
@@ -1060,7 +1060,7 @@
         }
 
         function chooseUploadType() {
-            var uploadForm = $("#uploadTheDailyReportTemplateForm");
+            var uploadForm = $("#uploadDailyReportTemplateForm");
             var uploadFile = uploadForm.find("#uploadFile").val();
             var fileTypes = new Array("xls", "xlsx");  //定义可支持的文件类型数组
             var fileTypeFlag = false;
@@ -1140,7 +1140,7 @@
                                                                  onclick="showCustomer(null,'${user.userID}')"/>
                             </td>
                             <td align="right" width="100"><input type="button" class="ui-button ui-widget ui-corner-all"
-                                                                 value=" 删除所选 " onclick="deleteCustomerForms(this)"/>
+                                                                 value=" 删除所选 " onclick="deleteCustomers(this)"/>
                             </td>
                             <c:if test="${'bc'.equalsIgnoreCase(entryType)}">
                                 <td align="right" width="100"><a target="_blank"
@@ -1211,11 +1211,11 @@
                     <a href="javascript:getCustomer(${customer.uuid})">修改</a> |
                     <a href="javascript:showCustomerKeyword(${customer.uuid})">增加</a> |
                     <a target="_blank"
-                       href="javascript:uploadTheDailyReportTemplate('${customer.uuid}', this)">上传日报表模板</a>
+                       href="javascript:uploadDailyReportTemplate('${customer.uuid}', this)">上传日报表模板</a>
                     <c:if test="${user.vipType}">
                         <a href="javascript:delCustomer('${customer.uuid}')">删除</a>
                         <a href="javascript:addRule('${customer.uuid}')">客户规则</a>
-                        <%--<a href="javascript:getCustomerChargeRule('${customer.uuid}')">修改规则</a>--%>
+                        <%--<a href="javascript:getCustomerChargeType('${customer.uuid}')">修改规则</a>--%>
                     </c:if>
                 </td>
             </tr>
@@ -1399,8 +1399,8 @@
     </form>
 </div>
 <%--上传日报表模板 onsubmit="return checkinput();"--%>
-<div id="uploadTheDailyReportTemplateDialog" title="上传日报表模板">
-    <form method="post" id="uploadTheDailyReportTemplateForm" onsubmit="return chooseUploadType()" action=""
+<div id="uploadDailyReportTemplateDialog" title="上传日报表模板">
+    <form method="post" id="uploadDailyReportTemplateForm" onsubmit="return chooseUploadType()" action=""
           enctype="multipart/form-data">
         <table width="100%" style="margin-top: 10px;margin-left: 10px">
             <tr>

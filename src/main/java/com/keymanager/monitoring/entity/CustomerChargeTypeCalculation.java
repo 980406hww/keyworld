@@ -5,8 +5,8 @@ import com.baomidou.mybatisplus.annotations.TableName;
 
 import java.math.BigDecimal;
 
-@TableName(value = "t_customer_charge_rule_calculation")
-public class CustomerChargeRuleCalculation extends BaseEntity{
+@TableName(value = "t_customer_charge_type_calculation")
+public class CustomerChargeTypeCalculation extends BaseEntity{
 	protected static final long serialVersionUID = -1101942701283949852L;
 
 
