@@ -325,6 +325,7 @@
                 success: function (customerChargeType) {
                     $("#tabPC tr:not(:first)").remove();
                     $("#tabPhone tr:not(:first)").remove();
+                    $("#showRuleDialog").find("#customerChargeTypeUuid").val("");
                     if (customerChargeType != null && customerChargeType != "") {
 //                        alert(JSON.stringify(customerChargeType));
                         initCustomerChargeRuleDiv(customerChargeType);
@@ -1204,7 +1205,7 @@
                        style="width: 13px;height: 13px; margin-left: 130px" onchange="showOperationTypeDiv(this)"/>电脑<br>
                 <input id="chargeRuleCalculationUuidPC" type="hidden"/>
                 <%--指数小于0: <input id="equalZeroCostPC" type="text" /><br>--%>
-                <div id="chargesLTPC" style="float: left;width: 50%">
+                <div id="chargesLTPC" style="float: left;width: 50%;margin-top: 5px;">
                     <h6 style="text-align: center">指数小于100</h6>
                     第一 <input id="chargesOfFirstLTPC" type="text"
                               onblur="theSamePriceFirstToThirdLTPC(this.value)"/><span></span><br>
@@ -1215,7 +1216,7 @@
                     第五 <input id="chargesOfFifthLTPC" type="text"/><span></span><br>
                     首页 <input id="chargesOfFirstPageLTPC" type="text"/><span></span>
                 </div>
-                <div id="chargesGTPC" style="float: left;width: 50%">
+                <div id="chargesGTPC" style="float: left;width: 50%;margin-top: 5px;">
                     <h6 style="text-align: center">指数大于100</h6>
                     第一 <input id="chargesOfFirstGTPC" type="text"
                               onblur="theSamePriceFirstToThirdGTPC(this.value)"/><span></span><br>
@@ -1227,7 +1228,7 @@
                     首页 <input id="chargesOfFirstPageGTPC" type="text"/><span></span>
                 </div>
             </div>
-            <div id="phoneOperationTypeDiv" style="float: left;width: 48%;">
+            <div id="phoneOperationTypeDiv" style="float: left;width: 48%;;margin-top: 5px;">
                 <input id="Phone" type="checkbox" name="operationType"
                        style="width: 13px;height: 13px;margin-left: 130px" onchange="showOperationTypeDiv(this)"/>手机<br>
                 <input id="chargeRuleCalculationUuidPhone" type="hidden"/>
@@ -1242,7 +1243,7 @@
                     第五 <input id="chargesOfFifthLTPhone" type="text"/><span></span><br>
                     首页 <input id="chargesOfFirstPageLTPhone" type="text"/><span></span>
                 </div>
-                <div id="chargesGTPhone" style="float: left;width: 50%">
+                <div id="chargesGTPhone" style="float: left;width: 50%;margin-top: 5px;">
                     <h6 style="text-align: center">指数大于100</h6>
                     第一 <input id="chargesOfFirstGTPhone" type="text"
                               onblur="theSamePriceFirstToThirdGTPhone(this.value)"/><span></span><br>
@@ -1348,7 +1349,7 @@
     </form>
 </div>
 <%--上传日报表模板 onsubmit="return checkinput();"--%>
-<div id="uploadTheDailyReportTemplateDialog" title="上传日报表模板">
+<div id="uploadTheDailyReportTemplateDialog" title="上传日报表模板" style="height:auto">
     <form method="post" id="uploadTheDailyReportTemplateForm" onsubmit="return chooseUploadType()" action=""
           enctype="multipart/form-data">
         <table width="100%" style="margin-top: 10px;margin-left: 10px">
@@ -1359,18 +1360,12 @@
                 <td></td>
             </tr>
             <tr>
-                <td></td>
-            </tr>
-            <tr>
-                <td></td>
-            </tr>
-            <tr>
                 <td align="right">
-                    <table width=90% style="font-size:14px;">
+                    <table width="100%" style="font-size:14px;">
                         <tr>
                             <td>
                                 <input type="hidden" id="customerUuidHidden" name="customerUuid">
-                                <input type="file" id="uploadFile" name="file" size=50 height="50px">
+                                <input type="file" id="uploadFile" name="file" size=50 height="50px" style="width: 350px;">
                             </td>
                         </tr>
                     </table>
