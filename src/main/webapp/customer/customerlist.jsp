@@ -706,7 +706,7 @@
         function deltrPC(index) {
             var taRow = $("#tabPC tr").length;
             if (taRow <= 2) {
-                alert("至少添加一条规");
+                alert("至少添加一条规则");
                 return;
             }
             $("#tabPC tr[id='" + index + "']").remove();//删除当前"
@@ -730,7 +730,7 @@
         function deltrPhone(index) {
             var taRow = $("#tabPhone tr").length;
             if (taRow <= 2) {
-                alert("至少添加一条规");
+                alert("至少添加一条规则");
                 return;
             }
             $("#tabPhone tr[id='" + index + "']").remove();//删除当前"
@@ -1350,7 +1350,7 @@
                 <td align="right">客户类型:</td>
                 <td>
                     <select name="type" id="type">
-                        <option value="普通客">普通客户</option>
+                        <option value="普通客户">普通客户</option>
                         <option value="代理">代理</option>
                     </select>
                 </td>
