@@ -558,8 +558,7 @@
             }
         }
         function chargeRulePercentage() {
-            $("#chargeRulePercentage").attr("checked", true);
-            $("#chargeRuleInterval").attr("checked", false);
+            $("#chargeRulePercentage").prop("checked", "checked");
             $("#showChargeRuleCalculationDiv").show();
             $("#showChargeRuleIntervalDiv").hide();
             $("#chargesGTPC").find("span").html("%");
@@ -569,8 +568,7 @@
             getFoucus();
         }
         function chargeRuleInterval() {
-            $("#chargeRuleInterval").attr("checked", true);
-            $("#chargeRulePercentage").attr("checked", false);
+            $("#chargeRuleInterval").prop("checked", "checked");
             $("#showChargeRuleCalculationDiv").hide();
             $("#showChargeRuleIntervalDiv").show();
             getFoucus();
@@ -587,7 +585,6 @@
             var customerChargeTypeIntervals = customerChargeType.customerChargeTypeIntervals;
             if (switchType == "Percentage") {
                 chargeRulePercentage();
-                showRuleDialog.find("#chargeRulePercentage").attr("checked", "checked");
                 $.each(customerChargeTypeCalculations, function (idx, val) {
                     showChargeRuleCalculationDiv.find("#ChargeRuleCalculationUuid" + val.operationType).val(val.uuid);
                     showChargeRuleCalculationDiv.find("#" + val.operationType).attr("checked", true);
@@ -601,7 +598,6 @@
                         chargesLT.find("#chargesOfFirstPageLT" + val.operationType).val(val.chargesOfFirstPage);
                     }
                     if (val.chargeDataType == "Percentage") {
-//                        showChargeRuleCalculationDiv.find("#chargesGT" + val.operationType).show();
                         var chargesGT = showChargeRuleCalculationDiv.find("#chargesGT" + val.operationType);
                         chargesGT.find("#chargesOfFirstGT" + val.operationType).val(val.chargesOfFirst);
                         chargesGT.find("#chargesOfSecondGT" + val.operationType).val(val.chargesOfSecond);
@@ -614,12 +610,11 @@
                 });
             } else {
                 chargeRuleInterval();
-                showRuleDialog.find("#chargeRuleInterval").attr("checked", "checked");
                 var idx = customerChargeTypeIntervals.length;
                 var customerChargeTypeIntervalPC = [];
                 var customerChargeTypeIntervalPhone = [];
                 $.each(customerChargeTypeIntervals, function (idx, val) {
-                    showChargeRuleIntervalDiv.find("#" + val.operationType).attr("checked", "checked");
+                    showChargeRuleIntervalDiv.find("#" + val.operationType).attr("checked", true);
                     //如果有一条PC类型就在PCtable中加一"
                     if (val.operationType == "PC") {
                         customerChargeTypeIntervalPC.push(val);
