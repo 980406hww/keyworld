@@ -89,7 +89,7 @@ public class CustomerChargeTypeService extends ServiceImpl<CustomerChargeTypeDao
 
 
     public CustomerChargeType getCustomerChargeType(Long customerUuid){
-        CustomerChargeType customerChargeType = customerChargeTypeDao.selectByCustomerUuid(customerUuid);
+        CustomerChargeType customerChargeType = customerChargeTypeDao.selectByCustomerUuid(customerUuid.intValue());
         if(null!=customerChargeType){
             List<CustomerChargeTypeCalculation> customerChargeTypeCalculations = customerChargeRuleCalculationService.selectBycustomerChargeRuleTypeUuid(customerChargeType.getUuid());
             if(customerChargeTypeCalculations.size()>0){
