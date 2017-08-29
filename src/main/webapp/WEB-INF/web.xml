@@ -93,11 +93,6 @@
         <servlet-class>com.keymanager.servlet.DownloadCustomerKeywordInfo</servlet-class>
     </servlet>
 
-    <servlet>
-        <servlet-name>DownloadCustomerKeywordDailyReport</servlet-name>
-        <servlet-class>com.keymanager.servlet.DownloadCustomerKeywordDailyReport</servlet-class>
-    </servlet>
-
     <servlet-mapping>
         <servlet-name>springmvc</servlet-name>
         <url-pattern>/</url-pattern>
@@ -122,10 +117,6 @@
     <servlet-mapping>
         <servlet-name>DownloadCustomerKeywordInfo</servlet-name>
         <url-pattern>/customerkeyword/DownloadCustomerKeywordInfo.jsp</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>DownloadCustomerKeywordDailyReport</servlet-name>
-        <url-pattern>/customerkeyword/DownloadCustomerKeywordDailyReport.jsp</url-pattern>
     </servlet-mapping>
 
     <!-- Session会话时间设置 -->

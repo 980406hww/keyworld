@@ -148,7 +148,6 @@
 				      	  	</td>
 				      	  	<td align="right">
 				       	  		&nbsp;&nbsp;<a href="/customer/customerlist.jsp" target="_blank">客户清单</a>
-				       	  		&nbsp;&nbsp;<a href="/customer/addcustomer.jsp" target="_blank">增加客户</a>
 				       	  		&nbsp;&nbsp;<a href="/customerkeyword/add.jsp" target="_blank">增加关键字</a>
 				       	  		&nbsp;&nbsp;<a href="http://wpa.qq.com/msgrd?v=3&uin=40467028&site=qq&menu=yes" target="_blank">充值</a>
 				       	  		&nbsp;&nbsp;<a href="http://wpa.qq.com/msgrd?v=3&uin=40467028&site=qq&menu=yes" target="_blank"><img src="/images/q20-20.png">联系客服</a>
