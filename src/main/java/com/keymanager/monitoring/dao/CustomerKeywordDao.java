@@ -27,4 +27,5 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void updateCaptureIndexQueryTime(@Param("keyword") String keyword);
 
+    void deleteByCustomerUuid(@Param("customerUuid") long customerUuid);
 }

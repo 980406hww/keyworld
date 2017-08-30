@@ -154,10 +154,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void deleteCustomerKeywords(long customerUuid) {
-        CustomerKeyword customerKeyword = new CustomerKeyword();
-        customerKeyword.setCustomerUuid(customerUuid);
-        Wrapper wrapper = new EntityWrapper(customerKeyword);
-        this.delete(wrapper);
+        customerKeywordDao.deleteByCustomerUuid(customerUuid);
     }
 
     private void supplementInfoFromSimpleUI(CustomerKeyword customerKeyword, String terminalType, String entryType, int maxSequence) {

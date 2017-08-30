@@ -118,4 +118,8 @@
     <select id="updateCaptureIndexQueryTime">
         UPDATE t_customer_keyword SET fCaptureIndexQueryTime = NOW() WHERE fKeyword = #{keyword} and fCurrentIndexCount IS NULL and fOptimizeGroupName IN ('pc_pm_xiaowu', 'm_pm_xiaowu')
     </select>
+
+    <select id="deleteByCustomerUuid">
+        DELETE FROM t_customer_keyword WHERE fCustomerUuid = #{customerUuid}
+    </select>
 </mapper>
