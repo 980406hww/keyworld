@@ -12,13 +12,12 @@ import java.util.List;
  * Created by shunshikj20 on 2017/8/21.
  */
 @Service
-public class CustomerChargeRuleIntervalService extends ServiceImpl<CustomerChargeIntervalDao, CustomerChargeTypeInterval> {
+public class CustomerChargeTypeIntervalService extends ServiceImpl<CustomerChargeIntervalDao, CustomerChargeTypeInterval> {
 
     @Autowired
     private CustomerChargeIntervalDao customerChargeIntervalDao;
 
-    public List<CustomerChargeTypeInterval> selectBycustomerChargeRuleTypeUuid(Long uuid){
-        return customerChargeIntervalDao.selectBycustomerChargeTypeUuid(uuid);
+    public List<CustomerChargeTypeInterval> searchCustomerChargeTypeIntervals(Long customerChargeTypeUuid) {
+        return customerChargeIntervalDao.searchCustomerChargeTypeIntervals(customerChargeTypeUuid);
     }
-
 }

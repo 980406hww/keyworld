@@ -106,7 +106,7 @@
         ORDER BY ck.fCaptureIndexQueryTime, ck.fCreateTime LIMIT 1
     </select>
 
-    <select id="getCustomerKeywordsForUpdateIndex" resultType="com.keymanager.monitoring.entity.CustomerKeyword">
+    <select id="searchCustomerKeywordsForUpdateIndex" resultType="com.keymanager.monitoring.entity.CustomerKeyword">
         SELECT
         <include refid="colID"/>
         FROM t_customer_keyword ck

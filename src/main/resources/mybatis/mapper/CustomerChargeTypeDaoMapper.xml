@@ -10,14 +10,10 @@
         t.fCreateTime AS `createTime`
     </sql>
 
-    <select id="selectByCustomerUuid" resultType="com.keymanager.monitoring.entity.CustomerChargeType" >
+    <select id="getCustomerChargeType" resultType="com.keymanager.monitoring.entity.CustomerChargeType" >
         SELECT <include refid="rowID"/>
         FROM t_customer_charge_type t
         WHERE t.fCustomerUuid = #{customerUuid}
-    </select>
-
-    <select id="selectLastId" resultType="java.lang.Integer">
-        select LAST_INSERT_ID()
     </select>
 
 </mapper>

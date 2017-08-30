@@ -6,8 +6,6 @@ import org.apache.ibatis.annotations.Param;
 
 public interface CustomerChargeTypeDao extends BaseMapper<CustomerChargeType> {
 
-    int selectLastId();
-
-    CustomerChargeType selectByCustomerUuid(@Param("customerUuid") Integer customerUuid);
+    CustomerChargeType getCustomerChargeType(@Param("customerUuid") Integer customerUuid);
 
 }

@@ -13,9 +13,6 @@
 	    <li class="mainlevel" id="mainlevel_02"><a href="#">客户管理</a>
 	    <ul id="sub_06">
 	    <li><a href="/internal/customer/searchCustomers">客户列表</a></li>
-	    <%--<li><a href="/customer/customerlist.jsp">客户列表</a></li>--%>
-	    <li><a href="/customer/addcustomer.jsp">增加客户</a></li>
-	    <!-- <li><a href="/customerkeyword/customercollectfeelist.jsp">客户收费清单</a></li> -->
 	    </ul>
 	    </li>
 	    

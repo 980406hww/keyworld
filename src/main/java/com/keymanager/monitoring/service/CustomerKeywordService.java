@@ -192,9 +192,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public CustomerKeyword getCustomerKeywordsForCaptureIndex() {
-        List<CustomerKeyword> customerKeywords = customerKeywordDao.getCustomerKeywordsForCaptureIndex();
-        if (CollectionUtils.isNotEmpty(customerKeywords)) {
-            CustomerKeyword customerKeyword = customerKeywords.get(0);
+        CustomerKeyword customerKeyword = customerKeywordDao.getCustomerKeywordsForCaptureIndex();
+        if (customerKeyword != null) {
             customerKeywordDao.updateCaptureIndexQueryTime(customerKeyword.getKeyword());
             return customerKeyword;
         }
@@ -202,7 +201,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void updateCustomerKeywordIndex(BaiduIndexCriteria baiduIndexCriteria) {
-        List<CustomerKeyword> customerKeywords = customerKeywordDao.getCustomerKeywordsForUpdateIndex(baiduIndexCriteria.getKeyword());
+        List<CustomerKeyword> customerKeywords = customerKeywordDao.searchCustomerKeywordsForUpdateIndex(baiduIndexCriteria.getKeyword());
         if (CollectionUtils.isNotEmpty(customerKeywords)) {
             for (CustomerKeyword customerKeyword : customerKeywords) {
                 if (TerminalTypeEnum.PC.name().equals(customerKeyword.getTerminalType())) {

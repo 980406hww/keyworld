@@ -15,7 +15,7 @@
         t.fChargesOfFirstPage AS `chargesOfFirstPage`
     </sql>
 
-    <select id="selectBycustomerChargeTypeUuid" resultType="com.keymanager.monitoring.entity.CustomerChargeTypeCalculation">
+    <select id="searchCustomerChargeTypeCalculations" resultType="com.keymanager.monitoring.entity.CustomerChargeTypeCalculation">
         select <include refid="rowID"/>
         FROM t_customer_charge_type_calculation t
         WHERE t.fCustomerChargeTypeUuid = #{uuid}

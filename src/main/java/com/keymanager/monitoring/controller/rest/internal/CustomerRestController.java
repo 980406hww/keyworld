@@ -50,13 +50,13 @@ public class CustomerRestController {
 
     @RequestMapping(value = "/searchCustomers", method = RequestMethod.POST)
     public ModelAndView searchCustomersPost(HttpServletRequest request, CustomerCriteria customerCriteria) {
-        String currentPage = request.getParameter("currentPageHidden");//
-        String displaysRecords = request.getParameter("displayRerondsHidden");
-        if (null == currentPage && null == currentPage) {
-            currentPage = "1";
-            displaysRecords = "30";
+        String currentPageNumber = request.getParameter("currentPageNumber");//
+        String pageSize = request.getParameter("pageSize");
+        if (null == currentPageNumber && null == currentPageNumber) {
+            currentPageNumber = "1";
+            pageSize = "30";
         }
-        return constructCustomerModelAndView(request, customerCriteria, currentPage, displaysRecords);
+        return constructCustomerModelAndView(request, customerCriteria, currentPageNumber, pageSize);
     }
 
     private ModelAndView constructCustomerModelAndView(HttpServletRequest request, CustomerCriteria customerCriteria, String currentPage, String displaysRecords) {
@@ -76,12 +76,15 @@ public class CustomerRestController {
     }
 
 
-    @RequestMapping(value = "/addCustomer" , method = RequestMethod.POST)
-    public ResponseEntity<?> addCustomer(@RequestBody Customer customer){
-        if(customerService.addCustomer(customer)){
+    @RequestMapping(value = "/addCustomer", method = RequestMethod.POST)
+    public ResponseEntity<?> addCustomer(@RequestBody Customer customer) {
+        try {
+            customerService.addCustomer(customer);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.OK);
         }
-        return new ResponseEntity<Object>(false, HttpStatus.OK);
     }
 
 
@@ -90,15 +93,26 @@ public class CustomerRestController {
         return new ResponseEntity<Object>(customerService.getCustomerWithKeywordCount(uuid), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/delCustomer/{uuid}" , method = RequestMethod.GET)
-    public ResponseEntity<?> delCustomer(@PathVariable("uuid")Long uuid){
-        return new ResponseEntity<Object>(customerService.deleteCustomer(uuid), HttpStatus.OK);
+    @RequestMapping(value = "/delCustomer/{uuid}", method = RequestMethod.GET)
+    public ResponseEntity<?> delCustomer(@PathVariable("uuid") Long uuid) {
+        try {
+            customerService.deleteCustomer(uuid);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.OK);
+        }
     }
 
     @RequestMapping(value = "/deleteCustomers" , method = RequestMethod.POST)
     public ResponseEntity<?> deleteCustomers(@RequestBody Map<String, Object> requestMap){
-        List<String> uuids = (List<String>) requestMap.get("uuids");
-        return new ResponseEntity<Object>(customerService.deleteAll(uuids) , HttpStatus.OK);
+        try {
+            List<String> uuids = (List<String>) requestMap.get("uuids");
+            customerService.deleteAll(uuids);
+            return new ResponseEntity<Object>(true , HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<Object>(false , HttpStatus.OK);
+        }
     }
 
     @RequestMapping(value = "/uploadDailyReportTemplate" , method = RequestMethod.POST)
