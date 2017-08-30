@@ -1,12 +1,10 @@
 package com.keymanager.monitoring.service;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.dao.CustomerChargeTypeDao;
+import com.keymanager.monitoring.entity.CustomerChargeType;
 import com.keymanager.monitoring.entity.CustomerChargeTypeCalculation;
 import com.keymanager.monitoring.entity.CustomerChargeTypeInterval;
-import com.keymanager.monitoring.entity.CustomerChargeType;
 import com.keymanager.monitoring.enums.ChargeTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,9 +12,6 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by shunshikj20 on 2017/8/21.
- */
 @Service
 public class CustomerChargeTypeService extends ServiceImpl<CustomerChargeTypeDao, CustomerChargeType> {
 
@@ -31,14 +26,8 @@ public class CustomerChargeTypeService extends ServiceImpl<CustomerChargeTypeDao
 
     public void saveCustomerChargeType(CustomerChargeType customerChargeType) throws Exception {
         if (null != customerChargeType.getUuid()) {
-            CustomerChargeTypeCalculation customerChargeTypeCalculation = new CustomerChargeTypeCalculation();
-            customerChargeTypeCalculation.setCustomerChargeTypeUuid(customerChargeType.getUuid().intValue());
-            Wrapper wrapperCalculation = new EntityWrapper(customerChargeTypeCalculation);
-            CustomerChargeTypeInterval customerChargeTypeInterval = new CustomerChargeTypeInterval();
-            customerChargeTypeInterval.setCustomerChargeTypeUuid(customerChargeType.getUuid().intValue());
-            Wrapper wrapperInterval = new EntityWrapper(customerChargeTypeInterval);
-            customerChargeTypeCalculationService.delete(wrapperCalculation);
-            customerChargeTypeIntervalService.delete(wrapperInterval);
+            customerChargeTypeCalculationService.deleteByCustomerChargeTypeUuid(customerChargeType.getUuid().longValue());
+            customerChargeTypeIntervalService.deleteByCustomerChargeTypeUuid(customerChargeType.getUuid().longValue());
             addCustomerChargeRules(customerChargeType);
             CustomerChargeType oldCustomerChargeType = customerChargeTypeDao.selectById(customerChargeType.getUuid());
             oldCustomerChargeType.setCustomerUuid(customerChargeType.getCustomerUuid());

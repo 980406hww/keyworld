@@ -130,15 +130,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeywordDao.insert(customerKeyword);
     }
 
-//	public List<CustomerKeyword> searchCustomerKeywords(String terminalType, long customerUuid, String keyword, String originalUrl){
-//		CustomerKeyword customerKeyword = new CustomerKeyword();
-//		customerKeyword.setCustomerUuid(customerUuid);
-//		customerKeyword.setType(terminalType);
-//		customerKeyword.setKeyword(keyword);
-//		customerKeyword.setOriginalUrl(originalUrl);
-//		Wrapper wrapper = new EntityWrapper(customerKeyword);
-//	}
-
     public boolean haveDuplicatedCustomerKeyword(String terminalType, long customerUuid, String keyword, String originalUrl) {
         int customerKeywordCount = 0;
         try {

@@ -10,10 +10,14 @@
     t.fEndIndex AS `endIndex`,
     t.fPrice AS `price`
 </sql>
+
 <select id="searchCustomerChargeTypeIntervals" resultType="com.keymanager.monitoring.entity.CustomerChargeTypeInterval">
     select <include refid="rowID"/>
     FROM t_customer_charge_type_interval t
     WHERE t.fCustomerChargeTypeUuid = #{uuid}
 </select>
 
+<select id="deleteByCustomerChargeTypeUuid">
+    DELETE FROM t_customer_charge_type_interval WHERE fCustomerChargeTypeUuid = #{customerChargeTypeUuid}
+</select>
 </mapper>

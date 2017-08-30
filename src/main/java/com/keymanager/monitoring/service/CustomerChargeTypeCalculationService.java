@@ -20,4 +20,8 @@ public class CustomerChargeTypeCalculationService extends ServiceImpl<CustomerCh
     public List<CustomerChargeTypeCalculation> searchCustomerChargeTypeCalculations(Long customerChargeTypeUuid){
         return customerChargeTypeCalculationDao.searchCustomerChargeTypeCalculations(customerChargeTypeUuid);
     }
+
+    void deleteByCustomerChargeTypeUuid(Long customerChargeTypeUuid){
+        customerChargeTypeCalculationDao.deleteByCustomerChargeTypeUuid(customerChargeTypeUuid);
+    }
 }

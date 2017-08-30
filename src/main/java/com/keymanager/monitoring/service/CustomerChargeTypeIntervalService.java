@@ -20,4 +20,8 @@ public class CustomerChargeTypeIntervalService extends ServiceImpl<CustomerCharg
     public List<CustomerChargeTypeInterval> searchCustomerChargeTypeIntervals(Long customerChargeTypeUuid) {
         return customerChargeIntervalDao.searchCustomerChargeTypeIntervals(customerChargeTypeUuid);
     }
+
+    public void deleteByCustomerChargeTypeUuid(Long customerChargeTypeUuid){
+        customerChargeIntervalDao.deleteByCustomerChargeTypeUuid(customerChargeTypeUuid);
+    }
 }

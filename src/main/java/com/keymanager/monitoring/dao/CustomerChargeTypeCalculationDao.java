@@ -9,4 +9,6 @@ import java.util.List;
 public interface CustomerChargeTypeCalculationDao extends BaseMapper<CustomerChargeTypeCalculation> {
 
     List<CustomerChargeTypeCalculation> searchCustomerChargeTypeCalculations(@Param("uuid") Long uuid );
+
+    void deleteByCustomerChargeTypeUuid(@Param("customerChargeTypeUuid") Long customerChargeTypeUuid );
 }

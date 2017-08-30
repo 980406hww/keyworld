@@ -21,4 +21,8 @@
         WHERE t.fCustomerChargeTypeUuid = #{uuid}
     </select>
 
+    <select id="deleteByCustomerChargeTypeUuid">
+        DELETE FROM t_customer_charge_type_calculation WHERE fCustomerChargeTypeUuid = #{customerChargeTypeUuid}
+    </select>
+
 </mapper>

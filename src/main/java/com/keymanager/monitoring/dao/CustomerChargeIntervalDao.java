@@ -9,4 +9,6 @@ import java.util.List;
 public interface CustomerChargeIntervalDao extends BaseMapper<CustomerChargeTypeInterval> {
 
     List<CustomerChargeTypeInterval> searchCustomerChargeTypeIntervals(@Param("uuid") Long uuid);
+
+    void deleteByCustomerChargeTypeUuid(@Param("customerChargeTypeUuid") Long customerChargeTypeUuid);
 }
