@@ -68,7 +68,7 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 		}
 	}
 
-	public void addCustomer(Customer customer) {
+	public void saveCustomer(Customer customer) {
 		//修改
 		if (null != customer.getUuid()) {
 			updateCustomer(customer);

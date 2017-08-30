@@ -52,9 +52,9 @@
     </style>
     <script type="text/javascript">
         $(function () {
-            $("#showCustomerDialog").hide();
+            $("#customerDialog").hide();
             $("#uploadDailyReportTemplateDialog").hide();
-            $("#addCustomerKeywordDialog").hide();
+            $("#customerKeywordDialog").hide();
             $("#customerChargeTypeDialog").hide();
             pageLoad();
             onlyNumber();
@@ -349,14 +349,14 @@
             var switchval = customerChargeType.chargeType;
             var validationFlag = true;
             if (switchval == "Percentage") {
-                var checkedObjs = chargeTypeCalculationDiv.find("input[name=operationType]:checkbox:checked");
-                if (checkedObjs.length == 0) {
+                var checkedTerminalTypeObjs = chargeTypeCalculationDiv.find("input[name=operationType]:checkbox:checked");
+                if (checkedTerminalTypeObjs.length == 0) {
                     alert("请选择一个操作类型电脑或手机");
                     validationFlag = false;
                     return;
                 }
                 customerChargeType.customerChargeTypeCalculations = [];
-                $.each(checkedObjs, function (idx, val) {
+                $.each(checkedTerminalTypeObjs, function (idx, val) {
                     if ($.trim(chargeTypeCalculationDiv.find("#chargesOfFirstLT" + val.id).val()) === '' && $.trim(chargeTypeCalculationDiv.find("#chargesOfFirstGT" + val.id).val()) === '') {
                         alert("至少填写一条排名第一的字段");
                         validationFlag = false;
@@ -391,14 +391,14 @@
                     }
                 });
             } else {
-                var checkedObjs = chargeTypeIntervalDiv.find("input[name=operationType]:checkbox:checked");
-                if (checkedObjs.length == 0) {
+                var checkedTerminalTypeObjs = chargeTypeIntervalDiv.find("input[name=operationType]:checkbox:checked");
+                if (checkedTerminalTypeObjs.length == 0) {
                     alert("请选择一个操作类型电脑或手机");
                     validationFlag = false;
                     return;
                 }
                 customerChargeType.customerChargeTypeIntervals = [];
-                $.each(checkedObjs, function (idx, val) {
+                $.each(checkedTerminalTypeObjs, function (idx, val) {
                     var trRowCount = chargeTypeIntervalDiv.find("#tab" + val.id + ' tr').length;
                     if (parseInt(trRowCount) == 1) {
                         alert("请至少填一条规则");
@@ -564,45 +564,31 @@
                 $.each(customerChargeTypeIntervals, function (idx, val) {
                     chargeTypeIntervalDiv.find("#" + val.operationType).prop("checked", true);
                     //如果有一条PC类型就在PCtable中加一"
-                    if (val.operationType == "PC") {
-                        customerChargeTypeIntervalPC.push(val);
-                    }
-                    if (val.operationType == "Phone") {
-                        customerChargeTypeIntervalPhone.push(val);
-                    }
-                });
-                $.each(customerChargeTypeIntervalPC, function (idx, val) {
                     if (null == val.endIndex || val.endIndex === '') {
                         val.endIndex = '';
                     }
-                    $("#tab" + val.operationType).append("<tr id=" + eval(idx + 1) + " align='center'>"
-                        + "<td>" + eval(idx + 1) + "</td>"
-                        + "<td><input type='text' name='startIndex' value='" + val.startIndex + "' style='width: 100%;height: 100%' /></td>"
-                        + "<td><input type='text' name='endIndex' value='" + val.endIndex + "' style='width: 100%;height: 100%' /></td>"
-                        + "<td><input type='text' name='price' value='" + val.price + "'  style='width: 100%;height: 100%' /></td>"
-                        + "<td><a href=\'#\' onclick=\"delRow(this)\">删除</a></td>"
-//                        + "<td><a href=\'#\' onclick=\"delRow('" + val.operationType + "' ,  '" + eval(idx + 1) + "')\">删除</a></td>"
-                        + "</tr>");
+                    $("#tab" + val.operationType).append(intervalRowStr(val));
                 });
-                $.each(customerChargeTypeIntervalPhone, function (idx, val) {
-                    if (null == val.endIndex || val.endIndex === '') {
-                        val.endIndex = '';
-                    }
-                    $("#tab" + val.operationType).append(intervalRowStr(idx, val));
-                });
+                resetSequence($("#tabPC"));
+                resetSequence($("#tabPhone"));
                 intervalInputOnlyNumberAllow();
             }
         }
 
-        function intervalRowStr(idx, val) {
-            return "<tr id=" + eval(idx + 1) + " align='center'>"
-                + "<td>" + eval(idx + 1) + "</td>"
-                + "<input type='hidden' id='intervalUuid" + val.operationType + "" + eval(idx + 1) + "' />"
-                + "<td><input type='text' name='startIndexPC" + eval(idx + 1) + "' id='startIndex" + val.operationType + "" + eval(idx + 1) + "' value='" + val.startIndex + "'  style='width: 100%;height: 100%'/></td>"
-                + "<td><input type='text' name='endIndexPC" + eval(idx + 1) + "' id='endIndex" + val.operationType + "" + eval(idx + 1) + "' value='" + val.endIndex + "'  style='width: 100%;height: 100%'/></td>"
-                + "<td><input type='text' name='pricePC" + eval(idx + 1) + "' id='price" + val.operationType + "" + eval(idx + 1) + "' value='" + val.price + "'   style='width: 100%;height: 100%'/></td>"
+        function intervalRowStr(val) {
+            return "<tr  align='center'>"
+                + "<td> <span name='sequence'></span> </td>"
+                + "<td><input type='text' name='startIndex' value='" + (val == null ? '' : val.startIndex) + "'  style='width: 100%;height: 100%'/></td>"
+                + "<td><input type='text' name='endIndex' value='" + (val == null ? '' : val.endIndex ) + "'  style='width: 100%;height: 100%'/></td>"
+                + "<td><input type='text' name='price' value='" + (val == null ? '' : val.price ) + "'   style='width: 100%;height: 100%'/></td>"
                 + "<td><a href=\'#\' onclick=\"delRow(this)\">删除</a></td>"
                 + "</tr>";
+        }
+
+        function resetSequence(tableObj) {
+            $.each(tableObj.find("span[name=sequence]"), function (idx, val) {
+                $(val).text(idx + 1);
+            });
         }
 
         function intervalInputOnlyNumberAllow() {
@@ -620,17 +606,13 @@
         }
 
         function addRow(terminalType) {
-            $("#chargeTypeIntervalDiv").find("#"+terminalType).prop("checked", true);
+            $("#chargeTypeIntervalDiv").find("#" + terminalType).prop("checked", true);
             var trRow = $("#tab" + terminalType + " tr").length;
-            $("#tab" + terminalType).append("<tr id=" + trRow + " align='center'>"
-                + "<td>" + trRow + "</td>"
-                + "<td><input type='text' name='startIndex'  style='width: 100;height: 100%' /></td>"
-                + "<td><input type='text' name='endIndex' style='width: 100;height: 100%'/></td>"
-                + "<td><input type='text' name='price'  style='width: 100;height: 100%'/></td>"
-                + "<td><a href=\'#\' onclick=\"delRow(this)\">删除</a></td>"
-                + "</tr>");
+            $("#tab" + terminalType).append(intervalRowStr(null));
             intervalInputOnlyNumberAllow();
             autoCheckTerminalType();
+            resetSequence($("#tabPC"));
+            resetSequence($("#tabPhone"));
         }
 
         //删除<tr/>
@@ -642,66 +624,25 @@
                 return;
             }
             currentRow.remove();
-            var rows = tableObj.rows;
-            $.each(rows, function (idx, val) {
-                if (idx > 0) {
-                    val.cells[0].innerText = idx;
-                }
-            });
             intervalInputOnlyNumberAllow();
             autoCheckTerminalType();
+            resetSequence($("#tabPC"));
+            resetSequence($("#tabPhone"));
         }
 
-
-        //设置当输入框失去焦点时填充数"
-        function theSamePriceFirstToThirdLTPC(obj) {
-            var chargesLTPC = $("#chargesLTPC");
-            var inputFirstToThirdLT = chargesLTPC.find("input[type=text]:gt(0):lt(2)");
-            inputFirstToThirdLT.val(obj);
+        function autoFillPrice(self) {
+            var price = $(self).val();
+            var idx = $($(self).parent().find("input[type=text]")).index(self);
+            if (idx == 0) {
+                $(self).parent().find("input[type=text]:gt(" + idx + "):lt(2)").val(price);
+            } else {
+                $(self).parent().find("input[type=text]:gt(" + idx + "):lt(1)").val(price);
+            }
         }
-        function theSamePriceFourthToPageLTPC(obj) {
-            var chargesLTPC = $("#chargesLTPC");
-            var inputFourthToPageLT = chargesLTPC.find("input[type=text]:gt(2):lt(2)");
-            inputFourthToPageLT.val(obj);
-        }
-        function theSamePriceFirstToThirdGTPC(obj) {
-            var chargesGTPC = $("#chargesGTPC");
-            var inputFirstToThirdGT = chargesGTPC.find("input[type=text]:gt(0):lt(2)");
-            inputFirstToThirdGT.val(obj);
-        }
-        function theSamePriceFourthToPageGTPC(obj) {
-            var chargesGTPC = $("#chargesGTPC");
-            var inputFirstToThirdGT = chargesGTPC.find("input[type=text]:gt(2):lt(2)");
-            inputFirstToThirdGT.val(obj);
-        }
-
-
-        //手机
-        function theSamePriceFirstToThirdLTPhone(obj) {
-            var chargesLTPhone = $("#chargesLTPhone");
-            var inputFirstToThirdLT = chargesLTPhone.find("input[type=text]:gt(0):lt(2)");
-            inputFirstToThirdLT.val(obj);
-        }
-        function theSamePriceFourthToPageLTPhone(obj) {
-            var chargesLTPhone = $("#chargesLTPhone");
-            var inputFourthToPageLT = chargesLTPhone.find("input[type=text]:gt(2):lt(2)");
-            inputFourthToPageLT.val(obj);
-        }
-        function theSamePriceFirstToThirdGTPhone(obj) {
-            var chargesGTPhone = $("#chargesGTPhone");
-            var inputFirstToThirdGT = chargesGTPhone.find("input[type=text]:gt(0):lt(2)");
-            inputFirstToThirdGT.val(obj);
-        }
-        function theSamePriceFourthToPageGTPhone(obj) {
-            var chargesGTPhone = $("#chargesGTPhone");
-            var inputFirstToThirdGT = chargesGTPhone.find("input[type=text]:gt(2):lt(2)");
-            inputFirstToThirdGT.val(obj);
-        }
-
 
         //上传日报报表模板
         function uploadDailyReportTemplate(uuid, self) {
-            $('#uploadDailyReportTemplateForm')[0].reset();
+            $('#dailyReportTemplateForm')[0].reset();
             $("#uploadDailyReportTemplateDialog").dialog({
                 resizable: false,
                 width: 400,
@@ -710,46 +651,61 @@
                 //按钮
                 buttons: {
                     "提交": function () {
-                        $(this).dialog("close");
-
-                        var uploadForm = $("#uploadDailyReportTemplateForm");
+                        var uploadForm = $("#dailyReportTemplateForm");
+                        var uploadFile = uploadForm.find("#uploadFile").val();
+                        var fileTypes = new Array("xls", "xlsx");  //定义可支持的文件类型数组
+                        var fileTypeFlag = false;
+                        var newFileName = uploadFile.split('.');
+                        newFileName = newFileName[newFileName.length - 1];
+                        for (var i = 0; i < fileTypes.length; i++) {
+                            if (fileTypes[i] == newFileName) {
+                                fileTypeFlag = true;
+                                break;
+                            }
+                        }
+                        if (!fileTypeFlag) {
+                            alert("请提交表格文 .xls .xlsx");
+                            return false;
+                        }
                         var formData = new FormData();
                         formData.append('file', uploadForm.find('#uploadFile')[0].files[0]);
                         formData.append('customerUuid', uuid);
-
-                        $.ajax({
-                            url: '/internal/customer/uploadDailyReportTemplate',
-                            type: 'POST',
-                            cache: false,
-                            data: formData,
-                            processData: false,
-                            contentType: false,
-                            success: function (result) {
-                                if (result) {
-                                    showInfo("上传成功", self);
-                                } else {
+                        if (fileTypeFlag) {
+                            $.ajax({
+                                url: '/internal/customer/uploadDailyReportTemplate',
+                                type: 'POST',
+                                cache: false,
+                                data: formData,
+                                processData: false,
+                                contentType: false,
+                                success: function (result) {
+                                    if (result) {
+                                        showInfo("上传成功", self);
+                                    } else {
+                                        showInfo("上传失败", self);
+                                    }
+                                },
+                                error: function () {
                                     showInfo("上传失败", self);
                                 }
-                            },
-                            error: function () {
-                                showInfo("上传失败", self);
-                            }
-                        });
+                            });
+                        }
+                        $(this).dialog("close");
                     },
                     "取消": function () {
                         $(this).dialog("close");
-                        $('#uploadDailyReportTemplateForm')[0].reset();
+                        $('#dailyReportTemplateForm')[0].reset();
                     }
                 }
             });
         }
 
         //显示添加客户是的DIV
-        function showCustomer(uuid, userID) {
+        function showCustomerDialog(uuid, userID) {
             if (uuid == null) {
-                $('#showCustomerForm')[0].reset();
+                $('#customerForm')[0].reset();
             }
-            $("#showCustomerDialog").dialog({
+            $("#customerDialog").dialog({
                 resizable: false,
                 width: 330,
                 height: 400,
@@ -760,28 +716,28 @@
                         savaCustomer(uuid, userID);
                     },
                     "清空": function () {
-                        $('#showCustomerForm')[0].reset();
+                        $('#customerForm')[0].reset();
                     },
                     "取消": function () {
                         $(this).dialog("close");
-                        $('#showCustomerForm')[0].reset();
+                        $('#customerForm')[0].reset();
                     }
                 }
             });
         }
         function savaCustomer(uuid, userID) {
-            var showCustomerForm = $("#showCustomerDialog").find("#showCustomerForm");
+            var customerForm = $("#customerDialog").find("#customerForm");
             var customer = {};
             customer.uuid = uuid;
             customer.userID = userID;
-            customer.entryType = showCustomerForm.find("#entryTypeHidden").val();
-            customer.contactPerson = showCustomerForm.find("#contactPerson").val();
-            customer.qq = showCustomerForm.find("#qq").val();
+            customer.entryType = customerForm.find("#entryTypeHidden").val();
+            customer.contactPerson = customerForm.find("#contactPerson").val();
+            customer.qq = customerForm.find("#qq").val();
             if (!(/^[1-9]\d{4,14}$/.test(customer.qq)) && (customer.qq != '')) {
                 alert("请输入正确的QQ");
                 return;
             }
-            customer.telphone = showCustomerForm.find("#telphone").val();
+            customer.telphone = customerForm.find("#telphone").val();
             if (!(/^1[34578]\d{9}$/.test(customer.telphone)) && (customer.telphone != '')) {
                 alert("请输入正确的手机");
                 return;
@@ -790,11 +746,11 @@
                 alert("请输入联系人");
                 return;
             }
-            customer.type = showCustomerForm.find("#type").val();
-            customer.status = showCustomerForm.find("#status").val();
-            customer.remark = showCustomerForm.find("#remark").val();
+            customer.type = customerForm.find("#type").val();
+            customer.status = customerForm.find("#status").val();
+            customer.remark = customerForm.find("#remark").val();
             $.ajax({
-                url: '/internal/customer/addCustomer',
+                url: '/internal/customer/saveCustomer',
                 data: JSON.stringify(customer),
                 headers: {
                     'Accept': 'application/json',
@@ -815,28 +771,36 @@
                     showInfo("保存失败", self);
                 }
             });
-            $("#showCustomerDialog").dialog("close");
-            $('#showCustomerForm')[0].reset();
+            $("#customerDialog").dialog("close");
+            $('#customerForm')[0].reset();
         }
-        function getCustomer(uuid) {
+
+        function modifyCustomer(uuid) {
+            getCustomer(uuid, function (customer) {
+                if (customer != null) {
+                    initCustomerDialog(customer);
+                    showCustomerDialog(customer.uuid, customer.userId);
+                } else {
+                    showInfo("获取信息失败", self);
+                }
+            })
+        }
+
+        function getCustomer(uuid, callback) {
             $.ajax({
-                url: '/internal/customer/getCustomerChargeType/' + uuid,
+                url: '/internal/customer/getCustomer/' + uuid,
                 type: 'Get',
                 success: function (customer) {
-                    if (customer != null) {
-                        initCustomerDialog(customer);
-                        showCustomer(customer.uuid, customer.userId);
-                    } else {
-                        showInfo("获取信息失败", self);
-                    }
+                    callback(customer);
                 },
                 error: function () {
                     showInfo("获取信息失败", self);
                 }
             });
         }
-        function showCustomerKeyword(uuid) {
-            $("#addCustomerKeywordDialog").dialog({
+
+        function showCustomerKeywordDialog(uuid) {
+            $("#customerKeywordDialog").dialog({
                 resizable: false,
                 width: 510,
                 height: 320,
@@ -847,15 +811,16 @@
                         addCustomerKeyword(uuid);
                     },
                     "清空": function () {
-                        $('#addCustomerKeywordForm')[0].reset();
+                        $('#customerKeywordForm')[0].reset();
                     },
                     "取消": function () {
                         $(this).dialog("close");
-                        $('#addCustomerKeywordForm')[0].reset();
+                        $('#customerKeywordForm')[0].reset();
                     }
                 }
             });
         }
+
         function addCustomerKeyword(uuid) {
             var customerKeywords = [];
             var customerKeywordTextarea = $("#customerKeywordTextarea").val().trim();
@@ -898,6 +863,10 @@
 
                 customerKeyword.url = customerKeyword.url.replace("http://", "");
                 customerKeyword.url = customerKeyword.url.replace("https://", "");
+
+                if (customerKeyword.url.length > 25) {
+                    customerKeyword.url = customerKeyword.url.substring(0, 25);
+                }
 
                 customerKeywords.push(customerKeyword);
             });
@@ -949,66 +918,29 @@
 
         //将客户信息填充DIV"
         function initCustomerDialog(customer) {
-            var showCustomerForm = $("#showCustomerForm");
-            showCustomerForm.find("#contactPerson").val(customer.contactPerson);
-            showCustomerForm.find("#qq").val(customer.qq);
-            showCustomerForm.find("#telphone").val(customer.telphone);
-            showCustomerForm.find("#type").val(customer.type);
-            showCustomerForm.find("#status").val(customer.status);
-            showCustomerForm.find("#remark").val(customer.remark);
-            showCustomerForm.find("#entryTypeHidden").val(customer.entryType);
+            var customerForm = $("#customerForm");
+            customerForm.find("#contactPerson").val(customer.contactPerson);
+            customerForm.find("#qq").val(customer.qq);
+            customerForm.find("#telphone").val(customer.telphone);
+            customerForm.find("#type").val(customer.type);
+            customerForm.find("#status").val(customer.status);
+            customerForm.find("#remark").val(customer.remark);
+            customerForm.find("#entryTypeHidden").val(customer.entryType);
         }
 
-        function changePaging(currentPage, displayRecords) {
+        function changePaging(currentPage, pageSize) {
             var searchCustomerForm = $("#searchCustomerForm");
+            var total = searchCustomerForm.find("#totalHidden").val();
             searchCustomerForm.find("#currentPageNumberHidden").val(currentPage);
-            searchCustomerForm.find("#pageSizeHidden").val(displayRecords);
+            searchCustomerForm.find("#pageSizeHidden").val(pageSize);
             searchCustomerForm.submit();
         }
+
         function resetPageNumber() {
             var searchCustomerForm = $("#searchCustomerForm");
             searchCustomerForm.find("#currentPageNumberHidden").val(1);
         }
 
-        function chooseUploadType() {
-            var uploadForm = $("#uploadDailyReportTemplateForm");
-            var uploadFile = uploadForm.find("#uploadFile").val();
-            var fileTypes = new Array("xls", "xlsx");  //定义可支持的文件类型数组
-            var fileTypeFlag = false;
-            var newFileName = uploadFile.split('.');
-            newFileName = newFileName[newFileName.length - 1];
-            for (var i = 0; i < fileTypes.length; i++) {
-                if (fileTypes[i] == newFileName) {
-                    fileTypeFlag = true;
-                    break;
-                }
-            }
-            if (!fileTypeFlag) {
-                alert("请提交表格文 .xls .xlsx");
-                return false;
-            }
-        }
-
-        function checkinput() {
-            var contactPerson = document.getElementById("contactPerson");
-            if (trim(contactPerson.value) == "") {
-                alert("请输入联系人");
-                contactPerson.focus();
-                return false;
-            }
-
-            contactPerson.value = trim(contactPerson.value);
-
-            var qq = document.getElementById("qq");
-            qq.value = trim(qq.value);
-            if (qq.value != "") {
-                if (isDigit(qq.value) == false) {
-                    alert("无效的QQ号码");
-                    qq.focus();
-                    return false;
-                }
-            }
-        }
 
         <c:if test="${'bc'.equalsIgnoreCase(entryType)}">
         var intervalId = setInterval(function () {
@@ -1016,7 +948,7 @@
         }, 1000 * 30);
         </c:if>
     </script>
-    <title>客户列表</title>
+    <title>客户管理</title>
 </head>
 
 <body>
@@ -1048,13 +980,14 @@
                                        value="${page.current}"/>
                                 <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
                                 <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
+                                <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
                                 <input type="submit" class="ui-button ui-widget ui-corner-all"
                                        onclick="resetPageNumber()"
                                        name="btnQuery" id="btnQuery" value=" 查询 ">
                             </td>
                             <td align="right" width="100"><input type="button" class="ui-button ui-widget ui-corner-all"
                                                                  value=" 添加客户 "
-                                                                 onclick="showCustomer(null,'${user.userID}')"/>
+                                                                 onclick="showCustomerDialog(null,'${user.userID}')"/>
                             </td>
                             <td align="right" width="100"><input type="button" class="ui-button ui-widget ui-corner-all"
                                                                  value=" 删除所选" onclick="deleteCustomers(this)"/>
@@ -1111,10 +1044,10 @@
                 </td>
                 <td><fmt:formatDate value="${customer.createTime}" pattern="yyyy-MM-dd"/></td>
                 <td>
-                    <a href="javascript:getCustomer(${customer.uuid})">修改</a> |
+                    <a href="javascript:modifyCustomer(${customer.uuid})">修改</a> |
                     <a href="javascript:delCustomer('${customer.uuid}')">删除</a> |
                     <a href="javascript:changeCustomerChargeType('${customer.uuid}')">客户规则</a> |
-                    <a href="javascript:showCustomerKeyword(${customer.uuid})">快速加词</a> |
+                    <a href="javascript:showCustomerKeywordDialog(${customer.uuid})">快速加词</a> |
                     <a target="_blank" href="javascript:uploadDailyReportTemplate('${customer.uuid}', this)">上传日报表模板</a>
                 </td>
             </tr>
@@ -1143,22 +1076,22 @@
                 <div id="chargesLTPC" style="float: left;width: 50%;margin-top: 5px;">
                     <h6 style="text-align: center">指数小于100</h6>
                     第一 <input id="chargesOfFirstLTPC" type="text"
-                              onblur="theSamePriceFirstToThirdLTPC(this.value)"/><span></span><br>
+                              onblur="autoFillPrice(this)"/><span></span><br>
                     第二 <input id="chargesOfSecondLTPC" type="text"/><span></span><br>
                     第三 <input id="chargesOfThirdLTPC" type="text"/><span></span><br>
                     第四 <input id="chargesOfFourthLTPC" type="text"
-                              onblur="theSamePriceFourthToPageLTPC(this.value)"/><span></span><br>
+                              onblur="autoFillPrice(this)"/><span></span><br>
                     第五 <input id="chargesOfFifthLTPC" type="text"/><span></span><br>
                     首页 <input id="chargesOfFirstPageLTPC" type="text"/><span></span>
                 </div>
                 <div id="chargesGTPC" style="float: left;width: 50%;margin-top: 5px;">
                     <h6 style="text-align: center">指数大于100</h6>
                     第一 <input id="chargesOfFirstGTPC" type="text"
-                              onblur="theSamePriceFirstToThirdGTPC(this.value)"/><span></span><br>
+                              onblur="autoFillPrice(this)"/><span></span><br>
                     第二 <input id="chargesOfSecondGTPC" type="text"/><span></span><br>
                     第三 <input id="chargesOfThirdGTPC" type="text"/><span></span><br>
                     第四 <input id="chargesOfFourthGTPC" type="text"
-                              onblur="theSamePriceFourthToPageGTPC(this.value)"/><span></span><br>
+                              onblur="autoFillPrice(this)"/><span></span><br>
                     第五 <input id="chargesOfFifthGTPC" type="text"/><span></span><br>
                     首页 <input id="chargesOfFirstPageGTPC" type="text"/><span></span>
                 </div>
@@ -1171,22 +1104,22 @@
                 <div id="chargesLTPhone" style="float: left;width: 50%">
                     <h6 style="text-align: center">指数小于100</h6>
                     第一 <input id="chargesOfFirstLTPhone" type="text"
-                              onblur="theSamePriceFirstToThirdLTPhone(this.value)"/><span></span><br>
+                              onblur="autoFillPrice(this)"/><span></span><br>
                     第二 <input id="chargesOfSecondLTPhone" type="text"/><span></span><br>
                     第三 <input id="chargesOfThirdLTPhone" type="text"/><span></span><br>
                     第四 <input id="chargesOfFourthLTPhone" type="text"
-                              onblur="theSamePriceFourthToPageLTPhone(this.value)"/><span></span><br>
+                              onblur="autoFillPrice(this)"/><span></span><br>
                     第五 <input id="chargesOfFifthLTPhone" type="text"/><span></span><br>
                     首页 <input id="chargesOfFirstPageLTPhone" type="text"/><span></span>
                 </div>
                 <div id="chargesGTPhone" style="float: left;width: 50%;margin-top: 5px;">
                     <h6 style="text-align: center">指数大于100</h6>
                     第一 <input id="chargesOfFirstGTPhone" type="text"
-                              onblur="theSamePriceFirstToThirdGTPhone(this.value)"/><span></span><br>
+                              onblur="autoFillPrice(this)"/><span></span><br>
                     第二 <input id="chargesOfSecondGTPhone" type="text"/><span></span><br>
                     第三 <input id="chargesOfThirdGTPhone" type="text"/><span></span><br>
                     第四 <input id="chargesOfFourthGTPhone" type="text"
-                              onblur="theSamePriceFourthToPageGTPhone(this.value)"/><span></span><br>
+                              onblur="autoFillPrice(this)"/><span></span><br>
                     第五 <input id="chargesOfFifthGTPhone" type="text"/><span></span><br>
                     首页 <input id="chargesOfFirstPageGTPhone" type="text"/><span></span>
                 </div>
@@ -1234,8 +1167,8 @@
 
 
 </div>
-<div id="showCustomerDialog" title="客户信息">
-    <form id="showCustomerForm" method="post" onsubmit="return checkinput();" action="customerlist.jsp">
+<div id="customerDialog" title="客户信息">
+    <form id="customerForm" method="post" action="customerlist.jsp">
         <table style="font-size:14px;" cellpadding=5>
             <tr>
                 <td align="right">联系人:</td>
@@ -1284,7 +1217,7 @@
 </div>
 <%--上传日报表模"onsubmit="return checkinput();"--%>
 <div id="uploadDailyReportTemplateDialog" title="上传日报表模板">
-    <form method="post" id="uploadDailyReportTemplateForm" onsubmit="return chooseUploadType()" action=""
+    <form method="post" id="dailyReportTemplateForm" action=""
           enctype="multipart/form-data">
         <table width="100%" style="margin-top: 10px;margin-left: 10px">
             <tr>
@@ -1310,8 +1243,8 @@
     </form>
 </div>
 <%--添加客户关键字--%>
-<div id="addCustomerKeywordDialog" title="客户关键字">
-    <form id="addCustomerKeywordForm">
+<div id="customerKeywordDialog" title="客户关键字">
+    <form id="customerKeywordForm">
    <textarea id="customerKeywordTextarea" style="width:480px;height:180px;"
              placeholder="关键字 域名  关键字与域名以空格作为分割，一行一组"></textarea>
         <c:choose>

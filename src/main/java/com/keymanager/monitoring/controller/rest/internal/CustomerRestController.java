@@ -8,11 +8,6 @@ import com.keymanager.monitoring.service.CustomerService;
 import com.keymanager.monitoring.service.UserService;
 import com.keymanager.util.PortTerminalTypeMapping;
 import com.keymanager.util.Utils;
-import com.keymanager.value.CustomerVO;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileItemFactory;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +18,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -59,12 +50,12 @@ public class CustomerRestController {
         return constructCustomerModelAndView(request, customerCriteria, currentPageNumber, pageSize);
     }
 
-    private ModelAndView constructCustomerModelAndView(HttpServletRequest request, CustomerCriteria customerCriteria, String currentPage, String displaysRecords) {
+    private ModelAndView constructCustomerModelAndView(HttpServletRequest request, CustomerCriteria customerCriteria, String currentPage, String pageSize) {
         ModelAndView modelAndView = new ModelAndView("/customer/customerlist");
         HttpSession session = request.getSession();
         String userID = (String) session.getAttribute("username");
         User user = userService.getUser(userID);
-        Page<Customer> page = customerService.searchCustomers(new Page<Customer>(Integer.parseInt(currentPage), Integer.parseInt(displaysRecords)), customerCriteria);
+        Page<Customer> page = customerService.searchCustomers(new Page<Customer>(Integer.parseInt(currentPage), Integer.parseInt(pageSize)), customerCriteria);
         String entryType = (String) session.getAttribute("entry");
         String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
         modelAndView.addObject("entryType", entryType);
@@ -76,10 +67,10 @@ public class CustomerRestController {
     }
 
 
-    @RequestMapping(value = "/addCustomer", method = RequestMethod.POST)
-    public ResponseEntity<?> addCustomer(@RequestBody Customer customer) {
+    @RequestMapping(value = "/saveCustomer", method = RequestMethod.POST)
+    public ResponseEntity<?> saveCustomer(@RequestBody Customer customer) {
         try {
-            customerService.addCustomer(customer);
+            customerService.saveCustomer(customer);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
