@@ -108,6 +108,7 @@
 	String position = request.getParameter("position");
 	String[] unPaidAll = request.getParameterValues("unPaidAll");
 	String[] pushPay = request.getParameterValues("pushPay");
+	String[] noPosition = request.getParameterValues("noPosition");
 	
 	if (userName == null){
 		userName = "justMine";
@@ -221,6 +222,12 @@
 		condition = condition + " AND ((fCollectMethod = 'PerDay' and ck.fEffectiveToTime is not null) or ck.fEffectiveToTime <= STR_TO_DATE('" + Utils.formatDatetime(Utils.addDay(Utils.getCurrentTimestamp(), 3), "yyyy-MM-dd") + "', '%Y-%m-%d')) ";
 		pageUrl = pageUrl + "&pushPay=pushPay";
 	}
+
+	if (noPosition != null){
+		condition = condition + " AND (ck.fCurrentPosition = 0) ";
+		pageUrl = pageUrl + "&noPosition=noPosition";
+	}
+
     List itemList = new ArrayList();
     
     String order = " order by ck.fCreateTime desc ";
@@ -317,31 +324,35 @@
 	      	  	 		<table style="font-size:12px;">
 	      	  	 		<tr>
 			          	  <td align="right">显示前:</td> <td><input type="text" name="position" id="position" value="<%=position%>" style="width:20px;" ></td>
-				 	   	  <td align="right">排序:</td>
-	      	  	 			<td>
-	      	  	 			  <select name="orderElement" id="orderElement">		
-			          	  	 	   <%
-				          	  	     String []orderElements = {"创建日期","当前排名","账单日期"};						          	  	     
-				          	  	     for (int i = 0; i < orderElements.length; i ++)
-				          	  	     {
-				          	  	         if (orderElements[i].equals(orderElement))
-				          	  	         {
-				          	  	              out.println("<option selected value='" + orderElements[i] + "'>" + orderElements[i] + "</option>");
-				          	  	         }
-				          	  	         else
-				          	  	       	 {
-				          	  	       	      out.println("<option value='" + orderElements[i] + "'>" + orderElements[i] + "</option>");
-				          	  	       	 }						          	
-				          	  	     }
-						          %>
-			          	  	 </select>
-			          	  </td>
-	      	  	 		  <td align="right"><input id="unPaidAll" name="unPaidAll" type="checkbox" value="unPaidAll" <%if (unPaidAll != null){ out.print(" checked=true");}%>>欠费</input></td>
-				 	   	  <td align="right"><input id="pushPay" name="pushPay" type="checkbox" value="pushPay" <%if (pushPay != null){ out.print(" checked=true");}%>>催缴</input></td>
+							<td align="right"><input id="noPosition" name="noPosition" type="checkbox" value="noPosition" <%if (noPosition != null){
+							out.print(" checked=true");}%>>显示排名为0</input></td>
+	      	  	 		  <td align="right"><input id="unPaidAll" name="unPaidAll" type="checkbox" value="unPaidAll" <%if (unPaidAll != null){
+	      	  	 		  out.print(" checked=true");}%>>欠费</input></td>
+				 	   	  <td align="right"><input id="pushPay" name="pushPay" type="checkbox" value="pushPay" <%if (pushPay != null){
+				 	   	  out.print(" checked=true");}%>>催缴</input></td>
 							<td align="right"><input id="displayStop" name="displayStop" type="checkbox" value="displayStop" <%if (displayStop != null){
-							out.print(" checked=true");}%>>显示下架</input></td>
+							out.print(" checked=true");}%>>显示下架    </input></td>
 				 	   	  <td align="right">订单号:</td> <td><input type="text" name="orderNumber" id="orderNumber" value="<%=orderNumber%>" style="width:160px;"></td>
 				 	   	  <td align="right">无效点击数:</td> <td><input type="text" name="invalidRefreshCount" id="invalidRefreshCount" value="<%=invalidRefreshCount%>" style="width:160px;"></td>
+							<td align="right">排序:</td>
+							<td>
+								<select name="orderElement" id="orderElement">
+									<%
+										String []orderElements = {"创建日期","当前排名","账单日期"};
+										for (int i = 0; i < orderElements.length; i ++)
+										{
+											if (orderElements[i].equals(orderElement))
+											{
+												out.println("<option selected value='" + orderElements[i] + "'>" + orderElements[i] + "</option>");
+											}
+											else
+											{
+												out.println("<option value='" + orderElements[i] + "'>" + orderElements[i] + "</option>");
+											}
+										}
+									%>
+								</select>
+							</td>
 			          	  <td align="right" width="100"><input type="submit" name="btnQuery" id="btnQuery" value=" 查询 " ></td>
 	      	  	 		</tr>
 		      	  	 	</table>

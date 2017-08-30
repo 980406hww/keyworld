@@ -76,7 +76,8 @@
 	  	String position = request.getParameter("position");
 	  	String[] unPaidAll = request.getParameterValues("unPaidAll");
 	  	String[] pushPay = request.getParameterValues("pushPay");
-	  	
+		String[] noPosition = request.getParameterValues("noPosition");
+
 	  	String pageUrl = "customerUuid=" + customerUuid;
 	  	condition = condition + " and fCustomerUuid=" + customerUuid;
 	  	
@@ -152,7 +153,12 @@
 	  		condition = condition + " AND ((fCollectMethod = 'PerDay' and ck.fEffectiveToTime is not null) or ck.fEffectiveToTime <= STR_TO_DATE('" + Utils.formatDatetime(Utils.addDay(Utils.getCurrentTimestamp(), 3), "yyyy-MM-dd") + "', '%Y-%m-%d')) ";
 	  		pageUrl = pageUrl + "&pushPay=pushPay";
 	  	}
-	      
+
+		if (noPosition != null){
+			condition = condition + " AND (ck.fCurrentPosition = 0) ";
+			pageUrl = pageUrl + "&noPosition=noPosition";
+		}
+
 	      String order = " order by ck.fCreateTime desc ";
 	      if ("账单日期".equals(orderElement)){    
 	      	order = " order by ck.fEffectiveFromTime desc ";
@@ -289,26 +295,28 @@
 	      	  	 		<tr>
 	      	  	 		  
 			          	  <td align="right">显示前:</td> <td><input type="text" name="position" id="position" value="<%=position%>" style="width:20px;" ></td>
-				 	   	  <td align="right">排序:</td>
-	      	  	 			<td>
-	      	  	 			  <select name="orderElement" id="orderElement">		
-			          	  	 	   <%
-				          	  	     String []orderElements = {"创建日期","当前排名","账单日期"};						          	  	     
-				          	  	     for (int i = 0; i < orderElements.length; i ++)
-				          	  	     {
-				          	  	         if (orderElements[i].equals(orderElement))
-				          	  	         {
-				          	  	              out.println("<option selected value='" + orderElements[i] + "'>" + orderElements[i] + "</option>");
-				          	  	         }
-				          	  	         else
-				          	  	       	 {
-				          	  	       	      out.println("<option value='" + orderElements[i] + "'>" + orderElements[i] + "</option>");
-				          	  	       	 }						          	
-				          	  	     }
-						          %>
-			          	  	 </select>
-			          	  </td>
+							<td align="right"><input id="noPosition" name="noPosition" type="checkbox" value="noPosition" <%if (noPosition != null){
+							out.print(" checked=true");}%>>显示排名为0</input></td>
 				 	   	  <td align="right">无效点击数:</td> <td><input type="text" name="invalidRefreshCount" id="invalidRefreshCount" value="<%=invalidRefreshCount%>" style="width:160px;"></td>
+							<td align="right">排序:</td>
+							<td>
+								<select name="orderElement" id="orderElement">
+									<%
+										String []orderElements = {"创建日期","当前排名","账单日期"};
+										for (int i = 0; i < orderElements.length; i ++)
+										{
+											if (orderElements[i].equals(orderElement))
+											{
+												out.println("<option selected value='" + orderElements[i] + "'>" + orderElements[i] + "</option>");
+											}
+											else
+											{
+												out.println("<option value='" + orderElements[i] + "'>" + orderElements[i] + "</option>");
+											}
+										}
+									%>
+								</select>
+							</td>
 			          	  <td align="right" width="100"><input type="submit" name="btnQuery" id="btnQuery" value=" 查询 " ></td>
 			          	  <td align="right"><a href="javascript:delAllItems(null)">删除所选关键字</a> |
 							  <a href="javascript:delAllItems('emptyTitleAndUrl')">删除标题和网址为空的关键字</a> |
