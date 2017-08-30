@@ -5,6 +5,7 @@ public class CustomerCriteria extends BaseCriteria{
     private String qq;
     private String telphone;
     private String userID;
+    private String entryType;
     private Integer status;
 
     public String getContactPerson() {
@@ -45,5 +46,13 @@ public class CustomerCriteria extends BaseCriteria{
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public String getEntryType() {
+        return entryType;
+    }
+
+    public void setEntryType(String entryType) {
+        this.entryType = entryType;
     }
 }

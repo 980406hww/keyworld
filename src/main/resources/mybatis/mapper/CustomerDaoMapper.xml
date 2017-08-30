@@ -23,7 +23,7 @@
         SELECT
         <include refid="colID"/>
         FROM t_customer c
-        WHERE 1 = 1
+        WHERE c.fEntryType = #{customerCriteria.entryType}
         <if test="customerCriteria.contactPerson != null and customerCriteria.contactPerson != ''">AND c.fContactPerson like '%${customerCriteria.contactPerson}%'</if>
         <if test="customerCriteria.qq != null and customerCriteria.qq != ''">AND c.fQQ like '${customerCriteria.qq}%'</if>
         <if test="customerCriteria.telphone != null and customerCriteria.telphone != ''">AND c.fTelphone like '%${customerCriteria.telphone}%'</if>

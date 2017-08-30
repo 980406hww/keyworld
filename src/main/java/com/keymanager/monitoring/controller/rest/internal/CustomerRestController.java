@@ -55,8 +55,9 @@ public class CustomerRestController {
         HttpSession session = request.getSession();
         String userID = (String) session.getAttribute("username");
         User user = userService.getUser(userID);
-        Page<Customer> page = customerService.searchCustomers(new Page<Customer>(Integer.parseInt(currentPage), Integer.parseInt(pageSize)), customerCriteria);
         String entryType = (String) session.getAttribute("entry");
+        customerCriteria.setEntryType(entryType);
+        Page<Customer> page = customerService.searchCustomers(new Page<Customer>(Integer.parseInt(currentPage), Integer.parseInt(pageSize)), customerCriteria);
         String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
         modelAndView.addObject("entryType", entryType);
         modelAndView.addObject("terminalType", terminalType);
