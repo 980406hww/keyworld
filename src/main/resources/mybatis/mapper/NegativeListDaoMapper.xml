@@ -13,11 +13,11 @@
 			fUpdateTime AS "updateTime",
 			fCreateTime AS "createTime"
 		FROM
-			t_fumian_list f
+			t_negative_list n
 		WHERE 1 = 1
-		<if test="negativeListCriteria.keyword != null and negativeListCriteria.keyword != ''">AND f.fKeyword like '%${negativeListCriteria.keyword}%'</if>
-		<if test="negativeListCriteria.url != null and negativeListCriteria.url != ''">AND f.fUrl like '%${negativeListCriteria.url}%'</if>
-		ORDER BY f.fCreateTime DESC
+		<if test="negativeListCriteria.keyword != null and negativeListCriteria.keyword != ''">AND n.fKeyword like '%${negativeListCriteria.keyword}%'</if>
+		<if test="negativeListCriteria.url != null and negativeListCriteria.url != ''">AND n.fUrl like '%${negativeListCriteria.url}%'</if>
+		ORDER BY n.fCreateTime DESC
 	</select>
 
 	<select id="selectLastId" resultType="int">
