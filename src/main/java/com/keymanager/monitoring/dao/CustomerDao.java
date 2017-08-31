@@ -11,6 +11,8 @@ import java.util.List;
 public interface CustomerDao extends BaseMapper<Customer> {
     List<Customer> searchCustomers(Page<Customer> page, @Param("customerCriteria")CustomerCriteria customerCriteria);
 
+    List<Customer> findCustomers();
+
     List<Customer> getActiveCustomerSimpleInfo();
 
     int selectLastId();

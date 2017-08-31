@@ -49,6 +49,10 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 		return page;
 	}
 
+	public List<Customer> findCustomers() {
+		return customerDao.findCustomers();
+	}
+
 	public void updateCustomer(Customer customer) {
 		Customer oldCustomer = customerDao.selectById(customer.getUuid());
 		if (oldCustomer != null) {

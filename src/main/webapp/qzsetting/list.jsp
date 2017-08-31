@@ -1,125 +1,7 @@
-<%@page contentType="text/html;charset=utf-8"%>
-<%@page import="com.keymanager.manager.*,com.keymanager.util.*,com.keymanager.value.*,java.util.*,java.net.URLEncoder"%>
-<%@ page import="com.keymanager.monitoring.entity.QZSetting" %>
-<%@ page import="com.keymanager.monitoring.service.QZSettingService" %>
-<%@ page import="com.keymanager.monitoring.service.QZOperationTypeService" %>
-<%@ page import="com.baomidou.mybatisplus.toolkit.StringUtils" %>
-<%@ page import="com.baomidou.mybatisplus.plugins.Page" %>
-<jsp:useBean id="um" scope="page" class="com.keymanager.manager.UserManager" />
-<jsp:useBean id="cm" scope="page" class="com.keymanager.manager.CustomerManager" />
-<jsp:useBean id="sch" scope="page" class="com.keymanager.util.SpringContextHolder" />
-<%@include file="/check.jsp" %>
-
-<%
-	if(loginState == 0)
-	{
-%>
-<script language="javascript">
-    window.location.href="/bd.html";
-</script>
-<%
-		return;
-	}
-
-	String username = (String) session.getAttribute("username");
-	String password = (String) session.getAttribute("password");
-
-	String type = (String) session.getAttribute("entry");
-	username = Utils.parseParam(username);
-	password = Utils.parseParam(password);
-
-	if (username == null || username.equals(""))
-	{
-%>
-<script language="javascript">
-    window.location.href="/bd.html";
-</script>
-<%
-		return;
-	}
-	String condition = " ";
-
-	String curPage = request.getParameter("pg");
-
-	if (curPage == null || curPage.equals(""))
-	{
-		curPage = "1";
-	}
-
-	int iCurPage = Integer.parseInt(curPage);
-	String uuid = request.getParameter("uuid");
-	String customer = request.getParameter("customer");
-	String customerUuid = null;
-	if(customer != null){
-		String []customerArray = customer.split("_____");
-		if(customerArray.length == 2){
-			customerUuid = customerArray[1];
-		}
-	}
-	String domain = request.getParameter("domain");
-	String group = request.getParameter("group");
-	String updateStatus = request.getParameter("updateStatus");
-
-	String pageUrl = "";
-
-	if (!Utils.isNullOrEmpty(uuid)){
-		pageUrl = pageUrl + "&uuid=" + uuid;
-	}
-	if (!Utils.isNullOrEmpty(customerUuid)){
-		pageUrl = pageUrl + "&customerUuid=" + customerUuid;
-	}
-	if (!Utils.isNullOrEmpty(domain)){
-		pageUrl = pageUrl + "&domain=" + domain;
-	}else{
-		domain = "";
-	}
-	if (!Utils.isNullOrEmpty(group)){
-		pageUrl = pageUrl + "&group=" + group;
-	}else{
-		group = "";
-	}
-	if (!Utils.isNullOrEmpty(updateStatus)){
-		pageUrl = pageUrl + "&updateStatus=" + updateStatus;
-	}else{
-		updateStatus = "";
-	}
-
-	QZSettingService qzss = (QZSettingService)SpringContextHolder.getBean("QZSettingService");
-	Integer pageNumber = iCurPage;
-	Integer pageSize = 100;
-	Page<QZSetting> pageDefinition = new Page<QZSetting>(pageNumber, pageSize);
-	Page<QZSetting> qzSettingPage = qzss.searchQZSettings(pageDefinition, uuid != null ? Long.parseLong(uuid) : null, customerUuid != null ?
-			Long.parseLong(customerUuid) : null,
-			domain, group, updateStatus);
-
-	List<QZSetting> itemList = qzSettingPage.getRecords();
-	QZOperationTypeService qzots = (QZOperationTypeService)SpringContextHolder.getBean("QZOperationTypeService");
-	List<QZSetting> expiredCharge = qzots.expiredCharge();
-	List<QZSetting> nowCharge = qzots.nowCharge();
-	List<QZSetting> threeCharge = qzots.threeCharge();
-	List<QZSetting> sevenCharge = qzots.sevenCharge();
-
-	String chargeDays = request.getParameter("chargeDays");
-	if("-1".equals(chargeDays)) {
-		itemList = expiredCharge;
-	} else if("0".equals(chargeDays)) {
-		itemList = nowCharge;
-	} else if("3".equals(chargeDays)) {
-		itemList = threeCharge;
-	} else if("7".equals(chargeDays)) {
-		itemList = sevenCharge;
-	}
-	pageUrl = pageUrl + "&chargeDays=" + chargeDays;
-
-	int recordCount = qzSettingPage.getTotal();
-	int pageCount = qzSettingPage.getPages();
-
-	String fileName = "/qzsetting/list.jsp?" + pageUrl;
-	String pageInfo = Utils.getPageInfo(iCurPage, 100, recordCount, pageCount, "", fileName);
-
-	List<CustomerVO> customerVOs = cm.searchCustomer(datasourceName, " AND fStatus = 1 ");
-%>
-
+<%@ page contentType="text/html;charset=utf-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <html>
 <head>
 	<title>全站设置清单</title>
@@ -223,39 +105,33 @@
 	</tr>
 	<tr>
 		<td colspan="14" align="right">
-			<a href="javascript:chargeRemind('-1')">过期未收费(<%=expiredCharge.size()%>)</a>
-			| <a target="_blank" href="javascript:chargeRemind('0')">当天收费提醒(<%=nowCharge.size()%>)</a>
-			| <a target="_blank" href="javascript:chargeRemind('3')">三天收费提醒(<%=threeCharge.size()%>)</a>
-			| <a target="_blank" href="javascript:chargeRemind('7')">七天收费提醒(<%=sevenCharge.size()%>)</a>
+			<a href="javascript:chargeRemind('-1')">过期未收费(${fn:length(expiredChargeList)})</a>
+			| <a target="_blank" href="javascript:chargeRemind('0')">当天收费提醒(${fn:length(nowChargeList)})</a>
+			| <a target="_blank" href="javascript:chargeRemind('3')">三天收费提醒(${fn:length(threeChargeList)})</a>
+			| <a target="_blank" href="javascript:chargeRemind('7')">七天收费提醒(${fn:length(sevenChargeList)})</a>
 		</td>
 	</tr>
 	<tr>
 		<td colspan="14">
-			<form method="post" id="chargeForm" action="list.jsp">
-				<input type="hidden" id="chargeDays" name="chargeDays" value="NaN"/>
+			<form method="post" id="chargeForm" action="/internal/qzsetting/searchQZSettingPage">
+				<input type="hidden" id="chargeDays" name="chargeDays" value="${chargeDays}"/>
 				<table style="font-size:12px;">
 					<tr>
-						<td align="right">客户:</td>
-						<td><input type="text" name="customer" id="customer" list="customer_list" value='<%=(customer != null) ? customer : ""%>'
-								   style="width:200px;"></td>
-						<td align="right">域名:</td> <td><input type="text" name="domain" id="domain" value="<%=domain%>" style="width:200px;"></td>
-						<td align="right">组名:</td> <td><input type="text" name="group" id="group" value="<%=group%>" style="width:200px;"></td>
+						<td align="right">客户:</td> <td><input type="text" name="contactPerson" id="contactPerson" value='${qzSettingVO.contactPerson}' style="width:200px;"></td>
+						<td align="right">域名:</td> <td><input type="text" name="domain" id="domain" value="${qzSettingVO.domain}" style="width:200px;"></td>
+						<td align="right">组名:</td> <td><input type="text" name="group" id="group" value="${qzSettingVO.group}" style="width:200px;"></td>
 						<td align="right">状态:</td>
 						<td>
 							<select name="updateStatus" id="updateStatus" style="width:200px;">
-								<%
-									String []statusNames = {"", "Processing", "Completed", "DownloadTimesUsed"};
-									for (int i = 0; i < statusNames.length; i ++) {
-										if (statusNames[i].equals(updateStatus)) {
-											out.println("<option selected value='" + statusNames[i] + "'>" + statusNames[i] + "</option>");
-										} else {
-											out.println("<option value='" + statusNames[i] + "'>" + statusNames[i] + "</option>");
-										}
-									}
-								%>
+								<c:forEach items="${statusList}" var="status">
+									<c:choose>
+										<c:when test="${status eq qzSettingVO.updateStatus}"><option selected>${status}</option></c:when>
+										<c:otherwise><option>${status}</option></c:otherwise>
+									</c:choose>
+								</c:forEach>
 							</select>
 						</td>
-						<td align="right" width="100"><input type="submit" name="btnQuery" id="btnQuery" value=" 查询 " ></td>
+						<td align="right" width="100"><input type="submit" name="btnQuery" id="btnQuery" onclick="chargeRemind('1')" value=" 查询 " ></td>
 					</tr>
 				</table>
 			</form>
@@ -279,80 +155,59 @@
 		<div id="div1"></div>
 		<div id="div2"></div>
 	</tr>
-	<%
-		String trClass = "";
-		String webUrl = "";
-		String keywordColor = "";
-		for (int i = 0; i < itemList.size(); i ++) {
-			QZSetting value = (QZSetting) itemList.get(i);
-			trClass= "";
-			keywordColor = "";
-			if ((i % 2) != 0) {
-				trClass = "bgcolor='#eeeeee'";
-			}
-	%>
-	<tr <%=trClass%> onmouseover="doOver(this);" onmouseout="doOut(this);">
-		<td><input type="checkbox" name="uuid" value=<%=value.getUuid()%> /></td>
-		<td>
-			<%=value.getContactPerson()%>
-		</td>
-		<td>
-			<a href="http://www.aizhan.com/cha/<%=value.getDomain()%>" style="text-decoration:none" target="_blank"><%=value.getDomain()%></a>
-		</td>
-		<td>
-			<%=value.getType()%>
-		</td>
-		<td>
-			<%=value.getPcGroup() == null ? "" : "pc: " + value.getPcGroup()%>
-			<br/>
-			<%=value.getPhoneGroup() == null ? "" : "m: " + value.getPhoneGroup()%>
-		</td>
-		<td>
-			<%=value.isIgnoreNoIndex() ? "是" : "否"%>
-		</td>
-		<td>
-			<%=value.isIgnoreNoOrder() ? "是" : "否"%>
-		</td>
-		<td>
-			<%=value.getUpdateInterval()%>天
-		</td>
-		<td>
-			<%=(value.getUpdateStatus() != null ? value.getUpdateStatus() : "")%>
-		</td>
-		<td>
-			<%=Utils.formatDate(value.getUpdateStartTime(), "MM-dd HH:mm")%>
-		</td>
-		<td>
-			<%=Utils.formatDate(value.getUpdateEndTime(), "MM-dd HH:mm")%>
-		</td>
-		<td>
-			<%=Utils.formatDate(value.getUpdateTime(), "MM-dd HH:mm")%>
-		</td>
-		<td>
-			<%=Utils.formatDate(value.getCreateTime(), "MM-dd HH:mm")%>
-		</td>
-		<td>
-			<a href="javascript:showChargeDialog('<%=value.getUuid()%>','<%=value.getContactPerson()%>','<%=value.getDomain()%>',this)">收费</a> |
-			<a href="javascript:showSettingDialog('<%=value.getUuid()%>', this)">修改</a>
-			<br/>
-			<a href="javascript:delQZSetting(<%=value.getUuid()%>)">删除</a> |
-			<a href="javascript:showChargeLog('<%=value.getUuid()%>', this)">收费记录</a>
-		</td>
-	</tr>
-	<%
-		}
-	%>
-	<tr>
-		<td colspan="14">
-			<br>
-			<%=pageInfo%>
-		</td>
-	</tr>
+	<c:forEach items="${page.records}" var="qzSetting">
+		<tr onmouseover="doOver(this);" onmouseout="doOut(this);" height=30>
+			<td><input type="checkbox" name="uuid" value="${qzSetting.uuid}"/></td>
+			<td>${qzSetting.contactPerson}</td>
+			<td>${qzSetting.domain}</td>
+			<td>${qzSetting.type}</td>
+			<td>
+				${qzSetting.pcGroup == null ? "" : "pc:"}${qzSetting.pcGroup == null ? "" : qzSetting.pcGroup}<br>
+				${qzSetting.phoneGroup == null ? "" : "m:"}${qzSetting.phoneGroup == null ? "" : qzSetting.phoneGroup}
+			</td>
+			<td>${qzSetting.ignoreNoIndex == true ? "是" : "否"}</td>
+			<td>${qzSetting.ignoreNoOrder == true ? "是" : "否"}</td>
+			<td>${qzSetting.updateInterval}</td>
+			<td>${qzSetting.updateStatus == null ? "" : qzSetting.updateStatus}</td>
+			<td><fmt:formatDate value="${qzSetting.updateStartTime}" pattern="MM-dd HH:mm" /></td>
+			<td><fmt:formatDate value="${qzSetting.updateEndTime}" pattern="MM-dd HH:mm" /></td>
+			<td><fmt:formatDate value="${qzSetting.updateTime}" pattern="MM-dd HH:mm" /></td>
+			<td><fmt:formatDate value="${qzSetting.createTime}" pattern="MM-dd HH:mm" /></td>
+			<td>
+				<a href="javascript:showChargeDialog('${qzSetting.uuid}','${qzSetting.contactPerson}','${qzSetting.domain}',this)">收费</a> |
+				<a href="javascript:showSettingDialog('${qzSetting.uuid}', this)">修改</a>
+				<br/>
+				<a href="javascript:delQZSetting(${qzSetting.uuid})">删除</a> |
+				<a href="javascript:showChargeLog('${qzSetting.uuid}', this)">收费记录</a>
+			</td>
+		</tr>
+	</c:forEach>
 </table>
-<br><br><br>
+<hr>
+<div id="showQZSettingBottomDiv" align="right">
+	<input id="fisrtButton" type="button" onclick="searchQZSettingPage(1,'${page.size}')" value="首页"/>
+	&nbsp;&nbsp;&nbsp;&nbsp;
+	<input id="upButton" type="button" onclick="searchQZSettingPage('${page.current-1}','${page.size}')" value="上一页"/>
+	&nbsp;&nbsp;&nbsp;&nbsp;${page.current}/${page.pages}&nbsp;&nbsp;
+	<input id="nextButton" type="button" onclick="searchQZSettingPage('${page.current+1>=page.pages?page.pages:page.current+1}','${page.size}')" value="下一页">
+	&nbsp;&nbsp;&nbsp;&nbsp;
+	<input id="lastButton" type="button" onclick="searchQZSettingPage('${page.pages}','${page.size}')" value="末页">
+	&nbsp;&nbsp;&nbsp;&nbsp;
+	总记录数:${page.total}&nbsp;&nbsp;&nbsp;&nbsp;
+	每页显示条数:
+	<select id="chooseRecords" onchange="chooseRecords(${page.current},this.value)">
+		<option>10</option>
+		<option>25</option>
+		<option>50</option>
+		<option>75</option>
+		<option>100</option>
+	</select>
+	<input type="hidden" id="currentPageHidden" value="${page.current}"/>
+	<input type="hidden" id="displaysRecordsHidden" value="${page.size}"/>
+	<input type="hidden" id="pagesHidden" value="${page.pages}"/>
+	&nbsp;&nbsp;&nbsp;&nbsp;
+</div>
 <br>
-
-<br><br><br><br><br><br><br><br>
 <script language="javascript">
     var divHeight = 250; // 修改UI的div高度
     var inputHeight = 25; // 修改UI的input高度
@@ -362,6 +217,43 @@
     var m = dateStr.getMonth() + 1 < 10 ? "0" + (dateStr.getMonth() + 1) : (dateStr.getMonth() + 1);
     var d = dateStr.getDate() < 10 ? "0" + dateStr.getDate() : dateStr.getDate();
     var today = dateStr.getFullYear() + "-" + m + "-" + d;
+
+    $(function () {
+        var showQZSettingBottomDiv = $('#showQZSettingBottomDiv');
+        var displaysRecords = showQZSettingBottomDiv.find('#displaysRecordsHidden').val();
+        showQZSettingBottomDiv.find('#chooseRecords').val(displaysRecords);
+        var pages = showQZSettingBottomDiv.find('#pagesHidden').val();
+        showQZSettingBottomDiv.find('#pagesHidden').val(pages);
+        var currentPage = showQZSettingBottomDiv.find('#currentPageHidden').val();
+        showQZSettingBottomDiv.find('#currentPageHidden').val(currentPage);
+        if (parseInt(currentPage) <= 1) {
+            currentPage = 1;
+            showQZSettingBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
+            showQZSettingBottomDiv.find("#upButton").attr("disabled", "disabled");
+        } else if (parseInt(currentPage) >= parseInt(pages)) {
+            currentPage = pages;
+            showQZSettingBottomDiv.find("#nextButton").attr("disabled", "disabled");
+            showQZSettingBottomDiv.find("#lastButton").attr("disabled", "disabled");
+        } else {
+            showQZSettingBottomDiv.find("#firstButton").removeAttr("disabled");
+            showQZSettingBottomDiv.find("#upButton").removeAttr("disabled");
+            showQZSettingBottomDiv.find("#nextButton").removeAttr("disabled");
+            showQZSettingBottomDiv.find("#lastButton").removeAttr("disabled");
+        }
+    });
+
+    function searchQZSettingPage(currentPage, displaysRecords) {
+        var chargeForm = $$$("#chargeForm");
+        chargeForm.append('<input value="' + currentPage + '" id="currentPage" type="hidden" name="currentPageHidden"/>');
+        chargeForm.append('<input value="' + displaysRecords + '" id="currentPage" type="hidden" name="displayRerondsHidden"/>');
+        chargeForm.submit();
+    }
+
+    function chooseRecords(currentPage, displayRecords) {
+        $$$("#currentPageHidden").val(currentPage);
+        $$$("#displaysRecordsHidden").val(displayRecords);
+        searchQZSettingPage(currentPage, displayRecords);
+    }
 
     function selectAll(self){
         var a = document.getElementsByName("uuid");
@@ -490,8 +382,14 @@
     }
 
     function chargeRemind(days) {
-        $$$("#chargeDays").val(days);
-        $$$("#chargeForm").submit();
+        if(days != 1) {
+            $$$("#chargeForm").find("#contactPerson").val();
+            $$$("#chargeForm").find("#domain").val();
+            $$$("#chargeForm").find("#group").val();
+            $$$("#chargeForm").find("#updateStatus").val();
+        }
+        $$$("#chargeForm").find("#chargeDays").val(days);
+        chargeForm.submit();
 	}
 
     function cancelChargeDialog() {
@@ -538,7 +436,7 @@
         settingDialogDiv.find("#qzSettingIgnoreNoIndex").val("1");
         settingDialogDiv.find("#qzSettingIgnoreNoOrder").val("1");
         settingDialogDiv.find("#qzSettingInterval").val("2");
-        settingDialogDiv.find("#qzSettingEntryType").val("<%=type%>");
+        settingDialogDiv.find("#qzSettingEntryType").val("${qzSettingVO.type}");
         settingDialogDiv[0].style.left = getTop(self); //鼠标目前在X轴上的位置，加10是为了向右边移动10个px方便看到内容
         clearInfo("Both");
 		var screenHeight = window.screen.height;
@@ -1368,12 +1266,9 @@
 	</table>
 </div>
 <datalist id="customer_list">
-	<%
-		for (int i = 0; i < customerVOs.size(); i++) {
-			CustomerVO value = (CustomerVO) customerVOs.get(i);
-			out.println("<option>" + value.getContactPerson() + "_____" + value.getUuid() + "</option>");
-		}
-	%>
+	<c:forEach items="${customerList}" var="costomer">
+		<option>${costomer.contactPerson} ${'_____'} ${costomer.uuid}</option>
+	</c:forEach>
 </datalist>
 <%--收费Dialog--%>
 <div id="chargeDialog">

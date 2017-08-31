@@ -13,6 +13,7 @@ import com.keymanager.monitoring.entity.QZOperationType;
 import com.keymanager.monitoring.entity.QZSetting;
 import com.keymanager.monitoring.enums.QZCaptureTitleLogStatusEnum;
 import com.keymanager.monitoring.enums.QZSettingStatusEnum;
+import com.keymanager.monitoring.vo.QZSettingVO;
 import com.keymanager.util.Constants;
 import com.keymanager.util.Utils;
 import com.keymanager.value.CustomerKeywordVO;
@@ -179,6 +180,11 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			qzChargeRule.setQzOperationTypeUuid(oldOperationType.getUuid());
 			qzChargeRuleService.insert(qzChargeRule);
 		}
+	}
+
+	public Page<QZSetting> searchQZSettingPage(Page<QZSetting> page, QZSettingVO qzSettingVO){
+		page.setRecords(qzSettingDao.searchCustomerPage(page, qzSettingVO));
+		return page;
 	}
 
 	//查询QZSetting
