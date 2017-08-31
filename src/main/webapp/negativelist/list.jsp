@@ -216,9 +216,16 @@
             }
             $("#negativeListDialog").dialog({
                 resizable: false,
-                width: 330,
-                height: 350,
+                width: 530,
+                height: 365,
                 modal: true,
+                position: { using:function(pos){
+                    console.log(pos)
+                    var topOffset = $(this).css(pos).offset().top;
+                    if (topOffset = 0||topOffset>0) {
+                        $(this).css('top', 150);
+                    }
+                }},
                 buttons: {
                     "保存": function () {
                         saveNegativeList(uuid);
@@ -236,7 +243,7 @@
 	</script>
 </head>
 <body>
-	<table width=100% style="font-size:12px;" cellpadding=3>
+	<table width="100%" height="95%" style="font-size:12px;" cellpadding=3>
 	  <tr>
 		<td colspan="8" align="left">
 			<%@include file="/menu.jsp" %>
@@ -289,7 +296,7 @@
 	  </c:forEach>
 	</table>
 	<hr>
-	<div id="showNegativeListBottomDiv" align="right">
+	<div height="5%" id="showNegativeListBottomDiv" align="right">
 	  <input id="fisrtButton" type="button" onclick="searchNegativeLists(1,'${page.size}')" value="首页"/>
 	  &nbsp;&nbsp;&nbsp;&nbsp;
 	  <input id="upButton" type="button" onclick="searchNegativeLists('${page.current-1}','${page.size}')" value="上一页"/>
@@ -315,27 +322,27 @@
 	<br>
 
 	<div id="negativeListDialog" style="display: none;">
-		<form id="negativeListForm" method="post" action="list.jsp">
+		<form id="negativeListForm" style="margin-bottom: 0px;" method="post" action="list.jsp">
 			<table style="font-size:14px;" cellpadding="5">
 				<tr>
 					<td align="right">关键词<label style="color: red">*</label>：</td>
-					<td><input type="text" id="keyword" style="width:200px;"></td>
+					<td><input type="text" id="keyword" style="width:400px;"></td>
 				</tr>
 				<tr>
 					<td align="right">标题<label style="color: red">*</label>：</td>
-					<td><input type="text" id="title" style="width:200px;"></td>
+					<td><input type="text" id="title" style="width:400px;"></td>
 				</tr>
 				<tr>
 					<td align="right">URL<label style="color: red">*</label>：</td>
-					<td><input type="text" id="url" style="width:200px;"></td>
+					<td><input type="text" id="url" style="width:400px;"></td>
 				</tr>
 				<tr>
 					<td align="right">排名：</td>
-					<td><input type="text" id="position" style="width:200px;"></td>
+					<td><input type="text" id="position" style="width:400px;"></td>
 				</tr>
 				<tr>
 					<td align="right">描述<label style="color: red">*</label>：</td>
-					<td><textarea id="desc" value="" placeholder="" style="width:200px;height:100px;resize: none"></textarea></td>
+					<td><textarea id="desc" value="" placeholder="" style="width:400px;height:100px;"></textarea></td>
 				</tr>
 			</table>
 		</form>
