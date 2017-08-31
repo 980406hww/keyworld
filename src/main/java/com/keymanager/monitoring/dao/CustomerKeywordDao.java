@@ -5,6 +5,7 @@ import com.keymanager.monitoring.entity.CustomerKeyword;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void clearTitleByUuids(String[] uuids);
@@ -12,6 +13,9 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void clearTitleByCustomerUuidAndTerminalType(@Param("terminalType") String terminalType, @Param("customerUuid") String customerUuid);
 
     int getCustomerKeywordCount(@Param("customerUuid") long customerUuid);
+
+    List<Map> getCustomerKeywordsCount(@Param("customerUuids") List<Long> customerUuids, @Param("terminalType") String terminalType, @Param
+            ("entryType") String entryType);
 
     int getSimilarCustomerKeywordCount(@Param("terminalType") String terminalType, @Param("customerUuid") long customerUuid, @Param("keyword") String
             keyword, @Param("originalUrl") String originalUrl);

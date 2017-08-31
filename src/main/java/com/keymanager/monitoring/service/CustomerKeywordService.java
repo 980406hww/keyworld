@@ -16,6 +16,7 @@ import com.keymanager.util.Utils;
 import com.keymanager.util.common.StringUtil;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, CustomerKeyword> {
@@ -280,5 +282,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             return fixedPrice.doubleValue();
         }
         return Math.round((currentIndexCount * pricePercentage.doubleValue()) / 1000 - 0.5) * 10;
+    }
+
+    public List<Map> getCustomerKeywordsCount(List<Long> customerUuids, String terminalType, String entryType){
+        return customerKeywordDao.getCustomerKeywordsCount(customerUuids, terminalType, entryType);
     }
 }

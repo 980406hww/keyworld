@@ -79,6 +79,14 @@
         SELECT COUNT(1) FROM t_customer_keyword ck WHERE ck.fCustomerUuid = #{customerUuid}
     </select>
 
+    <select id="getCustomerKeywordsCount" resultType="java.util.Map">
+        SELECT ck.fCustomerUuid, COUNT(1) as subCount FROM t_customer_keyword ck WHERE ck.fTerminalType = #{terminalType}
+        and ck.fType = #{entryType} and ck.fCustomerUuid IN
+        <foreach item="item" index="index" collection="customerUuids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+         GROUP BY ck.fCustomerUuid
+    </select>
 
     <select id="getSimilarCustomerKeywordCount" resultType="int">
         select Count(1) from t_customer_keyword where fKeyword = #{keyword} and fTerminalType = #{terminalType} and fCustomerUuid = #{customerUuid}

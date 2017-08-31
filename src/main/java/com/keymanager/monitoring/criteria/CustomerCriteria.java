@@ -1,11 +1,12 @@
 package com.keymanager.monitoring.criteria;
 
 public class CustomerCriteria extends BaseCriteria{
+    private String terminalType;
+    private String entryType;
     private String contactPerson;
     private String qq;
     private String telphone;
     private String userID;
-    private String entryType;
     private Integer status;
 
     public String getContactPerson() {
@@ -54,5 +55,13 @@ public class CustomerCriteria extends BaseCriteria{
 
     public void setEntryType(String entryType) {
         this.entryType = entryType;
+    }
+
+    public String getTerminalType() {
+        return terminalType;
+    }
+
+    public void setTerminalType(String terminalType) {
+        this.terminalType = terminalType;
     }
 }

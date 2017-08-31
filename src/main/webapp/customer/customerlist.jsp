@@ -1008,6 +1008,7 @@
 
             <td align="center" width=80>用户名称</td>
             <td align="center" width=80>联系人</td>
+            <td align="center" width=60>词数</td>
             <td align="center" width=60>QQ</td>
             <td align="center" width=100>电话</td>
             <td align="center" width=60>已付金额</td>
@@ -1027,6 +1028,7 @@
                 <td>
                     <a href="/customerkeyword/list.jsp?status=1&customerUuid=${customer.uuid}">${customer.contactPerson}</a>
                 </td>
+                <td>${customer.keywordCount}</td>
                 <td>${customer.qq}</td>
                 <td>${customer.telphone} </td>
                 <td align="right">${customer.paidFee} </td>
