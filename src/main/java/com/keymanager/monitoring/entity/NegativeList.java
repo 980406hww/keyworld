@@ -3,7 +3,7 @@ package com.keymanager.monitoring.entity;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 
-@TableName(value = "t_fumian_list")
+@TableName(value = "t_negative_list")
 public class NegativeList extends BaseEntity {
 	@TableField(value = "fTerminalType")
 	private String terminalType;

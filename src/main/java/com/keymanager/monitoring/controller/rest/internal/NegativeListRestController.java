@@ -3,9 +3,7 @@ package com.keymanager.monitoring.controller.rest.internal;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.criteria.NegativeListCriteria;
 import com.keymanager.monitoring.entity.NegativeList;
-import com.keymanager.monitoring.entity.User;
 import com.keymanager.monitoring.service.NegativeListService;
-import com.keymanager.monitoring.service.UserService;
 import com.keymanager.util.PortTerminalTypeMapping;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,14 +12,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by shunshikj08 on 2017/8/29.
- */
 @RestController
 @RequestMapping(value = "/internal/negativelist")
 public class NegativeListRestController {
@@ -49,7 +44,8 @@ public class NegativeListRestController {
 
     private ModelAndView constructNegativeListModelAndView(HttpServletRequest request, NegativeListCriteria negativeListCriteria, String currentPage, String displaysRecords) {
         ModelAndView modelAndView = new ModelAndView("/negativelist/list");
-        Page<NegativeList> page = negativeListService.searchNegativeLists(new Page<NegativeList>(Integer.parseInt(currentPage), Integer.parseInt(displaysRecords)), negativeListCriteria);
+        Page<NegativeList> page = negativeListService.searchNegativeLists(new Page<NegativeList>(Integer.parseInt(currentPage), Integer.parseInt
+                (displaysRecords)), negativeListCriteria);
         String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
         modelAndView.addObject("terminalType", terminalType);
         modelAndView.addObject("negativeListCriteria", negativeListCriteria);

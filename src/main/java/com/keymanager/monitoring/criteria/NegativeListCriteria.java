@@ -1,25 +1,22 @@
 package com.keymanager.monitoring.criteria;
 
+import com.keymanager.monitoring.entity.NegativeList;
+
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by shunshikj08 on 2017/8/29.
  */
 public class NegativeListCriteria extends BaseCriteria {
-
     private String terminalType;
-
     private String keyword;
-
     private String title;
-
     private String url;
-
     private String desc;
-
     private Integer position;
-
     private Date complainTime;
+    private List<NegativeList> negativeLists;
 
     public String getTerminalType() {
         return terminalType;
@@ -75,5 +72,13 @@ public class NegativeListCriteria extends BaseCriteria {
 
     public void setComplainTime(Date complainTime) {
         this.complainTime = complainTime;
+    }
+
+    public List<NegativeList> getNegativeLists() {
+        return negativeLists;
+    }
+
+    public void setNegativeLists(List<NegativeList> negativeLists) {
+        this.negativeLists = negativeLists;
     }
 }
