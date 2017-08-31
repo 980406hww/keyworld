@@ -873,7 +873,7 @@
 //            alert(JSON.stringify(customerKeywords));
 
             $.ajax({
-                url: '/internal/customerkeyword/saveCustomerKeyword',
+                url: '/internal/customerkeyword/saveCustomerKeywords',
                 data: JSON.stringify(customerKeywords),
                 headers: {
                     'Accept': 'application/json',

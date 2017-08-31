@@ -119,6 +119,7 @@
         UPDATE t_customer_keyword SET fCaptureIndexQueryTime = NOW() WHERE fKeyword = #{keyword} and fCurrentIndexCount IS NULL and fOptimizeGroupName IN ('pc_pm_xiaowu', 'm_pm_xiaowu')
     </select>
 
+    <!--重构部分-->
     <select id="searchCustomerKeywords" resultType="com.keymanager.monitoring.entity.CustomerKeyword">
         SELECT
           <include refid="colID"/>
@@ -132,4 +133,17 @@
         <if test="customerKeywordCrilteria.optimizeGroupName != null and customerKeywordCrilteria.optimizeGroupName != ''">AND ck.fOptimizeGroupName = #{customerKeywordCrilteria.optimizeGroupName}</if>
         <if test="customerKeywordCrilteria.creationFromTime != null and customerKeywordCrilteria.creationFromTime != ''">AND ck.fUserID = #{customerKeywordCrilteria.createTime}</if>
     </select>
+
+    <update id="updateCustomerKeywordGroupName">
+        UPDATE t_customer_keyword SET fOptimizeGroupName = #{customerKeyword.optimizeGroupName} WHERE fCustomerUuid = #{customerKeyword.customerUuid} AND fTerminalType = #{customerKeyword.terminalType}
+    </update>
+
+    <update id="changeOptimizationGroup">
+        UPDATE t_customer_keyword SET fOptimizeGroupName = #{customerKeyword.optimizeGroupName} WHERE fUuid = #{customerKeyword.Uuid} AND fTerminalType = #{customerKeyword.terminalType}
+    </update>
+
+    <delete id="deleteCustomerKeyword">
+        delete from t_customer_keyword where fUuid = #{customerKeyword.uuid} and fType = #{customerKeyword.type}
+    </delete>
+
 </mapper>

@@ -160,6 +160,24 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return customerKeywordDao.getCustomerKeywordCount(customerUuid);
     }
 
+    public void deleteCustomerKeyword(long customerKeywordUuid,String entry) {
+        CustomerKeyword customerKeyword = new CustomerKeyword();
+        customerKeyword.setUuid(customerKeywordUuid);
+        customerKeyword.setType(entry);
+//        Wrapper wrapper = new EntityWrapper(customerKeyword);
+//        this.delete(wrapper);
+        customerKeywordDao.deleteCustomerKeyword(customerKeyword);
+    }
+
+    public void deleteCustomerKeywords(List<String> customerKeywordUuids,String entry) {
+        for(String customerKeywordUuid : customerKeywordUuids){
+            CustomerKeyword customerKeyword = new CustomerKeyword();
+            customerKeyword.setUuid(Long.parseLong(customerKeywordUuid));
+            customerKeyword.setType(entry);
+            customerKeywordDao.deleteCustomerKeyword(customerKeyword);
+        }
+    }
+
     public void deleteCustomerKeywords(long customerUuid) {
         CustomerKeyword customerKeyword = new CustomerKeyword();
         customerKeyword.setCustomerUuid(customerUuid);
@@ -299,5 +317,16 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             return fixedPrice.doubleValue();
         }
         return Math.round((currentIndexCount * pricePercentage.doubleValue()) / 1000 - 0.5) * 10;
+    }
+
+    //重构部分
+    //修改该用户关键字组名
+    public void updateCustomerKeywordGroupName(CustomerKeyword customerKeyword) {
+        customerKeywordDao.updateCustomerKeywordGroupName(customerKeyword);
+    }
+
+    //修改选中关键字
+    public void changeOptimizationGroup(CustomerKeyword customerKeyword) {
+        customerKeywordDao.changeOptimizationGroup(customerKeyword);
     }
 }
