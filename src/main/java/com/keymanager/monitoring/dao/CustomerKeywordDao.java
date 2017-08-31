@@ -1,6 +1,8 @@
 package com.keymanager.monitoring.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.baomidou.mybatisplus.plugins.Page;
+import com.keymanager.monitoring.criteria.CustomerKeywordCrilteria;
 import com.keymanager.monitoring.entity.CustomerKeyword;
 import org.apache.ibatis.annotations.Param;
 
@@ -19,7 +21,7 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     int getMaxSequence(@Param("terminalType") String terminalType, @Param("entryType") String entryType, @Param("customerUuid") long customerUuid);
 
     List<CustomerKeyword> searchSameCustomerKeywords(@Param("terminalType") String terminalType, @Param("customerUuid") long customerUuid,
-            @Param("keyword") String keyword);
+                                                     @Param("keyword") String keyword);
 
     List<CustomerKeyword> searchCustomerKeywordsForUpdateIndex(@Param("keyword") String keyword);
 
@@ -27,5 +29,6 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void updateCaptureIndexQueryTime(@Param("keyword") String keyword);
 
-    void deleteByCustomerUuid(@Param("customerUuid") long customerUuid);
+    List<CustomerKeyword> searchCustomerKeywords(Page<CustomerKeyword> page, @Param("customerKeywordCrilteria") CustomerKeywordCrilteria customerKeywordCrilteria);
+
 }

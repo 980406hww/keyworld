@@ -2,12 +2,14 @@ package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.toolkit.StringUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.keymanager.enums.CollectMethod;
 import com.keymanager.manager.CustomerKeywordManager;
 import com.keymanager.monitoring.criteria.BaiduIndexCriteria;
+import com.keymanager.monitoring.criteria.CustomerKeywordCrilteria;
 import com.keymanager.monitoring.dao.CustomerKeywordDao;
 import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.enums.*;
@@ -43,6 +45,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     @Autowired
     private CustomerKeywordDao customerKeywordDao;
+
+    public Page<CustomerKeyword>  searchCustomerKeywords(Page<CustomerKeyword> page, CustomerKeywordCrilteria customerKeywordCrilteria){
+        page.setRecords(customerKeywordDao.searchCustomerKeywords(page, customerKeywordCrilteria));
+        return page;
+    }
 
     public String searchCustomerKeywordForCaptureTitle(String terminalType) throws Exception {
         QZCaptureTitleLog qzCaptureTitleLog = qzCaptureTitleLogService.getAvailableQZSetting(QZCaptureTitleLogStatusEnum.Processing.getValue(), terminalType);
@@ -130,6 +137,15 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeywordDao.insert(customerKeyword);
     }
 
+//	public List<CustomerKeyword> searchCustomerKeywords(String terminalType, long customerUuid, String keyword, String originalUrl){
+//		CustomerKeyword customerKeyword = new CustomerKeyword();
+//		customerKeyword.setCustomerUuid(customerUuid);
+//		customerKeyword.setType(terminalType);
+//		customerKeyword.setKeyword(keyword);
+//		customerKeyword.setOriginalUrl(originalUrl);
+//		Wrapper wrapper = new EntityWrapper(customerKeyword);
+//	}
+
     public boolean haveDuplicatedCustomerKeyword(String terminalType, long customerUuid, String keyword, String originalUrl) {
         int customerKeywordCount = 0;
         try {
@@ -145,7 +161,10 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void deleteCustomerKeywords(long customerUuid) {
-        customerKeywordDao.deleteByCustomerUuid(customerUuid);
+        CustomerKeyword customerKeyword = new CustomerKeyword();
+        customerKeyword.setCustomerUuid(customerUuid);
+        Wrapper wrapper = new EntityWrapper(customerKeyword);
+        this.delete(wrapper);
     }
 
     private void supplementInfoFromSimpleUI(CustomerKeyword customerKeyword, String terminalType, String entryType, int maxSequence) {

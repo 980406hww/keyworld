@@ -119,7 +119,17 @@
         UPDATE t_customer_keyword SET fCaptureIndexQueryTime = NOW() WHERE fKeyword = #{keyword} and fCurrentIndexCount IS NULL and fOptimizeGroupName IN ('pc_pm_xiaowu', 'm_pm_xiaowu')
     </select>
 
-    <select id="deleteByCustomerUuid">
-        DELETE FROM t_customer_keyword WHERE fCustomerUuid = #{customerUuid}
+    <select id="searchCustomerKeywords" resultType="com.keymanager.monitoring.entity.CustomerKeyword">
+        SELECT
+          <include refid="colID"/>
+        FROM  t_customer_keyword ck
+        WHERE 1 = 1
+        <if test="customerKeywordCrilteria.customerUuid != null and customerKeywordCrilteria.customerUuid != ''">AND ck.fCustomerUuid = #{customerKeywordCrilteria.customerUuid}</if>
+        <if test="customerKeywordCrilteria.keyword != null and customerKeywordCrilteria.keyword != ''">AND ck.fKeyword like '${customerKeywordCrilteria.keyword}%'</if>
+        <if test="customerKeywordCrilteria.url != null and customerKeywordCrilteria.url != ''">AND ck.fUrl like '%${customerKeywordCrilteria.url}%'</if>
+        <if test="customerKeywordCrilteria.status != null and customerKeywordCrilteria.status != ''">AND ck.fStatus = #{customerKeywordCrilteria.status}</if>
+        <if test="customerKeywordCrilteria.invalidRefreshCount != null and customerKeywordCrilteria.invalidRefreshCount != ''">AND ck.fInvalidRefreshCount = #{customerKeywordCrilteria.invalidRefreshCount}</if>
+        <if test="customerKeywordCrilteria.optimizeGroupName != null and customerKeywordCrilteria.optimizeGroupName != ''">AND ck.fOptimizeGroupName = #{customerKeywordCrilteria.optimizeGroupName}</if>
+        <if test="customerKeywordCrilteria.creationFromTime != null and customerKeywordCrilteria.creationFromTime != ''">AND ck.fUserID = #{customerKeywordCrilteria.createTime}</if>
     </select>
 </mapper>
