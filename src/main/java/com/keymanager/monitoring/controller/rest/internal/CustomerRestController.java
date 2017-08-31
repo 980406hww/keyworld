@@ -35,7 +35,8 @@ public class CustomerRestController {
     private UserService userService;
 
     @RequestMapping(value = "/searchCustomers", method = RequestMethod.GET)
-    public ModelAndView searchCustomers(@RequestParam(defaultValue = "1") int currentPage, @RequestParam(defaultValue = "30") int displaysRecords, HttpServletRequest request) {
+    public ModelAndView searchCustomers(@RequestParam(defaultValue = "1") int currentPage, @RequestParam(defaultValue = "50") int displaysRecords,
+                                        HttpServletRequest request) {
         return constructCustomerModelAndView(request, new CustomerCriteria(), currentPage + "", displaysRecords + "");
     }
 

@@ -184,7 +184,6 @@
                 },
                 error: function () {
                     showInfo("更新失败", self);
-                    settingDialogDiv.hide();
                 }
             });
         }
@@ -1274,9 +1273,10 @@
     总记录数:${page.total}&nbsp;&nbsp;&nbsp;&nbsp;
     每页显示条数:<select id="chooseRecords" onchange="changePaging(${page.current},this.value)">
     <option>10</option>
-    <option>15</option>
-    <option>30</option>
-    <option>45</option>
+    <option>25</option>
+    <option>50</option>
+    <option>75</option>
+    <option>100</option>
 </select>
 </div>
 

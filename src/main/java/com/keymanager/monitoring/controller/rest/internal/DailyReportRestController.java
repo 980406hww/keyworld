@@ -38,7 +38,7 @@ public class DailyReportRestController extends SpringMVCBaseController {
 	@Autowired
 	private CustomerService customerService;
 
-	@RequestMapping(value = "/triggerReportGeneration/", method = RequestMethod.POST)
+	@RequestMapping(value = "/triggerReportGeneration", method = RequestMethod.POST)
 	public ResponseEntity<?> triggerReportGeneration(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) throws Exception{
 		String customerUuids = (String) requestMap.get("customerUuids");
 		String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
