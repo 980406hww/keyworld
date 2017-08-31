@@ -383,10 +383,10 @@
 
     function chargeRemind(days) {
         if(days != 1) {
-            $$$("#chargeForm").find("#contactPerson").val();
-            $$$("#chargeForm").find("#domain").val();
-            $$$("#chargeForm").find("#group").val();
-            $$$("#chargeForm").find("#updateStatus").val();
+            $$$("#chargeForm").find("#contactPerson").val("");
+            $$$("#chargeForm").find("#domain").val("");
+            $$$("#chargeForm").find("#group").val("");
+            $$$("#chargeForm").find("#updateStatus").val("");
         }
         $$$("#chargeForm").find("#chargeDays").val(days);
         chargeForm.submit();
@@ -436,7 +436,6 @@
         settingDialogDiv.find("#qzSettingIgnoreNoIndex").val("1");
         settingDialogDiv.find("#qzSettingIgnoreNoOrder").val("1");
         settingDialogDiv.find("#qzSettingInterval").val("2");
-        settingDialogDiv.find("#qzSettingEntryType").val("${qzSettingVO.type}");
         settingDialogDiv[0].style.left = getTop(self); //鼠标目前在X轴上的位置，加10是为了向右边移动10个px方便看到内容
         clearInfo("Both");
 		var screenHeight = window.screen.height;
