@@ -134,7 +134,7 @@
 						<input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
 						<input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
 						<input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
-						<td align="right">客户:</td> <td><input type="text" name="contactPerson" id="contactPerson" value='${qzSettingSearchCriteria.contactPerson}' style="width:200px;"></td>
+						<td align="right">客户:</td> <td><input type="text" list="customer_list" name="contactPerson" id="contactPerson" value='${qzSettingSearchCriteria.contactPerson}' style="width:200px;"></td>
 						<td align="right">域名:</td> <td><input type="text" name="domain" id="domain" value="${qzSettingSearchCriteria.domain}" style="width:200px;"></td>
 						<td align="right">组名:</td> <td><input type="text" name="group" id="group" value="${qzSettingSearchCriteria.group}" style="width:200px;"></td>
 						<td align="right">状态:</td>
@@ -148,7 +148,7 @@
 								</c:forEach>
 							</select>
 						</td>
-						<td align="right" width="100"><input type="submit" name="btnQuery" id="btnQuery" onclick="resetSearchCondition(${qzSettingSearchCriteria.dateRangeType})" value=" 查询 " ></td>
+						<td align="right" width="100"><input type="submit" name="btnQuery" id="btnQuery" onclick="resetSearchCondition('1')" value=" 查询 " ></td>
 					</tr>
 				</table>
 			</form>

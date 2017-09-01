@@ -24,13 +24,13 @@ public class Utils {
 
 		calendar.setTime(compareDate);
 
-		int pastDateDays = calendar.get(Calendar.DAY_OF_YEAR);
+		int compareDateDay = calendar.get(Calendar.DAY_OF_YEAR);
 
 		calendar.setTime(date);
 
-		int nowDateDays = calendar.get(Calendar.DAY_OF_YEAR);
+		int dateDays = calendar.get(Calendar.DAY_OF_YEAR);
 
-		return nowDateDays - pastDateDays;
+		return dateDays - compareDateDay;
 
 	}
 

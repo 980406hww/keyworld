@@ -15,9 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = "/internal/qzsetting")
@@ -99,6 +97,10 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		String pageSize = request.getParameter("pageSize");
 		String dateRangeType = request.getParameter("dateRangeType");
 		qzSettingSearchCriteria.setDateRangeType(dateRangeType);
+		String contactPerson = qzSettingSearchCriteria.getContactPerson();
+		if(contactPerson.contains("_")) {
+			qzSettingSearchCriteria.setContactPerson(contactPerson.substring(0,contactPerson.indexOf("_")));
+		}
 		if (null == currentPageNumber && null == pageSize) {
 			currentPageNumber = "1";
 			pageSize = "50";

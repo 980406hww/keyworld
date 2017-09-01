@@ -23,25 +23,4 @@ public class QZOperationTypeRestController extends SpringMVCBaseController {
     @Autowired
     private QZOperationTypeService qzOperationTypeService;
 
-    @RequestMapping("chargeReminder/expiredCharge")
-    public ResponseEntity<?> chargeReminder(int day){
-        return new ResponseEntity<Object>(qzOperationTypeService.expiredCharge(), HttpStatus.OK);
-    }
-
-    @RequestMapping("chargeReminder/nowCharge")
-    public ResponseEntity<?> chargeReminder(String day){
-        return new ResponseEntity<Object>(qzOperationTypeService.nowCharge(), HttpStatus.OK);
-    }
-
-    @RequestMapping("chargeReminder/threeCharge")
-    public ResponseEntity<?> chargeReminder(Long day){
-        return new ResponseEntity<Object>(qzOperationTypeService.threeCharge(), HttpStatus.OK);
-    }
-
-    @RequestMapping("chargeReminder/sevenCharge")
-    public ResponseEntity<?> chargeReminder(BigDecimal day){
-        return new ResponseEntity<Object>(qzOperationTypeService.sevenCharge(), HttpStatus.OK);
-    }
-
-
 }
