@@ -27,25 +27,30 @@ public class NegativeListRestController {
     private NegativeListService negativeListService;
 
     @RequestMapping(value = "/searchNegativeLists", method = RequestMethod.GET)
-    public ModelAndView searchNegativeLists(@RequestParam(defaultValue = "1") int currentPage, @RequestParam(defaultValue = "50") int displaysRecords, HttpServletRequest request) {
-        return constructNegativeListModelAndView(request, new NegativeListCriteria(), currentPage + "", displaysRecords + "");
+    public ModelAndView searchNegativeLists(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request) {
+        return constructNegativeListModelAndView(request, new NegativeListCriteria(), currentPageNumber, pageSize);
     }
 
     @RequestMapping(value = "/searchNegativeLists", method = RequestMethod.POST)
     public ModelAndView searchNegativeListsPost(HttpServletRequest request, NegativeListCriteria negativeListCriteria) {
-        String currentPage = request.getParameter("currentPageHidden");
-        String displaysRecords = request.getParameter("displayRerondsHidden");
-        if (null == currentPage && null == currentPage) {
-            currentPage = "1";
-            displaysRecords = "50";
+        try {
+            String currentPageNumber = request.getParameter("currentPageNumber");
+            String pageSize = request.getParameter("pageSize");
+            if (null == currentPageNumber && null == pageSize) {
+                currentPageNumber = "1";
+                pageSize = "50";
+            }
+            return constructNegativeListModelAndView(request, negativeListCriteria, Integer.parseInt(currentPageNumber), Integer.parseInt(pageSize));
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ModelAndView("/negativelist/list");
         }
-        return constructNegativeListModelAndView(request, negativeListCriteria, currentPage, displaysRecords);
     }
 
-    private ModelAndView constructNegativeListModelAndView(HttpServletRequest request, NegativeListCriteria negativeListCriteria, String currentPage, String displaysRecords) {
+    private ModelAndView constructNegativeListModelAndView(HttpServletRequest request, NegativeListCriteria negativeListCriteria, int currentPageNumber, int pageSize) {
         ModelAndView modelAndView = new ModelAndView("/negativelist/list");
-        Page<NegativeList> page = negativeListService.searchNegativeLists(new Page<NegativeList>(Integer.parseInt(currentPage), Integer.parseInt
-                (displaysRecords)), negativeListCriteria);
+        Page<NegativeList> page = negativeListService.searchNegativeLists(new Page<NegativeList>(currentPageNumber,
+                pageSize), negativeListCriteria);
         String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
         modelAndView.addObject("terminalType", terminalType);
         modelAndView.addObject("negativeListCriteria", negativeListCriteria);
@@ -55,28 +60,45 @@ public class NegativeListRestController {
 
     @RequestMapping(value = "/addNegativeList", method = RequestMethod.POST)
     public ResponseEntity<?> addNegativeList(@RequestBody NegativeList negativeList) {
-        if(negativeListService.addNegativeList(negativeList)){
+        try {
+            negativeListService.addNegativeList(negativeList);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<Object>(false, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/getNegativeList/{uuid}" , method = RequestMethod.GET)
-    public ResponseEntity<?> getCustomer(@PathVariable("uuid")Long uuid) {
-        return new ResponseEntity<Object>(negativeListService.getNegativeList(uuid), HttpStatus.OK);
+    @RequestMapping(value = "/getNegativeList/{uuid}", method = RequestMethod.GET)
+    public ResponseEntity<?> getNegativeList(@PathVariable("uuid") Long uuid) {
+        try {
+            return new ResponseEntity<Object>(negativeListService.getNegativeList(uuid), HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+        }
     }
 
-    @RequestMapping(value = "/deleteNegativeList/{uuid}", method = RequestMethod.GET)
-    public ResponseEntity<?> delNegativeList(@PathVariable("uuid")Long uuid) {
-        return new ResponseEntity<Object>(negativeListService.deleteNegativeList(uuid), HttpStatus.OK);
+    @RequestMapping(value = "/deleteNegativeList/{uuid}", method = RequestMethod.POST)
+    public ResponseEntity<?> deleteNegativeList(@PathVariable("uuid") Long uuid) {
+        try {
+            negativeListService.deleteNegativeList(uuid);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @RequestMapping(value = "/deleteNegativeLists", method = RequestMethod.POST)
     public ResponseEntity<?> deleteNegativeLists(@RequestBody Map<String, Object> requestMap) {
-        List<String> uuids = (List<String>) requestMap.get("uuids");
-        return new ResponseEntity<Object>(negativeListService.deleteAll(uuids) , HttpStatus.OK);
+        try {
+            List<String> uuids = (List<String>) requestMap.get("uuids");
+            negativeListService.deleteAll(uuids);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+        }
     }
-    
-
-    
 }

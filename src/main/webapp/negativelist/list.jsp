@@ -10,6 +10,17 @@
 			word-wrap: break-word;
 		}
 
+		#div2 {
+			display: none;
+			background-color: #ACF106;
+			color: #E80404;
+			font-size: 20px;
+			line-height: 18px;
+			border: 2px solid #104454;
+			width: 100px;
+			height: 22px;
+		}
+
 		#showNegativeListDiv {
 			overflow: scroll;
 			width: 100%;
@@ -17,7 +28,7 @@
 			margin: auto;
 		}
 
-		#showNegativeListBottomDiv {
+		#negativeListBottomDiv {
 			float: right;
 			width: 580px;
 		}
@@ -32,47 +43,44 @@
 	<script language="javascript" type="text/javascript" src="/js/slide.js"></script>
 	<script language="javascript">
         $(function () {
-            var showNegativeListBottomDiv = $('#showNegativeListBottomDiv');
-            var displaysRecords = showNegativeListBottomDiv.find('#displaysRecordsHidden').val();
-            showNegativeListBottomDiv.find('#chooseRecords').val(displaysRecords);
-            var pages = showNegativeListBottomDiv.find('#pagesHidden').val();
-            showNegativeListBottomDiv.find('#pagesHidden').val(pages);
-            var currentPage = showNegativeListBottomDiv.find('#currentPageHidden').val();
-            showNegativeListBottomDiv.find('#currentPageHidden').val(currentPage);
-            if(parseInt(currentPage) > 1 && parseInt(currentPage) < parseInt(pages)) {
-                showNegativeListBottomDiv.find("#firstButton").removeAttr("disabled");
-                showNegativeListBottomDiv.find("#upButton").removeAttr("disabled");
-                showNegativeListBottomDiv.find("#nextButton").removeAttr("disabled");
-                showNegativeListBottomDiv.find("#lastButton").removeAttr("disabled");
-            } else if (parseInt(currentPage) == 1 && parseInt(pages) == 1) {
-                showNegativeListBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
-                showNegativeListBottomDiv.find("#upButton").attr("disabled", "disabled");
-                showNegativeListBottomDiv.find("#nextButton").attr("disabled", "disabled");
-                showNegativeListBottomDiv.find("#lastButton").attr("disabled", "disabled");
-            } else {
-                if (parseInt(currentPage) <= 1) {
-                    currentPage = 1;
-                    showNegativeListBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
-                    showNegativeListBottomDiv.find("#upButton").attr("disabled", "disabled");
-                } else if (parseInt(currentPage) >= parseInt(pages)) {
-                    currentPage = pages;
-                    showNegativeListBottomDiv.find("#nextButton").attr("disabled", "disabled");
-                    showNegativeListBottomDiv.find("#lastButton").attr("disabled", "disabled");
-                }
-            }
+            var negativeListBottomDiv = $('#negativeListBottomDiv');
+            var pageSize = negativeListBottomDiv.find('#pageSizeHidden').val();
+            negativeListBottomDiv.find('#chooseRecords').val(pageSize);
+            var pageCount = negativeListBottomDiv.find('#pageCountHidden').val();
+            negativeListBottomDiv.find('#pageCountHidden').val(pageCount);
+            var currentPage = negativeListBottomDiv.find('#currentPageHidden').val();
+            negativeListBottomDiv.find('#currentPageHidden').val(currentPage);
+            if(parseInt(currentPage) > 1 && parseInt(currentPage) < parseInt(pageCount)) {
+                negativeListBottomDiv.find("#firstButton").removeAttr("disabled");
+                negativeListBottomDiv.find("#upButton").removeAttr("disabled");
+                negativeListBottomDiv.find("#nextButton").removeAttr("disabled");
+                negativeListBottomDiv.find("#lastButton").removeAttr("disabled");
+            } else if (parseInt(pageCount) == 1) {
+                negativeListBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
+                negativeListBottomDiv.find("#upButton").attr("disabled", "disabled");
+                negativeListBottomDiv.find("#nextButton").attr("disabled", "disabled");
+                negativeListBottomDiv.find("#lastButton").attr("disabled", "disabled");
+            } else if (parseInt(currentPage) <= 1) {
+				currentPage = 1;
+				negativeListBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
+				negativeListBottomDiv.find("#upButton").attr("disabled", "disabled");
+			} else {
+				currentPage = pageCount;
+				negativeListBottomDiv.find("#nextButton").attr("disabled", "disabled");
+				negativeListBottomDiv.find("#lastButton").attr("disabled", "disabled");
+			}
         });
 
-        function searchNegativeLists(currentPage, displaysRecords) {
+        function changePaging(currentPageNumber, pageSize) {
             var searchNegativeListForm = $("#searchNegativeListForm");
-            searchNegativeListForm.append('<input value="' + currentPage + '" id="currentPage" type="hidden" name="currentPageHidden"/>');
-            searchNegativeListForm.append('<input value="' + displaysRecords + '" id="currentPage" type="hidden" name="displayRerondsHidden"/>');
+            searchNegativeListForm.find("#totalHidden").val();
+            searchNegativeListForm.find("#currentPageNumberHidden").val(currentPageNumber);
+            searchNegativeListForm.find("#pageSizeHidden").val(pageSize);
             searchNegativeListForm.submit();
         }
 
-        function chooseRecords(currentPage, displayRecords) {
-            $("#currentPageHidden").val(currentPage);
-            $("#displaysRecordsHidden").val(displayRecords);
-            searchNegativeLists(currentPage, displayRecords);
+        function resetPageNumber() {
+            $("#searchNegativeListForm").find("#currentPageNumberHidden").val(1);
         }
 
         function editNegativeList(uuid) {
@@ -90,11 +98,11 @@
                         negativeListForm.find("#position").val(negativeList.position);
                         showNegativeListDialog(negativeList.uuid);
                     } else {
-                        alert("获取信息失败!")
+                        showInfo("获取信息成功", self);
                     }
                 },
                 error: function () {
-                    alert("获取信息失败!");
+                    showInfo("获取信息失败", self);
                 }
             });
         }
@@ -116,6 +124,32 @@
             }
         }
 
+        function showInfo(content, e) {
+            e = e || window.event;
+            var div1 = document.getElementById('div2'); //将要弹出的层
+            div1.innerText = content;
+            div1.style.display = "block"; //div1初始状态是不可见的，设置可为可"
+            div1.style.left = getLeft(e) + 10; //鼠标目前在X轴上的位置，"0是为了向右边移动10个px方便看到内容
+            div1.style.top = getTop(e) + 5;
+            div1.style.position = "absolute";
+
+            var intervalID = setInterval(function () {
+                div1.style.display = "none";
+            }, 8000);
+        }
+
+        function getTop(e) {
+            var offset = e.offsetTop;
+            if (e.offsetParent != null) offset += getTop(e.offsetParent);
+            return offset;
+        }
+        //获取元素的横坐标
+        function getLeft(e) {
+            var offset = e.offsetLeft;
+            if (e.offsetParent != null) offset += getLeft(e.offsetParent);
+            return offset;
+        }
+
         function doOver(obj) {
             obj.style.backgroundColor = "green";
         }
@@ -133,19 +167,17 @@
             if (confirm("确定要删除这条信息吗?") == false) return;
             $.ajax({
                 url: '/internal/negativelist/deleteNegativeList/' + uuid,
-                type: 'Get',
+                type: 'POST',
                 success: function (result) {
                     if (result) {
-                        alert("删除成功");
+                        showInfo("操作成功", self);
                         window.location.reload();
                     } else {
-                        alert("删除失败");
-                        window.location.reload();
+                        showInfo("操作失败", self);
                     }
                 },
                 error: function () {
-                    alert("删除失败");
-                    window.location.reload();
+                    showInfo("操作失败", self);
                 }
             });
         }
@@ -170,16 +202,14 @@
                 type: 'POST',
                 success: function (data) {
                     if (data) {
-                        alert("操作成功");
+                        showInfo("操作成功", self);
                         window.location.reload();
                     } else {
-                        alert("操作失败");
-                        window.location.reload();
+                        showInfo("操作失败", self);
                     }
                 },
                 error: function () {
-                    alert("操作失败");
-                    window.location.reload();
+                    showInfo("操作失败", self);
                 }
             });
         }
@@ -198,9 +228,9 @@
         function saveNegativeList(uuid) {
             var negativeListObj = {};
             negativeListObj.uuid = uuid;
-            negativeListObj.keyword = $("#negativeListForm").find("#keyword").val();
-            negativeListObj.title = $("#negativeListForm").find("#title").val();
-            negativeListObj.url = $("#negativeListForm").find("#url").val();
+            negativeListObj.keyword = $("#negativeListForm").find("#keyword").val().trim();
+            negativeListObj.title = $("#negativeListForm").find("#title").val().trim();
+            negativeListObj.url = $("#negativeListForm").find("#url").val().trim();
             negativeListObj.desc = $("#negativeListForm").find("#desc").val();
             negativeListObj.position = $("#negativeListForm").find("#position").val();
             $.ajax({
@@ -214,16 +244,14 @@
                 type: 'POST',
                 success: function (result) {
                     if (result) {
-                        alert("操作成功");
+                        showInfo("操作成功", self);
                         window.location.reload();
                     } else {
-                        alert("操作失败");
-                        window.location.reload();
+                        showInfo("操作失败", self);
                     }
                 },
                 error: function () {
-                    alert("操作失败");
-                    window.location.reload();
+                    showInfo("操作失败", self);
                 }
             });
 
@@ -239,7 +267,6 @@
                 height: 365,
                 modal: true,
                 position: { using:function(pos){
-                    console.log(pos)
                     var topOffset = $(this).css(pos).offset().top;
                     if (topOffset = 0||topOffset>0) {
                         $(this).css('top', 150);
@@ -279,9 +306,13 @@
 			<form method="post" id="searchNegativeListForm" action="/internal/negativelist/searchNegativeLists">
 				<table style="font-size:12px;">
 					<tr>
+						<input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}"/>
+						<input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
+						<input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
+						<input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
 						<td align="right">关键字:</td> <td><input type="text" name="keyword" id="keyword" value="${negativeListCriteria.keyword}" style="width:200px;"></td>
 						<td align="right">URL:</td> <td><input type="text" name="url" id="url" value="${negativeListCriteria.url}" style="width:200px;"></td>
-						<td align="right" width="100"><input type="submit" name="btnQuery" id="btnQuery" value=" 查询 " ></td>
+						<td align="right" width="100"><input type="submit" name="btnQuery" id="btnQuery" onclick="resetPageNumber()" value=" 查询 " ></td>
 					</tr>
 				 </table>
 			</form>
@@ -317,18 +348,18 @@
 	</table>
 </div>
 	<hr>
-	<div id="showNegativeListBottomDiv" align="right">
-	  <input id="fisrtButton" type="button" onclick="searchNegativeLists(1,'${page.size}')" value="首页"/>
+	<div id="negativeListBottomDiv" align="right">
+	  <input id="fisrtButton" type="button" onclick="changePaging(1,'${page.size}')" value="首页"/>
 	  &nbsp;&nbsp;&nbsp;&nbsp;
-	  <input id="upButton" type="button" onclick="searchNegativeLists('${page.current-1}','${page.size}')" value="上一页"/>
+	  <input id="upButton" type="button" onclick="changePaging('${page.current-1}','${page.size}')" value="上一页"/>
 	  &nbsp;&nbsp;&nbsp;&nbsp;${page.current}/${page.pages}&nbsp;&nbsp;
-	  <input id="nextButton" type="button" onclick="searchNegativeLists('${page.current+1>=page.pages?page.pages:page.current+1}','${page.size}')" value="下一页">
+	  <input id="nextButton" type="button" onclick="changePaging('${page.current+1>=page.pages?page.pages:page.current+1}','${page.size}')" value="下一页">
 	  &nbsp;&nbsp;&nbsp;&nbsp;
-	  <input id="lastButton" type="button" onclick="searchNegativeLists('${page.pages}','${page.size}')" value="末页">
+	  <input id="lastButton" type="button" onclick="changePaging('${page.pages}','${page.size}')" value="末页">
 	  &nbsp;&nbsp;&nbsp;&nbsp;
 	  总记录数:${page.total}&nbsp;&nbsp;&nbsp;&nbsp;
 	  每页显示条数:
-	  <select id="chooseRecords" onchange="chooseRecords(${page.current},this.value)">
+	  <select id="chooseRecords" onchange="changePaging(${page.current},this.value)">
 		  <option>10</option>
 		  <option>25</option>
 		  <option>50</option>
@@ -336,8 +367,8 @@
 		  <option>100</option>
 	  </select>
 	  <input type="hidden" id="currentPageHidden" value="${page.current}"/>
-	  <input type="hidden" id="displaysRecordsHidden" value="${page.size}"/>
-	  <input type="hidden" id="pagesHidden" value="${page.pages}"/>
+	  <input type="hidden" id="pageSizeHidden" value="${page.size}"/>
+	  <input type="hidden" id="pageCountHidden" value="${page.pages}"/>
 	  &nbsp;&nbsp;&nbsp;&nbsp;
 	</div>
 	<br>
