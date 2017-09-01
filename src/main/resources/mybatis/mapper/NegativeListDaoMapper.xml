@@ -20,6 +20,24 @@
 		ORDER BY n.fCreateTime DESC
 	</select>
 
+	<select id="getSpecifiedKeywordNegativeLists" resultType="com.keymanager.monitoring.entity.NegativeList">
+		SELECT
+		fUuid AS "uuid",
+		fTerminalType AS "terminalType",
+		fKeyword AS "keyword",
+		fTitle AS "title",
+		fUrl AS "url",
+		fDesc AS "desc",
+		fPosition AS "position",
+		fUpdateTime AS "updateTime",
+		fCreateTime AS "createTime"
+		FROM
+		t_negative_list n
+		WHERE n.fTerminalType = #{terminalType}
+		AND n.fKeyword = #{keyword}
+		ORDER BY n.fCreateTime DESC
+	</select>
+
 	<select id="selectLastId" resultType="int">
 		select LAST_INSERT_ID()
 	</select>
