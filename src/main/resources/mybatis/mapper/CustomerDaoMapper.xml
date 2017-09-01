@@ -32,13 +32,6 @@
         order by c.fUpdateTime DESC
     </select>
 
-    <select id="findCustomers" resultType="com.keymanager.monitoring.entity.Customer">
-        SELECT
-        <include refid="colID"/>
-        FROM t_customer c
-        WHERE fStatus = 1
-    </select>
-
     <select id="getActiveCustomerSimpleInfo" resultType="com.keymanager.monitoring.entity.Customer">
         SELECT
           c.fContactPerson AS 'contactPerson',

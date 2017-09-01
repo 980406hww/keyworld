@@ -2,14 +2,10 @@ package com.keymanager.monitoring.controller.rest.internal;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
-import com.keymanager.monitoring.criteria.QZSettingCriteria;
+import com.keymanager.monitoring.criteria.QZSettingSearchCriteria;
 import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.QZSetting;
-import com.keymanager.monitoring.entity.User;
 import com.keymanager.monitoring.service.*;
-import com.keymanager.monitoring.vo.QZSettingVO;
-import com.keymanager.util.PortTerminalTypeMapping;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -44,22 +39,25 @@ public class QZSettingRestController extends SpringMVCBaseController {
 	@RequestMapping(value = "/updateImmediately", method = RequestMethod.POST)
 	public ResponseEntity<?> updateImmediately(@RequestBody Map<String, Object> requestMap) throws Exception{
 		String uuids = (String) requestMap.get("uuids");
-		String returnValue = null;
+		boolean returnValue = false;
 		try {
 			qzSettingService.updateImmediately(uuids);
-			returnValue = "{\"status\":true}";
+			returnValue = true;
 		}catch(Exception ex){
 			logger.error(ex.getMessage());
-			ex.printStackTrace();
-			returnValue = "{\"status\":false}";
 		}
 		return new ResponseEntity<Object>(returnValue, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public ResponseEntity<?> saveQZSetting(@RequestBody QZSetting qzSetting){
-		qzSettingService.saveQZSetting(qzSetting);
-		return new ResponseEntity<Object>(qzSetting, HttpStatus.OK);
+		try {
+			qzSettingService.saveQZSetting(qzSetting);
+			return new ResponseEntity<Object>(qzSetting, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return new ResponseEntity<Object>(false , HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@RequestMapping(value ="/delete/{uuid}", method = RequestMethod.GET)
@@ -85,70 +83,34 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		}
 	}
 
-	@RequestMapping(value = "/searchQZSettings", method = RequestMethod.POST)
-	public ResponseEntity<?> findQZSettings(@RequestBody Map<String, Object> requestMap){
-		Long uuid = (Long) requestMap.get("uuid");
-		Long customerUuid = (Long) requestMap.get("customerUuid");
-		String domain = (String) requestMap.get("domain");
-		String group = (String) requestMap.get("group");
-		String updateStatus = (String) requestMap.get("updateStatus");
-		Integer pageNumber = (Integer) requestMap.get("pageNumber");
-		Integer pageList = (Integer) requestMap.get("pageList");
-		Page<QZSetting> page = new Page<QZSetting>(pageNumber, pageList);
-		return new ResponseEntity<Object>(qzSettingService.searchQZSettings(page, uuid, customerUuid, domain, group, updateStatus), HttpStatus.OK);
-	}
-
-	//通过QZSettinguuid去查询
 	@RequestMapping(value = "/getQZSetting/{uuid}", method = RequestMethod.GET)
 	public ResponseEntity<?> findQZSettings(@PathVariable("uuid") Long uuid){
-		Page<QZSetting> page = new Page<QZSetting>();
-		return new ResponseEntity<Object>(qzSettingService.searchQZSettings(page, uuid, null, null, null, null), HttpStatus.OK);
+		return new ResponseEntity<Object>(qzSettingService.getQZSetting(uuid), HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/searchQZSettingPage", method = RequestMethod.GET)
-	public ModelAndView findQZSettingPage(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, @RequestParam(defaultValue = "1") int chargeDays, HttpServletRequest request) {
-		return constructQZSettingModelAndView(new QZSettingVO(), currentPageNumber, pageSize, chargeDays);
+	@RequestMapping(value = "/searchQZSettings", method = RequestMethod.GET)
+	public ModelAndView searchQZSettingsGet(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request) {
+		return constructQZSettingModelAndView(new QZSettingSearchCriteria(), currentPageNumber, pageSize);
 	}
 
-	@RequestMapping(value = "/searchQZSettingPage", method = RequestMethod.POST)
-	public ModelAndView findQZSettingPagePost(HttpServletRequest request, QZSettingVO qzSettingVO) {
-		String chargeDays = request.getParameter("chargeDays");
+	@RequestMapping(value = "/searchQZSettings", method = RequestMethod.POST)
+	public ModelAndView searchQZSettingsPost(HttpServletRequest request, QZSettingSearchCriteria qzSettingSearchCriteria) {
 		String currentPageNumber = request.getParameter("currentPageNumber");
 		String pageSize = request.getParameter("pageSize");
+		String dateRangeType = request.getParameter("dateRangeType");
+		qzSettingSearchCriteria.setDateRangeType(dateRangeType);
 		if (null == currentPageNumber && null == pageSize) {
 			currentPageNumber = "1";
 			pageSize = "50";
 		}
-		return constructQZSettingModelAndView(qzSettingVO, Integer.parseInt(currentPageNumber), Integer.parseInt(pageSize), Integer.parseInt(chargeDays));
+		return constructQZSettingModelAndView(qzSettingSearchCriteria, Integer.parseInt(currentPageNumber), Integer.parseInt(pageSize));
 	}
 
-	private ModelAndView constructQZSettingModelAndView(QZSettingVO qzSettingVO, int currentPageNumber, int pageSize, int chargeDays) {
+	private ModelAndView constructQZSettingModelAndView(QZSettingSearchCriteria qzSettingSearchCriteria, int currentPageNumber, int pageSize) {
 		ModelAndView modelAndView = new ModelAndView("/qzsetting/list");
-		Page<QZSetting> page = qzSettingService.searchQZSettingPage(new Page<QZSetting>(currentPageNumber, pageSize), qzSettingVO);
-		List<QZSetting> expiredChargeList = qzOperationTypeService.expiredCharge();
-		List<QZSetting> nowChargeList = qzOperationTypeService.nowCharge();
-		List<QZSetting> threeChargeList = qzOperationTypeService.threeCharge();
-		List<QZSetting> sevenChargeList = qzOperationTypeService.sevenCharge();
-		List<Customer> customerList = customerService.findCustomers();
-
-		if(chargeDays == -1) {
-			page.setRecords(expiredChargeList);
-			page.setTotal(expiredChargeList.size());
-		} else if (chargeDays == 0) {
-			page.setRecords(nowChargeList);
-			page.setTotal(nowChargeList.size());
-		} else if (chargeDays == 3) {
-			page.setRecords(threeChargeList);
-			page.setTotal(threeChargeList.size());
-		} else if (chargeDays == 7) {
-			page.setRecords(sevenChargeList);
-			page.setTotal(sevenChargeList.size());
-		}
-
-		if(chargeDays != 1) {
-			page.setSize(pageSize);
-			page.setCurrent(currentPageNumber);
-		}
+		Map<String, Integer> dateRangeTypeMap = qzSettingService.getDateRangeType();
+		Page<QZSetting> page = qzSettingService.searchQZSetting(new Page<QZSetting>(currentPageNumber, pageSize), qzSettingSearchCriteria);
+		List<Customer> customerList = customerService.getActiveCustomerSimpleInfo();
 
 		List<String> statusList = new ArrayList<String>();
 		statusList.add("");
@@ -156,14 +118,10 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		statusList.add("Completed");
 		statusList.add("DownloadTimesUsed");
 
-		modelAndView.addObject("expiredChargeList", expiredChargeList);
-		modelAndView.addObject("nowChargeList", nowChargeList);
-		modelAndView.addObject("threeChargeList", threeChargeList);
-		modelAndView.addObject("sevenChargeList", sevenChargeList);
+		modelAndView.addObject("dateRangeTypeMap", dateRangeTypeMap);
 		modelAndView.addObject("customerList", customerList);
-		modelAndView.addObject("qzSettingVO", qzSettingVO);
+		modelAndView.addObject("qzSettingSearchCriteria", qzSettingSearchCriteria);
 		modelAndView.addObject("statusList", statusList);
-		modelAndView.addObject("chargeDays", chargeDays);
 		modelAndView.addObject("page", page);
 		return modelAndView;
 	}

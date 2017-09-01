@@ -49,10 +49,6 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 		return page;
 	}
 
-	public List<Customer> findCustomers() {
-		return customerDao.findCustomers();
-	}
-
 	public void updateCustomer(Customer customer) {
 		Customer oldCustomer = customerDao.selectById(customer.getUuid());
 		if (oldCustomer != null) {
@@ -96,4 +92,8 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 	public List<Customer> getActiveCustomerSimpleInfo(){
 		return customerDao.getActiveCustomerSimpleInfo();
 	}
+
+    public Customer getCustomer(int customerUuid) {
+		return customerDao.selectById(customerUuid);
+    }
 }

@@ -18,6 +18,22 @@ import java.util.regex.Pattern;
 public class Utils {
 	public static String TIME_FORMAT = "yyyy-MM-dd HH:mm";
 
+	public static int getIntervalDays(Date compareDate, Date date) {
+
+		Calendar calendar = Calendar.getInstance();
+
+		calendar.setTime(compareDate);
+
+		int pastDateDays = calendar.get(Calendar.DAY_OF_YEAR);
+
+		calendar.setTime(date);
+
+		int nowDateDays = calendar.get(Calendar.DAY_OF_YEAR);
+
+		return nowDateDays - pastDateDays;
+
+	}
+
 	public static String parseParam(String param) {
 		String tmpParam = "";
 		if ((param == null) || (param.equals(""))) {

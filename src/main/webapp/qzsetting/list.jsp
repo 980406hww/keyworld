@@ -118,37 +118,37 @@
 	</tr>
 	<tr>
 		<td colspan="14" align="right">
-			<a href="javascript:resetSearchCondition('-1')">过期未收费(${fn:length(expiredChargeList)})</a>
-			| <a target="_blank" href="javascript:resetSearchCondition('0')">当天收费提醒(${fn:length(nowChargeList)})</a>
-			| <a target="_blank" href="javascript:resetSearchCondition('3')">三天收费提醒(${fn:length(threeChargeList)})</a>
-			| <a target="_blank" href="javascript:resetSearchCondition('7')">七天收费提醒(${fn:length(sevenChargeList)})</a>
+			<a href="javascript:resetSearchCondition('-1')">过期未收费(${dateRangeTypeMap['expiredChargeSize']})</a>
+			| <a target="_blank" href="javascript:resetSearchCondition('0')">当天收费提醒(${dateRangeTypeMap['nowChargeSize']})</a>
+			| <a target="_blank" href="javascript:resetSearchCondition('3')">三天收费提醒(${dateRangeTypeMap['threeChargeSize']})</a>
+			| <a target="_blank" href="javascript:resetSearchCondition('7')">七天收费提醒(${dateRangeTypeMap['sevenChargeSize']})</a>
 		</td>
 	</tr>
 	<tr>
 		<td colspan="14">
-			<form method="post" id="chargeForm" action="/internal/qzsetting/searchQZSettingPage">
-				<input type="hidden" id="chargeDays" name="chargeDays" value="${chargeDays}"/>
+			<form method="post" id="chargeForm" action="/internal/qzsetting/searchQZSettings">
+				<input type="hidden" id="dateRangeType" name="dateRangeType" value="${qzSettingSearchCriteria.dateRangeType}"/>
 				<table style="font-size:12px;">
 					<tr>
 						<input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}"/>
 						<input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
 						<input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
 						<input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
-						<td align="right">客户:</td> <td><input type="text" name="contactPerson" id="contactPerson" value='${qzSettingVO.contactPerson}' style="width:200px;"></td>
-						<td align="right">域名:</td> <td><input type="text" name="domain" id="domain" value="${qzSettingVO.domain}" style="width:200px;"></td>
-						<td align="right">组名:</td> <td><input type="text" name="group" id="group" value="${qzSettingVO.group}" style="width:200px;"></td>
+						<td align="right">客户:</td> <td><input type="text" name="contactPerson" id="contactPerson" value='${qzSettingSearchCriteria.contactPerson}' style="width:200px;"></td>
+						<td align="right">域名:</td> <td><input type="text" name="domain" id="domain" value="${qzSettingSearchCriteria.domain}" style="width:200px;"></td>
+						<td align="right">组名:</td> <td><input type="text" name="group" id="group" value="${qzSettingSearchCriteria.group}" style="width:200px;"></td>
 						<td align="right">状态:</td>
 						<td>
 							<select name="updateStatus" id="updateStatus" style="width:200px;">
 								<c:forEach items="${statusList}" var="status">
 									<c:choose>
-										<c:when test="${status eq qzSettingVO.updateStatus}"><option selected>${status}</option></c:when>
+										<c:when test="${status eq qzSettingSearchCriteria.updateStatus}"><option selected>${status}</option></c:when>
 										<c:otherwise><option>${status}</option></c:otherwise>
 									</c:choose>
 								</c:forEach>
 							</select>
 						</td>
-						<td align="right" width="100"><input type="submit" name="btnQuery" id="btnQuery" onclick="resetSearchCondition('1')" value=" 查询 " ></td>
+						<td align="right" width="100"><input type="submit" name="btnQuery" id="btnQuery" onclick="resetSearchCondition(${qzSettingSearchCriteria.dateRangeType})" value=" 查询 " ></td>
 					</tr>
 				</table>
 			</form>
@@ -268,7 +268,6 @@
 
     function changePaging(currentPage, pageSize) {
         var chargeForm = $("#chargeForm");
-        chargeForm.find("#totalHidden").val();
         chargeForm.find("#currentPageNumberHidden").val(currentPage);
         chargeForm.find("#pageSizeHidden").val(pageSize);
         chargeForm.submit();
@@ -276,13 +275,7 @@
 
     function resetSearchCondition(days) {
         var chargeForm = $("#chargeForm");
-        if(days != 1) {
-            chargeForm.find("#contactPerson").val("");
-            chargeForm.find("#domain").val("");
-            chargeForm.find("#group").val("");
-            chargeForm.find("#updateStatus").val("");
-        }
-        chargeForm.find("#chargeDays").val(days);
+        chargeForm.find("#dateRangeType").val(days);
         chargeForm.find("#currentPageNumberHidden").val(1);
         chargeForm.submit();
     }
@@ -400,7 +393,7 @@
             timeout: 5000,
             type: 'POST',
             success: function (data) {
-                if(data != null && data.status){
+                if(data){
                     showInfo("操作成功！", self);
                     window.location.reload();
                 }else{
@@ -435,9 +428,8 @@
         $$$.ajax({
             url: '/internal/qzsetting/getQZSetting/' + uuid,
             type: 'Get',
-            success: function (data) {
-                if(data != null && null != data.records && data.records.length > 0){
-                    var qzSetting = data.records[0];
+            success: function (qzSetting) {
+                if(qzSetting != null){
                     initSettingDialog(qzSetting, self);
                 }else{
                     showInfo("获取信息失败！", self);

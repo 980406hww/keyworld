@@ -68,38 +68,20 @@
         ORDER BY qs.fCaptureCurrentKeywordCountTime
     </select>
 
-    <select id="searchQZSettings" resultType="com.keymanager.monitoring.entity.QZSetting">
-        SELECT
-            qs.fUuid AS 'uuid',
-            qs.fCustomerUuid AS 'customerUuid',
-            c.fContactPerson AS 'contactPerson',
-            qs.fDomain AS 'domain',
-            qs.fPcGroup AS 'pcGroup',
-            qs.fPhoneGroup AS 'phoneGroup',
-            qs.fType AS 'type',
-            qs.fIgnoreNoIndex AS 'ignoreNoIndex',
-            qs.fIgnoreNoOrder AS 'ignoreNoOrder',
-            qs.fUpdateInterval AS 'updateInterval',
-            qs.fUpdateStatus AS 'updateStatus',
-            qs.fUpdateStartTime AS 'updateStartTime',
-            qs.fUpdateEndTime AS 'updateEndTime',
-            qs.fUpdateTime AS 'updateTime',
-            qs.fCreateTime AS 'createTime',
-            qs.fCaptureCurrentKeywordCountTime AS 'captureCurrentKeywordCountTime',
-            qs.fCaptureCurrentKeywordStatus AS 'captureCurrentKeywordStatus'
-            FROM t_qz_setting qs
-            JOIN t_customer c
-            ON qs.fCustomerUuid = c.fUuid
-        WHERE 1 = 1
-        <if test="uuid != null and uuid > 0">AND qs.fUuid = #{uuid}</if>
-        <if test="customerUuid != null and customerUuid > 0">AND qs.fCustomerUuid = #{customerUuid}</if>
-        <if test="domain != null and domain != ''">AND qs.fDomain = #{domain}</if>
-        <if test="group != null and group != ''">AND (qs.fPcGroup = #{group} or qs.fPhoneGroup = #{group})</if>
-        <if test="updateStatus != null and updateStatus != ''">AND qs.fUpdateStatus = #{updateStatus}</if>
-        order by qs.fUpdateEndTime
+    <select id="getChargeRemindData" resultType="com.keymanager.monitoring.vo.DateRangeTypeVO">
+        SELECT DISTINCT
+          qs.fUuid AS "uuid",
+          ot.fNextChargeDate AS "nextChargeDate"
+        FROM
+        t_qz_setting qs,
+        t_qz_operation_type ot
+        WHERE
+        qs.fUuid = ot.fQZSettingUuid
+        AND ot.fNextChargeDate &lt;= date_add(CURDATE(), INTERVAL 7 DAY)
+        AND ot.fIsDeleted = 0
     </select>
 
-    <select id="searchCustomerPage" parameterType="com.keymanager.monitoring.vo.QZSettingVO"
+    <select id="searchQZSettings" parameterType="com.keymanager.monitoring.criteria.QZSettingSearchCriteria"
             resultType="com.keymanager.monitoring.vo.QZSettingVO">
         SELECT
         qs.fUuid AS 'uuid',
@@ -123,10 +105,22 @@
         JOIN t_customer c
         ON qs.fCustomerUuid = c.fUuid
         WHERE 1 = 1
-        <if test="qzSettingVO.contactPerson != null and qzSettingVO.contactPerson != ''">AND c.fContactPerson = #{qzSettingVO.contactPerson}</if>
-        <if test="qzSettingVO.domain != null and qzSettingVO.domain != ''">AND qs.fDomain = #{qzSettingVO.domain}</if>
-        <if test="qzSettingVO.group != null and qzSettingVO.group != ''">AND (qs.fPcGroup = #{qzSettingVO.group} or qs.fPhoneGroup = #{qzSettingVO.group})</if>
-        <if test="qzSettingVO.updateStatus != null and qzSettingVO.updateStatus != ''">AND qs.fUpdateStatus = #{qzSettingVO.updateStatus}</if>
+        <if test="qzSettingSearchCriteria.contactPerson != null and qzSettingSearchCriteria.contactPerson != ''">AND c.fContactPerson = #{qzSettingSearchCriteria.contactPerson}</if>
+        <if test="qzSettingSearchCriteria.domain != null and qzSettingSearchCriteria.domain != ''">AND qs.fDomain = #{qzSettingSearchCriteria.domain}</if>
+        <if test="qzSettingSearchCriteria.group != null and qzSettingSearchCriteria.group != ''">AND (qs.fPcGroup = #{qzSettingSearchCriteria.group} or qs.fPhoneGroup = #{qzSettingSearchCriteria.group})</if>
+        <if test="qzSettingSearchCriteria.updateStatus != null and qzSettingSearchCriteria.updateStatus != ''">AND qs.fUpdateStatus = #{qzSettingSearchCriteria.updateStatus}</if>
+        <if test="qzSettingSearchCriteria.dateRangeType == '-1'">
+            AND EXISTS (select qs.fUuid from t_qz_operation_type ot where qs.fUuid = ot.fQZSettingUuid and ot.fNextChargeDate &lt; CURDATE())
+        </if>
+        <if test="qzSettingSearchCriteria.dateRangeType == '0'">
+            AND EXISTS (select qs.fUuid from t_qz_operation_type ot where qs.fUuid = ot.fQZSettingUuid and ot.fNextChargeDate = CURDATE())
+        </if>
+        <if test="qzSettingSearchCriteria.dateRangeType == '3'">
+            AND EXISTS (select qs.fUuid from t_qz_operation_type ot where qs.fUuid = ot.fQZSettingUuid and ot.fNextChargeDate BETWEEN CURDATE() AND date_add(CURDATE(), INTERVAL 3 DAY))
+        </if>
+        <if test="qzSettingSearchCriteria.dateRangeType == '7'">
+            AND EXISTS (select qs.fUuid from t_qz_operation_type ot where qs.fUuid = ot.fQZSettingUuid and ot.fNextChargeDate BETWEEN CURDATE() AND date_add(CURDATE(), INTERVAL 7 DAY))
+        </if>
         order by qs.fUpdateEndTime
     </select>
 
