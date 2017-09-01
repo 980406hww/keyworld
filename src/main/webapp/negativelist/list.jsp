@@ -9,6 +9,18 @@
 			word-break: break-all;
 			word-wrap: break-word;
 		}
+
+		#showNegativeListDiv {
+			overflow: scroll;
+			width: 100%;
+			height: 95%;
+			margin: auto;
+		}
+
+		#showNegativeListBottomDiv {
+			float: right;
+			width: 580px;
+		}
 	</style>
 	<link href="/css/menu.css" rel="stylesheet" type="text/css"/>
 	<link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css">
@@ -243,7 +255,8 @@
 	</script>
 </head>
 <body>
-	<table width="100%" height="95%" style="font-size:12px;" cellpadding=3>
+<div id="showNegativeListDiv">
+	<table width="100%" style="font-size:12px;" cellpadding="3">
 	  <tr>
 		<td colspan="8" align="left">
 			<%@include file="/menu.jsp" %>
@@ -295,8 +308,9 @@
 		  </tr>
 	  </c:forEach>
 	</table>
+</div>
 	<hr>
-	<div height="5%" id="showNegativeListBottomDiv" align="right">
+	<div id="showNegativeListBottomDiv" align="right">
 	  <input id="fisrtButton" type="button" onclick="searchNegativeLists(1,'${page.size}')" value="首页"/>
 	  &nbsp;&nbsp;&nbsp;&nbsp;
 	  <input id="upButton" type="button" onclick="searchNegativeLists('${page.current-1}','${page.size}')" value="上一页"/>
