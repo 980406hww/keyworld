@@ -82,6 +82,18 @@
 			z-index:2;
 			position:fixed;
 		}
+
+		#showQZSettingDiv {
+			overflow: scroll;
+			width: 100%;
+			height: 95%;
+			margin: auto;
+		}
+
+		#showQZSettingBottomDiv {
+			float: right;
+			width: 580px;
+		}
 		-->
 	</style>
 	<script language="javascript" type="text/javascript" src="/js/My97DatePicker/WdatePicker.js"></script>
@@ -90,6 +102,7 @@
 	<link href="/css/menu.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
+<div id="showQZSettingDiv">
 <table width=100% style="font-size:12px;" cellpadding=3>
 	<tr>
 		<td colspan="14" align="left">
@@ -183,6 +196,7 @@
 		</tr>
 	</c:forEach>
 </table>
+</div>
 <hr>
 <div id="showQZSettingBottomDiv" align="right">
 	<input id="fisrtButton" type="button" onclick="searchQZSettingPage(1,'${page.size}')" value="首页"/>
