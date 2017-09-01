@@ -240,20 +240,28 @@
         showQZSettingBottomDiv.find('#pagesHidden').val(pages);
         var currentPage = showQZSettingBottomDiv.find('#currentPageHidden').val();
         showQZSettingBottomDiv.find('#currentPageHidden').val(currentPage);
-        if (parseInt(currentPage) <= 1) {
-            currentPage = 1;
-            showQZSettingBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
-            showQZSettingBottomDiv.find("#upButton").attr("disabled", "disabled");
-        } else if (parseInt(currentPage) >= parseInt(pages)) {
-            currentPage = pages;
-            showQZSettingBottomDiv.find("#nextButton").attr("disabled", "disabled");
-            showQZSettingBottomDiv.find("#lastButton").attr("disabled", "disabled");
-        } else {
+
+        if(parseInt(currentPage) > 1 && parseInt(currentPage) < parseInt(pages)) {
             showQZSettingBottomDiv.find("#firstButton").removeAttr("disabled");
             showQZSettingBottomDiv.find("#upButton").removeAttr("disabled");
             showQZSettingBottomDiv.find("#nextButton").removeAttr("disabled");
             showQZSettingBottomDiv.find("#lastButton").removeAttr("disabled");
-        }
+		}else if(parseInt(currentPage) == 1 && parseInt(pages) == 1) {
+            showQZSettingBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
+            showQZSettingBottomDiv.find("#upButton").attr("disabled", "disabled");
+            showQZSettingBottomDiv.find("#nextButton").attr("disabled", "disabled");
+            showQZSettingBottomDiv.find("#lastButton").attr("disabled", "disabled");
+		} else {
+            if (parseInt(currentPage) <= 1) {
+                currentPage = 1;
+                showQZSettingBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
+                showQZSettingBottomDiv.find("#upButton").attr("disabled", "disabled");
+            } else if (parseInt(currentPage) >= parseInt(pages)) {
+                currentPage = pages;
+                showQZSettingBottomDiv.find("#nextButton").attr("disabled", "disabled");
+                showQZSettingBottomDiv.find("#lastButton").attr("disabled", "disabled");
+            }
+		}
     });
 
     function searchQZSettingPage(currentPage, displaysRecords) {
