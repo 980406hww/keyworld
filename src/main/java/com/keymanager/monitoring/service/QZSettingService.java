@@ -316,7 +316,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		qzOperationTypeService.updateById(oldOperationType);
 	}
 
-	public boolean deleteOne(Long uuid){
+	public void deleteOne(Long uuid){
 		//根据数据库中的uuid去查询
 		List<QZOperationType> qzOperationTypes =  qzOperationTypeService.searchQZOperationTypesByQZSettingUuid(uuid);
 		if(qzOperationTypes.size()>0){
@@ -326,14 +326,12 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			qzOperationTypeService.deleteByQZSettingUuid(uuid);
 		}
 		qzSettingDao.deleteById(uuid);
-		return true;
 	}
 
-	public boolean deleteAll(List<String> uuids){
+	public void deleteAll(List<String> uuids){
 		for(String uuid : uuids){
 			deleteOne(Long.valueOf(uuid));
 		}
-		return true;
 	}
 
 }

@@ -118,10 +118,10 @@
 	</tr>
 	<tr>
 		<td colspan="14" align="right">
-			<a href="javascript:chargeRemind('-1')">过期未收费(${fn:length(expiredChargeList)})</a>
-			| <a target="_blank" href="javascript:chargeRemind('0')">当天收费提醒(${fn:length(nowChargeList)})</a>
-			| <a target="_blank" href="javascript:chargeRemind('3')">三天收费提醒(${fn:length(threeChargeList)})</a>
-			| <a target="_blank" href="javascript:chargeRemind('7')">七天收费提醒(${fn:length(sevenChargeList)})</a>
+			<a href="javascript:resetSearchCondition('-1')">过期未收费(${fn:length(expiredChargeList)})</a>
+			| <a target="_blank" href="javascript:resetSearchCondition('0')">当天收费提醒(${fn:length(nowChargeList)})</a>
+			| <a target="_blank" href="javascript:resetSearchCondition('3')">三天收费提醒(${fn:length(threeChargeList)})</a>
+			| <a target="_blank" href="javascript:resetSearchCondition('7')">七天收费提醒(${fn:length(sevenChargeList)})</a>
 		</td>
 	</tr>
 	<tr>
@@ -130,6 +130,10 @@
 				<input type="hidden" id="chargeDays" name="chargeDays" value="${chargeDays}"/>
 				<table style="font-size:12px;">
 					<tr>
+						<input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}"/>
+						<input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
+						<input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
+						<input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
 						<td align="right">客户:</td> <td><input type="text" name="contactPerson" id="contactPerson" value='${qzSettingVO.contactPerson}' style="width:200px;"></td>
 						<td align="right">域名:</td> <td><input type="text" name="domain" id="domain" value="${qzSettingVO.domain}" style="width:200px;"></td>
 						<td align="right">组名:</td> <td><input type="text" name="group" id="group" value="${qzSettingVO.group}" style="width:200px;"></td>
@@ -144,7 +148,7 @@
 								</c:forEach>
 							</select>
 						</td>
-						<td align="right" width="100"><input type="submit" name="btnQuery" id="btnQuery" onclick="chargeRemind('1')" value=" 查询 " ></td>
+						<td align="right" width="100"><input type="submit" name="btnQuery" id="btnQuery" onclick="resetSearchCondition('1')" value=" 查询 " ></td>
 					</tr>
 				</table>
 			</form>
@@ -199,17 +203,17 @@
 </div>
 <hr>
 <div id="showQZSettingBottomDiv" align="right">
-	<input id="fisrtButton" type="button" onclick="searchQZSettingPage(1,'${page.size}')" value="首页"/>
+	<input id="fisrtButton" type="button" onclick="changePaging(1,'${page.size}')" value="首页"/>
 	&nbsp;&nbsp;&nbsp;&nbsp;
-	<input id="upButton" type="button" onclick="searchQZSettingPage('${page.current-1}','${page.size}')" value="上一页"/>
+	<input id="upButton" type="button" onclick="changePaging('${page.current-1}','${page.size}')" value="上一页"/>
 	&nbsp;&nbsp;&nbsp;&nbsp;${page.current}/${page.pages}&nbsp;&nbsp;
-	<input id="nextButton" type="button" onclick="searchQZSettingPage('${page.current+1>=page.pages?page.pages:page.current+1}','${page.size}')" value="下一页">
+	<input id="nextButton" type="button" onclick="changePaging('${page.current+1>=page.pages?page.pages:page.current+1}','${page.size}')" value="下一页">
 	&nbsp;&nbsp;&nbsp;&nbsp;
-	<input id="lastButton" type="button" onclick="searchQZSettingPage('${page.pages}','${page.size}')" value="末页">
+	<input id="lastButton" type="button" onclick="changePaging('${page.pages}','${page.size}')" value="末页">
 	&nbsp;&nbsp;&nbsp;&nbsp;
 	总记录数:${page.total}&nbsp;&nbsp;&nbsp;&nbsp;
 	每页显示条数:
-	<select id="chooseRecords" onchange="chooseRecords(${page.current},this.value)">
+	<select id="chooseRecords" onchange="changePaging(${page.current},this.value)">
 		<option>10</option>
 		<option>25</option>
 		<option>50</option>
@@ -246,7 +250,7 @@
             showQZSettingBottomDiv.find("#upButton").removeAttr("disabled");
             showQZSettingBottomDiv.find("#nextButton").removeAttr("disabled");
             showQZSettingBottomDiv.find("#lastButton").removeAttr("disabled");
-		}else if(parseInt(pages) == 1) {
+		} else if (parseInt(pages) == 1) {
             showQZSettingBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
             showQZSettingBottomDiv.find("#upButton").attr("disabled", "disabled");
             showQZSettingBottomDiv.find("#nextButton").attr("disabled", "disabled");
@@ -262,17 +266,25 @@
 		}
     });
 
-    function searchQZSettingPage(currentPage, displaysRecords) {
-        var chargeForm = $$$("#chargeForm");
-        chargeForm.append('<input value="' + currentPage + '" id="currentPage" type="hidden" name="currentPageHidden"/>');
-        chargeForm.append('<input value="' + displaysRecords + '" id="currentPage" type="hidden" name="displayRerondsHidden"/>');
+    function changePaging(currentPage, pageSize) {
+        var chargeForm = $("#chargeForm");
+        chargeForm.find("#totalHidden").val();
+        chargeForm.find("#currentPageNumberHidden").val(currentPage);
+        chargeForm.find("#pageSizeHidden").val(pageSize);
         chargeForm.submit();
     }
 
-    function chooseRecords(currentPage, displayRecords) {
-        $$$("#currentPageHidden").val(currentPage);
-        $$$("#displaysRecordsHidden").val(displayRecords);
-        searchQZSettingPage(currentPage, displayRecords);
+    function resetSearchCondition(days) {
+        var chargeForm = $("#chargeForm");
+        if(days != 1) {
+            chargeForm.find("#contactPerson").val("");
+            chargeForm.find("#domain").val("");
+            chargeForm.find("#group").val("");
+            chargeForm.find("#updateStatus").val("");
+        }
+        chargeForm.find("#chargeDays").val(days);
+        chargeForm.find("#currentPageNumberHidden").val(1);
+        chargeForm.submit();
     }
 
     function selectAll(self){
@@ -400,17 +412,6 @@
             }
         });
     }
-
-    function chargeRemind(days) {
-        if(days != 1) {
-            $$$("#chargeForm").find("#contactPerson").val("");
-            $$$("#chargeForm").find("#domain").val("");
-            $$$("#chargeForm").find("#group").val("");
-            $$$("#chargeForm").find("#updateStatus").val("");
-        }
-        $$$("#chargeForm").find("#chargeDays").val(days);
-        chargeForm.submit();
-	}
 
     function cancelChargeDialog() {
         resetChargeDialog();
