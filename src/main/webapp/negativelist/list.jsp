@@ -39,19 +39,26 @@
             showNegativeListBottomDiv.find('#pagesHidden').val(pages);
             var currentPage = showNegativeListBottomDiv.find('#currentPageHidden').val();
             showNegativeListBottomDiv.find('#currentPageHidden').val(currentPage);
-            if (parseInt(currentPage) <= 1) {
-                currentPage = 1;
-                showNegativeListBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
-                showNegativeListBottomDiv.find("#upButton").attr("disabled", "disabled");
-            } else if (parseInt(currentPage) >= parseInt(pages)) {
-                currentPage = pages;
-                showNegativeListBottomDiv.find("#nextButton").attr("disabled", "disabled");
-                showNegativeListBottomDiv.find("#lastButton").attr("disabled", "disabled");
-            } else {
+            if(parseInt(currentPage) > 1 && parseInt(currentPage) < parseInt(pages)) {
                 showNegativeListBottomDiv.find("#firstButton").removeAttr("disabled");
                 showNegativeListBottomDiv.find("#upButton").removeAttr("disabled");
                 showNegativeListBottomDiv.find("#nextButton").removeAttr("disabled");
                 showNegativeListBottomDiv.find("#lastButton").removeAttr("disabled");
+            } else if (parseInt(currentPage) == 1 && parseInt(pages) == 1) {
+                showNegativeListBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
+                showNegativeListBottomDiv.find("#upButton").attr("disabled", "disabled");
+                showNegativeListBottomDiv.find("#nextButton").attr("disabled", "disabled");
+                showNegativeListBottomDiv.find("#lastButton").attr("disabled", "disabled");
+            } else {
+                if (parseInt(currentPage) <= 1) {
+                    currentPage = 1;
+                    showNegativeListBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
+                    showNegativeListBottomDiv.find("#upButton").attr("disabled", "disabled");
+                } else if (parseInt(currentPage) >= parseInt(pages)) {
+                    currentPage = pages;
+                    showNegativeListBottomDiv.find("#nextButton").attr("disabled", "disabled");
+                    showNegativeListBottomDiv.find("#lastButton").attr("disabled", "disabled");
+                }
             }
         });
 
