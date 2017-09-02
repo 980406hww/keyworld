@@ -34,12 +34,10 @@
 		}
 	</style>
 	<link href="/css/menu.css" rel="stylesheet" type="text/css"/>
-	<link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css">
-	<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
-	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<link rel="stylesheet" href="/ui/jquery-ui.css">
 	<script language="javascript" type="text/javascript" src="/js/My97DatePicker/WdatePicker.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/jquery142.js"></script>
-	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<script language="javascript" type="text/javascript" src="/ui/jquery-ui.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/slide.js"></script>
 	<script language="javascript">
         $(function () {
