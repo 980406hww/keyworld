@@ -39,7 +39,7 @@
 	<script language="javascript" type="text/javascript" src="/js/My97DatePicker/WdatePicker.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/jquery142.js"></script>
 	<script language="javascript" type="text/javascript" src="/ui/jquery-ui.js"></script>
-	<script language="javascript" type="text/javascript" src="/js/slide.js"></script>
+	<script language="javascript" type="text/javascript" src="/js/slide1.12.4.js"></script>
 	<script language="javascript">
         $(function () {
             var negativeListBottomDiv = $('#negativeListBottomDiv');
