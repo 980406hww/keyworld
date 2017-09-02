@@ -51,23 +51,31 @@
             }
 
             #customerKeywordTopDiv {
-                margin-right: 10px;
-                z-index: -1;
+                position: fixed;
+                top: 0px;
+                left: 0px;
+                background-color: white;
             }
 
             #customerKeywordDiv {
-                overflow: scroll;
+                /*overflow: scroll;*/
                 width: 100%;
                 height: 93%;
                 margin: auto;
             }
 
+            #showCustomerBottomPositioneDiv{
+                position: fixed;
+                bottom: 0px;
+                right: 0px;
+                background-color: white;
+                padding-top: 10px;
+                padding-bottom: 10px;
+                width: 100%;
+            }
             #showCustomerBottomDiv {
                 float: right;
                 margin-right: 20px;
-                /*z-index: 1;*/
-                /*width: 800px;*/
-                /*height: 5%;*/
             }
             body{
                 margin: 0;
@@ -86,6 +94,7 @@
                 $("#uploadSimpleconDailog").hide();
                 $("#uploadFullconDailog").hide();
                 $("#customerKeywordDialog").hide();
+                $("#customerKeywordDiv").css("margin-top",$("#customerKeywordTopDiv").height());
                 pageLoad();
             });
             function pageLoad() {
@@ -877,6 +886,7 @@
                     width: 400,
                     height: 200,
                     modal: true,
+                    title: '关键字Excel上传(完整版)',
                     //按钮
                     buttons: {
                         "提交": function () {
@@ -944,128 +954,103 @@
 
     </head>
 <body>
-<div id="customerKeywordDiv">
-    <div id="customerKeywordTopDiv">
-        <table style="font-size:12px;margin-right: 10px;" cellpadding=3>
-            <tr>
-                <td colspan=18 align="left">
-                    <%@include file="/menu.jsp" %>
-                </td>
-            </tr>
-            <tr>
-                <table width=100% style="border:1px solid #000000;font-size:12px;" cellpadding=3>
-                    <tr border="1" height=30>
-                        <td width=250>联系人: ${customer.contactPerson}</td>
-                        <td width=200>QQ: ${customer.qq}</td>
-                        <td width=200>电话: ${customer.telphone}</td>
-                        <td width=120>关键字数: ${customer.keywordCount}</td>
-                        <td width=250>创建时间: <fmt:formatDate value="${customer.createTime}" pattern=" yyyy-MM-dd HH:mm"/></td>
-                    </tr>
-                </table>
-            </tr>
-        </table>
-
-        <%--<c:if test="${!user.vipType}">--%>
-        <table>
-            <tr>
-                <td colspan=18 align="right">
-                    <a href="javascript:updateCustomerKeywordGroupNameDialog('${customerKeywordCrilteria.customerUuid}',null)">修改所有分组</a>
-                    | <a target="_blank" href="javascript:changeOptimizationGroupDialog(this)">修改选中分组</a>
-                    | <a href="javascript:updateCustomerKeywordGroupName('${customerKeywordCrilteria.customerUuid}','stop')">下架所有关键字</a>
-                    | <a href="javascript:addCustomerKeyword()">增加</a>
-                    | <a target="_blank" href="javascript:uploadsimple('${customerKeywordCrilteria.customerUuid}',this)"/>Excel上传(简化版)</a>
-                    | <a target="_blank" href="/SuperUserSimpleKeywordList.xls">简化版下载</a>
-                    | <a target="_blank" href="javascript:uploadFull('${customerKeywordCrilteria.customerUuid}')">Excel上传(完整版)</a>
-                    | <a target="_blank" href="/SuperUserFullKeywordList.xls">完整版下载</a>
-                    | <a target="_blank" href="javascript:uploaddailyreporttemplate('${customerKeywordCrilteria.customerUuid}')">上传日报表模板</a>
-                    | <a target="_blank" href="javascript:downloadSingleCustomerReport('${customerKeywordCrilteria.customerUuid}')">导出日报表</a>
-                    | <a target="_blank"
-                         href='/internal/customerKeyword/DownloadCustomerKeywordInfo.jsp?fileName=CustomerKeywordInfo<%--<%="_" + Utils.getCurrentDate()%>.xls&<%=pageUrl%>--%>'>导出结果</a>
-                </td>
-            </tr>
-        </table>
-        <form id="searchCustomerKeywordForm" action="/internal/customerKeyword/searchCustomerKeywords" method="post">
-            <table style="font-size:12px;" id="searchCustomerKeywordTable">
-                <input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}"/>
-                <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
-                <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
-                <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
-                <tr>
-                    <td align="right">关键字:</td>
-                    <td><input type="text" name="keyword" id="keyword" value="${customerKeywordCrilteria.keyword}"
-                               style="width:90px;">
-                    </td>
-                    <td align="right">URL:</td>
-                    <td><input type="text" name="url" id="url" value="${customerKeywordCrilteria.url}"
-                               style="width:120px;"></td>
-                    <td>
-                        <input id="customerUuid" name="customerUuid" type="hidden"
-                               value="${customerKeywordCrilteria.customerUuid} ">
-                    </td>
-                    <td align="right">添加时间:<input name="creationFromTime" id="creationFromTime" class="Wdate"
-                                                  type="text" style="width:90px;" onClick="WdatePicker()"
-                                                  value="${customerKeywordCrilteria.creationFromTime}">
-                        <%--<fmt:formatDate value='${customerKeywordCrilteria.creationFromTime}' pattern='yyyy-MM-dd' />--%>
-                        到<input
-                                name="creationToTime"
-                                id="creationToTime"
-                                class="Wdate" type="text"
-                                style="width:90px;"
-                                onClick="WdatePicker()"
-                                value="${customerKeywordCrilteria.creationToTime} ">
-                    </td>
-                    <td align="right">关键字状态:</td>
-                    <td>
-                        <select name="status" id="status">
-                            <option value='1'>激活</option>
-                            <option value='2'>新增</option>
-                            <option value='0'>过期</option>
-                        </select>
-                    </td>
-                    <td align="right">优化组名:</td>
-                    <td><input type="text" name="optimizeGroupName" id="optimizeGroupName"
-                               value="${customerKeywordCrilteria.optimizeGroupName} " style="width:60px;"></td>
-                </tr>
-                <tr>
-                    <%--<c:if test="${!user.vipType}">--%>
-                    <td align="right">显示前:</td>
-                    <td><input type="text" name="position" id="position" value="${customerKeywordCrilteria.position}"
-                               style="width:20px;">
-                    </td>
-                    <td align="right">排序:</td>
-                    <td>
-                        <select name="orderElement" id="orderElement">
-                            <option value="">--请选择排序--</option>
-                            <option value="0">创建日期</option>
-                            <option value="1">当前排名</option>
-                        </select>
-                    </td>
-                    <td align="right">无效点击数:</td>
-                    <td><input type="text" name="invalidRefreshCount" id="invalidRefreshCount"
-                               value="${customerKeywordCrilteria.invalidRefreshCount} " style="width:160px;"></td>
-                    <%--</c:if>--%>
-                    <td align="right" width="100">
-                        <input type="submit" class="ui-button ui-widget ui-corner-all" onclick="resetPageNumber()"
-                               value=" 查询 ">
-                    </td>
+<div id="customerKeywordTopDiv">
+    <table style="font-size:12px;margin-right: 10px;" cellpadding=3>
+        <tr>
+            <td colspan=18 align="left">
+                <%@include file="/menu.jsp" %>
+            </td>
+        </tr>
+        <tr>
+            <table width=100% style="border:1px solid #000000;font-size:12px;" cellpadding=3>
+                <tr border="1" height=30>
+                    <td width=250>联系人: ${customer.contactPerson}</td>
+                    <td width=200>QQ: ${customer.qq}</td>
+                    <td width=200>电话: ${customer.telphone}</td>
+                    <td width=120>关键字数: ${customer.keywordCount}</td>
+                    <td width=250>创建时间: <fmt:formatDate value="${customer.createTime}" pattern=" yyyy-MM-dd HH:mm"/></td>
                 </tr>
             </table>
-        </form>
-        <table>
-            <tr>
-                <td align="right"><a href="javascript:delAllItems(null,'${customerKeywordCrilteria.customerUuid}')">删除所选</a> |
-                    <a href="javascript:delAllItems('emptyTitleAndUrl','${customerKeywordCrilteria.customerUuid}')">删除标题和网址为空的关键字</a> |
-                    <a href="javascript:delAllItems('emptyTitle','${customerKeywordCrilteria.customerUuid}')">删除标题为空的关键字</a> |
-                    <a href="javascript:resetTitle('${customerKeywordCrilteria.customerUuid}','captureTitle')">重采标题</a> |
-                    <a href="javascript:clearTitle('${customerKeywordCrilteria.customerUuid}', null)">清空所选标题</a>|
-                    <a href="javascript:resetTitle('${customerKeywordCrilteria.customerUuid}', 'all')">清空当前客户标题</a>
-                </td>
-            </tr>
-        </table>
-        <%--</c:if>--%>
+        </tr>
+    </table>
+
+    <%--<c:if test="${!user.vipType}">--%>
+    <div style="text-align: center">
+        <a href="javascript:updateCustomerKeywordGroupNameDialog('${customerKeywordCrilteria.customerUuid}',null)">修改所有分组</a>
+        | <a target="_blank" href="javascript:changeOptimizationGroupDialog(this)">修改选中分组</a>
+        | <a href="javascript:updateCustomerKeywordGroupName('${customerKeywordCrilteria.customerUuid}','stop')">下架所有关键字</a>
+        | <a target="_blank" href="javascript:uploadsimple('${customerKeywordCrilteria.customerUuid}',this)"/>Excel上传(简化版)</a>
+        | <a target="_blank" href="/SuperUserSimpleKeywordList.xls">简化版下载</a>
+        | <a target="_blank" href="javascript:uploadFull('${customerKeywordCrilteria.customerUuid}')">Excel上传(完整版)</a>
+        | <a target="_blank" href="/SuperUserFullKeywordList.xls">完整版下载</a>
+        | <a target="_blank" href="javascript:uploaddailyreporttemplate('${customerKeywordCrilteria.customerUuid}')">上传日报表模板</a>
+        | <a target="_blank" href="/internal/dailyReport/downloadSingleCustomerReport/${customerKeywordCrilteria.customerUuid}">导出日报表</a>
+        | <a target="_blank"
+             href='/internal/customerKeyword/DownloadCustomerKeywordInfo.jsp?fileName=CustomerKeywordInfo<%--<%="_" + Utils.getCurrentDate()%>.xls&<%=pageUrl%>--%>'>导出结果</a>
+        <br/><br/>
+        <a href="javascript:delAllItems('emptyTitleAndUrl','${customerKeywordCrilteria.customerUuid}')">删除标题和网址为空的关键字</a> |
+        <a href="javascript:delAllItems('emptyTitle','${customerKeywordCrilteria.customerUuid}')">删除标题为空的关键字</a> |
+        <a href="javascript:resetTitle('${customerKeywordCrilteria.customerUuid}','captureTitle')">重采标题</a> |
+        <a href="javascript:clearTitle('${customerKeywordCrilteria.customerUuid}', null)">清空所选标题</a>|
+        <a href="javascript:resetTitle('${customerKeywordCrilteria.customerUuid}', 'all')">清空当前客户标题</a>
+        <br/>
     </div>
-    <hr>
-    <%--<div id="customerKeywordDiv">--%>
+    <br/>
+    <form id="searchCustomerKeywordForm" action="/internal/customerKeyword/searchCustomerKeywords" method="post">
+        <div style="font-size:12px; width: 100%;" id="searchCustomerKeywordTable">
+            <input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}"/>
+            <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
+            <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
+            <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
+            <input id="customerUuid" name="customerUuid" type="hidden" value="${customerKeywordCrilteria.customerUuid} ">
+            关键字:<input type="text" name="keyword" id="keyword" value="${customerKeywordCrilteria.keyword}"
+                       style="width:90px;">
+            URL:<input type="text" name="url" id="url" value="${customerKeywordCrilteria.url}"
+                       style="width:120px;">
+            添加时间:<input name="creationFromTime" id="creationFromTime" class="Wdate"
+                        type="text" style="width:90px;" onClick="WdatePicker()"
+                        value="${customerKeywordCrilteria.creationFromTime}">
+            到<input
+                name="creationToTime"
+                id="creationToTime"
+                class="Wdate" type="text"
+                style="width:90px;"
+                onClick="WdatePicker()"
+                value="${customerKeywordCrilteria.creationToTime} ">
+            关键字状态:
+            <select name="status" id="status">
+                <option value='1'>激活</option>
+                <option value='2'>新增</option>
+                <option value='0'>过期</option>
+            </select>
+            优化组名:
+            <input type="text" name="optimizeGroupName" id="optimizeGroupName"
+                   value="${customerKeywordCrilteria.optimizeGroupName} " style="width:60px;">
+            <%--<c:if test="${!user.vipType}">--%>
+            显示前:
+            <input type="text" name="position" id="position" value="${customerKeywordCrilteria.position}"
+                   style="width:50px;">
+            排序:
+            <select name="orderElement" id="orderElement">
+                <option value="">--请选择排序--</option>
+                <option value="0">创建日期</option>
+                <option value="1">当前排名</option>
+            </select>
+            无效点击数:
+            <input type="text" name="invalidRefreshCount" id="invalidRefreshCount"
+                   value="${customerKeywordCrilteria.invalidRefreshCount} " style="width:50px;">
+            <%--</c:if>--%>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="submit" class="ui-button ui-widget ui-corner-all" onclick="resetPageNumber()"
+                   value=" 查询 ">&nbsp;&nbsp;
+            <input type="button" class="ui-button ui-widget ui-corner-all" onclick="addCustomerKeyword()"
+                   value=" 增加 ">&nbsp;&nbsp;
+            <input type="button" class="ui-button ui-widget ui-corner-all"
+                   onclick="delAllItems(null,'${customerKeywordCrilteria.customerUuid}')"
+                   value=" 删除所选 ">
+        </div>
+    </form>
+    <%--</c:if>--%>
     <table>
         <tr bgcolor="#eeeeee" height=30>
             <td align="center" width=10><input type="checkbox" onclick="selectAll(this)"/></td>
@@ -1096,14 +1081,19 @@
             <div id="div1"></div>
             <div id="div2"></div>
         </tr>
+    </table>
+    <hr>
+</div>
+<div id="customerKeywordDiv">
+    <table>
         <c:forEach items="${page.records}" var="customerKeyword">
-            <tr onmouseover="doOver(this);" onmouseout="doOut(this);" ondblclick="modifyCustomerKeyword('${customerKeyword.uuid}')" height=30>
-                <td><input type="checkbox" name="uuid" value="${customerKeyword.uuid}"/></td>
-                <td>
+            <tr bgcolor="#eeeeee" height=30 onmouseover="doOver(this);" onmouseout="doOut(this);" ondblclick="modifyCustomerKeyword('${customerKeyword.uuid}')" height=30>
+                <td  align="center" width=10><input type="checkbox" name="uuid" value="${customerKeyword.uuid}"/></td>
+                <td align="center" width=100>
                     <font color="<%--<%=keywordColor%>--%>">${customerKeyword.keyword}
                     </font>
                 </td>
-                <td class="wrap"
+                <td  align="center" width=200 class="wrap"
                     onMouseMove="showTip('原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}')"
                     onMouseOut="closeTip()">
                     <div style="height:16;">
@@ -1111,60 +1101,60 @@
                     </div>
                 </td>
 
-                <td>
+                <td align="center" width=250>
                         ${customerKeyword.title == null ? "" : customerKeyword.title.trim()}
                 </td>
 
-                <td>
+                <td align="center" width=30>
                     <div style="height:16;"><a
-                            href="/internal/customerKeyword/historyPositionAndIndex.jsp?type=PC&uuid=${customerKeyword.uuid}>"
+                            href="/internal/customerKeyword/historyPositionAndIndex.jsp?type=PC&uuid=${customerKeyword.uuid}"
                             target="_blank">${customerKeyword.currentIndexCount}
                     </a></div>
                 </td>
 
-                <td>
+                <td align="center" width=50>
                     <div style="height:16;">${customerKeyword.initialPosition}
                     </div>
                 </td>
 
-                <td>
+                <td align="center" width=50>
                     <div style="height:16;"><%--<a
                                 href="${customerKeyword.searchEngineUrl}${customerKeyword.Keyword}&pn=&lt;%&ndash;<%=Utils.prepareBaiduPageNumber(customerKeyword.CurrentPosition())%>&ndash;%&gt;"
                                 target="_blank"></a>--%>${customerKeyword.currentPosition}
                     </div>
                 </td>
 
-                <td> <%--onMouseMove="showTip('优化日期：<fmt:formatDate value="${customer.optimizeDate}" pattern="yyyy-MM-dd"/> ，要刷：${customerKeyword.OptimizePlanCount}，已刷：${customerKeyword.optimizedCount}')"
+                <td align="center" width=30> <%--onMouseMove="showTip('优化日期：<fmt:formatDate value="${customer.optimizeDate}" pattern="yyyy-MM-dd"/> ，要刷：${customerKeyword.OptimizePlanCount}，已刷：${customerKeyword.optimizedCount}')"
                         onMouseOut="closeTip()">${customerKeyword.collectMethodName}--%>
                 </td>
 
-                <td>${customerKeyword.optimizePlanCount}
-                </td>
-                <td>${customerKeyword.optimizedCount}
-                </td>
-                <td>${customerKeyword.invalidRefreshCount}
-                </td>
+                <td align="center" width=30>${customerKeyword.optimizePlanCount}</td>
 
-                <td>${value.feeString}
-                </td>
-                <td><fmt:formatDate value="${customerKeyword.startOptimizedTime}" pattern="yyyy-MM-dd"/></td>
-                <td><fmt:formatDate value="${customerKeyword.lastOptimizeDateTime}" pattern="yyyy-MM-dd  HH:mm"/></td>
+                <td align="center" width=30>${customerKeyword.optimizedCount} </td>
 
-                <td>${customerKeyword.orderNumber}
+                <td align="center" width=30>${customerKeyword.invalidRefreshCount}</td>
+
+
+                <td align="center" width=60>${value.feeString}
                 </td>
-                <td>${customerKeyword.remarks}
+                <td align="center" width=80><fmt:formatDate value="${customerKeyword.startOptimizedTime}" pattern="yyyy-MM-dd"/></td>
+                <td align="center" width=80><fmt:formatDate value="${customerKeyword.lastOptimizeDateTime}" pattern="yyyy-MM-dd  HH:mm"/></td>
+
+                <td align="center" width=50>${customerKeyword.orderNumber}
+                </td>
+                <td align="center" width=100>${customerKeyword.remarks}
                 </td>
                 <c:choose>
                     <c:when test="${user.vipType}">
-                        <td>${customerKeyword.optimizeGroupName == null ? "" : customerKeyword.optimizeGroupName}
+                        <td align="center" width=60>${customerKeyword.optimizeGroupName == null ? "" : customerKeyword.optimizeGroupName}
                         </td>
-                        <td>
+                        <td align="center" width=80>
                             <a href="javascript:modifyCustomerKeyword('${customerKeyword.uuid}')">修改</a>|
                             <a href="javascript:delItem('${customerKeyword.uuid}')">删除</a>
                         </td>
                     </c:when>
                     <c:when test="${user.userLevel==1}">
-                        <td>
+                        <td align="center" width=80>
                             <a href="modify.jsp?uuid=${customerKeyword.uuid}">修改</a> |
                             <a href="javascript:delItem('${customerKeyword.uuid}')">删除</a>
                         </td>
@@ -1178,7 +1168,7 @@
 <%--<div style="display:none;">
     <script src="http://s84.cnzz.com/stat.php?id=4204660&web_id=4204660" language="JavaScript"></script>
 </div>--%>
-<hr>
+<div id="showCustomerBottomPositioneDiv">
 <div id="showCustomerBottomDiv">
     <input id="fisrtButton" class="ui-button ui-widget ui-corner-all" type="button"
            onclick="changePaging(1,'${page.size}')" value="首页"/>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -1192,11 +1182,6 @@
            onclick="changePaging('${page.pages}','${page.size}')" value="末页">&nbsp;&nbsp;&nbsp;&nbsp;
     总记录数:${page.total}&nbsp;&nbsp;&nbsp;&nbsp;
     每页显示条数:<select id="chooseRecords" onchange="changePaging(${page.current},this.value)">
-    <%--<option value="10">10</option>
-    <option value="25">25</option>
-    <option value="50">50</option>
-    <option value="75">75</option>
-    <option value="100">100</option>--%>
     <option>10</option>
     <option>25</option>
     <option>50</option>
@@ -1204,29 +1189,29 @@
     <option>100</option>
 </select>
 </div>
-
+</div>
 <%--Dialog部分--%>
-<div id="changeOptimizationGroupDialog" title="修改选中关键字组名">
+<div id="changeOptimizationGroupDialog"  style="text-align: center;height: 60px;" title="修改选中关键字组名">
     <form id="changeOptimizationGroupFrom" style="text-align: center;margin-top: 10px;">
         分组名称<input type="text" name="optimizationGroup" id="optimizationGroup" style="width:150px"/>
     </form>
 </div>
 
-<div id="updateCustomerKeywordGroupNameDialog" title="修改该用户关键字组名">
+<div id="updateCustomerKeywordGroupNameDialog"  style="text-align: center;height: 60px;" title="修改该用户关键字组名">
     <form id="updateCustomerKeywordGroupNameFrom" style="text-align: center;margin-top: 10px;">
         目标组名称:<input type="text" id="groupName" name="groupName" style="width:150px">
     </form>
 </div>
-<div id="uploadSimpleconDailog">
-    <form method="post" id="uploadsimpleconForm"  enctype="multipart/form-data" style="text-align: center;margin-top: 10px;">
+<div id="uploadSimpleconDailog"  style="text-align: center;height: 60px;"  title="Excel上传(简化版)">
+    <form method="post" id="uploadsimpleconForm"  enctype="multipart/form-data" >
         <input type="hidden" id="customerUuid" name="customerUuid" value="${customerKeywordCrilteria.customerUuid}">
-        请选择要上传的文件(<font color="red">简化版</font>):<input type="file" id="uploadsimpleconFile" name="file" size=50>
+        请选择要上传的文件(<font color="red">简化版</font>):<input type="file" id="uploadsimpleconFile" name="file" >
     </form>
 </div>
-<div id="uploadFullconDailog" style="text-align: center;margin-top: 10px;">
+<div id="uploadFullconDailog" style="text-align: center;height: 60px;"   title="Excel上传(完整版)">
     <form method="post" id="uploadFullconForm" enctype="multipart/form-data">
         <input type="hidden" id="customerUuid" name="customerUuid" value="${customerKeywordCrilteria.customerUuid}">
-        请选择要上传的文件(<font color="red">完整版</font>):<input type="file" id="uploadFullconFile" name="file" size=50>
+        请选择要上传的文件(<font color="red">完整版</font>):<input type="file" id="uploadFullconFile" name="file">
     </form>
 </div>
 <div id="customerKeywordDialog">
