@@ -13,7 +13,8 @@ public class CustomerKeywordCrilteria extends BaseCriteria{
     private String orderElement;
     private String invalidRefreshCount;//无效点击数
     private String position;//显示前几条
-    private String entryType;//端口类型
+    private String entryType;//
+    private String terminalType;//8088 PC  8089  phone
 
 
     public String getCustomerUuid() {
@@ -104,7 +105,15 @@ public class CustomerKeywordCrilteria extends BaseCriteria{
         this.entryType = entryType;
     }
 
-    public CustomerKeywordCrilteria(String customerUuid, String url, String keyword, String creationFromTime, String creationToTime, String status, String optimizeGroupName, String orderElement, String invalidRefreshCount, String position, String entryType) {
+    public String getTerminalType() {
+        return terminalType;
+    }
+
+    public void setTerminalType(String terminalType) {
+        this.terminalType = terminalType;
+    }
+
+    public CustomerKeywordCrilteria(String customerUuid, String url, String keyword, String creationFromTime, String creationToTime, String status, String optimizeGroupName, String orderElement, String invalidRefreshCount, String position, String entryType, String terminalType) {
         this.customerUuid = customerUuid;
         this.url = url;
         this.keyword = keyword;
@@ -116,6 +125,7 @@ public class CustomerKeywordCrilteria extends BaseCriteria{
         this.invalidRefreshCount = invalidRefreshCount;
         this.position = position;
         this.entryType = entryType;
+        this.terminalType = terminalType;
     }
 
     public CustomerKeywordCrilteria() {

@@ -70,7 +70,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	}
 
 	@RequestMapping(value = "/searchCustomerKeywords", method = RequestMethod.POST)
-	public ModelAndView searchCustomerKeywords(/*CustomerKeywordCrilteria customerKeywordCrilteria,*/HttpServletRequest request) {
+	public ModelAndView searchCustomerKeywords(CustomerKeywordCrilteria customerKeywordCrilteria1,HttpServletRequest request) {
 		try {
 			String customerUuid = request.getParameter("customerUuid").trim();
 			String url = request.getParameter("url").trim();
@@ -88,7 +88,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 			}
 			String invalidRefreshCount = request.getParameter("invalidRefreshCount").trim();
 			String position = request.getParameter("position").trim();
-			CustomerKeywordCrilteria customerKeywordCrilteria = new CustomerKeywordCrilteria(customerUuid, url, keyword,creationFromTime, creationToTime, status, optimizeGroupName, orderElement, invalidRefreshCount, position, null) ;
+			CustomerKeywordCrilteria customerKeywordCrilteria = new CustomerKeywordCrilteria(customerUuid, url, keyword,creationFromTime, creationToTime, status, optimizeGroupName, orderElement, invalidRefreshCount, position, null,null) ;
 			String currentPageNumber = request.getParameter("currentPageNumber");//
 			String pageSize = request.getParameter("pageSize");
 			if (null == currentPageNumber && null == pageSize) {
@@ -109,7 +109,9 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		User user = userService.getUser(userID);
 		Customer customer = customerService.selectById(customerKeywordCrilteria.getCustomerUuid());
 		String entryType = (String) session.getAttribute("entry");
+		String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
 		customerKeywordCrilteria.setEntryType(entryType);
+		customerKeywordCrilteria.setTerminalType(terminalType);
 		List<ServiceProvider> serviceProviders = serviceProviderService.searchServiceProviders();
 		Page<CustomerKeyword> page = customerKeywordService.searchCustomerKeywords(new Page<CustomerKeyword>(Integer.parseInt(currentPage), Integer.parseInt(pageSize)), customerKeywordCrilteria);
 		modelAndView.addObject("customerKeywordCrilteria", customerKeywordCrilteria);
@@ -272,12 +274,13 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 				String entryType = (String) request.getSession().getAttribute("entry");
 				customerKeyword.setTerminalType(terminalType);
 				customerKeyword.setType(entryType);
+				customerKeyword.setStatus(1);
 				customerKeywordService.addCustomerKeyword(customerKeyword);
 				return new ResponseEntity<Object>(true, HttpStatus.OK);
 			} else {
 				customerKeyword.setUpdateTime(new Date());
+				customerKeyword.setStatus(1);
 				customerKeywordService.updateById(customerKeyword);
-
 				return new ResponseEntity<Object>(true, HttpStatus.OK);
 			}
 		}catch (Exception ex){

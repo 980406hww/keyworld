@@ -135,6 +135,7 @@
         <if test="customerKeywordCrilteria.creationToTime != null and customerKeywordCrilteria.creationToTime != ''">AND ck.fCreateTime &lt;= #{customerKeywordCrilteria.creationToTime}</if>
         <if test="customerKeywordCrilteria.entryType != null and customerKeywordCrilteria.entryType != ''">AND ck.fType = #{customerKeywordCrilteria.entryType}</if>
         <if test="customerKeywordCrilteria.position != null and customerKeywordCrilteria.position != ''"><![CDATA[AND fCurrentPosition > 0 and fCurrentPosition <= #{customerKeywordCrilteria.position}  ]]>   </if>
+        <if test="customerKeywordCrilteria.terminalType != null and customerKeywordCrilteria.terminalType != ''">AND fTerminalType =  #{customerKeywordCrilteria.terminalType} </if>
         <if test="customerKeywordCrilteria.orderElement != null and customerKeywordCrilteria.orderElement != ''">
             ORDER BY ${customerKeywordCrilteria.orderElement}  DESC
         </if>
