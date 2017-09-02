@@ -50,7 +50,7 @@ public class FumianListManager {
 
 		String preSql = null;
 		try {
-			preSql = "update t_fumian_list set fKeyword = ?, fUrl = ?, fTitle = ?, fDesc = ?, fPosition = ? where fUuid = ? ";
+			preSql = "update t_negative_list set fKeyword = ?, fUrl = ?, fTitle = ?, fDesc = ?, fPosition = ? where fUuid = ? ";
 			ps = conn.prepareStatement(preSql);
 			int i = 1;
 			ps.setString(i++, fumianRecordVO.getKeyword());
@@ -89,7 +89,7 @@ public class FumianListManager {
 		String sql = "";
 		FumianListVO fumianRecordVO = null;
 		try {
-			sql = "select * from t_fumian_list where fUuid = ? ";
+			sql = "select * from t_negative_list where fUuid = ? ";
 
 			stmt = conn.prepareStatement(sql, 1003, 1007);
 			stmt.setString(1, uuid);
@@ -138,7 +138,7 @@ public class FumianListManager {
 			conn = DBUtil.getConnection(dsName);
 
 			if (recCount != 0) {
-				sql = " select count(1) as recordCount from t_fumian_list where 1=1 " + condition;
+				sql = " select count(1) as recordCount from t_negative_list where 1=1 " + condition;
 
 				ps = conn.prepareStatement(sql, 1003, 1007);
 				rs = ps.executeQuery();
@@ -155,7 +155,7 @@ public class FumianListManager {
 
 			String sqlFields = " *  ";
 
-			sql = " select " + sqlFields + " from t_fumian_list where 1=1 " + condition + " " + order;
+			sql = " select " + sqlFields + " from t_negative_list where 1=1 " + condition + " " + order;
 			sql = sql + " limit " + (curPage - 1) * pageSize + "," + pageSize;
 
 			ps = conn.prepareStatement(sql, 1003, 1007);
@@ -197,7 +197,7 @@ public class FumianListManager {
 		PreparedStatement ps = null;
 		String preSql = null;
 		try {
-			preSql = "insert into t_fumian_list(fKeyword, fTerminalType, fUrl, fTitle, fDesc, fPosition, fCreateTime) values(?, ?, ?, ?, ?, ?, now())";
+			preSql = "insert into t_negative_list(fKeyword, fTerminalType, fUrl, fTitle, fDesc, fPosition, fCreateTime) values(?, ?, ?, ?, ?, ?, now())";
 			ps = conn.prepareStatement(preSql);
 			int i = 1;
 
@@ -223,7 +223,7 @@ public class FumianListManager {
 		String preSql = null;
 		try {
 			conn = DBUtil.getConnection(datasourceName);
-			preSql = " delete from t_fumian_list where fUuid = ? ";
+			preSql = " delete from t_negative_list where fUuid = ? ";
 			ps = conn.prepareStatement(preSql);
 			ps.setString(1, uuid);
 			ps.executeUpdate();
@@ -307,7 +307,7 @@ public class FumianListManager {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
-			String sql = " select * from t_fumian_list where fKeyword = ? and fTitle = ? and fUrl = ? and fDesc = ? and fTerminalType = ? ";
+			String sql = " select * from t_negative_list where fKeyword = ? and fTitle = ? and fUrl = ? and fDesc = ? and fTerminalType = ? ";
 			ps = conn.prepareStatement(sql, 1003, 1007);
 			ps.setString(1, keyword);
 			ps.setString(2, title);
