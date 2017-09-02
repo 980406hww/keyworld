@@ -24,7 +24,7 @@
 		#showNegativeListDiv {
 			overflow: scroll;
 			width: 100%;
-			height: 95%;
+			height: 94%;
 			margin: auto;
 		}
 
@@ -33,8 +33,8 @@
 			width: 580px;
 		}
 	</style>
-	<link href="/css/menu.css" rel="stylesheet" type="text/css"/>
-	<link rel="stylesheet" href="/ui/jquery-ui.css">
+	<link href="/css/menu.css" rel="stylesheet" type="text/css" />
+	<link href="/ui/jquery-ui.css" rel="stylesheet" type="text/css" />
 	<script language="javascript" type="text/javascript" src="/js/My97DatePicker/WdatePicker.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/jquery142.js"></script>
 	<script language="javascript" type="text/javascript" src="/ui/jquery-ui.js"></script>
