@@ -116,7 +116,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
     }
 
-    private void addCustomerKeyword(CustomerKeyword customerKeyword) {
+    public void addCustomerKeyword(CustomerKeyword customerKeyword) {
         if (StringUtil.isNullOrEmpty(customerKeyword.getOriginalUrl())) {
             customerKeyword.setOriginalUrl(customerKeyword.getUrl());
         }
@@ -166,15 +166,22 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeyword.setType(entry);
 //        Wrapper wrapper = new EntityWrapper(customerKeyword);
 //        this.delete(wrapper);
-        customerKeywordDao.deleteCustomerKeyword(customerKeyword);
+        customerKeywordDao.deleteCustomerKeyword(customerKeyword,null);
     }
 
-    public void deleteCustomerKeywords(List<String> customerKeywordUuids,String entry) {
-        for(String customerKeywordUuid : customerKeywordUuids){
+    public void deleteCustomerKeywords(List<String> customerKeywordUuids, String entry, String deleteType, String terminalType,String customerUuid) {
+        if (customerKeywordUuids != null) {
+            for (String customerKeywordUuid : customerKeywordUuids) {
+                CustomerKeyword customerKeyword = new CustomerKeyword();
+                customerKeyword.setUuid(Long.parseLong(customerKeywordUuid));
+                customerKeyword.setType(entry);
+                customerKeywordDao.deleteCustomerKeyword(customerKeyword, deleteType);
+            }
+        }else {
             CustomerKeyword customerKeyword = new CustomerKeyword();
-            customerKeyword.setUuid(Long.parseLong(customerKeywordUuid));
-            customerKeyword.setType(entry);
-            customerKeywordDao.deleteCustomerKeyword(customerKeyword);
+            customerKeyword.setCustomerUuid(Long.parseLong(customerUuid));
+            customerKeyword.setTerminalType(terminalType);
+            customerKeywordDao.deleteCustomerKeyword(customerKeyword, deleteType);
         }
     }
 
@@ -329,4 +336,14 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     public void changeOptimizationGroup(CustomerKeyword customerKeyword) {
         customerKeywordDao.changeOptimizationGroup(customerKeyword);
     }
+
+    //重采标题
+    public void resetTitle (CustomerKeyword customerKeyword,String resetType) {
+        customerKeywordDao.resetTitle(customerKeyword,resetType);
+    }
+    //
+    public CustomerKeyword getCustomerKeyword(Long CustomerKeywordUuid) {
+        return customerKeywordDao.selectById(CustomerKeywordUuid);
+    }
+
 }

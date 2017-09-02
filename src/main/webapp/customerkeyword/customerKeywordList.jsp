@@ -7,6 +7,7 @@
     <script language="javascript" type="text/javascript" src="/common.js"></script>
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script language="javascript" type="text/javascript" src="/js/My97DatePicker/WdatePicker.js"></script>
     <script language="javascript" type="text/javascript" src="/js/slide1.12.4.js"></script>
     <link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css">
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
@@ -16,6 +17,7 @@
     <head>
         <title>关键字列表</title>
 <style>
+
     .wrap {
         word-break: break-all;
         word-wrap: break-word;
@@ -45,26 +47,20 @@
     }
 
     #changeOptimizationGroupDialog {
-        display: none;
-        margin: -30px 0px 0px -130px;
-        background-color: white;
-        color: #2D2A2A;
-        font-size: 12px;
-        line-height: 12px;
-        border: 2px solid #104454;
-        width: 260px;
-        height: 60px;
-        left: 50%;
-        top: 50%;
-        z-index: 25;
-        position: fixed;
+
     }
-    #customerKeywordTopDiv{}
+
+    #customerKeywordTopDiv {
+        width: 100%;
+        height: 25%;
+        margin: auto;
+        z-index: 10;
+    }
 
     #customerKeywordDiv {
         overflow: scroll;
         width: 100%;
-        height: 120%;
+        height: 80%;
         margin: auto;
     }
 
@@ -72,7 +68,12 @@
         margin-right: 2%;
         float: right;
         width: 580px;
+        height: 5%;
     }
+
+    #customerKeywordDialog ul{list-style: none;margin: 0px;padding: 0px}
+    #customerKeywordDialog li{margin: 10px 0;}
+    #customerKeywordDialog .customerKeywordSpanClass{width: 100px;display: inline-block;text-align: right;}
 </style>
 
 <script language="javascript">
@@ -81,15 +82,52 @@
         $("#updateCustomerKeywordGroupNameDialog").hide();
         $("#uploadSimpleconDailog").hide();
         $("#uploadFullconDailog").hide();
-        $("#customerKeywordDialog").hide();
+//        $("#customerKeywordDialog").hide();
+        pageLoad();
+
+        $( "#customerKeywordDialog").dialog({
+            autoOpen : false,
+            width: 600,
+            height: 630,
+            position: {
+                my: "center",
+                at: "center center-250px",
+                of: window},
+            title : "添加关键字",
+            show: {
+                effect: "blind",
+                /* duration: 1000*/
+            },
+            hide: {
+                effect: "blind",
+                /*duration: 1000*/
+            },
+            modal: true,
+            resizable: false,
+            buttons: {
+                "保存": function () {
+                    saveCustomerKeyword("${customer.uuid}");
+                    $(this).dialog("close");
+                },
+                "清空": function () {
+                    $('#customerKeywordForm')[0].reset();
+                },
+                "取消": function () {
+                    $(this).dialog("close");
+                    $('#customerKeywordForm')[0].reset();
+                }
+            }
+        });
     });
     function pageLoad() {
-//        var searchCustomerForm = $("#searchCustomerForm");
-//        var pageSize = searchCustomerForm.find('#pageSizeHidden').val();
-//        var pages = searchCustomerForm.find('#pagesHidden').val();
-//        var currentPageNumber = searchCustomerForm.find('#currentPageNumberHidden').val();
+        var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
+        var searchCustomerKeywordTable = searchCustomerKeywordForm.find("#searchCustomerKeywordTable");
+         searchCustomerKeywordTable.find("#orderElement").val(${customerKeywordCrilteria.orderElement});
+         searchCustomerKeywordTable.find("#status").val(${customerKeywordCrilteria.status});
+        var pages = searchCustomerKeywordForm.find('#pagesHidden').val();
+        var currentPageNumber = searchCustomerKeywordForm.find('#currentPageNumberHidden').val();
         var showCustomerBottomDiv = $('#showCustomerBottomDiv');
-        showCustomerBottomDiv.find("#chooseRecords").val(pageSize);
+        showCustomerBottomDiv.find("#chooseRecords").val(${page.size});
         if (parseInt(currentPageNumber) <= 1) {
             currentPageNumber = 1;
             showCustomerBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
@@ -157,15 +195,26 @@
         });
     }
 
-    function delAllItems(deleteType) {
+    function delAllItems(deleteType,customerUuid) {
         var uuids = getUuids();
-        if (uuids === '') {
-            alert('请选择要操作的信息');
-            return;
+        switch (deleteType){
+            case null :
+                if (uuids === '') {
+                    alert('请选择要操作的信息');
+                    return;
+                }
+                if (confirm("确实要删除这些关键字吗?") == false) return;break;
+            case 'emptyTitleAndUrl' :if (confirm("确实要删除标题和网址为空的关键字吗?") == false) return;break;
+            case 'emptyTitle' :if (confirm("确实要删除标题为空的关键字吗?") == false) return;break;
         }
-        if (confirm("确实要删除这些关键字吗?") == false) return;
         var postData = {};
-        postData.uuids = uuids.split(",");
+        if(uuids ===''){
+
+        }else{
+            postData.uuids = uuids.split(",");
+        }
+        postData.deleteType = deleteType;
+        postData.customerUuid = customerUuid;
         $.ajax({
             url: '/internal/customerKeyword/deleteCustomerKeywords',
             data: JSON.stringify(postData),
@@ -207,13 +256,43 @@
         return uuids;
     }
 
-    function resetTitle() {
-        if (confirm("确实要清除当前结果的采集标题标志?") == false) return;
-        <%--document.location = "resetTitle.jsp?<%=pageUrl%>";--%>
+    function resetTitle(customerUuid,resetType) {
+        if(resetType == 'captureTitle'){
+            if (confirm("确实要重新采集标题?") == false) return;
+        }else {
+            if (confirm("确实要清除所有标题?") == false) return;
+        }
+        var postData = {};
+        postData.customerUuid = customerUuid;
+        postData.status = '${customer.status}';
+        postData.resetType = resetType;
+//        alert(JSON.stringify(postData));
+        $.ajax({
+            url: '/internal/customerKeyword/resetTitle',
+            data: JSON.stringify(postData),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            timeout: 5000,
+            type: 'POST',
+            success: function (status) {
+                if (status) {
+                    showInfo("操作成功！", self);
+                    window.location.reload();
+                } else {
+                    showInfo("操作失败！", self);
+                    window.location.reload();
+                }
+            },
+            error: function () {
+                showInfo("操作失败！", self);
+                window.location.reload();
+            }
+        });
     }
 
     function clearTitle(customerUuid, clearType) {
-        if (confirm("确认要清空标题吗?") == false) return;
         var uuids = getUuids();
         if (clearType == null) {
             if (uuids.trim() === '') {
@@ -221,6 +300,7 @@
                 return;
             }
         }
+        if (confirm("确认要清空标题吗?") == false) return;
         var postData = {};
         postData.uuids = uuids;
         postData.clearType = clearType;
@@ -309,8 +389,22 @@
     }
 
     //重构部分
+    //查询
+    function changePaging(currentPage, pageSize) {
+        var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
+        var total = searchCustomerKeywordForm.find("#totalHidden").val();
+        searchCustomerKeywordForm.find("#currentPageNumberHidden").val(currentPage);
+        searchCustomerKeywordForm.find("#pageSizeHidden").val(pageSize);
+        searchCustomerKeywordForm.submit();
+    }
+
+    function resetPageNumber() {
+        var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
+        searchCustomerKeywordForm.find("#currentPageNumberHidden").val(1);
+    }
+
     //修改该用户关键字组名
-    function updateCustomerKeywordGroupNameDialog(customerUuid) {
+    function updateCustomerKeywordGroupNameDialog(customerUuid,updateType) {
         $("#updateCustomerKeywordGroupNameDialog").dialog({
             resizable: false,
             width: 500,
@@ -319,28 +413,8 @@
             //按钮
             buttons: {
                 "保存": function () {
-                    var customerKeyword = {};
-                    var optimizeGroupName = $("#updateCustomerKeywordGroupNameFrom").find("#groupName").val();
-                    customerKeyword.customerUuid = customerUuid;
-                    customerKeyword.optimizeGroupName = optimizeGroupName;
-                    alert(JSON.stringify(customerKeyword));
-                    $.ajax({
-                        url:'/internal/customerKeyword/updateCustomerKeywordGroupName',
-                        type:'POST',
-                        date:JSON.stringify(customerKeyword),
-                        sucess: function (result) {
-                            if (result) {
-                                showInfo("操作成功", self);
-                                window.location.reload();
-                            } else {
-                                showInfo("操作失败", self);
-                            }
-                        },
-                        error: function () {
-                            showInfo("操作失败", self);
-                        },
-                    });
-                   $(this).close();
+                    updateCustomerKeywordGroupName(customerUuid,updateType);
+                   $(this).dialog("close");
                 },
                 "清空": function () {
                     $('#updateCustomerKeywordGroupNameFrom')[0].reset();
@@ -352,31 +426,49 @@
             }
         });
     }
-    // 下架该客户关键字
-    function stopCustomerKeyword(customerUuid) {
-        if (confirm("确实要下架这个客户的关键字吗?") == false) return;
-        var customerKeyword = {};
-        customerKeyword.customerUuid = customerUuid;
-        customerKeyword.optimizeGroupName = 'stop';
-        alert(JSON.stringify(customerKeyword));
+
+    function updateCustomerKeywordGroupName(customerUuid, updateType) {
+        if (updateType == 'stop') {
+            if (confirm("确实要下架客户关键字吗?") == false) return;
+            var customerKeyword = {};
+            customerKeyword.customerUuid = customerUuid;
+            customerKeyword.optimizeGroupName = updateType;
+        } else {
+            var customerKeyword = {};
+            var optimizeGroupName = $("#updateCustomerKeywordGroupNameFrom").find("#groupName").val();
+            customerKeyword.customerUuid = customerUuid;
+            customerKeyword.optimizeGroupName = optimizeGroupName;
+            if (optimizeGroupName == null || optimizeGroupName === '') {
+                alert("请输入分组名");
+                return;
+            }
+        }
+//        alert(JSON.stringify(customerKeyword));
         $.ajax({
             url:'/internal/customerKeyword/updateCustomerKeywordGroupName',
-            type:'POST',
-            date:JSON.stringify(customerKeyword),
-            sucess: function (result) {
+            data:JSON.stringify(customerKeyword),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            timeout: 5000,
+            type: 'POST',
+            success: function (result) {
+
                 if (result) {
                     showInfo("操作成功", self);
                     window.location.reload();
                 } else {
                     showInfo("操作失败", self);
+                    window.location.reload();
                 }
             },
             error: function () {
                 showInfo("操作失败", self);
+                window.location.reload();
             },
         });
     }
-    //
 
     function changeOptimizationGroupDialog(customerUuid) {
         var uuids = getUuids();
@@ -408,11 +500,11 @@
         var settingDialogDiv = $("#changeOptimizationGroupDialog");
         var optimizeGroupName = settingDialogDiv.find("#optimizationGroup").val();
         var uuids = getUuids();
-        if (uuids.trim() === '') {
+        if (uuids==='') {
             alert("请选中要操作的关键词！");
             return;
         }
-        if (optimizationGroup.trim() === '') {
+        if ($.trim(optimizationGroup)=== '') {
             alert("请输入分组名称！");
             return;
         }
@@ -442,51 +534,53 @@
                 window.location.reload();
             }
         });
-        $(this).dialog("close");
-    }
-    function cancelChangeOptimizationGroup() {
-        var settingDialogDiv = $("#changeOptimizationGroupDialog");
-        settingDialogDiv.hide();
+        $("#changeOptimizationGroupDialog").dialog("close");
     }
 
 
     //增加新关键字
     function addCustomerKeyword(customerUuid) {
-        $( "#customerKeywordDialog").dialog({
-            autoOpen: true,
-            width: 800,
-            height: 800,
+        /*$( "#customerKeywordDialog").dialog({
+            width: 600,
+            height: 630,
             position: {
                 my: "center",
-                at: "center top+150px",
+                at: "center center-250px",
                 of: window},
             title : "添加关键字",
             show: {
                 effect: "blind",
-                /* duration: 1000*/
+                /!* duration: 1000*!/
             },
             hide: {
                 effect: "blind",
-                /*duration: 1000*/
+                /!*duration: 1000*!/
             },
+            modal: true,
+            resizable: false,
             buttons: {
                 "保存": function () {
-                    saveCustomerKeyword("${customer.uuid}");
+                    saveCustomerKeyword("<%--${customer.uuid}--%>");
                 },
                 "清空": function () {
-                    $('#showRuleForm')[0].reset();
+                    $('#customerKeywordForm')[0].reset();
                 },
                 "取消": function () {
                     $(this).dialog("close");
-                    $('#showRuleForm')[0].reset();
+                    $('#customerKeywordForm')[0].reset();
                 }
             }
-        });
+        });*/
+        $("#customerKeywordForm")[0].reset();
+        $( "#customerKeywordDialog").dialog("open");
+
     }
 
     function saveCustomerKeyword(customerUuid) {
         var customerKeyword = {};
-        customerKeyword.uuid = customerUuid;
+
+        customerKeyword.uuid =$("#customerKeywordDialog #uuid").val();
+        customerKeyword.customerUuid=customerUuid;
         customerKeyword.searchEngine = $("#customerKeywordDialog #searchEngine").val();
 
         var initialIndexCount = $("#customerKeywordDialog #initialIndexCount").val();
@@ -659,8 +753,12 @@
         customerKeyword.sequence = sequence;
         var title = $.trim($("#customerKeywordDialog #title").val());
         customerKeyword.title = title;
-        var postDate = [];
-        postDate.customerKeyword = customerKeyword;
+        var optimizeGroupName=$.trim($("#customerKeywordDialog #optimizeGroupName").val());
+        customerKeyword.optimizeGroupName=optimizeGroupName;
+        var collectMethod=$.trim($("#customerKeywordDialog #collectMethod").val());
+        customerKeyword.collectMethod=collectMethod;
+        //var postDate = [];
+        //postDate.customerKeyword = customerKeyword;
         alert(JSON.stringify(customerKeyword));
         $.ajax({
             url: '/internal/customerKeyword/saveCustomerKeyword',
@@ -684,6 +782,62 @@
                 showInfo("操作失败", self);
             }
         });
+    }
+
+    //修改关键字
+    function modifyCustomerKeyword(customerKeywordUuid) {
+        $("#customerKeywordForm")[0].reset();
+        $.ajax({
+            url: '/internal/customerKeyword/getCustomerKeywordByCustomerKeywordUuid/' + customerKeywordUuid,
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            timeout: 5000,
+            type: 'POST',
+            success: function (customerKeyword) {
+                if (customerKeyword!=null) {
+                    $("#customerKeywordDialog #uuid").val(customerKeyword.uuid);
+                    $("#customerKeywordDialog #keyword").val(customerKeyword.keyword);
+                    $("#customerKeywordDialog #searchEngine").val(customerKeyword.searchEngine);
+                    $("#customerKeywordDialog #initialIndexCount").val(customerKeyword.currentIndexCount);
+                    $("#customerKeywordDialog #initialPositionSpan").text(customerKeyword.currentPosition);
+                    $("#customerKeywordDialog #url").val(customerKeyword.url);
+                    $("#customerKeywordDialog #originalUrl").val(customerKeyword.originalUrl);
+                    $("#customerKeywordDialog #positionFirstFee").val(customerKeyword.positionFirstFee);
+                    $("#customerKeywordDialog #positionSecondFee").val(customerKeyword.positionSecondFee);
+                    $("#customerKeywordDialog #positionThirdFee").val(customerKeyword.positionThirdFee);
+                    $("#customerKeywordDialog #positionForthFee").val(customerKeyword.positionForthFee);
+                    $("#customerKeywordDialog #positionFifthFee").val(customerKeyword.positionFifthFee);
+                    $("#customerKeywordDialog #positionFirstPageFee").val(customerKeyword.positionFirstPageFee);
+                    $("#customerKeywordDialog #positionFirstCost").val(customerKeyword.positionFirstCost);
+                    $("#customerKeywordDialog #positionSecondCost").val(customerKeyword.positionSecondCost);
+                    $("#customerKeywordDialog #positionThirdCost").val(customerKeyword.positionThirdCost);
+                    $("#customerKeywordDialog #positionForthCost").val(customerKeyword.positionForthCost);
+                    $("#customerKeywordDialog #positionFifthCost").val(customerKeyword.positionFifthCost);
+
+                    $("#customerKeywordDialog #serviceProvider").val(customerKeyword.serviceProvider);
+                    $("customerKeywordDialog #sequence").val(customerKeyword.sequence);
+                    $("customerKeywordDialog #title").val(customerKeyword.title);
+                    $("customerKeywordDialog #optimizeGroupName").val(customerKeyword.optimizeGroupName);
+                    $("customerKeywordDialog #relatedKeywords").val(customerKeyword.relatedKeywords);
+
+                    $("#customerKeywordDialog").dialog();
+
+                    showInfo("操作成功", self);
+                } else {
+                    showInfo("操作失败", self);
+                    window.location.reload();
+                }
+            },
+            error: function () {
+                showInfo("操作失败", self);
+                window.location.reload();
+            }
+        });
+    }
+    function showCustomerKeywordCost() {
+        $("#customerKeywordCost").toggle();
     }
     //关键字Excel上传(简化版)
     function uploadsimple(uuid,self){
@@ -840,106 +994,102 @@
             </table>
         </tr>
     </table>
+
+<%--<c:if test="${!user.vipType}">--%>
     <table>
         <tr>
             <td colspan=18 align="right">
-                <a href="javascript:updateCustomerKeywordGroupNameDialog('${customerUuid}')">修改当前所有关键字组名</a>
-                | <a href="javascript:stopCustomerKeyword('${customerUuid}')">下架客户关键字</a>
-                | <a href="javascript:addCustomerKeyword('${customerUuid}')">增加关键字</a>
-                | <a target="_blank" href="javascript:uploadsimple('${customerUuid}',this)"/>关键字Excel上传(简化版)</a>
+                <a href="javascript:updateCustomerKeywordGroupNameDialog('${customer.uuid}',null)">修改所有分组</a>
+                | <a target="_blank" href="javascript:changeOptimizationGroupDialog(this)">修改选中分组</a>
+                | <a href="javascript:updateCustomerKeywordGroupName('${customer.uuid}','stop')">下架所有关键字</a>
+                | <a href="javascript:addCustomerKeyword('${customer.uuid}')">增加</a>
+                | <a target="_blank" href="javascript:uploadsimple('${customer.uuid}',this)"/>Excel上传(简化版)</a>
                 | <a target="_blank" href="/SuperUserSimpleKeywordList.xls">简化版模板下载</a>
-                | <a target="_blank" href="javascript:uploadFull('${customerUuid}')">关键字Excel上传(完整版)</a>
+                | <a target="_blank" href="javascript:uploadFull('${customer.uuid}')">xcel上传(完整版)</a>
                 | <a target="_blank" href="/SuperUserFullKeywordList.xls">完整版模板下载</a>
-                | <a target="_blank" href="javascript:uploaddailyreporttemplate('${customerUuid}')">上传日报表模板</a>
-                | <a target="_blank" href="javascript:downloadSingleCustomerReport('${customerUuid}')">导出日报表</a>
+                | <a target="_blank" href="javascript:uploaddailyreporttemplate('${customer.uuid}')">上传日报表模板</a>
+                | <a target="_blank" href="javascript:downloadSingleCustomerReport('${customer.uuid}')">导出日报表</a>
                 | <a target="_blank"
                      href='/internal/customerKeyword/DownloadCustomerKeywordInfo.jsp?fileName=CustomerKeywordInfo<%--<%="_" + Utils.getCurrentDate()%>.xls&<%=pageUrl%>--%>'>导出结果</a>
             </td>
         </tr>
-        <tr>
-            <td colspan=18>
-                <table style="font-size:12px;">
-                    <form method="post" action="list.jsp">
-                        <tr>
-
-                            <td align="right">关键字:</td>
-                            <td><input type="text" name="keyword" id="keyword" value="${customerKeywordVO.keyword}"
-                                       style="width:90px;">
-                            </td>
-                            <td align="right">URL:</td>
-                            <td><input type="text" name="url" id="url" value="${customerKeywordVO.url}"
-                                       style="width:120px;"></td>
-                            <td>
-                                <input id="customerUuid" name="customerUuid" type="hidden"
-                                       value="${customerKeywordVO.customerUuid} ">
-                            </td>
-                            <td align="right">添加时间:<input name="creationFromTime" id="creationFromTime" class="Wdate"
-                                                          type="text" style="width:90px;" onClick="WdatePicker()"
-                                                          value="${customerKeywordVO.creationFromTime} ">到<input
-                                    name="creationToTime"
-                                    id="creationToTime"
-                                    class="Wdate" type="text"
-                                    style="width:90px;"
-                                    onClick="WdatePicker()"
-                                    value="${customerKeywordVO.creationToTime} ">
-                            </td>
-                            <td align="right">关键字状态:</td>
-                            <td>
-                                <select name="status" id="status">
-                                    <option value=''>""</option>
-                                    <option value='2'>新增</option>
-                                    <option value='1'>激活</option>
-                                    <option value='0'>过期</option>
-                                </select>
-                            </td>
-                            <td align="right">优化组名:</td>
-                            <td><input type="text" name="optimizeGroupName" id="optimizeGroupName"
-                                       value="${customerKeywordVO.optimizeGroupName} " style="width:60px;"></td>
-
-                            <td align="right" width="100"><input type="submit" name="btnQuery" id="btnQuery"
-                                                                 value=" 查询 "></td>
-                        </tr>
-                    </form>
-                </table>
-            </td>
-        </tr>
     </table>
-        <%--<c:if test="${!user.vipType}">--%>
-    <table style="font-size:12px;">
-        <tr>
-            <form>
+    <form id="searchCustomerKeywordForm" action="/internal/customerKeyword/searchCustomerKeywords" method="post">
+        <table style="font-size:12px;" id="searchCustomerKeywordTable">
+            <input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}"/>
+            <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
+            <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
+            <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
+            <tr>
+                <td align="right">关键字:</td>
+                <td><input type="text" name="keyword" id="keyword" value="${customerKeywordCrilteria.keyword}"
+                           style="width:90px;">
+                </td>
+                <td align="right">URL:</td>
+                <td><input type="text" name="url" id="url" value="${customerKeywordCrilteria.url}"
+                           style="width:120px;"></td>
+                <td>
+                    <input id="customerUuid" name="customerUuid" type="hidden"
+                           value="${customer.uuid} ">
+                </td>
+                <td align="right">添加时间:<input name="creationFromTime" id="creationFromTime" class="Wdate"
+                                              type="text" style="width:90px;" onClick="WdatePicker()"
+                                              value="${customerKeywordCrilteria.creationFromTime}">
+                    <%--<fmt:formatDate value='${customerKeywordCrilteria.creationFromTime}' pattern='yyyy-MM-dd' />--%>
+                    到<input
+                            name="creationToTime"
+                            id="creationToTime"
+                            class="Wdate" type="text"
+                            style="width:90px;"
+                            onClick="WdatePicker()"
+                            value="${customerKeywordCrilteria.creationToTime} ">
+                </td>
+                <td align="right">关键字状态:</td>
+                <td>
+                    <select name="status" id="status">
+                        <option value='1'>激活</option>
+                        <option value='2'>新增</option>
+                        <option value='0'>过期</option>
+                    </select>
+                </td>
+                <td align="right">优化组名:</td>
+                <td><input type="text" name="optimizeGroupName" id="optimizeGroupName"
+                           value="${customerKeywordCrilteria.optimizeGroupName} " style="width:60px;"></td>
+            </tr>
+            <tr>
+                <%--<c:if test="${!user.vipType}">--%>
                 <td align="right">显示前:</td>
-                <td><input type="text" name="position" id="position" value="${customerKeywordVO.position}"
+                <td><input type="text" name="position" id="position" value="${customerKeywordCrilteria.position}"
                            style="width:20px;">
                 </td>
                 <td align="right">排序:</td>
                 <td>
                     <select name="orderElement" id="orderElement">
+                        <option value="">--请选择排序--</option>
                         <option value="0">创建日期</option>
                         <option value="1">当前排名</option>
-                        <option value="2">账单日期</option>
                     </select>
                 </td>
                 <td align="right">无效点击数:</td>
                 <td><input type="text" name="invalidRefreshCount" id="invalidRefreshCount"
-                           value="${customerKeywordVO.invalidRefreshCount} " style="width:160px;"></td>
-                <td align="right" width="100"><input type="submit" name="btnQuery" id="btnQuery"
-                                                     value=" 查询 ">
+                           value="${customerKeywordCrilteria.invalidRefreshCount} " style="width:160px;"></td>
+                <%--</c:if>--%>
+                <td align="right" width="100">
+                    <input type="submit" class="ui-button ui-widget ui-corner-all" onclick="resetPageNumber()"
+                           value=" 查询 ">
                 </td>
-            </form>
-        </tr>
-    </table>
+            </tr>
+        </table>
+    </form>
     <table>
         <tr>
-            <td align="right"><a href="javascript:delAllItems(null)">删除所选关键字</a> |
-                <a href="javascript:delAllItems('emptyTitleAndUrl')">删除标题和网址为空的关键字</a> |
-                <a href="javascript:delAllItems('emptyTitle')">删除标题为空的关键字</a> |
-                <a href="javascript:resetTitle()">清空结果采集标题标志</a> |
-                <a href="javascript:clearTitle('${customerKeywordVO.customerUuid}', null)">清空所选关键字标题</a>
+            <td align="right"><a href="javascript:delAllItems(null,'${customer.uuid}')">删除所选</a> |
+                <a href="javascript:delAllItems('emptyTitleAndUrl','${customer.uuid}')">删除标题和网址为空的关键字</a> |
+                <a href="javascript:delAllItems('emptyTitle','${customerUuid}')">删除标题为空的关键字</a> |
+                <a href="javascript:resetTitle('${customer.uuid}','captureTitle')">重采标题</a> |
+                <a href="javascript:clearTitle('${customer.uuid}', null)">清空所选标题</a>
                 |
-                <a href="javascript:clearTitle('${customerKeywordVO.customerUuid}', 'all')">清空当前客户关键字标题</a>
-                |
-                <a target="_blank" href="javascript:changeOptimizationGroupDialog(this)">修改选中关键词分组</a>
+                <a href="javascript:resetTitle('${customer.uuid}', 'all')">清空当前客户标题</a>
             </td>
         </tr>
     </table>
@@ -1011,11 +1161,11 @@
                     <td>
                         <div style="height:16;"><%--<a
                                 href="${customerKeyword.searchEngineUrl}${customerKeyword.Keyword}&pn=&lt;%&ndash;<%=Utils.prepareBaiduPageNumber(customerKeyword.CurrentPosition())%>&ndash;%&gt;"
-                                target="_blank">${customerKeyword.currentPosition}
-                        </a>--%></div>
+                                target="_blank"></a>--%>${customerKeyword.currentPosition}
+                        </div>
                     </td>
 
-                    <td> <%--onMouseMove="showTip('优化日期：<fmt:formatDate value="${customer.optimizeDate}"pattern="yyyy-MM-dd"/> ，要刷：${customerKeyword.OptimizePlanCount}，已刷：${customerKeyword.optimizedCount}')"
+                    <td> <%--onMouseMove="showTip('优化日期：<fmt:formatDate value="${customer.optimizeDate}" pattern="yyyy-MM-dd"/> ，要刷：${customerKeyword.OptimizePlanCount}，已刷：${customerKeyword.optimizedCount}')"
                         onMouseOut="closeTip()">${customerKeyword.collectMethodName}--%>
                     </td>
 
@@ -1040,7 +1190,7 @@
                             <td>${customerKeyword.optimizeGroupName == null ? "" : customerKeyword.optimizeGroupName}
                             </td>
                             <td>
-                                <a href="modify.jsp?uuid=${customerKeyword.uuid}">修改</a> |
+                                <a href="javascript:modifyCustomerKeyword('${customerKeyword.uuid}')">修改</a>|
                                 <a href="javascript:delItem('${customerKeyword.uuid}')">删除</a>
                             </td>
                         </c:when>
@@ -1085,6 +1235,11 @@
            onclick="changePaging('${page.pages}','${page.size}')" value="末页">&nbsp;&nbsp;&nbsp;&nbsp;
     总记录数:${page.total}&nbsp;&nbsp;&nbsp;&nbsp;
     每页显示条数:<select id="chooseRecords" onchange="changePaging(${page.current},this.value)">
+    <%--<option value="10">10</option>
+    <option value="25">25</option>
+    <option value="50">50</option>
+    <option value="75">75</option>
+    <option value="100">100</option>--%>
     <option>10</option>
     <option>25</option>
     <option>50</option>
@@ -1118,118 +1273,101 @@
     </form>
 </div>
 <div id="customerKeywordDialog">
-    <table width=80% style="font-size:12px;">
-        <input type="hidden" name="customerUuid" value="${customer.uuid}">
-        <tr height="30"><td align="right">关键字:</td> <td><input type="text" name="keyword" id="keyword" value="" style="width:300px;"> 输入您要刷的关键字</td></tr>
-        <tr height="30"><td align="right">搜索引擎:</td>
-            <td>
+    <form id="customerKeywordForm">
+        <ul>
+            <input type="hidden" name="uuid" id="uuid" value="" style="width:300px;">
+            <li><span class="customerKeywordSpanClass">关键字:</span><input type="text" name="keyword" id="keyword" value=""
+                                                    style="width:300px;"> 输入您要刷的关键字
+            </li>
+            <li><span class="customerKeywordSpanClass">搜索引擎:</span>
                 <select name="searchEngine" id="searchEngine" onChange="searchEngineChanged();">
                     <option value="百度" selected>百度</option>
                     <option value="搜狗">搜狗</option>
                     <option value="360">360</option>
                     <option value="谷歌">谷歌</option>
                 </select>
-
                 <input type="hidden" id="initialPosition" name="initialPosition" value="">
-                当前指数:<input type="text" id="initialIndexCount" size="6" name="initialIndexCount" value="100"><font color="red"><span id="initialIndexCountSpan"></span></font>， 当前排名:<font color="red"><span id="initialPositionSpan"></span></font>
-            </td>
-        </tr>
-        <tr height="1"><td align="right" colspan="2"><hr style="height: 1px; border:none; border-top:1px dashed #CCCCCC;" /></td></tr>
-        <tr height="30"><td align="right">PC域名:</td> <td><input type="text" name="url" id="url" value="" style="width:300px;" ><font color="red"> 格式(www.baidu.com)即可</font></td></tr>
-        <tr height="30"><td align="right">PC原始域名:</td> <td><input type="text" name="originalUrl" id="originalUrl" value="" style="width:300px;" ><font color="red"> 格式(www.baidu.com)即可</font></td></tr>
+                当前指数:<input type="text" id="initialIndexCount" size="6" name="initialIndexCount" value="100">
+                <font color="red"><span id="initialIndexCountSpan"></span></font> 当前排名:<font color="red"><span
+                        id="initialPositionSpan"></span></font></li>
 
-        <!-- <tr height="30"><td align="right">网站快照:</td> <td><input type="text" name="snapshotDateTime" id="snapshotDateTime" value="" style="width:300px;" ><font color="red"> 直接从百度结果中拷贝</font></td></tr>	 -->
-        <!--  <tr height="30"><td align="right">网站标题:</td> <td><input type="text" name="title" id="title" value="" style="width:300px;" ></td></tr>  -->
+            <hr style="height: 1px; border:none; border-top:1px dashed #CCCCCC;"/>
 
-
-        <tr height="30"><td align="right">PC第一报价:</td> <td><input name="positionFirstFee" id="positionFirstFee" value="" onBlur="setSecondThirdDefaultFee();" style="width:100px;" type="text">元 <a href="javascript:void(0);" onclick="showMoreFee();"><span id="feeShowHideLabel">更多</span></a></td></tr>
-        <tr height="30" class="hiddentr" id="secondFee"><td align="right">PC第二报价:</td> <td><input name="positionSecondFee" onBlur="setThirdDefaultFee();" id="positionSecondFee" value="" style="width:100px;" type="text">元</tr>
-        <tr height="30" class="hiddentr" id="thirdFee"><td align="right">PC第三报价:</td> <td><input name="positionThirdFee" id="positionThirdFee" value="" style="width:100px;" type="text">元</td></tr>
-        <tr height="30" class="hiddentr" id="forthFee"><td align="right">PC第四报价:</td> <td><input name="positionForthFee" id="positionForthFee" value="0" style="width:100px;" type="text">元</td></tr>
-        <tr height="30" class="hiddentr" id="fifthFee"><td align="right">PC第五报价:</td> <td><input name="positionFifthFee" id="positionFifthFee" value="0" style="width:100px;" type="text">元</td></tr>
-        <tr height="30" class="hiddentr" id="firstPageFee"><td align="right">PC首页报价:</td> <td><input name="positionFirstPageFee" id="positionFirstPageFee" value="0" style="width:100px;" type="text">元</td></tr>
-        <c:if test="${user.vipType}">
-            <tr height="30"><td align="right">PC第一成本:</td> <td><input name="positionFirstCost" id="positionFirstCost" onBlur="setSecondThirdDefaultCost();" value="0" style="width:100px;" type="text">元 <a href="javascript:void(0);" onclick="showMoreCost();"><span id="costShowHideLabel">更多</span></a></td></tr>
-            <tr  height="30" class="hiddentr" id="secondCost"><td align="right">PC第二成本:</td> <td><input name="positionSecondCost" id="positionSecondCost" onBlur="setThirdDefaultCost();" value="0" style="width:100px;" type="text">元</tr>
-            <tr  height="30" class="hiddentr" id="thirdCost"><td align="right">PC第三成本:</td> <td><input name="positionThirdCost" id="positionThirdCost" value="0" style="width:100px;" type="text">元</td></tr>
-            <tr height="30" class="hiddentr" id="forthCost"><td align="right">PC第四成本:</td> <td><input name="positionForthCost" id="positionForthCost" value="0" style="width:100px;" type="text">元</td></tr>
-            <tr height="30" class="hiddentr" id="fifthCost"><td align="right">PC第五成本:</td> <td><input name="positionFifthCost" id="positionFifthCost" value="0" style="width:100px;" type="text">元</td></tr>
-        </c:if>
-        <c:if test="${user.vipType}">
-            <tr height="30">
-                <td align="right" width="120">PC服务提供商:</td>
-                <td align="left">
+            <li><span class="customerKeywordSpanClass">PC域名:</span><input type="text" name="url" id="url" value="" style="width:300px;">
+                <font color="red"> 格式(www.baidu.com)即可</font></li>
+            <li><span class="customerKeywordSpanClass">PC原始域名:</span><input type="text" name="originalUrl" id="originalUrl" value=""
+                                                       style="width:300px;"><font color="red">
+                格式(www.baidu.com)即可</font></li>
+            <li><span class="customerKeywordSpanClass">PC第一报价:</span><input name="positionFirstFee" id="positionFirstFee" value=""
+                                                       onBlur="setSecondThirdDefaultFee();" style="width:100px;"
+                                                       type="text">元 </li>
+            <li><span class="customerKeywordSpanClass">PC第二报价:</span><input name="positionSecondFee" onBlur="setThirdDefaultFee();"
+                                                       id="positionSecondFee" value="" style="width:100px;" type="text">元
+            </li>
+            <li><span class="customerKeywordSpanClass">PC第三报价:</span><input name="positionThirdFee" id="positionThirdFee" value=""
+                                                       style="width:100px;" type="text">元
+            </li>
+            <li><span class="customerKeywordSpanClass">PC第四报价:</span><input name="positionForthFee" id="positionForthFee" value="0"
+                                                       style="width:100px;" type="text">元
+            </li>
+            <li><span class="customerKeywordSpanClass">PC第五报价:</span><input name="positionFifthFee" id="positionFifthFee" value="0"
+                                                       style="width:100px;" type="text">元
+            </li>
+            <li><span class="customerKeywordSpanClass">PC首页报价:</span><input name="positionFirstPageFee" id="positionFirstPageFee" value="0"
+                                                       style="width:100px;" type="text">元
+            </li>
+            <c:if test="${user.vipType}">
+                <li><span class="customerKeywordSpanClass"></span><a href="javascript:showCustomerKeywordCost()">显示PC成本(再次点击关闭)</a></li>
+                <li>
+                    <ul id="customerKeywordCost" style="display: none">
+                        <li><span class="customerKeywordSpanClass">PC第一成本:</span><input name="positionFirstCost" id="positionFirstCost"
+                                                                   onBlur="setSecondThirdDefaultCost();" value="0"
+                                                                   style="width:100px;" type="text">元 </li>
+                        <li><span class="customerKeywordSpanClass">PC第二成本:</span><input name="positionSecondCost" id="positionSecondCost"
+                                                                   onBlur="setThirdDefaultCost();" value="0"
+                                                                   style="width:100px;" type="text">元
+                        </li>
+                        <li><span class="customerKeywordSpanClass">PC第三成本:</span><input name="positionThirdCost" id="positionThirdCost"
+                                                                   value="0" style="width:100px;" type="text">元
+                        </li>
+                        <li><span class="customerKeywordSpanClass">PC第四成本:</span><input name="positionForthCost" id="positionForthCost"
+                                                                   value="0" style="width:100px;" type="text">元
+                        </li>
+                        <li><span class="customerKeywordSpanClass">PC第五成本:</span><input name="positionFifthCost" id="positionFifthCost"
+                                                                   value="0" style="width:100px;" type="text">元
+                        </li>
+                    </ul>
+                </li>
+            </c:if>
+            <c:if test="${user.vipType}">
+                <li><span class="customerKeywordSpanClass">PC服务提供商:</span>
                     <select name="serviceProvider" id="serviceProvider">
                         <option value=""></option>
-                        <c:forEach items="serviceProviders" var="serviceProvider">
-                            <%-- for (int i = 0; i < serviceProviders.size(); i++)
-                             {
-                                 ServiceProviderVO serviceProviderVO = (ServiceProviderVO)serviceProviders.get(i);
-                                 if (serviceProviderVO.getServiceProviderName().equals(ServiceProviderVO.DEFAULT_SERVICE_PROVIDER))
-                                 {
-                                     out.println("<option selected value='" + serviceProviderVO.getServiceProviderName() + "'>" + serviceProviderVO.getServiceProviderName() + "</option>");
-                                 }
-                                 else
-                                 {
-                                     out.println("<option value='" + serviceProviderVO.getServiceProviderName() + "'>" + serviceProviderVO.getServiceProviderName() + "</option>");
-                                 }
-                             }--%>
-
+                        <c:forEach items="${serviceProviders}" var="serviceProvider">
+                            <option value="${serviceProvider.serviceProviderName}">${serviceProvider.serviceProviderName}</option>
                         </c:forEach>
-                    </select>
-                </td>
-            </tr>
-        </c:if>
-        <tr height="30"><td align="right">排序:</td> <td><input type="text" name="sequence" id="sequence" value="0" style="width:300px;" ></td></tr>
-        <tr height="30"><td align="right">标题:</td> <td><input type="text" name="title" id="title" value="" style="width:300px;" ></td></tr>
 
-        <%--<%
-            java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat("yyyy-MM-dd");
-            java.util.Date currentTime = new java.util.Date();//得到当前系统时间
-            String today = formatter.format(currentTime); //将日期时间格式化
-        %>
-        --%>
-        <tr height="1"><td align="right" colspan="2"><hr style="height: 1px; border:none; border-top:1px dashed #CCCCCC;" /></td></tr>
-        <%--<input type="hidden" name="startOptimizedTime" id="startOptimizedTime" value="<%=today%>">--%>
-        <!-- <tr height="30"><td align="right">开始优化日期:</td> <td><input name="startOptimizedTime" id="startOptimizedTime" class="Wdate" type="text" style="width:100px;"  onClick="WdatePicker()" value="">格式：2014-10-23</td></tr> -->
-        <tr height="30"><td align="right">优化组名:</td> <td><input name="optimizeGroupName" id="optimizeGroupName" type="text" style="width:200px;" value="">比如：shouji</td></tr>
-        <input type="hidden" name="relatedKeywords" id="relatedKeywords" value="">
-        <!-- <tr height="30"><td align="right">关联关键字:</td> <td><input name="relatedKeywords" id="relatedKeywords" type="text" style="width:200px;" value="">多个逗号分隔</td></tr> -->
-        <tr height="30"><td align="right">收费方式:</td>
-            <td>
-                <table width=50%>
-                    <tr>
-                        <td>
-                            <select name="collectMethod" id="collectMethod" onChange="setEffectiveToTime();">
-                                <option value="PerMonth"  selected>按月</option>
-                                <option value="PerTenDay">十天</option>
-                                <option value="PerSevenDay">七天</option>
-                                <option value="PerDay">按天</option>
-                            </select>
-                            <input type="hidden" id="status" name="status" value="1">
-                        </td>
-                        <!--
-						      <td align="left" width="50">状态:</td>
-				          	  <td align="left">
-				          	  	 <select name="status" id="status" value="2">
-				          	  	 	  <option value="2">新增</option>
-				          	  	 	  <c:if test="${user.vipType}">
-				          	  	 	  <option value="1" selected>激活</option>
-				          	  	 	  <option value="0">过期</option>
-				          	  	 	  </c:if>
-				          	  	 </select>
-				              </td>
-				              -->
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <%--<tr height="30"><td align="right"></td>
-            <td>
-                <input type="submit" name="btnsub" id="btnsub" value=" 提交 ">
-            </td>
-        </tr>--%>
-    </table>
+                    </select></li>
+            </c:if>
+            <li><span class="customerKeywordSpanClass">排序:</span><input type="text" name="sequence" id="sequence" value="0"
+                                                   style="width:300px;"></li>
+            <li><span class="customerKeywordSpanClass">标题:</span><input type="text" name="title" id="title" value="" style="width:300px;">
+            </li>
+            <hr style="height: 1px; border:none; border-top:1px dashed #CCCCCC;"/>
+            <li><span class="customerKeywordSpanClass">优化组名:</span><input name="optimizeGroupName" id="optimizeGroupName" type="text"
+                                                     style="width:200px;" value="">比如：shouji
+                <input type="hidden" name="relatedKeywords" id="relatedKeywords" value=""></li>
+            <li><span class="customerKeywordSpanClass">收费方式:</span>
+                <select name="collectMethod" id="collectMethod" onChange="setEffectiveToTime();">
+                    <option value="PerMonth" selected>按月</option>
+                    <option value="PerTenDay">十天</option>
+                    <option value="PerSevenDay">七天</option>
+                    <option value="PerDay">按天</option>
+                </select>
+                <input type="hidden" id="status" name="status" value="1">
+            </li>
+        </ul>
+    </form>
 </div>
 </body>
 </html>

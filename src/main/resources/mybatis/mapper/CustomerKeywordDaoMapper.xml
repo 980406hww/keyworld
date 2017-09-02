@@ -131,7 +131,13 @@
         <if test="customerKeywordCrilteria.status != null and customerKeywordCrilteria.status != ''">AND ck.fStatus = #{customerKeywordCrilteria.status}</if>
         <if test="customerKeywordCrilteria.invalidRefreshCount != null and customerKeywordCrilteria.invalidRefreshCount != ''">AND ck.fInvalidRefreshCount = #{customerKeywordCrilteria.invalidRefreshCount}</if>
         <if test="customerKeywordCrilteria.optimizeGroupName != null and customerKeywordCrilteria.optimizeGroupName != ''">AND ck.fOptimizeGroupName = #{customerKeywordCrilteria.optimizeGroupName}</if>
-        <if test="customerKeywordCrilteria.creationFromTime != null and customerKeywordCrilteria.creationFromTime != ''">AND ck.fUserID = #{customerKeywordCrilteria.createTime}</if>
+        <if test="customerKeywordCrilteria.creationFromTime != null and customerKeywordCrilteria.creationFromTime != ''">AND ck.fCreateTime >= #{customerKeywordCrilteria.creationFromTime}</if>
+        <if test="customerKeywordCrilteria.creationToTime != null and customerKeywordCrilteria.creationToTime != ''">AND ck.fCreateTime &lt;= #{customerKeywordCrilteria.creationToTime}</if>
+        <if test="customerKeywordCrilteria.entryType != null and customerKeywordCrilteria.entryType != ''">AND ck.fType = #{customerKeywordCrilteria.entryType}</if>
+        <if test="customerKeywordCrilteria.position != null and customerKeywordCrilteria.position != ''"><![CDATA[AND fCurrentPosition > 0 and fCurrentPosition <= #{customerKeywordCrilteria.position}  ]]>   </if>
+        <if test="customerKeywordCrilteria.orderElement != null and customerKeywordCrilteria.orderElement != ''">
+            ORDER BY ${customerKeywordCrilteria.orderElement}  DESC
+        </if>
     </select>
 
     <update id="updateCustomerKeywordGroupName">
@@ -139,11 +145,41 @@
     </update>
 
     <update id="changeOptimizationGroup">
-        UPDATE t_customer_keyword SET fOptimizeGroupName = #{customerKeyword.optimizeGroupName} WHERE fUuid = #{customerKeyword.Uuid} AND fTerminalType = #{customerKeyword.terminalType}
+        UPDATE t_customer_keyword SET fOptimizeGroupName = '${customerKeyword.optimizeGroupName}' , fUpdateTime = CURRENT_TIMESTAMP WHERE fUuid = '${customerKeyword.Uuid}' AND fTerminalType = '${customerKeyword.terminalType}'
     </update>
 
     <delete id="deleteCustomerKeyword">
-        delete from t_customer_keyword where fUuid = #{customerKeyword.uuid} and fType = #{customerKeyword.type}
+        <if test="deleteType==null || deleteType==''">
+            delete from t_customer_keyword where fUuid = #{customerKeyword.uuid} AND fType = #{customerKeyword.type}
+        </if>
+        <if test="deleteType == 'emptyTitleAndUrl'">
+            delete from t_customer_keyword where  fCustomerUuid = #{customerKeyword.customerUuid} AND fTerminalType = #{customerKeyword.terminalType}  AND (fTitle = '' or fTitle IS null) AND (fUrl = '' or fUrl IS NULL)
+        </if>
+        <if test="deleteType == 'emptyTitle'">
+            delete from t_customer_keyword where  fCustomerUuid = #{customerKeyword.customerUuid} AND fTerminalType = #{customerKeyword.terminalType}  AND (fTitle = '' or fTitle IS null)
+        </if>
     </delete>
 
+    <!--重采标题-->
+    <update id="resetTitle">
+        <if test="resetType == 'all'">
+            UPDATE t_customer_keyword SET fTitle = NULL where fCustomerUuid=#{customerKeyword.customerUuid}
+        </if>
+        <if test="resetType == 'captureTitle'">
+            UPDATE t_customer_keyword SET fTitle = NULL, fCaptureTitleQueryTime = NULL, fCapturedTitle = 0 where 1 = 1
+
+            <if test="customerKeyword.customerUuid !=null || customerKeyword.customerUuid !='' ">
+                and fCustomerUuid=#{customerKeyword.customerUuid}
+            </if>
+            <if test="customerKeyword.terminalType !=null || customerKeyword.terminalType !='' ">
+                and fTerminalType = #{customerKeyword.terminalType}
+            </if>
+            <if test="customerKeyword.type !=null || customerKeyword.type !='' ">
+                and fType = #{customerKeyword.type}
+            </if>
+            <if test="customerKeyword.status !=null || customerKeyword.status !='' ">
+                and fStatus = #{customerKeyword.status}
+            </if>
+        </if>
+    </update>
 </mapper>

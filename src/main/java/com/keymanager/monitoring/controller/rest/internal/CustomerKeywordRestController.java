@@ -5,9 +5,11 @@ import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.CustomerKeywordCrilteria;
 import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.CustomerKeyword;
+import com.keymanager.monitoring.entity.ServiceProvider;
 import com.keymanager.monitoring.entity.User;
 import com.keymanager.monitoring.service.CustomerKeywordService;
 import com.keymanager.monitoring.service.CustomerService;
+import com.keymanager.monitoring.service.ServiceProviderService;
 import com.keymanager.monitoring.service.UserService;
 import com.keymanager.util.PortTerminalTypeMapping;
 import com.keymanager.util.Utils;
@@ -23,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.File;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -40,10 +43,14 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	@Autowired
 	private CustomerService customerService;
 
+	@Autowired
+	private ServiceProviderService serviceProviderService;
+
 	@RequestMapping(value = "/clearTitle", method = RequestMethod.POST)
-	public ResponseEntity<?> clearTitle(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) throws Exception{
+	public ResponseEntity<?> clearTitle(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
 		String uuids = (String) requestMap.get("uuids");
 		String customerUuid = (String) requestMap.get("customerUuid");
+		String clearType = (String) requestMap.get("clearType");
 		String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
 		try{
 			customerKeywordService.clearTitle(uuids, customerUuid, terminalType);
@@ -53,30 +60,63 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
 		}
 	}
-	@RequestMapping(value="searchCustomerKeywords/{status}/{customerUuid}" , method=RequestMethod.GET)
+
+	@RequestMapping(value="/searchCustomerKeywords/{status}/{customerUuid}" , method=RequestMethod.GET)
 	public ModelAndView searchCustomerKeywords(@PathVariable("status") int status,@PathVariable("customerUuid") Long customerUuid,@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request){
 		CustomerKeywordCrilteria customerKeywordCrilteria = new CustomerKeywordCrilteria();
-		customerKeywordCrilteria.setStatus(status);
-		customerKeywordCrilteria.setCustomerUuid(customerUuid);
+		customerKeywordCrilteria.setStatus(status+"");
+		customerKeywordCrilteria.setCustomerUuid(customerUuid+"");
 		return constructCustomerKeywordModelAndView(request, customerKeywordCrilteria, currentPageNumber+"", pageSize+"");
 	}
 
-	@RequestMapping(value="searchCustomerKeywords" , method=RequestMethod.POST)
-	public ModelAndView searchCustomerKeywords(HttpServletRequest request, CustomerKeywordCrilteria customerKeywordCrilteria, String currentPageNumber, String pageSize) {
-		return  constructCustomerKeywordModelAndView(request, customerKeywordCrilteria, currentPageNumber, pageSize);
+	@RequestMapping(value = "/searchCustomerKeywords", method = RequestMethod.POST)
+	public ModelAndView searchCustomerKeywords(/*CustomerKeywordCrilteria customerKeywordCrilteria,*/HttpServletRequest request) {
+		try {
+			String customerUuid = request.getParameter("customerUuid").trim();
+			String url = request.getParameter("url").trim();
+			String keyword = request.getParameter("keyword").trim();
+			String creationFromTime = request.getParameter("creationFromTime").trim();
+			String creationToTime = request.getParameter("creationToTime").trim();
+			String status = request.getParameter("status").trim();
+			String optimizeGroupName = request.getParameter("optimizeGroupName").trim();
+			String orderElement = request.getParameter("orderElement").trim();
+			if(!orderElement.equals("")){
+				switch (Integer.parseInt(orderElement)){
+					case 0 : orderElement = "fCreateTime";break;
+					case 1: orderElement = "fCurrentPosition";break;
+				}
+			}
+			String invalidRefreshCount = request.getParameter("invalidRefreshCount").trim();
+			String position = request.getParameter("position").trim();
+			CustomerKeywordCrilteria customerKeywordCrilteria = new CustomerKeywordCrilteria(customerUuid, url, keyword,creationFromTime, creationToTime, status, optimizeGroupName, orderElement, invalidRefreshCount, position, null) ;
+			String currentPageNumber = request.getParameter("currentPageNumber");//
+			String pageSize = request.getParameter("pageSize");
+			if (null == currentPageNumber && null == pageSize) {
+				currentPageNumber = "1";
+				pageSize = "30";
+			}
+			return constructCustomerKeywordModelAndView(request, customerKeywordCrilteria, currentPageNumber, pageSize);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return null;
+		}
 	}
 
 	private ModelAndView constructCustomerKeywordModelAndView(HttpServletRequest request, CustomerKeywordCrilteria customerKeywordCrilteria, String currentPage, String pageSize) {
-		ModelAndView modelAndView = new ModelAndView("/customerkeyword/customerKeywordList");
 		HttpSession session = request.getSession();
+		ModelAndView modelAndView = new ModelAndView("/customerkeyword/customerKeywordList");
 		String userID = (String) session.getAttribute("username");
 		User user = userService.getUser(userID);
 		Customer customer = customerService.selectById(customerKeywordCrilteria.getCustomerUuid());
+		String entryType = (String) session.getAttribute("entry");
+		customerKeywordCrilteria.setEntryType(entryType);
+		List<ServiceProvider> serviceProviders = serviceProviderService.searchServiceProviders();
 		Page<CustomerKeyword> page = customerKeywordService.searchCustomerKeywords(new Page<CustomerKeyword>(Integer.parseInt(currentPage), Integer.parseInt(pageSize)), customerKeywordCrilteria);
-		modelAndView.addObject("customerKeywordVO", customerKeywordCrilteria);
+		modelAndView.addObject("customerKeywordCrilteria", customerKeywordCrilteria);
 		modelAndView.addObject("page", page);
 		modelAndView.addObject("user", user);
 		modelAndView.addObject("customer", customer);
+		modelAndView.addObject("serviceProviders",serviceProviders);
 		return modelAndView;
 	}
 
@@ -104,9 +144,10 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 			return new ResponseEntity<Object>(true, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
-			return new ResponseEntity<Object>(false, HttpStatus.OK);
+			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
 		}
 	}
+
 	//修改选中关键字组名
 	@RequestMapping(value = "/changeOptimizationGroup", method = RequestMethod.POST)
 	public ResponseEntity<?> changeOptimizationGroup(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
@@ -168,8 +209,8 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		return false;
 	}
 
-	@RequestMapping(value = "/getCustomerKeyword/{uuid}" , method = RequestMethod.GET)
-	public ResponseEntity<?> getCustomerKeyword(@PathVariable("uuid")Long uuid){
+	@RequestMapping(value = "/getCustomerKeywordBycustoemrUuid/{custoemrUuid}", method = RequestMethod.GET)
+	public ResponseEntity<?> getCustomerKeywordBycustoemrUuid(@PathVariable("custoemrUuid")Long uuid){
 		return new ResponseEntity<Object>(customerService.getCustomerWithKeywordCount(uuid), HttpStatus.OK);
 	}
 
@@ -188,25 +229,65 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	@RequestMapping(value = "/deleteCustomerKeywords" , method = RequestMethod.POST)
 	public ResponseEntity<?> deleteCustomerKeywords(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
 		try {
+			String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
 			List<String> customerKeywordUuids = (List<String>) requestMap.get("uuids");
-			String entry = (String)request.getSession().getAttribute("entry");
-			customerKeywordService.deleteCustomerKeywords(customerKeywordUuids,entry);
+			String entry = (String) request.getSession().getAttribute("entry");
+			String deleteType = (String) requestMap.get("deleteType");
+			String customerUuid = (String) requestMap.get("customerUuid");
+			customerKeywordService.deleteCustomerKeywords(customerKeywordUuids, entry, deleteType,terminalType,customerUuid);
 			return new ResponseEntity<Object>(true , HttpStatus.OK);
 		}catch (Exception e){
 			return new ResponseEntity<Object>(false , HttpStatus.BAD_REQUEST);
 		}
 	}
 
-	@RequestMapping(value = "/saveCustomerKeyword", method = RequestMethod.POST)
-	public ResponseEntity<?> saveCustomerKeyword(@RequestBody CustomerKeyword customerKeyword, HttpServletRequest request) {
+	//重采标题
+	@RequestMapping(value = "/resetTitle", method = RequestMethod.POST)
+	public ResponseEntity<?> resetTitle(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
 		try{
+			CustomerKeyword customerKeyword = new CustomerKeyword();
+			String customerUuid= (String)  requestMap.get("customerUuid");
+			String resetType= (String)  requestMap.get("resetType");
+			String status= (String)  requestMap.get("status");
 			String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
 			String entryType = (String)request.getSession().getAttribute("entry");
-//			customerKeywordService.addCustomerKeywordsFromSimpleUI(customerKeywords, terminalType, entryType);
+
+			customerKeyword.setCustomerUuid(Long.parseLong(customerUuid));
+			customerKeyword.setStatus(Integer.parseInt(status));
+			customerKeyword.setTerminalType(terminalType);
+			customerKeyword.setType(entryType);
+			customerKeywordService.resetTitle(customerKeyword,resetType);
 			return new ResponseEntity<Object>(true, HttpStatus.OK);
 		}catch (Exception ex){
 			logger.error(ex.getMessage());
 			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
 		}
+	}
+
+	@RequestMapping(value = "/saveCustomerKeyword", method = RequestMethod.POST)
+	public ResponseEntity<?> saveCustomerKeyword(@RequestBody CustomerKeyword customerKeyword, HttpServletRequest request) {
+		try{
+			if (customerKeyword.getUuid() == null) {
+				String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+				String entryType = (String) request.getSession().getAttribute("entry");
+				customerKeyword.setTerminalType(terminalType);
+				customerKeyword.setType(entryType);
+				customerKeywordService.addCustomerKeyword(customerKeyword);
+				return new ResponseEntity<Object>(true, HttpStatus.OK);
+			} else {
+				customerKeyword.setUpdateTime(new Date());
+				customerKeywordService.updateById(customerKeyword);
+
+				return new ResponseEntity<Object>(true, HttpStatus.OK);
+			}
+		}catch (Exception ex){
+			logger.error(ex.getMessage());
+			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@RequestMapping(value = "/getCustomerKeywordByCustomerKeywordUuid/{customerKeywordUuid}" , method = RequestMethod.POST)
+	public ResponseEntity<?> getCustomerKeywordByUuid(@PathVariable("customerKeywordUuid")Long customerKeywordUuid){
+		return new ResponseEntity<Object>(customerKeywordService.getCustomerKeyword(customerKeywordUuid), HttpStatus.OK);
 	}
 }

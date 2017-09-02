@@ -1,14 +1,10 @@
 package com.keymanager.monitoring.service;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.criteria.CustomerCriteria;
 import com.keymanager.monitoring.dao.CustomerDao;
 import com.keymanager.monitoring.entity.Customer;
-import com.keymanager.monitoring.entity.CustomerKeyword;
-import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,10 +32,10 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 		}
 	}
 
-	public Customer getCustomerWithKeywordCount(long uuid){
-		Customer customer = customerDao.selectById(uuid);
+	public Customer getCustomerWithKeywordCount(long customerUuid){
+		Customer customer = customerDao.selectById(customerUuid);
 		if(customer != null){
-			customer.setKeywordCount(customerKeywordService.getCustomerKeywordCount(uuid));
+			customer.setKeywordCount(customerKeywordService.getCustomerKeywordCount(customerUuid));
 		}
 		return customer;
 	}

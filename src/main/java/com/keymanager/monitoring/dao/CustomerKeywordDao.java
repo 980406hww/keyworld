@@ -37,6 +37,8 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void changeOptimizationGroup(@Param("customerKeyword")CustomerKeyword customerKeyword);
 
-    void deleteCustomerKeyword(@Param("customerKeyword")CustomerKeyword customerKeyword);
+    void deleteCustomerKeyword(@Param("customerKeyword")CustomerKeyword customerKeyword,@Param("deleteType") String deleteType);
+
+    void resetTitle(@Param("customerKeyword")CustomerKeyword customerKeyword , @Param("resetType") String resetType);
 
 }
