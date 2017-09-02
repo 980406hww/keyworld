@@ -263,6 +263,7 @@
                 width: 530,
                 height: 365,
                 modal: true,
+                title: '负面信息',
                 position: { using:function(pos){
                     var topOffset = $(this).css(pos).offset().top;
                     if (topOffset = 0||topOffset>0) {

@@ -49,9 +49,10 @@ public class NegativeListRestController {
 
     private ModelAndView constructNegativeListModelAndView(HttpServletRequest request, NegativeListCriteria negativeListCriteria, int currentPageNumber, int pageSize) {
         ModelAndView modelAndView = new ModelAndView("/negativelist/list");
+        String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+        negativeListCriteria.setTerminalType(terminalType);
         Page<NegativeList> page = negativeListService.searchNegativeLists(new Page<NegativeList>(currentPageNumber,
                 pageSize), negativeListCriteria);
-        String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
         modelAndView.addObject("terminalType", terminalType);
         modelAndView.addObject("negativeListCriteria", negativeListCriteria);
         modelAndView.addObject("page", page);

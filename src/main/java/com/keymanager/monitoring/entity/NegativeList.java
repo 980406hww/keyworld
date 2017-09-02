@@ -23,9 +23,6 @@ public class NegativeList extends BaseEntity {
 	@TableField(value = "fPosition")
 	private Integer position;
 
-	@TableField(value = "fComplainTimes")
-	private Integer complainTimes;
-
 	public String getTerminalType() {
 		return terminalType;
 	}
@@ -72,13 +69,5 @@ public class NegativeList extends BaseEntity {
 
 	public void setPosition(Integer position) {
 		this.position = position;
-	}
-
-	public Integer getComplainTimes() {
-		return complainTimes;
-	}
-
-	public void setComplainTimes(Integer complainTimes) {
-		this.complainTimes = complainTimes;
 	}
 }

@@ -5,14 +5,13 @@
     <%@page contentType="text/html;charset=utf-8" %>
 
     <script language="javascript" type="text/javascript" src="/common.js"></script>
-    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <script language="javascript" type="text/javascript" src="/js/slide1.12.4.js"></script>
-    <link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css">
-    <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <link href="/css/menu.css" rel="stylesheet" type="text/css"/>
 
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/ui/jquery-ui.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery142.js"></script>
+    <script language="javascript" type="text/javascript" src="/ui/jquery-ui.js"></script>
+    <script language="javascript" type="text/javascript" src="/js/My97DatePicker/WdatePicker.js"></script>
+    <script language="javascript" type="text/javascript" src="/js/slide1.12.4.js"></script>
     <style type="text/css">
         .wrap {
             word-break: break-all;
@@ -1131,7 +1130,7 @@
             <input id="chargeTypeIntervalUuid" type="hidden"/>
             <input id="PC" type="checkbox" name="operationType" onclick="initRangeTable(this)"/>PC
             <div id="pcOperationTypeDiv">
-                <table id="tabPC" border="1" width="100%" align="center" style="margin-top:10px" cellspacing="0">
+                <table id="tabPC" border="1" width="100%" align="center" style="margin-top:10px;font-size: 12px;" cellspacing="0">
                     <tr style="text-align: center">
                         <td width="20%">序号</td>
                         <td width="20%">起始指数</td>
@@ -1149,7 +1148,7 @@
             <br>
             <input id="Phone" type="checkbox" name="operationType" onclick="initRangeTable(this)"/>Phone
             <div id="phoneOperationTypeDiv">
-                <table id="tabPhone" border="1" width="100%" align="center" style="margin-top:10px" cellspacing="0">
+                <table id="tabPhone" border="1" width="100%" align="center" style="margin-top:10px;font-size: 12px;" cellspacing="0">
                     <tr style="text-align: center">
                         <td width="20%">序号</td>
                         <td width="20%">起始指数</td>
@@ -1253,7 +1252,7 @@
                 <input type="input" id="group" style="width:480px" value="pc_pm_xiaowu"/>
             </c:when>
             <c:otherwise>
-                <input type="input" id="group" style="width:480px" value="m_pm_xiaowu"/>
+                <input type="input" id="group" style="width:480px" value="m_pm_tiantian"/>
             </c:otherwise>
         </c:choose>
     </form>
