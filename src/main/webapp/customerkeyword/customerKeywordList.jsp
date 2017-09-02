@@ -82,42 +82,8 @@
         $("#updateCustomerKeywordGroupNameDialog").hide();
         $("#uploadSimpleconDailog").hide();
         $("#uploadFullconDailog").hide();
-//        $("#customerKeywordDialog").hide();
+        $("#customerKeywordDialog").hide();
         pageLoad();
-
-        $( "#customerKeywordDialog").dialog({
-            autoOpen : false,
-            width: 600,
-            height: 630,
-            position: {
-                my: "center",
-                at: "center center-250px",
-                of: window},
-            title : "添加关键字",
-            show: {
-                effect: "blind",
-                /* duration: 1000*/
-            },
-            hide: {
-                effect: "blind",
-                /*duration: 1000*/
-            },
-            modal: true,
-            resizable: false,
-            buttons: {
-                "保存": function () {
-                    saveCustomerKeyword("${customer.uuid}");
-                    $(this).dialog("close");
-                },
-                "清空": function () {
-                    $('#customerKeywordForm')[0].reset();
-                },
-                "取消": function () {
-                    $(this).dialog("close");
-                    $('#customerKeywordForm')[0].reset();
-                }
-            }
-        });
     });
     function pageLoad() {
         var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
@@ -539,28 +505,31 @@
 
 
     //增加新关键字
-    function addCustomerKeyword(customerUuid) {
-        /*$( "#customerKeywordDialog").dialog({
+    function addCustomerKeyword(customerKeywordUuid) {
+        if (customerKeywordUuid == null) {
+            $("#customerKeywordForm")[0].reset();
+        }
+        $( "#customerKeywordDialog").dialog({
             width: 600,
             height: 630,
-            position: {
+            /*position: {
                 my: "center",
                 at: "center center-250px",
-                of: window},
+                of: window},*/
             title : "添加关键字",
             show: {
                 effect: "blind",
-                /!* duration: 1000*!/
+                /* duration: 1000*/
             },
             hide: {
                 effect: "blind",
-                /!*duration: 1000*!/
+                /*duration: 1000*/
             },
             modal: true,
             resizable: false,
             buttons: {
                 "保存": function () {
-                    saveCustomerKeyword("<%--${customer.uuid}--%>");
+                    saveCustomerKeyword("${customer.uuid}");
                 },
                 "清空": function () {
                     $('#customerKeywordForm')[0].reset();
@@ -570,15 +539,11 @@
                     $('#customerKeywordForm')[0].reset();
                 }
             }
-        });*/
-        $("#customerKeywordForm")[0].reset();
-        $( "#customerKeywordDialog").dialog("open");
-
+        });
     }
 
     function saveCustomerKeyword(customerUuid) {
         var customerKeyword = {};
-
         customerKeyword.uuid =$("#customerKeywordDialog #uuid").val();
         customerKeyword.customerUuid=customerUuid;
         customerKeyword.searchEngine = $("#customerKeywordDialog #searchEngine").val();
@@ -786,7 +751,6 @@
 
     //修改关键字
     function modifyCustomerKeyword(customerKeywordUuid) {
-        $("#customerKeywordForm")[0].reset();
         $.ajax({
             url: '/internal/customerKeyword/getCustomerKeywordByCustomerKeywordUuid/' + customerKeywordUuid,
             headers: {
@@ -821,10 +785,7 @@
                     $("customerKeywordDialog #title").val(customerKeyword.title);
                     $("customerKeywordDialog #optimizeGroupName").val(customerKeyword.optimizeGroupName);
                     $("customerKeywordDialog #relatedKeywords").val(customerKeyword.relatedKeywords);
-
-                    $("#customerKeywordDialog").dialog();
-
-                    showInfo("操作成功", self);
+                    addCustomerKeyword(customerKeywordUuid);
                 } else {
                     showInfo("操作失败", self);
                     window.location.reload();
@@ -1002,7 +963,7 @@
                 <a href="javascript:updateCustomerKeywordGroupNameDialog('${customer.uuid}',null)">修改所有分组</a>
                 | <a target="_blank" href="javascript:changeOptimizationGroupDialog(this)">修改选中分组</a>
                 | <a href="javascript:updateCustomerKeywordGroupName('${customer.uuid}','stop')">下架所有关键字</a>
-                | <a href="javascript:addCustomerKeyword('${customer.uuid}')">增加</a>
+                | <a href="javascript:addCustomerKeyword()">增加</a>
                 | <a target="_blank" href="javascript:uploadsimple('${customer.uuid}',this)"/>Excel上传(简化版)</a>
                 | <a target="_blank" href="/SuperUserSimpleKeywordList.xls">简化版模板下载</a>
                 | <a target="_blank" href="javascript:uploadFull('${customer.uuid}')">xcel上传(完整版)</a>
