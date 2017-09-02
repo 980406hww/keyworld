@@ -60,11 +60,9 @@
                 negativeListBottomDiv.find("#nextButton").attr("disabled", "disabled");
                 negativeListBottomDiv.find("#lastButton").attr("disabled", "disabled");
             } else if (parseInt(currentPage) <= 1) {
-				currentPage = 1;
 				negativeListBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
 				negativeListBottomDiv.find("#upButton").attr("disabled", "disabled");
 			} else {
-				currentPage = pageCount;
 				negativeListBottomDiv.find("#nextButton").attr("disabled", "disabled");
 				negativeListBottomDiv.find("#lastButton").attr("disabled", "disabled");
 			}
