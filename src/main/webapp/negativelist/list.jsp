@@ -29,12 +29,13 @@
 		}
 
 		#negativeListBottomDiv {
+			width: 100%;
 			float: right;
 			width: 580px;
 		}
 	</style>
-	<link href="/css/menu.css" rel="stylesheet" type="text/css"/>
-	<link rel="stylesheet" href="/ui/jquery-ui.css">
+	<link href="/css/menu.css" rel="stylesheet" type="text/css" />
+	<link href="/ui/jquery-ui.css" rel="stylesheet" type="text/css" />
 	<script language="javascript" type="text/javascript" src="/js/My97DatePicker/WdatePicker.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/jquery142.js"></script>
 	<script language="javascript" type="text/javascript" src="/ui/jquery-ui.js"></script>
@@ -355,9 +356,9 @@
 	  &nbsp;&nbsp;&nbsp;&nbsp;
 	  <input id="lastButton" type="button" onclick="changePaging('${page.pages}','${page.size}')" value="末页">
 	  &nbsp;&nbsp;&nbsp;&nbsp;
-	  总记录数:${page.total}&nbsp;&nbsp;&nbsp;&nbsp;
+	  总记录数:${page.total}&nbsp;&nbsp;
 	  每页显示条数:
-	  <select id="chooseRecords" onchange="changePaging(${page.current},this.value)">
+	  <select id="chooseRecords" onchange="changePaging(${page.current},this.value)" style="margin-right: 10px;">
 		  <option>10</option>
 		  <option>25</option>
 		  <option>50</option>
@@ -367,9 +368,7 @@
 	  <input type="hidden" id="currentPageHidden" value="${page.current}"/>
 	  <input type="hidden" id="pageSizeHidden" value="${page.size}"/>
 	  <input type="hidden" id="pageCountHidden" value="${page.pages}"/>
-	  &nbsp;&nbsp;&nbsp;&nbsp;
 	</div>
-	<br>
 
 	<div id="negativeListDialog" style="display: none;">
 		<form id="negativeListForm" style="margin-bottom: 0px;" method="post" action="list.jsp">
