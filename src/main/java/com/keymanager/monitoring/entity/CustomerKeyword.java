@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.FieldStrategy;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.keymanager.enums.CollectMethod;
+import com.keymanager.util.Constants;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.sql.Timestamp;
@@ -653,4 +655,18 @@ public class CustomerKeyword extends BaseEntity {
     public void setStatus(int status) {
         this.status = status;
     }
+
+    public String getCollectMethodName(){
+        return CollectMethod.findByCode(this.getCollectMethod()).getName();
+    }
+    public String getSearchEngineUrl(){
+        return Constants.SEARCH_ENGINE_URL_MAP.get(this.getSearchEngine() + "_" + this.getTerminalType());
+    }
+    public  int getPrepareBaiduPageNumber(int value) {
+        int tmpValue = (value > 0 ? (value - 1) : 0);
+        String valueString = tmpValue + "";
+        String lastDigit = valueString.substring(valueString.length() - 1);
+        return tmpValue - Integer.parseInt(lastDigit);
+    }
+
 }

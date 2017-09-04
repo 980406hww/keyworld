@@ -19,4 +19,8 @@
 		</where>
 		order by u.username, k.create_time desc
 	</select>
+
+	<select id="existKeyword" resultType="com.keymanager.monitoring.entity.Keyword">
+		select * from t_keyword where fKeyword = #{keyword} and fSearchEngine = #{searchEngine} limit  1
+	</select>
 </mapper>

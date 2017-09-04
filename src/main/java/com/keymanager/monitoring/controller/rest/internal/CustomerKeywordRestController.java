@@ -1,7 +1,10 @@
 package com.keymanager.monitoring.controller.rest.internal;
 
 import com.baomidou.mybatisplus.plugins.Page;
+import com.keymanager.excel.operator.CustomerKeywordInfoExcelWriter;
+import com.keymanager.manager.CustomerKeywordManager;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
+import com.keymanager.monitoring.criteria.CustomerCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordCrilteria;
 import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.CustomerKeyword;
@@ -11,8 +14,10 @@ import com.keymanager.monitoring.service.CustomerKeywordService;
 import com.keymanager.monitoring.service.CustomerService;
 import com.keymanager.monitoring.service.ServiceProviderService;
 import com.keymanager.monitoring.service.UserService;
+import com.keymanager.util.Constants;
 import com.keymanager.util.PortTerminalTypeMapping;
 import com.keymanager.util.Utils;
+import com.keymanager.value.CustomerKeywordVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +28,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.File;
+import java.io.*;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -168,37 +174,29 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	@RequestMapping(value = "/uploadsimplecon" , method = RequestMethod.POST)
 	public boolean uploadsimplecon(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request){
 		String customerUuid = request.getParameter("customerUuid");
+		String entry = (String)request.getSession().getAttribute("entry");
 		String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
-		String path = Utils.getWebRootPath() + "uploadsimplecon" + File.separator + terminalType + File.separator;
-		String fileName = customerUuid  + ".xls";
-		File targetFile = new File(path, fileName);
-		if(!targetFile.exists()){
-			targetFile.mkdirs();
-		}
-		//保存
-		try {
-			file.transferTo(targetFile);
-			return true;
+		try{
+			boolean uploaded = customerKeywordService.handleExcel(file.getInputStream(), Constants.EXCEL_TYPE_SUPER_USER_SIMPLE, Integer.parseInt(customerUuid),  entry, terminalType);
+			if (uploaded){
+				return true;
+			};
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
 		return false;
 	}
-	//关键字Excel上传(简化版)
+	//关键字Excel上传(完整版)
 	@RequestMapping(value = "/uploadFullcon" , method = RequestMethod.POST)
 	public boolean uploadFullcon(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request){
 		String customerUuid = request.getParameter("customerUuid");
 		String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
-		String path = Utils.getWebRootPath() + "uploadFullcon" + File.separator + terminalType + File.separator;
-		String fileName = customerUuid  + ".xls";
-		File targetFile = new File(path, fileName);
-		if(!targetFile.exists()){
-			targetFile.mkdirs();
-		}
-		//保存
-		try {
-			file.transferTo(targetFile);
-			return true;
+		String entry = (String)request.getSession().getAttribute("entry");
+		try{
+			boolean uploaded = customerKeywordService.handleExcel(file.getInputStream(), Constants.EXCEL_TYPE_SUPER_USER_FULL, Integer.parseInt(customerUuid),  entry, terminalType);
+			if (uploaded){
+				return true;
+			};
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
@@ -286,5 +284,123 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	@RequestMapping(value = "/getCustomerKeywordByCustomerKeywordUuid/{customerKeywordUuid}" , method = RequestMethod.POST)
 	public ResponseEntity<?> getCustomerKeywordByUuid(@PathVariable("customerKeywordUuid")Long customerKeywordUuid){
 		return new ResponseEntity<Object>(customerKeywordService.getCustomerKeyword(customerKeywordUuid), HttpStatus.OK);
+	}
+
+	//历史记录
+	@RequestMapping(value = "/historyPositionAndIndex/{type}/{customerKeywordUuid}", method = RequestMethod.GET)
+	public ModelAndView historyPositionAndIndex(@PathVariable("type") String type,@PathVariable("customerKeywordUuid") Long customerKeywordUuid){
+		ModelAndView modelAndView = new ModelAndView("/customerkeyword/historyPositionAndIndex");
+		return new ModelAndView();
+	}
+	//导出成Excel文件
+	@RequestMapping(value = "/downloadCustomerKeywordInfo/{customerUuid}", method = RequestMethod.GET)
+	public ResponseEntity<?> downloadCustomerKeywordInfo(@PathVariable("customerUuid")Long customerUuid, HttpServletRequest request,
+														 HttpServletResponse response,CustomerKeywordCrilteria customerKeywordCrilteria1) {
+		System.out.println(customerKeywordCrilteria1);
+		FileInputStream fis = null;
+		BufferedInputStream bis = null;
+		try {
+			String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+			CustomerKeywordManager customerKeywordManager = new CustomerKeywordManager();
+			String condition = appendCondition(request,response);
+//			String condition = String.format(" and ck.fStatus = 1 and ck.fCustomerUuid = %d and ck.fTerminalType = '%s' ", customerUuid, terminalType);
+			List<CustomerKeywordVO> customerKeywords = customerKeywordManager.searchCustomerKeywords("keyword", 100000, 1, condition, " order by ck.fKeyword ", 1);
+			if (!Utils.isEmpty(customerKeywords)) {
+				CustomerKeywordInfoExcelWriter excelWriter = new CustomerKeywordInfoExcelWriter();
+				excelWriter.writeDataToExcel(customerKeywords);
+				Customer customer = customerService.selectById(customerUuid);
+				String fileName = customer.getContactPerson() + Utils.formatDatetime(Utils.getCurrentTimestamp(), "yyyy.MM.dd") + ".xls";
+				fileName = new String(fileName.getBytes("gb2312"), "ISO8859-1");
+				// 以流的形式下载文件。
+				byte[] buffer = excelWriter.getExcelContentBytes();
+				// 清空response
+				response.reset();
+				// 设置response的Header
+				response.addHeader("Content-Disposition", "attachment;filename=" + fileName);//new String(fileName.getBytes("utf-8"), "ISO-8859-1"));
+				response.addHeader("Content-Length", "" + buffer.length);
+				OutputStream toClient = new BufferedOutputStream(response.getOutputStream());
+				response.setContentType("application/octet-stream");
+				toClient.write(buffer);
+				toClient.flush();
+				toClient.close();
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			e.printStackTrace();
+		} finally {
+			if (bis != null) {
+				try {
+					bis.close();
+				} catch (IOException e) {
+					logger.error(e.getMessage());
+					e.printStackTrace();
+				}
+			}
+			if (fis != null) {
+				try {
+					fis.close();
+				} catch (IOException e) {
+					logger.error(e.getMessage());
+					e.printStackTrace();
+				}
+			}
+		}
+		return new ResponseEntity<Object>(HttpStatus.OK);
+	}
+
+	public String appendCondition(HttpServletRequest request, HttpServletResponse response){
+		String customerUuid = request.getParameter("customerUuid");
+		String invalidRefreshCount = request.getParameter("invalidRefreshCount");
+		String keyword = request.getParameter("keyword");
+		String url = request.getParameter("url");
+		String creationFromTime = request.getParameter("creationFromTime");
+		String creationToTime = request.getParameter("creationToTime");
+		String status = request.getParameter("status");
+		String optimizeGroupName = request.getParameter("optimizeGroupName");
+
+		String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+
+		String position = request.getParameter("position");
+
+		String condition = " and fTerminalType = '" + terminalType + "' ";
+		condition = condition + " and fCustomerUuid=" + customerUuid;
+
+		if (!Utils.isNullOrEmpty(keyword)) {
+			condition = condition + " and fKeyword like '%" + keyword.trim() + "%' ";
+		}
+
+		if (!Utils.isNullOrEmpty(url)) {
+			condition = condition + " and fUrl = '" + url.trim() + "' ";
+		}
+
+		if (!Utils.isNullOrEmpty(position)) {
+			condition = condition
+					+ " and ((fCurrentPosition > 0 and fCurrentPosition <= "
+					+ position.trim() + ") ";
+		}
+
+		if (!Utils.isNullOrEmpty(optimizeGroupName)) {
+			condition = condition + " and fOptimizeGroupName= '"
+					+ optimizeGroupName.trim() + "' ";
+		}
+
+		if (!Utils.isNullOrEmpty(creationFromTime)) {
+			condition = condition + " and ck.fCreateTime >= STR_TO_DATE('"
+					+ creationFromTime.trim() + "', '%Y-%m-%d') ";
+		}
+		if (!Utils.isNullOrEmpty(creationToTime)) {
+			condition = condition + " and ck.fCreateTime <= STR_TO_DATE('"
+					+ creationToTime.trim() + "', '%Y-%m-%d') ";
+		}
+
+		if (!Utils.isNullOrEmpty(status)) {
+			condition = condition + " and ck.fStatus = " + status.trim() + " ";
+		}
+
+		if (!Utils.isNullOrEmpty(invalidRefreshCount)) {
+			condition = condition + " and fInvalidRefreshCount >= "
+					+ invalidRefreshCount.trim() + " ";
+		}
+		return condition;
 	}
 }

@@ -55,15 +55,19 @@
                 top: 0px;
                 left: 0px;
                 background-color: white;
+                width: 100%;
             }
 
             #customerKeywordDiv {
                 /*overflow: scroll;*/
                 width: 100%;
-                height: 93%;
-                margin: auto;
+
+                margin-bottom: 47PX;
             }
 
+            #customerKeywordTable {
+                width: 100%;
+            }
             #customerKeywordTable tr:nth-child(odd){background:#EEEEEE;}
 
             #customerKeywordTable td{
@@ -535,7 +539,7 @@
                     height: 630,
                     /*position: {
                      my: "center",
-                     at: "center center-250px",
+//                     at: "c",
                      of: window},*/
                     title : "添加关键字",
                     show: {
@@ -571,7 +575,7 @@
 
                 var initialIndexCount = $("#customerKeywordDialog #initialIndexCount").val();
                 customerKeyword.initialIndexCount = initialIndexCount;
-                var reg = /^www\..*\.com$/;
+                var reg = /^www\..*\.com/;
 
                 var keyword = $.trim($("#customerKeywordDialog #keyword").val());
                 if (keyword == '') {
@@ -595,7 +599,7 @@
 
                 }
                 var originalUrl = $.trim($("#customerKeywordDialog #originalUrl").val());
-                if (!reg.test(originalUrl)) {
+                if (originalUrl!=''&&!reg.test(originalUrl)) {
                     alert("网址不符合要求！");
                     $("#customerKeywordDialog #originalUrl").focus();
                     return;
@@ -739,8 +743,6 @@
                 customerKeyword.sequence = sequence;
                 var title = $.trim($("#customerKeywordDialog #title").val());
                 customerKeyword.title = title;
-                var startOptimizedTime = $.trim($("#customerKeywordDialog #startOptimizedTime").val());
-                customerKeyword.startOptimizedTime = startOptimizedTime;
                 var optimizeGroupName=$.trim($("#customerKeywordDialog #optimizeGroupName").val());
                 customerKeyword.optimizeGroupName=optimizeGroupName;
                 var collectMethod=$.trim($("#customerKeywordDialog #collectMethod").val());
@@ -805,7 +807,6 @@
 
                             $("#customerKeywordDialog #serviceProvider").val(customerKeyword.serviceProvider);
                             $("customerKeywordDialog #sequence").val(customerKeyword.sequence);
-                            $("#customerKeywordDialog #startOptimizedTime").val(sss);
                             $("#customerKeywordDialog #title").val(customerKeyword.title);
                             $("#customerKeywordDialog #optimizeGroupName").val(customerKeyword.optimizeGroupName);
                             $("#customerKeywordDialog #relatedKeywords").val(customerKeyword.relatedKeywords);
@@ -817,6 +818,7 @@
                     },
                     error: function () {
                         showInfo("操作失败", self);
+                        window.location.reload();
                     }
                 });
             }
@@ -864,12 +866,15 @@
                                     success: function (result) {
                                         if (result) {
                                             showInfo("上传成功", self);
+                                            window.location.reload();
                                         } else {
                                             showInfo("上传失败", self);
+                                            window.location.reload();
                                         }
                                     },
                                     error: function () {
                                         showInfo("上传失败", self);
+                                        window.location.reload();
                                     }
                                 });
                             }
@@ -914,7 +919,7 @@
                             }
                             var formData = new FormData();
                             formData.append('file', uploadForm.find('#uploadFullconFile')[0].files[0]);
-                            formData.append('customerUuid', uuid);
+                            formData.append('customerUuid', customerUuid);
                             if (fileTypeFlag) {
                                 $.ajax({
                                     url: '/internal/customerKeyword/uploadFullcon',
@@ -926,12 +931,15 @@
                                     success: function (result) {
                                         if (result) {
                                             showInfo("上传成功", self);
+                                            window.location.reload();
                                         } else {
                                             showInfo("上传失败", self);
+                                            window.location.reload();
                                         }
                                     },
                                     error: function () {
                                         showInfo("上传失败", self);
+                                        window.location.reload();
                                     }
                                 });
                             }
@@ -955,7 +963,15 @@
 
             }
             //导出结果
+            function downloadCustomerKeywordInfo(customerUuid) {
+                var fileName = "CustomerKeywordInfo"+new Date().toString()+".xls";
+                var pageUrl = customerUuid;
+                var customerKeywordCrilteria = $("#searchCustomerKeywordForm").serialize().trim();
+                alert(customerKeywordCrilteria)
 
+//                var formData = new FormData();
+                location.href='/internal/customerKeyword/downloadCustomerKeywordInfo/'+customerUuid+'?'+customerKeywordCrilteria;
+            }
         </script>
 
     </head>
@@ -989,10 +1005,10 @@
         | <a target="_blank" href="/SuperUserSimpleKeywordList.xls">简化版下载</a>
         | <a target="_blank" href="javascript:uploadFull('${customerKeywordCrilteria.customerUuid}')">Excel上传(完整版)</a>
         | <a target="_blank" href="/SuperUserFullKeywordList.xls">完整版下载</a>
-        | <a target="_blank" href="javascript:uploaddailyreporttemplate('${customerKeywordCrilteria.customerUuid}')">上传日报表模板</a>
         | <a target="_blank" href="/internal/dailyReport/downloadSingleCustomerReport/${customerKeywordCrilteria.customerUuid}">导出日报表</a>
-        | <a target="_blank"
-             href='/internal/customerKeyword/DownloadCustomerKeywordInfo.jsp?fileName=CustomerKeywordInfo<%--<%="_" + Utils.getCurrentDate()%>.xls&<%=pageUrl%>--%>'>导出结果</a>
+        <%--| <a target="_blank" href='/internal/customerKeyword/downloadCustomerKeywordInfo/fileName=CustomerKeywordInfo&lt;%&ndash;<%="_" + Utils.getCurrentDate()%>.xls&<%=pageUrl%>&ndash;%&gt;'>导出结果</a>--%>
+        | <a target="_blank" href="javascript:downloadCustomerKeywordInfo('${customerKeywordCrilteria.customerUuid}')">导出结果</a>
+        | <a target="_blank" href="/internal/customerKeyword/downloadCustomerKeywordInfo/${customerKeywordCrilteria.customerUuid}">导出结果</a>
         <br/><br/>
         <a href="javascript:delAllItems('emptyTitleAndUrl','${customerKeywordCrilteria.customerUuid}')">删除标题和网址为空的关键字</a> |
         <a href="javascript:delAllItems('emptyTitle','${customerKeywordCrilteria.customerUuid}')">删除标题为空的关键字</a> |
@@ -1002,8 +1018,8 @@
         <br/>
     </div>
     <br/>
-    <form id="searchCustomerKeywordForm" action="/internal/customerKeyword/searchCustomerKeywords" method="post">
-        <div style="font-size:12px; width: 100%;" id="searchCustomerKeywordTable">
+    <form id="searchCustomerKeywordForm" style="font-size:12px; width: 100%;" action="/internal/customerKeyword/searchCustomerKeywords" method="post">
+        <div id="searchCustomerKeywordTable">
             <input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}"/>
             <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
             <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
@@ -1057,7 +1073,7 @@
         </div>
     </form>
     <%--</c:if>--%>
-    <table>
+    <table style="font-size:12px; width: 100%;">
         <tr bgcolor="#eeeeee" height=30>
             <td align="center" width=10><input type="checkbox" onclick="selectAll(this)"/></td>
             <td align="center" width=100>关键字</td>
@@ -1113,7 +1129,7 @@
 
                 <td align="center" width=30>
                     <div style="height:16;"><a
-                            href="/internal/customerKeyword/historyPositionAndIndex.jsp?type=PC&uuid=${customerKeyword.uuid}"
+                            href="/customerKeyword/historyPositionAndIndex.jsp?type=PC&uuid=${customerKeyword.uuid}"
                             target="_blank">${customerKeyword.currentIndexCount}
                     </a></div>
                 </td>
@@ -1124,14 +1140,14 @@
                 </td>
 
                 <td align="center" width=50>
-                    <div style="height:16;"><%--<a
-                                href="${customerKeyword.searchEngineUrl}${customerKeyword.Keyword}&pn=&lt;%&ndash;<%=Utils.prepareBaiduPageNumber(customerKeyword.CurrentPosition())%>&ndash;%&gt;"
-                                target="_blank"></a>--%>${customerKeyword.currentPosition}
+                    <div style="height:16;"><a
+                                href="${customerKeyword.searchEngineUrl}${customerKeyword.keyword}&pn=${customerKeyword.getPrepareBaiduPageNumber(customerKeyword.currentPosition)}"
+                                target="_blank">${customerKeyword.currentPosition}</a>
                     </div>
                 </td>
 
-                <td align="center" width=30> <%--onMouseMove="showTip('优化日期：<fmt:formatDate value="${customer.optimizeDate}" pattern="yyyy-MM-dd"/> ，要刷：${customerKeyword.OptimizePlanCount}，已刷：${customerKeyword.optimizedCount}')"
-                        onMouseOut="closeTip()">${customerKeyword.collectMethodName}--%>
+                <td align="center" width=30 onMouseMove="showTip('优化日期：<fmt:formatDate value="${customerKeyword.optimizeDate}" pattern="yyyy-MM-dd"/> ，要刷：${customerKeyword.optimizePlanCount}，已刷：${customerKeyword.optimizedCount}')"
+                        onMouseOut="closeTip()">${customerKeyword.collectMethodName}
                 </td>
 
                 <td align="center" width=30>${customerKeyword.optimizePlanCount}</td>
@@ -1171,9 +1187,9 @@
     </table>
 </div>
 
-<%--<div style="display:none;">
+<div style="display:none;">
     <script src="http://s84.cnzz.com/stat.php?id=4204660&web_id=4204660" language="JavaScript"></script>
-</div>--%>
+</div>
 <div id="showCustomerBottomPositioneDiv">
 <div id="showCustomerBottomDiv">
     <input id="fisrtButton" class="ui-button ui-widget ui-corner-all" type="button"
@@ -1246,7 +1262,6 @@
             <li><span class="customerKeywordSpanClass">PC原始域名:</span><input type="text" name="originalUrl" id="originalUrl" value=""
                                                                             style="width:300px;"><span style="color: red;text-transform: none">
                 格式(www.baidu.com)即可</span></li>
-            <li><span class="customerKeywordSpanClass">网站快照:</span><input type="text" name="snapshotDateTime" id="snapshotDateTime" value="" style="width:300px;" ><font color="red"> 直接从百度结果中拷贝</font></li>
             <li>
                 <ul style="float: left"><li>
                     <span class="customerKeywordSpanClass">PC第一报价:</span><input name="positionFirstFee" id="positionFirstFee" value=""
@@ -1304,14 +1319,12 @@
             </c:if>
             <li><span class="customerKeywordSpanClass">排序:</span><input type="text" name="sequence" id="sequence" value="0"
                                                                         style="width:300px;"></li>
-            <li><span class="customerKeywordSpanClass">开始优化日期:</span><input name="startOptimizedTime" id="startOptimizedTime" class="Wdate" type="text" style="width:100px;"  onClick="WdatePicker()" value="">格式：2014-10-23<li>
             <li><span class="customerKeywordSpanClass">标题:</span><input type="text" name="title" id="title" value="" style="width:300px;">
             </li>
             <hr style="height: 1px; border:none; border-top:1px dashed #CCCCCC;"/>
             <li><span class="customerKeywordSpanClass">优化组名:</span><input name="optimizeGroupName" id="optimizeGroupName" type="text"
                                                                           style="width:200px;" value="">比如：shouji
                 <input type="hidden" name="relatedKeywords" id="relatedKeywords" value=""></li>
-            <li><span class="customerKeywordSpanClass">关联关键字:</span><input name="relatedKeywords" id="relatedKeywords" type="text" style="width:200px;" value="">多个逗号分隔</li>
             <li><span class="customerKeywordSpanClass">收费方式:</span>
                 <select name="collectMethod" id="collectMethod" onChange="setEffectiveToTime();">
                     <option value="PerMonth" selected>按月</option>

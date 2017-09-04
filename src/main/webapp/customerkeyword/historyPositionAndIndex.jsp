@@ -73,8 +73,8 @@
             <td><%=customerKeyword.getContactPerson()%></td>
             <td><%=customerKeyword.getUrl()%></td>
             <td><%=customerKeyword.getOriginalUrl()%></td>
-            <td><%=customerKeyword.getPhoneUrl()%></td>
-            <td><%=customerKeyword.getOriginalPhoneUrl()%></td>
+            <td><%--<%=customerKeyword.getPhoneUrl()%>--%></td>
+            <td><%--<%=customerKeyword.getOriginalPhoneUrl()%>--%></td>
           </tr>
       </table>
       <table width=100% style="font-size:12px;" cellpadding=3>      	        	 

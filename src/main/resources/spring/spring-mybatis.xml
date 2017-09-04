@@ -60,6 +60,15 @@
             </array>
         </property>
     </bean>
+
+    <!--mapper.xml 热加载-测试时可用 -->
+    <bean class="com.baomidou.mybatisplus.spring.MybatisMapperRefresh">
+        <constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <constructor-arg name="mapperLocations"  value="classpath:mybatis/mapper/*Mapper.xml" />
+        <constructor-arg name="delaySeconds" value="10"/>
+        <constructor-arg name="sleepSeconds" value="20"/>
+        <constructor-arg name="enabled" value="true"/>
+    </bean>
     
     <!-- MyBatis 动态扫描  -->
 	<bean id="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">

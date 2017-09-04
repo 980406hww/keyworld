@@ -1,5 +1,6 @@
 package com.keymanager.monitoring.dao;
 
+import java.security.Key;
 import java.util.List;
 import java.util.Map;
 
@@ -14,4 +15,6 @@ public interface KeywordDao extends BaseMapper<Keyword> {
 	Map getKeywordForCollect(@Param("monitorType") String monitorType);
 
 	List<Map> findKeywordsForAutoComplete(@Param("userId") Long userId);
+
+	Keyword existKeyword(@Param("keyword") String keyword,@Param("searchEngine") String searchEngine);
 }
