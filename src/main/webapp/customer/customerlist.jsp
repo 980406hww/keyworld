@@ -839,34 +839,36 @@
             }
             $.each(customerKeywordTextArray, function (idx, val) {
                 val = val.trim();
-                var customerKeywordAttributes = val.split(" ");
-                if (customerKeywordAttributes.length == 1) {
-                    customerKeywordAttributes = val.split(" ");
-                }
-                if (customerKeywordAttributes.length == 1) {
-                    customerKeywordAttributes = val.split("	");
-                }
-
-                var tmpCustomerKeywordAttributes = [];
-                $.each(customerKeywordAttributes, function (idx, val) {
-                    if (val !== '') {
-                        tmpCustomerKeywordAttributes.push(val);
+                if(val !== ''){
+                    var customerKeywordAttributes = val.split(" ");
+                    if (customerKeywordAttributes.length == 1) {
+                        customerKeywordAttributes = val.split(" ");
                     }
-                });
-                var customerKeyword = {};
-                customerKeyword.customerUuid = uuid;
-                customerKeyword.keyword = tmpCustomerKeywordAttributes[0].trim();
-                customerKeyword.url = tmpCustomerKeywordAttributes[1].trim();
-                customerKeyword.optimizeGroupName = group.trim();
+                    if (customerKeywordAttributes.length == 1) {
+                        customerKeywordAttributes = val.split("	");
+                    }
 
-                customerKeyword.url = customerKeyword.url.replace("http://", "");
-                customerKeyword.url = customerKeyword.url.replace("https://", "");
+                    var tmpCustomerKeywordAttributes = [];
+                    $.each(customerKeywordAttributes, function (idx, val) {
+                        if (val !== '') {
+                            tmpCustomerKeywordAttributes.push(val);
+                        }
+                    });
+                    var customerKeyword = {};
+                    customerKeyword.customerUuid = uuid;
+                    customerKeyword.keyword = tmpCustomerKeywordAttributes[0].trim();
+                    customerKeyword.url = tmpCustomerKeywordAttributes[1].trim();
+                    customerKeyword.optimizeGroupName = group.trim();
 
-                if (customerKeyword.url.length > 25) {
-                    customerKeyword.url = customerKeyword.url.substring(0, 25);
+                    customerKeyword.url = customerKeyword.url.replace("http://", "");
+                    customerKeyword.url = customerKeyword.url.replace("https://", "");
+
+                    if (customerKeyword.url.length > 25) {
+                        customerKeyword.url = customerKeyword.url.substring(0, 25);
+                    }
+
+                    customerKeywords.push(customerKeyword);
                 }
-
-                customerKeywords.push(customerKeyword);
             });
 //            alert(JSON.stringify(customerKeywords));
 
@@ -882,14 +884,12 @@
                 success: function (result) {
                     if (result) {
                         showInfo("添加成功", self);
-                        window.location.reload();
                     } else {
                         showInfo("添加失败", self);
                     }
                 },
                 error: function () {
                     showInfo("添加失败", self);
-                    window.location.reload();
                 }
             });
         }
