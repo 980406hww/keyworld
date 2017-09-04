@@ -3,6 +3,7 @@ package com.keymanager.monitoring.entity;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.FieldStrategy;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -156,6 +157,7 @@ public class CustomerKeyword extends BaseEntity {
     private String collectMethod;
 
     @TableField(value = "fStartOptimizedTime")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date startOptimizedTime;
 
     @TableField(value = "fEffectiveFromTime")

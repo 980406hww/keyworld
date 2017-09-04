@@ -64,6 +64,13 @@
                 margin: auto;
             }
 
+            #customerKeywordTable tr:nth-child(odd){background:#EEEEEE;}
+
+            #customerKeywordTable td{
+                text-align: left;
+            }
+
+
             #showCustomerBottomPositioneDiv{
                 position: fixed;
                 bottom: 0px;
@@ -79,7 +86,7 @@
             }
             body{
                 margin: 0;
-                margin: 0;
+                padding: 0;
             }
 
             #customerKeywordDialog ul{list-style: none;margin: 0px;padding: 0px;}
@@ -100,7 +107,7 @@
             function pageLoad() {
                 var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
                 var searchCustomerKeywordTable = searchCustomerKeywordForm.find("#searchCustomerKeywordTable");
-                searchCustomerKeywordTable.find("#orderElement").val(${customerKeywordCrilteria.orderElement});
+                searchCustomerKeywordTable.find("#orderElement").val('${customerKeywordCrilteria.orderElement}');
                 searchCustomerKeywordTable.find("#status").val(${customerKeywordCrilteria.status});
                 var pages = searchCustomerKeywordForm.find('#pagesHidden').val();
                 var currentPageNumber = searchCustomerKeywordForm.find('#currentPageNumberHidden').val();
@@ -141,7 +148,7 @@
             }
 
             function doOver(obj) {
-                obj.style.backgroundColor = "green";
+                obj.style.backgroundColor = "#73B1E0";
             }
 
             function doOut(obj) {
@@ -732,6 +739,8 @@
                 customerKeyword.sequence = sequence;
                 var title = $.trim($("#customerKeywordDialog #title").val());
                 customerKeyword.title = title;
+                var title = $.trim($("#customerKeywordDialog #startOptimizedTime").val());
+                customerKeyword.startOptimizedTime = startOptimizedTime;
                 var optimizeGroupName=$.trim($("#customerKeywordDialog #optimizeGroupName").val());
                 customerKeyword.optimizeGroupName=optimizeGroupName;
                 var collectMethod=$.trim($("#customerKeywordDialog #collectMethod").val());
@@ -800,6 +809,7 @@
 
                             $("#customerKeywordDialog #serviceProvider").val(customerKeyword.serviceProvider);
                             $("customerKeywordDialog #sequence").val(customerKeyword.sequence);
+                            $("customerKeywordDialog #startOptimizedTime").val(customerKeyword.startOptimizedTime);
                             $("customerKeywordDialog #title").val(customerKeyword.title);
                             $("customerKeywordDialog #optimizeGroupName").val(customerKeyword.optimizeGroupName);
                             $("customerKeywordDialog #relatedKeywords").val(customerKeyword.relatedKeywords);
@@ -975,7 +985,7 @@
     </table>
 
     <%--<c:if test="${!user.vipType}">--%>
-    <div style="text-align: center">
+    <div style="text-align: right">
         <a href="javascript:updateCustomerKeywordGroupNameDialog('${customerKeywordCrilteria.customerUuid}',null)">修改所有分组</a>
         | <a target="_blank" href="javascript:changeOptimizationGroupDialog(this)">修改选中分组</a>
         | <a href="javascript:updateCustomerKeywordGroupName('${customerKeywordCrilteria.customerUuid}','stop')">下架所有关键字</a>
@@ -1033,8 +1043,8 @@
             排序:
             <select name="orderElement" id="orderElement">
                 <option value="">--请选择排序--</option>
-                <option value="0">创建日期</option>
-                <option value="1">当前排名</option>
+                <option value="fCreateTime">创建日期</option>
+                <option value="fCurrentPosition">当前排名</option>
             </select>
             无效点击数:
             <input type="text" name="invalidRefreshCount" id="invalidRefreshCount"
@@ -1085,9 +1095,9 @@
     <hr>
 </div>
 <div id="customerKeywordDiv">
-    <table>
+    <table id="customerKeywordTable">
         <c:forEach items="${page.records}" var="customerKeyword">
-            <tr bgcolor="#eeeeee" height=30 onmouseover="doOver(this);" onmouseout="doOut(this);" ondblclick="modifyCustomerKeyword('${customerKeyword.uuid}')" height=30>
+            <tr style="" height=30 onmouseover="doOver(this);" onmouseout="doOut(this);" ondblclick="modifyCustomerKeyword('${customerKeyword.uuid}')" height=30>
                 <td  align="center" width=10><input type="checkbox" name="uuid" value="${customerKeyword.uuid}"/></td>
                 <td align="center" width=100>
                     <font color="<%--<%=keywordColor%>--%>">${customerKeyword.keyword}
@@ -1301,6 +1311,7 @@
             </c:if>
             <li><span class="customerKeywordSpanClass">排序:</span><input type="text" name="sequence" id="sequence" value="0"
                                                                         style="width:300px;"></li>
+            <li><span class="customerKeywordSpanClass">开始优化日期:</span><input name="startOptimizedTime" id="startOptimizedTime" class="Wdate" type="text" style="width:100px;"  onClick="WdatePicker()" value="">格式：2014-10-23<li>
             <li><span class="customerKeywordSpanClass">标题:</span><input type="text" name="title" id="title" value="" style="width:300px;">
             </li>
             <hr style="height: 1px; border:none; border-top:1px dashed #CCCCCC;"/>

@@ -80,12 +80,6 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 			String status = request.getParameter("status").trim();
 			String optimizeGroupName = request.getParameter("optimizeGroupName").trim();
 			String orderElement = request.getParameter("orderElement").trim();
-			if(!orderElement.equals("")){
-				switch (Integer.parseInt(orderElement)){
-					case 0 : orderElement = "fCreateTime";break;
-					case 1: orderElement = "fCurrentPosition";break;
-				}
-			}
 			String invalidRefreshCount = request.getParameter("invalidRefreshCount").trim();
 			String position = request.getParameter("position").trim();
 			CustomerKeywordCrilteria customerKeywordCrilteria = new CustomerKeywordCrilteria(customerUuid, url, keyword,creationFromTime, creationToTime, status, optimizeGroupName, orderElement, invalidRefreshCount, position, null,null) ;

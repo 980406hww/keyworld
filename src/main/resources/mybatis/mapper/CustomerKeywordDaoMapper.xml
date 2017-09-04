@@ -130,7 +130,7 @@
         <if test="customerKeywordCrilteria.url != null and customerKeywordCrilteria.url != ''">AND ck.fUrl like '%${customerKeywordCrilteria.url}%'</if>
         <if test="customerKeywordCrilteria.status != null and customerKeywordCrilteria.status != ''">AND ck.fStatus = #{customerKeywordCrilteria.status}</if>
         <if test="customerKeywordCrilteria.invalidRefreshCount != null and customerKeywordCrilteria.invalidRefreshCount != ''">AND ck.fInvalidRefreshCount = #{customerKeywordCrilteria.invalidRefreshCount}</if>
-        <if test="customerKeywordCrilteria.optimizeGroupName != null and customerKeywordCrilteria.optimizeGroupName != ''">AND ck.fOptimizeGroupName = #{customerKeywordCrilteria.optimizeGroupName}</if>
+        <if test="customerKeywordCrilteria.optimizeGroupName != null and customerKeywordCrilteria.optimizeGroupName != ''">AND ck.fOptimizeGroupName  like '%${customerKeywordCrilteria.optimizeGroupName}%'</if>
         <if test="customerKeywordCrilteria.creationFromTime != null and customerKeywordCrilteria.creationFromTime != ''">AND ck.fCreateTime >= #{customerKeywordCrilteria.creationFromTime}</if>
         <if test="customerKeywordCrilteria.creationToTime != null and customerKeywordCrilteria.creationToTime != ''">AND ck.fCreateTime &lt;= #{customerKeywordCrilteria.creationToTime}</if>
         <if test="customerKeywordCrilteria.entryType != null and customerKeywordCrilteria.entryType != ''">AND ck.fType = #{customerKeywordCrilteria.entryType}</if>
