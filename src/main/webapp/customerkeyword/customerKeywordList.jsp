@@ -739,18 +739,14 @@
                 customerKeyword.sequence = sequence;
                 var title = $.trim($("#customerKeywordDialog #title").val());
                 customerKeyword.title = title;
-                var title = $.trim($("#customerKeywordDialog #startOptimizedTime").val());
+                var startOptimizedTime = $.trim($("#customerKeywordDialog #startOptimizedTime").val());
                 customerKeyword.startOptimizedTime = startOptimizedTime;
                 var optimizeGroupName=$.trim($("#customerKeywordDialog #optimizeGroupName").val());
                 customerKeyword.optimizeGroupName=optimizeGroupName;
                 var collectMethod=$.trim($("#customerKeywordDialog #collectMethod").val());
                 customerKeyword.collectMethod=collectMethod;
-                //var postDate = [];
-                //postDate.customerKeyword = customerKeyword;
-//        alert(JSON.stringify(customerKeyword));
                 $.ajax({
                     url: '/internal/customerKeyword/saveCustomerKeyword',
-//            data: JSON.stringify(postDate),
                     data: JSON.stringify(customerKeyword),
                     headers: {
                         'Accept': 'application/json',
@@ -786,7 +782,7 @@
                     timeout: 50000,
                     type: 'POST',
                     success: function (customerKeyword) {
-//                alert(customerKeyword);
+//                alert(JSON.(customerKeyword));
                         if (customerKeyword!=null) {
                             $("#customerKeywordDialog #uuid").val(customerKeyword.uuid);
                             $("#customerKeywordDialog #keyword").val(customerKeyword.keyword);
@@ -809,10 +805,10 @@
 
                             $("#customerKeywordDialog #serviceProvider").val(customerKeyword.serviceProvider);
                             $("customerKeywordDialog #sequence").val(customerKeyword.sequence);
-                            $("customerKeywordDialog #startOptimizedTime").val(customerKeyword.startOptimizedTime);
-                            $("customerKeywordDialog #title").val(customerKeyword.title);
-                            $("customerKeywordDialog #optimizeGroupName").val(customerKeyword.optimizeGroupName);
-                            $("customerKeywordDialog #relatedKeywords").val(customerKeyword.relatedKeywords);
+                            $("#customerKeywordDialog #startOptimizedTime").val(sss);
+                            $("#customerKeywordDialog #title").val(customerKeyword.title);
+                            $("#customerKeywordDialog #optimizeGroupName").val(customerKeyword.optimizeGroupName);
+                            $("#customerKeywordDialog #relatedKeywords").val(customerKeyword.relatedKeywords);
                             addCustomerKeyword(customerKeywordUuid);
                         } else {
                             showInfo("操作失败", self);
@@ -1250,6 +1246,7 @@
             <li><span class="customerKeywordSpanClass">PC原始域名:</span><input type="text" name="originalUrl" id="originalUrl" value=""
                                                                             style="width:300px;"><span style="color: red;text-transform: none">
                 格式(www.baidu.com)即可</span></li>
+            <li><span class="customerKeywordSpanClass">网站快照:</span><input type="text" name="snapshotDateTime" id="snapshotDateTime" value="" style="width:300px;" ><font color="red"> 直接从百度结果中拷贝</font></li>
             <li>
                 <ul style="float: left"><li>
                     <span class="customerKeywordSpanClass">PC第一报价:</span><input name="positionFirstFee" id="positionFirstFee" value=""
@@ -1294,11 +1291,7 @@
                         </ul>
                     </ul>
                 </c:if>
-
-
             </li>
-
-
             <c:if test="${user.vipType}">
                 <li><span class="customerKeywordSpanClass">PC服务提供商:</span>
                     <select name="serviceProvider" id="serviceProvider">
@@ -1318,6 +1311,7 @@
             <li><span class="customerKeywordSpanClass">优化组名:</span><input name="optimizeGroupName" id="optimizeGroupName" type="text"
                                                                           style="width:200px;" value="">比如：shouji
                 <input type="hidden" name="relatedKeywords" id="relatedKeywords" value=""></li>
+            <li><span class="customerKeywordSpanClass">关联关键字:</span><input name="relatedKeywords" id="relatedKeywords" type="text" style="width:200px;" value="">多个逗号分隔</li>
             <li><span class="customerKeywordSpanClass">收费方式:</span>
                 <select name="collectMethod" id="collectMethod" onChange="setEffectiveToTime();">
                     <option value="PerMonth" selected>按月</option>
