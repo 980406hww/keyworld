@@ -266,8 +266,13 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                             customerKeyword.setPositionFirstFee(tmpCustomerChargeTypeInterval.getPrice().doubleValue());
                             customerKeyword.setPositionSecondFee(tmpCustomerChargeTypeInterval.getPrice().doubleValue());
                             customerKeyword.setPositionThirdFee(tmpCustomerChargeTypeInterval.getPrice().doubleValue());
-                            customerKeyword.setPositionForthFee(tmpCustomerChargeTypeInterval.getPrice().doubleValue() / 2);
-                            customerKeyword.setPositionFifthFee(tmpCustomerChargeTypeInterval.getPrice().doubleValue() / 2);
+                            if(TerminalTypeEnum.PC.name().equals(customerKeyword.getTerminalType())) {
+                                customerKeyword.setPositionForthFee(tmpCustomerChargeTypeInterval.getPrice().doubleValue() / 2);
+                                customerKeyword.setPositionFifthFee(tmpCustomerChargeTypeInterval.getPrice().doubleValue() / 2);
+                            }else{
+                                customerKeyword.setPositionForthFee(null);
+                                customerKeyword.setPositionFifthFee(null);
+                            }
                             customerKeyword.setPositionFirstPageFee(null);
                             break;
                         }

@@ -118,7 +118,7 @@
         SELECT
         <include refid="colID"/>
         FROM t_customer_keyword ck
-        WHERE ck.fOptimizeGroupName IN ('pc_pm_xiaowu', 'm_pm_xiaowu') AND ck.fCurrentIndexCount IS NULL AND ck.fPositionFirstFee IS NULL
+        WHERE ck.fOptimizeGroupName IN ('pc_pm_xiaowu', 'm_pm_tiantian') AND ck.fCurrentIndexCount IS NULL AND ck.fPositionFirstFee IS NULL
         AND ck.fKeyword = #{keyword}
         ORDER BY ck.fCaptureIndexQueryTime, ck.fCreateTime
     </select>
