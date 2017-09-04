@@ -24,6 +24,7 @@ import com.keymanager.value.CustomerKeywordForCaptureTitle;
 import com.keymanager.value.CustomerKeywordVO;
 import com.keymanager.value.CustomerVO;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, CustomerKeyword> {
@@ -321,8 +323,13 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                             customerKeyword.setPositionFirstFee(tmpCustomerChargeTypeInterval.getPrice().doubleValue());
                             customerKeyword.setPositionSecondFee(tmpCustomerChargeTypeInterval.getPrice().doubleValue());
                             customerKeyword.setPositionThirdFee(tmpCustomerChargeTypeInterval.getPrice().doubleValue());
-                            customerKeyword.setPositionForthFee(tmpCustomerChargeTypeInterval.getPrice().doubleValue() / 2);
-                            customerKeyword.setPositionFifthFee(tmpCustomerChargeTypeInterval.getPrice().doubleValue() / 2);
+                            if(TerminalTypeEnum.PC.name().equals(customerKeyword.getTerminalType())) {
+                                customerKeyword.setPositionForthFee(tmpCustomerChargeTypeInterval.getPrice().doubleValue() / 2);
+                                customerKeyword.setPositionFifthFee(tmpCustomerChargeTypeInterval.getPrice().doubleValue() / 2);
+                            }else{
+                                customerKeyword.setPositionForthFee(null);
+                                customerKeyword.setPositionFifthFee(null);
+                            }
                             customerKeyword.setPositionFirstPageFee(null);
                             break;
                         }
@@ -339,14 +346,17 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return Math.round((currentIndexCount * pricePercentage.doubleValue()) / 1000 - 0.5) * 10;
     }
 
+    public List<Map> getCustomerKeywordsCount(List<Long> customerUuids, String terminalType, String entryType){
+        return customerKeywordDao.getCustomerKeywordsCount(customerUuids, terminalType, entryType);
+    }
+
     //重构部分
     //修改该用户关键字组名
     public void updateCustomerKeywordGroupName(CustomerKeyword customerKeyword) {
         customerKeywordDao.updateCustomerKeywordGroupName(customerKeyword);
     }
 
-    //修改选中关键字
-    public void changeOptimizationGroup(CustomerKeyword customerKeyword) {
+    //修改选中关键�    public void changeOptimizationGroup(CustomerKeyword customerKeyword) {
         customerKeywordDao.changeOptimizationGroup(customerKeyword);
     }
 

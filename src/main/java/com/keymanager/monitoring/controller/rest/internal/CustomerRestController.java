@@ -35,7 +35,8 @@ public class CustomerRestController {
     private UserService userService;
 
     @RequestMapping(value = "/searchCustomers", method = RequestMethod.GET)
-    public ModelAndView searchCustomers(@RequestParam(defaultValue = "1") int currentPage, @RequestParam(defaultValue = "30") int displaysRecords, HttpServletRequest request) {
+    public ModelAndView searchCustomers(@RequestParam(defaultValue = "1") int currentPage, @RequestParam(defaultValue = "50") int displaysRecords,
+                                        HttpServletRequest request) {
         return constructCustomerModelAndView(request, new CustomerCriteria(), currentPage + "", displaysRecords + "");
     }
 
@@ -56,9 +57,10 @@ public class CustomerRestController {
         String userID = (String) session.getAttribute("username");
         User user = userService.getUser(userID);
         String entryType = (String) session.getAttribute("entry");
-        customerCriteria.setEntryType(entryType);
-        Page<Customer> page = customerService.searchCustomers(new Page<Customer>(Integer.parseInt(currentPage), Integer.parseInt(pageSize)), customerCriteria);
         String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+        customerCriteria.setEntryType(entryType);
+        customerCriteria.setTerminalType(terminalType);
+        Page<Customer> page = customerService.searchCustomers(new Page<Customer>(Integer.parseInt(currentPage), Integer.parseInt(pageSize)), customerCriteria);
         modelAndView.addObject("entryType", entryType);
         modelAndView.addObject("terminalType", terminalType);
         modelAndView.addObject("customerCriteria", customerCriteria);
