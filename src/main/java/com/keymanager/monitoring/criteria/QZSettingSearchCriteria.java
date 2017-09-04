@@ -1,18 +1,27 @@
 package com.keymanager.monitoring.criteria;
 
 public class QZSettingSearchCriteria{
-    private String contactPerson;
+    private String customerUuid;
+    private String customerInfo;
     private String domain;
     private String group;
     private String updateStatus;
     private String dateRangeType;
 
-    public String getContactPerson() {
-        return contactPerson;
+    public String getCustomerUuid() {
+        return customerUuid;
     }
 
-    public void setContactPerson(String contactPerson) {
-        this.contactPerson = contactPerson;
+    public void setCustomerUuid(String customerUuid) {
+        this.customerUuid = customerUuid;
+    }
+
+    public String getCustomerInfo() {
+        return customerInfo;
+    }
+
+    public void setCustomerInfo(String customerInfo) {
+        this.customerInfo = customerInfo;
     }
 
     public String getDomain() {

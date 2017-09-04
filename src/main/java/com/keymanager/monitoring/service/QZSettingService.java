@@ -189,13 +189,14 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		return page;
 	}
 
-	public Map<String,Integer> getDateRangeType() {
+	public Map<String,Integer> getChargeRemindData() {
 		Map<String,Integer> dateRangeTypeMap = new HashMap<String, Integer>();
 		List<DateRangeTypeVO> chargeRemindDataList = qzSettingDao.getChargeRemindData();
 		int expiredChargeSize  = 0;
 		int nowChargeSize = 0;
 		int threeChargeSize = 0;
 		int sevenChargeSize = 0;
+
 		for (DateRangeTypeVO dateRangeTypeVO : chargeRemindDataList) {
 			int intervalDays = Utils.getIntervalDays(new Date(),dateRangeTypeVO.getNextChargeDate());
 			if(intervalDays < 0) {

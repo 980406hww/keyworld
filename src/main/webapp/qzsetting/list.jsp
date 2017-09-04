@@ -111,21 +111,14 @@
 	</tr>
 	<tr>
 		<td colspan="14" align="right">
-			<a href="javascript:showSettingDialog(null, this)">增加全站设置</a>
-			| <a target="_blank" href="javascript:updateImmediately(this)">马上更新</a>
-			| <a target="_blank" href="javascript:delSelectedQZSettings(this)">删除所选</a>
+			<a href="javascript:resetSearchCondition('-1')">过期未收费(${chargeRemindDataMap['expiredChargeSize']})</a>
+			| <a target="_blank" href="javascript:resetSearchCondition('0')">当天收费提醒(${chargeRemindDataMap['nowChargeSize']})</a>
+			| <a target="_blank" href="javascript:resetSearchCondition('3')">三天收费提醒(${chargeRemindDataMap['threeChargeSize']})</a>
+			| <a target="_blank" href="javascript:resetSearchCondition('7')">七天收费提醒(${chargeRemindDataMap['sevenChargeSize']})</a>
 		</td>
 	</tr>
 	<tr>
-		<td colspan="14" align="right">
-			<a href="javascript:resetSearchCondition('-1')">过期未收费(${dateRangeTypeMap['expiredChargeSize']})</a>
-			| <a target="_blank" href="javascript:resetSearchCondition('0')">当天收费提醒(${dateRangeTypeMap['nowChargeSize']})</a>
-			| <a target="_blank" href="javascript:resetSearchCondition('3')">三天收费提醒(${dateRangeTypeMap['threeChargeSize']})</a>
-			| <a target="_blank" href="javascript:resetSearchCondition('7')">七天收费提醒(${dateRangeTypeMap['sevenChargeSize']})</a>
-		</td>
-	</tr>
-	<tr>
-		<td colspan="14">
+		<td colspan="13">
 			<form method="post" id="chargeForm" action="/internal/qzsetting/searchQZSettings">
 				<input type="hidden" id="dateRangeType" name="dateRangeType" value="${qzSettingSearchCriteria.dateRangeType}"/>
 				<table style="font-size:12px;">
@@ -134,7 +127,8 @@
 						<input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
 						<input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
 						<input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
-						<td align="right">客户:</td> <td><input type="text" list="customer_list" name="contactPerson" id="contactPerson" value='${qzSettingSearchCriteria.contactPerson}' style="width:200px;"></td>
+						<input type="hidden" name="customerUuid" id="customerUuid" />
+						<td align="right">客户:</td> <td><input type="text" list="customer_list" name="customerInfo" id="customerInfo" value="${qzSettingSearchCriteria.customerInfo}" style="width:200px;"></td>
 						<td align="right">域名:</td> <td><input type="text" name="domain" id="domain" value="${qzSettingSearchCriteria.domain}" style="width:200px;"></td>
 						<td align="right">组名:</td> <td><input type="text" name="group" id="group" value="${qzSettingSearchCriteria.group}" style="width:200px;"></td>
 						<td align="right">状态:</td>
@@ -152,6 +146,11 @@
 					</tr>
 				</table>
 			</form>
+		</td>
+		<td align="right">
+			<a href="javascript:showSettingDialog(null, this)">增加全站设置</a>
+			| <a target="_blank" href="javascript:updateImmediately(this)">马上更新</a>
+			| <a target="_blank" href="javascript:delSelectedQZSettings(this)">删除所选</a>
 		</td>
 	</tr>
 	<tr bgcolor="#eeeeee" height=30>
@@ -190,10 +189,9 @@
 			<td><fmt:formatDate value="${qzSetting.updateEndTime}" pattern="MM-dd HH:mm" /></td>
 			<td><fmt:formatDate value="${qzSetting.updateTime}" pattern="MM-dd HH:mm" /></td>
 			<td><fmt:formatDate value="${qzSetting.createTime}" pattern="MM-dd HH:mm" /></td>
-			<td>
+			<td align="center">
 				<a href="javascript:showChargeDialog('${qzSetting.uuid}','${qzSetting.contactPerson}','${qzSetting.domain}',this)">收费</a> |
-				<a href="javascript:showSettingDialog('${qzSetting.uuid}', this)">修改</a>
-				<br/>
+				<a href="javascript:showSettingDialog('${qzSetting.uuid}', this)">修改</a> |
 				<a href="javascript:delQZSetting(${qzSetting.uuid})">删除</a> |
 				<a href="javascript:showChargeLog('${qzSetting.uuid}', this)">收费记录</a>
 			</td>
@@ -275,6 +273,9 @@
 
     function resetSearchCondition(days) {
         var chargeForm = $("#chargeForm");
+        var customerInfo = chargeForm.find("#customerInfo").val();
+        var customerUuid = customerInfo.substr(customerInfo.lastIndexOf("_") + 1);
+        chargeForm.find("#customerUuid").val(customerUuid);
         chargeForm.find("#dateRangeType").val(days);
         chargeForm.find("#currentPageNumberHidden").val(1);
         chargeForm.submit();

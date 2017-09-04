@@ -6,6 +6,7 @@ import com.keymanager.monitoring.criteria.QZSettingSearchCriteria;
 import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.QZSetting;
 import com.keymanager.monitoring.service.*;
+import com.keymanager.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,12 +96,6 @@ public class QZSettingRestController extends SpringMVCBaseController {
 	public ModelAndView searchQZSettingsPost(HttpServletRequest request, QZSettingSearchCriteria qzSettingSearchCriteria) {
 		String currentPageNumber = request.getParameter("currentPageNumber");
 		String pageSize = request.getParameter("pageSize");
-		String dateRangeType = request.getParameter("dateRangeType");
-		qzSettingSearchCriteria.setDateRangeType(dateRangeType);
-		String contactPerson = qzSettingSearchCriteria.getContactPerson();
-		if(contactPerson.contains("_")) {
-			qzSettingSearchCriteria.setContactPerson(contactPerson.substring(0,contactPerson.indexOf("_")));
-		}
 		if (null == currentPageNumber && null == pageSize) {
 			currentPageNumber = "1";
 			pageSize = "50";
@@ -110,20 +105,14 @@ public class QZSettingRestController extends SpringMVCBaseController {
 
 	private ModelAndView constructQZSettingModelAndView(QZSettingSearchCriteria qzSettingSearchCriteria, int currentPageNumber, int pageSize) {
 		ModelAndView modelAndView = new ModelAndView("/qzsetting/list");
-		Map<String, Integer> dateRangeTypeMap = qzSettingService.getDateRangeType();
+		Map<String, Integer> chargeRemindDataMap = qzSettingService.getChargeRemindData();
 		Page<QZSetting> page = qzSettingService.searchQZSetting(new Page<QZSetting>(currentPageNumber, pageSize), qzSettingSearchCriteria);
 		List<Customer> customerList = customerService.getActiveCustomerSimpleInfo();
 
-		List<String> statusList = new ArrayList<String>();
-		statusList.add("");
-		statusList.add("Processing");
-		statusList.add("Completed");
-		statusList.add("DownloadTimesUsed");
-
-		modelAndView.addObject("dateRangeTypeMap", dateRangeTypeMap);
+		modelAndView.addObject("chargeRemindDataMap", chargeRemindDataMap);
 		modelAndView.addObject("customerList", customerList);
 		modelAndView.addObject("qzSettingSearchCriteria", qzSettingSearchCriteria);
-		modelAndView.addObject("statusList", statusList);
+		modelAndView.addObject("statusList", Constants.QZSETTING_STATUS_LIST);
 		modelAndView.addObject("page", page);
 		return modelAndView;
 	}
