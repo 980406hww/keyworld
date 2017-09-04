@@ -82,8 +82,10 @@ public class CustomerKeywordDailyReportExcelWriter {
 			double totalFee = 0;
 			writeDailyTitle(rowIndex++);
 			for(CustomerKeywordVO view : views){
-				double todayPrice = writeDailyRow(rowIndex++, view);
-				totalFee = totalFee + todayPrice;
+				if(!"stop".equals(view.getOptimizeGroupName())) {
+					double todayPrice = writeDailyRow(rowIndex++, view);
+					totalFee = totalFee + todayPrice;
+				}
 			}
 
 			writer.addFormulanCell(CustomerKeywordDailyReportDefinition.TodayPrice.getColumnIndex(), rowIndex, "SUM(H2:H" + rowIndex + ")");
