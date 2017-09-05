@@ -6,12 +6,9 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.toolkit.StringUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.keymanager.db.DBUtil;
 import com.keymanager.enums.CollectMethod;
-import com.keymanager.enums.KeywordType;
 import com.keymanager.excel.operator.AbstractExcelReader;
 import com.keymanager.manager.CustomerKeywordManager;
-import com.keymanager.manager.KeywordManager;
 import com.keymanager.monitoring.criteria.BaiduIndexCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordCrilteria;
 import com.keymanager.monitoring.dao.CustomerKeywordDao;
@@ -24,7 +21,6 @@ import com.keymanager.value.CustomerKeywordForCaptureTitle;
 import com.keymanager.value.CustomerKeywordVO;
 import com.keymanager.value.CustomerVO;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +28,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -54,9 +47,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     @Autowired
     private CustomerChargeTypeService customerChargeTypeService;
-
-    @Autowired
-    private KeywordService keywordService;
 
     @Autowired
     private CustomerKeywordDao customerKeywordDao;
@@ -151,15 +141,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
         customerKeywordDao.insert(customerKeyword);
     }
-
-//	public List<CustomerKeyword> searchCustomerKeywords(String terminalType, long customerUuid, String keyword, String originalUrl){
-//		CustomerKeyword customerKeyword = new CustomerKeyword();
-//		customerKeyword.setCustomerUuid(customerUuid);
-//		customerKeyword.setType(terminalType);
-//		customerKeyword.setKeyword(keyword);
-//		customerKeyword.setOriginalUrl(originalUrl);
-//		Wrapper wrapper = new EntityWrapper(customerKeyword);
-//	}
 
     public boolean haveDuplicatedCustomerKeyword(String terminalType, long customerUuid, String keyword, String originalUrl) {
         int customerKeywordCount = 0;
@@ -350,13 +331,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return customerKeywordDao.getCustomerKeywordsCount(customerUuids, terminalType, entryType);
     }
 
-    //重构部分
-    //修改该用户关键字组名
     public void updateCustomerKeywordGroupName(CustomerKeyword customerKeyword) {
         customerKeywordDao.updateCustomerKeywordGroupName(customerKeyword);
     }
 
-    //修改选中关键�    public void changeOptimizationGroup(CustomerKeyword customerKeyword) {
+    public void changeOptimizationGroup(CustomerKeyword customerKeyword) {
         customerKeywordDao.changeOptimizationGroup(customerKeyword);
     }
 
