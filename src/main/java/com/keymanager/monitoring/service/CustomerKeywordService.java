@@ -6,12 +6,9 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.toolkit.StringUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.keymanager.db.DBUtil;
 import com.keymanager.enums.CollectMethod;
-import com.keymanager.enums.KeywordType;
 import com.keymanager.excel.operator.AbstractExcelReader;
 import com.keymanager.manager.CustomerKeywordManager;
-import com.keymanager.manager.KeywordManager;
 import com.keymanager.monitoring.criteria.BaiduIndexCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordCrilteria;
 import com.keymanager.monitoring.dao.CustomerKeywordDao;
@@ -31,11 +28,9 @@ import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, CustomerKeyword> {
@@ -52,9 +47,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     @Autowired
     private CustomerChargeTypeService customerChargeTypeService;
-
-    @Autowired
-    private KeywordService keywordService;
 
     @Autowired
     private CustomerKeywordDao customerKeywordDao;
@@ -149,15 +141,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
         customerKeywordDao.insert(customerKeyword);
     }
-
-//	public List<CustomerKeyword> searchCustomerKeywords(String terminalType, long customerUuid, String keyword, String originalUrl){
-//		CustomerKeyword customerKeyword = new CustomerKeyword();
-//		customerKeyword.setCustomerUuid(customerUuid);
-//		customerKeyword.setType(terminalType);
-//		customerKeyword.setKeyword(keyword);
-//		customerKeyword.setOriginalUrl(originalUrl);
-//		Wrapper wrapper = new EntityWrapper(customerKeyword);
-//	}
 
     public boolean haveDuplicatedCustomerKeyword(String terminalType, long customerUuid, String keyword, String originalUrl) {
         int customerKeywordCount = 0;
@@ -321,8 +304,13 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                             customerKeyword.setPositionFirstFee(tmpCustomerChargeTypeInterval.getPrice().doubleValue());
                             customerKeyword.setPositionSecondFee(tmpCustomerChargeTypeInterval.getPrice().doubleValue());
                             customerKeyword.setPositionThirdFee(tmpCustomerChargeTypeInterval.getPrice().doubleValue());
-                            customerKeyword.setPositionForthFee(tmpCustomerChargeTypeInterval.getPrice().doubleValue() / 2);
-                            customerKeyword.setPositionFifthFee(tmpCustomerChargeTypeInterval.getPrice().doubleValue() / 2);
+                            if(TerminalTypeEnum.PC.name().equals(customerKeyword.getTerminalType())) {
+                                customerKeyword.setPositionForthFee(tmpCustomerChargeTypeInterval.getPrice().doubleValue() / 2);
+                                customerKeyword.setPositionFifthFee(tmpCustomerChargeTypeInterval.getPrice().doubleValue() / 2);
+                            }else{
+                                customerKeyword.setPositionForthFee(null);
+                                customerKeyword.setPositionFifthFee(null);
+                            }
                             customerKeyword.setPositionFirstPageFee(null);
                             break;
                         }
@@ -339,13 +327,14 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return Math.round((currentIndexCount * pricePercentage.doubleValue()) / 1000 - 0.5) * 10;
     }
 
-    //重构部分
-    //修改该用户关键字组名
+    public List<Map> getCustomerKeywordsCount(List<Long> customerUuids, String terminalType, String entryType){
+        return customerKeywordDao.getCustomerKeywordsCount(customerUuids, terminalType, entryType);
+    }
+
     public void updateCustomerKeywordGroupName(CustomerKeyword customerKeyword) {
         customerKeywordDao.updateCustomerKeywordGroupName(customerKeyword);
     }
 
-    //修改选中关键字
     public void changeOptimizationGroup(CustomerKeyword customerKeyword) {
         customerKeywordDao.changeOptimizationGroup(customerKeyword);
     }

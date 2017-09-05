@@ -5,13 +5,13 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.criteria.CustomerCriteria;
 import com.keymanager.monitoring.dao.CustomerDao;
 import com.keymanager.monitoring.entity.Customer;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
@@ -41,7 +41,26 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 	}
 
 	public Page<Customer> searchCustomers(Page<Customer> page, CustomerCriteria customerCriteria){
-		page.setRecords(customerDao.searchCustomers(page, customerCriteria));
+		List<Customer> customers = customerDao.searchCustomers(page, customerCriteria);
+		if(CollectionUtils.isNotEmpty(customers)){
+			List<Long> customerUuids = new ArrayList<Long>();
+			for(Customer customer : customers){
+				customerUuids.add(customer.getUuid());
+			}
+			List<Map> customerKeywordCountMap = customerKeywordService.getCustomerKeywordsCount(customerUuids, customerCriteria.getTerminalType(),
+					customerCriteria.getEntryType());
+			Map<Integer, Long> customerUuidKeywordCountMap = new HashMap<Integer, Long>();
+			for(Map map : customerKeywordCountMap){
+				customerUuidKeywordCountMap.put((Integer)map.get("fCustomerUuid"), (Long)map.get("subCount"));
+			}
+			for(Customer customer : customers){
+				Long count = customerUuidKeywordCountMap.get(customer.getUuid().intValue());
+				if(count != null) {
+					customer.setKeywordCount(count.intValue());
+				}
+			}
+		}
+		page.setRecords(customers);
 		return page;
 	}
 

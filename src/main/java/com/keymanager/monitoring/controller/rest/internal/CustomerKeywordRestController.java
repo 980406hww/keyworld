@@ -102,7 +102,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		ModelAndView modelAndView = new ModelAndView("/customerkeyword/customerKeywordList");
 		String userID = (String) session.getAttribute("username");
 		User user = userService.getUser(userID);
-		Customer customer = customerService.selectById(customerKeywordCrilteria.getCustomerUuid());
+		Customer customer = customerService.getCustomerWithKeywordCount(Long.parseLong(customerKeywordCrilteria.getCustomerUuid()));
 		String entryType = (String) session.getAttribute("entry");
 		String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
 		customerKeywordCrilteria.setEntryType(entryType);
@@ -203,8 +203,8 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		return new ResponseEntity<Object>(customerService.getCustomerWithKeywordCount(uuid), HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/delelteCustomerKeyword/{customerKeywordUuid}", method = RequestMethod.GET)
-	public ResponseEntity<?> delelteCustomerKeyword(@PathVariable("customerKeywordUuid") Long customerKeywordUuid , HttpServletRequest request) {
+	@RequestMapping(value = "/deleteCustomerKeyword/{customerKeywordUuid}", method = RequestMethod.GET)
+	public ResponseEntity<?> deleteCustomerKeyword(@PathVariable("customerKeywordUuid") Long customerKeywordUuid , HttpServletRequest request) {
 		try {
 			String entry = (String)request.getSession().getAttribute("entry");
 			customerKeywordService.deleteCustomerKeyword(customerKeywordUuid,entry);

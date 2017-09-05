@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.NegativeListDao">
+	<select id="searchNegativeLists" parameterType="com.keymanager.monitoring.criteria.NegativeListCriteria" resultType="com.keymanager.monitoring.entity.NegativeList">
+		SELECT
+			fUuid AS "uuid",
+			fTerminalType AS "terminalType",
+			fKeyword AS "keyword",
+			fTitle AS "title",
+			fUrl AS "url",
+			fDesc AS "desc",
+			fPosition AS "position",
+			fUpdateTime AS "updateTime",
+			fCreateTime AS "createTime"
+		FROM
+			t_negative_list n
+		WHERE n.fTerminalType = #{negativeListCriteria.terminalType}
+		<if test="negativeListCriteria.keyword != null and negativeListCriteria.keyword != ''">AND n.fKeyword like '%${negativeListCriteria.keyword}%'</if>
+		<if test="negativeListCriteria.url != null and negativeListCriteria.url != ''">AND n.fUrl like '%${negativeListCriteria.url}%'</if>
+		ORDER BY n.fCreateTime DESC
+	</select>
+
+	<select id="getSpecifiedKeywordNegativeLists" resultType="com.keymanager.monitoring.entity.NegativeList">
+		SELECT
+		fUuid AS "uuid",
+		fTerminalType AS "terminalType",
+		fKeyword AS "keyword",
+		fTitle AS "title",
+		fUrl AS "url",
+		fDesc AS "desc",
+		fPosition AS "position",
+		fUpdateTime AS "updateTime",
+		fCreateTime AS "createTime"
+		FROM
+		t_negative_list n
+		WHERE n.fTerminalType = #{terminalType}
+		AND n.fKeyword = #{keyword}
+		ORDER BY n.fCreateTime DESC
+	</select>
+
+	<select id="selectLastId" resultType="int">
+		select LAST_INSERT_ID()
+	</select>
+</mapper>

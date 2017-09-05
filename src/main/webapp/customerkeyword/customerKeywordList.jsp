@@ -167,7 +167,7 @@
             function delItem(customerKeywordUuid) {
                 if (confirm("确实要删除这个关键字吗?") == false) return;
                 $.ajax({
-                    url: '/internal/customerKeyword/delelteCustomerKeyword/' + customerKeywordUuid,
+                    url: '/internal/customerKeyword/deleteCustomerKeyword/' + customerKeywordUuid,
                     type: 'GET',
                     success: function (result) {
                         if (result) {
@@ -381,7 +381,6 @@
             //查询
             function changePaging(currentPage, pageSize) {
                 var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
-                var total = searchCustomerKeywordForm.find("#totalHidden").val();
                 searchCustomerKeywordForm.find("#currentPageNumberHidden").val(currentPage);
                 searchCustomerKeywordForm.find("#pageSizeHidden").val(pageSize);
                 searchCustomerKeywordForm.submit();
@@ -396,7 +395,7 @@
             function updateCustomerKeywordGroupNameDialog(customerUuid,updateType) {
                 $("#updateCustomerKeywordGroupNameDialog").dialog({
                     resizable: false,
-                    width: 400,
+                    width: 260,
                     height: 150,
                     modal: true,
                     //按钮
@@ -467,7 +466,7 @@
                 }
                 $("#changeOptimizationGroupDialog").dialog({
                     resizable: false,
-                    width: 400,
+                    width: 260,
                     height: 150,
                     modal: true,
                     //按钮
@@ -991,14 +990,20 @@
         | <a target="_blank" href="javascript:uploadFull('${customerKeywordCrilteria.customerUuid}')">Excel上传(完整版)</a>
         | <a target="_blank" href="/SuperUserFullKeywordList.xls">完整版下载</a>
         | <a target="_blank" href="/internal/dailyReport/downloadSingleCustomerReport/${customerKeywordCrilteria.customerUuid}">导出日报表</a>
+<<<<<<< HEAD
         | <a target="_blank" href="javascript:downloadCustomerKeywordInfo()">导出结果</a>
         <br/><br/>
+=======
+        <%--| <a target="_blank" href='/internal/customerKeyword/downloadCustomerKeywordInfo/fileName=CustomerKeywordInfo&lt;%&ndash;<%="_" + Utils.getCurrentDate()%>.xls&<%=pageUrl%>&ndash;%&gt;'>导出结果</a>--%>
+        | <a target="_blank" href="javascript:downloadCustomerKeywordInfo('${customerKeywordCrilteria.customerUuid}')">导出结果</a>
+        | <a target="_blank" href="/internal/customerKeyword/downloadCustomerKeywordInfo/${customerKeywordCrilteria.customerUuid}">导出结果</a>
+        <br/>
+>>>>>>> 2d23eca01993daf42fa1eeda1399b5be817c5cad
         <a href="javascript:delAllItems('emptyTitleAndUrl','${customerKeywordCrilteria.customerUuid}')">删除标题和网址为空的关键字</a> |
         <a href="javascript:delAllItems('emptyTitle','${customerKeywordCrilteria.customerUuid}')">删除标题为空的关键字</a> |
         <a href="javascript:resetTitle('${customerKeywordCrilteria.customerUuid}','captureTitle')">重采标题</a> |
         <a href="javascript:clearTitle('${customerKeywordCrilteria.customerUuid}', null)">清空所选标题</a>|
-        <a href="javascript:resetTitle('${customerKeywordCrilteria.customerUuid}', 'all')">清空当前客户标题</a>
-        <br/>
+        <a href="javascript:resetTitle('${customerKeywordCrilteria.customerUuid}', 'all')">清空客户标题</a>
     </div>
     <br/>
     <form id="searchCustomerKeywordForm" style="font-size:12px; width: 100%;" action="/internal/customerKeyword/searchCustomerKeywords" method="post">
@@ -1196,13 +1201,13 @@
 </div>
 </div>
 <%--Dialog部分--%>
-<div id="changeOptimizationGroupDialog"  style="text-align: center;height: 60px;" title="修改选中关键字组名">
+<div id="changeOptimizationGroupDialog"  style="text-align: center;" title="修改选中关键字组名">
     <form id="changeOptimizationGroupFrom" style="text-align: center;margin-top: 10px;">
         分组名称<input type="text" name="optimizationGroup" id="optimizationGroup" style="width:150px"/>
     </form>
 </div>
 
-<div id="updateCustomerKeywordGroupNameDialog"  style="text-align: center;height: 60px;" title="修改该用户关键字组名">
+<div id="updateCustomerKeywordGroupNameDialog"  style="text-align: center;" title="修改客户关键字组名">
     <form id="updateCustomerKeywordGroupNameFrom" style="text-align: center;margin-top: 10px;">
         目标组名称:<input type="text" id="groupName" name="groupName" style="width:150px">
     </form>
@@ -1224,7 +1229,7 @@
         <ul>
             <input type="hidden" name="uuid" id="uuid" value="" style="width:300px;">
             <li><span class="customerKeywordSpanClass">关键字:</span><input type="text" name="keyword" id="keyword" value=""
-                                                                         style="width:300px;"> 输入您要刷的关键字
+                                                                         style="width:300px;">
             </li>
             <li><span class="customerKeywordSpanClass">搜索引擎:</span>
                 <select name="searchEngine" id="searchEngine" onChange="searchEngineChanged();">
@@ -1240,50 +1245,50 @@
 
             <hr style="height: 1px; border:none; border-top:1px dashed #CCCCCC;"/>
 
-            <li><span class="customerKeywordSpanClass">PC域名:</span><input type="text" name="url" id="url" value="" style="width:300px;">
-                <span style="color:red;text-transform: none">  格式(www.baidu.com)即可</span></li>
-            <li><span class="customerKeywordSpanClass">PC原始域名:</span><input type="text" name="originalUrl" id="originalUrl" value=""
+            <li><span class="customerKeywordSpanClass">域名:</span><input type="text" name="url" id="url" value="" style="width:300px;">
+                </li>
+            <li><span class="customerKeywordSpanClass">原始域名:</span><input type="text" name="originalUrl" id="originalUrl" value=""
                                                                             style="width:300px;"><span style="color: red;text-transform: none">
-                格式(www.baidu.com)即可</span></li>
+                </li>
             <li>
                 <ul style="float: left"><li>
-                    <span class="customerKeywordSpanClass">PC第一报价:</span><input name="positionFirstFee" id="positionFirstFee" value=""
+                    <span class="customerKeywordSpanClass">第一报价:</span><input name="positionFirstFee" id="positionFirstFee" value=""
                                                                                 onBlur="setSecondThirdDefaultFee();" style="width:100px;"
                                                                                 type="text">元 </li>
-                    <li><span class="customerKeywordSpanClass">PC第二报价:</span><input name="positionSecondFee" onBlur="setThirdDefaultFee();"
+                    <li><span class="customerKeywordSpanClass">第二报价:</span><input name="positionSecondFee" onBlur="setThirdDefaultFee();"
                                                                                     id="positionSecondFee" value="" style="width:100px;" type="text">元
                     </li>
-                    <li><span class="customerKeywordSpanClass">PC第三报价:</span><input name="positionThirdFee" id="positionThirdFee" value=""
+                    <li><span class="customerKeywordSpanClass">第三报价:</span><input name="positionThirdFee" id="positionThirdFee" value=""
                                                                                     style="width:100px;" type="text">元
                     </li>
-                    <li><span class="customerKeywordSpanClass">PC第四报价:</span><input name="positionForthFee" id="positionForthFee" value="0"
+                    <li><span class="customerKeywordSpanClass">第四报价:</span><input name="positionForthFee" id="positionForthFee" value="0"
                                                                                     style="width:100px;" type="text">元
                     </li>
-                    <li><span class="customerKeywordSpanClass">PC第五报价:</span><input name="positionFifthFee" id="positionFifthFee" value="0"
+                    <li><span class="customerKeywordSpanClass">第五报价:</span><input name="positionFifthFee" id="positionFifthFee" value="0"
                                                                                     style="width:100px;" type="text">元
                     </li>
-                    <li><span class="customerKeywordSpanClass">PC首页报价:</span><input name="positionFirstPageFee" id="positionFirstPageFee" value="0"
+                    <li><span class="customerKeywordSpanClass">首页报价:</span><input name="positionFirstPageFee" id="positionFirstPageFee" value="0"
                                                                                     style="width:100px;" type="text">元
                     </li></ul>
                 <c:if test="${user.vipType}">
 
                     <ul id="customerKeywordCost" style="float: left; width: 300px;height:200px;">
-                        <li><span class="customerKeywordSpanClass"></span><a href="javascript:showCustomerKeywordCost()">显示PC成本(再次点击关闭)</a></li>
+                        <li><span class="customerKeywordSpanClass"></span><a href="javascript:showCustomerKeywordCost()">显示成本(再次点击关闭)</a></li>
                         <ul id="customerKeywordCostFrom" style="margin-left: 50px;display: none;">
-                            <li><span class="customerKeywordSpanClass">PC第一成本:</span><input name="positionFirstCost" id="positionFirstCost"
+                            <li><span class="customerKeywordSpanClass">第一成本:</span><input name="positionFirstCost" id="positionFirstCost"
                                                                                             onBlur="setSecondThirdDefaultCost();" value="0"
                                                                                             style="width:100px;" type="text">元 </li>
-                            <li><span class="customerKeywordSpanClass">PC第二成本:</span><input name="positionSecondCost" id="positionSecondCost"
+                            <li><span class="customerKeywordSpanClass">第二成本:</span><input name="positionSecondCost" id="positionSecondCost"
                                                                                             onBlur="setThirdDefaultCost();" value="0"
                                                                                             style="width:100px;" type="text">元
                             </li>
-                            <li><span class="customerKeywordSpanClass">PC第三成本:</span><input name="positionThirdCost" id="positionThirdCost"
+                            <li><span class="customerKeywordSpanClass">第三成本:</span><input name="positionThirdCost" id="positionThirdCost"
                                                                                             value="0" style="width:100px;" type="text">元
                             </li>
-                            <li><span class="customerKeywordSpanClass">PC第四成本:</span><input name="positionForthCost" id="positionForthCost"
+                            <li><span class="customerKeywordSpanClass">第四成本:</span><input name="positionForthCost" id="positionForthCost"
                                                                                             value="0" style="width:100px;" type="text">元
                             </li>
-                            <li><span class="customerKeywordSpanClass">PC第五成本:</span><input name="positionFifthCost" id="positionFifthCost"
+                            <li><span class="customerKeywordSpanClass">第五成本:</span><input name="positionFifthCost" id="positionFifthCost"
                                                                                             value="0" style="width:100px;" type="text">元
                             </li>
                         </ul>
@@ -1291,7 +1296,7 @@
                 </c:if>
             </li>
             <c:if test="${user.vipType}">
-                <li><span class="customerKeywordSpanClass">PC服务提供商:</span>
+                <li><span class="customerKeywordSpanClass">服务提供商:</span>
                     <select name="serviceProvider" id="serviceProvider">
                         <option value=""></option>
                         <c:forEach items="${serviceProviders}" var="serviceProvider">
@@ -1306,7 +1311,7 @@
             </li>
             <hr style="height: 1px; border:none; border-top:1px dashed #CCCCCC;"/>
             <li><span class="customerKeywordSpanClass">优化组名:</span><input name="optimizeGroupName" id="optimizeGroupName" type="text"
-                                                                          style="width:200px;" value="">比如：shouji
+                                                                          style="width:200px;" value="">
                 <input type="hidden" name="relatedKeywords" id="relatedKeywords" value=""></li>
             <li><span class="customerKeywordSpanClass">收费方式:</span>
                 <select name="collectMethod" id="collectMethod" onChange="setEffectiveToTime();">

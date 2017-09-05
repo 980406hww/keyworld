@@ -79,6 +79,14 @@
         SELECT COUNT(1) FROM t_customer_keyword ck WHERE ck.fCustomerUuid = #{customerUuid}
     </select>
 
+    <select id="getCustomerKeywordsCount" resultType="java.util.Map">
+        SELECT ck.fCustomerUuid, COUNT(1) as subCount FROM t_customer_keyword ck WHERE ck.fTerminalType = #{terminalType}
+        and ck.fType = #{entryType} and ck.fCustomerUuid IN
+        <foreach item="item" index="index" collection="customerUuids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+         GROUP BY ck.fCustomerUuid
+    </select>
 
     <select id="getSimilarCustomerKeywordCount" resultType="int">
         select Count(1) from t_customer_keyword where fKeyword = #{keyword} and fTerminalType = #{terminalType} and fCustomerUuid = #{customerUuid}
@@ -102,7 +110,7 @@
         SELECT
         <include refid="colID"/>
         FROM t_customer_keyword ck
-        WHERE ck.fOptimizeGroupName IN ('pc_pm_xiaowu', 'm_pm_xiaowu') AND ck.fCurrentIndexCount IS NULL AND ck.fPositionFirstFee IS NULL
+        WHERE ck.fOptimizeGroupName IN ('pc_pm_xiaowu', 'm_pm_tiantian') AND ck.fCurrentIndexCount IS NULL AND ck.fPositionFirstFee IS NULL
         ORDER BY ck.fCaptureIndexQueryTime, ck.fCreateTime LIMIT 1
     </select>
 
@@ -110,7 +118,7 @@
         SELECT
         <include refid="colID"/>
         FROM t_customer_keyword ck
-        WHERE ck.fOptimizeGroupName IN ('pc_pm_xiaowu', 'm_pm_xiaowu') AND ck.fCurrentIndexCount IS NULL AND ck.fPositionFirstFee IS NULL
+        WHERE ck.fOptimizeGroupName IN ('pc_pm_xiaowu', 'm_pm_tiantian') AND ck.fCurrentIndexCount IS NULL AND ck.fPositionFirstFee IS NULL
         AND ck.fKeyword = #{keyword}
         ORDER BY ck.fCaptureIndexQueryTime, ck.fCreateTime
     </select>

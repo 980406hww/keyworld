@@ -142,10 +142,10 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(value = "fPositionThirdFee")
     private Double positionThirdFee;
 
-    @TableField(value = "fPositionForthFee")
+    @TableField(value = "fPositionForthFee", validate= FieldStrategy.IGNORED)
     private Double positionForthFee;
 
-    @TableField(value = "fPositionFifthFee")
+    @TableField(value = "fPositionFifthFee", validate= FieldStrategy.IGNORED)
     private Double positionFifthFee;
 
     @TableField(value = "fPositionFirstPageFee", validate= FieldStrategy.IGNORED)
