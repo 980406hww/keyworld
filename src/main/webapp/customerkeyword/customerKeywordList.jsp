@@ -167,7 +167,7 @@
             function delItem(customerKeywordUuid) {
                 if (confirm("确实要删除这个关键字吗?") == false) return;
                 $.ajax({
-                    url: '/internal/customerKeyword/delelteCustomerKeyword/' + customerKeywordUuid,
+                    url: '/internal/customerKeyword/deleteCustomerKeyword/' + customerKeywordUuid,
                     type: 'GET',
                     success: function (result) {
                         if (result) {
@@ -381,7 +381,6 @@
             //查询
             function changePaging(currentPage, pageSize) {
                 var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
-                var total = searchCustomerKeywordForm.find("#totalHidden").val();
                 searchCustomerKeywordForm.find("#currentPageNumberHidden").val(currentPage);
                 searchCustomerKeywordForm.find("#pageSizeHidden").val(pageSize);
                 searchCustomerKeywordForm.submit();
@@ -396,7 +395,7 @@
             function updateCustomerKeywordGroupNameDialog(customerUuid,updateType) {
                 $("#updateCustomerKeywordGroupNameDialog").dialog({
                     resizable: false,
-                    width: 400,
+                    width: 260,
                     height: 150,
                     modal: true,
                     //按钮
@@ -467,7 +466,7 @@
                 }
                 $("#changeOptimizationGroupDialog").dialog({
                     resizable: false,
-                    width: 400,
+                    width: 260,
                     height: 150,
                     modal: true,
                     //按钮
@@ -1009,13 +1008,12 @@
         <%--| <a target="_blank" href='/internal/customerKeyword/downloadCustomerKeywordInfo/fileName=CustomerKeywordInfo&lt;%&ndash;<%="_" + Utils.getCurrentDate()%>.xls&<%=pageUrl%>&ndash;%&gt;'>导出结果</a>--%>
         | <a target="_blank" href="javascript:downloadCustomerKeywordInfo('${customerKeywordCrilteria.customerUuid}')">导出结果</a>
         | <a target="_blank" href="/internal/customerKeyword/downloadCustomerKeywordInfo/${customerKeywordCrilteria.customerUuid}">导出结果</a>
-        <br/><br/>
+        <br/>
         <a href="javascript:delAllItems('emptyTitleAndUrl','${customerKeywordCrilteria.customerUuid}')">删除标题和网址为空的关键字</a> |
         <a href="javascript:delAllItems('emptyTitle','${customerKeywordCrilteria.customerUuid}')">删除标题为空的关键字</a> |
         <a href="javascript:resetTitle('${customerKeywordCrilteria.customerUuid}','captureTitle')">重采标题</a> |
         <a href="javascript:clearTitle('${customerKeywordCrilteria.customerUuid}', null)">清空所选标题</a>|
-        <a href="javascript:resetTitle('${customerKeywordCrilteria.customerUuid}', 'all')">清空当前客户标题</a>
-        <br/>
+        <a href="javascript:resetTitle('${customerKeywordCrilteria.customerUuid}', 'all')">清空客户标题</a>
     </div>
     <br/>
     <form id="searchCustomerKeywordForm" style="font-size:12px; width: 100%;" action="/internal/customerKeyword/searchCustomerKeywords" method="post">
@@ -1213,13 +1211,13 @@
 </div>
 </div>
 <%--Dialog部分--%>
-<div id="changeOptimizationGroupDialog"  style="text-align: center;height: 60px;" title="修改选中关键字组名">
+<div id="changeOptimizationGroupDialog"  style="text-align: center;" title="修改选中关键字组名">
     <form id="changeOptimizationGroupFrom" style="text-align: center;margin-top: 10px;">
         分组名称<input type="text" name="optimizationGroup" id="optimizationGroup" style="width:150px"/>
     </form>
 </div>
 
-<div id="updateCustomerKeywordGroupNameDialog"  style="text-align: center;height: 60px;" title="修改该用户关键字组名">
+<div id="updateCustomerKeywordGroupNameDialog"  style="text-align: center;" title="修改客户关键字组名">
     <form id="updateCustomerKeywordGroupNameFrom" style="text-align: center;margin-top: 10px;">
         目标组名称:<input type="text" id="groupName" name="groupName" style="width:150px">
     </form>
