@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.CustomerKeywordPositionIndexLogDao">
+    <sql id="rowID">
+        ck.fUuid AS `uuid`,
+        ck.fType AS `type`,
+        ck.fCustomerKeywordUuid AS `customerKeywordUuid`,
+        ck.fPositionNumber AS `positionNumber`,
+        ck.fIndexCount AS `indexCount`,
+        ck.fIP AS `ip`,
+        ck.fUpdateTime AS `updateTime`,
+        ck.fCreateTime AS `createTime`
+    </sql>
+    <select id="searchCustomerKeywordPositionIndexLogs" resultType="com.keymanager.monitoring.entity.CustomerKeywordPositionIndexLog">
+        select
+        <include refid="rowID"/>
+        from t_ck_position_index_log ck
+        where 1=1
+        <if test="condition.customerKeywordUuid !=null and condition.customerKeywordUuid !='' ">AND ck.fCustomerKeywordUuid = #{condition.customerKeywordUuid}</if>
+        <if test="condition.terminalType != null and condition.terminalType != ''">AND ck.fType = #{condition.terminalType}</if>
+        <if test="condition.queryTime!= null and condition.queryTime != ''">AND ck.fCreateTime>=date_add(CURDATE(), INTERVAL -${condition.queryTime} DAY)</if>
+        ORDER BY fCreateTime DESC
+    </select>
+
+</mapper>

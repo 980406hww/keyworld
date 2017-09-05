@@ -2,22 +2,13 @@ package com.keymanager.monitoring.controller.rest.internal;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.excel.operator.CustomerKeywordInfoExcelWriter;
-import com.keymanager.manager.CustomerKeywordManager;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
-import com.keymanager.monitoring.criteria.CustomerCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordCrilteria;
-import com.keymanager.monitoring.entity.Customer;
-import com.keymanager.monitoring.entity.CustomerKeyword;
-import com.keymanager.monitoring.entity.ServiceProvider;
-import com.keymanager.monitoring.entity.User;
-import com.keymanager.monitoring.service.CustomerKeywordService;
-import com.keymanager.monitoring.service.CustomerService;
-import com.keymanager.monitoring.service.ServiceProviderService;
-import com.keymanager.monitoring.service.UserService;
+import com.keymanager.monitoring.entity.*;
+import com.keymanager.monitoring.service.*;
 import com.keymanager.util.Constants;
 import com.keymanager.util.PortTerminalTypeMapping;
 import com.keymanager.util.Utils;
-import com.keymanager.value.CustomerKeywordVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -52,6 +44,9 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	@Autowired
 	private ServiceProviderService serviceProviderService;
 
+	@Autowired
+	private CustomerKeywordPositionIndexLogService customerKeywordPositionIndexLogService;
+
 	@RequestMapping(value = "/clearTitle", method = RequestMethod.POST)
 	public ResponseEntity<?> clearTitle(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
 		String uuids = (String) requestMap.get("uuids");
@@ -67,10 +62,10 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		}
 	}
 
-	@RequestMapping(value="/searchCustomerKeywords/{status}/{customerUuid}" , method=RequestMethod.GET)
-	public ModelAndView searchCustomerKeywords(@PathVariable("status") int status,@PathVariable("customerUuid") Long customerUuid,@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request){
+	@RequestMapping(value="/searchCustomerKeywords/{customerUuid}" , method=RequestMethod.GET)
+	public ModelAndView searchCustomerKeywords(@PathVariable("customerUuid") Long customerUuid,@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request){
 		CustomerKeywordCrilteria customerKeywordCrilteria = new CustomerKeywordCrilteria();
-		customerKeywordCrilteria.setStatus(status+"");
+		customerKeywordCrilteria.setStatus(1+"");
 		customerKeywordCrilteria.setCustomerUuid(customerUuid+"");
 		return constructCustomerKeywordModelAndView(request, customerKeywordCrilteria, currentPageNumber+"", pageSize+"");
 	}
@@ -286,25 +281,16 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		return new ResponseEntity<Object>(customerKeywordService.getCustomerKeyword(customerKeywordUuid), HttpStatus.OK);
 	}
 
-	//历史记录
-	@RequestMapping(value = "/historyPositionAndIndex/{type}/{customerKeywordUuid}", method = RequestMethod.GET)
-	public ModelAndView historyPositionAndIndex(@PathVariable("type") String type,@PathVariable("customerKeywordUuid") Long customerKeywordUuid){
-		ModelAndView modelAndView = new ModelAndView("/customerkeyword/historyPositionAndIndex");
-		return new ModelAndView();
-	}
 	//导出成Excel文件
-	@RequestMapping(value = "/downloadCustomerKeywordInfo/{customerUuid}", method = RequestMethod.GET)
-	public ResponseEntity<?> downloadCustomerKeywordInfo(@PathVariable("customerUuid")Long customerUuid, HttpServletRequest request,
-														 HttpServletResponse response,CustomerKeywordCrilteria customerKeywordCrilteria1) {
-		System.out.println(customerKeywordCrilteria1);
+	@RequestMapping(value = "/downloadCustomerKeywordInfo", method = RequestMethod.GET)
+	public ResponseEntity<?> downloadCustomerKeywordInfo( HttpServletRequest request,
+														 HttpServletResponse response,CustomerKeywordCrilteria customerKeywordCrilteria) {
 		FileInputStream fis = null;
 		BufferedInputStream bis = null;
 		try {
 			String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
-			CustomerKeywordManager customerKeywordManager = new CustomerKeywordManager();
-			String condition = appendCondition(request,response);
-//			String condition = String.format(" and ck.fStatus = 1 and ck.fCustomerUuid = %d and ck.fTerminalType = '%s' ", customerUuid, terminalType);
-			List<CustomerKeywordVO> customerKeywords = customerKeywordManager.searchCustomerKeywords("keyword", 100000, 1, condition, " order by ck.fKeyword ", 1);
+			String customerUuid = request.getParameter("customerUuid").trim();
+			List<CustomerKeyword> customerKeywords = appendCondition(request,response);
 			if (!Utils.isEmpty(customerKeywords)) {
 				CustomerKeywordInfoExcelWriter excelWriter = new CustomerKeywordInfoExcelWriter();
 				excelWriter.writeDataToExcel(customerKeywords);
@@ -348,59 +334,67 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		return new ResponseEntity<Object>(HttpStatus.OK);
 	}
 
-	public String appendCondition(HttpServletRequest request, HttpServletResponse response){
-		String customerUuid = request.getParameter("customerUuid");
-		String invalidRefreshCount = request.getParameter("invalidRefreshCount");
-		String keyword = request.getParameter("keyword");
-		String url = request.getParameter("url");
-		String creationFromTime = request.getParameter("creationFromTime");
-		String creationToTime = request.getParameter("creationToTime");
-		String status = request.getParameter("status");
-		String optimizeGroupName = request.getParameter("optimizeGroupName");
-
+	public List<CustomerKeyword> appendCondition(HttpServletRequest request, HttpServletResponse response){
+		String customerUuid = request.getParameter("customerUuid").trim();
+		String invalidRefreshCount = request.getParameter("invalidRefreshCount").trim();
+		String keyword = request.getParameter("keyword").trim();
+		String url = request.getParameter("url").trim();
+		String creationFromTime = request.getParameter("creationFromTime").trim();
+		String creationToTime = request.getParameter("creationToTime").trim();
+		String status = request.getParameter("status").trim();
+		String optimizeGroupName = request.getParameter("optimizeGroupName").trim();
 		String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
-
 		String position = request.getParameter("position");
-
-		String condition = " and fTerminalType = '" + terminalType + "' ";
-		condition = condition + " and fCustomerUuid=" + customerUuid;
-
+		CustomerKeywordCrilteria customerKeywordCrilteria = new CustomerKeywordCrilteria();
+		customerKeywordCrilteria.setTerminalType(terminalType);
+		customerKeywordCrilteria.setCustomerUuid(customerUuid);
 		if (!Utils.isNullOrEmpty(keyword)) {
-			condition = condition + " and fKeyword like '%" + keyword.trim() + "%' ";
+			customerKeywordCrilteria.setKeyword(keyword);
 		}
 
 		if (!Utils.isNullOrEmpty(url)) {
-			condition = condition + " and fUrl = '" + url.trim() + "' ";
+			customerKeywordCrilteria.setUrl(url);
 		}
 
 		if (!Utils.isNullOrEmpty(position)) {
-			condition = condition
-					+ " and ((fCurrentPosition > 0 and fCurrentPosition <= "
-					+ position.trim() + ") ";
+			customerKeywordCrilteria.setPosition(position);;
 		}
 
 		if (!Utils.isNullOrEmpty(optimizeGroupName)) {
-			condition = condition + " and fOptimizeGroupName= '"
-					+ optimizeGroupName.trim() + "' ";
+			customerKeywordCrilteria.setOptimizeGroupName(optimizeGroupName);
 		}
 
 		if (!Utils.isNullOrEmpty(creationFromTime)) {
-			condition = condition + " and ck.fCreateTime >= STR_TO_DATE('"
-					+ creationFromTime.trim() + "', '%Y-%m-%d') ";
+			customerKeywordCrilteria.setCreationToTime(creationFromTime);
 		}
 		if (!Utils.isNullOrEmpty(creationToTime)) {
-			condition = condition + " and ck.fCreateTime <= STR_TO_DATE('"
-					+ creationToTime.trim() + "', '%Y-%m-%d') ";
+			customerKeywordCrilteria.setCreationToTime(creationToTime);
 		}
 
 		if (!Utils.isNullOrEmpty(status)) {
-			condition = condition + " and ck.fStatus = " + status.trim() + " ";
+			customerKeywordCrilteria.setStatus(status);
 		}
 
 		if (!Utils.isNullOrEmpty(invalidRefreshCount)) {
-			condition = condition + " and fInvalidRefreshCount >= "
-					+ invalidRefreshCount.trim() + " ";
+			customerKeywordCrilteria.setInvalidRefreshCount(invalidRefreshCount);
 		}
-		return condition;
+		Page<CustomerKeyword>  page = customerKeywordService.searchCustomerKeywords(new Page<CustomerKeyword>(1, 100000), customerKeywordCrilteria);
+		List<CustomerKeyword> customerKeywords = page.getRecords();
+		return customerKeywords;
+	}
+	//查询历史缴费记录
+	@RequestMapping(value = "/historyPositionAndIndex/{customerKeywordUuid}/{queryTime}" , method = RequestMethod.GET)
+	public ModelAndView historyPositionAndIndex(@PathVariable("customerKeywordUuid")Long customerKeywordUuid, @PathVariable("queryTime")String queryTime,HttpServletRequest request){
+		String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+		CustomerKeyword customerKeyword = customerKeywordService.selectById(customerKeywordUuid);
+		Map<String,Object> condition = new HashMap<String, Object>();
+		condition.put("terminalType",terminalType);
+		condition.put("customerKeywordUuid",customerKeywordUuid);
+		condition.put("queryTime",queryTime);
+		Page<CustomerKeywordPositionIndexLog> page = customerKeywordPositionIndexLogService.searchCustomerKeywordPositionIndexLogs(new Page<CustomerKeywordPositionIndexLog>(1,10000),condition);
+		ModelAndView modelAndView = new ModelAndView("/customerkeyword/historyPositionAndIndex");
+		modelAndView.addObject("customerKeyword", customerKeyword);
+		modelAndView.addObject("page", page);
+		return modelAndView;
 	}
 }

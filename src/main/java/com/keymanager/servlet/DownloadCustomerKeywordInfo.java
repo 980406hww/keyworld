@@ -89,7 +89,7 @@ public class DownloadCustomerKeywordInfo extends HttpServlet {
 			List<CustomerKeywordVO> customerKeywords = customerKeywordManager.searchCustomerKeywords("keyword", 100000 , 1 , condition, " order by ck.fKeyword ", 1);
 			if(!Utils.isEmpty(customerKeywords)){
 				CustomerKeywordInfoExcelWriter excelWriter = new CustomerKeywordInfoExcelWriter();
-				excelWriter.writeDataToExcel(customerKeywords);
+//				excelWriter.writeDataToExcel(customerKeywords);
 				
 				// 以流的形式下载文件。
 				byte[] buffer = excelWriter.getExcelContentBytes();

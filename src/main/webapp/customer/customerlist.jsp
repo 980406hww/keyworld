@@ -1025,8 +1025,7 @@
                     <td>${user.userID}</td>
                 </c:if>
                 <td>
-                    <%--<a href="internal/customer/searchCustomers/1/${customer.uuid}">${customer.contactPerson}</a>--%>
-                    <a href="/customerkeyword/list.jsp?status=1&customerUuid=${customer.uuid}">${customer.contactPerson}</a>
+                    <a href="/internal/customerKeyword/searchCustomerKeywords/${customer.uuid}">${customer.contactPerson}</a>
                 </td>
                 <td>${customer.qq}</td>
                 <td>${customer.telphone} </td>

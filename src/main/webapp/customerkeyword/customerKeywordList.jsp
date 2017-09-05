@@ -952,25 +952,10 @@
                     }
                 });
             }
-            //完整版模板下载
-
-            //上传日报表模板
-            function uploaddailyreporttemplate(customerUuid) {
-
-            }
-            //导出日报表
-            function downloadSingleCustomerReport(customerUuid) {
-
-            }
             //导出结果
-            function downloadCustomerKeywordInfo(customerUuid) {
-                var fileName = "CustomerKeywordInfo"+new Date().toString()+".xls";
-                var pageUrl = customerUuid;
+            function downloadCustomerKeywordInfo() {
                 var customerKeywordCrilteria = $("#searchCustomerKeywordForm").serialize().trim();
-                alert(customerKeywordCrilteria)
-
-//                var formData = new FormData();
-                location.href='/internal/customerKeyword/downloadCustomerKeywordInfo/'+customerUuid+'?'+customerKeywordCrilteria;
+                location.href='/internal/customerKeyword/downloadCustomerKeywordInfo/?'+customerKeywordCrilteria;
             }
         </script>
 
@@ -1006,9 +991,7 @@
         | <a target="_blank" href="javascript:uploadFull('${customerKeywordCrilteria.customerUuid}')">Excel上传(完整版)</a>
         | <a target="_blank" href="/SuperUserFullKeywordList.xls">完整版下载</a>
         | <a target="_blank" href="/internal/dailyReport/downloadSingleCustomerReport/${customerKeywordCrilteria.customerUuid}">导出日报表</a>
-        <%--| <a target="_blank" href='/internal/customerKeyword/downloadCustomerKeywordInfo/fileName=CustomerKeywordInfo&lt;%&ndash;<%="_" + Utils.getCurrentDate()%>.xls&<%=pageUrl%>&ndash;%&gt;'>导出结果</a>--%>
-        | <a target="_blank" href="javascript:downloadCustomerKeywordInfo('${customerKeywordCrilteria.customerUuid}')">导出结果</a>
-        | <a target="_blank" href="/internal/customerKeyword/downloadCustomerKeywordInfo/${customerKeywordCrilteria.customerUuid}">导出结果</a>
+        | <a target="_blank" href="javascript:downloadCustomerKeywordInfo()">导出结果</a>
         <br/><br/>
         <a href="javascript:delAllItems('emptyTitleAndUrl','${customerKeywordCrilteria.customerUuid}')">删除标题和网址为空的关键字</a> |
         <a href="javascript:delAllItems('emptyTitle','${customerKeywordCrilteria.customerUuid}')">删除标题为空的关键字</a> |
@@ -1129,7 +1112,7 @@
 
                 <td align="center" width=30>
                     <div style="height:16;"><a
-                            href="/customerKeyword/historyPositionAndIndex.jsp?type=PC&uuid=${customerKeyword.uuid}"
+                            href="/internal/customerKeyword/historyPositionAndIndex/${customerKeyword.uuid}/30"
                             target="_blank">${customerKeyword.currentIndexCount}
                     </a></div>
                 </td>
@@ -1164,11 +1147,11 @@
 
                 <td align="center" width=50>${customerKeyword.orderNumber}
                 </td>
-                <td align="center" width=100>${customerKeyword.remarks}
+                <td align="center" width=100>${customerKeyword.remarks==null?"":customerKeyword.remarks}
                 </td>
                 <c:choose>
                     <c:when test="${user.vipType}">
-                        <td align="center" width=60>${customerKeyword.optimizeGroupName == null ? "" : customerKeyword.optimizeGroupName}
+                        <td align="center" width=60>${customerKeyword.optimizeGroupName == ''? "" : customerKeyword.optimizeGroupName}
                         </td>
                         <td align="center" width=80>
                             <a href="javascript:modifyCustomerKeyword('${customerKeyword.uuid}')">修改</a>|

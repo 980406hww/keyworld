@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.enums.FieldStrategy;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.keymanager.enums.CollectMethod;
 import com.keymanager.util.Constants;
+import com.keymanager.util.Utils;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.sql.Timestamp;
@@ -669,4 +670,25 @@ public class CustomerKeyword extends BaseEntity {
         return tmpValue - Integer.parseInt(lastDigit);
     }
 
+    public String getPositionFirstFeeString() {return Utils.removeDoubleZeros(positionFirstFee)==null?"":Utils.removeDoubleZeros(positionFirstFee);}
+
+    public String getPositionSecondFeeString() {
+        return Utils.removeDoubleZeros(positionSecondFee)==null?"":Utils.removeDoubleZeros(positionSecondFee);
+    }
+
+    public String getPositionThirdFeeString() {
+        return Utils.removeDoubleZeros(positionThirdFee)==null?"":Utils.removeDoubleZeros(positionThirdFee);
+    }
+
+    public String getPositionForthFeeString() {
+        return Utils.removeDoubleZeros(positionForthFee)==null?"":Utils.removeDoubleZeros(positionForthFee);
+    }
+
+    public String getPositionFifthFeeString() {
+        return Utils.removeDoubleZeros(positionFifthFee)==null?"":Utils.removeDoubleZeros(positionFifthFee);
+    }
+
+    public String getPositionFirstPageFeeString() {
+        return Utils.removeDoubleZeros(positionFirstPageFee)==null?"":Utils.removeDoubleZeros(positionFirstPageFee);
+    }
 }
