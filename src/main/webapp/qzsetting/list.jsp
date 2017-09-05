@@ -4,7 +4,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <html>
 <head>
-	<title>全站设置清单</title>
+	<title>全站设置单</title>
 	<style>
 		.wrap {word-break: break-all; word-wrap:break-word;}
 		<!--
@@ -456,6 +456,7 @@
                         cancelChargeDialog();
                         if (data != null && data != "") {
                             showInfo("收费成功！", self);
+                            $(self).dialog("close");
                             window.location.reload();
                         } else {
                             showInfo("收费失败！", self);
@@ -642,9 +643,10 @@
 						resizable: false,
 						modal: true,
                         width: 400,
+                        title: '收费',
 						//按钮
 						buttons: {
-							"保存": function () {
+							"收费": function () {
                                 saveChargeLog(this);
 							},
 							"取消": function () {
