@@ -96,7 +96,7 @@
 		</td>
 	</tr>
 	<tr>
-		<td colspan="13">
+		<td colspan="11">
 			<form method="post" id="chargeForm" action="/internal/qzsetting/searchQZSettings">
 				<input type="hidden" id="dateRangeType" name="dateRangeType" value="${qzSettingSearchCriteria.dateRangeType}"/>
 				<table style="font-size:12px;">
@@ -125,7 +125,7 @@
 				</table>
 			</form>
 		</td>
-		<td align="right">
+		<td align="right" colspan="3">
 			<a href="javascript:showSettingDialog(null, this)">增加全站设置</a>
 			| <a target="_blank" href="javascript:updateImmediately(this)">马上更新</a>
 			| <a target="_blank" href="javascript:delSelectedQZSettings(this)">删除所选</a>
@@ -167,9 +167,9 @@
 			<td><fmt:formatDate value="${qzSetting.updateEndTime}" pattern="MM-dd HH:mm" /></td>
 			<td><fmt:formatDate value="${qzSetting.updateTime}" pattern="MM-dd HH:mm" /></td>
 			<td><fmt:formatDate value="${qzSetting.createTime}" pattern="MM-dd HH:mm" /></td>
-			<td align="center">
+			<td>
 				<a href="javascript:showChargeDialog('${qzSetting.uuid}','${qzSetting.contactPerson}','${qzSetting.domain}',this)">收费</a> |
-				<a href="javascript:showSettingDialog('${qzSetting.uuid}', this)">修改</a> |
+				<a href="javascript:showSettingDialog('${qzSetting.uuid}', this)">修改</a><br>
 				<a href="javascript:delQZSetting(${qzSetting.uuid})">删除</a> |
 				<a href="javascript:showChargeLog('${qzSetting.uuid}', this)">收费记录</a>
 			</td>
@@ -686,7 +686,6 @@
         var chargeDialog = $$$("#chargeDialog");
         var checkboxObj = chargeDialog.find("#" + operationType);
         var chargeInfoObj = chargeDialog.find("#" + operationType + "ChargeInfo");
-        var chargeDialogHeight = $("#chargeDialog").height();
         if (chargeInfoObj.css("display") == "none" || checkboxObj[0].checked == true) {
             chargeInfoObj.css("display", "block");
         } else {
