@@ -1024,12 +1024,7 @@
                     <td>${user.userID}</td>
                 </c:if>
                 <td>
-<<<<<<< HEAD
                     <a href="/internal/customerKeyword/searchCustomerKeywords/${customer.uuid}">${customer.contactPerson}</a>
-=======
-                    <a href="/internal/customerKeyword/searchCustomerKeywords/1/${customer.uuid}">${customer.contactPerson}</a>
-                    <%--<a href="/customerkeyword/list.jsp?status=1&customerUuid=${customer.uuid}">${customer.contactPerson}</a>--%>
->>>>>>> 2d23eca01993daf42fa1eeda1399b5be817c5cad
                 </td>
                 <td>${customer.keywordCount}</td>
                 <td>${customer.qq}</td>

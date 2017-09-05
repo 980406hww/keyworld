@@ -990,15 +990,8 @@
         | <a target="_blank" href="javascript:uploadFull('${customerKeywordCrilteria.customerUuid}')">Excel上传(完整版)</a>
         | <a target="_blank" href="/SuperUserFullKeywordList.xls">完整版下载</a>
         | <a target="_blank" href="/internal/dailyReport/downloadSingleCustomerReport/${customerKeywordCrilteria.customerUuid}">导出日报表</a>
-<<<<<<< HEAD
         | <a target="_blank" href="javascript:downloadCustomerKeywordInfo()">导出结果</a>
-        <br/><br/>
-=======
-        <%--| <a target="_blank" href='/internal/customerKeyword/downloadCustomerKeywordInfo/fileName=CustomerKeywordInfo&lt;%&ndash;<%="_" + Utils.getCurrentDate()%>.xls&<%=pageUrl%>&ndash;%&gt;'>导出结果</a>--%>
-        | <a target="_blank" href="javascript:downloadCustomerKeywordInfo('${customerKeywordCrilteria.customerUuid}')">导出结果</a>
-        | <a target="_blank" href="/internal/customerKeyword/downloadCustomerKeywordInfo/${customerKeywordCrilteria.customerUuid}">导出结果</a>
         <br/>
->>>>>>> 2d23eca01993daf42fa1eeda1399b5be817c5cad
         <a href="javascript:delAllItems('emptyTitleAndUrl','${customerKeywordCrilteria.customerUuid}')">删除标题和网址为空的关键字</a> |
         <a href="javascript:delAllItems('emptyTitle','${customerKeywordCrilteria.customerUuid}')">删除标题为空的关键字</a> |
         <a href="javascript:resetTitle('${customerKeywordCrilteria.customerUuid}','captureTitle')">重采标题</a> |
