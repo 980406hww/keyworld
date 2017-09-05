@@ -453,7 +453,7 @@
                     timeout: 5000,
                     type: 'POST',
                     success: function (data) {
-                        cancelChargeDialog();
+                        resetChargeDialog();
                         if (data != null && data != "") {
                             showInfo("收费成功！", self);
                             $(self).dialog("close");
@@ -704,6 +704,8 @@
         $("#changeSettingDialog").dialog({
             resizable: false,
             width: 400,
+            height:
+            title: '全站设置',
             modal: true,
             buttons: {
                 "保存": function () {
@@ -991,13 +993,13 @@
                 timeout: 5000,
                 type: 'POST',
                 success: function (data) {
-                    settingDialogDiv.hide();
                     if (data != null && data != "") {
                         showInfo("更新成功！", self);
                         window.location.reload();
                     } else {
                         showInfo("更新失败！", self);
                     }
+                    $(self).dialog("close");
                 },
                 error: function () {
                     showInfo("更新失败！", self);
