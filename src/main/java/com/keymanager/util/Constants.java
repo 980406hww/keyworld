@@ -2,7 +2,9 @@ package com.keymanager.util;
 
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Constants {
@@ -44,7 +46,7 @@ public class Constants {
 	public final static String SEARCH_ENGINE_SOGOU = "搜狗";
 	public final static String SEARCH_ENGINE_360 = "360";
 	public final static String SEARCH_ENGINE_GOOGLE = "谷歌";
-	public final static Map<String, String> SEARCH_ENGINE_URL_MAP = new HashMap<String, String>();	
+	public final static Map<String, String> SEARCH_ENGINE_URL_MAP = new HashMap<String, String>();
 	static {
 		SEARCH_ENGINE_URL_MAP.put(SEARCH_ENGINE_BAIDU + "_" + TerminalTypeEnum.PC.name(), "http://www.baidu.com/s?wd=");
 		SEARCH_ENGINE_URL_MAP.put(SEARCH_ENGINE_360 + "_" + TerminalTypeEnum.PC.name(), "http://www.so.com/s?q=");
@@ -53,5 +55,13 @@ public class Constants {
 		SEARCH_ENGINE_URL_MAP.put(SEARCH_ENGINE_BAIDU + "_" + TerminalTypeEnum.Phone.name(), "http://m.baidu.com/s?wd=");
 		SEARCH_ENGINE_URL_MAP.put(SEARCH_ENGINE_360 + "_" + TerminalTypeEnum.Phone.name(), "http://www.so.com/s?q=");
 		SEARCH_ENGINE_URL_MAP.put(SEARCH_ENGINE_SOGOU + "_" + TerminalTypeEnum.Phone.name(), "http://www.sogou.com/web?query=");
+	}
+
+	public final static List<String> QZSETTING_STATUS_LIST = new ArrayList<String>();
+	static {
+		QZSETTING_STATUS_LIST.add("");
+		QZSETTING_STATUS_LIST.add("Processing");
+		QZSETTING_STATUS_LIST.add("Completed");
+		QZSETTING_STATUS_LIST.add("DownloadTimesUsed");
 	}
 }
