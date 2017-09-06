@@ -1,11 +1,17 @@
 <html>
+<%
+    String path = request.getContextPath();
+    String basePath =
+            request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+                    + path + "/";
+%>
 <head>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
     <%@page contentType="text/html;charset=utf-8" %>
 
     <script language="javascript" type="text/javascript" src="/common.js"></script>
-    <script src="customerkeyword/add.js"  type="text/javascript" language="javascript"></script>
+    <script src="${pageContext.request.contextPath}/customerkeyword/add.js"  type="text/javascript" language="javascript"></script>
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script language="javascript" type="text/javascript" src="/js/My97DatePicker/WdatePicker.js"></script>

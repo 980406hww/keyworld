@@ -314,6 +314,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			e.printStackTrace();
+			return new ResponseEntity<Object>(false,HttpStatus.OK);
 		} finally {
 			if (bis != null) {
 				try {
@@ -321,6 +322,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 				} catch (IOException e) {
 					logger.error(e.getMessage());
 					e.printStackTrace();
+					return new ResponseEntity<Object>(false,HttpStatus.OK);
 				}
 			}
 			if (fis != null) {
@@ -329,10 +331,11 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 				} catch (IOException e) {
 					logger.error(e.getMessage());
 					e.printStackTrace();
+					return new ResponseEntity<Object>(false,HttpStatus.OK);
 				}
 			}
 		}
-		return new ResponseEntity<Object>(HttpStatus.OK);
+		return new ResponseEntity<Object>(true,HttpStatus.OK);
 	}
 
 	public List<CustomerKeyword> appendCondition(HttpServletRequest request, HttpServletResponse response){
