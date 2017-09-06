@@ -6,13 +6,13 @@ import com.keymanager.db.DBUtil;
 import com.keymanager.enums.CollectMethod;
 import com.keymanager.manager.CustomerKeywordManager;
 import com.keymanager.monitoring.criteria.QZSettingCriteria;
+import com.keymanager.monitoring.criteria.QZSettingSearchCriteria;
 import com.keymanager.monitoring.dao.QZSettingDao;
-import com.keymanager.monitoring.entity.QZCaptureTitleLog;
-import com.keymanager.monitoring.entity.QZChargeRule;
-import com.keymanager.monitoring.entity.QZOperationType;
-import com.keymanager.monitoring.entity.QZSetting;
+import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.enums.QZCaptureTitleLogStatusEnum;
 import com.keymanager.monitoring.enums.QZSettingStatusEnum;
+import com.keymanager.monitoring.vo.DateRangeTypeVO;
+import com.keymanager.monitoring.vo.QZSettingVO;
 import com.keymanager.util.Constants;
 import com.keymanager.util.Utils;
 import com.keymanager.value.CustomerKeywordVO;
@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
+import java.text.DateFormat;
 import java.util.*;
 
 @Service
@@ -43,6 +44,8 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 	@Autowired
 	private QZChargeRuleService qzChargeRuleService;
 
+	@Autowired
+	private CustomerService customerService;
 
 	public QZSetting getAvailableQZSetting(){
 		List<QZSetting> qzSettings = qzSettingDao.getAvailableQZSettings();
@@ -181,23 +184,53 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		}
 	}
 
-	//查询QZSetting
-	public Page<QZSetting> searchQZSettings(Page<QZSetting> page, Long uuid, Long customerUuid, String domain, String group, String updateStatus){
-		//在封装成一个	QZSetting对象
-		page.setRecords(qzSettingDao.searchQZSettings(page, uuid, customerUuid, domain, group, updateStatus));
-		if(uuid!=null){
-			for(QZSetting qzSetting : page.getRecords()){
-				//通过uuid找到对应得操作类型表（多条数据）  ---->operationTypeUuid
-				List<QZOperationType> qzOperationTypes  =  qzOperationTypeService.searchQZOperationTypesIsDelete(qzSetting.getUuid());
-				//通过operationTypeUuid主键去查询规则表（多条数据）
-				for(QZOperationType qzOperationType : qzOperationTypes){
-					List<QZChargeRule> qzChargeRules = qzChargeRuleService.searchQZChargeRuleByqzOperationTypeUuids(qzOperationType.getUuid());
-					qzOperationType.setQzChargeRules(qzChargeRules);
-				}
-				qzSetting.setQzOperationTypes(qzOperationTypes);
+	public Page<QZSetting> searchQZSetting(Page<QZSetting> page, QZSettingSearchCriteria qzSettingSearchCriteria){
+		page.setRecords(qzSettingDao.searchQZSettings(page, qzSettingSearchCriteria));
+		return page;
+	}
+
+	public Map<String,Integer> getChargeRemindData() {
+		Map<String,Integer> dateRangeTypeMap = new HashMap<String, Integer>();
+		List<DateRangeTypeVO> chargeRemindDataList = qzSettingDao.getChargeRemindData();
+		int expiredChargeSize  = 0;
+		int nowChargeSize = 0;
+		int threeChargeSize = 0;
+		int sevenChargeSize = 0;
+
+		for (DateRangeTypeVO dateRangeTypeVO : chargeRemindDataList) {
+			int intervalDays = Utils.getIntervalDays(new Date(),dateRangeTypeVO.getNextChargeDate());
+			if(intervalDays < 0) {
+				expiredChargeSize++;
+			} else if(intervalDays == 0) {
+				nowChargeSize++;
+			} else if(intervalDays <= 3) {
+				threeChargeSize++;
+			} else if(intervalDays <= 7) {
+				sevenChargeSize++;
 			}
 		}
-		return page;
+		dateRangeTypeMap.put("expiredChargeSize",expiredChargeSize);
+		dateRangeTypeMap.put("nowChargeSize",nowChargeSize);
+		dateRangeTypeMap.put("threeChargeSize",threeChargeSize);
+		dateRangeTypeMap.put("sevenChargeSize",sevenChargeSize);
+		return dateRangeTypeMap;
+	}
+
+	public QZSetting getQZSetting(Long uuid){
+		QZSetting qzSetting = qzSettingDao.selectById(uuid);
+		if(qzSetting != null) {
+			Customer customer = customerService.getCustomer(qzSetting.getCustomerUuid());
+			if(customer != null) {
+				qzSetting.setContactPerson(customer.getContactPerson());
+			}
+			List<QZOperationType> qzOperationTypes = qzOperationTypeService.searchQZOperationTypesIsDelete(qzSetting.getUuid());
+			for (QZOperationType qzOperationType : qzOperationTypes) {
+				List<QZChargeRule> qzChargeRules = qzChargeRuleService.searchQZChargeRuleByqzOperationTypeUuids(qzOperationType.getUuid());
+				qzOperationType.setQzChargeRules(qzChargeRules);
+			}
+			qzSetting.setQzOperationTypes(qzOperationTypes);
+		}
+		return qzSetting;
 	}
 
 	public void updateImmediately(String uuids){
@@ -310,7 +343,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		qzOperationTypeService.updateById(oldOperationType);
 	}
 
-	public boolean deleteOne(Long uuid){
+	public void deleteOne(Long uuid){
 		//根据数据库中的uuid去查询
 		List<QZOperationType> qzOperationTypes =  qzOperationTypeService.searchQZOperationTypesByQZSettingUuid(uuid);
 		if(qzOperationTypes.size()>0){
@@ -320,14 +353,12 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			qzOperationTypeService.deleteByQZSettingUuid(uuid);
 		}
 		qzSettingDao.deleteById(uuid);
-		return true;
 	}
 
-	public boolean deleteAll(List<String> uuids){
+	public void deleteAll(List<String> uuids){
 		for(String uuid : uuids){
 			deleteOne(Long.valueOf(uuid));
 		}
-		return true;
 	}
 
 }

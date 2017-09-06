@@ -22,13 +22,4 @@ public interface QZOperationTypeDao extends BaseMapper<QZOperationType> {
     //上一级的主键
     int selectLastId();
 
-    //过期缴费
-    List<QZSetting> expiredCharge();
-    //当天缴费
-    List<QZSetting> nowCharge();
-    //三天缴费
-    List<QZSetting> threeCharge();
-    //七天缴费
-    List<QZSetting> sevenCharge();
-
 }
