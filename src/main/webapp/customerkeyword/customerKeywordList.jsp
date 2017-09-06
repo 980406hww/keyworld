@@ -20,7 +20,9 @@
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link href="/css/menu.css" rel="stylesheet" type="text/css"/>
-
+    //toastmessage插件
+    <script language="javascript" type="text/javascript" src="/toastmessage/jquery.toastmessage.js"></script>
+    <link rel="stylesheet" href="/toastmessage/css/jquery.toastmessage.css">
     <head>
         <title>关键字列表</title>
         <style>
@@ -183,14 +185,14 @@
                     type: 'GET',
                     success: function (result) {
                         if (result) {
-                            showInfo("删除成功", self);
+                            $().toastmessage('showSuccessToast', "删除成功");
                             window.location.reload();
                         } else {
-                            showInfo("删除失败", self);
+                            $().toastmessage('showErrorToast', "删除失败");
                         }
                     },
                     error: function () {
-                        showInfo("删除失败", self);
+                        $().toastmessage('showErrorToast', "删除失败");
                         window.location.reload();
                     }
                 });
@@ -227,15 +229,15 @@
                     type: 'POST',
                     success: function (data) {
                         if (data) {
-                            showInfo("操作成功", self);
+                            $().toastmessage('showSuccessToast', "操作成功");
                             window.location.reload();
                         } else {
-                            showInfo("操作失败", self);
+                            $().toastmessage('showErrorToast', "操作失败");
                             window.location.reload();
                         }
                     },
                     error: function () {
-                        showInfo("操作失败", self);
+                        $().toastmessage('showErrorToast', "操作失败");
                         window.location.reload();
                     }
                 });
@@ -279,15 +281,15 @@
                     type: 'POST',
                     success: function (status) {
                         if (status) {
-                            showInfo("操作成功！", self);
+                            $().toastmessage('showSuccessToast', "操作成功");
                             window.location.reload();
                         } else {
-                            showInfo("操作失败！", self);
+                            $().toastmessage('showErrorToast', "操作失败");
                             window.location.reload();
                         }
                     },
                     error: function () {
-                        showInfo("操作失败！", self);
+                        $().toastmessage('showErrorToast', "操作失败");
                         window.location.reload();
                     }
                 });
@@ -318,14 +320,14 @@
                     type: 'POST',
                     success: function (status) {
                         if (status) {
-                            showInfo("操作成功！", self);
+                            $().toastmessage('showSuccessToast', "操作成功");
                             window.location.reload();
                         } else {
-                            showInfo("操作失败！", self);
+                            $().toastmessage('showErrorToast', "操作失败");
                         }
                     },
                     error: function () {
-                        showInfo("操作失败！", self);
+                        $().toastmessage('showErrorToast', "操作失败");
                     }
                 });
             }
@@ -456,15 +458,15 @@
                     success: function (result) {
 
                         if (result) {
-                            showInfo("操作成功", self);
+                            $().toastmessage('showSuccessToast', "操作成功");
                             window.location.reload();
                         } else {
-                            showInfo("操作失败", self);
+                            $().toastmessage('showErrorToast', "操作失败");
                             window.location.reload();
                         }
                     },
                     error: function () {
-                        showInfo("操作失败", self);
+                        $().toastmessage('showErrorToast', "操作失败");
                         window.location.reload();
                     },
                 });
@@ -522,15 +524,15 @@
                     type: 'POST',
                     success: function (result) {
                         if(result){
-                            showInfo("操作成功", self);
+                            $().toastmessage('showSuccessToast', "操作成功");
                             window.location.reload();
                         } else {
-                            showInfo("操作失败", self);
+                            $().toastmessage('showErrorToast', "操作失败");
                             window.location.reload();
                         }
                     },
                     error: function () {
-                        showInfo("更新失败！", self);
+                        $().toastmessage('showErrorToast', "更新失败");
                         window.location.reload();
                     }
                 });
@@ -550,9 +552,9 @@
                     width: 440,
                     height: 490,
                     position: {
-                     my: "center top",
-                     at: "center top+50px",
-                     of: window},
+                        my: "center top",
+                        at: "center top+50px",
+                        of: window},
                     title : "添加关键字",
                     show: {
                         effect: "blind",
@@ -586,7 +588,7 @@
                 customerKeyword.searchEngine = $("#customerKeywordDialog #searchEngine").val();
                 var keyword = $.trim($("#customerKeywordDialog #keyword").val());
                 if (keyword == '') {
-                    alert("关键字不能为空");
+                    $().toastmessage('showWarningToast', "关键字不能为空");
                     $("#customerKeywordDialog #keyword").focus();
                     return;
                 }
@@ -595,7 +597,7 @@
                 }
                 var url = $.trim($("#customerKeywordDialog #url").val())
                 if (url.length == 0) {
-                    alert("网址不能为空！");
+                    $().toastmessage('showWarningToast', "网址不能为空！");
                     $("#customerKeywordDialog #url").focus();
                     return;
                 }
@@ -654,15 +656,15 @@
                     type: 'POST',
                     success: function (result) {
                         if (result) {
-                            showInfo("操作成功", self);
+                            $().toastmessage('showSuccessToast', "操作成功");
                             window.location.reload();
                         } else {
-                            showInfo("操作失败", self);
+                            $().toastmessage('showErrorToast', "操作失败");
                             window.location.reload();
                         }
                     },
                     error: function () {
-                        showInfo("操作失败", self);
+                        $().toastmessage('showErrorToast', "操作失败");
                         window.location.reload();
                     }
                 });
@@ -709,12 +711,12 @@
 
                             addCustomerKeyword(customerKeywordUuid);
                         } else {
-                            showInfo("操作失败", self);
+                            $().toastmessage('showErrorToast', "操作失败");
                             window.location.reload();
                         }
                     },
                     error: function () {
-                        showInfo("操作失败", self);
+                        $().toastmessage('showErrorToast', "操作失败");
                         window.location.reload();
                     }
                 });
@@ -762,15 +764,15 @@
                                     contentType: false,
                                     success: function (result) {
                                         if (result) {
-                                            showInfo("上传成功", self);
+                                            $().toastmessage('showSuccessToast', "上传成功");
                                             window.location.reload();
                                         } else {
-                                            showInfo("上传失败", self);
+                                            $().toastmessage('showErrorToast', "上传失败");
                                             window.location.reload();
                                         }
                                     },
                                     error: function () {
-                                        showInfo("上传失败", self);
+                                        $().toastmessage('showErrorToast', "上传失败");
                                         window.location.reload();
                                     }
                                 });
@@ -827,15 +829,15 @@
                                     contentType: false,
                                     success: function (result) {
                                         if (result) {
-                                            showInfo("上传成功", self);
+                                            $().toastmessage('showErrorToast', "上传成功");
                                             window.location.reload();
                                         } else {
-                                            showInfo("上传失败", self);
+                                            $().toastmessage('showErrorToast', "上传失败");
                                             window.location.reload();
                                         }
                                     },
                                     error: function () {
-                                        showInfo("上传失败", self);
+                                        $().toastmessage('showErrorToast', "上传失败");
                                         window.location.reload();
                                     }
                                 });
@@ -1024,10 +1026,10 @@
                     </font>
                 </td>
                 <td  align="center" width=200 class="wrap"
-                    onMouseMove="showTip('原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}')"
-                    onMouseOut="closeTip()">
+                     onMouseMove="showTip('原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}')"
+                     onMouseOut="closeTip()">
                     <div style="height:16;">
-                             ${customerKeyword.url==null?'':customerKeyword.url};
+                            ${customerKeyword.url==null?'':customerKeyword.url};
                     </div>
                 </td>
 
@@ -1049,13 +1051,13 @@
 
                 <td align="center" width=50>
                     <div style="height:16;"><a
-                                href="${customerKeyword.searchEngineUrl}${customerKeyword.keyword}&pn=${customerKeyword.getPrepareBaiduPageNumber(customerKeyword.currentPosition)}"
-                                target="_blank">${customerKeyword.currentPosition}</a>
+                            href="${customerKeyword.searchEngineUrl}${customerKeyword.keyword}&pn=${customerKeyword.getPrepareBaiduPageNumber(customerKeyword.currentPosition)}"
+                            target="_blank">${customerKeyword.currentPosition}</a>
                     </div>
                 </td>
 
                 <td align="center" width=30 onMouseMove="showTip('优化日期：<fmt:formatDate value="${customerKeyword.optimizeDate}" pattern="yyyy-MM-dd"/> ，要刷：${customerKeyword.optimizePlanCount}，已刷：${customerKeyword.optimizedCount}')"
-                        onMouseOut="closeTip()">${customerKeyword.collectMethodName}
+                    onMouseOut="closeTip()">${customerKeyword.collectMethodName}
                 </td>
 
                 <td align="center" width=30>${customerKeyword.optimizePlanCount}</td>
@@ -1095,26 +1097,26 @@
 </div>
 
 <div id="showCustomerBottomPositioneDiv">
-<div id="showCustomerBottomDiv">
-    <input id="fisrtButton" class="ui-button ui-widget ui-corner-all" type="button"
-           onclick="changePaging(1,'${page.size}')" value="首页"/>&nbsp;&nbsp;&nbsp;&nbsp;
-    <input id="upButton" type="button" class="ui-button ui-widget ui-corner-all"
-           onclick="changePaging('${page.current-1}','${page.size}')" value="上一页"/>&nbsp;&nbsp;&nbsp;&nbsp;
-    ${page.current}/${page.pages}&nbsp;&nbsp;
-    <input id="nextButton" type="button" class="ui-button ui-widget ui-corner-all"
-           onclick="changePaging('${page.current+1>=page.pages?page.pages:page.current+1}','${page.size}')"
-           value="下一页">&nbsp;&nbsp;&nbsp;&nbsp;
-    <input id="lastButton" type="button" class="ui-button ui-widget ui-corner-all"
-           onclick="changePaging('${page.pages}','${page.size}')" value="末页">&nbsp;&nbsp;&nbsp;&nbsp;
-    总记录数:${page.total}&nbsp;&nbsp;&nbsp;&nbsp;
-    每页显示条数:<select id="chooseRecords" onchange="changePaging(${page.current},this.value)">
-    <option>10</option>
-    <option>25</option>
-    <option>50</option>
-    <option>75</option>
-    <option>100</option>
-</select>
-</div>
+    <div id="showCustomerBottomDiv">
+        <input id="fisrtButton" class="ui-button ui-widget ui-corner-all" type="button"
+               onclick="changePaging(1,'${page.size}')" value="首页"/>&nbsp;&nbsp;&nbsp;&nbsp;
+        <input id="upButton" type="button" class="ui-button ui-widget ui-corner-all"
+               onclick="changePaging('${page.current-1}','${page.size}')" value="上一页"/>&nbsp;&nbsp;&nbsp;&nbsp;
+        ${page.current}/${page.pages}&nbsp;&nbsp;
+        <input id="nextButton" type="button" class="ui-button ui-widget ui-corner-all"
+               onclick="changePaging('${page.current+1>=page.pages?page.pages:page.current+1}','${page.size}')"
+               value="下一页">&nbsp;&nbsp;&nbsp;&nbsp;
+        <input id="lastButton" type="button" class="ui-button ui-widget ui-corner-all"
+               onclick="changePaging('${page.pages}','${page.size}')" value="末页">&nbsp;&nbsp;&nbsp;&nbsp;
+        总记录数:${page.total}&nbsp;&nbsp;&nbsp;&nbsp;
+        每页显示条数:<select id="chooseRecords" onchange="changePaging(${page.current},this.value)">
+        <option>10</option>
+        <option>25</option>
+        <option>50</option>
+        <option>75</option>
+        <option>100</option>
+    </select>
+    </div>
 </div>
 <%--Dialog部分--%>
 <div id="changeOptimizationGroupDialog"  style="text-align: center;" title="修改选中关键字组名">
