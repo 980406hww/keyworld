@@ -21,9 +21,6 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
 
     List<QZSetting> searchQZSettingsByUuids(@Param("uuids") String uuids);
 
-    List<QZSetting> searchQZSettings(Pagination page, @Param("uuid") Long uuid, @Param("customerUuid") Long customerUuid, @Param("domain") String
-            domain, @Param("group") String group, @Param("updateStatus") String updateStatus);
-
     List<QZSetting> searchQZSettings(Page<QZSetting> page, @Param("qzSettingSearchCriteria")QZSettingSearchCriteria qzSettingSearchCriteria);
 
     int selectLastId();
