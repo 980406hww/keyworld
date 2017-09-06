@@ -13,7 +13,17 @@ public class QZSettingVO {
 
     private String group;
 
-    private int updateInterval;
+    private String pcGroup;
+
+    private String phoneGroup;
+
+    private String type;
+
+    private Boolean ignoreNoIndex;
+
+    private Boolean ignoreNoOrder;
+
+    private Integer updateInterval;
 
     private String updateStatus;
 
@@ -45,6 +55,14 @@ public class QZSettingVO {
         this.customerUuid = customerUuid;
     }
 
+    public String getContactPerson() {
+        return contactPerson;
+    }
+
+    public void setContactPerson(String contactPerson) {
+        this.contactPerson = contactPerson;
+    }
+
     public String getDomain() {
         return domain;
     }
@@ -61,11 +79,51 @@ public class QZSettingVO {
         this.group = group;
     }
 
-    public int getUpdateInterval() {
+    public String getPcGroup() {
+        return pcGroup;
+    }
+
+    public void setPcGroup(String pcGroup) {
+        this.pcGroup = pcGroup;
+    }
+
+    public String getPhoneGroup() {
+        return phoneGroup;
+    }
+
+    public void setPhoneGroup(String phoneGroup) {
+        this.phoneGroup = phoneGroup;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public Boolean getIgnoreNoIndex() {
+        return ignoreNoIndex;
+    }
+
+    public void setIgnoreNoIndex(Boolean ignoreNoIndex) {
+        this.ignoreNoIndex = ignoreNoIndex;
+    }
+
+    public Boolean getIgnoreNoOrder() {
+        return ignoreNoOrder;
+    }
+
+    public void setIgnoreNoOrder(Boolean ignoreNoOrder) {
+        this.ignoreNoOrder = ignoreNoOrder;
+    }
+
+    public Integer getUpdateInterval() {
         return updateInterval;
     }
 
-    public void setUpdateInterval(int updateInterval) {
+    public void setUpdateInterval(Integer updateInterval) {
         this.updateInterval = updateInterval;
     }
 
@@ -107,14 +165,6 @@ public class QZSettingVO {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
-    }
-
-    public String getContactPerson() {
-        return contactPerson;
-    }
-
-    public void setContactPerson(String contactPerson) {
-        this.contactPerson = contactPerson;
     }
 
     public Date getCaptureCurrentKeywordCountTime() {

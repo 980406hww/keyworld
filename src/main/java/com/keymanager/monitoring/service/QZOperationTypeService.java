@@ -31,20 +31,4 @@ public class QZOperationTypeService extends ServiceImpl<QZOperationTypeDao, QZOp
 		qzOperationTypeDao.deleteByQZSettingUuid(qzSettingUuid);
 	};
 
-	//过期缴费
-	public  List<QZSetting> expiredCharge(){
-		return qzOperationTypeDao.expiredCharge();
-	}
-	//当天缴费
-	public  List<QZSetting> nowCharge(){
-		return qzOperationTypeDao.nowCharge();
-	}
-	//三天缴费
-	public  List<QZSetting> threeCharge(){
-		return qzOperationTypeDao.threeCharge();
-	}
-	//七天缴费
-	public  List<QZSetting> sevenCharge(){
-		return qzOperationTypeDao.sevenCharge();
-	}
 }

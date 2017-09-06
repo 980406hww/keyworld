@@ -110,4 +110,8 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 	public List<Customer> getActiveCustomerSimpleInfo(){
 		return customerDao.getActiveCustomerSimpleInfo();
 	}
+
+    public Customer getCustomer(int customerUuid) {
+		return customerDao.selectById(customerUuid);
+    }
 }

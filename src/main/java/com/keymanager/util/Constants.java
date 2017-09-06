@@ -2,9 +2,7 @@ package com.keymanager.util;
 
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Constants {
 	public final static String ROW_SPLITTOR = "__row__";
@@ -26,7 +24,7 @@ public class Constants {
 	public final static String BAIDU_TYPE_JISU = "Jisu";
 	public final static String BAIDU_TYPE_CHUPING = "Chuping";
 	
-	public final static Map<String, String> ACCOUNT_LOG_STATUS_MAP = new HashMap<String, String>();	
+	public final static Map<String, String> ACCOUNT_LOG_STATUS_MAP = new HashMap<String, String>();
 	static {
 		ACCOUNT_LOG_STATUS_MAP.put(ACCOUNT_LOG_STATUS_UN_PAID, "未付");
 		ACCOUNT_LOG_STATUS_MAP.put(ACCOUNT_LOG_STATUS_PAID_PARTIALLY, "已付部分");
@@ -45,7 +43,7 @@ public class Constants {
 	public final static String SEARCH_ENGINE_SOGOU = "搜狗";
 	public final static String SEARCH_ENGINE_360 = "360";
 	public final static String SEARCH_ENGINE_GOOGLE = "谷歌";
-	public final static Map<String, String> SEARCH_ENGINE_URL_MAP = new HashMap<String, String>();	
+	public final static Map<String, String> SEARCH_ENGINE_URL_MAP = new HashMap<String, String>();
 	static {
 		SEARCH_ENGINE_URL_MAP.put(SEARCH_ENGINE_BAIDU + "_" + TerminalTypeEnum.PC.name(), "http://www.baidu.com/s?wd=");
 		SEARCH_ENGINE_URL_MAP.put(SEARCH_ENGINE_360 + "_" + TerminalTypeEnum.PC.name(), "http://www.so.com/s?q=");
@@ -55,6 +53,7 @@ public class Constants {
 		SEARCH_ENGINE_URL_MAP.put(SEARCH_ENGINE_360 + "_" + TerminalTypeEnum.Phone.name(), "http://www.so.com/s?q=");
 		SEARCH_ENGINE_URL_MAP.put(SEARCH_ENGINE_SOGOU + "_" + TerminalTypeEnum.Phone.name(), "http://www.sogou.com/web?query=");
 	}
+
 
 	public final static Map<String, String> CLIENT_STATUS_VALID_MAP = new LinkedHashMap<String, String>();
 	static {
@@ -66,4 +65,13 @@ public class Constants {
 	public final static String[] pcOperationTypeValues = {"",
 			"pc_pm","pc_pm2","pc_pm3","pc_xg","pc_xg2","pc_xg3","pc_xl","pc_pm_sogou","pc_pm_360","pc_pm_58",
 			"pc_pm_zhidao", "pc_pm_wenku", "pc_tieba", "pc_kpm"};
+
+
+	public final static List<String> QZSETTING_STATUS_LIST = new ArrayList<String>();
+	static {
+		QZSETTING_STATUS_LIST.add("");
+		QZSETTING_STATUS_LIST.add("Processing");
+		QZSETTING_STATUS_LIST.add("Completed");
+		QZSETTING_STATUS_LIST.add("DownloadTimesUsed");
+	}
 }
