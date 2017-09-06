@@ -42,6 +42,13 @@
         ORDER BY m.fComplaintsTime
     </select>
 
+    <select id="getTSMainKeywordByKeyword" resultType="com.keymanager.monitoring.entity.TSMainKeyword">
+        SELECT
+        <include refid="colID"/>
+        FROM t_ts_main_keyword m
+        WHERE m.fKeyword = #{keyword}
+    </select>
+
     <select id="selectLastId" resultType="java.lang.Integer">
         select LAST_INSERT_ID()
     </select>

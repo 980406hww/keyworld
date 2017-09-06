@@ -2,6 +2,7 @@ package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.keymanager.monitoring.criteria.TSMainKeywordCriteria;
 import com.keymanager.monitoring.dao.TSMainKeywordDao;
 import com.keymanager.monitoring.entity.TSMainKeyword;
 import com.keymanager.monitoring.entity.TSNegativeKeyword;
@@ -131,6 +132,21 @@ public class TSMainKeywordService extends ServiceImpl<TSMainKeywordDao, TSMainKe
             startTsMainKeywordsForComplaints(tsMainKeyword.getUuid());
         }
         return tsMainKeyword;
+    }
+
+    public Set<String> getNegativeKeywords(String keyword){
+        TSMainKeyword tsMainKeyword = tsMainKeywordDao.getTSMainKeywordByKeyword(keyword);
+        if(tsMainKeyword != null){
+            List<TSNegativeKeyword> tsNegativeKeywords = tsNegativeKeywordService.findNegativeKeywordsByMainKeywordUuid(tsMainKeyword.getUuid());
+            if(CollectionUtils.isNotEmpty(tsNegativeKeywords)) {
+                Set<String> negativeKeywords = new HashSet<String>();
+                for (TSNegativeKeyword tsNegativeKeyword : tsNegativeKeywords) {
+                    negativeKeywords.add(tsNegativeKeyword.getKeyword());
+                }
+                return negativeKeywords;
+            }
+        }
+        return null;
     }
 
     private void startTsMainKeywordsForComplaints(Long uuid){

@@ -9,7 +9,8 @@ import com.keymanager.monitoring.entity.ClientStatus;
 import com.keymanager.value.ConfigVO;
 import com.vmware.vim25.VirtualMachinePowerState;
 import com.vmware.vim25.mo.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.net.URL;
@@ -17,6 +18,8 @@ import java.sql.Connection;
 
 @Service
 public class VMwareService extends ServiceImpl<ClientStatusDao, ClientStatus>{
+	private static Logger logger = LoggerFactory.getLogger(VMwareService.class);
+
 	private static ServiceInstance si;
 	private static Folder rootFolder;
 	static{
@@ -37,12 +40,11 @@ public class VMwareService extends ServiceImpl<ClientStatusDao, ClientStatus>{
 			si = new ServiceInstance(url, session.getUsername(), session.getPassword(), true);
 			rootFolder = si.getRootFolder();
 		}catch (Exception ex){
-			ex.printStackTrace();
+			logger.error(ex.getMessage());
+		}finally {
+			DBUtil.closeConnection(conn);
 		}
 	}
-
-	@Autowired
-	private ClientStatusDao clientStatusDao;
 
 	public String restartVPS(String vmName){
 		try {
@@ -55,14 +57,14 @@ public class VMwareService extends ServiceImpl<ClientStatusDao, ClientStatus>{
 				VirtualMachine virtualMachine = (VirtualMachine) mes;
 				VirtualMachinePowerState state = virtualMachine.getRuntime().powerState;//通电状态
 				if (state.equals(VirtualMachinePowerState.poweredOn)) {
-					virtualMachine.rebootGuest();
+					virtualMachine.resetVM_Task();
 				}else{
 					virtualMachine.powerOnVM_Task(null);
 				}
 			}
 			return "Success";
 		}catch (Exception e){
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			return e.getMessage();
 		}
 	}
@@ -84,7 +86,7 @@ public class VMwareService extends ServiceImpl<ClientStatusDao, ClientStatus>{
 				return mapper.writeValueAsString(clientStatus);
 			}
 		}catch (Exception e){
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return null;
 	}

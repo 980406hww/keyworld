@@ -2,19 +2,23 @@ package com.keymanager.monitoring.controller.rest.external;
 
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.TSMainKeywordCriteria;
-import com.keymanager.monitoring.service.TSComplainLogService;
 import com.keymanager.monitoring.entity.TSMainKeyword;
 import com.keymanager.monitoring.entity.User;
+import com.keymanager.monitoring.service.TSComplainLogService;
 import com.keymanager.monitoring.service.TSMainKeywordService;
 import com.keymanager.monitoring.service.TSNegativeKeywordService;
 import com.keymanager.monitoring.service.UserService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Set;
 
 /**
  * Created by shunshikj08 on 2017/8/1.
@@ -57,6 +61,18 @@ public class ExternalComplaintsRestController extends SpringMVCBaseController {
                 String ipCity = tsMainKeywordCriteria.getIpCity();
                 TSMainKeyword tsMainKeyword = tsMainKeywordService.getTsMainKeywordsForComplaints(ipCity);
                 return new ResponseEntity<Object>(tsMainKeyword, HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+    }
+
+    @RequestMapping(value = "/getNegativeKeywords", method = RequestMethod.POST)
+    public ResponseEntity<?> getNegativeKeywords(@RequestBody TSMainKeywordCriteria tsMainKeywordCriteria) throws Exception{
+        if(tsMainKeywordCriteria.getUserName() != null && tsMainKeywordCriteria.getPassword() != null){
+            User user = userService.getUser(tsMainKeywordCriteria.getUserName());
+            if(user != null && user.getPassword().equals(tsMainKeywordCriteria.getPassword())){
+                Set<String> negativeKeywords = tsMainKeywordService.getNegativeKeywords(tsMainKeywordCriteria.getKeyword());
+                return new ResponseEntity<Object>(negativeKeywords, HttpStatus.OK);
             }
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);

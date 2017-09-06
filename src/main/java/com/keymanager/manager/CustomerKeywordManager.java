@@ -6,6 +6,8 @@ import com.keymanager.enums.CollectMethod;
 import com.keymanager.enums.CustomerKeywordStatus;
 import com.keymanager.enums.KeywordType;
 import com.keymanager.excel.operator.AbstractExcelReader;
+import com.keymanager.monitoring.enums.EntryTypeEnum;
+import com.keymanager.monitoring.enums.TerminalTypeEnum;
 import com.keymanager.monitoring.service.CaptureRealUrlService;
 import com.keymanager.util.*;
 import com.keymanager.util.common.StringUtil;
@@ -640,9 +642,19 @@ public class CustomerKeywordManager {
 				customerKeywordForOptimization.setGroup(clientStatusVO.getGroup());
 				customerKeywordForOptimization.setOperationType(clientStatusVO.getOperationType());
 
-				customerKeywordForOptimization.setPage(clientStatusVO.getPage());
+				if("pc_pm_xiaowu".equals(customerKeyword.getOptimizeGroupName()) && (customerKeyword.getCurrentPosition() == 0 ||
+						customerKeyword.getCurrentPosition() > 20)) {
+					customerKeywordForOptimization.setPage(2);
+				}else{
+					customerKeywordForOptimization.setPage(clientStatusVO.getPage());
+				}
 				if(clientStatusVO.getPageSize() != null) {
-					customerKeywordForOptimization.setPageSize(clientStatusVO.getPageSize());
+					if("pc_pm_xiaowu".equals(customerKeyword.getOptimizeGroupName()) && (customerKeyword.getCurrentPosition() == 0 ||
+							customerKeyword.getCurrentPosition() > 20)){
+						customerKeywordForOptimization.setPageSize(50);
+					}else {
+						customerKeywordForOptimization.setPageSize(clientStatusVO.getPageSize());
+					}
 				}
 				if(clientStatusVO.getZhanneiPercent() != null) {
 					customerKeywordForOptimization.setZhanneiPercent(clientStatusVO.getZhanneiPercent());

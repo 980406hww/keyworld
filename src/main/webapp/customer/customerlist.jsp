@@ -5,14 +5,13 @@
     <%@page contentType="text/html;charset=utf-8" %>
 
     <script language="javascript" type="text/javascript" src="/common.js"></script>
-    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <script language="javascript" type="text/javascript" src="/js/slide1.12.4.js"></script>
-    <link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css">
-    <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <link href="/css/menu.css" rel="stylesheet" type="text/css"/>
 
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/ui/jquery-ui.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery142.js"></script>
+    <script language="javascript" type="text/javascript" src="/ui/jquery-ui.js"></script>
+    <script language="javascript" type="text/javascript" src="/js/My97DatePicker/WdatePicker.js"></script>
+    <script language="javascript" type="text/javascript" src="/js/slide1.12.4.js"></script>
     <style type="text/css">
         .wrap {
             word-break: break-all;
@@ -184,7 +183,6 @@
                 },
                 error: function () {
                     showInfo("更新失败", self);
-                    settingDialogDiv.hide();
                 }
             });
         }
@@ -841,34 +839,36 @@
             }
             $.each(customerKeywordTextArray, function (idx, val) {
                 val = val.trim();
-                var customerKeywordAttributes = val.split(" ");
-                if (customerKeywordAttributes.length == 1) {
-                    customerKeywordAttributes = val.split(" ");
-                }
-                if (customerKeywordAttributes.length == 1) {
-                    customerKeywordAttributes = val.split("	");
-                }
-
-                var tmpCustomerKeywordAttributes = [];
-                $.each(customerKeywordAttributes, function (idx, val) {
-                    if (val !== '') {
-                        tmpCustomerKeywordAttributes.push(val);
+                if(val !== ''){
+                    var customerKeywordAttributes = val.split(" ");
+                    if (customerKeywordAttributes.length == 1) {
+                        customerKeywordAttributes = val.split(" ");
                     }
-                });
-                var customerKeyword = {};
-                customerKeyword.customerUuid = uuid;
-                customerKeyword.keyword = tmpCustomerKeywordAttributes[0].trim();
-                customerKeyword.url = tmpCustomerKeywordAttributes[1].trim();
-                customerKeyword.optimizeGroupName = group.trim();
+                    if (customerKeywordAttributes.length == 1) {
+                        customerKeywordAttributes = val.split("	");
+                    }
 
-                customerKeyword.url = customerKeyword.url.replace("http://", "");
-                customerKeyword.url = customerKeyword.url.replace("https://", "");
+                    var tmpCustomerKeywordAttributes = [];
+                    $.each(customerKeywordAttributes, function (idx, val) {
+                        if (val !== '') {
+                            tmpCustomerKeywordAttributes.push(val);
+                        }
+                    });
+                    var customerKeyword = {};
+                    customerKeyword.customerUuid = uuid;
+                    customerKeyword.keyword = tmpCustomerKeywordAttributes[0].trim();
+                    customerKeyword.url = tmpCustomerKeywordAttributes[1].trim();
+                    customerKeyword.optimizeGroupName = group.trim();
 
-                if (customerKeyword.url.length > 25) {
-                    customerKeyword.url = customerKeyword.url.substring(0, 25);
+                    customerKeyword.url = customerKeyword.url.replace("http://", "");
+                    customerKeyword.url = customerKeyword.url.replace("https://", "");
+
+                    if (customerKeyword.url.length > 25) {
+                        customerKeyword.url = customerKeyword.url.substring(0, 25);
+                    }
+
+                    customerKeywords.push(customerKeyword);
                 }
-
-                customerKeywords.push(customerKeyword);
             });
 //            alert(JSON.stringify(customerKeywords));
 
@@ -884,14 +884,12 @@
                 success: function (result) {
                     if (result) {
                         showInfo("添加成功", self);
-                        window.location.reload();
                     } else {
                         showInfo("添加失败", self);
                     }
                 },
                 error: function () {
                     showInfo("添加失败", self);
-                    window.location.reload();
                 }
             });
         }
@@ -1008,6 +1006,7 @@
 
             <td align="center" width=80>用户名称</td>
             <td align="center" width=80>联系人</td>
+            <td align="center" width=60>词数</td>
             <td align="center" width=60>QQ</td>
             <td align="center" width=100>电话</td>
             <td align="center" width=60>已付金额</td>
@@ -1027,6 +1026,7 @@
                 <td>
                     <a href="/customerkeyword/list.jsp?status=1&customerUuid=${customer.uuid}">${customer.contactPerson}</a>
                 </td>
+                <td>${customer.keywordCount}</td>
                 <td>${customer.qq}</td>
                 <td>${customer.telphone} </td>
                 <td align="right">${customer.paidFee} </td>
@@ -1130,7 +1130,7 @@
             <input id="chargeTypeIntervalUuid" type="hidden"/>
             <input id="PC" type="checkbox" name="operationType" onclick="initRangeTable(this)"/>PC
             <div id="pcOperationTypeDiv">
-                <table id="tabPC" border="1" width="100%" align="center" style="margin-top:10px" cellspacing="0">
+                <table id="tabPC" border="1" width="100%" align="center" style="margin-top:10px;font-size: 12px;" cellspacing="0">
                     <tr style="text-align: center">
                         <td width="20%">序号</td>
                         <td width="20%">起始指数</td>
@@ -1148,7 +1148,7 @@
             <br>
             <input id="Phone" type="checkbox" name="operationType" onclick="initRangeTable(this)"/>Phone
             <div id="phoneOperationTypeDiv">
-                <table id="tabPhone" border="1" width="100%" align="center" style="margin-top:10px" cellspacing="0">
+                <table id="tabPhone" border="1" width="100%" align="center" style="margin-top:10px;font-size: 12px;" cellspacing="0">
                     <tr style="text-align: center">
                         <td width="20%">序号</td>
                         <td width="20%">起始指数</td>
@@ -1252,7 +1252,7 @@
                 <input type="input" id="group" style="width:480px" value="pc_pm_xiaowu"/>
             </c:when>
             <c:otherwise>
-                <input type="input" id="group" style="width:480px" value="m_pm_xiaowu"/>
+                <input type="input" id="group" style="width:480px" value="m_pm_tiantian"/>
             </c:otherwise>
         </c:choose>
     </form>
@@ -1272,9 +1272,10 @@
     总记录数:${page.total}&nbsp;&nbsp;&nbsp;&nbsp;
     每页显示条数:<select id="chooseRecords" onchange="changePaging(${page.current},this.value)">
     <option>10</option>
-    <option>15</option>
-    <option>30</option>
-    <option>45</option>
+    <option>25</option>
+    <option>50</option>
+    <option>75</option>
+    <option>100</option>
 </select>
 </div>
 
