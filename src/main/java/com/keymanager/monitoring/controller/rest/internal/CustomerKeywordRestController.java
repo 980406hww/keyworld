@@ -83,7 +83,8 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 			String orderElement = request.getParameter("orderElement").trim();
 			String invalidRefreshCount = request.getParameter("invalidRefreshCount").trim();
 			String position = request.getParameter("position").trim();
-			CustomerKeywordCrilteria customerKeywordCrilteria = new CustomerKeywordCrilteria(customerUuid, url, keyword,creationFromTime, creationToTime, status, optimizeGroupName, orderElement, invalidRefreshCount, position, null,null) ;
+			String noPosition = request.getParameter("noPosition")==null?null:request.getParameter("noPosition").trim();
+			CustomerKeywordCrilteria customerKeywordCrilteria = new CustomerKeywordCrilteria(customerUuid, url, keyword,creationFromTime, creationToTime, status, optimizeGroupName, orderElement, invalidRefreshCount, position,noPosition, null,null) ;
 			String currentPageNumber = request.getParameter("currentPageNumber");//
 			String pageSize = request.getParameter("pageSize");
 			if (null == currentPageNumber && null == pageSize) {

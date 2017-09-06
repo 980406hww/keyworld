@@ -13,6 +13,7 @@ public class CustomerKeywordCrilteria extends BaseCriteria{
     private String orderElement;
     private String invalidRefreshCount;//无效点击数
     private String position;//显示前几条
+    private String noPosition;//显示没有排名
     private String entryType;//
     private String terminalType;//8088 PC  8089  phone
 
@@ -113,7 +114,15 @@ public class CustomerKeywordCrilteria extends BaseCriteria{
         this.terminalType = terminalType;
     }
 
-    public CustomerKeywordCrilteria(String customerUuid, String url, String keyword, String creationFromTime, String creationToTime, String status, String optimizeGroupName, String orderElement, String invalidRefreshCount, String position, String entryType, String terminalType) {
+    public String getNoPosition() {
+        return noPosition;
+    }
+
+    public void setNoPosition(String noPosition) {
+        this.noPosition = noPosition;
+    }
+
+    public CustomerKeywordCrilteria(String customerUuid, String url, String keyword, String creationFromTime, String creationToTime, String status, String optimizeGroupName, String orderElement, String invalidRefreshCount, String position, String noPosition, String entryType, String terminalType) {
         this.customerUuid = customerUuid;
         this.url = url;
         this.keyword = keyword;
@@ -124,6 +133,7 @@ public class CustomerKeywordCrilteria extends BaseCriteria{
         this.orderElement = orderElement;
         this.invalidRefreshCount = invalidRefreshCount;
         this.position = position;
+        this.noPosition = noPosition;
         this.entryType = entryType;
         this.terminalType = terminalType;
     }
