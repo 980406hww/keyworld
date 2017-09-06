@@ -7,6 +7,7 @@ import com.keymanager.monitoring.entity.ClientStatus;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
 import com.keymanager.monitoring.service.ClientStatusService;
 import com.keymanager.monitoring.service.UserService;
+import com.keymanager.util.Constants;
 import com.keymanager.util.PortTerminalTypeMapping;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,6 +70,7 @@ public class ClientStatusRestController extends SpringMVCBaseController {
 		Page<ClientStatus> page = clientStatusService.searchClientStatuses(new Page<ClientStatus>(currentPageNumber, pageSize), clientStatusCriteria);
 		modelAndView.addObject("terminalType", terminalType);
 		modelAndView.addObject("clientStatusCriteria", clientStatusCriteria);
+		modelAndView.addObject("validMap", Constants.CLIENT_STATUS_VALID_MAP);
 		modelAndView.addObject("page", page);
 		return modelAndView;
 	}

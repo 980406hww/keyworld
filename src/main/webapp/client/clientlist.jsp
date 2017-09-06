@@ -1,180 +1,6 @@
-<%@page contentType="text/html;charset=utf-8"%>
-<%@page
-	import="com.keymanager.manager.*,com.keymanager.util.*,com.keymanager.value.*,java.util.*"%>
-<%@ page import="com.keymanager.monitoring.enums.TerminalTypeEnum" %>
-<%@ page import="com.keymanager.util.PortTerminalTypeMapping" %>
-<%@ page import="java.lang.reflect.Array" %>
-
-<jsp:useBean id="um" scope="page"
-	class="com.keymanager.manager.UserManager" />
-<jsp:useBean id="csm" scope="page"
-	class="com.keymanager.manager.ClientStatusManager" />
-
-<%@include file="/check.jsp"%>
-
-<%
-	if (loginState == 0) {
-%>
-<script language="javascript">
-	window.location.href = "/bd.html";
-</script>
-<%
-	return;
-	}
-
-	String username = (String) session.getAttribute("username");
-	String password = (String) session.getAttribute("password");
-
-	String clientID = request.getParameter("clientID");
-	String groupName = request.getParameter("groupName");
-	String noGroup = request.getParameter("noGroup");
-	String version = request.getParameter("version");
-	String city = request.getParameter("city");
-	String upgradeFailedReason = request.getParameter("upgradeFailedReason");
-	String valid = request.getParameter("valid");
-	String hasProblem = request.getParameter("hasProblem");
-	String showFetchKeywordStatus = request.getParameter("showFetchKeywordStatus");
-
-	String renewal = request.getParameter("renewal");
-	String operationType = request.getParameter("operationType");
-	String noOperationType = request.getParameter("noOperationType");
-	String noVNC = request.getParameter("noVNC");
-	String noUpgrade = request.getParameter("noUpgrade");
-	String orderBy = request.getParameter("orderBy");
-
-	username = Utils.parseParam(username);
-	password = Utils.parseParam(password);
-
-	if (username == null || username.equals("")) {
-%>
-<script language="javascript">
-	window.location.href = "/bd.html";
-</script>
-<%
-	return;
-	}
-	UserVO user = um.login(datasourceName, username, password);
-	if ((user.getStatus() == 0) || !(user.isVipType())) {
-%>
-<script language="javascript">
-	alert("你没有该权限！");
-	window.history.back();
-</script>
-<%
-	return;
-	}
-
-	String condition = " and fTerminalType = '" + terminalType + "' ";
-
-	String curPage = request.getParameter("pg");
-
-	if (curPage == null || curPage.equals("")) {
-		curPage = "1";
-	}
-
-	int iCurPage = Integer.parseInt(curPage);
-
-	String pageUrl = "prefix=1";
-
-	if (!Utils.isNullOrEmpty(clientID)) {
-		condition = condition + " and fClientID like '%"
-				+ clientID.trim() + "%' ";
-		pageUrl = pageUrl + "&clientID="
-				+ java.net.URLEncoder.encode(clientID, "UTF-8");
-	} else {
-		clientID = "";
-	}
-
-	if (!Utils.isNullOrEmpty(groupName)) {
-		condition = condition + " and fGroup like '%" + groupName.trim()
-				+ "%' ";
-		pageUrl = pageUrl + "&groupName=" + groupName;
-	} else {
-		groupName = "";
-	}
-
-	if (!Utils.isNullOrEmpty(upgradeFailedReason)) {
-		condition = condition + " and fUpgradeFailedReason like '%" + upgradeFailedReason.trim()
-				+ "%' ";
-		pageUrl = pageUrl + "&upgradeFailedReason=" + upgradeFailedReason;
-	} else {
-		upgradeFailedReason = "";
-	}
-
-	if (!Utils.isNullOrEmpty(version)) {
-		condition = condition + " and fVersion like '" + version.trim()
-				+ "%' ";
-		pageUrl = pageUrl + "&version=" + version;
-	} else {
-		version = "";
-	}
-	if (noOperationType != null){
-		condition = condition + " AND fOperationType is null ";
-		pageUrl = pageUrl + "&noOperationType=noOperationType";
-	}else{
-		if (!Utils.isNullOrEmpty(operationType)) {
-			condition = condition + " and fOperationType = '" + operationType + "' ";
-			pageUrl = pageUrl + "&operationType=" + operationType;
-		} else {
-			operationType = "";
-		}
-	}
-	if (!Utils.isNullOrEmpty(city)) {
-		condition = condition + " and fCity like '" + city.trim()
-				+ "%' ";
-		pageUrl = pageUrl + "&city=" + java.net.URLEncoder.encode(city,  "UTF-8");
-	} else {
-		city = "";
-	}
-
-	if (!Utils.isNullOrEmpty(valid)) {
-		condition = condition + " and fValid = " + valid.trim() + " ";
-		pageUrl = pageUrl + "&valid=" + valid;
-	} else {
-		valid = "";
-	}
-
-	if (hasProblem != null){
-		condition = condition + " AND (fContinuousFailCount > 5 OR DATE_ADD(fLastVisitTime, INTERVAL IF((10 > (fPageNo*3)), 10, (fPageNo * 3)) MINUTE) < NOW()) and fValid = 1 ";
-		pageUrl = pageUrl + "&hasProblem=hasProblem";
-	}
-
-	if (renewal != null){
-		condition = condition + " AND DATE_ADD(fRenewalDate, INTERVAL -3 DAY) < CURRENT_DATE() and fValid = 1  ";
-		pageUrl = pageUrl + "&renewal=renewal";
-	}
-
-	if (noGroup != null){
-		condition = condition + " AND fGroup is null ";
-		pageUrl = pageUrl + "&noGroup=noGroup";
-	}
-	
-	if (noVNC != null){
-		condition = condition + " AND (fHost is null or fHost = '') ";
-		pageUrl = pageUrl + "&noVNC=noVNC";
-	}
-
-	if (showFetchKeywordStatus != null){
-		pageUrl = pageUrl + "&showFetchKeywordStatus=showFetchKeywordStatus";
-	}
-
-	if (noUpgrade != null){
-		condition = condition + " AND (fVersion <> fTargetVersion) ";
-		pageUrl = pageUrl + "&noUpgrade=noUpgrade";
-	}
-
-	pageUrl = pageUrl + "&orderBy=" + orderBy;
-
-	List itemList = csm.searchClientStatusVOs(datasourceName, 50,
-			iCurPage, condition, " ORDER BY " + orderBy + " ", 1);
-
-	int recordCount = csm.getRecordCount();
-	int pageCount = csm.getPageCount();
-
-	String fileName = "/client/clientlist.jsp?" + pageUrl;
-	String pageInfo = Utils.getPageInfo(iCurPage, 50, recordCount, pageCount, "", fileName);
-%>
-
+<%@ page contentType="text/html;charset=utf-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <head>
 <title>客户端列表</title>
@@ -292,31 +118,24 @@
 					<table style="font-size: 12px;width:100%">
 						<tr>
 							<td align="left" colspan="2">
-								客户端ID:<input type="text" name="clientID" id="clientID" value="<%=clientID%>" style="width: 90px;">
+								客户端ID:<input type="text" name="clientID" id="clientID" value="${clientStatusCriteria.clientID}" style="width: 90px;">
 								&nbsp;&nbsp;&nbsp;
-								优化组:<input type="text" name="groupName" id="groupName" value="<%=groupName%>" style="width: 120px;">
+								优化组:<input type="text" name="groupName" id="groupName" value="${clientStatusCriteria.groupName}" style="width: 120px;">
 								&nbsp;&nbsp;&nbsp;
-								版本:<input type="text" name="version" id="version" value="<%=version%>" style="width: 60px;">
+								版本:<input type="text" name="version" id="version" value="${clientStatusCriteria.version}" style="width: 60px;">
 								&nbsp;&nbsp;&nbsp;
-								城市:<input type="text" name="city" id="city" value="<%=city%>" style="width: 120px;">
+								城市:<input type="text" name="city" id="city" value="${clientStatusCriteria.city}" style="width: 120px;">
 								&nbsp;&nbsp;&nbsp;
-								失败原因:<input type="text" name="upgradeFailedReason" id="upgradeFailedReason" value="<%=upgradeFailedReason%>"
+								失败原因:<input type="text" name="upgradeFailedReason" id="upgradeFailedReason" value="${clientStatusCriteria.upgradeFailedReason}"
 											  style="width: 50px;">
 								&nbsp;&nbsp;&nbsp;
 								状态:<select name="valid" id="valid">
-									<%
-										String[] valids = {"全部", "暂停", "监控中"};
-										String[] validValues = {"", "0", "1"};
-										for (int i = 0; i < valids.length; i++) {
-											if (validValues[i].equals(valid)) {
-												out.println("<option selected value='" + validValues[i]
-														+ "'>" + valids[i] + "</option>");
-											} else {
-												out.println("<option value='" + validValues[i] + "'>"
-														+ valids[i] + "</option>");
-											}
-										}
-									%>
+								<c:forEach items="${validMap}" var="entry">
+									<c:choose>
+										<c:when test="${entry.value eq clientStatusCriteria.valid}"><option selected value="${entry.value}">${entry.key}</option></c:when>
+										<c:otherwise><option value="${entry.value}">${entry.key}</option></c:otherwise>
+									</c:choose>
+								</c:forEach>
 							</select>
 							&nbsp;&nbsp;&nbsp;
 							操作类型:<select name="operationType" id="operationType">

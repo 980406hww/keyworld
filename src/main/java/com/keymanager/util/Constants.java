@@ -3,6 +3,7 @@ package com.keymanager.util;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Constants {
@@ -54,4 +55,15 @@ public class Constants {
 		SEARCH_ENGINE_URL_MAP.put(SEARCH_ENGINE_360 + "_" + TerminalTypeEnum.Phone.name(), "http://www.so.com/s?q=");
 		SEARCH_ENGINE_URL_MAP.put(SEARCH_ENGINE_SOGOU + "_" + TerminalTypeEnum.Phone.name(), "http://www.sogou.com/web?query=");
 	}
+
+	public final static Map<String, String> CLIENT_STATUS_VALID_MAP = new LinkedHashMap<String, String>();
+	static {
+		CLIENT_STATUS_VALID_MAP.put("全部","");
+		CLIENT_STATUS_VALID_MAP.put("暂停","0");
+		CLIENT_STATUS_VALID_MAP.put("监控中","1");
+	}
+
+	public final static String[] pcOperationTypeValues = {"",
+			"pc_pm","pc_pm2","pc_pm3","pc_xg","pc_xg2","pc_xg3","pc_xl","pc_pm_sogou","pc_pm_360","pc_pm_58",
+			"pc_pm_zhidao", "pc_pm_wenku", "pc_tieba", "pc_kpm"};
 }
