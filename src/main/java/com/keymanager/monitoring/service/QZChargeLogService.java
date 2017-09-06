@@ -50,8 +50,9 @@ public class QZChargeLogService extends ServiceImpl<QZChargeLogDao, QZChargeLog>
             }
             qzChargeInfoVO.setOperationType(qzOperationType.getOperationType());
             qzChargeInfoVO.setQzOperationTypeUuid(qzOperationType.getUuid().toString());
-            qzChargeInfoVO
-                .setInitialKeywordCount(qzOperationType.getInitialKeywordCount().toString());//初始词量
+            if(qzOperationType.getInitialKeywordCount() != null) {
+                qzChargeInfoVO.setInitialKeywordCount(qzOperationType.getInitialKeywordCount().toString());//初始词量
+            }
             //计划缴费日期
             qzChargeInfoVO.setPlanChargeDate(qzOperationType.getNextChargeDate() == null ? null
                 : sdf.format(qzOperationType.getNextChargeDate()));

@@ -6,7 +6,7 @@ public class QZSettingSearchCriteria{
     private String domain;
     private String group;
     private String updateStatus;
-    private String dateRangeType;
+    private Integer dateRangeType;
 
     public String getCustomerUuid() {
         return customerUuid;
@@ -48,11 +48,11 @@ public class QZSettingSearchCriteria{
         this.updateStatus = updateStatus;
     }
 
-    public String getDateRangeType() {
+    public Integer getDateRangeType() {
         return dateRangeType;
     }
 
-    public void setDateRangeType(String dateRangeType) {
+    public void setDateRangeType(Integer dateRangeType) {
         this.dateRangeType = dateRangeType;
     }
 }

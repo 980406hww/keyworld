@@ -703,8 +703,8 @@
     function createSettingDialog() {
         $("#changeSettingDialog").dialog({
             resizable: false,
+            maxHeight: 400,
             width: 400,
-            height:
             title: '全站设置',
             modal: true,
             buttons: {

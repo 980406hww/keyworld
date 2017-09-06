@@ -109,18 +109,23 @@
         <if test="qzSettingSearchCriteria.domain != null and qzSettingSearchCriteria.domain != ''">AND qs.fDomain = #{qzSettingSearchCriteria.domain}</if>
         <if test="qzSettingSearchCriteria.group != null and qzSettingSearchCriteria.group != ''">AND (qs.fPcGroup = #{qzSettingSearchCriteria.group} or qs.fPhoneGroup = #{qzSettingSearchCriteria.group})</if>
         <if test="qzSettingSearchCriteria.updateStatus != null and qzSettingSearchCriteria.updateStatus != ''">AND qs.fUpdateStatus = #{qzSettingSearchCriteria.updateStatus}</if>
-        <if test="qzSettingSearchCriteria.dateRangeType == '-1'">
-            AND EXISTS (select qs.fUuid from t_qz_operation_type ot where qs.fUuid = ot.fQZSettingUuid and ot.fNextChargeDate &lt; CURDATE())
-        </if>
-        <if test="qzSettingSearchCriteria.dateRangeType == '0'">
-            AND EXISTS (select qs.fUuid from t_qz_operation_type ot where qs.fUuid = ot.fQZSettingUuid and ot.fNextChargeDate = CURDATE())
-        </if>
-        <if test="qzSettingSearchCriteria.dateRangeType == '3'">
-            AND EXISTS (select qs.fUuid from t_qz_operation_type ot where qs.fUuid = ot.fQZSettingUuid and ot.fNextChargeDate BETWEEN CURDATE() AND date_add(CURDATE(), INTERVAL 3 DAY))
-        </if>
-        <if test="qzSettingSearchCriteria.dateRangeType == '7'">
-            AND EXISTS (select qs.fUuid from t_qz_operation_type ot where qs.fUuid = ot.fQZSettingUuid and ot.fNextChargeDate BETWEEN CURDATE() AND date_add(CURDATE(), INTERVAL 7 DAY))
-        </if>
+        <choose>
+            <when test="qzSettingSearchCriteria.dateRangeType == 0">
+                AND EXISTS (select qs.fUuid from t_qz_operation_type ot where qs.fUuid = ot.fQZSettingUuid and ot.fNextChargeDate = CURDATE())
+            </when>
+            <when test="qzSettingSearchCriteria.dateRangeType == -1">
+                AND EXISTS (select qs.fUuid from t_qz_operation_type ot where qs.fUuid = ot.fQZSettingUuid and ot.fNextChargeDate &lt; CURDATE())
+            </when>
+            <when test="qzSettingSearchCriteria.dateRangeType == 3">
+                AND EXISTS (select qs.fUuid from t_qz_operation_type ot where qs.fUuid = ot.fQZSettingUuid and ot.fNextChargeDate BETWEEN CURDATE() AND date_add(CURDATE(), INTERVAL 3 DAY))
+            </when>
+            <when test="qzSettingSearchCriteria.dateRangeType == 7">
+                AND EXISTS (select qs.fUuid from t_qz_operation_type ot where qs.fUuid = ot.fQZSettingUuid and ot.fNextChargeDate BETWEEN CURDATE() AND date_add(CURDATE(), INTERVAL 7 DAY))
+            </when>
+            <otherwise>
+
+            </otherwise>
+        </choose>
         order by qs.fUpdateEndTime
     </select>
 
