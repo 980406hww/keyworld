@@ -691,4 +691,38 @@ public class CustomerKeyword extends BaseEntity {
     public String getPositionFirstPageFeeString() {
         return Utils.removeDoubleZeros(positionFirstPageFee)==null?"":Utils.removeDoubleZeros(positionFirstPageFee);
     }
+
+    public String getFeeString(){
+        StringBuilder fee = new StringBuilder("");
+        String pcFeeString = this.pcFeeString();
+        boolean first = true;
+        if(!Utils.isNullOrEmpty(pcFeeString)){
+            fee.append("" + pcFeeString);
+            first = false;
+        }
+        return fee.toString();
+    }
+    public String pcFeeString(){
+        StringBuilder fee = new StringBuilder("");
+        if(this.getPositionFirstFee() > 0){
+            fee.append(this.getPositionFirstFeeString() + ";");
+        }
+        if(this.getPositionSecondFee() > 0){
+            fee.append(this.getPositionSecondFeeString() + ";");
+        }
+        if(this.getPositionThirdFee() > 0){
+            fee.append(this.getPositionThirdFeeString() + ";");
+        }
+        if(this.getPositionForthFee() > 0){
+            fee.append(this.getPositionForthFeeString() + ";");
+        }
+        if(this.getPositionFifthFee() > 0){
+            fee.append(this.getPositionFifthFeeString() + ";");
+        }
+        if(this.getPositionFirstPageFee() > 0){
+            fee.append(this.getPositionFirstPageFeeString() + ";");
+        }
+        return fee.toString();
+    }
+
 }
