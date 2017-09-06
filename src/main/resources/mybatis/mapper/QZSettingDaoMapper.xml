@@ -117,10 +117,12 @@
                 AND EXISTS (select qs.fUuid from t_qz_operation_type ot where qs.fUuid = ot.fQZSettingUuid and ot.fNextChargeDate &lt; CURDATE())
             </when>
             <when test="qzSettingSearchCriteria.dateRangeType == 3">
-                AND EXISTS (select qs.fUuid from t_qz_operation_type ot where qs.fUuid = ot.fQZSettingUuid and ot.fNextChargeDate BETWEEN CURDATE() AND date_add(CURDATE(), INTERVAL 3 DAY))
+                AND EXISTS (select qs.fUuid from t_qz_operation_type ot where qs.fUuid = ot.fQZSettingUuid and ot.fNextChargeDate BETWEEN
+                date_add(CURDATE(), INTERVAL 1 DAY) AND date_add(CURDATE(), INTERVAL 3 DAY))
             </when>
             <when test="qzSettingSearchCriteria.dateRangeType == 7">
-                AND EXISTS (select qs.fUuid from t_qz_operation_type ot where qs.fUuid = ot.fQZSettingUuid and ot.fNextChargeDate BETWEEN CURDATE() AND date_add(CURDATE(), INTERVAL 7 DAY))
+                AND EXISTS (select qs.fUuid from t_qz_operation_type ot where qs.fUuid = ot.fQZSettingUuid and ot.fNextChargeDate BETWEEN
+                date_add(CURDATE(), INTERVAL 4 DAY) AND date_add(CURDATE(), INTERVAL 7 DAY))
             </when>
             <otherwise>
 
