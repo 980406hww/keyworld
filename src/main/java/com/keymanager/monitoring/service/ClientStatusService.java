@@ -2,9 +2,11 @@ package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.keymanager.monitoring.criteria.ClientStatusCriteria;
 import com.keymanager.monitoring.dao.ClientStatusDao;
 import com.keymanager.monitoring.entity.ClientStatus;
+import com.keymanager.value.ClientStatusForUpdateTargetVersion;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,6 +94,18 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		}
 	}
 
+	public void updateClientStatusTargetVersion(String data) throws Exception {
+		ObjectMapper mapper = new ObjectMapper();
+		ClientStatusForUpdateTargetVersion clientStatusForUpdateTargetVersion = (ClientStatusForUpdateTargetVersion)mapper.readValue(data, ClientStatusForUpdateTargetVersion.class);
+		String[] clientIDs = clientStatusForUpdateTargetVersion.getClientIDs().split(",");
+		for (String clientID : clientIDs) {
+			ClientStatus clientStatus = clientStatusDao.selectById(clientID.substring(1, clientID.length() - 1));
+			clientStatus.setClientID(clientID.substring(1, clientID.length() - 1));
+			clientStatus.setTargetVersion(clientStatusForUpdateTargetVersion.getTargetVersion());
+			clientStatusDao.updateById(clientStatus);
+		}
+	}
+
 	public void addClientStatus(ClientStatus clientStatus) {
 		if (null != clientStatus.getClientID()) {
 			updateClientStatus(clientStatus);
@@ -108,8 +122,8 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		}
 	}
 
-	public ClientStatus getClientStatus(String clientID) {
-		ClientStatus clientStatus = clientStatusDao.selectById(clientID);
+	public ClientStatus getClientStatus(String clientID, String terminalType) {
+		ClientStatus clientStatus = clientStatusDao.getClientStatusByClientID(clientID, terminalType);
 		return clientStatus;
 	}
 

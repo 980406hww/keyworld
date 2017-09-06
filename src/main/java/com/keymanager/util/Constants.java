@@ -62,9 +62,21 @@ public class Constants {
 		CLIENT_STATUS_VALID_MAP.put("监控中","1");
 	}
 
-	public final static String[] pcOperationTypeValues = {"",
+	public final static Map<String, String> CLIENT_STATUS_ORDERBY_MAP = new LinkedHashMap<String, String>();
+	static {
+		CLIENT_STATUS_ORDERBY_MAP.put("fClientID","ID");
+		CLIENT_STATUS_ORDERBY_MAP.put("fLastVisitTime","最后工作时间");
+		CLIENT_STATUS_ORDERBY_MAP.put("fLastSendNotificationTime","发通知时间");
+		CLIENT_STATUS_ORDERBY_MAP.put("fRestartTime","重启时间");
+		CLIENT_STATUS_ORDERBY_MAP.put("fRestartOrderingTime","重启排序时间");
+		CLIENT_STATUS_ORDERBY_MAP.put("fRestartCount desc","重启次数");
+	}
+
+	public final static String[] pcOperationTypeValues = new String[]{"",
 			"pc_pm","pc_pm2","pc_pm3","pc_xg","pc_xg2","pc_xg3","pc_xl","pc_pm_sogou","pc_pm_360","pc_pm_58",
 			"pc_pm_zhidao", "pc_pm_wenku", "pc_tieba", "pc_kpm"};
+
+	public final static String[] phoneOperationTypeValues = new String[]{"", "m_pm", "m_xl", "m_xg", "m_pm_sm", "m_xl2", "m_kpm"};
 
 
 	public final static List<String> QZSETTING_STATUS_LIST = new ArrayList<String>();

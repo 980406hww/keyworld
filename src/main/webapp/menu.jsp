@@ -18,7 +18,8 @@
 	    
 	    <li class="mainlevel" id="mainlevel_02"><a href="#">其他</a>
 	    <ul id="sub_06">
-	    <li><a href="/internal/negativelist/searchClientStatuses">查看终端状态</a></li>
+	    <%--<li><a href="/internal/negativelist/searchClientStatuses">查看终端状态</a></li>--%>
+			<li><a href="/client/clientlist.jsp">查看终端状态</a></li>
 		<li><a href="/client/clientstat.jsp">查看终端统计</a></li>
 		<li><a href="/client/clientstat_group.jsp">查看终端分组统计</a></li>
 

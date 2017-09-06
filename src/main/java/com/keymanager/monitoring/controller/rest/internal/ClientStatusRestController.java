@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/internal/clientStatus")
+@RequestMapping(value = "/internal/clientstatus")
 public class ClientStatusRestController extends SpringMVCBaseController {
 	private static Logger logger = LoggerFactory.getLogger(ClientStatusRestController.class);
 
@@ -59,20 +59,38 @@ public class ClientStatusRestController extends SpringMVCBaseController {
 			return constructClientStatusModelAndView(request, clientStatusCriteria, Integer.parseInt(currentPageNumber), Integer.parseInt(pageSize));
 		} catch (Exception e) {
 			logger.error(e.getMessage());
-			return new ModelAndView("/client/clientlist");
+			return new ModelAndView("/client/list");
 		}
 	}
 
 	private ModelAndView constructClientStatusModelAndView(HttpServletRequest request, ClientStatusCriteria clientStatusCriteria, int currentPageNumber, int pageSize) {
-		ModelAndView modelAndView = new ModelAndView("/client/clientlist");
+		ModelAndView modelAndView = new ModelAndView("/client/list");
 		String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
 		clientStatusCriteria.setTerminalType(terminalType);
 		Page<ClientStatus> page = clientStatusService.searchClientStatuses(new Page<ClientStatus>(currentPageNumber, pageSize), clientStatusCriteria);
+		String[] operationTypeValues = Constants.pcOperationTypeValues;
+		if(TerminalTypeEnum.Phone.name().equals(terminalType)){
+			operationTypeValues = Constants.phoneOperationTypeValues;
+		}
 		modelAndView.addObject("terminalType", terminalType);
 		modelAndView.addObject("clientStatusCriteria", clientStatusCriteria);
 		modelAndView.addObject("validMap", Constants.CLIENT_STATUS_VALID_MAP);
+		modelAndView.addObject("orderByMap", Constants.CLIENT_STATUS_ORDERBY_MAP);
+		modelAndView.addObject("operationTypeValues", operationTypeValues);
 		modelAndView.addObject("page", page);
 		return modelAndView;
+	}
+
+	@RequestMapping(value = "/updateClientStatusTargetVersion", method = RequestMethod.POST)
+	public ResponseEntity<?> updateClientStatusTargetVersion(HttpServletRequest request) {
+		try {
+			String data = request.getParameter("data");
+			clientStatusService.updateClientStatusTargetVersion(data);
+			return new ResponseEntity<Object>(true, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@RequestMapping(value = "/addClientStatus", method = RequestMethod.POST)
@@ -87,9 +105,10 @@ public class ClientStatusRestController extends SpringMVCBaseController {
 	}
 
 	@RequestMapping(value = "/getClientStatus/{clientID}", method = RequestMethod.GET)
-	public ResponseEntity<?> getClientStatus(@PathVariable("clientID") String clientID) {
+	public ResponseEntity<?> getClientStatus(@PathVariable("clientID") String clientID, HttpServletRequest request) {
 		try {
-			return new ResponseEntity<Object>(clientStatusService.getClientStatus(clientID), HttpStatus.OK);
+			String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+			return new ResponseEntity<Object>(clientStatusService.getClientStatus(clientID, terminalType), HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);

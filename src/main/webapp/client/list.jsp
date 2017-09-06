@@ -1,180 +1,6 @@
-<%@page contentType="text/html;charset=utf-8"%>
-<%@page
-	import="com.keymanager.manager.*,com.keymanager.util.*,com.keymanager.value.*,java.util.*"%>
-<%@ page import="com.keymanager.monitoring.enums.TerminalTypeEnum" %>
-<%@ page import="com.keymanager.util.PortTerminalTypeMapping" %>
-<%@ page import="java.lang.reflect.Array" %>
-
-<jsp:useBean id="um" scope="page"
-	class="com.keymanager.manager.UserManager" />
-<jsp:useBean id="csm" scope="page"
-	class="com.keymanager.manager.ClientStatusManager" />
-
-<%@include file="/check.jsp"%>
-
-<%
-	if (loginState == 0) {
-%>
-<script language="javascript">
-	window.location.href = "/bd.html";
-</script>
-<%
-	return;
-	}
-
-	String username = (String) session.getAttribute("username");
-	String password = (String) session.getAttribute("password");
-
-	String clientID = request.getParameter("clientID");
-	String groupName = request.getParameter("groupName");
-	String noGroup = request.getParameter("noGroup");
-	String version = request.getParameter("version");
-	String city = request.getParameter("city");
-	String upgradeFailedReason = request.getParameter("upgradeFailedReason");
-	String valid = request.getParameter("valid");
-	String hasProblem = request.getParameter("hasProblem");
-	String showFetchKeywordStatus = request.getParameter("showFetchKeywordStatus");
-
-	String renewal = request.getParameter("renewal");
-	String operationType = request.getParameter("operationType");
-	String noOperationType = request.getParameter("noOperationType");
-	String noVNC = request.getParameter("noVNC");
-	String noUpgrade = request.getParameter("noUpgrade");
-	String orderBy = request.getParameter("orderBy");
-
-	username = Utils.parseParam(username);
-	password = Utils.parseParam(password);
-
-	if (username == null || username.equals("")) {
-%>
-<script language="javascript">
-	window.location.href = "/bd.html";
-</script>
-<%
-	return;
-	}
-	UserVO user = um.login(datasourceName, username, password);
-	if ((user.getStatus() == 0) || !(user.isVipType())) {
-%>
-<script language="javascript">
-	alert("你没有该权限！");
-	window.history.back();
-</script>
-<%
-	return;
-	}
-
-	String condition = " and fTerminalType = '" + terminalType + "' ";
-
-	String curPage = request.getParameter("pg");
-
-	if (curPage == null || curPage.equals("")) {
-		curPage = "1";
-	}
-
-	int iCurPage = Integer.parseInt(curPage);
-
-	String pageUrl = "prefix=1";
-
-	if (!Utils.isNullOrEmpty(clientID)) {
-		condition = condition + " and fClientID like '%"
-				+ clientID.trim() + "%' ";
-		pageUrl = pageUrl + "&clientID="
-				+ java.net.URLEncoder.encode(clientID, "UTF-8");
-	} else {
-		clientID = "";
-	}
-
-	if (!Utils.isNullOrEmpty(groupName)) {
-		condition = condition + " and fGroup like '%" + groupName.trim()
-				+ "%' ";
-		pageUrl = pageUrl + "&groupName=" + groupName;
-	} else {
-		groupName = "";
-	}
-
-	if (!Utils.isNullOrEmpty(upgradeFailedReason)) {
-		condition = condition + " and fUpgradeFailedReason like '%" + upgradeFailedReason.trim()
-				+ "%' ";
-		pageUrl = pageUrl + "&upgradeFailedReason=" + upgradeFailedReason;
-	} else {
-		upgradeFailedReason = "";
-	}
-
-	if (!Utils.isNullOrEmpty(version)) {
-		condition = condition + " and fVersion like '" + version.trim()
-				+ "%' ";
-		pageUrl = pageUrl + "&version=" + version;
-	} else {
-		version = "";
-	}
-	if (noOperationType != null){
-		condition = condition + " AND fOperationType is null ";
-		pageUrl = pageUrl + "&noOperationType=noOperationType";
-	}else{
-		if (!Utils.isNullOrEmpty(operationType)) {
-			condition = condition + " and fOperationType = '" + operationType + "' ";
-			pageUrl = pageUrl + "&operationType=" + operationType;
-		} else {
-			operationType = "";
-		}
-	}
-	if (!Utils.isNullOrEmpty(city)) {
-		condition = condition + " and fCity like '" + city.trim()
-				+ "%' ";
-		pageUrl = pageUrl + "&city=" + java.net.URLEncoder.encode(city,  "UTF-8");
-	} else {
-		city = "";
-	}
-
-	if (!Utils.isNullOrEmpty(valid)) {
-		condition = condition + " and fValid = " + valid.trim() + " ";
-		pageUrl = pageUrl + "&valid=" + valid;
-	} else {
-		valid = "";
-	}
-
-	if (hasProblem != null){
-		condition = condition + " AND (fContinuousFailCount > 5 OR DATE_ADD(fLastVisitTime, INTERVAL IF((10 > (fPageNo*3)), 10, (fPageNo * 3)) MINUTE) < NOW()) and fValid = 1 ";
-		pageUrl = pageUrl + "&hasProblem=hasProblem";
-	}
-
-	if (renewal != null){
-		condition = condition + " AND DATE_ADD(fRenewalDate, INTERVAL -3 DAY) < CURRENT_DATE() and fValid = 1  ";
-		pageUrl = pageUrl + "&renewal=renewal";
-	}
-
-	if (noGroup != null){
-		condition = condition + " AND fGroup is null ";
-		pageUrl = pageUrl + "&noGroup=noGroup";
-	}
-	
-	if (noVNC != null){
-		condition = condition + " AND (fHost is null or fHost = '') ";
-		pageUrl = pageUrl + "&noVNC=noVNC";
-	}
-
-	if (showFetchKeywordStatus != null){
-		pageUrl = pageUrl + "&showFetchKeywordStatus=showFetchKeywordStatus";
-	}
-
-	if (noUpgrade != null){
-		condition = condition + " AND (fVersion <> fTargetVersion) ";
-		pageUrl = pageUrl + "&noUpgrade=noUpgrade";
-	}
-
-	pageUrl = pageUrl + "&orderBy=" + orderBy;
-
-	List itemList = csm.searchClientStatusVOs(datasourceName, 50,
-			iCurPage, condition, " ORDER BY " + orderBy + " ", 1);
-
-	int recordCount = csm.getRecordCount();
-	int pageCount = csm.getPageCount();
-
-	String fileName = "/client/clientlist.jsp?" + pageUrl;
-	String pageInfo = Utils.getPageInfo(iCurPage, 50, recordCount, pageCount, "", fileName);
-%>
-
+<%@ page contentType="text/html;charset=utf-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <head>
 <title>客户端列表</title>
@@ -272,15 +98,17 @@
 }
 -->
 </style>
-<script language="javascript" type="text/javascript" src="/common.js"></script>
-<script language="javascript" type="text/javascript"
-	src="/js/My97DatePicker/WdatePicker.js"></script>
-<script language="javascript" type="text/javascript"
-	src="/js/jquery142.js"></script>
-<script language="javascript" type="text/javascript" src="/js/slide.js"></script>
-<link href="/css/menu.css" rel="stylesheet" type="text/css" />
+	<link href="/ui/jquery-ui.css" rel="stylesheet" type="text/css" />
+	<link href="/css/menu.css" rel="stylesheet" type="text/css" />
+	<script language="javascript" type="text/javascript" src="/ui/jquery-ui.js"></script>
+	<script language="javascript" type="text/javascript" src="/js/slide1.12.4.js"></script>
+	<script language="javascript" type="text/javascript" src="/common.js"></script>
+	<script language="javascript" type="text/javascript" src="/js/My97DatePicker/WdatePicker.js"></script>
+	<script language="javascript" type="text/javascript" src="/js/jquery142.js"></script>
+	<script language="javascript" type="text/javascript" src="/js/slide.js"></script>
 </head>
 <body>
+<div id="clientStatusDiv">
 	<table width=100% style="font-size: 12px;" cellpadding=3>
 		<tr>
 			<td colspan=16 align="left"><%@include file="/menu.jsp"%>
@@ -288,95 +116,70 @@
 		</tr>
 		<tr>
 			<td colspan=16>
-				<form method="post" action="clientlist.jsp">
+				<form id="searchClientStatusForm" method="post" action="/internal/clientstatus/searchClientStatuses">
 					<table style="font-size: 12px;width:100%">
 						<tr>
 							<td align="left" colspan="2">
-								客户端ID:<input type="text" name="clientID" id="clientID" value="<%=clientID%>" style="width: 90px;">
+								<input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}"/>
+								<input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
+								<input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
+								<input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
+								客户端ID:<input type="text" name="clientID" id="clientID" value="${clientStatusCriteria.clientID}" style="width: 90px;">
 								&nbsp;&nbsp;&nbsp;
-								优化组:<input type="text" name="groupName" id="groupName" value="<%=groupName%>" style="width: 120px;">
+								优化组:<input type="text" name="groupName" id="groupName" value="${clientStatusCriteria.groupName}" style="width: 120px;">
 								&nbsp;&nbsp;&nbsp;
-								版本:<input type="text" name="version" id="version" value="<%=version%>" style="width: 60px;">
+								版本:<input type="text" name="version" id="version" value="${clientStatusCriteria.version}" style="width: 60px;">
 								&nbsp;&nbsp;&nbsp;
-								城市:<input type="text" name="city" id="city" value="<%=city%>" style="width: 120px;">
+								城市:<input type="text" name="city" id="city" value="${clientStatusCriteria.city}" style="width: 120px;">
 								&nbsp;&nbsp;&nbsp;
-								失败原因:<input type="text" name="upgradeFailedReason" id="upgradeFailedReason" value="<%=upgradeFailedReason%>"
+								失败原因:<input type="text" name="upgradeFailedReason" id="upgradeFailedReason" value="${clientStatusCriteria.upgradeFailedReason}"
 											  style="width: 50px;">
 								&nbsp;&nbsp;&nbsp;
 								状态:<select name="valid" id="valid">
-									<%
-										String[] valids = {"全部", "暂停", "监控中"};
-										String[] validValues = {"", "0", "1"};
-										for (int i = 0; i < valids.length; i++) {
-											if (validValues[i].equals(valid)) {
-												out.println("<option selected value='" + validValues[i]
-														+ "'>" + valids[i] + "</option>");
-											} else {
-												out.println("<option value='" + validValues[i] + "'>"
-														+ valids[i] + "</option>");
-											}
-										}
-									%>
+								<c:forEach items="${validMap}" var="entry">
+									<c:choose>
+										<c:when test="${entry.value eq clientStatusCriteria.valid}"><option selected value="${entry.value}">${entry.key}</option></c:when>
+										<c:otherwise><option value="${entry.value}">${entry.key}</option></c:otherwise>
+									</c:choose>
+								</c:forEach>
 							</select>
 							&nbsp;&nbsp;&nbsp;
 							操作类型:<select name="operationType" id="operationType">
-									<%
-										String[] operationTypeValues = {"",
-												"pc_pm","pc_pm2","pc_pm3","pc_xg","pc_xg2","pc_xg3","pc_xl","pc_pm_sogou","pc_pm_360","pc_pm_58",
-												"pc_pm_zhidao", "pc_pm_wenku", "pc_tieba", "pc_kpm"};
-										if(TerminalTypeEnum.Phone.name().equals(terminalType)){
-											operationTypeValues = new String[]{"", "m_pm", "m_xl", "m_xg", "m_pm_sm", "m_xl2"};
-										}
-										for (int operationTypeValueIndex = 0; operationTypeValueIndex < operationTypeValues.length; operationTypeValueIndex++) {
-											if (operationTypeValues[operationTypeValueIndex].equals(operationType)) {
-												out.println("<option selected value='" + operationTypeValues[operationTypeValueIndex]
-														+ "'>" + operationTypeValues[operationTypeValueIndex] + "</option>");
-											} else {
-												out.println("<option value='" + operationTypeValues[operationTypeValueIndex] + "'>"
-														+ operationTypeValues[operationTypeValueIndex] + "</option>");
-											}
-										}
-									%>
+								<c:forEach items="${operationTypeValues}" var="operationType">
+									<c:choose>
+										<c:when test="${operationType eq clientStatusCriteria.operationType}"><option selected value="${operationType}">${operationType}</option></c:when>
+										<c:otherwise><option value="${operationType}">${operationType}</option></c:otherwise>
+									</c:choose>
+								</c:forEach>
 							</select>
 								&nbsp;&nbsp;&nbsp;
 							排序:<select name="orderBy" id="orderBy">
-								<%
-									String[] orderByNames = {"ID", "最后工作时间", "发通知时间", "重启时间", "重启排序时间", "重启次数"};
-									String[] orderByValues = {"fClientID", "fLastVisitTime", "fLastSendNotificationTime", "fRestartTime",
-											"fRestartOrderingTime", "fRestartCount desc"};
-									for (int orderByIndex = 0; orderByIndex < orderByValues.length; orderByIndex++) {
-										if (orderByValues[orderByIndex].equals(orderBy)) {
-											out.println("<option selected value='" + orderByValues[orderByIndex]
-													+ "'>" + orderByNames[orderByIndex] + "</option>");
-										} else {
-											out.println("<option value='" + orderByValues[orderByIndex] + "'>"
-													+ orderByNames[orderByIndex] + "</option>");
-										}
-									}
-								%>
+								<c:forEach items="${orderByMap}" var="entry">
+									<c:choose>
+										<c:when test="${entry.key eq clientStatusCriteria.orderBy}"><option selected value="${entry.key}">${entry.value}</option></c:when>
+										<c:otherwise><option value="${entry.key}">${entry.value}</option></c:otherwise>
+									</c:choose>
+								</c:forEach>
 							</select></td>
 						</tr>
 						<tr>
 						<td align="left">
-							<input id="hasProblem" name="hasProblem" type="checkbox" value="hasProblem" <%if (hasProblem != null){
-						out.print(" checked=true");}%>>停了</input>
+							<input id="hasProblem" name="hasProblem" type="checkbox" value="hasProblem" ${clientStatusCriteria.hasProblem != null ? "checked=true" : ""}>停了</input>
 							&nbsp;&nbsp;&nbsp;
-							<input id="renewal" name="renewal" type="checkbox" value="renewal" <%if (renewal != null){
-							out.print(" checked=true");}%>>续费</input>
+							<input id="renewal" name="renewal" type="checkbox" value="renewal" ${clientStatusCriteria.renewal != null ? "checked=true" : ""}>续费</input>
 							&nbsp;&nbsp;&nbsp;
-							<input id="noGroup" name="noGroup" type="checkbox" value="noGroup" <%if (noGroup != null){ out.print(" checked=true");}%>>没分组</input>
+							<input id="noGroup" name="noGroup" type="checkbox" value="noGroup" ${clientStatusCriteria.noGroup != null ? "checked=true" : ""}>没分组</input>
 							&nbsp;&nbsp;&nbsp;
-							<input id="noOperationType" name="noOperationType" type="checkbox" value="noOperationType" <%if (noOperationType != null){ out.print(" checked=true");}%>>没操作类型</input>
+							<input id="noOperationType" name="noOperationType" type="checkbox" value="noOperationType" ${clientStatusCriteria.noOperationType != null ? "checked=true" : ""}>没操作类型</input>
 							&nbsp;&nbsp;&nbsp;
-							<input id="noVNC" name="noVNC" type="checkbox" value="noVNC" <%if (noVNC != null){ out.print(" checked=true");}%>>没VNC</input>
+							<input id="noVNC" name="noVNC" type="checkbox" value="noVNC" ${clientStatusCriteria.noVNC != null ? "checked=true" : ""}>没VNC</input>
 							&nbsp;&nbsp;&nbsp;
-							<input id="noUpgrade" name="noUpgrade" type="checkbox" value="noUpgrade" <%if (noUpgrade != null){ out.print(" checked=true");}%>>没升级</input>
+							<input id="noUpgrade" name="noUpgrade" type="checkbox" value="noUpgrade" ${clientStatusCriteria.noUpgrade != null ? "checked=true" : ""}>没升级</input>
 							&nbsp;&nbsp;&nbsp;
 							<input id="showFetchKeywordStatus" name="showFetchKeywordStatus" type="checkbox" value="showFetchKeywordStatus"
-								<%if (showFetchKeywordStatus != null){ out.print(" checked=true");}%>>显示取词状态</input>
+							${clientStatusCriteria.showFetchKeywordStatus != null ? "checked=true" : ""}>显示取词状态</input>
 						</td>
-						<td align="right" width="30px"><input type="submit"
-															  name="btnFilter" id="btnFilter" value=" 查询 "></td>
+						<td align="right" width="30px"><input type="submit" name="btnFilter" id="btnFilter" onclick="resetPageNumber()" value=" 查询 "></td>
 						</tr>
 						<tr>
 						<td colspan="2">
@@ -417,124 +220,156 @@
 			<div id="div2"></div>
 			<div id="div3"></div>
 		</tr>
-		<%
-			String trClass = "";
-			String webUrl = "";
-			String keywordColor = "";
-			boolean validClient = true;
-			for (int i = 0; i < itemList.size(); i++) {
-				ClientStatusVO value = (ClientStatusVO) itemList.get(i);
-				trClass = "";
-				validClient = true;
-				keywordColor = "";
-				if (value.isValid()) {
-					if(value.isRed()){
-						keywordColor = "#FF0000";
-						validClient = false;
-					}else if(value.isYellow()){
-						keywordColor = "#ef00ff";
-						validClient = false;
-					}else{
-						keywordColor = "green";
-					}
-				} else {
-					keywordColor = "green";
-				}
-				if ((i % 2) != 0) {
-					trClass = "bgcolor='#eeeeee'";
-				}
-		%>
-		<tr <%=trClass%> onmouseover="doOver(this);" onmouseout="doOut(this);">
-			<td><input type="checkbox" name="clientID" value="<%=value.getClientID()%>"/></td>
+		<c:forEach items="${page.records}" var="clientStatus">
+			<c:set var="isValidClient" value="true" />
+			<c:choose>
+				<c:when test="${clientStatus.valid}">
+					<c:choose>
+						<c:when test="${clientStatus.red}">
+							<c:set var="keywordColor" value="#FF0000" />
+							<c:set var="isValidClient" value="false" />
+						</c:when>
+						<c:when test="${clientStatus.yellow}">
+							<c:set var="keywordColor" value="#ef00ff" />
+							<c:set var="isValidClient" value="false" />
+						</c:when>
+						<c:otherwise>
+							<c:set var="keywordColor" value="green" />
+						</c:otherwise>
+					</c:choose>
+				</c:when>
+				<c:otherwise>
+					<c:set var="keywordColor" value="green" />
+				</c:otherwise>
+			</c:choose>
+		<tr onmouseover="doOver(this);" onmouseout="doOut(this);">
+			<td><input type="checkbox" name="clientID" value="${clientStatus.clientID}"/></td>
 			<td>
-				<font color="<%=keywordColor%>"><%=value.getClientID()%></font>
-				<%if(!validClient){%>
-					<span name="invalidClient" id="span_<%=value.getClientID()%>"></span>
-				<%}%>
+				<font color="${keywordColor}">${clientStatus.clientID}</font>
+				<c:if test="${!isValidClient}">
+					<span name="invalidClient" id="span_${clientStatus.clientID}"></span>
+				</c:if>
 			</td>
-			<td><input type="text" value="<%=value.getGroup() == null ? "" : value.getGroup()%>"
-				name="group" id="<%=value.getClientID()%>"  onBlur="updateGroup(this)"
+			<td><input type="text" value="${clientStatus.group == null ? "" : clientStatus.group}"
+				name="group" id="${clientStatus.clientID}"  onBlur="updateGroup(this)"
 				style="width: 100%; height: 100%" /></td>
 			<td>
-				<select name="operationType<%=value.getClientID()%>" id="operationType<%=value.getClientID()%>" onChange="updateOperationType(this)"
+				<select name="operationType${clientStatus.clientID}" id="operationType${clientStatus.clientID}" onChange="updateOperationType(this)"
 				 style="width: 100%; height: 100%" />
-				<%
-					String[] operationTypes = {"",
-							"pc_pm","pc_pm2","pc_pm3","pc_xg","pc_xg2","pc_xg3","pc_xl","pc_pm_sogou","pc_pm_360","pc_pm_58",
-							"pc_pm_zhidao", "pc_pm_wenku", "pc_tieba", "pc_kpm"};
-					if(TerminalTypeEnum.Phone.name().equals(terminalType)){
-						operationTypes = new String[]{"", "m_pm", "m_xl", "m_xg", "m_pm_sm", "m_xl2"};
-					}
-					for (int operationTypeIndex = 0; operationTypeIndex < operationTypes.length; operationTypeIndex++) {
-						if (operationTypes[operationTypeIndex].equals(value.getOperationType())) {
-							out.println("<option selected value='" + operationTypes[operationTypeIndex]
-									+ "'>" + operationTypes[operationTypeIndex] + "</option>");
-						} else {
-							out.println("<option value='" + operationTypes[operationTypeIndex] + "'>"
-									+ operationTypes[operationTypeIndex] + "</option>");
-						}
-					}
-				%>	
+				<c:forEach items="${operationTypeValues}" var="operationType">
+					<c:choose>
+						<c:when test="${operationType eq clientStatus.operationType}"><option selected value="${operationType}">${operationType}</option></c:when>
+						<c:otherwise><option value="${operationType}">${operationType}</option></c:otherwise>
+					</c:choose>
+				</c:forEach>
 				</select>
 			</td>
-			<td><font color="<%=keywordColor%>"><%=Utils.formatDatetime(value.getRenewalDate(), "MM-dd")%></font></td>
-			<td><font color="<%=keywordColor%>"><%=value.getVersion() == null ? "" : value.getVersion()%></br><%=value.getTargetVersion() == null ? "" : value.getTargetVersion()%></font></td>
-			<td><font color="<%=keywordColor%>"><%=value.getRestartCount()%>/<%=value.getRestartStatus() == null ? "" : value.getRestartStatus()
-			%></br><%=value.getPageNo()%>/<%=value.getContinuousFailCount()%></font></td>
-			<td  style="word-break: break-all"><font color="<%=keywordColor%>"><%=value.getCity() == null ? "" : value.getCity()%></br><%=value.getStatus() == null ? "" :
-					value.getStatus()%></font></td>
-			<td><font color="<%=keywordColor%>"><%=value.getFreeSpace()%></font></td>
-			<td><font color="<%=keywordColor%>"><%=Utils.formatDatetime(value.getLastVisitTime(),
-						"MM-dd HH:mm")%></br><%=Utils.formatDatetime(
-					value.getRestartTime(), "MM-dd HH:mm")%></font></td>
-			<td><font color="<%=keywordColor%>"><%=Utils.formatDatetime(
-						value.getRestartOrderingTime(), "MM-dd HH:mm")%></br><%=Utils.formatDatetime(
-					value.getLastSendNotificationTime(), "MM-dd HH:mm")%></font></td>
-			<td><font color="<%=keywordColor%>"><%=value.getOptimizationSucceedCount()%></br><%=value.getOptimizationTotalCount()%></font></td>
-			<td><font color="<%=keywordColor%>"><%=value.isValid() ? "监控中" : "暂停监控"%></font></td>
-			<td><input type="text" value="<%=value.getUpgradeFailedReason() == null ? "" : value.getUpgradeFailedReason()%>"
-					   name="upgradeFailedReason" id="<%=value.getClientID()%>"  onBlur="updateUpgradeFailedReason(this)"
+			<td><font color="${keywordColor}"><fmt:formatDate value="${clientStatus.renewalDate}" pattern="MM-dd" /></font></td>
+			<td><font color="${keywordColor}">${clientStatus.version == null ? "" : clientStatus.version}</br>${clientStatus.targetVersion == null ? "" : clientStatus.targetVersion}</font></td>
+			<td><font color="${keywordColor}">${clientStatus.restartCount}/${clientStatus.restartStatus == null ? "" : clientStatus.restartStatus}</br>${clientStatus.pageNo}/${clientStatus.continuousFailCount}</font></td>
+			<td style="word-break: break-all"><font color="${keywordColor}">${clientStatus.city == null ? "" : clientStatus.city}</br>${clientStatus.status == null ? "" : clientStatus.status}</font></td>
+			<td><font color="${keywordColor}">${clientStatus.freeSpace}</font></td>
+			<td><font color="${keywordColor}"><fmt:formatDate value="${clientStatus.lastVisitTime}" pattern="MM-dd HH:mm" /></br><fmt:formatDate value="${clientStatus.restartTime}" pattern="MM-dd HH:mm" /></font></td>
+			<td><font color="${keywordColor}"><fmt:formatDate value="${clientStatus.restartOrderingTime}" pattern="MM-dd HH:mm" /></br><fmt:formatDate value="${clientStatus.lastSendNotificationTime}" pattern="MM-dd HH:mm" /></font></td>
+			<td><font color="${keywordColor}">${clientStatus.optimizationSucceedCount()}</br>${optimizationTotalCount}</font></td>
+			<td><font color="${keywordColor}">${clientStatus.valid ? "监控中" : "暂停监控"}</font></td>
+			<td><input type="text" value="${clientStatus.upgradeFailedReason == null ? "" : clientStatus.upgradeFailedReason}"
+					   name="upgradeFailedReason" id="${clientStatus.clientID}"  onBlur="updateUpgradeFailedReason(this)"
 					   style="width: 100%; height: 100%" /></td>
-			<td><font color="<%=keywordColor%>"><%=value.getVpsBackendSystemComputerID()%></font></td>
+			<td><font color="${keywordColor}">${clientStatus.vpsBackendSystemComputerID}</font></td>
 			<td>	
-				<%if(!Utils.isNullOrEmpty(value.getHost())){ %>	
-				<a href="javascript:connectVNC('<%=value.getClientID()%>')">VNC</a>
-				<%}else{%>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				<%}%>
+				<c:choose>
+					<c:when test="${null != clientStatus.host and !'' eq clientStatus.host}">
+						<a href="javascript:connectVNC('${clientStatus.clientID}')">VNC</a>
+					</c:when>
+					<c:otherwise>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					</c:otherwise>
+				</c:choose>
 				&nbsp;		
-				<a href="javascript:showSettingDialog('<%=value.getClientID()%>', this)">设置</a>
+				<a href="javascript:showSettingDialog('${clientStatus.clientID}', this)">设置</a>
 				&nbsp;
-				<a href="javascript:delItem('<%=value.getClientID()%>')">删除</a>
+				<a href="javascript:delItem('${clientStatus.clientID}')">删除</a>
 				</br>
-				<%
-				if (value.isValid()) {
-				%> <a href="javascript:stopMonitor('<%=value.getClientID()%>')">暂停监控</a> <%
- 				} else {
- %>
-				<a href="javascript:startMonitor('<%=value.getClientID()%>')">开始监控</a>
-				<%
-				}
-				%>
+				<c:choose>
+					<c:when test="${clientStatus.valid}">
+						<a href="javascript:stopMonitor('${clientStatus.clientID}')">暂停监控</a>
+					</c:when>
+					<c:otherwise>
+						<a href="javascript:startMonitor('${clientStatus.clientID}')">开始监控</a>
+					</c:otherwise>
+				</c:choose>
 				&nbsp;
-				<a href="javascript:changeTerminalType('<%=value.getClientID()%>')">变更终端类型</a>
+				<a href="javascript:changeTerminalType('${clientStatus.clientID}')">变更终端类型</a>
 				
 			</td>
 		</tr>
-		<%
-			}
-		%>
-
-		<tr>
-			<td colspan=16 align="right"><br>
-				<%=pageInfo%></td>
-		</tr>
+		</c:forEach>
 	</table>
-	</form>
-	<br>
-	<br>
+</div>
+	<hr>
+	<div id="clientStatusBottomDiv" align="right">
+		<input id="fisrtButton" type="button" onclick="changePaging(1,'${page.size}')" value="首页"/>
+		&nbsp;&nbsp;&nbsp;&nbsp;
+		<input id="upButton" type="button" onclick="changePaging('${page.current-1}','${page.size}')" value="上一页"/>
+		&nbsp;&nbsp;&nbsp;&nbsp;${page.current}/${page.pages}&nbsp;&nbsp;
+		<input id="nextButton" type="button" onclick="changePaging('${page.current+1>=page.pages?page.pages:page.current+1}','${page.size}')" value="下一页">
+		&nbsp;&nbsp;&nbsp;&nbsp;
+		<input id="lastButton" type="button" onclick="changePaging('${page.pages}','${page.size}')" value="末页">
+		&nbsp;&nbsp;&nbsp;&nbsp;
+		总记录数:${page.total}&nbsp;&nbsp;
+		每页显示条数:
+		<select id="chooseRecords" onchange="changePaging(${page.current},this.value)" style="margin-right: 10px;">
+			<option>10</option>
+			<option>25</option>
+			<option>50</option>
+			<option>75</option>
+			<option>100</option>
+		</select>
+		<input type="hidden" id="currentPageHidden" value="${page.current}"/>
+		<input type="hidden" id="pageSizeHidden" value="${page.size}"/>
+		<input type="hidden" id="pageCountHidden" value="${page.pages}"/>
+	</div>
 
 	<script language="javascript">
+        $(function () {
+            var clientStatusBottomDiv = $('#clientStatusBottomDiv');
+            var pageSize = clientStatusBottomDiv.find('#pageSizeHidden').val();
+            clientStatusBottomDiv.find('#chooseRecords').val(pageSize);
+            var pageCount = clientStatusBottomDiv.find('#pageCountHidden').val();
+            clientStatusBottomDiv.find('#pageCountHidden').val(pageCount);
+            var currentPage = clientStatusBottomDiv.find('#currentPageHidden').val();
+            clientStatusBottomDiv.find('#currentPageHidden').val(currentPage);
+            if(parseInt(currentPage) > 1 && parseInt(currentPage) < parseInt(pageCount)) {
+                clientStatusBottomDiv.find("#firstButton").removeAttr("disabled");
+                clientStatusBottomDiv.find("#upButton").removeAttr("disabled");
+                clientStatusBottomDiv.find("#nextButton").removeAttr("disabled");
+                clientStatusBottomDiv.find("#lastButton").removeAttr("disabled");
+            } else if (parseInt(pageCount) <= 1) {
+                clientStatusBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
+                clientStatusBottomDiv.find("#upButton").attr("disabled", "disabled");
+                clientStatusBottomDiv.find("#nextButton").attr("disabled", "disabled");
+                clientStatusBottomDiv.find("#lastButton").attr("disabled", "disabled");
+            } else if (parseInt(currentPage) <= 1) {
+                clientStatusBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
+                clientStatusBottomDiv.find("#upButton").attr("disabled", "disabled");
+            } else {
+                clientStatusBottomDiv.find("#nextButton").attr("disabled", "disabled");
+                clientStatusBottomDiv.find("#lastButton").attr("disabled", "disabled");
+            }
+        });
+
+        function changePaging(currentPageNumber, pageSize) {
+            var searchClientStatusForm = $("#searchClientStatusForm");
+            searchClientStatusForm.find("#currentPageNumberHidden").val(currentPageNumber);
+            searchClientStatusForm.find("#pageSizeHidden").val(pageSize);
+            searchClientStatusForm.submit();
+        }
+
+        function resetPageNumber() {
+            $("#searchClientStatusForm").find("#currentPageNumberHidden").val(1);
+        }
+
 		function selectAll(self){
 			var a = document.getElementsByName("clientID");
 			if(self.checked){
@@ -724,11 +559,11 @@
 		}
 		function showSettingDialog(clientID, self){
 		    $$$.ajax({
-		        url: '/client/getclientstatus.jsp?username=<%=username%>&password=<%=password%>&clientID=' + clientID,
+		        url: '/internal/clientstatus/getClientStatus/' + clientID,
 		        type: 'Get',
 		        success: function (data) {
 		        	data = data.replace(/\r\n/gm,"");
-		        	if(data === "0"){
+		        	if(data == null){
 		        		showInfo("获取信息失败！", self);
 		        	}else{
 		        		var clientStatusVO = JSON.parse(data);
@@ -920,13 +755,12 @@
 				return;
 			}
 		    $$$.ajax({
-		        url: '/client/updateClientStatusTargetVersion.jsp',
+		        url: '/internal/clientstatus/updateClientStatusTargetVersion',
 		        data: "data=" + JSON.stringify(clientStatusVO),
 		        type: 'POST',
 		        success: function (data) {
-		        	data = data.replace(/\r\n/gm,"");
 		        	settingDialogDiv.hide();
-		        	if(data === "1"){
+		        	if(data){
 		        		showInfo("更新成功！", self);
 		        		settingDialogDiv.hide();
 		        		window.location.reload();
@@ -1067,7 +901,7 @@
 				$$$("span[name=invalidClient]").each(function(){
 					var span = $$$(this);
 					$$$.ajax({
-						url: '/customerkeyword/getcustomerkeyword.jsp?username=<%=username%>&password=<%=password%>&clientID=' + this.id.replace("span_", ""),
+						url: '/customerkeyword/getcustomerkeyword.jsp?clientID=' + this.id.replace("span_", ""),
 						type: 'Get',
 						success: function (data) {
 							data = data.replace(/\r\n/gm,"");
@@ -1130,39 +964,46 @@
 							<th>操作类型</th>
 							<td>
 								<select name="settingOperationType" id="settingOperationType">
-									<%if(TerminalTypeEnum.PC.name().equals(terminalType)){%>
-									<option value="pc_pm">pc_pm</option>
-									<option value="pc_pm2">pc_pm2</option>
-									<option value="pc_pm3">pc_pm3</option>
-									<option value="pc_xg">pc_xg</option>
-									<option value="pc_xg2">pc_xg2</option>
-									<option value="pc_xg3">pc_xg3</option>
-									<option value="pc_xl">pc_xl</option>
-									<option value="pc_pm_sogou">pc_pm_sogou</option>
-									<option value="pc_pm_360">pc_pm_360</option>
-									<option value="pc_pm_58">pc_pm_58</option>
-									<option value="pc_pm_zhidao">pc_pm_zhidao</option>
-									<option value="pc_pm_wenku">pc_pm_wenku</option>
-									<option value="pc_tieba">pc_tieba</option>
-									<option value="pc_kpm">pc_kpm</option>
-									<%}else{%>
-									<option value="m_pm">m_pm</option>
-									<option value="m_xl">m_xl</option>
-									<option value="m_xg">m_xg</option>
-									<option value="m_pm_sm">m_pm_sm</option>
-									<option value="m_xl2">m_xl2</option>
-									<%}%>
+									<c:choose>
+										<c:when test="${terminalType eq 'PC'}">
+											<option value="pc_pm">pc_pm</option>
+											<option value="pc_pm2">pc_pm2</option>
+											<option value="pc_pm3">pc_pm3</option>
+											<option value="pc_xg">pc_xg</option>
+											<option value="pc_xg2">pc_xg2</option>
+											<option value="pc_xg3">pc_xg3</option>
+											<option value="pc_xl">pc_xl</option>
+											<option value="pc_pm_sogou">pc_pm_sogou</option>
+											<option value="pc_pm_360">pc_pm_360</option>
+											<option value="pc_pm_58">pc_pm_58</option>
+											<option value="pc_pm_zhidao">pc_pm_zhidao</option>
+											<option value="pc_pm_wenku">pc_pm_wenku</option>
+											<option value="pc_tieba">pc_tieba</option>
+											<option value="pc_kpm">pc_kpm</option>
+										</c:when>
+										<c:otherwise>
+											<option value="m_pm">m_pm</option>
+											<option value="m_xl">m_xl</option>
+											<option value="m_xg">m_xg</option>
+											<option value="m_pm_sm">m_pm_sm</option>
+											<option value="m_xl2">m_xl2</option>
+											<option value="m_kpm">m_kpm</option>
+										</c:otherwise>
+									</c:choose>
 								</select>
 							</td>
 						</tr>
 						<tr>
 							<th>页数</th>
 							<td>
-								<%if(TerminalTypeEnum.Phone.name().equals(terminalType)){%>
-									<input type="text" name="page" id="page" value="3"/>
-								<%}else{%>
-									<input type="text" name="page" id="page" value="5"/>
-								<%}%>
+								<c:choose>
+									<c:when test="${terminalType eq 'Phone'}">
+										<input type="text" name="page" id="page" value="3"/>
+									</c:when>
+									<c:otherwise>
+										<input type="text" name="page" id="page" value="5"/>
+									</c:otherwise>
+								</c:choose>
 							</td>
 						</tr>
 						<tr>
