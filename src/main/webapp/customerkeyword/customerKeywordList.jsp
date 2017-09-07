@@ -486,7 +486,7 @@
                 }
                 $( "#customerKeywordDialog").dialog({
                     width: 440,
-                    height: 490,
+                    height: 610,
                     position: {
                         my: "center top",
                         at: "center top+50px",
@@ -581,7 +581,13 @@
                 customerKeyword.collectMethod = collectMethod;
                 var serviceProvider = $.trim($("#customerKeywordDialog #serviceProvider").val());
                 customerKeyword.serviceProvider = serviceProvider;
-                alert(JSON.stringify(customerKeyword));
+                var orderNumber = $.trim($("#customerKeywordDialog #orderNumber").val());
+                customerKeyword.orderNumber = orderNumber;
+                var paymentStatus = $.trim($("#customerKeywordDialog #paymentStatus").val());
+                customerKeyword.paymentStatus = paymentStatus;
+                var remarks = $.trim($("#customerKeywordDialog #remarks").val());
+                customerKeyword.remarks = remarks;
+//                alert(JSON.stringify(customerKeyword));
                 $.ajax({
                     url: '/internal/customerKeyword/saveCustomerKeyword',
                     data: JSON.stringify(customerKeyword),
@@ -619,7 +625,7 @@
                     timeout: 50000,
                     type: 'POST',
                     success: function (customerKeyword) {
-                alert(customerKeyword);
+//                alert(customerKeyword);
                         if (customerKeyword != null) {
                             $("#customerKeywordDialog #uuid").val(customerKeyword.uuid);
                             $("#customerKeywordDialog #keyword").val(customerKeyword.keyword);
@@ -645,6 +651,9 @@
                             $("#customerKeywordDialog #optimizeGroupName").val(customerKeyword.optimizeGroupName);
                             $("#customerKeywordDialog #relatedKeywords").val(customerKeyword.relatedKeywords);
                             $("#customerKeywordDialog #collectMethod").val(customerKeyword.collectMethod);
+                            $("#customerKeywordDialog #orderNumber").val(customerKeyword.orderNumber);
+                            $("#customerKeywordDialog #paymentStatus").val(customerKeyword.paymentStatus);
+                            $("#customerKeywordDialog #remarks").val(customerKeyword.remarks);
 
                             addCustomerKeyword(customerKeywordUuid);
                         } else {
@@ -665,9 +674,9 @@
             function uploadCustomerKeywords(uuid, excelType){
                 $('#uploadsimpleconForm')[0].reset();
                 if(excelType=='SuperUserSimple'){
-                    $("#uploadSimpleconDailog").attr("title","Excel简易版上传")
+                    $('#uploadsimpleconForm').find("#excelType").html("(简易版)");
                 }else{
-                    $("#uploadSimpleconDailog").attr("title","Excel完整版上传")
+                    $('#uploadsimpleconForm').find("#excelType").html("(完整版)");
                 }
                 $("#uploadSimpleconDailog").dialog({
                     resizable: false,
@@ -1022,10 +1031,10 @@
         目标组名称:<input type="text" id="groupName" name="groupName" style="width:150px">
     </form>
 </div>
-<div id="uploadSimpleconDailog"  style="text-align: center;height: 60px;"  title="Excel上传">
+<div id="uploadSimpleconDailog"  style="text-align: center;height: 60px;" title="Excel文件上传">
     <form method="post" id="uploadsimpleconForm" style="margin-top: 10px"  enctype="multipart/form-data" >
         <input type="hidden" id="customerUuid" name="customerUuid" value="${customerKeywordCrilteria.customerUuid}">
-        请选择要上传的文件:<input type="file" id="uploadsimpleconFile" name="file" >
+        <span>请选择要上传的文件:<label id="excelType" style="color: red"></label></span><input type="file" id="uploadsimpleconFile" name="file" >
     </form>
 </div>
 
@@ -1126,6 +1135,20 @@
                 <input type="hidden" name="relatedKeywords" id="relatedKeywords" value="">
                 <input type="hidden" id="status" name="status" value="1">
                 排序:<input type="text" name="sequence" id="sequence" value="0" size="6" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)">
+            </li>
+            <hr style="height: 1px; border:none; border-top:1px dashed #CCCCCC;"/>
+            <li>
+                <span class="customerKeywordSpanClass">订单号:</span><input name="orderNumber" id="orderNumber" type="text" style="width:120px;" />
+                <span class="customerKeywordSpanClass">收费状态:</span><select name="paymentStatus" id="paymentStatus">
+                <option value="0"></option>
+                <option value="1">担保中</option>
+                <option value="2">已付费</option>
+                <option value="3">未担保</option>
+                <option value="4">跑路</option>
+            </select>
+            </li>
+            <li>
+                <span class="customerKeywordSpanClass" style="display: inline-block;float: left;height: 80px;">备注:</span><textarea name="remarks" id="remarks" style="width:300px;height:80px;resize: none" placeholder="请写备注吧!"></textarea>
             </li>
         </ul>
     </form>

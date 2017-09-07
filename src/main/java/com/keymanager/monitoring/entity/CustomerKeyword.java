@@ -9,6 +9,7 @@ import com.keymanager.util.Constants;
 import com.keymanager.util.Utils;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 @TableName(value = "t_customer_keyword")

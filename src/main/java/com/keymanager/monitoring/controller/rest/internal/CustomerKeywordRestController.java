@@ -197,7 +197,6 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 			} else {
 				customerKeyword.setUpdateTime(new Date());
 				customerKeyword.setStatus(1);
-				customerKeyword.setPositionForthFee(null);
 				customerKeywordService.updateById(customerKeyword);
 				return new ResponseEntity<Object>(true, HttpStatus.OK);
 			}
