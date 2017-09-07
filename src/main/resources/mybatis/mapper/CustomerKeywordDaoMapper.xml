@@ -64,16 +64,21 @@
         ck.fCreateTime	AS	'createTime'
     </sql>
 
-    <select id="clearTitleByUuids">
+    <update id="cleanSelectedCustomerKeywordTitle">
         UPDATE t_customer_keyword set fTitle = null where fUuid in
-        <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+        <foreach item="item" index="index" collection="uuids" open="(" separator="," close=")">
           #{item}
         </foreach>
-    </select>
+    </update>
 
-    <select id="clearTitleByCustomerUuidAndTerminalType">
-        UPDATE t_customer_keyword set fTitle = null where fTerminalType = #{terminalType} and fCustomerUuid = #{customerUuid}
-    </select>
+    <update id="cleanCustomerTitle">
+        UPDATE t_customer_keyword set fTitle = null where fTerminalType = #{terminalType} and fType = #{entryType} and fCustomerUuid = #{customerUuid}
+    </update>
+
+    <update id="cleanCaptureTitleFlag">
+        UPDATE t_customer_keyword SET fTitle = NULL, fCaptureTitleQueryTime = NULL, fCapturedTitle = 0
+        where fTerminalType = #{terminalType} and fCustomerUuid = #{customerUuid}  and fType = #{entryType}
+    </update>
 
     <select id="getCustomerKeywordCount" resultType="int">
         SELECT COUNT(1) FROM t_customer_keyword ck WHERE ck.fCustomerUuid = #{customerUuid}
@@ -151,16 +156,25 @@
     </select>
 
     <update id="updateCustomerKeywordGroupName">
-        UPDATE t_customer_keyword SET fOptimizeGroupName = #{customerKeyword.optimizeGroupName} WHERE fCustomerUuid = #{customerKeyword.customerUuid} AND fTerminalType = #{customerKeyword.terminalType}
+        UPDATE t_customer_keyword SET fOptimizeGroupName = #{customerKeywordUpdateGroupCriteria.targetGroupName},fUpdateTime = CURRENT_TIMESTAMP WHERE
+        fTerminalType = #{customerKeywordUpdateGroupCriteria.terminalType}  AND fType = #{customerKeywordUpdateGroupCriteria.entryType}
+        <if test="customerKeywordUpdateGroupCriteria.customerUuid !=null and customerKeywordUpdateGroupCriteria.customerUuid != ''">
+            AND fCustomerUuid = #{customerKeywordUpdateGroupCriteria.customerUuid}
+        </if>
+         <if test="customerKeywordUpdateGroupCriteria.customerKeywordUuids != null"> AND fUuid IN
+             <foreach item="item" index="index" collection="customerKeywordUpdateGroupCriteria.customerKeywordUuids" open="(" separator="," close=")">
+                 #{item}
+             </foreach>
+         </if>
     </update>
 
-    <update id="changeOptimizationGroup">
-        UPDATE t_customer_keyword SET fOptimizeGroupName = '${customerKeyword.optimizeGroupName}' , fUpdateTime = CURRENT_TIMESTAMP WHERE fUuid = '${customerKeyword.Uuid}' AND fTerminalType = '${customerKeyword.terminalType}'
-    </update>
-
-    <delete id="deleteCustomerKeyword">
-        <if test="deleteType==null || deleteType==''">
-            delete from t_customer_keyword where fUuid = #{customerKeyword.uuid} AND fType = #{customerKeyword.type}
+    <!--<delete id="deleteCustomerKeywords">
+        <if test="customerKeywordDeletionCritecleanTypeType == 'ByUuid'">
+            delete from t_customer_keyword where fType = #{customerKeywordDeletionCriteria.entryType} AND fTerminalType = #{customerKeywordDeletionCriteria.terminalType}
+            AND fUuid IN
+            <foreach item="item" index="index" collection="customerKeywordDeletionCriteria.customerKeywordUuids" open="(" separator="," close=")">
+                #{item}
+            </foreach>
         </if>
         <if test="deleteType == 'emptyTitleAndUrl'">
             delete from t_customer_keyword where  fCustomerUuid = #{customerKeyword.customerUuid} AND fTerminalType = #{customerKeyword.terminalType}  AND (fTitle = '' or fTitle IS null) AND (fUrl = '' or fUrl IS NULL)
@@ -168,28 +182,20 @@
         <if test="deleteType == 'emptyTitle'">
             delete from t_customer_keyword where  fCustomerUuid = #{customerKeyword.customerUuid} AND fTerminalType = #{customerKeyword.terminalType}  AND (fTitle = '' or fTitle IS null)
         </if>
+    </delete>-->
+
+    <delete id="deleteCustomerKeywordsByUuid">
+        delete from t_customer_keyword where fUuid IN
+        <foreach item="item" index="index" collection="customerKeywordUuids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
     </delete>
 
-    <!--重采标题-->
-    <update id="resetTitle">
-        <if test="resetType == 'all'">
-            UPDATE t_customer_keyword SET fTitle = NULL where fCustomerUuid=#{customerKeyword.customerUuid}
-        </if>
-        <if test="resetType == 'captureTitle'">
-            UPDATE t_customer_keyword SET fTitle = NULL, fCaptureTitleQueryTime = NULL, fCapturedTitle = 0 where 1 = 1
+    <delete id="deleteCustomerKeywordsWhenEmptyTitleAndUrl">
+        delete from t_customer_keyword where fTerminalType = #{terminalType} AND fType = #{entryType} AND fCustomerUuid = #{customerUuid} AND (fTitle = '' or fTitle IS null) AND (fUrl = '' or fUrl IS NULL)
+    </delete>
 
-            <if test="customerKeyword.customerUuid !=null || customerKeyword.customerUuid !='' ">
-                and fCustomerUuid=#{customerKeyword.customerUuid}
-            </if>
-            <if test="customerKeyword.terminalType !=null || customerKeyword.terminalType !='' ">
-                and fTerminalType = #{customerKeyword.terminalType}
-            </if>
-            <if test="customerKeyword.type !=null || customerKeyword.type !='' ">
-                and fType = #{customerKeyword.type}
-            </if>
-            <if test="customerKeyword.status !=null || customerKeyword.status !='' ">
-                and fStatus = #{customerKeyword.status}
-            </if>
-        </if>
-    </update>
+    <delete id="deleteCustomerKeywordsWhenEmptyTitle">
+        delete from t_customer_keyword where fTerminalType = #{terminalType} AND fType = #{entryType} AND fCustomerUuid = #{customerUuid} AND (fTitle = '' or fTitle IS null)
+    </delete>
 </mapper>

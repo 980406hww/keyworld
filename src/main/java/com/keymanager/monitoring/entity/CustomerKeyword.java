@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.FieldStrategy;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.keymanager.enums.CollectMethod;
 import com.keymanager.util.Constants;
 import com.keymanager.util.Utils;
@@ -704,22 +705,22 @@ public class CustomerKeyword extends BaseEntity {
     }
     public String pcFeeString(){
         StringBuilder fee = new StringBuilder("");
-        if(this.getPositionFirstFee() > 0){
+        if(this.getPositionFirstFee() != null && this.getPositionFirstFee() > 0){
             fee.append(this.getPositionFirstFeeString() + ";");
         }
-        if(this.getPositionSecondFee() > 0){
+        if(this.getPositionSecondFee() != null && this.getPositionSecondFee() > 0){
             fee.append(this.getPositionSecondFeeString() + ";");
         }
-        if(this.getPositionThirdFee() > 0){
+        if(this.getPositionThirdFee() != null && this.getPositionThirdFee() > 0){
             fee.append(this.getPositionThirdFeeString() + ";");
         }
-        if(this.getPositionForthFee() > 0){
+        if(this.getPositionForthFee() != null && this.getPositionForthFee() > 0){
             fee.append(this.getPositionForthFeeString() + ";");
         }
-        if(this.getPositionFifthFee() > 0){
+        if(this.getPositionFifthFee() != null && this.getPositionFifthFee() > 0){
             fee.append(this.getPositionFifthFeeString() + ";");
         }
-        if(this.getPositionFirstPageFee() > 0){
+        if(this.getPositionFirstPageFee() != null && this.getPositionFirstPageFee() > 0){
             fee.append(this.getPositionFirstPageFeeString() + ";");
         }
         return fee.toString();

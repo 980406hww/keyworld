@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link href="/css/menu.css" rel="stylesheet" type="text/css"/>
-    //toastmessage插件
+    <%--toastmessage插件--%>
     <script language="javascript" type="text/javascript" src="/toastmessage/jquery.toastmessage.js"></script>
     <link rel="stylesheet" href="/toastmessage/css/jquery.toastmessage.css">
     <head>
@@ -55,10 +55,6 @@
                 height: 22px;
             }
 
-            #changeOptimizationGroupDialog {
-
-            }
-
             #customerKeywordTopDiv {
                 position: fixed;
                 top: 0px;
@@ -70,7 +66,6 @@
             #customerKeywordDiv {
                 /*overflow: scroll;*/
                 width: 100%;
-
                 margin-bottom: 47PX;
             }
 
@@ -82,7 +77,6 @@
             #customerKeywordTable td{
                 text-align: left;
             }
-
 
             #showCustomerBottomPositioneDiv{
                 position: fixed;
@@ -97,6 +91,7 @@
                 float: right;
                 margin-right: 20px;
             }
+
             body{
                 margin: 0;
                 padding: 0;
@@ -110,7 +105,7 @@
         <script language="javascript">
             $(function () {
                 $("#changeOptimizationGroupDialog").hide();
-                $("#updateCustomerKeywordGroupNameDialog").hide();
+                $("#updateCustomerGroupName").hide();
                 $("#uploadSimpleconDailog").hide();
                 $("#uploadFullconDailog").hide();
                 $("#customerKeywordDialog").hide();
@@ -201,14 +196,14 @@
             function delAllItems(deleteType,customerUuid) {
                 var uuids = getUuids();
                 switch (deleteType){
-                    case null :
+                    case 'ByUuid' :
                         if (uuids === '') {
                             alert('请选择要操作的信息');
                             return;
                         }
                         if (confirm("确实要删除这些关键字吗?") == false) return;break;
-                    case 'emptyTitleAndUrl' :if (confirm("确实要删除标题和网址为空的关键字吗?") == false) return;break;
-                    case 'emptyTitle' :if (confirm("确实要删除标题为空的关键字吗?") == false) return;break;
+                    case 'EmptyTitleAndUrl' :if (confirm("确实要删除标题和网址为空的关键字吗?") == false) return;break;
+                    case 'EmptyTitle' :if (confirm("确实要删除标题为空的关键字吗?") == false) return;break;
                 }
                 var postData = {};
                 if(uuids ===''){
@@ -259,59 +254,27 @@
                 return uuids;
             }
 
-            function resetTitle(customerUuid,resetType) {
-                if(resetType == 'captureTitle'){
-                    if (confirm("确实要重新采集标题?") == false) return;
-                }else {
-                    if (confirm("确实要清除所有标题?") == false) return;
-                }
-                var postData = {};
-                postData.customerUuid = customerUuid;
-                postData.status = '${customer.status}';
-                postData.resetType = resetType;
-//        alert(JSON.stringify(postData));
-                $.ajax({
-                    url: '/internal/customerKeyword/resetTitle',
-                    data: JSON.stringify(postData),
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    timeout: 5000,
-                    type: 'POST',
-                    success: function (status) {
-                        if (status) {
-                            $().toastmessage('showSuccessToast', "操作成功");
-                            window.location.reload();
-                        } else {
-                            $().toastmessage('showErrorToast', "操作失败");
-                            window.location.reload();
-                        }
-                    },
-                    error: function () {
-                        $().toastmessage('showErrorToast', "操作失败");
-                        window.location.reload();
-                    }
-                });
-            }
-
-            function clearTitle(customerUuid, clearType) {
-                var uuids = getUuids();
-                if (clearType == null) {
-                    if (uuids.trim() === '') {
+            function cleanTitle(customerUuid, cleanType) {
+                var customerKeywordCleanCriteria = {};
+                if (cleanType == 'SelectedCustomerKeywordTitle') {
+                    var customerKeywordUuids = getUuids();
+                    if (customerKeywordUuids.trim() === '') {
                         alert("请选中要操作的关键词！");
                         return;
                     }
+                    if (confirm("确认要清空标题吗?") == false) return;
+                    customerKeywordCleanCriteria.customerKeywordUuids = customerKeywordUuids.split(",");
+                }else if(cleanType == 'CaptureTitleFlag'){
+                    if (confirm("确认要重新采集标题?") == false) return;
+                }else {
+                    if (confirm("确认要清除所有标题?") == false) return;
                 }
-                if (confirm("确认要清空标题吗?") == false) return;
-                var postData = {};
-                postData.uuids = uuids;
-                postData.clearType = clearType;
-                postData.customerUuid = customerUuid;
+                customerKeywordCleanCriteria.cleanType = cleanType;
+                customerKeywordCleanCriteria.customerUuid = customerUuid;
 
                 $.ajax({
-                    url: '/internal/customerKeyword/clearTitle',
-                    data: JSON.stringify(postData),
+                    url: '/internal/customerKeyword/cleanTitle',
+                    data: JSON.stringify(customerKeywordCleanCriteria),
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json'
@@ -405,17 +368,27 @@
                 searchCustomerKeywordForm.find("#currentPageNumberHidden").val(1);
             }
 
-            //修改该用户关键字组名
-            function updateCustomerKeywordGroupNameDialog(customerUuid,updateType) {
+            //修改所有组名
+            function updateCustomerGroupName(customerUuid) {
                 $("#updateCustomerKeywordGroupNameDialog").dialog({
                     resizable: false,
                     width: 260,
                     height: 150,
                     modal: true,
+                    position:{
+                        my:"center top",
+                        at:"center top+150",
+                        of:window
+                    },
                     //按钮
                     buttons: {
                         "保存": function () {
-                            updateCustomerKeywordGroupName(customerUuid,updateType);
+                            var targetGroupName = $("#updateCustomerKeywordGroupNameFrom").find("#groupName").val();
+                            if (targetGroupName == null || targetGroupName === '') {
+                                alert("请输入分组名");
+                                return;
+                            }
+                            changeGroupName({"customerUuid":customerUuid,"targetGroupName" :targetGroupName })
                             $(this).dialog("close");
                         },
                         "清空": function () {
@@ -429,26 +402,58 @@
                 });
             }
 
-            function updateCustomerKeywordGroupName(customerUuid, updateType) {
-                if (updateType == 'stop') {
-                    if (confirm("确实要下架客户关键字吗?") == false) return;
-                    var customerKeyword = {};
-                    customerKeyword.customerUuid = customerUuid;
-                    customerKeyword.optimizeGroupName = updateType;
-                } else {
-                    var customerKeyword = {};
-                    var optimizeGroupName = $("#updateCustomerKeywordGroupNameFrom").find("#groupName").val();
-                    customerKeyword.customerUuid = customerUuid;
-                    customerKeyword.optimizeGroupName = optimizeGroupName;
-                    if (optimizeGroupName == null || optimizeGroupName === '') {
-                        alert("请输入分组名");
-                        return;
-                    }
+            //下架
+            function stopOptimization(customerUuid){
+                changeGroupName({"customerUuid": customerUuid, "targetGroupName": "stop"});
+            }
+
+            //修改部分
+            function updateSpecifiedCustomerKeywordGroupName() {
+                var uuids = getUuids();
+                if (uuids.trim() === '') {
+                    alert("请选中要操作的关键词！");
+                    return;
                 }
-//        alert(JSON.stringify(customerKeyword));
+                $("#changeOptimizationGroupDialog").dialog({
+                    resizable: false,
+                    width: 260,
+                    height: 150,
+                    modal: true,
+                    position:{
+                        my:"center top",
+                        at:"center top+150",
+                        of:window
+                    },
+                    //按钮
+                    buttons: {
+                        "保存": function () {
+                            var customerKeywordUuids = getUuids();
+                            if (customerKeywordUuids.trim() === '') {
+                                alert("请选中要操作的关键词！");
+                                return;
+                            }
+                            var targetGroup = $("#changeOptimizationGroupDialog").find("#optimizationGroup").val();
+                            if (targetGroup == null || targetGroup === '') {
+                                alert("请输入分组名");
+                                return;
+                            }
+                            changeGroupName({"targetGroupName" :targetGroup,"customerKeywordUuids":customerKeywordUuids.split(",")})
+                        },
+                        "清空": function () {
+                            $('#changeOptimizationGroupFrom')[0].reset();
+                        },
+                        "取消": function () {
+                            $(this).dialog("close");
+                            $('#changeOptimizationGroupFrom')[0].reset();
+                        }
+                    }
+                });
+            }
+
+            function changeGroupName(customerKeywordUpdateGroupCriteria) {
                 $.ajax({
                     url:'/internal/customerKeyword/updateCustomerKeywordGroupName',
-                    data:JSON.stringify(customerKeyword),
+                    data:JSON.stringify(customerKeywordUpdateGroupCriteria),
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json'
@@ -456,7 +461,6 @@
                     timeout: 5000,
                     type: 'POST',
                     success: function (result) {
-
                         if (result) {
                             $().toastmessage('showSuccessToast', "操作成功");
                             window.location.reload();
@@ -470,73 +474,6 @@
                         window.location.reload();
                     },
                 });
-            }
-
-            function changeOptimizationGroupDialog(customerUuid) {
-                var uuids = getUuids();
-                if (uuids.trim() === '') {
-                    alert("请选中要操作的关键词！");
-                    return;
-                }
-                $("#changeOptimizationGroupDialog").dialog({
-                    resizable: false,
-                    width: 260,
-                    height: 150,
-                    modal: true,
-                    //按钮
-                    buttons: {
-                        "保存": function () {
-                            saveChangeOptimizationGroup();
-                        },
-                        "清空": function () {
-                            $('#changeOptimizationGroupFrom')[0].reset();
-                        },
-                        "取消": function () {
-                            $(this).dialog("close");
-                            $('#changeOptimizationGroupFrom')[0].reset();
-                        }
-                    }
-                });
-            }
-            function saveChangeOptimizationGroup() {
-                var settingDialogDiv = $("#changeOptimizationGroupDialog");
-                var optimizeGroupName = settingDialogDiv.find("#optimizationGroup").val();
-                var uuids = getUuids();
-                if (uuids==='') {
-                    alert("请选中要操作的关键词！");
-                    return;
-                }
-                if ($.trim(optimizationGroup)=== '') {
-                    alert("请输入分组名称！");
-                    return;
-                }
-                var postData = {};
-                postData.customerKeywordUuids = uuids.split(",");
-                postData.optimizeGroupName = optimizeGroupName;
-                $.ajax({
-                    url: '/internal/customerKeyword/changeOptimizationGroup',
-                    data:JSON.stringify(postData),
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    timeout: 5000,
-                    type: 'POST',
-                    success: function (result) {
-                        if(result){
-                            $().toastmessage('showSuccessToast', "操作成功");
-                            window.location.reload();
-                        } else {
-                            $().toastmessage('showErrorToast', "操作失败");
-                            window.location.reload();
-                        }
-                    },
-                    error: function () {
-                        $().toastmessage('showErrorToast', "更新失败");
-                        window.location.reload();
-                    }
-                });
-                $("#changeOptimizationGroupDialog").dialog("close");
             }
 
 
@@ -596,14 +533,14 @@
                     customerKeyword.keyword = keyword;
                 }
                 var url = $.trim($("#customerKeywordDialog #url").val())
-                if (url.length == 0) {
+                /*if (url.length == 0) {
                     $().toastmessage('showWarningToast', "网址不能为空！");
                     $("#customerKeywordDialog #url").focus();
                     return;
                 }
-                else {
+                else {*/
                     customerKeyword.url = url;
-                }
+//                }
                 var originalUrl = $.trim($("#customerKeywordDialog #originalUrl").val());
                 customerKeyword.originalUrl = originalUrl;
                 var regNumber = /^\d+$/;
@@ -682,7 +619,7 @@
                     timeout: 50000,
                     type: 'POST',
                     success: function (customerKeyword) {
-//                alert(JSON.(customerKeyword));
+                alert(customerKeyword);
                         if (customerKeyword != null) {
                             $("#customerKeywordDialog #uuid").val(customerKeyword.uuid);
                             $("#customerKeywordDialog #keyword").val(customerKeyword.keyword);
@@ -700,7 +637,7 @@
                             $("#customerKeywordDialog #positionFirstCost").val(customerKeyword.positionFirstCost);
                             $("#customerKeywordDialog #positionSecondCost").val(customerKeyword.positionSecondCost);
                             $("#customerKeywordDialog #positionThirdCost").val(customerKeyword.positionThirdCost);
-                            $("#customerKeywordDialog #positionForthCost").val(customerKeyword.positionForthCost);
+//                            $("#customerKeywordDialog #positionForthCost").val(customerKeyword.positionForthCost);
                             $("#customerKeywordDialog #positionFifthCost").val(customerKeyword.positionFifthCost);
                             $("#customerKeywordDialog #serviceProvider").val(customerKeyword.serviceProvider);
                             $("#customerKeywordDialog #sequence").val(customerKeyword.sequence);
@@ -725,13 +662,18 @@
                 $("#customerKeywordCost #customerKeywordCostFrom").toggle();
             }
             //关键字Excel上传(简化版)
-            function uploadsimple(uuid,self){
+            function uploadCustomerKeywords(uuid, excelType){
                 $('#uploadsimpleconForm')[0].reset();
                 $("#uploadSimpleconDailog").dialog({
                     resizable: false,
                     width: 400,
                     height: 200,
                     modal: true,
+                    position:{
+                        my:"center top",
+                        at:"center top+150",
+                        of:window
+                    },
                     //按钮
                     buttons: {
                         "提交": function () {
@@ -754,9 +696,10 @@
                             var formData = new FormData();
                             formData.append('file', uploadForm.find('#uploadsimpleconFile')[0].files[0]);
                             formData.append('customerUuid', uuid);
+                            formData.append('excelType', excelType);
                             if (fileTypeFlag) {
                                 $.ajax({
-                                    url: '/internal/customerKeyword/uploadsimplecon',
+                                    url: '/internal/customerKeyword/uploadCustomerKeywords',
                                     type: 'POST',
                                     cache: false,
                                     data: formData,
@@ -786,71 +729,7 @@
                     }
                 });
             }
-            //简化版模板下载
 
-            //关键字Excel上传(完整版)
-            function uploadFull(customerUuid,self) {
-                $('#uploadFullconForm')[0].reset();
-                $("#uploadFullconDailog").dialog({
-                    resizable: false,
-                    width: 400,
-                    height: 200,
-                    modal: true,
-                    title: '关键字Excel上传(完整版)',
-                    //按钮
-                    buttons: {
-                        "提交": function () {
-                            var uploadForm = $("#uploadFullconForm");
-                            var uploadFile = uploadForm.find("#uploadFullconFile").val();
-                            var fileTypes = new Array("xls", "xlsx");  //定义可支持的文件类型数组
-                            var fileTypeFlag = false;
-                            var newFileName = uploadFile.split('.');
-                            newFileName = newFileName[newFileName.length - 1];
-                            for (var i = 0; i < fileTypes.length; i++) {
-                                if (fileTypes[i] == newFileName) {
-                                    fileTypeFlag = true;
-                                    break;
-                                }
-                            }
-                            if (!fileTypeFlag) {
-                                alert("请提交表格文 .xls .xlsx");
-                                return false;
-                            }
-                            var formData = new FormData();
-                            formData.append('file', uploadForm.find('#uploadFullconFile')[0].files[0]);
-                            formData.append('customerUuid', customerUuid);
-                            if (fileTypeFlag) {
-                                $.ajax({
-                                    url: '/internal/customerKeyword/uploadFullcon',
-                                    type: 'POST',
-                                    cache: false,
-                                    data: formData,
-                                    processData: false,
-                                    contentType: false,
-                                    success: function (result) {
-                                        if (result) {
-                                            $().toastmessage('showErrorToast', "上传成功");
-                                            window.location.reload();
-                                        } else {
-                                            $().toastmessage('showErrorToast', "上传失败");
-                                            window.location.reload();
-                                        }
-                                    },
-                                    error: function () {
-                                        $().toastmessage('showErrorToast', "上传失败");
-                                        window.location.reload();
-                                    }
-                                });
-                            }
-                            $(this).dialog("close");
-                        },
-                        "取消": function () {
-                            $(this).dialog("close");
-                            $('#uploadsimpleconForm')[0].reset();
-                        }
-                    }
-                });
-            }
             //导出结果
             function downloadCustomerKeywordInfo() {
                 var customerKeywordCrilteria = $("#searchCustomerKeywordForm").serialize().trim();
@@ -910,21 +789,21 @@
 
     <%--<c:if test="${!user.vipType}">--%>
     <div style="text-align: right">
-        <a target="_blank" href="javascript:uploadsimple('${customerKeywordCrilteria.customerUuid}',this)"/>Excel上传(简化版)</a>
+        <a target="_blank" href="javascript:uploadCustomerKeywords('${customerKeywordCrilteria.customerUuid}', 'SuperUserSimple')"/>Excel上传(简化版)</a>
         | <a target="_blank" href="/SuperUserSimpleKeywordList.xls">简化版下载</a>
-        | <a target="_blank" href="javascript:uploadFull('${customerKeywordCrilteria.customerUuid}')">Excel上传(完整版)</a>
+        | <a target="_blank" href="javascript:uploadCustomerKeywords('${customerKeywordCrilteria.customerUuid}', 'SuperUserFull')">Excel上传(完整版)</a>
         | <a target="_blank" href="/SuperUserFullKeywordList.xls">完整版下载</a>
         | <a target="_blank" href="/internal/dailyReport/downloadSingleCustomerReport/${customerKeywordCrilteria.customerUuid}">导出日报表</a>
         | <a target="_blank" href="javascript:downloadCustomerKeywordInfo()">导出结果</a>
         <br/><br/>
-        <a href="javascript:updateCustomerKeywordGroupNameDialog('${customerKeywordCrilteria.customerUuid}',null)">修改所有分组</a>|
-        <a target="_blank" href="javascript:changeOptimizationGroupDialog(this)">修改选中分组</a>|
-        <a href="javascript:updateCustomerKeywordGroupName('${customerKeywordCrilteria.customerUuid}','stop')">下架所有关键字</a>|
-        <a href="javascript:delAllItems('emptyTitleAndUrl','${customerKeywordCrilteria.customerUuid}')">删除标题和网址为空的关键字</a> |
-        <a href="javascript:delAllItems('emptyTitle','${customerKeywordCrilteria.customerUuid}')">删除标题为空的关键字</a> |
-        <a href="javascript:resetTitle('${customerKeywordCrilteria.customerUuid}','captureTitle')">重采标题</a> |
-        <a href="javascript:clearTitle('${customerKeywordCrilteria.customerUuid}', null)">清空所选标题</a>|
-        <a href="javascript:resetTitle('${customerKeywordCrilteria.customerUuid}', 'all')">清空客户标题</a>
+        <a href="javascript:updateCustomerGroupName(${customerKeywordCrilteria.customerUuid})">修改所有分组</a>|
+        <a href="javascript:updateSpecifiedCustomerKeywordGroupName(${customerKeywordCrilteria.customerUuid})">修改选中分组</a>|
+        <a href="javascript:stopOptimization(${customerKeywordCrilteria.customerUuid})">下架所有关键字</a>|
+        <a href="javascript:delAllItems('EmptyTitleAndUrl','${customerKeywordCrilteria.customerUuid}')">删除标题和网址为空的关键字</a> |
+        <a href="javascript:delAllItems('EmptyTitle','${customerKeywordCrilteria.customerUuid}')">删除标题为空的关键字</a> |
+        <a href="javascript:cleanTitle('${customerKeywordCrilteria.customerUuid}','CaptureTitleFlag')">重采标题</a> |
+        <a href="javascript:cleanTitle('${customerKeywordCrilteria.customerUuid}', 'SelectedCustomerKeywordTitle')">清空所选标题</a>|
+        <a href="javascript:cleanTitle('${customerKeywordCrilteria.customerUuid}', 'CustomerTitle')">清空客户标题</a>
     </div>
     <br/>
     <form id="searchCustomerKeywordForm" style="font-size:12px; width: 100%;" action="/internal/customerKeyword/searchCustomerKeywords" method="post">
@@ -933,7 +812,7 @@
             <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
             <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
             <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
-            <input id="customerUuid" name="customerUuid" type="hidden" value="${customerKeywordCrilteria.customerUuid} ">
+            <input id="customerUuid" name="customerUuid" type="hidden" value="${customerKeywordCrilteria.customerUuid}">
             关键字:<input type="text" name="keyword" id="keyword" value="${customerKeywordCrilteria.keyword}"
                        style="width:80px;">
             URL:<input type="text" name="url" id="url" value="${customerKeywordCrilteria.url}"
@@ -946,16 +825,16 @@
             </select>
             优化组名:
             <input type="text" name="optimizeGroupName" id="optimizeGroupName"
-                   value="${customerKeywordCrilteria.optimizeGroupName} " style="width:100px;">
+                   value="${customerKeywordCrilteria.optimizeGroupName}" style="width:100px;">
             <%--<c:if test="${!user.vipType}">--%>
             显示前:
             <input type="text" name="position" id="position" value="${customerKeywordCrilteria.position}"
                    style="width:40px;"/>
-            显示0<input id="noPosition" name="noPosition" type="checkbox"  onclick="noPositionValue()"/>
+            <input id="noPosition" name="noPosition" type="checkbox"  onclick="noPositionValue()"/>显示0 &nbsp;
             无效点击数:
             <input type="text" name="invalidRefreshCount" id="invalidRefreshCount"
-                   value="${customerKeywordCrilteria.invalidRefreshCount} " style="width:20px;">
-            添加时间:<input name="creationFromTime" id="creationFromTime" class="Wdate"
+                   value="${customerKeywordCrilteria.invalidRefreshCount}" style="width:20px;">
+            创建日期:<input name="creationFromTime" id="creationFromTime" class="Wdate"
                         type="text" style="width:90px;" onClick="WdatePicker()"
                         value="${customerKeywordCrilteria.creationFromTime}">
             到<input
@@ -964,7 +843,7 @@
                 class="Wdate" type="text"
                 style="width:90px;"
                 onClick="WdatePicker()"
-                value="${customerKeywordCrilteria.creationToTime} ">
+                value="${customerKeywordCrilteria.creationToTime}">
             排序:
             <select name="orderElement" id="orderElement">
                 <option value="">--请选择排序--</option>
@@ -972,13 +851,13 @@
                 <option value="fCurrentPosition">当前排名</option>
             </select>
             <%--</c:if>--%>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;
             <input type="submit" class="ui-button ui-widget ui-corner-all" onclick="resetPageNumber()"
                    value=" 查询 ">&nbsp;&nbsp;
             <input type="button" class="ui-button ui-widget ui-corner-all" onclick="addCustomerKeyword()"
                    value=" 增加 ">&nbsp;&nbsp;
             <input type="button" class="ui-button ui-widget ui-corner-all"
-                   onclick="delAllItems(null,'${customerKeywordCrilteria.customerUuid}')"
+                   onclick="delAllItems('ByUuid','${customerKeywordCrilteria.customerUuid}')"
                    value=" 删除所选 ">
         </div>
     </form>
@@ -1022,8 +901,7 @@
             <tr style="" height=30 onmouseover="doOver(this);" onmouseout="doOut(this);" ondblclick="modifyCustomerKeyword('${customerKeyword.uuid}')" height=30>
                 <td  align="center" width=10><input type="checkbox" name="uuid" value="${customerKeyword.uuid}"/></td>
                 <td align="center" width=100>
-                    <font color="<%--<%=keywordColor%>--%>">${customerKeyword.keyword}
-                    </font>
+                    <font color="<%--<%=keywordColor%>--%>">${customerKeyword.keyword}</font>
                 </td>
                 <td  align="center" width=200 class="wrap"
                      onMouseMove="showTip('原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}')"
@@ -1036,45 +914,33 @@
                 <td align="center" width=250>
                         ${customerKeyword.title == null ? "" : customerKeyword.title.trim()}
                 </td>
-
                 <td align="center" width=30>
                     <div style="height:16;"><a
                             href="/internal/customerKeyword/historyPositionAndIndex/${customerKeyword.uuid}/30"
                             target="_blank">${customerKeyword.currentIndexCount}
                     </a></div>
                 </td>
-
                 <td align="center" width=50>
                     <div style="height:16;">${customerKeyword.initialPosition}
                     </div>
                 </td>
-
                 <td align="center" width=50>
                     <div style="height:16;"><a
                             href="${customerKeyword.searchEngineUrl}${customerKeyword.keyword}&pn=${customerKeyword.getPrepareBaiduPageNumber(customerKeyword.currentPosition)}"
                             target="_blank">${customerKeyword.currentPosition}</a>
                     </div>
                 </td>
-
                 <td align="center" width=30 onMouseMove="showTip('优化日期：<fmt:formatDate value="${customerKeyword.optimizeDate}" pattern="yyyy-MM-dd"/> ，要刷：${customerKeyword.optimizePlanCount}，已刷：${customerKeyword.optimizedCount}')"
                     onMouseOut="closeTip()">${customerKeyword.collectMethodName}
                 </td>
-
                 <td align="center" width=30>${customerKeyword.optimizePlanCount}</td>
-
                 <td align="center" width=30>${customerKeyword.optimizedCount} </td>
-
                 <td align="center" width=30>${customerKeyword.invalidRefreshCount}</td>
-
-
                 <td align="center" width=60>${customerKeyword.feeString}</td>
                 <td align="center" width=80><fmt:formatDate value="${customerKeyword.startOptimizedTime}" pattern="yyyy-MM-dd"/></td>
                 <td align="center" width=80><fmt:formatDate value="${customerKeyword.lastOptimizeDateTime}" pattern="yyyy-MM-dd  HH:mm"/></td>
-
-                <td align="center" width=50>${customerKeyword.orderNumber}
-                </td>
-                <td align="center" width=100>${customerKeyword.remarks==null?"":customerKeyword.remarks}
-                </td>
+                <td align="center" width=50>${customerKeyword.orderNumber}</td>
+                <td align="center" width=100>${customerKeyword.remarks==null?"":customerKeyword.remarks} </td>
                 <c:choose>
                     <c:when test="${user.vipType}">
                         <td align="center" width=60>${customerKeyword.optimizeGroupName == ''? "" : customerKeyword.optimizeGroupName}

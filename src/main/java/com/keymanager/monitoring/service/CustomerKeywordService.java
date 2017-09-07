@@ -4,13 +4,14 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.baomidou.mybatisplus.toolkit.StringUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.keymanager.enums.CollectMethod;
 import com.keymanager.excel.operator.AbstractExcelReader;
 import com.keymanager.manager.CustomerKeywordManager;
 import com.keymanager.monitoring.criteria.BaiduIndexCriteria;
+import com.keymanager.monitoring.criteria.CustomerKeywordCleanCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordCrilteria;
+import com.keymanager.monitoring.criteria.CustomerKeywordUpdateGroupCriteria;
 import com.keymanager.monitoring.dao.CustomerKeywordDao;
 import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.enums.*;
@@ -90,11 +91,13 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return manager.searchCustomerKeywordForCaptureTitle("keyword", terminalType, groupName);
     }
 
-    public void clearTitle(String uuids, String customerUuid, String terminalType) {
-        if (StringUtils.isEmpty(uuids)) {
-            customerKeywordDao.clearTitleByCustomerUuidAndTerminalType(terminalType, customerUuid);
-        } else {
-            customerKeywordDao.clearTitleByUuids(uuids.split(","));
+    public void cleanTitle(CustomerKeywordCleanCriteria customerKeywordCleanCriteria) {
+        if (CustomerKeywordCleanTypeEnum.CustomerTitle.name().equals(customerKeywordCleanCriteria.getCleanType())) {
+            customerKeywordDao.cleanCustomerTitle(customerKeywordCleanCriteria.getTerminalType(), customerKeywordCleanCriteria.getEntryType(), customerKeywordCleanCriteria.getCustomerUuid());
+        } else if(CustomerKeywordCleanTypeEnum.SelectedCustomerKeywordTitle.name().equals(customerKeywordCleanCriteria.getCleanType())) {
+            customerKeywordDao.cleanSelectedCustomerKeywordTitle(customerKeywordCleanCriteria.getCustomerKeywordUuids());
+        } else{
+            customerKeywordDao.cleanCaptureTitleFlag(customerKeywordCleanCriteria.getTerminalType(), customerKeywordCleanCriteria.getEntryType(), customerKeywordCleanCriteria.getCustomerUuid());
         }
     }
 
@@ -156,16 +159,16 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return customerKeywordDao.getCustomerKeywordCount(customerUuid);
     }
 
-    public void deleteCustomerKeyword(long customerKeywordUuid,String entry) {
+    /*public void deleteCustomerKeyword(long customerKeywordUuid, String entryType) {
         CustomerKeyword customerKeyword = new CustomerKeyword();
         customerKeyword.setUuid(customerKeywordUuid);
-        customerKeyword.setType(entry);
+        customerKeyword.setType(entryType);
 //        Wrapper wrapper = new EntityWrapper(customerKeyword);
 //        this.delete(wrapper);
         customerKeywordDao.deleteCustomerKeyword(customerKeyword,null);
-    }
+    }*/
 
-    public void deleteCustomerKeywords(List<String> customerKeywordUuids, String entry, String deleteType, String terminalType,String customerUuid) {
+    /*public void deleteCustomerKeywords(List<String> customerKeywordUuids, String entry, String deleteType, String terminalType,String customerUuid) {
         if (customerKeywordUuids != null) {
             for (String customerKeywordUuid : customerKeywordUuids) {
                 CustomerKeyword customerKeyword = new CustomerKeyword();
@@ -179,6 +182,18 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeyword.setTerminalType(terminalType);
             customerKeywordDao.deleteCustomerKeyword(customerKeyword, deleteType);
         }
+    }*/
+
+    public void deleteCustomerKeywordsByUuid(List<String> customerKeywordUuids){
+        customerKeywordDao.deleteCustomerKeywordsByUuid(customerKeywordUuids);
+    }
+
+    public void deleteCustomerKeywordsWhenEmptyTitleAndUrl(String terminalType, String entryType,String customerUuid){
+        customerKeywordDao.deleteCustomerKeywordsWhenEmptyTitleAndUrl(terminalType, entryType,customerUuid);
+    }
+
+    public void deleteCustomerKeywordsWhenEmptyTitle(String terminalType, String entryType,String customerUuid){
+        customerKeywordDao.deleteCustomerKeywordsWhenEmptyTitle(terminalType, entryType,customerUuid);
     }
 
     public void deleteCustomerKeywords(long customerUuid) {
@@ -331,18 +346,14 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return customerKeywordDao.getCustomerKeywordsCount(customerUuids, terminalType, entryType);
     }
 
-    public void updateCustomerKeywordGroupName(CustomerKeyword customerKeyword) {
-        customerKeywordDao.updateCustomerKeywordGroupName(customerKeyword);
+    public void updateCustomerKeywordGroupName(CustomerKeywordUpdateGroupCriteria customerKeywordUpdateGroupCriteria) {
+        customerKeywordDao.updateCustomerKeywordGroupName(customerKeywordUpdateGroupCriteria);
     }
 
     public void changeOptimizationGroup(CustomerKeyword customerKeyword) {
         customerKeywordDao.changeOptimizationGroup(customerKeyword);
     }
 
-    //重采标题
-    public void resetTitle (CustomerKeyword customerKeyword,String resetType) {
-        customerKeywordDao.resetTitle(customerKeyword,resetType);
-    }
     //
     public CustomerKeyword getCustomerKeyword(Long CustomerKeywordUuid) {
         return customerKeywordDao.selectById(CustomerKeywordUuid);
@@ -452,5 +463,14 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
     }
 
+    public void deleteCustomerKeywords(String deleteType, String terminalType, String entryType, String customerUuid, List<String> customerKeywordUuids) {
+        if(CustomerKeywordDeletionTypeEnum.ByUuid.name().equals(deleteType)){
+            deleteCustomerKeywordsByUuid(customerKeywordUuids);
+        }else if(CustomerKeywordDeletionTypeEnum.EmptyTitle.name().equals(deleteType)){
+            deleteCustomerKeywordsWhenEmptyTitle(terminalType, entryType,customerUuid);
+        }else{
+            deleteCustomerKeywordsWhenEmptyTitleAndUrl(terminalType, entryType,customerUuid);
+        }
+    }
 
 }
