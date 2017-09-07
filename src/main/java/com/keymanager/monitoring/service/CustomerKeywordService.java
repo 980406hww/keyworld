@@ -473,4 +473,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
     }
 
+    public List<String> getGroups(){
+        return customerKeywordDao.getGroups();
+    }
+
 }

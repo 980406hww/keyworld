@@ -49,4 +49,6 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void deleteCustomerKeywordsWhenEmptyTitleAndUrl(@Param("terminalType")String terminalType, @Param("entryType")String entryType, @Param("customerUuid")String customerUuid);
 
     void deleteCustomerKeywordsWhenEmptyTitle(@Param("terminalType")String terminalType, @Param("entryType")String entryType, @Param("customerUuid")String customerUuid);
+
+    List<String> getGroups();
 }

@@ -198,4 +198,9 @@
     <delete id="deleteCustomerKeywordsWhenEmptyTitle">
         delete from t_customer_keyword where fTerminalType = #{terminalType} AND fType = #{entryType} AND fCustomerUuid = #{customerUuid} AND (fTitle = '' or fTitle IS null)
     </delete>
+
+    <select id="getGroups" resultType="String">
+        SELECT DISTINCT ck.fOptimizeGroupName as 'group' FROM t_customer_keyword ck WHERE ck.fStatus = 1 AND ck.fOptimizeGroupName IS NOT NULL
+        AND ck.fOptimizeGroupName <![CDATA[<>]]>'' ORDER BY ck.fOptimizeGroupName
+    </select>
 </mapper>

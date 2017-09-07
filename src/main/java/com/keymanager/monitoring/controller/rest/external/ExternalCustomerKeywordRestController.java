@@ -1,5 +1,6 @@
 package com.keymanager.monitoring.controller.rest.external;
 
+import com.fasterxml.jackson.databind.deser.Deserializers;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.BaiduIndexCriteria;
 import com.keymanager.monitoring.criteria.BaseCriteria;
@@ -79,5 +80,17 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
 			}
 		}
 		return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+	}
+
+	@RequestMapping(value = "/getGroups", method = RequestMethod.POST)
+	public ResponseEntity<?> getGroups(@RequestBody BaseCriteria baseCriteria) throws Exception{
+		if(baseCriteria.getUserName() != null && baseCriteria.getPassword() != null){
+			User user = userService.getUser(baseCriteria.getUserName());
+			if(user != null && user.getPassword().equals(baseCriteria.getPassword())){
+				List<String> groups = customerKeywordService.getGroups();
+				return new ResponseEntity<Object>(groups, HttpStatus.OK);
+			}
+		}
+		return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
 	}
 }
