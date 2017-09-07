@@ -119,28 +119,28 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(value = "fOptimizePositionThirdPercentage")
     private int optimizePositionThirdPercentage;
 
-    @TableField(value = "fPositionFirstCost")
+    @TableField(value = "fPositionFirstCost", validate= FieldStrategy.IGNORED)
     private Double positionFirstCost;
 
-    @TableField(value = "fPositionSecondCost")
+    @TableField(value = "fPositionSecondCost", validate= FieldStrategy.IGNORED)
     private Double positionSecondCost;
 
-    @TableField(value = "fPositionThirdCost")
+    @TableField(value = "fPositionThirdCost", validate= FieldStrategy.IGNORED)
     private Double positionThirdCost;
 
-    @TableField(value = "fPositionForthCost")
+    @TableField(value = "fPositionForthCost", validate= FieldStrategy.IGNORED)
     private Double positionForthCost;
 
-    @TableField(value = "fPositionFifthCost")
+    @TableField(value = "fPositionFifthCost", validate= FieldStrategy.IGNORED)
     private Double positionFifthCost;
 
-    @TableField(value = "fPositionFirstFee")
+    @TableField(value = "fPositionFirstFee", validate= FieldStrategy.IGNORED)
     private Double positionFirstFee;
 
-    @TableField(value = "fPositionSecondFee")
+    @TableField(value = "fPositionSecondFee", validate= FieldStrategy.IGNORED)
     private Double positionSecondFee;
 
-    @TableField(value = "fPositionThirdFee")
+    @TableField(value = "fPositionThirdFee", validate= FieldStrategy.IGNORED)
     private Double positionThirdFee;
 
     @TableField(value = "fPositionForthFee", validate= FieldStrategy.IGNORED)
@@ -166,10 +166,10 @@ public class CustomerKeyword extends BaseEntity {
     private Date startOptimizedTime;
 
     @TableField(value = "fEffectiveFromTime")
-    private Date effectiveFromTime;
+    private Timestamp effectiveFromTime;
 
     @TableField(value = "fEffectiveToTime")
-    private Date effectiveToTime;
+    private Timestamp effectiveToTime;
 
     @TableField(value = "fPaymentEffectiveFromTime")
     private Date paymentEffectiveFromTime;
@@ -191,6 +191,9 @@ public class CustomerKeyword extends BaseEntity {
 
     @TableField(value = "fStatus")
     private int status;
+
+    @TableField(exist = false)
+    private Timestamp autoUpdateNegativeTime;
 
     public long getCustomerUuid() {
         return customerUuid;
@@ -586,20 +589,24 @@ public class CustomerKeyword extends BaseEntity {
         this.startOptimizedTime = startOptimizedTime;
     }
 
-    public Date getEffectiveFromTime() {
+    public Timestamp getEffectiveFromTime() {
         return effectiveFromTime;
     }
 
-    public void setEffectiveFromTime(Date effectiveFromTime) {
+    public void setEffectiveFromTime(Timestamp effectiveFromTime) {
         this.effectiveFromTime = effectiveFromTime;
     }
 
-    public Date getEffectiveToTime() {
+    public Timestamp getEffectiveToTime() {
         return effectiveToTime;
     }
 
-    public void setEffectiveToTime(Date effectiveToTime) {
+    public void setEffectiveToTime(Timestamp effectiveToTime) {
         this.effectiveToTime = effectiveToTime;
+    }
+
+    public Timestamp getAutoUpdateNegativeTime() {
+        return autoUpdateNegativeTime;
     }
 
     public Date getPaymentEffectiveFromTime() {
@@ -724,6 +731,16 @@ public class CustomerKeyword extends BaseEntity {
             fee.append(this.getPositionFirstPageFeeString() + ";");
         }
         return fee.toString();
+    }
+    public String captureIndexString(String type){
+        return String.format("%s__col__%s__col__%s", this.getUuid(), type, this.getKeyword());
+    }
+    public void setAutoUpdateNegativeTime(Timestamp autoUpdateNegativeTime) {
+        this.autoUpdateNegativeTime = autoUpdateNegativeTime;
+    }
+
+    public void setApplicableCurrentPosition(int currentPosition, String type) {
+        this.setCurrentPosition(currentPosition);
     }
 
 }

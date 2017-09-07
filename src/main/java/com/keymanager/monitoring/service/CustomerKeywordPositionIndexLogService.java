@@ -18,8 +18,8 @@ public class CustomerKeywordPositionIndexLogService extends ServiceImpl<Customer
 	@Autowired
 	private CustomerKeywordPositionIndexLogDao customerKeywordPositionIndexLogDao;
 
-	public Page<CustomerKeywordPositionIndexLog> searchCustomerKeywordPositionIndexLogs(Page<CustomerKeywordPositionIndexLog> page, Map<String,Object> condition){
-		page.setRecords(customerKeywordPositionIndexLogDao.searchCustomerKeywordPositionIndexLogs(page,condition));
+	public Page<CustomerKeywordPositionIndexLog> searchCustomerKeywordPositionIndexLogs(Page<CustomerKeywordPositionIndexLog> page, Map<String,Object> conditionMap){
+		page.setRecords(customerKeywordPositionIndexLogDao.searchCustomerKeywordPositionIndexLogs(page, conditionMap));
 		return page;
 	}
 }

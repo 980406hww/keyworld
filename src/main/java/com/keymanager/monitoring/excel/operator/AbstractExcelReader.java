@@ -1,4 +1,4 @@
-package com.keymanager.excel.operator;
+package com.keymanager.monitoring.excel.operator;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,7 +13,6 @@ import com.keymanager.enums.CollectMethod;
 import com.keymanager.util.Constants;
 import com.keymanager.util.Utils;
 import com.keymanager.util.excel.JXLExcelReader;
-import com.keymanager.value.CustomerKeywordVO;
 
 public abstract class AbstractExcelReader {
 	protected JXLExcelReader reader;

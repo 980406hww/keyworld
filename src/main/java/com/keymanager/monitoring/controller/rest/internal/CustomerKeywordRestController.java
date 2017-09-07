@@ -1,7 +1,7 @@
 package com.keymanager.monitoring.controller.rest.internal;
 
 import com.baomidou.mybatisplus.plugins.Page;
-import com.keymanager.excel.operator.CustomerKeywordInfoExcelWriter;
+import com.keymanager.monitoring.excel.operator.CustomerKeywordInfoExcelWriter;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.CustomerKeywordCleanCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordCrilteria;
@@ -214,7 +214,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	}
 
 	//导出成Excel文件
-	@RequestMapping(value = "/downloadCustomerKeywordInfo", method = RequestMethod.GET)
+	@RequestMapping(value = "/downloadCustomerKeywordInfo", method = RequestMethod.POST)
 	public ResponseEntity<?> downloadCustomerKeywordInfo( HttpServletRequest request,
 														 HttpServletResponse response,CustomerKeywordCrilteria customerKeywordCrilteria) {
 		FileInputStream fis = null;
@@ -222,7 +222,10 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		try {
 			String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
 			String customerUuid = request.getParameter("customerUuid").trim();
-			List<CustomerKeyword> customerKeywords = appendCondition(request,response);
+			String entryType = (String) request.getSession().getAttribute("entry");
+			customerKeywordCrilteria.setTerminalType(terminalType);
+			customerKeywordCrilteria.setEntryType(entryType);
+			List<CustomerKeyword> customerKeywords = customerKeywordService.searchCustomerKeywords(customerKeywordCrilteria);
 			if (!Utils.isEmpty(customerKeywords)) {
 				CustomerKeywordInfoExcelWriter excelWriter = new CustomerKeywordInfoExcelWriter();
 				excelWriter.writeDataToExcel(customerKeywords);
@@ -267,69 +270,5 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 			}
 		}
 		return new ResponseEntity<Object>(true,HttpStatus.OK);
-	}
-
-	public List<CustomerKeyword> appendCondition(HttpServletRequest request, HttpServletResponse response){
-		String customerUuid = request.getParameter("customerUuid").trim();
-		String invalidRefreshCount = request.getParameter("invalidRefreshCount").trim();
-		String keyword = request.getParameter("keyword").trim();
-		String url = request.getParameter("url").trim();
-		String creationFromTime = request.getParameter("creationFromTime").trim();
-		String creationToTime = request.getParameter("creationToTime").trim();
-		String status = request.getParameter("status").trim();
-		String optimizeGroupName = request.getParameter("optimizeGroupName").trim();
-		String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
-		String position = request.getParameter("position");
-		CustomerKeywordCrilteria customerKeywordCrilteria = new CustomerKeywordCrilteria();
-		customerKeywordCrilteria.setTerminalType(terminalType);
-		customerKeywordCrilteria.setCustomerUuid(Long.parseLong(customerUuid));
-		if (!Utils.isNullOrEmpty(keyword)) {
-			customerKeywordCrilteria.setKeyword(keyword);
-		}
-
-		if (!Utils.isNullOrEmpty(url)) {
-			customerKeywordCrilteria.setUrl(url);
-		}
-
-		if (!Utils.isNullOrEmpty(position)) {
-			customerKeywordCrilteria.setPosition(position);;
-		}
-
-		if (!Utils.isNullOrEmpty(optimizeGroupName)) {
-			customerKeywordCrilteria.setOptimizeGroupName(optimizeGroupName);
-		}
-
-		if (!Utils.isNullOrEmpty(creationFromTime)) {
-			customerKeywordCrilteria.setCreationToTime(creationFromTime);
-		}
-		if (!Utils.isNullOrEmpty(creationToTime)) {
-			customerKeywordCrilteria.setCreationToTime(creationToTime);
-		}
-
-		if (!Utils.isNullOrEmpty(status)) {
-			customerKeywordCrilteria.setStatus(status);
-		}
-
-		if (!Utils.isNullOrEmpty(invalidRefreshCount)) {
-			customerKeywordCrilteria.setInvalidRefreshCount(invalidRefreshCount);
-		}
-		Page<CustomerKeyword>  page = customerKeywordService.searchCustomerKeywords(new Page<CustomerKeyword>(1, 100000), customerKeywordCrilteria);
-		List<CustomerKeyword> customerKeywords = page.getRecords();
-		return customerKeywords;
-	}
-	//查询历史缴费记录
-	@RequestMapping(value = "/historyPositionAndIndex/{customerKeywordUuid}/{queryTime}" , method = RequestMethod.GET)
-	public ModelAndView historyPositionAndIndex(@PathVariable("customerKeywordUuid")Long customerKeywordUuid, @PathVariable("queryTime")String queryTime,HttpServletRequest request){
-		String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
-		CustomerKeyword customerKeyword = customerKeywordService.selectById(customerKeywordUuid);
-		Map<String,Object> condition = new HashMap<String, Object>();
-		condition.put("terminalType",terminalType);
-		condition.put("customerKeywordUuid",customerKeywordUuid);
-		condition.put("queryTime",queryTime);
-		Page<CustomerKeywordPositionIndexLog> page = customerKeywordPositionIndexLogService.searchCustomerKeywordPositionIndexLogs(new Page<CustomerKeywordPositionIndexLog>(1,10000),condition);
-		ModelAndView modelAndView = new ModelAndView("/customerkeyword/historyPositionAndIndex");
-		modelAndView.addObject("customerKeyword", customerKeyword);
-		modelAndView.addObject("page", page);
-		return modelAndView;
 	}
 }

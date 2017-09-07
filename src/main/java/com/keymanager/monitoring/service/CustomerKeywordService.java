@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.keymanager.enums.CollectMethod;
-import com.keymanager.excel.operator.AbstractExcelReader;
+import com.keymanager.monitoring.excel.operator.AbstractExcelReader;
 import com.keymanager.manager.CustomerKeywordManager;
 import com.keymanager.monitoring.criteria.BaiduIndexCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordCleanCriteria;
@@ -19,7 +19,6 @@ import com.keymanager.util.Constants;
 import com.keymanager.util.Utils;
 import com.keymanager.util.common.StringUtil;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
-import com.keymanager.value.CustomerKeywordVO;
 import com.keymanager.value.CustomerVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
@@ -55,6 +54,10 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     public Page<CustomerKeyword>  searchCustomerKeywords(Page<CustomerKeyword> page, CustomerKeywordCrilteria customerKeywordCrilteria){
         page.setRecords(customerKeywordDao.searchCustomerKeywords(page, customerKeywordCrilteria));
         return page;
+    }
+
+    public List<CustomerKeyword>  searchCustomerKeywords(CustomerKeywordCrilteria customerKeywordCrilteria){
+        return customerKeywordDao.searchCustomerKeywords(customerKeywordCrilteria);
     }
 
     public String searchCustomerKeywordForCaptureTitle(String terminalType) throws Exception {
@@ -118,11 +121,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
     }
 
-    public void addCustomerKeywords(List<CustomerKeyword> customerKeywords) {
+   /* public void addCustomerKeywords(List<CustomerKeyword> customerKeywords) {
         for (CustomerKeyword customerKeyword : customerKeywords) {
             addCustomerKeyword(customerKeyword);
         }
-    }
+    }*/
 
     public void addCustomerKeyword(CustomerKeyword customerKeyword) {
         if (StringUtil.isNullOrEmpty(customerKeyword.getOriginalUrl())) {
@@ -367,28 +370,28 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     public boolean handleExcel(InputStream inputStream, String excelType, int customerUuid, String type, String terminalType)
             throws Exception {
         AbstractExcelReader operator = AbstractExcelReader.createExcelOperator(inputStream, excelType);
-        List customerKeywordVOs = operator.readDataFromExcel();
-        supplementInfo(customerKeywordVOs, customerUuid, type, terminalType);
-        addCustomerKeywordVOs(customerKeywordVOs);
+        List<CustomerKeyword> customerKeywords = operator.readDataFromExcel();
+        supplementInfo(customerKeywords, customerUuid, type, terminalType);
+        addCustomerKeywords(customerKeywords);
         return true;
     }
 
-    public void supplementInfo(List<CustomerKeywordVO> customerKeywordVOs, int customerUuid, String type, String terminalType) {
-        for (CustomerKeywordVO customerKeywordVO : customerKeywordVOs) {
-            customerKeywordVO.setCustomerUuid(customerUuid);
-            customerKeywordVO.setType(type);
-            customerKeywordVO.setCreateTime(Utils.getCurrentTimestamp());
-            customerKeywordVO.setUpdateTime(Utils.getCurrentTimestamp());
-            customerKeywordVO.setStatus(1);
-            customerKeywordVO.setTerminalType(terminalType);
+    public void supplementInfo(List<CustomerKeyword> customerKeywords, int customerUuid, String type, String terminalType) {
+        for (CustomerKeyword customerKeyword : customerKeywords) {
+            customerKeyword.setCustomerUuid(customerUuid);
+            customerKeyword.setType(type);
+            customerKeyword.setCreateTime(Utils.getCurrentTimestamp());
+            customerKeyword.setUpdateTime(Utils.getCurrentTimestamp());
+            customerKeyword.setStatus(1);
+            customerKeyword.setTerminalType(terminalType);
         }
     }
-    public void addCustomerKeywordVOs(List<CustomerKeywordVO> customerKeywords) throws Exception {
-        for (CustomerKeywordVO customerKeywordVO : customerKeywords) {
-            if(StringUtil.isNullOrEmpty(customerKeywordVO.getOriginalUrl())){
-                customerKeywordVO.setOriginalUrl(customerKeywordVO.getUrl());
+    public void addCustomerKeywords(List<CustomerKeyword> customerKeywords) throws Exception {
+        for (CustomerKeyword customerKeyword : customerKeywords) {
+            if(StringUtil.isNullOrEmpty(customerKeyword.getOriginalUrl())){
+                customerKeyword.setOriginalUrl(customerKeyword.getUrl());
             }
-            String originalUrl = customerKeywordVO.getOriginalUrl();
+            String originalUrl = customerKeyword.getOriginalUrl();
             if(!StringUtil.isNullOrEmpty(originalUrl)){
                 if(originalUrl.indexOf("www.") == 0){
                     originalUrl = originalUrl.substring(4);
@@ -398,68 +401,21 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             }else{
                 originalUrl = null;
             }
-            if(!"fm".equals(customerKeywordVO.getType()) && haveDuplicatedCustomerKeyword(customerKeywordVO.getTerminalType(), customerKeywordVO
-                    .getCustomerUuid(), customerKeywordVO.getKeyword(), originalUrl)){
+            if(!"fm".equals(customerKeyword.getType()) && haveDuplicatedCustomerKeyword(customerKeyword.getTerminalType(), customerKeyword
+                    .getCustomerUuid(), customerKeyword.getKeyword(), originalUrl)){
                 return ;
             }
-            CustomerKeyword customerKeyword = new CustomerKeyword();
-            customerKeyword.setCustomerUuid(customerKeywordVO.getCustomerUuid());
-            customerKeyword.setType(customerKeywordVO.getType().trim());
-            customerKeyword.setKeyword(customerKeywordVO.getKeyword().trim());
-            customerKeyword.setUrl(customerKeywordVO.getUrl() != null ? customerKeywordVO.getUrl().trim() : "");
-            customerKeyword.setTitle(customerKeywordVO.getTitle() != null ? customerKeywordVO.getTitle().trim() : "");
-            customerKeyword.setSnapshotDateTime(customerKeywordVO.getSnapshotDateTime());
-            customerKeyword.setSearchEngine(customerKeywordVO.getSearchEngine());
-            customerKeyword.setInitialIndexCount(customerKeywordVO.getInitialIndexCount());
+            customerKeyword.setKeyword(customerKeyword.getKeyword().trim());
+            customerKeyword.setUrl(customerKeyword.getUrl() != null ? customerKeyword.getUrl().trim() : "");
+            customerKeyword.setTitle(customerKeyword.getTitle() != null ? customerKeyword.getTitle().trim() : "");
 
+            customerKeyword.setOriginalUrl(customerKeyword.getOriginalUrl() != null ? customerKeyword.getOriginalUrl().trim() : "");
+            customerKeyword.setOrderNumber(customerKeyword.getOrderNumber() != null ? customerKeyword.getOrderNumber().trim() : "");
 
-            customerKeyword.setTerminalType(customerKeywordVO.getTerminalType());
-            customerKeyword.setOriginalUrl(customerKeywordVO.getOriginalUrl() != null ? customerKeywordVO.getOriginalUrl().trim() : "");
-            customerKeyword.setPaymentStatus(customerKeywordVO.getPaymentStatus() != null ? customerKeywordVO.getPaymentStatus().trim() : "");
-            customerKeyword.setOrderNumber(customerKeywordVO.getOrderNumber() != null ? customerKeywordVO.getOrderNumber().trim() : "");
-
-            customerKeyword.setInitialPosition(customerKeywordVO.getInitialPosition());
-            customerKeyword.setCurrentIndexCount(customerKeywordVO.getCurrentIndexCount());
             customerKeyword.setCurrentPosition(10);
-
-            customerKeyword.setQueryTime(customerKeywordVO.getQueryTime());
-            customerKeyword.setServiceProvider(customerKeywordVO.getServiceProvider());
-            customerKeyword.setOptimizeGroupName(customerKeywordVO.getOptimizeGroupName());
-
-            customerKeyword.setOptimizePlanCount(customerKeywordVO.getOptimizePlanCount());
-            customerKeyword.setOptimizedCount(customerKeywordVO.getOptimizedCount());
-            customerKeyword.setSequence(customerKeywordVO.getSequence());
-
-            customerKeyword.setRelatedKeywords(customerKeywordVO.getRelatedKeywords());
-            customerKeyword.setPositionFirstCost(customerKeywordVO.getPositionFirstCost());
-            customerKeyword.setPositionSecondCost(customerKeywordVO.getPositionSecondCost());
-            customerKeyword.setPositionThirdCost(customerKeywordVO.getPositionThirdCost());
-            customerKeyword.setPositionForthCost(customerKeywordVO.getPositionForthCost());
-            customerKeyword.setPositionFifthCost(customerKeywordVO.getPositionFifthCost());
-
-            customerKeyword.setPositionFirstFee(customerKeywordVO.getPositionFirstFee());
-            customerKeyword.setPositionSecondFee(customerKeywordVO.getPositionSecondFee());
-            customerKeyword.setPositionThirdFee(customerKeywordVO.getPositionThirdFee());
-            customerKeyword.setPositionForthFee(customerKeywordVO.getPositionForthFee());
-            customerKeyword.setPositionFifthFee(customerKeywordVO.getPositionFifthFee());
-            customerKeyword.setPositionFirstPageFee(customerKeywordVO.getPositionFirstPageFee());
-
-            customerKeyword.setCollectMethod(customerKeywordVO.getCollectMethod());
-            customerKeyword.setStartOptimizedTime(customerKeywordVO.getStartOptimizedTime());
-            customerKeyword.setEffectiveFromTime(customerKeywordVO.getEffectiveFromTime());
-            customerKeyword.setEffectiveToTime(customerKeywordVO.getEffectiveToTime());
-
-            customerKeyword.setStatus(customerKeywordVO.getStatus());
-            customerKeyword.setRemarks(customerKeywordVO.getRemarks());
-            customerKeyword.setAutoUpdateNegativeDateTime(new Date());
+            customerKeyword.setAutoUpdateNegativeDateTime(Utils.getCurrentTimestamp());
             customerKeyword.setUpdateTime(new Date());
             customerKeywordDao.insert(customerKeyword);
-
-//            Keyword keyword = new Keyword();
-//            keywordService.addKeywordVOs(customerKeyword.getRelatedKeywords(), customerKeyword.getSearchEngine(),
-//                    KeywordType.RelatedKeyword.name());
-//            keywordService.addKeywordVOs(customerKeyword.getKeyword(), customerKeyword.getSearchEngine(),
-//                    KeywordType.CustomerKeyword.name());
         }
     }
 

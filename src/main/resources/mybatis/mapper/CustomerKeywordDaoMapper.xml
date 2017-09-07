@@ -168,22 +168,6 @@
          </if>
     </update>
 
-    <!--<delete id="deleteCustomerKeywords">
-        <if test="customerKeywordDeletionCritecleanTypeType == 'ByUuid'">
-            delete from t_customer_keyword where fType = #{customerKeywordDeletionCriteria.entryType} AND fTerminalType = #{customerKeywordDeletionCriteria.terminalType}
-            AND fUuid IN
-            <foreach item="item" index="index" collection="customerKeywordDeletionCriteria.customerKeywordUuids" open="(" separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="deleteType == 'emptyTitleAndUrl'">
-            delete from t_customer_keyword where  fCustomerUuid = #{customerKeyword.customerUuid} AND fTerminalType = #{customerKeyword.terminalType}  AND (fTitle = '' or fTitle IS null) AND (fUrl = '' or fUrl IS NULL)
-        </if>
-        <if test="deleteType == 'emptyTitle'">
-            delete from t_customer_keyword where  fCustomerUuid = #{customerKeyword.customerUuid} AND fTerminalType = #{customerKeyword.terminalType}  AND (fTitle = '' or fTitle IS null)
-        </if>
-    </delete>-->
-
     <delete id="deleteCustomerKeywordsByUuid">
         delete from t_customer_keyword where fUuid IN
         <foreach item="item" index="index" collection="customerKeywordUuids" open="(" separator="," close=")">

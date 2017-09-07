@@ -105,9 +105,8 @@
         <script language="javascript">
             $(function () {
                 $("#changeOptimizationGroupDialog").hide();
-                $("#updateCustomerGroupName").hide();
+                $("#updateCustomerKeywordGroupNameDialog").hide();
                 $("#uploadSimpleconDailog").hide();
-                $("#uploadFullconDailog").hide();
                 $("#customerKeywordDialog").hide();
                 $("#customerKeywordDiv").css("margin-top",$("#customerKeywordTopDiv").height());
                 pageLoad();
@@ -582,6 +581,7 @@
                 customerKeyword.collectMethod = collectMethod;
                 var serviceProvider = $.trim($("#customerKeywordDialog #serviceProvider").val());
                 customerKeyword.serviceProvider = serviceProvider;
+                alert(JSON.stringify(customerKeyword));
                 $.ajax({
                     url: '/internal/customerKeyword/saveCustomerKeyword',
                     data: JSON.stringify(customerKeyword),
@@ -637,7 +637,7 @@
                             $("#customerKeywordDialog #positionFirstCost").val(customerKeyword.positionFirstCost);
                             $("#customerKeywordDialog #positionSecondCost").val(customerKeyword.positionSecondCost);
                             $("#customerKeywordDialog #positionThirdCost").val(customerKeyword.positionThirdCost);
-//                            $("#customerKeywordDialog #positionForthCost").val(customerKeyword.positionForthCost);
+                            $("#customerKeywordDialog #positionForthCost").val(customerKeyword.positionForthCost);
                             $("#customerKeywordDialog #positionFifthCost").val(customerKeyword.positionFifthCost);
                             $("#customerKeywordDialog #serviceProvider").val(customerKeyword.serviceProvider);
                             $("#customerKeywordDialog #sequence").val(customerKeyword.sequence);
@@ -664,10 +664,15 @@
             //关键字Excel上传(简化版)
             function uploadCustomerKeywords(uuid, excelType){
                 $('#uploadsimpleconForm')[0].reset();
+                if(excelType=='SuperUserSimple'){
+                    $("#uploadSimpleconDailog").attr("title","Excel简易版上传")
+                }else{
+                    $("#uploadSimpleconDailog").attr("title","Excel完整版上传")
+                }
                 $("#uploadSimpleconDailog").dialog({
                     resizable: false,
-                    width: 400,
-                    height: 200,
+                    width: 300,
+                    height: 170,
                     modal: true,
                     position:{
                         my:"center top",
@@ -676,7 +681,7 @@
                     },
                     //按钮
                     buttons: {
-                        "提交": function () {
+                        "上传": function () {
                             var uploadForm = $("#uploadsimpleconForm");
                             var uploadFile = uploadForm.find("#uploadsimpleconFile").val();
                             var fileTypes = new Array("xls", "xlsx");  //定义可支持的文件类型数组
@@ -732,8 +737,29 @@
 
             //导出结果
             function downloadCustomerKeywordInfo() {
-                var customerKeywordCrilteria = $("#searchCustomerKeywordForm").serialize().trim();
-                location.href='/internal/customerKeyword/downloadCustomerKeywordInfo/?'+customerKeywordCrilteria;
+                var customerKeywordCrilteriaArray = $("#searchCustomerKeywordForm").serializeArray();
+                var formData = new FormData();
+                $.each(customerKeywordCrilteriaArray, function(idx, val){
+                    formData.append(val.name, val.value);
+                });
+                $.ajax({
+                    url: '/internal/customerKeyword/downloadCustomerKeywordInfo',
+                    type: 'POST',
+                    cache: false,
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (result) {
+                        if (result) {
+                            $().toastmessage('showSuccessToast', "导出成功");
+                        } else {
+                            $().toastmessage('showErrorToast',"导出失败");
+                        }
+                    },
+                    error: function () {
+                        $().toastmessage('showErrorToast',"导出失败");
+                    }
+                });
             }
             //显示排名为0
             function noPositionValue() {
@@ -916,7 +942,7 @@
                 </td>
                 <td align="center" width=30>
                     <div style="height:16;"><a
-                            href="/internal/customerKeyword/historyPositionAndIndex/${customerKeyword.uuid}/30"
+                            href="/internal/customerKeywordPositionIndexLog/historyPositionAndIndex/${customerKeyword.uuid}/30"
                             target="_blank">${customerKeyword.currentIndexCount}
                     </a></div>
                 </td>
@@ -938,7 +964,7 @@
                 <td align="center" width=30>${customerKeyword.invalidRefreshCount}</td>
                 <td align="center" width=60>${customerKeyword.feeString}</td>
                 <td align="center" width=80><fmt:formatDate value="${customerKeyword.startOptimizedTime}" pattern="yyyy-MM-dd"/></td>
-                <td align="center" width=80><fmt:formatDate value="${customerKeyword.lastOptimizeDateTime}" pattern="yyyy-MM-dd  HH:mm"/></td>
+                <td align="center" width=80><fmt:formatDate value="${customerKeyword.lastOptimizeDateTime}" pattern="yyyy-MM-dd HH:mm"/></td>
                 <td align="center" width=50>${customerKeyword.orderNumber}</td>
                 <td align="center" width=100>${customerKeyword.remarks==null?"":customerKeyword.remarks} </td>
                 <c:choose>
@@ -996,18 +1022,13 @@
         目标组名称:<input type="text" id="groupName" name="groupName" style="width:150px">
     </form>
 </div>
-<div id="uploadSimpleconDailog"  style="text-align: center;height: 60px;"  title="Excel上传(简化版)">
-    <form method="post" id="uploadsimpleconForm"  enctype="multipart/form-data" >
+<div id="uploadSimpleconDailog"  style="text-align: center;height: 60px;"  title="Excel上传">
+    <form method="post" id="uploadsimpleconForm" style="margin-top: 10px"  enctype="multipart/form-data" >
         <input type="hidden" id="customerUuid" name="customerUuid" value="${customerKeywordCrilteria.customerUuid}">
-        请选择要上传的文件(<font color="red">简化版</font>):<input type="file" id="uploadsimpleconFile" name="file" >
+        请选择要上传的文件:<input type="file" id="uploadsimpleconFile" name="file" >
     </form>
 </div>
-<div id="uploadFullconDailog" style="text-align: center;height: 60px;"   title="Excel上传(完整版)">
-    <form method="post" id="uploadFullconForm" enctype="multipart/form-data">
-        <input type="hidden" id="customerUuid" name="customerUuid" value="${customerKeywordCrilteria.customerUuid}">
-        请选择要上传的文件(<font color="red">完整版</font>):<input type="file" id="uploadFullconFile" name="file">
-    </form>
-</div>
+
 <div id="customerKeywordDialog">
     <form id="customerKeywordForm">
         <ul>
@@ -1043,13 +1064,13 @@
                     <li><span class="customerKeywordSpanClass">第三报价:</span><input name="positionThirdFee" id="positionThirdFee" value=""
                                                                                   style="width:100px;" type="text" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)">元
                     </li>
-                    <li><span class="customerKeywordSpanClass">第四报价:</span><input name="positionForthFee" id="positionForthFee" value="0"
+                    <li><span class="customerKeywordSpanClass">第四报价:</span><input name="positionForthFee" id="positionForthFee" value=""
                                                                                   style="width:100px;" type="text" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)">元
                     </li>
-                    <li><span class="customerKeywordSpanClass">第五报价:</span><input name="positionFifthFee" id="positionFifthFee" value="0"
+                    <li><span class="customerKeywordSpanClass">第五报价:</span><input name="positionFifthFee" id="positionFifthFee" value=""
                                                                                   style="width:100px;" type="text" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)">元
                     </li>
-                    <li><span class="customerKeywordSpanClass">首页报价:</span><input name="positionFirstPageFee" id="positionFirstPageFee" value="0"
+                    <li><span class="customerKeywordSpanClass">首页报价:</span><input name="positionFirstPageFee" id="positionFirstPageFee" value=""
                                                                                   style="width:100px;" type="text" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)">元
                     </li></ul>
                 <c:if test="${user.vipType}">
@@ -1058,10 +1079,10 @@
                         <li><a href="javascript:showCustomerKeywordCost()">&nbsp;显示成本(再次点击关闭)</a></li>
                         <ul id="customerKeywordCostFrom" style="display: none;">
                             <li><span class="customerKeywordSpanClass">第一成本:</span><input name="positionFirstCost" id="positionFirstCost"
-                                                                                          onBlur="setSecondThirdDefaultCost();" value="0"
+                                                                                          onBlur="setSecondThirdDefaultCost();" value=""
                                                                                           style="width:100px;" type="text" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)">元 </li>
                             <li><span class="customerKeywordSpanClass">第二成本:</span><input name="positionSecondCost" id="positionSecondCost"
-                                                                                          onBlur="setThirdDefaultCost();" value="0"
+                                                                                          onBlur="setThirdDefaultCost();" value=""
                                                                                           style="width:100px;" type="text" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)">元
                             </li>
                             <li><span class="customerKeywordSpanClass">第三成本:</span><input name="positionThirdCost" id="positionThirdCost"

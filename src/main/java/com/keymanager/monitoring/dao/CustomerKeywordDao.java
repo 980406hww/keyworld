@@ -38,6 +38,8 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     List<CustomerKeyword> searchCustomerKeywords(Page<CustomerKeyword> page, @Param("customerKeywordCrilteria") CustomerKeywordCrilteria customerKeywordCrilteria);
 
+    List<CustomerKeyword> searchCustomerKeywords(@Param("customerKeywordCrilteria") CustomerKeywordCrilteria customerKeywordCrilteria);
+
     //重构部分
     //修改该用户关键字组名
     void updateCustomerKeywordGroupName(@Param("customerKeywordUpdateGroupCriteria")CustomerKeywordUpdateGroupCriteria customerKeywordUpdateGroupCriteria);

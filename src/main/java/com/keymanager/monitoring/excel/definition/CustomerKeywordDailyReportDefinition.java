@@ -1,4 +1,4 @@
-package com.keymanager.excel.definition;
+package com.keymanager.monitoring.excel.definition;
 
 public enum CustomerKeywordDailyReportDefinition {
 	Sequence(0, "序号"),

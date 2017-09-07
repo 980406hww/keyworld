@@ -1,4 +1,4 @@
-package com.keymanager.excel.operator;
+package com.keymanager.monitoring.excel.operator;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,11 +7,10 @@ import java.util.List;
 import com.keymanager.monitoring.entity.CustomerKeyword;
 import jxl.read.biff.BiffException;
 
-import com.keymanager.excel.definition.CustomerKeywordInfoDefinition;
+import com.keymanager.monitoring.excel.definition.CustomerKeywordInfoDefinition;
 import com.keymanager.util.Utils;
 import com.keymanager.util.excel.ExcelWriteException;
 import com.keymanager.util.excel.JXLExcelWriter;
-import com.keymanager.value.CustomerKeywordVO;
 
 public class CustomerKeywordInfoExcelWriter {
 	private final String fileName = "CustomerKeywordInfo.xls";
