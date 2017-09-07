@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.keymanager.monitoring.entity.CustomerKeyword;
 import jxl.Cell;
 import jxl.read.biff.BiffException;
 
@@ -24,9 +25,8 @@ public abstract class AbstractExcelReader {
 			return new SuperUserSimpleKeywordExcelOperator(inputStream);
 		}else if(Constants.EXCEL_TYPE_SUPER_USER_FULL.equals(excelType)){
 			return new SuperUserFullKeywordExcelOperator(inputStream);
-		}else{
-			return new AgentKeywordExcelOperator(inputStream);
 		}
+		return null;
 	}
 
 	public AbstractExcelReader(InputStream inputStream) throws BiffException, IOException {
@@ -35,7 +35,7 @@ public abstract class AbstractExcelReader {
 		reader.setCurrentWorkSheetWithName("KeywordList");
 	}
 	
-	public abstract CustomerKeywordVO readRow(int rowIndex);
+	public abstract CustomerKeyword readRow(int rowIndex);
 	
 	protected String getStringValue(int columnIndex, int rowIndex) {
 		Cell cell = reader.getCell(columnIndex, rowIndex);
@@ -69,15 +69,15 @@ public abstract class AbstractExcelReader {
 		return "";
 	}
 
-	public List readDataFromExcel() {
-		List<CustomerKeywordVO> customerKeywordVOs = new ArrayList<CustomerKeywordVO>();
+	public List<CustomerKeyword> readDataFromExcel() {
+		List<CustomerKeyword> customerKeywords= new ArrayList<CustomerKeyword>();
 		for (int i = 1; i < reader.getCurrentSheet().getRows(); i++){
-			CustomerKeywordVO customerKeywordVO = this.readRow(i);
-			if(customerKeywordVO != null){
-				customerKeywordVOs.add(customerKeywordVO);
+			CustomerKeyword customerKeyword = this.readRow(i);
+			if(customerKeyword != null){
+				customerKeywords.add(customerKeyword);
 			}
 		}
-		return customerKeywordVOs;
+		return customerKeywords;
 	}
 
 }
