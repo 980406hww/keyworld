@@ -109,4 +109,8 @@
         AND cs.fClientID = #{clientID}
     </select>
 
+    <select id="resetRestartStatusForProcessing">
+       UPDATE t_client_status SET fRestartStatus = NULL WHERE (fRestartStatus = 'Processing' or fRestartStatus = 'Logging')
+    </select>
+
 </mapper>

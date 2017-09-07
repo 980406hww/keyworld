@@ -189,7 +189,7 @@
 							<td colspan="2" align="right">
 								<a target="_blank" href="javascript:showTargetVersionSettingDialog(this)">设定目标版本</a>
 								|<a target="_blank" href="javascript:showRenewalSettingDialog(this)">续费</a>
-								|<a target="_blank" href="javascript:delAllItems()">删除所选</a>
+								|<a target="_blank" href="javascript:delAllItems(this)">删除所选</a>
 								|<a target="_blank" href="javascript:resetRestartStatus()">重置重启状态</a>
 								|<a target="_blank" href="/client/uploadvnc.jsp">上传VNC文件</a>
 								|<a target="_blank" href="/client/downloadvnc.jsp">下载VNC连接压缩文件</a>
@@ -293,10 +293,10 @@
 				</br>
 				<c:choose>
 					<c:when test="${clientStatus.valid}">
-						<a href="javascript:stopMonitor('${clientStatus.clientID}')">暂停监控</a>
+						<a href="javascript:changeMonitorType('${clientStatus.clientID}',false)">暂停监控</a>
 					</c:when>
 					<c:otherwise>
-						<a href="javascript:startMonitor('${clientStatus.clientID}')">开始监控</a>
+						<a href="javascript:changeMonitorType('${clientStatus.clientID}',true)">开始监控</a>
 					</c:otherwise>
 				</c:choose>
 				&nbsp;
@@ -370,6 +370,54 @@
             $("#searchClientStatusForm").find("#currentPageNumberHidden").val(1);
         }
 
+        function showUploadVNCDialog() {
+            $("#uploadVNCDialog").dialog({
+                resizable: false,
+                width: 430,
+                modal: true,
+                title: '上传VNC文件',
+                buttons: {
+                    "上传": function () {
+                        var fileValue = $("#uploadVNCDialog").find("#file").val();
+                        if(fileValue == ""){
+                            alert("请选择要上传的VNC配置文件!");
+                            return false;
+                        }
+                        var posIndex = fileValue.indexOf(".xml");
+                        if (posIndex == -1) {
+                            alert("只能上传的XML文件！");
+                            return false;
+                        }
+
+                        var formData = new FormData();
+                        formData.append('file', $("#uploadVNCDialog").find("#file")[0].files[0]);
+						$.ajax({
+							url: '/internal/clientstatus/uploadVNCFile',
+							type: 'POST',
+							cache: false,
+							data: formData,
+							processData: false,
+							contentType: false,
+							success: function (result) {
+								if (result) {
+									showInfo("上传成功", self);
+								} else {
+									showInfo("上传失败", self);
+								}
+							},
+							error: function () {
+								showInfo("上传失败", self);
+							}
+						});
+                        $(this).dialog("close");
+                    },
+                    "取消": function () {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+        }
+
 		function selectAll(self){
 			var a = document.getElementsByName("clientID");
 			if(self.checked){
@@ -398,58 +446,77 @@
 				obj.style.backgroundColor = "#ffffff";
 			}
 		}
-		function delItem(clientID)
-		{
-		   if (confirm("确实要删除这台终端吗?") == false) return;
-		   document.location = "delete.jsp?clientID=" + clientID;
-		}
-		function getSelectedClientIDs(){
-			var a = document.getElementsByName("clientID");
-			var clientIDs = '';
-			for(var i = 0;i<a.length;i++){
-				//alert(a[i].value);
-				if(a[i].checked){
-					if(clientIDs === ''){
-						clientIDs = "'" + a[i].value + "'";
-					}else{
-						clientIDs = clientIDs + ",'" + a[i].value + "'";	
-					}
-				}
-			}
-			return clientIDs;
-		}
-		function delAllItems()
-		{
-		   if (confirm("确实要删除选中的终端吗?") == false) return;
-		   var clientIDs = getSelectedClientIDs();
-		   
-		   $$$.ajax({
-		        url: '/client/deleteclientstatuses.jsp?clientIDs=' + clientIDs ,
-		        type: 'Get',
-		        success: function (data) {
-		        	data = data.replace(/\r\n/gm,"");
-		        	if(data === "1"){
-		        		showInfo("更新成功！", self);
-		        		window.location.reload();
-		        	}else{
-		        		showInfo("更新失败！", self);
-		        	}
-		        },
-		        error: function () {
-		        	showInfo("更新失败！", self);
-		        }
-		    });
-		}
-		function resetRestartStatus()
-		{
+
+        function delItem(clientID) {
+            if (confirm("确定要删除这台终端吗?") == false) return;
+            $.ajax({
+                url: '/internal/clientstatus/deleteClientStatus/' + clientID,
+                type: 'POST',
+                success: function (result) {
+                    if (result) {
+                        showInfo("操作成功", self);
+                        window.location.reload();
+                    } else {
+                        showInfo("操作失败", self);
+                    }
+                },
+                error: function () {
+                    showInfo("操作失败", self);
+                }
+            });
+        }
+
+        function delAllItems(self) {
+            var clientIDs = getSelectedClientIDs();
+            if (clientIDs === '') {
+                alert('请选择要删除的终端');
+                return;
+            }
+            if (confirm("确定要删除这些负面词吗?") == false) return;
+            var postData = {};
+            postData.clientIDs = clientIDs.split(",");
+            $.ajax({
+                url: '/internal/clientstatus/deleteClientStatuses',
+                data: JSON.stringify(postData),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                type: 'POST',
+                success: function (data) {
+                    if (data) {
+                        showInfo("操作成功", self);
+                        window.location.reload();
+                    } else {
+                        showInfo("操作失败", self);
+                    }
+                },
+                error: function () {
+                    showInfo("操作失败", self);
+                }
+            });
+        }
+
+        function getSelectedClientIDs() {
+            var clientIDs = '';
+            $.each($("input[name=clientID]:checkbox:checked"), function () {
+                if (clientIDs === '') {
+                    clientIDs = $(this).val();
+                } else {
+                    clientIDs = clientIDs + "," + $(this).val();
+                }
+            });
+            return clientIDs;
+        }
+
+		function resetRestartStatus() {
 			if (confirm("确实要重设状态为Processing或者Logging终端的重启状态吗?") == false) return;
 			$$$.ajax({
-				url: '/client/resetRestartStatus.jsp' ,
-				type: 'Get',
+				url: '/internal/clientstatus/resetRestartStatusForProcessing' ,
+				type: 'POST',
 				success: function (data) {
-					data = data.replace(/\r\n/gm,"");
-					data = data.replace(/\n/gm,"");
-					if(data === "1"){
+					if(data){
 						showInfo("更新成功！", self);
 						window.location.reload();
 					}else{
@@ -461,16 +528,34 @@
 				}
 			});
 		}
-		function stopMonitor(clientID) {
-			if (confirm("确实要暂停监控这台终端吗?") == false)
-				return;
-			document.location = "stopMonitor.jsp?clientID=" + clientID;
+		function changeMonitorType(clientID, monitorType) {
+		    if(monitorType) {
+                if (confirm("确实要开始监控这台终端吗?") == false) {
+                    return;
+				}
+			} else {
+                if (confirm("确实要暂停监控这台终端吗?") == false) {
+					return;
+				}
+			}
+            $.ajax({
+                url: '/internal/clientstatus/changeMonitorType/' + clientID,
+                type: 'POST',
+                success: function (result) {
+                    if (result) {
+                        showInfo("操作成功", self);
+                        window.location.reload();
+                    } else {
+                        showInfo("操作失败", self);
+                    }
+                },
+                error: function () {
+                    showInfo("操作失败", self);
+                }
+            });
+
 		}
-		function startMonitor(clientID) {
-			if (confirm("确实要开始监控这台终端吗?") == false)
-				return;
-			document.location = "startMonitor.jsp?clientID=" + clientID;
-		}
+
 		function updateGroup(self){
 			var clientID = self.id;
 			var groupName = self.value.trim();
@@ -561,13 +646,11 @@
 		    $$$.ajax({
 		        url: '/internal/clientstatus/getClientStatus/' + clientID,
 		        type: 'Get',
-		        success: function (data) {
-		        	data = data.replace(/\r\n/gm,"");
-		        	if(data == null){
+		        success: function (clientStatus) {
+		        	if(clientStatus == null){
 		        		showInfo("获取信息失败！", self);
 		        	}else{
-		        		var clientStatusVO = JSON.parse(data);
-		        		initSettingDialog(clientStatusVO, self);
+		        		initSettingDialog(clientStatus, self);
 		        	}
 		        },
 		        error: function () {
@@ -575,151 +658,154 @@
 		        }
 		    });
 		}
-		function initSettingDialog(clientStatusVO, self){
+		function initSettingDialog(clientStatus, self){
 			var settingDialogDiv = $$$("#changeSettingDialog");
-			settingDialogDiv.find("#settingClientID").val(clientStatusVO.clientID);
-			settingDialogDiv.find("#settingGroup").val(clientStatusVO.group != null ? clientStatusVO.group : "");
-			settingDialogDiv.find("#settingOperationType").val(clientStatusVO.operationType != null ? clientStatusVO.operationType : "");
-			if(clientStatusVO.pageSize != null){
-				settingDialogDiv.find("#pageSize").val(clientStatusVO.pageSize);
+			settingDialogDiv.find("#settingClientID").val(clientStatus.clientID);
+			settingDialogDiv.find("#settingGroup").val(clientStatus.group != null ? clientStatus.group : "");
+			settingDialogDiv.find("#settingOperationType").val(clientStatus.operationType != null ? clientStatus.operationType : "");
+			if(clientStatus.pageSize != null){
+				settingDialogDiv.find("#pageSize").val(clientStatus.pageSize);
 			}
-			if(clientStatusVO.page != null){
-				settingDialogDiv.find("#page").val(clientStatusVO.page);
+			if(clientStatus.page != null){
+				settingDialogDiv.find("#page").val(clientStatus.page);
 			}
-			if(clientStatusVO.zhanneiPercent != null){
-				settingDialogDiv.find("#zhanneiPercent").val(clientStatusVO.zhanneiPercent);
+			if(clientStatus.zhanneiPercent != null){
+				settingDialogDiv.find("#zhanneiPercent").val(clientStatus.zhanneiPercent);
 			}
-			if(clientStatusVO.dragPercent  != null){
-				settingDialogDiv.find("#dragPercent ").val(clientStatusVO.dragPercent );
+			if(clientStatus.dragPercent  != null){
+				settingDialogDiv.find("#dragPercent ").val(clientStatus.dragPercent );
 			}
-			if(clientStatusVO.kuaizhaoPercent != null){
-				settingDialogDiv.find("#kuaizhaoPercent").val(clientStatusVO.kuaizhaoPercent);
+			if(clientStatus.kuaizhaoPercent != null){
+				settingDialogDiv.find("#kuaizhaoPercent").val(clientStatus.kuaizhaoPercent);
 			}
-			if(clientStatusVO.baiduSemPercent != null){
-				settingDialogDiv.find("#baiduSemPercent").val(clientStatusVO.baiduSemPercent);
+			if(clientStatus.baiduSemPercent != null){
+				settingDialogDiv.find("#baiduSemPercent").val(clientStatus.baiduSemPercent);
 			}
-			if(clientStatusVO.multiBrowser != null){
-				settingDialogDiv.find("#multiBrowser").val(clientStatusVO.multiBrowser);
+			if(clientStatus.multiBrowser != null){
+				settingDialogDiv.find("#multiBrowser").val(clientStatus.multiBrowser);
 			}
-			if(clientStatusVO.clearCookie != null){
-				settingDialogDiv.find("#clearCookie").val(clientStatusVO.clearCookie);
+			if(clientStatus.clearCookie != null){
+				settingDialogDiv.find("#clearCookie").val(clientStatus.clearCookie);
 			}
-			settingDialogDiv.find("#allowSwitchGroup ").val(clientStatusVO.allowSwitchGroup );
-			settingDialogDiv.find("#disableStatistics ").val(clientStatusVO.disableStatistics );
+			settingDialogDiv.find("#allowSwitchGroup ").val(clientStatus.allowSwitchGroup );
+			settingDialogDiv.find("#disableStatistics ").val(clientStatus.disableStatistics );
 
-			settingDialogDiv.find("#entryPageMinCount").val(clientStatusVO.entryPageMinCount);
-			settingDialogDiv.find("#entryPageMaxCount").val(clientStatusVO.entryPageMaxCount);
-			settingDialogDiv.find("#pageRemainMinTime").val(clientStatusVO.pageRemainMinTime);
-			settingDialogDiv.find("#pageRemainMaxTime").val(clientStatusVO.pageRemainMaxTime);
-			settingDialogDiv.find("#inputDelayMinTime").val(clientStatusVO.inputDelayMinTime);
-			settingDialogDiv.find("#inputDelayMaxTime").val(clientStatusVO.inputDelayMaxTime);
-			settingDialogDiv.find("#slideDelayMinTime").val(clientStatusVO.slideDelayMinTime);
-			settingDialogDiv.find("#slideDelayMaxTime").val(clientStatusVO.slideDelayMaxTime);
-			settingDialogDiv.find("#titleRemainMinTime").val(clientStatusVO.titleRemainMinTime);
-			settingDialogDiv.find("#titleRemainMaxTime").val(clientStatusVO.titleRemainMaxTime);
-			settingDialogDiv.find("#waitTimeAfterOpenBaidu").val(clientStatusVO.waitTimeAfterOpenBaidu);
-			settingDialogDiv.find("#waitTimeBeforeClick").val(clientStatusVO.waitTimeBeforeClick);
-			settingDialogDiv.find("#waitTimeAfterClick").val(clientStatusVO.waitTimeAfterClick);
-			settingDialogDiv.find("#maxUserCount").val(clientStatusVO.maxUserCount);
-			settingDialogDiv.find("#optimizeKeywordCountPerIP").val(clientStatusVO.optimizeKeywordCountPerIP);
+			settingDialogDiv.find("#entryPageMinCount").val(clientStatus.entryPageMinCount);
+			settingDialogDiv.find("#entryPageMaxCount").val(clientStatus.entryPageMaxCount);
+			settingDialogDiv.find("#pageRemainMinTime").val(clientStatus.pageRemainMinTime);
+			settingDialogDiv.find("#pageRemainMaxTime").val(clientStatus.pageRemainMaxTime);
+			settingDialogDiv.find("#inputDelayMinTime").val(clientStatus.inputDelayMinTime);
+			settingDialogDiv.find("#inputDelayMaxTime").val(clientStatus.inputDelayMaxTime);
+			settingDialogDiv.find("#slideDelayMinTime").val(clientStatus.slideDelayMinTime);
+			settingDialogDiv.find("#slideDelayMaxTime").val(clientStatus.slideDelayMaxTime);
+			settingDialogDiv.find("#titleRemainMinTime").val(clientStatus.titleRemainMinTime);
+			settingDialogDiv.find("#titleRemainMaxTime").val(clientStatus.titleRemainMaxTime);
+			settingDialogDiv.find("#waitTimeAfterOpenBaidu").val(clientStatus.waitTimeAfterOpenBaidu);
+			settingDialogDiv.find("#waitTimeBeforeClick").val(clientStatus.waitTimeBeforeClick);
+			settingDialogDiv.find("#waitTimeAfterClick").val(clientStatus.waitTimeAfterClick);
+			settingDialogDiv.find("#maxUserCount").val(clientStatus.maxUserCount);
+			settingDialogDiv.find("#optimizeKeywordCountPerIP").val(clientStatus.optimizeKeywordCountPerIP);
 
-			settingDialogDiv.find("#oneIPOneUser")[0].checked = (clientStatusVO.oneIPOneUser == 1) ? true : false;
-			settingDialogDiv.find("#randomlyClickNoResult")[0].checked = (clientStatusVO.randomlyClickNoResult == 1) ? true : false;
-			settingDialogDiv.find("#justVisitSelfPage")[0].checked = (clientStatusVO.justVisitSelfPage == 1) ? true : false;
-			settingDialogDiv.find("#sleepPer2Words")[0].checked = (clientStatusVO.sleepPer2Words == 1) ? true : false;
-			settingDialogDiv.find("#supportPaste")[0].checked = (clientStatusVO.supportPaste == 1) ? true : false;
-			settingDialogDiv.find("#moveRandomly")[0].checked = (clientStatusVO.moveRandomly == 1) ? true : false;
-			settingDialogDiv.find("#parentSearchEntry")[0].checked = (clientStatusVO.parentSearchEntry == 1) ? true : false;
-			settingDialogDiv.find("#clearLocalStorage")[0].checked = (clientStatusVO.clearLocalStorage == 1) ? true : false;
-			settingDialogDiv.find("#lessClickAtNight")[0].checked = (clientStatusVO.lessClickAtNight == 1) ? true : false;
-			settingDialogDiv.find("#sameCityUser")[0].checked = (clientStatusVO.sameCityUser == 1) ? true : false;
-			settingDialogDiv.find("#locateTitlePosition")[0].checked = (clientStatusVO.locateTitlePosition == 1) ? true : false;
-			settingDialogDiv.find("#baiduAllianceEntry")[0].checked = (clientStatusVO.baiduAllianceEntry == 1) ? true : false;
-			settingDialogDiv.find("#justClickSpecifiedTitle")[0].checked = (clientStatusVO.justClickSpecifiedTitle == 1) ? true : false;
-			settingDialogDiv.find("#randomlyClickMoreLink")[0].checked = (clientStatusVO.randomlyClickMoreLink == 1) ? true : false;
-			settingDialogDiv.find("#moveUp20")[0].checked = (clientStatusVO.moveUp20 == 1) ? true : false;
+			settingDialogDiv.find("#oneIPOneUser")[0].checked = (clientStatus.oneIPOneUser == 1) ? true : false;
+			settingDialogDiv.find("#randomlyClickNoResult")[0].checked = (clientStatus.randomlyClickNoResult == 1) ? true : false;
+			settingDialogDiv.find("#justVisitSelfPage")[0].checked = (clientStatus.justVisitSelfPage == 1) ? true : false;
+			settingDialogDiv.find("#sleepPer2Words")[0].checked = (clientStatus.sleepPer2Words == 1) ? true : false;
+			settingDialogDiv.find("#supportPaste")[0].checked = (clientStatus.supportPaste == 1) ? true : false;
+			settingDialogDiv.find("#moveRandomly")[0].checked = (clientStatus.moveRandomly == 1) ? true : false;
+			settingDialogDiv.find("#parentSearchEntry")[0].checked = (clientStatus.parentSearchEntry == 1) ? true : false;
+			settingDialogDiv.find("#clearLocalStorage")[0].checked = (clientStatus.clearLocalStorage == 1) ? true : false;
+			settingDialogDiv.find("#lessClickAtNight")[0].checked = (clientStatus.lessClickAtNight == 1) ? true : false;
+			settingDialogDiv.find("#sameCityUser")[0].checked = (clientStatus.sameCityUser == 1) ? true : false;
+			settingDialogDiv.find("#locateTitlePosition")[0].checked = (clientStatus.locateTitlePosition == 1) ? true : false;
+			settingDialogDiv.find("#baiduAllianceEntry")[0].checked = (clientStatus.baiduAllianceEntry == 1) ? true : false;
+			settingDialogDiv.find("#justClickSpecifiedTitle")[0].checked = (clientStatus.justClickSpecifiedTitle == 1) ? true : false;
+			settingDialogDiv.find("#randomlyClickMoreLink")[0].checked = (clientStatus.randomlyClickMoreLink == 1) ? true : false;
+			settingDialogDiv.find("#moveUp20")[0].checked = (clientStatus.moveUp20 == 1) ? true : false;
 
-			settingDialogDiv.find("#waitTimeAfterOpenBaidu").val(clientStatusVO.waitTimeAfterOpenBaidu);
-			settingDialogDiv.find("#waitTimeBeforeClick").val(clientStatusVO.waitTimeBeforeClick);
-			settingDialogDiv.find("#waitTimeAfterClick").val(clientStatusVO.waitTimeAfterClick);
-			settingDialogDiv.find("#maxUserCount").val(clientStatusVO.maxUserCount);
+			settingDialogDiv.find("#waitTimeAfterOpenBaidu").val(clientStatus.waitTimeAfterOpenBaidu);
+			settingDialogDiv.find("#waitTimeBeforeClick").val(clientStatus.waitTimeBeforeClick);
+			settingDialogDiv.find("#waitTimeAfterClick").val(clientStatus.waitTimeAfterClick);
+			settingDialogDiv.find("#maxUserCount").val(clientStatus.maxUserCount);
 
-			settingDialogDiv.find("#host").val(clientStatusVO.host != null ? clientStatusVO.host : "");
-			settingDialogDiv.find("#port").val(clientStatusVO.port != null ? clientStatusVO.port : "");
-			settingDialogDiv.find("#userName").val(clientStatusVO.userName != null ? clientStatusVO.userName : "Administrator");
-			settingDialogDiv.find("#password").val(clientStatusVO.password != null ? clientStatusVO.password : "doshows123");
-			settingDialogDiv.find("#vpsBackendSystemComputerID").val(clientStatusVO.vpsBackendSystemComputerID != null ? clientStatusVO.vpsBackendSystemComputerID :
+			settingDialogDiv.find("#host").val(clientStatus.host != null ? clientStatus.host : "");
+			settingDialogDiv.find("#port").val(clientStatus.port != null ? clientStatus.port : "");
+			settingDialogDiv.find("#userName").val(clientStatus.userName != null ? clientStatus.userName : "Administrator");
+			settingDialogDiv.find("#password").val(clientStatus.password != null ? clientStatus.password : "doshows123");
+			settingDialogDiv.find("#vpsBackendSystemComputerID").val(clientStatus.vpsBackendSystemComputerID != null ? clientStatus.vpsBackendSystemComputerID :
 					"");
-			settingDialogDiv.find("#vpsBackendSystemPassword").val(clientStatusVO.vpsBackendSystemPassword != null ? clientStatusVO.vpsBackendSystemPassword : "doshows123");
+			settingDialogDiv.find("#vpsBackendSystemPassword").val(clientStatus.vpsBackendSystemPassword != null ? clientStatus.vpsBackendSystemPassword : "doshows123");
 			settingDialogDiv[0].style.left = getTop(self); //鼠标目前在X轴上的位置，加10是为了向右边移动10个px方便看到内容
 			settingDialogDiv.show();
 		}
 		function saveChangeSetting(self){
 			var settingDialogDiv = $$$("#changeSettingDialog");
-			var clientStatusVO = {};
-			clientStatusVO.clientID = settingDialogDiv.find("#settingClientID").val();
-			clientStatusVO.group = settingDialogDiv.find("#settingGroup").val();
-			clientStatusVO.operationType = settingDialogDiv.find("#settingOperationType").val();
-			clientStatusVO.pageSize = settingDialogDiv.find("#pageSize").val();
-			clientStatusVO.page = settingDialogDiv.find("#page").val();
-			clientStatusVO.dragPercent  = settingDialogDiv.find("#dragPercent ").val();
-			clientStatusVO.zhanneiPercent = settingDialogDiv.find("#zhanneiPercent").val();
-			clientStatusVO.kuaizhaoPercent = settingDialogDiv.find("#kuaizhaoPercent").val();
-			clientStatusVO.baiduSemPercent = settingDialogDiv.find("#baiduSemPercent").val();
-			clientStatusVO.multiBrowser = settingDialogDiv.find("#multiBrowser").val();
-			clientStatusVO.clearCookie = settingDialogDiv.find("#clearCookie").val();
-			clientStatusVO.allowSwitchGroup = settingDialogDiv.find("#allowSwitchGroup").val();
-			clientStatusVO.disableStatistics = settingDialogDiv.find("#disableStatistics").val();
-			clientStatusVO.host = settingDialogDiv.find("#host").val();
-			clientStatusVO.port = settingDialogDiv.find("#port").val();
-			clientStatusVO.userName = settingDialogDiv.find("#userName").val();
-			clientStatusVO.password = settingDialogDiv.find("#password").val();
-			clientStatusVO.vpsBackendSystemComputerID = settingDialogDiv.find("#vpsBackendSystemComputerID").val();
-			clientStatusVO.vpsBackendSystemPassword = settingDialogDiv.find("#vpsBackendSystemPassword").val();
+			var clientStatus = {};
+			clientStatus.clientID = settingDialogDiv.find("#settingClientID").val();
+			clientStatus.group = settingDialogDiv.find("#settingGroup").val();
+			clientStatus.operationType = settingDialogDiv.find("#settingOperationType").val();
+			clientStatus.pageSize = settingDialogDiv.find("#pageSize").val();
+			clientStatus.page = settingDialogDiv.find("#page").val();
+			clientStatus.dragPercent  = settingDialogDiv.find("#dragPercent ").val();
+			clientStatus.zhanneiPercent = settingDialogDiv.find("#zhanneiPercent").val();
+			clientStatus.kuaizhaoPercent = settingDialogDiv.find("#kuaizhaoPercent").val();
+			clientStatus.baiduSemPercent = settingDialogDiv.find("#baiduSemPercent").val();
+			clientStatus.multiBrowser = settingDialogDiv.find("#multiBrowser").val();
+			clientStatus.clearCookie = settingDialogDiv.find("#clearCookie").val();
+			clientStatus.allowSwitchGroup = settingDialogDiv.find("#allowSwitchGroup").val();
+			clientStatus.disableStatistics = settingDialogDiv.find("#disableStatistics").val();
+			clientStatus.host = settingDialogDiv.find("#host").val();
+			clientStatus.port = settingDialogDiv.find("#port").val();
+			clientStatus.userName = settingDialogDiv.find("#userName").val();
+			clientStatus.password = settingDialogDiv.find("#password").val();
+			clientStatus.vpsBackendSystemComputerID = settingDialogDiv.find("#vpsBackendSystemComputerID").val();
+			clientStatus.vpsBackendSystemPassword = settingDialogDiv.find("#vpsBackendSystemPassword").val();
 
-			clientStatusVO.entryPageMinCount = settingDialogDiv.find("#entryPageMinCount").val();
-			clientStatusVO.entryPageMaxCount = settingDialogDiv.find("#entryPageMaxCount").val();
-			clientStatusVO.disableVisitWebsite = settingDialogDiv.find("#disableVisitWebsite").val();
-			clientStatusVO.pageRemainMinTime = settingDialogDiv.find("#pageRemainMinTime").val();
-			clientStatusVO.pageRemainMaxTime = settingDialogDiv.find("#pageRemainMaxTime").val();
-			clientStatusVO.inputDelayMinTime = settingDialogDiv.find("#inputDelayMinTime").val();
-			clientStatusVO.inputDelayMaxTime = settingDialogDiv.find("#inputDelayMaxTime").val();
-			clientStatusVO.slideDelayMinTime = settingDialogDiv.find("#slideDelayMinTime").val();
-			clientStatusVO.slideDelayMaxTime = settingDialogDiv.find("#slideDelayMaxTime").val();
-			clientStatusVO.titleRemainMinTime = settingDialogDiv.find("#titleRemainMinTime").val();
-			clientStatusVO.titleRemainMaxTime = settingDialogDiv.find("#titleRemainMaxTime").val();
-			clientStatusVO.waitTimeAfterOpenBaidu = settingDialogDiv.find("#waitTimeAfterOpenBaidu").val();
-			clientStatusVO.waitTimeBeforeClick = settingDialogDiv.find("#waitTimeBeforeClick").val();
-			clientStatusVO.waitTimeAfterClick = settingDialogDiv.find("#waitTimeAfterClick").val();
-			clientStatusVO.maxUserCount = settingDialogDiv.find("#maxUserCount").val();
-			clientStatusVO.optimizeKeywordCountPerIP = settingDialogDiv.find("#optimizeKeywordCountPerIP").val();
+			clientStatus.entryPageMinCount = settingDialogDiv.find("#entryPageMinCount").val();
+			clientStatus.entryPageMaxCount = settingDialogDiv.find("#entryPageMaxCount").val();
+			clientStatus.disableVisitWebsite = settingDialogDiv.find("#disableVisitWebsite").val();
+			clientStatus.pageRemainMinTime = settingDialogDiv.find("#pageRemainMinTime").val();
+			clientStatus.pageRemainMaxTime = settingDialogDiv.find("#pageRemainMaxTime").val();
+			clientStatus.inputDelayMinTime = settingDialogDiv.find("#inputDelayMinTime").val();
+			clientStatus.inputDelayMaxTime = settingDialogDiv.find("#inputDelayMaxTime").val();
+			clientStatus.slideDelayMinTime = settingDialogDiv.find("#slideDelayMinTime").val();
+			clientStatus.slideDelayMaxTime = settingDialogDiv.find("#slideDelayMaxTime").val();
+			clientStatus.titleRemainMinTime = settingDialogDiv.find("#titleRemainMinTime").val();
+			clientStatus.titleRemainMaxTime = settingDialogDiv.find("#titleRemainMaxTime").val();
+			clientStatus.waitTimeAfterOpenBaidu = settingDialogDiv.find("#waitTimeAfterOpenBaidu").val();
+			clientStatus.waitTimeBeforeClick = settingDialogDiv.find("#waitTimeBeforeClick").val();
+			clientStatus.waitTimeAfterClick = settingDialogDiv.find("#waitTimeAfterClick").val();
+			clientStatus.maxUserCount = settingDialogDiv.find("#maxUserCount").val();
+			clientStatus.optimizeKeywordCountPerIP = settingDialogDiv.find("#optimizeKeywordCountPerIP").val();
 
-//			clientStatusVO.disableVisitWebsite = settingDialogDiv.find("#disableVisitWebsite:checked").val() === '1' ? 1 : 0;
-			clientStatusVO.oneIPOneUser = settingDialogDiv.find("#oneIPOneUser:checked").val() === '1' ? 1 : 0;
-			clientStatusVO.randomlyClickNoResult = settingDialogDiv.find("#randomlyClickNoResult:checked").val() === '1' ? 1 : 0;
-			clientStatusVO.justVisitSelfPage = settingDialogDiv.find("#justVisitSelfPage:checked").val() === '1' ? 1 : 0;
-			clientStatusVO.sleepPer2Words = settingDialogDiv.find("#sleepPer2Words:checked").val() === '1' ? 1 : 0;
-			clientStatusVO.supportPaste = settingDialogDiv.find("#supportPaste:checked").val() === '1' ? 1 : 0;
-			clientStatusVO.moveRandomly = settingDialogDiv.find("#moveRandomly:checked").val() === '1' ? 1 : 0;
-			clientStatusVO.parentSearchEntry = settingDialogDiv.find("#parentSearchEntry:checked").val() === '1' ? 1 : 0;
-			clientStatusVO.clearLocalStorage = settingDialogDiv.find("#clearLocalStorage:checked").val() === '1' ? 1 : 0;
-			clientStatusVO.lessClickAtNight = settingDialogDiv.find("#lessClickAtNight:checked").val() === '1' ? 1 : 0;
-			clientStatusVO.sameCityUser = settingDialogDiv.find("#sameCityUser:checked").val() === '1' ? 1 : 0;
-			clientStatusVO.locateTitlePosition = settingDialogDiv.find("#locateTitlePosition:checked").val() === '1' ? 1 : 0;
-			clientStatusVO.baiduAllianceEntry = settingDialogDiv.find("#baiduAllianceEntry:checked").val() === '1' ? 1 : 0;
-			clientStatusVO.justClickSpecifiedTitle = settingDialogDiv.find("#justClickSpecifiedTitle:checked").val() === '1' ? 1 : 0;
-			clientStatusVO.randomlyClickMoreLink = settingDialogDiv.find("#randomlyClickMoreLink:checked").val() === '1' ? 1 : 0;
-			clientStatusVO.moveUp20 = settingDialogDiv.find("#moveUp20:checked").val() === '1' ? 1 : 0;
-
+//			clientStatus.disableVisitWebsite = settingDialogDiv.find("#disableVisitWebsite:checked").val() === '1' ? 1 : 0;
+			clientStatus.oneIPOneUser = settingDialogDiv.find("#oneIPOneUser:checked").val() === '1' ? 1 : 0;
+			clientStatus.randomlyClickNoResult = settingDialogDiv.find("#randomlyClickNoResult:checked").val() === '1' ? 1 : 0;
+			clientStatus.justVisitSelfPage = settingDialogDiv.find("#justVisitSelfPage:checked").val() === '1' ? 1 : 0;
+			clientStatus.sleepPer2Words = settingDialogDiv.find("#sleepPer2Words:checked").val() === '1' ? 1 : 0;
+			clientStatus.supportPaste = settingDialogDiv.find("#supportPaste:checked").val() === '1' ? 1 : 0;
+			clientStatus.moveRandomly = settingDialogDiv.find("#moveRandomly:checked").val() === '1' ? 1 : 0;
+			clientStatus.parentSearchEntry = settingDialogDiv.find("#parentSearchEntry:checked").val() === '1' ? 1 : 0;
+			clientStatus.clearLocalStorage = settingDialogDiv.find("#clearLocalStorage:checked").val() === '1' ? 1 : 0;
+			clientStatus.lessClickAtNight = settingDialogDiv.find("#lessClickAtNight:checked").val() === '1' ? 1 : 0;
+			clientStatus.sameCityUser = settingDialogDiv.find("#sameCityUser:checked").val() === '1' ? 1 : 0;
+			clientStatus.locateTitlePosition = settingDialogDiv.find("#locateTitlePosition:checked").val() === '1' ? 1 : 0;
+			clientStatus.baiduAllianceEntry = settingDialogDiv.find("#baiduAllianceEntry:checked").val() === '1' ? 1 : 0;
+			clientStatus.justClickSpecifiedTitle = settingDialogDiv.find("#justClickSpecifiedTitle:checked").val() === '1' ? 1 : 0;
+			clientStatus.randomlyClickMoreLink = settingDialogDiv.find("#randomlyClickMoreLink:checked").val() === '1' ? 1 : 0;
+			clientStatus.moveUp20 = settingDialogDiv.find("#moveUp20:checked").val() === '1' ? 1 : 0;
 
 			$$$.ajax({
-		        url: '/client/updateClientStatus.jsp',
-		        data: "data=" + JSON.stringify(clientStatusVO),
-		        type: 'POST',
+		        url: '/internal/clientstatus/addClientStatus',
+		        data: JSON.stringify(clientStatus),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                type: 'POST',
 		        success: function (data) {
-		        	data = data.replace(/\r\n/gm,"");
 		        	settingDialogDiv.hide();
-		        	if(data === "1"){
+		        	if(data){
 		        		showInfo("更新成功！", self);
 		        	}else{
 		        		showInfo("更新失败！", self);
@@ -1314,6 +1400,30 @@
 				</td>
 			</tr>
 		</table>
+	</div>
+
+	<div id="uploadVNCDialog" style="display: none;">
+		<form method="post" id="uploadVNCForm" action="" enctype="multipart/form-data">
+			<table width="100%" style="margin-top: 10px;margin-left: 10px">
+				<tr>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+				</tr>
+				<tr>
+					<td align="right">
+						<table width="100%" style="font-size:14px;">
+							<tr>
+								<td>
+									<input type="file" id="file" name="file" size=50 height="50px" style="width: 350px;">
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</form>
 	</div>
 </body>
 </html>

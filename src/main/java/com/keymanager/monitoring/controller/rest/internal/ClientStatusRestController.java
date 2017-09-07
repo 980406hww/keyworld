@@ -9,15 +9,18 @@ import com.keymanager.monitoring.service.ClientStatusService;
 import com.keymanager.monitoring.service.UserService;
 import com.keymanager.util.Constants;
 import com.keymanager.util.PortTerminalTypeMapping;
+import com.keymanager.util.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -108,7 +111,8 @@ public class ClientStatusRestController extends SpringMVCBaseController {
 	public ResponseEntity<?> getClientStatus(@PathVariable("clientID") String clientID, HttpServletRequest request) {
 		try {
 			String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
-			return new ResponseEntity<Object>(clientStatusService.getClientStatus(clientID, terminalType), HttpStatus.OK);
+			ClientStatus clientStatus = clientStatusService.getClientStatus(clientID, terminalType);
+			return new ResponseEntity<Object>(clientStatus, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
@@ -136,5 +140,32 @@ public class ClientStatusRestController extends SpringMVCBaseController {
 			logger.error(e.getMessage());
 			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
 		}
+	}
+
+	@RequestMapping(value = "/resetRestartStatusForProcessing", method = RequestMethod.POST)
+	public ResponseEntity<?> resetRestartStatusForProcessing() {
+		try {
+			clientStatusService.resetRestartStatusForProcessing();
+			return new ResponseEntity<Object>(true, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@RequestMapping(value = "/changeMonitorType/{clientID}", method = RequestMethod.POST)
+	public ResponseEntity<?> changeMonitorType(@PathVariable("clientID") String clientID) {
+		try {
+			clientStatusService.changeMonitorType(clientID);
+			return new ResponseEntity<Object>(true, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@RequestMapping(value = "/uploadVNCFile" , method = RequestMethod.POST)
+	public boolean uploadVNCFile(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request){
+		return false;
 	}
 }

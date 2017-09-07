@@ -41,55 +41,55 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 	public void updateClientStatus(ClientStatus clientStatus) {
 		ClientStatus oldClientStatus = clientStatusDao.selectById(clientStatus.getClientID());
 		if (oldClientStatus != null) {
-			clientStatus.setGroup(clientStatus.getGroup());
-			clientStatus.setOperationType(clientStatus.getOperationType());
-			clientStatus.setPage(clientStatus.getPage());
-			clientStatus.setPageSize(clientStatus.getPageSize() == null ? null : clientStatus.getPageSize());
-			clientStatus.setZhanneiPercent(clientStatus.getZhanneiPercent() == null ? null : clientStatus.getZhanneiPercent());
-			clientStatus.setKuaizhaoPercent(clientStatus.getKuaizhaoPercent() == null ? null : clientStatus.getKuaizhaoPercent());
-			clientStatus.setBaiduSemPercent(clientStatus.getBaiduSemPercent() == null ? null : clientStatus.getBaiduSemPercent());
-			clientStatus.setDisableVisitWebsite(clientStatus.getDisableVisitWebsite());
-			clientStatus.setEntryPageMinCount(clientStatus.getEntryPageMinCount());
-			clientStatus.setEntryPageMaxCount(clientStatus.getEntryPageMaxCount());
-			clientStatus.setPageRemainMinTime(clientStatus.getPageRemainMinTime());
-			clientStatus.setPageRemainMaxTime(clientStatus.getPageRemainMaxTime());
-			clientStatus.setInputDelayMinTime(clientStatus.getInputDelayMinTime());
-			clientStatus.setInputDelayMaxTime(clientStatus.getInputDelayMaxTime());
-			clientStatus.setSlideDelayMinTime(clientStatus.getSlideDelayMinTime());
-			clientStatus.setSlideDelayMaxTime(clientStatus.getSlideDelayMaxTime());
-			clientStatus.setTitleRemainMinTime(clientStatus.getTitleRemainMinTime());
-			clientStatus.setTitleRemainMaxTime(clientStatus.getTitleRemainMaxTime());
-			clientStatus.setOptimizeKeywordCountPerIP(clientStatus.getOptimizeKeywordCountPerIP());
-			clientStatus.setOneIPOneUser(clientStatus.getOneIPOneUser());
-			clientStatus.setRandomlyClickNoResult(clientStatus.getRandomlyClickNoResult());
-			clientStatus.setJustVisitSelfPage(clientStatus.getJustVisitSelfPage());
-			clientStatus.setSleepPer2Words(clientStatus.getSleepPer2Words());
-			clientStatus.setSupportPaste(clientStatus.getSupportPaste());
-			clientStatus.setMoveRandomly(clientStatus.getMoveRandomly());
-			clientStatus.setParentSearchEntry(clientStatus.getParentSearchEntry());
-			clientStatus.setClearLocalStorage(clientStatus.getClearLocalStorage());
-			clientStatus.setLessClickAtNight(clientStatus.getLessClickAtNight());
-			clientStatus.setSameCityUser(clientStatus.getSameCityUser());
-			clientStatus.setLocateTitlePosition(clientStatus.getLocateTitlePosition());
-			clientStatus.setBaiduAllianceEntry(clientStatus.getBaiduAllianceEntry());
-			clientStatus.setJustClickSpecifiedTitle(clientStatus.getJustClickSpecifiedTitle());
-			clientStatus.setRandomlyClickMoreLink(clientStatus.getRandomlyClickMoreLink());
-			clientStatus.setMoveUp20(clientStatus.getMoveUp20());
-			clientStatus.setWaitTimeAfterOpenBaidu(clientStatus.getWaitTimeAfterOpenBaidu());
-			clientStatus.setWaitTimeBeforeClick(clientStatus.getWaitTimeBeforeClick());
-			clientStatus.setWaitTimeAfterClick(clientStatus.getWaitTimeAfterClick());
-			clientStatus.setMaxUserCount(clientStatus.getMaxUserCount());
-			clientStatus.setMultiBrowser(clientStatus.getMultiBrowser());
-			clientStatus.setClearCookie(clientStatus.getClearCookie());
-			clientStatus.setDragPercent(clientStatus.getDragPercent() == null ? null : clientStatus.getDragPercent());
-			clientStatus.setAllowSwitchGroup(clientStatus.getAllowSwitchGroup());
-			clientStatus.setDisableStatistics(clientStatus.getDisableStatistics());
-			clientStatus.setHost(clientStatus.getHost());
-			clientStatus.setPort(clientStatus.getPort());
-			clientStatus.setUserName(clientStatus.getUserName());
-			clientStatus.setPassword(clientStatus.getPassword());
-			clientStatus.setVpsBackendSystemComputerID(clientStatus.getVpsBackendSystemComputerID());
-			clientStatus.setVpsBackendSystemPassword(clientStatus.getVpsBackendSystemPassword());
+			oldClientStatus.setGroup(clientStatus.getGroup());
+			oldClientStatus.setOperationType(clientStatus.getOperationType());
+			oldClientStatus.setPage(clientStatus.getPage());
+			oldClientStatus.setPageSize(clientStatus.getPageSize() == null ? null : clientStatus.getPageSize());
+			oldClientStatus.setZhanneiPercent(clientStatus.getZhanneiPercent() == null ? null : clientStatus.getZhanneiPercent());
+			oldClientStatus.setKuaizhaoPercent(clientStatus.getKuaizhaoPercent() == null ? null : clientStatus.getKuaizhaoPercent());
+			oldClientStatus.setBaiduSemPercent(clientStatus.getBaiduSemPercent() == null ? null : clientStatus.getBaiduSemPercent());
+			oldClientStatus.setDisableVisitWebsite(clientStatus.getDisableVisitWebsite());
+			oldClientStatus.setEntryPageMinCount(clientStatus.getEntryPageMinCount());
+			oldClientStatus.setEntryPageMaxCount(clientStatus.getEntryPageMaxCount());
+			oldClientStatus.setPageRemainMinTime(clientStatus.getPageRemainMinTime());
+			oldClientStatus.setPageRemainMaxTime(clientStatus.getPageRemainMaxTime());
+			oldClientStatus.setInputDelayMinTime(clientStatus.getInputDelayMinTime());
+			oldClientStatus.setInputDelayMaxTime(clientStatus.getInputDelayMaxTime());
+			oldClientStatus.setSlideDelayMinTime(clientStatus.getSlideDelayMinTime());
+			oldClientStatus.setSlideDelayMaxTime(clientStatus.getSlideDelayMaxTime());
+			oldClientStatus.setTitleRemainMinTime(clientStatus.getTitleRemainMinTime());
+			oldClientStatus.setTitleRemainMaxTime(clientStatus.getTitleRemainMaxTime());
+			oldClientStatus.setOptimizeKeywordCountPerIP(clientStatus.getOptimizeKeywordCountPerIP());
+			oldClientStatus.setOneIPOneUser(clientStatus.getOneIPOneUser());
+			oldClientStatus.setRandomlyClickNoResult(clientStatus.getRandomlyClickNoResult());
+			oldClientStatus.setJustVisitSelfPage(clientStatus.getJustVisitSelfPage());
+			oldClientStatus.setSleepPer2Words(clientStatus.getSleepPer2Words());
+			oldClientStatus.setSupportPaste(clientStatus.getSupportPaste());
+			oldClientStatus.setMoveRandomly(clientStatus.getMoveRandomly());
+			oldClientStatus.setParentSearchEntry(clientStatus.getParentSearchEntry());
+			oldClientStatus.setClearLocalStorage(clientStatus.getClearLocalStorage());
+			oldClientStatus.setLessClickAtNight(clientStatus.getLessClickAtNight());
+			oldClientStatus.setSameCityUser(clientStatus.getSameCityUser());
+			oldClientStatus.setLocateTitlePosition(clientStatus.getLocateTitlePosition());
+			oldClientStatus.setBaiduAllianceEntry(clientStatus.getBaiduAllianceEntry());
+			oldClientStatus.setJustClickSpecifiedTitle(clientStatus.getJustClickSpecifiedTitle());
+			oldClientStatus.setRandomlyClickMoreLink(clientStatus.getRandomlyClickMoreLink());
+			oldClientStatus.setMoveUp20(clientStatus.getMoveUp20());
+			oldClientStatus.setWaitTimeAfterOpenBaidu(clientStatus.getWaitTimeAfterOpenBaidu());
+			oldClientStatus.setWaitTimeBeforeClick(clientStatus.getWaitTimeBeforeClick());
+			oldClientStatus.setWaitTimeAfterClick(clientStatus.getWaitTimeAfterClick());
+			oldClientStatus.setMaxUserCount(clientStatus.getMaxUserCount());
+			oldClientStatus.setMultiBrowser(clientStatus.getMultiBrowser());
+			oldClientStatus.setClearCookie(clientStatus.getClearCookie());
+			oldClientStatus.setDragPercent(clientStatus.getDragPercent() == null ? null : clientStatus.getDragPercent());
+			oldClientStatus.setAllowSwitchGroup(clientStatus.getAllowSwitchGroup());
+			oldClientStatus.setDisableStatistics(clientStatus.getDisableStatistics());
+			oldClientStatus.setHost(clientStatus.getHost());
+			oldClientStatus.setPort(clientStatus.getPort());
+			oldClientStatus.setUserName(clientStatus.getUserName());
+			oldClientStatus.setPassword(clientStatus.getPassword());
+			oldClientStatus.setVpsBackendSystemComputerID(clientStatus.getVpsBackendSystemComputerID());
+			oldClientStatus.setVpsBackendSystemPassword(clientStatus.getVpsBackendSystemPassword());
 			clientStatusDao.updateById(oldClientStatus);
 		}
 	}
@@ -135,5 +135,15 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		for (String clientID : clientIDs) {
 			deleteClientStatus(clientID);
 		}
+	}
+
+	public void resetRestartStatusForProcessing() {
+		clientStatusDao.resetRestartStatusForProcessing();
+	}
+
+	public void changeMonitorType(String clientID) {
+		ClientStatus clientStatus = clientStatusDao.selectById(clientID);
+		clientStatus.setValid(!clientStatus.getValid());
+		clientStatusDao.updateById(clientStatus);
 	}
 }

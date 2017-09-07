@@ -15,4 +15,5 @@ public interface ClientStatusDao extends BaseMapper<ClientStatus> {
 
     ClientStatus getClientStatusByClientID(@Param("clientID") String clientID, @Param("terminalType") String terminalType);
 
+    void resetRestartStatusForProcessing();
 }
