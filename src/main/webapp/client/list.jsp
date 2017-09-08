@@ -96,15 +96,26 @@
 	z-index: 25;
 	position: fixed;
 }
+
+#clientStatusDiv {
+	overflow: scroll;
+	width: 100%;
+	height: 95%;
+	margin: auto;
+}
+
+#showClientStatusBottomDiv {
+	float: right;
+	width: 580px;
+}
 -->
 </style>
 	<link href="/ui/jquery-ui.css" rel="stylesheet" type="text/css" />
 	<link href="/css/menu.css" rel="stylesheet" type="text/css" />
-	<script language="javascript" type="text/javascript" src="/ui/jquery-ui.js"></script>
-	<script language="javascript" type="text/javascript" src="/js/slide1.12.4.js"></script>
-	<script language="javascript" type="text/javascript" src="/common.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/My97DatePicker/WdatePicker.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/jquery142.js"></script>
+	<script language="javascript" type="text/javascript" src="/js/My97DatePicker/WdatePicker.js"></script>
+	<script language="javascript" type="text/javascript" src="/ui/jquery-ui.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/slide.js"></script>
 </head>
 <body>
@@ -191,8 +202,8 @@
 								|<a target="_blank" href="javascript:showRenewalSettingDialog(this)">续费</a>
 								|<a target="_blank" href="javascript:delAllItems(this)">删除所选</a>
 								|<a target="_blank" href="javascript:resetRestartStatus()">重置重启状态</a>
-								|<a target="_blank" href="/client/uploadvnc.jsp">上传VNC文件</a>
-								|<a target="_blank" href="/client/downloadvnc.jsp">下载VNC连接压缩文件</a>
+								|<a target="_blank" href="javascript:showUploadVNCDialog()">上传VNC文件</a>
+								|<a target="_blank" href="javascript:downloadVNCFile()">下载VNC连接压缩文件</a>
 							</td>
 						</tr>
 					</table>
@@ -332,7 +343,7 @@
 	</div>
 
 	<script language="javascript">
-        $(function () {
+        $$$(function () {
             var clientStatusBottomDiv = $('#clientStatusBottomDiv');
             var pageSize = clientStatusBottomDiv.find('#pageSizeHidden').val();
             clientStatusBottomDiv.find('#chooseRecords').val(pageSize);
@@ -367,11 +378,15 @@
         }
 
         function resetPageNumber() {
-            $("#searchClientStatusForm").find("#currentPageNumberHidden").val(1);
+            $$$("#searchClientStatusForm").find("#currentPageNumberHidden").val(1);
+        }
+
+        function downloadVNCFile() {
+            $("#downloadVNCForm").submit();
         }
 
         function showUploadVNCDialog() {
-            $("#uploadVNCDialog").dialog({
+            $('#uploadVNCDialog').dialog({
                 resizable: false,
                 width: 430,
                 modal: true,
@@ -449,7 +464,7 @@
 
         function delItem(clientID) {
             if (confirm("确定要删除这台终端吗?") == false) return;
-            $.ajax({
+            $$$.ajax({
                 url: '/internal/clientstatus/deleteClientStatus/' + clientID,
                 type: 'POST',
                 success: function (result) {
@@ -475,7 +490,7 @@
             if (confirm("确定要删除这些负面词吗?") == false) return;
             var postData = {};
             postData.clientIDs = clientIDs.split(",");
-            $.ajax({
+            $$$.ajax({
                 url: '/internal/clientstatus/deleteClientStatuses',
                 data: JSON.stringify(postData),
                 headers: {
@@ -557,25 +572,34 @@
 		}
 
 		function updateGroup(self){
-			var clientID = self.id;
-			var groupName = self.value.trim();
-		    $$$.ajax({
-		        url: '/client/updateGroup.jsp',
-		        data: "data=" + JSON.stringify(clientID + '=' + groupName),
-		        type: 'POST',
-		        success: function (data) {
-		        	data = data.replace(/\r\n/gm,"");
-		        	if(data === "1"){
-		        		showInfo("更新成功！", self);
-		        	}else{
-		        		showInfo("更新失败！", self);
-		        	}
-		        },
-		        error: function () {
-		        	showInfo("更新失败！", self);
-		        }
-		    });
+		    var clientStatus = {};
+            clientStatus.clientID = self.id;
+            clientStatus.group = self.value.trim();
+            $$$.ajax({
+                url: '/internal/clientstatus/updateGroup',
+                data: JSON.stringify(clientStatus),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                type: 'POST',
+                success: function (data) {
+                    settingDialogDiv.hide();
+                    if(data){
+                        showInfo("更新成功！", self);
+                        window.location.reload();
+                    }else{
+                        showInfo("更新失败！", self);
+                    }
+                },
+                error: function () {
+                    showInfo("更新失败！", self);
+                    settingDialogDiv.hide();
+                }
+            });
 		}
+
 		function changeTerminalType(clientID){
 			var postData = {};
 			postData.clientID = clientID;
@@ -603,44 +627,60 @@
 		}
 
 		function updateUpgradeFailedReason(self){
-			var clientID = self.id;
-			var upgradeFailedReason = self.value.trim();
-			$$$.ajax({
-				url: '/client/updateUpgradeFailedReason.jsp',
-				data: "data=" + JSON.stringify(clientID + '=' + upgradeFailedReason),
-				type: 'POST',
-				success: function (data) {
-					data = data.replace(/\r\n/gm,"");
-					if(data === "1"){
-						showInfo("更新成功！", self);
-					}else{
-						showInfo("更新失败！", self);
-					}
-				},
-				error: function () {
-					showInfo("更新失败！", self);
-				}
-			});
+		    var clientStatus = {};
+            clientStatus.clientID = self.id;
+            clientStatus.upgradeFailedReason = self.value.trim();
+            $$$.ajax({
+                url: '/internal/clientstatus/updateUpgradeFailedReason',
+                data: JSON.stringify(clientStatus),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                type: 'POST',
+                success: function (data) {
+                    settingDialogDiv.hide();
+                    if(data){
+                        showInfo("更新成功！", self);
+                        window.location.reload();
+                    }else{
+                        showInfo("更新失败！", self);
+                    }
+                },
+                error: function () {
+                    showInfo("更新失败！", self);
+                    settingDialogDiv.hide();
+                }
+            });
 		}
 		function updateOperationType(self){
-			var clientID = self.id.replace("operationType", "");
-			var operationType = self.value.trim();
-		    $$$.ajax({
-		        url: '/client/updateOperationType.jsp',
-		        data: "data=" + JSON.stringify(clientID + '=' + operationType),
-		        type: 'POST',
-		        success: function (data) {
-		        	data = data.replace(/\r\n/gm,"");
-		        	if(data === "1"){
-		        		showInfo("更新成功！", self);
-		        	}else{
-		        		showInfo("更新失败！", self);
-		        	}
-		        },
-		        error: function () {
-		        	showInfo("更新失败！", self);
-		        }
-		    });
+		    var clientStatus = {};
+            clientStatus.clientID = self.id.replace("operationType", "");
+            clientStatus.operationType = self.value.trim();
+            $$$.ajax({
+                url: '/internal/clientstatus/updateOperationType',
+                data: JSON.stringify(clientStatus),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                type: 'POST',
+                success: function (data) {
+                    settingDialogDiv.hide();
+                    if(data){
+                        showInfo("更新成功！", self);
+                        window.location.reload();
+                    }else{
+                        showInfo("更新失败！", self);
+                    }
+                },
+                error: function () {
+                    showInfo("更新失败！", self);
+                    settingDialogDiv.hide();
+                }
+            });
 		}
 		function showSettingDialog(clientID, self){
 		    $$$.ajax({
@@ -807,6 +847,7 @@
 		        	settingDialogDiv.hide();
 		        	if(data){
 		        		showInfo("更新成功！", self);
+		        		window.location.reload();
 		        	}else{
 		        		showInfo("更新失败！", self);
 		        	}
@@ -1423,6 +1464,11 @@
 					</td>
 				</tr>
 			</table>
+		</form>
+	</div>
+
+	<div style="display:none;">
+		<form id="downloadVNCForm" action="/internal/clientstatus/downloadVNCFile" method="post">
 		</form>
 	</div>
 </body>

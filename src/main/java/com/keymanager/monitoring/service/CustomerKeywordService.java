@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.keymanager.enums.CollectMethod;
 import com.keymanager.manager.CustomerKeywordManager;
 import com.keymanager.monitoring.criteria.BaiduIndexCriteria;
+import com.keymanager.monitoring.dao.ClientStatusDao;
 import com.keymanager.monitoring.dao.CustomerKeywordDao;
 import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.enums.*;
@@ -292,4 +293,5 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     public List<Map> getCustomerKeywordsCount(List<Long> customerUuids, String terminalType, String entryType){
         return customerKeywordDao.getCustomerKeywordsCount(customerUuids, terminalType, entryType);
     }
+
 }

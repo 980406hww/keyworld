@@ -6,16 +6,23 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.keymanager.monitoring.criteria.ClientStatusCriteria;
 import com.keymanager.monitoring.dao.ClientStatusDao;
 import com.keymanager.monitoring.entity.ClientStatus;
+import com.keymanager.util.Utils;
+import com.keymanager.util.VNCAddressBookParser;
+import com.keymanager.util.ZipCompressor;
 import com.keymanager.value.ClientStatusForUpdateTargetVersion;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStatus>{
@@ -145,5 +152,119 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		ClientStatus clientStatus = clientStatusDao.selectById(clientID);
 		clientStatus.setValid(!clientStatus.getValid());
 		clientStatusDao.updateById(clientStatus);
+	}
+
+
+	public void uploadVNCFile(InputStream inputStream, String terminalType) throws Exception {
+		if(inputStream != null){
+			VNCAddressBookParser vncAddressBookParser = new VNCAddressBookParser();
+			Map<String, String> vncInfoMap = vncAddressBookParser.extractVNCInfo(inputStream);
+			List<ClientStatus> clientStatuses = clientStatusDao.searchClientStatusesOrByHost(terminalType,null);
+			for (ClientStatus clientStatus : clientStatuses) {
+				String vncInfo = vncInfoMap.get(clientStatus.getClientID());
+				if (!Utils.isNullOrEmpty(vncInfo)) {
+					String vncInfos[] = vncInfo.split(":");
+					if (vncInfos.length == 3) {
+						clientStatus.setHost(vncInfos[0]);
+						clientStatus.setPort(vncInfos[1]);
+						clientStatus.setVpsBackendSystemComputerID(vncInfos[2]);
+					} else {
+						System.out.println(vncInfo);
+					}
+					updateClientStatus(clientStatus);
+					writeTxtFile(clientStatus);
+				}
+			}
+		}
+	}
+
+	public String getDownloadVNCInfo(String terminalType) throws Exception {
+		List<ClientStatus> clientStatuses = clientStatusDao.searchClientStatusesOrByHost(terminalType,"yes");
+		for (ClientStatus clientStatus : clientStatuses) {
+			updateClientStatus(clientStatus);
+			writeTxtFile(clientStatus);
+		}
+		String path = Thread.currentThread().getContextClassLoader().getResource("").toURI().getPath();
+		String zipFileName = path + "vnc.zip";
+		ZipCompressor.zipMultiFile(path + "vnc/", zipFileName);
+		return zipFileName;
+	}
+
+	public void writeTxtFile(ClientStatus clientStatus) throws Exception {
+		RandomAccessFile mm = null;
+		FileOutputStream o = null;
+		try {
+			Utils.createDir(Thread.currentThread().getContextClassLoader().getResource("").toURI().getPath() + "vnc/");
+			String fileName = Thread.currentThread().getContextClassLoader().getResource("").toURI().getPath() + "vnc/" + clientStatus.getClientID() + ".vnc";
+			o = new FileOutputStream(fileName);
+			o.write("[Connection]".getBytes("UTF-8"));
+			o.write(((String)java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+			o.write(String.format("Host=%s", clientStatus.getHost()).getBytes("UTF-8"));
+			o.write(((String)java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+			o.write(String.format("Port=%s", clientStatus.getPort()).getBytes("UTF-8"));
+			o.write(((String)java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+			o.write(String.format("Username=%s", clientStatus.getUserName()).getBytes("UTF-8"));
+			o.write(((String)java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+			o.write("Password=8e587919308fcab0c34af756358b9053".getBytes("UTF-8"));
+			o.write(((String)java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+			o.write("[Options]".getBytes("UTF-8"));
+			o.write(((String)java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+			o.write("UseLocalCursor=1".getBytes("UTF-8"));
+			o.write(((String)java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+			o.write("UseDesktopResize=1".getBytes("UTF-8"));
+			o.write(((String)java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+			o.write("FullScreen=0".getBytes("UTF-8"));
+			o.write(((String)java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+			o.write("FullColour=0".getBytes("UTF-8"));
+			o.write(((String)java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+			o.write("LowColourLevel=1".getBytes("UTF-8"));
+			o.write(((String)java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+			o.write("PreferredEncoding=ZRLE".getBytes("UTF-8"));
+			o.write(((String)java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+			o.write("AutoSelect=1".getBytes("UTF-8"));
+			o.write(((String)java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+			o.write("Shared=0".getBytes("UTF-8"));
+			o.write(((String)java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+			o.write("SendPtrEvents=1".getBytes("UTF-8"));
+			o.write(((String)java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+			o.write("SendKeyEvents=1".getBytes("UTF-8"));
+			o.write(((String)java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+			o.write("SendCutText=1".getBytes("UTF-8"));
+			o.write(((String)java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+			o.write("AcceptCutText=1".getBytes("UTF-8"));
+			o.write(((String)java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+			o.write("Emulate3=0".getBytes("UTF-8"));
+			o.write(((String)java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+			o.write("PointerEventInterval=0".getBytes("UTF-8"));
+			o.write(((String)java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+			o.write("Monitor=".getBytes("UTF-8"));
+			o.write(((String)java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+			o.write("MenuKey=F8".getBytes("UTF-8"));
+			o.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (mm != null) {
+				mm.close();
+			}
+		}
+	}
+
+	public void updateGroup(ClientStatus clientStatus) {
+		ClientStatus oldClientStatus = clientStatusDao.selectById(clientStatus.getClientID());
+		oldClientStatus.setGroup(clientStatus.getGroup());
+		clientStatusDao.updateById(oldClientStatus);
+	}
+
+	public void updateOperationType(ClientStatus clientStatus) {
+		ClientStatus oldClientStatus = clientStatusDao.selectById(clientStatus.getClientID());
+		oldClientStatus.setOperationType(clientStatus.getOperationType());
+		clientStatusDao.updateById(oldClientStatus);
+	}
+
+	public void updateUpgradeFailedReason(ClientStatus clientStatus) {
+		ClientStatus oldClientStatus = clientStatusDao.selectById(clientStatus.getClientID());
+		oldClientStatus.setUpgradeFailedReason(clientStatus.getUpgradeFailedReason());
+		clientStatusDao.updateById(oldClientStatus);
 	}
 }

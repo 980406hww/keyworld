@@ -13,6 +13,8 @@ public interface ClientStatusDao extends BaseMapper<ClientStatus> {
 
     List<ClientStatus> searchClientStatuses(Page<ClientStatus> page, @Param("clientStatusCriteria") ClientStatusCriteria clientStatusCriteria);
 
+    List<ClientStatus> searchClientStatusesOrByHost(@Param("terminalType") String terminalType, @Param("comfirm") String comfirm);
+
     ClientStatus getClientStatusByClientID(@Param("clientID") String clientID, @Param("terminalType") String terminalType);
 
     void resetRestartStatusForProcessing();

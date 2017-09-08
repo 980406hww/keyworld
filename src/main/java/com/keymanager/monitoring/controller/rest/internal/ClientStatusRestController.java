@@ -20,9 +20,12 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.util.List;
 import java.util.Map;
+
+import static java.lang.System.out;
 
 @RestController
 @RequestMapping(value = "/internal/clientstatus")
@@ -33,14 +36,14 @@ public class ClientStatusRestController extends SpringMVCBaseController {
 	private ClientStatusService clientStatusService;
 
 	@RequestMapping(value = "/changeTerminalType", method = RequestMethod.POST)
-	public ResponseEntity<?> changeTerminalType(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) throws Exception{
+	public ResponseEntity<?> changeTerminalType(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) throws Exception {
 		String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
 		String clientID = (String) requestMap.get("clientID");
-		try{
+		try {
 			clientStatusService.changeTerminalType(clientID, TerminalTypeEnum.PC.name().equals(terminalType) ? TerminalTypeEnum.Phone.name() :
 					TerminalTypeEnum.PC.name());
 			return new ResponseEntity<Object>(true, HttpStatus.OK);
-		}catch (Exception ex){
+		} catch (Exception ex) {
 			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
 		}
 	}
@@ -72,7 +75,7 @@ public class ClientStatusRestController extends SpringMVCBaseController {
 		clientStatusCriteria.setTerminalType(terminalType);
 		Page<ClientStatus> page = clientStatusService.searchClientStatuses(new Page<ClientStatus>(currentPageNumber, pageSize), clientStatusCriteria);
 		String[] operationTypeValues = Constants.pcOperationTypeValues;
-		if(TerminalTypeEnum.Phone.name().equals(terminalType)){
+		if (TerminalTypeEnum.Phone.name().equals(terminalType)) {
 			operationTypeValues = Constants.phoneOperationTypeValues;
 		}
 		modelAndView.addObject("terminalType", terminalType);
@@ -100,6 +103,39 @@ public class ClientStatusRestController extends SpringMVCBaseController {
 	public ResponseEntity<?> addClientStatus(@RequestBody ClientStatus clientStatus) {
 		try {
 			clientStatusService.addClientStatus(clientStatus);
+			return new ResponseEntity<Object>(true, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@RequestMapping(value = "/updateGroup", method = RequestMethod.POST)
+	public ResponseEntity<?> updateGroup(@RequestBody ClientStatus clientStatus) {
+		try {
+			clientStatusService.updateGroup(clientStatus);
+			return new ResponseEntity<Object>(true, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@RequestMapping(value = "/updateOperationType", method = RequestMethod.POST)
+	public ResponseEntity<?> updateOperationType(@RequestBody ClientStatus clientStatus) {
+		try {
+			clientStatusService.updateOperationType(clientStatus);
+			return new ResponseEntity<Object>(true, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@RequestMapping(value = "/updateUpgradeFailedReason", method = RequestMethod.POST)
+	public ResponseEntity<?> updateUpgradeFailedReason(@RequestBody ClientStatus clientStatus) {
+		try {
+			clientStatusService.updateUpgradeFailedReason(clientStatus);
 			return new ResponseEntity<Object>(true, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
@@ -164,8 +200,51 @@ public class ClientStatusRestController extends SpringMVCBaseController {
 		}
 	}
 
-	@RequestMapping(value = "/uploadVNCFile" , method = RequestMethod.POST)
-	public boolean uploadVNCFile(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request){
+	@RequestMapping(value = "/uploadVNCFile", method = RequestMethod.POST)
+	public boolean uploadVNCFile(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request) {
+		try {
+			String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+			clientStatusService.uploadVNCFile(file.getInputStream(), terminalType);
+			return true;
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
 		return false;
+	}
+
+	@RequestMapping(value = "/downloadVNCFile", method = RequestMethod.POST)
+	public boolean downloadVNCFile(HttpServletRequest request, HttpServletResponse response) {
+		OutputStream outputStream = null;
+		FileInputStream fileInputStream = null;
+		boolean downloadFlag = false;
+		try {
+			response.setContentType("application/octet-stream");
+			String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+			String filedownload = clientStatusService.getDownloadVNCInfo(terminalType);
+			String filedisplay = "vnc.zip";
+			response.addHeader("Content-Disposition", "attachment;filename=" + filedisplay);
+			outputStream = response.getOutputStream();
+			fileInputStream = new FileInputStream(filedownload);
+
+			byte[] b = new byte[1024];
+			int i = 0;
+			while ((i = fileInputStream.read(b)) > 0) {
+				outputStream.write(b, 0, i);
+			}
+			outputStream.flush();
+			downloadFlag = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (fileInputStream != null) {
+				try {
+					fileInputStream.close();
+					fileInputStream = null;
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return downloadFlag;
 	}
 }

@@ -113,4 +113,13 @@
        UPDATE t_client_status SET fRestartStatus = NULL WHERE (fRestartStatus = 'Processing' or fRestartStatus = 'Logging')
     </select>
 
+    <select id="searchClientStatusesOrByHost" parameterType="java.lang.String" resultType="com.keymanager.monitoring.entity.ClientStatus">
+        SELECT
+          <include refid="selectCol" />
+        FROM
+          t_client_status cs
+        WHERE cs.fTerminalType = #{terminalType}
+        <if test="comfirm != null"> and (cs.fHost is not null or cs.fHost &lt;&gt; '')</if>
+    </select>
+
 </mapper>
