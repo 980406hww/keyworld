@@ -703,29 +703,31 @@
 
             //导出结果
             function downloadCustomerKeywordInfo() {
-                var customerKeywordCrilteriaArray = $("#searchCustomerKeywordForm").serializeArray();
-                var formData = new FormData();
-                $.each(customerKeywordCrilteriaArray, function(idx, val){
-                    formData.append(val.name, val.value);
-                });
-                $.ajax({
-                    url: '/internal/customerKeyword/downloadCustomerKeywordInfo',
-                    type: 'POST',
-                    cache: false,
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function (result) {
-                        if (result) {
-                            $().toastmessage('showSuccessToast', "导出成功");
-                        } else {
-                            $().toastmessage('showErrorToast',"导出失败");
-                        }
-                    },
-                    error: function () {
-                        $().toastmessage('showErrorToast',"导出失败");
-                    }
-                });
+//                var customerKeywordCrilteriaArray = $("#searchCustomerKeywordForm").serializeArray();
+//                var formData = new FormData();
+//                $.each(customerKeywordCrilteriaArray, function(idx, val){
+//                    formData.append(val.name, val.value);
+//                });
+//                $.ajax({
+//                    url: '/internal/customerKeyword/downloadCustomerKeywordInfo',
+//                    type: 'POST',
+//                    cache: false,
+//                    data: formData,
+//                    processData: false,
+//                    contentType: false,
+//                    success: function (result) {
+//                        if (result) {
+//                            $().toastmessage('showSuccessToast', "导出成功");
+//                        } else {
+//                            $().toastmessage('showErrorToast',"导出失败");
+//                        }
+//                    },
+//                    error: function () {
+//                        $().toastmessage('showErrorToast',"导出失败");
+//                    }
+//                });
+                var customerKeywordCrilteriaArray = $("#searchCustomerKeywordForm").serialize();
+                location.href='/internal/customerKeyword/downloadCustomerKeywordInfo/?'+customerKeywordCrilteriaArray;
             }
             //显示排名为0
             function noPositionValue() {

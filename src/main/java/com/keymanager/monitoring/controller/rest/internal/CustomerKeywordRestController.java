@@ -230,7 +230,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	}
 
 	//导出成Excel文件
-	@RequestMapping(value = "/downloadCustomerKeywordInfo", method = RequestMethod.POST)
+	@RequestMapping(value = "/downloadCustomerKeywordInfo", method = RequestMethod.GET)
 	public ResponseEntity<?> downloadCustomerKeywordInfo( HttpServletRequest request,
 														 HttpServletResponse response,CustomerKeywordCrilteria customerKeywordCrilteria) {
 		try {
@@ -239,9 +239,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 			String entryType = (String) request.getSession().getAttribute("entry");
 			customerKeywordCrilteria.setTerminalType(terminalType);
 			customerKeywordCrilteria.setEntryType(entryType);
-			String orderElement = request.getParameter("orderElement");
-			initOrderElemnet(orderElement,customerKeywordCrilteria);
-			List<CustomerKeyword> customerKeywords = customerKeywordService.searchCustomerKeywords(customerKeywordCrilteria);
+			List<CustomerKeyword> customerKeywords = appendCondition(request,response);
 			if (!Utils.isEmpty(customerKeywords)) {
 				CustomerKeywordInfoExcelWriter excelWriter = new CustomerKeywordInfoExcelWriter();
 				excelWriter.writeDataToExcel(customerKeywords);
@@ -267,5 +265,56 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 			return new ResponseEntity<Object>(false,HttpStatus.OK);
 		}
 		return new ResponseEntity<Object>(true,HttpStatus.OK);
+	}
+
+	public List<CustomerKeyword> appendCondition(HttpServletRequest request, HttpServletResponse response){
+		String customerUuid = request.getParameter("customerUuid").trim();
+		String invalidRefreshCount = request.getParameter("invalidRefreshCount").trim();
+		String keyword = request.getParameter("keyword").trim();
+		String url = request.getParameter("url").trim();
+		String creationFromTime = request.getParameter("creationFromTime").trim();
+		String creationToTime = request.getParameter("creationToTime").trim();
+		String status = request.getParameter("status").trim();
+		String optimizeGroupName = request.getParameter("optimizeGroupName").trim();
+		String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+		String position = request.getParameter("position");
+		CustomerKeywordCrilteria customerKeywordCrilteria = new CustomerKeywordCrilteria();
+		String orderElement = request.getParameter("orderElement");
+		initOrderElemnet(orderElement,customerKeywordCrilteria);
+		customerKeywordCrilteria.setTerminalType(terminalType);
+		customerKeywordCrilteria.setCustomerUuid(Long.parseLong(customerUuid));
+		if (!Utils.isNullOrEmpty(keyword)) {
+			customerKeywordCrilteria.setKeyword(keyword);
+		}
+
+		if (!Utils.isNullOrEmpty(url)) {
+			customerKeywordCrilteria.setUrl(url);
+		}
+
+		if (!Utils.isNullOrEmpty(position)) {
+			customerKeywordCrilteria.setPosition(position);;
+		}
+
+		if (!Utils.isNullOrEmpty(optimizeGroupName)) {
+			customerKeywordCrilteria.setOptimizeGroupName(optimizeGroupName);
+		}
+
+		if (!Utils.isNullOrEmpty(creationFromTime)) {
+			customerKeywordCrilteria.setCreationToTime(creationFromTime);
+		}
+		if (!Utils.isNullOrEmpty(creationToTime)) {
+			customerKeywordCrilteria.setCreationToTime(creationToTime);
+		}
+
+		if (!Utils.isNullOrEmpty(status)) {
+			customerKeywordCrilteria.setStatus(status);
+		}
+
+		if (!Utils.isNullOrEmpty(invalidRefreshCount)) {
+			customerKeywordCrilteria.setInvalidRefreshCount(invalidRefreshCount);
+		}
+		Page<CustomerKeyword>  page = customerKeywordService.searchCustomerKeywords(new Page<CustomerKeyword>(1, 100000), customerKeywordCrilteria);
+		List<CustomerKeyword> customerKeywords = page.getRecords();
+		return customerKeywords;
 	}
 }
