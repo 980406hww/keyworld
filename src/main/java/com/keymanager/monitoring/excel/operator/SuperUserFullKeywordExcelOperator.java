@@ -53,13 +53,13 @@ public class SuperUserFullKeywordExcelOperator extends AbstractExcelReader {
 		
 		customerKeyword.setServiceProvider("baidutop123");
 		
-		int indexCount = getIntValue(SuperUserFullKeywordDefinition.IndexCount.getColumnIndex(), rowIndex);
+		Integer indexCount = getIntValue(SuperUserFullKeywordDefinition.IndexCount.getColumnIndex(), rowIndex);
 		customerKeyword.setCurrentIndexCount(indexCount);
 
-		int sequence = getIntValue(SuperUserFullKeywordDefinition.Sequnce.getColumnIndex(), rowIndex);
+		Integer sequence = getIntValue(SuperUserFullKeywordDefinition.Sequnce.getColumnIndex(), rowIndex);
 		customerKeyword.setSequence(sequence);
 
-		int optimizePlanCount = getIntValue(SuperUserFullKeywordDefinition.OptimizePlanCount.getColumnIndex(), rowIndex);
+		Integer optimizePlanCount = getIntValue(SuperUserFullKeywordDefinition.OptimizePlanCount.getColumnIndex(), rowIndex);
 		customerKeyword.setOptimizePlanCount(optimizePlanCount);
 		
 		customerKeyword.setOptimizeGroupName(getStringValue(SuperUserFullKeywordDefinition.OptimizeGroupName.getColumnIndex(), rowIndex));

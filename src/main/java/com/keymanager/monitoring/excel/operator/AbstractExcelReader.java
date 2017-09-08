@@ -44,20 +44,20 @@ public abstract class AbstractExcelReader {
 		return null;
 	}
 
-	protected int getIntValue(int columnIndex, int rowIndex) {
+	protected Integer getIntValue(int columnIndex, int rowIndex) {
 		Cell cell = reader.getCell(columnIndex, rowIndex);
 		if (cell != null && !Utils.isNullOrEmpty(cell.getContents())){
 			return Integer.parseInt(cell.getContents().trim());
 		}
-		return 0;
+		return null;
 	}
 	
-	protected double getDoubleValue(int columnIndex, int rowIndex) {
+	protected Double getDoubleValue(int columnIndex, int rowIndex) {
 		Cell cell = reader.getCell(columnIndex, rowIndex);
 		if (cell != null && !Utils.isNullOrEmpty(cell.getContents())){
 			return Double.parseDouble(cell.getContents().trim());
 		}
-		return 0;
+		return null;
 	}
 
 	protected String getCollectMethodValue(String name) {

@@ -38,7 +38,7 @@ public class CustomerKeyword extends BaseEntity {
     private String title;
 
     @TableField(value = "fSequence")
-    private int sequence;
+    private Integer sequence;
 
     @TableField(value = "fCaptureTitleQueryTime")
     private Date captureTitleQueryTime;
@@ -92,7 +92,7 @@ public class CustomerKeyword extends BaseEntity {
     private String optimizeGroupName;
 
     @TableField(value = "fOptimizePlanCount")
-    private int optimizePlanCount;
+    private Integer optimizePlanCount;
 
     @TableField(value = "fOptimizedCount")
     private int optimizedCount;
@@ -250,11 +250,11 @@ public class CustomerKeyword extends BaseEntity {
         this.title = title;
     }
 
-    public int getSequence() {
+    public Integer getSequence() {
         return sequence;
     }
 
-    public void setSequence(int sequence) {
+    public void setSequence(Integer sequence) {
         this.sequence = sequence;
     }
 
@@ -394,15 +394,15 @@ public class CustomerKeyword extends BaseEntity {
         this.optimizeGroupName = optimizeGroupName;
     }
 
-    public int getOptimizePlanCount() {
+    public Integer getOptimizePlanCount() {
         return optimizePlanCount;
     }
 
-    public void setOptimizePlanCount(int optimizePlanCount) {
+    public void setOptimizePlanCount(Integer optimizePlanCount) {
         this.optimizePlanCount = optimizePlanCount;
     }
 
-    public int getOptimizedCount() {
+    public Integer getOptimizedCount() {
         return optimizedCount;
     }
 

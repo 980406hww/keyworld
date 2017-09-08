@@ -1,6 +1,7 @@
 package com.keymanager.monitoring.controller.rest.internal;
 
 import com.baomidou.mybatisplus.plugins.Page;
+import com.keymanager.monitoring.criteria.CustomerCriteria;
 import com.keymanager.monitoring.excel.operator.CustomerKeywordInfoExcelWriter;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.CustomerKeywordCleanCriteria;
@@ -77,6 +78,8 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		Customer customer = customerService.getCustomerWithKeywordCount(customerKeywordCrilteria.getCustomerUuid());
 		String entryType = (String) session.getAttribute("entry");
 		String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+		String orderElement = request.getParameter("orderElement");
+		initOrderElemnet(orderElement,customerKeywordCrilteria);
 		customerKeywordCrilteria.setEntryType(entryType);
 		customerKeywordCrilteria.setTerminalType(terminalType);
 		List<ServiceProvider> serviceProviders = serviceProviderService.searchServiceProviders();
@@ -86,7 +89,21 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		modelAndView.addObject("user", user);
 		modelAndView.addObject("customer", customer);
 		modelAndView.addObject("serviceProviders",serviceProviders);
+		modelAndView.addObject("orderElement",orderElement);
 		return modelAndView;
+	}
+
+	private void initOrderElemnet(String orderElement, CustomerKeywordCrilteria customerKeywordCrilteria){
+		if(orderElement!=null){
+			switch (orderElement.charAt(0)){
+				case '0':customerKeywordCrilteria.setOrderElement("");break;
+				case '1':customerKeywordCrilteria.setOrderElement("fCreateTime");break;
+				case '2':customerKeywordCrilteria.setOrderElement("fCurrentPosition");break;
+				case '3':customerKeywordCrilteria.setOrderElement("fSequence");break;
+			}
+		}else{
+			orderElement = "0";
+		}
 	}
 
 	@RequestMapping(value = "/saveCustomerKeywords", method = RequestMethod.POST)
@@ -216,14 +233,14 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	@RequestMapping(value = "/downloadCustomerKeywordInfo", method = RequestMethod.POST)
 	public ResponseEntity<?> downloadCustomerKeywordInfo( HttpServletRequest request,
 														 HttpServletResponse response,CustomerKeywordCrilteria customerKeywordCrilteria) {
-		FileInputStream fis = null;
-		BufferedInputStream bis = null;
 		try {
 			String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
 			String customerUuid = request.getParameter("customerUuid").trim();
 			String entryType = (String) request.getSession().getAttribute("entry");
 			customerKeywordCrilteria.setTerminalType(terminalType);
 			customerKeywordCrilteria.setEntryType(entryType);
+			String orderElement = request.getParameter("orderElement");
+			initOrderElemnet(orderElement,customerKeywordCrilteria);
 			List<CustomerKeyword> customerKeywords = customerKeywordService.searchCustomerKeywords(customerKeywordCrilteria);
 			if (!Utils.isEmpty(customerKeywords)) {
 				CustomerKeywordInfoExcelWriter excelWriter = new CustomerKeywordInfoExcelWriter();
@@ -248,25 +265,6 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 			logger.error(e.getMessage());
 			e.printStackTrace();
 			return new ResponseEntity<Object>(false,HttpStatus.OK);
-		} finally {
-			if (bis != null) {
-				try {
-					bis.close();
-				} catch (IOException e) {
-					logger.error(e.getMessage());
-					e.printStackTrace();
-					return new ResponseEntity<Object>(false,HttpStatus.OK);
-				}
-			}
-			if (fis != null) {
-				try {
-					fis.close();
-				} catch (IOException e) {
-					logger.error(e.getMessage());
-					e.printStackTrace();
-					return new ResponseEntity<Object>(false,HttpStatus.OK);
-				}
-			}
 		}
 		return new ResponseEntity<Object>(true,HttpStatus.OK);
 	}

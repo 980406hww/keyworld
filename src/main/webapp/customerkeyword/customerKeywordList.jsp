@@ -118,7 +118,7 @@
             function initPaging() {
                 var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
                 var searchCustomerKeywordTable = searchCustomerKeywordForm.find("#searchCustomerKeywordTable");
-                searchCustomerKeywordTable.find("#orderElement").val('${customerKeywordCrilteria.orderElement}');
+                searchCustomerKeywordTable.find("#orderElement").val('${orderElement}');
                 searchCustomerKeywordTable.find("#status").val(${customerKeywordCrilteria.status});
                 var pages = searchCustomerKeywordForm.find('#pagesHidden').val();
                 var currentPageNumber = searchCustomerKeywordForm.find('#currentPageNumberHidden').val();
@@ -167,6 +167,38 @@
                     obj.style.backgroundColor = "#eeeeee";
                 } else {
                     obj.style.backgroundColor = "#ffffff";
+                }
+            }
+
+            function setSecondThirdDefaultFee(self){
+                $(self).val($(self).val().replace(/[^\d]*/g, ''));
+                var positionFirstFee = document.getElementById("positionFirstFee");
+                var positionSecondFee = document.getElementById("positionSecondFee");
+                var positionThirdFee = document.getElementById("positionThirdFee");
+                positionFirstFee.value = trim(positionFirstFee.value);
+                positionSecondFee.value = trim(positionSecondFee.value);
+                positionThirdFee.value = trim(positionThirdFee.value);
+                if (positionFirstFee.value != "") {
+                    if (positionSecondFee.value == ""){
+                        positionSecondFee.value = positionFirstFee.value;
+                    }
+
+                    if (positionThirdFee.value == ""){
+                        positionThirdFee.value = positionFirstFee.value;
+                    }
+                }
+            }
+
+            function setThirdDefaultFee(self){
+                $(self).val($(self).val().replace(/[^\d]*/g, ''));
+                var positionSecondFee = document.getElementById("positionSecondFee");
+                var positionThirdFee = document.getElementById("positionThirdFee");
+                positionSecondFee.value = trim(positionSecondFee.value);
+                positionThirdFee.value = trim(positionThirdFee.value);
+                if (positionSecondFee.value != "") {
+                    if (positionThirdFee.value == ""){
+                        positionThirdFee.value = positionSecondFee.value;
+                    }
                 }
             }
 
@@ -581,7 +613,9 @@
                             saveCustomerKeywordDialog.find("#orderNumber").val(customerKeyword.orderNumber);
                             saveCustomerKeywordDialog.find("#paymentStatus").val(customerKeyword.paymentStatus);
                             saveCustomerKeywordDialog.find("#remarks").val(customerKeyword.remarks);
-
+                            if(customerKeyword.positionFirstCost!=null||customerKeyword.positionSecondCost!=null||customerKeyword.positionThirdCost!=null||customerKeyword.positionForthCost!=null||customerKeyword.positionFifthCost!=null){
+                                showCustomerKeywordCost();
+                            }
                             addCustomerKeyword(customerKeywordUuid);
                         } else {
                             $().toastmessage('showErrorToast', "操作失败");
@@ -605,8 +639,8 @@
                 }
                 $("#uploadExcelDailog").dialog({
                     resizable: false,
-                    width: 300,
-                    height: 170,
+                    width: 260,
+                    height: 180,
                     modal: true,
                     position:{
                         my:"center top",
@@ -803,10 +837,17 @@
                 onClick="WdatePicker()"
                 value="${customerKeywordCrilteria.creationToTime}">
             排序:
+            <%--<select name="orderElement" id="orderElement">--%>
+                <%--<option value="">--请选择排序--</option>--%>
+                <%--<option value="fCreateTime">创建日期</option>--%>
+                <%--<option value="fCurrentPosition">当前排名</option>--%>
+                <%--<option value="fSequence">添加序号</option>--%>
+            <%--</select>--%>
             <select name="orderElement" id="orderElement">
-                <option value="">--请选择排序--</option>
-                <option value="fCreateTime">创建日期</option>
-                <option value="fCurrentPosition">当前排名</option>
+                <option value="0">关键字</option>
+                <option value="1">创建日期</option>
+                <option value="2">当前排名</option>
+                <option value="3">添加序号</option>
             </select>
             <%--</c:if>--%>
             &nbsp;&nbsp;
@@ -949,10 +990,12 @@
         目标组名称:<input type="text" id="groupName" name="groupName" style="width:150px">
     </form>
 </div>
-<div id="uploadExcelDailog"  style="text-align: center;height: 60px;" title="Excel文件上传">
+<div id="uploadExcelDailog"  style="text-align: left;height: 60px;" title="Excel文件上传">
     <form method="post" id="uploadExcelForm" style="margin-top: 10px"  enctype="multipart/form-data" >
         <input type="hidden" id="customerUuid" name="customerUuid" value="${customerKeywordCrilteria.customerUuid}">
-        <span>请选择要上传的文件:<label id="excelType" style="color: red"></label></span><input type="file" id="uploadExcelFile" name="file" >
+        <span>请选择要上传的文件<label id="excelType" style="color: red"></label></span>
+        <div style="height: 10px;"></div>
+        <input type="file" id="uploadExcelFile" name="file" >
     </form>
 </div>
 
@@ -984,12 +1027,12 @@
                     <li>
                         <span class="customerKeywordSpanClass">第一报价:</span><input name="positionFirstFee" id="positionFirstFee" value=""
                                                                                   style="width:100px;"
-                                                                                  type="text" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)">元 </li>
+                                                                                  type="text" onkeyup="onlyNumber(this)" onblur="setSecondThirdDefaultFee(this)">元 </li>
                     <li><span class="customerKeywordSpanClass">第二报价:</span><input name="positionSecondFee"
                                                                                   id="positionSecondFee" value="" style="width:100px;" type="text" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)">元
                     </li>
                     <li><span class="customerKeywordSpanClass">第三报价:</span><input name="positionThirdFee" id="positionThirdFee" value=""
-                                                                                  style="width:100px;" type="text" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)">元
+                                                                                  style="width:100px;" type="text" onkeyup="onlyNumber(this)" onblur="setThirdDefaultFee(this)">元
                     </li>
                     <li><span class="customerKeywordSpanClass">第四报价:</span><input name="positionForthFee" id="positionForthFee" value=""
                                                                                   style="width:100px;" type="text" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)">元
@@ -1013,13 +1056,13 @@
                                                                                           style="width:100px;" type="text" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)">元
                             </li>
                             <li><span class="customerKeywordSpanClass">第三成本:</span><input name="positionThirdCost" id="positionThirdCost"
-                                                                                          value="0" style="width:100px;" type="text" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)">元
+                                                                                          value="" style="width:100px;" type="text" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)">元
                             </li>
                             <li><span class="customerKeywordSpanClass">第四成本:</span><input name="positionForthCost" id="positionForthCost"
-                                                                                          value="0" style="width:100px;" type="text" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)">元
+                                                                                          value="" style="width:100px;" type="text" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)">元
                             </li>
                             <li><span class="customerKeywordSpanClass">第五成本:</span><input name="positionFifthCost" id="positionFifthCost"
-                                                                                          value="0" style="width:100px;" type="text" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)">元
+                                                                                          value="" style="width:100px;" type="text" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)">元
                             </li>
                         </ul>
                     </ul>
@@ -1031,7 +1074,6 @@
                         <c:forEach items="${serviceProviders}" var="serviceProvider">
                             <option value="${serviceProvider.serviceProviderName}" <c:if test="${serviceProvider.serviceProviderName=='baidutop123'}">selected="selected"</c:if>>${serviceProvider.serviceProviderName}</option>
                         </c:forEach>
-
                     </select></li>
             </c:if>
 
