@@ -44,8 +44,6 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     //修改该用户关键字组名
     void updateCustomerKeywordGroupName(@Param("customerKeywordUpdateGroupCriteria")CustomerKeywordUpdateGroupCriteria customerKeywordUpdateGroupCriteria);
 
-    void changeOptimizationGroup(@Param("customerKeyword")CustomerKeyword customerKeyword);
-
     void deleteCustomerKeywordsByUuid(@Param("customerKeywordUuids")List<String> customerKeywordUuids);
 
     void deleteCustomerKeywordsWhenEmptyTitleAndUrl(@Param("terminalType")String terminalType, @Param("entryType")String entryType, @Param("customerUuid")String customerUuid);
@@ -53,4 +51,19 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void deleteCustomerKeywordsWhenEmptyTitle(@Param("terminalType")String terminalType, @Param("entryType")String entryType, @Param("customerUuid")String customerUuid);
 
     List<String> getGroups();
+
+    List<Map> searchRemainingOptimizationCount(@Param("groupName")String groupName, @Param("maxInvalidCount")int maxInvalidCount);
+
+    void cleanBigKeywordIndicator(@Param("groupName")String groupName);
+
+    void setBigKeywordIndicator(@Param("uuids")List<Long> uuids);
+
+    List<String> getEntryTypes(@Param("groupName")String groupName);
+
+    void resetOptimizationInfo();
+
+    CustomerKeyword getCustomerKeywordForOptimization(@Param("groupName")String groupName, @Param("maxInvalidCount")int maxInvalidCount,
+                                                                @Param("bigKeyowrd")int bigKeyowrd);
+
+    void updateOptimizationQueryTime(@Param("customerKeywordUuid")Long customerKeywordUuid);
 }

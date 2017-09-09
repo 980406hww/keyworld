@@ -4,7 +4,7 @@ import java.util.List;
 
 public class CustomerKeywordForOptimization {
 	private String keyword;
-	private int uuid;
+	private long uuid;
 	private String url;
 	private String group;
 	private String entryType;
@@ -67,11 +67,11 @@ public class CustomerKeywordForOptimization {
 		this.keyword = keyword;
 	}
 
-	public int getUuid() {
+	public long getUuid() {
 		return uuid;
 	}
 
-	public void setUuid(int uuid) {
+	public void setUuid(long uuid) {
 		this.uuid = uuid;
 	}
 

@@ -10,6 +10,7 @@ import com.keymanager.util.Utils;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.sql.Timestamp;
 
 @TableName(value = "t_customer_keyword")
 public class CustomerKeyword extends BaseEntity {

@@ -26,6 +26,13 @@ public class Constants {
 	public final static String BAIDU_TYPE_PC = "PC";
 	public final static String BAIDU_TYPE_JISU = "Jisu";
 	public final static String BAIDU_TYPE_CHUPING = "Chuping";
+
+	public final static String CONFIG_TYPE_PAGE_PERCENTAGE = "PagePercentage";
+	public final static String CONFIG_KEY_PAGE_PC_PERCENTAGE = "PCPercentage";
+	public final static String CONFIG_KEY_PAGE_PHONE_PERCENTAGE = "PhonePercentage";
+	public final static String CONFIG_KEY_MAX_INVALID_COUNT = "MaxInvalidCount";
+	public final static String CONFIG_KEY_VMWARE = "VMWARE";
+	public final static String CONFIG_TYPE_OPTIMIZATION_DATE = "OptimizationDate";
 	
 	public final static Map<String, String> ACCOUNT_LOG_STATUS_MAP = new HashMap<String, String>();	
 	static {

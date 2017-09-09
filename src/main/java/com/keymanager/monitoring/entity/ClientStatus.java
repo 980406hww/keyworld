@@ -3,7 +3,6 @@ package com.keymanager.monitoring.entity;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.NotBlank;
 
 import java.sql.Timestamp;
@@ -227,6 +226,9 @@ public class ClientStatus {
 
 	@TableField(value = "fValid")
 	private boolean valid;
+
+	@TableField(value = "fCreateTime")
+	private Timestamp createTime;
 
 	public String getClientID() {
 		return clientID;
@@ -794,5 +796,13 @@ public class ClientStatus {
 
 	public void setValid(boolean valid) {
 		this.valid = valid;
+	}
+
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
 	}
 }

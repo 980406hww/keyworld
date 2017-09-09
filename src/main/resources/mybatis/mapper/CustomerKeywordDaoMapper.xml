@@ -187,4 +187,45 @@
         SELECT DISTINCT ck.fOptimizeGroupName as 'group' FROM t_customer_keyword ck WHERE ck.fStatus = 1 AND ck.fOptimizeGroupName IS NOT NULL
         AND ck.fOptimizeGroupName <![CDATA[<>]]>'' ORDER BY ck.fOptimizeGroupName
     </select>
+
+    <update id="cleanBigKeywordIndicator">
+        UPDATE t_customer_keyword SET fBigKeyword = 0 WHERE fOptimizeGroupName = #{groupName}
+    </update>
+
+    <update id="setBigKeywordIndicator">
+        UPDATE t_customer_keyword SET fBigKeyword = 1 WHERE fUuid IN
+        <foreach item="item" index="index" collection="uuids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <select id="getEntryTypes" resultType="String">
+        SELECT distinct ck.fType as typeName FROM t_customer_keyword ck WHERE ck.fOptimizeGroupName = #{groupName} AND ck.fStatus = 1
+    </select>
+
+    <update id="resetOptimizationInfo">
+        UPDATE t_customer_keyword SET fOptimizedCount = 0, fInvalidRefreshCount = 0, fOptimizeDate = CURRENT_DATE(), fQueryCount = 0, fQueryDate = CURRENT_DATE()  WHERE fOptimizeDate != CURRENT_DATE()
+    </update>
+
+    <select id="searchRemainingOptimizationCount" resultType="java.util.Map">
+        SELECT ck.fUuid as 'uuid', (ck.fOptimizePlanCount - ck.fOptimizedCount) AS 'remainingCount' FROM t_customer_keyword ck
+        WHERE ck.fOptimizeGroupName = #{groupName} AND ck.fOptimizePlanCount > ck.fOptimizedCount and ck.fInvalidRefreshCount <![CDATA[<]]> #{maxInvalidCount}
+        ORDER BY (ck.fOptimizePlanCount - ck.fOptimizedCount) DESC
+    </select>
+
+    <select id="getCustomerKeywordForOptimization" resultType="com.keymanager.monitoring.entity.CustomerKeyword">
+        SELECT
+        <include refid="colID"/>
+        FROM t_customer_keyword ck
+        WHERE ck.fOptimizeGroupName = #{groupName} and ck.fStatus = 1
+        and (ck.fQueryTime is NULL or DATE_SUB(NOW(), INTERVAL ck.fQueryInterval MINUTE) > ck.fQueryTime) and ck.fUrl <![CDATA[<>]]> ''
+        and ((ck.fCurrentPosition = 0 and ck.fInvalidRefreshCount <![CDATA[<]]> 2) or (ck.fCurrentPosition > 0 and ck.fInvalidRefreshCount <![CDATA[<]]> #{maxInvalidCount}))
+        and ck.fBigKeyword = #{bigKeyowrd} and ((ck.fOptimizedCount <![CDATA[<]]> ck.fOptimizePlanCount) or (ck.fOptimizeDate is null) or (ck.fOptimizeDate <![CDATA[<]]> current_date()))
+        order by ck.fQueryTime limit 1
+    </select>
+
+    <update id="updateOptimizationQueryTime">
+        UPDATE t_customer_keyword set fQueryDate = CURRENT_DATE(), fInvalidRefreshCount = fInvalidRefreshCount + 1, fQueryTime = now()
+        WHERE fUuid = #{customerKeywordUuid}
+    </update>
 </mapper>

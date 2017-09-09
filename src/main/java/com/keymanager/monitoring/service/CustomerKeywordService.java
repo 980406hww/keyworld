@@ -5,9 +5,11 @@ import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.keymanager.db.DBUtil;
 import com.keymanager.enums.CollectMethod;
+import com.keymanager.enums.CustomerKeywordStatus;
+import com.keymanager.manager.*;
 import com.keymanager.monitoring.excel.operator.AbstractExcelReader;
-import com.keymanager.manager.CustomerKeywordManager;
 import com.keymanager.monitoring.criteria.BaiduIndexCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordCleanCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordCrilteria;
@@ -18,9 +20,10 @@ import com.keymanager.monitoring.enums.*;
 import com.keymanager.util.Constants;
 import com.keymanager.util.Utils;
 import com.keymanager.util.common.StringUtil;
-import com.keymanager.value.CustomerKeywordForCaptureTitle;
-import com.keymanager.value.CustomerVO;
+import com.keymanager.value.*;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +31,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, CustomerKeyword> {
@@ -47,6 +48,15 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     @Autowired
     private CustomerChargeTypeService customerChargeTypeService;
+
+    @Autowired
+    private ClientStatusService clientStatusService;
+
+    @Autowired
+    private ConfigService configService;
+
+    @Autowired
+    private KeywordOptimizationCountService keywordOptimizationCountService;
 
     @Autowired
     private CustomerKeywordDao customerKeywordDao;
@@ -161,31 +171,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     public int getCustomerKeywordCount(long customerUuid) {
         return customerKeywordDao.getCustomerKeywordCount(customerUuid);
     }
-
-    /*public void deleteCustomerKeyword(long customerKeywordUuid, String entryType) {
-        CustomerKeyword customerKeyword = new CustomerKeyword();
-        customerKeyword.setUuid(customerKeywordUuid);
-        customerKeyword.setType(entryType);
-//        Wrapper wrapper = new EntityWrapper(customerKeyword);
-//        this.delete(wrapper);
-        customerKeywordDao.deleteCustomerKeyword(customerKeyword,null);
-    }*/
-
-    /*public void deleteCustomerKeywords(List<String> customerKeywordUuids, String entry, String deleteType, String terminalType,String customerUuid) {
-        if (customerKeywordUuids != null) {
-            for (String customerKeywordUuid : customerKeywordUuids) {
-                CustomerKeyword customerKeyword = new CustomerKeyword();
-                customerKeyword.setUuid(Long.parseLong(customerKeywordUuid));
-                customerKeyword.setType(entry);
-                customerKeywordDao.deleteCustomerKeyword(customerKeyword, deleteType);
-            }
-        }else {
-            CustomerKeyword customerKeyword = new CustomerKeyword();
-            customerKeyword.setCustomerUuid(Long.parseLong(customerUuid));
-            customerKeyword.setTerminalType(terminalType);
-            customerKeywordDao.deleteCustomerKeyword(customerKeyword, deleteType);
-        }
-    }*/
 
     public void deleteCustomerKeywordsByUuid(List<String> customerKeywordUuids){
         customerKeywordDao.deleteCustomerKeywordsByUuid(customerKeywordUuids);
@@ -353,17 +338,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeywordDao.updateCustomerKeywordGroupName(customerKeywordUpdateGroupCriteria);
     }
 
-    public void changeOptimizationGroup(CustomerKeyword customerKeyword) {
-        customerKeywordDao.changeOptimizationGroup(customerKeyword);
-    }
-
-    //
     public CustomerKeyword getCustomerKeyword(Long CustomerKeywordUuid) {
         return customerKeywordDao.selectById(CustomerKeywordUuid);
-    }
-    //
-    public CustomerVO getCustomerByUuid(String uuid) throws Exception {
-        return null;
     }
 
     //简化版Excel文件导入
@@ -433,4 +409,176 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return customerKeywordDao.getGroups();
     }
 
+
+    public CustomerKeywordForOptimization searchCustomerKeywordsForOptimization(String terminalType, String clientID, String ip) throws Exception {
+        ClientStatus clientStatus = clientStatusService.selectById(clientID);
+        if(clientStatus == null) {
+            clientStatusService.addClientStatus(terminalType, clientID, 500 + "", null, null);
+            return null;
+        }
+        clientStatusService.updatePageNo(clientID, 0);
+        if(!clientStatus.isValid() || StringUtils.isEmpty(clientStatus.getGroup())){
+            return null;
+        }
+
+        String typeName = "all";
+        List<String> entryTypes = customerKeywordDao.getEntryTypes(clientStatus.getGroup());
+        if(!Utils.isEmpty(entryTypes) && entryTypes.size() == 1){
+            typeName = entryTypes.get(0);
+        }
+
+        if(configService.optimizationDateChanged()) {
+            configService.updateOptimizationDateAsToday();
+            customerKeywordDao.resetOptimizationInfo();
+        }
+
+        Config maxInvalidCountConfig = configService.getConfig(Constants.CONFIG_KEY_MAX_INVALID_COUNT, typeName);
+        if(keywordOptimizationCountService.resetBigKeywordIndicator(clientStatus.getGroup())) {
+            keywordOptimizationCountService.init(clientStatus.getGroup());
+            resetBigKeywordIndicator(clientStatus.getGroup(), Integer.parseInt(maxInvalidCountConfig.getValue()));
+        }
+
+        CustomerKeyword customerKeyword = null;
+        int retryCount = 0;
+        do{
+            boolean isNormalKeyword = keywordOptimizationCountService.optimizeNormalKeyword(clientStatus.getGroup());
+            customerKeyword = customerKeywordDao.getCustomerKeywordForOptimization(clientStatus.getGroup(),
+                    Integer.parseInt(maxInvalidCountConfig.getValue()), isNormalKeyword == false ? 0 : 1);
+            retryCount++;
+            if(customerKeyword == null){
+                keywordOptimizationCountService.init(clientStatus.getGroup());
+                resetBigKeywordIndicator(clientStatus.getGroup(), Integer.parseInt(maxInvalidCountConfig.getValue()));
+            }
+        }while(customerKeyword != null || retryCount > 2);
+
+        if(customerKeyword != null){
+            CustomerKeywordForOptimization customerKeywordForOptimization = new CustomerKeywordForOptimization();
+            customerKeywordForOptimization.setUuid(customerKeyword.getUuid());
+            customerKeywordForOptimization.setKeyword(customerKeyword.getKeyword());
+            customerKeywordForOptimization.setUrl(customerKeyword.getUrl());
+            customerKeywordForOptimization.setEntryType(customerKeyword.getType());
+
+//            String relatedKeyword = "";
+//            Random rd = new Random();
+//            if (!Utils.isNullOrEmpty(customerKeyword.getRelatedKeywords())) {
+//                String[] keywords = customerKeyword.getRelatedKeywords().split(",");
+//                relatedKeyword = keywords[rd.nextInt(keywords.length)];
+//            }
+//            if (Utils.isNullOrEmpty(relatedKeyword)) {
+//                KeywordPositionUrlManager manager = new KeywordPositionUrlManager();
+//
+//                relatedKeyword = manager.getKeywordPositionUrlVOString(datasourceName, customerKeyword.getSearchEngine(), null);
+//                customerKeywordForOptimization.setRelatedKeyword(relatedKeyword);
+//            }
+
+            customerKeywordForOptimization.setCurrentPosition(customerKeyword.getCurrentPosition());
+            customerKeywordForOptimization.setOriginalUrl(customerKeyword.getOriginalUrl());
+            customerKeywordForOptimization.setTitle(customerKeyword.getTitle());
+
+//            KeywordExcludeTitleManager manager = new KeywordExcludeTitleManager();
+//            List<KeywordExcludeTitleVO> keywordExcludeTitleVOs = manager.searchKeywordExcludeTitleVOs(conn, customerKeyword.getKeyword());
+//            StringBuilder sbTitle = new StringBuilder();
+//            if(keywordExcludeTitleVOs != null){
+//                List<String> excludeTitles = new ArrayList<String>();
+//                customerKeywordForOptimization.setExcludeTitles(excludeTitles);
+//                for(KeywordExcludeTitleVO keywordExcludeTitleVO : keywordExcludeTitleVOs){
+//                    excludeTitles.add(keywordExcludeTitleVO.getExcludeTitle());
+//                }
+//            }
+//
+//
+//            BaiduAdUrlManager baiduAdUrlManager = new BaiduAdUrlManager();
+//            String baiduAdUrl = baiduAdUrlManager.getBaiduAdUrl(conn);
+//            customerKeywordForOptimization.setBaiduAdUrl(baiduAdUrl);
+
+            customerKeywordForOptimization.setGroup(clientStatus.getGroup());
+            customerKeywordForOptimization.setOperationType(clientStatus.getOperationType());
+
+            if("pc_pm_xiaowu".equals(customerKeyword.getOptimizeGroupName()) && (customerKeyword.getCurrentPosition() == 0 ||
+                    customerKeyword.getCurrentPosition() > 20)) {
+                customerKeywordForOptimization.setPage(2);
+            }else{
+                customerKeywordForOptimization.setPage(clientStatus.getPage());
+            }
+
+            if(clientStatus.getPageSize() != null) {
+                if("pc_pm_xiaowu".equals(customerKeyword.getOptimizeGroupName()) && (customerKeyword.getCurrentPosition() == 0 ||
+                        customerKeyword.getCurrentPosition() > 20)){
+                    customerKeywordForOptimization.setPageSize(50);
+                }else {
+                    customerKeywordForOptimization.setPageSize(clientStatus.getPageSize());
+                }
+            }
+            if(clientStatus.getZhanneiPercent() != null) {
+                customerKeywordForOptimization.setZhanneiPercent(clientStatus.getZhanneiPercent());
+            }
+            if(clientStatus.getBaiduSemPercent() != null) {
+                customerKeywordForOptimization.setBaiduSemPercent(clientStatus.getBaiduSemPercent());
+            }
+            customerKeywordForOptimization.setClearCookie(clientStatus.getClearCookie());
+            if(clientStatus.getDragPercent() != null) {
+                customerKeywordForOptimization.setDragPercent(clientStatus.getDragPercent());
+            }
+            if(clientStatus.getKuaizhaoPercent() != null) {
+                customerKeywordForOptimization.setKuaizhaoPercent(clientStatus.getKuaizhaoPercent());
+            }
+            if(clientStatus.getMultiBrowser() != null) {
+                customerKeywordForOptimization.setMultiBrowser(clientStatus.getMultiBrowser());
+            }
+            customerKeywordForOptimization.setOpenStatistics(clientStatus.getDisableStatistics() == 1 ? 0 : 1);
+            customerKeywordForOptimization.setDisableStatistics(clientStatus.getDisableStatistics());
+            customerKeywordForOptimization.setCurrentTime(Utils.formatDate(new Date(), Utils.TIME_FORMAT));
+
+            customerKeywordForOptimization.setEntryPageMinCount(clientStatus.getEntryPageMinCount());
+            customerKeywordForOptimization.setEntryPageMaxCount(clientStatus.getEntryPageMaxCount());
+            customerKeywordForOptimization.setDisableVisitWebsite(clientStatus.getDisableVisitWebsite());
+            customerKeywordForOptimization.setPageRemainMinTime(clientStatus.getPageRemainMinTime());
+            customerKeywordForOptimization.setPageRemainMaxTime(clientStatus.getPageRemainMaxTime());
+            customerKeywordForOptimization.setInputDelayMinTime(clientStatus.getInputDelayMinTime());
+            customerKeywordForOptimization.setInputDelayMaxTime(clientStatus.getInputDelayMaxTime());
+            customerKeywordForOptimization.setSlideDelayMinTime(clientStatus.getSlideDelayMinTime());
+            customerKeywordForOptimization.setSlideDelayMaxTime(clientStatus.getSlideDelayMaxTime());
+            customerKeywordForOptimization.setTitleRemainMinTime(clientStatus.getTitleRemainMinTime());
+            customerKeywordForOptimization.setTitleRemainMaxTime(clientStatus.getTitleRemainMaxTime());
+            customerKeywordForOptimization.setOptimizeKeywordCountPerIP(clientStatus.getOptimizeKeywordCountPerIP());
+            customerKeywordForOptimization.setOneIPOneUser(clientStatus.getOneIPOneUser());
+            customerKeywordForOptimization.setRandomlyClickNoResult(clientStatus.getRandomlyClickNoResult());
+            customerKeywordForOptimization.setJustVisitSelfPage(clientStatus.getJustVisitSelfPage());
+            customerKeywordForOptimization.setSleepPer2Words(clientStatus.getSleepPer2Words());
+            customerKeywordForOptimization.setSupportPaste(clientStatus.getSupportPaste());
+            customerKeywordForOptimization.setMoveRandomly(clientStatus.getMoveRandomly());
+            customerKeywordForOptimization.setParentSearchEntry(clientStatus.getParentSearchEntry());
+            customerKeywordForOptimization.setClearLocalStorage(clientStatus.getClearLocalStorage());
+            customerKeywordForOptimization.setLessClickAtNight(clientStatus.getLessClickAtNight());
+            customerKeywordForOptimization.setSameCityUser(clientStatus.getSameCityUser());
+            customerKeywordForOptimization.setLocateTitlePosition(clientStatus.getLocateTitlePosition());
+            customerKeywordForOptimization.setBaiduAllianceEntry(clientStatus.getBaiduAllianceEntry());
+            customerKeywordForOptimization.setJustClickSpecifiedTitle(clientStatus.getJustClickSpecifiedTitle());
+            customerKeywordForOptimization.setRandomlyClickMoreLink(clientStatus.getRandomlyClickMoreLink());
+            customerKeywordForOptimization.setMoveUp20(clientStatus.getMoveUp20());
+            customerKeywordForOptimization.setWaitTimeAfterOpenBaidu(clientStatus.getWaitTimeAfterOpenBaidu());
+            customerKeywordForOptimization.setWaitTimeBeforeClick(clientStatus.getWaitTimeBeforeClick());
+            customerKeywordForOptimization.setWaitTimeAfterClick(clientStatus.getWaitTimeAfterClick());
+            customerKeywordForOptimization.setMaxUserCount(clientStatus.getMaxUserCount());
+
+            customerKeywordDao.updateOptimizationQueryTime(customerKeyword.getUuid());
+            return customerKeywordForOptimization;
+        }
+        return null;
+    }
+
+    public void resetBigKeywordIndicator(String groupName, int maxInvalidCount) {
+        customerKeywordDao.cleanBigKeywordIndicator(groupName);
+        List<Map> remainingOptimizationCountMap = customerKeywordDao.searchRemainingOptimizationCount(groupName, maxInvalidCount);
+        if(CollectionUtils.isNotEmpty(remainingOptimizationCountMap)) {
+            List<Long> customerKeywordUuids = new ArrayList<Long>();
+            for(Map map : remainingOptimizationCountMap) {
+                customerKeywordUuids.add((Long)map.get("uuid"));
+                if((1.0 * customerKeywordUuids.size()) / remainingOptimizationCountMap.size() > 0.2) {
+                    break;
+                }
+            }
+            customerKeywordDao.setBigKeywordIndicator(customerKeywordUuids);
+        }
+    }
 }
