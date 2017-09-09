@@ -43,18 +43,18 @@ public class SuperUserSimpleKeywordExcelOperator extends AbstractExcelReader {
 		}
 		customerKeyword.setServiceProvider("baidutop123");
 		
-		double pcFee = getDoubleValue(SuperUserSimpleKeywordDefinition.Fee.getColumnIndex(), rowIndex);
+		Double pcFee = getDoubleValue(SuperUserSimpleKeywordDefinition.Fee.getColumnIndex(), rowIndex);
 		customerKeyword.setPositionFirstFee(pcFee);
 		customerKeyword.setPositionSecondFee(pcFee);
 		customerKeyword.setPositionThirdFee(pcFee);
 		
-		int indexCount = getIntValue(SuperUserSimpleKeywordDefinition.IndexCount.getColumnIndex(), rowIndex);
+		Integer indexCount = getIntValue(SuperUserSimpleKeywordDefinition.IndexCount.getColumnIndex(), rowIndex);
 		customerKeyword.setCurrentIndexCount(indexCount);
 
-		int sequence = getIntValue(SuperUserSimpleKeywordDefinition.Sequnce.getColumnIndex(), rowIndex);
+		Integer sequence = getIntValue(SuperUserSimpleKeywordDefinition.Sequnce.getColumnIndex(), rowIndex);
 		customerKeyword.setSequence(sequence);
 
-		int optimizePlanCount = getIntValue(SuperUserFullKeywordDefinition.OptimizePlanCount.getColumnIndex(), rowIndex);
+		Integer optimizePlanCount = getIntValue(SuperUserFullKeywordDefinition.OptimizePlanCount.getColumnIndex(), rowIndex);
 		customerKeyword.setOptimizePlanCount(optimizePlanCount);
 		
 		customerKeyword.setOriginalUrl(getStringValue(SuperUserSimpleKeywordDefinition.OriginalURL.getColumnIndex(), rowIndex));
@@ -62,7 +62,6 @@ public class SuperUserSimpleKeywordExcelOperator extends AbstractExcelReader {
 		
 		customerKeyword.setTitle(getStringValue(SuperUserSimpleKeywordDefinition.Title.getColumnIndex(), rowIndex));
 		customerKeyword.setRemarks(getStringValue(SuperUserSimpleKeywordDefinition.Remarks.getColumnIndex(), rowIndex));
-		
 		return customerKeyword;
 	}
 }

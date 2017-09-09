@@ -97,29 +97,28 @@
                 padding: 0;
             }
 
-            #customerKeywordDialog ul{list-style: none;margin: 0px;padding: 0px;}
-            #customerKeywordDialog li{margin: 5px 0;}
-            #customerKeywordDialog .customerKeywordSpanClass{width: 70px;display: inline-block;text-align: right;}
+            #saveCustomerKeywordDialog ul{list-style: none;margin: 0px;padding: 0px;}
+            #saveCustomerKeywordDialog li{margin: 5px 0;}
+            #saveCustomerKeywordDialog .customerKeywordSpanClass{width: 70px;display: inline-block;text-align: right;}
         </style>
 
         <script language="javascript">
             $(function () {
-                $("#changeOptimizationGroupDialog").hide();
-                $("#updateCustomerKeywordGroupNameDialog").hide();
-                $("#uploadSimpleconDailog").hide();
-                $("#customerKeywordDialog").hide();
+                $("#groupChangeNameDialog").hide();
+                $("#uploadExcelDailog").hide();
+                $("#saveCustomerKeywordDialog").hide();
                 $("#customerKeywordDiv").css("margin-top",$("#customerKeywordTopDiv").height());
-                pageLoad();
-                setNoPositionChecked();
-                aligned();
+                initPaging();
+                initNoPositionChecked();//初始化排名为0的初始值
+                alignTableHeader();
                 window.onresize = function(){
-                    aligned();
+                    alignTableHeader();
                 }
             });
-            function pageLoad() {
+            function initPaging() {
                 var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
                 var searchCustomerKeywordTable = searchCustomerKeywordForm.find("#searchCustomerKeywordTable");
-                searchCustomerKeywordTable.find("#orderElement").val('${customerKeywordCrilteria.orderElement}');
+                searchCustomerKeywordTable.find("#orderElement").val('${orderElement}');
                 searchCustomerKeywordTable.find("#status").val(${customerKeywordCrilteria.status});
                 var pages = searchCustomerKeywordForm.find('#pagesHidden').val();
                 var currentPageNumber = searchCustomerKeywordForm.find('#currentPageNumberHidden').val();
@@ -140,7 +139,6 @@
                     showCustomerBottomDiv.find("#lastButton").removeAttr("disabled");
                 }
             }
-
 
             function selectAll(self) {
                 var a = document.getElementsByName("uuid");
@@ -172,6 +170,38 @@
                 }
             }
 
+            function setSecondThirdDefaultFee(self){
+                $(self).val($(self).val().replace(/[^\d]*/g, ''));
+                var positionFirstFee = document.getElementById("positionFirstFee");
+                var positionSecondFee = document.getElementById("positionSecondFee");
+                var positionThirdFee = document.getElementById("positionThirdFee");
+                positionFirstFee.value = trim(positionFirstFee.value);
+                positionSecondFee.value = trim(positionSecondFee.value);
+                positionThirdFee.value = trim(positionThirdFee.value);
+                if (positionFirstFee.value != "") {
+                    if (positionSecondFee.value == ""){
+                        positionSecondFee.value = positionFirstFee.value;
+                    }
+
+                    if (positionThirdFee.value == ""){
+                        positionThirdFee.value = positionFirstFee.value;
+                    }
+                }
+            }
+
+            function setThirdDefaultFee(self){
+                $(self).val($(self).val().replace(/[^\d]*/g, ''));
+                var positionSecondFee = document.getElementById("positionSecondFee");
+                var positionThirdFee = document.getElementById("positionThirdFee");
+                positionSecondFee.value = trim(positionSecondFee.value);
+                positionThirdFee.value = trim(positionThirdFee.value);
+                if (positionSecondFee.value != "") {
+                    if (positionThirdFee.value == ""){
+                        positionThirdFee.value = positionSecondFee.value;
+                    }
+                }
+            }
+
             function delItem(customerKeywordUuid) {
                 if (confirm("确实要删除这个关键字吗?") == false) return;
                 $.ajax({
@@ -187,34 +217,36 @@
                     },
                     error: function () {
                         $().toastmessage('showErrorToast', "删除失败");
-                        window.location.reload();
                     }
                 });
             }
 
             function delAllItems(deleteType,customerUuid) {
-                var uuids = getUuids();
+                var customerKeywordUuids = getUuids();
                 switch (deleteType){
                     case 'ByUuid' :
-                        if (uuids === '') {
+                        if (customerKeywordUuids === '') {
                             alert('请选择要操作的信息');
                             return;
                         }
-                        if (confirm("确实要删除这些关键字吗?") == false) return;break;
-                    case 'EmptyTitleAndUrl' :if (confirm("确实要删除标题和网址为空的关键字吗?") == false) return;break;
-                    case 'EmptyTitle' :if (confirm("确实要删除标题为空的关键字吗?") == false) return;break;
+                        if (confirm("确实要删除这些关键字吗?") == false) return;
+                        break;
+                    case 'EmptyTitleAndUrl' :
+                        if (confirm("确实要删除标题和网址为空的关键字吗?") == false) return;
+                        break;
+                    case 'EmptyTitle' :
+                        if (confirm("确实要删除标题为空的关键字吗?") == false) return;
+                        break;
                 }
-                var postData = {};
-                if(uuids ===''){
-
-                }else{
-                    postData.uuids = uuids.split(",");
+                var deletionCriteria = {};
+                if(customerKeywordUuids !== ''){
+                    deletionCriteria.uuids = customerKeywordUuids.split(",");
                 }
-                postData.deleteType = deleteType;
-                postData.customerUuid = customerUuid;
+                deletionCriteria.deleteType = deleteType;
+                deletionCriteria.customerUuid = customerUuid;
                 $.ajax({
                     url: '/internal/customerKeyword/deleteCustomerKeywords',
-                    data: JSON.stringify(postData),
+                    data: JSON.stringify(deletionCriteria),
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json'
@@ -227,12 +259,10 @@
                             window.location.reload();
                         } else {
                             $().toastmessage('showErrorToast', "操作失败");
-                            window.location.reload();
                         }
                     },
                     error: function () {
                         $().toastmessage('showErrorToast', "操作失败");
-                        window.location.reload();
                     }
                 });
             }
@@ -294,32 +324,6 @@
                 });
             }
 
-            function showInfo(content, e) {
-                e = e || window.event;
-                var div1 = document.getElementById('div2'); //将要弹出的层
-                div1.innerText = content;
-                div1.style.display = "block"; //div1初始状态是不可见的，设置可为可见
-                div1.style.left = getLeft(e) + 10; //鼠标目前在X轴上的位置，加10是为了向右边移动10个px方便看到内容
-                div1.style.top = getTop(e) + 5;
-                div1.style.position = "absolute";
-
-                var intervalID = setInterval(function () {
-                    div1.style.display = "none";
-                }, 3000);
-            }
-
-            function getTop(e) {
-                var offset = e.offsetTop;
-                if (e.offsetParent != null) offset += getTop(e.offsetParent);
-                return offset;
-            }
-            //获取元素的横坐标
-            function getLeft(e) {
-                var offset = e.offsetLeft;
-                if (e.offsetParent != null) offset += getLeft(e.offsetParent);
-                return offset;
-            }
-
             function showTip(content, e) {
                 var event = e || window.event;
                 var pageX = event.pageX;
@@ -344,15 +348,6 @@
                 div1.style.display = "none";
             }
 
-            //弹出部分
-            function checkinput(){
-                var groupName = document.getElementById("groupName");
-                if(trim(groupName.value) == ""){
-                    alert("请输入目标组名");
-                    return false;
-                }
-            }
-
             //重构部分
             //查询
             function changePaging(currentPage, pageSize) {
@@ -368,12 +363,13 @@
             }
 
             //修改所有组名
-            function updateCustomerGroupName(customerUuid) {
-                $("#updateCustomerKeywordGroupNameDialog").dialog({
+            function showGroupNameChangeDialog(changeGroupCriteria) {
+                $("#groupChangeNameDialog").dialog({
                     resizable: false,
                     width: 260,
                     height: 150,
                     modal: true,
+                    title: changeGroupCriteria.title,
                     position:{
                         my:"center top",
                         at:"center top+150",
@@ -382,20 +378,21 @@
                     //按钮
                     buttons: {
                         "保存": function () {
-                            var targetGroupName = $("#updateCustomerKeywordGroupNameFrom").find("#groupName").val();
+                            var targetGroupName = $("#groupNameChangeFrom").find("#groupName").val();
                             if (targetGroupName == null || targetGroupName === '') {
                                 alert("请输入分组名");
                                 return;
                             }
-                            changeGroupName({"customerUuid":customerUuid,"targetGroupName" :targetGroupName })
+                            changeGroupCriteria.targetGroupName = targetGroupName;
+                            changeGroupName(changeGroupCriteria);
                             $(this).dialog("close");
                         },
                         "清空": function () {
-                            $('#updateCustomerKeywordGroupNameFrom')[0].reset();
+                            $('#groupNameChangeFrom')[0].reset();
                         },
                         "取消": function () {
                             $(this).dialog("close");
-                            $('#updateCustomerKeywordGroupNameFrom')[0].reset();
+                            $('#groupNameChangeFrom')[0].reset();
                         }
                     }
                 });
@@ -408,45 +405,13 @@
 
             //修改部分
             function updateSpecifiedCustomerKeywordGroupName() {
-                var uuids = getUuids();
-                if (uuids.trim() === '') {
+                var customerKeywordUuids = getUuids();
+                if (customerKeywordUuids.trim() === '') {
                     alert("请选中要操作的关键词！");
                     return;
                 }
-                $("#changeOptimizationGroupDialog").dialog({
-                    resizable: false,
-                    width: 260,
-                    height: 150,
-                    modal: true,
-                    position:{
-                        my:"center top",
-                        at:"center top+150",
-                        of:window
-                    },
-                    //按钮
-                    buttons: {
-                        "保存": function () {
-                            var customerKeywordUuids = getUuids();
-                            if (customerKeywordUuids.trim() === '') {
-                                alert("请选中要操作的关键词！");
-                                return;
-                            }
-                            var targetGroup = $("#changeOptimizationGroupDialog").find("#optimizationGroup").val();
-                            if (targetGroup == null || targetGroup === '') {
-                                alert("请输入分组名");
-                                return;
-                            }
-                            changeGroupName({"targetGroupName" :targetGroup,"customerKeywordUuids":customerKeywordUuids.split(",")})
-                        },
-                        "清空": function () {
-                            $('#changeOptimizationGroupFrom')[0].reset();
-                        },
-                        "取消": function () {
-                            $(this).dialog("close");
-                            $('#changeOptimizationGroupFrom')[0].reset();
-                        }
-                    }
-                });
+                var changeGroupCriteria = {"title" : "修改选中关键字分组", "customerKeywordUuids":customerKeywordUuids.split(",")};
+                showGroupNameChangeDialog(changeGroupCriteria);
             }
 
             function changeGroupName(customerKeywordUpdateGroupCriteria) {
@@ -482,11 +447,10 @@
                     $("#customerKeywordForm")[0].reset();
                     $("#customerKeywordForm").find("#uuid").val('');
                     $("#customerKeywordForm").find("#status").val('');
-                    $("#customerKeywordForm").find("#relatedKeywords").val('');
                 }
-                $( "#customerKeywordDialog").dialog({
+                $( "#saveCustomerKeywordDialog").dialog({
                     width: 440,
-                    height: 490,
+                    height: 610,
                     position: {
                         my: "center top",
                         at: "center top+50px",
@@ -519,69 +483,72 @@
 
             function saveCustomerKeyword(customerUuid) {
                 var customerKeyword = {};
-                customerKeyword.uuid = $("#customerKeywordDialog #uuid").val();
+                var saveCustomerKeywordDialog= $("#saveCustomerKeywordDialog");
+                customerKeyword.uuid = saveCustomerKeywordDialog.find("#uuid").val();
                 customerKeyword.customerUuid = customerUuid;
-                customerKeyword.searchEngine = $("#customerKeywordDialog #searchEngine").val();
-                var keyword = $.trim($("#customerKeywordDialog #keyword").val());
-                if (keyword == '') {
+                customerKeyword.searchEngine = saveCustomerKeywordDialog.find("#searchEngine").val();
+                var keyword = $.trim(saveCustomerKeywordDialog.find("#keyword").val());
+                if (keyword === '') {
                     $().toastmessage('showWarningToast', "关键字不能为空");
-                    $("#customerKeywordDialog #keyword").focus();
+                    saveCustomerKeywordDialog.find("#keyword").focus();
                     return;
                 }
-                else {
-                    customerKeyword.keyword = keyword;
-                }
-                var url = $.trim($("#customerKeywordDialog #url").val())
-                /*if (url.length == 0) {
+                customerKeyword.keyword = keyword;
+                var url = $.trim(saveCustomerKeywordDialog.find("#url").val())
+                if (url.length == 0) {
                     $().toastmessage('showWarningToast', "网址不能为空！");
-                    $("#customerKeywordDialog #url").focus();
+                    saveCustomerKeywordDialog.find("#url").focus();
                     return;
                 }
-                else {*/
-                    customerKeyword.url = url;
-//                }
-                var originalUrl = $.trim($("#customerKeywordDialog #originalUrl").val());
+                customerKeyword.url = url;
+                var originalUrl = $.trim(saveCustomerKeywordDialog.find("#originalUrl").val());
                 customerKeyword.originalUrl = originalUrl;
                 var regNumber = /^\d+$/;
-                var positionFirstFee = $.trim($("#customerKeywordDialog #positionFirstFee").val());
+                var positionFirstFee = $.trim(saveCustomerKeywordDialog.find("#positionFirstFee").val());
                 customerKeyword.positionFirstFee = positionFirstFee;
-                var positionSecondFee = $.trim($("#customerKeywordDialog #positionSecondFee").val());
+                var positionSecondFee = $.trim(saveCustomerKeywordDialog.find("#positionSecondFee").val());
                 customerKeyword.positionSecondFee = positionSecondFee;
-                var positionThirdFee = $.trim($("#customerKeywordDialog #positionThirdFee").val());
+                var positionThirdFee = $.trim(saveCustomerKeywordDialog.find("#positionThirdFee").val());
                 customerKeyword.positionThirdFee = positionThirdFee;
-                var positionForthFee = $.trim($("#customerKeywordDialog #positionForthFee").val());
+                var positionForthFee = $.trim(saveCustomerKeywordDialog.find("#positionForthFee").val());
                 customerKeyword.positionForthFee = positionForthFee;
-                var positionFifthFee = $.trim($("#customerKeywordDialog #positionFifthFee").val());
+                var positionFifthFee = $.trim(saveCustomerKeywordDialog.find("#positionFifthFee").val());
                 customerKeyword.positionFifthFee = positionFifthFee;
-                var positionFirstPageFee = $.trim($("#customerKeywordDialog #positionFirstPageFee").val());
+                var positionFirstPageFee = $.trim(saveCustomerKeywordDialog.find("#positionFirstPageFee").val());
                 customerKeyword.positionFirstPageFee = positionFirstPageFee;
-                var positionFirstCost = $.trim($("#customerKeywordDialog #positionFirstCost").val());
+                var positionFirstCost = $.trim(saveCustomerKeywordDialog.find("#positionFirstCost").val());
                 customerKeyword.positionFirstCost = positionFirstCost;
-                var positionSecondCost = $.trim($("#customerKeywordDialog #positionSecondCost").val());
+                var positionSecondCost = $.trim(saveCustomerKeywordDialog.find("#positionSecondCost").val());
                 customerKeyword.positionSecondCost = positionSecondCost;
-                var positionThirdCost = $.trim($("#customerKeywordDialog #positionThirdCost").val());
+                var positionThirdCost = $.trim(saveCustomerKeywordDialog.find("#positionThirdCost").val());
                 customerKeyword.positionThirdCost = positionThirdCost;
-                var positionForthCost = $.trim($("#customerKeywordDialog #positionForthCost").val());
+                var positionForthCost = $.trim(saveCustomerKeywordDialog.find("#positionForthCost").val());
                 customerKeyword.positionForthCost = positionForthCost;
-                var positionFifthCost = $.trim($("#customerKeywordDialog #positionFifthCost").val());
+                var positionFifthCost = $.trim(saveCustomerKeywordDialog.find("#positionFifthCost").val());
                 customerKeyword.positionFifthCost = positionFifthCost;
-                var initialPosition = $.trim($("#customerKeywordDialog #initialPosition").val());
+                var initialPosition = $.trim(saveCustomerKeywordDialog.find("#initialPosition").val());
                 customerKeyword.initialPosition = initialPosition;
                 customerKeyword.currentPosition = initialPosition;
-                var initialIndexCount = $.trim($("#customerKeywordDialog #initialIndexCount").val());
+                var initialIndexCount = $.trim(saveCustomerKeywordDialog.find("#initialIndexCount").val());
                 customerKeyword.initialIndexCount = initialIndexCount;
                 customerKeyword.currentIndexCount = initialIndexCount;
-                var sequence = $.trim($("#customerKeywordDialog #sequence").val());
+                var sequence = $.trim(saveCustomerKeywordDialog.find("#sequence").val());
                 customerKeyword.sequence = sequence;
-                var title = $.trim($("#customerKeywordDialog #title").val());
+                var title = $.trim(saveCustomerKeywordDialog.find("#title").val());
                 customerKeyword.title = title;
-                var optimizeGroupName = $.trim($("#customerKeywordDialog #optimizeGroupName").val());
+                var optimizeGroupName = $.trim(saveCustomerKeywordDialog.find("#optimizeGroupName").val());
                 customerKeyword.optimizeGroupName = optimizeGroupName;
-                var collectMethod = $.trim($("#customerKeywordDialog #collectMethod").val());
+                var collectMethod = $.trim(saveCustomerKeywordDialog.find("#collectMethod").val());
                 customerKeyword.collectMethod = collectMethod;
-                var serviceProvider = $.trim($("#customerKeywordDialog #serviceProvider").val());
+                var serviceProvider = $.trim(saveCustomerKeywordDialog.find("#serviceProvider").val());
                 customerKeyword.serviceProvider = serviceProvider;
-                alert(JSON.stringify(customerKeyword));
+                var orderNumber = $.trim(saveCustomerKeywordDialog.find("#orderNumber").val());
+                customerKeyword.orderNumber = orderNumber;
+                var paymentStatus = $.trim(saveCustomerKeywordDialog.find("#paymentStatus").val());
+                customerKeyword.paymentStatus = paymentStatus;
+                var remarks = $.trim(saveCustomerKeywordDialog.find("#remarks").val());
+                customerKeyword.remarks = remarks;
+//                alert(JSON.stringify(customerKeyword));
                 $.ajax({
                     url: '/internal/customerKeyword/saveCustomerKeyword',
                     data: JSON.stringify(customerKeyword),
@@ -597,12 +564,10 @@
                             window.location.reload();
                         } else {
                             $().toastmessage('showErrorToast', "操作失败");
-                            window.location.reload();
                         }
                     },
                     error: function () {
                         $().toastmessage('showErrorToast', "操作失败");
-                        window.location.reload();
                     }
                 });
                 $(this).dialog("close");
@@ -610,51 +575,54 @@
 
             //修改关键字
             function modifyCustomerKeyword(customerKeywordUuid) {
+                var saveCustomerKeywordDialog= $("#saveCustomerKeywordDialog");
                 $.ajax({
                     url: '/internal/customerKeyword/getCustomerKeywordByCustomerKeywordUuid/' + customerKeywordUuid,
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json'
                     },
-                    timeout: 50000,
+                    timeout: 5000,
                     type: 'POST',
                     success: function (customerKeyword) {
-                alert(customerKeyword);
+//                alert(customerKeyword);
                         if (customerKeyword != null) {
-                            $("#customerKeywordDialog #uuid").val(customerKeyword.uuid);
-                            $("#customerKeywordDialog #keyword").val(customerKeyword.keyword);
-                            $("#customerKeywordDialog #searchEngine").val(customerKeyword.searchEngine);
-                            $("#customerKeywordDialog #initialIndexCount").val(customerKeyword.currentIndexCount);
-                            $("#customerKeywordDialog #initialPosition").val(customerKeyword.currentPosition == null ? '' : customerKeyword.currentPosition);
-                            $("#customerKeywordDialog #url").val(customerKeyword.url);
-                            $("#customerKeywordDialog #originalUrl").val(customerKeyword.originalUrl);
-                            $("#customerKeywordDialog #positionFirstFee").val(customerKeyword.positionFirstFee);
-                            $("#customerKeywordDialog #positionSecondFee").val(customerKeyword.positionSecondFee);
-                            $("#customerKeywordDialog #positionThirdFee").val(customerKeyword.positionThirdFee);
-                            $("#customerKeywordDialog #positionForthFee").val(customerKeyword.positionForthFee);
-                            $("#customerKeywordDialog #positionFifthFee").val(customerKeyword.positionFifthFee);
-                            $("#customerKeywordDialog #positionFirstPageFee").val(customerKeyword.positionFirstPageFee);
-                            $("#customerKeywordDialog #positionFirstCost").val(customerKeyword.positionFirstCost);
-                            $("#customerKeywordDialog #positionSecondCost").val(customerKeyword.positionSecondCost);
-                            $("#customerKeywordDialog #positionThirdCost").val(customerKeyword.positionThirdCost);
-                            $("#customerKeywordDialog #positionForthCost").val(customerKeyword.positionForthCost);
-                            $("#customerKeywordDialog #positionFifthCost").val(customerKeyword.positionFifthCost);
-                            $("#customerKeywordDialog #serviceProvider").val(customerKeyword.serviceProvider);
-                            $("#customerKeywordDialog #sequence").val(customerKeyword.sequence);
-                            $("#customerKeywordDialog #title").val(customerKeyword.title);
-                            $("#customerKeywordDialog #optimizeGroupName").val(customerKeyword.optimizeGroupName);
-                            $("#customerKeywordDialog #relatedKeywords").val(customerKeyword.relatedKeywords);
-                            $("#customerKeywordDialog #collectMethod").val(customerKeyword.collectMethod);
-
+                            saveCustomerKeywordDialog.find("#uuid").val(customerKeyword.uuid);
+                            saveCustomerKeywordDialog.find("#keyword").val(customerKeyword.keyword);
+                            saveCustomerKeywordDialog.find("#searchEngine").val(customerKeyword.searchEngine);
+                            saveCustomerKeywordDialog.find("#initialIndexCount").val(customerKeyword.currentIndexCount);
+                            saveCustomerKeywordDialog.find("#initialPosition").val(customerKeyword.currentPosition == null ? '' : customerKeyword.currentPosition);
+                            saveCustomerKeywordDialog.find("#url").val(customerKeyword.url);
+                            saveCustomerKeywordDialog.find("#originalUrl").val(customerKeyword.originalUrl);
+                            saveCustomerKeywordDialog.find("#positionFirstFee").val(customerKeyword.positionFirstFee);
+                            saveCustomerKeywordDialog.find("#positionSecondFee").val(customerKeyword.positionSecondFee);
+                            saveCustomerKeywordDialog.find("#positionThirdFee").val(customerKeyword.positionThirdFee);
+                            saveCustomerKeywordDialog.find("#positionForthFee").val(customerKeyword.positionForthFee);
+                            saveCustomerKeywordDialog.find("#positionFifthFee").val(customerKeyword.positionFifthFee);
+                            saveCustomerKeywordDialog.find("#positionFirstPageFee").val(customerKeyword.positionFirstPageFee);
+                            saveCustomerKeywordDialog.find("#positionFirstCost").val(customerKeyword.positionFirstCost);
+                            saveCustomerKeywordDialog.find("#positionSecondCost").val(customerKeyword.positionSecondCost);
+                            saveCustomerKeywordDialog.find("#positionThirdCost").val(customerKeyword.positionThirdCost);
+                            saveCustomerKeywordDialog.find("#positionForthCost").val(customerKeyword.positionForthCost);
+                            saveCustomerKeywordDialog.find("#positionFifthCost").val(customerKeyword.positionFifthCost);
+                            saveCustomerKeywordDialog.find("#serviceProvider").val(customerKeyword.serviceProvider);
+                            saveCustomerKeywordDialog.find("#sequence").val(customerKeyword.sequence);
+                            saveCustomerKeywordDialog.find("#title").val(customerKeyword.title);
+                            saveCustomerKeywordDialog.find("#optimizeGroupName").val(customerKeyword.optimizeGroupName);
+                            saveCustomerKeywordDialog.find("#collectMethod").val(customerKeyword.collectMethod);
+                            saveCustomerKeywordDialog.find("#orderNumber").val(customerKeyword.orderNumber);
+                            saveCustomerKeywordDialog.find("#paymentStatus").val(customerKeyword.paymentStatus);
+                            saveCustomerKeywordDialog.find("#remarks").val(customerKeyword.remarks);
+                            if(customerKeyword.positionFirstCost!=null||customerKeyword.positionSecondCost!=null||customerKeyword.positionThirdCost!=null||customerKeyword.positionForthCost!=null||customerKeyword.positionFifthCost!=null){
+                                showCustomerKeywordCost();
+                            }
                             addCustomerKeyword(customerKeywordUuid);
                         } else {
                             $().toastmessage('showErrorToast', "操作失败");
-                            window.location.reload();
                         }
                     },
                     error: function () {
                         $().toastmessage('showErrorToast', "操作失败");
-                        window.location.reload();
                     }
                 });
             }
@@ -662,17 +630,17 @@
                 $("#customerKeywordCost #customerKeywordCostFrom").toggle();
             }
             //关键字Excel上传(简化版)
-            function uploadCustomerKeywords(uuid, excelType){
-                $('#uploadsimpleconForm')[0].reset();
+            function uploadCustomerKeywords(customerUuid, excelType){
+                $('#uploadExcelForm')[0].reset();
                 if(excelType=='SuperUserSimple'){
-                    $("#uploadSimpleconDailog").attr("title","Excel简易版上传")
+                    $('#uploadExcelForm').find("#excelType").html("(简易版)");
                 }else{
-                    $("#uploadSimpleconDailog").attr("title","Excel完整版上传")
+                    $('#uploadExcelForm').find("#excelType").html("(完整版)");
                 }
-                $("#uploadSimpleconDailog").dialog({
+                $("#uploadExcelDailog").dialog({
                     resizable: false,
-                    width: 300,
-                    height: 170,
+                    width: 260,
+                    height: 180,
                     modal: true,
                     position:{
                         my:"center top",
@@ -682,8 +650,8 @@
                     //按钮
                     buttons: {
                         "上传": function () {
-                            var uploadForm = $("#uploadsimpleconForm");
-                            var uploadFile = uploadForm.find("#uploadsimpleconFile").val();
+                            var uploadForm = $("#uploadExcelForm");
+                            var uploadFile = uploadForm.find("#uploadExcelFile").val();
                             var fileTypes = new Array("xls", "xlsx");  //定义可支持的文件类型数组
                             var fileTypeFlag = false;
                             var newFileName = uploadFile.split('.');
@@ -699,8 +667,8 @@
                                 return false;
                             }
                             var formData = new FormData();
-                            formData.append('file', uploadForm.find('#uploadsimpleconFile')[0].files[0]);
-                            formData.append('customerUuid', uuid);
+                            formData.append('file', uploadForm.find('#uploadExcelFile')[0].files[0]);
+                            formData.append('customerUuid', customerUuid);
                             formData.append('excelType', excelType);
                             if (fileTypeFlag) {
                                 $.ajax({
@@ -716,12 +684,10 @@
                                             window.location.reload();
                                         } else {
                                             $().toastmessage('showErrorToast', "上传失败");
-                                            window.location.reload();
                                         }
                                     },
                                     error: function () {
                                         $().toastmessage('showErrorToast', "上传失败");
-                                        window.location.reload();
                                     }
                                 });
                             }
@@ -729,7 +695,7 @@
                         },
                         "取消": function () {
                             $(this).dialog("close");
-                            $('#uploadsimpleconForm')[0].reset();
+                            $('#uploadExcelForm')[0].reset();
                         }
                     }
                 });
@@ -737,29 +703,31 @@
 
             //导出结果
             function downloadCustomerKeywordInfo() {
-                var customerKeywordCrilteriaArray = $("#searchCustomerKeywordForm").serializeArray();
-                var formData = new FormData();
-                $.each(customerKeywordCrilteriaArray, function(idx, val){
-                    formData.append(val.name, val.value);
-                });
-                $.ajax({
-                    url: '/internal/customerKeyword/downloadCustomerKeywordInfo',
-                    type: 'POST',
-                    cache: false,
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function (result) {
-                        if (result) {
-                            $().toastmessage('showSuccessToast', "导出成功");
-                        } else {
-                            $().toastmessage('showErrorToast',"导出失败");
-                        }
-                    },
-                    error: function () {
-                        $().toastmessage('showErrorToast',"导出失败");
-                    }
-                });
+//                var customerKeywordCrilteriaArray = $("#searchCustomerKeywordForm").serializeArray();
+//                var formData = new FormData();
+//                $.each(customerKeywordCrilteriaArray, function(idx, val){
+//                    formData.append(val.name, val.value);
+//                });
+//                $.ajax({
+//                    url: '/internal/customerKeyword/downloadCustomerKeywordInfo',
+//                    type: 'POST',
+//                    cache: false,
+//                    data: formData,
+//                    processData: false,
+//                    contentType: false,
+//                    success: function (result) {
+//                        if (result) {
+//                            $().toastmessage('showSuccessToast', "导出成功");
+//                        } else {
+//                            $().toastmessage('showErrorToast',"导出失败");
+//                        }
+//                    },
+//                    error: function () {
+//                        $().toastmessage('showErrorToast',"导出失败");
+//                    }
+//                });
+                var customerKeywordCrilteriaArray = $("#searchCustomerKeywordForm").serialize();
+                location.href='/internal/customerKeyword/downloadCustomerKeywordInfo/?'+customerKeywordCrilteriaArray;
             }
             //显示排名为0
             function noPositionValue() {
@@ -770,7 +738,7 @@
                 }
             }
 
-            function setNoPositionChecked() {
+            function initNoPositionChecked() {
                 if(${customerKeywordCrilteria.noPosition == 1}){
                     $("#noPosition").prop("checked",true);
                 }else{
@@ -779,7 +747,7 @@
                 noPositionValue();
             }
 
-            function aligned() {
+            function alignTableHeader() {
                 var td = $("#customerKeywordTable tr:first td");
                 var ctd = $("#headerTable tr:first td");
                 $.each(td, function (idx, val) {
@@ -822,7 +790,7 @@
         | <a target="_blank" href="/internal/dailyReport/downloadSingleCustomerReport/${customerKeywordCrilteria.customerUuid}">导出日报表</a>
         | <a target="_blank" href="javascript:downloadCustomerKeywordInfo()">导出结果</a>
         <br/><br/>
-        <a href="javascript:updateCustomerGroupName(${customerKeywordCrilteria.customerUuid})">修改所有分组</a>|
+        <a href="javascript:showGroupNameChangeDialog({'title': '修改客户关键字分组', 'customerUuid':'${customerKeywordCrilteria.customerUuid}'})">修改所有分组</a>|
         <a href="javascript:updateSpecifiedCustomerKeywordGroupName(${customerKeywordCrilteria.customerUuid})">修改选中分组</a>|
         <a href="javascript:stopOptimization(${customerKeywordCrilteria.customerUuid})">下架所有关键字</a>|
         <a href="javascript:delAllItems('EmptyTitleAndUrl','${customerKeywordCrilteria.customerUuid}')">删除标题和网址为空的关键字</a> |
@@ -871,10 +839,17 @@
                 onClick="WdatePicker()"
                 value="${customerKeywordCrilteria.creationToTime}">
             排序:
+            <%--<select name="orderElement" id="orderElement">--%>
+                <%--<option value="">--请选择排序--</option>--%>
+                <%--<option value="fCreateTime">创建日期</option>--%>
+                <%--<option value="fCurrentPosition">当前排名</option>--%>
+                <%--<option value="fSequence">添加序号</option>--%>
+            <%--</select>--%>
             <select name="orderElement" id="orderElement">
-                <option value="">--请选择排序--</option>
-                <option value="fCreateTime">创建日期</option>
-                <option value="fCurrentPosition">当前排名</option>
+                <option value="0">关键字</option>
+                <option value="1">创建日期</option>
+                <option value="2">当前排名</option>
+                <option value="3">添加序号</option>
             </select>
             <%--</c:if>--%>
             &nbsp;&nbsp;
@@ -1011,25 +986,22 @@
     </div>
 </div>
 <%--Dialog部分--%>
-<div id="changeOptimizationGroupDialog"  style="text-align: center;" title="修改选中关键字组名">
-    <form id="changeOptimizationGroupFrom" style="text-align: center;margin-top: 10px;">
-        分组名称<input type="text" name="optimizationGroup" id="optimizationGroup" style="width:150px"/>
-    </form>
-</div>
 
-<div id="updateCustomerKeywordGroupNameDialog"  style="text-align: center;" title="修改客户关键字组名">
-    <form id="updateCustomerKeywordGroupNameFrom" style="text-align: center;margin-top: 10px;">
+<div id="groupChangeNameDialog"  style="text-align: center;" title="修改客户关键字组名">
+    <form id="groupNameChangeFrom" style="text-align: center;margin-top: 10px;">
         目标组名称:<input type="text" id="groupName" name="groupName" style="width:150px">
     </form>
 </div>
-<div id="uploadSimpleconDailog"  style="text-align: center;height: 60px;"  title="Excel上传">
-    <form method="post" id="uploadsimpleconForm" style="margin-top: 10px"  enctype="multipart/form-data" >
+<div id="uploadExcelDailog"  style="text-align: left;height: 60px;" title="Excel文件上传">
+    <form method="post" id="uploadExcelForm" style="margin-top: 10px"  enctype="multipart/form-data" >
         <input type="hidden" id="customerUuid" name="customerUuid" value="${customerKeywordCrilteria.customerUuid}">
-        请选择要上传的文件:<input type="file" id="uploadsimpleconFile" name="file" >
+        <span>请选择要上传的文件<label id="excelType" style="color: red"></label></span>
+        <div style="height: 10px;"></div>
+        <input type="file" id="uploadExcelFile" name="file" >
     </form>
 </div>
 
-<div id="customerKeywordDialog">
+<div id="saveCustomerKeywordDialog">
     <form id="customerKeywordForm">
         <ul>
             <input type="hidden" name="uuid" id="uuid" value="" style="width:300px;">
@@ -1057,12 +1029,12 @@
                     <li>
                         <span class="customerKeywordSpanClass">第一报价:</span><input name="positionFirstFee" id="positionFirstFee" value=""
                                                                                   style="width:100px;"
-                                                                                  type="text" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)">元 </li>
+                                                                                  type="text" onkeyup="onlyNumber(this)" onblur="setSecondThirdDefaultFee(this)">元 </li>
                     <li><span class="customerKeywordSpanClass">第二报价:</span><input name="positionSecondFee"
                                                                                   id="positionSecondFee" value="" style="width:100px;" type="text" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)">元
                     </li>
                     <li><span class="customerKeywordSpanClass">第三报价:</span><input name="positionThirdFee" id="positionThirdFee" value=""
-                                                                                  style="width:100px;" type="text" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)">元
+                                                                                  style="width:100px;" type="text" onkeyup="onlyNumber(this)" onblur="setThirdDefaultFee(this)">元
                     </li>
                     <li><span class="customerKeywordSpanClass">第四报价:</span><input name="positionForthFee" id="positionForthFee" value=""
                                                                                   style="width:100px;" type="text" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)">元
@@ -1086,13 +1058,13 @@
                                                                                           style="width:100px;" type="text" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)">元
                             </li>
                             <li><span class="customerKeywordSpanClass">第三成本:</span><input name="positionThirdCost" id="positionThirdCost"
-                                                                                          value="0" style="width:100px;" type="text" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)">元
+                                                                                          value="" style="width:100px;" type="text" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)">元
                             </li>
                             <li><span class="customerKeywordSpanClass">第四成本:</span><input name="positionForthCost" id="positionForthCost"
-                                                                                          value="0" style="width:100px;" type="text" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)">元
+                                                                                          value="" style="width:100px;" type="text" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)">元
                             </li>
                             <li><span class="customerKeywordSpanClass">第五成本:</span><input name="positionFifthCost" id="positionFifthCost"
-                                                                                          value="0" style="width:100px;" type="text" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)">元
+                                                                                          value="" style="width:100px;" type="text" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)">元
                             </li>
                         </ul>
                     </ul>
@@ -1104,7 +1076,6 @@
                         <c:forEach items="${serviceProviders}" var="serviceProvider">
                             <option value="${serviceProvider.serviceProviderName}" <c:if test="${serviceProvider.serviceProviderName=='baidutop123'}">selected="selected"</c:if>>${serviceProvider.serviceProviderName}</option>
                         </c:forEach>
-
                     </select></li>
             </c:if>
 
@@ -1123,9 +1094,22 @@
                     <option value="360">360</option>
                     <option value="谷歌">谷歌</option>
                 </select>
-                <input type="hidden" name="relatedKeywords" id="relatedKeywords" value="">
                 <input type="hidden" id="status" name="status" value="1">
                 排序:<input type="text" name="sequence" id="sequence" value="0" size="6" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)">
+            </li>
+            <hr style="height: 1px; border:none; border-top:1px dashed #CCCCCC;"/>
+            <li>
+                <span class="customerKeywordSpanClass">订单号:</span><input name="orderNumber" id="orderNumber" type="text" style="width:120px;" />
+                <span class="customerKeywordSpanClass">收费状态:</span><select name="paymentStatus" id="paymentStatus">
+                <option value="0"></option>
+                <option value="1">担保中</option>
+                <option value="2">已付费</option>
+                <option value="3">未担保</option>
+                <option value="4">跑路</option>
+            </select>
+            </li>
+            <li>
+                <span class="customerKeywordSpanClass" style="display: inline-block;float: left;height: 80px;">备注:</span><textarea name="remarks" id="remarks" style="width:300px;height:80px;resize: none" placeholder="请写备注吧!"></textarea>
             </li>
         </ul>
     </form>

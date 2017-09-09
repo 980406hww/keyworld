@@ -83,7 +83,10 @@ public class Utils {
 		return times;
 	}
 
-	public static String removeDoubleZeros(double value) {
+	public static String removeDoubleZeros(Double value) {
+		if(value == null) {
+			return "";
+		}
 		return ((value - Math.round(value)) == 0) ? Math.round(value) + "" : value + "";
 	}
 

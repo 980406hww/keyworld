@@ -150,9 +150,14 @@
         <if test="customerKeywordCrilteria.position != null and customerKeywordCrilteria.position != '' and customerKeywordCrilteria.noPosition == null "><![CDATA[AND fCurrentPosition > 0 and fCurrentPosition <= #{customerKeywordCrilteria.position}  ]]>   </if>
         <if test="customerKeywordCrilteria.noPosition == 1 ">AND ck.fCurrentPosition =  0    </if>
         <if test="customerKeywordCrilteria.terminalType != null and customerKeywordCrilteria.terminalType != ''">AND fTerminalType =  #{customerKeywordCrilteria.terminalType} </if>
-        <if test="customerKeywordCrilteria.orderElement != null and customerKeywordCrilteria.orderElement != ''">
-            ORDER BY ${customerKeywordCrilteria.orderElement}  DESC
-        </if>
+        <choose>
+          <when test="customerKeywordCrilteria.orderElement != null and customerKeywordCrilteria.orderElement != ''">
+              ORDER BY ${customerKeywordCrilteria.orderElement}  DESC
+          </when>
+          <otherwise>
+              ORDER BY ck.fKeyword
+          </otherwise>
+        </choose>
     </select>
 
     <update id="updateCustomerKeywordGroupName">
