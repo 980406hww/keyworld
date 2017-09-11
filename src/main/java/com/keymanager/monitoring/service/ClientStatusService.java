@@ -9,8 +9,10 @@ import com.keymanager.monitoring.entity.ClientStatus;
 import com.keymanager.util.Utils;
 import com.keymanager.util.VNCAddressBookParser;
 import com.keymanager.util.ZipCompressor;
+import com.keymanager.value.ClientStatusForUpdateRenewalDate;
 import com.keymanager.value.ClientStatusForUpdateTargetVersion;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,9 +108,24 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		ClientStatusForUpdateTargetVersion clientStatusForUpdateTargetVersion = (ClientStatusForUpdateTargetVersion)mapper.readValue(data, ClientStatusForUpdateTargetVersion.class);
 		String[] clientIDs = clientStatusForUpdateTargetVersion.getClientIDs().split(",");
 		for (String clientID : clientIDs) {
-			ClientStatus clientStatus = clientStatusDao.selectById(clientID.substring(1, clientID.length() - 1));
-			clientStatus.setClientID(clientID.substring(1, clientID.length() - 1));
+			ClientStatus clientStatus = clientStatusDao.selectById(clientID);
 			clientStatus.setTargetVersion(clientStatusForUpdateTargetVersion.getTargetVersion());
+			clientStatusDao.updateById(clientStatus);
+		}
+	}
+
+	public void updateRenewalDate(String data) throws Exception {
+		ObjectMapper mapper = new ObjectMapper();
+		ClientStatusForUpdateRenewalDate clientStatusForUpdateRenewalDate = (ClientStatusForUpdateRenewalDate)mapper.readValue(data, ClientStatusForUpdateRenewalDate.class);
+		String[] clientIDs = clientStatusForUpdateRenewalDate.getClientIDs().split(",");
+
+		for (String clientID : clientIDs) {
+			ClientStatus clientStatus = clientStatusDao.selectById(clientID);
+			if("increaseOneMonth".equals(clientStatusForUpdateRenewalDate.getSettingType())) {
+				clientStatus.setRenewalDate(Utils.addMonth(clientStatus.getRenewalDate(), 1));
+			} else {
+				clientStatus.setRenewalDate(Utils.string2Timestamp(clientStatusForUpdateRenewalDate.getRenewalDate()));
+			}
 			clientStatusDao.updateById(clientStatus);
 		}
 	}

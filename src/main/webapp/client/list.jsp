@@ -117,6 +117,7 @@
 	<script language="javascript" type="text/javascript" src="/js/My97DatePicker/WdatePicker.js"></script>
 	<script language="javascript" type="text/javascript" src="/ui/jquery-ui.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/slide.js"></script>
+	<script language="javascript" type="text/javascript" src="/common.js"></script>
 </head>
 <body>
 <div id="clientStatusDiv">
@@ -204,6 +205,7 @@
 								|<a target="_blank" href="javascript:resetRestartStatus()">重置重启状态</a>
 								|<a target="_blank" href="javascript:showUploadVNCDialog()">上传VNC文件</a>
 								|<a target="_blank" href="javascript:downloadVNCFile()">下载VNC连接压缩文件</a>
+								|<a target="_blank" href="javascript:downloadAllVNCFile()">下载完整版VNC文件</a>
 							</td>
 						</tr>
 					</table>
@@ -343,7 +345,7 @@
 	</div>
 
 	<script language="javascript">
-        $$$(function () {
+        $(function () {
             var clientStatusBottomDiv = $('#clientStatusBottomDiv');
             var pageSize = clientStatusBottomDiv.find('#pageSizeHidden').val();
             clientStatusBottomDiv.find('#chooseRecords').val(pageSize);
@@ -378,11 +380,15 @@
         }
 
         function resetPageNumber() {
-            $$$("#searchClientStatusForm").find("#currentPageNumberHidden").val(1);
+            $("#searchClientStatusForm").find("#currentPageNumberHidden").val(1);
         }
 
         function downloadVNCFile() {
             $("#downloadVNCForm").submit();
+        }
+
+        function downloadAllVNCFile() {
+            $("#downloadAllVNCForm").submit();
         }
 
         function showUploadVNCDialog() {
@@ -464,7 +470,7 @@
 
         function delItem(clientID) {
             if (confirm("确定要删除这台终端吗?") == false) return;
-            $$$.ajax({
+            $.ajax({
                 url: '/internal/clientstatus/deleteClientStatus/' + clientID,
                 type: 'POST',
                 success: function (result) {
@@ -490,7 +496,7 @@
             if (confirm("确定要删除这些负面词吗?") == false) return;
             var postData = {};
             postData.clientIDs = clientIDs.split(",");
-            $$$.ajax({
+            $.ajax({
                 url: '/internal/clientstatus/deleteClientStatuses',
                 data: JSON.stringify(postData),
                 headers: {
@@ -527,7 +533,7 @@
 
 		function resetRestartStatus() {
 			if (confirm("确实要重设状态为Processing或者Logging终端的重启状态吗?") == false) return;
-			$$$.ajax({
+			$.ajax({
 				url: '/internal/clientstatus/resetRestartStatusForProcessing' ,
 				type: 'POST',
 				success: function (data) {
@@ -575,7 +581,7 @@
 		    var clientStatus = {};
             clientStatus.clientID = self.id;
             clientStatus.group = self.value.trim();
-            $$$.ajax({
+            $.ajax({
                 url: '/internal/clientstatus/updateGroup',
                 data: JSON.stringify(clientStatus),
                 headers: {
@@ -603,7 +609,7 @@
 		function changeTerminalType(clientID){
 			var postData = {};
 			postData.clientID = clientID;
-			$$$.ajax({
+			$.ajax({
 				url: '/internal/clientStatus/changeTerminalType',
 				data: JSON.stringify(postData),
 				headers: {
@@ -630,7 +636,7 @@
 		    var clientStatus = {};
             clientStatus.clientID = self.id;
             clientStatus.upgradeFailedReason = self.value.trim();
-            $$$.ajax({
+            $.ajax({
                 url: '/internal/clientstatus/updateUpgradeFailedReason',
                 data: JSON.stringify(clientStatus),
                 headers: {
@@ -658,7 +664,7 @@
 		    var clientStatus = {};
             clientStatus.clientID = self.id.replace("operationType", "");
             clientStatus.operationType = self.value.trim();
-            $$$.ajax({
+            $.ajax({
                 url: '/internal/clientstatus/updateOperationType',
                 data: JSON.stringify(clientStatus),
                 headers: {
@@ -683,7 +689,7 @@
             });
 		}
 		function showSettingDialog(clientID, self){
-		    $$$.ajax({
+		    $.ajax({
 		        url: '/internal/clientstatus/getClientStatus/' + clientID,
 		        type: 'Get',
 		        success: function (clientStatus) {
@@ -699,7 +705,7 @@
 		    });
 		}
 		function initSettingDialog(clientStatus, self){
-			var settingDialogDiv = $$$("#changeSettingDialog");
+			var settingDialogDiv = $("#changeSettingDialog");
 			settingDialogDiv.find("#settingClientID").val(clientStatus.clientID);
 			settingDialogDiv.find("#settingGroup").val(clientStatus.group != null ? clientStatus.group : "");
 			settingDialogDiv.find("#settingOperationType").val(clientStatus.operationType != null ? clientStatus.operationType : "");
@@ -778,7 +784,7 @@
 			settingDialogDiv.show();
 		}
 		function saveChangeSetting(self){
-			var settingDialogDiv = $$$("#changeSettingDialog");
+			var settingDialogDiv = $("#changeSettingDialog");
 			var clientStatus = {};
 			clientStatus.clientID = settingDialogDiv.find("#settingClientID").val();
 			clientStatus.group = settingDialogDiv.find("#settingGroup").val();
@@ -834,7 +840,7 @@
 			clientStatus.randomlyClickMoreLink = settingDialogDiv.find("#randomlyClickMoreLink:checked").val() === '1' ? 1 : 0;
 			clientStatus.moveUp20 = settingDialogDiv.find("#moveUp20:checked").val() === '1' ? 1 : 0;
 
-			$$$.ajax({
+			$.ajax({
 		        url: '/internal/clientstatus/addClientStatus',
 		        data: JSON.stringify(clientStatus),
                 headers: {
@@ -859,31 +865,31 @@
 		    });
 		}
 		function cancelChangeSetting(){
-			var settingDialogDiv = $$$("#changeSettingDialog");
+			var settingDialogDiv = $("#changeSettingDialog");
 			settingDialogDiv.hide();
 		}
 		
 		function showTargetVersionSettingDialog(self){
-			var settingDialogDiv = $$$("#targetVersionSettingDialog");
+			var settingDialogDiv = $("#targetVersionSettingDialog");
 			settingDialogDiv.find("#settingTargetVersion").val("");
 			settingDialogDiv.show();
 		}
 		function saveTargetVersionSetting(self){
-			var settingDialogDiv = $$$("#targetVersionSettingDialog");
-			var clientStatusVO = {};
-			clientStatusVO.clientIDs = getSelectedClientIDs();
-			clientStatusVO.targetVersion = settingDialogDiv.find("#settingTargetVersion").val();
-			if(clientStatusVO.targetVersion.trim() === ''){
+			var settingDialogDiv = $("#targetVersionSettingDialog");
+			var clientStatus = {};
+			clientStatus.clientIDs = getSelectedClientIDs();
+			clientStatus.targetVersion = settingDialogDiv.find("#settingTargetVersion").val();
+			if(clientStatus.targetVersion.trim() === ''){
 				alert("请输入目标版本！");
 				return;
 			}
-			if(clientStatusVO.clientIDs.trim() === ''){
+			if(clientStatus.clientIDs.trim() === ''){
 				alert("请选择要更新的终端！");
 				return;
 			}
-		    $$$.ajax({
+		    $.ajax({
 		        url: '/internal/clientstatus/updateClientStatusTargetVersion',
-		        data: "data=" + JSON.stringify(clientStatusVO),
+		        data: "data=" + JSON.stringify(clientStatus),
 		        type: 'POST',
 		        success: function (data) {
 		        	settingDialogDiv.hide();
@@ -903,43 +909,43 @@
 		    });
 		}
 		function cancelTargetVersionSetting(){
-			var settingDialogDiv = $$$("#targetVersionSettingDialog");
+			var settingDialogDiv = $("#targetVersionSettingDialog");
 			settingDialogDiv.hide();
 		}
 
 		function showRenewalSettingDialog(self){
-			var settingDialogDiv = $$$("#renewalSettingDialog");
+			var settingDialogDiv = $("#renewalSettingDialog");
 			settingDialogDiv.find("#renewalSettingDialog").val("");
 			settingDialogDiv.show();
 		}
 		function saveRenewalSetting(self){
-			var settingDialogDiv = $$$("#renewalSettingDialog");
-			var clientStatusVO = {};
-			clientStatusVO.clientIDs = getSelectedClientIDs();
-			clientStatusVO.settingType = settingDialogDiv.find("input[name=settingType][checked]").val();
-			clientStatusVO.renewalDate = settingDialogDiv.find("#renewalDate").val();
-			if(clientStatusVO.settingType.trim() === 'specificDate'){
-				if(clientStatusVO.renewalDate.trim() === ''){
+			var settingDialogDiv = $("#renewalSettingDialog");
+			var clientStatus = {};
+            clientStatus.clientIDs = getSelectedClientIDs();
+            clientStatus.settingType = settingDialogDiv.find("input[name=settingType]:checked").val();
+            clientStatus.renewalDate = settingDialogDiv.find("#renewalDate").val();
+			if(clientStatus.settingType.trim() === 'specificDate'){
+				if(clientStatus.renewalDate.trim() === ''){
 					alert("请输入日期！");
 					return;
 				}
-				if(!isDate(clientStatusVO.renewalDate.trim())){
+				if(!isDate(clientStatus.renewalDate.trim())){
 					alert("日期格式不对！");
 					return;
 				}
 			}
-			if(clientStatusVO.clientIDs.trim() === ''){
+			if(clientStatus.clientIDs.trim() === ''){
 				alert("请选择要更新的终端！");
 				return;
 			}
-			$$$.ajax({
-				url: '/client/updateClientStatusRenewalDate.jsp',
-				data: "data=" + JSON.stringify(clientStatusVO),
+			alert(JSON.stringify(clientStatus));
+			$.ajax({
+				url: '/internal/clientstatus/updateClientStatusRenewalDate',
+				data: "data=" + JSON.stringify(clientStatus),
 				type: 'POST',
-				success: function (data) {
-					data = data.replace(/\r\n/gm,"");
+				success: function (result) {
 					settingDialogDiv.hide();
-					if(data === "1"){
+					if(result){
 						showInfo("更新成功！", self);
 						settingDialogDiv.hide();
 						window.location.reload();
@@ -955,7 +961,7 @@
 			});
 		}
 		function cancelRenewalSetting(){
-			var settingDialogDiv = $$$("#renewalSettingDialog");
+			var settingDialogDiv = $("#renewalSettingDialog");
 			settingDialogDiv.hide();
 		}
 
@@ -1023,11 +1029,11 @@
 		    if(e.offsetParent!=null) offset+=getLeft(e.offsetParent);
 		    return offset;
 	    }
-	    $$$(document).ready(function(){
-			if($$$("#showFetchKeywordStatus").attr("checked") === "checked"){
-				$$$("span[name=invalidClient]").each(function(){
-					var span = $$$(this);
-					$$$.ajax({
+	    $(document).ready(function(){
+			if($("#showFetchKeywordStatus").attr("checked") === "checked"){
+				$("span[name=invalidClient]").each(function(){
+					var span = $(this);
+					$.ajax({
 						url: '/customerkeyword/getcustomerkeyword.jsp?clientID=' + this.id.replace("span_", ""),
 						type: 'Get',
 						success: function (data) {
@@ -1468,8 +1474,8 @@
 	</div>
 
 	<div style="display:none;">
-		<form id="downloadVNCForm" action="/internal/clientstatus/downloadVNCFile" method="post">
-		</form>
+		<form id="downloadVNCForm" action="/internal/clientstatus/downloadVNCFile" method="post"></form>
+		<form id="downloadAllVNCForm" action="/internal/clientstatus/downloadAllVNCFile" method="post"></form>
 	</div>
 </body>
 </html>

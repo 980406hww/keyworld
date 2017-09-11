@@ -99,6 +99,18 @@ public class ClientStatusRestController extends SpringMVCBaseController {
 		}
 	}
 
+	@RequestMapping(value = "/updateClientStatusRenewalDate", method = RequestMethod.POST)
+	public ResponseEntity<?> updateClientStatusRenewalDate(HttpServletRequest request) {
+		try {
+			String data = request.getParameter("data");
+			clientStatusService.updateRenewalDate(data);
+			return new ResponseEntity<Object>(true, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+		}
+	}
+
 	@RequestMapping(value = "/addClientStatus", method = RequestMethod.POST)
 	public ResponseEntity<?> addClientStatus(@RequestBody ClientStatus clientStatus) {
 		try {

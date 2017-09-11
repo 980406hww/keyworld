@@ -83,11 +83,11 @@
             t_client_status cs
         WHERE cs.fTerminalType = #{clientStatusCriteria.terminalType}
         <if test="clientStatusCriteria.clientID != null and clientStatusCriteria.clientID != ''"> AND cs.fClientID like '%${clientStatusCriteria.clientID}%'</if>
-        <if test="clientStatusCriteria.groupName != null and clientStatusCriteria.groupName != ''"> AND cs.fGroupName like '%${clientStatusCriteria.groupName}%'</if>
+        <if test="clientStatusCriteria.groupName != null and clientStatusCriteria.groupName != ''"> AND cs.fGroup like '%${clientStatusCriteria.groupName}%'</if>
         <if test="clientStatusCriteria.upgradeFailedReason != null and clientStatusCriteria.upgradeFailedReason != ''"> AND cs.fUpgradeFailedReason like '%${clientStatusCriteria.upgradeFailedReason}%'</if>
         <if test="clientStatusCriteria.version != null and clientStatusCriteria.version != ''"> AND cs.fVersion like concat(#{clientStatusCriteria.version},'%')</if>
         <if test="clientStatusCriteria.noOperationType != null and clientStatusCriteria.noOperationType != ''"> AND cs.fOperationType is null</if>
-        <if test="clientStatusCriteria.noOperationType == null and clientStatusCriteria.noOperationType == '' and clientStatusCriteria.operationType != null and clientStatusCriteria.operationType != ''">
+        <if test="clientStatusCriteria.noOperationType == null and clientStatusCriteria.operationType != null and clientStatusCriteria.operationType != ''">
             AND cs.fOperationType = #{clientStatusCriteria.operationType}
         </if>
         <if test="clientStatusCriteria.city != null and clientStatusCriteria.city != ''"> AND cs.fCity like concat(#{clientStatusCriteria.city},'%')</if>
