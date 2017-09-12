@@ -1,141 +1,139 @@
-/*******************************************************************************
- * Copyright (c) 2005, 2014 springside.github.io
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- *******************************************************************************/
-package com.keymanager.monitoring.controller.web;
-
-import java.awt.Color;
-import java.io.IOException;
-import java.util.Random;
+package com.keymanager.monitoring.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
-import com.keymanager.monitoring.common.shiro.ShiroDbRealm;
-import com.keymanager.monitoring.controller.SpringMVCBaseController;
-import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
-import org.patchca.color.ColorFactory;
-import org.patchca.filter.predefined.CurvesRippleFilterFactory;
-import org.patchca.filter.predefined.DiffuseRippleFilterFactory;
-import org.patchca.filter.predefined.DoubleRippleFilterFactory;
-import org.patchca.filter.predefined.MarbleRippleFilterFactory;
-import org.patchca.filter.predefined.WobbleRippleFilterFactory;
-import org.patchca.service.ConfigurableCaptchaService;
-import org.patchca.utils.encoder.EncoderHelper;
-import org.patchca.word.RandomWordFactory;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.DisabledAccountException;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.keymanager.monitoring.common.base.BaseController;
+import com.keymanager.monitoring.common.csrf.CsrfToken;
+import com.keymanager.monitoring.common.shiro.captcha.DreamCaptcha;
+import com.keymanager.monitoring.common.utils.StringUtils;
 
 /**
- * LoginController负责打开登录页面(GET请求)和登录出错页面(POST请求)，
- * 
- * 真正登录的POST请求由Filter完成,
- * 
+ * @description：登录退出
+ * @author：zhixuan.wang
+ * @date：2015/10/1 14:51
  */
 @Controller
-@RequestMapping(value = "/login")
-public class LoginController extends SpringMVCBaseController {
-
-	private static ConfigurableCaptchaService cs = new ConfigurableCaptchaService();
-	private static Random random = new Random();
-	static {
-		cs.setColorFactory(new ColorFactory() {
-			@Override
-			public Color getColor(int x) {
-				int[] c = new int[3];
-				int i = random.nextInt(c.length);
-				for (int fi = 0; fi < c.length; fi++) {
-					if (fi == i) {
-						c[fi] = random.nextInt(71);
-					} else {
-						c[fi] = random.nextInt(256);
-					}
-				}
-				return new Color(c[0], c[1], c[2]);
-			}
-		});
-		RandomWordFactory wf = new RandomWordFactory();
-		wf.setCharacters("23456789abcdefghigkmnpqrstuvwxyzABCDEFGHIGKLMNPQRSTUVWXYZ");
-		wf.setMaxLength(4);
-		wf.setMinLength(4);
-		cs.setWordFactory(wf);
+public class LoginController extends BaseController {
+	@Autowired
+	private DreamCaptcha dreamCaptcha;
+	/**
+	 * 首页
+	 *
+	 * @return
+	 */
+	@GetMapping("/")
+	public String index() {
+		return "redirect:/bd.html";
 	}
 
-	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView login() {
-		ShiroDbRealm.ShiroUser currentUser = getCurrentUser();
-		ModelAndView mav;
-		if (currentUser == null) {
-			mav = new ModelAndView("login.jsp");
-		} else {
-			mav = new ModelAndView("redirect:maintains/home.jsp");
-		}
-		return mav;
+	/**
+	 * 首页
+	 *
+	 * @param model
+	 * @return
+	 */
+	@GetMapping("/index")
+	public String index(Model model) {
+		return "index";
 	}
 
-	@RequestMapping(method = RequestMethod.POST)
-	public ModelAndView fail(@RequestParam(FormAuthenticationFilter.DEFAULT_USERNAME_PARAM) String username) {
-		ShiroDbRealm.ShiroUser currentUser = getCurrentUser();
-		if (currentUser != null) {
-			return new ModelAndView("redirect:maintains/home.jsp");
+	/**
+	 * GET 登录
+	 * @return {String}
+	 */
+	@GetMapping("/login")
+	@CsrfToken(create = true)
+	public String login() {
+		logger.info("GET请求登录");
+		if (SecurityUtils.getSubject().isAuthenticated()) {
+			return "redirect:/index";
 		}
-		ModelAndView mav = new ModelAndView("login.jsp");
-		ModelMap modelMap = new ModelMap();
-		modelMap.addAttribute(FormAuthenticationFilter.DEFAULT_USERNAME_PARAM, username);
-		Object error = getHttpRequest().getAttribute(FormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME);
-		if (error != null) {
-			if(error.toString().equals("CaptchaException")){
-				modelMap.put("loginInfo", "验证码错误");
-			}else{
-				modelMap.put("loginInfo", "用户名或者密码错误");
-			}
-		}
-		mav.addAllObjects(modelMap);
-		return mav;
+		return "login";
 	}
 
-	@RequestMapping(value="/pcrimg", method = RequestMethod.GET)
-	public void pcrimg(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		switch (random.nextInt(5)) {
-		case 0:
-			cs.setFilterFactory(new CurvesRippleFilterFactory(cs.getColorFactory()));
-			break;
-		case 1:
-			cs.setFilterFactory(new MarbleRippleFilterFactory());
-			break;
-		case 2:
-			cs.setFilterFactory(new DoubleRippleFilterFactory());
-			break;
-		case 3:
-			cs.setFilterFactory(new WobbleRippleFilterFactory());
-			break;
-		case 4:
-			cs.setFilterFactory(new DiffuseRippleFilterFactory());
-			break;
+	/**
+	 * POST 登录 shiro 写法
+	 *
+	 * @param username 用户名
+	 * @param password 密码
+	 * @return {Object}
+	 */
+	@PostMapping("/login")
+	@CsrfToken(remove = true)
+	@ResponseBody
+	public Object loginPost(HttpServletRequest request, HttpServletResponse response,
+							String username, String password, String captcha,
+							@RequestParam(value = "rememberMe", defaultValue = "0") Integer rememberMe) {
+		logger.info("POST请求登录");
+		// 改为全部抛出异常，避免ajax csrf token被刷新
+		if (StringUtils.isBlank(username)) {
+			throw new RuntimeException("用户名不能为空");
 		}
-		HttpSession session = request.getSession(false);
-		if (session == null) {
-			session = request.getSession();
+		if (StringUtils.isBlank(password)) {
+			throw new RuntimeException("密码不能为空");
 		}
-		setResponseHeaders(response);
-		String token = EncoderHelper.getChallangeAndWriteImage(cs, "png", response.getOutputStream());
-		session.setAttribute("captcha", token);
+		if (StringUtils.isBlank(captcha)) {
+			throw new RuntimeException("验证码不能为空");
+		}
+		if (!dreamCaptcha.validate(request, response, captcha)) {
+			throw new RuntimeException("验证码错误");
+		}
+		Subject user = SecurityUtils.getSubject();
+		UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+		// 设置记住密码
+		token.setRememberMe(1 == rememberMe);
+		try {
+			user.login(token);
+			return renderSuccess();
+		} catch (UnknownAccountException e) {
+			throw new RuntimeException("账号不存在！", e);
+		} catch (DisabledAccountException e) {
+			throw new RuntimeException("账号未启用！", e);
+		} catch (IncorrectCredentialsException e) {
+			throw new RuntimeException("密码错误！", e);
+		} catch (Throwable e) {
+			throw new RuntimeException(e.getMessage(), e);
+		}
 	}
 
-	protected void setResponseHeaders(HttpServletResponse response) {
-		response.setContentType("image/png");
-		response.setHeader("Cache-Control", "no-cache, no-store");
-		response.setHeader("Pragma", "no-cache");
-		long time = System.currentTimeMillis();
-		response.setDateHeader("Last-Modified", time);
-		response.setDateHeader("Date", time);
-		response.setDateHeader("Expires", time);
+	/**
+	 * 未授权
+	 * @return {String}
+	 */
+	@GetMapping("/unauth")
+	public String unauth() {
+		if (SecurityUtils.getSubject().isAuthenticated() == false) {
+			return "redirect:/login";
+		}
+		return "unauth";
+	}
+
+	/**
+	 * 退出
+	 * @return {Result}
+	 */
+	@PostMapping("/logout")
+	@ResponseBody
+	public Object logout() {
+		logger.info("登出");
+		Subject subject = SecurityUtils.getSubject();
+		subject.logout();
+		return renderSuccess();
 	}
 
 }

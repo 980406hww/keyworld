@@ -1,143 +1,112 @@
-/*******************************************************************************
- * Copyright (c) 2005, 2014 springside.github.io
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- *******************************************************************************/
 package com.keymanager.monitoring.common.shiro;
 
-import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import javax.annotation.PostConstruct;
-
-import com.keymanager.monitoring.common.utils.Encodes;
-import com.keymanager.monitoring.entity.User;
-import org.apache.shiro.SecurityUtils;
+import com.keymanager.monitoring.entity.UserInfo;
+import com.keymanager.monitoring.vo.UserVO;
+import com.keymanager.monitoring.service.IRoleService;
+import com.keymanager.monitoring.service.IUserService;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
-import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
+import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.apache.shiro.util.ByteSource;
+import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.google.common.base.Objects;
-import com.keymanager.monitoring.service.UserService;
-
+/**
+ * @description：shiro权限认证
+ * @author：zhixuan.wang
+ * @date：2015/10/1 14:51
+ */
 public class ShiroDbRealm extends AuthorizingRealm {
+	private static final Logger LOGGER = LogManager.getLogger(ShiroDbRealm.class);
 
-	@Autowired
-	protected UserService userService;
+	@Autowired private IUserService userService;
+	@Autowired private IRoleService roleService;
 
-	/**
-	 * 认证回调函数,登录时调用.
-	 */
-	@Override
-	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken) throws AuthenticationException {
-		UsernamePasswordCaptchaToken token = (UsernamePasswordCaptchaToken) authcToken;
-		String captcha = token.getCaptcha();
-		String exitCode = (String) SecurityUtils.getSubject().getSession().getAttribute("captcha");
-		if (null == captcha || !captcha.equalsIgnoreCase(exitCode)) {
-			throw new CaptchaException("验证码错误");
-		}
-		User user = userService.getUser(token.getUsername());
-		if (user != null) {
-			byte[] salt = Encodes.decodeHex(user.getSalt());
-			return new SimpleAuthenticationInfo(new ShiroUser(user.getUserID(), user.getUserName()), user.getPassword(),
-					ByteSource
-					.Util.bytes(salt), getName());
-		} else {
-			return null;
-		}
+	public ShiroDbRealm(CacheManager cacheManager, CredentialsMatcher matcher) {
+		super(cacheManager, matcher);
 	}
 
 	/**
-	 * 授权查询回调函数, 进行鉴权但缓存中无用户的授权信息时调用.
+	 * Shiro登录认证(原理：用户提交 用户名和密码  --- shiro 封装令牌 ---- realm 通过用户名将密码查询返回 ---- shiro 自动去比较查询出密码和用户输入密码是否一致---- 进行登陆控制 )
 	 */
 	@Override
-	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
+	protected AuthenticationInfo doGetAuthenticationInfo(
+			AuthenticationToken authcToken) throws AuthenticationException {
+		LOGGER.info("Shiro开始登录认证");
+		UsernamePasswordToken token = (UsernamePasswordToken) authcToken;
+		UserVO uservo = new UserVO();
+		uservo.setLoginName(token.getUsername());
+		List<UserInfo> list = userService.selectByLoginName(uservo);
+		// 账号不存在
+		if (list == null || list.isEmpty()) {
+			return null;
+		}
+		UserInfo user = list.get(0);
+		// 账号未启用
+		if (user.getStatus() == 1) {
+			return null;
+		}
+		// 读取用户的url和角色
+		Map<String, Set<String>> resourceMap = roleService.selectResourceMapByUserId(user.getUuid());
+		Set<String> urls = resourceMap.get("urls");
+		Set<String> roles = resourceMap.get("roles");
+		ShiroUser shiroUser = new ShiroUser(user.getUuid(), user.getLoginName(), user.getUserName(), urls);
+		shiroUser.setRoles(roles);
+		// 认证缓存信息
+		return new SimpleAuthenticationInfo(shiroUser, user.getPassword().toCharArray(),
+				ShiroByteSource.of(user.getSalt()), getName());
+	}
+
+	/**
+	 * Shiro权限认证
+	 */
+	@Override
+	protected AuthorizationInfo doGetAuthorizationInfo(
+			PrincipalCollection principals) {
 		ShiroUser shiroUser = (ShiroUser) principals.getPrimaryPrincipal();
-		User user = userService.getUser(shiroUser.userID);
+
 		SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-		//info.addRoles(user.getRoleList());
+		info.setRoles(shiroUser.getRoles());
+		info.addStringPermissions(shiroUser.getUrlSet());
+
 		return info;
 	}
 
-	/**
-	 * 设定Password校验的Hash算法与迭代次数.
-	 */
-	@PostConstruct
-	public void initCredentialsMatcher() {
-		HashedCredentialsMatcher matcher = new HashedCredentialsMatcher(userService.HASH_ALGORITHM);
-		matcher.setHashIterations(userService.HASH_INTERATIONS);
-
-		setCredentialsMatcher(matcher);
+	@Override
+	public void onLogout(PrincipalCollection principals) {
+		super.clearCachedAuthorizationInfo(principals);
+		ShiroUser shiroUser = (ShiroUser) principals.getPrimaryPrincipal();
+		removeUserCache(shiroUser);
 	}
 
+	/**
+	 * 清除用户缓存
+	 * @param shiroUser
+	 */
+	public void removeUserCache(ShiroUser shiroUser){
+		removeUserCache(shiroUser.getLoginName());
+	}
 
 	/**
-	 * 自定义Authentication对象，使得Subject除了携带用户的登录名外还可以携带更多信息.
+	 * 清除用户缓存
+	 * @param loginName
 	 */
-	public static class ShiroUser implements Serializable {
-		private static final long serialVersionUID = -1373760761780840081L;
-		public String userID;
-		public String userName;
-
-		public ShiroUser(String userID, String userName) {
-			this.userID = userID;
-			this.userName = userName;
-		}
-
-		public String getUserName() {
-			return userName;
-		}
-		
-		public String getUserID() {
-			return userID;
-		}
-
-		/**
-		 * 本函数输出将作为默认的<shiro:principal/>输出.
-		 */
-		@Override
-		public String toString() {
-			return userName;
-		}
-
-		/**
-		 * 重载hashCode,只计算loginName;
-		 */
-		@Override
-		public int hashCode() {
-			return Objects.hashCode(userID);
-		}
-
-		/**
-		 * 重载equals,只计算loginName;
-		 */
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj) {
-				return true;
-			}
-			if (obj == null) {
-				return false;
-			}
-			if (getClass() != obj.getClass()) {
-				return false;
-			}
-			ShiroUser other = (ShiroUser) obj;
-			if (userID == null) {
-				if (other.userID != null) {
-					return false;
-				}
-			} else if (!userID.equals(other.userID)) {
-				return false;
-			}
-			return true;
-		}
+	public void removeUserCache(String loginName){
+		SimplePrincipalCollection principals = new SimplePrincipalCollection();
+		principals.add(loginName, super.getName());
+		super.clearCachedAuthenticationInfo(principals);
 	}
 }

@@ -1,37 +1,84 @@
 package com.keymanager.monitoring.vo;
 
-public class UserVO {
-	
-	private String username;
-	
-	private String oldPassword;
-	
-	private String newPassword;
-	
+import java.io.Serializable;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
+
+import com.keymanager.monitoring.entity.Role;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.keymanager.monitoring.entity.User;
+
+/**
+ * @description：UserVo
+ * @author：zhixuan.wang
+ * @date：2015/10/1 14:51
+ */
+public class UserVO implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	private Long userUuid;
+
+	@NotBlank
+	@Length(min = 4, max = 64)
+	private String loginName;
+
+	private String name;
+
+	@JsonIgnore
 	private String password;
-	
-	private String againPassword;
-	
-	private String email;
-	
+	@JsonIgnore
+	private String salt; // 密码加密盐
+
+	private Integer sex;
+
+	private Integer age;
+
+	private Integer userType;
+
+	private Integer status;
+
+	private Integer organizationId;
+
+	private Date createTime;
+
 	private String phone;
-	
-	private String phoneCode;
-	
-	private String qq;
-	
-	private String captcha;
 
-	private int status;
+	private List<Role> rolesList;
 
-	private String type;
+	private String organizationName;
 
-	public String getUsername() {
-		return username;
+	private String roleIds;
+
+	private Date createdateStart;
+	private Date createdateEnd;
+
+	public Long getUserUuid() {
+		return userUuid;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setUserUuid(Long userUuid) {
+		this.userUuid = userUuid;
+	}
+
+	public String getLoginName() {
+		return loginName;
+	}
+
+	public void setLoginName(String loginName) {
+		this.loginName = loginName == null ? null : loginName.trim();
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name == null ? null : name.trim();
 	}
 
 	public String getPassword() {
@@ -39,87 +86,126 @@ public class UserVO {
 	}
 
 	public void setPassword(String password) {
-		this.password = password;
+		this.password = password == null ? null : password.trim();
 	}
 
-	public String getAgainPassword() {
-		return againPassword;
+	public String getSalt() {
+		return salt;
 	}
 
-	public void setAgainPassword(String againPassword) {
-		this.againPassword = againPassword;
+	public void setSalt(String salt) {
+		this.salt = salt;
 	}
 
-	public String getEmail() {
-		return email;
+	public Integer getSex() {
+		return sex;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setSex(Integer sex) {
+		this.sex = sex;
 	}
 
-	public String getOldPassword() {
-		return oldPassword;
+	public Integer getAge() {
+		return age;
 	}
 
-	public void setOldPassword(String oldPassword) {
-		this.oldPassword = oldPassword;
+	public void setAge(Integer age) {
+		this.age = age;
 	}
 
-	public String getNewPassword() {
-		return newPassword;
+	public Integer getUserType() {
+		return userType;
 	}
 
-	public void setNewPassword(String newPassword) {
-		this.newPassword = newPassword;
+	public void setUserType(Integer userType) {
+		this.userType = userType;
 	}
 
-	public String getQq() {
-		return qq;
+	public Integer getStatus() {
+		return status;
 	}
 
-	public void setQq(String qq) {
-		this.qq = qq;
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 
-	public String getCaptcha() {
-		return captcha;
+	public Integer getOrganizationId() {
+		return organizationId;
 	}
 
-	public void setCaptcha(String captcha) {
-		this.captcha = captcha;
+	public void setOrganizationId(Integer organizationId) {
+		this.organizationId = organizationId;
 	}
 
-	
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
 	public String getPhone() {
 		return phone;
 	}
 
 	public void setPhone(String phone) {
-		this.phone = phone;
+		this.phone = phone == null ? null : phone.trim();
 	}
 
-	public String getPhoneCode() {
-		return phoneCode;
+	public List<Role> getRolesList() {
+		return rolesList;
 	}
 
-	public void setPhoneCode(String phoneCode) {
-		this.phoneCode = phoneCode;
+	public void setRolesList(List<Role> rolesList) {
+		this.rolesList = rolesList;
 	}
 
-	public int getStatus() {
-		return status;
+	public String getOrganizationName() {
+		return organizationName;
 	}
 
-	public void setStatus(int status) {
-		this.status = status;
+	public void setOrganizationName(String organizationName) {
+		this.organizationName = organizationName;
 	}
 
-	public String getType() {
-		return type;
+	public String getRoleIds() {
+		return roleIds;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setRoleIds(String roleIds) {
+		this.roleIds = roleIds;
+	}
+
+	public Date getCreatedateStart() {
+		return createdateStart;
+	}
+
+	public void setCreatedateStart(Date createdateStart) {
+		this.createdateStart = createdateStart;
+	}
+
+	public Date getCreatedateEnd() {
+		return createdateEnd;
+	}
+
+	public void setCreatedateEnd(Date createdateEnd) {
+		this.createdateEnd = createdateEnd;
+	}
+
+	/**
+	 * 比较vo和数据库中的用户是否同一个user，采用id比较
+	 * @param user 用户
+	 * @return 是否同一个人
+	 */
+	public boolean equalsUser(User user) {
+		if (user == null) {
+			return false;
+		}
+		String userId = user.getUserID();
+		if (userUuid == null || userId == null) {
+			return false;
+		}
+		return userUuid.equals(userId);
 	}
 }

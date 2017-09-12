@@ -26,4 +26,5 @@
 	<import resource="classpath:spring/spring-mybatis.xml" />
 	<import resource="classpath:spring/spring-email.xml" />
 	<import resource="classpath:spring/spring-quartz.xml" />
+	<import resource="classpath:spring/spring-ehcache.xml"/>
 </beans>

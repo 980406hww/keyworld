@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.ResourceDao">
+
+    <!-- 通用查询结果列-->
+    <sql id="colID">
+        rs.fUuid AS `uuid`,
+        rs.fResourceName AS `eesourceName`,
+        rs.fUrl AS `url`,
+        rs.fOpenMode AS `openMode`,
+        rs.fDescription AS `description`,
+        rs.fIconCls AS `iconCls`,
+        rs.fParentID AS `parentID`,
+        rs.fSequence AS `sequence`,
+        rs.fStatus AS `status`,
+        rs.fOpened AS `opened`,
+        rs.fResourceType AS `resourceType`,
+        rs.fUpdateTime AS `updateIime`,
+        rs.fCreateTime AS `createTime`
+    </sql>
+
+</mapper>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.UserRoleDao">
+
+    <!-- 通用查询结果列-->
+    <sql id="colID">
+        fUuid AS `uuid`,
+        fUserID AS `userID`,
+        fRoleID AS `roleID`,
+        fUpdateTime AS `updateTime`,
+        fcreateTime AS `createTime`
+    </sql>
+
+    <select id="selectByUserId" resultType="UserRole" parameterType="java.lang.Long">
+        select
+        <include refid="colID"/>
+        from t_user_role
+        where fUserID = #{userId}
+    </select>
+
+</mapper>

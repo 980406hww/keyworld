@@ -61,6 +61,13 @@
         </property>
     </bean>
 
+    <!-- MP 全局配置 -->
+    <bean id="globalConfig" class="com.baomidou.mybatisplus.entity.GlobalConfiguration">
+        <property name="idType" value="0"/>
+        <!-- 全局表为下划线命名设置 true -->
+        <property name="dbColumnUnderline" value="false"/>
+    </bean>
+
     <!--mapper.xml 热加载-测试时可用 -->
     <bean class="com.baomidou.mybatisplus.spring.MybatisMapperRefresh">
         <constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"/>

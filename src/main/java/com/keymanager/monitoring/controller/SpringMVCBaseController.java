@@ -2,11 +2,11 @@ package com.keymanager.monitoring.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.keymanager.monitoring.common.shiro.ShiroUser;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.keymanager.monitoring.common.shiro.ShiroDbRealm.ShiroUser;
 
 public abstract class SpringMVCBaseController {
 

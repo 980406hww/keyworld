@@ -27,7 +27,7 @@ public class UserRestController extends SpringMVCBaseController {
 	
 	@RequestMapping(value = "/getCurrentUserInfo", method = RequestMethod.GET)
 	public ResponseEntity<?> getCurrentUserInfo(){
-		String currentUserId = getCurrentUser().getUserID();
+		String currentUserId = getCurrentUser().getLoginName();
 		User user = userService.selectById(currentUserId);
 		if(user != null){
 			return new ResponseEntity<Object>(user, HttpStatus.OK);

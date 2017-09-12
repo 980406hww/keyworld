@@ -10,11 +10,11 @@ import java.util.Date;
 
 
 @TableName(value = "t_user")
-public class User {
+public class User extends BaseEntity{
 	
 	private static final long serialVersionUID = -7590694637780491359L;
 	@NotBlank
-	@TableId(value = "fUserID")
+	@TableField(value = "fUserID")
 	private String userID;
 
 	@TableField(value = "fUserName")
@@ -43,12 +43,6 @@ public class User {
 
 	@TableField(value = "fStatus")
 	private Integer status; // 1: active,  0: inactive
-
-	@TableField(value = "fUpdateTime")
-	private Date updateTime;
-
-	@TableField(value = "fCreateTime")
-	private Date createTime;
 
 	public String getUserID() {
 		return userID;
@@ -121,22 +115,6 @@ public class User {
 
 	public void setStatus(Integer status) {
 		this.status = status;
-	}
-
-	public Date getUpdateTime() {
-		return updateTime;
-	}
-
-	public void setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
-	}
-
-	public Date getCreateTime() {
-		return createTime;
-	}
-
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
 	}
 
 	public String getSalt() {
