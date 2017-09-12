@@ -6,6 +6,11 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 
+	<properties>
+		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
+		<ehcache.version>2.6.11</ehcache.version>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>com.vmware</groupId>
@@ -36,7 +41,7 @@
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
-			<version>1.2</version>
+			<version>2.5</version>
 		</dependency>
 
 		<dependency>
@@ -66,7 +71,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
-			<version>4.1.7.RELEASE</version>
+			<version>4.3.8.RELEASE</version>
 		</dependency>
 		
 		<dependency>
@@ -258,6 +263,13 @@
 			<groupId>org.quartz-scheduler</groupId>
 			<artifactId>quartz</artifactId>
 			<version>2.2.1</version>
+		</dependency>
+
+		<!-- ehcache和redis必选其一，也可同时使用（需要注意） -->
+		<dependency>
+			<groupId>net.sf.ehcache</groupId>
+			<artifactId>ehcache-core</artifactId>
+			<version>${ehcache.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.shunshikj.keywordmanagement</groupId>
