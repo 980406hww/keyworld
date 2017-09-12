@@ -574,7 +574,7 @@
 			var postData = {};
 			postData.clientID = clientID;
 			$.ajax({
-				url: '/internal/clientStatus/changeTerminalType',
+				url: '/internal/clientstatus/changeTerminalType',
 				data: JSON.stringify(postData),
 				headers: {
 					'Accept': 'application/json',
