@@ -33,18 +33,7 @@
 }
 #changeSettingDialog {
 	display: none;
-	margin: -255px 0px 0px -295px;
-	background-color: white;
-    color: #2D2A2A;
-    font-size: 12px;
-    line-height: 12px;
-    border: 2px solid #104454;
-    width: 590px;
-    height: 510px;
-    left: 50%;
-    top: 50%;
-    z-index: 25;
-    position: fixed;
+	margin: 5px 0px 0px 20px;
 }
 #changeSettingDialog tr {
 	height : 24px;
@@ -65,36 +54,13 @@
 	width : 50px;
 }
 
-#targetVersionSettingDialog {
-	display: none;
-	margin: -30px 0px 0px -110px;
-	background-color: white;
-    color: #2D2A2A;
-    font-size: 12px;
-    line-height: 12px;
-    border: 2px solid #104454;
-    width: 220px;
-    height: 60px;
-    left: 50%;
-    top: 50%;
-    z-index: 25;
-    position: fixed;
-}
-
 #renewalSettingDialog {
 	display: none;
-	margin: -40px 0px 0px -100px;
-	background-color: white;
-	color: #2D2A2A;
-	font-size: 12px;
-	line-height: 12px;
-	border: 2px solid #104454;
-	width: 200px;
-	height: 80px;
-	left: 50%;
-	top: 50%;
-	z-index: 25;
-	position: fixed;
+	margin: 5px 0px 0px 20px;
+}
+
+#targetVersionSettingDialog{
+	margin: 10px 0px 0px 20px;
 }
 
 #clientStatusDiv {
@@ -505,8 +471,8 @@
                 },
                 timeout: 5000,
                 type: 'POST',
-                success: function (data) {
-                    if (data) {
+                success: function (result) {
+                    if (result) {
                         showInfo("操作成功", self);
                         window.location.reload();
                     } else {
@@ -536,8 +502,8 @@
 			$.ajax({
 				url: '/internal/clientstatus/resetRestartStatusForProcessing' ,
 				type: 'POST',
-				success: function (data) {
-					if(data){
+				success: function (result) {
+					if(result){
 						showInfo("更新成功！", self);
 						window.location.reload();
 					}else{
@@ -590,9 +556,8 @@
                 },
                 timeout: 5000,
                 type: 'POST',
-                success: function (data) {
-                    settingDialogDiv.hide();
-                    if(data){
+                success: function (result) {
+                    if(result){
                         showInfo("更新成功！", self);
                         window.location.reload();
                     }else{
@@ -601,7 +566,6 @@
                 },
                 error: function () {
                     showInfo("更新失败！", self);
-                    settingDialogDiv.hide();
                 }
             });
 		}
@@ -618,8 +582,8 @@
 				},
 				timeout: 5000,
 				type: 'POST',
-				success: function (status) {
-					if(status){
+				success: function (result) {
+					if(result){
 						showInfo("更新成功！", self);
 						window.location.reload();
 					}else{
@@ -645,9 +609,8 @@
                 },
                 timeout: 5000,
                 type: 'POST',
-                success: function (data) {
-                    settingDialogDiv.hide();
-                    if(data){
+                success: function (result) {
+                    if(result){
                         showInfo("更新成功！", self);
                         window.location.reload();
                     }else{
@@ -656,7 +619,6 @@
                 },
                 error: function () {
                     showInfo("更新失败！", self);
-                    settingDialogDiv.hide();
                 }
             });
 		}
@@ -673,9 +635,8 @@
                 },
                 timeout: 5000,
                 type: 'POST',
-                success: function (data) {
-                    settingDialogDiv.hide();
-                    if(data){
+                success: function (result) {
+                    if(result){
                         showInfo("更新成功！", self);
                         window.location.reload();
                     }else{
@@ -684,7 +645,6 @@
                 },
                 error: function () {
                     showInfo("更新失败！", self);
-                    settingDialogDiv.hide();
                 }
             });
 		}
@@ -693,10 +653,25 @@
 		        url: '/internal/clientstatus/getClientStatus/' + clientID,
 		        type: 'Get',
 		        success: function (clientStatus) {
-		        	if(clientStatus == null){
+		        	if(clientStatus == null) {
 		        		showInfo("获取信息失败！", self);
-		        	}else{
+		        	} else {
 		        		initSettingDialog(clientStatus, self);
+                        $("#changeSettingDialog").dialog({
+                            resizable: false,
+                            title: "设置",
+                            width: 640,
+							maxHeight: 510,
+                            modal: true,
+                            buttons: {
+                                "保存": function () {
+                                    saveChangeSetting(this);
+                                },
+                                "取消": function () {
+                                    $(this).dialog("close");
+                                }
+                            }
+                        });
 		        	}
 		        },
 		        error: function () {
@@ -849,30 +824,39 @@
                 },
                 timeout: 5000,
                 type: 'POST',
-		        success: function (data) {
-		        	settingDialogDiv.hide();
-		        	if(data){
-		        		showInfo("更新成功！", self);
-		        		window.location.reload();
-		        	}else{
-		        		showInfo("更新失败！", self);
+		        success: function (result) {
+		        	if(result){
+                        settingDialogDiv.hide();
+                        showInfo("更新成功！", self);
+                        window.location.reload();
+                    }else{
+                        settingDialogDiv.hide();
+                        showInfo("更新失败！", self);
 		        	}
 		        },
 		        error: function () {
-		        	showInfo("更新失败！", self);
-		        	settingDialogDiv.hide();
+                    settingDialogDiv.hide();
+                    showInfo("更新失败！", self);
 		        }
 		    });
 		}
-		function cancelChangeSetting(){
-			var settingDialogDiv = $("#changeSettingDialog");
-			settingDialogDiv.hide();
-		}
 		
 		function showTargetVersionSettingDialog(self){
-			var settingDialogDiv = $("#targetVersionSettingDialog");
-			settingDialogDiv.find("#settingTargetVersion").val("");
-			settingDialogDiv.show();
+            $("#targetVersionSettingDialog").find("#settingTargetVersion").val("");
+            $("#targetVersionSettingDialog").dialog({
+                resizable: false,
+				title: "设定目标版本",
+                width: 300,
+                modal: true,
+                buttons: {
+                    "保存": function () {
+                        saveTargetVersionSetting(this);
+                    },
+                    "取消": function () {
+                        $(this).dialog("close");
+                    }
+                }
+            });
 		}
 		function saveTargetVersionSetting(self){
 			var settingDialogDiv = $("#targetVersionSettingDialog");
@@ -891,32 +875,39 @@
 		        url: '/internal/clientstatus/updateClientStatusTargetVersion',
 		        data: "data=" + JSON.stringify(clientStatus),
 		        type: 'POST',
-		        success: function (data) {
-		        	settingDialogDiv.hide();
-		        	if(data){
-		        		showInfo("更新成功！", self);
+		        success: function (result) {
+		        	if(result){
 		        		settingDialogDiv.hide();
-		        		window.location.reload();
-		        	}else{
+                        showInfo("更新成功！", self);
+                        window.location.reload();
+                    }else{
 		        		settingDialogDiv.hide();
 		        		showInfo("更新失败！", self);
 		        	}
 		        },
 		        error: function () {
-		        	showInfo("更新失败！", self);
-		        	settingDialogDiv.hide();
+                    settingDialogDiv.hide();
+                    showInfo("更新失败！", self);
 		        }
 		    });
 		}
-		function cancelTargetVersionSetting(){
-			var settingDialogDiv = $("#targetVersionSettingDialog");
-			settingDialogDiv.hide();
-		}
 
 		function showRenewalSettingDialog(self){
-			var settingDialogDiv = $("#renewalSettingDialog");
-			settingDialogDiv.find("#renewalSettingDialog").val("");
-			settingDialogDiv.show();
+			$("#renewalSettingDialog").find("#renewalSettingDialog").val("");
+            $("#renewalSettingDialog").dialog({
+                resizable: false,
+                title: "续费",
+                width: 300,
+                modal: true,
+                buttons: {
+                    "保存": function () {
+                        saveRenewalSetting(this);
+                    },
+                    "取消": function () {
+                        $(this).dialog("close");
+                    }
+                }
+            });
 		}
 		function saveRenewalSetting(self){
 			var settingDialogDiv = $("#renewalSettingDialog");
@@ -935,34 +926,28 @@
 				}
 			}
 			if(clientStatus.clientIDs.trim() === ''){
-				alert("请选择要更新的终端！");
+				alert("请先选择要更新的终端！");
 				return;
 			}
-			alert(JSON.stringify(clientStatus));
 			$.ajax({
 				url: '/internal/clientstatus/updateClientStatusRenewalDate',
 				data: "data=" + JSON.stringify(clientStatus),
 				type: 'POST',
 				success: function (result) {
-					settingDialogDiv.hide();
 					if(result){
-						showInfo("更新成功！", self);
-						settingDialogDiv.hide();
-						window.location.reload();
-					}else{
-						settingDialogDiv.hide();
-						showInfo("更新失败！", self);
+                        settingDialogDiv.hide();
+                        showInfo("更新成功！", self);
+                        window.location.reload();
+                    }else{
+                        settingDialogDiv.hide();
+                        showInfo("更新失败！", self);
 					}
 				},
 				error: function () {
-					showInfo("更新失败！", self);
-					settingDialogDiv.hide();
+                    settingDialogDiv.hide();
+                    showInfo("更新失败！", self);
 				}
 			});
-		}
-		function cancelRenewalSetting(){
-			var settingDialogDiv = $("#renewalSettingDialog");
-			settingDialogDiv.hide();
 		}
 
 		function connectVNC(clientID){
@@ -1251,11 +1236,6 @@
 								<input type="text" name="vpsBackendSystemPassword" id="vpsBackendSystemPassword"/>
 							</td>
 						</tr>
-						<tr>
-							<td colspan="2" align="right">
-								<input type="button" id="saveChangeSetting" onClick="saveChangeSetting(this)" value="保存"/>&nbsp;&nbsp;&nbsp;<input type="button" onClick="cancelChangeSetting()" id="cancelChangeSetting" value="取消"/>
-							</td>
-						</tr>
 					</table>
 				</td>
 
@@ -1406,20 +1386,8 @@
 
 	</div>
 	
-	<div id="targetVersionSettingDialog">
-		<table style="font-size:12px">
-			<tr>
-				<th>目标版本</th>
-				<td>					
-					<input type="text" name="settingTargetVersion" id="settingTargetVersion" />
-				</td>
-			</tr>	
-			<tr>
-				<td colspan="2" align="right">
-					<input type="button" value="保存" id="saveTargetVersionSetting" onClick="saveTargetVersionSetting(this)"/> &nbsp;&nbsp;&nbsp;<input type="button" onClick="cancelTargetVersionSetting()" id="cancelTargetVersionSetting" value="取消"/>
-				</td>
-			</tr>	
-		</table>
+	<div id="targetVersionSettingDialog" style="display: none;">
+		目标版本：<input type="text" name="settingTargetVersion" id="settingTargetVersion" />
 	</div>
 
 	<div id="renewalSettingDialog">
@@ -1435,12 +1403,6 @@
 				<th>日期</th>
 				<td>
 					<input name="renewalDate" id="renewalDate" class="Wdate" type="text" style="width:160px;"  onClick="WdatePicker()" value="">
-				</td>
-			</tr>
-			<tr>
-				<td colspan="2" align="right">
-					<input type="button" value="保存" id="saveRenewalSetting" onClick="saveRenewalSetting(this)"/> &nbsp;&nbsp;&nbsp;<input
-						type="button" onClick="cancelRenewalSetting()" id="cancelRenewalSetting" value="取消"/>
 				</td>
 			</tr>
 		</table>
