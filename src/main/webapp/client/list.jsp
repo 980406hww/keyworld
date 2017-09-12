@@ -205,7 +205,7 @@
 								|<a target="_blank" href="javascript:resetRestartStatus()">重置重启状态</a>
 								|<a target="_blank" href="javascript:showUploadVNCDialog()">上传VNC文件</a>
 								|<a target="_blank" href="javascript:downloadVNCFile()">下载VNC连接压缩文件</a>
-								|<a target="_blank" href="javascript:downloadAllVNCFile()">下载完整版VNC文件</a>
+								|<a target="_blank" href="javascript:downloadFullVNCFile()">下载完整版VNC文件</a>
 							</td>
 						</tr>
 					</table>
@@ -387,8 +387,8 @@
             $("#downloadVNCForm").submit();
         }
 
-        function downloadAllVNCFile() {
-            $("#downloadAllVNCForm").submit();
+        function downloadFullVNCFile() {
+            $("#downloadFullVNCForm").submit();
         }
 
         function showUploadVNCDialog() {
@@ -1056,11 +1056,8 @@
 	    });
 	</script>
 
-
 	<div style="display: none;">
-		<script src="http://s84.cnzz.com/stat.php?id=4204660&web_id=4204660"
-			language="JavaScript"></script>
-
+		<script src="http://s84.cnzz.com/stat.php?id=4204660&web_id=4204660" language="JavaScript"></script>
 	</div>
 	<div id="changeSettingDialog">
 		<table>
@@ -1475,7 +1472,7 @@
 
 	<div style="display:none;">
 		<form id="downloadVNCForm" action="/internal/clientstatus/downloadVNCFile" method="post"></form>
-		<form id="downloadAllVNCForm" action="/internal/clientstatus/downloadAllVNCFile" method="post"></form>
+		<form id="downloadFullVNCForm" action="/internal/clientstatus/downloadFullVNCFile" method="post"></form>
 	</div>
 </body>
 </html>

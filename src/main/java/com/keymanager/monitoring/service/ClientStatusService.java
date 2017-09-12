@@ -171,7 +171,6 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		clientStatusDao.updateById(clientStatus);
 	}
 
-
 	public void uploadVNCFile(InputStream inputStream, String terminalType) throws Exception {
 		if(inputStream != null){
 			VNCAddressBookParser vncAddressBookParser = new VNCAddressBookParser();
@@ -195,10 +194,10 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		}
 	}
 
-	public String getDownloadVNCInfo(String terminalType) throws Exception {
+	public String getVNCFileInfo(String terminalType) throws Exception {
 		List<ClientStatus> clientStatuses = clientStatusDao.searchClientStatusesOrByHost(terminalType,"yes");
 		for (ClientStatus clientStatus : clientStatuses) {
-			updateClientStatus(clientStatus);
+			//updateClientStatus(clientStatus);
 			writeTxtFile(clientStatus);
 		}
 		String path = Thread.currentThread().getContextClassLoader().getResource("").toURI().getPath();
@@ -207,8 +206,147 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		return zipFileName;
 	}
 
+	public String getFullVNCFileInfo(String terminalType) throws Exception {
+		List<ClientStatus> clientStatuses = clientStatusDao.searchClientStatusesOrByHost(terminalType,null);
+		writeFullTxtFile(clientStatuses);
+		String path = Thread.currentThread().getContextClassLoader().getResource("").toURI().getPath();
+		String zipFileName = path + "vncAll.zip";
+		ZipCompressor.zipMultiFile(path + "vncAll/", zipFileName);
+		return zipFileName;
+	}
+
+	public void writeXMLDTD(FileOutputStream o) throws Exception {
+		o.write("<?xml version=\"1.0\"?>".getBytes("UTF-8"));
+		o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+		o.write("<!DOCTYPE vncaddressbook [".getBytes("UTF-8"));
+		o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+		o.write("<!ENTITY COMPANY \"RealVNC Ltd.\">".getBytes("UTF-8"));
+		o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+		o.write("<!ELEMENT vncaddressbook (folder*,file*)>".getBytes("UTF-8"));
+		o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+		o.write("<!ATTLIST vncaddressbook password CDATA #IMPLIED>".getBytes("UTF-8"));
+		o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+		o.write("<!ELEMENT folder (folder*,file*)>".getBytes("UTF-8"));
+		o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+		o.write("<!ATTLIST folder name CDATA #REQUIRED>".getBytes("UTF-8"));
+		o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+		o.write("<!ELEMENT file (section*)>".getBytes("UTF-8"));
+		o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+		o.write("<!ATTLIST file name CDATA #REQUIRED>".getBytes("UTF-8"));
+		o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+		o.write("<!ELEMENT section (param*)>".getBytes("UTF-8"));
+		o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+		o.write("<!ATTLIST section name CDATA #REQUIRED>".getBytes("UTF-8"));
+		o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+		o.write("<!ELEMENT param (#PCDATA)>".getBytes("UTF-8"));
+		o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+		o.write("<!ATTLIST param name CDATA #REQUIRED>".getBytes("UTF-8"));
+		o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+		o.write("<!ATTLIST param value CDATA #REQUIRED>".getBytes("UTF-8"));
+		o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+		o.write("]>".getBytes("UTF-8"));
+		o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+	}
+
+	public void writeFullTxtFile(List<ClientStatus> clientStatuses) throws Exception {
+		FileOutputStream o = null;
+		try {
+			Utils.createDir(Thread.currentThread().getContextClassLoader().getResource("").toURI().getPath() + "vncAll/");
+			String fileName = Thread.currentThread().getContextClassLoader().getResource("").toURI().getPath() + "vncAll/vncAll.xml";
+			o = new FileOutputStream(fileName);
+			writeXMLDTD(o);
+			o.write("<vncaddressbook password=\"cf73063bbf04432f43bba536d4a5f96017c5798fb8acc9xf67f8acf1945d85c\">".getBytes("UTF-8"));
+			o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+			o.write("<folder name=\"263互联\">".getBytes("UTF-8"));
+			o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+			for (ClientStatus clientStatus : clientStatuses) {
+				o.write(String.format("<file name=\"%s--%s-%s--%s--%s\">",clientStatus.getClientID(),clientStatus.getHost(),clientStatus.getPort(),clientStatus.getPort(),clientStatus.getVpsBackendSystemComputerID()).getBytes("UTF-8"));
+				o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+				o.write("<section name=\"Connection\">".getBytes("UTF-8"));
+				o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+				o.write(String.format("<param name=\"Host\" value=\"%s\" />",clientStatus.getHost()).getBytes("UTF-8"));
+				o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+				o.write("</section>".getBytes("UTF-8"));
+				o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+				o.write("<section name=\"Options\">".getBytes("UTF-8"));
+				o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+				o.write("<param name=\"MenuKey\" value=\"F8\" />".getBytes("UTF-8"));
+				o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+				o.write("<param name=\"SingleSignOn\" value=\"1\" />".getBytes("UTF-8"));
+				o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+				o.write("<param name=\"ShareFiles\" value=\"1\" />".getBytes("UTF-8"));
+				o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+				o.write("<param name=\"Monitor\" value=\"\\\\.\\DISPLAY1\" />".getBytes("UTF-8"));
+				o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+				o.write("<param name=\"SendSpecialKeys\" value=\"1\" />".getBytes("UTF-8"));
+				o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+				o.write("<param name=\"UseAllMonitors\" value=\"0\" />".getBytes("UTF-8"));
+				o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+				o.write("<param name=\"FullScreenChangeResolution\" value=\"0\" />".getBytes("UTF-8"));
+				o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+				o.write("<param name=\"VerifyId\" value=\"2\" />".getBytes("UTF-8"));
+				o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+				o.write("<param name=\"AutoReconnect\" value=\"1\" />".getBytes("UTF-8"));
+				o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+				o.write("<param name=\"PreferredEncoding\" value=\"ZRLE\" />".getBytes("UTF-8"));
+				o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+				o.write("<param name=\"Encryption\" value=\"Server\" />".getBytes("UTF-8"));
+				o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+				o.write(String.format("<param name=\"UserName\" value=\"%s\" />",clientStatus.getUserName()).getBytes("UTF-8"));
+				o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+				o.write("<param name=\"Scaling\" value=\"None\" />".getBytes("UTF-8"));
+				o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+				o.write("<param name=\"AcceptBell\" value=\"1\" />".getBytes("UTF-8"));
+				o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+				o.write("<param name=\"ProtocolVersion\" value=\"\" />".getBytes("UTF-8"));
+				o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+				o.write("<param name=\"Emulate3\" value=\"0\" />".getBytes("UTF-8"));
+				o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+				o.write("<param name=\"PointerEventInterval\" value=\"0\" />".getBytes("UTF-8"));
+				o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+				o.write("<param name=\"ServerCutText\" value=\"1\" />".getBytes("UTF-8"));
+				o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+				o.write("<param name=\"ClientCutText\" value=\"1\" />".getBytes("UTF-8"));
+				o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+				o.write("<param name=\"SendKeyEvents\" value=\"1\" />".getBytes("UTF-8"));
+				o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+				o.write("<param name=\"SendPointerEvents\" value=\"1\" />".getBytes("UTF-8"));
+				o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+				o.write("<param name=\"Shared\" value=\"0\" />".getBytes("UTF-8"));
+				o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+				o.write("<param name=\"AutoSelect\" value=\"1\" />".getBytes("UTF-8"));
+				o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+				o.write("<param name=\"ColorLevel\" value=\"rgb222\" />".getBytes("UTF-8"));
+				o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+				o.write("<param name=\"FullColor\" value=\"0\" />".getBytes("UTF-8"));
+				o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+				o.write("<param name=\"RelativePtr\" value=\"0\" />".getBytes("UTF-8"));
+				o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+				o.write("<param name=\"FullScreen\" value=\"0\" />".getBytes("UTF-8"));
+				o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+				o.write("<param name=\"UseLocalCursor\" value=\"1\" />".getBytes("UTF-8"));
+				o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+				o.write("</section>".getBytes("UTF-8"));
+				o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+				o.write("<section name=\"Signature\">".getBytes("UTF-8"));
+				o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+				o.write("<param name=\"DotVncFileSignature\" value=\"d513e6046201f276d46513a72ecc7c74889ddacd90dd83c3ce8351f5f8c54d677a46ed7ce4c3c54e065f70bb3aef7e53da8e6882886581377365ff1f84efdff8f0971970b8b25fca736cf32fdf712bd50a6490c5fdfba5c79e951ee9b9b86e96e34076d44d0df456818509f050c8323e315429dcc675e012a003b4acx9f959c6822ca2133\" />".getBytes("UTF-8"));
+				o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+				o.write("</section>".getBytes("UTF-8"));
+				o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+				o.write("</file>".getBytes("UTF-8"));
+				o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+			}
+			o.write("</folder>".getBytes("UTF-8"));
+			o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+			o.write("</vncaddressbook>".getBytes("UTF-8"));
+			o.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public void writeTxtFile(ClientStatus clientStatus) throws Exception {
-		RandomAccessFile mm = null;
 		FileOutputStream o = null;
 		try {
 			Utils.createDir(Thread.currentThread().getContextClassLoader().getResource("").toURI().getPath() + "vnc/");
@@ -260,10 +398,6 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 			o.close();
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-			if (mm != null) {
-				mm.close();
-			}
 		}
 	}
 

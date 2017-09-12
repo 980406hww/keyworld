@@ -225,14 +225,13 @@ public class ClientStatusRestController extends SpringMVCBaseController {
 	}
 
 	@RequestMapping(value = "/downloadVNCFile", method = RequestMethod.POST)
-	public boolean downloadVNCFile(HttpServletRequest request, HttpServletResponse response) {
+	public void downloadVNCFile(HttpServletRequest request, HttpServletResponse response) {
 		OutputStream outputStream = null;
 		FileInputStream fileInputStream = null;
-		boolean downloadFlag = false;
 		try {
 			response.setContentType("application/octet-stream");
 			String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
-			String filedownload = clientStatusService.getDownloadVNCInfo(terminalType);
+			String filedownload = clientStatusService.getVNCFileInfo(terminalType);
 			String filedisplay = "vnc.zip";
 			response.addHeader("Content-Disposition", "attachment;filename=" + filedisplay);
 			outputStream = response.getOutputStream();
@@ -244,7 +243,6 @@ public class ClientStatusRestController extends SpringMVCBaseController {
 				outputStream.write(b, 0, i);
 			}
 			outputStream.flush();
-			downloadFlag = true;
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -257,6 +255,38 @@ public class ClientStatusRestController extends SpringMVCBaseController {
 				}
 			}
 		}
-		return downloadFlag;
+	}
+
+	@RequestMapping(value = "/downloadFullVNCFile", method = RequestMethod.POST)
+	public void downloadFullVNCFile(HttpServletRequest request, HttpServletResponse response) {
+		OutputStream outputStream = null;
+		FileInputStream fileInputStream = null;
+		try {
+			response.setContentType("application/octet-stream");
+			String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+			String filedownload = clientStatusService.getFullVNCFileInfo(terminalType);
+			String filedisplay = "vncAll.zip";
+			response.addHeader("Content-Disposition", "attachment;filename=" + filedisplay);
+			outputStream = response.getOutputStream();
+			fileInputStream = new FileInputStream(filedownload);
+
+			byte[] b = new byte[1024];
+			int i = 0;
+			while ((i = fileInputStream.read(b)) > 0) {
+				outputStream.write(b, 0, i);
+			}
+			outputStream.flush();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (fileInputStream != null) {
+				try {
+					fileInputStream.close();
+					fileInputStream = null;
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 }
