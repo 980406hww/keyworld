@@ -12,10 +12,7 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import com.keymanager.monitoring.common.base.BaseController;
 import com.keymanager.monitoring.common.csrf.CsrfToken;
@@ -38,7 +35,7 @@ public class LoginController extends BaseController {
 	 */
 	@GetMapping("/")
 	public String index() {
-		return "redirect:/bd.html";
+		return "redirect:/index";
 	}
 
 	/**
@@ -49,22 +46,22 @@ public class LoginController extends BaseController {
 	 */
 	@GetMapping("/index")
 	public String index(Model model) {
-		return "index";
+		return "/views/index";
 	}
 
 	/**
 	 * GET 登录
 	 * @return {String}
 	 */
-	@GetMapping("/login")
+	@GetMapping("login")
 	@CsrfToken(create = true)
 	public String login() {
 		logger.info("GET请求登录");
 		if (SecurityUtils.getSubject().isAuthenticated()) {
-			return "redirect:/index";
+			return "/views/index";
 		}
-		return "login";
-	}
+		return "/views/login";
+}
 
 	/**
 	 * POST 登录 shiro 写法
@@ -77,7 +74,7 @@ public class LoginController extends BaseController {
 	@CsrfToken(remove = true)
 	@ResponseBody
 	public Object loginPost(HttpServletRequest request, HttpServletResponse response,
-							String username, String password, String captcha,
+							String username, String password, String captcha,String entryType,
 							@RequestParam(value = "rememberMe", defaultValue = "0") Integer rememberMe) {
 		logger.info("POST请求登录");
 		// 改为全部抛出异常，避免ajax csrf token被刷新
@@ -94,6 +91,8 @@ public class LoginController extends BaseController {
 			throw new RuntimeException("验证码错误");
 		}
 		Subject user = SecurityUtils.getSubject();
+		request.getSession().setAttribute("entry",entryType);
+		request.getSession().setAttribute("username","keyadmin");
 		UsernamePasswordToken token = new UsernamePasswordToken(username, password);
 		// 设置记住密码
 		token.setRememberMe(1 == rememberMe);
@@ -118,7 +117,7 @@ public class LoginController extends BaseController {
 	@GetMapping("/unauth")
 	public String unauth() {
 		if (SecurityUtils.getSubject().isAuthenticated() == false) {
-			return "redirect:/login";
+			return "redirect:/views/login";
 		}
 		return "unauth";
 	}
@@ -129,9 +128,11 @@ public class LoginController extends BaseController {
 	 */
 	@PostMapping("/logout")
 	@ResponseBody
-	public Object logout() {
+	public Object logout(HttpServletRequest request) {
 		logger.info("登出");
 		Subject subject = SecurityUtils.getSubject();
+		request.getSession().removeAttribute("username");
+		request.getSession().removeAttribute("password");
 		subject.logout();
 		return renderSuccess();
 	}

@@ -60,7 +60,7 @@ $(function () {
             progressClose();
             result = $.parseJSON(result);
             if (result.success) {
-                window.location.href = basePath + '/index';
+                window.location.href = basePath + '/internal/customer/searchCustomers';
             }else{
                 // 刷新验证码
                 $("#captcha")[0].click();

@@ -17,7 +17,7 @@
             frozenColumns : [ [ {
                 width : '100',
                 title : 'id',
-                field : 'fUuid',
+                field : 'uuid',
                 sortable : true
             }, {
                 width : '80',
@@ -27,7 +27,7 @@
             } , {
                 width : '80',
                 title : '排序号',
-                field : 's',
+                field : 'sequence',
                 sortable : true
             }, {
                 width : '200',

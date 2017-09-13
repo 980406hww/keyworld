@@ -8,6 +8,8 @@ import com.keymanager.monitoring.service.CustomerService;
 import com.keymanager.monitoring.service.UserService;
 import com.keymanager.util.PortTerminalTypeMapping;
 import com.keymanager.util.Utils;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +55,7 @@ public class CustomerRestController {
 
     private ModelAndView constructCustomerModelAndView(HttpServletRequest request, CustomerCriteria customerCriteria, String currentPage, String pageSize) {
         ModelAndView modelAndView = new ModelAndView("/customer/customerlist");
+        Subject subject = SecurityUtils.getSubject();
         HttpSession session = request.getSession();
         String userID = (String) session.getAttribute("username");
         User user = userService.getUser(userID);

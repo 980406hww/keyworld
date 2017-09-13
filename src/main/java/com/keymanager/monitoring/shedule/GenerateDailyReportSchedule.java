@@ -14,9 +14,9 @@ public class GenerateDailyReportSchedule {
     private DailyReportService dailyReportService;
 
     public void runTask(){
-        logger.info("============= "+" Generate Report Task "+"===================");
+//        logger.info("============= "+" Generate Report Task "+"===================");
         try {
-            dailyReportService.generateReport();
+//            dailyReportService.generateReport();
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(" Generate Report is error" + e.getMessage());

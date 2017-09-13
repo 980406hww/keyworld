@@ -21,7 +21,7 @@
             fit : true,
             striped : true,
             rownumbers : true,
-            pagination : true,
+            pagination : true,//True 就会在 datagrid 的底部显示分页栏。
             singleSelect : true,
             idField : 'id',
             sortName : 'createTime',
@@ -36,12 +36,12 @@
             }, {
                 width : '80',
                 title : '姓名',
-                field : 'name',
+                field : 'userName',
                 sortable : true
             },{
                 width : '80',
                 title : '部门ID',
-                field : 'organizationId',
+                field : 'organizationID',
                 hidden : true
             },{
                 width : '80',
@@ -55,7 +55,7 @@
             },  {
                 width : '40',
                 title : '性别',
-                field : 'sex',
+                field : 'gender',
                 sortable : true,
                 formatter : function(value, row, index) {
                     switch (value) {
@@ -67,13 +67,18 @@
                 }
             }, {
                 width : '40',
-                title : '年龄',
-                field : 'age',
+                title : 'QQ',
+                field : 'qq',
+                sortable : true
+            }, {
+                width : '40',
+                title : '登录IP',
+                field : 'clientIp',
                 sortable : true
             },{
                 width : '120',
-                title : '电话',
-                field : 'phone',
+                title : '用户状态',
+                field : 'status',
                 sortable : true
             }, 
             {
@@ -83,7 +88,7 @@
             }, {
                 width : '60',
                 title : '用户类型',
-                field : 'userType',
+                field : 'vipType',
                 sortable : true,
                 formatter : function(value, row, index) {
                     if(value == 0) {

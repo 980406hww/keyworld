@@ -51,16 +51,6 @@
 	username = Utils.parseParam(username);
 	password = Utils.parseParam(password);
 	
-	if (username == null || username.equals(""))
-	{
-%>
-       <script language="javascript">
-			window.location.href="/bd.html";
-		</script>
-<%
-	return;  
-	}
-	
 	
 	UserVO user = new UserVO();
 	

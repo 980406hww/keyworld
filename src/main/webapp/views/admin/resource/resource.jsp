@@ -5,19 +5,22 @@
     $(function() {
         resourceTreeGrid = $('#resourceTreeGrid').treegrid({
             url : '${path }/resource/treeGrid',
-            idField : 'id',
+            idField : 'uuid',
             treeField : 'name',
-            parentField : 'pid',
+            parentField : 'parentID',
             fit : true,
             fitColumns : false,
             border : false,
+            pagination : true,
+            pageSize : 20,
+            pageList : [ 10, 20, 30, 40, 50, 100, 200, 300, 400, 500 ],
             frozenColumns : [ [ {
                 title : '编号',
-                field : 'id',
+                field : 'uuid',
                 width : 40
             } ] ],
             columns : [ [ {
-                field : 'name',
+                field : 'resourceName',
                 title : '资源名称',
                 width : 150
             }, {
@@ -40,7 +43,7 @@
                     }
                 }
             }, {
-                field : 'seq',
+                field : 'sequence',
                 title : '排序',
                 width : 40
             }, {
@@ -60,7 +63,7 @@
                     }
                 }
             }, {
-                field : 'pid',
+                field : 'parentID',
                 title : '上级资源ID',
                 width : 150,
                 hidden : true

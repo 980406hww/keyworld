@@ -29,7 +29,7 @@ public class TestController extends BaseController {
     @RequiresRoles("test")
     @GetMapping("/dataGrid")
     public String dataGrid() {
-        return "admin/test";
+        return "/views/admin/test";
     }
 
     /**

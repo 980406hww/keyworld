@@ -87,7 +87,7 @@ public class UserController extends BaseController {
      */
     @GetMapping("/addPage")
     public String addPage() {
-        return "admin/user/userAdd";
+        return "/views/admin/user/userAdd";
     }
 
     /**
@@ -163,7 +163,7 @@ public class UserController extends BaseController {
      */
     @GetMapping("/editPwdPage")
     public String editPwdPage() {
-        return "admin/user/userEditPwd";
+        return "/views/admin/user/userEditPwd";
     }
 
     /**

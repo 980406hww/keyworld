@@ -34,7 +34,7 @@ import java.util.Date;
  */
 public abstract class BaseController {
     // 控制器本来就是单例，这样似乎更加合理
-    protected Logger logger = LogManager.getLogger(getClass());
+    protected Logger logger = LogManager.getLogger(BaseController.class);
 
     @InitBinder
     public void initBinder(ServletRequestDataBinder binder) {

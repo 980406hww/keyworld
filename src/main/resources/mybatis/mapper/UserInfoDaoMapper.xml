@@ -59,8 +59,8 @@
         r.fUuid AS `roleId`,
         r.fRoleName AS `roleName`
         FROM
-        t_user u
-        LEFT JOIN t_user_role ur ON u.fUuid = ur.fUserID
+        t_userinfo u
+        LEFT JOIN t_userinfo_role ur ON u.fUuid = ur.fUserID
         LEFT JOIN t_role r ON ur.fRoleID = r.fUuid
         LEFT JOIN t_organization og ON og.fuuid = u.fOrganizationID
         where
@@ -83,8 +83,8 @@
             u.fcreateTime AS `createTime`,
             og.fOrganizationName AS `organizationName`,
             group_concat(o.`name`) AS rolesList
-        FROM t_user u
-        LEFT JOIN t_user_role ur ON u.fUuid = ur.fUserID
+        FROM t_userinfo u
+        LEFT JOIN t_userinfo_role ur ON u.fUuid = ur.fUserID
         LEFT JOIN t_role r ON ur.fRoleID = r.fUuid
         LEFT JOIN t_organization og ON og.fUuid= t.fOrganizationID
         <where>
@@ -107,7 +107,7 @@
     <select id="searchUsers" resultType="com.keymanager.monitoring.entity.UserInfo">
         SELECT
         <include refid="colID"/>
-        FROM t_user u
+        FROM t_userinfo u
     </select>
 
 </mapper>

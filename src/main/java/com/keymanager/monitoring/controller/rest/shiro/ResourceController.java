@@ -46,7 +46,7 @@ public class ResourceController extends BaseController {
      */
     @GetMapping("/manager")
     public String manager() {
-        return "admin/resource/resource";
+        return "/views/admin/resource/resource";
     }
 
     /**
@@ -67,7 +67,7 @@ public class ResourceController extends BaseController {
      */
     @GetMapping("/addPage")
     public String addPage() {
-        return "admin/resource/resourceAdd";
+        return "/views/admin/resource/resourceAdd";
     }
 
     /**
@@ -118,7 +118,7 @@ public class ResourceController extends BaseController {
     public String editPage(Model model, Long id) {
         Resource resource = resourceService.selectById(id);
         model.addAttribute("resource", resource);
-        return "admin/resource/resourceEdit";
+        return "/views/admin/resource/resourceEdit";
     }
 
     /**

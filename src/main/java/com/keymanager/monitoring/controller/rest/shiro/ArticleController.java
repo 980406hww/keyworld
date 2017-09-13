@@ -25,7 +25,7 @@ public class ArticleController {
      */
     @GetMapping("create")
     public String create() {
-        return "/WEB-INF/views/admin/article/create";
+        return "/views/admin/article/create";
     }
     
 }

@@ -13,7 +13,7 @@
             border : false,
             frozenColumns : [ [ {
                 title : 'id',
-                field : 'id',
+                field : 'uuid',
                 width : 40,
                 hidden : true
             } ] ],
@@ -22,15 +22,15 @@
                 title : '编号',
                 width : 40
             },{
-                field : 'name',
+                field : 'organizationName',
                 title : '部门名称',
                 width : 180
             }, {
-                field : 'seq',
+                field : 'sequence',
                 title : '排序',
                 width : 40
             }, {
-                field : 'iconCls',
+                field : 'icon',
                 title : '图标',
                 width : 120
             },  {
@@ -38,7 +38,7 @@
                 title : '创建时间',
                 field : 'createTime'
             },{
-                field : 'pid',
+                field : 'parentID',
                 title : '上级资源ID',
                 width : 150,
                 hidden : true

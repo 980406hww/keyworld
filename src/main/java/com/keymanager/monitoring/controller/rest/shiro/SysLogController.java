@@ -19,13 +19,13 @@ public class SysLogController {
 
     @GetMapping("/manager")
     public String manager() {
-        return "admin/syslog";
+        return "/views/admin/syslog";
     }
 
     @PostMapping("/dataGrid")
     @ResponseBody
     public PageInfo dataGrid(Integer page, Integer rows, 
-            @RequestParam(value = "sort", defaultValue = "create_time") String sort,
+            @RequestParam(value = "sort", defaultValue = "fCreateTime") String sort,
             @RequestParam(value = "order", defaultValue = "DESC") String order) {
         PageInfo pageInfo = new PageInfo(page, rows, sort, order);
         sysLogService.selectDataGrid(pageInfo);

@@ -8,8 +8,6 @@
 <head>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-    <%@page contentType="text/html;charset=utf-8" %>
-
     <script language="javascript" type="text/javascript" src="/common.js"></script>
     <script src="${pageContext.request.contextPath}/customerkeyword/add.js"  type="text/javascript" language="javascript"></script>
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>

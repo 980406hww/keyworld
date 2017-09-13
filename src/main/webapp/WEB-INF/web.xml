@@ -7,6 +7,7 @@
             <url-pattern>*.jsp</url-pattern>
             <el-ignored>false</el-ignored>
             <page-encoding>utf-8</page-encoding>
+            <trim-directive-whitespaces>true </trim-directive-whitespaces>
         </jsp-property-group>
     </jsp-config>
 
@@ -126,15 +127,16 @@
 
     <error-page>
         <error-code>404</error-code>
-        <location>/WEB-INF/views/error/404.jsp</location>
+        <location>/views/error/404.jsp</location>
     </error-page>
     <error-page>
         <error-code>500</error-code>
-        <location>/WEB-INF/views/error/500.jsp</location>
+        <!--<location>/views/error/500.jsp</location>-->
+        <location>/error.jsp</location>
     </error-page>
 
     <welcome-file-list>
-        <welcome-file>bd.html</welcome-file>
+        <welcome-file>/views/login.jsp</welcome-file>
     </welcome-file-list>
 
 </web-app>
