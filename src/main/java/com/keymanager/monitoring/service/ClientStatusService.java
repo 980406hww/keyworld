@@ -25,7 +25,7 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		}
 	}
 
-	public void addClientStatus(String terminalType, String clientID, String freeSpace, String version, String city){
+	public void addSummaryClientStatus(String terminalType, String clientID, String freeSpace, String version, String city){
 		ClientStatus clientStatus = new ClientStatus();
 		clientStatus.setTerminalType(terminalType);
 		clientStatus.setClientID(clientID);
@@ -33,11 +33,7 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		clientStatus.setVersion(version);
 		clientStatus.setCity(city);
 		clientStatus.setClientIDPrefix(Utils.removeDigital(clientID));
-		clientStatus.setLastVisitTime(Utils.getCurrentTimestamp());
-		Timestamp nextMonth = Utils.addMonth(Utils.getCurrentTimestamp(), 1);
-		clientStatus.setRenewalDate(Utils.addDay(nextMonth, -1));
-		clientStatus.setCreateTime(Utils.getCurrentTimestamp());
-		clientStatusDao.insert(clientStatus);
+		clientStatusDao.addSummaryClientStatus(clientStatus);
 	}
 
 	public void updatePageNo(String clientID, int pageNo){
@@ -45,6 +41,20 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		if(clientStatus != null){
 			clientStatus.setPageNo(pageNo);
 			clientStatusDao.updateById(clientStatus);
+		}
+	}
+
+	public  void updateClientVersion(String clientID, String version){
+		clientStatusDao.updateClientVersion(clientID, version);
+	}
+
+	public void logClientStatusTime(String terminalType, String clientID, String status, String freeSpace, String version, String
+			city, int updateCount){
+		ClientStatus clientStatus = clientStatusDao.selectById(clientID);
+		if(clientStatus == null){
+			addSummaryClientStatus(terminalType, clientID, freeSpace, version, city);
+		}else{
+			clientStatusDao.updateOptimizationResult(clientID, status, version, freeSpace, city, updateCount);
 		}
 	}
 }

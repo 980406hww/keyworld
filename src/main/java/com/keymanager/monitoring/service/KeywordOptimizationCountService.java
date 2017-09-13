@@ -1,19 +1,22 @@
 package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.keymanager.monitoring.dao.ClientStatusDao;
+import com.keymanager.monitoring.entity.ClientStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class KeywordOptimizationCountService extends ServiceImpl{
+public class KeywordOptimizationCountService extends ServiceImpl<ClientStatusDao, ClientStatus>{
 	private static Map<String, KeywordOptimizationCount> keywordOptimizationCountMap = new HashMap<String, KeywordOptimizationCount>();
 
 	private synchronized KeywordOptimizationCount get(String groupName){
 		KeywordOptimizationCount keywordOptimizationCount = keywordOptimizationCountMap.get(groupName);
 		if(keywordOptimizationCount == null){
 			keywordOptimizationCount = new KeywordOptimizationCount();
+			keywordOptimizationCount.setGroup(groupName);
 			keywordOptimizationCountMap.put(groupName, keywordOptimizationCount);
 		}
 		return keywordOptimizationCount;
@@ -47,11 +50,11 @@ public class KeywordOptimizationCountService extends ServiceImpl{
 		private int bigKeywordOptimizedCount;
 
 		public boolean fetchNormalKeyword(){
-			return this.normalKeywordOptimizedCount < 30;
+			return this.normalKeywordOptimizedCount < 3;
 		}
 
 		public boolean fetchBigKeyword(){
-			return this.bigKeywordOptimizedCount < 20;
+			return this.bigKeywordOptimizedCount < 2;
 		}
 
 		public String getGroup() {

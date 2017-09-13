@@ -6,4 +6,6 @@ import org.apache.ibatis.annotations.Param;
 
 public interface ConfigDao extends BaseMapper<Config> {
     Config getConfig(@Param("configType")String configType, @Param("key")String key);
+
+    void updateConfig(@Param("config") Config config);
 }

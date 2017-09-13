@@ -1,5 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.monitoring.dao.ClientStatusDao">
+    <update id="updateClientVersion">
+        UPDATE t_client_status
+        SET fVersion = #{version}, fRestartCount = 0, fRestartStatus = null
+        WHERE fClientID = #{clientID}
+    </update>
 
+    <insert id="addSummaryClientStatus" parameterType="com.keymanager.monitoring.entity.ClientStatus">
+        INSERT INTO t_client_status
+            (fTerminalType,
+             fFreeSpace,
+             fVersion,
+             fCity,
+             fClientID,
+             fClientIDPrefix,
+             fHost,
+             fPort,
+             fUserName,
+             fPassword,
+             fVPSBackendSystemComputerID,
+             fLastVisitTime,
+             fLastSendNotificationTime,
+             fRenewalDate,
+             fCreateTime)
+        VALUES (#{clientStatus.terminalType},
+                #{clientStatus.freeSpace},
+                #{clientStatus.version},
+                #{clientStatus.city},
+                #{clientStatus.clientID},
+                #{clientStatus.clientIDPrefix},
+                #{clientStatus.host},
+                #{clientStatus.port},
+                #{clientStatus.userName},
+                #{clientStatus.password},
+                #{clientStatus.vpsBackendSystemComputerID},
+                NOW(),
+                NULL,
+                DATE_ADD(CURRENT_DATE(), INTERVAL - 1 DAY),
+                NOW())
+    </insert>
+
+    <update id="updateOptimizationResult">
+        UPDATE t_client_status
+        SET fRestartOrderingTime = NOW(),
+          fOptimizationStartDate = IF(fOptimizationStartDate IS NULL, CURRENT_DATE(), fOptimizationStartDate),
+          fOptimizationTotalCount = fOptimizationTotalCount + 1,
+          fOptimizationSucceedCount = fOptimizationSucceedCount + #{count},
+          fLastVisitTime = NOW(),
+          <choose>
+              <when test="count == 0">
+                  fContinuousFailCount = fContinuousFailCount + 1,
+              </when>
+              <when test="count == 1">
+                  fContinuousFailCount = 0,
+              </when>
+          </choose>
+          fLastSendNotificationTime = NULL,
+          fStatus = #{status},
+          fFreeSpace = #{freeSpace},
+          fVersion = #{version},
+          fCity = #{city}
+        WHERE fClientID = #{clientID}
+    </update>
 </mapper>

@@ -30,6 +30,6 @@ public class ConfigService extends ServiceImpl<ClientStatusDao, ClientStatus>{
 		Config optimizationDateConfig = getConfig(Constants.CONFIG_TYPE_OPTIMIZATION_DATE, Constants.CONFIG_TYPE_OPTIMIZATION_DATE);
 		String currentDate = Utils.getCurrentDate();
 		optimizationDateConfig.setValue(currentDate);
-		configDao.updateById(optimizationDateConfig);
+		configDao.updateConfig(optimizationDateConfig);
 	}
 }

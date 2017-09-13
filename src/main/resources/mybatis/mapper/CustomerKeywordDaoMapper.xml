@@ -222,7 +222,7 @@
         SELECT
         <include refid="colID"/>
         FROM t_customer_keyword ck
-        WHERE ck.fOptimizeGroupName = #{groupName} and ck.fStatus = 1
+        WHERE ck.fOptimizeGroupName = #{groupName} and ck.fStatus = 1 and ck.fTerminalType = #{terminalType}
         and (ck.fQueryTime is NULL or DATE_SUB(NOW(), INTERVAL ck.fQueryInterval MINUTE) > ck.fQueryTime) and ck.fUrl <![CDATA[<>]]> ''
         and ((ck.fCurrentPosition = 0 and ck.fInvalidRefreshCount <![CDATA[<]]> 2) or (ck.fCurrentPosition > 0 and ck.fInvalidRefreshCount <![CDATA[<]]> #{maxInvalidCount}))
         and ck.fBigKeyword = #{bigKeyowrd} and ((ck.fOptimizedCount <![CDATA[<]]> ck.fOptimizePlanCount) or (ck.fOptimizeDate is null) or (ck.fOptimizeDate <![CDATA[<]]> current_date()))
@@ -232,5 +232,13 @@
     <update id="updateOptimizationQueryTime">
         UPDATE t_customer_keyword set fQueryDate = CURRENT_DATE(), fInvalidRefreshCount = fInvalidRefreshCount + 1, fQueryTime = now()
         WHERE fUuid = #{customerKeywordUuid}
+    </update>
+
+    <update id="updateOptimizationResult">
+        UPDATE t_customer_keyword
+        SET fLastOptimizeDateTime = now(), fOptimizedCount = fOptimizedCount + #{count},
+        <if test="count == 0">fInvalidRefreshCount = 0, </if>
+        fOptimizedPercentage = fOptimizedCount/fOptimizePlanCount, fOptimizeDate = CURRENT_DATE(),fUpdateTime = NOW()
+		WHERE fUuid = #{customerKeywordUuid}
     </update>
 </mapper>

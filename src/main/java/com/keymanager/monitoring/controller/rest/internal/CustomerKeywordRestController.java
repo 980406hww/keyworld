@@ -1,16 +1,22 @@
 package com.keymanager.monitoring.controller.rest.internal;
 
 import com.baomidou.mybatisplus.plugins.Page;
-import com.keymanager.monitoring.criteria.CustomerCriteria;
-import com.keymanager.monitoring.excel.operator.CustomerKeywordInfoExcelWriter;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.CustomerKeywordCleanCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordCrilteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordUpdateGroupCriteria;
-import com.keymanager.monitoring.entity.*;
-import com.keymanager.monitoring.service.*;
+import com.keymanager.monitoring.entity.Customer;
+import com.keymanager.monitoring.entity.CustomerKeyword;
+import com.keymanager.monitoring.entity.ServiceProvider;
+import com.keymanager.monitoring.entity.User;
+import com.keymanager.monitoring.excel.operator.CustomerKeywordInfoExcelWriter;
+import com.keymanager.monitoring.service.CustomerKeywordService;
+import com.keymanager.monitoring.service.CustomerService;
+import com.keymanager.monitoring.service.ServiceProviderService;
+import com.keymanager.monitoring.service.UserService;
 import com.keymanager.util.PortTerminalTypeMapping;
 import com.keymanager.util.Utils;
+import com.keymanager.value.CustomerKeywordForOptimization;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +29,11 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.*;
-import java.util.*;
+import java.io.BufferedOutputStream;
+import java.io.OutputStream;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/internal/customerKeyword")
@@ -42,9 +51,6 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 
 	@Autowired
 	private ServiceProviderService serviceProviderService;
-
-	@Autowired
-	private CustomerKeywordPositionIndexLogService customerKeywordPositionIndexLogService;
 
 	@RequestMapping(value="/searchCustomerKeywords/{customerUuid}" , method=RequestMethod.GET)
 	public ModelAndView searchCustomerKeywords(@PathVariable("customerUuid") Long customerUuid,@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request){
@@ -316,5 +322,19 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		Page<CustomerKeyword>  page = customerKeywordService.searchCustomerKeywords(new Page<CustomerKeyword>(1, 100000), customerKeywordCrilteria);
 		List<CustomerKeyword> customerKeywords = page.getRecords();
 		return customerKeywords;
+	}
+
+	@RequestMapping(value = "/haveCustomerKeywordForOptimization", method = RequestMethod.POST)
+	public ResponseEntity<?> haveCustomerKeywordForOptimization(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) throws Exception{
+		String clientID = (String) requestMap.get("clientID");
+		String version = (String) requestMap.get("version");
+		String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+		try {
+			CustomerKeywordForOptimization customerKeywordForOptimization = customerKeywordService.searchCustomerKeywordsForOptimization(terminalType, clientID, version);
+			return new ResponseEntity<Object>(customerKeywordForOptimization != null, HttpStatus.OK);
+		}catch(Exception ex){
+			logger.error(ex.getMessage());
+			return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
+		}
 	}
 }

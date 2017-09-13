@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.annotations.TableName;
 import org.hibernate.validator.constraints.NotBlank;
 
 import java.sql.Timestamp;
-import java.util.Date;
 
 
 @TableName(value = "t_client_status")

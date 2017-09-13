@@ -5,9 +5,7 @@ import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.keymanager.db.DBUtil;
 import com.keymanager.enums.CollectMethod;
-import com.keymanager.enums.CustomerKeywordStatus;
 import com.keymanager.manager.*;
 import com.keymanager.monitoring.excel.operator.AbstractExcelReader;
 import com.keymanager.monitoring.criteria.BaiduIndexCriteria;
@@ -22,7 +20,6 @@ import com.keymanager.util.Utils;
 import com.keymanager.util.common.StringUtil;
 import com.keymanager.value.*;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +48,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     @Autowired
     private ClientStatusService clientStatusService;
+
+    @Autowired
+    private CustomerKeywordIPService customerKeywordIPService;
 
     @Autowired
     private ConfigService configService;
@@ -410,10 +410,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
 
-    public CustomerKeywordForOptimization searchCustomerKeywordsForOptimization(String terminalType, String clientID, String ip) throws Exception {
+    public CustomerKeywordForOptimization searchCustomerKeywordsForOptimization(String terminalType, String clientID, String version) throws
+            Exception {
         ClientStatus clientStatus = clientStatusService.selectById(clientID);
         if(clientStatus == null) {
-            clientStatusService.addClientStatus(terminalType, clientID, 500 + "", null, null);
+            clientStatusService.addSummaryClientStatus(terminalType, clientID, 500 + "", version, null);
             return null;
         }
         clientStatusService.updatePageNo(clientID, 0);
@@ -442,14 +443,14 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         int retryCount = 0;
         do{
             boolean isNormalKeyword = keywordOptimizationCountService.optimizeNormalKeyword(clientStatus.getGroup());
-            customerKeyword = customerKeywordDao.getCustomerKeywordForOptimization(clientStatus.getGroup(),
+            customerKeyword = customerKeywordDao.getCustomerKeywordForOptimization(terminalType, clientStatus.getGroup(),
                     Integer.parseInt(maxInvalidCountConfig.getValue()), isNormalKeyword == false ? 0 : 1);
             retryCount++;
             if(customerKeyword == null){
                 keywordOptimizationCountService.init(clientStatus.getGroup());
                 resetBigKeywordIndicator(clientStatus.getGroup(), Integer.parseInt(maxInvalidCountConfig.getValue()));
             }
-        }while(customerKeyword != null || retryCount > 2);
+        }while(customerKeyword == null && retryCount < 3);
 
         if(customerKeyword != null){
             CustomerKeywordForOptimization customerKeywordForOptimization = new CustomerKeywordForOptimization();
@@ -573,12 +574,22 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         if(CollectionUtils.isNotEmpty(remainingOptimizationCountMap)) {
             List<Long> customerKeywordUuids = new ArrayList<Long>();
             for(Map map : remainingOptimizationCountMap) {
-                customerKeywordUuids.add((Long)map.get("uuid"));
+                customerKeywordUuids.add(Long.parseLong(map.get("uuid").toString()));
                 if((1.0 * customerKeywordUuids.size()) / remainingOptimizationCountMap.size() > 0.2) {
                     break;
                 }
             }
             customerKeywordDao.setBigKeywordIndicator(customerKeywordUuids);
         }
+    }
+
+    public void updateOptimizationResult(String terminalType, Long customerKeywordUuid, int count, String ip, String city, String clientID, String status, String freeSpace, String version){
+        if(configService.optimizationDateChanged()) {
+            configService.updateOptimizationDateAsToday();
+            customerKeywordDao.resetOptimizationInfo();
+        }
+        customerKeywordDao.updateOptimizationResult(customerKeywordUuid, count);
+        clientStatusService.logClientStatusTime(terminalType, clientID, status, freeSpace, version, city, count);
+        customerKeywordIPService.addCustomerKeywordIP(customerKeywordUuid, city, ip);
     }
 }

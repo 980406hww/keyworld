@@ -23,9 +23,6 @@ public class CustomerKeywordPositionIndexLogController extends SpringMVCBaseCont
 	@Autowired
 	private CustomerKeywordPositionIndexLogService customerKeywordPositionIndexLogService;
 
-	@Autowired
-	private CustomerKeywordService customerKeywordService;
-
 	//查询历史缴费记录
 	@RequestMapping(value = "/historyPositionAndIndex/{customerKeywordUuid}/{dayCount}" , method = RequestMethod.GET)
 	public ModelAndView historyPositionAndIndex(@PathVariable("customerKeywordUuid")Long customerKeywordUuid, @PathVariable("dayCount")String dayCount, HttpServletRequest request){

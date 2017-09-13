@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.keymanager.db.DBUtil;
 import com.keymanager.manager.ConfigManager;
+import com.keymanager.monitoring.dao.ClientStatusDao;
+import com.keymanager.monitoring.entity.ClientStatus;
 import com.keymanager.value.ConfigVO;
 import com.vmware.vim25.VirtualMachinePowerState;
 import com.vmware.vim25.mo.*;
@@ -15,7 +17,7 @@ import java.net.URL;
 import java.sql.Connection;
 
 @Service
-public class VMwareService extends ServiceImpl{
+public class VMwareService extends ServiceImpl<ClientStatusDao, ClientStatus>{
 	private static Logger logger = LoggerFactory.getLogger(VMwareService.class);
 
 	private static ServiceInstance si;
