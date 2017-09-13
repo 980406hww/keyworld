@@ -25,7 +25,8 @@
 	    <li><a href="/internal/qzsetting/searchQZSettings">全站设置信息</a></li>
 	    <li><a href="/internal/complaints/findTSMainKeywords">投诉专用平台</a></li>
 		<li><a href="/client/vpslist.jsp">查看开机信息</a></li>
-	    <li><a href="/refresh/refreshstat.jsp">查看刷量统计</a></li>
+			<li><a href="/internal/refreshstatinfo/searchRefreshStatInfos">查看刷量统计</a></li>
+	    <li><a href="/refresh/refreshstat.jsp">查看刷量统计(old)</a></li>
 	    <li><a href="/customerkeyword/verification.jsp">验证</a></li>
 	    </ul>
 	    </li>
