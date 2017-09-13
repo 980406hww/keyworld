@@ -64,6 +64,4 @@ public class Constants {
 		QZSETTING_STATUS_LIST.add("Completed");
 		QZSETTING_STATUS_LIST.add("DownloadTimesUsed");
 	}
-
-	public final static String CONFIG_KEY_MAX_INVALID_COUNT = "MaxInvalidCount";
 }
