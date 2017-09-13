@@ -5,7 +5,7 @@
     $(function() {
         resourceTree = $('#resourceTree').tree({
             url : '${path }/resource/allTrees',
-            parentField : 'pid',
+            parentField : 'parentID',
             lines : true,
             checkbox : true,
             onClick : function(node) {},

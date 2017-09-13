@@ -4,7 +4,7 @@
     $(function() {
         $('#resourceAddPid').combotree({
             url : '${path }/resource/allTree',
-            parentField : 'pid',
+            parentField : 'parentID',
             lines : true,
             panelHeight : 'auto'
         });
@@ -40,7 +40,7 @@
         <table class="grid">
             <tr>
                 <td>资源名称</td>
-                <td><input name="name" type="text" placeholder="请输入资源名称" class="easyui-validatebox span2" data-options="required:true" ></td>
+                <td><input name="resourceName" type="text" placeholder="请输入资源名称" class="easyui-validatebox span2" data-options="required:true" ></td>
                 <td>资源类型</td>
                 <td>
                     <select name="resourceType" class="easyui-combobox" data-options="width:140,height:29,editable:false,panelHeight:'auto'">
@@ -65,7 +65,7 @@
                 <td>菜单图标</td>
                 <td ><input name="icon" /></td>
                 <td>排序</td>
-                <td><input name="seq" value="0"  class="easyui-numberspinner" style="width: 140px; height: 29px;" required="required" data-options="editable:false"></td>
+                <td><input name="sequence" value="0"  class="easyui-numberspinner" style="width: 140px; height: 29px;" required="required" data-options="editable:false"></td>
             </tr>
             <tr>
                 <td>状态</td>
@@ -86,7 +86,7 @@
             <tr>
                 <td>上级资源</td>
                 <td colspan="3">
-                    <select id="resourceAddPid" name="pid" style="width: 200px; height: 29px;"></select>
+                    <select id="resourceAddPid" name="parentID" style="width: 200px; height: 29px;"></select>
                     <a class="easyui-linkbutton" href="javascript:void(0)" onclick="$('#pid').combotree('clear');" >清空</a>
                 </td>
             </tr>

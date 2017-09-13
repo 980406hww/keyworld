@@ -23,7 +23,7 @@
             rownumbers : true,
             pagination : true,//True 就会在 datagrid 的底部显示分页栏。
             singleSelect : true,
-            idField : 'id',
+            idField : 'uuid',
             sortName : 'createTime',
 	        sortOrder : 'asc',
             pageSize : 20,
@@ -43,28 +43,19 @@
                 title : '部门ID',
                 field : 'organizationID',
                 hidden : true
-            },{
-                width : '80',
-                title : '所属部门',
-                field : 'organizationName'
-            },{
-                width : '130',
-                title : '创建时间',
-                field : 'createTime',
-                sortable : true
-            },  {
+            }, {
                 width : '40',
                 title : '性别',
                 field : 'gender',
                 sortable : true,
-                formatter : function(value, row, index) {
-                    switch (value) {
-                    case 0:
-                        return '男';
-                    case 1:
-                        return '女';
-                    }
-                }
+//                formatter : function(value, row, index) {
+//                    switch (value) {
+//                    case 0:
+//                        return '男';
+//                    case 1:
+//                        return '女';
+//                    }
+//                }
             }, {
                 width : '40',
                 title : 'QQ',
@@ -84,7 +75,7 @@
             {
                 width : '200',
                 title : '角色',
-                field : 'rolesList'
+                field : 'roleList'
             }, {
                 width : '60',
                 title : '用户类型',
@@ -112,17 +103,22 @@
                     }
                 }
             } , {
+                    width : '130',
+                    title : '创建时间',
+                    field : 'createTime',
+                    sortable : true
+                },{
                 field : 'action',
                 title : '操作',
                 width : 130,
                 formatter : function(value, row, index) {
                     var str = '';
                         <shiro:hasPermission name="/user/edit">
-                            str += $.formatString('<a href="javascript:void(0)" class="user-easyui-linkbutton-edit" data-options="plain:true,iconCls:\'fi-pencil icon-blue\'" onclick="editUserFun(\'{0}\');" >编辑</a>', row.id);
+                            str += $.formatString('<a href="javascript:void(0)" class="user-easyui-linkbutton-edit" data-options="plain:true,iconCls:\'fi-pencil icon-blue\'" onclick="editUserFun(\'{0}\');" >编辑</a>', row.uuid);
                         </shiro:hasPermission>
                         <shiro:hasPermission name="/user/delete">
                             str += '&nbsp;&nbsp;|&nbsp;&nbsp;';
-                            str += $.formatString('<a href="javascript:void(0)" class="user-easyui-linkbutton-del" data-options="plain:true,iconCls:\'fi-x icon-red\'" onclick="deleteUserFun(\'{0}\');" >删除</a>', row.id);
+                            str += $.formatString('<a href="javascript:void(0)" class="user-easyui-linkbutton-del" data-options="plain:true,iconCls:\'fi-x icon-red\'" onclick="deleteUserFun(\'{0}\');" >删除</a>', row.uuid);
                         </shiro:hasPermission>
                     return str;
                 }
@@ -214,11 +210,11 @@
             <table>
                 <tr>
                     <th>姓名:</th>
-                    <td><input name="name" placeholder="请输入用户姓名"/></td>
+                    <td><input name="userName" placeholder="请输入用户姓名"/></td>
                     <th>创建时间:</th>
                     <td>
-                        <input name="createdateStart" placeholder="点击选择时间" onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})" readonly="readonly" />至
-                        <input  name="createdateEnd" placeholder="点击选择时间" onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})" readonly="readonly" />
+                        <%--<input name="createdateStart" placeholder="点击选择时间" onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})" readonly="readonly" />至--%>
+                        <%--<input  name="createdateEnd" placeholder="点击选择时间" onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})" readonly="readonly" />--%>
                         <a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'fi-magnifying-glass',plain:true" onclick="searchUserFun();">查询</a>
                         <a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'fi-x-circle',plain:true" onclick="cleanUserFun();">清空</a>
                     </td>

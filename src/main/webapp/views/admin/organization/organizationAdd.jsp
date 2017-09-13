@@ -41,12 +41,12 @@
                 <td>编号</td>
                 <td><input name="code" type="text" placeholder="请输入部门编号" class="easyui-validatebox" data-options="required:true" ></td>
                 <td>部门名称</td>
-                <td><input name="name" type="text" placeholder="请输入部门名称" class="easyui-validatebox" data-options="required:true" ></td>
+                <td><input name="organizationName" type="text" placeholder="请输入部门名称" class="easyui-validatebox" data-options="required:true" ></td>
                 
             </tr>
             <tr>
                 <td>排序</td>
-                <td><input name="seq" class="easyui-numberspinner" style="width: 140px; height: 29px;" required="required" data-options="editable:false" value="0"></td>
+                <td><input name="sequence" class="easyui-numberspinner" style="width: 140px; height: 29px;" required="required" data-options="editable:false" value="0"></td>
                 <td>菜单图标</td>
                 <td><input name="icon" value="fi-folder"/></td>
             </tr>
@@ -56,7 +56,7 @@
             </tr>
             <tr>
                 <td>上级部门</td>
-                <td colspan="3"><select id="organizationAddPid" name="pid" style="width:200px;height: 29px;"></select>
+                <td colspan="3"><select id="organizationAddPid" name="parentID" style="width:200px;height: 29px;"></select>
                 <a class="easyui-linkbutton" href="javascript:void(0)" onclick="$('#pid').combotree('clear');" >清空</a></td>
             </tr>
         </table>

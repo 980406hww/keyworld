@@ -4,10 +4,10 @@
     $(function() {
         $('#resourceEditPid').combotree({
             url : '${path }/resource/tree',
-            parentField : 'pid',
+            parentField : 'parentID',
             lines : true,
             panelHeight : 'auto',
-            value : '${resource.pid}'
+            value : '${resource.parentID}'
         });
         
         $('#resourceEditForm').form({
@@ -45,8 +45,8 @@
             <tr>
                 <td>资源名称</td>
                 <td>
-                    <input name="id" type="hidden"  value="${resource.id}" >
-                    <input name="name" type="text" placeholder="请输入资源名称" value="${resource.name}" class="easyui-validatebox span2" data-options="required:true" >
+                    <input name="uuid" type="hidden"  value="${resource.uuid}" >
+                    <input name="resourceName" type="text" placeholder="请输入资源名称" value="${resource.resourceName}" class="easyui-validatebox span2" data-options="required:true" >
                 </td>
                 <td>资源类型</td>
                 <td>
@@ -72,7 +72,7 @@
                 <td>菜单图标</td>
                 <td><input name="icon" value="${resource.icon}"/></td>
                 <td>排序</td>
-                <td><input name="seq" value="${resource.seq}" class="easyui-numberspinner" style="width: 140px; height: 29px;" required="required" data-options="editable:false"></td>
+                <td><input name="seq" value="${resource.sequence}" class="easyui-numberspinner" style="width: 140px; height: 29px;" required="required" data-options="editable:false"></td>
             </tr>
             <tr>
                 <td>状态</td>
@@ -92,7 +92,7 @@
             </tr>
             <tr>
                 <td>上级资源</td>
-                <td colspan="3"><select id="resourceEditPid" name="pid" style="width: 200px; height: 29px;"></select>
+                <td colspan="3"><select id="resourceEditPid" name="parentID" style="width: 200px; height: 29px;"></select>
                 <a class="easyui-linkbutton" href="javascript:void(0)" onclick="$('#pid').combotree('clear');" >清空</a></td>
             </tr>
         </table>

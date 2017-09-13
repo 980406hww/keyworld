@@ -6,7 +6,7 @@
         resourceTreeGrid = $('#resourceTreeGrid').treegrid({
             url : '${path }/resource/treeGrid',
             idField : 'uuid',
-            treeField : 'name',
+            treeField : 'resourceName',
             parentField : 'parentID',
             fit : true,
             fitColumns : false,
@@ -86,11 +86,11 @@
                 formatter : function(value, row, index) {
                     var str = '';
                         <shiro:hasPermission name="/resource/edit">
-                            str += $.formatString('<a href="javascript:void(0)" class="resource-easyui-linkbutton-edit" data-options="plain:true,iconCls:\'fi-pencil icon-blue\'" onclick="editResourceFun(\'{0}\');" >编辑</a>', row.id);
+                            str += $.formatString('<a href="javascript:void(0)" class="resource-easyui-linkbutton-edit" data-options="plain:true,iconCls:\'fi-pencil icon-blue\'" onclick="editResourceFun(\'{0}\');" >编辑</a>', row.uuid);
                         </shiro:hasPermission>
                         <shiro:hasPermission name="/resource/delete">
                             str += '&nbsp;&nbsp;|&nbsp;&nbsp;';
-                            str += $.formatString('<a href="javascript:void(0)" class="resource-easyui-linkbutton-del" data-options="plain:true,iconCls:\'fi-x icon-red\'" onclick="deleteResourceFun(\'{0}\');" >删除</a>', row.id);
+                            str += $.formatString('<a href="javascript:void(0)" class="resource-easyui-linkbutton-del" data-options="plain:true,iconCls:\'fi-x icon-red\'" onclick="deleteResourceFun(\'{0}\');" >删除</a>', row.uuid);
                         </shiro:hasPermission>
                     return str;
                 }
@@ -108,6 +108,7 @@
             resourceTreeGrid.treegrid('select', id);
         }
         var node = resourceTreeGrid.treegrid('getSelected');
+        alert(node.id);
         if (node) {
             parent.$.modalDialog({
                 title : '编辑',

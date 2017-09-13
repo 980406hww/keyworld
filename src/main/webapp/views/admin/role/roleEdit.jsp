@@ -34,12 +34,12 @@
             <table class="grid">
                 <tr>
                     <td>角色名称</td>
-                    <td><input name="id" type="hidden"  value="${role.id}">
-                    <input name="name" type="text" placeholder="请输入角色名称" class="easyui-validatebox" data-options="required:true" value="${role.name}"></td>
+                    <td><input name="id" type="hidden"  value="${role.uuid}">
+                    <input name="roleName" type="text" placeholder="请输入角色名称" class="easyui-validatebox" data-options="required:true" value="${role.roleName}"></td>
                 </tr>
                 <tr>
                     <td>排序</td>
-                    <td><input name="seq"  class="easyui-numberspinner" style="width: 140px; height: 29px;" required="required" data-options="editable:false" value="${role.seq}"></td>
+                    <td><input name="sequence"  class="easyui-numberspinner" style="width: 140px; height: 29px;" required="required" data-options="editable:false" value="${role.sequence}"></td>
                 </tr>
                 <tr>
                     <td>状态</td>
