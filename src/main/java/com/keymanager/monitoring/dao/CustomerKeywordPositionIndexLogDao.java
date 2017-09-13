@@ -10,5 +10,5 @@ import java.util.Map;
 
 public interface CustomerKeywordPositionIndexLogDao extends BaseMapper<CustomerKeywordPositionIndexLog> {
 
-	List<CustomerKeywordPositionIndexLog> searchCustomerKeywordPositionIndexLogs(Page<CustomerKeywordPositionIndexLog> page, @Param("condition") Map<String,Object> condition);
+	List<CustomerKeywordPositionIndexLog> searchCustomerKeywordPositionIndexLogs(Page<CustomerKeywordPositionIndexLog> page, @Param("conditionMap") Map<String,Object> conditionMap);
 }

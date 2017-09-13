@@ -38,7 +38,7 @@ public class CustomerKeyword extends BaseEntity {
     private String title;
 
     @TableField(value = "fSequence")
-    private int sequence;
+    private Integer sequence;
 
     @TableField(value = "fCaptureTitleQueryTime")
     private Date captureTitleQueryTime;
@@ -92,7 +92,7 @@ public class CustomerKeyword extends BaseEntity {
     private String optimizeGroupName;
 
     @TableField(value = "fOptimizePlanCount")
-    private int optimizePlanCount;
+    private Integer optimizePlanCount;
 
     @TableField(value = "fOptimizedCount")
     private int optimizedCount;
@@ -118,28 +118,28 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(value = "fOptimizePositionThirdPercentage")
     private int optimizePositionThirdPercentage;
 
-    @TableField(value = "fPositionFirstCost")
+    @TableField(value = "fPositionFirstCost", validate= FieldStrategy.IGNORED)
     private Double positionFirstCost;
 
-    @TableField(value = "fPositionSecondCost")
+    @TableField(value = "fPositionSecondCost", validate= FieldStrategy.IGNORED)
     private Double positionSecondCost;
 
-    @TableField(value = "fPositionThirdCost")
+    @TableField(value = "fPositionThirdCost", validate= FieldStrategy.IGNORED)
     private Double positionThirdCost;
 
-    @TableField(value = "fPositionForthCost")
+    @TableField(value = "fPositionForthCost", validate= FieldStrategy.IGNORED)
     private Double positionForthCost;
 
-    @TableField(value = "fPositionFifthCost")
+    @TableField(value = "fPositionFifthCost", validate= FieldStrategy.IGNORED)
     private Double positionFifthCost;
 
-    @TableField(value = "fPositionFirstFee")
+    @TableField(value = "fPositionFirstFee", validate= FieldStrategy.IGNORED)
     private Double positionFirstFee;
 
-    @TableField(value = "fPositionSecondFee")
+    @TableField(value = "fPositionSecondFee", validate= FieldStrategy.IGNORED)
     private Double positionSecondFee;
 
-    @TableField(value = "fPositionThirdFee")
+    @TableField(value = "fPositionThirdFee", validate= FieldStrategy.IGNORED)
     private Double positionThirdFee;
 
     @TableField(value = "fPositionForthFee", validate= FieldStrategy.IGNORED)
@@ -165,10 +165,10 @@ public class CustomerKeyword extends BaseEntity {
     private Date startOptimizedTime;
 
     @TableField(value = "fEffectiveFromTime")
-    private Date effectiveFromTime;
+    private Timestamp effectiveFromTime;
 
     @TableField(value = "fEffectiveToTime")
-    private Date effectiveToTime;
+    private Timestamp effectiveToTime;
 
     @TableField(value = "fPaymentEffectiveFromTime")
     private Date paymentEffectiveFromTime;
@@ -190,6 +190,9 @@ public class CustomerKeyword extends BaseEntity {
 
     @TableField(value = "fStatus")
     private int status;
+
+    @TableField(exist = false)
+    private Timestamp autoUpdateNegativeTime;
 
     public long getCustomerUuid() {
         return customerUuid;
@@ -247,11 +250,11 @@ public class CustomerKeyword extends BaseEntity {
         this.title = title;
     }
 
-    public int getSequence() {
+    public Integer getSequence() {
         return sequence;
     }
 
-    public void setSequence(int sequence) {
+    public void setSequence(Integer sequence) {
         this.sequence = sequence;
     }
 
@@ -391,15 +394,15 @@ public class CustomerKeyword extends BaseEntity {
         this.optimizeGroupName = optimizeGroupName;
     }
 
-    public int getOptimizePlanCount() {
+    public Integer getOptimizePlanCount() {
         return optimizePlanCount;
     }
 
-    public void setOptimizePlanCount(int optimizePlanCount) {
+    public void setOptimizePlanCount(Integer optimizePlanCount) {
         this.optimizePlanCount = optimizePlanCount;
     }
 
-    public int getOptimizedCount() {
+    public Integer getOptimizedCount() {
         return optimizedCount;
     }
 
@@ -585,20 +588,24 @@ public class CustomerKeyword extends BaseEntity {
         this.startOptimizedTime = startOptimizedTime;
     }
 
-    public Date getEffectiveFromTime() {
+    public Timestamp getEffectiveFromTime() {
         return effectiveFromTime;
     }
 
-    public void setEffectiveFromTime(Date effectiveFromTime) {
+    public void setEffectiveFromTime(Timestamp effectiveFromTime) {
         this.effectiveFromTime = effectiveFromTime;
     }
 
-    public Date getEffectiveToTime() {
+    public Timestamp getEffectiveToTime() {
         return effectiveToTime;
     }
 
-    public void setEffectiveToTime(Date effectiveToTime) {
+    public void setEffectiveToTime(Timestamp effectiveToTime) {
         this.effectiveToTime = effectiveToTime;
+    }
+
+    public Timestamp getAutoUpdateNegativeTime() {
+        return autoUpdateNegativeTime;
     }
 
     public Date getPaymentEffectiveFromTime() {
@@ -704,25 +711,35 @@ public class CustomerKeyword extends BaseEntity {
     }
     public String pcFeeString(){
         StringBuilder fee = new StringBuilder("");
-        if(this.getPositionFirstFee() > 0){
+        if(this.getPositionFirstFee() != null && this.getPositionFirstFee() > 0){
             fee.append(this.getPositionFirstFeeString() + ";");
         }
-        if(this.getPositionSecondFee() > 0){
+        if(this.getPositionSecondFee() != null && this.getPositionSecondFee() > 0){
             fee.append(this.getPositionSecondFeeString() + ";");
         }
-        if(this.getPositionThirdFee() > 0){
+        if(this.getPositionThirdFee() != null && this.getPositionThirdFee() > 0){
             fee.append(this.getPositionThirdFeeString() + ";");
         }
-        if(this.getPositionForthFee() > 0){
+        if(this.getPositionForthFee() != null && this.getPositionForthFee() > 0){
             fee.append(this.getPositionForthFeeString() + ";");
         }
-        if(this.getPositionFifthFee() > 0){
+        if(this.getPositionFifthFee() != null && this.getPositionFifthFee() > 0){
             fee.append(this.getPositionFifthFeeString() + ";");
         }
-        if(this.getPositionFirstPageFee() > 0){
+        if(this.getPositionFirstPageFee() != null && this.getPositionFirstPageFee() > 0){
             fee.append(this.getPositionFirstPageFeeString() + ";");
         }
         return fee.toString();
+    }
+    public String captureIndexString(String type){
+        return String.format("%s__col__%s__col__%s", this.getUuid(), type, this.getKeyword());
+    }
+    public void setAutoUpdateNegativeTime(Timestamp autoUpdateNegativeTime) {
+        this.autoUpdateNegativeTime = autoUpdateNegativeTime;
+    }
+
+    public void setApplicableCurrentPosition(int currentPosition, String type) {
+        this.setCurrentPosition(currentPosition);
     }
 
 }

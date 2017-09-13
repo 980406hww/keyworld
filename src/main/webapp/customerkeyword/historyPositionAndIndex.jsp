@@ -9,32 +9,10 @@
 		  <title>关键字指数和排名历史数据</title>
   	</head>	
 <body>
-	 
-<div>
-   	  <table width=100% style="font-size:12px;" cellpadding=3>      	        	 
-          <tr bgcolor="#eeeeee" height=30>
-          	<td align="center" width=140>关键字</td>
-            <td align="center" width=100>联系人</td>
-            <td align="center" width=200>电脑URL</td>
-            <td align="center" width=200>电脑原始URL</td>
-            <td align="center" width=200>手机URL</td>
-            <td align="center" width=200>手机原始URL</td>
-          </tr>
-          <tr>
-          	<td>${customerKeyword.keyword}</td>
-            <td>${customerKeyword.contactPerson}</td>
-            <td>${customerKeyword.url}</td>
-            <td>${customerKeyword.originalUrl}</td>
-            <td><%--${customerKeyword.PhoneUrl}--%></td>
-            <td><%--${customerKeyword.OriginalPhoneUrl}--%></td>
-          </tr>
-      </table>
-</div>
+
 <div>
       <table width=100% style="font-size:12px;" cellpadding=3>      	        	 
           <tr bgcolor="#eeeeee" height=30>
-          		
-              
               <td align="center" width=40>指数</td>
               <td align="center" width=70>排名</td>
               <td align="center" width=60>IP</td>
@@ -52,7 +30,7 @@
           <tr>
           	<td colspan=9>
           		  <br>总记录:
-          		  ${page.pages}
+          		  ${page.total}
           	</td>
           </tr>          
       </table>

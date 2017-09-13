@@ -16,9 +16,9 @@
         <include refid="rowID"/>
         from t_ck_position_index_log ck
         where 1=1
-        <if test="condition.customerKeywordUuid !=null and condition.customerKeywordUuid !='' ">AND ck.fCustomerKeywordUuid = #{condition.customerKeywordUuid}</if>
-        <if test="condition.terminalType != null and condition.terminalType != ''">AND ck.fType = #{condition.terminalType}</if>
-        <if test="condition.queryTime!= null and condition.queryTime != ''">AND ck.fCreateTime>=date_add(CURDATE(), INTERVAL -${condition.queryTime} DAY)</if>
+        <if test="conditionMap.customerKeywordUuid !=null and conditionMap.customerKeywordUuid !='' ">AND ck.fCustomerKeywordUuid = #{conditionMap.customerKeywordUuid}</if>
+        <if test="conditionMap.terminalType != null and conditionMap.terminalType != ''">AND ck.fType = #{conditionMap.terminalType}</if>
+        <if test="conditionMap.queryTime!= null and conditionMap.queryTime != ''">AND ck.fCreateTime>=date_add(CURDATE(), INTERVAL -${conditionMap.dayCount} DAY)</if>
         ORDER BY fCreateTime DESC
     </select>
 

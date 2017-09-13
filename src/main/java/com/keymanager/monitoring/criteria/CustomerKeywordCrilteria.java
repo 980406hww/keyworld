@@ -3,7 +3,7 @@ package com.keymanager.monitoring.criteria;
 import java.util.Date;
 
 public class CustomerKeywordCrilteria extends BaseCriteria{
-    private String customerUuid;
+    private Long customerUuid;
     private String url;
     private String keyword;
     private String creationFromTime;//添加时间
@@ -18,11 +18,11 @@ public class CustomerKeywordCrilteria extends BaseCriteria{
     private String terminalType;//8088 PC  8089  phone
 
 
-    public String getCustomerUuid() {
+    public Long getCustomerUuid() {
         return customerUuid;
     }
 
-    public void setCustomerUuid(String customerUuid) {
+    public void setCustomerUuid(Long customerUuid) {
         this.customerUuid = customerUuid;
     }
 
@@ -122,22 +122,4 @@ public class CustomerKeywordCrilteria extends BaseCriteria{
         this.noPosition = noPosition;
     }
 
-    public CustomerKeywordCrilteria(String customerUuid, String url, String keyword, String creationFromTime, String creationToTime, String status, String optimizeGroupName, String orderElement, String invalidRefreshCount, String position, String noPosition, String entryType, String terminalType) {
-        this.customerUuid = customerUuid;
-        this.url = url;
-        this.keyword = keyword;
-        this.creationFromTime = creationFromTime;
-        this.creationToTime = creationToTime;
-        this.status = status;
-        this.optimizeGroupName = optimizeGroupName;
-        this.orderElement = orderElement;
-        this.invalidRefreshCount = invalidRefreshCount;
-        this.position = position;
-        this.noPosition = noPosition;
-        this.entryType = entryType;
-        this.terminalType = terminalType;
-    }
-
-    public CustomerKeywordCrilteria() {
-    }
 }
