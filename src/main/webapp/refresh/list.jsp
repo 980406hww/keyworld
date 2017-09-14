@@ -37,6 +37,8 @@
 	<script language="javascript" type="text/javascript" src="/js/My97DatePicker/WdatePicker.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/jquery142.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/slide1.12.4.js"></script>
+	<script language="javascript" type="text/javascript" src="/toastmessage/jquery.toastmessage.js"></script>
+	<link rel="stylesheet" href="/toastmessage/css/jquery.toastmessage.css">
 	<script language="javascript">
         function doOver(obj) {
             obj.style.backgroundColor = "green";
@@ -52,21 +54,21 @@
         }
 
         function findClientStatus(groupName) {
-			$$$("#searchClientStatusForm").find("#groupName").val(groupName);
-            $$$("#searchClientStatusForm").submit();
+			$("#searchClientStatusForm").find("#groupName").val(groupName);
+            $("#searchClientStatusForm").submit();
 		}
 		
 		function findKeyword(optimizeGroupName, invalidRefreshCount) {
-            $$$("#searchCustomerKeywordForm").find("#optimizeGroupName").val(optimizeGroupName);
-            $$$("#searchCustomerKeywordForm").find("#invalidRefreshCount").val(invalidRefreshCount);
-            $$$("#searchCustomerKeywordForm").submit();
+            $("#searchCustomerKeywordForm").find("#optimizeGroupName").val(optimizeGroupName);
+            $("#searchCustomerKeywordForm").find("#invalidRefreshCount").val(invalidRefreshCount);
+            $("#searchCustomerKeywordForm").submit();
         }
 
         function resetInvaidRefreshCount(groupName, customerName, self){
             var customerKeyword = {};
             customerKeyword.customerName = customerName;
             customerKeyword.groupName = groupName;
-            $$$.ajax({
+            $.ajax({
                 url: '/internal/customerKeyword/resetInvalidRefreshCount',
                 data: JSON.stringify(customerKeyword),
                 type: 'POST',
@@ -76,43 +78,18 @@
                 },
                 success: function (result) {
                     if(result){
-                        showInfo("重置成功！", self);
+                        $().toastmessage('showWarningToast', "重置成功！");
                         window.location.reload();
                     }else{
-                        showInfo("重置失败！", self);
+                        $().toastmessage('showWarningToast', "重置失败！");
                     }
                 },
                 error: function () {
-                    showInfo("重置失败！", self);
+                    $().toastmessage('showWarningToast', "重置失败！");
                 }
             });
         }
 
-        function showInfo(content, e) {
-            e = e || window.event;
-            var div1 = document.getElementById('div2'); //将要弹出的层
-            div1.innerText = content;
-            div1.style.display = "block"; //div1初始状态是不可见的，设置可为可见
-            div1.style.left = getLeft(e) + 10; //鼠标目前在X轴上的位置，加10是为了向右边移动10个px方便看到内容
-            //div1.style.top = getTop(e) + 5;
-            //div1.style.position = "absolute";
-
-            var intervalID = setInterval(function() {
-                div1.style.display = "none";
-            }, 3000);
-        }
-
-        function getTop(e) {
-            var offset=e.offsetTop;
-            if(e.offsetParent!=null) offset+=getTop(e.offsetParent);
-            return offset;
-        }
-        //获取元素的横坐标
-        function getLeft(e) {
-            var offset=e.offsetLeft;
-            if(e.offsetParent!=null) offset+=getLeft(e.offsetParent);
-            return offset;
-        }
         function showTip(content,e) {
             e = e||window.event;
             var div1 = document.getElementById('div1'); //将要弹出的层
@@ -154,7 +131,6 @@
 					       <td align="center" width=80 colspan="4">关键字</td>
 					       <td align="center" width=60 colspan="5">刷的次数</td>
 					       <td align="center" width=100 colspan="2">机器数</td>
-
 		   				</tr>
 		   				<tr bgcolor="#eeeeee" height=30>
 					       <td align="center" width=80>总数</td>
