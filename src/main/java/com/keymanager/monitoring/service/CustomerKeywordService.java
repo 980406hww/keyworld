@@ -7,11 +7,8 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.keymanager.enums.CollectMethod;
 import com.keymanager.manager.*;
+import com.keymanager.monitoring.criteria.*;
 import com.keymanager.monitoring.excel.operator.AbstractExcelReader;
-import com.keymanager.monitoring.criteria.BaiduIndexCriteria;
-import com.keymanager.monitoring.criteria.CustomerKeywordCleanCriteria;
-import com.keymanager.monitoring.criteria.CustomerKeywordCrilteria;
-import com.keymanager.monitoring.criteria.CustomerKeywordUpdateGroupCriteria;
 import com.keymanager.monitoring.dao.CustomerKeywordDao;
 import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.enums.*;
@@ -657,7 +654,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return null;
     }
 
-    public void updateInvalidRefreshCount(String data) {
-        customerKeywordDao.updateInvalidRefreshCount();
+    public void updateInvalidRefreshCount(String entryType, String data) throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfo = (CustomerKeywordRefreshStatInfoCriteria)mapper.readValue(data, CustomerKeywordRefreshStatInfoCriteria.class);
+        String customerName = customerKeywordRefreshStatInfo.getCustomerName();
+        String groupName = customerKeywordRefreshStatInfo.getGroupName();
+        customerKeywordDao.updateInvalidRefreshCount(entryType, customerName, groupName);
     }
 }

@@ -338,11 +338,12 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		}
 	}
 
-	@RequestMapping(value = "/updateInvalidRefreshCount", method = RequestMethod.GET)
+	@RequestMapping(value = "/updateInvalidRefreshCount", method = RequestMethod.POST)
 	public ResponseEntity<?> updateInvalidRefreshCount(HttpServletRequest request) {
 		try {
 			String data = request.getParameter("data");
-			customerKeywordService.updateInvalidRefreshCount(data);
+			String entryType = (String)request.getSession().getAttribute("entry");
+			customerKeywordService.updateInvalidRefreshCount(entryType, data);
 			return new ResponseEntity<Object>(true, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.getMessage());

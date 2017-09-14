@@ -282,4 +282,9 @@
         LIMIT 1
     </select>
 
+    <update id="updateInvalidRefreshCount">
+    UPDATE t_customer_keyword SET fInvalidRefreshCount = 0 WHERE fType = #{entryType}
+    <if test="customerName!=null and customerName!=''">AND EXISTS (SELECT 1 FROM t_customer c WHERE c.fUuid = fCustomerUuid AND c.fContactPerson LIKE concat('%', #{customerName}, '%'))</if>
+    <if test="groupName!=null and groupName!=''">AND fOptimizeGroupName LIKE concat('%', #{groupName}, '%')</if>
+    </update>
 </mapper>
