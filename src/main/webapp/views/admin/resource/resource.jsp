@@ -128,6 +128,7 @@
     }
 
     function deleteResourceFun(id) {
+        alert(id);
         if (id != undefined) {
             resourceTreeGrid.treegrid('select', id);
         }

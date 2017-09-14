@@ -1,4 +1,4 @@
-<%@page contentType="text/html;charset=utf-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <table width=100%  style= "border:1px solid #000000;font-size:12px;" cellpadding=3>
 	<tr border="1" height=30>
       <td width=250>联系人: <%=customer.getContactPerson()%></td>

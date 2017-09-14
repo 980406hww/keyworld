@@ -191,16 +191,17 @@
     </div>
     <div id="index_layout">
         <div data-options="region:'north',border:false" style="overflow: hidden;">
-            <div>
-                <span style="float: right; padding-right: 20px; margin-top: 15px; color: #333">
-                    <i class="fi-torso"></i>
-                    <b><shiro:principal></shiro:principal></b>&nbsp;&nbsp; 
-                    <shiro:hasPermission name="/user/editPwdPage">
-                        <a href="javascript:void(0)" onclick="editUserPwd()" class="easyui-linkbutton" plain="true" icon="fi-unlock" >修改密码</a>
-                    </shiro:hasPermission>&nbsp;&nbsp;
-                    <a href="javascript:void(0)" onclick="logout()" class="easyui-linkbutton" plain="true" icon="fi-x">安全退出</a>
-                </span>
-                <span class="header"></span>
+            <div style="z-index: 20;">
+                <%--<span style="float: right; padding-right: 20px; margin-top: 15px; color: #333">--%>
+                    <%--<i class="fi-torso"></i>--%>
+                    <%--<b><shiro:principal></shiro:principal></b>&nbsp;&nbsp; --%>
+                    <%--<shiro:hasPermission name="/user/editPwdPage">--%>
+                        <%--<a href="javascript:void(0)" onclick="editUserPwd()" class="easyui-linkbutton" plain="true" icon="fi-unlock" >修改密码</a>--%>
+                    <%--</shiro:hasPermission>&nbsp;&nbsp;--%>
+                    <%--<a href="javascript:void(0)" onclick="logout()" class="easyui-linkbutton" plain="true" icon="fi-x">安全退出</a>--%>
+                <%--</span>--%>
+                <%--<span class="header"></span>--%>
+                    <%@include file="/menu.jsp"%>
             </div>
         </div>
         <div data-options="region:'west',split:true" title="菜单" style="width: 160px; overflow: hidden;overflow-y:auto; padding:0px">

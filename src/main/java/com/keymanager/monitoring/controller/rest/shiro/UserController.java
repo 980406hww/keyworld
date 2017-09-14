@@ -44,7 +44,7 @@ public class UserController extends BaseController {
      */
     @GetMapping("/manager")
     public String manager() {
-        return "admin/user/user";
+        return "views/admin/user/user";
     }
 
     /**

@@ -1,5 +1,6 @@
 
-<%@page contentType="text/html;charset=utf-8"  %> <%@page import="com.keymanager.manager.*,java.util.*,com.keymanager.value.*,com.keymanager.util.*" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@page import="com.keymanager.manager.*,java.util.*,com.keymanager.value.*,com.keymanager.util.*" %>
 <jsp:useBean id="um" scope="page" class="com.keymanager.manager.UserManager" />
 <jsp:useBean id="rkm" scope="page" class="com.keymanager.manager.RelatedKeywordManager" />
 <%

@@ -49,7 +49,7 @@
             }, {
                 field : 'action',
                 title : '操作',
-                width : 200,
+                width : 230,
                 formatter : function(value, row, index) {
                     var str = '';
                         <shiro:hasPermission name="/role/grant">

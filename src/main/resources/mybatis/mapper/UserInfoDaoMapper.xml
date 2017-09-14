@@ -82,11 +82,11 @@
             u.fPhone AS `phone`,
             u.fcreateTime AS `createTime`,
             og.fOrganizationName AS `organizationName`,
-            group_concat(o.`name`) AS rolesList
+            group_concat(r.`fRoleName`) AS `rolesList`
         FROM t_userinfo u
-        LEFT JOIN t_userinfo_role ur ON u.fUuid = ur.fUserID
+        LEFT JOIN t_user_role ur ON u.fUuid = ur.fUserID
         LEFT JOIN t_role r ON ur.fRoleID = r.fUuid
-        LEFT JOIN t_organization og ON og.fUuid= t.fOrganizationID
+        LEFT JOIN t_organization og ON og.fUuid= u.fOrganizationID
         <where>
             <if test=" name != null and name != '' ">
                 u.fUserName = #{name}

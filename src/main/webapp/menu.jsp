@@ -1,11 +1,11 @@
-<%-- [EasyUI] --%>
-<link id="easyuiTheme" rel="stylesheet" type="text/css" href="${staticPath }/static/easyui/themes/gray/easyui.css" />
-<link id="easyuiTheme" rel="stylesheet" type="text/css" href="${staticPath }/static/easyui/plugins/jquery.messager.js" />
-<%-- [扩展JS] --%>
-<script type="text/javascript" src="${staticPath }/static/extJs.js" charset="utf-8"></script>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<%@ include file="/commons/basejs.jsp" %>
+<link href="/css/menu.css" rel="stylesheet" type="text/css"/>
+<script language="javascript" type="text/javascript" src="/js/slide1.12.4.js"></script>
 <script type="text/javascript">
     function logout(){
-        $.messager.confirm('提示','确定要退出?',function(r){s
+        $.messager.confirm('提示','确定要退出?',function(r){
             if (r){
                 progressLoad();
                 $.post('${path }/logout', function(result) {
@@ -50,7 +50,7 @@
 	    </ul>
 	    </li>
 
-		<li class="mainlevel" id="mainlevel_02"><a target="_blank" href="/login">权限管理</a>
+		<li class="mainlevel" id="mainlevel_02"><a href="/login">权限管理</a>
 
 		</li>
 
@@ -61,6 +61,20 @@
 	    <li><a href="javascript:void(0)" onclick="logout()">安全退出</a></li>
 	    </ul>
 	    </li>
+
+		<div data-options="region:'north',border:false" style="overflow: hidden;">
+			<div>
+                <span style="float: right; padding-right: 20px; margin-top: 15px; color: #333">
+                    <i class="fi-torso"></i>
+                    <b><shiro:principal></shiro:principal></b>&nbsp;&nbsp;
+                    <shiro:hasPermission name="/user/editPwdPage">
+						<a href="javascript:void(0)" onclick="editUserPwd()" class="easyui-linkbutton" plain="true" icon="fi-unlock" >修改密码</a>
+					</shiro:hasPermission>&nbsp;&nbsp;
+                    <a href="javascript:void(0)" onclick="logout()" class="easyui-linkbutton" plain="true" icon="fi-x">安全退出</a>
+                </span>
+				<%--<span class="header"></span>--%>
+			</div>
+		</div>
 	    <div class="clear"></div>
 	</ul>
 </div>

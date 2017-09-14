@@ -1,3 +1,4 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <script language="javascript" type="text/javascript" src="/common.js"></script>
@@ -8,7 +9,6 @@
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script language="javascript" type="text/javascript" src="/js/slide1.12.4.js"></script>
 <link href="/css/menu.css" rel="stylesheet" type="text/css"/>
-<%@page contentType="text/html;charset=utf-8" %>
 <%@page import="com.keymanager.manager.*,com.keymanager.util.*,com.keymanager.value.*,java.util.*,java.net.URLEncoder" %>
 <jsp:useBean id="um" scope="page" class="com.keymanager.manager.UserManager"/>
 <jsp:useBean id="sch" scope="page" class="com.keymanager.util.SpringContextHolder"/>

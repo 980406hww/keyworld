@@ -7,11 +7,11 @@
     $(function() {
         organizationTree = $('#organizationTree').tree({
             url : '${path }/organization/tree',
-            parentField : 'pid',
+            parentField : 'parentID',
             lines : true,
             onClick : function(node) {
                 userDataGrid.datagrid('load', {
-                    organizationId: node.id
+                    organizationID: node.id
                 });
             }
         });
@@ -62,12 +62,12 @@
                 field : 'qq',
                 sortable : true
             }, {
-                width : '40',
+                width : '80',
                 title : '登录IP',
                 field : 'clientIp',
                 sortable : true
             },{
-                width : '120',
+                width : '80',
                 title : '用户状态',
                 field : 'status',
                 sortable : true
@@ -79,7 +79,7 @@
             }, {
                 width : '60',
                 title : '用户类型',
-                field : 'vipType',
+                field : 'userType',
                 sortable : true,
                 formatter : function(value, row, index) {
                     if(value == 0) {
