@@ -1,7 +1,9 @@
 package com.keymanager.monitoring.entity;
 
 import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
 
 import java.io.Serializable;
 
@@ -9,9 +11,9 @@ import java.io.Serializable;
  * Created by shunshikj24 on 2017/9/1.
  */
 @TableName(value = "t_service_provider")
-public class ServiceProvider implements Serializable{
+public class ServiceProvider implements Serializable {
 
-    @TableField(value = "fUuid")
+    @TableId(value = "fUuid", type = IdType.AUTO)
     private Long uuid;
     @TableField(value = "fServiceProviderName")
     private String serviceProviderName;

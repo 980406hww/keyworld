@@ -1,8 +1,8 @@
 package com.keymanager.value;
 
-public class CustomerKeywordForPaiming {
+public class CustomerKeywordForCapturePosition {
+	private Long uuid;
 	private String keyword;
-	private int uuid;
 	private String url;
 	private String title;
 	
@@ -14,11 +14,11 @@ public class CustomerKeywordForPaiming {
 		this.keyword = keyword;
 	}
 
-	public int getUuid() {
+	public Long getUuid() {
 		return uuid;
 	}
 
-	public void setUuid(int uuid) {
+	public void setUuid(Long uuid) {
 		this.uuid = uuid;
 	}
 

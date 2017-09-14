@@ -59,6 +59,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     private KeywordOptimizationCountService keywordOptimizationCountService;
 
     @Autowired
+    private CustomerKeywordPositionSummaryService customerKeywordPositionSummaryService;
+
+    @Autowired
     private CustomerKeywordDao customerKeywordDao;
 
     public Page<CustomerKeyword>  searchCustomerKeywords(Page<CustomerKeyword> page, CustomerKeywordCrilteria customerKeywordCrilteria){
@@ -591,5 +594,66 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeywordDao.updateOptimizationResult(customerKeywordUuid, count);
         clientStatusService.logClientStatusTime(terminalType, clientID, status, freeSpace, version, city, count);
         customerKeywordIPService.addCustomerKeywordIP(customerKeywordUuid, city, ip);
+    }
+
+    public void adjustOptimizationCount(){
+        List<Map> customerKeywordSummaries = customerKeywordDao.searchCustomerKeywordsForAdjustingOptimizationCount("pc_pm_xiaowu");
+        if(CollectionUtils.isNotEmpty(customerKeywordSummaries)){
+            for(Map customerKeywordSummaryMap : customerKeywordSummaries) {
+                Long uuid = Long.parseLong(customerKeywordSummaryMap.get("uuid").toString());
+                int currentIndexCount = (Integer) customerKeywordSummaryMap.get("currentIndexCount");
+                String positionStr = (String) customerKeywordSummaryMap.get("positions");
+                String[] positionArray = positionStr.split(",");
+                int optimizationPlanCount = currentIndexCount < 100 ? 150 : currentIndexCount;
+                if (positionArray.length == 3) {
+                    boolean lessFifth = true;
+                    for (String position : positionArray) {
+                        int iPosition = Integer.parseInt(position);
+                        if (iPosition == 0 || iPosition >= 3) {
+                            lessFifth = false;
+                            break;
+                        }
+                    }
+                    if (lessFifth) {
+                        optimizationPlanCount = 20 + currentIndexCount / 50;
+                    }
+                }
+                int queryInterval = (23 * 60) / optimizationPlanCount;
+
+                customerKeywordDao.adjustOptimizationCount(uuid, optimizationPlanCount, queryInterval);
+            }
+        }
+    }
+
+    public void updateCustomerKeywordPosition(Long customerKeywordUuid, int position){
+        CustomerKeyword customerKeyword = customerKeywordDao.selectById(customerKeywordUuid);
+        if(customerKeyword != null){
+            customerKeyword.setCurrentPosition(position);
+            if(customerKeyword.getInitialPosition() == null){
+                customerKeyword.setInitialPosition(position);
+            }
+            customerKeyword.setCapturePositionQueryTime(Utils.getCurrentTimestamp());
+            customerKeyword.setUpdateTime(new Date());
+            customerKeywordDao.updateById(customerKeyword);
+
+            customerKeywordPositionSummaryService.savePositionSummary(customerKeywordUuid, position);
+        }
+    }
+
+    public CustomerKeywordForCapturePosition getCustomerKeywordForCapturePosition(String terminalType, List<String> groupNames, Long customerUuid,
+                                                                                  int minutes){
+        CustomerKeyword customerKeyword = customerKeywordDao.getCustomerKeywordForCapturePosition(terminalType, groupNames, customerUuid, minutes);
+        if(customerKeyword != null){
+            CustomerKeywordForCapturePosition customerKeywordForCapturePosition = new CustomerKeywordForCapturePosition();
+            customerKeywordForCapturePosition.setUuid(customerKeyword.getUuid());
+            customerKeywordForCapturePosition.setKeyword(customerKeyword.getKeyword());
+            customerKeywordForCapturePosition.setUrl(customerKeyword.getUrl());
+            customerKeywordForCapturePosition.setTitle(customerKeyword.getTitle());
+
+            customerKeyword.setCapturePositionQueryTime(new Date());
+            customerKeywordDao.updateById(customerKeyword);
+            return customerKeywordForCapturePosition;
+        }
+        return null;
     }
 }

@@ -241,4 +241,45 @@
         fOptimizedPercentage = fOptimizedCount/fOptimizePlanCount, fOptimizeDate = CURRENT_DATE(),fUpdateTime = NOW()
 		WHERE fUuid = #{customerKeywordUuid}
     </update>
+
+    <select id="searchCustomerKeywordsForAdjustingOptimizationCount" resultType="java.util.Map">
+        SELECT ck.fUuid AS 'uuid', ck.fKeyword as 'keyword', ck.fUrl as 'url', ck.fCurrentIndexCount as 'currentIndexCount',
+        GROUP_CONCAT(CAST(ps.fPosition AS CHAR) ORDER BY ps.fCreateDate) AS 'positions'
+        FROM t_customer_keyword ck JOIN t_ck_position_summary ps ON ck.fUuid = ps.fCustomerKeywordUuid
+		WHERE ps.fCreateDate >= DATE_SUB(CURRENT_DATE(), INTERVAL 3 DAY)
+		AND ck.fStatus = 1 AND ck.fOptimizeGroupName = #{groupName}
+		GROUP BY ck.fUuid, ck.fKeyword
+    </select>
+
+    <update id="updateOptimizationResult">
+        UPDATE t_customer_keyword
+        SET fOptimizePlanCount = #{optimizationPlanCount}, fQueryInterval = #{queryInterval}
+        WHERE fUuid = #{customerKeywordUuid}
+    </update>
+
+    <select id="getCustomerKeywordForCapturePosition" resultType="com.keymanager.monitoring.entity.CustomerKeyword">
+        SELECT
+        <include refid="colID"/>
+        FROM t_customer_keyword ck
+        WHERE ck.fTerminalType = #{terminalType} and ck.fUrl is not null and ck.fStatus = 1
+        AND (ck.fCapturePositionQueryTime is null or ck.fCapturePositionQueryTime <![CDATA[<]]> DATE_SUB(NOW(), INTERVAL #{minutes} MINUTE ))
+        <if test="customerUuid != null">
+            AND ck.fCustomerUuid = #{customerUuid}
+        </if>
+
+        <choose>
+            <when test="groupNames != null">
+                AND ck.fOptimizeGroupName IN
+                <foreach item="item" index="index" collection="groupNames" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </when>
+            <otherwise>
+                AND ck.fOptimizeGroupName <![CDATA[<>]]> 'stop'
+            </otherwise>
+        </choose>
+        ORDER BY ck.fCapturePositionQueryTime, fUpdateTime DESC
+        LIMIT 1
+    </select>
+
 </mapper>

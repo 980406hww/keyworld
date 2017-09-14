@@ -68,4 +68,12 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void updateOptimizationQueryTime(@Param("customerKeywordUuid")Long customerKeywordUuid);
 
     void updateOptimizationResult(@Param("customerKeywordUuid")Long customerKeywordUuid, @Param("count")int count);
+
+    List<Map> searchCustomerKeywordsForAdjustingOptimizationCount(@Param("groupName")String groupName);
+
+    void adjustOptimizationCount(@Param("customerKeywordUuid")Long customerKeywordUuid, @Param("optimizationPlanCount")int optimizationPlanCount,
+                                  @Param("queryInterval")int queryInterval);
+
+    CustomerKeyword getCustomerKeywordForCapturePosition(@Param("terminalType")String terminalType, @Param("groupNames")List<String> groupNames,
+                                                         @Param("customerUuid")Long customerUuid, @Param("minutes")int minutes);
 }
