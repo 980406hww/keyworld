@@ -52,7 +52,7 @@
         }
 
         function findClientStatus(groupName) {
-			$$$("#searchClientStatusForm").find("#group").val(groupName);
+			$$$("#searchClientStatusForm").find("#groupName").val(groupName);
             $$$("#searchClientStatusForm").submit();
 		}
 
@@ -209,7 +209,7 @@
 <div id="div2"></div>
 <form id="searchClientStatusForm" style="display: none;" method="post" action="/internal/clientstatus/searchClientStatuses">
 	<a type="hidden" name="hasProblem" value="hasProblem"/>
-	<a type="hidden" name="group" value=""/>
+	<a type="hidden" name="groupName" value=""/>
 </form>
 </body>
 </html>
