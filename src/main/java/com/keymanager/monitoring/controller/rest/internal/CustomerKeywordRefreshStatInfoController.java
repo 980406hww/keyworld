@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * Created by shunshikj08 on 2017/9/12.
@@ -28,32 +29,26 @@ public class CustomerKeywordRefreshStatInfoController {
     private CustomerKeywordRefreshStatInfoService customerKeywordRefreshStatInfoService;
 
     @RequestMapping(value = "/searchRefreshStatInfos", method = RequestMethod.GET)
-    public ModelAndView searchRefreshStatInfos(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request) {
-        return constructNegativeListModelAndView(request, new CustomerKeywordRefreshStatInfoCriteria(), currentPageNumber, pageSize);
+    public ModelAndView searchRefreshStatInfos(HttpServletRequest request) {
+        ModelAndView modelAndView = new ModelAndView("/refresh/list");
+        return modelAndView;
     }
 
     @RequestMapping(value = "/searchRefreshStatInfos", method = RequestMethod.POST)
     public ModelAndView searchRefreshStatInfosPost(HttpServletRequest request, CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria) {
         try {
-            String currentPageNumber = request.getParameter("currentPageNumber");
-            String pageSize = request.getParameter("pageSize");
-            if (null == currentPageNumber && null == pageSize) {
-                currentPageNumber = "1";
-                pageSize = "50";
-            }
-            return constructNegativeListModelAndView(request, customerKeywordRefreshStatInfoCriteria, Integer.parseInt(currentPageNumber), Integer.parseInt(pageSize));
+            return constructNegativeListModelAndView(request, customerKeywordRefreshStatInfoCriteria);
         } catch (Exception e) {
             logger.error(e.getMessage());
             return new ModelAndView("/refresh/list");
         }
     }
 
-    private ModelAndView constructNegativeListModelAndView(HttpServletRequest request, CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria, int currentPageNumber, int pageSize) {
+    private ModelAndView constructNegativeListModelAndView(HttpServletRequest request, CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria) {
         ModelAndView modelAndView = new ModelAndView("/refresh/list");
         String entryType = (String) request.getSession().getAttribute("entry");
         customerKeywordRefreshStatInfoCriteria.setType(entryType);
-        Page<CustomerKeywordRefreshStatInfoVO> page = customerKeywordRefreshStatInfoService.generateCustomerKeywordStatInfo(new Page<CustomerKeywordRefreshStatInfoVO>(currentPageNumber,
-                pageSize), customerKeywordRefreshStatInfoCriteria);
+        List<CustomerKeywordRefreshStatInfoVO> page = customerKeywordRefreshStatInfoService.generateCustomerKeywordStatInfo(customerKeywordRefreshStatInfoCriteria);
         modelAndView.addObject("customerKeywordRefreshStatInfoCriteria", customerKeywordRefreshStatInfoCriteria);
         modelAndView.addObject("page", page);
         return modelAndView;

@@ -68,4 +68,6 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void updateOptimizationQueryTime(@Param("customerKeywordUuid")Long customerKeywordUuid);
 
     void updateOptimizationResult(@Param("customerKeywordUuid")Long customerKeywordUuid, @Param("count")int count);
+
+    void updateInvalidRefreshCount();
 }

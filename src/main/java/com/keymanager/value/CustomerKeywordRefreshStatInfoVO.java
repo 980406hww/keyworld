@@ -13,7 +13,7 @@ public class CustomerKeywordRefreshStatInfoVO {
 	private int totalMachineCount;
 	private int unworkMachineCount;
 	private int maxInvalidCount;
-	
+
 	public double getInvalidKeywordPercentage(){
 		return (this.getTotalKeywordCount() > 0) ? ((this.getInvalidKeywordCount() * 1.0) / this.getTotalKeywordCount()) * 100 : 0;
 	}
@@ -42,8 +42,8 @@ public class CustomerKeywordRefreshStatInfoVO {
 	
 	public String getUnworkMachineCountStr(){
 		if(this.getUnworkMachineCount() > 0){
-			String url = "/client/clientlist.jsp?prefix=1&hasProblem=hasProblem" + ("总计".equals(getGroup()) ?  "" : "&groupName=" + this.getGroup());
-			return String.format("<a href='%s' target='_blank'>%d</a>", url, getUnworkMachineCount());
+			String group = "总计".equals(getGroup()) ?  null : this.getGroup();
+			return String.format("<a target='_blank' href=\"javascript:findClientStatus('%s')\">%d</a>", group, getUnworkMachineCount());
 		}else{
 			return "";
 		}

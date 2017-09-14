@@ -31,94 +31,39 @@
     z-index: 25;
     position: fixed;
 }
-
-#showRefreshStatInfoDiv {
-	overflow: scroll;
-	width: 100%;
-	height: 95%;
-	margin: auto;
-}
-
-#refreshStatInfoBottomDiv {
-	width: 100%;
-	float: right;
-	width: 580px;
-}
 -->
 </style>
 	<link href="/css/menu.css" rel="stylesheet" type="text/css" />
-	<link href="/ui/jquery-ui.css" rel="stylesheet" type="text/css" />
 	<script language="javascript" type="text/javascript" src="/js/My97DatePicker/WdatePicker.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/jquery142.js"></script>
-	<script language="javascript" type="text/javascript" src="/ui/jquery-ui.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/slide1.12.4.js"></script>
 	<script language="javascript">
-        $(function () {
-            var refreshStatInfoBottomDiv = $('#refreshStatInfoBottomDiv');
-            var pageSize = refreshStatInfoBottomDiv.find('#pageSizeHidden').val();
-            refreshStatInfoBottomDiv.find('#chooseRecords').val(pageSize);
-            var pageCount = refreshStatInfoBottomDiv.find('#pageCountHidden').val();
-            refreshStatInfoBottomDiv.find('#pageCountHidden').val(pageCount);
-            var currentPage = refreshStatInfoBottomDiv.find('#currentPageHidden').val();
-            refreshStatInfoBottomDiv.find('#currentPageHidden').val(currentPage);
-            if(parseInt(currentPage) > 1 && parseInt(currentPage) < parseInt(pageCount)) {
-                refreshStatInfoBottomDiv.find("#firstButton").removeAttr("disabled");
-                refreshStatInfoBottomDiv.find("#upButton").removeAttr("disabled");
-                refreshStatInfoBottomDiv.find("#nextButton").removeAttr("disabled");
-                refreshStatInfoBottomDiv.find("#lastButton").removeAttr("disabled");
-            } else if (parseInt(pageCount) <= 1) {
-                refreshStatInfoBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
-                refreshStatInfoBottomDiv.find("#upButton").attr("disabled", "disabled");
-                refreshStatInfoBottomDiv.find("#nextButton").attr("disabled", "disabled");
-                refreshStatInfoBottomDiv.find("#lastButton").attr("disabled", "disabled");
-            } else if (parseInt(currentPage) <= 1) {
-                refreshStatInfoBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
-                refreshStatInfoBottomDiv.find("#upButton").attr("disabled", "disabled");
-            } else {
-                refreshStatInfoBottomDiv.find("#nextButton").attr("disabled", "disabled");
-                refreshStatInfoBottomDiv.find("#lastButton").attr("disabled", "disabled");
-            }
-        });
-
-        function changePaging(currentPageNumber, pageSize) {
-            var searchRefreshStatInfoForm = $("#searchRefreshStatInfoForm");
-            searchRefreshStatInfoForm.find("#totalHidden").val();
-            searchRefreshStatInfoForm.find("#currentPageNumberHidden").val(currentPageNumber);
-            searchRefreshStatInfoForm.find("#pageSizeHidden").val(pageSize);
-            searchRefreshStatInfoForm.submit();
-        }
-
-        function resetPageNumber() {
-            $("#searchRefreshStatInfoForm").find("#currentPageNumberHidden").val(1);
-        }
-
-        function doOver(obj)
-        {
+        function doOver(obj) {
             obj.style.backgroundColor = "green";
         }
 
-        function doOut(obj)
-        {
+        function doOut(obj) {
             var rowIndex = obj.rowIndex;
-            if ((rowIndex % 2) == 0)
-            {
+            if ((rowIndex % 2) == 0) {
                 obj.style.backgroundColor = "#eeeeee";
-            }
-            else
-            {
+            } else {
                 obj.style.backgroundColor = "#ffffff";
             }
         }
 
+        function findClientStatus(groupName) {
+			$$$("#searchClientStatusForm").find("#group").val(groupName);
+            $$$("#searchClientStatusForm").submit();
+		}
+
         function resetInvaidRefreshCount(groupName, customerName, self){
             $$$.ajax({
-                url: '/refresh/refreshagain.jsp?groupName=' + groupName + "&customerName=" + customerName,
-                type: 'Get',
-                success: function (data) {
-                    data = data.replace(/\r\n/gm,"");
-                    if(data === "1"){
+                url: '/internal/customerKeyword/updateInvalidRefreshCount',
+                data: "data=" + JSON.stringify(groupName + '=' + customerName),
+                type: 'POST',
+                success: function (result) {
+                    if(result){
                         showInfo("重置成功！", self);
-                        window.location.reload();
                     }else{
                         showInfo("重置失败！", self);
                     }
@@ -138,24 +83,23 @@
             //div1.style.top = getTop(e) + 5;
             //div1.style.position = "absolute";
 
-            var intervalID = setInterval(function(){
+            var intervalID = setInterval(function() {
                 div1.style.display = "none";
             }, 3000);
         }
 
-        function getTop(e){
+        function getTop(e) {
             var offset=e.offsetTop;
             if(e.offsetParent!=null) offset+=getTop(e.offsetParent);
             return offset;
         }
         //获取元素的横坐标
-        function getLeft(e){
+        function getLeft(e) {
             var offset=e.offsetLeft;
             if(e.offsetParent!=null) offset+=getLeft(e.offsetParent);
             return offset;
         }
-        function showTip(content,e)
-        {
+        function showTip(content,e) {
             e = e||window.event;
             var div1 = document.getElementById('div1'); //将要弹出的层
             div1.innerText = content;
@@ -166,8 +110,7 @@
         }
 
         //关闭层div1的显示
-        function closeTip()
-        {
+        function closeTip() {
             var div1 = document.getElementById('div1');
             div1.style.display="none";
         }
@@ -186,13 +129,9 @@
       	  	 	<form method="post" id="searchRefreshStatInfoForm" action="/internal/refreshstatinfo/searchRefreshStatInfos">
       	  	 		<table style="font-size:12px;">
 	      	  	 		<tr>
-						  <input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}"/>
-						  <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
-						  <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
-						  <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
 			          	  <td align="right">分组名称:<input name="groupName" id="groupName" type="text" style="width:200px;" value="${customerKeywordRefreshStatInfoCriteria.groupName}"></td>
 			          	  <td align="right">客户名称:<input name="customerName" id="customerName" type="text" style="width:200px;" value="${customerKeywordRefreshStatInfoCriteria.customerName}"></td>
-			          	  <td align="right"><input type="submit" name="btnQuery" id="btnQuery" onclick="resetPageNumber()" value=" 查询 "></td>
+			          	  <td align="right"><input type="submit" name="btnQuery" id="btnQuery" value=" 查询 "></td>
 			          	</tr>
 			        </table>
 	      	  	 	<table style="font-size:12px;">
@@ -216,7 +155,7 @@
 					       <td align="center" width=100>总数</td>
 					       <td align="center" width=60>已停数</td>
 		   				</tr>
-						<c:forEach items="${page.records}" var="refreshStatInfoVO">
+						<c:forEach items="${page}" var="refreshStatInfoVO">
 							 <tr onmouseover="doOver(this);" onmouseout="doOut(this);" height="30">
 								 <td>${refreshStatInfoVO.group}</td>
 								 <td>${refreshStatInfoVO.totalKeywordCount}</td>
@@ -262,32 +201,13 @@
       	  </tr>      	  
       </table>
 </div>
-<hr>
-<div id="refreshStatInfoBottomDiv" align="right">
-	<input id="fisrtButton" type="button" onclick="changePaging(1,'${page.size}')" value="首页"/>
-	&nbsp;&nbsp;&nbsp;&nbsp;
-	<input id="upButton" type="button" onclick="changePaging('${page.current-1}','${page.size}')" value="上一页"/>
-	&nbsp;&nbsp;&nbsp;&nbsp;${page.current}/${page.pages}&nbsp;&nbsp;
-	<input id="nextButton" type="button" onclick="changePaging('${page.current+1>=page.pages?page.pages:page.current+1}','${page.size}')" value="下一页">
-	&nbsp;&nbsp;&nbsp;&nbsp;
-	<input id="lastButton" type="button" onclick="changePaging('${page.pages}','${page.size}')" value="末页">
-	&nbsp;&nbsp;&nbsp;&nbsp;
-	总记录数:${page.total}&nbsp;&nbsp;
-	每页显示条数:
-	<select id="chooseRecords" onchange="changePaging(${page.current},this.value)" style="margin-right: 10px;">
-		<option>10</option>
-		<option>25</option>
-		<option>50</option>
-		<option>75</option>
-		<option>100</option>
-	</select>
-	<input type="hidden" id="currentPageHidden" value="${page.current}"/>
-	<input type="hidden" id="pageSizeHidden" value="${page.size}"/>
-	<input type="hidden" id="pageCountHidden" value="${page.pages}"/>
-</div>
 <div style="display:none;">
 </div>
 <div id="div2"></div>
+<form id="searchClientStatusForm" style="display: none;" method="post" action="/internal/clientstatus/searchClientStatuses">
+	<a type="hidden" name="hasProblem" value="hasProblem"/>
+	<a type="hidden" name="group" value=""/>
+</form>
 </body>
 </html>
 

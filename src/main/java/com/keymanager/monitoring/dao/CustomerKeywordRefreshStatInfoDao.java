@@ -13,6 +13,6 @@ import java.util.List;
  */
 public interface CustomerKeywordRefreshStatInfoDao extends BaseMapper<CustomerKeywordRefreshStatInfoVO> {
 
-    List<CustomerKeywordRefreshStatInfoVO> searchCustomerKeywordStatInfoVOs(Page<CustomerKeywordRefreshStatInfoVO> page, @Param("customerKeywordRefreshStatInfoCriteria") CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria);
+    List<CustomerKeywordRefreshStatInfoVO> searchCustomerKeywordStatInfoVOs(@Param("customerKeywordRefreshStatInfoCriteria") CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria);
 
 }

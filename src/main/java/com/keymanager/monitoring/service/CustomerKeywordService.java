@@ -418,7 +418,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             return null;
         }
         clientStatusService.updatePageNo(clientID, 0);
-        if(!clientStatus.isValid() || StringUtils.isEmpty(clientStatus.getGroup())){
+        if(!clientStatus.getValid() || StringUtils.isEmpty(clientStatus.getGroup())){
             return null;
         }
 
@@ -591,5 +591,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeywordDao.updateOptimizationResult(customerKeywordUuid, count);
         clientStatusService.logClientStatusTime(terminalType, clientID, status, freeSpace, version, city, count);
         customerKeywordIPService.addCustomerKeywordIP(customerKeywordUuid, city, ip);
+    }
+
+    public void updateInvalidRefreshCount(String data) {
+        customerKeywordDao.updateInvalidRefreshCount();
     }
 }

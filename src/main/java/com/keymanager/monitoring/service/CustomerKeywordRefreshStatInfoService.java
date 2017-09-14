@@ -35,8 +35,8 @@ public class CustomerKeywordRefreshStatInfoService extends ServiceImpl<CustomerK
     @Autowired
     private CustomerKeywordRefreshStatInfoDao customerKeywordRefreshStatInfoDao;
 
-    public Page<CustomerKeywordRefreshStatInfoVO> generateCustomerKeywordStatInfo(Page<CustomerKeywordRefreshStatInfoVO> page, CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria) {
-        List<CustomerKeywordRefreshStatInfoVO> customerKeywordRefreshStatInfoVOs = getCustomerKeywordStatInfoVOList(page,customerKeywordRefreshStatInfoCriteria);
+    public List<CustomerKeywordRefreshStatInfoVO> generateCustomerKeywordStatInfo(CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria) {
+        List<CustomerKeywordRefreshStatInfoVO> customerKeywordRefreshStatInfoVOs = getCustomerKeywordStatInfoVOList(customerKeywordRefreshStatInfoCriteria);
         Map<String, CustomerKeywordRefreshStatInfoVO> customerKeywordRefreshStatInfoVOMap = new HashMap<String, CustomerKeywordRefreshStatInfoVO>();
         for (CustomerKeywordRefreshStatInfoVO customerKeywordRefreshStatInfoVO : customerKeywordRefreshStatInfoVOs) {
             customerKeywordRefreshStatInfoVOMap.put(customerKeywordRefreshStatInfoVO.getGroup(), customerKeywordRefreshStatInfoVO);
@@ -47,9 +47,9 @@ public class CustomerKeywordRefreshStatInfoService extends ServiceImpl<CustomerK
             CustomerKeywordRefreshStatInfoVO customerKeywordRefreshStatInfoVO = customerKeywordRefreshStatInfoVOMap.get(clientStatus.getGroup());
             if (customerKeywordRefreshStatInfoVO != null) {
                 customerKeywordRefreshStatInfoVO.setTotalMachineCount(customerKeywordRefreshStatInfoVO.getTotalMachineCount() + 1);
-                /*if (clientStatus.isRed()) {
+                if (clientStatus.getRed()) {
                     customerKeywordRefreshStatInfoVO.setUnworkMachineCount(customerKeywordRefreshStatInfoVO.getUnworkMachineCount() + 1);
-                }*/
+                }
             }
         }
         CustomerKeywordRefreshStatInfoVO total = new CustomerKeywordRefreshStatInfoVO();
@@ -67,14 +67,13 @@ public class CustomerKeywordRefreshStatInfoService extends ServiceImpl<CustomerK
             total.setMaxInvalidCount(customerKeywordRefreshStatInfoVO.getMaxInvalidCount());
         }
         customerKeywordRefreshStatInfoVOs.add(0, total);
-        page.setRecords(customerKeywordRefreshStatInfoVOs);
-        return page;
+        return customerKeywordRefreshStatInfoVOs;
     }
 
-    private List<CustomerKeywordRefreshStatInfoVO> getCustomerKeywordStatInfoVOList(Page<CustomerKeywordRefreshStatInfoVO> page,CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria) {
+    private List<CustomerKeywordRefreshStatInfoVO> getCustomerKeywordStatInfoVOList(CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria) {
         Config config = configService.getConfig(Constants.CONFIG_KEY_MAX_INVALID_COUNT, customerKeywordRefreshStatInfoCriteria.getType());
         customerKeywordRefreshStatInfoCriteria.setConfigValue(config.getValue());
-        List<CustomerKeywordRefreshStatInfoVO> customerKeywordRefreshStatInfoVOs = customerKeywordRefreshStatInfoDao.searchCustomerKeywordStatInfoVOs(page,customerKeywordRefreshStatInfoCriteria);
+        List<CustomerKeywordRefreshStatInfoVO> customerKeywordRefreshStatInfoVOs = customerKeywordRefreshStatInfoDao.searchCustomerKeywordStatInfoVOs(customerKeywordRefreshStatInfoCriteria);
         List<CustomerKeywordRefreshStatInfoVO> customerKeywordRefreshStatInfoVOList = new ArrayList<CustomerKeywordRefreshStatInfoVO>();
         for(CustomerKeywordRefreshStatInfoVO customerKeywordRefreshStatInfoVO : customerKeywordRefreshStatInfoVOs) {
             CustomerKeywordRefreshStatInfoVO refreshStatInfoVO = new CustomerKeywordRefreshStatInfoVO();

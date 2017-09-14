@@ -3,14 +3,17 @@ package com.keymanager.monitoring.entity;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.keymanager.util.Utils;
 import org.hibernate.validator.constraints.NotBlank;
 
 import java.sql.Timestamp;
+import java.util.Date;
 
 
 @TableName(value = "t_client_status")
 public class ClientStatus {
-	
+
 	private static final long serialVersionUID = -7590694637780491359L;
 	@NotBlank
 	@TableId(value = "fClientID")
@@ -18,7 +21,7 @@ public class ClientStatus {
 
 	@TableField(value = "fTerminalType")
 	private String terminalType;
-	
+
 	@TableField(value = "fClientIDPrefix")
 	private String clientIDPrefix;
 
@@ -226,8 +229,11 @@ public class ClientStatus {
 	@TableField(value = "fValid")
 	private boolean valid;
 
-	@TableField(value = "fCreateTime")
-	private Timestamp createTime;
+	@TableField(exist=false)
+	private boolean red;
+
+	@TableField(exist=false)
+	private boolean yellow;
 
 	public String getClientID() {
 		return clientID;
@@ -789,7 +795,7 @@ public class ClientStatus {
 		this.status = status;
 	}
 
-	public boolean isValid() {
+	public boolean getValid() {
 		return valid;
 	}
 
@@ -797,11 +803,22 @@ public class ClientStatus {
 		this.valid = valid;
 	}
 
-	public Timestamp getCreateTime() {
-		return createTime;
+	public boolean getRed(){
+		return (this.getContinuousFailCount() > 5) || (Utils.addMinutes(this.lastVisitTime, (10 > (this.getPageNo() * 3) ? (10 + 5) : (this.getPageNo() * 3 + 5)))
+				.compareTo(Utils.getCurrentTimestamp()) <	0);
 	}
 
-	public void setCreateTime(Timestamp createTime) {
-		this.createTime = createTime;
+	public boolean getYellow(){
+		Timestamp time = Utils.addMinutes(this.lastVisitTime, (10 > (this.getPageNo() * 3) ? 10 : (this.getPageNo() * 3)));
+		return time.compareTo(Utils.getCurrentTimestamp()) < 0 && (Utils.addMinutes(time, 5)).compareTo(Utils.getCurrentTimestamp()) > 0;
 	}
+
+	public void setRed(boolean red) {
+		this.red = red;
+	}
+
+	public void setYellow(boolean yellow) {
+		this.yellow = yellow;
+	}
+
 }
