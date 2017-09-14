@@ -620,7 +620,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                 }
                 int queryInterval = (23 * 60) / optimizationPlanCount;
 
-                customerKeywordDao.adjustOptimizationCount(uuid, optimizationPlanCount, queryInterval);
+                customerKeywordDao.adjustOptimizePlanCount(uuid, optimizationPlanCount, queryInterval);
             }
         }
     }

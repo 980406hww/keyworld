@@ -1,13 +1,15 @@
 package com.keymanager.monitoring.entity;
 
 import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
 
 import java.sql.Timestamp;
 
 @TableName(value = "t_customer_keyword_ip")
 public class CustomerKeywordIP {
-	@TableField(value = "fUuid")
+	@TableId(value = "fUuid", type= IdType.AUTO)
 	private int uuid;
 
 	@TableField(value = "fCustomerKeywordUuid")

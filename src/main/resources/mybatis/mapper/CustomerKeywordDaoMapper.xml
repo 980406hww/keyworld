@@ -251,7 +251,7 @@
 		GROUP BY ck.fUuid, ck.fKeyword
     </select>
 
-    <update id="updateOptimizationResult">
+    <update id="adjustOptimizePlanCount">
         UPDATE t_customer_keyword
         SET fOptimizePlanCount = #{optimizationPlanCount}, fQueryInterval = #{queryInterval}
         WHERE fUuid = #{customerKeywordUuid}
