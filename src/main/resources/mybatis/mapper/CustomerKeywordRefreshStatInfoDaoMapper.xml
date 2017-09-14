@@ -13,6 +13,7 @@
             SUM(ck.fQueryCount) AS "queryCount"
         FROM t_customer_keyword ck, t_customer c
         WHERE ck.fType = #{customerKeywordRefreshStatInfoCriteria.type}
+        AND ck.fTerminalType = #{customerKeywordRefreshStatInfoCriteria.terminalType}
         AND ck.fCustomerUuid = c.fUuid
         <if test="customerKeywordRefreshStatInfoCriteria.groupName!=null and customerKeywordRefreshStatInfoCriteria.groupName!=''">AND ck.fOptimizeGroupName like concat('%', #{customerKeywordRefreshStatInfoCriteria.groupName}, "%")</if>
         <if test="customerKeywordRefreshStatInfoCriteria.customerName!=null and customerKeywordRefreshStatInfoCriteria.customerName!=''">AND c.fContactPerson like concat('%', #{customerKeywordRefreshStatInfoCriteria.customerName}, "%")</if>

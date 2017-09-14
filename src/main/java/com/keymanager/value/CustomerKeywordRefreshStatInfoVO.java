@@ -21,16 +21,17 @@ public class CustomerKeywordRefreshStatInfoVO {
 	public double getInvalidOptimizePercentage(){
 		return (this.getQueryCount() > 0) ? (((this.getQueryCount() - this.getTotalOptimizedCount()) * 1.0) / this.getQueryCount()) * 100 : 0;
 	}
-	
+
 	public String getInvalidKeywordCountStr(){
 		if(this.getInvalidKeywordCount() > 0){
-			String url = "/customerkeyword/keywordfinder.jsp?invalidRefreshCount=" + this.getMaxInvalidCount() + ("总计".equals(getGroup()) ?  "" : "&optimizeGroupName=" + this.getGroup());
-			return String.format("<a href='%s' target='_blank'>%d</a>", url, getInvalidKeywordCount());
+			return String.format("<a href=\"javascript:findKeyword('%s', '%s')\">%d</a>",
+					"总计".equals(getGroup()) ?  "" : this.getGroup(), this.getMaxInvalidCount(), getInvalidKeywordCount());
 		}else{
 			return "";
 		}
 	}
-	
+
+	// 可删除
 	public String getResetInvalidRefreshCountStr(String groupName, String customerName){
 		if(getInvalidKeywordCount() > 0){
 			return String.format("<a href=\"javascript:resetInvaidRefreshCount('%s', '%s', this)\">重置</a>", 

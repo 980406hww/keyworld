@@ -10,6 +10,8 @@ public class CustomerKeywordRefreshStatInfoCriteria extends BaseCriteria {
 
     private String configValue;
 
+    private String terminalType;
+
     public String getType() {
         return type;
     }
@@ -40,5 +42,13 @@ public class CustomerKeywordRefreshStatInfoCriteria extends BaseCriteria {
 
     public void setConfigValue(String configValue) {
         this.configValue = configValue;
+    }
+
+    public String getTerminalType() {
+        return terminalType;
+    }
+
+    public void setTerminalType(String terminalType) {
+        this.terminalType = terminalType;
     }
 }

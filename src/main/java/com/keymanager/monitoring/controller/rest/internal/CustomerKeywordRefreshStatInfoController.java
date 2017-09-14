@@ -3,6 +3,7 @@ package com.keymanager.monitoring.controller.rest.internal;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
 import com.keymanager.monitoring.service.CustomerKeywordRefreshStatInfoService;
+import com.keymanager.util.PortTerminalTypeMapping;
 import com.keymanager.value.CustomerKeywordRefreshStatInfoVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +49,8 @@ public class CustomerKeywordRefreshStatInfoController {
         ModelAndView modelAndView = new ModelAndView("/refresh/list");
         String entryType = (String) request.getSession().getAttribute("entry");
         customerKeywordRefreshStatInfoCriteria.setType(entryType);
+        String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+        customerKeywordRefreshStatInfoCriteria.setTerminalType(terminalType);
         List<CustomerKeywordRefreshStatInfoVO> page = customerKeywordRefreshStatInfoService.generateCustomerKeywordStatInfo(customerKeywordRefreshStatInfoCriteria);
         modelAndView.addObject("customerKeywordRefreshStatInfoCriteria", customerKeywordRefreshStatInfoCriteria);
         modelAndView.addObject("page", page);

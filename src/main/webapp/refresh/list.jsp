@@ -55,6 +55,12 @@
 			$$$("#searchClientStatusForm").find("#groupName").val(groupName);
             $$$("#searchClientStatusForm").submit();
 		}
+		
+		function findKeyword(optimizeGroupName, invalidRefreshCount) {
+            $$$("#searchCustomerKeywordForm").find("#optimizeGroupName").val(optimizeGroupName);
+            $$$("#searchCustomerKeywordForm").find("#invalidRefreshCount").val(invalidRefreshCount);
+            $$$("#searchCustomerKeywordForm").submit();
+        }
 
         function resetInvaidRefreshCount(groupName, customerName, self){
             var customerKeyword = {};
@@ -168,10 +174,10 @@
 							     <c:if test="${refreshStatInfoVO.invalidKeywordCount > 0}">
 									 <c:choose>
 										 <c:when test="${'总计' eq refreshStatInfoVO.group}">
-											 <a href="javascript:resetInvaidRefreshCount('${customerKeywordRefreshStatInfoCriteria.groupName == null ? "" : customerKeywordRefreshStatInfoCriteria.groupName}', '${customerKeywordRefreshStatInfoCriteria.customerName == null ? "" : customerKeywordRefreshStatInfoCriteria.customerName}', this)"/>
+											 <a href="javascript:resetInvaidRefreshCount('${customerKeywordRefreshStatInfoCriteria.groupName == null ? "" : customerKeywordRefreshStatInfoCriteria.groupName}', '${customerKeywordRefreshStatInfoCriteria.customerName == null ? "" : customerKeywordRefreshStatInfoCriteria.customerName}', this)">重置</a>
 										 </c:when>
 										 <c:otherwise>
-											 <a href="javascript:resetInvaidRefreshCount('${refreshStatInfoVO.group}', '${customerKeywordRefreshStatInfoCriteria.customerName == null ? "" : customerKeywordRefreshStatInfoCriteria.customerName}', this)"/>
+											 <a href="javascript:resetInvaidRefreshCount('${refreshStatInfoVO.group}', '${customerKeywordRefreshStatInfoCriteria.customerName == null ? "" : customerKeywordRefreshStatInfoCriteria.customerName}', this)">重置</a>
 										 </c:otherwise>
 									 </c:choose>
 								 </c:if>
@@ -179,7 +185,7 @@
 								 <td>
 									<font color="${refreshStatInfoVO.invalidKeywordPercentage > 20 ? "red" : (refreshStatInfoVO.invalidKeywordPercentage > 10 ? "purple" : "")}">
 										<c:if test="${refreshStatInfoVO.invalidKeywordPercentage > 0}">
-											${refreshStatInfoVO.invalidKeywordPercentage}%
+											<fmt:formatNumber value="${refreshStatInfoVO.invalidKeywordPercentage}" pattern="#.##" minFractionDigits="2" />%
 										</c:if>
 									</font>
 								 </td>
@@ -190,7 +196,7 @@
 								 <td>
 									<font color="${refreshStatInfoVO.invalidOptimizePercentage > 20 ? "red" : (refreshStatInfoVO.invalidOptimizePercentage > 10 ? "purple" : "")}">
 										<c:if test="${refreshStatInfoVO.invalidOptimizePercentage > 0}">
-											${refreshStatInfoVO.invalidOptimizePercentage}%
+											<fmt:formatNumber value="${refreshStatInfoVO.invalidOptimizePercentage}" pattern="#.##" minFractionDigits="2" />%
 										</c:if>
 								 	</font>
 								 </td>
@@ -209,7 +215,11 @@
 <div id="div2"></div>
 <form id="searchClientStatusForm" style="display: none;" method="post" action="/internal/clientstatus/searchClientStatuses">
 	<a type="hidden" name="hasProblem" value="hasProblem"/>
-	<a type="hidden" name="groupName" value=""/>
+	<a type="hidden" name="groupName" id="groupName" value=""/>
+</form>
+<form id="searchCustomerKeywordForm" style="display: none;" method="post" action="/internal/customerKeyword/searchCustomerKeywords">
+	<a type="hidden" name="optimizeGroupName" id="optimizeGroupName" value=""/>
+	<a type="hidden" name="invalidRefreshCount" id="invalidRefreshCount" value=""/>
 </form>
 </body>
 </html>
