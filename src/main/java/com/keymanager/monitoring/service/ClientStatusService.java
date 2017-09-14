@@ -9,8 +9,6 @@ import com.keymanager.util.common.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -60,8 +58,8 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		}
 	}
 
-	public List<ClientStatus> getClientStatusList(CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria) {
-		List<ClientStatus> clientStatuseList = clientStatusDao.getClientStatusList(customerKeywordRefreshStatInfoCriteria);
+	public List<ClientStatus> searchClientStatusForRefreshStat(CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria) {
+		List<ClientStatus> clientStatuseList = clientStatusDao.searchClientStatusForRefreshStat(customerKeywordRefreshStatInfoCriteria);
 		return clientStatuseList;
 	}
 }

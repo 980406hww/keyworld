@@ -1,13 +1,12 @@
 package com.keymanager.monitoring.service;
 
-import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
 import com.keymanager.monitoring.dao.CustomerKeywordRefreshStatInfoDao;
 import com.keymanager.monitoring.entity.ClientStatus;
 import com.keymanager.monitoring.entity.Config;
+import com.keymanager.monitoring.vo.CustomerKeywordRefreshStatInfoVO;
 import com.keymanager.util.Constants;
-import com.keymanager.value.CustomerKeywordRefreshStatInfoVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,14 +35,14 @@ public class CustomerKeywordRefreshStatInfoService extends ServiceImpl<CustomerK
     private CustomerKeywordRefreshStatInfoDao customerKeywordRefreshStatInfoDao;
 
     public List<CustomerKeywordRefreshStatInfoVO> generateCustomerKeywordStatInfo(CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria) {
-        List<CustomerKeywordRefreshStatInfoVO> customerKeywordRefreshStatInfoVOs = getCustomerKeywordStatInfoVOList(customerKeywordRefreshStatInfoCriteria);
+        List<CustomerKeywordRefreshStatInfoVO> customerKeywordRefreshStatInfoVOs = getCustomerKeywordStatInfoVOs(customerKeywordRefreshStatInfoCriteria);
         Map<String, CustomerKeywordRefreshStatInfoVO> customerKeywordRefreshStatInfoVOMap = new HashMap<String, CustomerKeywordRefreshStatInfoVO>();
         for (CustomerKeywordRefreshStatInfoVO customerKeywordRefreshStatInfoVO : customerKeywordRefreshStatInfoVOs) {
             customerKeywordRefreshStatInfoVOMap.put(customerKeywordRefreshStatInfoVO.getGroup(), customerKeywordRefreshStatInfoVO);
         }
 
-        List<ClientStatus> clientStatuseList = clientStatusService.getClientStatusList(customerKeywordRefreshStatInfoCriteria);
-        for (ClientStatus clientStatus : clientStatuseList) {
+        List<ClientStatus> clientStatuses = clientStatusService.searchClientStatusForRefreshStat(customerKeywordRefreshStatInfoCriteria);
+        for (ClientStatus clientStatus : clientStatuses) {
             CustomerKeywordRefreshStatInfoVO customerKeywordRefreshStatInfoVO = customerKeywordRefreshStatInfoVOMap.get(clientStatus.getGroup());
             if (customerKeywordRefreshStatInfoVO != null) {
                 customerKeywordRefreshStatInfoVO.setTotalMachineCount(customerKeywordRefreshStatInfoVO.getTotalMachineCount() + 1);
@@ -70,8 +69,8 @@ public class CustomerKeywordRefreshStatInfoService extends ServiceImpl<CustomerK
         return customerKeywordRefreshStatInfoVOs;
     }
 
-    private List<CustomerKeywordRefreshStatInfoVO> getCustomerKeywordStatInfoVOList(CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria) {
-        Config config = configService.getConfig(Constants.CONFIG_KEY_MAX_INVALID_COUNT, customerKeywordRefreshStatInfoCriteria.getType());
+    private List<CustomerKeywordRefreshStatInfoVO> getCustomerKeywordStatInfoVOs(CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria) {
+        Config config = configService.getConfig(Constants.CONFIG_KEY_MAX_INVALID_COUNT, customerKeywordRefreshStatInfoCriteria.getEntryType());
         customerKeywordRefreshStatInfoCriteria.setConfigValue(config.getValue());
         List<CustomerKeywordRefreshStatInfoVO> customerKeywordRefreshStatInfoVOs = customerKeywordRefreshStatInfoDao.searchCustomerKeywordStatInfoVOs(customerKeywordRefreshStatInfoCriteria);
         List<CustomerKeywordRefreshStatInfoVO> customerKeywordRefreshStatInfoVOList = new ArrayList<CustomerKeywordRefreshStatInfoVO>();

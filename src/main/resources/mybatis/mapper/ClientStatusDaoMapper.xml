@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.monitoring.dao.ClientStatusDao">
-    <select id="getClientStatusList" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria" resultType="com.keymanager.monitoring.entity.ClientStatus">
+    <select id="searchClientStatusForRefreshStat" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria" resultType="com.keymanager.monitoring.entity.ClientStatus">
         SELECT DISTINCT
             cs.fClientID AS "clientID",
             cs.fTerminalType AS "terminalType",
@@ -76,12 +76,12 @@
             cs.fUpgradeFailedReason AS "upgradeFailedReason",
             cs.fCreateTime AS "createTime"
         FROM t_customer_keyword ck, t_customer c, t_client_status cs
-        WHERE ck.fType = #{customerKeywordRefreshStatInfoCriteria.type}
+        WHERE ck.fType = #{customerKeywordRefreshStatInfoCriteria.entryType}
         AND cs.fValid = 1
         AND ck.fCustomerUuid = c.fUuid
         AND ck.fOptimizeGroupName = cs.fGroup
-        <if test="customerKeywordRefreshStatInfoCriteria.groupName!=null || customerKeywordRefreshStatInfoCriteria.groupName!=''">AND ck.fOptimizeGroupName like concat('%', #{customerKeywordRefreshStatInfoCriteria.groupName}, "%")</if>
-        <if test="customerKeywordRefreshStatInfoCriteria.customerName!=null || customerKeywordRefreshStatInfoCriteria.customerName!=''">AND c.fContactPerson like concat('%', #{customerKeywordRefreshStatInfoCriteria.customerName}, "%")</if>
+        <if test="customerKeywordRefreshStatInfoCriteria.groupName!=null || customerKeywordRefreshStatInfoCriteria.groupName!=''">AND ck.fOptimizeGroupName like concat('%', #{customerKeywordRefreshStatInfoCriteria.groupName}, '%')</if>
+        <if test="customerKeywordRefreshStatInfoCriteria.customerName!=null || customerKeywordRefreshStatInfoCriteria.customerName!=''">AND c.fContactPerson like concat('%', #{customerKeywordRefreshStatInfoCriteria.customerName}, '%')</if>
         ORDER BY ck.fOptimizeGroupName
     </select>
 

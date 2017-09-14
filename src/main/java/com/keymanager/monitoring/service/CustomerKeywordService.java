@@ -654,11 +654,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return null;
     }
 
-    public void updateInvalidRefreshCount(String entryType, String data) throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
-        CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfo = (CustomerKeywordRefreshStatInfoCriteria)mapper.readValue(data, CustomerKeywordRefreshStatInfoCriteria.class);
-        String customerName = customerKeywordRefreshStatInfo.getCustomerName();
-        String groupName = customerKeywordRefreshStatInfo.getGroupName();
-        customerKeywordDao.updateInvalidRefreshCount(entryType, customerName, groupName);
+    public void resetInvalidRefreshCount(CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria) throws Exception {
+        customerKeywordDao.resetInvalidRefreshCount(customerKeywordRefreshStatInfoCriteria);
     }
 }

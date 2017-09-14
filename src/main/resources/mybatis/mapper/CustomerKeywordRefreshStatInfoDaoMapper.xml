@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.monitoring.dao.CustomerKeywordRefreshStatInfoDao">
-    <select id="searchCustomerKeywordStatInfoVOs" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria" resultType="com.keymanager.value.CustomerKeywordRefreshStatInfoVO">
+    <select id="searchCustomerKeywordStatInfoVOs" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria" resultType="com.keymanager.monitoring.vo.CustomerKeywordRefreshStatInfoVO">
         SELECT
             ck.fOptimizeGroupName AS "group",
             COUNT(1) AS "totalKeywordCount",
@@ -12,7 +12,7 @@
             SUM(ck.fOptimizePlanCount - ck.fOptimizedCount) AS "needOptimizeCount",
             SUM(ck.fQueryCount) AS "queryCount"
         FROM t_customer_keyword ck, t_customer c
-        WHERE ck.fType = #{customerKeywordRefreshStatInfoCriteria.type}
+        WHERE ck.fType = #{customerKeywordRefreshStatInfoCriteria.entryType}
         AND ck.fTerminalType = #{customerKeywordRefreshStatInfoCriteria.terminalType}
         AND ck.fCustomerUuid = c.fUuid
         <if test="customerKeywordRefreshStatInfoCriteria.groupName!=null and customerKeywordRefreshStatInfoCriteria.groupName!=''">AND ck.fOptimizeGroupName like concat('%', #{customerKeywordRefreshStatInfoCriteria.groupName}, "%")</if>

@@ -3,6 +3,7 @@ package com.keymanager.monitoring.dao;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.criteria.CustomerKeywordCrilteria;
+import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordUpdateGroupCriteria;
 import com.keymanager.monitoring.entity.CustomerKeyword;
 import org.apache.ibatis.annotations.Param;
@@ -69,8 +70,6 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void updateOptimizationResult(@Param("customerKeywordUuid")Long customerKeywordUuid, @Param("count")int count);
 
-    void updateInvalidRefreshCount();
-
     List<Map> searchCustomerKeywordsForAdjustingOptimizationCount(@Param("groupName")String groupName);
 
     void adjustOptimizePlanCount(@Param("customerKeywordUuid")Long customerKeywordUuid, @Param("optimizationPlanCount")int optimizationPlanCount,
@@ -79,5 +78,5 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     CustomerKeyword getCustomerKeywordForCapturePosition(@Param("terminalType")String terminalType, @Param("groupNames")List<String> groupNames,
                                                          @Param("customerUuid")Long customerUuid, @Param("minutes")int minutes);
 
-    void updateInvalidRefreshCount(@Param("entryType")String entryType, @Param("customerName")String customerName, @Param("groupName")String groupName);
+    void resetInvalidRefreshCount(@Param("customerKeywordRefreshStatInfoCriteria")CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria);
 }

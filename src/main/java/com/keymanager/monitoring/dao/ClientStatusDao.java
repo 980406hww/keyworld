@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 public interface ClientStatusDao extends BaseMapper<ClientStatus> {
-    List<ClientStatus> getClientStatusList(@Param("customerKeywordRefreshStatInfoCriteria")CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria);
+    List<ClientStatus> searchClientStatusForRefreshStat(@Param("customerKeywordRefreshStatInfoCriteria")CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria);
 
     void updateClientVersion(@Param("clientID") String clientID, @Param("version")String version);
 

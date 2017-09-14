@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.CustomerKeywordCleanCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordCrilteria;
+import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordUpdateGroupCriteria;
 import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.CustomerKeyword;
@@ -338,12 +339,16 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		}
 	}
 
-	@RequestMapping(value = "/updateInvalidRefreshCount", method = RequestMethod.POST)
-	public ResponseEntity<?> updateInvalidRefreshCount(HttpServletRequest request) {
+	@RequestMapping(value = "/resetInvalidRefreshCount", method = RequestMethod.POST)
+	public ResponseEntity<?> resetInvalidRefreshCount(@RequestBody CustomerKeywordRefreshStatInfoCriteria criteria, HttpServletRequest request) {
 		try {
-			String data = request.getParameter("data");
 			String entryType = (String)request.getSession().getAttribute("entry");
-			customerKeywordService.updateInvalidRefreshCount(entryType, data);
+			criteria.setEntryType(entryType);
+
+			String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+			criteria.setTerminalType(terminalType);
+
+			customerKeywordService.resetInvalidRefreshCount(criteria);
 			return new ResponseEntity<Object>(true, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.getMessage());

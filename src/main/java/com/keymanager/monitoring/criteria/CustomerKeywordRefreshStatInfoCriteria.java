@@ -1,8 +1,7 @@
 package com.keymanager.monitoring.criteria;
 
 public class CustomerKeywordRefreshStatInfoCriteria extends BaseCriteria {
-
-    private String type;
+    private String entryType;
 
     private String groupName;
 
@@ -12,12 +11,12 @@ public class CustomerKeywordRefreshStatInfoCriteria extends BaseCriteria {
 
     private String terminalType;
 
-    public String getType() {
-        return type;
+    public String getEntryType() {
+        return entryType;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setEntryType(String entryType) {
+        this.entryType = entryType;
     }
 
     public String getGroupName() {

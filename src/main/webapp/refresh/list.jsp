@@ -67,12 +67,17 @@
             customerKeyword.customerName = customerName;
             customerKeyword.groupName = groupName;
             $$$.ajax({
-                url: '/internal/customerKeyword/updateInvalidRefreshCount',
-                data: "data=" + JSON.stringify(customerKeyword),
+                url: '/internal/customerKeyword/resetInvalidRefreshCount',
+                data: JSON.stringify(customerKeyword),
                 type: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
                 success: function (result) {
                     if(result){
                         showInfo("重置成功！", self);
+                        window.location.reload();
                     }else{
                         showInfo("重置失败！", self);
                     }
@@ -138,8 +143,8 @@
       	  	 	<form method="post" id="searchRefreshStatInfoForm" action="/internal/refreshstatinfo/searchRefreshStatInfos">
       	  	 		<table style="font-size:12px;">
 	      	  	 		<tr>
-			          	  <td align="right">分组名称:<input name="groupName" id="groupName" type="text" style="width:200px;" value="${customerKeywordRefreshStatInfoCriteria.groupName}"></td>
-			          	  <td align="right">客户名称:<input name="customerName" id="customerName" type="text" style="width:200px;" value="${customerKeywordRefreshStatInfoCriteria.customerName}"></td>
+			          	  <td align="right">分组名称:<input name="groupName" id="groupName" type="text" style="width:200px;" value="${refreshStatInfoCriteria.groupName}"></td>
+			          	  <td align="right">客户名称:<input name="customerName" id="customerName" type="text" style="width:200px;" value="${refreshStatInfoCriteria.customerName}"></td>
 			          	  <td align="right"><input type="submit" name="btnQuery" id="btnQuery" value=" 查询 "></td>
 			          	</tr>
 			        </table>
@@ -164,7 +169,7 @@
 					       <td align="center" width=100>总数</td>
 					       <td align="center" width=60>已停数</td>
 		   				</tr>
-						<c:forEach items="${page}" var="refreshStatInfoVO">
+						<c:forEach items="${refreshStatInfoVOs}" var="refreshStatInfoVO">
 							 <tr onmouseover="doOver(this);" onmouseout="doOut(this);" height="30">
 								 <td>${refreshStatInfoVO.group}</td>
 								 <td>${refreshStatInfoVO.totalKeywordCount}</td>
@@ -174,10 +179,10 @@
 							     <c:if test="${refreshStatInfoVO.invalidKeywordCount > 0}">
 									 <c:choose>
 										 <c:when test="${'总计' eq refreshStatInfoVO.group}">
-											 <a href="javascript:resetInvaidRefreshCount('${customerKeywordRefreshStatInfoCriteria.groupName == null ? "" : customerKeywordRefreshStatInfoCriteria.groupName}', '${customerKeywordRefreshStatInfoCriteria.customerName == null ? "" : customerKeywordRefreshStatInfoCriteria.customerName}', this)">重置</a>
+											 <a href="javascript:resetInvaidRefreshCount('${refreshStatInfoCriteria.groupName == null ? "" : refreshStatInfoCriteria.groupName}', '${refreshStatInfoCriteria.customerName == null ? "" : refreshStatInfoCriteria.customerName}', this)">重置</a>
 										 </c:when>
 										 <c:otherwise>
-											 <a href="javascript:resetInvaidRefreshCount('${refreshStatInfoVO.group}', '${customerKeywordRefreshStatInfoCriteria.customerName == null ? "" : customerKeywordRefreshStatInfoCriteria.customerName}', this)">重置</a>
+											 <a href="javascript:resetInvaidRefreshCount('${refreshStatInfoVO.group}', '${refreshStatInfoCriteria.customerName == null ? "" : refreshStatInfoCriteria.customerName}', this)">重置</a>
 										 </c:otherwise>
 									 </c:choose>
 								 </c:if>

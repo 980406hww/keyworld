@@ -1,16 +1,14 @@
 package com.keymanager.monitoring.controller.rest.internal;
 
-import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
 import com.keymanager.monitoring.service.CustomerKeywordRefreshStatInfoService;
+import com.keymanager.monitoring.vo.CustomerKeywordRefreshStatInfoVO;
 import com.keymanager.util.PortTerminalTypeMapping;
-import com.keymanager.value.CustomerKeywordRefreshStatInfoVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -45,15 +43,16 @@ public class CustomerKeywordRefreshStatInfoController {
         }
     }
 
-    private ModelAndView constructNegativeListModelAndView(HttpServletRequest request, CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria) {
+    private ModelAndView constructNegativeListModelAndView(HttpServletRequest request, CustomerKeywordRefreshStatInfoCriteria refreshStatInfoCriteria) {
         ModelAndView modelAndView = new ModelAndView("/refresh/list");
         String entryType = (String) request.getSession().getAttribute("entry");
-        customerKeywordRefreshStatInfoCriteria.setType(entryType);
+        refreshStatInfoCriteria.setEntryType(entryType);
         String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
-        customerKeywordRefreshStatInfoCriteria.setTerminalType(terminalType);
-        List<CustomerKeywordRefreshStatInfoVO> page = customerKeywordRefreshStatInfoService.generateCustomerKeywordStatInfo(customerKeywordRefreshStatInfoCriteria);
-        modelAndView.addObject("customerKeywordRefreshStatInfoCriteria", customerKeywordRefreshStatInfoCriteria);
-        modelAndView.addObject("page", page);
+        refreshStatInfoCriteria.setTerminalType(terminalType);
+
+        List<CustomerKeywordRefreshStatInfoVO> refreshStatInfoVOs = customerKeywordRefreshStatInfoService.generateCustomerKeywordStatInfo(refreshStatInfoCriteria);
+        modelAndView.addObject("refreshStatInfoCriteria", refreshStatInfoCriteria);
+        modelAndView.addObject("refreshStatInfoVOs", refreshStatInfoVOs);
         return modelAndView;
     }
 }
