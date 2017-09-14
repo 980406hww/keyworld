@@ -6,14 +6,14 @@
 <style>
 .wrap {word-break: break-all; word-wrap:break-word;}
 <!--
-#div1{ 
-	display:none; 
-	background-color :#f6f7f7; 
-	color:#333333; 
-	font-size:12px; 
-	line-height:18px; 
-	border:1px solid #e1e3e2; 
-	width:350; 
+#div1{
+	display:none;
+	background-color :#f6f7f7;
+	color:#333333;
+	font-size:12px;
+	line-height:18px;
+	border:1px solid #e1e3e2;
+	width:350;
 	height:50;
 }
 #div2 {
@@ -52,14 +52,17 @@
         }
 
         function findClientStatus(groupName) {
-			$$$("#searchClientStatusForm").find("#group").val(groupName);
+			$$$("#searchClientStatusForm").find("#groupName").val(groupName);
             $$$("#searchClientStatusForm").submit();
 		}
 
         function resetInvaidRefreshCount(groupName, customerName, self){
+            var customerKeyword = {};
+            customerKeyword.customerName = customerName;
+            customerKeyword.groupName = groupName;
             $$$.ajax({
                 url: '/internal/customerKeyword/updateInvalidRefreshCount',
-                data: "data=" + JSON.stringify(groupName + '=' + customerName),
+                data: "data=" + JSON.stringify(customerKeyword),
                 type: 'POST',
                 success: function (result) {
                     if(result){
@@ -121,7 +124,7 @@
       <table width=1240 style="font-size:12px;" cellpadding=3>
             <tr>
 				<td colspan=13 align="left">
-					<%@include file="/menu.jsp" %>	
+					<%@include file="/menu.jsp" %>
 				</td>
 			</tr>
       	  <tr>
@@ -140,7 +143,7 @@
 					       <td align="center" width=80 colspan="4">关键字</td>
 					       <td align="center" width=60 colspan="5">刷的次数</td>
 					       <td align="center" width=100 colspan="2">机器数</td>
-					       
+
 		   				</tr>
 		   				<tr bgcolor="#eeeeee" height=30>
 					       <td align="center" width=80>总数</td>
@@ -198,7 +201,7 @@
 		      	  	</table>
       	  	 	</form>
       	  	 </td>
-      	  </tr>      	  
+      	  </tr>
       </table>
 </div>
 <div style="display:none;">
@@ -206,7 +209,7 @@
 <div id="div2"></div>
 <form id="searchClientStatusForm" style="display: none;" method="post" action="/internal/clientstatus/searchClientStatuses">
 	<a type="hidden" name="hasProblem" value="hasProblem"/>
-	<a type="hidden" name="group" value=""/>
+	<a type="hidden" name="groupName" value=""/>
 </form>
 </body>
 </html>
