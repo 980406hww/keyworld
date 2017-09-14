@@ -109,9 +109,9 @@
         AND cs.fClientID = #{clientID}
     </select>
 
-    <select id="resetRestartStatusForProcessing">
+    <update id="resetRestartStatusForProcessing">
        UPDATE t_client_status SET fRestartStatus = NULL WHERE (fRestartStatus = 'Processing' or fRestartStatus = 'Logging')
-    </select>
+    </update>
 
     <select id="searchClientStatusesOrByHost" parameterType="java.lang.String" resultType="com.keymanager.monitoring.entity.ClientStatus">
         SELECT
