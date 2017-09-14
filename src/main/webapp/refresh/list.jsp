@@ -215,12 +215,12 @@
 </div>
 <div id="div2"></div>
 <form id="searchClientStatusForm" style="display: none;" method="post" action="/internal/clientstatus/searchClientStatuses">
-	<a type="hidden" name="hasProblem" value="hasProblem"/>
-	<a type="hidden" name="groupName" id="groupName" value=""/>
+	<input type="hidden" name="hasProblem" value="hasProblem"/>
+	<input type="hidden" name="groupName" id="groupName" value=""/>
 </form>
 <form id="searchCustomerKeywordForm" style="display: none;" method="post" action="/internal/customerKeyword/searchCustomerKeywords">
-	<a type="hidden" name="optimizeGroupName" id="optimizeGroupName" value=""/>
-	<a type="hidden" name="invalidRefreshCount" id="invalidRefreshCount" value=""/>
+	<input type="hidden" name="optimizeGroupName" id="optimizeGroupName" value=""/>
+	<input type="hidden" name="invalidRefreshCount" id="invalidRefreshCount" value=""/>
 </form>
 </body>
 </html>

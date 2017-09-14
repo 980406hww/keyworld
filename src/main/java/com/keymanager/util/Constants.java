@@ -2,10 +2,7 @@ package com.keymanager.util;
 
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Constants {
 	public final static String ROW_SPLITTOR = "__row__";
@@ -34,7 +31,7 @@ public class Constants {
 	public final static String CONFIG_KEY_VMWARE = "VMWARE";
 	public final static String CONFIG_TYPE_OPTIMIZATION_DATE = "OptimizationDate";
 	
-	public final static Map<String, String> ACCOUNT_LOG_STATUS_MAP = new HashMap<String, String>();	
+	public final static Map<String, String> ACCOUNT_LOG_STATUS_MAP = new HashMap<String, String>();
 	static {
 		ACCOUNT_LOG_STATUS_MAP.put(ACCOUNT_LOG_STATUS_UN_PAID, "未付");
 		ACCOUNT_LOG_STATUS_MAP.put(ACCOUNT_LOG_STATUS_PAID_PARTIALLY, "已付部分");
@@ -63,6 +60,31 @@ public class Constants {
 		SEARCH_ENGINE_URL_MAP.put(SEARCH_ENGINE_360 + "_" + TerminalTypeEnum.Phone.name(), "http://www.so.com/s?q=");
 		SEARCH_ENGINE_URL_MAP.put(SEARCH_ENGINE_SOGOU + "_" + TerminalTypeEnum.Phone.name(), "http://www.sogou.com/web?query=");
 	}
+
+
+	public final static Map<String, String> CLIENT_STATUS_VALID_MAP = new LinkedHashMap<String, String>();
+	static {
+		CLIENT_STATUS_VALID_MAP.put("全部","");
+		CLIENT_STATUS_VALID_MAP.put("暂停","0");
+		CLIENT_STATUS_VALID_MAP.put("监控中","1");
+	}
+
+	public final static Map<String, String> CLIENT_STATUS_ORDERBY_MAP = new LinkedHashMap<String, String>();
+	static {
+		CLIENT_STATUS_ORDERBY_MAP.put("fClientID","ID");
+		CLIENT_STATUS_ORDERBY_MAP.put("fLastVisitTime","最后工作时间");
+		CLIENT_STATUS_ORDERBY_MAP.put("fLastSendNotificationTime","发通知时间");
+		CLIENT_STATUS_ORDERBY_MAP.put("fRestartTime","重启时间");
+		CLIENT_STATUS_ORDERBY_MAP.put("fRestartOrderingTime","重启排序时间");
+		CLIENT_STATUS_ORDERBY_MAP.put("fRestartCount desc","重启次数");
+	}
+
+	public final static String[] pcOperationTypeValues = new String[]{"",
+			"pc_pm","pc_pm2","pc_pm3","pc_xg","pc_xg2","pc_xg3","pc_xl","pc_pm_sogou","pc_pm_360","pc_pm_58",
+			"pc_pm_zhidao", "pc_pm_wenku", "pc_tieba", "pc_kpm"};
+
+	public final static String[] phoneOperationTypeValues = new String[]{"", "m_pm", "m_xl", "m_xg", "m_pm_sm", "m_xl2", "m_kpm"};
+
 
 	public final static List<String> QZSETTING_STATUS_LIST = new ArrayList<String>();
 	static {
