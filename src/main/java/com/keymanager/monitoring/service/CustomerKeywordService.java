@@ -596,8 +596,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeywordIPService.addCustomerKeywordIP(customerKeywordUuid, city, ip);
     }
 
-    public void updateInvalidRefreshCount(String data) {
-        customerKeywordDao.updateInvalidRefreshCount();
     public void adjustOptimizationCount(){
         List<Map> customerKeywordSummaries = customerKeywordDao.searchCustomerKeywordsForAdjustingOptimizationCount("pc_pm_xiaowu");
         if(CollectionUtils.isNotEmpty(customerKeywordSummaries)){
@@ -657,5 +655,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             return customerKeywordForCapturePosition;
         }
         return null;
+    }
+
+    public void updateInvalidRefreshCount(String data) {
+        customerKeywordDao.updateInvalidRefreshCount();
     }
 }
