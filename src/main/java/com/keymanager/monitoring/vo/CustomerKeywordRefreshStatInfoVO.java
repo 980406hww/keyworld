@@ -21,24 +21,6 @@ public class CustomerKeywordRefreshStatInfoVO {
 	public double getInvalidOptimizePercentage(){
 		return (this.getQueryCount() > 0) ? (((this.getQueryCount() - this.getTotalOptimizedCount()) * 1.0) / this.getQueryCount()) * 100 : 0;
 	}
-
-	public String getInvalidKeywordCountStr(){
-		if(this.getInvalidKeywordCount() > 0){
-			return String.format("<a href=\"javascript:findKeyword('%s', '%s')\">%d</a>",
-					"总计".equals(getGroup()) ?  "" : this.getGroup(), this.getMaxInvalidCount(), getInvalidKeywordCount());
-		}else{
-			return "";
-		}
-	}
-	
-	public String getUnworkMachineCountStr(){
-		if(this.getUnworkMachineCount() > 0){
-			String group = "总计".equals(getGroup()) ?  null : this.getGroup();
-			return String.format("<a target='_blank' href=\"javascript:findClientStatus('%s')\">%d</a>", group, getUnworkMachineCount());
-		}else{
-			return "";
-		}
-	}
 	
 	public int getTotalKeywordCount() {
 		return totalKeywordCount;

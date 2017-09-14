@@ -175,14 +175,23 @@
 								 <td>${refreshStatInfoVO.totalKeywordCount}</td>
 								 <td>${refreshStatInfoVO.needOptimizeKeywordCount > 0 ? refreshStatInfoVO.needOptimizeKeywordCount : ""}</td>
 								 <td>
-								 ${refreshStatInfoVO.invalidKeywordCountStr}
+								 <c:if test="${refreshStatInfoVO.invalidKeywordCount > 0}">
+									 <c:choose>
+										 <c:when test="${'总计' eq refreshStatInfoVO.group}">
+											 <a href="javascript:findKeyword(null, '${refreshStatInfoVO.maxInvalidCount}')">${refreshStatInfoVO.invalidKeywordCount}</a>
+										 </c:when>
+										 <c:otherwise>
+											 <a href="javascript:findKeyword('${refreshStatInfoVO.group}', '${refreshStatInfoVO.maxInvalidCount}')">${refreshStatInfoVO.invalidKeywordCount}</a>
+										 </c:otherwise>
+									 </c:choose>
+								 </c:if>
 							     <c:if test="${refreshStatInfoVO.invalidKeywordCount > 0}">
 									 <c:choose>
 										 <c:when test="${'总计' eq refreshStatInfoVO.group}">
-											 <a href="javascript:resetInvaidRefreshCount('${refreshStatInfoCriteria.groupName == null ? "" : refreshStatInfoCriteria.groupName}', '${refreshStatInfoCriteria.customerName == null ? "" : refreshStatInfoCriteria.customerName}', this)">重置</a>
+											 <a target="_blank" href="javascript:resetInvaidRefreshCount('${refreshStatInfoCriteria.groupName == null ? "" : refreshStatInfoCriteria.groupName}', '${refreshStatInfoCriteria.customerName == null ? "" : refreshStatInfoCriteria.customerName}', this)">重置</a>
 										 </c:when>
 										 <c:otherwise>
-											 <a href="javascript:resetInvaidRefreshCount('${refreshStatInfoVO.group}', '${refreshStatInfoCriteria.customerName == null ? "" : refreshStatInfoCriteria.customerName}', this)">重置</a>
+											 <a target="_blank" href="javascript:resetInvaidRefreshCount('${refreshStatInfoVO.group}', '${refreshStatInfoCriteria.customerName == null ? "" : refreshStatInfoCriteria.customerName}', this)">重置</a>
 										 </c:otherwise>
 									 </c:choose>
 								 </c:if>
@@ -206,7 +215,18 @@
 								 	</font>
 								 </td>
 								 <td>${refreshStatInfoVO.totalMachineCount > 0 ? refreshStatInfoVO.totalMachineCount : ""}</td>
-								 <td>${refreshStatInfoVO.unworkMachineCountStr}</td>
+								 <td>
+								 <c:if test="${refreshStatInfoVO.unworkMachineCount > 0}">
+									 <c:choose>
+										 <c:when test="${'总计' eq refreshStatInfoVO.group}">
+											 <a target="_blank" href="javascript:findClientStatus(null)">${refreshStatInfoVO.unworkMachineCount}</a>
+										 </c:when>
+										 <c:otherwise>
+											 <a target="_blank" href="javascript:findClientStatus('${refreshStatInfoVO.group}')">${refreshStatInfoVO.unworkMachineCount}</a>
+										 </c:otherwise>
+									 </c:choose>
+								 </c:if>
+								 </td>
 							  </tr>
 						</c:forEach>
 		      	  	</table>
