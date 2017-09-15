@@ -49,8 +49,8 @@ public class ClientStatusRestController extends SpringMVCBaseController {
 	}
 
 	@RequestMapping(value = "/searchClientStatuses", method = RequestMethod.GET)
-	public ModelAndView searchClientStatuses(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request) {
-		return constructClientStatusModelAndView(request, new ClientStatusCriteria(), currentPageNumber, pageSize);
+	public ModelAndView searchClientStatuses(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request, boolean clientStatusFlag) {
+		return constructClientStatusModelAndView(request, new ClientStatusCriteria(), currentPageNumber, pageSize, true);
 	}
 
 	@RequestMapping(value = "/searchClientStatuses", method = RequestMethod.POST)
@@ -62,18 +62,28 @@ public class ClientStatusRestController extends SpringMVCBaseController {
 				currentPageNumber = "1";
 				pageSize = "50";
 			}
-			return constructClientStatusModelAndView(request, clientStatusCriteria, Integer.parseInt(currentPageNumber), Integer.parseInt(pageSize));
+			return constructClientStatusModelAndView(request, clientStatusCriteria, Integer.parseInt(currentPageNumber), Integer.parseInt(pageSize), true);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return new ModelAndView("/client/list");
 		}
 	}
 
-	private ModelAndView constructClientStatusModelAndView(HttpServletRequest request, ClientStatusCriteria clientStatusCriteria, int currentPageNumber, int pageSize) {
+	@RequestMapping(value = "/searchBadClientStatus", method = RequestMethod.POST)
+	public ModelAndView searchBadClientStatus(HttpServletRequest request, ClientStatusCriteria clientStatusCriteria) {
+		try {
+			return constructClientStatusModelAndView(request, clientStatusCriteria, 1, 50, false);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return new ModelAndView("/client/list");
+		}
+	}
+
+	private ModelAndView constructClientStatusModelAndView(HttpServletRequest request, ClientStatusCriteria clientStatusCriteria, int currentPageNumber, int pageSize, boolean clientSatausFlag) {
 		ModelAndView modelAndView = new ModelAndView("/client/list");
 		String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
 		clientStatusCriteria.setTerminalType(terminalType);
-		Page<ClientStatus> page = clientStatusService.searchClientStatuses(new Page<ClientStatus>(currentPageNumber, pageSize), clientStatusCriteria);
+		Page<ClientStatus> page = clientStatusService.searchClientStatuses(new Page<ClientStatus>(currentPageNumber, pageSize), clientStatusCriteria, clientSatausFlag);
 		String[] operationTypeValues = Constants.pcOperationTypeValues;
 		if (TerminalTypeEnum.Phone.name().equals(terminalType)) {
 			operationTypeValues = Constants.phoneOperationTypeValues;
