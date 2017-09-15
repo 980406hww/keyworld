@@ -46,7 +46,7 @@
             }, {
                 width : '40',
                 title : '性别',
-                field : 'gender',
+                field : 'sex',
                 sortable : true,
                 formatter : function(value, row, index) {
                     switch (value) {

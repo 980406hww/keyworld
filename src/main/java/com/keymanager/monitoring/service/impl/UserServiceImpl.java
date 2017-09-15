@@ -30,18 +30,18 @@ import java.util.Map;
 public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUserService {
 
     @Autowired
-    private UserInfoDao userDao;
+    private UserInfoDao userInfoDao;
     @Autowired
     private UserRoleDao userRoleDao;
     
     public List<UserInfo> selectByLoginName(UserVO userVo) {
-        User user = new User();
-        user.setUserName(userVo.getLoginName());
-        EntityWrapper<User> wrapper = new EntityWrapper<User>(user);
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUserName(userVo.getLoginName());
+        EntityWrapper<UserInfo> wrapper = new EntityWrapper<UserInfo>(userInfo);
         if (null != userVo.getUserUuid()) {
             wrapper.where("fuuid != {0}", userVo.getUserUuid());
         }
-        return userDao.searchUsers();
+        return userInfoDao.selectList(wrapper);
     }
 
     public void insertByVo(UserVO userVo) {
@@ -60,16 +60,16 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
     }
 
     public UserVO selectVoById(Long id) {
-        return userDao.selectUserVoById(id);
+        return userInfoDao.selectUserVoById(id);
     }
 
     public void updateByVo(UserVO userVo) {
-        User user = BeanUtils.copy(userVo, User.class);
-        if (StringUtils.isBlank(user.getPassword())) {
-            user.setPassword(null);
+        UserInfo userInfo = BeanUtils.copy(userVo, UserInfo.class);
+        if (StringUtils.isBlank(userInfo.getPassword())) {
+            userInfo.setPassword(null);
         }
-        this.updateById(user);
-        
+        userInfo.setUuid(userVo.getUserUuid());
+        userInfoDao.updateById(userInfo);
         Long id = userVo.getUserUuid();
         List<UserRole> userRoles = userRoleDao.selectByUserId(id);
         if (userRoles != null && !userRoles.isEmpty()) {
@@ -100,7 +100,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
         Page<Map<String, Object>> page = new Page<Map<String, Object>>(pageInfo.getNowpage(), pageInfo.getSize());
         page.setOrderByField(pageInfo.getSort());
         page.setAsc(pageInfo.getOrder().equalsIgnoreCase("asc"));
-        List<Map<String, Object>> list = userDao.selectUserPage(page, pageInfo.getCondition());
+        List<Map<String, Object>> list = userInfoDao.selectUserPage(page, pageInfo.getCondition());
         pageInfo.setRows(list);
         pageInfo.setTotal(page.getTotal());
     }

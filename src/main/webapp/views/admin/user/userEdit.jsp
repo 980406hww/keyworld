@@ -24,7 +24,6 @@
         $('#userEditForm').form({
             url : '${path }/user/edit',
             onSubmit : function() {
-                alert("11112");
                 progressLoad();
                 var isValid = $(this).form('validate');
                 if (!isValid) {
@@ -83,7 +82,7 @@
                     <td>部门</td>
                     <td><select id="userEditorganizationId" name="organizationID" style="width: 140px; height: 29px;" class="easyui-validatebox" data-options="required:true"></select></td>
                     <td>角色</td>
-                    <td><input  id="userEditRoleIds" name="roleIds" style="width: 140px; height: 29px;"/></td>
+                    <td><input  id="userEditRoleIds" name="roleIds" style="width: 140px; height: 29px;" required="required"/></td>
                 </tr>
                 <tr>
                     <td>电话</td>

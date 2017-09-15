@@ -108,7 +108,6 @@
             resourceTreeGrid.treegrid('select', id);
         }
         var node = resourceTreeGrid.treegrid('getSelected');
-        alert(node);
         if (node) {
             parent.$.modalDialog({
                 title : '编辑',
@@ -132,7 +131,6 @@
             resourceTreeGrid.treegrid('select', id);
         }
         var node = resourceTreeGrid.treegrid('getSelected');
-        alert(node.id);
         if (node) {
             parent.$.messager.confirm('询问', '您是否要删除当前资源？删除当前资源会连同子资源一起删除!', function(b) {
                 if (b) {

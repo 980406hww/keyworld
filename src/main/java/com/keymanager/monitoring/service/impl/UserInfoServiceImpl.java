@@ -36,9 +36,9 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoDao, UserInfo> impl
     private UserRoleDao userRoleDao;
     
     public List<UserInfo> selectByLoginName(UserVO userVo) {
-        UserInfo user = new UserInfo();
-        user.setUserName(userVo.getLoginName());
-        EntityWrapper<UserInfo> wrapper = new EntityWrapper<UserInfo>(user);
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUserName(userVo.getLoginName());
+        EntityWrapper<UserInfo> wrapper = new EntityWrapper<UserInfo>(userInfo);
         if (null != userVo.getUserUuid()) {
             wrapper.where("fuuid != {0}", userVo.getUserUuid());
         }

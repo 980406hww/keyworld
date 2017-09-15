@@ -22,20 +22,17 @@ public class UserInfo extends BaseEntity {
 	@TableField(value = "fPassword")
 	private String password;
 
-	@TableField(value = "fGender")
-	private String gender;
+	@TableField(value = "fSex")
+	private String sex;
 
 	@TableField(value = "fQQ")
 	private String qq;
 
-	@TableField(value = "fUserLevel")
-	private int userLevel;
-
 	@TableField(value = "fSalt")
 	private String salt;
 
-	@TableField(value = "fVipType")
-	private boolean vipType;
+	@TableField(value = "fUserType")
+	private Integer userType;
 
 	@TableField(value = "fClientIp")
 	private String clientIp;
@@ -74,12 +71,12 @@ public class UserInfo extends BaseEntity {
 		this.password = password;
 	}
 
-	public String getGender() {
-		return gender;
+	public String getSex() {
+		return sex;
 	}
 
-	public void setGender(String gender) {
-		this.gender = gender;
+	public void setSex(String sex) {
+		this.sex = sex;
 	}
 
 	public String getQq() {
@@ -90,20 +87,12 @@ public class UserInfo extends BaseEntity {
 		this.qq = qq;
 	}
 
-	public int getUserLevel() {
-		return userLevel;
+	public Integer getUserType() {
+		return userType;
 	}
 
-	public void setUserLevel(int userLevel) {
-		this.userLevel = userLevel;
-	}
-
-	public boolean isVipType() {
-		return vipType;
-	}
-
-	public void setVipType(boolean vipType) {
-		this.vipType = vipType;
+	public void setUserType(Integer userType) {
+		this.userType = userType;
 	}
 
 	public String getClientIp() {
