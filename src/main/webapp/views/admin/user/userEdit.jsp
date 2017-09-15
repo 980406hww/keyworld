@@ -18,7 +18,7 @@
             multiple : true,
             required : true,
             cascadeCheck : false,
-            value : ${roleIds }
+            value : ${roleIds}
         });
 
         $('#userEditForm').form({

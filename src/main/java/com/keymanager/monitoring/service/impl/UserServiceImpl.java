@@ -36,7 +36,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
     
     public List<UserInfo> selectByLoginName(UserVO userVo) {
         UserInfo userInfo = new UserInfo();
-        userInfo.setUserName(userVo.getLoginName());
+        userInfo.setLoginName(userVo.getLoginName());
         EntityWrapper<UserInfo> wrapper = new EntityWrapper<UserInfo>(userInfo);
         if (null != userVo.getUserUuid()) {
             wrapper.where("fuuid != {0}", userVo.getUserUuid());

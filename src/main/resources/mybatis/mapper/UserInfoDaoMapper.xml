@@ -34,7 +34,7 @@
         <result column="organizationName" property="organizationName" jdbcType="VARCHAR"/>
 
         <collection property="rolesList" ofType="Role">
-            <id column="fUuid" property="roleId"/>
+            <id column="uuid" property="uuid"/>
             <result column="roleName" property="roleName"/>
         </collection>
     </resultMap>
@@ -52,7 +52,7 @@
         u.fPhone AS `phone`,
         u.fcreateTime AS `createTime`,
         og.fOrganizationName AS `organizationName`,
-        r.fUuid AS `roleId`,
+        r.fUuid AS `uuid`,
         r.fRoleName AS `roleName`
         FROM
         t_userinfo u
