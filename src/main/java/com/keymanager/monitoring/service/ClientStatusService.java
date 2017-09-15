@@ -461,6 +461,7 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 			throw new Exception("getClientStatusSummary error");
 		}
 	}
+
 	public Page<ClientStatusGroupSummaryVO> searchClientStatusGroupSummaryVO(Page<ClientStatusGroupSummaryVO> page, String group, String terminalType)
 	{
 		List<ClientStatusGroupSummaryVO> clientStatusGroupSummaryVOs = clientStatusDao.searchClientStatusGroupSummaryVO(page,group,terminalType);
@@ -468,4 +469,13 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		return page;
 	}
 
+	public String checkUpgrade(String clientID){
+		ClientStatus clientStatus = clientStatusDao.selectById(clientID);
+		if(clientStatus != null){
+			if(clientStatus.getTargetVersion() != null){
+				return clientStatus.getTargetVersion().equals(clientStatus.getVersion()) ? "" : clientStatus.getTargetVersion();
+			}
+		}
+		return "0";
+	}
 }
