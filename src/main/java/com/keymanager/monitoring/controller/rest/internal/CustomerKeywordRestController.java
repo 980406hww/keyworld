@@ -328,14 +328,13 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	@RequestMapping(value = "/haveCustomerKeywordForOptimization", method = RequestMethod.POST)
 	public ResponseEntity<?> haveCustomerKeywordForOptimization(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) throws Exception{
 		String clientID = (String) requestMap.get("clientID");
-		String version = (String) requestMap.get("version");
 		String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
 		try {
-			CustomerKeywordForOptimization customerKeywordForOptimization = customerKeywordService.searchCustomerKeywordsForOptimization(terminalType, clientID, version);
+			CustomerKeywordForOptimization customerKeywordForOptimization = customerKeywordService.searchCustomerKeywordsForOptimization(terminalType, clientID, null);
 			return new ResponseEntity<Object>(customerKeywordForOptimization != null, HttpStatus.OK);
 		}catch(Exception ex){
 			logger.error(ex.getMessage());
-			return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
 		}
 	}
 

@@ -3,6 +3,7 @@ package com.keymanager.monitoring.entity;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.FieldStrategy;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.keymanager.util.Utils;
 import org.hibernate.validator.constraints.NotBlank;
@@ -34,7 +35,7 @@ public class ClientStatus {
 	@TableField(value = "fPageNo")
 	private int pageNo;
 
-	@TableField(value = "fGroup")
+	@TableField(value = "fGroup", validate= FieldStrategy.IGNORED)
 	private String group;
 
 	@TableField(value = "fContinuousFailCount")
@@ -43,7 +44,7 @@ public class ClientStatus {
 	@TableField(value = "fCity")
 	private String city;
 
-	@TableField(value = "fOperationType")
+	@TableField(value = "fOperationType", validate= FieldStrategy.IGNORED)
 	private String operationType;
 
 	@TableField(value = "fPage")
@@ -220,7 +221,7 @@ public class ClientStatus {
 	@TableField(value = "fRenewalDate")
 	private Timestamp renewalDate;
 
-	@TableField(value = "fUpgradeFailedReason")
+	@TableField(value = "fUpgradeFailedReason", validate= FieldStrategy.IGNORED)
 	private String upgradeFailedReason;
 
 	@TableField(value = "fStatus")

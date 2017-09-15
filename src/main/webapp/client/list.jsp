@@ -1019,15 +1019,20 @@
 				$("span[name=invalidClient]").each(function(){
 					var span = $(this);
 					$.ajax({
-						url: '/customerkeyword/getcustomerkeyword.jsp?clientID=' + this.id.replace("span_", ""),
-						type: 'Get',
-						success: function (data) {
-							data = data.replace(/\r\n/gm,"");
-							if(data.indexOf("keyword") > 0){
+						url: '/internal/customerKeyword/haveCustomerKeywordForOptimization',
+                        data: JSON.stringify({"clientID": this.id.replace("span_", "")}),
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        timeout: 5000,
+                        type: 'POST',
+						success: function (result) {
+							if(result){
 								span.html("</br>取词正常");
 								span.css("color", "green");
 							}else{
-								span.html("</br>取不到词" + data);
+								span.html("</br>取不到词");
 								span.css("color", "red");
 							}
 						},

@@ -99,7 +99,7 @@
         <if test="clientStatusCriteria.groupName != null and clientStatusCriteria.groupName != ''"> AND cs.fGroup like '%${clientStatusCriteria.groupName}%'</if>
         <if test="clientStatusCriteria.upgradeFailedReason != null and clientStatusCriteria.upgradeFailedReason != ''"> AND cs.fUpgradeFailedReason like '%${clientStatusCriteria.upgradeFailedReason}%'</if>
         <if test="clientStatusCriteria.version != null and clientStatusCriteria.version != ''"> AND cs.fVersion like concat(#{clientStatusCriteria.version},'%')</if>
-        <if test="clientStatusCriteria.noOperationType != null and clientStatusCriteria.noOperationType != ''"> AND cs.fOperationType is null</if>
+        <if test="clientStatusCriteria.noOperationType != null and clientStatusCriteria.noOperationType != ''"> AND (cs.fOperationType is null or cs.fOperationType = '')</if>
         <if test="clientStatusCriteria.noOperationType == null and clientStatusCriteria.operationType != null and clientStatusCriteria.operationType != ''">
             AND cs.fOperationType = #{clientStatusCriteria.operationType}
         </if>
@@ -107,7 +107,7 @@
         <if test="clientStatusCriteria.valid != null and clientStatusCriteria.valid != ''"> AND cs.fValid = #{clientStatusCriteria.valid}</if>
         <if test="clientStatusCriteria.hasProblem != null"> AND (cs.fContinuousFailCount &gt; 5 OR DATE_ADD(cs.fLastVisitTime, INTERVAL IF((10 &gt; (cs.fPageNo*3)), 10, (cs.fPageNo * 3)) MINUTE) &lt; NOW()) and cs.fValid = 1</if>
         <if test="clientStatusCriteria.renewal != null"> AND DATE_ADD(cs.fRenewalDate, INTERVAL -3 DAY) &lt; CURRENT_DATE() and cs.fValid = 1</if>
-        <if test="clientStatusCriteria.noGroup != null"> AND cs.fGroup is null</if>
+        <if test="clientStatusCriteria.noGroup != null"> AND (cs.fGroup is null or cs.fGroup = '')</if>
         <if test="clientStatusCriteria.noVNC != null"> AND (cs.fHost is null or cs.fHost = '')</if>
         <if test="clientStatusCriteria.noUpgrade != null"> AND (cs.fVersion &lt;&gt; cs.fTargetVersion)</if>
         <if test="clientStatusCriteria.orderBy != null and clientStatusCriteria.orderBy != ''"> ORDER BY #{clientStatusCriteria.orderBy}</if>
