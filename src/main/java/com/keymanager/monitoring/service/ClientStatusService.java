@@ -93,28 +93,28 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		clientStatusDao.updateById(clientStatus);
 	}
 
-	public void updateClientStatusTargetVersion(String data) throws Exception {
-		ObjectMapper mapper = new ObjectMapper();
-		ClientStatusForUpdateTargetVersion clientStatusForUpdateTargetVersion = (ClientStatusForUpdateTargetVersion)mapper.readValue(data, ClientStatusForUpdateTargetVersion.class);
-		String[] clientIDs = clientStatusForUpdateTargetVersion.getClientIDs().split(",");
-		for (String clientID : clientIDs) {
+	public void updateClientStatusTargetVersion(String clientIDs, String targetVersion) throws Exception {
+		String[] clientIDArray = clientIDs.split(",");
+		for (String clientID : clientIDArray) {
 			ClientStatus clientStatus = clientStatusDao.selectById(clientID);
-			clientStatus.setTargetVersion(clientStatusForUpdateTargetVersion.getTargetVersion());
+			clientStatus.setTargetVersion(targetVersion);
 			clientStatusDao.updateById(clientStatus);
 		}
 	}
 
-	public void updateRenewalDate(String data) throws Exception {
-		ObjectMapper mapper = new ObjectMapper();
-		ClientStatusForUpdateRenewalDate clientStatusForUpdateRenewalDate = (ClientStatusForUpdateRenewalDate)mapper.readValue(data, ClientStatusForUpdateRenewalDate.class);
-		String[] clientIDs = clientStatusForUpdateRenewalDate.getClientIDs().split(",");
+	public void updateRenewalDate(String clientIDs,String settingType,String renewalDate) throws Exception {
+		String[] clientIDArray = clientIDs.split(",");
 
-		for (String clientID : clientIDs) {
+		for (String clientID : clientIDArray) {
 			ClientStatus clientStatus = clientStatusDao.selectById(clientID);
-			if("increaseOneMonth".equals(clientStatusForUpdateRenewalDate.getSettingType())) {
-				clientStatus.setRenewalDate(Utils.addMonth(clientStatus.getRenewalDate(), 1));
+			if("increaseOneMonth".equals(settingType)) {
+				if(clientStatus.getRenewalDate() != null) {
+					clientStatus.setRenewalDate(Utils.addMonth(clientStatus.getRenewalDate(), 1));
+				} else {
+					clientStatus.setRenewalDate(Utils.addMonth(Utils.getCurrentTimestamp(), 1));
+				}
 			} else {
-				clientStatus.setRenewalDate(Utils.string2Timestamp(clientStatusForUpdateRenewalDate.getRenewalDate()));
+				clientStatus.setRenewalDate(Utils.string2Timestamp(renewalDate));
 			}
 			clientStatusDao.updateById(clientStatus);
 		}

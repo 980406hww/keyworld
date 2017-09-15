@@ -7,10 +7,6 @@ import com.keymanager.monitoring.criteria.ClientStatusCriteria;
 import com.keymanager.monitoring.entity.ClientStatus;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
-import com.keymanager.value.ClientStatusForUpdateTargetVersion;
-import org.apache.ibatis.annotations.Param;
-
-import java.util.List;
 
 public interface ClientStatusDao extends BaseMapper<ClientStatus> {
     List<ClientStatus> searchClientStatusForRefreshStat(@Param("customerKeywordRefreshStatInfoCriteria")CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria);
