@@ -41,7 +41,7 @@
 
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
+    <script language="javascript" type="text/javascript" src="/js/slide1.12.4.js"></script>
     <link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css">
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -57,18 +57,6 @@
                 alignTableHeader();
             }
         });
-        function changePaging(currentPage, pageSize) {
-            var searchClientStatusSummaryVOForm = $("#searchClientStatusSummaryVOForm");
-            searchClientStatusSummaryVOForm.find("#currentPageNumberHidden").val(currentPage);
-            searchClientStatusSummaryVOForm.find("#pageSizeHidden").val(pageSize);
-            searchClientStatusSummaryVOForm.submit();
-        }
-
-        function resetPageNumber() {
-            var searchClientStatusSummaryVOForm = $("#searchClientStatusSummaryVOForm");
-            searchClientStatusSummaryVOForm.find("#currentPageNumberHidden").val(1);
-        }
-
         function alignTableHeader() {
             var td = $("#ClientStatusGroupSummaryTable tr:first td");
             var ctd = $("#headerTable tr:first td");
@@ -83,10 +71,6 @@
     <%@include file="/menu.jsp"%>
 
     <form action="/internal/clientstatus/clientStatusGroupStat" method="post" id="searchClientStatusSummaryVOForm" style="margin: 20px 0;">
-        <input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}"/>
-        <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
-        <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
-        <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
         分组名称:<input type="text" name="group" value="${group}">
         终端类型:
         <select name="terminalType">
@@ -96,7 +80,7 @@
         </select>
         <input type="submit" value="查询">
     </form>
-    <table width=50% style="font-size: 12px;" cellpadding=3 id="headerTable">
+    <table width=70% style="font-size: 12px;" cellpadding=3 id="headerTable">
         <tr bgcolor="#eeeeee" height=30>
             <td align="center" width=100>分组名称</td>
             <td align="center" width=100>终端类型</td>
@@ -107,8 +91,8 @@
     </table>
 </div>
 <div id="centerDiv">
-    <table width=50% style="font-size: 12px;" cellpadding=3 id="ClientStatusGroupSummaryTable">
-    <c:forEach items="${page.records}" var="ClientStatusGroupSummaryVO" varStatus="status">
+    <table width=70% style="font-size: 12px;" cellpadding=3 id="ClientStatusGroupSummaryTable">
+    <c:forEach items="${clientStatusGroupSummaryVOs}" var="ClientStatusGroupSummaryVO" varStatus="status">
         <tr align="center">
         <td>${ClientStatusGroupSummaryVO.group}</td>
         <td>${ClientStatusGroupSummaryVO.terminalType}</td>
@@ -117,34 +101,7 @@
     </c:forEach>
 </table>
 </div>
-<div id="showCustomerBottomPositioneDiv">
-    <div id="showCustomerBottomDiv">
-        <input id="fisrtButton" class="ui-button ui-widget ui-corner-all" type="button"
-               onclick="changePaging(1,'${page.size}')" value="首页"/>&nbsp;&nbsp;&nbsp;&nbsp;
-        <input id="upButton" type="button" class="ui-button ui-widget ui-corner-all"
-               onclick="changePaging('${page.current-1}','${page.size}')" value="上一页"/>&nbsp;&nbsp;&nbsp;&nbsp;
-        ${page.current}/${page.pages}&nbsp;&nbsp;
-        <input id="nextButton" type="button" class="ui-button ui-widget ui-corner-all"
-               onclick="changePaging('${page.current+1>=page.pages?page.pages:page.current+1}','${page.size}')"
-               value="下一页">&nbsp;&nbsp;&nbsp;&nbsp;
-        <input id="lastButton" type="button" class="ui-button ui-widget ui-corner-all"
-               onclick="changePaging('${page.pages}','${page.size}')" value="末页">&nbsp;&nbsp;&nbsp;&nbsp;
-        总记录数:${page.total}&nbsp;&nbsp;&nbsp;&nbsp;
-        每页显示条数:<select id="chooseRecords" onchange="changePaging(${page.current},this.value)">
-        <option>10</option>
-        <option>25</option>
-        <option>50</option>
-        <option>75</option>
-        <option>100</option>
-    </select>
-    </div>
-</div>
-<br>
-<br>
 
-<script language="javascript">
-
-</script>
 </body>
 </html>
 

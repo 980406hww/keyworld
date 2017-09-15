@@ -413,9 +413,9 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 	}
 
 
-	public Page<ClientStatusSummaryVO> searchClientStatusSummaryVO(Page<ClientStatusSummaryVO> page, String clientIDPrefix, String city) throws Exception {
+	public List<ClientStatusSummaryVO> searchClientStatusSummaryVO(String clientIDPrefix, String city) throws Exception {
 		try {
-			List<ClientStatusSummaryVO> pcClientStatusSummaryVOs = clientStatusDao.searchClientStatusSummaryVO(page,clientIDPrefix,city);
+			List<ClientStatusSummaryVO> pcClientStatusSummaryVOs = clientStatusDao.searchClientStatusSummaryVO(clientIDPrefix,city);
 			Collections.sort(pcClientStatusSummaryVOs);
 			ClientStatusSummaryVO previousClientIDPrefix = null;
 			ClientStatusSummaryVO previousType = null;
@@ -454,19 +454,15 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 							clientStatusSummaryVO.getCount());
 				}
 			}
-			page.setRecords(pcClientStatusSummaryVOs);
-			return page;
+			return pcClientStatusSummaryVOs;
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new Exception("getClientStatusSummary error");
 		}
 	}
-
-	public Page<ClientStatusGroupSummaryVO> searchClientStatusGroupSummaryVO(Page<ClientStatusGroupSummaryVO> page, String group, String terminalType)
+	public List<ClientStatusGroupSummaryVO> searchClientStatusGroupSummaryVO(String group, String terminalType)
 	{
-		List<ClientStatusGroupSummaryVO> clientStatusGroupSummaryVOs = clientStatusDao.searchClientStatusGroupSummaryVO(page,group,terminalType);
-		page.setRecords(clientStatusGroupSummaryVOs);
-		return page;
+		return clientStatusDao.searchClientStatusGroupSummaryVO(group,terminalType);
 	}
 
 	public String checkUpgrade(String clientID){
