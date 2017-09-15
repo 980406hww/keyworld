@@ -33,7 +33,7 @@
 }
 #changeSettingDialog {
 	display: none;
-	margin: 5px 0px 0px 20px;
+	margin: 5px 0px 0px 5px;
 }
 #changeSettingDialog tr {
 	height : 24px;
@@ -56,11 +56,11 @@
 
 #renewalSettingDialog {
 	display: none;
-	margin: 5px 0px 0px 20px;
+	margin: 5px 0px 0px 5px;
 }
 
 #targetVersionSettingDialog{
-	margin: 10px 0px 0px 20px;
+	margin: 15px 0px 0px 5px;
 }
 
 #clientStatusDiv {
@@ -660,7 +660,7 @@
                         $("#changeSettingDialog").dialog({
                             resizable: false,
                             title: "设置",
-                            width: 640,
+                            width: 620,
 							maxHeight: 510,
                             modal: true,
                             buttons: {
@@ -833,6 +833,7 @@
                         settingDialogDiv.hide();
                         showInfo("更新失败！", self);
 		        	}
+                    $(this).dialog("close");
 		        },
 		        error: function () {
                     settingDialogDiv.hide();
@@ -846,7 +847,7 @@
             $("#targetVersionSettingDialog").dialog({
                 resizable: false,
 				title: "设定目标版本",
-                width: 300,
+                width: 240,
                 modal: true,
                 buttons: {
                     "保存": function () {
@@ -873,7 +874,12 @@
 			}
 		    $.ajax({
 		        url: '/internal/clientstatus/updateClientStatusTargetVersion',
-		        data: "data=" + JSON.stringify(clientStatus),
+		        data: JSON.stringify(clientStatus),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
 		        type: 'POST',
 		        success: function (result) {
 		        	if(result){
@@ -884,6 +890,7 @@
 		        		settingDialogDiv.hide();
 		        		showInfo("更新失败！", self);
 		        	}
+                    $(this).dialog("close");
 		        },
 		        error: function () {
                     settingDialogDiv.hide();
@@ -897,7 +904,7 @@
             $("#renewalSettingDialog").dialog({
                 resizable: false,
                 title: "续费",
-                width: 300,
+                width: 225,
                 modal: true,
                 buttons: {
                     "保存": function () {
@@ -931,7 +938,12 @@
 			}
 			$.ajax({
 				url: '/internal/clientstatus/updateClientStatusRenewalDate',
-				data: "data=" + JSON.stringify(clientStatus),
+				data: JSON.stringify(clientStatus),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
 				type: 'POST',
 				success: function (result) {
 					if(result){
@@ -942,6 +954,7 @@
                         settingDialogDiv.hide();
                         showInfo("更新失败！", self);
 					}
+                    $(this).dialog("close");
 				},
 				error: function () {
                     settingDialogDiv.hide();

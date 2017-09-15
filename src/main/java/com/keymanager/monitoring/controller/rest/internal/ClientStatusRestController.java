@@ -88,10 +88,11 @@ public class ClientStatusRestController extends SpringMVCBaseController {
 	}
 
 	@RequestMapping(value = "/updateClientStatusTargetVersion", method = RequestMethod.POST)
-	public ResponseEntity<?> updateClientStatusTargetVersion(HttpServletRequest request) {
+	public ResponseEntity<?> updateClientStatusTargetVersion(@RequestBody Map<String, Object> requestMap) {
 		try {
-			String data = request.getParameter("data");
-			clientStatusService.updateClientStatusTargetVersion(data);
+			String clientIDs = (String) requestMap.get("clientIDs");
+			String targetVersion = (String) requestMap.get("targetVersion");
+			clientStatusService.updateClientStatusTargetVersion(clientIDs,targetVersion);
 			return new ResponseEntity<Object>(true, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
@@ -100,10 +101,12 @@ public class ClientStatusRestController extends SpringMVCBaseController {
 	}
 
 	@RequestMapping(value = "/updateClientStatusRenewalDate", method = RequestMethod.POST)
-	public ResponseEntity<?> updateClientStatusRenewalDate(HttpServletRequest request) {
+	public ResponseEntity<?> updateClientStatusRenewalDate(@RequestBody Map<String, Object> requestMap) {
 		try {
-			String data = request.getParameter("data");
-			clientStatusService.updateRenewalDate(data);
+			String clientIDs = (String) requestMap.get("clientIDs");
+			String settingType = (String) requestMap.get("settingType");
+			String renewalDate = (String) requestMap.get("renewalDate");
+			clientStatusService.updateRenewalDate(clientIDs, settingType, renewalDate);
 			return new ResponseEntity<Object>(true, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
