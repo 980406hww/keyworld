@@ -74,6 +74,27 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceDao, Resource> impl
     }
     
     @Override
+    public List<Tree> selectAuthorizationMenu(String loginName) {
+        List<Tree> trees = new ArrayList<Tree>();
+        // 查询权限菜单
+        List<Resource> resources = resourceDao.selectAuthorizationMenu(loginName);
+        if (resources == null) {
+            return trees;
+        }
+        for (Resource resource : resources) {
+            Tree tree = new Tree();
+            tree.setId(resource.getId());
+            tree.setPid(resource.getParentID());
+            tree.setText(resource.getResourceName());
+            tree.setIconCls(resource.getIcon());
+            tree.setAttributes(resource.getUrl());
+            tree.setState(resource.getOpened());
+            trees.add(tree);
+        }
+        return trees;
+    }
+
+    @Override
     public List<Tree> selectAllTree() {
         // 获取所有的资源 tree形式，展示
         List<Tree> trees = new ArrayList<Tree>();

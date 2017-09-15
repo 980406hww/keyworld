@@ -18,6 +18,8 @@ public interface IResourceService extends IService<Resource> {
 
     List<Tree> selectAllMenu();
 
+    List<Tree> selectAuthorizationMenu(String loginName);
+
     List<Tree> selectAllTree();
 
     List<Tree> selectTree(ShiroUser shiroUser);

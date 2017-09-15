@@ -190,7 +190,7 @@
         <img src="${staticPath }/static/style/images/ajax-loader.gif" style="position: absolute;top: 0;left: 0;right: 0;bottom: 0;margin: auto;"/>
     </div>
     <div id="index_layout">
-        <div data-options="region:'north',border:false" style="overflow: hidden;">
+        <div data-options="region:'north',border:false" style="overflow: hidden;height: 60px">
             <div style="z-index: 20;">
                 <%--<span style="float: right; padding-right: 20px; margin-top: 15px; color: #333">--%>
                     <%--<i class="fi-torso"></i>--%>

@@ -100,9 +100,10 @@ public class LoginController extends BaseController {
 			throw new RuntimeException("验证码错误");
 		}
 		Subject user = SecurityUtils.getSubject();
-		List<Tree> menus = resourceService.selectAllTree();
+		List<Tree> menus = resourceService.selectAuthorizationMenu(username);
+//		List<Tree> menus = resourceService.selectAllMenu();
 		request.getSession().setAttribute("entry",entryType);
-		request.getSession().setAttribute("username","keyadmin");
+		request.getSession().setAttribute("username",username);
 		request.getSession().setAttribute("menus",menus);
 		UsernamePasswordToken token = new UsernamePasswordToken(username, password);
 		// 设置记住密码

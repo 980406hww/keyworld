@@ -4,19 +4,49 @@
 
     <!-- 通用查询结果列-->
     <sql id="colID">
-        rs.fUuid AS `id`,
-        rs.fResourceName AS `eesourceName`,
-        rs.fUrl AS `url`,
-        rs.fOpenMode AS `openMode`,
-        rs.fDescription AS `description`,
-        rs.fIconCls AS `iconCls`,
-        rs.fParentID AS `parentID`,
-        rs.fSequence AS `sequence`,
-        rs.fStatus AS `status`,
-        rs.fOpened AS `opened`,
-        rs.fResourceType AS `resourceType`,
-        rs.fUpdateTime AS `updateIime`,
-        rs.fCreateTime AS `createTime`
+        s.fUuid AS `id`,
+        s.fResourceName AS `resourceName`,
+        s.fUrl AS `url`,
+        s.fOpenMode AS `openMode`,
+        s.fDescription AS `description`,
+        s.fIconCls AS `iconCls`,
+        s.fParentID AS `parentID`,
+        s.fSequence AS `sequence`,
+        s.fStatus AS `status`,
+        s.fOpened AS `opened`,
+        s.fResourceType AS `resourceType`,
+        s.fUpdateTime AS `updateIime`,
+        s.fCreateTime AS `createTime`
     </sql>
 
+    <select id="selectAuthorizationMenu" resultType="com.keymanager.monitoring.entity.Resource">
+        SELECT
+        <include refid="colID"/>
+        FROM
+            t_resource s
+        WHERE
+             s.fUuid IN (
+                   SELECT
+                       rr.fResourceID
+                    FROM
+                       t_role_resource rr
+                   WHERE
+        rr.fRoleID IN (
+        SELECT
+        ur.fRoleID
+        FROM
+        t_user_role ur
+        WHERE
+        ur.fUserID = (
+        SELECT
+        fUuid
+        FROM
+        t_userinfo
+        WHERE
+        fLoginName = #{loginName}
+        )
+        )
+        )
+        AND s.fResourceType = 0
+    </select>
 </mapper>
