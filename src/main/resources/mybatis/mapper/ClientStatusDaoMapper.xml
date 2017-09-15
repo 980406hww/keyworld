@@ -119,8 +119,8 @@
         FROM
         t_client_status cs
         WHERE cs.fTerminalType = #{clientStatusCriteria.terminalType}
-        <if test="clientStatusCriteria.groupName != null and clientStatusCriteria.groupName != ''"> AND cs.fGroup = #{clientStatusCriteria.groupName}</if>
-        <if test="clientStatusCriteria.hasProblem != null"> AND (cs.fContinuousFailCount &gt; 5 OR DATE_ADD(cs.fLastVisitTime, INTERVAL IF((10 &gt; (cs.fPageNo*3)), 10, (cs.fPageNo * 3)) MINUTE) &lt; NOW()) and cs.fValid = 1</if>
+        AND cs.fGroup = #{clientStatusCriteria.groupName}
+        AND (cs.fContinuousFailCount &gt; 5 OR DATE_ADD(cs.fLastVisitTime, INTERVAL IF((10 &gt; (cs.fPageNo*3)), 10, (cs.fPageNo * 3)) MINUTE) &lt; NOW()) and cs.fValid = 1
     </select>
 
     <select id="getClientStatusByClientID" parameterType="java.lang.String" resultType="com.keymanager.monitoring.entity.ClientStatus">

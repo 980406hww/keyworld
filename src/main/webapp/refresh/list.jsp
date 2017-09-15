@@ -214,7 +214,7 @@
 <div style="display:none;">
 </div>
 <div id="div2"></div>
-<form id="searchClientStatusForm" style="display: none;" method="post" action="/internal/clientstatus/searchClientStatuses">
+<form id="searchClientStatusForm" style="display: none;" method="post" action="/internal/clientstatus/searchBadClientStatus">
 	<input type="hidden" name="hasProblem" value="hasProblem"/>
 	<input type="hidden" name="groupName" id="groupName" value=""/>
 </form>
