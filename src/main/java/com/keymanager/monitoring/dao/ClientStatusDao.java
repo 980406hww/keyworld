@@ -5,6 +5,8 @@ import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.criteria.ClientStatusCriteria;
 import com.keymanager.monitoring.entity.ClientStatus;
+import com.keymanager.value.ClientStatusGroupSummaryVO;
+import com.keymanager.value.ClientStatusSummaryVO;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
@@ -24,4 +26,8 @@ public interface ClientStatusDao extends BaseMapper<ClientStatus> {
     ClientStatus getClientStatusByClientID(@Param("clientID") String clientID, @Param("terminalType") String terminalType);
 
     void resetRestartStatusForProcessing();
+
+    List<ClientStatusSummaryVO> searchClientStatusSummaryVO(Page<ClientStatusSummaryVO> page, @Param("clientIDPrefix") String clientIDPrefix, @Param("city") String city);
+
+    List<ClientStatusGroupSummaryVO> searchClientStatusGroupSummaryVO(Page<ClientStatusGroupSummaryVO> page, @Param("group") String group, @Param("terminalType") String terminalType);
 }

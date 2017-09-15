@@ -13,6 +13,8 @@ import com.keymanager.util.VNCAddressBookParser;
 import com.keymanager.util.ZipCompressor;
 import com.keymanager.value.ClientStatusForUpdateRenewalDate;
 import com.keymanager.value.ClientStatusForUpdateTargetVersion;
+import com.keymanager.value.ClientStatusGroupSummaryVO;
+import com.keymanager.value.ClientStatusSummaryVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
@@ -23,10 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import java.util.List;
 
@@ -408,4 +407,61 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		oldClientStatus.setUpgradeFailedReason(clientStatus.getUpgradeFailedReason());
 		clientStatusDao.updateById(oldClientStatus);
 	}
+
+
+	public Page<ClientStatusSummaryVO> searchClientStatusSummaryVO(Page<ClientStatusSummaryVO> page, String clientIDPrefix, String city) throws Exception {
+		try {
+			List<ClientStatusSummaryVO> pcClientStatusSummaryVOs = clientStatusDao.searchClientStatusSummaryVO(page,clientIDPrefix,city);
+			Collections.sort(pcClientStatusSummaryVOs);
+			ClientStatusSummaryVO previousClientIDPrefix = null;
+			ClientStatusSummaryVO previousType = null;
+			for(ClientStatusSummaryVO clientStatusSummaryVO : pcClientStatusSummaryVOs){
+				if(previousClientIDPrefix == null){
+					previousClientIDPrefix = clientStatusSummaryVO;
+					previousClientIDPrefix.setClientIDPrefixCount(previousClientIDPrefix.getClientIDPrefixCount() + 1);
+					previousClientIDPrefix.setClientIDPrefixTotalCount(previousClientIDPrefix.getClientIDPrefixTotalCount() +
+							clientStatusSummaryVO.getCount());
+				}else if(previousClientIDPrefix.getClientIDPrefix().equals(clientStatusSummaryVO.getClientIDPrefix())){
+					previousClientIDPrefix.setClientIDPrefixCount(previousClientIDPrefix.getClientIDPrefixCount() + 1);
+					previousClientIDPrefix.setClientIDPrefixTotalCount(previousClientIDPrefix.getClientIDPrefixTotalCount() +
+							clientStatusSummaryVO.getCount());
+				}else{
+					previousClientIDPrefix = clientStatusSummaryVO;
+					previousClientIDPrefix.setClientIDPrefixCount(previousClientIDPrefix.getClientIDPrefixCount() + 1);
+					previousClientIDPrefix.setClientIDPrefixTotalCount(previousClientIDPrefix.getClientIDPrefixTotalCount() +
+							clientStatusSummaryVO.getCount());
+
+					previousType = null;
+				}
+
+				if(previousType == null){
+					previousType = clientStatusSummaryVO;
+					previousType.setTypeCount(previousType.getTypeCount() + 1);
+					previousType.setTypeTotalCount(previousType.getTypeTotalCount() +
+							clientStatusSummaryVO.getCount());
+				}else if(previousType.getType().equals(clientStatusSummaryVO.getType())){
+					previousType.setTypeCount(previousType.getTypeCount() + 1);
+					previousType.setTypeTotalCount(previousType.getTypeTotalCount() +
+							clientStatusSummaryVO.getCount());
+				}else{
+					previousType = clientStatusSummaryVO;
+					previousType.setTypeCount(previousType.getTypeCount() + 1);
+					previousType.setTypeTotalCount(previousType.getTypeTotalCount() +
+							clientStatusSummaryVO.getCount());
+				}
+			}
+			page.setRecords(pcClientStatusSummaryVOs);
+			return page;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception("getClientStatusSummary error");
+		}
+	}
+	public Page<ClientStatusGroupSummaryVO> searchClientStatusGroupSummaryVO(Page<ClientStatusGroupSummaryVO> page, String group, String terminalType)
+	{
+		List<ClientStatusGroupSummaryVO> clientStatusGroupSummaryVOs = clientStatusDao.searchClientStatusGroupSummaryVO(page,group,terminalType);
+		page.setRecords(clientStatusGroupSummaryVOs);
+		return page;
+	}
+
 }

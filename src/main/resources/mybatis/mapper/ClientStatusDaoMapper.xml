@@ -197,4 +197,24 @@
         fCity = #{city}
         WHERE fClientID = #{clientID}
     </update>
+
+
+    <select id="searchClientStatusSummaryVO" resultType="com.keymanager.value.ClientStatusSummaryVO">
+        SELECT cs.fClientIDPrefix as clientIDPrefix, cs.fTerminalType as type, cs.fCity as city, COUNT(1) as 'count'
+        FROM t_client_status cs
+        <where> cs.fValid = 1
+            <if test="clientIDPrefix!=null and clientIDPrefix!=''">and cs.fClientIDPrefix LIKE '%${clientIDPrefix}%'</if>
+            <if test="city!=null and city!=''">and cs.fCity LIKE '%${city}%'</if>
+        </where>
+        GROUP BY cs.fClientIDPrefix, cs.fTerminalType, cs.fCity ORDER BY cs.fClientIDPrefix
+    </select>
+
+    <select id="searchClientStatusGroupSummaryVO" resultType="com.keymanager.value.ClientStatusGroupSummaryVO">
+        SELECT cs.fGroup as 'group', cs.fTerminalType as terminalType, COUNT(1) AS 'count' FROM t_client_status cs
+        <where>
+            <if test="group!=null and group!=''">and cs.fGroup LIKE '%${group}%'</if>
+            <if test="terminalType!=null and terminalType!=''">and cs.fTerminalType = #{terminalType}</if>
+        </where>
+        GROUP BY cs.fGroup, cs.fTerminalType ORDER BY cs.fGroup
+    </select>
 </mapper>

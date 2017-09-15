@@ -20,9 +20,10 @@
 	    <ul id="sub_06">
 	    <li><a href="/internal/clientstatus/searchClientStatuses">查看终端状态</a></li>
 			<li><a href="/client/clientlist.jsp">查看终端状态(old)</a></li>
-		<li><a href="/client/clientstat.jsp">查看终端统计</a></li>
-		<li><a href="/client/clientstat_group.jsp">查看终端分组统计</a></li>
-
+		<li><a href="/internal/clientstatus/clientStatusStat">查看终端统计</a></li>
+			<li><a href="/client/clientstat.jsp">查看终端统计(old)</a></li>
+		<li><a href="/internal/clientstatus/clientStatusGroupStat">查看终端分组统计</a></li>
+			<li><a href="/client/clientstat_group.jsp">查看终端分组统计(old)</a></li>
 	    <li><a href="/internal/qzsetting/searchQZSettings">全站设置信息</a></li>
 	    <li><a href="/internal/complaints/findTSMainKeywords">投诉专用平台</a></li>
 		<li><a href="/client/vpslist.jsp">查看开机信息</a></li>

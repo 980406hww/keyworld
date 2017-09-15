@@ -6,10 +6,10 @@ import com.keymanager.monitoring.criteria.ClientStatusCriteria;
 import com.keymanager.monitoring.entity.ClientStatus;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
 import com.keymanager.monitoring.service.ClientStatusService;
-import com.keymanager.monitoring.service.UserService;
 import com.keymanager.util.Constants;
 import com.keymanager.util.PortTerminalTypeMapping;
-import com.keymanager.util.Utils;
+import com.keymanager.value.ClientStatusGroupSummaryVO;
+import com.keymanager.value.ClientStatusSummaryVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +24,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.List;
 import java.util.Map;
-
-import static java.lang.System.out;
 
 @RestController
 @RequestMapping(value = "/internal/clientstatus")
@@ -291,5 +289,53 @@ public class ClientStatusRestController extends SpringMVCBaseController {
 				}
 			}
 		}
+	}
+
+	@RequestMapping(value = "/clientStatusStat", method = {RequestMethod.GET, RequestMethod.POST})
+	public ModelAndView clientStatusStat(String clientIDPrefix, String city, @RequestParam(value = "currentPageNumber", defaultValue = "1", required = false) Integer currentPage,@RequestParam(value="pageSize",defaultValue = "50",required = false) Integer pageSize) {
+		ModelAndView modelAndView = new ModelAndView("client/clientStatusStat");
+		try {
+			if(clientIDPrefix != null)
+			{
+				clientIDPrefix = clientIDPrefix.trim();
+			}
+			if(city != null)
+			{
+				city = city.trim();
+			}
+			Page<ClientStatusSummaryVO> page = clientStatusService.searchClientStatusSummaryVO(new Page<ClientStatusSummaryVO>(currentPage, pageSize),clientIDPrefix,city);
+			if(page.getCurrent() > page.getPages())
+			{
+				page = clientStatusService.searchClientStatusSummaryVO(new Page<ClientStatusSummaryVO>(page.getPages(), pageSize),clientIDPrefix,city);
+			}
+			modelAndView.addObject("clientIDPrefix", clientIDPrefix);
+			modelAndView.addObject("city", city);
+			modelAndView.addObject("page", page);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
+		return modelAndView;
+	}
+
+	@RequestMapping(value = "/clientStatusGroupStat", method = {RequestMethod.GET, RequestMethod.POST})
+	public ModelAndView clientStatusGroupStat(@RequestParam(value = "currentPageNumber",defaultValue = "1",required = false) Integer currentPage,@RequestParam(value = "pageSize",defaultValue = "50",required = false) Integer pageSize,String group,String terminalType) {
+		ModelAndView modelAndView = new ModelAndView("client/clientStatusGroupStat");
+		try {
+			if(null!=group)
+			{
+				group=group.trim();
+			}
+			Page<ClientStatusGroupSummaryVO> page = clientStatusService.searchClientStatusGroupSummaryVO(new Page<ClientStatusGroupSummaryVO>(currentPage,pageSize),group,terminalType);
+			if(page.getCurrent()>page.getPages())
+			{
+				page = clientStatusService.searchClientStatusGroupSummaryVO(new Page<ClientStatusGroupSummaryVO>(page.getPages(),pageSize),group,terminalType);
+			}
+			modelAndView.addObject("group",group);
+			modelAndView.addObject("terminalType",terminalType);
+			modelAndView.addObject("page", page);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
+		return modelAndView;
 	}
 }
