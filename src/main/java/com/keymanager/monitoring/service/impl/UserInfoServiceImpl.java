@@ -12,6 +12,7 @@ import com.keymanager.monitoring.dao.UserRoleDao;
 import com.keymanager.monitoring.entity.User;
 import com.keymanager.monitoring.entity.UserInfo;
 import com.keymanager.monitoring.entity.UserRole;
+import com.keymanager.monitoring.service.IUserInfoService;
 import com.keymanager.monitoring.service.IUserService;
 import com.keymanager.monitoring.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,29 +28,29 @@ import java.util.Map;
  *
  */
 @Service
-public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUserService {
+public class UserInfoServiceImpl extends ServiceImpl<UserInfoDao, UserInfo> implements IUserInfoService {
 
     @Autowired
-    private UserInfoDao userDao;
+    private UserInfoDao userInfoDao;
     @Autowired
     private UserRoleDao userRoleDao;
     
     public List<UserInfo> selectByLoginName(UserVO userVo) {
-        User user = new User();
+        UserInfo user = new UserInfo();
         user.setUserName(userVo.getLoginName());
-        EntityWrapper<User> wrapper = new EntityWrapper<User>(user);
+        EntityWrapper<UserInfo> wrapper = new EntityWrapper<UserInfo>(user);
         if (null != userVo.getUserUuid()) {
             wrapper.where("fuuid != {0}", userVo.getUserUuid());
         }
-        return userDao.searchUsers();
+        return this.selectList(wrapper);
     }
 
     public void insertByVo(UserVO userVo) {
-        User user = BeanUtils.copy(userVo, User.class);
-        user.setCreateTime(new Date());
-        this.insert(user);
+        UserInfo userInfo = BeanUtils.copy(userVo, UserInfo.class);
+        userInfo.setCreateTime(new Date());
+        this.insert(userInfo);
 
-        Long userUuid = user.getUuid();
+        Long userUuid = userInfo.getUuid();
         String[] roles = userVo.getRoleIds().split(",");
         UserRole userRole = new UserRole();
         for (String string : roles) {
@@ -60,11 +61,11 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
     }
 
     public UserVO selectVoById(Long id) {
-        return userDao.selectUserVoById(id);
+        return userInfoDao.selectUserVoById(id);
     }
 
     public void updateByVo(UserVO userVo) {
-        User user = BeanUtils.copy(userVo, User.class);
+        UserInfo user = BeanUtils.copy(userVo, UserInfo.class);
         if (StringUtils.isBlank(user.getPassword())) {
             user.setPassword(null);
         }
@@ -89,7 +90,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
 
     @Override
     public void updatePwdByUserId(Long userUuid, String md5Hex) {
-        User user = new User();
+        UserInfo user = new UserInfo();
         user.setUuid(userUuid);
         user.setPassword(md5Hex);
         this.updateById(user);
@@ -100,7 +101,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
         Page<Map<String, Object>> page = new Page<Map<String, Object>>(pageInfo.getNowpage(), pageInfo.getSize());
         page.setOrderByField(pageInfo.getSort());
         page.setAsc(pageInfo.getOrder().equalsIgnoreCase("asc"));
-        List<Map<String, Object>> list = userDao.selectUserPage(page, pageInfo.getCondition());
+        List<Map<String, Object>> list = userInfoDao.selectUserPage(page, pageInfo.getCondition());
         pageInfo.setRows(list);
         pageInfo.setTotal(page.getTotal());
     }

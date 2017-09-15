@@ -32,7 +32,7 @@
             rs.fOpenMode AS `openMode`,
             rs.fDescription AS `description`,
             rs.fIconCls AS `iconCls`,
-            rs.fParentID AS `parentID`,
+            rs.fParentID AS `pid`,
             rs.fSequence AS `sequence`,
             rs.fStatus AS `status`,
             rs.fOpened AS `opened`,

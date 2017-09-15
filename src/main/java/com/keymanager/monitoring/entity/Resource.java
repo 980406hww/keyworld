@@ -1,9 +1,14 @@
 package com.keymanager.monitoring.entity;
 
 import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.NotBlank;
+
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  *
@@ -11,9 +16,12 @@ import org.hibernate.validator.constraints.NotBlank;
  *
  */
 @TableName(value = "t_resource")
-public class Resource extends BaseEntity {
+public class Resource implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+
+	@TableId(value = "fUuid", type= IdType.AUTO)
+	private Long id;
 
 	@NotBlank
 	@TableField(value = "fResourceName")
@@ -46,6 +54,12 @@ public class Resource extends BaseEntity {
 
 	@TableField(value = "fResourceType")
 	private Integer resourceType;/** 资源类别 */
+
+	@TableField(value = "fUpdateTime")
+	private Date updateTime;
+
+	@TableField(value = "fCreateTime")
+	private Date createTime;
 
 	public String getResourceName() {
 		return resourceName;
@@ -127,19 +141,27 @@ public class Resource extends BaseEntity {
 		this.resourceType = resourceType;
 	}
 
-	@Override
-	public String toString() {
-		return "Resource{" +
-				"resourceName='" + resourceName + '\'' +
-				", url='" + url + '\'' +
-				", openMode='" + openMode + '\'' +
-				", description='" + description + '\'' +
-				", icon='" + icon + '\'' +
-				", parentID=" + parentID +
-				", sequence=" + sequence +
-				", status=" + status +
-				", opened=" + opened +
-				", resourceType=" + resourceType +
-				'}';
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
 	}
 }

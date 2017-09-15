@@ -5,7 +5,7 @@
     $(function() {
         resourceTreeGrid = $('#resourceTreeGrid').treegrid({
             url : '${path }/resource/treeGrid',
-            idField : 'uuid',
+            idField : 'id',
             treeField : 'resourceName',
             parentField : 'parentID',
             fit : true,
@@ -16,7 +16,7 @@
             pageList : [ 10, 20, 30, 40, 50, 100, 200, 300, 400, 500 ],
             frozenColumns : [ [ {
                 title : '编号',
-                field : 'uuid',
+                field : 'id',
                 width : 40
             } ] ],
             columns : [ [ {
@@ -66,7 +66,7 @@
                 field : 'parentID',
                 title : '上级资源ID',
                 width : 150,
-                hidden : true
+//                hidden : true
             }, {
                 field : 'status',
                 title : '状态',
@@ -82,15 +82,15 @@
             }, {
                 field : 'action',
                 title : '操作',
-                width : 130,
+                width : 140,
                 formatter : function(value, row, index) {
                     var str = '';
                         <shiro:hasPermission name="/resource/edit">
-                            str += $.formatString('<a href="javascript:void(0)" class="resource-easyui-linkbutton-edit" data-options="plain:true,iconCls:\'fi-pencil icon-blue\'" onclick="editResourceFun(\'{0}\');" >编辑</a>', row.uuid);
+                            str += $.formatString('<a href="javascript:void(0)" class="resource-easyui-linkbutton-edit" data-options="plain:true,iconCls:\'fi-pencil icon-blue\'" onclick="editResourceFun(\'{0}\');" >编辑</a>', row.id);
                         </shiro:hasPermission>
                         <shiro:hasPermission name="/resource/delete">
                             str += '&nbsp;&nbsp;|&nbsp;&nbsp;';
-                            str += $.formatString('<a href="javascript:void(0)" class="resource-easyui-linkbutton-del" data-options="plain:true,iconCls:\'fi-x icon-red\'" onclick="deleteResourceFun(\'{0}\');" >删除</a>', row.uuid);
+                            str += $.formatString('<a href="javascript:void(0)" class="resource-easyui-linkbutton-del" data-options="plain:true,iconCls:\'fi-x icon-red\'" onclick="deleteResourceFun(\'{0}\');" >删除</a>', row.id);
                         </shiro:hasPermission>
                     return str;
                 }
@@ -108,7 +108,7 @@
             resourceTreeGrid.treegrid('select', id);
         }
         var node = resourceTreeGrid.treegrid('getSelected');
-        alert(node.id);
+        alert(node);
         if (node) {
             parent.$.modalDialog({
                 title : '编辑',
@@ -128,11 +128,11 @@
     }
 
     function deleteResourceFun(id) {
-        alert(id);
         if (id != undefined) {
             resourceTreeGrid.treegrid('select', id);
         }
         var node = resourceTreeGrid.treegrid('getSelected');
+        alert(node.id);
         if (node) {
             parent.$.messager.confirm('询问', '您是否要删除当前资源？删除当前资源会连同子资源一起删除!', function(b) {
                 if (b) {

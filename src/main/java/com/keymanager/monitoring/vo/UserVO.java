@@ -2,7 +2,6 @@ package com.keymanager.monitoring.vo;
 
 import java.io.Serializable;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -27,7 +26,7 @@ public class UserVO implements Serializable {
 	@Length(min = 4, max = 64)
 	private String loginName;
 
-	private String name;
+	private String userName;
 
 	@JsonIgnore
 	private String password;
@@ -36,17 +35,15 @@ public class UserVO implements Serializable {
 
 	private Integer sex;
 
-	private Integer age;
-
 	private Integer userType;
 
 	private Integer status;
 
-	private Integer organizationId;
-
-	private Date createTime;
+	private Integer organizationID;
 
 	private String phone;
+
+	private Date createTime;
 
 	private List<Role> rolesList;
 
@@ -73,12 +70,12 @@ public class UserVO implements Serializable {
 		this.loginName = loginName == null ? null : loginName.trim();
 	}
 
-	public String getName() {
-		return name;
+	public String getUserName() {
+		return userName;
 	}
 
-	public void setName(String name) {
-		this.name = name == null ? null : name.trim();
+	public void setUserName(String userName) {
+		this.userName = userName == null ? null : userName.trim();
 	}
 
 	public String getPassword() {
@@ -105,14 +102,6 @@ public class UserVO implements Serializable {
 		this.sex = sex;
 	}
 
-	public Integer getAge() {
-		return age;
-	}
-
-	public void setAge(Integer age) {
-		this.age = age;
-	}
-
 	public Integer getUserType() {
 		return userType;
 	}
@@ -129,12 +118,12 @@ public class UserVO implements Serializable {
 		this.status = status;
 	}
 
-	public Integer getOrganizationId() {
-		return organizationId;
+	public Integer getOrganizationID() {
+		return organizationID;
 	}
 
-	public void setOrganizationId(Integer organizationId) {
-		this.organizationId = organizationId;
+	public void setOrganizationID(Integer organizationID) {
+		this.organizationID = organizationID;
 	}
 
 	public Date getCreateTime() {

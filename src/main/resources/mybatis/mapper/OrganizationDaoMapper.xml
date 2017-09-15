@@ -4,12 +4,12 @@
 
     <!-- 通用查询结果列-->
     <sql id="colID">
-        fUuid AS `uuid`,
+        fUuid AS `id`,
         fOrganizationName AS `organizationName`,
         fAddress AS `address`,
         fCode AS `code`,
         fIcon AS `icon`,
-        fParentID AS `parentID`,
+        fParentID AS `pid`,
         fSequence AS `sequence`,
         fUpdateTime AS `updateTime`,
         fCreateTime AS `createTime`

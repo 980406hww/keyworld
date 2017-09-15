@@ -7,7 +7,7 @@
             parentField : 'pid',
             lines : true,
             panelHeight : 'auto',
-            value : '${user.organizationId}'
+            value : '${user.organizationID}'
         });
 
         $('#userEditRoleIds').combotree({
@@ -24,6 +24,7 @@
         $('#userEditForm').form({
             url : '${path }/user/edit',
             onSubmit : function() {
+                alert("11112");
                 progressLoad();
                 var isValid = $(this).form('validate');
                 if (!isValid) {
@@ -57,10 +58,10 @@
             <table class="grid">
                 <tr>
                     <td>登录名</td>
-                    <td><input name="id" type="hidden"  value="${user.id}">
+                    <td><input name="userUuid" type="hidden"  value="${user.userUuid}">
                     <input name="loginName" type="text" placeholder="请输入登录名称" class="easyui-validatebox" data-options="required:true" value="${user.loginName}"></td>
                     <td>姓名</td>
-                    <td><input name="name" type="text" placeholder="请输入姓名" class="easyui-validatebox" data-options="required:true" value="${user.name}"></td>
+                    <td><input name="userName" type="text" placeholder="请输入姓名" class="easyui-validatebox" data-options="required:true" value="${user.userName}"></td>
                 </tr>
                 <tr>
                     <td>密码</td>
@@ -72,8 +73,6 @@
                     </select></td>
                 </tr>
                 <tr>
-                    <td>年龄</td>
-                    <td><input type="text" name="age" value="${user.age}" class="easyui-numberbox"/></td>
                     <td>用户类型</td>
                     <td><select id="userEditUserType" name="userType" class="easyui-combobox" data-options="width:140,height:29,editable:false,panelHeight:'auto'">
                             <option value="0">管理员</option>
@@ -82,7 +81,7 @@
                 </tr>
                 <tr>
                     <td>部门</td>
-                    <td><select id="userEditorganizationId" name="organizationId" style="width: 140px; height: 29px;" class="easyui-validatebox" data-options="required:true"></select></td>
+                    <td><select id="userEditorganizationId" name="organizationID" style="width: 140px; height: 29px;" class="easyui-validatebox" data-options="required:true"></select></td>
                     <td>角色</td>
                     <td><input  id="userEditRoleIds" name="roleIds" style="width: 140px; height: 29px;"/></td>
                 </tr>
@@ -91,7 +90,7 @@
                     <td>
                         <input type="text" name="phone" class="easyui-numberbox" value="${user.phone}"/>
                     </td>
-                    <td>用户类型</td>
+                    <td>用户状态</td>
                     <td><select id="userEditStatus" name="status" value="${user.status}" class="easyui-combobox" data-options="width:140,height:29,editable:false,panelHeight:'auto'">
                             <option value="0">正常</option>
                             <option value="1">停用</option>

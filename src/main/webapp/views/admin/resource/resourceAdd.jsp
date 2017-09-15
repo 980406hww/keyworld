@@ -87,7 +87,7 @@
                 <td>上级资源</td>
                 <td colspan="3">
                     <select id="resourceAddPid" name="parentID" style="width: 200px; height: 29px;"></select>
-                    <a class="easyui-linkbutton" href="javascript:void(0)" onclick="$('#pid').combotree('clear');" >清空</a>
+                    <a class="easyui-linkbutton" href="javascript:void(0)" onclick="$('#resourceAddPid').combotree('clear');" >清空</a>
                 </td>
             </tr>
         </table>

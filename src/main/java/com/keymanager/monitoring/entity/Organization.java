@@ -1,9 +1,13 @@
 package com.keymanager.monitoring.entity;
 
 import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.NotBlank;
+
+import java.io.Serializable;
 
 /**
  *
@@ -11,9 +15,12 @@ import org.hibernate.validator.constraints.NotBlank;
  *
  */
 @TableName(value = "t_organization")
-public class Organization extends BaseEntity {
+public class Organization  implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+
+	@TableId(value = "fUuid", type= IdType.AUTO)
+	private Long id;
 
 	/** 组织名 */
 	@NotBlank
@@ -21,7 +28,7 @@ public class Organization extends BaseEntity {
 	private String organizationName;
 
 	/** 地址 */
-	@TableField(value = "fOrganizationName")
+	@TableField(value = "fAddress")
 	private String address;
 
 	/** 编号 */
@@ -36,11 +43,19 @@ public class Organization extends BaseEntity {
 
 	/** 父级主键 */
 	@TableField(value = "fParentID")
-	private Long parentID;
+	private Long pid;
 
 	/** 排序 */
 	@TableField(value = "fSequence")
 	private Integer sequence;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public String getOrganizationName() {
 		return organizationName;
@@ -74,12 +89,12 @@ public class Organization extends BaseEntity {
 		this.icon = icon;
 	}
 
-	public Long getParentID() {
-		return parentID;
+	public Long getPid() {
+		return pid;
 	}
 
-	public void setParentID(Long parentID) {
-		this.parentID = parentID;
+	public void setPid(Long pid) {
+		this.pid = pid;
 	}
 
 	public Integer getSequence() {

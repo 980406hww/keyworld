@@ -45,7 +45,7 @@
             <tr>
                 <td>资源名称</td>
                 <td>
-                    <input name="uuid" type="hidden"  value="${resource.uuid}" >
+                    <input name="id" type="hidden"  value="${resource.id}" >
                     <input name="resourceName" type="text" placeholder="请输入资源名称" value="${resource.resourceName}" class="easyui-validatebox span2" data-options="required:true" >
                 </td>
                 <td>资源类型</td>
@@ -72,7 +72,7 @@
                 <td>菜单图标</td>
                 <td><input name="icon" value="${resource.icon}"/></td>
                 <td>排序</td>
-                <td><input name="seq" value="${resource.sequence}" class="easyui-numberspinner" style="width: 140px; height: 29px;" required="required" data-options="editable:false"></td>
+                <td><input name="sequence" value="${resource.sequence}" class="easyui-numberspinner" style="width: 140px; height: 29px;" required="required" data-options="editable:false"></td>
             </tr>
             <tr>
                 <td>状态</td>
@@ -93,7 +93,7 @@
             <tr>
                 <td>上级资源</td>
                 <td colspan="3"><select id="resourceEditPid" name="parentID" style="width: 200px; height: 29px;"></select>
-                <a class="easyui-linkbutton" href="javascript:void(0)" onclick="$('#pid').combotree('clear');" >清空</a></td>
+                <a class="easyui-linkbutton" href="javascript:void(0)" onclick="$('#resourceEditPid').combotree('clear');" >清空</a></td>
             </tr>
         </table>
     </form>

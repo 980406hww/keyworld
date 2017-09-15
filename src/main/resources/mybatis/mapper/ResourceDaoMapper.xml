@@ -4,7 +4,7 @@
 
     <!-- 通用查询结果列-->
     <sql id="colID">
-        rs.fUuid AS `uuid`,
+        rs.fUuid AS `id`,
         rs.fResourceName AS `eesourceName`,
         rs.fUrl AS `url`,
         rs.fOpenMode AS `openMode`,

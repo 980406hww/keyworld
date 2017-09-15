@@ -62,7 +62,7 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceDao, Resource> impl
         }
         for (Resource resource : resources) {
             Tree tree = new Tree();
-            tree.setId(resource.getUuid());
+            tree.setId(resource.getId());
             tree.setPid(resource.getParentID());
             tree.setText(resource.getResourceName());
             tree.setIconCls(resource.getIcon());
@@ -83,7 +83,7 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceDao, Resource> impl
         }
         for (Resource resource : resources) {
             Tree tree = new Tree();
-            tree.setId(resource.getUuid());
+            tree.setId(resource.getId());
             tree.setPid(resource.getParentID());
             tree.setText(resource.getResourceName());
             tree.setIconCls(resource.getIcon());
@@ -110,7 +110,7 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceDao, Resource> impl
             }
             for (Resource resource : resourceList) {
                 Tree tree = new Tree();
-                tree.setId(resource.getUuid());
+                tree.setId(resource.getId());
                 tree.setPid(resource.getParentID());
                 tree.setText(resource.getResourceName());
                 tree.setIconCls(resource.getIcon());
@@ -132,7 +132,7 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceDao, Resource> impl
         }
         for (Resource resource : resourceLists) {
             Tree tree = new Tree();
-            tree.setId(resource.getUuid());
+            tree.setId(resource.getId());
             tree.setPid(resource.getParentID());
             tree.setText(resource.getResourceName());
             tree.setIconCls(resource.getIcon());

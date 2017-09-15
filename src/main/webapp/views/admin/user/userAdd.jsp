@@ -56,7 +56,7 @@
                     <td><input name="password" type="password" placeholder="请输入密码" class="easyui-validatebox" data-options="required:true"></td>
                     <td>性别</td>
                     <td>
-                        <select name="gender" class="easyui-combobox" data-options="width:140,height:29,editable:false,panelHeight:'auto'">
+                        <select name="sex" class="easyui-combobox" data-options="width:140,height:29,editable:false,panelHeight:'auto'">
                             <option value="男" selected="selected">男</option>
                             <option value="女" >女</option>
                         </select>
@@ -65,7 +65,7 @@
                 <tr>
                     <td>用户类型</td>
                     <td>
-                        <select name="vipType" class="easyui-combobox" data-options="width:140,height:29,editable:false,panelHeight:'auto'">
+                        <select name="userType" class="easyui-combobox" data-options="width:140,height:29,editable:false,panelHeight:'auto'">
                             <option value="0">管理员</option>
                             <option value="1" selected="selected">用户</option>
                         </select>
@@ -75,7 +75,7 @@
                     <td>部门</td>
                     <td><select id="userAddOrganizationId" name="organizationID" style="width: 140px; height: 29px;" class="easyui-validatebox" data-options="required:true"></select></td>
                     <td>角色</td>
-                    <td><select id="userAddRoleIds" name="roleIds" style="width: 140px; height: 29px;"></select></td>
+                    <td><select id="userAddRoleIds" name="rolesList" style="width: 140px; height: 29px;"></select></td>
                 </tr>
                 <tr>
                     <td>电话</td>

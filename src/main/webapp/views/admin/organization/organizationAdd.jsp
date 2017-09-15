@@ -56,8 +56,8 @@
             </tr>
             <tr>
                 <td>上级部门</td>
-                <td colspan="3"><select id="organizationAddPid" name="parentID" style="width:200px;height: 29px;"></select>
-                <a class="easyui-linkbutton" href="javascript:void(0)" onclick="$('#pid').combotree('clear');" >清空</a></td>
+                <td colspan="3"><select id="organizationAddPid" name="pid" style="width:200px;height: 29px;"></select>
+                <a class="easyui-linkbutton" href="javascript:void(0)" onclick="$('#organizationAddPid').combotree('clear');" >清空</a></td>
             </tr>
         </table>
     </form>

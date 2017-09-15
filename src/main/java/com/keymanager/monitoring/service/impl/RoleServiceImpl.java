@@ -58,7 +58,6 @@ public class RoleServiceImpl extends ServiceImpl<RoleDao, Role> implements IRole
             Tree tree = new Tree();
             tree.setId(role.getUuid());
             tree.setText(role.getRoleName());
-
             trees.add(tree);
         }
         return trees;

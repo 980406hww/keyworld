@@ -40,13 +40,13 @@
         <table class="grid">
             <tr>
                 <td>编号</td>
-                <td><input name="uuid" type="hidden"  value="${organization.id}"><input name="code" type="text" value="${organization.code}" /></td>
+                <td><input name="id" type="hidden"  value="${organization.id}"><input name="code" type="text" value="${organization.code}" /></td>
                 <td>部门名称</td>
-                <td><input name="organizationName" type="text" value="${organization.name}" placeholder="请输入部门名称" class="easyui-validatebox" data-options="required:true" ></td>
+                <td><input name="organizationName" type="text" value="${organization.organizationName}" placeholder="请输入部门名称" class="easyui-validatebox" data-options="required:true" ></td>
             </tr>
             <tr>
                 <td>排序</td>
-                <td><input name="sequence"  class="easyui-numberspinner" value="${organization.seq}" style="widtd: 140px; height: 29px;" required="required" data-options="editable:false"></td>
+                <td><input name="sequence"  class="easyui-numberspinner" value="${organization.sequence}" style="widtd: 140px; height: 29px;" required="required" data-options="editable:false"></td>
                 <td>菜单图标</td>
                 <td ><input name="icon" value="${organization.icon}"/></td>
             </tr>
@@ -56,7 +56,7 @@
             </tr>
             <tr>
                 <td>上级资源</td>
-                <td colspan="3"><select id="organizationEditPid" name="parentID" style="width: 200px; height: 29px;"></select>
+                <td colspan="3"><select id="organizationEditPid" name="pid" style="width: 200px; height: 29px;"></select>
                 <a class="easyui-linkbutton" href="javascript:void(0)" onclick="$('#pid').combotree('clear');" >清空</a></td>
             </tr>
         </table>

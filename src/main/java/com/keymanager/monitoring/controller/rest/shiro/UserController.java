@@ -7,6 +7,7 @@ import com.keymanager.monitoring.common.utils.StringUtils;
 import com.keymanager.monitoring.entity.Role;
 import com.keymanager.monitoring.entity.User;
 import com.keymanager.monitoring.entity.UserInfo;
+import com.keymanager.monitoring.service.IUserInfoService;
 import com.keymanager.monitoring.service.IUserService;
 import com.keymanager.monitoring.vo.UserVO;
 import org.apache.shiro.authz.annotation.RequiresRoles;
@@ -32,6 +33,8 @@ import java.util.Map;
 @Controller
 @RequestMapping("/user")
 public class UserController extends BaseController {
+    @Autowired
+    private IUserInfoService userInfoService;
     @Autowired
     private IUserService userService;
     @Autowired
@@ -63,18 +66,15 @@ public class UserController extends BaseController {
         PageInfo pageInfo = new PageInfo(page, rows, sort, order);
         Map<String, Object> condition = new HashMap<String, Object>();
 
-        if (StringUtils.isNotBlank(userVo.getName())) {
-            condition.put("name", userVo.getName());
+        if (StringUtils.isNotBlank(userVo.getUserName())) {
+            condition.put("userName", userVo.getUserName());
         }
-        if (userVo.getOrganizationId() != null) {
-            condition.put("organizationId", userVo.getOrganizationId());
+        if (userVo.getOrganizationID() != null) {
+            condition.put("organizationID", userVo.getOrganizationID());
         }
-//        if (userVo.getCreatedateStart() != null) {
-//            condition.put("startTime", userVo.getCreatedateStart());
-//        }
-//        if (userVo.getCreatedateEnd() != null) {
-//            condition.put("endTime", userVo.getCreatedateEnd());
-//        }
+        if (userVo.getCreatedateStart() != null) {
+            condition.put("createTime", userVo.getCreatedateStart());
+        }
         pageInfo.setCondition(condition);
         userService.selectDataGrid(pageInfo);
         return pageInfo;
@@ -99,7 +99,7 @@ public class UserController extends BaseController {
     @PostMapping("/add")
     @ResponseBody
     public Object add(@Valid UserVO userVo) {
-        List<UserInfo> list = userService.selectByLoginName(userVo);
+        List<UserInfo> list = userInfoService.selectByLoginName(userVo);
         if (list != null && !list.isEmpty()) {
             return renderError("登录名已存在!");
         }
@@ -128,7 +128,7 @@ public class UserController extends BaseController {
         }
         model.addAttribute("roleIds", ids);
         model.addAttribute("user", userVo);
-        return "admin/user/userEdit";
+        return "/views/admin/user/userEdit";
     }
 
     /**
@@ -141,7 +141,7 @@ public class UserController extends BaseController {
     @PostMapping("/edit")
     @ResponseBody
     public Object edit(@Valid UserVO userVo) {
-        List<UserInfo> list = userService.selectByLoginName(userVo);
+        List<UserInfo> list = userInfoService.selectByLoginName(userVo);
         if (list != null && !list.isEmpty()) {
             return renderError("登录名已存在!");
         }

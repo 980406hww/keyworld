@@ -5,15 +5,15 @@
     $(function() {
         organizationTreeGrid = $('#organizationTreeGrid').treegrid({
             url : '${path }/organization/treeGrid',
-            idField : 'uuid',
-            treeField : 'name',
+            idField : 'id',
+            treeField : 'organizationName',
             parentField : 'pid',
             fit : true,
             fitColumns : false,
             border : false,
             frozenColumns : [ [ {
                 title : 'id',
-                field : 'uuid',
+                field : 'id',
                 width : 40,
                 hidden : true
             } ] ],
@@ -30,15 +30,11 @@
                 title : '排序',
                 width : 40
             }, {
-                field : 'icon',
+                field : 'iconCls',
                 title : '图标',
                 width : 120
-            },  {
-                width : '130',
-                title : '创建时间',
-                field : 'createTime'
-            },{
-                field : 'parentID',
+            }, {
+                field : 'pid',
                 title : '上级资源ID',
                 width : 150,
                 hidden : true
@@ -53,11 +49,11 @@
                 formatter : function(value, row, index) {
                     var str = '';
                         <shiro:hasPermission name="/organization/edit">
-                            str += $.formatString('<a href="javascript:void(0)" class="organization-easyui-linkbutton-edit" data-options="plain:true,iconCls:\'fi-pencil icon-blue\'" onclick="editOrganizationFun(\'{0}\');" >编辑</a>', row.uuid);
+                            str += $.formatString('<a href="javascript:void(0)" class="organization-easyui-linkbutton-edit" data-options="plain:true,iconCls:\'fi-pencil icon-blue\'" onclick="editOrganizationFun(\'{0}\');" >编辑</a>', row.id);
                         </shiro:hasPermission>
                         <shiro:hasPermission name="/organization/delete">
                             str += '&nbsp;&nbsp;|&nbsp;&nbsp;';
-                            str += $.formatString('<a href="javascript:void(0)" class="organization-easyui-linkbutton-del" data-options="plain:true,iconCls:\'fi-x icon-red\'" onclick="deleteOrganizationFun(\'{0}\');" >删除</a>', row.uuid);
+                            str += $.formatString('<a href="javascript:void(0)" class="organization-easyui-linkbutton-del" data-options="plain:true,iconCls:\'fi-x icon-red\'" onclick="deleteOrganizationFun(\'{0}\');" >删除</a>', row.id);
                         </shiro:hasPermission>
                     return str;
                 }

@@ -26,15 +26,14 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationDao, Organi
     @Override
     public List<Tree> selectTree() {
         List<Organization> organizationList = selectTreeGrid();
-
         List<Tree> trees = new ArrayList<Tree>();
         if (organizationList != null) {
             for (Organization organization : organizationList) {
                 Tree tree = new Tree();
-                tree.setId(organization.getUuid());
+                tree.setId(organization.getId());
                 tree.setText(organization.getOrganizationName());
                 tree.setIconCls(organization.getIcon());
-                tree.setPid(organization.getParentID());
+                tree.setPid(organization.getPid());
                 trees.add(tree);
             }
         }
