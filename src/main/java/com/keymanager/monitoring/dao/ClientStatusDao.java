@@ -19,7 +19,6 @@ public interface ClientStatusDao extends BaseMapper<ClientStatus> {
 
     void updateOptimizationResult(@Param("clientID") String clientID, @Param("status")String status, @Param("version")String version,
                                   @Param("freeSpace")String freeSpace, @Param("city")String city, @Param("count")int count);
-    List<ClientStatus> searchClientStatuses(Page<ClientStatus> page, @Param("clientStatusCriteria") ClientStatusCriteria clientStatusCriteria);
 
     List<ClientStatus> searchClientStatusesOrByHost(@Param("terminalType") String terminalType, @Param("comfirm") String comfirm);
 
@@ -28,6 +27,8 @@ public interface ClientStatusDao extends BaseMapper<ClientStatus> {
     void resetRestartStatusForProcessing();
 
     List<ClientStatusSummaryVO> searchClientStatusSummaryVO(Page<ClientStatusSummaryVO> page, @Param("clientIDPrefix") String clientIDPrefix, @Param("city") String city);
+    List<ClientStatus> searchClientStatuses(Page<ClientStatus> page, @Param("clientStatusCriteria") ClientStatusCriteria clientStatusCriteria);
 
     List<ClientStatusGroupSummaryVO> searchClientStatusGroupSummaryVO(Page<ClientStatusGroupSummaryVO> page, @Param("group") String group, @Param("terminalType") String terminalType);
+    List<ClientStatus> searchBadClientStatus(Page<ClientStatus> page,  @Param("clientStatusCriteria") ClientStatusCriteria clientStatusCriteria);
 }

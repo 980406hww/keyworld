@@ -113,6 +113,16 @@
         <if test="clientStatusCriteria.orderBy != null and clientStatusCriteria.orderBy != ''"> ORDER BY #{clientStatusCriteria.orderBy}</if>
     </select>
 
+    <select id="searchBadClientStatus" parameterType="com.keymanager.monitoring.criteria.ClientStatusCriteria" resultType="com.keymanager.monitoring.entity.ClientStatus">
+        SELECT
+        <include refid="selectCol" />
+        FROM
+        t_client_status cs
+        WHERE cs.fTerminalType = #{clientStatusCriteria.terminalType}
+        AND cs.fGroup = #{clientStatusCriteria.groupName}
+        AND (cs.fContinuousFailCount &gt; 5 OR DATE_ADD(cs.fLastVisitTime, INTERVAL IF((10 &gt; (cs.fPageNo*3)), 10, (cs.fPageNo * 3)) MINUTE) &lt; NOW()) and cs.fValid = 1
+    </select>
+
     <select id="getClientStatusByClientID" parameterType="java.lang.String" resultType="com.keymanager.monitoring.entity.ClientStatus">
         SELECT
         <include refid="selectCol" />

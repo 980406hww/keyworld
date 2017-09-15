@@ -83,8 +83,12 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		return clientStatuseList;
 	}
 
-	public Page<ClientStatus> searchClientStatuses(Page<ClientStatus> page, ClientStatusCriteria clientStatusCriteria) {
-		page.setRecords(clientStatusDao.searchClientStatuses(page, clientStatusCriteria));
+	public Page<ClientStatus> searchClientStatuses(Page<ClientStatus> page, ClientStatusCriteria clientStatusCriteria, boolean clientStatusFlag) {
+		if(clientStatusFlag) {
+			page.setRecords(clientStatusDao.searchClientStatuses(page, clientStatusCriteria));
+		} else {
+			page.setRecords(clientStatusDao.searchBadClientStatus(page, clientStatusCriteria));
+		}
 		return page;
 	}
 
