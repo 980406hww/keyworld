@@ -3,6 +3,10 @@ package com.keymanager.monitoring.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.keymanager.monitoring.common.result.Tree;
+import com.keymanager.monitoring.dao.ResourceDao;
+import com.keymanager.monitoring.entity.Resource;
+import com.keymanager.monitoring.service.IResourceService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.DisabledAccountException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
@@ -19,6 +23,8 @@ import com.keymanager.monitoring.common.csrf.CsrfToken;
 import com.keymanager.monitoring.common.shiro.captcha.DreamCaptcha;
 import com.keymanager.monitoring.common.utils.StringUtils;
 
+import java.util.List;
+
 /**
  * @description：登录退出
  * @author：zhixuan.wang
@@ -28,6 +34,9 @@ import com.keymanager.monitoring.common.utils.StringUtils;
 public class LoginController extends BaseController {
 	@Autowired
 	private DreamCaptcha dreamCaptcha;
+
+	@Autowired
+	private IResourceService resourceService;
 	/**
 	 * 首页
 	 *
@@ -91,8 +100,10 @@ public class LoginController extends BaseController {
 			throw new RuntimeException("验证码错误");
 		}
 		Subject user = SecurityUtils.getSubject();
+		List<Tree> menus = resourceService.selectAllTree();
 		request.getSession().setAttribute("entry",entryType);
 		request.getSession().setAttribute("username","keyadmin");
+		request.getSession().setAttribute("menus",menus);
 		UsernamePasswordToken token = new UsernamePasswordToken(username, password);
 		// 设置记住密码
 		token.setRememberMe(1 == rememberMe);
@@ -133,6 +144,7 @@ public class LoginController extends BaseController {
 		Subject subject = SecurityUtils.getSubject();
 		request.getSession().removeAttribute("username");
 		request.getSession().removeAttribute("password");
+		request.getSession().removeAttribute("menus");
 		subject.logout();
 		return renderSuccess();
 	}
