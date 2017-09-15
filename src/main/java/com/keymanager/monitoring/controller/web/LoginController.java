@@ -88,16 +88,16 @@ public class LoginController extends BaseController {
 		logger.info("POST请求登录");
 		// 改为全部抛出异常，避免ajax csrf token被刷新
 		if (StringUtils.isBlank(username)) {
-			throw new RuntimeException("用户名不能为空");
+			return 	renderError("用户名不能为空");
 		}
 		if (StringUtils.isBlank(password)) {
-			throw new RuntimeException("密码不能为空");
+			return 	renderError("密码不能为空");
 		}
 		if (StringUtils.isBlank(captcha)) {
-			throw new RuntimeException("验证码不能为空");
+		   return 	renderError("验证码不能为空");
 		}
 		if (!dreamCaptcha.validate(request, response, captcha)) {
-			throw new RuntimeException("验证码错误");
+			return 	renderError("验证码错误");
 		}
 		Subject user = SecurityUtils.getSubject();
 		List<Tree> menus = resourceService.selectAuthorizationMenu(username);
