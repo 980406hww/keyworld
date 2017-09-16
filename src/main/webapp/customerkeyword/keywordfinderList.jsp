@@ -279,7 +279,7 @@
         </div>
     </form>
     <table style="font-size:12px; width: 100%;" id="headerTable">
-        <tr bgcolor="#eeeeee" height=20>
+        <tr bgcolor="#eeeeee" height=30>
             <td align="center" width=80>联系人</td>
             <td align="center" width=80>关键字</td>
             <td align="center" width=100>URL</td>
@@ -301,7 +301,7 @@
 </div>
 
 <div id="customerKeywordDiv">
-    <table id="customerKeywordTable">
+    <table id="customerKeywordTable" style="font-size:12px;">
         <c:forEach items="${page.records}" var="customerKeyword">
             <tr style="" height=30 onmouseover="doOver(this);" onmouseout="doOut(this);" height=30>
                 <td align="center" width=80>

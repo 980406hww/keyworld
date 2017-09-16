@@ -218,7 +218,7 @@
 	<input type="hidden" name="hasProblem" value="hasProblem"/>
 	<input type="hidden" name="groupName" id="groupName" value=""/>
 </form>
-<form id="searchCustomerKeywordForm" style="display: none;" method="post" action="/internal/customerKeyword/searchCustomerKeywords">
+<form id="searchCustomerKeywordForm" style="display: none;" method="post" action="/internal/customerKeyword/searchCustomerKeywordLists">
 	<input type="hidden" name="optimizeGroupName" id="optimizeGroupName" value=""/>
 	<input type="hidden" name="invalidRefreshCount" id="invalidRefreshCount" value=""/>
 </form>
