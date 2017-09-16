@@ -222,7 +222,7 @@
 				</c:otherwise>
 			</c:choose>
 		<c:choose>
-			<c:when test="${tr.count % 2 != 0}">
+			<c:when test="${tr.count % 2 == 0}">
 				<tr onmouseover="doOver(this);" onmouseout="doOut(this);" style="background-color: #eeeeee;">
 			</c:when>
 			<c:otherwise>
