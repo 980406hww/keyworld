@@ -40,19 +40,6 @@
 	<script language="javascript" type="text/javascript" src="/toastmessage/jquery.toastmessage.js"></script>
 	<link rel="stylesheet" href="/toastmessage/css/jquery.toastmessage.css">
 	<script language="javascript">
-        function doOver(obj) {
-            obj.style.backgroundColor = "green";
-        }
-
-        function doOut(obj) {
-            var rowIndex = obj.rowIndex;
-            if ((rowIndex % 2) == 0) {
-                obj.style.backgroundColor = "#eeeeee";
-            } else {
-                obj.style.backgroundColor = "#ffffff";
-            }
-        }
-
         function findClientStatus(groupName) {
 			$("#searchClientStatusForm").find("#groupName").val(groupName);
             $("#searchClientStatusForm").submit();
@@ -145,8 +132,15 @@
 					       <td align="center" width=100>总数</td>
 					       <td align="center" width=60>已停数</td>
 		   				</tr>
-						<c:forEach items="${refreshStatInfoVOs}" var="refreshStatInfoVO">
-							 <tr onmouseover="doOver(this);" onmouseout="doOut(this);" height="30">
+						<c:forEach items="${refreshStatInfoVOs}" var="refreshStatInfoVO" varStatus="tr">
+							 <c:choose>
+								 <c:when test="${tr.count % 2 != 0}">
+								 	<tr style="background-color: #eeeeee;" height="30">
+								 </c:when>
+								 <c:otherwise>
+									 <tr height="30">
+								 </c:otherwise>
+							 </c:choose>
 								 <td>${refreshStatInfoVO.group}</td>
 								 <td>${refreshStatInfoVO.totalKeywordCount}</td>
 								 <td>${refreshStatInfoVO.needOptimizeKeywordCount > 0 ? refreshStatInfoVO.needOptimizeKeywordCount : ""}</td>
