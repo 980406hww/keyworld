@@ -2,7 +2,7 @@
 /* CSS Document */
 html, body, ul, li, h1, h2, h3, h4, h5, h6, p, fieldset, legend {padding:0; margin:0;}
 body {font:12px/normal Verdana, Arial, Helvetica, sans-serif;}
-ul,li {list-style-type:none; text-transform:capitalize;}
+ul,li {list-style-type:none; }/*text-transform:capitalize;首字母大写的属性*/
 .clear {clear:both; *display:inline;/*IE only*/}
 
 /*menu*/

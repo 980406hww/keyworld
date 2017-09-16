@@ -29,9 +29,9 @@ public class CommonsController {
     /**
      * 图标页
      */
-    @GetMapping("icons.html")
+    @GetMapping("/icons.html")
     public String icons() {
-        return "icons";
+        return "views/icons";
     }
     
     /**

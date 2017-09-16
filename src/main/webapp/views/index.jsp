@@ -183,6 +183,10 @@
             } ]
         });
     }
+    function fun()
+    {
+        $("[title=资源管理]").click();
+    }
 </script>
 </head>
 <body>
@@ -192,16 +196,7 @@
     <div id="index_layout">
         <div data-options="region:'north',border:false" style="overflow: hidden;height: 60px">
             <div style="z-index: 20;">
-                <%--<span style="float: right; padding-right: 20px; margin-top: 15px; color: #333">--%>
-                    <%--<i class="fi-torso"></i>--%>
-                    <%--<b><shiro:principal></shiro:principal></b>&nbsp;&nbsp; --%>
-                    <%--<shiro:hasPermission name="/user/editPwdPage">--%>
-                        <%--<a href="javascript:void(0)" onclick="editUserPwd()" class="easyui-linkbutton" plain="true" icon="fi-unlock" >修改密码</a>--%>
-                    <%--</shiro:hasPermission>&nbsp;&nbsp;--%>
-                    <%--<a href="javascript:void(0)" onclick="logout()" class="easyui-linkbutton" plain="true" icon="fi-x">安全退出</a>--%>
-                <%--</span>--%>
-                <%--<span class="header"></span>--%>
-                    <%@include file="/menu.jsp"%>
+                <%@include file="/menu.jsp"%>
             </div>
         </div>
         <div data-options="region:'west',split:true" title="菜单" style="width: 160px; overflow: hidden;overflow-y:auto; padding:0px">
@@ -209,22 +204,22 @@
                 <ul id="layout_west_tree" class="ztree"></ul>
             </div>
         </div>
+        <ul id="layout_west_tree" class="ztree" style="display: none"></ul>
         <div data-options="region:'center'" style="overflow: hidden;">
             <div id="index_tabs" style="overflow: hidden;">
                 <div title="首页" data-options="iconCls:'fi-home',border:false" style="overflow: hidden;">
-                    <script src='https://git.oschina.net/wangzhixuan/spring-shiro-training/widget_preview'></script>
-                    <style>
+                    <%--<script src='https://git.oschina.net/wangzhixuan/spring-shiro-training/widget_preview'></script>--%>
+                   <%-- <style>
                         .pro_name a{color: #4183c4;}
                         .osc_git_title{background-color: #d8e5f1;}
                         .osc_git_box{background-color: #fafafa;}
                         .osc_git_box{border-color: #ddd;}
                         .osc_git_info{color: #666;}
                         .osc_git_main a{color: #4183c4;}
-                    </style>
+                    </style>--%>
                 </div>
             </div>
         </div>
-        <div data-options="region:'south',border:false" style="height: 30px;line-height:30px; overflow: hidden;text-align: center;background-color: #eee" >Copyright © 2015 power by <a href="http://www.dreamlu.net/" target="_blank">如梦技术</a></div>
     </div>
     <div id="tabsMenu">
         <div data-options="iconCls:'fi-loop'" type="refresh" style="font-size: 12px;">刷新</div>

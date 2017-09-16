@@ -9,7 +9,7 @@
         s.fUrl AS `url`,
         s.fOpenMode AS `openMode`,
         s.fDescription AS `description`,
-        s.fIconCls AS `iconCls`,
+        s.fIconCls AS `icon`,
         s.fParentID AS `parentID`,
         s.fSequence AS `sequence`,
         s.fStatus AS `status`,
@@ -23,14 +23,14 @@
         SELECT
         <include refid="colID"/>
         FROM
-            t_resource s
+        t_resource s
         WHERE
-             s.fUuid IN (
-                   SELECT
-                       rr.fResourceID
-                    FROM
-                       t_role_resource rr
-                   WHERE
+        s.fUuid IN (
+        SELECT
+        rr.fResourceID
+        FROM
+        t_role_resource rr
+        WHERE
         rr.fRoleID IN (
         SELECT
         ur.fRoleID
@@ -48,5 +48,6 @@
         )
         )
         AND s.fResourceType = 0
+        ORDER BY s.fSequence DESC
     </select>
 </mapper>

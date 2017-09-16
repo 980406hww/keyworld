@@ -7,6 +7,7 @@ import com.keymanager.monitoring.common.result.Tree;
 import com.keymanager.monitoring.dao.ResourceDao;
 import com.keymanager.monitoring.entity.Resource;
 import com.keymanager.monitoring.service.IResourceService;
+import com.keymanager.util.PortTerminalTypeMapping;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.DisabledAccountException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
@@ -103,6 +104,7 @@ public class LoginController extends BaseController {
 		List<Tree> menus = resourceService.selectAuthorizationMenu(username);
 //		List<Tree> menus = resourceService.selectAllMenu();
 		request.getSession().setAttribute("entry",entryType);
+		request.getSession().setAttribute("terminalType", PortTerminalTypeMapping.getTerminalType(request.getServerPort()));
 		request.getSession().setAttribute("username",username);
 		request.getSession().setAttribute("menus",menus);
 		UsernamePasswordToken token = new UsernamePasswordToken(username, password);
