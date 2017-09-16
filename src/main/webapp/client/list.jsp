@@ -199,7 +199,7 @@
 			<div id="div2"></div>
 			<div id="div3"></div>
 		</tr>
-		<c:forEach items="${page.records}" var="clientStatus">
+		<c:forEach items="${page.records}" var="clientStatus" varStatus="tr">
 			<c:set var="isValidClient" value="true" />
 			<c:choose>
 				<c:when test="${clientStatus.valid}">
@@ -221,7 +221,14 @@
 					<c:set var="keywordColor" value="green" />
 				</c:otherwise>
 			</c:choose>
-		<tr onmouseover="doOver(this);" onmouseout="doOut(this);">
+		<c:choose>
+			<c:when test="${tr.count % 2 != 0}">
+				<tr onmouseover="doOver(this);" onmouseout="doOut(this);" style="background-color: #eeeeee;">
+			</c:when>
+			<c:otherwise>
+				<tr onmouseover="doOver(this);" onmouseout="doOut(this);">
+			</c:otherwise>
+		</c:choose>
 			<td><input type="checkbox" name="clientID" value="${clientStatus.clientID}"/></td>
 			<td>
 				<font color="${keywordColor}">${clientStatus.clientID}</font>
