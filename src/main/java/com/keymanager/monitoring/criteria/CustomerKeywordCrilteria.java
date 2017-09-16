@@ -17,6 +17,11 @@ public class CustomerKeywordCrilteria extends BaseCriteria{
     private String entryType;//
     private String terminalType;//8088 PC  8089  phone
 
+    private String qq;
+    private String userName;
+    private String pushPay;//催缴
+    private String displayStop;//显示下架
+    private String orderNumber;//订单号
 
     public Long getCustomerUuid() {
         return customerUuid;
@@ -122,4 +127,45 @@ public class CustomerKeywordCrilteria extends BaseCriteria{
         this.noPosition = noPosition;
     }
 
+    public String getQq() {
+        return qq;
+    }
+
+    public void setQq(String qq) {
+        this.qq = qq;
+    }
+
+    @Override
+    public String getUserName() {
+        return userName;
+    }
+
+    @Override
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getPushPay() {
+        return pushPay;
+    }
+
+    public void setPushPay(String pushPay) {
+        this.pushPay = pushPay;
+    }
+
+    public String getDisplayStop() {
+        return displayStop;
+    }
+
+    public void setDisplayStop(String displayStop) {
+        this.displayStop = displayStop;
+    }
+
+    public String getOrderNumber() {
+        return orderNumber;
+    }
+
+    public void setOrderNumber(String orderNumber) {
+        this.orderNumber = orderNumber;
+    }
 }

@@ -354,4 +354,48 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
 		}
 	}
+
+	@RequestMapping(value="/searchCustomerKeywordLists" , method= RequestMethod.GET)
+	public ModelAndView searchCustomerKeywordLists(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request){
+		CustomerKeywordCrilteria customerKeywordCrilteria = new CustomerKeywordCrilteria();
+		customerKeywordCrilteria.setStatus("1");
+		return constructCustomerKeywordListsModelAndView(request, customerKeywordCrilteria, currentPageNumber, pageSize);
+	}
+
+	@RequestMapping(value = "/searchCustomerKeywordLists", method = RequestMethod.POST)
+	public ModelAndView searchCustomerKeywordLists(CustomerKeywordCrilteria customerKeywordCrilteria, HttpServletRequest request) {
+		try {
+			String currentPageNumber = request.getParameter("currentPageNumber");
+			String pageSize = request.getParameter("pageSize");
+			if (null == currentPageNumber && null == pageSize) {
+				currentPageNumber = "1";
+				pageSize = "50";
+			}
+			return constructCustomerKeywordListsModelAndView(request, customerKeywordCrilteria, Integer.parseInt(currentPageNumber), Integer.parseInt(pageSize));
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return new ModelAndView("/customerkeyword/keywordfinderList");
+		}
+	}
+
+	private ModelAndView constructCustomerKeywordListsModelAndView(HttpServletRequest request, CustomerKeywordCrilteria customerKeywordCrilteria, int currentPage, int pageSize) {
+		HttpSession session = request.getSession();
+		ModelAndView modelAndView = new ModelAndView("/customerkeyword/keywordfinderList");
+		String userID = (String) session.getAttribute("username");
+		User user = userService.getUser(userID);
+		List<User> ActiveUsers = userService.findActiveUsers();
+		String entryType = (String) session.getAttribute("entry");
+		String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+		String orderElement = request.getParameter("orderElement");
+		initOrderElemnet(orderElement,customerKeywordCrilteria);
+		customerKeywordCrilteria.setEntryType(entryType);
+		customerKeywordCrilteria.setTerminalType(terminalType);
+		Page<CustomerKeyword> page = customerKeywordService.searchCustomerKeywordLists(new Page<CustomerKeyword>(currentPage, pageSize), customerKeywordCrilteria);
+		modelAndView.addObject("customerKeywordCrilteria", customerKeywordCrilteria);
+		modelAndView.addObject("page", page);
+		modelAndView.addObject("user", user);
+		modelAndView.addObject("ActiveUsers", ActiveUsers);
+		modelAndView.addObject("orderElement",orderElement);
+		return modelAndView;
+	}
 }

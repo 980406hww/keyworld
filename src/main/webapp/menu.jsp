@@ -3,7 +3,7 @@
 	<ul id="nav">
 	    <li class="mainlevel" id="mainlevel_01"><a href="#">关键字管理</a>
 	    <ul id="sub_01">
-	    <li><a href="/customerkeyword/keywordfinder.jsp">关键字统计</a></li>
+	    <li><a href="/internal/customerKeyword/searchCustomerKeywordLists">关键字统计</a></li>
 	    <li><a href="/internal/negativelist/searchNegativeLists">关键字负面清单</a></li>
 	    <li><a href="/SuperUserSimpleKeywordList.xls">关键字简化模板下载</a></li>
 	    <li><a href="/SuperUserFullKeywordList.xls">关键字完整模板下载</a></li>

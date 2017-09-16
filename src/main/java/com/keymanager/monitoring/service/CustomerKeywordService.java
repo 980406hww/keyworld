@@ -60,6 +60,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     private CustomerKeywordPositionSummaryService customerKeywordPositionSummaryService;
 
     @Autowired
+    private CustomerService customerService;
+
+    @Autowired
     private CustomerKeywordDao customerKeywordDao;
 
     public Page<CustomerKeyword>  searchCustomerKeywords(Page<CustomerKeyword> page, CustomerKeywordCrilteria customerKeywordCrilteria){
@@ -634,6 +637,22 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     public void resetInvalidRefreshCount(CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria) throws Exception {
         customerKeywordDao.resetInvalidRefreshCount(customerKeywordRefreshStatInfoCriteria);
+    }
+
+    public Page<CustomerKeyword> searchCustomerKeywordLists(Page<CustomerKeyword> page, CustomerKeywordCrilteria customerKeywordCrilteria) {
+        List<CustomerKeyword> customerKeywords = customerKeywordDao.searchCustomerKeywords(page, customerKeywordCrilteria);
+        List<Customer> customers = customerService.selectList(null);
+        List<CustomerKeyword> customerKeywordList = new ArrayList<CustomerKeyword>();
+        for (CustomerKeyword customerKeyword : customerKeywords) {
+            for (Customer customer : customers) {
+                if (customerKeyword.getCustomerUuid() == customer.getUuid()) {
+                    customerKeyword.setContactPerson(customer.getContactPerson());
+                    customerKeywordList.add(customerKeyword);
+                }
+            }
+        }
+        page.setRecords(customerKeywordList);
+        return page;
     }
 
 }

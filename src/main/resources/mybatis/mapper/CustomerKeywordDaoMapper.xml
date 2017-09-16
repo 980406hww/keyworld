@@ -136,23 +136,44 @@
     <select id="searchCustomerKeywords" resultType="com.keymanager.monitoring.entity.CustomerKeyword">
         SELECT
           <include refid="colID"/>
-        FROM  t_customer_keyword ck
-        WHERE 1 = 1
+        FROM
+        t_customer_keyword ck,
+        t_customer c
+        WHERE c.fUuid = ck.fCustomerUuid
         <if test="customerKeywordCrilteria.customerUuid != null and customerKeywordCrilteria.customerUuid != ''">AND ck.fCustomerUuid = #{customerKeywordCrilteria.customerUuid}</if>
         <if test="customerKeywordCrilteria.keyword != null and customerKeywordCrilteria.keyword != ''">AND ck.fKeyword like '${customerKeywordCrilteria.keyword}%'</if>
         <if test="customerKeywordCrilteria.url != null and customerKeywordCrilteria.url != ''">AND ck.fUrl like '%${customerKeywordCrilteria.url}%'</if>
         <if test="customerKeywordCrilteria.status != null and customerKeywordCrilteria.status != ''">AND ck.fStatus = #{customerKeywordCrilteria.status}</if>
         <if test="customerKeywordCrilteria.invalidRefreshCount != null and customerKeywordCrilteria.invalidRefreshCount != ''">AND ck.fInvalidRefreshCount = #{customerKeywordCrilteria.invalidRefreshCount}</if>
-        <if test="customerKeywordCrilteria.optimizeGroupName != null and customerKeywordCrilteria.optimizeGroupName != ''">AND ck.fOptimizeGroupName  like '%${customerKeywordCrilteria.optimizeGroupName}%'</if>
         <if test="customerKeywordCrilteria.creationFromTime != null and customerKeywordCrilteria.creationFromTime != ''">AND ck.fCreateTime >= #{customerKeywordCrilteria.creationFromTime}</if>
         <if test="customerKeywordCrilteria.creationToTime != null and customerKeywordCrilteria.creationToTime != ''">AND ck.fCreateTime &lt;= #{customerKeywordCrilteria.creationToTime}</if>
         <if test="customerKeywordCrilteria.entryType != null and customerKeywordCrilteria.entryType != ''">AND ck.fType = #{customerKeywordCrilteria.entryType}</if>
         <if test="customerKeywordCrilteria.position != null and customerKeywordCrilteria.position != '' and customerKeywordCrilteria.noPosition == null "><![CDATA[AND fCurrentPosition > 0 and fCurrentPosition <= #{customerKeywordCrilteria.position}  ]]>   </if>
         <if test="customerKeywordCrilteria.noPosition == 1 ">AND ck.fCurrentPosition =  0    </if>
+        <if test="customerKeywordCrilteria.orderNumber != null and customerKeywordCrilteria.orderNumber != ''">AND ck.fOrderNumber  like '%${customerKeywordCrilteria.orderNumber}%'</if>
+        <if test="customerKeywordCrilteria.pushPay != null and customerKeywordCrilteria.pushPay != ''">AND ((ck.fCollectMethod = 'PerDay' AND ck.fEffectiveToTime is not null) OR (ck.fEffectiveToTime &lt;= DATE_ADD(CURDATE(),INTERVAL 3 DAY))) </if>
         <if test="customerKeywordCrilteria.terminalType != null and customerKeywordCrilteria.terminalType != ''">AND fTerminalType =  #{customerKeywordCrilteria.terminalType} </if>
+        <if test="customerKeywordCrilteria.qq != null and customerKeywordCrilteria.qq != ''">
+            AND ck.fCustomerUuid in (
+            SELECT fUuid FROM t_customer WHERE fQQ LIKE '${customerKeywordCrilteria.qq}%' )
+        </if>
+        <if test="customerKeywordCrilteria.userName != null and customerKeywordCrilteria.userName != ''">
+            AND ck.fCustomerUuid IN ( SELECT fUuid FROM t_customer c WHERE c.fUserID = (
+            SELECT fUserID FROM t_user WHERE fUserID = #{customerKeywordCrilteria.userName}))
+        </if>
+        <choose>
+            <when test="customerKeywordCrilteria.optimizeGroupName != null and customerKeywordCrilteria.optimizeGroupName != ''">
+                AND ck.fOptimizeGroupName  like '%${customerKeywordCrilteria.optimizeGroupName}%'
+            </when>
+            <otherwise>
+                <if test="customerKeywordCrilteria.displayStop == null or customerKeywordCrilteria.displayStop == ''">
+                    AND ck.fOptimizeGroupName != 'stop'
+                </if>
+            </otherwise>
+        </choose>
         <choose>
           <when test="customerKeywordCrilteria.orderElement != null and customerKeywordCrilteria.orderElement != ''">
-              ORDER BY ${customerKeywordCrilteria.orderElement}  DESC
+              ORDER BY ck.${customerKeywordCrilteria.orderElement}  DESC
           </when>
           <otherwise>
               ORDER BY ck.fKeyword
