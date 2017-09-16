@@ -7,14 +7,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.keymanager.monitoring.criteria.ClientStatusCriteria;
 import com.keymanager.monitoring.dao.ClientStatusDao;
 import com.keymanager.monitoring.entity.ClientStatus;
+import com.keymanager.monitoring.entity.ClientStatusRestartLog;
 import com.keymanager.util.Utils;
 import com.keymanager.util.common.StringUtil;
 import com.keymanager.util.VNCAddressBookParser;
 import com.keymanager.util.ZipCompressor;
-import com.keymanager.value.ClientStatusForUpdateRenewalDate;
-import com.keymanager.value.ClientStatusForUpdateTargetVersion;
-import com.keymanager.value.ClientStatusGroupSummaryVO;
-import com.keymanager.value.ClientStatusSummaryVO;
+import com.keymanager.value.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
@@ -36,6 +34,12 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 	
 	@Autowired
 	private ClientStatusDao clientStatusDao;
+
+	@Autowired
+	private CustomerKeywordService customerKeywordService;
+
+	@Autowired
+	private ClientStatusRestartLogService clientStatusRestartLogService;
 
 	public void changeTerminalType(String clientID, String terminalType){
 		ClientStatus clientStatus = clientStatusDao.selectById(clientID);
@@ -473,5 +477,51 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 			}
 		}
 		return "0";
+	}
+
+	public ClientStatus getStoppedClientStatuses(String terminalType){
+		ClientStatus tmpClientStatus = null;
+		List<ClientStatus> clientStatuses = clientStatusDao.searchRestartingClientStatuses(terminalType);
+		for(ClientStatus clientStatus : clientStatuses){
+			if(customerKeywordService.haveCustomerKeywordForOptimization(terminalType, clientStatus.getClientID())){
+				tmpClientStatus = clientStatus;
+				updateRestartStatus(clientStatus, "Logging");
+				break;
+			}
+		}
+		clientStatuses = clientStatusDao.searchWaitingRestartingClientStatuses(terminalType);
+		for(ClientStatus clientStatus : clientStatuses){
+			if(customerKeywordService.haveCustomerKeywordForOptimization(terminalType, clientStatus.getClientID())){
+				tmpClientStatus = clientStatus;
+				updateRestartStatus(clientStatus, "Processing");
+				break;
+			}
+		}
+		return tmpClientStatus;
+	}
+
+	private void updateRestartStatus(ClientStatus clientStatus, String restartStatus){
+		clientStatus.setRestartStatus(restartStatus);
+		clientStatus.setRestartTime(Utils.getCurrentTimestamp());
+		clientStatus.setRestartOrderingTime(Utils.getCurrentTimestamp());
+		clientStatusDao.updateById(clientStatus);
+	}
+
+	public void updateClientStatusRestartStatus(String clientID, String restartStatus){
+		ClientStatus clientStatus = clientStatusDao.selectById(clientID);
+		if(clientStatus != null){
+			clientStatus.setRestartTime(Utils.getCurrentTimestamp());
+			clientStatus.setRestartOrderingTime(Utils.getCurrentTimestamp());
+			clientStatus.setRestartCount(clientStatus.getRestartCount() + 1);
+			clientStatus.setRestartStatus(restartStatus);
+			clientStatusDao.updateById(clientStatus);
+
+			ClientStatusRestartLog clientStatusRestartLog = new ClientStatusRestartLog();
+			clientStatusRestartLog.setClientID(clientStatus.getClientID());
+			clientStatusRestartLog.setGroup(clientStatus.getGroup());
+			clientStatusRestartLog.setRestartCount(clientStatus.getRestartCount() + 1);
+			clientStatusRestartLog.setRestartStatus(restartStatus);
+			clientStatusRestartLogService.insert(clientStatusRestartLog);
+		}
 	}
 }

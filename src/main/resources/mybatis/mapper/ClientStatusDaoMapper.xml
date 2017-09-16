@@ -227,4 +227,29 @@
         </where>
         GROUP BY cs.fGroup, cs.fTerminalType ORDER BY cs.fGroup
     </select>
+
+    <select id="searchRestartingClientStatuses" resultType="com.keymanager.monitoring.entity.ClientStatus">
+        SELECT
+        <include refid="selectCol" />
+        FROM t_client_status cs
+        WHERE cs.fTerminalType = #{terminalType}
+        AND (DATE_ADD(fLastVisitTime, INTERVAL 10 MINUTE) &lt; NOW() and fValid = 1
+        AND (fRestartStatus = 'restarting' AND DATE_ADD(fRestartTime, INTERVAL 3 MINUTE) &lt; NOW())
+        AND (fHost is not null and fHost &lt;&gt; '')) order by fRestartOrderingTime
+    </select>
+
+
+    <select id="searchWaitingRestartingClientStatuses" resultType="com.keymanager.monitoring.entity.ClientStatus">
+        SELECT
+        <include refid="selectCol" />
+        FROM t_client_status cs
+        WHERE cs.fTerminalType = #{terminalType}
+        AND (fContinuousFailCount > 5 OR DATE_ADD(fLastVisitTime, INTERVAL IF((10 > (fPageNo*3)), 10, (fPageNo * 3)) MINUTE) &lt; NOW())
+        AND (fRestartTime IS NULL OR DATE_ADD(fRestartTime, INTERVAL 10 MINUTE) &lt; NOW())
+        AND fValid = 1 AND (fHost is not null and fHost &lt;&gt; '') order by fRestartOrderingTime
+    </select>
+
+    <update id="resetRestartStatusForProcessing">
+        UPDATE t_client_status SET fRestartStatus = NULL WHERE (fRestartStatus = 'Processing' or fRestartStatus = 'Logging')
+    </update>
 </mapper>

@@ -411,8 +411,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
 
-    public CustomerKeywordForOptimization searchCustomerKeywordsForOptimization(String terminalType, String clientID, String version) throws
-            Exception {
+    public CustomerKeywordForOptimization searchCustomerKeywordsForOptimization(String terminalType, String clientID, String version) {
         ClientStatus clientStatus = clientStatusService.selectById(clientID);
         if(clientStatus == null) {
             clientStatusService.addSummaryClientStatus(terminalType, clientID, 500 + "", version, null);
@@ -460,38 +459,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeywordForOptimization.setUrl(customerKeyword.getUrl());
             customerKeywordForOptimization.setEntryType(customerKeyword.getType());
 
-//            String relatedKeyword = "";
-//            Random rd = new Random();
-//            if (!Utils.isNullOrEmpty(customerKeyword.getRelatedKeywords())) {
-//                String[] keywords = customerKeyword.getRelatedKeywords().split(",");
-//                relatedKeyword = keywords[rd.nextInt(keywords.length)];
-//            }
-//            if (Utils.isNullOrEmpty(relatedKeyword)) {
-//                KeywordPositionUrlManager manager = new KeywordPositionUrlManager();
-//
-//                relatedKeyword = manager.getKeywordPositionUrlVOString(datasourceName, customerKeyword.getSearchEngine(), null);
-//                customerKeywordForOptimization.setRelatedKeyword(relatedKeyword);
-//            }
-
             customerKeywordForOptimization.setCurrentPosition(customerKeyword.getCurrentPosition());
             customerKeywordForOptimization.setOriginalUrl(customerKeyword.getOriginalUrl());
             customerKeywordForOptimization.setTitle(customerKeyword.getTitle());
-
-//            KeywordExcludeTitleManager manager = new KeywordExcludeTitleManager();
-//            List<KeywordExcludeTitleVO> keywordExcludeTitleVOs = manager.searchKeywordExcludeTitleVOs(conn, customerKeyword.getKeyword());
-//            StringBuilder sbTitle = new StringBuilder();
-//            if(keywordExcludeTitleVOs != null){
-//                List<String> excludeTitles = new ArrayList<String>();
-//                customerKeywordForOptimization.setExcludeTitles(excludeTitles);
-//                for(KeywordExcludeTitleVO keywordExcludeTitleVO : keywordExcludeTitleVOs){
-//                    excludeTitles.add(keywordExcludeTitleVO.getExcludeTitle());
-//                }
-//            }
-//
-//
-//            BaiduAdUrlManager baiduAdUrlManager = new BaiduAdUrlManager();
-//            String baiduAdUrl = baiduAdUrlManager.getBaiduAdUrl(conn);
-//            customerKeywordForOptimization.setBaiduAdUrl(baiduAdUrl);
 
             customerKeywordForOptimization.setGroup(clientStatus.getGroup());
             customerKeywordForOptimization.setOperationType(clientStatus.getOperationType());
@@ -562,11 +532,18 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeywordForOptimization.setWaitTimeBeforeClick(clientStatus.getWaitTimeBeforeClick());
             customerKeywordForOptimization.setWaitTimeAfterClick(clientStatus.getWaitTimeAfterClick());
             customerKeywordForOptimization.setMaxUserCount(clientStatus.getMaxUserCount());
-
-            customerKeywordDao.updateOptimizationQueryTime(customerKeyword.getUuid());
             return customerKeywordForOptimization;
         }
         return null;
+    }
+
+    public void updateOptimizationQueryTime(Long customerKeywordUuid){
+        customerKeywordDao.updateOptimizationQueryTime(customerKeywordUuid);
+    }
+
+    public boolean haveCustomerKeywordForOptimization(String terminalType, String clientID){
+        CustomerKeywordForOptimization customerKeywordForOptimization = searchCustomerKeywordsForOptimization(terminalType, clientID, null);
+        return customerKeywordForOptimization != null;
     }
 
     public void resetBigKeywordIndicator(String groupName, int maxInvalidCount) {

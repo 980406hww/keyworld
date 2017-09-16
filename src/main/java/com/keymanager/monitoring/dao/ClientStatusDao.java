@@ -27,8 +27,14 @@ public interface ClientStatusDao extends BaseMapper<ClientStatus> {
     void resetRestartStatusForProcessing();
 
     List<ClientStatusSummaryVO> searchClientStatusSummaryVO(@Param("clientIDPrefix") String clientIDPrefix, @Param("city") String city);
+
     List<ClientStatus> searchClientStatuses(Page<ClientStatus> page, @Param("clientStatusCriteria") ClientStatusCriteria clientStatusCriteria);
 
     List<ClientStatusGroupSummaryVO> searchClientStatusGroupSummaryVO(@Param("group") String group, @Param("terminalType") String terminalType);
+
     List<ClientStatus> searchBadClientStatus(Page<ClientStatus> page,  @Param("clientStatusCriteria") ClientStatusCriteria clientStatusCriteria);
+
+    List<ClientStatus> searchRestartingClientStatuses(@Param("terminalType") String terminalType);
+
+    List<ClientStatus> searchWaitingRestartingClientStatuses(@Param("terminalType") String terminalType);
 }

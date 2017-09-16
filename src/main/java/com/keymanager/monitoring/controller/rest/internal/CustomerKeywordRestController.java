@@ -330,8 +330,8 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		String clientID = (String) requestMap.get("clientID");
 		String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
 		try {
-			CustomerKeywordForOptimization customerKeywordForOptimization = customerKeywordService.searchCustomerKeywordsForOptimization(terminalType, clientID, null);
-			return new ResponseEntity<Object>(customerKeywordForOptimization != null, HttpStatus.OK);
+			boolean haveCustomerKeywordForOptimization = customerKeywordService.haveCustomerKeywordForOptimization(terminalType, clientID);
+			return new ResponseEntity<Object>(haveCustomerKeywordForOptimization, HttpStatus.OK);
 		}catch(Exception ex){
 			logger.error(ex.getMessage());
 			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);

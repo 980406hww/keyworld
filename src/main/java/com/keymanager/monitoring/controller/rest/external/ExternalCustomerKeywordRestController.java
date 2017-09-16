@@ -128,6 +128,9 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
 			User user = userService.getUser(userName);
 			if(user != null && user.getPassword().equals(password)){
 				CustomerKeywordForOptimization customerKeywordForOptimization = customerKeywordService.searchCustomerKeywordsForOptimization(terminalType, clientID, version);
+				if(customerKeywordForOptimization != null){
+					customerKeywordService.updateOptimizationQueryTime(customerKeywordForOptimization.getUuid());
+				}
 				clientStatusService.updateClientVersion(clientID, version);
 				return new ResponseEntity<Object>(customerKeywordForOptimization, HttpStatus.OK);
 			}
