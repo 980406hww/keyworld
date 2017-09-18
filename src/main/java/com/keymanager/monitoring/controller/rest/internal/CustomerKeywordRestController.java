@@ -380,9 +380,9 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	private ModelAndView constructCustomerKeywordListsModelAndView(HttpServletRequest request, CustomerKeywordCrilteria customerKeywordCrilteria, int currentPage, int pageSize) {
 		HttpSession session = request.getSession();
 		ModelAndView modelAndView = new ModelAndView("/customerkeyword/keywordfinderList");
-		String userID = (String) session.getAttribute("username");
-		User user = userService.getUser(userID);
-		List<User> ActiveUsers = userService.findActiveUsers();
+		String userName = (String) session.getAttribute("username");
+		User user = userService.getUser(userName);
+		List<User> activeUsers = userService.findActiveUsers();
 		String entryType = (String) session.getAttribute("entry");
 		String terminalType = TerminalTypeMapping.getTerminalType(request);
 		String orderElement = request.getParameter("orderElement");
@@ -393,7 +393,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		modelAndView.addObject("customerKeywordCrilteria", customerKeywordCrilteria);
 		modelAndView.addObject("page", page);
 		modelAndView.addObject("user", user);
-		modelAndView.addObject("ActiveUsers", ActiveUsers);
+		modelAndView.addObject("activeUsers", activeUsers);
 		modelAndView.addObject("orderElement",orderElement);
 		return modelAndView;
 	}

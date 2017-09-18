@@ -66,13 +66,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     @Autowired
     private CustomerKeywordDao customerKeywordDao;
 
-    public Page<CustomerKeyword>  searchCustomerKeywords(Page<CustomerKeyword> page, CustomerKeywordCrilteria customerKeywordCrilteria){
+    public Page<CustomerKeyword> searchCustomerKeywords(Page<CustomerKeyword> page, CustomerKeywordCrilteria customerKeywordCrilteria){
         page.setRecords(customerKeywordDao.searchCustomerKeywords(page, customerKeywordCrilteria));
         return page;
-    }
-
-    public List<CustomerKeyword>  searchCustomerKeywords(CustomerKeywordCrilteria customerKeywordCrilteria){
-        return customerKeywordDao.searchCustomerKeywords(customerKeywordCrilteria);
     }
 
     public String searchCustomerKeywordForCaptureTitle(String terminalType) throws Exception {
@@ -642,15 +638,17 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     public Page<CustomerKeyword> searchCustomerKeywordLists(Page<CustomerKeyword> page, CustomerKeywordCrilteria customerKeywordCrilteria) {
         List<CustomerKeyword> customerKeywords = customerKeywordDao.searchCustomerKeywords(page, customerKeywordCrilteria);
-        List<Customer> customers = customerService.selectList(null);
         List<CustomerKeyword> customerKeywordList = new ArrayList<CustomerKeyword>();
+        Map<Long,String> customerMap = new HashMap<Long, String>();
         for (CustomerKeyword customerKeyword : customerKeywords) {
-            for (Customer customer : customers) {
-                if (customerKeyword.getCustomerUuid() == customer.getUuid()) {
-                    customerKeyword.setContactPerson(customer.getContactPerson());
-                    customerKeywordList.add(customerKeyword);
-                }
+            String contactPerson = customerMap.get(customerKeyword.getCustomerUuid());
+            if(contactPerson == null) {
+                Customer customer = customerService.selectById(customerKeyword.getCustomerUuid());
+                contactPerson = customer.getContactPerson();
+                customerMap.put(customer.getUuid(), customer.getContactPerson());
             }
+            customerKeyword.setContactPerson(contactPerson);
+            customerKeywordList.add(customerKeyword);
         }
         page.setRecords(customerKeywordList);
         return page;

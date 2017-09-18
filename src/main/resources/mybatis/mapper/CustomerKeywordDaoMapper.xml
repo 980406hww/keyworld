@@ -133,7 +133,7 @@
     </select>
 
     <!--重构部分-->
-    <select id="searchCustomerKeywords" resultType="com.keymanager.monitoring.entity.CustomerKeyword">
+    <select id="searchCustomerKeywords" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordCrilteria" resultType="com.keymanager.monitoring.entity.CustomerKeyword">
         SELECT
           <include refid="colID"/>
         FROM

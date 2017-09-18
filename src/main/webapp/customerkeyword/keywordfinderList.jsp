@@ -61,10 +61,6 @@
                 margin: 0;
                 padding: 0;
             }
-
-            #saveCustomerKeywordDialog ul{list-style: none;margin: 0px;padding: 0px;}
-            #saveCustomerKeywordDialog li{margin: 5px 0;}
-            #saveCustomerKeywordDialog .customerKeywordSpanClass{width: 70px;display: inline-block;text-align: right;}
         </style>
 
         <script language="javascript">
@@ -233,7 +229,7 @@
             <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
             <input id="customerUuid" name="customerUuid" type="hidden" value="${customerKeywordCrilteria.customerUuid}">
             关键字:&nbsp;<input type="text" name="keyword" id="keyword" value="${customerKeywordCrilteria.keyword}" style="width:100px;">&nbsp;
-            Q Q:<input type="text" name="qq" id="qq" value="${customerKeywordCrilteria.qq}" style="width:100px;">&nbsp;
+            QQ:<input type="text" name="qq" id="qq" value="${customerKeywordCrilteria.qq}" style="width:100px;">&nbsp;
             URL:<input type="text" name="url" id="url" value="${customerKeywordCrilteria.url}" style="width:100px;">&nbsp;
             关键字状态:
             <select name="status" id="status">
@@ -249,7 +245,7 @@
                 <select name="userName" id="userName">
                     <option value="">所有</option>
                     <option value="${user.userID}">只显示自己</option>
-                    <c:forEach items="${ActiveUsers}" var="activeUser">
+                    <c:forEach items="${activeUsers}" var="activeUser">
                         <option value="${activeUser.userID}">${activeUser.userName}</option>
                     </c:forEach>
                 </select>
