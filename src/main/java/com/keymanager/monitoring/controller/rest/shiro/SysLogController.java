@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @description：日志管理
  * @author：zhixuan.wang
@@ -18,7 +20,13 @@ public class SysLogController {
     private ISysLogService sysLogService;
 
     @GetMapping("/manager")
-    public String manager() {
+    public String manager(HttpServletRequest request, String resource) {
+        String requestURI=request.getRequestURI();
+        if(null==resource || (!resource.equals("/login") && !resource.equals("/index")))
+        {
+            request.getSession().setAttribute("requestURI",requestURI);
+            return "redirect:/index";
+        }
         return "/views/admin/syslog";
     }
 

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Date;
 
@@ -45,7 +46,13 @@ public class ResourceController extends BaseController {
      * @return
      */
     @GetMapping("/manager")
-    public String manager() {
+    public String manager(HttpServletRequest request, String resource) {
+        String requestURI=request.getRequestURI();
+        if(null==resource || (!resource.equals("/login") && !resource.equals("/index")))
+        {
+            request.getSession().setAttribute("requestURI",requestURI);
+            return "redirect:/index";
+        }
         return "/views/admin/resource/resource";
     }
 

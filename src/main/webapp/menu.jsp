@@ -24,7 +24,32 @@
         $().maps();
         $("#editUserPwdDiv").hide();
     });
+	//点击菜单
+    function openUrl(url,title,iconCls,openMode) {
+        alert(url);
+        var opts = {
+            title : title,
+            border : false,
+            closable : true,
+            fit : true,
+            iconCls :iconCls
+        };
+        if("${pageContext.request.getAttribute("javax.servlet.forward.request_uri")}"!='/login' && "${pageContext.request.getAttribute("javax.servlet.forward.request_uri")}"!='/index')
+        {
+            window.location.href=url+"?resource="+"${pageContext.request.getAttribute('javax.servlet.forward.request_uri')}";
+        }
 
+        if (url && url.indexOf("http") == -1) {
+            url = '${path }' + url;
+        }
+        if (openMode == 'iframe') {
+            opts.content = '<iframe src="' + url + '" frameborder="0" style="border:0;width:100%;height:99.5%;"></iframe>';
+            addTab(opts);
+        } else if (url) {
+            opts.href = url+"?resource="+"${pageContext.request.getAttribute("javax.servlet.forward.request_uri")}";
+            addTab(opts);
+        }
+    }
     //修改密码
     function editUserPwd() {
         $('#editUserPwdForm')[0].reset();
@@ -107,7 +132,14 @@
 <div class="content" style="position:fixed;width: 100%">
 	<ul class="venus-menu">
 		<c:forEach items="${menus}" var="menu">
-			<li style="" pid="${menu.pid}" lid="${menu.id}"><a href="${menu.attributes}"><i class="${menu.iconCls}"></i> ${menu.text}</a></li>
+			<li style="" pid="${menu.pid}" lid="${menu.id}">
+				<c:if test="${menu.openMode=='ajax' || menu.openMode=='iframe'}">
+					<a href="javascript:void(0)" onclick="openUrl('${menu.attributes}','${menu.text}','${menu.iconCls}','${menu.openMode}')" title="${menu.attributes}"><i class="${menu.iconCls}"></i> ${menu.text}</a>
+				</c:if>
+				<c:if test="${menu.openMode==null}">
+					<a href="${menu.attributes}" title="${menu.attributes}"><i class="${menu.iconCls}"></i> ${menu.text}</a>
+				</c:if>
+			</li>
 		</c:forEach>
 		<div style="float: right;margin:10px 60px 0px 0px;">
 			<b class="fi-torso icon-black" style="font-size: 14px;">&nbsp;<shiro:principal></shiro:principal></b>|
