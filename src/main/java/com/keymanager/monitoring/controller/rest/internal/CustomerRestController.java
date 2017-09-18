@@ -6,7 +6,7 @@ import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.User;
 import com.keymanager.monitoring.service.CustomerService;
 import com.keymanager.monitoring.service.UserService;
-import com.keymanager.util.PortTerminalTypeMapping;
+import com.keymanager.util.TerminalTypeMapping;
 import com.keymanager.util.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,7 +57,7 @@ public class CustomerRestController {
         String userID = (String) session.getAttribute("username");
         User user = userService.getUser(userID);
         String entryType = (String) session.getAttribute("entry");
-        String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+        String terminalType = TerminalTypeMapping.getTerminalType(request);
         customerCriteria.setEntryType(entryType);
         customerCriteria.setTerminalType(terminalType);
         Page<Customer> page = customerService.searchCustomers(new Page<Customer>(Integer.parseInt(currentPage), Integer.parseInt(pageSize)), customerCriteria);
@@ -112,7 +112,7 @@ public class CustomerRestController {
     @RequestMapping(value = "/uploadDailyReportTemplate" , method = RequestMethod.POST)
     public boolean uploadDailyReportTemplate(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request){
        String customerUuid = request.getParameter("customerUuid");
-       String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+       String terminalType = TerminalTypeMapping.getTerminalType(request);
        String path = Utils.getWebRootPath() + "dailyreport" + File.separator + terminalType + File.separator;
        String fileName = customerUuid  + ".xls";
        File targetFile = new File(path, fileName);

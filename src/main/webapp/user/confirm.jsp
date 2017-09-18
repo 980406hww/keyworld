@@ -1,6 +1,6 @@
 <%@page contentType="text/html;charset=utf-8"  %>
 <%@page import="com.keymanager.manager.*,java.util.*,com.keymanager.value.*" %>
-<%@ page import="com.keymanager.util.PortTerminalTypeMapping" %>
+<%@ page import="com.keymanager.util.TerminalTypeMapping" %>
 <jsp:useBean id="um" scope="page" class="com.keymanager.manager.UserManager" />
 <%
 	String username = (String) request.getParameter("userID");
@@ -27,7 +27,7 @@
 	UserVO user = um.login("keyword", username, password, ip);
 
 	if (user != null) {
-		session.setAttribute("terminalType", PortTerminalTypeMapping.getTerminalType(request.getServerPort()));
+		session.setAttribute("terminalType", TerminalTypeMapping.getTerminalType(request));
 		session.setAttribute("loginstate", "1");
 		session.setAttribute("username", user.getUserID());
 		session.setAttribute("password", user.getPassword());

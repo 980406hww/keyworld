@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.service.*;
-import com.keymanager.util.PortTerminalTypeMapping;
+import com.keymanager.util.TerminalTypeMapping;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class CustomerKeywordPositionIndexLogController extends SpringMVCBaseCont
 	//查询历史缴费记录
 	@RequestMapping(value = "/historyPositionAndIndex/{customerKeywordUuid}/{dayCount}" , method = RequestMethod.GET)
 	public ModelAndView historyPositionAndIndex(@PathVariable("customerKeywordUuid")Long customerKeywordUuid, @PathVariable("dayCount")String dayCount, HttpServletRequest request){
-		String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+		String terminalType = TerminalTypeMapping.getTerminalType(request);
 		Map<String,Object> conditionMap = new HashMap<String, Object>();
 		conditionMap.put("terminalType",terminalType);
 		conditionMap.put("customerKeywordUuid",customerKeywordUuid);

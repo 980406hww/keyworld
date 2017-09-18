@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=utf-8" %>
 <%@ page import="java.text.*,java.io.*,java.util.*,com.keymanager.value.*,com.keymanager.manager.*" %>
-<%@ page import="com.keymanager.util.PortTerminalTypeMapping" %>
+<%@ page import="com.keymanager.util.TerminalTypeMapping" %>
 <jsp:useBean id="um" scope="page" class="com.keymanager.manager.UserManager" />
 <jsp:useBean id="csm" scope="page" class="com.keymanager.manager.ClientStatusManager" />
 

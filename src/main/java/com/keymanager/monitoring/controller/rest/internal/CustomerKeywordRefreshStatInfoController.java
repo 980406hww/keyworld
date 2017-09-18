@@ -3,7 +3,7 @@ package com.keymanager.monitoring.controller.rest.internal;
 import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
 import com.keymanager.monitoring.service.CustomerKeywordRefreshStatInfoService;
 import com.keymanager.monitoring.vo.CustomerKeywordRefreshStatInfoVO;
-import com.keymanager.util.PortTerminalTypeMapping;
+import com.keymanager.util.TerminalTypeMapping;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +47,7 @@ public class CustomerKeywordRefreshStatInfoController {
         ModelAndView modelAndView = new ModelAndView("/refresh/list");
         String entryType = (String) request.getSession().getAttribute("entry");
         refreshStatInfoCriteria.setEntryType(entryType);
-        String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+        String terminalType = TerminalTypeMapping.getTerminalType(request);
         refreshStatInfoCriteria.setTerminalType(terminalType);
 
         List<CustomerKeywordRefreshStatInfoVO> refreshStatInfoVOs = customerKeywordRefreshStatInfoService.generateCustomerKeywordStatInfo(refreshStatInfoCriteria);

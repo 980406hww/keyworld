@@ -2,7 +2,7 @@
 <%@page
 	import="com.keymanager.manager.*,com.keymanager.util.*,com.keymanager.value.*,java.util.*"%>
 <%@ page import="com.keymanager.monitoring.enums.TerminalTypeEnum" %>
-<%@ page import="com.keymanager.util.PortTerminalTypeMapping" %>
+<%@ page import="com.keymanager.util.TerminalTypeMapping" %>
 <%@ page import="java.lang.reflect.Array" %>
 
 <jsp:useBean id="um" scope="page"

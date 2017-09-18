@@ -28,7 +28,7 @@ if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
 	String password = request.getParameter("password");
 	String clientID = request.getParameter("clientID");
 	String keyword = request.getParameter("keyword");
-	String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+	String terminalType = TerminalTypeMapping.getTerminalType(request);
     username = Utils.parseParam(username);
     password = Utils.parseParam(password);
     

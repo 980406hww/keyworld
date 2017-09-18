@@ -6,7 +6,7 @@
 <%		  
 	try {
 		String data = request.getParameter("customerKeywordJson");
-		String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+		String terminalType = TerminalTypeMapping.getTerminalType(request);
 		String operation = request.getParameter("operation");
 		if ("Save".equals(operation)) {
 			ckm.saveCustomerKeywords("keyword", terminalType, data);

@@ -7,7 +7,7 @@ import com.keymanager.monitoring.entity.ClientStatus;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
 import com.keymanager.monitoring.service.ClientStatusService;
 import com.keymanager.util.Constants;
-import com.keymanager.util.PortTerminalTypeMapping;
+import com.keymanager.util.TerminalTypeMapping;
 import com.keymanager.value.ClientStatusGroupSummaryVO;
 import com.keymanager.value.ClientStatusSummaryVO;
 import org.slf4j.Logger;
@@ -35,7 +35,7 @@ public class ClientStatusRestController extends SpringMVCBaseController {
 
     @RequestMapping(value = "/changeTerminalType", method = RequestMethod.POST)
     public ResponseEntity<?> changeTerminalType(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) throws Exception {
-        String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+        String terminalType = TerminalTypeMapping.getTerminalType(request);
         String clientID = (String) requestMap.get("clientID");
         try {
             clientStatusService.changeTerminalType(clientID, TerminalTypeEnum.PC.name().equals(terminalType) ? TerminalTypeEnum.Phone.name() :
@@ -79,7 +79,7 @@ public class ClientStatusRestController extends SpringMVCBaseController {
 
     private ModelAndView constructClientStatusModelAndView(HttpServletRequest request, ClientStatusCriteria clientStatusCriteria, int currentPageNumber, int pageSize, boolean clientSatausFlag) {
         ModelAndView modelAndView = new ModelAndView("/client/list");
-        String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+        String terminalType = TerminalTypeMapping.getTerminalType(request);
         clientStatusCriteria.setTerminalType(terminalType);
         Page<ClientStatus> page = clientStatusService.searchClientStatuses(new Page<ClientStatus>(currentPageNumber, pageSize), clientStatusCriteria, clientSatausFlag);
         String[] operationTypeValues = Constants.pcOperationTypeValues;
@@ -169,7 +169,7 @@ public class ClientStatusRestController extends SpringMVCBaseController {
     @RequestMapping(value = "/getClientStatus/{clientID}", method = RequestMethod.GET)
     public ResponseEntity<?> getClientStatus(@PathVariable("clientID") String clientID, HttpServletRequest request) {
         try {
-            String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+            String terminalType = TerminalTypeMapping.getTerminalType(request);
             ClientStatus clientStatus = clientStatusService.getClientStatus(clientID, terminalType);
             return new ResponseEntity<Object>(clientStatus, HttpStatus.OK);
         } catch (Exception e) {
@@ -226,7 +226,7 @@ public class ClientStatusRestController extends SpringMVCBaseController {
     @RequestMapping(value = "/uploadVNCFile", method = RequestMethod.POST)
     public boolean uploadVNCFile(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request) {
         try {
-            String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+            String terminalType = TerminalTypeMapping.getTerminalType(request);
             clientStatusService.uploadVNCFile(file.getInputStream(), terminalType);
             return true;
         } catch (Exception e) {
@@ -241,7 +241,7 @@ public class ClientStatusRestController extends SpringMVCBaseController {
         FileInputStream fileInputStream = null;
         try {
             response.setContentType("application/octet-stream");
-            String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+            String terminalType = TerminalTypeMapping.getTerminalType(request);
             String filedownload = clientStatusService.getVNCFileInfo(terminalType);
             String filedisplay = "vnc.zip";
             response.addHeader("Content-Disposition", "attachment;filename=" + filedisplay);
@@ -274,7 +274,7 @@ public class ClientStatusRestController extends SpringMVCBaseController {
         FileInputStream fileInputStream = null;
         try {
             response.setContentType("application/octet-stream");
-            String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+            String terminalType = TerminalTypeMapping.getTerminalType(request);
             String filedownload = clientStatusService.getFullVNCFileInfo(terminalType);
             String filedisplay = "vncAll.zip";
             response.addHeader("Content-Disposition", "attachment;filename=" + filedisplay);

@@ -10,7 +10,7 @@ import com.keymanager.monitoring.service.CustomerKeywordService;
 import com.keymanager.monitoring.service.UserService;
 import com.keymanager.monitoring.vo.SearchEngineResultItemVO;
 import com.keymanager.monitoring.vo.SearchEngineResultVO;
-import com.keymanager.util.PortTerminalTypeMapping;
+import com.keymanager.util.TerminalTypeMapping;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
 import com.keymanager.value.CustomerKeywordForOptimization;
 import org.apache.commons.lang3.StringUtils;
@@ -71,7 +71,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
 			User user = userService.getUser(userName);
 			if(user != null && user.getPassword().equals(password)){
 				String returnValue = "";
-				String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+				String terminalType = TerminalTypeMapping.getTerminalType(request);
 				if(StringUtils.isEmpty(groupName)) {
 					returnValue = customerKeywordService.searchCustomerKeywordForCaptureTitle(terminalType);
 				}else{
@@ -137,7 +137,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
 		String userName = request.getParameter("userName");
 		String password = request.getParameter("password");
 		String version = request.getParameter("version");
-		String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+		String terminalType = TerminalTypeMapping.getTerminalType(request);
 		if(userName != null && password != null){
 			User user = userService.getUser(userName);
 			if(user != null && user.getPassword().equals(password)){
@@ -166,7 +166,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
 		String status = request.getParameter("status");
 
 		String ip = getIP(request);
-		String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+		String terminalType = TerminalTypeMapping.getTerminalType(request);
 
 		if(userName != null && password != null){
 			User user = userService.getUser(userName);
@@ -216,7 +216,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
 	public ResponseEntity<?> getCustomerKeywordForCapturePosition(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) throws Exception{
 		String userName = (String) requestMap.get("userName");
 		String password = (String) requestMap.get("password");
-		String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+		String terminalType = TerminalTypeMapping.getTerminalType(request);
 
 		List<String> groupNames = (List<String>)requestMap.get("groupNames");
 		Integer customerUuid = (requestMap.get("customerUuid") == null) ? null : (Integer) requestMap.get("customerUuid");
@@ -238,7 +238,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
 		if(searchEngineResultVO.getUserName() != null && searchEngineResultVO.getPassword() != null){
 			User user = userService.getUser(searchEngineResultVO.getUserName());
 			if(user != null && user.getPassword().equals(searchEngineResultVO.getPassword())){
-				String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+				String terminalType = TerminalTypeMapping.getTerminalType(request);
 				customerKeywordService.addCustomerKeywords(searchEngineResultVO, terminalType);
 				return new ResponseEntity<Object>(true, HttpStatus.OK);
 			}

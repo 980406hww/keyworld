@@ -6,7 +6,7 @@ import com.keymanager.monitoring.entity.User;
 import com.keymanager.monitoring.service.ClientStatusService;
 import com.keymanager.monitoring.service.UserService;
 import com.keymanager.monitoring.service.VMwareService;
-import com.keymanager.util.PortTerminalTypeMapping;
+import com.keymanager.util.TerminalTypeMapping;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,7 +75,7 @@ public class ExternalClientStatusRestController extends SpringMVCBaseController 
 	public ResponseEntity<?> getStoppedClientStatuses(HttpServletRequest request) throws Exception {
 		String userName = request.getParameter("username");
 		String password = request.getParameter("password");
-		String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+		String terminalType = TerminalTypeMapping.getTerminalType(request);
 		if(userName != null && password != null) {
 			User user = userService.getUser(userName);
 			if (user != null && user.getPassword().equals(password)) {
