@@ -20,6 +20,10 @@
 <%-- [扩展样式] --%>
 <link rel="stylesheet" type="text/css" href="${staticPath }/static/style/css/dreamlu.css?v=10" />
 <link rel="stylesheet" type="text/css" href="${staticPath }/static/foundation-icons/foundation-icons.css" />
+<%--[消息提示]--%>
+<script language="javascript" type="text/javascript" src="/toastmessage/jquery.toastmessage.js"></script>
+<link rel="stylesheet" href="/toastmessage/css/jquery.toastmessage.css">
+
 <script type="text/javascript">
     var basePath = "${staticPath }";
     window.UEDITOR_HOME_URL = "${staticPath }/static/ueditor/";

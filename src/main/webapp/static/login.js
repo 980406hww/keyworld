@@ -64,7 +64,7 @@ $(function () {
             }else{
                 // 刷新验证码
                 $("#captcha")[0].click();
-                showMsg(result.msg);
+                $().toastmessage('showErrorToast', result.msg);
             }
         }
     });

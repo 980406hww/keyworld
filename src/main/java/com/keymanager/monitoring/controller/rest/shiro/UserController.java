@@ -14,10 +14,7 @@ import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -76,7 +73,7 @@ public class UserController extends BaseController {
             condition.put("createTime", userVo.getCreatedateStart());
         }
         pageInfo.setCondition(condition);
-        userService.selectDataGrid(pageInfo);
+        userInfoService.selectDataGrid(pageInfo);
         return pageInfo;
     }
 
@@ -107,7 +104,7 @@ public class UserController extends BaseController {
         String pwd = passwordHash.toHex(userVo.getPassword(), salt);
         userVo.setSalt(salt);
         userVo.setPassword(pwd);
-        userService.insertByVo(userVo);
+        userInfoService.insertByVo(userVo);
         return renderSuccess("添加成功");
     }
 
@@ -120,7 +117,7 @@ public class UserController extends BaseController {
      */
     @GetMapping("/editPage")
     public String editPage(Model model, Long id) {
-        UserVO userVo = userService.selectVoById(id);
+        UserVO userVo = userInfoService.selectVoById(id);
         List<Role> rolesList = userVo.getRolesList();
         List<Long> ids = new ArrayList<Long>();
         for (Role role : rolesList) {
@@ -147,12 +144,12 @@ public class UserController extends BaseController {
         }
         // 更新密码
         if (StringUtils.isNotBlank(userVo.getPassword())) {
-            User user = userService.selectById(userVo.getUserUuid());
+            UserInfo user = userInfoService.selectById(userVo.getUserUuid());
             String salt = user.getSalt();
             String pwd = passwordHash.toHex(userVo.getPassword(), salt);
             userVo.setPassword(pwd);
         }
-        userService.updateByVo(userVo);
+        userInfoService.updateByVo(userVo);
         return renderSuccess("修改成功！");
     }
 
@@ -175,14 +172,16 @@ public class UserController extends BaseController {
      */
     @PostMapping("/editUserPwd")
     @ResponseBody
-    public Object editUserPwd(String oldPwd, String pwd) {
-        User user = userService.selectById(getUserId());
+    public Object editUserPwd(@RequestBody Map<String, Object> requestMap) {
+        UserInfo user = userInfoService.selectById(getUserId());
+        String oldPwd = (String) requestMap.get("oldPwd");
+        String pwd = (String) requestMap.get("pwd");
         String salt = user.getSalt();
         if (!user.getPassword().equals(passwordHash.toHex(oldPwd, salt))) {
-            return renderError("老密码不正确!");
+            return renderError("原始密码不正确!");
         }
-        userService.updatePwdByUserId(getUserId(), passwordHash.toHex(pwd, salt));
-        return renderSuccess("密码修改成功！");
+        userInfoService.updatePwdByUserId(getUserId(), passwordHash.toHex(pwd, salt));
+        return renderSuccess("密码修改成功,请重新登录!");
     }
 
     /**
@@ -199,7 +198,7 @@ public class UserController extends BaseController {
         if (id == currentUserId) {
             return renderError("不可以删除自己！");
         }
-        userService.deleteUserById(id);
+        userInfoService.deleteUserById(id);
         return renderSuccess("删除成功！");
     }
 }

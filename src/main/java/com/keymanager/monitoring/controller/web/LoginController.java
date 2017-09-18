@@ -106,6 +106,7 @@ public class LoginController extends BaseController {
 		request.getSession().setAttribute("entry",entryType);
 		request.getSession().setAttribute("terminalType", PortTerminalTypeMapping.getTerminalType(request.getServerPort()));
 		request.getSession().setAttribute("username",username);
+		request.getSession().setAttribute("password",password);
 		request.getSession().setAttribute("menus",menus);
 		UsernamePasswordToken token = new UsernamePasswordToken(username, password);
 		// 设置记住密码

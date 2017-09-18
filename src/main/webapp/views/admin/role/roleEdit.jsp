@@ -30,11 +30,11 @@
 </script>
 <div class="easyui-layout" data-options="fit:true,border:false">
     <div data-options="region:'center',border:false" title="" style="overflow: hidden;padding: 3px;">
-        <form id="roleEditForm" method="post">
+        <form id="roleEditForm" method="post" style="width: 350px;">
             <table class="grid">
                 <tr>
                     <td>角色名称</td>
-                    <td><input name="id" type="hidden"  value="${role.uuid}">
+                    <td><input name="uuid" type="hidden"  value="${role.uuid}">
                     <input name="roleName" type="text" placeholder="请输入角色名称" class="easyui-validatebox" data-options="required:true" value="${role.roleName}"></td>
                 </tr>
                 <tr>

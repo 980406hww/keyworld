@@ -1,11 +1,9 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ include file="/commons/global.jsp" %>
 <!DOCTYPE html>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <html>
+<%@ include file="/commons/global.jsp" %>
 <head>
     <title>用户登录</title>
-    <meta name="keywords" content="如梦技术,java职业教育,java线教育平台,java在线学习,spring,mybatis,spring-boot,docker">
-    <meta name="description" content="如梦技术作为中国最权威的java在线教育平台,拥有海量高清java职业课程,涵盖个个组件,根据java在线学习特点,如梦技术推出java学习知识体系图,java职业学习实战路径图,帮助java学习者从零基础起步,结合java实战案例演练,系统学习,助你快速成为java优秀技术人才！">
     <meta name="viewport" content="width=device-width">
     <%@ include file="/commons/basejs.jsp" %>
     <link rel="stylesheet" type="text/css" href="${staticPath }/static/style/css/login.css?v=201612202107" />
@@ -33,16 +31,16 @@
             <input class="captcha" type="text" name="captcha" placeholder="请输入验证码"/>
             <img id="captcha" alt="验证码" src="${path }/captcha.jpg" data-src="${path }/captcha.jpg?t=" style="vertical-align:middle;border-radius:4px;width:94.5px;height:35px;cursor:pointer;">
         </P>
-        <p style="position: relative;">
-            <select id="entryType" name="entryType">
+        <span style="position: relative;float: left;margin-left: 33px;">
+            <select id="entryType" name="entryType" style="width: 120px; ">
                 <option value="qz">全站链接</option>
                 <option value="pt">普通链接</option>
                 <option value="fm">负面链接</option>
             </select>
-        </p>
-        <P style="position: relative;text-align: left;">
-            <input class="rememberMe" type="checkbox" name="rememberMe" value="1" checked style="vertical-align:middle;margin-left:40px;height:20px;"/> 记住密码
-        </P>
+        </span>
+        <span style="position: relative;text-align: left;margin-right:80px;">
+            <input class="rememberMe" type="checkbox" name="rememberMe" value="1" checked style="vertical-align:middle;height:20px;"/> 记住密码
+        </span>
         <div style="height: 50px; line-height: 50px; margin-top: 10px;border-top-color: rgb(231, 231, 231); border-top-width: 1px; border-top-style: solid;">
             <P style="margin: 0px 35px 20px 45px;">
                 <span style="float: left;">

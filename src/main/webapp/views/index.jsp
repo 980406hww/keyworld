@@ -183,10 +183,6 @@
             } ]
         });
     }
-    function fun()
-    {
-        $("[title=资源管理]").click();
-    }
 </script>
 </head>
 <body>

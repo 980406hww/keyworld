@@ -47,7 +47,6 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoDao, UserInfo> impl
 
     public void insertByVo(UserVO userVo) {
         UserInfo userInfo = BeanUtils.copy(userVo, UserInfo.class);
-        userInfo.setCreateTime(new Date());
         this.insert(userInfo);
 
         Long userUuid = userInfo.getUuid();
@@ -66,6 +65,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoDao, UserInfo> impl
 
     public void updateByVo(UserVO userVo) {
         UserInfo user = BeanUtils.copy(userVo, UserInfo.class);
+        user.setUuid(userVo.getUserUuid());
         if (StringUtils.isBlank(user.getPassword())) {
             user.setPassword(null);
         }
