@@ -47,7 +47,7 @@ public class ClientStatusRestController extends SpringMVCBaseController {
     }
 
     @RequestMapping(value = "/searchClientStatuses", method = RequestMethod.GET)
-    public ModelAndView searchClientStatuses(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request, boolean clientStatusFlag) {
+    public ModelAndView searchClientStatuses(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request) {
         return constructClientStatusModelAndView(request, new ClientStatusCriteria(), currentPageNumber, pageSize, true);
     }
 
@@ -77,15 +77,13 @@ public class ClientStatusRestController extends SpringMVCBaseController {
         }
     }
 
-    private ModelAndView constructClientStatusModelAndView(HttpServletRequest request, ClientStatusCriteria clientStatusCriteria, int currentPageNumber, int pageSize, boolean clientSatausFlag) {
+    private ModelAndView constructClientStatusModelAndView(HttpServletRequest request, ClientStatusCriteria clientStatusCriteria, int currentPageNumber, int pageSize, boolean normalSearchFlag) {
         ModelAndView modelAndView = new ModelAndView("/client/list");
         String terminalType = TerminalTypeMapping.getTerminalType(request);
         clientStatusCriteria.setTerminalType(terminalType);
-        Page<ClientStatus> page = clientStatusService.searchClientStatuses(new Page<ClientStatus>(currentPageNumber, pageSize), clientStatusCriteria, clientSatausFlag);
-        String[] operationTypeValues = Constants.pcOperationTypeValues;
-        if (TerminalTypeEnum.Phone.name().equals(terminalType)) {
-            operationTypeValues = Constants.phoneOperationTypeValues;
-        }
+        Page<ClientStatus> page = clientStatusService.searchClientStatuses(new Page<ClientStatus>(currentPageNumber, pageSize), clientStatusCriteria, normalSearchFlag);
+        String[] operationTypeValues = Constants.operationTypeMap.get(terminalType);
+
         modelAndView.addObject("terminalType", terminalType);
         modelAndView.addObject("clientStatusCriteria", clientStatusCriteria);
         modelAndView.addObject("validMap", Constants.CLIENT_STATUS_VALID_MAP);
@@ -98,7 +96,7 @@ public class ClientStatusRestController extends SpringMVCBaseController {
     @RequestMapping(value = "/updateClientStatusTargetVersion", method = RequestMethod.POST)
     public ResponseEntity<?> updateClientStatusTargetVersion(@RequestBody Map<String, Object> requestMap) {
         try {
-            String clientIDs = (String) requestMap.get("clientIDs");
+            List<String> clientIDs = (List<String>) requestMap.get("clientIDs");
             String targetVersion = (String) requestMap.get("targetVersion");
             clientStatusService.updateClientStatusTargetVersion(clientIDs, targetVersion);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
@@ -134,9 +132,11 @@ public class ClientStatusRestController extends SpringMVCBaseController {
     }
 
     @RequestMapping(value = "/updateGroup", method = RequestMethod.POST)
-    public ResponseEntity<?> updateGroup(@RequestBody ClientStatus clientStatus) {
+    public ResponseEntity<?> updateGroup(@RequestBody Map<String, Object> requestMap) {
         try {
-            clientStatusService.updateGroup(clientStatus);
+            String clientID = (String)requestMap.get("clientID");
+            String group = (String)requestMap.get("group");
+            clientStatusService.updateGroup(clientID, group);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -145,9 +145,11 @@ public class ClientStatusRestController extends SpringMVCBaseController {
     }
 
     @RequestMapping(value = "/updateOperationType", method = RequestMethod.POST)
-    public ResponseEntity<?> updateOperationType(@RequestBody ClientStatus clientStatus) {
+    public ResponseEntity<?> updateOperationType(@RequestBody Map<String, Object> requestMap) {
         try {
-            clientStatusService.updateOperationType(clientStatus);
+            String clientID = (String)requestMap.get("clientID");
+            String operationType = (String)requestMap.get("operationType");
+            clientStatusService.updateOperationType(clientID, operationType);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -156,9 +158,11 @@ public class ClientStatusRestController extends SpringMVCBaseController {
     }
 
     @RequestMapping(value = "/updateUpgradeFailedReason", method = RequestMethod.POST)
-    public ResponseEntity<?> updateUpgradeFailedReason(@RequestBody ClientStatus clientStatus) {
+    public ResponseEntity<?> updateUpgradeFailedReason(@RequestBody Map<String, Object> requestMap) {
         try {
-            clientStatusService.updateUpgradeFailedReason(clientStatus);
+            String clientID = (String)requestMap.get("clientID");
+            String upgradeFailedReason = (String)requestMap.get("upgradeFailedReason");
+            clientStatusService.updateUpgradeFailedReason(clientID, upgradeFailedReason);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -212,10 +216,10 @@ public class ClientStatusRestController extends SpringMVCBaseController {
         }
     }
 
-    @RequestMapping(value = "/changeMonitorType/{clientID}", method = RequestMethod.POST)
-    public ResponseEntity<?> changeMonitorType(@PathVariable("clientID") String clientID) {
+    @RequestMapping(value = "/changeStatus/{clientID}", method = RequestMethod.POST)
+    public ResponseEntity<?> changeStatus(@PathVariable("clientID") String clientID) {
         try {
-            clientStatusService.changeMonitorType(clientID);
+            clientStatusService.changeStatus(clientID);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -237,67 +241,22 @@ public class ClientStatusRestController extends SpringMVCBaseController {
 
     @RequestMapping(value = "/downloadVNCFile", method = RequestMethod.POST)
     public void downloadVNCFile(HttpServletRequest request, HttpServletResponse response) {
-        OutputStream outputStream = null;
-        FileInputStream fileInputStream = null;
         try {
-            response.setContentType("application/octet-stream");
-            String terminalType = TerminalTypeMapping.getTerminalType(request);
-            String filedownload = clientStatusService.getVNCFileInfo(terminalType);
-            String filedisplay = "vnc.zip";
-            response.addHeader("Content-Disposition", "attachment;filename=" + filedisplay);
-            outputStream = response.getOutputStream();
-            fileInputStream = new FileInputStream(filedownload);
-
-            byte[] b = new byte[1024];
-            int i = 0;
-            while ((i = fileInputStream.read(b)) > 0) {
-                outputStream.write(b, 0, i);
-            }
-            outputStream.flush();
+            clientStatusService.getVNCFileInfo(TerminalTypeMapping.getTerminalType(request));
+            downFile(response, "vnc.zip");
         } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (fileInputStream != null) {
-                try {
-                    fileInputStream.close();
-                    fileInputStream = null;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            logger.error(e.getMessage());
         }
+
     }
 
     @RequestMapping(value = "/downloadFullVNCFile", method = RequestMethod.POST)
     public void downloadFullVNCFile(HttpServletRequest request, HttpServletResponse response) {
-        OutputStream outputStream = null;
-        FileInputStream fileInputStream = null;
         try {
-            response.setContentType("application/octet-stream");
-            String terminalType = TerminalTypeMapping.getTerminalType(request);
-            String filedownload = clientStatusService.getFullVNCFileInfo(terminalType);
-            String filedisplay = "vncAll.zip";
-            response.addHeader("Content-Disposition", "attachment;filename=" + filedisplay);
-            outputStream = response.getOutputStream();
-            fileInputStream = new FileInputStream(filedownload);
-
-            byte[] b = new byte[1024];
-            int i = 0;
-            while ((i = fileInputStream.read(b)) > 0) {
-                outputStream.write(b, 0, i);
-            }
-            outputStream.flush();
+            clientStatusService.getFullVNCFileInfo(TerminalTypeMapping.getTerminalType(request));
+            downFile(response, "vncAll.zip");
         } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (fileInputStream != null) {
-                try {
-                    fileInputStream.close();
-                    fileInputStream = null;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            logger.error(e.getMessage());
         }
     }
 
@@ -305,18 +264,19 @@ public class ClientStatusRestController extends SpringMVCBaseController {
     public ModelAndView clientStatusStat(String clientIDPrefix, String city, HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView("client/clientStatusStat");
         try {
+            if(request.getMethod().equals("GET")){
+                return modelAndView;
+            }
             if (clientIDPrefix != null) {
                 clientIDPrefix = clientIDPrefix.trim();
             }
             if (city != null) {
                 city = city.trim();
             }
-            if (request.getMethod().equals("POST")) {
-                List<ClientStatusSummaryVO> clientStatusSummaryVOs = clientStatusService.searchClientStatusSummaryVO(clientIDPrefix, city);
-                modelAndView.addObject("clientIDPrefix", clientIDPrefix);
-                modelAndView.addObject("city", city);
-                modelAndView.addObject("clientStatusSummaryVOs", clientStatusSummaryVOs);
-            }
+            List<ClientStatusSummaryVO> clientStatusSummaryVOs = clientStatusService.searchClientStatusSummaryVO(clientIDPrefix, city);
+            modelAndView.addObject("clientIDPrefix", clientIDPrefix);
+            modelAndView.addObject("city", city);
+            modelAndView.addObject("clientStatusSummaryVOs", clientStatusSummaryVOs);
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
@@ -327,15 +287,16 @@ public class ClientStatusRestController extends SpringMVCBaseController {
     public ModelAndView clientStatusGroupStat(String group, String terminalType, HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView("client/clientStatusGroupStat");
         try {
+            if(request.getMethod().equals("GET")){
+                return modelAndView;
+            }
             if (null != group) {
                 group = group.trim();
             }
-            if (request.getMethod().equals("POST")) {
-                List<ClientStatusGroupSummaryVO> clientStatusGroupSummaryVOs = clientStatusService.searchClientStatusGroupSummaryVO(group, terminalType);
-                modelAndView.addObject("group", group);
-                modelAndView.addObject("terminalType", terminalType);
-                modelAndView.addObject("clientStatusGroupSummaryVOs", clientStatusGroupSummaryVOs);
-            }
+            List<ClientStatusGroupSummaryVO> clientStatusGroupSummaryVOs = clientStatusService.searchClientStatusGroupSummaryVO(group, terminalType);
+            modelAndView.addObject("group", group);
+            modelAndView.addObject("terminalType", terminalType);
+            modelAndView.addObject("clientStatusGroupSummaryVOs", clientStatusGroupSummaryVOs);
         } catch (Exception e) {
             logger.error(e.getMessage());
         }

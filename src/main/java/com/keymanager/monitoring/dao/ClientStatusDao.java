@@ -37,4 +37,8 @@ public interface ClientStatusDao extends BaseMapper<ClientStatus> {
     List<ClientStatus> searchRestartingClientStatuses(@Param("terminalType") String terminalType);
 
     List<ClientStatus> searchWaitingRestartingClientStatuses(@Param("terminalType") String terminalType);
+
+    void updateClientStatusTargetVersion(@Param("clientIDs")List<String> clientIDs, @Param("targetVersion")String targetVersion);
+
+    void deleteClientStatus(@Param("clientIDs")List<String> clientIDs);
 }

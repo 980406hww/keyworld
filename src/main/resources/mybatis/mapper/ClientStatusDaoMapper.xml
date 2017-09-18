@@ -6,6 +6,7 @@
           <include refid="selectCol" />
         FROM t_customer_keyword ck, t_customer c, t_client_status cs
         WHERE ck.fType = #{customerKeywordRefreshStatInfoCriteria.entryType}
+        AND cs.fTerminalType = #{customerKeywordRefreshStatInfoCriteria.terminalType}
         AND cs.fValid = 1
         AND ck.fCustomerUuid = c.fUuid
         AND ck.fOptimizeGroupName = cs.fGroup
@@ -88,6 +89,21 @@
         cs.fUpgradeFailedReason AS "upgradeFailedReason",
         cs.fCreateTime AS "createTime"
     </sql>
+
+    <update id="updateClientStatusTargetVersion">
+        UPDATE t_client_status SET fTargetVersion = #{targetVersion}
+        WHERE fClientID IN
+        <foreach item="item" collection="clientIDs" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <delete id="deleteClientStatus">
+        DELETE FROM t_client_status WHERE fClientID IN
+        <foreach item="item" collection="clientIDs" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
 
     <select id="searchClientStatuses" parameterType="com.keymanager.monitoring.criteria.ClientStatusCriteria" resultType="com.keymanager.monitoring.entity.ClientStatus">
         SELECT

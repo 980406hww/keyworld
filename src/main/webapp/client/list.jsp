@@ -80,7 +80,6 @@
 	<link href="/css/menu.css" rel="stylesheet" type="text/css" />
 	<script language="javascript" type="text/javascript" src="/js/My97DatePicker/WdatePicker.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/jquery142.js"></script>
-	<script language="javascript" type="text/javascript" src="/js/My97DatePicker/WdatePicker.js"></script>
 	<script language="javascript" type="text/javascript" src="/ui/jquery-ui.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/slide.js"></script>
 	<script language="javascript" type="text/javascript" src="/common.js"></script>
@@ -279,10 +278,10 @@
 				</br>
 				<c:choose>
 					<c:when test="${clientStatus.valid}">
-						<a href="javascript:changeMonitorType('${clientStatus.clientID}',false)">暂停监控</a>
+						<a href="javascript:changeStatus('${clientStatus.clientID}',false)">暂停监控</a>
 					</c:when>
 					<c:otherwise>
-						<a href="javascript:changeMonitorType('${clientStatus.clientID}',true)">开始监控</a>
+						<a href="javascript:changeStatus('${clientStatus.clientID}',true)">开始监控</a>
 					</c:otherwise>
 				</c:choose>
 				&nbsp;
@@ -379,7 +378,7 @@
                         }
                         var posIndex = fileValue.indexOf(".xml");
                         if (posIndex == -1) {
-                            alert("只能上传的XML文件！");
+                            alert("只能上传XML文件！");
                             return false;
                         }
 
@@ -395,6 +394,7 @@
 							success: function (result) {
 								if (result) {
 									showInfo("上传成功", self);
+									window.location.reload();
 								} else {
 									showInfo("上传失败", self);
 								}
@@ -522,8 +522,8 @@
 				}
 			});
 		}
-		function changeMonitorType(clientID, monitorType) {
-		    if(monitorType) {
+		function changeStatus(clientID, status) {
+		    if(status) {
                 if (confirm("确实要开始监控这台终端吗?") == false) {
                     return;
 				}
@@ -533,7 +533,7 @@
 				}
 			}
             $.ajax({
-                url: '/internal/clientstatus/changeMonitorType/' + clientID,
+                url: '/internal/clientstatus/changeStatus/' + clientID,
                 type: 'POST',
                 success: function (result) {
                     if (result) {
@@ -765,6 +765,7 @@
 			settingDialogDiv[0].style.left = getTop(self); //鼠标目前在X轴上的位置，加10是为了向右边移动10个px方便看到内容
 			settingDialogDiv.show();
 		}
+
 		function saveChangeSetting(self){
 			var settingDialogDiv = $("#changeSettingDialog");
 			var clientStatus = {};
@@ -833,18 +834,16 @@
                 type: 'POST',
 		        success: function (result) {
 		        	if(result){
-                        settingDialogDiv.hide();
                         showInfo("更新成功！", self);
                         window.location.reload();
                     }else{
-                        settingDialogDiv.hide();
                         showInfo("更新失败！", self);
 		        	}
                     $(this).dialog("close");
 		        },
 		        error: function () {
-                    settingDialogDiv.hide();
                     showInfo("更新失败！", self);
+                    $(this).dialog("close");
 		        }
 		    });
 		}
@@ -866,6 +865,7 @@
                 }
             });
 		}
+
 		function saveTargetVersionSetting(self){
 			var settingDialogDiv = $("#targetVersionSettingDialog");
 			var clientStatus = {};
@@ -879,6 +879,7 @@
 				alert("请选择要更新的终端！");
 				return;
 			}
+			clientStatus.clientIDs = clientStatus.clientIDs.split(",");
 		    $.ajax({
 		        url: '/internal/clientstatus/updateClientStatusTargetVersion',
 		        data: JSON.stringify(clientStatus),
@@ -890,18 +891,16 @@
 		        type: 'POST',
 		        success: function (result) {
 		        	if(result){
-		        		settingDialogDiv.hide();
                         showInfo("更新成功！", self);
                         window.location.reload();
                     }else{
-		        		settingDialogDiv.hide();
 		        		showInfo("更新失败！", self);
 		        	}
                     $(this).dialog("close");
 		        },
 		        error: function () {
-                    settingDialogDiv.hide();
                     showInfo("更新失败！", self);
+                    $(this).dialog("close");
 		        }
 		    });
 		}
@@ -923,6 +922,7 @@
                 }
             });
 		}
+
 		function saveRenewalSetting(self){
 			var settingDialogDiv = $("#renewalSettingDialog");
 			var clientStatus = {};
@@ -954,18 +954,16 @@
 				type: 'POST',
 				success: function (result) {
 					if(result){
-                        settingDialogDiv.hide();
                         showInfo("更新成功！", self);
                         window.location.reload();
                     }else{
-                        settingDialogDiv.hide();
                         showInfo("更新失败！", self);
 					}
                     $(this).dialog("close");
 				},
 				error: function () {
-                    settingDialogDiv.hide();
                     showInfo("更新失败！", self);
+                    $(this).dialog("close");
 				}
 			});
 		}
@@ -975,24 +973,7 @@
 			obj.run("file:///C:/vnc/" + clientID + ".vnc"); 
 			obj = null;
 		}
-		function checkinput() {
-			var a = document.getElementsByName("group");
-			var keyValues = '';
-			for (var i = 0; i < a.length; i++) {
-				if (a[i].value === '') {
-					a[i].focus();
-					alert('请输入分组名称！');
-					return;
-				}
-				if (keyValues === '') {
-					keyValues = a[i].id + '=' + a[i].value;
-				} else {
-					keyValues = keyValues + '--row--' + a[i].id + '=' + a[i].value;
-				}
-			}
-			var data = document.getElementsByName("data");
-			data[0].value = keyValues;
-		}
+
 		function showTip(content, e) {
 			e = e || window.event;
 			var div1 = document.getElementById('div1'); //将要弹出的层 

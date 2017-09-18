@@ -3,7 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <head>
-	<title>查看刷量统计</title>
+	<title>刷量统计列表</title>
 <style>
 .wrap {word-break: break-all; word-wrap:break-word;}
 <!--
