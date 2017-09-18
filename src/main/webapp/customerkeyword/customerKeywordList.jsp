@@ -760,15 +760,9 @@
 
     </head>
 <body>
-<div id="customerKeywordTopDiv">
-    <table style="font-size:12px;margin-right: 10px;" cellpadding=3>
-        <tr>
-            <td colspan=18 align="left">
-                <%@include file="/menu.jsp" %>
-            </td>
-        </tr>
-        <tr>
-            <table width=100% style="border:1px solid #000000;font-size:12px;" cellpadding=3>
+<div id="customerKeywordTopDiv" >
+    <%@include file="/menu.jsp" %>
+            <table width=100% style="border:1px solid #000000;font-size:12px;margin-top: 40px" cellpadding=3>
                 <tr border="1" height=30>
                     <td width=250>联系人: ${customer.contactPerson}</td>
                     <td width=200>QQ: ${customer.qq}</td>
@@ -777,8 +771,7 @@
                     <td width=250>创建时间: <fmt:formatDate value="${customer.createTime}" pattern=" yyyy-MM-dd HH:mm"/></td>
                 </tr>
             </table>
-        </tr>
-    </table>
+
 
     <%--<c:if test="${!user.vipType}">--%>
     <div style="text-align: right">
