@@ -8,13 +8,16 @@ import com.keymanager.monitoring.service.QZChargeRuleService;
 import com.keymanager.monitoring.service.QZOperationTypeService;
 import com.keymanager.monitoring.service.QZSettingService;
 import com.keymanager.monitoring.service.UserService;
-import com.keymanager.util.PortTerminalTypeMapping;
+import com.keymanager.util.TerminalTypeMapping;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -52,7 +55,7 @@ public class ExternalQZSettingRestController extends SpringMVCBaseController {
 		if(qzSettingCriteria.getUserName() != null && qzSettingCriteria.getPassword() != null){
 			User user = userService.getUser(qzSettingCriteria.getUserName());
 			if(user != null && user.getPassword().equals(qzSettingCriteria.getPassword())){
-				String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+				String terminalType = TerminalTypeMapping.getTerminalType(request);
 				qzSettingService.updateResult(qzSettingCriteria, terminalType);
 				return new ResponseEntity<Object>(HttpStatus.OK);
 			}
