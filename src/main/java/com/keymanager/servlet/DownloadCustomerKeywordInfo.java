@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.keymanager.monitoring.excel.operator.CustomerKeywordInfoExcelWriter;
 import com.keymanager.manager.CustomerKeywordManager;
-import com.keymanager.util.PortTerminalTypeMapping;
+import com.keymanager.util.TerminalTypeMapping;
 import com.keymanager.util.Utils;
 import com.keymanager.value.CustomerKeywordVO;
 
@@ -36,7 +36,7 @@ public class DownloadCustomerKeywordInfo extends HttpServlet {
 		String status = request.getParameter("status");
 		String optimizeGroupName = request.getParameter("optimizeGroupName");
 
-		String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+		String terminalType = TerminalTypeMapping.getTerminalType(request);
 
 		String position = request.getParameter("position");
 

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.CustomerKeywordRefreshStatInfoDao">
+    <select id="searchCustomerKeywordStatInfoVOs" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria" resultType="com.keymanager.monitoring.vo.CustomerKeywordRefreshStatInfoVO">
+        SELECT
+            ck.fOptimizeGroupName AS "group",
+            COUNT(1) AS "totalKeywordCount",
+            SUM(IF(ck.fOptimizePlanCount > ck.fOptimizedCount, 1, 0)) AS "needOptimizeKeywordCount",
+            SUM(IF(ck.fInvalidRefreshCount > (#{customerKeywordRefreshStatInfoCriteria.configValue} - 1), 1, 0)) AS "invalidKeywordCount",
+            SUM(ck.fOptimizePlanCount) AS "totalOptimizeCount",
+            SUM(ck.fOptimizedCount) AS "totalOptimizedCount",
+            SUM(ck.fOptimizePlanCount - ck.fOptimizedCount) AS "needOptimizeCount",
+            SUM(ck.fQueryCount) AS "queryCount"
+        FROM t_customer_keyword ck, t_customer c
+        WHERE ck.fType = #{customerKeywordRefreshStatInfoCriteria.entryType}
+        AND ck.fTerminalType = #{customerKeywordRefreshStatInfoCriteria.terminalType}
+        AND ck.fCustomerUuid = c.fUuid
+        <if test="customerKeywordRefreshStatInfoCriteria.groupName!=null and customerKeywordRefreshStatInfoCriteria.groupName!=''">AND ck.fOptimizeGroupName like concat('%', #{customerKeywordRefreshStatInfoCriteria.groupName}, "%")</if>
+        <if test="customerKeywordRefreshStatInfoCriteria.customerName!=null and customerKeywordRefreshStatInfoCriteria.customerName!=''">AND c.fContactPerson like concat('%', #{customerKeywordRefreshStatInfoCriteria.customerName}, "%")</if>
+        GROUP BY ck.fOptimizeGroupName
+        ORDER BY ck.fOptimizeGroupName
+    </select>
+
+</mapper>

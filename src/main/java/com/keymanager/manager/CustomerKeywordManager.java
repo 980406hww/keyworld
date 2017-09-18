@@ -1126,14 +1126,14 @@ public class CustomerKeywordManager {
 			while (rs.next())
 			{
 				CustomerKeywordVO customerKeyword = getCustomerKeyword(conn, rs);
-				CustomerKeywordForPaiming customerKeywordForPaiming = new CustomerKeywordForPaiming();
-				customerKeywordForPaiming.setUuid(customerKeyword.getUuid());
-				customerKeywordForPaiming.setKeyword(customerKeyword.getKeyword());
-				customerKeywordForPaiming.setUrl(customerKeyword.getUrl());
-				customerKeywordForPaiming.setTitle(customerKeyword.getTitle());
+				CustomerKeywordForCapturePosition customerKeywordForCapturePosition = new CustomerKeywordForCapturePosition();
+				customerKeywordForCapturePosition.setUuid(new Long(customerKeyword.getUuid()));
+				customerKeywordForCapturePosition.setKeyword(customerKeyword.getKeyword());
+				customerKeywordForCapturePosition.setUrl(customerKeyword.getUrl());
+				customerKeywordForCapturePosition.setTitle(customerKeyword.getTitle());
 
 				ObjectMapper mapper = new ObjectMapper();
-				sb.append(mapper.writeValueAsString(customerKeywordForPaiming));
+				sb.append(mapper.writeValueAsString(customerKeywordForCapturePosition));
 
 				updateCapturePositionQueryTime(conn, type, customerKeyword.getUuid());
 			}

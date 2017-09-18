@@ -1,19 +1,18 @@
 package com.keymanager.monitoring.controller.rest.external;
 
-import com.fasterxml.jackson.databind.deser.Deserializers;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.BaiduIndexCriteria;
 import com.keymanager.monitoring.criteria.BaseCriteria;
-import com.keymanager.monitoring.criteria.CustomerCriteria;
-import com.keymanager.monitoring.criteria.QZSettingCriteria;
-import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.CustomerKeyword;
-import com.keymanager.monitoring.entity.QZSetting;
 import com.keymanager.monitoring.entity.User;
+import com.keymanager.monitoring.service.ClientStatusService;
 import com.keymanager.monitoring.service.CustomerKeywordService;
-import com.keymanager.monitoring.service.QZSettingService;
 import com.keymanager.monitoring.service.UserService;
-import com.keymanager.util.PortTerminalTypeMapping;
+import com.keymanager.monitoring.vo.SearchEngineResultItemVO;
+import com.keymanager.monitoring.vo.SearchEngineResultVO;
+import com.keymanager.util.TerminalTypeMapping;
+import com.keymanager.value.CustomerKeywordForCapturePosition;
+import com.keymanager.value.CustomerKeywordForOptimization;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,7 +34,33 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
 	private CustomerKeywordService customerKeywordService;
 
 	@Autowired
+	private ClientStatusService clientStatusService;
+
+	@Autowired
 	private UserService userService;
+
+	private String getIP(HttpServletRequest request){
+		String ip = request.getHeader("X-Forwarded-For");
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			ip = request.getHeader("Proxy-Client-IP");
+		}
+
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			ip = request.getHeader("WL-Proxy-Client-IP");
+		}
+
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			ip = request.getHeader("HTTP_CLIENT_IP");
+		}
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+		}
+
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			ip = request.getRemoteAddr();
+		}
+		return ip;
+	}
 
 	@RequestMapping(value = "/getKeywordForCaptureTitle", method = RequestMethod.POST)
 	public ResponseEntity<?> getKeywordForCaptureTitle(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) throws Exception{
@@ -46,7 +71,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
 			User user = userService.getUser(userName);
 			if(user != null && user.getPassword().equals(password)){
 				String returnValue = "";
-				String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+				String terminalType = TerminalTypeMapping.getTerminalType(request);
 				if(StringUtils.isEmpty(groupName)) {
 					returnValue = customerKeywordService.searchCustomerKeywordForCaptureTitle(terminalType);
 				}else{
@@ -56,6 +81,18 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
 			}
 		}
 		return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+	}
+
+	@RequestMapping(value = "/updateCustomerKeywordForCaptureTitle", method = RequestMethod.POST)
+	public ResponseEntity<?> updateCustomerKeywordForCaptureTitle(@RequestBody SearchEngineResultItemVO searchEngineResultItemVO) throws Exception{
+		if(searchEngineResultItemVO.getUserName() != null && searchEngineResultItemVO.getPassword() != null){
+			User user = userService.getUser(searchEngineResultItemVO.getUserName());
+			if(user != null && user.getPassword().equals(searchEngineResultItemVO.getPassword())){
+				customerKeywordService.updateCustomerKeywordTitle(searchEngineResultItemVO);
+				return new ResponseEntity<Object>(1, HttpStatus.OK);
+			}
+		}
+		return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
 	}
 
 	@RequestMapping(value = "/getCustomerKeywordsForCaptureIndex" , method = RequestMethod.POST)
@@ -92,5 +129,120 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
 			}
 		}
 		return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
+	}
+
+	@RequestMapping(value = "/getCustomerKeyword", method = RequestMethod.GET)
+	public ResponseEntity<?> getCustomerKeywordForOptimization(HttpServletRequest request) throws Exception{
+		String clientID = request.getParameter("clientID");
+		String userName = request.getParameter("userName");
+		String password = request.getParameter("password");
+		String version = request.getParameter("version");
+		String terminalType = TerminalTypeMapping.getTerminalType(request);
+		if(userName != null && password != null){
+			User user = userService.getUser(userName);
+			if(user != null && user.getPassword().equals(password)){
+				CustomerKeywordForOptimization customerKeywordForOptimization = customerKeywordService.searchCustomerKeywordsForOptimization(terminalType, clientID, version);
+				if(customerKeywordForOptimization != null){
+					customerKeywordService.updateOptimizationQueryTime(customerKeywordForOptimization.getUuid());
+				}
+				clientStatusService.updateClientVersion(clientID, version);
+				return new ResponseEntity<Object>(customerKeywordForOptimization, HttpStatus.OK);
+			}
+		}
+		return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
+	}
+
+	@RequestMapping(value = "/updateOptimizedCount", method = RequestMethod.GET)
+	public ResponseEntity<?> updateOptimizedCount(HttpServletRequest request) throws Exception{
+		String userName = request.getParameter("username");
+		String password = request.getParameter("password");
+
+		Long customerKeywordUuid = Long.parseLong(request.getParameter("uuid").trim());
+		String count = request.getParameter("count");
+		String clientID = request.getParameter("clientID");
+		String freeSpace = request.getParameter("freespace");
+		String version = request.getParameter("version");
+		String city = request.getParameter("city");
+		String status = request.getParameter("status");
+
+		String ip = getIP(request);
+		String terminalType = TerminalTypeMapping.getTerminalType(request);
+
+		if(userName != null && password != null){
+			User user = userService.getUser(userName);
+			if(user != null && user.getPassword().equals(password)){
+				customerKeywordService.updateOptimizationResult(terminalType, customerKeywordUuid, Integer.parseInt(count.trim()), ip, city, clientID,
+						status, freeSpace, version);
+				return new ResponseEntity<Object>(1, HttpStatus.OK);
+			}
+		}
+		return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
+	}
+
+	@RequestMapping(value = "/adjustOptimizationCount", method = RequestMethod.POST)
+	public ResponseEntity<?> adjustOptimizationCount(HttpServletRequest request) throws Exception{
+		String userName = request.getParameter("userName");
+		String password = request.getParameter("password");
+
+		if(userName != null && password != null){
+			User user = userService.getUser(userName);
+			if(user != null && user.getPassword().equals(password)){
+				customerKeywordService.adjustOptimizationCount();
+				return new ResponseEntity<Object>(1, HttpStatus.OK);
+			}
+		}
+		return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
+	}
+
+	@RequestMapping(value = "/updateCustomerKeywordPosition", method = RequestMethod.POST)
+	public ResponseEntity<?> updateCustomerKeywordPosition(@RequestBody Map<String, Object> requestMap) throws Exception{
+		String userName = (String) requestMap.get("userName");
+		String password = (String) requestMap.get("password");
+
+		Long customerKeywordUuid = Long.parseLong(requestMap.get("customerKeywordUuid").toString());
+		int position = (Integer) requestMap.get("position");
+
+		if(userName != null && password != null){
+			User user = userService.getUser(userName);
+			if(user != null && user.getPassword().equals(password)){
+				customerKeywordService.updateCustomerKeywordPosition(customerKeywordUuid, position);
+				return new ResponseEntity<Object>(true, HttpStatus.OK);
+			}
+		}
+		return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+	}
+
+	@RequestMapping(value = "/getCustomerKeywordForCapturePosition", method = RequestMethod.POST)
+	public ResponseEntity<?> getCustomerKeywordForCapturePosition(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) throws Exception{
+		String userName = (String) requestMap.get("userName");
+		String password = (String) requestMap.get("password");
+		String terminalType = TerminalTypeMapping.getTerminalType(request);
+
+		List<String> groupNames = (List<String>)requestMap.get("groupNames");
+		Integer customerUuid = (requestMap.get("customerUuid") == null) ? null : (Integer) requestMap.get("customerUuid");
+		int minutes = (Integer) requestMap.get("minutes");
+
+		if(userName != null && password != null){
+			User user = userService.getUser(userName);
+			if(user != null && user.getPassword().equals(password)){
+				CustomerKeywordForCapturePosition capturePosition = customerKeywordService.getCustomerKeywordForCapturePosition(terminalType,
+						groupNames, customerUuid != null ? customerUuid.longValue() : null, minutes);
+				return new ResponseEntity<Object>(capturePosition, HttpStatus.OK);
+			}
+		}
+		return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
+	}
+
+	@RequestMapping(value = "/saveCustomerKeywords", method = RequestMethod.POST)
+	public ResponseEntity<?> saveCustomerKeywords(@RequestBody SearchEngineResultVO searchEngineResultVO, HttpServletRequest request) throws Exception{
+		if(searchEngineResultVO.getUserName() != null && searchEngineResultVO.getPassword() != null){
+			User user = userService.getUser(searchEngineResultVO.getUserName());
+			if(user != null && user.getPassword().equals(searchEngineResultVO.getPassword())){
+				String terminalType = TerminalTypeMapping.getTerminalType(request);
+				customerKeywordService.addCustomerKeywords(searchEngineResultVO, terminalType);
+				return new ResponseEntity<Object>(true, HttpStatus.OK);
+			}
+		}
+		return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
 	}
 }

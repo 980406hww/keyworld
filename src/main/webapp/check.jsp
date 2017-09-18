@@ -1,4 +1,4 @@
-<%@ page import="com.keymanager.util.PortTerminalTypeMapping" %>
+<%@ page import="com.keymanager.util.TerminalTypeMapping" %>
 <%
 		int loginState = 0;
 		String datasourceName = "keyword";
@@ -9,5 +9,5 @@
 		    loginState = 1;
 		}
 
-		String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+		String terminalType = TerminalTypeMapping.getTerminalType(request);
 %>

@@ -1,7 +1,6 @@
 package com.keymanager.value;
 
-
-public class CustomerKeywordRefreshStatInfoVO {	
+public class CustomerKeywordRefreshStatInfoVO {
 	private String group;
 	private int totalKeywordCount;
 	private int needOptimizeKeywordCount;
@@ -13,7 +12,7 @@ public class CustomerKeywordRefreshStatInfoVO {
 	private int totalMachineCount;
 	private int unworkMachineCount;
 	private int maxInvalidCount;
-	
+
 	public double getInvalidKeywordPercentage(){
 		return (this.getTotalKeywordCount() > 0) ? ((this.getInvalidKeywordCount() * 1.0) / this.getTotalKeywordCount()) * 100 : 0;
 	}
@@ -21,7 +20,7 @@ public class CustomerKeywordRefreshStatInfoVO {
 	public double getInvalidOptimizePercentage(){
 		return (this.getQueryCount() > 0) ? (((this.getQueryCount() - this.getTotalOptimizedCount()) * 1.0) / this.getQueryCount()) * 100 : 0;
 	}
-	
+
 	public String getInvalidKeywordCountStr(){
 		if(this.getInvalidKeywordCount() > 0){
 			String url = "/customerkeyword/keywordfinder.jsp?invalidRefreshCount=" + this.getMaxInvalidCount() + ("总计".equals(getGroup()) ?  "" : "&optimizeGroupName=" + this.getGroup());
@@ -30,16 +29,16 @@ public class CustomerKeywordRefreshStatInfoVO {
 			return "";
 		}
 	}
-	
+
 	public String getResetInvalidRefreshCountStr(String groupName, String customerName){
 		if(getInvalidKeywordCount() > 0){
-			return String.format("<a href=\"javascript:resetInvaidRefreshCount('%s', '%s', this)\">重置</a>", 
+			return String.format("<a href=\"javascript:resetInvaidRefreshCount('%s', '%s', this)\">重置</a>",
 					"总计".equals(getGroup()) ?  (groupName == null ? "" : groupName) : getGroup(), customerName == null ? "" : customerName);
 		}else{
 			return "";
 		}
 	}
-	
+
 	public String getUnworkMachineCountStr(){
 		if(this.getUnworkMachineCount() > 0){
 			String url = "/client/clientlist.jsp?prefix=1&hasProblem=hasProblem" + ("总计".equals(getGroup()) ?  "" : "&groupName=" + this.getGroup());
@@ -48,7 +47,7 @@ public class CustomerKeywordRefreshStatInfoVO {
 			return "";
 		}
 	}
-	
+
 	public int getTotalKeywordCount() {
 		return totalKeywordCount;
 	}

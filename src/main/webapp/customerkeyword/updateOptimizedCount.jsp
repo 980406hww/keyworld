@@ -35,10 +35,8 @@ if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
 		String version = request.getParameter("version");
 		String city = request.getParameter("city");
 		String status = request.getParameter("status");
-	    String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+	    String terminalType = TerminalTypeMapping.getTerminalType(request);
 
-		ip = request.getParameter("ip");
-		
 		if (customerKeywordUuid == null || count == null || username == null || password == null)
 		{
 		    out.println("Invalid Data");

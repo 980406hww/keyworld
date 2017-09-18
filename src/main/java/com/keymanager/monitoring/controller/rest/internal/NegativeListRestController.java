@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.criteria.NegativeListCriteria;
 import com.keymanager.monitoring.entity.NegativeList;
 import com.keymanager.monitoring.service.NegativeListService;
-import com.keymanager.util.PortTerminalTypeMapping;
+import com.keymanager.util.TerminalTypeMapping;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +49,7 @@ public class NegativeListRestController {
 
     private ModelAndView constructNegativeListModelAndView(HttpServletRequest request, NegativeListCriteria negativeListCriteria, int currentPageNumber, int pageSize) {
         ModelAndView modelAndView = new ModelAndView("/negativelist/list");
-        String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+        String terminalType = TerminalTypeMapping.getTerminalType(request);
         negativeListCriteria.setTerminalType(terminalType);
         Page<NegativeList> page = negativeListService.searchNegativeLists(new Page<NegativeList>(currentPageNumber,
                 pageSize), negativeListCriteria);

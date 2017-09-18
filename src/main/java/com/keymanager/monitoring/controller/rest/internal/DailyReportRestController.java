@@ -7,7 +7,7 @@ import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.DailyReport;
 import com.keymanager.monitoring.service.CustomerService;
 import com.keymanager.monitoring.service.DailyReportService;
-import com.keymanager.util.PortTerminalTypeMapping;
+import com.keymanager.util.TerminalTypeMapping;
 import com.keymanager.util.Utils;
 import com.keymanager.value.CustomerKeywordVO;
 import org.slf4j.Logger;
@@ -37,7 +37,7 @@ public class DailyReportRestController extends SpringMVCBaseController {
 	@RequestMapping(value = "/triggerReportGeneration", method = RequestMethod.POST)
 	public ResponseEntity<?> triggerReportGeneration(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) throws Exception{
 		String customerUuids = (String) requestMap.get("customerUuids");
-		String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+		String terminalType = TerminalTypeMapping.getTerminalType(request);
 		String returnValue = null;
 		try {
 			dailyReportService.triggerReportGeneration(terminalType, customerUuids);
@@ -53,7 +53,7 @@ public class DailyReportRestController extends SpringMVCBaseController {
 	@RequestMapping(value = "/searchCurrentDateCompletedReports", method = RequestMethod.GET)
 	public ResponseEntity<?> searchCurrentDateCompletedReports(HttpServletRequest request) throws Exception{
 		try {
-			String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+			String terminalType = TerminalTypeMapping.getTerminalType(request);
 			List<DailyReport> dailyReports = dailyReportService.searchCurrentDateCompletedReports(terminalType);
 			return new ResponseEntity<Object>(dailyReports, HttpStatus.OK);
 		}catch (Exception ex) {
@@ -64,7 +64,7 @@ public class DailyReportRestController extends SpringMVCBaseController {
 	@RequestMapping(value = "/downloadSingleCustomerReport/{customerUuid}", method = RequestMethod.GET)
 	public ResponseEntity<?> downloadSingleCustomerReport(@PathVariable("customerUuid")Long customerUuid, HttpServletRequest request,
 														  HttpServletResponse response) throws Exception {
-		String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+		String terminalType = TerminalTypeMapping.getTerminalType(request);
 		CustomerKeywordManager customerKeywordManager = new CustomerKeywordManager();
 		String condition = String.format(" and ck.fStatus = 1 and ck.fCustomerUuid = %d and ck.fTerminalType = '%s' ", customerUuid, terminalType);
 		List<CustomerKeywordVO> customerKeywords = customerKeywordManager.searchCustomerKeywords("keyword", 10000, 1, condition,

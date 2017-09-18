@@ -28,7 +28,7 @@ if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
 	String password = request.getParameter("password");
 	String clientID = request.getParameter("clientID");
 	String useHourRange = request.getParameter("useHourRange");
-	String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+	String terminalType = TerminalTypeMapping.getTerminalType(request);
 
 	String freeSpace = request.getParameter("freespace");
 	String version = request.getParameter("version");
