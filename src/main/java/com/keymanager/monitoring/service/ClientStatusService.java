@@ -130,7 +130,57 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 
 	public void addClientStatus(ClientStatus clientStatus) {
 		if (null != clientStatus.getClientID()) {
-			updateClientStatus(clientStatus);
+			ClientStatus oldClientStatus = clientStatusDao.selectById(clientStatus.getClientID());
+			oldClientStatus.setGroup(clientStatus.getGroup());
+			oldClientStatus.setOperationType(clientStatus.getOperationType());
+			oldClientStatus.setPageSize(clientStatus.getPageSize());
+			oldClientStatus.setPage(clientStatus.getPage());
+			oldClientStatus.setDragPercent(clientStatus.getDragPercent());
+			oldClientStatus.setZhanneiPercent(clientStatus.getZhanneiPercent());
+			oldClientStatus.setKuaizhaoPercent(clientStatus.getKuaizhaoPercent());
+			oldClientStatus.setBaiduSemPercent(clientStatus.getBaiduSemPercent());
+			oldClientStatus.setMultiBrowser(clientStatus.getMultiBrowser());
+			oldClientStatus.setClearCookie(clientStatus.getClearCookie());
+			oldClientStatus.setAllowSwitchGroup(clientStatus.getAllowSwitchGroup());
+			oldClientStatus.setDisableStatistics(clientStatus.getDisableStatistics());
+			oldClientStatus.setHost(clientStatus.getHost());
+			oldClientStatus.setPort(clientStatus.getPort());
+			oldClientStatus.setUserName(clientStatus.getUserName());
+			oldClientStatus.setPassword(clientStatus.getPassword());
+			oldClientStatus.setVpsBackendSystemComputerID(clientStatus.getVpsBackendSystemComputerID());
+			oldClientStatus.setVpsBackendSystemPassword(clientStatus.getVpsBackendSystemPassword());
+			oldClientStatus.setEntryPageMinCount(clientStatus.getEntryPageMinCount());
+			oldClientStatus.setEntryPageMaxCount(clientStatus.getEntryPageMaxCount());
+			oldClientStatus.setDisableVisitWebsite(clientStatus.getDisableVisitWebsite());
+			oldClientStatus.setPageRemainMinTime(clientStatus.getPageRemainMinTime());
+			oldClientStatus.setPageRemainMaxTime(clientStatus.getPageRemainMaxTime());
+			oldClientStatus.setInputDelayMinTime(clientStatus.getInputDelayMinTime());
+			oldClientStatus.setInputDelayMaxTime(clientStatus.getInputDelayMaxTime());
+			oldClientStatus.setSlideDelayMinTime(clientStatus.getSlideDelayMinTime());
+			oldClientStatus.setSlideDelayMaxTime(clientStatus.getSlideDelayMaxTime());
+			oldClientStatus.setTitleRemainMinTime(clientStatus.getTitleRemainMinTime());
+			oldClientStatus.setTitleRemainMaxTime(clientStatus.getTitleRemainMaxTime());
+			oldClientStatus.setWaitTimeAfterOpenBaidu(clientStatus.getWaitTimeAfterOpenBaidu());
+			oldClientStatus.setWaitTimeBeforeClick(clientStatus.getWaitTimeBeforeClick());
+			oldClientStatus.setWaitTimeAfterClick(clientStatus.getWaitTimeAfterClick());
+			oldClientStatus.setMaxUserCount(clientStatus.getMaxUserCount());
+			oldClientStatus.setOptimizeKeywordCountPerIP(clientStatus.getOptimizeKeywordCountPerIP());
+			oldClientStatus.setOneIPOneUser(clientStatus.getOneIPOneUser());
+			oldClientStatus.setRandomlyClickNoResult(clientStatus.getRandomlyClickNoResult());
+			oldClientStatus.setJustVisitSelfPage(clientStatus.getJustVisitSelfPage());
+			oldClientStatus.setSleepPer2Words(clientStatus.getSleepPer2Words());
+			oldClientStatus.setSupportPaste(clientStatus.getSupportPaste());
+			oldClientStatus.setMoveRandomly(clientStatus.getMoveRandomly());
+			oldClientStatus.setParentSearchEntry(clientStatus.getParentSearchEntry());
+			oldClientStatus.setClearLocalStorage(clientStatus.getClearLocalStorage());
+			oldClientStatus.setLessClickAtNight(clientStatus.getLessClickAtNight());
+			oldClientStatus.setSameCityUser(clientStatus.getSameCityUser());
+			oldClientStatus.setLocateTitlePosition(clientStatus.getLocateTitlePosition());
+			oldClientStatus.setBaiduAllianceEntry(clientStatus.getBaiduAllianceEntry());
+			oldClientStatus.setJustClickSpecifiedTitle(clientStatus.getJustClickSpecifiedTitle());
+			oldClientStatus.setRandomlyClickMoreLink(clientStatus.getRandomlyClickMoreLink());
+			oldClientStatus.setMoveUp20(clientStatus.getMoveUp20());
+			clientStatusDao.updateById(oldClientStatus);
 		} else {
 			clientStatusDao.insert(clientStatus);
 		}

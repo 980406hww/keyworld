@@ -11,26 +11,6 @@
 }
 
 <!--
-#div1 {
-	display: none;
-	background-color: #f6f7f7;
-	color: #333333;
-	font-size: 12px;
-	line-height: 18px;
-	border: 1px solid #e1e3e2;
-	width: 250px;
-	height: 50px;
-}
-#div2 {
-	display: none;
-	background-color: #ACF106;
-    color: #E80404;
-    font-size: 20px;
-    line-height: 18px;
-    border: 2px solid #104454;
-    width: 100px;
-    height: 22px;
-}
 #changeSettingDialog {
 	display: none;
 	margin: 5px 0px 0px 5px;
@@ -78,11 +58,13 @@
 </style>
 	<link href="/ui/jquery-ui.css" rel="stylesheet" type="text/css" />
 	<link href="/css/menu.css" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" href="/toastmessage/css/jquery.toastmessage.css">
 	<script language="javascript" type="text/javascript" src="/js/My97DatePicker/WdatePicker.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/jquery142.js"></script>
 	<script language="javascript" type="text/javascript" src="/ui/jquery-ui.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/slide.js"></script>
 	<script language="javascript" type="text/javascript" src="/common.js"></script>
+	<script language="javascript" type="text/javascript" src="/toastmessage/jquery.toastmessage.js"></script>
 </head>
 <body>
 <div id="clientStatusDiv">
@@ -194,9 +176,6 @@
 			<td align="center" width=40>失败原因</td>
 			<td align="center" width=50>服务器ID</td>
 			<td align="center" width=90>操作</td>
-			<div id="div1"></div>
-			<div id="div2"></div>
-			<div id="div3"></div>
 		</tr>
 		<c:forEach items="${page.records}" var="clientStatus" varStatus="tr">
 			<c:set var="isValidClient" value="true" />
@@ -393,17 +372,18 @@
 							contentType: false,
 							success: function (result) {
 								if (result) {
-									showInfo("上传成功", self);
+                                    $().toastmessage('showErrorToast', "上传成功");
 									window.location.reload();
 								} else {
-									showInfo("上传失败", self);
+                                    $().toastmessage('showErrorToast', "上传失败");
 								}
+                                $(this).dialog("close");
 							},
 							error: function () {
-								showInfo("上传失败", self);
+                                $().toastmessage('showErrorToast', "上传失败");
+                                $(this).dialog("close");
 							}
 						});
-                        $(this).dialog("close");
                     },
                     "取消": function () {
                         $(this).dialog("close");
@@ -428,6 +408,7 @@
 				}
 			}
 		}
+
 		function doOver(obj) {
 			obj.style.backgroundColor = "green";
 		}
@@ -448,14 +429,14 @@
                 type: 'POST',
                 success: function (result) {
                     if (result) {
-                        showInfo("操作成功", self);
+                        $().toastmessage('showErrorToast', "操作成功");
                         window.location.reload();
                     } else {
-                        showInfo("操作失败", self);
+                        $().toastmessage('showErrorToast', "操作失败");
                     }
                 },
                 error: function () {
-                    showInfo("操作失败", self);
+                    $().toastmessage('showErrorToast', "操作失败");
                 }
             });
         }
@@ -466,7 +447,7 @@
                 alert('请选择要删除的终端');
                 return;
             }
-            if (confirm("确定要删除这些负面词吗?") == false) return;
+            if (confirm("确定要删除这些终端吗?") == false) return;
             var postData = {};
             postData.clientIDs = clientIDs.split(",");
             $.ajax({
@@ -480,14 +461,14 @@
                 type: 'POST',
                 success: function (result) {
                     if (result) {
-                        showInfo("操作成功", self);
+                        $().toastmessage('showErrorToast', "操作成功");
                         window.location.reload();
                     } else {
-                        showInfo("操作失败", self);
+                        $().toastmessage('showErrorToast', "操作失败");
                     }
                 },
                 error: function () {
-                    showInfo("操作失败", self);
+                    $().toastmessage('showErrorToast', "操作失败");
                 }
             });
         }
@@ -511,14 +492,14 @@
 				type: 'POST',
 				success: function (result) {
 					if(result){
-						showInfo("更新成功！", self);
+                        $().toastmessage('showErrorToast', "更新成功");
 						window.location.reload();
 					}else{
-						showInfo("更新失败！", self);
+                        $().toastmessage('showErrorToast', "更新失败");
 					}
 				},
 				error: function () {
-					showInfo("更新失败！", self);
+                    $().toastmessage('showErrorToast', "更新失败");
 				}
 			});
 		}
@@ -537,14 +518,14 @@
                 type: 'POST',
                 success: function (result) {
                     if (result) {
-                        showInfo("操作成功", self);
+                        $().toastmessage('showErrorToast', "操作成功");
                         window.location.reload();
                     } else {
-                        showInfo("操作失败", self);
+                        $().toastmessage('showErrorToast', "操作失败");
                     }
                 },
                 error: function () {
-                    showInfo("操作失败", self);
+                    $().toastmessage('showErrorToast', "操作失败");
                 }
             });
 
@@ -565,14 +546,14 @@
                 type: 'POST',
                 success: function (result) {
                     if(result){
-                        showInfo("更新成功！", self);
+                        $().toastmessage('showErrorToast', "更新成功");
                         window.location.reload();
                     }else{
-                        showInfo("更新失败！", self);
+                        $().toastmessage('showErrorToast', "更新失败");
                     }
                 },
                 error: function () {
-                    showInfo("更新失败！", self);
+                    $().toastmessage('showErrorToast', "更新失败");
                 }
             });
 		}
@@ -591,14 +572,14 @@
 				type: 'POST',
 				success: function (result) {
 					if(result){
-						showInfo("更新成功！", self);
+                        $().toastmessage('showErrorToast', "更新成功");
 						window.location.reload();
 					}else{
-						showInfo("更新失败！", self);
+                        $().toastmessage('showErrorToast', "更新失败");
 					}
 				},
 				error: function () {
-					showInfo("更新失败！", self);
+                    $().toastmessage('showErrorToast', "更新失败");
 				}
 			});
 		}
@@ -618,14 +599,14 @@
                 type: 'POST',
                 success: function (result) {
                     if(result){
-                        showInfo("更新成功！", self);
+                        $().toastmessage('showErrorToast', "更新成功");
                         window.location.reload();
                     }else{
-                        showInfo("更新失败！", self);
+                        $().toastmessage('showErrorToast', "更新失败");
                     }
                 },
                 error: function () {
-                    showInfo("更新失败！", self);
+                    $().toastmessage('showErrorToast', "更新失败");
                 }
             });
 		}
@@ -644,14 +625,14 @@
                 type: 'POST',
                 success: function (result) {
                     if(result){
-                        showInfo("更新成功！", self);
+                        $().toastmessage('showErrorToast', "更新成功");
                         window.location.reload();
                     }else{
-                        showInfo("更新失败！", self);
+                        $().toastmessage('showErrorToast', "更新失败");
                     }
                 },
                 error: function () {
-                    showInfo("更新失败！", self);
+                    $().toastmessage('showErrorToast', "更新失败");
                 }
             });
 		}
@@ -661,7 +642,7 @@
 		        type: 'Get',
 		        success: function (clientStatus) {
 		        	if(clientStatus == null) {
-		        		showInfo("获取信息失败！", self);
+                        $().toastmessage('showErrorToast', "获取信息失败");
 		        	} else {
 		        		initSettingDialog(clientStatus, self);
                         $("#changeSettingDialog").dialog({
@@ -682,7 +663,7 @@
 		        	}
 		        },
 		        error: function () {
-		        	showInfo("获取信息失败！", self);
+                    $().toastmessage('showErrorToast', "获取信息失败");
 		        }
 		    });
 		}
@@ -701,7 +682,7 @@
 				settingDialogDiv.find("#zhanneiPercent").val(clientStatus.zhanneiPercent);
 			}
 			if(clientStatus.dragPercent  != null){
-				settingDialogDiv.find("#dragPercent ").val(clientStatus.dragPercent );
+				settingDialogDiv.find("#dragPercent").val(clientStatus.dragPercent );
 			}
 			if(clientStatus.kuaizhaoPercent != null){
 				settingDialogDiv.find("#kuaizhaoPercent").val(clientStatus.kuaizhaoPercent);
@@ -762,7 +743,6 @@
 			settingDialogDiv.find("#vpsBackendSystemComputerID").val(clientStatus.vpsBackendSystemComputerID != null ? clientStatus.vpsBackendSystemComputerID :
 					"");
 			settingDialogDiv.find("#vpsBackendSystemPassword").val(clientStatus.vpsBackendSystemPassword != null ? clientStatus.vpsBackendSystemPassword : "doshows123");
-			settingDialogDiv[0].style.left = getTop(self); //鼠标目前在X轴上的位置，加10是为了向右边移动10个px方便看到内容
 			settingDialogDiv.show();
 		}
 
@@ -774,7 +754,7 @@
 			clientStatus.operationType = settingDialogDiv.find("#settingOperationType").val();
 			clientStatus.pageSize = settingDialogDiv.find("#pageSize").val();
 			clientStatus.page = settingDialogDiv.find("#page").val();
-			clientStatus.dragPercent  = settingDialogDiv.find("#dragPercent ").val();
+			clientStatus.dragPercent = settingDialogDiv.find("#dragPercent").val();
 			clientStatus.zhanneiPercent = settingDialogDiv.find("#zhanneiPercent").val();
 			clientStatus.kuaizhaoPercent = settingDialogDiv.find("#kuaizhaoPercent").val();
 			clientStatus.baiduSemPercent = settingDialogDiv.find("#baiduSemPercent").val();
@@ -834,15 +814,15 @@
                 type: 'POST',
 		        success: function (result) {
 		        	if(result){
-                        showInfo("更新成功！", self);
+                        $().toastmessage('showErrorToast', "更新成功");
                         window.location.reload();
                     }else{
-                        showInfo("更新失败！", self);
+                        $().toastmessage('showErrorToast', "更新失败");
 		        	}
                     $(this).dialog("close");
 		        },
 		        error: function () {
-                    showInfo("更新失败！", self);
+                    $().toastmessage('showErrorToast', "更新失败");
                     $(this).dialog("close");
 		        }
 		    });
@@ -891,15 +871,15 @@
 		        type: 'POST',
 		        success: function (result) {
 		        	if(result){
-                        showInfo("更新成功！", self);
+                        $().toastmessage('showErrorToast', "更新成功");
                         window.location.reload();
                     }else{
-		        		showInfo("更新失败！", self);
+                        $().toastmessage('showErrorToast', "更新失败");
 		        	}
                     $(this).dialog("close");
 		        },
 		        error: function () {
-                    showInfo("更新失败！", self);
+                    $().toastmessage('showErrorToast', "更新失败");
                     $(this).dialog("close");
 		        }
 		    });
@@ -954,15 +934,15 @@
 				type: 'POST',
 				success: function (result) {
 					if(result){
-                        showInfo("更新成功！", self);
+                        $().toastmessage('showErrorToast', "更新成功");
                         window.location.reload();
                     }else{
-                        showInfo("更新失败！", self);
+                        $().toastmessage('showErrorToast', "更新失败");
 					}
                     $(this).dialog("close");
 				},
 				error: function () {
-                    showInfo("更新失败！", self);
+                    $().toastmessage('showErrorToast', "更新失败");
                     $(this).dialog("close");
 				}
 			});
@@ -974,47 +954,6 @@
 			obj = null;
 		}
 
-		function showTip(content, e) {
-			e = e || window.event;
-			var div1 = document.getElementById('div1'); //将要弹出的层 
-			div1.innerText = content;
-			div1.style.display = "block"; //div1初始状态是不可见的，设置可为可见  
-			div1.style.left = e.clientX + 10; //鼠标目前在X轴上的位置，加10是为了向右边移动10个px方便看到内容 
-			div1.style.top = e.clientY + 5;
-			div1.style.position = "absolute";
-		}
-
-		//关闭层div1的显示 
-		function closeTip() {
-			var div1 = document.getElementById('div1');
-			div1.style.display = "none";
-		}
-		
-		function showInfo(content, e) {
-			e = e || window.event;
-			var div1 = document.getElementById('div2'); //将要弹出的层 
-			div1.innerText = content;
-			div1.style.display = "block"; //div1初始状态是不可见的，设置可为可见  
-			div1.style.left = getLeft(e) + 10; //鼠标目前在X轴上的位置，加10是为了向右边移动10个px方便看到内容 
-			div1.style.top = getTop(e) + 5;
-			div1.style.position = "absolute";
-			
-			var intervalID = setInterval(function(){
-				div1.style.display = "none";
-			}, 3000);
-		}
-		
-		function getTop(e){
-		    var offset=e.offsetTop;
-		    if(e.offsetParent!=null) offset+=getTop(e.offsetParent);
-		    return offset;
-	    }
-	    //获取元素的横坐标
-	    function getLeft(e){
-		    var offset=e.offsetLeft;
-		    if(e.offsetParent!=null) offset+=getLeft(e.offsetParent);
-		    return offset;
-	    }
 	    $(document).ready(function(){
 			if($("#showFetchKeywordStatus").attr("checked") === "checked"){
 				$("span[name=invalidClient]").each(function(){

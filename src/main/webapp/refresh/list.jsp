@@ -4,42 +4,12 @@
 <html>
 <head>
 	<title>刷量统计列表</title>
-<style>
-.wrap {word-break: break-all; word-wrap:break-word;}
-<!--
-#div1{
-	display:none;
-	background-color :#f6f7f7;
-	color:#333333;
-	font-size:12px;
-	line-height:18px;
-	border:1px solid #e1e3e2;
-	width:350;
-	height:50;
-}
-#div2 {
-	display: none;
-	background-color: #ACF106;
-	margin: -50 0 0 -11;
-    color: #E80404;
-    font-size: 20px;
-    line-height: 18px;
-    border: 2px solid #104454;
-    width: 100;
-    height: 22;
-    left: 50%;
-    top: 50%;
-    z-index: 25;
-    position: fixed;
-}
--->
-</style>
 	<link href="/css/menu.css" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" href="/toastmessage/css/jquery.toastmessage.css">
 	<script language="javascript" type="text/javascript" src="/js/My97DatePicker/WdatePicker.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/jquery142.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/slide1.12.4.js"></script>
 	<script language="javascript" type="text/javascript" src="/toastmessage/jquery.toastmessage.js"></script>
-	<link rel="stylesheet" href="/toastmessage/css/jquery.toastmessage.css">
 	<script language="javascript">
         function doOver(obj) {
             obj.style.backgroundColor = "green";
@@ -89,22 +59,6 @@
                     $().toastmessage('showWarningToast', "重置失败！");
                 }
             });
-        }
-
-        function showTip(content,e) {
-            e = e||window.event;
-            var div1 = document.getElementById('div1'); //将要弹出的层
-            div1.innerText = content;
-            div1.style.display="block"; //div1初始状态是不可见的，设置可为可见
-            div1.style.left=e.clientX+10; //鼠标目前在X轴上的位置，加10是为了向右边移动10个px方便看到内容
-            div1.style.top=e.clientY+5;
-            div1.style.position="absolute";
-        }
-
-        //关闭层div1的显示
-        function closeTip() {
-            var div1 = document.getElementById('div1');
-            div1.style.display="none";
         }
 	</script>
 </head>
@@ -219,9 +173,6 @@
       	  </tr>
       </table>
 </div>
-<div style="display:none;">
-</div>
-<div id="div2"></div>
 <form id="searchClientStatusForm" style="display: none;" method="post" target="_blank" action="/internal/clientstatus/searchBadClientStatus">
 	<input type="hidden" name="hasProblem" value="hasProblem"/>
 	<input type="hidden" name="groupName" id="groupName" value=""/>
