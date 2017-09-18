@@ -9,10 +9,11 @@ import com.keymanager.enums.CollectMethod;
 import com.keymanager.manager.*;
 import com.keymanager.monitoring.criteria.*;
 import com.keymanager.monitoring.excel.operator.AbstractExcelReader;
-import com.keymanager.monitoring.dao.ClientStatusDao;
 import com.keymanager.monitoring.dao.CustomerKeywordDao;
 import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.enums.*;
+import com.keymanager.monitoring.vo.SearchEngineResultItemVO;
+import com.keymanager.monitoring.vo.SearchEngineResultVO;
 import com.keymanager.util.Constants;
 import com.keymanager.util.Utils;
 import com.keymanager.util.common.StringUtil;
@@ -655,4 +656,51 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return page;
     }
 
+    public void updateCustomerKeywordTitle(SearchEngineResultItemVO searchEngineResultItemVO) {
+        CustomerKeyword customerKeyword = customerKeywordDao.selectById(searchEngineResultItemVO.getUuid());
+        if (customerKeyword != null) {
+            if(searchEngineResultItemVO.getUrl() != null){
+                customerKeyword.setTitle(searchEngineResultItemVO.getTitle());
+                customerKeyword.setUrl(searchEngineResultItemVO.getUrl());
+                customerKeyword.setInitialPosition(searchEngineResultItemVO.getOrder());
+                customerKeyword.setCurrentPosition(searchEngineResultItemVO.getOrder());
+            }
+            customerKeyword.setCapturedTitle(1);
+            customerKeywordDao.updateById(customerKeyword);
+        }
+    }
+
+    public void addCustomerKeywords(SearchEngineResultVO searchEngineResultVO, String terminalType) throws Exception {
+        if(searchEngineResultVO != null){
+            List<CustomerKeyword> customerKeywords = new ArrayList<CustomerKeyword>();
+            for(SearchEngineResultItemVO searchEngineResultItemVO : searchEngineResultVO.getSearchEngineResultItemVOs()){
+                CustomerKeyword customerKeyword = new CustomerKeyword();
+                customerKeyword.setCurrentPosition(searchEngineResultItemVO.getOrder());
+                customerKeyword.setInitialPosition(searchEngineResultItemVO.getOrder());
+                customerKeyword.setOptimizeGroupName(searchEngineResultVO.getGroup());
+                customerKeyword.setOptimizePlanCount(searchEngineResultItemVO.getClickCount());
+                customerKeyword.setStatus(1);
+                customerKeyword.setKeyword(searchEngineResultItemVO.getKeyword());
+                customerKeyword.setTitle(searchEngineResultItemVO.getTitle());
+                customerKeyword.setType(searchEngineResultItemVO.getType());
+                customerKeyword.setTerminalType(terminalType);
+                customerKeyword.setOriginalUrl(searchEngineResultItemVO.getHref());
+                customerKeyword.setServiceProvider("baidutop123");
+                customerKeyword.setSearchEngine(Constants.SEARCH_ENGINE_BAIDU);
+                customerKeyword.setUrl(searchEngineResultItemVO.getUrl());
+                customerKeyword.setStartOptimizedTime(Utils.getCurrentTimestamp());
+                customerKeyword.setCollectMethod(CollectMethod.PerMonth.getCode());
+//                customerKeyword.setPositionFirstFee(0);
+//                customerKeyword.setPositionSecondFee(0);
+//                customerKeyword.setPositionThirdFee(0);
+                customerKeyword.setCurrentIndexCount(20);
+                customerKeyword.setCustomerUuid(searchEngineResultVO.getCustomerUuid());
+                customerKeyword.setAutoUpdateNegativeTime(Utils.getCurrentTimestamp());
+                customerKeyword.setCreateTime(Utils.getCurrentTimestamp());
+                customerKeyword.setUpdateTime(Utils.getCurrentTimestamp());
+                customerKeywords.add(customerKeyword);
+            }
+            this.addCustomerKeywords(customerKeywords);
+        }
+    }
 }

@@ -8,6 +8,8 @@ import com.keymanager.monitoring.entity.User;
 import com.keymanager.monitoring.service.ClientStatusService;
 import com.keymanager.monitoring.service.CustomerKeywordService;
 import com.keymanager.monitoring.service.UserService;
+import com.keymanager.monitoring.vo.SearchEngineResultItemVO;
+import com.keymanager.monitoring.vo.SearchEngineResultVO;
 import com.keymanager.util.PortTerminalTypeMapping;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
 import com.keymanager.value.CustomerKeywordForOptimization;
@@ -79,6 +81,18 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
 			}
 		}
 		return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+	}
+
+	@RequestMapping(value = "/updateCustomerKeywordForCaptureTitle", method = RequestMethod.POST)
+	public ResponseEntity<?> updateCustomerKeywordForCaptureTitle(@RequestBody SearchEngineResultItemVO searchEngineResultItemVO) throws Exception{
+		if(searchEngineResultItemVO.getUserName() != null && searchEngineResultItemVO.getPassword() != null){
+			User user = userService.getUser(searchEngineResultItemVO.getUserName());
+			if(user != null && user.getPassword().equals(searchEngineResultItemVO.getPassword())){
+				customerKeywordService.updateCustomerKeywordTitle(searchEngineResultItemVO);
+				return new ResponseEntity<Object>(1, HttpStatus.OK);
+			}
+		}
+		return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
 	}
 
 	@RequestMapping(value = "/getCustomerKeywordsForCaptureIndex" , method = RequestMethod.POST)
@@ -217,5 +231,18 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
 			}
 		}
 		return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
+	}
+
+	@RequestMapping(value = "/saveCustomerKeywords", method = RequestMethod.POST)
+	public ResponseEntity<?> saveCustomerKeywords(@RequestBody SearchEngineResultVO searchEngineResultVO, HttpServletRequest request) throws Exception{
+		if(searchEngineResultVO.getUserName() != null && searchEngineResultVO.getPassword() != null){
+			User user = userService.getUser(searchEngineResultVO.getUserName());
+			if(user != null && user.getPassword().equals(searchEngineResultVO.getPassword())){
+				String terminalType = PortTerminalTypeMapping.getTerminalType(request.getServerPort());
+				customerKeywordService.addCustomerKeywords(searchEngineResultVO, terminalType);
+				return new ResponseEntity<Object>(true, HttpStatus.OK);
+			}
+		}
+		return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
 	}
 }
