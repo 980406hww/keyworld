@@ -12,7 +12,6 @@
 <%@page import="com.keymanager.manager.*,com.keymanager.util.*,com.keymanager.value.*,java.util.*,java.net.URLEncoder" %>
 <jsp:useBean id="um" scope="page" class="com.keymanager.manager.UserManager"/>
 <jsp:useBean id="sch" scope="page" class="com.keymanager.util.SpringContextHolder"/>
-<%@include file="/check.jsp" %>
 <%@page language="java" import="java.util.*" pageEncoding="utf-8" %>
 <%
     String path = request.getContextPath();
