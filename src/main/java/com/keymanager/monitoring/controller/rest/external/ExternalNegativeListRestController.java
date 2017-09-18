@@ -1,16 +1,12 @@
 package com.keymanager.monitoring.controller.rest.external;
 
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
-import com.keymanager.monitoring.criteria.CaptureRealUrlCriteria;
 import com.keymanager.monitoring.criteria.NegativeListCriteria;
 import com.keymanager.monitoring.entity.NegativeList;
 import com.keymanager.monitoring.entity.User;
-import com.keymanager.monitoring.service.CaptureRealUrlService;
 import com.keymanager.monitoring.service.NegativeListService;
 import com.keymanager.monitoring.service.UserService;
-import com.keymanager.monitoring.vo.BaiduUrl;
 import com.keymanager.util.PortTerminalTypeMapping;
-import com.sun.tools.corba.se.idl.constExpr.Negative;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

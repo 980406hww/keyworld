@@ -68,6 +68,7 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceDao, Resource> impl
             tree.setIconCls(resource.getIcon());
             tree.setAttributes(resource.getUrl());
             tree.setState(resource.getOpened());
+
             trees.add(tree);
         }
         return trees;
@@ -89,6 +90,7 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceDao, Resource> impl
             tree.setIconCls(resource.getIcon());
             tree.setAttributes(resource.getUrl());
             tree.setState(resource.getOpened());
+            tree.setOpenMode(resource.getOpenMode());
             trees.add(tree);
         }
         return trees;

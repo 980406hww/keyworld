@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,7 +44,13 @@ public class UserController extends BaseController {
      * @return
      */
     @GetMapping("/manager")
-    public String manager() {
+    public String manager(HttpServletRequest request, String resource) {
+        String requestURI=request.getRequestURI();
+        if(null==resource || (!resource.equals("/login") && !resource.equals("/index")))
+        {
+            request.getSession().setAttribute("requestURI",requestURI);
+            return "redirect:/index";
+        }
         return "views/admin/user/user";
     }
 
