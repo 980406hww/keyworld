@@ -1,7 +1,6 @@
 package com.keymanager.value;
 
-
-public class CustomerKeywordRefreshStatInfoVO {	
+public class CustomerKeywordRefreshStatInfoVO {
 	private String group;
 	private int totalKeywordCount;
 	private int needOptimizeKeywordCount;
@@ -24,32 +23,31 @@ public class CustomerKeywordRefreshStatInfoVO {
 
 	public String getInvalidKeywordCountStr(){
 		if(this.getInvalidKeywordCount() > 0){
-			return String.format("<a href=\"javascript:findKeyword('%s', '%s')\">%d</a>",
-					"总计".equals(getGroup()) ?  "" : this.getGroup(), this.getMaxInvalidCount(), getInvalidKeywordCount());
+			String url = "/customerkeyword/keywordfinder.jsp?invalidRefreshCount=" + this.getMaxInvalidCount() + ("总计".equals(getGroup()) ?  "" : "&optimizeGroupName=" + this.getGroup());
+			return String.format("<a href='%s' target='_blank'>%d</a>", url, getInvalidKeywordCount());
 		}else{
 			return "";
 		}
 	}
 
-	// 可删除
 	public String getResetInvalidRefreshCountStr(String groupName, String customerName){
 		if(getInvalidKeywordCount() > 0){
-			return String.format("<a href=\"javascript:resetInvaidRefreshCount('%s', '%s', this)\">重置</a>", 
+			return String.format("<a href=\"javascript:resetInvaidRefreshCount('%s', '%s', this)\">重置</a>",
 					"总计".equals(getGroup()) ?  (groupName == null ? "" : groupName) : getGroup(), customerName == null ? "" : customerName);
 		}else{
 			return "";
 		}
 	}
-	
+
 	public String getUnworkMachineCountStr(){
 		if(this.getUnworkMachineCount() > 0){
-			String group = "总计".equals(getGroup()) ?  null : this.getGroup();
-			return String.format("<a target='_blank' href=\"javascript:findClientStatus('%s')\">%d</a>", group, getUnworkMachineCount());
+			String url = "/client/clientlist.jsp?prefix=1&hasProblem=hasProblem" + ("总计".equals(getGroup()) ?  "" : "&groupName=" + this.getGroup());
+			return String.format("<a href='%s' target='_blank'>%d</a>", url, getUnworkMachineCount());
 		}else{
 			return "";
 		}
 	}
-	
+
 	public int getTotalKeywordCount() {
 		return totalKeywordCount;
 	}

@@ -3,6 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <head>
+	<title>查看刷量统计</title>
 <style>
 .wrap {word-break: break-all; word-wrap:break-word;}
 <!--
@@ -145,8 +146,15 @@
 					       <td align="center" width=100>总数</td>
 					       <td align="center" width=60>已停数</td>
 		   				</tr>
-						<c:forEach items="${refreshStatInfoVOs}" var="refreshStatInfoVO">
-							 <tr onmouseover="doOver(this);" onmouseout="doOut(this);" height="30">
+						<c:forEach items="${refreshStatInfoVOs}" var="refreshStatInfoVO" varStatus="tr">
+							 <c:choose>
+								 <c:when test="${tr.count % 2 != 0}">
+									 <tr onmouseover="doOver(this);" onmouseout="doOut(this);" style="background-color: #eeeeee;" height="30">
+								 </c:when>
+								 <c:otherwise>
+									 <tr onmouseover="doOver(this);" onmouseout="doOut(this);" height="30">
+								 </c:otherwise>
+							 </c:choose>
 								 <td>${refreshStatInfoVO.group}</td>
 								 <td>${refreshStatInfoVO.totalKeywordCount}</td>
 								 <td>${refreshStatInfoVO.needOptimizeKeywordCount > 0 ? refreshStatInfoVO.needOptimizeKeywordCount : ""}</td>
@@ -214,11 +222,11 @@
 <div style="display:none;">
 </div>
 <div id="div2"></div>
-<form id="searchClientStatusForm" style="display: none;" method="post" action="/internal/clientstatus/searchBadClientStatus">
+<form id="searchClientStatusForm" style="display: none;" method="post" target="_blank" action="/internal/clientstatus/searchBadClientStatus">
 	<input type="hidden" name="hasProblem" value="hasProblem"/>
 	<input type="hidden" name="groupName" id="groupName" value=""/>
 </form>
-<form id="searchCustomerKeywordForm" style="display: none;" method="post" action="/internal/customerKeyword/searchCustomerKeywords">
+<form id="searchCustomerKeywordForm" style="display: none;" method="post" target="_blank" action="/internal/customerKeyword/searchCustomerKeywordLists">
 	<input type="hidden" name="optimizeGroupName" id="optimizeGroupName" value=""/>
 	<input type="hidden" name="invalidRefreshCount" id="invalidRefreshCount" value=""/>
 </form>
