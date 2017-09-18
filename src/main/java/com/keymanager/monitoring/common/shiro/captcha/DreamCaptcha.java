@@ -4,10 +4,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.keymanager.monitoring.common.utils.StringUtils;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 
@@ -19,7 +19,7 @@ import com.keymanager.monitoring.common.utils.WebUtils;
  *
  */
 public class DreamCaptcha implements InitializingBean {
-	private final static Logger logger = LogManager.getLogger(DreamCaptcha.class);
+	private final static Logger logger =  LoggerFactory.getLogger(DreamCaptcha.class);
 	private static final String DEFAULT_COOKIE_NAME = "dream-captcha";
 	private final static String DEFAULT_CHACHE_NAME = "dreamCaptchaCache";
 	private final static int DEFAULT_MAX_AGE = -1; // cookie超时默认为session会话状态

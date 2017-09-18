@@ -1,7 +1,7 @@
 package com.keymanager.monitoring.common.csrf;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -17,7 +17,7 @@ import java.io.IOException;
  * @author L.cm
  */
 public class CsrfInterceptor extends HandlerInterceptorAdapter {
-	private static final Logger logger = LogManager.getLogger(CsrfInterceptor.class);
+	private static final Logger logger =  LoggerFactory.getLogger(CsrfInterceptor.class);
 	
 	@Autowired
 	private CsrfTokenRepository csrfTokenRepository;

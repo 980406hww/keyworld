@@ -57,22 +57,11 @@
                     }
                 }
             }, {
-                width : '40',
-                title : 'QQ',
-                field : 'qq',
-                sortable : true
-            }, {
                 width : '80',
                 title : '登录IP',
                 field : 'clientIp',
                 sortable : true
-            },{
-                width : '80',
-                title : '用户状态',
-                field : 'status',
-                sortable : true
-            }, 
-            {
+            }, {
                 width : '200',
                 title : '角色',
                 field : 'rolesList'
@@ -106,8 +95,12 @@
                     width : '130',
                     title : '创建时间',
                     field : 'createTime',
-                    sortable : true
-                },{
+                    sortable : true,
+                    formatter:function(value,row,index){
+                        var unixTimestamp = new Date(value);
+                        return unixTimestamp.toLocaleString();
+                    }
+        },{
                 field : 'action',
                 title : '操作',
                 width : 130,

@@ -8,8 +8,6 @@ import com.keymanager.monitoring.entity.UserInfo;
 import com.keymanager.monitoring.vo.UserVO;
 import com.keymanager.monitoring.service.IRoleService;
 import com.keymanager.monitoring.service.IUserService;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -22,6 +20,8 @@ import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -30,7 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @date：2015/10/1 14:51
  */
 public class ShiroDbRealm extends AuthorizingRealm {
-	private static final Logger LOGGER = LogManager.getLogger(ShiroDbRealm.class);
+	private static final Logger LOGGER =  LoggerFactory.getLogger(ShiroDbRealm.class);
 
 	@Autowired private IUserService userService;
 	@Autowired private IRoleService roleService;

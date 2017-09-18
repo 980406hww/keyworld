@@ -31,7 +31,11 @@
             }, {
                 width: '130',
                 title: '创建时间',
-                field: 'createTime'
+                field: 'createTime',
+                formatter:function(value,row,index){
+                    var unixTimestamp = new Date(value);
+                    return unixTimestamp.toLocaleString();
+                }
             }]]
         });
     });

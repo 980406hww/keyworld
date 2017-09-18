@@ -21,14 +21,14 @@
  */
 package com.keymanager.monitoring.common.shiro;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.ExcessiveAttemptsException;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 
@@ -39,7 +39,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author L.cm
  */
 public class RetryLimitCredentialsMatcher extends HashedCredentialsMatcher implements InitializingBean {
-	private final static Logger logger = LogManager.getLogger(RetryLimitCredentialsMatcher.class);
+	private final static Logger logger =  LoggerFactory.getLogger(RetryLimitCredentialsMatcher.class);
 	private final static String DEFAULT_CHACHE_NAME = "retryLimitCache";
 	
 	private final CacheManager cacheManager;

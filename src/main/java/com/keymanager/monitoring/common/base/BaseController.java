@@ -7,9 +7,9 @@ import com.keymanager.monitoring.common.shiro.ShiroUser;
 import com.keymanager.monitoring.common.utils.Charsets;
 import com.keymanager.monitoring.common.utils.StringEscapeEditor;
 import com.keymanager.monitoring.common.utils.URLUtils;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -34,7 +34,7 @@ import java.util.Date;
  */
 public abstract class BaseController {
     // 控制器本来就是单例，这样似乎更加合理
-    protected Logger logger = LogManager.getLogger(BaseController.class);
+    protected Logger logger =  LoggerFactory.getLogger(BaseController.class);
 
     @InitBinder
     public void initBinder(ServletRequestDataBinder binder) {

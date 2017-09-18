@@ -21,12 +21,12 @@
  */
 package com.keymanager.monitoring.common.shiro.cache;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheException;
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.util.Destroyable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 使用spring-cache作为shiro缓存
@@ -35,7 +35,7 @@ import org.apache.shiro.util.Destroyable;
  *
  */
 public class ShiroSpringCacheManager implements CacheManager, Destroyable {
-	private static final Logger logger = LogManager.getLogger(ShiroSpringCacheManager.class);
+	private static final Logger logger =  LoggerFactory.getLogger(ShiroSpringCacheManager.class);
 	private org.springframework.cache.CacheManager cacheManager;
 	
 	public org.springframework.cache.CacheManager getCacheManager() {
