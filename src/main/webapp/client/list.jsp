@@ -372,7 +372,7 @@
 							contentType: false,
 							success: function (result) {
 								if (result) {
-                                    $().toastmessage('showErrorToast', "上传成功");
+                                    $().toastmessage('showSuccessToast', "上传成功");
 									window.location.reload();
 								} else {
                                     $().toastmessage('showErrorToast', "上传失败");
@@ -429,7 +429,7 @@
                 type: 'POST',
                 success: function (result) {
                     if (result) {
-                        $().toastmessage('showErrorToast', "操作成功");
+                        $().toastmessage('showSuccessToast', "操作成功");
                         window.location.reload();
                     } else {
                         $().toastmessage('showErrorToast', "操作失败");
@@ -461,7 +461,7 @@
                 type: 'POST',
                 success: function (result) {
                     if (result) {
-                        $().toastmessage('showErrorToast', "操作成功");
+                        $().toastmessage('showSuccessToast', "操作成功");
                         window.location.reload();
                     } else {
                         $().toastmessage('showErrorToast', "操作失败");
@@ -492,7 +492,7 @@
 				type: 'POST',
 				success: function (result) {
 					if(result){
-                        $().toastmessage('showErrorToast', "更新成功");
+                        $().toastmessage('showSuccessToast', "更新成功");
 						window.location.reload();
 					}else{
                         $().toastmessage('showErrorToast', "更新失败");
@@ -518,7 +518,7 @@
                 type: 'POST',
                 success: function (result) {
                     if (result) {
-                        $().toastmessage('showErrorToast', "操作成功");
+                        $().toastmessage('showSuccessToast', "操作成功");
                         window.location.reload();
                     } else {
                         $().toastmessage('showErrorToast', "操作失败");
@@ -546,7 +546,7 @@
                 type: 'POST',
                 success: function (result) {
                     if(result){
-                        $().toastmessage('showErrorToast', "更新成功");
+                        $().toastmessage('showSuccessToast', "更新成功");
                         window.location.reload();
                     }else{
                         $().toastmessage('showErrorToast', "更新失败");
@@ -572,7 +572,7 @@
 				type: 'POST',
 				success: function (result) {
 					if(result){
-                        $().toastmessage('showErrorToast', "更新成功");
+                        $().toastmessage('showSuccessToast', "更新成功");
 						window.location.reload();
 					}else{
                         $().toastmessage('showErrorToast', "更新失败");
@@ -599,7 +599,7 @@
                 type: 'POST',
                 success: function (result) {
                     if(result){
-                        $().toastmessage('showErrorToast', "更新成功");
+                        $().toastmessage('showSuccessToast', "更新成功");
                         window.location.reload();
                     }else{
                         $().toastmessage('showErrorToast', "更新失败");
@@ -625,7 +625,7 @@
                 type: 'POST',
                 success: function (result) {
                     if(result){
-                        $().toastmessage('showErrorToast', "更新成功");
+                        $().toastmessage('showSuccessToast', "更新成功");
                         window.location.reload();
                     }else{
                         $().toastmessage('showErrorToast', "更新失败");
@@ -814,7 +814,7 @@
                 type: 'POST',
 		        success: function (result) {
 		        	if(result){
-                        $().toastmessage('showErrorToast', "更新成功");
+                        $().toastmessage('showSuccessToast', "更新成功");
                         window.location.reload();
                     }else{
                         $().toastmessage('showErrorToast', "更新失败");
@@ -871,7 +871,7 @@
 		        type: 'POST',
 		        success: function (result) {
 		        	if(result){
-                        $().toastmessage('showErrorToast', "更新成功");
+                        $().toastmessage('showSuccessToast', "更新成功");
                         window.location.reload();
                     }else{
                         $().toastmessage('showErrorToast', "更新失败");
@@ -934,7 +934,7 @@
 				type: 'POST',
 				success: function (result) {
 					if(result){
-                        $().toastmessage('showErrorToast', "更新成功");
+                        $().toastmessage('showSuccessToast', "更新成功");
                         window.location.reload();
                     }else{
                         $().toastmessage('showErrorToast', "更新失败");
