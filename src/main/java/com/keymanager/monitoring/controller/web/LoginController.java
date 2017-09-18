@@ -1,13 +1,12 @@
 package com.keymanager.monitoring.controller;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.keymanager.monitoring.common.base.BaseController;
+import com.keymanager.monitoring.common.csrf.CsrfToken;
 import com.keymanager.monitoring.common.result.Tree;
-import com.keymanager.monitoring.dao.ResourceDao;
-import com.keymanager.monitoring.entity.Resource;
+import com.keymanager.monitoring.common.shiro.captcha.DreamCaptcha;
+import com.keymanager.monitoring.common.utils.StringUtils;
 import com.keymanager.monitoring.service.IResourceService;
-import com.keymanager.util.PortTerminalTypeMapping;
+import com.keymanager.util.TerminalTypeMapping;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.DisabledAccountException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
@@ -17,13 +16,13 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.keymanager.monitoring.common.base.BaseController;
-import com.keymanager.monitoring.common.csrf.CsrfToken;
-import com.keymanager.monitoring.common.shiro.captcha.DreamCaptcha;
-import com.keymanager.monitoring.common.utils.StringUtils;
-
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -104,7 +103,7 @@ public class LoginController extends BaseController {
 		List<Tree> menus = resourceService.selectAuthorizationMenu(username);
 //		List<Tree> menus = resourceService.selectAllMenu();
 		request.getSession().setAttribute("entry",entryType);
-		request.getSession().setAttribute("terminalType", PortTerminalTypeMapping.getTerminalType(request.getServerPort()));
+		request.getSession().setAttribute("terminalType", TerminalTypeMapping.getTerminalType(request));
 		request.getSession().setAttribute("username",username);
 		request.getSession().setAttribute("password",password);
 		request.getSession().setAttribute("menus",menus);
