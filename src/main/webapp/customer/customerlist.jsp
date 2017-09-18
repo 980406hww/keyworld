@@ -1019,9 +1019,11 @@
         <c:forEach items="${page.records}" var="customer">
             <tr onmouseover="doOver(this);" onmouseout="doOut(this);" height=30>
                 <td><input type="checkbox" name="customerUuid" value="${customer.uuid}"/></td>
-                <c:if test="${user.vipType}">
-                    <td>${user.userID}</td>
-                </c:if>
+                <td>
+                    <c:if test="${user.vipType}">
+                    ${user.userID}
+                    </c:if>
+                </td>
                 <td>
                     <a href="/internal/customerKeyword/searchCustomerKeywords/${customer.uuid}">${customer.contactPerson}</a>
                 </td>

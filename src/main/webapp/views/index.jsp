@@ -197,25 +197,23 @@
                 <%@include file="/menu.jsp"%>
             </div>
         </div>
-        <div data-options="region:'west',split:true" title="菜单" style="width: 160px; overflow: hidden;overflow-y:auto; padding:0px">
+        <%--<div data-options="region:'west',split:true" title="菜单" style="width: 160px; overflow: hidden;overflow-y:auto; padding:0px">
             <div class="well well-small" style="padding: 5px 5px 5px 5px;">
                 <ul id="layout_west_tree" class="ztree"></ul>
             </div>
-        </div>
+        </div>--%>
         <ul id="layout_west_tree" class="ztree" style="display: none"></ul>
         <div data-options="region:'center'" style="overflow: hidden;">
             <div id="index_tabs" style="overflow: hidden;">
-                <div title="首页" data-options="iconCls:'fi-home',border:false" style="overflow: hidden;">
-                    <%--<script src='https://git.oschina.net/wangzhixuan/spring-shiro-training/widget_preview'></script>--%>
-                   <%-- <style>
+                    <script src='${path}/resource/manager'></script>
+                    <style>
                         .pro_name a{color: #4183c4;}
                         .osc_git_title{background-color: #d8e5f1;}
                         .osc_git_box{background-color: #fafafa;}
                         .osc_git_box{border-color: #ddd;}
                         .osc_git_info{color: #666;}
                         .osc_git_main a{color: #4183c4;}
-                    </style>--%>
-                </div>
+                    </style>
             </div>
         </div>
     </div>
