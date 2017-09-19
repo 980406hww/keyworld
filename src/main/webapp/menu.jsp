@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <%@ include file="/commons/global.jsp" %>
+<%--<%@ include file="/commons/basejs.jsp" %>--%>
 <link rel="stylesheet" type="text/css" href="${staticPath }/static/foundation-icons/foundation-icons.css" />
 <link href="${path}/css/sskjMenu.css" rel="stylesheet">
 <%--[消息提示]--%>
@@ -50,82 +51,36 @@
             addTab(opts);
         }
     }
-    //修改密码
-    function editUserPwd() {
-        $('#editUserPwdForm')[0].reset();
-        $("#editUserPwdDiv").dialog({
-            resizable: false,
-            width: 320,
-            height: 220,
-            modal: true,
-            //按钮
-            buttons: {
-                "保存": function () {
-					var editUserPwdForm = $("#editUserPwdForm");
-					var oldPwd = editUserPwdForm.find("#oldPwd").val();
-					var pwd = editUserPwdForm.find("#pwd").val();
-					var rePwd = editUserPwdForm.find("#rePwd").val();
-                    var postData = {};
-					if(pwd!=(rePwd)){
-                        $().toastmessage('showErrorToast', "2次密码不一致");
-                        return;
-					}
-                    postData.oldPwd = oldPwd;
-                    postData.pwd = pwd;
-                    $.ajax({
-                        url: '${path }/user/editUserPwd',
-                        data: JSON.stringify(postData),
-                        headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                        },
-                        timeout: 5000,
-                        type: 'POST',
-                        success: function (result) {
-                            if (result.success) {
-                                $().toastmessage('showSuccessToast', result.msg);
-                                setTimeout(function () {
-                                    logoutService();
-                                },4000);
-                            } else {
-                                $().toastmessage('showErrorToast', result.msg);
-                            }
-                        },
-                        error: function () {
-                            $().toastmessage('showErrorToast', "操作失败");
-                        }
-                    });
-                    $(this).dialog("close");
-                },
-                "清空": function () {
-                    $('#editUserPwdForm')[0].reset();
-                },
-                "取消": function () {
-                    $(this).dialog("close");
-                    $('#editUserPwdForm')[0].reset();
-                }
+    function logout(){
+        $.messager.confirm('提示','确定要退出?',function(r){
+            if (r){
+                progressLoad();
+                $.post('${path }/logout', function(result) {
+                    if(result.success){
+                        progressClose();
+                        window.location.href='${path }';
+                    }
+                }, 'json');
             }
         });
     }
 
-    function logout(){
-        if (confirm("确定要退出?") == false) return;
-        logoutService();
-    }
-    function logoutService() {
-        $.ajax({
-            url: '/logout',
-            type: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            success: function (result) {
-                if(result.success){
-                    window.location.href='${path }';
+    function editUserPwd() {
+        parent.$.modalDialog({
+            title : '修改密码',
+            width : 250,
+            height : 170,
+            href : '${path }/user/editPwdPage',
+            buttons : [ {
+                text : '确定',
+                handler : function() {
+                    var f = parent.$.modalDialog.handler.find('#editUserPwdForm');
+                    f.submit();
                 }
-            }
+            } ]
         });
+        parent.$.modalDialog.handler.dialog("open");
+        parent.$.modalDialog.handler.window("resize",{top:$(document).scrollTop() + 100});
     }
 </script>
 
