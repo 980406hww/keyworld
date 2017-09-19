@@ -69,13 +69,15 @@ public class RoleServiceImpl extends ServiceImpl<RoleDao, Role> implements IRole
         RoleResource roleResource = new RoleResource();
         roleResource.setRoleID(roleId);
         roleResourceDao.delete(new EntityWrapper<RoleResource>(roleResource));
-        
-        String[] resourceIdArray = resourceIds.split(",");
-        for (String resourceId : resourceIdArray) {
-            roleResource = new RoleResource();
-            roleResource.setRoleID(roleId);
-            roleResource.setResourceID(Long.parseLong(resourceId));
-            roleResourceDao.insert(roleResource);
+
+        if(!StringUtils.isBlank(resourceIds)) {
+            String[] resourceIdArray = resourceIds.split(",");
+            for (String resourceId : resourceIdArray) {
+                roleResource = new RoleResource();
+                roleResource.setRoleID(roleId);
+                roleResource.setResourceID(Long.parseLong(resourceId));
+                roleResourceDao.insert(roleResource);
+            }
         }
     }
 
@@ -94,7 +96,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleDao, Role> implements IRole
             List<Map<Long, String>> resourceList = roleDao.selectResourceListByRoleId(roleId);
             if (resourceList != null) {
                 for (Map<Long, String> map : resourceList) {
-                    if (StringUtils.isNotBlank(map.get("url"))) {
+                    if (map!=null&&StringUtils.isNotBlank(map.get("url"))) {
                         urlSet.add(map.get("url"));
                     }
                 }
