@@ -48,6 +48,6 @@
         )
         )
         AND s.fResourceType = 0
-        ORDER BY s.fSequence DESC
+        ORDER BY s.fSequence
     </select>
 </mapper>
