@@ -1,40 +1,35 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <html>
 <head>
-    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-    <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+    <%@ include file="/commons/basejs.jsp" %>
+    <%@ include file="/commons/global.jsp" %>
+    <script language="javascript" type="text/javascript" src="/toastmessage/jquery.toastmessage.js"></script>
+    <link rel="stylesheet" href="/toastmessage/css/jquery.toastmessage.css">
     <script language="javascript" type="text/javascript" src="/common.js"></script>
 
-    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
-    <link href="/ui/jquery-ui.css" rel="stylesheet" type="text/css" />
-    <script language="javascript" type="text/javascript" src="/js/jquery142.js"></script>
-    <script language="javascript" type="text/javascript" src="/ui/jquery-ui.js"></script>
-    <script language="javascript" type="text/javascript" src="/js/My97DatePicker/WdatePicker.js"></script>
-    <script language="javascript" type="text/javascript" src="/js/slide1.12.4.js"></script>
     <style type="text/css">
         .wrap {
             word-break: break-all;
             word-wrap: break-word;
         }
 
-        #div2 {
-            display: none;
-            background-color: #ACF106;
-            color: #E80404;
-            font-size: 20px;
-            line-height: 18px;
-            border: 2px solid #104454;
-            width: 100px;
-            height: 22px;
-        }
-
-        #showCustomerTableDiv {
-            overflow: scroll;
+        #topDiv {
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            background-color: white;
             width: 100%;
-            height: 90%;
+        }
+        #showCustomerTableDiv {
+            width: 100%;
             margin: auto;
         }
 
+        #showCustomerTable tr:nth-child(odd){background:#EEEEEE;}
+
+        #showCustomerTable td{
+            text-align: left;
+        }
         #showCustomerBottomDiv {
             margin-right: 2%;
             float: right;
@@ -47,18 +42,43 @@
             height: 20px;
             margin-top: 10px;
         }
+
+        #showCustomerBottomPositioneDiv{
+            position: fixed;
+            bottom: 0px;
+            right: 0px;
+            background-color: white;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            width: 100%;
+        }
+        #showCustomerBottomDiv {
+            float: right;
+            margin-right: 20px;
+        }
+        body{
+            margin: 0;
+            padding: 0;
+        }
     </style>
     <script type="text/javascript">
         $(function () {
-            $("#customerDialog").hide();
-            $("#uploadDailyReportTemplateDialog").hide();
-            $("#customerKeywordDialog").hide();
-            $("#customerChargeTypeDialog").hide();
+            $("#customerDialog").dialog("close");
+            $("#uploadDailyReportTemplateDialog").dialog("close");
+            $("#customerKeywordDialog").dialog("close");
+            $("#customerChargeTypeDialog").dialog("close");
+            $("#showCustomerTableDiv").css("margin-top",$("#topDiv").height());
+
             pageLoad();
             onlyNumber();
             autoCheckTerminalType();
+            alignTableHeader();
+            window.onresize = function(){
+                alignTableHeader();
+            }
 //            initRangeTable();
         });
+
         function pageLoad() {
             var searchCustomerForm = $("#searchCustomerForm");
             var pageSize = searchCustomerForm.find('#pageSizeHidden').val();
@@ -174,14 +194,17 @@
                 },
                 success: function (status) {
                     if (status) {
-                        showInfo("更新成功", self);
+
+                        $().toastmessage('showSuccessToast', "更新成功");
                         window.location.reload();
                     } else {
-                        showInfo("更新失败", self);
+                       /* showInfo("更新失败", self);*/
+                        $().toastmessage('showErrorToast', "更新失败");
                     }
                 },
                 error: function () {
-                    showInfo("更新失败", self);
+                   /* showInfo("更新失败", self);*/
+                    $().toastmessage('showErrorToast', "更新失败");
                 }
             });
         }
@@ -262,15 +285,16 @@
                 type: 'POST',
                 success: function (data) {
                     if (data) {
-                        showInfo("操作成功", self);
+                        /*showInfo("操作成功", self);*/
+                        $().toastmessage('showSuccessToast', "操作成功");
                         window.location.reload();
                     } else {
-                        showInfo("操作失败", self);
+                        $().toastmessage('showErrorToast', "操作失败");
                         window.location.reload();
                     }
                 },
                 error: function () {
-                    showInfo("操作失败", self);
+                    $().toastmessage('showErrorToast', "操作失败");
                     window.location.reload();
                 }
             });
@@ -308,7 +332,7 @@
                     }
                 },
                 error: function () {
-                    showInfo("获取信息失败", self);
+                    $().toastmessage('showErrorToast', "获取信息失败");
                 }
             });
         }
@@ -319,20 +343,33 @@
                 width: 500,
                 height: 400,
                 modal: true,
+                closed: true,
                 //按钮
-                buttons: {
-                    "保存": function () {
+                buttons: [{
+                    text: '保存',
+                    iconCls: 'icon-ok',
+                    handler: function () {
                         saveCustomerChargeType(customerUuid);
-                    },
-                    "清空": function () {
-                        $('#showRuleForm')[0].reset();
-                    },
-                    "取消": function () {
-                        $(this).dialog("close");
-                        $('#showRuleForm')[0].reset();
                     }
-                }
+                },
+                    {
+                        text: '清空',
+                        iconCls: 'fi-trash',
+                        handler: function () {
+                            $('#showRuleForm')[0].reset();
+                        }
+                    },
+                    {
+                        text: '取消',
+                        iconCls: 'icon-cancel',
+                        handler: function () {
+                            $(this).dialog("close");
+                            $('#showRuleForm')[0].reset();
+                        }
+                    }]
             });
+            $("#customerChargeTypeDialog").dialog("open");
+            $('#customerChargeTypeDialog').window("resize",{top:$(document).scrollTop() + 100});
         }
 
         function saveCustomerChargeType(customerUuid) {
@@ -471,14 +508,14 @@
                     type: 'POST',
                     success: function (result) {
                         if (result) {
-                            showInfo("操作成功", self);
+                            $().toastmessage('showSuccessToast', "操作成功");
                             window.location.reload();
                         } else {
-                            showInfo("操作失败", self);
+                            $().toastmessage('showErrorToast', "操作失败");
                         }
                     },
                     error: function () {
-                        showInfo("操作失败", self);
+                        $().toastmessage('showErrorToast', "操作失败");
                     }
                 });
                 $("#customerChargeTypeDialog").dialog("close");
@@ -646,8 +683,10 @@
                 height: 200,
                 modal: true,
                 //按钮
-                buttons: {
-                    "提交": function () {
+                buttons: [{
+                    text: '提交',
+                    iconCls: 'icon-ok',
+                    handler: function () {
                         var uploadForm = $("#dailyReportTemplateForm");
                         var uploadFile = uploadForm.find("#uploadFile").val();
                         var fileTypes = new Array("xls", "xlsx");  //定义可支持的文件类型数组
@@ -677,24 +716,32 @@
                                 contentType: false,
                                 success: function (result) {
                                     if (result) {
-                                        showInfo("上传成功", self);
+                                       /* showInfo("上传成功", self);*/
+                                        $().toastmessage('showSuccessToast', "上传成功");
                                     } else {
-                                        showInfo("上传失败", self);
+                                        /*showInfo("上传失败", self);*/
+                                        $().toastmessage('showErrorToast', "上传失败");
                                     }
                                 },
                                 error: function () {
-                                    showInfo("上传失败", self);
+                                    $().toastmessage('showErrorToast', "上传失败");
                                 }
                             });
                         }
                         $(this).dialog("close");
-                    },
-                    "取消": function () {
-                        $(this).dialog("close");
-                        $('#dailyReportTemplateForm')[0].reset();
                     }
-                }
+                },
+                    {
+                        text: '取消',
+                        iconCls: 'icon-cancel',
+                        handler: function () {
+                            $(this).dialog("close");
+                            $('#dailyReportTemplateForm')[0].reset();
+                        }
+                    }]
             });
+            $("#uploadDailyReportTemplateDialog").dialog("open");
+            $('#uploadDailyReportTemplateDialog').window("resize",{top:$(document).scrollTop() + 100});
         }
 
         //显示添加客户是的DIV
@@ -708,19 +755,31 @@
                 height: 400,
                 modal: true,
                 //按钮
-                buttons: {
-                    "保存": function () {
+                buttons: [{
+                    text: '保存',
+                    iconCls: 'icon-ok',
+                    handler: function () {
                         savaCustomer(uuid, userID);
-                    },
-                    "清空": function () {
-                        $('#customerForm')[0].reset();
-                    },
-                    "取消": function () {
-                        $(this).dialog("close");
-                        $('#customerForm')[0].reset();
                     }
-                }
+                },
+                    {
+                        text: '清空',
+                        iconCls: 'fi-trash',
+                        handler: function () {
+                            $('#customerForm')[0].reset();
+                        }
+                    },
+                    {
+                        text: '取消',
+                        iconCls: 'icon-cancel',
+                        handler: function () {
+                            $(this).dialog("close");
+                            $('#customerForm')[0].reset();
+                        }
+                    }]
             });
+            $("#customerDialog").dialog("open");
+            $('#customerDialog').window("resize",{top:$(document).scrollTop() + 100});
         }
         function savaCustomer(uuid, userID) {
             var customerForm = $("#customerDialog").find("#customerForm");
@@ -757,15 +816,17 @@
                 type: 'POST',
                 success: function (result) {
                     if (result) {
-                        showInfo("保存成功", self);
+                        /*showInfo("保存成功", self);*/
+                        $().toastmessage('showSuccessToast', "保存成功");
                         window.location.reload();
                     } else {
-                        showInfo("保存失败", self);
+
+                        $().toastmessage('showErrorToast', "保存失败");
                         window.location.reload();
                     }
                 },
                 error: function () {
-                    showInfo("保存失败", self);
+                    $().toastmessage('showErrorToast', "保存失败");
                 }
             });
             $("#customerDialog").dialog("close");
@@ -778,7 +839,8 @@
                     initCustomerDialog(customer);
                     showCustomerDialog(customer.uuid, customer.userId);
                 } else {
-                    showInfo("获取信息失败", self);
+
+                    $().toastmessage('showErrorToast', "获取信息失败");
                 }
             })
         }
@@ -791,7 +853,7 @@
                     callback(customer);
                 },
                 error: function () {
-                    showInfo("获取信息失败", self);
+                    $().toastmessage('showErrorToast', "获取信息失败");
                 }
             });
         }
@@ -803,19 +865,31 @@
                 height: 320,
                 modal: true,
                 //按钮
-                buttons: {
-                    "保存": function () {
+                buttons: [{
+                    text: '保存',
+                    iconCls: 'icon-ok',
+                    handler: function () {
                         addCustomerKeyword(uuid);
-                    },
-                    "清空": function () {
-                        $('#customerKeywordForm')[0].reset();
-                    },
-                    "取消": function () {
-                        $(this).dialog("close");
-                        $('#customerKeywordForm')[0].reset();
                     }
-                }
+                },
+                    {
+                        text: '清空',
+                        iconCls: 'fi-trash',
+                        handler: function () {
+                            $('#customerKeywordForm')[0].reset();
+                        }
+                    },
+                    {
+                        text: '取消',
+                        iconCls: 'icon-cancel',
+                        handler: function () {
+                            (this).dialog("close");
+                            $('#customerKeywordForm')[0].reset();
+                        }
+                    }]
             });
+            $("#customerKeywordDialog").dialog("open");
+            $('#customerKeywordDialog').window("resize",{top:$(document).scrollTop() + 100});
         }
 
         function addCustomerKeyword(uuid) {
@@ -882,13 +956,15 @@
                 type: 'POST',
                 success: function (result) {
                     if (result) {
-                        showInfo("添加成功", self);
+
+                        $().toastmessage('showSuccessToast', "添加成功");
                     } else {
-                        showInfo("添加失败", self);
+
+                        $().toastmessage('showErrorToast', "添加失败");
                     }
                 },
                 error: function () {
-                    showInfo("添加失败", self);
+                    $().toastmessage('showErrorToast', "添加失败");
                 }
             });
         }
@@ -900,14 +976,14 @@
                 type: 'Get',
                 success: function (result) {
                     if (result) {
-                        showInfo("删除成功", self);
+                        $().toastmessage('showSuccessToast', "删除成功");
                         window.location.reload();
                     } else {
-                        showInfo("删除失败", self);
+                        $().toastmessage('showErrorToast', "删除失败");
                     }
                 },
                 error: function () {
-                    showInfo("删除失败", self);
+                    $().toastmessage('showErrorToast', "删除失败");
                     window.location.reload();
                 }
             });
@@ -937,7 +1013,13 @@
             var searchCustomerForm = $("#searchCustomerForm");
             searchCustomerForm.find("#currentPageNumberHidden").val(1);
         }
-
+        function alignTableHeader(){
+            var td = $("#headerTable tr:first td");
+            var ctd = $("#showCustomerTable tr:first td");
+            $.each(td, function (idx, val) {
+                ctd.eq(idx).width($(val).width());
+            });
+        }
 
         <c:if test="${'bc'.equalsIgnoreCase(entryType)}">
         var intervalId = setInterval(function () {
@@ -949,16 +1031,12 @@
 </head>
 
 <body>
-<div id="showCustomerTableDiv">
-    <table width="100%" style="font-size:12px;" cellpadding=3>
-        <tr>
-            <td colspan=13 align="left">
+<div id="topDiv">
                 <%@include file="/menu.jsp" %>
-            </td>
-        </tr>
+    <table width="100%" style="font-size:12px; margin-top:40px" cellpadding=3>
         <tr>
             <td colspan=13>
-                <form method="post" id="searchCustomerForm" action="/internal/customer/searchCustomers">
+                <form method="post" id="searchCustomerForm" action="/internal/customer/searchCustomers" style="margin-bottom:0px ">
                     <table style="font-size:12px;">
                         <tr>
                             <td align="right">联系人:</td>
@@ -1000,9 +1078,10 @@
                 </form>
             </td>
         </tr>
-        <tr bgcolor="#eeeeee" height=30>
-            <td align="center" width=10><input type="checkbox" onclick="selectAll(this)"/></td>
-
+    </table>
+    <table style="font-size:12px; width: 100%;" id="headerTable">
+        <tr bgcolor="#eeeeee">
+            <td align="left" width=10><input type="checkbox" onclick="selectAll(this)"/></td>
             <td align="center" width=80>用户名称</td>
             <td align="center" width=80>联系人</td>
             <td align="center" width=60>词数</td>
@@ -1014,21 +1093,23 @@
             <td align="center" width=40>状态</td>
             <td align="center" width=80>创建时间</td>
             <td align="center" width=200>操作</td>
-            <div id="div2"></div>
+
         </tr>
+    </table>
+</div>
+<div id="showCustomerTableDiv">
+    <table style="font-size:12px; width: 100%;" id="showCustomerTable">
         <c:forEach items="${page.records}" var="customer">
             <tr onmouseover="doOver(this);" onmouseout="doOut(this);" height=30>
                 <td><input type="checkbox" name="customerUuid" value="${customer.uuid}"/></td>
-                <td>
-                    <c:if test="${user.vipType}">
-                    ${user.userID}
-                    </c:if>
-                </td>
+                    <%--  <c:if test="${user.vipType}">--%>
+                <td>${user.userID}</td>
+                    <%--  </c:if>--%>
                 <td>
                     <a href="/internal/customerKeyword/searchCustomerKeywords/${customer.uuid}">${customer.contactPerson}</a>
                 </td>
                 <td>${customer.keywordCount}</td>
-                <td>${customer.qq}</td>
+                <td>${customer.qq}dsgdfh</td>
                 <td>${customer.telphone} </td>
                 <td align="right">${customer.paidFee} </td>
                 <td>${customer.remark}</td>
@@ -1057,7 +1138,7 @@
     <%--<br><br><br>--%>
     <%--<br>--%>
 </div>
-<div id="customerChargeTypeDialog" title="客户规则">
+<div id="customerChargeTypeDialog" title="客户规则" class="easyui-dialog">
     <input type="hidden" id="customerChargeTypeUuid"/>
     <div id="showRuleRadioDiv" style="text-align: center">
         <input type="radio" id="chargeTypePercentage" onclick="chooseChargeType(this.value)" value="Percentage"
@@ -1127,7 +1208,7 @@
             </div>
         </div>
 
-        <div id="chargeTypeIntervalDiv">
+        <div id="chargeTypeIntervalDiv" >
             <input id="chargeTypeIntervalUuid" type="hidden"/>
             <input id="PC" type="checkbox" name="operationType" onclick="initRangeTable(this)"/>PC
             <div id="pcOperationTypeDiv">
@@ -1168,7 +1249,7 @@
 
 
 </div>
-<div id="customerDialog" title="客户信息">
+<div id="customerDialog" title="客户信息" class="easyui-dialog">
     <form id="customerForm" method="post" action="customerlist.jsp">
         <table style="font-size:14px;" cellpadding=5>
             <tr>
@@ -1217,7 +1298,7 @@
     </form>
 </div>
 <%--上传日报表模"onsubmit="return checkinput();"--%>
-<div id="uploadDailyReportTemplateDialog" title="上传日报表模板">
+<div id="uploadDailyReportTemplateDialog" title="上传日报表模板" class="easyui-dialog">
     <form method="post" id="dailyReportTemplateForm" action=""
           enctype="multipart/form-data">
         <table width="100%" style="margin-top: 10px;margin-left: 10px">
@@ -1244,7 +1325,7 @@
     </form>
 </div>
 <%--添加客户关键字--%>
-<div id="customerKeywordDialog" title="客户关键字">
+<div id="customerKeywordDialog" title="客户关键字" class="easyui-dialog">
     <form id="customerKeywordForm">
    <textarea id="customerKeywordTextarea" style="width:480px;height:180px;"
              placeholder="关键字 域名  关键字与域名以空格作为分割，一行一组"></textarea>
@@ -1259,25 +1340,27 @@
     </form>
 </div>
 <hr>
-<div id="showCustomerBottomDiv">
-    <input id="fisrtButton" class="ui-button ui-widget ui-corner-all" type="button"
-           onclick="changePaging(1,'${page.size}')" value="首页"/>&nbsp;&nbsp;&nbsp;&nbsp;
-    <input id="upButton" type="button" class="ui-button ui-widget ui-corner-all"
-           onclick="changePaging('${page.current-1}','${page.size}')" value="上一页"/>&nbsp;&nbsp;&nbsp;&nbsp;
-    ${page.current}/${page.pages}&nbsp;&nbsp;
-    <input id="nextButton" type="button" class="ui-button ui-widget ui-corner-all"
-           onclick="changePaging('${page.current+1>=page.pages?page.pages:page.current+1}','${page.size}')"
-           value="下一页">&nbsp;&nbsp;&nbsp;&nbsp;
-    <input id="lastButton" type="button" class="ui-button ui-widget ui-corner-all"
-           onclick="changePaging('${page.pages}','${page.size}')" value="末页">&nbsp;&nbsp;&nbsp;&nbsp;
-    总记录数:${page.total}&nbsp;&nbsp;&nbsp;&nbsp;
-    每页显示条数:<select id="chooseRecords" onchange="changePaging(${page.current},this.value)">
-    <option>10</option>
-    <option>25</option>
-    <option>50</option>
-    <option>75</option>
-    <option>100</option>
-</select>
+<div id="showCustomerBottomPositioneDiv">
+    <div id="showCustomerBottomDiv">
+        <input id="fisrtButton" class="ui-button ui-widget ui-corner-all" type="button"
+               onclick="changePaging(1,'${page.size}')" value="首页"/>&nbsp;&nbsp;&nbsp;&nbsp;
+        <input id="upButton" type="button" class="ui-button ui-widget ui-corner-all"
+               onclick="changePaging('${page.current-1}','${page.size}')" value="上一页"/>&nbsp;&nbsp;&nbsp;&nbsp;
+        ${page.current}/${page.pages}&nbsp;&nbsp;
+        <input id="nextButton" type="button" class="ui-button ui-widget ui-corner-all"
+               onclick="changePaging('${page.current+1>=page.pages?page.pages:page.current+1}','${page.size}')"
+               value="下一页">&nbsp;&nbsp;&nbsp;&nbsp;
+        <input id="lastButton" type="button" class="ui-button ui-widget ui-corner-all"
+               onclick="changePaging('${page.pages}','${page.size}')" value="末页">&nbsp;&nbsp;&nbsp;&nbsp;
+        总记录数:${page.total}&nbsp;&nbsp;&nbsp;&nbsp;
+        每页显示条数:<select id="chooseRecords" onchange="changePaging(${page.current},this.value)">
+        <option>10</option>
+        <option>25</option>
+        <option>50</option>
+        <option>75</option>
+        <option>100</option>
+    </select>
+    </div>
 </div>
 
 </body>
