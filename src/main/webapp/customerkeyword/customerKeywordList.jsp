@@ -3,6 +3,7 @@
 <html>
 <head>
     <script language="javascript" type="text/javascript" src="/toastmessage/jquery.toastmessage.js"></script>
+    <script language="javascript" type="text/javascript" src="/js/jquery.poshytip.js"></script>
     <link rel="stylesheet" href="/toastmessage/css/jquery.toastmessage.css">
     <script language="javascript" type="text/javascript" src="/common.js"></script>
     <head>
@@ -77,6 +78,17 @@
                 padding: 0;
             }
 
+            .tip-yellow {
+                z-index:1000;
+                text-align:left;
+                padding:7px;
+                font-size: 12px;
+                min-width:200px;
+                max-width:550px;
+                color:#8c3901;
+                background-color: #fff;
+            }
+
             #saveCustomerKeywordDialog ul{list-style: none;margin: 0px;padding: 0px;}
             #saveCustomerKeywordDialog li{margin: 5px 0;}
             #saveCustomerKeywordDialog .customerKeywordSpanClass{width: 70px;display: inline-block;text-align: right;}
@@ -90,6 +102,7 @@
                 $("#customerKeywordDiv").css("margin-top",$("#customerKeywordTopDiv").height());
                 initPaging();
                 initNoPositionChecked();//初始化排名为0的初始值
+                $(".floatTd").poshytip();
                 alignTableHeader();
                 window.onresize = function(){
                     alignTableHeader();
@@ -895,9 +908,8 @@
                 <td align="center" width=100>
                     <font color="<%--<%=keywordColor%>--%>">${customerKeyword.keyword}</font>
                 </td>
-                <td  align="center" width=200 class="wrap"
-                     onMouseMove="showTip('原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}')"
-                     onMouseOut="closeTip()">
+                <td  align="center" width=200 class="wrap floatTd"
+                     title="原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}">
                     <div style="height:16;">
                             ${customerKeyword.url==null?'':customerKeyword.url};
                     </div>
@@ -922,9 +934,7 @@
                             target="_blank">${customerKeyword.currentPosition}</a>
                     </div>
                 </td>
-                <td align="center" width=30 onMouseMove="showTip('优化日期：<fmt:formatDate value="${customerKeyword.optimizeDate}" pattern="yyyy-MM-dd"/> ，要刷：${customerKeyword.optimizePlanCount}，已刷：${customerKeyword.optimizedCount}')"
-                    onMouseOut="closeTip()">${customerKeyword.collectMethodName}
-                </td>
+                <td align="center" width=30 class="floatTd" title="优化日期：<fmt:formatDate value="${customerKeyword.optimizeDate}" pattern="yyyy-MM-dd"/> ，要刷：${customerKeyword.optimizePlanCount}，已刷：${customerKeyword.optimizedCount}")">${customerKeyword.collectMethodName}</td>
                 <td align="center" width=30>${customerKeyword.optimizePlanCount}</td>
                 <td align="center" width=30>${customerKeyword.optimizedCount} </td>
                 <td align="center" width=30>${customerKeyword.invalidRefreshCount}</td>
