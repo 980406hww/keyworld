@@ -94,7 +94,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleDao, Role> implements IRole
             List<Map<Long, String>> resourceList = roleDao.selectResourceListByRoleId(roleId);
             if (resourceList != null) {
                 for (Map<Long, String> map : resourceList) {
-                    if (StringUtils.isNotBlank(map.get("url"))) {
+                    if (map!=null&&StringUtils.isNotBlank(map.get("url"))) {
                         urlSet.add(map.get("url"));
                     }
                 }
