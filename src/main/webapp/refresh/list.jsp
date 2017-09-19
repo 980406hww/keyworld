@@ -1,15 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ include file="/commons/basejs.jsp" %>
+<%@ include file="/commons/global.jsp" %>
 <html>
 <head>
 	<title>刷量统计列表</title>
-	<link href="/css/menu.css" rel="stylesheet" type="text/css" />
-	<link rel="stylesheet" href="/toastmessage/css/jquery.toastmessage.css">
-	<script language="javascript" type="text/javascript" src="/js/My97DatePicker/WdatePicker.js"></script>
-	<script language="javascript" type="text/javascript" src="/js/jquery142.js"></script>
-	<script language="javascript" type="text/javascript" src="/js/slide1.12.4.js"></script>
 	<script language="javascript" type="text/javascript" src="/toastmessage/jquery.toastmessage.js"></script>
+	<link rel="stylesheet" href="/toastmessage/css/jquery.toastmessage.css">
+	<script language="javascript" type="text/javascript" src="/common.js"></script>
 	<script language="javascript">
         function doOver(obj) {
             obj.style.backgroundColor = "green";
@@ -63,13 +60,16 @@
 	</script>
 </head>
 <body>
-<div id="showRefreshStatInfoDiv">
+<div>
+	<div>
+		<%@include file="/menu.jsp" %>
+	</div>
+	<table>
+
+	</table>
+</div>
+<div id="showRefreshStatInfoDiv" style="margin-top: 40px;">
       <table width=1240 style="font-size:12px;" cellpadding=3>
-            <tr>
-				<td colspan=13 align="left">
-					<%@include file="/menu.jsp" %>
-				</td>
-			</tr>
       	  <tr>
       	  	 <td colspan=13>
       	  	 	<form method="post" id="searchRefreshStatInfoForm" action="/internal/refreshstatinfo/searchRefreshStatInfos">

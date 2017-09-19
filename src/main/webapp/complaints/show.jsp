@@ -1,32 +1,23 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ include file="/commons/basejs.jsp" %>
+<%@ include file="/commons/global.jsp" %>
+<script language="javascript" type="text/javascript" src="/toastmessage/jquery.toastmessage.js"></script>
+<link rel="stylesheet" href="/toastmessage/css/jquery.toastmessage.css">
 <script language="javascript" type="text/javascript" src="/common.js"></script>
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css">
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<script language="javascript" type="text/javascript" src="/js/slide1.12.4.js"></script>
-<link href="/css/menu.css" rel="stylesheet" type="text/css"/>
-<%@page import="com.keymanager.manager.*,com.keymanager.util.*,com.keymanager.value.*,java.util.*,java.net.URLEncoder" %>
-<jsp:useBean id="um" scope="page" class="com.keymanager.manager.UserManager"/>
-<jsp:useBean id="sch" scope="page" class="com.keymanager.util.SpringContextHolder"/>
-<%@page language="java" import="java.util.*" pageEncoding="utf-8" %>
-<%
-    String path = request.getContextPath();
-    String basePath =
-            request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-                    + path + "/";
-%>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
+
 <script type="text/javascript">
     /*页面进入即刻加载*/
     $(function() {
-      $("#showAddMainKeywordDialog").hide();
       pageLoad();
+        $("#showMainKeywordTableDiv").css("margin-top",$("#showMainKeywordTopDiv").height());
+        $("#showAddMainKeywordDialog").dialog("close");
+        alignTableHeader();
+        window.onresize = function(){
+            alignTableHeader();
+        }
     });
     function pageLoad() {
       var  showMainKeywordBottomDiv = $('#showMainKeywordBottomDiv');
@@ -52,7 +43,13 @@
         showMainKeywordBottomDiv.find("#nextButton").removeAttr("disabled");
         showMainKeywordBottomDiv.find("#lastButton").removeAttr("disabled");
       }
-
+    }
+    function alignTableHeader(){
+        var td = $("#headerTable tr:first td");
+        var ctd = $("#showMainKeywordTable tr:first td");
+        $.each(td, function (idx, val) {
+            ctd.eq(idx).width($(val).width());
+        });
     }
     //增加
     function showAddMainKeywordDialog(uuid) {
@@ -61,22 +58,30 @@
       }
       $("#showAddMainKeywordDialog").dialog({
         resizable: false,
-        width: 400,
-        height: 440,
+        width: 380,
+        height: 365,
         modal: true,
         //按钮
-        buttons: {
-          "保存": function() {
+        buttons:[{
+            text:"保存",
+            iconCls: 'icon-ok',
+            handler : function() {
             savaMainKeyword(uuid);
-          },
-          "清空": function() {
-            $('#mainKeywordForm')[0].reset();
-          },
-          "取消": function() {
-            $(this).dialog("close");
-            $('#mainKeywordForm')[0].reset();
           }
-        }
+        },{
+            text: '清空',
+            iconCls: 'fi-trash',
+            handler: function () {
+                $('#mainKeywordForm')[0].reset();
+            }
+        }, {
+            text: '取消',
+            iconCls: 'icon-cancel',
+            handler: function () {
+                $("#showAddMainKeywordDialog").dialog("close");
+                $('#mainKeywordForm')[0].reset();
+            }
+        }]
       });
     }
     function savaMainKeyword(uuid) {
@@ -118,15 +123,13 @@
         type: 'POST',
         success: function (result) {
           if (result) {
-            showInfo("保存成功！", self);
-            window.location.reload();
+            $().toastmessage('showSuccessToast', "保存成功!");
           } else {
-            showInfo("保存失败！", self);
-            window.location.reload();
+              $().toastmessage('showErrorToast',"保存失败");
           }
         },
         error: function () {
-          showInfo("保存失败！", self);
+           $().toastmessage('showErrorToast',"保存失败");
         }
       });
       $("#showAddMainKeywordDialog").dialog("close");
@@ -142,11 +145,11 @@
             initMainKeywordDialog(tsMainKeyword);
             showAddMainKeywordDialog(tsMainKeyword.uuid);
           } else {
-            showInfo("获取信息失败！", self);
+              $().toastmessage('showErrorToast',"获取信息失败！");
           }
         },
         error: function () {
-          showInfo("获取信息失败！", self);
+            $().toastmessage('showErrorToast',"获取信息失败！");
         }
       });
     }
@@ -172,15 +175,13 @@
         type: 'Get',
         success: function (result) {
           if (result) {
-            showInfo("删除成功！", self);
-            window.location.reload();
+              $().toastmessage('showSuccessToast',"删除成功！");
           } else {
-            showInfo("删除失败！", self);
+              $().toastmessage('showErrorToast',"删除失败！");
           }
         },
         error: function () {
-          showInfo("删除失败！", self);
-          window.location.reload();
+            $().toastmessage('showErrorToast',"删除失败！");
         }
       });
     }
@@ -216,16 +217,14 @@
         type: 'POST',
         success: function (data) {
           if(data){
-            showInfo("操作成功！", self);
+              $().toastmessage('showSuccessToast',"操作成功！");
             window.location.reload();
           }else{
-            showInfo("操作失败！", self);
-            window.location.reload();
+              $().toastmessage('showErrorToast', "操作失败！");
           }
         },
         error: function () {
-          showInfo("操作失败！", self);
-          window.location.reload();
+            $().toastmessage('showErrorToast', "操作失败！");
         }
       });
     }
@@ -276,20 +275,6 @@
       div1.style.position = "absolute";
     }
 
-    function showInfo(content, e) {
-      e = e || window.event;
-      var div1 = document.getElementById('div2'); //将要弹出的层
-      div1.innerText = content;
-      div1.style.display = "block"; //div1初始状态是不可见的，设置可为可见
-      div1.style.left = getLeft(e) + 10; //鼠标目前在X轴上的位置，加10是为了向右边移动10个px方便看到内容
-      div1.style.top = getTop(e) + 5;
-      div1.style.position = "absolute";
-
-      var intervalID = setInterval(function () {
-        div1.style.display = "none";
-      }, 3000);
-    }
-
     //关闭层div1的显示
     function closeTip() {
       var div1 = document.getElementById('div1');
@@ -331,14 +316,16 @@
     }
 
     #showMainKeywordTopDiv {
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        background-color: white;
         width: 100%;
-        margin:0 auto;
     }
 
     #showMainKeywordTableDiv {
-        overflow:scroll;
         width: 100%;
-        height: 78%;
+        height: 95%;
         margin:auto;
     }
     #showMainKeywordTable{
@@ -361,6 +348,20 @@
         margin-right: 2%;
         float: right;
         width: 550px;
+    }
+
+    #showMainKeywordBottomPositioneDiv{
+        position: fixed;
+        bottom: 0px;
+        right: 0px;
+        background-color: white;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        width: 100%;
+    }
+    #showMainKeywordBottomDiv {
+        float: right;
+        margin-right: 20px;
     }
 
     #nav .mainLevel ul {display:none; position:absolute;z-index: 10;}
@@ -388,47 +389,35 @@
     }
 </style>
 <head>
-    <base href="<%=basePath%>">
     <title>投诉专用平台</title>
 </head>
 <body>
-<div id="showMainKeywordBodyDiv">
-    <div id="showMainKeywordTopDiv">
-        <div>
-            <table width=100% style="font-size:12px;" cellpadding=3>
-                <tr>
-                    <td colspan="15" align="left">
-                        <%@include file="/menu.jsp" %>
-                    </td>
-                </tr>
-            </table>
-        </div>
-        <div id="serachMainKeyword">
-           <form id="serachMainKeywordForm" action="/internal/complaints/findTSMainKeywords" method="post">
-               主关键词&nbsp;&nbsp;<input id="itemKeyword" name="itemKeyword" type="text" value="${page.condition.get("keyword")}"/>&nbsp;&nbsp;
-               <input id="itemGroupHidden" type="hidden" value="${page.condition.get("group")}"/>
-               区域分组&nbsp;&nbsp;<select id="itemGroup" name="itemGroup" style="height: 21px;">
-                           <option value="">请 选 择 城 市</option>
-                           <option value="北京">北京</option>
-                           <option value="上海">上海</option>
-                           <option value="广州">广州</option>
-                           <option value="深圳">深圳</option>
-                       </select>
-               &nbsp;&nbsp;
-               <input type="hidden" id="currentPageHidden" name="currentPageHidden" value="${page.current}"/>
-               <input type="hidden" id="displaysRecordsHidden" name="displaysRecordsHidden" value="${page.size}"/>
+<div id="showMainKeywordTopDiv">
+    <%@include file="/menu.jsp" %>
+    <div id="serachMainKeyword">
+        <form id="serachMainKeywordForm" action="/internal/complaints/findTSMainKeywords" method="post">
+            主关键词&nbsp;&nbsp;<input id="itemKeyword" name="itemKeyword" type="text"
+                                   value="${page.condition.get("keyword")}"/>&nbsp;&nbsp;
+            <input id="itemGroupHidden" type="hidden" value="${page.condition.get("group")}"/>
+            区域分组&nbsp;&nbsp;<select id="itemGroup" name="itemGroup" style="height: 21px;">
+            <option value="">请 选 择 城 市</option>
+            <option value="北京">北京</option>
+            <option value="上海">上海</option>
+            <option value="广州">广州</option>
+            <option value="深圳">深圳</option>
+        </select>
+            &nbsp;&nbsp;
+            <input type="hidden" id="currentPageHidden" name="currentPageHidden" value="${page.current}"/>
+            <input type="hidden" id="displaysRecordsHidden" name="displaysRecordsHidden" value="${page.size}"/>
 
-               <input type="submit" class="ui-button ui-widget ui-corner-all" style="z-index: 0";
-                       value="查询">&nbsp;&nbsp;&nbsp;
-               <input type="button" class="ui-button ui-widget ui-corner-all"  style="z-index: 0";
-                      onclick="showAddMainKeywordDialog(null)" value="添加"/>&nbsp;&nbsp;&nbsp;
-               <input type="button" class="ui-button ui-widget ui-corner-all"  style="z-index: 0";
-                      onclick="deleteMainKeywords(this)" value="删除所选"/>
-           </form>
-        </div>
-    </div>
-    <div id="showMainKeywordTableDiv">
-        <table id="showMainKeywordTable">
+            <input type="submit" class="ui-button ui-widget ui-corner-all" style="z-index: 0" ;
+                   value="查询">&nbsp;&nbsp;&nbsp;
+            <input type="button" class="ui-button ui-widget ui-corner-all" style="z-index: 0" ;
+                   onclick="showAddMainKeywordDialog(null)" value="添加"/>&nbsp;&nbsp;&nbsp;
+            <input type="button" class="ui-button ui-widget ui-corner-all" style="z-index: 0" ;
+                   onclick="deleteMainKeywords(this)" value="删除所选"/>
+        </form>
+        <table id="headerTable" style="width:100%;">
             <tr bgcolor="#eeeeee" height=30>
                 <td align="center" width=10><input type="checkbox" onclick="selectAll(this)"/></td>
                 <td align="center" width=150>主词</td>
@@ -440,6 +429,11 @@
                 <div id="div1"></div>
                 <div id="div2"></div>
             </tr>
+        </table>
+    </div>
+</div>
+<div id="showMainKeywordTableDiv">
+        <table id="showMainKeywordTable">
             <c:forEach items="${page.records }" var="mainkey">
                 <tr onmouseover="doOver(this)" onmouseout="doOut(this)" ondblclick="getMainKeyword('${mainkey.uuid}')">
                     <td><input type="checkbox" name="uuid" value="${mainkey.uuid}" /></td>
@@ -476,56 +470,56 @@
                 </tr>
             </c:forEach>
         </table>
-    </div>
-    <div id="showAddMainKeywordDialog" title="添加投诉关键字">
-        <form id="mainKeywordForm" action="show.jsp">
-            <table style="border-spacing:15px;">
-                <tr>
-                    <input id="mUuid" type="hidden">
-                    <td>主关键字</td>
-                    <td><input id="mKeyword" type="text" style="width: 250px;"></td>
-                </tr>
-                <tr>
-                    <td>地区分组</td>
-                    <td>
-                        <select id="mGroup" style="width: 250px;">
-                            <option value="">-----------请 选 择 城 市-----------</option>
-                            <option value="北京">北京</option>
-                            <option value="上海">上海</option>
-                            <option value="广州">广州</option>
-                            <option value="深圳">深圳</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>负面词</td>
-                    <td>
-                        <textarea id="ngKeyword" style="resize: none;height: 180px;width: 250px"
-                                  placeholder="请用逗号作为分割符"></textarea>
-                    </td>
-                </tr>
-            </table>
-        </form>
-    </div>
-<hr>
+</div>
+<div id="showMainKeywordBottomPositioneDiv">
     <div id="showMainKeywordBottomDiv">
         <input id="fisrtButton" class="ui-button ui-widget ui-corner-all" type="button"  onclick="serachMainKeywords(1,'${page.size}')" value="首页"/>&nbsp;&nbsp;&nbsp;&nbsp;
         <input id="upButton" type="button" class="ui-button ui-widget ui-corner-all" onclick="serachMainKeywords('${page.current-1}','${page.size}')" value="上一页"/>&nbsp;&nbsp;&nbsp;&nbsp;
-                ${page.current}/${page.pages}&nbsp;&nbsp;
+        ${page.current}/${page.pages}&nbsp;&nbsp;
         <input id="nextButton"  type="button" class="ui-button ui-widget ui-corner-all"  onclick="serachMainKeywords('${page.current+1>=page.pages?page.pages:page.current+1}','${page.size}')" value="下一页">&nbsp;&nbsp;&nbsp;&nbsp;
         <input id="lastButton" type="button" class="ui-button ui-widget ui-corner-all" onclick="serachMainKeywords('${page.pages}','${page.size}')" value="末页">&nbsp;&nbsp;&nbsp;&nbsp;
-                        总记录数:${page.total}&nbsp;&nbsp;&nbsp;&nbsp;
-                        每页显示条数:<select id="chooseRecords"  onchange="chooseRecords(${page.current},this.value)">
-                            <option>10</option>
-                            <option>15</option>
-                            <option>30</option>
-                            <option>45</option>
-                        </select>
+        总记录数:${page.total}&nbsp;&nbsp;&nbsp;&nbsp;
+        每页显示条数:<select id="chooseRecords"  onchange="chooseRecords(${page.current},this.value)">
+        <option>10</option>
+        <option>15</option>
+        <option>30</option>
+        <option>45</option>
+    </select>
         <%--用于存储pageInfo--%>
         <input type="hidden" id="currentPageHidden" value="${page.current}"/>
         <input type="hidden" id="displaysRecordsHidden" value="${page.size}"/>
         <input type="hidden" id="pagesHidden" value="${page.pages}"/>
     </div>
+</div>
+<div id="showAddMainKeywordDialog" class="easyui-dialog" title="添加投诉关键字">
+    <form id="mainKeywordForm" action="show.jsp">
+        <table style="border-spacing:15px;">
+            <tr>
+                <input id="mUuid" type="hidden">
+                <td>主关键字</td>
+                <td><input id="mKeyword" type="text" style="width: 250px;"></td>
+            </tr>
+            <tr>
+                <td>地区分组</td>
+                <td>
+                    <select id="mGroup" style="width: 250px;">
+                        <option value="">-----------请 选 择 城 市-----------</option>
+                        <option value="北京">北京</option>
+                        <option value="上海">上海</option>
+                        <option value="广州">广州</option>
+                        <option value="深圳">深圳</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>负面词</td>
+                <td>
+                        <textarea id="ngKeyword" style="resize: none;height: 180px;width: 250px"
+                                  placeholder="请用逗号作为分割符"></textarea>
+                </td>
+            </tr>
+        </table>
+    </form>
 </div>
 </body>
 </html>

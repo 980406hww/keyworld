@@ -1,12 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ include file="/commons/basejs.jsp" %>
+<%@ include file="/commons/global.jsp" %>
+<script language="javascript" type="text/javascript" src="/toastmessage/jquery.toastmessage.js"></script>
+<link rel="stylesheet" href="/toastmessage/css/jquery.toastmessage.css">
+<script language="javascript" type="text/javascript" src="/common.js"></script>
 <html>
 <head>
 	<title>全站设置单</title>
 	<style>
-		.wrap {word-break: break-all; word-wrap:break-word;}
+		.wrap,td {word-break: break-all; word-wrap:break-word;}
+
 		<!--
 		#div1{
 			display:none;
@@ -29,8 +32,15 @@
 			height: 22px;
 		}
 
+		#topDiv {
+			position: fixed;
+			top: 0px;
+			left: 0px;
+			background-color: white;
+			width: 100%;
+		}
+
 		#changeSettingDialog {
-			display: none;
 			font-size: 12px;
 			line-height: 12px;
 			width: 340px;
@@ -41,7 +51,6 @@
 			margin: 10px 10px 0px 30px;
 		}
 		#chargeDialog {
-			display: none;
 			width: 375px;
 			height: 145px;
 			font-size: 12px;
@@ -54,120 +63,125 @@
 			display: none;
 		}
 		#chargeLogListDiv {
-			display: none;
 			overflow-y: auto;
 		}
 
 		#showQZSettingDiv {
-			overflow: scroll;
 			width: 100%;
 			height: 95%;
 			margin: auto;
 		}
 
+		#showQZSettingBottomPositioneDiv{
+			position: fixed;
+			bottom: 0px;
+			right: 0px;
+			background-color: white;
+			padding-top: 10px;
+			padding-bottom: 10px;
+			width: 100%;
+		}
 		#showQZSettingBottomDiv {
 			float: right;
-			width: 580px;
+			margin-right: 20px;
 		}
-		-->
+		body{
+			margin: 0;
+			padding: 0;
+		}
 	</style>
-	<script language="javascript" type="text/javascript" src="/js/My97DatePicker/WdatePicker.js"></script>
-	<script language="javascript" type="text/javascript" src="/js/jquery142.js"></script>
-	<script language="javascript" type="text/javascript" src="/js/My97DatePicker/WdatePicker.js"></script>
-	<script language="javascript" type="text/javascript" src="/ui/jquery-ui.js"></script>
-	<script language="javascript" type="text/javascript" src="/js/slide.js"></script>
-	<link href="/ui/jquery-ui.css" rel="stylesheet" type="text/css" />
-	<link href="/css/menu.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
+<div id="topDiv">
+	<%@include file="/menu.jsp" %>
+	<table width="100%" style="font-size:12px; margin-top:40px;" cellpadding=3>
+		<tr>
+			<td colspan="14" align="right">
+				<a href="javascript:resetSearchCondition('-1')">过期未收费(${chargeRemindDataMap['expiredChargeSize']})</a>
+				| <a target="_blank" href="javascript:resetSearchCondition('0')">当天收费提醒(${chargeRemindDataMap['nowChargeSize']})</a>
+				| <a target="_blank" href="javascript:resetSearchCondition('3')">三天收费提醒(${chargeRemindDataMap['threeChargeSize']})</a>
+				| <a target="_blank" href="javascript:resetSearchCondition('7')">七天收费提醒(${chargeRemindDataMap['sevenChargeSize']})</a>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="11">
+				<form method="post" id="chargeForm" action="/internal/qzsetting/searchQZSettings">
+					<input type="hidden" id="dateRangeType" name="dateRangeType" value="${qzSettingSearchCriteria.dateRangeType}"/>
+					<table style="font-size:12px;">
+						<tr>
+							<input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}"/>
+							<input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
+							<input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
+							<input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
+							<input type="hidden" name="customerUuid" id="customerUuid" />
+							<td align="right">客户:</td> <td><input type="text" list="customer_list" name="customerInfo" id="customerInfo" value="${qzSettingSearchCriteria.customerInfo}" style="width:200px;"></td>
+							<td align="right">域名:</td> <td><input type="text" name="domain" id="domain" value="${qzSettingSearchCriteria.domain}" style="width:200px;"></td>
+							<td align="right">组名:</td> <td><input type="text" name="group" id="group" value="${qzSettingSearchCriteria.group}" style="width:200px;"></td>
+							<td align="right">状态:</td>
+							<td>
+								<select name="updateStatus" id="updateStatus" style="width:200px;">
+									<c:forEach items="${statusList}" var="status">
+										<c:choose>
+											<c:when test="${status eq qzSettingSearchCriteria.updateStatus}"><option selected>${status}</option></c:when>
+											<c:otherwise><option>${status}</option></c:otherwise>
+										</c:choose>
+									</c:forEach>
+								</select>
+							</td>
+							<td align="right" width="100"><input type="submit" name="btnQuery" id="btnQuery" onclick="resetSearchCondition('1')" value=" 查询 " ></td>
+						</tr>
+					</table>
+				</form>
+			</td>
+			<td align="right" colspan="3">
+				<a href="javascript:showSettingDialog(null, this)">增加全站设置</a>
+				| <a target="_blank" href="javascript:updateImmediately(this)">马上更新</a>
+				| <a target="_blank" href="javascript:delSelectedQZSettings(this)">删除所选</a>
+			</td>
+		</tr>
+	</table>
+	<table id="headerTable" style="width: 100%">
+		<tr bgcolor="#eeeeee" height=30>
+			<td align="center" width=25><input type="checkbox" onclick="selectAll(this)" /></td>
+			<td align="center" width=150>客户</td>
+			<td align="center" width=100>域名</td>
+			<td align="center" width=50>入口类型</td>
+			<td align="center" width=80>分组</td>
+			<td align="center" width=80>去掉没指数</td>
+			<td align="center" width=80>去掉没排名</td>
+			<td align="center" width=60>更新间隔</td>
+			<td align="center" width=60>更新状态</td>
+			<td align="center" width=80>更新开始时间</td>
+			<td align="center" width=80>更新结束时间</td>
+			<td align="center" width=80>更新时间</td>
+			<td align="center" width=80>添加时间</td>
+			<td align="center" width=100>操作</td>
+			<div id="div1"></div>
+			<div id="div2"></div>
+		</tr>
+	</table>
+</div>
 <div id="showQZSettingDiv">
-<table width=100% style="font-size:12px;" cellpadding=3>
-	<tr>
-		<td colspan="14" align="left">
-			<%@include file="/menu.jsp" %>
-		</td>
-	</tr>
-	<tr>
-		<td colspan="14" align="right">
-			<a href="javascript:resetSearchCondition('-1')">过期未收费(${chargeRemindDataMap['expiredChargeSize']})</a>
-			| <a target="_blank" href="javascript:resetSearchCondition('0')">当天收费提醒(${chargeRemindDataMap['nowChargeSize']})</a>
-			| <a target="_blank" href="javascript:resetSearchCondition('3')">三天收费提醒(${chargeRemindDataMap['threeChargeSize']})</a>
-			| <a target="_blank" href="javascript:resetSearchCondition('7')">七天收费提醒(${chargeRemindDataMap['sevenChargeSize']})</a>
-		</td>
-	</tr>
-	<tr>
-		<td colspan="11">
-			<form method="post" id="chargeForm" action="/internal/qzsetting/searchQZSettings">
-				<input type="hidden" id="dateRangeType" name="dateRangeType" value="${qzSettingSearchCriteria.dateRangeType}"/>
-				<table style="font-size:12px;">
-					<tr>
-						<input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}"/>
-						<input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
-						<input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
-						<input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
-						<input type="hidden" name="customerUuid" id="customerUuid" />
-						<td align="right">客户:</td> <td><input type="text" list="customer_list" name="customerInfo" id="customerInfo" value="${qzSettingSearchCriteria.customerInfo}" style="width:200px;"></td>
-						<td align="right">域名:</td> <td><input type="text" name="domain" id="domain" value="${qzSettingSearchCriteria.domain}" style="width:200px;"></td>
-						<td align="right">组名:</td> <td><input type="text" name="group" id="group" value="${qzSettingSearchCriteria.group}" style="width:200px;"></td>
-						<td align="right">状态:</td>
-						<td>
-							<select name="updateStatus" id="updateStatus" style="width:200px;">
-								<c:forEach items="${statusList}" var="status">
-									<c:choose>
-										<c:when test="${status eq qzSettingSearchCriteria.updateStatus}"><option selected>${status}</option></c:when>
-										<c:otherwise><option>${status}</option></c:otherwise>
-									</c:choose>
-								</c:forEach>
-							</select>
-						</td>
-						<td align="right" width="100"><input type="submit" name="btnQuery" id="btnQuery" onclick="resetSearchCondition('1')" value=" 查询 " ></td>
-					</tr>
-				</table>
-			</form>
-		</td>
-		<td align="right" colspan="3">
-			<a href="javascript:showSettingDialog(null, this)">增加全站设置</a>
-			| <a target="_blank" href="javascript:updateImmediately(this)">马上更新</a>
-			| <a target="_blank" href="javascript:delSelectedQZSettings(this)">删除所选</a>
-		</td>
-	</tr>
-	<tr bgcolor="#eeeeee" height=30>
-		<td align="center" width=10><input type="checkbox" onclick="selectAll(this)" /></td>
-		<td align="center" width=120>客户</td>
-		<td align="center" width=100>域名</td>
-		<td align="center" width=50>入口类型</td>
-		<td align="center" width=80>分组</td>
-		<td align="center" width=80>去掉没指数</td>
-		<td align="center" width=80>去掉没排名</td>
-		<td align="center" width=60>更新间隔</td>
-		<td align="center" width=60>更新状态</td>
-		<td align="center" width=80>更新开始时间</td>
-		<td align="center" width=80>更新结束时间</td>
-		<td align="center" width=80>更新时间</td>
-		<td align="center" width=80>添加时间</td>
-		<td align="center" width=100>操作</td>
-		<div id="div1"></div>
-		<div id="div2"></div>
-	</tr>
+<table id="showQZSettingTable"  style="font-size:12px;width: 100%;" cellpadding=3>
 	<c:forEach items="${page.records}" var="qzSetting">
 		<tr onmouseover="doOver(this);" onmouseout="doOut(this);" height=30>
-			<td><input type="checkbox" name="uuid" value="${qzSetting.uuid}"/></td>
-			<td>${qzSetting.contactPerson}</td>
-			<td>${qzSetting.domain}</td>
-			<td>${qzSetting.type}</td>
-			<td>
+			<td  align="center" width=25><input type="checkbox" name="uuid" value="${qzSetting.uuid}"/></td>
+			<td  align="center" width=150>${qzSetting.contactPerson}</td>
+			<td  align="center" width=100>${qzSetting.domain}</td>
+			<td  align="center" width=50>${qzSetting.type}</td>
+			<td  align="center" width=80>
 				${qzSetting.pcGroup == null ? "" : "pc:"}${qzSetting.pcGroup == null ? "" : qzSetting.pcGroup}<br>
 				${qzSetting.phoneGroup == null ? "" : "m:"}${qzSetting.phoneGroup == null ? "" : qzSetting.phoneGroup}
 			</td>
-			<td>${qzSetting.ignoreNoIndex == true ? "是" : "否"}</td>
-			<td>${qzSetting.ignoreNoOrder == true ? "是" : "否"}</td>
-			<td>${qzSetting.updateInterval}</td>
-			<td>${qzSetting.updateStatus == null ? "" : qzSetting.updateStatus}</td>
-			<td><fmt:formatDate value="${qzSetting.updateStartTime}" pattern="MM-dd HH:mm" /></td>
-			<td><fmt:formatDate value="${qzSetting.updateEndTime}" pattern="MM-dd HH:mm" /></td>
-			<td><fmt:formatDate value="${qzSetting.updateTime}" pattern="MM-dd HH:mm" /></td>
-			<td><fmt:formatDate value="${qzSetting.createTime}" pattern="MM-dd HH:mm" /></td>
-			<td>
+			<td  align="center" width=80>${qzSetting.ignoreNoIndex == true ? "是" : "否"}</td>
+			<td  align="center" width=80>${qzSetting.ignoreNoOrder == true ? "是" : "否"}</td>
+			<td  align="center" width=60>${qzSetting.updateInterval}</td>
+			<td  align="center" width=60>${qzSetting.updateStatus == null ? "" : qzSetting.updateStatus}</td>
+			<td  align="center" width=80><fmt:formatDate value="${qzSetting.updateStartTime}" pattern="MM-dd HH:mm" /></td>
+			<td  align="center" width=80><fmt:formatDate value="${qzSetting.updateEndTime}" pattern="MM-dd HH:mm" /></td>
+			<td  align="center" width=80><fmt:formatDate value="${qzSetting.updateTime}" pattern="MM-dd HH:mm" /></td>
+			<td  align="center" width=80><fmt:formatDate value="${qzSetting.createTime}" pattern="MM-dd HH:mm" /></td>
+			<td  align="center" width=100>
 				<a href="javascript:showChargeDialog('${qzSetting.uuid}','${qzSetting.contactPerson}','${qzSetting.domain}',this)">收费</a> |
 				<a href="javascript:showSettingDialog('${qzSetting.uuid}', this)">修改</a><br>
 				<a href="javascript:delQZSetting(${qzSetting.uuid})">删除</a> |
@@ -177,7 +191,7 @@
 	</c:forEach>
 </table>
 </div>
-<hr>
+<div id="showQZSettingBottomPositioneDiv">
 <div id="showQZSettingBottomDiv" align="right">
 	<input id="fisrtButton" type="button" onclick="changePaging(1,'${page.size}')" value="首页"/>
 	&nbsp;&nbsp;&nbsp;&nbsp;
@@ -201,8 +215,7 @@
 	<input type="hidden" id="pagesHidden" value="${page.pages}"/>
 	&nbsp;&nbsp;&nbsp;&nbsp;
 </div>
-<br>
-
+</div>
 <script language="javascript">
     var dateStr = new Date(); // 当天日期
     var m = dateStr.getMonth() + 1 < 10 ? "0" + (dateStr.getMonth() + 1) : (dateStr.getMonth() + 1);
@@ -237,7 +250,23 @@
             showQZSettingBottomDiv.find("#nextButton").attr("disabled", "disabled");
             showQZSettingBottomDiv.find("#lastButton").attr("disabled", "disabled");
         }
+        $("#chargeLogListDiv").dialog("close");
+        $("#chargeDialog").dialog("close");
+        $("#changeSettingDialog").dialog("close");
+        $("#showQZSettingDiv").css("margin-top",$("#topDiv").height());
+        alignTableHeader();
+        window.onresize = function(){
+            alignTableHeader();
+        }
     });
+
+    function alignTableHeader(){
+        var td = $("#headerTable tr:first td");
+        var ctd = $("#showQZSettingTable tr:first td");
+        $.each(td, function (idx, val) {
+            ctd.eq(idx).width($(val).width());
+        });
+    }
 
     function changePaging(currentPage, pageSize) {
         var chargeForm = $("#chargeForm");
@@ -287,19 +316,19 @@
     }
     function delQZSetting(uuid) {
         if (confirm("确实要删除这个全站设置吗?") == false) return;
-        $$$.ajax({
+        $.ajax({
             url: '/internal/qzsetting/delete/' + uuid,
             type: 'Get',
             success: function (data) {
                 if(data){
-                    showInfo("删除成功！", self);
+                    $().toastmessage('showSuccessToast', "删除成功！", self);
                     window.location.reload();
                 }else{
-                    showInfo("删除失败！", self);
+                   $().toastmessage('showErrorToast', "删除失败");
                 }
             },
             error: function () {
-                showInfo("删除失败！", self);
+               $().toastmessage('showErrorToast', "删除失败");
                 window.location.reload();
             }
         });
@@ -307,11 +336,11 @@
 
     function getSelectedIDs() {
         var uuids = '';
-        $$$.each($$$("input[name=uuid]:checkbox:checked"), function(){
+        $.each($("input[name=uuid]:checkbox:checked"), function(){
             if(uuids === ''){
-                uuids = $$$(this).val();
+                uuids = $(this).val();
             }else{
-                uuids = uuids + "," + $$$(this).val();
+                uuids = uuids + "," + $(this).val();
             }
         });
         return uuids;
@@ -326,7 +355,7 @@
         if (confirm("确实要删除这些关键字吗?") == false) return;
         var postData = {};
         postData.uuids = uuids.split(",");
-        $$$.ajax({
+        $.ajax({
             url: '/internal/qzsetting/deleteQZSettings',
             data: JSON.stringify(postData),
             headers: {
@@ -337,14 +366,14 @@
             type: 'POST',
             success: function (data) {
                 if(data){
-                    showInfo("操作成功！", self);
+                   $().toastmessage('showSuccessToast', "操作成功");
                     window.location.reload();
                 }else{
-                    showInfo("操作失败！", self);
+                    $().toastmessage('showErrorToast', "操作失败");
                 }
             },
             error: function () {
-                showInfo("操作失败！", self);
+                $().toastmessage('showErrorToast', "操作失败");
                 window.location.reload();
             }
         });
@@ -359,7 +388,7 @@
         if (confirm("确实要马上更新这些设置吗？") == false) return;
         var postData = {};
         postData.uuids = uuids;
-        $$$.ajax({
+        $.ajax({
             url: '/internal/qzsetting/updateImmediately',
             data: JSON.stringify(postData),
             headers: {
@@ -370,14 +399,14 @@
             type: 'POST',
             success: function (data) {
                 if(data){
-                    showInfo("操作成功！", self);
+                   $().toastmessage('showSuccessToast', "操作成功");
                     window.location.reload();
                 }else{
-                    showInfo("操作失败！", self);
+                    $().toastmessage('showErrorToast', "操作失败");
                 }
             },
             error: function () {
-                showInfo("操作失败！", self);
+                $().toastmessage('showErrorToast', "操作失败");
             }
         });
     }
@@ -397,7 +426,7 @@
     };
 
     function saveChargeLog(self) {
-        var chargeDialog = $$$("#chargeDialog");
+        var chargeDialog = $("#chargeDialog");
         var selectedOperationTypes = chargeDialog.find("input[name=operationType]:checkbox:checked");
         var saveChargeLogFlag = true;
         if (selectedOperationTypes.length == 0) {
@@ -406,7 +435,7 @@
             return;
         }
         var chargeLogs = [];
-        $$$.each(selectedOperationTypes, function (index, val) {
+        $.each(selectedOperationTypes, function (index, val) {
             var chargeLog = {};
             chargeLog.qzOperationTypeUuid = chargeDialog.find(
                 "#qzOperationTypeUuid" + val.id).val();
@@ -443,7 +472,7 @@
         });
         if(saveChargeLogFlag) {
             if (window.confirm("确认收费?")) {
-                $$$.ajax({
+                $.ajax({
                     url: '/internal/qzchargelog/save',
                     data: JSON.stringify(chargeLogs),
                     headers: {
@@ -455,16 +484,15 @@
                     success: function (data) {
                         resetChargeDialog();
                         if (data != null && data != "") {
-                            showInfo("收费成功！", self);
+                            $().toastmessage('showSuccessToast', "收费成功！");
                             $(self).dialog("close");
                             window.location.reload();
                         } else {
-                            showInfo("收费失败！", self);
-                            window.location.reload();
+                            $().toastmessage('showErrorToast', "收费失败");
                         }
                     },
                     error: function () {
-                        showInfo("收费失败！", self);
+                        $().toastmessage('showErrorToast', "收费失败");
                     }
                 });
             } else {
@@ -475,8 +503,8 @@
 
     function calTotalAmount() {
         var totalAmount = 0;
-        var chargeDialog = $$$("#chargeDialog");
-        $$$.each(chargeDialog.find("input[name=operationType]:checkbox:checked"), function(idx, val){
+        var chargeDialog = $("#chargeDialog");
+        $.each(chargeDialog.find("input[name=operationType]:checkbox:checked"), function(idx, val){
             totalAmount = totalAmount + Number(chargeDialog.find("#actualAmount" + val.id).val());
         });
         var str = new String(totalAmount);
@@ -513,20 +541,6 @@
         div1.style.position="absolute";
     }
 
-    function showInfo(content, e) {
-        e = e || window.event;
-        var div1 = document.getElementById('div2'); //将要弹出的层
-        div1.innerText = content;
-        div1.style.display = "block"; //div1初始状态是不可见的，设置可为可见
-        div1.style.left = getLeft(e) + 10; //鼠标目前在X轴上的位置，加10是为了向右边移动10个px方便看到内容
-        div1.style.top = getTop(e) + 5;
-        div1.style.position = "absolute";
-
-        var intervalID = setInterval(function(){
-            div1.style.display = "none";
-        }, 3000);
-    }
-
     //关闭层div1的显示
     function closeTip(){
         var div1 = document.getElementById('div1');
@@ -535,12 +549,12 @@
 
     function showChargeLog(uuid, self) {
         $("#chargeLogListTable  tr:not(:first)").remove();
-        $$$.ajax({
+        $.ajax({
             url: '/internal/qzchargelog/chargesList/' + uuid,
             type: 'Get',
             success: function (qzChargeLogs) {
                 if (qzChargeLogs != null && qzChargeLogs.length > 0) {
-                    $$$.each(qzChargeLogs, function (idx, val) {
+                    $.each(qzChargeLogs, function (idx, val) {
                         var newTr = document.createElement("tr")
                         var chargeLogElements = [
                             toDateFormat(new Date(val.actualChargeDate)),
@@ -549,7 +563,7 @@
                             val.userName,
                             toTimeFormat(new Date(val.createTime))
                         ];
-                        $$$.each(chargeLogElements, function () {
+                        $.each(chargeLogElements, function () {
                             var newTd = document.createElement("td");
                             newTr.appendChild(newTd);
                             newTd.innerHTML = this;
@@ -561,27 +575,32 @@
                         width: 365,
 						title:"收费记录",
                         modal: true,
-                        buttons: {
-                            "取消": function () {
-                                $(this).dialog("close");
-                            }
-                        }
+                        buttons: [{
+							text: '取消',
+							iconCls: 'icon-cancel',
+							handler: function () {
+								$("#chargeLogListDiv").dialog("close");
+								$('#showRuleForm')[0].reset();
+							}
+						}]
                     });
+                    $("#chargeLogListDiv").dialog("open");
+                    $("#chargeLogListDiv").window("resize",{top:$(document).scrollTop() + 100});
                 } else {
                     alert("暂无收费记录");
                 }
             },
             error: function () {
-                showInfo("获取信息失败！", self);
+                $().toastmessage('showErrorToast', "获取信息失败！");
             }
         });
     }
 
     function showChargeDialog(uuid,contactPerson,domain,self) {
-        var chargeDialogObj = $$$("#chargeDialog");
+        var chargeDialogObj = $("#chargeDialog");
         chargeDialogObj.find("#qzSettingCustomer").val(contactPerson);
         chargeDialogObj.find("#qzSettingDomain").val(domain);
-        $$$.ajax({
+        $.ajax({
             url: '/internal/qzchargelog/getQZChargeLog/' + uuid,
             type: 'Get',
             success: function (chargeInfos) {
@@ -589,7 +608,7 @@
                     resetChargeDialog();
                     var totalAmount = 0;
                     var showFlag = false;
-                    $$$.each(chargeInfos, function(idx, val){
+                    $.each(chargeInfos, function(idx, val){
                         var checkbox = chargeDialogObj.find("#" + val.operationType);
                         if(val.qzOperationTypeUuid != null) {
                             // 存在此类操作类型
@@ -643,35 +662,42 @@
 						resizable: false,
 						modal: true,
                         width: 400,
+						height:380,
                         title: '收费',
-						//按钮
-						buttons: {
-							"收费": function () {
+                        buttons: [{
+                            text: '收费',
+                            iconCls: 'icon-ok',
+                            handler: function () {
                                 saveChargeLog(this);
-							},
-							"取消": function () {
-								$(this).dialog("close");
+                            }
+                        }, {
+							text: '取消',
+							iconCls: 'icon-cancel',
+							handler: function () {
+								$("#chargeDialog").dialog("close");
 							}
-						}
+                       }]
 					});
+                    $("#chargeDialog").dialog("open");
+                    $("#chargeDialog").window("resize",{top:$(document).scrollTop() + 100});
                 }else{
-                    showInfo("获取信息失败！", self);
+                    $().toastmessage('showErrorToast', "获取信息失败！");
                 }
             },
             error: function () {
-                showInfo("获取信息失败！", self);
+                $().toastmessage('showErrorToast', "获取信息失败！");
             }
         });
     }
 
     function resetChargeDialog() {
-        var chargeDialogObj = $$$("#chargeDialog");
+        var chargeDialogObj = $("#chargeDialog");
         chargeDialogObj.find("#PCChargeInfo").css("display","none");
         chargeDialogObj.find("#PhoneChargeInfo").css("display","none");
         chargeDialogObj.find("#checkChargePC").css("display","none");
         chargeDialogObj.find("#checkChargePhone").css("display","none");
         var operationTypes = chargeDialogObj.find("input[name=operationType]");
-        $$$.each(operationTypes,function (idx, val) {
+        $.each(operationTypes,function (idx, val) {
             val.checked = false;
             chargeDialogObj.find("#qzOperationTypeUuid" + val.id).val("");
             chargeDialogObj.find("#initialKeywordCount" + val.id).val("");
@@ -685,7 +711,7 @@
     }
 
     function dealChargeTable(operationType) {
-        var chargeDialog = $$$("#chargeDialog");
+        var chargeDialog = $("#chargeDialog");
         var checkboxObj = chargeDialog.find("#" + operationType);
         var chargeInfoObj = chargeDialog.find("#" + operationType + "ChargeInfo");
         if (chargeInfoObj.css("display") == "none" || checkboxObj[0].checked == true) {
@@ -703,23 +729,41 @@
     function createSettingDialog() {
         $("#changeSettingDialog").dialog({
             resizable: false,
-            maxHeight: 400,
+            height: 430,
+//            maxHeight: 430,
             width: 400,
             title: '全站设置',
             modal: true,
-            buttons: {
-                "保存": function () {
+            buttons: [{
+                text: '保存',
+                iconCls: 'icon-ok',
+                handler: function () {
                     saveChangeSetting(this);
-                },
-                "取消": function () {
-                    $(this).dialog("close");
                 }
-            }
+            },
+                {
+                    text: '清空',
+                    iconCls: 'fi-trash',
+                    handler: function () {
+                        $('#showRuleForm')[0].reset();
+                    }
+                },
+                {
+                    text: '取消',
+                    iconCls: 'icon-cancel',
+                    handler: function () {
+                        $("#changeSettingDialog").dialog("close");
+                        $('#showRuleForm')[0].reset();
+                    }
+                }]
         });
-	}
+        $("#changeSettingDialog").dialog("open");
+        $("#changeSettingDialog").window("resize",{top:$(document).scrollTop() + 100});
+
+    }
 
     function resetSettingDialog() {
-        var settingDialogDiv = $$$("#changeSettingDialog");
+        var settingDialogDiv = $("#changeSettingDialog");
         settingDialogDiv.find("#qzSettingUuid").val("");
         settingDialogDiv.find("#qzSettingCustomer").val("");
         settingDialogDiv.find("#qzSettingDomain").val("");
@@ -730,7 +774,7 @@
     }
 
     function clearInfo(type) {
-        var settingDialogObj = $$$("#changeSettingDialog");
+        var settingDialogObj = $("#changeSettingDialog");
         if(type == "Both") {
             clearInfo("PC");
             clearInfo("Phone");
@@ -754,7 +798,7 @@
             createSettingDialog();
             return;
         }
-        $$$.ajax({
+        $.ajax({
             url: '/internal/qzsetting/getQZSetting/' + uuid,
             type: 'Get',
             success: function (qzSetting) {
@@ -762,11 +806,11 @@
                     initSettingDialog(qzSetting, self);
                     createSettingDialog();
                 }else{
-                    showInfo("获取信息失败！", self);
+                    $().toastmessage('showErrorToast', "获取信息失败！");
                 }
             },
             error: function () {
-                showInfo("获取信息失败！", self);
+                $().toastmessage('showErrorToast', "获取信息失败！");
             }
         });
     }
@@ -774,7 +818,7 @@
     function initSettingDialog(qzSetting, self) {
         var PCType = false;
         var PhoneType = false;
-        var settingDialogDiv = $$$("#changeSettingDialog");
+        var settingDialogDiv = $("#changeSettingDialog");
         settingDialogDiv.find("#qzSettingUuid").val(qzSetting.uuid);
         settingDialogDiv.find("#qzSettingCustomer").val(
             qzSetting.contactPerson + "_____" + qzSetting.customerUuid);
@@ -789,7 +833,7 @@
         settingDialogDiv[0].style.left = getTop(self); //鼠标目前在X轴上的位置，加10是为了向右边移动10个px方便看到内容
 
         // 操作类型表填充数据
-        $$$.each(qzSetting.qzOperationTypes, function (idx, val) {
+        $.each(qzSetting.qzOperationTypes, function (idx, val) {
             settingDialogDiv.find("#group" + val.operationType).val(val.group);
             settingDialogDiv.find("#initialKeywordCount" + val.operationType).val(
                 val.initialKeywordCount);
@@ -798,7 +842,7 @@
             settingDialogDiv.find("#qzSettingUuid" + val.operationType).val(val.uuid);
 
             // 构造规则表
-            $$$.each(val.qzChargeRules, function (chargeRuleIdx, chargeRuleVal) {
+            $.each(val.qzChargeRules, function (chargeRuleIdx, chargeRuleVal) {
                 addRow("chargeRule" + val.operationType, chargeRuleVal);
                 if (val.operationType === 'PC') {
                     PCType = true;
@@ -821,7 +865,7 @@
     //规则表验证
     var reg = /^[1-9]\d*$/;
     function saveChangeSetting(self) {
-        var settingDialogDiv = $$$("#changeSettingDialog");
+        var settingDialogDiv = $("#changeSettingDialog");
         var qzSetting = {};
         qzSetting.uuid = settingDialogDiv.find("#qzSettingUuid").val();
 
@@ -862,7 +906,7 @@
 
         var checkedObjs = settingDialogDiv.find("input[name=operationType]:checkbox:checked");
         var validationFlag = true;
-        $$$.each(checkedObjs, function (idx, val) {
+        $.each(checkedObjs, function (idx, val) {
             var ruleObj = settingDialogDiv.find("#chargeRule" + val.id);
             var operationType = {};
             operationType.qzChargeRules = [];
@@ -895,10 +939,10 @@
             //多条规则
             var endKeyWordCountValue = -1;
             var trObjs = ruleObj.find("tr:not(:first,:last)");
-            $$$.each(trObjs, function (idx, val) {
-                var startKeywordCountObj = $$$(val).find("input[name=startKeywordCount]");
-                var endKeywordCountObj = $$$(val).find("input[name=endKeywordCount]");
-                var amountObj = $$$(val).find("input[name=amount]");
+            $.each(trObjs, function (idx, val) {
+                var startKeywordCountObj = $(val).find("input[name=startKeywordCount]");
+                var endKeywordCountObj = $(val).find("input[name=endKeywordCount]");
+                var amountObj = $(val).find("input[name=amount]");
 
                 var chargeRule = {};
                 chargeRule.startKeywordCount = startKeywordCountObj.val();
@@ -983,7 +1027,7 @@
                 alert("保存失败，必须要增加一条规则");
                 return;
             }
-            $$$.ajax({
+            $.ajax({
                 url: '/internal/qzsetting/save',
                 data: JSON.stringify(qzSetting),
                 headers: {
@@ -994,15 +1038,15 @@
                 type: 'POST',
                 success: function (data) {
                     if (data != null && data != "") {
-                        showInfo("更新成功！", self);
+                        $().toastmessage('showSuccessToast', "更新成功");
                         window.location.reload();
                     } else {
-                        showInfo("更新失败！", self);
+                        $().toastmessage('showErrorToast', "更新失败！");
                     }
                     $(self).dialog("close");
                 },
                 error: function () {
-                    showInfo("更新失败！", self);
+                    $().toastmessage('showErrorToast', "更新失败！");
                 }
             });
         }
@@ -1013,7 +1057,7 @@
     }
 
     function addRow(tableID, chargeRule){
-        var tableObj = $$$("#" + tableID);
+        var tableObj = $("#" + tableID);
         var rowCount = tableObj.find("tr").length;
         var newRow = tableObj[0].insertRow(rowCount - 1); //插入新行
 
@@ -1039,8 +1083,8 @@
         var tableObj = currentRow.parentNode.parentNode;
         if(tableObj.rows.length > 3) {
             tableObj.deleteRow(index);
-            $$$.each($$$("#"+tableObj.id).find("input[name=sequenceID]"), function(idx, val){
-                $$$(val).val(idx + 1);
+            $.each($("#"+tableObj.id).find("input[name=sequenceID]"), function(idx, val){
+                $(val).val(idx + 1);
             });
         } else {
             alert("删除失败，规则表不允许为空");
@@ -1048,7 +1092,7 @@
     }
 
     function dealSettingTable(operationType) {
-        var settingDialogDiv = $$$("#changeSettingDialog");
+        var settingDialogDiv = $("#changeSettingDialog");
         var groupObj = settingDialogDiv.find('#operationTypeSummaryInfo' + operationType);
         var ruleObj = settingDialogDiv.find('#chargeRule' + operationType);
         var chargeRuleRowCount = ruleObj.find("tr").length;
@@ -1071,9 +1115,7 @@
     }
 
 </script>
-<div style="display:none;">
-</div>
-<div id="changeSettingDialog">
+<div id="changeSettingDialog" class="easyui-dialog">
 	<table style="font-size:12px" id="settingTable" align="center">
 		<tr>
 			<td>客户</td>
@@ -1227,7 +1269,7 @@
 	</c:forEach>
 </datalist>
 <%--收费Dialog--%>
-<div id="chargeDialog">
+<div id="chargeDialog" class="easyui-dialog">
 	<table id="chargeDialogTable">
 		<tr>
 			<td align="right">客户</td>
@@ -1356,7 +1398,7 @@
 	</p>
 </div>
 <%--收费详情列表--%>
-<div id="chargeLogListDiv">
+<div id="chargeLogListDiv" class="easyui-dialog">
 	<table id="chargeLogListTable" border="1" cellpadding="3" style="font-size: 12px;background-color: white;border-collapse: collapse;">
 		<tr>
 			<td>收费时间</td>
