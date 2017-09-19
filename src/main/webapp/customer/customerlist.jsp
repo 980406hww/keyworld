@@ -6,13 +6,11 @@
     <script language="javascript" type="text/javascript" src="/toastmessage/jquery.toastmessage.js"></script>
     <link rel="stylesheet" href="/toastmessage/css/jquery.toastmessage.css">
     <script language="javascript" type="text/javascript" src="/common.js"></script>
-
     <style type="text/css">
         .wrap {
             word-break: break-all;
             word-wrap: break-word;
         }
-
         #topDiv {
             position: fixed;
             top: 0px;
@@ -24,7 +22,6 @@
             width: 100%;
             margin: auto;
         }
-
         #showCustomerTable tr:nth-child(odd){background:#EEEEEE;}
 
         #showCustomerTable td{
@@ -60,6 +57,7 @@
             margin: 0;
             padding: 0;
         }
+        h6{ margin: 0 5px;}
     </style>
     <script type="text/javascript">
         $(function () {
@@ -341,7 +339,7 @@
             $("#customerChargeTypeDialog").dialog({
                 resizable: false,
                 width: 500,
-                height: 400,
+                height:350,
                 modal: true,
                 closed: true,
                 //按钮
@@ -363,7 +361,7 @@
                         text: '取消',
                         iconCls: 'icon-cancel',
                         handler: function () {
-                            $(this).dialog("close");
+                            $("#customerChargeTypeDialog").dialog("close");
                             $('#showRuleForm')[0].reset();
                         }
                     }]
@@ -735,7 +733,7 @@
                         text: '取消',
                         iconCls: 'icon-cancel',
                         handler: function () {
-                            $(this).dialog("close");
+                            $("#uploadDailyReportTemplateDialog").dialog("close");
                             $('#dailyReportTemplateForm')[0].reset();
                         }
                     }]
@@ -773,7 +771,7 @@
                         text: '取消',
                         iconCls: 'icon-cancel',
                         handler: function () {
-                            $(this).dialog("close");
+                            $("#customerDialog").dialog("close");
                             $('#customerForm')[0].reset();
                         }
                     }]
@@ -883,7 +881,7 @@
                         text: '取消',
                         iconCls: 'icon-cancel',
                         handler: function () {
-                            (this).dialog("close");
+                            ("#customerKeywordDialog").dialog("close");
                             $('#customerKeywordForm')[0].reset();
                         }
                     }]
@@ -1109,7 +1107,7 @@
                     <a href="/internal/customerKeyword/searchCustomerKeywords/${customer.uuid}">${customer.contactPerson}</a>
                 </td>
                 <td>${customer.keywordCount}</td>
-                <td>${customer.qq}dsgdfh</td>
+                <td>${customer.qq}</td>
                 <td>${customer.telphone} </td>
                 <td align="right">${customer.paidFee} </td>
                 <td>${customer.remark}</td>
@@ -1126,9 +1124,15 @@
                 </td>
                 <td><fmt:formatDate value="${customer.createTime}" pattern="yyyy-MM-dd"/></td>
                 <td>
-                    <a href="javascript:modifyCustomer(${customer.uuid})">修改</a> |
-                    <a href="javascript:delCustomer('${customer.uuid}')">删除</a> |
-                    <a href="javascript:changeCustomerChargeType('${customer.uuid}')">客户规则</a> |
+                    <shiro:hasPermission name="/internal/customer/saveCustomer">
+                        <a href="javascript:modifyCustomer(${customer.uuid})">修改</a> |
+                    </shiro:hasPermission>
+                    <shiro:hasPermission name="/internal/customer/delCustomer">
+                        <a href="javascript:delCustomer('${customer.uuid}')">删除</a> |
+                    </shiro:hasPermission>
+                    <shiro:hasPermission name="/internal/customerChar/saveCustomerChargeTypegeType">
+                        <a href="javascript:changeCustomerChargeType('${customer.uuid}')">客户规则</a> |
+                    </shiro:hasPermission>
                     <a href="javascript:showCustomerKeywordDialog(${customer.uuid})">快速加词</a> |
                     <a target="_blank" href="javascript:uploadDailyReportTemplate('${customer.uuid}', this)">上传日报表模板</a>
                 </td>
@@ -1149,7 +1153,7 @@
     <hr>
     <form id="showRuleForm">
         <div id="chargeTypeCalculationDiv" style="float: left;width: 100%;">
-            <div id="pcOperationTypeDiv" style="float: left;width: 50%;">
+            <div id="pcOperationTypeDiv" style="float: left;width: 48%; margin-left: 10px">
                 <input id="PC" type="checkbox" name="operationType"
                        style="width: 13px;height: 13px; margin-left: 130px"
                        onchange="controlChargeTypeCalculationDiv(this)"/>电脑<br>
