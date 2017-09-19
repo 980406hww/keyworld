@@ -69,13 +69,15 @@ public class RoleServiceImpl extends ServiceImpl<RoleDao, Role> implements IRole
         RoleResource roleResource = new RoleResource();
         roleResource.setRoleID(roleId);
         roleResourceDao.delete(new EntityWrapper<RoleResource>(roleResource));
-        
-        String[] resourceIdArray = resourceIds.split(",");
-        for (String resourceId : resourceIdArray) {
-            roleResource = new RoleResource();
-            roleResource.setRoleID(roleId);
-            roleResource.setResourceID(Long.parseLong(resourceId));
-            roleResourceDao.insert(roleResource);
+
+        if(!StringUtils.isBlank(resourceIds)) {
+            String[] resourceIdArray = resourceIds.split(",");
+            for (String resourceId : resourceIdArray) {
+                roleResource = new RoleResource();
+                roleResource.setRoleID(roleId);
+                roleResource.setResourceID(Long.parseLong(resourceId));
+                roleResourceDao.insert(roleResource);
+            }
         }
     }
 
