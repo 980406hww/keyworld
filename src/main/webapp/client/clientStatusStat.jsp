@@ -1,6 +1,5 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ include file="/commons/basejs.jsp" %>
+<%@ include file="/commons/global.jsp" %>
 <html>
 <head>
     <title>客户端统计</title>
@@ -38,13 +37,7 @@
             padding: 0;
         }
     </style>
-    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <script language="javascript" type="text/javascript" src="/js/slide1.12.4.js"></script>
-    <link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css">
-    <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <link href="/css/menu.css" rel="stylesheet" type="text/css"/>
+
 
     <script language="javascript" type="text/javascript">
 
@@ -69,7 +62,7 @@
 
     <%@include file="/menu.jsp" %>
 
-    <form action="/internal/clientstatus/clientStatusStat" method="post" id="searchClientStatusSummaryVOForm" style="margin: 20px 0;">
+    <form action="/internal/clientstatus/clientStatusStat" method="post" id="searchClientStatusSummaryVOForm" style="margin-top: 50px;margin-left: 20px">
         客户端ID前缀:<input type="text" name="clientIDPrefix" value="${clientIDPrefix}">
         城市:<input type="text" name="city" value="${city}">
         <input type="submit" value="查询">

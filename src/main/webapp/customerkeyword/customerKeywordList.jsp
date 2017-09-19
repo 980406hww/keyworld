@@ -1,26 +1,17 @@
-
+<%@ include file="/commons/basejs.jsp" %>
+<%@ include file="/commons/global.jsp" %>
 <html>
-<%
-    String path = request.getContextPath();
-    String basePath =
-            request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-                    + path + "/";
-%>
 <head>
-    <%@ include file="/commons/basejs.jsp" %>
-    <%@ include file="/commons/global.jsp" %>
     <script language="javascript" type="text/javascript" src="/toastmessage/jquery.toastmessage.js"></script>
     <link rel="stylesheet" href="/toastmessage/css/jquery.toastmessage.css">
     <script language="javascript" type="text/javascript" src="/common.js"></script>
     <head>
         <title>关键字列表</title>
         <style>
-
             .wrap {
                 word-break: break-all;
                 word-wrap: break-word;
             }
-
             <!--
             #div1 {
                 display: none;
@@ -391,7 +382,7 @@
                             text: '取消',
                             iconCls: 'icon-cancel',
                             handler: function () {
-                                $(this).dialog("close");
+                                $("#groupChangeNameDialog").dialog("close");
                                 $('#groupNameChangeFrom')[0].reset();
                             }
                         }]
@@ -452,7 +443,7 @@
                 }
                 $( "#saveCustomerKeywordDialog").dialog({
                     width: 440,
-                    height: 610,
+                    height: 540,
                     title : "添加关键字",
                     modal: true,
                     resizable: false,
@@ -475,7 +466,7 @@
                             text: '取消',
                             iconCls: 'icon-cancel',
                             handler: function () {
-                                $(this).dialog("close");
+                                $("#saveCustomerKeywordDialog").dialog("close");
                                 $('#customerKeywordForm')[0].reset();
                             }
                         }]
@@ -699,7 +690,7 @@
                             text: '取消',
                             iconCls: 'icon-cancel',
                             handler: function () {
-                                $(this).dialog("close");
+                                $("#uploadExcelDailog").dialog("close");
                                 $('#uploadExcelForm')[0].reset();
                             }
                         }]
@@ -1045,9 +1036,10 @@
                     <li><span class="customerKeywordSpanClass">首页报价:</span><input name="positionFirstPageFee" id="positionFirstPageFee" value=""
                                                                                   style="width:100px;" type="text" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)">元
                     </li></ul>
-                <c:if test="${user.vipType}">
+
 
                     <ul id="customerKeywordCost" style="float: left; width: 200px;height:170px;text-align: center">
+                        <c:if test="${user.vipType}">
                         <li><a href="javascript:showCustomerKeywordCost()">&nbsp;显示成本(再次点击关闭)</a></li>
                         <ul id="customerKeywordCostFrom" style="display: none;">
                             <li><span class="customerKeywordSpanClass">第一成本:</span><input name="positionFirstCost" id="positionFirstCost"
@@ -1067,8 +1059,9 @@
                                                                                           value="" style="width:100px;" type="text" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)">元
                             </li>
                         </ul>
+                        </c:if>
                     </ul>
-                </c:if>
+
             </li>
             <c:if test="${user.vipType}">
                 <li style="float:none"><span class="customerKeywordSpanClass">服务提供商:</span>
