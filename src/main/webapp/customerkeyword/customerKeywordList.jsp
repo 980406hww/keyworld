@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
 <html>
 <%
     String path = request.getContextPath();
@@ -7,21 +7,11 @@
                     + path + "/";
 %>
 <head>
-    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-    <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-    <script language="javascript" type="text/javascript" src="/common.js"></script>
-    <script src="${pageContext.request.contextPath}/customerkeyword/add.js"  type="text/javascript" language="javascript"></script>
-    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <script language="javascript" type="text/javascript" src="/js/My97DatePicker/WdatePicker.js"></script>
-    <script language="javascript" type="text/javascript" src="/js/slide1.12.4.js"></script>
-    <link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css">
-    <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <link href="/css/menu.css" rel="stylesheet" type="text/css"/>
-    <%--toastmessage插件--%>
+    <%@ include file="/commons/basejs.jsp" %>
+    <%@ include file="/commons/global.jsp" %>
     <script language="javascript" type="text/javascript" src="/toastmessage/jquery.toastmessage.js"></script>
     <link rel="stylesheet" href="/toastmessage/css/jquery.toastmessage.css">
+    <script language="javascript" type="text/javascript" src="/common.js"></script>
     <head>
         <title>关键字列表</title>
         <style>
@@ -103,9 +93,9 @@
 
         <script language="javascript">
             $(function () {
-                $("#groupChangeNameDialog").hide();
-                $("#uploadExcelDailog").hide();
-                $("#saveCustomerKeywordDialog").hide();
+                $("#groupChangeNameDialog").dialog("close");
+                $("#uploadExcelDailog").dialog("close");
+                $("#saveCustomerKeywordDialog").dialog("close");
                 $("#customerKeywordDiv").css("margin-top",$("#customerKeywordTopDiv").height());
                 initPaging();
                 initNoPositionChecked();//初始化排名为0的初始值
@@ -367,6 +357,7 @@
                     resizable: false,
                     width: 260,
                     height: 150,
+                    closed: true,
                     modal: true,
                     title: changeGroupCriteria.title,
                     position:{
@@ -375,8 +366,10 @@
                         of:window
                     },
                     //按钮
-                    buttons: {
-                        "保存": function () {
+                    buttons: [{
+                        text: '保存',
+                        iconCls: 'icon-ok',
+                        handler: function () {
                             var targetGroupName = $("#groupNameChangeFrom").find("#groupName").val();
                             if (targetGroupName == null || targetGroupName === '') {
                                 alert("请输入分组名");
@@ -385,16 +378,26 @@
                             changeGroupCriteria.targetGroupName = targetGroupName;
                             changeGroupName(changeGroupCriteria);
                             $(this).dialog("close");
-                        },
-                        "清空": function () {
-                            $('#groupNameChangeFrom')[0].reset();
-                        },
-                        "取消": function () {
-                            $(this).dialog("close");
-                            $('#groupNameChangeFrom')[0].reset();
                         }
-                    }
+                    },
+                        {
+                            text: '清空',
+                            iconCls: 'fi-trash',
+                            handler: function () {
+                                $('#groupNameChangeFrom')[0].reset();
+                            }
+                        },
+                        {
+                            text: '取消',
+                            iconCls: 'icon-cancel',
+                            handler: function () {
+                                $(this).dialog("close");
+                                $('#groupNameChangeFrom')[0].reset();
+                            }
+                        }]
                 });
+                $("#groupChangeNameDialog").dialog("open");
+                $('#groupChangeNameDialog').window("resize",{top:$(document).scrollTop() + 100});
             }
 
             //下架
@@ -450,34 +453,35 @@
                 $( "#saveCustomerKeywordDialog").dialog({
                     width: 440,
                     height: 610,
-                    position: {
-                        my: "center top",
-                        at: "center top+50px",
-                        of: window},
                     title : "添加关键字",
-                    show: {
-                        effect: "blind",
-                        /* duration: 1000*/
-                    },
-                    hide: {
-                        effect: "blind",
-                        /*duration: 1000*/
-                    },
                     modal: true,
                     resizable: false,
-                    buttons: {
-                        "保存": function () {
+                    closed: true,
+                    buttons: [{
+                        text: '保存',
+                        iconCls: 'icon-ok',
+                        handler: function () {
                             saveCustomerKeyword("${customerKeywordCrilteria.customerUuid}");
-                        },
-                        "清空": function () {
-                            $('#customerKeywordForm')[0].reset();
-                        },
-                        "取消": function () {
-                            $(this).dialog("close");
-                            $('#customerKeywordForm')[0].reset();
                         }
-                    }
+                    },
+                        {
+                            text: '清空',
+                            iconCls: 'fi-trash',
+                            handler: function () {
+                                $('#customerKeywordForm')[0].reset();
+                            }
+                        },
+                        {
+                            text: '取消',
+                            iconCls: 'icon-cancel',
+                            handler: function () {
+                                $(this).dialog("close");
+                                $('#customerKeywordForm')[0].reset();
+                            }
+                        }]
                 });
+                $("#saveCustomerKeywordDialog").dialog("open");
+                $('#saveCustomerKeywordDialog').window("resize",{top:$(document).scrollTop() + 100});
             }
 
             function saveCustomerKeyword(customerUuid) {
@@ -641,14 +645,12 @@
                     width: 260,
                     height: 180,
                     modal: true,
-                    position:{
-                        my:"center top",
-                        at:"center top+150",
-                        of:window
-                    },
+                    closed: true,
                     //按钮
-                    buttons: {
-                        "上传": function () {
+                    buttons: [{
+                        text: '上传',
+                        iconCls: 'icon-ok',
+                        handler: function () {
                             var uploadForm = $("#uploadExcelForm");
                             var uploadFile = uploadForm.find("#uploadExcelFile").val();
                             var fileTypes = new Array("xls", "xlsx");  //定义可支持的文件类型数组
@@ -691,13 +693,19 @@
                                 });
                             }
                             $(this).dialog("close");
-                        },
-                        "取消": function () {
-                            $(this).dialog("close");
-                            $('#uploadExcelForm')[0].reset();
                         }
-                    }
+                    },
+                        {
+                            text: '取消',
+                            iconCls: 'icon-cancel',
+                            handler: function () {
+                                $(this).dialog("close");
+                                $('#uploadExcelForm')[0].reset();
+                            }
+                        }]
                 });
+                $("#uploadExcelDailog").dialog("open");
+                $('#uploadExcelDailog').window("resize",{top:$(document).scrollTop() + 100});
             }
 
             //导出结果
@@ -747,8 +755,8 @@
             }
 
             function alignTableHeader() {
-                var td = $("#customerKeywordTable tr:first td");
-                var ctd = $("#headerTable tr:first td");
+                var td = $("#headerTable tr:first td");
+                var ctd = $("#customerKeywordTable tr:first td");
                 $.each(td, function (idx, val) {
                     ctd.eq(idx).width($(val).width());
                 });
@@ -979,12 +987,12 @@
 </div>
 <%--Dialog部分--%>
 
-<div id="groupChangeNameDialog"  style="text-align: center;" title="修改客户关键字组名">
+<div id="groupChangeNameDialog"  style="text-align: center;" title="修改客户关键字组名" class="easyui-dialog">
     <form id="groupNameChangeFrom" style="text-align: center;margin-top: 10px;">
         目标组名称:<input type="text" id="groupName" name="groupName" style="width:150px">
     </form>
 </div>
-<div id="uploadExcelDailog"  style="text-align: left;height: 60px;" title="Excel文件上传">
+<div id="uploadExcelDailog"  style="text-align: left;height: 60px;" title="Excel文件上传" class="easyui-dialog">
     <form method="post" id="uploadExcelForm" style="margin-top: 10px"  enctype="multipart/form-data" >
         <input type="hidden" id="customerUuid" name="customerUuid" value="${customerKeywordCrilteria.customerUuid}">
         <span>请选择要上传的文件<label id="excelType" style="color: red"></label></span>
@@ -993,7 +1001,7 @@
     </form>
 </div>
 
-<div id="saveCustomerKeywordDialog">
+<div id="saveCustomerKeywordDialog" class="easyui-dialog">
     <form id="customerKeywordForm">
         <ul>
             <input type="hidden" name="uuid" id="uuid" value="" style="width:300px;">
