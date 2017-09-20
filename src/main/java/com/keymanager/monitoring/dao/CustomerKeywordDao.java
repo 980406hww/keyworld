@@ -75,6 +75,7 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     CustomerKeyword getCustomerKeywordForCapturePosition(@Param("terminalType")String terminalType, @Param("groupNames")List<String> groupNames,
                                                          @Param("customerUuid")Long customerUuid, @Param("minutes")int minutes);
-
     void resetInvalidRefreshCount(@Param("customerKeywordRefreshStatInfoCriteria")CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria);
+
+    void updateCustomerKeywordStatus(@Param("customerUuids")List<String> customerUuids, @Param("status")Integer status);
 }

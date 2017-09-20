@@ -40,7 +40,6 @@
 }
 
 #renewalSettingDialog {
-	display: none;
 	margin: 5px 0px 0px 5px;
 }
 
@@ -146,7 +145,11 @@
 							<input id="showFetchKeywordStatus" name="showFetchKeywordStatus" type="checkbox" value="showFetchKeywordStatus"
 							${clientStatusCriteria.showFetchKeywordStatus != null ? "checked=true" : ""}>显示取词状态</input>
 						</td>
-						<td align="right" width="30px"><input type="submit" name="btnFilter" id="btnFilter" onclick="resetPageNumber()" value=" 查询 "></td>
+						<td align="right" width="30px">
+						<shiro:hasPermission name="/internal/clientstatus/searchClientStatuses">
+							<input type="submit" name="btnFilter" id="btnFilter" onclick="resetPageNumber()" value=" 查询 ">
+						</shiro:hasPermission>
+						</td>
 						</tr>
 						<tr>
 						<td colspan="2">
@@ -154,13 +157,27 @@
 						</tr>
 						<tr>
 							<td colspan="2" align="right">
+							<shiro:hasPermission name="/internal/clientstatus/updateClientStatusTargetVersion">
 								<a target="_blank" href="javascript:showTargetVersionSettingDialog(this)">设定目标版本</a>
+							</shiro:hasPermission>
+							<shiro:hasPermission name="/internal/clientstatus/updateClientStatusRenewalDate">
 								|<a target="_blank" href="javascript:showRenewalSettingDialog(this)">续费</a>
+							</shiro:hasPermission>
+							<shiro:hasPermission name="/internal/clientstatus/deleteClientStatuses">
 								|<a target="_blank" href="javascript:delAllItems(this)">删除所选</a>
+							</shiro:hasPermission>
+							<shiro:hasPermission name="/internal/clientstatus/resetRestartStatusForProcessing">
 								|<a target="_blank" href="javascript:resetRestartStatus()">重置重启状态</a>
+							</shiro:hasPermission>
+							<shiro:hasPermission name="/internal/clientstatus/uploadVNCFile">
 								|<a target="_blank" href="javascript:showUploadVNCDialog()">上传VNC文件</a>
+							</shiro:hasPermission>
+							<shiro:hasPermission name="/internal/clientstatus/downloadVNCFile">
 								|<a target="_blank" href="javascript:downloadVNCFile()">下载VNC连接压缩文件</a>
+							</shiro:hasPermission>
+							<shiro:hasPermission name="/internal/clientstatus/downloadFullVNCFile">
 								|<a target="_blank" href="javascript:downloadFullVNCFile()">下载完整版VNC文件</a>
+							</shiro:hasPermission>
 							</td>
 						</tr>
 					</table>
@@ -283,10 +300,15 @@
 					</c:otherwise>
 				</c:choose>
 				&nbsp;
+				<shiro:hasPermission name="/internal/clientstatus/saveClientStatus">
 				<a href="javascript:showSettingDialog('${clientStatus.clientID}', this)">设置</a>
+				</shiro:hasPermission>
 				&nbsp;
+				<shiro:hasPermission name="/internal/clientstatus/deleteClientStatus">
 				<a href="javascript:delItem('${clientStatus.clientID}')">删除</a>
+				</shiro:hasPermission>
 				</br>
+				<shiro:hasPermission name="/internal/clientstatus/changeStatus">
 				<c:choose>
 					<c:when test="${clientStatus.valid}">
 						<a href="javascript:changeStatus('${clientStatus.clientID}',false)">暂停监控</a>
@@ -295,8 +317,11 @@
 						<a href="javascript:changeStatus('${clientStatus.clientID}',true)">开始监控</a>
 					</c:otherwise>
 				</c:choose>
+				</shiro:hasPermission>
 				&nbsp;
+				<shiro:hasPermission name="/internal/clientstatus/changeTerminalType">
 				<a href="javascript:changeTerminalType('${clientStatus.clientID}')">变更终端类型</a>
+				</shiro:hasPermission>
 			</td>
 			</tr>
 		</c:forEach>
@@ -331,7 +356,6 @@
             $("#changeSettingDialog").dialog("close");
             $("#targetVersionSettingDialog").dialog("close");
             $("#renewalSettingDialog").dialog("close");
-            renewalSettingDialog
             $("#clientStatusDiv").css("margin-top",$("#topDiv").height());
             alignTableHeader();
             window.onresize = function(){
@@ -421,8 +445,8 @@
                             contentType: false,
                             success: function (result) {
                                 if (result) {
-                                    $().toastmessage('showSuccessToast', "上传成功");
-                                    window.location.reload();
+                                    $().toastmessage('showSuccessToast', "上传成功",true);
+                                    /* window.location.reload();*/
                                 } else {
                                     $().toastmessage('showErrorToast', "上传失败");
                                 }
@@ -490,8 +514,8 @@
                 type: 'POST',
                 success: function (result) {
                     if (result) {
-                        $().toastmessage('showSuccessToast', "操作成功");
-                        window.location.reload();
+                        $().toastmessage('showSuccessToast', "操作成功",true);
+                        /* window.location.reload();*/
                     } else {
                         $().toastmessage('showErrorToast', "操作失败");
                     }
@@ -522,8 +546,8 @@
                 type: 'POST',
                 success: function (result) {
                     if (result) {
-                        $().toastmessage('showSuccessToast', "操作成功");
-                        window.location.reload();
+                        $().toastmessage('showSuccessToast', "操作成功",true);
+                        /* window.location.reload();*/
                     } else {
                         $().toastmessage('showErrorToast', "操作失败");
                     }
@@ -553,8 +577,8 @@
 				type: 'POST',
 				success: function (result) {
 					if(result){
-                        $().toastmessage('showSuccessToast', "更新成功");
-						window.location.reload();
+                        $().toastmessage('showSuccessToast', "更新成功",true);
+						/* window.location.reload();*/
 					}else{
                         $().toastmessage('showErrorToast', "更新失败");
 					}
@@ -579,8 +603,8 @@
                 type: 'POST',
                 success: function (result) {
                     if (result) {
-                        $().toastmessage('showSuccessToast', "操作成功");
-                        window.location.reload();
+                        $().toastmessage('showSuccessToast', "操作成功",true);
+                        /* window.location.reload();*/
                     } else {
                         $().toastmessage('showErrorToast', "操作失败");
                     }
@@ -607,8 +631,8 @@
                 type: 'POST',
                 success: function (result) {
                     if(result){
-                        $().toastmessage('showSuccessToast', "更新成功");
-                        window.location.reload();
+                        $().toastmessage('showSuccessToast', "更新成功",true);
+                        /* window.location.reload();*/
                     }else{
                         $().toastmessage('showErrorToast', "更新失败");
                     }
@@ -633,8 +657,8 @@
 				type: 'POST',
 				success: function (result) {
 					if(result){
-                        $().toastmessage('showSuccessToast', "更新成功");
-						window.location.reload();
+                        $().toastmessage('showSuccessToast', "更新成功",true);
+						/* window.location.reload();*/
 					}else{
                         $().toastmessage('showErrorToast', "更新失败");
 					}
@@ -660,8 +684,8 @@
                 type: 'POST',
                 success: function (result) {
                     if(result){
-                        $().toastmessage('showSuccessToast', "更新成功");
-                        window.location.reload();
+                        $().toastmessage('showSuccessToast', "更新成功",true);
+                        /* window.location.reload();*/
                     }else{
                         $().toastmessage('showErrorToast', "更新失败");
                     }
@@ -686,8 +710,8 @@
                 type: 'POST',
                 success: function (result) {
                     if(result){
-                        $().toastmessage('showSuccessToast', "更新成功");
-                        window.location.reload();
+                        $().toastmessage('showSuccessToast', "更新成功",true);
+                        /* window.location.reload();*/
                     }else{
                         $().toastmessage('showErrorToast', "更新失败");
                     }
@@ -872,7 +896,7 @@
 			clientStatus.moveUp20 = settingDialogDiv.find("#moveUp20:checked").val() === '1' ? 1 : 0;
 
 			$.ajax({
-		        url: '/internal/clientstatus/addClientStatus',
+		        url: '/internal/clientstatus/saveClientStatus',
 		        data: JSON.stringify(clientStatus),
                 headers: {
                     'Accept': 'application/json',
@@ -882,8 +906,8 @@
                 type: 'POST',
 		        success: function (result) {
 		        	if(result){
-                        $().toastmessage('showSuccessToast', "更新成功");
-                        window.location.reload();
+                        $().toastmessage('showSuccessToast', "更新成功",true);
+                        /* window.location.reload();*/
                     }else{
                         $().toastmessage('showErrorToast', "更新失败");
 		        	}
@@ -946,8 +970,8 @@
 		        type: 'POST',
 		        success: function (result) {
 		        	if(result){
-                        $().toastmessage('showSuccessToast', "更新成功");
-                        window.location.reload();
+                        $().toastmessage('showSuccessToast', "更新成功",true);
+                        /* window.location.reload();*/
                     }else{
                         $().toastmessage('showErrorToast', "更新失败");
 		        	}
@@ -1016,8 +1040,8 @@
 				type: 'POST',
 				success: function (result) {
 					if(result){
-                        $().toastmessage('showSuccessToast', "更新成功");
-                        window.location.reload();
+                        $().toastmessage('showSuccessToast', "更新成功",true);
+                        /* window.location.reload();*/
                     }else{
                         $().toastmessage('showErrorToast', "更新失败");
 					}

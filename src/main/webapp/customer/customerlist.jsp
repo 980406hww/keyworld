@@ -193,8 +193,8 @@
                 success: function (status) {
                     if (status) {
 
-                        $().toastmessage('showSuccessToast', "更新成功");
-                        window.location.reload();
+                        $().toastmessage('showSuccessToast', "更新成功",true);
+
                     } else {
                        /* showInfo("更新失败", self);*/
                         $().toastmessage('showErrorToast', "更新失败");
@@ -203,35 +203,6 @@
                 error: function () {
                    /* showInfo("更新失败", self);*/
                     $().toastmessage('showErrorToast', "更新失败");
-                }
-            });
-        }
-
-        function searchCurrentDateCompletedReports() {
-            var span = $("#dailyReportSpan");
-            $.ajax({
-                url: '/internal/dailyReport/searchCurrentDateCompletedReports',
-                type: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                success: function (dailyReports) {
-                    var htmlContent = "";
-                    if (dailyReports) {
-                        $.each(dailyReports, function (idx, val) {
-                            var date = new Date(val.completeTime);
-                            htmlContent = htmlContent + '  <a href="' + val.reportPath + '">下载(' + ((date.getHours() < 10) ? '0'
-                                    + date.getHours() : date.getHours()) + ':' + ((date.getMinutes() < 10) ? '0' + date.getMinutes()
-                                    : date.getMinutes()) + ')</a>';
-                        });
-                    } else {
-                        htmlContent = "今天没报表";
-                    }
-                    span.html(htmlContent);
-                },
-                error: function () {
-                    span.html("获取报表清单异常");
                 }
             });
         }
@@ -284,16 +255,16 @@
                 success: function (data) {
                     if (data) {
                         /*showInfo("操作成功", self);*/
-                        $().toastmessage('showSuccessToast', "操作成功");
-                        window.location.reload();
+                        $().toastmessage('showSuccessToast', "操作成功",true);
+
                     } else {
-                        $().toastmessage('showErrorToast', "操作失败");
-                        window.location.reload();
+                        $().toastmessage('showErrorToast', "操作失败",true);
+
                     }
                 },
                 error: function () {
-                    $().toastmessage('showErrorToast', "操作失败");
-                    window.location.reload();
+                    $().toastmessage('showErrorToast', "操作失败",true);
+
                 }
             });
         }
@@ -506,8 +477,8 @@
                     type: 'POST',
                     success: function (result) {
                         if (result) {
-                            $().toastmessage('showSuccessToast', "操作成功");
-                            window.location.reload();
+                            $().toastmessage('showSuccessToast', "操作成功",true);
+
                         } else {
                             $().toastmessage('showErrorToast', "操作失败");
                         }
@@ -815,12 +786,12 @@
                 success: function (result) {
                     if (result) {
                         /*showInfo("保存成功", self);*/
-                        $().toastmessage('showSuccessToast', "保存成功");
-                        window.location.reload();
+                        $().toastmessage('showSuccessToast', "保存成功",true);
+                       /**/
                     } else {
 
-                        $().toastmessage('showErrorToast', "保存失败");
-                        window.location.reload();
+                        $().toastmessage('showErrorToast', "保存失败",true);
+
                     }
                 },
                 error: function () {
@@ -974,15 +945,15 @@
                 type: 'Get',
                 success: function (result) {
                     if (result) {
-                        $().toastmessage('showSuccessToast', "删除成功");
-                        window.location.reload();
+                        $().toastmessage('showSuccessToast', "删除成功",true);
+
                     } else {
                         $().toastmessage('showErrorToast', "删除失败");
                     }
                 },
                 error: function () {
-                    $().toastmessage('showErrorToast', "删除失败");
-                    window.location.reload();
+                    $().toastmessage('showErrorToast', "删除失败",true);
+
                 }
             });
         }
@@ -1020,9 +991,40 @@
         }
 
         <c:if test="${'bc'.equalsIgnoreCase(entryType)}">
-        var intervalId = setInterval(function () {
-            searchCurrentDateCompletedReports();
-        }, 1000 * 30);
+        <shiro:hasPermission name="/internal/dailyReport/triggerReportGeneration">
+            function searchCurrentDateCompletedReports() {
+                var span = $("#dailyReportSpan");
+                $.ajax({
+                    url: '/internal/dailyReport/searchCurrentDateCompletedReports',
+                    type: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    success: function (dailyReports) {
+                        var htmlContent = "";
+                        if (dailyReports) {
+                            $.each(dailyReports, function (idx, val) {
+                                var date = new Date(val.completeTime);
+                                htmlContent = htmlContent + '  <a href="' + val.reportPath + '">下载(' + ((date.getHours() < 10) ? '0'
+                                    + date.getHours() : date.getHours()) + ':' + ((date.getMinutes() < 10) ? '0' + date.getMinutes()
+                                    : date.getMinutes()) + ')</a>';
+                            });
+                        } else {
+                            htmlContent = "今天没报表";
+                        }
+                        span.html(htmlContent);
+                    },
+                    error: function () {
+                        span.html("获取报表清单异常");
+                    }
+                });
+            }
+
+            var intervalId = setInterval(function () {
+                searchCurrentDateCompletedReports();
+            }, 1000 * 30);
+        </shiro:hasPermission>
         </c:if>
     </script>
     <title>客户管理</title>
@@ -1048,28 +1050,36 @@
                             <td><input type="text" name="telphone" id="telphone" value="${customerCriteria.telphone}"
                                        style="width:200px;">
                             </td>
-                            <td align="right" width="100">
+                            <td align="right" width="60">
                                 <input type="hidden" name="currentPageNumber" id="currentPageNumberHidden"
                                        value="${page.current}"/>
                                 <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
                                 <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
                                 <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
-                                <input type="submit" class="ui-button ui-widget ui-corner-all"
-                                       onclick="resetPageNumber()"
-                                       name="btnQuery" id="btnQuery" value=" 查询 ">
+                                <shiro:hasPermission name="/internal/customer/searchCustomers">
+                                    <input type="submit" class="ui-button ui-widget ui-corner-all"
+                                           onclick="resetPageNumber()"
+                                           name="btnQuery" id="btnQuery" value=" 查询 ">
+                                </shiro:hasPermission>
                             </td>
-                            <td align="right" width="100"><input type="button" class="ui-button ui-widget ui-corner-all"
-                                                                 value=" 添加客户 "
-                                                                 onclick="showCustomerDialog(null,'${user.userID}')"/>
-                            </td>
-                            <td align="right" width="100"><input type="button" class="ui-button ui-widget ui-corner-all"
-                                                                 value=" 删除所选" onclick="deleteCustomers(this)"/>
-                            </td>
-                            <c:if test="${'bc'.equalsIgnoreCase(entryType)}">
-                                <td align="right" width="100"><a target="_blank"
-                                                                 href='javascript:triggerDailyReportGeneration(this)'>触发日报表生成</a>
+                            <shiro:hasPermission name="/internal/customer/saveCustomer">
+                                <td align="right" width="100"><input type="button" class="ui-button ui-widget ui-corner-all"
+                                                                     value=" 添加 "
+                                                                     onclick="showCustomerDialog(null,'${user.userID}')"/>
                                 </td>
-                                <td><span id="dailyReportSpan"></span></td>
+                            </shiro:hasPermission>
+                            <shiro:hasPermission name="/internal/customer/deleteCustomer">
+                                <td align="right" width="100"><input type="button" class="ui-button ui-widget ui-corner-all"
+                                                                     value=" 删除所选" onclick="deleteCustomers(this)"/>
+                                </td>
+                            </shiro:hasPermission>
+                            <c:if test="${'bc'.equalsIgnoreCase(entryType)}">
+                                <shiro:hasPermission name="/internal/dailyReport/triggerReportGeneration">
+                                    <td align="right" width="100"><a target="_blank"
+                                                                     href='javascript:triggerDailyReportGeneration(this)'>触发日报表生成</a>
+                                    </td>
+                                    <td><span id="dailyReportSpan"></span></td>
+                                </shiro:hasPermission>
                             </c:if>
                         </tr>
                     </table>
@@ -1133,8 +1143,11 @@
                     <shiro:hasPermission name="/internal/customerChar/saveCustomerChargeTypegeType">
                         <a href="javascript:changeCustomerChargeType('${customer.uuid}')">客户规则</a> |
                     </shiro:hasPermission>
+
                     <a href="javascript:showCustomerKeywordDialog(${customer.uuid})">快速加词</a> |
-                    <a target="_blank" href="javascript:uploadDailyReportTemplate('${customer.uuid}', this)">上传日报表模板</a>
+                    <shiro:hasPermission name="/internal/customer/uploadDailyReportTemplate">
+                        <a target="_blank" href="javascript:uploadDailyReportTemplate('${customer.uuid}', this)">上传日报表模板</a>
+                    </shiro:hasPermission>
                 </td>
             </tr>
         </c:forEach>
@@ -1343,7 +1356,6 @@
         </c:choose>
     </form>
 </div>
-<hr>
 <div id="showCustomerBottomPositioneDiv">
     <div id="showCustomerBottomDiv">
         <input id="fisrtButton" class="ui-button ui-widget ui-corner-all" type="button"
