@@ -128,7 +128,7 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		clientStatusDao.deleteClientStatus(clientIDs);
 	}
 
-	public void addClientStatus(ClientStatus clientStatus) {
+	public void saveClientStatus(ClientStatus clientStatus) {
 		if (null != clientStatus.getClientID()) {
 			ClientStatus oldClientStatus = clientStatusDao.selectById(clientStatus.getClientID());
 			oldClientStatus.setGroup(clientStatus.getGroup());

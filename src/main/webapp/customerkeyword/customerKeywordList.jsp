@@ -822,23 +822,43 @@
             </table>
 
     <div style="text-align: right">
+    <shiro:hasPermission name="/internal/customerKeyword/uploadCustomerKeywords">
         <a target="_blank" href="javascript:uploadCustomerKeywords('${customerKeywordCrilteria.customerUuid}', 'SuperUserSimple')"/>Excel上传(简化版)</a>
+    </shiro:hasPermission>
+    <shiro:hasPermission name="/SuperUserSimpleKeywordList.xls">
         | <a target="_blank" href="/SuperUserSimpleKeywordList.xls">简化版下载</a>
+    </shiro:hasPermission>
+    <shiro:hasPermission name="/internal/customerKeyword/uploadCustomerKeywords">
         | <a target="_blank" href="javascript:uploadCustomerKeywords('${customerKeywordCrilteria.customerUuid}', 'SuperUserFull')">Excel上传(完整版)</a>
+    </shiro:hasPermission>
+    <shiro:hasPermission name="/SuperUserFullKeywordList.xls">
         | <a target="_blank" href="/SuperUserFullKeywordList.xls">完整版下载</a>
+    </shiro:hasPermission>
+    <shiro:hasPermission name="/internal/customerKeyword/downloadSingleCustomerReport">
         | <a target="_blank" href="/internal/dailyReport/downloadSingleCustomerReport/${customerKeywordCrilteria.customerUuid}">导出日报表</a>
-        | <a target="_blank" href="javascript:downloadCustomerKeywordInfo()">导出结果</a>
+    </shiro:hasPermission>
+    <shiro:hasPermission name="/internal/customerKeyword/downloadCustomerKeywordInfo">
+        | <a target="_blank" href="javascript:downloadCustomerKeywordInfo()">导出结果</a>&nbsp;&nbsp;
+    </shiro:hasPermission>
         <br/><br/>
+    <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupName">
         <a href="javascript:showGroupNameChangeDialog({'title': '修改客户关键字分组', 'customerUuid':'${customerKeywordCrilteria.customerUuid}'})">修改所有分组</a> |
         <a href="javascript:updateSpecifiedCustomerKeywordGroupName(${customerKeywordCrilteria.customerUuid})">修改选中分组</a> |
+        <a href="javascript:stopOptimization(${customerKeywordCrilteria.customerUuid})">下架所有关键字</a>|
+    </shiro:hasPermission>
+    <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
         <a href="javascript:updateCustomerKeywordStatus(0)">暂停选中关键字</a> |
         <a href="javascript:updateCustomerKeywordStatus(1)">激活选中关键字</a> |
-        <a href="javascript:stopOptimization(${customerKeywordCrilteria.customerUuid})">下架所有关键字</a>|
+    </shiro:hasPermission>
+    <shiro:hasPermission name="/internal/customerKeyword/deleteCustomerKeywords">
         <a href="javascript:delAllItems('EmptyTitleAndUrl','${customerKeywordCrilteria.customerUuid}')">删除标题和网址为空的关键字</a> |
         <a href="javascript:delAllItems('EmptyTitle','${customerKeywordCrilteria.customerUuid}')">删除标题为空的关键字</a> |
+    </shiro:hasPermission>
+    <shiro:hasPermission name="/internal/customerKeyword/cleanTitle">
         <a href="javascript:cleanTitle('${customerKeywordCrilteria.customerUuid}','CaptureTitleFlag')">重采标题</a> |
         <a href="javascript:cleanTitle('${customerKeywordCrilteria.customerUuid}', 'SelectedCustomerKeywordTitle')">清空所选标题</a> |
-        <a href="javascript:cleanTitle('${customerKeywordCrilteria.customerUuid}', 'CustomerTitle')">清空客户标题</a>
+        <a href="javascript:cleanTitle('${customerKeywordCrilteria.customerUuid}', 'CustomerTitle')">清空客户标题</a>&nbsp;&nbsp;
+    </shiro:hasPermission>
     </div>
     <br/>
     <form id="searchCustomerKeywordForm" style="font-size:12px; width: 100%;" action="/internal/customerKeyword/searchCustomerKeywords" method="post">
@@ -894,15 +914,19 @@
             </select>
             <%--</c:if>--%>
             &nbsp;&nbsp;
+            <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
             <input type="submit" class="ui-button ui-widget ui-corner-all" onclick="resetPageNumber()"
                    value=" 查询 ">&nbsp;&nbsp;
+            </shiro:hasPermission>
             <shiro:hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
                 <input type="button" class="ui-button ui-widget ui-corner-all" onclick="addCustomerKeyword()"
                        value=" 增加 ">&nbsp;&nbsp;
             </shiro:hasPermission>
+            <shiro:hasPermission name="/internal/customerKeyword/deleteCustomerKeywords">
             <input type="button" class="ui-button ui-widget ui-corner-all"
                    onclick="delAllItems('ByUuid','${customerKeywordCrilteria.customerUuid}')"
                    value=" 删除所选 ">
+            </shiro:hasPermission>
         </div>
     </form>
     <%--</c:if>--%>
@@ -973,7 +997,7 @@
                             target="_blank">${customerKeyword.currentPosition}</a>
                     </div>
                 </td>
-                <td align="center" width=30 class="floatTd" title="优化日期：<fmt:formatDate value="${customerKeyword.optimizeDate}" pattern="yyyy-MM-dd"/> ，要刷：${customerKeyword.optimizePlanCount}，已刷：${customerKeyword.optimizedCount}")">${customerKeyword.collectMethodName}</td>
+                <td align="center" width=30 class="floatTd" title="优化日期：<fmt:formatDate value="${customerKeyword.optimizeDate}" pattern="yyyy-MM-dd"/> ，要刷：${customerKeyword.optimizePlanCount}，已刷：${customerKeyword.optimizedCount})">${customerKeyword.collectMethodName}</td>
                 <td align="center" width=30>${customerKeyword.optimizePlanCount}</td>
                 <td align="center" width=30>${customerKeyword.optimizedCount} </td>
                 <td align="center" width=30>${customerKeyword.invalidRefreshCount}</td>
@@ -982,22 +1006,16 @@
                 <td align="center" width=80><fmt:formatDate value="${customerKeyword.lastOptimizeDateTime}" pattern="yyyy-MM-dd HH:mm"/></td>
                 <td align="center" width=50>${customerKeyword.orderNumber}</td>
                 <td align="center" width=100>${customerKeyword.remarks==null?"":customerKeyword.remarks} </td>
-                <c:choose>
-                    <c:when test="${user.vipType}">
-                        <td align="center" width=60>${customerKeyword.optimizeGroupName == ''? "" : customerKeyword.optimizeGroupName}
-                        </td>
-                        <td align="center" width=80>
-                            <a href="javascript:modifyCustomerKeyword('${customerKeyword.uuid}')">修改</a>|
-                            <a href="javascript:delItem('${customerKeyword.uuid}')">删除</a>
-                        </td>
-                    </c:when>
-                    <c:when test="${user.userLevel==1}">
-                        <td align="center" width=80>
-                            <a href="modify.jsp?uuid=${customerKeyword.uuid}">修改</a> |
-                            <a href="javascript:delItem('${customerKeyword.uuid}')">删除</a>
-                        </td>
-                    </c:when>
-                </c:choose>
+                <td align="center" width=60>${customerKeyword.optimizeGroupName == ''? "" : customerKeyword.optimizeGroupName}
+                </td>
+                <td align="center" width=80>
+                    <shiro:hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
+                    <a href="javascript:modifyCustomerKeyword('${customerKeyword.uuid}')">修改</a>|
+                    </shiro:hasPermission>
+                    <shiro:hasPermission name="/internal/customerKeyword/deleteCustomerKeyword">
+                    <a href="javascript:delItem('${customerKeyword.uuid}')">删除</a>
+                    </shiro:hasPermission>
+                </td>
             </tr>
         </c:forEach>
     </table>

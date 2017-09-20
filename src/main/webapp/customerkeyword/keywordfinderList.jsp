@@ -7,6 +7,7 @@
     <script language="javascript" type="text/javascript" src="/js/My97DatePicker/WdatePicker.js"></script>
     <script language="javascript" type="text/javascript" src="/js/jquery142.js"></script>
     <script language="javascript" type="text/javascript" src="/js/slide1.12.4.js"></script>
+    <script language="JavaScript" type="text/javascript" src="/js/jquery.poshytip.js"></script>
     <head>
         <style>
             #div1 {
@@ -61,11 +62,22 @@
                 margin: 0;
                 padding: 0;
             }
+            .tip-yellow {
+                z-index:1000;
+                text-align:left;
+                padding:7px;
+                font-size: 12px;
+                min-width:300px;
+                max-width:550px;
+                color:#8c3901;
+                background-color: #fff;
+            }
         </style>
 
         <script language="javascript">
             $(function () {
                 $("#customerKeywordDiv").css("margin-top",$("#customerKeywordTopDiv").height());
+                $(".floatTd").poshytip();
                 initPaging();
                 initNoPositionChecked();
                 alignTableHeader();
@@ -212,16 +224,8 @@
     </head>
 <body>
 <div id="customerKeywordTopDiv">
-    <table style="font-size:12px;margin-right: 10px;" cellpadding=3>
-        <tr>
-            <td colspan=18 align="left">
-                <%@include file="/menu.jsp" %>
-            </td>
-        </tr>
-    </table>
-
-    <br/>
-    <form id="searchCustomerKeywordForm" style="font-size:12px; width: 100%;" action="/internal/customerKeyword/searchCustomerKeywordLists" method="post">
+    <%@include file="/menu.jsp" %>
+    <form id="searchCustomerKeywordForm" style="font-size:12px; width: 100%;margin-top: 40px;" action="/internal/customerKeyword/searchCustomerKeywordLists" method="post" >
         <div id="searchCustomerKeywordTable">
             <input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}"/>
             <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
@@ -306,9 +310,8 @@
                 <td align="center" width=80>
                         ${customerKeyword.keyword}
                 </td>
-                <td  align="center" width=100 class="wrap"
-                     onMouseMove="showTip('原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}')"
-                     onMouseOut="closeTip()">
+
+                <td  align="center" width=100 class="floatTd" title="原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}" >
                     <div style="height:16;">
                             ${customerKeyword.url==null?'':customerKeyword.url};
                     </div>
@@ -333,9 +336,11 @@
                             target="_blank">${customerKeyword.currentPosition}</a>
                     </div>
                 </td>
-                <td align="center" width=30 onMouseMove="showTip('优化日期：<fmt:formatDate value="${customerKeyword.optimizeDate}" pattern="yyyy-MM-dd"/> ，要刷：${customerKeyword.optimizePlanCount}，已刷：${customerKeyword.optimizedCount}')"
-                    onMouseOut="closeTip()">${customerKeyword.collectMethodName}
+
+                <td align="center" class="floatTd" width=30 title="优化日期：<fmt:formatDate value="${customerKeyword.optimizeDate}" pattern="yyyy-MM-dd"/> ，要刷：${customerKeyword.optimizePlanCount}，已刷：${customerKeyword.optimizedCount}" >
+                        ${customerKeyword.collectMethodName}
                 </td>
+
                 <td align="center" width=30>${customerKeyword.optimizePlanCount}</td>
                 <td align="center" width=30>${customerKeyword.optimizedCount} </td>
                 <td align="center" width=30>${customerKeyword.invalidRefreshCount}</td>
