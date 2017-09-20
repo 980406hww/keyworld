@@ -38,9 +38,7 @@
         #ClientStatusGroupSummaryTable tr:hover{background-color: #dad55e}
     </style>
 
-
     <script language="javascript" type="text/javascript">
-
 
         $(function () {
             $("#centerDiv").css("margin-top",$("#topDiv").height());
@@ -61,7 +59,6 @@
 <body>
 <div id="topDiv">
     <%@include file="/menu.jsp"%>
-
     <form action="/internal/clientstatus/clientStatusGroupStat" method="post" id="searchClientStatusSummaryVOForm" style="margin: 50px 0 10px 20px;">
         分组名称:<input type="text" name="group" value="${group}">
         终端类型:
@@ -70,7 +67,9 @@
             <option value="PC" <c:if test="${requestScope.terminalType.equals('PC')}">selected="selected"</c:if>>PC</option>
             <option value="Phone" <c:if test="${requestScope.terminalType.equals('Phone')}">selected="selected"</c:if>>Phone</option>
         </select>
-        <input type="submit" value="查询">
+        <shiro:hasPermission name="/internal/clientstatus/clientStatusGroupStat">
+            <input type="submit" value="查询">
+        </shiro:hasPermission>
     </form>
     <table width=70% style="font-size: 12px;" cellpadding=3 id="headerTable">
         <tr bgcolor="#eeeeee" height=30>
@@ -93,7 +92,6 @@
     </c:forEach>
 </table>
 </div>
-
 </body>
 </html>
 

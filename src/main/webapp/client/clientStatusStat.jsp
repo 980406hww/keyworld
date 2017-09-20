@@ -59,13 +59,13 @@
 </head>
 <body>
 <div id="topDiv">
-
     <%@include file="/menu.jsp" %>
-
     <form action="/internal/clientstatus/clientStatusStat" method="post" id="searchClientStatusSummaryVOForm" style="margin-top: 50px;margin-left: 20px">
         客户端ID前缀:<input type="text" name="clientIDPrefix" value="${clientIDPrefix}">
         城市:<input type="text" name="city" value="${city}">
-        <input type="submit" value="查询">
+        <shiro:hasPermission name="/internal/clientstatus/clientStatusStat">
+            <input type="submit" value="查询">
+        </shiro:hasPermission>
     </form>
     <table width=70% style="font-size: 12px;" cellpadding=3 id="headerTable">
         <tr bgcolor="#eeeeee" height=30>
@@ -98,7 +98,6 @@
     </c:forEach>
 </table>
 </div>
-
 </body>
 </html>
 
