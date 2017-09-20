@@ -896,8 +896,10 @@
             &nbsp;&nbsp;
             <input type="submit" class="ui-button ui-widget ui-corner-all" onclick="resetPageNumber()"
                    value=" 查询 ">&nbsp;&nbsp;
-            <input type="button" class="ui-button ui-widget ui-corner-all" onclick="addCustomerKeyword()"
-                   value=" 增加 ">&nbsp;&nbsp;
+            <shiro:hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
+                <input type="button" class="ui-button ui-widget ui-corner-all" onclick="addCustomerKeyword()"
+                       value=" 增加 ">&nbsp;&nbsp;
+            </shiro:hasPermission>
             <input type="button" class="ui-button ui-widget ui-corner-all"
                    onclick="delAllItems('ByUuid','${customerKeywordCrilteria.customerUuid}')"
                    value=" 删除所选 ">
