@@ -49,7 +49,7 @@ public class SupplierController {
     public ModelAndView searchSuppliersPost(HttpServletRequest request , SupplierCriteria supplierCriteria) {
         String currentPageNumber = request.getParameter("currentPageNumber");
         String pageSize = request.getParameter("pageSize");
-        if (null == currentPageNumber && null == currentPageNumber) {
+        if (null == currentPageNumber && null == pageSize) {
             currentPageNumber = "1";
             pageSize = "50";
         }

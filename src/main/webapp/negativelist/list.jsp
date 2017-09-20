@@ -128,16 +128,27 @@
             var a = document.getElementsByName("uuid");
             if (self.checked) {
                 for (var i = 0; i < a.length; i++) {
-                    if (a[i].type == "checkbox") {
                         a[i].checked = true;
-                    }
                 }
             } else {
                 for (var i = 0; i < a.length; i++) {
-                    if (a[i].type == "checkbox") {
                         a[i].checked = false;
-                    }
                 }
+            }
+        }
+
+        function decideSelectAll() {
+            var a = document.getElementsByName("uuid");
+            var select=0;
+            for(var i = 0; i < a.length; i++){
+                if (a[i].checked == true){
+                    select++;
+                }
+            }
+            if(select == a.length){
+                $("#selectAllChecked").prop("checked",true);
+            }else {
+                $("#selectAllChecked").prop("checked",false);
             }
         }
 
@@ -357,7 +368,7 @@
 	</table>
 	<table id="headerTable" width="100%">
 	  <tr bgcolor="#eeeeee" height=30>
-		  <td align="center" ><input type="checkbox" onclick="selectAll(this)" /></td>
+		  <td align="center" ><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
 		  <td align="center" >关键字</td>
 		  <td align="center" >标题</td>
 		  <td align="center" >URL</td>
@@ -380,7 +391,7 @@
 				  <tr onmouseover="doOver(this);" onmouseout="doOut(this);" height=30>
 			  </c:otherwise>
 		  </c:choose>
-			  <td><input type="checkbox" name="uuid" value="${negativeList.uuid}"/></td>
+			  <td><input type="checkbox" name="uuid" value="${negativeList.uuid}" onclick="decideSelectAll()"/></td>
 			  <td>${negativeList.keyword}</td>
 			  <td>${negativeList.title} </td>
 			  <td>${negativeList.url}</td>
