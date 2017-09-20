@@ -128,8 +128,6 @@
         {
             var options = {text : message, type : 'success',isReload:isReload};
             options.stayTime=1000;
-
-            },2000);
             return $().toastmessage('showToast', options);
         },
 
@@ -137,7 +135,6 @@
         {
             var options = {text : message, type : 'error',isReload:isReload};
             options.stayTime=1000;
-            },1000);
             return $().toastmessage('showToast', options);
         },
 
@@ -147,21 +144,17 @@
             return $().toastmessage('showToast', options);
         },
 
-		removeToast: function(obj, options)
-		{
-			obj.animate({opacity: '0'}, 600, function()
-			{
-				obj.parent().animate({height: '0px'}, 300, function()
-				{
-					obj.parent().remove();
-				});
-			});
+		removeToast: function(obj, options) {
+            obj.animate({opacity: '0'}, 600, function () {
+                obj.parent().animate({height: '0px'}, 300, function () {
+                    obj.parent().remove();
+                });
+            });
             // callback
-            if (options && options.close !== null)
-            {
+            if (options && options.close !== null) {
                 options.close();
             }
-		}
+        }
 	};
 
     $.fn.toastmessage = function( method ) {
