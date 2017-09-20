@@ -152,7 +152,7 @@
 	</table>
 	<table id="headerTable" style="width: 100%">
 		<tr bgcolor="#eeeeee" height=30>
-			<td align="center" width=25><input type="checkbox" onclick="selectAll(this)" /></td>
+			<td align="center" width=25><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
 			<td align="center" width=150>客户</td>
 			<td align="center" width=100>域名</td>
 			<td align="center" width=50>入口类型</td>
@@ -175,7 +175,7 @@
 <table id="showQZSettingTable"  style="font-size:12px;width: 100%;" cellpadding=3>
 	<c:forEach items="${page.records}" var="qzSetting">
 		<tr onmouseover="doOver(this);" onmouseout="doOut(this);" height=30>
-			<td align="center" width=25><input type="checkbox" name="uuid" value="${qzSetting.uuid}"/></td>
+			<td align="center" width=25><input type="checkbox" name="uuid" value="${qzSetting.uuid}" onclick="decideSelectAll()"/></td>
 			<td align="center" width=150>${qzSetting.contactPerson}</td>
 			<td align="center" width=100>${qzSetting.domain}</td>
 			<td align="center" width=50>${qzSetting.type}</td>
@@ -307,16 +307,27 @@
         var a = document.getElementsByName("uuid");
         if(self.checked){
             for(var i = 0;i<a.length;i++){
-                if(a[i].type == "checkbox"){
                     a[i].checked = true;
-                }
             }
         }else{
             for(var i = 0;i<a.length;i++){
-                if(a[i].type == "checkbox"){
                     a[i].checked = false;
-                }
             }
+        }
+    }
+
+    function decideSelectAll() {
+        var a = document.getElementsByName("uuid");
+        var select=0;
+        for(var i = 0; i < a.length; i++){
+            if (a[i].checked == true){
+                select++;
+            }
+        }
+        if(select == a.length){
+            $("#selectAllChecked").prop("checked",true);
+        }else {
+            $("#selectAllChecked").prop("checked",false);
         }
     }
 

@@ -283,18 +283,30 @@
       var a = document.getElementsByName("uuid");
       if(self.checked){
         for(var i = 0;i<a.length;i++){
-          if(a[i].type == "checkbox"){
             a[i].checked = true;
-          }
         }
       }else{
         for(var i = 0;i<a.length;i++){
-          if(a[i].type == "checkbox"){
             a[i].checked = false;
-          }
         }
       }
     }
+
+    function decideSelectAll() {
+        var a = document.getElementsByName("uuid");
+        var select=0;
+        for(var i = 0; i < a.length; i++){
+            if (a[i].checked == true){
+                select++;
+            }
+        }
+        if(select == a.length){
+            $("#selectAllChecked").prop("checked",true);
+        }else {
+            $("#selectAllChecked").prop("checked",false);
+        }
+    }
+
     function doOver(obj) {
       obj.style.backgroundColor = "green";
     }
@@ -420,7 +432,7 @@
         </form>
         <table id="headerTable" style="width:100%;">
             <tr bgcolor="#eeeeee" height=30>
-                <td align="center" width=10><input type="checkbox" onclick="selectAll(this)"/></td>
+                <td align="center" width=10><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
                 <td align="center" width=150>主词</td>
                 <td align="center" width=60>分组</td>
                 <td align="center" width=400>负面语句</td>
@@ -437,7 +449,7 @@
         <table id="showMainKeywordTable">
             <c:forEach items="${page.records }" var="mainkey">
                 <tr onmouseover="doOver(this)" onmouseout="doOut(this)" ondblclick="getMainKeyword('${mainkey.uuid}')">
-                    <td><input type="checkbox" name="uuid" value="${mainkey.uuid}" /></td>
+                    <td><input type="checkbox" name="uuid" value="${mainkey.uuid}" onclick="decideSelectAll()"/></td>
                     <input type="hidden" id="mkUuid" value="${mainkey.uuid}"/>
                     <td>${mainkey.keyword }</td>
                     <td>${mainkey.group }</td>

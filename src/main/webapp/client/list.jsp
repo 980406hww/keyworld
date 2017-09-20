@@ -187,7 +187,7 @@
 	</table>--%>
 	<table  width=100% style="font-size: 12px" id="headerTable">
 		<tr bgcolor="#eeeeee" height=30>
-			<td align="center" width=10><input type="checkbox" onclick="selectAll(this)" /></td>
+			<td align="center" width=10><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
 			<td align="center" width=40>客户端ID</td>
 			<td align="center" width=60>优化组</td>
 			<td align="center" width=60>操作类型</td>
@@ -238,7 +238,7 @@
 					<tr onmouseover="doOver(this);" onmouseout="doOut(this);">
 				</c:otherwise>
 			</c:choose>
-			<td align="center" width=10><input type="checkbox" name="clientID" value="${clientStatus.clientID}"/></td>
+			<td align="center" width=10><input type="checkbox" name="clientID" value="${clientStatus.clientID}" onclick="decideSelectAll()"/></td>
 			<td width=40>
 				<font color="${keywordColor}">${clientStatus.clientID}</font>
 				<c:if test="${!isValidClient}">
@@ -481,18 +481,29 @@
 			var a = document.getElementsByName("clientID");
 			if(self.checked){
 				for(var i = 0;i<a.length;i++){
-					if(a[i].type == "checkbox"){
 						a[i].checked = true;
-					}
 				}
 			}else{
 				for(var i = 0;i<a.length;i++){
-					if(a[i].type == "checkbox"){
 						a[i].checked = false;
-					}
 				}
 			}
 		}
+
+        function decideSelectAll() {
+            var a = document.getElementsByName("clientID");
+            var select=0;
+            for(var i = 0; i < a.length; i++){
+                if (a[i].checked == true){
+                    select++;
+                }
+            }
+            if(select == a.length){
+                $("#selectAllChecked").prop("checked",true);
+            }else {
+                $("#selectAllChecked").prop("checked",false);
+            }
+        }
 
 		function doOver(obj) {
 			obj.style.backgroundColor = "green";

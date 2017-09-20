@@ -30,7 +30,6 @@
             }
 
             #customerKeywordDiv {
-                /*overflow: scroll;*/
                 width: 100%;
                 margin-bottom: 47PX;
             }

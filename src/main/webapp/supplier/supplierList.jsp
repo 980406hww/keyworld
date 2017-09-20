@@ -164,16 +164,12 @@
                 type: 'Get',
                 success: function (result) {
                     if (result) {
-                        /*showInfo("删除成功",self);*/
-                        $().toastmessage('showSuccessToast', "删除成功");
-                        window.location.reload();
+                        $().toastmessage('showSuccessToast', "删除成功",true);
                     } else {
-                        /*showInfo("删除失败",self);*/
                         $().toastmessage('showErrorToast', "删除失败");
                     }
                 },
                 error: function () {
-                    /*showInfo("删除失败",self);*/
                     $().toastmessage('showErrorToast', "删除失败");
                 }
             });
@@ -199,8 +195,7 @@
                 type: 'POST',
                 success: function (data) {
                     if (data) {
-                        $().toastmessage('showSuccessToast', "操作成功");
-                        window.location.reload();
+                        $().toastmessage('showSuccessToast', "操作成功",true);
                     } else {
                         $().toastmessage('showErrorToast', "操作失败");
                     }
@@ -364,11 +359,9 @@
                 type: 'POST',
                 success: function (result) {
                     if (result) {
-                        $().toastmessage('showSuccessToast', "保存成功");
-                        window.location.reload();
+                        $().toastmessage('showSuccessToast', "保存成功",true);
                     } else {
                         $().toastmessage('showErrorToast', "保存失败");
-                        window.location.reload();
                     }
                 },
                 error: function () {

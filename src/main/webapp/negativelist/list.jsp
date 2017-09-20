@@ -113,12 +113,10 @@
                         negativeListForm.find("#position").val(negativeList.position);
                         showNegativeListDialog(negativeList.uuid);
                     } else {
-                        /*showInfo("获取信息成功", self);*/
-                        $().toastmessage('showSuccessToast', "获取信息成功");
+                        $().toastmessage('showErrorToast', "获取信息失败");
                     }
                 },
                 error: function () {
-                    /*showInfo("获取信息失败", self);*/
                     $().toastmessage('showErrorToast', "获取信息失败");
                 }
             });
@@ -198,16 +196,12 @@
                 type: 'POST',
                 success: function (result) {
                     if (result) {
-                        /*showInfo("操作成功", self);*/
-                        $().toastmessage('showSuccessToast', "操作成功");
-                        window.location.reload();
+                        $().toastmessage('showSuccessToast', "操作成功",true);
                     } else {
-                        /*showInfo("操作失败", self);*/
                         $().toastmessage('showErrorToast', "操作失败");
                     }
                 },
                 error: function () {
-                    /*showInfo("操作失败", self);*/
                     $().toastmessage('showErrorToast', "操作失败");
                 }
             });
@@ -233,14 +227,12 @@
                 type: 'POST',
                 success: function (data) {
                     if (data) {
-                        $().toastmessage('showSuccessToast', "操作成功");
-                        window.location.reload();
+                        $().toastmessage('showSuccessToast', "操作成功",true);
                     } else {
                         $().toastmessage('showErrorToast', "操作失败");
                     }
                 },
                 error: function () {
-                    /*showInfo("操作失败", self);*/
                     $().toastmessage('showErrorToast', "操作失败");
                 }
             });
@@ -276,16 +268,12 @@
                 type: 'POST',
                 success: function (result) {
                     if (result) {
-                        /*showInfo("操作成功", self);*/
-                        $().toastmessage('showSuccessToast', "操作成功");
-                        window.location.reload();
+                        $().toastmessage('showSuccessToast', "操作成功",true);
                     } else {
-                        /*showInfo("操作失败", self);*/
                         $().toastmessage('showErrorToast', "操作失败");
                     }
                 },
                 error: function () {
-                    /*showInfo("操作失败", self);*/
                     $().toastmessage('showErrorToast', "操作失败");
                 }
             });
