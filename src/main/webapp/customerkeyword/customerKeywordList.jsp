@@ -807,8 +807,8 @@
             }
 
             function alignTableHeader() {
-                var td = $("#headerTable tr:first td");
-                var ctd = $("#customerKeywordTable tr:first td");
+                var td = $("#customerKeywordTable tr:first td");
+                var ctd = $("#headerTable tr:first td");
                 $.each(td, function (idx, val) {
                     ctd.eq(idx).width($(val).width());
                 });
@@ -822,7 +822,7 @@
 <body>
 <div id="customerKeywordTopDiv" >
     <%@include file="/menu.jsp" %>
-            <table width=100% style="border:1px solid #000000;font-size:12px;margin-top: 40px" cellpadding=3>
+            <table width=100% style="border:1px solid #000000;font-size:12px;margin-top: 30px" cellpadding=3>
                 <tr border="1" height=30>
                     <td width=250>联系人: ${customer.contactPerson}</td>
                     <td width=200>QQ: ${customer.qq}</td>

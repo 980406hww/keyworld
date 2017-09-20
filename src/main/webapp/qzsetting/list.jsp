@@ -350,15 +350,13 @@
             type: 'Get',
             success: function (data) {
                 if(data){
-                    $().toastmessage('showSuccessToast', "删除成功！", self);
-                    window.location.reload();
+                    $().toastmessage('showSuccessToast', "删除成功！", true);
                 }else{
                    $().toastmessage('showErrorToast', "删除失败");
                 }
             },
             error: function () {
                $().toastmessage('showErrorToast', "删除失败");
-                window.location.reload();
             }
         });
     }
@@ -395,15 +393,13 @@
             type: 'POST',
             success: function (data) {
                 if(data){
-                   $().toastmessage('showSuccessToast', "操作成功");
-                    window.location.reload();
+                   $().toastmessage('showSuccessToast', "操作成功", true);
                 }else{
                     $().toastmessage('showErrorToast', "操作失败");
                 }
             },
             error: function () {
                 $().toastmessage('showErrorToast', "操作失败");
-                window.location.reload();
             }
         });
     }
@@ -428,8 +424,7 @@
             type: 'POST',
             success: function (data) {
                 if(data){
-                   $().toastmessage('showSuccessToast', "操作成功");
-                    window.location.reload();
+                   $().toastmessage('showSuccessToast', "操作成功", true);
                 }else{
                     $().toastmessage('showErrorToast', "操作失败");
                 }
@@ -513,9 +508,8 @@
                     success: function (data) {
                         resetChargeDialog();
                         if (data != null && data != "") {
-                            $().toastmessage('showSuccessToast', "收费成功！");
+                            $().toastmessage('showSuccessToast', "收费成功！", true);
                             $(self).dialog("close");
-                            window.location.reload();
                         } else {
                             $().toastmessage('showErrorToast', "收费失败");
                         }
@@ -1067,8 +1061,7 @@
                 type: 'POST',
                 success: function (data) {
                     if (data != null && data != "") {
-                        $().toastmessage('showSuccessToast', "更新成功");
-                        window.location.reload();
+                        $().toastmessage('showSuccessToast', "更新成功", true);
                     } else {
                         $().toastmessage('showErrorToast', "更新失败！");
                     }

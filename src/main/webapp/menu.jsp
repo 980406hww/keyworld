@@ -85,7 +85,7 @@
     }
 </script>
 
-<div class="content" style="position:fixed;width: 100%;height:40px;">
+<div class="content" style="position:fixed;width: 100%;height:30px;">
 	<ul class="venus-menu" style="display: none">
 		<c:choose>
 			<c:when test="${sessionScope.get('entryType')=='fm'}">
@@ -115,10 +115,10 @@
 				</c:forEach>
 			</c:otherwise>
 		</c:choose>
-			<div style="float: right;margin:10px 0px 0px 0px;">
-			<b class="fi-torso icon-black" style="font-size: 14px;">&nbsp;<shiro:principal></shiro:principal></b>|
-			<span class="fi-anchor icon-green" style="font-size: 14px;color: green"></span>
-			<span style="font-size: 14px;color: black">
+			<div style="float: right;margin:7px 10px 0px 0px;">
+			<b class="fi-torso icon-black" style="font-size: 12px;">&nbsp;<shiro:principal></shiro:principal></b>|
+			<span class="fi-anchor icon-green" style="font-size: 12px;color: green"></span>
+			<span style="font-size: 12px;color: black">
 				<c:choose>
 					<c:when test="${sessionScope.get('entryType')=='qz'}">
 						全站链接
@@ -134,12 +134,12 @@
 					</c:otherwise>
 				</c:choose>
 			</span>|
-			<span class="fi-web icon-black" style="font-size: 14px;color: red;"></span><span style="color: black">&nbsp;${sessionScope.get("terminalType")}端&nbsp;|</span>&nbsp;
+			<span class="fi-web icon-black" style="font-size: 12px;color: red;"></span><span style="color: black">&nbsp;${sessionScope.get("terminalType")}端&nbsp;|</span>&nbsp;
 			<shiro:hasPermission name="/user/editPwdPage">
-				<span class="fi-unlock icon-green" style="font-size: 14px;color: green"></span>
-				<a href="javascript:void(0)" onclick="editUserPwd()"  style="text-decoration: none;font-size: 14px;color: black">修改密码</a>|
+				<span class="fi-unlock icon-green" style="font-size: 12px;color: green"></span>
+				<a href="javascript:void(0)" onclick="editUserPwd()"  style="text-decoration: none;font-size: 12px;color: black">修改密码</a>|
 			</shiro:hasPermission>
-			<a class="fi-x" href="javascript:void(0)" onclick="logout()" style="text-decoration: none;font-size: 14px;">&nbsp;安全退出</a>
+			<a class="fi-x" href="javascript:void(0)" onclick="logout()" style="text-decoration: none;font-size: 12px;">&nbsp;安全退出</a>
 		</div>
 	</ul>
 </div>

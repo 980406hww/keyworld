@@ -9,10 +9,6 @@ body {
     background: #dedede;
 }
 
-.venus-menu {
-    margin: 10px 0 10px 0;
-
-}
 
 
 .venus-menu {
@@ -23,7 +19,7 @@ body {
     float: left;
     font-family: 'Open Sans', sans-serif;
     list-style: none;
-    background:#ffffff;
+    background:#dedede;
     box-shadow: 0 1px 3px #dedede;
 }
 
@@ -39,8 +35,9 @@ body {
 
 
 .venus-menu > li > a {
-    padding: 10px 24px;
-    font-size: 18px;
+    /*padding: 10px 24px;*/
+    padding: 5px 12px;
+    font-size: 12px;
     color: #000000;
     text-decoration: none;
     display: block;
@@ -56,7 +53,7 @@ body {
 }
 
 .venus-menu > li > a i {
-    color: #bababa;
+    /*color: #bababa;*/
 }
 
 .venus-menu > li:hover > a i, .venus-menu li.active a i {
@@ -75,7 +72,7 @@ body {
 }
 
 .venus-menu ul {
-    top: 40px;
+    top: 30px;
     left: 0;
     padding-top: 10px;
 }
@@ -83,7 +80,7 @@ body {
 .venus-menu > li > ul > li:first-child a:before {
     content: '';
     position: absolute;
-    bottom: 48px;
+    bottom: 28px;
     left: 45%;
     margin-left: -48px;
     width: 0;
@@ -137,10 +134,10 @@ body {
 }
 
 .venus-menu ul li a {
-    padding: 14px 20px;
+    padding: 5px 12px;
     width: 100%;
     color: #000;
-    font-size: 14px;
+    font-size: 12px;
     text-decoration: none;
     display: inline-block;
     float: left;
@@ -171,8 +168,8 @@ body {
 .venus-menu > li .indicator {
     position: absolute;
     color: #000000;
-    top: 10px;
-    right: 8px;
+    top: 5px;
+    right: 2px;
     font-size: 20px;
     -webkit-transition: color 0.2s linear;
     -moz-transition: color 0.2s linear;
@@ -443,7 +440,4 @@ body {
     .venus-menu > li > ul > li > ul > li > ul > li > a {
         padding-left: 80px !important;
     }
-}
-.venus-menu {
-    margin: 0px;
 }

@@ -122,7 +122,7 @@
         type: 'POST',
         success: function (result) {
           if (result) {
-            $().toastmessage('showSuccessToast', "保存成功!");
+            $().toastmessage('showSuccessToast', "保存成功!", true);
           } else {
               $().toastmessage('showErrorToast',"保存失败");
           }
@@ -174,7 +174,7 @@
         type: 'Get',
         success: function (result) {
           if (result) {
-              $().toastmessage('showSuccessToast',"删除成功！");
+              $().toastmessage('showSuccessToast',"删除成功！", true);
           } else {
               $().toastmessage('showErrorToast',"删除失败！");
           }
@@ -216,8 +216,7 @@
         type: 'POST',
         success: function (data) {
           if(data){
-              $().toastmessage('showSuccessToast',"操作成功！");
-            window.location.reload();
+              $().toastmessage('showSuccessToast',"操作成功！", true);
           }else{
               $().toastmessage('showErrorToast', "操作失败！");
           }
