@@ -37,25 +37,6 @@
             #customerKeywordTable td{
                 text-align: left;
             }
-
-            #showCustomerBottomPositioneDiv{
-                position: fixed;
-                bottom: 0px;
-                right: 0px;
-                background-color: white;
-                padding-top: 10px;
-                padding-bottom: 10px;
-                width: 100%;
-            }
-            #showCustomerBottomDiv {
-                float: right;
-                margin-right: 20px;
-            }
-
-            body{
-                margin: 0;
-                padding: 0;
-            }
             .tip-yellow {
                 z-index:1000;
                 text-align:left;

@@ -3,8 +3,6 @@
 <html>
 <head>
     <script language="javascript" type="text/javascript" src="/common.js"></script>
-    <script language="javascript" type="text/javascript" src="/toastmessage/jquery.toastmessage.js"></script>
-    <link rel="stylesheet" href="/toastmessage/css/jquery.toastmessage.css">
     <style>
         td{
             display: table-cell;
@@ -16,30 +14,6 @@
             left: 0px;
             background-color: white;
             width: 100%;
-        }
-        #supplierListBottomDiv{
-            position: fixed;
-            bottom: 0px;
-            right: 0px;
-            background-color: white;
-            padding-top: 10px;
-            padding-bottom: 10px;
-            width: 100%;
-        }
-        #showSupplierBottomDiv {
-            float: right;
-            margin-right: 20px;
-        }
-        #div2 {
-            display: none;
-            background-color: #ACF106;
-            color: #E80404;
-            font-size: 20px;
-            line-height: 18px;
-            border: 2px solid #104454;
-            width: 100px;
-            height: 22px;
-            transition-delay: 2s;
         }
     </style>
     <title>供应商列表</title>
@@ -449,7 +423,6 @@
             <td align="center" width=100 >更新时间</td>
             <td align="center" width=100 >添加时间</td>
             <td align="center" width=100>操作</td>
-            <div id="div2"></div>
         </tr>
     </table>
 </div>
@@ -558,24 +531,26 @@
         </table>
     </form>
 </div>
-<div style="height: 5px;"></div>
-<div id="supplierListBottomDiv" align="right">
-    <div id="showSupplierBottomDiv">
-    <input id="fisrtButton" type="button"
-           onclick="changePaging(1,'${page.size}')" value="首页"/>&nbsp;&nbsp;&nbsp;&nbsp;
-    <input id="upButton" type="button" onclick="changePaging('${page.current-1}','${page.size}')" value="上一页"/>&nbsp;&nbsp;&nbsp;&nbsp;
-    ${page.current}/${page.pages}&nbsp;&nbsp;
-    <input id="nextButton" type="button" onclick="changePaging('${page.current+1>=page.pages?page.pages:page.current+1}','${page.size}')"
-           value="下一页">&nbsp;&nbsp;&nbsp;&nbsp;
-    <input id="lastButton" type="button" onclick="changePaging('${page.pages}','${page.size}')" value="末页">&nbsp;&nbsp;&nbsp;&nbsp;
-    总记录数:${page.total}&nbsp;&nbsp;&nbsp;&nbsp;
-    每页显示条数:<select id="chooseRecords" onchange="changePaging(${page.current},this.value)">
+<div id="showCustomerBottomPositioneDiv">
+    <div id="showCustomerBottomDiv">
+        <input id="fisrtButton" class="ui-button ui-widget ui-corner-all" type="button"
+               onclick="changePaging(1,'${page.size}')" value="首页"/>&nbsp;&nbsp;&nbsp;&nbsp;
+        <input id="upButton" type="button" class="ui-button ui-widget ui-corner-all"
+               onclick="changePaging('${page.current-1}','${page.size}')" value="上一页"/>&nbsp;&nbsp;&nbsp;&nbsp;
+        ${page.current}/${page.pages}&nbsp;&nbsp;
+        <input id="nextButton" type="button" class="ui-button ui-widget ui-corner-all"
+               onclick="changePaging('${page.current+1>=page.pages?page.pages:page.current+1}','${page.size}')"
+               value="下一页">&nbsp;&nbsp;&nbsp;&nbsp;
+        <input id="lastButton" type="button" class="ui-button ui-widget ui-corner-all"
+               onclick="changePaging('${page.pages}','${page.size}')" value="末页">&nbsp;&nbsp;&nbsp;&nbsp;
+        总记录数:${page.total}&nbsp;&nbsp;&nbsp;&nbsp;
+        每页显示条数:<select id="chooseRecords" onchange="changePaging(${page.current},this.value)">
         <option>10</option>
         <option>25</option>
         <option>50</option>
         <option>75</option>
         <option>100</option>
-        </select>
+    </select>
     </div>
 </div>
 </body>

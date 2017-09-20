@@ -5,11 +5,6 @@
 <head>
 	<title>关键字负面清单</title>
 	<style>
-		.wrap {
-			word-break: break-all;
-			word-wrap: break-word;
-		}
-
 		#div2 {
 			display: none;
 			background-color: #ACF106;
@@ -33,19 +28,17 @@
 			position: fixed;
 			bottom: 0px;
 			right: 0px;
-			background-color: white;
-			padding-top: 10px;
-			padding-bottom: 10px;
+			background-color:#dedede;
+			padding-top: 5px;
+			padding-bottom: 5px;
 			width: 100%;
 		}
 		#showNegativeBottomDiv {
 			float: right;
-			margin-right: 20px;
+			margin-right: 10px;
 		}
 
 	</style>
-	<script language="javascript" type="text/javascript" src="/toastmessage/jquery.toastmessage.js"></script>
-	<link rel="stylesheet" href="/toastmessage/css/jquery.toastmessage.css">
 	<script language="javascript">
         $(function () {
             $("#negativeListDialog").dialog("close");

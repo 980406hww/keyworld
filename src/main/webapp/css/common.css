@@ -1,0 +1,28 @@
+body{
+    margin: 0;
+    padding: 0;
+}
+td,.wrap {
+    word-break: break-all;
+    word-wrap: break-word;
+}
+#topDiv {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    background-color: white;
+    width: 100%;
+}
+#showCustomerBottomPositioneDiv{
+    position: fixed;
+    bottom: 0px;
+    right: 0px;
+    background-color:#dedede;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    width: 100%;
+}
+#showCustomerBottomDiv {
+    float: right;
+    margin-right: 10px;
+}

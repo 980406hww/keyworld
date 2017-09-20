@@ -3,21 +3,8 @@
 <head>
     <%@ include file="/commons/basejs.jsp" %>
     <%@ include file="/commons/global.jsp" %>
-    <script language="javascript" type="text/javascript" src="/toastmessage/jquery.toastmessage.js"></script>
-    <link rel="stylesheet" href="/toastmessage/css/jquery.toastmessage.css">
     <script language="javascript" type="text/javascript" src="/common.js"></script>
     <style type="text/css">
-        td,.wrap {
-            word-break: break-all;
-            word-wrap: break-word;
-        }
-        #topDiv {
-            position: fixed;
-            top: 0px;
-            left: 0px;
-            background-color: white;
-            width: 100%;
-        }
         #showCustomerTableDiv {
             width: 100%;
             margin: auto;
@@ -27,35 +14,11 @@
         #showCustomerTable td{
             text-align: left;
         }
-        #showCustomerBottomDiv {
-            margin-right: 2%;
-            float: right;
-            width: 580px;
-        }
-
         #chargeTypeCalculationDiv input {
             font-size: 12px;
             width: 70px;
             height: 20px;
             margin-top: 10px;
-        }
-
-        #showCustomerBottomPositioneDiv{
-            position: fixed;
-            bottom: 0px;
-            right: 0px;
-            background-color: white;
-            padding-top: 10px;
-            padding-bottom: 10px;
-            width: 100%;
-        }
-        #showCustomerBottomDiv {
-            float: right;
-            margin-right: 20px;
-        }
-        body{
-            margin: 0;
-            padding: 0;
         }
         h6{ margin: 0 5px;}
     </style>

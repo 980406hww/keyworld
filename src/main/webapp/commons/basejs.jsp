@@ -24,6 +24,7 @@
 <script language="javascript" type="text/javascript" src="/toastmessage/jquery.toastmessage.js"></script>
 <link rel="stylesheet" href="/toastmessage/css/jquery.toastmessage.css">
 
+<link rel="stylesheet" href="/css/common.css">
 <script type="text/javascript">
     var basePath = "${staticPath }";
     window.UEDITOR_HOME_URL = "${staticPath }/static/ueditor/";
