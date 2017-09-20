@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="/toastmessage/css/jquery.toastmessage.css">
     <script language="javascript" type="text/javascript" src="/common.js"></script>
     <style type="text/css">
-        .wrap {
+        td,.wrap {
             word-break: break-all;
             word-wrap: break-word;
         }
@@ -720,8 +720,8 @@
             }
             $("#customerDialog").dialog({
                 resizable: false,
-                width: 330,
-                height: 400,
+               /* width: 330,
+                height: 400,*/
                 modal: true,
                 //按钮
                 buttons: [{
@@ -830,8 +830,8 @@
         function showCustomerKeywordDialog(uuid) {
             $("#customerKeywordDialog").dialog({
                 resizable: false,
-                width: 510,
-                height: 320,
+               /* width: 510,
+                height: 320,*/
                 modal: true,
                 //按钮
                 buttons: [{
@@ -852,7 +852,7 @@
                         text: '取消',
                         iconCls: 'icon-cancel',
                         handler: function () {
-                            ("#customerKeywordDialog").dialog("close");
+                            $("#customerKeywordDialog").dialog("close");
                             $('#customerKeywordForm')[0].reset();
                         }
                     }]
@@ -983,8 +983,8 @@
             searchCustomerForm.find("#currentPageNumberHidden").val(1);
         }
         function alignTableHeader(){
-            var td = $("#headerTable tr:first td");
-            var ctd = $("#showCustomerTable tr:first td");
+            var td = $("#showCustomerTabletr:first td");
+            var ctd = $("#headerTable tr:first td");
             $.each(td, function (idx, val) {
                 ctd.eq(idx).width($(val).width());
             });
@@ -1033,7 +1033,7 @@
 <body>
 <div id="topDiv">
                 <%@include file="/menu.jsp" %>
-    <table width="100%" style="font-size:12px; margin-top:40px" cellpadding=3>
+    <table width="100%" style="font-size:12px; margin-top:30px" cellpadding=3>
         <tr>
             <td colspan=13>
                 <form method="post" id="searchCustomerForm" action="/internal/customer/searchCustomers" style="margin-bottom:0px ">
@@ -1109,20 +1109,20 @@
     <table style="font-size:12px; width: 100%;" id="showCustomerTable">
         <c:forEach items="${page.records}" var="customer">
             <tr onmouseover="doOver(this);" onmouseout="doOut(this);" height=30>
-                <td><input type="checkbox" name="customerUuid" value="${customer.uuid}"/></td>
+                <td width=10><input type="checkbox" name="customerUuid" value="${customer.uuid}"/></td>
                     <%--  <c:if test="${user.vipType}">--%>
-                <td>${user.userID}</td>
+                <td width=80>${user.userID}</td>
                     <%--  </c:if>--%>
-                <td>
+                <td width=80>
                     <a href="/internal/customerKeyword/searchCustomerKeywords/${customer.uuid}">${customer.contactPerson}</a>
                 </td>
-                <td>${customer.keywordCount}</td>
-                <td>${customer.qq}</td>
-                <td>${customer.telphone} </td>
-                <td align="right">${customer.paidFee} </td>
-                <td>${customer.remark}</td>
-                <td>${customer.type}</td>
-                <td>
+                <td width=60>${customer.keywordCount}</td>
+                <td width=60>${customer.qq}</td>
+                <td width=100>${customer.telphone} </td>
+                <td align="right" width=60>${customer.paidFee} </td>
+                <td width=140>${customer.remark}</td>
+                <td width=60>${customer.type}</td>
+                <td width=40>
                     <c:choose>
                         <c:when test="${customer.status ==1}">
                             激活
@@ -1132,8 +1132,8 @@
                         </c:otherwise>
                     </c:choose>
                 </td>
-                <td><fmt:formatDate value="${customer.createTime}" pattern="yyyy-MM-dd"/></td>
-                <td>
+                <td width=80><fmt:formatDate value="${customer.createTime}" pattern="yyyy-MM-dd"/></td>
+                <td width=200>
                     <shiro:hasPermission name="/internal/customer/saveCustomer">
                         <a href="javascript:modifyCustomer(${customer.uuid})">修改</a> |
                     </shiro:hasPermission>
@@ -1347,6 +1347,7 @@
     <form id="customerKeywordForm">
    <textarea id="customerKeywordTextarea" style="width:480px;height:180px;"
              placeholder="关键字 域名  关键字与域名以空格作为分割，一行一组"></textarea>
+        <br>
         <c:choose>
             <c:when test="${'PC'.equalsIgnoreCase(terminalType)}">
                 <input type="input" id="group" style="width:480px" value="pc_pm_xiaowu"/>
