@@ -14,6 +14,12 @@ import com.keymanager.util.TerminalTypeMapping;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
 import com.keymanager.value.CustomerKeywordForOptimization;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.DisabledAccountException;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,219 +36,393 @@ import java.util.Map;
 @RequestMapping(value = "/external/customerkeyword")
 public class ExternalCustomerKeywordRestController extends SpringMVCBaseController {
 
-	@Autowired
-	private CustomerKeywordService customerKeywordService;
+    @Autowired
+    private CustomerKeywordService customerKeywordService;
 
-	@Autowired
-	private ClientStatusService clientStatusService;
+    @Autowired
+    private ClientStatusService clientStatusService;
 
-	@Autowired
-	private UserService userService;
+    @Autowired
+    private UserService userService;
 
-	private String getIP(HttpServletRequest request){
-		String ip = request.getHeader("X-Forwarded-For");
-		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-			ip = request.getHeader("Proxy-Client-IP");
-		}
+    private String getIP(HttpServletRequest request) {
+        String ip = request.getHeader("X-Forwarded-For");
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("Proxy-Client-IP");
+        }
 
-		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-			ip = request.getHeader("WL-Proxy-Client-IP");
-		}
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("WL-Proxy-Client-IP");
+        }
 
-		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-			ip = request.getHeader("HTTP_CLIENT_IP");
-		}
-		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-			ip = request.getHeader("HTTP_X_FORWARDED_FOR");
-		}
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("HTTP_CLIENT_IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+        }
 
-		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-			ip = request.getRemoteAddr();
-		}
-		return ip;
-	}
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getRemoteAddr();
+        }
+        return ip;
+    }
 
-	@RequestMapping(value = "/getKeywordForCaptureTitle", method = RequestMethod.POST)
-	public ResponseEntity<?> getKeywordForCaptureTitle(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) throws Exception{
-		String groupName = (String) requestMap.get("group");
-		String userName = (String) requestMap.get("userName");
-		String password = (String) requestMap.get("password");
-		if(userName != null && password != null){
-			User user = userService.getUser(userName);
-			if(user != null && user.getPassword().equals(password)){
-				String returnValue = "";
-				String terminalType = TerminalTypeMapping.getTerminalType(request);
-				if(StringUtils.isEmpty(groupName)) {
-					returnValue = customerKeywordService.searchCustomerKeywordForCaptureTitle(terminalType);
-				}else{
-					returnValue = customerKeywordService.searchCustomerKeywordForCaptureTitle(groupName, terminalType);
-				}
-				return new ResponseEntity<Object>(StringUtils.isEmpty(returnValue) ? "{}" : returnValue, HttpStatus.OK);
-			}
-		}
-		return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
-	}
+    @RequestMapping(value = "/getKeywordForCaptureTitle", method = RequestMethod.POST)
+    public ResponseEntity<?> getKeywordForCaptureTitle(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) throws Exception {
+        String groupName = (String) requestMap.get("group");
+        String userName = (String) requestMap.get("userName");
+        String password = (String) requestMap.get("password");
+        Subject user = SecurityUtils.getSubject();
+        if (user.isAuthenticated()) {
+            String returnValue = "";
+            String terminalType = TerminalTypeMapping.getTerminalType(request);
+            if (StringUtils.isEmpty(groupName)) {
+                returnValue = customerKeywordService.searchCustomerKeywordForCaptureTitle(terminalType);
+            } else {
+                returnValue = customerKeywordService.searchCustomerKeywordForCaptureTitle(groupName, terminalType);
+            }
+            return new ResponseEntity<Object>(StringUtils.isEmpty(returnValue) ? "{}" : returnValue, HttpStatus.OK);
+        } else {
+            UsernamePasswordToken token = new UsernamePasswordToken(userName, password);
+            try {
+                user.login(token);
+                String returnValue = "";
+                String terminalType = TerminalTypeMapping.getTerminalType(request);
+                if (StringUtils.isEmpty(groupName)) {
+                    returnValue = customerKeywordService.searchCustomerKeywordForCaptureTitle(terminalType);
+                } else {
+                    returnValue = customerKeywordService.searchCustomerKeywordForCaptureTitle(groupName, terminalType);
+                }
+                return new ResponseEntity<Object>(StringUtils.isEmpty(returnValue) ? "{}" : returnValue, HttpStatus.OK);
+            } catch (UnknownAccountException e) {
+                return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+            } catch (DisabledAccountException e) {
+                return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+            } catch (IncorrectCredentialsException e) {
+                return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+            } catch (Throwable e) {
+                return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+            }
+        }
+    }
 
-	@RequestMapping(value = "/updateCustomerKeywordForCaptureTitle", method = RequestMethod.POST)
-	public ResponseEntity<?> updateCustomerKeywordForCaptureTitle(@RequestBody SearchEngineResultItemVO searchEngineResultItemVO) throws Exception{
-		if(searchEngineResultItemVO.getUserName() != null && searchEngineResultItemVO.getPassword() != null){
-			User user = userService.getUser(searchEngineResultItemVO.getUserName());
-			if(user != null && user.getPassword().equals(searchEngineResultItemVO.getPassword())){
-				customerKeywordService.updateCustomerKeywordTitle(searchEngineResultItemVO);
-				return new ResponseEntity<Object>(1, HttpStatus.OK);
-			}
-		}
-		return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-	}
+    @RequestMapping(value = "/updateCustomerKeywordForCaptureTitle", method = RequestMethod.POST)
+    public ResponseEntity<?> updateCustomerKeywordForCaptureTitle(@RequestBody SearchEngineResultItemVO searchEngineResultItemVO) throws Exception {
+        if (searchEngineResultItemVO.getUserName() != null && searchEngineResultItemVO.getPassword() != null) {
+            Subject user = SecurityUtils.getSubject();
+            if (user.isAuthenticated()) {
+                customerKeywordService.updateCustomerKeywordTitle(searchEngineResultItemVO);
+                return new ResponseEntity<Object>(1, HttpStatus.OK);
+            } else {
+                UsernamePasswordToken token = new UsernamePasswordToken(searchEngineResultItemVO.getUserName(), searchEngineResultItemVO.getPassword());
+                try {
+                    user.login(token);
+                    customerKeywordService.updateCustomerKeywordTitle(searchEngineResultItemVO);
+                    return new ResponseEntity<Object>(1, HttpStatus.OK);
+                } catch (UnknownAccountException e) {
+                    return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+                } catch (DisabledAccountException e) {
+                    return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+                } catch (IncorrectCredentialsException e) {
+                    return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+                } catch (Throwable e) {
+                    return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+                }
+            }
+        }
+        return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+    }
 
-	@RequestMapping(value = "/getCustomerKeywordsForCaptureIndex" , method = RequestMethod.POST)
-	public ResponseEntity<?> getCustomerKeywordsForCaptureIndex(@RequestBody BaseCriteria baseCriteria) throws Exception{
-		if(baseCriteria.getUserName() != null && baseCriteria.getPassword() != null){
-			User user = userService.getUser(baseCriteria.getUserName());
-			if(user != null && user.getPassword().equals(baseCriteria.getPassword())){
-				CustomerKeyword customerKeyword = customerKeywordService.getCustomerKeywordsForCaptureIndex();
-				return new ResponseEntity<Object>(customerKeyword, HttpStatus.OK);
-			}
-		}
-		return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
-	}
+    @RequestMapping(value = "/getCustomerKeywordsForCaptureIndex", method = RequestMethod.POST)
+    public ResponseEntity<?> getCustomerKeywordsForCaptureIndex(@RequestBody BaseCriteria baseCriteria) throws Exception {
+        if (baseCriteria.getUserName() != null && baseCriteria.getPassword() != null) {
+            Subject user = SecurityUtils.getSubject();
+            if (user.isAuthenticated()) {
+                CustomerKeyword customerKeyword = customerKeywordService.getCustomerKeywordsForCaptureIndex();
+                return new ResponseEntity<Object>(customerKeyword, HttpStatus.OK);
+            } else {
+                UsernamePasswordToken token = new UsernamePasswordToken(baseCriteria.getUserName(), baseCriteria.getPassword());
+                try {
+                    user.login(token);
+                    CustomerKeyword customerKeyword = customerKeywordService.getCustomerKeywordsForCaptureIndex();
+                    return new ResponseEntity<Object>(customerKeyword, HttpStatus.OK);
+                } catch (UnknownAccountException e) {
+                    return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+                } catch (DisabledAccountException e) {
+                    return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+                } catch (IncorrectCredentialsException e) {
+                    return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+                } catch (Throwable e) {
+                    return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+                }
+            }
+        }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+    }
 
-	@RequestMapping(value = "/updateKeywordIndex", method = RequestMethod.POST)
-	public ResponseEntity<?> updateKeywordIndex(@RequestBody BaiduIndexCriteria baiduIndexCriteria) throws Exception{
-		if(baiduIndexCriteria.getUserName() != null && baiduIndexCriteria.getPassword() != null){
-			User user = userService.getUser(baiduIndexCriteria.getUserName());
-			if(user != null && user.getPassword().equals(baiduIndexCriteria.getPassword())){
-				customerKeywordService.updateCustomerKeywordIndex(baiduIndexCriteria);
-				return new ResponseEntity<Object>(true, HttpStatus.OK);
-			}
-		}
-		return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
-	}
+    @RequestMapping(value = "/updateKeywordIndex", method = RequestMethod.POST)
+    public ResponseEntity<?> updateKeywordIndex(@RequestBody BaiduIndexCriteria baiduIndexCriteria) throws Exception {
+        if (baiduIndexCriteria.getUserName() != null && baiduIndexCriteria.getPassword() != null) {
+            Subject user = SecurityUtils.getSubject();
+            if (user.isAuthenticated()) {
+                CustomerKeyword customerKeyword = customerKeywordService.getCustomerKeywordsForCaptureIndex();
+                return new ResponseEntity<Object>(customerKeyword, HttpStatus.OK);
+            } else {
+                UsernamePasswordToken token = new UsernamePasswordToken(baiduIndexCriteria.getUserName(), baiduIndexCriteria.getPassword());
+                try {
+                    user.login(token);
+                    CustomerKeyword customerKeyword = customerKeywordService.getCustomerKeywordsForCaptureIndex();
+                    return new ResponseEntity<Object>(customerKeyword, HttpStatus.OK);
+                } catch (UnknownAccountException e) {
+                    return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+                } catch (DisabledAccountException e) {
+                    return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+                } catch (IncorrectCredentialsException e) {
+                    return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+                } catch (Throwable e) {
+                    return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+                }
+            }
+        }
+        return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+    }
 
-	@RequestMapping(value = "/getGroups", method = RequestMethod.POST)
-	public ResponseEntity<?> getGroups(@RequestBody BaseCriteria baseCriteria) throws Exception{
-		if(baseCriteria.getUserName() != null && baseCriteria.getPassword() != null){
-			User user = userService.getUser(baseCriteria.getUserName());
-			if(user != null && user.getPassword().equals(baseCriteria.getPassword())){
-				List<String> groups = customerKeywordService.getGroups();
-				return new ResponseEntity<Object>(groups, HttpStatus.OK);
-			}
-		}
-		return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
-	}
+    @RequestMapping(value = "/getGroups", method = RequestMethod.POST)
+    public ResponseEntity<?> getGroups(@RequestBody BaseCriteria baseCriteria) throws Exception {
+        if (baseCriteria.getUserName() != null && baseCriteria.getPassword() != null) {
+            Subject user = SecurityUtils.getSubject();
+            if (user.isAuthenticated()) {
+                List<String> groups = customerKeywordService.getGroups();
+                return new ResponseEntity<Object>(groups, HttpStatus.OK);
+            } else {
+                UsernamePasswordToken token = new UsernamePasswordToken(baseCriteria.getUserName(), baseCriteria.getPassword());
+                try {
+                    user.login(token);
+                    List<String> groups = customerKeywordService.getGroups();
+                    return new ResponseEntity<Object>(groups, HttpStatus.OK);
+                } catch (UnknownAccountException e) {
+                    return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
+                } catch (DisabledAccountException e) {
+                    return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
+                } catch (IncorrectCredentialsException e) {
+                    return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
+                } catch (Throwable e) {
+                    return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
+                }
+            }
+        }
+        return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
+    }
 
-	@RequestMapping(value = "/getCustomerKeyword", method = RequestMethod.GET)
-	public ResponseEntity<?> getCustomerKeywordForOptimization(HttpServletRequest request) throws Exception{
-		String clientID = request.getParameter("clientID");
-		String userName = request.getParameter("userName");
-		String password = request.getParameter("password");
-		String version = request.getParameter("version");
-		String terminalType = TerminalTypeMapping.getTerminalType(request);
-		if(userName != null && password != null){
-			User user = userService.getUser(userName);
-			if(user != null && user.getPassword().equals(password)){
-				CustomerKeywordForOptimization customerKeywordForOptimization = customerKeywordService.searchCustomerKeywordsForOptimization(terminalType, clientID, version);
-				if(customerKeywordForOptimization != null){
-					customerKeywordService.updateOptimizationQueryTime(customerKeywordForOptimization.getUuid());
-				}
-				clientStatusService.updateClientVersion(clientID, version);
-				return new ResponseEntity<Object>(customerKeywordForOptimization, HttpStatus.OK);
-			}
-		}
-		return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
-	}
+    @RequestMapping(value = "/getCustomerKeyword", method = RequestMethod.GET)
+    public ResponseEntity<?> getCustomerKeywordForOptimization(HttpServletRequest request) throws Exception {
+        String clientID = request.getParameter("clientID");
+        String userName = request.getParameter("userName");
+        String password = request.getParameter("password");
+        String version = request.getParameter("version");
+        String terminalType = TerminalTypeMapping.getTerminalType(request);
+        if (userName != null && password != null) {
+            Subject user = SecurityUtils.getSubject();
+            if (user.isAuthenticated()) {
+                CustomerKeywordForOptimization customerKeywordForOptimization = customerKeywordService.searchCustomerKeywordsForOptimization(terminalType, clientID, version);
+                if (customerKeywordForOptimization != null) {
+                    customerKeywordService.updateOptimizationQueryTime(customerKeywordForOptimization.getUuid());
+                }
+                clientStatusService.updateClientVersion(clientID, version);
+                return new ResponseEntity<Object>(customerKeywordForOptimization, HttpStatus.OK);
+            } else {
+                UsernamePasswordToken token = new UsernamePasswordToken(userName, password);
+                try {
+                    user.login(token);
+                    CustomerKeywordForOptimization customerKeywordForOptimization = customerKeywordService.searchCustomerKeywordsForOptimization(terminalType, clientID, version);
+                    if (customerKeywordForOptimization != null) {
+                        customerKeywordService.updateOptimizationQueryTime(customerKeywordForOptimization.getUuid());
+                    }
+                    clientStatusService.updateClientVersion(clientID, version);
+                    return new ResponseEntity<Object>(customerKeywordForOptimization, HttpStatus.OK);
+                } catch (UnknownAccountException e) {
+                    return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
+                } catch (DisabledAccountException e) {
+                    return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
+                } catch (IncorrectCredentialsException e) {
+                    return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
+                } catch (Throwable e) {
+                    return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
+                }
+            }
+        }
+        return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
+    }
 
-	@RequestMapping(value = "/updateOptimizedCount", method = RequestMethod.GET)
-	public ResponseEntity<?> updateOptimizedCount(HttpServletRequest request) throws Exception{
-		String userName = request.getParameter("username");
-		String password = request.getParameter("password");
+    @RequestMapping(value = "/updateOptimizedCount", method = RequestMethod.GET)
+    public ResponseEntity<?> updateOptimizedCount(HttpServletRequest request) throws Exception {
+        String userName = request.getParameter("username");
+        String password = request.getParameter("password");
 
-		Long customerKeywordUuid = Long.parseLong(request.getParameter("uuid").trim());
-		String count = request.getParameter("count");
-		String clientID = request.getParameter("clientID");
-		String freeSpace = request.getParameter("freespace");
-		String version = request.getParameter("version");
-		String city = request.getParameter("city");
-		String status = request.getParameter("status");
+        Long customerKeywordUuid = Long.parseLong(request.getParameter("uuid").trim());
+        String count = request.getParameter("count");
+        String clientID = request.getParameter("clientID");
+        String freeSpace = request.getParameter("freespace");
+        String version = request.getParameter("version");
+        String city = request.getParameter("city");
+        String status = request.getParameter("status");
 
-		String ip = getIP(request);
-		String terminalType = TerminalTypeMapping.getTerminalType(request);
+        String ip = getIP(request);
+        String terminalType = TerminalTypeMapping.getTerminalType(request);
 
-		if(userName != null && password != null){
-			User user = userService.getUser(userName);
-			if(user != null && user.getPassword().equals(password)){
-				customerKeywordService.updateOptimizationResult(terminalType, customerKeywordUuid, Integer.parseInt(count.trim()), ip, city, clientID,
-						status, freeSpace, version);
-				return new ResponseEntity<Object>(1, HttpStatus.OK);
-			}
-		}
-		return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-	}
+        if (userName != null && password != null) {
+            Subject user = SecurityUtils.getSubject();
+            if (user.isAuthenticated()) {
+                customerKeywordService.updateOptimizationResult(terminalType, customerKeywordUuid, Integer.parseInt(count.trim()), ip, city, clientID,
+                        status, freeSpace, version);
+                return new ResponseEntity<Object>(1, HttpStatus.OK);
+            } else {
+                UsernamePasswordToken token = new UsernamePasswordToken(userName, password);
+                try {
+                    user.login(token);
+                    customerKeywordService.updateOptimizationResult(terminalType, customerKeywordUuid, Integer.parseInt(count.trim()), ip, city, clientID,
+                            status, freeSpace, version);
+                    return new ResponseEntity<Object>(1, HttpStatus.OK);
+                } catch (UnknownAccountException e) {
+                    return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
+                } catch (DisabledAccountException e) {
+                    return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
+                } catch (IncorrectCredentialsException e) {
+                    return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
+                } catch (Throwable e) {
+                    return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
+                }
+            }
+        }
+        return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
+    }
 
-	@RequestMapping(value = "/adjustOptimizationCount", method = RequestMethod.POST)
-	public ResponseEntity<?> adjustOptimizationCount(HttpServletRequest request) throws Exception{
-		String userName = request.getParameter("userName");
-		String password = request.getParameter("password");
+    @RequestMapping(value = "/adjustOptimizationCount", method = RequestMethod.POST)
+    public ResponseEntity<?> adjustOptimizationCount(HttpServletRequest request) throws Exception {
+        String userName = request.getParameter("userName");
+        String password = request.getParameter("password");
+        if (userName != null && password != null) {
+            Subject user = SecurityUtils.getSubject();
+            if (user.isAuthenticated()) {
+                customerKeywordService.adjustOptimizationCount();
+                return new ResponseEntity<Object>(1, HttpStatus.OK);
+            } else {
+                UsernamePasswordToken token = new UsernamePasswordToken(userName, password);
+                try {
+                    user.login(token);
+                    customerKeywordService.adjustOptimizationCount();
+                    return new ResponseEntity<Object>(1, HttpStatus.OK);
+                } catch (UnknownAccountException e) {
+                    return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+                } catch (DisabledAccountException e) {
+                    return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+                } catch (IncorrectCredentialsException e) {
+                    return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+                } catch (Throwable e) {
+                    return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+                }
+            }
+        }
+        return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+    }
 
-		if(userName != null && password != null){
-			User user = userService.getUser(userName);
-			if(user != null && user.getPassword().equals(password)){
-				customerKeywordService.adjustOptimizationCount();
-				return new ResponseEntity<Object>(1, HttpStatus.OK);
-			}
-		}
-		return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-	}
+    @RequestMapping(value = "/updateCustomerKeywordPosition", method = RequestMethod.POST)
+    public ResponseEntity<?> updateCustomerKeywordPosition(@RequestBody Map<String, Object> requestMap) throws Exception {
+        String userName = (String) requestMap.get("userName");
+        String password = (String) requestMap.get("password");
 
-	@RequestMapping(value = "/updateCustomerKeywordPosition", method = RequestMethod.POST)
-	public ResponseEntity<?> updateCustomerKeywordPosition(@RequestBody Map<String, Object> requestMap) throws Exception{
-		String userName = (String) requestMap.get("userName");
-		String password = (String) requestMap.get("password");
+        Long customerKeywordUuid = Long.parseLong(requestMap.get("customerKeywordUuid").toString());
+        int position = (Integer) requestMap.get("position");
 
-		Long customerKeywordUuid = Long.parseLong(requestMap.get("customerKeywordUuid").toString());
-		int position = (Integer) requestMap.get("position");
+        if (userName != null && password != null) {
+            Subject user = SecurityUtils.getSubject();
+            if (user.isAuthenticated()) {
+                customerKeywordService.updateCustomerKeywordPosition(customerKeywordUuid, position);
+                return new ResponseEntity<Object>(true, HttpStatus.OK);
+            } else {
+                UsernamePasswordToken token = new UsernamePasswordToken(userName, password);
+                try {
+                    user.login(token);
+                    customerKeywordService.updateCustomerKeywordPosition(customerKeywordUuid, position);
+                    return new ResponseEntity<Object>(true, HttpStatus.OK);
+                } catch (UnknownAccountException e) {
+                    return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+                } catch (DisabledAccountException e) {
+                    return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+                } catch (IncorrectCredentialsException e) {
+                    return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+                } catch (Throwable e) {
+                    return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+                }
+            }
+        }
+        return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+    }
 
-		if(userName != null && password != null){
-			User user = userService.getUser(userName);
-			if(user != null && user.getPassword().equals(password)){
-				customerKeywordService.updateCustomerKeywordPosition(customerKeywordUuid, position);
-				return new ResponseEntity<Object>(true, HttpStatus.OK);
-			}
-		}
-		return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
-	}
+    @RequestMapping(value = "/getCustomerKeywordForCapturePosition", method = RequestMethod.POST)
+    public ResponseEntity<?> getCustomerKeywordForCapturePosition(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) throws Exception {
+        String userName = (String) requestMap.get("userName");
+        String password = (String) requestMap.get("password");
+        String terminalType = TerminalTypeMapping.getTerminalType(request);
 
-	@RequestMapping(value = "/getCustomerKeywordForCapturePosition", method = RequestMethod.POST)
-	public ResponseEntity<?> getCustomerKeywordForCapturePosition(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) throws Exception{
-		String userName = (String) requestMap.get("userName");
-		String password = (String) requestMap.get("password");
-		String terminalType = TerminalTypeMapping.getTerminalType(request);
+        List<String> groupNames = (List<String>) requestMap.get("groupNames");
+        Integer customerUuid = (requestMap.get("customerUuid") == null) ? null : (Integer) requestMap.get("customerUuid");
+        int minutes = (Integer) requestMap.get("minutes");
 
-		List<String> groupNames = (List<String>)requestMap.get("groupNames");
-		Integer customerUuid = (requestMap.get("customerUuid") == null) ? null : (Integer) requestMap.get("customerUuid");
-		int minutes = (Integer) requestMap.get("minutes");
+        if (userName != null && password != null) {
+            Subject user = SecurityUtils.getSubject();
+            if (user.isAuthenticated()) {
+                CustomerKeywordForCapturePosition capturePosition = customerKeywordService.getCustomerKeywordForCapturePosition(terminalType,
+                        groupNames, customerUuid != null ? customerUuid.longValue() : null, minutes);
+                return new ResponseEntity<Object>(capturePosition, HttpStatus.OK);
+            } else {
+                UsernamePasswordToken token = new UsernamePasswordToken(userName, password);
+                try {
+                    user.login(token);
+                    CustomerKeywordForCapturePosition capturePosition = customerKeywordService.getCustomerKeywordForCapturePosition(terminalType,
+                            groupNames, customerUuid != null ? customerUuid.longValue() : null, minutes);
+                    return new ResponseEntity<Object>(capturePosition, HttpStatus.OK);
+                } catch (UnknownAccountException e) {
+                    return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+                } catch (DisabledAccountException e) {
+                    return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+                } catch (IncorrectCredentialsException e) {
+                    return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+                } catch (Throwable e) {
+                    return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+                }
+            }
+        }
+        return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
+    }
 
-		if(userName != null && password != null){
-			User user = userService.getUser(userName);
-			if(user != null && user.getPassword().equals(password)){
-				CustomerKeywordForCapturePosition capturePosition = customerKeywordService.getCustomerKeywordForCapturePosition(terminalType,
-						groupNames, customerUuid != null ? customerUuid.longValue() : null, minutes);
-				return new ResponseEntity<Object>(capturePosition, HttpStatus.OK);
-			}
-		}
-		return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
-	}
-
-	@RequestMapping(value = "/saveCustomerKeywords", method = RequestMethod.POST)
-	public ResponseEntity<?> saveCustomerKeywords(@RequestBody SearchEngineResultVO searchEngineResultVO, HttpServletRequest request) throws Exception{
-		if(searchEngineResultVO.getUserName() != null && searchEngineResultVO.getPassword() != null){
-			User user = userService.getUser(searchEngineResultVO.getUserName());
-			if(user != null && user.getPassword().equals(searchEngineResultVO.getPassword())){
-				String terminalType = TerminalTypeMapping.getTerminalType(request);
-				customerKeywordService.addCustomerKeywords(searchEngineResultVO, terminalType);
-				return new ResponseEntity<Object>(true, HttpStatus.OK);
-			}
-		}
-		return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
-	}
+    @RequestMapping(value = "/saveCustomerKeywords", method = RequestMethod.POST)
+    public ResponseEntity<?> saveCustomerKeywords(@RequestBody SearchEngineResultVO searchEngineResultVO, HttpServletRequest request) throws Exception {
+        if (searchEngineResultVO.getUserName() != null && searchEngineResultVO.getPassword() != null) {
+            Subject user = SecurityUtils.getSubject();
+            if (user.isAuthenticated()) {
+                String terminalType = TerminalTypeMapping.getTerminalType(request);
+                customerKeywordService.addCustomerKeywords(searchEngineResultVO, terminalType);
+                return new ResponseEntity<Object>(true, HttpStatus.OK);
+            } else {
+                UsernamePasswordToken token = new UsernamePasswordToken(searchEngineResultVO.getUserName(), searchEngineResultVO.getPassword());
+                try {
+                    user.login(token);
+                    String terminalType = TerminalTypeMapping.getTerminalType(request);
+                    customerKeywordService.addCustomerKeywords(searchEngineResultVO, terminalType);
+                    return new ResponseEntity<Object>(true, HttpStatus.OK);
+                } catch (UnknownAccountException e) {
+                    return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+                } catch (DisabledAccountException e) {
+                    return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+                } catch (IncorrectCredentialsException e) {
+                    return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+                } catch (Throwable e) {
+                    return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+                }
+            }
+        }
+        return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+    }
 }

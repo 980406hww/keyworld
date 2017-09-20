@@ -71,6 +71,7 @@
 				/commons/** = anon
 				/static/** = anon
 				/webhooks = anon
+				/external/** = anon
 				/login = anon
 				/** = userInfo
 			</value>
