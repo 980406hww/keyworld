@@ -480,7 +480,7 @@
                     $("#customerKeywordForm").find("#status").val('');
                 }
                 $( "#saveCustomerKeywordDialog").dialog({
-                    width: 430,
+                    width: 420,
                     height: 540,
                     title : "添加关键字",
                     modal: true,
