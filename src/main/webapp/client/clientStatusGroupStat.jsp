@@ -4,35 +4,12 @@
 <head>
     <title>客户端统计</title>
     <style>
-        .wrap {
-            word-break: break-all;
-            word-wrap: break-word;
-        }
         #topDiv {
             position: fixed;
             top: 0px;
             left: 0px;
             background-color: white;
             width: 100%;
-        }
-        #showCustomerBottomPositioneDiv {
-            position: fixed;
-            bottom: 0px;
-            right: 0px;
-            background-color: white;
-            padding-top: 10px;
-            padding-bottom: 10px;
-            width: 100%;
-        }
-
-        #showCustomerBottomDiv {
-            float: right;
-            margin-right: 20px;
-        }
-
-        body {
-            margin: 0;
-            padding: 0;
         }
         #ClientStatusGroupSummaryTable tr:nth-child(even){background-color: #eeeeee}
         #ClientStatusGroupSummaryTable tr:hover{background-color: #dad55e}
@@ -71,7 +48,7 @@
             <input type="submit" value="查询">
         </shiro:hasPermission>
     </form>
-    <table width=70% style="font-size: 12px;" cellpadding=3 id="headerTable">
+    <table width=40% style="font-size: 12px;" cellpadding=3 id="headerTable">
         <tr bgcolor="#eeeeee" height=30>
             <td align="center" width=100>分组名称</td>
             <td align="center" width=100>终端类型</td>
@@ -82,9 +59,9 @@
     </table>
 </div>
 <div id="centerDiv">
-    <table width=70% style="font-size: 12px;" cellpadding=3 id="ClientStatusGroupSummaryTable">
+    <table width=40% style="font-size: 12px;" cellpadding=3 id="ClientStatusGroupSummaryTable">
     <c:forEach items="${clientStatusGroupSummaryVOs}" var="ClientStatusGroupSummaryVO" varStatus="status">
-        <tr align="center">
+        <tr align="left">
         <td>${ClientStatusGroupSummaryVO.group}</td>
         <td>${ClientStatusGroupSummaryVO.terminalType}</td>
         <td>${ClientStatusGroupSummaryVO.count}</td>
