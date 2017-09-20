@@ -46,9 +46,6 @@ public class ExternalComplaintsRestController extends SpringMVCBaseController {
     @Autowired
     private TSComplainLogService tsComplainLogService;
 
-    @Autowired
-    private UserService userService;
-
     @RequestMapping(value = "/saveWithAuthentication", method = RequestMethod.POST)
     public ResponseEntity<?> saveTSMainKeywords(@RequestBody TSMainKeywordCriteria tsMainKeywordCriteria) {
         try {

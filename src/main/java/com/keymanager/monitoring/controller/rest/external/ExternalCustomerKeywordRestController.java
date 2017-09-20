@@ -47,9 +47,6 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
     @Autowired
     private ClientStatusService clientStatusService;
 
-    @Autowired
-    private UserService userService;
-
     private String getIP(HttpServletRequest request) {
         String ip = request.getHeader("X-Forwarded-For");
         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {

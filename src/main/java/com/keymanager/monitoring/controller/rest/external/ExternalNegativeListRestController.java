@@ -30,9 +30,6 @@ public class ExternalNegativeListRestController extends SpringMVCBaseController 
 	@Autowired
 	private NegativeListService negativeListService;
 
-	@Autowired
-	private UserService userService;
-
 	@RequestMapping(value = "/saveNegativeLists", method = RequestMethod.POST)
 	public ResponseEntity<?> saveNegativeLists(@RequestBody NegativeListCriteria negativeListCriteria, HttpServletRequest request) throws Exception{
 		try {

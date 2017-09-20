@@ -37,15 +37,6 @@ public class ComplaintsRestController extends SpringMVCBaseController {
     @Autowired
     private TSMainKeywordService tsMainKeywordService;
 
-    @Autowired
-    private TSNegativeKeywordService tsNegativeKeywordService;
-
-    @Autowired
-    private TSComplainLogService tsComplainLogService;
-
-    @Autowired
-    private UserService userService;
-
     @RequiresPermissions("/internal/complaints/save")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public ResponseEntity<?> saveTSMainKeywords(@RequestBody TSMainKeyword tsMainKeyword){

@@ -32,9 +32,6 @@ public class ExternalCustomerRestController extends SpringMVCBaseController {
     @Autowired
     private CustomerService customerService;
 
-    @Autowired
-    private UserService userService;
-
     @RequestMapping(value = "getActiveCustomerSimpleInfo" , method = RequestMethod.POST)
     public ResponseEntity<?> getActiveCustomerSimpleInfo(@RequestBody CustomerCriteria customerCriteria) throws Exception{
         try {

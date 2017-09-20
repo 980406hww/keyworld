@@ -30,9 +30,6 @@ public class ExternalClientStatusRestController extends SpringMVCBaseController 
     private static Logger logger = LoggerFactory.getLogger(ExternalClientStatusRestController.class);
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private VMwareService vMwareService;
 
     @Autowired

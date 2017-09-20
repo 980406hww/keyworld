@@ -36,15 +36,6 @@ public class ExternalQZSettingRestController extends SpringMVCBaseController {
 	@Autowired
 	private QZSettingService qzSettingService;
 
-	@Autowired
-	private QZChargeRuleService qzChargeRuleService;
-
-	@Autowired
-	private QZOperationTypeService qzOperationTypeService;
-
-	@Autowired
-	private UserService userService;
-
 	@RequestMapping(value = "/getAvailableQZSetting", method = RequestMethod.POST)
 	public ResponseEntity<?> getAvailableQZSetting(@RequestBody QZSettingCriteria qzSettingCriteria){
 		try {

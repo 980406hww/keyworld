@@ -26,9 +26,6 @@ public class ExternalSupportRestController extends SpringMVCBaseController {
 	@Autowired
 	private CaptureRealUrlService captureRealUrlService;
 
-	@Autowired
-	private UserService userService;
-
 	@RequestMapping(value = "/getRealUrls", method = RequestMethod.POST)
 	public ResponseEntity<?> getRealUrls(@RequestBody CaptureRealUrlCriteria captureRealUrlCriteria) throws Exception{
 		try {
