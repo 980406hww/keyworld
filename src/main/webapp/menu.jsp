@@ -28,7 +28,6 @@
     });
 	//点击菜单
     function openUrl(url,title,iconCls,openMode) {
-//        alert(url);
         var opts = {
             title : title,
             border : false,

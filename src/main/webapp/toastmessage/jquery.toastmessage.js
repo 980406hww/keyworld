@@ -73,7 +73,6 @@
         init : function(options)
 		{
 			if (options) {
-
                 $.extend( settings, options );
             }
 		},
