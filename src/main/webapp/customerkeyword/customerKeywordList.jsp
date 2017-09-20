@@ -8,7 +8,7 @@
     <head>
         <title>关键字列表</title>
         <style>
-            .wrap {
+            .wrap,td{
                 word-break: break-all;
                 word-wrap: break-word;
             }
@@ -189,8 +189,8 @@
                     type: 'GET',
                     success: function (result) {
                         if (result) {
-                            $().toastmessage('showSuccessToast', "删除成功");
-                            window.location.reload();
+                            $().toastmessage('showSuccessToast', "删除成功",true);
+                           /* window.location.reload();*/
                         } else {
                             $().toastmessage('showErrorToast', "删除失败");
                         }
@@ -235,8 +235,8 @@
                     type: 'POST',
                     success: function (data) {
                         if (data) {
-                            $().toastmessage('showSuccessToast', "操作成功");
-                            window.location.reload();
+                            $().toastmessage('showSuccessToast', "操作成功",true);
+                           /* window.location.reload();*/
                         } else {
                             $().toastmessage('showErrorToast', "操作失败");
                         }
@@ -292,8 +292,8 @@
                     type: 'POST',
                     success: function (status) {
                         if (status) {
-                            $().toastmessage('showSuccessToast', "操作成功");
-                            window.location.reload();
+                            $().toastmessage('showSuccessToast', "操作成功",true);
+                           /* window.location.reload();*/
                         } else {
                             $().toastmessage('showErrorToast', "操作失败");
                         }
@@ -419,16 +419,16 @@
                     type: 'POST',
                     success: function (result) {
                         if (result) {
-                            $().toastmessage('showSuccessToast', "操作成功");
-                            window.location.reload();
+                            $().toastmessage('showSuccessToast', "操作成功",true);
+                           /* window.location.reload();*/
                         } else {
-                            $().toastmessage('showErrorToast', "操作失败");
-                            window.location.reload();
+                            $().toastmessage('showErrorToast', "操作失败",true);
+                           /* window.location.reload();*/
                         }
                     },
                     error: function () {
-                        $().toastmessage('showErrorToast', "操作失败");
-                        window.location.reload();
+                        $().toastmessage('showErrorToast', "操作失败",true);
+                       /* window.location.reload();*/
                     },
                 });
             }
@@ -554,8 +554,8 @@
                     type: 'POST',
                     success: function (result) {
                         if (result) {
-                            $().toastmessage('showSuccessToast', "操作成功");
-                            window.location.reload();
+                            $().toastmessage('showSuccessToast', "操作成功",true);
+                           /* window.location.reload();*/
                         } else {
                             $().toastmessage('showErrorToast', "操作失败");
                         }
@@ -672,8 +672,8 @@
                                     contentType: false,
                                     success: function (result) {
                                         if (result) {
-                                            $().toastmessage('showSuccessToast', "上传成功");
-                                            window.location.reload();
+                                            $().toastmessage('showSuccessToast', "上传成功",true);
+                                           /*window.location.reload();*/
                                         } else {
                                             $().toastmessage('showErrorToast', "上传失败");
                                         }
@@ -885,7 +885,6 @@
             <div id="div2"></div>
         </tr>
     </table>
-    <hr>
 </div>
 <div id="customerKeywordDiv">
     <table id="customerKeywordTable">
@@ -896,9 +895,9 @@
                     <font color="<%--<%=keywordColor%>--%>">${customerKeyword.keyword}</font>
                 </td>
                 <td  align="center" width=200 class="wrap"
-                     onMouseMove="showTip('原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}')"
-                     onMouseOut="closeTip()">
-                    <div style="height:16;">
+                    <%-- onMouseMove="showTip('原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}')"
+                     onMouseOut="closeTip()"--%>>
+                    <div style="height:16;" class="easyui-tooltip" title="'原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}'">
                             ${customerKeyword.url==null?'':customerKeyword.url};
                     </div>
                 </td>

@@ -65,7 +65,8 @@
                 position:           'top-right',        // top-left, top-center, top-right, middle-left, middle-center, middle-right ... Position of the toast container holding different toast. Position can be set only once at the very first call, changing the position after the first call does nothing
                 closeText:          '',                 // text which will be shown as close button, set to '' when you want to introduce an image via css
                 close:              null,                // callback function when the toastmessage is closed
-                hastoastItem:        false               //是否有关闭按钮,默认为false
+                hastoastItem:        false,              //是否有关闭按钮,默认为false
+                isReload:            false                //是否重新加载页面
             };
 
     var methods = {
@@ -103,7 +104,15 @@
 			{
 				setTimeout(function()
 				{
-					$().toastmessage('removeToast', toastItemInner, localSettings);
+					if(localSettings.isReload)
+                    {
+                       /* localSettings.stayTime=1000;*/
+                        $().toastmessage('removeToast', toastItemInner, localSettings);
+                        window.location.reload();
+                    }
+                    else{
+                        $().toastmessage('removeToast', toastItemInner, localSettings);
+                    }
 				},
 				localSettings.stayTime);
 			}
@@ -116,15 +125,17 @@
             return $().toastmessage('showToast', options);
         },
 
-        showSuccessToast : function (message)
+        showSuccessToast : function (message,isReload)
         {
-            var options = {text : message, type : 'success'};
+            var options = {text : message, type : 'success',isReload:isReload};
+            options.stayTime=1000;
             return $().toastmessage('showToast', options);
         },
 
-        showErrorToast : function (message)
+        showErrorToast : function (message,isReload)
         {
-            var options = {text : message, type : 'error'};
+            var options = {text : message, type : 'error',isReload:isReload};
+            options.stayTime=1000;
             return $().toastmessage('showToast', options);
         },
 

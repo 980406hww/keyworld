@@ -1,7 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ include file="/commons/global.jsp"%>
+<%@ include file="/commons/basejs.jsp" %>
+<%@ include file="/commons/global.jsp" %>
 <link rel="stylesheet" type="text/css" href="${staticPath }/static/style/css/icons-view.css?v=60" />
 <script type="text/javascript" src="${staticPath }/static/clipboard/clipboard.min.js" charset="utf-8"></script>
+<%@include file="/menu.jsp" %>
 <div class="container">
     <div class="interchange-body">
         <div id="clipIcon" class="large-12 columns">

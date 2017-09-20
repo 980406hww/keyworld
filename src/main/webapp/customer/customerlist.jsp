@@ -193,8 +193,8 @@
                 success: function (status) {
                     if (status) {
 
-                        $().toastmessage('showSuccessToast', "更新成功");
-                        window.location.reload();
+                        $().toastmessage('showSuccessToast', "更新成功",true);
+
                     } else {
                        /* showInfo("更新失败", self);*/
                         $().toastmessage('showErrorToast', "更新失败");
@@ -284,16 +284,16 @@
                 success: function (data) {
                     if (data) {
                         /*showInfo("操作成功", self);*/
-                        $().toastmessage('showSuccessToast', "操作成功");
-                        window.location.reload();
+                        $().toastmessage('showSuccessToast', "操作成功",true);
+
                     } else {
-                        $().toastmessage('showErrorToast', "操作失败");
-                        window.location.reload();
+                        $().toastmessage('showErrorToast', "操作失败",true);
+
                     }
                 },
                 error: function () {
-                    $().toastmessage('showErrorToast', "操作失败");
-                    window.location.reload();
+                    $().toastmessage('showErrorToast', "操作失败",true);
+
                 }
             });
         }
@@ -506,8 +506,8 @@
                     type: 'POST',
                     success: function (result) {
                         if (result) {
-                            $().toastmessage('showSuccessToast', "操作成功");
-                            window.location.reload();
+                            $().toastmessage('showSuccessToast', "操作成功",true);
+
                         } else {
                             $().toastmessage('showErrorToast', "操作失败");
                         }
@@ -815,12 +815,12 @@
                 success: function (result) {
                     if (result) {
                         /*showInfo("保存成功", self);*/
-                        $().toastmessage('showSuccessToast', "保存成功");
-                        window.location.reload();
+                        $().toastmessage('showSuccessToast', "保存成功",true);
+                       /**/
                     } else {
 
-                        $().toastmessage('showErrorToast', "保存失败");
-                        window.location.reload();
+                        $().toastmessage('showErrorToast', "保存失败",true);
+
                     }
                 },
                 error: function () {
@@ -974,15 +974,15 @@
                 type: 'Get',
                 success: function (result) {
                     if (result) {
-                        $().toastmessage('showSuccessToast', "删除成功");
-                        window.location.reload();
+                        $().toastmessage('showSuccessToast', "删除成功",true);
+
                     } else {
                         $().toastmessage('showErrorToast', "删除失败");
                     }
                 },
                 error: function () {
-                    $().toastmessage('showErrorToast', "删除失败");
-                    window.location.reload();
+                    $().toastmessage('showErrorToast', "删除失败",true);
+
                 }
             });
         }
@@ -1343,7 +1343,6 @@
         </c:choose>
     </form>
 </div>
-<hr>
 <div id="showCustomerBottomPositioneDiv">
     <div id="showCustomerBottomDiv">
         <input id="fisrtButton" class="ui-button ui-widget ui-corner-all" type="button"
