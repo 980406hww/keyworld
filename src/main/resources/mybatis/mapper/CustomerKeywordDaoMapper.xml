@@ -307,6 +307,13 @@
         UPDATE t_customer_keyword SET fInvalidRefreshCount = 0 WHERE fType = #{customerKeywordRefreshStatInfoCriteria.entryType} and fTerminalType = #{customerKeywordRefreshStatInfoCriteria.terminalType}
         <if test="customerKeywordRefreshStatInfoCriteria.customerName!=null and customerKeywordRefreshStatInfoCriteria.customerName!=''">AND EXISTS (SELECT 1 FROM t_customer c WHERE c.fUuid = fCustomerUuid AND c.fContactPerson LIKE concat('%', #{customerKeywordRefreshStatInfoCriteria.customerName}, '%'))</if>
         <if test="customerKeywordRefreshStatInfoCriteria.groupName!=null and customerKeywordRefreshStatInfoCriteria.groupName!=''">AND fOptimizeGroupName LIKE concat('%', #{customerKeywordRefreshStatInfoCriteria.groupName}, '%')</if>
+    </update>
 
+    <update id="updateCustomerKeywordStatus">
+        UPDATE t_customer_keyword SET fStatus = #{status}
+        WHERE fUuid IN
+        <foreach item="uuid" collection="customerUuids" open="(" separator="," close=")">
+            #{uuid}
+        </foreach>
     </update>
 </mapper>

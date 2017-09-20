@@ -404,6 +404,45 @@
                 $('#groupChangeNameDialog').window("resize",{top:$(document).scrollTop() + 100});
             }
 
+            function updateCustomerKeywordStatus(status) {
+                var customerKeyword = {};
+                var customerKeywordUuids = getUuids();
+                if (customerKeywordUuids.trim() === '') {
+                    alert("请选中要操作的关键词！");
+                    return;
+                }
+
+                if(status == 0) {
+                    if (confirm("确认要暂停选中的关键字吗?") == false) return;
+                } else {
+                    if (confirm("确认要上线选中的关键字吗?") == false) return;
+                }
+                customerKeyword.uuids = customerKeywordUuids.split(",");
+                customerKeyword.status = status;
+
+                $.ajax({
+                    url: '/internal/customerKeyword/updateCustomerKeywordStatus',
+                    data: JSON.stringify(customerKeyword),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (status) {
+                        if (status) {
+                            $().toastmessage('showSuccessToast', "操作成功");
+                            window.location.reload();
+                        } else {
+                            $().toastmessage('showErrorToast', "操作失败");
+                        }
+                    },
+                    error: function () {
+                        $().toastmessage('showErrorToast', "操作失败");
+                    }
+                });
+            }
+
             //下架
             function stopOptimization(customerUuid){
                 changeGroupName({"customerUuid": customerUuid, "targetGroupName": "stop"});
@@ -436,12 +475,10 @@
                             window.location.reload();
                         } else {
                             $().toastmessage('showErrorToast', "操作失败");
-                            window.location.reload();
                         }
                     },
                     error: function () {
                         $().toastmessage('showErrorToast', "操作失败");
-                        window.location.reload();
                     },
                 });
             }
@@ -784,8 +821,6 @@
                 </tr>
             </table>
 
-
-    <%--<c:if test="${!user.vipType}">--%>
     <div style="text-align: right">
         <a target="_blank" href="javascript:uploadCustomerKeywords('${customerKeywordCrilteria.customerUuid}', 'SuperUserSimple')"/>Excel上传(简化版)</a>
         | <a target="_blank" href="/SuperUserSimpleKeywordList.xls">简化版下载</a>
@@ -794,13 +829,15 @@
         | <a target="_blank" href="/internal/dailyReport/downloadSingleCustomerReport/${customerKeywordCrilteria.customerUuid}">导出日报表</a>
         | <a target="_blank" href="javascript:downloadCustomerKeywordInfo()">导出结果</a>
         <br/><br/>
-        <a href="javascript:showGroupNameChangeDialog({'title': '修改客户关键字分组', 'customerUuid':'${customerKeywordCrilteria.customerUuid}'})">修改所有分组</a>|
-        <a href="javascript:updateSpecifiedCustomerKeywordGroupName(${customerKeywordCrilteria.customerUuid})">修改选中分组</a>|
+        <a href="javascript:showGroupNameChangeDialog({'title': '修改客户关键字分组', 'customerUuid':'${customerKeywordCrilteria.customerUuid}'})">修改所有分组</a> |
+        <a href="javascript:updateSpecifiedCustomerKeywordGroupName(${customerKeywordCrilteria.customerUuid})">修改选中分组</a> |
+        <a href="javascript:updateCustomerKeywordStatus(0)">暂停选中关键字</a> |
+        <a href="javascript:updateCustomerKeywordStatus(1)">激活选中关键字</a> |
         <a href="javascript:stopOptimization(${customerKeywordCrilteria.customerUuid})">下架所有关键字</a>|
         <a href="javascript:delAllItems('EmptyTitleAndUrl','${customerKeywordCrilteria.customerUuid}')">删除标题和网址为空的关键字</a> |
         <a href="javascript:delAllItems('EmptyTitle','${customerKeywordCrilteria.customerUuid}')">删除标题为空的关键字</a> |
         <a href="javascript:cleanTitle('${customerKeywordCrilteria.customerUuid}','CaptureTitleFlag')">重采标题</a> |
-        <a href="javascript:cleanTitle('${customerKeywordCrilteria.customerUuid}', 'SelectedCustomerKeywordTitle')">清空所选标题</a>|
+        <a href="javascript:cleanTitle('${customerKeywordCrilteria.customerUuid}', 'SelectedCustomerKeywordTitle')">清空所选标题</a> |
         <a href="javascript:cleanTitle('${customerKeywordCrilteria.customerUuid}', 'CustomerTitle')">清空客户标题</a>
     </div>
     <br/>
@@ -987,7 +1024,6 @@
     </div>
 </div>
 <%--Dialog部分--%>
-
 <div id="groupChangeNameDialog"  style="text-align: center;" title="修改客户关键字组名" class="easyui-dialog">
     <form id="groupNameChangeFrom" style="text-align: center;margin-top: 10px;">
         目标组名称:<input type="text" id="groupName" name="groupName" style="width:150px">

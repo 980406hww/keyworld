@@ -701,4 +701,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             this.addCustomerKeywords(customerKeywords);
         }
     }
+
+    public void updateCustomerKeywordStatus(List<String> customerUuids, Integer status) {
+        customerKeywordDao.updateCustomerKeywordStatus(customerUuids, status);
+    }
 }
