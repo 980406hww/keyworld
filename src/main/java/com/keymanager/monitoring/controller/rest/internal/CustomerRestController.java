@@ -59,7 +59,7 @@ public class CustomerRestController {
         HttpSession session = request.getSession();
         String userID = (String) session.getAttribute("username");
         User user = userService.getUser(userID);
-        String entryType = (String) session.getAttribute("entry");
+        String entryType = (String) session.getAttribute("entryType");
         String terminalType = TerminalTypeMapping.getTerminalType(request);
         customerCriteria.setEntryType(entryType);
         customerCriteria.setTerminalType(terminalType);

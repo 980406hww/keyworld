@@ -85,7 +85,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		String userID = (String) session.getAttribute("username");
 		User user = userService.getUser(userID);
 		Customer customer = customerService.getCustomerWithKeywordCount(customerKeywordCrilteria.getCustomerUuid());
-		String entryType = (String) session.getAttribute("entry");
+		String entryType = (String) session.getAttribute("entryType");
 		String terminalType = TerminalTypeMapping.getTerminalType(request);
 		String orderElement = request.getParameter("orderElement");
 		initOrderElemnet(orderElement,customerKeywordCrilteria);
@@ -120,7 +120,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	public ResponseEntity<?> saveCustomerKeywords(@RequestBody List<CustomerKeyword> customerKeywords, HttpServletRequest request) {
 		try{
 			String terminalType = TerminalTypeMapping.getTerminalType(request);
-			String entryType = (String)request.getSession().getAttribute("entry");
+			String entryType = (String)request.getSession().getAttribute("entryType");
 			customerKeywordService.addCustomerKeywordsFromSimpleUI(customerKeywords, terminalType, entryType);
 			return new ResponseEntity<Object>(true, HttpStatus.OK);
 		}catch (Exception ex){
@@ -136,7 +136,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	public ResponseEntity<?> updateCustomerKeywordGroupName(@RequestBody CustomerKeywordUpdateGroupCriteria customerKeywordUpdateGroupCriteria, HttpServletRequest request) {
 		try {
 			String terminalType = TerminalTypeMapping.getTerminalType(request);
-			String entryType = (String)request.getSession().getAttribute("entry");
+			String entryType = (String)request.getSession().getAttribute("entryType");
 			customerKeywordUpdateGroupCriteria.setTerminalType(terminalType);
 			customerKeywordUpdateGroupCriteria.setEntryType(entryType);
 			customerKeywordService.updateCustomerKeywordGroupName(customerKeywordUpdateGroupCriteria);
@@ -153,7 +153,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	public boolean uploadCustomerKeywords(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request){
 		String customerUuid = request.getParameter("customerUuid");
 		String excelType = request.getParameter("excelType");
-		String entry = (String)request.getSession().getAttribute("entry");
+		String entry = (String)request.getSession().getAttribute("entryType");
 		String terminalType = TerminalTypeMapping.getTerminalType(request);
 		try{
 			boolean uploaded = customerKeywordService.handleExcel(file.getInputStream(), excelType, Integer.parseInt(customerUuid),  entry, terminalType);
@@ -184,7 +184,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	public ResponseEntity<?> deleteCustomerKeywords(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
 		try {
 			String terminalType = TerminalTypeMapping.getTerminalType(request);
-			String entryType = (String) request.getSession().getAttribute("entry");
+			String entryType = (String) request.getSession().getAttribute("entryType");
 			String deleteType = (String) requestMap.get("deleteType");
 			String customerUuid = (String) requestMap.get("customerUuid");
 			List<String> customerKeywordUuids = (List<String>) requestMap.get("uuids");
@@ -202,7 +202,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	public ResponseEntity<?> cleanTitle(@RequestBody CustomerKeywordCleanCriteria customerKeywordCleanCriteria, HttpServletRequest request) {
 		try{
 			String terminalType = TerminalTypeMapping.getTerminalType(request);
-			String entryType = (String)request.getSession().getAttribute("entry");
+			String entryType = (String)request.getSession().getAttribute("entryType");
 
 			customerKeywordCleanCriteria.setTerminalType(terminalType);
 			customerKeywordCleanCriteria.setEntryType(entryType);
@@ -221,7 +221,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		try{
 			if (customerKeyword.getUuid() == null) {
 				String terminalType = TerminalTypeMapping.getTerminalType(request);
-				String entryType = (String) request.getSession().getAttribute("entry");
+				String entryType = (String) request.getSession().getAttribute("entryType");
 				customerKeyword.setTerminalType(terminalType);
 				customerKeyword.setType(entryType);
 				customerKeyword.setStatus(1);
@@ -253,7 +253,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		try {
 			String terminalType = TerminalTypeMapping.getTerminalType(request);
 			String customerUuid = request.getParameter("customerUuid").trim();
-			String entryType = (String) request.getSession().getAttribute("entry");
+			String entryType = (String) request.getSession().getAttribute("entryType");
 			customerKeywordCrilteria.setTerminalType(terminalType);
 			customerKeywordCrilteria.setEntryType(entryType);
 			List<CustomerKeyword> customerKeywords = appendCondition(request,response);
@@ -353,7 +353,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	@RequestMapping(value = "/resetInvalidRefreshCount", method = RequestMethod.POST)
 	public ResponseEntity<?> resetInvalidRefreshCount(@RequestBody CustomerKeywordRefreshStatInfoCriteria criteria, HttpServletRequest request) {
 		try {
-			String entryType = (String)request.getSession().getAttribute("entry");
+			String entryType = (String)request.getSession().getAttribute("entryType");
 			criteria.setEntryType(entryType);
 
 			String terminalType = TerminalTypeMapping.getTerminalType(request);
@@ -398,7 +398,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		String userName = (String) session.getAttribute("username");
 		User user = userService.getUser(userName);
 		List<User> activeUsers = userService.findActiveUsers();
-		String entryType = (String) session.getAttribute("entry");
+		String entryType = (String) session.getAttribute("entryType");
 		String terminalType = TerminalTypeMapping.getTerminalType(request);
 		String orderElement = request.getParameter("orderElement");
 		initOrderElemnet(orderElement,customerKeywordCrilteria);

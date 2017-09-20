@@ -1,13 +1,17 @@
 package com.keymanager.monitoring.common.shiro;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import com.keymanager.monitoring.entity.UserInfo;
+import com.keymanager.monitoring.enums.EntryTypeEnum;
+import com.keymanager.monitoring.vo.ExtendedUsernamePasswordToken;
 import com.keymanager.monitoring.vo.UserVO;
 import com.keymanager.monitoring.service.IRoleService;
 import com.keymanager.monitoring.service.IUserService;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -46,7 +50,7 @@ public class ShiroDbRealm extends AuthorizingRealm {
 	protected AuthenticationInfo doGetAuthenticationInfo(
 			AuthenticationToken authcToken) throws AuthenticationException {
 		LOGGER.info("Shiro开始登录认证");
-		UsernamePasswordToken token = (UsernamePasswordToken) authcToken;
+		ExtendedUsernamePasswordToken token = (ExtendedUsernamePasswordToken) authcToken;
 		UserVO uservo = new UserVO();
 		uservo.setLoginName(token.getUsername());
 		List<UserInfo> list = userService.selectByLoginName(uservo);
@@ -63,8 +67,14 @@ public class ShiroDbRealm extends AuthorizingRealm {
 		Map<String, Set<String>> resourceMap = roleService.selectResourceMapByUserId(user.getUuid());
 		Set<String> urls = resourceMap.get("urls");
 		Set<String> roles = resourceMap.get("roles");
+
+		if(EntryTypeEnum.fm.name().equalsIgnoreCase(token.getEntryType()) && !roles.contains("FMSpecial")) {
+			roles = new HashSet<String>();
+			urls = new HashSet<String>();
+		}
 		ShiroUser shiroUser = new ShiroUser(user.getUuid(), user.getLoginName(), user.getUserName(), urls);
 		shiroUser.setRoles(roles);
+
 		// 认证缓存信息
 		return new SimpleAuthenticationInfo(shiroUser, user.getPassword().toCharArray(),
 				ShiroByteSource.of(user.getSalt()), getName());
