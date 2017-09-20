@@ -44,26 +44,15 @@ public class ExternalClientStatusRestController extends SpringMVCBaseController 
         String password = request.getParameter("password");
         String clientID = request.getParameter("clientID");
         String pageNo = request.getParameter("pageNo");
-        Subject user = SecurityUtils.getSubject();
-        if (user.isAuthenticated()) {
-            clientStatusService.updatePageNo(clientID, Integer.parseInt(pageNo.trim()));
-            return new ResponseEntity<Object>(1, HttpStatus.OK);
-        } else {
-            UsernamePasswordToken token = new UsernamePasswordToken(userName, password);
-            try {
-                user.login(token);
+        try {
+            if (validUser(userName, password)) {
                 clientStatusService.updatePageNo(clientID, Integer.parseInt(pageNo.trim()));
                 return new ResponseEntity<Object>(1, HttpStatus.OK);
-            } catch (UnknownAccountException e) {
-                return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-            } catch (DisabledAccountException e) {
-                return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-            } catch (IncorrectCredentialsException e) {
-                return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-            } catch (Throwable e) {
-                return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
             }
+        }catch (Exception ex){
+            logger.error(ex.getMessage());
         }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
     @RequestMapping(value = "/checkUpgrade", method = RequestMethod.GET)
@@ -71,26 +60,15 @@ public class ExternalClientStatusRestController extends SpringMVCBaseController 
         String userName = request.getParameter("username");
         String password = request.getParameter("password");
         String clientID = request.getParameter("clientID");
-        Subject user = SecurityUtils.getSubject();
-        if (user.isAuthenticated()) {
-            String returnValue = clientStatusService.checkUpgrade(clientID);
-            return new ResponseEntity<Object>(returnValue, HttpStatus.OK);
-        } else {
-            UsernamePasswordToken token = new UsernamePasswordToken(userName, password);
-            try {
-                user.login(token);
+        try {
+            if (validUser(userName, password)) {
                 String returnValue = clientStatusService.checkUpgrade(clientID);
                 return new ResponseEntity<Object>(returnValue, HttpStatus.OK);
-            } catch (UnknownAccountException e) {
-                return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-            } catch (DisabledAccountException e) {
-                return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-            } catch (IncorrectCredentialsException e) {
-                return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-            } catch (Throwable e) {
-                return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
             }
+        }catch (Exception ex){
+            logger.error(ex.getMessage());
         }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
     @RequestMapping(value = "/getStoppedClientStatuses", method = RequestMethod.GET)
@@ -98,26 +76,15 @@ public class ExternalClientStatusRestController extends SpringMVCBaseController 
         String userName = request.getParameter("username");
         String password = request.getParameter("password");
         String terminalType = TerminalTypeMapping.getTerminalType(request);
-        Subject user = SecurityUtils.getSubject();
-        if (user.isAuthenticated()) {
-            ClientStatus clientStatus = clientStatusService.getStoppedClientStatuses(terminalType);
-            return new ResponseEntity<Object>(clientStatus, HttpStatus.OK);
-        } else {
-            UsernamePasswordToken token = new UsernamePasswordToken(userName, password);
-            try {
-                user.login(token);
+        try {
+            if (validUser(userName, password)) {
                 ClientStatus clientStatus = clientStatusService.getStoppedClientStatuses(terminalType);
                 return new ResponseEntity<Object>(clientStatus, HttpStatus.OK);
-            } catch (UnknownAccountException e) {
-                return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-            } catch (DisabledAccountException e) {
-                return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-            } catch (IncorrectCredentialsException e) {
-                return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-            } catch (Throwable e) {
-                return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
             }
+        }catch (Exception ex){
+            logger.error(ex.getMessage());
         }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
     @RequestMapping(value = "/updateClientStatusRestartStatus", method = RequestMethod.GET)
@@ -126,26 +93,15 @@ public class ExternalClientStatusRestController extends SpringMVCBaseController 
         String password = request.getParameter("password");
         String clientID = request.getParameter("clientID");
         String status = request.getParameter("status");
-        Subject user = SecurityUtils.getSubject();
-        if (user.isAuthenticated()) {
-            clientStatusService.updateClientStatusRestartStatus(clientID, status);
-            return new ResponseEntity<Object>(1, HttpStatus.OK);
-        } else {
-            UsernamePasswordToken token = new UsernamePasswordToken(userName, password);
-            try {
-                user.login(token);
+        try {
+            if (validUser(userName, password)) {
                 clientStatusService.updateClientStatusRestartStatus(clientID, status);
                 return new ResponseEntity<Object>(1, HttpStatus.OK);
-            } catch (UnknownAccountException e) {
-                return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-            } catch (DisabledAccountException e) {
-                return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-            } catch (IncorrectCredentialsException e) {
-                return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-            } catch (Throwable e) {
-                return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
             }
+        }catch (Exception ex){
+            logger.error(ex.getMessage());
         }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
     @RequestMapping(value = "/restartVPS", method = RequestMethod.GET)
@@ -153,26 +109,15 @@ public class ExternalClientStatusRestController extends SpringMVCBaseController 
         String userName = request.getParameter("username");
         String password = request.getParameter("password");
         String vmName = request.getParameter("vmname");
-        Subject user = SecurityUtils.getSubject();
-        if (user.isAuthenticated()) {
-            vMwareService.restartVPS(vmName);
-            return new ResponseEntity<Object>(1, HttpStatus.OK);
-        } else {
-            UsernamePasswordToken token = new UsernamePasswordToken(userName, password);
-            try {
-                user.login(token);
+        try {
+            if (validUser(userName, password)) {
                 vMwareService.restartVPS(vmName);
                 return new ResponseEntity<Object>(1, HttpStatus.OK);
-            } catch (UnknownAccountException e) {
-                return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-            } catch (DisabledAccountException e) {
-                return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-            } catch (IncorrectCredentialsException e) {
-                return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-            } catch (Throwable e) {
-                return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
             }
+        }catch (Exception ex){
+            logger.error(ex.getMessage());
         }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
     @RequestMapping(value = "/getVPSStatus", method = RequestMethod.GET)
@@ -180,25 +125,14 @@ public class ExternalClientStatusRestController extends SpringMVCBaseController 
         String userName = request.getParameter("username");
         String password = request.getParameter("password");
         String vmName = request.getParameter("vmname");
-        Subject user = SecurityUtils.getSubject();
-        if (user.isAuthenticated()) {
-            String status = vMwareService.getVPSStatus(vmName);
-            return new ResponseEntity<Object>(status, HttpStatus.OK);
-        } else {
-            UsernamePasswordToken token = new UsernamePasswordToken(userName, password);
-            try {
-                user.login(token);
+        try {
+            if (validUser(userName, password)) {
                 String status = vMwareService.getVPSStatus(vmName);
                 return new ResponseEntity<Object>(status, HttpStatus.OK);
-            } catch (UnknownAccountException e) {
-                return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-            } catch (DisabledAccountException e) {
-                return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-            } catch (IncorrectCredentialsException e) {
-                return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-            } catch (Throwable e) {
-                return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
             }
+        }catch (Exception ex){
+            logger.error(ex.getMessage());
         }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 }

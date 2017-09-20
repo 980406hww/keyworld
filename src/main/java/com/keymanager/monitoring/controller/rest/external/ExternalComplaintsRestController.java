@@ -2,12 +2,14 @@ package com.keymanager.monitoring.controller.rest.external;
 
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.TSMainKeywordCriteria;
+import com.keymanager.monitoring.entity.NegativeList;
 import com.keymanager.monitoring.entity.TSMainKeyword;
 import com.keymanager.monitoring.entity.User;
 import com.keymanager.monitoring.service.TSComplainLogService;
 import com.keymanager.monitoring.service.TSMainKeywordService;
 import com.keymanager.monitoring.service.TSNegativeKeywordService;
 import com.keymanager.monitoring.service.UserService;
+import com.keymanager.util.TerminalTypeMapping;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.DisabledAccountException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
@@ -49,119 +51,60 @@ public class ExternalComplaintsRestController extends SpringMVCBaseController {
 
     @RequestMapping(value = "/saveWithAuthentication", method = RequestMethod.POST)
     public ResponseEntity<?> saveTSMainKeywords(@RequestBody TSMainKeywordCriteria tsMainKeywordCriteria) {
-        if (tsMainKeywordCriteria.getUserName() != null && tsMainKeywordCriteria.getPassword() != null) {
-            Subject user = SecurityUtils.getSubject();
-            if (user.isAuthenticated()) {
+        try {
+            if (validUser(tsMainKeywordCriteria.getUserName(), tsMainKeywordCriteria.getPassword())) {
                 tsMainKeywordService.saveTSMainKeyword(tsMainKeywordCriteria.getTsMainKeyword());
                 return new ResponseEntity<Object>(true, HttpStatus.OK);
-            } else {
-                UsernamePasswordToken token = new UsernamePasswordToken(tsMainKeywordCriteria.getUserName(), tsMainKeywordCriteria.getPassword());
-                try {
-                    user.login(token);
-                    tsMainKeywordService.saveTSMainKeyword(tsMainKeywordCriteria.getTsMainKeyword());
-                    return new ResponseEntity<Object>(true, HttpStatus.OK);
-                } catch (UnknownAccountException e) {
-                    return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-                } catch (DisabledAccountException e) {
-                    return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-                } catch (IncorrectCredentialsException e) {
-                    return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-                } catch (Throwable e) {
-                    return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-                }
             }
+        }catch (Exception ex){
+            logger.error(ex.getMessage());
         }
-        return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
     //提供爬虫使用
     @RequestMapping(value = "/getTSMainKeywordsForComplaints", method = RequestMethod.POST)
     public ResponseEntity<?> getTSMainKeywordsForComplaints(@RequestBody TSMainKeywordCriteria tsMainKeywordCriteria) throws Exception {
-        if (tsMainKeywordCriteria.getUserName() != null && tsMainKeywordCriteria.getPassword() != null) {
-            Subject user = SecurityUtils.getSubject();
-            if (user.isAuthenticated()) {
+        try {
+            if (validUser(tsMainKeywordCriteria.getUserName(), tsMainKeywordCriteria.getPassword())) {
                 String ipCity = tsMainKeywordCriteria.getIpCity();
                 TSMainKeyword tsMainKeyword = tsMainKeywordService.getTsMainKeywordsForComplaints(ipCity);
                 return new ResponseEntity<Object>(tsMainKeyword, HttpStatus.OK);
-            } else {
-                UsernamePasswordToken token = new UsernamePasswordToken(tsMainKeywordCriteria.getUserName(), tsMainKeywordCriteria.getPassword());
-                try {
-                    user.login(token);
-                    String ipCity = tsMainKeywordCriteria.getIpCity();
-                    TSMainKeyword tsMainKeyword = tsMainKeywordService.getTsMainKeywordsForComplaints(ipCity);
-                    return new ResponseEntity<Object>(tsMainKeyword, HttpStatus.OK);
-                } catch (UnknownAccountException e) {
-                    return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-                } catch (DisabledAccountException e) {
-                    return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-                } catch (IncorrectCredentialsException e) {
-                    return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-                } catch (Throwable e) {
-                    return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-                }
             }
+        }catch (Exception ex){
+            logger.error(ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
     @RequestMapping(value = "/getNegativeKeywords", method = RequestMethod.POST)
     public ResponseEntity<?> getNegativeKeywords(@RequestBody TSMainKeywordCriteria tsMainKeywordCriteria) throws Exception {
-        if (tsMainKeywordCriteria.getUserName() != null && tsMainKeywordCriteria.getPassword() != null) {
-            Subject user = SecurityUtils.getSubject();
-            if (user.isAuthenticated()) {
+        try {
+            if (validUser(tsMainKeywordCriteria.getUserName(), tsMainKeywordCriteria.getPassword())) {
                 String ipCity = tsMainKeywordCriteria.getIpCity();
                 Set<String> negativeKeywords = tsMainKeywordService.getNegativeKeywords(tsMainKeywordCriteria.getKeyword());
                 return new ResponseEntity<Object>(negativeKeywords, HttpStatus.OK);
-            } else {
-                UsernamePasswordToken token = new UsernamePasswordToken(tsMainKeywordCriteria.getUserName(), tsMainKeywordCriteria.getPassword());
-                try {
-                    user.login(token);
-                    Set<String> negativeKeywords = tsMainKeywordService.getNegativeKeywords(tsMainKeywordCriteria.getKeyword());
-                    return new ResponseEntity<Object>(negativeKeywords, HttpStatus.OK);
-                } catch (UnknownAccountException e) {
-                    return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-                } catch (DisabledAccountException e) {
-                    return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-                } catch (IncorrectCredentialsException e) {
-                    return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-                } catch (Throwable e) {
-                    return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-                }
             }
+        }catch (Exception ex){
+            logger.error(ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
     @RequestMapping(value = "/updateTSMainKeywordsForComplaints", method = RequestMethod.POST)
     public ResponseEntity<?> updateTsMainKeywordsForComplaints(@RequestBody TSMainKeywordCriteria tsMainKeywordCriteria) {
-        if (tsMainKeywordCriteria.getUserName() != null && tsMainKeywordCriteria.getPassword() != null) {
-            Subject user = SecurityUtils.getSubject();
-            if (user.isAuthenticated()) {
+        try {
+            if (validUser(tsMainKeywordCriteria.getUserName(), tsMainKeywordCriteria.getPassword())) {
                 // 更新Negative
                 tsNegativeKeywordService.updateNegativeKeywords(tsMainKeywordCriteria.getTsMainKeyword().getTsNegativeKeywords());
                 // 添加Log
                 tsComplainLogService.addComplainLogByNegativeKeywords(tsMainKeywordCriteria.getTsMainKeyword().getTsNegativeKeywords());
                 return new ResponseEntity<Object>(true, HttpStatus.OK);
-            } else {
-                UsernamePasswordToken token = new UsernamePasswordToken(tsMainKeywordCriteria.getUserName(), tsMainKeywordCriteria.getPassword());
-                try {
-                    // 更新Negative
-                    tsNegativeKeywordService.updateNegativeKeywords(tsMainKeywordCriteria.getTsMainKeyword().getTsNegativeKeywords());
-                    // 添加Log
-                    tsComplainLogService.addComplainLogByNegativeKeywords(tsMainKeywordCriteria.getTsMainKeyword().getTsNegativeKeywords());
-                    return new ResponseEntity<Object>(true, HttpStatus.OK);
-                } catch (UnknownAccountException e) {
-                    return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-                } catch (DisabledAccountException e) {
-                    return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-                } catch (IncorrectCredentialsException e) {
-                    return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-                } catch (Throwable e) {
-                    return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-                }
             }
+        }catch (Exception ex){
+            logger.error(ex.getMessage());
         }
-        return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
 }

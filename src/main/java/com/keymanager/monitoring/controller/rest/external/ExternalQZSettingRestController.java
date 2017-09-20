@@ -8,6 +8,7 @@ import com.keymanager.monitoring.service.QZChargeRuleService;
 import com.keymanager.monitoring.service.QZOperationTypeService;
 import com.keymanager.monitoring.service.QZSettingService;
 import com.keymanager.monitoring.service.UserService;
+import com.keymanager.monitoring.vo.ExtendedUsernamePasswordToken;
 import com.keymanager.util.TerminalTypeMapping;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.DisabledAccountException;
@@ -45,111 +46,54 @@ public class ExternalQZSettingRestController extends SpringMVCBaseController {
 	private UserService userService;
 
 	@RequestMapping(value = "/getAvailableQZSetting", method = RequestMethod.POST)
-	public ResponseEntity<?> getAvailableQZSetting(@RequestBody QZSettingCriteria qzSettingCriteria) throws Exception{
-		if(qzSettingCriteria.getUserName() != null && qzSettingCriteria.getPassword() != null){
-			Subject user = SecurityUtils.getSubject();
-			if (user.isAuthenticated()) {
+	public ResponseEntity<?> getAvailableQZSetting(@RequestBody QZSettingCriteria qzSettingCriteria){
+		try {
+			if (validUser(qzSettingCriteria.getUserName(), qzSettingCriteria.getPassword())) {
 				QZSetting qzSetting = qzSettingService.getAvailableQZSetting();
 				return new ResponseEntity<Object>(qzSetting, HttpStatus.OK);
-			} else {
-				UsernamePasswordToken token = new UsernamePasswordToken(qzSettingCriteria.getUserName() , qzSettingCriteria.getPassword());
-				try {
-					user.login(token);
-					QZSetting qzSetting = qzSettingService.getAvailableQZSetting();
-					return new ResponseEntity<Object>(qzSetting, HttpStatus.OK);
-				} catch (UnknownAccountException e) {
-					return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-				} catch (DisabledAccountException e) {
-					return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-				} catch (IncorrectCredentialsException e) {
-					return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-				} catch (Throwable e) {
-					return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-				}
 			}
+		}catch (Exception ex){
+			logger.error(ex.getMessage());
 		}
 		return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
 	}
 
 	@RequestMapping(value = "/updateQZKeywords", method = RequestMethod.POST)
 	public ResponseEntity<?> updateQZKeywords(@RequestBody QZSettingCriteria qzSettingCriteria, HttpServletRequest request) throws Exception{
-		if(qzSettingCriteria.getUserName() != null && qzSettingCriteria.getPassword() != null){
-			Subject user = SecurityUtils.getSubject();
-			if (user.isAuthenticated()) {
+		try {
+			if (validUser(qzSettingCriteria.getUserName(), qzSettingCriteria.getPassword())) {
 				String terminalType = TerminalTypeMapping.getTerminalType(request);
 				qzSettingService.updateResult(qzSettingCriteria, terminalType);
 				return new ResponseEntity<Object>(HttpStatus.OK);
-			} else {
-				UsernamePasswordToken token = new UsernamePasswordToken(qzSettingCriteria.getUserName() , qzSettingCriteria.getPassword());
-				try {
-					user.login(token);
-					String terminalType = TerminalTypeMapping.getTerminalType(request);
-					qzSettingService.updateResult(qzSettingCriteria, terminalType);
-					return new ResponseEntity<Object>(HttpStatus.OK);
-				} catch (UnknownAccountException e) {
-					return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-				} catch (DisabledAccountException e) {
-					return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-				} catch (IncorrectCredentialsException e) {
-					return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-				} catch (Throwable e) {
-					return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-				}
 			}
+		}catch (Exception ex){
+			logger.error(ex.getMessage());
 		}
 		return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
 	}
 
 	@RequestMapping(value = "/getQZSettingsForCaptureCurrentKeyword", method = RequestMethod.POST)
 	public ResponseEntity<?> getQZSettingsForCaptureCurrentKeyword(@RequestBody BaseCriteria baseCriteria) throws Exception{
-		if(baseCriteria.getUserName() != null && baseCriteria.getPassword() != null){
-			Subject user = SecurityUtils.getSubject();
-			if (user.isAuthenticated()) {
+		try {
+			if (validUser(baseCriteria.getUserName(), baseCriteria.getPassword())) {
 				QZSetting qzSetting = qzSettingService.getQZSettingsForCaptureCurrentKeyword();
 				return new ResponseEntity<Object>(qzSetting, HttpStatus.OK);
-			} else {
-				UsernamePasswordToken token = new UsernamePasswordToken(baseCriteria.getUserName() , baseCriteria.getPassword());
-				try {
-					user.login(token);
-					QZSetting qzSetting = qzSettingService.getQZSettingsForCaptureCurrentKeyword();
-					return new ResponseEntity<Object>(qzSetting, HttpStatus.OK);
-				} catch (UnknownAccountException e) {
-					return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-				} catch (DisabledAccountException e) {
-					return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-				} catch (IncorrectCredentialsException e) {
-					return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-				} catch (Throwable e) {
-					return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-				}
 			}
+		}catch (Exception ex){
+			logger.error(ex.getMessage());
 		}
 		return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
 	}
 
 	@RequestMapping(value = "/updateCurrentKeywordCount", method = RequestMethod.POST)
 	public ResponseEntity<?> updateCurrentKeywordCount(@RequestBody QZSettingCriteria qzSettingCriteria) throws Exception{
-		if(qzSettingCriteria.getUserName() != null && qzSettingCriteria.getPassword() != null){
-			Subject user = SecurityUtils.getSubject();
-			if (user.isAuthenticated()) {
+		try {
+			if (validUser(qzSettingCriteria.getUserName(), qzSettingCriteria.getPassword())) {
 				qzSettingService.updateCurrentKeywordCount(qzSettingCriteria);
 				return new ResponseEntity<Object>(HttpStatus.OK);
-			} else {
-				UsernamePasswordToken token = new UsernamePasswordToken(qzSettingCriteria.getUserName() , qzSettingCriteria.getPassword());
-				try {
-					user.login(token);
-					qzSettingService.updateCurrentKeywordCount(qzSettingCriteria);
-					return new ResponseEntity<Object>(HttpStatus.OK);
-				} catch (UnknownAccountException e) {
-					return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-				} catch (DisabledAccountException e) {
-					return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-				} catch (IncorrectCredentialsException e) {
-					return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-				} catch (Throwable e) {
-					return new ResponseEntity<Object>(0, HttpStatus.BAD_REQUEST);
-				}
 			}
+		}catch (Exception ex){
+			logger.error(ex.getMessage());
 		}
 		return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
 	}
