@@ -393,7 +393,7 @@
 <body>
 <div id="showMainKeywordTopDiv">
     <%@include file="/menu.jsp" %>
-    <div id="serachMainKeyword" style="margin-top: 40px;">
+    <div id="serachMainKeyword" style="margin-top: 45px;">
         <form id="serachMainKeywordForm" action="/internal/complaints/findTSMainKeywords" method="post">
             主关键词&nbsp;&nbsp;<input id="itemKeyword" name="itemKeyword" type="text"
                                    value="${page.condition.get("keyword")}"/>&nbsp;&nbsp;
@@ -408,13 +408,15 @@
             &nbsp;&nbsp;
             <input type="hidden" id="currentPageHidden" name="currentPageHidden" value="${page.current}"/>
             <input type="hidden" id="displaysRecordsHidden" name="displaysRecordsHidden" value="${page.size}"/>
-
-            <input type="submit" class="ui-button ui-widget ui-corner-all" style="z-index: 0" ;
-                   value="查询">&nbsp;&nbsp;&nbsp;
-            <input type="button" class="ui-button ui-widget ui-corner-all" style="z-index: 0" ;
-                   onclick="showAddMainKeywordDialog(null)" value="添加"/>&nbsp;&nbsp;&nbsp;
-            <input type="button" class="ui-button ui-widget ui-corner-all" style="z-index: 0" ;
-                   onclick="deleteMainKeywords(this)" value="删除所选"/>
+            <shiro:hasPermission name="/internal/negativelist/findTSMainKeywords">
+            <input type="submit" class="ui-button ui-widget ui-corner-all" style="z-index: 0" ; value="查询">&nbsp;&nbsp;&nbsp;
+            </shiro:hasPermission>
+            <shiro:hasPermission name="/internal/negativelist/save">
+            <input type="button" class="ui-button ui-widget ui-corner-all" style="z-index: 0" ; onclick="showAddMainKeywordDialog(null)" value="添加"/>&nbsp;&nbsp;&nbsp;
+            </shiro:hasPermission>
+            <shiro:hasPermission name="/internal/negativelist/deleteTSMainKeywords">
+            <input type="button" class="ui-button ui-widget ui-corner-all" style="z-index: 0" ; onclick="deleteMainKeywords(this)" value="删除所选"/>
+            </shiro:hasPermission>
         </form>
         <table id="headerTable" style="width:100%;">
             <tr bgcolor="#eeeeee" height=30>
@@ -462,10 +464,13 @@
                             </c:otherwise>
                         </c:choose>
                     </td>
-                    <td><fmt:formatDate value="${mainkey.createTime}"
-                                        pattern="yy-MM-dd HH:mm"/></td>
-                    <td>&nbsp;&nbsp;&nbsp;<a href="javascript:getMainKeyword('${mainkey.uuid}')">修改</a>&nbsp;&nbsp;&nbsp;
-                    <a href="javascript:deleteMainKeyword('${mainkey.uuid}')">删除</a></td>
+                    <td><fmt:formatDate value="${mainkey.createTime}" pattern="yy-MM-dd HH:mm"/></td>
+                    <shiro:hasPermission name="/internal/negativelist/save">
+                        <td>&nbsp;&nbsp;&nbsp;<a href="javascript:getMainKeyword('${mainkey.uuid}')">修改</a>&nbsp;&nbsp;&nbsp;
+                    </shiro:hasPermission>
+                    <shiro:hasPermission name="/internal/negativelist/delete">
+                        <a href="javascript:deleteMainKeyword('${mainkey.uuid}')">删除</a></td>
+                    </shiro:hasPermission>
                 </tr>
             </c:forEach>
         </table>
@@ -514,8 +519,7 @@
             <tr>
                 <td>负面词</td>
                 <td>
-                        <textarea id="ngKeyword" style="resize: none;height: 180px;width: 250px"
-                                  placeholder="请用逗号作为分割符"></textarea>
+                    <textarea id="ngKeyword" style="resize: none;height: 180px;width: 250px" placeholder="请用逗号作为分割符"></textarea>
                 </td>
             </tr>
         </table>
