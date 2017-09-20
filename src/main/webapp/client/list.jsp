@@ -386,10 +386,23 @@
             $("#downloadFullVNCForm").submit();
         }
 
+		function selectAll(self){
+			var a = document.getElementsByName("clientID");
+			if(self.checked){
+				for(var i = 0;i<a.length;i++){
+						a[i].checked = true;
+				}
+			}else{
+				for(var i = 0;i<a.length;i++){
+						a[i].checked = false;
+				}
+			}
+		}
+
         function showUploadVNCDialog() {
             $('#uploadVNCDialog').dialog({
                 resizable: false,
-                width: 430,
+                width: 300,
                 modal: true,
                 title: '上传VNC文件',
                 buttons: [{
@@ -419,7 +432,7 @@
                             success: function (result) {
                                 if (result) {
                                     $().toastmessage('showSuccessToast', "上传成功",true);
-                                    /* window.location.reload();*/
+									/* window.location.reload();*/
                                 } else {
                                     $().toastmessage('showErrorToast', "上传失败");
                                 }
@@ -449,19 +462,6 @@
             });
             $('#uploadVNCDialog').window("resize",{top:$(document).scrollTop() + 100});
         }
-
-		function selectAll(self){
-			var a = document.getElementsByName("clientID");
-			if(self.checked){
-				for(var i = 0;i<a.length;i++){
-						a[i].checked = true;
-				}
-			}else{
-				for(var i = 0;i<a.length;i++){
-						a[i].checked = false;
-				}
-			}
-		}
 
         function decideSelectAll() {
             var a = document.getElementsByName("clientID");
@@ -1087,7 +1087,7 @@
 	<div style="display: none;">
 		<script src="http://s84.cnzz.com/stat.php?id=4204660&web_id=4204660" language="JavaScript"></script>
 	</div>
-	<div id="changeSettingDialog" class="easyui-dialog">
+	<div id="changeSettingDialog" class="easyui-dialog" style="left: 30%;">
 		<table>
 			<tr>
 				<td>
@@ -1451,7 +1451,7 @@
 		</table>
 	</div>
 
-	<div id="uploadVNCDialog" class="easyui-dialog">
+	<div id="uploadVNCDialog" class="easyui-dialog" >
 		<form method="post" id="uploadVNCForm" action="" enctype="multipart/form-data">
 			<table width="100%" style="margin-top: 10px;margin-left: 10px">
 				<tr>

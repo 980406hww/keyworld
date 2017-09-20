@@ -57,7 +57,7 @@
       }
       $("#showAddMainKeywordDialog").dialog({
         resizable: false,
-        width: 380,
+        width: 350,
         height: 365,
         modal: true,
         //按钮
@@ -82,6 +82,8 @@
             }
         }]
       });
+        $("#showAddMainKeywordDialog").dialog("open");
+        $("#showAddMainKeywordDialog").window("resize",{top:$(document).scrollTop() + 100});
     }
     function savaMainKeyword(uuid) {
       var mainKeywordObj = {};

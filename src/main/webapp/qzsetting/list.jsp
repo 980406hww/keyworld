@@ -565,7 +565,7 @@
                     });
                     $("#chargeLogListDiv").dialog({
                         resizable: false,
-                        width: 365,
+                        width: 355,
 						title:"收费记录",
                         modal: true,
                         buttons: [{
@@ -654,7 +654,7 @@
 					$("#chargeDialog").dialog({
 						resizable: false,
 						modal: true,
-                        width: 400,
+                        width: 380,
 						height:380,
                         title: '收费',
                         buttons: [{
@@ -722,9 +722,9 @@
     function createSettingDialog() {
         $("#changeSettingDialog").dialog({
             resizable: false,
-            height: 430,
+            height: 290,
 //            maxHeight: 430,
-            width: 400,
+            width: 330,
             title: '全站设置',
             modal: true,
             buttons: [{
