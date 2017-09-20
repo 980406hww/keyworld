@@ -35,9 +35,8 @@ public class ExternalNegativeListRestController extends SpringMVCBaseController 
 
 	@RequestMapping(value = "/saveNegativeLists", method = RequestMethod.POST)
 	public ResponseEntity<?> saveNegativeLists(@RequestBody NegativeListCriteria negativeListCriteria, HttpServletRequest request) throws Exception{
-		if(negativeListCriteria.getUserName() != null && negativeListCriteria.getPassword() != null){
-			User user = userService.getUser(negativeListCriteria.getUserName());
-			if(user != null && user.getPassword().equals(negativeListCriteria.getPassword())){
+		try {
+			if (validUser(negativeListCriteria.getUserName(), negativeListCriteria.getUserName())) {
 				String terminalType = TerminalTypeMapping.getTerminalType(request);
 				for(NegativeList negativeList : negativeListCriteria.getNegativeLists()){
 					negativeList.setTerminalType(terminalType);
@@ -45,22 +44,25 @@ public class ExternalNegativeListRestController extends SpringMVCBaseController 
 				negativeListService.saveNegativeLists(negativeListCriteria.getNegativeLists());
 				return new ResponseEntity<Object>(true, HttpStatus.OK);
 			}
+		}catch (Exception ex){
+			logger.error(ex.getMessage());
 		}
-		return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
 	}
 
 	@RequestMapping(value = "/getSpecifiedKeywordNegativeLists", method = RequestMethod.POST)
 	public ResponseEntity<?> getSpecifiedKeywordNegativeLists(@RequestBody NegativeListCriteria negativeListCriteria, HttpServletRequest request) throws Exception{
-		if(negativeListCriteria.getUserName() != null && negativeListCriteria.getPassword() != null){
-			User user = userService.getUser(negativeListCriteria.getUserName());
-			if(user != null && user.getPassword().equals(negativeListCriteria.getPassword())){
+		try {
+			if (validUser(negativeListCriteria.getUserName(), negativeListCriteria.getUserName())) {
 				String terminalType = TerminalTypeMapping.getTerminalType(request);
 				List<NegativeList> negativeLists = negativeListService.getSpecifiedKeywordNegativeLists(terminalType, negativeListCriteria
 						.getKeyword());
 				return new ResponseEntity<Object>(negativeLists, HttpStatus.OK);
 			}
+		}catch (Exception ex){
+			logger.error(ex.getMessage());
 		}
-		return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
 	}
 
 	@RequestMapping(value = "/getSpecifiedKeywordNegativeLists", method = RequestMethod.GET)
@@ -68,9 +70,8 @@ public class ExternalNegativeListRestController extends SpringMVCBaseController 
 		String userName = request.getParameter("username");
 		String password = request.getParameter("password");
 		String keyword = request.getParameter("keyword");
-		if(userName != null && password != null){
-			User user = userService.getUser(userName);
-			if(user != null && user.getPassword().equals(password)){
+		try {
+			if (validUser(userName, password)) {
 				String terminalType = TerminalTypeMapping.getTerminalType(request);
 				List<NegativeList> negativeLists = negativeListService.getSpecifiedKeywordNegativeLists(terminalType, keyword);
 				StringBuilder sb = new StringBuilder(Constants.COLUMN_SPLITTOR);
@@ -84,7 +85,9 @@ public class ExternalNegativeListRestController extends SpringMVCBaseController 
 				}
 				return new ResponseEntity<Object>(sb.toString(), HttpStatus.OK);
 			}
+		}catch (Exception ex){
+			logger.error(ex.getMessage());
 		}
-		return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
 	}
 }

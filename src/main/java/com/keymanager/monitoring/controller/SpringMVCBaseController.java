@@ -4,13 +4,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.keymanager.monitoring.common.shiro.ShiroUser;
+import com.keymanager.monitoring.entity.QZSetting;
+import com.keymanager.monitoring.vo.ExtendedUsernamePasswordToken;
 import com.keymanager.util.TerminalTypeMapping;
 import com.keymanager.util.ZipCompressor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.DisabledAccountException;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 
 import java.io.FileInputStream;
@@ -94,6 +102,21 @@ public abstract class SpringMVCBaseController {
 				} catch (IOException e) {
 					logger.error(e.getMessage());
 				}
+			}
+		}
+	}
+
+	public boolean validUser(String userName, String password) throws Exception{
+		Subject user = SecurityUtils.getSubject();
+		if (user.isAuthenticated()) {
+			return true;
+		} else {
+			ExtendedUsernamePasswordToken token = new ExtendedUsernamePasswordToken(userName, password);
+			try {
+				user.login(token);
+				return true;
+			} catch (Exception ex) {
+				throw ex;
 			}
 		}
 	}
