@@ -82,7 +82,7 @@
 	<%--<table width=100% style="font-size: 12px;margin-top: 40px" cellpadding=3>
 		<tr>
 			<td colspan=16>--%>
-				<form id="searchClientStatusForm" method="post" action="/internal/clientstatus/searchClientStatuses" style="font-size: 12px;margin-top: 45px" cellpadding=3>
+				<form id="searchClientStatusForm" method="post" action="/internal/clientstatus/searchClientStatuses" style="font-size: 12px;margin-top: 35px" cellpadding=3>
 					<table style="font-size: 12px;width:100%">
 						<tr>
 							<td align="left" colspan="2">

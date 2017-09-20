@@ -17,6 +17,7 @@ import com.keymanager.monitoring.service.ServiceProviderService;
 import com.keymanager.monitoring.service.UserService;
 import com.keymanager.util.TerminalTypeMapping;
 import com.keymanager.util.Utils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -379,8 +380,10 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		try {
 			String currentPageNumber = request.getParameter("currentPageNumber");
 			String pageSize = request.getParameter("pageSize");
-			if (null == currentPageNumber && null == pageSize) {
+			if(StringUtils.isEmpty(currentPageNumber)){
 				currentPageNumber = "1";
+			}
+			if(StringUtils.isEmpty(pageSize)){
 				pageSize = "50";
 			}
 			return constructCustomerKeywordListsModelAndView(request, customerKeywordCrilteria, Integer.parseInt(currentPageNumber), Integer.parseInt(pageSize));
