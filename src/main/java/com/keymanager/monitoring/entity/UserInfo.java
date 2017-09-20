@@ -31,12 +31,6 @@ public class UserInfo extends BaseEntity {
 	@TableField(value = "fSalt")
 	private String salt;
 
-	@TableField(value = "fUserType")
-	private Integer userType;
-
-	@TableField(value = "fClientIp")
-	private String clientIp;
-
 	@TableField(value = "fStatus")
 	private Integer status; // 1: active,  0: inactive
 
@@ -85,22 +79,6 @@ public class UserInfo extends BaseEntity {
 
 	public void setQq(String qq) {
 		this.qq = qq;
-	}
-
-	public Integer getUserType() {
-		return userType;
-	}
-
-	public void setUserType(Integer userType) {
-		this.userType = userType;
-	}
-
-	public String getClientIp() {
-		return clientIp;
-	}
-
-	public void setClientIp(String clientIp) {
-		this.clientIp = clientIp;
 	}
 
 	public Integer getStatus() {

@@ -57,28 +57,10 @@
                     }
                 }
             }, {
-                width : '80',
-                title : '登录IP',
-                field : 'clientIp',
-                sortable : true
-            }, {
                 width : '200',
                 title : '角色',
                 field : 'rolesList'
             }, {
-                width : '60',
-                title : '用户类型',
-                field : 'userType',
-                sortable : true,
-                formatter : function(value, row, index) {
-                    if(value == 0) {
-                        return "管理员";
-                    }else if(value == 1) {
-                        return "用户";
-                    }
-                    return "未知类型";
-                }
-            },{
                 width : '60',
                 title : '状态',
                 field : 'status',

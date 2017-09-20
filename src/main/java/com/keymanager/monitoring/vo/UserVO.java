@@ -35,8 +35,6 @@ public class UserVO implements Serializable {
 
 	private Integer sex;
 
-	private Integer userType;
-
 	private Integer status;
 
 	private Integer organizationID;
@@ -100,14 +98,6 @@ public class UserVO implements Serializable {
 
 	public void setSex(Integer sex) {
 		this.sex = sex;
-	}
-
-	public Integer getUserType() {
-		return userType;
-	}
-
-	public void setUserType(Integer userType) {
-		this.userType = userType;
 	}
 
 	public Integer getStatus() {

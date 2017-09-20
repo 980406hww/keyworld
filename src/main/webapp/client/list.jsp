@@ -335,29 +335,28 @@
             window.onresize = function(){
                 alignTableHeader();
             }
-            var clientStatusBottomDiv = $('#clientStatusBottomDiv');
-            var pageSize = clientStatusBottomDiv.find('#pageSizeHidden').val();
-            clientStatusBottomDiv.find('#chooseRecords').val(pageSize);
-            var pageCount = clientStatusBottomDiv.find('#pageCountHidden').val();
-            clientStatusBottomDiv.find('#pageCountHidden').val(pageCount);
-            var currentPage = clientStatusBottomDiv.find('#currentPageHidden').val();
-            clientStatusBottomDiv.find('#currentPageHidden').val(currentPage);
+            var showCustomerBottomDiv = $('#showCustomerBottomDiv');
+            $("#showCustomerBottomDiv").find('#chooseRecords').val(${page.size});
+            var pageCount = ${page.pages};
+            showCustomerBottomDiv.find('#pageCountHidden').val(${page.pages});
+            var currentPage = ${page.current};
+            showCustomerBottomDiv.find('#currentPageHidden').val(${page.current});
             if(parseInt(currentPage) > 1 && parseInt(currentPage) < parseInt(pageCount)) {
-                clientStatusBottomDiv.find("#firstButton").removeAttr("disabled");
-                clientStatusBottomDiv.find("#upButton").removeAttr("disabled");
-                clientStatusBottomDiv.find("#nextButton").removeAttr("disabled");
-                clientStatusBottomDiv.find("#lastButton").removeAttr("disabled");
+                showCustomerBottomDiv.find("#firstButton").removeAttr("disabled");
+                showCustomerBottomDiv.find("#upButton").removeAttr("disabled");
+                showCustomerBottomDiv.find("#nextButton").removeAttr("disabled");
+                showCustomerBottomDiv.find("#lastButton").removeAttr("disabled");
             } else if (parseInt(pageCount) <= 1) {
-                clientStatusBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
-                clientStatusBottomDiv.find("#upButton").attr("disabled", "disabled");
-                clientStatusBottomDiv.find("#nextButton").attr("disabled", "disabled");
-                clientStatusBottomDiv.find("#lastButton").attr("disabled", "disabled");
+                showCustomerBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
+                showCustomerBottomDiv.find("#upButton").attr("disabled", "disabled");
+                showCustomerBottomDiv.find("#nextButton").attr("disabled", "disabled");
+                showCustomerBottomDiv.find("#lastButton").attr("disabled", "disabled");
             } else if (parseInt(currentPage) <= 1) {
-                clientStatusBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
-                clientStatusBottomDiv.find("#upButton").attr("disabled", "disabled");
+                showCustomerBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
+                showCustomerBottomDiv.find("#upButton").attr("disabled", "disabled");
             } else {
-                clientStatusBottomDiv.find("#nextButton").attr("disabled", "disabled");
-                clientStatusBottomDiv.find("#lastButton").attr("disabled", "disabled");
+                showCustomerBottomDiv.find("#nextButton").attr("disabled", "disabled");
+                showCustomerBottomDiv.find("#lastButton").attr("disabled", "disabled");
             }
         });
         function alignTableHeader(){
