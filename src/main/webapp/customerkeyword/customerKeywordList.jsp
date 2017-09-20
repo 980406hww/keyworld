@@ -137,16 +137,27 @@
                 var a = document.getElementsByName("uuid");
                 if (self.checked) {
                     for (var i = 0; i < a.length; i++) {
-                        if (a[i].type == "checkbox") {
                             a[i].checked = true;
-                        }
                     }
                 } else {
                     for (var i = 0; i < a.length; i++) {
-                        if (a[i].type == "checkbox") {
                             a[i].checked = false;
-                        }
                     }
+                }
+            }
+
+            function decideSelectAll() {
+                var a = document.getElementsByName("uuid");
+                var select=0;
+                for(var i = 0; i < a.length; i++){
+                    if (a[i].checked == true){
+                        select++;
+                    }
+                }
+                if(select == a.length){
+                    $("#selectAllChecked").prop("checked",true);
+                }else {
+                    $("#selectAllChecked").prop("checked",false);
                 }
             }
 
@@ -932,7 +943,7 @@
     <%--</c:if>--%>
     <table style="font-size:12px; width: 100%;" id="headerTable">
         <tr bgcolor="#eeeeee" height=30>
-            <td align="center" width=10><input type="checkbox" onclick="selectAll(this)"/></td>
+            <td align="center" width=10><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
             <td align="center" width=100>关键字</td>
             <td align="center" width=200>URL</td>
             <td align="center" width=250>标题</td>
@@ -967,7 +978,7 @@
     <table id="customerKeywordTable">
         <c:forEach items="${page.records}" var="customerKeyword">
             <tr style="" height=30 onmouseover="doOver(this);" onmouseout="doOut(this);" ondblclick="modifyCustomerKeyword('${customerKeyword.uuid}')" height=30>
-                <td  align="center" width=10><input type="checkbox" name="uuid" value="${customerKeyword.uuid}"/></td>
+                <td  align="center" width=10><input type="checkbox" name="uuid" value="${customerKeyword.uuid}" onclick="decideSelectAll()"/></td>
                 <td align="center" width=100>
                     <font color="<%--<%=keywordColor%>--%>">${customerKeyword.keyword}</font>
                 </td>

@@ -21,8 +21,7 @@
     });
     function pageLoad() {
       var  showMainKeywordBottomDiv = $('#showMainKeywordBottomDiv');
-      var displaysRecords =  showMainKeywordBottomDiv.find('#displaysRecordsHidden').val();
-      showMainKeywordBottomDiv.find('#chooseRecords').val(displaysRecords);
+        $("#showMainKeywordBottomDiv").find('#chooseRecords').val(${page.size});
       var selectGroup = $('#serachMainKeywordForm').find("#itemGroupHidden").val();
       $('#serachMainKeywordForm').find("#itemGroup").val(selectGroup);
       var pages  = showMainKeywordBottomDiv.find('#pagesHidden').val();
@@ -394,7 +393,7 @@
 <body>
 <div id="showMainKeywordTopDiv">
     <%@include file="/menu.jsp" %>
-    <div id="serachMainKeyword">
+    <div id="serachMainKeyword" style="margin-top: 40px;">
         <form id="serachMainKeywordForm" action="/internal/complaints/findTSMainKeywords" method="post">
             主关键词&nbsp;&nbsp;<input id="itemKeyword" name="itemKeyword" type="text"
                                    value="${page.condition.get("keyword")}"/>&nbsp;&nbsp;
@@ -481,9 +480,10 @@
         总记录数:${page.total}&nbsp;&nbsp;&nbsp;&nbsp;
         每页显示条数:<select id="chooseRecords"  onchange="chooseRecords(${page.current},this.value)">
         <option>10</option>
-        <option>15</option>
-        <option>30</option>
-        <option>45</option>
+        <option>25</option>
+        <option>50</option>
+        <option>75</option>
+        <option>100</option>
     </select>
         <%--用于存储pageInfo--%>
         <input type="hidden" id="currentPageHidden" value="${page.current}"/>

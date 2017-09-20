@@ -2,20 +2,9 @@
 <%@ include file="/commons/global.jsp" %>
 <html>
 <head>
-
     <script language="javascript" type="text/javascript" src="/common.js"></script>
     <script language="javascript" type="text/javascript" src="/toastmessage/jquery.toastmessage.js"></script>
     <link rel="stylesheet" href="/toastmessage/css/jquery.toastmessage.css">
-    <%--<link rel="stylesheet" type="text/css" href="/multiselectSrc/jquery.multiselect.css" />
-    <%--<link href="/css/menu.css" rel="stylesheet" type="text/css"/>--%>
-    <%--<link href="/ui/jquery-ui.css" rel="stylesheet" type="text/css"/>--%>
-    <%--<script type="text/javascript" src="/js/jquery.js"></script>--%>
-    <%--<script type="text/javascript" src="/ui/jquery.ui.core.js"></script>--%>
-    <%--<script type="text/javascript" src="/ui/jquery.ui.widget.js"></script>--%>
-    <%--<script type="text/javascript" src="/multiselectSrc/jquery.multiselect.js"></script>--%>
-    <%--<script language="javascript" type="text/javascript" src="/ui/jquery-ui.js"></script>--%>
-    <%--<script language="javascript" type="text/javascript" src="/js/My97DatePicker/WdatePicker.js"></script>--%>
-    <%--<script language="javascript" type="text/javascript" src="/js/slide1.12.4.js"></script>--%>
     <style>
         td{
             display: table-cell;
@@ -58,7 +47,7 @@
     <script>
         $(function () {
             $('#supplierDialog').dialog("close");
-            $("#showNegativeListDiv").css("margin-top",$("#showSupplierTableDiv").height());
+            $("#showSupplierListDiv").css("margin-top",$("#showSupplierTableDiv").height());
             alignTableHeader();
             pageLoad();
             $('#supplierNexus').combo({
@@ -113,20 +102,58 @@
             }
         }
 
+        function selectSupplierNexusAll(self) {
+            var b = document.getElementsByName("supplierNexus");
+            if (self.checked) {
+                for (var i = 0; i < b.length; i++) {
+                        b[i].checked = true;
+                }
+            } else {
+                for (var i = 0; i < b.length; i++) {
+                        b[i].checked = false;
+                }
+            }
+        }
+        function decideselectSupplierNexusAll() {
+            var a = document.getElementsByName("supplierNexus");
+            var select=0;
+            for(var i = 0; i < a.length; i++){
+                if (a[i].checked == true){
+                    select++;
+                }
+            }
+            if(select == a.length){
+                $("#SupplierNexusAll").prop("checked",true);
+            }else {
+                $("#SupplierNexusAll").prop("checked",false);
+            }
+        }
+
         function selectAll(self) {
             var a = document.getElementsByName("uuid");
             if (self.checked) {
                 for (var i = 0; i < a.length; i++) {
-                    if (a[i].type == "checkbox") {
                         a[i].checked = true;
-                    }
                 }
             } else {
                 for (var i = 0; i < a.length; i++) {
-                    if (a[i].type == "checkbox") {
                         a[i].checked = false;
-                    }
                 }
+            }
+        }
+
+        function decideSelectAll() {
+            var a = document.getElementsByName("uuid");
+            var select=0;
+            for(var i = 0; i < a.length; i++){
+                if (a[i].checked == true){
+                    select++;
+                }
+            }
+            if(select == a.length){
+                $("#selectAllChecked").prop("checked",true);
+            }else {
+                $("#selectAllChecked").prop("checked",false);
             }
         }
 
@@ -172,11 +199,9 @@
                 type: 'POST',
                 success: function (data) {
                     if (data) {
-                        /*showInfo("操作成功", self);*/
                         $().toastmessage('showSuccessToast', "操作成功");
                         window.location.reload();
                     } else {
-                        /*showInfo("操作失败", self);*/
                         $().toastmessage('showErrorToast', "操作失败");
                     }
                 },
@@ -201,31 +226,6 @@
         function resetPageNumber() {
             var searchSupplierForm = $("#searchSupplierForm");
             searchSupplierForm.find("#currentPageNumberHidden").val(1);
-        }
-        function showInfo(content, e) {
-            e = e || window.event;
-            var div1 = document.getElementById('div2'); //将要弹出的层
-            div1.innerText = content;
-            div1.style.display = "block"; //div1初始状态是不可见的，设置可为可"
-            div1.style.left = getLeft(e) + 10; //鼠标目前在X轴上的位置，"0是为了向右边移动10个px方便看到内容
-            div1.style.top = getTop(e) + 5;
-            div1.style.position = "absolute";
-
-            var intervalID = setInterval(function () {
-                div1.style.display = "none";
-            }, 3000);
-        }
-
-        function getTop(e) {
-            var offset = e.offsetTop;
-            if (e.offsetParent != null) offset += getTop(e.offsetParent);
-            return offset;
-        }
-        //获取元素的横坐标
-        function getLeft(e) {
-            var offset = e.offsetLeft;
-            if (e.offsetParent != null) offset += getLeft(e.offsetParent);
-            return offset;
         }
         function initSupplierDialog(supplier) {
             var supplierForm = $("#supplierForm");
@@ -437,7 +437,7 @@
     </table>
     <table id="headerTable" width="100%">
         <tr bgcolor="#eeeeee" height=30>
-            <td align="left" width="10"><input type="checkbox" onclick="selectAll(this)"/></td>
+            <td align="left" width="10"><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
             <td align="center" width=100>供应商名称</td>
             <td align="center" width=80>联系人</td>
             <td align="center" width=80>电话</td>
@@ -455,11 +455,11 @@
         </tr>
     </table>
 </div>
-<div id="showNegativeListDiv" >
+<div id="showSupplierListDiv" >
     <table id="showSupplierListTable"  width="100%">
         <c:forEach items="${page.records}" var="supplier">
             <tr onmouseover="doOver(this);" onmouseout="doOut(this);" height=30>
-                <td><input type="checkbox" name="uuid" value="${supplier.uuid}"/></td>
+                <td><input type="checkbox" name="uuid" value="${supplier.uuid}" onclick="decideSelectAll()"/></td>
                 <td>${supplier.supplierName}</td>
                 <td>
                     <a href="#">${supplier.contactPerson}</a>
@@ -503,6 +503,7 @@
                 <td><input type="text" name="phone" id="phone" style="width:200px;">
                 </td>
             </tr>
+
             <tr>
                 <td align="right">QQ</td>
                 <td><input type="text" name="qq" id="qq" style="width:200px;">
@@ -542,10 +543,12 @@
             <tr>
                 <td align="right">服务类型:</td>
                 <td>
-                    <select name="supplierNexus" id="supplierNexus" style="width:200px;height:30px;"></select>
+                    <select name="supplierNexuss" id="supplierNexus" style="width:200px;height:30px;"></select>
                         <div id="sp">
+                        <input type="checkbox" onclick="selectSupplierNexusAll(this)" id="SupplierNexusAll"/>全选<br>
+                            <hr>
                         <c:forEach items="${supplierServiceTypes}" var="supplierServiceType">
-                            <input type="checkbox" name="supplierNexus" value="${supplierServiceType.uuid}">
+                            <input type="checkbox" name="supplierNexus" value="${supplierServiceType.uuid}" onclick="decideselectSupplierNexusAll()">
                             <span>${supplierServiceType.name}</span>
                             <br>
                         </c:forEach>

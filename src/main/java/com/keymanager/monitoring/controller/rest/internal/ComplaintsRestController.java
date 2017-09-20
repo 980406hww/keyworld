@@ -55,22 +55,26 @@ public class ComplaintsRestController extends SpringMVCBaseController {
     }
 
     @RequestMapping(value = "/findTSMainKeywords", method = RequestMethod.GET)
-    public ModelAndView findTSMainKeywords(@RequestParam(defaultValue = "1") int currentPage,@RequestParam(defaultValue="15") int displaysRecords,
+    public ModelAndView findTSMainKeywords(@RequestParam(defaultValue = "1",name = "currentPage") int currentPage,@RequestParam(defaultValue="50",name = "displaysRecords") int pageSize,
                                            @RequestParam(defaultValue="") String keyword,@RequestParam(defaultValue="") String  group){
-        return findTSMainKeywordsAndReturnView(currentPage,displaysRecords,keyword,group);
+        return findTSMainKeywordsAndReturnView(currentPage,pageSize,keyword,group);
     }
 
     @RequestMapping(value = "/findTSMainKeywords", method = RequestMethod.POST)
     public ModelAndView findTSMainKeywords(HttpServletRequest httpServletRequest){
         String keyword = httpServletRequest.getParameter("itemKeyword");
         String group = httpServletRequest.getParameter("itemGroup");
-        int currentPage  = Integer.parseInt(httpServletRequest.getParameter("currentPageHidden"));
-        int displaysRecords = Integer.parseInt(httpServletRequest.getParameter("displaysRecordsHidden"));
-        return findTSMainKeywordsAndReturnView(currentPage,displaysRecords,keyword,group);
+        String currentPage  = httpServletRequest.getParameter("currentPageHidden");
+        String pageSize = httpServletRequest.getParameter("displaysRecordsHidden");
+        if (null == currentPage && null == pageSize) {
+            currentPage = "1";
+            pageSize = "50";
+        }
+        return findTSMainKeywordsAndReturnView(Integer.parseInt(currentPage),Integer.parseInt(pageSize),keyword,group);
     }
 
-    private ModelAndView findTSMainKeywordsAndReturnView(int currentPage,int displaysRecords,String keyword,String  group){
-        Page<TSMainKeyword> page = new Page<TSMainKeyword>(currentPage, displaysRecords);
+    private ModelAndView findTSMainKeywordsAndReturnView(int currentPage,int pageSize,String keyword,String  group){
+        Page<TSMainKeyword> page = new Page<TSMainKeyword>(currentPage, pageSize);
         page.getCondition().put("keyword",keyword);
         page.getCondition().put("group",group);
         page = tsMainKeywordService.searchTSMainKeywords(page, keyword, group);
