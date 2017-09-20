@@ -95,12 +95,11 @@
 							<c:if test="${menu.openMode=='ajax' || menu.openMode=='iframe'}">
 								<a href="javascript:void(0)" onclick="openUrl('${menu.attributes}','${menu.text}','${menu.iconCls}','${menu.openMode}')" title="${menu.attributes}"><i class="${menu.iconCls}"></i> ${menu.text}</a>
 							</c:if>
-				<c:if test="${menu.openMode==null || menu.openMode==''}">
+							<c:if test="${menu.openMode==null || menu.openMode==''}">
 								<a href="${menu.attributes}" title="${menu.attributes}"><i class="${menu.iconCls}"></i> ${menu.text}</a>
 							</c:if>
 						</li>
 					</c:forEach>
-		<div style="float: right;margin:10px 0px 0px 0px;">
 				</shiro:hasRole >
 			</c:when>
 			<c:otherwise>
@@ -109,13 +108,14 @@
 						<c:if test="${menu.openMode=='ajax' || menu.openMode=='iframe'}">
 							<a href="javascript:void(0)" onclick="openUrl('${menu.attributes}','${menu.text}','${menu.iconCls}','${menu.openMode}')" title="${menu.attributes}"><i class="${menu.iconCls}"></i> ${menu.text}</a>
 						</c:if>
-						<c:if test="${menu.openMode==null}">
+						<c:if test="${menu.openMode==null || menu.openMode==''}">
 							<a href="${menu.attributes}" title="${menu.attributes}"><i class="${menu.iconCls}"></i> ${menu.text}</a>
 						</c:if>
 					</li>
 				</c:forEach>
 			</c:otherwise>
 		</c:choose>
+			<div style="float: right;margin:10px 0px 0px 0px;">
 			<b class="fi-torso icon-black" style="font-size: 14px;">&nbsp;<shiro:principal></shiro:principal></b>|
 			<span class="fi-anchor icon-green" style="font-size: 14px;color: green"></span>
 			<span style="font-size: 14px;color: black">
@@ -137,7 +137,7 @@
 			<span class="fi-web icon-black" style="font-size: 14px;color: red;"></span><span style="color: black">&nbsp;${sessionScope.get("terminalType")}端&nbsp;|</span>&nbsp;
 			<shiro:hasPermission name="/user/editPwdPage">
 				<span class="fi-unlock icon-green" style="font-size: 14px;color: green"></span>
-				<a href="javascript:void(0)" onclick="editUserPwd()"  style="text-decoration-line: none;font-size: 14px;color: black">修改密码</a>|
+				<a href="javascript:void(0)" onclick="editUserPwd()"  style="text-decoration: none;font-size: 14px;color: black">修改密码</a>|
 			</shiro:hasPermission>
 			<a class="fi-x" href="javascript:void(0)" onclick="logout()" style="text-decoration: none;font-size: 14px;">&nbsp;安全退出</a>
 		</div>
