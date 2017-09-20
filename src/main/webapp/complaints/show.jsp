@@ -365,13 +365,13 @@
         bottom: 0px;
         right: 0px;
         background-color: white;
-        padding-top: 10px;
-        padding-bottom: 10px;
+        padding-top: 5px;
+        padding-bottom: 5px;
         width: 100%;
     }
     #showMainKeywordBottomDiv {
         float: right;
-        margin-right: 20px;
+        margin-right: 10px;
     }
 
     #nav .mainLevel ul {display:none; position:absolute;z-index: 10;}

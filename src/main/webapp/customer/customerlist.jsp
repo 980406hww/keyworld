@@ -3,21 +3,8 @@
 <head>
     <%@ include file="/commons/basejs.jsp" %>
     <%@ include file="/commons/global.jsp" %>
-    <script language="javascript" type="text/javascript" src="/toastmessage/jquery.toastmessage.js"></script>
-    <link rel="stylesheet" href="/toastmessage/css/jquery.toastmessage.css">
     <script language="javascript" type="text/javascript" src="/common.js"></script>
     <style type="text/css">
-        td,.wrap {
-            word-break: break-all;
-            word-wrap: break-word;
-        }
-        #topDiv {
-            position: fixed;
-            top: 0px;
-            left: 0px;
-            background-color: white;
-            width: 100%;
-        }
         #showCustomerTableDiv {
             width: 100%;
             margin: auto;
@@ -27,35 +14,11 @@
         #showCustomerTable td{
             text-align: left;
         }
-        #showCustomerBottomDiv {
-            margin-right: 2%;
-            float: right;
-            width: 580px;
-        }
-
         #chargeTypeCalculationDiv input {
             font-size: 12px;
             width: 70px;
             height: 20px;
             margin-top: 10px;
-        }
-
-        #showCustomerBottomPositioneDiv{
-            position: fixed;
-            bottom: 0px;
-            right: 0px;
-            background-color: white;
-            padding-top: 10px;
-            padding-bottom: 10px;
-            width: 100%;
-        }
-        #showCustomerBottomDiv {
-            float: right;
-            margin-right: 20px;
-        }
-        body{
-            margin: 0;
-            padding: 0;
         }
         h6{ margin: 0 5px;}
     </style>
@@ -656,8 +619,8 @@
             $('#dailyReportTemplateForm')[0].reset();
             $("#uploadDailyReportTemplateDialog").dialog({
                 resizable: false,
-                width: 400,
-                height: 200,
+                width: 350,
+                height: 150,
                 modal: true,
                 //按钮
                 buttons: [{
@@ -728,8 +691,8 @@
             }
             $("#customerDialog").dialog({
                 resizable: false,
-               /* width: 330,
-                height: 400,*/
+                width: 310,
+                height: 350,
                 modal: true,
                 //按钮
                 buttons: [{
@@ -1059,7 +1022,7 @@
                             <td><input type="text" name="telphone" id="telphone" value="${customerCriteria.telphone}"
                                        style="width:200px;">
                             </td>
-                            <td align="right" width="60">
+                            <td align="right">
                                 <input type="hidden" name="currentPageNumber" id="currentPageNumberHidden"
                                        value="${page.current}"/>
                                 <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
@@ -1072,13 +1035,12 @@
                                 </shiro:hasPermission>
                             </td>
                             <shiro:hasPermission name="/internal/customer/saveCustomer">
-                                <td align="right" width="100"><input type="button" class="ui-button ui-widget ui-corner-all"
-                                                                     value=" 添加 "
+                                <td align="right"><input type="button" class="ui-button ui-widget ui-corner-all" value=" 添加 "
                                                                      onclick="showCustomerDialog(null,'${user.userID}')"/>
                                 </td>
                             </shiro:hasPermission>
                             <shiro:hasPermission name="/internal/customer/deleteCustomer">
-                                <td align="right" width="100"><input type="button" class="ui-button ui-widget ui-corner-all"
+                                <td align="right"><input type="button" class="ui-button ui-widget ui-corner-all"
                                                                      value=" 删除所选" onclick="deleteCustomers(this)"/>
                                 </td>
                             </shiro:hasPermission>
