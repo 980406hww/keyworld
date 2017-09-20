@@ -370,9 +370,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	@RequiresPermissions("/internal/customerKeyword/searchCustomerKeywordLists")
 	@RequestMapping(value="/searchCustomerKeywordLists" , method= RequestMethod.GET)
 	public ModelAndView searchCustomerKeywordLists(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request){
-		CustomerKeywordCrilteria customerKeywordCrilteria = new CustomerKeywordCrilteria();
-		customerKeywordCrilteria.setStatus("1");
-		return constructCustomerKeywordListsModelAndView(request, customerKeywordCrilteria, currentPageNumber, pageSize);
+		return new ModelAndView("/customerkeyword/keywordfinderList");
 	}
 
 	@RequiresPermissions("/internal/customerKeyword/searchCustomerKeywordLists")
