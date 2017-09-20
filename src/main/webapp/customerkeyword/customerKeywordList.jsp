@@ -1006,22 +1006,16 @@
                 <td align="center" width=80><fmt:formatDate value="${customerKeyword.lastOptimizeDateTime}" pattern="yyyy-MM-dd HH:mm"/></td>
                 <td align="center" width=50>${customerKeyword.orderNumber}</td>
                 <td align="center" width=100>${customerKeyword.remarks==null?"":customerKeyword.remarks} </td>
-                <c:choose>
-                    <c:when test="${user.vipType}">
-                        <td align="center" width=60>${customerKeyword.optimizeGroupName == ''? "" : customerKeyword.optimizeGroupName}
-                        </td>
-                        <td align="center" width=80>
-                            <a href="javascript:modifyCustomerKeyword('${customerKeyword.uuid}')">修改</a>|
-                            <a href="javascript:delItem('${customerKeyword.uuid}')">删除</a>
-                        </td>
-                    </c:when>
-                    <c:when test="${user.userLevel==1}">
-                        <td align="center" width=80>
-                            <a href="modify.jsp?uuid=${customerKeyword.uuid}">修改</a> |
-                            <a href="javascript:delItem('${customerKeyword.uuid}')">删除</a>
-                        </td>
-                    </c:when>
-                </c:choose>
+                <td align="center" width=60>${customerKeyword.optimizeGroupName == ''? "" : customerKeyword.optimizeGroupName}
+                </td>
+                <td align="center" width=80>
+                    <shiro:hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
+                    <a href="javascript:modifyCustomerKeyword('${customerKeyword.uuid}')">修改</a>|
+                    </shiro:hasPermission>
+                    <shiro:hasPermission name="/internal/customerKeyword/deleteCustomerKeyword">
+                    <a href="javascript:delItem('${customerKeyword.uuid}')">删除</a>
+                    </shiro:hasPermission>
+                </td>
             </tr>
         </c:forEach>
     </table>
