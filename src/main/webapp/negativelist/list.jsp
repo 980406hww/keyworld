@@ -257,6 +257,10 @@
             negativeListObj.url = $("#negativeListForm").find("#url").val().trim();
             negativeListObj.desc = $("#negativeListForm").find("#desc").val();
             negativeListObj.position = $("#negativeListForm").find("#position").val();
+            if (!(/^[0-9]*$/.test(negativeListObj.position)) && (negativeListObj.position != '')) {
+                alert("输入非法!");
+                return;
+            }
             $.ajax({
                 url: '/internal/negativelist/saveNegativeList',
                 data: JSON.stringify(negativeListObj),
@@ -286,8 +290,8 @@
             }
             $("#negativeListDialog").dialog({
                 resizable: false,
-                width: 530,
-                height: 365,
+                width: 510,
+                height: 315,
                 modal: true,
                 title: '负面信息',
 				closed:true,

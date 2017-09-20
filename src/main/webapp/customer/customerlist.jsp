@@ -656,8 +656,8 @@
             $('#dailyReportTemplateForm')[0].reset();
             $("#uploadDailyReportTemplateDialog").dialog({
                 resizable: false,
-                width: 400,
-                height: 200,
+                width: 350,
+                height: 150,
                 modal: true,
                 //按钮
                 buttons: [{
@@ -728,8 +728,8 @@
             }
             $("#customerDialog").dialog({
                 resizable: false,
-               /* width: 330,
-                height: 400,*/
+                width: 310,
+                height: 350,
                 modal: true,
                 //按钮
                 buttons: [{
@@ -1059,7 +1059,7 @@
                             <td><input type="text" name="telphone" id="telphone" value="${customerCriteria.telphone}"
                                        style="width:200px;">
                             </td>
-                            <td align="right" width="60">
+                            <td align="right">
                                 <input type="hidden" name="currentPageNumber" id="currentPageNumberHidden"
                                        value="${page.current}"/>
                                 <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
@@ -1072,13 +1072,12 @@
                                 </shiro:hasPermission>
                             </td>
                             <shiro:hasPermission name="/internal/customer/saveCustomer">
-                                <td align="right" width="100"><input type="button" class="ui-button ui-widget ui-corner-all"
-                                                                     value=" 添加 "
+                                <td align="right"><input type="button" class="ui-button ui-widget ui-corner-all" value=" 添加 "
                                                                      onclick="showCustomerDialog(null,'${user.userID}')"/>
                                 </td>
                             </shiro:hasPermission>
                             <shiro:hasPermission name="/internal/customer/deleteCustomer">
-                                <td align="right" width="100"><input type="button" class="ui-button ui-widget ui-corner-all"
+                                <td align="right"><input type="button" class="ui-button ui-widget ui-corner-all"
                                                                      value=" 删除所选" onclick="deleteCustomers(this)"/>
                                 </td>
                             </shiro:hasPermission>

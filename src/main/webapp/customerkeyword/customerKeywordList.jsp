@@ -503,7 +503,7 @@
                     $("#customerKeywordForm").find("#status").val('');
                 }
                 $( "#saveCustomerKeywordDialog").dialog({
-                    width: 440,
+                    width: 430,
                     height: 540,
                     title : "添加关键字",
                     modal: true,
