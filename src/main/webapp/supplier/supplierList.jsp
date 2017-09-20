@@ -294,8 +294,8 @@
                         }
                     }]
             });
-            $("#customerDialog").dialog("open");
-            $('#customerDialog').window("resize",{top:$(document).scrollTop() + 100});
+            $("#supplierDialog").dialog("open");
+            $('#supplierDialog').window("resize",{top:$(document).scrollTop() + 100});
         }
         function saveSupplier(uuid) {
             var supplierForm = $("#supplierDialog").find("#supplierForm");
@@ -395,14 +395,6 @@
     <table width="100%" style="font-size:12px; margin-top: 40px;" cellpadding=3>
         <tr>
             <td colspan=14>
-                <div style="float: right;">
-                    <shiro:hasPermission name="/internal/supplier/saveSupplier">
-                        <a href="javaScript:showSupplierDialog()" style="">添加供应商</a>&nbsp;|&nbsp;
-                    </shiro:hasPermission>
-                    <shiro:hasPermission name="/internal/supplier/deleteSuppliers">
-                        <a href="javaScript:deleteSupplier(this)">删除所选</a>
-                    </shiro:hasPermission>
-                </div>
                 <form method="post" id="searchSupplierForm" action="/internal/supplier/searchSuppliers">
                     <table style="font-size:12px;">
                         <tr>
@@ -423,7 +415,16 @@
                                 <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
                                 <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
                                 <shiro:hasPermission name="/internal/supplier/searchSuppliers">
-                                    <input type="submit" onclick="resetPageNumber()" name="btnQuery" id="btnQuery" value=" 查询 ">
+                                    <input type="submit" onclick="resetPageNumber()" name="btnQuery" id="btnQuery" value=" 查询 ">&nbsp;&nbsp;
+                                </shiro:hasPermission>
+                            </td>
+                            <td>
+                                <shiro:hasPermission name="/internal/supplier/saveSupplier">
+                                    <input type="button" onclick="showSupplierDialog()" value="添加供应商">&nbsp;&nbsp;
+                                </shiro:hasPermission></td>
+                            <td>
+                                <shiro:hasPermission name="/internal/supplier/deleteSuppliers">
+                                    <input type="button" onclick="deleteSupplier(this)" value="删除所选">
                                 </shiro:hasPermission>
                             </td>
                         </tr>
@@ -456,26 +457,24 @@
     <table id="showSupplierListTable"  width="100%">
         <c:forEach items="${page.records}" var="supplier">
             <tr onmouseover="doOver(this);" onmouseout="doOut(this);" height=30>
-                <td><input type="checkbox" name="uuid" value="${supplier.uuid}" onclick="decideSelectAll()"/></td>
-                <td>${supplier.supplierName}</td>
-                <td>
-                    <a href="#">${supplier.contactPerson}</a>
-                </td>
-                <td>${supplier.phone}</td>
-                <td>${supplier.qq}</td>
-                <td>${supplier.weChat} </td>
-                <td>${supplier.address}</td>
-                <td>
+                <td width="10"><input type="checkbox" name="uuid" value="${supplier.uuid}" onclick="decideSelectAll()"/></td>
+                <td width="100">${supplier.supplierName}</td>
+                <td width="80">${supplier.contactPerson}</td>
+                <td width="80">${supplier.phone}</td>
+                <td width="80">${supplier.qq}</td>
+                <td width="80">${supplier.weChat} </td>
+                <td width="180">${supplier.address}</td>
+                <td width="150">
                     <c:forEach items="${supplier.supplierNexus}" var="supplierNexus">
                         ${supplierNexus.supplierServiceType.name} ${" "}
                     </c:forEach>
                 </td>
-                <td>${supplier.url}</td>
-                <td>${supplier.email}</td>
-                <td>${supplier.remark}</td>
-                <td><fmt:formatDate value="${supplier.updateTime}" pattern="MM-dd HH:mm" /></td>
-                <td><fmt:formatDate value="${supplier.createTime}" pattern="MM-dd HH:mm" /></td>
-                <td style="text-align: center;">
+                <td width="130">${supplier.url}</td>
+                <td width="80">${supplier.email}</td>
+                <td width="130">${supplier.remark}</td>
+                <td width="100"><fmt:formatDate value="${supplier.updateTime}" pattern="MM-dd HH:mm" /></td>
+                <td width="100"><fmt:formatDate value="${supplier.createTime}" pattern="MM-dd HH:mm" /></td>
+                <td style="text-align: center;" width="100">
                     <shiro:hasPermission name="/internal/supplier/saveSupplier">
                     <a href="javascript:modifySupplier(${supplier.uuid})">修改</a> |
                     </shiro:hasPermission>
