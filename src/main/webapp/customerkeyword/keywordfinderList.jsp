@@ -75,7 +75,9 @@
                 initPaging();
                 initNoPositionChecked();
                 alignTableHeader();
-                $("#userName").val("${customerKeywordCrilteria.userName}");
+                if(${isDepartmentManager}) {
+                    $("#userName").val("${customerKeywordCrilteria.userName}");
+                }
                 window.onresize = function(){
                     alignTableHeader();
                 }
@@ -241,11 +243,18 @@
                    value="${customerKeywordCrilteria.optimizeGroupName}" style="width:100px;">&nbsp;
             用户名称:
                 <select name="userName" id="userName">
-                    <option value="">所有</option>
-                    <option value="${user.userID}">只显示自己</option>
-                    <c:forEach items="${activeUsers}" var="activeUser">
-                        <option value="${activeUser.userID}">${activeUser.userName}</option>
-                    </c:forEach>
+                    <c:choose>
+                        <c:when test="${isDepartmentManager}">
+                            <option value="">所有</option>
+                            <option value="${user.userID}">只显示自己</option>
+                            <c:forEach items="${activeUsers}" var="activeUser">
+                                <option value="${activeUser.userID}">${activeUser.userName}</option>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <option value="${user.userID}">只显示自己</option>
+                        </c:otherwise>
+                    </c:choose>
                 </select>
             <br>
             显示前:

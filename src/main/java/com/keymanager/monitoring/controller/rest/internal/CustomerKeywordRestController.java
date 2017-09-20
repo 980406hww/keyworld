@@ -11,10 +11,7 @@ import com.keymanager.monitoring.entity.CustomerKeyword;
 import com.keymanager.monitoring.entity.ServiceProvider;
 import com.keymanager.monitoring.entity.User;
 import com.keymanager.monitoring.excel.operator.CustomerKeywordInfoExcelWriter;
-import com.keymanager.monitoring.service.CustomerKeywordService;
-import com.keymanager.monitoring.service.CustomerService;
-import com.keymanager.monitoring.service.ServiceProviderService;
-import com.keymanager.monitoring.service.UserService;
+import com.keymanager.monitoring.service.*;
 import com.keymanager.util.TerminalTypeMapping;
 import com.keymanager.util.Utils;
 import org.apache.commons.lang3.StringUtils;
@@ -47,6 +44,12 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private UserRoleService userRoleService;
+
+	@Autowired
+	private UserInfoService userInfoService;
 
 	@Autowired
 	private CustomerService customerService;
@@ -408,11 +411,13 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		customerKeywordCrilteria.setEntryType(entryType);
 		customerKeywordCrilteria.setTerminalType(terminalType);
 		Page<CustomerKeyword> page = customerKeywordService.searchCustomerKeywordLists(new Page<CustomerKeyword>(currentPage, pageSize), customerKeywordCrilteria);
+		boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
 		modelAndView.addObject("customerKeywordCrilteria", customerKeywordCrilteria);
 		modelAndView.addObject("page", page);
 		modelAndView.addObject("user", user);
 		modelAndView.addObject("activeUsers", activeUsers);
 		modelAndView.addObject("orderElement",orderElement);
+		modelAndView.addObject("isDepartmentManager",isDepartmentManager);
 		return modelAndView;
 	}
 
