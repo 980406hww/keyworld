@@ -97,10 +97,12 @@
 	<table width="100%" style="font-size:12px; margin-top:40px;" cellpadding=3>
 		<tr>
 			<td colspan="14" align="right">
+				<shiro:hasPermission name="/internal/qzsetting/searchQZSettings">
 				<a href="javascript:resetSearchCondition('-1')">过期未收费(${chargeRemindDataMap['expiredChargeSize']})</a>
 				| <a target="_blank" href="javascript:resetSearchCondition('0')">当天收费提醒(${chargeRemindDataMap['nowChargeSize']})</a>
 				| <a target="_blank" href="javascript:resetSearchCondition('3')">三天收费提醒(${chargeRemindDataMap['threeChargeSize']})</a>
 				| <a target="_blank" href="javascript:resetSearchCondition('7')">七天收费提醒(${chargeRemindDataMap['sevenChargeSize']})</a>
+				</shiro:hasPermission>
 			</td>
 		</tr>
 		<tr>
@@ -128,15 +130,23 @@
 									</c:forEach>
 								</select>
 							</td>
-							<td align="right" width="100"><input type="submit" name="btnQuery" id="btnQuery" onclick="resetSearchCondition('1')" value=" 查询 " ></td>
+							<shiro:hasPermission name="/internal/qzsetting/searchQZSettings">
+								<td align="right" width="100"><input type="submit" name="btnQuery" id="btnQuery" onclick="resetSearchCondition('1')" value=" 查询 " ></td>
+							</shiro:hasPermission>
 						</tr>
 					</table>
 				</form>
 			</td>
 			<td align="right" colspan="3">
-				<a href="javascript:showSettingDialog(null, this)">增加全站设置</a>
-				| <a target="_blank" href="javascript:updateImmediately(this)">马上更新</a>
-				| <a target="_blank" href="javascript:delSelectedQZSettings(this)">删除所选</a>
+				<shiro:hasPermission name="/internal/qzsetting/save">
+					<a href="javascript:showSettingDialog(null, this)">增加全站设置</a>
+				</shiro:hasPermission>
+				<shiro:hasPermission name="/internal/qzsetting/updateImmediately">
+					| <a target="_blank" href="javascript:updateImmediately(this)">马上更新</a>
+				</shiro:hasPermission>
+				<shiro:hasPermission name="/internal/qzsetting/deleteQZSettings">
+					| <a target="_blank" href="javascript:delSelectedQZSettings(this)">删除所选</a>
+				</shiro:hasPermission>
 			</td>
 		</tr>
 	</table>
@@ -165,27 +175,35 @@
 <table id="showQZSettingTable"  style="font-size:12px;width: 100%;" cellpadding=3>
 	<c:forEach items="${page.records}" var="qzSetting">
 		<tr onmouseover="doOver(this);" onmouseout="doOut(this);" height=30>
-			<td  align="center" width=25><input type="checkbox" name="uuid" value="${qzSetting.uuid}"/></td>
-			<td  align="center" width=150>${qzSetting.contactPerson}</td>
-			<td  align="center" width=100>${qzSetting.domain}</td>
-			<td  align="center" width=50>${qzSetting.type}</td>
-			<td  align="center" width=80>
+			<td align="center" width=25><input type="checkbox" name="uuid" value="${qzSetting.uuid}"/></td>
+			<td align="center" width=150>${qzSetting.contactPerson}</td>
+			<td align="center" width=100>${qzSetting.domain}</td>
+			<td align="center" width=50>${qzSetting.type}</td>
+			<td align="center" width=80>
 				${qzSetting.pcGroup == null ? "" : "pc:"}${qzSetting.pcGroup == null ? "" : qzSetting.pcGroup}<br>
 				${qzSetting.phoneGroup == null ? "" : "m:"}${qzSetting.phoneGroup == null ? "" : qzSetting.phoneGroup}
 			</td>
-			<td  align="center" width=80>${qzSetting.ignoreNoIndex == true ? "是" : "否"}</td>
-			<td  align="center" width=80>${qzSetting.ignoreNoOrder == true ? "是" : "否"}</td>
-			<td  align="center" width=60>${qzSetting.updateInterval}</td>
-			<td  align="center" width=60>${qzSetting.updateStatus == null ? "" : qzSetting.updateStatus}</td>
-			<td  align="center" width=80><fmt:formatDate value="${qzSetting.updateStartTime}" pattern="MM-dd HH:mm" /></td>
-			<td  align="center" width=80><fmt:formatDate value="${qzSetting.updateEndTime}" pattern="MM-dd HH:mm" /></td>
-			<td  align="center" width=80><fmt:formatDate value="${qzSetting.updateTime}" pattern="MM-dd HH:mm" /></td>
-			<td  align="center" width=80><fmt:formatDate value="${qzSetting.createTime}" pattern="MM-dd HH:mm" /></td>
-			<td  align="center" width=100>
-				<a href="javascript:showChargeDialog('${qzSetting.uuid}','${qzSetting.contactPerson}','${qzSetting.domain}',this)">收费</a> |
-				<a href="javascript:showSettingDialog('${qzSetting.uuid}', this)">修改</a><br>
-				<a href="javascript:delQZSetting(${qzSetting.uuid})">删除</a> |
-				<a href="javascript:showChargeLog('${qzSetting.uuid}', this)">收费记录</a>
+			<td align="center" width=80>${qzSetting.ignoreNoIndex == true ? "是" : "否"}</td>
+			<td align="center" width=80>${qzSetting.ignoreNoOrder == true ? "是" : "否"}</td>
+			<td align="center" width=60>${qzSetting.updateInterval}</td>
+			<td align="center" width=60>${qzSetting.updateStatus == null ? "" : qzSetting.updateStatus}</td>
+			<td align="center" width=80><fmt:formatDate value="${qzSetting.updateStartTime}" pattern="MM-dd HH:mm" /></td>
+			<td align="center" width=80><fmt:formatDate value="${qzSetting.updateEndTime}" pattern="MM-dd HH:mm" /></td>
+			<td align="center" width=80><fmt:formatDate value="${qzSetting.updateTime}" pattern="MM-dd HH:mm" /></td>
+			<td align="center" width=80><fmt:formatDate value="${qzSetting.createTime}" pattern="MM-dd HH:mm" /></td>
+			<td align="center" width=100>
+				<shiro:hasPermission name="/internal/qzchargelog/save">
+					<a href="javascript:showChargeDialog('${qzSetting.uuid}','${qzSetting.contactPerson}','${qzSetting.domain}',this)">收费</a> |
+				</shiro:hasPermission>
+				<shiro:hasPermission name="/internal/qzsetting/save">
+					<a href="javascript:showSettingDialog('${qzSetting.uuid}', this)">修改</a><br>
+				</shiro:hasPermission>
+				<shiro:hasPermission name="/internal/qzsetting/deleteQZSetting">
+					<a href="javascript:delQZSetting(${qzSetting.uuid})">删除</a> |
+				</shiro:hasPermission>
+				<shiro:hasPermission name="/internal/qzchargelog/chargesList">
+					<a href="javascript:showChargeLog('${qzSetting.uuid}', this)">收费记录</a>
+				</shiro:hasPermission>
 			</td>
 		</tr>
 	</c:forEach>

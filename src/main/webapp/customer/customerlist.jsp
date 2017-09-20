@@ -915,7 +915,7 @@
 //            alert(JSON.stringify(customerKeywords));
 
             $.ajax({
-                url: '/internal/customerkeyword/saveCustomerKeywords',
+                url: '/internal/customerKeyword/saveCustomerKeywords',
                 data: JSON.stringify(customerKeywords),
                 headers: {
                     'Accept': 'application/json',
@@ -1143,8 +1143,9 @@
                     <shiro:hasPermission name="/internal/customerChar/saveCustomerChargeTypegeType">
                         <a href="javascript:changeCustomerChargeType('${customer.uuid}')">客户规则</a> |
                     </shiro:hasPermission>
-
+                    <shiro:hasPermission name="/internal/customerKeyword/saveCustomerKeywords">
                     <a href="javascript:showCustomerKeywordDialog(${customer.uuid})">快速加词</a> |
+                    </shiro:hasPermission>
                     <shiro:hasPermission name="/internal/customer/uploadDailyReportTemplate">
                         <a target="_blank" href="javascript:uploadDailyReportTemplate('${customer.uuid}', this)">上传日报表模板</a>
                     </shiro:hasPermission>

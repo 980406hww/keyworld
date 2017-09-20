@@ -3,6 +3,7 @@ package com.keymanager.monitoring.controller.rest.internal;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.entity.QZChargeLog;
 import com.keymanager.monitoring.service.QZChargeLogService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,12 +28,15 @@ public class QZChargeLogRestControlller extends SpringMVCBaseController {
     }
 
     //插入一条收费流水表
+    @RequiresPermissions("/internal/qzchargelog/save")
     @RequestMapping(value = "/save" , method = RequestMethod.POST)
     public ResponseEntity<?> saveQZChargeLog(@RequestBody List<QZChargeLog> qzChargeLogs,HttpServletRequest request){
         qzChargeLogService.saveQZChargeLog(qzChargeLogs,request);
         return new ResponseEntity<Object>(qzChargeLogs, HttpStatus.OK);
     }
+
     //查看收费记录
+    @RequiresPermissions("/internal/qzchargelog/chargesList")
     @RequestMapping(value = "/chargesList/{uuid}", method = RequestMethod.GET)
     public ResponseEntity<?> chargesList(@PathVariable("uuid") Long uuid){
         return new ResponseEntity<Object>(qzChargeLogService.chargesList(uuid), HttpStatus.OK);

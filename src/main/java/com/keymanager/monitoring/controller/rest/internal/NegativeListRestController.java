@@ -5,6 +5,7 @@ import com.keymanager.monitoring.criteria.NegativeListCriteria;
 import com.keymanager.monitoring.entity.NegativeList;
 import com.keymanager.monitoring.service.NegativeListService;
 import com.keymanager.util.TerminalTypeMapping;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +27,13 @@ public class NegativeListRestController {
     @Autowired
     private NegativeListService negativeListService;
 
+    @RequiresPermissions("/internal/negativelist/searchNegativeLists")
     @RequestMapping(value = "/searchNegativeLists", method = RequestMethod.GET)
     public ModelAndView searchNegativeLists(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request) {
         return constructNegativeListModelAndView(request, new NegativeListCriteria(), currentPageNumber, pageSize);
     }
 
+    @RequiresPermissions("/internal/negativelist/searchNegativeLists")
     @RequestMapping(value = "/searchNegativeLists", method = RequestMethod.POST)
     public ModelAndView searchNegativeListsPost(HttpServletRequest request, NegativeListCriteria negativeListCriteria) {
         try {
@@ -59,10 +62,11 @@ public class NegativeListRestController {
         return modelAndView;
     }
 
-    @RequestMapping(value = "/addNegativeList", method = RequestMethod.POST)
-    public ResponseEntity<?> addNegativeList(@RequestBody NegativeList negativeList) {
+    @RequiresPermissions("/internal/negativelist/saveNegativeList")
+    @RequestMapping(value = "/saveNegativeList", method = RequestMethod.POST)
+    public ResponseEntity<?> saveNegativeList(@RequestBody NegativeList negativeList) {
         try {
-            negativeListService.addNegativeList(negativeList);
+            negativeListService.saveNegativeList(negativeList);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -80,6 +84,7 @@ public class NegativeListRestController {
         }
     }
 
+    @RequiresPermissions("/internal/negativelist/deleteNegativeList")
     @RequestMapping(value = "/deleteNegativeList/{uuid}", method = RequestMethod.POST)
     public ResponseEntity<?> deleteNegativeList(@PathVariable("uuid") Long uuid) {
         try {
@@ -91,6 +96,7 @@ public class NegativeListRestController {
         }
     }
 
+    @RequiresPermissions("/internal/negativelist/deleteNegativeLists")
     @RequestMapping(value = "/deleteNegativeLists", method = RequestMethod.POST)
     public ResponseEntity<?> deleteNegativeLists(@RequestBody Map<String, Object> requestMap) {
         try {

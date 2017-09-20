@@ -183,7 +183,7 @@
 						</tr>
 					</table>
 				</form>
-		<%--	</td>
+			<%--</td>
 		</tr>
 	</table>--%>
 	<table  width=100% style="font-size: 12px" id="headerTable">
@@ -239,7 +239,7 @@
 					<tr onmouseover="doOver(this);" onmouseout="doOut(this);">
 				</c:otherwise>
 			</c:choose>
-			<td width=10><input type="checkbox" name="clientID" value="${clientStatus.clientID}"/></td>
+			<td align="center" width=10><input type="checkbox" name="clientID" value="${clientStatus.clientID}"/></td>
 			<td width=40>
 				<font color="${keywordColor}">${clientStatus.clientID}</font>
 				<c:if test="${!isValidClient}">
@@ -618,6 +618,7 @@
 
 		}
 
+		<shiro:hasPermission name="/internal/clientstatus/updateGroup">
 		function updateGroup(self){
 		    var clientStatus = {};
             clientStatus.clientID = self.id;
@@ -644,6 +645,7 @@
                 }
             });
 		}
+		</shiro:hasPermission>
 
 		function changeTerminalType(clientID){
 			var postData = {};
@@ -671,6 +673,7 @@
 			});
 		}
 
+		<shiro:hasPermission name="/internal/clientstatus/updateUpgradeFailedReason">
 		function updateUpgradeFailedReason(self){
 		    var clientStatus = {};
             clientStatus.clientID = self.id;
@@ -697,6 +700,9 @@
                 }
             });
 		}
+		</shiro:hasPermission>
+
+		<shiro:hasPermission name="/internal/clientstatus/updateOperationType">
 		function updateOperationType(self){
 		    var clientStatus = {};
             clientStatus.clientID = self.id.replace("operationType", "");
@@ -723,6 +729,8 @@
                 }
             });
 		}
+		</shiro:hasPermission>
+
 		function showSettingDialog(clientID, self){
 		    $.ajax({
 		        url: '/internal/clientstatus/getClientStatus/' + clientID,
