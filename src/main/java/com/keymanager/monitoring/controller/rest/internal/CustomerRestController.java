@@ -9,6 +9,7 @@ import com.keymanager.monitoring.service.UserService;
 import com.keymanager.util.TerminalTypeMapping;
 import com.keymanager.util.Utils;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,12 +37,14 @@ public class CustomerRestController {
     @Autowired
     private UserService userService;
 
+    @RequiresPermissions("/internal/customer/searchCustomers")
     @RequestMapping(value = "/searchCustomers", method = RequestMethod.GET)
     public ModelAndView searchCustomers(@RequestParam(defaultValue = "1") int currentPage, @RequestParam(defaultValue = "50") int displaysRecords,
                                         HttpServletRequest request) {
         return constructCustomerModelAndView(request, new CustomerCriteria(), currentPage + "", displaysRecords + "");
     }
 
+    @RequiresPermissions("/internal/customer/searchCustomers")
     @RequestMapping(value = "/searchCustomers", method = RequestMethod.POST)
     public ModelAndView searchCustomersPost(HttpServletRequest request, CustomerCriteria customerCriteria) {
         String currentPageNumber = request.getParameter("currentPageNumber");//
@@ -72,7 +75,7 @@ public class CustomerRestController {
         return modelAndView;
     }
 
-
+    @RequiresPermissions("/internal/customer/saveCustomer")
     @RequestMapping(value = "/saveCustomer", method = RequestMethod.POST)
     public ResponseEntity<?> saveCustomer(@RequestBody Customer customer) {
         try {
@@ -84,12 +87,12 @@ public class CustomerRestController {
         }
     }
 
-
     @RequestMapping(value = "/getCustomer/{uuid}" , method = RequestMethod.GET)
     public ResponseEntity<?> getCustomer(@PathVariable("uuid")Long uuid){
         return new ResponseEntity<Object>(customerService.getCustomerWithKeywordCount(uuid), HttpStatus.OK);
     }
 
+    @RequiresPermissions("/internal/customer/delCustomer")
     @RequestMapping(value = "/delCustomer/{uuid}", method = RequestMethod.GET)
     public ResponseEntity<?> delCustomer(@PathVariable("uuid") Long uuid) {
         try {
@@ -101,6 +104,7 @@ public class CustomerRestController {
         }
     }
 
+    @RequiresPermissions("/internal/customer/deleteCustomers")
     @RequestMapping(value = "/deleteCustomers" , method = RequestMethod.POST)
     public ResponseEntity<?> deleteCustomers(@RequestBody Map<String, Object> requestMap){
         try {
@@ -112,6 +116,7 @@ public class CustomerRestController {
         }
     }
 
+    @RequiresPermissions("/internal/customer/uploadDailyReportTemplate")
     @RequestMapping(value = "/uploadDailyReportTemplate" , method = RequestMethod.POST)
     public boolean uploadDailyReportTemplate(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request){
        String customerUuid = request.getParameter("customerUuid");
