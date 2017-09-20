@@ -198,7 +198,7 @@
 				<shiro:hasPermission name="/internal/qzsetting/save">
 					<a href="javascript:showSettingDialog('${qzSetting.uuid}', this)">修改</a><br>
 				</shiro:hasPermission>
-				<shiro:hasPermission name="/internal/qzsetting/deleteQZSetting">
+				<shiro:hasPermission name="/internal/qzsetting/delete">
 					<a href="javascript:delQZSetting(${qzSetting.uuid})">删除</a> |
 				</shiro:hasPermission>
 				<shiro:hasPermission name="/internal/qzchargelog/chargesList">

@@ -403,8 +403,12 @@
         <tr>
             <td colspan=14>
                 <div style="float: right;">
-                    <a href="javaScript:showSupplierDialog()" style="">添加供应商</a>&nbsp;|&nbsp;
-                    <a href="javaScript:deleteSupplier(this)">删除所选</a>
+                    <shiro:hasPermission name="/internal/supplier/saveSupplier">
+                        <a href="javaScript:showSupplierDialog()" style="">添加供应商</a>&nbsp;|&nbsp;
+                    </shiro:hasPermission>
+                    <shiro:hasPermission name="/internal/supplier/deleteSuppliers">
+                        <a href="javaScript:deleteSupplier(this)">删除所选</a>
+                    </shiro:hasPermission>
                 </div>
                 <form method="post" id="searchSupplierForm" action="/internal/supplier/searchSuppliers">
                     <table style="font-size:12px;">
@@ -421,13 +425,13 @@
                                        style="width:200px;">
                             </td>
                             <td align="right" width="100">
-                                <input type="hidden" name="currentPageNumber" id="currentPageNumberHidden"
-                                       value="${page.current}"/>
+                                <input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}"/>
                                 <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
                                 <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
                                 <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
-                                <input type="submit" onclick="resetPageNumber()"
-                                       name="btnQuery" id="btnQuery" value=" 查询 ">
+                                <shiro:hasPermission name="/internal/supplier/searchSuppliers">
+                                    <input type="submit" onclick="resetPageNumber()" name="btnQuery" id="btnQuery" value=" 查询 ">
+                                </shiro:hasPermission>
                             </td>
                         </tr>
                     </table>
@@ -479,8 +483,12 @@
                 <td><fmt:formatDate value="${supplier.updateTime}" pattern="MM-dd HH:mm" /></td>
                 <td><fmt:formatDate value="${supplier.createTime}" pattern="MM-dd HH:mm" /></td>
                 <td style="text-align: center;">
+                    <shiro:hasPermission name="/internal/supplier/saveSupplier">
                     <a href="javascript:modifySupplier(${supplier.uuid})">修改</a> |
+                    </shiro:hasPermission>
+                    <shiro:hasPermission name="/internal/supplier/delSupplier">
                     <a href="javascript:delSupplier('${supplier.uuid}')">删除</a>
+                    </shiro:hasPermission>
                 </td>
             </tr>
         </c:forEach>
