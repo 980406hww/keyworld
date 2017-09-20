@@ -12,6 +12,8 @@ import com.keymanager.monitoring.service.TSNegativeKeywordService;
 import com.keymanager.monitoring.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +46,7 @@ public class ComplaintsRestController extends SpringMVCBaseController {
     @Autowired
     private UserService userService;
 
+    @RequiresPermissions("/internal/complaints/save")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public ResponseEntity<?> saveTSMainKeywords(@RequestBody TSMainKeyword tsMainKeyword){
         try {
@@ -54,23 +57,29 @@ public class ComplaintsRestController extends SpringMVCBaseController {
         }
     }
 
+    @RequiresPermissions("/internal/complaints/findTSMainKeywords")
     @RequestMapping(value = "/findTSMainKeywords", method = RequestMethod.GET)
-    public ModelAndView findTSMainKeywords(@RequestParam(defaultValue = "1") int currentPage,@RequestParam(defaultValue="15") int displaysRecords,
+    public ModelAndView findTSMainKeywords(@RequestParam(defaultValue = "1",name = "currentPage") int currentPage,@RequestParam(defaultValue="50",name = "displaysRecords") int pageSize,
                                            @RequestParam(defaultValue="") String keyword,@RequestParam(defaultValue="") String  group){
-        return findTSMainKeywordsAndReturnView(currentPage,displaysRecords,keyword,group);
+        return findTSMainKeywordsAndReturnView(currentPage,pageSize,keyword,group);
     }
 
+    @RequiresPermissions("/internal/complaints/findTSMainKeywords")
     @RequestMapping(value = "/findTSMainKeywords", method = RequestMethod.POST)
     public ModelAndView findTSMainKeywords(HttpServletRequest httpServletRequest){
         String keyword = httpServletRequest.getParameter("itemKeyword");
         String group = httpServletRequest.getParameter("itemGroup");
-        int currentPage  = Integer.parseInt(httpServletRequest.getParameter("currentPageHidden"));
-        int displaysRecords = Integer.parseInt(httpServletRequest.getParameter("displaysRecordsHidden"));
-        return findTSMainKeywordsAndReturnView(currentPage,displaysRecords,keyword,group);
+        String currentPage  = httpServletRequest.getParameter("currentPageHidden");
+        String pageSize = httpServletRequest.getParameter("displaysRecordsHidden");
+        if (null == currentPage && null == pageSize) {
+            currentPage = "1";
+            pageSize = "50";
+        }
+        return findTSMainKeywordsAndReturnView(Integer.parseInt(currentPage),Integer.parseInt(pageSize),keyword,group);
     }
 
-    private ModelAndView findTSMainKeywordsAndReturnView(int currentPage,int displaysRecords,String keyword,String  group){
-        Page<TSMainKeyword> page = new Page<TSMainKeyword>(currentPage, displaysRecords);
+    private ModelAndView findTSMainKeywordsAndReturnView(int currentPage,int pageSize,String keyword,String  group){
+        Page<TSMainKeyword> page = new Page<TSMainKeyword>(currentPage, pageSize);
         page.getCondition().put("keyword",keyword);
         page.getCondition().put("group",group);
         page = tsMainKeywordService.searchTSMainKeywords(page, keyword, group);
@@ -84,11 +93,13 @@ public class ComplaintsRestController extends SpringMVCBaseController {
         return new ResponseEntity<Object>(tsMainKeywordService.getTSMainKeyword(uuid), HttpStatus.OK);
     }
 
+    @RequiresPermissions("/internal/complaints/delete")
     @RequestMapping(value ="/delete/{uuid}", method = RequestMethod.GET)
     public ResponseEntity<?> deleteTSMainKeyword(@PathVariable("uuid") Long uuid){
         return new ResponseEntity<Object>(tsMainKeywordService.deleteOne(uuid), HttpStatus.OK);
     }
 
+    @RequiresPermissions("/internal/complaints/deleteTSMainKeywords")
     @RequestMapping(value = "/deleteTSMainKeywords", method = RequestMethod.POST)
     public ResponseEntity<?> deleteTSMainKeywords(@RequestBody Map<String, Object> requestMap){
         List<String> uuids = (List<String>) requestMap.get("uuids");

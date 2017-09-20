@@ -7,6 +7,7 @@ import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.QZSetting;
 import com.keymanager.monitoring.service.*;
 import com.keymanager.util.Constants;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
 	@Autowired
 	private CustomerService customerService;
 
+	@RequiresPermissions("/internal/qzsetting/updateImmediately")
 	@RequestMapping(value = "/updateImmediately", method = RequestMethod.POST)
 	public ResponseEntity<?> updateImmediately(@RequestBody Map<String, Object> requestMap) throws Exception{
 		String uuids = (String) requestMap.get("uuids");
@@ -48,6 +50,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		return new ResponseEntity<Object>(returnValue, HttpStatus.OK);
 	}
 
+	@RequiresPermissions("/internal/qzsetting/save")
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public ResponseEntity<?> saveQZSetting(@RequestBody QZSetting qzSetting){
 		try {
@@ -59,6 +62,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		}
 	}
 
+	@RequiresPermissions("/internal/qzsetting/delete")
 	@RequestMapping(value ="/delete/{uuid}", method = RequestMethod.GET)
 	public ResponseEntity<?> deleteQZSetting(@PathVariable("uuid") Long uuid){
 		try {
@@ -70,6 +74,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		}
 	}
 
+	@RequiresPermissions("/internal/qzsetting/deleteQZSettings")
 	@RequestMapping(value = "/deleteQZSettings", method = RequestMethod.POST)
 	public ResponseEntity<?> deleteQZSettings(@RequestBody Map<String, Object> requestMap){
 		try {
@@ -87,11 +92,13 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		return new ResponseEntity<Object>(qzSettingService.getQZSetting(uuid), HttpStatus.OK);
 	}
 
+	@RequiresPermissions("/internal/qzsetting/searchQZSettings")
 	@RequestMapping(value = "/searchQZSettings", method = RequestMethod.GET)
 	public ModelAndView searchQZSettingsGet(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request) {
 		return constructQZSettingModelAndView(new QZSettingSearchCriteria(), currentPageNumber, pageSize);
 	}
 
+	@RequiresPermissions("/internal/qzsetting/searchQZSettings")
 	@RequestMapping(value = "/searchQZSettings", method = RequestMethod.POST)
 	public ModelAndView searchQZSettingsPost(HttpServletRequest request, QZSettingSearchCriteria qzSettingSearchCriteria) {
 		String currentPageNumber = request.getParameter("currentPageNumber");

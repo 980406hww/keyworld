@@ -164,16 +164,27 @@
             var a = document.getElementsByName("customerUuid");
             if (self.checked) {
                 for (var i = 0; i < a.length; i++) {
-                    if (a[i].type == "checkbox") {
                         a[i].checked = true;
-                    }
                 }
             } else {
                 for (var i = 0; i < a.length; i++) {
-                    if (a[i].type == "checkbox") {
                         a[i].checked = false;
-                    }
                 }
+            }
+        }
+
+        function decideSelectAll() {
+            var a = document.getElementsByName("customerUuid");
+            var select=0;
+            for(var i = 0; i < a.length; i++){
+                if (a[i].checked == true){
+                    select++;
+                }
+            }
+            if(select == a.length){
+                $("#selectAllChecked").prop("checked",true);
+            }else {
+                $("#selectAllChecked").prop("checked",false);
             }
         }
 
@@ -915,7 +926,7 @@
 //            alert(JSON.stringify(customerKeywords));
 
             $.ajax({
-                url: '/internal/customerkeyword/saveCustomerKeywords',
+                url: '/internal/customerKeyword/saveCustomerKeywords',
                 data: JSON.stringify(customerKeywords),
                 headers: {
                     'Accept': 'application/json',
@@ -1089,7 +1100,7 @@
     </table>
     <table style="font-size:12px; width: 100%;" id="headerTable">
         <tr bgcolor="#eeeeee">
-            <td align="left" width=10><input type="checkbox" onclick="selectAll(this)"/></td>
+            <td align="left" width=10><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
             <td align="center" width=80>用户名称</td>
             <td align="center" width=80>联系人</td>
             <td align="center" width=60>词数</td>
@@ -1109,7 +1120,7 @@
     <table style="font-size:12px; width: 100%;" id="showCustomerTable">
         <c:forEach items="${page.records}" var="customer">
             <tr onmouseover="doOver(this);" onmouseout="doOut(this);" height=30>
-                <td><input type="checkbox" name="customerUuid" value="${customer.uuid}"/></td>
+                <td><input type="checkbox" name="customerUuid" value="${customer.uuid}" onclick="decideSelectAll()"/></td>
                     <%--  <c:if test="${user.vipType}">--%>
                 <td>${user.userID}</td>
                     <%--  </c:if>--%>
@@ -1143,8 +1154,9 @@
                     <shiro:hasPermission name="/internal/customerChar/saveCustomerChargeTypegeType">
                         <a href="javascript:changeCustomerChargeType('${customer.uuid}')">客户规则</a> |
                     </shiro:hasPermission>
-
+                    <shiro:hasPermission name="/internal/customerKeyword/saveCustomerKeywords">
                     <a href="javascript:showCustomerKeywordDialog(${customer.uuid})">快速加词</a> |
+                    </shiro:hasPermission>
                     <shiro:hasPermission name="/internal/customer/uploadDailyReportTemplate">
                         <a target="_blank" href="javascript:uploadDailyReportTemplate('${customer.uuid}', this)">上传日报表模板</a>
                     </shiro:hasPermission>

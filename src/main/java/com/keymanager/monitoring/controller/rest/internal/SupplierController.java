@@ -9,6 +9,7 @@ import com.keymanager.monitoring.entity.SupplierServiceType;
 import com.keymanager.monitoring.service.SupplierService;
 import com.keymanager.monitoring.service.SupplierServiceTypeService;
 import org.apache.ibatis.annotations.Param;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,17 +37,19 @@ public class SupplierController {
     @Autowired
     private SupplierServiceTypeService supplierServiceTypeService;
 
+    @RequiresPermissions("/internal/supplier/searchSuppliers")
     @RequestMapping(value = "/searchSuppliers", method = RequestMethod.GET)
     public ModelAndView searchSuppliers(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize,
                                         HttpServletRequest request) {
         return constructCustomerModelAndView(request,new SupplierCriteria(),currentPageNumber, pageSize);
     }
 
+    @RequiresPermissions("/internal/supplier/searchSuppliers")
     @RequestMapping(value = "/searchSuppliers", method = RequestMethod.POST)
     public ModelAndView searchSuppliersPost(HttpServletRequest request , SupplierCriteria supplierCriteria) {
         String currentPageNumber = request.getParameter("currentPageNumber");
         String pageSize = request.getParameter("pageSize");
-        if (null == currentPageNumber && null == currentPageNumber) {
+        if (null == currentPageNumber && null == pageSize) {
             currentPageNumber = "1";
             pageSize = "50";
         }
@@ -63,6 +66,7 @@ public class SupplierController {
         return modelAndView;
     }
 
+    @RequiresPermissions("/internal/supplier/delSupplier")
     @RequestMapping(value = "/delSupplier/{uuid}", method = RequestMethod.GET)
     public ResponseEntity<?> delSupplier(@PathVariable("uuid") Long uuid) {
         try {
@@ -74,6 +78,7 @@ public class SupplierController {
         }
     }
 
+    @RequiresPermissions("/internal/supplier/deleteSuppliers")
     @RequestMapping(value = "/deleteSuppliers" , method = RequestMethod.POST)
     public ResponseEntity<?> deleteSuppliers(@RequestBody Map<String, Object> requestMap){
         try {
@@ -90,6 +95,7 @@ public class SupplierController {
         return new ResponseEntity<Object>(supplierService.getSupplier(uuid), HttpStatus.OK);
     }
 
+    @RequiresPermissions("/internal/supplier/saveSupplier")
     @RequestMapping(value = "/saveSupplier", method = RequestMethod.POST)
     public ResponseEntity<?> saveSupplier(@RequestBody Supplier supplier) {
         try {
