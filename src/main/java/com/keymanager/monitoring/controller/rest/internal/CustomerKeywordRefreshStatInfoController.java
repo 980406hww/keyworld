@@ -45,7 +45,7 @@ public class CustomerKeywordRefreshStatInfoController {
 
     private ModelAndView constructNegativeListModelAndView(HttpServletRequest request, CustomerKeywordRefreshStatInfoCriteria refreshStatInfoCriteria) {
         ModelAndView modelAndView = new ModelAndView("/refresh/list");
-        String entryType = (String) request.getSession().getAttribute("entry");
+        String entryType = (String) request.getSession().getAttribute("entryType");
         refreshStatInfoCriteria.setEntryType(entryType);
         String terminalType = TerminalTypeMapping.getTerminalType(request);
         refreshStatInfoCriteria.setTerminalType(terminalType);
