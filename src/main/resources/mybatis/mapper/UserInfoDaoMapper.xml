@@ -2,7 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.monitoring.dao.UserInfoDao">
 
-
     <!-- 通用查询结果列-->
     <sql id="colID">
         u.fUuid AS 'uuid',
@@ -98,4 +97,10 @@
         FROM t_userinfo u
     </select>
 
+    <select id="getUuidByLoginName" parameterType="java.lang.String" resultType="java.lang.Long">
+        SELECT
+        fUuid AS "uuid"
+        FROM t_userinfo
+        WHERE fLoginName = #{loginName}
+    </select>
 </mapper>
