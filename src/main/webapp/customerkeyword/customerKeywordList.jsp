@@ -190,7 +190,7 @@
                     success: function (result) {
                         if (result) {
                             $().toastmessage('showSuccessToast', "删除成功",true);
-                           /* window.location.reload();*/
+                           
                         } else {
                             $().toastmessage('showErrorToast', "删除失败");
                         }
@@ -236,7 +236,7 @@
                     success: function (data) {
                         if (data) {
                             $().toastmessage('showSuccessToast', "操作成功",true);
-                           /* window.location.reload();*/
+                           
                         } else {
                             $().toastmessage('showErrorToast', "操作失败");
                         }
@@ -293,7 +293,7 @@
                     success: function (status) {
                         if (status) {
                             $().toastmessage('showSuccessToast', "操作成功",true);
-                           /* window.location.reload();*/
+                           
                         } else {
                             $().toastmessage('showErrorToast', "操作失败");
                         }
@@ -420,15 +420,15 @@
                     success: function (result) {
                         if (result) {
                             $().toastmessage('showSuccessToast', "操作成功",true);
-                           /* window.location.reload();*/
+                           
                         } else {
                             $().toastmessage('showErrorToast', "操作失败",true);
-                           /* window.location.reload();*/
+                           
                         }
                     },
                     error: function () {
                         $().toastmessage('showErrorToast', "操作失败",true);
-                       /* window.location.reload();*/
+                       
                     },
                 });
             }
@@ -555,7 +555,7 @@
                     success: function (result) {
                         if (result) {
                             $().toastmessage('showSuccessToast', "操作成功",true);
-                           /* window.location.reload();*/
+                           
                         } else {
                             $().toastmessage('showErrorToast', "操作失败");
                         }

@@ -106,7 +106,6 @@
 				{
 					if(localSettings.isReload)
                     {
-                       /* localSettings.stayTime=1000;*/
                         $().toastmessage('removeToast', toastItemInner, localSettings);
                         window.location.reload();
                     }
