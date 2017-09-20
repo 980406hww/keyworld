@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.SupplierDao">
+    <sql id="colID">
+        s.fUuid AS `uuid`,
+        s.fSupplierName AS `supplierName`,
+        s.fContactPerson AS `contactPerson`,
+        s.fPhone AS `phone`,
+        s.fQq AS `qq`,
+        s.fWeChat AS `weChat`,
+        s.fAddress  AS `address`,
+        s.fUrl AS `url`,
+        s.fEmail AS `email`,
+        s.fRemark AS `remark`,
+        s.fUpdateTime AS `updateTime`,
+        s.fCreateTime AS `createTime`
+    </sql>
+
+    <select id="searchSupplier" resultType="com.keymanager.monitoring.entity.Supplier">
+        SELECT
+        <include refid="colID"/>
+        FROM t_supplier s
+        WHERE 1 = 1
+        <if test="supplierCriteria.contactPerson != null and supplierCriteria.contactPerson != ''">AND s.fContactperson like '%${supplierCriteria.contactPerson}%'</if>
+        <if test="supplierCriteria.qq != null and supplierCriteria.qq != ''">AND s.fQq like '${supplierCriteria.qq}%'</if>
+        <if test="supplierCriteria.phone != null and supplierCriteria.phone != '' ">AND s.fPhone like '%${supplierCriteria.phone}%'</if>
+        order by s.fUuid DESC
+    </select>
+
+</mapper>
