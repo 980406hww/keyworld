@@ -137,27 +137,16 @@
                 var a = document.getElementsByName("uuid");
                 if (self.checked) {
                     for (var i = 0; i < a.length; i++) {
+                        if (a[i].type == "checkbox") {
                             a[i].checked = true;
+                        }
                     }
                 } else {
                     for (var i = 0; i < a.length; i++) {
+                        if (a[i].type == "checkbox") {
                             a[i].checked = false;
+                        }
                     }
-                }
-            }
-
-            function decideSelectAll() {
-                var a = document.getElementsByName("uuid");
-                var select=0;
-                for(var i = 0; i < a.length; i++){
-                    if (a[i].checked == true){
-                        select++;
-                    }
-                }
-                if(select == a.length){
-                    $("#selectAllChecked").prop("checked",true);
-                }else {
-                    $("#selectAllChecked").prop("checked",false);
                 }
             }
 
@@ -485,11 +474,21 @@
                             $().toastmessage('showSuccessToast', "操作成功",true);
                            
                         } else {
+<<<<<<< HEAD
                             $().toastmessage('showErrorToast', "操作失败",true);
+                           
                         }
                     },
                     error: function () {
                         $().toastmessage('showErrorToast', "操作失败",true);
+                       
+=======
+                            $().toastmessage('showErrorToast', "操作失败");
+                        }
+                    },
+                    error: function () {
+                        $().toastmessage('showErrorToast', "操作失败");
+>>>>>>> 9abab3071b4cf2694bfe1848886d27a205e150f3
                     },
                 });
             }
@@ -943,7 +942,7 @@
     <%--</c:if>--%>
     <table style="font-size:12px; width: 100%;" id="headerTable">
         <tr bgcolor="#eeeeee" height=30>
-            <td align="center" width=10><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
+            <td align="center" width=10><input type="checkbox" onclick="selectAll(this)"/></td>
             <td align="center" width=100>关键字</td>
             <td align="center" width=200>URL</td>
             <td align="center" width=250>标题</td>
@@ -977,13 +976,20 @@
     <table id="customerKeywordTable">
         <c:forEach items="${page.records}" var="customerKeyword">
             <tr style="" height=30 onmouseover="doOver(this);" onmouseout="doOut(this);" ondblclick="modifyCustomerKeyword('${customerKeyword.uuid}')" height=30>
-                <td  align="center" width=10><input type="checkbox" name="uuid" value="${customerKeyword.uuid}" onclick="decideSelectAll()"/></td>
+                <td  align="center" width=10><input type="checkbox" name="uuid" value="${customerKeyword.uuid}"/></td>
                 <td align="center" width=100>
                     <font color="<%--<%=keywordColor%>--%>">${customerKeyword.keyword}</font>
                 </td>
+<<<<<<< HEAD
+                <td  align="center" width=200 class="wrap"
+                    <%-- onMouseMove="showTip('原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}')"
+                     onMouseOut="closeTip()"--%>>
+                    <div style="height:16;" class="easyui-tooltip" title="'原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}'">
+=======
                 <td  align="center" width=200 class="wrap floatTd"
                      title="原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}">
-                    <div style="height:16;" class="easyui-tooltip" title="'原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}'">
+                    <div style="height:16;">
+>>>>>>> 9abab3071b4cf2694bfe1848886d27a205e150f3
                             ${customerKeyword.url==null?'':customerKeyword.url};
                     </div>
                 </td>

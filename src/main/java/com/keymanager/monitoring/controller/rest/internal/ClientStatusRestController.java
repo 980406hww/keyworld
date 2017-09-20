@@ -10,6 +10,8 @@ import com.keymanager.util.Constants;
 import com.keymanager.util.TerminalTypeMapping;
 import com.keymanager.value.ClientStatusGroupSummaryVO;
 import com.keymanager.value.ClientStatusSummaryVO;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,7 @@ public class ClientStatusRestController extends SpringMVCBaseController {
     @Autowired
     private ClientStatusService clientStatusService;
 
+    @RequiresPermissions("/internal/clientstatus/changeTerminalType")
     @RequestMapping(value = "/changeTerminalType", method = RequestMethod.POST)
     public ResponseEntity<?> changeTerminalType(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) throws Exception {
         String terminalType = TerminalTypeMapping.getTerminalType(request);
@@ -46,11 +49,13 @@ public class ClientStatusRestController extends SpringMVCBaseController {
         }
     }
 
+    @RequiresPermissions("/internal/clientstatus/searchClientStatuses")
     @RequestMapping(value = "/searchClientStatuses", method = RequestMethod.GET)
     public ModelAndView searchClientStatuses(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request) {
         return constructClientStatusModelAndView(request, new ClientStatusCriteria(), currentPageNumber, pageSize, true);
     }
 
+    @RequiresPermissions("/internal/clientstatus/searchClientStatuses")
     @RequestMapping(value = "/searchClientStatuses", method = RequestMethod.POST)
     public ModelAndView searchClientStatusesPost(HttpServletRequest request, ClientStatusCriteria clientStatusCriteria) {
         try {
@@ -67,6 +72,7 @@ public class ClientStatusRestController extends SpringMVCBaseController {
         }
     }
 
+    @RequiresPermissions("/internal/clientstatus/searchBadClientStatus")
     @RequestMapping(value = "/searchBadClientStatus", method = RequestMethod.POST)
     public ModelAndView searchBadClientStatus(HttpServletRequest request, ClientStatusCriteria clientStatusCriteria) {
         try {
@@ -93,6 +99,7 @@ public class ClientStatusRestController extends SpringMVCBaseController {
         return modelAndView;
     }
 
+    @RequiresPermissions("/internal/clientstatus/updateClientStatusTargetVersion")
     @RequestMapping(value = "/updateClientStatusTargetVersion", method = RequestMethod.POST)
     public ResponseEntity<?> updateClientStatusTargetVersion(@RequestBody Map<String, Object> requestMap) {
         try {
@@ -106,6 +113,7 @@ public class ClientStatusRestController extends SpringMVCBaseController {
         }
     }
 
+    @RequiresPermissions("/internal/clientstatus/updateClientStatusRenewalDate")
     @RequestMapping(value = "/updateClientStatusRenewalDate", method = RequestMethod.POST)
     public ResponseEntity<?> updateClientStatusRenewalDate(@RequestBody Map<String, Object> requestMap) {
         try {
@@ -120,10 +128,11 @@ public class ClientStatusRestController extends SpringMVCBaseController {
         }
     }
 
-    @RequestMapping(value = "/addClientStatus", method = RequestMethod.POST)
-    public ResponseEntity<?> addClientStatus(@RequestBody ClientStatus clientStatus) {
+    @RequiresPermissions("/internal/clientstatus/saveClientStatus")
+    @RequestMapping(value = "/saveClientStatus", method = RequestMethod.POST)
+    public ResponseEntity<?> saveClientStatus(@RequestBody ClientStatus clientStatus) {
         try {
-            clientStatusService.addClientStatus(clientStatus);
+            clientStatusService.saveClientStatus(clientStatus);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -131,6 +140,7 @@ public class ClientStatusRestController extends SpringMVCBaseController {
         }
     }
 
+    @RequiresPermissions("/internal/clientstatus/updateGroup")
     @RequestMapping(value = "/updateGroup", method = RequestMethod.POST)
     public ResponseEntity<?> updateGroup(@RequestBody Map<String, Object> requestMap) {
         try {
@@ -144,6 +154,7 @@ public class ClientStatusRestController extends SpringMVCBaseController {
         }
     }
 
+    @RequiresPermissions("/internal/clientstatus/updateOperationType")
     @RequestMapping(value = "/updateOperationType", method = RequestMethod.POST)
     public ResponseEntity<?> updateOperationType(@RequestBody Map<String, Object> requestMap) {
         try {
@@ -157,6 +168,7 @@ public class ClientStatusRestController extends SpringMVCBaseController {
         }
     }
 
+    @RequiresPermissions("/internal/clientstatus/updateUpgradeFailedReason")
     @RequestMapping(value = "/updateUpgradeFailedReason", method = RequestMethod.POST)
     public ResponseEntity<?> updateUpgradeFailedReason(@RequestBody Map<String, Object> requestMap) {
         try {
@@ -182,6 +194,7 @@ public class ClientStatusRestController extends SpringMVCBaseController {
         }
     }
 
+    @RequiresPermissions("/internal/clientstatus/deleteClientStatus")
     @RequestMapping(value = "/deleteClientStatus/{clientID}", method = RequestMethod.POST)
     public ResponseEntity<?> deleteClientStatus(@PathVariable("clientID") String clientID) {
         try {
@@ -193,6 +206,7 @@ public class ClientStatusRestController extends SpringMVCBaseController {
         }
     }
 
+    @RequiresPermissions("/internal/clientstatus/deleteClientStatuses")
     @RequestMapping(value = "/deleteClientStatuses", method = RequestMethod.POST)
     public ResponseEntity<?> deleteClientStatuses(@RequestBody Map<String, Object> requestMap) {
         try {
@@ -205,6 +219,7 @@ public class ClientStatusRestController extends SpringMVCBaseController {
         }
     }
 
+    @RequiresPermissions("/internal/clientstatus/resetRestartStatusForProcessing")
     @RequestMapping(value = "/resetRestartStatusForProcessing", method = RequestMethod.POST)
     public ResponseEntity<?> resetRestartStatusForProcessing() {
         try {
@@ -216,6 +231,7 @@ public class ClientStatusRestController extends SpringMVCBaseController {
         }
     }
 
+    @RequiresPermissions("/internal/clientstatus/changeStatus")
     @RequestMapping(value = "/changeStatus/{clientID}", method = RequestMethod.POST)
     public ResponseEntity<?> changeStatus(@PathVariable("clientID") String clientID) {
         try {
@@ -227,6 +243,7 @@ public class ClientStatusRestController extends SpringMVCBaseController {
         }
     }
 
+    @RequiresPermissions("/internal/clientstatus/uploadVNCFile")
     @RequestMapping(value = "/uploadVNCFile", method = RequestMethod.POST)
     public boolean uploadVNCFile(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request) {
         try {
@@ -239,6 +256,7 @@ public class ClientStatusRestController extends SpringMVCBaseController {
         return false;
     }
 
+    @RequiresPermissions("/internal/clientstatus/downloadVNCFile")
     @RequestMapping(value = "/downloadVNCFile", method = RequestMethod.POST)
     public void downloadVNCFile(HttpServletRequest request, HttpServletResponse response) {
         try {
@@ -250,6 +268,7 @@ public class ClientStatusRestController extends SpringMVCBaseController {
 
     }
 
+    @RequiresPermissions("/internal/clientstatus/downloadFullVNCFile")
     @RequestMapping(value = "/downloadFullVNCFile", method = RequestMethod.POST)
     public void downloadFullVNCFile(HttpServletRequest request, HttpServletResponse response) {
         try {
@@ -260,6 +279,7 @@ public class ClientStatusRestController extends SpringMVCBaseController {
         }
     }
 
+    @RequiresPermissions("/internal/clientstatus/clientStatusStat")
     @RequestMapping(value = "/clientStatusStat", method = {RequestMethod.GET, RequestMethod.POST})
     public ModelAndView clientStatusStat(String clientIDPrefix, String city, HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView("client/clientStatusStat");
@@ -283,6 +303,7 @@ public class ClientStatusRestController extends SpringMVCBaseController {
         return modelAndView;
     }
 
+    @RequiresPermissions("/internal/clientstatus/clientStatusGroupStat")
     @RequestMapping(value = "/clientStatusGroupStat", method = {RequestMethod.POST, RequestMethod.GET})
     public ModelAndView clientStatusGroupStat(String group, String terminalType, HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView("client/clientStatusGroupStat");

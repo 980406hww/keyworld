@@ -39,4 +39,8 @@ public class SysLogController {
         sysLogService.selectDataGrid(pageInfo);
         return pageInfo;
     }
+    @GetMapping("/icons")
+    public String toIcons() {
+        return "/views/icons";
+    }
 }

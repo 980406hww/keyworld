@@ -4,6 +4,7 @@ import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria
 import com.keymanager.monitoring.service.CustomerKeywordRefreshStatInfoService;
 import com.keymanager.monitoring.vo.CustomerKeywordRefreshStatInfoVO;
 import com.keymanager.util.TerminalTypeMapping;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +28,14 @@ public class CustomerKeywordRefreshStatInfoController {
     @Autowired
     private CustomerKeywordRefreshStatInfoService customerKeywordRefreshStatInfoService;
 
+    @RequiresPermissions("/internal/refreshstatinfo/searchRefreshStatInfos")
     @RequestMapping(value = "/searchRefreshStatInfos", method = RequestMethod.GET)
     public ModelAndView searchRefreshStatInfos(HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView("/refresh/list");
         return modelAndView;
     }
 
+    @RequiresPermissions("/internal/refreshstatinfo/searchRefreshStatInfos")
     @RequestMapping(value = "/searchRefreshStatInfos", method = RequestMethod.POST)
     public ModelAndView searchRefreshStatInfosPost(HttpServletRequest request, CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria) {
         try {
@@ -45,7 +48,7 @@ public class CustomerKeywordRefreshStatInfoController {
 
     private ModelAndView constructNegativeListModelAndView(HttpServletRequest request, CustomerKeywordRefreshStatInfoCriteria refreshStatInfoCriteria) {
         ModelAndView modelAndView = new ModelAndView("/refresh/list");
-        String entryType = (String) request.getSession().getAttribute("entry");
+        String entryType = (String) request.getSession().getAttribute("entryType");
         refreshStatInfoCriteria.setEntryType(entryType);
         String terminalType = TerminalTypeMapping.getTerminalType(request);
         refreshStatInfoCriteria.setTerminalType(terminalType);

@@ -1,4 +1,4 @@
-package com.keymanager.monitoring.controller;
+package com.keymanager.monitoring.controller.web;
 
 import com.keymanager.monitoring.common.base.BaseController;
 import com.keymanager.monitoring.common.csrf.CsrfToken;
@@ -6,12 +6,12 @@ import com.keymanager.monitoring.common.result.Tree;
 import com.keymanager.monitoring.common.shiro.captcha.DreamCaptcha;
 import com.keymanager.monitoring.common.utils.StringUtils;
 import com.keymanager.monitoring.service.IResourceService;
+import com.keymanager.monitoring.vo.ExtendedUsernamePasswordToken;
 import com.keymanager.util.TerminalTypeMapping;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.DisabledAccountException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
-import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -102,12 +102,15 @@ public class LoginController extends BaseController {
 		Subject user = SecurityUtils.getSubject();
 		List<Tree> menus = resourceService.selectAuthorizationMenu(username);
 //		List<Tree> menus = resourceService.selectAllMenu();
-		request.getSession().setAttribute("entry",entryType);
-		request.getSession().setAttribute("terminalType", TerminalTypeMapping.getTerminalType(request));
+		request.getSession().setAttribute("entryType",entryType);
+		String terminalType = TerminalTypeMapping.getTerminalType(request);
+		request.getSession().setAttribute("terminalType", terminalType);
 		request.getSession().setAttribute("username",username);
 		request.getSession().setAttribute("password",password);
 		request.getSession().setAttribute("menus",menus);
-		UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+		ExtendedUsernamePasswordToken token = new ExtendedUsernamePasswordToken(username, password);
+		token.setEntryType(entryType);
+		token.setTerminalType(terminalType);
 		// 设置记住密码
 		token.setRememberMe(1 == rememberMe);
 		try {
