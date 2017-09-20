@@ -309,6 +309,7 @@
 				<a href="javascript:delItem('${clientStatus.clientID}')">删除</a>
 				</shiro:hasPermission>
 				</br>
+				<shiro:hasPermission name="/internal/clientstatus/changeStatus">
 				<c:choose>
 					<c:when test="${clientStatus.valid}">
 						<a href="javascript:changeStatus('${clientStatus.clientID}',false)">暂停监控</a>
@@ -317,8 +318,11 @@
 						<a href="javascript:changeStatus('${clientStatus.clientID}',true)">开始监控</a>
 					</c:otherwise>
 				</c:choose>
+				</shiro:hasPermission>
 				&nbsp;
+				<shiro:hasPermission name="/internal/clientstatus/changeTerminalType">
 				<a href="javascript:changeTerminalType('${clientStatus.clientID}')">变更终端类型</a>
+				</shiro:hasPermission>
 			</td>
 			</tr>
 		</c:forEach>
