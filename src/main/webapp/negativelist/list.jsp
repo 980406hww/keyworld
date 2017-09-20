@@ -255,7 +255,7 @@
             negativeListObj.desc = $("#negativeListForm").find("#desc").val();
             negativeListObj.position = $("#negativeListForm").find("#position").val();
             $.ajax({
-                url: '/internal/negativelist/addNegativeList/',
+                url: '/internal/negativelist/saveNegativeList',
                 data: JSON.stringify(negativeListObj),
                 headers: {
                     'Accept': 'application/json',
@@ -327,7 +327,12 @@
 	<table width="100%" style="font-size:12px;margin-top: 40px;" cellpadding="3" id="">
 	  <tr>
 		 <td colspan="8" align="right">
-			<a href="javascript:showNegativeListDialog(null)">增加关键字负面清单</a> | <a href="javascript:deleteNegatives()">删除所选数据</a>
+			<shiro:hasPermission name="/internal/negativelist/saveNegativeList">
+			 <a href="javascript:showNegativeListDialog(null)">增加关键字负面清单</a> |
+			</shiro:hasPermission>
+			<shiro:hasPermission name="/internal/negativelist/deleteNegativeLists">
+			 <a href="javascript:deleteNegatives()">删除所选数据</a>
+			</shiro:hasPermission>
 		 </td>
 	  </tr>
 	  <tr>
@@ -341,7 +346,9 @@
 						<input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
 						<td align="right">关键字:</td> <td><input type="text" name="keyword" id="keyword" value="${negativeListCriteria.keyword}" style="width:200px;"></td>
 						<td align="right">URL:</td> <td><input type="text" name="url" id="url" value="${negativeListCriteria.url}" style="width:200px;"></td>
+						<shiro:hasPermission name="/internal/negativelist/searchNegativeLists">
 						<td align="right" width="100"><input type="submit" name="btnQuery" id="btnQuery" onclick="resetPageNumber()" value=" 查询 " ></td>
+						</shiro:hasPermission>
 					</tr>
 				 </table>
 			</form>
@@ -381,8 +388,12 @@
 			  <td width="50">${negativeList.position}</td>
 			  <td width="80"><fmt:formatDate value="${negativeList.createTime}" pattern="yyyy-MM-dd"/></td>
 			  <td align="center" width="80">
-				  <a href="javascript:editNegativeList(${negativeList.uuid})">修改</a> |
-				  <a href="javascript:deleteNegativeList('${negativeList.uuid}')">删除</a>
+				  <shiro:hasPermission name="/internal/negativelist/saveNegativeList">
+				  	<a href="javascript:editNegativeList(${negativeList.uuid})">修改</a> |
+				  </shiro:hasPermission>
+				  <shiro:hasPermission name="/internal/negativelist/deleteNegativeList">
+				  	<a href="javascript:deleteNegativeList('${negativeList.uuid}')">删除</a>
+				  </shiro:hasPermission>
 			  </td>
 		  </tr>
 	  </c:forEach>

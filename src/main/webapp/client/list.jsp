@@ -40,7 +40,6 @@
 }
 
 #renewalSettingDialog {
-	display: none;
 	margin: 5px 0px 0px 5px;
 }
 
@@ -183,7 +182,7 @@
 						</tr>
 					</table>
 				</form>
-		<%--	</td>
+			<%--</td>
 		</tr>
 	</table>--%>
 	<table  width=100% style="font-size: 12px" id="headerTable">
@@ -239,7 +238,7 @@
 					<tr onmouseover="doOver(this);" onmouseout="doOut(this);">
 				</c:otherwise>
 			</c:choose>
-			<td width=10><input type="checkbox" name="clientID" value="${clientStatus.clientID}"/></td>
+			<td align="center" width=10><input type="checkbox" name="clientID" value="${clientStatus.clientID}"/></td>
 			<td width=40>
 				<font color="${keywordColor}">${clientStatus.clientID}</font>
 				<c:if test="${!isValidClient}">
@@ -357,7 +356,6 @@
             $("#changeSettingDialog").dialog("close");
             $("#targetVersionSettingDialog").dialog("close");
             $("#renewalSettingDialog").dialog("close");
-            renewalSettingDialog
             $("#clientStatusDiv").css("margin-top",$("#topDiv").height());
             alignTableHeader();
             window.onresize = function(){
@@ -447,8 +445,8 @@
                             contentType: false,
                             success: function (result) {
                                 if (result) {
-                                    $().toastmessage('showSuccessToast', "上传成功");
-                                    window.location.reload();
+                                    $().toastmessage('showSuccessToast', "上传成功",true);
+                                    /* window.location.reload();*/
                                 } else {
                                     $().toastmessage('showErrorToast', "上传失败");
                                 }
@@ -516,8 +514,8 @@
                 type: 'POST',
                 success: function (result) {
                     if (result) {
-                        $().toastmessage('showSuccessToast', "操作成功");
-                        window.location.reload();
+                        $().toastmessage('showSuccessToast', "操作成功",true);
+                        /* window.location.reload();*/
                     } else {
                         $().toastmessage('showErrorToast', "操作失败");
                     }
@@ -548,8 +546,8 @@
                 type: 'POST',
                 success: function (result) {
                     if (result) {
-                        $().toastmessage('showSuccessToast', "操作成功");
-                        window.location.reload();
+                        $().toastmessage('showSuccessToast', "操作成功",true);
+                        /* window.location.reload();*/
                     } else {
                         $().toastmessage('showErrorToast', "操作失败");
                     }
@@ -579,8 +577,8 @@
 				type: 'POST',
 				success: function (result) {
 					if(result){
-                        $().toastmessage('showSuccessToast', "更新成功");
-						window.location.reload();
+                        $().toastmessage('showSuccessToast', "更新成功",true);
+						/* window.location.reload();*/
 					}else{
                         $().toastmessage('showErrorToast', "更新失败");
 					}
@@ -605,8 +603,8 @@
                 type: 'POST',
                 success: function (result) {
                     if (result) {
-                        $().toastmessage('showSuccessToast', "操作成功");
-                        window.location.reload();
+                        $().toastmessage('showSuccessToast', "操作成功",true);
+                        /* window.location.reload();*/
                     } else {
                         $().toastmessage('showErrorToast', "操作失败");
                     }
@@ -618,6 +616,7 @@
 
 		}
 
+		<shiro:hasPermission name="/internal/clientstatus/updateGroup">
 		function updateGroup(self){
 		    var clientStatus = {};
             clientStatus.clientID = self.id;
@@ -633,8 +632,8 @@
                 type: 'POST',
                 success: function (result) {
                     if(result){
-                        $().toastmessage('showSuccessToast', "更新成功");
-                        window.location.reload();
+                        $().toastmessage('showSuccessToast', "更新成功",true);
+                        /* window.location.reload();*/
                     }else{
                         $().toastmessage('showErrorToast', "更新失败");
                     }
@@ -644,6 +643,7 @@
                 }
             });
 		}
+		</shiro:hasPermission>
 
 		function changeTerminalType(clientID){
 			var postData = {};
@@ -659,8 +659,8 @@
 				type: 'POST',
 				success: function (result) {
 					if(result){
-                        $().toastmessage('showSuccessToast', "更新成功");
-						window.location.reload();
+                        $().toastmessage('showSuccessToast', "更新成功",true);
+						/* window.location.reload();*/
 					}else{
                         $().toastmessage('showErrorToast', "更新失败");
 					}
@@ -671,6 +671,7 @@
 			});
 		}
 
+		<shiro:hasPermission name="/internal/clientstatus/updateUpgradeFailedReason">
 		function updateUpgradeFailedReason(self){
 		    var clientStatus = {};
             clientStatus.clientID = self.id;
@@ -686,8 +687,8 @@
                 type: 'POST',
                 success: function (result) {
                     if(result){
-                        $().toastmessage('showSuccessToast', "更新成功");
-                        window.location.reload();
+                        $().toastmessage('showSuccessToast', "更新成功",true);
+                        /* window.location.reload();*/
                     }else{
                         $().toastmessage('showErrorToast', "更新失败");
                     }
@@ -697,6 +698,9 @@
                 }
             });
 		}
+		</shiro:hasPermission>
+
+		<shiro:hasPermission name="/internal/clientstatus/updateOperationType">
 		function updateOperationType(self){
 		    var clientStatus = {};
             clientStatus.clientID = self.id.replace("operationType", "");
@@ -712,8 +716,8 @@
                 type: 'POST',
                 success: function (result) {
                     if(result){
-                        $().toastmessage('showSuccessToast', "更新成功");
-                        window.location.reload();
+                        $().toastmessage('showSuccessToast', "更新成功",true);
+                        /* window.location.reload();*/
                     }else{
                         $().toastmessage('showErrorToast', "更新失败");
                     }
@@ -723,6 +727,8 @@
                 }
             });
 		}
+		</shiro:hasPermission>
+
 		function showSettingDialog(clientID, self){
 		    $.ajax({
 		        url: '/internal/clientstatus/getClientStatus/' + clientID,
@@ -908,8 +914,8 @@
                 type: 'POST',
 		        success: function (result) {
 		        	if(result){
-                        $().toastmessage('showSuccessToast', "更新成功");
-                        window.location.reload();
+                        $().toastmessage('showSuccessToast', "更新成功",true);
+                        /* window.location.reload();*/
                     }else{
                         $().toastmessage('showErrorToast', "更新失败");
 		        	}
@@ -972,8 +978,8 @@
 		        type: 'POST',
 		        success: function (result) {
 		        	if(result){
-                        $().toastmessage('showSuccessToast', "更新成功");
-                        window.location.reload();
+                        $().toastmessage('showSuccessToast', "更新成功",true);
+                        /* window.location.reload();*/
                     }else{
                         $().toastmessage('showErrorToast', "更新失败");
 		        	}
@@ -1042,8 +1048,8 @@
 				type: 'POST',
 				success: function (result) {
 					if(result){
-                        $().toastmessage('showSuccessToast', "更新成功");
-                        window.location.reload();
+                        $().toastmessage('showSuccessToast', "更新成功",true);
+                        /* window.location.reload();*/
                     }else{
                         $().toastmessage('showErrorToast', "更新失败");
 					}

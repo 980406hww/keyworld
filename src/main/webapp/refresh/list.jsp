@@ -21,17 +21,22 @@
             }
         }
 
+		<shiro:hasPermission name="/internal/clientstatus/searchBadClientStatus">
         function findClientStatus(groupName) {
 			$("#searchClientStatusForm").find("#groupName").val(groupName);
             $("#searchClientStatusForm").submit();
 		}
-		
+		</shiro:hasPermission>
+
+		<shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
 		function findKeyword(optimizeGroupName, invalidRefreshCount) {
             $("#searchCustomerKeywordForm").find("#optimizeGroupName").val(optimizeGroupName);
             $("#searchCustomerKeywordForm").find("#invalidRefreshCount").val(invalidRefreshCount);
             $("#searchCustomerKeywordForm").submit();
         }
+		</shiro:hasPermission>
 
+		<shiro:hasPermission name="/internal/customerKeyword/resetInvalidRefreshCount">
         function resetInvaidRefreshCount(groupName, customerName, self){
             var customerKeyword = {};
             customerKeyword.customerName = customerName;
@@ -57,6 +62,7 @@
                 }
             });
         }
+		</shiro:hasPermission>
 	</script>
 </head>
 <body>
@@ -75,9 +81,11 @@
       	  	 	<form method="post" id="searchRefreshStatInfoForm" action="/internal/refreshstatinfo/searchRefreshStatInfos">
       	  	 		<table style="font-size:12px;">
 	      	  	 		<tr>
-			          	  <td align="right">分组名称:<input name="groupName" id="groupName" type="text" style="width:200px;" value="${refreshStatInfoCriteria.groupName}"></td>
-			          	  <td align="right">客户名称:<input name="customerName" id="customerName" type="text" style="width:200px;" value="${refreshStatInfoCriteria.customerName}"></td>
-			          	  <td align="right"><input type="submit" name="btnQuery" id="btnQuery" value=" 查询 "></td>
+			          	    <td align="right">分组名称:<input name="groupName" id="groupName" type="text" style="width:200px;" value="${refreshStatInfoCriteria.groupName}"></td>
+			          	    <td align="right">客户名称:<input name="customerName" id="customerName" type="text" style="width:200px;" value="${refreshStatInfoCriteria.customerName}"></td>
+							<shiro:hasPermission name="/internal/refreshstatinfo/searchRefreshStatInfos">
+								<td align="right"><input type="submit" name="btnQuery" id="btnQuery" value=" 查询 "></td>
+							</shiro:hasPermission>
 			          	</tr>
 			        </table>
 	      	  	 	<table style="font-size:12px;">

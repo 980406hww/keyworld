@@ -4,6 +4,7 @@ import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.entity.CustomerChargeType;
 import com.keymanager.monitoring.service.CustomerChargeTypeService;
 import com.sun.media.jfxmedia.logging.Logger;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ public class CustomerChargeTypeRestController extends SpringMVCBaseController {
     @Autowired
     private CustomerChargeTypeService customerChargeTypeService;
 
+    @RequiresPermissions("/internal/customerChargeType/saveCustomerChargeType")
     @RequestMapping(value = "/saveCustomerChargeType" , method = RequestMethod.POST)
     public ResponseEntity<?> saveCustomerChargeType(@RequestBody CustomerChargeType customerChargeType){
        try{

@@ -43,7 +43,7 @@ public class NegativeListService extends ServiceImpl<NegativeListDao, NegativeLi
         }
     }
 
-    public void addNegativeList(NegativeList negativeList) {
+    public void saveNegativeList(NegativeList negativeList) {
         if (null != negativeList.getUuid()) {
             updateNegativeList(negativeList);
         } else {

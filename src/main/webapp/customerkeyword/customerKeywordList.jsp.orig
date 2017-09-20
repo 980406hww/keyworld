@@ -474,11 +474,21 @@
                             $().toastmessage('showSuccessToast', "操作成功",true);
                            
                         } else {
+<<<<<<< HEAD
                             $().toastmessage('showErrorToast', "操作失败",true);
+                           
                         }
                     },
                     error: function () {
                         $().toastmessage('showErrorToast', "操作失败",true);
+                       
+=======
+                            $().toastmessage('showErrorToast', "操作失败");
+                        }
+                    },
+                    error: function () {
+                        $().toastmessage('showErrorToast', "操作失败");
+>>>>>>> 9abab3071b4cf2694bfe1848886d27a205e150f3
                     },
                 });
             }
@@ -970,9 +980,16 @@
                 <td align="center" width=100>
                     <font color="<%--<%=keywordColor%>--%>">${customerKeyword.keyword}</font>
                 </td>
+<<<<<<< HEAD
+                <td  align="center" width=200 class="wrap"
+                    <%-- onMouseMove="showTip('原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}')"
+                     onMouseOut="closeTip()"--%>>
+                    <div style="height:16;" class="easyui-tooltip" title="'原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}'">
+=======
                 <td  align="center" width=200 class="wrap floatTd"
                      title="原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}">
-                    <div style="height:16;" class="easyui-tooltip" title="'原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}'">
+                    <div style="height:16;">
+>>>>>>> 9abab3071b4cf2694bfe1848886d27a205e150f3
                             ${customerKeyword.url==null?'':customerKeyword.url};
                     </div>
                 </td>
