@@ -203,9 +203,7 @@
                 },
                 success: function (status) {
                     if (status) {
-
                         $().toastmessage('showSuccessToast', "更新成功",true);
-
                     } else {
                        /* showInfo("更新失败", self);*/
                         $().toastmessage('showErrorToast', "更新失败");
@@ -489,7 +487,6 @@
                     success: function (result) {
                         if (result) {
                             $().toastmessage('showSuccessToast', "操作成功",true);
-
                         } else {
                             $().toastmessage('showErrorToast', "操作失败");
                         }
@@ -863,7 +860,7 @@
                         text: '取消',
                         iconCls: 'icon-cancel',
                         handler: function () {
-                            ("#customerKeywordDialog").dialog("close");
+                            $("#customerKeywordDialog").dialog("close");
                             $('#customerKeywordForm')[0].reset();
                         }
                     }]
@@ -936,17 +933,17 @@
                 type: 'POST',
                 success: function (result) {
                     if (result) {
-
                         $().toastmessage('showSuccessToast', "添加成功");
                     } else {
-
                         $().toastmessage('showErrorToast', "添加失败");
+
                     }
                 },
                 error: function () {
                     $().toastmessage('showErrorToast', "添加失败");
                 }
             });
+            $("#customerKeywordDialog").dialog("close");
         }
 
         function delCustomer(uuid) {
@@ -956,6 +953,7 @@
                 type: 'Get',
                 success: function (result) {
                     if (result) {
+
                         $().toastmessage('showSuccessToast', "删除成功",true);
 
                     } else {
