@@ -44,7 +44,6 @@
             }
         });
         $("#userEditSex").val('${user.sex}');
-        $("#userEditUserType").val('${user.userType}');
         $("#userEditStatus").val('${user.status}');
     });
 </script>
@@ -69,13 +68,6 @@
                     <td><select id="userEditSex" name="sex" class="easyui-combobox" data-options="width:140,height:29,editable:false,panelHeight:'auto'">
                             <option value="0">男</option>
                             <option value="1">女</option>
-                    </select></td>
-                </tr>
-                <tr>
-                    <td>用户类型</td>
-                    <td><select id="userEditUserType" name="userType" class="easyui-combobox" data-options="width:140,height:29,editable:false,panelHeight:'auto'">
-                            <option value="0">管理员</option>
-                            <option value="1">用户</option>
                     </select></td>
                 </tr>
                 <tr>
