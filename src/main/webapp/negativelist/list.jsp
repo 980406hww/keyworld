@@ -1,6 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<%@ include file="/commons/basejs.jsp" %>
+<%@ include file="/commons/global.jsp" %>
 <html>
 <head>
 	<title>关键字负面清单</title>
@@ -21,27 +21,39 @@
 			height: 22px;
 		}
 
-		#showNegativeListDiv {
-			overflow: scroll;
+		#topDiv {
+			position: fixed;
+			top: 0px;
+			left: 0px;
+			background-color: white;
 			width: 100%;
-			height: 95%;
-			margin: auto;
 		}
 
-		#negativeListBottomDiv {
+		#negativeListBottomDiv{
+			position: fixed;
+			bottom: 0px;
+			right: 0px;
+			background-color: white;
+			padding-top: 10px;
+			padding-bottom: 10px;
 			width: 100%;
-			float: right;
-			width: 580px;
 		}
+		#showNegativeBottomDiv {
+			float: right;
+			margin-right: 20px;
+		}
+
 	</style>
-	<link href="/css/menu.css" rel="stylesheet" type="text/css" />
-	<link href="/ui/jquery-ui.css" rel="stylesheet" type="text/css" />
-	<script language="javascript" type="text/javascript" src="/js/My97DatePicker/WdatePicker.js"></script>
-	<script language="javascript" type="text/javascript" src="/js/jquery142.js"></script>
-	<script language="javascript" type="text/javascript" src="/ui/jquery-ui.js"></script>
-	<script language="javascript" type="text/javascript" src="/js/slide1.12.4.js"></script>
+	<script language="javascript" type="text/javascript" src="/toastmessage/jquery.toastmessage.js"></script>
+	<link rel="stylesheet" href="/toastmessage/css/jquery.toastmessage.css">
 	<script language="javascript">
         $(function () {
+            $("#negativeListDialog").dialog("close");
+            $("#showNegativeListDiv").css("margin-top",$("#topDiv").height());
+            alignTableHeader();
+            window.onresize = function(){
+                alignTableHeader();
+            }
             var negativeListBottomDiv = $('#negativeListBottomDiv');
             var pageSize = negativeListBottomDiv.find('#pageSizeHidden').val();
             negativeListBottomDiv.find('#chooseRecords').val(pageSize);
@@ -60,14 +72,20 @@
                 negativeListBottomDiv.find("#nextButton").attr("disabled", "disabled");
                 negativeListBottomDiv.find("#lastButton").attr("disabled", "disabled");
             } else if (parseInt(currentPage) <= 1) {
-				negativeListBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
-				negativeListBottomDiv.find("#upButton").attr("disabled", "disabled");
-			} else {
-				negativeListBottomDiv.find("#nextButton").attr("disabled", "disabled");
-				negativeListBottomDiv.find("#lastButton").attr("disabled", "disabled");
-			}
+                negativeListBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
+                negativeListBottomDiv.find("#upButton").attr("disabled", "disabled");
+            } else {
+                negativeListBottomDiv.find("#nextButton").attr("disabled", "disabled");
+                negativeListBottomDiv.find("#lastButton").attr("disabled", "disabled");
+            }
         });
-
+        function alignTableHeader(){
+            var td = $("#showNegativeListTable tr:first td");
+            var ctd = $("#headerTable tr:first td");
+            $.each(td, function (idx, val) {
+                ctd.eq(idx).width($(val).width());
+            });
+        }
         function changePaging(currentPageNumber, pageSize) {
             var searchNegativeListForm = $("#searchNegativeListForm");
             searchNegativeListForm.find("#totalHidden").val();
@@ -95,11 +113,13 @@
                         negativeListForm.find("#position").val(negativeList.position);
                         showNegativeListDialog(negativeList.uuid);
                     } else {
-                        showInfo("获取信息成功", self);
+                        /*showInfo("获取信息成功", self);*/
+                        $().toastmessage('showSuccessToast', "获取信息成功");
                     }
                 },
                 error: function () {
-                    showInfo("获取信息失败", self);
+                    /*showInfo("获取信息失败", self);*/
+                    $().toastmessage('showErrorToast', "获取信息失败");
                 }
             });
         }
@@ -167,14 +187,17 @@
                 type: 'POST',
                 success: function (result) {
                     if (result) {
-                        showInfo("操作成功", self);
+                        /*showInfo("操作成功", self);*/
+                        $().toastmessage('showSuccessToast', "操作成功");
                         window.location.reload();
                     } else {
-                        showInfo("操作失败", self);
+                        /*showInfo("操作失败", self);*/
+                        $().toastmessage('showErrorToast', "操作失败");
                     }
                 },
                 error: function () {
-                    showInfo("操作失败", self);
+                    /*showInfo("操作失败", self);*/
+                    $().toastmessage('showErrorToast', "操作失败");
                 }
             });
         }
@@ -199,14 +222,15 @@
                 type: 'POST',
                 success: function (data) {
                     if (data) {
-                        showInfo("操作成功", self);
+                        $().toastmessage('showSuccessToast', "操作成功");
                         window.location.reload();
                     } else {
-                        showInfo("操作失败", self);
+                        $().toastmessage('showErrorToast', "操作失败");
                     }
                 },
                 error: function () {
-                    showInfo("操作失败", self);
+                    /*showInfo("操作失败", self);*/
+                    $().toastmessage('showErrorToast', "操作失败");
                 }
             });
         }
@@ -221,7 +245,7 @@
             });
             return uuids;
         }
-        
+
         function saveNegativeList(uuid) {
             var negativeListObj = {};
             negativeListObj.uuid = uuid;
@@ -241,18 +265,21 @@
                 type: 'POST',
                 success: function (result) {
                     if (result) {
-                        showInfo("操作成功", self);
+                        /*showInfo("操作成功", self);*/
+                        $().toastmessage('showSuccessToast', "操作成功");
                         window.location.reload();
                     } else {
-                        showInfo("操作失败", self);
+                        /*showInfo("操作失败", self);*/
+                        $().toastmessage('showErrorToast', "操作失败");
                     }
                 },
                 error: function () {
-                    showInfo("操作失败", self);
+                    /*showInfo("操作失败", self);*/
+                    $().toastmessage('showErrorToast', "操作失败");
                 }
             });
 
-		}
+        }
 
         function showNegativeListDialog(uuid) {
             if (uuid == null) {
@@ -264,36 +291,40 @@
                 height: 365,
                 modal: true,
                 title: '负面信息',
-                position: { using:function(pos){
-                    var topOffset = $(this).css(pos).offset().top;
-                    if (topOffset = 0||topOffset>0) {
-                        $(this).css('top', 150);
-                    }
-                }},
-                buttons: {
-                    "保存": function () {
+				closed:true,
+                buttons: [{
+                    text: '保存',
+                    iconCls: 'icon-ok',
+                    handler: function () {
                         saveNegativeList(uuid);
-                    },
-                    "清空": function () {
-                        $('#negativeListForm')[0].reset();
-                    },
-                    "取消": function () {
-                        $(this).dialog("close");
-                        $('#negativeListForm')[0].reset();
                     }
-                }
-            });
+                },
+                    {
+                        text: '清空',
+                        iconCls: 'fi-trash',
+                        handler: function () {
+                            $('#negativeListForm')[0].reset();
+                        }
+                    },
+                    {
+                        text: '取消',
+                        iconCls: 'icon-cancel',
+                        handler: function () {
+                            $('#negativeListDialog').dialog("close");
+                            $('#negativeListForm')[0].reset();
+                        }
+                    }]
+           	 });
+            $('#negativeListDialog').dialog("open");
+            $('#negativeListDialog').window("resize",{top:$(document).scrollTop() + 100});
         }
 	</script>
 </head>
 <body>
-<div id="showNegativeListDiv">
-	<table width="100%" style="font-size:12px;" cellpadding="3">
-	  <tr>
-		<td colspan="8" align="left">
-			<%@include file="/menu.jsp" %>
-		</td>
-	  </tr>
+
+<div id="topDiv">
+	<%@include file="/menu.jsp" %>
+	<table width="100%" style="font-size:12px;margin-top: 40px;" cellpadding="3" id="">
 	  <tr>
 		 <td colspan="8" align="right">
 			<a href="javascript:showNegativeListDialog(null)">增加关键字负面清单</a> | <a href="javascript:deleteNegatives()">删除所选数据</a>
@@ -316,37 +347,51 @@
 			</form>
 		 </td>
 	  </tr>
+	</table>
+	<table id="headerTable" width="100%">
 	  <tr bgcolor="#eeeeee" height=30>
-		  <td align="center" width=10><input type="checkbox" onclick="selectAll(this)" /></td>
-		  <td align="center" width=100>关键字</td>
-		  <td align="center" width=100>URL</td>
-		  <td align="center" width=200>标题</td>
-		  <td align="center" width=300>描述</td>
-		  <td align="center" width=50>排名</td>
-		  <td align="center" width=100>采集日期</td>
-		  <td align="center" width=100>操作</td>
-		  <div id="div1"></div>
+		  <td align="center" ><input type="checkbox" onclick="selectAll(this)" /></td>
+		  <td align="center" >关键字</td>
+		  <td align="center" >标题</td>
+		  <td align="center" >URL</td>
+		  <td align="center" >描述</td>
+		  <td align="center" >排名</td>
+		  <td align="center" >采集日期</td>
+		  <td align="center" >操作</td>
 		  <div id="div2"></div>
 	  </tr>
-	  <c:forEach items="${page.records}" var="negativeList">
-		  <tr onmouseover="doOver(this);" onmouseout="doOut(this);" height=30>
+	</table>
+</div>
+<div id="showNegativeListDiv">
+	<table id="showNegativeListTable"  width="100%">
+	  <c:forEach items="${page.records}" var="negativeList" varStatus="trIndex">
+		  <c:choose>
+			  <c:when test="${trIndex.count % 2 != 0}">
+				  <tr onmouseover="doOver(this);" onmouseout="doOut(this);" height=30 style="background-color: #eeeeee;">
+			  </c:when>
+			  <c:otherwise>
+				  <tr onmouseover="doOver(this);" onmouseout="doOut(this);" height=30>
+			  </c:otherwise>
+		  </c:choose>
 			  <td><input type="checkbox" name="uuid" value="${negativeList.uuid}"/></td>
 			  <td>${negativeList.keyword}</td>
 			  <td>${negativeList.title} </td>
 			  <td>${negativeList.url}</td>
 			  <td>${negativeList.desc}</td>
-			  <td>${negativeList.position}</td>
-			  <td><fmt:formatDate value="${negativeList.createTime}" pattern="yyyy-MM-dd"/></td>
-			  <td align="center">
+			  <td width="50">${negativeList.position}</td>
+			  <td width="80"><fmt:formatDate value="${negativeList.createTime}" pattern="yyyy-MM-dd"/></td>
+			  <td align="center" width="80">
 				  <a href="javascript:editNegativeList(${negativeList.uuid})">修改</a> |
 				  <a href="javascript:deleteNegativeList('${negativeList.uuid}')">删除</a>
 			  </td>
 		  </tr>
 	  </c:forEach>
+
 	</table>
 </div>
 	<hr>
-	<div id="negativeListBottomDiv" align="right">
+<div id="negativeListBottomDiv" align="right">
+	<div id="showNegativeBottomDiv">
 	  <input id="fisrtButton" type="button" onclick="changePaging(1,'${page.size}')" value="首页"/>
 	  &nbsp;&nbsp;&nbsp;&nbsp;
 	  <input id="upButton" type="button" onclick="changePaging('${page.current-1}','${page.size}')" value="上一页"/>
@@ -368,8 +413,9 @@
 	  <input type="hidden" id="pageSizeHidden" value="${page.size}"/>
 	  <input type="hidden" id="pageCountHidden" value="${page.pages}"/>
 	</div>
+</div>
 
-	<div id="negativeListDialog" style="display: none;">
+	<div id="negativeListDialog" class="easyui-dialog">
 		<form id="negativeListForm" style="margin-bottom: 0px;" method="post" action="list.jsp">
 			<table style="font-size:14px;" cellpadding="5">
 				<tr>

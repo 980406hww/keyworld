@@ -128,8 +128,6 @@
         {
             var options = {text : message, type : 'success',isReload:isReload};
             options.stayTime=1000;
-
-            },2000);
             return $().toastmessage('showToast', options);
         },
 
@@ -137,7 +135,6 @@
         {
             var options = {text : message, type : 'error',isReload:isReload};
             options.stayTime=1000;
-            },1000);
             return $().toastmessage('showToast', options);
         },
 
