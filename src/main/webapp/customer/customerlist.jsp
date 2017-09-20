@@ -6,13 +6,11 @@
     <script language="javascript" type="text/javascript" src="/toastmessage/jquery.toastmessage.js"></script>
     <link rel="stylesheet" href="/toastmessage/css/jquery.toastmessage.css">
     <script language="javascript" type="text/javascript" src="/common.js"></script>
-
     <style type="text/css">
         .wrap {
             word-break: break-all;
             word-wrap: break-word;
         }
-
         #topDiv {
             position: fixed;
             top: 0px;
@@ -24,7 +22,6 @@
             width: 100%;
             margin: auto;
         }
-
         #showCustomerTable tr:nth-child(odd){background:#EEEEEE;}
 
         #showCustomerTable td{
@@ -60,6 +57,7 @@
             margin: 0;
             padding: 0;
         }
+        h6{ margin: 0 5px;}
     </style>
     <script type="text/javascript">
         $(function () {
@@ -209,35 +207,6 @@
             });
         }
 
-        function searchCurrentDateCompletedReports() {
-            var span = $("#dailyReportSpan");
-            $.ajax({
-                url: '/internal/dailyReport/searchCurrentDateCompletedReports',
-                type: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                success: function (dailyReports) {
-                    var htmlContent = "";
-                    if (dailyReports) {
-                        $.each(dailyReports, function (idx, val) {
-                            var date = new Date(val.completeTime);
-                            htmlContent = htmlContent + '  <a href="' + val.reportPath + '">下载(' + ((date.getHours() < 10) ? '0'
-                                    + date.getHours() : date.getHours()) + ':' + ((date.getMinutes() < 10) ? '0' + date.getMinutes()
-                                    : date.getMinutes()) + ')</a>';
-                        });
-                    } else {
-                        htmlContent = "今天没报表";
-                    }
-                    span.html(htmlContent);
-                },
-                error: function () {
-                    span.html("获取报表清单异常");
-                }
-            });
-        }
-
         function showInfo(content, e) {
             e = e || window.event;
             var div1 = document.getElementById('div2'); //将要弹出的层
@@ -341,7 +310,7 @@
             $("#customerChargeTypeDialog").dialog({
                 resizable: false,
                 width: 500,
-                height: 400,
+                height:350,
                 modal: true,
                 closed: true,
                 //按钮
@@ -363,7 +332,7 @@
                         text: '取消',
                         iconCls: 'icon-cancel',
                         handler: function () {
-                            $(this).dialog("close");
+                            $("#customerChargeTypeDialog").dialog("close");
                             $('#showRuleForm')[0].reset();
                         }
                     }]
@@ -735,7 +704,7 @@
                         text: '取消',
                         iconCls: 'icon-cancel',
                         handler: function () {
-                            $(this).dialog("close");
+                            $("#uploadDailyReportTemplateDialog").dialog("close");
                             $('#dailyReportTemplateForm')[0].reset();
                         }
                     }]
@@ -773,7 +742,7 @@
                         text: '取消',
                         iconCls: 'icon-cancel',
                         handler: function () {
-                            $(this).dialog("close");
+                            $("#customerDialog").dialog("close");
                             $('#customerForm')[0].reset();
                         }
                     }]
@@ -883,7 +852,7 @@
                         text: '取消',
                         iconCls: 'icon-cancel',
                         handler: function () {
-                            (this).dialog("close");
+                            ("#customerKeywordDialog").dialog("close");
                             $('#customerKeywordForm')[0].reset();
                         }
                     }]
@@ -1022,9 +991,40 @@
         }
 
         <c:if test="${'bc'.equalsIgnoreCase(entryType)}">
-        var intervalId = setInterval(function () {
-            searchCurrentDateCompletedReports();
-        }, 1000 * 30);
+        <shiro:hasPermission name="/internal/dailyReport/triggerReportGeneration">
+            function searchCurrentDateCompletedReports() {
+                var span = $("#dailyReportSpan");
+                $.ajax({
+                    url: '/internal/dailyReport/searchCurrentDateCompletedReports',
+                    type: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    success: function (dailyReports) {
+                        var htmlContent = "";
+                        if (dailyReports) {
+                            $.each(dailyReports, function (idx, val) {
+                                var date = new Date(val.completeTime);
+                                htmlContent = htmlContent + '  <a href="' + val.reportPath + '">下载(' + ((date.getHours() < 10) ? '0'
+                                    + date.getHours() : date.getHours()) + ':' + ((date.getMinutes() < 10) ? '0' + date.getMinutes()
+                                    : date.getMinutes()) + ')</a>';
+                            });
+                        } else {
+                            htmlContent = "今天没报表";
+                        }
+                        span.html(htmlContent);
+                    },
+                    error: function () {
+                        span.html("获取报表清单异常");
+                    }
+                });
+            }
+
+            var intervalId = setInterval(function () {
+                searchCurrentDateCompletedReports();
+            }, 1000 * 30);
+        </shiro:hasPermission>
         </c:if>
     </script>
     <title>客户管理</title>
@@ -1050,28 +1050,36 @@
                             <td><input type="text" name="telphone" id="telphone" value="${customerCriteria.telphone}"
                                        style="width:200px;">
                             </td>
-                            <td align="right" width="100">
+                            <td align="right" width="60">
                                 <input type="hidden" name="currentPageNumber" id="currentPageNumberHidden"
                                        value="${page.current}"/>
                                 <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
                                 <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
                                 <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
-                                <input type="submit" class="ui-button ui-widget ui-corner-all"
-                                       onclick="resetPageNumber()"
-                                       name="btnQuery" id="btnQuery" value=" 查询 ">
+                                <shiro:hasPermission name="/internal/customer/searchCustomers">
+                                    <input type="submit" class="ui-button ui-widget ui-corner-all"
+                                           onclick="resetPageNumber()"
+                                           name="btnQuery" id="btnQuery" value=" 查询 ">
+                                </shiro:hasPermission>
                             </td>
-                            <td align="right" width="100"><input type="button" class="ui-button ui-widget ui-corner-all"
-                                                                 value=" 添加客户 "
-                                                                 onclick="showCustomerDialog(null,'${user.userID}')"/>
-                            </td>
-                            <td align="right" width="100"><input type="button" class="ui-button ui-widget ui-corner-all"
-                                                                 value=" 删除所选" onclick="deleteCustomers(this)"/>
-                            </td>
-                            <c:if test="${'bc'.equalsIgnoreCase(entryType)}">
-                                <td align="right" width="100"><a target="_blank"
-                                                                 href='javascript:triggerDailyReportGeneration(this)'>触发日报表生成</a>
+                            <shiro:hasPermission name="/internal/customer/saveCustomer">
+                                <td align="right" width="100"><input type="button" class="ui-button ui-widget ui-corner-all"
+                                                                     value=" 添加 "
+                                                                     onclick="showCustomerDialog(null,'${user.userID}')"/>
                                 </td>
-                                <td><span id="dailyReportSpan"></span></td>
+                            </shiro:hasPermission>
+                            <shiro:hasPermission name="/internal/customer/deleteCustomer">
+                                <td align="right" width="100"><input type="button" class="ui-button ui-widget ui-corner-all"
+                                                                     value=" 删除所选" onclick="deleteCustomers(this)"/>
+                                </td>
+                            </shiro:hasPermission>
+                            <c:if test="${'bc'.equalsIgnoreCase(entryType)}">
+                                <shiro:hasPermission name="/internal/dailyReport/triggerReportGeneration">
+                                    <td align="right" width="100"><a target="_blank"
+                                                                     href='javascript:triggerDailyReportGeneration(this)'>触发日报表生成</a>
+                                    </td>
+                                    <td><span id="dailyReportSpan"></span></td>
+                                </shiro:hasPermission>
                             </c:if>
                         </tr>
                     </table>
@@ -1109,7 +1117,7 @@
                     <a href="/internal/customerKeyword/searchCustomerKeywords/${customer.uuid}">${customer.contactPerson}</a>
                 </td>
                 <td>${customer.keywordCount}</td>
-                <td>${customer.qq}dsgdfh</td>
+                <td>${customer.qq}</td>
                 <td>${customer.telphone} </td>
                 <td align="right">${customer.paidFee} </td>
                 <td>${customer.remark}</td>
@@ -1126,11 +1134,20 @@
                 </td>
                 <td><fmt:formatDate value="${customer.createTime}" pattern="yyyy-MM-dd"/></td>
                 <td>
-                    <a href="javascript:modifyCustomer(${customer.uuid})">修改</a> |
-                    <a href="javascript:delCustomer('${customer.uuid}')">删除</a> |
-                    <a href="javascript:changeCustomerChargeType('${customer.uuid}')">客户规则</a> |
+                    <shiro:hasPermission name="/internal/customer/saveCustomer">
+                        <a href="javascript:modifyCustomer(${customer.uuid})">修改</a> |
+                    </shiro:hasPermission>
+                    <shiro:hasPermission name="/internal/customer/delCustomer">
+                        <a href="javascript:delCustomer('${customer.uuid}')">删除</a> |
+                    </shiro:hasPermission>
+                    <shiro:hasPermission name="/internal/customerChar/saveCustomerChargeTypegeType">
+                        <a href="javascript:changeCustomerChargeType('${customer.uuid}')">客户规则</a> |
+                    </shiro:hasPermission>
+
                     <a href="javascript:showCustomerKeywordDialog(${customer.uuid})">快速加词</a> |
-                    <a target="_blank" href="javascript:uploadDailyReportTemplate('${customer.uuid}', this)">上传日报表模板</a>
+                    <shiro:hasPermission name="/internal/customer/uploadDailyReportTemplate">
+                        <a target="_blank" href="javascript:uploadDailyReportTemplate('${customer.uuid}', this)">上传日报表模板</a>
+                    </shiro:hasPermission>
                 </td>
             </tr>
         </c:forEach>
@@ -1149,7 +1166,7 @@
     <hr>
     <form id="showRuleForm">
         <div id="chargeTypeCalculationDiv" style="float: left;width: 100%;">
-            <div id="pcOperationTypeDiv" style="float: left;width: 50%;">
+            <div id="pcOperationTypeDiv" style="float: left;width: 48%; margin-left: 10px">
                 <input id="PC" type="checkbox" name="operationType"
                        style="width: 13px;height: 13px; margin-left: 130px"
                        onchange="controlChargeTypeCalculationDiv(this)"/>电脑<br>

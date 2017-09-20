@@ -119,12 +119,17 @@
         showSuccessToast : function (message)
         {
             var options = {text : message, type : 'success'};
+            setTimeout(function () {
+
+            },2000);
             return $().toastmessage('showToast', options);
         },
 
         showErrorToast : function (message)
         {
             var options = {text : message, type : 'error'};
+            setTimeout(function () {
+            },1000);
             return $().toastmessage('showToast', options);
         },
 

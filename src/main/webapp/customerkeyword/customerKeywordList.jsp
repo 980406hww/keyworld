@@ -1,26 +1,18 @@
-
+<%@ include file="/commons/basejs.jsp" %>
+<%@ include file="/commons/global.jsp" %>
 <html>
-<%
-    String path = request.getContextPath();
-    String basePath =
-            request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-                    + path + "/";
-%>
 <head>
-    <%@ include file="/commons/basejs.jsp" %>
-    <%@ include file="/commons/global.jsp" %>
     <script language="javascript" type="text/javascript" src="/toastmessage/jquery.toastmessage.js"></script>
+    <script language="javascript" type="text/javascript" src="/js/jquery.poshytip.js"></script>
     <link rel="stylesheet" href="/toastmessage/css/jquery.toastmessage.css">
     <script language="javascript" type="text/javascript" src="/common.js"></script>
     <head>
         <title>关键字列表</title>
         <style>
-
             .wrap {
                 word-break: break-all;
                 word-wrap: break-word;
             }
-
             <!--
             #div1 {
                 display: none;
@@ -86,6 +78,17 @@
                 padding: 0;
             }
 
+            .tip-yellow {
+                z-index:1000;
+                text-align:left;
+                padding:7px;
+                font-size: 12px;
+                min-width:200px;
+                max-width:550px;
+                color:#8c3901;
+                background-color: #fff;
+            }
+
             #saveCustomerKeywordDialog ul{list-style: none;margin: 0px;padding: 0px;}
             #saveCustomerKeywordDialog li{margin: 5px 0;}
             #saveCustomerKeywordDialog .customerKeywordSpanClass{width: 70px;display: inline-block;text-align: right;}
@@ -99,6 +102,7 @@
                 $("#customerKeywordDiv").css("margin-top",$("#customerKeywordTopDiv").height());
                 initPaging();
                 initNoPositionChecked();//初始化排名为0的初始值
+                $(".floatTd").poshytip();
                 alignTableHeader();
                 window.onresize = function(){
                     alignTableHeader();
@@ -391,13 +395,52 @@
                             text: '取消',
                             iconCls: 'icon-cancel',
                             handler: function () {
-                                $(this).dialog("close");
+                                $("#groupChangeNameDialog").dialog("close");
                                 $('#groupNameChangeFrom')[0].reset();
                             }
                         }]
                 });
                 $("#groupChangeNameDialog").dialog("open");
                 $('#groupChangeNameDialog').window("resize",{top:$(document).scrollTop() + 100});
+            }
+
+            function updateCustomerKeywordStatus(status) {
+                var customerKeyword = {};
+                var customerKeywordUuids = getUuids();
+                if (customerKeywordUuids.trim() === '') {
+                    alert("请选中要操作的关键词！");
+                    return;
+                }
+
+                if(status == 0) {
+                    if (confirm("确认要暂停选中的关键字吗?") == false) return;
+                } else {
+                    if (confirm("确认要上线选中的关键字吗?") == false) return;
+                }
+                customerKeyword.uuids = customerKeywordUuids.split(",");
+                customerKeyword.status = status;
+
+                $.ajax({
+                    url: '/internal/customerKeyword/updateCustomerKeywordStatus',
+                    data: JSON.stringify(customerKeyword),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (status) {
+                        if (status) {
+                            $().toastmessage('showSuccessToast', "操作成功");
+                            window.location.reload();
+                        } else {
+                            $().toastmessage('showErrorToast', "操作失败");
+                        }
+                    },
+                    error: function () {
+                        $().toastmessage('showErrorToast', "操作失败");
+                    }
+                });
             }
 
             //下架
@@ -432,12 +475,10 @@
                             window.location.reload();
                         } else {
                             $().toastmessage('showErrorToast', "操作失败");
-                            window.location.reload();
                         }
                     },
                     error: function () {
                         $().toastmessage('showErrorToast', "操作失败");
-                        window.location.reload();
                     },
                 });
             }
@@ -452,7 +493,7 @@
                 }
                 $( "#saveCustomerKeywordDialog").dialog({
                     width: 440,
-                    height: 610,
+                    height: 540,
                     title : "添加关键字",
                     modal: true,
                     resizable: false,
@@ -475,7 +516,7 @@
                             text: '取消',
                             iconCls: 'icon-cancel',
                             handler: function () {
-                                $(this).dialog("close");
+                                $("#saveCustomerKeywordDialog").dialog("close");
                                 $('#customerKeywordForm')[0].reset();
                             }
                         }]
@@ -699,7 +740,7 @@
                             text: '取消',
                             iconCls: 'icon-cancel',
                             handler: function () {
-                                $(this).dialog("close");
+                                $("#uploadExcelDailog").dialog("close");
                                 $('#uploadExcelForm')[0].reset();
                             }
                         }]
@@ -780,24 +821,44 @@
                 </tr>
             </table>
 
-
-    <%--<c:if test="${!user.vipType}">--%>
     <div style="text-align: right">
+    <shiro:hasPermission name="/internal/customerKeyword/uploadCustomerKeywords">
         <a target="_blank" href="javascript:uploadCustomerKeywords('${customerKeywordCrilteria.customerUuid}', 'SuperUserSimple')"/>Excel上传(简化版)</a>
+    </shiro:hasPermission>
+    <shiro:hasPermission name="/SuperUserSimpleKeywordList.xls">
         | <a target="_blank" href="/SuperUserSimpleKeywordList.xls">简化版下载</a>
+    </shiro:hasPermission>
+    <shiro:hasPermission name="/internal/customerKeyword/uploadCustomerKeywords">
         | <a target="_blank" href="javascript:uploadCustomerKeywords('${customerKeywordCrilteria.customerUuid}', 'SuperUserFull')">Excel上传(完整版)</a>
+    </shiro:hasPermission>
+    <shiro:hasPermission name="/SuperUserFullKeywordList.xls">
         | <a target="_blank" href="/SuperUserFullKeywordList.xls">完整版下载</a>
+    </shiro:hasPermission>
+    <shiro:hasPermission name="/internal/customerKeyword/downloadSingleCustomerReport">
         | <a target="_blank" href="/internal/dailyReport/downloadSingleCustomerReport/${customerKeywordCrilteria.customerUuid}">导出日报表</a>
-        | <a target="_blank" href="javascript:downloadCustomerKeywordInfo()">导出结果</a>
+    </shiro:hasPermission>
+    <shiro:hasPermission name="/internal/customerKeyword/downloadCustomerKeywordInfo">
+        | <a target="_blank" href="javascript:downloadCustomerKeywordInfo()">导出结果</a>&nbsp;&nbsp;
+    </shiro:hasPermission>
         <br/><br/>
-        <a href="javascript:showGroupNameChangeDialog({'title': '修改客户关键字分组', 'customerUuid':'${customerKeywordCrilteria.customerUuid}'})">修改所有分组</a>|
-        <a href="javascript:updateSpecifiedCustomerKeywordGroupName(${customerKeywordCrilteria.customerUuid})">修改选中分组</a>|
+    <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupName">
+        <a href="javascript:showGroupNameChangeDialog({'title': '修改客户关键字分组', 'customerUuid':'${customerKeywordCrilteria.customerUuid}'})">修改所有分组</a> |
+        <a href="javascript:updateSpecifiedCustomerKeywordGroupName(${customerKeywordCrilteria.customerUuid})">修改选中分组</a> |
         <a href="javascript:stopOptimization(${customerKeywordCrilteria.customerUuid})">下架所有关键字</a>|
+    </shiro:hasPermission>
+    <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
+        <a href="javascript:updateCustomerKeywordStatus(0)">暂停选中关键字</a> |
+        <a href="javascript:updateCustomerKeywordStatus(1)">激活选中关键字</a> |
+    </shiro:hasPermission>
+    <shiro:hasPermission name="/internal/customerKeyword/deleteCustomerKeywords">
         <a href="javascript:delAllItems('EmptyTitleAndUrl','${customerKeywordCrilteria.customerUuid}')">删除标题和网址为空的关键字</a> |
         <a href="javascript:delAllItems('EmptyTitle','${customerKeywordCrilteria.customerUuid}')">删除标题为空的关键字</a> |
+    </shiro:hasPermission>
+    <shiro:hasPermission name="/internal/customerKeyword/cleanTitle">
         <a href="javascript:cleanTitle('${customerKeywordCrilteria.customerUuid}','CaptureTitleFlag')">重采标题</a> |
-        <a href="javascript:cleanTitle('${customerKeywordCrilteria.customerUuid}', 'SelectedCustomerKeywordTitle')">清空所选标题</a>|
-        <a href="javascript:cleanTitle('${customerKeywordCrilteria.customerUuid}', 'CustomerTitle')">清空客户标题</a>
+        <a href="javascript:cleanTitle('${customerKeywordCrilteria.customerUuid}', 'SelectedCustomerKeywordTitle')">清空所选标题</a> |
+        <a href="javascript:cleanTitle('${customerKeywordCrilteria.customerUuid}', 'CustomerTitle')">清空客户标题</a>&nbsp;&nbsp;
+    </shiro:hasPermission>
     </div>
     <br/>
     <form id="searchCustomerKeywordForm" style="font-size:12px; width: 100%;" action="/internal/customerKeyword/searchCustomerKeywords" method="post">
@@ -853,13 +914,19 @@
             </select>
             <%--</c:if>--%>
             &nbsp;&nbsp;
+            <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
             <input type="submit" class="ui-button ui-widget ui-corner-all" onclick="resetPageNumber()"
                    value=" 查询 ">&nbsp;&nbsp;
-            <input type="button" class="ui-button ui-widget ui-corner-all" onclick="addCustomerKeyword()"
-                   value=" 增加 ">&nbsp;&nbsp;
+            </shiro:hasPermission>
+            <shiro:hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
+                <input type="button" class="ui-button ui-widget ui-corner-all" onclick="addCustomerKeyword()"
+                       value=" 增加 ">&nbsp;&nbsp;
+            </shiro:hasPermission>
+            <shiro:hasPermission name="/internal/customerKeyword/deleteCustomerKeywords">
             <input type="button" class="ui-button ui-widget ui-corner-all"
                    onclick="delAllItems('ByUuid','${customerKeywordCrilteria.customerUuid}')"
                    value=" 删除所选 ">
+            </shiro:hasPermission>
         </div>
     </form>
     <%--</c:if>--%>
@@ -904,9 +971,8 @@
                 <td align="center" width=100>
                     <font color="<%--<%=keywordColor%>--%>">${customerKeyword.keyword}</font>
                 </td>
-                <td  align="center" width=200 class="wrap"
-                     onMouseMove="showTip('原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}')"
-                     onMouseOut="closeTip()">
+                <td  align="center" width=200 class="wrap floatTd"
+                     title="原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}">
                     <div style="height:16;">
                             ${customerKeyword.url==null?'':customerKeyword.url};
                     </div>
@@ -931,9 +997,7 @@
                             target="_blank">${customerKeyword.currentPosition}</a>
                     </div>
                 </td>
-                <td align="center" width=30 onMouseMove="showTip('优化日期：<fmt:formatDate value="${customerKeyword.optimizeDate}" pattern="yyyy-MM-dd"/> ，要刷：${customerKeyword.optimizePlanCount}，已刷：${customerKeyword.optimizedCount}')"
-                    onMouseOut="closeTip()">${customerKeyword.collectMethodName}
-                </td>
+                <td align="center" width=30 class="floatTd" title="优化日期：<fmt:formatDate value="${customerKeyword.optimizeDate}" pattern="yyyy-MM-dd"/> ，要刷：${customerKeyword.optimizePlanCount}，已刷：${customerKeyword.optimizedCount})">${customerKeyword.collectMethodName}</td>
                 <td align="center" width=30>${customerKeyword.optimizePlanCount}</td>
                 <td align="center" width=30>${customerKeyword.optimizedCount} </td>
                 <td align="center" width=30>${customerKeyword.invalidRefreshCount}</td>
@@ -986,7 +1050,6 @@
     </div>
 </div>
 <%--Dialog部分--%>
-
 <div id="groupChangeNameDialog"  style="text-align: center;" title="修改客户关键字组名" class="easyui-dialog">
     <form id="groupNameChangeFrom" style="text-align: center;margin-top: 10px;">
         目标组名称:<input type="text" id="groupName" name="groupName" style="width:150px">
@@ -1045,9 +1108,10 @@
                     <li><span class="customerKeywordSpanClass">首页报价:</span><input name="positionFirstPageFee" id="positionFirstPageFee" value=""
                                                                                   style="width:100px;" type="text" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)">元
                     </li></ul>
-                <c:if test="${user.vipType}">
+
 
                     <ul id="customerKeywordCost" style="float: left; width: 200px;height:170px;text-align: center">
+                        <c:if test="${user.vipType}">
                         <li><a href="javascript:showCustomerKeywordCost()">&nbsp;显示成本(再次点击关闭)</a></li>
                         <ul id="customerKeywordCostFrom" style="display: none;">
                             <li><span class="customerKeywordSpanClass">第一成本:</span><input name="positionFirstCost" id="positionFirstCost"
@@ -1067,8 +1131,9 @@
                                                                                           value="" style="width:100px;" type="text" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)">元
                             </li>
                         </ul>
+                        </c:if>
                     </ul>
-                </c:if>
+
             </li>
             <c:if test="${user.vipType}">
                 <li style="float:none"><span class="customerKeywordSpanClass">服务提供商:</span>

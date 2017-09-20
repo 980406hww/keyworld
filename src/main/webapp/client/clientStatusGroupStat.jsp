@@ -1,6 +1,5 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ include file="/commons/basejs.jsp" %>
+<%@ include file="/commons/global.jsp" %>
 <html>
 <head>
     <title>客户端统计</title>
@@ -39,13 +38,6 @@
         #ClientStatusGroupSummaryTable tr:hover{background-color: #dad55e}
     </style>
 
-    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <script language="javascript" type="text/javascript" src="/js/slide1.12.4.js"></script>
-    <link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css">
-    <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <link href="/css/menu.css" rel="stylesheet" type="text/css"/>
 
     <script language="javascript" type="text/javascript">
 
@@ -70,7 +62,7 @@
 <div id="topDiv">
     <%@include file="/menu.jsp"%>
 
-    <form action="/internal/clientstatus/clientStatusGroupStat" method="post" id="searchClientStatusSummaryVOForm" style="margin: 20px 0;">
+    <form action="/internal/clientstatus/clientStatusGroupStat" method="post" id="searchClientStatusSummaryVOForm" style="margin: 50px 0 10px 20px;">
         分组名称:<input type="text" name="group" value="${group}">
         终端类型:
         <select name="terminalType">

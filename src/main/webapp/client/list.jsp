@@ -1,15 +1,20 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ include file="/commons/basejs.jsp" %>
+<%@ include file="/commons/global.jsp" %>
 <html>
 <head>
 <title>客户端列表</title>
 <style>
-.wrap {
+.wrap,td{
 	word-break: break-all;
 	word-wrap: break-word;
 }
-
+#topDiv {
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	background-color: white;
+	width: 100%;
+}
 <!--
 #changeSettingDialog {
 	display: none;
@@ -44,9 +49,7 @@
 }
 
 #clientStatusDiv {
-	overflow: scroll;
 	width: 100%;
-	height: 95%;
 	margin: auto;
 }
 
@@ -54,28 +57,33 @@
 	float: right;
 	width: 580px;
 }
+#showCustomerBottomPositioneDiv{
+	position: fixed;
+	bottom: 0px;
+	right: 0px;
+	background-color: white;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	width: 100%;
+}
+#showCustomerBottomDiv {
+	float: right;
+	margin-right: 20px;
+}
 -->
 </style>
-	<link href="/ui/jquery-ui.css" rel="stylesheet" type="text/css" />
-	<link href="/css/menu.css" rel="stylesheet" type="text/css" />
 	<link rel="stylesheet" href="/toastmessage/css/jquery.toastmessage.css">
 	<script language="javascript" type="text/javascript" src="/js/My97DatePicker/WdatePicker.js"></script>
-	<script language="javascript" type="text/javascript" src="/js/jquery142.js"></script>
-	<script language="javascript" type="text/javascript" src="/ui/jquery-ui.js"></script>
-	<script language="javascript" type="text/javascript" src="/js/slide.js"></script>
 	<script language="javascript" type="text/javascript" src="/common.js"></script>
 	<script language="javascript" type="text/javascript" src="/toastmessage/jquery.toastmessage.js"></script>
 </head>
 <body>
-<div id="clientStatusDiv">
-	<table width=100% style="font-size: 12px;" cellpadding=3>
+<div id="topDiv">
+	<%@include file="/menu.jsp"%>
+	<%--<table width=100% style="font-size: 12px;margin-top: 40px" cellpadding=3>
 		<tr>
-			<td colspan=16 align="left"><%@include file="/menu.jsp"%>
-			</td>
-		</tr>
-		<tr>
-			<td colspan=16>
-				<form id="searchClientStatusForm" method="post" action="/internal/clientstatus/searchClientStatuses">
+			<td colspan=16>--%>
+				<form id="searchClientStatusForm" method="post" action="/internal/clientstatus/searchClientStatuses" style="font-size: 12px;margin-top: 45px" cellpadding=3>
 					<table style="font-size: 12px;width:100%">
 						<tr>
 							<td align="left" colspan="2">
@@ -157,91 +165,115 @@
 						</tr>
 					</table>
 				</form>
-			</td>
+		<%--	</td>
 		</tr>
+	</table>--%>
+	<table  width=100% style="font-size: 12px" id="headerTable">
 		<tr bgcolor="#eeeeee" height=30>
 			<td align="center" width=10><input type="checkbox" onclick="selectAll(this)" /></td>
 			<td align="center" width=40>客户端ID</td>
-			<td align="center" width=100>优化组</td>
+			<td align="center" width=60>优化组</td>
 			<td align="center" width=60>操作类型</td>
 			<td align="center" width=40>续费</br>日期</td>
 			<td align="center" width=40>现版本</br>目标版本</td>
-			<td align="center" width=90>重启数/重启状态</br>页码/失败次数</td>
-			<td align="center" width=100 style="word-break: break-all">所在城市</br>终端状态</td>
-			<td align="center" width=50>剩余空间</td>
-			<td align="center" width=80>最新工作时间</br>重启时间</td>
-			<td align="center" width=80>重启排序时间</br>发通知时间</td>
+			<td align="center" width=80>重启数/重启状态</br>页码/失败次数</td>
+			<td align="center" width=100>所在城市</br>终端状态</td>
+			<td align="center" width=40>剩余空间</td>
+			<td align="center" width=70>最新工作时间</br>重启时间</td>
+			<td align="center" width=50>重启排序时间</br>发通知时间</td>
 			<td align="center" width=50>成功次数</br>操作次数</td>
-			<td align="center" width=40>状态</td>
+			<td align="center" width=30>状态</td>
 			<td align="center" width=40>失败原因</td>
-			<td align="center" width=50>服务器ID</td>
-			<td align="center" width=90>操作</td>
+			<td align="center" width=40>服务器ID</td>
+			<td align="center" width=80>操作</td>
 		</tr>
+	</table>
+</div>
+<div id="clientStatusDiv">
+	<table width=100% style="font-size: 12px" id="clientStatusTable">
 		<c:forEach items="${page.records}" var="clientStatus" varStatus="tr">
-			<c:set var="isValidClient" value="true" />
+			<c:set var="isValidClient" value="true"/>
 			<c:choose>
 				<c:when test="${clientStatus.valid}">
 					<c:choose>
 						<c:when test="${clientStatus.red}">
-							<c:set var="keywordColor" value="#FF0000" />
-							<c:set var="isValidClient" value="false" />
+							<c:set var="keywordColor" value="#FF0000"/>
+							<c:set var="isValidClient" value="false"/>
 						</c:when>
 						<c:when test="${clientStatus.yellow}">
-							<c:set var="keywordColor" value="#ef00ff" />
-							<c:set var="isValidClient" value="false" />
+							<c:set var="keywordColor" value="#ef00ff"/>
+							<c:set var="isValidClient" value="false"/>
 						</c:when>
 						<c:otherwise>
-							<c:set var="keywordColor" value="green" />
+							<c:set var="keywordColor" value="green"/>
 						</c:otherwise>
 					</c:choose>
 				</c:when>
 				<c:otherwise>
-					<c:set var="keywordColor" value="green" />
+					<c:set var="keywordColor" value="green"/>
 				</c:otherwise>
 			</c:choose>
-		<c:choose>
-			<c:when test="${tr.count % 2 == 0}">
-				<tr onmouseover="doOver(this);" onmouseout="doOut(this);" style="background-color: #eeeeee;">
-			</c:when>
-			<c:otherwise>
-				<tr onmouseover="doOver(this);" onmouseout="doOut(this);">
-			</c:otherwise>
-		</c:choose>
-			<td><input type="checkbox" name="clientID" value="${clientStatus.clientID}"/></td>
-			<td>
+			<c:choose>
+				<c:when test="${tr.count % 2 == 0}">
+					<tr onmouseover="doOver(this);" onmouseout="doOut(this);" style="background-color: #eeeeee;">
+				</c:when>
+				<c:otherwise>
+					<tr onmouseover="doOver(this);" onmouseout="doOut(this);">
+				</c:otherwise>
+			</c:choose>
+			<td width=10><input type="checkbox" name="clientID" value="${clientStatus.clientID}"/></td>
+			<td width=40>
 				<font color="${keywordColor}">${clientStatus.clientID}</font>
 				<c:if test="${!isValidClient}">
 					<span name="invalidClient" id="span_${clientStatus.clientID}"></span>
 				</c:if>
 			</td>
-			<td><input type="text" value="${clientStatus.group == null ? "" : clientStatus.group}"
-				name="group" id="${clientStatus.clientID}"  onBlur="updateGroup(this)"
-				style="width: 100%; height: 100%" /></td>
-			<td>
-				<select name="operationType${clientStatus.clientID}" id="operationType${clientStatus.clientID}" onChange="updateOperationType(this)"
-				 style="width: 100%; height: 100%" />
+			<td width=60><input type="text" value="${clientStatus.group == null ? "" : clientStatus.group}"
+					   name="group" id="${clientStatus.clientID}" onBlur="updateGroup(this)" style="width: 100%;"/></td>
+			<td width=60>
+				<select name="operationType${clientStatus.clientID}" id="operationType${clientStatus.clientID}"
+						onChange="updateOperationType(this)" style="width: 100%;"
+						/>
 				<c:forEach items="${operationTypeValues}" var="operationType">
 					<c:choose>
-						<c:when test="${operationType eq clientStatus.operationType}"><option selected value="${operationType}">${operationType}</option></c:when>
-						<c:otherwise><option value="${operationType}">${operationType}</option></c:otherwise>
+						<c:when test="${operationType eq clientStatus.operationType}">
+							<option selected value="${operationType}">${operationType}</option>
+						</c:when>
+						<c:otherwise>
+							<option value="${operationType}">${operationType}</option>
+						</c:otherwise>
 					</c:choose>
 				</c:forEach>
 				</select>
 			</td>
-			<td><font color="${keywordColor}"><fmt:formatDate value="${clientStatus.renewalDate}" pattern="MM-dd" /></font></td>
-			<td><font color="${keywordColor}">${clientStatus.version == null ? "" : clientStatus.version}</br>${clientStatus.targetVersion == null ? "" : clientStatus.targetVersion}</font></td>
-			<td><font color="${keywordColor}">${clientStatus.restartCount}/${clientStatus.restartStatus == null ? "" : clientStatus.restartStatus}</br>${clientStatus.pageNo}/${clientStatus.continuousFailCount}</font></td>
-			<td style="word-break: break-all"><font color="${keywordColor}">${clientStatus.city == null ? "" : clientStatus.city}</br>${clientStatus.status == null ? "" : clientStatus.status}</font></td>
-			<td><font color="${keywordColor}">${clientStatus.freeSpace}</font></td>
-			<td><font color="${keywordColor}"><fmt:formatDate value="${clientStatus.lastVisitTime}" pattern="MM-dd HH:mm" /></br><fmt:formatDate value="${clientStatus.restartTime}" pattern="MM-dd HH:mm" /></font></td>
-			<td><font color="${keywordColor}"><fmt:formatDate value="${clientStatus.restartOrderingTime}" pattern="MM-dd HH:mm" /></br><fmt:formatDate value="${clientStatus.lastSendNotificationTime}" pattern="MM-dd HH:mm" /></font></td>
-			<td><font color="${keywordColor}">${clientStatus.optimizationSucceedCount()}</br>${optimizationTotalCount}</font></td>
-			<td><font color="${keywordColor}">${clientStatus.valid ? "监控中" : "暂停监控"}</font></td>
-			<td><input type="text" value="${clientStatus.upgradeFailedReason == null ? "" : clientStatus.upgradeFailedReason}"
-					   name="upgradeFailedReason" id="${clientStatus.clientID}"  onBlur="updateUpgradeFailedReason(this)"
-					   style="width: 100%; height: 100%" /></td>
-			<td><font color="${keywordColor}">${clientStatus.vpsBackendSystemComputerID}</font></td>
-			<td>	
+			<td width=40><font color="${keywordColor}"><fmt:formatDate value="${clientStatus.renewalDate}"
+															  pattern="MM-dd"/></font></td>
+			<td width=40><font
+					color="${keywordColor}">${clientStatus.version == null ? "" : clientStatus.version}</br>${clientStatus.targetVersion == null ? "" : clientStatus.targetVersion}</font>
+			</td>
+			<td width=80><font
+					color="${keywordColor}">${clientStatus.restartCount}/${clientStatus.restartStatus == null ? "" : clientStatus.restartStatus}</br>${clientStatus.pageNo}/${clientStatus.continuousFailCount}</font>
+			</td>
+			<td width=100 style="word-break: break-all;"><font
+					color="${keywordColor}">${clientStatus.city == null ? "" : clientStatus.city}</br>${clientStatus.status == null ? "" : clientStatus.status}</font>
+			</td>
+			<td width=40><font color="${keywordColor}">${clientStatus.freeSpace}</font></td>
+			<td width=70><font color="${keywordColor}"><fmt:formatDate value="${clientStatus.lastVisitTime}"
+															  pattern="MM-dd HH:mm"/></br><fmt:formatDate
+					value="${clientStatus.restartTime}" pattern="MM-dd HH:mm"/></font></td>
+			<td width=50><font color="${keywordColor}"><fmt:formatDate value="${clientStatus.restartOrderingTime}"
+															  pattern="MM-dd HH:mm"/></br><fmt:formatDate
+					value="${clientStatus.lastSendNotificationTime}" pattern="MM-dd HH:mm"/></font></td>
+			<td width=50><font
+					color="${keywordColor}">${clientStatus.optimizationSucceedCount()}</br>${optimizationTotalCount}</font>
+			</td>
+			<td width=30><font color="${keywordColor}">${clientStatus.valid ? "监控中" : "暂停监控"}</font></td>
+			<td width=40><input type="text"
+					   value="${clientStatus.upgradeFailedReason == null ? "" : clientStatus.upgradeFailedReason}"
+					   name="upgradeFailedReason" id="${clientStatus.clientID}" onBlur="updateUpgradeFailedReason(this)"
+					   style="width: 100%;"/></td>
+			<td width=40><font color="${keywordColor}">${clientStatus.vpsBackendSystemComputerID}</font></td>
+			<td width=80>
 				<c:choose>
 					<c:when test="${null != clientStatus.host and !'' eq clientStatus.host}">
 						<a href="javascript:connectVNC('${clientStatus.clientID}')">VNC</a>
@@ -250,7 +282,7 @@
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					</c:otherwise>
 				</c:choose>
-				&nbsp;		
+				&nbsp;
 				<a href="javascript:showSettingDialog('${clientStatus.clientID}', this)">设置</a>
 				&nbsp;
 				<a href="javascript:delItem('${clientStatus.clientID}')">删除</a>
@@ -265,38 +297,46 @@
 				</c:choose>
 				&nbsp;
 				<a href="javascript:changeTerminalType('${clientStatus.clientID}')">变更终端类型</a>
-				
 			</td>
-		</tr>
+			</tr>
 		</c:forEach>
 	</table>
 </div>
-	<hr>
-	<div id="clientStatusBottomDiv" align="right">
-		<input id="fisrtButton" type="button" onclick="changePaging(1,'${page.size}')" value="首页"/>
-		&nbsp;&nbsp;&nbsp;&nbsp;
-		<input id="upButton" type="button" onclick="changePaging('${page.current-1}','${page.size}')" value="上一页"/>
-		&nbsp;&nbsp;&nbsp;&nbsp;${page.current}/${page.pages}&nbsp;&nbsp;
-		<input id="nextButton" type="button" onclick="changePaging('${page.current+1>=page.pages?page.pages:page.current+1}','${page.size}')" value="下一页">
-		&nbsp;&nbsp;&nbsp;&nbsp;
-		<input id="lastButton" type="button" onclick="changePaging('${page.pages}','${page.size}')" value="末页">
-		&nbsp;&nbsp;&nbsp;&nbsp;
-		总记录数:${page.total}&nbsp;&nbsp;
-		每页显示条数:
-		<select id="chooseRecords" onchange="changePaging(${page.current},this.value)" style="margin-right: 10px;">
-			<option>10</option>
-			<option>25</option>
-			<option>50</option>
-			<option>75</option>
-			<option>100</option>
-		</select>
-		<input type="hidden" id="currentPageHidden" value="${page.current}"/>
-		<input type="hidden" id="pageSizeHidden" value="${page.size}"/>
-		<input type="hidden" id="pageCountHidden" value="${page.pages}"/>
+<div id="showCustomerBottomPositioneDiv">
+	<div id="showCustomerBottomDiv">
+		<input id="fisrtButton" class="ui-button ui-widget ui-corner-all" type="button"
+			   onclick="changePaging(1,'${page.size}')" value="首页"/>&nbsp;&nbsp;&nbsp;&nbsp;
+		<input id="upButton" type="button" class="ui-button ui-widget ui-corner-all"
+			   onclick="changePaging('${page.current-1}','${page.size}')" value="上一页"/>&nbsp;&nbsp;&nbsp;&nbsp;
+		${page.current}/${page.pages}&nbsp;&nbsp;
+		<input id="nextButton" type="button" class="ui-button ui-widget ui-corner-all"
+			   onclick="changePaging('${page.current+1>=page.pages?page.pages:page.current+1}','${page.size}')"
+			   value="下一页">&nbsp;&nbsp;&nbsp;&nbsp;
+		<input id="lastButton" type="button" class="ui-button ui-widget ui-corner-all"
+			   onclick="changePaging('${page.pages}','${page.size}')" value="末页">&nbsp;&nbsp;&nbsp;&nbsp;
+		总记录数:${page.total}&nbsp;&nbsp;&nbsp;&nbsp;
+		每页显示条数:<select id="chooseRecords" onchange="changePaging(${page.current},this.value)">
+		<option>10</option>
+		<option>25</option>
+		<option>50</option>
+		<option>75</option>
+		<option>100</option>
+	</select>
 	</div>
+</div>
 
 	<script language="javascript">
         $(function () {
+            $('#uploadVNCDialog').dialog("close");
+            $("#changeSettingDialog").dialog("close");
+            $("#targetVersionSettingDialog").dialog("close");
+            $("#renewalSettingDialog").dialog("close");
+            renewalSettingDialog
+            $("#clientStatusDiv").css("margin-top",$("#topDiv").height());
+            alignTableHeader();
+            window.onresize = function(){
+                alignTableHeader();
+            }
             var clientStatusBottomDiv = $('#clientStatusBottomDiv');
             var pageSize = clientStatusBottomDiv.find('#pageSizeHidden').val();
             clientStatusBottomDiv.find('#chooseRecords').val(pageSize);
@@ -322,6 +362,13 @@
                 clientStatusBottomDiv.find("#lastButton").attr("disabled", "disabled");
             }
         });
+        function alignTableHeader(){
+            var td = $("#clientStatusTable tr:first td");
+            var ctd = $("#headerTable tr:first td");
+            $.each(td, function (idx, val) {
+                ctd.eq(idx).width($(val).width());
+            });
+        }
 
         function changePaging(currentPageNumber, pageSize) {
             var searchClientStatusForm = $("#searchClientStatusForm");
@@ -348,8 +395,10 @@
                 width: 430,
                 modal: true,
                 title: '上传VNC文件',
-                buttons: {
-                    "上传": function () {
+                buttons: [{
+                    text: '上传',
+                    iconCls: 'icon-ok',
+                    handler: function () {
                         var fileValue = $("#uploadVNCDialog").find("#file").val();
                         if(fileValue == ""){
                             alert("请选择要上传的VNC配置文件!");
@@ -363,33 +412,45 @@
 
                         var formData = new FormData();
                         formData.append('file', $("#uploadVNCDialog").find("#file")[0].files[0]);
-						$.ajax({
-							url: '/internal/clientstatus/uploadVNCFile',
-							type: 'POST',
-							cache: false,
-							data: formData,
-							processData: false,
-							contentType: false,
-							success: function (result) {
-								if (result) {
+                        $.ajax({
+                            url: '/internal/clientstatus/uploadVNCFile',
+                            type: 'POST',
+                            cache: false,
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            success: function (result) {
+                                if (result) {
                                     $().toastmessage('showSuccessToast', "上传成功");
-									window.location.reload();
-								} else {
+                                    window.location.reload();
+                                } else {
                                     $().toastmessage('showErrorToast', "上传失败");
-								}
+                                }
                                 $(this).dialog("close");
-							},
-							error: function () {
+                            },
+                            error: function () {
                                 $().toastmessage('showErrorToast', "上传失败");
                                 $(this).dialog("close");
-							}
-						});
-                    },
-                    "取消": function () {
-                        $(this).dialog("close");
+                            }
+                        });
                     }
-                }
+                },
+                    {
+                        text: '清空',
+                        iconCls: 'fi-trash',
+                        handler: function () {
+                            $('#customerKeywordForm')[0].reset();
+                        }
+                    },
+                    {
+                        text: '取消',
+                        iconCls: 'icon-cancel',
+                        handler: function () {
+                            $('#uploadVNCDialog').dialog("close");
+                        }
+                    }]
             });
+            $('#uploadVNCDialog').window("resize",{top:$(document).scrollTop() + 100});
         }
 
 		function selectAll(self){
@@ -651,15 +712,22 @@
                             width: 620,
 							maxHeight: 510,
                             modal: true,
-                            buttons: {
-                                "保存": function () {
+                            buttons: [{
+                                text: '保存',
+                                iconCls: 'icon-ok',
+                                handler: function () {
                                     saveChangeSetting(this);
-                                },
-                                "取消": function () {
-                                    $(this).dialog("close");
                                 }
-                            }
+                            },
+                                {
+                                    text: '取消',
+                                    iconCls: 'icon-cancel',
+                                    handler: function () {
+                                        $("#changeSettingDialog").dialog("close");
+                                    }
+                                }]
                         });
+                        $('#changeSettingDialog').window("resize",{top:$(document).scrollTop() + 100});
 		        	}
 		        },
 		        error: function () {
@@ -835,15 +903,22 @@
 				title: "设定目标版本",
                 width: 240,
                 modal: true,
-                buttons: {
-                    "保存": function () {
+                buttons: [{
+                    text: '保存',
+                    iconCls: 'icon-ok',
+                    handler: function () {
                         saveTargetVersionSetting(this);
-                    },
-                    "取消": function () {
-                        $(this).dialog("close");
                     }
-                }
+                },
+                    {
+                        text: '取消',
+                        iconCls: 'icon-cancel',
+                        handler: function () {
+                            $('#targetVersionSettingDialog').dialog("close");
+                        }
+                    }]
             });
+            $('#targetVersionSettingDialog').window("resize",{top:$(document).scrollTop() + 100});
 		}
 
 		function saveTargetVersionSetting(self){
@@ -892,15 +967,22 @@
                 title: "续费",
                 width: 225,
                 modal: true,
-                buttons: {
-                    "保存": function () {
+                buttons: [{
+                    text: '保存',
+                    iconCls: 'icon-ok',
+                    handler: function () {
                         saveRenewalSetting(this);
-                    },
-                    "取消": function () {
-                        $(this).dialog("close");
                     }
-                }
+                },
+                    {
+                        text: '取消',
+                        iconCls: 'icon-cancel',
+                        handler: function () {
+                            $("#renewalSettingDialog").dialog("close");
+                        }
+                    }]
             });
+            $('#renewalSettingDialog').window("resize",{top:$(document).scrollTop() + 100});
 		}
 
 		function saveRenewalSetting(self){
@@ -989,7 +1071,7 @@
 	<div style="display: none;">
 		<script src="http://s84.cnzz.com/stat.php?id=4204660&web_id=4204660" language="JavaScript"></script>
 	</div>
-	<div id="changeSettingDialog">
+	<div id="changeSettingDialog" class="easyui-dialog">
 		<table>
 			<tr>
 				<td>
@@ -1331,11 +1413,11 @@
 
 	</div>
 	
-	<div id="targetVersionSettingDialog" style="display: none;">
+	<div id="targetVersionSettingDialog" class="easyui-dialog">
 		目标版本：<input type="text" name="settingTargetVersion" id="settingTargetVersion" />
 	</div>
 
-	<div id="renewalSettingDialog">
+	<div id="renewalSettingDialog" class="easyui-dialog">
 		<table style="font-size:12px">
 			<tr>
 				<th>类型</th>
@@ -1353,7 +1435,7 @@
 		</table>
 	</div>
 
-	<div id="uploadVNCDialog" style="display: none;">
+	<div id="uploadVNCDialog" class="easyui-dialog">
 		<form method="post" id="uploadVNCForm" action="" enctype="multipart/form-data">
 			<table width="100%" style="margin-top: 10px;margin-left: 10px">
 				<tr>
