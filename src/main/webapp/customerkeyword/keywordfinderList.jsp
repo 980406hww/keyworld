@@ -37,25 +37,6 @@
             #customerKeywordTable td{
                 text-align: left;
             }
-
-            #showCustomerBottomPositioneDiv{
-                position: fixed;
-                bottom: 0px;
-                right: 0px;
-                background-color: white;
-                padding-top: 10px;
-                padding-bottom: 10px;
-                width: 100%;
-            }
-            #showCustomerBottomDiv {
-                float: right;
-                margin-right: 20px;
-            }
-
-            body{
-                margin: 0;
-                padding: 0;
-            }
             .tip-yellow {
                 z-index:1000;
                 text-align:left;
@@ -75,7 +56,9 @@
                 initPaging();
                 initNoPositionChecked();
                 alignTableHeader();
-                $("#userName").val("${customerKeywordCrilteria.userName}");
+                if(${isDepartmentManager}) {
+                    $("#userName").val("${customerKeywordCrilteria.userName}");
+                }
                 window.onresize = function(){
                     alignTableHeader();
                 }
@@ -241,11 +224,18 @@
                    value="${customerKeywordCrilteria.optimizeGroupName}" style="width:100px;">&nbsp;
             用户名称:
                 <select name="userName" id="userName">
-                    <option value="">所有</option>
-                    <option value="${user.userID}">只显示自己</option>
-                    <c:forEach items="${activeUsers}" var="activeUser">
-                        <option value="${activeUser.userID}">${activeUser.userName}</option>
-                    </c:forEach>
+                    <c:choose>
+                        <c:when test="${isDepartmentManager}">
+                            <option value="">所有</option>
+                            <option value="${user.userID}">只显示自己</option>
+                            <c:forEach items="${activeUsers}" var="activeUser">
+                                <option value="${activeUser.userID}">${activeUser.userName}</option>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <option value="${user.userID}">只显示自己</option>
+                        </c:otherwise>
+                    </c:choose>
                 </select>
             <br>
             显示前:

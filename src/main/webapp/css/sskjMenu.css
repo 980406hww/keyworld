@@ -9,8 +9,6 @@ body {
     background: #dedede;
 }
 
-
-
 .venus-menu {
     width: 100%;
     margin: 0;
@@ -170,7 +168,7 @@ body {
     color: #000000;
     top: 5px;
     right: 2px;
-    font-size: 20px;
+    font-size: 14px;
     -webkit-transition: color 0.2s linear;
     -moz-transition: color 0.2s linear;
     -o-transition: color 0.2s linear;

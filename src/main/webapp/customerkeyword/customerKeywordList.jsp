@@ -9,10 +9,6 @@
     <head>
         <title>关键字列表</title>
         <style>
-            .wrap,td{
-                word-break: break-all;
-                word-wrap: break-word;
-            }
             <!--
             #div1 {
                 display: none;
@@ -57,25 +53,6 @@
 
             #customerKeywordTable td{
                 text-align: left;
-            }
-
-            #showCustomerBottomPositioneDiv{
-                position: fixed;
-                bottom: 0px;
-                right: 0px;
-                background-color: white;
-                padding-top: 10px;
-                padding-bottom: 10px;
-                width: 100%;
-            }
-            #showCustomerBottomDiv {
-                float: right;
-                margin-right: 20px;
-            }
-
-            body{
-                margin: 0;
-                padding: 0;
             }
 
             .tip-yellow {
@@ -503,7 +480,7 @@
                     $("#customerKeywordForm").find("#status").val('');
                 }
                 $( "#saveCustomerKeywordDialog").dialog({
-                    width: 440,
+                    width: 430,
                     height: 540,
                     title : "添加关键字",
                     modal: true,
