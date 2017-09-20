@@ -64,15 +64,6 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>用户类型</td>
-                    <td>
-                        <select name="userType" class="easyui-combobox" data-options="width:140,height:29,editable:false,panelHeight:'auto'">
-                            <option value="0">管理员</option>
-                            <option value="1" selected="selected">用户</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
                     <td>部门</td>
                     <td><select id="userAddOrganizationId" name="organizationID" style="width: 140px; height: 29px;" class="easyui-validatebox" data-options="required:true"></select></td>
                     <td>角色</td>
