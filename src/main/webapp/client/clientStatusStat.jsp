@@ -33,8 +33,8 @@
 <div id="topDiv">
     <%@include file="/menu.jsp" %>
     <form action="/internal/clientstatus/clientStatusStat" method="post" id="searchClientStatusSummaryVOForm" style="margin-top: 35px;margin-left: 20px">
-        客户端ID前缀:<input type="text" name="clientIDPrefix" value="${clientIDPrefix}">
-        城市:<input type="text" name="city" value="${city}">
+     客户端ID前缀:&nbsp;<input type="text" name="clientIDPrefix" value="${clientIDPrefix}">
+        &nbsp;&nbsp;城市: <input type="text" name="city" value="${city}">&nbsp;&nbsp;
         <shiro:hasPermission name="/internal/clientstatus/clientStatusStat">
             <input type="submit" value=" 查询 ">
         </shiro:hasPermission>

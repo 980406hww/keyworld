@@ -106,7 +106,7 @@
 </form>
 	<table style="font-size:12px;" id="headerTable" width=100%">
 		<tr bgcolor="#eeeeee" height=30>
-			<td align="center" width=60 rowspan="2">类型</td>
+			<td align="center" width=100 rowspan="2">类型</td>
 			<td align="center" width=80 colspan="4">关键字</td>
 			<td align="center" width=60 colspan="5">刷的次数</td>
 			<td align="center" width=100 colspan="2">机器数</td>
@@ -140,7 +140,7 @@
 						<tr onmouseover="doOver(this);" onmouseout="doOut(this);" height="30">
 					</c:otherwise>
 				</c:choose>
-				<td width=60>${refreshStatInfoVO.group}</td>
+				<td width=100>${refreshStatInfoVO.group}</td>
 				<td width=80>${refreshStatInfoVO.totalKeywordCount}</td>
 				<td width=80>${refreshStatInfoVO.needOptimizeKeywordCount > 0 ? refreshStatInfoVO.needOptimizeKeywordCount : ""}</td>
 				<td width=80>

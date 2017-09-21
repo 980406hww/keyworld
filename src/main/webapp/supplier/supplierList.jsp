@@ -220,6 +220,16 @@
                 serviceTypeArray[i]=supplier.supplierNexus[i].supplierServiceTypeCode;
             }
             $("#sp input[name=supplierNexus]").val(serviceTypeArray);
+
+            var _value = "";
+            var _text = "";
+            $("[name=supplierNexus]:input:checked").each(function() {
+                _value += $(this).val() + ",";
+                _text += $(this).next("span").text() + ",";
+            });
+            //设置下拉选中值
+            $('#supplierNexus').combo('setValue', _value).combo(
+                'setText', _text);
         }
 
         function modifySupplier(uuid) {
@@ -250,7 +260,7 @@
             }
             $("#supplierDialog").dialog({
                 resizable: false,
-                width: 320,
+                width: 290,
                 height: 400,
                 modal: true,
                 buttons: [{
@@ -470,7 +480,7 @@
 
 <div id="supplierDialog" title="供应商信息" class="easyui-dialog" style="left: 35%;">
     <form id="supplierForm" method="post" action="supplierList.jsp">
-        <table style="font-size:14px;" cellpadding=5>
+        <table style="font-size:14px;" cellpadding=10 cellspacing="5">
             <tr>
                 <td align="right">供应商名称:</td>
                 <td><input type="text" name="supplierName" id="supplierName" style="width:200px;"></td>
@@ -499,7 +509,7 @@
 
             <tr>
                 <td align="right">地址</td>
-                <td><textarea name="address" id="address" cols="20" rows="4" style="width:200px;"></textarea>
+                <td><textarea name="address" id="address" cols="20" rows="4" style="width:200px; resize: none"></textarea>
                 </td>
             </tr>
 
@@ -517,7 +527,7 @@
 
             <tr>
                 <td align="right" >备注</td>
-                <td><textarea name="remark" id="remark" cols="20" rows="4" style="width:200px;"></textarea>
+                <td><textarea name="remark" id="remark" cols="20" rows="4" style="width:200px; resize: none"></textarea>
                 </td>
             </tr>
 

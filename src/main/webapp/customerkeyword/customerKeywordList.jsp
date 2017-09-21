@@ -816,7 +816,8 @@
                 </tr>
             </table>
 
-    <div style="text-align: right">
+    <div style="text-align: right;margin-bottom: 5px">
+        <div style="margin-bottom: 5px">
     <shiro:hasPermission name="/internal/customerKeyword/uploadCustomerKeywords">
         <a target="_blank" href="javascript:uploadCustomerKeywords('${customerKeywordCriteria.customerUuid}', 'SuperUserSimple')"/>Excel上传(简化版)</a>
     </shiro:hasPermission>
@@ -835,7 +836,7 @@
     <shiro:hasPermission name="/internal/customerKeyword/downloadCustomerKeywordInfo">
         | <a target="_blank" href="javascript:downloadCustomerKeywordInfo()">导出结果</a>&nbsp;&nbsp;
     </shiro:hasPermission>
-        <br/><br/>
+        </div><div>
     <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupName">
         <a href="javascript:showGroupNameChangeDialog({'title': '修改客户关键字分组', 'customerUuid':'${customerKeywordCriteria.customerUuid}'})">修改所有分组</a> |
         <a href="javascript:updateSpecifiedCustomerKeywordGroupName(${customerKeywordCriteria.customerUuid})">修改选中分组</a> |
@@ -855,7 +856,7 @@
         <a href="javascript:cleanTitle('${customerKeywordCriteria.customerUuid}', 'CustomerTitle')">清空客户标题</a>&nbsp;&nbsp;
     </shiro:hasPermission>
     </div>
-    <br/>
+    </div>
     <form id="searchCustomerKeywordForm" style="font-size:12px; width: 100%;" action="/internal/customerKeyword/searchCustomerKeywords" method="post">
         <div id="searchCustomerKeywordTable">
             <input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}"/>
