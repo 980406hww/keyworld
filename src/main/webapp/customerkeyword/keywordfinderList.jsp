@@ -402,7 +402,7 @@
 
                 <td  align="center" width=100 class="floatTd" title="原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}" >
                     <div style="height:16;">
-                        ${customerKeyword.url==null?'':customerKeyword.url};
+                        ${customerKeyword.url==null?'':customerKeyword.url}
                     </div>
                 </td>
 
