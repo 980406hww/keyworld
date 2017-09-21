@@ -20,24 +20,24 @@
    </tr>
          
     <tr height="30">                                            
-         <td><%=customerKeywordCrilteria.getKeyword()%></td>
-         <td><%=customerKeywordCrilteria.getUrl()%></td>
-         <td><%=customerKeywordCrilteria.getSearchEngine()%></td>
-         <td><a href="historyPositionAndIndex.jsp?uuid=<%=customerKeywordCrilteria.getUuid()%>" target="_blank"><%=customerKeywordCrilteria.getCurrentIndexCount()%></a>/<%=customerKeywordCrilteria.getInitialPosition()%>/<a href="http://www.baidu.com/s?wd=<%=customerKeywordCrilteria.getKeyword()%>" target="_blank"><%=customerKeywordCrilteria.getCurrentPosition()%></a>
+         <td><%=customerKeywordCriteria.getKeyword()%></td>
+         <td><%=customerKeywordCriteria.getUrl()%></td>
+         <td><%=customerKeywordCriteria.getSearchEngine()%></td>
+         <td><a href="historyPositionAndIndex.jsp?uuid=<%=customerKeywordCriteria.getUuid()%>" target="_blank"><%=customerKeywordCriteria.getCurrentIndexCount()%></a>/<%=customerKeywordCriteria.getInitialPosition()%>/<a href="http://www.baidu.com/s?wd=<%=customerKeywordCriteria.getKeyword()%>" target="_blank"><%=customerKeywordCriteria.getCurrentPosition()%></a>
          </td>
-         <td><%=customerKeywordCrilteria.getCollectMethodName()%></td>
+         <td><%=customerKeywordCriteria.getCollectMethodName()%></td>
          <% if (user.isVipType()){ %>
-         <td nowrap=true><%=customerKeywordCrilteria.costString()%>
+         <td nowrap=true><%=customerKeywordCriteria.costString()%>
          <%} %>
          </td nowrap=true>
-         <td><%=customerKeywordCrilteria.feeString()%>
+         <td><%=customerKeywordCriteria.feeString()%>
          </td>
-         <td><%=Utils.formatDatetime(customerKeywordCrilteria.getStartOptimizedTime(), "yyyy-MM-dd")%></td>
-         <td><div style="height:16;"><%=Utils.formatDatetime(customerKeywordCrilteria.getEffectiveFromTime(), "yyyy-MM-dd")%></div><div style="height:16;"><%=Utils.formatDatetime(customerKeywordCrilteria.getEffectiveToTime(), "yyyy-MM-dd")%></div></td>
-         <td><div style="height:16;"><%=Utils.formatDatetime(customerKeywordCrilteria.getPaymentEffectiveFromTime(), "yyyy-MM-dd")%></div><div style="height:16;"><%=Utils.formatDatetime(customerKeywordCrilteria.getPaymentEffectiveToTime(), "yyyy-MM-dd")%></div></td>
-         <td><%=customerKeywordCrilteria.getStatusName()%></td>
+         <td><%=Utils.formatDatetime(customerKeywordCriteria.getStartOptimizedTime(), "yyyy-MM-dd")%></td>
+         <td><div style="height:16;"><%=Utils.formatDatetime(customerKeywordCriteria.getEffectiveFromTime(), "yyyy-MM-dd")%></div><div style="height:16;"><%=Utils.formatDatetime(customerKeywordCriteria.getEffectiveToTime(), "yyyy-MM-dd")%></div></td>
+         <td><div style="height:16;"><%=Utils.formatDatetime(customerKeywordCriteria.getPaymentEffectiveFromTime(), "yyyy-MM-dd")%></div><div style="height:16;"><%=Utils.formatDatetime(customerKeywordCriteria.getPaymentEffectiveToTime(), "yyyy-MM-dd")%></div></td>
+         <td><%=customerKeywordCriteria.getStatusName()%></td>
          <% if (user.isVipType()){ %>                                                 
-         <td><%=customerKeywordCrilteria.getServiceProvider()%></td>
+         <td><%=customerKeywordCriteria.getServiceProvider()%></td>
          <%} %>
      </tr>
 </table>

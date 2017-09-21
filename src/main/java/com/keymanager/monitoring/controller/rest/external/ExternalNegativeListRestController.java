@@ -3,9 +3,7 @@ package com.keymanager.monitoring.controller.rest.external;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.NegativeListCriteria;
 import com.keymanager.monitoring.entity.NegativeList;
-import com.keymanager.monitoring.entity.User;
 import com.keymanager.monitoring.service.NegativeListService;
-import com.keymanager.monitoring.service.UserService;
 import com.keymanager.util.Constants;
 import com.keymanager.util.TerminalTypeMapping;
 import org.apache.commons.collections.CollectionUtils;
@@ -29,9 +27,6 @@ public class ExternalNegativeListRestController extends SpringMVCBaseController 
 
 	@Autowired
 	private NegativeListService negativeListService;
-
-	@Autowired
-	private UserService userService;
 
 	@RequestMapping(value = "/saveNegativeLists", method = RequestMethod.POST)
 	public ResponseEntity<?> saveNegativeLists(@RequestBody NegativeListCriteria negativeListCriteria, HttpServletRequest request) throws Exception{

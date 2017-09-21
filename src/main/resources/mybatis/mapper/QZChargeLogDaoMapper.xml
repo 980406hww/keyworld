@@ -13,7 +13,7 @@
         us.fUserName AS 'userName'
     FROM
         t_qz_charge_log ql
-    JOIN t_user us ON ql.fUserID = us.fUserID
+    JOIN t_userinfo us ON ql.fUserID = us.fLoginName
     JOIN t_qz_operation_type qt ON qt.fUuid = ql.fQZOperationTypeUuid
     WHERE EXISTS(
     SELECT qt.fUuid

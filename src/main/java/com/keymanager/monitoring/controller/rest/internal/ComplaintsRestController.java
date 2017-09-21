@@ -3,16 +3,11 @@ package com.keymanager.monitoring.controller.rest.internal;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.TSMainKeywordCriteria;
-import com.keymanager.monitoring.entity.*;
-import com.keymanager.monitoring.service.TSComplainLogService;
 import com.keymanager.monitoring.entity.TSMainKeyword;
-import com.keymanager.monitoring.entity.User;
-import com.keymanager.monitoring.service.TSMainKeywordService;
-import com.keymanager.monitoring.service.TSNegativeKeywordService;
-import com.keymanager.monitoring.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.keymanager.monitoring.service.TSMainKeywordService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,15 +31,6 @@ public class ComplaintsRestController extends SpringMVCBaseController {
 
     @Autowired
     private TSMainKeywordService tsMainKeywordService;
-
-    @Autowired
-    private TSNegativeKeywordService tsNegativeKeywordService;
-
-    @Autowired
-    private TSComplainLogService tsComplainLogService;
-
-    @Autowired
-    private UserService userService;
 
     @RequiresPermissions("/internal/complaints/save")
     @RequestMapping(value = "/save", method = RequestMethod.POST)

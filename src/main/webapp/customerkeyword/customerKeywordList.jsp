@@ -89,7 +89,7 @@
                 var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
                 var searchCustomerKeywordTable = searchCustomerKeywordForm.find("#searchCustomerKeywordTable");
                 searchCustomerKeywordTable.find("#orderElement").val('${orderElement}');
-                searchCustomerKeywordTable.find("#status").val(${customerKeywordCrilteria.status});
+                searchCustomerKeywordTable.find("#status").val(${customerKeywordCriteria.status});
                 var pages = searchCustomerKeywordForm.find('#pagesHidden').val();
                 var currentPageNumber = searchCustomerKeywordForm.find('#currentPageNumberHidden').val();
                 var showCustomerBottomDiv = $('#showCustomerBottomDiv');
@@ -490,7 +490,7 @@
                         text: '保存',
                         iconCls: 'icon-ok',
                         handler: function () {
-                            saveCustomerKeyword("${customerKeywordCrilteria.customerUuid}");
+                            saveCustomerKeyword("${customerKeywordCriteria.customerUuid}");
                         }
                     },
                         {
@@ -775,7 +775,7 @@
             }
 
             function initNoPositionChecked() {
-                if(${customerKeywordCrilteria.noPosition == 1}){
+                if(${customerKeywordCriteria.noPosition == 1}){
                     $("#noPosition").prop("checked",true);
                 }else{
                     $("#noPosition").prop("checked",false);
@@ -811,41 +811,41 @@
 
     <div style="text-align: right">
     <shiro:hasPermission name="/internal/customerKeyword/uploadCustomerKeywords">
-        <a target="_blank" href="javascript:uploadCustomerKeywords('${customerKeywordCrilteria.customerUuid}', 'SuperUserSimple')"/>Excel上传(简化版)</a>
+        <a target="_blank" href="javascript:uploadCustomerKeywords('${customerKeywordCriteria.customerUuid}', 'SuperUserSimple')"/>Excel上传(简化版)</a>
     </shiro:hasPermission>
     <shiro:hasPermission name="/SuperUserSimpleKeywordList.xls">
         | <a target="_blank" href="/SuperUserSimpleKeywordList.xls">简化版下载</a>
     </shiro:hasPermission>
     <shiro:hasPermission name="/internal/customerKeyword/uploadCustomerKeywords">
-        | <a target="_blank" href="javascript:uploadCustomerKeywords('${customerKeywordCrilteria.customerUuid}', 'SuperUserFull')">Excel上传(完整版)</a>
+        | <a target="_blank" href="javascript:uploadCustomerKeywords('${customerKeywordCriteria.customerUuid}', 'SuperUserFull')">Excel上传(完整版)</a>
     </shiro:hasPermission>
     <shiro:hasPermission name="/SuperUserFullKeywordList.xls">
         | <a target="_blank" href="/SuperUserFullKeywordList.xls">完整版下载</a>
     </shiro:hasPermission>
     <shiro:hasPermission name="/internal/customerKeyword/downloadSingleCustomerReport">
-        | <a target="_blank" href="/internal/dailyReport/downloadSingleCustomerReport/${customerKeywordCrilteria.customerUuid}">导出日报表</a>
+        | <a target="_blank" href="/internal/dailyReport/downloadSingleCustomerReport/${customerKeywordCriteria.customerUuid}">导出日报表</a>
     </shiro:hasPermission>
     <shiro:hasPermission name="/internal/customerKeyword/downloadCustomerKeywordInfo">
         | <a target="_blank" href="javascript:downloadCustomerKeywordInfo()">导出结果</a>&nbsp;&nbsp;
     </shiro:hasPermission>
         <br/><br/>
     <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupName">
-        <a href="javascript:showGroupNameChangeDialog({'title': '修改客户关键字分组', 'customerUuid':'${customerKeywordCrilteria.customerUuid}'})">修改所有分组</a> |
-        <a href="javascript:updateSpecifiedCustomerKeywordGroupName(${customerKeywordCrilteria.customerUuid})">修改选中分组</a> |
-        <a href="javascript:stopOptimization(${customerKeywordCrilteria.customerUuid})">下架所有关键字</a>|
+        <a href="javascript:showGroupNameChangeDialog({'title': '修改客户关键字分组', 'customerUuid':'${customerKeywordCriteria.customerUuid}'})">修改所有分组</a> |
+        <a href="javascript:updateSpecifiedCustomerKeywordGroupName(${customerKeywordCriteria.customerUuid})">修改选中分组</a> |
+        <a href="javascript:stopOptimization(${customerKeywordCriteria.customerUuid})">下架所有关键字</a>|
     </shiro:hasPermission>
     <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
         <a href="javascript:updateCustomerKeywordStatus(0)">暂停选中关键字</a> |
         <a href="javascript:updateCustomerKeywordStatus(1)">激活选中关键字</a> |
     </shiro:hasPermission>
     <shiro:hasPermission name="/internal/customerKeyword/deleteCustomerKeywords">
-        <a href="javascript:delAllItems('EmptyTitleAndUrl','${customerKeywordCrilteria.customerUuid}')">删除标题和网址为空的关键字</a> |
-        <a href="javascript:delAllItems('EmptyTitle','${customerKeywordCrilteria.customerUuid}')">删除标题为空的关键字</a> |
+        <a href="javascript:delAllItems('EmptyTitleAndUrl','${customerKeywordCriteria.customerUuid}')">删除标题和网址为空的关键字</a> |
+        <a href="javascript:delAllItems('EmptyTitle','${customerKeywordCriteria.customerUuid}')">删除标题为空的关键字</a> |
     </shiro:hasPermission>
     <shiro:hasPermission name="/internal/customerKeyword/cleanTitle">
-        <a href="javascript:cleanTitle('${customerKeywordCrilteria.customerUuid}','CaptureTitleFlag')">重采标题</a> |
-        <a href="javascript:cleanTitle('${customerKeywordCrilteria.customerUuid}', 'SelectedCustomerKeywordTitle')">清空所选标题</a> |
-        <a href="javascript:cleanTitle('${customerKeywordCrilteria.customerUuid}', 'CustomerTitle')">清空客户标题</a>&nbsp;&nbsp;
+        <a href="javascript:cleanTitle('${customerKeywordCriteria.customerUuid}','CaptureTitleFlag')">重采标题</a> |
+        <a href="javascript:cleanTitle('${customerKeywordCriteria.customerUuid}', 'SelectedCustomerKeywordTitle')">清空所选标题</a> |
+        <a href="javascript:cleanTitle('${customerKeywordCriteria.customerUuid}', 'CustomerTitle')">清空客户标题</a>&nbsp;&nbsp;
     </shiro:hasPermission>
     </div>
     <br/>
@@ -855,10 +855,10 @@
             <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
             <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
             <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
-            <input id="customerUuid" name="customerUuid" type="hidden" value="${customerKeywordCrilteria.customerUuid}">
-            关键字:<input type="text" name="keyword" id="keyword" value="${customerKeywordCrilteria.keyword}"
+            <input id="customerUuid" name="customerUuid" type="hidden" value="${customerKeywordCriteria.customerUuid}">
+            关键字:<input type="text" name="keyword" id="keyword" value="${customerKeywordCriteria.keyword}"
                        style="width:80px;">
-            URL:<input type="text" name="url" id="url" value="${customerKeywordCrilteria.url}"
+            URL:<input type="text" name="url" id="url" value="${customerKeywordCriteria.url}"
                        style="width:80px;">
             关键字状态:
             <select name="status" id="status">
@@ -868,25 +868,26 @@
             </select>
             优化组名:
             <input type="text" name="optimizeGroupName" id="optimizeGroupName"
-                   value="${customerKeywordCrilteria.optimizeGroupName}" style="width:100px;">
+                   value="${customerKeywordCriteria.optimizeGroupName}" style="width:100px;">
             <%--<c:if test="${!user.vipType}">--%>
+            已刷:<input type="text" name="optimizedCount" id="optimizedCount" value="${customerKeywordCriteria.optimizedCount}" style="width:40px;"/>
             显示前:
-            <input type="text" name="position" id="position" value="${customerKeywordCrilteria.position}"
+            <input type="text" name="position" id="position" value="${customerKeywordCriteria.position}"
                    style="width:40px;"/>
             <input id="noPosition" name="noPosition" type="checkbox"  onclick="noPositionValue()"/>显示0 &nbsp;
             无效点击数:
             <input type="text" name="invalidRefreshCount" id="invalidRefreshCount"
-                   value="${customerKeywordCrilteria.invalidRefreshCount}" style="width:20px;">
+                   value="${customerKeywordCriteria.invalidRefreshCount}" style="width:20px;">
             创建日期:<input name="creationFromTime" id="creationFromTime" class="Wdate"
                         type="text" style="width:90px;" onClick="WdatePicker()"
-                        value="${customerKeywordCrilteria.creationFromTime}">
+                        value="${customerKeywordCriteria.creationFromTime}">
             到<input
                 name="creationToTime"
                 id="creationToTime"
                 class="Wdate" type="text"
                 style="width:90px;"
                 onClick="WdatePicker()"
-                value="${customerKeywordCrilteria.creationToTime}">
+                value="${customerKeywordCriteria.creationToTime}">
             排序:
             <%--<select name="orderElement" id="orderElement">--%>
                 <%--<option value="">--请选择排序--</option>--%>
@@ -912,7 +913,7 @@
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/customerKeyword/deleteCustomerKeywords">
             <input type="button" class="ui-button ui-widget ui-corner-all"
-                   onclick="delAllItems('ByUuid','${customerKeywordCrilteria.customerUuid}')"
+                   onclick="delAllItems('ByUuid','${customerKeywordCriteria.customerUuid}')"
                    value=" 删除所选 ">
             </shiro:hasPermission>
         </div>
@@ -936,15 +937,8 @@
             <td align="center" width=80>最后优化时间</td>
             <td align="center" width=50>订单号</td>
             <td align="center" width=100>备注</td>
-            <c:choose>
-                <c:when test="${user.vipType}">
-                    <td align="center" width=60>优化组名</td>
-                    <td align="center" width=80>操作</td>
-                </c:when>
-                <c:when test="${user.userLevel == 1}">
-                    <td align="center" width=80>操作</td>
-                </c:when>
-            </c:choose>
+            <td align="center" width=60>优化组名</td>
+            <td align="center" width=80>操作</td>
             <div id="div1"></div>
             <div id="div2"></div>
         </tr>
@@ -960,7 +954,7 @@
                 </td>
                 <td  align="center" width=200 class="wrap floatTd"
                      title="原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}">
-                    <div style="height:16;" class="easyui-tooltip" title="'原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}'">
+                    <div style="height:16;">
                             ${customerKeyword.url==null?'':customerKeyword.url};
                     </div>
                 </td>
@@ -971,7 +965,7 @@
                 <td align="center" width=30>
                     <div style="height:16;"><a
                             href="/internal/customerKeywordPositionIndexLog/historyPositionAndIndex/${customerKeyword.uuid}/30"
-                            target="_blank">${customerKeyword.currentIndexCount}
+                            target="_blank" title="查看历史排名" class="floatTd">${customerKeyword.currentIndexCount}
                     </a></div>
                 </td>
                 <td align="center" width=50>
@@ -1038,7 +1032,7 @@
 </div>
 <div id="uploadExcelDailog"  style="text-align: left;height: 60px; left: 40%;" title="Excel文件上传" class="easyui-dialog">
     <form method="post" id="uploadExcelForm" style="margin-top: 10px"  enctype="multipart/form-data" >
-        <input type="hidden" id="customerUuid" name="customerUuid" value="${customerKeywordCrilteria.customerUuid}">
+        <input type="hidden" id="customerUuid" name="customerUuid" value="${customerKeywordCriteria.customerUuid}">
         <span>请选择要上传的文件<label id="excelType" style="color: red"></label></span>
         <div style="height: 10px;"></div>
         <input type="file" id="uploadExcelFile" name="file" >

@@ -1453,7 +1453,7 @@
 
 	<div id="uploadVNCDialog" class="easyui-dialog" style="left: 40%;">
 		<form method="post" id="uploadVNCForm" action="" enctype="multipart/form-data">
-			<table width="100%" style="margin-top: 10px;margin-left: 10px">
+			<table width="95%" style="margin-top: 10px;margin-left: 10px">
 				<tr>
 					<td></td>
 				</tr>
@@ -1465,7 +1465,7 @@
 						<table width="100%" style="font-size:14px;">
 							<tr>
 								<td>
-									<input type="file" id="file" name="file" size=50 height="50px" style="width: 350px;">
+									<input type="file" id="file" name="file" size=50 height="50px" style="width: 260px;">
 								</td>
 							</tr>
 						</table>

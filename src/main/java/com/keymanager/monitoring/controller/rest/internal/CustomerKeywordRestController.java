@@ -3,13 +3,13 @@ package com.keymanager.monitoring.controller.rest.internal;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.CustomerKeywordCleanCriteria;
-import com.keymanager.monitoring.criteria.CustomerKeywordCrilteria;
+import com.keymanager.monitoring.criteria.CustomerKeywordCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordUpdateGroupCriteria;
 import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.CustomerKeyword;
 import com.keymanager.monitoring.entity.ServiceProvider;
-import com.keymanager.monitoring.entity.User;
+import com.keymanager.monitoring.entity.UserInfo;
 import com.keymanager.monitoring.enums.EntryTypeEnum;
 import com.keymanager.monitoring.excel.operator.CustomerKeywordInfoExcelWriter;
 import com.keymanager.monitoring.service.*;
@@ -18,8 +18,6 @@ import com.keymanager.util.Utils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.authz.annotation.RequiresRoles;
-import org.aspectj.lang.annotation.RequiredTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,13 +45,11 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	private CustomerKeywordService customerKeywordService;
 
 	@Autowired
-	private UserService userService;
+	private IUserInfoService userInfoService;
 
 	@Autowired
 	private UserRoleService userRoleService;
 
-	@Autowired
-	private UserInfoService userInfoService;
 
 	@Autowired
 	private CustomerService customerService;
@@ -64,15 +60,15 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	@RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
 	@RequestMapping(value="/searchCustomerKeywords/{customerUuid}" , method=RequestMethod.GET)
 	public ModelAndView searchCustomerKeywords(@PathVariable("customerUuid") Long customerUuid,@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request){
-		CustomerKeywordCrilteria customerKeywordCrilteria = new CustomerKeywordCrilteria();
-		customerKeywordCrilteria.setStatus("1");
-		customerKeywordCrilteria.setCustomerUuid(customerUuid);
-		return constructCustomerKeywordModelAndView(request, customerKeywordCrilteria, currentPageNumber, pageSize);
+		CustomerKeywordCriteria customerKeywordCriteria = new CustomerKeywordCriteria();
+		customerKeywordCriteria.setStatus("1");
+		customerKeywordCriteria.setCustomerUuid(customerUuid);
+		return constructCustomerKeywordModelAndView(request, customerKeywordCriteria, currentPageNumber, pageSize);
 	}
 
 	@RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
 	@RequestMapping(value = "/searchCustomerKeywords", method = RequestMethod.POST)
-	public ModelAndView searchCustomerKeywords(CustomerKeywordCrilteria customerKeywordCrilteria, HttpServletRequest request) {
+	public ModelAndView searchCustomerKeywords(CustomerKeywordCriteria customerKeywordCriteria, HttpServletRequest request) {
 		try {
 			String currentPageNumber = request.getParameter("currentPageNumber");
 			String pageSize = request.getParameter("pageSize");
@@ -80,28 +76,28 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 				currentPageNumber = "1";
 				pageSize = "30";
 			}
-			return constructCustomerKeywordModelAndView(request, customerKeywordCrilteria, Integer.parseInt(currentPageNumber), Integer.parseInt(pageSize));
+			return constructCustomerKeywordModelAndView(request, customerKeywordCriteria, Integer.parseInt(currentPageNumber), Integer.parseInt(pageSize));
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return null;
 		}
 	}
 
-	private ModelAndView constructCustomerKeywordModelAndView(HttpServletRequest request, CustomerKeywordCrilteria customerKeywordCrilteria, int currentPage, int pageSize) {
+	private ModelAndView constructCustomerKeywordModelAndView(HttpServletRequest request, CustomerKeywordCriteria customerKeywordCriteria, int currentPage, int pageSize) {
 		HttpSession session = request.getSession();
 		ModelAndView modelAndView = new ModelAndView("/customerkeyword/customerKeywordList");
 		String userID = (String) session.getAttribute("username");
-		User user = userService.getUser(userID);
-		Customer customer = customerService.getCustomerWithKeywordCount(customerKeywordCrilteria.getCustomerUuid());
+		UserInfo user = userInfoService.getUserInfo(userID);
+		Customer customer = customerService.getCustomerWithKeywordCount(customerKeywordCriteria.getCustomerUuid());
 		String entryType = (String) session.getAttribute("entryType");
 		String terminalType = TerminalTypeMapping.getTerminalType(request);
 		String orderElement = request.getParameter("orderElement");
-		initOrderElemnet(orderElement,customerKeywordCrilteria);
-		customerKeywordCrilteria.setEntryType(entryType);
-		customerKeywordCrilteria.setTerminalType(terminalType);
+		initOrderElemnet(orderElement, customerKeywordCriteria);
+		customerKeywordCriteria.setEntryType(entryType);
+		customerKeywordCriteria.setTerminalType(terminalType);
 		List<ServiceProvider> serviceProviders = serviceProviderService.searchServiceProviders();
-		Page<CustomerKeyword> page = customerKeywordService.searchCustomerKeywords(new Page<CustomerKeyword>(currentPage, pageSize), customerKeywordCrilteria);
-		modelAndView.addObject("customerKeywordCrilteria", customerKeywordCrilteria);
+		Page<CustomerKeyword> page = customerKeywordService.searchCustomerKeywords(new Page<CustomerKeyword>(currentPage, pageSize), customerKeywordCriteria);
+		modelAndView.addObject("customerKeywordCriteria", customerKeywordCriteria);
 		modelAndView.addObject("page", page);
 		modelAndView.addObject("user", user);
 		modelAndView.addObject("customer", customer);
@@ -110,13 +106,17 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		return modelAndView;
 	}
 
-	private void initOrderElemnet(String orderElement, CustomerKeywordCrilteria customerKeywordCrilteria){
+	private void initOrderElemnet(String orderElement, CustomerKeywordCriteria customerKeywordCriteria){
 		if(orderElement!=null){
 			switch (orderElement.charAt(0)){
-				case '0':customerKeywordCrilteria.setOrderElement("");break;
-				case '1':customerKeywordCrilteria.setOrderElement("fCreateTime");break;
-				case '2':customerKeywordCrilteria.setOrderElement("fCurrentPosition");break;
-				case '3':customerKeywordCrilteria.setOrderElement("fSequence");break;
+				case '0':
+					customerKeywordCriteria.setOrderElement("");break;
+				case '1':
+					customerKeywordCriteria.setOrderElement("fCreateTime");break;
+				case '2':
+					customerKeywordCriteria.setOrderElement("fCurrentPosition");break;
+				case '3':
+					customerKeywordCriteria.setOrderElement("fSequence");break;
 			}
 		}else{
 			orderElement = "0";
@@ -257,13 +257,13 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	@RequiresPermissions("/internal/customerKeyword/downloadCustomerKeywordInfo")
 	@RequestMapping(value = "/downloadCustomerKeywordInfo", method = RequestMethod.GET)
 	public ResponseEntity<?> downloadCustomerKeywordInfo( HttpServletRequest request,
-														 HttpServletResponse response,CustomerKeywordCrilteria customerKeywordCrilteria) {
+														 HttpServletResponse response,CustomerKeywordCriteria customerKeywordCriteria) {
 		try {
 			String terminalType = TerminalTypeMapping.getTerminalType(request);
 			String customerUuid = request.getParameter("customerUuid").trim();
 			String entryType = (String) request.getSession().getAttribute("entryType");
-			customerKeywordCrilteria.setTerminalType(terminalType);
-			customerKeywordCrilteria.setEntryType(entryType);
+			customerKeywordCriteria.setTerminalType(terminalType);
+			customerKeywordCriteria.setEntryType(entryType);
 			List<CustomerKeyword> customerKeywords = appendCondition(request,response);
 			if (!Utils.isEmpty(customerKeywords)) {
 				CustomerKeywordInfoExcelWriter excelWriter = new CustomerKeywordInfoExcelWriter();
@@ -271,7 +271,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 				Customer customer = customerService.selectById(customerUuid);
 				String fileName = customer.getContactPerson() + Utils.formatDatetime(Utils.getCurrentTimestamp(), "yyyy.MM.dd") + ".xls";
 				fileName = new String(fileName.getBytes("gb2312"), "ISO8859-1");
-				// 以流的形式下载文件。
+				// 以流的形式下载文件�
 				byte[] buffer = excelWriter.getExcelContentBytes();
 				// 清空response
 				response.reset();
@@ -303,42 +303,42 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		String optimizeGroupName = request.getParameter("optimizeGroupName").trim();
 		String terminalType = TerminalTypeMapping.getTerminalType(request);
 		String position = request.getParameter("position");
-		CustomerKeywordCrilteria customerKeywordCrilteria = new CustomerKeywordCrilteria();
+		CustomerKeywordCriteria customerKeywordCriteria = new CustomerKeywordCriteria();
 		String orderElement = request.getParameter("orderElement");
-		initOrderElemnet(orderElement,customerKeywordCrilteria);
-		customerKeywordCrilteria.setTerminalType(terminalType);
-		customerKeywordCrilteria.setCustomerUuid(Long.parseLong(customerUuid));
+		initOrderElemnet(orderElement, customerKeywordCriteria);
+		customerKeywordCriteria.setTerminalType(terminalType);
+		customerKeywordCriteria.setCustomerUuid(Long.parseLong(customerUuid));
 		if (!Utils.isNullOrEmpty(keyword)) {
-			customerKeywordCrilteria.setKeyword(keyword);
+			customerKeywordCriteria.setKeyword(keyword);
 		}
 
 		if (!Utils.isNullOrEmpty(url)) {
-			customerKeywordCrilteria.setUrl(url);
+			customerKeywordCriteria.setUrl(url);
 		}
 
 		if (!Utils.isNullOrEmpty(position)) {
-			customerKeywordCrilteria.setPosition(position);;
+			customerKeywordCriteria.setPosition(position);;
 		}
 
 		if (!Utils.isNullOrEmpty(optimizeGroupName)) {
-			customerKeywordCrilteria.setOptimizeGroupName(optimizeGroupName);
+			customerKeywordCriteria.setOptimizeGroupName(optimizeGroupName);
 		}
 
 		if (!Utils.isNullOrEmpty(creationFromTime)) {
-			customerKeywordCrilteria.setCreationToTime(creationFromTime);
+			customerKeywordCriteria.setCreationToTime(creationFromTime);
 		}
 		if (!Utils.isNullOrEmpty(creationToTime)) {
-			customerKeywordCrilteria.setCreationToTime(creationToTime);
+			customerKeywordCriteria.setCreationToTime(creationToTime);
 		}
 
 		if (!Utils.isNullOrEmpty(status)) {
-			customerKeywordCrilteria.setStatus(status);
+			customerKeywordCriteria.setStatus(status);
 		}
 
 		if (!Utils.isNullOrEmpty(invalidRefreshCount)) {
-			customerKeywordCrilteria.setInvalidRefreshCount(invalidRefreshCount);
+			customerKeywordCriteria.setInvalidRefreshCount(invalidRefreshCount);
 		}
-		Page<CustomerKeyword>  page = customerKeywordService.searchCustomerKeywords(new Page<CustomerKeyword>(1, 100000), customerKeywordCrilteria);
+		Page<CustomerKeyword>  page = customerKeywordService.searchCustomerKeywords(new Page<CustomerKeyword>(1, 100000), customerKeywordCriteria);
 		List<CustomerKeyword> customerKeywords = page.getRecords();
 		return customerKeywords;
 	}
@@ -382,14 +382,14 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		if(EntryTypeEnum.fm.name().equalsIgnoreCase(entryType) && !SecurityUtils.getSubject().hasRole("FMSpecial")){
 			SecurityUtils.getSubject().logout();
 		}
-		CustomerKeywordCrilteria customerKeywordCrilteria = new CustomerKeywordCrilteria();
-		customerKeywordCrilteria.setStatus("1");
-		return constructCustomerKeywordListsModelAndView(request, customerKeywordCrilteria, currentPageNumber, pageSize);
+		CustomerKeywordCriteria customerKeywordCriteria = new CustomerKeywordCriteria();
+		customerKeywordCriteria.setStatus("1");
+		return constructCustomerKeywordListsModelAndView(request, customerKeywordCriteria, currentPageNumber, pageSize);
 	}
 
 	@RequiresPermissions("/internal/customerKeyword/searchCustomerKeywordLists")
 	@RequestMapping(value = "/searchCustomerKeywordLists", method = RequestMethod.POST)
-	public ModelAndView searchCustomerKeywordLists(CustomerKeywordCrilteria customerKeywordCrilteria, HttpServletRequest request) {
+	public ModelAndView searchCustomerKeywordLists(CustomerKeywordCriteria customerKeywordCriteria, HttpServletRequest request) {
 		try {
 			String currentPageNumber = request.getParameter("currentPageNumber");
 			String pageSize = request.getParameter("pageSize");
@@ -399,28 +399,31 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 			if(StringUtils.isEmpty(pageSize)){
 				pageSize = "50";
 			}
-			return constructCustomerKeywordListsModelAndView(request, customerKeywordCrilteria, Integer.parseInt(currentPageNumber), Integer.parseInt(pageSize));
+			return constructCustomerKeywordListsModelAndView(request, customerKeywordCriteria, Integer.parseInt(currentPageNumber), Integer.parseInt(pageSize));
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return new ModelAndView("/customerkeyword/keywordfinderList");
 		}
 	}
 
-	private ModelAndView constructCustomerKeywordListsModelAndView(HttpServletRequest request, CustomerKeywordCrilteria customerKeywordCrilteria, int currentPage, int pageSize) {
+	private ModelAndView constructCustomerKeywordListsModelAndView(HttpServletRequest request, CustomerKeywordCriteria customerKeywordCriteria, int currentPage, int pageSize) {
 		HttpSession session = request.getSession();
 		ModelAndView modelAndView = new ModelAndView("/customerkeyword/keywordfinderList");
 		String userName = (String) session.getAttribute("username");
-		User user = userService.getUser(userName);
-		List<User> activeUsers = userService.findActiveUsers();
+		UserInfo user = userInfoService.getUserInfo(userName);
+		List<UserInfo> activeUsers = userInfoService.findActiveUsers();
 		String entryType = (String) session.getAttribute("entryType");
 		String terminalType = TerminalTypeMapping.getTerminalType(request);
 		String orderElement = request.getParameter("orderElement");
-		initOrderElemnet(orderElement,customerKeywordCrilteria);
-		customerKeywordCrilteria.setEntryType(entryType);
-		customerKeywordCrilteria.setTerminalType(terminalType);
-		Page<CustomerKeyword> page = customerKeywordService.searchCustomerKeywordLists(new Page<CustomerKeyword>(currentPage, pageSize), customerKeywordCrilteria);
+		initOrderElemnet(orderElement, customerKeywordCriteria);
+		customerKeywordCriteria.setEntryType(entryType);
+		customerKeywordCriteria.setTerminalType(terminalType);
 		boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
-		modelAndView.addObject("customerKeywordCrilteria", customerKeywordCrilteria);
+		if(isDepartmentManager == false) {
+			customerKeywordCriteria.setUserName(userName);
+		}
+		Page<CustomerKeyword> page = customerKeywordService.searchCustomerKeywordLists(new Page<CustomerKeyword>(currentPage, pageSize), customerKeywordCriteria);
+		modelAndView.addObject("customerKeywordCriteria", customerKeywordCriteria);
 		modelAndView.addObject("page", page);
 		modelAndView.addObject("user", user);
 		modelAndView.addObject("activeUsers", activeUsers);

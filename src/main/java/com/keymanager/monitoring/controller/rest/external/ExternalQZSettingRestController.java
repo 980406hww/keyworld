@@ -7,15 +7,7 @@ import com.keymanager.monitoring.entity.QZSetting;
 import com.keymanager.monitoring.service.QZChargeRuleService;
 import com.keymanager.monitoring.service.QZOperationTypeService;
 import com.keymanager.monitoring.service.QZSettingService;
-import com.keymanager.monitoring.service.UserService;
-import com.keymanager.monitoring.vo.ExtendedUsernamePasswordToken;
 import com.keymanager.util.TerminalTypeMapping;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.DisabledAccountException;
-import org.apache.shiro.authc.IncorrectCredentialsException;
-import org.apache.shiro.authc.UnknownAccountException;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,15 +27,6 @@ public class ExternalQZSettingRestController extends SpringMVCBaseController {
 
 	@Autowired
 	private QZSettingService qzSettingService;
-
-	@Autowired
-	private QZChargeRuleService qzChargeRuleService;
-
-	@Autowired
-	private QZOperationTypeService qzOperationTypeService;
-
-	@Autowired
-	private UserService userService;
 
 	@RequestMapping(value = "/getAvailableQZSetting", method = RequestMethod.POST)
 	public ResponseEntity<?> getAvailableQZSetting(@RequestBody QZSettingCriteria qzSettingCriteria){

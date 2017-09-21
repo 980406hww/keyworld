@@ -5,10 +5,8 @@ import com.keymanager.monitoring.criteria.BaiduIndexCriteria;
 import com.keymanager.monitoring.criteria.BaseCriteria;
 import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.CustomerKeyword;
-import com.keymanager.monitoring.entity.User;
 import com.keymanager.monitoring.service.ClientStatusService;
 import com.keymanager.monitoring.service.CustomerKeywordService;
-import com.keymanager.monitoring.service.UserService;
 import com.keymanager.monitoring.vo.SearchEngineResultItemVO;
 import com.keymanager.monitoring.vo.SearchEngineResultVO;
 import com.keymanager.util.TerminalTypeMapping;
@@ -46,9 +44,6 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
 
     @Autowired
     private ClientStatusService clientStatusService;
-
-    @Autowired
-    private UserService userService;
 
     private String getIP(HttpServletRequest request) {
         String ip = request.getHeader("X-Forwarded-For");
