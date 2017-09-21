@@ -1011,6 +1011,7 @@
                 <form method="post" id="searchCustomerForm" action="/internal/customer/searchCustomers" style="margin-bottom:0px ">
                     <table style="font-size:12px;">
                         <tr>
+
                             <td align="right">联系人:</td>
                             <td><input type="text" name="contactPerson" id="contactPerson"
                                        value="${customerCriteria.contactPerson}"
@@ -1035,19 +1036,21 @@
                                 </shiro:hasPermission>
                             </td>
                             <shiro:hasPermission name="/internal/customer/saveCustomer">
-                                <td align="right"><input type="button" class="ui-button ui-widget ui-corner-all" value=" 添加 "
+                                <td align="right">
+                                    <input type="button" class="ui-button ui-widget ui-corner-all" value=" 添加 "
                                                                      onclick="showCustomerDialog(null,'${user.userID}')"/>
                                 </td>
                             </shiro:hasPermission>
+                            <td align="right">
                             <shiro:hasPermission name="/internal/customer/deleteCustomer">
-                                <td align="right"><input type="button" class="ui-button ui-widget ui-corner-all"
-                                                                     value=" 删除所选" onclick="deleteCustomers(this)"/>
-                                </td>
+                                <input type="button" class="ui-button ui-widget ui-corner-all" value=" 删除所选" onclick="deleteCustomers(this)"/>
                             </shiro:hasPermission>
+                            </td>
                             <c:if test="${'bc'.equalsIgnoreCase(entryType)}">
                                 <shiro:hasPermission name="/internal/dailyReport/triggerReportGeneration">
-                                    <td align="right" width="100"><a target="_blank"
-                                                                     href='javascript:triggerDailyReportGeneration(this)'>触发日报表生成</a>
+                                    <td align="right" width="100">
+                                        <a target="_blank" href='javascript:triggerDailyReportGeneration(this)'>触发日报表生成</a>
+                                        <%--<input type="button" onclick="triggerDailyReportGeneration(this)" value="触发日报表生成">--%>
                                     </td>
                                     <td><span id="dailyReportSpan"></span></td>
                                 </shiro:hasPermission>
@@ -1124,10 +1127,8 @@
             </tr>
         </c:forEach>
     </table>
-    <%--<br><br><br>--%>
-    <%--<br>--%>
 </div>
-<div id="customerChargeTypeDialog" title="客户规则" class="easyui-dialog">
+<div id="customerChargeTypeDialog" title="客户规则" class="easyui-dialog" style="left: 35%;">
     <input type="hidden" id="customerChargeTypeUuid"/>
     <div id="showRuleRadioDiv" style="text-align: center">
         <input type="radio" id="chargeTypePercentage" onclick="chooseChargeType(this.value)" value="Percentage"
@@ -1238,7 +1239,7 @@
 
 
 </div>
-<div id="customerDialog" title="客户信息" class="easyui-dialog">
+<div id="customerDialog" title="客户信息" class="easyui-dialog" style="left: 40%;">
     <form id="customerForm" method="post" action="customerlist.jsp">
         <table style="font-size:14px;" cellpadding=5>
             <tr>
@@ -1248,15 +1249,11 @@
             <tr>
                 <td align="right">QQ</td>
                 <td><input type="text" name="qq" id="qq" style="width:200px;">
-                    <div class="hiddentr"
-                         id="qqExisting"><%--<font color="red">该QQ在系统中已经存在"/font>--%></div>
                 </td>
             </tr>
             <tr>
                 <td align="right">联系电话</td>
                 <td><input type="text" name="telphone" id="telphone" style="width:200px;">
-                    <div class="hiddentr"
-                         id="telphoneExisting"><%--<font color="red">该电话在系统中已经存在！</font>--%></div>
                 </td>
             </tr>
             <tr>
@@ -1287,7 +1284,7 @@
     </form>
 </div>
 <%--上传日报表模"onsubmit="return checkinput();"--%>
-<div id="uploadDailyReportTemplateDialog" title="上传日报表模板" class="easyui-dialog">
+<div id="uploadDailyReportTemplateDialog" title="上传日报表模板" class="easyui-dialog" style="left: 40%;">
     <form method="post" id="dailyReportTemplateForm" action=""
           enctype="multipart/form-data">
         <table width="100%" style="margin-top: 10px;margin-left: 10px">
@@ -1314,7 +1311,7 @@
     </form>
 </div>
 <%--添加客户关键字--%>
-<div id="customerKeywordDialog" title="客户关键字" class="easyui-dialog">
+<div id="customerKeywordDialog" title="客户关键字" class="easyui-dialog" style="left: 35%;">
     <form id="customerKeywordForm">
    <textarea id="customerKeywordTextarea" style="width:480px;height:180px;"
              placeholder="关键字 域名  关键字与域名以空格作为分割，一行一组"></textarea>

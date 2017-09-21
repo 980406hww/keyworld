@@ -104,7 +104,7 @@
 								</select>
 							</td>
 							<shiro:hasPermission name="/internal/qzsetting/searchQZSettings">
-								<td align="right" width="100"><input type="submit" name="btnQuery" id="btnQuery" onclick="resetSearchCondition('1')" value=" 查询 " ></td>
+								<td align="right" width="50"><input type="submit" name="btnQuery" id="btnQuery" onclick="resetSearchCondition('1')" value=" 查询 " ></td>
 							</shiro:hasPermission>
 						</tr>
 					</table>
@@ -722,8 +722,7 @@
     function createSettingDialog() {
         $("#changeSettingDialog").dialog({
             resizable: false,
-            height: 290,
-//            maxHeight: 430,
+            height: 400,
             width: 330,
             title: '全站设置',
             modal: true,
@@ -738,7 +737,7 @@
                     text: '清空',
                     iconCls: 'fi-trash',
                     handler: function () {
-                        $('#showRuleForm')[0].reset();
+                        $('#changeSettingForm')[0].reset();
                     }
                 },
                 {
@@ -746,7 +745,7 @@
                     iconCls: 'icon-cancel',
                     handler: function () {
                         $("#changeSettingDialog").dialog("close");
-                        $('#showRuleForm')[0].reset();
+                        $('#changeSettingForm')[0].reset();
                     }
                 }]
         });
@@ -1107,7 +1106,8 @@
     }
 
 </script>
-<div id="changeSettingDialog" class="easyui-dialog">
+<div id="changeSettingDialog" class="easyui-dialog" style="left: 40%;">
+	<form id="changeSettingForm">
 	<table style="font-size:12px" id="settingTable" align="center">
 		<tr>
 			<td>客户</td>
@@ -1254,6 +1254,7 @@
 			</td>
 		</tr>
 	</table>
+	</form>
 </div>
 <datalist id="customer_list">
 	<c:forEach items="${customerList}" var="costomer">
@@ -1261,7 +1262,7 @@
 	</c:forEach>
 </datalist>
 <%--收费Dialog--%>
-<div id="chargeDialog" class="easyui-dialog">
+<div id="chargeDialog" class="easyui-dialog" style="left: 40%;">
 	<table id="chargeDialogTable">
 		<tr>
 			<td align="right">客户</td>
@@ -1390,7 +1391,7 @@
 	</p>
 </div>
 <%--收费详情列表--%>
-<div id="chargeLogListDiv" class="easyui-dialog">
+<div id="chargeLogListDiv" class="easyui-dialog" style="left: 40%;">
 	<table id="chargeLogListTable" border="1" cellpadding="3" style="font-size: 12px;background-color: white;border-collapse: collapse;">
 		<tr>
 			<td>收费时间</td>
