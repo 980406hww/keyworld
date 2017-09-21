@@ -299,21 +299,16 @@
             优化组名:
             <input type="text" name="optimizeGroupName" id="optimizeGroupName"
                    value="${customerKeywordCriteria.optimizeGroupName}" style="width:100px;">&nbsp;
-            用户名称:
+            <c:if test="${isDepartmentManager}">
+                用户名称:
                 <select name="userName" id="userName">
-                    <c:choose>
-                        <c:when test="${isDepartmentManager}">
-                            <option value="">所有</option>
-                            <option value="${user.loginName}">只显示自己</option>
-                            <c:forEach items="${activeUsers}" var="activeUser">
-                                <option value="${activeUser.loginName}">${activeUser.userName}</option>
-                            </c:forEach>
-                        </c:when>
-                        <c:otherwise>
-                            <option value="${user.loginName}">只显示自己</option>
-                        </c:otherwise>
-                    </c:choose>
+                    <option value="">所有</option>
+                    <option value="${user.loginName}">只显示自己</option>
+                    <c:forEach items="${activeUsers}" var="activeUser">
+                        <option value="${activeUser.loginName}">${activeUser.userName}</option>
+                    </c:forEach>
                 </select>
+            </c:if>
             <br>
             已刷:<input type="text" name="optimizedCount" id="optimizedCount" value="${customerKeywordCriteria.optimizedCount}" style="width:40px;"/>
             显示前:
@@ -337,7 +332,8 @@
                 <option value="3">添加序号</option>
             </select>
             &nbsp;&nbsp;
-            <input type="submit" onclick="resetPageNumber()" value=" 查询 ">&nbsp;&nbsp;
+            <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
+                <input type="submit" onclick="resetPageNumber()" value=" 查询 ">&nbsp;&nbsp;
             <input type="button" onclick="updateCustomerKeywordStatus(0)" value="暂停选择关键字">&nbsp;&nbsp;
             <input type="button" onclick="updateCustomerKeywordStatus(1)" value="激活选中关键字">
         </div>
@@ -365,7 +361,7 @@
     </table>
 </div>
 
-<div id="customerKeywordDiv">
+<div id="customerKeywordDiv" style="margin-bottom: 30px">
     <table id="customerKeywordTable" style="font-size:12px;">
         <c:forEach items="${page.records}" var="customerKeyword">
             <tr style="" height=30 onmouseover="doOver(this);" onmouseout="doOut(this);" height=30>

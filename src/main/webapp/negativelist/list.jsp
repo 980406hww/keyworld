@@ -59,7 +59,7 @@
                 negativeListBottomDiv.find("#upButton").removeAttr("disabled");
                 negativeListBottomDiv.find("#nextButton").removeAttr("disabled");
                 negativeListBottomDiv.find("#lastButton").removeAttr("disabled");
-            } else if (parseInt(pageCount) == 1) {
+            } else if (parseInt(pageCount) <= 1) {
                 negativeListBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
                 negativeListBottomDiv.find("#upButton").attr("disabled", "disabled");
                 negativeListBottomDiv.find("#nextButton").attr("disabled", "disabled");
@@ -335,8 +335,9 @@
 						<input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
 						<td align="right">关键字:</td> <td><input type="text" name="keyword" id="keyword" value="${negativeListCriteria.keyword}" style="width:200px;"></td>
 						<td align="right">URL:</td> <td><input type="text" name="url" id="url" value="${negativeListCriteria.url}" style="width:170px;"></td>
-						<shiro:hasPermission name="/internal/negativelist/searchNegativeLists">
-						<td align="right" width="50"><input type="submit" name="btnQuery" id="btnQuery" onclick="resetPageNumber()" value=" 查询 " >&nbsp;</td>
+						<td align="right" width="100">
+							<shiro:hasPermission name="/internal/negativelist/searchNegativeLists">
+							<input type="submit" name="btnQuery" id="btnQuery" onclick="resetPageNumber()" value=" 查询 " >
 						</shiro:hasPermission>
 						<td colspan="4" align="right">
 							<shiro:hasPermission name="/internal/negativelist/saveNegativeList">
@@ -367,7 +368,7 @@
 	  </tr>
 	</table>
 </div>
-<div id="showNegativeListDiv">
+<div id="showNegativeListDiv" style="margin-bottom: 30px">
 	<table id="showNegativeListTable"  width="100%">
 	  <c:forEach items="${page.records}" var="negativeList" varStatus="trIndex">
 		  <c:choose>

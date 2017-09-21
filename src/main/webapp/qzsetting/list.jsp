@@ -28,8 +28,6 @@
 			height: 22px;
 		}
 
-
-
 		#changeSettingDialog {
 			font-size: 12px;
 			line-height: 12px;
@@ -54,12 +52,6 @@
 		}
 		#chargeLogListDiv {
 			overflow-y: auto;
-		}
-
-		#showQZSettingDiv {
-			width: 100%;
-			height: 95%;
-			margin: auto;
 		}
 
 	</style>
@@ -103,9 +95,11 @@
 									</c:forEach>
 								</select>
 							</td>
-							<shiro:hasPermission name="/internal/qzsetting/searchQZSettings">
-								<td align="right" width="50"><input type="submit" name="btnQuery" id="btnQuery" onclick="resetSearchCondition('1')" value=" 查询 " ></td>
-							</shiro:hasPermission>
+							<td align="right" width="100">
+								<shiro:hasPermission name="/internal/qzsetting/searchQZSettings">
+									<input type="submit" name="btnQuery" id="btnQuery" onclick="resetSearchCondition('1')" value=" 查询 " >
+								</shiro:hasPermission>
+							</td>
 						</tr>
 					</table>
 				</form>
@@ -144,11 +138,11 @@
 		</tr>
 	</table>
 </div>
-<div id="showQZSettingDiv">
-<table id="showQZSettingTable"  style="font-size:12px;width: 100%;" cellpadding=3>
-	<c:forEach items="${page.records}" var="qzSetting">
-		<tr onmouseover="doOver(this);" onmouseout="doOut(this);" height=30>
-			<td width=25><input type="checkbox" name="uuid" value="${qzSetting.uuid}" onclick="decideSelectAll()"/></td>
+<div id="showQZSettingDiv" style="margin-bottom: 30px">
+<table id="showQZSettingTable"  style="font-size:12px;width: 100%;" cellpadding=3 >
+	<c:forEach items="${page.records}" var="qzSetting" varStatus="status">
+		<tr onmouseover="doOver(this);" onmouseout="doOut(this);" height=30 <c:if test="${status.index%2==0}">bgcolor="#eee" </c:if> >
+			<td width=25 align="center"><input type="checkbox" name="uuid" value="${qzSetting.uuid}" onclick="decideSelectAll()"/></td>
 			<td width=150>${qzSetting.contactPerson}</td>
 			<td width=100>${qzSetting.domain}</td>
 			<td width=50>${qzSetting.type}</td>
@@ -211,33 +205,7 @@
     var today = dateStr.getFullYear() + "-" + m + "-" + d;
 
     $(function () {
-        var showQZSettingBottomDiv = $('#showQZSettingBottomDiv');
-        var displaysRecords = showQZSettingBottomDiv.find('#displaysRecordsHidden').val();
-        showQZSettingBottomDiv.find('#chooseRecords').val(displaysRecords);
-        var pages = showQZSettingBottomDiv.find('#pagesHidden').val();
-        showQZSettingBottomDiv.find('#pagesHidden').val(pages);
-        var currentPage = showQZSettingBottomDiv.find('#currentPageHidden').val();
-        showQZSettingBottomDiv.find('#currentPageHidden').val(currentPage);
 
-        if(parseInt(currentPage) > 1 && parseInt(currentPage) < parseInt(pages)) {
-            showQZSettingBottomDiv.find("#firstButton").removeAttr("disabled");
-            showQZSettingBottomDiv.find("#upButton").removeAttr("disabled");
-            showQZSettingBottomDiv.find("#nextButton").removeAttr("disabled");
-            showQZSettingBottomDiv.find("#lastButton").removeAttr("disabled");
-        } else if (parseInt(pages) == 1) {
-            showQZSettingBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
-            showQZSettingBottomDiv.find("#upButton").attr("disabled", "disabled");
-            showQZSettingBottomDiv.find("#nextButton").attr("disabled", "disabled");
-            showQZSettingBottomDiv.find("#lastButton").attr("disabled", "disabled");
-        } else if (parseInt(currentPage) <= 1) {
-            currentPage = 1;
-            showQZSettingBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
-            showQZSettingBottomDiv.find("#upButton").attr("disabled", "disabled");
-        } else {
-            currentPage = pages;
-            showQZSettingBottomDiv.find("#nextButton").attr("disabled", "disabled");
-            showQZSettingBottomDiv.find("#lastButton").attr("disabled", "disabled");
-        }
         $("#chargeLogListDiv").dialog("close");
         $("#chargeDialog").dialog("close");
         $("#changeSettingDialog").dialog("close");
@@ -246,6 +214,41 @@
         window.onresize = function(){
             alignTableHeader();
         }
+
+        /*var showQZSettingBottomDiv = $('#showQZSettingBottomDiv');
+        var displaysRecords = showQZSettingBottomDiv.find('#displaysRecordsHidden').val();
+        showQZSettingBottomDiv.find('#chooseRecords').val(displaysRecords);
+        var pages = showQZSettingBottomDiv.find('#pagesHidden').val();
+        showQZSettingBottomDiv.find('#pagesHidden').val(pages);
+        var currentPage = showQZSettingBottomDiv.find('#currentPageHidden').val();
+        showQZSettingBottomDiv.find('#currentPageHidden').val(currentPage);*/
+        var searchCustomerForm = $("#chargeForm");
+        var pageSize = searchCustomerForm.find('#pageSizeHidden').val();
+        var pages = searchCustomerForm.find('#pagesHidden').val();
+        var currentPageNumber = searchCustomerForm.find('#currentPageNumberHidden').val();
+        var showCustomerBottomDiv = $('#showCustomerBottomDiv');
+        showCustomerBottomDiv.find('#chooseRecords').val(pageSize);
+        showCustomerBottomDiv.find('#pagesHidden').val(pages);
+
+        if(parseInt(currentPageNumber) > 1 && parseInt(currentPageNumber) < parseInt(pages)) {
+            showCustomerBottomDiv.find("#firstButton").removeAttr("disabled");
+            showCustomerBottomDiv.find("#upButton").removeAttr("disabled");
+            showCustomerBottomDiv.find("#nextButton").removeAttr("disabled");
+            showCustomerBottomDiv.find("#lastButton").removeAttr("disabled");
+        } else if (parseInt(pages) <= 1) {
+            showCustomerBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
+            showCustomerBottomDiv.find("#upButton").attr("disabled", "disabled");
+            showCustomerBottomDiv.find("#nextButton").attr("disabled", "disabled");
+            showCustomerBottomDiv.find("#lastButton").attr("disabled", "disabled");
+        } else if (parseInt(currentPageNumber) <= 1) {
+            showCustomerBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
+            showCustomerBottomDiv.find("#upButton").attr("disabled", "disabled");
+        } else {
+            showCustomerBottomDiv.find("#nextButton").attr("disabled", "disabled");
+            showCustomerBottomDiv.find("#lastButton").attr("disabled", "disabled");
+        }
+
+
     });
 
     function alignTableHeader(){

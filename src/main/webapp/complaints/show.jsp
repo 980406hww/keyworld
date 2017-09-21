@@ -335,17 +335,7 @@
         width: 100%;
     }
 
-    #showMainKeywordTableDiv {
-        width: 100%;
-        height: 95%;
-        margin:auto;
-    }
-    #showMainKeywordTable{
-        width: 100%;
-    }
-    #showMainKeywordTable td {
 
-    }
 
     #showAddMainKeywordDialog {
         margin:0 auto;
@@ -356,17 +346,13 @@
     #serachMainKeywordForm{
         text-align: left;
     }
-    #showMainKeywordBottomDiv{
-        margin-right: 2%;
-        float: right;
-        width: 550px;
-    }
+
 
     #showMainKeywordBottomPositioneDiv{
         position: fixed;
         bottom: 0px;
         right: 0px;
-        background-color: white;
+        background-color:#dedede;
         padding-top: 5px;
         padding-bottom: 5px;
         width: 100%;
@@ -406,7 +392,7 @@
 <body>
 <div id="showMainKeywordTopDiv">
     <%@include file="/menu.jsp" %>
-    <div id="serachMainKeyword" style="margin-top: 45px;">
+    <div id="serachMainKeyword" style="margin-top: 35px;">
         <form id="serachMainKeywordForm" action="/internal/complaints/findTSMainKeywords" method="post">
             主关键词&nbsp;&nbsp;<input id="itemKeyword" name="itemKeyword" type="text"
                                    value="${page.condition.get("keyword")}"/>&nbsp;&nbsp;
@@ -446,15 +432,15 @@
         </table>
     </div>
 </div>
-<div id="showMainKeywordTableDiv">
+<div id="showMainKeywordTableDiv" style="margin-bottom: 30px">
         <table id="showMainKeywordTable">
-            <c:forEach items="${page.records }" var="mainkey">
-                <tr onmouseover="doOver(this)" onmouseout="doOut(this)" ondblclick="getMainKeyword('${mainkey.uuid}')">
-                    <td><input type="checkbox" name="uuid" value="${mainkey.uuid}" onclick="decideSelectAll()"/></td>
+            <c:forEach items="${page.records }" var="mainkey" varStatus="status">
+                <tr onmouseover="doOver(this)" onmouseout="doOut(this)" ondblclick="getMainKeyword('${mainkey.uuid}')" <c:if test="${status.index%2==0}">bgcolor="#eee" </c:if> >
+                    <td width=10 align="center"><input type="checkbox" name="uuid" value="${mainkey.uuid}" onclick="decideSelectAll()"/></td>
                     <input type="hidden" id="mkUuid" value="${mainkey.uuid}"/>
-                    <td>${mainkey.keyword }</td>
-                    <td>${mainkey.group }</td>
-                    <td>
+                    <td width=150>${mainkey.keyword }</td>
+                    <td width=60>${mainkey.group }</td>
+                    <td width=400>
                         <c:forEach items="${mainkey.tsNegativeKeywords}" var="ngkey">
                             <input type="hidden" id="ngkeyUuid" value="${ngkey.uuid}"/>
                             <c:choose>
@@ -467,7 +453,7 @@
                             </c:choose>
                         </c:forEach>
                     </td>
-                    <td>
+                    <td width=100>
                         <c:choose>
                             <c:when test="${mainkey.updateTime==null}">
                                 ${mainkey.updateTime}
@@ -477,7 +463,7 @@
                             </c:otherwise>
                         </c:choose>
                     </td>
-                    <td><fmt:formatDate value="${mainkey.createTime}" pattern="yy-MM-dd HH:mm"/></td>
+                    <td width=100><fmt:formatDate value="${mainkey.createTime}" pattern="yy-MM-dd HH:mm"/></td>
                     <td>
                     <shiro:hasPermission name="/internal/negativelist/save">
                         &nbsp;&nbsp;&nbsp;<a href="javascript:getMainKeyword('${mainkey.uuid}')">修改</a>&nbsp;&nbsp;&nbsp;

@@ -45,7 +45,6 @@
 
 #clientStatusDiv {
 	width: 100%;
-	margin: auto;
 }
 
 #showClientStatusBottomDiv {
@@ -180,7 +179,7 @@
 		</tr>
 	</table>
 </div>
-<div id="clientStatusDiv">
+<div id="clientStatusDiv" style="margin-bottom: 30px;">
 	<table width=100% style="font-size: 12px" id="clientStatusTable">
 		<c:forEach items="${page.records}" var="clientStatus" varStatus="tr">
 			<c:set var="isValidClient" value="true"/>

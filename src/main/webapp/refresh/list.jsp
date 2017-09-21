@@ -87,9 +87,11 @@
 										  value="${refreshStatInfoCriteria.groupName}"></td>
 			<td align="right">客户名称:<input name="customerName" id="customerName" type="text" style="width:200px;"
 										  value="${refreshStatInfoCriteria.customerName}"></td>
-			<shiro:hasPermission name="/internal/refreshstatinfo/searchRefreshStatInfos">
-				<td align="right"><input type="submit" name="btnQuery" id="btnQuery" value=" 查询 "></td>
-			</shiro:hasPermission>
+			<td align="right">
+				<shiro:hasPermission name="/internal/refreshstatinfo/searchRefreshStatInfos">
+					<input type="submit" name="btnQuery" id="btnQuery" value=" 查询 ">
+				</shiro:hasPermission>
+			</td>
 		</tr>
 	</table>
 </form>

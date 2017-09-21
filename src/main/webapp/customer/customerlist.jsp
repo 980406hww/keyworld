@@ -49,20 +49,25 @@
             var currentPageNumber = searchCustomerForm.find('#currentPageNumberHidden').val();
             var showCustomerBottomDiv = $('#showCustomerBottomDiv');
             showCustomerBottomDiv.find("#chooseRecords").val(pageSize);
-            if (parseInt(currentPageNumber) <= 1) {
-                currentPageNumber = 1;
-                showCustomerBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
-                showCustomerBottomDiv.find("#upButton").attr("disabled", "disabled");
-            } else if (parseInt(currentPageNumber) >= parseInt(pages)) {
-                currentPageNumber = pages;
-                showCustomerBottomDiv.find("#nextButton").attr("disabled", "disabled");
-                showCustomerBottomDiv.find("#lastButton").attr("disabled", "disabled");
-            } else {
+
+            if(parseInt(currentPageNumber) > 1 && parseInt(currentPageNumber) < parseInt(pages)) {
                 showCustomerBottomDiv.find("#firstButton").removeAttr("disabled");
                 showCustomerBottomDiv.find("#upButton").removeAttr("disabled");
                 showCustomerBottomDiv.find("#nextButton").removeAttr("disabled");
                 showCustomerBottomDiv.find("#lastButton").removeAttr("disabled");
+            } else if (parseInt(pages) <= 1) {
+                showCustomerBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
+                showCustomerBottomDiv.find("#upButton").attr("disabled", "disabled");
+                showCustomerBottomDiv.find("#nextButton").attr("disabled", "disabled");
+                showCustomerBottomDiv.find("#lastButton").attr("disabled", "disabled");
+            } else if (parseInt(currentPageNumber) <= 1) {
+                showCustomerBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
+                showCustomerBottomDiv.find("#upButton").attr("disabled", "disabled");
+            } else {
+                showCustomerBottomDiv.find("#nextButton").attr("disabled", "disabled");
+                showCustomerBottomDiv.find("#lastButton").attr("disabled", "disabled");
             }
+
         }
         //只能输入数字
         function onlyNumber() {
@@ -1050,26 +1055,25 @@
                                            name="btnQuery" id="btnQuery" value=" 查询 ">
                                 </shiro:hasPermission>
                             </td>
-                            <shiro:hasPermission name="/internal/customer/saveCustomer">
-                                <td align="right">
-                                    <input type="button" class="ui-button ui-widget ui-corner-all" value=" 添加 "
-                                                                     onclick="showCustomerDialog(null,'${user.userID}')"/>
-                                </td>
-                            </shiro:hasPermission>
+
                             <td align="right">
-                            <shiro:hasPermission name="/internal/customer/deleteCustomer">
-                                <input type="button" class="ui-button ui-widget ui-corner-all" value=" 删除所选" onclick="deleteCustomers(this)"/>
-                            </shiro:hasPermission>
-                            </td>
-                            <c:if test="${'bc'.equalsIgnoreCase(entryType)}">
-                                <shiro:hasPermission name="/internal/dailyReport/triggerReportGeneration">
-                                    <td align="right" width="100">
-                                        <a target="_blank" href='javascript:triggerDailyReportGeneration(this)'>触发日报表生成</a>
-                                        <%--<input type="button" onclick="triggerDailyReportGeneration(this)" value="触发日报表生成">--%>
-                                    </td>
-                                    <td><span id="dailyReportSpan"></span></td>
+                                <shiro:hasPermission name="/internal/customer/saveCustomer">
+                                <input type="button" class="ui-button ui-widget ui-corner-all" value=" 添加 " onclick="showCustomerDialog(null,'${user.userID}')"/>
                                 </shiro:hasPermission>
-                            </c:if>
+                            </td>
+                            <td align="right">
+                                <shiro:hasPermission name="/internal/customer/deleteCustomers">
+                                <input type="button" class="ui-button ui-widget ui-corner-all" value=" 删除所选" onclick="deleteCustomers(this)"/>
+                                </shiro:hasPermission>
+                            </td>
+                            <td align="right" width="100">
+                                <c:if test="${'bc'.equalsIgnoreCase(entryType)}">
+                                    <shiro:hasPermission name="/internal/dailyReport/triggerReportGeneration">
+                                        <a target="_blank" href='javascript:triggerDailyReportGeneration(this)'>触发日报表生成</a>
+                                    </shiro:hasPermission>
+                                </c:if>
+                            </td>
+                            <td><span id="dailyReportSpan"></span></td>
                         </tr>
                     </table>
                 </form>

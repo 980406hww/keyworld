@@ -55,7 +55,7 @@ public class CustomerRestController {
         String pageSize = request.getParameter("pageSize");
         if (null == currentPageNumber && null == currentPageNumber) {
             currentPageNumber = "1";
-            pageSize = "30";
+            pageSize = "50";
         }
         return constructCustomerModelAndView(request, customerCriteria, currentPageNumber, pageSize);
     }
