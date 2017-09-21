@@ -121,9 +121,9 @@
 							<input id="showFetchKeywordStatus" name="showFetchKeywordStatus" type="checkbox" value="showFetchKeywordStatus"
 							${clientStatusCriteria.showFetchKeywordStatus != null ? "checked=true" : ""}>显示取词状态</input>
 						</td>
-						<td align="right" width="30px">
+						<td align="right" width="50px">
 						<shiro:hasPermission name="/internal/clientstatus/searchClientStatuses">
-							<input type="submit" name="btnFilter" id="btnFilter" onclick="resetPageNumber()" value=" 查询 ">
+							<input type="submit" name="btnFilter" id="btnFilter" onclick="resetPageNumber()" value=" 查询 " style="width: 50px;">
 						</shiro:hasPermission>
 						</td>
 						</tr>
@@ -1428,11 +1428,11 @@
 
 	</div>
 	
-	<div id="targetVersionSettingDialog" class="easyui-dialog">
+	<div id="targetVersionSettingDialog" class="easyui-dialog" style="left: 40%;">
 		目标版本：<input type="text" name="settingTargetVersion" id="settingTargetVersion" />
 	</div>
 
-	<div id="renewalSettingDialog" class="easyui-dialog">
+	<div id="renewalSettingDialog" class="easyui-dialog" style="left: 40%;">
 		<table style="font-size:12px">
 			<tr>
 				<th>类型</th>
@@ -1450,7 +1450,7 @@
 		</table>
 	</div>
 
-	<div id="uploadVNCDialog" class="easyui-dialog" >
+	<div id="uploadVNCDialog" class="easyui-dialog" style="left: 40%;">
 		<form method="post" id="uploadVNCForm" action="" enctype="multipart/form-data">
 			<table width="95%" style="margin-top: 10px;margin-left: 10px">
 				<tr>

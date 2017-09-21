@@ -168,6 +168,34 @@
                 }
             }
 
+            function selectAll(self) {
+                var a = document.getElementsByName("uuid");
+                if (self.checked) {
+                    for (var i = 0; i < a.length; i++) {
+                        a[i].checked = true;
+                    }
+                } else {
+                    for (var i = 0; i < a.length; i++) {
+                        a[i].checked = false;
+                    }
+                }
+            }
+
+            function decideSelectAll() {
+                var a = document.getElementsByName("uuid");
+                var select=0;
+                for(var i = 0; i < a.length; i++){
+                    if (a[i].checked == true){
+                        select++;
+                    }
+                }
+                if(select == a.length){
+                    $("#selectAllChecked").prop("checked",true);
+                }else {
+                    $("#selectAllChecked").prop("checked",false);
+                }
+            }
+
             function initNoPositionChecked() {
                 if(${customerKeywordCriteria.noPosition == 1}){
                     $("#noPosition").prop("checked",true);
@@ -194,6 +222,55 @@
                 var ctd = $("#headerTable tr:first td");
                 $.each(td, function (idx, val) {
                     ctd.eq(idx).width($(val).width());
+                });
+            }
+
+            function getSelectedIDs() {
+                var uuids = '';
+                $.each($("input[name=uuid]:checkbox:checked"), function () {
+                    if (uuids === '') {
+                        uuids = $(this).val();
+                    } else {
+                        uuids = uuids + "," + $(this).val();
+                    }
+                });
+                return uuids;
+            }
+
+            function updateCustomerKeywordStatus(status) {
+                var customerKeyword = {};
+                var customerKeywordUuids = getSelectedIDs();
+                if (customerKeywordUuids === '') {
+                    alert('请选择要操作的关键字');
+                    return;
+                }
+                if(status == 0) {
+                    if (confirm("确认要暂停选中的关键字吗?") == false) return;
+                } else {
+                    if (confirm("确认要上线选中的关键字吗?") == false) return;
+                }
+                customerKeyword.uuids = customerKeywordUuids.split(",");
+                customerKeyword.status = status;
+                $.ajax({
+                    url: '/internal/customerKeyword/updateCustomerKeywordStatus',
+                    data: JSON.stringify(customerKeyword),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (status) {
+                        if (status) {
+                            $().toastmessage('showSuccessToast', "操作成功");
+                            window.location.reload();
+                        } else {
+                            $().toastmessage('showErrorToast', "操作失败");
+                        }
+                    },
+                    error: function () {
+                        $().toastmessage('showErrorToast', "操作失败");
+                    }
                 });
             }
         </script>
@@ -254,15 +331,16 @@
                 <option value="2">当前排名</option>
                 <option value="3">添加序号</option>
             </select>
-            &nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;
             <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
                 <input type="submit" onclick="resetPageNumber()" value=" 查询 ">&nbsp;&nbsp;
-            </shiro:hasPermission>
-
+            <input type="button" onclick="updateCustomerKeywordStatus(0)" value="暂停选择关键字">&nbsp;&nbsp;
+            <input type="button" onclick="updateCustomerKeywordStatus(1)" value="激活选中关键字">
         </div>
     </form>
     <table style="font-size:12px; width: 100%;" id="headerTable">
         <tr bgcolor="#eeeeee" height=30>
+            <td align="center" width="10"><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
             <td align="center" width=80>联系人</td>
             <td align="center" width=80>关键字</td>
             <td align="center" width=100>URL</td>
@@ -287,6 +365,9 @@
     <table id="customerKeywordTable" style="font-size:12px;">
         <c:forEach items="${page.records}" var="customerKeyword">
             <tr style="" height=30 onmouseover="doOver(this);" onmouseout="doOut(this);" height=30>
+                <td width="10">
+                    <input type="checkbox" name="uuid" value="${customerKeyword.uuid}" onclick="decideSelectAll()"/>
+                </td>
                 <td align="center" width=80>
                     <a href="/internal/customerKeyword/searchCustomerKeywords/${customerKeyword.customerUuid}" target="_blank">${customerKeyword.contactPerson}</a></td>
                 </td>

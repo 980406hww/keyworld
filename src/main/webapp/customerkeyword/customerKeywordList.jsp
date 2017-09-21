@@ -1025,12 +1025,12 @@
     </div>
 </div>
 <%--Dialog部分--%>
-<div id="groupChangeNameDialog"  style="text-align: center;" title="修改客户关键字组名" class="easyui-dialog">
+<div id="groupChangeNameDialog"  style="text-align: center;left: 40%;" title="修改客户关键字组名" class="easyui-dialog">
     <form id="groupNameChangeFrom" style="text-align: center;margin-top: 10px;">
         目标组名称:<input type="text" id="groupName" name="groupName" style="width:150px">
     </form>
 </div>
-<div id="uploadExcelDailog"  style="text-align: left;height: 60px;" title="Excel文件上传" class="easyui-dialog">
+<div id="uploadExcelDailog"  style="text-align: left;height: 60px; left: 40%;" title="Excel文件上传" class="easyui-dialog">
     <form method="post" id="uploadExcelForm" style="margin-top: 10px"  enctype="multipart/form-data" >
         <input type="hidden" id="customerUuid" name="customerUuid" value="${customerKeywordCriteria.customerUuid}">
         <span>请选择要上传的文件<label id="excelType" style="color: red"></label></span>
@@ -1039,7 +1039,7 @@
     </form>
 </div>
 
-<div id="saveCustomerKeywordDialog" class="easyui-dialog">
+<div id="saveCustomerKeywordDialog" class="easyui-dialog" style="left: 35%;">
     <form id="customerKeywordForm">
         <ul>
             <input type="hidden" name="uuid" id="uuid" value="" style="width:300px;">
