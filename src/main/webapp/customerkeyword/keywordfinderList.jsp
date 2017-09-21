@@ -293,10 +293,6 @@
             function searchCustomerKeywords(url) {
                 window.open(url);
             }
-
-            function historyPositionAndIndex(url) {
-                window.open(url);
-            }
         </script>
 
     </head>
@@ -415,10 +411,8 @@
                 </td>
                 <td align="center" width=30>
                     <div style="height:16;">
-                        <shiro:hasPermission name="/internal/customerKeywordPositionIndexLog/historyPositionAndIndex">
-                        <a href="#" onclick="historyPositionAndIndex('/internal/customerKeywordPositionIndexLog/historyPositionAndIndex/${customerKeyword.uuid}/30')"
-                             title="查看历史排名" class="floatTd">${customerKeyword.currentIndexCount}</a>
-                        </shiro:hasPermission>
+                        <a href="/internal/customerKeywordPositionIndexLog/historyPositionAndIndex/${customerKeyword.uuid}/30"
+                             target="_blank" title="查看历史排名" class="floatTd">${customerKeyword.currentIndexCount}</a>
                     </div>
                 </td>
                 <td align="center" width=50>
