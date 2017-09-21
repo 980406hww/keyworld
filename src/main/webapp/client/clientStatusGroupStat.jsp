@@ -1,4 +1,4 @@
-<%@ include file="/commons/basejs.jsp" %>
+﻿<%@ include file="/commons/basejs.jsp" %>
 <%@ include file="/commons/global.jsp" %>
 <html>
 <head>
@@ -24,7 +24,7 @@
             background-color: white;
         }
         #ClientStatusGroupSummaryTable tr:nth-child(even){background-color: #eeeeee}
-        #ClientStatusGroupSummaryTable tr:hover{background-color: #dad55e}
+        #ClientStatusGroupSummaryTable tr:hover{background-color: green;}
     </style>
 
     <script language="javascript" type="text/javascript">
@@ -73,7 +73,7 @@
 <div id="centerDiv">
     <table width=40% style="font-size: 12px;" cellpadding=3 id="ClientStatusGroupSummaryTable">
     <c:forEach items="${clientStatusGroupSummaryVOs}" var="ClientStatusGroupSummaryVO" varStatus="status">
-        <tr align="left">
+        <tr align="left" height="30px">
         <td style="padding-left: 7px;">${ClientStatusGroupSummaryVO.group}</td>
         <td>${ClientStatusGroupSummaryVO.terminalType}</td>
         <td>${ClientStatusGroupSummaryVO.count}</td>
