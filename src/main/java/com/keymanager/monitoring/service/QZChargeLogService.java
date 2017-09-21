@@ -82,10 +82,10 @@ public class QZChargeLogService extends ServiceImpl<QZChargeLogDao, QZChargeLog>
 
     //保存收费流水表----->可能是多个对象
     public String saveQZChargeLog(List<QZChargeLog> qzChargeLogs,HttpServletRequest request) {
-        String userID = (String)request.getSession().getAttribute("username");
+        String loginName = (String)request.getSession().getAttribute("username");
         for(QZChargeLog qzChargeLog : qzChargeLogs){
             if (null !=qzChargeLog  && null != qzChargeLog.getQzOperationTypeUuid()) {
-                qzChargeLog.setUserID(userID);
+                qzChargeLog.setLoginName(loginName);
                 qzChargeLogDao.insert(qzChargeLog);
                 //插入时 更新 下一次的收费日期
                 QZOperationType qzOperationType = qzOperationTypeService.selectById(qzChargeLog.getQzOperationTypeUuid());
