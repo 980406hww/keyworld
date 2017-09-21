@@ -6,11 +6,11 @@ import java.util.Date;
 import java.util.List;
 
 import com.keymanager.monitoring.entity.Role;
+import com.keymanager.monitoring.entity.UserInfo;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.keymanager.monitoring.entity.User;
 
 /**
  * @description：UserVo
@@ -177,11 +177,11 @@ public class UserVO implements Serializable {
 	 * @param user 用户
 	 * @return 是否同一个人
 	 */
-	public boolean equalsUser(User user) {
+	public boolean equalsUser(UserInfo user) {
 		if (user == null) {
 			return false;
 		}
-		String userId = user.getUserID();
+		String userId = user.getLoginName();
 		if (userUuid == null || userId == null) {
 			return false;
 		}

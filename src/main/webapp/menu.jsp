@@ -115,7 +115,7 @@
 			</c:otherwise>
 		</c:choose>
 			<div style="float: right;margin:7px 10px 0px 0px;">
-			<b class="fi-torso icon-black" style="font-size: 12px;">&nbsp;<shiro:principal></shiro:principal></b>|
+			<b class="fi-torso icon-black" style="font-size: 12px;">&nbsp;<shiro:principal property="name"></shiro:principal></b>|
 			<span class="fi-anchor icon-green" style="font-size: 12px;color: green"></span>
 			<span style="font-size: 12px;color: black">
 				<c:choose>

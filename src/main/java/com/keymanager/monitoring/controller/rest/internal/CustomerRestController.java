@@ -3,9 +3,9 @@ package com.keymanager.monitoring.controller.rest.internal;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.criteria.CustomerCriteria;
 import com.keymanager.monitoring.entity.Customer;
-import com.keymanager.monitoring.entity.User;
+import com.keymanager.monitoring.entity.UserInfo;
 import com.keymanager.monitoring.service.CustomerService;
-import com.keymanager.monitoring.service.UserService;
+import com.keymanager.monitoring.service.IUserInfoService;
 import com.keymanager.util.TerminalTypeMapping;
 import com.keymanager.util.Utils;
 import org.apache.shiro.SecurityUtils;
@@ -35,7 +35,7 @@ public class CustomerRestController {
     private CustomerService customerService;
 
     @Autowired
-    private UserService userService;
+    private IUserInfoService userInfoService;
 
     @RequiresPermissions("/internal/customer/searchCustomers")
     @RequestMapping(value = "/searchCustomers", method = RequestMethod.GET)
@@ -61,7 +61,7 @@ public class CustomerRestController {
         Subject subject = SecurityUtils.getSubject();
         HttpSession session = request.getSession();
         String userID = (String) session.getAttribute("username");
-        User user = userService.getUser(userID);
+        UserInfo user = userInfoService.getUserInfo(userID);
         String entryType = (String) session.getAttribute("entryType");
         String terminalType = TerminalTypeMapping.getTerminalType(request);
         customerCriteria.setEntryType(entryType);

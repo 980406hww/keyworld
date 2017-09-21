@@ -97,10 +97,31 @@
         FROM t_userinfo u
     </select>
 
+    <!--原userDao的方法-->
+    <select id="getUserInfo" resultType="com.keymanager.monitoring.entity.UserInfo">
+        SELECT
+        <include refid="colID"/>
+        FROM t_userinfo u
+        WHERE
+        u.fUuid = #{userID}
+        AND u.fStatus = 1
+    </select>
+
+
     <select id="getUuidByLoginName" parameterType="java.lang.String" resultType="java.lang.Long">
         SELECT
         fUuid AS "uuid"
         FROM t_userinfo
         WHERE fLoginName = #{loginName}
     </select>
+
+
+    <select id="findActiveUsers" resultType="com.keymanager.monitoring.entity.UserInfo">
+        SELECT
+        <include refid="colID"/>
+        FROM
+        t_userinfo u
+        WHERE u.fStatus = 1
+    </select>
+
 </mapper>

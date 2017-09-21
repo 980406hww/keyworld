@@ -2,17 +2,9 @@ package com.keymanager.monitoring.controller.rest.external;
 
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.entity.ClientStatus;
-import com.keymanager.monitoring.entity.User;
 import com.keymanager.monitoring.service.ClientStatusService;
-import com.keymanager.monitoring.service.UserService;
 import com.keymanager.monitoring.service.VMwareService;
 import com.keymanager.util.TerminalTypeMapping;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.DisabledAccountException;
-import org.apache.shiro.authc.IncorrectCredentialsException;
-import org.apache.shiro.authc.UnknownAccountException;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -6,19 +6,15 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.common.result.PageInfo;
 import com.keymanager.monitoring.common.utils.BeanUtils;
 import com.keymanager.monitoring.common.utils.StringUtils;
-import com.keymanager.monitoring.dao.UserDao;
 import com.keymanager.monitoring.dao.UserInfoDao;
 import com.keymanager.monitoring.dao.UserRoleDao;
-import com.keymanager.monitoring.entity.User;
 import com.keymanager.monitoring.entity.UserInfo;
 import com.keymanager.monitoring.entity.UserRole;
 import com.keymanager.monitoring.service.IUserInfoService;
-import com.keymanager.monitoring.service.IUserService;
 import com.keymanager.monitoring.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -34,10 +30,20 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoDao, UserInfo> impl
     private UserInfoDao userInfoDao;
     @Autowired
     private UserRoleDao userRoleDao;
-    
+
+    @Override
+    public UserInfo getUserInfo(String userID) {
+        return userInfoDao.getUserInfo(userID);
+    }
+
+    @Override
+    public List<UserInfo> findActiveUsers() {
+        return userInfoDao.findActiveUsers();
+    }
+
     public List<UserInfo> selectByLoginName(UserVO userVo) {
         UserInfo userInfo = new UserInfo();
-        userInfo.setUserName(userVo.getLoginName());
+        userInfo.setLoginName(userVo.getLoginName());
         EntityWrapper<UserInfo> wrapper = new EntityWrapper<UserInfo>(userInfo);
         if (null != userVo.getUserUuid()) {
             wrapper.where("fuuid != {0}", userVo.getUserUuid());
@@ -110,6 +116,11 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoDao, UserInfo> impl
     public void deleteUserById(Long id) {
         this.deleteById(id);
         userRoleDao.deleteByUserId(id);
+    }
+
+    @Override
+    public Long getUuidByLoginName(String loginName) {
+        return userInfoDao.getUuidByLoginName(loginName);
     }
 
 }

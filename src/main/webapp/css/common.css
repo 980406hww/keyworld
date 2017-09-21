@@ -2,6 +2,7 @@ body{
     margin: 0;
     padding: 0;
 }
+*{margin: 0px;padding: 0px}
 td,.wrap {
     word-break: break-all;
     word-wrap: break-word;
