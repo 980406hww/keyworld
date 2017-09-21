@@ -341,7 +341,7 @@
     </form>
     <table style="font-size:12px; width: 100%;" id="headerTable">
         <tr bgcolor="#eeeeee" height=30>
-            <td align="center" width="10"><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
+            <td width="10"><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
             <td align="center" width=80>联系人</td>
             <td align="center" width=80>关键字</td>
             <td align="center" width=100>URL</td>

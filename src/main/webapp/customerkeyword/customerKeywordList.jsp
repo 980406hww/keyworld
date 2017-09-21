@@ -21,17 +21,6 @@
                 height: 50px;
             }
 
-            #div2 {
-                display: none;
-                background-color: #ACF106;
-                color: #E80404;
-                font-size: 20px;
-                line-height: 18px;
-                border: 2px solid #104454;
-                width: 100px;
-                height: 22px;
-            }
-
             #customerKeywordTopDiv {
                 position: fixed;
                 top: 0px;
@@ -921,7 +910,7 @@
     <%--</c:if>--%>
     <table style="font-size:12px; width: 100%;" id="headerTable">
         <tr bgcolor="#eeeeee" height=30>
-            <td align="center" width=10><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
+            <td width=10><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
             <td align="center" width=100>关键字</td>
             <td align="center" width=200>URL</td>
             <td align="center" width=250>标题</td>
@@ -940,7 +929,6 @@
             <td align="center" width=60>优化组名</td>
             <td align="center" width=80>操作</td>
             <div id="div1"></div>
-            <div id="div2"></div>
         </tr>
     </table>
 </div>
@@ -948,7 +936,7 @@
     <table id="customerKeywordTable">
         <c:forEach items="${page.records}" var="customerKeyword">
             <tr style="" height=30 onmouseover="doOver(this);" onmouseout="doOut(this);" ondblclick="modifyCustomerKeyword('${customerKeyword.uuid}')" height=30>
-                <td  align="center" width=10><input type="checkbox" name="uuid" value="${customerKeyword.uuid}" onclick="decideSelectAll()"/></td>
+                <td width=10><input type="checkbox" name="uuid" value="${customerKeyword.uuid}" onclick="decideSelectAll()"/></td>
                 <td align="center" width=100>
                     <font color="<%--<%=keywordColor%>--%>">${customerKeyword.keyword}</font>
                 </td>
