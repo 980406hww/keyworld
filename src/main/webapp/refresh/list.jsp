@@ -33,10 +33,12 @@
             }
         }
 
+		<shiro:hasPermission name="/internal/clientstatus/searchBadClientStatus">
         function findClientStatus(groupName) {
 			$("#searchClientStatusForm").find("#groupName").val(groupName);
             $("#searchClientStatusForm").submit();
 		}
+		</shiro:hasPermission>
 
 		<shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
 		function findKeyword(optimizeGroupName, invalidRefreshCount) {

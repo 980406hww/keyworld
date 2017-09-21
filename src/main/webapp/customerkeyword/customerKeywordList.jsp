@@ -337,7 +337,7 @@
                 $("#groupChangeNameDialog").dialog({
                     resizable: false,
                     width: 260,
-                    height: 150,
+                    height: 100,
                     closed: true,
                     modal: true,
                     title: changeGroupCriteria.title,
@@ -378,7 +378,7 @@
                         }]
                 });
                 $("#groupChangeNameDialog").dialog("open");
-                $('#groupChangeNameDialog').window("resize",{top:$(document).scrollTop() + 100});
+                $('#groupChangeNameDialog').window("resize",{top:$(document).scrollTop() + 200});
             }
 
             function updateCustomerKeywordStatus(status) {
@@ -459,8 +459,6 @@
                     },
                 });
             }
-
-
             //增加新关键字
             function addCustomerKeyword(customerKeywordUuid) {
                 if (customerKeywordUuid == null) {
@@ -470,7 +468,7 @@
                 }
                 $( "#saveCustomerKeywordDialog").dialog({
                     width: 410,
-                    height: 540,
+                    height: 550,
                     title : "添加关键字",
                     modal: true,
                     resizable: false,
@@ -516,11 +514,11 @@
                 }
                 customerKeyword.keyword = keyword;
                 var url = $.trim(saveCustomerKeywordDialog.find("#url").val())
-                if (url.length == 0) {
-                    $().toastmessage('showWarningToast', "网址不能为空！");
-                    saveCustomerKeywordDialog.find("#url").focus();
-                    return;
-                }
+//                if (url.length == 0) {
+//                    $().toastmessage('showWarningToast', "网址不能为空！");
+//                    saveCustomerKeywordDialog.find("#url").focus();
+//                    return;
+//                }
                 customerKeyword.url = url;
                 var originalUrl = $.trim(saveCustomerKeywordDialog.find("#originalUrl").val());
                 customerKeyword.originalUrl = originalUrl;
@@ -762,6 +760,14 @@
                     $("#noPosition").val("0");
                 }
             }
+            //显示下架
+            function displayStopValue() {
+                if($("#displayStop").is(":checked")){
+                    $("#displayStop").val("1")
+                }else {
+                    $("#displayStop").val("");
+                }
+            }
 
             function initNoPositionChecked() {
                 if(${customerKeywordCriteria.noPosition == 1}){
@@ -863,7 +869,8 @@
             显示前:
             <input type="text" name="position" id="position" value="${customerKeywordCriteria.position}"
                    style="width:40px;"/>
-            <input id="noPosition" name="noPosition" type="checkbox"  onclick="noPositionValue()"/>显示0 &nbsp;
+            <input id="noPosition" name="noPosition" type="checkbox"  onclick="noPositionValue()" />显示0 &nbsp;
+            <input id="displayStop" name="displayStop" type="checkbox"  onclick="displayStopValue()" value="${customerKeywordCriteria.displayStop}" <c:if test="${customerKeywordCriteria.displayStop=='1'}">checked</c:if>/>显示下架 &nbsp;
             无效点击数:
             <input type="text" name="invalidRefreshCount" id="invalidRefreshCount"
                    value="${customerKeywordCriteria.invalidRefreshCount}" style="width:20px;">
@@ -878,12 +885,6 @@
                 onClick="WdatePicker()"
                 value="${customerKeywordCriteria.creationToTime}">
             排序:
-            <%--<select name="orderElement" id="orderElement">--%>
-                <%--<option value="">--请选择排序--</option>--%>
-                <%--<option value="fCreateTime">创建日期</option>--%>
-                <%--<option value="fCurrentPosition">当前排名</option>--%>
-                <%--<option value="fSequence">添加序号</option>--%>
-            <%--</select>--%>
             <select name="orderElement" id="orderElement">
                 <option value="0">关键字</option>
                 <option value="1">创建日期</option>
@@ -943,7 +944,7 @@
                 <td  align="center" width=200 class="wrap floatTd"
                      title="原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}">
                     <div style="height:16;">
-                            ${customerKeyword.url==null?'':customerKeyword.url};
+                            ${customerKeyword.url==null?'':customerKeyword.url}
                     </div>
                 </td>
 

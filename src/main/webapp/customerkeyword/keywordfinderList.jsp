@@ -273,6 +273,14 @@
                     }
                 });
             }
+            
+            function searchCustomerKeywords(url) {
+                window.open(url);
+            }
+
+            function historyPositionAndIndex(url) {
+                window.open(url);
+            }
         </script>
 
     </head>
@@ -309,13 +317,13 @@
                     </c:forEach>
                 </select>
             </c:if>
-            <br>
+            <input id="pushPay" name="pushPay" type="checkbox"  onclick="pushPayValue()" value="${customerKeywordCriteria.pushPay}"/>催缴 &nbsp;
+            <input id="displayStop" name="displayStop" type="checkbox"  onclick="displayStopValue()" value="${customerKeywordCriteria.displayStop}"/>显示下架 &nbsp;
+            <br/>
             已刷:<input type="text" name="optimizedCount" id="optimizedCount" value="${customerKeywordCriteria.optimizedCount}" style="width:40px;"/>
             显示前:
             <input type="text" name="position" id="position" value="${customerKeywordCriteria.position}" style="width:40px;"/>
             <input id="noPosition" name="noPosition" type="checkbox"  onclick="noPositionValue()"/>显示排名为0 &nbsp;
-            <input id="pushPay" name="pushPay" type="checkbox"  onclick="pushPayValue()" value="${customerKeywordCriteria.pushPay}"/>催缴 &nbsp;
-            <input id="displayStop" name="displayStop" type="checkbox"  onclick="displayStopValue()" value="${customerKeywordCriteria.displayStop}"/>显示下架 &nbsp;
             订单号:
             <input type="text" name="orderNumber" id="orderNumber" value="${customerKeywordCriteria.orderNumber}" style="width:100px;">
             无效点击数:
@@ -335,8 +343,10 @@
             <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
                 <input type="submit" onclick="resetPageNumber()" value=" 查询 ">&nbsp;&nbsp;
             </shiro:hasPermission>
-            <input type="button" onclick="updateCustomerKeywordStatus(0)" value="暂停选择关键字">&nbsp;&nbsp;
-            <input type="button" onclick="updateCustomerKeywordStatus(1)" value="激活选中关键字">
+            <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
+                <input type="button" onclick="updateCustomerKeywordStatus(0)" value=" 暂停选择关键字 ">&nbsp;&nbsp;
+                <input type="button" onclick="updateCustomerKeywordStatus(1)" value=" 激活选中关键字 ">
+            </shiro:hasPermission>
         </div>
     </form>
     <table style="font-size:12px; width: 100%;" id="headerTable">
@@ -370,26 +380,30 @@
                     <input type="checkbox" name="uuid" value="${customerKeyword.uuid}" onclick="decideSelectAll()"/>
                 </td>
                 <td align="center" width=80>
-                    <a href="/internal/customerKeyword/searchCustomerKeywords/${customerKeyword.customerUuid}" target="_blank">${customerKeyword.contactPerson}</a></td>
+                    <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywords">
+                    <a href="#" onclick="searchCustomerKeywords('/internal/customerKeyword/searchCustomerKeywords/${customerKeyword.customerUuid}')">${customerKeyword.contactPerson}</a>
+                    </shiro:hasPermission>
                 </td>
                 <td align="center" width=80>
-                        ${customerKeyword.keyword}
+                    ${customerKeyword.keyword}
                 </td>
 
                 <td  align="center" width=100 class="floatTd" title="原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}" >
                     <div style="height:16;">
-                            ${customerKeyword.url==null?'':customerKeyword.url};
+                        ${customerKeyword.url==null?'':customerKeyword.url};
                     </div>
                 </td>
 
                 <td align="center" width=150>
-                        ${customerKeyword.title == null ? "" : customerKeyword.title.trim()}
+                    ${customerKeyword.title == null ? "" : customerKeyword.title.trim()}
                 </td>
                 <td align="center" width=30>
-                    <div style="height:16;"><a
-                            href="/internal/customerKeywordPositionIndexLog/historyPositionAndIndex/${customerKeyword.uuid}/30"
-                            target="_blank" title="查看历史排名" class="floatTd">${customerKeyword.currentIndexCount}
-                    </a></div>
+                    <div style="height:16;">
+                        <shiro:hasPermission name="/internal/customerKeywordPositionIndexLog/historyPositionAndIndex">
+                        <a href="#" onclick="historyPositionAndIndex('/internal/customerKeywordPositionIndexLog/historyPositionAndIndex/${customerKeyword.uuid}/30')"
+                             title="查看历史排名" class="floatTd">${customerKeyword.currentIndexCount}</a>
+                        </shiro:hasPermission>
+                    </div>
                 </td>
                 <td align="center" width=50>
                     <div style="height:16;">${customerKeyword.initialPosition}
