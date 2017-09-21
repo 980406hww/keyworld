@@ -981,9 +981,12 @@
                 ctd.eq(idx).width($(val).width());
             });
         }
+
+        <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywords">
         function searchCustomerKeywords(url) {
             window.open(url);
         }
+        </shiro:hasPermission>
 
         <c:if test="${'bc'.equalsIgnoreCase(entryType)}">
         <shiro:hasPermission name="/internal/dailyReport/triggerReportGeneration">
@@ -1116,9 +1119,7 @@
                 <td width=10 style="padding-left: 7px;"><input type="checkbox" name="customerUuid" value="${customer.uuid}"/></td>
                 <td width=80>${user.loginName}</td>
                 <td width=80>
-                    <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywords">
                     <a href="#" onclick="searchCustomerKeywords('/internal/customerKeyword/searchCustomerKeywords/${customer.uuid}')">${customer.contactPerson}</a>
-                    </shiro:hasPermission>
                 </td>
                 <td width=60>${customer.keywordCount}</td>
                 <td width=60>${customer.qq}</td>

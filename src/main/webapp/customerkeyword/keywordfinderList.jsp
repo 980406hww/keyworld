@@ -289,10 +289,12 @@
                     }
                 });
             }
-            
+
+            <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywords">
             function searchCustomerKeywords(url) {
                 window.open(url);
             }
+            </shiro:hasPermission>
         </script>
 
     </head>
@@ -392,9 +394,7 @@
                     <input type="checkbox" name="uuid" value="${customerKeyword.uuid}" onclick="decideSelectAll()"/>
                 </td>
                 <td align="center" width=80>
-                    <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywords">
                     <a href="#" onclick="searchCustomerKeywords('/internal/customerKeyword/searchCustomerKeywords/${customerKeyword.customerUuid}')">${customerKeyword.contactPerson}</a>
-                    </shiro:hasPermission>
                 </td>
                 <td align="center" width=80>
                     ${customerKeyword.keyword}
