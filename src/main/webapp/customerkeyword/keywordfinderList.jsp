@@ -307,7 +307,7 @@
                 <td align="center" width=30>
                     <div style="height:16;"><a
                             href="/internal/customerKeywordPositionIndexLog/historyPositionAndIndex/${customerKeyword.uuid}/30"
-                            target="_blank">${customerKeyword.currentIndexCount}
+                            target="_blank" title="查看历史排名" class="floatTd">${customerKeyword.currentIndexCount}
                     </a></div>
                 </td>
                 <td align="center" width=50>
@@ -317,7 +317,7 @@
                 <td align="center" width=50>
                     <div style="height:16;"><a
                             href="${customerKeyword.searchEngineUrl}${customerKeyword.keyword}&pn=${customerKeyword.getPrepareBaiduPageNumber(customerKeyword.currentPosition)}"
-                            target="_blank">${customerKeyword.currentPosition}</a>
+                            target="_blank" >${customerKeyword.currentPosition}</a>
                     </div>
                 </td>
 
