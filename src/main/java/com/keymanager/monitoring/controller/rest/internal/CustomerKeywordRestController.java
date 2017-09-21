@@ -419,7 +419,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		customerKeywordCrilteria.setEntryType(entryType);
 		customerKeywordCrilteria.setTerminalType(terminalType);
 		boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
-		if(!isDepartmentManager) {
+		if(isDepartmentManager == false) {
 			customerKeywordCrilteria.setUserName(userName);
 		}
 		Page<CustomerKeyword> page = customerKeywordService.searchCustomerKeywordLists(new Page<CustomerKeyword>(currentPage, pageSize), customerKeywordCrilteria);
