@@ -1047,8 +1047,7 @@
                                 </c:if>
                             </td>
                             <td align="right">
-                                <input type="hidden" name="currentPageNumber" id="currentPageNumberHidden"
-                                       value="${page.current}"/>
+                                <input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}"/>
                                 <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
                                 <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
                                 <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
