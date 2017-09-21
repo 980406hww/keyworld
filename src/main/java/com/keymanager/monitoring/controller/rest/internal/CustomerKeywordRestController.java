@@ -9,7 +9,7 @@ import com.keymanager.monitoring.criteria.CustomerKeywordUpdateGroupCriteria;
 import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.CustomerKeyword;
 import com.keymanager.monitoring.entity.ServiceProvider;
-import com.keymanager.monitoring.entity.User;
+import com.keymanager.monitoring.entity.UserInfo;
 import com.keymanager.monitoring.enums.EntryTypeEnum;
 import com.keymanager.monitoring.excel.operator.CustomerKeywordInfoExcelWriter;
 import com.keymanager.monitoring.service.*;
@@ -52,8 +52,6 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	@Autowired
 	private UserRoleService userRoleService;
 
-	@Autowired
-	private UserInfoService userInfoService;
 
 	@Autowired
 	private CustomerService customerService;
@@ -271,7 +269,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 				Customer customer = customerService.selectById(customerUuid);
 				String fileName = customer.getContactPerson() + Utils.formatDatetime(Utils.getCurrentTimestamp(), "yyyy.MM.dd") + ".xls";
 				fileName = new String(fileName.getBytes("gb2312"), "ISO8859-1");
-				// 以流的形式下载文件�
+				// 以流的形式下载文件�
 				byte[] buffer = excelWriter.getExcelContentBytes();
 				// 清空response
 				response.reset();

@@ -11,7 +11,7 @@ import java.util.Map;
 
 /**
  *
- * UserInfo 表数据库控制层接�
+ * UserInfo 表数据库控制层接
  *
  */
 public interface UserInfoDao extends BaseMapper<UserInfo> {

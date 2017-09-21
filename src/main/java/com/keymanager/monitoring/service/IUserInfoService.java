@@ -32,4 +32,6 @@ public interface IUserInfoService extends IService<UserInfo> {
     void selectDataGrid(PageInfo pageInfo);
 
     void deleteUserById(Long id);
+
+     Long getUuidByLoginName(String loginName);
 }

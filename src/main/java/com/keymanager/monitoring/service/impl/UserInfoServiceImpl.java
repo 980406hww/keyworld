@@ -118,4 +118,9 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoDao, UserInfo> impl
         userRoleDao.deleteByUserId(id);
     }
 
+    @Override
+    public Long getUuidByLoginName(String loginName) {
+        return userInfoDao.getUuidByLoginName(loginName);
+    }
+
 }
