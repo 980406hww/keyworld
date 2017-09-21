@@ -25,19 +25,19 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(value = "fKeyword")
     private String keyword;
 
-    @TableField(value = "fUrl")
+    @TableField(value = "fUrl", validate= FieldStrategy.IGNORED)
     private String url;
 
     @TableField(value = "fType")
     private String type;
 
-    @TableField(value = "fOriginalUrl")
+    @TableField(value = "fOriginalUrl", validate= FieldStrategy.IGNORED)
     private String originalUrl;
 
-    @TableField(value = "fTitle")
+    @TableField(value = "fTitle", validate= FieldStrategy.IGNORED)
     private String title;
 
-    @TableField(value = "fSequence")
+    @TableField(value = "fSequence", validate= FieldStrategy.IGNORED)
     private Integer sequence;
 
     @TableField(value = "fCaptureTitleQueryTime")
@@ -157,7 +157,7 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(value = "fCaptureIndexQueryTime")
     private Date captureIndexQueryTime;
 
-    @TableField(value = "fCollectMethod")
+    @TableField(value = "fCollectMethod", validate= FieldStrategy.IGNORED)
     private String collectMethod;
 
     @TableField(value = "fStartOptimizedTime")
@@ -176,16 +176,16 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(value = "fPaymentEffectiveFromTime")
     private Date paymentEffectiveToTime;
 
-    @TableField(value = "fRelatedKeywords")
+    @TableField(value = "fRelatedKeywords", validate= FieldStrategy.IGNORED)
     private String relatedKeywords;
 
-    @TableField(value = "fPaymentStatus")
+    @TableField(value = "fPaymentStatus", validate= FieldStrategy.IGNORED)
     private String paymentStatus;
 
-    @TableField(value = "fOrderNumber")
+    @TableField(value = "fOrderNumber", validate= FieldStrategy.IGNORED)
     private String orderNumber;
 
-    @TableField(value = "fRemarks")
+    @TableField(value = "fRemarks", validate= FieldStrategy.IGNORED)
     private String remarks;
 
     @TableField(value = "fStatus")

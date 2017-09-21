@@ -21,17 +21,6 @@
                 height: 50px;
             }
 
-            #div2 {
-                display: none;
-                background-color: #ACF106;
-                color: #E80404;
-                font-size: 20px;
-                line-height: 18px;
-                border: 2px solid #104454;
-                width: 100px;
-                height: 22px;
-            }
-
             #customerKeywordTopDiv {
                 position: fixed;
                 top: 0px;
@@ -525,11 +514,11 @@
                 }
                 customerKeyword.keyword = keyword;
                 var url = $.trim(saveCustomerKeywordDialog.find("#url").val())
-                if (url.length == 0) {
-                    $().toastmessage('showWarningToast', "网址不能为空！");
-                    saveCustomerKeywordDialog.find("#url").focus();
-                    return;
-                }
+//                if (url.length == 0) {
+//                    $().toastmessage('showWarningToast', "网址不能为空！");
+//                    saveCustomerKeywordDialog.find("#url").focus();
+//                    return;
+//                }
                 customerKeyword.url = url;
                 var originalUrl = $.trim(saveCustomerKeywordDialog.find("#originalUrl").val());
                 customerKeyword.originalUrl = originalUrl;
@@ -897,12 +886,6 @@
                 onClick="WdatePicker()"
                 value="${customerKeywordCriteria.creationToTime}">
             排序:
-            <%--<select name="orderElement" id="orderElement">--%>
-                <%--<option value="">--请选择排序--</option>--%>
-                <%--<option value="fCreateTime">创建日期</option>--%>
-                <%--<option value="fCurrentPosition">当前排名</option>--%>
-                <%--<option value="fSequence">添加序号</option>--%>
-            <%--</select>--%>
             <select name="orderElement" id="orderElement">
                 <option value="0">关键字</option>
                 <option value="1">创建日期</option>
@@ -929,7 +912,7 @@
     <%--</c:if>--%>
     <table style="font-size:12px; width: 100%;" id="headerTable">
         <tr bgcolor="#eeeeee" height=30>
-            <td align="center" width=10><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
+            <td width=10><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
             <td align="center" width=100>关键字</td>
             <td align="center" width=200>URL</td>
             <td align="center" width=250>标题</td>
@@ -948,7 +931,6 @@
             <td align="center" width=60>优化组名</td>
             <td align="center" width=80>操作</td>
             <div id="div1"></div>
-            <div id="div2"></div>
         </tr>
     </table>
 </div>
@@ -956,14 +938,14 @@
     <table id="customerKeywordTable">
         <c:forEach items="${page.records}" var="customerKeyword">
             <tr style="" height=30 onmouseover="doOver(this);" onmouseout="doOut(this);" ondblclick="modifyCustomerKeyword('${customerKeyword.uuid}')" height=30>
-                <td  align="center" width=10><input type="checkbox" name="uuid" value="${customerKeyword.uuid}" onclick="decideSelectAll()"/></td>
+                <td width=10><input type="checkbox" name="uuid" value="${customerKeyword.uuid}" onclick="decideSelectAll()"/></td>
                 <td align="center" width=100>
                     <font color="<%--<%=keywordColor%>--%>">${customerKeyword.keyword}</font>
                 </td>
                 <td  align="center" width=200 class="wrap floatTd"
                      title="原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}">
                     <div style="height:16;">
-                            ${customerKeyword.url==null?'':customerKeyword.url};
+                            ${customerKeyword.url==null?'':customerKeyword.url}
                     </div>
                 </td>
 
