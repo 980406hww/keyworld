@@ -418,8 +418,11 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		initOrderElemnet(orderElement,customerKeywordCrilteria);
 		customerKeywordCrilteria.setEntryType(entryType);
 		customerKeywordCrilteria.setTerminalType(terminalType);
-		Page<CustomerKeyword> page = customerKeywordService.searchCustomerKeywordLists(new Page<CustomerKeyword>(currentPage, pageSize), customerKeywordCrilteria);
 		boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
+		if(!isDepartmentManager) {
+			customerKeywordCrilteria.setUserName(userName);
+		}
+		Page<CustomerKeyword> page = customerKeywordService.searchCustomerKeywordLists(new Page<CustomerKeyword>(currentPage, pageSize), customerKeywordCrilteria);
 		modelAndView.addObject("customerKeywordCrilteria", customerKeywordCrilteria);
 		modelAndView.addObject("page", page);
 		modelAndView.addObject("user", user);
