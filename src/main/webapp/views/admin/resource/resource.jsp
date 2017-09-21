@@ -112,7 +112,7 @@
             parent.$.modalDialog({
                 title : '编辑',
                 width : 500,
-                height : 350,
+                height : 300,
                 href : '${path }/resource/editPage?id=' + node.id,
                 buttons : [ {
                     text : '确定',

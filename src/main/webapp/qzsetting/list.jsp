@@ -1,16 +1,12 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
 <%@ include file="/commons/basejs.jsp" %>
 <%@ include file="/commons/global.jsp" %>
-<script language="javascript" type="text/javascript" src="/toastmessage/jquery.toastmessage.js"></script>
-<link rel="stylesheet" href="/toastmessage/css/jquery.toastmessage.css">
 <script language="javascript" type="text/javascript" src="/common.js"></script>
 <html>
 <head>
 	<title>全站设置单</title>
 	<style>
-		.wrap,td {word-break: break-all; word-wrap:break-word;}
 
-		<!--
 		#div1{
 			display:none;
 			background-color :#f6f7f7;
@@ -32,13 +28,7 @@
 			height: 22px;
 		}
 
-		#topDiv {
-			position: fixed;
-			top: 0px;
-			left: 0px;
-			background-color: white;
-			width: 100%;
-		}
+
 
 		#changeSettingDialog {
 			font-size: 12px;
@@ -72,23 +62,6 @@
 			margin: auto;
 		}
 
-		#showQZSettingBottomPositioneDiv{
-			position: fixed;
-			bottom: 0px;
-			right: 0px;
-			background-color: white;
-			padding-top: 10px;
-			padding-bottom: 10px;
-			width: 100%;
-		}
-		#showQZSettingBottomDiv {
-			float: right;
-			margin-right: 20px;
-		}
-		body{
-			margin: 0;
-			padding: 0;
-		}
 	</style>
 </head>
 <body>
@@ -175,23 +148,23 @@
 <table id="showQZSettingTable"  style="font-size:12px;width: 100%;" cellpadding=3>
 	<c:forEach items="${page.records}" var="qzSetting">
 		<tr onmouseover="doOver(this);" onmouseout="doOut(this);" height=30>
-			<td align="center" width=25><input type="checkbox" name="uuid" value="${qzSetting.uuid}" onclick="decideSelectAll()"/></td>
-			<td align="center" width=150>${qzSetting.contactPerson}</td>
-			<td align="center" width=100>${qzSetting.domain}</td>
-			<td align="center" width=50>${qzSetting.type}</td>
-			<td align="center" width=80>
+			<td width=25><input type="checkbox" name="uuid" value="${qzSetting.uuid}" onclick="decideSelectAll()"/></td>
+			<td width=150>${qzSetting.contactPerson}</td>
+			<td width=100>${qzSetting.domain}</td>
+			<td width=50>${qzSetting.type}</td>
+			<td width=80>
 				${qzSetting.pcGroup == null ? "" : "pc:"}${qzSetting.pcGroup == null ? "" : qzSetting.pcGroup}<br>
 				${qzSetting.phoneGroup == null ? "" : "m:"}${qzSetting.phoneGroup == null ? "" : qzSetting.phoneGroup}
 			</td>
-			<td align="center" width=80>${qzSetting.ignoreNoIndex == true ? "是" : "否"}</td>
-			<td align="center" width=80>${qzSetting.ignoreNoOrder == true ? "是" : "否"}</td>
-			<td align="center" width=60>${qzSetting.updateInterval}</td>
-			<td align="center" width=60>${qzSetting.updateStatus == null ? "" : qzSetting.updateStatus}</td>
-			<td align="center" width=80><fmt:formatDate value="${qzSetting.updateStartTime}" pattern="MM-dd HH:mm" /></td>
-			<td align="center" width=80><fmt:formatDate value="${qzSetting.updateEndTime}" pattern="MM-dd HH:mm" /></td>
-			<td align="center" width=80><fmt:formatDate value="${qzSetting.updateTime}" pattern="MM-dd HH:mm" /></td>
-			<td align="center" width=80><fmt:formatDate value="${qzSetting.createTime}" pattern="MM-dd HH:mm" /></td>
-			<td align="center" width=100>
+			<td width=80>${qzSetting.ignoreNoIndex == true ? "是" : "否"}</td>
+			<td width=80>${qzSetting.ignoreNoOrder == true ? "是" : "否"}</td>
+			<td width=60>${qzSetting.updateInterval}</td>
+			<td width=60>${qzSetting.updateStatus == null ? "" : qzSetting.updateStatus}</td>
+			<td width=80><fmt:formatDate value="${qzSetting.updateStartTime}" pattern="MM-dd HH:mm" /></td>
+			<td width=80><fmt:formatDate value="${qzSetting.updateEndTime}" pattern="MM-dd HH:mm" /></td>
+			<td width=80><fmt:formatDate value="${qzSetting.updateTime}" pattern="MM-dd HH:mm" /></td>
+			<td width=80><fmt:formatDate value="${qzSetting.createTime}" pattern="MM-dd HH:mm" /></td>
+			<td width=100>
 				<shiro:hasPermission name="/internal/qzchargelog/save">
 					<a href="javascript:showChargeDialog('${qzSetting.uuid}','${qzSetting.contactPerson}','${qzSetting.domain}',this)">收费</a> |
 				</shiro:hasPermission>
@@ -209,30 +182,27 @@
 	</c:forEach>
 </table>
 </div>
-<div id="showQZSettingBottomPositioneDiv">
-<div id="showQZSettingBottomDiv" align="right">
-	<input id="fisrtButton" type="button" onclick="changePaging(1,'${page.size}')" value="首页"/>
-	&nbsp;&nbsp;&nbsp;&nbsp;
-	<input id="upButton" type="button" onclick="changePaging('${page.current-1}','${page.size}')" value="上一页"/>
-	&nbsp;&nbsp;&nbsp;&nbsp;${page.current}/${page.pages}&nbsp;&nbsp;
-	<input id="nextButton" type="button" onclick="changePaging('${page.current+1>=page.pages?page.pages:page.current+1}','${page.size}')" value="下一页">
-	&nbsp;&nbsp;&nbsp;&nbsp;
-	<input id="lastButton" type="button" onclick="changePaging('${page.pages}','${page.size}')" value="末页">
-	&nbsp;&nbsp;&nbsp;&nbsp;
-	总记录数:${page.total}&nbsp;&nbsp;&nbsp;&nbsp;
-	每页显示条数:
-	<select id="chooseRecords" onchange="changePaging(${page.current},this.value)">
+<div id="showCustomerBottomPositioneDiv">
+	<div id="showCustomerBottomDiv">
+		<input id="fisrtButton" class="ui-button ui-widget ui-corner-all" type="button"
+			   onclick="changePaging(1,'${page.size}')" value="首页"/>&nbsp;&nbsp;&nbsp;&nbsp;
+		<input id="upButton" type="button" class="ui-button ui-widget ui-corner-all"
+			   onclick="changePaging('${page.current-1}','${page.size}')" value="上一页"/>&nbsp;&nbsp;&nbsp;&nbsp;
+		${page.current}/${page.pages}&nbsp;&nbsp;
+		<input id="nextButton" type="button" class="ui-button ui-widget ui-corner-all"
+			   onclick="changePaging('${page.current+1>=page.pages?page.pages:page.current+1}','${page.size}')"
+			   value="下一页">&nbsp;&nbsp;&nbsp;&nbsp;
+		<input id="lastButton" type="button" class="ui-button ui-widget ui-corner-all"
+			   onclick="changePaging('${page.pages}','${page.size}')" value="末页">&nbsp;&nbsp;&nbsp;&nbsp;
+		总记录数:${page.total}&nbsp;&nbsp;&nbsp;&nbsp;
+		每页显示条数:<select id="chooseRecords" onchange="changePaging(${page.current},this.value)">
 		<option>10</option>
 		<option>25</option>
 		<option>50</option>
 		<option>75</option>
 		<option>100</option>
 	</select>
-	<input type="hidden" id="currentPageHidden" value="${page.current}"/>
-	<input type="hidden" id="displaysRecordsHidden" value="${page.size}"/>
-	<input type="hidden" id="pagesHidden" value="${page.pages}"/>
-	&nbsp;&nbsp;&nbsp;&nbsp;
-</div>
+	</div>
 </div>
 <script language="javascript">
     var dateStr = new Date(); // 当天日期
@@ -595,7 +565,7 @@
                     });
                     $("#chargeLogListDiv").dialog({
                         resizable: false,
-                        width: 365,
+                        width: 355,
 						title:"收费记录",
                         modal: true,
                         buttons: [{
@@ -684,7 +654,7 @@
 					$("#chargeDialog").dialog({
 						resizable: false,
 						modal: true,
-                        width: 400,
+                        width: 380,
 						height:380,
                         title: '收费',
                         buttons: [{
@@ -752,9 +722,9 @@
     function createSettingDialog() {
         $("#changeSettingDialog").dialog({
             resizable: false,
-            height: 430,
+            height: 290,
 //            maxHeight: 430,
-            width: 400,
+            width: 330,
             title: '全站设置',
             modal: true,
             buttons: [{

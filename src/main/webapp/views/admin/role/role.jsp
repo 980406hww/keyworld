@@ -101,8 +101,8 @@
         }
         parent.$.modalDialog({
             title : '编辑',
-            width : 500,
-            height : 300,
+            width : 300,
+            height : 250,
             href : '${path }/role/editPage?id=' + id,
             buttons : [ {
                 text : '确定',
@@ -148,7 +148,7 @@
         
         parent.$.modalDialog({
             title : '授权',
-            width : 500,
+            width : 370,
             height : 500,
             href : '${path }/role/grantPage?id=' + id,
             buttons : [ {

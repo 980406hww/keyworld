@@ -7,9 +7,6 @@ import com.keymanager.monitoring.entity.TSMainKeyword;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.keymanager.monitoring.service.TSComplainLogService;
-import com.keymanager.monitoring.service.TSMainKeywordService;
-import com.keymanager.monitoring.service.TSNegativeKeywordService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,12 +30,6 @@ public class ComplaintsRestController extends SpringMVCBaseController {
 
     @Autowired
     private TSMainKeywordService tsMainKeywordService;
-
-    @Autowired
-    private TSNegativeKeywordService tsNegativeKeywordService;
-
-    @Autowired
-    private TSComplainLogService tsComplainLogService;
 
     @RequiresPermissions("/internal/complaints/save")
     @RequestMapping(value = "/save", method = RequestMethod.POST)

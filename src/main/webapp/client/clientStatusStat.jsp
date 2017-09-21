@@ -3,42 +3,7 @@
 <html>
 <head>
     <title>客户端统计</title>
-    <style>
-        .wrap {
-            word-break: break-all;
-            word-wrap: break-word;
-        }
-
-        #topDiv {
-            position: fixed;
-            top: 0px;
-            left: 0px;
-            background-color: white;
-            width: 100%;
-        }
-
-        #showCustomerBottomPositioneDiv {
-            position: fixed;
-            bottom: 0px;
-            right: 0px;
-            background-color: white;
-            padding-top: 10px;
-            padding-bottom: 10px;
-            width: 100%;
-        }
-
-        #showCustomerBottomDiv {
-            float: right;
-            margin-right: 20px;
-        }
-
-        body {
-            margin: 0;
-            padding: 0;
-        }
-    </style>
-
-
+    <style></style>
     <script language="javascript" type="text/javascript">
 
         $(function () {
@@ -67,7 +32,7 @@
             <input type="submit" value="查询">
         </shiro:hasPermission>
     </form>
-    <table width=70% style="font-size: 12px;" cellpadding=3 id="headerTable">
+    <table width=60% style="font-size: 12px;" cellpadding=3 id="headerTable">
         <tr bgcolor="#eeeeee" height=30>
             <td align="center" width=100>客户端ID前缀</td>
             <td align="center" width=100>总数</td>
@@ -75,15 +40,13 @@
             <td align="center" width=120>小计</td>
             <td align="center" width=100>城市</td>
             <td align="center" width=50>数量</td>
-            <div id="div1"></div>
-            <div id="div2"></div>
         </tr>
     </table>
 </div>
 <div id="centerDiv">
-<table width=70% style="font-size: 12px;" cellpadding=3 id="clientStatusSummaryTable">
+<table width=60% style="font-size: 12px;" cellpadding=3 id="clientStatusSummaryTable">
     <c:forEach items="${clientStatusSummaryVOs}" var="clientStatusSummaryVO">
-        <tr align="center">
+        <tr align="left">
             <c:if test="${clientStatusSummaryVO.clientIDPrefixCount>0}">
                 <td rowspan="${clientStatusSummaryVO.clientIDPrefixCount}">${clientStatusSummaryVO.clientIDPrefix}</td>
                 <td rowspan="${clientStatusSummaryVO.clientIDPrefixCount}">${clientStatusSummaryVO.clientIDPrefixTotalCount}</td>

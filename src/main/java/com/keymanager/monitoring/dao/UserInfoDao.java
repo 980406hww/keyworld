@@ -11,7 +11,7 @@ import java.util.Map;
 
 /**
  *
- * UserInfo 表数据库控制层接口
+ * UserInfo 表数据库控制层接�
  *
  */
 public interface UserInfoDao extends BaseMapper<UserInfo> {
@@ -26,4 +26,6 @@ public interface UserInfoDao extends BaseMapper<UserInfo> {
     UserInfo getUserInfo(@Param("userID")String userID);
 
     List<UserInfo> findActiveUsers();
+
+    Long getUuidByLoginName(@Param("loginName")String loginName);
 }

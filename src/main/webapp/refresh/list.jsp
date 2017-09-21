@@ -4,8 +4,6 @@
 <html>
 <head>
 	<title>刷量统计列表</title>
-	<script language="javascript" type="text/javascript" src="/toastmessage/jquery.toastmessage.js"></script>
-	<link rel="stylesheet" href="/toastmessage/css/jquery.toastmessage.css">
 	<script language="javascript" type="text/javascript" src="/common.js"></script>
 	<script language="javascript">
         function doOver(obj) {

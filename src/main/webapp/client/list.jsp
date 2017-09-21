@@ -4,10 +4,6 @@
 <head>
 <title>客户端列表</title>
 <style>
-.wrap,td{
-	word-break: break-all;
-	word-wrap: break-word;
-}
 #topDiv {
 	position: fixed;
 	top: 0px;
@@ -56,32 +52,13 @@
 	float: right;
 	width: 580px;
 }
-#showCustomerBottomPositioneDiv{
-	position: fixed;
-	bottom: 0px;
-	right: 0px;
-	background-color: white;
-	padding-top: 10px;
-	padding-bottom: 10px;
-	width: 100%;
-}
-#showCustomerBottomDiv {
-	float: right;
-	margin-right: 20px;
-}
 -->
 </style>
-	<link rel="stylesheet" href="/toastmessage/css/jquery.toastmessage.css">
-	<script language="javascript" type="text/javascript" src="/js/My97DatePicker/WdatePicker.js"></script>
 	<script language="javascript" type="text/javascript" src="/common.js"></script>
-	<script language="javascript" type="text/javascript" src="/toastmessage/jquery.toastmessage.js"></script>
 </head>
 <body>
 <div id="topDiv">
 	<%@include file="/menu.jsp"%>
-	<%--<table width=100% style="font-size: 12px;margin-top: 40px" cellpadding=3>
-		<tr>
-			<td colspan=16>--%>
 				<form id="searchClientStatusForm" method="post" action="/internal/clientstatus/searchClientStatuses" style="font-size: 12px;margin-top: 35px" cellpadding=3>
 					<table style="font-size: 12px;width:100%">
 						<tr>
@@ -182,9 +159,6 @@
 						</tr>
 					</table>
 				</form>
-			<%--</td>
-		</tr>
-	</table>--%>
 	<table  width=100% style="font-size: 12px" id="headerTable">
 		<tr bgcolor="#eeeeee" height=30>
 			<td align="center" width=10><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
@@ -412,10 +386,23 @@
             $("#downloadFullVNCForm").submit();
         }
 
+		function selectAll(self){
+			var a = document.getElementsByName("clientID");
+			if(self.checked){
+				for(var i = 0;i<a.length;i++){
+						a[i].checked = true;
+				}
+			}else{
+				for(var i = 0;i<a.length;i++){
+						a[i].checked = false;
+				}
+			}
+		}
+
         function showUploadVNCDialog() {
             $('#uploadVNCDialog').dialog({
                 resizable: false,
-                width: 430,
+                width: 300,
                 modal: true,
                 title: '上传VNC文件',
                 buttons: [{
@@ -445,7 +432,7 @@
                             success: function (result) {
                                 if (result) {
                                     $().toastmessage('showSuccessToast', "上传成功",true);
-                                    /* window.location.reload();*/
+									/* window.location.reload();*/
                                 } else {
                                     $().toastmessage('showErrorToast', "上传失败");
                                 }
@@ -475,19 +462,6 @@
             });
             $('#uploadVNCDialog').window("resize",{top:$(document).scrollTop() + 100});
         }
-
-		function selectAll(self){
-			var a = document.getElementsByName("clientID");
-			if(self.checked){
-				for(var i = 0;i<a.length;i++){
-						a[i].checked = true;
-				}
-			}else{
-				for(var i = 0;i<a.length;i++){
-						a[i].checked = false;
-				}
-			}
-		}
 
         function decideSelectAll() {
             var a = document.getElementsByName("clientID");
@@ -1113,7 +1087,7 @@
 	<div style="display: none;">
 		<script src="http://s84.cnzz.com/stat.php?id=4204660&web_id=4204660" language="JavaScript"></script>
 	</div>
-	<div id="changeSettingDialog" class="easyui-dialog">
+	<div id="changeSettingDialog" class="easyui-dialog" style="left: 30%;">
 		<table>
 			<tr>
 				<td>
@@ -1477,7 +1451,7 @@
 		</table>
 	</div>
 
-	<div id="uploadVNCDialog" class="easyui-dialog">
+	<div id="uploadVNCDialog" class="easyui-dialog" >
 		<form method="post" id="uploadVNCForm" action="" enctype="multipart/form-data">
 			<table width="100%" style="margin-top: 10px;margin-left: 10px">
 				<tr>

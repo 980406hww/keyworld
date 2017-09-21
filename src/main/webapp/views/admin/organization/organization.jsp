@@ -75,7 +75,7 @@
             parent.$.modalDialog({
                 title : '编辑',
                 width : 500,
-                height : 300,
+                height : 230,
                 href : '${path }/organization/editPage?id=' + node.id,
                 buttons : [ {
                     text : '编辑',

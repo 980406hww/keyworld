@@ -6,13 +6,20 @@ import com.keymanager.monitoring.criteria.CustomerKeywordCleanCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordCrilteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordUpdateGroupCriteria;
-import com.keymanager.monitoring.entity.*;
+import com.keymanager.monitoring.entity.Customer;
+import com.keymanager.monitoring.entity.CustomerKeyword;
+import com.keymanager.monitoring.entity.ServiceProvider;
+import com.keymanager.monitoring.entity.User;
+import com.keymanager.monitoring.enums.EntryTypeEnum;
 import com.keymanager.monitoring.excel.operator.CustomerKeywordInfoExcelWriter;
 import com.keymanager.monitoring.service.*;
 import com.keymanager.util.TerminalTypeMapping;
 import com.keymanager.util.Utils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.aspectj.lang.annotation.RequiredTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +48,12 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 
 	@Autowired
 	private IUserInfoService userInfoService;
+
+	@Autowired
+	private UserRoleService userRoleService;
+
+	@Autowired
+	private UserInfoService userInfoService;
 
 	@Autowired
 	private CustomerService customerService;
@@ -258,7 +271,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 				Customer customer = customerService.selectById(customerUuid);
 				String fileName = customer.getContactPerson() + Utils.formatDatetime(Utils.getCurrentTimestamp(), "yyyy.MM.dd") + ".xls";
 				fileName = new String(fileName.getBytes("gb2312"), "ISO8859-1");
-				// 以流的形式下载文件。
+				// 以流的形式下载文件�
 				byte[] buffer = excelWriter.getExcelContentBytes();
 				// 清空response
 				response.reset();
@@ -365,6 +378,10 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	@RequiresPermissions("/internal/customerKeyword/searchCustomerKeywordLists")
 	@RequestMapping(value="/searchCustomerKeywordLists" , method= RequestMethod.GET)
 	public ModelAndView searchCustomerKeywordLists(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request){
+		String entryType = (String)request.getSession().getAttribute("entryType");
+		if(EntryTypeEnum.fm.name().equalsIgnoreCase(entryType) && !SecurityUtils.getSubject().hasRole("FMSpecial")){
+			SecurityUtils.getSubject().logout();
+		}
 		CustomerKeywordCrilteria customerKeywordCrilteria = new CustomerKeywordCrilteria();
 		customerKeywordCrilteria.setStatus("1");
 		return constructCustomerKeywordListsModelAndView(request, customerKeywordCrilteria, currentPageNumber, pageSize);
@@ -401,12 +418,17 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		initOrderElemnet(orderElement,customerKeywordCrilteria);
 		customerKeywordCrilteria.setEntryType(entryType);
 		customerKeywordCrilteria.setTerminalType(terminalType);
+		boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
+		if(isDepartmentManager == false) {
+			customerKeywordCrilteria.setUserName(userName);
+		}
 		Page<CustomerKeyword> page = customerKeywordService.searchCustomerKeywordLists(new Page<CustomerKeyword>(currentPage, pageSize), customerKeywordCrilteria);
 		modelAndView.addObject("customerKeywordCrilteria", customerKeywordCrilteria);
 		modelAndView.addObject("page", page);
 		modelAndView.addObject("user", user);
 		modelAndView.addObject("activeUsers", activeUsers);
 		modelAndView.addObject("orderElement",orderElement);
+		modelAndView.addObject("isDepartmentManager",isDepartmentManager);
 		return modelAndView;
 	}
 

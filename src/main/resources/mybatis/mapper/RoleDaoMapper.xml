@@ -13,6 +13,15 @@
         fCreateTime AS `createTime`
     </sql>
 
+    <select id="selectUuidByRoleName" resultType="java.lang.Long" parameterType="java.lang.String">
+        SELECT
+        fUuid AS "uuid"
+        FROM
+        t_role
+        WHERE
+        fRoleName = #{roleName}
+    </select>
+
     <select id="selectResourceIdListByRoleId" resultType="java.lang.Long" parameterType="java.lang.Long">
         SELECT
             e.fResourceID AS id
