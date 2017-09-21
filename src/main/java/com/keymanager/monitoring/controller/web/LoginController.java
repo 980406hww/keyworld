@@ -27,8 +27,6 @@ import java.util.List;
 
 /**
  * @description：登录退出
- * @author：zhixuan.wang
- * @date：2015/10/1 14:51
  */
 @Controller
 public class LoginController extends BaseController {

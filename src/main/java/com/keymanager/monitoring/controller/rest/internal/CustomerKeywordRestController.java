@@ -9,7 +9,7 @@ import com.keymanager.monitoring.criteria.CustomerKeywordUpdateGroupCriteria;
 import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.CustomerKeyword;
 import com.keymanager.monitoring.entity.ServiceProvider;
-import com.keymanager.monitoring.entity.User;
+import com.keymanager.monitoring.entity.UserInfo;
 import com.keymanager.monitoring.enums.EntryTypeEnum;
 import com.keymanager.monitoring.excel.operator.CustomerKeywordInfoExcelWriter;
 import com.keymanager.monitoring.service.*;
@@ -47,13 +47,11 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	private CustomerKeywordService customerKeywordService;
 
 	@Autowired
-	private UserService userService;
+	private IUserInfoService userInfoService;
 
 	@Autowired
 	private UserRoleService userRoleService;
 
-	@Autowired
-	private UserInfoService userInfoService;
 
 	@Autowired
 	private CustomerService customerService;
@@ -91,7 +89,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		HttpSession session = request.getSession();
 		ModelAndView modelAndView = new ModelAndView("/customerkeyword/customerKeywordList");
 		String userID = (String) session.getAttribute("username");
-		User user = userService.getUser(userID);
+		UserInfo user = userInfoService.getUserInfo(userID);
 		Customer customer = customerService.getCustomerWithKeywordCount(customerKeywordCrilteria.getCustomerUuid());
 		String entryType = (String) session.getAttribute("entryType");
 		String terminalType = TerminalTypeMapping.getTerminalType(request);
@@ -271,7 +269,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 				Customer customer = customerService.selectById(customerUuid);
 				String fileName = customer.getContactPerson() + Utils.formatDatetime(Utils.getCurrentTimestamp(), "yyyy.MM.dd") + ".xls";
 				fileName = new String(fileName.getBytes("gb2312"), "ISO8859-1");
-				// 以流的形式下载文件。
+				// 以流的形式下载文件�
 				byte[] buffer = excelWriter.getExcelContentBytes();
 				// 清空response
 				response.reset();
@@ -410,8 +408,8 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		HttpSession session = request.getSession();
 		ModelAndView modelAndView = new ModelAndView("/customerkeyword/keywordfinderList");
 		String userName = (String) session.getAttribute("username");
-		User user = userService.getUser(userName);
-		List<User> activeUsers = userService.findActiveUsers();
+		UserInfo user = userInfoService.getUserInfo(userName);
+		List<UserInfo> activeUsers = userInfoService.findActiveUsers();
 		String entryType = (String) session.getAttribute("entryType");
 		String terminalType = TerminalTypeMapping.getTerminalType(request);
 		String orderElement = request.getParameter("orderElement");
@@ -419,7 +417,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		customerKeywordCrilteria.setEntryType(entryType);
 		customerKeywordCrilteria.setTerminalType(terminalType);
 		boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
-		if(!isDepartmentManager) {
+		if(isDepartmentManager == false) {
 			customerKeywordCrilteria.setUserName(userName);
 		}
 		Page<CustomerKeyword> page = customerKeywordService.searchCustomerKeywordLists(new Page<CustomerKeyword>(currentPage, pageSize), customerKeywordCrilteria);

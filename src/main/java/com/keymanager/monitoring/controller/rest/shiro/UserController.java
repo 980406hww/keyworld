@@ -5,10 +5,8 @@ import com.keymanager.monitoring.common.result.PageInfo;
 import com.keymanager.monitoring.common.shiro.PasswordHash;
 import com.keymanager.monitoring.common.utils.StringUtils;
 import com.keymanager.monitoring.entity.Role;
-import com.keymanager.monitoring.entity.User;
 import com.keymanager.monitoring.entity.UserInfo;
 import com.keymanager.monitoring.service.IUserInfoService;
-import com.keymanager.monitoring.service.IUserService;
 import com.keymanager.monitoring.vo.UserVO;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +31,6 @@ import java.util.Map;
 public class UserController extends BaseController {
     @Autowired
     private IUserInfoService userInfoService;
-    @Autowired
-    private IUserService userService;
     @Autowired
     private PasswordHash passwordHash;
 
