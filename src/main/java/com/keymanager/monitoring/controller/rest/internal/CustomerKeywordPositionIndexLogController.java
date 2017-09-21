@@ -5,6 +5,7 @@ import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.service.*;
 import com.keymanager.util.TerminalTypeMapping;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ public class CustomerKeywordPositionIndexLogController extends SpringMVCBaseCont
 	private CustomerKeywordPositionIndexLogService customerKeywordPositionIndexLogService;
 
 	//查询历史缴费记录
+	@RequiresPermissions("/internal/customerKeywordPositionIndexLog/historyPositionAndIndex")
 	@RequestMapping(value = "/historyPositionAndIndex/{customerKeywordUuid}/{dayCount}" , method = RequestMethod.GET)
 	public ModelAndView historyPositionAndIndex(@PathVariable("customerKeywordUuid")Long customerKeywordUuid, @PathVariable("dayCount")String dayCount, HttpServletRequest request){
 		String terminalType = TerminalTypeMapping.getTerminalType(request);

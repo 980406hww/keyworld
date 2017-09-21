@@ -969,6 +969,9 @@
                 ctd.eq(idx).width($(val).width());
             });
         }
+        function searchCustomerKeywords(url) {
+            window.open(url);
+        }
 
         <c:if test="${'bc'.equalsIgnoreCase(entryType)}">
         <shiro:hasPermission name="/internal/dailyReport/triggerReportGeneration">
@@ -1055,7 +1058,6 @@
                                            name="btnQuery" id="btnQuery" value=" 查询 ">
                                 </shiro:hasPermission>
                             </td>
-
                             <td align="right">
                                 <shiro:hasPermission name="/internal/customer/saveCustomer">
                                 <input type="button" class="ui-button ui-widget ui-corner-all" value=" 添加 " onclick="showCustomerDialog(null,'${user.loginName}')"/>
@@ -1103,11 +1105,11 @@
         <c:forEach items="${page.records}" var="customer">
             <tr onmouseover="doOver(this);" onmouseout="doOut(this);" height=30>
                 <td width=10><input type="checkbox" name="customerUuid" value="${customer.uuid}"/></td>
-                    <%--  <c:if test="${user.vipType}">--%>
                 <td width=80>${user.loginName}</td>
-                    <%--  </c:if>--%>
                 <td width=80>
-                    <a href="/internal/customerKeyword/searchCustomerKeywords/${customer.uuid}">${customer.contactPerson}</a>
+                    <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywords">
+                    <a href="#" onclick="searchCustomerKeywords('/internal/customerKeyword/searchCustomerKeywords/${customer.uuid}')">${customer.contactPerson}</a>
+                    </shiro:hasPermission>
                 </td>
                 <td width=60>${customer.keywordCount}</td>
                 <td width=60>${customer.qq}</td>
