@@ -355,7 +355,7 @@
 								<input type="button" value=" 增加 " onclick="showNegativeListDialog(null)">&nbsp;
 							</shiro:hasPermission>
 							<shiro:hasPermission name="/internal/negativelist/deleteNegativeLists">
-								<input type="button" value=" 删除 " onclick="deleteNegatives()">
+								<input type="button" value=" 删除所选 " onclick="deleteNegatives()">
 							</shiro:hasPermission>
 						</td>
 					</tr>

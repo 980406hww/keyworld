@@ -424,7 +424,7 @@
             <input type="button" class="ui-button ui-widget ui-corner-all" style="z-index: 0" ; onclick="showAddMainKeywordDialog(null)" value=" 添加 "/>&nbsp;&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/complaints/deleteTSMainKeywords">
-            <input type="button" class="ui-button ui-widget ui-corner-all" style="z-index: 0" ; onclick="deleteMainKeywords(this)" value=" 删除 "/>
+            <input type="button" class="ui-button ui-widget ui-corner-all" style="z-index: 0" ; onclick="deleteMainKeywords(this)" value=" 删除所选 "/>
             </shiro:hasPermission>
         </form>
         <table id="headerTable" style="width:100%;">
