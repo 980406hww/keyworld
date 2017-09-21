@@ -5,6 +5,10 @@
     <script language="JavaScript" type="text/javascript" src="/js/jquery.poshytip.js"></script>
     <head>
         <style>
+            #showCustomerTableDiv {
+                width: 100%;
+                margin: auto;
+            }
             #div1 {
                 display: none;
                 background-color: #f6f7f7;
@@ -63,7 +67,7 @@
 
         <script language="javascript">
             $(function () {
-                $("#customerKeywordDiv").css("margin-top",$("#customerKeywordTopDiv").height());
+                $("#showCustomerTableDiv").css("margin-top",$("#customerKeywordTopDiv").height());
                 $(".floatTd").poshytip();
                 initPaging();
                 initNoPositionChecked();
@@ -363,7 +367,7 @@
     </form>
     <table style="font-size:12px; width: 100%;" id="headerTable">
         <tr bgcolor="#eeeeee" height=30>
-            <td width="10"><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
+            <td width="10" style="padding-left: 7px;"><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
             <td align="center" width=80>联系人</td>
             <td align="center" width=80>关键字</td>
             <td align="center" width=100>URL</td>
@@ -384,11 +388,11 @@
     </table>
 </div>
 
-<div id="customerKeywordDiv" style="margin-bottom: 30px">
+<div id="showCustomerTableDiv" style="margin-bottom: 30px">
     <table id="customerKeywordTable" style="font-size:12px;">
         <c:forEach items="${page.records}" var="customerKeyword">
-            <tr style="" height=30 onmouseover="doOver(this);" onmouseout="doOut(this);" height=30>
-                <td width="10">
+            <tr height=30 onmouseover="doOver(this);" onmouseout="doOut(this);" height=30>
+                <td width="10" style="padding-left: 7px;">
                     <input type="checkbox" name="uuid" value="${customerKeyword.uuid}" onclick="decideSelectAll()"/>
                 </td>
                 <td align="center" width=80>

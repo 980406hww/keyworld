@@ -427,7 +427,7 @@
     </table>
     <table id="headerTable" width="100%">
         <tr bgcolor="#eeeeee" height=30>
-            <td align="left" width="10"><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
+            <td align="left" width="10" style="padding-left: 7px;"><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
             <td align="center" width=100>供应商名称</td>
             <td align="center" width=80>联系人</td>
             <td align="center" width=80>电话</td>
@@ -448,7 +448,7 @@
     <table id="showSupplierListTable"  width="100%">
         <c:forEach items="${page.records}" var="supplier" varStatus="status">
             <tr onmouseover="doOver(this);" onmouseout="doOut(this);" height=30 <c:if test="${status.index%2==0}">bgcolor="#eee" </c:if> >
-                <td width="10"><input type="checkbox" name="uuid" value="${supplier.uuid}" onclick="decideSelectAll()"/></td>
+                <td width="10" style="padding-left: 7px;"><input type="checkbox" name="uuid" value="${supplier.uuid}" onclick="decideSelectAll()"/></td>
                 <td width="100">${supplier.supplierName}</td>
                 <td width="80">${supplier.contactPerson}</td>
                 <td width="80">${supplier.phone}</td>

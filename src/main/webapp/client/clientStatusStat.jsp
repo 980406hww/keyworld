@@ -56,7 +56,7 @@
 
         <tr align="left" <c:if test="${status.index%2==0}">bgcolor="#eee" </c:if>>
             <c:if test="${clientStatusSummaryVO.clientIDPrefixCount>0}">
-                <td rowspan="${clientStatusSummaryVO.clientIDPrefixCount}">${clientStatusSummaryVO.clientIDPrefix}</td>
+                <td style="padding-left: 7px;" rowspan="${clientStatusSummaryVO.clientIDPrefixCount}">${clientStatusSummaryVO.clientIDPrefix}</td>
                 <td rowspan="${clientStatusSummaryVO.clientIDPrefixCount}">${clientStatusSummaryVO.clientIDPrefixTotalCount}</td>
             </c:if>
             <c:if test="${clientStatusSummaryVO.typeCount>0}">
