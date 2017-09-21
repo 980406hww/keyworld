@@ -51,28 +51,24 @@
             var pageSize = searchSupplierForm.find('#pageSizeHidden').val();
             var pages = searchSupplierForm.find('#pagesHidden').val();
             var currentPageNumber = searchSupplierForm.find('#currentPageNumberHidden').val();
-            var showSupplierBottomDiv = $('#showSupplierBottomDiv');
-
-            $("#showSupplierBottomDiv").find("#chooseRecords").val(${page.size});
-            if(parseInt(pages)==1){
-                showSupplierBottomDiv.find("#firstButton").attr("disabled", "disabled");
-                showSupplierBottomDiv.find("#upButton").attr("disabled", "disabled");
-                showSupplierBottomDiv.find("#nextButton").attr("disabled", "disabled");
-                showSupplierBottomDiv.find("#lastButton").attr("disabled", "disabled");
-            }
-            if (parseInt(currentPageNumber) <= 1) {
-                currentPageNumber = 1;
-                showSupplierBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
-                showSupplierBottomDiv.find("#upButton").attr("disabled", "disabled");
-            } else if (parseInt(currentPageNumber) >= parseInt(pages)) {
-                currentPageNumber = pages;
-                showSupplierBottomDiv.find("#nextButton").attr("disabled", "disabled");
-                showSupplierBottomDiv.find("#lastButton").attr("disabled", "disabled");
+            var showCustomerBottomDiv = $('#showCustomerBottomDiv');
+            $("#showCustomerBottomDiv").find("#chooseRecords").val(${page.size});
+            if(parseInt(currentPageNumber) > 1 && parseInt(currentPageNumber) < parseInt(pages)) {
+                showCustomerBottomDiv.find("#firstButton").removeAttr("disabled");
+                showCustomerBottomDiv.find("#upButton").removeAttr("disabled");
+                showCustomerBottomDiv.find("#nextButton").removeAttr("disabled");
+                showCustomerBottomDiv.find("#lastButton").removeAttr("disabled");
+            } else if (parseInt(pages) <= 1) {
+                showCustomerBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
+                showCustomerBottomDiv.find("#upButton").attr("disabled", "disabled");
+                showCustomerBottomDiv.find("#nextButton").attr("disabled", "disabled");
+                showCustomerBottomDiv.find("#lastButton").attr("disabled", "disabled");
+            } else if (parseInt(currentPageNumber) <= 1) {
+                showCustomerBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
+                showCustomerBottomDiv.find("#upButton").attr("disabled", "disabled");
             } else {
-                showSupplierBottomDiv.find("#firstButton").removeAttr("disabled");
-                showSupplierBottomDiv.find("#upButton").removeAttr("disabled");
-                showSupplierBottomDiv.find("#nextButton").removeAttr("disabled");
-                showSupplierBottomDiv.find("#lastButton").removeAttr("disabled");
+                showCustomerBottomDiv.find("#nextButton").attr("disabled", "disabled");
+                showCustomerBottomDiv.find("#lastButton").attr("disabled", "disabled");
             }
         }
 
@@ -426,10 +422,10 @@
         </tr>
     </table>
 </div>
-<div id="showSupplierListDiv" >
+<div id="showSupplierListDiv" style="margin-bottom: 30px">
     <table id="showSupplierListTable"  width="100%">
-        <c:forEach items="${page.records}" var="supplier">
-            <tr onmouseover="doOver(this);" onmouseout="doOut(this);" height=30>
+        <c:forEach items="${page.records}" var="supplier" varStatus="status">
+            <tr onmouseover="doOver(this);" onmouseout="doOut(this);" height=30 <c:if test="${status.index%2==0}">bgcolor="#eee" </c:if> >
                 <td width="10"><input type="checkbox" name="uuid" value="${supplier.uuid}" onclick="decideSelectAll()"/></td>
                 <td width="100">${supplier.supplierName}</td>
                 <td width="80">${supplier.contactPerson}</td>

@@ -59,7 +59,7 @@
                 negativeListBottomDiv.find("#upButton").removeAttr("disabled");
                 negativeListBottomDiv.find("#nextButton").removeAttr("disabled");
                 negativeListBottomDiv.find("#lastButton").removeAttr("disabled");
-            } else if (parseInt(pageCount) == 1) {
+            } else if (parseInt(pageCount) <= 1) {
                 negativeListBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
                 negativeListBottomDiv.find("#upButton").attr("disabled", "disabled");
                 negativeListBottomDiv.find("#nextButton").attr("disabled", "disabled");
@@ -365,7 +365,7 @@
 	  </tr>
 	</table>
 </div>
-<div id="showNegativeListDiv">
+<div id="showNegativeListDiv" style="margin-bottom: 30px">
 	<table id="showNegativeListTable"  width="100%">
 	  <c:forEach items="${page.records}" var="negativeList" varStatus="trIndex">
 		  <c:choose>

@@ -3,7 +3,8 @@
 <html>
 <head>
     <title>客户端统计</title>
-    <style></style>
+    <style>
+    </style>
     <script language="javascript" type="text/javascript">
 
         $(function () {
@@ -25,7 +26,7 @@
 <body>
 <div id="topDiv">
     <%@include file="/menu.jsp" %>
-    <form action="/internal/clientstatus/clientStatusStat" method="post" id="searchClientStatusSummaryVOForm" style="margin-top: 50px;margin-left: 20px">
+    <form action="/internal/clientstatus/clientStatusStat" method="post" id="searchClientStatusSummaryVOForm" style="margin-top: 35px;margin-left: 20px">
         客户端ID前缀:<input type="text" name="clientIDPrefix" value="${clientIDPrefix}">
         城市:<input type="text" name="city" value="${city}">
         <shiro:hasPermission name="/internal/clientstatus/clientStatusStat">
@@ -44,9 +45,10 @@
     </table>
 </div>
 <div id="centerDiv">
-<table width=60% style="font-size: 12px;" cellpadding=3 id="clientStatusSummaryTable">
-    <c:forEach items="${clientStatusSummaryVOs}" var="clientStatusSummaryVO">
-        <tr align="left">
+<table width=60% style="font-size: 12px" id="clientStatusSummaryTable" cellpadding=3>
+    <c:forEach items="${clientStatusSummaryVOs}" var="clientStatusSummaryVO" varStatus="status">
+
+        <tr align="left" <c:if test="${status.index%2==0}">bgcolor="#eee" </c:if>>
             <c:if test="${clientStatusSummaryVO.clientIDPrefixCount>0}">
                 <td rowspan="${clientStatusSummaryVO.clientIDPrefixCount}">${clientStatusSummaryVO.clientIDPrefix}</td>
                 <td rowspan="${clientStatusSummaryVO.clientIDPrefixCount}">${clientStatusSummaryVO.clientIDPrefixTotalCount}</td>

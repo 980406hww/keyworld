@@ -285,7 +285,7 @@
     </table>
 </div>
 
-<div id="customerKeywordDiv">
+<div id="customerKeywordDiv" style="margin-bottom: 30px">
     <table id="customerKeywordTable" style="font-size:12px;">
         <c:forEach items="${page.records}" var="customerKeyword">
             <tr style="" height=30 onmouseover="doOver(this);" onmouseout="doOut(this);" height=30>
