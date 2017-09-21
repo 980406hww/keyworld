@@ -34,7 +34,7 @@
             autoCheckTerminalType();
             alignTableHeader();
             if(${isDepartmentManager}) {
-                $("#userID").val("${customerCriteria.userID}");
+                $("#userID").val("${customerCriteria.loginName}");
             }
             window.onresize = function(){
                 alignTableHeader();
@@ -1058,7 +1058,7 @@
 
                             <td align="right">
                                 <shiro:hasPermission name="/internal/customer/saveCustomer">
-                                <input type="button" class="ui-button ui-widget ui-corner-all" value=" 添加 " onclick="showCustomerDialog(null,'${user.userID}')"/>
+                                <input type="button" class="ui-button ui-widget ui-corner-all" value=" 添加 " onclick="showCustomerDialog(null,'${user.loginName}')"/>
                                 </shiro:hasPermission>
                             </td>
                             <td align="right">
@@ -1104,7 +1104,7 @@
             <tr onmouseover="doOver(this);" onmouseout="doOut(this);" height=30>
                 <td width=10><input type="checkbox" name="customerUuid" value="${customer.uuid}"/></td>
                     <%--  <c:if test="${user.vipType}">--%>
-                <td width=80>${user.userID}</td>
+                <td width=80>${user.loginName}</td>
                     <%--  </c:if>--%>
                 <td width=80>
                     <a href="/internal/customerKeyword/searchCustomerKeywords/${customer.uuid}">${customer.contactPerson}</a>

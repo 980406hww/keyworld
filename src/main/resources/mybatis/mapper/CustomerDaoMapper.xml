@@ -3,7 +3,7 @@
 <mapper namespace="com.keymanager.monitoring.dao.CustomerDao">
     <sql id="colID">
         c.fUuid AS `uuid`,
-        c.fUserID AS `userID`,
+        c.fUserID AS `loginName`,
         c.fEntryType AS `entryType`,
         c.fContactPerson AS `contactPerson`,
         c.fQQ AS `qq`,
@@ -27,7 +27,7 @@
         <if test="customerCriteria.contactPerson != null and customerCriteria.contactPerson != ''">AND c.fContactPerson like '%${customerCriteria.contactPerson}%'</if>
         <if test="customerCriteria.qq != null and customerCriteria.qq != ''">AND c.fQQ like '${customerCriteria.qq}%'</if>
         <if test="customerCriteria.telphone != null and customerCriteria.telphone != ''">AND c.fTelphone like '%${customerCriteria.telphone}%'</if>
-        <if test="customerCriteria.userID != null and customerCriteria.userID != ''">AND c.fUserID = #{customerCriteria.userID}</if>
+        <if test="customerCriteria.loginName != null and customerCriteria.loginName != ''">AND c.fUserID = #{customerCriteria.loginName}</if>
         <if test="customerCriteria.status != null and customerCriteria.status != ''">AND c.fStatus = #{customerCriteria.status}</if>
         order by c.fUpdateTime DESC
     </select>

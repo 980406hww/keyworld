@@ -85,8 +85,8 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	private ModelAndView constructCustomerKeywordModelAndView(HttpServletRequest request, CustomerKeywordCriteria customerKeywordCriteria, int currentPage, int pageSize) {
 		HttpSession session = request.getSession();
 		ModelAndView modelAndView = new ModelAndView("/customerkeyword/customerKeywordList");
-		String userID = (String) session.getAttribute("username");
-		UserInfo user = userInfoService.getUserInfo(userID);
+		String loginName = (String) session.getAttribute("username");
+		UserInfo user = userInfoService.getUserInfo(loginName);
 		Customer customer = customerService.getCustomerWithKeywordCount(customerKeywordCriteria.getCustomerUuid());
 		String entryType = (String) session.getAttribute("entryType");
 		String terminalType = TerminalTypeMapping.getTerminalType(request);

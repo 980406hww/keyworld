@@ -191,7 +191,7 @@
                     success: function (result) {
                         if (result) {
                             $().toastmessage('showSuccessToast', "删除成功",true);
-                           
+
                         } else {
                             $().toastmessage('showErrorToast', "删除失败");
                         }
@@ -237,7 +237,7 @@
                     success: function (data) {
                         if (data) {
                             $().toastmessage('showSuccessToast', "操作成功",true);
-                           
+
                         } else {
                             $().toastmessage('showErrorToast', "操作失败");
                         }
@@ -294,7 +294,7 @@
                     success: function (status) {
                         if (status) {
                             $().toastmessage('showSuccessToast', "操作成功",true);
-                           
+
                         } else {
                             $().toastmessage('showErrorToast', "操作失败");
                         }
@@ -460,7 +460,7 @@
                     success: function (result) {
                         if (result) {
                             $().toastmessage('showSuccessToast', "操作成功",true);
-                           
+
                         } else {
                             $().toastmessage('showErrorToast', "操作失败",true);
                         }
@@ -593,7 +593,7 @@
                     success: function (result) {
                         if (result) {
                             $().toastmessage('showSuccessToast', "操作成功",true);
-                           
+
                         } else {
                             $().toastmessage('showErrorToast', "操作失败");
                         }
@@ -1086,7 +1086,6 @@
 
 
                     <ul id="customerKeywordCost" style="float: left; width: 200px;height:170px;text-align: center">
-                        <c:if test="${user.vipType}">
                         <li><a href="javascript:showCustomerKeywordCost()">&nbsp;显示成本(再次点击关闭)</a></li>
                         <ul id="customerKeywordCostFrom" style="display: none;">
                             <li><span class="customerKeywordSpanClass">第一成本:</span><input name="positionFirstCost" id="positionFirstCost"
@@ -1106,18 +1105,15 @@
                                                                                           value="" style="width:100px;" type="text" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)">元
                             </li>
                         </ul>
-                        </c:if>
                     </ul>
 
             </li>
-            <c:if test="${user.vipType}">
                 <li style="float:none"><span class="customerKeywordSpanClass">服务提供商:</span>
                     <select name="serviceProvider" id="serviceProvider" style="width: 296px">
                         <c:forEach items="${serviceProviders}" var="serviceProvider">
                             <option value="${serviceProvider.serviceProviderName}" <c:if test="${serviceProvider.serviceProviderName=='baidutop123'}">selected="selected"</c:if>>${serviceProvider.serviceProviderName}</option>
                         </c:forEach>
                     </select></li>
-            </c:if>
 
             <hr style="height: 1px; border:none; border-top:1px dashed #CCCCCC;"/>
             <li><span class="customerKeywordSpanClass">收费方式:</span>

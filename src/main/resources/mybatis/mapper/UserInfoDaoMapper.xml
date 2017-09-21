@@ -103,7 +103,7 @@
         <include refid="colID"/>
         FROM t_userinfo u
         WHERE
-        u.fLoginName = #{userID}
+        u.fLoginName = #{loginName}
         AND u.fStatus = 0
     </select>
 

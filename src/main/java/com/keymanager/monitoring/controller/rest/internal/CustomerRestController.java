@@ -64,16 +64,16 @@ public class CustomerRestController {
         ModelAndView modelAndView = new ModelAndView("/customer/customerlist");
         Subject subject = SecurityUtils.getSubject();
         HttpSession session = request.getSession();
-        String userID = (String) session.getAttribute("username");
-        UserInfo user = userInfoService.getUserInfo(userID);
+        String loginName = (String) session.getAttribute("username");
+        UserInfo user = userInfoService.getUserInfo(loginName);
         List<UserInfo> activeUsers = userInfoService.findActiveUsers();
         String entryType = (String) session.getAttribute("entryType");
         String terminalType = TerminalTypeMapping.getTerminalType(request);
         customerCriteria.setEntryType(entryType);
         customerCriteria.setTerminalType(terminalType);
-        boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userID));
+        boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(loginName));
         if(!isDepartmentManager) {
-            customerCriteria.setUserID(userID);
+            customerCriteria.setLoginName(loginName);
         }
         Page<Customer> page = customerService.searchCustomers(new Page<Customer>(Integer.parseInt(currentPage), Integer.parseInt(pageSize)), customerCriteria);
         modelAndView.addObject("entryType", entryType);
