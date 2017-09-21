@@ -29,11 +29,13 @@
             $("#customerKeywordDialog").dialog("close");
             $("#customerChargeTypeDialog").dialog("close");
             $("#showCustomerTableDiv").css("margin-top",$("#topDiv").height());
-
             pageLoad();
             onlyNumber();
             autoCheckTerminalType();
             alignTableHeader();
+            if(${isDepartmentManager}) {
+                $("#userID").val("${customerCriteria.userID}");
+            }
             window.onresize = function(){
                 alignTableHeader();
             }
@@ -1023,6 +1025,18 @@
                             <td align="right">联系电话:</td>
                             <td><input type="text" name="telphone" id="telphone" value="${customerCriteria.telphone}"
                                        style="width:200px;">
+                            </td>
+                            <td>
+                                <c:if test="${isDepartmentManager}">
+                                    用户名称:
+                                    <select name="userID" id="userID">
+                                        <option value="">所有</option>
+                                        <option value="${user.loginName}">只显示自己</option>
+                                        <c:forEach items="${activeUsers}" var="activeUser">
+                                            <option value="${activeUser.loginName}">${activeUser.userName}</option>
+                                        </c:forEach>
+                                    </select>
+                                </c:if>
                             </td>
                             <td align="right">
                                 <input type="hidden" name="currentPageNumber" id="currentPageNumberHidden"

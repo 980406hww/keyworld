@@ -304,13 +304,13 @@
                     <c:choose>
                         <c:when test="${isDepartmentManager}">
                             <option value="">所有</option>
-                            <option value="${user.userID}">只显示自己</option>
+                            <option value="${user.loginName}">只显示自己</option>
                             <c:forEach items="${activeUsers}" var="activeUser">
-                                <option value="${activeUser.userID}">${activeUser.userName}</option>
+                                <option value="${activeUser.loginName}">${activeUser.userName}</option>
                             </c:forEach>
                         </c:when>
                         <c:otherwise>
-                            <option value="${user.userID}">只显示自己</option>
+                            <option value="${user.loginName}">只显示自己</option>
                         </c:otherwise>
                     </c:choose>
                 </select>

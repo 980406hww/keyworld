@@ -6,6 +6,7 @@ import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.UserInfo;
 import com.keymanager.monitoring.service.CustomerService;
 import com.keymanager.monitoring.service.IUserInfoService;
+import com.keymanager.monitoring.service.UserRoleService;
 import com.keymanager.util.TerminalTypeMapping;
 import com.keymanager.util.Utils;
 import org.apache.shiro.SecurityUtils;
@@ -37,6 +38,9 @@ public class CustomerRestController {
     @Autowired
     private IUserInfoService userInfoService;
 
+    @Autowired
+    private UserRoleService userRoleService;
+
     @RequiresPermissions("/internal/customer/searchCustomers")
     @RequestMapping(value = "/searchCustomers", method = RequestMethod.GET)
     public ModelAndView searchCustomers(@RequestParam(defaultValue = "1") int currentPage, @RequestParam(defaultValue = "50") int displaysRecords,
@@ -62,16 +66,23 @@ public class CustomerRestController {
         HttpSession session = request.getSession();
         String userID = (String) session.getAttribute("username");
         UserInfo user = userInfoService.getUserInfo(userID);
+        List<UserInfo> activeUsers = userInfoService.findActiveUsers();
         String entryType = (String) session.getAttribute("entryType");
         String terminalType = TerminalTypeMapping.getTerminalType(request);
         customerCriteria.setEntryType(entryType);
         customerCriteria.setTerminalType(terminalType);
+        boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userID));
+        if(!isDepartmentManager) {
+            customerCriteria.setUserID(userID);
+        }
         Page<Customer> page = customerService.searchCustomers(new Page<Customer>(Integer.parseInt(currentPage), Integer.parseInt(pageSize)), customerCriteria);
         modelAndView.addObject("entryType", entryType);
         modelAndView.addObject("terminalType", terminalType);
         modelAndView.addObject("customerCriteria", customerCriteria);
         modelAndView.addObject("page", page);
         modelAndView.addObject("user", user);
+        modelAndView.addObject("isDepartmentManager", isDepartmentManager);
+        modelAndView.addObject("activeUsers", activeUsers);
         return modelAndView;
     }
 
