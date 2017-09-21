@@ -50,7 +50,6 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	@Autowired
 	private UserRoleService userRoleService;
 
-
 	@Autowired
 	private CustomerService customerService;
 
@@ -419,7 +418,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		customerKeywordCriteria.setEntryType(entryType);
 		customerKeywordCriteria.setTerminalType(terminalType);
 		boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
-		if(isDepartmentManager == false) {
+		if(!isDepartmentManager) {
 			customerKeywordCriteria.setUserName(userName);
 		}
 		Page<CustomerKeyword> page = customerKeywordService.searchCustomerKeywordLists(new Page<CustomerKeyword>(currentPage, pageSize), customerKeywordCriteria);
