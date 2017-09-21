@@ -34,7 +34,7 @@
             autoCheckTerminalType();
             alignTableHeader();
             if(${isDepartmentManager}) {
-                $("#userID").val("${customerCriteria.userID}");
+                $("#loginName").val("${customerCriteria.loginName}");
             }
             window.onresize = function(){
                 alignTableHeader();
@@ -693,21 +693,21 @@
         }
 
         //显示添加客户是的DIV
-        function showCustomerDialog(uuid, userID) {
+        function showCustomerDialog(uuid, loginName) {
             if (uuid == null) {
                 $('#customerForm')[0].reset();
             }
             $("#customerDialog").dialog({
                 resizable: false,
-                width: 310,
-                height: 350,
+                width: 280,
+                height: 300,
                 modal: true,
                 //按钮
                 buttons: [{
                     text: '保存',
                     iconCls: 'icon-ok',
                     handler: function () {
-                        savaCustomer(uuid, userID);
+                        savaCustomer(uuid, loginName);
                     }
                 },
                     {
@@ -729,11 +729,11 @@
             $("#customerDialog").dialog("open");
             $('#customerDialog').window("resize",{top:$(document).scrollTop() + 100});
         }
-        function savaCustomer(uuid, userID) {
+        function savaCustomer(uuid, loginName) {
             var customerForm = $("#customerDialog").find("#customerForm");
             var customer = {};
             customer.uuid = uuid;
-            customer.userID = userID;
+            customer.loginName = loginName;
             customer.entryType = customerForm.find("#entryTypeHidden").val();
             customer.contactPerson = customerForm.find("#contactPerson").val();
             customer.qq = customerForm.find("#qq").val();
@@ -1019,6 +1019,7 @@
                 <form method="post" id="searchCustomerForm" action="/internal/customer/searchCustomers" style="margin-bottom:0px ">
                     <table style="font-size:12px;">
                         <tr>
+
                             <td align="right">联系人:</td>
                             <td><input type="text" name="contactPerson" id="contactPerson"
                                        value="${customerCriteria.contactPerson}"
@@ -1033,7 +1034,7 @@
                             <td>
                                 <c:if test="${isDepartmentManager}">
                                     用户名称:
-                                    <select name="userID" id="userID">
+                                    <select name="loginName" id="loginName">
                                         <option value="">所有</option>
                                         <option value="${user.loginName}">只显示自己</option>
                                         <c:forEach items="${activeUsers}" var="activeUser">
@@ -1049,26 +1050,24 @@
                                 <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
                                 <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
                                 <shiro:hasPermission name="/internal/customer/searchCustomers">
-                                    <input type="submit" class="ui-button ui-widget ui-corner-all"
-                                           onclick="resetPageNumber()"
-                                           name="btnQuery" id="btnQuery" value=" 查询 ">
+                                    &nbsp;&nbsp;<input type="submit" class="ui-button ui-widget ui-corner-all" onclick="resetPageNumber()" name="btnQuery" id="btnQuery" value=" 查询 ">
                                 </shiro:hasPermission>
                             </td>
 
                             <td align="right">
                                 <shiro:hasPermission name="/internal/customer/saveCustomer">
-                                <input type="button" class="ui-button ui-widget ui-corner-all" value=" 添加 " onclick="showCustomerDialog(null,'${user.loginName}')"/>
+                                    &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 添加 " onclick="showCustomerDialog(null,'${user.loginName}')"/>
                                 </shiro:hasPermission>
                             </td>
                             <td align="right">
                                 <shiro:hasPermission name="/internal/customer/deleteCustomers">
-                                <input type="button" class="ui-button ui-widget ui-corner-all" value=" 删除所选" onclick="deleteCustomers(this)"/>
+                                    &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 删除所选 " onclick="deleteCustomers(this)"/>
                                 </shiro:hasPermission>
                             </td>
                             <td align="right" width="100">
                                 <c:if test="${'bc'.equalsIgnoreCase(entryType)}">
                                     <shiro:hasPermission name="/internal/dailyReport/triggerReportGeneration">
-                                        <a target="_blank" href='javascript:triggerDailyReportGeneration(this)'>触发日报表生成</a>
+                                        &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 触发日报表生成 " onclick="triggerDailyReportGeneration(this)"/>
                                     </shiro:hasPermission>
                                 </c:if>
                             </td>
@@ -1102,9 +1101,7 @@
         <c:forEach items="${page.records}" var="customer">
             <tr onmouseover="doOver(this);" onmouseout="doOut(this);" height=30>
                 <td width=10><input type="checkbox" name="customerUuid" value="${customer.uuid}"/></td>
-                    <%--  <c:if test="${user.vipType}">--%>
                 <td width=80>${user.loginName}</td>
-                    <%--  </c:if>--%>
                 <td width=80>
                     <a href="/internal/customerKeyword/searchCustomerKeywords/${customer.uuid}">${customer.contactPerson}</a>
                 </td>
@@ -1127,28 +1124,28 @@
                 <td width=80><fmt:formatDate value="${customer.createTime}" pattern="yyyy-MM-dd"/></td>
                 <td width=200>
                     <shiro:hasPermission name="/internal/customer/saveCustomer">
-                        <a href="javascript:modifyCustomer(${customer.uuid})">修改</a> |
+                        <a href="javascript:modifyCustomer(${customer.uuid})">修改</a>
                     </shiro:hasPermission>
                     <shiro:hasPermission name="/internal/customer/delCustomer">
-                        <a href="javascript:delCustomer('${customer.uuid}')">删除</a> |
+                        | <a href="javascript:delCustomer('${customer.uuid}')">删除</a>
                     </shiro:hasPermission>
-                    <shiro:hasPermission name="/internal/customerChar/saveCustomerChargeTypegeType">
-                        <a href="javascript:changeCustomerChargeType('${customer.uuid}')">客户规则</a> |
-                    </shiro:hasPermission>
-                    <shiro:hasPermission name="/internal/customerKeyword/saveCustomerKeywords">
-                    <a href="javascript:showCustomerKeywordDialog(${customer.uuid})">快速加词</a> |
-                    </shiro:hasPermission>
-                    <shiro:hasPermission name="/internal/customer/uploadDailyReportTemplate">
-                        <a target="_blank" href="javascript:uploadDailyReportTemplate('${customer.uuid}', this)">上传日报表模板</a>
-                    </shiro:hasPermission>
+                    <c:if test="${'bc'.equalsIgnoreCase(entryType)}">
+                        <shiro:hasPermission name="/internal/customerChar/saveCustomerChargeTypegeType">
+                            | <a href="javascript:changeCustomerChargeType('${customer.uuid}')">客户规则</a>
+                        </shiro:hasPermission>
+                        <shiro:hasPermission name="/internal/customerKeyword/saveCustomerKeywords">
+                             | <a href="javascript:showCustomerKeywordDialog(${customer.uuid})">快速加词</a>
+                        </shiro:hasPermission>
+                        <shiro:hasPermission name="/internal/customer/uploadDailyReportTemplate">
+                             | <a target="_blank" href="javascript:uploadDailyReportTemplate('${customer.uuid}', this)">上传日报表模板</a>
+                        </shiro:hasPermission>
+                    </c:if>
                 </td>
             </tr>
         </c:forEach>
     </table>
-    <%--<br><br><br>--%>
-    <%--<br>--%>
 </div>
-<div id="customerChargeTypeDialog" title="客户规则" class="easyui-dialog">
+<div id="customerChargeTypeDialog" title="客户规则" class="easyui-dialog" style="left: 35%;">
     <input type="hidden" id="customerChargeTypeUuid"/>
     <div id="showRuleRadioDiv" style="text-align: center">
         <input type="radio" id="chargeTypePercentage" onclick="chooseChargeType(this.value)" value="Percentage"
@@ -1259,7 +1256,7 @@
 
 
 </div>
-<div id="customerDialog" title="客户信息" class="easyui-dialog">
+<div id="customerDialog" title="客户信息" class="easyui-dialog" style="left: 40%;">
     <form id="customerForm" method="post" action="customerlist.jsp">
         <table style="font-size:14px;" cellpadding=5>
             <tr>
@@ -1269,15 +1266,11 @@
             <tr>
                 <td align="right">QQ</td>
                 <td><input type="text" name="qq" id="qq" style="width:200px;">
-                    <div class="hiddentr"
-                         id="qqExisting"><%--<font color="red">该QQ在系统中已经存在"/font>--%></div>
                 </td>
             </tr>
             <tr>
                 <td align="right">联系电话</td>
                 <td><input type="text" name="telphone" id="telphone" style="width:200px;">
-                    <div class="hiddentr"
-                         id="telphoneExisting"><%--<font color="red">该电话在系统中已经存在！</font>--%></div>
                 </td>
             </tr>
             <tr>
@@ -1308,7 +1301,7 @@
     </form>
 </div>
 <%--上传日报表模"onsubmit="return checkinput();"--%>
-<div id="uploadDailyReportTemplateDialog" title="上传日报表模板" class="easyui-dialog">
+<div id="uploadDailyReportTemplateDialog" title="上传日报表模板" class="easyui-dialog" style="left: 40%;">
     <form method="post" id="dailyReportTemplateForm" action=""
           enctype="multipart/form-data">
         <table width="100%" style="margin-top: 10px;margin-left: 10px">
@@ -1335,7 +1328,7 @@
     </form>
 </div>
 <%--添加客户关键字--%>
-<div id="customerKeywordDialog" title="客户关键字" class="easyui-dialog">
+<div id="customerKeywordDialog" title="客户关键字" class="easyui-dialog" style="left: 35%;">
     <form id="customerKeywordForm">
    <textarea id="customerKeywordTextarea" style="width:480px;height:180px;"
              placeholder="关键字 域名  关键字与域名以空格作为分割，一行一组"></textarea>

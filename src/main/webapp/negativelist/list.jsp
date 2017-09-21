@@ -251,7 +251,7 @@
             negativeListObj.desc = $("#negativeListForm").find("#desc").val();
             negativeListObj.position = $("#negativeListForm").find("#position").val();
             if (!(/^[0-9]*$/.test(negativeListObj.position)) && (negativeListObj.position != '')) {
-                alert("输入非法!");
+                alert("排名输入非法!");
                 return;
             }
             $.ajax({
@@ -283,8 +283,8 @@
             }
             $("#negativeListDialog").dialog({
                 resizable: false,
-                width: 510,
-                height: 315,
+                width: 490,
+                height: 290,
                 modal: true,
                 title: '负面信息',
 				closed:true,
@@ -322,14 +322,7 @@
 	<%@include file="/menu.jsp" %>
 	<table width="100%" style="font-size:12px;margin-top: 40px;" cellpadding="3" id="">
 	  <tr>
-		 <td colspan="8" align="right">
-			<shiro:hasPermission name="/internal/negativelist/saveNegativeList">
-			 <a href="javascript:showNegativeListDialog(null)">增加关键字负面清单</a> |
-			</shiro:hasPermission>
-			<shiro:hasPermission name="/internal/negativelist/deleteNegativeLists">
-			 <a href="javascript:deleteNegatives()">删除所选数据</a>
-			</shiro:hasPermission>
-		 </td>
+
 	  </tr>
 	  <tr>
 		 <td colspan="8">
@@ -341,13 +334,21 @@
 						<input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
 						<input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
 						<td align="right">关键字:</td> <td><input type="text" name="keyword" id="keyword" value="${negativeListCriteria.keyword}" style="width:200px;"></td>
-						<td align="right">URL:</td> <td><input type="text" name="url" id="url" value="${negativeListCriteria.url}" style="width:200px;"></td>
-						<td align="right" width="100">
+						<td align="right">URL:</td> <td><input type="text" name="url" id="url" value="${negativeListCriteria.url}" style="width:170px;"></td>
+						<td align="right" width="50">
 							<shiro:hasPermission name="/internal/negativelist/searchNegativeLists">
-							<input type="submit" name="btnQuery" id="btnQuery" onclick="resetPageNumber()" value=" 查询 " >
+							<input type="submit" name="btnQuery" id="btnQuery" onclick="resetPageNumber()" value=" 查询 " >&nbsp;
+						</shiro:hasPermission>
+						<td colspan="4" align="right">
+							<shiro:hasPermission name="/internal/negativelist/saveNegativeList">
+								<input type="button" value="增加关键字负面清单" onclick="showNegativeListDialog(null)">&nbsp;
+							</shiro:hasPermission>
+							<shiro:hasPermission name="/internal/negativelist/deleteNegativeLists">
+								<input type="button" value="删除所选数据" onclick="deleteNegatives()">
 							</shiro:hasPermission>
 						</td>
 					</tr>
+
 				 </table>
 			</form>
 		 </td>
@@ -424,7 +425,7 @@
 	</div>
 </div>
 
-	<div id="negativeListDialog" class="easyui-dialog">
+	<div id="negativeListDialog" class="easyui-dialog" style="left: 40%;">
 		<form id="negativeListForm" style="margin-bottom: 0px;" method="post" action="list.jsp">
 			<table style="font-size:14px;" cellpadding="5">
 				<tr>

@@ -15,7 +15,7 @@ import java.util.List;
 public interface IUserInfoService extends IService<UserInfo> {
 
     //原UserService方法
-    public UserInfo getUserInfo(String userID);
+    public UserInfo getUserInfo(String loginName);
 
     public List<UserInfo> findActiveUsers();
 

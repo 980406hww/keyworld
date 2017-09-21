@@ -32,8 +32,8 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoDao, UserInfo> impl
     private UserRoleDao userRoleDao;
 
     @Override
-    public UserInfo getUserInfo(String userID) {
-        return userInfoDao.getUserInfo(userID);
+    public UserInfo getUserInfo(String loginName) {
+        return userInfoDao.getUserInfo(loginName);
     }
 
     @Override

@@ -6,7 +6,7 @@ public class CustomerCriteria extends BaseCriteria{
     private String contactPerson;
     private String qq;
     private String telphone;
-    private String userID;
+    private String loginName;
     private Integer status;
 
     public String getContactPerson() {
@@ -33,12 +33,12 @@ public class CustomerCriteria extends BaseCriteria{
         this.telphone = telphone;
     }
 
-    public String getUserID() {
-        return userID;
+    public String getLoginName() {
+        return loginName;
     }
 
-    public void setUserID(String userID) {
-        this.userID = userID;
+    public void setLoginName(String loginName) {
+        this.loginName = loginName;
     }
 
     public Integer getStatus() {

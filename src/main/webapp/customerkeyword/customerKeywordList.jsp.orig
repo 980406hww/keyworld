@@ -9,10 +9,6 @@
     <head>
         <title>关键字列表</title>
         <style>
-            .wrap,td{
-                word-break: break-all;
-                word-wrap: break-word;
-            }
             <!--
             #div1 {
                 display: none;
@@ -57,25 +53,6 @@
 
             #customerKeywordTable td{
                 text-align: left;
-            }
-
-            #showCustomerBottomPositioneDiv{
-                position: fixed;
-                bottom: 0px;
-                right: 0px;
-                background-color: white;
-                padding-top: 10px;
-                padding-bottom: 10px;
-                width: 100%;
-            }
-            #showCustomerBottomDiv {
-                float: right;
-                margin-right: 20px;
-            }
-
-            body{
-                margin: 0;
-                padding: 0;
             }
 
             .tip-yellow {
@@ -137,16 +114,27 @@
                 var a = document.getElementsByName("uuid");
                 if (self.checked) {
                     for (var i = 0; i < a.length; i++) {
-                        if (a[i].type == "checkbox") {
                             a[i].checked = true;
-                        }
                     }
                 } else {
                     for (var i = 0; i < a.length; i++) {
-                        if (a[i].type == "checkbox") {
                             a[i].checked = false;
-                        }
                     }
+                }
+            }
+
+            function decideSelectAll() {
+                var a = document.getElementsByName("uuid");
+                var select=0;
+                for(var i = 0; i < a.length; i++){
+                    if (a[i].checked == true){
+                        select++;
+                    }
+                }
+                if(select == a.length){
+                    $("#selectAllChecked").prop("checked",true);
+                }else {
+                    $("#selectAllChecked").prop("checked",false);
                 }
             }
 
@@ -203,7 +191,7 @@
                     success: function (result) {
                         if (result) {
                             $().toastmessage('showSuccessToast', "删除成功",true);
-                           
+
                         } else {
                             $().toastmessage('showErrorToast', "删除失败");
                         }
@@ -249,7 +237,7 @@
                     success: function (data) {
                         if (data) {
                             $().toastmessage('showSuccessToast', "操作成功",true);
-                           
+
                         } else {
                             $().toastmessage('showErrorToast', "操作失败");
                         }
@@ -306,7 +294,7 @@
                     success: function (status) {
                         if (status) {
                             $().toastmessage('showSuccessToast', "操作成功",true);
-                           
+
                         } else {
                             $().toastmessage('showErrorToast', "操作失败");
                         }
@@ -360,7 +348,7 @@
                 $("#groupChangeNameDialog").dialog({
                     resizable: false,
                     width: 260,
-                    height: 150,
+                    height: 100,
                     closed: true,
                     modal: true,
                     title: changeGroupCriteria.title,
@@ -401,7 +389,7 @@
                         }]
                 });
                 $("#groupChangeNameDialog").dialog("open");
-                $('#groupChangeNameDialog').window("resize",{top:$(document).scrollTop() + 100});
+                $('#groupChangeNameDialog').window("resize",{top:$(document).scrollTop() + 200});
             }
 
             function updateCustomerKeywordStatus(status) {
@@ -472,28 +460,16 @@
                     success: function (result) {
                         if (result) {
                             $().toastmessage('showSuccessToast', "操作成功",true);
-                           
+
                         } else {
-<<<<<<< HEAD
                             $().toastmessage('showErrorToast', "操作失败",true);
-                           
                         }
                     },
                     error: function () {
                         $().toastmessage('showErrorToast', "操作失败",true);
-                       
-=======
-                            $().toastmessage('showErrorToast', "操作失败");
-                        }
-                    },
-                    error: function () {
-                        $().toastmessage('showErrorToast', "操作失败");
->>>>>>> 9abab3071b4cf2694bfe1848886d27a205e150f3
                     },
                 });
             }
-
-
             //增加新关键字
             function addCustomerKeyword(customerKeywordUuid) {
                 if (customerKeywordUuid == null) {
@@ -502,8 +478,13 @@
                     $("#customerKeywordForm").find("#status").val('');
                 }
                 $( "#saveCustomerKeywordDialog").dialog({
-                    width: 440,
+<<<<<<< HEAD
+                    width: 420,
+                    height: 550,
+=======
+                    width: 410,
                     height: 540,
+>>>>>>> 0441d31fc7f25452c75e3be64e6426b3dd3385e1
                     title : "添加关键字",
                     modal: true,
                     resizable: false,
@@ -615,7 +596,7 @@
                     success: function (result) {
                         if (result) {
                             $().toastmessage('showSuccessToast', "操作成功",true);
-                           
+
                         } else {
                             $().toastmessage('showErrorToast', "操作失败");
                         }
@@ -795,6 +776,14 @@
                     $("#noPosition").val("0");
                 }
             }
+            //显示下架
+            function displayStopValue() {
+                if($("#displayStop").is(":checked")){
+                    $("#displayStop").val("1")
+                }else {
+                    $("#displayStop").val("");
+                }
+            }
 
             function initNoPositionChecked() {
                 if(${customerKeywordCriteria.noPosition == 1}){
@@ -806,8 +795,8 @@
             }
 
             function alignTableHeader() {
-                var td = $("#headerTable tr:first td");
-                var ctd = $("#customerKeywordTable tr:first td");
+                var td = $("#customerKeywordTable tr:first td");
+                var ctd = $("#headerTable tr:first td");
                 $.each(td, function (idx, val) {
                     ctd.eq(idx).width($(val).width());
                 });
@@ -821,7 +810,7 @@
 <body>
 <div id="customerKeywordTopDiv" >
     <%@include file="/menu.jsp" %>
-            <table width=100% style="border:1px solid #000000;font-size:12px;margin-top: 40px" cellpadding=3>
+            <table width=100% style="border:1px solid #000000;font-size:12px;margin-top: 30px" cellpadding=3>
                 <tr border="1" height=30>
                     <td width=250>联系人: ${customer.contactPerson}</td>
                     <td width=200>QQ: ${customer.qq}</td>
@@ -892,10 +881,12 @@
             <input type="text" name="optimizeGroupName" id="optimizeGroupName"
                    value="${customerKeywordCriteria.optimizeGroupName}" style="width:100px;">
             <%--<c:if test="${!user.vipType}">--%>
+            已刷:<input type="text" name="optimizedCount" id="optimizedCount" value="${customerKeywordCriteria.optimizedCount}" style="width:40px;"/>
             显示前:
             <input type="text" name="position" id="position" value="${customerKeywordCriteria.position}"
                    style="width:40px;"/>
-            <input id="noPosition" name="noPosition" type="checkbox"  onclick="noPositionValue()"/>显示0 &nbsp;
+            <input id="noPosition" name="noPosition" type="checkbox"  onclick="noPositionValue()" />显示0 &nbsp;
+            <input id="displayStop" name="displayStop" type="checkbox"  onclick="displayStopValue()" value="${customerKeywordCriteria.displayStop}" <c:if test="${customerKeywordCriteria.displayStop=='1'}">checked</c:if>/>显示下架 &nbsp;
             无效点击数:
             <input type="text" name="invalidRefreshCount" id="invalidRefreshCount"
                    value="${customerKeywordCriteria.invalidRefreshCount}" style="width:20px;">
@@ -942,7 +933,7 @@
     <%--</c:if>--%>
     <table style="font-size:12px; width: 100%;" id="headerTable">
         <tr bgcolor="#eeeeee" height=30>
-            <td align="center" width=10><input type="checkbox" onclick="selectAll(this)"/></td>
+            <td align="center" width=10><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
             <td align="center" width=100>关键字</td>
             <td align="center" width=200>URL</td>
             <td align="center" width=250>标题</td>
@@ -958,15 +949,8 @@
             <td align="center" width=80>最后优化时间</td>
             <td align="center" width=50>订单号</td>
             <td align="center" width=100>备注</td>
-            <c:choose>
-                <c:when test="${user.vipType}">
-                    <td align="center" width=60>优化组名</td>
-                    <td align="center" width=80>操作</td>
-                </c:when>
-                <c:when test="${user.userLevel == 1}">
-                    <td align="center" width=80>操作</td>
-                </c:when>
-            </c:choose>
+            <td align="center" width=60>优化组名</td>
+            <td align="center" width=80>操作</td>
             <div id="div1"></div>
             <div id="div2"></div>
         </tr>
@@ -976,20 +960,13 @@
     <table id="customerKeywordTable">
         <c:forEach items="${page.records}" var="customerKeyword">
             <tr style="" height=30 onmouseover="doOver(this);" onmouseout="doOut(this);" ondblclick="modifyCustomerKeyword('${customerKeyword.uuid}')" height=30>
-                <td  align="center" width=10><input type="checkbox" name="uuid" value="${customerKeyword.uuid}"/></td>
+                <td  align="center" width=10><input type="checkbox" name="uuid" value="${customerKeyword.uuid}" onclick="decideSelectAll()"/></td>
                 <td align="center" width=100>
                     <font color="<%--<%=keywordColor%>--%>">${customerKeyword.keyword}</font>
                 </td>
-<<<<<<< HEAD
-                <td  align="center" width=200 class="wrap"
-                    <%-- onMouseMove="showTip('原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}')"
-                     onMouseOut="closeTip()"--%>>
-                    <div style="height:16;" class="easyui-tooltip" title="'原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}'">
-=======
                 <td  align="center" width=200 class="wrap floatTd"
                      title="原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}">
                     <div style="height:16;">
->>>>>>> 9abab3071b4cf2694bfe1848886d27a205e150f3
                             ${customerKeyword.url==null?'':customerKeyword.url};
                     </div>
                 </td>
@@ -1000,7 +977,7 @@
                 <td align="center" width=30>
                     <div style="height:16;"><a
                             href="/internal/customerKeywordPositionIndexLog/historyPositionAndIndex/${customerKeyword.uuid}/30"
-                            target="_blank">${customerKeyword.currentIndexCount}
+                            target="_blank" title="查看历史排名" class="floatTd">${customerKeyword.currentIndexCount}
                     </a></div>
                 </td>
                 <td align="center" width=50>
@@ -1060,12 +1037,12 @@
     </div>
 </div>
 <%--Dialog部分--%>
-<div id="groupChangeNameDialog"  style="text-align: center;" title="修改客户关键字组名" class="easyui-dialog">
+<div id="groupChangeNameDialog"  style="text-align: center;left: 40%;" title="修改客户关键字组名" class="easyui-dialog">
     <form id="groupNameChangeFrom" style="text-align: center;margin-top: 10px;">
         目标组名称:<input type="text" id="groupName" name="groupName" style="width:150px">
     </form>
 </div>
-<div id="uploadExcelDailog"  style="text-align: left;height: 60px;" title="Excel文件上传" class="easyui-dialog">
+<div id="uploadExcelDailog"  style="text-align: left;height: 60px; left: 40%;" title="Excel文件上传" class="easyui-dialog">
     <form method="post" id="uploadExcelForm" style="margin-top: 10px"  enctype="multipart/form-data" >
         <input type="hidden" id="customerUuid" name="customerUuid" value="${customerKeywordCriteria.customerUuid}">
         <span>请选择要上传的文件<label id="excelType" style="color: red"></label></span>
@@ -1074,7 +1051,7 @@
     </form>
 </div>
 
-<div id="saveCustomerKeywordDialog" class="easyui-dialog">
+<div id="saveCustomerKeywordDialog" class="easyui-dialog" style="left: 35%;">
     <form id="customerKeywordForm">
         <ul>
             <input type="hidden" name="uuid" id="uuid" value="" style="width:300px;">
@@ -1121,7 +1098,6 @@
 
 
                     <ul id="customerKeywordCost" style="float: left; width: 200px;height:170px;text-align: center">
-                        <c:if test="${user.vipType}">
                         <li><a href="javascript:showCustomerKeywordCost()">&nbsp;显示成本(再次点击关闭)</a></li>
                         <ul id="customerKeywordCostFrom" style="display: none;">
                             <li><span class="customerKeywordSpanClass">第一成本:</span><input name="positionFirstCost" id="positionFirstCost"
@@ -1141,18 +1117,15 @@
                                                                                           value="" style="width:100px;" type="text" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)">元
                             </li>
                         </ul>
-                        </c:if>
                     </ul>
 
             </li>
-            <c:if test="${user.vipType}">
                 <li style="float:none"><span class="customerKeywordSpanClass">服务提供商:</span>
                     <select name="serviceProvider" id="serviceProvider" style="width: 296px">
                         <c:forEach items="${serviceProviders}" var="serviceProvider">
                             <option value="${serviceProvider.serviceProviderName}" <c:if test="${serviceProvider.serviceProviderName=='baidutop123'}">selected="selected"</c:if>>${serviceProvider.serviceProviderName}</option>
                         </c:forEach>
                     </select></li>
-            </c:if>
 
             <hr style="height: 1px; border:none; border-top:1px dashed #CCCCCC;"/>
             <li><span class="customerKeywordSpanClass">收费方式:</span>

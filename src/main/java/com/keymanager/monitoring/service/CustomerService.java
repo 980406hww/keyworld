@@ -76,7 +76,7 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 			oldCustomer.setRemark(customer.getRemark());
 			oldCustomer.setType(customer.getType());
 			oldCustomer.setStatus(customer.getStatus());
-			oldCustomer.setUserID(customer.getUserID());
+			oldCustomer.setLoginName(customer.getLoginName());
 			oldCustomer.setEntryType(customer.getEntryType());
 			oldCustomer.setUpdateTime(new Date());
 			customerDao.updateById(oldCustomer);

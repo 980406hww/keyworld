@@ -238,8 +238,8 @@
             }
             $("#supplierDialog").dialog({
                 resizable: false,
-                width: 330,
-                height: 450,
+                width: 320,
+                height: 400,
                 modal: true,
                 buttons: [{
                     text: '保存',
@@ -379,7 +379,7 @@
                             <td><input type="text" name="phone" value="${supplierCriteria.phone}"
                                        style="width:200px;">
                             </td>
-                            <td align="right" width="100">
+                            <td align="right" width="60">
                                 <input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}"/>
                                 <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
                                 <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
@@ -456,7 +456,7 @@
     </table>
 </div>
 
-<div id="supplierDialog" title="供应商信息" class="easyui-dialog">
+<div id="supplierDialog" title="供应商信息" class="easyui-dialog" style="left: 35%;">
     <form id="supplierForm" method="post" action="supplierList.jsp">
         <table style="font-size:14px;" cellpadding=5>
             <tr>

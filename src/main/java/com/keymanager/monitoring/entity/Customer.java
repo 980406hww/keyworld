@@ -8,7 +8,7 @@ public class Customer extends BaseEntity{
 	protected static final long serialVersionUID = -1101942701283949852L;
 
 	@TableField(value = "fUserID")
-	private String userID;
+	private String loginName;
 
 	@TableField(value = "fEntryType")
 	private String entryType;
@@ -43,12 +43,12 @@ public class Customer extends BaseEntity{
 	@TableField(value = "fStatus")
 	private int status;
 
-	public String getUserID() {
-		return userID;
+	public String getLoginName() {
+		return loginName;
 	}
 
-	public void setUserID(String userID) {
-		this.userID = userID;
+	public void setLoginName(String loginName) {
+		this.loginName = loginName;
 	}
 
 	public String getEntryType() {
