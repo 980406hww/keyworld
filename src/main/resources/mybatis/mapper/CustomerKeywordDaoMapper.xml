@@ -160,7 +160,7 @@
         </if>
         <if test="customerKeywordCriteria.userName != null and customerKeywordCriteria.userName != ''">
             AND ck.fCustomerUuid IN ( SELECT fUuid FROM t_customer c WHERE c.fUserID = (
-            SELECT fUserID FROM t_userinfo WHERE fLoginName = #{customerKeywordCriteria.userName}))
+            SELECT fLoginName FROM t_userinfo WHERE fLoginName = #{customerKeywordCriteria.userName}))
         </if>
         <choose>
             <when test="customerKeywordCriteria.optimizeGroupName != null and customerKeywordCriteria.optimizeGroupName != ''">
