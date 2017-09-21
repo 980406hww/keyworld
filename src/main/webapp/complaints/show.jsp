@@ -445,7 +445,7 @@
 <div id="showMainKeywordTableDiv" style="margin-bottom: 30px">
         <table id="showMainKeywordTable">
             <c:forEach items="${page.records }" var="mainkey" varStatus="status">
-                <tr onmouseover="doOver(this)" onmouseout="doOut(this)" ondblclick="getMainKeyword('${mainkey.uuid}')" <c:if test="${status.index%2==0}">bgcolor="#eee" </c:if> >
+                <tr onmouseover="doOver(this)" onmouseout="doOut(this)" ondblclick="getMainKeyword('${mainkey.uuid}')" height="30" <c:if test="${status.index%2==0}">bgcolor="#eee" </c:if> >
                     <td width=10 align="center"><input type="checkbox" name="uuid" value="${mainkey.uuid}" onclick="decideSelectAll()"/></td>
                     <input type="hidden" id="mkUuid" value="${mainkey.uuid}"/>
                     <td width=150>${mainkey.keyword }</td>
