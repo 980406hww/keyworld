@@ -34,7 +34,7 @@
             autoCheckTerminalType();
             alignTableHeader();
             if(${isDepartmentManager}) {
-                $("#userID").val("${customerCriteria.userID}");
+                $("#userID").val("${customerCriteria.loginName}");
             }
             window.onresize = function(){
                 alignTableHeader();
