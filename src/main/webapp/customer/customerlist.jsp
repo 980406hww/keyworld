@@ -956,7 +956,7 @@
             searchCustomerForm.find("#currentPageNumberHidden").val(1);
         }
         function alignTableHeader(){
-            var td = $("#showCustomerTabletr:first td");
+            var td = $("#showCustomerTable tr:first td");
             var ctd = $("#headerTable tr:first td");
             $.each(td, function (idx, val) {
                 ctd.eq(idx).width($(val).width());
@@ -1040,7 +1040,7 @@
                                                                      onclick="showCustomerDialog(null,'${user.userID}')"/>
                                 </td>
                             </shiro:hasPermission>
-                            <shiro:hasPermission name="/internal/customer/deleteCustomer">
+                            <shiro:hasPermission name="/internal/customer/deleteCustomers">
                                 <td align="right"><input type="button" class="ui-button ui-widget ui-corner-all"
                                                                      value=" 删除所选" onclick="deleteCustomers(this)"/>
                                 </td>
