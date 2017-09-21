@@ -11,6 +11,7 @@
             background-color: white;
             width: 100%;
         }
+
         #ClientStatusGroupSummaryTable tr:nth-child(even){background-color: #eeeeee}
         #ClientStatusGroupSummaryTable tr:hover{background-color: #dad55e}
     </style>
@@ -36,7 +37,7 @@
 <body>
 <div id="topDiv">
     <%@include file="/menu.jsp"%>
-    <form action="/internal/clientstatus/clientStatusGroupStat" method="post" id="searchClientStatusSummaryVOForm" style="margin: 50px 0 10px 20px;">
+    <form action="/internal/clientstatus/clientStatusGroupStat" method="post" id="searchClientStatusSummaryVOForm" style="margin: 35px 0 5px 10px;">
         分组名称:<input type="text" name="group" value="${group}">
         终端类型:
         <select name="terminalType">

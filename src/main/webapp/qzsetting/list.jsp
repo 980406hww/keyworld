@@ -28,8 +28,6 @@
 			height: 22px;
 		}
 
-
-
 		#changeSettingDialog {
 			font-size: 12px;
 			line-height: 12px;
@@ -54,12 +52,6 @@
 		}
 		#chargeLogListDiv {
 			overflow-y: auto;
-		}
-
-		#showQZSettingDiv {
-			width: 100%;
-			height: 95%;
-			margin: auto;
 		}
 
 	</style>
@@ -146,11 +138,11 @@
 		</tr>
 	</table>
 </div>
-<div id="showQZSettingDiv">
-<table id="showQZSettingTable"  style="font-size:12px;width: 100%;" cellpadding=3>
-	<c:forEach items="${page.records}" var="qzSetting">
-		<tr onmouseover="doOver(this);" onmouseout="doOut(this);" height=30>
-			<td width=25><input type="checkbox" name="uuid" value="${qzSetting.uuid}" onclick="decideSelectAll()"/></td>
+<div id="showQZSettingDiv" style="margin-bottom: 30px">
+<table id="showQZSettingTable"  style="font-size:12px;width: 100%;" cellpadding=3 >
+	<c:forEach items="${page.records}" var="qzSetting" varStatus="status">
+		<tr onmouseover="doOver(this);" onmouseout="doOut(this);" height=30 <c:if test="${status.index%2==0}">bgcolor="#eee" </c:if> >
+			<td width=25 align="center"><input type="checkbox" name="uuid" value="${qzSetting.uuid}" onclick="decideSelectAll()"/></td>
 			<td width=150>${qzSetting.contactPerson}</td>
 			<td width=100>${qzSetting.domain}</td>
 			<td width=50>${qzSetting.type}</td>
@@ -206,6 +198,302 @@
 	</select>
 	</div>
 </div>
+<div id="changeSettingDialog" class="easyui-dialog">
+	<table style="font-size:12px" id="settingTable" align="center">
+		<tr>
+			<td>客户</td>
+			<td>
+				<input type="hidden" id="qzSettingUuid" />
+				<input type="text" list="customer_list" name="qzSettingCustomer" id="qzSettingCustomer" style="width:240px" />
+			</td>
+		</tr>
+		<tr>
+			<td>域名</td>
+			<td>
+				<input type="text" name="qzSettingDomain" id="qzSettingDomain" style="width:240px" />
+				<span style="margin-right: 28px;"></span>
+			</td>
+		</tr>
+	</table>
+	<table style="font-size:12px">
+		<tr>
+			<td colspan="2">
+				<input type="checkbox" name="operationType" id="PC" onclick="dealSettingTable('PC')" style=""/>电脑
+			</td>
+		</tr>
+		<%--电脑分组信息--%>
+		<tr>
+			<td colspan="2" id="groupHeightPC">
+				<table border="0" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="operationTypeSummaryInfoPC">
+					<tr>
+						<td align="right" style="width:72px"><span style="margin-right:14;">分组</span></td>
+						<td><input type="text" name="group" id="groupPC"  style="width:240px;margin-left: -6;"/></td>
+					</tr>
+					<tr>
+						<td align="right" style="width:72px"><span style="margin-right:14;">初始词量</span></td>
+						<td colspan="4"><input type="text" name="initialKeywordCount" id="initialKeywordCountPC" style="width:240px;margin-left: -6;"/></td>
+					</tr>
+					<tr>
+						<td align="right" style="width:72px"><span style="margin-right:14;">当前词量</span></td>
+						<td colspan="4"><input type="text" name="currentKeywordCount" id="currentKeywordCountPC" style="width:240px;margin-left: -6;" readonly/></td>
+					</tr>
+					<input type="hidden" id="qzSettingUuidPC" name="qzOperationTypeUuid" value="" />
+				</table>
+			</td>
+		</tr>
+		<%--电脑规则信息--%>
+		<tr id="pcChargeRuleTable">
+			<td colspan="2" id="ruleHeightPC">
+				<table border="1" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="chargeRulePC">
+					<tr>
+						<td style="width:50px">序号</td>
+						<td style="width:72px">起始词数</td>
+						<td style="width:72px">终止词数</td>
+						<td style="width:50px">价格</td>
+						<td style="width:46px">操作</td>
+					</tr>
+					<tr>
+						<td colspan="5">
+							<input name="addRule" type="button" value="增加规则" onclick="addRow('chargeRulePC')" /></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+
+		<tr>
+			<td colspan="2">
+				<input type="checkbox" name="operationType" id="Phone" onclick="dealSettingTable('Phone')" style=""/>手机
+			</td>
+		</tr>
+		<%--手机分组信息--%>
+		<tr>
+			<td colspan="2" id="groupHeightPhone">
+				<table border="0" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="operationTypeSummaryInfoPhone">
+					<tr>
+						<td align="right" style="width:72px;"><span style="margin-right:14;">分组</span></td>
+						<td><input type="text" name="group" id="groupPhone" style="width:240px;margin-left: -6;"/></td>
+					</tr>
+					<tr>
+						<td align="right" style="width:72px"><span style="margin-right:14;">初始词量</span></td>
+						<td colspan="4"><input type="text" name="initialKeywordCount" id="initialKeywordCountPhone"  style="width:240px;margin-left: -6;"/></td>
+					</tr>
+					<tr>
+						<td align="right" style="width:72px"><span style="margin-right:14;">当前词量</span></td>
+						<td colspan="4"><input type="text" name="currentKeywordCount" id="currentKeywordCountPhone"  style="width:240px;margin-left: -6;" readonly/></td>
+					</tr>
+					<input type="hidden" id="qzSettingUuidPhone" name="qzOperationTypeUuid" value="" />
+				</table>
+			</td>
+		</tr>
+		<%--手机规则信息--%>
+		<tr id="phoneChargeRuleTable">
+			<td colspan="2" id="ruleHeightPhone">
+				<table border="1" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="chargeRulePhone">
+					<tr>
+						<td style="width:50px">序号</td>
+						<td style="width:72px">起始词数</td>
+						<td style="width:72px">终止词数</td>
+						<td style="width:50px">价格</td>
+						<td style="width:46px">操作</td>
+					</tr>
+					<tr>
+						<td colspan="5">
+							<input name="addRule" type="button" value="增加规则" onclick="addRow('chargeRulePhone')" /></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+
+		<tr>
+			<td align="right" style="margin-right:4px;">入口</td>
+			<td>
+				<select name="qzSettingEntryType" id="qzSettingEntryType"  style="width:240px">
+					<option value="qz" selected>全站</option>
+					<option value="bc">bc</option>
+					<option value="pt">普通</option>
+					<option value="fm">负面</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td align="right" style="margin-right:4px;">去掉没指数</td>
+			<td>
+				<select name="qzSettingIgnoreNoIndex" id="qzSettingIgnoreNoIndex"  style="width:240px">
+					<option value="1" selected>是</option>
+					<option value="0">否</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td align="right" style="margin-right:4px;">去掉没排名</td>
+			<td>
+				<select name="qzSettingIgnoreNoOrder" id="qzSettingIgnoreNoOrder"  style="width:240px">
+					<option value="1" selected>是</option>
+					<option value="0">否</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td align="right" style="margin-right:4px;">更新间隔</td>
+			<td>
+				<select name="qzSettingInterval" id="qzSettingInterval"  style="width:240px">
+					<option value="1">1天</option>
+					<option value="2" selected>2天</option>
+					<option value="3">3天</option>
+					<option value="5">5天</option>
+				</select>
+			</td>
+		</tr>
+	</table>
+</div>
+<datalist id="customer_list">
+	<c:forEach items="${customerList}" var="costomer">
+		<option>${costomer.contactPerson} ${'_____'} ${costomer.uuid}</option>
+	</c:forEach>
+</datalist>
+<%--收费Dialog--%>
+<div id="chargeDialog" class="easyui-dialog">
+	<table id="chargeDialogTable">
+		<tr>
+			<td align="right">客户</td>
+			<td>
+				<input type="text" name="qzSettingCustomer" id="qzSettingCustomer" style="width: 280px" readonly/>
+			</td>
+		</tr>
+		<tr>
+			<td align="right">域名</td>
+			<td>
+				<input type="text" name="qzSettingDomain" id="qzSettingDomain" style="width: 280px" readonly/>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<table id="checkChargePC" style="display: none;font-size:12px;">
+					<tr><td>
+						<input type="checkbox" name="operationType" id="PC" style="margin-left: -2px" onclick="dealChargeTable('PC')" />电脑
+					</td></tr>
+				</table>
+			</td>
+
+			<td>
+				<table id="checkChargePhone" style="display: none;font-size:12px;">
+					<tr><td>
+						<input type="checkbox" name="operationType" id="Phone" onclick="dealChargeTable('Phone')" style="margin-left: 140px"/>手机
+					</td></tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+	<table id="chargeInfoTable" style="height:185px;">
+		<%--电脑收费信息--%>
+		<tr>
+			<td style="width: 182px">
+				<table style="display:none;font-size:12px;" id="PCChargeInfo">
+					<tr>
+						<td align="right">初始词量</td>
+						<input type="hidden" name="qzOperationTypeUuid" id="qzOperationTypeUuidPC"/>
+						<td><input type="text" name="initialKeywordCount" id="initialKeywordCountPC"  style="width:100px" readonly/></td>
+					</tr>
+					<tr>
+						<td align="right">当前词量</td>
+						<td><input type="text" name="currentKeywordCount" id="currentKeywordCountPC"  style="width:100px" readonly/></td>
+					</tr>
+					<tr>
+						<td align="right">应收金额</td>
+						<td>
+							<input type="text" name="receivableAmount" id="receivableAmountPC" style="width:100px" readonly />
+						</td>
+					</tr>
+					<tr>
+						<td align="right">计划收费日期</td>
+						<td>
+							<input type="text" name="planChargeDate" id="planChargeDatePC" style="width:100px" readonly />
+						</td>
+					</tr>
+					<tr>
+						<td align="right">下次收费日期</td>
+						<td>
+							<input type="text" name="nextChargeDate" id="nextChargeDatePC" class="Wdate" onClick="WdatePicker()" style="width:100px" />
+						</td>
+					</tr>
+					<tr>
+						<td align="right">实收金额</td>
+						<td>
+							<input type="text" name="actualAmount" id="actualAmountPC" onkeyup="calTotalAmount()" style="width:100px" />
+						</td>
+					</tr>
+					<tr>
+						<td align="right">实际收费日期</td>
+						<td>
+							<input name="actualChargeDate" id="actualChargeDatePC" class="Wdate" type="text" style="width:100px" onClick="WdatePicker()" value="">
+						</td>
+					</tr>
+				</table>
+			</td>
+			<%--手机收费信息--%>
+			<td style="width: 182px">
+				<table style="display:none;font-size:12px;margin-top: 2px;margin-bottom: 2px;" id="PhoneChargeInfo">
+					<tr>
+						<td align="right">初始词量</td>
+						<input type="hidden" name="qzOperationTypeUuid" id="qzOperationTypeUuidPhone"/>
+						<td><input type="text" name="initialKeywordCount" id="initialKeywordCountPhone"  style="width:100px" readonly/></td>
+					</tr>
+					<tr>
+						<td align="right">当前词量</td>
+						<td><input type="text" name="currentKeywordCount" id="currentKeywordCountPhone"  style="width:100px" readonly/></td>
+					</tr>
+					<tr>
+						<td align="right">应收金额</td>
+						<td>
+							<input type="text" name="receivableAmount" id="receivableAmountPhone" style="width:100px" readonly />
+						</td>
+					</tr>
+					<tr>
+						<td align="right">计划收费日期</td>
+						<td>
+							<input type="text" name="planChargeDate" id="planChargeDatePhone" style="width:100px" readonly />
+						</td>
+					</tr>
+					<tr>
+						<td align="right">下次收费日期</td>
+						<td>
+							<input type="text" name="nextChargeDate" id="nextChargeDatePhone" class="Wdate" onClick="WdatePicker()" style="width:100px" />
+						</td>
+					</tr>
+					<tr>
+						<td align="right">实收金额</td>
+						<td>
+							<input type="text" name="actualAmount" id="actualAmountPhone" onkeyup="calTotalAmount()" style="width:100px" />
+						</td>
+					</tr>
+					<tr>
+						<td align="right">实际收费日期</td>
+						<td>
+							<input name="actualChargeDate" id="actualChargeDatePhone" class="Wdate" type="text" style="width:100px"  onClick="WdatePicker()" value="">
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+	<p>
+		<span style="margin-left: 55px"></span>合计:<sapn id="totalAmount"></sapn>
+	</p>
+</div>
+<%--收费详情列表--%>
+<div id="chargeLogListDiv" class="easyui-dialog">
+	<table id="chargeLogListTable" border="1" cellpadding="3" style="font-size: 12px;background-color: white;border-collapse: collapse;">
+		<tr>
+			<td>收费时间</td>
+			<td>操作类型</td>
+			<td>收费金额</td>
+			<td>收费人员</td>
+			<td>创建时间</td>
+		</tr>
+	</table>
+</div>
+</body>
+</html>
 <script language="javascript">
     var dateStr = new Date(); // 当天日期
     var m = dateStr.getMonth() + 1 < 10 ? "0" + (dateStr.getMonth() + 1) : (dateStr.getMonth() + 1);
@@ -213,33 +501,7 @@
     var today = dateStr.getFullYear() + "-" + m + "-" + d;
 
     $(function () {
-        var showQZSettingBottomDiv = $('#showQZSettingBottomDiv');
-        var displaysRecords = showQZSettingBottomDiv.find('#displaysRecordsHidden').val();
-        showQZSettingBottomDiv.find('#chooseRecords').val(displaysRecords);
-        var pages = showQZSettingBottomDiv.find('#pagesHidden').val();
-        showQZSettingBottomDiv.find('#pagesHidden').val(pages);
-        var currentPage = showQZSettingBottomDiv.find('#currentPageHidden').val();
-        showQZSettingBottomDiv.find('#currentPageHidden').val(currentPage);
 
-        if(parseInt(currentPage) > 1 && parseInt(currentPage) < parseInt(pages)) {
-            showQZSettingBottomDiv.find("#firstButton").removeAttr("disabled");
-            showQZSettingBottomDiv.find("#upButton").removeAttr("disabled");
-            showQZSettingBottomDiv.find("#nextButton").removeAttr("disabled");
-            showQZSettingBottomDiv.find("#lastButton").removeAttr("disabled");
-        } else if (parseInt(pages) == 1) {
-            showQZSettingBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
-            showQZSettingBottomDiv.find("#upButton").attr("disabled", "disabled");
-            showQZSettingBottomDiv.find("#nextButton").attr("disabled", "disabled");
-            showQZSettingBottomDiv.find("#lastButton").attr("disabled", "disabled");
-        } else if (parseInt(currentPage) <= 1) {
-            currentPage = 1;
-            showQZSettingBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
-            showQZSettingBottomDiv.find("#upButton").attr("disabled", "disabled");
-        } else {
-            currentPage = pages;
-            showQZSettingBottomDiv.find("#nextButton").attr("disabled", "disabled");
-            showQZSettingBottomDiv.find("#lastButton").attr("disabled", "disabled");
-        }
         $("#chargeLogListDiv").dialog("close");
         $("#chargeDialog").dialog("close");
         $("#changeSettingDialog").dialog("close");
@@ -248,6 +510,41 @@
         window.onresize = function(){
             alignTableHeader();
         }
+
+        /*var showQZSettingBottomDiv = $('#showQZSettingBottomDiv');
+        var displaysRecords = showQZSettingBottomDiv.find('#displaysRecordsHidden').val();
+        showQZSettingBottomDiv.find('#chooseRecords').val(displaysRecords);
+        var pages = showQZSettingBottomDiv.find('#pagesHidden').val();
+        showQZSettingBottomDiv.find('#pagesHidden').val(pages);
+        var currentPage = showQZSettingBottomDiv.find('#currentPageHidden').val();
+        showQZSettingBottomDiv.find('#currentPageHidden').val(currentPage);*/
+        var searchCustomerForm = $("#chargeForm");
+        var pageSize = searchCustomerForm.find('#pageSizeHidden').val();
+        var pages = searchCustomerForm.find('#pagesHidden').val();
+        var currentPageNumber = searchCustomerForm.find('#currentPageNumberHidden').val();
+        var showCustomerBottomDiv = $('#showCustomerBottomDiv');
+        showCustomerBottomDiv.find('#chooseRecords').val(pageSize);
+        showCustomerBottomDiv.find('#pagesHidden').val(pages);
+
+        if(parseInt(currentPageNumber) > 1 && parseInt(currentPageNumber) < parseInt(pages)) {
+            showCustomerBottomDiv.find("#firstButton").removeAttr("disabled");
+            showCustomerBottomDiv.find("#upButton").removeAttr("disabled");
+            showCustomerBottomDiv.find("#nextButton").removeAttr("disabled");
+            showCustomerBottomDiv.find("#lastButton").removeAttr("disabled");
+        } else if (parseInt(pages) <= 1) {
+            showCustomerBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
+            showCustomerBottomDiv.find("#upButton").attr("disabled", "disabled");
+            showCustomerBottomDiv.find("#nextButton").attr("disabled", "disabled");
+            showCustomerBottomDiv.find("#lastButton").attr("disabled", "disabled");
+        } else if (parseInt(currentPageNumber) <= 1) {
+            showCustomerBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
+            showCustomerBottomDiv.find("#upButton").attr("disabled", "disabled");
+        } else {
+            showCustomerBottomDiv.find("#nextButton").attr("disabled", "disabled");
+            showCustomerBottomDiv.find("#lastButton").attr("disabled", "disabled");
+        }
+
+
     });
 
     function alignTableHeader(){
@@ -1109,299 +1406,3 @@
     }
 
 </script>
-<div id="changeSettingDialog" class="easyui-dialog">
-	<table style="font-size:12px" id="settingTable" align="center">
-		<tr>
-			<td>客户</td>
-			<td>
-				<input type="hidden" id="qzSettingUuid" />
-				<input type="text" list="customer_list" name="qzSettingCustomer" id="qzSettingCustomer" style="width:240px" />
-			</td>
-		</tr>
-		<tr>
-			<td>域名</td>
-			<td>
-				<input type="text" name="qzSettingDomain" id="qzSettingDomain" style="width:240px" />
-				<span style="margin-right: 28px;"></span>
-			</td>
-		</tr>
-	</table>
-	<table style="font-size:12px">
-		<tr>
-			<td colspan="2">
-				<input type="checkbox" name="operationType" id="PC" onclick="dealSettingTable('PC')" style=""/>电脑
-			</td>
-		</tr>
-		<%--电脑分组信息--%>
-		<tr>
-			<td colspan="2" id="groupHeightPC">
-				<table border="0" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="operationTypeSummaryInfoPC">
-					<tr>
-						<td align="right" style="width:72px"><span style="margin-right:14;">分组</span></td>
-						<td><input type="text" name="group" id="groupPC"  style="width:240px;margin-left: -6;"/></td>
-					</tr>
-					<tr>
-						<td align="right" style="width:72px"><span style="margin-right:14;">初始词量</span></td>
-						<td colspan="4"><input type="text" name="initialKeywordCount" id="initialKeywordCountPC" style="width:240px;margin-left: -6;"/></td>
-					</tr>
-					<tr>
-						<td align="right" style="width:72px"><span style="margin-right:14;">当前词量</span></td>
-						<td colspan="4"><input type="text" name="currentKeywordCount" id="currentKeywordCountPC" style="width:240px;margin-left: -6;" readonly/></td>
-					</tr>
-					<input type="hidden" id="qzSettingUuidPC" name="qzOperationTypeUuid" value="" />
-				</table>
-			</td>
-		</tr>
-		<%--电脑规则信息--%>
-		<tr id="pcChargeRuleTable">
-			<td colspan="2" id="ruleHeightPC">
-				<table border="1" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="chargeRulePC">
-					<tr>
-						<td style="width:50px">序号</td>
-						<td style="width:72px">起始词数</td>
-						<td style="width:72px">终止词数</td>
-						<td style="width:50px">价格</td>
-						<td style="width:46px">操作</td>
-					</tr>
-					<tr>
-						<td colspan="5">
-							<input name="addRule" type="button" value="增加规则" onclick="addRow('chargeRulePC')" /></td>
-					</tr>
-				</table>
-			</td>
-		</tr>
-
-		<tr>
-			<td colspan="2">
-				<input type="checkbox" name="operationType" id="Phone" onclick="dealSettingTable('Phone')" style=""/>手机
-			</td>
-		</tr>
-		<%--手机分组信息--%>
-		<tr>
-			<td colspan="2" id="groupHeightPhone">
-				<table border="0" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="operationTypeSummaryInfoPhone">
-					<tr>
-						<td align="right" style="width:72px;"><span style="margin-right:14;">分组</span></td>
-						<td><input type="text" name="group" id="groupPhone" style="width:240px;margin-left: -6;"/></td>
-					</tr>
-					<tr>
-						<td align="right" style="width:72px"><span style="margin-right:14;">初始词量</span></td>
-						<td colspan="4"><input type="text" name="initialKeywordCount" id="initialKeywordCountPhone"  style="width:240px;margin-left: -6;"/></td>
-					</tr>
-					<tr>
-						<td align="right" style="width:72px"><span style="margin-right:14;">当前词量</span></td>
-						<td colspan="4"><input type="text" name="currentKeywordCount" id="currentKeywordCountPhone"  style="width:240px;margin-left: -6;" readonly/></td>
-					</tr>
-					<input type="hidden" id="qzSettingUuidPhone" name="qzOperationTypeUuid" value="" />
-				</table>
-			</td>
-		</tr>
-		<%--手机规则信息--%>
-		<tr id="phoneChargeRuleTable">
-			<td colspan="2" id="ruleHeightPhone">
-				<table border="1" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="chargeRulePhone">
-					<tr>
-						<td style="width:50px">序号</td>
-						<td style="width:72px">起始词数</td>
-						<td style="width:72px">终止词数</td>
-						<td style="width:50px">价格</td>
-						<td style="width:46px">操作</td>
-					</tr>
-					<tr>
-						<td colspan="5">
-							<input name="addRule" type="button" value="增加规则" onclick="addRow('chargeRulePhone')" /></td>
-					</tr>
-				</table>
-			</td>
-		</tr>
-
-		<tr>
-			<td align="right" style="margin-right:4px;">入口</td>
-			<td>
-				<select name="qzSettingEntryType" id="qzSettingEntryType"  style="width:240px">
-					<option value="qz" selected>全站</option>
-					<option value="bc">bc</option>
-					<option value="pt">普通</option>
-					<option value="fm">负面</option>
-				</select>
-			</td>
-		</tr>
-		<tr>
-			<td align="right" style="margin-right:4px;">去掉没指数</td>
-			<td>
-				<select name="qzSettingIgnoreNoIndex" id="qzSettingIgnoreNoIndex"  style="width:240px">
-					<option value="1" selected>是</option>
-					<option value="0">否</option>
-				</select>
-			</td>
-		</tr>
-		<tr>
-			<td align="right" style="margin-right:4px;">去掉没排名</td>
-			<td>
-				<select name="qzSettingIgnoreNoOrder" id="qzSettingIgnoreNoOrder"  style="width:240px">
-					<option value="1" selected>是</option>
-					<option value="0">否</option>
-				</select>
-			</td>
-		</tr>
-		<tr>
-			<td align="right" style="margin-right:4px;">更新间隔</td>
-			<td>
-				<select name="qzSettingInterval" id="qzSettingInterval"  style="width:240px">
-					<option value="1">1天</option>
-					<option value="2" selected>2天</option>
-					<option value="3">3天</option>
-					<option value="5">5天</option>
-				</select>
-			</td>
-		</tr>
-	</table>
-</div>
-<datalist id="customer_list">
-	<c:forEach items="${customerList}" var="costomer">
-		<option>${costomer.contactPerson} ${'_____'} ${costomer.uuid}</option>
-	</c:forEach>
-</datalist>
-<%--收费Dialog--%>
-<div id="chargeDialog" class="easyui-dialog">
-	<table id="chargeDialogTable">
-		<tr>
-			<td align="right">客户</td>
-			<td>
-				<input type="text" name="qzSettingCustomer" id="qzSettingCustomer" style="width: 280px" readonly/>
-			</td>
-		</tr>
-		<tr>
-			<td align="right">域名</td>
-			<td>
-				<input type="text" name="qzSettingDomain" id="qzSettingDomain" style="width: 280px" readonly/>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<table id="checkChargePC" style="display: none;font-size:12px;">
-					<tr><td>
-						<input type="checkbox" name="operationType" id="PC" style="margin-left: -2px" onclick="dealChargeTable('PC')" />电脑
-					</td></tr>
-				</table>
-			</td>
-
-			<td>
-				<table id="checkChargePhone" style="display: none;font-size:12px;">
-					<tr><td>
-						<input type="checkbox" name="operationType" id="Phone" onclick="dealChargeTable('Phone')" style="margin-left: 140px"/>手机
-					</td></tr>
-				</table>
-			</td>
-		</tr>
-	</table>
-	<table id="chargeInfoTable" style="height:185px;">
-		<%--电脑收费信息--%>
-		<tr>
-			<td style="width: 182px">
-				<table style="display:none;font-size:12px;" id="PCChargeInfo">
-					<tr>
-						<td align="right">初始词量</td>
-						<input type="hidden" name="qzOperationTypeUuid" id="qzOperationTypeUuidPC"/>
-						<td><input type="text" name="initialKeywordCount" id="initialKeywordCountPC"  style="width:100px" readonly/></td>
-					</tr>
-					<tr>
-						<td align="right">当前词量</td>
-						<td><input type="text" name="currentKeywordCount" id="currentKeywordCountPC"  style="width:100px" readonly/></td>
-					</tr>
-					<tr>
-						<td align="right">应收金额</td>
-						<td>
-							<input type="text" name="receivableAmount" id="receivableAmountPC" style="width:100px" readonly />
-						</td>
-					</tr>
-					<tr>
-						<td align="right">计划收费日期</td>
-						<td>
-							<input type="text" name="planChargeDate" id="planChargeDatePC" style="width:100px" readonly />
-						</td>
-					</tr>
-					<tr>
-						<td align="right">下次收费日期</td>
-						<td>
-							<input type="text" name="nextChargeDate" id="nextChargeDatePC" class="Wdate" onClick="WdatePicker()" style="width:100px" />
-						</td>
-					</tr>
-					<tr>
-						<td align="right">实收金额</td>
-						<td>
-							<input type="text" name="actualAmount" id="actualAmountPC" onkeyup="calTotalAmount()" style="width:100px" />
-						</td>
-					</tr>
-					<tr>
-						<td align="right">实际收费日期</td>
-						<td>
-							<input name="actualChargeDate" id="actualChargeDatePC" class="Wdate" type="text" style="width:100px" onClick="WdatePicker()" value="">
-						</td>
-					</tr>
-				</table>
-			</td>
-			<%--手机收费信息--%>
-			<td style="width: 182px">
-				<table style="display:none;font-size:12px;margin-top: 2px;margin-bottom: 2px;" id="PhoneChargeInfo">
-					<tr>
-						<td align="right">初始词量</td>
-						<input type="hidden" name="qzOperationTypeUuid" id="qzOperationTypeUuidPhone"/>
-						<td><input type="text" name="initialKeywordCount" id="initialKeywordCountPhone"  style="width:100px" readonly/></td>
-					</tr>
-					<tr>
-						<td align="right">当前词量</td>
-						<td><input type="text" name="currentKeywordCount" id="currentKeywordCountPhone"  style="width:100px" readonly/></td>
-					</tr>
-					<tr>
-						<td align="right">应收金额</td>
-						<td>
-							<input type="text" name="receivableAmount" id="receivableAmountPhone" style="width:100px" readonly />
-						</td>
-					</tr>
-					<tr>
-						<td align="right">计划收费日期</td>
-						<td>
-							<input type="text" name="planChargeDate" id="planChargeDatePhone" style="width:100px" readonly />
-						</td>
-					</tr>
-					<tr>
-						<td align="right">下次收费日期</td>
-						<td>
-							<input type="text" name="nextChargeDate" id="nextChargeDatePhone" class="Wdate" onClick="WdatePicker()" style="width:100px" />
-						</td>
-					</tr>
-					<tr>
-						<td align="right">实收金额</td>
-						<td>
-							<input type="text" name="actualAmount" id="actualAmountPhone" onkeyup="calTotalAmount()" style="width:100px" />
-						</td>
-					</tr>
-					<tr>
-						<td align="right">实际收费日期</td>
-						<td>
-							<input name="actualChargeDate" id="actualChargeDatePhone" class="Wdate" type="text" style="width:100px"  onClick="WdatePicker()" value="">
-						</td>
-					</tr>
-				</table>
-			</td>
-		</tr>
-	</table>
-	<p>
-		<span style="margin-left: 55px"></span>合计:<sapn id="totalAmount"></sapn>
-	</p>
-</div>
-<%--收费详情列表--%>
-<div id="chargeLogListDiv" class="easyui-dialog">
-	<table id="chargeLogListTable" border="1" cellpadding="3" style="font-size: 12px;background-color: white;border-collapse: collapse;">
-		<tr>
-			<td>收费时间</td>
-			<td>操作类型</td>
-			<td>收费金额</td>
-			<td>收费人员</td>
-			<td>创建时间</td>
-		</tr>
-	</table>
-</div>
-</body>
-</html>
