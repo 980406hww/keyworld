@@ -15,6 +15,4 @@ public class UserInfoService extends ServiceImpl<UserInfoDao, UserInfo> {
 	public Long getUuidByLoginName(String loginName) {
 		return userInfoDao.getUuidByLoginName(loginName);
 	}
-
-
 }
