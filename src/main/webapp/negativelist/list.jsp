@@ -37,7 +37,18 @@
 			float: right;
 			margin-right: 10px;
 		}
-
+		input[type="button"]{
+			padding: 2px;
+			border-radius: 5px;
+			border: 1px solid #bbb;
+			background-color: white;
+		}
+		input[type="submit"]{
+			padding: 2px;
+			border-radius: 5px;
+			border: 1px solid #bbb;
+			background-color: white;
+		}
 	</style>
 	<script language="javascript">
         $(function () {
@@ -341,10 +352,10 @@
 						</shiro:hasPermission>
 						<td colspan="4" align="right">
 							<shiro:hasPermission name="/internal/negativelist/saveNegativeList">
-								<input type="button" value="增加关键字负面清单" onclick="showNegativeListDialog(null)">&nbsp;
+								<input type="button" value=" 增加 " onclick="showNegativeListDialog(null)">&nbsp;
 							</shiro:hasPermission>
 							<shiro:hasPermission name="/internal/negativelist/deleteNegativeLists">
-								<input type="button" value="删除所选数据" onclick="deleteNegatives()">
+								<input type="button" value=" 删除 " onclick="deleteNegatives()">
 							</shiro:hasPermission>
 						</td>
 					</tr>

@@ -383,6 +383,18 @@
         width: 100px;
         height: 22px;
     }
+    input[type="button"]{
+        padding: 2px;
+        border-radius: 5px;
+        border: 1px solid #bbb;
+        background-color: white;
+    }
+    input[type="submit"]{
+        padding: 2px;
+        border-radius: 5px;
+        border: 1px solid #bbb;
+        background-color: white;
+    }
 </style>
 <head>
     <title>投诉专用平台</title>
@@ -406,13 +418,13 @@
             <input type="hidden" id="currentPageHidden" name="currentPageHidden" value="${page.current}"/>
             <input type="hidden" id="displaysRecordsHidden" name="displaysRecordsHidden" value="${page.size}"/>
             <shiro:hasPermission name="/internal/negativelist/findTSMainKeywords">
-            <input type="submit" class="ui-button ui-widget ui-corner-all" style="z-index: 0" ; value="查询">&nbsp;&nbsp;&nbsp;
+            <input type="submit" class="ui-button ui-widget ui-corner-all" style="z-index: 0" ; value=" 查询 ">&nbsp;&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/negativelist/save">
-            <input type="button" class="ui-button ui-widget ui-corner-all" style="z-index: 0" ; onclick="showAddMainKeywordDialog(null)" value="添加"/>&nbsp;&nbsp;&nbsp;
+            <input type="button" class="ui-button ui-widget ui-corner-all" style="z-index: 0" ; onclick="showAddMainKeywordDialog(null)" value=" 添加 "/>&nbsp;&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/negativelist/deleteTSMainKeywords">
-            <input type="button" class="ui-button ui-widget ui-corner-all" style="z-index: 0" ; onclick="deleteMainKeywords(this)" value="删除所选"/>
+            <input type="button" class="ui-button ui-widget ui-corner-all" style="z-index: 0" ; onclick="deleteMainKeywords(this)" value=" 删除 "/>
             </shiro:hasPermission>
         </form>
         <table id="headerTable" style="width:100%;">

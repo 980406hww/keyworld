@@ -51,6 +51,18 @@
 	float: right;
 	width: 580px;
 }
+input[type="button"]{
+	padding: 2px;
+	border-radius: 5px;
+	border: 1px solid #bbb;
+	background-color: white;
+}
+input[type="submit"]{
+	padding: 2px;
+	border-radius: 5px;
+	border: 1px solid #bbb;
+	background-color: white;
+}
 -->
 </style>
 	<script language="javascript" type="text/javascript" src="/common.js"></script>

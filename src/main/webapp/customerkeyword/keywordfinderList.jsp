@@ -45,7 +45,19 @@
                 min-width:300px;
                 max-width:550px;
                 color:#8c3901;
-                background-color: #fff;
+                background-color: #fff2de;
+            }
+            input[type="button"]{
+                padding: 2px;
+                border-radius: 5px;
+                border: 1px solid #bbb;
+                background-color: white;
+            }
+            input[type="submit"]{
+                padding: 2px;
+                border-radius: 5px;
+                border: 1px solid #bbb;
+                background-color: white;
             }
         </style>
 

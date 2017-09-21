@@ -11,7 +11,18 @@
             background-color: white;
             width: 100%;
         }
-
+        input[type="button"]{
+            padding: 2px;
+            border-radius: 5px;
+            border: 1px solid #bbb;
+            background-color: white;
+        }
+        input[type="submit"]{
+            padding: 2px;
+            border-radius: 5px;
+            border: 1px solid #bbb;
+            background-color: white;
+        }
         #ClientStatusGroupSummaryTable tr:nth-child(even){background-color: #eeeeee}
         #ClientStatusGroupSummaryTable tr:hover{background-color: #dad55e}
     </style>
@@ -46,7 +57,7 @@
             <option value="Phone" <c:if test="${requestScope.terminalType.equals('Phone')}">selected="selected"</c:if>>Phone</option>
         </select>
         <shiro:hasPermission name="/internal/clientstatus/clientStatusGroupStat">
-            <input type="submit" value="查询">
+            <input type="submit" value=" 查询 ">
         </shiro:hasPermission>
     </form>
     <table width=40% style="font-size: 12px;" cellpadding=3 id="headerTable">

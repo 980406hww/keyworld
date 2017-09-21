@@ -15,6 +15,18 @@
             background-color: white;
             width: 100%;
         }
+        input[type="button"]{
+            padding: 2px;
+            border-radius: 5px;
+            border: 1px solid #bbb;
+            background-color: white;
+        }
+        input[type="submit"]{
+            padding: 2px;
+            border-radius: 5px;
+            border: 1px solid #bbb;
+            background-color: white;
+        }
     </style>
     <title>供应商列表</title>
 
@@ -390,11 +402,11 @@
                             </td>
                             <td>
                                 <shiro:hasPermission name="/internal/supplier/saveSupplier">
-                                    <input type="button" onclick="showSupplierDialog()" value="添加供应商">&nbsp;&nbsp;
+                                    <input type="button" onclick="showSupplierDialog()" value=" 添加 ">&nbsp;&nbsp;
                                 </shiro:hasPermission></td>
                             <td>
                                 <shiro:hasPermission name="/internal/supplier/deleteSuppliers">
-                                    <input type="button" onclick="deleteSupplier(this)" value="删除所选">
+                                    <input type="button" onclick="deleteSupplier(this)" value=" 删除 ">
                                 </shiro:hasPermission>
                             </td>
                         </tr>

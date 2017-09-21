@@ -4,6 +4,12 @@
 <head>
     <title>客户端统计</title>
     <style>
+        input[type="submit"]{
+            padding: 2px;
+            border-radius: 5px;
+            border: 1px solid #bbb;
+            background-color: white;
+        }
     </style>
     <script language="javascript" type="text/javascript">
 
@@ -30,7 +36,7 @@
         客户端ID前缀:<input type="text" name="clientIDPrefix" value="${clientIDPrefix}">
         城市:<input type="text" name="city" value="${city}">
         <shiro:hasPermission name="/internal/clientstatus/clientStatusStat">
-            <input type="submit" value="查询">
+            <input type="submit" value=" 查询 ">
         </shiro:hasPermission>
     </form>
     <table width=60% style="font-size: 12px;" cellpadding=3 id="headerTable">

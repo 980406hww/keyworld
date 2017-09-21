@@ -53,7 +53,18 @@
 		#chargeLogListDiv {
 			overflow-y: auto;
 		}
-
+		input[type="button"]{
+			padding: 2px;
+			border-radius: 5px;
+			border: 1px solid #bbb;
+			background-color: white;
+		}
+		input[type="submit"]{
+			padding: 2px;
+			border-radius: 5px;
+			border: 1px solid #bbb;
+			background-color: white;
+		}
 	</style>
 </head>
 <body>

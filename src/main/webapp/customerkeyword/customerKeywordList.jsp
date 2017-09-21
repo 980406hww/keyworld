@@ -55,6 +55,18 @@
                 background-color: #fff;
             }
 
+            input[type="button"]{
+                padding: 2px;
+                border-radius: 5px;
+                border: 1px solid #bbb;
+                background-color: white;
+            }
+            input[type="submit"]{
+                padding: 2px;
+                border-radius: 5px;
+                border: 1px solid #bbb;
+                background-color: white;
+            }
             #saveCustomerKeywordDialog ul{list-style: none;margin: 0px;padding: 0px;}
             #saveCustomerKeywordDialog li{margin: 5px 0;}
             #saveCustomerKeywordDialog .customerKeywordSpanClass{width: 70px;display: inline-block;text-align: right;}

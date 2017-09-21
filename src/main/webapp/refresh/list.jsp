@@ -4,6 +4,14 @@
 <html>
 <head>
 	<title>刷量统计列表</title>
+	<style>
+		input[type="submit"]{
+			padding: 2px;
+			border-radius: 5px;
+			border: 1px solid #bbb;
+			background-color: white;
+		}
+	</style>
 	<script language="javascript" type="text/javascript" src="/common.js"></script>
 	<script language="javascript">
         $(function () {
@@ -88,6 +96,7 @@
 			<td align="right">客户名称:<input name="customerName" id="customerName" type="text" style="width:200px;"
 										  value="${refreshStatInfoCriteria.customerName}"></td>
 			<td align="right">
+				&nbsp;
 				<shiro:hasPermission name="/internal/refreshstatinfo/searchRefreshStatInfos">
 					<input type="submit" name="btnQuery" id="btnQuery" value=" 查询 ">
 				</shiro:hasPermission>
