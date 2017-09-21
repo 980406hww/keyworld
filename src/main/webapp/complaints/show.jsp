@@ -465,12 +465,13 @@
                     </td>
                     <td width=100><fmt:formatDate value="${mainkey.createTime}" pattern="yy-MM-dd HH:mm"/></td>
                     <td width=80>
-                    <shiro:hasPermission name="/internal/negativelist/save">
+                        <shiro:hasPermission name="/internal/negativelist/save">
                         &nbsp;&nbsp;&nbsp;<a href="javascript:getMainKeyword('${mainkey.uuid}')">修改</a>&nbsp;&nbsp;&nbsp;
-                    </shiro:hasPermission>
-                    <shiro:hasPermission name="/internal/negativelist/delete">
+                            &nbsp;&nbsp;&nbsp;
+                        </shiro:hasPermission>
+                        <shiro:hasPermission name="/internal/negativelist/delete">
                         <a href="javascript:deleteMainKeyword('${mainkey.uuid}')">删除</a>
-                    </shiro:hasPermission>
+                        </shiro:hasPermission>
                     </td>
                 </tr>
             </c:forEach>

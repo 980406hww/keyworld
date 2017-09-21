@@ -2,7 +2,7 @@ package com.keymanager.monitoring.criteria;
 
 import java.util.Date;
 
-public class CustomerKeywordCrilteria extends BaseCriteria{
+public class CustomerKeywordCriteria extends BaseCriteria{
     private Long customerUuid;
     private String url;
     private String keyword;

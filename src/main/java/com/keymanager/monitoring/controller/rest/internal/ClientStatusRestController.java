@@ -72,7 +72,6 @@ public class ClientStatusRestController extends SpringMVCBaseController {
         }
     }
 
-    @RequiresPermissions("/internal/clientstatus/searchBadClientStatus")
     @RequestMapping(value = "/searchBadClientStatus", method = RequestMethod.POST)
     public ModelAndView searchBadClientStatus(HttpServletRequest request, ClientStatusCriteria clientStatusCriteria) {
         try {

@@ -57,7 +57,7 @@
                 initNoPositionChecked();
                 alignTableHeader();
                 if(${isDepartmentManager}) {
-                    $("#userName").val("${customerKeywordCrilteria.userName}");
+                    $("#userName").val("${customerKeywordCriteria.userName}");
                 }
                 window.onresize = function(){
                     alignTableHeader();
@@ -67,7 +67,7 @@
                 var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
                 var searchCustomerKeywordTable = searchCustomerKeywordForm.find("#searchCustomerKeywordTable");
                 searchCustomerKeywordTable.find("#orderElement").val('${orderElement}');
-                searchCustomerKeywordTable.find("#status").val(${customerKeywordCrilteria.status});
+                searchCustomerKeywordTable.find("#status").val(${customerKeywordCriteria.status});
                 var pages = searchCustomerKeywordForm.find('#pagesHidden').val();
                 var currentPageNumber = searchCustomerKeywordForm.find('#currentPageNumberHidden').val();
                 var showCustomerBottomDiv = $('#showCustomerBottomDiv');
@@ -169,17 +169,17 @@
             }
 
             function initNoPositionChecked() {
-                if(${customerKeywordCrilteria.noPosition == 1}){
+                if(${customerKeywordCriteria.noPosition == 1}){
                     $("#noPosition").prop("checked",true);
                 }else{
                     $("#noPosition").prop("checked",false);
                 }
-                if(${customerKeywordCrilteria.displayStop == 1}){
+                if(${customerKeywordCriteria.displayStop == 1}){
                     $("#displayStop").prop("checked",true);
                 }else{
                     $("#displayStop").prop("checked",false);
                 }
-                if(${customerKeywordCrilteria.pushPay == 1}){
+                if(${customerKeywordCriteria.pushPay == 1}){
                     $("#pushPay").prop("checked",true);
                 }else{
                     $("#pushPay").prop("checked",false);
@@ -208,10 +208,10 @@
             <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
             <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
             <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
-            <input id="customerUuid" name="customerUuid" type="hidden" value="${customerKeywordCrilteria.customerUuid}">
-            关键字:&nbsp;<input type="text" name="keyword" id="keyword" value="${customerKeywordCrilteria.keyword}" style="width:100px;">&nbsp;
-            QQ:<input type="text" name="qq" id="qq" value="${customerKeywordCrilteria.qq}" style="width:100px;">&nbsp;
-            URL:<input type="text" name="url" id="url" value="${customerKeywordCrilteria.url}" style="width:100px;">&nbsp;
+            <input id="customerUuid" name="customerUuid" type="hidden" value="${customerKeywordCriteria.customerUuid}">
+            关键字:&nbsp;<input type="text" name="keyword" id="keyword" value="${customerKeywordCriteria.keyword}" style="width:100px;">&nbsp;
+            QQ:<input type="text" name="qq" id="qq" value="${customerKeywordCriteria.qq}" style="width:100px;">&nbsp;
+            URL:<input type="text" name="url" id="url" value="${customerKeywordCriteria.url}" style="width:100px;">&nbsp;
             关键字状态:
             <select name="status" id="status">
                 <option value=''>所有</option>
@@ -221,37 +221,32 @@
             </select>&nbsp;
             优化组名:
             <input type="text" name="optimizeGroupName" id="optimizeGroupName"
-                   value="${customerKeywordCrilteria.optimizeGroupName}" style="width:100px;">&nbsp;
-            用户名称:
+                   value="${customerKeywordCriteria.optimizeGroupName}" style="width:100px;">&nbsp;
+            <c:if test="${isDepartmentManager}">
+                用户名称:
                 <select name="userName" id="userName">
-                    <c:choose>
-                        <c:when test="${isDepartmentManager}">
-                            <option value="">所有</option>
-                            <option value="${user.userID}">只显示自己</option>
-                            <c:forEach items="${activeUsers}" var="activeUser">
-                                <option value="${activeUser.userID}">${activeUser.userName}</option>
-                            </c:forEach>
-                        </c:when>
-                        <c:otherwise>
-                            <option value="${user.userID}">只显示自己</option>
-                        </c:otherwise>
-                    </c:choose>
+                    <option value="">所有</option>
+                    <option value="${user.loginName}">只显示自己</option>
+                    <c:forEach items="${activeUsers}" var="activeUser">
+                        <option value="${activeUser.loginName}">${activeUser.userName}</option>
+                    </c:forEach>
                 </select>
+            </c:if>
             <br>
-            已刷:<input type="text" name="optimizedCount" id="optimizedCount" value="${customerKeywordCrilteria.optimizedCount}" style="width:40px;"/>
+            已刷:<input type="text" name="optimizedCount" id="optimizedCount" value="${customerKeywordCriteria.optimizedCount}" style="width:40px;"/>
             显示前:
-            <input type="text" name="position" id="position" value="${customerKeywordCrilteria.position}" style="width:40px;"/>
+            <input type="text" name="position" id="position" value="${customerKeywordCriteria.position}" style="width:40px;"/>
             <input id="noPosition" name="noPosition" type="checkbox"  onclick="noPositionValue()"/>显示排名为0 &nbsp;
-            <input id="pushPay" name="pushPay" type="checkbox"  onclick="pushPayValue()" value="${customerKeywordCrilteria.pushPay}"/>催缴 &nbsp;
-            <input id="displayStop" name="displayStop" type="checkbox"  onclick="displayStopValue()" value="${customerKeywordCrilteria.displayStop}"/>显示下架 &nbsp;
+            <input id="pushPay" name="pushPay" type="checkbox"  onclick="pushPayValue()" value="${customerKeywordCriteria.pushPay}"/>催缴 &nbsp;
+            <input id="displayStop" name="displayStop" type="checkbox"  onclick="displayStopValue()" value="${customerKeywordCriteria.displayStop}"/>显示下架 &nbsp;
             订单号:
-            <input type="text" name="orderNumber" id="orderNumber" value="${customerKeywordCrilteria.orderNumber}" style="width:100px;">
+            <input type="text" name="orderNumber" id="orderNumber" value="${customerKeywordCriteria.orderNumber}" style="width:100px;">
             无效点击数:
-            <input type="text" name="invalidRefreshCount" id="invalidRefreshCount" value="${customerKeywordCrilteria.invalidRefreshCount}" style="width:40px;">
+            <input type="text" name="invalidRefreshCount" id="invalidRefreshCount" value="${customerKeywordCriteria.invalidRefreshCount}" style="width:40px;">
             创建日期:<input name="creationFromTime" id="creationFromTime" class="Wdate" type="text" style="width:90px;" onClick="WdatePicker()"
-                        value="${customerKeywordCrilteria.creationFromTime}">
+                        value="${customerKeywordCriteria.creationFromTime}">
             到&nbsp;<input name="creationToTime" id="creationToTime" class="Wdate" type="text" style="width:90px;"
-                onClick="WdatePicker()" value="${customerKeywordCrilteria.creationToTime}">&nbsp;
+                onClick="WdatePicker()" value="${customerKeywordCriteria.creationToTime}">&nbsp;
             排序:
             <select name="orderElement" id="orderElement">
                 <option value="0">关键字</option>
@@ -260,7 +255,10 @@
                 <option value="3">添加序号</option>
             </select>
             &nbsp;&nbsp;&nbsp;
-            <input type="submit" onclick="resetPageNumber()" value=" 查询 ">&nbsp;&nbsp;
+            <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
+                <input type="submit" onclick="resetPageNumber()" value=" 查询 ">&nbsp;&nbsp;
+            </shiro:hasPermission>
+
         </div>
     </form>
     <table style="font-size:12px; width: 100%;" id="headerTable">

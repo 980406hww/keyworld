@@ -103,8 +103,8 @@
         <include refid="colID"/>
         FROM t_userinfo u
         WHERE
-        u.fUuid = #{userID}
-        AND u.fStatus = 1
+        u.fLoginName = #{userID}
+        AND u.fStatus = 0
     </select>
 
 
@@ -121,7 +121,7 @@
         <include refid="colID"/>
         FROM
         t_userinfo u
-        WHERE u.fStatus = 1
+        WHERE u.fStatus = 0
     </select>
 
 </mapper>

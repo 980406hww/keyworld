@@ -342,9 +342,11 @@
 						<input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
 						<td align="right">关键字:</td> <td><input type="text" name="keyword" id="keyword" value="${negativeListCriteria.keyword}" style="width:200px;"></td>
 						<td align="right">URL:</td> <td><input type="text" name="url" id="url" value="${negativeListCriteria.url}" style="width:200px;"></td>
-						<shiro:hasPermission name="/internal/negativelist/searchNegativeLists">
-						<td align="right" width="100"><input type="submit" name="btnQuery" id="btnQuery" onclick="resetPageNumber()" value=" 查询 " ></td>
-						</shiro:hasPermission>
+						<td align="right" width="100">
+							<shiro:hasPermission name="/internal/negativelist/searchNegativeLists">
+							<input type="submit" name="btnQuery" id="btnQuery" onclick="resetPageNumber()" value=" 查询 " >
+							</shiro:hasPermission>
+						</td>
 					</tr>
 				 </table>
 			</form>
