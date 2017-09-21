@@ -237,7 +237,7 @@
                 return uuids;
             }
 
-            function stopKeyword(status) {
+            function updateCustomerKeywordStatus(status) {
                 var customerKeyword = {};
                 var customerKeywordUuids = getSelectedIDs();
                 if (customerKeywordUuids === '') {
@@ -338,8 +338,8 @@
             </select>
             &nbsp;&nbsp;
             <input type="submit" onclick="resetPageNumber()" value=" 查询 ">&nbsp;&nbsp;
-            <input type="button" onclick="stopKeyword(0)" value="暂停选择关键字">&nbsp;&nbsp;
-            <input type="button" onclick="stopKeyword(1)" value="激活选中关键字">
+            <input type="button" onclick="updateCustomerKeywordStatus(0)" value="暂停选择关键字">&nbsp;&nbsp;
+            <input type="button" onclick="updateCustomerKeywordStatus(1)" value="激活选中关键字">
         </div>
     </form>
     <table style="font-size:12px; width: 100%;" id="headerTable">

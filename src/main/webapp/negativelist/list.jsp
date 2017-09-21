@@ -336,11 +336,11 @@
 						<td align="right">关键字:</td> <td><input type="text" name="keyword" id="keyword" value="${negativeListCriteria.keyword}" style="width:200px;"></td>
 						<td align="right">URL:</td> <td><input type="text" name="url" id="url" value="${negativeListCriteria.url}" style="width:170px;"></td>
 						<shiro:hasPermission name="/internal/negativelist/searchNegativeLists">
-						<td align="right" width="50"><input type="submit" name="btnQuery" id="btnQuery" onclick="resetPageNumber()" value=" 查询 " ></td>
+						<td align="right" width="50"><input type="submit" name="btnQuery" id="btnQuery" onclick="resetPageNumber()" value=" 查询 " >&nbsp;</td>
 						</shiro:hasPermission>
 						<td colspan="4" align="right">
 							<shiro:hasPermission name="/internal/negativelist/saveNegativeList">
-								<input type="button" value="增加关键字负面清单" onclick="showNegativeListDialog(null)">
+								<input type="button" value="增加关键字负面清单" onclick="showNegativeListDialog(null)">&nbsp;
 							</shiro:hasPermission>
 							<shiro:hasPermission name="/internal/negativelist/deleteNegativeLists">
 								<input type="button" value="删除所选数据" onclick="deleteNegatives()">
