@@ -699,8 +699,8 @@
             }
             $("#customerDialog").dialog({
                 resizable: false,
-                width: 310,
-                height: 350,
+                width: 280,
+                height: 300,
                 modal: true,
                 //按钮
                 buttons: [{

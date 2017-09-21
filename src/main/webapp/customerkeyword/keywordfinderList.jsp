@@ -334,6 +334,7 @@
             &nbsp;&nbsp;
             <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
                 <input type="submit" onclick="resetPageNumber()" value=" 查询 ">&nbsp;&nbsp;
+            </shiro:hasPermission>
             <input type="button" onclick="updateCustomerKeywordStatus(0)" value="暂停选择关键字">&nbsp;&nbsp;
             <input type="button" onclick="updateCustomerKeywordStatus(1)" value="激活选中关键字">
         </div>

@@ -238,8 +238,8 @@
             }
             $("#supplierDialog").dialog({
                 resizable: false,
-                width: 330,
-                height: 480,
+                width: 320,
+                height: 400,
                 modal: true,
                 buttons: [{
                     text: '保存',
