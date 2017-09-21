@@ -1145,7 +1145,7 @@
                         | <a href="javascript:delCustomer('${customer.uuid}')">删除</a>
                     </shiro:hasPermission>
                     <c:if test="${'bc'.equalsIgnoreCase(entryType)}">
-                        <shiro:hasPermission name="/internal/customerChar/saveCustomerChargeTypegeType">
+                        <shiro:hasPermission name="/internal/customerChargeType/saveCustomerChargeType">
                             | <a href="javascript:changeCustomerChargeType('${customer.uuid}')">客户规则</a>
                         </shiro:hasPermission>
                         <shiro:hasPermission name="/internal/customerKeyword/saveCustomerKeywords">
