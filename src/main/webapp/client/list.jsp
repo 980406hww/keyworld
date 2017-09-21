@@ -724,7 +724,7 @@
                         $("#changeSettingDialog").dialog({
                             resizable: false,
                             title: "设置",
-                            width: 620,
+                            width: 610,
 							maxHeight: 510,
                             modal: true,
                             buttons: [{
@@ -916,6 +916,7 @@
             $("#targetVersionSettingDialog").dialog({
                 resizable: false,
 				title: "设定目标版本",
+				height:100,
                 width: 240,
                 modal: true,
                 buttons: [{
@@ -980,6 +981,7 @@
             $("#renewalSettingDialog").dialog({
                 resizable: false,
                 title: "续费",
+				height:130,
                 width: 225,
                 modal: true,
                 buttons: [{

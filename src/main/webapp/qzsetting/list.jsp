@@ -95,7 +95,7 @@
 									</c:forEach>
 								</select>
 							</td>
-							<td align="right" width="100">
+							<td align="right" width="50">
 								<shiro:hasPermission name="/internal/qzsetting/searchQZSettings">
 									<input type="submit" name="btnQuery" id="btnQuery" onclick="resetSearchCondition('1')" value=" 查询 " >
 								</shiro:hasPermission>
@@ -657,8 +657,8 @@
 					$("#chargeDialog").dialog({
 						resizable: false,
 						modal: true,
-                        width: 380,
-						height:380,
+                        width: 370,
+						height:360,
                         title: '收费',
                         buttons: [{
                             text: '收费',
@@ -725,7 +725,7 @@
     function createSettingDialog() {
         $("#changeSettingDialog").dialog({
             resizable: false,
-            height: 400,
+            height: 380,
             width: 330,
             title: '全站设置',
             modal: true,
