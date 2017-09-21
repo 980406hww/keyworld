@@ -51,6 +51,18 @@
 	float: right;
 	width: 580px;
 }
+input[type="button"]{
+	padding: 2px;
+	border-radius: 5px;
+	border: 1px solid #bbb;
+	background-color: white;
+}
+input[type="submit"]{
+	padding: 2px;
+	border-radius: 5px;
+	border: 1px solid #bbb;
+	background-color: white;
+}
 -->
 </style>
 	<script language="javascript" type="text/javascript" src="/common.js"></script>
@@ -120,15 +132,16 @@
 							&nbsp;&nbsp;&nbsp;
 							<input id="showFetchKeywordStatus" name="showFetchKeywordStatus" type="checkbox" value="showFetchKeywordStatus"
 							${clientStatusCriteria.showFetchKeywordStatus != null ? "checked=true" : ""}>显示取词状态</input>
+
+							<shiro:hasPermission name="/internal/clientstatus/searchClientStatuses">
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" name="btnFilter" id="btnFilter" onclick="resetPageNumber()" value=" 查询 " style="width: 50px;">
+							</shiro:hasPermission>
+							<shiro:hasPermission name="/internal/clientstatus/deleteClientStatuses">
+								&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" name="btnFilter" id="btnFilter" onclick="delAllItems(this)" value=" 删除所选 " style="width: 80px;">
+							</shiro:hasPermission>
 						</td>
-						<td align="right" width="50px">
-						<shiro:hasPermission name="/internal/clientstatus/searchClientStatuses">
-							<input type="submit" name="btnFilter" id="btnFilter" onclick="resetPageNumber()" value=" 查询 " style="width: 50px;">
-						</shiro:hasPermission>
-						</td>
-						</tr>
-						<tr>
-						<td colspan="2">
+						<td width="50px">
+
 						</td>
 						</tr>
 						<tr>
@@ -139,9 +152,7 @@
 							<shiro:hasPermission name="/internal/clientstatus/updateClientStatusRenewalDate">
 								|<a target="_blank" href="javascript:showRenewalSettingDialog(this)">续费</a>
 							</shiro:hasPermission>
-							<shiro:hasPermission name="/internal/clientstatus/deleteClientStatuses">
-								|<a target="_blank" href="javascript:delAllItems(this)">删除所选</a>
-							</shiro:hasPermission>
+
 							<shiro:hasPermission name="/internal/clientstatus/resetRestartStatusForProcessing">
 								|<a target="_blank" href="javascript:resetRestartStatus()">重置重启状态</a>
 							</shiro:hasPermission>

@@ -383,6 +383,18 @@
         width: 100px;
         height: 22px;
     }
+    input[type="button"]{
+        padding: 2px;
+        border-radius: 5px;
+        border: 1px solid #bbb;
+        background-color: white;
+    }
+    input[type="submit"]{
+        padding: 2px;
+        border-radius: 5px;
+        border: 1px solid #bbb;
+        background-color: white;
+    }
 </style>
 <head>
     <title>投诉专用平台</title>
@@ -405,14 +417,14 @@
             &nbsp;&nbsp;
             <input type="hidden" id="currentPageHidden" name="currentPageHidden" value="${page.current}"/>
             <input type="hidden" id="displaysRecordsHidden" name="displaysRecordsHidden" value="${page.size}"/>
-            <shiro:hasPermission name="/internal/negativelist/findTSMainKeywords">
-            <input type="submit" class="ui-button ui-widget ui-corner-all" style="z-index: 0" ; value="查询">&nbsp;&nbsp;&nbsp;
+            <shiro:hasPermission name="/internal/complaints/findTSMainKeywords">
+            <input type="submit" class="ui-button ui-widget ui-corner-all" style="z-index: 0" ; value=" 查询 ">&nbsp;&nbsp;&nbsp;
             </shiro:hasPermission>
-            <shiro:hasPermission name="/internal/negativelist/save">
-            <input type="button" class="ui-button ui-widget ui-corner-all" style="z-index: 0" ; onclick="showAddMainKeywordDialog(null)" value="添加"/>&nbsp;&nbsp;&nbsp;
+            <shiro:hasPermission name="/internal/complaints/save">
+            <input type="button" class="ui-button ui-widget ui-corner-all" style="z-index: 0" ; onclick="showAddMainKeywordDialog(null)" value=" 添加 "/>&nbsp;&nbsp;&nbsp;
             </shiro:hasPermission>
-            <shiro:hasPermission name="/internal/negativelist/deleteTSMainKeywords">
-            <input type="button" class="ui-button ui-widget ui-corner-all" style="z-index: 0" ; onclick="deleteMainKeywords(this)" value="删除所选"/>
+            <shiro:hasPermission name="/internal/complaints/deleteTSMainKeywords">
+            <input type="button" class="ui-button ui-widget ui-corner-all" style="z-index: 0" ; onclick="deleteMainKeywords(this)" value=" 删除所选 "/>
             </shiro:hasPermission>
         </form>
         <table id="headerTable" style="width:100%;">
@@ -463,10 +475,10 @@
                     </td>
                     <td width=100><fmt:formatDate value="${mainkey.createTime}" pattern="yy-MM-dd HH:mm"/></td>
                     <td>
-                    <shiro:hasPermission name="/internal/negativelist/save">
+                    <shiro:hasPermission name="/internal/complaints/save">
                         &nbsp;&nbsp;&nbsp;<a href="javascript:getMainKeyword('${mainkey.uuid}')">修改</a>&nbsp;&nbsp;&nbsp;
                     </shiro:hasPermission>
-                    <shiro:hasPermission name="/internal/negativelist/delete">
+                    <shiro:hasPermission name="/internal/complaints/delete">
                         <a href="javascript:deleteMainKeyword('${mainkey.uuid}')">删除</a>
                     </shiro:hasPermission>
                     </td>

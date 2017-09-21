@@ -15,6 +15,18 @@
             background-color: white;
             width: 100%;
         }
+        input[type="button"]{
+            padding: 2px;
+            border-radius: 5px;
+            border: 1px solid #bbb;
+            background-color: white;
+        }
+        input[type="submit"]{
+            padding: 2px;
+            border-radius: 5px;
+            border: 1px solid #bbb;
+            background-color: white;
+        }
     </style>
     <title>供应商列表</title>
 
@@ -378,14 +390,14 @@
                 <form method="post" id="searchSupplierForm" action="/internal/supplier/searchSuppliers">
                     <table style="font-size:12px;">
                         <tr>
-                            <td align="right">联系人:</td>
+                            <td align="right">联系人: </td>
                             <td><input type="text" name="contactPerson"
                                        value="${supplierCriteria.contactPerson}"
                                        style="width:200px;"></td>
-                            <td align="right">QQ:</td>
+                            <td align="right">&nbsp;&nbsp;QQ:&nbsp;</td>
                             <td><input type="text" name="qq" value="${supplierCriteria.qq}"
                                        style="width:200px;"></td>
-                            <td align="right">联系电话:</td>
+                            <td align="right">&nbsp;&nbsp;联系电话:&nbsp;</td>
                             <td><input type="text" name="phone" value="${supplierCriteria.phone}"
                                        style="width:200px;">
                             </td>
@@ -400,11 +412,11 @@
                             </td>
                             <td>
                                 <shiro:hasPermission name="/internal/supplier/saveSupplier">
-                                    <input type="button" onclick="showSupplierDialog()" value="添加供应商">&nbsp;&nbsp;
+                                    <input type="button" onclick="showSupplierDialog()" value=" 添加 ">&nbsp;&nbsp;
                                 </shiro:hasPermission></td>
                             <td>
                                 <shiro:hasPermission name="/internal/supplier/deleteSuppliers">
-                                    <input type="button" onclick="deleteSupplier(this)" value="删除所选">
+                                    <input type="button" onclick="deleteSupplier(this)" value=" 删除所选 ">
                                 </shiro:hasPermission>
                             </td>
                         </tr>
@@ -415,7 +427,7 @@
     </table>
     <table id="headerTable" width="100%">
         <tr bgcolor="#eeeeee" height=30>
-            <td align="left" width="10"><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
+            <td align="left" width="10" style="padding-left: 7px;"><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
             <td align="center" width=100>供应商名称</td>
             <td align="center" width=80>联系人</td>
             <td align="center" width=80>电话</td>
@@ -436,7 +448,7 @@
     <table id="showSupplierListTable"  width="100%">
         <c:forEach items="${page.records}" var="supplier" varStatus="status">
             <tr onmouseover="doOver(this);" onmouseout="doOut(this);" height=30 <c:if test="${status.index%2==0}">bgcolor="#eee" </c:if> >
-                <td width="10"><input type="checkbox" name="uuid" value="${supplier.uuid}" onclick="decideSelectAll()"/></td>
+                <td width="10" style="padding-left: 7px;"><input type="checkbox" name="uuid" value="${supplier.uuid}" onclick="decideSelectAll()"/></td>
                 <td width="100">${supplier.supplierName}</td>
                 <td width="80">${supplier.contactPerson}</td>
                 <td width="80">${supplier.phone}</td>

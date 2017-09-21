@@ -50,7 +50,13 @@
 		#PhoneChargeInfo {
 			display: none;
 		}
+<<<<<<< HEAD
 
+
+=======
+		#chargeLogListDiv {
+			overflow-y: auto;
+		}
 		input[type="button"]{
 			padding: 2px;
 			border-radius: 5px;
@@ -63,6 +69,7 @@
 			border: 1px solid #bbb;
 			background-color: white;
 		}
+>>>>>>> b53038b32a08ceecffe21bd620a04bbd331fd179
 	</style>
 </head>
 <body>

@@ -126,9 +126,10 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	@RequestMapping(value = "/saveCustomerKeywords", method = RequestMethod.POST)
 	public ResponseEntity<?> saveCustomerKeywords(@RequestBody List<CustomerKeyword> customerKeywords, HttpServletRequest request) {
 		try{
+			String userName = (String) request.getSession().getAttribute("username");
 			String terminalType = TerminalTypeMapping.getTerminalType(request);
 			String entryType = (String)request.getSession().getAttribute("entryType");
-			customerKeywordService.addCustomerKeywordsFromSimpleUI(customerKeywords, terminalType, entryType);
+			customerKeywordService.addCustomerKeywordsFromSimpleUI(customerKeywords, terminalType, entryType, userName);
 			return new ResponseEntity<Object>(true, HttpStatus.OK);
 		}catch (Exception ex){
 			logger.error(ex.getMessage());
@@ -162,8 +163,9 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		String excelType = request.getParameter("excelType");
 		String entry = (String)request.getSession().getAttribute("entryType");
 		String terminalType = TerminalTypeMapping.getTerminalType(request);
+		String userName = (String) request.getSession().getAttribute("username");
 		try{
-			boolean uploaded = customerKeywordService.handleExcel(file.getInputStream(), excelType, Integer.parseInt(customerUuid),  entry, terminalType);
+			boolean uploaded = customerKeywordService.handleExcel(file.getInputStream(), excelType, Integer.parseInt(customerUuid),  entry, terminalType, userName);
 			if (uploaded){
 				return true;
 			};
@@ -226,17 +228,22 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	@RequestMapping(value = "/saveCustomerKeyword", method = RequestMethod.POST)
 	public ResponseEntity<?> saveCustomerKeyword(@RequestBody CustomerKeyword customerKeyword, HttpServletRequest request) {
 		try{
+			String userName = (String) request.getSession().getAttribute("username");
 			if (customerKeyword.getUuid() == null) {
 				String terminalType = TerminalTypeMapping.getTerminalType(request);
 				String entryType = (String) request.getSession().getAttribute("entryType");
 				customerKeyword.setTerminalType(terminalType);
 				customerKeyword.setType(entryType);
-				customerKeyword.setStatus(1);
-				customerKeywordService.addCustomerKeyword(customerKeyword);
+				customerKeywordService.addCustomerKeyword(customerKeyword, userName);
 				return new ResponseEntity<Object>(true, HttpStatus.OK);
 			} else {
+				boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
+				if(isDepartmentManager) {
+					customerKeyword.setStatus(1);
+				} else {
+					customerKeyword.setStatus(2);
+				}
 				customerKeyword.setUpdateTime(new Date());
-				customerKeyword.setStatus(1);
 				customerKeywordService.updateById(customerKeyword);
 				return new ResponseEntity<Object>(true, HttpStatus.OK);
 			}
@@ -270,7 +277,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 				Customer customer = customerService.selectById(customerUuid);
 				String fileName = customer.getContactPerson() + Utils.formatDatetime(Utils.getCurrentTimestamp(), "yyyy.MM.dd") + ".xls";
 				fileName = new String(fileName.getBytes("gb2312"), "ISO8859-1");
-				// 以流的形式下载文件�
+				// 以流的形式下载文件
 				byte[] buffer = excelWriter.getExcelContentBytes();
 				// 清空response
 				response.reset();

@@ -37,7 +37,18 @@
 			float: right;
 			margin-right: 10px;
 		}
-
+		input[type="button"]{
+			padding: 2px;
+			border-radius: 5px;
+			border: 1px solid #bbb;
+			background-color: white;
+		}
+		input[type="submit"]{
+			padding: 2px;
+			border-radius: 5px;
+			border: 1px solid #bbb;
+			background-color: white;
+		}
 	</style>
 	<script language="javascript">
         $(function () {
@@ -341,10 +352,10 @@
 						</shiro:hasPermission>
 						<td colspan="4" align="right">
 							<shiro:hasPermission name="/internal/negativelist/saveNegativeList">
-								<input type="button" value="增加关键字负面清单" onclick="showNegativeListDialog(null)">&nbsp;
+								<input type="button" value=" 增加 " onclick="showNegativeListDialog(null)">&nbsp;
 							</shiro:hasPermission>
 							<shiro:hasPermission name="/internal/negativelist/deleteNegativeLists">
-								<input type="button" value="删除所选数据" onclick="deleteNegatives()">
+								<input type="button" value=" 删除所选 " onclick="deleteNegatives()">
 							</shiro:hasPermission>
 						</td>
 					</tr>
@@ -356,7 +367,7 @@
 	</table>
 	<table id="headerTable" width="100%">
 	  <tr bgcolor="#eeeeee" height=30>
-		  <td align="center" ><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
+		  <td style="padding: 5px;" ><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
 		  <td align="center" >关键字</td>
 		  <td align="center" >标题</td>
 		  <td align="center" >URL</td>
@@ -379,7 +390,7 @@
 				  <tr onmouseover="doOver(this);" onmouseout="doOut(this);" height=30>
 			  </c:otherwise>
 		  </c:choose>
-			  <td><input type="checkbox" name="uuid" value="${negativeList.uuid}" onclick="decideSelectAll()"/></td>
+			  <td style="padding: 5px;"><input type="checkbox" name="uuid" value="${negativeList.uuid}" onclick="decideSelectAll()"/></td>
 			  <td>${negativeList.keyword}</td>
 			  <td>${negativeList.title} </td>
 			  <td>${negativeList.url}</td>

@@ -251,7 +251,8 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         try {
             if (validUser(searchEngineResultVO.getUserName(), searchEngineResultVO.getPassword())) {
                 String terminalType = TerminalTypeMapping.getTerminalType(request);
-                customerKeywordService.addCustomerKeywords(searchEngineResultVO, terminalType);
+                String userName = (String) request.getSession().getAttribute("username");
+                customerKeywordService.addCustomerKeywords(searchEngineResultVO, terminalType, userName);
                 return new ResponseEntity<Object>(true, HttpStatus.OK);
             }
         }catch (Exception ex){

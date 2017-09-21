@@ -4,6 +4,12 @@
 <head>
     <title>客户端统计</title>
     <style>
+        input[type="submit"]{
+            padding: 2px;
+            border-radius: 5px;
+            border: 1px solid #bbb;
+            background-color: white;
+        }
     </style>
     <script language="javascript" type="text/javascript">
 
@@ -50,7 +56,7 @@
 
         <tr align="left" <c:if test="${status.index%2==0}">bgcolor="#eee" </c:if>>
             <c:if test="${clientStatusSummaryVO.clientIDPrefixCount>0}">
-                <td rowspan="${clientStatusSummaryVO.clientIDPrefixCount}">${clientStatusSummaryVO.clientIDPrefix}</td>
+                <td style="padding-left: 7px;" rowspan="${clientStatusSummaryVO.clientIDPrefixCount}">${clientStatusSummaryVO.clientIDPrefix}</td>
                 <td rowspan="${clientStatusSummaryVO.clientIDPrefixCount}">${clientStatusSummaryVO.clientIDPrefixTotalCount}</td>
             </c:if>
             <c:if test="${clientStatusSummaryVO.typeCount>0}">

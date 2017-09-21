@@ -25,7 +25,6 @@ public class CustomerKeywordPositionIndexLogController extends SpringMVCBaseCont
 	private CustomerKeywordPositionIndexLogService customerKeywordPositionIndexLogService;
 
 	//查询历史缴费记录
-	@RequiresPermissions("/internal/customerKeywordPositionIndexLog/historyPositionAndIndex")
 	@RequestMapping(value = "/historyPositionAndIndex/{customerKeywordUuid}/{dayCount}" , method = RequestMethod.GET)
 	public ModelAndView historyPositionAndIndex(@PathVariable("customerKeywordUuid")Long customerKeywordUuid, @PathVariable("dayCount")String dayCount, HttpServletRequest request){
 		String terminalType = TerminalTypeMapping.getTerminalType(request);
