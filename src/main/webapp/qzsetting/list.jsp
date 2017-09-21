@@ -50,9 +50,7 @@
 		#PhoneChargeInfo {
 			display: none;
 		}
-		#chargeLogListDiv {
-			overflow-y: auto;
-		}
+
 
 	</style>
 </head>
@@ -573,7 +571,7 @@
                     });
                     $("#chargeLogListDiv").dialog({
                         resizable: false,
-                        width: 355,
+                        width: 350,
 						title:"收费记录",
                         modal: true,
                         buttons: [{
@@ -662,7 +660,7 @@
 					$("#chargeDialog").dialog({
 						resizable: false,
 						modal: true,
-                        width: 370,
+                        width: 390,
 						height:360,
                         title: '收费',
                         buttons: [{
@@ -730,7 +728,7 @@
     function createSettingDialog() {
         $("#changeSettingDialog").dialog({
             resizable: false,
-            height: 380,
+            height: 450,
             width: 330,
             title: '全站设置',
             modal: true,
@@ -1116,23 +1114,23 @@
 </script>
 <div id="changeSettingDialog" class="easyui-dialog" style="left: 40%;">
 	<form id="changeSettingForm">
-	<table style="font-size:12px" id="settingTable" align="center">
+	<table style="font-size:12px" id="settingTable" align="center" cellspacing="5">
 		<tr>
-			<td>客户</td>
+			<td style="width:60x" align="right">客户</td>
 			<td>
 				<input type="hidden" id="qzSettingUuid" />
 				<input type="text" list="customer_list" name="qzSettingCustomer" id="qzSettingCustomer" style="width:240px" />
 			</td>
 		</tr>
 		<tr>
-			<td>域名</td>
+			<td style="width:60px" align="right">域名</td>
 			<td>
 				<input type="text" name="qzSettingDomain" id="qzSettingDomain" style="width:240px" />
 				<span style="margin-right: 28px;"></span>
 			</td>
 		</tr>
 	</table>
-	<table style="font-size:12px">
+	<table style="font-size:12px" cellspacing="5">
 		<tr>
 			<td colspan="2">
 				<input type="checkbox" name="operationType" id="PC" onclick="dealSettingTable('PC')" style=""/>电脑
@@ -1141,17 +1139,17 @@
 		<%--电脑分组信息--%>
 		<tr>
 			<td colspan="2" id="groupHeightPC">
-				<table border="0" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="operationTypeSummaryInfoPC">
+				<table border="0" style="display:none;font-size:12px;" cellspacing="5" cellpadding="0" id="operationTypeSummaryInfoPC">
 					<tr>
-						<td align="right" style="width:72px"><span style="margin-right:14;">分组</span></td>
+						<td align="right" style="width:72px">分组</td>
 						<td><input type="text" name="group" id="groupPC"  style="width:240px;margin-left: -6;"/></td>
 					</tr>
 					<tr>
-						<td align="right" style="width:72px"><span style="margin-right:14;">初始词量</span></td>
+						<td align="right" style="width:72px">初始词量</td>
 						<td colspan="4"><input type="text" name="initialKeywordCount" id="initialKeywordCountPC" style="width:240px;margin-left: -6;"/></td>
 					</tr>
 					<tr>
-						<td align="right" style="width:72px"><span style="margin-right:14;">当前词量</span></td>
+						<td align="right" style="width:72px">当前词量</td>
 						<td colspan="4"><input type="text" name="currentKeywordCount" id="currentKeywordCountPC" style="width:240px;margin-left: -6;" readonly/></td>
 					</tr>
 					<input type="hidden" id="qzSettingUuidPC" name="qzOperationTypeUuid" value="" />
@@ -1185,7 +1183,7 @@
 		<%--手机分组信息--%>
 		<tr>
 			<td colspan="2" id="groupHeightPhone">
-				<table border="0" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="operationTypeSummaryInfoPhone">
+				<table border="0" style="display:none;font-size:12px;" cellspacing="5" cellpadding="0" id="operationTypeSummaryInfoPhone">
 					<tr>
 						<td align="right" style="width:72px;"><span style="margin-right:14;">分组</span></td>
 						<td><input type="text" name="group" id="groupPhone" style="width:240px;margin-left: -6;"/></td>
@@ -1205,7 +1203,7 @@
 		<%--手机规则信息--%>
 		<tr id="phoneChargeRuleTable">
 			<td colspan="2" id="ruleHeightPhone">
-				<table border="1" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="chargeRulePhone">
+				<table border="1" style="display:none;font-size:12px;" cellspacing="0" cellpadding="5" id="chargeRulePhone">
 					<tr>
 						<td style="width:50px">序号</td>
 						<td style="width:72px">起始词数</td>
@@ -1271,7 +1269,7 @@
 </datalist>
 <%--收费Dialog--%>
 <div id="chargeDialog" class="easyui-dialog" style="left: 40%;">
-	<table id="chargeDialogTable">
+	<table id="chargeDialogTable" cellspacing="5">
 		<tr>
 			<td align="right">客户</td>
 			<td>
@@ -1399,8 +1397,8 @@
 	</p>
 </div>
 <%--收费详情列表--%>
-<div id="chargeLogListDiv" class="easyui-dialog" style="left: 40%;">
-	<table id="chargeLogListTable" border="1" cellpadding="3" style="font-size: 12px;background-color: white;border-collapse: collapse;">
+<div id="chargeLogListDiv" class="easyui-dialog" style="left: 40%;" >
+	<table id="chargeLogListTable" border="1" cellpadding="10" style="font-size: 12px;background-color: white;border-collapse: collapse;margin: 10px 10px">
 		<tr>
 			<td>收费时间</td>
 			<td>操作类型</td>
