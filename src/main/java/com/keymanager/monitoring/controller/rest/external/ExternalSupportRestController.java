@@ -2,12 +2,8 @@ package com.keymanager.monitoring.controller.rest.external;
 
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.CaptureRealUrlCriteria;
-import com.keymanager.monitoring.entity.NegativeList;
-import com.keymanager.monitoring.entity.User;
 import com.keymanager.monitoring.service.CaptureRealUrlService;
-import com.keymanager.monitoring.service.UserService;
 import com.keymanager.monitoring.vo.BaiduUrl;
-import com.keymanager.util.TerminalTypeMapping;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +21,6 @@ public class ExternalSupportRestController extends SpringMVCBaseController {
 
 	@Autowired
 	private CaptureRealUrlService captureRealUrlService;
-
-	@Autowired
-	private UserService userService;
 
 	@RequestMapping(value = "/getRealUrls", method = RequestMethod.POST)
 	public ResponseEntity<?> getRealUrls(@RequestBody CaptureRealUrlCriteria captureRealUrlCriteria) throws Exception{

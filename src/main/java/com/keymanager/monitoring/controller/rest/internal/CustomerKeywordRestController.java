@@ -6,15 +6,9 @@ import com.keymanager.monitoring.criteria.CustomerKeywordCleanCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordCrilteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordUpdateGroupCriteria;
-import com.keymanager.monitoring.entity.Customer;
-import com.keymanager.monitoring.entity.CustomerKeyword;
-import com.keymanager.monitoring.entity.ServiceProvider;
-import com.keymanager.monitoring.entity.User;
+import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.excel.operator.CustomerKeywordInfoExcelWriter;
-import com.keymanager.monitoring.service.CustomerKeywordService;
-import com.keymanager.monitoring.service.CustomerService;
-import com.keymanager.monitoring.service.ServiceProviderService;
-import com.keymanager.monitoring.service.UserService;
+import com.keymanager.monitoring.service.*;
 import com.keymanager.util.TerminalTypeMapping;
 import com.keymanager.util.Utils;
 import org.apache.commons.lang3.StringUtils;
@@ -46,7 +40,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	private CustomerKeywordService customerKeywordService;
 
 	@Autowired
-	private UserService userService;
+	private IUserInfoService userInfoService;
 
 	@Autowired
 	private CustomerService customerService;
@@ -84,7 +78,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		HttpSession session = request.getSession();
 		ModelAndView modelAndView = new ModelAndView("/customerkeyword/customerKeywordList");
 		String userID = (String) session.getAttribute("username");
-		User user = userService.getUser(userID);
+		UserInfo user = userInfoService.getUserInfo(userID);
 		Customer customer = customerService.getCustomerWithKeywordCount(customerKeywordCrilteria.getCustomerUuid());
 		String entryType = (String) session.getAttribute("entryType");
 		String terminalType = TerminalTypeMapping.getTerminalType(request);
@@ -399,8 +393,8 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		HttpSession session = request.getSession();
 		ModelAndView modelAndView = new ModelAndView("/customerkeyword/keywordfinderList");
 		String userName = (String) session.getAttribute("username");
-		User user = userService.getUser(userName);
-		List<User> activeUsers = userService.findActiveUsers();
+		UserInfo user = userInfoService.getUserInfo(userName);
+		List<UserInfo> activeUsers = userInfoService.findActiveUsers();
 		String entryType = (String) session.getAttribute("entryType");
 		String terminalType = TerminalTypeMapping.getTerminalType(request);
 		String orderElement = request.getParameter("orderElement");

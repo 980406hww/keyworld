@@ -1,10 +1,11 @@
 package com.keymanager.monitoring.controller;
 
-import com.keymanager.monitoring.entity.User;
-import com.keymanager.monitoring.service.UserService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import com.keymanager.monitoring.entity.UserInfo;
+import com.keymanager.monitoring.service.IUserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -15,7 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class LoginInterceptor implements HandlerInterceptor {
 
   @Autowired
-  private UserService userService;
+  private IUserInfoService userInfoService;
 
   @Override
   public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
@@ -41,7 +42,7 @@ public class LoginInterceptor implements HandlerInterceptor {
       String username = (String) session.getAttribute("username");
       String password = (String) session.getAttribute("password");
       if (username != null) {
-        User user = userService.getUser(username);
+        UserInfo user = userInfoService.getUserInfo(username);
         if (user != null) {
           if(user.getPassword().equals(password)){
             return true;

@@ -2,7 +2,6 @@ package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.service.IService;
 import com.keymanager.monitoring.common.result.PageInfo;
-import com.keymanager.monitoring.entity.User;
 import com.keymanager.monitoring.entity.UserInfo;
 import com.keymanager.monitoring.vo.UserVO;
 
@@ -14,6 +13,11 @@ import java.util.List;
  *
  */
 public interface IUserInfoService extends IService<UserInfo> {
+
+    //原UserService方法
+    public UserInfo getUserInfo(String userID);
+
+    public List<UserInfo> findActiveUsers();
 
     List<UserInfo> selectByLoginName(UserVO userVo);
 

@@ -7,16 +7,14 @@ import java.util.Set;
 
 import com.keymanager.monitoring.entity.UserInfo;
 import com.keymanager.monitoring.enums.EntryTypeEnum;
+import com.keymanager.monitoring.service.IUserInfoService;
 import com.keymanager.monitoring.vo.ExtendedUsernamePasswordToken;
 import com.keymanager.monitoring.vo.UserVO;
 import com.keymanager.monitoring.service.IRoleService;
-import com.keymanager.monitoring.service.IUserService;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
-import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -36,7 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class ShiroDbRealm extends AuthorizingRealm {
 	private static final Logger LOGGER =  LoggerFactory.getLogger(ShiroDbRealm.class);
 
-	@Autowired private IUserService userService;
+	@Autowired private IUserInfoService userInfoService;
 	@Autowired private IRoleService roleService;
 
 	public ShiroDbRealm(CacheManager cacheManager, CredentialsMatcher matcher) {
@@ -53,7 +51,7 @@ public class ShiroDbRealm extends AuthorizingRealm {
 		ExtendedUsernamePasswordToken token = (ExtendedUsernamePasswordToken) authcToken;
 		UserVO uservo = new UserVO();
 		uservo.setLoginName(token.getUsername());
-		List<UserInfo> list = userService.selectByLoginName(uservo);
+		List<UserInfo> list = userInfoService.selectByLoginName(uservo);
 		// 账号不存在
 		if (list == null || list.isEmpty()) {
 			return null;
@@ -74,6 +72,7 @@ public class ShiroDbRealm extends AuthorizingRealm {
 		}
 		ShiroUser shiroUser = new ShiroUser(user.getUuid(), user.getLoginName(), user.getUserName(), urls);
 		shiroUser.setRoles(roles);
+		shiroUser.setName(user.getUserName());
 
 		// 认证缓存信息
 		return new SimpleAuthenticationInfo(shiroUser, user.getPassword().toCharArray(),

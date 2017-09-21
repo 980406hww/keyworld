@@ -3,7 +3,6 @@ package com.keymanager.monitoring.controller.rest.internal;
 import com.keymanager.db.DBUtil;
 import com.keymanager.manager.VPSOpenInfoManager;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
-import com.keymanager.monitoring.service.UserService;
 import com.keymanager.value.VPSOpenInfoVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,9 +17,6 @@ import java.sql.Connection;
 @RequestMapping(value = "/internal/vpsopeninfo")
 public class VPSOpenInfoRestController extends SpringMVCBaseController {
 	private static Logger logger = LoggerFactory.getLogger(VPSOpenInfoRestController.class);
-
-	@Autowired
-	private UserService userService;
 
 	@RequestMapping(value = "/saveVPSOpenInfo", method = RequestMethod.POST)
 	public ResponseEntity<?> saveVPSOpenInfo(@RequestBody VPSOpenInfoVO vpsOpenInfoVO){

@@ -4,9 +4,7 @@ import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.CustomerCriteria;
 import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.NegativeList;
-import com.keymanager.monitoring.entity.User;
 import com.keymanager.monitoring.service.CustomerService;
-import com.keymanager.monitoring.service.UserService;
 import com.keymanager.util.Constants;
 import com.keymanager.util.TerminalTypeMapping;
 import org.apache.commons.collections.CollectionUtils;
@@ -32,8 +30,6 @@ public class ExternalCustomerRestController extends SpringMVCBaseController {
     @Autowired
     private CustomerService customerService;
 
-    @Autowired
-    private UserService userService;
 
     @RequestMapping(value = "getActiveCustomerSimpleInfo" , method = RequestMethod.POST)
     public ResponseEntity<?> getActiveCustomerSimpleInfo(@RequestBody CustomerCriteria customerCriteria) throws Exception{

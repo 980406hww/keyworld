@@ -1,7 +1,7 @@
 package com.keymanager.monitoring.controller.web;
 
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
-import com.keymanager.monitoring.service.UserService;
+import com.keymanager.monitoring.service.IUserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -11,5 +11,5 @@ import org.springframework.web.bind.annotation.*;
 public class RegisterController extends SpringMVCBaseController {
 	
 	@Autowired
-	private UserService userService;
+	private IUserInfoService userInfoService;
 }
