@@ -64,6 +64,12 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     private CustomerService customerService;
 
     @Autowired
+    private IUserInfoService userInfoService;
+
+    @Autowired
+    private UserRoleService userRoleService;
+
+    @Autowired
     private CustomerKeywordDao customerKeywordDao;
 
     public Page<CustomerKeyword> searchCustomerKeywords(Page<CustomerKeyword> page, CustomerKeywordCriteria customerKeywordCriteria){
@@ -115,7 +121,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
     }
 
-    public void addCustomerKeywordsFromSimpleUI(List<CustomerKeyword> customerKeywords, String terminalType, String entryType) {
+    public void addCustomerKeywordsFromSimpleUI(List<CustomerKeyword> customerKeywords, String terminalType, String entryType, String userName) {
         if (CollectionUtils.isNotEmpty(customerKeywords)) {
             long customerUuid = customerKeywords.get(0).getCustomerUuid();
             int maxSequence = 0;
@@ -127,7 +133,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             for (CustomerKeyword customerKeyword : customerKeywords) {
                 supplementInfoFromSimpleUI(customerKeyword, terminalType, entryType, ++maxSequence);
                 supplementIndexAndPriceFromExisting(customerKeyword);
-                addCustomerKeyword(customerKeyword);
+                addCustomerKeyword(customerKeyword, userName);
             }
         }
     }
@@ -138,7 +144,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
     }*/
 
-    public void addCustomerKeyword(CustomerKeyword customerKeyword) {
+    public void addCustomerKeyword(CustomerKeyword customerKeyword, String userName) {
         if (StringUtil.isNullOrEmpty(customerKeyword.getOriginalUrl())) {
             customerKeyword.setOriginalUrl(customerKeyword.getUrl());
         }
@@ -155,6 +161,12 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         if (!EntryTypeEnum.fm.name().equals(customerKeyword.getType()) && haveDuplicatedCustomerKeyword(customerKeyword.getTerminalType(),
                 customerKeyword.getCustomerUuid(), customerKeyword.getKeyword(), originalUrl)) {
             return;
+        }
+        boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
+        if(isDepartmentManager) {
+            customerKeyword.setStatus(1);
+        } else {
+            customerKeyword.setStatus(2);
         }
         customerKeywordDao.insert(customerKeyword);
     }
@@ -194,7 +206,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     private void supplementInfoFromSimpleUI(CustomerKeyword customerKeyword, String terminalType, String entryType, int maxSequence) {
         customerKeyword.setType(entryType);
-        customerKeyword.setStatus(1);
         customerKeyword.setTerminalType(terminalType);
         customerKeyword.setSearchEngine(Constants.SEARCH_ENGINE_BAIDU);
         customerKeyword.setStartOptimizedTime(Utils.getCurrentTimestamp());
@@ -344,12 +355,12 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     //简化版Excel文件导入
-    public boolean handleExcel(InputStream inputStream, String excelType, int customerUuid, String type, String terminalType)
+    public boolean handleExcel(InputStream inputStream, String excelType, int customerUuid, String type, String terminalType, String userName)
             throws Exception {
         AbstractExcelReader operator = AbstractExcelReader.createExcelOperator(inputStream, excelType);
         List<CustomerKeyword> customerKeywords = operator.readDataFromExcel();
         supplementInfo(customerKeywords, customerUuid, type, terminalType);
-        addCustomerKeywords(customerKeywords);
+        addCustomerKeywords(customerKeywords, userName);
         return true;
     }
 
@@ -359,11 +370,10 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeyword.setType(type);
             customerKeyword.setCreateTime(Utils.getCurrentTimestamp());
             customerKeyword.setUpdateTime(Utils.getCurrentTimestamp());
-            customerKeyword.setStatus(1);
             customerKeyword.setTerminalType(terminalType);
         }
     }
-    public void addCustomerKeywords(List<CustomerKeyword> customerKeywords) throws Exception {
+    public void addCustomerKeywords(List<CustomerKeyword> customerKeywords, String userName) throws Exception {
         for (CustomerKeyword customerKeyword : customerKeywords) {
             if(StringUtil.isNullOrEmpty(customerKeyword.getOriginalUrl())){
                 customerKeyword.setOriginalUrl(customerKeyword.getUrl());
@@ -392,6 +402,13 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeyword.setCurrentPosition(10);
             customerKeyword.setAutoUpdateNegativeDateTime(Utils.getCurrentTimestamp());
             customerKeyword.setUpdateTime(new Date());
+            boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
+            if(isDepartmentManager) {
+                customerKeyword.setStatus(1);
+            } else {
+                customerKeyword.setStatus(2);
+            }
+
             customerKeywordDao.insert(customerKeyword);
         }
     }
@@ -668,7 +685,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
     }
 
-    public void addCustomerKeywords(SearchEngineResultVO searchEngineResultVO, String terminalType) throws Exception {
+    public void addCustomerKeywords(SearchEngineResultVO searchEngineResultVO, String terminalType, String userName) throws Exception {
         if(searchEngineResultVO != null){
             List<CustomerKeyword> customerKeywords = new ArrayList<CustomerKeyword>();
             for(SearchEngineResultItemVO searchEngineResultItemVO : searchEngineResultVO.getSearchEngineResultItemVOs()){
@@ -677,7 +694,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                 customerKeyword.setInitialPosition(searchEngineResultItemVO.getOrder());
                 customerKeyword.setOptimizeGroupName(searchEngineResultVO.getGroup());
                 customerKeyword.setOptimizePlanCount(searchEngineResultItemVO.getClickCount());
-                customerKeyword.setStatus(1);
                 customerKeyword.setKeyword(searchEngineResultItemVO.getKeyword());
                 customerKeyword.setTitle(searchEngineResultItemVO.getTitle());
                 customerKeyword.setType(searchEngineResultItemVO.getType());
@@ -698,7 +714,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                 customerKeyword.setUpdateTime(Utils.getCurrentTimestamp());
                 customerKeywords.add(customerKeyword);
             }
-            this.addCustomerKeywords(customerKeywords);
+            this.addCustomerKeywords(customerKeywords, userName);
         }
     }
 

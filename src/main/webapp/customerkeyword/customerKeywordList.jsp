@@ -471,7 +471,6 @@
                 });
             }
 
-
             //增加新关键字
             function addCustomerKeyword(customerKeywordUuid) {
                 if (customerKeywordUuid == null) {
