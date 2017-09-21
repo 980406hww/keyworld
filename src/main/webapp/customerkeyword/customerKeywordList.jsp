@@ -527,11 +527,11 @@
                 }
                 customerKeyword.keyword = keyword;
                 var url = $.trim(saveCustomerKeywordDialog.find("#url").val())
-                if (url.length == 0) {
-                    $().toastmessage('showWarningToast', "网址不能为空！");
-                    saveCustomerKeywordDialog.find("#url").focus();
-                    return;
-                }
+//                if (url.length == 0) {
+//                    $().toastmessage('showWarningToast', "网址不能为空！");
+//                    saveCustomerKeywordDialog.find("#url").focus();
+//                    return;
+//                }
                 customerKeyword.url = url;
                 var originalUrl = $.trim(saveCustomerKeywordDialog.find("#originalUrl").val());
                 customerKeyword.originalUrl = originalUrl;
@@ -889,12 +889,6 @@
                 onClick="WdatePicker()"
                 value="${customerKeywordCriteria.creationToTime}">
             排序:
-            <%--<select name="orderElement" id="orderElement">--%>
-                <%--<option value="">--请选择排序--</option>--%>
-                <%--<option value="fCreateTime">创建日期</option>--%>
-                <%--<option value="fCurrentPosition">当前排名</option>--%>
-                <%--<option value="fSequence">添加序号</option>--%>
-            <%--</select>--%>
             <select name="orderElement" id="orderElement">
                 <option value="0">关键字</option>
                 <option value="1">创建日期</option>
@@ -955,7 +949,7 @@
                 <td  align="center" width=200 class="wrap floatTd"
                      title="原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}">
                     <div style="height:16;">
-                            ${customerKeyword.url==null?'':customerKeyword.url};
+                            ${customerKeyword.url==null?'':customerKeyword.url}
                     </div>
                 </td>
 

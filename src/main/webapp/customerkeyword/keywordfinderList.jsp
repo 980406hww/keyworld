@@ -309,13 +309,13 @@
                     </c:forEach>
                 </select>
             </c:if>
-            <br>
+            <input id="pushPay" name="pushPay" type="checkbox"  onclick="pushPayValue()" value="${customerKeywordCriteria.pushPay}"/>催缴 &nbsp;
+            <input id="displayStop" name="displayStop" type="checkbox"  onclick="displayStopValue()" value="${customerKeywordCriteria.displayStop}"/>显示下架 &nbsp;
+            <br/>
             已刷:<input type="text" name="optimizedCount" id="optimizedCount" value="${customerKeywordCriteria.optimizedCount}" style="width:40px;"/>
             显示前:
             <input type="text" name="position" id="position" value="${customerKeywordCriteria.position}" style="width:40px;"/>
             <input id="noPosition" name="noPosition" type="checkbox"  onclick="noPositionValue()"/>显示排名为0 &nbsp;
-            <input id="pushPay" name="pushPay" type="checkbox"  onclick="pushPayValue()" value="${customerKeywordCriteria.pushPay}"/>催缴 &nbsp;
-            <input id="displayStop" name="displayStop" type="checkbox"  onclick="displayStopValue()" value="${customerKeywordCriteria.displayStop}"/>显示下架 &nbsp;
             订单号:
             <input type="text" name="orderNumber" id="orderNumber" value="${customerKeywordCriteria.orderNumber}" style="width:100px;">
             无效点击数:
@@ -334,8 +334,8 @@
             &nbsp;&nbsp;
             <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
                 <input type="submit" onclick="resetPageNumber()" value=" 查询 ">&nbsp;&nbsp;
-            <input type="button" onclick="updateCustomerKeywordStatus(0)" value="暂停选择关键字">&nbsp;&nbsp;
-            <input type="button" onclick="updateCustomerKeywordStatus(1)" value="激活选中关键字">
+            <input type="button" onclick="updateCustomerKeywordStatus(0)" value=" 暂停所选关键字 ">&nbsp;&nbsp;
+            <input type="button" onclick="updateCustomerKeywordStatus(1)" value=" 激活所选关键字 ">
         </div>
     </form>
     <table style="font-size:12px; width: 100%;" id="headerTable">
