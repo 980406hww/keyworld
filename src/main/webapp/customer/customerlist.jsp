@@ -1093,7 +1093,7 @@
     </table>
     <table style="font-size:12px; width: 100%;" id="headerTable">
         <tr bgcolor="#eeeeee">
-            <td align="left" width=10><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
+            <td style="padding-left: 7px;" width=10><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
             <td align="center" width=80>用户名称</td>
             <td align="center" width=80>联系人</td>
             <td align="center" width=60>词数</td>
@@ -1113,7 +1113,7 @@
     <table style="font-size:12px; width: 100%;" id="showCustomerTable">
         <c:forEach items="${page.records}" var="customer">
             <tr onmouseover="doOver(this);" onmouseout="doOut(this);" height=30>
-                <td width=10><input type="checkbox" name="customerUuid" value="${customer.uuid}"/></td>
+                <td width=10 style="padding-left: 7px;"><input type="checkbox" name="customerUuid" value="${customer.uuid}"/></td>
                 <td width=80>${user.loginName}</td>
                 <td width=80>
                     <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywords">

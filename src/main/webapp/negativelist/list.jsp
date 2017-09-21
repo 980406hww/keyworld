@@ -367,7 +367,7 @@
 	</table>
 	<table id="headerTable" width="100%">
 	  <tr bgcolor="#eeeeee" height=30>
-		  <td align="center" ><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
+		  <td style="padding: 5px;" ><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
 		  <td align="center" >关键字</td>
 		  <td align="center" >标题</td>
 		  <td align="center" >URL</td>
@@ -390,7 +390,7 @@
 				  <tr onmouseover="doOver(this);" onmouseout="doOut(this);" height=30>
 			  </c:otherwise>
 		  </c:choose>
-			  <td><input type="checkbox" name="uuid" value="${negativeList.uuid}" onclick="decideSelectAll()"/></td>
+			  <td style="padding: 5px;"><input type="checkbox" name="uuid" value="${negativeList.uuid}" onclick="decideSelectAll()"/></td>
 			  <td>${negativeList.keyword}</td>
 			  <td>${negativeList.title} </td>
 			  <td>${negativeList.url}</td>

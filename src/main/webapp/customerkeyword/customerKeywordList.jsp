@@ -926,7 +926,7 @@
     <%--</c:if>--%>
     <table style="font-size:12px; width: 100%;" id="headerTable">
         <tr bgcolor="#eeeeee" height=30>
-            <td width=10><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
+            <td width=10 style="padding-left:7px;"><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
             <td align="center" width=100>关键字</td>
             <td align="center" width=200>URL</td>
             <td align="center" width=250>标题</td>
@@ -952,7 +952,7 @@
     <table id="customerKeywordTable">
         <c:forEach items="${page.records}" var="customerKeyword">
             <tr style="" height=30 onmouseover="doOver(this);" onmouseout="doOut(this);" ondblclick="modifyCustomerKeyword('${customerKeyword.uuid}')" height=30>
-                <td width=10><input type="checkbox" name="uuid" value="${customerKeyword.uuid}" onclick="decideSelectAll()"/></td>
+                <td width=10 style="padding-left:7px;"><input type="checkbox" name="uuid" value="${customerKeyword.uuid}" onclick="decideSelectAll()"/></td>
                 <td align="center" width=100>
                     <font color="<%--<%=keywordColor%>--%>">${customerKeyword.keyword}</font>
                 </td>

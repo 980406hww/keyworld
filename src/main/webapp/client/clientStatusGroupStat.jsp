@@ -1,4 +1,4 @@
-<%@ include file="/commons/basejs.jsp" %>
+﻿<%@ include file="/commons/basejs.jsp" %>
 <%@ include file="/commons/global.jsp" %>
 <html>
 <head>
@@ -74,7 +74,7 @@
     <table width=40% style="font-size: 12px;" cellpadding=3 id="ClientStatusGroupSummaryTable">
     <c:forEach items="${clientStatusGroupSummaryVOs}" var="ClientStatusGroupSummaryVO" varStatus="status">
         <tr align="left" height="30px">
-        <td>${ClientStatusGroupSummaryVO.group}</td>
+        <td style="padding-left: 7px;">${ClientStatusGroupSummaryVO.group}</td>
         <td>${ClientStatusGroupSummaryVO.terminalType}</td>
         <td>${ClientStatusGroupSummaryVO.count}</td>
         </tr>
