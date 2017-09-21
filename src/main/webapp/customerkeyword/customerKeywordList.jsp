@@ -870,6 +870,7 @@
             <input type="text" name="optimizeGroupName" id="optimizeGroupName"
                    value="${customerKeywordCrilteria.optimizeGroupName}" style="width:100px;">
             <%--<c:if test="${!user.vipType}">--%>
+            已刷:<input type="text" name="optimizedCount" id="optimizedCount" value="${customerKeywordCrilteria.optimizedCount}" style="width:40px;"/>
             显示前:
             <input type="text" name="position" id="position" value="${customerKeywordCrilteria.position}"
                    style="width:40px;"/>
@@ -936,15 +937,8 @@
             <td align="center" width=80>最后优化时间</td>
             <td align="center" width=50>订单号</td>
             <td align="center" width=100>备注</td>
-            <c:choose>
-                <c:when test="${user.vipType}">
-                    <td align="center" width=60>优化组名</td>
-                    <td align="center" width=80>操作</td>
-                </c:when>
-                <c:when test="${user.userLevel == 1}">
-                    <td align="center" width=80>操作</td>
-                </c:when>
-            </c:choose>
+            <td align="center" width=60>优化组名</td>
+            <td align="center" width=80>操作</td>
             <div id="div1"></div>
             <div id="div2"></div>
         </tr>
@@ -960,7 +954,7 @@
                 </td>
                 <td  align="center" width=200 class="wrap floatTd"
                      title="原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}">
-                    <div style="height:16;" class="easyui-tooltip" title="'原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}'">
+                    <div style="height:16;">
                             ${customerKeyword.url==null?'':customerKeyword.url};
                     </div>
                 </td>
@@ -971,7 +965,7 @@
                 <td align="center" width=30>
                     <div style="height:16;"><a
                             href="/internal/customerKeywordPositionIndexLog/historyPositionAndIndex/${customerKeyword.uuid}/30"
-                            target="_blank">${customerKeyword.currentIndexCount}
+                            target="_blank" title="查看历史排名" class="floatTd">${customerKeyword.currentIndexCount}
                     </a></div>
                 </td>
                 <td align="center" width=50>

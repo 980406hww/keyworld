@@ -153,6 +153,7 @@
         <if test="customerKeywordCrilteria.orderNumber != null and customerKeywordCrilteria.orderNumber != ''">AND ck.fOrderNumber  like '%${customerKeywordCrilteria.orderNumber}%'</if>
         <if test="customerKeywordCrilteria.pushPay != null and customerKeywordCrilteria.pushPay != ''">AND ((ck.fCollectMethod = 'PerDay' AND ck.fEffectiveToTime is not null) OR (ck.fEffectiveToTime &lt;= DATE_ADD(CURDATE(),INTERVAL 3 DAY))) </if>
         <if test="customerKeywordCrilteria.terminalType != null and customerKeywordCrilteria.terminalType != ''">AND fTerminalType =  #{customerKeywordCrilteria.terminalType} </if>
+        <if test="customerKeywordCrilteria.optimizedCount != null">AND ck.fOptimizedCount &lt;= #{customerKeywordCrilteria.optimizedCount} </if>
         <if test="customerKeywordCrilteria.qq != null and customerKeywordCrilteria.qq != ''">
             AND ck.fCustomerUuid in (
             SELECT fUuid FROM t_customer WHERE fQQ LIKE '${customerKeywordCrilteria.qq}%' )

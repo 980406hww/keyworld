@@ -238,6 +238,7 @@
                     </c:choose>
                 </select>
             <br>
+            已刷:<input type="text" name="optimizedCount" id="optimizedCount" value="${customerKeywordCrilteria.optimizedCount}" style="width:40px;"/>
             显示前:
             <input type="text" name="position" id="position" value="${customerKeywordCrilteria.position}" style="width:40px;"/>
             <input id="noPosition" name="noPosition" type="checkbox"  onclick="noPositionValue()"/>显示排名为0 &nbsp;

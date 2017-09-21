@@ -16,12 +16,23 @@ public class CustomerKeywordCrilteria extends BaseCriteria{
     private String noPosition;//显示没有排名
     private String entryType;//
     private String terminalType;//8088 PC  8089  phone
+    private Integer optimizedCount;//已刷
+
+
 
     private String qq;
     private String userName;
     private String pushPay;//催缴
     private String displayStop;//显示下架
     private String orderNumber;//订单号
+
+    public Integer getOptimizedCount() {
+        return optimizedCount;
+    }
+
+    public void setOptimizedCount(Integer optimizedCount) {
+        this.optimizedCount = optimizedCount;
+    }
 
     public Long getCustomerUuid() {
         return customerUuid;
