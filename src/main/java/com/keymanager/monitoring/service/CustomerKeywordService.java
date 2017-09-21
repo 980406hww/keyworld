@@ -66,8 +66,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     @Autowired
     private CustomerKeywordDao customerKeywordDao;
 
-    public Page<CustomerKeyword> searchCustomerKeywords(Page<CustomerKeyword> page, CustomerKeywordCrilteria customerKeywordCrilteria){
-        page.setRecords(customerKeywordDao.searchCustomerKeywords(page, customerKeywordCrilteria));
+    public Page<CustomerKeyword> searchCustomerKeywords(Page<CustomerKeyword> page, CustomerKeywordCriteria customerKeywordCriteria){
+        page.setRecords(customerKeywordDao.searchCustomerKeywords(page, customerKeywordCriteria));
         return page;
     }
 
@@ -636,8 +636,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeywordDao.resetInvalidRefreshCount(customerKeywordRefreshStatInfoCriteria);
     }
 
-    public Page<CustomerKeyword> searchCustomerKeywordLists(Page<CustomerKeyword> page, CustomerKeywordCrilteria customerKeywordCrilteria) {
-        List<CustomerKeyword> customerKeywords = customerKeywordDao.searchCustomerKeywords(page, customerKeywordCrilteria);
+    public Page<CustomerKeyword> searchCustomerKeywordLists(Page<CustomerKeyword> page, CustomerKeywordCriteria customerKeywordCriteria) {
+        List<CustomerKeyword> customerKeywords = customerKeywordDao.searchCustomerKeywords(page, customerKeywordCriteria);
         List<CustomerKeyword> customerKeywordList = new ArrayList<CustomerKeyword>();
         Map<Long,String> customerMap = new HashMap<Long, String>();
         for (CustomerKeyword customerKeyword : customerKeywords) {

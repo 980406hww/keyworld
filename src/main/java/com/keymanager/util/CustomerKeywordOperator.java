@@ -16,12 +16,12 @@ public class CustomerKeywordOperator {
 		
 //		
 //		AgentKeywordExcelOperator operator = new AgentKeywordExcelOperator();
-//		List<CustomerKeywordCrilteria> list = operator.readDataFromExcel();
+//		List<CustomerKeywordCriteria> list = operator.readDataFromExcel();
 //		System.out.println(list.size());
 //		
 //		
 //		SuperUserKeywordExcelOperator operator2 = new SuperUserKeywordExcelOperator();
-//		List<CustomerKeywordCrilteria> list2 = operator2.readDataFromExcel();
+//		List<CustomerKeywordCriteria> list2 = operator2.readDataFromExcel();
 //		System.out.println(list2.size());
 	}
 }
