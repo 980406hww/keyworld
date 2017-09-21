@@ -283,8 +283,8 @@
             }
             $("#negativeListDialog").dialog({
                 resizable: false,
-                width: 510,
-                height: 315,
+                width: 490,
+                height: 290,
                 modal: true,
                 title: '负面信息',
 				closed:true,
@@ -335,9 +335,9 @@
 						<input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
 						<td align="right">关键字:</td> <td><input type="text" name="keyword" id="keyword" value="${negativeListCriteria.keyword}" style="width:200px;"></td>
 						<td align="right">URL:</td> <td><input type="text" name="url" id="url" value="${negativeListCriteria.url}" style="width:170px;"></td>
-						<td align="right" width="100">
+						<td align="right" width="50">
 							<shiro:hasPermission name="/internal/negativelist/searchNegativeLists">
-							<input type="submit" name="btnQuery" id="btnQuery" onclick="resetPageNumber()" value=" 查询 " >
+							<input type="submit" name="btnQuery" id="btnQuery" onclick="resetPageNumber()" value=" 查询 " >&nbsp;
 						</shiro:hasPermission>
 						<td colspan="4" align="right">
 							<shiro:hasPermission name="/internal/negativelist/saveNegativeList">

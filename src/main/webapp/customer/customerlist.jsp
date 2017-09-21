@@ -699,8 +699,8 @@
             }
             $("#customerDialog").dialog({
                 resizable: false,
-                width: 310,
-                height: 350,
+                width: 280,
+                height: 300,
                 modal: true,
                 //按钮
                 buttons: [{
@@ -969,6 +969,9 @@
                 ctd.eq(idx).width($(val).width());
             });
         }
+        function searchCustomerKeywords(url) {
+            window.open(url);
+        }
 
         <c:if test="${'bc'.equalsIgnoreCase(entryType)}">
         <shiro:hasPermission name="/internal/dailyReport/triggerReportGeneration">
@@ -1053,7 +1056,6 @@
                                     &nbsp;&nbsp;<input type="submit" class="ui-button ui-widget ui-corner-all" onclick="resetPageNumber()" name="btnQuery" id="btnQuery" value=" 查询 ">
                                 </shiro:hasPermission>
                             </td>
-
                             <td align="right">
                                 <shiro:hasPermission name="/internal/customer/saveCustomer">
                                     &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 添加 " onclick="showCustomerDialog(null,'${user.loginName}')"/>
@@ -1103,7 +1105,9 @@
                 <td width=10><input type="checkbox" name="customerUuid" value="${customer.uuid}"/></td>
                 <td width=80>${user.loginName}</td>
                 <td width=80>
-                    <a href="/internal/customerKeyword/searchCustomerKeywords/${customer.uuid}">${customer.contactPerson}</a>
+                    <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywords">
+                    <a href="#" onclick="searchCustomerKeywords('/internal/customerKeyword/searchCustomerKeywords/${customer.uuid}')">${customer.contactPerson}</a>
+                    </shiro:hasPermission>
                 </td>
                 <td width=60>${customer.keywordCount}</td>
                 <td width=60>${customer.qq}</td>

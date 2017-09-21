@@ -1,8 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
 <%@ include file="/commons/basejs.jsp" %>
 <%@ include file="/commons/global.jsp" %>
-<script language="javascript" type="text/javascript" src="/toastmessage/jquery.toastmessage.js"></script>
-<link rel="stylesheet" href="/toastmessage/css/jquery.toastmessage.css">
 <script language="javascript" type="text/javascript" src="/common.js"></script>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">

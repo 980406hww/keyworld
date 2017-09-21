@@ -348,7 +348,7 @@
                 $("#groupChangeNameDialog").dialog({
                     resizable: false,
                     width: 260,
-                    height: 150,
+                    height: 100,
                     closed: true,
                     modal: true,
                     title: changeGroupCriteria.title,
@@ -389,7 +389,7 @@
                         }]
                 });
                 $("#groupChangeNameDialog").dialog("open");
-                $('#groupChangeNameDialog').window("resize",{top:$(document).scrollTop() + 100});
+                $('#groupChangeNameDialog').window("resize",{top:$(document).scrollTop() + 200});
             }
 
             function updateCustomerKeywordStatus(status) {
@@ -470,8 +470,6 @@
                     },
                 });
             }
-
-
             //增加新关键字
             function addCustomerKeyword(customerKeywordUuid) {
                 if (customerKeywordUuid == null) {
@@ -480,8 +478,8 @@
                     $("#customerKeywordForm").find("#status").val('');
                 }
                 $( "#saveCustomerKeywordDialog").dialog({
-                    width: 420,
-                    height: 540,
+                    width: 410,
+                    height: 550,
                     title : "添加关键字",
                     modal: true,
                     resizable: false,
@@ -773,6 +771,14 @@
                     $("#noPosition").val("0");
                 }
             }
+            //显示下架
+            function displayStopValue() {
+                if($("#displayStop").is(":checked")){
+                    $("#displayStop").val("1")
+                }else {
+                    $("#displayStop").val("");
+                }
+            }
 
             function initNoPositionChecked() {
                 if(${customerKeywordCriteria.noPosition == 1}){
@@ -874,7 +880,8 @@
             显示前:
             <input type="text" name="position" id="position" value="${customerKeywordCriteria.position}"
                    style="width:40px;"/>
-            <input id="noPosition" name="noPosition" type="checkbox"  onclick="noPositionValue()"/>显示0 &nbsp;
+            <input id="noPosition" name="noPosition" type="checkbox"  onclick="noPositionValue()" />显示0 &nbsp;
+            <input id="displayStop" name="displayStop" type="checkbox"  onclick="displayStopValue()" value="${customerKeywordCriteria.displayStop}" <c:if test="${customerKeywordCriteria.displayStop=='1'}">checked</c:if>/>显示下架 &nbsp;
             无效点击数:
             <input type="text" name="invalidRefreshCount" id="invalidRefreshCount"
                    value="${customerKeywordCriteria.invalidRefreshCount}" style="width:20px;">
