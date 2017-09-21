@@ -21,17 +21,6 @@
                 height: 50px;
             }
 
-            #div2 {
-                display: none;
-                background-color: #ACF106;
-                color: #E80404;
-                font-size: 20px;
-                line-height: 18px;
-                border: 2px solid #104454;
-                width: 100px;
-                height: 22px;
-            }
-
             #customerKeywordTopDiv {
                 position: fixed;
                 top: 0px;
@@ -348,7 +337,7 @@
                 $("#groupChangeNameDialog").dialog({
                     resizable: false,
                     width: 260,
-                    height: 150,
+                    height: 100,
                     closed: true,
                     modal: true,
                     title: changeGroupCriteria.title,
@@ -389,7 +378,7 @@
                         }]
                 });
                 $("#groupChangeNameDialog").dialog("open");
-                $('#groupChangeNameDialog').window("resize",{top:$(document).scrollTop() + 100});
+                $('#groupChangeNameDialog').window("resize",{top:$(document).scrollTop() + 200});
             }
 
             function updateCustomerKeywordStatus(status) {
@@ -471,6 +460,7 @@
                 });
             }
 
+
             //增加新关键字
             function addCustomerKeyword(customerKeywordUuid) {
                 if (customerKeywordUuid == null) {
@@ -480,7 +470,7 @@
                 }
                 $( "#saveCustomerKeywordDialog").dialog({
                     width: 410,
-                    height: 540,
+                    height: 550,
                     title : "添加关键字",
                     modal: true,
                     resizable: false,
@@ -526,11 +516,11 @@
                 }
                 customerKeyword.keyword = keyword;
                 var url = $.trim(saveCustomerKeywordDialog.find("#url").val())
-                if (url.length == 0) {
-                    $().toastmessage('showWarningToast', "网址不能为空！");
-                    saveCustomerKeywordDialog.find("#url").focus();
-                    return;
-                }
+//                if (url.length == 0) {
+//                    $().toastmessage('showWarningToast', "网址不能为空！");
+//                    saveCustomerKeywordDialog.find("#url").focus();
+//                    return;
+//                }
                 customerKeyword.url = url;
                 var originalUrl = $.trim(saveCustomerKeywordDialog.find("#originalUrl").val());
                 customerKeyword.originalUrl = originalUrl;
@@ -772,6 +762,14 @@
                     $("#noPosition").val("0");
                 }
             }
+            //显示下架
+            function displayStopValue() {
+                if($("#displayStop").is(":checked")){
+                    $("#displayStop").val("1")
+                }else {
+                    $("#displayStop").val("");
+                }
+            }
 
             function initNoPositionChecked() {
                 if(${customerKeywordCriteria.noPosition == 1}){
@@ -808,7 +806,8 @@
                 </tr>
             </table>
 
-    <div style="text-align: right">
+    <div style="text-align: right;margin-bottom: 5px">
+        <div style="margin-bottom: 5px">
     <shiro:hasPermission name="/internal/customerKeyword/uploadCustomerKeywords">
         <a target="_blank" href="javascript:uploadCustomerKeywords('${customerKeywordCriteria.customerUuid}', 'SuperUserSimple')"/>Excel上传(简化版)</a>
     </shiro:hasPermission>
@@ -827,7 +826,7 @@
     <shiro:hasPermission name="/internal/customerKeyword/downloadCustomerKeywordInfo">
         | <a target="_blank" href="javascript:downloadCustomerKeywordInfo()">导出结果</a>&nbsp;&nbsp;
     </shiro:hasPermission>
-        <br/><br/>
+        </div><div>
     <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupName">
         <a href="javascript:showGroupNameChangeDialog({'title': '修改客户关键字分组', 'customerUuid':'${customerKeywordCriteria.customerUuid}'})">修改所有分组</a> |
         <a href="javascript:updateSpecifiedCustomerKeywordGroupName(${customerKeywordCriteria.customerUuid})">修改选中分组</a> |
@@ -847,7 +846,7 @@
         <a href="javascript:cleanTitle('${customerKeywordCriteria.customerUuid}', 'CustomerTitle')">清空客户标题</a>&nbsp;&nbsp;
     </shiro:hasPermission>
     </div>
-    <br/>
+    </div>
     <form id="searchCustomerKeywordForm" style="font-size:12px; width: 100%;" action="/internal/customerKeyword/searchCustomerKeywords" method="post">
         <div id="searchCustomerKeywordTable">
             <input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}"/>
@@ -873,7 +872,8 @@
             显示前:
             <input type="text" name="position" id="position" value="${customerKeywordCriteria.position}"
                    style="width:40px;"/>
-            <input id="noPosition" name="noPosition" type="checkbox"  onclick="noPositionValue()"/>显示0 &nbsp;
+            <input id="noPosition" name="noPosition" type="checkbox"  onclick="noPositionValue()" />显示0 &nbsp;
+            <input id="displayStop" name="displayStop" type="checkbox"  onclick="displayStopValue()" value="${customerKeywordCriteria.displayStop}" <c:if test="${customerKeywordCriteria.displayStop=='1'}">checked</c:if>/>显示下架 &nbsp;
             无效点击数:
             <input type="text" name="invalidRefreshCount" id="invalidRefreshCount"
                    value="${customerKeywordCriteria.invalidRefreshCount}" style="width:20px;">
@@ -888,12 +888,6 @@
                 onClick="WdatePicker()"
                 value="${customerKeywordCriteria.creationToTime}">
             排序:
-            <%--<select name="orderElement" id="orderElement">--%>
-                <%--<option value="">--请选择排序--</option>--%>
-                <%--<option value="fCreateTime">创建日期</option>--%>
-                <%--<option value="fCurrentPosition">当前排名</option>--%>
-                <%--<option value="fSequence">添加序号</option>--%>
-            <%--</select>--%>
             <select name="orderElement" id="orderElement">
                 <option value="0">关键字</option>
                 <option value="1">创建日期</option>
@@ -920,7 +914,7 @@
     <%--</c:if>--%>
     <table style="font-size:12px; width: 100%;" id="headerTable">
         <tr bgcolor="#eeeeee" height=30>
-            <td align="center" width=10><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
+            <td width=10><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
             <td align="center" width=100>关键字</td>
             <td align="center" width=200>URL</td>
             <td align="center" width=250>标题</td>
@@ -939,7 +933,6 @@
             <td align="center" width=60>优化组名</td>
             <td align="center" width=80>操作</td>
             <div id="div1"></div>
-            <div id="div2"></div>
         </tr>
     </table>
 </div>
@@ -947,14 +940,14 @@
     <table id="customerKeywordTable">
         <c:forEach items="${page.records}" var="customerKeyword">
             <tr style="" height=30 onmouseover="doOver(this);" onmouseout="doOut(this);" ondblclick="modifyCustomerKeyword('${customerKeyword.uuid}')" height=30>
-                <td  align="center" width=10><input type="checkbox" name="uuid" value="${customerKeyword.uuid}" onclick="decideSelectAll()"/></td>
+                <td width=10><input type="checkbox" name="uuid" value="${customerKeyword.uuid}" onclick="decideSelectAll()"/></td>
                 <td align="center" width=100>
                     <font color="<%--<%=keywordColor%>--%>">${customerKeyword.keyword}</font>
                 </td>
                 <td  align="center" width=200 class="wrap floatTd"
                      title="原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}">
                     <div style="height:16;">
-                            ${customerKeyword.url==null?'':customerKeyword.url};
+                            ${customerKeyword.url==null?'':customerKeyword.url}
                     </div>
                 </td>
 

@@ -97,23 +97,28 @@
 							</td>
 							<td align="right" width="50">
 								<shiro:hasPermission name="/internal/qzsetting/searchQZSettings">
-									<input type="submit" name="btnQuery" id="btnQuery" onclick="resetSearchCondition('1')" value=" 查询 " >
+									<input class="ui-button ui-widget ui-corner-all" type="submit" name="btnQuery" id="btnQuery" onclick="resetSearchCondition('1')" value=" 查询 " >
 								</shiro:hasPermission>
 							</td>
+							<td align="right" width="50">
+								<shiro:hasPermission name="/internal/qzsetting/save">
+									<input class="ui-button ui-widget ui-corner-all" type="submit" name="btnQuery" id="btnQuery" onclick="showSettingDialog(null, this)" value=" 增加 " >
+								</shiro:hasPermission>
+							</td>
+							<td align="right" width="70">
+								<shiro:hasPermission name="/internal/qzsetting/updateImmediately">
+									<input class="ui-button ui-widget ui-corner-all" type="submit" name="btnQuery" id="btnQuery" onclick="updateImmediately(this)" value=" 马上更新 " >
+								</shiro:hasPermission>
+							</td>
+							<td align="right" width="70" >
+								<shiro:hasPermission name="/internal/qzsetting/deleteQZSettings">
+									<input class="ui-button ui-widget ui-corner-all" type="submit" name="btnQuery" id="btnQuery" onclick="delSelectedQZSettings(this)" value=" 删除所选 " >
+								</shiro:hasPermission>
+							</td>
+
 						</tr>
 					</table>
 				</form>
-			</td>
-			<td align="right" colspan="3">
-				<shiro:hasPermission name="/internal/qzsetting/save">
-					<a href="javascript:showSettingDialog(null, this)">增加全站设置</a>
-				</shiro:hasPermission>
-				<shiro:hasPermission name="/internal/qzsetting/updateImmediately">
-					| <a target="_blank" href="javascript:updateImmediately(this)">马上更新</a>
-				</shiro:hasPermission>
-				<shiro:hasPermission name="/internal/qzsetting/deleteQZSettings">
-					| <a target="_blank" href="javascript:delSelectedQZSettings(this)">删除所选</a>
-				</shiro:hasPermission>
 			</td>
 		</tr>
 	</table>
@@ -123,7 +128,7 @@
 			<td align="center" width=150>客户</td>
 			<td align="center" width=100>域名</td>
 			<td align="center" width=50>入口类型</td>
-			<td align="center" width=80>分组</td>
+			<td align="center" width=120>分组</td>
 			<td align="center" width=80>去掉没指数</td>
 			<td align="center" width=80>去掉没排名</td>
 			<td align="center" width=60>更新间隔</td>
