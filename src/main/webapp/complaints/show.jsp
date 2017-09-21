@@ -478,12 +478,15 @@
                         </c:choose>
                     </td>
                     <td><fmt:formatDate value="${mainkey.createTime}" pattern="yy-MM-dd HH:mm"/></td>
-                    <shiro:hasPermission name="/internal/negativelist/save">
-                        <td>&nbsp;&nbsp;&nbsp;<a href="javascript:getMainKeyword('${mainkey.uuid}')">修改</a>&nbsp;&nbsp;&nbsp;
-                    </shiro:hasPermission>
-                    <shiro:hasPermission name="/internal/negativelist/delete">
-                        <a href="javascript:deleteMainKeyword('${mainkey.uuid}')">删除</a></td>
-                    </shiro:hasPermission>
+                    <td>&nbsp;&nbsp;&nbsp;
+                        <shiro:hasPermission name="/internal/negativelist/save">
+                            <a href="javascript:getMainKeyword('${mainkey.uuid}')">修改</a>
+                            &nbsp;&nbsp;&nbsp;
+                        </shiro:hasPermission>
+                        <shiro:hasPermission name="/internal/negativelist/delete">
+                            <a href="javascript:deleteMainKeyword('${mainkey.uuid}')">删除</a>
+                        </shiro:hasPermission>
+                    </td>
                 </tr>
             </c:forEach>
         </table>

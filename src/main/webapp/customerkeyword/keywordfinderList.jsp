@@ -255,7 +255,10 @@
                 <option value="3">添加序号</option>
             </select>
             &nbsp;&nbsp;&nbsp;
-            <input type="submit" onclick="resetPageNumber()" value=" 查询 ">&nbsp;&nbsp;
+            <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
+                <input type="submit" onclick="resetPageNumber()" value=" 查询 ">&nbsp;&nbsp;
+            </shiro:hasPermission>
+
         </div>
     </form>
     <table style="font-size:12px; width: 100%;" id="headerTable">

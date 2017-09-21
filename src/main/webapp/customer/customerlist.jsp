@@ -1049,24 +1049,25 @@
                                            name="btnQuery" id="btnQuery" value=" 查询 ">
                                 </shiro:hasPermission>
                             </td>
-                            <shiro:hasPermission name="/internal/customer/saveCustomer">
-                                <td align="right"><input type="button" class="ui-button ui-widget ui-corner-all" value=" 添加 "
-                                                                     onclick="showCustomerDialog(null,'${user.userID}')"/>
-                                </td>
-                            </shiro:hasPermission>
-                            <shiro:hasPermission name="/internal/customer/deleteCustomers">
-                                <td align="right"><input type="button" class="ui-button ui-widget ui-corner-all"
-                                                                     value=" 删除所选" onclick="deleteCustomers(this)"/>
-                                </td>
-                            </shiro:hasPermission>
-                            <c:if test="${'bc'.equalsIgnoreCase(entryType)}">
-                                <shiro:hasPermission name="/internal/dailyReport/triggerReportGeneration">
-                                    <td align="right" width="100"><a target="_blank"
-                                                                     href='javascript:triggerDailyReportGeneration(this)'>触发日报表生成</a>
-                                    </td>
-                                    <td><span id="dailyReportSpan"></span></td>
+
+                            <td align="right">
+                                <shiro:hasPermission name="/internal/customer/saveCustomer">
+                                <input type="button" class="ui-button ui-widget ui-corner-all" value=" 添加 " onclick="showCustomerDialog(null,'${user.userID}')"/>
                                 </shiro:hasPermission>
-                            </c:if>
+                            </td>
+                            <td align="right">
+                                <shiro:hasPermission name="/internal/customer/deleteCustomers">
+                                <input type="button" class="ui-button ui-widget ui-corner-all" value=" 删除所选" onclick="deleteCustomers(this)"/>
+                                </shiro:hasPermission>
+                            </td>
+                            <td align="right" width="100">
+                                <c:if test="${'bc'.equalsIgnoreCase(entryType)}">
+                                    <shiro:hasPermission name="/internal/dailyReport/triggerReportGeneration">
+                                        <a target="_blank" href='javascript:triggerDailyReportGeneration(this)'>触发日报表生成</a>
+                                    </shiro:hasPermission>
+                                </c:if>
+                            </td>
+                            <td><span id="dailyReportSpan"></span></td>
                         </tr>
                     </table>
                 </form>

@@ -103,9 +103,11 @@
 									</c:forEach>
 								</select>
 							</td>
-							<shiro:hasPermission name="/internal/qzsetting/searchQZSettings">
-								<td align="right" width="100"><input type="submit" name="btnQuery" id="btnQuery" onclick="resetSearchCondition('1')" value=" 查询 " ></td>
-							</shiro:hasPermission>
+							<td align="right" width="100">
+								<shiro:hasPermission name="/internal/qzsetting/searchQZSettings">
+									<input type="submit" name="btnQuery" id="btnQuery" onclick="resetSearchCondition('1')" value=" 查询 " >
+								</shiro:hasPermission>
+							</td>
 						</tr>
 					</table>
 				</form>
