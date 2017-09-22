@@ -69,7 +69,7 @@
         parent.$.modalDialog({
             title : '修改密码',
             width : 230,
-            height : 160,
+            height : 170,
             href : '${path }/user/editPwdPage',
             buttons : [ {
                 text : '确定',
