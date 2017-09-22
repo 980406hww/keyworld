@@ -383,18 +383,6 @@
         width: 100px;
         height: 22px;
     }
-    input[type="button"]{
-        padding: 2px;
-        border-radius: 5px;
-        border: 1px solid #bbb;
-        background-color: white;
-    }
-    input[type="submit"]{
-        padding: 2px;
-        border-radius: 5px;
-        border: 1px solid #bbb;
-        background-color: white;
-    }
 </style>
 <head>
     <title>投诉专用平台</title>

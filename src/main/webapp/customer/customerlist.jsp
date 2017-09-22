@@ -22,18 +22,6 @@
             margin-top: 10px;
         }
         h6{ margin: 0 5px;}
-        input[type="button"]{
-            padding: 2px;
-            border-radius: 5px;
-            border: 1px solid #bbb;
-            background-color: white;
-        }
-        input[type="submit"]{
-            padding: 2px;
-            border-radius: 5px;
-            border: 1px solid #bbb;
-            background-color: white;
-        }
     </style>
     <script type="text/javascript">
         $(function () {

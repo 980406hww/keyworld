@@ -2,7 +2,7 @@
 <%@ include file="/commons/global.jsp" %>
 <html>
 <head>
-<title>客户端列表</title>
+<title>终端监控</title>
 <style>
 #topDiv {
 	position: fixed;
@@ -50,18 +50,6 @@
 #showClientStatusBottomDiv {
 	float: right;
 	width: 580px;
-}
-input[type="button"]{
-	padding: 2px;
-	border-radius: 5px;
-	border: 1px solid #bbb;
-	background-color: white;
-}
-input[type="submit"]{
-	padding: 2px;
-	border-radius: 5px;
-	border: 1px solid #bbb;
-	background-color: white;
 }
 -->
 </style>
@@ -134,10 +122,10 @@ input[type="submit"]{
 							${clientStatusCriteria.showFetchKeywordStatus != null ? "checked=true" : ""}>显示取词状态</input>
 
 							<shiro:hasPermission name="/internal/clientstatus/searchClientStatuses">
-								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" name="btnFilter" id="btnFilter" onclick="resetPageNumber()" value=" 查询 " style="width: 50px;">
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" name="btnFilter" id="btnFilter" onclick="resetPageNumber()" value=" 查询 ">
 							</shiro:hasPermission>
 							<shiro:hasPermission name="/internal/clientstatus/deleteClientStatuses">
-								&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" name="btnFilter" id="btnFilter" onclick="delAllItems(this)" value=" 删除所选 " style="width: 80px;">
+								&nbsp;&nbsp;<input type="submit" name="btnFilter" id="btnFilter" onclick="delAllItems(this)" value=" 删除 ">
 							</shiro:hasPermission>
 						</td>
 						<td width="50px">
@@ -229,12 +217,30 @@ input[type="submit"]{
 					<span name="invalidClient" id="span_${clientStatus.clientID}"></span>
 				</c:if>
 			</td>
-			<td width=60><input type="text" value="${clientStatus.group == null ? "" : clientStatus.group}"
-					   name="group" id="${clientStatus.clientID}" onBlur="updateGroup(this)" style="width: 100%;"/></td>
+
 			<td width=60>
-				<select name="operationType${clientStatus.clientID}" id="operationType${clientStatus.clientID}"
-						onChange="updateOperationType(this)" style="width: 100%;"
-						/>
+				<shiro:hasPermission name="/internal/clientstatus/updateGroup">
+					<input type="text" value="${clientStatus.group == null ? "" : clientStatus.group}"
+						   name="group" id="${clientStatus.clientID}" onBlur="updateGroup(this)" style="width: 100%;"/>
+				</shiro:hasPermission>
+				<shiro:lacksPermission name="/internal/clientstatus/updateGroup">
+					<input type="text" value="${clientStatus.group == null ? "" : clientStatus.group}"
+						   name="group" id="${clientStatus.clientID}" disabled style="width: 100%;"/>
+				</shiro:lacksPermission>
+			</td>
+			<td width=60>
+				<shiro:hasPermission name="/internal/clientstatus/updateOperationType">
+					<select name="operationType${clientStatus.clientID}" id="operationType${clientStatus.clientID}"
+							onChange="updateOperationType(this)" style="width: 100%;"
+							/>
+				</shiro:hasPermission>
+
+				<shiro:lacksPermission name="/internal/clientstatus/updateOperationType">
+					<select name="operationType${clientStatus.clientID}" id="operationType${clientStatus.clientID}"
+							disabled style="width: 100%;"
+					/>
+				</shiro:lacksPermission>
+
 				<c:forEach items="${operationTypeValues}" var="operationType">
 					<c:choose>
 						<c:when test="${operationType eq clientStatus.operationType}">
@@ -610,7 +616,6 @@ input[type="submit"]{
 
 		}
 
-		<shiro:hasPermission name="/internal/clientstatus/updateGroup">
 		function updateGroup(self){
 		    var clientStatus = {};
             clientStatus.clientID = self.id;
@@ -637,7 +642,6 @@ input[type="submit"]{
                 }
             });
 		}
-		</shiro:hasPermission>
 
 		function changeTerminalType(clientID){
 			var postData = {};
@@ -694,7 +698,6 @@ input[type="submit"]{
 		}
 		</shiro:hasPermission>
 
-		<shiro:hasPermission name="/internal/clientstatus/updateOperationType">
 		function updateOperationType(self){
 		    var clientStatus = {};
             clientStatus.clientID = self.id.replace("operationType", "");
@@ -721,7 +724,6 @@ input[type="submit"]{
                 }
             });
 		}
-		</shiro:hasPermission>
 
 		function showSettingDialog(clientID, self){
 		    $.ajax({

@@ -3,14 +3,6 @@
 <html>
 <head>
     <title>客户端统计</title>
-    <style>
-        input[type="submit"]{
-            padding: 2px;
-            border-radius: 5px;
-            border: 1px solid #bbb;
-            background-color: white;
-        }
-    </style>
     <script language="javascript" type="text/javascript">
 
         $(function () {

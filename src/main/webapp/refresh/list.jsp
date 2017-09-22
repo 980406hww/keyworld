@@ -5,12 +5,6 @@
 <head>
 	<title>刷量统计列表</title>
 	<style>
-		input[type="submit"]{
-			padding: 2px;
-			border-radius: 5px;
-			border: 1px solid #bbb;
-			background-color: white;
-		}
 	</style>
 	<script language="javascript" type="text/javascript" src="/common.js"></script>
 	<script language="javascript">
