@@ -8,7 +8,42 @@
             parentField : 'pid',
             lines : true,
             checkbox : true,
-            onClick : function(node) {},
+            onClick : function(node) {
+                if(node.checked){
+                    resourceTree.tree('uncheck', node.target);
+                }
+                else{
+                    resourceTree.tree('check', node.target);
+                }
+                if (node.checked) {
+                    var parentNode = $('#resourceTree').tree('getParent', node.target);
+                    if (parentNode != null) {
+                        $('#resourceTree').tree('check', parentNode.target);
+                    }
+                } else {
+                    var childNode = $('#resourceTree').tree('getChildren', node.target);
+                    if (childNode.length > 0) {
+                        for (var i = 0; i < childNode.length; i++) {
+                            $('#resourceTree').tree('uncheck', childNode[i].target);
+                        }
+                    }
+                }
+            },
+            onCheck: function(node,checked) {
+                if (checked) {
+                    var parentNode = $('#resourceTree').tree('getParent', node.target);
+                    if (parentNode != null) {
+                        $('#resourceTree').tree('check', parentNode.target);
+                    }
+                } else {
+                    var childNode = $('#resourceTree').tree('getChildren', node.target);
+                    if (childNode.length > 0) {
+                        for (var i = 0; i < childNode.length; i++) {
+                            $('#resourceTree').tree('uncheck', childNode[i].target);
+                        }
+                    }
+                }
+            },
             onLoadSuccess : function(node, data) {
                 progressLoad();
                 $.post( '${path }/role/findResourceIdListByRoleId', {

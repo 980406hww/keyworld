@@ -5,6 +5,7 @@
     <%@ include file="/commons/global.jsp" %>
     <script language="javascript" type="text/javascript" src="/common.js"></script>
     <style type="text/css">
+        #headerTable{ background: -webkit-linear-gradient(bottom,#73B1E0 10px,#eee );}
         #showCustomerTableDiv {
             width: 100%;
             margin: auto;
@@ -1095,7 +1096,7 @@
         </tr>
     </table>
     <table style="font-size:12px; width: 100%;" id="headerTable">
-        <tr bgcolor="#eeeeee">
+        <tr bgcolor="" height="30">
             <td style="padding-left: 7px;" width=10><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
             <td align="center" width=80>用户名称</td>
             <td align="center" width=80>联系人</td>
