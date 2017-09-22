@@ -46,10 +46,10 @@
                         <th>重复密码：</th>
                         <td><input name="rePwd" type="password" placeholder="请再次输入新密码" class="easyui-validatebox" data-options="required:true,validType:'eqPwd[\'#editUserPwdForm input[name=pwd]\']'"></td>
                     </tr>
-                    <div style="display: none;color: red;font-size: 12px; height: 12px;" id="errorInfo" align="center">
-                        原始密码不正确！
-                    </div>
                 </table>
+                <div style="display: none;color: red;font-size: 12px; height: 12px;" id="errorInfo" align="center">
+                    原始密码不正确！
+                </div>
             </form>
     </div>
 </div>
