@@ -30,7 +30,6 @@
             }
 
             #customerKeywordDiv {
-                /*overflow: scroll;*/
                 width: 100%;
                 margin-bottom: 47PX;
             }
@@ -53,19 +52,6 @@
                 max-width:550px;
                 color:#8c3901;
                 background-color: #fff;
-            }
-
-            input[type="button"]{
-                padding: 2px;
-                border-radius: 5px;
-                border: 1px solid #bbb;
-                background-color: #F0F0EE;
-            }
-            input[type="submit"]{
-                padding: 2px;
-                border-radius: 5px;
-                border: 1px solid #bbb;
-                background-color: #F0F0EE;
             }
             #saveCustomerKeywordDialog ul{list-style: none;margin: 0px;padding: 0px;}
             #saveCustomerKeywordDialog li{margin: 5px 0;}

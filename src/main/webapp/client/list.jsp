@@ -51,18 +51,6 @@
 	float: right;
 	width: 580px;
 }
-input[type="button"]{
-	padding: 2px;
-	border-radius: 5px;
-	border: 1px solid #bbb;
-	background-color: #F0F0EE;
-}
-input[type="submit"]{
-	padding: 2px;
-	border-radius: 5px;
-	border: 1px solid #bbb;
-	background-color: #F0F0EE;
-}
 -->
 </style>
 	<script language="javascript" type="text/javascript" src="/common.js"></script>

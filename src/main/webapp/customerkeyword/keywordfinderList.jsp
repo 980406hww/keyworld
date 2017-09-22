@@ -51,18 +51,6 @@
                 color:#8c3901;
                 background-color: #fff2de;
             }
-            input[type="button"]{
-                padding: 2px;
-                border-radius: 5px;
-                border: 1px solid #bbb;
-                background-color: #F0F0EE;
-            }
-            input[type="submit"]{
-                padding: 2px;
-                border-radius: 5px;
-                border: 1px solid #bbb;
-                background-color: #F0F0EE;
-            }
         </style>
 
         <script language="javascript">
