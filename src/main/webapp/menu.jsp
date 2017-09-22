@@ -68,8 +68,8 @@
     function editUserPwd() {
         parent.$.modalDialog({
             title : '修改密码',
-            width : 250,
-            height : 170,
+            width : 230,
+            height : 160,
             href : '${path }/user/editPwdPage',
             buttons : [ {
                 text : '确定',
@@ -143,25 +143,3 @@
 	</ul>
 </div>
 
-<div id="editUserPwdDiv" data-options="region:'center',border:false" title="修改密码" style="overflow: hidden;display:none;">
-	<form id="editUserPwdForm" method="post">
-		<table>
-			<tr>
-				<th>登录名：</th>
-				<td><shiro:principal></shiro:principal></td>
-			</tr>
-			<tr>
-				<th>原密码：</th>
-				<td><input id="oldPwd" name="oldPwd" type="password" placeholder="请输入原密码" required="required"></td>
-			</tr>
-			<tr>
-				<th>新密码：</th>
-				<td><input id="pwd" name="pwd" type="password" placeholder="请输入新密码" required="required"></td>
-			</tr>
-			<tr>
-				<th>重复密码：</th>
-				<td><input id="rePwd"  name="rePwd" type="password" placeholder="请再次输入新密码" required="required"></td>
-			</tr>
-		</table>
-	</form>
-</div>

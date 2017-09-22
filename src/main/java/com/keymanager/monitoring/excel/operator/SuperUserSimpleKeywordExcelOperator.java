@@ -61,6 +61,7 @@ public class SuperUserSimpleKeywordExcelOperator extends AbstractExcelReader {
 		customerKeyword.setOptimizeGroupName(getStringValue(SuperUserSimpleKeywordDefinition.OptimizeGroupName.getColumnIndex(), rowIndex));
 		
 		customerKeyword.setTitle(getStringValue(SuperUserSimpleKeywordDefinition.Title.getColumnIndex(), rowIndex));
+		customerKeyword.setOrderNumber(getStringValue(SuperUserSimpleKeywordDefinition.OrderNumber.getColumnIndex(), rowIndex));
 		customerKeyword.setRemarks(getStringValue(SuperUserSimpleKeywordDefinition.Remarks.getColumnIndex(), rowIndex));
 		return customerKeyword;
 	}
