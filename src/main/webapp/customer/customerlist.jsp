@@ -5,7 +5,6 @@
     <%@ include file="/commons/global.jsp" %>
     <script language="javascript" type="text/javascript" src="/common.js"></script>
     <style type="text/css">
-        #headerTable{ background: -webkit-linear-gradient(bottom,#73B1E0 10px,#eee );}
         #showCustomerTableDiv {
             width: 100%;
             margin: auto;

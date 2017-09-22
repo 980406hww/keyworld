@@ -6,9 +6,8 @@ body {
 
 .content {
     margin: 0px 0px;
-    background: #dedede;
+    background: #fff;
 }
-
 .venus-menu {
     width: 100%;
     margin: 0;
@@ -18,7 +17,7 @@ body {
     font-family: 'Open Sans', sans-serif;
     list-style: none;
     /*background:#dedede;*/
-    background: -webkit-linear-gradient(top,#73B1E0 2px,#eee );
+    background: -webkit-linear-gradient(top,#73B1E0 5px,#fff );
     box-shadow: 0 1px 3px #dedede;
 }
 
