@@ -229,12 +229,30 @@ input[type="submit"]{
 					<span name="invalidClient" id="span_${clientStatus.clientID}"></span>
 				</c:if>
 			</td>
-			<td width=60><input type="text" value="${clientStatus.group == null ? "" : clientStatus.group}"
-					   name="group" id="${clientStatus.clientID}" onBlur="updateGroup(this)" style="width: 100%;"/></td>
+
 			<td width=60>
-				<select name="operationType${clientStatus.clientID}" id="operationType${clientStatus.clientID}"
-						onChange="updateOperationType(this)" style="width: 100%;"
-						/>
+				<shiro:hasPermission name="/internal/clientstatus/updateGroup">
+					<input type="text" value="${clientStatus.group == null ? "" : clientStatus.group}"
+						   name="group" id="${clientStatus.clientID}" onBlur="updateGroup(this)" style="width: 100%;"/>
+				</shiro:hasPermission>
+				<shiro:lacksPermission name="/internal/clientstatus/updateGroup">
+					<input type="text" value="${clientStatus.group == null ? "" : clientStatus.group}"
+						   name="group" id="${clientStatus.clientID}" disabled style="width: 100%;"/>
+				</shiro:lacksPermission>
+			</td>
+			<td width=60>
+				<shiro:hasPermission name="/internal/clientstatus/updateOperationType">
+					<select name="operationType${clientStatus.clientID}" id="operationType${clientStatus.clientID}"
+							onChange="updateOperationType(this)" style="width: 100%;"
+							/>
+				</shiro:hasPermission>
+
+				<shiro:lacksPermission name="/internal/clientstatus/updateOperationType">
+					<select name="operationType${clientStatus.clientID}" id="operationType${clientStatus.clientID}"
+							disabled style="width: 100%;"
+					/>
+				</shiro:lacksPermission>
+
 				<c:forEach items="${operationTypeValues}" var="operationType">
 					<c:choose>
 						<c:when test="${operationType eq clientStatus.operationType}">
@@ -610,7 +628,6 @@ input[type="submit"]{
 
 		}
 
-		<shiro:hasPermission name="/internal/clientstatus/updateGroup">
 		function updateGroup(self){
 		    var clientStatus = {};
             clientStatus.clientID = self.id;
@@ -637,7 +654,6 @@ input[type="submit"]{
                 }
             });
 		}
-		</shiro:hasPermission>
 
 		function changeTerminalType(clientID){
 			var postData = {};
@@ -694,7 +710,6 @@ input[type="submit"]{
 		}
 		</shiro:hasPermission>
 
-		<shiro:hasPermission name="/internal/clientstatus/updateOperationType">
 		function updateOperationType(self){
 		    var clientStatus = {};
             clientStatus.clientID = self.id.replace("operationType", "");
@@ -721,7 +736,6 @@ input[type="submit"]{
                 }
             });
 		}
-		</shiro:hasPermission>
 
 		function showSettingDialog(clientID, self){
 		    $.ajax({
