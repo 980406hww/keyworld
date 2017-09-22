@@ -19,13 +19,13 @@
             padding: 2px;
             border-radius: 5px;
             border: 1px solid #bbb;
-            background-color: white;
+            background-color: #F0F0EE;
         }
         input[type="submit"]{
             padding: 2px;
             border-radius: 5px;
             border: 1px solid #bbb;
-            background-color: white;
+            background-color: #F0F0EE;
         }
     </style>
     <title>供应商列表</title>

@@ -2,7 +2,7 @@
 <%@ include file="/commons/global.jsp" %>
 <html>
 <head>
-<title>客户端列表</title>
+<title>终端监控</title>
 <style>
 #topDiv {
 	position: fixed;
@@ -55,13 +55,13 @@ input[type="button"]{
 	padding: 2px;
 	border-radius: 5px;
 	border: 1px solid #bbb;
-	background-color: white;
+	background-color: #F0F0EE;
 }
 input[type="submit"]{
 	padding: 2px;
 	border-radius: 5px;
 	border: 1px solid #bbb;
-	background-color: white;
+	background-color: #F0F0EE;
 }
 -->
 </style>
@@ -134,10 +134,10 @@ input[type="submit"]{
 							${clientStatusCriteria.showFetchKeywordStatus != null ? "checked=true" : ""}>显示取词状态</input>
 
 							<shiro:hasPermission name="/internal/clientstatus/searchClientStatuses">
-								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" name="btnFilter" id="btnFilter" onclick="resetPageNumber()" value=" 查询 " style="width: 50px;">
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" name="btnFilter" id="btnFilter" onclick="resetPageNumber()" value=" 查询 ">
 							</shiro:hasPermission>
 							<shiro:hasPermission name="/internal/clientstatus/deleteClientStatuses">
-								&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" name="btnFilter" id="btnFilter" onclick="delAllItems(this)" value=" 删除所选 " style="width: 80px;">
+								&nbsp;&nbsp;<input type="submit" name="btnFilter" id="btnFilter" onclick="delAllItems(this)" value=" 删除 ">
 							</shiro:hasPermission>
 						</td>
 						<td width="50px">

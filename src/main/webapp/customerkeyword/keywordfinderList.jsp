@@ -55,13 +55,13 @@
                 padding: 2px;
                 border-radius: 5px;
                 border: 1px solid #bbb;
-                background-color: white;
+                background-color: #F0F0EE;
             }
             input[type="submit"]{
                 padding: 2px;
                 border-radius: 5px;
                 border: 1px solid #bbb;
-                background-color: white;
+                background-color: #F0F0EE;
             }
         </style>
 
@@ -358,8 +358,8 @@
                 <input type="submit" onclick="resetPageNumber()" value=" 查询 ">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
-                <input type="button" onclick="updateCustomerKeywordStatus(0)" value=" 暂停选择关键字 ">&nbsp;&nbsp;
-                <input type="button" onclick="updateCustomerKeywordStatus(1)" value=" 激活选中关键字 ">
+                <input type="button" onclick="updateCustomerKeywordStatus(0)" value=" 暂停关键字 ">&nbsp;&nbsp;
+                <input type="button" onclick="updateCustomerKeywordStatus(1)" value=" 激活关键字 ">
             </shiro:hasPermission>
         </div>
     </form>

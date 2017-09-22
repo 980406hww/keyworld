@@ -8,7 +8,7 @@
             padding: 2px;
             border-radius: 5px;
             border: 1px solid #bbb;
-            background-color: white;
+            background-color: #F0F0EE;
         }
     </style>
     <script language="javascript" type="text/javascript">

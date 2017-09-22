@@ -11,17 +11,11 @@
             background-color: white;
             width: 100%;
         }
-        input[type="button"]{
-            padding: 2px;
-            border-radius: 5px;
-            border: 1px solid #bbb;
-            background-color: white;
-        }
         input[type="submit"]{
             padding: 2px;
             border-radius: 5px;
             border: 1px solid #bbb;
-            background-color: white;
+            background-color: #F0F0EE;
         }
         #ClientStatusGroupSummaryTable tr:nth-child(even){background-color: #eeeeee}
         #ClientStatusGroupSummaryTable tr:hover{background-color: green;}

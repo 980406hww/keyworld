@@ -59,13 +59,13 @@
                 padding: 2px;
                 border-radius: 5px;
                 border: 1px solid #bbb;
-                background-color: white;
+                background-color: #F0F0EE;
             }
             input[type="submit"]{
                 padding: 2px;
                 border-radius: 5px;
                 border: 1px solid #bbb;
-                background-color: white;
+                background-color: #F0F0EE;
             }
             #saveCustomerKeywordDialog ul{list-style: none;margin: 0px;padding: 0px;}
             #saveCustomerKeywordDialog li{margin: 5px 0;}
