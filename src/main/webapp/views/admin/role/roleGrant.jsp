@@ -20,14 +20,15 @@
                     if (parentNode != null) {
                         $('#resourceTree').tree('check', parentNode.target);
                     }
-                } else {
-                    var childNode = $('#resourceTree').tree('getChildren', node.target);
-                    if (childNode.length > 0) {
-                        for (var i = 0; i < childNode.length; i++) {
-                            $('#resourceTree').tree('uncheck', childNode[i].target);
-                        }
-                    }
                 }
+//                else {
+//                    var childNode = $('#resourceTree').tree('getChildren', node.target);
+//                    if (childNode.length > 0) {
+//                        for (var i = 0; i < childNode.length; i++) {
+//                            $('#resourceTree').tree('uncheck', childNode[i].target);
+//                        }
+//                    }
+//                }
             },
             onCheck: function(node,checked) {
                 if (checked) {
@@ -35,14 +36,15 @@
                     if (parentNode != null) {
                         $('#resourceTree').tree('check', parentNode.target);
                     }
-                } else {
-                    var childNode = $('#resourceTree').tree('getChildren', node.target);
-                    if (childNode.length > 0) {
-                        for (var i = 0; i < childNode.length; i++) {
-                            $('#resourceTree').tree('uncheck', childNode[i].target);
-                        }
-                    }
                 }
+//                else {
+//                    var childNode = $('#resourceTree').tree('getChildren', node.target);
+//                    if (childNode.length > 0) {
+//                        for (var i = 0; i < childNode.length; i++) {
+//                            $('#resourceTree').tree('uncheck', childNode[i].target);
+//                        }
+//                    }
+//                }
             },
             onLoadSuccess : function(node, data) {
                 progressLoad();

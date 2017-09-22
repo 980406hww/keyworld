@@ -116,3 +116,17 @@ a {
     top: -21px;
     left: 210px;
 }
+
+.rememberMe + label {
+    background-color: #FFF;
+    border: 1px solid #C1CACA;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
+    display: inline-block;
+    position: relative;
+}
+.rememberMe:checked + label {
+    background: #00a0e9;
+}
