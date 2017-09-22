@@ -106,7 +106,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	}
 
 	private void initOrderElemnet(String orderElement, CustomerKeywordCriteria customerKeywordCriteria){
-		if(orderElement!=null){
+		if(StringUtils.isNotEmpty(orderElement)){
 			switch (orderElement.charAt(0)){
 				case '0':
 					customerKeywordCriteria.setOrderElement("");break;
@@ -261,20 +261,21 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 
 	//导出成Excel文件
 	@RequiresPermissions("/internal/customerKeyword/downloadCustomerKeywordInfo")
-	@RequestMapping(value = "/downloadCustomerKeywordInfo", method = RequestMethod.GET)
+	@RequestMapping(value = "/downloadCustomerKeywordInfo", method = RequestMethod.POST)
 	public ResponseEntity<?> downloadCustomerKeywordInfo( HttpServletRequest request,
 														 HttpServletResponse response,CustomerKeywordCriteria customerKeywordCriteria) {
 		try {
 			String terminalType = TerminalTypeMapping.getTerminalType(request);
-			String customerUuid = request.getParameter("customerUuid").trim();
 			String entryType = (String) request.getSession().getAttribute("entryType");
 			customerKeywordCriteria.setTerminalType(terminalType);
 			customerKeywordCriteria.setEntryType(entryType);
-			List<CustomerKeyword> customerKeywords = appendCondition(request,response);
+			initOrderElemnet(customerKeywordCriteria.getOrderElement(), customerKeywordCriteria);
+			Page<CustomerKeyword>  page = customerKeywordService.searchCustomerKeywords(new Page<CustomerKeyword>(1, 100000), customerKeywordCriteria);
+			List<CustomerKeyword> customerKeywords = page.getRecords();
 			if (!Utils.isEmpty(customerKeywords)) {
 				CustomerKeywordInfoExcelWriter excelWriter = new CustomerKeywordInfoExcelWriter();
 				excelWriter.writeDataToExcel(customerKeywords);
-				Customer customer = customerService.selectById(customerUuid);
+				Customer customer = customerService.selectById(customerKeywordCriteria.getCustomerUuid());
 				String fileName = customer.getContactPerson() + Utils.formatDatetime(Utils.getCurrentTimestamp(), "yyyy.MM.dd") + ".xls";
 				fileName = new String(fileName.getBytes("gb2312"), "ISO8859-1");
 				// 以流的形式下载文件
@@ -296,57 +297,6 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 			return new ResponseEntity<Object>(false,HttpStatus.OK);
 		}
 		return new ResponseEntity<Object>(true,HttpStatus.OK);
-	}
-
-	public List<CustomerKeyword> appendCondition(HttpServletRequest request, HttpServletResponse response){
-		String customerUuid = request.getParameter("customerUuid").trim();
-		String invalidRefreshCount = request.getParameter("invalidRefreshCount").trim();
-		String keyword = request.getParameter("keyword").trim();
-		String url = request.getParameter("url").trim();
-		String creationFromTime = request.getParameter("creationFromTime").trim();
-		String creationToTime = request.getParameter("creationToTime").trim();
-		String status = request.getParameter("status").trim();
-		String optimizeGroupName = request.getParameter("optimizeGroupName").trim();
-		String terminalType = TerminalTypeMapping.getTerminalType(request);
-		String position = request.getParameter("position");
-		CustomerKeywordCriteria customerKeywordCriteria = new CustomerKeywordCriteria();
-		String orderElement = request.getParameter("orderElement");
-		initOrderElemnet(orderElement, customerKeywordCriteria);
-		customerKeywordCriteria.setTerminalType(terminalType);
-		customerKeywordCriteria.setCustomerUuid(Long.parseLong(customerUuid));
-		if (!Utils.isNullOrEmpty(keyword)) {
-			customerKeywordCriteria.setKeyword(keyword);
-		}
-
-		if (!Utils.isNullOrEmpty(url)) {
-			customerKeywordCriteria.setUrl(url);
-		}
-
-		if (!Utils.isNullOrEmpty(position)) {
-			customerKeywordCriteria.setPosition(position);;
-		}
-
-		if (!Utils.isNullOrEmpty(optimizeGroupName)) {
-			customerKeywordCriteria.setOptimizeGroupName(optimizeGroupName);
-		}
-
-		if (!Utils.isNullOrEmpty(creationFromTime)) {
-			customerKeywordCriteria.setCreationToTime(creationFromTime);
-		}
-		if (!Utils.isNullOrEmpty(creationToTime)) {
-			customerKeywordCriteria.setCreationToTime(creationToTime);
-		}
-
-		if (!Utils.isNullOrEmpty(status)) {
-			customerKeywordCriteria.setStatus(status);
-		}
-
-		if (!Utils.isNullOrEmpty(invalidRefreshCount)) {
-			customerKeywordCriteria.setInvalidRefreshCount(invalidRefreshCount);
-		}
-		Page<CustomerKeyword>  page = customerKeywordService.searchCustomerKeywords(new Page<CustomerKeyword>(1, 100000), customerKeywordCriteria);
-		List<CustomerKeyword> customerKeywords = page.getRecords();
-		return customerKeywords;
 	}
 
 	@RequiresPermissions("/internal/customerKeyword/haveCustomerKeywordForOptimization")
