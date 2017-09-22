@@ -766,8 +766,14 @@
 //                        $().toastmessage('showErrorToast',"导出失败");
 //                    }
 //                });
-                var customerKeywordCrilteriaArray = $("#searchCustomerKeywordForm").serialize();
-                location.href='/internal/customerKeyword/downloadCustomerKeywordInfo/?'+customerKeywordCrilteriaArray;
+                /*var customerKeywordCrilteriaArray = $("#searchCustomerKeywordForm").serialize();
+                location.href='/internal/customerKeyword/downloadCustomerKeywordInfo/?'+customerKeywordCrilteriaArray;*/
+                var customerKeywordCrilteriaArray = $("#searchCustomerKeywordForm").serializeArray();
+                var downloadCustomerKeywordInfoForm = $("#downloadCustomerKeywordInfoForm");
+                $.each(customerKeywordCrilteriaArray, function(idx, val){
+                    downloadCustomerKeywordInfoForm.find("#"+val.name+"Hidden").val(val.value);
+                });
+                downloadCustomerKeywordInfoForm.submit();
             }
             //显示排名为0
             function noPositionValue() {
@@ -1158,5 +1164,18 @@
         </ul>
     </form>
 </div>
+
+<form id="downloadCustomerKeywordInfoForm" method="post" action="/internal/customerKeyword/downloadCustomerKeywordInfo">
+    <input type="hidden" name="customerUuid" id="customerUuidHidden" value="">
+    <input type="hidden" name="keyword" id="keywordHidden" value=""/>
+    <input type="hidden" name="url" id="urlHidden" value="" />
+    <input type="hidden" name="status" id="statusHidden" value="" />
+    <input type="hidden" name="optimizeGroupName" id="optimizeGroupNameHidden" value="" />
+    <input type="hidden" name="position" id="positionHidden" value="" />
+    <input type="hidden" name="invalidRefreshCount" id="invalidRefreshCountHidden" value="" />
+    <input type="hidden" name="creationFromTime" id="creationFromTimeHidden" value="" />
+    <input type="hidden" name="creationToTime" id="creationToTimeHidden" value="" />
+    <input type="hidden" name="orderElement" id="orderElementHidden" value="" />
+</form>
 </body>
 </html>

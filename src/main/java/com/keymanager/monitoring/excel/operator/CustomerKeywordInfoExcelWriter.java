@@ -56,6 +56,7 @@ public class CustomerKeywordInfoExcelWriter {
 	private void writeRow(int rowIndex, CustomerKeyword view) throws ExcelWriteException{
 		writer.addLabelCell(CustomerKeywordInfoDefinition.Keyword.getColumnIndex(), rowIndex, view.getKeyword());
 		writer.addLabelCell(CustomerKeywordInfoDefinition.URL.getColumnIndex(), rowIndex, view.getUrl());
+		writer.addLabelCell(CustomerKeywordInfoDefinition.OriginalUrl.getColumnIndex(), rowIndex, view.getOriginalUrl());
 		writer.addLabelCell(CustomerKeywordInfoDefinition.Title.getColumnIndex(), rowIndex, view.getTitle());
 		writer.addLabelCell(CustomerKeywordInfoDefinition.OriginalPosition.getColumnIndex(), rowIndex, view.getInitialPosition()==null?0:view.getInitialPosition());
 		writer.addLabelCell(CustomerKeywordInfoDefinition.CurrentPosition.getColumnIndex(), rowIndex, view.getCurrentPosition()==null?0:view.getCurrentPosition());
