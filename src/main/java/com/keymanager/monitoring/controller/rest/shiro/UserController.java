@@ -175,10 +175,8 @@ public class UserController extends BaseController {
      */
     @PostMapping("/editUserPwd")
     @ResponseBody
-    public Object editUserPwd(@RequestBody Map<String, Object> requestMap) {
+    public Object editUserPwd(String oldPwd, String pwd) {
         UserInfo user = userInfoService.selectById(getUserId());
-        String oldPwd = (String) requestMap.get("oldPwd");
-        String pwd = (String) requestMap.get("pwd");
         String salt = user.getSalt();
         if (!user.getPassword().equals(passwordHash.toHex(oldPwd, salt))) {
             return renderError("原始密码不正确!");
