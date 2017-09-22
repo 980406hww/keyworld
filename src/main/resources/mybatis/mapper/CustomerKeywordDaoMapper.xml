@@ -168,7 +168,7 @@
             </when>
             <otherwise>
                 <if test="customerKeywordCriteria.displayStop == null or customerKeywordCriteria.displayStop == ''">
-                    AND ck.fOptimizeGroupName != 'stop'
+                    AND (ck.fOptimizeGroupName is null or ck.fOptimizeGroupName != 'stop')
                 </if>
             </otherwise>
         </choose>
@@ -297,7 +297,7 @@
                 </foreach>
             </when>
             <otherwise>
-                AND ck.fOptimizeGroupName <![CDATA[<>]]> 'stop'
+                AND (ck.fOptimizeGroupName IS NULL OR ck.fOptimizeGroupName <![CDATA[<>]]> 'stop')
             </otherwise>
         </choose>
         ORDER BY ck.fCapturePositionQueryTime, fUpdateTime DESC

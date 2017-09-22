@@ -188,6 +188,19 @@
                 }
             }
 
+            function setForthDefaultFee(self){
+                $(self).val($(self).val().replace(/[^\d]*/g, ''));
+                var positionForthFee = document.getElementById("positionForthFee");
+                var positionTFifthFee = document.getElementById("positionFifthFee");
+                positionForthFee.value = trim(positionForthFee.value);
+                positionTFifthFee.value = trim(positionTFifthFee.value);
+                if (positionForthFee.value != "") {
+                    if (positionTFifthFee.value == ""){
+                        positionTFifthFee.value = positionForthFee.value;
+                    }
+                }
+            }
+
             function delItem(customerKeywordUuid) {
                 if (confirm("确实要删除这个关键字吗?") == false) return;
                 $.ajax({
@@ -876,6 +889,7 @@
                        style="width:80px;">
             关键字状态:
             <select name="status" id="status">
+                <option value=''>所有</option>
                 <option value='1'>激活</option>
                 <option value='2'>新增</option>
                 <option value='0'>过期</option>
@@ -999,10 +1013,10 @@
                 </td>
                 <td align="center" width=80>
                     <shiro:hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
-                    <a href="javascript:modifyCustomerKeyword('${customerKeyword.uuid}')">修改</a>|
+                        <a href="javascript:modifyCustomerKeyword('${customerKeyword.uuid}')">修改</a>
                     </shiro:hasPermission>
                     <shiro:hasPermission name="/internal/customerKeyword/deleteCustomerKeyword">
-                    <a href="javascript:delItem('${customerKeyword.uuid}')">删除</a>
+                        | <a href="javascript:delItem('${customerKeyword.uuid}')">删除</a>
                     </shiro:hasPermission>
                 </td>
             </tr>
@@ -1083,7 +1097,7 @@
                                                                                   style="width:100px;" type="text" onkeyup="onlyNumber(this)" onblur="setThirdDefaultFee(this)">元
                     </li>
                     <li><span class="customerKeywordSpanClass">第四报价:</span><input name="positionForthFee" id="positionForthFee" value=""
-                                                                                  style="width:100px;" type="text" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)">元
+                                                                                  style="width:100px;" type="text" onkeyup="onlyNumber(this)" onblur="setForthDefaultFee(this)">元
                     </li>
                     <li><span class="customerKeywordSpanClass">第五报价:</span><input name="positionFifthFee" id="positionFifthFee" value=""
                                                                                   style="width:100px;" type="text" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)">元

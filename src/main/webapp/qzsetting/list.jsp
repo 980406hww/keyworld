@@ -1409,7 +1409,7 @@
 </div>
 <%--收费详情列表--%>
 <div id="chargeLogListDiv" class="easyui-dialog" style="left: 40%;" >
-	<table id="chargeLogListTable" border="1" cellpadding="10" style="font-size: 12px;background-color: white;border-collapse: collapse;margin: 10px 10px">
+	<table id="chargeLogListTable" border="1" cellpadding="10" style="font-size: 12px;background-color: white;border-collapse: collapse;margin: 10px 10px;width:92%;">
 		<tr>
 			<td>收费时间</td>
 			<td>操作类型</td>
