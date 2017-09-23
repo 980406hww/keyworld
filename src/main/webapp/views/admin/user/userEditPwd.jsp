@@ -16,7 +16,18 @@
                 progressClose();
                 result = $.parseJSON(result);
                 if (result.success) {
-                    parent.$.messager.alert('提示', result.msg, 'info');
+                    /*parent.$.messager.alert('提示', result.msg, 'info');*/
+                    parent.$.messager.show({
+                        title:'提示',
+                        msg:result.msg,
+                        showType:'slide',
+                        timeout:2000,
+                        style:{
+                            right:'',
+                            top:document.body.scrollTop+100,
+                            bottom:''
+                        }
+                    });
                     parent.$.modalDialog.handler.dialog('close');
                 } else {
                     $("#errorInfo").css("display","block");
