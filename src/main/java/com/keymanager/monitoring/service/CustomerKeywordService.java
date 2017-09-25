@@ -24,7 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.*;
@@ -68,6 +67,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     @Autowired
     private UserRoleService userRoleService;
+
+    @Autowired
+    private CustomerKeywordOptimizedCountLogService customerKeywordOptimizedCountLogService;
 
     @Autowired
     private CustomerKeywordDao customerKeywordDao;
@@ -580,9 +582,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     public void updateOptimizationResult(String terminalType, Long customerKeywordUuid, int count, String ip, String city, String clientID, String status, String freeSpace, String version){
         if(configService.optimizationDateChanged()) {
+            customerKeywordOptimizedCountLogService.addCustomerKeywordOptimizedCountLog(customerKeywordUuid, count);
             configService.updateOptimizationDateAsToday();
             customerKeywordDao.resetOptimizationInfo();
         }
+
         customerKeywordDao.updateOptimizationResult(customerKeywordUuid, count);
         clientStatusService.logClientStatusTime(terminalType, clientID, status, freeSpace, version, city, count);
         customerKeywordIPService.addCustomerKeywordIP(customerKeywordUuid, city, ip);
@@ -720,5 +724,20 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     public void updateCustomerKeywordStatus(List<String> customerUuids, Integer status) {
         customerKeywordDao.updateCustomerKeywordStatus(customerUuids, status);
+    }
+
+    public void controlCustomerKeywordStatus() {
+        List<CustomerKeywordOptimizedCountLog> customerKeywordOptimizedCountLogList = customerKeywordOptimizedCountLogService.groupCustomerKeywordOptimizedCountLogs();
+        for (CustomerKeywordOptimizedCountLog countLog : customerKeywordOptimizedCountLogList) {
+            CustomerKeywordOptimizedCountLog currentCountLog = customerKeywordOptimizedCountLogService.findCurrentCountLog(countLog.getCustomerKeywordUuid());
+            CustomerKeywordOptimizedCountLog threeDaysAgoCountLog = customerKeywordOptimizedCountLogService.findThreeDaysAgoCountLog(countLog.getCustomerKeywordUuid());
+            if(null != countLog && null != threeDaysAgoCountLog) {
+                if(currentCountLog.getOptimizedCount() == threeDaysAgoCountLog.getOptimizedCount()) {
+                    CustomerKeyword customerKeyword = customerKeywordDao.selectById(currentCountLog.getCustomerKeywordUuid());
+                    customerKeyword.setStatus(0);
+                    customerKeywordDao.updateById(customerKeyword);
+                }
+            }
+        }
     }
 }

@@ -7,6 +7,7 @@
 		<!-- Triggers集成 -->
 		<property name="triggers">
 			<list>
+				<ref bean="cronTriggerControlCustomerKeywordStatus" />
 				<ref bean="cronTriggerAdjustOptimizationCount" />
 				<ref bean="cronTriggerSwitchClientStatusGroup" />
 				<ref bean="cronTriggerRenewalNotification" />
@@ -22,6 +23,19 @@
 		</property>
 		<!-- 启动时延期2秒开始任务 -->
 		<property name="startupDelay" value="2" />
+	</bean>
+
+	<bean id="cronTriggerControlCustomerKeywordStatus" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="cronJobDetailControlCustomerKeywordStatus" />
+		<property name="cronExpression" value="0 20 01 * * ?" />
+	</bean>
+
+	<!-- JobDetajil, 基于MethodInvokingJobDetailFactoryBean调用普通Spring Bean -->
+	<bean id="cronJobDetailControlCustomerKeywordStatus" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="controlCustomerKeywordStatusSchedule" />
+		<property name="targetMethod" value="runTask" />
+		<!-- 同一任务在前一次执行未完成而Trigger时间又到时是否并发开始新的执行, 默认为true. -->
+		<property name="concurrent" value="false" />
 	</bean>
 
 	<bean id="cronTriggerAdjustOptimizationCount" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
