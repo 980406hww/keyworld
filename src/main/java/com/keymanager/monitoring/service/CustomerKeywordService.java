@@ -731,7 +731,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         for (CustomerKeywordOptimizedCountLog countLog : customerKeywordOptimizedCountLogList) {
             CustomerKeywordOptimizedCountLog currentCountLog = customerKeywordOptimizedCountLogService.findCurrentCountLog(countLog.getCustomerKeywordUuid());
             CustomerKeywordOptimizedCountLog threeDaysAgoCountLog = customerKeywordOptimizedCountLogService.findThreeDaysAgoCountLog(countLog.getCustomerKeywordUuid());
-            if(null != countLog && null != threeDaysAgoCountLog) {
+
+            if(null != currentCountLog && null != threeDaysAgoCountLog) {
                 if(currentCountLog.getOptimizedCount() == threeDaysAgoCountLog.getOptimizedCount()) {
                     CustomerKeyword customerKeyword = customerKeywordDao.selectById(currentCountLog.getCustomerKeywordUuid());
                     customerKeyword.setStatus(0);

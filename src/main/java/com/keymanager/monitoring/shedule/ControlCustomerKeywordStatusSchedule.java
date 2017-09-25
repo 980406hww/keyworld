@@ -18,7 +18,7 @@ public class ControlCustomerKeywordStatusSchedule {
 		try {
 			customerKeywordService.controlCustomerKeywordStatus();
 		} catch (Exception e) {
-			logger.error("Control Customer Keyword Status" + e.getMessage());
+			logger.error("Control Customer Keyword Status " + e.getMessage());
 		}
 	}
 }
