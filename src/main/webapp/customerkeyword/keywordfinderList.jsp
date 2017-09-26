@@ -97,7 +97,7 @@
             }
 
             function doOver(obj) {
-                obj.style.backgroundColor = "#73B1E0";
+                obj.style.backgroundColor = "green";
             }
 
             function doOut(obj) {
