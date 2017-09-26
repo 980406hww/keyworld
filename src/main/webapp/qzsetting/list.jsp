@@ -569,7 +569,7 @@
                     });
                     $("#chargeLogListDiv").dialog({
                         resizable: false,
-                        width: 350,
+                        width: 370,
 						title:"收费记录",
                         modal: true,
                         buttons: [{

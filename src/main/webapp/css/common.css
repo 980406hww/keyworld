@@ -7,7 +7,7 @@ td,.wrap {
     word-break: break-all;
     word-wrap: break-word;
 }
-#headerTable tr{ background: -webkit-linear-gradient(bottom,#73B1E0 5px,#fff );}
+#headerTable tr{ background: #ADD1FF}
 #topDiv {
     position: fixed;
     top: 0px;
@@ -20,7 +20,7 @@ td,.wrap {
     bottom: 0px;
     right: 0px;
     /*background-color:#dedede;*/
-    background:#73B1E0;
+    background: #ADD1FF;
     padding-top: 5px;
     padding-bottom: 5px;
     width: 100%;

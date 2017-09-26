@@ -38,6 +38,7 @@
                 <option value="qz">全站链接</option>
                 <option value="pt">普通链接</option>
                 <option value="fm">负面链接</option>
+                <option value="bc">bc</option>
             </select>
         </span>
         <span style="position: relative;text-align: left;margin-right:120px; margin-top: 2px">

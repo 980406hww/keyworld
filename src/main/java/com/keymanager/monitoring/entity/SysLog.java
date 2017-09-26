@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.annotations.TableName;
  * 系统日志
  *
  */
-@TableName(value = "t_system_Log")
+@TableName(value = "t_system_log")
 public class SysLog extends BaseEntity {
 
 	private static final long serialVersionUID = 1L;
