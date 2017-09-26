@@ -78,4 +78,7 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void resetInvalidRefreshCount(@Param("customerKeywordRefreshStatInfoCriteria")CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria);
 
     void updateCustomerKeywordStatus(@Param("customerUuids")List<String> customerUuids, @Param("status")Integer status);
+
+
+    public List<CustomerKeyword> searchTitleAndUrl(@Param("customerKeyword") CustomerKeyword customerKeyword);
 }

@@ -66,6 +66,10 @@ public class ShiroDbRealm extends AuthorizingRealm {
 		Set<String> urls = resourceMap.get("urls");
 		Set<String> roles = resourceMap.get("roles");
 
+//		if(EntryTypeEnum.fm.name().equalsIgnoreCase(token.getEntryType()) && !roles.contains("FMSpecial")) {
+//			roles = new HashSet<String>();
+//			urls = new HashSet<String>();
+//		}
 		ShiroUser shiroUser = new ShiroUser(user.getUuid(), user.getLoginName(), user.getUserName(), urls);
 		shiroUser.setRoles(roles);
 		shiroUser.setName(user.getUserName());

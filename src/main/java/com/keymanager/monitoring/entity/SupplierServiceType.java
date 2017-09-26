@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.enums.IdType;
 /**
  * Created by shunshikj22 on 2017/9/5.
  */
-@TableName(value = "t_supplier_servicetype")
+@TableName(value = "t_supplier_serviceType")
 public class SupplierServiceType{
 
     @TableId(value = "fUuid", type= IdType.AUTO)

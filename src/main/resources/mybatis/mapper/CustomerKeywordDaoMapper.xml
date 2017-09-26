@@ -317,4 +317,10 @@
             #{uuid}
         </foreach>
     </update>
+
+
+    <select id="searchTitleAndUrl" resultType="com.keymanager.monitoring.entity.CustomerKeyword">
+        select ck.fUuid as uuid,ck.fUrl as url,ck.fTitle as title from t_customer_keyword ck
+        where ck.fCustomerUuid=#{customerKeyword.customerUuid} and ck.fOptimizeGroupName=#{customerKeyword.optimizeGroupName}
+    </select>
 </mapper>
