@@ -9,42 +9,6 @@
             lines : true,
             checkbox : true,
             onClick : function(node) {
-                if(node.checked){
-                    resourceTree.tree('uncheck', node.target);
-                }
-                else{
-                    resourceTree.tree('check', node.target);
-                }
-                if (node.checked) {
-                    var parentNode = $('#resourceTree').tree('getParent', node.target);
-                    if (parentNode != null) {
-                        $('#resourceTree').tree('check', parentNode.target);
-                    }
-                }
-//                else {
-//                    var childNode = $('#resourceTree').tree('getChildren', node.target);
-//                    if (childNode.length > 0) {
-//                        for (var i = 0; i < childNode.length; i++) {
-//                            $('#resourceTree').tree('uncheck', childNode[i].target);
-//                        }
-//                    }
-//                }
-            },
-            onCheck: function(node,checked) {
-                if (checked) {
-                    var parentNode = $('#resourceTree').tree('getParent', node.target);
-                    if (parentNode != null) {
-                        $('#resourceTree').tree('check', parentNode.target);
-                    }
-                }
-//                else {
-//                    var childNode = $('#resourceTree').tree('getChildren', node.target);
-//                    if (childNode.length > 0) {
-//                        for (var i = 0; i < childNode.length; i++) {
-//                            $('#resourceTree').tree('uncheck', childNode[i].target);
-//                        }
-//                    }
-//                }
             },
             onLoadSuccess : function(node, data) {
                 progressLoad();
@@ -142,11 +106,11 @@
     </div>
     <div data-options="region:'center'" title="" style="overflow: hidden; padding: 10px;">
         <div>
-            <button class="btn btn-success" onclick="checkAll();">全选</button>
+            <button class="btn btn-success" onclick="checkAll();"> 全选 </button>
             <br /> <br />
-            <button class="btn btn-warning" onclick="checkInverse();">反选</button>
+            <button class="btn btn-warning" onclick="checkInverse();"> 反选 </button>
             <br /> <br />
-            <button class="btn btn-inverse" onclick="uncheckAll();">取消</button>
+            <button class="btn btn-inverse" onclick="uncheckAll();"> 取消 </button>
         </div>
     </div>
 </div>
