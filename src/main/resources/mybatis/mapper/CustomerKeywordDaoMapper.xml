@@ -154,6 +154,7 @@
         <if test="customerKeywordCriteria.pushPay != null and customerKeywordCriteria.pushPay != ''">AND ((ck.fCollectMethod = 'PerDay' AND ck.fEffectiveToTime is not null) OR (ck.fEffectiveToTime &lt;= DATE_ADD(CURDATE(),INTERVAL 3 DAY))) </if>
         <if test="customerKeywordCriteria.terminalType != null and customerKeywordCriteria.terminalType != ''">AND fTerminalType =  #{customerKeywordCriteria.terminalType} </if>
         <if test="customerKeywordCriteria.optimizedCount != null">AND ck.fOptimizedCount &lt;= #{customerKeywordCriteria.optimizedCount} </if>
+        <if test="customerKeywordCriteria.remarks != null and customerKeywordCriteria.remarks != ''">AND ck.fRemarks like '${customerKeywordCriteria.remarks}%' </if>
         <if test="customerKeywordCriteria.qq != null and customerKeywordCriteria.qq != ''">
             AND ck.fCustomerUuid in (
             SELECT fUuid FROM t_customer WHERE fQQ LIKE '${customerKeywordCriteria.qq}%' )

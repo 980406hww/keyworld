@@ -122,10 +122,10 @@
 							${clientStatusCriteria.showFetchKeywordStatus != null ? "checked=true" : ""}>显示取词状态</input>
 
 							<shiro:hasPermission name="/internal/clientstatus/searchClientStatuses">
-								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" name="btnFilter" id="btnFilter" onclick="resetPageNumber()" value=" 查询 ">
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" onclick="resetPageNumber()" value=" 查询 ">
 							</shiro:hasPermission>
 							<shiro:hasPermission name="/internal/clientstatus/deleteClientStatuses">
-								&nbsp;&nbsp;<input type="submit" name="btnFilter" id="btnFilter" onclick="delAllItems(this)" value=" 删除 ">
+								&nbsp;&nbsp;<input type="button" onclick="delAllItems(this)" value=" 删除 ">
 							</shiro:hasPermission>
 						</td>
 						<td width="50px">
@@ -272,7 +272,7 @@
 															  pattern="MM-dd HH:mm"/></br><fmt:formatDate
 					value="${clientStatus.lastSendNotificationTime}" pattern="MM-dd HH:mm"/></font></td>
 			<td width=50><font
-					color="${keywordColor}">${clientStatus.optimizationSucceedCount()}</br>${optimizationTotalCount}</font>
+					color="${keywordColor}">${clientStatus.optimizationSucceedCount}</br>${clientStatus.optimizationTotalCount}</font>
 			</td>
 			<td width=30><font color="${keywordColor}">${clientStatus.valid ? "监控中" : "暂停监控"}</font></td>
 			<td width=40><input type="text"

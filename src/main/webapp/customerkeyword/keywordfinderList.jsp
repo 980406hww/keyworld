@@ -341,7 +341,8 @@
                 <option value="2">当前排名</option>
                 <option value="3">添加序号</option>
             </select>
-            &nbsp;&nbsp;
+            &nbsp;
+            备注:<input type="text" name="remarks" style="width: 90px;" value="${customerKeywordCriteria.remarks}">
             <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
                 <input type="submit" onclick="resetPageNumber()" value=" 查询 ">&nbsp;&nbsp;
             </shiro:hasPermission>

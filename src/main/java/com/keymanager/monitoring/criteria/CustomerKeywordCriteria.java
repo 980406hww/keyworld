@@ -25,6 +25,15 @@ public class CustomerKeywordCriteria extends BaseCriteria{
     private String pushPay;//催缴
     private String displayStop;//显示下架
     private String orderNumber;//订单号
+    private String remarks;//备注
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
 
     public Integer getOptimizedCount() {
         return optimizedCount;
