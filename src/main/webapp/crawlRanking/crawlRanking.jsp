@@ -75,7 +75,9 @@
             <td align="center" width=60>执行类型</td>
             <td align="center" width=100>执行时间</td>
             <td align="center" width=60>状态</td>
-            <td align="center" width=140>开始抓取时间</td>
+            <td align="center" width=100>创建时间</td>
+            <td align="center" width=100>修改时间</td>
+            <td align="center" width=100>开始抓取时间</td>
             <td align="center" width=60>最后抓取时间</td>
         </tr>
     </table>
@@ -90,6 +92,8 @@
             <td width=60>${captureCurrentRankJob.operationType}</td>
             <td width=60>${captureCurrentRankJob.exectionTime}</td>
             <td width=50>${captureCurrentRankJob.exectionStatus}</td>
+            <td width=100>${captureCurrentRankJob.createTime}</td>
+            <td width=100>${captureCurrentRankJob.updateTime}</td>
             <td width=60><fmt:formatDate value="${captureCurrentRankJob.startTime}" pattern="yyyy-MM-dd"/></td>
             <td width=100><fmt:formatDate value="${captureCurrentRankJob.endTime}" pattern="yyyy-MM-dd"/></td>
         </tr>

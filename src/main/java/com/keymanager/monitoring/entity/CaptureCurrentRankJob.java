@@ -34,12 +34,65 @@ public class CaptureCurrentRankJob {
     private String exectionStatus;
 
     @TableField(value = "fStartTime")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date startTime;
 
     @TableField(value = "fEndTime")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endTime;
+
+    @TableField(value = "fCreateBy")
+    private Long createBy;
+
+    @TableField(value = "fCreateTime")
+    private Date createTime;
+
+    @TableField(value = "fUpdateBy")
+    private Long updateBy;
+
+    @TableField(value = "fUpdateTime")
+    private Date updateTime;
+
+    @TableField(value = "fLastExecutionDate")
+    private Date lastExecutionDate;
+
+    public Long getCreateBy() {
+        return createBy;
+    }
+
+    public void setCreateBy(Long createBy) {
+        this.createBy = createBy;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Long getUpdateBy() {
+        return updateBy;
+    }
+
+    public void setUpdateBy(Long updateBy) {
+        this.updateBy = updateBy;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public Date getLastExecutionDate() {
+        return lastExecutionDate;
+    }
+
+    public void setLastExecutionDate(Date lastExecutionDate) {
+        this.lastExecutionDate = lastExecutionDate;
+    }
 
     public Long getUuid() {
         return uuid;
