@@ -8,6 +8,15 @@ public class CustomerCriteria extends BaseCriteria{
     private String telphone;
     private String loginName;
     private Integer status;
+    private String remark;
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 
     public String getContactPerson() {
         return contactPerson;

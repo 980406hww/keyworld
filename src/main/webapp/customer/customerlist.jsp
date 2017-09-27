@@ -1049,6 +1049,9 @@
                                     </select>
                                 </c:if>
                             </td>
+                            <td>
+                                备注:<input type="text" value="${customerCriteria.remark}" name="remark" style="width: 90px;">
+                            </td>
                             <td align="right">
                                 <input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}"/>
                                 <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
