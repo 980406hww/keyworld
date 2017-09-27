@@ -1,9 +1,7 @@
 package com.keymanager.monitoring.entity;
 
 import com.baomidou.mybatisplus.annotations.TableField;
-import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
-import com.baomidou.mybatisplus.enums.IdType;
 
 import java.util.List;
 
@@ -42,7 +40,7 @@ public class Supplier extends BaseEntity{
     private String remark;
 
     @TableField(exist = false)
-    private List<SupplierNexus> supplierNexus;
+    private List<SupplierServiceTypeMapping> supplierServiceTypeMappings;
 
     public String getWeChat() {
         return weChat;
@@ -116,11 +114,11 @@ public class Supplier extends BaseEntity{
         this.qq = qq;
     }
 
-    public List<SupplierNexus> getSupplierNexus() {
-        return supplierNexus;
+    public List<SupplierServiceTypeMapping> getSupplierServiceTypeMappings() {
+        return supplierServiceTypeMappings;
     }
 
-    public void setSupplierNexus(List<SupplierNexus> supplierNexus) {
-        this.supplierNexus = supplierNexus;
+    public void setSupplierServiceTypeMappings(List<SupplierServiceTypeMapping> supplierServiceTypeMappings) {
+        this.supplierServiceTypeMappings = supplierServiceTypeMappings;
     }
 }

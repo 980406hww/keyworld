@@ -13,6 +13,6 @@ import java.util.List;
  */
 public interface SupplierDao extends BaseMapper<Supplier> {
 
-    List<Supplier> searchSupplier(Page<Supplier> page, @Param("supplierCriteria") SupplierCriteria supplierCriteria);
+    List<Supplier> searchSuppliers(Page<Supplier> page, @Param("supplierCriteria") SupplierCriteria supplierCriteria);
 
 }

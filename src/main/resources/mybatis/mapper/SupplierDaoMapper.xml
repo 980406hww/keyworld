@@ -16,7 +16,7 @@
         s.fCreateTime AS `createTime`
     </sql>
 
-    <select id="searchSupplier" resultType="com.keymanager.monitoring.entity.Supplier">
+    <select id="searchSuppliers" resultType="com.keymanager.monitoring.entity.Supplier">
         SELECT
         <include refid="colID"/>
         FROM t_supplier s
