@@ -211,6 +211,10 @@
         delete from t_customer_keyword where fTerminalType = #{terminalType} AND fType = #{entryType} AND fCustomerUuid = #{customerUuid} AND (fTitle = '' or fTitle IS null)
     </delete>
 
+    <delete id="deleteCustomerKeywords">
+        delete from t_customer_keyword where fTerminalType = #{terminalType} AND fOptimizeGroupName = #{groupName} AND fKeyword = #{keyword}
+    </delete>
+
     <select id="getGroups" resultType="String">
         SELECT DISTINCT ck.fOptimizeGroupName as 'group' FROM t_customer_keyword ck WHERE ck.fStatus = 1 AND ck.fOptimizeGroupName IS NOT NULL
         AND ck.fOptimizeGroupName <![CDATA[<>]]>'' ORDER BY ck.fOptimizeGroupName
@@ -317,5 +321,38 @@
         <foreach item="uuid" collection="customerUuids" open="(" separator="," close=")">
             #{uuid}
         </foreach>
+    </update>
+
+    <select id="getCustomerKeywordForAutoUpdateNegative" resultType="com.keymanager.monitoring.vo.SearchEngineResultVO">
+        SELECT DISTINCT
+          ck.fKeyword as 'keyword',
+          ck.fCustomerUuid as 'customerUuid',
+          ck.fOptimizeGroupName as 'group'
+        FROM t_customer_keyword ck
+        WHERE ck.fType = 'fm'
+            <if test="groupName != null and groupName != ''">AND ck.fOptimizeGroupName = #{groupName}</if>
+            AND ck.fTerminalType = #{terminalType}
+            AND ck.fStatus = 1
+            AND (ck.fAutoUpdateNegativeDateTime is null or DATE_ADD(ck.fAutoUpdateNegativeDateTime, INTERVAL 3 MINUTE) &lt; NOW())
+        ORDER BY ck.fAutoUpdateNegativeDateTime LIMIT 1
+    </select>
+
+    <update id="updateAutoUpdateNegativeTimeAs4MinutesAgo">
+        UPDATE t_customer_keyword
+        SET fAutoUpdateNegativeDateTime = DATE_ADD(now(), INTERVAL -4 MINUTE)
+        WHERE fType = 'fm'
+            AND fStatus = 1
+            AND fTerminalType = #{terminalType}
+            AND fOptimizeGroupName = #{groupName}
+    </update>
+
+    <update id="updateAutoUpdateNegativeTime">
+        UPDATE t_customer_keyword
+        SET fAutoUpdateNegativeDateTime = NOW()
+        WHERE fType = 'fm'
+        AND fStatus = 1
+        AND fKeyword = #{keyword}
+        AND fTerminalType = #{terminalType}
+        AND fOptimizeGroupName = #{groupName}
     </update>
 </mapper>

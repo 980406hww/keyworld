@@ -9,7 +9,7 @@ public class TerminalTypeMapping {
 
 	public static String getTerminalType(HttpServletRequest request){
 		StringBuffer url = request.getRequestURL();
-		if(url.indexOf("http://pcssskj.") == 0){
+		if(url.indexOf("http://pcsskj.") == 0){
 			return TerminalTypeEnum.PC.name();
 		}else if(url.indexOf("http://msskj.") == 0){
 			return TerminalTypeEnum.Phone.name();

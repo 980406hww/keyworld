@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.keymanager.db.DBUtil;
 import com.keymanager.enums.CollectMethod;
 import com.keymanager.manager.*;
 import com.keymanager.monitoring.criteria.*;
@@ -18,6 +19,7 @@ import com.keymanager.util.Constants;
 import com.keymanager.util.Utils;
 import com.keymanager.util.common.StringUtil;
 import com.keymanager.value.*;
+import com.sun.org.apache.xpath.internal.operations.Neg;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -27,6 +29,9 @@ import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.*;
 
 @Service
@@ -68,6 +73,12 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     @Autowired
     private UserRoleService userRoleService;
+
+    @Autowired
+    private NegativeListService negativeListService;
+
+    @Autowired
+    private CaptureRealUrlService captureRealUrlService;
 
     @Autowired
     private CustomerKeywordDao customerKeywordDao;
@@ -373,7 +384,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeyword.setTerminalType(terminalType);
         }
     }
-    public void addCustomerKeywords(List<CustomerKeyword> customerKeywords, String userName) throws Exception {
+    public void addCustomerKeywords(List<CustomerKeyword> customerKeywords, String loginName) throws Exception {
         for (CustomerKeyword customerKeyword : customerKeywords) {
             if(StringUtil.isNullOrEmpty(customerKeyword.getOriginalUrl())){
                 customerKeyword.setOriginalUrl(customerKeyword.getUrl());
@@ -402,7 +413,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeyword.setCurrentPosition(10);
             customerKeyword.setAutoUpdateNegativeDateTime(Utils.getCurrentTimestamp());
             customerKeyword.setUpdateTime(new Date());
-            boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
+            boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(loginName));
             if(isDepartmentManager) {
                 customerKeyword.setStatus(1);
             } else {
@@ -689,36 +700,84 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         if(searchEngineResultVO != null){
             List<CustomerKeyword> customerKeywords = new ArrayList<CustomerKeyword>();
             for(SearchEngineResultItemVO searchEngineResultItemVO : searchEngineResultVO.getSearchEngineResultItemVOs()){
-                CustomerKeyword customerKeyword = new CustomerKeyword();
-                customerKeyword.setCurrentPosition(searchEngineResultItemVO.getOrder());
-                customerKeyword.setInitialPosition(searchEngineResultItemVO.getOrder());
-                customerKeyword.setOptimizeGroupName(searchEngineResultVO.getGroup());
-                customerKeyword.setOptimizePlanCount(searchEngineResultItemVO.getClickCount());
-                customerKeyword.setKeyword(searchEngineResultItemVO.getKeyword());
-                customerKeyword.setTitle(searchEngineResultItemVO.getTitle());
-                customerKeyword.setType(searchEngineResultItemVO.getType());
-                customerKeyword.setTerminalType(terminalType);
-                customerKeyword.setOriginalUrl(searchEngineResultItemVO.getHref());
-                customerKeyword.setServiceProvider("baidutop123");
-                customerKeyword.setSearchEngine(Constants.SEARCH_ENGINE_BAIDU);
-                customerKeyword.setUrl(searchEngineResultItemVO.getUrl());
-                customerKeyword.setStartOptimizedTime(Utils.getCurrentTimestamp());
-                customerKeyword.setCollectMethod(CollectMethod.PerMonth.getCode());
-//                customerKeyword.setPositionFirstFee(0);
-//                customerKeyword.setPositionSecondFee(0);
-//                customerKeyword.setPositionThirdFee(0);
-                customerKeyword.setCurrentIndexCount(20);
-                customerKeyword.setCustomerUuid(searchEngineResultVO.getCustomerUuid());
-                customerKeyword.setAutoUpdateNegativeTime(Utils.getCurrentTimestamp());
-                customerKeyword.setCreateTime(Utils.getCurrentTimestamp());
-                customerKeyword.setUpdateTime(Utils.getCurrentTimestamp());
+                CustomerKeyword customerKeyword = convert(searchEngineResultItemVO, terminalType, searchEngineResultVO.getGroup(), searchEngineResultVO.getCustomerUuid());
                 customerKeywords.add(customerKeyword);
             }
             this.addCustomerKeywords(customerKeywords, userName);
         }
     }
 
+    private CustomerKeyword convert(SearchEngineResultItemVO searchEngineResultItemVO, String terminalType, String groupName, long customerUuid) {
+        CustomerKeyword customerKeyword = new CustomerKeyword();
+        customerKeyword.setCurrentPosition(searchEngineResultItemVO.getOrder());
+        customerKeyword.setInitialPosition(searchEngineResultItemVO.getOrder());
+        customerKeyword.setOptimizeGroupName(groupName);
+        customerKeyword.setOptimizePlanCount(searchEngineResultItemVO.getClickCount());
+        customerKeyword.setKeyword(searchEngineResultItemVO.getKeyword());
+        customerKeyword.setTitle(searchEngineResultItemVO.getTitle());
+        customerKeyword.setType(searchEngineResultItemVO.getType());
+        customerKeyword.setTerminalType(terminalType);
+        customerKeyword.setOriginalUrl(searchEngineResultItemVO.getHref());
+        customerKeyword.setServiceProvider("baidutop123");
+        customerKeyword.setSearchEngine(Constants.SEARCH_ENGINE_BAIDU);
+        customerKeyword.setUrl(searchEngineResultItemVO.getUrl());
+        customerKeyword.setStartOptimizedTime(Utils.getCurrentTimestamp());
+        customerKeyword.setCollectMethod(CollectMethod.PerMonth.getCode());
+//                customerKeyword.setPositionFirstFee(0);
+//                customerKeyword.setPositionSecondFee(0);
+//                customerKeyword.setPositionThirdFee(0);
+        customerKeyword.setCurrentIndexCount(20);
+        customerKeyword.setCustomerUuid(customerUuid);
+        customerKeyword.setAutoUpdateNegativeTime(Utils.getCurrentTimestamp());
+        customerKeyword.setCreateTime(Utils.getCurrentTimestamp());
+        customerKeyword.setUpdateTime(Utils.getCurrentTimestamp());
+        return customerKeyword;
+    }
+
     public void updateCustomerKeywordStatus(List<String> customerUuids, Integer status) {
         customerKeywordDao.updateCustomerKeywordStatus(customerUuids, status);
+    }
+
+    public void autoUpdateNegativeCustomerKeywords(SearchEngineResultVO searchEngineResultVO, String terminalType, String loginName) throws Exception {
+        if(searchEngineResultVO != null) {
+            List<NegativeList> negativeLists = negativeListService.getSpecifiedKeywordNegativeLists(terminalType, searchEngineResultVO.getKeyword());
+            List<CustomerKeyword> customerKeywords = new ArrayList<CustomerKeyword>();
+            for (SearchEngineResultItemVO searchEngineResultItemVO : searchEngineResultVO.getSearchEngineResultItemVOs()) {
+                SearchEngineResultItemVO tmpSearchEngineResultItemVO = searchEngineResultItemVO;
+                if (CollectionUtils.isNotEmpty(negativeLists)) {
+                    for (NegativeList negativeList : negativeLists) {
+                        if (Utils.isSameStr(searchEngineResultItemVO.getTitle(), negativeList.getTitle()) && Utils.isSameStr(searchEngineResultItemVO.getUrl(), negativeList.getUrl())) {
+                            tmpSearchEngineResultItemVO = null;
+                            break;
+                        }
+                    }
+                }
+                if (tmpSearchEngineResultItemVO != null) {
+                    CustomerKeyword customerKeyword = convert(searchEngineResultItemVO, terminalType, searchEngineResultVO.getGroup(), searchEngineResultVO.getCustomerUuid());
+                    if (!Utils.isNullOrEmpty(customerKeyword.getOriginalUrl())) {
+                        String targetUrl = captureRealUrlService.fetchSingleRealUrl(customerKeyword.getOriginalUrl());
+                        if (!Utils.isNullOrEmpty(targetUrl)) {
+                            customerKeyword.setOriginalUrl(targetUrl);
+                        }
+                    }
+                    customerKeywords.add(customerKeyword);
+                }
+            }
+            customerKeywordDao.deleteCustomerKeywords(terminalType, searchEngineResultVO.getGroup(), searchEngineResultVO.getKeyword());
+            this.addCustomerKeywords(customerKeywords, loginName);
+        }
+    }
+
+    public SearchEngineResultVO getCustomerKeywordForAutoUpdateNegative(String terminalType, String group) throws Exception
+    {
+        SearchEngineResultVO searchEngineResultVO = customerKeywordDao.getCustomerKeywordForAutoUpdateNegative(terminalType, group);
+        if(searchEngineResultVO != null) {
+            customerKeywordDao.updateAutoUpdateNegativeTime(terminalType, group, searchEngineResultVO.getKeyword());
+        }
+        return searchEngineResultVO;
+    }
+
+    public void updateAutoUpdateNegativeTimeAs4MinutesAgo(String terminalType, String group){
+        customerKeywordDao.updateAutoUpdateNegativeTimeAs4MinutesAgo(terminalType, group);
     }
 }

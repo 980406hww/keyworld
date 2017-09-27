@@ -6,6 +6,7 @@ import com.keymanager.monitoring.criteria.CustomerKeywordCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordUpdateGroupCriteria;
 import com.keymanager.monitoring.entity.CustomerKeyword;
+import com.keymanager.monitoring.vo.SearchEngineResultVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -49,6 +50,8 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void deleteCustomerKeywordsWhenEmptyTitle(@Param("terminalType")String terminalType, @Param("entryType")String entryType, @Param("customerUuid")String customerUuid);
 
+    void deleteCustomerKeywords(@Param("terminalType")String terminalType, @Param("groupName")String groupName, @Param("keyword")String keyword);
+
     List<String> getGroups();
 
     List<Map> searchRemainingOptimizationCount(@Param("groupName")String groupName, @Param("maxInvalidCount")int maxInvalidCount);
@@ -78,4 +81,10 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void resetInvalidRefreshCount(@Param("customerKeywordRefreshStatInfoCriteria")CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria);
 
     void updateCustomerKeywordStatus(@Param("customerUuids")List<String> customerUuids, @Param("status")Integer status);
+
+    SearchEngineResultVO getCustomerKeywordForAutoUpdateNegative(@Param("terminalType")String terminalType, @Param("groupName")String groupName);
+
+    void updateAutoUpdateNegativeTime(@Param("terminalType")String terminalType, @Param("groupName")String groupName, @Param("keyword")String keyword);
+
+    void updateAutoUpdateNegativeTimeAs4MinutesAgo(@Param("terminalType")String terminalType, @Param("groupName")String groupName);
 }
