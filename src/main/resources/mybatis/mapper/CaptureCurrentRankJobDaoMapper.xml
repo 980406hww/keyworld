@@ -4,17 +4,39 @@
     <sql id="colID">
         c.fUuid AS `uuid`,
         c.fGroupNames AS `groupNames`,
-        c.fCustomerIds AS `customerIds`,
+        c.fCustomerID AS `customerID`,
         c.fOperationType AS `operationType`,
+        c.fExectionType AS `exectionType`,
         c.fExectionTime AS `exectionTime`,
         c.fExectionStatus  AS `exectionStatus`,
         c.fStartTime AS `startTime`,
         c.fEndTime AS `endTime`,
+        c.fCreateBy AS `createBy`,
+        c.fUpdateBy AS `updateBy`,
+        c.fCreateTime AS `createTime`,
+        c.fUpdateTime AS `updateTime`,
+        c.fLastExecutionDate AS `lastExecutionDate`
     </sql>
+    <select id="searchCaptureCurrentRankJob" resultType="com.keymanager.monitoring.entity.CaptureCurrentRankJob">
+        select
+        <include refid="colID"/>
+        FROM t_capture_rank_job c
+        <where>
+            <if test="captureCurrentRankJobCriteria.groupNames!=null and captureCurrentRankJobCriteria.groupNames!=''"> and c.fGroupNames like '%${captureCurrentRankJobCriteria.groupNames}%'</if>
+            <if test="captureCurrentRankJobCriteria.customerID!=null and captureCurrentRankJobCriteria.customerID!=''"> and c.fCustomerID = #{captureCurrentRankJobCriteria.customerID}</if>
+            <if test="captureCurrentRankJobCriteria.operationType!=null and captureCurrentRankJobCriteria.operationType!=''"> and c.fOperationType = #{captureCurrentRankJobCriteria.operationType}</if>
+            <if test="captureCurrentRankJobCriteria.exectionType!=null and captureCurrentRankJobCriteria.exectionType!=''"> and c.fExectionType = #{captureCurrentRankJobCriteria.exectionType}</if>
+        </where>
+    </select>
     <select id="searchCaptureCurrentRankJobs" resultType="com.keymanager.monitoring.entity.CaptureCurrentRankJob">
-         select c.fUuid as uuid,c.fGroupNames AS `groupNames`,c.fCustomerIds AS `customerIds` from t_capture_current_rank_job c
+         select c.fUuid as uuid,c.fGroupNames AS `groupNames`,c.fCustomerID AS `customerID` from t_capture_rank_job c
          where
-            c.fExectionStatus='prepared' or
-            (c.fExectionStatus='complete' and c.fOperationType='everyday' and DATE_FORMAT(c.fEndTime,'%Y-%m-%d')=(date_sub(curdate(),interval 1 day)))
+         (
+            c.fExectionStatus=null or c.fExectionStatus='' or
+            (c.fExectionStatus='complete' and c.fOperationType='everyday' and DATE_FORMAT(c.fEndTime,'%Y-%m-%d')&lt;=(date_sub(curdate(),interval 1 day)))
+          )
+            and c.fExectionTime &lt;= curtime()
+            order By c.fExectionTime
+            limit 1;
     </select>
 </mapper>

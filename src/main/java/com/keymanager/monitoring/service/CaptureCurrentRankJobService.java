@@ -2,7 +2,9 @@ package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.keymanager.monitoring.criteria.CaptureCurrentRankJobCriteria;
 import com.keymanager.monitoring.dao.CaptureCurrentRankJobDao;
 import com.keymanager.monitoring.entity.CaptureCurrentRankJob;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,5 +24,11 @@ public class CaptureCurrentRankJobService  extends ServiceImpl<CaptureCurrentRan
     {
         List<CaptureCurrentRankJob> captureCurrentRankJobs = captureCurrentRankJobDao.searchCaptureCurrentRankJobs();
         return captureCurrentRankJobs;
+    }
+    public Page<CaptureCurrentRankJob> searchCaptureCurrentRankJob(Page<CaptureCurrentRankJob> page, CaptureCurrentRankJobCriteria captureCurrentRankJobCriteria)
+    {
+        List<CaptureCurrentRankJob> captureCurrentRankJobs = captureCurrentRankJobDao.searchCaptureCurrentRankJob(page,captureCurrentRankJobCriteria);
+        page.setRecords(captureCurrentRankJobs);
+        return page;
     }
 }

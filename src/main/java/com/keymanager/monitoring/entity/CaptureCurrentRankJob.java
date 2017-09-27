@@ -7,28 +7,30 @@ import com.baomidou.mybatisplus.enums.IdType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.sql.Time;
 import java.util.Date;
 import java.util.List;
 
 /**
  * Created by shunshikj24 on 2017/9/26.
  */
-@TableName(value = "t_capture_current_rank_job")
-public class CaptureCurrentRankJob {
-    @TableId(value = "fUuid", type= IdType.AUTO)
-    private Long uuid;
+@TableName(value = "t_capture_rank_job")
+public class CaptureCurrentRankJob extends BaseEntity{
 
     @TableField(value = "fGroupNames")
     private String groupNames;
 
-    @TableField(value = "fCustomerIds")
-    private String customerIds;
+    @TableField(value = "fCustomerID")
+    private String customerID;
 
     @TableField(value = "fOperationType")
     private String operationType;
 
+    @TableField(value = "fExectionType")
+    private String exectionType;
+
     @TableField(value = "fExectionTime")
-    private String exectionTime;
+    private java.sql.Time exectionTime;
 
     @TableField(value = "fExectionStatus")
     private String exectionStatus;
@@ -40,67 +42,13 @@ public class CaptureCurrentRankJob {
     private Date endTime;
 
     @TableField(value = "fCreateBy")
-    private Long createBy;
-
-    @TableField(value = "fCreateTime")
-    private Date createTime;
+    private String createBy;
 
     @TableField(value = "fUpdateBy")
-    private Long updateBy;
-
-    @TableField(value = "fUpdateTime")
-    private Date updateTime;
+    private String updateBy;
 
     @TableField(value = "fLastExecutionDate")
     private Date lastExecutionDate;
-
-    public Long getCreateBy() {
-        return createBy;
-    }
-
-    public void setCreateBy(Long createBy) {
-        this.createBy = createBy;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Long getUpdateBy() {
-        return updateBy;
-    }
-
-    public void setUpdateBy(Long updateBy) {
-        this.updateBy = updateBy;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public Date getLastExecutionDate() {
-        return lastExecutionDate;
-    }
-
-    public void setLastExecutionDate(Date lastExecutionDate) {
-        this.lastExecutionDate = lastExecutionDate;
-    }
-
-    public Long getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(Long uuid) {
-        this.uuid = uuid;
-    }
 
     public String getGroupNames() {
         return groupNames;
@@ -110,12 +58,12 @@ public class CaptureCurrentRankJob {
         this.groupNames = groupNames;
     }
 
-    public String getCustomerIds() {
-        return customerIds;
+    public String getCustomerID() {
+        return customerID;
     }
 
-    public void setCustomerIds(String customerIds) {
-        this.customerIds = customerIds;
+    public void setCustomerID(String customerID) {
+        this.customerID = customerID;
     }
 
     public String getOperationType() {
@@ -126,11 +74,19 @@ public class CaptureCurrentRankJob {
         this.operationType = operationType;
     }
 
-    public String getExectionTime() {
+    public String getExectionType() {
+        return exectionType;
+    }
+
+    public void setExectionType(String exectionType) {
+        this.exectionType = exectionType;
+    }
+
+    public Time getExectionTime() {
         return exectionTime;
     }
 
-    public void setExectionTime(String exectionTime) {
+    public void setExectionTime(Time exectionTime) {
         this.exectionTime = exectionTime;
     }
 
@@ -142,7 +98,6 @@ public class CaptureCurrentRankJob {
         this.exectionStatus = exectionStatus;
     }
 
-
     public Date getStartTime() {
         return startTime;
     }
@@ -151,12 +106,35 @@ public class CaptureCurrentRankJob {
         this.startTime = startTime;
     }
 
-
     public Date getEndTime() {
         return endTime;
     }
 
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
+    }
+
+    public String getCreateBy() {
+        return createBy;
+    }
+
+    public void setCreateBy(String createBy) {
+        this.createBy = createBy;
+    }
+
+    public String getUpdateBy() {
+        return updateBy;
+    }
+
+    public void setUpdateBy(String updateBy) {
+        this.updateBy = updateBy;
+    }
+
+    public Date getLastExecutionDate() {
+        return lastExecutionDate;
+    }
+
+    public void setLastExecutionDate(Date lastExecutionDate) {
+        this.lastExecutionDate = lastExecutionDate;
     }
 }

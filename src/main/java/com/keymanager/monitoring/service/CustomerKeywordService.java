@@ -724,8 +724,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
 
 
-    public List<CustomerKeyword> searchTitleAndUrl(CustomerKeyword customerKeyword)
+    public List<CustomerKeyword> searchTitleAndUrl(String[] groupNames,String customerID)
     {
-           return customerKeywordDao.searchTitleAndUrl(customerKeyword);
+           return customerKeywordDao.searchTitleAndUrl(groupNames,customerID);
     }
 }
