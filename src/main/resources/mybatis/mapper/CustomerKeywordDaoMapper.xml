@@ -64,12 +64,6 @@
         ck.fCreateTime	AS	'createTime'
     </sql>
 
-    <insert id="addCustomerKeywordOptimizedCountLog">
-        INSERT INTO t_ck_optimized_count_log(fCustomerKeywordUuid, fOptimizedCount, fOptimizedDate)
-        SELECT fUuid AS 'fCustomerKeywordUuid', fOptimizedCount, DATE_SUB(CURRENT_DATE(),INTERVAL 1 DAY)
-        FROM t_customer_keyword
-    </insert>
-
     <update id="cleanSelectedCustomerKeywordTitle">
         UPDATE t_customer_keyword set fTitle = null where fUuid in
         <foreach item="item" index="index" collection="uuids" open="(" separator="," close=")">

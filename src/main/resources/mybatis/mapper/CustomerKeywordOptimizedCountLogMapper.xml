@@ -2,6 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.monitoring.dao.CustomerKeywordOptimizedCountLogDao">
 
+    <insert id="addCustomerKeywordOptimizedCountLog">
+        INSERT INTO t_ck_optimized_count_log(fCustomerKeywordUuid, fOptimizedCount, fOptimizedDate)
+        SELECT fUuid AS 'fCustomerKeywordUuid', fOptimizedCount, DATE_SUB(CURRENT_DATE(),INTERVAL 1 DAY)
+        FROM t_customer_keyword
+    </insert>
+
     <select id="findInvalidCustomerKeyword" resultType="java.lang.Long">
         SELECT fCustomerKeywordUuid FROM t_ck_optimized_count_log
         WHERE fOptimizedCount = 0
