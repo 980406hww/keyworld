@@ -165,16 +165,15 @@
 			<td align="center" width=40>客户端ID</td>
 			<td align="center" width=60>优化组</td>
 			<td align="center" width=60>操作类型</td>
-			<td align="center" width=20>续费</br>日期</td>
-			<td align="center" width=30>现版本</br>目标版本</td>
-			<td align="center" width=40>重启数/重启状态</br>页码/失败次数</td>
-			<td align="center" width=100>所在城市</br>终端状态</td>
+			<td align="center" width=20>续费<br>日期</td>
+			<td align="center" width=30>现版本<br>目标版本</td>
+			<td align="center" width=40>重启数/重启状态<br>页码/失败次数</td>
+			<td align="center" width=100>所在城市<br>终端状态</td>
 			<td align="center" width=30>剩余空间</td>
-			<td align="center" width=40>最新工作时间</br>重启时间</td>
-			<td align="center" width=40>重启排序时间</br>发通知时间</td>
-			<td align="center" width=30>成功次数</br>操作次数</td>
-			<td align="center" width=50>宽带账号</td>
-			<td align="center" width=50>宽带密码</td>
+			<td align="center" width=40>最新工作时间<br>重启时间</td>
+			<td align="center" width=40>重启排序时间<br>发通知时间</td>
+			<td align="center" width=30>成功次数<br>操作次数</td>
+			<td align="center" width=50>宽带账号<br>宽带密码</td>
 			<td align="center" width=20>状态</td>
 			<td align="center" width=40>失败原因</td>
 			<td align="center" width=40>服务器ID</td>
@@ -257,26 +256,25 @@
 			<td width=20><font color="${keywordColor}"><fmt:formatDate value="${clientStatus.renewalDate}"
 															  pattern="MM-dd"/></font></td>
 			<td width=30><font
-					color="${keywordColor}">${clientStatus.version == null ? "" : clientStatus.version}</br>${clientStatus.targetVersion == null ? "" : clientStatus.targetVersion}</font>
+					color="${keywordColor}">${clientStatus.version == null ? "" : clientStatus.version}<br>${clientStatus.targetVersion == null ? "" : clientStatus.targetVersion}</font>
 			</td>
 			<td width=40><font
-					color="${keywordColor}">${clientStatus.restartCount}/${clientStatus.restartStatus == null ? "" : clientStatus.restartStatus}</br>${clientStatus.pageNo}/${clientStatus.continuousFailCount}</font>
+					color="${keywordColor}">${clientStatus.restartCount}/${clientStatus.restartStatus == null ? "" : clientStatus.restartStatus}<br>${clientStatus.pageNo}/${clientStatus.continuousFailCount}</font>
 			</td>
 			<td width=100 style="word-break: break-all;"><font
-					color="${keywordColor}">${clientStatus.city == null ? "" : clientStatus.city}</br>${clientStatus.status == null ? "" : clientStatus.status}</font>
+					color="${keywordColor}">${clientStatus.city == null ? "" : clientStatus.city}<br>${clientStatus.status == null ? "" : clientStatus.status}</font>
 			</td>
 			<td width=30><font color="${keywordColor}">${clientStatus.freeSpace}</font></td>
 			<td width=40><font color="${keywordColor}"><fmt:formatDate value="${clientStatus.lastVisitTime}"
-															  pattern="MM-dd HH:mm"/></br><fmt:formatDate
+															  pattern="MM-dd HH:mm"/><br><fmt:formatDate
 					value="${clientStatus.restartTime}" pattern="MM-dd HH:mm"/></font></td>
 			<td width=40><font color="${keywordColor}"><fmt:formatDate value="${clientStatus.restartOrderingTime}"
-															  pattern="MM-dd HH:mm"/></br><fmt:formatDate
+															  pattern="MM-dd HH:mm"/><br><fmt:formatDate
 					value="${clientStatus.lastSendNotificationTime}" pattern="MM-dd HH:mm"/></font></td>
 			<td width=30><font
-					color="${keywordColor}">${clientStatus.optimizationSucceedCount}</br>${clientStatus.optimizationTotalCount}</font>
+					color="${keywordColor}">${clientStatus.optimizationSucceedCount}<br>${clientStatus.optimizationTotalCount}</font>
 			</td>
-			<td width=50>${clientStatus.broadbandAccount}</td>
-			<td width=50>${clientStatus.broadbandPassword}</td>
+			<td width=50><font color="${keywordColor}">${clientStatus.broadbandAccount}<br>${clientStatus.broadbandPassword}</font></td>
 			<td width=20><font color="${keywordColor}">${clientStatus.valid ? "监控中" : "暂停监控"}</font></td>
 			<td width=40><input type="text"
 					   value="${clientStatus.upgradeFailedReason == null ? "" : clientStatus.upgradeFailedReason}"
@@ -300,7 +298,7 @@
 				<shiro:hasPermission name="/internal/clientstatus/deleteClientStatus">
 				<a href="javascript:delItem('${clientStatus.clientID}')">删除</a>
 				</shiro:hasPermission>
-				</br>
+				<br>
 				<shiro:hasPermission name="/internal/clientstatus/changeStatus">
 				<c:choose>
 					<c:when test="${clientStatus.valid}">
@@ -1146,15 +1144,15 @@
                         type: 'POST',
 						success: function (result) {
 							if(result){
-								span.html("</br>取词正常");
+								span.html("<br>取词正常");
 								span.css("color", "green");
 							}else{
-								span.html("</br>取不到词");
+								span.html("<br>取不到词");
 								span.css("color", "red");
 							}
 						},
 						error: function () {
-							span.html("</br>取词异常");
+							span.html("<br>取词异常");
 							span.css("color", "red");
 						}
 					});
@@ -1371,6 +1369,18 @@
 				<td style="vertical-align:top;">
 					<table id="td_2" style="font-size:12px">
 						<tr>
+							<th>宽带账号</th>
+							<td>
+								<input type="text" name="broadbandAccount" id="broadbandAccount" value="" style="width:110px;"/>
+							</td>
+						</tr>
+						<tr>
+							<th>宽带密码</th>
+							<td>
+								<input type="text" name="broadbandPassword" id="broadbandPassword" value="" style="width:110px;"/>
+							</td>
+						</tr>
+						<tr>
 							<th>进入页</th>
 							<td>
 								<input type="text" name="entryPageMinCount" id="entryPageMinCount" value="0" /> -
@@ -1428,18 +1438,6 @@
 							<th>点击目标后等待</th>
 							<td>
 								<input type="text" name="waitTimeAfterClick" id="waitTimeAfterClick" value="5000"/>秒
-							</td>
-						</tr>
-						<tr>
-							<th>宽带账号</th>
-							<td>
-								<input type="text" name="broadbandAccount" id="broadbandAccount" value="" style="width:114px;"/>
-							</td>
-						</tr>
-						<tr>
-							<th>宽带密码</th>
-							<td>
-								<input type="text" name="broadbandPassword" id="broadbandPassword" value="" style="width:114px;"/>
 							</td>
 						</tr>
 

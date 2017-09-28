@@ -226,22 +226,34 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		List<String> VPSInfos = FileUtil.readTxtFile(file,"UTF-8");
 		for (String VPSInfo : VPSInfos) {
 			String[] clientStatusInfo = VPSInfo.split("----");
-			ClientStatus clientStatus = new ClientStatus();
-			clientStatus.setTerminalType(terminalType);
-			clientStatus.setClientID(clientStatusInfo[0]);
-			clientStatus.setVpsBackendSystemComputerID(clientStatusInfo[1]);
-			clientStatus.setHost(clientStatusInfo[2].substring(0,clientStatusInfo[2].indexOf(":")));
-			clientStatus.setPort(clientStatusInfo[2].substring(clientStatusInfo[2].indexOf(":") + 1));
-			clientStatus.setUserName(clientStatusInfo[3]);
-			clientStatus.setPassword(clientStatusInfo[4]);
-			clientStatus.setBroadbandAccount(clientStatusInfo[5]);
-			clientStatus.setBroadbandPassword(clientStatusInfo[6]);
-			clientStatus.setFreeSpace(500.00);
-			clientStatus.setDisableStatistics(0);
-			clientStatus.setLastVisitTime(Utils.getCurrentTimestamp());
-			clientStatus.setClientIDPrefix(Utils.removeDigital(clientStatusInfo[0]));
-			clientStatusDao.insert(clientStatus);
+			ClientStatus oldClientStatus = clientStatusDao.selectById(clientStatusInfo[0]);
+			if(null != oldClientStatus.getClientID()) {
+				saveClientStatusByVPSFile(oldClientStatus, terminalType, clientStatusInfo);
+				clientStatusDao.updateById(oldClientStatus);
+			} else {
+				ClientStatus clientStatus = new ClientStatus();
+				clientStatus.setTerminalType(terminalType);
+				clientStatus.setFreeSpace(500.00);
+				clientStatus.setDisableStatistics(0);
+				clientStatus.setValid(true);
+				saveClientStatusByVPSFile(clientStatus, terminalType, clientStatusInfo);
+				clientStatusDao.insert(clientStatus);
+			}
 		}
+	}
+
+	private void saveClientStatusByVPSFile(ClientStatus clientStatus, String terminalType, String[] clientStatusInfo) {
+		String[] vncInfos = clientStatusInfo[2].split(":");
+		clientStatus.setClientID(clientStatusInfo[0]);
+		clientStatus.setVpsBackendSystemComputerID(clientStatusInfo[1]);
+		clientStatus.setHost(vncInfos[0]);
+		clientStatus.setPort(vncInfos[1]);
+		clientStatus.setUserName(clientStatusInfo[3]);
+		clientStatus.setPassword(clientStatusInfo[4]);
+		clientStatus.setBroadbandAccount(clientStatusInfo[5]);
+		clientStatus.setBroadbandPassword(clientStatusInfo[6]);
+		clientStatus.setLastVisitTime(Utils.getCurrentTimestamp());
+		clientStatus.setClientIDPrefix(Utils.removeDigital(clientStatusInfo[0]));
 	}
 
 	public void getVNCFileInfo(String terminalType) throws Exception {
