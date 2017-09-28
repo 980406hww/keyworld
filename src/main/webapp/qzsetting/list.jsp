@@ -92,22 +92,22 @@
 							</td>
 							<td align="right" width="50">
 								<shiro:hasPermission name="/internal/qzsetting/searchQZSettings">
-									<input class="ui-button ui-widget ui-corner-all" type="submit" name="btnQuery" id="btnQuery" onclick="resetSearchCondition('1')" value=" 查询 " >
+									<input class="ui-button ui-widget ui-corner-all" type="submit" onclick="resetSearchCondition('1')" value=" 查询 " >
 								</shiro:hasPermission>
 							</td>
 							<td align="right" width="50">
 								<shiro:hasPermission name="/internal/qzsetting/save">
-									<input class="ui-button ui-widget ui-corner-all" type="submit" name="btnQuery" id="btnQuery" onclick="showSettingDialog(null, this)" value=" 增加 " >
+									<input class="ui-button ui-widget ui-corner-all" type="button" onclick="showSettingDialog(null, this)" value=" 增加 " >
 								</shiro:hasPermission>
 							</td>
 							<td align="right" width="70">
 								<shiro:hasPermission name="/internal/qzsetting/updateImmediately">
-									<input class="ui-button ui-widget ui-corner-all" type="submit" name="btnQuery" id="btnQuery" onclick="updateImmediately(this)" value=" 马上更新 " >
+									<input class="ui-button ui-widget ui-corner-all" type="button" onclick="updateImmediately(this)" value=" 马上更新 " >
 								</shiro:hasPermission>
 							</td>
 							<td align="right" width="70" >
 								<shiro:hasPermission name="/internal/qzsetting/deleteQZSettings">
-									<input class="ui-button ui-widget ui-corner-all" type="submit" name="btnQuery" id="btnQuery" onclick="delSelectedQZSettings(this)" value=" 删除所选 " >
+									<input class="ui-button ui-widget ui-corner-all" type="button" onclick="delSelectedQZSettings(this)" value=" 删除所选 " >
 								</shiro:hasPermission>
 							</td>
 

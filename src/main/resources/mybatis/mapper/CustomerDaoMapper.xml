@@ -29,6 +29,7 @@
         <if test="customerCriteria.telphone != null and customerCriteria.telphone != ''">AND c.fTelphone like '%${customerCriteria.telphone}%'</if>
         <if test="customerCriteria.loginName != null and customerCriteria.loginName != ''">AND c.fUserID = #{customerCriteria.loginName}</if>
         <if test="customerCriteria.status != null and customerCriteria.status != ''">AND c.fStatus = #{customerCriteria.status}</if>
+        <if test="customerCriteria.remark != null and customerCriteria.remark != ''">AND c.fRemark like '%${customerCriteria.remark}%'</if>
         order by c.fUpdateTime DESC
     </select>
 

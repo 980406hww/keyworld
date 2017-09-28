@@ -1049,6 +1049,9 @@
                                     </select>
                                 </c:if>
                             </td>
+                            <td>
+                                备注:<input type="text" value="${customerCriteria.remark}" name="remark" style="width: 90px;">
+                            </td>
                             <td align="right">
                                 <input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}"/>
                                 <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
@@ -1105,7 +1108,7 @@
         <c:forEach items="${page.records}" var="customer">
             <tr onmouseover="doOver(this);" onmouseout="doOut(this);" height=30>
                 <td width=10 style="padding-left: 7px;"><input type="checkbox" name="customerUuid" value="${customer.uuid}"/></td>
-                <td width=80>${user.loginName}</td>
+                <td width=80>${customer.loginName}</td>
                 <td width=80>
                     <a href="#" onclick="searchCustomerKeywords('/internal/customerKeyword/searchCustomerKeywords/${customer.uuid}')">${customer.contactPerson}</a>
                 </td>

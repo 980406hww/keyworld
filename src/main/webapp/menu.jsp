@@ -87,8 +87,8 @@
 <div class="content" style="position:fixed;width: 100%;height:30px;">
 	<ul class="venus-menu" style="display: none">
 		<c:choose>
-			<c:when test="${sessionScope.get('entryType')=='fm'}">
-				<shiro:hasRole  name="FMSpecial">
+			<c:when test="${sessionScope.get('entryType')=='bc'}">
+				<shiro:hasRole  name="BCSpecial">
 					<c:forEach items="${menus}" var="menu">
 						<li style="" pid="${menu.pid}" lid="${menu.id}">
 							<c:if test="${menu.openMode=='ajax' || menu.openMode=='iframe'}">

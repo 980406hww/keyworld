@@ -130,7 +130,7 @@
             }
 
             function doOver(obj) {
-                obj.style.backgroundColor = "#73B1E0";
+                obj.style.backgroundColor = "green";
             }
 
             function doOut(obj) {
@@ -916,6 +916,7 @@
                 <option value="2">当前排名</option>
                 <option value="3">添加序号</option>
             </select>
+            备注:<input type="text" name="remarks" value="${customerKeywordCriteria.remarks}" style="width: 90px;">
             <%--</c:if>--%>
             &nbsp;&nbsp;
             <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">

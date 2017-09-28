@@ -350,7 +350,7 @@
         position: fixed;
         bottom: 0px;
         right: 0px;
-        background-color:#dedede;
+        background-color:#ADD1FF;
         padding-top: 5px;
         padding-bottom: 5px;
         width: 100%;

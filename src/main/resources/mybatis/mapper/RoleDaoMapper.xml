@@ -35,13 +35,13 @@
     <select id="selectResourceListByRoleIdList" resultType="Resource"
             parameterType="java.lang.Long">
         SELECT
-            DISTINCT rs.fUuid AS `uuid`,
+            DISTINCT rs.fUuid AS `id`,
             rs.fResourceName AS `resourceName`,
             rs.fUrl AS `url`,
             rs.fOpenMode AS `openMode`,
             rs.fDescription AS `description`,
-            rs.fIconCls AS `iconCls`,
-            rs.fParentID AS `pid`,
+            rs.fIconCls AS `icon`,
+            rs.fParentID AS `parentID`,
             rs.fSequence AS `sequence`,
             rs.fStatus AS `status`,
             rs.fOpened AS `opened`,

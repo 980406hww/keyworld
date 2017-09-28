@@ -1,4 +1,4 @@
-<%@ include file="/commons/basejs.jsp" %>
+﻿<%@ include file="/commons/basejs.jsp" %>
 <%@ include file="/commons/global.jsp" %>
 <html>
 <head>
@@ -122,10 +122,10 @@
 							${clientStatusCriteria.showFetchKeywordStatus != null ? "checked=true" : ""}>显示取词状态</input>
 
 							<shiro:hasPermission name="/internal/clientstatus/searchClientStatuses">
-								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" name="btnFilter" onclick="resetPageNumber()" value=" 查询 ">
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" onclick="resetPageNumber()" value=" 查询 ">
 							</shiro:hasPermission>
 							<shiro:hasPermission name="/internal/clientstatus/deleteClientStatuses">
-								&nbsp;&nbsp;<input type="button" name="btnFilter" onclick="delAllItems(this)" value=" 删除 ">
+								&nbsp;&nbsp;<input type="button" onclick="delAllItems(this)" value=" 删除 ">
 							</shiro:hasPermission>
 							<shiro:hasPermission name="/internal/clientstatus/uploadVPSFile">
 								&nbsp;&nbsp;<input type="button" name="btnFilter" onclick="showUploadVPSDialog()" value=" 导入 ">

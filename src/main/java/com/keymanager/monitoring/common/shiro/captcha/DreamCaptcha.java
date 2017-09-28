@@ -77,7 +77,9 @@ public class DreamCaptcha implements InitializingBean {
 	 */
 	public void generate(HttpServletRequest request, HttpServletResponse response) {
 		// 先检查cookie的uuid是否存在
-		String cookieValue = WebUtils.getCookieValue(request, cookieName);
+		//String cookieValue = WebUtils.getCookieValue(request, cookieName);
+		String cookieValue = (String) request.getSession().getAttribute(cookieName);
+		logger.info("validate captcha cookieValue3 is " + cookieValue);
 		boolean hasCookie = true;
 		if (StringUtils.isBlank(cookieValue)) {
 			hasCookie = false;
@@ -86,7 +88,11 @@ public class DreamCaptcha implements InitializingBean {
 		String captchaCode = CaptchaUtils.generateCode().toUpperCase();// 转成大写重要
 		// 不存在cookie时设置cookie
 		if (!hasCookie) {
-			WebUtils.setCookie(response, cookieName, cookieValue, DEFAULT_MAX_AGE);
+			//WebUtils.setCookie(response, cookieName, cookieValue, DEFAULT_MAX_AGE);
+			logger.info("Before put into session cookieValue is " + cookieValue);
+			request.getSession().setAttribute(cookieName, cookieValue);
+			String cookieValue2 = (String) request.getAttribute(cookieName);
+			logger.info("After put into session cookieValue is " + cookieValue2);
 		}
 		// 生成验证码
 		CaptchaUtils.generate(response, captchaCode);
@@ -101,10 +107,11 @@ public class DreamCaptcha implements InitializingBean {
 	 * @return 验证通过返回 true, 否则返回 false
 	 */
 	public boolean validate(HttpServletRequest request, HttpServletResponse response, String userInputCaptcha) {
-		if (logger.isDebugEnabled()) {
-			logger.debug("validate captcha userInputCaptcha is " + userInputCaptcha);
-		}
-		String cookieValue = WebUtils.getCookieValue(request, cookieName);
+		logger.info("validate captcha userInputCaptcha is " + userInputCaptcha);
+		//String cookieValue = WebUtils.getCookieValue(request, cookieName);
+		String cookieValue = (String) request.getSession().getAttribute(cookieName);
+		logger.info("validate captcha cookieName is " + cookieName);
+		logger.info("validate captcha cookieValue is " + cookieValue);
 		if (StringUtils.isBlank(cookieValue)) {
 			return false;
 		}
@@ -112,12 +119,14 @@ public class DreamCaptcha implements InitializingBean {
 		if (StringUtils.isBlank(captchaCode)) {
 			return false;
 		}
+		logger.info("validate captcha captchaCode is " + captchaCode);
 		// 转成大写重要
 		userInputCaptcha = userInputCaptcha.toUpperCase();
 		boolean result = userInputCaptcha.equals(captchaCode);
 		if (result) {
 			dreamCaptchaCache.remove(cookieValue);
-			WebUtils.removeCookie(response, cookieName);
+			request.getSession().removeAttribute(cookieName);
+			//WebUtils.removeCookie(response, cookieName);
 		}
 		return result;
 	}
