@@ -1,36 +1,34 @@
-﻿package com.keymanager.monitoring.service;
+package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.keymanager.db.DBUtil;
 import com.keymanager.enums.CollectMethod;
-import com.keymanager.manager.*;
+import com.keymanager.manager.CustomerKeywordManager;
 import com.keymanager.monitoring.criteria.*;
-import com.keymanager.monitoring.excel.operator.AbstractExcelReader;
 import com.keymanager.monitoring.dao.CustomerKeywordDao;
 import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.enums.*;
+import com.keymanager.monitoring.excel.operator.AbstractExcelReader;
 import com.keymanager.monitoring.vo.SearchEngineResultItemVO;
 import com.keymanager.monitoring.vo.SearchEngineResultVO;
 import com.keymanager.util.Constants;
 import com.keymanager.util.Utils;
 import com.keymanager.util.common.StringUtil;
-import com.keymanager.value.*;
-import com.sun.org.apache.xpath.internal.operations.Neg;
+import com.keymanager.value.CustomerKeywordForCapturePosition;
+import com.keymanager.value.CustomerKeywordForCaptureTitle;
+import com.keymanager.value.CustomerKeywordForOptimization;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.*;
 
 @Service
@@ -78,6 +76,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     @Autowired
     private CaptureRealUrlService captureRealUrlService;
+
+    @Autowired
+    private NegativeListService negativeListService;
 
     @Autowired
     private CustomerKeywordDao customerKeywordDao;
@@ -769,8 +770,17 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
     }
 
-    public void updateCustomerKeywordStatus(List<String> customerUuids, Integer status) {
-        customerKeywordDao.updateCustomerKeywordStatus(customerUuids, status);
+    public SearchEngineResultVO getCustomerKeywordForAutoUpdateNegative(String terminalType, String group) throws Exception
+    {
+        SearchEngineResultVO searchEngineResultVO = customerKeywordDao.getCustomerKeywordForAutoUpdateNegative(terminalType, group);
+        if(searchEngineResultVO != null) {
+            customerKeywordDao.updateAutoUpdateNegativeTime(terminalType, group, searchEngineResultVO.getKeyword());
+        }
+        return searchEngineResultVO;
+    }
+
+    public void updateAutoUpdateNegativeTimeAs4MinutesAgo(String terminalType, String group){
+        customerKeywordDao.updateAutoUpdateNegativeTimeAs4MinutesAgo(terminalType, group);
     }
 
     public void controlCustomerKeywordStatus() {
