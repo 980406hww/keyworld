@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.criteria.CaptureCurrentRankJobCriteria;
 import com.keymanager.monitoring.criteria.CustomerCriteria;
 import com.keymanager.monitoring.entity.*;
+import com.keymanager.monitoring.enums.CaptureRankExectionStatus;
 import com.keymanager.monitoring.service.*;
 import com.keymanager.util.TerminalTypeMapping;
 import org.apache.shiro.SecurityUtils;
@@ -49,7 +50,7 @@ public class CrawlRankingRsetController {
     public ResponseEntity<?> saveCrawlRanking(@RequestBody CaptureCurrentRankJob captureCurrentRankJob,HttpServletRequest request){
         try{
             if(captureCurrentRankJob.getUuid()==null) {
-                captureCurrentRankJob.setExectionStatus("New");
+                captureCurrentRankJob.setExectionStatus(CaptureRankExectionStatus.New.name());
                 captureCurrentRankJob.setOperationType(request.getSession().getAttribute("terminalType").toString());
                 captureCurrentRankJob.setCreateBy(request.getSession().getAttribute("username").toString());
                 captureCurrentRankJobService.insert(captureCurrentRankJob);

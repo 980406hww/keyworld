@@ -5,6 +5,7 @@ import com.keymanager.monitoring.criteria.BaseCriteria;
 import com.keymanager.monitoring.criteria.CaptureRankCriteria;
 import com.keymanager.monitoring.entity.CaptureCurrentRankJob;
 import com.keymanager.monitoring.entity.CustomerKeyword;
+import com.keymanager.monitoring.enums.CaptureRankExectionStatus;
 import com.keymanager.monitoring.service.CaptureCurrentRankJobService;
 import com.keymanager.monitoring.service.CustomerKeywordService;
 import com.keymanager.util.TerminalTypeMapping;
@@ -21,7 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -39,14 +42,33 @@ public class ExternalCrawlRankingRsetController extends SpringMVCBaseController 
     @Autowired
     private CustomerKeywordService customerKeywordService;
 
-    @RequestMapping(value = "/crawlRankingExternalInterface", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/crawlRankingExternalInterface", method = RequestMethod.POST)
     public ResponseEntity<?> doCrawlRanking(@RequestBody BaseCriteria baseCriteria) {
         String userName = baseCriteria.getUserName();
         String password = baseCriteria.getUserName();
         try {
             if (validUser(userName, password)) {
-                CaptureCurrentRankJob captureCurrentRankJobs = captureCurrentRankJobService.provideCaptureCurrentRankJob();
-                return new ResponseEntity<Object>(captureCurrentRankJobs, HttpStatus.OK);
+                CaptureCurrentRankJob captureCurrentRankJob = captureCurrentRankJobService.provideCaptureCurrentRankJob();
+                return new ResponseEntity<Object>(captureCurrentRankJob, HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+    }
+    @RequestMapping(value = "/updateJob", method = RequestMethod.POST)
+    public ResponseEntity<?> updateJob(@RequestBody  CaptureRankCriteria captureRankCriteria) {
+        String userName = captureRankCriteria.getUserName();
+        String password = captureRankCriteria.getUserName();
+        CaptureCurrentRankJob captureCurrentRankJob=captureRankCriteria.getCaptureRankJob();
+        try {
+            if (validUser(userName, password)) {
+                captureCurrentRankJob.setExectionStatus(CaptureRankExectionStatus.Complete.name());
+                captureCurrentRankJob.setEndTime(new Time(new Date().getTime()));
+                captureCurrentRankJob.setLastExecutionDate(new java.sql.Date(new Date().getTime()));
+                captureCurrentRankJobService.updateById(captureCurrentRankJob);
+                return new ResponseEntity<Object>(HttpStatus.OK);
             }
         } catch (Exception e) {
             logger.error(e.getMessage());

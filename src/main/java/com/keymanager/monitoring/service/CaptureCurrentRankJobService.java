@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.criteria.CaptureCurrentRankJobCriteria;
 import com.keymanager.monitoring.dao.CaptureCurrentRankJobDao;
 import com.keymanager.monitoring.entity.CaptureCurrentRankJob;
+import com.keymanager.monitoring.enums.CaptureRankExectionStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,7 @@ import java.util.List;
  * Created by shunshikj24 on 2017/9/26.
  */
 @Service
-public class CaptureCurrentRankJobService  extends ServiceImpl<CaptureCurrentRankJobDao, CaptureCurrentRankJob> {
+public class CaptureCurrentRankJobService extends ServiceImpl<CaptureCurrentRankJobDao, CaptureCurrentRankJob> {
     @Autowired
     private CaptureCurrentRankJobDao captureCurrentRankJobDao;
 
@@ -30,7 +31,7 @@ public class CaptureCurrentRankJobService  extends ServiceImpl<CaptureCurrentRan
         } else {
             captureCurrentRankJob = captureCurrentRankJobDao.provideCaptureCurrentRankJob();
             captureCurrentRankJob.setStartTime(new Time(new Date().getTime()));
-            captureCurrentRankJob.setExectionStatus("Processing");
+            captureCurrentRankJob.setExectionStatus(CaptureRankExectionStatus.Processing.name());
             captureCurrentRankJobDao.updateById(captureCurrentRankJob);
             return captureCurrentRankJob;
         }
