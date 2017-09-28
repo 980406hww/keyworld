@@ -12,7 +12,7 @@
 				<ref bean="cronTriggerSwitchClientStatusGroup" />
 				<ref bean="cronTriggerRenewalNotification" />
 				<ref bean="cronTriggerGenerateDailyReport" />
-				<ref bean="cronTriggercomplaintsReportSchedule" />
+				<ref bean="cronTriggerComplaintsReportSchedule" />
 			</list>
 		</property>
 		<!-- Quartz配置, 本地运行无需单独的quartz.properties文件，在此简单配置即可 -->
@@ -27,7 +27,7 @@
 
 	<bean id="cronTriggerControlCustomerKeywordStatus" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="cronJobDetailControlCustomerKeywordStatus" />
-		<property name="cronExpression" value="0 20 01 * * ?" />
+		<property name="cronExpression" value="0 0 30 * * ?" />
 	</bean>
 
 	<!-- JobDetajil, 基于MethodInvokingJobDetailFactoryBean调用普通Spring Bean -->
@@ -89,7 +89,7 @@
 	</bean>
 
 	<!--发送投诉邮件-->
-	<bean id="cronTriggercomplaintsReportSchedule" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	<bean id="cronTriggerComplaintsReportSchedule" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="cronJobDetailcomplaintsReportSchedule" />
 		<property name="cronExpression" value="0 0 10 * * ?" />
 		<!--<property name="cronExpression" value=" 0 */1 * * * ?" />-->
