@@ -16,6 +16,7 @@
         c.fCreateTime AS `createTime`,
         c.fUpdateTime AS `updateTime`,
         c.fLastExecutionDate AS `lastExecutionDate`
+        c.fRowNumber AS `rowNumber`
     </sql>
     <select id="searchCaptureCurrentRankJob" resultType="com.keymanager.monitoring.entity.CaptureCurrentRankJob">
         select
@@ -40,7 +41,7 @@
             limit 1;
     </select>
     <select id="searchProcessingJob" resultType="com.keymanager.monitoring.entity.CaptureCurrentRankJob">
-        select c.fUuid as uuid,c.fGroupNames AS `groupNames`,c.fCustomerID AS `customerID` c.fStartTime AS `startTime` from t_capture_rank_job c
+        select c.fUuid as uuid,c.fGroupNames AS `groupNames`,c.fCustomerID AS `customerID` c.fStartTime AS `startTime`,c.fRowNumber AS `rowNumber` from t_capture_rank_job c
         where
         c.fExectionStatus='Processing'
         order By c.fExectionTime
