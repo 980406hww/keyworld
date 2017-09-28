@@ -36,10 +36,10 @@ public class CaptureCurrentRankJob extends BaseEntity{
     private String exectionStatus;
 
     @TableField(value = "fStartTime")
-    private java.sql.Time startTime;
+    private Date startTime;
 
     @TableField(value = "fEndTime")
-    private java.sql.Time endTime;
+    private Date endTime;
 
     @TableField(value = "fCreateBy")
     private String createBy;
@@ -112,19 +112,19 @@ public class CaptureCurrentRankJob extends BaseEntity{
         this.exectionStatus = exectionStatus;
     }
 
-    public Time getStartTime() {
+    public Date getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Time startTime) {
+    public void setStartTime(Date startTime) {
         this.startTime = startTime;
     }
 
-    public Time getEndTime() {
+    public Date getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Time endTime) {
+    public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
 

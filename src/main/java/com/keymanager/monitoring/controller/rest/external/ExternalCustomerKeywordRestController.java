@@ -236,7 +236,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         Date startTime = (Date) requestMap.get("startTime");
 
         Integer customerUuid = (requestMap.get("customerUuid") == null) ? null : (Integer) requestMap.get("customerUuid");
-        int minutes = (Integer) requestMap.get("minutes");
+        Integer minutes = (Integer) requestMap.get("minutes");
         try {
             if (validUser(userName, password)) {
                 CustomerKeywordForCapturePosition capturePosition = customerKeywordService.getCustomerKeywordForCapturePosition(terminalType,

@@ -7,7 +7,7 @@
     <style type="text/css">
         ul{list-style: none}
         ul li{margin: 5px}
-        ul li span{width: 100px;text-align: right;display: inline-block}
+        ul li > span{width: 100px;text-align: right;display: inline-block}
         input[type='radio']{ margin: 0 5px 0 10px;}
         input[type='checkbox']{ margin: 0 5px 0 10px;}
     </style>
@@ -73,6 +73,7 @@
 
         function showCrawlRankingForm(uuid)
         {
+            $('#crawlRankingForm')[0].reset();
             $("#crawlRankingDialog").dialog({
                 resizable: false,
                 title:"添加抓排名任务",
@@ -140,7 +141,7 @@
             }
             CaptureCurrentRankJob.groupNames=$("#crawlRankingForm #groupNames").val();
             CaptureCurrentRankJob.customerID=$("#crawlRankingForm input[name=customerID]").val();
-            CaptureCurrentRankJob.operationType="";
+            //CaptureCurrentRankJob.operationType="";
             /*var operationType=$("#crawlRankingForm input[name=operationType]:checked");
             if(operationType.length>0)
             {
@@ -199,7 +200,8 @@
                         }*/
                         $("#crawlRankingForm input[name=exectionType][value="+data.exectionType+"]").attr("checked",true);
                         $("#crawlRankingForm #exectionTime").val(data.exectionTime);
-                        $("#crawlRankingForm #rowNumber").val(data.rowNumber);
+                        /*$("#crawlRankingForm #rowNumber").val(data.rowNumber);*/
+                        $('#crawlRankingForm #rowNumber').spinner('setValue',data.rowNumber);
 
                     }
                     else {
@@ -214,8 +216,10 @@
 
         function modifyCaptureCurrentRankJob(uuid)
         {
-            showCrawlRankingForm(uuid);
+
             initCrawlRankingForm(uuid);
+            showCrawlRankingForm(uuid);
+
         }
 
         function deleteCaptureCurrentRankJob(uuid)
@@ -313,7 +317,7 @@
     </script>
 </head>
 <body>
-<div id="topDiv" style="height: 100px">
+<div id="topDiv">
     <%@include file="/menu.jsp" %>
     <div style="margin-top: 35px">
         <form method="post" id="searchCaptureCurrentRankJobForm" action="/internal/crawlRanking/crawlRanking" style="margin-bottom:0px ">
@@ -328,17 +332,16 @@
                 <option value="">请选择终端类型</option>
                 <option value="PC" <c:if test="${captureCurrentRankJobCriteria.operationType.equals('PC')}">selected="selected"</c:if>>PC</option>
                 <option value="Phone" <c:if test="${captureCurrentRankJobCriteria.operationType.equals('Phone')}">selected="selected"</c:if>>Phone</option>
-                <option value="PC,Phone" <c:if test="${captureCurrentRankJobCriteria.operationType.equals('PC,Phone')}">selected="selected"</c:if>>PC,Phone</option>
             </select>
             执行类型:
             <select name="exectionType">
                 <option value="">请选择执行类型</option>
                 <option value="Once" <c:if test="${captureCurrentRankJobCriteria.exectionType.equals('Once')}">selected="selected"</c:if>>Once</option>
                 <option value="Everyday" <c:if test="${captureCurrentRankJobCriteria.exectionType.equals('Everyday')}">selected="selected"</c:if>>Everyday</option>
-            </select>
-            <input type="submit" value="查询">
-            <input type="button" value="添加" onclick="showCrawlRankingForm()">
-            <input type="button" value="删除所选" onclick="deleteCaptureCurrentRankJobs()">
+            </select>&nbsp;&nbsp;
+            <input type="submit" value="查询">&nbsp;&nbsp;
+            <input type="button" value="添加" onclick="showCrawlRankingForm()">&nbsp;&nbsp;
+            <input type="button" value="删除所选" onclick="deleteCaptureCurrentRankJobs()">&nbsp;&nbsp;
         </form>
     </div>
     <table style="font-size:12px; width: 100%;" id="headerTable">
@@ -349,6 +352,7 @@
             <td align="center" width=60>操作类型</td>
             <td align="center" width=60>执行类型</td>
             <td align="center" width=100>执行时间</td>
+            <td align="center" width=40>抓取截止条数</td>
             <td align="center" width=60>状态</td>
             <td align="center" width=60>创建人</td>
             <td align="center" width=100>创建时间</td>
@@ -362,7 +366,7 @@
     </table>
 </div>
 <div id="centerDiv">
-    <table style="font-size:12px; width: 100%;" id="showCaptureCurrentRankJobTable" style="margin-top: 100px">
+    <table style="font-size:12px; width: 100%;" id="showCaptureCurrentRankJobTable">
         <c:forEach items="${page.records}" var="captureCurrentRankJob" varStatus="status">
         <tr align="left" onmouseover="doOver(this);" onmouseout="doOut(this);" height=30  <c:if test="${status.index%2==0}">bgcolor="#eee"</c:if> >
             <td width=10 align="center"><input type="checkbox" name="uuid" value="${captureCurrentRankJob.uuid}" onclick="decideSelectAll()"/></td>
@@ -371,13 +375,14 @@
             <td width=60>${captureCurrentRankJob.operationType}</td>
             <td width=60>${captureCurrentRankJob.exectionType}</td>
             <td width=60><fmt:formatDate value="${captureCurrentRankJob.exectionTime}" pattern="HH:mm:ss"/></td>
+            <td width=40>${captureCurrentRankJob.rowNumber}</td>
             <td width=50>${captureCurrentRankJob.exectionStatus}</td>
             <td width=60>${captureCurrentRankJob.createBy}</td>
             <td width=100><fmt:formatDate value="${captureCurrentRankJob.createTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
             <td width=60>${captureCurrentRankJob.updateBy}</td>
             <td width=100><fmt:formatDate value="${captureCurrentRankJob.updateTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
-            <td width=60><fmt:formatDate value="${captureCurrentRankJob.startTime}" pattern="HH:mm:ss"/></td>
-            <td width=60><fmt:formatDate value="${captureCurrentRankJob.endTime}" pattern="HH:mm:ss"/></td>
+            <td width=60><fmt:formatDate value="${captureCurrentRankJob.startTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+            <td width=60><fmt:formatDate value="${captureCurrentRankJob.endTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
             <td width=60>${captureCurrentRankJob.lastExecutionDate}</td>
             <td width=80>
                 <a href="javascript:modifyCaptureCurrentRankJob('${captureCurrentRankJob.uuid}')">修改</a>
@@ -396,7 +401,7 @@
        <%--<li><span>操作类型:</span><input type="checkbox" name="operationType"  value="PC">电脑端</label><input type="checkbox" name="operationType" value="Phone">手机端</li>--%>
         <li><span>执行方式:</span><input type="radio" name="exectionType" checked  value="Once">一次性</label><input type="radio" name="exectionType" value="Everyday">每天</li>
         <li><span>执行时间:</span><input type="text" class="Wdate" name="exectionTime" id="exectionTime" onfocus="WdatePicker({lang:'zh-cn',dateFmt:'HH:mm:ss'})"></li>
-        <li><span>抓取截止条数:</span><input type="text" name="rowNumber" id="rowNumber"></li>
+        <li><span>抓取截止条数:</span><input id="rowNumber" name="rowNumber" class="easyui-numberspinner"  style="width:80px;" data-options="min:50,max:300,increment:20"></li>
     </ul>
 </form>
 </div>
