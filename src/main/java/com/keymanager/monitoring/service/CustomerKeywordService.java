@@ -1,4 +1,4 @@
-package com.keymanager.monitoring.service;
+﻿package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
@@ -26,7 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -75,7 +74,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     private UserRoleService userRoleService;
 
     @Autowired
-    private NegativeListService negativeListService;
+    private CustomerKeywordOptimizedCountLogService customerKeywordOptimizedCountLogService;
 
     @Autowired
     private CaptureRealUrlService captureRealUrlService;
@@ -591,9 +590,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     public void updateOptimizationResult(String terminalType, Long customerKeywordUuid, int count, String ip, String city, String clientID, String status, String freeSpace, String version){
         if(configService.optimizationDateChanged()) {
+            customerKeywordOptimizedCountLogService.addCustomerKeywordOptimizedCountLog(customerKeywordUuid, count);
             configService.updateOptimizationDateAsToday();
             customerKeywordDao.resetOptimizationInfo();
         }
+
         customerKeywordDao.updateOptimizationResult(customerKeywordUuid, count);
         clientStatusService.logClientStatusTime(terminalType, clientID, status, freeSpace, version, city, count);
         customerKeywordIPService.addCustomerKeywordIP(customerKeywordUuid, city, ip);
@@ -768,16 +769,23 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
     }
 
-    public SearchEngineResultVO getCustomerKeywordForAutoUpdateNegative(String terminalType, String group) throws Exception
-    {
-        SearchEngineResultVO searchEngineResultVO = customerKeywordDao.getCustomerKeywordForAutoUpdateNegative(terminalType, group);
-        if(searchEngineResultVO != null) {
-            customerKeywordDao.updateAutoUpdateNegativeTime(terminalType, group, searchEngineResultVO.getKeyword());
-        }
-        return searchEngineResultVO;
+    public void updateCustomerKeywordStatus(List<String> customerUuids, Integer status) {
+        customerKeywordDao.updateCustomerKeywordStatus(customerUuids, status);
     }
 
-    public void updateAutoUpdateNegativeTimeAs4MinutesAgo(String terminalType, String group){
-        customerKeywordDao.updateAutoUpdateNegativeTimeAs4MinutesAgo(terminalType, group);
+    public void controlCustomerKeywordStatus() {
+        List<CustomerKeywordOptimizedCountLog> customerKeywordOptimizedCountLogList = customerKeywordOptimizedCountLogService.groupCustomerKeywordOptimizedCountLogs();
+        for (CustomerKeywordOptimizedCountLog countLog : customerKeywordOptimizedCountLogList) {
+            CustomerKeywordOptimizedCountLog currentCountLog = customerKeywordOptimizedCountLogService.findCurrentCountLog(countLog.getCustomerKeywordUuid());
+            CustomerKeywordOptimizedCountLog threeDaysAgoCountLog = customerKeywordOptimizedCountLogService.findThreeDaysAgoCountLog(countLog.getCustomerKeywordUuid());
+
+            if(null != currentCountLog && null != threeDaysAgoCountLog) {
+                if(currentCountLog.getOptimizedCount() == threeDaysAgoCountLog.getOptimizedCount()) {
+                    CustomerKeyword customerKeyword = customerKeywordDao.selectById(currentCountLog.getCustomerKeywordUuid());
+                    customerKeyword.setStatus(0);
+                    customerKeywordDao.updateById(customerKeyword);
+                }
+            }
+        }
     }
 }
