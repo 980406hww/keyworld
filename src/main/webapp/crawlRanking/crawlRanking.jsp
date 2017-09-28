@@ -333,8 +333,8 @@
             执行类型:
             <select name="exectionType">
                 <option value="">请选择执行类型</option>
-                <option value="once" <c:if test="${captureCurrentRankJobCriteria.exectionType.equals('once')}">selected="selected"</c:if>>once</option>
-                <option value="everyday" <c:if test="${captureCurrentRankJobCriteria.exectionType.equals('everyday')}">selected="selected"</c:if>>everyday</option>
+                <option value="Once" <c:if test="${captureCurrentRankJobCriteria.exectionType.equals('Once')}">selected="selected"</c:if>>Once</option>
+                <option value="Everyday" <c:if test="${captureCurrentRankJobCriteria.exectionType.equals('Everyday')}">selected="selected"</c:if>>Everyday</option>
             </select>
             <input type="submit" value="查询">
             <input type="button" value="添加" onclick="showCrawlRankingForm()">
@@ -394,7 +394,7 @@
         <li><span>输入优化组名:</span><input type="text" name="groupNames" id="groupNames"></li>
         <li><span>输入客户名:</span><input type="text" name="customerID" id="searchCustomer"></li>
        <%--<li><span>操作类型:</span><input type="checkbox" name="operationType"  value="PC">电脑端</label><input type="checkbox" name="operationType" value="Phone">手机端</li>--%>
-        <li><span>执行方式:</span><input type="radio" name="exectionType" checked  value="once">一次性</label><input type="radio" name="exectionType" value="everyday">每天</li>
+        <li><span>执行方式:</span><input type="radio" name="exectionType" checked  value="Once">一次性</label><input type="radio" name="exectionType" value="Everyday">每天</li>
         <li><span>执行时间:</span><input type="text" class="Wdate" name="exectionTime" id="exectionTime" onfocus="WdatePicker({lang:'zh-cn',dateFmt:'HH:mm:ss'})"></li>
         <li><span>抓取截止条数:</span><input type="text" name="rowNumber" id="rowNumber"></li>
     </ul>

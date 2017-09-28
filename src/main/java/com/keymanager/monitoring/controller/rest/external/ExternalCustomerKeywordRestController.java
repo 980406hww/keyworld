@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -232,12 +233,14 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         String terminalType = TerminalTypeMapping.getTerminalType(request);
 
         List<String> groupNames = (List<String>) requestMap.get("groupNames");
+        Date startTime = (Date) requestMap.get("startTime");
+
         Integer customerUuid = (requestMap.get("customerUuid") == null) ? null : (Integer) requestMap.get("customerUuid");
         int minutes = (Integer) requestMap.get("minutes");
         try {
             if (validUser(userName, password)) {
                 CustomerKeywordForCapturePosition capturePosition = customerKeywordService.getCustomerKeywordForCapturePosition(terminalType,
-                        groupNames, customerUuid != null ? customerUuid.longValue() : null, minutes);
+                        groupNames, customerUuid != null ? customerUuid.longValue() : null, startTime, minutes);
                 return new ResponseEntity<Object>(capturePosition, HttpStatus.OK);
             }
         }catch (Exception ex){

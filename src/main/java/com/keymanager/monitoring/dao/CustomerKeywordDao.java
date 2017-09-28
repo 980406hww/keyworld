@@ -8,6 +8,7 @@ import com.keymanager.monitoring.criteria.CustomerKeywordUpdateGroupCriteria;
 import com.keymanager.monitoring.entity.CustomerKeyword;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -74,7 +75,8 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
                                   @Param("queryInterval")int queryInterval);
 
     CustomerKeyword getCustomerKeywordForCapturePosition(@Param("terminalType")String terminalType, @Param("groupNames")List<String> groupNames,
-                                                         @Param("customerUuid")Long customerUuid, @Param("minutes")int minutes);
+                                                         @Param("customerUuid")Long customerUuid, @Param("startTime")Date startTime, @Param("minutes")Integer minutes);
+
     void resetInvalidRefreshCount(@Param("customerKeywordRefreshStatInfoCriteria")CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria);
 
     void updateCustomerKeywordStatus(@Param("customerUuids")List<String> customerUuids, @Param("status")Integer status);

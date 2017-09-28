@@ -10,6 +10,8 @@ import com.keymanager.monitoring.entity.CaptureCurrentRankJob;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Time;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -20,14 +22,22 @@ public class CaptureCurrentRankJobService  extends ServiceImpl<CaptureCurrentRan
     @Autowired
     private CaptureCurrentRankJobDao captureCurrentRankJobDao;
 
-    public  CaptureCurrentRankJob provideCaptureCurrentRankJob()
-    {
-        CaptureCurrentRankJob captureCurrentRankJob = captureCurrentRankJobDao.provideCaptureCurrentRankJob();
-        return captureCurrentRankJob;
+    public CaptureCurrentRankJob provideCaptureCurrentRankJob() {
+        CaptureCurrentRankJob captureCurrentRankJob = null;
+        captureCurrentRankJob = captureCurrentRankJobDao.searchProcessingJob();
+        if (captureCurrentRankJob != null) {
+            return captureCurrentRankJob;
+        } else {
+            captureCurrentRankJob = captureCurrentRankJobDao.provideCaptureCurrentRankJob();
+            captureCurrentRankJob.setStartTime(new Time(new Date().getTime()));
+            captureCurrentRankJob.setExectionStatus("Processing");
+            captureCurrentRankJobDao.updateById(captureCurrentRankJob);
+            return captureCurrentRankJob;
+        }
     }
-    public Page<CaptureCurrentRankJob> searchCaptureCurrentRankJob(Page<CaptureCurrentRankJob> page, CaptureCurrentRankJobCriteria captureCurrentRankJobCriteria)
-    {
-        List<CaptureCurrentRankJob> captureCurrentRankJobs = captureCurrentRankJobDao.searchCaptureCurrentRankJob(page,captureCurrentRankJobCriteria);
+
+    public Page<CaptureCurrentRankJob> searchCaptureCurrentRankJob(Page<CaptureCurrentRankJob> page, CaptureCurrentRankJobCriteria captureCurrentRankJobCriteria) {
+        List<CaptureCurrentRankJob> captureCurrentRankJobs = captureCurrentRankJobDao.searchCaptureCurrentRankJob(page, captureCurrentRankJobCriteria);
         page.setRecords(captureCurrentRankJobs);
         return page;
     }

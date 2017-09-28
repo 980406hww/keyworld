@@ -49,6 +49,7 @@ public class CrawlRankingRsetController {
     public ResponseEntity<?> saveCrawlRanking(@RequestBody CaptureCurrentRankJob captureCurrentRankJob,HttpServletRequest request){
         try{
             if(captureCurrentRankJob.getUuid()==null) {
+                captureCurrentRankJob.setExectionStatus("New");
                 captureCurrentRankJob.setOperationType(request.getSession().getAttribute("terminalType").toString());
                 captureCurrentRankJob.setCreateBy(request.getSession().getAttribute("username").toString());
                 captureCurrentRankJobService.insert(captureCurrentRankJob);

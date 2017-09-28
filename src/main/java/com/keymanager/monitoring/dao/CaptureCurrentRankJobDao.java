@@ -15,4 +15,5 @@ import java.util.List;
 public interface CaptureCurrentRankJobDao extends BaseMapper<CaptureCurrentRankJob> {
    public List<CaptureCurrentRankJob> searchCaptureCurrentRankJob(Page<CaptureCurrentRankJob> page, @Param("captureCurrentRankJobCriteria") CaptureCurrentRankJobCriteria captureCurrentRankJobCriteria);
    public CaptureCurrentRankJob provideCaptureCurrentRankJob();
+   public CaptureCurrentRankJob searchProcessingJob();
 }

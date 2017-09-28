@@ -32,11 +32,18 @@
          select c.fUuid as uuid,c.fGroupNames AS `groupNames`,c.fCustomerID AS `customerID` from t_capture_rank_job c
          where
          (
-            c.fExectionStatus IS null or c.fExectionStatus='' or
-            (c.fExectionStatus='complete' and c.fExectionType='everyday' and c.fLastExecutionDate &lt; curdate())
+            c.fExectionStatus='New' or
+            (c.fExectionStatus='Complete' and c.fExectionType='Everyday' and c.fLastExecutionDate &lt; curdate())
           )
             and c.fExectionTime &lt;= curtime()
             order By c.fExectionTime
             limit 1;
+    </select>
+    <select id="searchProcessingJob" resultType="com.keymanager.monitoring.entity.CaptureCurrentRankJob">
+        select c.fUuid as uuid,c.fGroupNames AS `groupNames`,c.fCustomerID AS `customerID` from t_capture_rank_job c
+        where
+        c.fExectionStatus='Processing'
+        order By c.fExectionTime
+        limit 1;
     </select>
 </mapper>
