@@ -13,4 +13,8 @@ public interface CustomerKeywordOptimizedCountLogDao extends BaseMapper<Customer
     CustomerKeywordOptimizedCountLog findCurrentCountLog(@Param("customerKeywordUuid") Long customerKeywordUuid);
 
     CustomerKeywordOptimizedCountLog findThreeDaysAgoCountLog(@Param("customerKeywordUuid") Long customerKeywordUuid);
+
+    List<Integer> findInvalidCustomerKeyword();
+
+    void addCustomerKeywordOptimizedCountLog();
 }

@@ -19,24 +19,11 @@ public class CustomerKeywordOptimizedCountLogService extends ServiceImpl<Custome
 	@Autowired
 	private CustomerKeywordService customerKeywordService;
 
-	public void addCustomerKeywordOptimizedCountLog(Long customerKeywordUuid, int count) {
-		CustomerKeyword customerKeyword = customerKeywordService.selectById(customerKeywordUuid);
-		CustomerKeywordOptimizedCountLog customerKeywordOptimizedCountLog = new CustomerKeywordOptimizedCountLog();
-		customerKeywordOptimizedCountLog.setCustomerKeywordUuid(customerKeywordUuid);
-		customerKeywordOptimizedCountLog.setOptimizedCount(customerKeyword.getOptimizedCount() + count);
-		customerKeywordOptimizedCountLog.setOptimizedDate(new Date());
-		customerKeywordOptimizedCountLogDao.insert(customerKeywordOptimizedCountLog);
+	public void addCustomerKeywordOptimizedCountLog() {
+		customerKeywordOptimizedCountLogDao.addCustomerKeywordOptimizedCountLog();
 	}
 
-	public List<CustomerKeywordOptimizedCountLog> groupCustomerKeywordOptimizedCountLogs() {
-		return customerKeywordOptimizedCountLogDao.groupCustomerKeywordOptimizedCountLogs();
-	}
-
-	public CustomerKeywordOptimizedCountLog findCurrentCountLog(Long customerKeywordUuid) {
-		return customerKeywordOptimizedCountLogDao.findCurrentCountLog(customerKeywordUuid);
-	}
-
-	public CustomerKeywordOptimizedCountLog findThreeDaysAgoCountLog(Long customerKeywordUuid) {
-		return customerKeywordOptimizedCountLogDao.findThreeDaysAgoCountLog(customerKeywordUuid);
+	public List<Integer> findInvalidCustomerKeyword() {
+		return customerKeywordOptimizedCountLogDao.findInvalidCustomerKeyword();
 	}
 }

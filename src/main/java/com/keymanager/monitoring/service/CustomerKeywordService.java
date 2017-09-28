@@ -457,6 +457,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
 
         if(configService.optimizationDateChanged()) {
+            customerKeywordOptimizedCountLogService.addCustomerKeywordOptimizedCountLog();
             configService.updateOptimizationDateAsToday();
             customerKeywordDao.resetOptimizationInfo();
         }
@@ -591,7 +592,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     public void updateOptimizationResult(String terminalType, Long customerKeywordUuid, int count, String ip, String city, String clientID, String status, String freeSpace, String version){
         if(configService.optimizationDateChanged()) {
-            customerKeywordOptimizedCountLogService.addCustomerKeywordOptimizedCountLog(customerKeywordUuid, count);
+            customerKeywordOptimizedCountLogService.addCustomerKeywordOptimizedCountLog();
             configService.updateOptimizationDateAsToday();
             customerKeywordDao.resetOptimizationInfo();
         }
@@ -784,18 +785,14 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void controlCustomerKeywordStatus() {
-        List<CustomerKeywordOptimizedCountLog> customerKeywordOptimizedCountLogList = customerKeywordOptimizedCountLogService.groupCustomerKeywordOptimizedCountLogs();
-        for (CustomerKeywordOptimizedCountLog countLog : customerKeywordOptimizedCountLogList) {
-            CustomerKeywordOptimizedCountLog currentCountLog = customerKeywordOptimizedCountLogService.findCurrentCountLog(countLog.getCustomerKeywordUuid());
-            CustomerKeywordOptimizedCountLog threeDaysAgoCountLog = customerKeywordOptimizedCountLogService.findThreeDaysAgoCountLog(countLog.getCustomerKeywordUuid());
-
-            if(null != currentCountLog && null != threeDaysAgoCountLog) {
-                if(currentCountLog.getOptimizedCount() == threeDaysAgoCountLog.getOptimizedCount()) {
-                    CustomerKeyword customerKeyword = customerKeywordDao.selectById(currentCountLog.getCustomerKeywordUuid());
-                    customerKeyword.setStatus(0);
-                    customerKeywordDao.updateById(customerKeyword);
-                }
+        List<Integer> invalidCustomerKeywords = customerKeywordOptimizedCountLogService.findInvalidCustomerKeyword();
+        for(Integer customerKeywordUuid : invalidCustomerKeywords) {
+            CustomerKeyword customerKeyword = customerKeywordDao.selectById(customerKeywordUuid);
+            if(null != customerKeyword) {
+                customerKeyword.setStatus(0);
+                customerKeywordDao.updateById(customerKeyword);
             }
         }
+
     }
 }
