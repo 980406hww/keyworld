@@ -320,10 +320,14 @@
 
 
     <select id="searchTitleAndUrl" resultType="com.keymanager.monitoring.entity.CustomerKeyword">
-        select ck.fUuid as uuid,ck.fUrl as url,ck.fTitle as title from t_customer_keyword ck
+        select  <include refid="colID"/>
+        from t_customer_keyword ck
         where ck.fCustomerUuid=#{customerID} and ck.fOptimizeGroupName in
         <foreach item="groupName" collection="groupNames" open="(" separator="," close=")">
             #{groupName}
         </foreach>
+        and DATE_FORMAT(ck.fCapturePositionQueryTime,'%Y-%m-%d') &lt; curdate() or ck.fCapturePositionQueryTime IS NULL
+        order By ck.fCapturePositionQueryTime
+        limit 1
     </select>
 </mapper>

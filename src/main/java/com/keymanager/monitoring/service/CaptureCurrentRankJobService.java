@@ -20,10 +20,10 @@ public class CaptureCurrentRankJobService  extends ServiceImpl<CaptureCurrentRan
     @Autowired
     private CaptureCurrentRankJobDao captureCurrentRankJobDao;
 
-    public  List<CaptureCurrentRankJob> searchCaptureCurrentRankJobs()
+    public  CaptureCurrentRankJob provideCaptureCurrentRankJob()
     {
-        List<CaptureCurrentRankJob> captureCurrentRankJobs = captureCurrentRankJobDao.searchCaptureCurrentRankJobs();
-        return captureCurrentRankJobs;
+        CaptureCurrentRankJob captureCurrentRankJob = captureCurrentRankJobDao.provideCaptureCurrentRankJob();
+        return captureCurrentRankJob;
     }
     public Page<CaptureCurrentRankJob> searchCaptureCurrentRankJob(Page<CaptureCurrentRankJob> page, CaptureCurrentRankJobCriteria captureCurrentRankJobCriteria)
     {

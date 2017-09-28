@@ -49,12 +49,14 @@ public class CrawlRankingRsetController {
     public ResponseEntity<?> saveCrawlRanking(@RequestBody CaptureCurrentRankJob captureCurrentRankJob,HttpServletRequest request){
         try{
             if(captureCurrentRankJob.getUuid()==null) {
+                captureCurrentRankJob.setOperationType(request.getSession().getAttribute("terminalType").toString());
                 captureCurrentRankJob.setCreateBy(request.getSession().getAttribute("username").toString());
                 captureCurrentRankJobService.insert(captureCurrentRankJob);
                 return new ResponseEntity<Object>(true, HttpStatus.OK);
             }
             else
             {
+                captureCurrentRankJob.setOperationType(request.getSession().getAttribute("terminalType").toString());
                 captureCurrentRankJob.setUpdateBy(request.getSession().getAttribute("username").toString());
                 captureCurrentRankJob.setUpdateTime(new Date());
                 captureCurrentRankJobService.updateById(captureCurrentRankJob);
@@ -152,7 +154,7 @@ public class CrawlRankingRsetController {
        return new ModelAndView("/crawlRanking/crawlRanking").addObject("captureCurrentRankJobs", captureCurrentRankJobs);
     }*/
 
-    @RequestMapping(value="/crawlRankingExternalInterface",method = RequestMethod.GET)
+   /* @RequestMapping(value="/crawlRankingExternalInterface",method = RequestMethod.GET)
     public ModelAndView doCrawlRanking() {
         List<CaptureCurrentRankJob> captureCurrentRankJobs = captureCurrentRankJobService.searchCaptureCurrentRankJobs();
         List<CustomerKeyword> customerKeywordlist= new ArrayList<CustomerKeyword>();
@@ -166,5 +168,5 @@ public class CrawlRankingRsetController {
         }
 
         return new ModelAndView("/crawlRanking/crawlRanking").addObject("captureCurrentRankJobs", captureCurrentRankJobs);
-    }
+    }*/
 }

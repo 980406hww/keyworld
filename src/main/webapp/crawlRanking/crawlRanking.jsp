@@ -141,16 +141,18 @@
             CaptureCurrentRankJob.groupNames=$("#crawlRankingForm #groupNames").val();
             CaptureCurrentRankJob.customerID=$("#crawlRankingForm input[name=customerID]").val();
             CaptureCurrentRankJob.operationType="";
-            var operationType=$("#crawlRankingForm input[name=operationType]:checked");
+            /*var operationType=$("#crawlRankingForm input[name=operationType]:checked");
             if(operationType.length>0)
             {
                 $.each(operationType,function(idx,val){
                     CaptureCurrentRankJob.operationType=CaptureCurrentRankJob.operationType+$(val).val()+",";
                 })
                 CaptureCurrentRankJob.operationType=CaptureCurrentRankJob.operationType.substring(0,CaptureCurrentRankJob.operationType.length-1);
-            }
+            }*/
             CaptureCurrentRankJob.exectionType=$("#crawlRankingForm input[name=exectionType]:checked").val();
             CaptureCurrentRankJob.exectionTime=$("#crawlRankingForm #exectionTime").val();
+            CaptureCurrentRankJob.rowNumber=$("#crawlRankingForm #rowNumber").val();
+
             alert(JSON.stringify(CaptureCurrentRankJob));
             $.ajax({
                 url: '/internal/crawlRanking/saveCaptureCurrentRankJob',
@@ -190,13 +192,15 @@
                     if (data) {
                         $("#crawlRankingForm #groupNames").val(data.groupNames);
                         $("#crawlRankingForm input[name=customerID]").val(data.customerID);
-                        var split = data.operationType.split(",");
+                        /*var split = data.operationType.split(",");
                         for(var i=0;i<split.length;i++)
                         {
                             $("input:checkbox[name=operationType][value="+split[i]+"]").attr('checked',true);
-                        }
+                        }*/
                         $("#crawlRankingForm input[name=exectionType][value="+data.exectionType+"]").attr("checked",true);
                         $("#crawlRankingForm #exectionTime").val(data.exectionTime);
+                        $("#crawlRankingForm #rowNumber").val(data.rowNumber);
+
                     }
                     else {
                         $().toastmessage('showErrorToast', "获取失败");
@@ -346,13 +350,13 @@
             <td align="center" width=60>执行类型</td>
             <td align="center" width=100>执行时间</td>
             <td align="center" width=60>状态</td>
-            <td align="center" width=60>最后执行日期</td>
-            <td align="center" width=100>创建时间</td>
             <td align="center" width=60>创建人</td>
-            <td align="center" width=100>修改时间</td>
+            <td align="center" width=100>创建时间</td>
             <td align="center" width=60>修改人</td>
-            <td align="center" width=100>开始抓取时间</td>
-            <td align="center" width=100>最后抓取时间</td>
+            <td align="center" width=100>修改时间</td>
+            <td align="center" width=60>开始抓取时间</td>
+            <td align="center" width=60>最后抓取时间</td>
+            <td align="center" width=60>最后执行日期</td>
             <td align="center" width=80>操作</td>
         </tr>
     </table>
@@ -368,17 +372,16 @@
             <td width=60>${captureCurrentRankJob.exectionType}</td>
             <td width=60><fmt:formatDate value="${captureCurrentRankJob.exectionTime}" pattern="HH:mm:ss"/></td>
             <td width=50>${captureCurrentRankJob.exectionStatus}</td>
-            <td width=60>${captureCurrentRankJob.lastExecutionDate}</td>
-            <td width=100><fmt:formatDate value="${captureCurrentRankJob.createTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
             <td width=60>${captureCurrentRankJob.createBy}</td>
-            <td width=100><fmt:formatDate value="${captureCurrentRankJob.updateTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+            <td width=100><fmt:formatDate value="${captureCurrentRankJob.createTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
             <td width=60>${captureCurrentRankJob.updateBy}</td>
-            <td width=100><fmt:formatDate value="${captureCurrentRankJob.startTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
-            <td width=100><fmt:formatDate value="${captureCurrentRankJob.endTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+            <td width=100><fmt:formatDate value="${captureCurrentRankJob.updateTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+            <td width=60><fmt:formatDate value="${captureCurrentRankJob.startTime}" pattern="HH:mm:ss"/></td>
+            <td width=60><fmt:formatDate value="${captureCurrentRankJob.endTime}" pattern="HH:mm:ss"/></td>
+            <td width=60>${captureCurrentRankJob.lastExecutionDate}</td>
             <td width=80>
                 <a href="javascript:modifyCaptureCurrentRankJob('${captureCurrentRankJob.uuid}')">修改</a>
                 <a href="javascript:deleteCaptureCurrentRankJob('${captureCurrentRankJob.uuid}')">删除</a>
-
             </td>
         </tr>
         </c:forEach>
@@ -390,9 +393,10 @@
         <input type="hidden" name="captureCurrentRankJobUuid" id="captureCurrentRankJobUuid">
         <li><span>输入优化组名:</span><input type="text" name="groupNames" id="groupNames"></li>
         <li><span>输入客户名:</span><input type="text" name="customerID" id="searchCustomer"></li>
-        <li><span>操作类型:</span><input type="checkbox" name="operationType"  value="PC">电脑端</label><input type="checkbox" name="operationType" value="Phone">手机端</li>
+       <%--<li><span>操作类型:</span><input type="checkbox" name="operationType"  value="PC">电脑端</label><input type="checkbox" name="operationType" value="Phone">手机端</li>--%>
         <li><span>执行方式:</span><input type="radio" name="exectionType" checked  value="once">一次性</label><input type="radio" name="exectionType" value="everyday">每天</li>
         <li><span>执行时间:</span><input type="text" class="Wdate" name="exectionTime" id="exectionTime" onfocus="WdatePicker({lang:'zh-cn',dateFmt:'HH:mm:ss'})"></li>
+        <li><span>抓取截止条数:</span><input type="text" name="rowNumber" id="rowNumber"></li>
     </ul>
 </form>
 </div>

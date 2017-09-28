@@ -3,11 +3,13 @@
 <script type="text/javascript">
     $(function() {
         $('#resourceEditPid').combotree({
+
             url : '${path }/resource/tree',
             parentField : 'parentID',
             lines : true,
             panelHeight : 'auto',
             value : '${resource.parentID}'
+
         });
         
         $('#resourceEditForm').form({
@@ -31,6 +33,7 @@
                     var form = $('#resourceEditForm');
                     parent.$.messager.alert('提示', eval(result.msg), 'warning');
                 }
+
             }
         });
         $("#resourceEditStatus").val("${resource.status}");

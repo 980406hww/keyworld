@@ -21,7 +21,7 @@ public class CaptureCurrentRankJob extends BaseEntity{
     private String groupNames;
 
     @TableField(value = "fCustomerID")
-    private String customerID;
+    private Long customerID;
 
     @TableField(value = "fOperationType")
     private String operationType;
@@ -36,10 +36,10 @@ public class CaptureCurrentRankJob extends BaseEntity{
     private String exectionStatus;
 
     @TableField(value = "fStartTime")
-    private Date startTime;
+    private java.sql.Time startTime;
 
     @TableField(value = "fEndTime")
-    private Date endTime;
+    private java.sql.Time endTime;
 
     @TableField(value = "fCreateBy")
     private String createBy;
@@ -48,7 +48,27 @@ public class CaptureCurrentRankJob extends BaseEntity{
     private String updateBy;
 
     @TableField(value = "fLastExecutionDate")
-    private Date lastExecutionDate;
+    private java.sql.Date lastExecutionDate;
+
+    @TableField(value = "fRowNumber")
+    private Integer rowNumber;
+
+    public Long getCustomerID() {
+        return customerID;
+    }
+
+    public void setCustomerID(Long customerID) {
+        this.customerID = customerID;
+    }
+
+    public Integer getRowNumber() {
+        return rowNumber;
+    }
+
+    public void setRowNumber(Integer rowNumber) {
+        this.rowNumber = rowNumber;
+    }
+
 
     public String getGroupNames() {
         return groupNames;
@@ -58,13 +78,7 @@ public class CaptureCurrentRankJob extends BaseEntity{
         this.groupNames = groupNames;
     }
 
-    public String getCustomerID() {
-        return customerID;
-    }
 
-    public void setCustomerID(String customerID) {
-        this.customerID = customerID;
-    }
 
     public String getOperationType() {
         return operationType;
@@ -98,19 +112,19 @@ public class CaptureCurrentRankJob extends BaseEntity{
         this.exectionStatus = exectionStatus;
     }
 
-    public Date getStartTime() {
+    public Time getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Date startTime) {
+    public void setStartTime(Time startTime) {
         this.startTime = startTime;
     }
 
-    public Date getEndTime() {
+    public Time getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Date endTime) {
+    public void setEndTime(Time endTime) {
         this.endTime = endTime;
     }
 
@@ -130,11 +144,11 @@ public class CaptureCurrentRankJob extends BaseEntity{
         this.updateBy = updateBy;
     }
 
-    public Date getLastExecutionDate() {
+    public java.sql.Date getLastExecutionDate() {
         return lastExecutionDate;
     }
 
-    public void setLastExecutionDate(Date lastExecutionDate) {
+    public void setLastExecutionDate(java.sql.Date lastExecutionDate) {
         this.lastExecutionDate = lastExecutionDate;
     }
 }

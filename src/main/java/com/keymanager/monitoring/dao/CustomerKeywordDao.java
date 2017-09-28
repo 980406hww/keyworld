@@ -80,5 +80,5 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void updateCustomerKeywordStatus(@Param("customerUuids")List<String> customerUuids, @Param("status")Integer status);
 
 
-    public List<CustomerKeyword> searchTitleAndUrl(@Param("groupNames") String[] groupNames,@Param("customerID") String customerID);
+    public CustomerKeyword searchTitleAndUrl(@Param("groupNames") String[] groupNames,@Param("customerID") Long customerID);
 }
