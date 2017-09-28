@@ -1,10 +1,9 @@
-
 <%@ include file="/commons/basejs.jsp" %>
 <%@ include file="/commons/global.jsp" %>
 <script language="javascript" type="text/javascript" src="/common.js"></script>
 <html>
 <head>
-	<title>全站设置单</title>
+	<title>全站设置</title>
 	<style>
 
 		#div1{

@@ -7,6 +7,7 @@ import com.keymanager.monitoring.criteria.ClientStatusCriteria;
 import com.keymanager.monitoring.dao.ClientStatusDao;
 import com.keymanager.monitoring.entity.ClientStatus;
 import com.keymanager.monitoring.entity.ClientStatusRestartLog;
+import com.keymanager.util.FileUtil;
 import com.keymanager.util.Utils;
 import com.keymanager.util.common.StringUtil;
 import com.keymanager.util.VNCAddressBookParser;
@@ -147,6 +148,8 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 			oldClientStatus.setPort(clientStatus.getPort());
 			oldClientStatus.setUserName(clientStatus.getUserName());
 			oldClientStatus.setPassword(clientStatus.getPassword());
+			oldClientStatus.setBroadbandAccount(clientStatus.getBroadbandAccount());
+			oldClientStatus.setBroadbandPassword(clientStatus.getBroadbandPassword());
 			oldClientStatus.setVpsBackendSystemComputerID(clientStatus.getVpsBackendSystemComputerID());
 			oldClientStatus.setVpsBackendSystemPassword(clientStatus.getVpsBackendSystemPassword());
 			oldClientStatus.setEntryPageMinCount(clientStatus.getEntryPageMinCount());
@@ -217,6 +220,40 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 				}
 			}
 		}
+	}
+
+	public void uploadVPSFile(File file, String terminalType) throws Exception {
+		List<String> vpsInfos = FileUtil.readTxtFile(file,"UTF-8");
+		for (String vpsInfo : vpsInfos) {
+			String[] clientStatusInfo = vpsInfo.split("----");
+			ClientStatus existingClientStatus = clientStatusDao.selectById(clientStatusInfo[0]);
+			if(null != existingClientStatus) {
+				saveClientStatusByVPSFile(existingClientStatus, clientStatusInfo);
+				clientStatusDao.updateById(existingClientStatus);
+			} else {
+				ClientStatus clientStatus = new ClientStatus();
+				clientStatus.setTerminalType(terminalType);
+				clientStatus.setFreeSpace(500.00);
+				clientStatus.setDisableStatistics(0);
+				clientStatus.setValid(true);
+				saveClientStatusByVPSFile(clientStatus, clientStatusInfo);
+				clientStatusDao.insert(clientStatus);
+			}
+		}
+	}
+
+	private void saveClientStatusByVPSFile(ClientStatus clientStatus, String[] clientStatusInfo) {
+		String[] vncInfos = clientStatusInfo[2].split(":");
+		clientStatus.setClientID(clientStatusInfo[0]);
+		clientStatus.setVpsBackendSystemComputerID(clientStatusInfo[1]);
+		clientStatus.setHost(vncInfos[0]);
+		clientStatus.setPort(vncInfos[1]);
+		clientStatus.setUserName(clientStatusInfo[3]);
+		clientStatus.setPassword(clientStatusInfo[4]);
+		clientStatus.setBroadbandAccount(clientStatusInfo[5]);
+		clientStatus.setBroadbandPassword(clientStatusInfo[6]);
+		clientStatus.setLastVisitTime(Utils.getCurrentTimestamp());
+		clientStatus.setClientIDPrefix(Utils.removeDigital(clientStatusInfo[0]));
 	}
 
 	public void getVNCFileInfo(String terminalType) throws Exception {

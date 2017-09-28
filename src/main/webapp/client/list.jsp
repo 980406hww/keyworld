@@ -1,4 +1,4 @@
-<%@ include file="/commons/basejs.jsp" %>
+﻿<%@ include file="/commons/basejs.jsp" %>
 <%@ include file="/commons/global.jsp" %>
 <html>
 <head>
@@ -127,6 +127,9 @@
 							<shiro:hasPermission name="/internal/clientstatus/deleteClientStatuses">
 								&nbsp;&nbsp;<input type="button" onclick="delAllItems(this)" value=" 删除 ">
 							</shiro:hasPermission>
+							<shiro:hasPermission name="/internal/clientstatus/uploadVPSFile">
+								&nbsp;&nbsp;<input type="button" name="btnFilter" onclick="showUploadVPSDialog()" value=" 导入 ">
+							</shiro:hasPermission>
 						</td>
 						<td width="50px">
 
@@ -140,7 +143,6 @@
 							<shiro:hasPermission name="/internal/clientstatus/updateClientStatusRenewalDate">
 								|<a target="_blank" href="javascript:showRenewalSettingDialog(this)">续费</a>
 							</shiro:hasPermission>
-
 							<shiro:hasPermission name="/internal/clientstatus/resetRestartStatusForProcessing">
 								|<a target="_blank" href="javascript:resetRestartStatus()">重置重启状态</a>
 							</shiro:hasPermission>
@@ -163,15 +165,16 @@
 			<td align="center" width=40>客户端ID</td>
 			<td align="center" width=60>优化组</td>
 			<td align="center" width=60>操作类型</td>
-			<td align="center" width=40>续费</br>日期</td>
-			<td align="center" width=40>现版本</br>目标版本</td>
-			<td align="center" width=80>重启数/重启状态</br>页码/失败次数</td>
-			<td align="center" width=100>所在城市</br>终端状态</td>
-			<td align="center" width=40>剩余空间</td>
-			<td align="center" width=70>最新工作时间</br>重启时间</td>
-			<td align="center" width=50>重启排序时间</br>发通知时间</td>
-			<td align="center" width=50>成功次数</br>操作次数</td>
-			<td align="center" width=30>状态</td>
+			<td align="center" width=20>续费<br>日期</td>
+			<td align="center" width=30>现版本<br>目标版本</td>
+			<td align="center" width=40>重启数/重启状态<br>页码/失败次数</td>
+			<td align="center" width=100>所在城市<br>终端状态</td>
+			<td align="center" width=30>剩余空间</td>
+			<td align="center" width=40>最新工作时间<br>重启时间</td>
+			<td align="center" width=40>重启排序时间<br>发通知时间</td>
+			<td align="center" width=30>成功次数<br>操作次数</td>
+			<td align="center" width=50>宽带账号<br>宽带密码</td>
+			<td align="center" width=20>状态</td>
 			<td align="center" width=40>失败原因</td>
 			<td align="center" width=40>服务器ID</td>
 			<td align="center" width=80>操作</td>
@@ -203,7 +206,7 @@
 				</c:otherwise>
 			</c:choose>
 			<c:choose>
-				<c:when test="${tr.count % 2 == 0}">
+				<c:when test="${tr.count % 2 != 0}">
 					<tr onmouseover="doOver(this);" onmouseout="doOut(this);" style="background-color: #eeeeee;">
 				</c:when>
 				<c:otherwise>
@@ -217,7 +220,6 @@
 					<span name="invalidClient" id="span_${clientStatus.clientID}"></span>
 				</c:if>
 			</td>
-
 			<td width=60>
 				<shiro:hasPermission name="/internal/clientstatus/updateGroup">
 					<input type="text" value="${clientStatus.group == null ? "" : clientStatus.group}"
@@ -231,14 +233,12 @@
 			<td width=60>
 				<shiro:hasPermission name="/internal/clientstatus/updateOperationType">
 					<select name="operationType${clientStatus.clientID}" id="operationType${clientStatus.clientID}"
-							onChange="updateOperationType(this)" style="width: 100%;"
-							/>
+							onChange="updateOperationType(this)" style="width: 100%;" />
 				</shiro:hasPermission>
 
 				<shiro:lacksPermission name="/internal/clientstatus/updateOperationType">
 					<select name="operationType${clientStatus.clientID}" id="operationType${clientStatus.clientID}"
-							disabled style="width: 100%;"
-					/>
+							disabled style="width: 100%;" />
 				</shiro:lacksPermission>
 
 				<c:forEach items="${operationTypeValues}" var="operationType">
@@ -253,28 +253,29 @@
 				</c:forEach>
 				</select>
 			</td>
-			<td width=40><font color="${keywordColor}"><fmt:formatDate value="${clientStatus.renewalDate}"
+			<td width=20><font color="${keywordColor}"><fmt:formatDate value="${clientStatus.renewalDate}"
 															  pattern="MM-dd"/></font></td>
-			<td width=40><font
-					color="${keywordColor}">${clientStatus.version == null ? "" : clientStatus.version}</br>${clientStatus.targetVersion == null ? "" : clientStatus.targetVersion}</font>
+			<td width=30><font
+					color="${keywordColor}">${clientStatus.version == null ? "" : clientStatus.version}<br>${clientStatus.targetVersion == null ? "" : clientStatus.targetVersion}</font>
 			</td>
-			<td width=80><font
-					color="${keywordColor}">${clientStatus.restartCount}/${clientStatus.restartStatus == null ? "" : clientStatus.restartStatus}</br>${clientStatus.pageNo}/${clientStatus.continuousFailCount}</font>
+			<td width=40><font
+					color="${keywordColor}">${clientStatus.restartCount}/${clientStatus.restartStatus == null ? "" : clientStatus.restartStatus}<br>${clientStatus.pageNo}/${clientStatus.continuousFailCount}</font>
 			</td>
 			<td width=100 style="word-break: break-all;"><font
-					color="${keywordColor}">${clientStatus.city == null ? "" : clientStatus.city}</br>${clientStatus.status == null ? "" : clientStatus.status}</font>
+					color="${keywordColor}">${clientStatus.city == null ? "" : clientStatus.city}<br>${clientStatus.status == null ? "" : clientStatus.status}</font>
 			</td>
-			<td width=40><font color="${keywordColor}">${clientStatus.freeSpace}</font></td>
-			<td width=70><font color="${keywordColor}"><fmt:formatDate value="${clientStatus.lastVisitTime}"
-															  pattern="MM-dd HH:mm"/></br><fmt:formatDate
+			<td width=30><font color="${keywordColor}">${clientStatus.freeSpace}</font></td>
+			<td width=40><font color="${keywordColor}"><fmt:formatDate value="${clientStatus.lastVisitTime}"
+															  pattern="MM-dd HH:mm"/><br><fmt:formatDate
 					value="${clientStatus.restartTime}" pattern="MM-dd HH:mm"/></font></td>
-			<td width=50><font color="${keywordColor}"><fmt:formatDate value="${clientStatus.restartOrderingTime}"
-															  pattern="MM-dd HH:mm"/></br><fmt:formatDate
+			<td width=40><font color="${keywordColor}"><fmt:formatDate value="${clientStatus.restartOrderingTime}"
+															  pattern="MM-dd HH:mm"/><br><fmt:formatDate
 					value="${clientStatus.lastSendNotificationTime}" pattern="MM-dd HH:mm"/></font></td>
-			<td width=50><font
-					color="${keywordColor}">${clientStatus.optimizationSucceedCount}</br>${clientStatus.optimizationTotalCount}</font>
+			<td width=30><font
+					color="${keywordColor}">${clientStatus.optimizationSucceedCount}<br>${clientStatus.optimizationTotalCount}</font>
 			</td>
-			<td width=30><font color="${keywordColor}">${clientStatus.valid ? "监控中" : "暂停监控"}</font></td>
+			<td width=50><font color="${keywordColor}">${clientStatus.broadbandAccount}<br>${clientStatus.broadbandPassword}</font></td>
+			<td width=20><font color="${keywordColor}">${clientStatus.valid ? "监控中" : "暂停监控"}</font></td>
 			<td width=40><input type="text"
 					   value="${clientStatus.upgradeFailedReason == null ? "" : clientStatus.upgradeFailedReason}"
 					   name="upgradeFailedReason" id="${clientStatus.clientID}" onBlur="updateUpgradeFailedReason(this)"
@@ -297,7 +298,7 @@
 				<shiro:hasPermission name="/internal/clientstatus/deleteClientStatus">
 				<a href="javascript:delItem('${clientStatus.clientID}')">删除</a>
 				</shiro:hasPermission>
-				</br>
+				<br>
 				<shiro:hasPermission name="/internal/clientstatus/changeStatus">
 				<c:choose>
 					<c:when test="${clientStatus.valid}">
@@ -343,6 +344,7 @@
 	<script language="javascript">
         $(function () {
             $('#uploadVNCDialog').dialog("close");
+            $('#uploadVPSDialog').dialog("close");
             $("#changeSettingDialog").dialog("close");
             $("#targetVersionSettingDialog").dialog("close");
             $("#renewalSettingDialog").dialog("close");
@@ -477,6 +479,63 @@
                     }]
             });
             $('#uploadVNCDialog').window("resize",{top:$(document).scrollTop() + 100});
+        }
+
+        function showUploadVPSDialog() {
+            $('#uploadVPSDialog').dialog({
+                resizable: false,
+                width: 300,
+                modal: true,
+                title: '上传VPS文件',
+                buttons: [{
+                    text: '上传',
+                    iconCls: 'icon-ok',
+                    handler: function () {
+                        var fileValue = $("#uploadVPSDialog").find("#file").val();
+                        if(fileValue == ""){
+                            alert("请选择要上传的VPS文件!");
+                            return false;
+                        }
+                        var posIndex = fileValue.indexOf(".txt");
+                        if (posIndex == -1) {
+                            alert("只能上传txt文件！");
+                            return false;
+                        }
+
+                        var formData = new FormData();
+                        formData.append('file', $("#uploadVPSDialog").find("#file")[0].files[0]);
+                        $.ajax({
+                            url: '/internal/clientstatus/uploadVPSFile',
+                            type: 'POST',
+                            cache: false,
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            success: function (result) {
+                                if (result) {
+                                    $().toastmessage('showSuccessToast', "上传成功",true);
+									/* window.location.reload();*/
+                                } else {
+                                    $().toastmessage('showErrorToast', "上传失败");
+                                }
+                                $(this).dialog("close");
+                            },
+                            error: function () {
+                                $().toastmessage('showErrorToast', "上传失败");
+                                $(this).dialog("close");
+                            }
+                        });
+                    }
+                },
+                    {
+                        text: '取消',
+                        iconCls: 'icon-cancel',
+                        handler: function () {
+                            $('#uploadVPSDialog').dialog("close");
+                        }
+                    }]
+            });
+            $('#uploadVPSDialog').window("resize",{top:$(document).scrollTop() + 100});
         }
 
         function decideSelectAll() {
@@ -728,7 +787,7 @@
 		function showSettingDialog(clientID, self){
 		    $.ajax({
 		        url: '/internal/clientstatus/getClientStatus/' + clientID,
-		        type: 'Get',
+		        type: 'POST',
 		        success: function (clientStatus) {
 		        	if(clientStatus == null) {
                         $().toastmessage('showErrorToast', "获取信息失败");
@@ -738,7 +797,7 @@
                             resizable: false,
                             title: "设置",
                             width: 610,
-							maxHeight: 510,
+							maxHeight: 534,
                             modal: true,
                             buttons: [{
                                 text: '保存',
@@ -836,6 +895,8 @@
 			settingDialogDiv.find("#port").val(clientStatus.port != null ? clientStatus.port : "");
 			settingDialogDiv.find("#userName").val(clientStatus.userName != null ? clientStatus.userName : "Administrator");
 			settingDialogDiv.find("#password").val(clientStatus.password != null ? clientStatus.password : "doshows123");
+            settingDialogDiv.find("#broadbandAccount").val(clientStatus.broadbandAccount != null ? clientStatus.broadbandAccount : "");
+            settingDialogDiv.find("#broadbandPassword").val(clientStatus.broadbandPassword != null ? clientStatus.broadbandPassword : "");
 			settingDialogDiv.find("#vpsBackendSystemComputerID").val(clientStatus.vpsBackendSystemComputerID != null ? clientStatus.vpsBackendSystemComputerID :
 					"");
 			settingDialogDiv.find("#vpsBackendSystemPassword").val(clientStatus.vpsBackendSystemPassword != null ? clientStatus.vpsBackendSystemPassword : "doshows123");
@@ -862,6 +923,8 @@
 			clientStatus.port = settingDialogDiv.find("#port").val();
 			clientStatus.userName = settingDialogDiv.find("#userName").val();
 			clientStatus.password = settingDialogDiv.find("#password").val();
+            clientStatus.broadbandAccount = settingDialogDiv.find("#broadbandAccount").val();
+            clientStatus.broadbandPassword = settingDialogDiv.find("#broadbandPassword").val();
 			clientStatus.vpsBackendSystemComputerID = settingDialogDiv.find("#vpsBackendSystemComputerID").val();
 			clientStatus.vpsBackendSystemPassword = settingDialogDiv.find("#vpsBackendSystemPassword").val();
 
@@ -1081,15 +1144,15 @@
                         type: 'POST',
 						success: function (result) {
 							if(result){
-								span.html("</br>取词正常");
+								span.html("<br>取词正常");
 								span.css("color", "green");
 							}else{
-								span.html("</br>取不到词");
+								span.html("<br>取不到词");
 								span.css("color", "red");
 							}
 						},
 						error: function () {
-							span.html("</br>取词异常");
+							span.html("<br>取词异常");
 							span.css("color", "red");
 						}
 					});
@@ -1293,12 +1356,30 @@
 								<input type="text" name="vpsBackendSystemPassword" id="vpsBackendSystemPassword"/>
 							</td>
 						</tr>
+						<tr>
+							<th>最大用户数</th>
+							<td>
+								<input type="text" name="maxUserCount" id="maxUserCount" value="300"/>
+							</td>
+						</tr>
 					</table>
 				</td>
 
 
 				<td style="vertical-align:top;">
 					<table id="td_2" style="font-size:12px">
+						<tr>
+							<th>宽带账号</th>
+							<td>
+								<input type="text" name="broadbandAccount" id="broadbandAccount" value="" style="width:110px;"/>
+							</td>
+						</tr>
+						<tr>
+							<th>宽带密码</th>
+							<td>
+								<input type="text" name="broadbandPassword" id="broadbandPassword" value="" style="width:110px;"/>
+							</td>
+						</tr>
 						<tr>
 							<th>进入页</th>
 							<td>
@@ -1339,12 +1420,6 @@
 							<th>刷多少</th>
 							<td>
 								<input type="text" name="optimizeKeywordCountPerIP" id="optimizeKeywordCountPerIP" value="1"/>个词换IP
-							</td>
-						</tr>
-						<tr>
-							<th>最大用户数</th>
-							<td>
-								<input type="text" name="maxUserCount" id="maxUserCount" value="300"/>
 							</td>
 						</tr>
 						<tr>
@@ -1467,6 +1542,30 @@
 
 	<div id="uploadVNCDialog" class="easyui-dialog" style="left: 40%;">
 		<form method="post" id="uploadVNCForm" action="" enctype="multipart/form-data">
+			<table width="95%" style="margin-top: 10px;margin-left: 10px">
+				<tr>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+				</tr>
+				<tr>
+					<td align="right">
+						<table width="100%" style="font-size:14px;">
+							<tr>
+								<td>
+									<input type="file" id="file" name="file" size=50 height="50px" style="width: 260px;">
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+
+	<div id="uploadVPSDialog" class="easyui-dialog" style="left: 40%;">
+		<form method="post" id="uploadVPSForm" action="" enctype="multipart/form-data">
 			<table width="95%" style="margin-top: 10px;margin-left: 10px">
 				<tr>
 					<td></td>
