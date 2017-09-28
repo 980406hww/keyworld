@@ -6,6 +6,7 @@
         INSERT INTO t_ck_optimized_count_log(fCustomerKeywordUuid, fOptimizedCount, fOptimizedDate)
         SELECT fUuid AS 'fCustomerKeywordUuid', fOptimizedCount, DATE_SUB(CURRENT_DATE(),INTERVAL 1 DAY)
         FROM t_customer_keyword
+        WHERE fStatus = 1
     </insert>
 
     <select id="findInvalidCustomerKeyword" resultType="java.lang.Long">

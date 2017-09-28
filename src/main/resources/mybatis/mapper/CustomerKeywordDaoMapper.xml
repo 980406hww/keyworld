@@ -318,7 +318,7 @@
     <update id="updateCustomerKeywordStatus">
         UPDATE t_customer_keyword SET fStatus = #{status}
         WHERE fUuid IN
-        <foreach item="uuid" collection="customerUuids" open="(" separator="," close=")">
+        <foreach item="uuid"  collection="uuids" open="(" separator="," close=")">
             #{uuid}
         </foreach>
     </update>

@@ -1,4 +1,4 @@
-﻿package com.keymanager.monitoring.service;
+package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.keymanager.enums.CollectMethod;
+import com.keymanager.enums.CustomerKeywordStatus;
 import com.keymanager.manager.CustomerKeywordManager;
 import com.keymanager.monitoring.criteria.*;
 import com.keymanager.monitoring.dao.CustomerKeywordDao;
@@ -739,8 +740,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return customerKeyword;
     }
 
-    public void updateCustomerKeywordStatus(List<String> customerUuids, Integer status) {
-        customerKeywordDao.updateCustomerKeywordStatus(customerUuids, status);
+    public void updateCustomerKeywordStatus(List<Long> customerKeywordUuids, Integer status) {
+        customerKeywordDao.updateCustomerKeywordStatus(customerKeywordUuids, status);
     }
 
     public void autoUpdateNegativeCustomerKeywords(SearchEngineResultVO searchEngineResultVO, String terminalType, String loginName) throws Exception {
@@ -788,13 +789,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     public void controlCustomerKeywordStatus() {
         List<Long> invalidCustomerKeywords = customerKeywordOptimizedCountLogService.findInvalidCustomerKeyword();
-        for(Long customerKeywordUuid : invalidCustomerKeywords) {
-            CustomerKeyword customerKeyword = customerKeywordDao.selectById(customerKeywordUuid);
-            if(null != customerKeyword) {
-                customerKeyword.setStatus(0);
-                customerKeywordDao.updateById(customerKeyword);
-            }
-        }
-
+        do {
+            List<Long> subCustomerKeywordUuids = invalidCustomerKeywords.subList(0, (invalidCustomerKeywords.size() > 500) ? 500 : invalidCustomerKeywords.size());
+            customerKeywordDao.updateCustomerKeywordStatus(subCustomerKeywordUuids, CustomerKeywordStatus.Inactive.getCode());
+            invalidCustomerKeywords.removeAll(subCustomerKeywordUuids);
+        } while (invalidCustomerKeywords.size() > 0);
     }
 }
+

@@ -80,7 +80,7 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
                                                          @Param("customerUuid")Long customerUuid, @Param("minutes")int minutes);
     void resetInvalidRefreshCount(@Param("customerKeywordRefreshStatInfoCriteria")CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria);
 
-    void updateCustomerKeywordStatus(@Param("customerUuids")List<String> customerUuids, @Param("status")Integer status);
+    void updateCustomerKeywordStatus(@Param("uuids")List<Long> uuids, @Param("status")Integer status);
 
     SearchEngineResultVO getCustomerKeywordForAutoUpdateNegative(@Param("terminalType")String terminalType, @Param("groupName")String groupName);
 

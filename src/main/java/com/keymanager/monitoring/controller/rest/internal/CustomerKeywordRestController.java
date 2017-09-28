@@ -392,9 +392,9 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	@RequestMapping(value = "/updateCustomerKeywordStatus", method = RequestMethod.POST)
 	public ResponseEntity<?> updateCustomerKeywordStatus(@RequestBody Map<String, Object> requestMap) {
 		try {
-			List<String> customerUuids = (List<String>) requestMap.get("uuids");
+			List<Long> customerKeywordUuids = (List<Long>) requestMap.get("uuids");
 			Integer status = (Integer) requestMap.get("status");
-			customerKeywordService.updateCustomerKeywordStatus(customerUuids, status);
+			customerKeywordService.updateCustomerKeywordStatus(customerKeywordUuids, status);
 			return new ResponseEntity<Object>(true, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
