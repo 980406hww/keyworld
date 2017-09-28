@@ -223,26 +223,26 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 	}
 
 	public void uploadVPSFile(File file, String terminalType) throws Exception {
-		List<String> VPSInfos = FileUtil.readTxtFile(file,"UTF-8");
-		for (String VPSInfo : VPSInfos) {
-			String[] clientStatusInfo = VPSInfo.split("----");
-			ClientStatus oldClientStatus = clientStatusDao.selectById(clientStatusInfo[0]);
-			if(null != oldClientStatus.getClientID()) {
-				saveClientStatusByVPSFile(oldClientStatus, terminalType, clientStatusInfo);
-				clientStatusDao.updateById(oldClientStatus);
+		List<String> vpsInfos = FileUtil.readTxtFile(file,"UTF-8");
+		for (String vpsInfo : vpsInfos) {
+			String[] clientStatusInfo = vpsInfo.split("----");
+			ClientStatus existingClientStatus = clientStatusDao.selectById(clientStatusInfo[0]);
+			if(null != existingClientStatus) {
+				saveClientStatusByVPSFile(existingClientStatus, clientStatusInfo);
+				clientStatusDao.updateById(existingClientStatus);
 			} else {
 				ClientStatus clientStatus = new ClientStatus();
 				clientStatus.setTerminalType(terminalType);
 				clientStatus.setFreeSpace(500.00);
 				clientStatus.setDisableStatistics(0);
 				clientStatus.setValid(true);
-				saveClientStatusByVPSFile(clientStatus, terminalType, clientStatusInfo);
+				saveClientStatusByVPSFile(clientStatus, clientStatusInfo);
 				clientStatusDao.insert(clientStatus);
 			}
 		}
 	}
 
-	private void saveClientStatusByVPSFile(ClientStatus clientStatus, String terminalType, String[] clientStatusInfo) {
+	private void saveClientStatusByVPSFile(ClientStatus clientStatus, String[] clientStatusInfo) {
 		String[] vncInfos = clientStatusInfo[2].split(":");
 		clientStatus.setClientID(clientStatusInfo[0]);
 		clientStatus.setVpsBackendSystemComputerID(clientStatusInfo[1]);
