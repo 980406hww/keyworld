@@ -1,6 +1,8 @@
 package com.keymanager.util;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FileUtil {
     public static boolean createDir(String destDirName) {
@@ -20,6 +22,29 @@ public class FileUtil {
             return false;
         }
     }
+
+    public static List<String> readTxtFile(File file, String encoding){
+        try {
+            List<String> contents = new ArrayList<String>();
+            if(file.isFile() && file.exists()){ //判断文件是否存在
+                InputStreamReader read = new InputStreamReader(new FileInputStream(file),encoding);//考虑到编码格式
+                BufferedReader bufferedReader = new BufferedReader(read);
+                String lineTxt = null;
+                while((lineTxt = bufferedReader.readLine()) != null){
+                    contents.add(lineTxt);
+                }
+                read.close();
+                return contents;
+            }else{
+                System.out.println("找不到指定的文件");
+            }
+        } catch (Exception e) {
+            System.out.println("读取文件内容出错");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
     public static String readTxtFile(String fileName, String encoding) throws Exception {
         StringBuilder result = new StringBuilder();

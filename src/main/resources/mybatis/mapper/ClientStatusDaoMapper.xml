@@ -71,6 +71,8 @@
         cs.fPort AS "port",
         cs.fUserName AS "userName",
         cs.fPassword AS "password",
+        cs.fBroadbandAccount AS "broadbandAccount",
+        cs.fBroadbandPassword AS "broadbandPassword",
         cs.fFreeSpace AS "freeSpace",
         cs.fVPSBackendSystemComputerID AS "vPSBackendSystemComputerID",
         cs.fVPSBackendSystemPassword AS "vPSBackendSystemPassword",

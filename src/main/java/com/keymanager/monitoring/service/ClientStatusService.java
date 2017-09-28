@@ -7,6 +7,7 @@ import com.keymanager.monitoring.criteria.ClientStatusCriteria;
 import com.keymanager.monitoring.dao.ClientStatusDao;
 import com.keymanager.monitoring.entity.ClientStatus;
 import com.keymanager.monitoring.entity.ClientStatusRestartLog;
+import com.keymanager.util.FileUtil;
 import com.keymanager.util.Utils;
 import com.keymanager.util.common.StringUtil;
 import com.keymanager.util.VNCAddressBookParser;
@@ -147,6 +148,8 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 			oldClientStatus.setPort(clientStatus.getPort());
 			oldClientStatus.setUserName(clientStatus.getUserName());
 			oldClientStatus.setPassword(clientStatus.getPassword());
+			oldClientStatus.setBroadbandAccount(clientStatus.getBroadbandAccount());
+			oldClientStatus.setBroadbandPassword(clientStatus.getBroadbandPassword());
 			oldClientStatus.setVpsBackendSystemComputerID(clientStatus.getVpsBackendSystemComputerID());
 			oldClientStatus.setVpsBackendSystemPassword(clientStatus.getVpsBackendSystemPassword());
 			oldClientStatus.setEntryPageMinCount(clientStatus.getEntryPageMinCount());
@@ -216,6 +219,28 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 					writeTxtFile(clientStatus);
 				}
 			}
+		}
+	}
+
+	public void uploadVPSFile(File file, String terminalType) throws Exception {
+		List<String> VPSInfos = FileUtil.readTxtFile(file,"UTF-8");
+		for (String VPSInfo : VPSInfos) {
+			String[] clientStatusInfo = VPSInfo.split("----");
+			ClientStatus clientStatus = new ClientStatus();
+			clientStatus.setTerminalType(terminalType);
+			clientStatus.setClientID(clientStatusInfo[0]);
+			clientStatus.setVpsBackendSystemComputerID(clientStatusInfo[1]);
+			clientStatus.setHost(clientStatusInfo[2].substring(0,clientStatusInfo[2].indexOf(":")));
+			clientStatus.setPort(clientStatusInfo[2].substring(clientStatusInfo[2].indexOf(":") + 1));
+			clientStatus.setUserName(clientStatusInfo[3]);
+			clientStatus.setPassword(clientStatusInfo[4]);
+			clientStatus.setBroadbandAccount(clientStatusInfo[5]);
+			clientStatus.setBroadbandPassword(clientStatusInfo[6]);
+			clientStatus.setFreeSpace(500.00);
+			clientStatus.setDisableStatistics(0);
+			clientStatus.setLastVisitTime(Utils.getCurrentTimestamp());
+			clientStatus.setClientIDPrefix(Utils.removeDigital(clientStatusInfo[0]));
+			clientStatusDao.insert(clientStatus);
 		}
 	}
 

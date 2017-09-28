@@ -7,7 +7,9 @@ import com.keymanager.monitoring.entity.ClientStatus;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
 import com.keymanager.monitoring.service.ClientStatusService;
 import com.keymanager.util.Constants;
+import com.keymanager.util.FileUtil;
 import com.keymanager.util.TerminalTypeMapping;
+import com.keymanager.util.Utils;
 import com.keymanager.value.ClientStatusGroupSummaryVO;
 import com.keymanager.value.ClientStatusSummaryVO;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -182,7 +184,7 @@ public class ClientStatusRestController extends SpringMVCBaseController {
         }
     }
 
-    @RequestMapping(value = "/getClientStatus/{clientID}", method = RequestMethod.GET)
+    @RequestMapping(value = "/getClientStatus/{clientID}", method = RequestMethod.POST)
     public ResponseEntity<?> getClientStatus(@PathVariable("clientID") String clientID, HttpServletRequest request) {
         try {
             String terminalType = TerminalTypeMapping.getTerminalType(request);
@@ -249,6 +251,26 @@ public class ClientStatusRestController extends SpringMVCBaseController {
         try {
             String terminalType = TerminalTypeMapping.getTerminalType(request);
             clientStatusService.uploadVNCFile(file.getInputStream(), terminalType);
+            return true;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return false;
+    }
+
+    @RequiresPermissions("/internal/clientstatus/uploadVPSFile")
+    @RequestMapping(value = "/uploadVPSFile", method = RequestMethod.POST)
+    public boolean uploadVPSFile(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request) {
+        try {
+            String terminalType = TerminalTypeMapping.getTerminalType(request);
+            String path = Utils.getWebRootPath() + "vpsfile";
+            File targetFile = new File(path, "vps.txt");
+            if(!targetFile.exists()){
+                targetFile.mkdirs();
+            }
+            file.transferTo(targetFile);
+            clientStatusService.uploadVPSFile(targetFile, terminalType);
+            FileUtil.delFolder(path);
             return true;
         } catch (Exception e) {
             logger.error(e.getMessage());

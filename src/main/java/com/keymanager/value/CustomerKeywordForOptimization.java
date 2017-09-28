@@ -56,6 +56,9 @@ public class CustomerKeywordForOptimization {
 	private int waitTimeAfterClick;
 	private int maxUserCount;
 	private String currentTime;
+
+	private String broadbandAccount;
+	private String broadbandPassword;
 	
 	private List<String> excludeTitles; 
 
@@ -489,5 +492,21 @@ public class CustomerKeywordForOptimization {
 
 	public void setDisableStatistics(int disableStatistics) {
 		this.disableStatistics = disableStatistics;
+	}
+
+	public String getBroadbandAccount() {
+		return broadbandAccount;
+	}
+
+	public void setBroadbandAccount(String broadbandAccount) {
+		this.broadbandAccount = broadbandAccount;
+	}
+
+	public String getBroadbandPassword() {
+		return broadbandPassword;
+	}
+
+	public void setBroadbandPassword(String broadbandPassword) {
+		this.broadbandPassword = broadbandPassword;
 	}
 }

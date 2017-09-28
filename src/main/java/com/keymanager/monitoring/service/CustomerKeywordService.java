@@ -482,6 +482,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
             customerKeywordForOptimization.setGroup(clientStatus.getGroup());
             customerKeywordForOptimization.setOperationType(clientStatus.getOperationType());
+            customerKeywordForOptimization.setBroadbandAccount(clientStatus.getBroadbandAccount());
+            customerKeywordForOptimization.setBroadbandPassword(clientStatus.getBroadbandPassword());
 
             if("pc_pm_xiaowu".equals(customerKeyword.getOptimizeGroupName()) && (customerKeyword.getCurrentPosition() == 0 ||
                     customerKeyword.getCurrentPosition() > 20)) {
