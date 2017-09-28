@@ -30,7 +30,8 @@
         </where>
     </select>
     <select id="provideCaptureCurrentRankJob" resultType="com.keymanager.monitoring.entity.CaptureCurrentRankJob">
-         select c.fUuid as uuid,c.fGroupNames AS `groupNames`,c.fCustomerID AS `customerID` from t_capture_rank_job c
+         select <include refid="colID"/>
+          from t_capture_rank_job c
          where
          (
             c.fExectionStatus='New' or
@@ -42,7 +43,7 @@
     </select>
     <select id="searchProcessingJob" resultType="com.keymanager.monitoring.entity.CaptureCurrentRankJob">
         select <include refid="colID"/>
-        from t_capture_rank_job c
+          from t_capture_rank_job c
         where
         c.fExectionStatus='Processing'
         order By c.fExectionTime
