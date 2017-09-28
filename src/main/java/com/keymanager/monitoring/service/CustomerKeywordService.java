@@ -785,8 +785,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void controlCustomerKeywordStatus() {
-        List<Integer> invalidCustomerKeywords = customerKeywordOptimizedCountLogService.findInvalidCustomerKeyword();
-        for(Integer customerKeywordUuid : invalidCustomerKeywords) {
+        List<Long> invalidCustomerKeywords = customerKeywordOptimizedCountLogService.findInvalidCustomerKeyword();
+        for(Long customerKeywordUuid : invalidCustomerKeywords) {
             CustomerKeyword customerKeyword = customerKeywordDao.selectById(customerKeywordUuid);
             if(null != customerKeyword) {
                 customerKeyword.setStatus(0);

@@ -23,7 +23,7 @@ public class CustomerKeywordOptimizedCountLogService extends ServiceImpl<Custome
 		customerKeywordOptimizedCountLogDao.addCustomerKeywordOptimizedCountLog();
 	}
 
-	public List<Integer> findInvalidCustomerKeyword() {
+	public List<Long> findInvalidCustomerKeyword() {
 		return customerKeywordOptimizedCountLogDao.findInvalidCustomerKeyword();
 	}
 }
