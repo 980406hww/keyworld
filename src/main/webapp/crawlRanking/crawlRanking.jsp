@@ -73,7 +73,7 @@
         {
             $('#searchCustomer').combogrid({
                 model:'remote',
-                panelWidth:450,
+                panelWidth:460,
                 value:'',
                 idField:'uuid',
                 textField:'contactPerson',
@@ -95,22 +95,26 @@
                 },
                 onChange:function()
                 {
-                    alert($('#searchCustomer').combogrid("getValue"));
-                    initGroupNames($('#searchCustomer').combogrid("getValue"));
+                    if($.isNumeric($('#searchCustomer').combogrid("getValue")))
+                    {
+                        initGroupNames($('#searchCustomer').combogrid("getValue"));
+                    }
                 }
 
             });
         }
         function initGroupNames(customerID)
         {
+
             $('#groupNames').combobox({
                 url:'/internal/crawlRanking/searchGroups?customerID='+customerID, //后台获取下拉框数据的url
                 method:'post',
-                panelHeight:300,//设置为固定高度，combobox出现竖直滚动条
+                //panelHeight:300,//设置为固定高度，combobox出现竖直滚动条
                 valueField:'optimizeGroupName',
                 textField:'optimizeGroupName',
                 multiple:true,
                 dataType:'json',
+                editable:false,
                 formatter: function (row) { //formatter方法就是实现了在每个下拉选项前面增加checkbox框的方法
                     var opts = $(this).combobox('options');
                     return '<input type="checkbox" class="combobox-checkbox">' + row[opts.textField]
@@ -131,7 +135,6 @@
                      el.find('input.combobox-checkbox')._propAttr('checked', true);
                      })*/
                     $.map(values, function (value) {
-                        alert(value);
                         var el = opts.finder.getEl(target, value);
                         el.find('input.combobox-checkbox')._propAttr('checked', true);
                     })
@@ -164,8 +167,8 @@
             $("#crawlRankingDialog").dialog({
                 resizable: false,
                 title:"添加抓排名任务",
-                width: 500,
-                height:350,
+                /*width: 500,
+                height:350,*/
                 fitColumns:true,//自动大小
                 modal: true,
                 //按钮
@@ -224,7 +227,7 @@
             CaptureCurrentRankJob.exectionTime=$("#crawlRankingForm #exectionTime").val();
             CaptureCurrentRankJob.rowNumber=$("#crawlRankingForm #rowNumber").val();
 
-            alert(JSON.stringify(CaptureCurrentRankJob));
+
             $.ajax({
                 url: '/internal/crawlRanking/saveCaptureCurrentRankJob',
                 data:JSON.stringify(CaptureCurrentRankJob),
@@ -325,7 +328,7 @@
             var a = document.getElementsByName("uuid");
             var uuids = '';
             for (var i = 0; i < a.length; i++) {
-                //alert(a[i].value);
+
                 if (a[i].checked) {
                     if (uuids === '') {
                         uuids = a[i].value;
@@ -395,7 +398,7 @@
 <div id="topDiv">
     <%@include file="/menu.jsp" %>
     <div style="margin-top: 35px">
-        <form method="post" id="searchCaptureCurrentRankJobForm" action="/internal/crawlRanking/crawlRanking" style="margin-bottom:0px ">
+        <form method="post" id="searchCaptureCurrentRankJobForm" action="/internal/crawlRanking/searchCaptureCurrentRankJob" style="margin-bottom:0px ">
             <input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}" />
             <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
             <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
@@ -422,19 +425,19 @@
     <table style="font-size:12px; width: 100%;" id="headerTable">
         <tr bgcolor="" height="30">
             <td align="center" width=10><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
-            <td align="center" width=80>组名</td>
             <td align="center" width=40>客户ID</td>
+            <td align="center" width=80>组名</td>
             <td align="center" width=60>操作类型</td>
             <td align="center" width=60>执行类型</td>
-            <td align="center" width=100>执行时间</td>
+            <td align="center" width=60>执行时间</td>
             <td align="center" width=40>抓取截止条数</td>
-            <td align="center" width=60>状态</td>
+            <td align="center" width=50>状态</td>
             <td align="center" width=60>创建人</td>
-            <td align="center" width=100>创建时间</td>
+            <td align="center" width=90>创建时间</td>
             <td align="center" width=60>修改人</td>
-            <td align="center" width=100>修改时间</td>
-            <td align="center" width=60>开始抓取时间</td>
-            <td align="center" width=60>最后抓取时间</td>
+            <td align="center" width=90>修改时间</td>
+            <td align="center" width=90>开始抓取时间</td>
+            <td align="center" width=90>最后抓取时间</td>
             <td align="center" width=60>最后执行日期</td>
             <td align="center" width=80>操作</td>
         </tr>
@@ -445,19 +448,19 @@
         <c:forEach items="${page.records}" var="captureCurrentRankJob" varStatus="status">
         <tr align="left" onmouseover="doOver(this);" onmouseout="doOut(this);" height=30  <c:if test="${status.index%2==0}">bgcolor="#eee"</c:if> >
             <td width=10 align="center"><input type="checkbox" name="uuid" value="${captureCurrentRankJob.uuid}" onclick="decideSelectAll()"/></td>
-            <td width=80>${captureCurrentRankJob.groupNames}</td>
             <td width=40>${captureCurrentRankJob.customerID}</td>
+            <td width=80>${captureCurrentRankJob.groupNames}</td>
             <td width=60>${captureCurrentRankJob.operationType}</td>
             <td width=60>${captureCurrentRankJob.exectionType}</td>
             <td width=60><fmt:formatDate value="${captureCurrentRankJob.exectionTime}" pattern="HH:mm:ss"/></td>
             <td width=40>${captureCurrentRankJob.rowNumber}</td>
             <td width=50>${captureCurrentRankJob.exectionStatus}</td>
             <td width=60>${captureCurrentRankJob.createBy}</td>
-            <td width=100><fmt:formatDate value="${captureCurrentRankJob.createTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+            <td width=90><fmt:formatDate value="${captureCurrentRankJob.createTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
             <td width=60>${captureCurrentRankJob.updateBy}</td>
-            <td width=100><fmt:formatDate value="${captureCurrentRankJob.updateTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
-            <td width=60><fmt:formatDate value="${captureCurrentRankJob.startTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
-            <td width=60><fmt:formatDate value="${captureCurrentRankJob.endTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+            <td width=90><fmt:formatDate value="${captureCurrentRankJob.updateTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+            <td width=90><fmt:formatDate value="${captureCurrentRankJob.startTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+            <td width=90><fmt:formatDate value="${captureCurrentRankJob.endTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
             <td width=60>${captureCurrentRankJob.lastExecutionDate}</td>
             <td width=80>
                 <a href="javascript:modifyCaptureCurrentRankJob('${captureCurrentRankJob.uuid}')">修改</a>
@@ -471,12 +474,12 @@
 <form id="crawlRankingForm">
     <ul>
         <input type="hidden" name="captureCurrentRankJobUuid" id="captureCurrentRankJobUuid">
-        <li><span>输入客户名:</span><input type="text" name="customerID" id="searchCustomer" style="width: 200px"></li>
-        <li><span>输入优化组名:</span><input type="text" name="groupNames" id="groupNames" class="easyui-combobox" style="width: 200px"></li>
+        <li><span>输入客户名:</span><input type="text" name="customerID" id="searchCustomer" style="width: 200px" required></li>
+        <li><span>输入优化组名:</span><input type="text" name="groupNames" id="groupNames" class="easyui-combobox" style="width: 200px" data-options="editable:false" required></li>
        <%--<li><span>操作类型:</span><input type="checkbox" name="operationType"  value="PC">电脑端</label><input type="checkbox" name="operationType" value="Phone">手机端</li>--%>
         <li><span>执行方式:</span><input type="radio" name="exectionType" checked  value="Once">一次性</label><input type="radio" name="exectionType" value="Everyday">每天</li>
-        <li><span>执行时间:</span><input type="text" class="Wdate" name="exectionTime" id="exectionTime" onfocus="WdatePicker({lang:'zh-cn',dateFmt:'HH:mm:ss'})"></li>
-        <li><span>抓取截止条数:</span><input id="rowNumber" name="rowNumber" class="easyui-numberspinner"  style="width:80px;" data-options="min:50,max:300,increment:20"></li>
+        <li><span>执行时间:</span><input type="text" class="Wdate" name="exectionTime" id="exectionTime" onfocus="WdatePicker({lang:'zh-cn',dateFmt:'HH:mm:ss'})" required></li>
+        <li><span>抓取截止条数:</span><input id="rowNumber" name="rowNumber" class="easyui-numberspinner"  data-options="min:0,max:1000,increment:50" required></li>
     </ul>
 </form>
 </div>
