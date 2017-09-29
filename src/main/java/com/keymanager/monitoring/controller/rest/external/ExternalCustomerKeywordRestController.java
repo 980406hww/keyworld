@@ -216,7 +216,6 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
 
         Long customerKeywordUuid = Long.parseLong(requestMap.get("customerKeywordUuid").toString());
         int position = (Integer) requestMap.get("position");
-        logger.info("capturePosition-----------------------AAAAAAAA----BBBBBBBBB-------------->"+position);
         try {
             if (validUser(userName, password)) {
                 customerKeywordService.updateCustomerKeywordPosition(customerKeywordUuid, position);
@@ -225,7 +224,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         }catch (Exception ex){
             logger.error(ex.getMessage());
         }
-        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<Object>(false,HttpStatus.BAD_REQUEST);
     }
 
     @RequestMapping(value = "/getCustomerKeywordForCapturePosition", method = RequestMethod.POST)
