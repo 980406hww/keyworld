@@ -70,7 +70,7 @@ public class CrawlRankingRsetController {
         }
     }
 
-    @RequestMapping(value="/crawlRanking",method = RequestMethod.POST)
+    @RequestMapping(value="/searchCaptureCurrentRankJob",method = RequestMethod.POST)
     public ModelAndView searchCrawlRanking(HttpServletRequest request, CaptureCurrentRankJobCriteria captureCurrentRankJobCriteria) {
         String currentPageNumber = request.getParameter("currentPageNumber");
         String pageSize = request.getParameter("pageSize");
@@ -80,7 +80,7 @@ public class CrawlRankingRsetController {
         }
         return constructCaptureCurrentRankJobModelAndView(request, captureCurrentRankJobCriteria, currentPageNumber, pageSize);
     }
-    @RequestMapping(value="/crawlRanking",method = RequestMethod.GET)
+    @RequestMapping(value="/searchCaptureCurrentRankJob",method = RequestMethod.GET)
     public ModelAndView toSetCrawlRanking(@RequestParam(defaultValue = "1") int currentPage, @RequestParam(defaultValue = "50") int displaysRecords,
                                           HttpServletRequest request) {
         return constructCaptureCurrentRankJobModelAndView(request, new CaptureCurrentRankJobCriteria(), currentPage+"", displaysRecords+"");
