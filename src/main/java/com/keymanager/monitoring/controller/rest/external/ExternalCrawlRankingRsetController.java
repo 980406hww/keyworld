@@ -36,7 +36,7 @@ public class ExternalCrawlRankingRsetController extends SpringMVCBaseController 
     @Autowired
     private CustomerKeywordService customerKeywordService;
 
-    @RequestMapping(value = "/crawlRankingExternalInterface", method = RequestMethod.GET)
+    @RequestMapping(value = "/crawlRankingExternalInterface", method = RequestMethod.POST)
     public ResponseEntity<?> doCrawlRanking(@RequestBody BaseCriteria baseCriteria) {
         String userName = baseCriteria.getUserName();
         String password = baseCriteria.getPassword();

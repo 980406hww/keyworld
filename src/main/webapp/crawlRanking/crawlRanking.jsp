@@ -69,7 +69,94 @@
             }
 
         }
+        function initCustomerID()
+        {
+            $('#searchCustomer').combogrid({
+                model:'remote',
+                panelWidth:450,
+                value:'',
+                idField:'uuid',
+                textField:'contactPerson',
+                dataType:'json',
+                url:'/internal/crawlRanking/searchCustomer',
+                columns:[[
+                    {field:'contactPerson',title:'联系人',width:150},
+                    {field:'telphone',title:'电话',width:100},
+                    {field:'qq',title:'QQ',width:100},
+                    {field:'email',title:'E-mail',width:100}
+                ]],
+                keyHandler:{
+                    query: function(q) {
+                        //动态搜索
 
+                        $('#searchCustomer').combogrid("grid").datagrid("reload", {'contactPerson': q});
+                        $('#searchCustomer').combogrid("setValue", q);
+                    }
+                },
+                onChange:function()
+                {
+                    alert($('#searchCustomer').combogrid("getValue"));
+                    initGroupNames($('#searchCustomer').combogrid("getValue"));
+                }
+
+            });
+        }
+        function initGroupNames(customerID)
+        {
+            $('#groupNames').combobox({
+                url:'/internal/crawlRanking/searchGroups?customerID='+customerID, //后台获取下拉框数据的url
+                method:'post',
+                panelHeight:300,//设置为固定高度，combobox出现竖直滚动条
+                valueField:'optimizeGroupName',
+                textField:'optimizeGroupName',
+                multiple:true,
+                dataType:'json',
+                formatter: function (row) { //formatter方法就是实现了在每个下拉选项前面增加checkbox框的方法
+                    var opts = $(this).combobox('options');
+                    return '<input type="checkbox" class="combobox-checkbox">' + row[opts.textField]
+                },
+                onLoadSuccess: function () {  //下拉框数据加载成功调用
+                    var opts = $(this).combobox('options');
+                    var target = this;
+                    var values = "";
+                    if ($(target).combobox('getValue').indexOf(",") >= 0) {
+                        values = $(target).combobox('getValue').split(",");//获取选中的值的values
+                    }
+                    else {
+                        values = (target).combobox('getValue');
+                    }
+                    /*var splits =values .split(",");
+                     $.each(splits,function(idx,value){
+                     var el = opts.finder.getEl(target, value);
+                     el.find('input.combobox-checkbox')._propAttr('checked', true);
+                     })*/
+                    $.map(values, function (value) {
+                        alert(value);
+                        var el = opts.finder.getEl(target, value);
+                        el.find('input.combobox-checkbox')._propAttr('checked', true);
+                    })
+                    $("input[type=hidden][name=groupNames]").remove();
+                },
+                onSelect: function (row) { //选中一个选项时调用
+                    var opts = $(this).combobox('options');
+                    //获取选中的值的values
+                    $('#groupNames').val($(this).combobox('getValues'));
+
+                    //设置选中值所对应的复选框为选中状态
+                    var el = opts.finder.getEl(this, row[opts.valueField]);
+                    el.find('input.combobox-checkbox')._propAttr('checked', true);
+                },
+                onUnselect: function (row) {//不选中一个选项时调用
+
+                    var opts = $(this).combobox('options');
+                    //获取选中的值的values
+                    $('#groupNames').val($(this).combobox('getValues'));
+
+                    var el = opts.finder.getEl(this, row[opts.valueField]);
+                    el.find('input.combobox-checkbox')._propAttr('checked', false);
+                }
+            });
+        }
 
         function showCrawlRankingForm(uuid)
         {
@@ -77,8 +164,8 @@
             $("#crawlRankingDialog").dialog({
                 resizable: false,
                 title:"添加抓排名任务",
-               // width: 500,
-                //height:350,
+                width: 500,
+                height:350,
                 fitColumns:true,//自动大小
                 modal: true,
                 //按钮
@@ -108,28 +195,11 @@
 
             $('#crawlRankingDialog').window("resize",{top:$(document).scrollTop() + 100});
 
-            $('#searchCustomer').combogrid({
-                model:'remote',
-                panelWidth:450,
-                value:'',
-                idField:'uuid',
-                textField:'contactPerson',
-                dataType:'json',
-                url:'/internal/crawlRanking/searchCustomer',
-                columns:[[
-                    {field:'contactPerson',title:'联系人',width:100},
-                    {field:'telphone',title:'电话',width:100},
-                    {field:'qq',title:'QQ',width:120},
-                    {field:'email',title:'E-mail',width:100}
-                ]],
-                keyHandler:{
-                    query: function(q) {
-                        //动态搜索
-                        $('#searchCustomer').combogrid("grid").datagrid("reload", {'contactPerson': q});
-                        $('#searchCustomer').combogrid("setValue", q);
-                    }
-                }
-            });
+            initCustomerID();
+            /*if(uuid=null)
+            {
+                initGroupNames($('#searchCustomer').combogrid("getValue"));
+            }*/
         }
 
         function saveCaptureCurrentRankJob(uuid)
@@ -162,7 +232,7 @@
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
-                timeout: 50000,
+                timeout: 5000,
                 type: 'POST',
                 success: function (data) {
                     if (data) {
@@ -191,8 +261,12 @@
                 type: 'POST',
                 success: function (data) {
                     if (data) {
-                        $("#crawlRankingForm #groupNames").val(data.groupNames);
+                        //$("#crawlRankingForm #groupNames").val(data.groupNames);
+
                         $("#crawlRankingForm input[name=customerID]").val(data.customerID);
+                        initGroupNames($('#searchCustomer').combogrid("getValue"));
+                        $("#crawlRankingForm #groupNames").combobox('setValue',data.groupNames);
+                        /*$('#crawlRankingForm groupNames').combobox('setValues',data.groupNames.split(","));*/
                         /*var split = data.operationType.split(",");
                         for(var i=0;i<split.length;i++)
                         {
@@ -219,6 +293,7 @@
 
             initCrawlRankingForm(uuid);
             showCrawlRankingForm(uuid);
+
 
         }
 
@@ -396,8 +471,8 @@
 <form id="crawlRankingForm">
     <ul>
         <input type="hidden" name="captureCurrentRankJobUuid" id="captureCurrentRankJobUuid">
-        <li><span>输入优化组名:</span><input type="text" name="groupNames" id="groupNames"></li>
-        <li><span>输入客户名:</span><input type="text" name="customerID" id="searchCustomer"></li>
+        <li><span>输入客户名:</span><input type="text" name="customerID" id="searchCustomer" style="width: 200px"></li>
+        <li><span>输入优化组名:</span><input type="text" name="groupNames" id="groupNames" class="easyui-combobox" style="width: 200px"></li>
        <%--<li><span>操作类型:</span><input type="checkbox" name="operationType"  value="PC">电脑端</label><input type="checkbox" name="operationType" value="Phone">手机端</li>--%>
         <li><span>执行方式:</span><input type="radio" name="exectionType" checked  value="Once">一次性</label><input type="radio" name="exectionType" value="Everyday">每天</li>
         <li><span>执行时间:</span><input type="text" class="Wdate" name="exectionTime" id="exectionTime" onfocus="WdatePicker({lang:'zh-cn',dateFmt:'HH:mm:ss'})"></li>

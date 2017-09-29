@@ -108,7 +108,17 @@ public class CrawlRankingRsetController {
         }
         return customerService.selectList(new EntityWrapper<Customer>().setSqlSelect("fUuid as uuid,fContactPerson as contactPerson,fQQ as qq,fTelphone as telphone,fEmail as email"));
     }
-
+    @RequestMapping(value="/searchGroups",method = RequestMethod.POST)
+    public List<CustomerKeyword> searchGroups(Long customerID) {
+        if(customerID!=null)
+        {
+            //return customerKeywordService.selectList(new EntityWrapper<CustomerKeyword>().setSqlSelect("DISTINCT  fOptimizeGroupName as optimizeGroupName").eq("fCustomerUuid", customerID));
+            return customerKeywordService.selectList(new EntityWrapper<CustomerKeyword>().groupBy("fOptimizeGroupName").eq("fCustomerUuid",customerID));
+        }
+        //List<CustomerKeyword> customerKeywords = customerKeywordService.selectList(new EntityWrapper<CustomerKeyword>().groupBy("fOptimizeGroupName"));
+        //List<CustomerKeyword> customerKeywords = customerKeywordService.selectList(new EntityWrapper<CustomerKeyword>().setSqlSelect("DISTINCT  fOptimizeGroupName as optimizeGroupName"));
+        return customerKeywordService.selectList(new EntityWrapper<CustomerKeyword>().groupBy("fOptimizeGroupName"));
+    }
 
 
     @RequestMapping(value="/deleteCaptureCurrentRankJob",method = RequestMethod.POST)
