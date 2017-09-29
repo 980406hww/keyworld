@@ -2,7 +2,7 @@ package com.keymanager.monitoring.controller.rest.external;
 
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.BaseCriteria;
-import com.keymanager.monitoring.criteria.CaptureRankCriteria;
+import com.keymanager.monitoring.criteria.CaptureRankJobCriteria;
 import com.keymanager.monitoring.entity.CaptureCurrentRankJob;
 import com.keymanager.monitoring.entity.CustomerKeyword;
 import com.keymanager.monitoring.enums.CaptureRankExectionStatus;
@@ -52,10 +52,10 @@ public class ExternalCrawlRankingRsetController extends SpringMVCBaseController 
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
     @RequestMapping(value = "/updateCaptureRankJob", method = RequestMethod.POST)
-    public ResponseEntity<?> updateCaptureRankJob(@RequestBody  CaptureRankCriteria captureRankCriteria) {
-        String userName = captureRankCriteria.getUserName();
-        String password = captureRankCriteria.getPassword();
-        CaptureCurrentRankJob captureCurrentRankJob=captureRankCriteria.getCaptureRankJob();
+    public ResponseEntity<?> updateCaptureRankJob(@RequestBody CaptureRankJobCriteria captureRankJobCriteria) {
+        String userName = captureRankJobCriteria.getUserName();
+        String password = captureRankJobCriteria.getPassword();
+        CaptureCurrentRankJob captureCurrentRankJob= captureRankJobCriteria.getCaptureCurrentRankJob();
         try {
             if (validUser(userName, password)) {
                 captureCurrentRankJob.setExectionStatus(CaptureRankExectionStatus.Complete.name());
@@ -72,13 +72,13 @@ public class ExternalCrawlRankingRsetController extends SpringMVCBaseController 
     }
 
     @RequestMapping(value = "/getCustomerKeywordForCapturePosition", method = RequestMethod.POST)
-    public ResponseEntity<?> getCustomerKeywordForCapturePosition(@RequestBody CaptureRankCriteria captureRankCriteria, HttpServletRequest request) throws Exception {
-        String userName = captureRankCriteria.getUserName();
-        String password = captureRankCriteria.getPassword();
+    public ResponseEntity<?> getCustomerKeywordForCapturePosition(@RequestBody CaptureRankJobCriteria captureRankJobCriteria, HttpServletRequest request) throws Exception {
+        String userName = captureRankJobCriteria.getUserName();
+        String password = captureRankJobCriteria.getPassword();
         String terminalType = TerminalTypeMapping.getTerminalType(request);
         try {
             if (validUser(userName, password)) {
-                CaptureCurrentRankJob captureCurrentRankJob = captureRankCriteria.getCaptureRankJob();
+                CaptureCurrentRankJob captureCurrentRankJob = captureRankJobCriteria.getCaptureCurrentRankJob();
                 String[] groupNames = captureCurrentRankJob.getGroupNames().split(",");
                 Long customerID = captureCurrentRankJob.getCustomerID();
                 CustomerKeyword customerKeyword = customerKeywordService.searchTitleAndUrl(groupNames, customerID);

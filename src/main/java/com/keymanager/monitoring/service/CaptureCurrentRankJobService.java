@@ -27,9 +27,11 @@ public class CaptureCurrentRankJobService extends ServiceImpl<CaptureCurrentRank
             return captureCurrentRankJob;
         } else {
             captureCurrentRankJob = captureCurrentRankJobDao.provideCaptureCurrentRankJob();
-            captureCurrentRankJob.setStartTime(new Date());
-            captureCurrentRankJob.setExectionStatus(CaptureRankExectionStatus.Processing.name());
-            captureCurrentRankJobDao.updateById(captureCurrentRankJob);
+           if(captureCurrentRankJob!=null){
+               captureCurrentRankJob.setStartTime(new Date());
+               captureCurrentRankJob.setExectionStatus(CaptureRankExectionStatus.Processing.name());
+               captureCurrentRankJobDao.updateById(captureCurrentRankJob);
+           }
             return captureCurrentRankJob;
         }
     }
