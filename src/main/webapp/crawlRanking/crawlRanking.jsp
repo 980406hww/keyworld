@@ -13,17 +13,17 @@
     </style>
     <title>客户管理</title>
     <script language="javascript" type="text/javascript">
-        $(function(){
+        $(function () {
             $("#crawlRankingDialog").dialog("close");
-            $("#centerDiv").css("margin-top",$("#topDiv").height());
+            $("#centerDiv").css("margin-top", $("#topDiv").height());
             pageLoad();
             alignTableHeader();
-            window.onresize = function(){
+            window.onresize = function () {
                 alignTableHeader();
             }
         })
 
-        function alignTableHeader(){
+        function alignTableHeader() {
             var td = $("#showCaptureCurrentRankJobTable tr:first td");
             var ctd = $("#headerTable tr:first td");
             $.each(td, function (idx, val) {
@@ -50,7 +50,7 @@
             var showCustomerBottomDiv = $('#showCustomerBottomDiv');
             showCustomerBottomDiv.find("#chooseRecords").val(pageSize);
 
-            if(parseInt(currentPageNumber) > 1 && parseInt(currentPageNumber) < parseInt(pages)) {
+            if (parseInt(currentPageNumber) > 1 && parseInt(currentPageNumber) < parseInt(pages)) {
                 showCustomerBottomDiv.find("#firstButton").removeAttr("disabled");
                 showCustomerBottomDiv.find("#upButton").removeAttr("disabled");
                 showCustomerBottomDiv.find("#nextButton").removeAttr("disabled");
@@ -69,52 +69,48 @@
             }
 
         }
-        function initCustomerID()
-        {
+        function initCustomerID() {
             $('#searchCustomer').combogrid({
-                model:'remote',
-                panelWidth:460,
-                value:'',
-                idField:'uuid',
-                textField:'contactPerson',
-                dataType:'json',
-                url:'/internal/crawlRanking/searchCustomer',
-                columns:[[
-                    {field:'contactPerson',title:'联系人',width:150},
-                    {field:'telphone',title:'电话',width:100},
-                    {field:'qq',title:'QQ',width:100},
-                    {field:'email',title:'E-mail',width:100}
+                model: 'remote',
+                panelWidth: 460,
+                value: '',
+                idField: 'uuid',
+                textField: 'contactPerson',
+                dataType: 'json',
+                url: '/internal/crawlRanking/searchCustomer',
+                columns: [[
+                    {field: 'contactPerson', title: '联系人', width: 150},
+                    {field: 'telphone', title: '电话', width: 100},
+                    {field: 'qq', title: 'QQ', width: 100},
+                    {field: 'email', title: 'E-mail', width: 100}
                 ]],
-                keyHandler:{
-                    query: function(q) {
+                keyHandler: {
+                    query: function (q) {
                         //动态搜索
 
                         $('#searchCustomer').combogrid("grid").datagrid("reload", {'contactPerson': q});
                         $('#searchCustomer').combogrid("setValue", q);
                     }
                 },
-                onChange:function()
-                {
-                    if($.isNumeric($('#searchCustomer').combogrid("getValue")))
-                    {
+                onChange: function () {
+                    if ($.isNumeric($('#searchCustomer').combogrid("getValue"))) {
                         initGroupNames($('#searchCustomer').combogrid("getValue"));
                     }
                 }
 
             });
         }
-        function initGroupNames(customerID)
-        {
+        function initGroupNames(customerID) {
 
             $('#groupNames').combobox({
-                url:'/internal/crawlRanking/searchGroups?customerID='+customerID, //后台获取下拉框数据的url
-                method:'post',
+                url: '/internal/crawlRanking/searchGroups?customerID=' + customerID, //后台获取下拉框数据的url
+                method: 'post',
                 //panelHeight:300,//设置为固定高度，combobox出现竖直滚动条
-                valueField:'optimizeGroupName',
-                textField:'optimizeGroupName',
-                multiple:true,
-                dataType:'json',
-                editable:false,
+                valueField: 'optimizeGroupName',
+                textField: 'optimizeGroupName',
+                multiple: true,
+                dataType: 'json',
+                editable: false,
                 formatter: function (row) { //formatter方法就是实现了在每个下拉选项前面增加checkbox框的方法
                     var opts = $(this).combobox('options');
                     return '<input type="checkbox" class="combobox-checkbox">' + row[opts.textField]
@@ -161,15 +157,14 @@
             });
         }
 
-        function showCrawlRankingForm(uuid)
-        {
+        function showCrawlRankingForm(uuid) {
             $('#crawlRankingForm')[0].reset();
             $("#crawlRankingDialog").dialog({
                 resizable: false,
-                title:"添加抓排名任务",
+                title: "添加抓排名任务",
                 /*width: 500,
-                height:350,*/
-                fitColumns:true,//自动大小
+                 height:350,*/
+                fitColumns: true,//自动大小
                 modal: true,
                 //按钮
                 buttons: [{
@@ -196,41 +191,39 @@
                     }]
             });
 
-            $('#crawlRankingDialog').window("resize",{top:$(document).scrollTop() + 100});
+            $('#crawlRankingDialog').window("resize", {top: $(document).scrollTop() + 100});
 
             initCustomerID();
             /*if(uuid=null)
-            {
-                initGroupNames($('#searchCustomer').combogrid("getValue"));
-            }*/
+             {
+             initGroupNames($('#searchCustomer').combogrid("getValue"));
+             }*/
         }
 
-        function saveCaptureCurrentRankJob(uuid)
-        {
-            var CaptureCurrentRankJob={};
-            if(uuid!=null)
-            {
-                CaptureCurrentRankJob.uuid=uuid;
+        function saveCaptureCurrentRankJob(uuid) {
+            var CaptureCurrentRankJob = {};
+            if (uuid != null) {
+                CaptureCurrentRankJob.uuid = uuid;
             }
-            CaptureCurrentRankJob.groupNames=$("#crawlRankingForm #groupNames").val();
-            CaptureCurrentRankJob.customerID=$("#crawlRankingForm input[name=customerID]").val();
+            CaptureCurrentRankJob.groupNames = $("#crawlRankingForm #groupNames").val();
+            CaptureCurrentRankJob.customerID = $("#crawlRankingForm input[name=customerID]").val();
             //CaptureCurrentRankJob.operationType="";
             /*var operationType=$("#crawlRankingForm input[name=operationType]:checked");
-            if(operationType.length>0)
-            {
-                $.each(operationType,function(idx,val){
-                    CaptureCurrentRankJob.operationType=CaptureCurrentRankJob.operationType+$(val).val()+",";
-                })
-                CaptureCurrentRankJob.operationType=CaptureCurrentRankJob.operationType.substring(0,CaptureCurrentRankJob.operationType.length-1);
-            }*/
-            CaptureCurrentRankJob.exectionType=$("#crawlRankingForm input[name=exectionType]:checked").val();
-            CaptureCurrentRankJob.exectionTime=$("#crawlRankingForm #exectionTime").val();
-            CaptureCurrentRankJob.rowNumber=$("#crawlRankingForm #rowNumber").val();
+             if(operationType.length>0)
+             {
+             $.each(operationType,function(idx,val){
+             CaptureCurrentRankJob.operationType=CaptureCurrentRankJob.operationType+$(val).val()+",";
+             })
+             CaptureCurrentRankJob.operationType=CaptureCurrentRankJob.operationType.substring(0,CaptureCurrentRankJob.operationType.length-1);
+             }*/
+            CaptureCurrentRankJob.exectionType = $("#crawlRankingForm input[name=exectionType]:checked").val();
+            CaptureCurrentRankJob.exectionTime = $("#crawlRankingForm #exectionTime").val();
+            CaptureCurrentRankJob.rowNumber = $("#crawlRankingForm #rowNumber").val();
 
 
             $.ajax({
                 url: '/internal/crawlRanking/saveCaptureCurrentRankJob',
-                data:JSON.stringify(CaptureCurrentRankJob),
+                data: JSON.stringify(CaptureCurrentRankJob),
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
@@ -239,7 +232,7 @@
                 type: 'POST',
                 success: function (data) {
                     if (data) {
-                        $().toastmessage('showSuccessToast', "保存成功",true);
+                        $().toastmessage('showSuccessToast', "保存成功", true);
 
 
                     } else {
@@ -252,10 +245,9 @@
             });
         }
 
-        function initCrawlRankingForm(uuid)
-        {
+        function initCrawlRankingForm(uuid) {
             $.ajax({
-                url: '/internal/crawlRanking/getCaptureCurrentRankJob?uuid='+uuid,
+                url: '/internal/crawlRanking/getCaptureCurrentRankJob?uuid=' + uuid,
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
@@ -268,17 +260,17 @@
 
                         $("#crawlRankingForm input[name=customerID]").val(data.customerID);
                         initGroupNames($('#searchCustomer').combogrid("getValue"));
-                        $("#crawlRankingForm #groupNames").combobox('setValue',data.groupNames);
+                        $("#crawlRankingForm #groupNames").combobox('setValue', data.groupNames);
                         /*$('#crawlRankingForm groupNames').combobox('setValues',data.groupNames.split(","));*/
                         /*var split = data.operationType.split(",");
-                        for(var i=0;i<split.length;i++)
-                        {
-                            $("input:checkbox[name=operationType][value="+split[i]+"]").attr('checked',true);
-                        }*/
-                        $("#crawlRankingForm input[name=exectionType][value="+data.exectionType+"]").attr("checked",true);
+                         for(var i=0;i<split.length;i++)
+                         {
+                         $("input:checkbox[name=operationType][value="+split[i]+"]").attr('checked',true);
+                         }*/
+                        $("#crawlRankingForm input[name=exectionType][value=" + data.exectionType + "]").attr("checked", true);
                         $("#crawlRankingForm #exectionTime").val(data.exectionTime);
                         /*$("#crawlRankingForm #rowNumber").val(data.rowNumber);*/
-                        $('#crawlRankingForm #rowNumber').spinner('setValue',data.rowNumber);
+                        $('#crawlRankingForm #rowNumber').spinner('setValue', data.rowNumber);
 
                     }
                     else {
@@ -291,8 +283,7 @@
             });
         }
 
-        function modifyCaptureCurrentRankJob(uuid)
-        {
+        function modifyCaptureCurrentRankJob(uuid) {
 
             initCrawlRankingForm(uuid);
             showCrawlRankingForm(uuid);
@@ -300,10 +291,9 @@
 
         }
 
-        function deleteCaptureCurrentRankJob(uuid)
-        {
+        function deleteCaptureCurrentRankJob(uuid) {
             $.ajax({
-                url: '/internal/crawlRanking/deleteCaptureCurrentRankJob?uuid='+uuid,
+                url: '/internal/crawlRanking/deleteCaptureCurrentRankJob?uuid=' + uuid,
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
@@ -312,7 +302,7 @@
                 type: 'POST',
                 success: function (data) {
                     if (data) {
-                        $().toastmessage('showSuccessToast', "删除成功",true);
+                        $().toastmessage('showSuccessToast', "删除成功", true);
                     }
                     else {
                         $().toastmessage('showErrorToast', "删除失败");
@@ -340,11 +330,10 @@
             return uuids;
         }
 
-        function deleteCaptureCurrentRankJobs()
-        {
+        function deleteCaptureCurrentRankJobs() {
 
             $.ajax({
-                url: '/internal/crawlRanking/deleteCaptureCurrentRankJobs?uuids='+getUuids(),
+                url: '/internal/crawlRanking/deleteCaptureCurrentRankJobs?uuids=' + getUuids(),
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
@@ -353,14 +342,14 @@
                 type: 'POST',
                 success: function (data) {
                     if (data) {
-                        $().toastmessage('showSuccessToast', "删除成功",true);
+                        $().toastmessage('showSuccessToast', "删除成功", true);
                     }
                     else {
-                        $().toastmessage('showErrorToast', "删除失败",true);
+                        $().toastmessage('showErrorToast', "删除失败", true);
                     }
                 },
                 error: function () {
-                    $().toastmessage('showErrorToast', "删除失败",true);
+                    $().toastmessage('showErrorToast', "删除失败", true);
                 }
             });
         }
@@ -380,16 +369,16 @@
 
         function decideSelectAll() {
             var a = document.getElementsByName("uuid");
-            var select=0;
-            for(var i = 0; i < a.length; i++){
-                if (a[i].checked == true){
+            var select = 0;
+            for (var i = 0; i < a.length; i++) {
+                if (a[i].checked == true) {
                     select++;
                 }
             }
-            if(select == a.length){
-                $("#selectAllChecked").prop("checked",true);
-            }else {
-                $("#selectAllChecked").prop("checked",false);
+            if (select == a.length) {
+                $("#selectAllChecked").prop("checked", true);
+            } else {
+                $("#selectAllChecked").prop("checked", false);
             }
         }
     </script>

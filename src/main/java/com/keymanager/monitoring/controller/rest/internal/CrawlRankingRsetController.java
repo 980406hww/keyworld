@@ -3,13 +3,11 @@ package com.keymanager.monitoring.controller.rest.internal;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.criteria.CaptureCurrentRankJobCriteria;
-import com.keymanager.monitoring.criteria.CustomerCriteria;
-import com.keymanager.monitoring.entity.*;
+import com.keymanager.monitoring.entity.CaptureCurrentRankJob;
+import com.keymanager.monitoring.entity.Customer;
+import com.keymanager.monitoring.entity.CustomerKeyword;
 import com.keymanager.monitoring.enums.CaptureRankExectionStatus;
 import com.keymanager.monitoring.service.*;
-import com.keymanager.util.TerminalTypeMapping;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +17,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by shunshikj24 on 2017/9/26.
@@ -100,16 +100,18 @@ public class CrawlRankingRsetController {
 
     @RequestMapping(value = "/searchCustomer", method = RequestMethod.POST)
     public List<Customer> searchCustomer(String contactPerson) {
-        if (contactPerson != null) {
+        /*if (contactPerson != null) {
+            customerService.
             return customerService.selectList(new EntityWrapper<Customer>().setSqlSelect("fUuid as uuid,fContactPerson as contactPerson,fQQ as qq,fTelphone as telphone,fEmail as email").like("fContactPerson", contactPerson));
         }
-        return customerService.selectList(new EntityWrapper<Customer>().setSqlSelect("fUuid as uuid,fContactPerson as contactPerson,fQQ as qq,fTelphone as telphone,fEmail as email"));
+        return customerService.selectList(new EntityWrapper<Customer>().setSqlSelect("fUuid as uuid,fContactPerson as contactPerson,fQQ as qq,fTelphone as telphone,fEmail as email"));*/
+        return customerService.searchCustomerWithKeyword(contactPerson);
     }
 
     @RequestMapping(value = "/searchGroups", method = RequestMethod.POST)
     public List<CustomerKeyword> searchGroups(Long customerID) {
         if (customerID != null) {
-            //return customerKeywordService.selectList(new EntityWrapper<CustomerKeyword>().setSqlSelect("DISTINCT  fOptimizeGroupName as optimizeGroupName").eq("fCustomerUuid", customerID));
+
             return customerKeywordService.selectList(new EntityWrapper<CustomerKeyword>().groupBy("fOptimizeGroupName").eq("fCustomerUuid", customerID));
         }
         //List<CustomerKeyword> customerKeywords = customerKeywordService.selectList(new EntityWrapper<CustomerKeyword>().groupBy("fOptimizeGroupName"));

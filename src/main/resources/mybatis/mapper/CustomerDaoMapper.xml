@@ -44,4 +44,20 @@
     <select id="selectLastId" resultType="int">
         select LAST_INSERT_ID()
     </select>
+
+    <select id="searchCustomerWithKeyword" resultType="com.keymanager.monitoring.entity.Customer">
+        SELECT
+            c.fUuid AS uuid,
+            c.fContactPerson AS contactPerson
+        FROM
+            t_customer c
+        RIGHT JOIN t_customer_keyword ck ON c.fUuid = ck.fCustomerUuid
+        WHERE
+            c.fUuid IS NOT NULL
+            <if test="contactPerson!=null and contactPerson!=''">
+             AND   c.fContactPerson LIKE '%${contactPerson}%'
+            </if>
+        GROUP BY
+            ck.fCustomerUuid
+    </select>
 </mapper>
