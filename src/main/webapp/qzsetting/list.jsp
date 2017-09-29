@@ -1,11 +1,10 @@
-<%@ include file="/commons/basejs.jsp" %>
 <%@ include file="/commons/global.jsp" %>
 <script language="javascript" type="text/javascript" src="/common.js"></script>
 <html>
 <head>
+	<%@ include file="/commons/basejs.jsp" %>
 	<title>全站设置</title>
 	<style>
-
 		#div1{
 			display:none;
 			background-color :#f6f7f7;

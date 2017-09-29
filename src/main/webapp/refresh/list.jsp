@@ -1,11 +1,8 @@
-
-<%@ include file="/commons/basejs.jsp" %>
 <%@ include file="/commons/global.jsp" %>
 <html>
 <head>
 	<title>刷量统计列表</title>
-	<style>
-	</style>
+	<%@ include file="/commons/basejs.jsp" %>
 	<script language="javascript" type="text/javascript" src="/common.js"></script>
 	<script language="javascript">
         $(function () {

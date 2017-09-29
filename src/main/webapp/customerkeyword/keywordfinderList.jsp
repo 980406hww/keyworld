@@ -1,9 +1,8 @@
-<%@ include file="/commons/basejs.jsp" %>
 <%@ include file="/commons/global.jsp" %>
 <html>
-<head>
-    <script language="JavaScript" type="text/javascript" src="/js/jquery.poshytip.js"></script>
     <head>
+        <%@ include file="/commons/basejs.jsp" %>
+        <script language="JavaScript" type="text/javascript" src="/js/jquery.poshytip.js"></script>
         <style>
             td{
                 display: table-cell;
@@ -288,7 +287,6 @@
             }
             </shiro:hasPermission>
         </script>
-
     </head>
 <body>
 <div id="customerKeywordTopDiv">

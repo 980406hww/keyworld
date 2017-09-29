@@ -1,12 +1,11 @@
-<%@ include file="/commons/basejs.jsp" %>
 <%@ include file="/commons/global.jsp" %>
 <html>
-<head>
-    <script language="javascript" type="text/javascript" src="/toastmessage/jquery.toastmessage.js"></script>
-    <script language="javascript" type="text/javascript" src="/js/jquery.poshytip.js"></script>
-    <link rel="stylesheet" href="/toastmessage/css/jquery.toastmessage.css">
-    <script language="javascript" type="text/javascript" src="/common.js"></script>
     <head>
+        <%@ include file="/commons/basejs.jsp" %>
+        <script language="javascript" type="text/javascript" src="/toastmessage/jquery.toastmessage.js"></script>
+        <script language="javascript" type="text/javascript" src="/js/jquery.poshytip.js"></script>
+        <link rel="stylesheet" href="/toastmessage/css/jquery.toastmessage.css">
+        <script language="javascript" type="text/javascript" src="/common.js"></script>
         <title>关键字列表</title>
         <style>
             <!--
@@ -815,7 +814,6 @@
                 $(self).val($(self).val().replace(/[^\d]*/g, ''));
             }
         </script>
-
     </head>
 <body>
 <div id="customerKeywordTopDiv" >
