@@ -485,7 +485,7 @@
                 }
                 $( "#saveCustomerKeywordDialog").dialog({
                     width: 410,
-                    height: 550,
+                    height: 560,
                     title : "添加关键字",
                     modal: true,
                     resizable: false,
@@ -539,6 +539,8 @@
                 customerKeyword.url = url;
                 var originalUrl = $.trim(saveCustomerKeywordDialog.find("#originalUrl").val());
                 customerKeyword.originalUrl = originalUrl;
+                var optimizePlanCount = $.trim(saveCustomerKeywordDialog.find("#optimizePlanCount").val());
+                customerKeyword.optimizePlanCount = optimizePlanCount;
                 var regNumber = /^\d+$/;
                 var positionFirstFee = $.trim(saveCustomerKeywordDialog.find("#positionFirstFee").val());
                 customerKeyword.positionFirstFee = positionFirstFee;
@@ -630,6 +632,7 @@
                             saveCustomerKeywordDialog.find("#initialPosition").val(customerKeyword.currentPosition == null ? '' : customerKeyword.currentPosition);
                             saveCustomerKeywordDialog.find("#url").val(customerKeyword.url);
                             saveCustomerKeywordDialog.find("#originalUrl").val(customerKeyword.originalUrl);
+                            saveCustomerKeywordDialog.find("#optimizePlanCount").val(customerKeyword.optimizePlanCount);
                             saveCustomerKeywordDialog.find("#positionFirstFee").val(customerKeyword.positionFirstFee);
                             saveCustomerKeywordDialog.find("#positionSecondFee").val(customerKeyword.positionSecondFee);
                             saveCustomerKeywordDialog.find("#positionThirdFee").val(customerKeyword.positionThirdFee);
@@ -1066,8 +1069,9 @@
             </li>
             <li><span class="customerKeywordSpanClass">域名:</span><input type="text" name="url" id="url" value="" style="width:300px;">
             </li>
-            <li><span class="customerKeywordSpanClass">原始域名:</span><input type="text" name="originalUrl" id="originalUrl" value=""
-                                                                          style="width:300px;">
+            <li><span class="customerKeywordSpanClass">原始域名:</span><input type="text" name="originalUrl" id="originalUrl" value="" style="width:300px;">
+            </li>
+            <li><span class="customerKeywordSpanClass">要刷数量:</span><input type="text" name="optimizePlanCount" id="optimizePlanCount" value="" style="width:300px;">
             </li>
             <li><span class="customerKeywordSpanClass">优化组名:</span>
                 <input name="optimizeGroupName" id="optimizeGroupName" type="text"
