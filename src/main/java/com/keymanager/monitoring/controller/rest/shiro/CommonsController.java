@@ -37,7 +37,7 @@ public class CommonsController {
     /**
      * 图形验证码
      */
-    @GetMapping("captcha.jpg")
+    @GetMapping("captcha")
     public void captcha(HttpServletRequest request, HttpServletResponse response) {
         dreamCaptcha.generate(request, response);
     }

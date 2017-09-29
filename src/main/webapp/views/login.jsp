@@ -31,7 +31,7 @@
         </P>
         <P style="padding: 10px 0px 10px; position: relative;">
             <input class="captcha" type="text" name="captcha" placeholder="请输入验证码"/>
-            <img id="captcha" alt="验证码" src="${path }/captcha.jpg" data-src="${path }/captcha.jpg?t=" style="vertical-align:middle;border-radius:4px;width:94.5px;height:35px;cursor:pointer;">
+            <img id="captcha" alt="验证码" src="${path }/captcha" data-src="${path }/captcha?t=" style="vertical-align:middle;border-radius:4px;width:94.5px;height:35px;cursor:pointer;">
         </P>
         <span style="position: relative;float: left;margin-left: 33px;">
             <select id="entryType" name="entryType" style="width: 120px;height:20px;padding:0px;" class="ipt">
