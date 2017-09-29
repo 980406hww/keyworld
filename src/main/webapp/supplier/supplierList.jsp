@@ -1,8 +1,8 @@
-<%@ include file="/commons/basejs.jsp" %>
 <%@ include file="/commons/global.jsp" %>
 <html>
 <head>
     <script language="javascript" type="text/javascript" src="/common.js"></script>
+    <%@ include file="/commons/basejs.jsp" %>
     <style>
         td{
             display: table-cell;
