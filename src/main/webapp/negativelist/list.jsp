@@ -1,8 +1,7 @@
-
-<%@ include file="/commons/basejs.jsp" %>
 <%@ include file="/commons/global.jsp" %>
 <html>
 <head>
+	<%@ include file="/commons/basejs.jsp" %>
 	<title>关键字负面清单</title>
 	<style>
 		#div2 {

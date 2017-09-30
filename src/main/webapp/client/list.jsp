@@ -1,7 +1,7 @@
-﻿<%@ include file="/commons/basejs.jsp" %>
-<%@ include file="/commons/global.jsp" %>
+﻿<%@ include file="/commons/global.jsp" %>
 <html>
 <head>
+<%@ include file="/commons/basejs.jsp" %>
 <title>终端监控</title>
 <style>
 #topDiv {

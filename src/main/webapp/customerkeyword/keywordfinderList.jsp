@@ -1,10 +1,13 @@
-<%@ include file="/commons/basejs.jsp" %>
 <%@ include file="/commons/global.jsp" %>
 <html>
-<head>
-    <script language="JavaScript" type="text/javascript" src="/js/jquery.poshytip.js"></script>
     <head>
+        <%@ include file="/commons/basejs.jsp" %>
+        <script language="JavaScript" type="text/javascript" src="/js/jquery.poshytip.js"></script>
         <style>
+            td{
+                display: table-cell;
+                vertical-align: inherit;
+            }
             #showCustomerTableDiv {
                 width: 100%;
                 margin: auto;
@@ -284,7 +287,6 @@
             }
             </shiro:hasPermission>
         </script>
-
     </head>
 <body>
 <div id="customerKeywordTopDiv">
@@ -390,9 +392,7 @@
                 </td>
 
                 <td  align="center" width=100 class="floatTd" title="原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}" >
-                    <div style="height:16;">
                         ${customerKeyword.url==null?'':customerKeyword.url}
-                    </div>
                 </td>
 
                 <td align="center" width=150>
