@@ -1099,7 +1099,6 @@
             <td align="center" width=40>状态</td>
             <td align="center" width=80>创建时间</td>
             <td align="center" width=200>操作</td>
-
         </tr>
     </table>
 </div>
