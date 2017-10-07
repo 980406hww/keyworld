@@ -1,12 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<%@ include file="/commons/global.jsp" %>
-<%--<%@ include file="/commons/basejs.jsp" %>--%>
-<link rel="stylesheet" type="text/css" href="${staticPath }/static/foundation-icons/foundation-icons.css" />
 <link href="${path}/css/sskjMenu.css" rel="stylesheet">
-<%--[消息提示]--%>
-<script language="javascript" type="text/javascript" src="/toastmessage/jquery.toastmessage.js"></script>
-<link rel="stylesheet" href="/toastmessage/css/jquery.toastmessage.css">
 <script type="text/javascript" src="${path}/js/sskjMenu.js"></script>
 <script type="text/javascript">
 

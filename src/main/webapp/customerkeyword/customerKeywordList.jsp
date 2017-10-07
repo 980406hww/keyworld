@@ -1,11 +1,7 @@
-<%@ include file="/commons/global.jsp" %>
+<%@include file="/commons/global.jsp" %>
 <html>
     <head>
-        <%@ include file="/commons/basejs.jsp" %>
-        <script language="javascript" type="text/javascript" src="/toastmessage/jquery.toastmessage.js"></script>
-        <script language="javascript" type="text/javascript" src="/js/jquery.poshytip.js"></script>
-        <link rel="stylesheet" href="/toastmessage/css/jquery.toastmessage.css">
-        <script language="javascript" type="text/javascript" src="/common.js"></script>
+        <%@include file="/commons/basejs.jsp" %>
         <title>关键字列表</title>
         <style>
             <!--
