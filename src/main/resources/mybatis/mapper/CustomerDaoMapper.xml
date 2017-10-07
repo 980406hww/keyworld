@@ -54,6 +54,7 @@
         RIGHT JOIN t_customer_keyword ck ON c.fUuid = ck.fCustomerUuid
         WHERE
             c.fUuid IS NOT NULL
+            AND c.fStatus = 1
             <if test="contactPerson!=null and contactPerson!=''">
              AND   c.fContactPerson LIKE '%${contactPerson}%'
             </if>

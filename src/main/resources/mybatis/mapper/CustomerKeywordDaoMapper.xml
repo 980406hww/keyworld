@@ -284,12 +284,12 @@
         <include refid="colID"/>
         FROM t_customer_keyword ck
         WHERE ck.fTerminalType = #{terminalType} and ck.fUrl is not null and ck.fStatus = 1
-        AND (ck.fCapturePositionQueryTime is null or
+        AND (ck.fCapturePositionQueryTime is null
         <if test="startTime != null">
-            ck.fCapturePositionQueryTime <![CDATA[<]]> #{startTime}
+          or  ck.fCapturePositionQueryTime <![CDATA[<]]> #{startTime}
         </if>
         <if test="minutes != null">
-            ck.fCapturePositionQueryTime <![CDATA[<]]> DATE_SUB(NOW(), INTERVAL #{minutes} MINUTE )
+          or  ck.fCapturePositionQueryTime <![CDATA[<]]> DATE_SUB(NOW(), INTERVAL #{minutes} MINUTE )
         </if>
         )
         <if test="customerUuid != null">

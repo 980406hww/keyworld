@@ -3,7 +3,7 @@ package com.keymanager.monitoring.criteria;
 /**
  * Created by shunshikj24 on 2017/9/27.
  */
-public class CaptureCurrentRankJobCriteria extends BaseCriteria{
+public class CaptureRankJobSearchCriteria{
     private String groupNames;
     private String customerID;
     private String operationType;

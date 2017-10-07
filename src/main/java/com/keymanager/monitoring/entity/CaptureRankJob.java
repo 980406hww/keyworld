@@ -15,7 +15,7 @@ import java.util.List;
  * Created by shunshikj24 on 2017/9/26.
  */
 @TableName(value = "t_capture_rank_job")
-public class CaptureCurrentRankJob extends BaseEntity{
+public class CaptureRankJob extends BaseEntity{
 
     @TableField(value = "fGroupNames")
     private String groupNames;
@@ -52,6 +52,17 @@ public class CaptureCurrentRankJob extends BaseEntity{
 
     @TableField(value = "fRowNumber")
     private Integer rowNumber;
+
+    @TableField(value = "fExecutionCycle")
+    private Integer executionCycle;
+
+    public Integer getExecutionCycle() {
+        return executionCycle;
+    }
+
+    public void setExecutionCycle(Integer executionCycle) {
+        this.executionCycle = executionCycle;
+    }
 
     public Long getCustomerID() {
         return customerID;

@@ -728,4 +728,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     {
            return customerKeywordDao.searchTitleAndUrl(groupNames,customerID);
     }
+
+    public List<CustomerKeyword> searchGroups(Long customerID) {
+        if (customerID != null) {
+            return customerKeywordDao.selectList(new EntityWrapper<CustomerKeyword>().groupBy("fOptimizeGroupName").eq("fCustomerUuid", customerID));
+        }
+        return customerKeywordDao.selectList(new EntityWrapper<CustomerKeyword>().groupBy("fOptimizeGroupName"));
+    }
 }

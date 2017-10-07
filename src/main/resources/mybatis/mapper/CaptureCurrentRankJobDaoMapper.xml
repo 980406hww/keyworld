@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.keymanager.monitoring.dao.CaptureCurrentRankJobDao">
+<mapper namespace="com.keymanager.monitoring.dao.CaptureRankJobDao">
     <sql id="colID">
         c.fUuid AS `uuid`,
         c.fGroupNames AS `groupNames`,
@@ -16,20 +16,21 @@
         c.fCreateTime AS `createTime`,
         c.fUpdateTime AS `updateTime`,
         c.fLastExecutionDate AS `lastExecutionDate`,
-        c.fRowNumber AS `rowNumber`
+        c.fRowNumber AS `rowNumber`,
+        c.fExecutionCycle AS `executionCycle`
     </sql>
-    <select id="searchCaptureCurrentRankJob" resultType="com.keymanager.monitoring.entity.CaptureCurrentRankJob">
+    <select id="searchCaptureRankJobs" resultType="com.keymanager.monitoring.entity.CaptureRankJob">
         select
         <include refid="colID"/>
         FROM t_capture_rank_job c
         <where>
-            <if test="captureCurrentRankJobCriteria.groupNames!=null and captureCurrentRankJobCriteria.groupNames!=''"> and c.fGroupNames like '%${captureCurrentRankJobCriteria.groupNames}%'</if>
-            <if test="captureCurrentRankJobCriteria.customerID!=null and captureCurrentRankJobCriteria.customerID!=''"> and c.fCustomerID = #{captureCurrentRankJobCriteria.customerID}</if>
-            <if test="captureCurrentRankJobCriteria.operationType!=null and captureCurrentRankJobCriteria.operationType!=''"> and c.fOperationType = #{captureCurrentRankJobCriteria.operationType}</if>
-            <if test="captureCurrentRankJobCriteria.exectionType!=null and captureCurrentRankJobCriteria.exectionType!=''"> and c.fExectionType = #{captureCurrentRankJobCriteria.exectionType}</if>
+            <if test="captureRankJobSearchCriteria.groupNames!=null and captureRankJobSearchCriteria.groupNames!=''"> and c.fGroupNames like '%${captureRankJobSearchCriteria.groupNames}%'</if>
+            <if test="captureRankJobSearchCriteria.customerID!=null and captureRankJobSearchCriteria.customerID!=''"> and c.fCustomerID = #{captureRankJobSearchCriteria.customerID}</if>
+            <if test="captureRankJobSearchCriteria.operationType!=null and captureRankJobSearchCriteria.operationType!=''"> and c.fOperationType = #{captureRankJobSearchCriteria.operationType}</if>
+            <if test="captureRankJobSearchCriteria.exectionType!=null and captureRankJobSearchCriteria.exectionType!=''"> and c.fExectionType = #{captureRankJobSearchCriteria.exectionType}</if>
         </where>
     </select>
-    <select id="provideCaptureCurrentRankJob" resultType="com.keymanager.monitoring.entity.CaptureCurrentRankJob">
+    <select id="provideCaptureRankJob" resultType="com.keymanager.monitoring.entity.CaptureRankJob">
         select
         <include refid="colID"/>
         from t_capture_rank_job c
@@ -42,7 +43,7 @@
         order By c.fExectionTime
         limit 1;
     </select>
-    <select id="searchProcessingJob" resultType="com.keymanager.monitoring.entity.CaptureCurrentRankJob">
+    <select id="getProcessingJob" resultType="com.keymanager.monitoring.entity.CaptureRankJob">
         select
         <include refid="colID"/>
         from t_capture_rank_job c

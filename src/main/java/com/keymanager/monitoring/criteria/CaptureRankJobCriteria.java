@@ -1,22 +1,22 @@
 package com.keymanager.monitoring.criteria;
 
-import com.keymanager.monitoring.entity.CaptureCurrentRankJob;
+import com.keymanager.monitoring.entity.CaptureRankJob;
 
 public class CaptureRankJobCriteria extends BaseCriteria {
-    private CaptureCurrentRankJob captureCurrentRankJob;
+    private CaptureRankJob captureRankJob;
 
-    public CaptureCurrentRankJob getCaptureCurrentRankJob() {
-        return captureCurrentRankJob;
+    public CaptureRankJob getCaptureRankJob() {
+        return captureRankJob;
     }
 
-    public void setCaptureCurrentRankJob(CaptureCurrentRankJob captureCurrentRankJob) {
-        this.captureCurrentRankJob = captureCurrentRankJob;
+    public void setCaptureRankJob(CaptureRankJob captureRankJob) {
+        this.captureRankJob = captureRankJob;
     }
 
     public CaptureRankJobCriteria() {
     }
 
-    public CaptureRankJobCriteria(CaptureCurrentRankJob captureCurrentRankJob) {
-        this.captureCurrentRankJob = captureCurrentRankJob;
+    public CaptureRankJobCriteria(CaptureRankJob captureRankJob) {
+        this.captureRankJob = captureRankJob;
     }
 }
