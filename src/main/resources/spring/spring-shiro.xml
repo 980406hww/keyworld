@@ -73,6 +73,7 @@
 				/webhooks = anon
 				/external/** = anon
 				/login = anon
+				/resetPasswordPage = anon
 				/** = userInfo
 			</value>
 		</property>
