@@ -169,7 +169,7 @@ public class RoleController extends BaseController {
      * @param resourceIds
      * @return
      */
-    @RequiresRoles("admin")
+    @RequiresRoles("AccessAdmin")
     @RequestMapping("/grant")
     @ResponseBody
     public Object grant(Long id, String resourceIds) {

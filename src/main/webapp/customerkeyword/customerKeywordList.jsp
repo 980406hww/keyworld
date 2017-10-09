@@ -56,6 +56,7 @@
         <script language="javascript">
             $(function () {
                 $("#groupChangeNameDialog").dialog("close");
+                $("#groupChangeNameByRankDialog").dialog("close");
                 $("#uploadExcelDailog").dialog("close");
                 $("#saveCustomerKeywordDialog").dialog("close");
                 $("#customerKeywordDiv").css("margin-top",$("#customerKeywordTopDiv").height());
@@ -342,6 +343,84 @@
                 searchCustomerKeywordForm.find("#currentPageNumberHidden").val(1);
             }
 
+            //通过排名修改分组
+            function showGroupNameChangeByRankDialog(customerUuid) {
+                $('#groupNameChangeByRankFrom')[0].reset();
+                $("#groupChangeNameByRankDialog").dialog({
+                    resizable: false,
+                    width: 240,
+                    height: 170,
+                    closed: true,
+                    modal: true,
+                    title: "通过排名修改分组",
+                    position:{
+                        my:"center top",
+                        at:"center top+150",
+                        of:window
+                    },
+                    //按钮
+                    buttons: [{
+                        text: '保存',
+                        iconCls: 'icon-ok',
+                        handler: function () {
+                            var targetGroupName = $("#groupNameChangeByRankFrom").find("#groupName").val();
+                            var position = $("#groupNameChangeByRankFrom").find("#position").val();
+                            var day = $("#groupNameChangeByRankFrom").find("#day").val();
+                            if (targetGroupName == null || targetGroupName === '') {
+                                alert("请输入分组名");
+                                return;
+                            }
+                            if (position == null || position === '') {
+                                alert("请输入排名");
+                                return;
+                            }
+                            if (day == null || day === '') {
+                                alert("请输入天数");
+                                return;
+                            }
+                            $.ajax({
+                                url:'/internal/customerKeyword/updateCustomerKeywordGroupNameByRank',
+                                data:JSON.stringify({"customerUuid":customerUuid,"targetGroupName":targetGroupName,"position":position,"day":day}),
+                                headers: {
+                                    'Accept': 'application/json',
+                                    'Content-Type': 'application/json'
+                                },
+                                timeout: 5000,
+                                type: 'POST',
+                                success: function (result) {
+                                    if (result) {
+                                        $().toastmessage('showSuccessToast', "操作成功",true);
+                                    } else {
+                                        $().toastmessage('showErrorToast', "操作失败");
+                                    }
+                                },
+                                error: function () {
+                                    $().toastmessage('showErrorToast', "操作失败");
+                                }
+                            });
+                            $("#groupChangeNameByRankDialog").dialog("close");
+                        }
+                    },
+                        {
+                            text: '清空',
+                            iconCls: 'fi-trash',
+                            handler: function () {
+                                $('#groupNameChangeByRankFrom')[0].reset();
+                            }
+                        },
+                        {
+                            text: '取消',
+                            iconCls: 'icon-cancel',
+                            handler: function () {
+                                $("#groupChangeNameByRankDialog").dialog("close");
+                                $('#groupNameChangeByRankFrom')[0].reset();
+                            }
+                        }]
+                });
+                $("#groupChangeNameByRankDialog").dialog("open");
+                $('#groupChangeNameByRankDialog').window("resize",{top:$(document).scrollTop() + 200});
+            }
+
             //修改所有组名
             function showGroupNameChangeDialog(changeGroupCriteria) {
                 $("#groupChangeNameDialog").dialog({
@@ -459,14 +538,13 @@
                     success: function (result) {
                         if (result) {
                             $().toastmessage('showSuccessToast', "操作成功",true);
-
                         } else {
                             $().toastmessage('showErrorToast', "操作失败",true);
                         }
                     },
                     error: function () {
                         $().toastmessage('showErrorToast', "操作失败",true);
-                    },
+                    }
                 });
             }
 
@@ -845,6 +923,11 @@
         | <a target="_blank" href="javascript:downloadCustomerKeywordInfo()">导出结果</a>&nbsp;&nbsp;
     </shiro:hasPermission>
         </div><div>
+
+    <%--<shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupNameByRank">--%>
+        <a href="javascript:showGroupNameChangeByRankDialog('${customerKeywordCriteria.customerUuid}')">修改排名分组</a> |
+    <%--</shiro:hasPermission>--%>
+
     <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupName">
         <a href="javascript:showGroupNameChangeDialog({'title': '修改客户关键字分组', 'customerUuid':'${customerKeywordCriteria.customerUuid}'})">修改所有分组</a> |
         <a href="javascript:updateSpecifiedCustomerKeywordGroupName(${customerKeywordCriteria.customerUuid})">修改选中分组</a> |
@@ -1037,6 +1120,13 @@
     </div>
 </div>
 <%--Dialog部分--%>
+<div id="groupChangeNameByRankDialog"  style="text-align: center;left: 40%;"  class="easyui-dialog">
+    <form id="groupNameChangeByRankFrom" style="text-align: center;margin-top: 10px;">
+       <span style="text-align: right;width: 52px;display:inline-block">分组名称:</span><input type="text" id="groupName" name="groupName" style="width:150px"><br><br>
+       <span style="text-align: right;width: 52px;display:inline-block">排名:</span><input type="text" id="position" name="position" style="width:150px" onkeyup="onlyNumber(this)"><br><br>
+       <span style="text-align: right;width: 52px;display:inline-block">天数:</span><input type="text" id="day" name="day" style="width:150px" onkeyup="onlyNumber(this)">
+    </form>
+</div>
 <div id="groupChangeNameDialog"  style="text-align: center;left: 40%;" title="修改客户关键字组名" class="easyui-dialog">
     <form id="groupNameChangeFrom" style="text-align: center;margin-top: 10px;">
         目标组名称:<input type="text" id="groupName" name="groupName" style="width:150px">
