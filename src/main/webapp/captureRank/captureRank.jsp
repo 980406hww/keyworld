@@ -97,7 +97,7 @@
                     }
                 },
                 onSelect:function(){
-                    initGroupNames($('#searchCustomer').combogrid("getValue"));
+                    initGroupNames($('#searchCustomer').combogrid("getValue"),groupNames);
                 }
                 /*,
 
@@ -110,7 +110,7 @@
 
             });
         }
-        function initGroupNames(customerID) {
+        function initGroupNames(customerID,groupNames) {
 
             $('#groupNames').combobox({
                 url: '/internal/captureRank/searchGroups?customerID=' + customerID, //后台获取下拉框数据的url
@@ -128,13 +128,16 @@
                 onLoadSuccess: function () {  //下拉框数据加载成功调用
                     var opts = $(this).combobox('options');
                     var target = this;
-                    var values = "";
-                    if ($(target).combobox('getValue').indexOf(",") >= 0) {
-                        values = $(target).combobox('getValue').split(",");//获取选中的值的values
-                    }
-                    else {
-                        values = (target).combobox('getValue');
-                    }
+                    var values = groupNames.split(",");
+                    //alert(groupNames);
+                   // alert(values);
+
+                    //if ($(target).combobox('getValue').indexOf(",") >= 0) {
+                        //values = $(target).combobox('getValue').split(",");//获取选中的值的values
+                   // }
+                    //else {
+                       // values = (target).combobox('getValue');
+                   // }
                     /*var splits =values .split(",");
                      $.each(splits,function(idx,value){
                      var el = opts.finder.getEl(target, value);
@@ -143,8 +146,9 @@
                     $.map(values, function (value) {
                         var el = opts.finder.getEl(target, value);
                         el.find('input.combobox-checkbox')._propAttr('checked', true);
+                        el.click();
                     })
-                    $("input[type=hidden][name=groupNames]").remove();
+                    //$("input[type=hidden][name=groupNames]").remove();
                 },
                 onSelect: function (row) { //选中一个选项时调用
                     var opts = $(this).combobox('options');
@@ -272,8 +276,8 @@
                         //$("#crawlRankingForm #groupNames").val(data.groupNames);
 
                         $("#crawlRankingForm input[name=customerID]").val(data.customerID);
-                        initGroupNames($('#searchCustomer').combogrid("getValue"));
-                        $("#crawlRankingForm #groupNames").combobox('setValue', data.groupNames);
+                        initGroupNames($('#searchCustomer').combogrid("getValue"),data.groupNames);
+                        //$("#crawlRankingForm #groupNames").combobox('setValue', data.groupNames);
                         /*$('#crawlRankingForm groupNames').combobox('setValues',data.groupNames.split(","));*/
                         /*var split = data.operationType.split(",");
                          for(var i=0;i<split.length;i++)

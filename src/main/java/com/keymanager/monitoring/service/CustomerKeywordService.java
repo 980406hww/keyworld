@@ -611,7 +611,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                     }
                 }
                 int queryInterval = (23 * 60) / optimizationPlanCount;
-
                 customerKeywordDao.adjustOptimizePlanCount(uuid, optimizationPlanCount, queryInterval);
             }
         }
@@ -627,7 +626,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeyword.setCapturePositionQueryTime(Utils.getCurrentTimestamp());
             customerKeyword.setUpdateTime(new Date());
             customerKeywordDao.updateById(customerKeyword);
-
             customerKeywordPositionSummaryService.savePositionSummary(customerKeywordUuid, position);
         }
     }
@@ -641,7 +639,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeywordForCapturePosition.setKeyword(customerKeyword.getKeyword());
             customerKeywordForCapturePosition.setUrl(customerKeyword.getUrl());
             customerKeywordForCapturePosition.setTitle(customerKeyword.getTitle());
-
             customerKeyword.setCapturePositionQueryTime(new Date());
             customerKeywordDao.updateById(customerKeyword);
             return customerKeywordForCapturePosition;

@@ -3,6 +3,7 @@ package com.keymanager.monitoring.entity;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.FieldStrategy;
 import com.baomidou.mybatisplus.enums.IdType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -17,7 +18,7 @@ import java.util.List;
 @TableName(value = "t_capture_rank_job")
 public class CaptureRankJob extends BaseEntity{
 
-    @TableField(value = "fGroupNames")
+    @TableField(value = "fGroupNames",validate= FieldStrategy.IGNORED)
     private String groupNames;
 
     @TableField(value = "fCustomerID")
