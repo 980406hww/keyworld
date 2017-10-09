@@ -54,7 +54,9 @@ body {
 .venus-menu > li > a i {
     /*color: #bababa;*/
 }
-
+.venus-menu > li:hover > ul {
+    display: block;
+}
 .venus-menu > li:hover > a i, .venus-menu li.active a i {
     color: #fff;
 }

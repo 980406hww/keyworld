@@ -78,6 +78,7 @@
                 textField: 'contactPerson',
                 dataType: 'json',
                 url: '/internal/captureRank/searchCustomer',
+                delay:500,
                 columns: [[
                     {field: 'contactPerson', title: '联系人', width: 150},
                     {field: 'telphone', title: '电话', width: 100},
@@ -87,16 +88,25 @@
                 keyHandler: {
                     query: function (q) {
                         //动态搜索
-
+                       /* if($('#searchCustomer').combogrid('grid').datagrid('selectRow',0))
+                        {
+                            initGroupNames($('#searchCustomer').combogrid("getValue"));
+                        }*/
                         $('#searchCustomer').combogrid("grid").datagrid("reload", {'contactPerson': q});
                         $('#searchCustomer').combogrid("setValue", q);
                     }
                 },
-                onChange: function () {
-                    if ($.isNumeric($('#searchCustomer').combogrid("getValue"))) {
-                        initGroupNames($('#searchCustomer').combogrid("getValue"));
-                    }
+                onSelect:function(){
+                    initGroupNames($('#searchCustomer').combogrid("getValue"));
                 }
+                /*,
+
+                onChange: function () {
+                    $('#searchCustomer').combogrid('grid').datagrid('selectRow',0);
+                    if ($.isNumeric($('#searchCustomer').combogrid("getValue"))) {
+
+                    }
+                }*/
 
             });
         }
