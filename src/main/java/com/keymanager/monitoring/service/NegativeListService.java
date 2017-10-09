@@ -55,8 +55,17 @@ public class NegativeListService extends ServiceImpl<NegativeListDao, NegativeLi
     public void saveNegativeLists(List<NegativeList> negativeLists) {
         if (CollectionUtils.isNotEmpty(negativeLists)) {
             for (NegativeList negativeList : negativeLists) {
-                negativeList.setUpdateTime(new Date());
-                negativeListDao.insert(negativeList);
+                NegativeListCriteria negativeListCriteria = new NegativeListCriteria();
+                negativeListCriteria.setKeyword(negativeList.getKeyword());
+                negativeListCriteria.setTerminalType(negativeList.getTerminalType());
+                negativeListCriteria.setUrl(negativeList.getUrl());
+                negativeListCriteria.setTitle(negativeList.getTitle());
+                List<NegativeList> existingNegativeLists = negativeListDao.searchNegativeListsFullMatching(negativeListCriteria);
+                if(CollectionUtils.isNotEmpty(existingNegativeLists)){
+                    negativeList.setUuid(existingNegativeLists.get(0).getUuid());
+                    negativeList.setCreateTime(existingNegativeLists.get(0).getCreateTime());
+                }
+                this.saveNegativeList(negativeList);
             }
         }
     }
