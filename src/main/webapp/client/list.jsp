@@ -1152,7 +1152,7 @@
                             'Accept': 'application/json',
                             'Content-Type': 'application/json'
                         },
-                        timeout: 5000,
+                        timeout: 60000,
                         type: 'POST',
 						success: function (result) {
 							if(result){

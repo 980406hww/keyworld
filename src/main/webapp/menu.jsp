@@ -1,12 +1,10 @@
-<link href="${path}/css/sskjMenu.css" rel="stylesheet">
-<script type="text/javascript" src="${path}/js/sskjMenu.js"></script>
 <script type="text/javascript">
 
     $(function () {
         var li = $(".venus-menu li");
         $.each(li, function (idx, val) {
             if ($(val).attr("pid") != null && $(val).attr("pid") != '') {
-                $("li[lid=" + $(val).attr("pid") + "]").append("<ul style='display: none;' id='" + $(val).attr("pid") + "'></ul>");
+                $("li[lid=" + $(val).attr("pid") + "]").append("<ul id='" + $(val).attr("pid") + "'></ul>");
                 $.each(li, function (idx1, val1) {
                     if ($(val1).attr("lid") == $(val).attr("pid")) {
                         $("li").find("#" + $(val).attr("pid")).append($(val));
@@ -14,7 +12,7 @@
                 })
             }
         });
-        $().maps();
+        //$().maps();
         $(".venus-menu").show();
         $("#editUserPwdDiv").hide();
     });

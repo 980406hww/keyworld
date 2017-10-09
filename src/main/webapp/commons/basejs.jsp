@@ -23,7 +23,10 @@
 <script language="javascript" type="text/javascript" src="${staticPath }/static/toastmessage/jquery.toastmessage.js"></script>
 <script language="javascript" type="text/javascript" src="${staticPath }/static/jquery.poshytip.js"></script>
 
-<link rel="stylesheet" href="/css/common.css">
+<link type="text/css" href="${staticPath}/static/css/sskjMenu.css" rel="stylesheet">
+<script type="text/javascript" src="${staticPath}/static/sskjMenu.js"></script>
+
+<link rel="stylesheet" href="${staticPath}/static/css/common.css">
 <script language="javascript" type="text/javascript" src="/common.js"></script>
 
 <script type="text/javascript">

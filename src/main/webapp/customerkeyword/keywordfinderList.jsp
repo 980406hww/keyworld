@@ -2,7 +2,6 @@
 <html>
     <head>
         <%@ include file="/commons/basejs.jsp" %>
-        <script language="JavaScript" type="text/javascript" src="/js/jquery.poshytip.js"></script>
         <style>
             td{
                 display: table-cell;
