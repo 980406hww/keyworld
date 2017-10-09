@@ -719,17 +719,14 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeywordDao.updateCustomerKeywordStatus(customerUuids, status);
     }
 
-
-
     public CustomerKeyword searchTitleAndUrl(String[] groupNames,Long customerID)
     {
            return customerKeywordDao.searchTitleAndUrl(groupNames,customerID);
     }
-
     public List<CustomerKeyword> searchGroups(Long customerID) {
         if (customerID != null) {
-            return customerKeywordDao.selectList(new EntityWrapper<CustomerKeyword>().groupBy("fOptimizeGroupName").eq("fCustomerUuid", customerID));
+            return customerKeywordDao.selectList(new EntityWrapper<CustomerKeyword>().groupBy("fOptimizeGroupName").eq("fCustomerUuid", customerID).isNotNull("fOptimizeGroupName").ne("fOptimizeGroupName",""));
         }
-        return customerKeywordDao.selectList(new EntityWrapper<CustomerKeyword>().groupBy("fOptimizeGroupName"));
+        return customerKeywordDao.selectList(new EntityWrapper<CustomerKeyword>().groupBy("fOptimizeGroupName").isNotNull("fOptimizeGroupName").ne("fOptimizeGroupName",""));
     }
 }
