@@ -32,7 +32,7 @@
 			newUserInfo.loginName = $("#loginName").val();
 			alert(JSON.stringify(newUserInfo));
             $.ajax({
-                url: '',
+                url: '/external/user/resetPassword',
                 data: JSON.stringify(newUserInfo),
                 headers: {
                     'Accept': 'application/json',
@@ -57,7 +57,7 @@
 <body <%--onkeydown="enterlogin();"--%>>
 <div class="top_div"></div>
 <div style="background: rgb(255, 255, 255); margin: -100px auto auto; border: 1px solid rgb(231, 231, 231);border-image:none;width:400px;text-align: center;">
-	<form method="post" id="forgotPassword" onsubmit="return checkPassword()">
+	<form method="post" id="forgotPassword">
 		<P style="padding: 30px 0px 10px; position: relative;">
 			<span class="u_logo"></span>&nbsp;
 			<input class="ipt" type="password" name="password" id="password" placeholder="请输入新密码"/>

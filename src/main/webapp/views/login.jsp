@@ -60,7 +60,7 @@
             }
             /*alert($("#forgotPasswordCaptcha").val);*/
             $.ajax({
-                url: '/user/forgetPassword',
+                url: '/external/user/forgetPassword',
                 data: JSON.stringify(loginNameEmail),
                 headers: {
                     'Accept': 'application/json',
@@ -70,10 +70,9 @@
                 type: 'POST',
                 success: function (result) {
                     if (result) {
-                        $().toastmessage('showSuccessToast', "保存成功",true);
+                        $().toastmessage('showSuccessToast', "请注意查收邮箱邮件",true);
                     } else {
-                        alert("保存失败");
-                        $().toastmessage('showErrorToast', "保存失败");
+                        $().toastmessage('showErrorToast', "验证失败");
                     }
                 },
                 error: function () {

@@ -20,6 +20,12 @@
 		<property name="freemarkerConfiguration" ref="freemarkerConfiguration" />
 	</bean>
 
+	<bean id="forgetPasswordMailService" class="com.keymanager.monitoring.common.email.ForgetPasswordMailService">
+		<property name="mailSender" ref="forgetpasswordmailSender" />
+		<property name="emailFrom" value="${forgetpassword.emailFrom}" />
+		<property name="freemarkerConfiguration" ref="freemarkerConfiguration" />
+	</bean>
+
 	<!-- 用于生成HTML邮件内容的Freemarker配置 -->
 	<bean id="freemarkerConfiguration" class="org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean">
 		<property name="templateLoaderPath" value="classpath:/template" />
@@ -43,6 +49,19 @@
 		<property name="host" value="${complaintsreport.host}" />
 		<property name="username" value="${complaintsreport.username}" />
 		<property name="password" value="${complaintsreport.password}" />
+		<property name="defaultEncoding" value="UTF-8"/>
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.smtp.auth">true</prop>
+			</props>
+		</property>
+	</bean>
+
+	<!-- 忘记密码邮件发送器 -->
+	<bean id="forgetpasswordmailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="${forgetpassword.host}" />
+		<property name="username" value="${forgetpassword.username}" />
+		<property name="password" value="${forgetpassword.password}" />
 		<property name="defaultEncoding" value="UTF-8"/>
 		<property name="javaMailProperties">
 			<props>

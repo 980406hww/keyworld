@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotations.TableName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.NotBlank;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -28,6 +29,9 @@ public class UserInfo extends BaseEntity {
 	@TableField(value = "fQQ")
 	private String qq;
 
+	@TableField(value = "fEmail")
+	private String email;
+
 	@TableField(value = "fSalt")
 	private String salt;
 
@@ -36,6 +40,9 @@ public class UserInfo extends BaseEntity {
 
 	@TableField(value = "fOrganizationID")
 	private Integer organizationID;/** 所属机构 */
+
+	@TableField(value = "fResetPasswordApplicationTime")
+	private Date resetPasswordApplicationTime;
 
 	@TableField(exist = false)
 	private List<Role> roleList;
@@ -111,5 +118,21 @@ public class UserInfo extends BaseEntity {
 
 	public void setRoleList(List<Role> roleList) {
 		this.roleList = roleList;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public Date getResetPasswordApplicationTime() {
+		return resetPasswordApplicationTime;
+	}
+
+	public void setResetPasswordApplicationTime(Date resetPasswordApplicationTime) {
+		this.resetPasswordApplicationTime = resetPasswordApplicationTime;
 	}
 }
