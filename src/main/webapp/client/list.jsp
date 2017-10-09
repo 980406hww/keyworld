@@ -94,7 +94,9 @@
 									</c:choose>
 								</c:forEach>
 							</select>
-								&nbsp;&nbsp;&nbsp;
+							&nbsp;&nbsp;&nbsp;
+							服务器ID:<input type="text" name="vpsBackendSystemComputerID" id="vpsBackendSystemComputerID" value="${clientStatusCriteria.vpsBackendSystemComputerID}" style="width: 80px;">
+							&nbsp;&nbsp;&nbsp;
 							排序:<select name="orderBy" id="orderBy">
 								<c:forEach items="${orderByMap}" var="entry">
 									<c:choose>
@@ -1143,34 +1145,50 @@
 
 	    $(document).ready(function(){
 			if($("#showFetchKeywordStatus").attr("checked") === "checked"){
+                var clientIDs = [];
 				$("span[name=invalidClient]").each(function(){
-					var span = $(this);
-					$.ajax({
-						url: '/internal/customerKeyword/haveCustomerKeywordForOptimization',
-                        data: JSON.stringify({"clientID": this.id.replace("span_", "")}),
-                        headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                        },
-                        timeout: 60000,
-                        type: 'POST',
-						success: function (result) {
-							if(result){
-								span.html("<br>取词正常");
-								span.css("color", "green");
-							}else{
-								span.html("<br>取不到词");
-								span.css("color", "red");
-							}
-						},
-						error: function () {
-							span.html("<br>取词异常");
-							span.css("color", "red");
-						}
-					});
+					clientIDs.push(this.id.replace("span_", ""));
+					if(clientIDs.length == 20){
+                        haveCustomerKeywordForOptimization(clientIDs);
+                        clientIDs = [];
+					}
+                    if(clientIDs.length > 0){
+                        haveCustomerKeywordForOptimization(clientIDs);
+                    };
 				});
 			}
 	    });
+
+		function haveCustomerKeywordForOptimization(clientIDs) {
+            $.ajax({
+                url: '/internal/customerKeyword/haveCustomerKeywordForOptimization',
+                data: JSON.stringify({"clientIDs": clientIDs}),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 60000,
+                type: 'POST',
+                success: function (result) {
+                    $("span[name=invalidClient]").each(function(){
+                        var val = $(this);
+                        var clientID = val.attr("id").replace("span_", "");
+                        if (result[clientID] !== undefined) {
+                            if (result[clientID]) {
+                                val.html("<br>取词正常");
+                                val.css("color", "green");
+                            } else {
+                                val.html("<br>取不到词");
+                                val.css("color", "red");
+                            }
+                        }
+                    });
+                },
+                error: function () {
+                    $().toastmessage('showErrorToast', "取词异常");
+                }
+            });
+        }
 	</script>
 
 	<div style="display: none;">

@@ -372,6 +372,17 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     public void updateCustomerKeywordGroupName(CustomerKeywordUpdateGroupCriteria customerKeywordUpdateGroupCriteria) {
         customerKeywordDao.updateCustomerKeywordGroupName(customerKeywordUpdateGroupCriteria);
     }
+    public void updateCustomerKeywordGroupNameByRank(Map<String,Object> resultMap) {
+        List<Long>  customerKeywordUuids = customerKeywordDao.updateCustomerKeywordGroupNameByRank(resultMap);
+        if (customerKeywordUuids != null) {
+            for (Long customerKeywordUuid : customerKeywordUuids) {
+                CustomerKeyword customerKeyword = new CustomerKeyword();
+                customerKeyword.setUuid(customerKeywordUuid);
+                customerKeyword.setOptimizeGroupName(resultMap.get("targetGroupName").toString());
+                customerKeywordDao.updateById(customerKeyword);
+            }
+        }
+    }
 
     public CustomerKeyword getCustomerKeyword(Long CustomerKeywordUuid) {
         return customerKeywordDao.selectById(CustomerKeywordUuid);
