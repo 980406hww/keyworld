@@ -1073,7 +1073,7 @@
                             <td align="right" width="100">
                                 <c:if test="${'bc'.equalsIgnoreCase(entryType)}">
                                     <shiro:hasPermission name="/internal/dailyReport/triggerReportGeneration">
-                                        &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 触发日报表生成 " onclick="triggerDailyReportGeneration(this)"/>
+                                       <input type="button" class="ui-button ui-widget ui-corner-all" value=" 触发日报表生成 " onclick="triggerDailyReportGeneration(this)"/>
                                     </shiro:hasPermission>
                                 </c:if>
                             </td>
@@ -1098,7 +1098,6 @@
             <td align="center" width=40>状态</td>
             <td align="center" width=80>创建时间</td>
             <td align="center" width=200>操作</td>
-
         </tr>
     </table>
 </div>

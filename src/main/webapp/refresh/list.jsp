@@ -47,7 +47,6 @@
         }
 		</shiro:hasPermission>
 
-		<shiro:hasPermission name="/internal/customerKeyword/resetInvalidRefreshCount">
         function resetInvaidRefreshCount(groupName, customerName, self){
             var customerKeyword = {};
             customerKeyword.customerName = customerName;
@@ -63,6 +62,7 @@
                 success: function (result) {
                     if(result){
                         $().toastmessage('showSuccessToast', "重置成功！");
+                        window.location.reload();
                     }else{
                         $().toastmessage('showErrorToast', "重置失败！");
                     }
@@ -72,7 +72,6 @@
                 }
             });
         }
-		</shiro:hasPermission>
 	</script>
 </head>
 <body>
@@ -145,18 +144,20 @@
 							</c:otherwise>
 						</c:choose>
 					</c:if>
-					<c:if test="${refreshStatInfoVO.invalidKeywordCount > 0}">
-						<c:choose>
-							<c:when test="${'总计' eq refreshStatInfoVO.group}">
-								<a target="_blank"
-								   href="javascript:resetInvaidRefreshCount('${refreshStatInfoCriteria.groupName == null ? "" : refreshStatInfoCriteria.groupName}', '${refreshStatInfoCriteria.customerName == null ? "" : refreshStatInfoCriteria.customerName}', this)">重置</a>
-							</c:when>
-							<c:otherwise>
-								<a target="_blank"
-								   href="javascript:resetInvaidRefreshCount('${refreshStatInfoVO.group}', '${refreshStatInfoCriteria.customerName == null ? "" : refreshStatInfoCriteria.customerName}', this)">重置</a>
-							</c:otherwise>
-						</c:choose>
-					</c:if>
+					<shiro:hasPermission name="/internal/customerKeyword/resetInvalidRefreshCount">
+						<c:if test="${refreshStatInfoVO.invalidKeywordCount > 0}">
+							<c:choose>
+								<c:when test="${'总计' eq refreshStatInfoVO.group}">
+									<a target="_blank"
+									   href="javascript:resetInvaidRefreshCount('${refreshStatInfoCriteria.groupName == null ? "" : refreshStatInfoCriteria.groupName}', '${refreshStatInfoCriteria.customerName == null ? "" : refreshStatInfoCriteria.customerName}', this)">重置</a>
+								</c:when>
+								<c:otherwise>
+									<a target="_blank"
+									   href="javascript:resetInvaidRefreshCount('${refreshStatInfoVO.group}', '${refreshStatInfoCriteria.customerName == null ? "" : refreshStatInfoCriteria.customerName}', this)">重置</a>
+								</c:otherwise>
+							</c:choose>
+						</c:if>
+					</shiro:hasPermission>
 				</td>
 				<td width=80>
 					<font color="${refreshStatInfoVO.invalidKeywordPercentage > 20 ? "red" : (refreshStatInfoVO.invalidKeywordPercentage > 10 ? "purple" : "")}">

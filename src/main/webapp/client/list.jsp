@@ -276,15 +276,27 @@
 			</td>
 			<td width=50><font color="${keywordColor}">${clientStatus.broadbandAccount}<br>${clientStatus.broadbandPassword}</font></td>
 			<td width=20><font color="${keywordColor}">${clientStatus.valid ? "监控中" : "暂停监控"}</font></td>
-			<td width=40><input type="text"
-					   value="${clientStatus.upgradeFailedReason == null ? "" : clientStatus.upgradeFailedReason}"
-					   name="upgradeFailedReason" id="${clientStatus.clientID}" onBlur="updateUpgradeFailedReason(this)"
-					   style="width: 100%;"/></td>
+			<td width=40>
+				<shiro:hasPermission name="/internal/clientstatus/updateUpgradeFailedReason">
+					<input type="text"
+						   value="${clientStatus.upgradeFailedReason == null ? "" : clientStatus.upgradeFailedReason}"
+						   name="upgradeFailedReason" id="${clientStatus.clientID}" onBlur="updateUpgradeFailedReason(this)"
+						   style="width: 100%;"/>
+				</shiro:hasPermission>
+				<shiro:lacksPermission name="/internal/clientstatus/updateUpgradeFailedReason">
+					<input type="text"
+						   value="${clientStatus.upgradeFailedReason == null ? "" : clientStatus.upgradeFailedReason}"
+						   name="upgradeFailedReason" id="${clientStatus.clientID}" disabled
+						   style="width: 100%;"/>
+				</shiro:lacksPermission>
+			</td>
 			<td width=40><font color="${keywordColor}">${clientStatus.vpsBackendSystemComputerID}</font></td>
 			<td width=80>
 				<c:choose>
-					<c:when test="${null != clientStatus.host and !'' eq clientStatus.host}">
-						<a href="javascript:connectVNC('${clientStatus.clientID}')">VNC</a>
+					<c:when test="${null != clientStatus.host and '' != clientStatus.host}">
+						<shiro:hasPermission name="/internal/clientstatus/saveClientStatus">
+							<a href="javascript:connectVNC('${clientStatus.clientID}')">VNC</a>
+						</shiro:hasPermission>
 					</c:when>
 					<c:otherwise>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -292,11 +304,11 @@
 				</c:choose>
 				&nbsp;
 				<shiro:hasPermission name="/internal/clientstatus/saveClientStatus">
-				<a href="javascript:showSettingDialog('${clientStatus.clientID}', this)">设置</a>
+					<a href="javascript:showSettingDialog('${clientStatus.clientID}', this)">设置</a>
 				</shiro:hasPermission>
 				&nbsp;
 				<shiro:hasPermission name="/internal/clientstatus/deleteClientStatus">
-				<a href="javascript:delItem('${clientStatus.clientID}')">删除</a>
+					<a href="javascript:delItem('${clientStatus.clientID}')">删除</a>
 				</shiro:hasPermission>
 				<br>
 				<shiro:hasPermission name="/internal/clientstatus/changeStatus">
@@ -1140,7 +1152,7 @@
                             'Accept': 'application/json',
                             'Content-Type': 'application/json'
                         },
-                        timeout: 5000,
+                        timeout: 60000,
                         type: 'POST',
 						success: function (result) {
 							if(result){
