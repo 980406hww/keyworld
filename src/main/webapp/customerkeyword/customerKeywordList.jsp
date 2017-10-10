@@ -925,7 +925,7 @@
         </div><div>
 
     <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupNameByRank">
-        <a href="javascript:showGroupNameChangeByRankDialog('${customerKeywordCriteria.customerUuid}')">修改排名分组</a> |
+        <a href="javascript:showGroupNameChangeByRankDialog('${customerKeywordCriteria.customerUuid}')">按排名修改分组</a> |
     </shiro:hasPermission>
 
     <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupName">
