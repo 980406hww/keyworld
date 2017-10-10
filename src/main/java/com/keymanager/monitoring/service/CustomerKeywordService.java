@@ -385,15 +385,10 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                    customerKeywordDao.updateCustomerKeywordGroupNameByRank(customerKeyowrdUuidsTmp,resultMap.get("targetGroupName").toString());
                    customerKeyowrdUuidsTmp.clear();
                }
-               if(customerKeyowrdUuidsTmp.size()>0){
-                   customerKeywordDao.updateCustomerKeywordGroupNameByRank(customerKeyowrdUuidsTmp,resultMap.get("targetGroupName").toString());
-               }
            }
-            /*Double count  = Math.ceil((double) customerKeywordUuids.size()/ (double) 200);
-            for (int i = 0; i < count; i++) {
-                customerKeyowrdUuidsTmp = customerKeywordUuids.subList(0 * i, 200 * (i + 1));
-                customerKeywordDao.updateCustomerKeywordGroupNameByRank(customerKeyowrdUuidsTmp, resultMap.get("targetGroupName").toString());
-            }*/
+            if(customerKeyowrdUuidsTmp.size()>0){
+                customerKeywordDao.updateCustomerKeywordGroupNameByRank(customerKeyowrdUuidsTmp,resultMap.get("targetGroupName").toString());
+            }
         }
     }
 

@@ -1151,11 +1151,11 @@
                         haveCustomerKeywordForOptimization(clientIDs);
                         clientIDs = [];
 					}
-                    if(clientIDs.length > 0){
-                        haveCustomerKeywordForOptimization(clientIDs);
-                    };
 				});
-			}
+                if(clientIDs.length > 0){
+                    haveCustomerKeywordForOptimization(clientIDs);
+                };
+            }
 	    });
 
 		function haveCustomerKeywordForOptimization(clientIDs) {
