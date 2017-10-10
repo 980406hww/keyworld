@@ -128,6 +128,7 @@
         <if test="clientStatusCriteria.noGroup != null"> AND (cs.fGroup is null or cs.fGroup = '')</if>
         <if test="clientStatusCriteria.noVNC != null"> AND (cs.fHost is null or cs.fHost = '')</if>
         <if test="clientStatusCriteria.noUpgrade != null"> AND (cs.fVersion &lt;&gt; cs.fTargetVersion)</if>
+        <if test="clientStatusCriteria.vpsBackendSystemComputerID != null"> AND (cs.fVPSBackendSystemComputerID = #{clientStatusCriteria.vpsBackendSystemComputerID})</if>
         <if test="clientStatusCriteria.orderBy != null and clientStatusCriteria.orderBy != ''"> ORDER BY ${clientStatusCriteria.orderBy}</if>
     </select>
 

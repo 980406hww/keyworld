@@ -11,10 +11,10 @@
 
 	<script>
         // 验证码
-        function captchaForgotPassword() {
-            var captchaForgotPassword = $("#forgotPasswordCaptcha");
-            var url = captchaForgotPassword.data("src") + new Date().getTime();
-            captchaForgotPassword.attr("src", url);
+        function captchaForgetPassword() {
+            var captchaForgetPassword = $("#forgetPasswordCaptcha");
+            var url = captchaForgetPassword.data("src") + new Date().getTime();
+            captchaForgetPassword.attr("src", url);
         }
 
 		function checkPassword() {
@@ -30,7 +30,8 @@
 			var newUserInfo = {};
             newUserInfo.password = password;
 			newUserInfo.loginName = $("#loginName").val();
-			alert(JSON.stringify(newUserInfo));
+            forgetPassword();
+            $("#forgetPassword").submit();
             $.ajax({
                 url: '/external/user/resetPassword',
                 data: JSON.stringify(newUserInfo),
@@ -42,22 +43,30 @@
                 type: 'POST',
                 success: function (result) {
                     if (result) {
-                        $().toastmessage('showSuccessToast', "修改密码成功",true);
+                        $().toastmessage('showSuccessToast', "修改密码成功,即将跳转登陆页面...");
+                        setTimeout(function(){window.location.href="/login"},4000);
                     } else {
-                        $().toastmessage('showErrorToast', "修改密码失败");
+                        $().toastmessage('showErrorToast', "修改密码失败!");
+                        captchaForgetPassword();
                     }
                 },
                 error: function () {
-                    $().toastmessage('showErrorToast', "修改密码失败");
+                    $().toastmessage('showErrorToast', "修改密码失败!");
+                    captchaForgetPassword();
                 }
             });
+        }
+        function forgetPassword() {
+            $('#forgetPassword').form({
+                url: basePath + '/forgetPassword'
+            })
         }
 	</script>
 </head>
 <body <%--onkeydown="enterlogin();"--%>>
 <div class="top_div"></div>
 <div style="background: rgb(255, 255, 255); margin: -100px auto auto; border: 1px solid rgb(231, 231, 231);border-image:none;width:400px;text-align: center;">
-	<form method="post" id="forgotPassword">
+	<form method="post" id="forgetPassword">
 		<P style="padding: 30px 0px 10px; position: relative;">
 			<span class="u_logo"></span>&nbsp;
 			<input class="ipt" type="password" name="password" id="password" placeholder="请输入新密码"/>
@@ -69,7 +78,7 @@
 		</P>
 		<P style="padding: 10px 0px 10px; position: relative;">
 			<input class="captcha" type="text" name="captcha" placeholder="请输入验证码"/>
-			<img id="forgotPasswordCaptcha" onclick="captchaForgotPassword()" alt="验证码" src="${path }/captcha" data-src="${path }/captcha?t=" style="vertical-align:middle;border-radius:4px;width:94.5px;height:35px;cursor:pointer;">
+			<img id="forgetPasswordCaptcha" onclick="captchaForgetPassword()" alt="验证码" src="${path }/captcha" data-src="${path }/captcha?t=" style="vertical-align:middle;border-radius:4px;width:94.5px;height:35px;cursor:pointer;">
 		</P>
 		<div style="height: 50px; line-height: 50px; margin-top: 10px;border-top-color: rgb(231, 231, 231); border-top-width: 1px; border-top-style: solid;">
 			<P style="margin: 0px 35px 20px 45px;">

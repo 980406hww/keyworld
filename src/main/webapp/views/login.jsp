@@ -10,11 +10,13 @@
     <script type="text/javascript" src="${staticPath }/static/login.js?v=20170115" charset="utf-8"></script>
     <script>
         $(function () {
-            $('#forgotPasswordDialog').dialog("close");
+            $('#forgetPasswordDialog').dialog("close");
         })
         /*忘记密码*/
-        function forgotPassword() {
-            $("#forgotPasswordDialog").dialog({
+        function forgetPassword() {
+            var username = $("#userName").val();
+            $("#loginName").val(username);
+            $("#forgetPasswordDialog").dialog({
                 resizable: false,
                 width: 405,
                 height: 255,
@@ -30,26 +32,26 @@
                         text: '清空',
                         iconCls: 'fi-trash',
                         handler: function () {
-                            $('#forgotPassword')[0].reset();
+                            $('#forgetPassword')[0].reset();
                         }
                     },
                     {
                         text: '取消',
                         iconCls: 'icon-cancel',
                         handler: function () {
-                            $('#forgotPasswordDialog').dialog("close");
-                            $('#forgotPassword')[0].reset();
+                            $('#forgetPasswordDialog').dialog("close");
+                            $('#forgetPassword')[0].reset();
                         }
                     }]
             });
-            $('#forgotPasswordDialog').window("resize",{top:$(document).scrollTop() + 100});
+            $('#forgetPasswordDialog').window("resize",{top:$(document).scrollTop() + 100});
         }
 
         function checkLoginNameEmail() {
-            var forgotPassword = $("#forgotPasswordDialog").find("#forgotPassword");
+            var forgetPassword = $("#forgetPasswordDialog").find("#forgetPassword");
             var loginNameEmail = {};
-            loginNameEmail.loginName = forgotPassword.find("#loginName").val();
-            loginNameEmail.email = forgotPassword.find("#email").val();
+            loginNameEmail.loginName = forgetPassword.find("#loginName").val();
+            loginNameEmail.email = forgetPassword.find("#email").val();
             if(!(loginNameEmail.loginName!=null && loginNameEmail.loginName != '')){
                 alert( "登录名不能为空");
                 return;
@@ -58,7 +60,6 @@
                 alert("请输入正确的邮箱");
                 return;
             }
-            /*alert($("#forgotPasswordCaptcha").val);*/
             $.ajax({
                 url: '/external/user/forgetPassword',
                 data: JSON.stringify(loginNameEmail),
@@ -72,15 +73,15 @@
                     if (result) {
                         $().toastmessage('showSuccessToast', "请注意查收邮箱邮件",true);
                     } else {
-                        $().toastmessage('showErrorToast', "验证失败");
+                        $().toastmessage('showErrorToast', "身份验证失败");
                     }
                 },
                 error: function () {
-                    $().toastmessage('showErrorToast', "保存失败");
+                    $().toastmessage('showErrorToast', "发送邮件失败");
                   }
             });
-            $("#forgotPasswordDialog").dialog("close");
-            $('#forgotPassword')[0].reset();
+            $("#forgetPasswordDialog").dialog("close");
+            $('#forgetPassword')[0].reset();
         }
     </script>
 </head>
@@ -96,7 +97,7 @@
         </div>
         <P style="padding: 30px 0px 10px; position: relative;">
             <span class="u_logo"></span>
-            <input class="ipt" type="text" name="username" placeholder="请输入登录名"/>
+            <input class="ipt" type="text" name="username" id="userName" placeholder="请输入登录名"/>
         </P>
         <P style="position: relative;">
             <span class="p_logo"></span>
@@ -121,7 +122,7 @@
         <div style="height: 50px; line-height: 50px; margin-top: 10px;border-top-color: rgb(231, 231, 231); border-top-width: 1px; border-top-style: solid;">
             <P style="margin: 0px 35px 20px 45px;">
                 <span style="float: left;">
-                    <a style="color: rgb(204, 204, 204);" href="javascript:forgotPassword()">忘记密码?</a>
+                    <a style="color: rgb(204, 204, 204);" href="javascript:forgetPassword()">忘记密码?</a>
                 </span>
                 <span style="float: right;">
                     <a style="color: rgb(204, 204, 204); margin-right: 10px;" href="javascript:;">注册</a>
@@ -137,8 +138,8 @@
 </div>
 
 <%--忘记密码--%>
-<div class="easyui-dialog" id="forgotPasswordDialog" title="找回密码" style="left: 36%; top: 110px;">
-    <form method="post" id="forgotPassword">
+<div class="easyui-dialog" id="forgetPasswordDialog" title="找回密码" style="left: 36%; top: 110px;">
+    <form method="post" id="forgetPassword">
         <P style="padding: 30px 0px 10px; position: relative;">
             <span class="u_logo"></span>
             <input class="ipt" type="text" id="loginName" name="loginName" placeholder="请输入登录名" style="margin-left: 60px;"/>
