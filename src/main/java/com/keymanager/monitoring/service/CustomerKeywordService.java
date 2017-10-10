@@ -188,6 +188,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeyword.setStatus(2);
         }
 
+        if(customerKeyword.getCurrentPosition() == null){
+            customerKeyword.setCurrentPosition(10);
+        }
         customerKeyword.setAutoUpdateNegativeDateTime(Utils.getCurrentTimestamp());
         customerKeyword.setUpdateTime(new Date());
         customerKeyword.setCreateTime(new Date());
@@ -376,8 +379,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         List<Long>  customerKeywordUuids = customerKeywordDao.updateCustomerKeywordGroupNameByRank(resultMap);
         if (customerKeywordUuids != null) {
             for (Long customerKeywordUuid : customerKeywordUuids) {
-                CustomerKeyword customerKeyword = new CustomerKeyword();
-                customerKeyword.setUuid(customerKeywordUuid);
+                CustomerKeyword customerKeyword = customerKeywordDao.selectById(customerKeywordUuid);
                 customerKeyword.setOptimizeGroupName(resultMap.get("targetGroupName").toString());
                 customerKeywordDao.updateById(customerKeyword);
             }
