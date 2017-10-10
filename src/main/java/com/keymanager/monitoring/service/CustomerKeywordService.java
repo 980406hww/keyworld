@@ -12,6 +12,7 @@ import com.keymanager.monitoring.excel.operator.AbstractExcelReader;
 import com.keymanager.monitoring.dao.CustomerKeywordDao;
 import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.enums.*;
+import com.keymanager.monitoring.vo.CodeNameVo;
 import com.keymanager.monitoring.vo.SearchEngineResultItemVO;
 import com.keymanager.monitoring.vo.SearchEngineResultVO;
 import com.keymanager.util.Constants;
@@ -712,6 +713,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                 customerKeywords.add(customerKeyword);
             }
             this.addCustomerKeywords(customerKeywords, userName);
+
         }
     }
 
@@ -723,10 +725,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     {
            return customerKeywordDao.searchTitleAndUrl(groupNames,customerID);
     }
-    public List<CustomerKeyword> searchGroups(Long customerID) {
-        if (customerID != null) {
-            return customerKeywordDao.selectList(new EntityWrapper<CustomerKeyword>().groupBy("fOptimizeGroupName").eq("fCustomerUuid", customerID).isNotNull("fOptimizeGroupName").ne("fOptimizeGroupName",""));
-        }
-        return customerKeywordDao.selectList(new EntityWrapper<CustomerKeyword>().groupBy("fOptimizeGroupName").isNotNull("fOptimizeGroupName").ne("fOptimizeGroupName",""));
+
+    public List<CodeNameVo> searchGroups(Long customerUuid) {
+        return customerKeywordDao.searchGroups(customerUuid);
     }
 }

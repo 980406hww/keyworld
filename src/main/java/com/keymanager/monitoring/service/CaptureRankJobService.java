@@ -52,4 +52,12 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
             captureRankJobDao.updateById(captureRankJob);
         }
     }
+
+    public void completeCaptureRankJob(CaptureRankJob captureRankJob)
+    {
+        captureRankJob.setExectionStatus(CaptureRankExectionStatus.Complete.name());
+        captureRankJob.setEndTime(new Date());
+        captureRankJob.setLastExecutionDate(new java.sql.Date(new Date().getTime()));
+        captureRankJobDao.updateById(captureRankJob);
+    }
 }

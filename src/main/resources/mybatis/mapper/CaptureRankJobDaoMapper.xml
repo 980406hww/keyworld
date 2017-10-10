@@ -4,7 +4,7 @@
     <sql id="colID">
         c.fUuid AS `uuid`,
         c.fGroupNames AS `groupNames`,
-        c.fCustomerID AS `customerID`,
+        c.fCustomerUuid AS `customerUuid`,
         c.fOperationType AS `operationType`,
         c.fExectionType AS `exectionType`,
         c.fExectionTime AS `exectionTime`,
@@ -25,7 +25,7 @@
         FROM t_capture_rank_job c
         <where>
             <if test="captureRankJobSearchCriteria.groupNames!=null and captureRankJobSearchCriteria.groupNames!=''"> and c.fGroupNames like '%${captureRankJobSearchCriteria.groupNames}%'</if>
-            <if test="captureRankJobSearchCriteria.customerID!=null and captureRankJobSearchCriteria.customerID!=''"> and c.fCustomerID = #{captureRankJobSearchCriteria.customerID}</if>
+            <if test="captureRankJobSearchCriteria.customerUuid!=null and captureRankJobSearchCriteria.customerUuid!=''"> and c.fcustomerUuid = #{captureRankJobSearchCriteria.customerUuid}</if>
             <if test="captureRankJobSearchCriteria.operationType!=null and captureRankJobSearchCriteria.operationType!=''"> and c.fOperationType = #{captureRankJobSearchCriteria.operationType}</if>
             <if test="captureRankJobSearchCriteria.exectionType!=null and captureRankJobSearchCriteria.exectionType!=''"> and c.fExectionType = #{captureRankJobSearchCriteria.exectionType}</if>
         </where>

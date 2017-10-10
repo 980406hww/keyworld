@@ -4,11 +4,8 @@ import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.BaseCriteria;
 import com.keymanager.monitoring.criteria.CaptureRankJobCriteria;
 import com.keymanager.monitoring.entity.CaptureRankJob;
-import com.keymanager.monitoring.entity.CustomerKeyword;
-import com.keymanager.monitoring.enums.CaptureRankExectionStatus;
 import com.keymanager.monitoring.service.CaptureRankJobService;
 import com.keymanager.monitoring.service.CustomerKeywordService;
-import com.keymanager.util.TerminalTypeMapping;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
 
 /**
  * Created by shunshikj24 on 2017/9/27.
@@ -59,10 +53,7 @@ public class ExternalCrawlRankingRsetController extends SpringMVCBaseController 
         CaptureRankJob captureRankJob = captureRankJobCriteria.getCaptureRankJob();
         try {
             if (validUser(userName, password)) {
-                captureRankJob.setExectionStatus(CaptureRankExectionStatus.Complete.name());
-                captureRankJob.setEndTime(new Date());
-                captureRankJob.setLastExecutionDate(new java.sql.Date(new Date().getTime()));
-                captureRankJobService.updateById(captureRankJob);
+                captureRankJobService.completeCaptureRankJob(captureRankJob);
                 return new ResponseEntity<Object>(HttpStatus.OK);
             }
         } catch (Exception e) {

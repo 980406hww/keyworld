@@ -24,10 +24,10 @@
         })
 
         function alignTableHeader() {
-            var td = $("#showCaptureRankJobTable tr:first td");
-            var ctd = $("#headerTable tr:first td");
-            $.each(td, function (idx, val) {
-                ctd.eq(idx).width($(val).width());
+            var firstLineDataTds = $("#showCaptureRankJobTable tr:first td");
+            var titleTds = $("#headerTable tr:first td");
+            $.each(firstLineDataTds, function (idx, val) {
+                titleTds.eq(idx).width($(val).width());
             });
         }
 
@@ -42,6 +42,7 @@
             var searchCaptureRankJobForm = $("#searchCaptureRankJobForm");
             searchCaptureRankJobForm.find("#currentPageNumberHidden").val(1);
         }
+
         function pageLoad() {
             var searchCustomerForm = $("#searchCaptureRankJobForm");
             var pageSize = searchCustomerForm.find('#pageSizeHidden').val();
@@ -67,10 +68,10 @@
                 showCustomerBottomDiv.find("#nextButton").attr("disabled", "disabled");
                 showCustomerBottomDiv.find("#lastButton").attr("disabled", "disabled");
             }
-
         }
-        function initCustomerID() {
-            $('#crawlRankingForm #customerID').combogrid({
+        
+        function initcustomerUuid() {
+            $('#crawlRankingForm #customerUuid').combogrid({
                 model: 'remote',
                 panelWidth: 460,
                 value: '',
@@ -88,22 +89,22 @@
                 keyHandler: {
                     query: function (q) {
                         //动态搜索
-                        $('#crawlRankingForm #customerID').combogrid("grid").datagrid("reload", {'contactPerson': q});
-                        $('#crawlRankingForm #customerID').combogrid("setValue", q);
+                        $('#crawlRankingForm #customerUuid').combogrid("grid").datagrid("reload", {'contactPerson': q});
+                        $('#crawlRankingForm #customerUuid').combogrid("setValue", q);
                     }
                 },
                 onSelect: function () {
-                    initGroupNames($('#crawlRankingForm #customerID').combogrid("getValue"), groupNames);
+                    initGroupNames($('#crawlRankingForm #customerUuid').combogrid("getValue"), groupNames);
                 }
             });
         }
-        function initGroupNames(customerID, groupNames) {
+        function initGroupNames(customerUuid, groupNames) {
             $('#crawlRankingForm #groupNames').combobox({
-                url: '/internal/captureRank/searchGroups?customerID=' + customerID, //后台获取下拉框数据的url
+                url: '/internal/captureRank/searchGroups?customerUuid=' + customerUuid, //后台获取下拉框数据的url
                 method: 'post',
                 //panelHeight:300,//设置为固定高度，combobox出现竖直滚动条
-                valueField: 'optimizeGroupName',
-                textField: 'optimizeGroupName',
+                valueField: 'name',
+                textField: 'name',
                 multiple: true,
                 dataType: 'json',
                 editable: false,
@@ -173,7 +174,7 @@
                     }]
             });
             $('#crawlRankingDialog').window("resize", {top: $(document).scrollTop() + 100});
-            initCustomerID();
+            initcustomerUuid();
             $('#crawlRankingForm #rowNumber').spinner('setValue', 100);
             $('#crawlRankingForm #executionCycle').spinner('setValue', 0);
         }
@@ -183,11 +184,11 @@
             if (uuid != null) {
                 CaptureRankJob.uuid = uuid;
             }
-            if ($('#crawlRankingForm #customerID').combogrid("getValue") == null || $('#crawlRankingForm #customerID').combogrid("getValue") === '') {
+            if ($('#crawlRankingForm #customerUuid').combogrid("getValue") == null || $('#crawlRankingForm #customerUuid').combogrid("getValue") === '') {
                 $().toastmessage('showWarningToast', "客户名不能为空!");
                 return;
             }
-            CaptureRankJob.customerID = $('#crawlRankingForm #customerID').combogrid("getValue");
+            CaptureRankJob.customerUuid = $('#crawlRankingForm #customerUuid').combogrid("getValue");
             if ($("#crawlRankingForm #groupNames").val() == null || $("#crawlRankingForm #groupNames").val() === '') {
                 $().toastmessage('showWarningToast', "优化组名不能为空!");
                 return;
@@ -235,8 +236,8 @@
                 type: 'POST',
                 success: function (data) {
                     if (data) {
-                        $('#crawlRankingForm #customerID').combogrid("setValue",data.customerID);
-                        initGroupNames($('#crawlRankingForm #customerID').combogrid("getValue"), data.groupNames);
+                        $('#crawlRankingForm #customerUuid').combogrid("setValue",data.customerUuid);
+                        initGroupNames($('#crawlRankingForm #customerUuid').combogrid("getValue"), data.groupNames);
                         $("#crawlRankingForm input[name=exectionType][value=" + data.exectionType + "]").attr("checked", true);
                         $("#crawlRankingForm #exectionTime").val(data.exectionTime);
                         $('#crawlRankingForm #rowNumber').spinner('setValue', data.rowNumber);
@@ -365,7 +366,7 @@
             <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
             <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
             组名:<input type="text" name="groupNames" value="${captureRankJobSearchCriteria.groupNames}">
-            客户ID:<input type="text" name="customerID" value="${captureRankJobSearchCriteria.customerID}">
+            客户ID:<input type="text" name="customerUuid" value="${captureRankJobSearchCriteria.customerUuid}">
             操作类型:
             <select name="operationType">
                 <option value="">请选择终端类型</option>
@@ -410,7 +411,7 @@
         <c:forEach items="${page.records}" var="captureRankJob" varStatus="status">
         <tr align="left" onmouseover="doOver(this);" onmouseout="doOut(this);" height=30  <c:if test="${status.index%2==0}">bgcolor="#eee"</c:if> >
             <td width=10 align="center"><input type="checkbox" name="uuid" value="${captureRankJob.uuid}" onclick="decideSelectAll()"/></td>
-            <td width=40>${captureRankJob.customerID}</td>
+            <td width=40>${captureRankJob.customerUuid}</td>
             <td width=80>${captureRankJob.groupNames}</td>
             <td width=60>${captureRankJob.operationType}</td>
             <td width=60>${captureRankJob.exectionType}</td>
@@ -437,7 +438,7 @@
 <form id="crawlRankingForm">
     <ul>
         <input type="hidden" name="captureRankJobUuid" id="captureRankJobUuid">
-        <li><span>输入客户名:</span><input type="text" name="customerID" id="customerID" style="width: 200px" required></li>
+        <li><span>输入客户名:</span><input type="text" name="customerUuid" id="customerUuid" style="width: 200px" required></li>
         <li><span>输入优化组名:</span><input type="text" name="groupNames" id="groupNames" class="easyui-combobox" style="width: 200px" data-options="editable:false" required></li>
         <li><span>执行方式:</span><input type="radio" name="exectionType" checked  value="Once">一次性</label><input type="radio" name="exectionType" value="Everyday">每天</li>
         <li><span>执行时间:</span><input type="text" class="Wdate" name="exectionTime" id="exectionTime" onfocus="WdatePicker({lang:'zh-cn',dateFmt:'HH:mm:ss'})" required style="width: 200px"></li>

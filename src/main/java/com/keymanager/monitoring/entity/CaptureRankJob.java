@@ -21,8 +21,8 @@ public class CaptureRankJob extends BaseEntity{
     @TableField(value = "fGroupNames",validate= FieldStrategy.IGNORED)
     private String groupNames;
 
-    @TableField(value = "fCustomerID")
-    private Long customerID;
+    @TableField(value = "fCustomerUuid")
+    private Long customerUuid;
 
     @TableField(value = "fOperationType")
     private String operationType;
@@ -65,12 +65,12 @@ public class CaptureRankJob extends BaseEntity{
         this.executionCycle = executionCycle;
     }
 
-    public Long getCustomerID() {
-        return customerID;
+    public Long getCustomerUuid() {
+        return customerUuid;
     }
 
-    public void setCustomerID(Long customerID) {
-        this.customerID = customerID;
+    public void setCustomerUuid(Long customerUuid) {
+        this.customerUuid = customerUuid;
     }
 
     public Integer getRowNumber() {

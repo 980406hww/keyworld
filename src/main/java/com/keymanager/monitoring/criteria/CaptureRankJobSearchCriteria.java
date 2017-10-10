@@ -5,7 +5,7 @@ package com.keymanager.monitoring.criteria;
  */
 public class CaptureRankJobSearchCriteria{
     private String groupNames;
-    private String customerID;
+    private String customerUuid;
     private String operationType;
     private String exectionType;
     private String createBy;
@@ -19,12 +19,12 @@ public class CaptureRankJobSearchCriteria{
         this.groupNames = groupNames;
     }
 
-    public String getCustomerID() {
-        return customerID;
+    public String getCustomerUuid() {
+        return customerUuid;
     }
 
-    public void setCustomerID(String customerID) {
-        this.customerID = customerID;
+    public void setCustomerUuid(String customerUuid) {
+        this.customerUuid = customerUuid;
     }
 
     public String getOperationType() {

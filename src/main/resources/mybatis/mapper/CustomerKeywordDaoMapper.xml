@@ -325,7 +325,14 @@
         </foreach>
     </update>
 
-
-
-
+    <select id="searchGroups" resultType="com.keymanager.monitoring.vo.CodeNameVo">
+        select
+        fOptimizeGroupName	as 'name'
+        from t_customer_keyword
+        where
+            fCustomerUuid = #{customerUuid}
+            and fOptimizeGroupName is not null
+            and fOptimizeGroupName != ''
+            GROUP BY fOptimizeGroupName
+    </select>
 </mapper>

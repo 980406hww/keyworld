@@ -7,6 +7,7 @@ import com.keymanager.monitoring.entity.CaptureRankJob;
 import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.CustomerKeyword;
 import com.keymanager.monitoring.service.*;
+import com.keymanager.monitoring.vo.CodeNameVo;
 import com.keymanager.util.TerminalTypeMapping;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,12 +31,6 @@ import java.util.Map;
 public class CaptureRankRsetController {
 
     private static Logger logger = LoggerFactory.getLogger(CaptureRankRsetController.class);
-
-    @Autowired
-    private UserRoleService userRoleService;
-
-    @Autowired
-    private IUserInfoService userInfoService;
 
     @Autowired
     private CaptureRankJobService captureRankJobService;
@@ -94,8 +89,8 @@ public class CaptureRankRsetController {
     }
 
     @RequestMapping(value = "/searchGroups", method = RequestMethod.POST)
-    public List<CustomerKeyword> searchGroups(Long customerID) {
-       return customerKeywordService.searchGroups(customerID);//查看到这里
+    public List<CodeNameVo > searchGroups(Long customerUuid) {
+       return customerKeywordService.searchGroups(customerUuid);//查看到这里
     }
 
 

@@ -6,13 +6,15 @@ import com.keymanager.monitoring.criteria.CustomerKeywordCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordUpdateGroupCriteria;
 import com.keymanager.monitoring.entity.CustomerKeyword;
+import com.keymanager.monitoring.vo.CodeNameVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
+public interface
+CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void cleanSelectedCustomerKeywordTitle(@Param("uuids")List<String> uuids);
 
     void cleanCustomerTitle(@Param("terminalType") String terminalType, @Param("entryType") String entryType, @Param("customerUuid") String customerUuid);
@@ -82,5 +84,8 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void updateCustomerKeywordStatus(@Param("customerUuids")List<String> customerUuids, @Param("status")Integer status);
 
 
-    public CustomerKeyword searchTitleAndUrl(@Param("groupNames") String[] groupNames,@Param("customerID") Long customerID);
+    public CustomerKeyword searchTitleAndUrl(@Param("groupNames") String[] groupNames,@Param("customerUuid") Long customerUuid);
+
+    List<CodeNameVo> searchGroups(@Param("customerUuid") Long customerUuid);
+
 }
