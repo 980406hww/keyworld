@@ -143,9 +143,6 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		try {
 			String terminalType = TerminalTypeMapping.getTerminalType(request);
 			String entryType = (String)request.getSession().getAttribute("entryType");
-			String day = (String) resultMap.get("day");
-			day = Integer.parseInt(day)+1+"";
-			resultMap.put("day",day);
 			resultMap.put("terminalType",terminalType);
 			resultMap.put("entryType",entryType);
 			customerKeywordService.updateCustomerKeywordGroupNameByRank(resultMap);
