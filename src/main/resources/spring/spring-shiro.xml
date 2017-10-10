@@ -74,6 +74,7 @@
 				/external/** = anon
 				/login = anon
 				/forgetPassword = anon
+				/checkEmail = anon
 				/resetPasswordPage = anon
 				/** = userInfo
 			</value>

@@ -7,6 +7,7 @@ import com.keymanager.monitoring.dao.UserInfoDao;
 import com.keymanager.monitoring.entity.UserInfo;
 import com.keymanager.monitoring.service.IUserInfoService;
 import com.keymanager.util.Utils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,6 +50,12 @@ public class ExternalUserInfoRestController {
             return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
         }
 
+    }
+
+    @RequestMapping(value = "/checkEmail", method = RequestMethod.GET)
+    public ModelAndView checkEmail() {
+        ModelAndView modelAndView = new ModelAndView("/checkEmail");
+        return modelAndView;
     }
 
     @RequestMapping(value = "/userValidate/{loginName}/{validateCode}", method = RequestMethod.GET)

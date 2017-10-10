@@ -6,17 +6,10 @@
 	<meta name="viewport" content="width=device-width">
 	<%@ include file="/commons/basejs.jsp" %>
 	<script language="javascript" type="text/javascript" src="/toastmessage/jquery.toastmessage.js"></script>
+	<script language="javascript" type="text/javascript" src="/static/login.js"></script>
 	<link rel="stylesheet" href="/toastmessage/css/jquery.toastmessage.css">
 	<link rel="stylesheet" type="text/css" href="${staticPath }/static/style/css/login.css?v=201612202107" />
-
 	<script>
-        // 验证码
-        function captchaForgetPassword() {
-            var captchaForgetPassword = $("#forgetPasswordCaptcha");
-            var url = captchaForgetPassword.data("src") + new Date().getTime();
-            captchaForgetPassword.attr("src", url);
-        }
-
 		function checkPassword() {
 			var password = $("#password").val();
 			var confirmPassword = $("#confirmPassword").val()
@@ -30,8 +23,6 @@
 			var newUserInfo = {};
             newUserInfo.password = password;
 			newUserInfo.loginName = $("#loginName").val();
-            forgetPassword();
-            $("#forgetPassword").submit();
             $.ajax({
                 url: '/external/user/resetPassword',
                 data: JSON.stringify(newUserInfo),
@@ -52,14 +43,8 @@
                 },
                 error: function () {
                     $().toastmessage('showErrorToast', "修改密码失败!");
-                    captchaForgetPassword();
                 }
             });
-        }
-        function forgetPassword() {
-            $('#forgetPassword').form({
-                url: basePath + '/forgetPassword'
-            })
         }
 	</script>
 </head>
@@ -67,6 +52,11 @@
 <div class="top_div"></div>
 <div style="background: rgb(255, 255, 255); margin: -100px auto auto; border: 1px solid rgb(231, 231, 231);border-image:none;width:400px;text-align: center;">
 	<form method="post" id="forgetPassword">
+		<div style="width: 165px; height: 96px; position: absolute;">
+			<div class="tou"></div>
+			<div class="initial_left_hand" id="left_hand"></div>
+			<div class="initial_right_hand" id="right_hand"></div>
+		</div>
 		<P style="padding: 30px 0px 10px; position: relative;">
 			<span class="u_logo"></span>&nbsp;
 			<input class="ipt" type="password" name="password" id="password" placeholder="请输入新密码"/>
@@ -75,10 +65,6 @@
 		<P style="position: relative;">
 			<span class="p_logo"></span>&nbsp;&nbsp;
 			<input class="ipt" id="confirmPassword"  type="password" name="confirmPassword" placeholder="请再次输入密码"/>
-		</P>
-		<P style="padding: 10px 0px 10px; position: relative;">
-			<input class="captcha" type="text" name="captcha" placeholder="请输入验证码"/>
-			<img id="forgetPasswordCaptcha" onclick="captchaForgetPassword()" alt="验证码" src="${path }/captcha" data-src="${path }/captcha?t=" style="vertical-align:middle;border-radius:4px;width:94.5px;height:35px;cursor:pointer;">
 		</P>
 		<div style="height: 50px; line-height: 50px; margin-top: 10px;border-top-color: rgb(231, 231, 231); border-top-width: 1px; border-top-style: solid;">
 			<P style="margin: 0px 35px 20px 45px;">
