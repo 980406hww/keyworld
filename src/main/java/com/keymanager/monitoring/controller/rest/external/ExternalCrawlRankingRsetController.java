@@ -36,8 +36,8 @@ public class ExternalCrawlRankingRsetController extends SpringMVCBaseController 
     @Autowired
     private CustomerKeywordService customerKeywordService;
 
-    @RequestMapping(value = "/crawlRankingExternalInterface", method = RequestMethod.POST)
-    public ResponseEntity<?> doCrawlRanking(@RequestBody BaseCriteria baseCriteria) {
+    @RequestMapping(value = "/getCaptureRankJob", method = RequestMethod.POST)
+    public ResponseEntity<?> getCaptureRankJob(@RequestBody BaseCriteria baseCriteria) {
         String userName = baseCriteria.getUserName();
         String password = baseCriteria.getPassword();
         try {
@@ -67,26 +67,6 @@ public class ExternalCrawlRankingRsetController extends SpringMVCBaseController 
             }
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
-    }
-
-    @RequestMapping(value = "/getCustomerKeywordForCapturePosition", method = RequestMethod.POST)
-    public ResponseEntity<?> getCustomerKeywordForCapturePosition(@RequestBody CaptureRankJobCriteria captureRankJobCriteria, HttpServletRequest request) throws Exception {
-        String userName = captureRankJobCriteria.getUserName();
-        String password = captureRankJobCriteria.getPassword();
-        String terminalType = TerminalTypeMapping.getTerminalType(request);
-        try {
-            if (validUser(userName, password)) {
-                CaptureRankJob captureRankJob = captureRankJobCriteria.getCaptureRankJob();
-                String[] groupNames = captureRankJob.getGroupNames().split(",");
-                Long customerID = captureRankJob.getCustomerID();
-                CustomerKeyword customerKeyword = customerKeywordService.searchTitleAndUrl(groupNames, customerID);
-                return new ResponseEntity<Object>(customerKeyword, HttpStatus.OK);
-            }
-        } catch (Exception ex) {
-            logger.error(ex.getMessage());
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
