@@ -188,6 +188,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeyword.setStatus(2);
         }
 
+        if(customerKeyword.getCurrentPosition() == null){
+            customerKeyword.setCurrentPosition(10);
+        }
         customerKeyword.setAutoUpdateNegativeDateTime(Utils.getCurrentTimestamp());
         customerKeyword.setUpdateTime(new Date());
         customerKeyword.setCreateTime(new Date());

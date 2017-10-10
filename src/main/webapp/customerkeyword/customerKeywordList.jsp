@@ -1072,7 +1072,7 @@
                        style="width:115px;" value="">
 
                 指数:<input type="text" id="initialIndexCount" size="5" name="initialIndexCount" value="100" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)">
-                排名:<input type="text" id="initialPosition" size="5" name="initialPosition" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)" >
+                排名:<input type="text" id="initialPosition" size="5" name="initialPosition" value="10" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)" >
 
             </li>
             <li>
