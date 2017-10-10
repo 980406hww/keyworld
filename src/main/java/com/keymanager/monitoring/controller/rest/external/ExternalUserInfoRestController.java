@@ -38,7 +38,7 @@ public class ExternalUserInfoRestController {
         try {
             String loginName = (String) requestMap.get("loginName");
             String password = (String) requestMap.get("password");
-            UserInfo user = userInfoDao.selectById(loginName);
+            UserInfo user = userInfoDao.getUserInfo(loginName);
             String salt = user.getSalt();
             UserInfo userInfo = new UserInfo();
             userInfo.setUuid(user.getUuid());
