@@ -70,7 +70,7 @@
 
         }
         function initCustomerID() {
-            $('#searchCustomer').combogrid({
+            $('#crawlRankingForm #customerID').combogrid({
                 model: 'remote',
                 panelWidth: 460,
                 value: '',
@@ -88,17 +88,17 @@
                 keyHandler: {
                     query: function (q) {
                         //动态搜索
-                        $('#searchCustomer').combogrid("grid").datagrid("reload", {'contactPerson': q});
-                        $('#searchCustomer').combogrid("setValue", q);
+                        $('#crawlRankingForm #customerID').combogrid("grid").datagrid("reload", {'contactPerson': q});
+                        $('#crawlRankingForm #customerID').combogrid("setValue", q);
                     }
                 },
                 onSelect: function () {
-                    initGroupNames($('#searchCustomer').combogrid("getValue"), groupNames);
+                    initGroupNames($('#crawlRankingForm #customerID').combogrid("getValue"), groupNames);
                 }
             });
         }
         function initGroupNames(customerID, groupNames) {
-            $('#groupNames').combobox({
+            $('#crawlRankingForm #groupNames').combobox({
                 url: '/internal/captureRank/searchGroups?customerID=' + customerID, //后台获取下拉框数据的url
                 method: 'post',
                 //panelHeight:300,//设置为固定高度，combobox出现竖直滚动条
@@ -124,7 +124,7 @@
                 onSelect: function (row) { //选中一个选项时调用
                     var opts = $(this).combobox('options');
                     //获取选中的值的values
-                    $('#groupNames').val($(this).combobox('getValues'));
+                    $('#crawlRankingForm #groupNames').val($(this).combobox('getValues'));
 
                     //设置选中值所对应的复选框为选中状态
                     var el = opts.finder.getEl(this, row[opts.valueField]);
@@ -134,7 +134,7 @@
 
                     var opts = $(this).combobox('options');
                     //获取选中的值的values
-                    $('#groupNames').val($(this).combobox('getValues'));
+                    $('#crawlRankingForm #groupNames').val($(this).combobox('getValues'));
 
                     var el = opts.finder.getEl(this, row[opts.valueField]);
                     el.find('input.combobox-checkbox')._propAttr('checked', false);
@@ -183,11 +183,11 @@
             if (uuid != null) {
                 CaptureRankJob.uuid = uuid;
             }
-            if ($("#crawlRankingForm input[name=customerID]").val() == null || $("#crawlRankingForm input[name=customerID]").val() === '') {
+            if ($('#crawlRankingForm #customerID').combogrid("getValue") == null || $('#crawlRankingForm #customerID').combogrid("getValue") === '') {
                 $().toastmessage('showWarningToast', "客户名不能为空!");
                 return;
             }
-            CaptureRankJob.customerID = $("#crawlRankingForm input[name=customerID]").val();
+            CaptureRankJob.customerID = $('#crawlRankingForm #customerID').combogrid("getValue");
             if ($("#crawlRankingForm #groupNames").val() == null || $("#crawlRankingForm #groupNames").val() === '') {
                 $().toastmessage('showWarningToast', "优化组名不能为空!");
                 return;
@@ -201,7 +201,6 @@
             CaptureRankJob.exectionTime = $("#crawlRankingForm #exectionTime").val();
             CaptureRankJob.rowNumber = $("#crawlRankingForm #rowNumber").val();
             CaptureRankJob.executionCycle = $("#crawlRankingForm #executionCycle").val();
-
             alert(JSON.stringify(CaptureRankJob));
             $.ajax({
                 url: '/internal/captureRank/saveCaptureRankJob',
@@ -215,8 +214,6 @@
                 success: function (data) {
                     if (data) {
                         $().toastmessage('showSuccessToast', "保存成功", true);
-
-
                     } else {
                         $().toastmessage('showErrorToast', "保存失败");
                     }
@@ -238,8 +235,8 @@
                 type: 'POST',
                 success: function (data) {
                     if (data) {
-                        $("#crawlRankingForm input[name=customerID]").val(data.customerID);
-                        initGroupNames($('#searchCustomer').combogrid("getValue"), data.groupNames);
+                        $('#crawlRankingForm #customerID').combogrid("setValue",data.customerID);
+                        initGroupNames($('#crawlRankingForm #customerID').combogrid("getValue"), data.groupNames);
                         $("#crawlRankingForm input[name=exectionType][value=" + data.exectionType + "]").attr("checked", true);
                         $("#crawlRankingForm #exectionTime").val(data.exectionTime);
                         $('#crawlRankingForm #rowNumber').spinner('setValue', data.rowNumber);
@@ -299,13 +296,20 @@
         }
 
         function deleteCaptureRankJobs() {
-
+            var uuids = getUuids();
+            if (uuids == null || uuids == '') {
+                alert("至少选择一条数据!");
+            }
+            if (confirm("确实要删除这些任务吗?") == false) return;
+            var postData = {};
+            postData.uuids = uuids.split(",");
             $.ajax({
-                url: '/internal/captureRank/deleteCaptureRankJobs?uuids=' + getUuids(),
+                url: '/internal/captureRank/deleteCaptureRankJobs',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
+                data: JSON.stringify(postData),
                 timeout: 5000,
                 type: 'POST',
                 success: function (data) {
@@ -433,7 +437,7 @@
 <form id="crawlRankingForm">
     <ul>
         <input type="hidden" name="captureRankJobUuid" id="captureRankJobUuid">
-        <li><span>输入客户名:</span><input type="text" name="customerID" id="searchCustomer" style="width: 200px" required></li>
+        <li><span>输入客户名:</span><input type="text" name="customerID" id="customerID" style="width: 200px" required></li>
         <li><span>输入优化组名:</span><input type="text" name="groupNames" id="groupNames" class="easyui-combobox" style="width: 200px" data-options="editable:false" required></li>
         <li><span>执行方式:</span><input type="radio" name="exectionType" checked  value="Once">一次性</label><input type="radio" name="exectionType" value="Everyday">每天</li>
         <li><span>执行时间:</span><input type="text" class="Wdate" name="exectionTime" id="exectionTime" onfocus="WdatePicker({lang:'zh-cn',dateFmt:'HH:mm:ss'})" required style="width: 200px"></li>

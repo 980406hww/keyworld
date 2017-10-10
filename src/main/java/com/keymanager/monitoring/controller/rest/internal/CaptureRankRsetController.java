@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by shunshikj24 on 2017/9/26.
@@ -110,9 +111,9 @@ public class CaptureRankRsetController {
     }
 
     @RequestMapping(value = "/deleteCaptureRankJobs", method = RequestMethod.POST)
-    public ResponseEntity<?> deleteCaptureRankJobs(Long[] uuids) {
+    public ResponseEntity<?> deleteCaptureRankJobs(@RequestBody Map<String,Object> requestMap) {
         try {
-            captureRankJobService.deleteBatchIds(new ArrayList<Long>(Arrays.asList(uuids)));
+            captureRankJobService.deleteBatchIds((List<Long>)requestMap.get("uuids"));
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
