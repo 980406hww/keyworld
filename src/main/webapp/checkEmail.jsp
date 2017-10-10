@@ -38,7 +38,7 @@
                     }
                 },
                 error: function () {
-                    $().toastmessage('showErrorToast', "请注意查收邮件");
+                    $().toastmessage('showSuccessToast', "请注意查收邮件");
                 }
             });
             $("#forgetPasswordDialog").dialog("close");
@@ -57,12 +57,11 @@
             <div class="initial_right_hand" id="right_hand"></div>
         </div>
         <P style="padding: 30px 0px 10px; position: relative;">
-            <span class="u_logo"></span>
-            <input class="ipt" type="text" id="loginName" name="loginName" value="${loginName}" placeholder="请输入登录名" style="margin-left: 60px;"/>
+            <span class="fi-torso icon-black" style="color: gray;margin-left: 15px;"></span>
+            <input class="ipt" type="text" id="loginName" name="loginName" value="${loginName}" placeholder="请输入登录名" style="margin-left: 25px;"/>
         </P>
-        <br>
-        <P style="position: relative;">
-            <span class="p_logo"></span>
+        <P style="padding: 25px 0px 10px;position: relative;">
+            <span class="u_logo" ></span>
             <input class="ipt" id="email" type="email" name="email" placeholder="请输入邮箱" style="margin-left: 60px;"/>
         </P>
         <div style="height: 50px; line-height: 50px; margin-top: 10px;border-top-color: rgb(231, 231, 231); border-top-width: 1px; border-top-style: solid;">

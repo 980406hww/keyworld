@@ -29,11 +29,11 @@
             <div class="initial_right_hand" id="right_hand"></div>
         </div>
         <P style="padding: 30px 0px 10px; position: relative;">
-            <span class="u_logo"></span>
+            <span class="fi-torso icon-black" style="color: gray;margin-left: -15px;"></span>&nbsp;&nbsp;
             <input class="ipt" type="text" name="username" id="userName" placeholder="请输入登录名"/>
         </P>
         <P style="position: relative;">
-            <span class="p_logo"></span>
+            <span class="p_logo" style="color: gray;margin-left: -10px;"></span>&nbsp;&nbsp;
             <input class="ipt" id="password" type="password" name="password" placeholder="请输入密码"/>
         </P>
         <P style="padding: 10px 0px 10px; position: relative;">

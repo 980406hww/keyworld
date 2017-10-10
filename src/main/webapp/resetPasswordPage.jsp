@@ -58,7 +58,7 @@
 			<div class="initial_right_hand" id="right_hand"></div>
 		</div>
 		<P style="padding: 30px 0px 10px; position: relative;">
-			<span class="u_logo"></span>&nbsp;
+			<span class="p_logo" style="margin-top: 30px;"></span>&nbsp;
 			<input class="ipt" type="password" name="password" id="password" placeholder="请输入新密码"/>
 			<input type="hidden" name="loginName" id="loginName" value="${loginName}">
 		</P>
