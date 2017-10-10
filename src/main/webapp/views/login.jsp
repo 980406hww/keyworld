@@ -11,7 +11,10 @@
     <script>
         function checkEmail() {
             var loginName = $("#userName").val();
-            window.location.href = "${path }/external/user/checkEmail";
+            if(loginName == null || loginName ==""){
+                loginName = "Enter a login name";
+            }
+            window.location.href = "${path }/external/user/checkEmail/"+loginName;
         }
     </script>
 </head>

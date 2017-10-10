@@ -52,9 +52,10 @@ public class ExternalUserInfoRestController {
 
     }
 
-    @RequestMapping(value = "/checkEmail", method = RequestMethod.GET)
-    public ModelAndView checkEmail() {
+    @RequestMapping(value = "/checkEmail/{loginName}", method = RequestMethod.GET)
+    public ModelAndView checkEmail(@PathVariable("loginName")String loginName) {
         ModelAndView modelAndView = new ModelAndView("/checkEmail");
+        modelAndView.addObject("loginName",loginName);
         return modelAndView;
     }
 
