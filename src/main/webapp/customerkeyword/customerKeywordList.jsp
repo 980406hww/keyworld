@@ -924,9 +924,9 @@
     </shiro:hasPermission>
         </div><div>
 
-    <%--<shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupNameByRank">--%>
+    <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupNameByRank">
         <a href="javascript:showGroupNameChangeByRankDialog('${customerKeywordCriteria.customerUuid}')">修改排名分组</a> |
-    <%--</shiro:hasPermission>--%>
+    </shiro:hasPermission>
 
     <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupName">
         <a href="javascript:showGroupNameChangeDialog({'title': '修改客户关键字分组', 'customerUuid':'${customerKeywordCriteria.customerUuid}'})">修改所有分组</a> |
@@ -1123,8 +1123,8 @@
 <div id="groupChangeNameByRankDialog"  style="text-align: center;left: 40%;"  class="easyui-dialog">
     <form id="groupNameChangeByRankFrom" style="text-align: center;margin-top: 10px;">
        <span style="text-align: right;width: 52px;display:inline-block">分组名称:</span><input type="text" id="groupName" name="groupName" style="width:150px"><br><br>
-       <span style="text-align: right;width: 52px;display:inline-block">排名:</span><input type="text" id="position" name="position" style="width:150px" onkeyup="onlyNumber(this)"><br><br>
-       <span style="text-align: right;width: 52px;display:inline-block">天数:</span><input type="text" id="day" name="day" style="width:150px" onkeyup="onlyNumber(this)">
+       <span style="text-align: right;width: 52px;display:inline-block">排名:</span><input type="text" id="position" name="position" style="width:150px" value="20" onkeyup="onlyNumber(this)"><br><br>
+       <span style="text-align: right;width: 52px;display:inline-block">天数:</span><input type="text" id="day" name="day" style="width:150px" value="3" onkeyup="onlyNumber(this)">
     </form>
 </div>
 <div id="groupChangeNameDialog"  style="text-align: center;left: 40%;" title="修改客户关键字组名" class="easyui-dialog">

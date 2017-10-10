@@ -373,13 +373,24 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeywordDao.updateCustomerKeywordGroupName(customerKeywordUpdateGroupCriteria);
     }
     public void updateCustomerKeywordGroupNameByRank(Map<String,Object> resultMap) {
-        List<Long>  customerKeywordUuids = customerKeywordDao.updateCustomerKeywordGroupNameByRank(resultMap);
+        List<Long>  customerKeywordUuids = customerKeywordDao.searchCustomerKeywordUuidByRank(resultMap);
+        List<Long>  customerKeyowrdUuidsTmp = new ArrayList<Long>();
         if (customerKeywordUuids != null) {
-            for (Long customerKeywordUuid : customerKeywordUuids) {
-                CustomerKeyword customerKeyword = customerKeywordDao.selectById(customerKeywordUuid);
-                customerKeyword.setOptimizeGroupName(resultMap.get("targetGroupName").toString());
-                customerKeywordDao.updateById(customerKeyword);
-            }
+           for(Long customerKeywordUuid : customerKeywordUuids){
+               customerKeyowrdUuidsTmp.add(customerKeywordUuid);
+               if(customerKeyowrdUuidsTmp.size()==200){
+                   customerKeywordDao.updateCustomerKeywordGroupNameByRank(customerKeyowrdUuidsTmp,resultMap.get("targetGroupName").toString());
+                   customerKeyowrdUuidsTmp.clear();
+               }
+               if(customerKeyowrdUuidsTmp.size()>0){
+                   customerKeywordDao.updateCustomerKeywordGroupNameByRank(customerKeyowrdUuidsTmp,resultMap.get("targetGroupName").toString());
+               }
+           }
+            /*Double count  = Math.ceil((double) customerKeywordUuids.size()/ (double) 200);
+            for (int i = 0; i < count; i++) {
+                customerKeyowrdUuidsTmp = customerKeywordUuids.subList(0 * i, 200 * (i + 1));
+                customerKeywordDao.updateCustomerKeywordGroupNameByRank(customerKeyowrdUuidsTmp, resultMap.get("targetGroupName").toString());
+            }*/
         }
     }
 

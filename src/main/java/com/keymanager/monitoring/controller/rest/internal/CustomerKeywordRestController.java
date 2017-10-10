@@ -137,7 +137,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 
 	//重构部分
 	//通过排名修改分组
-//	@RequiresPermissions("/internal/customerKeyword/updateCustomerKeywordGroupNameByRank")
+	@RequiresPermissions("/internal/customerKeyword/updateCustomerKeywordGroupNameByRank")
 	@RequestMapping(value = "/updateCustomerKeywordGroupNameByRank", method = RequestMethod.POST)
 	public ResponseEntity<?> updateCustomerKeywordGroupNameByRank(@RequestBody Map<String,Object> resultMap, HttpServletRequest request) {
 		try {

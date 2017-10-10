@@ -46,7 +46,9 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     //修改该用户关键字组名
     void updateCustomerKeywordGroupName(@Param("customerKeywordUpdateGroupCriteria")CustomerKeywordUpdateGroupCriteria customerKeywordUpdateGroupCriteria);
 
-    List<Long> updateCustomerKeywordGroupNameByRank(@Param("resultMap")Map<String,Object> resultMap);
+    void updateCustomerKeywordGroupNameByRank(@Param("customerKeywordUuids") List<Long> customerKeywordUuids,@Param("targetGroupName") String targetGroupName);
+
+    List<Long> searchCustomerKeywordUuidByRank(@Param("resultMap")Map<String,Object> resultMap);
 
     void deleteCustomerKeywordsWhenEmptyTitleAndUrl(@Param("terminalType")String terminalType, @Param("entryType")String entryType, @Param("customerUuid")String customerUuid);
 
