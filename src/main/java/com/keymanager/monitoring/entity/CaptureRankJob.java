@@ -57,6 +57,28 @@ public class CaptureRankJob extends BaseEntity{
     @TableField(value = "fExecutionCycle")
     private Integer executionCycle;
 
+    @TableField(value = "fCaptureInterval")
+    private Integer captureInterval;
+
+    @TableField(value = "fPageSize")
+    private Integer pageSize;
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public Integer getCaptureInterval() {
+        return captureInterval;
+    }
+
+    public void setCaptureInterval(Integer captureInterval) {
+        this.captureInterval = captureInterval;
+    }
+
     public Integer getExecutionCycle() {
         return executionCycle;
     }

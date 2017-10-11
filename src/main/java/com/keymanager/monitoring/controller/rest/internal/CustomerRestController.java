@@ -147,4 +147,9 @@ public class CustomerRestController {
        }
        return false;
     }
+
+    @RequestMapping(value = "/searchCustomersWithKeyword", method = RequestMethod.POST)
+    public List<Customer> searchCustomersWithKeyword(String contactPerson) {
+        return customerService.searchCustomersWithKeyword(contactPerson);
+    }
 }

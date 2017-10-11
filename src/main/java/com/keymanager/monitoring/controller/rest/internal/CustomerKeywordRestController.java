@@ -13,6 +13,7 @@ import com.keymanager.monitoring.entity.UserInfo;
 import com.keymanager.monitoring.enums.EntryTypeEnum;
 import com.keymanager.monitoring.excel.operator.CustomerKeywordInfoExcelWriter;
 import com.keymanager.monitoring.service.*;
+import com.keymanager.monitoring.vo.CodeNameVo;
 import com.keymanager.util.TerminalTypeMapping;
 import com.keymanager.util.Utils;
 import org.apache.commons.lang3.StringUtils;
@@ -400,5 +401,10 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 			logger.error(e.getMessage());
 			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
 		}
+	}
+
+	@RequestMapping(value = "/searchGroups", method = RequestMethod.POST)
+	public List<CodeNameVo> searchGroups(Long customerUuid) {
+		return customerKeywordService.searchGroups(customerUuid);//查看到这里
 	}
 }

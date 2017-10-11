@@ -84,15 +84,6 @@ public class CaptureRankRsetController {
         return captureRankJobService.selectById(uuid);
     }
 
-    @RequestMapping(value = "/searchCustomer", method = RequestMethod.POST)
-    public List<Customer> searchCustomer(String contactPerson) {return customerService.searchCustomersWithKeyword(contactPerson);
-    }
-
-    @RequestMapping(value = "/searchGroups", method = RequestMethod.POST)
-    public List<CodeNameVo > searchGroups(Long customerUuid) {
-       return customerKeywordService.searchGroups(customerUuid);//查看到这里
-    }
-
 
     @RequestMapping(value = "/deleteCaptureRankJob", method = RequestMethod.POST)
     public ResponseEntity<?> deleteCaptureRankJob(Long uuid) {

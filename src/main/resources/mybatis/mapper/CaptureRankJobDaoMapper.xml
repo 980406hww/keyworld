@@ -17,7 +17,9 @@
         c.fUpdateTime AS `updateTime`,
         c.fLastExecutionDate AS `lastExecutionDate`,
         c.fRowNumber AS `rowNumber`,
-        c.fExecutionCycle AS `executionCycle`
+        c.fExecutionCycle AS `executionCycle`,
+        c.fCaptureInterval AS `captureInterval`,
+        c.fPageSize AS `pageSize`
     </sql>
     <select id="searchCaptureRankJobs" resultType="com.keymanager.monitoring.entity.CaptureRankJob">
         select

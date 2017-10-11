@@ -69,7 +69,6 @@
                 showCustomerBottomDiv.find("#lastButton").attr("disabled", "disabled");
             }
         }
-        
         function initcustomerUuid() {
             $('#crawlRankingForm #customerUuid').combogrid({
                 model: 'remote',
@@ -78,8 +77,8 @@
                 idField: 'uuid',
                 textField: 'contactPerson',
                 dataType: 'json',
-                url: '/internal/captureRank/searchCustomer',
-                delay: 500,
+                url: '/internal/customer/searchCustomersWithKeyword',
+                delay: 1000,
                 columns: [[
                     {field: 'contactPerson', title: '联系人', width: 150},
                     {field: 'telphone', title: '电话', width: 100},
@@ -100,7 +99,7 @@
         }
         function initGroupNames(customerUuid, groupNames) {
             $('#crawlRankingForm #groupNames').combobox({
-                url: '/internal/captureRank/searchGroups?customerUuid=' + customerUuid, //后台获取下拉框数据的url
+                url: '/internal/customerKeyword/searchGroups?customerUuid=' + customerUuid, //后台获取下拉框数据的url
                 method: 'post',
                 //panelHeight:300,//设置为固定高度，combobox出现竖直滚动条
                 valueField: 'name',
@@ -176,7 +175,9 @@
             $('#crawlRankingDialog').window("resize", {top: $(document).scrollTop() + 100});
             initcustomerUuid();
             $('#crawlRankingForm #rowNumber').spinner('setValue', 100);
+            $('#crawlRankingForm #captureInterval').spinner('setValue', 500);
             $('#crawlRankingForm #executionCycle').spinner('setValue', 0);
+            $('#crawlRankingForm #pageSize').spinner('setValue', 10);
         }
 
         function saveCaptureRankJob(uuid) {
@@ -201,7 +202,9 @@
             }
             CaptureRankJob.exectionTime = $("#crawlRankingForm #exectionTime").val();
             CaptureRankJob.rowNumber = $("#crawlRankingForm #rowNumber").val();
+            CaptureRankJob.captureInterval = $("#crawlRankingForm #captureInterval").val();
             CaptureRankJob.executionCycle = $("#crawlRankingForm #executionCycle").val();
+            CaptureRankJob.pageSize = $("#crawlRankingForm #pageSize").val();
             alert(JSON.stringify(CaptureRankJob));
             $.ajax({
                 url: '/internal/captureRank/saveCaptureRankJob',
@@ -241,7 +244,9 @@
                         $("#crawlRankingForm input[name=exectionType][value=" + data.exectionType + "]").attr("checked", true);
                         $("#crawlRankingForm #exectionTime").val(data.exectionTime);
                         $('#crawlRankingForm #rowNumber').spinner('setValue', data.rowNumber);
+                        $('#crawlRankingForm #captureInterval').spinner('setValue', data.captureInterval);
                         $('#crawlRankingForm #executionCycle').spinner('setValue', data.executionCycle);
+                        $('#crawlRankingForm #pageSize').spinner('setValue', data.pageSize);
                     }
                     else {
                         $().toastmessage('showErrorToast', "获取失败");
@@ -393,7 +398,9 @@
             <td align="center" width=60>执行类型</td>
             <td align="center" width=60>执行时间</td>
             <td align="center" width=40>抓取截止条数</td>
+            <td align="center" width=40>抓取间隔(ms)</td>
             <td align="center" width=40>抓取周期</td>
+            <td align="center" width=40>每页条数</td>
             <td align="center" width=50>状态</td>
             <td align="center" width=90>开始抓取时间</td>
             <td align="center" width=90>最后抓取时间</td>
@@ -417,7 +424,9 @@
             <td width=60>${captureRankJob.exectionType}</td>
             <td width=60><fmt:formatDate value="${captureRankJob.exectionTime}" pattern="HH:mm:ss"/></td>
             <td width=40>${captureRankJob.rowNumber}</td>
+            <td width=40>${captureRankJob.captureInterval}</td>
             <td width=40>${captureRankJob.executionCycle}</td>
+            <td width=40>${captureRankJob.pageSize}</td>
             <td width=50>${captureRankJob.exectionStatus}</td>
             <td width=90><fmt:formatDate value="${captureRankJob.startTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
             <td width=90><fmt:formatDate value="${captureRankJob.endTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
@@ -443,6 +452,8 @@
         <li><span>执行方式:</span><input type="radio" name="exectionType" checked  value="Once">一次性</label><input type="radio" name="exectionType" value="Everyday">每天</li>
         <li><span>执行时间:</span><input type="text" class="Wdate" name="exectionTime" id="exectionTime" onfocus="WdatePicker({lang:'zh-cn',dateFmt:'HH:mm:ss'})" required style="width: 200px"></li>
         <li><span>抓取截止条数:</span><input id="rowNumber" name="rowNumber" class="easyui-numberspinner"  data-options="min:0,max:1000,increment:50" required style="width: 200px"></li>
+        <li><span>抓取间隔(毫秒):</span><input id="captureInterval" name="captureInterval" class="easyui-numberspinner"  data-options="min:0,increment:500" required style="width: 200px"></li>
+        <li><span>每页条数:</span><input id="pageSize" name="pageSize" class="easyui-numberspinner"  data-options="min:0,max:50,increment:10" required style="width: 200px"></li>
         <li><span>执行周期:</span><input id="executionCycle" name="executionCycle" class="easyui-numberspinner"  data-options="min:0,increment:50" required style="width: 200px"></li>
     </ul>
 </form>
