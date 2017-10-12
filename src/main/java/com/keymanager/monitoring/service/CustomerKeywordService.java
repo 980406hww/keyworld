@@ -1,4 +1,4 @@
-﻿package com.keymanager.monitoring.service;
+package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
@@ -380,13 +380,13 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         List<Long>  customerKeywordUuids = customerKeywordDao.searchCustomerKeywordUuidByRank(resultMap);
         List<Long>  customerKeyowrdUuidsTmp = new ArrayList<Long>();
         if (customerKeywordUuids != null) {
-           for(Long customerKeywordUuid : customerKeywordUuids){
-               customerKeyowrdUuidsTmp.add(customerKeywordUuid);
-               if(customerKeyowrdUuidsTmp.size()==200){
-                   customerKeywordDao.updateCustomerKeywordGroupNameByRank(customerKeyowrdUuidsTmp,resultMap.get("targetGroupName").toString());
-                   customerKeyowrdUuidsTmp.clear();
-               }
-           }
+            for(Long customerKeywordUuid : customerKeywordUuids){
+                customerKeyowrdUuidsTmp.add(customerKeywordUuid);
+                if(customerKeyowrdUuidsTmp.size()==200){
+                    customerKeywordDao.updateCustomerKeywordGroupNameByRank(customerKeyowrdUuidsTmp,resultMap.get("targetGroupName").toString());
+                    customerKeyowrdUuidsTmp.clear();
+                }
+            }
             if(customerKeyowrdUuidsTmp.size()>0){
                 customerKeywordDao.updateCustomerKeywordGroupNameByRank(customerKeyowrdUuidsTmp,resultMap.get("targetGroupName").toString());
             }
@@ -647,8 +647,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public CustomerKeywordForCapturePosition getCustomerKeywordForCapturePosition(String terminalType, List<String> groupNames, Long customerUuid,
-                                                                                  int minutes){
-        CustomerKeyword customerKeyword = customerKeywordDao.getCustomerKeywordForCapturePosition(terminalType, groupNames, customerUuid, minutes);
+                                                                                  Date startTime, int minutes){
+        CustomerKeyword customerKeyword = customerKeywordDao.getCustomerKeywordForCapturePosition(terminalType, groupNames, customerUuid, startTime, minutes);
         if(customerKeyword != null){
             CustomerKeywordForCapturePosition customerKeywordForCapturePosition = new CustomerKeywordForCapturePosition();
             customerKeywordForCapturePosition.setUuid(customerKeyword.getUuid());
@@ -797,4 +797,3 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return customerKeywordDao.searchGroups(customerUuid);
     }
 }
-

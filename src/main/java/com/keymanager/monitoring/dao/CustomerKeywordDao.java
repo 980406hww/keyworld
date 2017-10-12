@@ -1,4 +1,4 @@
-﻿package com.keymanager.monitoring.dao;
+package com.keymanager.monitoring.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -81,7 +81,7 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     List<Map> searchCustomerKeywordsForAdjustingOptimizationCount(@Param("groupName")String groupName);
 
     void adjustOptimizePlanCount(@Param("customerKeywordUuid")Long customerKeywordUuid, @Param("optimizationPlanCount")int optimizationPlanCount,
-                                  @Param("queryInterval")int queryInterval);
+                                 @Param("queryInterval")int queryInterval);
 
     CustomerKeyword getCustomerKeywordForCapturePosition(@Param("terminalType")String terminalType, @Param("groupNames")List<String> groupNames,
                                                          @Param("customerUuid")Long customerUuid, @Param("startTime")Date startTime, @Param("minutes")Integer minutes);
