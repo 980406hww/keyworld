@@ -647,7 +647,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public CustomerKeywordForCapturePosition getCustomerKeywordForCapturePosition(String terminalType, List<String> groupNames, Long customerUuid,
-                                                                                  Date startTime, int minutes){
+                                                                                  Date startTime, Integer minutes){
         CustomerKeyword customerKeyword = customerKeywordDao.getCustomerKeywordForCapturePosition(terminalType, groupNames, customerUuid, startTime, minutes);
         if(customerKeyword != null){
             CustomerKeywordForCapturePosition customerKeywordForCapturePosition = new CustomerKeywordForCapturePosition();
