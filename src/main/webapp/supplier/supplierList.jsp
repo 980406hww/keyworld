@@ -1,8 +1,8 @@
-<%@ include file="/commons/basejs.jsp" %>
 <%@ include file="/commons/global.jsp" %>
 <html>
 <head>
     <script language="javascript" type="text/javascript" src="/common.js"></script>
+    <%@ include file="/commons/basejs.jsp" %>
     <style>
         td{
             display: table-cell;
@@ -24,31 +24,29 @@
             $("#showSupplierListDiv").css("margin-top",$("#showSupplierTableDiv").height());
             alignTableHeader();
             pageLoad();
-            $('#supplierNexus').combo({
+            $('#supplierServiceTypeMappings').combo({
                 required : false,
                 editable : false,
                 multiple : true
             });
-            $('#sp').appendTo($('#supplierNexus').combo('panel'));
+            $('#supplierServiceTypeDiv').appendTo($('#supplierServiceTypeMappings').combo('panel'));
 
-            $("#sp input")
-                .click(
+            $("#supplierServiceTypeDiv input").click(
                     function() {
                         var _value = "";
                         var _text = "";
-                        $("[name=supplierNexus]:input:checked").each(function() {
+                        $("[name=supplierServiceTypeMappings]:input:checked").each(function() {
                             _value += $(this).val() + ",";
                             _text += $(this).next("span").text() + ",";
                         });
                         //设置下拉选中值
-                        $('#supplierNexus').combo('setValue', _value).combo(
+                        $('#supplierServiceTypeMappings').combo('setValue', _value).combo(
                             'setText', _text);
                 });
         });
 
         function pageLoad() {
             var searchSupplierForm = $("#searchSupplierForm");
-            var pageSize = searchSupplierForm.find('#pageSizeHidden').val();
             var pages = searchSupplierForm.find('#pagesHidden').val();
             var currentPageNumber = searchSupplierForm.find('#currentPageNumberHidden').val();
             var showCustomerBottomDiv = $('#showCustomerBottomDiv');
@@ -72,8 +70,8 @@
             }
         }
 
-        function selectSupplierNexusAll(self) {
-            var b = document.getElementsByName("supplierNexus");
+        function tickAllCheckboxForSupplierServiceType(self) {
+            var b = document.getElementsByName("supplierServiceTypeMappings");
             if (self.checked) {
                 for (var i = 0; i < b.length; i++) {
                         b[i].checked = true;
@@ -84,15 +82,15 @@
                 }
             }
         }
-        function decideselectSupplierNexusAll() {
-            var a = document.getElementsByName("supplierNexus");
-            var select=0;
+        function tickAllCheckboxWhenAllItemsSelected() {
+            var a = document.getElementsByName("supplierServiceTypeMappings");
+            var selectedCount=0;
             for(var i = 0; i < a.length; i++){
                 if (a[i].checked == true){
-                    select++;
+                    selectedCount++;
                 }
             }
-            if(select == a.length){
+            if(selectedCount == a.length){
                 $("#SupplierNexusAll").prop("checked",true);
             }else {
                 $("#SupplierNexusAll").prop("checked",false);
@@ -127,10 +125,10 @@
             }
         }
 
-        function delSupplier(uuid) {
+        function deleteSupplier(uuid) {
             if (confirm("确实要删除这个供应商吗?") == false) return;
             $.ajax({
-                url: '/internal/supplier/delSupplier/' + uuid,
+                url: '/internal/supplier/deleteSupplier/' + uuid,
                 type: 'Get',
                 success: function (result) {
                     if (result) {
@@ -145,7 +143,7 @@
             });
         }
 
-        function deleteSupplier(self) {
+        function deleteSuppliers(self) {
             var uuids = getSelectedIDs();
             if (uuids === '') {
                 alert('请选择要操作的设置信息');
@@ -204,20 +202,19 @@
             supplierForm.find("#email").val(supplier.email);
             supplierForm.find("#remark").val(supplier.remark);
             var serviceTypeArray = [];
-            for(var i=0;i<supplier.supplierNexus.length;i++){
-                serviceTypeArray[i]=supplier.supplierNexus[i].supplierServiceTypeCode;
+            for(var i=0;i<supplier.supplierServiceTypeMappings.length;i++){
+                serviceTypeArray[i]=supplier.supplierServiceTypeMappings[i].supplierServiceTypeUuid;
             }
-            $("#sp input[name=supplierNexus]").val(serviceTypeArray);
+            $("#supplierServiceTypeDiv input[name=supplierServiceTypeMappings]").val(serviceTypeArray);
 
             var _value = "";
             var _text = "";
-            $("[name=supplierNexus]:input:checked").each(function() {
+            $("[name=supplierServiceTypeMappings]:input:checked").each(function() {
                 _value += $(this).val() + ",";
                 _text += $(this).next("span").text() + ",";
             });
             //设置下拉选中值
-            $('#supplierNexus').combo('setValue', _value).combo(
-                'setText', _text);
+            $('#supplierServiceTypeMappings').combo('setValue', _value).combo('setText', _text);
         }
 
         function modifySupplier(uuid) {
@@ -248,7 +245,7 @@
             }
             $("#supplierDialog").dialog({
                 resizable: false,
-                width: 290,
+                width: 310,
                 height: 400,
                 modal: true,
                 buttons: [{
@@ -294,10 +291,6 @@
                 return;
             }
             supplier.weChat = supplierForm.find("#weChat").val();
-            if (!(supplier.weChat != '')) {
-                alert("微信号不能为空");
-                return;
-            }
             if (supplier.contactPerson == '') {
                 alert("请输入联系人");
                 return;
@@ -312,20 +305,15 @@
             }
 
             supplier.url = supplierForm.find("#url").val();
-            if(supplier.url ==''){
-                alert("网址URL不能为空!");
-                return;
-            }
-            supplier.supplierNexus = [];
-            var supplierNexusss=[];
+            supplier.supplierServiceTypeMappings = [];
+            var supplierServiceTypeMappings =[];
 
-            var count = $("#sp input[name=supplierNexus]:checked").length;
-            $("#sp input[name=supplierNexus]:checked").each(function(idx,val){
-                supplierNexusss[idx]=$(val).val();
+            $("#supplierServiceTypeDiv input[name=supplierServiceTypeMappings]:checked").each(function(idx,val){
+                supplierServiceTypeMappings[idx] = $(val).val().trim();
             });
-            for(var i=0 ; i<supplierNexusss.length ; i++){
-                if(!(supplierNexusss[i] == " " || supplierNexusss[i]=="," || supplierNexusss[i]=="")){
-                    supplier.supplierNexus.push({"supplierServiceTypeCode":supplierNexusss[i]});
+            for(var i=0 ; i<supplierServiceTypeMappings.length ; i++){
+                if(!(supplierServiceTypeMappings[i] == "" || supplierServiceTypeMappings[i] == ",")){
+                    supplier.supplierServiceTypeMappings.push({"supplierServiceTypeUuid" : supplierServiceTypeMappings[i]});
                 }
             }
             $.ajax({
@@ -404,7 +392,7 @@
                                 </shiro:hasPermission></td>
                             <td>
                                 <shiro:hasPermission name="/internal/supplier/deleteSuppliers">
-                                    <input type="button" onclick="deleteSupplier(this)" value=" 删除所选 ">
+                                    <input type="button" onclick="deleteSuppliers(this)" value=" 删除所选 ">
                                 </shiro:hasPermission>
                             </td>
                         </tr>
@@ -444,8 +432,8 @@
                 <td width="80">${supplier.weChat} </td>
                 <td width="180">${supplier.address}</td>
                 <td width="150">
-                    <c:forEach items="${supplier.supplierNexus}" var="supplierNexus">
-                        ${supplierNexus.supplierServiceType.name} ${" "}
+                    <c:forEach items="${supplier.supplierServiceTypeMappings}" var="supplierServiceTypeMappings">
+                        ${supplierServiceTypeMappings.supplierServiceType.name} ${" "}
                     </c:forEach>
                 </td>
                 <td width="130">${supplier.url}</td>
@@ -457,8 +445,8 @@
                     <shiro:hasPermission name="/internal/supplier/saveSupplier">
                     <a href="javascript:modifySupplier(${supplier.uuid})">修改</a> |
                     </shiro:hasPermission>
-                    <shiro:hasPermission name="/internal/supplier/delSupplier">
-                    <a href="javascript:delSupplier('${supplier.uuid}')">删除</a>
+                    <shiro:hasPermission name="/internal/supplier/deleteSupplier">
+                    <a href="javascript:deleteSupplier('${supplier.uuid}')">删除</a>
                     </shiro:hasPermission>
                 </td>
             </tr>
@@ -522,12 +510,12 @@
             <tr>
                 <td align="right">服务类型:</td>
                 <td>
-                    <select name="supplierNexuss" id="supplierNexus" style="width:200px;height:30px;"></select>
-                        <div id="sp">
-                        <input type="checkbox" onclick="selectSupplierNexusAll(this)" id="SupplierNexusAll"/>全选<br>
+                    <select name="supplierNexuss" id="supplierServiceTypeMappings" style="width:200px;height:30px;"></select>
+                        <div id="supplierServiceTypeDiv">
+                        <input type="checkbox" onclick="tickAllCheckboxForSupplierServiceType(this)" id="SupplierNexusAll"/>全选<br>
                             <hr>
                         <c:forEach items="${supplierServiceTypes}" var="supplierServiceType">
-                            <input type="checkbox" name="supplierNexus" value="${supplierServiceType.uuid}" onclick="decideselectSupplierNexusAll()">
+                            <input type="checkbox" name="supplierServiceTypeMappings" value="${supplierServiceType.uuid}" onclick="tickAllCheckboxWhenAllItemsSelected()">
                             <span>${supplierServiceType.name}</span>
                             <br>
                         </c:forEach>

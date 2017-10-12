@@ -1,8 +1,7 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ include file="/commons/global.jsp" %>
 <html>
 <head>
     <%@ include file="/commons/basejs.jsp" %>
-    <%@ include file="/commons/global.jsp" %>
     <script language="javascript" type="text/javascript" src="/common.js"></script>
     <style type="text/css">
         #showCustomerTableDiv {
@@ -1049,6 +1048,9 @@
                                     </select>
                                 </c:if>
                             </td>
+                            <td>
+                                备注:<input type="text" value="${customerCriteria.remark}" name="remark" style="width: 90px;">
+                            </td>
                             <td align="right">
                                 <input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}"/>
                                 <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
@@ -1071,7 +1073,7 @@
                             <td align="right" width="100">
                                 <c:if test="${'bc'.equalsIgnoreCase(entryType)}">
                                     <shiro:hasPermission name="/internal/dailyReport/triggerReportGeneration">
-                                        &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 触发日报表生成 " onclick="triggerDailyReportGeneration(this)"/>
+                                       <input type="button" class="ui-button ui-widget ui-corner-all" value=" 触发日报表生成 " onclick="triggerDailyReportGeneration(this)"/>
                                     </shiro:hasPermission>
                                 </c:if>
                             </td>
@@ -1096,7 +1098,6 @@
             <td align="center" width=40>状态</td>
             <td align="center" width=80>创建时间</td>
             <td align="center" width=200>操作</td>
-
         </tr>
     </table>
 </div>
@@ -1105,7 +1106,7 @@
         <c:forEach items="${page.records}" var="customer">
             <tr onmouseover="doOver(this);" onmouseout="doOut(this);" height=30>
                 <td width=10 style="padding-left: 7px;"><input type="checkbox" name="customerUuid" value="${customer.uuid}"/></td>
-                <td width=80>${user.loginName}</td>
+                <td width=80>${customer.loginName}</td>
                 <td width=80>
                     <a href="#" onclick="searchCustomerKeywords('/internal/customerKeyword/searchCustomerKeywords/${customer.uuid}')">${customer.contactPerson}</a>
                 </td>

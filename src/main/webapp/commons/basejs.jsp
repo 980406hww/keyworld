@@ -1,12 +1,10 @@
 <%--标签 --%>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta http-equiv="X-UA-Compatible" content="edge" />
 <link rel="shortcut icon" href="${staticPath }/static/style/images/favicon.ico" />
 <%-- [my97日期时间控件] --%>
 <script type="text/javascript" src="${staticPath }/static/My97DatePicker/WdatePicker.js" charset="utf-8"></script>
 <%-- [jQuery] --%>
 <script type="text/javascript" src="${staticPath }/static/easyui/jquery.min.js" charset="utf-8"></script>
+
 <%-- [EasyUI] --%>
 <link id="easyuiTheme" rel="stylesheet" type="text/css" href="${staticPath }/static/easyui/themes/gray/easyui.css" />
 <link id="easyuiTheme" rel="stylesheet" type="text/css" href="${staticPath }/static/easyui/themes/icon.css" />
@@ -21,10 +19,16 @@
 <link rel="stylesheet" type="text/css" href="${staticPath }/static/style/css/dreamlu.css?v=10" />
 <link rel="stylesheet" type="text/css" href="${staticPath }/static/foundation-icons/foundation-icons.css" />
 <%--[消息提示]--%>
-<script language="javascript" type="text/javascript" src="/toastmessage/jquery.toastmessage.js"></script>
-<link rel="stylesheet" href="/toastmessage/css/jquery.toastmessage.css">
+<link rel="stylesheet" href="${staticPath }/static/toastmessage/css/jquery.toastmessage.css">
+<script language="javascript" type="text/javascript" src="${staticPath }/static/toastmessage/jquery.toastmessage.js"></script>
+<script language="javascript" type="text/javascript" src="${staticPath }/static/jquery.poshytip.js"></script>
 
-<link rel="stylesheet" href="/css/common.css">
+<link type="text/css" href="${staticPath}/static/css/sskjMenu.css" rel="stylesheet">
+<script type="text/javascript" src="${staticPath}/static/sskjMenu.js"></script>
+
+<link rel="stylesheet" href="${staticPath}/static/css/common.css">
+<script language="javascript" type="text/javascript" src="/common.js"></script>
+
 <script type="text/javascript">
     var basePath = "${staticPath }";
     window.UEDITOR_HOME_URL = "${staticPath }/static/ueditor/";

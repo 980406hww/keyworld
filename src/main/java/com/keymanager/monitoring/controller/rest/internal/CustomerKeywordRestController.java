@@ -33,9 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.BufferedOutputStream;
 import java.io.OutputStream;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = "/internal/customerKeyword")
@@ -139,6 +137,22 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	}
 
 	//重构部分
+	//通过排名修改分组
+	@RequiresPermissions("/internal/customerKeyword/updateCustomerKeywordGroupNameByRank")
+	@RequestMapping(value = "/updateCustomerKeywordGroupNameByRank", method = RequestMethod.POST)
+	public ResponseEntity<?> updateCustomerKeywordGroupNameByRank(@RequestBody Map<String,Object> resultMap, HttpServletRequest request) {
+		try {
+			String terminalType = TerminalTypeMapping.getTerminalType(request);
+			String entryType = (String)request.getSession().getAttribute("entryType");
+			resultMap.put("terminalType",terminalType);
+			resultMap.put("entryType",entryType);
+			customerKeywordService.updateCustomerKeywordGroupNameByRank(resultMap);
+			return new ResponseEntity<Object>(true, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+		}
+	}
 	//修改该用户关键字组名
 	@RequiresPermissions("/internal/customerKeyword/updateCustomerKeywordGroupName")
 	@RequestMapping(value = "/updateCustomerKeywordGroupName", method = RequestMethod.POST)
@@ -303,11 +317,15 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	@RequiresPermissions("/internal/customerKeyword/haveCustomerKeywordForOptimization")
 	@RequestMapping(value = "/haveCustomerKeywordForOptimization", method = RequestMethod.POST)
 	public ResponseEntity<?> haveCustomerKeywordForOptimization(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) throws Exception{
-		String clientID = (String) requestMap.get("clientID");
+		List<String> clientIDs = (List<String>) requestMap.get("clientIDs");
 		String terminalType = TerminalTypeMapping.getTerminalType(request);
 		try {
-			boolean haveCustomerKeywordForOptimization = customerKeywordService.haveCustomerKeywordForOptimization(terminalType, clientID);
-			return new ResponseEntity<Object>(haveCustomerKeywordForOptimization, HttpStatus.OK);
+			Map<String,Boolean> resultMap = new HashMap<String, Boolean>();
+			for(String clientID : clientIDs){
+				boolean haveCustomerKeywordForOptimization = customerKeywordService.haveCustomerKeywordForOptimization(terminalType, clientID);
+				resultMap.put(clientID,haveCustomerKeywordForOptimization);
+			}
+			return new ResponseEntity<Object>(resultMap, HttpStatus.OK);
 		}catch(Exception ex){
 			logger.error(ex.getMessage());
 			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
@@ -320,10 +338,8 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		try {
 			String entryType = (String)request.getSession().getAttribute("entryType");
 			criteria.setEntryType(entryType);
-
 			String terminalType = TerminalTypeMapping.getTerminalType(request);
 			criteria.setTerminalType(terminalType);
-
 			customerKeywordService.resetInvalidRefreshCount(criteria);
 			return new ResponseEntity<Object>(true, HttpStatus.OK);
 		} catch (Exception e) {
@@ -393,9 +409,9 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	@RequestMapping(value = "/updateCustomerKeywordStatus", method = RequestMethod.POST)
 	public ResponseEntity<?> updateCustomerKeywordStatus(@RequestBody Map<String, Object> requestMap) {
 		try {
-			List<String> customerUuids = (List<String>) requestMap.get("uuids");
+			List<Long> customerKeywordUuids = (List<Long>) requestMap.get("uuids");
 			Integer status = (Integer) requestMap.get("status");
-			customerKeywordService.updateCustomerKeywordStatus(customerUuids, status);
+			customerKeywordService.updateCustomerKeywordStatus(customerKeywordUuids, status);
 			return new ResponseEntity<Object>(true, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.getMessage());

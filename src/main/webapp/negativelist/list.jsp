@@ -1,8 +1,7 @@
-
-<%@ include file="/commons/basejs.jsp" %>
 <%@ include file="/commons/global.jsp" %>
 <html>
 <head>
+	<%@ include file="/commons/basejs.jsp" %>
 	<title>关键字负面清单</title>
 	<style>
 		#div2 {
@@ -28,7 +27,7 @@
 			position: fixed;
 			bottom: 0px;
 			right: 0px;
-			background-color:#dedede;
+			background-color:#ADD1FF;
 			padding-top: 5px;
 			padding-bottom: 5px;
 			width: 100%;

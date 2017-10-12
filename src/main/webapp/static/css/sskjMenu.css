@@ -31,7 +31,9 @@ body {
     position: relative;
 }
 
-
+.venus-menu > li:hover > ul {
+    display: block;
+}
 
 .venus-menu > li > a {
     /*padding: 10px 24px;*/

@@ -17,7 +17,7 @@ public class CustomerKeywordCriteria extends BaseCriteria{
     private String entryType;//
     private String terminalType;//8088 PC  8089  phone
     private Integer optimizedCount;//已刷
-
+    private Integer currentIndexCount;
 
 
     private String qq;
@@ -25,6 +25,23 @@ public class CustomerKeywordCriteria extends BaseCriteria{
     private String pushPay;//催缴
     private String displayStop;//显示下架
     private String orderNumber;//订单号
+    private String remarks;//备注
+
+    public Integer getCurrentIndexCount() {
+        return currentIndexCount;
+    }
+
+    public void setCurrentIndexCount(Integer currentIndexCount) {
+        this.currentIndexCount = currentIndexCount;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
 
     public Integer getOptimizedCount() {
         return optimizedCount;

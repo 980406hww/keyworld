@@ -1,10 +1,12 @@
-<%@ include file="/commons/basejs.jsp" %>
 <%@ include file="/commons/global.jsp" %>
 <html>
-<head>
-    <script language="JavaScript" type="text/javascript" src="/js/jquery.poshytip.js"></script>
     <head>
+        <%@ include file="/commons/basejs.jsp" %>
         <style>
+            td{
+                display: table-cell;
+                vertical-align: inherit;
+            }
             #showCustomerTableDiv {
                 width: 100%;
                 margin: auto;
@@ -97,7 +99,7 @@
             }
 
             function doOver(obj) {
-                obj.style.backgroundColor = "#73B1E0";
+                obj.style.backgroundColor = "green";
             }
 
             function doOut(obj) {
@@ -284,7 +286,6 @@
             }
             </shiro:hasPermission>
         </script>
-
     </head>
 <body>
 <div id="customerKeywordTopDiv">
@@ -341,7 +342,8 @@
                 <option value="2">当前排名</option>
                 <option value="3">添加序号</option>
             </select>
-            &nbsp;&nbsp;
+            &nbsp;
+            备注:<input type="text" name="remarks" style="width: 90px;" value="${customerKeywordCriteria.remarks}">
             <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
                 <input type="submit" onclick="resetPageNumber()" value=" 查询 ">&nbsp;&nbsp;
             </shiro:hasPermission>
@@ -389,9 +391,7 @@
                 </td>
 
                 <td  align="center" width=100 class="floatTd" title="原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}" >
-                    <div style="height:16;">
                         ${customerKeyword.url==null?'':customerKeyword.url}
-                    </div>
                 </td>
 
                 <td align="center" width=150>

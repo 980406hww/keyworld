@@ -8,9 +8,7 @@ import java.util.List;
 
 public interface CustomerKeywordOptimizedCountLogDao extends BaseMapper<CustomerKeywordOptimizedCountLog> {
 
-    List<CustomerKeywordOptimizedCountLog> groupCustomerKeywordOptimizedCountLogs();
+    List<Long> findInvalidCustomerKeyword();
 
-    CustomerKeywordOptimizedCountLog findCurrentCountLog(@Param("customerKeywordUuid") Long customerKeywordUuid);
-
-    CustomerKeywordOptimizedCountLog findThreeDaysAgoCountLog(@Param("customerKeywordUuid") Long customerKeywordUuid);
+    void addCustomerKeywordOptimizedCountLog();
 }

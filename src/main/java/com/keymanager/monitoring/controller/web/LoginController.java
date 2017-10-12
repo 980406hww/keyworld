@@ -152,5 +152,4 @@ public class LoginController extends BaseController {
 		subject.logout();
 		return renderSuccess();
 	}
-
 }

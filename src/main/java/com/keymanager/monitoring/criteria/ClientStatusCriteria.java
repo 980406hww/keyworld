@@ -17,6 +17,7 @@ public class ClientStatusCriteria extends BaseCriteria {
     private String noVNC; // 没VNC
     private String noUpgrade; // 没升级
     private String orderBy; // 排序
+    private String vpsBackendSystemComputerID;//服务器ID
 
     private String terminalType;
 
@@ -146,5 +147,13 @@ public class ClientStatusCriteria extends BaseCriteria {
 
     public void setTerminalType(String terminalType) {
         this.terminalType = terminalType;
+    }
+
+    public String getVpsBackendSystemComputerID() {
+        return vpsBackendSystemComputerID;
+    }
+
+    public void setVpsBackendSystemComputerID(String vpsBackendSystemComputerID) {
+        this.vpsBackendSystemComputerID = vpsBackendSystemComputerID;
     }
 }

@@ -1,4 +1,4 @@
-package com.keymanager.monitoring.dao;
+﻿package com.keymanager.monitoring.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -7,6 +7,7 @@ import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria
 import com.keymanager.monitoring.criteria.CustomerKeywordUpdateGroupCriteria;
 import com.keymanager.monitoring.entity.CustomerKeyword;
 import com.keymanager.monitoring.vo.CodeNameVo;
+import com.keymanager.monitoring.vo.SearchEngineResultVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
@@ -42,15 +43,21 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     List<CustomerKeyword> searchCustomerKeywords(Page<CustomerKeyword> page, @Param("customerKeywordCriteria") CustomerKeywordCriteria customerKeywordCriteria);
 
+    void deleteCustomerKeywordsByUuid(@Param("customerKeywordUuids")List<String> customerKeywordUuids);
+
     //重构部分
     //修改该用户关键字组名
     void updateCustomerKeywordGroupName(@Param("customerKeywordUpdateGroupCriteria")CustomerKeywordUpdateGroupCriteria customerKeywordUpdateGroupCriteria);
 
-    void deleteCustomerKeywordsByUuid(@Param("customerKeywordUuids")List<String> customerKeywordUuids);
+    void updateCustomerKeywordGroupNameByRank(@Param("customerKeywordUuids") List<Long> customerKeywordUuids,@Param("targetGroupName") String targetGroupName);
+
+    List<Long> searchCustomerKeywordUuidByRank(@Param("resultMap")Map<String,Object> resultMap);
 
     void deleteCustomerKeywordsWhenEmptyTitleAndUrl(@Param("terminalType")String terminalType, @Param("entryType")String entryType, @Param("customerUuid")String customerUuid);
 
     void deleteCustomerKeywordsWhenEmptyTitle(@Param("terminalType")String terminalType, @Param("entryType")String entryType, @Param("customerUuid")String customerUuid);
+
+    void deleteCustomerKeywords(@Param("terminalType")String terminalType, @Param("groupName")String groupName, @Param("keyword")String keyword);
 
     List<String> getGroups();
 
@@ -81,11 +88,16 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void resetInvalidRefreshCount(@Param("customerKeywordRefreshStatInfoCriteria")CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria);
 
-    void updateCustomerKeywordStatus(@Param("customerUuids")List<String> customerUuids, @Param("status")Integer status);
+    void updateCustomerKeywordStatus(@Param("uuids")List<Long> uuids, @Param("status")Integer status);
 
 
     public CustomerKeyword searchTitleAndUrl(@Param("groupNames") String[] groupNames,@Param("customerUuid") Long customerUuid);
 
     List<CodeNameVo> searchGroups(@Param("customerUuid") Long customerUuid);
 
+    SearchEngineResultVO getCustomerKeywordForAutoUpdateNegative(@Param("terminalType")String terminalType, @Param("groupName")String groupName);
+
+    void updateAutoUpdateNegativeTime(@Param("terminalType")String terminalType, @Param("groupName")String groupName, @Param("keyword")String keyword);
+
+    void updateAutoUpdateNegativeTimeAs4MinutesAgo(@Param("terminalType")String terminalType, @Param("groupName")String groupName);
 }

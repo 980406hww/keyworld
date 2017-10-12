@@ -25,6 +25,8 @@
         AND DATE_SUB(NOW(), INTERVAL qs.fUpdateInterval DAY) > qs.fUpdateEndTime)
         OR (qs.fUpdateStatus = 'Processing'
         AND DATE_SUB(NOW(), INTERVAL 10 MINUTE) > qs.fUpdateStartTime)
+        OR (qs.fUpdateStatus = 'DownloadTimesUsed'
+        AND DATE_SUB(NOW(), INTERVAL 1 DAY) > qs.fUpdateEndTime)
         ORDER BY qs.fUpdateEndTime
     </select>
 

@@ -89,6 +89,12 @@ public class ClientStatus {
 	@TableField(value = "fPassword")
 	private String password;
 
+	@TableField(value = "fBroadbandAccount")
+	private String broadbandAccount;
+
+	@TableField(value = "fBroadbandPassword")
+	private String broadbandPassword;
+
 	@TableField(value = "fFreeSpace")
 	private Double freeSpace;
 
@@ -822,4 +828,19 @@ public class ClientStatus {
 		this.yellow = yellow;
 	}
 
+	public String getBroadbandAccount() {
+		return broadbandAccount;
+	}
+
+	public void setBroadbandAccount(String broadbandAccount) {
+		this.broadbandAccount = broadbandAccount;
+	}
+
+	public String getBroadbandPassword() {
+		return broadbandPassword;
+	}
+
+	public void setBroadbandPassword(String broadbandPassword) {
+		this.broadbandPassword = broadbandPassword;
+	}
 }

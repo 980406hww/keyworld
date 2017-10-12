@@ -1,11 +1,9 @@
-
-<%@ include file="/commons/basejs.jsp" %>
 <%@ include file="/commons/global.jsp" %>
-<script language="javascript" type="text/javascript" src="/common.js"></script>
-
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
-
+<head>
+<%@ include file="/commons/basejs.jsp" %>
+<script language="javascript" type="text/javascript" src="/common.js"></script>
 <script type="text/javascript">
     /*页面进入即刻加载*/
     $(function() {
@@ -350,7 +348,7 @@
         position: fixed;
         bottom: 0px;
         right: 0px;
-        background-color:#dedede;
+        background-color:#ADD1FF;
         padding-top: 5px;
         padding-bottom: 5px;
         width: 100%;
@@ -384,7 +382,6 @@
         height: 22px;
     }
 </style>
-<head>
     <title>投诉专用平台</title>
 </head>
 <body>

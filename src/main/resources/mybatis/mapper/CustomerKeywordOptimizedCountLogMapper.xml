@@ -1,34 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.monitoring.dao.CustomerKeywordOptimizedCountLogDao">
-    <sql id="selectCol">
-        fUuid AS "uuid",
-        fCustomerKeywordUuid AS "customerKeywordUuid",
-        fOptimizedCount AS "optimizedCount",
-        fOptimizedDate AS "optimizedDate"
-    </sql>
 
-    <select id="groupCustomerKeywordOptimizedCountLogs" resultType="com.keymanager.monitoring.entity.CustomerKeywordOptimizedCountLog">
-        SELECT
-          <include refid="selectCol" />
-        FROM t_ck_optimized_count_log
+    <select id="addCustomerKeywordOptimizedCountLog">
+        INSERT INTO t_ck_optimized_count_log(fCustomerKeywordUuid, fOptimizedCount, fOptimizedDate)
+        SELECT fUuid AS 'fCustomerKeywordUuid', fOptimizedCount, DATE_SUB(CURRENT_DATE(),INTERVAL 1 DAY)
+        FROM t_customer_keyword
+        WHERE fStatus = 1
+    </select>
+
+    <select id="findInvalidCustomerKeyword" resultType="java.lang.Long">
+        SELECT fCustomerKeywordUuid FROM t_ck_optimized_count_log
+        WHERE fOptimizedCount = 0
+        AND fOptimizedDate >= DATE_SUB(CURDATE(), INTERVAL 3 DAY)
         GROUP BY fCustomerKeywordUuid
-    </select>
-
-    <select id="findCurrentCountLog" resultType="com.keymanager.monitoring.entity.CustomerKeywordOptimizedCountLog">
-        SELECT
-          <include refid="selectCol" />
-        FROM t_ck_optimized_count_log
-        WHERE fCustomerKeywordUuid = #{customerKeywordUuid}
-        AND fOptimizedDate = CURDATE()
-    </select>
-
-    <select id="findThreeDaysAgoCountLog" resultType="com.keymanager.monitoring.entity.CustomerKeywordOptimizedCountLog">
-        SELECT
-          <include refid="selectCol" />
-        FROM t_ck_optimized_count_log
-        WHERE fCustomerKeywordUuid = #{customerKeywordUuid}
-        AND fOptimizedDate = DATE_SUB(CURDATE(), INTERVAL 3 DAY)
+        HAVING count(*) = 3
     </select>
 
 </mapper>

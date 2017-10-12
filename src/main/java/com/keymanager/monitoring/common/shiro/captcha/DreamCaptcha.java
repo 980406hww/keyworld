@@ -23,39 +23,39 @@ public class DreamCaptcha implements InitializingBean {
 	private static final String DEFAULT_COOKIE_NAME = "dream-captcha";
 	private final static String DEFAULT_CHACHE_NAME = "dreamCaptchaCache";
 	private final static int DEFAULT_MAX_AGE = -1; // cookie超时默认为session会话状态
-	
+
 	private CacheManager cacheManager;
 	private String cacheName;
 	private String cookieName;
-	
+
 	private Cache<String, String> dreamCaptchaCache;
-	
+
 	public DreamCaptcha() {
 		this.cacheName = DEFAULT_CHACHE_NAME;
 		this.cookieName = DEFAULT_COOKIE_NAME;
 	}
-	
+
 	public DreamCaptcha(CacheManager cacheManager) {
 		this();
 		this.cacheManager = cacheManager;
 	}
-	
+
 	public CacheManager getCacheManager() {
 		return cacheManager;
 	}
-	
+
 	public void setCacheManager(CacheManager cacheManager) {
 		this.cacheManager = cacheManager;
 	}
-	
+
 	public String getCacheName() {
 		return cacheName;
 	}
-	
+
 	public void setCacheName(String cacheName) {
 		this.cacheName = cacheName;
 	}
-	
+
 	public String getCookieName() {
 		return cookieName;
 	}
@@ -63,7 +63,7 @@ public class DreamCaptcha implements InitializingBean {
 	public void setCookieName(String cookieName) {
 		this.cookieName = cookieName;
 	}
-	
+
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		Assert.notNull(cacheManager, "cacheManager must not be null!");
@@ -71,7 +71,7 @@ public class DreamCaptcha implements InitializingBean {
 		Assert.hasText(cookieName, "cookieName must not be empty!");
 		this.dreamCaptchaCache = cacheManager.getCache(cacheName);
 	}
-	
+
 	/**
 	 * 生成验证码
 	 */
@@ -92,7 +92,7 @@ public class DreamCaptcha implements InitializingBean {
 		CaptchaUtils.generate(response, captchaCode);
 		dreamCaptchaCache.put(cookieValue, captchaCode);
 	}
-	
+
 	/**
 	 * 仅能验证一次，验证后立即删除
 	 * @param request HttpServletRequest

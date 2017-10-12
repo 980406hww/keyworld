@@ -255,8 +255,49 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         try {
             if (validUser(searchEngineResultVO.getUserName(), searchEngineResultVO.getPassword())) {
                 String terminalType = TerminalTypeMapping.getTerminalType(request);
-                String userName = (String) request.getSession().getAttribute("username");
-                customerKeywordService.addCustomerKeywords(searchEngineResultVO, terminalType, userName);
+                customerKeywordService.addCustomerKeywords(searchEngineResultVO, terminalType, searchEngineResultVO.getUserName());
+                return new ResponseEntity<Object>(true, HttpStatus.OK);
+            }
+        }catch (Exception ex){
+            logger.error(ex.getMessage());
+        }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+    }
+
+    @RequestMapping(value = "/autoUpdateCustomerKeywords", method = RequestMethod.POST)
+    public ResponseEntity<?> autoUpdateCustomerKeywords(@RequestBody SearchEngineResultVO searchEngineResultVO, HttpServletRequest request) throws Exception {
+        try {
+            if (validUser(searchEngineResultVO.getUserName(), searchEngineResultVO.getPassword())) {
+                String terminalType = TerminalTypeMapping.getTerminalType(request);
+                customerKeywordService.autoUpdateNegativeCustomerKeywords(searchEngineResultVO, terminalType, searchEngineResultVO.getUserName());
+                return new ResponseEntity<Object>(true, HttpStatus.OK);
+            }
+        }catch (Exception ex){
+            logger.error(ex.getMessage());
+        }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+    }
+
+    @RequestMapping(value = "/getCustomerKeywordForAutoUpdateNegative", method = RequestMethod.POST)
+    public ResponseEntity<?> getCustomerKeywordForAutoUpdateNegative(@RequestBody SearchEngineResultVO searchEngineResultVO, HttpServletRequest request) throws Exception {
+        String terminalType = TerminalTypeMapping.getTerminalType(request);
+        try {
+            if (validUser(searchEngineResultVO.getUserName(), searchEngineResultVO.getPassword())) {
+                SearchEngineResultVO result = customerKeywordService.getCustomerKeywordForAutoUpdateNegative(terminalType, searchEngineResultVO.getGroup());
+                return new ResponseEntity<Object>(result, HttpStatus.OK);
+            }
+        }catch (Exception ex){
+            logger.error(ex.getMessage());
+        }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+    }
+
+    @RequestMapping(value = "/updateAutoUpdateNegativeTimeAs4MinutesAgo", method = RequestMethod.POST)
+    public ResponseEntity<?> updateAutoUpdateNegativeTimeAs4MinutesAgo(@RequestBody SearchEngineResultVO searchEngineResultVO, HttpServletRequest request) throws Exception {
+        try {
+            if (validUser(searchEngineResultVO.getUserName(), searchEngineResultVO.getPassword())) {
+                String terminalType = TerminalTypeMapping.getTerminalType(request);
+                customerKeywordService.updateAutoUpdateNegativeTimeAs4MinutesAgo(terminalType, searchEngineResultVO.getGroup());
                 return new ResponseEntity<Object>(true, HttpStatus.OK);
             }
         }catch (Exception ex){

@@ -10,8 +10,10 @@
         u.fPassword AS 'password',
         u.fSex AS 'sex',
         u.fQQ AS 'qq',
+        u.fEmail AS "email",
         u.fSalt AS 'salt',
         u.fStatus AS 'status',
+        u.fResetPasswordApplicationTime AS "resetPasswordApplicationTime",
         u.fUpdateTime AS 'updateTime',
         u.fCreateTime AS 'createTime'
     </sql>

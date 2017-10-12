@@ -1,19 +1,10 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<%@ include file="/commons/global.jsp" %>
-<%--<%@ include file="/commons/basejs.jsp" %>--%>
-<link rel="stylesheet" type="text/css" href="${staticPath }/static/foundation-icons/foundation-icons.css" />
-<link href="${path}/css/sskjMenu.css" rel="stylesheet">
-<%--[消息提示]--%>
-<script language="javascript" type="text/javascript" src="/toastmessage/jquery.toastmessage.js"></script>
-<link rel="stylesheet" href="/toastmessage/css/jquery.toastmessage.css">
-<script type="text/javascript" src="${path}/js/sskjMenu.js"></script>
-<script type="text/javascript">
+﻿<script type="text/javascript">
+
     $(function () {
         var li = $(".venus-menu li");
         $.each(li, function (idx, val) {
             if ($(val).attr("pid") != null && $(val).attr("pid") != '') {
-                $("li[lid=" + $(val).attr("pid") + "]").append("<ul  id='" + $(val).attr("pid") + "'></ul>");
+                $("li[lid=" + $(val).attr("pid") + "]").append("<ul id='" + $(val).attr("pid") + "'></ul>");
                 $.each(li, function (idx1, val1) {
                     if ($(val1).attr("lid") == $(val).attr("pid")) {
                         $("li").find("#" + $(val).attr("pid")).append($(val));
@@ -21,6 +12,7 @@
                 })
             }
         });
+        //$().maps();
         $(".venus-menu").show();
         $("#editUserPwdDiv").hide();
     });
@@ -85,8 +77,8 @@
 <div class="content" style="position:fixed;width: 100%;height:30px;">
 	<ul class="venus-menu" style="display: none">
 		<c:choose>
-			<c:when test="${sessionScope.get('entryType')=='fm'}">
-				<shiro:hasRole  name="FMSpecial">
+			<c:when test="${sessionScope.get('entryType')=='bc'}">
+				<shiro:hasRole  name="BCSpecial">
 					<c:forEach items="${menus}" var="menu">
 						<li style="" pid="${menu.pid}" lid="${menu.id}">
 							<c:if test="${menu.openMode=='ajax' || menu.openMode=='iframe'}">
