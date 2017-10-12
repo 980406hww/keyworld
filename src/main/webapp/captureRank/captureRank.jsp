@@ -147,6 +147,7 @@
             $("#crawlRankingDialog").dialog({
                 resizable: false,
                 title: "设置抓排名任务",
+                width:320,
                 fitColumns: true,//自动大小
                 modal: true,
                 buttons: [{
@@ -177,9 +178,13 @@
             $('#crawlRankingForm #rowNumber').spinner('setValue', 100);
             $('#crawlRankingForm #captureInterval').spinner('setValue', 500);
             $('#crawlRankingForm #executionCycle').spinner('setValue', 0);
-            $('#crawlRankingForm #pageSize').spinner('setValue', 10);
+            if ("${sessionScope.terminalType}" == 'PC') {
+                $('#crawlRankingForm #pageSize').spinner('setValue', 10);
+            }
+            else {
+                $('#crawlRankingForm #pageSize').spinner('setValue', 50);
+            }
         }
-
         function saveCaptureRankJob(uuid) {
             var CaptureRankJob = {};
             if (uuid != null) {
