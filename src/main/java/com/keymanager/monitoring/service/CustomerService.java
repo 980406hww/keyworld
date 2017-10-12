@@ -112,8 +112,8 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 		return customerDao.selectById(customerUuid);
     }
 
-	public List<Customer> searchCustomersWithKeyword(String contactPerson)
+	public List<Customer> searchCustomersWithKeyword(String contactPerson,String terminalType)
 	{
-		return customerDao.searchCustomerWithKeyword(contactPerson);
+		return customerDao.searchCustomerWithKeyword(contactPerson,terminalType);
 	}
 }

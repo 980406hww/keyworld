@@ -147,7 +147,7 @@
             $("#crawlRankingDialog").dialog({
                 resizable: false,
                 title: "设置抓排名任务",
-                width:320,
+                width: 320,
                 fitColumns: true,//自动大小
                 modal: true,
                 buttons: [{
@@ -210,7 +210,6 @@
             CaptureRankJob.captureInterval = $("#crawlRankingForm #captureInterval").val();
             CaptureRankJob.executionCycle = $("#crawlRankingForm #executionCycle").val();
             CaptureRankJob.pageSize = $("#crawlRankingForm #pageSize").val();
-            alert(JSON.stringify(CaptureRankJob));
             $.ajax({
                 url: '/internal/captureRank/saveCaptureRankJob',
                 data: JSON.stringify(CaptureRankJob),
@@ -310,6 +309,7 @@
             var uuids = getUuids();
             if (uuids == null || uuids == '') {
                 alert("至少选择一条数据!");
+                return;
             }
             if (confirm("确实要删除这些任务吗?") == false) return;
             var postData = {};
