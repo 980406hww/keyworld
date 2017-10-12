@@ -9,6 +9,7 @@ import com.keymanager.monitoring.entity.CustomerKeyword;
 import com.keymanager.monitoring.service.*;
 import com.keymanager.monitoring.vo.CodeNameVo;
 import com.keymanager.util.TerminalTypeMapping;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,7 @@ public class CaptureRankRsetController {
     @Autowired
     private CustomerService customerService;
 
+    @RequiresPermissions("/internal/captureRank/saveCaptureRankJob")
     @RequestMapping(value = "/saveCaptureRankJob", method = RequestMethod.POST)
     public ResponseEntity<?> saveCaptureRankJob(@RequestBody CaptureRankJob captureRankJob, HttpServletRequest request) {
         try {
@@ -54,6 +56,7 @@ public class CaptureRankRsetController {
         }
     }
 
+    @RequiresPermissions("/internal/captureRank/searchCaptureRankJobs")
     @RequestMapping(value = "/searchCaptureRankJobs", method = RequestMethod.POST)
     public ModelAndView searchCaptureRankingJobs(CaptureRankJobSearchCriteria captureRankJobSearchCriteria, HttpServletRequest request) {
         String currentPageNumber = request.getParameter("currentPageNumber");
@@ -65,6 +68,7 @@ public class CaptureRankRsetController {
         return constructCaptureRankJobModelAndView(request, captureRankJobSearchCriteria, currentPageNumber, pageSize);
     }
 
+    @RequiresPermissions("/internal/captureRank/searchCaptureRankJobs")
     @RequestMapping(value = "/searchCaptureRankJobs", method = RequestMethod.GET)
     public ModelAndView toSetCrawlRanking(@RequestParam(defaultValue = "1") int currentPage, @RequestParam(defaultValue = "50") int displaysRecords,
                                           HttpServletRequest request) {
@@ -79,12 +83,13 @@ public class CaptureRankRsetController {
         return modelAndView;
     }
 
+    @RequiresPermissions("/internal/captureRank/getCaptureRankJob")
     @RequestMapping(value = "/getCaptureRankJob", method = RequestMethod.POST)
     public CaptureRankJob getCaptureRankJob(Long uuid) {
         return captureRankJobService.selectById(uuid);
     }
 
-
+    @RequiresPermissions("/internal/captureRank/deleteCaptureRankJob")
     @RequestMapping(value = "/deleteCaptureRankJob", method = RequestMethod.POST)
     public ResponseEntity<?> deleteCaptureRankJob(Long uuid) {
         try {
@@ -96,6 +101,7 @@ public class CaptureRankRsetController {
         }
     }
 
+    @RequiresPermissions("/internal/captureRank/deleteCaptureRankJobs")
     @RequestMapping(value = "/deleteCaptureRankJobs", method = RequestMethod.POST)
     public ResponseEntity<?> deleteCaptureRankJobs(@RequestBody Map<String,Object> requestMap) {
         try {

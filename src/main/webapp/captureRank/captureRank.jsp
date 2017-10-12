@@ -389,9 +389,15 @@
                 <option value="Once" <c:if test="${captureRankJobSearchCriteria.exectionType.equals('Once')}">selected="selected"</c:if>>Once</option>
                 <option value="Everyday" <c:if test="${captureRankJobSearchCriteria.exectionType.equals('Everyday')}">selected="selected"</c:if>>Everyday</option>
             </select>&nbsp;&nbsp;
+            <shiro:hasPermission name="/internal/captureRank/searchCaptureRankJobs">
             <input type="submit" value="查询">&nbsp;&nbsp;
+            </shiro:hasPermission>
+            <shiro:hasPermission name="/internal/captureRank/saveCaptureRankJob">
             <input type="button" value="添加" onclick="showCrawlRankingForm()">&nbsp;&nbsp;
+            </shiro:hasPermission>
+            <shiro:hasPermission name="/internal/captureRank/deleteCaptureRankJobs">
             <input type="button" value="删除所选" onclick="deleteCaptureRankJobs()">&nbsp;&nbsp;
+            </shiro:hasPermission>
         </form>
     </div>
     <table style="font-size:12px; width: 100%;" id="headerTable">
@@ -441,8 +447,12 @@
             <td width=60>${captureRankJob.updateBy}</td>
             <td width=90><fmt:formatDate value="${captureRankJob.updateTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
             <td width=80>
+                <shiro:hasPermission name="/internal/captureRank/saveCaptureRankJob">
                 <a href="javascript:modifyCaptureRankJob('${captureRankJob.uuid}')">修改</a>
+                </shiro:hasPermission>
+                <shiro:hasPermission name="/internal/captureRank/deleteCaptureRankJob">
                 <a href="javascript:deleteCaptureRankJob('${captureRankJob.uuid}')">删除</a>
+                </shiro:hasPermission>
             </td>
         </tr>
         </c:forEach>
