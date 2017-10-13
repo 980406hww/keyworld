@@ -15,5 +15,5 @@ public interface CustomerDao extends BaseMapper<Customer> {
 
     int selectLastId();
 
-    List<Customer> searchCustomerWithKeyword(@Param("contactPerson") String contactPerson,@Param("terminalType") String terminalType);
+    List<Customer> searchCustomerWithKeyword(@Param("groupNames") List<String> groupNames,@Param("terminalType") String terminalType);
 }

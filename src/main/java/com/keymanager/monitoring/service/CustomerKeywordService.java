@@ -793,7 +793,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         } while (invalidCustomerKeywords.size() > 0);
     }
 
-    public List<CodeNameVo> searchGroups(Long customerUuid) {
-        return customerKeywordDao.searchGroups(customerUuid);
+    public List<CodeNameVo> searchGroups() {
+        return customerKeywordDao.searchGroups();
     }
 }

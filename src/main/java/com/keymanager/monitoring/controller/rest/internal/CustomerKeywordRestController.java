@@ -420,7 +420,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	}
 
 	@RequestMapping(value = "/searchGroups", method = RequestMethod.POST)
-	public List<CodeNameVo> searchGroups(Long customerUuid) {
-		return customerKeywordService.searchGroups(customerUuid);//查看到这里
+	public List<CodeNameVo> searchGroups() {
+		return customerKeywordService.searchGroups();//查看到这里
 	}
 }

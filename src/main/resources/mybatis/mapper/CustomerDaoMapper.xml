@@ -57,9 +57,10 @@
             c.fUuid IS NOT NULL
             AND ck.fTerminalType = #{terminalType}
             AND c.fStatus = 1
-            <if test="contactPerson!=null and contactPerson!=''">
-             AND   c.fContactPerson LIKE '%${contactPerson}%'
-            </if>
+            AND ck.fOptimizeGroupName IN
+            <foreach collection="groupNames" item="groupName" open="(" close=")" separator=",">
+                #{groupName}
+            </foreach>
         GROUP BY
             ck.fCustomerUuid
     </select>

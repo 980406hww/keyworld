@@ -149,8 +149,9 @@ public class CustomerRestController {
     }
 
     @RequestMapping(value = "/searchCustomersWithKeyword", method = RequestMethod.POST)
-    public List<Customer> searchCustomersWithKeyword(String contactPerson,HttpServletRequest request) {
+    public List<Customer> searchCustomersWithKeyword(@RequestBody Map<String,Object> requestMap,HttpServletRequest request) {
         String terminalType = TerminalTypeMapping.getTerminalType(request);
-        return customerService.searchCustomersWithKeyword(contactPerson,terminalType);
+        List<String> groupNames=(List<String>) requestMap.get("groupNames");
+        return customerService.searchCustomersWithKeyword(groupNames,terminalType);
     }
 }

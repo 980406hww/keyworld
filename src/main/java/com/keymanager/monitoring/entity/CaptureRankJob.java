@@ -21,7 +21,7 @@ public class CaptureRankJob extends BaseEntity{
     @TableField(value = "fGroupNames",validate= FieldStrategy.IGNORED)
     private String groupNames;
 
-    @TableField(value = "fCustomerUuid")
+    @TableField(value = "fCustomerUuid",validate= FieldStrategy.IGNORED)
     private Long customerUuid;
 
     @TableField(value = "fOperationType")

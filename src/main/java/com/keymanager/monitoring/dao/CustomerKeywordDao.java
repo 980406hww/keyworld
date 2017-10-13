@@ -93,7 +93,7 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     public CustomerKeyword searchTitleAndUrl(@Param("groupNames") String[] groupNames,@Param("customerUuid") Long customerUuid);
 
-    List<CodeNameVo> searchGroups(@Param("customerUuid") Long customerUuid);
+    List<CodeNameVo> searchGroups();
 
     SearchEngineResultVO getCustomerKeywordForAutoUpdateNegative(@Param("terminalType")String terminalType, @Param("groupName")String groupName);
 

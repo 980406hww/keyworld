@@ -31,12 +31,8 @@
             pageLoad();
             onlyNumber();
             autoCheckTerminalType();
-            alignTableHeader();
             if(${isDepartmentManager}) {
                 $("#loginName").val("${customerCriteria.loginName}");
-            }
-            window.onresize = function(){
-                alignTableHeader();
             }
 //            initRangeTable();
         });
@@ -960,13 +956,6 @@
         function resetPageNumber() {
             var searchCustomerForm = $("#searchCustomerForm");
             searchCustomerForm.find("#currentPageNumberHidden").val(1);
-        }
-        function alignTableHeader(){
-            var td = $("#showCustomerTable tr:first td");
-            var ctd = $("#headerTable tr:first td");
-            $.each(td, function (idx, val) {
-                ctd.eq(idx).width($(val).width());
-            });
         }
 
         <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywords">

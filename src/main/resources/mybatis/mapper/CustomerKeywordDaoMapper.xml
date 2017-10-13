@@ -391,8 +391,7 @@
         fOptimizeGroupName	as 'name'
         from t_customer_keyword
         where
-            fCustomerUuid = #{customerUuid}
-            and fOptimizeGroupName is not null
+            fOptimizeGroupName is not null
             and fOptimizeGroupName != ''
             GROUP BY fOptimizeGroupName
     </select>
