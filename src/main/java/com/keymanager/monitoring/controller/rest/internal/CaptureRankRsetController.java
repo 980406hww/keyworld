@@ -83,7 +83,6 @@ public class CaptureRankRsetController {
         return modelAndView;
     }
 
-    @RequiresPermissions("/internal/captureRank/getCaptureRankJob")
     @RequestMapping(value = "/getCaptureRankJob", method = RequestMethod.POST)
     public CaptureRankJob getCaptureRankJob(Long uuid) {
         return captureRankJobService.selectById(uuid);
