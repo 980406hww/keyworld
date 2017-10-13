@@ -120,7 +120,9 @@
                         })
                         showCrawlRankingForm(data.uuid);
                         initcustomerUuid(data.customerUuid);
-                        $('#crawlRankingForm #customerUuid').combogrid("setValue", data.customerUuid);
+                        if (data.customerUuid != null && data.customerUuid != '') {
+                            $('#crawlRankingForm #customerUuid').combogrid("setValue", data.customerUuid);
+                        }
                         $("#crawlRankingForm input[name=exectionType][value=" + data.exectionType + "]").attr("checked", true);
                         $("#crawlRankingForm #exectionTime").val(data.exectionTime);
                         $('#crawlRankingForm #rowNumber').spinner('setValue', data.rowNumber);
@@ -206,14 +208,24 @@
             if (uuid != null) {
                 CaptureRankJob.uuid = uuid;
             }
-            alert($('#crawlRankingForm #customerUuid').val());
+
             CaptureRankJob.customerUuid = $('#crawlRankingForm #customerUuid').combogrid("getValue");
-            alert(CaptureRankJob.customerUuid);
             if ($("#crawlRankingForm #groupNames").val() == null || $("#crawlRankingForm #groupNames").val() === '') {
                 $().toastmessage('showWarningToast', "优化组名不能为空!");
                 return;
             }
-            CaptureRankJob.groupNames = $("#crawlRankingForm #groupNames").val();
+            var groupNames=$(".combobox-item-selected");
+            var groupNamesSelected="";
+            $.each(groupNames,function(idx,val){
+                if(idx==0) {
+                    groupNamesSelected=groupNamesSelected+$(val).text();
+                }
+                else {
+                    groupNamesSelected=groupNamesSelected+","+$(val).text();
+                }
+            })
+            CaptureRankJob.groupNames = groupNamesSelected;
+                //$("#crawlRankingForm #groupNames").val();
             CaptureRankJob.exectionType = $("#crawlRankingForm input[name=exectionType]:checked").val();
             if ($("#crawlRankingForm #exectionTime").val() == null || $("#crawlRankingForm #exectionTime").val() === '') {
                 $().toastmessage('showWarningToast', "执行时间不能为空!");
@@ -257,7 +269,9 @@
                 type: 'POST',
                 success: function (data) {
                     if (data) {
-                        $('#crawlRankingForm #customerUuid').combogrid("setValue", data.customerUuid);
+                        if (data.customerUuid != null && data.customerUuid != '') {
+                            $('#crawlRankingForm #customerUuid').combogrid("setValue", data.customerUuid);
+                        }
                         initGroupNames(data);
                     }
                     else {
