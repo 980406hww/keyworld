@@ -421,13 +421,13 @@
                 <option value="Everyday" <c:if test="${captureRankJobSearchCriteria.exectionType.equals('Everyday')}">selected="selected"</c:if>>Everyday</option>
             </select>&nbsp;&nbsp;
             <shiro:hasPermission name="/internal/captureRank/searchCaptureRankJobs">
-            <input type="submit" value="查询">&nbsp;&nbsp;
+            <input type="submit" value=" 查询 ">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/captureRank/saveCaptureRankJob">
-            <input type="button" value="添加" onclick="showCrawlRankingForm()">&nbsp;&nbsp;
+            <input type="button" value=" 添加 " onclick="showCrawlRankingForm()">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/captureRank/deleteCaptureRankJobs">
-            <input type="button" value="删除所选" onclick="deleteCaptureRankJobs()">&nbsp;&nbsp;
+            <input type="button" value=" 删除所选 " onclick="deleteCaptureRankJobs()">&nbsp;&nbsp;
             </shiro:hasPermission>
         </form>
     </div>
