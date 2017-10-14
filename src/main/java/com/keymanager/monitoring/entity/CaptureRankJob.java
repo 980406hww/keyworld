@@ -1,16 +1,11 @@
 package com.keymanager.monitoring.entity;
 
 import com.baomidou.mybatisplus.annotations.TableField;
-import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.FieldStrategy;
-import com.baomidou.mybatisplus.enums.IdType;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.sql.Time;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by shunshikj24 on 2017/9/26.
@@ -23,6 +18,9 @@ public class CaptureRankJob extends BaseEntity{
 
     @TableField(value = "fCustomerUuid",validate= FieldStrategy.IGNORED)
     private Long customerUuid;
+
+    @TableField(exist=false)
+    private String contactPerson;
 
     @TableField(value = "fOperationType")
     private String operationType;
@@ -184,5 +182,13 @@ public class CaptureRankJob extends BaseEntity{
 
     public void setLastExecutionDate(java.sql.Date lastExecutionDate) {
         this.lastExecutionDate = lastExecutionDate;
+    }
+
+    public String getContactPerson() {
+        return contactPerson;
+    }
+
+    public void setContactPerson(String contactPerson) {
+        this.contactPerson = contactPerson;
     }
 }

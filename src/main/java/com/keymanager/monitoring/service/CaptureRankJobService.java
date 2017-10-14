@@ -5,12 +5,15 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.criteria.CaptureRankJobSearchCriteria;
 import com.keymanager.monitoring.dao.CaptureRankJobDao;
 import com.keymanager.monitoring.entity.CaptureRankJob;
+import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.enums.CaptureRankExectionStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by shunshikj24 on 2017/9/26.
@@ -19,6 +22,9 @@ import java.util.List;
 public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, CaptureRankJob> {
     @Autowired
     private CaptureRankJobDao captureRankJobDao;
+
+    @Autowired
+    private CustomerService customerService;
 
     public CaptureRankJob provideCaptureRankJob() {
         CaptureRankJob captureRankJob = captureRankJobDao.getProcessingJob();
@@ -35,6 +41,19 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
 
     public Page<CaptureRankJob> searchCaptureRankJob(Page<CaptureRankJob> page, CaptureRankJobSearchCriteria captureRankJobSearchCriteria) {
         List<CaptureRankJob> captureRankJobs = captureRankJobDao.searchCaptureRankJobs(page, captureRankJobSearchCriteria);
+        Map<Long,Customer> customerMap = new HashMap<Long,Customer>();
+        for(CaptureRankJob captureRankJob : captureRankJobs){
+            if(captureRankJob.getCustomerUuid() != null &&  !captureRankJob.getCustomerUuid() .equals("")) {
+                Customer customer = customerMap.get(captureRankJob.getCustomerUuid());
+                if(customer == null) {
+                    customer = customerService.selectById(captureRankJob.getCustomerUuid());
+                    customerMap.put(captureRankJob.getCustomerUuid(),customer);
+                }
+                if(customer != null) {
+                    captureRankJob.setContactPerson(customer.getContactPerson());
+                }
+            }
+        }
         page.setRecords(captureRankJobs);
         return page;
     }
