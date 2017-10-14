@@ -467,21 +467,21 @@
                     <c:otherwise>一次性</c:otherwise>
                 </c:choose>
             </td>
-            <td width=40><fmt:formatDate value="${captureRankJob.exectionTime}" pattern="HH:mm:ss"/></td>
+            <td width=40><fmt:formatDate value="${captureRankJob.exectionTime}" pattern="HH:mm"/></td>
             <td width=60>${captureRankJob.lastExecutionDate}</td>
             <td width=50>${captureRankJob.exectionStatus}</td>
             <td width=50>${captureRankJob.rowNumber}</td>
             <td width=60>${captureRankJob.captureInterval}</td>
             <td width=40>${captureRankJob.executionCycle}</td>
             <td width=40>${captureRankJob.pageSize}</td>
-            <td width=90><fmt:formatDate value="${captureRankJob.startTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
-            <td width=90><fmt:formatDate value="${captureRankJob.endTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+            <td width=90><fmt:formatDate value="${captureRankJob.startTime}" pattern="yyyy-MM-dd HH:mm"/></td>
+            <td width=90><fmt:formatDate value="${captureRankJob.endTime}" pattern="yyyy-MM-dd HH:mm"/></td>
 
 
             <td width=60>${captureRankJob.updateBy}</td>
-            <td width=90><fmt:formatDate value="${captureRankJob.updateTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+            <td width=90><fmt:formatDate value="${captureRankJob.updateTime}" pattern="yyyy-MM-dd HH:mm"/></td>
             <td width=60>${captureRankJob.createBy}</td>
-            <td width=90><fmt:formatDate value="${captureRankJob.createTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+            <td width=90><fmt:formatDate value="${captureRankJob.createTime}" pattern="yyyy-MM-dd HH:mm"/></td>
             <td width=80>
                 <shiro:hasPermission name="/internal/captureRank/saveCaptureRankJob">
                 <a href="javascript:modifyCaptureRankJob('${captureRankJob.uuid}')">修改</a>
