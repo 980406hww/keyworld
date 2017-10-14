@@ -421,13 +421,13 @@
                 <option value="Everyday" <c:if test="${captureRankJobSearchCriteria.exectionType.equals('Everyday')}">selected="selected"</c:if>>Everyday</option>
             </select>&nbsp;&nbsp;
             <shiro:hasPermission name="/internal/captureRank/searchCaptureRankJobs">
-            <input type="submit" value="查询">&nbsp;&nbsp;
+            <input type="submit" value=" 查询 ">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/captureRank/saveCaptureRankJob">
-            <input type="button" value="添加" onclick="showCrawlRankingForm()">&nbsp;&nbsp;
+            <input type="button" value=" 添加 " onclick="showCrawlRankingForm()">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/captureRank/deleteCaptureRankJobs">
-            <input type="button" value="删除所选" onclick="deleteCaptureRankJobs()">&nbsp;&nbsp;
+            <input type="button" value=" 删除所选 " onclick="deleteCaptureRankJobs()">&nbsp;&nbsp;
             </shiro:hasPermission>
         </form>
     </div>
@@ -435,22 +435,21 @@
         <tr bgcolor="" height="30">
             <td align="center" width=10><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
             <td align="center" width=80>组名</td>
-            <td align="center" width=40>客户ID</td>
-            <td align="center" width=60>操作类型</td>
-            <td align="center" width=60>执行类型</td>
-            <td align="center" width=60>执行时间</td>
-            <td align="center" width=40>抓取截止条数</td>
-            <td align="center" width=40>抓取间隔(ms)</td>
-            <td align="center" width=40>抓取周期</td>
-            <td align="center" width=40>每页条数</td>
-            <td align="center" width=50>状态</td>
-            <td align="center" width=90>开始抓取时间</td>
-            <td align="center" width=90>最后抓取时间</td>
+            <td align="center" width=40>客户</td>
+            <td align="center" width=40>执行方式</td>
+            <td align="center" width=40>执行时间</td>
             <td align="center" width=60>最后执行日期</td>
-            <td align="center" width=60>创建人</td>
-            <td align="center" width=90>创建时间</td>
+            <td align="center" width=50>状态</td>
+            <td align="center" width=50>抓取记录数</td>
+            <td align="center" width=60>抓取间隔(ms)</td>
+            <td align="center" width=40>换IP间隔</td>
+            <td align="center" width=40>每页条数</td>
+            <td align="center" width=90>抓取开始时间</td>
+            <td align="center" width=90>抓取结束时间</td>
             <td align="center" width=60>修改人</td>
             <td align="center" width=90>修改时间</td>
+            <td align="center" width=60>创建人</td>
+            <td align="center" width=90>创建时间</td>
             <td align="center" width=80>操作</td>
         </tr>
     </table>
@@ -461,22 +460,28 @@
         <tr align="left" onmouseover="doOver(this);" onmouseout="doOut(this);" height=30  <c:if test="${status.index%2==0}">bgcolor="#eee"</c:if> >
             <td width=10 align="center"><input type="checkbox" name="uuid" value="${captureRankJob.uuid}" onclick="decideSelectAll()"/></td>
             <td width=80>${captureRankJob.groupNames}</td>
-            <td width=40>${captureRankJob.customerUuid}</td>
-            <td width=60>${captureRankJob.operationType}</td>
-            <td width=60>${captureRankJob.exectionType}</td>
-            <td width=60><fmt:formatDate value="${captureRankJob.exectionTime}" pattern="HH:mm:ss"/></td>
-            <td width=40>${captureRankJob.rowNumber}</td>
-            <td width=40>${captureRankJob.captureInterval}</td>
+            <td width=40>${captureRankJob.contactPerson}</td>
+            <td width=40>
+                <c:choose>
+                    <c:when test="${captureRankJob.exectionType == 'Everyday'}">每天</c:when>
+                    <c:otherwise>一次性</c:otherwise>
+                </c:choose>
+            </td>
+            <td width=40><fmt:formatDate value="${captureRankJob.exectionTime}" pattern="HH:mm"/></td>
+            <td width=60>${captureRankJob.lastExecutionDate}</td>
+            <td width=50>${captureRankJob.exectionStatus}</td>
+            <td width=50>${captureRankJob.rowNumber}</td>
+            <td width=60>${captureRankJob.captureInterval}</td>
             <td width=40>${captureRankJob.executionCycle}</td>
             <td width=40>${captureRankJob.pageSize}</td>
-            <td width=50>${captureRankJob.exectionStatus}</td>
-            <td width=90><fmt:formatDate value="${captureRankJob.startTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
-            <td width=90><fmt:formatDate value="${captureRankJob.endTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
-            <td width=60>${captureRankJob.lastExecutionDate}</td>
-            <td width=60>${captureRankJob.createBy}</td>
-            <td width=90><fmt:formatDate value="${captureRankJob.createTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+            <td width=90><fmt:formatDate value="${captureRankJob.startTime}" pattern="yyyy-MM-dd HH:mm"/></td>
+            <td width=90><fmt:formatDate value="${captureRankJob.endTime}" pattern="yyyy-MM-dd HH:mm"/></td>
+
+
             <td width=60>${captureRankJob.updateBy}</td>
-            <td width=90><fmt:formatDate value="${captureRankJob.updateTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+            <td width=90><fmt:formatDate value="${captureRankJob.updateTime}" pattern="yyyy-MM-dd HH:mm"/></td>
+            <td width=60>${captureRankJob.createBy}</td>
+            <td width=90><fmt:formatDate value="${captureRankJob.createTime}" pattern="yyyy-MM-dd HH:mm"/></td>
             <td width=80>
                 <shiro:hasPermission name="/internal/captureRank/saveCaptureRankJob">
                 <a href="javascript:modifyCaptureRankJob('${captureRankJob.uuid}')">修改</a>
@@ -493,14 +498,14 @@
 <form id="crawlRankingForm">
     <ul>
         <input type="hidden" name="captureRankJobUuid" id="captureRankJobUuid">
-        <li><span>输入优化组名:</span><input type="text" name="groupNames" id="groupNames" class="easyui-combobox" style="width: 200px"  required></li>
-        <li><span>输入客户名:</span><input type="text" name="customerUuid" id="customerUuid" style="width: 160px" class="easyui-combogrid" data-options="editable:false" placeholder="可以不做操作"><input type="button" value="清空" onclick="customerUuidReset()" style="margin-left: 10px"></input></li>
+        <li><span>优化组名:</span><input type="text" name="groupNames" id="groupNames" class="easyui-combobox" style="width: 200px"  required></li>
+        <li><span>客户名:</span><input type="text" name="customerUuid" id="customerUuid" style="width: 160px" class="easyui-combogrid" data-options="editable:false" placeholder="可以不做操作"><input type="button" value="清空" onclick="customerUuidReset()" style="margin-left: 10px"></input></li>
         <li><span>执行方式:</span><input type="radio" name="exectionType" checked  value="Once">一次性</label><input type="radio" name="exectionType" value="Everyday">每天</li>
         <li><span>执行时间:</span><input type="text" class="Wdate" name="exectionTime" id="exectionTime" onfocus="WdatePicker({lang:'zh-cn',dateFmt:'HH:mm:ss'})" required style="width: 200px"></li>
-        <li><span>抓取截止条数:</span><input id="rowNumber" name="rowNumber" class="easyui-numberspinner"  data-options="min:0,max:1000,increment:50" required style="width: 200px"></li>
+        <li><span>抓取记录数:</span><input id="rowNumber" name="rowNumber" class="easyui-numberspinner"  data-options="min:0,max:1000,increment:50" required style="width: 200px"></li>
         <li><span>抓取间隔(毫秒):</span><input id="captureInterval" name="captureInterval" class="easyui-numberspinner"  data-options="min:0,increment:500" required style="width: 200px"></li>
         <li><span>每页条数:</span><input id="pageSize" name="pageSize" class="easyui-numberspinner"  data-options="min:0,max:50,increment:10" required style="width: 200px"></li>
-        <li><span>执行周期:</span><input id="executionCycle" name="executionCycle" class="easyui-numberspinner"  data-options="min:0,increment:50" required style="width: 200px"></li>
+        <li><span>换IP间隔:</span><input id="executionCycle" name="executionCycle" class="easyui-numberspinner"  data-options="min:0,increment:50" required style="width: 200px"></li>
     </ul>
 </form>
 </div>
