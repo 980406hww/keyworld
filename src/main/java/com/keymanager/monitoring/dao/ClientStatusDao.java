@@ -34,11 +34,13 @@ public interface ClientStatusDao extends BaseMapper<ClientStatus> {
 
     List<ClientStatus> searchBadClientStatus(Page<ClientStatus> page,  @Param("clientStatusCriteria") ClientStatusCriteria clientStatusCriteria);
 
-    List<ClientStatus> searchRestartingClientStatuses(@Param("terminalType") String terminalType);
+    List<ClientStatus> searchRestartingClientStatuses();
 
-    List<ClientStatus> searchWaitingRestartingClientStatuses(@Param("terminalType") String terminalType);
+    List<ClientStatus> searchWaitingRestartingClientStatuses();
 
     void updateClientStatusTargetVersion(@Param("clientIDs")List<String> clientIDs, @Param("targetVersion")String targetVersion);
 
     void deleteClientStatus(@Param("clientIDs")List<String> clientIDs);
+
+    void updateRestartStatus(@Param("clientID")String clientID, @Param("restartStatus")String restartStatus);
 }

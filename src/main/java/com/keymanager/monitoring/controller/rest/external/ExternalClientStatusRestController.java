@@ -64,10 +64,9 @@ public class ExternalClientStatusRestController extends SpringMVCBaseController 
     public ResponseEntity<?> getStoppedClientStatuses(HttpServletRequest request) throws Exception {
         String userName = request.getParameter("username");
         String password = request.getParameter("password");
-        String terminalType = TerminalTypeMapping.getTerminalType(request);
         try {
             if (validUser(userName, password)) {
-                ClientStatus clientStatus = clientStatusService.getStoppedClientStatuses(terminalType);
+                ClientStatus clientStatus = clientStatusService.getStoppedClientStatuses();
                 return new ResponseEntity<Object>(clientStatus, HttpStatus.OK);
             }
         }catch (Exception ex){

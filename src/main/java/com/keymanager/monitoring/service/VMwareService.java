@@ -2,19 +2,18 @@ package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.keymanager.db.DBUtil;
-import com.keymanager.manager.ConfigManager;
 import com.keymanager.monitoring.dao.ClientStatusDao;
 import com.keymanager.monitoring.entity.ClientStatus;
-import com.keymanager.value.ConfigVO;
+import com.keymanager.monitoring.entity.Config;
+import com.keymanager.util.Constants;
 import com.vmware.vim25.VirtualMachinePowerState;
 import com.vmware.vim25.mo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.net.URL;
-import java.sql.Connection;
 
 @Service
 public class VMwareService extends ServiceImpl<ClientStatusDao, ClientStatus>{
@@ -22,32 +21,30 @@ public class VMwareService extends ServiceImpl<ClientStatusDao, ClientStatus>{
 
 	private static ServiceInstance si;
 	private static Folder rootFolder;
-	static{
-		reConnect();
-	}
 
-	private static void reConnect() {
-		Connection conn = null;
+	@Autowired
+	private ConfigService configService;
+
+	private void reConnect() {
 		try {
-			conn = DBUtil.getConnection("keyword");
-			ConfigManager configManager = new ConfigManager();
-			ConfigVO configVOForIP = configManager.getConfig(conn, ConfigManager.CONFIG_KEY_VMWARE, "IP");
-			ConfigVO configVOForUserName = configManager.getConfig(conn, ConfigManager.CONFIG_KEY_VMWARE, "UserName");
-			ConfigVO configVOForPassword = configManager.getConfig(conn, ConfigManager.CONFIG_KEY_VMWARE, "Password");
+			Config configForIP = configService.getConfig(Constants.CONFIG_KEY_VMWARE, "IP");
+			Config configForUserName = configService.getConfig(Constants.CONFIG_KEY_VMWARE, "UserName");
+			Config configForPassword = configService.getConfig(Constants.CONFIG_KEY_VMWARE, "Password");
 
-			VMClientSesion session = new VMClientSesion(configVOForIP.getValue(), configVOForUserName.getValue(), configVOForPassword.getValue());
+			VMClientSesion session = new VMClientSesion(configForIP.getValue(), configForUserName.getValue(), configForPassword.getValue());
 			URL url = new URL("https", session.getHost(), "/sdk");
 			si = new ServiceInstance(url, session.getUsername(), session.getPassword(), true);
 			rootFolder = si.getRootFolder();
 		}catch (Exception ex){
 			logger.error(ex.getMessage());
-		}finally {
-			DBUtil.closeConnection(conn);
 		}
 	}
 
 	public String restartVPS(String vmName){
 		try {
+			if(si == null){
+				reConnect();
+			}
 			ManagedEntity mes = new InventoryNavigator(rootFolder).searchManagedEntity("VirtualMachine", vmName);
 			if(mes == null){
 				reConnect();
@@ -71,6 +68,9 @@ public class VMwareService extends ServiceImpl<ClientStatusDao, ClientStatus>{
 
 	public String getVPSStatus(String vmName){
 		try {
+			if(si == null){
+				reConnect();
+			}
 			ManagedEntity mes = new InventoryNavigator(rootFolder).searchManagedEntity("VirtualMachine", vmName);
 			if(mes == null){
 				reConnect();

@@ -522,32 +522,31 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		return "0";
 	}
 
-	public ClientStatus getStoppedClientStatuses(String terminalType){
+	public ClientStatus getStoppedClientStatuses(){
 		ClientStatus tmpClientStatus = null;
-		List<ClientStatus> clientStatuses = clientStatusDao.searchRestartingClientStatuses(terminalType);
+		List<ClientStatus> clientStatuses = clientStatusDao.searchRestartingClientStatuses();
 		for(ClientStatus clientStatus : clientStatuses){
-			if(customerKeywordService.haveCustomerKeywordForOptimization(terminalType, clientStatus.getClientID())){
+			if(customerKeywordService.haveCustomerKeywordForOptimization(clientStatus.getTerminalType(), clientStatus.getClientID())){
 				tmpClientStatus = clientStatus;
-				updateRestartStatus(clientStatus, "Logging");
+				updateRestartStatus(clientStatus.getClientID(), "Logging");
 				break;
 			}
 		}
-		clientStatuses = clientStatusDao.searchWaitingRestartingClientStatuses(terminalType);
-		for(ClientStatus clientStatus : clientStatuses){
-			if(customerKeywordService.haveCustomerKeywordForOptimization(terminalType, clientStatus.getClientID())){
-				tmpClientStatus = clientStatus;
-				updateRestartStatus(clientStatus, "Processing");
-				break;
+		if(tmpClientStatus == null) {
+			clientStatuses = clientStatusDao.searchWaitingRestartingClientStatuses();
+			for (ClientStatus clientStatus : clientStatuses) {
+				if (customerKeywordService.haveCustomerKeywordForOptimization(clientStatus.getTerminalType(), clientStatus.getClientID())) {
+					tmpClientStatus = clientStatus;
+					updateRestartStatus(clientStatus.getClientID(), "Processing");
+					break;
+				}
 			}
 		}
 		return tmpClientStatus;
 	}
 
-	private void updateRestartStatus(ClientStatus clientStatus, String restartStatus){
-		clientStatus.setRestartStatus(restartStatus);
-		clientStatus.setRestartTime(Utils.getCurrentTimestamp());
-		clientStatus.setRestartOrderingTime(Utils.getCurrentTimestamp());
-		clientStatusDao.updateById(clientStatus);
+	private void updateRestartStatus(String clientID, String restartStatus){
+		clientStatusDao.updateRestartStatus(clientID, restartStatus);
 	}
 
 	public void updateClientStatusRestartStatus(String clientID, String restartStatus){
