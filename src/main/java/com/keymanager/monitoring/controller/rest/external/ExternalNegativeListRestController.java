@@ -1,6 +1,7 @@
 package com.keymanager.monitoring.controller.rest.external;
 
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
+import com.keymanager.monitoring.criteria.KeywordNegativeCriteria;
 import com.keymanager.monitoring.criteria.NegativeListCriteria;
 import com.keymanager.monitoring.entity.NegativeList;
 import com.keymanager.monitoring.service.NegativeListService;
@@ -84,5 +85,27 @@ public class ExternalNegativeListRestController extends SpringMVCBaseController 
 			logger.error(ex.getMessage());
 		}
 		return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+	}
+	//负面信息同步
+	@RequestMapping(value = "/negativeListsSynchronize", method = RequestMethod.POST)
+	public ResponseEntity<?> negativeListsSynchronize(@RequestBody KeywordNegativeCriteria keywordNegativeCriteria) throws Exception{
+		String userName = keywordNegativeCriteria.getUserName();
+		String password = keywordNegativeCriteria.getPassword();
+		try {
+			if (validUser(userName, password)) {
+				NegativeList negativeList = keywordNegativeCriteria.getNegativeList();
+				List<NegativeList> existNegativeList = negativeListService.negativeListsSynchronizeOfDelete(negativeList);
+				if(existNegativeList!=null){
+					negativeListService.deleteBatchIds(existNegativeList);
+				}
+				if(keywordNegativeCriteria.getNegative()){
+					negativeListService.insert(negativeList);
+				}
+				return new ResponseEntity<Object>(true,HttpStatus.OK);
+			}
+		}catch (Exception ex){
+			logger.error(ex.getMessage());
+		}
+		return new ResponseEntity<Object>(false,HttpStatus.BAD_REQUEST);
 	}
 }
