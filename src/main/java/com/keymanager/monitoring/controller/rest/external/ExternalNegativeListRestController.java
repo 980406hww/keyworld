@@ -96,7 +96,9 @@ public class ExternalNegativeListRestController extends SpringMVCBaseController 
 				NegativeList negativeList = keywordNegativeCriteria.getNegativeList();
 				List<NegativeList> existNegativeList = negativeListService.negativeListsSynchronizeOfDelete(negativeList);
 				if(existNegativeList!=null){
-					negativeListService.deleteBatchIds(existNegativeList);
+					for(NegativeList negativeList1 : existNegativeList){
+						negativeListService.deleteById(negativeList1.getUuid());
+					}
 				}
 				if(keywordNegativeCriteria.getNegative()){
 					negativeListService.insert(negativeList);
