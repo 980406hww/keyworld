@@ -7,6 +7,7 @@ import com.keymanager.monitoring.criteria.ClientStatusCriteria;
 import com.keymanager.monitoring.entity.ClientStatus;
 import com.keymanager.value.ClientStatusGroupSummaryVO;
 import com.keymanager.value.ClientStatusSummaryVO;
+import com.sun.deploy.util.SessionState;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
@@ -29,6 +30,10 @@ public interface ClientStatusDao extends BaseMapper<ClientStatus> {
     List<ClientStatusSummaryVO> searchClientStatusSummaryVO(@Param("clientIDPrefix") String clientIDPrefix, @Param("city") String city);
 
     List<ClientStatus> searchClientStatuses(Page<ClientStatus> page, @Param("clientStatusCriteria") ClientStatusCriteria clientStatusCriteria);
+
+    List<ClientStatus> getClientStatusesForSwitchGroup(@Param("terminalType") String terminalType);
+
+    List<ClientStatus> getClientStatusesForRenewal();
 
     List<ClientStatusGroupSummaryVO> searchClientStatusGroupSummaryVO(@Param("group") String group, @Param("terminalType") String terminalType);
 

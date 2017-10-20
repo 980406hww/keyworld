@@ -2,11 +2,16 @@ package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.keymanager.db.DBUtil;
+import com.keymanager.mail.MailHelper;
+import com.keymanager.manager.ConfigManager;
 import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
 import com.keymanager.monitoring.criteria.ClientStatusCriteria;
 import com.keymanager.monitoring.dao.ClientStatusDao;
 import com.keymanager.monitoring.entity.ClientStatus;
 import com.keymanager.monitoring.entity.ClientStatusRestartLog;
+import com.keymanager.monitoring.entity.Config;
+import com.keymanager.monitoring.enums.TerminalTypeEnum;
 import com.keymanager.util.FileUtil;
 import com.keymanager.util.Utils;
 import com.keymanager.util.common.StringUtil;
@@ -18,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.sql.Connection;
 import java.util.*;
 
 import java.util.List;
@@ -32,6 +38,9 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 
 	@Autowired
 	private CustomerKeywordService customerKeywordService;
+
+	@Autowired
+	private ConfigService configService;
 
 	@Autowired
 	private ClientStatusRestartLogService clientStatusRestartLogService;
@@ -564,6 +573,224 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 			clientStatusRestartLog.setRestartCount(clientStatus.getRestartCount() + 1);
 			clientStatusRestartLog.setRestartStatus(restartStatus);
 			clientStatusRestartLogService.insert(clientStatusRestartLog);
+		}
+	}
+
+	public void switchGroup() throws Exception{
+		switchGroup(TerminalTypeEnum.PC.name());
+		switchGroup(TerminalTypeEnum.Phone.name());
+	}
+
+	private void switchGroup(String terminalType) throws Exception{
+		List<ClientStatus> clientStatuses = clientStatusDao.getClientStatusesForSwitchGroup(terminalType);
+		List<ClientStatus> cloneClientStatuses = new ArrayList<ClientStatus>(clientStatuses);
+		Collections.shuffle(clientStatuses);
+		Collections.shuffle(clientStatuses);
+		Collections.shuffle(cloneClientStatuses);
+		Collections.shuffle(cloneClientStatuses);
+		Collections.shuffle(cloneClientStatuses);
+		for(int i = 0; i < clientStatuses.size(); i++){
+			ClientStatus sourceClientStatus = clientStatuses.get(i);
+			ClientStatus targetClientStatus = cloneClientStatuses.get(i);
+			switchClientStatusInfo(sourceClientStatus, targetClientStatus);
+		}
+
+		for(ClientStatus clientStatus : clientStatuses){
+			clientStatusDao.updateById(clientStatus);
+		}
+	}
+
+	private void switchClientStatusInfo(ClientStatus sourceClientStatus, ClientStatus targetClientStatus){
+		Integer baiduSemPercent = sourceClientStatus.getBaiduSemPercent();
+		sourceClientStatus.setBaiduSemPercent(targetClientStatus.getBaiduSemPercent());
+		targetClientStatus.setBaiduSemPercent(baiduSemPercent);
+
+		int clearCookie = sourceClientStatus.getClearCookie();
+		sourceClientStatus.setClearCookie(targetClientStatus.getClearCookie());
+		targetClientStatus.setClearCookie(clearCookie);
+
+		Integer dragPercent = sourceClientStatus.getDragPercent();
+		sourceClientStatus.setDragPercent(targetClientStatus.getDragPercent());
+		targetClientStatus.setDragPercent(dragPercent);
+
+		Integer kuaizhaoPercent = sourceClientStatus.getKuaizhaoPercent();
+		sourceClientStatus.setKuaizhaoPercent(targetClientStatus.getKuaizhaoPercent());
+		targetClientStatus.setKuaizhaoPercent(kuaizhaoPercent);
+
+		Integer multiBrowser = sourceClientStatus.getMultiBrowser();
+		sourceClientStatus.setMultiBrowser(targetClientStatus.getMultiBrowser());
+		targetClientStatus.setMultiBrowser(multiBrowser);
+
+		String operationType = sourceClientStatus.getOperationType();
+		sourceClientStatus.setOperationType(targetClientStatus.getOperationType());
+		targetClientStatus.setOperationType(operationType);
+
+		int page = sourceClientStatus.getPage();
+		sourceClientStatus.setPage(targetClientStatus.getPage());
+		targetClientStatus.setPage(page);
+
+		Integer pageSize = sourceClientStatus.getPageSize();
+		sourceClientStatus.setPageSize(targetClientStatus.getPageSize());
+		targetClientStatus.setPageSize(pageSize);
+
+		Integer zhanneiPercent = sourceClientStatus.getZhanneiPercent();
+		sourceClientStatus.setZhanneiPercent(targetClientStatus.getZhanneiPercent());
+		targetClientStatus.setZhanneiPercent(zhanneiPercent);
+
+		String group = sourceClientStatus.getGroup();
+		sourceClientStatus.setGroup(targetClientStatus.getGroup());
+		targetClientStatus.setGroup(group);
+
+		int disableStatistics = sourceClientStatus.getDisableStatistics();
+		sourceClientStatus.setDisableStatistics(targetClientStatus.getDisableStatistics());
+		targetClientStatus.setDisableStatistics(disableStatistics);
+
+		int disableVisiteWebsite = sourceClientStatus.getDisableVisitWebsite();
+		sourceClientStatus.setDisableVisitWebsite(targetClientStatus.getDisableVisitWebsite());
+		targetClientStatus.setDisableVisitWebsite(disableVisiteWebsite);
+
+		int entryPageMinCount = sourceClientStatus.getEntryPageMinCount();
+		sourceClientStatus.setEntryPageMinCount(targetClientStatus.getEntryPageMinCount());
+		targetClientStatus.setEntryPageMinCount(entryPageMinCount);
+
+		int entryPageMaxCount = sourceClientStatus.getEntryPageMaxCount();
+		sourceClientStatus.setEntryPageMaxCount(targetClientStatus.getEntryPageMaxCount());
+		targetClientStatus.setEntryPageMaxCount(entryPageMaxCount);
+
+		int disableVisitWebsite = sourceClientStatus.getDisableVisitWebsite();
+		sourceClientStatus.setDisableVisitWebsite(targetClientStatus.getDisableVisitWebsite());
+		targetClientStatus.setDisableVisitWebsite(disableVisitWebsite);
+
+		int pageRemainMinTime = sourceClientStatus.getPageRemainMinTime();
+		sourceClientStatus.setPageRemainMinTime(targetClientStatus.getPageRemainMinTime());
+		targetClientStatus.setPageRemainMinTime(pageRemainMinTime);
+
+		int pageRemainMaxTime = sourceClientStatus.getPageRemainMaxTime();
+		sourceClientStatus.setPageRemainMaxTime(targetClientStatus.getPageRemainMaxTime());
+		targetClientStatus.setPageRemainMaxTime(pageRemainMaxTime);
+
+		int inputDelayMinTime = sourceClientStatus.getInputDelayMinTime();
+		sourceClientStatus.setInputDelayMinTime(targetClientStatus.getInputDelayMinTime());
+		targetClientStatus.setInputDelayMinTime(inputDelayMinTime);
+
+		int inputDelayMaxTime = sourceClientStatus.getInputDelayMaxTime();
+		sourceClientStatus.setInputDelayMaxTime(targetClientStatus.getInputDelayMaxTime());
+		targetClientStatus.setInputDelayMaxTime(inputDelayMaxTime);
+
+		int slideDelayMinTime = sourceClientStatus.getSlideDelayMinTime();
+		sourceClientStatus.setSlideDelayMinTime(targetClientStatus.getSlideDelayMinTime());
+		targetClientStatus.setSlideDelayMinTime(slideDelayMinTime);
+
+		int slideDelayMaxTime = sourceClientStatus.getSlideDelayMaxTime();
+		sourceClientStatus.setSlideDelayMaxTime(targetClientStatus.getSlideDelayMaxTime());
+		targetClientStatus.setSlideDelayMaxTime(slideDelayMaxTime);
+
+		int titleRemainMinTime = sourceClientStatus.getTitleRemainMinTime();
+		sourceClientStatus.setTitleRemainMinTime(targetClientStatus.getTitleRemainMinTime());
+		targetClientStatus.setTitleRemainMinTime(titleRemainMinTime);
+
+		int titleRemainMaxTime = sourceClientStatus.getTitleRemainMaxTime();
+		sourceClientStatus.setTitleRemainMaxTime(targetClientStatus.getTitleRemainMaxTime());
+		targetClientStatus.setTitleRemainMaxTime(titleRemainMaxTime);
+
+		int optimizeKeywordCountPerIP = sourceClientStatus.getOptimizeKeywordCountPerIP();
+		sourceClientStatus.setOptimizeKeywordCountPerIP(targetClientStatus.getOptimizeKeywordCountPerIP());
+		targetClientStatus.setOptimizeKeywordCountPerIP(optimizeKeywordCountPerIP);
+
+		int oneIPOneUser = sourceClientStatus.getOneIPOneUser();
+		sourceClientStatus.setOneIPOneUser(targetClientStatus.getOneIPOneUser());
+		targetClientStatus.setOneIPOneUser(oneIPOneUser);
+
+		int randomlyClickNoResult = sourceClientStatus.getRandomlyClickNoResult();
+		sourceClientStatus.setRandomlyClickNoResult(targetClientStatus.getRandomlyClickNoResult());
+		targetClientStatus.setRandomlyClickNoResult(randomlyClickNoResult);
+
+		int justVisitSelfPage = sourceClientStatus.getJustVisitSelfPage();
+		sourceClientStatus.setJustVisitSelfPage(targetClientStatus.getJustVisitSelfPage());
+		targetClientStatus.setJustVisitSelfPage(justVisitSelfPage);
+
+		int sleepPer2Words = sourceClientStatus.getSleepPer2Words();
+		sourceClientStatus.setSleepPer2Words(targetClientStatus.getSleepPer2Words());
+		targetClientStatus.setSleepPer2Words(sleepPer2Words);
+
+		int supportPaste = sourceClientStatus.getSupportPaste();
+		sourceClientStatus.setSupportPaste(targetClientStatus.getSupportPaste());
+		targetClientStatus.setSupportPaste(supportPaste);
+
+		int moveRandomly = sourceClientStatus.getMoveRandomly();
+		sourceClientStatus.setMoveRandomly(targetClientStatus.getMoveRandomly());
+		targetClientStatus.setMoveRandomly(moveRandomly);
+
+		int parentSearchEntry = sourceClientStatus.getParentSearchEntry();
+		sourceClientStatus.setParentSearchEntry(targetClientStatus.getParentSearchEntry());
+		targetClientStatus.setParentSearchEntry(parentSearchEntry);
+
+		int clearLocalStorage = sourceClientStatus.getClearLocalStorage();
+		sourceClientStatus.setClearLocalStorage(targetClientStatus.getClearLocalStorage());
+		targetClientStatus.setClearLocalStorage(clearLocalStorage);
+
+		int lessClickAtNight = sourceClientStatus.getLessClickAtNight();
+		sourceClientStatus.setLessClickAtNight(targetClientStatus.getLessClickAtNight());
+		targetClientStatus.setLessClickAtNight(lessClickAtNight);
+
+		int sameCityUser = sourceClientStatus.getSameCityUser();
+		sourceClientStatus.setSameCityUser(targetClientStatus.getSameCityUser());
+		targetClientStatus.setSameCityUser(sameCityUser);
+
+		int locateTitlePosition = sourceClientStatus.getLocateTitlePosition();
+		sourceClientStatus.setLocateTitlePosition(targetClientStatus.getLocateTitlePosition());
+		targetClientStatus.setLocateTitlePosition(locateTitlePosition);
+
+		int baiduAllianceEntry = sourceClientStatus.getBaiduAllianceEntry();
+		sourceClientStatus.setBaiduAllianceEntry(targetClientStatus.getBaiduAllianceEntry());
+		targetClientStatus.setBaiduAllianceEntry(baiduAllianceEntry);
+
+		int justClickSpecifiedTitle = sourceClientStatus.getJustClickSpecifiedTitle();
+		sourceClientStatus.setJustClickSpecifiedTitle(targetClientStatus.getJustClickSpecifiedTitle());
+		targetClientStatus.setJustClickSpecifiedTitle(justClickSpecifiedTitle);
+
+		int randomlyClickMoreLink = sourceClientStatus.getRandomlyClickMoreLink();
+		sourceClientStatus.setRandomlyClickMoreLink(targetClientStatus.getRandomlyClickMoreLink());
+		targetClientStatus.setRandomlyClickMoreLink(randomlyClickMoreLink);
+
+		int moveUp20 = sourceClientStatus.getMoveUp20();
+		sourceClientStatus.setMoveUp20(targetClientStatus.getMoveUp20());
+		targetClientStatus.setMoveUp20(moveUp20);
+
+		int waitTimeAfterOpenBaidu = sourceClientStatus.getWaitTimeAfterOpenBaidu();
+		sourceClientStatus.setWaitTimeAfterOpenBaidu(targetClientStatus.getWaitTimeAfterOpenBaidu());
+		targetClientStatus.setWaitTimeAfterOpenBaidu(waitTimeAfterOpenBaidu);
+
+		int waitTimeBeforeClick = sourceClientStatus.getWaitTimeBeforeClick();
+		sourceClientStatus.setWaitTimeBeforeClick(targetClientStatus.getWaitTimeBeforeClick());
+		targetClientStatus.setWaitTimeBeforeClick(waitTimeBeforeClick);
+
+		int waitTimeAfterClick = sourceClientStatus.getWaitTimeAfterClick();
+		sourceClientStatus.setWaitTimeAfterClick(targetClientStatus.getWaitTimeAfterClick());
+		targetClientStatus.setWaitTimeAfterClick(waitTimeAfterClick);
+
+		int maxUserCount = sourceClientStatus.getMaxUserCount();
+		sourceClientStatus.setMaxUserCount(targetClientStatus.getMaxUserCount());
+		targetClientStatus.setMaxUserCount(maxUserCount);
+	}
+
+	public void sendNotificationForRenewal() throws Exception{
+		String condition = " and DATE_ADD(fRenewalDate, INTERVAL -3 DAY ) < NOW() and fValid = 1 ORDER BY fRenewalDate ";
+		List<ClientStatus> clientStatuses = clientStatusDao.getClientStatusesForRenewal();
+
+		if(!Utils.isEmpty(clientStatuses)){
+			Config notificationEmail = configService.getConfig("NotificationEmail", "EmailAddress");
+			StringBuilder sb = new StringBuilder();
+			sb.append("<table><tr><td>客户端ID</td><td>续费日期</td></tr>");
+			for(ClientStatus clientStatus : clientStatuses){
+				sb.append(String.format("<tr><td>%s</td><td>%s</td>", clientStatus.getClientID(), Utils.formatDatetime(clientStatus.getRenewalDate(),
+						"yyyy-MM-dd")));
+			}
+			sb.append("</table>");
+			String[] emailAddresses = notificationEmail.getValue().split(";");
+			for(String emailAddress : emailAddresses) {
+				MailHelper.sendClientDownNotification(emailAddress, sb.toString(), "续费通知");
+			}
 		}
 	}
 }
