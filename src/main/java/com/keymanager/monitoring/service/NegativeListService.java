@@ -57,11 +57,7 @@ public class NegativeListService extends ServiceImpl<NegativeListDao, NegativeLi
             keywordNegativeCriteria.setNegativeList(negativeList);
             keywordNegativeCriteria.setNegative(true);
             negativeListDao.insert(negativeList);
-            try{
-                negativeListsSynchronizeService.negativeListsSynchronize(keywordNegativeCriteria);
-            }catch (Exception e){
-                logger.error(e.getMessage());
-            }
+            negativeListsSynchronizeService.negativeListsSynchronize(keywordNegativeCriteria);
         }
     }
 
@@ -99,11 +95,7 @@ public class NegativeListService extends ServiceImpl<NegativeListDao, NegativeLi
         keywordNegativeCriteria.setNegativeList(negativeList);
         keywordNegativeCriteria.setNegative(false);
         negativeListDao.deleteById(uuid);
-        try{
-            negativeListsSynchronizeService.negativeListsSynchronize(keywordNegativeCriteria);
-        }catch (Exception e){
-           logger.error(e.getMessage());
-        }
+        negativeListsSynchronizeService.negativeListsSynchronize(keywordNegativeCriteria);
 //        Boolean isDelete =
 //        if(isDelete){
 //
