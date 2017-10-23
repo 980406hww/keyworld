@@ -1,5 +1,6 @@
 package com.keymanager.monitoring.controller.rest.external;
 
+import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.BaseCriteria;
 import com.keymanager.monitoring.entity.CaptureRankJob;
 import com.keymanager.monitoring.entity.NegativeExcludeKeyword;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +28,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping(value = "/external/negativeKeyword")
-public class ExternalNegativeKeyword {
+public class ExternalNegativeKeyword extends SpringMVCBaseController {
     private static Logger logger = LoggerFactory.getLogger(ExternalNegativeKeyword.class);
 
     @Autowired
@@ -37,18 +39,21 @@ public class ExternalNegativeKeyword {
 
 
     @RequestMapping(value = "/searchNegativeKeywords", method = RequestMethod.GET)
-    public ResponseEntity<?> getCaptureRankJob() {
+    public ResponseEntity<?> getCaptureRankJob(HttpServletRequest request) throws Exception{
+        String userName = request.getParameter("username");
+        String password = request.getParameter("password");
         try {
-            Map<String,Object> NegativeKeyword=new HashMap<String,Object>();
-            List<NegativeKeyword> negativeKeywords = negativeKeywordService.selectList(null);
-            NegativeKeyword.put("negativeKeywords",negativeKeywords);
-            List<NegativeExcludeKeyword> negativeExcludeKeywords = negativeExcludeKeywordService.selectList(null);
-            NegativeKeyword.put("negativeExcludeKeywords",negativeExcludeKeywords);
-            return new ResponseEntity<Object>(NegativeKeyword,HttpStatus.BAD_REQUEST);
+            if (validUser(userName, password)) {
+                Map<String, Object> negativeKeywordMap = new HashMap<String, Object>();
+                List<NegativeKeyword> negativeKeywords = negativeKeywordService.selectList(null);
+                negativeKeywordMap.put("negativeKeywords", negativeKeywords);
+                List<NegativeExcludeKeyword> negativeExcludeKeywords = negativeExcludeKeywordService.selectList(null);
+                negativeKeywordMap.put("negativeExcludeKeywords", negativeExcludeKeywords);
+                return new ResponseEntity<Object>(negativeKeywordMap, HttpStatus.BAD_REQUEST);
+            }
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
-
 }
