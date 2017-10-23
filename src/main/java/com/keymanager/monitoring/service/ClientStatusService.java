@@ -246,7 +246,7 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 				clientStatus.setDisableStatistics(0);
 				clientStatus.setValid(true);
 				saveClientStatusByVPSFile(clientStatus, clientStatusInfo);
-				clientStatusDao.insert(clientStatus);
+				clientStatusDao.addClientStatusByVPSFile(clientStatus);
 			}
 		}
 	}
@@ -261,7 +261,6 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		clientStatus.setPassword(clientStatusInfo[4]);
 		clientStatus.setBroadbandAccount(clientStatusInfo[5]);
 		clientStatus.setBroadbandPassword(clientStatusInfo[6]);
-		clientStatus.setLastVisitTime(Utils.getCurrentTimestamp());
 		clientStatus.setClientIDPrefix(Utils.removeDigital(clientStatusInfo[0]));
 	}
 
