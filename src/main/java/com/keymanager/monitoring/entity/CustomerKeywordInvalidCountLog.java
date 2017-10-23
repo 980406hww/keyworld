@@ -8,8 +8,8 @@ import com.baomidou.mybatisplus.enums.IdType;
 import java.io.Serializable;
 import java.util.Date;
 
-@TableName(value = "t_ck_optimized_count_log")
-public class CustomerKeywordOptimizedCountLog implements Serializable {
+@TableName(value = "t_ck_invalid_count_log")
+public class CustomerKeywordInvalidCountLog implements Serializable {
 
 	private static final long serialVersionUID = 3922222059082125030L;
 
@@ -19,8 +19,8 @@ public class CustomerKeywordOptimizedCountLog implements Serializable {
 	@TableField(value = "fCustomerKeywordUuid")
 	private Long customerKeywordUuid;
 
-	@TableField(value = "fOptimizedCount")
-	private int optimizedCount;
+	@TableField(value = "fInvalidCount")
+	private int invalidCount;
 
 	@TableField(value = "fOptimizedDate")
 	private Date optimizedDate;
@@ -41,12 +41,12 @@ public class CustomerKeywordOptimizedCountLog implements Serializable {
 		this.customerKeywordUuid = customerKeywordUuid;
 	}
 
-	public int getOptimizedCount() {
-		return optimizedCount;
+	public int getInvalidCount() {
+		return invalidCount;
 	}
 
-	public void setOptimizedCount(int optimizedCount) {
-		this.optimizedCount = optimizedCount;
+	public void setInvalidCount(int invalidCount) {
+		this.invalidCount = invalidCount;
 	}
 
 	public Date getOptimizedDate() {

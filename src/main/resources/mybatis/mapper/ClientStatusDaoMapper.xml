@@ -132,6 +132,27 @@
         <if test="clientStatusCriteria.orderBy != null and clientStatusCriteria.orderBy != ''"> ORDER BY ${clientStatusCriteria.orderBy}</if>
     </select>
 
+    <select id="getClientStatusesForSwitchGroup" resultType="com.keymanager.monitoring.entity.ClientStatus">
+        SELECT
+        <include refid="selectCol" />
+        FROM
+        t_client_status cs
+        WHERE cs.fTerminalType = #{terminalType}
+        AND cs.fValid = 1
+        AND  cs.fAllowSwitchGroup = 1
+    </select>
+
+    <select id="getClientStatusesForRenewal" resultType="com.keymanager.monitoring.entity.ClientStatus">
+        SELECT
+            cs.fClientID as 'clientID',
+            cs.fRenewalDate AS "renewalDate"
+        FROM
+        t_client_status cs
+        WHERE DATE_ADD(fRenewalDate, INTERVAL -3 DAY ) &lt; NOW()
+        AND fValid = 1
+        ORDER BY fRenewalDate
+    </select>
+
     <select id="searchBadClientStatus" parameterType="com.keymanager.monitoring.criteria.ClientStatusCriteria" resultType="com.keymanager.monitoring.entity.ClientStatus">
         SELECT
         <include refid="selectCol" />

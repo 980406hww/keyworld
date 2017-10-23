@@ -463,16 +463,16 @@
                             contentType: false,
                             success: function (result) {
                                 if (result) {
-                                    $().toastmessage('showSuccessToast', "上传成功",true);
+                                    $().toastmessage('showSuccessToast', "上传成功");
 									/* window.location.reload();*/
                                 } else {
                                     $().toastmessage('showErrorToast', "上传失败");
                                 }
-                                $(this).dialog("close");
+                                $('#uploadVNCDialog').dialog("close");
                             },
                             error: function () {
                                 $().toastmessage('showErrorToast', "上传失败");
-                                $(this).dialog("close");
+                                $('#uploadVNCDialog').dialog("close");
                             }
                         });
                     }
@@ -532,11 +532,11 @@
                                 } else {
                                     $().toastmessage('showErrorToast', "上传失败");
                                 }
-                                $(this).dialog("close");
+                                $('#uploadVPSDialog').dialog("close");
                             },
                             error: function () {
                                 $().toastmessage('showErrorToast', "上传失败");
-                                $(this).dialog("close");
+                                $('#uploadVPSDialog').dialog("close");
                             }
                         });
                     }
@@ -650,7 +650,7 @@
 				type: 'POST',
 				success: function (result) {
 					if(result){
-                        $().toastmessage('showSuccessToast', "更新成功",true);
+                        $().toastmessage('showSuccessToast', "更新成功");
 						/* window.location.reload();*/
 					}else{
                         $().toastmessage('showErrorToast', "更新失败");
@@ -757,7 +757,7 @@
                 type: 'POST',
                 success: function (result) {
                     if(result){
-                        $().toastmessage('showSuccessToast', "更新成功",true);
+                        $().toastmessage('showSuccessToast', "更新成功");
 
                     }else{
                         $().toastmessage('showErrorToast', "更新失败");
@@ -986,16 +986,16 @@
                 type: 'POST',
 		        success: function (result) {
 		        	if(result){
-                        $().toastmessage('showSuccessToast', "更新成功",true);
+                        $().toastmessage('showSuccessToast', "更新成功");
 
                     }else{
                         $().toastmessage('showErrorToast', "更新失败");
 		        	}
-                    $(this).dialog("close");
+                    $("#changeSettingDialog").dialog("close");
 		        },
 		        error: function () {
                     $().toastmessage('showErrorToast', "更新失败");
-                    $(this).dialog("close");
+                    $("#changeSettingDialog").dialog("close");
 		        }
 		    });
 		}
@@ -1056,11 +1056,11 @@
                     }else{
                         $().toastmessage('showErrorToast', "更新失败");
 		        	}
-                    $(this).dialog("close");
+                    settingDialogDiv.dialog("close");
 		        },
 		        error: function () {
                     $().toastmessage('showErrorToast', "更新失败");
-                    $(this).dialog("close");
+                    settingDialogDiv.dialog("close");
 		        }
 		    });
 		}
@@ -1122,16 +1122,16 @@
 				type: 'POST',
 				success: function (result) {
 					if(result){
-                        $().toastmessage('showSuccessToast', "更新成功",true);
+                        $().toastmessage('showSuccessToast', "更新成功");
 
                     }else{
                         $().toastmessage('showErrorToast', "更新失败");
 					}
-                    $(this).dialog("close");
+                    settingDialogDiv.dialog("close");
 				},
 				error: function () {
                     $().toastmessage('showErrorToast', "更新失败");
-                    $(this).dialog("close");
+                    settingDialogDiv.dialog("close");
 				}
 			});
 		}

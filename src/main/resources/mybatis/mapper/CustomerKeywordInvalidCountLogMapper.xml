@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.CustomerKeywordInvalidCountLogDao">
+
+    <select id="addCustomerKeywordInvalidCountLog">
+        INSERT INTO t_ck_invalid_count_log(fCustomerKeywordUuid, fInvalidCount, fOptimizedDate)
+        SELECT fUuid AS 'fCustomerKeywordUuid', (fQueryCount - fOptimizedCount), DATE_SUB(CURRENT_DATE(),INTERVAL 1 DAY)
+        FROM t_customer_keyword
+        WHERE fStatus = 1
+        AND fType = 'qz'
+    </select>
+
+    <select id="findInvalidCustomerKeyword" resultType="java.lang.Long">
+        SELECT fCustomerKeywordUuid FROM t_ck_invalid_count_log
+        WHERE fInvalidCount > 6
+        AND fOptimizedDate >= DATE_SUB(CURDATE(), INTERVAL 3 DAY)
+        GROUP BY fCustomerKeywordUuid
+        HAVING count(*) = 3
+    </select>
+
+</mapper>

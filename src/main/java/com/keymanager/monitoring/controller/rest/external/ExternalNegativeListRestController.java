@@ -32,7 +32,7 @@ public class ExternalNegativeListRestController extends SpringMVCBaseController 
 	@RequestMapping(value = "/saveNegativeLists", method = RequestMethod.POST)
 	public ResponseEntity<?> saveNegativeLists(@RequestBody NegativeListCriteria negativeListCriteria, HttpServletRequest request) throws Exception{
 		try {
-			if (validUser(negativeListCriteria.getUserName(), negativeListCriteria.getUserName())) {
+			if (validUser(negativeListCriteria.getUserName(), negativeListCriteria.getPassword())) {
 				String terminalType = TerminalTypeMapping.getTerminalType(request);
 				for(NegativeList negativeList : negativeListCriteria.getNegativeLists()){
 					negativeList.setTerminalType(terminalType);
@@ -49,7 +49,7 @@ public class ExternalNegativeListRestController extends SpringMVCBaseController 
 	@RequestMapping(value = "/getSpecifiedKeywordNegativeLists", method = RequestMethod.POST)
 	public ResponseEntity<?> getSpecifiedKeywordNegativeLists(@RequestBody NegativeListCriteria negativeListCriteria, HttpServletRequest request) throws Exception{
 		try {
-			if (validUser(negativeListCriteria.getUserName(), negativeListCriteria.getUserName())) {
+			if (validUser(negativeListCriteria.getUserName(), negativeListCriteria.getPassword())) {
 				String terminalType = TerminalTypeMapping.getTerminalType(request);
 				List<NegativeList> negativeLists = negativeListService.getSpecifiedKeywordNegativeLists(terminalType, negativeListCriteria
 						.getKeyword());

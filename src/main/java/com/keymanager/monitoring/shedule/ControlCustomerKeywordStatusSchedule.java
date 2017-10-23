@@ -16,7 +16,7 @@ public class ControlCustomerKeywordStatusSchedule {
 	public void runTask(){
 		logger.info("============= "+" Control Customer Keyword Status Task "+"===================");
 		try {
-			//customerKeywordService.controlCustomerKeywordStatus();
+			customerKeywordService.controlCustomerKeywordStatus();
 		} catch (Exception e) {
 			logger.error("Control Customer Keyword Status " + e.getMessage());
 		}

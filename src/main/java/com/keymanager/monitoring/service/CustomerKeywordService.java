@@ -74,7 +74,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     private UserRoleService userRoleService;
 
     @Autowired
-    private CustomerKeywordOptimizedCountLogService customerKeywordOptimizedCountLogService;
+    private CustomerKeywordInvalidCountLogService customerKeywordInvalidCountLogService;
 
     @Autowired
     private CaptureRealUrlService captureRealUrlService;
@@ -455,7 +455,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
 
         if(configService.optimizationDateChanged()) {
-            customerKeywordOptimizedCountLogService.addCustomerKeywordOptimizedCountLog();
+            customerKeywordInvalidCountLogService.addCustomerKeywordInvalidCountLog();
             configService.updateOptimizationDateAsToday();
             customerKeywordDao.resetOptimizationInfo();
         }
@@ -592,7 +592,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     public void updateOptimizationResult(String terminalType, Long customerKeywordUuid, int count, String ip, String city, String clientID, String status, String freeSpace, String version){
         if(configService.optimizationDateChanged()) {
-            customerKeywordOptimizedCountLogService.addCustomerKeywordOptimizedCountLog();
+            customerKeywordInvalidCountLogService.addCustomerKeywordInvalidCountLog();
             configService.updateOptimizationDateAsToday();
             customerKeywordDao.resetOptimizationInfo();
         }
@@ -785,10 +785,10 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void controlCustomerKeywordStatus() {
-        List<Long> invalidCustomerKeywords = customerKeywordOptimizedCountLogService.findInvalidCustomerKeyword();
+        List<Long> invalidCustomerKeywords = customerKeywordInvalidCountLogService.findInvalidCustomerKeyword();
         do {
             List<Long> subCustomerKeywordUuids = invalidCustomerKeywords.subList(0, (invalidCustomerKeywords.size() > 500) ? 500 : invalidCustomerKeywords.size());
-            customerKeywordDao.updateCustomerKeywordStatus(subCustomerKeywordUuids, CustomerKeywordStatus.Inactive.getCode());
+            customerKeywordDao.deleteBatchIds(subCustomerKeywordUuids);
             invalidCustomerKeywords.removeAll(subCustomerKeywordUuids);
         } while (invalidCustomerKeywords.size() > 0);
     }
