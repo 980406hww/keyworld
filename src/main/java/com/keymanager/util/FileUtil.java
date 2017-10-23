@@ -258,4 +258,17 @@ public class FileUtil {
             ex.printStackTrace();
         }
     }
+
+    public static String getFilePath(){
+        String path = FileUtil.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+        path = path.substring(1,path.length());
+        int endIndex = path.lastIndexOf("/");
+        path = path.substring(0, endIndex);
+        try {
+            return path = java.net.URLDecoder.decode(path, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
 }

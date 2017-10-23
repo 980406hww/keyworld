@@ -23,7 +23,7 @@
                 return;
             }
             $.ajax({
-                url: '/external/user/forgetPassword',
+                url: '/internal/user/forgetPassword',
                 data: JSON.stringify(loginNameEmail),
                 headers: {
                     'Accept': 'application/json',
