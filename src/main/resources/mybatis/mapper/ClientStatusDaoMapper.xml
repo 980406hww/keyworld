@@ -225,6 +225,44 @@
         NOW())
     </insert>
 
+    <insert id="addClientStatusByVPSFile" parameterType="com.keymanager.monitoring.entity.ClientStatus">
+        INSERT INTO t_client_status
+        (fTerminalType,
+        fFreeSpace,
+        fClientID,
+        fClientIDPrefix,
+        fHost,
+        fPort,
+        fUserName,
+        fPassword,
+        fVPSBackendSystemComputerID,
+        fDisableStatistics,
+        fValid,
+        fBroadbandAccount,
+        fBroadbandPassword,
+        fLastVisitTime,
+        fLastSendNotificationTime,
+        fRenewalDate,
+        fCreateTime)
+        VALUES (#{clientStatus.terminalType},
+        #{clientStatus.freeSpace},
+        #{clientStatus.clientID},
+        #{clientStatus.clientIDPrefix},
+        #{clientStatus.host},
+        #{clientStatus.port},
+        #{clientStatus.userName},
+        #{clientStatus.password},
+        #{clientStatus.vpsBackendSystemComputerID},
+        #{clientStatus.disableStatistics},
+        #{clientStatus.valid},
+        #{clientStatus.broadbandAccount},
+        #{clientStatus.broadbandPassword},
+        NOW(),
+        NULL,
+        DATE_ADD(CURRENT_DATE(), INTERVAL - 1 DAY),
+        NOW())
+    </insert>
+
     <update id="updateOptimizationResult">
         UPDATE t_client_status
         SET fRestartOrderingTime = NOW(),
