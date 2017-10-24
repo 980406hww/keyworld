@@ -122,8 +122,8 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
     public ResponseEntity<?> updateKeywordIndex(@RequestBody BaiduIndexCriteria baiduIndexCriteria) throws Exception {
         try {
             if (validUser(baiduIndexCriteria.getUserName(), baiduIndexCriteria.getPassword())) {
-                CustomerKeyword customerKeyword = customerKeywordService.getCustomerKeywordsForCaptureIndex();
-                return new ResponseEntity<Object>(customerKeyword, HttpStatus.OK);
+                customerKeywordService.updateCustomerKeywordIndex(baiduIndexCriteria);
+                return new ResponseEntity<Object>(true, HttpStatus.OK);
             }
         }catch (Exception ex){
             logger.error(ex.getMessage());
