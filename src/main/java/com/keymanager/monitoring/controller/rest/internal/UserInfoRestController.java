@@ -1,4 +1,4 @@
-package com.keymanager.monitoring.controller.rest.external;
+package com.keymanager.monitoring.controller.rest.internal;
 
 import com.keymanager.monitoring.common.email.ForgetPasswordMailService;
 import com.keymanager.monitoring.common.shiro.PasswordHash;
@@ -6,6 +6,7 @@ import com.keymanager.monitoring.common.sms.MD5;
 import com.keymanager.monitoring.dao.UserInfoDao;
 import com.keymanager.monitoring.entity.UserInfo;
 import com.keymanager.monitoring.service.IUserInfoService;
+import com.keymanager.util.PropertiesUtil;
 import com.keymanager.util.Utils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,8 @@ import java.util.Map;
  * Created by shunshikj08 on 2017/9/30.
  */
 @RestController
-@RequestMapping(value = "/external/user")
-public class ExternalUserInfoRestController {
+@RequestMapping(value = "/internal/user")
+public class UserInfoRestController {
 
     @Autowired
     private UserInfoDao userInfoDao;
@@ -85,7 +86,7 @@ public class ExternalUserInfoRestController {
 
             if(null != userInfo) {
                 if(null != userInfo.getEmail() && userInfo.getEmail().equals(email)) {
-                    String mailContent = "<a href = 'http://pcsskjlocal.shunshikj.com/external/user/userValidate/"
+                    String mailContent = "<a href = '"+ PropertiesUtil.pcWebPath +"/internal/user/userValidate/"
                             + loginName + "/" + MD5.getMd5String(loginName) + "'>" + loginName+"</a>";
                     forgetPasswordMailService.sendForgetPasswordMail(loginName, email, mailContent);
                     userInfo.setResetPasswordApplicationTime(date);

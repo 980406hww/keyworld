@@ -24,7 +24,7 @@
             newUserInfo.password = password;
 			newUserInfo.loginName = $("#loginName").val();
             $.ajax({
-                url: '/external/user/resetPassword',
+                url: '/internal/user/resetPassword',
                 data: JSON.stringify(newUserInfo),
                 headers: {
                     'Accept': 'application/json',

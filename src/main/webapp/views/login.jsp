@@ -14,7 +14,7 @@
             if(loginName == null || loginName ==""){
                 loginName = "Enter a login name";
             }
-            window.location.href = "${path }/external/user/checkEmail/"+loginName;
+            window.location.href = "/internal/user/checkEmail/"+loginName;
         }
     </script>
 </head>
