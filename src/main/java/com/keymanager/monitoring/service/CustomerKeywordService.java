@@ -513,6 +513,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             if(clientStatus.getZhanneiPercent() != null) {
                 customerKeywordForOptimization.setZhanneiPercent(clientStatus.getZhanneiPercent());
             }
+            if(clientStatus.getZhanwaiPercent() != null) {
+                customerKeywordForOptimization.setZhanwaiPercent(clientStatus.getZhanwaiPercent());
+            }
             if(clientStatus.getBaiduSemPercent() != null) {
                 customerKeywordForOptimization.setBaiduSemPercent(clientStatus.getBaiduSemPercent());
             }

@@ -809,7 +809,7 @@
                         $("#changeSettingDialog").dialog({
                             resizable: false,
                             title: "设置",
-                            width: 610,
+                            width: 800,
 							maxHeight: 534,
                             modal: true,
                             buttons: [{
@@ -849,6 +849,9 @@
 			if(clientStatus.zhanneiPercent != null){
 				settingDialogDiv.find("#zhanneiPercent").val(clientStatus.zhanneiPercent);
 			}
+            if(clientStatus.zhanwaiPercent != null){
+                settingDialogDiv.find("#zhanwaiPercent").val(clientStatus.zhanwaiPercent);
+            }
 			if(clientStatus.dragPercent  != null){
 				settingDialogDiv.find("#dragPercent").val(clientStatus.dragPercent );
 			}
@@ -926,6 +929,7 @@
 			clientStatus.page = settingDialogDiv.find("#page").val();
 			clientStatus.dragPercent = settingDialogDiv.find("#dragPercent").val();
 			clientStatus.zhanneiPercent = settingDialogDiv.find("#zhanneiPercent").val();
+            clientStatus.zhanwaiPercent = settingDialogDiv.find("#zhanwaiPercent").val();
 			clientStatus.kuaizhaoPercent = settingDialogDiv.find("#kuaizhaoPercent").val();
 			clientStatus.baiduSemPercent = settingDialogDiv.find("#baiduSemPercent").val();
 			clientStatus.multiBrowser = settingDialogDiv.find("#multiBrowser").val();
@@ -1293,6 +1297,18 @@
 							</td>
 						</tr>
 						<tr>
+							<th>外链检索</th>
+							<td>
+								<select name="zhanwaiPercent" id="zhanwaiPercent">
+									<option value="0">0%</option>
+									<option value="1">10%</option>
+									<option value="2">30%</option>
+									<option value="3">50%</option>
+									<option value="4">100%</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
 							<th>快照点击比例</th>
 							<td>
 								<select name="kuaizhaoPercent" id="kuaizhaoPercent">
@@ -1349,54 +1365,54 @@
 								</select>
 							</td>
 						</tr>
+					</table>
+				</td>
+
+
+				<td>
+					<table id="td_2" style="font-size:12px">
 						<tr>
 							<th>主机</th>
 							<td>
-								<input type="text" name="host" id="host"/>
+								<input type="text" name="host" id="host"  style="width:110px;"/>
 							</td>
 						</tr>
 						<tr>
 							<th>端口</th>
 							<td>
-								<input type="text" name="port" id="port"/>
+								<input type="text" name="port" id="port"  style="width:110px;"/>
 							</td>
 						</tr>
 						<tr>
 							<th>VNC和操作系统用户名</th>
 							<td>
-								<input type="text" name="userName" id="userName" value="Administrator"/>
+								<input type="text" name="userName" id="userName" value="Administrator"  style="width:110px;"/>
 							</td>
 						</tr>
 						<tr>
 							<th>VNC和操作系统密码</th>
 							<td>
-								<input type="text" name="password" id="password" value="doshows123"/>
+								<input type="text" name="password" id="password" value="doshows123"  style="width:110px;"/>
 							</td>
 						</tr>
 						<tr>
 							<th>VPS后台系统电脑ID</th>
 							<td>
-								<input type="text" name="vpsBackendSystemComputerID" id="vpsBackendSystemComputerID"/>
+								<input type="text" name="vpsBackendSystemComputerID" id="vpsBackendSystemComputerID"  style="width:110px;"/>
 							</td>
 						</tr>
 						<tr>
 							<th>VPS后台系统密码</th>
 							<td>
-								<input type="text" name="vpsBackendSystemPassword" id="vpsBackendSystemPassword"/>
+								<input type="text" name="vpsBackendSystemPassword" id="vpsBackendSystemPassword"  style="width:110px;"/>
 							</td>
 						</tr>
 						<tr>
 							<th>最大用户数</th>
 							<td>
-								<input type="text" name="maxUserCount" id="maxUserCount" value="300"/>
+								<input type="text" name="maxUserCount" id="maxUserCount" value="300"  style="width:110px;"/>
 							</td>
 						</tr>
-					</table>
-				</td>
-
-
-				<td style="vertical-align:top;">
-					<table id="td_2" style="font-size:12px">
 						<tr>
 							<th>宽带账号</th>
 							<td>
@@ -1438,6 +1454,11 @@
 								<input type="text" name="slideDelayMaxTime" id="slideDelayMaxTime" value="1500"/>毫秒
 							</td>
 						</tr>
+					</table>
+				</td>
+
+				<td style="vertical-align:top;">
+					<table id="td_2" style="font-size:12px">
 						<tr>
 							<th>标题停留</th>
 							<td>

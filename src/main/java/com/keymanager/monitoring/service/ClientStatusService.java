@@ -148,6 +148,7 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 			oldClientStatus.setPage(clientStatus.getPage());
 			oldClientStatus.setDragPercent(clientStatus.getDragPercent());
 			oldClientStatus.setZhanneiPercent(clientStatus.getZhanneiPercent());
+			oldClientStatus.setZhanwaiPercent(clientStatus.getZhanwaiPercent());
 			oldClientStatus.setKuaizhaoPercent(clientStatus.getKuaizhaoPercent());
 			oldClientStatus.setBaiduSemPercent(clientStatus.getBaiduSemPercent());
 			oldClientStatus.setMultiBrowser(clientStatus.getMultiBrowser());
@@ -276,6 +277,7 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		}
 		clientStatus.setPageSize(0);
 		clientStatus.setZhanneiPercent(0);
+		clientStatus.setZhanwaiPercent(0);
 		clientStatus.setKuaizhaoPercent(0);
 		clientStatus.setBaiduSemPercent(0);
 		clientStatus.setDragPercent(0);
@@ -678,6 +680,10 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		Integer zhanneiPercent = sourceClientStatus.getZhanneiPercent();
 		sourceClientStatus.setZhanneiPercent(targetClientStatus.getZhanneiPercent());
 		targetClientStatus.setZhanneiPercent(zhanneiPercent);
+
+		Integer zhanwaiPercent = sourceClientStatus.getZhanwaiPercent();
+		sourceClientStatus.setZhanwaiPercent(targetClientStatus.getZhanwaiPercent());
+		targetClientStatus.setZhanwaiPercent(zhanwaiPercent);
 
 		String group = sourceClientStatus.getGroup();
 		sourceClientStatus.setGroup(targetClientStatus.getGroup());

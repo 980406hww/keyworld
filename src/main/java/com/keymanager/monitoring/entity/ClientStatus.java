@@ -4,12 +4,10 @@ import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.FieldStrategy;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.keymanager.util.Utils;
 import org.hibernate.validator.constraints.NotBlank;
 
 import java.sql.Timestamp;
-import java.util.Date;
 
 
 @TableName(value = "t_client_status")
@@ -64,6 +62,9 @@ public class ClientStatus {
 
 	@TableField(value = "fDragPercent")
 	private Integer dragPercent;
+
+	@TableField(value = "fZhanwaiPercent")
+	private Integer zhanwaiPercent;
 
 	@TableField(value = "fMultiBrowser")
 	private Integer multiBrowser;
@@ -842,5 +843,13 @@ public class ClientStatus {
 
 	public void setBroadbandPassword(String broadbandPassword) {
 		this.broadbandPassword = broadbandPassword;
+	}
+
+	public Integer getZhanwaiPercent() {
+		return zhanwaiPercent;
+	}
+
+	public void setZhanwaiPercent(Integer zhanwaiPercent) {
+		this.zhanwaiPercent = zhanwaiPercent;
 	}
 }
