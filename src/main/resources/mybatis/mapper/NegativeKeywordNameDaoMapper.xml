@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.NegativeKeywordNameDao">
+	<sql id="selectCol">
+		fUuid AS "uuid",
+		fGroup AS "group",
+		fName AS "name",
+		fRankQueried AS "rankQueried",
+		fRankCaptured AS "rankCaptured",
+		fRankExistNegative AS "rankExistNegative",
+		fRankNegativeKeyword AS "rankNegativeKeyword",
+		fRankNegativeCount AS "rankNegativeCount",
+		fOfficialUrl AS "officialUrl",
+		fOfficialUrlBak AS "officialUrlBak",
+		fEmail AS "email",
+		fSelectQueried AS "selectQueried",
+		fSelectCaptured AS "selectCaptured",
+		fSelectExistNegative AS "selectExistNegative",
+		fSelectNegativeKeyword AS "selectNegativeKeyword",
+		fRelevantQueried AS "relevantQueried",
+		fRelevantCaptured AS "relevantCaptured",
+		fRelevantExistNegative AS "relevantExistNegative",
+		fRelevantNegativeKeyword AS "relevantNegativeKeyword",
+		fPhoneQueried AS "phoneQueried",
+		fPhoneCaptured AS "phoneCaptured",
+		fPhoneRankNegativeCount AS "phoneRankNegativeCount",
+		fPhoneSelectExistNegative AS "phoneSelectExistNegative",
+		fPhoneSelectNegativeKeyword AS "phoneSelectNegativeKeyword",
+		fPhoneRelevantExistNegative AS "phoneRelevantExistNegative",
+		fPhoneRelevantNegativeKeyword AS "phoneRelevantNegativeKeyword",
+		fHandled AS "handled",
+		fUpdateTime AS "updateTime",
+		fCreateTime AS "createTime"
+	</sql>
+
+	<select id="searchNegativeKeywordNames" parameterType="com.keymanager.monitoring.criteria.NegativeKeywordNameCriteria" resultType="com.keymanager.monitoring.entity.NegativeKeywordName">
+		SELECT
+			<include refid="selectCol" />
+		FROM
+			t_negative_keyword_name n
+		WHERE 1 = 1
+		<if test="negativeKeywordNameCriteria.group != null and negativeKeywordNameCriteria.group != ''">AND n.fGroup like '%${negativeKeywordNameCriteria.group}%'</if>
+		<if test="negativeKeywordNameCriteria.isExistEmail != null and negativeKeywordNameCriteria.isExistEmail != ''">AND n.fEmail IS NOT NULL AND n.fEmail != '' </if>
+		ORDER BY fUpdateTime
+	</select>
+
+	<select id="getPCNegativeKeywordName" parameterType="java.lang.String" resultType="com.keymanager.monitoring.entity.NegativeKeywordName">
+		SELECT
+			<include refid="selectCol" />
+		FROM
+			t_negative_keyword_name n
+		WHERE
+			fRankQueried = 0 AND fRankCaptured = 0
+		<if test="group != 'All'"> AND n.fGroup = #{group} </if>
+		LIMIT 1
+	</select>
+
+	<select id="getPhoneNegativeKeywordName" parameterType="java.lang.String" resultType="com.keymanager.monitoring.entity.NegativeKeywordName">
+		SELECT
+			<include refid="selectCol" />
+		FROM
+			t_negative_keyword_name n
+		WHERE
+			fPhoneQueried = 0 AND fPhoneCaptured = 0
+		<if test="group != 'All'"> AND n.fGroup = #{group} </if>
+		LIMIT 1
+	</select>
+
+	<insert id="addNegativeKeywordName" parameterType="com.keymanager.monitoring.entity.NegativeKeywordName">
+		INSERT INTO t_negative_keyword_name(fUUid, fName, fGroup, fHandled, fUpdateTime, fCreateTime)
+		VALUES(NULL, #{negativeKeywordName.name}, #{negativeKeywordName.group}, #{negativeKeywordName.handled}, NOW(), NOW())
+	</insert>
+
+</mapper>

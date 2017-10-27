@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.NegativeKeywordNamePositionInfoDao">
+	<select id="findPositionInfoByUuid" parameterType="java.lang.Long" resultType="com.keymanager.monitoring.entity.NegativeKeywordNamePositionInfo">
+		SELECT
+			fUuid AS "uuid",
+			fNegativeKeywordNameUuid AS "negativeKeywordNameUuid",
+			fType AS "type",
+			fKeyword AS "keyword",
+			fPosition AS "position",
+			fTargetUrl AS "targetUrl",
+			fCreateTime AS "createTime"
+		FROM
+			t_negative_keyword_name_position_info n
+		WHERE
+			n.fNegativeKeywordNameUuid = #{uuid}
+	</select>
+</mapper>
