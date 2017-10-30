@@ -90,6 +90,10 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return page;
     }
 
+    public List<CustomerKeyword> searchCustomerKeywords(CustomerKeywordCriteria customerKeywordCriteria){
+        return customerKeywordDao.searchCustomerKeywords(customerKeywordCriteria);
+    }
+
     public String searchCustomerKeywordForCaptureTitle(String terminalType) throws Exception {
         QZCaptureTitleLog qzCaptureTitleLog = qzCaptureTitleLogService.getAvailableQZSetting(QZCaptureTitleLogStatusEnum.Processing.getValue(), terminalType);
         if (qzCaptureTitleLog == null) {

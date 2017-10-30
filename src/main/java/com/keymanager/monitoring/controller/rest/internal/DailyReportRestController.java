@@ -1,10 +1,13 @@
 package com.keymanager.monitoring.controller.rest.internal;
 
+import com.keymanager.monitoring.criteria.CustomerKeywordCriteria;
+import com.keymanager.monitoring.entity.CustomerKeyword;
 import com.keymanager.monitoring.excel.operator.CustomerKeywordDailyReportExcelWriter;
 import com.keymanager.manager.CustomerKeywordManager;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.DailyReport;
+import com.keymanager.monitoring.service.CustomerKeywordService;
 import com.keymanager.monitoring.service.CustomerService;
 import com.keymanager.monitoring.service.DailyReportService;
 import com.keymanager.util.TerminalTypeMapping;
@@ -33,6 +36,9 @@ public class DailyReportRestController extends SpringMVCBaseController {
 
 	@Autowired
 	private CustomerService customerService;
+
+	@Autowired
+	private CustomerKeywordService customerKeywordService;
 
 	@RequestMapping(value = "/triggerReportGeneration", method = RequestMethod.POST)
 	public ResponseEntity<?> triggerReportGeneration(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) throws Exception{
@@ -65,18 +71,21 @@ public class DailyReportRestController extends SpringMVCBaseController {
 	public ResponseEntity<?> downloadSingleCustomerReport(@PathVariable("customerUuid")Long customerUuid, HttpServletRequest request,
 														  HttpServletResponse response) throws Exception {
 		String terminalType = TerminalTypeMapping.getTerminalType(request);
-		CustomerKeywordManager customerKeywordManager = new CustomerKeywordManager();
-		String condition = String.format(" and ck.fStatus = 1 and ck.fCustomerUuid = %d and ck.fTerminalType = '%s' ", customerUuid, terminalType);
-		List<CustomerKeywordVO> customerKeywords = customerKeywordManager.searchCustomerKeywords("keyword", 10000, 1, condition,
-				"order by ck.fSequence, ck.fKeyword ", 1);
+
+		CustomerKeywordCriteria customerKeywordCriteria = new CustomerKeywordCriteria();
+		customerKeywordCriteria.setTerminalType(terminalType);
+		customerKeywordCriteria.setCustomerUuid(customerUuid);
+		customerKeywordCriteria.setStatus("1");
+		List<CustomerKeyword> customerKeywords = customerKeywordService.searchCustomerKeywords(customerKeywordCriteria);
 		if (!Utils.isEmpty(customerKeywords)) {
 			CustomerKeywordDailyReportExcelWriter excelWriter = new CustomerKeywordDailyReportExcelWriter(terminalType, customerUuid + "", 0);
-			excelWriter.writeDataToExcel(customerKeywords);
+
+			Customer customer = customerService.selectById(customerUuid);
+			excelWriter.writeDataToExcel(customerKeywords, customer.getContactPerson());
 
 			FileInputStream fis = null;
 			BufferedInputStream bis = null;
 			try {
-				Customer customer = customerService.selectById(customerUuid);
 				String fileName = customer.getContactPerson() + Utils.formatDatetime(Utils.getCurrentTimestamp(), "yyyy.MM.dd") + ".xls";
 				fileName = new String(fileName.getBytes("gb2312"), "ISO8859-1");
 				// 以流的形式下载文件。
