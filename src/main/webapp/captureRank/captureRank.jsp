@@ -56,7 +56,7 @@
                 showCustomerBottomDiv.find("#lastButton").attr("disabled", "disabled");
             }
         }
-        function initcustomerUuid(customerUuid) {
+        function initcustomerUuid() {
             var postData = {};
             postData.groupNames = $('#crawlRankingForm #groupNames').val().split(",");
             $.ajax({
@@ -119,7 +119,7 @@
                             el.click();
                         })
                         showCrawlRankingForm(data.uuid);
-                        initcustomerUuid(data.customerUuid);
+                        initcustomerUuid();
                         if (data.customerUuid != null && data.customerUuid != '') {
                             $('#crawlRankingForm #customerUuid').combogrid("setValue", data.customerUuid);
                         }
@@ -139,9 +139,8 @@
                     //设置选中值所对应的复选框为选中状态
                     var el = opts.finder.getEl(this, row[opts.valueField]);
                     el.find('input.combobox-checkbox')._propAttr('checked', true);
-                    if (groupNames != null) {
-                        initcustomerUuid();
-                    }
+
+                    initcustomerUuid();
                 },
                 onUnselect: function (row) {//不选中一个选项时调用
                     var opts = $(this).combobox('options');
@@ -150,9 +149,8 @@
 
                     var el = opts.finder.getEl(this, row[opts.valueField]);
                     el.find('input.combobox-checkbox')._propAttr('checked', false);
-                    if (groupNames != null) {
-                        initcustomerUuid();
-                    }
+
+                    initcustomerUuid();
                 }
             });
         }
@@ -189,7 +187,7 @@
             });
             if (uuid == null || uuid == '') {
                 $('#crawlRankingForm')[0].reset();
-                initGroupNames(groupNames);
+                initGroupNames();
                 initcustomerUuid();
                 $('#crawlRankingForm #rowNumber').spinner('setValue', 100);
                 $('#crawlRankingForm #captureInterval').spinner('setValue', 500);
