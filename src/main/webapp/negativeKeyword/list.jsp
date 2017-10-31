@@ -80,6 +80,7 @@
                         var formData = new FormData();
                         formData.append('group', $("#uploadTxtFileForm").find("#groupName").val());
                         formData.append('file', $("#uploadTxtFileDialog").find("#file")[0].files[0]);
+                        $('#uploadTxtFileDialog').dialog("close");
                         $.ajax({
                             url: '/internal/negativeKeywordName/uploadTxtFile',
                             type: 'POST',
@@ -93,7 +94,6 @@
                                 } else {
                                     $().toastmessage('showErrorToast', "上传失败");
                                 }
-                                $('#uploadTxtFileDialog').dialog("close");
                             },
                             error: function () {
                                 $().toastmessage('showErrorToast', "上传失败");
@@ -131,9 +131,9 @@
         };
 
         function toDateFormat (time) {
-            return time.getFullYear() + "-" +
-                (time.getMonth() + 1) + "-" +
-                time.getDate();
+            var m = (time.getMonth() + 1) > 9 ? (time.getMonth() + 1) : "0" + (time.getMonth() + 1);
+            var d = time.getDate() > 9 ? time.getDate() : "0" + time.getDate();
+            return time.getFullYear() + "-" + m + "-" + d;
         };
 
         <shiro:hasPermission name="/internal/negativeKeywordName/getNegativePositionInfo">
@@ -161,9 +161,9 @@
                             });
                             $("#positionInfoTable")[0].lastChild.appendChild(newTr);
                         });
-                        $("#positionInfoTable").dialog({
+                        $("#positionInfoDiv").dialog({
                             resizable: false,
-                            maxWidth:420,
+                            minWidth:530,
                             maxHeight:350,
                             title:"排名信息",
                             modal: true,
@@ -171,11 +171,11 @@
                                 text: '取消',
                                 iconCls: 'icon-cancel',
                                 handler: function () {
-                                    $("#positionInfoTable").dialog("close");
+                                    $("#positionInfoDiv").dialog("close");
                                 }
                             }]
                         });
-                        $("#positionInfoTable").window("resize",{top:$(document).scrollTop() + 100});
+                        $("#positionInfoDiv").window("resize",{top:$(document).scrollTop() + 100});
                     } else {
                         alert("暂无数据");
                     }
@@ -198,7 +198,7 @@
             <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
             <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
             分组名称:<input type="text" name="group" value="${negativeKeywordNameCriteria.group}">&nbsp;&nbsp;
-            按Email:<c:choose>
+            包含Email:<c:choose>
                 <c:when test="${negativeKeywordNameCriteria.isExistEmail != null and negativeKeywordNameCriteria.isExistEmail != ''}">
                     <input type="radio" name="isExistEmail" checked="checked" value="true" />是&nbsp;&nbsp;
                     <input type="radio" name="isExistEmail" value="" />否
@@ -294,14 +294,14 @@
 </div>
 
 <div id="positionInfoDiv" class="easyui-dialog" style="left: 40%;" >
-    <table id="positionInfoTable" border="1" cellpadding="10" style="font-size: 12px;background-color: white;border-collapse: collapse;margin: 10px 10px;width:92%;">
+    <table id="positionInfoTable" border="1" cellpadding="10" style="font-size: 12px;background-color: white;border-collapse: collapse;margin: 10px 10px;width:96%;">
         <tr>
-            <td>编号</td>
-            <td>类型</td>
-            <td>关键字</td>
-            <td>排名</td>
-            <td>目标网址</td>
-            <td>生成时间</td>
+            <td width="45">编号</td>
+            <td width="30">类型</td>
+            <td width="40">关键字</td>
+            <td width="30">排名</td>
+            <td width="200">目标网址</td>
+            <td width="140">生成时间</td>
         </tr>
     </table>
 </div>

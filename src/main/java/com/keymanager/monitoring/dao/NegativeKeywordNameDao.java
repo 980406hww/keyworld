@@ -19,4 +19,8 @@ public interface NegativeKeywordNameDao extends BaseMapper<NegativeKeywordName> 
     NegativeKeywordName getPCNegativeKeywordName(@Param("group") String group);
 
     NegativeKeywordName getPhoneNegativeKeywordName(@Param("group") String group);
+
+    List<String> getNegativeGroup();
+
+    void insertBatchByList(@Param("group")String group, @Param("companyNames")List<String> companyNames);
 }

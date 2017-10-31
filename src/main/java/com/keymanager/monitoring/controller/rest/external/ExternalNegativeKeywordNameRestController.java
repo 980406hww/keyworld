@@ -3,12 +3,14 @@ package com.keymanager.monitoring.controller.rest.external;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.NegativeKeywordNameCriteria;
+import com.keymanager.monitoring.entity.NegativeExcludeKeyword;
+import com.keymanager.monitoring.entity.NegativeKeyword;
 import com.keymanager.monitoring.entity.NegativeKeywordName;
 import com.keymanager.monitoring.entity.NegativeKeywordNamePositionInfo;
-import com.keymanager.monitoring.service.NegativeKeywordNamePositionInfoService;
-import com.keymanager.monitoring.service.NegativeKeywordNameService;
+import com.keymanager.monitoring.service.*;
 import com.keymanager.monitoring.vo.KeywordSimpleVO;
 import com.keymanager.monitoring.vo.NegativeInfoVO;
+import com.keymanager.monitoring.vo.NegativeSupportingDataVO;
 import com.keymanager.util.Utils;
 import org.apache.ibatis.annotations.ResultMap;
 import org.slf4j.Logger;
@@ -33,6 +35,15 @@ public class ExternalNegativeKeywordNameRestController extends SpringMVCBaseCont
     @Autowired
     private NegativeKeywordNamePositionInfoService negativeKeywordNamePositionInfoService;
 
+    @Autowired
+    private NegativeSiteContactKeywordService negativeSiteContactKeywordService;
+
+    @Autowired
+    private NegativeKeywordService negativeKeywordService;
+
+    @Autowired
+    private NegativeExcludeKeywordService negativeExcludeKeywordService;
+
     @RequestMapping(value = "/getNegativeKeywordName" , method = RequestMethod.POST)
     public ResponseEntity<?> getNegativeKeywordName(@RequestBody Map<String, Object> requestMap) {
         try {
@@ -55,14 +66,28 @@ public class ExternalNegativeKeywordNameRestController extends SpringMVCBaseCont
     public ResponseEntity<?> updateNegativeInfo(@RequestBody Map<String, Object> requestMap) {
         try {
             String type = (String) requestMap.get("type");
-            NegativeInfoVO negativeInfoVO = (NegativeInfoVO) requestMap.get("data");
+            ObjectMapper mapper = new ObjectMapper();
+            NegativeInfoVO negativeInfoVO = (NegativeInfoVO)mapper.readValue((String)requestMap.get("data"), NegativeInfoVO.class);
             negativeKeywordNamePositionInfoService.insertPositionInfo(type, negativeInfoVO);
             negativeKeywordNameService.updateOfficialUrlAndEmail(negativeInfoVO);
             negativeKeywordNameService.updateNegativeKeywordNameByType(type, negativeInfoVO);
-            // TODO
-
-
             return new ResponseEntity<Object>(true, HttpStatus.OK);
+        }catch (Exception ex){
+            logger.error(ex.getMessage());
+        }
+        return new ResponseEntity<Object>("",HttpStatus.BAD_REQUEST);
+    }
+
+    @RequestMapping(value = "/getNegativeSupportingData" , method = RequestMethod.GET)
+    public ResponseEntity<?> getNegativeSupportingData() {
+        try {
+            NegativeSupportingDataVO negativeSupportingDataVO = new NegativeSupportingDataVO();
+            negativeSupportingDataVO.setContactKeywords(negativeSiteContactKeywordService.getContactKeyword());
+            negativeSupportingDataVO.setExcludeKeywords(negativeExcludeKeywordService.getNegativeExcludeKeyword());
+            negativeSupportingDataVO.setNegativeGroups(negativeKeywordNameService.getNegativeGroup());
+            negativeSupportingDataVO.setNegativeKeywords(negativeKeywordService.getNegativeKeyword());
+            ObjectMapper mapper = new ObjectMapper();
+            return new ResponseEntity<Object>(mapper.writeValueAsString(negativeSupportingDataVO), HttpStatus.OK);
         }catch (Exception ex){
             logger.error(ex.getMessage());
         }

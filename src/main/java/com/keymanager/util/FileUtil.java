@@ -31,7 +31,7 @@ public class FileUtil {
                 BufferedReader bufferedReader = new BufferedReader(read);
                 String lineTxt = null;
                 while((lineTxt = bufferedReader.readLine()) != null){
-                    contents.add(lineTxt);
+                    contents.add(lineTxt.trim());
                 }
                 read.close();
                 return contents;

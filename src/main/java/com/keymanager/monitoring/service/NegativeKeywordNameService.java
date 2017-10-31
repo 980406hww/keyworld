@@ -12,6 +12,7 @@ import com.keymanager.monitoring.enums.TerminalTypeEnum;
 import com.keymanager.monitoring.vo.NegativeInfoVO;
 import com.keymanager.util.FileUtil;
 import com.keymanager.util.Utils;
+import com.keymanager.util.common.StringUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -43,14 +44,27 @@ public class NegativeKeywordNameService extends ServiceImpl<NegativeKeywordNameD
         return negativeKeywordNameDao.searchNegativeKeywordNames(negativeKeywordNameCriteria);
     }
 
+    public List<String> getNegativeGroup() {
+        return negativeKeywordNameDao.getNegativeGroup();
+    }
+
     public void insertBatchByTxtFile(File file, String group) throws Exception {
         List<String> companyNames = FileUtil.readTxtFile(file,"UTF-8");
-        for (String companyName : companyNames) {
-            NegativeKeywordName negativeKeywordName = new NegativeKeywordName();
-            negativeKeywordName.setGroup(group);
-            negativeKeywordName.setName(companyName);
-            negativeKeywordName.setHandled(false);
-            negativeKeywordNameDao.addNegativeKeywordName(negativeKeywordName);
+        int rowCount = 5000;
+        int listSize = companyNames.size();
+        if(!Utils.isEmpty(companyNames)) {
+            if(listSize < rowCount) {
+                negativeKeywordNameDao.insertBatchByList(group, companyNames);
+            } else {
+                int insertCount = listSize / rowCount;
+                for(int i = 0; i < insertCount; i++) {
+                    negativeKeywordNameDao.insertBatchByList(group, companyNames.subList(0, rowCount));
+                    companyNames.subList(0, rowCount).clear();
+                }
+                if(!Utils.isEmpty(companyNames)) {
+                    negativeKeywordNameDao.insertBatchByList(group, companyNames);
+                }
+            }
         }
     }
 
@@ -95,14 +109,57 @@ public class NegativeKeywordNameService extends ServiceImpl<NegativeKeywordNameD
     }
 
     public void updateNegativeKeywordNameByType(String type, NegativeInfoVO negativeInfoVO) {
-        int negativeCount = 0;
+        int negativeCount = negativeInfoVO.getNegativeInfos().size();
         NegativeKeywordName negativeKeywordName = negativeKeywordNameDao.selectById(negativeInfoVO.getUuid());
-        // TODO
         if(TerminalTypeEnum.PC.name().equals(type)) {
-            negativeKeywordName.setRankExistNegative(negativeInfoVO.getNegativeInfos().size() > 0 ? true : false);
+            negativeKeywordName.setRankExistNegative(negativeCount > 0 ? true : false);
+            negativeKeywordName.setRankNegativeCount(negativeCount);
 
+            if(StringUtils.isBlank(negativeInfoVO.getOfficialWebsiteUrl())) {
+                negativeKeywordName.setOfficialUrl(null);
+            } else {
+                negativeKeywordName.setOfficialUrl(negativeInfoVO.getOfficialWebsiteUrl());
+            }
+
+            if(StringUtils.isBlank(negativeInfoVO.getEmailAddress())) {
+                negativeKeywordName.setEmail(null);
+            } else {
+                negativeKeywordName.setEmail(negativeInfoVO.getEmailAddress());
+            }
+
+            if(StringUtils.isBlank(negativeInfoVO.getSuggestionNegativeKeyword())) {
+                negativeKeywordName.setSelectExistNegative(false);
+                negativeKeywordName.setSelectNegativeKeyword(null);
+            } else {
+                negativeKeywordName.setSelectExistNegative(true);
+                negativeKeywordName.setSelectNegativeKeyword(negativeInfoVO.getSuggestionNegativeKeyword());
+            }
+
+            if(StringUtils.isBlank(negativeInfoVO.getRelativeNegativeKeyword())) {
+                negativeKeywordName.setRelevantExistNegative(false);
+                negativeKeywordName.setRelevantNegativeKeyword(null);
+            } else {
+                negativeKeywordName.setRelevantExistNegative(true);
+                negativeKeywordName.setRelevantNegativeKeyword(negativeInfoVO.getRelativeNegativeKeyword());
+            }
         } else {
+            negativeKeywordName.setPhoneRankNegativeCount(negativeCount);
+            if(StringUtils.isBlank(negativeInfoVO.getSuggestionNegativeKeyword())) {
+                negativeKeywordName.setPhoneSelectExistNegative(false);
+                negativeKeywordName.setPhoneSelectNegativeKeyword(null);
+            } else {
+                negativeKeywordName.setPhoneSelectExistNegative(true);
+                negativeKeywordName.setPhoneSelectNegativeKeyword(negativeInfoVO.getSuggestionNegativeKeyword());
+            }
 
+            if(StringUtils.isBlank(negativeInfoVO.getRelativeNegativeKeyword())) {
+                negativeKeywordName.setPhoneRelevantExistNegative(false);
+                negativeKeywordName.setPhoneRelevantNegativeKeyword(null);
+            } else {
+                negativeKeywordName.setPhoneRelevantExistNegative(true);
+                negativeKeywordName.setPhoneRelevantNegativeKeyword(negativeInfoVO.getRelativeNegativeKeyword());
+            }
         }
+        negativeKeywordNameDao.updateById(negativeKeywordName);
     }
 }
