@@ -61,7 +61,8 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		clientStatus.setVersion(version);
 		clientStatus.setCity(city);
 		clientStatus.setClientIDPrefix(Utils.removeDigital(clientID));
-		clientStatusDao.addSummaryClientStatus(clientStatus);
+		supplementDefaultValue(clientStatus);
+		clientStatusDao.insert(clientStatus);
 	}
 
 	public void updatePageNo(String clientID, int pageNo){
@@ -147,6 +148,7 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 			oldClientStatus.setPage(clientStatus.getPage());
 			oldClientStatus.setDragPercent(clientStatus.getDragPercent());
 			oldClientStatus.setZhanneiPercent(clientStatus.getZhanneiPercent());
+			oldClientStatus.setZhanwaiPercent(clientStatus.getZhanwaiPercent());
 			oldClientStatus.setKuaizhaoPercent(clientStatus.getKuaizhaoPercent());
 			oldClientStatus.setBaiduSemPercent(clientStatus.getBaiduSemPercent());
 			oldClientStatus.setMultiBrowser(clientStatus.getMultiBrowser());
@@ -246,7 +248,8 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 				clientStatus.setDisableStatistics(0);
 				clientStatus.setValid(true);
 				saveClientStatusByVPSFile(clientStatus, clientStatusInfo);
-				clientStatusDao.addClientStatusByVPSFile(clientStatus);
+				supplementDefaultValue(clientStatus);
+				clientStatusDao.insert(clientStatus);
 			}
 		}
 	}
@@ -262,6 +265,48 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		clientStatus.setBroadbandAccount(clientStatusInfo[5]);
 		clientStatus.setBroadbandPassword(clientStatusInfo[6]);
 		clientStatus.setClientIDPrefix(Utils.removeDigital(clientStatusInfo[0]));
+	}
+
+	private void supplementDefaultValue(ClientStatus clientStatus){
+		clientStatus.setAllowSwitchGroup(0);
+		clientStatus.setDisableStatistics(0);
+		if(TerminalTypeEnum.PC.name().equalsIgnoreCase(clientStatus.getTerminalType())){
+			clientStatus.setPage(5);
+		}else{
+			clientStatus.setPage(3);
+		}
+		clientStatus.setPageSize(0);
+		clientStatus.setZhanneiPercent(0);
+		clientStatus.setZhanwaiPercent(0);
+		clientStatus.setKuaizhaoPercent(0);
+		clientStatus.setBaiduSemPercent(0);
+		clientStatus.setDragPercent(0);
+		clientStatus.setMultiBrowser(0);
+		clientStatus.setClearCookie(0);
+		clientStatus.setEntryPageMinCount(0);
+		clientStatus.setEntryPageMaxCount(0);
+		clientStatus.setPageRemainMinTime(3000);
+		clientStatus.setPageRemainMaxTime(5000);
+		clientStatus.setInputDelayMinTime(50);
+		clientStatus.setInputDelayMaxTime(80);
+		clientStatus.setSlideDelayMinTime(700);
+		clientStatus.setSlideDelayMaxTime(1500);
+		clientStatus.setTitleRemainMinTime(1000);
+		clientStatus.setTitleRemainMaxTime(3000);
+		clientStatus.setOptimizeKeywordCountPerIP(1);
+		clientStatus.setMaxUserCount(300);
+		clientStatus.setWaitTimeAfterOpenBaidu(1000);
+		clientStatus.setWaitTimeBeforeClick(1000);
+		clientStatus.setWaitTimeAfterClick(5000);
+//		clientStatus.setOneIPOneUser(1);
+//		clientStatus.setRandomlyClickNoResult(1);
+		clientStatus.setJustVisitSelfPage(1);
+		clientStatus.setSleepPer2Words(1);
+		clientStatus.setSupportPaste(1);
+		clientStatus.setMoveRandomly(1);
+		clientStatus.setClearLocalStorage(1);
+
+		clientStatus.setLastVisitTime(Utils.getCurrentTimestamp());;
 	}
 
 	public void getVNCFileInfo(String terminalType) throws Exception {
@@ -635,6 +680,10 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		Integer zhanneiPercent = sourceClientStatus.getZhanneiPercent();
 		sourceClientStatus.setZhanneiPercent(targetClientStatus.getZhanneiPercent());
 		targetClientStatus.setZhanneiPercent(zhanneiPercent);
+
+		Integer zhanwaiPercent = sourceClientStatus.getZhanwaiPercent();
+		sourceClientStatus.setZhanwaiPercent(targetClientStatus.getZhanwaiPercent());
+		targetClientStatus.setZhanwaiPercent(zhanwaiPercent);
 
 		String group = sourceClientStatus.getGroup();
 		sourceClientStatus.setGroup(targetClientStatus.getGroup());

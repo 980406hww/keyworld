@@ -1066,7 +1066,7 @@
                                     </shiro:hasPermission>
                                 </c:if>
                             </td>
-                            <td><span id="dailyReportSpan"></span></td>
+                            <td>&nbsp;&nbsp;<span id="dailyReportSpan"></span></td>
                         </tr>
                     </table>
                 </form>

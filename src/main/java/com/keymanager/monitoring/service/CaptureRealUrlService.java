@@ -18,6 +18,7 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 
 @Service
 public class CaptureRealUrlService {
@@ -57,6 +58,7 @@ public class CaptureRealUrlService {
 
     public String fetchRealUrl(String sourceUrl, int retryCount) throws IOException {
         System.out.println(sourceUrl);
+        String finalUrl = "";
         try {
             DefaultHttpClient client = new DefaultHttpClient();
             HttpParams params = client.getParams();
@@ -67,13 +69,15 @@ public class CaptureRealUrlService {
             if (statusCode == 301 || statusCode == 302) {
                 Header hs = response.getFirstHeader("Location");
                 String tmpUrl = hs.getValue();
-                if (tmpUrl.indexOf("http") == -1) {
-                    return sourceUrl;
+                if (tmpUrl.indexOf("http") == -1 || sourceUrl.equals(tmpUrl)) {
+                    finalUrl = sourceUrl;
+                }else {
+                    finalUrl = (retryCount < 2) ? fetchRealUrl(tmpUrl, ++retryCount) : sourceUrl;
                 }
-                return (retryCount < 2) ? fetchRealUrl(tmpUrl, ++retryCount) : sourceUrl;
             } else {
-                return sourceUrl;
+                finalUrl = sourceUrl;
             }
+            return URLDecoder.decode(finalUrl, "UTF-8");
         }catch (Exception ex){
             return sourceUrl;
         }

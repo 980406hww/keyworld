@@ -90,6 +90,10 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return page;
     }
 
+    public List<CustomerKeyword> searchCustomerKeywords(CustomerKeywordCriteria customerKeywordCriteria){
+        return customerKeywordDao.searchCustomerKeywords(customerKeywordCriteria);
+    }
+
     public String searchCustomerKeywordForCaptureTitle(String terminalType) throws Exception {
         QZCaptureTitleLog qzCaptureTitleLog = qzCaptureTitleLogService.getAvailableQZSetting(QZCaptureTitleLogStatusEnum.Processing.getValue(), terminalType);
         if (qzCaptureTitleLog == null) {
@@ -512,6 +516,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             }
             if(clientStatus.getZhanneiPercent() != null) {
                 customerKeywordForOptimization.setZhanneiPercent(clientStatus.getZhanneiPercent());
+            }
+            if(clientStatus.getZhanwaiPercent() != null) {
+                customerKeywordForOptimization.setZhanwaiPercent(clientStatus.getZhanwaiPercent());
             }
             if(clientStatus.getBaiduSemPercent() != null) {
                 customerKeywordForOptimization.setBaiduSemPercent(clientStatus.getBaiduSemPercent());

@@ -1,13 +1,13 @@
 package com.keymanager.monitoring.excel.operator;
 
-import com.keymanager.monitoring.excel.definition.CustomerKeywordDailyReportDefinition;
 import com.keymanager.manager.CustomerManager;
+import com.keymanager.monitoring.entity.Customer;
+import com.keymanager.monitoring.entity.CustomerKeyword;
+import com.keymanager.monitoring.excel.definition.CustomerKeywordDailyReportDefinition;
 import com.keymanager.util.FileUtil;
 import com.keymanager.util.Utils;
 import com.keymanager.util.excel.ExcelWriteException;
 import com.keymanager.util.excel.JXLExcelWriter;
-import com.keymanager.value.CustomerKeywordVO;
-import com.keymanager.value.CustomerVO;
 import jxl.Sheet;
 import jxl.read.biff.BiffException;
 
@@ -73,7 +73,7 @@ public class CustomerKeywordDailyReportExcelWriter {
 		return new File(path);
 	}
 
-	private void writeDailyDetail(List<CustomerKeywordVO> views) throws Exception {
+	private void writeDailyDetail(List<CustomerKeyword> views) throws Exception {
 		if(!Utils.isEmpty(views)){
 			String sheetName = Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "";
 			createOrReplaceSheet(sheetName, writer.getNumberOfSheets());
@@ -81,7 +81,7 @@ public class CustomerKeywordDailyReportExcelWriter {
 			int rowIndex = 0;
 			double totalFee = 0;
 			writeDailyTitle(rowIndex++);
-			for(CustomerKeywordVO view : views){
+			for(CustomerKeyword view : views){
 				if(!"stop".equals(view.getOptimizeGroupName())) {
 					double todayPrice = writeDailyRow(rowIndex++, view);
 					totalFee = totalFee + todayPrice;
@@ -127,23 +127,23 @@ public class CustomerKeywordDailyReportExcelWriter {
 		todayPriceWidth = calculateWidth(todayPriceWidth, CustomerKeywordDailyReportDefinition.TodayPrice.getTitle());
 	}
 	
-	private double writeDailyRow(int rowIndex, CustomerKeywordVO view) throws ExcelWriteException{
-		writer.addLabelCell(CustomerKeywordDailyReportDefinition.Sequence.getColumnIndex(), rowIndex, view.getSequence());
+	private double writeDailyRow(int rowIndex, CustomerKeyword view) throws ExcelWriteException{
+		writer.addLabelCell(CustomerKeywordDailyReportDefinition.Sequence.getColumnIndex(), rowIndex, view.getSequence() == null ? "" : view.getSequence() + "");
 		writer.addLabelCell(CustomerKeywordDailyReportDefinition.Keyword.getColumnIndex(), rowIndex, view.getKeyword());
 		keywordWidth = calculateWidth(keywordWidth, view.getKeyword());
 		writer.addLabelCell(CustomerKeywordDailyReportDefinition.URL.getColumnIndex(), rowIndex, view.getUrl());
 		urlWidth = calculateWidth(keywordWidth, view.getUrl());
-		if(view.getCurrentPosition() > 0) {
+		if(view.getCurrentPosition() != null  && view.getCurrentPosition() > 0) {
 			writer.addLabelCell(CustomerKeywordDailyReportDefinition.CurrentPosition.getColumnIndex(), rowIndex, view.getCurrentPosition());
 		}
-		writer.addLabelCell(CustomerKeywordDailyReportDefinition.Price1.getColumnIndex(), rowIndex, view.getPositionFirstFee());
-		writer.addLabelCell(CustomerKeywordDailyReportDefinition.Price4.getColumnIndex(), rowIndex, view.getPositionForthFee());
-		writer.addLabelCell(CustomerKeywordDailyReportDefinition.Index.getColumnIndex(), rowIndex, view.getCurrentIndexCount());
+		writer.addLabelCell(CustomerKeywordDailyReportDefinition.Price1.getColumnIndex(), rowIndex, view.getPositionFirstFeeString());
+		writer.addLabelCell(CustomerKeywordDailyReportDefinition.Price4.getColumnIndex(), rowIndex, view.getPositionForthFeeString());
+		writer.addLabelCell(CustomerKeywordDailyReportDefinition.Index.getColumnIndex(), rowIndex, view.getCurrentIndexCount() == null ? 0 : view.getCurrentIndexCount());
 		double todayPrice = 0;
-		if(view.getCurrentPosition() > 0) {
-			if (view.getCurrentPosition() < 4) {
+		if(view.getCurrentPosition() != null && view.getCurrentPosition() > 0) {
+			if (view.getCurrentPosition() < 4 && view.getPositionFirstFee() != null) {
 				todayPrice = view.getPositionFirstFee();
-			}else if(view.getCurrentPosition() <= 5){
+			}else if(view.getCurrentPosition() <= 5 && view.getPositionForthFee() != null){
 				todayPrice = view.getPositionForthFee();
 			}
 			if(todayPrice > 0) {
@@ -178,14 +178,14 @@ public class CustomerKeywordDailyReportExcelWriter {
 		return existWidth;
 	}
 
-	private void writeMonthSummary(List<CustomerKeywordVO> views) throws Exception {
+	private void writeMonthSummary(List<CustomerKeyword> views) throws Exception {
 		if(!Utils.isEmpty(views)){
 			String sheetName = (Calendar.getInstance().get(Calendar.MONTH) + 1) + "月";
 			createOrReplaceSheet(sheetName, 0);
 
 			int rowIndex = 0;
 			writeMonthSummaryTitle(rowIndex++);
-			for(CustomerKeywordVO view : views){
+			for(CustomerKeyword view : views){
 				writeMonthRow(rowIndex++, view);
 			}
 
@@ -216,26 +216,24 @@ public class CustomerKeywordDailyReportExcelWriter {
 		indexWidth = calculateWidth(keywordWidth, CustomerKeywordDailyReportDefinition.Index.getTitle());
 	}
 
-	private void writeMonthRow(int rowIndex, CustomerKeywordVO view) throws ExcelWriteException{
-		writer.addLabelCell(CustomerKeywordDailyReportDefinition.Sequence.getColumnIndex(), rowIndex, view.getSequence());
+	private void writeMonthRow(int rowIndex, CustomerKeyword view) throws ExcelWriteException{
+		writer.addLabelCell(CustomerKeywordDailyReportDefinition.Sequence.getColumnIndex(), rowIndex, view.getSequence() == null ? "" : view.getSequence() + "");
 		writer.addLabelCell(CustomerKeywordDailyReportDefinition.Keyword.getColumnIndex(), rowIndex, view.getKeyword());
 		keywordWidth = calculateWidth(keywordWidth, view.getKeyword());
 		writer.addLabelCell(CustomerKeywordDailyReportDefinition.URL.getColumnIndex(), rowIndex, view.getUrl());
 		urlWidth = calculateWidth(keywordWidth, view.getUrl());
-		writer.addLabelCell(CustomerKeywordDailyReportDefinition.Price1.getColumnIndex(), rowIndex, view.getPositionFirstFee());
-		writer.addLabelCell(CustomerKeywordDailyReportDefinition.Price4.getColumnIndex(), rowIndex, view.getPositionForthFee());
-		writer.addLabelCell(CustomerKeywordDailyReportDefinition.Index.getColumnIndex(), rowIndex, view.getCurrentIndexCount());
+		writer.addLabelCell(CustomerKeywordDailyReportDefinition.Price1.getColumnIndex(), rowIndex, view.getPositionFirstFeeString());
+		writer.addLabelCell(CustomerKeywordDailyReportDefinition.Price4.getColumnIndex(), rowIndex, view.getPositionForthFeeString());
+		writer.addLabelCell(CustomerKeywordDailyReportDefinition.Index.getColumnIndex(), rowIndex, view.getCurrentIndexCount() == null ? 0 : view.getCurrentIndexCount());
 	}
 
-	public void writeDataToExcel(List<CustomerKeywordVO> views) throws Exception {
+	public void writeDataToExcel(List<CustomerKeyword> views, String contactPerson) throws Exception {
 		writeDailyDetail(views);
 		writeMonthSummary(views);
 
 		saveAs(dailyReportFileName);
 		if(dailyReportUuid > 0) {
-			CustomerManager customerManager = new CustomerManager();
-			CustomerVO customerVO = customerManager.getCustomerByUuid("keyword", customerUuid);
-			String fileName = "dailyreport/" + dailyReportUuid + "/" + customerVO.getContactPerson() + "_" + Utils.formatDatetime(Utils
+			String fileName = "dailyreport/" + dailyReportUuid + "/" + contactPerson + "_" + Utils.formatDatetime(Utils
 					.getCurrentTimestamp(), "yyyy.MM.dd") + ".xls";
 			FileUtil.copyFile(webRootPath + dailyReportFileName, webRootPath + fileName, true);
 		}

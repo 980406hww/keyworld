@@ -1,6 +1,9 @@
 package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.keymanager.monitoring.criteria.CustomerKeywordCriteria;
+import com.keymanager.monitoring.entity.Customer;
+import com.keymanager.monitoring.entity.CustomerKeyword;
 import com.keymanager.monitoring.excel.operator.CustomerKeywordDailyReportExcelWriter;
 import com.keymanager.manager.CustomerKeywordManager;
 import com.keymanager.monitoring.dao.DailyReportItemDao;
@@ -23,6 +26,12 @@ public class DailyReportItemService extends ServiceImpl<DailyReportItemDao, Dail
 	@Autowired
 	private DailyReportItemDao dailyReportItemDao;
 
+	@Autowired
+	private CustomerService customerService;
+
+	@Autowired
+	private CustomerKeywordService customerKeywordService;
+
 	public void createDailyReportItem(int dailyReportUuid, int customerUuid){
 		DailyReportItem dailyReportItem = new DailyReportItem();
 		dailyReportItem.setStatus(DailyReportStatusEnum.New.name());
@@ -35,15 +44,17 @@ public class DailyReportItemService extends ServiceImpl<DailyReportItemDao, Dail
 
 	public void generateDailyReport(String terminalType, long dailyReportUuid, long dailyReportItemUuid) throws Exception {
 		DailyReportItem dailyReportItem = dailyReportItemDao.selectById(dailyReportItemUuid);
-		CustomerKeywordManager customerKeywordManager = new CustomerKeywordManager();
-		String condition = String.format(" and ck.fStatus = 1 and ck.fCustomerUuid = %d and ck.fTerminalType = '%s' ", dailyReportItem
-				.getCustomerUuid(), terminalType);
-		List<CustomerKeywordVO> customerKeywords = customerKeywordManager.searchCustomerKeywords("keyword", 10000, 1, condition,
-				"order by ck.fSequence, ck.fKeyword ", 1);
+		CustomerKeywordCriteria customerKeywordCriteria = new CustomerKeywordCriteria();
+		customerKeywordCriteria.setTerminalType(terminalType);
+		customerKeywordCriteria.setCustomerUuid(new Long(dailyReportItem.getCustomerUuid()));
+		customerKeywordCriteria.setStatus("1");
+		List<CustomerKeyword> customerKeywords = customerKeywordService.searchCustomerKeywords(customerKeywordCriteria);
+
 		if (!Utils.isEmpty(customerKeywords)) {
+			Customer customer = customerService.getCustomer(dailyReportItem.getCustomerUuid());
 			CustomerKeywordDailyReportExcelWriter excelWriter = new CustomerKeywordDailyReportExcelWriter(terminalType, dailyReportItem
 					.getCustomerUuid() + "", dailyReportUuid);
-			excelWriter.writeDataToExcel(customerKeywords);
+			excelWriter.writeDataToExcel(customerKeywords, customer.getContactPerson());
 		}
 		dailyReportItem.setStatus(DailyReportStatusEnum.Completed.name());
 		dailyReportItem.setUpdateTime(new Date());

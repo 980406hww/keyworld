@@ -43,6 +43,8 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     List<CustomerKeyword> searchCustomerKeywords(Page<CustomerKeyword> page, @Param("customerKeywordCriteria") CustomerKeywordCriteria customerKeywordCriteria);
 
+    List<CustomerKeyword> searchCustomerKeywords(@Param("customerKeywordCriteria") CustomerKeywordCriteria customerKeywordCriteria);
+
     void deleteCustomerKeywordsByUuid(@Param("customerKeywordUuids")List<String> customerKeywordUuids);
 
     //重构部分

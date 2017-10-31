@@ -22,6 +22,7 @@ public class CustomerKeywordForOptimization {
 	private int multiBrowser;
 	private int clearCookie;
 	private int zhanneiPercent;
+	private int zhanwaiPercent;
 	private int openStatistics;
 	private int disableStatistics;
 	private int entryPageMinCount;
@@ -508,5 +509,13 @@ public class CustomerKeywordForOptimization {
 
 	public void setBroadbandPassword(String broadbandPassword) {
 		this.broadbandPassword = broadbandPassword;
+	}
+
+	public int getZhanwaiPercent() {
+		return zhanwaiPercent;
+	}
+
+	public void setZhanwaiPercent(int zhanwaiPercent) {
+		this.zhanwaiPercent = zhanwaiPercent;
 	}
 }
