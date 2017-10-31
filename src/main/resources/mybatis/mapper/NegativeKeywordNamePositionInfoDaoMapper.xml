@@ -5,7 +5,7 @@
 		SELECT
 			fUuid AS "uuid",
 			fNegativeKeywordNameUuid AS "negativeKeywordNameUuid",
-			fType AS "type",
+			fTerminalType AS "terminalType",
 			fKeyword AS "keyword",
 			fPosition AS "position",
 			fTargetUrl AS "targetUrl",

@@ -31,14 +31,14 @@ public class NegativeKeywordNamePositionInfoService extends ServiceImpl<Negative
         return negativeKeywordNamePositionInfoDao.findPositionInfoByUuid(uuid);
     }
 
-    public void insertPositionInfo(String type, NegativeInfoVO negativeInfoVO) {
+    public void insertPositionInfo(NegativeInfoVO negativeInfoVO) {
         int negativeCount = 0;
         if(!Utils.isEmpty(negativeInfoVO.getNegativeInfos())){
             negativeCount = negativeInfoVO.getNegativeInfos().size();
             for(NegativeDetailInfoVO negativeDetailInfoVO : negativeInfoVO.getNegativeInfos()){
                 NegativeKeywordNamePositionInfo positionInfo = new NegativeKeywordNamePositionInfo();
-                positionInfo.setNegativeKeywordNameUuid(new Long((long)negativeInfoVO.getUuid()));
-                positionInfo.setType(type);
+                positionInfo.setNegativeKeywordNameUuid((long)negativeInfoVO.getUuid());
+                positionInfo.setTerminalType(negativeInfoVO.getTerminalType());
                 positionInfo.setPosition(negativeDetailInfoVO.getPosition());
                 positionInfo.setKeyword(negativeDetailInfoVO.getKeyword());
                 positionInfo.setTargetUrl(negativeDetailInfoVO.getUrl());

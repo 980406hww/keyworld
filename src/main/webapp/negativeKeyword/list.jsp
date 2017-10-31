@@ -114,12 +114,17 @@
         }
 
         function getNegativeExcel() {
-            var negativeKeywordCrilteriaArray = $("#negativeKeywordForm").serializeArray();
-            var downloadNegativeKeywordInfoForm = $("#downloadNegativeKeywordInfoForm");
-            $.each(negativeKeywordCrilteriaArray, function(idx, val){
-                downloadNegativeKeywordInfoForm.find("#"+val.name+"Hidden").val(val.value);
-            });
-            downloadNegativeKeywordInfoForm.submit();
+            var group = $("#negativeKeywordForm").find("#group").val();
+            if(group != '') {
+                var negativeKeywordCrilteriaArray = $("#negativeKeywordForm").serializeArray();
+                var downloadNegativeKeywordInfoForm = $("#downloadNegativeKeywordInfoForm");
+                $.each(negativeKeywordCrilteriaArray, function(idx, val){
+                    downloadNegativeKeywordInfoForm.find("#"+val.name+"Hidden").val(val.value);
+                });
+                downloadNegativeKeywordInfoForm.submit();
+            } else {
+                alert("请填写要导出数据的分组名称");
+            }
         }
 
         function toTimeFormat(time) {
@@ -145,13 +150,19 @@
                 success: function (positionInfos) {
                     if (positionInfos != null && positionInfos.length > 0) {
                         $.each(positionInfos, function (idx, val) {
-                            var newTr = document.createElement("tr")
+                            var newTr = document.createElement("tr");
+                            var url = val.targetUrl;
+                            if(url.indexOf("http") > -1) {
+                                url = "<a target='_blank' href='" + val.targetUrl + "'>" + val.targetUrl + "</a>";
+                            } else {
+                                url = "<a target='_blank' href='http://" + val.targetUrl + "'>" + val.targetUrl + "</a>";
+                            }
                             var positionInfoElements = [
                                 val.uuid,
                                 val.type,
                                 val.keyword,
                                 val.position,
-                                val.targetUrl,
+                                url,
                                 toTimeFormat(new Date(val.createTime))
                             ];
                             $.each(positionInfoElements, function () {
@@ -197,17 +208,8 @@
             <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
             <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
             <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
-            分组名称:<input type="text" name="group" value="${negativeKeywordNameCriteria.group}">&nbsp;&nbsp;
-            包含Email:<c:choose>
-                <c:when test="${negativeKeywordNameCriteria.isExistEmail != null and negativeKeywordNameCriteria.isExistEmail != ''}">
-                    <input type="radio" name="isExistEmail" checked="checked" value="true" />是&nbsp;&nbsp;
-                    <input type="radio" name="isExistEmail" value="" />否
-                </c:when>
-                <c:otherwise>
-                    <input type="radio" name="isExistEmail" value="true" />是&nbsp;&nbsp;
-                    <input type="radio" name="isExistEmail" checked="checked" value="" />否
-                </c:otherwise>
-            </c:choose>&nbsp;&nbsp;
+            分组名称:<input type="text" name="group" id="group" value="${negativeKeywordNameCriteria.group}">&nbsp;&nbsp;
+            <input type="checkbox" name="hasEmail" ${negativeKeywordNameCriteria.hasEmail != null ? "checked=true" : ""} />&nbsp;有Email&nbsp;&nbsp;
             <shiro:hasPermission name="/internal/negativeKeywordName/searchNegativeKeywordNames">
             <input type="submit" value=" 查询 ">&nbsp;&nbsp;
             </shiro:hasPermission>
@@ -308,7 +310,7 @@
 
 <form id="downloadNegativeKeywordInfoForm" method="post" action="/internal/negativeKeywordName/downloadNegativeKeywordInfo">
     <input type="hidden" name="group" id="groupHidden" value="">
-    <input type="hidden" name="isExistEmail" id="isExistEmailHidden" value=""/>
+    <input type="hidden" name="hasEmail" id="hasEmailHidden" value=""/>
 </form>
 </body>
 </html>

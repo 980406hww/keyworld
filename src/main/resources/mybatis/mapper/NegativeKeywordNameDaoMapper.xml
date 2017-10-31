@@ -40,7 +40,7 @@
 			t_negative_keyword_name n
 		WHERE 1 = 1
 		<if test="negativeKeywordNameCriteria.group != null and negativeKeywordNameCriteria.group != ''">AND n.fGroup like '%${negativeKeywordNameCriteria.group}%'</if>
-		<if test="negativeKeywordNameCriteria.isExistEmail != null and negativeKeywordNameCriteria.isExistEmail != ''">AND n.fEmail IS NOT NULL AND n.fEmail != '' </if>
+		<if test="negativeKeywordNameCriteria.hasEmail != null and negativeKeywordNameCriteria.hasEmail != ''">AND n.fEmail IS NOT NULL AND n.fEmail != '' </if>
 		ORDER BY fUpdateTime
 	</select>
 

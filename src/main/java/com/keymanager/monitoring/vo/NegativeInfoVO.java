@@ -4,6 +4,9 @@ import java.util.List;
 
 public class NegativeInfoVO {
 	private int uuid;
+	private String userName;
+	private String password;
+	private String terminalType;
 	private String suggestionNegativeKeyword;
 	private String relativeNegativeKeyword;
 	private String officialWebsiteUrl;
@@ -16,6 +19,30 @@ public class NegativeInfoVO {
 
 	public void setUuid(int uuid) {
 		this.uuid = uuid;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getTerminalType() {
+		return terminalType;
+	}
+
+	public void setTerminalType(String terminalType) {
+		this.terminalType = terminalType;
 	}
 
 	public String getSuggestionNegativeKeyword() {

@@ -95,7 +95,7 @@ public class NegativeKeywordNameRestController {
                 // 需要将模板文件放在最外层项目文件夹下
                 NegativeKeywordNameExcelWriter excelWriter = new NegativeKeywordNameExcelWriter();
                 excelWriter.writeDataToExcel(negativeKeywordNames);
-                String fileName = "NegativeKeyword" + Utils.formatDatetime(Utils.getCurrentTimestamp(), "MMdd") + ".xls";
+                String fileName = negativeKeywordNameCriteria.getGroup() + ".xls";
                 fileName = new String(fileName.getBytes("gb2312"), "ISO8859-1");
                 byte[] buffer = excelWriter.getExcelContentBytes();
                 response.reset();

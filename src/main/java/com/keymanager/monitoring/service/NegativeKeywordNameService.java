@@ -90,28 +90,13 @@ public class NegativeKeywordNameService extends ServiceImpl<NegativeKeywordNameD
         negativeKeywordNameDao.updateById(negativeKeywordName);
     }
 
-    public void updateOfficialUrlAndEmail(NegativeInfoVO negativeInfoVO) {
-        boolean updateFalg = false;
-        NegativeKeywordName negativeKeywordName = negativeKeywordNameDao.selectById(negativeInfoVO.getUuid());
-        if(StringUtils.isNotBlank(negativeInfoVO.getOfficialWebsiteUrl()) && StringUtils.isBlank(negativeKeywordName.getOfficialUrl())){
-            negativeKeywordName.setOfficialUrl(negativeInfoVO.getOfficialWebsiteUrl());
-            updateFalg = true;
-        }
-
-        if(StringUtils.isNotBlank(negativeInfoVO.getEmailAddress()) && StringUtils.isBlank(negativeKeywordName.getEmail())) {
-            negativeKeywordName.setEmail(negativeInfoVO.getEmailAddress());
-            updateFalg = true;
-        }
-
-        if(updateFalg) {
-            negativeKeywordNameDao.updateById(negativeKeywordName);
-        }
-    }
-
-    public void updateNegativeKeywordNameByType(String type, NegativeInfoVO negativeInfoVO) {
+    public void updateNegativeKeywordName(NegativeInfoVO negativeInfoVO) {
         int negativeCount = negativeInfoVO.getNegativeInfos().size();
         NegativeKeywordName negativeKeywordName = negativeKeywordNameDao.selectById(negativeInfoVO.getUuid());
-        if(TerminalTypeEnum.PC.name().equals(type)) {
+        if(TerminalTypeEnum.PC.name().equals(negativeInfoVO.getTerminalType())) {
+            negativeKeywordName.setRankCaptured(true);
+            negativeKeywordName.setSelectCaptured(true);
+            negativeKeywordName.setRelevantCaptured(true);
             negativeKeywordName.setRankExistNegative(negativeCount > 0 ? true : false);
             negativeKeywordName.setRankNegativeCount(negativeCount);
 
@@ -143,6 +128,7 @@ public class NegativeKeywordNameService extends ServiceImpl<NegativeKeywordNameD
                 negativeKeywordName.setRelevantNegativeKeyword(negativeInfoVO.getRelativeNegativeKeyword());
             }
         } else {
+            negativeKeywordName.setPhoneCaptured(true);
             negativeKeywordName.setPhoneRankNegativeCount(negativeCount);
             if(StringUtils.isBlank(negativeInfoVO.getSuggestionNegativeKeyword())) {
                 negativeKeywordName.setPhoneSelectExistNegative(false);

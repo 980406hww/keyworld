@@ -22,8 +22,8 @@ public class NegativeKeywordNamePositionInfo {
     @TableField(value = "fNegativeKeywordNameUuid")
     private Long negativeKeywordNameUuid;
 
-    @TableField(value = "fType")
-    private String type;
+    @TableField(value = "fTerminalType")
+    private String terminalType;
 
     @TableField(value = "fKeyword")
     private String keyword;
@@ -53,12 +53,12 @@ public class NegativeKeywordNamePositionInfo {
         this.negativeKeywordNameUuid = negativeKeywordNameUuid;
     }
 
-    public String getType() {
-        return type;
+    public String getTerminalType() {
+        return terminalType;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setTerminalType(String terminalType) {
+        this.terminalType = terminalType;
     }
 
     public String getKeyword() {

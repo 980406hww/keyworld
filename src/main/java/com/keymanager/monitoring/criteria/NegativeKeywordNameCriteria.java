@@ -2,7 +2,7 @@ package com.keymanager.monitoring.criteria;
 
 public class NegativeKeywordNameCriteria extends BaseCriteria{
     private String group;
-    private String isExistEmail;
+    private String hasEmail;
 
     public String getGroup() {
         return group;
@@ -12,11 +12,11 @@ public class NegativeKeywordNameCriteria extends BaseCriteria{
         this.group = group;
     }
 
-    public String getIsExistEmail() {
-        return isExistEmail;
+    public String getHasEmail() {
+        return hasEmail;
     }
 
-    public void setIsExistEmail(String isExistEmail) {
-        this.isExistEmail = isExistEmail;
+    public void setHasEmail(String hasEmail) {
+        this.hasEmail = hasEmail;
     }
 }
