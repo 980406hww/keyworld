@@ -159,7 +159,7 @@
                             }
                             var positionInfoElements = [
                                 val.uuid,
-                                val.type,
+                                val.terminalType,
                                 val.keyword,
                                 val.position,
                                 url,
@@ -299,7 +299,7 @@
     <table id="positionInfoTable" border="1" cellpadding="10" style="font-size: 12px;background-color: white;border-collapse: collapse;margin: 10px 10px;width:96%;">
         <tr>
             <td width="45">编号</td>
-            <td width="30">类型</td>
+            <td width="40">类型</td>
             <td width="40">关键字</td>
             <td width="30">排名</td>
             <td width="200">目标网址</td>
