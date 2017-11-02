@@ -55,6 +55,9 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	@Autowired
 	private ServiceProviderService serviceProviderService;
 
+	@Autowired
+	private PerformanceService performanceService;
+
 	@RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
 	@RequestMapping(value="/searchCustomerKeywords/{customerUuid}" , method=RequestMethod.GET)
 	public ModelAndView searchCustomerKeywords(@PathVariable("customerUuid") Long customerUuid,@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request){
@@ -82,6 +85,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	}
 
 	private ModelAndView constructCustomerKeywordModelAndView(HttpServletRequest request, CustomerKeywordCriteria customerKeywordCriteria, int currentPage, int pageSize) {
+		long startMilleSeconds = System.currentTimeMillis();
 		HttpSession session = request.getSession();
 		ModelAndView modelAndView = new ModelAndView("/customerkeyword/customerKeywordList");
 		String loginName = (String) session.getAttribute("username");
@@ -101,6 +105,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		modelAndView.addObject("customer", customer);
 		modelAndView.addObject("serviceProviders",serviceProviders);
 		modelAndView.addObject("orderElement",orderElement);
+		performanceService.addPerformanceLog(terminalType + ":searchCustomerKeywords", System.currentTimeMillis() - startMilleSeconds, null);
 		return modelAndView;
 	}
 
