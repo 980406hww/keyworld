@@ -53,17 +53,13 @@ public class NegativeKeywordNameService extends ServiceImpl<NegativeKeywordNameD
         int rowCount = 5000;
         int listSize = companyNames.size();
         if(!Utils.isEmpty(companyNames)) {
-            if(listSize < rowCount) {
+            int insertCount = listSize / rowCount;
+            for(int i = 0; i < insertCount; i++) {
+                negativeKeywordNameDao.insertBatchByList(group, companyNames.subList(0, rowCount));
+                companyNames.subList(0, rowCount).clear();
+            }
+            if(!Utils.isEmpty(companyNames)) {
                 negativeKeywordNameDao.insertBatchByList(group, companyNames);
-            } else {
-                int insertCount = listSize / rowCount;
-                for(int i = 0; i < insertCount; i++) {
-                    negativeKeywordNameDao.insertBatchByList(group, companyNames.subList(0, rowCount));
-                    companyNames.subList(0, rowCount).clear();
-                }
-                if(!Utils.isEmpty(companyNames)) {
-                    negativeKeywordNameDao.insertBatchByList(group, companyNames);
-                }
             }
         }
     }

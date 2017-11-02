@@ -123,7 +123,7 @@
                 });
                 downloadNegativeKeywordInfoForm.submit();
             } else {
-                alert("请填写要导出数据的分组名称");
+                $().toastmessage('showErrorToast', "请填写要导出数据的分组名称");
             }
         }
 

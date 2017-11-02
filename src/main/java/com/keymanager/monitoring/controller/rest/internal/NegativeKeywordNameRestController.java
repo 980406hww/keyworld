@@ -1,6 +1,7 @@
 package com.keymanager.monitoring.controller.rest.internal;
 
 import com.baomidou.mybatisplus.plugins.Page;
+import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.NegativeKeywordNameCriteria;
 import com.keymanager.monitoring.entity.NegativeKeywordName;
 import com.keymanager.monitoring.entity.NegativeKeywordNamePositionInfo;
@@ -30,7 +31,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/internal/negativeKeywordName")
-public class NegativeKeywordNameRestController {
+public class NegativeKeywordNameRestController extends SpringMVCBaseController {
 
     private static Logger logger = LoggerFactory.getLogger(NegativeKeywordNameRestController.class);
 
@@ -98,14 +99,7 @@ public class NegativeKeywordNameRestController {
                 String fileName = negativeKeywordNameCriteria.getGroup() + ".xls";
                 fileName = new String(fileName.getBytes("gb2312"), "ISO8859-1");
                 byte[] buffer = excelWriter.getExcelContentBytes();
-                response.reset();
-                response.addHeader("Content-Disposition", "attachment;filename=" + fileName);
-                response.addHeader("Content-Length", "" + buffer.length);
-                OutputStream toClient = new BufferedOutputStream(response.getOutputStream());
-                response.setContentType("application/octet-stream");
-                toClient.write(buffer);
-                toClient.flush();
-                toClient.close();
+                downExcelFile(response, fileName, buffer);
             }
         } catch (Exception e) {
             logger.error(e.getMessage());
