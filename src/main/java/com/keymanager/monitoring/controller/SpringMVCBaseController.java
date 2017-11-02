@@ -32,7 +32,7 @@ public abstract class SpringMVCBaseController {
 
 	@Autowired
 	private HttpServletRequest httpRequest;
-	
+
 
 	public Double getDouble(String key) {
 		String value = httpRequest.getParameter(key);
@@ -69,7 +69,7 @@ public abstract class SpringMVCBaseController {
 	public void setHttpRequest(HttpServletRequest httpRequest) {
 		this.httpRequest = httpRequest;
 	}
-	
+
 	public ShiroUser getCurrentUser(){
 		ShiroUser user = (ShiroUser) SecurityUtils.getSubject().getPrincipal();
 		return user;
@@ -128,6 +128,7 @@ public abstract class SpringMVCBaseController {
 			return true;
 		} else {
 			ExtendedUsernamePasswordToken token = new ExtendedUsernamePasswordToken(userName, password);
+			token.setEntryType("External");
 			try {
 				user.login(token);
 				return true;
