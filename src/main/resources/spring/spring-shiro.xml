@@ -15,8 +15,14 @@
 
 	<!--安全管理器-->
 	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
-		<!--设置自定义Realm-->
-		<property name="realm" ref="shiroDbRealm"/>
+		<property name="authenticator" ref="defineModularRealmAuthenticator" />
+		<!-- 可以配置多个Realm，其实会把realms属性赋值给ModularRealmAuthenticator的realms属性 -->
+		<property name="realms">
+			<list>
+				<ref bean="shiroDbRealm" />
+				<ref bean="ExternalControllerRealm"/>
+			</list>
+		</property>
 		<!--将缓存管理器，交给安全管理器-->
 		<property name="cacheManager" ref="shiroSpringCacheManager"/>
 		<!-- 记住密码管理 -->
@@ -24,8 +30,33 @@
 		<property name="sessionManager" ref="sessionManager"/>
 	</bean>
 
-	<!-- 項目自定义的Realm -->
+	<!--多个realm 的集中管理  -->
+	<bean id="defineModularRealmAuthenticator" class="com.keymanager.monitoring.common.shiro.CustomizedModularRealmAuthenticator">
+		<property name="definedRealms">
+			<map>
+				<entry key="shiroDbRealm" value-ref="shiroDbRealm" />
+				<entry key="ExternalControllerRealm" value-ref="ExternalControllerRealm" />
+			</map>
+		</property>
+		<property name="authenticationStrategy">
+			<bean class="org.apache.shiro.authc.pam.FirstSuccessfulStrategy" />
+		</property>
+	</bean>
+
+	<!-- 項目自定义的shiroDbRealm -->
 	<bean id="shiroDbRealm" class="com.keymanager.monitoring.common.shiro.ShiroDbRealm">
+		<constructor-arg index="0" name="cacheManager" ref="shiroSpringCacheManager"/>
+		<constructor-arg index="1" name="matcher" ref="credentialsMatcher"/>
+		<!-- 启用身份验证缓存，即缓存AuthenticationInfo信息，默认false -->
+		<property name="authenticationCachingEnabled" value="true"/>
+		<!-- 缓存AuthenticationInfo信息的缓存名称 -->
+		<property name="authenticationCacheName" value="authenticationCache"/>
+		<!-- 缓存AuthorizationInfo信息的缓存名称 -->
+		<property name="authorizationCacheName" value="authorizationCache"/>
+	</bean>
+
+	<!-- 項目自定义的ExternalControllerRealm -->
+	<bean id="ExternalControllerRealm" class="com.keymanager.monitoring.common.shiro.ExternalControllerRealm">
 		<constructor-arg index="0" name="cacheManager" ref="shiroSpringCacheManager"/>
 		<constructor-arg index="1" name="matcher" ref="credentialsMatcher"/>
 		<!-- 启用身份验证缓存，即缓存AuthenticationInfo信息，默认false -->
