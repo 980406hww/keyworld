@@ -3,22 +3,17 @@ package com.keymanager.monitoring.controller.rest.external;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.BaiduIndexCriteria;
 import com.keymanager.monitoring.criteria.BaseCriteria;
-import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.CustomerKeyword;
+import com.keymanager.monitoring.entity.Performance;
 import com.keymanager.monitoring.service.ClientStatusService;
 import com.keymanager.monitoring.service.CustomerKeywordService;
+import com.keymanager.monitoring.service.PerformanceService;
 import com.keymanager.monitoring.vo.SearchEngineResultItemVO;
 import com.keymanager.monitoring.vo.SearchEngineResultVO;
 import com.keymanager.util.TerminalTypeMapping;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
 import com.keymanager.value.CustomerKeywordForOptimization;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.DisabledAccountException;
-import org.apache.shiro.authc.IncorrectCredentialsException;
-import org.apache.shiro.authc.UnknownAccountException;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +40,9 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
 
     @Autowired
     private ClientStatusService clientStatusService;
+
+    @Autowired
+    private PerformanceService performanceService;
 
     private String getIP(HttpServletRequest request) {
         String ip = request.getHeader("X-Forwarded-For");
@@ -146,6 +143,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
 
     @RequestMapping(value = "/getCustomerKeyword", method = RequestMethod.GET)
     public ResponseEntity<?> getCustomerKeywordForOptimization(HttpServletRequest request) throws Exception {
+        long startMilleSeconds = System.currentTimeMillis();
         String clientID = request.getParameter("clientID");
         String userName = request.getParameter("userName");
         String password = request.getParameter("password");
@@ -158,6 +156,8 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                     customerKeywordService.updateOptimizationQueryTime(customerKeywordForOptimization.getUuid());
                 }
                 clientStatusService.updateClientVersion(clientID, version);
+
+                performanceService.addPerformanceLog(terminalType + ":getCustomerKeyword", System.currentTimeMillis() - startMilleSeconds, null);
                 return new ResponseEntity<Object>(customerKeywordForOptimization, HttpStatus.OK);
             }
         }catch (Exception ex){
@@ -168,6 +168,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
 
     @RequestMapping(value = "/updateOptimizedCount", method = RequestMethod.GET)
     public ResponseEntity<?> updateOptimizedCount(HttpServletRequest request) throws Exception {
+        long startMilleSeconds = System.currentTimeMillis();
         String userName = request.getParameter("username");
         String password = request.getParameter("password");
 
@@ -186,6 +187,8 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             if (validUser(userName, password)) {
                 customerKeywordService.updateOptimizationResult(terminalType, customerKeywordUuid, Integer.parseInt(count.trim()), ip, city, clientID,
                         status, freeSpace, version);
+                performanceService.addPerformanceLog(terminalType + ":updateOptimizedCount", System.currentTimeMillis() - startMilleSeconds, null);
+
                 return new ResponseEntity<Object>(1, HttpStatus.OK);
             }
         }catch (Exception ex){

@@ -6,6 +6,7 @@ import com.keymanager.monitoring.criteria.ClientStatusCriteria;
 import com.keymanager.monitoring.entity.ClientStatus;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
 import com.keymanager.monitoring.service.ClientStatusService;
+import com.keymanager.monitoring.service.PerformanceService;
 import com.keymanager.util.Constants;
 import com.keymanager.util.FileUtil;
 import com.keymanager.util.TerminalTypeMapping;
@@ -36,6 +37,9 @@ public class ClientStatusRestController extends SpringMVCBaseController {
 
     @Autowired
     private ClientStatusService clientStatusService;
+
+    @Autowired
+    private PerformanceService performanceService;
 
     @RequiresPermissions("/internal/clientstatus/changeTerminalType")
     @RequestMapping(value = "/changeTerminalType", method = RequestMethod.POST)
@@ -86,6 +90,7 @@ public class ClientStatusRestController extends SpringMVCBaseController {
     }
 
     private ModelAndView constructClientStatusModelAndView(HttpServletRequest request, ClientStatusCriteria clientStatusCriteria, int currentPageNumber, int pageSize, boolean normalSearchFlag) {
+        long startMilleSeconds = System.currentTimeMillis();
         ModelAndView modelAndView = new ModelAndView("/client/list");
         String terminalType = TerminalTypeMapping.getTerminalType(request);
         clientStatusCriteria.setTerminalType(terminalType);
@@ -98,6 +103,7 @@ public class ClientStatusRestController extends SpringMVCBaseController {
         modelAndView.addObject("orderByMap", Constants.CLIENT_STATUS_ORDERBY_MAP);
         modelAndView.addObject("operationTypeValues", operationTypeValues);
         modelAndView.addObject("page", page);
+        performanceService.addPerformanceLog(terminalType + ":searchCustomerKeywords", System.currentTimeMillis() - startMilleSeconds, null);
         return modelAndView;
     }
 
