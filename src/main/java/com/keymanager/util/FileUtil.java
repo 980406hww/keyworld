@@ -31,7 +31,10 @@ public class FileUtil {
                 BufferedReader bufferedReader = new BufferedReader(read);
                 String lineTxt = null;
                 while((lineTxt = bufferedReader.readLine()) != null){
-                    contents.add(lineTxt);
+                    if(lineTxt.contains("\uFEFF")) {
+                        lineTxt = lineTxt.substring(1);
+                    }
+                    contents.add(lineTxt.trim());
                 }
                 read.close();
                 return contents;

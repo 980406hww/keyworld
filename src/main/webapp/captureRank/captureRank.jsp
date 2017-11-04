@@ -455,7 +455,7 @@
 <div id="centerDiv">
     <table style="font-size:12px; width: 100%;" id="showCaptureRankJobTable">
         <c:forEach items="${page.records}" var="captureRankJob" varStatus="status">
-        <tr align="left" onmouseover="doOver(this);" onmouseout="doOut(this);" height=30  <c:if test="${status.index%2==0}">bgcolor="#eee"</c:if> >
+        <tr align="left" onmouseover="doOver(this);" onmouseout="doOut(this);" height=30  <c:if test="${status.index%2==0}">bgcolor="#eeeeee"</c:if> >
             <td width=10 align="center"><input type="checkbox" name="uuid" value="${captureRankJob.uuid}" onclick="decideSelectAll()"/></td>
             <td width=80>${captureRankJob.groupNames}</td>
             <td width=40>${captureRankJob.contactPerson}</td>

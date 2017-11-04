@@ -157,12 +157,10 @@
         <if test="customerKeywordCriteria.remarks != null and customerKeywordCriteria.remarks != ''">AND ck.fRemarks like '%${customerKeywordCriteria.remarks}%' </if>
         <if test="customerKeywordCriteria.currentIndexCount != null and customerKeywordCriteria.currentIndexCount != ''">AND ck.fCurrentIndexCount &gt;= #{customerKeywordCriteria.currentIndexCount} </if>
         <if test="customerKeywordCriteria.qq != null and customerKeywordCriteria.qq != ''">
-            AND ck.fCustomerUuid in (
-            SELECT fUuid FROM t_customer WHERE fQQ LIKE '${customerKeywordCriteria.qq}%' )
+            AND c.fQQ LIKE '${customerKeywordCriteria.qq}%'
         </if>
         <if test="customerKeywordCriteria.userName != null and customerKeywordCriteria.userName != ''">
-            AND ck.fCustomerUuid IN ( SELECT fUuid FROM t_customer c WHERE c.fUserID = (
-            SELECT fLoginName FROM t_userinfo WHERE fLoginName = #{customerKeywordCriteria.userName}))
+            AND c.fUserID = #{customerKeywordCriteria.userName}
         </if>
         <choose>
             <when test="customerKeywordCriteria.optimizeGroupName != null and customerKeywordCriteria.optimizeGroupName != ''">
