@@ -40,6 +40,7 @@ public class ExternalClientStatusRestController extends SpringMVCBaseController 
             }
         }catch (Exception ex){
             logger.error(ex.getMessage());
+            ex.printStackTrace();
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }

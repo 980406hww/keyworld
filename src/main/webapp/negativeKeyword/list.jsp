@@ -141,7 +141,7 @@
             return time.getFullYear() + "-" + m + "-" + d;
         };
 
-        <shiro:hasPermission name="/internal/negativeKeywordName/getNegativePositionInfo">
+        <shiro:hasPermission name="/internal/negativeKeywordName/searchNegativeKeywordNames">
         function findPositionInfos(uuid) {
             $("#positionInfoTable  tr:not(:first)").remove();
             $.ajax({

@@ -103,12 +103,13 @@ public class NegativeKeywordNameRestController extends SpringMVCBaseController {
             }
         } catch (Exception e) {
             logger.error(e.getMessage());
+            e.printStackTrace();
             return new ResponseEntity<Object>(false,HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<Object>(true,HttpStatus.OK);
     }
 
-    @RequiresPermissions("/internal/negativeKeywordName/getNegativePositionInfo")
+    @RequiresPermissions("/internal/negativeKeywordName/searchNegativeKeywordNames")
     @RequestMapping(value = "/getNegativePositionInfo/{uuid}", method = RequestMethod.GET)
     public List<NegativeKeywordNamePositionInfo> searchNegativeKeywordNames(@PathVariable("uuid") Long uuid) {
         List<NegativeKeywordNamePositionInfo> negativeKeywordNamePositionInfos = negativeKeywordNamePositionInfoService.findPositionInfos(uuid);
