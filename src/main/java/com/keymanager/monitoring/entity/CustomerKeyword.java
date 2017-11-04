@@ -191,6 +191,9 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(value = "fStatus")
     private int status;
 
+    @TableField(value = "fManualCleanTitle")
+    private Boolean manualCleanTitle;
+
     @TableField(exist = false)
     private Timestamp autoUpdateNegativeTime;
 
@@ -456,6 +459,14 @@ public class CustomerKeyword extends BaseEntity {
 
     public void setOptimizePositionSecondPercentage(int optimizePositionSecondPercentage) {
         this.optimizePositionSecondPercentage = optimizePositionSecondPercentage;
+    }
+
+    public Boolean getManualCleanTitle() {
+        return manualCleanTitle;
+    }
+
+    public void setManualCleanTitle(Boolean manualCleanTitle) {
+        this.manualCleanTitle = manualCleanTitle;
     }
 
     public int getOptimizePositionThirdPercentage() {

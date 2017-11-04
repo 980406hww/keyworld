@@ -65,19 +65,19 @@
     </sql>
 
     <update id="cleanSelectedCustomerKeywordTitle">
-        UPDATE t_customer_keyword set fTitle = null where fUuid in
+        UPDATE t_customer_keyword set fTitle = null , fManualCleanTitle = 1 where fUuid in
         <foreach item="item" index="index" collection="uuids" open="(" separator="," close=")">
           #{item}
         </foreach>
     </update>
 
     <update id="cleanCustomerTitle">
-        UPDATE t_customer_keyword set fTitle = null where fTerminalType = #{terminalType} and fType = #{entryType} and fCustomerUuid = #{customerUuid}
+        UPDATE t_customer_keyword set fTitle = null , fManualCleanTitle = 1 where fTerminalType = #{terminalType} and fType = #{entryType} and fCustomerUuid = #{customerUuid}
     </update>
 
     <update id="cleanCaptureTitleFlag">
         UPDATE t_customer_keyword SET fTitle = NULL, fCaptureTitleQueryTime = NULL, fCapturedTitle = 0
-        where fTerminalType = #{terminalType} and fCustomerUuid = #{customerUuid}  and fType = #{entryType}
+        where fTerminalType = #{terminalType} and fCustomerUuid = #{customerUuid}  and fType = #{entryType} and  fManualCleanTitle = 0
     </update>
 
     <select id="getCustomerKeywordCount" resultType="int">
