@@ -1040,7 +1040,7 @@
         </tr>
     </table>
 </div>
-<div id="customerKeywordDiv">
+<div id="customerKeywordDiv" style="margin-bottom: 30px">
     <table id="customerKeywordTable">
         <c:forEach items="${page.records}" var="customerKeyword">
             <tr style="" height=30 onmouseover="doOver(this);" onmouseout="doOut(this);" ondblclick="modifyCustomerKeyword('${customerKeyword.uuid}')" height=30>
