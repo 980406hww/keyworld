@@ -395,4 +395,42 @@
             and fOptimizeGroupName != ''
             GROUP BY fOptimizeGroupName
     </select>
+
+    <select id="searchCustomerKeywordForCaptureTitle" resultType="com.keymanager.value.CustomerKeywordForCaptureTitle">
+            SELECT
+                ck.fKeyword  AS `keyword`,
+                ck.fUrl  AS `url`,
+                ck.fUuid  AS `uuid`,
+                ck.fOriginalUrl  AS `wholeUrl`
+            FROM
+                t_customer_keyword ck
+            WHERE 1 = 1
+            <if test="qzCaptureTitleLog.terminalType != null and qzCaptureTitleLog.terminalType != ''">
+                AND ck.fTerminalType = #{qzCaptureTitleLog.terminalType}
+            </if>
+            <if test="qzCaptureTitleLog.group != null and qzCaptureTitleLog.group != ''">
+                AND ck.fOptimizeGroupName = #{qzCaptureTitleLog.group}
+            </if>
+            <if test="qzCaptureTitleLog.customerUuid != null and qzCaptureTitleLog.customerUuid != ''">
+                AND ck.fCustomerUuid = #{qzCaptureTitleLog.customerUuid}
+            </if>
+            AND ck.fCapturedTitle = 0
+            AND ck.fCaptureTitleQueryTime IS NULL
+            AND (ck.fTitle IS NULL OR ck.fTitle = '')
+            LIMIT 1
+    </select>
+
+    <delete id="deleteEmptyTitleCustomerKeyword">
+        DELETE
+        FROM
+            t_customer_keyword
+        WHERE
+            fCustomerUuid = #{qzCaptureTitleLog.customerUuid}
+        AND fTerminalType = #{qzCaptureTitleLog.terminalType}
+        AND fType =  #{qzCaptureTitleLog.type}
+        AND fOptimizeGroupName =  #{qzCaptureTitleLog.group}
+        AND ( fTitle = '' OR  fTitle IS NULL )
+        AND fManualCleanTitle  = 0
+    </delete>
+
 </mapper>

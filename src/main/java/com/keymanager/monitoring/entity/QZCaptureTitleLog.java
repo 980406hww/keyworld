@@ -13,7 +13,7 @@ public class QZCaptureTitleLog extends BaseEntity{
 	private long qzOperationTypeUuid;
 
 	@TableField(exist=false)
-	private int customerUuid;
+	private Integer customerUuid;
 
 	@TableField(exist=false)
 	private String group;
@@ -41,11 +41,11 @@ public class QZCaptureTitleLog extends BaseEntity{
 		this.qzOperationTypeUuid = qzOperationTypeUuid;
 	}
 
-	public int getCustomerUuid() {
+	public Integer getCustomerUuid() {
 		return customerUuid;
 	}
 
-	public void setCustomerUuid(int customerUuid) {
+	public void setCustomerUuid(Integer customerUuid) {
 		this.customerUuid = customerUuid;
 	}
 

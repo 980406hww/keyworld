@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.keymanager.enums.CollectMethod;
 import com.keymanager.enums.CustomerKeywordStatus;
-import com.keymanager.manager.CustomerKeywordManager;
 import com.keymanager.monitoring.criteria.*;
 import com.keymanager.monitoring.dao.CustomerKeywordDao;
 import com.keymanager.monitoring.entity.*;
@@ -105,14 +104,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         if (qzCaptureTitleLog == null) {
             return "";
         }
-        CustomerKeywordManager manager = new CustomerKeywordManager();
-        CustomerKeywordForCaptureTitle captureTitle = manager.searchCustomerKeywordForCaptureTitle("keyword", qzCaptureTitleLog.getTerminalType(),
-                qzCaptureTitleLog.getGroup(), qzCaptureTitleLog.getCustomerUuid());
 
+        CustomerKeywordForCaptureTitle captureTitle = customerKeywordDao.searchCustomerKeywordForCaptureTitle(qzCaptureTitleLog);
         if (captureTitle == null) {
             qzCaptureTitleLogService.completeQZCaptureTitleLog(qzCaptureTitleLog.getUuid());
-            manager.deleteEmptyTitleCustomerKeyword("keyword", qzCaptureTitleLog.getTerminalType(), qzCaptureTitleLog.getCustomerUuid(),
-                    qzCaptureTitleLog.getType(), qzCaptureTitleLog.getGroup());
+            customerKeywordDao.deleteEmptyTitleCustomerKeyword(qzCaptureTitleLog);
             return "";
         } else {
             QZOperationType qzOperationType = qzOperationTypeService.selectById(qzCaptureTitleLog.getQzOperationTypeUuid());
@@ -124,8 +120,12 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public String searchCustomerKeywordForCaptureTitle(String groupName, String terminalType) throws Exception {
-        CustomerKeywordManager manager = new CustomerKeywordManager();
-        return manager.searchCustomerKeywordForCaptureTitle("keyword", terminalType, groupName);
+            QZCaptureTitleLog qzCaptureTitleLog = new QZCaptureTitleLog();
+            qzCaptureTitleLog.setGroup(groupName);
+            qzCaptureTitleLog.setTerminalType(terminalType);
+            CustomerKeywordForCaptureTitle captureTitle = customerKeywordDao.searchCustomerKeywordForCaptureTitle(qzCaptureTitleLog);
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.writeValueAsString(captureTitle);
     }
 
     public void cleanTitle(CustomerKeywordCleanCriteria customerKeywordCleanCriteria) {
