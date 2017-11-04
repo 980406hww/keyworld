@@ -140,7 +140,7 @@
 <div id="showQZSettingDiv" style="margin-bottom: 30px">
 <table id="showQZSettingTable"  style="font-size:12px;width: 100%;" cellpadding=3 >
 	<c:forEach items="${page.records}" var="qzSetting" varStatus="status">
-		<tr onmouseover="doOver(this);" onmouseout="doOut(this);" height=30 <c:if test="${status.index%2==0}">bgcolor="#eee" </c:if> >
+		<tr onmouseover="doOver(this);" onmouseout="doOut(this);" height=30 <c:if test="${status.index%2==0}">bgcolor="#eeeeee" </c:if> >
 			<td width=25 align="center"><input type="checkbox" name="uuid" value="${qzSetting.uuid}" onclick="decideSelectAll()"/></td>
 			<td width=150>${qzSetting.contactPerson}</td>
 			<td width=100>${qzSetting.domain}</td>

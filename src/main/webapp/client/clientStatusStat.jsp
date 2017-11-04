@@ -46,7 +46,7 @@
 <table width=60% style="font-size: 12px" id="clientStatusSummaryTable" cellpadding=3>
     <c:forEach items="${clientStatusSummaryVOs}" var="clientStatusSummaryVO" varStatus="status">
 
-        <tr align="left" <c:if test="${status.index%2==0}">bgcolor="#eee" </c:if>>
+        <tr align="left" <c:if test="${status.index%2==0}">bgcolor="#eeeeee" </c:if>>
             <c:if test="${clientStatusSummaryVO.clientIDPrefixCount>0}">
                 <td style="padding-left: 7px;" rowspan="${clientStatusSummaryVO.clientIDPrefixCount}">${clientStatusSummaryVO.clientIDPrefix}</td>
                 <td rowspan="${clientStatusSummaryVO.clientIDPrefixCount}">${clientStatusSummaryVO.clientIDPrefixTotalCount}</td>
