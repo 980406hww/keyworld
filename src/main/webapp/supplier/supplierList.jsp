@@ -423,7 +423,7 @@
 <div id="showSupplierListDiv" style="margin-bottom: 30px">
     <table id="showSupplierListTable"  width="100%">
         <c:forEach items="${page.records}" var="supplier" varStatus="status">
-            <tr onmouseover="doOver(this);" onmouseout="doOut(this);" height=30 <c:if test="${status.index%2==0}">bgcolor="#eee" </c:if> >
+            <tr onmouseover="doOver(this);" onmouseout="doOut(this);" height=30 <c:if test="${status.index%2==0}">bgcolor="#eeeeee" </c:if> >
                 <td width="10" style="padding-left: 7px;"><input type="checkbox" name="uuid" value="${supplier.uuid}" onclick="decideSelectAll()"/></td>
                 <td width="100">${supplier.supplierName}</td>
                 <td width="80">${supplier.contactPerson}</td>

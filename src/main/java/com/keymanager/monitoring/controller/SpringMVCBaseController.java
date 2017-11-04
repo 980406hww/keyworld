@@ -21,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 
+import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -103,6 +104,21 @@ public abstract class SpringMVCBaseController {
 					logger.error(e.getMessage());
 				}
 			}
+		}
+	}
+
+	public void downExcelFile(HttpServletResponse response, String fileName, byte[] buffer) {
+		try {
+			response.reset();
+			response.addHeader("Content-Disposition", "attachment;filename=" + fileName);
+			response.addHeader("Content-Length", "" + buffer.length);
+			OutputStream toClient = new BufferedOutputStream(response.getOutputStream());
+			response.setContentType("application/octet-stream");
+			toClient.write(buffer);
+			toClient.flush();
+			toClient.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
