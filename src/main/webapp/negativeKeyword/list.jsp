@@ -239,7 +239,7 @@
         </tr>
     </table>
 </div>
-<div id="centerDiv">
+<div id="centerDiv" style="margin-bottom: 30px;">
     <table style="font-size:12px; width: 100%;" id="showCaptureRankJobTable">
         <c:forEach items="${page.records}" var="negativeKeyword" varStatus="status">
         <tr align="left" onmouseover="doOver(this);" onmouseout="doOut(this);" height=30  <c:if test="${status.index%2==0}">bgcolor="#eeeeee"</c:if> >
