@@ -7,11 +7,7 @@
 		<!-- Triggers集成 -->
 		<property name="triggers">
 			<list>
-				<ref bean="cronTriggerControlCustomerKeywordStatus" />
 				<ref bean="cronTriggerAdjustOptimizationCount" />
-				<ref bean="cronTriggerSwitchClientStatusGroup" />
-				<ref bean="cronTriggerRenewalNotification" />
-				<ref bean="cronTriggerGenerateDailyReport" />
 			</list>
 		</property>
 		<!-- Quartz配置, 本地运行无需单独的quartz.properties文件，在此简单配置即可 -->
@@ -39,7 +35,7 @@
 
 	<bean id="cronTriggerAdjustOptimizationCount" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="cronJobDetailAdjustOptimizationCount" />
-		<property name="cronExpression" value="0 10 01 * * ?" />
+		<property name="cronExpression" value="0 10 0 * * ?" />
 	</bean>
 
 	<!-- JobDetajil, 基于MethodInvokingJobDetailFactoryBean调用普通Spring Bean -->

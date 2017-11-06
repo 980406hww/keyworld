@@ -613,7 +613,10 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void adjustOptimizationCount(){
-        List<Map> customerKeywordSummaries = customerKeywordDao.searchCustomerKeywordsForAdjustingOptimizationCount("pc_pm_xiaowu");
+        List<String> groupNames = new ArrayList<String>();
+        groupNames.add("pc_pm_xiaowu");
+        groupNames.add("pc_pm_xiaowu2");
+        List<Map> customerKeywordSummaries = customerKeywordDao.searchCustomerKeywordsForAdjustingOptimizationCount(groupNames);
         if(CollectionUtils.isNotEmpty(customerKeywordSummaries)){
             for(Map customerKeywordSummaryMap : customerKeywordSummaries) {
                 Long uuid = Long.parseLong(customerKeywordSummaryMap.get("uuid").toString());

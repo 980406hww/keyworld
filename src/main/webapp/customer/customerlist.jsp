@@ -1090,7 +1090,7 @@
         </tr>
     </table>
 </div>
-<div id="showCustomerTableDiv">
+<div id="showCustomerTableDiv" style="margin-bottom: 30px">
     <table style="font-size:12px; width: 100%;" id="showCustomerTable">
         <c:forEach items="${page.records}" var="customer">
             <tr onmouseover="doOver(this);" onmouseout="doOut(this);" height=30>
@@ -1337,6 +1337,7 @@
         </c:choose>
     </form>
 </div>
+
 <div id="showCustomerBottomPositioneDiv">
     <div id="showCustomerBottomDiv">
         <input id="fisrtButton" class="ui-button ui-widget ui-corner-all" type="button"
@@ -1359,6 +1360,5 @@
     </select>
     </div>
 </div>
-
 </body>
 </html>
