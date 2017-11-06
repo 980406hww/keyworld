@@ -281,7 +281,7 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		clientStatus.setKuaizhaoPercent(0);
 		clientStatus.setBaiduSemPercent(0);
 		clientStatus.setDragPercent(0);
-		clientStatus.setMultiBrowser(0);
+		clientStatus.setMultiBrowser(1);
 		clientStatus.setClearCookie(0);
 		clientStatus.setEntryPageMinCount(0);
 		clientStatus.setEntryPageMaxCount(0);
