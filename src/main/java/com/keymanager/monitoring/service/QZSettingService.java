@@ -11,11 +11,13 @@ import com.keymanager.monitoring.dao.QZSettingDao;
 import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.enums.QZCaptureTitleLogStatusEnum;
 import com.keymanager.monitoring.enums.QZSettingStatusEnum;
+import com.keymanager.monitoring.enums.TerminalTypeEnum;
 import com.keymanager.monitoring.vo.DateRangeTypeVO;
 import com.keymanager.monitoring.vo.QZSettingVO;
 import com.keymanager.util.Constants;
 import com.keymanager.util.Utils;
 import com.keymanager.value.CustomerKeywordVO;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -46,6 +48,9 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 	@Autowired
 	private CustomerService customerService;
+
+	@Autowired
+	private CustomerKeywordService customerKeywordService;
 
 	public QZSetting getAvailableQZSetting(){
 		List<QZSetting> qzSettings = qzSettingDao.getAvailableQZSettings();
@@ -164,6 +169,13 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			oldOperationType.setUpdateTime(new Date());
 			oldOperationType.setIsDeleted(1);
 			qzOperationTypeService.updateById(oldOperationType);
+			QZSetting qzSetting = qzSettingDao.selectById(oldOperationType.getQzSettingUuid());
+			if(oldOperationType.getOperationType().equals(TerminalTypeEnum.PC.name())) {
+				qzSetting.setPcGroup(null);
+			} else {
+				qzSetting.setPhoneGroup(null);
+			}
+			qzSettingDao.deleteQZSettingGroup(qzSetting);
 		}
 	}
 
@@ -245,51 +257,48 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		}
 	}
 
-	public void updateResult(QZSettingCriteria qzSettingCriteria, String terminalType) {
+	public void updateResult(QZSettingCriteria qzSettingCriteria, String terminalType) throws Exception {
 		if (!qzSettingCriteria.isDownloadTimesUsed()){
 			if (CollectionUtils.isNotEmpty(qzSettingCriteria.getCustomerKeywordVOs())) {
-				CustomerKeywordManager manager = new CustomerKeywordManager();
-				Connection conn = null;
-				try {
-					List<QZOperationType> qzOperationTypes = qzOperationTypeService.searchQZOperationTypesIsDelete(qzSettingCriteria.getQzSetting().getUuid());
+				List<QZOperationType> qzOperationTypes = qzOperationTypeService.searchQZOperationTypesIsDelete(qzSettingCriteria.getQzSetting().getUuid());
 
-					if(CollectionUtils.isNotEmpty(qzOperationTypes)) {
-						conn = DBUtil.getConnection("keyword");
-						List<CustomerKeywordVO> insertingCustomerKeywordVOs = new ArrayList<CustomerKeywordVO>();
-						for (CustomerKeywordVO customerKeywordVO : qzSettingCriteria.getCustomerKeywordVOs()) {
-							customerKeywordVO.setCustomerUuid(qzSettingCriteria.getQzSetting().getCustomerUuid());
-							customerKeywordVO.setOptimizePlanCount(customerKeywordVO.getCurrentIndexCount() + 8);
-							customerKeywordVO.setServiceProvider("baidutop123");
-							customerKeywordVO.setSearchEngine(Constants.SEARCH_ENGINE_BAIDU);
-							customerKeywordVO.setCollectMethod(CollectMethod.PerMonth.name());
-							customerKeywordVO.setType(qzSettingCriteria.getQzSetting().getType());
-							customerKeywordVO.setStartOptimizedTime(Utils.getCurrentTimestamp());
-							customerKeywordVO.setStatus(1);
-							customerKeywordVO.setCreateTime(Utils.getCurrentTimestamp());
-							customerKeywordVO.setUpdateTime(Utils.getCurrentTimestamp());
-							customerKeywordVO.setInitialIndexCount(customerKeywordVO.getCurrentIndexCount());
-							insertingCustomerKeywordVOs.add(customerKeywordVO);
-						}
-						if (CollectionUtils.isNotEmpty(insertingCustomerKeywordVOs)) {
-							QZCaptureTitleLog qzCaptureTitleLog = new QZCaptureTitleLog();
-							qzCaptureTitleLog.setStatus(QZCaptureTitleLogStatusEnum.New.getValue());
-							for(QZOperationType qzOperationType : qzOperationTypes){
-								qzCaptureTitleLog.setTerminalType(qzOperationType.getOperationType());
-								qzCaptureTitleLog.setQzOperationTypeUuid(qzOperationType.getUuid());
-								qzCaptureTitleLogService.addQZCaptureTitleLog(qzCaptureTitleLog);
-								for (CustomerKeywordVO customerKeywordVO : insertingCustomerKeywordVOs) {
-									customerKeywordVO.setTerminalType(qzOperationType.getOperationType());
-									customerKeywordVO.setOptimizeGroupName(qzOperationType.getGroup());
-								}
-								manager.addCustomerKeywords(conn, insertingCustomerKeywordVOs);
+				if(CollectionUtils.isNotEmpty(qzOperationTypes)) {
+					List<CustomerKeyword> insertingCustomerKeywords = new ArrayList<CustomerKeyword>();
+					for (CustomerKeywordVO customerKeywordVO : qzSettingCriteria.getCustomerKeywordVOs()) {
+						CustomerKeyword customerKeyword = new CustomerKeyword();
+						customerKeyword.setKeyword(customerKeywordVO.getKeyword());
+						customerKeyword.setUrl(customerKeywordVO.getUrl());
+						customerKeyword.setTitle(customerKeywordVO.getTitle());
+						customerKeyword.setOrderNumber(customerKeywordVO.getOrderNumber());
+						customerKeyword.setCurrentIndexCount(customerKeywordVO.getCurrentIndexCount());
+
+						customerKeyword.setCustomerUuid(qzSettingCriteria.getQzSetting().getCustomerUuid());
+						customerKeyword.setOptimizePlanCount(customerKeywordVO.getCurrentIndexCount() + 8);
+						customerKeyword.setServiceProvider("baidutop123");
+						customerKeyword.setSearchEngine(Constants.SEARCH_ENGINE_BAIDU);
+						customerKeyword.setCollectMethod(CollectMethod.PerMonth.name());
+						customerKeyword.setType(qzSettingCriteria.getQzSetting().getType());
+						customerKeyword.setStartOptimizedTime(Utils.getCurrentTimestamp());
+						customerKeyword.setStatus(1);
+						customerKeyword.setCreateTime(Utils.getCurrentTimestamp());
+						customerKeyword.setUpdateTime(Utils.getCurrentTimestamp());
+						customerKeyword.setInitialIndexCount(customerKeywordVO.getCurrentIndexCount());
+						insertingCustomerKeywords.add(customerKeyword);
+					}
+					if (CollectionUtils.isNotEmpty(insertingCustomerKeywords)) {
+						QZCaptureTitleLog qzCaptureTitleLog = new QZCaptureTitleLog();
+						qzCaptureTitleLog.setStatus(QZCaptureTitleLogStatusEnum.New.getValue());
+						for(QZOperationType qzOperationType : qzOperationTypes){
+							qzCaptureTitleLog.setTerminalType(qzOperationType.getOperationType());
+							qzCaptureTitleLog.setQzOperationTypeUuid(qzOperationType.getUuid());
+							qzCaptureTitleLogService.addQZCaptureTitleLog(qzCaptureTitleLog);
+							for (CustomerKeyword customerKeyword : insertingCustomerKeywords) {
+								customerKeyword.setTerminalType(qzOperationType.getOperationType());
+								customerKeyword.setOptimizeGroupName(qzOperationType.getGroup());
 							}
+							customerKeywordService.addCustomerKeywords(insertingCustomerKeywords, qzSettingCriteria.getUserName());
 						}
 					}
-				} catch (Exception ex) {
-					ex.printStackTrace();
-					logger.error(ex.getLocalizedMessage());
-				} finally {
-					DBUtil.closeConnection(conn);
 				}
 			}
 		}
