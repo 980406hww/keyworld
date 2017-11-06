@@ -158,4 +158,10 @@
     <select id="selectLastId" resultType="int">
         select LAST_INSERT_ID()
     </select>
+
+    <update id="deleteQZSettingGroup" parameterType="com.keymanager.monitoring.entity.QZSetting">
+        UPDATE t_qz_setting
+        SET fPcGroup = #{qzSetting.pcGroup},fPhoneGroup = #{qzSetting.phoneGroup}
+        WHERE fUuid = #{qzSetting.uuid}
+    </update>
 </mapper>
