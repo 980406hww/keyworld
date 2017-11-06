@@ -397,7 +397,6 @@
 
 	</table>
 </div>
-	<hr>
 <div id="negativeListBottomDiv" align="right">
 	<div id="showNegativeBottomDiv">
 	  <input id="fisrtButton" type="button" onclick="changePaging(1,'${page.size}')" value="首页"/>

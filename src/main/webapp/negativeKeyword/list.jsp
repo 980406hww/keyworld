@@ -239,10 +239,10 @@
         </tr>
     </table>
 </div>
-<div id="centerDiv">
+<div id="centerDiv" style="margin-bottom: 30px;">
     <table style="font-size:12px; width: 100%;" id="showCaptureRankJobTable">
         <c:forEach items="${page.records}" var="negativeKeyword" varStatus="status">
-        <tr align="left" onmouseover="doOver(this);" onmouseout="doOut(this);" height=30  <c:if test="${status.index%2==0}">bgcolor="#eee"</c:if> >
+        <tr align="left" onmouseover="doOver(this);" onmouseout="doOut(this);" height=30  <c:if test="${status.index%2==0}">bgcolor="#eeeeee"</c:if> >
             <td width=30>${negativeKeyword.uuid}</td>
             <td width=80><a href="#" onclick="findPositionInfos('${negativeKeyword.uuid}')">${negativeKeyword.name}</a></td>
             <td width=50>${negativeKeyword.group}</td>
