@@ -12,6 +12,7 @@ import com.keymanager.monitoring.vo.SearchEngineResultItemVO;
 import com.keymanager.monitoring.vo.SearchEngineResultVO;
 import com.keymanager.util.TerminalTypeMapping;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
+import com.keymanager.value.CustomerKeywordForCaptureTitle;
 import com.keymanager.value.CustomerKeywordForOptimization;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -74,14 +76,19 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         String password = (String) requestMap.get("password");
         try {
             if (validUser(userName, password)) {
-                String returnValue = "";
+                //String returnValue = "";
+                List<CustomerKeywordForCaptureTitle> returnValueList = new ArrayList<CustomerKeywordForCaptureTitle>();
                 String terminalType = TerminalTypeMapping.getTerminalType(request);
                 if (StringUtils.isEmpty(groupName)) {
-                    returnValue = customerKeywordService.searchCustomerKeywordForCaptureTitle(terminalType);
+                    returnValueList = customerKeywordService.searchCustomerKeywordForCaptureTitle(terminalType);
+                    //returnValue = customerKeywordService.searchCustomerKeywordForCaptureTitle(terminalType);
                 } else {
-                    returnValue = customerKeywordService.searchCustomerKeywordForCaptureTitle(groupName, terminalType);
+                    returnValueList.add(customerKeywordService.searchCustomerKeywordForCaptureTitle(groupName, terminalType));
+                    //returnValue = customerKeywordService.searchCustomerKeywordForCaptureTitle(groupName, terminalType);
                 }
-                return new ResponseEntity<Object>(StringUtils.isEmpty(returnValue) ? "{}" : returnValue, HttpStatus.OK);
+                for(CustomerKeywordForCaptureTitle returnValue:returnValueList){
+                    return new ResponseEntity<Object>(returnValue, HttpStatus.OK);
+                }
             }
         }catch (Exception ex){
             logger.error(ex.getMessage());
