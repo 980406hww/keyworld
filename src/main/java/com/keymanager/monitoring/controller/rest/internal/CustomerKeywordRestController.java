@@ -257,14 +257,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 				customerKeywordService.addCustomerKeyword(customerKeyword, userName);
 				return new ResponseEntity<Object>(true, HttpStatus.OK);
 			} else {
-				boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
-				if(isDepartmentManager) {
-					customerKeyword.setStatus(1);
-				} else {
-					customerKeyword.setStatus(2);
-				}
-				customerKeyword.setUpdateTime(new Date());
-				customerKeywordService.updateById(customerKeyword);
+				customerKeywordService.updateCustomerKeywordFromUI(customerKeyword, userName);
 				return new ResponseEntity<Object>(true, HttpStatus.OK);
 			}
 		}catch (Exception ex){

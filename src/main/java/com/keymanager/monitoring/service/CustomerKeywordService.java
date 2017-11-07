@@ -205,6 +205,17 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeywordDao.insert(customerKeyword);
     }
 
+    public void updateCustomerKeywordFromUI(CustomerKeyword customerKeyword, String userName){
+        boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
+        if(isDepartmentManager) {
+            customerKeyword.setStatus(1);
+        } else {
+            customerKeyword.setStatus(2);
+        }
+        customerKeyword.setUpdateTime(new Date());
+        customerKeywordDao.updateById(customerKeyword);
+    }
+
     public boolean haveDuplicatedCustomerKeyword(String terminalType, long customerUuid, String keyword, String originalUrl) {
         int customerKeywordCount = 0;
         try {
