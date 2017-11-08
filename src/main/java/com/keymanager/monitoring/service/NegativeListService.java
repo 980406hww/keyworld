@@ -35,23 +35,11 @@ public class NegativeListService extends ServiceImpl<NegativeListDao, NegativeLi
         return page;
     }
 
-    public void updateNegativeList(NegativeList negativeList) {
-        NegativeList oldNegativeList = negativeListDao.selectById(negativeList.getUuid());
-        if (oldNegativeList != null) {
-            oldNegativeList.setKeyword(negativeList.getKeyword());
-            oldNegativeList.setTitle(negativeList.getTitle());
-            oldNegativeList.setUrl(negativeList.getUrl());
-            oldNegativeList.setDesc(negativeList.getDesc());
-            oldNegativeList.setPosition(negativeList.getPosition());
-            oldNegativeList.setOriginalUrl(negativeList.getOriginalUrl());
-            oldNegativeList.setUpdateTime(new Date());
-            negativeListDao.updateById(oldNegativeList);
-        }
-    }
 
     public void saveNegativeList(NegativeList negativeList) {
         if (null != negativeList.getUuid()) {
-            updateNegativeList(negativeList);
+            negativeList.setUpdateTime(new Date());
+            negativeListDao.updateById(negativeList);
         } else {
             negativeList.setUpdateTime(new Date());
             //在opinion设置该值为负面
@@ -63,7 +51,7 @@ public class NegativeListService extends ServiceImpl<NegativeListDao, NegativeLi
         }
     }
 
-    public void saveNegativeLists(List<NegativeList> negativeLists) {
+    public void saveNegativeLists(List<NegativeList> negativeLists , String operationType) {
         if (CollectionUtils.isNotEmpty(negativeLists)) {
             for (NegativeList negativeList : negativeLists) {
                 NegativeListCriteria negativeListCriteria = new NegativeListCriteria();
@@ -73,11 +61,15 @@ public class NegativeListService extends ServiceImpl<NegativeListDao, NegativeLi
                 negativeListCriteria.setTitle(negativeList.getTitle());
                 negativeListCriteria.setOriginalUrl(negativeList.getOriginalUrl());
                 NegativeList existingNegativeLists = negativeListDao.searchNegativeListsFullMatching(negativeListCriteria);
-                if (existingNegativeLists != null) {
-                    negativeList.setUuid(existingNegativeLists.getUuid());
-                    negativeList.setCreateTime(existingNegativeLists.getCreateTime());
+                if(operationType.equals("update") && existingNegativeLists != null){
+                    negativeListDao.deleteById(existingNegativeLists.getUuid());
+                }else {
+                    if (existingNegativeLists != null) {
+                        negativeList.setUuid(existingNegativeLists.getUuid());
+                        negativeList.setCreateTime(existingNegativeLists.getCreateTime());
+                    }
+                    this.saveNegativeList(negativeList);
                 }
-                this.saveNegativeList(negativeList);
             }
         }
     }

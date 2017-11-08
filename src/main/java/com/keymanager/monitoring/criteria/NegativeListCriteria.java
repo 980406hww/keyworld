@@ -15,6 +15,7 @@ public class NegativeListCriteria extends BaseCriteria {
     private String url;
     private String desc;
     private Integer position;
+    private String operationType;
     private String originalUrl;
     private Date complainTime;
     private List<NegativeList> negativeLists;
@@ -89,5 +90,13 @@ public class NegativeListCriteria extends BaseCriteria {
 
     public void setOriginalUrl(String originalUrl) {
         this.originalUrl = originalUrl;
+    }
+
+    public String getOperationType() {
+        return operationType;
+    }
+
+    public void setOperationType(String operationType) {
+        this.operationType = operationType;
     }
 }

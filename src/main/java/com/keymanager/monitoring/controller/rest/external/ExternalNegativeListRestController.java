@@ -42,7 +42,7 @@ public class ExternalNegativeListRestController extends SpringMVCBaseController 
 						negativeList.setDesc(desc);
 					}
 				}
-				negativeListService.saveNegativeLists(negativeListCriteria.getNegativeLists());
+					negativeListService.saveNegativeLists(negativeListCriteria.getNegativeLists() , negativeListCriteria.getOperationType());
 				return new ResponseEntity<Object>(true, HttpStatus.OK);
 			}
 		}catch (Exception ex){
