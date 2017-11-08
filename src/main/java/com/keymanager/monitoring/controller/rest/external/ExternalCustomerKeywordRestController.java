@@ -77,18 +77,14 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         try {
             if (validUser(userName, password)) {
                 //String returnValue = "";
-                List<CustomerKeywordForCaptureTitle> returnValueList = new ArrayList<CustomerKeywordForCaptureTitle>();
+                CustomerKeywordForCaptureTitle returnValue = new CustomerKeywordForCaptureTitle();
                 String terminalType = TerminalTypeMapping.getTerminalType(request);
                 if (StringUtils.isEmpty(groupName)) {
-                    returnValueList = customerKeywordService.searchCustomerKeywordForCaptureTitle(terminalType);
-                    //returnValue = customerKeywordService.searchCustomerKeywordForCaptureTitle(terminalType);
+                    returnValue = customerKeywordService.searchCustomerKeywordForCaptureTitle(terminalType);
                 } else {
-                    returnValueList.add(customerKeywordService.searchCustomerKeywordForCaptureTitle(groupName, terminalType));
-                    //returnValue = customerKeywordService.searchCustomerKeywordForCaptureTitle(groupName, terminalType);
+                    returnValue = (customerKeywordService.searchCustomerKeywordForCaptureTitle(groupName, terminalType));
                 }
-                for(CustomerKeywordForCaptureTitle returnValue:returnValueList){
                     return new ResponseEntity<Object>(returnValue, HttpStatus.OK);
-                }
             }
         }catch (Exception ex){
             logger.error(ex.getMessage());

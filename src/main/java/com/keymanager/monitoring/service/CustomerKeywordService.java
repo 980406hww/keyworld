@@ -96,7 +96,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return customerKeywordDao.searchCustomerKeywords(customerKeywordCriteria);
     }
 
-    public List<CustomerKeywordForCaptureTitle> searchCustomerKeywordForCaptureTitle(String terminalType) throws Exception {
+    public CustomerKeywordForCaptureTitle searchCustomerKeywordForCaptureTitle(String terminalType) throws Exception {
         QZCaptureTitleLog qzCaptureTitleLog = qzCaptureTitleLogService.getAvailableQZSetting(QZCaptureTitleLogStatusEnum.Processing.getValue(), terminalType);
         if (qzCaptureTitleLog == null) {
             qzCaptureTitleLog = qzCaptureTitleLogService.getAvailableQZSetting(QZCaptureTitleLogStatusEnum.New.getValue(), terminalType);
@@ -115,27 +115,23 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         } else {
             QZOperationType qzOperationType = qzOperationTypeService.selectById(qzCaptureTitleLog.getQzOperationTypeUuid());
             QZSetting qzSetting = qzSettingService.selectById(qzOperationType.getQzSettingUuid());
-            List<CustomerKeywordForCaptureTitle> customerKeywordForCaptureTitleList = new ArrayList<CustomerKeywordForCaptureTitle>();
-            String twolevelDomainNames = "www.baidu.com,www.sougou.com";
-            //String twolevelDomainNames = qzOperationType.getTwolevelDomainName();
-            //ObjectMapper mapper = new ObjectMapper();
-            String [] twolevelDomainNameArray = twolevelDomainNames.split(",");
-            for (String twolevelDomainName: twolevelDomainNameArray) {
+            String twolevelDomainName = qzOperationType.getTwolevelDomainName();
+            if(StringUtils.isNotEmpty(twolevelDomainName)){
                 captureTitle.setWholeUrl(twolevelDomainName);
-                customerKeywordForCaptureTitleList.add(captureTitle);
-                //return mapper.writeValueAsString(captureTitle);
+            }else {
+                captureTitle.setWholeUrl(qzSetting.getDomain());
             }
-            return customerKeywordForCaptureTitleList;
+            return captureTitle;
         }
     }
 
     public CustomerKeywordForCaptureTitle searchCustomerKeywordForCaptureTitle(String groupName, String terminalType) throws Exception {
-            QZCaptureTitleLog qzCaptureTitleLog = new QZCaptureTitleLog();
-            qzCaptureTitleLog.setGroup(groupName);
-            qzCaptureTitleLog.setTerminalType(terminalType);
-            CustomerKeywordForCaptureTitle captureTitle = customerKeywordDao.searchCustomerKeywordForCaptureTitle(qzCaptureTitleLog);
-           // ObjectMapper mapper = new ObjectMapper();
-            //return mapper.writeValueAsString(captureTitle);
+        QZCaptureTitleLog qzCaptureTitleLog = new QZCaptureTitleLog();
+        qzCaptureTitleLog.setGroup(groupName);
+        qzCaptureTitleLog.setTerminalType(terminalType);
+        CustomerKeywordForCaptureTitle captureTitle = customerKeywordDao.searchCustomerKeywordForCaptureTitle(qzCaptureTitleLog);
+       // ObjectMapper mapper = new ObjectMapper();
+        //return mapper.writeValueAsString(captureTitle);
         return captureTitle;
     }
 
