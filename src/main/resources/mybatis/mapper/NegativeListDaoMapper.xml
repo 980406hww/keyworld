@@ -61,4 +61,26 @@
 	<select id="selectLastId" resultType="int">
 		select LAST_INSERT_ID()
 	</select>
+
+	<select id="negativeListsSynchronizeOfDelete"  resultType="com.keymanager.monitoring.entity.NegativeList">
+		SELECT
+			fUuid AS "uuid",
+			fTerminalType AS "terminalType",
+			fKeyword AS "keyword",
+			fTitle AS "title",
+			fUrl AS "url",
+			fDesc AS "desc",
+			fPosition AS "position",
+			fUpdateTime AS "updateTime",
+			fCreateTime AS "createTime"
+		FROM
+		t_negative_list n
+		WHERE fKeyword = #{negativeList.keyword}
+		<if test="negativeList.url != null || negativeList.url != ''">
+			AND fUrl = #{negativeList.url}
+		</if>
+		<if test="negativeList.title != null || negativeList.title != ''">
+			AND fTitle = #{negativeList.title}
+		</if>
+	</select>
 </mapper>

@@ -18,4 +18,6 @@ public interface NegativeListDao extends BaseMapper<NegativeList> {
 
     int selectLastId();
 
+    List<NegativeList> negativeListsSynchronizeOfDelete(@Param("negativeList") NegativeList negativeList);
+
 }

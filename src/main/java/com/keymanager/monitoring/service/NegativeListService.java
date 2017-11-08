@@ -2,6 +2,7 @@ package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.keymanager.monitoring.criteria.KeywordNegativeCriteria;
 import com.keymanager.monitoring.criteria.NegativeListCriteria;
 import com.keymanager.monitoring.dao.NegativeListDao;
 import com.keymanager.monitoring.entity.NegativeList;
@@ -24,6 +25,9 @@ public class NegativeListService extends ServiceImpl<NegativeListDao, NegativeLi
 
     @Autowired
     private NegativeListDao negativeListDao;
+
+    @Autowired
+    private NegativeListsSynchronizeService negativeListsSynchronizeService;
 
     public Page<NegativeList> searchNegativeLists(Page<NegativeList> page, NegativeListCriteria negativeListCriteria) {
         page.setRecords(negativeListDao.searchNegativeLists(page, negativeListCriteria));
@@ -48,7 +52,12 @@ public class NegativeListService extends ServiceImpl<NegativeListDao, NegativeLi
             updateNegativeList(negativeList);
         } else {
             negativeList.setUpdateTime(new Date());
+            //在opinion设置该值为负面
+            KeywordNegativeCriteria keywordNegativeCriteria = new KeywordNegativeCriteria();
+            keywordNegativeCriteria.setNegativeList(negativeList);
+            keywordNegativeCriteria.setNegative(true);
             negativeListDao.insert(negativeList);
+            negativeListsSynchronizeService.negativeListsSynchronize(keywordNegativeCriteria);
         }
     }
 
@@ -80,13 +89,31 @@ public class NegativeListService extends ServiceImpl<NegativeListDao, NegativeLi
     }
 
     public void deleteNegativeList(long uuid) {
+        NegativeList negativeList = negativeListDao.selectById(uuid);
+        //在opinion设置该值为负面
+        KeywordNegativeCriteria keywordNegativeCriteria = new KeywordNegativeCriteria();
+        keywordNegativeCriteria.setNegativeList(negativeList);
+        keywordNegativeCriteria.setNegative(false);
         negativeListDao.deleteById(uuid);
+        negativeListsSynchronizeService.negativeListsSynchronize(keywordNegativeCriteria);
+//        Boolean isDelete =
+//        if(isDelete){
+//
+//        }
     }
 
     public void deleteAll(List<String> uuids) {
         for (String uuid : uuids) {
             deleteNegativeList(Long.valueOf(uuid));
         }
+    }
+
+    public List<NegativeList> negativeListsSynchronizeOfDelete(NegativeList negativeList){
+        List<NegativeList> negativeLists = negativeListDao.negativeListsSynchronizeOfDelete(negativeList);
+        if (negativeLists == null || negativeLists.isEmpty()) {
+            return null;
+        }
+        return negativeLists;
     }
 
 }
