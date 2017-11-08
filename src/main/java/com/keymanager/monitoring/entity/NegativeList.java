@@ -23,6 +23,9 @@ public class NegativeList extends BaseEntity {
 	@TableField(value = "fPosition")
 	private Integer position;
 
+	@TableField(value = "fOriginalUrl")
+	private String originalUrl;
+
 	public String getTerminalType() {
 		return terminalType;
 	}
@@ -69,5 +72,13 @@ public class NegativeList extends BaseEntity {
 
 	public void setPosition(Integer position) {
 		this.position = position;
+	}
+
+	public String getOriginalUrl() {
+		return originalUrl;
+	}
+
+	public void setOriginalUrl(String originalUrl) {
+		this.originalUrl = originalUrl;
 	}
 }

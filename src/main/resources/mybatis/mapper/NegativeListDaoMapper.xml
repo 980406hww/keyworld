@@ -38,6 +38,7 @@
 		<if test="negativeListCriteria.url != null and negativeListCriteria.url != ''">AND n.fUrl = #{negativeListCriteria.url}</if>
 		<if test="negativeListCriteria.title != null and negativeListCriteria.title != ''">AND n.fTitle = #{negativeListCriteria.title}</if>
 		ORDER BY n.fCreateTime DESC
+		LIMIT 1
 	</select>
 
 	<select id="getSpecifiedKeywordNegativeLists" resultType="com.keymanager.monitoring.entity.NegativeList">

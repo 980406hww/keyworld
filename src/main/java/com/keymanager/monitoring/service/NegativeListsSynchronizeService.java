@@ -9,21 +9,14 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.InetAddress;
 
-@Service
 public class NegativeListsSynchronizeService {
 	private static Logger logger = LoggerFactory.getLogger(NegativeListsSynchronizeService.class);
 	public static final RestTemplate restTemplate = new RestTemplate();
-	public static String username;
-	public static String password;
-	public static String webPath;
+	private String username;
+	private String password;
+	private String webPath;
 
-	static{
-		PropertiesLoader propertiesLoader = new PropertiesLoader("classpath:/application.properties");
-		username = propertiesLoader.getProperty("publicOpinion.username");
-		password = propertiesLoader.getProperty("publicOpinion.password");
-		webPath = propertiesLoader.getProperty("publicOpinion.webPath");
-	}
-	
+
 	public Boolean negativeListsSynchronize(KeywordNegativeCriteria keywordNegativeCriteria){
 		keywordNegativeCriteria.setUserName(username);
 		keywordNegativeCriteria.setPassword(password);
@@ -33,5 +26,17 @@ public class NegativeListsSynchronizeService {
 			logger.error(e.getMessage());
 		}
 		return false;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public void setWebPath(String webPath) {
+		this.webPath = webPath;
 	}
 }

@@ -8,6 +8,7 @@ import com.keymanager.monitoring.service.NegativeListService;
 import com.keymanager.util.Constants;
 import com.keymanager.util.TerminalTypeMapping;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,10 @@ public class ExternalNegativeListRestController extends SpringMVCBaseController 
 				String terminalType = TerminalTypeMapping.getTerminalType(request);
 				for(NegativeList negativeList : negativeListCriteria.getNegativeLists()){
 					negativeList.setTerminalType(terminalType);
+					if(StringUtils.isNotEmpty(negativeList.getDesc())){
+						String desc = 	negativeList.getDesc().replace("\n" , "").replace(" ", "");
+						negativeList.setDesc(desc);
+					}
 				}
 				negativeListService.saveNegativeLists(negativeListCriteria.getNegativeLists());
 				return new ResponseEntity<Object>(true, HttpStatus.OK);

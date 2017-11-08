@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd"
+	default-lazy-init="true">
+
+	<description>其他配置</description>
+	
+	<!-- 负面信息同步服务类 -->
+	<bean id="negativeListsSynchronizeService" class="com.keymanager.monitoring.service.NegativeListsSynchronizeService">
+		<property name="username" value="${publicOpinion.username}" />
+		<property name="password" value="${publicOpinion.password}" />
+		<property name="webPath" value="${publicOpinion.webPath}" />
+	</bean>
+	
+</beans>

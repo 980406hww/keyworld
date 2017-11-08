@@ -10,6 +10,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -42,6 +43,7 @@ public class NegativeListService extends ServiceImpl<NegativeListDao, NegativeLi
             oldNegativeList.setUrl(negativeList.getUrl());
             oldNegativeList.setDesc(negativeList.getDesc());
             oldNegativeList.setPosition(negativeList.getPosition());
+            oldNegativeList.setOriginalUrl(negativeList.getOriginalUrl());
             oldNegativeList.setUpdateTime(new Date());
             negativeListDao.updateById(oldNegativeList);
         }
@@ -69,10 +71,11 @@ public class NegativeListService extends ServiceImpl<NegativeListDao, NegativeLi
                 negativeListCriteria.setTerminalType(negativeList.getTerminalType());
                 negativeListCriteria.setUrl(negativeList.getUrl());
                 negativeListCriteria.setTitle(negativeList.getTitle());
-                List<NegativeList> existingNegativeLists = negativeListDao.searchNegativeListsFullMatching(negativeListCriteria);
-                if(CollectionUtils.isNotEmpty(existingNegativeLists)){
-                    negativeList.setUuid(existingNegativeLists.get(0).getUuid());
-                    negativeList.setCreateTime(existingNegativeLists.get(0).getCreateTime());
+                negativeListCriteria.setOriginalUrl(negativeList.getOriginalUrl());
+                NegativeList existingNegativeLists = negativeListDao.searchNegativeListsFullMatching(negativeListCriteria);
+                if (existingNegativeLists != null) {
+                    negativeList.setUuid(existingNegativeLists.getUuid());
+                    negativeList.setCreateTime(existingNegativeLists.getCreateTime());
                 }
                 this.saveNegativeList(negativeList);
             }
