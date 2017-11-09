@@ -133,7 +133,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 				qzOperationType.setQzSettingUuid(qzSettingUuid);
 				qzOperationTypeService.insert(qzOperationType);
 				Long qzOperationTypeUuid  = new Long(qzOperationTypeService.selectLastId());//插入qzOperationType时的uuid
-				for(QZChargeRule qzChargeRule : qzOperationType.getQzChargeRules() ){
+				for(QZChargeRule qzChargeRule : qzOperationType.getQzChargeRules()){
 					qzChargeRule.setQzOperationTypeUuid(qzOperationTypeUuid);
 					qzChargeRuleService.insert(qzChargeRule);
 				}
@@ -186,6 +186,8 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		oldOperationType.setInitialKeywordCount(newOperationType.getInitialKeywordCount());
 		oldOperationType.setCurrentKeywordCount(newOperationType.getCurrentKeywordCount());
 		oldOperationType.setGroup(newOperationType.getGroup());
+		oldOperationType.setTwolevelDomainName(newOperationType.getTwolevelDomainName());
+
 		oldOperationType.setIsDeleted(0);//只要是发生改变那么就让它的状态为1
 		qzOperationTypeService.updateById(oldOperationType);
 		//删除规则

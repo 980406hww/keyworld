@@ -29,7 +29,7 @@ public class QZOperationType extends BaseEntity {
   @TableField(value = "fGroup")
   private String group;//分组()
 
-  @TableField(value = "fTwolevelDomainName")
+  @TableField(value = "fTwolevelDomainName",validate= FieldStrategy.IGNORED)
   private String twolevelDomainName;//二级域名()
 
   @TableField(value = "fReachTargetDate")
