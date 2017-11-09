@@ -57,7 +57,7 @@ public class CaptureRealUrlService {
 //    }
 
     public String fetchRealUrl(String sourceUrl, int retryCount) throws IOException {
-        System.out.println(sourceUrl);
+//        System.out.println(sourceUrl);
         String finalUrl = "";
         try {
             DefaultHttpClient client = new DefaultHttpClient();
@@ -93,7 +93,7 @@ public class CaptureRealUrlService {
         try {
 //            String realUrl = captureRealUrl.fetch("{\"baiduUrlElementList\":[{\"id\":\"1\",\"baiduUrl\":\"http://www.baidu.com/link?url=HUPn1y5JDgrWUa1ug77bAJRup3AfJzi-HYDIyDScozLebF1F2LIlfv5vtDPRApwJbj34NnnuWwaNWUD04naJ_QNKRdbmGMdj2Efdh-qRq-S\"}]}");
             String realUrl = captureRealUrlService.fetchRealUrl("http://www.aihuhua.com/index.php?app=wap&mod=Index&act=index", 0);
-            System.out.println(realUrl);
+//            System.out.println(realUrl);
         } catch (Exception e) {
             e.printStackTrace();
         }

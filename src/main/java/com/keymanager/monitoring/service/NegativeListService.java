@@ -62,7 +62,7 @@ public class NegativeListService extends ServiceImpl<NegativeListDao, NegativeLi
                 negativeListCriteria.setOriginalUrl(negativeList.getOriginalUrl());
                 NegativeList existingNegativeLists = negativeListDao.searchNegativeListsFullMatching(negativeListCriteria);
                 if(operationType.equals("update") && existingNegativeLists != null){
-                    negativeListDao.deleteById(existingNegativeLists.getUuid());
+                    deleteNegativeList(existingNegativeLists.getUuid(), existingNegativeLists);
                 }else {
                     if (existingNegativeLists != null) {
                         negativeList.setUuid(existingNegativeLists.getUuid());
@@ -83,8 +83,11 @@ public class NegativeListService extends ServiceImpl<NegativeListDao, NegativeLi
         return negativeList;
     }
 
-    public void deleteNegativeList(long uuid) {
-        NegativeList negativeList = negativeListDao.selectById(uuid);
+    public void deleteNegativeList(long uuid , NegativeList existingNegativeLists) {
+        NegativeList negativeList = existingNegativeLists;
+        if (negativeList == null) {
+            negativeList = negativeListDao.selectById(uuid);
+        }
         //在opinion设置该值为负面
         KeywordNegativeCriteria keywordNegativeCriteria = new KeywordNegativeCriteria();
         keywordNegativeCriteria.setNegativeList(negativeList);
@@ -99,7 +102,7 @@ public class NegativeListService extends ServiceImpl<NegativeListDao, NegativeLi
 
     public void deleteAll(List<String> uuids) {
         for (String uuid : uuids) {
-            deleteNegativeList(Long.valueOf(uuid));
+            deleteNegativeList(Long.valueOf(uuid) , null);
         }
     }
 
