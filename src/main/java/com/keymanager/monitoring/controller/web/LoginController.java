@@ -88,6 +88,7 @@ public class LoginController extends BaseController {
 		if (StringUtils.isBlank(username)) {
 			return 	renderError("用户名不能为空");
 		}
+		username = username.trim();
 		if (StringUtils.isBlank(password)) {
 			return 	renderError("密码不能为空");
 		}

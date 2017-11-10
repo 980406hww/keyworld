@@ -6,8 +6,10 @@ import com.keymanager.monitoring.criteria.CustomerKeywordCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordUpdateGroupCriteria;
 import com.keymanager.monitoring.entity.CustomerKeyword;
+import com.keymanager.monitoring.entity.QZCaptureTitleLog;
 import com.keymanager.monitoring.vo.CodeNameVo;
 import com.keymanager.monitoring.vo.SearchEngineResultVO;
+import com.keymanager.value.CustomerKeywordForCaptureTitle;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
@@ -92,8 +94,9 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void updateCustomerKeywordStatus(@Param("uuids")List<Long> uuids, @Param("status")Integer status);
 
+    void updateCustomerKeywordFromUI(@Param("CustomerKeyword")CustomerKeyword customerKeyword);
 
-    public CustomerKeyword searchTitleAndUrl(@Param("groupNames") String[] groupNames,@Param("customerUuid") Long customerUuid);
+    CustomerKeyword searchTitleAndUrl(@Param("groupNames") String[] groupNames,@Param("customerUuid") Long customerUuid);
 
     List<CodeNameVo> searchGroups();
 
@@ -102,4 +105,8 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void updateAutoUpdateNegativeTime(@Param("terminalType")String terminalType, @Param("groupName")String groupName, @Param("keyword")String keyword);
 
     void updateAutoUpdateNegativeTimeAs4MinutesAgo(@Param("terminalType")String terminalType, @Param("groupName")String groupName);
+
+    CustomerKeywordForCaptureTitle searchCustomerKeywordForCaptureTitle(@Param("qzCaptureTitleLog") QZCaptureTitleLog qzCaptureTitleLog);
+
+    void  deleteEmptyTitleCustomerKeyword(@Param("qzCaptureTitleLog")QZCaptureTitleLog qzCaptureTitleLog);
 }

@@ -60,24 +60,60 @@
         ck.fOrderNumber	AS	'orderNumber',
         ck.fRemarks	AS	'remarks',
         ck.fStatus	AS	'status',
+        ck.fManualCleanTitle as 'manualCleanTitle',
         ck.fUpdateTime	AS	'updateTime',
         ck.fCreateTime	AS	'createTime'
     </sql>
 
     <update id="cleanSelectedCustomerKeywordTitle">
-        UPDATE t_customer_keyword set fTitle = null where fUuid in
+        UPDATE t_customer_keyword set fTitle = null , fManualCleanTitle = 1 where fUuid in
         <foreach item="item" index="index" collection="uuids" open="(" separator="," close=")">
           #{item}
         </foreach>
     </update>
 
     <update id="cleanCustomerTitle">
-        UPDATE t_customer_keyword set fTitle = null where fTerminalType = #{terminalType} and fType = #{entryType} and fCustomerUuid = #{customerUuid}
+        UPDATE t_customer_keyword set fTitle = null , fManualCleanTitle = 1 where fTerminalType = #{terminalType} and fType = #{entryType} and fCustomerUuid = #{customerUuid}
     </update>
 
     <update id="cleanCaptureTitleFlag">
         UPDATE t_customer_keyword SET fTitle = NULL, fCaptureTitleQueryTime = NULL, fCapturedTitle = 0
-        where fTerminalType = #{terminalType} and fCustomerUuid = #{customerUuid}  and fType = #{entryType}
+        where fTerminalType = #{terminalType} and fCustomerUuid = #{customerUuid}  and fType = #{entryType} and  fManualCleanTitle = 0
+    </update>
+
+    <update id="updateCustomerKeywordFromUI" parameterType="com.keymanager.monitoring.entity.CustomerKeyword">
+        UPDATE t_customer_keyword
+        SET fKeyword = #{customerKeyword.keyword},
+          fUrl = #{customerKeyword.url},
+          fOriginalUrl = #{customerKeyword.originalUrl},
+          fTitle = #{customerKeyword.url},
+          fSequence = #{customerKeyword.sequence
+          fSearchEngine = #{customerKeyword.searchEngine},
+          fInitialIndexCount = #{customerKeyword.initialIndexCount},
+          fInitialPosition = #{customerKeyword.initialPosition},
+          fCurrentIndexCount = #{customerKeyword.currentIndexCount},
+          fCurrentPosition = #{customerKeyword.currentPosition},
+          fServiceProvider = #{customerKeyword.serviceProvider},
+          fOptimizeGroupName = #{customerKeyword.optimizeGroupName},
+          fOptimizePlanCount = #{customerKeyword.optimizePlanCount},
+          fPositionFirstCost = #{customerKeyword.positionFirstCost},
+          fPositionSecondCost = #{customerKeyword.positionSecondCost},
+          fPositionThirdCost = #{customerKeyword.positionThirdCost},
+          fPositionForthCost = #{customerKeyword.positionForthCost},
+          fPositionFifthCost = #{customerKeyword.positionFifthCost},
+          fPositionFirstFee = #{customerKeyword.positionFirstFee},
+          fPositionSecondFee = #{customerKeyword.positionSecondFee},
+          fPositionThirdFee = #{customerKeyword.positionThirdFee},
+          fPositionForthFee = #{customerKeyword.positionForthFee},
+          fPositionFifthFee = #{customerKeyword.positionFifthFee},
+          fPositionFirstPageFee = #{customerKeyword.positionFirstPageFee},
+          fCollectMethod = #{customerKeyword.collectMethod},
+          fPaymentStatus = #{customerKeyword.paymentStatus},
+          fOrderNumber = #{customerKeyword.orderNumber},
+          fRemarks = #{customerKeyword.remarks},
+          fStatus = #{customerKeyword.status},
+          fUpdateTime = #{customerKeyword.updateTime}
+        WHERE fUuid = #{customerKeyword.uuid}
     </update>
 
     <select id="getCustomerKeywordCount" resultType="int">
@@ -397,4 +433,42 @@
             and fOptimizeGroupName != ''
             GROUP BY fOptimizeGroupName
     </select>
+
+    <select id="searchCustomerKeywordForCaptureTitle" resultType="com.keymanager.value.CustomerKeywordForCaptureTitle">
+            SELECT
+                ck.fKeyword  AS `keyword`,
+                ck.fUrl  AS `url`,
+                ck.fUuid  AS `uuid`,
+                ck.fOriginalUrl  AS `wholeUrl`
+            FROM
+                t_customer_keyword ck
+            WHERE 1 = 1
+            <if test="qzCaptureTitleLog.terminalType != null and qzCaptureTitleLog.terminalType != ''">
+                AND ck.fTerminalType = #{qzCaptureTitleLog.terminalType}
+            </if>
+            <if test="qzCaptureTitleLog.group != null and qzCaptureTitleLog.group != ''">
+                AND ck.fOptimizeGroupName = #{qzCaptureTitleLog.group}
+            </if>
+            <if test="qzCaptureTitleLog.customerUuid != null and qzCaptureTitleLog.customerUuid != ''">
+                AND ck.fCustomerUuid = #{qzCaptureTitleLog.customerUuid}
+            </if>
+            AND ck.fCapturedTitle = 0
+            AND ck.fCaptureTitleQueryTime IS NULL
+            AND (ck.fTitle IS NULL OR ck.fTitle = '')
+            LIMIT 1
+    </select>
+
+    <delete id="deleteEmptyTitleCustomerKeyword">
+        DELETE
+        FROM
+            t_customer_keyword
+        WHERE
+            fCustomerUuid = #{qzCaptureTitleLog.customerUuid}
+        AND fTerminalType = #{qzCaptureTitleLog.terminalType}
+        AND fType =  #{qzCaptureTitleLog.type}
+        AND fOptimizeGroupName =  #{qzCaptureTitleLog.group}
+        AND ( fTitle = '' OR  fTitle IS NULL )
+        AND fManualCleanTitle  = 0
+    </delete>
+
 </mapper>

@@ -909,7 +909,7 @@
 
 			settingDialogDiv.find("#host").val(clientStatus.host != null ? clientStatus.host : "");
 			settingDialogDiv.find("#port").val(clientStatus.port != null ? clientStatus.port : "");
-			settingDialogDiv.find("#userName").val(clientStatus.userName != null ? clientStatus.userName : "Administrator");
+			settingDialogDiv.find("#csUserName").val(clientStatus.userName != null ? clientStatus.userName : "Administrator");
 			settingDialogDiv.find("#password").val(clientStatus.password != null ? clientStatus.password : "doshows123");
             settingDialogDiv.find("#broadbandAccount").val(clientStatus.broadbandAccount != null ? clientStatus.broadbandAccount : "");
             settingDialogDiv.find("#broadbandPassword").val(clientStatus.broadbandPassword != null ? clientStatus.broadbandPassword : "");
@@ -938,7 +938,7 @@
 			clientStatus.disableStatistics = settingDialogDiv.find("#disableStatistics").val();
 			clientStatus.host = settingDialogDiv.find("#host").val();
 			clientStatus.port = settingDialogDiv.find("#port").val();
-			clientStatus.userName = settingDialogDiv.find("#userName").val();
+			clientStatus.userName = settingDialogDiv.find("#csUserName").val();
 			clientStatus.password = settingDialogDiv.find("#password").val();
             clientStatus.broadbandAccount = settingDialogDiv.find("#broadbandAccount").val();
             clientStatus.broadbandPassword = settingDialogDiv.find("#broadbandPassword").val();
@@ -1386,7 +1386,7 @@
 						<tr>
 							<th>VNC和操作系统用户名</th>
 							<td>
-								<input type="text" name="userName" id="userName" value="Administrator"  style="width:110px;"/>
+								<input type="text" name="csUserName" id="csUserName" value="Administrator"  style="width:110px;"/>
 							</td>
 						</tr>
 						<tr>
