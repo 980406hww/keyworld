@@ -55,6 +55,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
 	public ResponseEntity<?> saveQZSetting(@RequestBody QZSetting qzSetting){
 		try {
 			qzSettingService.saveQZSetting(qzSetting);
+
 			return new ResponseEntity<Object>(qzSetting, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.getMessage());

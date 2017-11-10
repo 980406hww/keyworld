@@ -96,7 +96,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return customerKeywordDao.searchCustomerKeywords(customerKeywordCriteria);
     }
 
-    public String searchCustomerKeywordForCaptureTitle(String terminalType) throws Exception {
+    public CustomerKeywordForCaptureTitle searchCustomerKeywordForCaptureTitle(String terminalType) throws Exception {
         QZCaptureTitleLog qzCaptureTitleLog = qzCaptureTitleLogService.getAvailableQZSetting(QZCaptureTitleLogStatusEnum.Processing.getValue(), terminalType);
         if (qzCaptureTitleLog == null) {
             qzCaptureTitleLog = qzCaptureTitleLogService.getAvailableQZSetting(QZCaptureTitleLogStatusEnum.New.getValue(), terminalType);
@@ -105,30 +105,34 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             }
         }
         if (qzCaptureTitleLog == null) {
-            return "";
+            return null;
         }
-
         CustomerKeywordForCaptureTitle captureTitle = customerKeywordDao.searchCustomerKeywordForCaptureTitle(qzCaptureTitleLog);
         if (captureTitle == null) {
             qzCaptureTitleLogService.completeQZCaptureTitleLog(qzCaptureTitleLog.getUuid());
             customerKeywordDao.deleteEmptyTitleCustomerKeyword(qzCaptureTitleLog);
-            return "";
+            return null;
         } else {
             QZOperationType qzOperationType = qzOperationTypeService.selectById(qzCaptureTitleLog.getQzOperationTypeUuid());
             QZSetting qzSetting = qzSettingService.selectById(qzOperationType.getQzSettingUuid());
-            captureTitle.setWholeUrl(qzSetting.getDomain());
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.writeValueAsString(captureTitle);
+            String twolevelDomainName = qzOperationType.getTwolevelDomainName();
+            if(StringUtils.isNotEmpty(twolevelDomainName)){
+                captureTitle.setWholeUrl(twolevelDomainName);
+            }else {
+                captureTitle.setWholeUrl(qzSetting.getDomain());
+            }
+            return captureTitle;
         }
     }
 
-    public String searchCustomerKeywordForCaptureTitle(String groupName, String terminalType) throws Exception {
-            QZCaptureTitleLog qzCaptureTitleLog = new QZCaptureTitleLog();
-            qzCaptureTitleLog.setGroup(groupName);
-            qzCaptureTitleLog.setTerminalType(terminalType);
-            CustomerKeywordForCaptureTitle captureTitle = customerKeywordDao.searchCustomerKeywordForCaptureTitle(qzCaptureTitleLog);
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.writeValueAsString(captureTitle);
+    public CustomerKeywordForCaptureTitle searchCustomerKeywordForCaptureTitle(String groupName, String terminalType) throws Exception {
+        QZCaptureTitleLog qzCaptureTitleLog = new QZCaptureTitleLog();
+        qzCaptureTitleLog.setGroup(groupName);
+        qzCaptureTitleLog.setTerminalType(terminalType);
+        CustomerKeywordForCaptureTitle captureTitle = customerKeywordDao.searchCustomerKeywordForCaptureTitle(qzCaptureTitleLog);
+       // ObjectMapper mapper = new ObjectMapper();
+        //return mapper.writeValueAsString(captureTitle);
+        return captureTitle;
     }
 
     public void cleanTitle(CustomerKeywordCleanCriteria customerKeywordCleanCriteria) {
