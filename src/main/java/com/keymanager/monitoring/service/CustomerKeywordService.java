@@ -4,9 +4,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.keymanager.enums.CollectMethod;
-import com.keymanager.enums.CustomerKeywordStatus;
 import com.keymanager.monitoring.criteria.*;
 import com.keymanager.monitoring.dao.CustomerKeywordDao;
 import com.keymanager.monitoring.entity.*;
@@ -115,9 +113,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         } else {
             QZOperationType qzOperationType = qzOperationTypeService.selectById(qzCaptureTitleLog.getQzOperationTypeUuid());
             QZSetting qzSetting = qzSettingService.selectById(qzOperationType.getQzSettingUuid());
-            String twolevelDomainName = qzOperationType.getTwolevelDomainName();
-            if(StringUtils.isNotEmpty(twolevelDomainName)){
-                captureTitle.setWholeUrl(twolevelDomainName);
+            String subDomainName = qzOperationType.getSubDomainName();
+            if(StringUtils.isNotEmpty(subDomainName)){
+                captureTitle.setWholeUrl(subDomainName);
             }else {
                 captureTitle.setWholeUrl(qzSetting.getDomain());
             }

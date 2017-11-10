@@ -829,7 +829,7 @@
         // 操作类型表填充数据
         $.each(qzSetting.qzOperationTypes, function (idx, val) {
             settingDialogDiv.find("#group" + val.operationType).val(val.group);
-            settingDialogDiv.find("#twolevelDomainName" + val.operationType).val(val.twolevelDomainName);
+            settingDialogDiv.find("#subDomainName" + val.operationType).val(val.subDomainName);
             settingDialogDiv.find("#initialKeywordCount" + val.operationType).val(
                 val.initialKeywordCount);
             settingDialogDiv.find("#currentKeywordCount" + val.operationType).val(
@@ -911,7 +911,7 @@
                 "#initialKeywordCount" + val.id).val();
             operationType.currentKeywordCount = settingDialogDiv.find(
                 "#currentKeywordCount" + val.id).val();
-            operationType.twolevelDomainName = settingDialogDiv.find("#twolevelDomainName" + val.id).val();
+            operationType.subDomainName = settingDialogDiv.find("#subDomainName" + val.id).val();
 
             if (operationType.group == null || operationType.group === "") {
                 alert("请输入分组");
@@ -1144,7 +1144,7 @@
 					</tr>
 					<tr>
 						<td align="right" style="width:72px">电脑域名</td>
-						<td><input type="text" name="twolevelDomainName" id="twolevelDomainNamePC"  style="width:240px;margin-left: -6;"/></td>
+						<td><input type="text" name="subDomainName" id="subDomainNamePC"  style="width:240px;margin-left: -6;"/></td>
 					</tr>
 					<tr>
 						<td align="right" style="width:72px">初始词量</td>
@@ -1192,7 +1192,7 @@
 					</tr>
 					<tr>
 						<td align="right" style="width:72px;"><span style="margin-right:14;">手机域名</span></td>
-						<td><input type="text" name="twolevelDomainName" id="twolevelDomainNamePhone" style="width:240px;margin-left: -6;"/></td>
+						<td><input type="text" name="subDomainName" id="subDomainNamePhone" style="width:240px;margin-left: -6;"/></td>
 					</tr>
 					<tr>
 						<td align="right" style="width:72px"><span style="margin-right:14;">初始词量</span></td>

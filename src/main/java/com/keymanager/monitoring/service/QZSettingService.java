@@ -2,9 +2,7 @@ package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.keymanager.db.DBUtil;
 import com.keymanager.enums.CollectMethod;
-import com.keymanager.manager.CustomerKeywordManager;
 import com.keymanager.monitoring.criteria.QZSettingCriteria;
 import com.keymanager.monitoring.criteria.QZSettingSearchCriteria;
 import com.keymanager.monitoring.dao.QZSettingDao;
@@ -13,11 +11,9 @@ import com.keymanager.monitoring.enums.QZCaptureTitleLogStatusEnum;
 import com.keymanager.monitoring.enums.QZSettingStatusEnum;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
 import com.keymanager.monitoring.vo.DateRangeTypeVO;
-import com.keymanager.monitoring.vo.QZSettingVO;
 import com.keymanager.util.Constants;
 import com.keymanager.util.Utils;
 import com.keymanager.value.CustomerKeywordVO;
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -26,8 +22,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Connection;
-import java.text.DateFormat;
 import java.util.*;
 
 @Service
@@ -186,7 +180,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		oldOperationType.setInitialKeywordCount(newOperationType.getInitialKeywordCount());
 		oldOperationType.setCurrentKeywordCount(newOperationType.getCurrentKeywordCount());
 		oldOperationType.setGroup(newOperationType.getGroup());
-		oldOperationType.setTwolevelDomainName(newOperationType.getTwolevelDomainName());
+		oldOperationType.setSubDomainName(newOperationType.getSubDomainName());
 
 		oldOperationType.setIsDeleted(0);//只要是发生改变那么就让它的状态为1
 		qzOperationTypeService.updateById(oldOperationType);
