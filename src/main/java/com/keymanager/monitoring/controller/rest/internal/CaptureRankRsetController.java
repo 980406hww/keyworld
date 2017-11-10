@@ -6,6 +6,7 @@ import com.keymanager.monitoring.criteria.CaptureRankJobSearchCriteria;
 import com.keymanager.monitoring.entity.CaptureRankJob;
 import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.CustomerKeyword;
+import com.keymanager.monitoring.enums.TerminalTypeEnum;
 import com.keymanager.monitoring.service.*;
 import com.keymanager.monitoring.vo.CodeNameVo;
 import com.keymanager.util.TerminalTypeMapping;
@@ -77,6 +78,7 @@ public class CaptureRankRsetController {
 
     private ModelAndView constructCaptureRankJobModelAndView(HttpServletRequest request, CaptureRankJobSearchCriteria captureRankJobSearchCriteria, String currentPage, String pageSize) {
         ModelAndView modelAndView = new ModelAndView("captureRank/captureRank");
+        captureRankJobSearchCriteria.setOperationType(TerminalTypeMapping.getTerminalType(request));
         Page<CaptureRankJob> page = captureRankJobService.searchCaptureRankJob(new Page<CaptureRankJob>(Integer.parseInt(currentPage), Integer.parseInt(pageSize)), captureRankJobSearchCriteria);
         modelAndView.addObject("page", page);
         modelAndView.addObject("captureRankJobSearchCriteria", captureRankJobSearchCriteria);

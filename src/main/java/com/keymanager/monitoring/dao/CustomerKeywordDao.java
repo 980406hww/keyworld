@@ -94,8 +94,9 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void updateCustomerKeywordStatus(@Param("uuids")List<Long> uuids, @Param("status")Integer status);
 
+    void updateCustomerKeywordFromUI(@Param("CustomerKeyword")CustomerKeyword customerKeyword);
 
-    public CustomerKeyword searchTitleAndUrl(@Param("groupNames") String[] groupNames,@Param("customerUuid") Long customerUuid);
+    CustomerKeyword searchTitleAndUrl(@Param("groupNames") String[] groupNames,@Param("customerUuid") Long customerUuid);
 
     List<CodeNameVo> searchGroups();
 
