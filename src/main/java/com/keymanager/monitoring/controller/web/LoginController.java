@@ -12,6 +12,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.DisabledAccountException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -100,20 +101,20 @@ public class LoginController extends BaseController {
 		}
 		Subject user = SecurityUtils.getSubject();
 		List<Tree> menus = resourceService.selectAuthorizationMenu(username);
-//		List<Tree> menus = resourceService.selectAllMenu();
-		request.getSession().setAttribute("entryType",entryType);
-		String terminalType = TerminalTypeMapping.getTerminalType(request);
-		request.getSession().setAttribute("terminalType", terminalType);
-		request.getSession().setAttribute("username",username);
-		request.getSession().setAttribute("password",password);
-		request.getSession().setAttribute("menus",menus);
 		ExtendedUsernamePasswordToken token = new ExtendedUsernamePasswordToken(username, password);
 		token.setEntryType(entryType);
+		String terminalType = TerminalTypeMapping.getTerminalType(request);
 		token.setTerminalType(terminalType);
 		// 设置记住密码
 		token.setRememberMe(1 == rememberMe);
 		try {
 			user.login(token);
+			Session session = user.getSession();
+			session.setAttribute("entryType",entryType);
+			session.setAttribute("terminalType", terminalType);
+			session.setAttribute("username",username);
+			session.setAttribute("password",password);
+			session.setAttribute("menus",menus);
 			return renderSuccess();
 		} catch (UnknownAccountException e) {
 			throw new RuntimeException("账号不存在！", e);
