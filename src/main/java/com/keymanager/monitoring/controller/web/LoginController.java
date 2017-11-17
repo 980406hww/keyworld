@@ -12,6 +12,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.DisabledAccountException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -92,21 +93,27 @@ public class LoginController extends BaseController {
 		if (StringUtils.isBlank(password)) {
 			return 	renderError("密码不能为空");
 		}
-		if (StringUtils.isBlank(captcha)) {
-		   return 	renderError("验证码不能为空");
-		}
-		if (!dreamCaptcha.validate(request, response, captcha)) {
-			return 	renderError("验证码错误");
-		}
+//		if (StringUtils.isBlank(captcha)) {
+//		   return 	renderError("验证码不能为空");
+//		}
+//		if (!dreamCaptcha.validate(request, response, captcha)) {
+//			return 	renderError("验证码错误");
+//		}
 		Subject user = SecurityUtils.getSubject();
 		List<Tree> menus = resourceService.selectAuthorizationMenu(username);
 //		List<Tree> menus = resourceService.selectAllMenu();
-		request.getSession().setAttribute("entryType",entryType);
+		Session session = user.getSession();
 		String terminalType = TerminalTypeMapping.getTerminalType(request);
-		request.getSession().setAttribute("terminalType", terminalType);
-		request.getSession().setAttribute("username",username);
-		request.getSession().setAttribute("password",password);
-		request.getSession().setAttribute("menus",menus);
+//		request.getSession().setAttribute("entryType",entryType);
+//		request.getSession().setAttribute("terminalType", terminalType);
+//		request.getSession().setAttribute("username",username);
+//		request.getSession().setAttribute("password",password);
+//		request.getSession().setAttribute("menus",menus);
+		session.setAttribute("entryType",entryType);
+		session.setAttribute("terminalType", terminalType);
+		session.setAttribute("username",username);
+		session.setAttribute("password",password);
+		session.setAttribute("menus",menus);
 		ExtendedUsernamePasswordToken token = new ExtendedUsernamePasswordToken(username, password);
 		token.setEntryType(entryType);
 		token.setTerminalType(terminalType);
