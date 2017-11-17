@@ -824,4 +824,14 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     public List<CodeNameVo> searchGroups() {
         return customerKeywordDao.searchGroups();
     }
+
+    public List<QZOperationType> addCustomerKeywordForTerminal(Integer customerUuid, String keyword, List<QZOperationType> qzOperationTypes) {
+        for (QZOperationType qzOperationType : qzOperationTypes) {
+            int customerKeywordCount = customerKeywordDao.searchCustomerKeywordByKeyword((long) customerUuid, keyword, qzOperationType);
+            if(customerKeywordCount > 0) {
+                qzOperationTypes.remove(qzOperationType);
+            }
+        }
+        return qzOperationTypes;
+    }
 }
