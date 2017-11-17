@@ -93,34 +93,28 @@ public class LoginController extends BaseController {
 		if (StringUtils.isBlank(password)) {
 			return 	renderError("密码不能为空");
 		}
-//		if (StringUtils.isBlank(captcha)) {
-//		   return 	renderError("验证码不能为空");
-//		}
-//		if (!dreamCaptcha.validate(request, response, captcha)) {
-//			return 	renderError("验证码错误");
-//		}
+		if (StringUtils.isBlank(captcha)) {
+		   return 	renderError("验证码不能为空");
+		}
+		if (!dreamCaptcha.validate(request, response, captcha)) {
+			return 	renderError("验证码错误");
+		}
 		Subject user = SecurityUtils.getSubject();
 		List<Tree> menus = resourceService.selectAuthorizationMenu(username);
-//		List<Tree> menus = resourceService.selectAllMenu();
-		Session session = user.getSession();
-		String terminalType = TerminalTypeMapping.getTerminalType(request);
-//		request.getSession().setAttribute("entryType",entryType);
-//		request.getSession().setAttribute("terminalType", terminalType);
-//		request.getSession().setAttribute("username",username);
-//		request.getSession().setAttribute("password",password);
-//		request.getSession().setAttribute("menus",menus);
-		session.setAttribute("entryType",entryType);
-		session.setAttribute("terminalType", terminalType);
-		session.setAttribute("username",username);
-		session.setAttribute("password",password);
-		session.setAttribute("menus",menus);
 		ExtendedUsernamePasswordToken token = new ExtendedUsernamePasswordToken(username, password);
 		token.setEntryType(entryType);
+		String terminalType = TerminalTypeMapping.getTerminalType(request);
 		token.setTerminalType(terminalType);
 		// 设置记住密码
 		token.setRememberMe(1 == rememberMe);
 		try {
 			user.login(token);
+			Session session = user.getSession();
+			session.setAttribute("entryType",entryType);
+			session.setAttribute("terminalType", terminalType);
+			session.setAttribute("username",username);
+			session.setAttribute("password",password);
+			session.setAttribute("menus",menus);
 			return renderSuccess();
 		} catch (UnknownAccountException e) {
 			throw new RuntimeException("账号不存在！", e);
