@@ -104,7 +104,10 @@
 				/webhooks = anon
 				/external/** = anon
 				/login = anon
+				/internal/terminalSetting/** = anon
 				/internal/user/** = anon
+				/tj.js =anon
+				/terminalSetting/test.jsp = anon
 				/** = userInfo
 			</value>
 		</property>
