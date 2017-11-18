@@ -241,7 +241,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
     public ResponseEntity<?> getCustomerKeywordForCapturePosition(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) throws Exception {
         String userName = (String) requestMap.get("userName");
         String password = (String) requestMap.get("password");
-        String terminalType = TerminalTypeMapping.getTerminalType(request);
+        String terminalType = (String) requestMap.get("terminalType");
 
         List<String> groupNames = (List<String>) requestMap.get("groupNames");
 
