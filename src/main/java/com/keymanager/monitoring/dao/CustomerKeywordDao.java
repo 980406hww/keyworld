@@ -111,5 +111,5 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void  deleteEmptyTitleCustomerKeyword(@Param("qzCaptureTitleLog")QZCaptureTitleLog qzCaptureTitleLog);
 
-    int searchCustomerKeywordByKeyword(@Param("customerUuid")Long customerUuid, @Param("keyword")String keyword, @Param("qzOperationType") QZOperationType qzOperationType);
+    List<String> searchCustomerKeyword(@Param("customerUuid")Long customerUuid);
 }

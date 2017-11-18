@@ -825,13 +825,19 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return customerKeywordDao.searchGroups();
     }
 
-    public List<QZOperationType> addCustomerKeywordForTerminal(Integer customerUuid, String keyword, List<QZOperationType> qzOperationTypes) {
-        for (QZOperationType qzOperationType : qzOperationTypes) {
-            int customerKeywordCount = customerKeywordDao.searchCustomerKeywordByKeyword((long) customerUuid, keyword, qzOperationType);
-            if(customerKeywordCount > 0) {
-                qzOperationTypes.remove(qzOperationType);
+    public Map<String, String> searchCustomerKeywordByCustomerUuid(Long customerUuid) {
+        Map<String, String> customerKeywordMap = new HashMap<String, String>();
+        List<String> customerKeywords = customerKeywordDao.searchCustomerKeyword(customerUuid);
+        for (String customerKeyword : customerKeywords) {
+            String[] customerKeywordValues = customerKeyword.split(",");
+            String value = customerKeywordMap.get(customerKeywordValues[0]);
+            if(StringUtils.isBlank(value)) {
+                customerKeywordMap.put(customerKeywordValues[0], customerKeywordValues[1]);
+            } else {
+                customerKeywordMap.remove(customerKeywordValues[0]);
             }
         }
-        return qzOperationTypes;
+        return customerKeywordMap;
     }
+
 }

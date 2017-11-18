@@ -471,12 +471,12 @@
         AND fManualCleanTitle  = 0
     </delete>
 
-    <select id="searchCustomerKeywordByKeyword" resultType="int">
-        SELECT COUNT(1)
-        FROM t_customer_keyword ck
-        WHERE ck.fCustomerUuid = #{customerUuid}
-        AND ck.fKeyword = #{keyword}
-        AND ck.fTerminalType = #{qzOperationType}
+    <select id="searchCustomerKeyword" resultType="java.lang.String">
+        SELECT
+            CONCAT(fKeyword, ',', fTerminalType) AS keyword_terminal
+        FROM t_customer_keyword
+        WHERE fCustomerUuid = #{customerUuid}
+        GROUP BY fKeyword,fTerminalType
     </select>
 
 </mapper>
