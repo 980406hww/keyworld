@@ -257,43 +257,47 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		if (!qzSettingCriteria.isDownloadTimesUsed()){
 			if (CollectionUtils.isNotEmpty(qzSettingCriteria.getCustomerKeywordVOs())) {
 				List<QZOperationType> qzOperationTypes = qzOperationTypeService.searchQZOperationTypesIsDelete(qzSettingCriteria.getQzSetting().getUuid());
+				QZCaptureTitleLog qzCaptureTitleLog = new QZCaptureTitleLog();
+				qzCaptureTitleLog.setStatus(QZCaptureTitleLogStatusEnum.New.getValue());
 
 				if(CollectionUtils.isNotEmpty(qzOperationTypes)) {
 					List<CustomerKeyword> insertingCustomerKeywords = new ArrayList<CustomerKeyword>();
 					for (CustomerKeywordVO customerKeywordVO : qzSettingCriteria.getCustomerKeywordVOs()) {
-						CustomerKeyword customerKeyword = new CustomerKeyword();
-						customerKeyword.setKeyword(customerKeywordVO.getKeyword());
-						customerKeyword.setUrl(customerKeywordVO.getUrl());
-						customerKeyword.setTitle(customerKeywordVO.getTitle());
-						customerKeyword.setOrderNumber(customerKeywordVO.getOrderNumber());
-						customerKeyword.setCurrentIndexCount(customerKeywordVO.getCurrentIndexCount());
+						// 判断需要添加关键字的类型
+						List<QZOperationType> newQZOperationTypes = customerKeywordService.addCustomerKeywordForTerminal(qzSettingCriteria.getQzSetting().getCustomerUuid(), customerKeywordVO.getKeyword(), qzOperationTypes);
+						if(CollectionUtils.isNotEmpty(qzOperationTypes)) {
+							for(QZOperationType qzOperationType : newQZOperationTypes){
+								// 添加日志
+								qzCaptureTitleLog.setTerminalType(qzOperationType.getOperationType());
+								qzCaptureTitleLog.setQzOperationTypeUuid(qzOperationType.getUuid());
+								qzCaptureTitleLogService.addQZCaptureTitleLog(qzCaptureTitleLog);
 
-						customerKeyword.setCustomerUuid(qzSettingCriteria.getQzSetting().getCustomerUuid());
-						customerKeyword.setOptimizePlanCount(customerKeywordVO.getCurrentIndexCount() + 8);
-						customerKeyword.setServiceProvider("baidutop123");
-						customerKeyword.setSearchEngine(Constants.SEARCH_ENGINE_BAIDU);
-						customerKeyword.setCollectMethod(CollectMethod.PerMonth.name());
-						customerKeyword.setType(qzSettingCriteria.getQzSetting().getType());
-						customerKeyword.setStartOptimizedTime(Utils.getCurrentTimestamp());
-						customerKeyword.setStatus(1);
-						customerKeyword.setCreateTime(Utils.getCurrentTimestamp());
-						customerKeyword.setUpdateTime(Utils.getCurrentTimestamp());
-						customerKeyword.setInitialIndexCount(customerKeywordVO.getCurrentIndexCount());
-						insertingCustomerKeywords.add(customerKeyword);
-					}
-					if (CollectionUtils.isNotEmpty(insertingCustomerKeywords)) {
-						QZCaptureTitleLog qzCaptureTitleLog = new QZCaptureTitleLog();
-						qzCaptureTitleLog.setStatus(QZCaptureTitleLogStatusEnum.New.getValue());
-						for(QZOperationType qzOperationType : qzOperationTypes){
-							qzCaptureTitleLog.setTerminalType(qzOperationType.getOperationType());
-							qzCaptureTitleLog.setQzOperationTypeUuid(qzOperationType.getUuid());
-							qzCaptureTitleLogService.addQZCaptureTitleLog(qzCaptureTitleLog);
-							for (CustomerKeyword customerKeyword : insertingCustomerKeywords) {
+								CustomerKeyword customerKeyword = new CustomerKeyword();
+								customerKeyword.setKeyword(customerKeywordVO.getKeyword());
+								customerKeyword.setUrl(customerKeywordVO.getUrl());
+								customerKeyword.setTitle(customerKeywordVO.getTitle());
+								customerKeyword.setOrderNumber(customerKeywordVO.getOrderNumber());
+								customerKeyword.setCurrentIndexCount(customerKeywordVO.getCurrentIndexCount());
+								customerKeyword.setCustomerUuid(qzSettingCriteria.getQzSetting().getCustomerUuid());
+								customerKeyword.setOptimizePlanCount(customerKeywordVO.getCurrentIndexCount() + 8);
+								customerKeyword.setServiceProvider("baidutop123");
+								customerKeyword.setSearchEngine(Constants.SEARCH_ENGINE_BAIDU);
+								customerKeyword.setCollectMethod(CollectMethod.PerMonth.name());
+								customerKeyword.setType(qzSettingCriteria.getQzSetting().getType());
+								customerKeyword.setStartOptimizedTime(Utils.getCurrentTimestamp());
+								customerKeyword.setStatus(1);
+								customerKeyword.setCreateTime(Utils.getCurrentTimestamp());
+								customerKeyword.setUpdateTime(Utils.getCurrentTimestamp());
+								customerKeyword.setInitialIndexCount(customerKeywordVO.getCurrentIndexCount());
 								customerKeyword.setTerminalType(qzOperationType.getOperationType());
 								customerKeyword.setOptimizeGroupName(qzOperationType.getGroup());
+								insertingCustomerKeywords.add(customerKeyword);
 							}
-							customerKeywordService.addCustomerKeywords(insertingCustomerKeywords, qzSettingCriteria.getUserName());
 						}
+					}
+
+					if (CollectionUtils.isNotEmpty(insertingCustomerKeywords)) {
+						customerKeywordService.addCustomerKeywords(insertingCustomerKeywords, qzSettingCriteria.getUserName());
 					}
 				}
 			}

@@ -7,6 +7,7 @@ import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria
 import com.keymanager.monitoring.criteria.CustomerKeywordUpdateGroupCriteria;
 import com.keymanager.monitoring.entity.CustomerKeyword;
 import com.keymanager.monitoring.entity.QZCaptureTitleLog;
+import com.keymanager.monitoring.entity.QZOperationType;
 import com.keymanager.monitoring.vo.CodeNameVo;
 import com.keymanager.monitoring.vo.SearchEngineResultVO;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
@@ -109,4 +110,6 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     CustomerKeywordForCaptureTitle searchCustomerKeywordForCaptureTitle(@Param("qzCaptureTitleLog") QZCaptureTitleLog qzCaptureTitleLog);
 
     void  deleteEmptyTitleCustomerKeyword(@Param("qzCaptureTitleLog")QZCaptureTitleLog qzCaptureTitleLog);
+
+    int searchCustomerKeywordByKeyword(@Param("customerUuid")Long customerUuid, @Param("keyword")String keyword, @Param("qzOperationType") QZOperationType qzOperationType);
 }

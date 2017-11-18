@@ -471,4 +471,12 @@
         AND fManualCleanTitle  = 0
     </delete>
 
+    <select id="searchCustomerKeywordByKeyword" resultType="int">
+        SELECT COUNT(1)
+        FROM t_customer_keyword ck
+        WHERE ck.fCustomerUuid = #{customerUuid}
+        AND ck.fKeyword = #{keyword}
+        AND ck.fTerminalType = #{qzOperationType}
+    </select>
+
 </mapper>
