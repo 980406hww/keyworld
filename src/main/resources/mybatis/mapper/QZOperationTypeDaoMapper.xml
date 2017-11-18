@@ -28,6 +28,7 @@
        qopty.fInitialKeywordCount    AS 'initialKeywordCount',
        qopty.fCurrentKeywordCount    AS 'currentkeywordcount',
        qopty.fGroup            AS 'group',
+       qopty.fSubDomainName  AS 'subDomainName',
        qopty.fReachTargetDate  AS 'reachTargetDate',
        qopty.fNextChargeDate   AS 'nextChargeDate',
        qopty.fUpdateTime       AS 'updateTime',

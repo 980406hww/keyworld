@@ -29,6 +29,9 @@ public class QZOperationType extends BaseEntity {
   @TableField(value = "fGroup")
   private String group;//分组()
 
+  @TableField(value = "fSubDomainName",validate= FieldStrategy.IGNORED)
+  private String subDomainName;//二级域名()
+
   @TableField(value = "fReachTargetDate")
   private Date reachTargetDate;// 达标日期()
 
@@ -40,6 +43,14 @@ public class QZOperationType extends BaseEntity {
 
   @TableField(exist = false)
   protected List<QZChargeRule> qzChargeRules;//一个操作类型对应多个规则
+
+  public String getSubDomainName() {
+    return subDomainName;
+  }
+
+  public void setSubDomainName(String subDomainName) {
+    this.subDomainName = subDomainName;
+  }
 
   public Long getQzSettingUuid() {
     return qzSettingUuid;

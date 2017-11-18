@@ -118,7 +118,7 @@
 		</property>
 	</bean>
 	<!-- ajax session超时时处理 -->
-	<bean id="ajaxSessionFilter" class="com.keymanager.monitoring.common.shiro.ShiroAjaxSessionFilter"/>
+	<bean id="ajaxSessionFilter" class="com.keymanager.monitoring.common.shiro.NewShiroAjaxSessionFilter"/>
 
 	<!-- 用户授权信息Cache, 采用spring-cache, 具体请查看spring-ehcache.xml、spring-redis.xml -->
 	<bean id="shiroSpringCacheManager" class="com.keymanager.monitoring.common.shiro.cache.ShiroSpringCacheManager">

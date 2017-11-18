@@ -1,12 +1,14 @@
 package com.keymanager.monitoring.controller.rest.external;
 
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
+import com.keymanager.monitoring.criteria.KeywordNegativeCriteria;
 import com.keymanager.monitoring.criteria.NegativeListCriteria;
 import com.keymanager.monitoring.entity.NegativeList;
 import com.keymanager.monitoring.service.NegativeListService;
 import com.keymanager.util.Constants;
 import com.keymanager.util.TerminalTypeMapping;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,8 +37,12 @@ public class ExternalNegativeListRestController extends SpringMVCBaseController 
 				String terminalType = TerminalTypeMapping.getTerminalType(request);
 				for(NegativeList negativeList : negativeListCriteria.getNegativeLists()){
 					negativeList.setTerminalType(terminalType);
+					if(StringUtils.isNotEmpty(negativeList.getDesc())){
+						String desc = 	negativeList.getDesc().replace("\n" , "").replace(" ", "");
+						negativeList.setDesc(desc);
+					}
 				}
-				negativeListService.saveNegativeLists(negativeListCriteria.getNegativeLists());
+					negativeListService.saveNegativeLists(negativeListCriteria.getNegativeLists() , negativeListCriteria.getOperationType());
 				return new ResponseEntity<Object>(true, HttpStatus.OK);
 			}
 		}catch (Exception ex){
@@ -84,5 +90,29 @@ public class ExternalNegativeListRestController extends SpringMVCBaseController 
 			logger.error(ex.getMessage());
 		}
 		return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+	}
+	//负面信息同步
+	@RequestMapping(value = "/negativeListsSynchronize", method = RequestMethod.POST)
+	public ResponseEntity<?> negativeListsSynchronize(@RequestBody KeywordNegativeCriteria keywordNegativeCriteria) throws Exception{
+		String userName = keywordNegativeCriteria.getUserName();
+		String password = keywordNegativeCriteria.getPassword();
+		try {
+			if (validUser(userName, password)) {
+				NegativeList negativeList = keywordNegativeCriteria.getNegativeList();
+				List<NegativeList> existNegativeList = negativeListService.negativeListsSynchronizeOfDelete(negativeList);
+				if(existNegativeList!=null){
+					for(NegativeList negativeList1 : existNegativeList){
+						negativeListService.deleteById(negativeList1.getUuid());
+					}
+				}
+				if(keywordNegativeCriteria.getNegative()){
+					negativeListService.insert(negativeList);
+				}
+				return new ResponseEntity<Object>(true,HttpStatus.OK);
+			}
+		}catch (Exception ex){
+			logger.error(ex.getMessage());
+		}
+		return new ResponseEntity<Object>(false,HttpStatus.BAD_REQUEST);
 	}
 }

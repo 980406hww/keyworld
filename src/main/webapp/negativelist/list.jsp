@@ -100,6 +100,7 @@
                         negativeListForm.find("#keyword").val(negativeList.keyword);
                         negativeListForm.find("#title").val(negativeList.title);
                         negativeListForm.find("#url").val(negativeList.url);
+                        negativeListForm.find("#originalUrl").val(negativeList.originalUrl);
                         negativeListForm.find("#desc").val(negativeList.desc);
                         negativeListForm.find("#position").val(negativeList.position);
                         showNegativeListDialog(negativeList.uuid);
@@ -246,6 +247,7 @@
             negativeListObj.keyword = $("#negativeListForm").find("#keyword").val().trim();
             negativeListObj.title = $("#negativeListForm").find("#title").val().trim();
             negativeListObj.url = $("#negativeListForm").find("#url").val().trim();
+            negativeListObj.originalUrl = $("#negativeListForm").find("#originalUrl").val().trim();
             negativeListObj.desc = $("#negativeListForm").find("#desc").val();
             negativeListObj.position = $("#negativeListForm").find("#position").val();
             if (!(/^[0-9]*$/.test(negativeListObj.position)) && (negativeListObj.position != '')) {
@@ -436,6 +438,10 @@
 				<tr>
 					<td align="right">URL<label style="color: red">*</label>：</td>
 					<td><input type="text" id="url" style="width:400px;"></td>
+				</tr>
+				<tr>
+					<td align="right">原始URL<label style="color: red">*</label>：</td>
+					<td><input type="text" id="originalUrl" style="width:400px;"></td>
 				</tr>
 				<tr>
 					<td align="right">排名：</td>

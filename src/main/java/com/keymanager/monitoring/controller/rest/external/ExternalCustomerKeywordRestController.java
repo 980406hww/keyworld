@@ -3,6 +3,7 @@ package com.keymanager.monitoring.controller.rest.external;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.BaiduIndexCriteria;
 import com.keymanager.monitoring.criteria.BaseCriteria;
+import com.keymanager.monitoring.entity.ClientStatus;
 import com.keymanager.monitoring.entity.CustomerKeyword;
 import com.keymanager.monitoring.entity.Performance;
 import com.keymanager.monitoring.service.ClientStatusService;
@@ -12,6 +13,7 @@ import com.keymanager.monitoring.vo.SearchEngineResultItemVO;
 import com.keymanager.monitoring.vo.SearchEngineResultVO;
 import com.keymanager.util.TerminalTypeMapping;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
+import com.keymanager.value.CustomerKeywordForCaptureTitle;
 import com.keymanager.value.CustomerKeywordForOptimization;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -74,14 +77,15 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         String password = (String) requestMap.get("password");
         try {
             if (validUser(userName, password)) {
-                String returnValue = "";
+                //String returnValue = "";
+                CustomerKeywordForCaptureTitle returnValue = null;
                 String terminalType = TerminalTypeMapping.getTerminalType(request);
                 if (StringUtils.isEmpty(groupName)) {
                     returnValue = customerKeywordService.searchCustomerKeywordForCaptureTitle(terminalType);
                 } else {
-                    returnValue = customerKeywordService.searchCustomerKeywordForCaptureTitle(groupName, terminalType);
+                    returnValue = (customerKeywordService.searchCustomerKeywordForCaptureTitle(groupName, terminalType));
                 }
-                return new ResponseEntity<Object>(StringUtils.isEmpty(returnValue) ? "{}" : returnValue, HttpStatus.OK);
+                    return new ResponseEntity<Object>(returnValue, HttpStatus.OK);
             }
         }catch (Exception ex){
             logger.error(ex.getMessage());
@@ -148,9 +152,11 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         String userName = request.getParameter("userName");
         String password = request.getParameter("password");
         String version = request.getParameter("version");
-        String terminalType = TerminalTypeMapping.getTerminalType(request);
         try {
             if (validUser(userName, password)) {
+                ClientStatus clientStatus = clientStatusService.selectById(clientID);
+                String terminalType = clientStatus.getTerminalType();
+
                 CustomerKeywordForOptimization customerKeywordForOptimization = customerKeywordService.searchCustomerKeywordsForOptimization(terminalType, clientID, version);
                 if (customerKeywordForOptimization != null) {
                     customerKeywordService.updateOptimizationQueryTime(customerKeywordForOptimization.getUuid());
@@ -181,10 +187,11 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         String status = request.getParameter("status");
 
         String ip = getIP(request);
-        String terminalType = TerminalTypeMapping.getTerminalType(request);
 
         try {
             if (validUser(userName, password)) {
+                ClientStatus clientStatus = clientStatusService.selectById(clientID);
+                String terminalType = clientStatus.getTerminalType();
                 customerKeywordService.updateOptimizationResult(terminalType, customerKeywordUuid, Integer.parseInt(count.trim()), ip, city, clientID,
                         status, freeSpace, version);
                 performanceService.addPerformanceLog(terminalType + ":updateOptimizedCount", System.currentTimeMillis() - startMilleSeconds, null);
@@ -234,7 +241,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
     public ResponseEntity<?> getCustomerKeywordForCapturePosition(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) throws Exception {
         String userName = (String) requestMap.get("userName");
         String password = (String) requestMap.get("password");
-        String terminalType = TerminalTypeMapping.getTerminalType(request);
+        String terminalType = (String) requestMap.get("terminalType");
 
         List<String> groupNames = (List<String>) requestMap.get("groupNames");
 

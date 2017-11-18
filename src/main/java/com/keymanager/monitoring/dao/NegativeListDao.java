@@ -12,10 +12,12 @@ public interface NegativeListDao extends BaseMapper<NegativeList> {
 
     List<NegativeList> searchNegativeLists(Page<NegativeList> page, @Param("negativeListCriteria") NegativeListCriteria negativeListCriteria);
 
-    List<NegativeList> searchNegativeListsFullMatching(@Param("negativeListCriteria") NegativeListCriteria negativeListCriteria);
+    NegativeList searchNegativeListsFullMatching(@Param("negativeListCriteria") NegativeListCriteria negativeListCriteria);
 
     List<NegativeList> getSpecifiedKeywordNegativeLists(@Param("terminalType") String terminalType, @Param("keyword") String keyword);
 
     int selectLastId();
+
+    List<NegativeList> negativeListsSynchronizeOfDelete(@Param("negativeList") NegativeList negativeList);
 
 }

@@ -4,9 +4,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.keymanager.enums.CollectMethod;
-import com.keymanager.enums.CustomerKeywordStatus;
 import com.keymanager.monitoring.criteria.*;
 import com.keymanager.monitoring.dao.CustomerKeywordDao;
 import com.keymanager.monitoring.entity.*;
@@ -96,7 +94,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return customerKeywordDao.searchCustomerKeywords(customerKeywordCriteria);
     }
 
-    public String searchCustomerKeywordForCaptureTitle(String terminalType) throws Exception {
+    public CustomerKeywordForCaptureTitle searchCustomerKeywordForCaptureTitle(String terminalType) throws Exception {
         QZCaptureTitleLog qzCaptureTitleLog = qzCaptureTitleLogService.getAvailableQZSetting(QZCaptureTitleLogStatusEnum.Processing.getValue(), terminalType);
         if (qzCaptureTitleLog == null) {
             qzCaptureTitleLog = qzCaptureTitleLogService.getAvailableQZSetting(QZCaptureTitleLogStatusEnum.New.getValue(), terminalType);
@@ -105,30 +103,34 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             }
         }
         if (qzCaptureTitleLog == null) {
-            return "";
+            return null;
         }
-
         CustomerKeywordForCaptureTitle captureTitle = customerKeywordDao.searchCustomerKeywordForCaptureTitle(qzCaptureTitleLog);
         if (captureTitle == null) {
             qzCaptureTitleLogService.completeQZCaptureTitleLog(qzCaptureTitleLog.getUuid());
             customerKeywordDao.deleteEmptyTitleCustomerKeyword(qzCaptureTitleLog);
-            return "";
+            return null;
         } else {
             QZOperationType qzOperationType = qzOperationTypeService.selectById(qzCaptureTitleLog.getQzOperationTypeUuid());
             QZSetting qzSetting = qzSettingService.selectById(qzOperationType.getQzSettingUuid());
-            captureTitle.setWholeUrl(qzSetting.getDomain());
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.writeValueAsString(captureTitle);
+            String subDomainName = qzOperationType.getSubDomainName();
+            if(StringUtils.isNotEmpty(subDomainName)){
+                captureTitle.setWholeUrl(subDomainName);
+            }else {
+                captureTitle.setWholeUrl(qzSetting.getDomain());
+            }
+            return captureTitle;
         }
     }
 
-    public String searchCustomerKeywordForCaptureTitle(String groupName, String terminalType) throws Exception {
-            QZCaptureTitleLog qzCaptureTitleLog = new QZCaptureTitleLog();
-            qzCaptureTitleLog.setGroup(groupName);
-            qzCaptureTitleLog.setTerminalType(terminalType);
-            CustomerKeywordForCaptureTitle captureTitle = customerKeywordDao.searchCustomerKeywordForCaptureTitle(qzCaptureTitleLog);
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.writeValueAsString(captureTitle);
+    public CustomerKeywordForCaptureTitle searchCustomerKeywordForCaptureTitle(String groupName, String terminalType) throws Exception {
+        QZCaptureTitleLog qzCaptureTitleLog = new QZCaptureTitleLog();
+        qzCaptureTitleLog.setGroup(groupName);
+        qzCaptureTitleLog.setTerminalType(terminalType);
+        CustomerKeywordForCaptureTitle captureTitle = customerKeywordDao.searchCustomerKeywordForCaptureTitle(qzCaptureTitleLog);
+       // ObjectMapper mapper = new ObjectMapper();
+        //return mapper.writeValueAsString(captureTitle);
+        return captureTitle;
     }
 
     public void cleanTitle(CustomerKeywordCleanCriteria customerKeywordCleanCriteria) {
@@ -203,6 +205,17 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeyword.setUpdateTime(new Date());
         customerKeyword.setCreateTime(new Date());
         customerKeywordDao.insert(customerKeyword);
+    }
+
+    public void updateCustomerKeywordFromUI(CustomerKeyword customerKeyword, String userName){
+        boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
+        if(isDepartmentManager) {
+            customerKeyword.setStatus(1);
+        } else {
+            customerKeyword.setStatus(2);
+        }
+        customerKeyword.setUpdateTime(new Date());
+        customerKeywordDao.updateById(customerKeyword);
     }
 
     public boolean haveDuplicatedCustomerKeyword(String terminalType, long customerUuid, String keyword, String originalUrl) {
@@ -811,4 +824,20 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     public List<CodeNameVo> searchGroups() {
         return customerKeywordDao.searchGroups();
     }
+
+    public Map<String, String> searchCustomerKeywordByCustomerUuid(Long customerUuid) {
+        Map<String, String> customerKeywordMap = new HashMap<String, String>();
+        List<String> customerKeywords = customerKeywordDao.searchCustomerKeyword(customerUuid);
+        for (String customerKeyword : customerKeywords) {
+            String[] customerKeywordValues = customerKeyword.split(",");
+            String value = customerKeywordMap.get(customerKeywordValues[0]);
+            if(StringUtils.isBlank(value)) {
+                customerKeywordMap.put(customerKeywordValues[0], customerKeywordValues[1]);
+            } else {
+                customerKeywordMap.remove(customerKeywordValues[0]);
+            }
+        }
+        return customerKeywordMap;
+    }
+
 }

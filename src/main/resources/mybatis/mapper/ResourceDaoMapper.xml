@@ -22,31 +22,15 @@
     <select id="selectAuthorizationMenu" resultType="com.keymanager.monitoring.entity.Resource">
         SELECT
         <include refid="colID"/>
-        FROM
-        t_resource s
-        WHERE
-        s.fUuid IN (
-        SELECT
+        FROM t_resource s
+        WHERE s.fUuid IN (SELECT
         rr.fResourceID
-        FROM
+        FROM t_userinfo u,
+        t_user_role ur,
         t_role_resource rr
-        WHERE
-        rr.fRoleID IN (
-        SELECT
-        ur.fRoleID
-        FROM
-        t_user_role ur
-        WHERE
-        ur.fUserID = (
-        SELECT
-        fUuid
-        FROM
-        t_userinfo
-        WHERE
-        fLoginName = #{loginName}
-        )
-        )
-        )
+        WHERE u.fLoginName = #{loginName}
+        AND u.fUuid = ur.fUserID
+        AND ur.fRoleID = rr.fRoleID)
         AND s.fResourceType = 0
         ORDER BY s.fSequence
     </select>

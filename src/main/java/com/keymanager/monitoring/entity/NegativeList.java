@@ -2,6 +2,7 @@ package com.keymanager.monitoring.entity;
 
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.FieldStrategy;
 
 @TableName(value = "t_negative_list")
 public class NegativeList extends BaseEntity {
@@ -22,6 +23,9 @@ public class NegativeList extends BaseEntity {
 
 	@TableField(value = "fPosition")
 	private Integer position;
+
+	@TableField(value = "fOriginalUrl",validate = FieldStrategy.IGNORED)
+	private String originalUrl;
 
 	public String getTerminalType() {
 		return terminalType;
@@ -69,5 +73,13 @@ public class NegativeList extends BaseEntity {
 
 	public void setPosition(Integer position) {
 		this.position = position;
+	}
+
+	public String getOriginalUrl() {
+		return originalUrl;
+	}
+
+	public void setOriginalUrl(String originalUrl) {
+		this.originalUrl = originalUrl;
 	}
 }
