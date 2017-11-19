@@ -825,19 +825,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return customerKeywordDao.searchGroups();
     }
 
-    public Map<String, String> searchCustomerKeywordByCustomerUuid(Long customerUuid) {
-        Map<String, String> customerKeywordMap = new HashMap<String, String>();
-        List<String> customerKeywords = customerKeywordDao.searchCustomerKeyword(customerUuid);
-        for (String customerKeyword : customerKeywords) {
-            String[] customerKeywordValues = customerKeyword.split(",");
-            String value = customerKeywordMap.get(customerKeywordValues[0]);
-            if(StringUtils.isBlank(value)) {
-                customerKeywordMap.put(customerKeywordValues[0], customerKeywordValues[1]);
-            } else {
-                customerKeywordMap.remove(customerKeywordValues[0]);
-            }
-        }
-        return customerKeywordMap;
+    public List<String> searchCustomerKeywordSummaryInfo(String entryType, Long customerUuid) {
+        return customerKeywordDao.searchCustomerKeywordSummaryInfo(entryType, customerUuid);
     }
 
 }
