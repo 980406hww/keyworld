@@ -7,6 +7,7 @@ import com.keymanager.monitoring.criteria.QZSettingCriteria;
 import com.keymanager.monitoring.criteria.QZSettingSearchCriteria;
 import com.keymanager.monitoring.dao.QZSettingDao;
 import com.keymanager.monitoring.entity.*;
+import com.keymanager.monitoring.enums.EntryTypeEnum;
 import com.keymanager.monitoring.enums.QZCaptureTitleLogStatusEnum;
 import com.keymanager.monitoring.enums.QZSettingStatusEnum;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
@@ -276,24 +277,28 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		return customerKeyword;
 	}
 
-	public void updateResult(QZSettingCriteria qzSettingCriteria, String terminalType) throws Exception {
+	public void updateResult(QZSettingCriteria qzSettingCriteria) throws Exception {
 		if (!qzSettingCriteria.isDownloadTimesUsed()){
 			if (CollectionUtils.isNotEmpty(qzSettingCriteria.getCustomerKeywordVOs())) {
 				List<QZOperationType> qzOperationTypes = qzOperationTypeService.searchQZOperationTypesIsDelete(qzSettingCriteria.getQzSetting().getUuid());
-				Map<String, String> customerKeywordMap = customerKeywordService.searchCustomerKeywordByCustomerUuid(qzSettingCriteria.getQzSetting().getUuid());
-
+				List<String> customerKeywordSummaryInfos = customerKeywordService.searchCustomerKeywordSummaryInfo(EntryTypeEnum.qz.name(), qzSettingCriteria.getQzSetting().getUuid());
+				Map<String, String> customerKeywordSummaryInfoMap = new HashMap<String, String>();
+				if(CollectionUtils.isNotEmpty(customerKeywordSummaryInfos)){
+					for(String customerKeywordSummaryInfo : customerKeywordSummaryInfos) {
+						customerKeywordSummaryInfoMap.put(customerKeywordSummaryInfo, customerKeywordSummaryInfo);
+					}
+				}
 				QZCaptureTitleLog qzCaptureTitleLog = new QZCaptureTitleLog();
 				qzCaptureTitleLog.setStatus(QZCaptureTitleLogStatusEnum.New.getValue());
 				if(CollectionUtils.isNotEmpty(qzOperationTypes)) {
 					List<CustomerKeyword> insertingCustomerKeywords = new ArrayList<CustomerKeyword>();
 					for (CustomerKeywordVO customerKeywordVO : qzSettingCriteria.getCustomerKeywordVOs()) {
-						String alreadyExistTerminalType = customerKeywordMap.get(customerKeywordVO.getKeyword());
 						for(QZOperationType qzOperationType : qzOperationTypes){
-							if(!qzOperationType.getOperationType().equals(alreadyExistTerminalType)) {
+							if(!customerKeywordSummaryInfoMap.containsKey(String.format("%s__%s", customerKeywordVO.getKeyword(), qzOperationType.getOperationType()))) {
 								CustomerKeyword customerKeyword = createCustomerKeyword(qzSettingCriteria,qzOperationType,customerKeywordVO);
 								insertingCustomerKeywords.add(customerKeyword);
 							}
-						}
+					}
 					}
 
 					for(QZOperationType qzOperationType : qzOperationTypes){

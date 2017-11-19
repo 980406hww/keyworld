@@ -471,11 +471,11 @@
         AND fManualCleanTitle  = 0
     </delete>
 
-    <select id="searchCustomerKeyword" resultType="java.lang.String">
-        SELECT
-            CONCAT(fKeyword, ',', fTerminalType) AS keyword_terminal
+    <select id="searchCustomerKeywordSummaryInfo" resultType="java.lang.String">
+        SELECT CONCAT(fKeyword, '__', fTerminalType) AS keyword_terminal
         FROM t_customer_keyword
         WHERE fCustomerUuid = #{customerUuid}
+        and fType = #{entryType}
         GROUP BY fKeyword,fTerminalType
     </select>
 
