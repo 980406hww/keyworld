@@ -282,18 +282,23 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			if (CollectionUtils.isNotEmpty(qzSettingCriteria.getCustomerKeywordVOs())) {
 				List<QZOperationType> qzOperationTypes = qzOperationTypeService.searchQZOperationTypesIsDelete(qzSettingCriteria.getQzSetting().getUuid());
 				List<String> customerKeywordSummaryInfos = customerKeywordService.searchCustomerKeywordSummaryInfo(EntryTypeEnum.qz.name(), qzSettingCriteria.getQzSetting().getUuid());
-
+				Map<String, String> customerKeywordSummaryInfoMap = new HashMap<String, String>();
+				if(CollectionUtils.isNotEmpty(customerKeywordSummaryInfos)){
+					for(String customerKeywordSummaryInfo : customerKeywordSummaryInfos) {
+						customerKeywordSummaryInfoMap.put(customerKeywordSummaryInfo, customerKeywordSummaryInfo);
+					}
+				}
 				QZCaptureTitleLog qzCaptureTitleLog = new QZCaptureTitleLog();
 				qzCaptureTitleLog.setStatus(QZCaptureTitleLogStatusEnum.New.getValue());
 				if(CollectionUtils.isNotEmpty(qzOperationTypes)) {
 					List<CustomerKeyword> insertingCustomerKeywords = new ArrayList<CustomerKeyword>();
 					for (CustomerKeywordVO customerKeywordVO : qzSettingCriteria.getCustomerKeywordVOs()) {
 						for(QZOperationType qzOperationType : qzOperationTypes){
-							if(!customerKeywordSummaryInfos.contains(String.format("%s__%s", customerKeywordVO.getKeyword(), qzOperationType.getOperationType()))) {
+							if(!customerKeywordSummaryInfoMap.containsKey(String.format("%s__%s", customerKeywordVO.getKeyword(), qzOperationType.getOperationType()))) {
 								CustomerKeyword customerKeyword = createCustomerKeyword(qzSettingCriteria,qzOperationType,customerKeywordVO);
 								insertingCustomerKeywords.add(customerKeyword);
 							}
-						}
+					}
 					}
 
 					for(QZOperationType qzOperationType : qzOperationTypes){
