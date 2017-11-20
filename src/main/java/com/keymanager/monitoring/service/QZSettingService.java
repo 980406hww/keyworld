@@ -281,7 +281,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		if (!qzSettingCriteria.isDownloadTimesUsed()){
 			if (CollectionUtils.isNotEmpty(qzSettingCriteria.getCustomerKeywordVOs())) {
 				List<QZOperationType> qzOperationTypes = qzOperationTypeService.searchQZOperationTypesIsDelete(qzSettingCriteria.getQzSetting().getUuid());
-				List<String> customerKeywordSummaryInfos = customerKeywordService.searchCustomerKeywordSummaryInfo(EntryTypeEnum.qz.name(), qzSettingCriteria.getQzSetting().getUuid());
+				List<String> customerKeywordSummaryInfos = customerKeywordService.searchCustomerKeywordSummaryInfo(EntryTypeEnum.qz.name(), (long)qzSettingCriteria.getQzSetting().getCustomerUuid());
 				Map<String, String> customerKeywordSummaryInfoMap = new HashMap<String, String>();
 				if(CollectionUtils.isNotEmpty(customerKeywordSummaryInfos)){
 					for(String customerKeywordSummaryInfo : customerKeywordSummaryInfos) {
