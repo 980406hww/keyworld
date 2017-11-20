@@ -25,7 +25,7 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void cleanCaptureTitleFlag(@Param("terminalType") String terminalType, @Param("entryType") String entryType, @Param("customerUuid") String customerUuid);
 
-    int getCustomerKeywordCount(@Param("customerUuid") long customerUuid);
+    int getCustomerKeywordCount(@Param("terminalType") String terminalType, @Param("entryType") String entryType, @Param("customerUuid") long customerUuid);
 
     List<Map> getCustomerKeywordsCount(@Param("customerUuids") List<Long> customerUuids, @Param("terminalType") String terminalType, @Param
             ("entryType") String entryType);
@@ -61,6 +61,8 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void deleteCustomerKeywordsWhenEmptyTitleAndUrl(@Param("terminalType")String terminalType, @Param("entryType")String entryType, @Param("customerUuid")String customerUuid);
 
     void deleteCustomerKeywordsWhenEmptyTitle(@Param("terminalType")String terminalType, @Param("entryType")String entryType, @Param("customerUuid")String customerUuid);
+
+    void deleteCustomerKeywordsByCustomerUuid(@Param("customerUuid")Long customerUuid);
 
     void deleteCustomerKeywords(@Param("terminalType")String terminalType, @Param("groupName")String groupName, @Param("keyword")String keyword);
 

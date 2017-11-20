@@ -228,8 +228,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return customerKeywordCount > 0;
     }
 
-    public int getCustomerKeywordCount(long customerUuid) {
-        return customerKeywordDao.getCustomerKeywordCount(customerUuid);
+    public int getCustomerKeywordCount(String terminalType, String entryType, long customerUuid) {
+        return customerKeywordDao.getCustomerKeywordCount(terminalType, entryType, customerUuid);
     }
 
     public void deleteCustomerKeywordsByUuid(List<String> customerKeywordUuids){
@@ -245,10 +245,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void deleteCustomerKeywords(long customerUuid) {
-        CustomerKeyword customerKeyword = new CustomerKeyword();
-        customerKeyword.setCustomerUuid(customerUuid);
-        Wrapper wrapper = new EntityWrapper(customerKeyword);
-        this.delete(wrapper);
+        customerKeywordDao.deleteCustomerKeywordsByCustomerUuid(customerUuid);
     }
 
     private void supplementInfoFromSimpleUI(CustomerKeyword customerKeyword, String terminalType, String entryType, int maxSequence) {
