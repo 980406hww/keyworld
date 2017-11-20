@@ -699,11 +699,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     public Page<CustomerKeyword> searchCustomerKeywordLists(Page<CustomerKeyword> page, CustomerKeywordCriteria customerKeywordCriteria) {
         long startMilleSeconds = System.currentTimeMillis();
-//        System.out.println("Before execute time: " + new Date());
         RowBounds rowBounds = new RowBounds(page.getOffset(),page.getLimit());
-        List<CustomerKeyword> customerKeywords = customerKeywordDao.searchCustomerKeywordsPage(rowBounds, customerKeywordCriteria);
-//        System.out.println("After execute time : " + new Date());
-        int total = customerKeywordDao.searchCustomerKeywordsCount(customerKeywordCriteria);
+        List<CustomerKeyword> customerKeywords = customerKeywordDao.searchCustomerKeywordsPage(page, customerKeywordCriteria);
         performanceService.addPerformanceLog(this.getClass() + ":searchCustomerKeywordLists", System.currentTimeMillis() - startMilleSeconds, null);
         List<CustomerKeyword> customerKeywordList = new ArrayList<CustomerKeyword>();
         Map<Long,String> customerMap = new HashMap<Long, String>();
@@ -717,15 +714,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeyword.setContactPerson(contactPerson);
             customerKeywordList.add(customerKeyword);
         }
-//        PageUtil<CustomerKeyword> pageUtil = BeanUtils.copy(page,PageUtil.class);
-        PageCustomize<CustomerKeyword> pageUtil = new PageCustomize<CustomerKeyword>();
-        pageUtil.setRecords(customerKeywordList);
-        pageUtil.setTotal(total);
-        pageUtil.setSize(page.getSize());
-        pageUtil.setCurrent(page.getCurrent());
-        pageUtil.setPages(pageUtil.getPages(page.getSize(),total));
-        pageUtil.setCurrent(page.getCurrent());
-        return pageUtil;
+        page.setRecords(customerKeywordList);
+        return page;
     }
 
     public void updateCustomerKeywordTitle(SearchEngineResultItemVO searchEngineResultItemVO) {

@@ -46,7 +46,7 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void updateCaptureIndexQueryTime(@Param("keyword") String keyword);
 
-    List<CustomerKeyword> searchCustomerKeywordsPage(RowBounds rowBounds /*Page<CustomerKeyword> page*/, @Param("customerKeywordCriteria") CustomerKeywordCriteria customerKeywordCriteria);
+    List<CustomerKeyword> searchCustomerKeywordsPage(Page<CustomerKeyword> page, @Param("customerKeywordCriteria") CustomerKeywordCriteria customerKeywordCriteria);
 
     int searchCustomerKeywordsCount(@Param("customerKeywordCriteria") CustomerKeywordCriteria customerKeywordCriteria);
 
