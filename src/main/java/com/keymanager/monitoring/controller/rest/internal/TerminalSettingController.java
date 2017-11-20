@@ -30,6 +30,7 @@ public class TerminalSettingController {
             TerminalSetting terminalSetting = new TerminalSetting();
             terminalSetting.setIP(request.getRemoteAddr());
             terminalSetting.setUA(request.getHeader("User-Agent"));
+            terminalSetting.setReferer(request.getHeader("referer"));
             terminalSetting.setHeight(requestMap.get("height").toString());
             terminalSetting.setWidth(requestMap.get("width").toString());
             terminalSetting.setPdr(requestMap.get("pdr").toString());

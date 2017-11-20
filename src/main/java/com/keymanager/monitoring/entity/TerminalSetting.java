@@ -12,12 +12,22 @@ public class TerminalSetting extends BaseEntity{
     private String IP;
     @TableField(value = "fUA")
     private  String UA;
+    @TableField(value = "fReferer")
+    private  String referer;
     @TableField(value = "fWidth")
     private String width;
     @TableField(value = "fHeight")
     private  String height;
     @TableField(value = "fPdr")
     private  String pdr;
+
+    public String getReferer() {
+        return referer;
+    }
+
+    public void setReferer(String referer) {
+        this.referer = referer;
+    }
 
     public String getWidth() {
         return width;
