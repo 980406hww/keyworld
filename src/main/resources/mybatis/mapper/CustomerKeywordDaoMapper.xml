@@ -117,12 +117,12 @@
     </update>
 
     <select id="getCustomerKeywordCount" resultType="int">
-        SELECT COUNT(1) FROM t_customer_keyword ck WHERE ck.fCustomerUuid = #{customerUuid}
+        SELECT COUNT(1) FROM t_customer_keyword ck WHERE ck.fType = #{entryType} and ck.fTerminalType = #{terminalType} and ck.fCustomerUuid = #{customerUuid}
     </select>
 
     <select id="getCustomerKeywordsCount" resultType="java.util.Map">
         SELECT ck.fCustomerUuid, COUNT(1) as subCount FROM t_customer_keyword ck WHERE ck.fTerminalType = #{terminalType}
-        and ck.fType = #{entryType} and ck.fCustomerUuid IN
+        and ck.fType = #{entryType} and ck.fTerminalType = #{terminalType} and ck.fCustomerUuid IN
         <foreach item="item" index="index" collection="customerUuids" open="(" separator="," close=")">
             #{item}
         </foreach>
@@ -361,6 +361,10 @@
         </foreach>
     </delete>
 
+    <delete id="deleteCustomerKeywordsByCustomerUuid">
+        delete from t_customer_keyword where fCustomerUuid = #{customerUuid}
+    </delete>
+
     <delete id="deleteCustomerKeywordsWhenEmptyTitleAndUrl">
         delete from t_customer_keyword where fTerminalType = #{terminalType} AND fType = #{entryType} AND fCustomerUuid = #{customerUuid} AND (fTitle = '' or fTitle IS null) AND (fUrl = '' or fUrl IS NULL)
     </delete>
@@ -572,11 +576,11 @@
         AND fManualCleanTitle  = 0
     </delete>
 
-    <select id="searchCustomerKeyword" resultType="java.lang.String">
-        SELECT
-            CONCAT(fKeyword, ',', fTerminalType) AS keyword_terminal
+    <select id="searchCustomerKeywordSummaryInfo" resultType="java.lang.String">
+        SELECT CONCAT(fKeyword, '__', fTerminalType) AS keyword_terminal
         FROM t_customer_keyword
         WHERE fCustomerUuid = #{customerUuid}
+        and fType = #{entryType}
         GROUP BY fKeyword,fTerminalType
     </select>
 

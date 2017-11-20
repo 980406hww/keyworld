@@ -45,8 +45,7 @@ public class ExternalQZSettingRestController extends SpringMVCBaseController {
 	public ResponseEntity<?> updateQZKeywords(@RequestBody QZSettingCriteria qzSettingCriteria, HttpServletRequest request) throws Exception{
 		try {
 			if (validUser(qzSettingCriteria.getUserName(), qzSettingCriteria.getPassword())) {
-				String terminalType = TerminalTypeMapping.getTerminalType(request);
-				qzSettingService.updateResult(qzSettingCriteria, terminalType);
+				qzSettingService.updateResult(qzSettingCriteria);
 				return new ResponseEntity<Object>(HttpStatus.OK);
 			}
 		}catch (Exception ex){

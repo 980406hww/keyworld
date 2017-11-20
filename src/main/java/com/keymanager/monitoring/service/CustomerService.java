@@ -32,10 +32,10 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 		}
 	}
 
-	public Customer getCustomerWithKeywordCount(long customerUuid){
+	public Customer getCustomerWithKeywordCount(String terminalType, String entryType, long customerUuid){
 		Customer customer = customerDao.selectById(customerUuid);
 		if(customer != null){
-			customer.setKeywordCount(customerKeywordService.getCustomerKeywordCount(customerUuid));
+			customer.setKeywordCount(customerKeywordService.getCustomerKeywordCount(terminalType, entryType, customerUuid));
 		}
 		return customer;
 	}
