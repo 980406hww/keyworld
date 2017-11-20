@@ -57,6 +57,8 @@ public class CustomerKeywordForOptimization {
 	private int waitTimeAfterClick;
 	private int maxUserCount;
 	private String currentTime;
+	private String searchEngine;
+	private String terminalType;
 
 	private String broadbandAccount;
 	private String broadbandPassword;
@@ -517,5 +519,21 @@ public class CustomerKeywordForOptimization {
 
 	public void setZhanwaiPercent(int zhanwaiPercent) {
 		this.zhanwaiPercent = zhanwaiPercent;
+	}
+
+	public String getSearchEngine() {
+		return searchEngine;
+	}
+
+	public void setSearchEngine(String searchEngine) {
+		this.searchEngine = searchEngine;
+	}
+
+	public String getTerminalType() {
+		return terminalType;
+	}
+
+	public void setTerminalType(String terminalType) {
+		this.terminalType = terminalType;
 	}
 }

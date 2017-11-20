@@ -99,8 +99,11 @@ public class CustomerRestController {
     }
 
     @RequestMapping(value = "/getCustomer/{uuid}" , method = RequestMethod.GET)
-    public ResponseEntity<?> getCustomer(@PathVariable("uuid")Long uuid){
-        return new ResponseEntity<Object>(customerService.getCustomerWithKeywordCount(uuid), HttpStatus.OK);
+    public ResponseEntity<?> getCustomer(HttpServletRequest request, @PathVariable("uuid")Long uuid){
+        HttpSession session = request.getSession();
+        String entryType = (String) session.getAttribute("entryType");
+        String terminalType = TerminalTypeMapping.getTerminalType(request);
+        return new ResponseEntity<Object>(customerService.getCustomerWithKeywordCount(terminalType, entryType, uuid), HttpStatus.OK);
     }
 
     @RequiresPermissions("/internal/customer/delCustomer")
