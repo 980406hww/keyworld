@@ -13,10 +13,10 @@ import java.util.Date;
 @TableName(value = "t_capture_rank_job")
 public class CaptureRankJob extends BaseEntity{
 
-    @TableField(value = "fGroupNames",validate= FieldStrategy.IGNORED)
+    @TableField(value = "fGroupNames",strategy = FieldStrategy.IGNORED)
     private String groupNames;
 
-    @TableField(value = "fCustomerUuid",validate= FieldStrategy.IGNORED)
+    @TableField(value = "fCustomerUuid",strategy = FieldStrategy.IGNORED)
     private Long customerUuid;
 
     @TableField(exist=false)

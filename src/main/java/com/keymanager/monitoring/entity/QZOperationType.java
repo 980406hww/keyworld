@@ -23,13 +23,13 @@ public class QZOperationType extends BaseEntity {
   @TableField(value = "fInitialKeywordCount")
   private Long initialKeywordCount;//起始首页词数()
 
-  @TableField(value = "fCurrentKeywordCount", validate = FieldStrategy.IGNORED)
+  @TableField(value = "fCurrentKeywordCount", strategy = FieldStrategy.IGNORED)
   private Long currentKeywordCount;//当前首页词数()
 
   @TableField(value = "fGroup")
   private String group;//分组()
 
-  @TableField(value = "fSubDomainName",validate= FieldStrategy.IGNORED)
+  @TableField(value = "fSubDomainName",strategy = FieldStrategy.IGNORED)
   private String subDomainName;//二级域名()
 
   @TableField(value = "fReachTargetDate")

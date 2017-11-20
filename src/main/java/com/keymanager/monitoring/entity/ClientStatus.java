@@ -33,7 +33,7 @@ public class ClientStatus {
 	@TableField(value = "fPageNo")
 	private int pageNo;
 
-	@TableField(value = "fGroup", validate= FieldStrategy.IGNORED)
+	@TableField(value = "fGroup", strategy = FieldStrategy.IGNORED)
 	private String group;
 
 	@TableField(value = "fContinuousFailCount")
@@ -42,7 +42,7 @@ public class ClientStatus {
 	@TableField(value = "fCity")
 	private String city;
 
-	@TableField(value = "fOperationType", validate= FieldStrategy.IGNORED)
+	@TableField(value = "fOperationType", strategy = FieldStrategy.IGNORED)
 	private String operationType;
 
 	@TableField(value = "fPage")
@@ -228,7 +228,7 @@ public class ClientStatus {
 	@TableField(value = "fRenewalDate")
 	private Timestamp renewalDate;
 
-	@TableField(value = "fUpgradeFailedReason", validate= FieldStrategy.IGNORED)
+	@TableField(value = "fUpgradeFailedReason", strategy = FieldStrategy.IGNORED)
 	private String upgradeFailedReason;
 
 	@TableField(value = "fStatus")

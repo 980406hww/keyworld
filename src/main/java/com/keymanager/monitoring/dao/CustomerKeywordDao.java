@@ -2,6 +2,7 @@ package com.keymanager.monitoring.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
+import com.keymanager.monitoring.common.result.PageInfo;
 import com.keymanager.monitoring.criteria.CustomerKeywordCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordUpdateGroupCriteria;
@@ -12,6 +13,7 @@ import com.keymanager.monitoring.vo.CodeNameVo;
 import com.keymanager.monitoring.vo.SearchEngineResultVO;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.session.RowBounds;
 
 import java.util.Date;
 import java.util.List;
@@ -44,7 +46,9 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void updateCaptureIndexQueryTime(@Param("keyword") String keyword);
 
-    List<CustomerKeyword> searchCustomerKeywords(Page<CustomerKeyword> page, @Param("customerKeywordCriteria") CustomerKeywordCriteria customerKeywordCriteria);
+    List<CustomerKeyword> searchCustomerKeywordsPage(RowBounds rowBounds /*Page<CustomerKeyword> page*/, @Param("customerKeywordCriteria") CustomerKeywordCriteria customerKeywordCriteria);
+
+    int searchCustomerKeywordsCount(@Param("customerKeywordCriteria") CustomerKeywordCriteria customerKeywordCriteria);
 
     List<CustomerKeyword> searchCustomerKeywords(@Param("customerKeywordCriteria") CustomerKeywordCriteria customerKeywordCriteria);
 
