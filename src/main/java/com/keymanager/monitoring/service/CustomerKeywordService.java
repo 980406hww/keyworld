@@ -585,6 +585,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeywordForOptimization.setWaitTimeBeforeClick(clientStatus.getWaitTimeBeforeClick());
             customerKeywordForOptimization.setWaitTimeAfterClick(clientStatus.getWaitTimeAfterClick());
             customerKeywordForOptimization.setMaxUserCount(clientStatus.getMaxUserCount());
+            customerKeywordForOptimization.setSearchEngine(customerKeyword.getSearchEngine());
+            customerKeywordForOptimization.setTerminalType(customerKeyword.getTerminalType());
             return customerKeywordForOptimization;
         }
         return null;
