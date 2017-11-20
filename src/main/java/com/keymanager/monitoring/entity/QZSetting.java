@@ -39,7 +39,7 @@ public class QZSetting extends BaseEntity{
 	@TableField(value = "fUpdateInterval")
 	private int updateInterval;
 
-	@TableField(value = "fUpdateStatus", validate= FieldStrategy.IGNORED)
+	@TableField(value = "fUpdateStatus", strategy = FieldStrategy.IGNORED)
 	private String updateStatus;
 
 	@TableField(value = "fUpdateStartTime")
@@ -51,7 +51,7 @@ public class QZSetting extends BaseEntity{
 	@TableField(value = "fCaptureCurrentKeywordCountTime")
 	private Date captureCurrentKeywordCountTime;
 
-	@TableField(value = "fCaptureCurrentKeywordStatus", validate= FieldStrategy.IGNORED)
+	@TableField(value = "fCaptureCurrentKeywordStatus", strategy = FieldStrategy.IGNORED)
 	private String captureCurrentKeywordStatus;
 
 	@TableField(exist=false)

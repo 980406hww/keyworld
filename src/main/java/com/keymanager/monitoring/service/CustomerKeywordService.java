@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.enums.CollectMethod;
+import com.keymanager.monitoring.common.result.PageInfo;
+import com.keymanager.monitoring.common.utils.BeanUtils;
 import com.keymanager.monitoring.criteria.*;
 import com.keymanager.monitoring.dao.CustomerKeywordDao;
 import com.keymanager.monitoring.entity.*;
@@ -14,6 +16,7 @@ import com.keymanager.monitoring.vo.CodeNameVo;
 import com.keymanager.monitoring.vo.SearchEngineResultItemVO;
 import com.keymanager.monitoring.vo.SearchEngineResultVO;
 import com.keymanager.util.Constants;
+import com.keymanager.util.PageCustomize;
 import com.keymanager.util.Utils;
 import com.keymanager.util.common.StringUtil;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
@@ -21,6 +24,7 @@ import com.keymanager.value.CustomerKeywordForCaptureTitle;
 import com.keymanager.value.CustomerKeywordForOptimization;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,7 +90,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     private PerformanceService performanceService;
 
     public Page<CustomerKeyword> searchCustomerKeywords(Page<CustomerKeyword> page, CustomerKeywordCriteria customerKeywordCriteria){
-        page.setRecords(customerKeywordDao.searchCustomerKeywords(page, customerKeywordCriteria));
+        page.setRecords(customerKeywordDao.searchCustomerKeywordsPage(page, customerKeywordCriteria));
         return page;
     }
 
@@ -695,7 +699,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     public Page<CustomerKeyword> searchCustomerKeywordLists(Page<CustomerKeyword> page, CustomerKeywordCriteria customerKeywordCriteria) {
         long startMilleSeconds = System.currentTimeMillis();
-        List<CustomerKeyword> customerKeywords = customerKeywordDao.searchCustomerKeywords(page, customerKeywordCriteria);
+//        System.out.println("Before execute time: " + new Date());
+        RowBounds rowBounds = new RowBounds(page.getOffset(),page.getLimit());
+        List<CustomerKeyword> customerKeywords = customerKeywordDao.searchCustomerKeywordsPage(rowBounds, customerKeywordCriteria);
+//        System.out.println("After execute time : " + new Date());
+        int total = customerKeywordDao.searchCustomerKeywordsCount(customerKeywordCriteria);
         performanceService.addPerformanceLog(this.getClass() + ":searchCustomerKeywordLists", System.currentTimeMillis() - startMilleSeconds, null);
         List<CustomerKeyword> customerKeywordList = new ArrayList<CustomerKeyword>();
         Map<Long,String> customerMap = new HashMap<Long, String>();
@@ -709,8 +717,15 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeyword.setContactPerson(contactPerson);
             customerKeywordList.add(customerKeyword);
         }
-        page.setRecords(customerKeywordList);
-        return page;
+//        PageUtil<CustomerKeyword> pageUtil = BeanUtils.copy(page,PageUtil.class);
+        PageCustomize<CustomerKeyword> pageUtil = new PageCustomize<CustomerKeyword>();
+        pageUtil.setRecords(customerKeywordList);
+        pageUtil.setTotal(total);
+        pageUtil.setSize(page.getSize());
+        pageUtil.setCurrent(page.getCurrent());
+        pageUtil.setPages(pageUtil.getPages(page.getSize(),total));
+        pageUtil.setCurrent(page.getCurrent());
+        return pageUtil;
     }
 
     public void updateCustomerKeywordTitle(SearchEngineResultItemVO searchEngineResultItemVO) {

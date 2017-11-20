@@ -25,19 +25,19 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(value = "fKeyword")
     private String keyword;
 
-    @TableField(value = "fUrl", validate= FieldStrategy.IGNORED)
+    @TableField(value = "fUrl", strategy = FieldStrategy.IGNORED)
     private String url;
 
     @TableField(value = "fType")
     private String type;
 
-    @TableField(value = "fOriginalUrl", validate= FieldStrategy.IGNORED)
+    @TableField(value = "fOriginalUrl", strategy = FieldStrategy.IGNORED)
     private String originalUrl;
 
-    @TableField(value = "fTitle", validate= FieldStrategy.IGNORED)
+    @TableField(value = "fTitle", strategy = FieldStrategy.IGNORED)
     private String title;
 
-    @TableField(value = "fSequence", validate= FieldStrategy.IGNORED)
+    @TableField(value = "fSequence", strategy = FieldStrategy.IGNORED)
     private Integer sequence;
 
     @TableField(value = "fCaptureTitleQueryTime")
@@ -118,37 +118,37 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(value = "fOptimizePositionThirdPercentage")
     private int optimizePositionThirdPercentage;
 
-    @TableField(value = "fPositionFirstCost", validate= FieldStrategy.IGNORED)
+    @TableField(value = "fPositionFirstCost", strategy = FieldStrategy.IGNORED)
     private Double positionFirstCost;
 
-    @TableField(value = "fPositionSecondCost", validate= FieldStrategy.IGNORED)
+    @TableField(value = "fPositionSecondCost", strategy = FieldStrategy.IGNORED)
     private Double positionSecondCost;
 
-    @TableField(value = "fPositionThirdCost", validate= FieldStrategy.IGNORED)
+    @TableField(value = "fPositionThirdCost", strategy = FieldStrategy.IGNORED)
     private Double positionThirdCost;
 
-    @TableField(value = "fPositionForthCost", validate= FieldStrategy.IGNORED)
+    @TableField(value = "fPositionForthCost", strategy = FieldStrategy.IGNORED)
     private Double positionForthCost;
 
-    @TableField(value = "fPositionFifthCost", validate= FieldStrategy.IGNORED)
+    @TableField(value = "fPositionFifthCost", strategy = FieldStrategy.IGNORED)
     private Double positionFifthCost;
 
-    @TableField(value = "fPositionFirstFee", validate= FieldStrategy.IGNORED)
+    @TableField(value = "fPositionFirstFee", strategy = FieldStrategy.IGNORED)
     private Double positionFirstFee;
 
-    @TableField(value = "fPositionSecondFee", validate= FieldStrategy.IGNORED)
+    @TableField(value = "fPositionSecondFee", strategy = FieldStrategy.IGNORED)
     private Double positionSecondFee;
 
-    @TableField(value = "fPositionThirdFee", validate= FieldStrategy.IGNORED)
+    @TableField(value = "fPositionThirdFee", strategy = FieldStrategy.IGNORED)
     private Double positionThirdFee;
 
-    @TableField(value = "fPositionForthFee", validate= FieldStrategy.IGNORED)
+    @TableField(value = "fPositionForthFee", strategy = FieldStrategy.IGNORED)
     private Double positionForthFee;
 
-    @TableField(value = "fPositionFifthFee", validate= FieldStrategy.IGNORED)
+    @TableField(value = "fPositionFifthFee", strategy = FieldStrategy.IGNORED)
     private Double positionFifthFee;
 
-    @TableField(value = "fPositionFirstPageFee", validate= FieldStrategy.IGNORED)
+    @TableField(value = "fPositionFirstPageFee", strategy = FieldStrategy.IGNORED)
     private Double positionFirstPageFee;
 
     @TableField(value = "fCapturePositionQueryTime")
@@ -157,7 +157,7 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(value = "fCaptureIndexQueryTime")
     private Date captureIndexQueryTime;
 
-    @TableField(value = "fCollectMethod", validate= FieldStrategy.IGNORED)
+    @TableField(value = "fCollectMethod", strategy = FieldStrategy.IGNORED)
     private String collectMethod;
 
     @TableField(value = "fStartOptimizedTime")
@@ -176,16 +176,16 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(value = "fPaymentEffectiveFromTime")
     private Date paymentEffectiveToTime;
 
-    @TableField(value = "fRelatedKeywords", validate= FieldStrategy.IGNORED)
+    @TableField(value = "fRelatedKeywords", strategy = FieldStrategy.IGNORED)
     private String relatedKeywords;
 
-    @TableField(value = "fPaymentStatus", validate= FieldStrategy.IGNORED)
+    @TableField(value = "fPaymentStatus", strategy = FieldStrategy.IGNORED)
     private String paymentStatus;
 
-    @TableField(value = "fOrderNumber", validate= FieldStrategy.IGNORED)
+    @TableField(value = "fOrderNumber", strategy = FieldStrategy.IGNORED)
     private String orderNumber;
 
-    @TableField(value = "fRemarks", validate= FieldStrategy.IGNORED)
+    @TableField(value = "fRemarks", strategy = FieldStrategy.IGNORED)
     private String remarks;
 
     @TableField(value = "fStatus")

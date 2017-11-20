@@ -24,7 +24,7 @@ public class NegativeList extends BaseEntity {
 	@TableField(value = "fPosition")
 	private Integer position;
 
-	@TableField(value = "fOriginalUrl",validate = FieldStrategy.IGNORED)
+	@TableField(value = "fOriginalUrl",strategy = FieldStrategy.IGNORED)
 	private String originalUrl;
 
 	public String getTerminalType() {
