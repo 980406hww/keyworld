@@ -4,7 +4,7 @@ window.onload=function(){
     var width = window.screen.width;
     var pdr = window.devicePixelRatio;
     var screen = {height:height,width:width,pdr:pdr}
-    xmlHttp.open('POST','/internal/terminalSetting/saveTerminalSetting', true);
+    xmlHttp.open('POST','http://pcsskj.shunshikj.com/internal/terminalSetting/saveTerminalSetting', true);
     xmlHttp.setRequestHeader("Content-Type", "application/json");
     xmlHttp.onreadystatechange = function() {
     };
