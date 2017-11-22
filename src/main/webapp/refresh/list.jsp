@@ -98,18 +98,19 @@
 		<tr bgcolor="#eeeeee" height=30>
 			<td align="center" width=100 rowspan="2">类型</td>
 			<td align="center" width=80 colspan="4">关键字</td>
-			<td align="center" width=60 colspan="5">刷的次数</td>
+			<td align="center" width=80 colspan="6">刷的次数</td>
 			<td align="center" width=100 colspan="2">机器数</td>
 		</tr>
 		<tr bgcolor="#eeeeee" height=30>
 			<%--<td align="center" width=80></td>--%>
 			<td align="center" width=80>总数</td>
 			<td align="center" width=80>待刷数</td>
-			<td align="center" width=80>无效刷数</td>
+			<td align="center" width=80>无效刷量</td>
 			<td align="center" width=80>无效占比</td>
 			<td align="center" width=60>总次数</td>
 			<td align="center" width=80>已刷次数</td>
 			<td align="center" width=80>待刷次数</td>
+			<td align="center" width=80>平均有效刷量</td>
 			<td align="center" width=80>取词次数</td>
 			<td align="center" width=60>无效占比</td>
 			<td align="center" width=100>总数</td>
@@ -130,7 +131,7 @@
 						<tr onmouseover="doOver(this);" onmouseout="doOut(this);" height="30">
 					</c:otherwise>
 				</c:choose>
-				<td width=100 style="padding-left: 7px;">${refreshStatInfoVO.group}</td>
+				<td width=100>${refreshStatInfoVO.group}</td>
 				<td width=80>${refreshStatInfoVO.totalKeywordCount}</td>
 				<td width=80>${refreshStatInfoVO.needOptimizeKeywordCount > 0 ? refreshStatInfoVO.needOptimizeKeywordCount : ""}</td>
 				<td width=80>
@@ -170,8 +171,16 @@
 				<td width=60>${refreshStatInfoVO.totalOptimizeCount > 0 ? refreshStatInfoVO.totalOptimizeCount : ""}</td>
 				<td width=80>${refreshStatInfoVO.totalOptimizedCount > 0 ? refreshStatInfoVO.totalOptimizedCount : ""}</td>
 				<td width=80>${refreshStatInfoVO.needOptimizeCount > 0 ? refreshStatInfoVO.needOptimizeCount : ""}</td>
+				<td width=80>
+					<c:if test="${refreshStatInfoVO.totalOptimizedCount > 0}">
+						<c:set var="avgOptimizedCount" value="${refreshStatInfoVO.totalOptimizedCount / refreshStatInfoVO.totalKeywordCount}"/>
+						<font color="${avgOptimizedCount <= 30 ? "red" : "black"}">
+							<fmt:formatNumber value="${avgOptimizedCount}" pattern="#.##" minFractionDigits="2"/>
+						</font>
+					</c:if>
+				</td>
 				<td width=80>${refreshStatInfoVO.queryCount > 0 ? refreshStatInfoVO.queryCount : ""}</td>
-				<td width=60>
+				<td width=80>
 					<font color="${refreshStatInfoVO.invalidOptimizePercentage > 20 ? "red" : (refreshStatInfoVO.invalidOptimizePercentage > 10 ? "purple" : "")}">
 						<c:if test="${refreshStatInfoVO.invalidOptimizePercentage > 0}">
 							<fmt:formatNumber value="${refreshStatInfoVO.invalidOptimizePercentage}" pattern="#.##"
@@ -211,4 +220,3 @@
 </form>
 </body>
 </html>
-
