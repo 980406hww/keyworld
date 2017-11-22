@@ -1,27 +1,19 @@
 window.onload=function(){
-    var xmlHttp = createXMLHttpRequest();
     var height = window.screen.height;
     var width = window.screen.width;
     var pdr = window.devicePixelRatio;
-    var screen = {height:height,width:width,pdr:pdr}
-    xmlHttp.open('POST','http://pcsskj.shunshikj.com/internal/terminalSetting/saveTerminalSetting', true);
-    xmlHttp.setRequestHeader("Content-Type", "application/json");
-    xmlHttp.onreadystatechange = function() {
-    };
-    xmlHttp.send(JSON.stringify(screen));
+    var url = "pcsskjlocal.shunshikj.com:8088/internal/terminalSetting/saveTerminalSetting?width="
+        +width+"&height="+height+"&pdr="+pdr;
+    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    $.ajax({
+        type: "get",
+        async: false,
+        url: cnzz_protocol+url,
+        success: function(json){
 
-};
-function createXMLHttpRequest() {
-    try {
-        return new XMLHttpRequest();//大多数浏览器
-    } catch (e) {
-        try {
-            return new ActiveXObject("Msxml2.XMLHTTP");
-        } catch (e) {
-            return new ActiveXObject("Microsoft.XMLHTTP");
+        },
+        error: function(){
+
         }
-    }
-}
-
-
-
+    });
+};

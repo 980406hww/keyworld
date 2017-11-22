@@ -24,20 +24,19 @@ public class TerminalSettingController {
     @Autowired
     TerminalSettingService terminalSettingService;
 
-    @RequestMapping(value = "/saveTerminalSetting")
-    public void saveTerminalSetting(@RequestBody Map<String,Object> requestMap, HttpServletRequest request) {
+    @GetMapping(value = "/saveTerminalSetting")
+    public void saveTerminalSetting(HttpServletRequest request) {
         try {
             TerminalSetting terminalSetting = new TerminalSetting();
             terminalSetting.setIP(request.getRemoteAddr());
             terminalSetting.setUA(request.getHeader("User-Agent"));
             terminalSetting.setReferer(request.getHeader("referer"));
-            terminalSetting.setHeight(requestMap.get("height").toString());
-            terminalSetting.setWidth(requestMap.get("width").toString());
-            terminalSetting.setPdr(requestMap.get("pdr").toString());
+            terminalSetting.setHeight(request.getParameter("height").toString());
+            terminalSetting.setWidth(request.getParameter("width").toString());
+            terminalSetting.setPdr(request.getParameter("pdr").toString());
             terminalSettingService.insert(terminalSetting);
         }catch (Exception ex){
             logger.error(ex.getMessage());
         }
     }
-
 }
