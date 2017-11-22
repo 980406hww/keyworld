@@ -75,6 +75,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         String groupName = (String) requestMap.get("group");
         String userName = (String) requestMap.get("userName");
         String password = (String) requestMap.get("password");
+        String searchEngine = (String) requestMap.get("searchEngine");
         try {
             if (validUser(userName, password)) {
                 //String returnValue = "";
