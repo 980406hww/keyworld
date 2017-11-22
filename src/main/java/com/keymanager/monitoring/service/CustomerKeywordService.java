@@ -98,7 +98,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return customerKeywordDao.searchCustomerKeywords(customerKeywordCriteria);
     }
 
-    public CustomerKeywordForCaptureTitle searchCustomerKeywordForCaptureTitle(String terminalType) throws Exception {
+    public CustomerKeywordForCaptureTitle searchCustomerKeywordForCaptureTitle(String terminalType,String searchEngine) throws Exception {
         QZCaptureTitleLog qzCaptureTitleLog = qzCaptureTitleLogService.getAvailableQZSetting(QZCaptureTitleLogStatusEnum.Processing.getValue(), terminalType);
         if (qzCaptureTitleLog == null) {
             qzCaptureTitleLog = qzCaptureTitleLogService.getAvailableQZSetting(QZCaptureTitleLogStatusEnum.New.getValue(), terminalType);
@@ -109,10 +109,10 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         if (qzCaptureTitleLog == null) {
             return null;
         }
-        CustomerKeywordForCaptureTitle captureTitle = customerKeywordDao.searchCustomerKeywordForCaptureTitle(qzCaptureTitleLog);
+        CustomerKeywordForCaptureTitle captureTitle = customerKeywordDao.searchCustomerKeywordForCaptureTitle(qzCaptureTitleLog,searchEngine);
         if (captureTitle == null) {
             qzCaptureTitleLogService.completeQZCaptureTitleLog(qzCaptureTitleLog.getUuid());
-            customerKeywordDao.deleteEmptyTitleCustomerKeyword(qzCaptureTitleLog);
+            customerKeywordDao.deleteEmptyTitleCustomerKeyword(qzCaptureTitleLog,searchEngine);
             return null;
         } else {
             QZOperationType qzOperationType = qzOperationTypeService.selectById(qzCaptureTitleLog.getQzOperationTypeUuid());
@@ -127,11 +127,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
     }
 
-    public CustomerKeywordForCaptureTitle searchCustomerKeywordForCaptureTitle(String groupName, String terminalType) throws Exception {
+    public CustomerKeywordForCaptureTitle searchCustomerKeywordForCaptureTitle(String groupName, String terminalType,String searchEngine) throws Exception {
         QZCaptureTitleLog qzCaptureTitleLog = new QZCaptureTitleLog();
         qzCaptureTitleLog.setGroup(groupName);
         qzCaptureTitleLog.setTerminalType(terminalType);
-        CustomerKeywordForCaptureTitle captureTitle = customerKeywordDao.searchCustomerKeywordForCaptureTitle(qzCaptureTitleLog);
+        CustomerKeywordForCaptureTitle captureTitle = customerKeywordDao.searchCustomerKeywordForCaptureTitle(qzCaptureTitleLog,searchEngine);
        // ObjectMapper mapper = new ObjectMapper();
         //return mapper.writeValueAsString(captureTitle);
         return captureTitle;

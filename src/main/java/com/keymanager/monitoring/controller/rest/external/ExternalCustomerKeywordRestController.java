@@ -82,9 +82,9 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 CustomerKeywordForCaptureTitle returnValue = null;
                 String terminalType = TerminalTypeMapping.getTerminalType(request);
                 if (StringUtils.isEmpty(groupName)) {
-                    returnValue = customerKeywordService.searchCustomerKeywordForCaptureTitle(terminalType);
+                    returnValue = customerKeywordService.searchCustomerKeywordForCaptureTitle(terminalType,searchEngine);
                 } else {
-                    returnValue = (customerKeywordService.searchCustomerKeywordForCaptureTitle(groupName, terminalType));
+                    returnValue = (customerKeywordService.searchCustomerKeywordForCaptureTitle(groupName, terminalType,searchEngine));
                 }
                     return new ResponseEntity<Object>(returnValue, HttpStatus.OK);
             }

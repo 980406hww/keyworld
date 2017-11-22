@@ -558,6 +558,7 @@
                 AND ck.fCustomerUuid = #{qzCaptureTitleLog.customerUuid}
             </if>
             AND ck.fCapturedTitle = 0
+            AND ck.fSearchEngine = #{searchEngine}
             AND ck.fCaptureTitleQueryTime IS NULL
             AND (ck.fTitle IS NULL OR ck.fTitle = '')
             LIMIT 1
@@ -571,6 +572,7 @@
             fCustomerUuid = #{qzCaptureTitleLog.customerUuid}
         AND fTerminalType = #{qzCaptureTitleLog.terminalType}
         AND fType =  #{qzCaptureTitleLog.type}
+        AND fSearchEngine =  #{searchEngine}
         AND fOptimizeGroupName =  #{qzCaptureTitleLog.group}
         AND ( fTitle = '' OR  fTitle IS NULL )
         AND fManualCleanTitle  = 0

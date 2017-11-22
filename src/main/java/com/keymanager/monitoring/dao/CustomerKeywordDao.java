@@ -113,9 +113,9 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void updateAutoUpdateNegativeTimeAs4MinutesAgo(@Param("terminalType")String terminalType, @Param("groupName")String groupName);
 
-    CustomerKeywordForCaptureTitle searchCustomerKeywordForCaptureTitle(@Param("qzCaptureTitleLog") QZCaptureTitleLog qzCaptureTitleLog);
+    CustomerKeywordForCaptureTitle searchCustomerKeywordForCaptureTitle(@Param("qzCaptureTitleLog") QZCaptureTitleLog qzCaptureTitleLog,@Param("searchEngine")String searchEngine);
 
-    void  deleteEmptyTitleCustomerKeyword(@Param("qzCaptureTitleLog")QZCaptureTitleLog qzCaptureTitleLog);
+    void  deleteEmptyTitleCustomerKeyword(@Param("qzCaptureTitleLog")QZCaptureTitleLog qzCaptureTitleLog,@Param("searchEngine")String searchEngine);
 
     List<String> searchCustomerKeywordSummaryInfo(@Param("entryType")String entryType, @Param("customerUuid")Long customerUuid);
 }
