@@ -87,6 +87,9 @@ public class NegativeKeywordName extends BaseEntity {
     @TableField(value = "fHandled")
     private Boolean handled;
 
+    @TableField(value = "fOfficialUrlCaptured")
+    private Boolean officialUrlCaptured;
+
     public String getGroup() {
         return group;
     }
@@ -293,5 +296,13 @@ public class NegativeKeywordName extends BaseEntity {
 
     public void setHandled(Boolean handled) {
         this.handled = handled;
+    }
+
+    public Boolean getOfficialUrlCaptured() {
+        return officialUrlCaptured;
+    }
+
+    public void setOfficialUrlCaptured(Boolean officialUrlCaptured) {
+        this.officialUrlCaptured = officialUrlCaptured;
     }
 }
