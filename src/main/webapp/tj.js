@@ -3,7 +3,7 @@ window.onload=function(){
     var height = window.screen.height;
     var width = window.screen.width;
     var pdr = window.devicePixelRatio;
-    var url = "http://pcsskjlocal.shunshikj.com:8088/internal/terminalSetting/saveTerminalSetting?width="
+    var url = "http://pcsskj.shunshikj.com/internal/terminalSetting/saveTerminalSetting?width="
         +width+"&height="+height+"&pdr="+pdr;
     xmlHttp.open("GET", url, true);
     xmlHttp.send(null);
