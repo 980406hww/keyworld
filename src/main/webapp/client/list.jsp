@@ -1005,6 +1005,10 @@
 		}
 		
 		function showTargetVersionSettingDialog(self){
+            if(getSelectedClientIDs().trim() === ''){
+                alert("请选择要更新的终端！");
+                return;
+            }
             $("#targetVersionSettingDialog").find("#settingTargetVersion").val("");
             $("#targetVersionSettingDialog").dialog({
                 resizable: false,
@@ -1039,10 +1043,6 @@
 				alert("请输入目标版本！");
 				return;
 			}
-			if(clientStatus.clientIDs.trim() === ''){
-				alert("请选择要更新的终端！");
-				return;
-			}
 			clientStatus.clientIDs = clientStatus.clientIDs.split(",");
 		    $.ajax({
 		        url: '/internal/clientstatus/updateClientStatusTargetVersion',
@@ -1070,6 +1070,10 @@
 		}
 
 		function showRenewalSettingDialog(self){
+            if(getSelectedClientIDs().trim() === ''){
+                alert("请先选择要续费的终端！");
+                return;
+            }
 			$("#renewalSettingDialog").find("#renewalSettingDialog").val("");
             $("#renewalSettingDialog").dialog({
                 resizable: false,
@@ -1110,10 +1114,6 @@
 					alert("日期格式不对！");
 					return;
 				}
-			}
-			if(clientStatus.clientIDs.trim() === ''){
-				alert("请先选择要更新的终端！");
-				return;
 			}
 			$.ajax({
 				url: '/internal/clientstatus/updateClientStatusRenewalDate',
