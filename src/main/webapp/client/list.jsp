@@ -809,7 +809,7 @@
                         $("#changeSettingDialog").dialog({
                             resizable: false,
                             title: "设置",
-                            width: 800,
+                            width: 820,
 							maxHeight: 534,
                             modal: true,
                             buttons: [{
@@ -962,7 +962,7 @@
 			clientStatus.maxUserCount = settingDialogDiv.find("#maxUserCount").val();
 			clientStatus.optimizeKeywordCountPerIP = settingDialogDiv.find("#optimizeKeywordCountPerIP").val();
 
-//			clientStatus.disableVisitWebsite = settingDialogDiv.find("#disableVisitWebsite:checked").val() === '1' ? 1 : 0;
+			clientStatus.disableVisitWebsite = settingDialogDiv.find("#disableVisitWebsite:checked").val() === '1' ? 1 : 0;
 			clientStatus.oneIPOneUser = settingDialogDiv.find("#oneIPOneUser:checked").val() === '1' ? 1 : 0;
 			clientStatus.randomlyClickNoResult = settingDialogDiv.find("#randomlyClickNoResult:checked").val() === '1' ? 1 : 0;
 			clientStatus.justVisitSelfPage = settingDialogDiv.find("#justVisitSelfPage:checked").val() === '1' ? 1 : 0;
@@ -1248,6 +1248,7 @@
 											<option value="pc_pm_wenku">pc_pm_wenku</option>
 											<option value="pc_tieba">pc_tieba</option>
 											<option value="pc_kpm">pc_kpm</option>
+											<option value="pc_xl_sogou">pc_xl_sogou</option>
 										</c:when>
 										<c:otherwise>
 											<option value="m_pm">m_pm</option>
@@ -1256,6 +1257,7 @@
 											<option value="m_pm_sm">m_pm_sm</option>
 											<option value="m_xl2">m_xl2</option>
 											<option value="m_kpm">m_kpm</option>
+											<option value="m_xl_sogou">m_xl_sogou</option>
 										</c:otherwise>
 									</c:choose>
 								</select>
