@@ -3,10 +3,9 @@ window.onload=function(){
     var height = window.screen.height;
     var width = window.screen.width;
     var pdr = window.devicePixelRatio;
-    var url = "pcsskjlocal.shunshikj.com:8088/internal/terminalSetting/saveTerminalSetting?width="
+    var url = "http://pcsskjlocal.shunshikj.com:8088/internal/terminalSetting/saveTerminalSetting?width="
         +width+"&height="+height+"&pdr="+pdr;
-    var sstj_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-    xmlHttp.open("GET",sstj_protocol+url,true);
+    xmlHttp.open("GET", url, true);
     xmlHttp.send(null);
 };
 
