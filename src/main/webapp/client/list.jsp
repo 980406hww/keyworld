@@ -809,7 +809,7 @@
                         $("#changeSettingDialog").dialog({
                             resizable: false,
                             title: "设置",
-                            width: 800,
+                            width: 820,
 							maxHeight: 534,
                             modal: true,
                             buttons: [{
@@ -962,7 +962,7 @@
 			clientStatus.maxUserCount = settingDialogDiv.find("#maxUserCount").val();
 			clientStatus.optimizeKeywordCountPerIP = settingDialogDiv.find("#optimizeKeywordCountPerIP").val();
 
-//			clientStatus.disableVisitWebsite = settingDialogDiv.find("#disableVisitWebsite:checked").val() === '1' ? 1 : 0;
+			clientStatus.disableVisitWebsite = settingDialogDiv.find("#disableVisitWebsite:checked").val() === '1' ? 1 : 0;
 			clientStatus.oneIPOneUser = settingDialogDiv.find("#oneIPOneUser:checked").val() === '1' ? 1 : 0;
 			clientStatus.randomlyClickNoResult = settingDialogDiv.find("#randomlyClickNoResult:checked").val() === '1' ? 1 : 0;
 			clientStatus.justVisitSelfPage = settingDialogDiv.find("#justVisitSelfPage:checked").val() === '1' ? 1 : 0;
@@ -1005,6 +1005,10 @@
 		}
 		
 		function showTargetVersionSettingDialog(self){
+            if(getSelectedClientIDs().trim() === ''){
+                alert("请选择要更新的终端！");
+                return;
+            }
             $("#targetVersionSettingDialog").find("#settingTargetVersion").val("");
             $("#targetVersionSettingDialog").dialog({
                 resizable: false,
@@ -1039,10 +1043,6 @@
 				alert("请输入目标版本！");
 				return;
 			}
-			if(clientStatus.clientIDs.trim() === ''){
-				alert("请选择要更新的终端！");
-				return;
-			}
 			clientStatus.clientIDs = clientStatus.clientIDs.split(",");
 		    $.ajax({
 		        url: '/internal/clientstatus/updateClientStatusTargetVersion',
@@ -1070,6 +1070,10 @@
 		}
 
 		function showRenewalSettingDialog(self){
+            if(getSelectedClientIDs().trim() === ''){
+                alert("请先选择要续费的终端！");
+                return;
+            }
 			$("#renewalSettingDialog").find("#renewalSettingDialog").val("");
             $("#renewalSettingDialog").dialog({
                 resizable: false,
@@ -1110,10 +1114,6 @@
 					alert("日期格式不对！");
 					return;
 				}
-			}
-			if(clientStatus.clientIDs.trim() === ''){
-				alert("请先选择要更新的终端！");
-				return;
 			}
 			$.ajax({
 				url: '/internal/clientstatus/updateClientStatusRenewalDate',
@@ -1248,6 +1248,7 @@
 											<option value="pc_pm_wenku">pc_pm_wenku</option>
 											<option value="pc_tieba">pc_tieba</option>
 											<option value="pc_kpm">pc_kpm</option>
+											<option value="pc_xl_sogou">pc_xl_sogou</option>
 										</c:when>
 										<c:otherwise>
 											<option value="m_pm">m_pm</option>
@@ -1256,6 +1257,7 @@
 											<option value="m_pm_sm">m_pm_sm</option>
 											<option value="m_xl2">m_xl2</option>
 											<option value="m_kpm">m_kpm</option>
+											<option value="m_xl_sogou">m_xl_sogou</option>
 										</c:otherwise>
 									</c:choose>
 								</select>

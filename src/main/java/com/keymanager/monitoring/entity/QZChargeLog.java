@@ -86,7 +86,7 @@ public class QZChargeLog extends BaseEntity{
         return loginName;
     }
 
-    public void setLoginName(String userID) {
+    public void setLoginName(String loginName) {
         this.loginName = loginName;
     }
 
