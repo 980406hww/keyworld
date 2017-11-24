@@ -1,12 +1,8 @@
 package com.keymanager.monitoring.service;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.enums.CollectMethod;
-import com.keymanager.monitoring.common.result.PageInfo;
-import com.keymanager.monitoring.common.utils.BeanUtils;
 import com.keymanager.monitoring.criteria.*;
 import com.keymanager.monitoring.dao.CustomerKeywordDao;
 import com.keymanager.monitoring.entity.*;
@@ -16,12 +12,11 @@ import com.keymanager.monitoring.vo.CodeNameVo;
 import com.keymanager.monitoring.vo.SearchEngineResultItemVO;
 import com.keymanager.monitoring.vo.SearchEngineResultVO;
 import com.keymanager.util.Constants;
-import com.keymanager.util.PageCustomize;
 import com.keymanager.util.Utils;
 import com.keymanager.util.common.StringUtil;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
-import com.keymanager.value.CustomerKeywordForOptimization;
+import com.keymanager.monitoring.vo.CustomerKeywordForOptimization;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.RowBounds;

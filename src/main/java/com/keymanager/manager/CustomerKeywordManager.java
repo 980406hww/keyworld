@@ -7,6 +7,7 @@ import com.keymanager.enums.CustomerKeywordStatus;
 import com.keymanager.enums.KeywordType;
 import com.keymanager.monitoring.excel.operator.AbstractExcelReader;
 import com.keymanager.monitoring.service.CaptureRealUrlService;
+import com.keymanager.monitoring.vo.CustomerKeywordForOptimization;
 import com.keymanager.util.*;
 import com.keymanager.util.common.StringUtil;
 import com.keymanager.value.*;
