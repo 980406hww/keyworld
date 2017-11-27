@@ -65,12 +65,12 @@ public class NegativeKeywordNameService extends ServiceImpl<NegativeKeywordNameD
     }
 
     public NegativeKeywordName getNegativeKeywordName(String type, String group) {
-        NegativeKeywordName negativeKeywordName = null;
-        if(type.equals(TerminalTypeEnum.PC.name())) {
-            negativeKeywordName = negativeKeywordNameDao.getPCNegativeKeywordName(group);
-        } else {
-            negativeKeywordName = negativeKeywordNameDao.getPhoneNegativeKeywordName(group);
-        }
+        NegativeKeywordName negativeKeywordName = negativeKeywordName = negativeKeywordNameDao.getNegativeKeywordName(type, group);
+        return negativeKeywordName;
+    }
+
+    public NegativeKeywordName getHasOfficialUrlNegativeKeywordName(String group) {
+        NegativeKeywordName negativeKeywordName = negativeKeywordNameDao.getHasUrlNegativeKeywordName(group);
         return negativeKeywordName;
     }
 
@@ -83,6 +83,12 @@ public class NegativeKeywordNameService extends ServiceImpl<NegativeKeywordNameD
         } else {
             negativeKeywordName.setPhoneQueried(true);
         }
+        negativeKeywordNameDao.updateById(negativeKeywordName);
+    }
+
+    public void updateNegativeOfficialUrlCaptured(Long uuid) {
+        NegativeKeywordName negativeKeywordName = negativeKeywordNameDao.selectById(uuid);
+        negativeKeywordName.setOfficialUrlCaptured(true);
         negativeKeywordNameDao.updateById(negativeKeywordName);
     }
 
@@ -141,6 +147,16 @@ public class NegativeKeywordNameService extends ServiceImpl<NegativeKeywordNameD
                 negativeKeywordName.setPhoneRelevantExistNegative(true);
                 negativeKeywordName.setPhoneRelevantNegativeKeyword(negativeInfoVO.getRelativeNegativeKeyword());
             }
+        }
+        negativeKeywordName.setUpdateTime(new Date());
+        negativeKeywordNameDao.updateById(negativeKeywordName);
+    }
+
+    public void updateEmailByUuid(Long uuid, String emailAddress) {
+        NegativeKeywordName negativeKeywordName = negativeKeywordNameDao.selectById(uuid);
+        negativeKeywordName.setUpdateTime(new Date());
+        if(StringUtils.isNotBlank(emailAddress)) {
+            negativeKeywordName.setEmail(emailAddress);
         }
         negativeKeywordNameDao.updateById(negativeKeywordName);
     }

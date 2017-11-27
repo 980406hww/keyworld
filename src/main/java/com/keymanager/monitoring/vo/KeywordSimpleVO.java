@@ -7,6 +7,7 @@ public class KeywordSimpleVO {
 
     private Long uuid;
     private String keyword;
+    private String officialUrl;
 
     public Long getUuid() {
         return uuid;
@@ -22,5 +23,13 @@ public class KeywordSimpleVO {
 
     public void setKeyword(String keyword) {
         this.keyword = keyword;
+    }
+
+    public String getOfficialUrl() {
+        return officialUrl;
+    }
+
+    public void setOfficialUrl(String officialUrl) {
+        this.officialUrl = officialUrl;
     }
 }

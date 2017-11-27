@@ -84,8 +84,8 @@ public class Constants {
 	static {
 		operationTypeMap.put(TerminalTypeEnum.PC.name(), new String[]{"",
 				"pc_pm","pc_pm2","pc_pm3","pc_xg","pc_xg2","pc_xg3","pc_xl","pc_pm_sogou","pc_pm_360","pc_pm_58",
-				"pc_pm_zhidao", "pc_pm_wenku", "pc_tieba", "pc_kpm"});
-		operationTypeMap.put(TerminalTypeEnum.Phone.name(), new String[]{"", "m_pm", "m_xl", "m_xg", "m_pm_sm", "m_xl2", "m_kpm"});
+				"pc_pm_zhidao", "pc_pm_wenku", "pc_tieba", "pc_kpm", "pc_xl_sogou", "pc_xunipm"});
+		operationTypeMap.put(TerminalTypeEnum.Phone.name(), new String[]{"", "m_pm", "m_xl", "m_xg", "m_pm_sm", "m_xl2", "m_kpm", "m_xl_sogou", "m_xunipm"});
 	}
 
 	public final static List<String> QZSETTING_STATUS_LIST = new ArrayList<String>();

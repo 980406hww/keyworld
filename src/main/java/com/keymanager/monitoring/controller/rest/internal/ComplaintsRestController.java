@@ -8,6 +8,8 @@ import com.keymanager.monitoring.entity.TSMainKeyword;
 import javax.servlet.http.HttpServletRequest;
 
 import com.keymanager.monitoring.service.TSMainKeywordService;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.jdbc.Null;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,8 +47,8 @@ public class ComplaintsRestController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/complaints/findTSMainKeywords")
     @RequestMapping(value = "/findTSMainKeywords", method = RequestMethod.GET)
-    public ModelAndView findTSMainKeywords(@RequestParam(defaultValue = "1",name = "currentPage") int currentPage,@RequestParam(defaultValue="50",name = "displaysRecords") int pageSize,
-                                           @RequestParam(defaultValue="") String keyword,@RequestParam(defaultValue="") String  group){
+    public ModelAndView findTSMainKeywords(@RequestParam(defaultValue = "1",name = "currentPage") int currentPage, @RequestParam(defaultValue="50",name = "displaysRecords") int pageSize,
+                                           @RequestParam(defaultValue= "") String keyword, @RequestParam(defaultValue="") String  group){
         return findTSMainKeywordsAndReturnView(currentPage,pageSize,keyword,group);
     }
 
@@ -66,8 +68,6 @@ public class ComplaintsRestController extends SpringMVCBaseController {
 
     private ModelAndView findTSMainKeywordsAndReturnView(int currentPage,int pageSize,String keyword,String  group){
         Page<TSMainKeyword> page = new Page<TSMainKeyword>(currentPage, pageSize);
-        page.getCondition().put("keyword",keyword);
-        page.getCondition().put("group",group);
         page = tsMainKeywordService.searchTSMainKeywords(page, keyword, group);
         ModelAndView modelAndView = new ModelAndView("/complaints/show");
         modelAndView.addObject("page", page);

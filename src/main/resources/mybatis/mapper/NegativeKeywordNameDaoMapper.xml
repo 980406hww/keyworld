@@ -28,6 +28,7 @@
 		fPhoneSelectNegativeKeyword AS "phoneSelectNegativeKeyword",
 		fPhoneRelevantExistNegative AS "phoneRelevantExistNegative",
 		fPhoneRelevantNegativeKeyword AS "phoneRelevantNegativeKeyword",
+		fOfficialUrlCaptured AS "officialUrlCaptured",
 		fHandled AS "handled",
 		fUpdateTime AS "updateTime",
 		fCreateTime AS "createTime"
@@ -44,24 +45,32 @@
 		ORDER BY fUpdateTime
 	</select>
 
-	<select id="getPCNegativeKeywordName" parameterType="java.lang.String" resultType="com.keymanager.monitoring.entity.NegativeKeywordName">
+	<select id="getNegativeKeywordName" parameterType="java.lang.String" resultType="com.keymanager.monitoring.entity.NegativeKeywordName">
 		SELECT
 			<include refid="selectCol" />
 		FROM
 			t_negative_keyword_name n
 		WHERE
-			fRankQueried = 0 AND fRankCaptured = 0
+			1 = 1
+		<if test="type != 'Phone'">
+			AND fRankQueried = 0 AND fRankCaptured = 0
+		</if>
+		<if test="type != 'PC'">
+			AND fPhoneQueried = 0 AND fPhoneCaptured = 0
+		</if>
 		<if test="group != 'All'"> AND n.fGroup = #{group} </if>
 		LIMIT 1
 	</select>
 
-	<select id="getPhoneNegativeKeywordName" parameterType="java.lang.String" resultType="com.keymanager.monitoring.entity.NegativeKeywordName">
+	<select id="getHasUrlNegativeKeywordName" parameterType="java.lang.String" resultType="com.keymanager.monitoring.entity.NegativeKeywordName">
 		SELECT
 			<include refid="selectCol" />
 		FROM
 			t_negative_keyword_name n
 		WHERE
-			fPhoneQueried = 0 AND fPhoneCaptured = 0
+			fOfficialUrlCaptured = 0
+		AND fOfficialUrl IS NOT NULL
+		AND fEmail IS NULL
 		<if test="group != 'All'"> AND n.fGroup = #{group} </if>
 		LIMIT 1
 	</select>

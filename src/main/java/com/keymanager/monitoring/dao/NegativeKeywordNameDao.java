@@ -14,9 +14,9 @@ public interface NegativeKeywordNameDao extends BaseMapper<NegativeKeywordName> 
 
     List<NegativeKeywordName> searchNegativeKeywordNames(@Param("negativeKeywordNameCriteria")NegativeKeywordNameCriteria negativeKeywordNameCriteria);
 
-    NegativeKeywordName getPCNegativeKeywordName(@Param("group") String group);
+    NegativeKeywordName getNegativeKeywordName(@Param("type") String type, @Param("group") String group);
 
-    NegativeKeywordName getPhoneNegativeKeywordName(@Param("group") String group);
+    NegativeKeywordName getHasUrlNegativeKeywordName(@Param("group") String group);
 
     List<String> getNegativeGroup();
 
