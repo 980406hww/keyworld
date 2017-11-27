@@ -733,16 +733,17 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     public void addCustomerKeywords(SearchEngineResultVO searchEngineResultVO, String terminalType, String userName) throws Exception {
         if(searchEngineResultVO != null){
+            String searchEngine = searchEngineResultVO.getSearchEngine();
             List<CustomerKeyword> customerKeywords = new ArrayList<CustomerKeyword>();
             for(SearchEngineResultItemVO searchEngineResultItemVO : searchEngineResultVO.getSearchEngineResultItemVOs()){
-                CustomerKeyword customerKeyword = convert(searchEngineResultItemVO, terminalType, searchEngineResultVO.getGroup(), searchEngineResultVO.getCustomerUuid());
+                CustomerKeyword customerKeyword = convert(searchEngineResultItemVO, terminalType, searchEngineResultVO.getGroup(), searchEngineResultVO.getCustomerUuid(),searchEngine);
                 customerKeywords.add(customerKeyword);
             }
             this.addCustomerKeywords(customerKeywords, userName);
         }
     }
 
-    private CustomerKeyword convert(SearchEngineResultItemVO searchEngineResultItemVO, String terminalType, String groupName, long customerUuid) {
+    private CustomerKeyword convert(SearchEngineResultItemVO searchEngineResultItemVO, String terminalType, String groupName, long customerUuid,String searchEngine) {
         CustomerKeyword customerKeyword = new CustomerKeyword();
         customerKeyword.setCurrentPosition(searchEngineResultItemVO.getOrder());
         customerKeyword.setInitialPosition(searchEngineResultItemVO.getOrder());
@@ -754,7 +755,19 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeyword.setTerminalType(terminalType);
         customerKeyword.setOriginalUrl(searchEngineResultItemVO.getHref());
         customerKeyword.setServiceProvider("baidutop123");
-        customerKeyword.setSearchEngine(Constants.SEARCH_ENGINE_BAIDU);
+        if(searchEngine.equals(Constants.SEARCH_ENGINE_BAIDU)){
+            customerKeyword.setSearchEngine(Constants.SEARCH_ENGINE_BAIDU);
+        }
+        if(searchEngine.equals(Constants.SEARCH_ENGINE_SOGOU)){
+            customerKeyword.setSearchEngine(Constants.SEARCH_ENGINE_SOGOU);
+        }
+        if(searchEngine.equals(Constants.SEARCH_ENGINE_360)){
+            customerKeyword.setSearchEngine(Constants.SEARCH_ENGINE_360);
+        }
+        if(searchEngine.equals(Constants.SEARCH_ENGINE_SM)){
+            customerKeyword.setSearchEngine(Constants.SEARCH_ENGINE_SM);
+        }
+        //customerKeyword.setSearchEngine(Constants.SEARCH_ENGINE_BAIDU);
         customerKeyword.setUrl(searchEngineResultItemVO.getUrl());
         customerKeyword.setStartOptimizedTime(Utils.getCurrentTimestamp());
         customerKeyword.setCollectMethod(CollectMethod.PerMonth.getCode());
@@ -777,6 +790,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         if(searchEngineResultVO != null) {
             List<NegativeList> negativeLists = negativeListService.getSpecifiedKeywordNegativeLists(terminalType, searchEngineResultVO.getKeyword());
             List<CustomerKeyword> customerKeywords = new ArrayList<CustomerKeyword>();
+            String searchEngine = searchEngineResultVO.getSearchEngine();
             for (SearchEngineResultItemVO searchEngineResultItemVO : searchEngineResultVO.getSearchEngineResultItemVOs()) {
                 SearchEngineResultItemVO tmpSearchEngineResultItemVO = searchEngineResultItemVO;
                 if (CollectionUtils.isNotEmpty(negativeLists)) {
@@ -788,7 +802,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                     }
                 }
                 if (tmpSearchEngineResultItemVO != null) {
-                    CustomerKeyword customerKeyword = convert(searchEngineResultItemVO, terminalType, searchEngineResultVO.getGroup(), searchEngineResultVO.getCustomerUuid());
+                    CustomerKeyword customerKeyword = convert(searchEngineResultItemVO, terminalType, searchEngineResultVO.getGroup(), searchEngineResultVO.getCustomerUuid(),searchEngine);
                     if (!Utils.isNullOrEmpty(customerKeyword.getOriginalUrl())) {
                         String targetUrl = captureRealUrlService.fetchSingleRealUrl(customerKeyword.getOriginalUrl());
                         if (!Utils.isNullOrEmpty(targetUrl)) {

@@ -49,6 +49,7 @@ public class Constants {
 	public final static String SEARCH_ENGINE_BAIDU = "百度";
 	public final static String SEARCH_ENGINE_SOGOU = "搜狗";
 	public final static String SEARCH_ENGINE_360 = "360";
+	public final static String SEARCH_ENGINE_SM = "神马";
 	public final static String SEARCH_ENGINE_GOOGLE = "谷歌";
 	public final static Map<String, String> SEARCH_ENGINE_URL_MAP = new HashMap<String, String>();
 	static {

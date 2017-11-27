@@ -5,12 +5,20 @@ import com.keymanager.monitoring.criteria.BaseCriteria;
 import java.util.List;
 
 public class SearchEngineResultVO extends BaseCriteria{
+	private  String searchEngine;
 	private String group;
 	private String keyword;
 	private int customerUuid;
 	private String entryType;
 	private List<SearchEngineResultItemVO> searchEngineResultItemVOs;
 
+	public String getSearchEngine() {
+		return searchEngine;
+	}
+
+	public void setSearchEngine(String searchEngine) {
+		this.searchEngine = searchEngine;
+	}
 
 	public String getGroup() {
 		return group;
