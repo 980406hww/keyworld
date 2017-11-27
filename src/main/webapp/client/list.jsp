@@ -1249,6 +1249,7 @@
 											<option value="pc_tieba">pc_tieba</option>
 											<option value="pc_kpm">pc_kpm</option>
 											<option value="pc_xl_sogou">pc_xl_sogou</option>
+											<option value="pc_xunipm">pc_xunipm</option>
 										</c:when>
 										<c:otherwise>
 											<option value="m_pm">m_pm</option>
@@ -1258,6 +1259,7 @@
 											<option value="m_xl2">m_xl2</option>
 											<option value="m_kpm">m_kpm</option>
 											<option value="m_xl_sogou">m_xl_sogou</option>
+											<option value="m_xunipm">m_xunipm</option>
 										</c:otherwise>
 									</c:choose>
 								</select>
