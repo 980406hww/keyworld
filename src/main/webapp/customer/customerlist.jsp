@@ -206,11 +206,11 @@
             return offset;
         }
 
-        //删除所"
+        //删除所选
         function deleteCustomers(self) {
             var uuids = getSelectedIDs();
             if (uuids === '') {
-                alert('请选择要操作的设置信息');
+                alert('请选择要删除的客户');
                 return;
             }
             if (confirm("确实要删除这些客户吗?") == false) return;
