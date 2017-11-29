@@ -10,6 +10,7 @@ import com.keymanager.monitoring.service.CustomerKeywordService;
 import com.keymanager.monitoring.service.PerformanceService;
 import com.keymanager.monitoring.vo.SearchEngineResultItemVO;
 import com.keymanager.monitoring.vo.SearchEngineResultVO;
+import com.keymanager.util.Constants;
 import com.keymanager.util.TerminalTypeMapping;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
@@ -80,11 +81,14 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 CustomerKeywordForCaptureTitle returnValue = null;
                 String terminalType = TerminalTypeMapping.getTerminalType(request);
                 if (StringUtils.isEmpty(groupName)) {
-                    returnValue = customerKeywordService.searchCustomerKeywordForCaptureTitle(terminalType,searchEngine);
+                    //just baidu have whole site
+                    if(Constants.SEARCH_ENGINE_BAIDU.equals(searchEngine)) {
+                        returnValue = customerKeywordService.searchCustomerKeywordForCaptureTitle(terminalType, searchEngine);
+                    }
                 } else {
                     returnValue = (customerKeywordService.searchCustomerKeywordForCaptureTitle(groupName, terminalType,searchEngine));
                 }
-                    return new ResponseEntity<Object>(returnValue, HttpStatus.OK);
+                return new ResponseEntity<Object>(returnValue, HttpStatus.OK);
             }
         }catch (Exception ex){
             logger.error(ex.getMessage());
