@@ -1143,7 +1143,9 @@
                              | <a target="_blank" href="javascript:uploadDailyReportTemplate('${customer.uuid}', this)">上传日报表模板</a>
                         </shiro:hasPermission>
                     </c:if>
+                    <c:if test="${'qz'.equalsIgnoreCase(entryType)}">
                     | <a target="_blank" href="javascript:viewAizhanRank('${customer.contactPerson}')">查看爱站排名</a>
+                    </c:if>
                 </td>
             </tr>
         </c:forEach>
