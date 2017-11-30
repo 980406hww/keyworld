@@ -679,7 +679,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeywordForCapturePosition.setKeyword(customerKeyword.getKeyword());
             customerKeywordForCapturePosition.setUrl(customerKeyword.getUrl());
             customerKeywordForCapturePosition.setTitle(customerKeyword.getTitle());
-
+            customerKeywordForCapturePosition.setSearchEngine(customerKeyword.getSearchEngine());
             customerKeyword.setCapturePositionQueryTime(new Date());
             customerKeywordDao.updateById(customerKeyword);
             return customerKeywordForCapturePosition;
