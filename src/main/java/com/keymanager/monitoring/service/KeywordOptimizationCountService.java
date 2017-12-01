@@ -29,12 +29,12 @@ public class KeywordOptimizationCountService extends ServiceImpl<ClientStatusDao
 
 	public boolean optimizeNormalKeyword(String groupName){
 		KeywordOptimizationCount keywordOptimizationCount = get(groupName);
-		if(keywordOptimizationCount.fetchNormalKeyword()){
-			keywordOptimizationCount.setNormalKeywordOptimizedCount(keywordOptimizationCount.getNormalKeywordOptimizedCount() + 1);
-			return true;
-		}else{
+		if(keywordOptimizationCount.fetchBigKeyword()){
 			keywordOptimizationCount.setBigKeywordOptimizedCount(keywordOptimizationCount.getBigKeywordOptimizedCount() + 1);
 			return false;
+		}else{
+			keywordOptimizationCount.setNormalKeywordOptimizedCount(keywordOptimizationCount.getNormalKeywordOptimizedCount() + 1);
+			return true;
 		}
 	}
 
