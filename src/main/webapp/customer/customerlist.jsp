@@ -958,6 +958,15 @@
             searchCustomerForm.find("#currentPageNumberHidden").val(1);
         }
 
+        function viewAizhanRank(contactPerson) {
+            var index = contactPerson.indexOf("整站");
+            if(index > -1) {
+                contactPerson = contactPerson.substr(0, index);
+            }
+            window.open("https://baidurank.aizhan.com/baidu/" + contactPerson);
+
+        }
+
         <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywords">
         function searchCustomerKeywords(url) {
             window.open(url);
@@ -1133,6 +1142,9 @@
                         <shiro:hasPermission name="/internal/customer/uploadDailyReportTemplate">
                              | <a target="_blank" href="javascript:uploadDailyReportTemplate('${customer.uuid}', this)">上传日报表模板</a>
                         </shiro:hasPermission>
+                    </c:if>
+                    <c:if test="${'qz'.equalsIgnoreCase(entryType)}">
+                    | <a target="_blank" href="javascript:viewAizhanRank('${customer.contactPerson}')">查看爱站排名</a>
                     </c:if>
                 </td>
             </tr>

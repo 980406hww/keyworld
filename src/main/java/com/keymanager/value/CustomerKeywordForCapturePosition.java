@@ -5,6 +5,7 @@ public class CustomerKeywordForCapturePosition {
 	private String keyword;
 	private String url;
 	private String title;
+	private String searchEngine;
 	
 	public String getKeyword() {
 		return keyword;
@@ -36,5 +37,14 @@ public class CustomerKeywordForCapturePosition {
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+
+	public String getSearchEngine() {
+		return searchEngine;
+	}
+
+	public void setSearchEngine(String searchEngine) {
+		this.searchEngine = searchEngine;
 	}
 }
