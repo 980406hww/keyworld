@@ -42,10 +42,14 @@ public class DailyReportRestController extends SpringMVCBaseController {
 
 	@RequestMapping(value = "/triggerReportGeneration", method = RequestMethod.POST)
 	public ResponseEntity<?> triggerReportGeneration(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) throws Exception{
+		int dayOfMonth = Utils.getDayOfMonth();
 		String customerUuids = (String) requestMap.get("customerUuids");
 		String terminalType = TerminalTypeMapping.getTerminalType(request);
 		String returnValue = null;
 		try {
+			if(dayOfMonth == 1) {
+				dailyReportService.resetDailyReportExcel(terminalType, customerUuids);
+			}
 			dailyReportService.triggerReportGeneration(terminalType, customerUuids);
 			returnValue = "{\"status\":true}";
 		}catch(Exception ex){
@@ -71,6 +75,7 @@ public class DailyReportRestController extends SpringMVCBaseController {
 	public ResponseEntity<?> downloadSingleCustomerReport(@PathVariable("customerUuid")Long customerUuid, HttpServletRequest request,
 														  HttpServletResponse response) throws Exception {
 		String terminalType = TerminalTypeMapping.getTerminalType(request);
+		int dayOfMonth = Utils.getDayOfMonth();
 
 		CustomerKeywordCriteria customerKeywordCriteria = new CustomerKeywordCriteria();
 		customerKeywordCriteria.setTerminalType(terminalType);
@@ -78,8 +83,12 @@ public class DailyReportRestController extends SpringMVCBaseController {
 		customerKeywordCriteria.setStatus("1");
 		List<CustomerKeyword> customerKeywords = customerKeywordService.searchCustomerKeywords(customerKeywordCriteria);
 		if (!Utils.isEmpty(customerKeywords)) {
-			CustomerKeywordDailyReportExcelWriter excelWriter = new CustomerKeywordDailyReportExcelWriter(terminalType, customerUuid + "", 0);
+			if(dayOfMonth == 1) {
+				String uuids = "" + customerUuid;
+				dailyReportService.resetDailyReportExcel(terminalType, uuids);
+			}
 
+			CustomerKeywordDailyReportExcelWriter excelWriter = new CustomerKeywordDailyReportExcelWriter(terminalType, customerUuid + "", 0);
 			Customer customer = customerService.selectById(customerUuid);
 			excelWriter.writeDataToExcel(customerKeywords, customer.getContactPerson());
 

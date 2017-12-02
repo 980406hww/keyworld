@@ -34,6 +34,12 @@ public class Utils {
 
 	}
 
+	public static int getDayOfMonth() {
+		Calendar calendar = Calendar.getInstance();
+		int day = calendar.get(Calendar.DAY_OF_MONTH);
+		return day;
+	}
+
 	public static String parseParam(String param) {
 		String tmpParam = "";
 		if ((param == null) || (param.equals(""))) {

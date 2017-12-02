@@ -235,7 +235,7 @@
 			<td width=60>
 				<shiro:hasPermission name="/internal/clientstatus/updateOperationType">
 					<select name="operationType${clientStatus.clientID}" id="operationType${clientStatus.clientID}"
-							onChange="updateOperationType(this)" style="width: 100%;" />
+							onBlur="updateOperationType(this)" style="width: 100%;" />
 				</shiro:hasPermission>
 
 				<shiro:lacksPermission name="/internal/clientstatus/updateOperationType">

@@ -87,4 +87,15 @@ public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport>
 	public List<DailyReport> searchCurrentDateCompletedReports(String terminalType){
 		return dailyReportDao.searchCurrentDateCompletedReports(terminalType);
 	}
+
+	public void resetDailyReportExcel(String terminalType, String customerUuids) {
+		String srcFilePath = Utils.getWebRootPath() + "CustomerKeywordDailyReport.xls";
+		if(StringUtils.isNotEmpty(customerUuids)){
+			String [] customerUuidArray = customerUuids.trim().split(",");
+			for(String customerUuid : customerUuidArray){
+				String dailyReportFilePath = Utils.getWebRootPath() + "dailyreport/" + terminalType + "/" + customerUuid + ".xls";
+				FileUtil.copyFile(srcFilePath, dailyReportFilePath, true);
+			}
+		}
+	}
 }
