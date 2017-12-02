@@ -785,7 +785,7 @@
                 type: 'POST',
                 success: function (result) {
                     if(result){
-                        $().toastmessage('showSuccessToast', "更新成功",true);
+                        $().toastmessage('showSuccessToast', "更新成功");
 
                     }else{
                         $().toastmessage('showErrorToast', "更新失败");
