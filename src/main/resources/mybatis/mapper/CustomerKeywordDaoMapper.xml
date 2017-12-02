@@ -209,8 +209,8 @@
             </otherwise>
         </choose>
         <choose>
-          <when test="customerKeywordCriteria.orderElement != null and customerKeywordCriteria.orderElement != ''">
-              ORDER BY ck.${customerKeywordCriteria.orderElement}  DESC
+          <when test="customerKeywordCriteria.orderingElement != null and customerKeywordCriteria.orderingElement != ''">
+              ORDER BY ck.${customerKeywordCriteria.orderingElement}  DESC
           </when>
           <otherwise>
               ORDER BY ck.fKeyword
@@ -259,8 +259,8 @@
             </otherwise>
         </choose>
         <choose>
-            <when test="customerKeywordCriteria.orderElement != null and customerKeywordCriteria.orderElement != ''">
-                ORDER BY ck.${customerKeywordCriteria.orderElement}  DESC
+            <when test="customerKeywordCriteria.orderingElement != null and customerKeywordCriteria.orderingElement != ''">
+                ORDER BY ck.${customerKeywordCriteria.orderingElement}  DESC
             </when>
             <otherwise>
                 ORDER BY ck.fKeyword
@@ -310,11 +310,17 @@
             </otherwise>
         </choose>
         <choose>
-            <when test="customerKeywordCriteria.orderElement != null and customerKeywordCriteria.orderElement != ''">
-                ORDER BY ck.${customerKeywordCriteria.orderElement}  DESC
+            <when test="customerKeywordCriteria.orderingElement != null and customerKeywordCriteria.orderingElement != ''">
+                ORDER BY ck.${customerKeywordCriteria.orderingElement}
             </when>
             <otherwise>
                 ORDER BY ck.fKeyword
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="customerKeywordCriteria.orderingRule != null and customerKeywordCriteria.orderingRule != ''"> ${customerKeywordCriteria.orderingRule}</when>
+            <otherwise>
+                DESC
             </otherwise>
         </choose>
     </select>

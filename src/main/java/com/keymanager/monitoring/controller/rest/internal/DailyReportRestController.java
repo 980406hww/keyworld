@@ -3,7 +3,6 @@ package com.keymanager.monitoring.controller.rest.internal;
 import com.keymanager.monitoring.criteria.CustomerKeywordCriteria;
 import com.keymanager.monitoring.entity.CustomerKeyword;
 import com.keymanager.monitoring.excel.operator.CustomerKeywordDailyReportExcelWriter;
-import com.keymanager.manager.CustomerKeywordManager;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.DailyReport;
@@ -12,7 +11,6 @@ import com.keymanager.monitoring.service.CustomerService;
 import com.keymanager.monitoring.service.DailyReportService;
 import com.keymanager.util.TerminalTypeMapping;
 import com.keymanager.util.Utils;
-import com.keymanager.value.CustomerKeywordVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,6 +79,8 @@ public class DailyReportRestController extends SpringMVCBaseController {
 		customerKeywordCriteria.setTerminalType(terminalType);
 		customerKeywordCriteria.setCustomerUuid(customerUuid);
 		customerKeywordCriteria.setStatus("1");
+		customerKeywordCriteria.setOrderingElement("fSequence");
+		customerKeywordCriteria.setOrderingRule("ASC");
 		List<CustomerKeyword> customerKeywords = customerKeywordService.searchCustomerKeywords(customerKeywordCriteria);
 		if (!Utils.isEmpty(customerKeywords)) {
 			if(dayOfMonth == 1) {

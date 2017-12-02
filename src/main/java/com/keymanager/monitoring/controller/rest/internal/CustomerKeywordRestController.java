@@ -113,13 +113,13 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		if(StringUtils.isNotEmpty(orderElement)){
 			switch (orderElement.charAt(0)){
 				case '0':
-					customerKeywordCriteria.setOrderElement("");break;
+					customerKeywordCriteria.setOrderingElement("");break;
 				case '1':
-					customerKeywordCriteria.setOrderElement("fCreateTime");break;
+					customerKeywordCriteria.setOrderingElement("fCreateTime");break;
 				case '2':
-					customerKeywordCriteria.setOrderElement("fCurrentPosition");break;
+					customerKeywordCriteria.setOrderingElement("fCurrentPosition");break;
 				case '3':
-					customerKeywordCriteria.setOrderElement("fSequence");break;
+					customerKeywordCriteria.setOrderingElement("fSequence");break;
 			}
 		}else{
 			orderElement = "0";
@@ -282,7 +282,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 			String entryType = (String) request.getSession().getAttribute("entryType");
 			customerKeywordCriteria.setTerminalType(terminalType);
 			customerKeywordCriteria.setEntryType(entryType);
-			initOrderElemnet(customerKeywordCriteria.getOrderElement(), customerKeywordCriteria);
+			initOrderElemnet(customerKeywordCriteria.getOrderingElement(), customerKeywordCriteria);
 			Page<CustomerKeyword>  page = customerKeywordService.searchCustomerKeywords(new Page<CustomerKeyword>(1, 100000), customerKeywordCriteria);
 			List<CustomerKeyword> customerKeywords = page.getRecords();
 			if (!Utils.isEmpty(customerKeywords)) {
