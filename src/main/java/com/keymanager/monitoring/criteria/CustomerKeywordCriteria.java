@@ -1,7 +1,5 @@
 package com.keymanager.monitoring.criteria;
 
-import java.util.Date;
-
 public class CustomerKeywordCriteria extends BaseCriteria{
     private Long customerUuid;
     private String url;
@@ -10,7 +8,6 @@ public class CustomerKeywordCriteria extends BaseCriteria{
     private String creationToTime;
     private String status;
     private String optimizeGroupName;//优化组名
-    private String orderElement;
     private String invalidRefreshCount;//无效点击数
     private String position;//显示前几条
     private String noPosition;//显示没有排名
@@ -26,6 +23,9 @@ public class CustomerKeywordCriteria extends BaseCriteria{
     private String displayStop;//显示下架
     private String orderNumber;//订单号
     private String remarks;//备注
+
+    private String orderingElement;
+    private String orderingRule;
 
     public Integer getCurrentIndexCount() {
         return currentIndexCount;
@@ -107,12 +107,12 @@ public class CustomerKeywordCriteria extends BaseCriteria{
         this.optimizeGroupName = optimizeGroupName;
     }
 
-    public String getOrderElement() {
-        return orderElement;
+    public String getOrderingElement() {
+        return orderingElement;
     }
 
-    public void setOrderElement(String orderElement) {
-        this.orderElement = orderElement;
+    public void setOrderingElement(String orderingElement) {
+        this.orderingElement = orderingElement;
     }
 
     public String getInvalidRefreshCount() {
@@ -195,5 +195,13 @@ public class CustomerKeywordCriteria extends BaseCriteria{
 
     public void setOrderNumber(String orderNumber) {
         this.orderNumber = orderNumber;
+    }
+
+    public String getOrderingRule() {
+        return orderingRule;
+    }
+
+    public void setOrderingRule(String orderingRule) {
+        this.orderingRule = orderingRule;
     }
 }

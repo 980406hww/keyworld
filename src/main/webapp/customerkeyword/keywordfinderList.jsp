@@ -72,7 +72,7 @@
             function initPaging() {
                 var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
                 var searchCustomerKeywordTable = searchCustomerKeywordForm.find("#searchCustomerKeywordTable");
-                searchCustomerKeywordTable.find("#orderElement").val('${orderElement}');
+                searchCustomerKeywordTable.find("#orderingElement").val('${orderingElement}');
                 searchCustomerKeywordTable.find("#status").val(${customerKeywordCriteria.status});
                 var pages = searchCustomerKeywordForm.find('#pagesHidden').val();
                 var currentPageNumber = searchCustomerKeywordForm.find('#currentPageNumberHidden').val();
@@ -336,7 +336,7 @@
             到&nbsp;<input name="creationToTime" id="creationToTime" class="Wdate" type="text" style="width:90px;"
                 onClick="WdatePicker()" value="${customerKeywordCriteria.creationToTime}">&nbsp;
             排序:
-            <select name="orderElement" id="orderElement">
+            <select name="orderingElement" id="orderingElement">
                 <option value="0">关键字</option>
                 <option value="1">创建日期</option>
                 <option value="2">当前排名</option>

@@ -3,7 +3,6 @@ package com.keymanager.monitoring.controller.rest.internal;
 import com.keymanager.monitoring.criteria.CustomerKeywordCriteria;
 import com.keymanager.monitoring.entity.CustomerKeyword;
 import com.keymanager.monitoring.excel.operator.CustomerKeywordDailyReportExcelWriter;
-import com.keymanager.manager.CustomerKeywordManager;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.DailyReport;
@@ -12,7 +11,6 @@ import com.keymanager.monitoring.service.CustomerService;
 import com.keymanager.monitoring.service.DailyReportService;
 import com.keymanager.util.TerminalTypeMapping;
 import com.keymanager.util.Utils;
-import com.keymanager.value.CustomerKeywordVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,10 +40,14 @@ public class DailyReportRestController extends SpringMVCBaseController {
 
 	@RequestMapping(value = "/triggerReportGeneration", method = RequestMethod.POST)
 	public ResponseEntity<?> triggerReportGeneration(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) throws Exception{
+		int dayOfMonth = Utils.getDayOfMonth();
 		String customerUuids = (String) requestMap.get("customerUuids");
 		String terminalType = TerminalTypeMapping.getTerminalType(request);
 		String returnValue = null;
 		try {
+			if(dayOfMonth == 1) {
+				dailyReportService.resetDailyReportExcel(terminalType, customerUuids);
+			}
 			dailyReportService.triggerReportGeneration(terminalType, customerUuids);
 			returnValue = "{\"status\":true}";
 		}catch(Exception ex){
@@ -71,15 +73,22 @@ public class DailyReportRestController extends SpringMVCBaseController {
 	public ResponseEntity<?> downloadSingleCustomerReport(@PathVariable("customerUuid")Long customerUuid, HttpServletRequest request,
 														  HttpServletResponse response) throws Exception {
 		String terminalType = TerminalTypeMapping.getTerminalType(request);
+		int dayOfMonth = Utils.getDayOfMonth();
 
 		CustomerKeywordCriteria customerKeywordCriteria = new CustomerKeywordCriteria();
 		customerKeywordCriteria.setTerminalType(terminalType);
 		customerKeywordCriteria.setCustomerUuid(customerUuid);
 		customerKeywordCriteria.setStatus("1");
+		customerKeywordCriteria.setOrderingElement("fSequence");
+		customerKeywordCriteria.setOrderingRule("ASC");
 		List<CustomerKeyword> customerKeywords = customerKeywordService.searchCustomerKeywords(customerKeywordCriteria);
 		if (!Utils.isEmpty(customerKeywords)) {
-			CustomerKeywordDailyReportExcelWriter excelWriter = new CustomerKeywordDailyReportExcelWriter(terminalType, customerUuid + "", 0);
+			if(dayOfMonth == 1) {
+				String uuids = "" + customerUuid;
+				dailyReportService.resetDailyReportExcel(terminalType, uuids);
+			}
 
+			CustomerKeywordDailyReportExcelWriter excelWriter = new CustomerKeywordDailyReportExcelWriter(terminalType, customerUuid + "", 0);
 			Customer customer = customerService.selectById(customerUuid);
 			excelWriter.writeDataToExcel(customerKeywords, customer.getContactPerson());
 
