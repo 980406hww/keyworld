@@ -433,7 +433,7 @@
     <update id="updateOptimizationResult">
         UPDATE t_customer_keyword
         SET fLastOptimizeDateTime = now(), fOptimizedCount = fOptimizedCount + #{count},
-        <if test="count == 0">fInvalidRefreshCount = 0, </if>
+        <if test="count > 0">fInvalidRefreshCount = 0, </if>
         fOptimizedPercentage = fOptimizedCount/fOptimizePlanCount, fOptimizeDate = CURRENT_DATE(),fUpdateTime = NOW()
 		WHERE fUuid = #{customerKeywordUuid}
     </update>
