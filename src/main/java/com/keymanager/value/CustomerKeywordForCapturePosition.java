@@ -6,6 +6,7 @@ public class CustomerKeywordForCapturePosition {
 	private String url;
 	private String title;
 	private String searchEngine;
+	private String terminalType;
 	
 	public String getKeyword() {
 		return keyword;
@@ -46,5 +47,13 @@ public class CustomerKeywordForCapturePosition {
 
 	public void setSearchEngine(String searchEngine) {
 		this.searchEngine = searchEngine;
+	}
+
+	public String getTerminalType() {
+		return terminalType;
+	}
+
+	public void setTerminalType(String terminalType) {
+		this.terminalType = terminalType;
 	}
 }
