@@ -293,12 +293,20 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 				if(CollectionUtils.isNotEmpty(qzOperationTypes)) {
 					List<CustomerKeyword> insertingCustomerKeywords = new ArrayList<CustomerKeyword>();
 					for (CustomerKeywordVO customerKeywordVO : qzSettingCriteria.getCustomerKeywordVOs()) {
+						// 遍历需要添加的终端类型
 						for(QZOperationType qzOperationType : qzOperationTypes){
 							if(!customerKeywordSummaryInfoMap.containsKey(String.format("%s__%s", customerKeywordVO.getKeyword(), qzOperationType.getOperationType()))) {
-								CustomerKeyword customerKeyword = createCustomerKeyword(qzSettingCriteria,qzOperationType,customerKeywordVO);
-								insertingCustomerKeywords.add(customerKeyword);
+								if(StringUtils.isBlank(customerKeywordVO.getTerminalType())) {
+									CustomerKeyword customerKeyword = createCustomerKeyword(qzSettingCriteria,qzOperationType,customerKeywordVO);
+									insertingCustomerKeywords.add(customerKeyword);
+								} else {
+									if(qzOperationType.equals(customerKeywordVO.getTerminalType())) {
+										CustomerKeyword customerKeyword = createCustomerKeyword(qzSettingCriteria,qzOperationType,customerKeywordVO);
+										insertingCustomerKeywords.add(customerKeyword);
+									}
+								}
 							}
-					}
+						}
 					}
 
 					for(QZOperationType qzOperationType : qzOperationTypes){
