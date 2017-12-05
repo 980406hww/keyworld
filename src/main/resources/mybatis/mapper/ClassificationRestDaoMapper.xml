@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.ClassificationRestDao">
+    <sql id="colID">
+        fUuid	AS	'uuid',
+        fKeyword AS 'keyword',
+        fGroup AS 'group',
+        fQueried AS 'queried',
+        fCaptured AS 'captured',
+        fUpdateTime AS 'updateTime',
+        fCreateTime AS 'createTime'
+    </sql>
+
+    <select id="getClassificationGroup" resultType="java.lang.String">
+        SELECT DISTINCT fGroup FROM t_classification
+    </select>
+
+    <select id="getClassification" resultType="com.keymanager.monitoring.entity.Classification">
+      SELECT
+        <include refid="colID"/>
+      FROM
+        t_classification
+      WHERE
+        fQueried = 0
+      AND
+        fCaptured = 0
+      limit 1
+    </select>
+
+    <select id="getClassificationgroupNotAll" resultType="com.keymanager.monitoring.entity.Classification">
+      SELECT
+        <include refid="colID"/>
+      FROM
+        t_classification
+      WHERE
+        fQueried = 0
+      AND
+        fCaptured = 0
+      AND
+        fGroup = #{groupInfo}
+        limit 1
+    </select>
+    <update id="updatefCaptured">
+        UPDATE t_classification SET fCaptured = 1 WHERE fUuid = #{uuid}
+    </update>
+</mapper>
