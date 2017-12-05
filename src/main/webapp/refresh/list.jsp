@@ -2,79 +2,9 @@
 <html>
 <head>
 	<title>刷量统计列表</title>
-	<%@ include file="/commons/basejs.jsp" %>
-	<script language="javascript" type="text/javascript" src="/common.js"></script>
-	<script language="javascript">
-        $(function () {
-            $("#showRefreshStatInfoDiv").css("margin-top",$("#topDiv").height());
-            alignTableHeader();
-            window.onresize = function(){
-                alignTableHeader();
-            }
-        });
-        function alignTableHeader(){
-            var td = $("#showRefreshStatInfoTable tr:first td:gt(0)");
-            var ctd = $("#headerTable tr:eq(1) td");
-            $("#headerTable tr:eq(0) td:eq(0)").width($("#showRefreshStatInfoTable tr:first td:eq(0)").width());
-            $.each(td, function (idx, val) {
-                ctd.eq(idx).width($(val).width());
-            });
-        }
-        function doOver(obj) {
-            obj.style.backgroundColor = "green";
-        }
-        function doOut(obj) {
-            var rowIndex = obj.rowIndex;
-            if ((rowIndex % 2) == 0) {
-                obj.style.backgroundColor = "#eeeeee";
-            } else {
-                obj.style.backgroundColor = "#ffffff";
-            }
-        }
-
-		<shiro:hasPermission name="/internal/clientstatus/searchBadClientStatus">
-        function findClientStatus(groupName) {
-			$("#searchClientStatusForm").find("#groupName").val(groupName);
-            $("#searchClientStatusForm").submit();
-		}
-		</shiro:hasPermission>
-
-		<shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
-		function findKeyword(optimizeGroupName, invalidRefreshCount) {
-            $("#searchCustomerKeywordForm").find("#optimizeGroupName").val(optimizeGroupName);
-            $("#searchCustomerKeywordForm").find("#invalidRefreshCount").val(invalidRefreshCount);
-            $("#searchCustomerKeywordForm").submit();
-        }
-		</shiro:hasPermission>
-
-        function resetInvaidRefreshCount(groupName, customerName, self){
-            var customerKeyword = {};
-            customerKeyword.customerName = customerName;
-            customerKeyword.groupName = groupName;
-            $.ajax({
-                url: '/internal/customerKeyword/resetInvalidRefreshCount',
-                data: JSON.stringify(customerKeyword),
-                type: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                success: function (result) {
-                    if(result){
-                        $().toastmessage('showSuccessToast', "重置成功！");
-                        window.location.reload();
-                    }else{
-                        $().toastmessage('showErrorToast', "重置失败！");
-                    }
-                },
-                error: function () {
-                    $().toastmessage('showErrorToast', "重置失败！");
-                }
-            });
-        }
-	</script>
 </head>
 <body>
+<%@ include file="/commons/basejs.jsp" %>
 <div id="topDiv">
 	<%@include file="/menu.jsp" %>
 <form method="post" id="searchRefreshStatInfoForm" action="/internal/refreshstatinfo/searchRefreshStatInfos"
@@ -218,5 +148,63 @@
 	<input type="hidden" name="optimizeGroupName" id="optimizeGroupName" value=""/>
 	<input type="hidden" name="invalidRefreshCount" id="invalidRefreshCount" value=""/>
 </form>
+<script language="javascript">
+    $(function () {
+        $("#showRefreshStatInfoDiv").css("margin-top",$("#topDiv").height());
+        alignTableHeader();
+        window.onresize = function(){
+            alignTableHeader();
+        }
+    });
+    function alignTableHeader(){
+        var td = $("#showRefreshStatInfoTable tr:first td:gt(0)");
+        var ctd = $("#headerTable tr:eq(1) td");
+        $("#headerTable tr:eq(0) td:eq(0)").width($("#showRefreshStatInfoTable tr:first td:eq(0)").width());
+        $.each(td, function (idx, val) {
+            ctd.eq(idx).width($(val).width());
+        });
+    }
+
+    <shiro:hasPermission name="/internal/clientstatus/searchBadClientStatus">
+    function findClientStatus(groupName) {
+        $("#searchClientStatusForm").find("#groupName").val(groupName);
+        $("#searchClientStatusForm").submit();
+    }
+    </shiro:hasPermission>
+
+    <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
+    function findKeyword(optimizeGroupName, invalidRefreshCount) {
+        $("#searchCustomerKeywordForm").find("#optimizeGroupName").val(optimizeGroupName);
+        $("#searchCustomerKeywordForm").find("#invalidRefreshCount").val(invalidRefreshCount);
+        $("#searchCustomerKeywordForm").submit();
+    }
+    </shiro:hasPermission>
+
+    function resetInvaidRefreshCount(groupName, customerName, self){
+        var customerKeyword = {};
+        customerKeyword.customerName = customerName;
+        customerKeyword.groupName = groupName;
+        $.ajax({
+            url: '/internal/customerKeyword/resetInvalidRefreshCount',
+            data: JSON.stringify(customerKeyword),
+            type: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            success: function (result) {
+                if(result){
+                    $().toastmessage('showSuccessToast', "重置成功！");
+                    window.location.reload();
+                }else{
+                    $().toastmessage('showErrorToast', "重置失败！");
+                }
+            },
+            error: function () {
+                $().toastmessage('showErrorToast', "重置失败！");
+            }
+        });
+    }
+</script>
 </body>
 </html>

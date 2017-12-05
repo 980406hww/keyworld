@@ -2,321 +2,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<%@ include file="/commons/basejs.jsp" %>
-<script language="javascript" type="text/javascript" src="/common.js"></script>
-<script type="text/javascript">
-    /*页面进入即刻加载*/
-    $(function() {
-      pageLoad();
-        $("#showMainKeywordTableDiv").css("margin-top",$("#showMainKeywordTopDiv").height());
-        $("#showAddMainKeywordDialog").dialog("close");
-        alignTableHeader();
-        window.onresize = function(){
-            alignTableHeader();
-        }
-    });
-    function pageLoad() {
-      var  showMainKeywordBottomDiv = $('#showMainKeywordBottomDiv');
-        $("#showMainKeywordBottomDiv").find('#chooseRecords').val(${page.size});
-      var selectGroup = $('#serachMainKeywordForm').find("#itemGroupHidden").val();
-      $('#serachMainKeywordForm').find("#itemGroup").val(selectGroup);
-      var pages  = showMainKeywordBottomDiv.find('#pagesHidden').val();
-      showMainKeywordBottomDiv.find('#pagesHidden').val(pages);
-      var currentPage  = showMainKeywordBottomDiv.find('#currentPageHidden').val();
-      showMainKeywordBottomDiv.find('#currentPageHidden').val(currentPage);
-      if(currentPage<=1){
-        currentPage=1;
-        showMainKeywordBottomDiv.find("#fisrtButton").attr("disabled","disabled");
-        showMainKeywordBottomDiv.find("#upButton").attr("disabled","disabled");
-      }else if(currentPage>=pages){
-        currentPage=pages;
-        showMainKeywordBottomDiv.find("#nextButton").attr("disabled","disabled");
-        showMainKeywordBottomDiv.find("#lastButton").attr("disabled","disabled");
-      }else {
-        showMainKeywordBottomDiv.find("#firstButton").removeAttr("disabled");
-        showMainKeywordBottomDiv.find("#upButton").removeAttr("disabled");
-        showMainKeywordBottomDiv.find("#nextButton").removeAttr("disabled");
-        showMainKeywordBottomDiv.find("#lastButton").removeAttr("disabled");
-      }
-    }
-    function alignTableHeader(){
-        var td = $("#headerTable tr:first td");
-        var ctd = $("#showMainKeywordTable tr:first td");
-        $.each(td, function (idx, val) {
-            ctd.eq(idx).width($(val).width());
-        });
-    }
-    //增加
-    function showAddMainKeywordDialog(uuid) {
-      if(uuid==null){
-        $('#mainKeywordForm')[0].reset();
-      }
-      $("#showAddMainKeywordDialog").dialog({
-        resizable: false,
-        width: 350,
-        height: 365,
-        modal: true,
-        //按钮
-        buttons:[{
-            text:"保存",
-            iconCls: 'icon-ok',
-            handler : function() {
-            savaMainKeyword(uuid);
-          }
-        },{
-            text: '清空',
-            iconCls: 'fi-trash',
-            handler: function () {
-                $('#mainKeywordForm')[0].reset();
-            }
-        }, {
-            text: '取消',
-            iconCls: 'icon-cancel',
-            handler: function () {
-                $("#showAddMainKeywordDialog").dialog("close");
-                $('#mainKeywordForm')[0].reset();
-            }
-        }]
-      });
-        $("#showAddMainKeywordDialog").dialog("open");
-        $("#showAddMainKeywordDialog").window("resize",{top:$(document).scrollTop() + 100});
-    }
-    function savaMainKeyword(uuid) {
-      var mainKeywordObj = {};
-      mainKeywordObj.uuid = uuid;
-      var mainKeywordForm = $('#mainKeywordForm');
-      mainKeywordObj.keyword = mainKeywordForm.find('#mKeyword').val().trim();
-      mainKeywordObj.group = mainKeywordForm.find('#mGroup').val();
-
-      var ngKeywords = mainKeywordForm.find('#ngKeyword').val().split(',');
-      if (mainKeywordObj.keyword === "") {
-        alert("关键字不能为空");
-        mainKeywordForm.find('#mKeyword').focus();
-        return false;
-      }
-      if (mainKeywordObj.keyword === "") {
-        alert("请选择有效城市");
-        mainKeywordForm.find('#mGroup').focus();
-        return false;
-      }
-      if (ngKeywords === "" || ngKeywords === "null") {
-        alert("请输入需要投诉的负面词汇");
-        mainKeywordForm.find('#ngKeyword').focus();
-        return false;
-      }
-      mainKeywordObj.tsNegativeKeywords = [];
-      $.each(ngKeywords, function (idx, val) {
-        var ngKeywordObj = {"keyword": val.trim()};
-        mainKeywordObj.tsNegativeKeywords.push(ngKeywordObj);
-      });
-      $.ajax({
-        url: '/internal/complaints/save',
-        data: JSON.stringify(mainKeywordObj),
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        timeout: 5000,
-        type: 'POST',
-        success: function (result) {
-          if (result) {
-            $().toastmessage('showSuccessToast', "保存成功!", true);
-          } else {
-              $().toastmessage('showErrorToast',"保存失败");
-          }
-        },
-        error: function () {
-           $().toastmessage('showErrorToast',"保存失败");
-        }
-      });
-      $("#showAddMainKeywordDialog").dialog("close");
-      $('#mainKeywordForm')[0].reset();
-    }
-    //通过uuid查找mainKey对象
-    function getMainKeyword(uuid) {
-      $.ajax({
-        url: '/internal/complaints/findTSMainKeywordById/' + uuid,
-        type: 'Get',
-        success: function (tsMainKeyword) {
-          if (tsMainKeyword != null ) {
-            initMainKeywordDialog(tsMainKeyword);
-            showAddMainKeywordDialog(tsMainKeyword.uuid);
-          } else {
-              $().toastmessage('showErrorToast',"获取信息失败！");
-          }
-        },
-        error: function () {
-            $().toastmessage('showErrorToast',"获取信息失败！");
-        }
-      });
-    }
-    function initMainKeywordDialog(mainKeyword) {
-      var mainKeywordForm = $("#mainKeywordForm");
-      mainKeywordForm.find("#mUuid").val(mainKeyword.uuid);
-      mainKeywordForm.find("#mKeyword").val(mainKeyword.keyword);
-      mainKeywordForm.find("#mGroup").val(mainKeyword.group);
-      var ngKeyword =  mainKeyword.tsNegativeKeywords;
-      var tmpNegativeKeywords = '';
-      $.each(ngKeyword,function (idx,val) {
-          tmpNegativeKeywords = tmpNegativeKeywords + val.keyword+',';
-      });
-      var negativeKeywords = tmpNegativeKeywords.substring(0,tmpNegativeKeywords.length-1);
-      mainKeywordForm.find("#ngKeyword").val(negativeKeywords);
-    }
-
-    //删除
-    function deleteMainKeyword(uuid) {
-      if (confirm("确实要删除这个主关键字吗?") == false) return;
-      $.ajax({
-        url: '/internal/complaints/delete/' + uuid,
-        type: 'Get',
-        success: function (result) {
-          if (result) {
-              $().toastmessage('showSuccessToast',"删除成功！", true);
-          } else {
-              $().toastmessage('showErrorToast',"删除失败！");
-          }
-        },
-        error: function () {
-            $().toastmessage('showErrorToast',"删除失败！");
-        }
-      });
-    }
-    function getSelectedIDs() {
-      var uuids = '';
-      $.each($("input[name=uuid]:checkbox:checked"), function(){
-        if(uuids === ''){
-          uuids = $(this).val();
-        }else{
-          uuids = uuids + "," + $(this).val();
-        }
-      });
-      return uuids;
-    }
-    //删除所选
-    function deleteMainKeywords(self) {
-      var uuids = getSelectedIDs();
-      if(uuids === ''){
-        alert('请选择要操作的设置信息！');
-        return ;
-      }
-      if (confirm("确实要删除这些投诉关键字吗?") == false) return;
-      var postData = {};
-      postData.uuids = uuids.split(",");
-      $.ajax({
-        url: '/internal/complaints/deleteTSMainKeywords',
-        data: JSON.stringify(postData),
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        timeout: 5000,
-        type: 'POST',
-        success: function (data) {
-          if(data){
-              $().toastmessage('showSuccessToast',"操作成功！", true);
-          }else{
-              $().toastmessage('showErrorToast', "操作失败！");
-          }
-        },
-        error: function () {
-            $().toastmessage('showErrorToast', "操作失败！");
-        }
-      });
-    }
-
-    //查询
-    function serachMainKeywords(currentPage, displaysRecords) {
-      var keyword = $("#serachMainKeyword").find("#itemKeyword").val();
-      var group = $("#serachMainKeyword").find("#itemgroup").val();
-      var showMainKeywordBottomDiv = $("#showMainKeywordBottomDiv");
-      var pages = showMainKeywordBottomDiv.find("#pagesHidden").val();
-     var url= '/internal/complaints/findTSMainKeywords?currentPage='+currentPage+'&displaysRecords='+displaysRecords+'&keyword='+ keyword+'&group='+ group;
-      window.location.href=url;
-    }
-    //改变当前页
-    function chooseRecords(currentPage, displayRecords) {
-      $('#showMainKeywordBottomDiv').find("#currentPageHidden").val(currentPage);
-      $('#showMainKeywordBottomDiv').find("#displaysRecordsHidden").val(displayRecords);
-      serachMainKeywords(currentPage, displayRecords);
-    }
-
-    //弹出提示框
-    function getTop(e) {
-      var offset = e.offsetTop;
-      if (e.offsetParent != null) offset += getTop(e.offsetParent);
-      return offset;
-    }
-    //获取元素的横坐标
-    function getLeft(e) {
-      var offset = e.offsetLeft;
-      if (e.offsetParent != null) offset += getLeft(e.offsetParent);
-      return offset;
-    }
-    function showTip(content, e) {
-      var event = e || window.event;
-      var pageX = event.pageX;
-      var pageY = event.pageY;
-      if (pageX == undefined) {
-        pageX = event.clientX + document.body.scrollLeft || document.documentElement.scrollLeft;
-      }
-      if (pageY == undefined) {
-        pageY = event.clientY + document.body.scrollTop || document.documentElement.scrollTop;
-      }
-      var div1 = document.getElementById('div1'); //将要弹出的层
-      div1.innerText = content;
-      div1.style.display = "block"; //div1初始状态是不可见的，设置可为可见
-      div1.style.left = pageX + 10; //鼠标目前在X轴上的位置，加10是为了向右边移动10个px方便看到内容
-      div1.style.top = pageY + 5;
-      div1.style.position = "absolute";
-    }
-
-    //关闭层div1的显示
-    function closeTip() {
-      var div1 = document.getElementById('div1');
-      div1.style.display = "none";
-    }
-    function selectAll(self){
-      var a = document.getElementsByName("uuid");
-      if(self.checked){
-        for(var i = 0;i<a.length;i++){
-            a[i].checked = true;
-        }
-      }else{
-        for(var i = 0;i<a.length;i++){
-            a[i].checked = false;
-        }
-      }
-    }
-
-    function decideSelectAll() {
-        var a = document.getElementsByName("uuid");
-        var select=0;
-        for(var i = 0; i < a.length; i++){
-            if (a[i].checked == true){
-                select++;
-            }
-        }
-        if(select == a.length){
-            $("#selectAllChecked").prop("checked",true);
-        }else {
-            $("#selectAllChecked").prop("checked",false);
-        }
-    }
-
-    function doOver(obj) {
-      obj.style.backgroundColor = "green";
-    }
-
-    function doOut(obj) {
-      var rowIndex = obj.rowIndex;
-      if ((rowIndex % 2) == 0) {
-        obj.style.backgroundColor = "#eeeeee";
-      } else {
-        obj.style.backgroundColor = "#ffffff";
-      }
-    }
-</script>
 <style type="text/css">
     body {
         font-size: 12px;
@@ -385,6 +70,7 @@
     <title>投诉专用平台</title>
 </head>
 <body>
+<%@ include file="/commons/basejs.jsp" %>
 <div id="showMainKeywordTopDiv">
     <%@include file="/menu.jsp" %>
     <div id="serachMainKeyword" style="margin-top: 35px;">
@@ -521,5 +207,270 @@
         </table>
     </form>
 </div>
+<script type="text/javascript">
+    /*页面进入即刻加载*/
+    $(function() {
+        pageLoad();
+        $("#showMainKeywordTableDiv").css("margin-top",$("#showMainKeywordTopDiv").height());
+        $("#showAddMainKeywordDialog").dialog("close");
+        alignTableHeader();
+        window.onresize = function(){
+            alignTableHeader();
+        }
+    });
+    function pageLoad() {
+        var  showMainKeywordBottomDiv = $('#showMainKeywordBottomDiv');
+        $("#showMainKeywordBottomDiv").find('#chooseRecords').val(${page.size});
+        var selectGroup = $('#serachMainKeywordForm').find("#itemGroupHidden").val();
+        $('#serachMainKeywordForm').find("#itemGroup").val(selectGroup);
+        var pages  = showMainKeywordBottomDiv.find('#pagesHidden').val();
+        showMainKeywordBottomDiv.find('#pagesHidden').val(pages);
+        var currentPage  = showMainKeywordBottomDiv.find('#currentPageHidden').val();
+        showMainKeywordBottomDiv.find('#currentPageHidden').val(currentPage);
+        if(currentPage<=1){
+            currentPage=1;
+            showMainKeywordBottomDiv.find("#fisrtButton").attr("disabled","disabled");
+            showMainKeywordBottomDiv.find("#upButton").attr("disabled","disabled");
+        }else if(currentPage>=pages){
+            currentPage=pages;
+            showMainKeywordBottomDiv.find("#nextButton").attr("disabled","disabled");
+            showMainKeywordBottomDiv.find("#lastButton").attr("disabled","disabled");
+        }else {
+            showMainKeywordBottomDiv.find("#firstButton").removeAttr("disabled");
+            showMainKeywordBottomDiv.find("#upButton").removeAttr("disabled");
+            showMainKeywordBottomDiv.find("#nextButton").removeAttr("disabled");
+            showMainKeywordBottomDiv.find("#lastButton").removeAttr("disabled");
+        }
+    }
+    function alignTableHeader(){
+        var td = $("#headerTable tr:first td");
+        var ctd = $("#showMainKeywordTable tr:first td");
+        $.each(td, function (idx, val) {
+            ctd.eq(idx).width($(val).width());
+        });
+    }
+    //增加
+    function showAddMainKeywordDialog(uuid) {
+        if(uuid==null){
+            $('#mainKeywordForm')[0].reset();
+        }
+        $("#showAddMainKeywordDialog").dialog({
+            resizable: false,
+            width: 350,
+            height: 365,
+            modal: true,
+            //按钮
+            buttons:[{
+                text:"保存",
+                iconCls: 'icon-ok',
+                handler : function() {
+                    savaMainKeyword(uuid);
+                }
+            },{
+                text: '清空',
+                iconCls: 'fi-trash',
+                handler: function () {
+                    $('#mainKeywordForm')[0].reset();
+                }
+            }, {
+                text: '取消',
+                iconCls: 'icon-cancel',
+                handler: function () {
+                    $("#showAddMainKeywordDialog").dialog("close");
+                    $('#mainKeywordForm')[0].reset();
+                }
+            }]
+        });
+        $("#showAddMainKeywordDialog").dialog("open");
+        $("#showAddMainKeywordDialog").window("resize",{top:$(document).scrollTop() + 100});
+    }
+    function savaMainKeyword(uuid) {
+        var mainKeywordObj = {};
+        mainKeywordObj.uuid = uuid;
+        var mainKeywordForm = $('#mainKeywordForm');
+        mainKeywordObj.keyword = mainKeywordForm.find('#mKeyword').val().trim();
+        mainKeywordObj.group = mainKeywordForm.find('#mGroup').val();
+
+        var ngKeywords = mainKeywordForm.find('#ngKeyword').val().split(',');
+        if (mainKeywordObj.keyword === "") {
+            alert("关键字不能为空");
+            mainKeywordForm.find('#mKeyword').focus();
+            return false;
+        }
+        if (mainKeywordObj.keyword === "") {
+            alert("请选择有效城市");
+            mainKeywordForm.find('#mGroup').focus();
+            return false;
+        }
+        if (ngKeywords === "" || ngKeywords === "null") {
+            alert("请输入需要投诉的负面词汇");
+            mainKeywordForm.find('#ngKeyword').focus();
+            return false;
+        }
+        mainKeywordObj.tsNegativeKeywords = [];
+        $.each(ngKeywords, function (idx, val) {
+            var ngKeywordObj = {"keyword": val.trim()};
+            mainKeywordObj.tsNegativeKeywords.push(ngKeywordObj);
+        });
+        $.ajax({
+            url: '/internal/complaints/save',
+            data: JSON.stringify(mainKeywordObj),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            timeout: 5000,
+            type: 'POST',
+            success: function (result) {
+                if (result) {
+                    $().toastmessage('showSuccessToast', "保存成功!", true);
+                } else {
+                    $().toastmessage('showErrorToast',"保存失败");
+                }
+            },
+            error: function () {
+                $().toastmessage('showErrorToast',"保存失败");
+            }
+        });
+        $("#showAddMainKeywordDialog").dialog("close");
+        $('#mainKeywordForm')[0].reset();
+    }
+    //通过uuid查找mainKey对象
+    function getMainKeyword(uuid) {
+        $.ajax({
+            url: '/internal/complaints/findTSMainKeywordById/' + uuid,
+            type: 'Get',
+            success: function (tsMainKeyword) {
+                if (tsMainKeyword != null ) {
+                    initMainKeywordDialog(tsMainKeyword);
+                    showAddMainKeywordDialog(tsMainKeyword.uuid);
+                } else {
+                    $().toastmessage('showErrorToast',"获取信息失败！");
+                }
+            },
+            error: function () {
+                $().toastmessage('showErrorToast',"获取信息失败！");
+            }
+        });
+    }
+    function initMainKeywordDialog(mainKeyword) {
+        var mainKeywordForm = $("#mainKeywordForm");
+        mainKeywordForm.find("#mUuid").val(mainKeyword.uuid);
+        mainKeywordForm.find("#mKeyword").val(mainKeyword.keyword);
+        mainKeywordForm.find("#mGroup").val(mainKeyword.group);
+        var ngKeyword =  mainKeyword.tsNegativeKeywords;
+        var tmpNegativeKeywords = '';
+        $.each(ngKeyword,function (idx,val) {
+            tmpNegativeKeywords = tmpNegativeKeywords + val.keyword+',';
+        });
+        var negativeKeywords = tmpNegativeKeywords.substring(0,tmpNegativeKeywords.length-1);
+        mainKeywordForm.find("#ngKeyword").val(negativeKeywords);
+    }
+
+    //删除
+    function deleteMainKeyword(uuid) {
+        if (confirm("确实要删除这个主关键字吗?") == false) return;
+        $.ajax({
+            url: '/internal/complaints/delete/' + uuid,
+            type: 'Get',
+            success: function (result) {
+                if (result) {
+                    $().toastmessage('showSuccessToast',"删除成功！", true);
+                } else {
+                    $().toastmessage('showErrorToast',"删除失败！");
+                }
+            },
+            error: function () {
+                $().toastmessage('showErrorToast',"删除失败！");
+            }
+        });
+    }
+    function getSelectedIDs() {
+        var uuids = '';
+        $.each($("input[name=uuid]:checkbox:checked"), function(){
+            if(uuids === ''){
+                uuids = $(this).val();
+            }else{
+                uuids = uuids + "," + $(this).val();
+            }
+        });
+        return uuids;
+    }
+    //删除所选
+    function deleteMainKeywords(self) {
+        var uuids = getSelectedIDs();
+        if(uuids === ''){
+            alert('请选择要操作的设置信息！');
+            return ;
+        }
+        if (confirm("确实要删除这些投诉关键字吗?") == false) return;
+        var postData = {};
+        postData.uuids = uuids.split(",");
+        $.ajax({
+            url: '/internal/complaints/deleteTSMainKeywords',
+            data: JSON.stringify(postData),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            timeout: 5000,
+            type: 'POST',
+            success: function (data) {
+                if(data){
+                    $().toastmessage('showSuccessToast',"操作成功！", true);
+                }else{
+                    $().toastmessage('showErrorToast', "操作失败！");
+                }
+            },
+            error: function () {
+                $().toastmessage('showErrorToast', "操作失败！");
+            }
+        });
+    }
+
+    //查询
+    function serachMainKeywords(currentPage, displaysRecords) {
+        var keyword = $("#serachMainKeyword").find("#itemKeyword").val();
+        var group = $("#serachMainKeyword").find("#itemgroup").val();
+        var showMainKeywordBottomDiv = $("#showMainKeywordBottomDiv");
+        var pages = showMainKeywordBottomDiv.find("#pagesHidden").val();
+        var url= '/internal/complaints/findTSMainKeywords?currentPage='+currentPage+'&displaysRecords='+displaysRecords+'&keyword='+ keyword+'&group='+ group;
+        window.location.href=url;
+    }
+    //改变当前页
+    function chooseRecords(currentPage, displayRecords) {
+        $('#showMainKeywordBottomDiv').find("#currentPageHidden").val(currentPage);
+        $('#showMainKeywordBottomDiv').find("#displaysRecordsHidden").val(displayRecords);
+        serachMainKeywords(currentPage, displayRecords);
+    }
+
+    function selectAll(self){
+        var a = document.getElementsByName("uuid");
+        if(self.checked){
+            for(var i = 0;i<a.length;i++){
+                a[i].checked = true;
+            }
+        }else{
+            for(var i = 0;i<a.length;i++){
+                a[i].checked = false;
+            }
+        }
+    }
+
+    function decideSelectAll() {
+        var a = document.getElementsByName("uuid");
+        var select=0;
+        for(var i = 0; i < a.length; i++){
+            if (a[i].checked == true){
+                select++;
+            }
+        }
+        if(select == a.length){
+            $("#selectAllChecked").prop("checked",true);
+        }else {
+            $("#selectAllChecked").prop("checked",false);
+        }
+    }
+</script>
 </body>
 </html>

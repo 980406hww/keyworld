@@ -2,204 +2,10 @@
 <%@ include file="/commons/global.jsp" %>
 <html>
 <head>
-    <%@ include file="/commons/basejs.jsp" %>
-    <script language="javascript" type="text/javascript" src="/common.js"></script>
     <title>负面词管理</title>
-    <script language="javascript" type="text/javascript">
-        $(function () {
-            var date = new Date();
-            var month = (date.getMonth() + 1) > 9 ? (date.getMonth() + 1) : "0" + (date.getMonth() + 1);
-            var day = date.getDate() > 9 ? date.getDate() : "0" + date.getDate();
-            $("#uploadTxtFileForm").find("#groupName").val("company" + month + day);
-            $('#uploadTxtFileDialog').dialog("close");
-            $("#positionInfoDiv").dialog("close");
-            $("#centerDiv").css("margin-top", $("#topDiv").height());
-            pageLoad();
-        })
-
-        function changePaging(currentPage, pageSize) {
-            var negativeKeywordForm = $("#negativeKeywordForm");
-            negativeKeywordForm.find("#currentPageNumberHidden").val(currentPage);
-            negativeKeywordForm.find("#pageSizeHidden").val(pageSize);
-            negativeKeywordForm.submit();
-        }
-
-        function resetPageNumber() {
-            var negativeKeywordForm = $("#negativeKeywordForm");
-            negativeKeywordForm.find("#currentPageNumberHidden").val(1);
-        }
-
-        function pageLoad() {
-            var negativeKeywordForm = $("#negativeKeywordForm");
-            var pageSize = negativeKeywordForm.find('#pageSizeHidden').val();
-            var pages = negativeKeywordForm.find('#pagesHidden').val();
-            var currentPageNumber = negativeKeywordForm.find('#currentPageNumberHidden').val();
-            var showCustomerBottomDiv = $('#showCustomerBottomDiv');
-            showCustomerBottomDiv.find("#chooseRecords").val(pageSize);
-
-            if (parseInt(currentPageNumber) > 1 && parseInt(currentPageNumber) < parseInt(pages)) {
-                showCustomerBottomDiv.find("#firstButton").removeAttr("disabled");
-                showCustomerBottomDiv.find("#upButton").removeAttr("disabled");
-                showCustomerBottomDiv.find("#nextButton").removeAttr("disabled");
-                showCustomerBottomDiv.find("#lastButton").removeAttr("disabled");
-            } else if (parseInt(pages) <= 1) {
-                showCustomerBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
-                showCustomerBottomDiv.find("#upButton").attr("disabled", "disabled");
-                showCustomerBottomDiv.find("#nextButton").attr("disabled", "disabled");
-                showCustomerBottomDiv.find("#lastButton").attr("disabled", "disabled");
-            } else if (parseInt(currentPageNumber) <= 1) {
-                showCustomerBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
-                showCustomerBottomDiv.find("#upButton").attr("disabled", "disabled");
-            } else {
-                showCustomerBottomDiv.find("#nextButton").attr("disabled", "disabled");
-                showCustomerBottomDiv.find("#lastButton").attr("disabled", "disabled");
-            }
-        }
-
-        function showUploadTxtFileDialog() {
-            $('#uploadTxtFileDialog').dialog({
-                resizable: true,
-                width: 220,
-                modal: true,
-                title: '导入负面词',
-                buttons: [{
-                    text: '上传',
-                    iconCls: 'icon-ok',
-                    handler: function () {
-                        var fileValue = $("#uploadTxtFileDialog").find("#file").val();
-                        if(fileValue == ""){
-                            alert("请选择要上传的负面词txt文件!");
-                            return false;
-                        }
-                        var posIndex = fileValue.indexOf(".txt");
-                        if (posIndex == -1) {
-                            alert("只能上传txt文件！");
-                            return false;
-                        }
-
-                        var formData = new FormData();
-                        formData.append('group', $("#uploadTxtFileForm").find("#groupName").val());
-                        formData.append('file', $("#uploadTxtFileDialog").find("#file")[0].files[0]);
-                        $('#uploadTxtFileDialog').dialog("close");
-                        $.ajax({
-                            url: '/internal/negativeKeywordName/uploadTxtFile',
-                            type: 'POST',
-                            cache: false,
-                            data: formData,
-                            processData: false,
-                            contentType: false,
-                            success: function (result) {
-                                if (result) {
-                                    $().toastmessage('showSuccessToast', "上传成功",true);
-                                } else {
-                                    $().toastmessage('showErrorToast', "上传失败");
-                                }
-                            },
-                            error: function () {
-                                $().toastmessage('showErrorToast', "上传失败");
-                                $('#uploadTxtFileDialog').dialog("close");
-                            }
-                        });
-                    }
-                },
-                    {
-                        text: '取消',
-                        iconCls: 'icon-cancel',
-                        handler: function () {
-                            $('#uploadTxtFileDialog').dialog("close");
-                        }
-                    }]
-            });
-            $('#uploadTxtFileDialog').window("resize",{top:$(document).scrollTop() + 100});
-        }
-
-        function getNegativeExcel() {
-            var group = $("#negativeKeywordForm").find("#group").val();
-            if(group != '') {
-                var negativeKeywordCrilteriaArray = $("#negativeKeywordForm").serializeArray();
-                var downloadNegativeKeywordInfoForm = $("#downloadNegativeKeywordInfoForm");
-                $.each(negativeKeywordCrilteriaArray, function(idx, val){
-                    downloadNegativeKeywordInfoForm.find("#"+val.name+"Hidden").val(val.value);
-                });
-                downloadNegativeKeywordInfoForm.submit();
-            } else {
-                $().toastmessage('showErrorToast', "请填写要导出数据的分组名称");
-            }
-        }
-
-        function toTimeFormat(time) {
-            var date = toDateFormat(time);
-            var hours = time.getHours() < 10 ? ("0" + time.getHours()) : time.getHours();
-            var minutes = time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes();
-            var seconds = time.getSeconds() < 10 ? "0" + time.getSeconds() : time.getSeconds();
-            return date + " " + hours + ":" + minutes + ":" + seconds;
-        };
-
-        function toDateFormat (time) {
-            var m = (time.getMonth() + 1) > 9 ? (time.getMonth() + 1) : "0" + (time.getMonth() + 1);
-            var d = time.getDate() > 9 ? time.getDate() : "0" + time.getDate();
-            return time.getFullYear() + "-" + m + "-" + d;
-        };
-
-        <shiro:hasPermission name="/internal/negativeKeywordName/searchNegativeKeywordNames">
-        function findPositionInfos(uuid) {
-            $("#positionInfoTable  tr:not(:first)").remove();
-            $.ajax({
-                url: '/internal/negativeKeywordName/getNegativePositionInfo/' + uuid,
-                type: 'Get',
-                success: function (positionInfos) {
-                    if (positionInfos != null && positionInfos.length > 0) {
-                        $.each(positionInfos, function (idx, val) {
-                            var newTr = document.createElement("tr");
-                            var url = val.targetUrl;
-                            if(url.indexOf("http") > -1) {
-                                url = "<a target='_blank' href='" + val.targetUrl + "'>" + val.targetUrl + "</a>";
-                            } else {
-                                url = "<a target='_blank' href='http://" + val.targetUrl + "'>" + val.targetUrl + "</a>";
-                            }
-                            var positionInfoElements = [
-                                val.uuid,
-                                val.terminalType,
-                                val.keyword,
-                                val.position,
-                                url,
-                                toTimeFormat(new Date(val.createTime))
-                            ];
-                            $.each(positionInfoElements, function () {
-                                var newTd = document.createElement("td");
-                                newTr.appendChild(newTd);
-                                newTd.innerHTML = this;
-                            });
-                            $("#positionInfoTable")[0].lastChild.appendChild(newTr);
-                        });
-                        $("#positionInfoDiv").dialog({
-                            resizable: false,
-                            minWidth:530,
-                            maxHeight:350,
-                            title:"排名信息",
-                            modal: true,
-                            buttons: [{
-                                text: '取消',
-                                iconCls: 'icon-cancel',
-                                handler: function () {
-                                    $("#positionInfoDiv").dialog("close");
-                                }
-                            }]
-                        });
-                        $("#positionInfoDiv").window("resize",{top:$(document).scrollTop() + 100});
-                    } else {
-                        alert("暂无数据");
-                    }
-                },
-                error: function () {
-                    $().toastmessage('showErrorToast', "获取信息失败");
-                }
-            });
-        }
-        </shiro:hasPermission>
-    </script>
 </head>
 <body>
+<%@ include file="/commons/basejs.jsp" %>
 <div id="topDiv">
     <%@include file="/menu.jsp" %>
     <div style="margin-top: 35px">
@@ -312,5 +118,198 @@
     <input type="hidden" name="group" id="groupHidden" value="">
     <input type="hidden" name="hasEmail" id="hasEmailHidden" value=""/>
 </form>
+<script language="javascript" type="text/javascript">
+    $(function () {
+        var date = new Date();
+        var month = (date.getMonth() + 1) > 9 ? (date.getMonth() + 1) : "0" + (date.getMonth() + 1);
+        var day = date.getDate() > 9 ? date.getDate() : "0" + date.getDate();
+        $("#uploadTxtFileForm").find("#groupName").val("company" + month + day);
+        $('#uploadTxtFileDialog').dialog("close");
+        $("#positionInfoDiv").dialog("close");
+        $("#centerDiv").css("margin-top", $("#topDiv").height());
+        pageLoad();
+    })
+
+    function changePaging(currentPage, pageSize) {
+        var negativeKeywordForm = $("#negativeKeywordForm");
+        negativeKeywordForm.find("#currentPageNumberHidden").val(currentPage);
+        negativeKeywordForm.find("#pageSizeHidden").val(pageSize);
+        negativeKeywordForm.submit();
+    }
+
+    function resetPageNumber() {
+        var negativeKeywordForm = $("#negativeKeywordForm");
+        negativeKeywordForm.find("#currentPageNumberHidden").val(1);
+    }
+
+    function pageLoad() {
+        var negativeKeywordForm = $("#negativeKeywordForm");
+        var pageSize = negativeKeywordForm.find('#pageSizeHidden').val();
+        var pages = negativeKeywordForm.find('#pagesHidden').val();
+        var currentPageNumber = negativeKeywordForm.find('#currentPageNumberHidden').val();
+        var showCustomerBottomDiv = $('#showCustomerBottomDiv');
+        showCustomerBottomDiv.find("#chooseRecords").val(pageSize);
+
+        if (parseInt(currentPageNumber) > 1 && parseInt(currentPageNumber) < parseInt(pages)) {
+            showCustomerBottomDiv.find("#firstButton").removeAttr("disabled");
+            showCustomerBottomDiv.find("#upButton").removeAttr("disabled");
+            showCustomerBottomDiv.find("#nextButton").removeAttr("disabled");
+            showCustomerBottomDiv.find("#lastButton").removeAttr("disabled");
+        } else if (parseInt(pages) <= 1) {
+            showCustomerBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
+            showCustomerBottomDiv.find("#upButton").attr("disabled", "disabled");
+            showCustomerBottomDiv.find("#nextButton").attr("disabled", "disabled");
+            showCustomerBottomDiv.find("#lastButton").attr("disabled", "disabled");
+        } else if (parseInt(currentPageNumber) <= 1) {
+            showCustomerBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
+            showCustomerBottomDiv.find("#upButton").attr("disabled", "disabled");
+        } else {
+            showCustomerBottomDiv.find("#nextButton").attr("disabled", "disabled");
+            showCustomerBottomDiv.find("#lastButton").attr("disabled", "disabled");
+        }
+    }
+
+    function showUploadTxtFileDialog() {
+        $('#uploadTxtFileDialog').dialog({
+            resizable: true,
+            width: 220,
+            modal: true,
+            title: '导入负面词',
+            buttons: [{
+                text: '上传',
+                iconCls: 'icon-ok',
+                handler: function () {
+                    var fileValue = $("#uploadTxtFileDialog").find("#file").val();
+                    if(fileValue == ""){
+                        alert("请选择要上传的负面词txt文件!");
+                        return false;
+                    }
+                    var posIndex = fileValue.indexOf(".txt");
+                    if (posIndex == -1) {
+                        alert("只能上传txt文件！");
+                        return false;
+                    }
+
+                    var formData = new FormData();
+                    formData.append('group', $("#uploadTxtFileForm").find("#groupName").val());
+                    formData.append('file', $("#uploadTxtFileDialog").find("#file")[0].files[0]);
+                    $('#uploadTxtFileDialog').dialog("close");
+                    $.ajax({
+                        url: '/internal/negativeKeywordName/uploadTxtFile',
+                        type: 'POST',
+                        cache: false,
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function (result) {
+                            if (result) {
+                                $().toastmessage('showSuccessToast', "上传成功",true);
+                            } else {
+                                $().toastmessage('showErrorToast', "上传失败");
+                            }
+                        },
+                        error: function () {
+                            $().toastmessage('showErrorToast', "上传失败");
+                            $('#uploadTxtFileDialog').dialog("close");
+                        }
+                    });
+                }
+            },
+                {
+                    text: '取消',
+                    iconCls: 'icon-cancel',
+                    handler: function () {
+                        $('#uploadTxtFileDialog').dialog("close");
+                    }
+                }]
+        });
+        $('#uploadTxtFileDialog').window("resize",{top:$(document).scrollTop() + 100});
+    }
+
+    function getNegativeExcel() {
+        var group = $("#negativeKeywordForm").find("#group").val();
+        if(group != '') {
+            var negativeKeywordCrilteriaArray = $("#negativeKeywordForm").serializeArray();
+            var downloadNegativeKeywordInfoForm = $("#downloadNegativeKeywordInfoForm");
+            $.each(negativeKeywordCrilteriaArray, function(idx, val){
+                downloadNegativeKeywordInfoForm.find("#"+val.name+"Hidden").val(val.value);
+            });
+            downloadNegativeKeywordInfoForm.submit();
+        } else {
+            $().toastmessage('showErrorToast', "请填写要导出数据的分组名称");
+        }
+    }
+
+    function toTimeFormat(time) {
+        var date = toDateFormat(time);
+        var hours = time.getHours() < 10 ? ("0" + time.getHours()) : time.getHours();
+        var minutes = time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes();
+        var seconds = time.getSeconds() < 10 ? "0" + time.getSeconds() : time.getSeconds();
+        return date + " " + hours + ":" + minutes + ":" + seconds;
+    };
+
+    function toDateFormat (time) {
+        var m = (time.getMonth() + 1) > 9 ? (time.getMonth() + 1) : "0" + (time.getMonth() + 1);
+        var d = time.getDate() > 9 ? time.getDate() : "0" + time.getDate();
+        return time.getFullYear() + "-" + m + "-" + d;
+    };
+
+    <shiro:hasPermission name="/internal/negativeKeywordName/searchNegativeKeywordNames">
+    function findPositionInfos(uuid) {
+        $("#positionInfoTable  tr:not(:first)").remove();
+        $.ajax({
+            url: '/internal/negativeKeywordName/getNegativePositionInfo/' + uuid,
+            type: 'Get',
+            success: function (positionInfos) {
+                if (positionInfos != null && positionInfos.length > 0) {
+                    $.each(positionInfos, function (idx, val) {
+                        var newTr = document.createElement("tr");
+                        var url = val.targetUrl;
+                        if(url.indexOf("http") > -1) {
+                            url = "<a target='_blank' href='" + val.targetUrl + "'>" + val.targetUrl + "</a>";
+                        } else {
+                            url = "<a target='_blank' href='http://" + val.targetUrl + "'>" + val.targetUrl + "</a>";
+                        }
+                        var positionInfoElements = [
+                            val.uuid,
+                            val.terminalType,
+                            val.keyword,
+                            val.position,
+                            url,
+                            toTimeFormat(new Date(val.createTime))
+                        ];
+                        $.each(positionInfoElements, function () {
+                            var newTd = document.createElement("td");
+                            newTr.appendChild(newTd);
+                            newTd.innerHTML = this;
+                        });
+                        $("#positionInfoTable")[0].lastChild.appendChild(newTr);
+                    });
+                    $("#positionInfoDiv").dialog({
+                        resizable: false,
+                        minWidth:530,
+                        maxHeight:350,
+                        title:"排名信息",
+                        modal: true,
+                        buttons: [{
+                            text: '取消',
+                            iconCls: 'icon-cancel',
+                            handler: function () {
+                                $("#positionInfoDiv").dialog("close");
+                            }
+                        }]
+                    });
+                    $("#positionInfoDiv").window("resize",{top:$(document).scrollTop() + 100});
+                } else {
+                    alert("暂无数据");
+                }
+            },
+            error: function () {
+                $().toastmessage('showErrorToast', "获取信息失败");
+            }
+        });
+    }
+    </shiro:hasPermission>
+</script>
 </body>
 </html>

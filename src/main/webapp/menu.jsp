@@ -1,5 +1,4 @@
 ﻿<script type="text/javascript">
-
     $(function () {
         var li = $(".venus-menu li");
         $.each(li, function (idx, val) {
@@ -16,7 +15,7 @@
         $(".venus-menu").show();
         $("#editUserPwdDiv").hide();
     });
-	//点击菜单
+    //点击菜单
     function openUrl(url,title,iconCls,openMode) {
         var opts = {
             title : title,

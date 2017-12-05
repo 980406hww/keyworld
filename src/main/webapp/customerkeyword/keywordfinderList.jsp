@@ -54,238 +54,6 @@
                 background-color: #fff2de;
             }
         </style>
-
-        <script language="javascript">
-            $(function () {
-                $("#showCustomerTableDiv").css("margin-top",$("#customerKeywordTopDiv").height());
-                $(".floatTd").poshytip();
-                initPaging();
-                initNoPositionChecked();
-                alignTableHeader();
-                if(${isDepartmentManager}) {
-                    $("#userName").val("${customerKeywordCriteria.userName}");
-                }
-                window.onresize = function(){
-                    alignTableHeader();
-                }
-            });
-            function initPaging() {
-                var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
-                var searchCustomerKeywordTable = searchCustomerKeywordForm.find("#searchCustomerKeywordTable");
-                searchCustomerKeywordTable.find("#orderingElement").val('${orderingElement}');
-                searchCustomerKeywordTable.find("#status").val(${customerKeywordCriteria.status});
-                var pages = searchCustomerKeywordForm.find('#pagesHidden').val();
-                var currentPageNumber = searchCustomerKeywordForm.find('#currentPageNumberHidden').val();
-                var showCustomerBottomDiv = $('#showCustomerBottomDiv');
-                showCustomerBottomDiv.find("#chooseRecords").val(${page.size});
-                if(parseInt(currentPageNumber) > 1 && parseInt(currentPageNumber) < parseInt(pages)) {
-                    showCustomerBottomDiv.find("#firstButton").removeAttr("disabled");
-                    showCustomerBottomDiv.find("#upButton").removeAttr("disabled");
-                    showCustomerBottomDiv.find("#nextButton").removeAttr("disabled");
-                    showCustomerBottomDiv.find("#lastButton").removeAttr("disabled");
-                } else if (parseInt(pages) <= 1) {
-                    showCustomerBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
-                    showCustomerBottomDiv.find("#upButton").attr("disabled", "disabled");
-                    showCustomerBottomDiv.find("#nextButton").attr("disabled", "disabled");
-                    showCustomerBottomDiv.find("#lastButton").attr("disabled", "disabled");
-                } else if (parseInt(currentPageNumber) <= 1) {
-                    showCustomerBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
-                    showCustomerBottomDiv.find("#upButton").attr("disabled", "disabled");
-                } else {
-                    showCustomerBottomDiv.find("#nextButton").attr("disabled", "disabled");
-                    showCustomerBottomDiv.find("#lastButton").attr("disabled", "disabled");
-                }
-
-            }
-
-            function doOver(obj) {
-                obj.style.backgroundColor = "green";
-            }
-
-            function doOut(obj) {
-                var rowIndex = obj.rowIndex;
-                if ((rowIndex % 2) == 0) {
-                    obj.style.backgroundColor = "#eeeeee";
-                } else {
-                    obj.style.backgroundColor = "#ffffff";
-                }
-            }
-
-            function showTip(content, e) {
-                var event = e || window.event;
-                var pageX = event.pageX;
-                var pageY = event.pageY;
-                if (pageX == undefined) {
-                    pageX = event.clientX + document.body.scrollLeft || document.documentElement.scrollLeft;
-                }
-                if (pageY == undefined) {
-                    pageY = event.clientY + document.body.scrollTop || document.documentElement.scrollTop;
-                }
-                var div1 = document.getElementById('div1'); //将要弹出的层
-                div1.innerText = content;
-                div1.style.display = "block"; //div1初始状态是不可见的，设置可为可见
-                div1.style.left = pageX + 10; //鼠标目前在X轴上的位置，加10是为了向右边移动10个px方便看到内容
-                div1.style.top = pageY + 5;
-                div1.style.position = "absolute";
-            }
-
-            //关闭层div1的显示
-            function closeTip() {
-                var div1 = document.getElementById('div1');
-                div1.style.display = "none";
-            }
-
-            //重构部分
-            //查询
-            function changePaging(currentPage, pageSize) {
-                var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
-                searchCustomerKeywordForm.find("#currentPageNumberHidden").val(currentPage);
-                searchCustomerKeywordForm.find("#pageSizeHidden").val(pageSize);
-                searchCustomerKeywordForm.submit();
-            }
-
-            function resetPageNumber() {
-                var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
-                searchCustomerKeywordForm.find("#currentPageNumberHidden").val(1);
-            }
-
-            //显示排名为0
-            function noPositionValue() {
-                if($("#noPosition").is(":checked")){
-                    $("#noPosition").val("1")
-                }else {
-                    $("#noPosition").val("0");
-                }
-            }
-            //催缴
-            function pushPayValue() {
-                if($("#pushPay").is(":checked")){
-                    $("#pushPay").val("1")
-                }else {
-                    $("#pushPay").val("0");
-                }
-            }
-            //显示下架
-            function displayStopValue() {
-                if($("#displayStop").is(":checked")){
-                    $("#displayStop").val("1")
-                }else {
-                    $("#displayStop").val("0");
-                }
-            }
-
-            function selectAll(self) {
-                var a = document.getElementsByName("uuid");
-                if (self.checked) {
-                    for (var i = 0; i < a.length; i++) {
-                        a[i].checked = true;
-                    }
-                } else {
-                    for (var i = 0; i < a.length; i++) {
-                        a[i].checked = false;
-                    }
-                }
-            }
-
-            function decideSelectAll() {
-                var a = document.getElementsByName("uuid");
-                var select=0;
-                for(var i = 0; i < a.length; i++){
-                    if (a[i].checked == true){
-                        select++;
-                    }
-                }
-                if(select == a.length){
-                    $("#selectAllChecked").prop("checked",true);
-                }else {
-                    $("#selectAllChecked").prop("checked",false);
-                }
-            }
-
-            function initNoPositionChecked() {
-                if(${customerKeywordCriteria.noPosition == 1}){
-                    $("#noPosition").prop("checked",true);
-                }else{
-                    $("#noPosition").prop("checked",false);
-                }
-                if(${customerKeywordCriteria.displayStop == 1}){
-                    $("#displayStop").prop("checked",true);
-                }else{
-                    $("#displayStop").prop("checked",false);
-                }
-                if(${customerKeywordCriteria.pushPay == 1}){
-                    $("#pushPay").prop("checked",true);
-                }else{
-                    $("#pushPay").prop("checked",false);
-                }
-                noPositionValue();
-                displayStopValue();
-                pushPayValue();
-            }
-
-            function alignTableHeader() {
-                var td = $("#customerKeywordTable tr:first td");
-                var ctd = $("#headerTable tr:first td");
-                $.each(td, function (idx, val) {
-                    ctd.eq(idx).width($(val).width());
-                });
-            }
-
-            function getSelectedIDs() {
-                var uuids = '';
-                $.each($("input[name=uuid]:checkbox:checked"), function () {
-                    if (uuids === '') {
-                        uuids = $(this).val();
-                    } else {
-                        uuids = uuids + "," + $(this).val();
-                    }
-                });
-                return uuids;
-            }
-
-            function updateCustomerKeywordStatus(status) {
-                var customerKeyword = {};
-                var customerKeywordUuids = getSelectedIDs();
-                if (customerKeywordUuids === '') {
-                    alert('请选择要操作的关键字');
-                    return;
-                }
-                if(status == 0) {
-                    if (confirm("确认要暂停选中的关键字吗?") == false) return;
-                } else {
-                    if (confirm("确认要上线选中的关键字吗?") == false) return;
-                }
-                customerKeyword.uuids = customerKeywordUuids.split(",");
-                customerKeyword.status = status;
-                $.ajax({
-                    url: '/internal/customerKeyword/updateCustomerKeywordStatus',
-                    data: JSON.stringify(customerKeyword),
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    timeout: 5000,
-                    type: 'POST',
-                    success: function (status) {
-                        if (status) {
-                            $().toastmessage('showSuccessToast', "操作成功");
-                            window.location.reload();
-                        } else {
-                            $().toastmessage('showErrorToast', "操作失败");
-                        }
-                    },
-                    error: function () {
-                        $().toastmessage('showErrorToast', "操作失败");
-                    }
-                });
-            }
-
-            <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywords">
-            function searchCustomerKeywords(url) {
-                window.open(url);
-            }
-            </shiro:hasPermission>
-        </script>
     </head>
 <body>
 <div id="customerKeywordTopDiv">
@@ -448,6 +216,198 @@
     </select>
     </div>
 </div>
+<script language="javascript">
+    $(function () {
+        $("#showCustomerTableDiv").css("margin-top",$("#customerKeywordTopDiv").height());
+        $(".floatTd").poshytip();
+        initPaging();
+        initNoPositionChecked();
+        alignTableHeader();
+        if(${isDepartmentManager}) {
+            $("#userName").val("${customerKeywordCriteria.userName}");
+        }
+        window.onresize = function(){
+            alignTableHeader();
+        }
+    });
+    function initPaging() {
+        var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
+        var searchCustomerKeywordTable = searchCustomerKeywordForm.find("#searchCustomerKeywordTable");
+        searchCustomerKeywordTable.find("#orderingElement").val('${orderingElement}');
+        searchCustomerKeywordTable.find("#status").val(${customerKeywordCriteria.status});
+        var pages = searchCustomerKeywordForm.find('#pagesHidden').val();
+        var currentPageNumber = searchCustomerKeywordForm.find('#currentPageNumberHidden').val();
+        var showCustomerBottomDiv = $('#showCustomerBottomDiv');
+        showCustomerBottomDiv.find("#chooseRecords").val(${page.size});
+        if(parseInt(currentPageNumber) > 1 && parseInt(currentPageNumber) < parseInt(pages)) {
+            showCustomerBottomDiv.find("#firstButton").removeAttr("disabled");
+            showCustomerBottomDiv.find("#upButton").removeAttr("disabled");
+            showCustomerBottomDiv.find("#nextButton").removeAttr("disabled");
+            showCustomerBottomDiv.find("#lastButton").removeAttr("disabled");
+        } else if (parseInt(pages) <= 1) {
+            showCustomerBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
+            showCustomerBottomDiv.find("#upButton").attr("disabled", "disabled");
+            showCustomerBottomDiv.find("#nextButton").attr("disabled", "disabled");
+            showCustomerBottomDiv.find("#lastButton").attr("disabled", "disabled");
+        } else if (parseInt(currentPageNumber) <= 1) {
+            showCustomerBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
+            showCustomerBottomDiv.find("#upButton").attr("disabled", "disabled");
+        } else {
+            showCustomerBottomDiv.find("#nextButton").attr("disabled", "disabled");
+            showCustomerBottomDiv.find("#lastButton").attr("disabled", "disabled");
+        }
 
+    }
+
+    //查询
+    function changePaging(currentPage, pageSize) {
+        var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
+        searchCustomerKeywordForm.find("#currentPageNumberHidden").val(currentPage);
+        searchCustomerKeywordForm.find("#pageSizeHidden").val(pageSize);
+        searchCustomerKeywordForm.submit();
+    }
+
+    function resetPageNumber() {
+        var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
+        searchCustomerKeywordForm.find("#currentPageNumberHidden").val(1);
+    }
+
+    //显示排名为0
+    function noPositionValue() {
+        if($("#noPosition").is(":checked")){
+            $("#noPosition").val("1")
+        }else {
+            $("#noPosition").val("0");
+        }
+    }
+    //催缴
+    function pushPayValue() {
+        if($("#pushPay").is(":checked")){
+            $("#pushPay").val("1")
+        }else {
+            $("#pushPay").val("0");
+        }
+    }
+    //显示下架
+    function displayStopValue() {
+        if($("#displayStop").is(":checked")){
+            $("#displayStop").val("1")
+        }else {
+            $("#displayStop").val("0");
+        }
+    }
+
+    function selectAll(self) {
+        var a = document.getElementsByName("uuid");
+        if (self.checked) {
+            for (var i = 0; i < a.length; i++) {
+                a[i].checked = true;
+            }
+        } else {
+            for (var i = 0; i < a.length; i++) {
+                a[i].checked = false;
+            }
+        }
+    }
+
+    function decideSelectAll() {
+        var a = document.getElementsByName("uuid");
+        var select=0;
+        for(var i = 0; i < a.length; i++){
+            if (a[i].checked == true){
+                select++;
+            }
+        }
+        if(select == a.length){
+            $("#selectAllChecked").prop("checked",true);
+        }else {
+            $("#selectAllChecked").prop("checked",false);
+        }
+    }
+
+    function initNoPositionChecked() {
+        if(${customerKeywordCriteria.noPosition == 1}){
+            $("#noPosition").prop("checked",true);
+        }else{
+            $("#noPosition").prop("checked",false);
+        }
+        if(${customerKeywordCriteria.displayStop == 1}){
+            $("#displayStop").prop("checked",true);
+        }else{
+            $("#displayStop").prop("checked",false);
+        }
+        if(${customerKeywordCriteria.pushPay == 1}){
+            $("#pushPay").prop("checked",true);
+        }else{
+            $("#pushPay").prop("checked",false);
+        }
+        noPositionValue();
+        displayStopValue();
+        pushPayValue();
+    }
+
+    function alignTableHeader() {
+        var td = $("#customerKeywordTable tr:first td");
+        var ctd = $("#headerTable tr:first td");
+        $.each(td, function (idx, val) {
+            ctd.eq(idx).width($(val).width());
+        });
+    }
+
+    function getSelectedIDs() {
+        var uuids = '';
+        $.each($("input[name=uuid]:checkbox:checked"), function () {
+            if (uuids === '') {
+                uuids = $(this).val();
+            } else {
+                uuids = uuids + "," + $(this).val();
+            }
+        });
+        return uuids;
+    }
+
+    function updateCustomerKeywordStatus(status) {
+        var customerKeyword = {};
+        var customerKeywordUuids = getSelectedIDs();
+        if (customerKeywordUuids === '') {
+            alert('请选择要操作的关键字');
+            return;
+        }
+        if(status == 0) {
+            if (confirm("确认要暂停选中的关键字吗?") == false) return;
+        } else {
+            if (confirm("确认要上线选中的关键字吗?") == false) return;
+        }
+        customerKeyword.uuids = customerKeywordUuids.split(",");
+        customerKeyword.status = status;
+        $.ajax({
+            url: '/internal/customerKeyword/updateCustomerKeywordStatus',
+            data: JSON.stringify(customerKeyword),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            timeout: 5000,
+            type: 'POST',
+            success: function (status) {
+                if (status) {
+                    $().toastmessage('showSuccessToast', "操作成功");
+                    window.location.reload();
+                } else {
+                    $().toastmessage('showErrorToast', "操作失败");
+                }
+            },
+            error: function () {
+                $().toastmessage('showErrorToast', "操作失败");
+            }
+        });
+    }
+
+    <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywords">
+    function searchCustomerKeywords(url) {
+        window.open(url);
+    }
+    </shiro:hasPermission>
+</script>
 </body>
 </html>

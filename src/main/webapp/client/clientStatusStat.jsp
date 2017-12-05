@@ -1,27 +1,10 @@
-<%@ include file="/commons/basejs.jsp" %>
 <%@ include file="/commons/global.jsp" %>
 <html>
 <head>
     <title>客户端统计</title>
-    <script language="javascript" type="text/javascript">
-
-        $(function () {
-            $("#centerDiv").css("margin-top",$("#topDiv").height());
-            alignTableHeader();
-            window.onresize = function(){
-                alignTableHeader();
-            }
-        });
-        function alignTableHeader() {
-            var td = $("#clientStatusSummaryTable tr:first td");
-            var ctd = $("#headerTable tr:first td");
-            $.each(td, function (idx, val) {
-                ctd.eq(idx).width($(val).width());
-            });
-        }
-    </script>
 </head>
 <body>
+<%@ include file="/commons/basejs.jsp" %>
 <div id="topDiv">
     <%@include file="/menu.jsp" %>
     <form action="/internal/clientstatus/clientStatusStat" method="post" id="searchClientStatusSummaryVOForm" style="margin-top: 35px;margin-left: 20px">
@@ -61,6 +44,22 @@
     </c:forEach>
 </table>
 </div>
+<script language="javascript" type="text/javascript">
+    $(function () {
+        $("#centerDiv").css("margin-top",$("#topDiv").height());
+        alignTableHeader();
+        window.onresize = function(){
+            alignTableHeader();
+        }
+    });
+    function alignTableHeader() {
+        var td = $("#clientStatusSummaryTable tr:first td");
+        var ctd = $("#headerTable tr:first td");
+        $.each(td, function (idx, val) {
+            ctd.eq(idx).width($(val).width());
+        });
+    }
+</script>
 </body>
 </html>
 

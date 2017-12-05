@@ -1,5 +1,4 @@
-﻿<%@ include file="/commons/basejs.jsp" %>
-<%@ include file="/commons/global.jsp" %>
+﻿<%@ include file="/commons/global.jsp" %>
 <html>
 <head>
     <title>客户端统计</title>
@@ -14,26 +13,9 @@
         #ClientStatusGroupSummaryTable tr:nth-child(even){background-color: #eeeeee}
         #ClientStatusGroupSummaryTable tr:hover{background-color: green;}
     </style>
-
-    <script language="javascript" type="text/javascript">
-
-        $(function () {
-            $("#centerDiv").css("margin-top",$("#topDiv").height());
-            alignTableHeader();
-            window.onresize = function(){
-                alignTableHeader();
-            }
-        });
-        function alignTableHeader() {
-            var td = $("#ClientStatusGroupSummaryTable tr:first td");
-            var ctd = $("#headerTable tr:first td");
-            $.each(td, function (idx, val) {
-                ctd.eq(idx).width($(val).width());
-            });
-        }
-    </script>
 </head>
 <body>
+<%@ include file="/commons/basejs.jsp" %>
 <div id="topDiv">
     <%@include file="/menu.jsp"%>
     <form action="/internal/clientstatus/clientStatusGroupStat" method="post" id="searchClientStatusSummaryVOForm" style="margin: 35px 0 5px 10px;">
@@ -69,6 +51,22 @@
     </c:forEach>
 </table>
 </div>
+<script language="javascript" type="text/javascript">
+    $(function () {
+        $("#centerDiv").css("margin-top",$("#topDiv").height());
+        alignTableHeader();
+        window.onresize = function(){
+            alignTableHeader();
+        }
+    });
+    function alignTableHeader() {
+        var td = $("#ClientStatusGroupSummaryTable tr:first td");
+        var ctd = $("#headerTable tr:first td");
+        $.each(td, function (idx, val) {
+            ctd.eq(idx).width($(val).width());
+        });
+    }
+</script>
 </body>
 </html>
 

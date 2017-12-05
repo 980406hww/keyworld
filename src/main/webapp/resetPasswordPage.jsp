@@ -5,9 +5,6 @@
 	<title>重置密码</title>
 	<meta name="viewport" content="width=device-width">
 	<%@ include file="/commons/basejs.jsp" %>
-	<script language="javascript" type="text/javascript" src="/toastmessage/jquery.toastmessage.js"></script>
-	<script language="javascript" type="text/javascript" src="/static/login.js"></script>
-	<link rel="stylesheet" href="/toastmessage/css/jquery.toastmessage.css">
 	<link rel="stylesheet" type="text/css" href="${staticPath }/static/style/css/login.css?v=201612202107" />
 	<script>
 		function checkPassword() {
@@ -48,7 +45,7 @@
         }
 	</script>
 </head>
-<body <%--onkeydown="enterlogin();"--%>>
+<body>
 <div class="top_div"></div>
 <div style="background: rgb(255, 255, 255); margin: -100px auto auto; border: 1px solid rgb(231, 231, 231);border-image:none;width:400px;text-align: center;">
 	<form method="post" id="forgetPassword">
