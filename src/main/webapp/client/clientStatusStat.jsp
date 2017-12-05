@@ -1,7 +1,7 @@
 <%@ include file="/commons/global.jsp" %>
 <html>
 <head>
-    <title>客户端统计</title>
+    <title>终端统计</title>
 </head>
 <body>
 <%@ include file="/commons/basejs.jsp" %>

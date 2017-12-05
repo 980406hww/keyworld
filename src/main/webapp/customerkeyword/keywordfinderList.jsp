@@ -54,6 +54,7 @@
                 background-color: #fff2de;
             }
         </style>
+        <title>关键字统计</title>
     </head>
 <body>
 <div id="customerKeywordTopDiv">

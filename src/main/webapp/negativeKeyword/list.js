@@ -8,19 +8,16 @@ $(function () {
     $("#centerDiv").css("margin-top", $("#topDiv").height());
     pageLoad();
 });
-
 function changePaging(currentPage, pageSize) {
     var negativeKeywordForm = $("#negativeKeywordForm");
     negativeKeywordForm.find("#currentPageNumberHidden").val(currentPage);
     negativeKeywordForm.find("#pageSizeHidden").val(pageSize);
     negativeKeywordForm.submit();
 }
-
 function resetPageNumber() {
     var negativeKeywordForm = $("#negativeKeywordForm");
     negativeKeywordForm.find("#currentPageNumberHidden").val(1);
 }
-
 function pageLoad() {
     var negativeKeywordForm = $("#negativeKeywordForm");
     var pageSize = negativeKeywordForm.find('#pageSizeHidden').val();
@@ -47,7 +44,6 @@ function pageLoad() {
         showCustomerBottomDiv.find("#lastButton").attr("disabled", "disabled");
     }
 }
-
 function showUploadTxtFileDialog() {
     $('#uploadTxtFileDialog').dialog({
         resizable: true,
@@ -68,7 +64,6 @@ function showUploadTxtFileDialog() {
                     alert("只能上传txt文件！");
                     return false;
                 }
-
                 var formData = new FormData();
                 formData.append('group', $("#uploadTxtFileForm").find("#groupName").val());
                 formData.append('file', $("#uploadTxtFileDialog").find("#file")[0].files[0]);
@@ -104,7 +99,6 @@ function showUploadTxtFileDialog() {
     });
     $('#uploadTxtFileDialog').window("resize",{top:$(document).scrollTop() + 100});
 }
-
 function getNegativeExcel() {
     var group = $("#negativeKeywordForm").find("#group").val();
     if(group != '') {
@@ -118,7 +112,6 @@ function getNegativeExcel() {
         $().toastmessage('showErrorToast', "请填写要导出数据的分组名称");
     }
 }
-
 function toTimeFormat(time) {
     var date = toDateFormat(time);
     var hours = time.getHours() < 10 ? ("0" + time.getHours()) : time.getHours();
@@ -126,7 +119,6 @@ function toTimeFormat(time) {
     var seconds = time.getSeconds() < 10 ? "0" + time.getSeconds() : time.getSeconds();
     return date + " " + hours + ":" + minutes + ":" + seconds;
 };
-
 function toDateFormat (time) {
     var m = (time.getMonth() + 1) > 9 ? (time.getMonth() + 1) : "0" + (time.getMonth() + 1);
     var d = time.getDate() > 9 ? time.getDate() : "0" + time.getDate();

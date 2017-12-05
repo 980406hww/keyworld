@@ -19,7 +19,7 @@
         }
         h6{ margin: 0 5px;}
     </style>
-    <title>客户管理</title>
+    <title>客户列表</title>
 </head>
 <body>
 <%@ include file="/commons/basejs.jsp" %>
@@ -426,7 +426,6 @@
             }
         });
     }
-
     var intervalId = setInterval(function () {
         searchCurrentDateCompletedReports();
     }, 1000 * 30);

@@ -8,7 +8,6 @@ $(function () {
     onlyNumber();
     autoCheckTerminalType();
 });
-
 function pageLoad() {
     var searchCustomerForm = $("#searchCustomerForm");
     var pageSize = searchCustomerForm.find('#pageSizeHidden').val();
@@ -36,7 +35,6 @@ function pageLoad() {
     }
 
 }
-//只能输入数字
 function onlyNumber() {
     var calculationInput = $("#chargeTypeCalculationDiv").find("input[type=text]");
     calculationInput.bind('keyup', function (k, v) {
@@ -44,7 +42,6 @@ function onlyNumber() {
         obj.val(obj.val().replace(/[^\d]*/g, ''));
     });
 }
-
 function initRangeTable(terminalTypeCheckboxObj) {
     if (terminalTypeCheckboxObj.checked) {
         $("#tab" + terminalTypeCheckboxObj.id + " tr:not(:first)").remove();
@@ -57,7 +54,6 @@ function initRangeTable(terminalTypeCheckboxObj) {
         $("#tab" + terminalTypeCheckboxObj.id + " tr:not(:first)").remove();
     }
 }
-
 function controlChargeTypeCalculationDiv(terminalTypeCheckboxObj) {
     var chargeTypeCalculationDiv = $("#chargeTypeCalculationDiv");
     if (terminalTypeCheckboxObj.checked) {
@@ -69,7 +65,6 @@ function controlChargeTypeCalculationDiv(terminalTypeCheckboxObj) {
         chargeTypeCalculationDiv.find("#chargesGT" + terminalTypeCheckboxObj.id).fadeOut("slow");
     }
 }
-
 function autoCheckTerminalType() {
     var chargeTypeCalculationDiv = $("#chargeTypeCalculationDiv");
     var chargeTypeIntervalDiv = $("#chargeTypeIntervalDiv");
@@ -94,7 +89,6 @@ function autoCheckTerminalType() {
         chargeTypeIntervalDiv.find("#Phone").prop("checked", true);
     });
 }
-
 function selectAll(self) {
     var a = document.getElementsByName("customerUuid");
     if (self.checked) {
@@ -107,7 +101,6 @@ function selectAll(self) {
         }
     }
 }
-
 function decideSelectAll() {
     var a = document.getElementsByName("customerUuid");
     var select=0;
@@ -122,7 +115,6 @@ function decideSelectAll() {
         $("#selectAllChecked").prop("checked",false);
     }
 }
-
 function triggerDailyReportGeneration(self) {
     if (confirm("确实要生成当天报表吗?") == false) return;
     var customerUuids = getSelectedIDs();
@@ -148,8 +140,6 @@ function triggerDailyReportGeneration(self) {
         }
     });
 }
-
-//删除所选
 function deleteCustomers(self) {
     var uuids = getSelectedIDs();
     if (uuids === '') {
@@ -178,12 +168,11 @@ function deleteCustomers(self) {
             }
         },
         error: function () {
-            $().toastmessage('showErrorToast', "操作失败",true);
+            $().toastmessage('showErrorToast', "操作失败");
 
         }
     });
 }
-
 function getSelectedIDs() {
     var uuids = '';
     $.each($("input[name=customerUuid]:checkbox:checked"), function () {
@@ -195,7 +184,6 @@ function getSelectedIDs() {
     });
     return uuids;
 }
-//规则部分
 function changeCustomerChargeType(customerUuid) {
     $.ajax({
         url: '/internal/customerChargeType/getCustomerChargeType/' + customerUuid,
@@ -220,7 +208,6 @@ function changeCustomerChargeType(customerUuid) {
         }
     });
 }
-
 function showCustomerChargeTypeDialog(customerUuid) {
     $("#customerChargeTypeDialog").dialog({
         resizable: false,
@@ -228,7 +215,6 @@ function showCustomerChargeTypeDialog(customerUuid) {
         height:350,
         modal: true,
         closed: true,
-        //按钮
         buttons: [{
             text: '保存',
             iconCls: 'icon-ok',
@@ -255,7 +241,6 @@ function showCustomerChargeTypeDialog(customerUuid) {
     $("#customerChargeTypeDialog").dialog("open");
     $('#customerChargeTypeDialog').window("resize",{top:$(document).scrollTop() + 100});
 }
-
 function saveCustomerChargeType(customerUuid) {
     var customerChargeTypeDialog = $("#customerChargeTypeDialog");
     var chargeTypeCalculationDiv = customerChargeTypeDialog.find("#chargeTypeCalculationDiv");
@@ -407,13 +392,11 @@ function saveCustomerChargeType(customerUuid) {
         $('#showRuleForm')[0].reset();
     }
 }
-
 function chooseChargeType(val) {
     switch (val) {
         case "Percentage":
             initChargeTypePercentage();
             $('#showRuleForm')[0].reset();
-//                    hideOperationTypeDiv();
             $("#chargeTypeIntervalDiv").find("#PC").prop("checked", false);
             $("#chargeTypeIntervalDiv").find("#Phone").prop("checked", false);
             break;
@@ -425,7 +408,6 @@ function chooseChargeType(val) {
             break;
     }
 }
-
 function initChargeTypePercentage() {
     $("#chargeTypePercentage").prop("checked", "checked");
     $("#chargeTypeCalculationDiv").show();
@@ -435,14 +417,11 @@ function initChargeTypePercentage() {
     $("#tabPC tr:not(:first)").remove();
     $("#tabPhone tr:not(:first)").remove();
 }
-
 function initChargeTypeInterval() {
     $("#chargeTypeInterval").prop("checked", "checked");
     $("#chargeTypeCalculationDiv").hide();
     $("#chargeTypeIntervalDiv").show();
 }
-
-//填充到规则DIV"
 function initCustomerChargeTypeDialog(customerChargeType) {
     var customerChargeTypeDialog = $("#customerChargeTypeDialog");
     var chargeTypeCalculationDiv = $("#chargeTypeCalculationDiv");
@@ -493,7 +472,6 @@ function initCustomerChargeTypeDialog(customerChargeType) {
         intervalInputOnlyNumberAllow();
     }
 }
-
 function intervalRowStr(val) {
     return "<tr  align='center'>"
         + "<td> <span name='sequence'></span> </td>"
@@ -503,13 +481,11 @@ function intervalRowStr(val) {
         + "<td><a href=\'#\' onclick=\"delRow(this)\">删除</a></td>"
         + "</tr>";
 }
-
 function resetSequence(tableObj) {
     $.each(tableObj.find("span[name=sequence]"), function (idx, val) {
         $(val).text(idx + 1);
     });
 }
-
 function intervalInputOnlyNumberAllow() {
     var intervalInputPC = $("#tabPC").find("input[type=text]");
     intervalInputPC.bind("keyup", function (k, v) {
@@ -523,7 +499,6 @@ function intervalInputOnlyNumberAllow() {
         obj.val(obj.val().replace(/[^\d]*/g, ''));
     });
 }
-
 function addRow(terminalType) {
     $("#chargeTypeIntervalDiv").find("#" + terminalType).prop("checked", true);
     var trRow = $("#tab" + terminalType + " tr").length;
@@ -533,8 +508,6 @@ function addRow(terminalType) {
     resetSequence($("#tabPC"));
     resetSequence($("#tabPhone"));
 }
-
-//删除<tr/>
 function delRow(rowHref) {
     var currentRow = rowHref.parentNode.parentNode;
     var tableObj = currentRow.parentNode;
@@ -548,7 +521,6 @@ function delRow(rowHref) {
     resetSequence($("#tabPC"));
     resetSequence($("#tabPhone"));
 }
-
 function autoFillPrice(self) {
     var price = $(self).val();
     var idx = $($(self).parent().find("input[type=text]")).index(self);
@@ -558,8 +530,6 @@ function autoFillPrice(self) {
         $(self).parent().find("input[type=text]:gt(" + idx + "):lt(1)").val(price);
     }
 }
-
-//上传日报报表模板
 function uploadDailyReportTemplate(uuid, self) {
     $('#dailyReportTemplateForm')[0].reset();
     $("#uploadDailyReportTemplateDialog").dialog({
@@ -567,7 +537,6 @@ function uploadDailyReportTemplate(uuid, self) {
         width: 350,
         height: 150,
         modal: true,
-        //按钮
         buttons: [{
             text: '提交',
             iconCls: 'icon-ok',
@@ -626,8 +595,6 @@ function uploadDailyReportTemplate(uuid, self) {
     $("#uploadDailyReportTemplateDialog").dialog("open");
     $('#uploadDailyReportTemplateDialog').window("resize",{top:$(document).scrollTop() + 100});
 }
-
-//显示添加客户是的DIV
 function showCustomerDialog(uuid, loginName) {
     if (uuid == null) {
         $('#customerForm')[0].reset();
@@ -637,7 +604,6 @@ function showCustomerDialog(uuid, loginName) {
         width: 280,
         height: 300,
         modal: true,
-        //按钮
         buttons: [{
             text: '保存',
             iconCls: 'icon-ok',
@@ -700,10 +666,8 @@ function savaCustomer(uuid, loginName) {
         success: function (result) {
             if (result) {
                 $().toastmessage('showSuccessToast', "保存成功",true);
-                /**/
             } else {
-
-                $().toastmessage('showErrorToast', "保存失败",true);
+                $().toastmessage('showErrorToast', "保存失败");
 
             }
         },
@@ -714,7 +678,6 @@ function savaCustomer(uuid, loginName) {
     $("#customerDialog").dialog("close");
     $('#customerForm')[0].reset();
 }
-
 function modifyCustomer(uuid) {
     getCustomer(uuid, function (customer) {
         if (customer != null) {
@@ -726,7 +689,6 @@ function modifyCustomer(uuid) {
         }
     })
 }
-
 function getCustomer(uuid, callback) {
     $.ajax({
         url: '/internal/customer/getCustomer/' + uuid,
@@ -739,14 +701,12 @@ function getCustomer(uuid, callback) {
         }
     });
 }
-
 function showCustomerKeywordDialog(uuid) {
     $("#customerKeywordDialog").dialog({
         resizable: false,
         /* width: 510,
          height: 320,*/
         modal: true,
-        //按钮
         buttons: [{
             text: '保存',
             iconCls: 'icon-ok',
@@ -773,7 +733,6 @@ function showCustomerKeywordDialog(uuid) {
     $("#customerKeywordDialog").dialog("open");
     $('#customerKeywordDialog').window("resize",{top:$(document).scrollTop() + 100});
 }
-
 function addCustomerKeyword(uuid) {
     var customerKeywords = [];
     var customerKeywordTextarea = $("#customerKeywordTextarea").val().trim();
@@ -825,7 +784,6 @@ function addCustomerKeyword(uuid) {
             customerKeywords.push(customerKeyword);
         }
     });
-
     $.ajax({
         url: '/internal/customerKeyword/saveCustomerKeywords',
         data: JSON.stringify(customerKeywords),
@@ -849,7 +807,6 @@ function addCustomerKeyword(uuid) {
     });
     $("#customerKeywordDialog").dialog("close");
 }
-
 function delCustomer(uuid) {
     if (confirm("确实要删除这个客户吗?") == false) return;
     $.ajax({
@@ -870,8 +827,6 @@ function delCustomer(uuid) {
         }
     });
 }
-
-//将客户信息填充DIV"
 function initCustomerDialog(customer) {
     var customerForm = $("#customerForm");
     customerForm.find("#contactPerson").val(customer.contactPerson);
@@ -882,7 +837,6 @@ function initCustomerDialog(customer) {
     customerForm.find("#remark").val(customer.remark);
     customerForm.find("#entryTypeHidden").val(customer.entryType);
 }
-
 function changePaging(currentPage, pageSize) {
     var searchCustomerForm = $("#searchCustomerForm");
     var total = searchCustomerForm.find("#totalHidden").val();
@@ -890,12 +844,10 @@ function changePaging(currentPage, pageSize) {
     searchCustomerForm.find("#pageSizeHidden").val(pageSize);
     searchCustomerForm.submit();
 }
-
 function resetPageNumber() {
     var searchCustomerForm = $("#searchCustomerForm");
     searchCustomerForm.find("#currentPageNumberHidden").val(1);
 }
-
 function viewAizhanRank(contactPerson) {
     var index = contactPerson.indexOf("整站");
     if(index > -1) {

@@ -12,12 +12,12 @@
 <script type="text/javascript" src="${staticPath }/static/easyui/jquery.easyui.min.js" charset="utf-8"></script>
 <script type="text/javascript" src="${staticPath }/static/easyui/locale/easyui-lang-zh_CN.js" charset="utf-8"></script>
 <%-- [扩展JS] --%>
-<script type="text/javascript" src="${staticPath }/static/extJs.js" charset="utf-8"></script>
+<script type="text/javascript" src="${staticPath }/static/extJs-min.js" charset="utf-8"></script>
 <%-- [扩展样式] --%>
 <link rel="stylesheet" type="text/css" href="${staticPath }/static/style/css/dreamlu.css?v=10" />
 <link rel="stylesheet" type="text/css" href="${staticPath }/static/foundation-icons/foundation-icons.css" />
 
-<script language="javascript" type="text/javascript" src="${staticPath }/static/jquery.poshytip.js"></script>
+<script language="javascript" type="text/javascript" src="${staticPath }/static/jquery.poshytip-min.js"></script>
 
 <link rel="stylesheet" href="${staticPath}/static/css/common.css">
 <script language="javascript" type="text/javascript" src="/common.js"></script>

@@ -1,4 +1,62 @@
-﻿<script type="text/javascript">
+﻿<div class="content" style="position:fixed;width: 100%;height:30px;">
+	<ul class="venus-menu" style="display: none">
+		<c:choose>
+			<c:when test="${sessionScope.get('entryType')=='bc'}">
+				<shiro:hasRole  name="BCSpecial">
+					<c:forEach items="${menus}" var="menu">
+						<li style="" pid="${menu.pid}" lid="${menu.id}">
+							<c:if test="${menu.openMode=='ajax' || menu.openMode=='iframe'}">
+								<a href="javascript:void(0)" onclick="openUrl('${menu.attributes}','${menu.text}','${menu.iconCls}','${menu.openMode}')" title="${menu.attributes}"><i class="${menu.iconCls}"></i> ${menu.text}</a>
+							</c:if>
+							<c:if test="${menu.openMode==null || menu.openMode==''}">
+								<a href="${menu.attributes}" title="${menu.attributes}"><i class="${menu.iconCls}"></i> ${menu.text}</a>
+							</c:if>
+						</li>
+					</c:forEach>
+				</shiro:hasRole >
+			</c:when>
+			<c:otherwise>
+				<c:forEach items="${menus}" var="menu">
+					<li style="" pid="${menu.pid}" lid="${menu.id}">
+						<c:if test="${menu.openMode=='ajax' || menu.openMode=='iframe'}">
+							<a href="javascript:void(0)" onclick="openUrl('${menu.attributes}','${menu.text}','${menu.iconCls}','${menu.openMode}')" title="${menu.attributes}"><i class="${menu.iconCls}"></i> ${menu.text}</a>
+						</c:if>
+						<c:if test="${menu.openMode==null || menu.openMode==''}">
+							<a href="${menu.attributes}" title="${menu.attributes}"><i class="${menu.iconCls}"></i> ${menu.text}</a>
+						</c:if>
+					</li>
+				</c:forEach>
+			</c:otherwise>
+		</c:choose>
+			<div style="float: right;margin:7px 10px 0px 0px;">
+			<b class="fi-torso icon-black" style="font-size: 12px;">&nbsp;<shiro:principal property="name"></shiro:principal></b>|
+			<span class="fi-anchor icon-green" style="font-size: 12px;color: green"></span>
+			<span style="font-size: 12px;color: black">
+				<c:choose>
+					<c:when test="${sessionScope.get('entryType')=='qz'}">
+						全站链接
+					</c:when>
+					<c:when test="${sessionScope.get('entryType')=='pt'}">
+						普通链接
+					</c:when>
+					<c:when test="${sessionScope.get('entryType')=='bc'}">
+						BC链接
+					</c:when>
+					<c:otherwise>
+						负面链接
+					</c:otherwise>
+				</c:choose>
+			</span>|
+			<span class="fi-web icon-black" style="font-size: 12px;color: red;"></span><span style="color: black">&nbsp;${sessionScope.get("terminalType")}端&nbsp;|</span>&nbsp;
+			<shiro:hasPermission name="/user/editPwdPage">
+				<span class="fi-unlock icon-green" style="font-size: 12px;color: green"></span>
+				<a href="javascript:void(0)" onclick="editUserPwd()"  style="text-decoration: none;font-size: 12px;color: black">修改密码</a>|
+			</shiro:hasPermission>
+			<a class="fi-x" href="javascript:void(0)" onclick="logout()" style="text-decoration: none;font-size: 12px;">&nbsp;安全退出</a>
+		</div>
+	</ul>
+</div>
+<script type="text/javascript">
     $(function () {
         var li = $(".venus-menu li");
         $.each(li, function (idx, val) {
@@ -72,63 +130,3 @@
         parent.$.modalDialog.handler.window("resize",{top:$(document).scrollTop() + 100});
     }
 </script>
-
-<div class="content" style="position:fixed;width: 100%;height:30px;">
-	<ul class="venus-menu" style="display: none">
-		<c:choose>
-			<c:when test="${sessionScope.get('entryType')=='bc'}">
-				<shiro:hasRole  name="BCSpecial">
-					<c:forEach items="${menus}" var="menu">
-						<li style="" pid="${menu.pid}" lid="${menu.id}">
-							<c:if test="${menu.openMode=='ajax' || menu.openMode=='iframe'}">
-								<a href="javascript:void(0)" onclick="openUrl('${menu.attributes}','${menu.text}','${menu.iconCls}','${menu.openMode}')" title="${menu.attributes}"><i class="${menu.iconCls}"></i> ${menu.text}</a>
-							</c:if>
-							<c:if test="${menu.openMode==null || menu.openMode==''}">
-								<a href="${menu.attributes}" title="${menu.attributes}"><i class="${menu.iconCls}"></i> ${menu.text}</a>
-							</c:if>
-						</li>
-					</c:forEach>
-				</shiro:hasRole >
-			</c:when>
-			<c:otherwise>
-				<c:forEach items="${menus}" var="menu">
-					<li style="" pid="${menu.pid}" lid="${menu.id}">
-						<c:if test="${menu.openMode=='ajax' || menu.openMode=='iframe'}">
-							<a href="javascript:void(0)" onclick="openUrl('${menu.attributes}','${menu.text}','${menu.iconCls}','${menu.openMode}')" title="${menu.attributes}"><i class="${menu.iconCls}"></i> ${menu.text}</a>
-						</c:if>
-						<c:if test="${menu.openMode==null || menu.openMode==''}">
-							<a href="${menu.attributes}" title="${menu.attributes}"><i class="${menu.iconCls}"></i> ${menu.text}</a>
-						</c:if>
-					</li>
-				</c:forEach>
-			</c:otherwise>
-		</c:choose>
-			<div style="float: right;margin:7px 10px 0px 0px;">
-			<b class="fi-torso icon-black" style="font-size: 12px;">&nbsp;<shiro:principal property="name"></shiro:principal></b>|
-			<span class="fi-anchor icon-green" style="font-size: 12px;color: green"></span>
-			<span style="font-size: 12px;color: black">
-				<c:choose>
-					<c:when test="${sessionScope.get('entryType')=='qz'}">
-						全站链接
-					</c:when>
-					<c:when test="${sessionScope.get('entryType')=='pt'}">
-						普通链接
-					</c:when>
-					<c:when test="${sessionScope.get('entryType')=='bc'}">
-						BC链接
-					</c:when>
-					<c:otherwise>
-						负面链接
-					</c:otherwise>
-				</c:choose>
-			</span>|
-			<span class="fi-web icon-black" style="font-size: 12px;color: red;"></span><span style="color: black">&nbsp;${sessionScope.get("terminalType")}端&nbsp;|</span>&nbsp;
-			<shiro:hasPermission name="/user/editPwdPage">
-				<span class="fi-unlock icon-green" style="font-size: 12px;color: green"></span>
-				<a href="javascript:void(0)" onclick="editUserPwd()"  style="text-decoration: none;font-size: 12px;color: black">修改密码</a>|
-			</shiro:hasPermission>
-			<a class="fi-x" href="javascript:void(0)" onclick="logout()" style="text-decoration: none;font-size: 12px;">&nbsp;安全退出</a>
-		</div>
-	</ul>
-</div>
-

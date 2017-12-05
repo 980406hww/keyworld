@@ -4,12 +4,10 @@ function changePaging(currentPage, pageSize) {
     searchCustomerKeywordForm.find("#pageSizeHidden").val(pageSize);
     searchCustomerKeywordForm.submit();
 }
-
 function resetPageNumber() {
     var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
     searchCustomerKeywordForm.find("#currentPageNumberHidden").val(1);
 }
-
 function selectAll(self) {
     var a = document.getElementsByName("uuid");
     if (self.checked) {
@@ -22,7 +20,6 @@ function selectAll(self) {
         }
     }
 }
-
 function decideSelectAll() {
     var a = document.getElementsByName("uuid");
     var select=0;
@@ -37,7 +34,6 @@ function decideSelectAll() {
         $("#selectAllChecked").prop("checked",false);
     }
 }
-
 function getSelectedIDs() {
     var uuids = '';
     $.each($("input[name=uuid]:checkbox:checked"), function () {
@@ -49,7 +45,6 @@ function getSelectedIDs() {
     });
     return uuids;
 }
-
 function updateCustomerKeywordStatus(status) {
     var customerKeyword = {};
     var customerKeywordUuids = getSelectedIDs();

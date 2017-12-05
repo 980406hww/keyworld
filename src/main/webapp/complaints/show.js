@@ -39,7 +39,6 @@ function alignTableHeader(){
         ctd.eq(idx).width($(val).width());
     });
 }
-//增加
 function showAddMainKeywordDialog(uuid) {
     if(uuid==null){
         $('#mainKeywordForm')[0].reset();
@@ -125,7 +124,6 @@ function savaMainKeyword(uuid) {
     $("#showAddMainKeywordDialog").dialog("close");
     $('#mainKeywordForm')[0].reset();
 }
-//通过uuid查找mainKey对象
 function getMainKeyword(uuid) {
     $.ajax({
         url: '/internal/complaints/findTSMainKeywordById/' + uuid,
@@ -156,8 +154,6 @@ function initMainKeywordDialog(mainKeyword) {
     var negativeKeywords = tmpNegativeKeywords.substring(0,tmpNegativeKeywords.length-1);
     mainKeywordForm.find("#ngKeyword").val(negativeKeywords);
 }
-
-//删除
 function deleteMainKeyword(uuid) {
     if (confirm("确实要删除这个主关键字吗?") == false) return;
     $.ajax({
@@ -186,7 +182,6 @@ function getSelectedIDs() {
     });
     return uuids;
 }
-//删除所选
 function deleteMainKeywords(self) {
     var uuids = getSelectedIDs();
     if(uuids === ''){
@@ -217,8 +212,6 @@ function deleteMainKeywords(self) {
         }
     });
 }
-
-//查询
 function serachMainKeywords(currentPage, displaysRecords) {
     var keyword = $("#serachMainKeyword").find("#itemKeyword").val();
     var group = $("#serachMainKeyword").find("#itemgroup").val();
@@ -227,13 +220,11 @@ function serachMainKeywords(currentPage, displaysRecords) {
     var url= '/internal/complaints/findTSMainKeywords?currentPage='+currentPage+'&displaysRecords='+displaysRecords+'&keyword='+ keyword+'&group='+ group;
     window.location.href=url;
 }
-//改变当前页
 function chooseRecords(currentPage, displayRecords) {
     $('#showMainKeywordBottomDiv').find("#currentPageHidden").val(currentPage);
     $('#showMainKeywordBottomDiv').find("#displaysRecordsHidden").val(displayRecords);
     serachMainKeywords(currentPage, displayRecords);
 }
-
 function selectAll(self){
     var a = document.getElementsByName("uuid");
     if(self.checked){
@@ -246,7 +237,6 @@ function selectAll(self){
         }
     }
 }
-
 function decideSelectAll() {
     var a = document.getElementsByName("uuid");
     var select=0;

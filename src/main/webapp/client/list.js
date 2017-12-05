@@ -11,7 +11,6 @@ $(function () {
         alignTableHeader();
     }
 });
-
 function pageLoad() {
     var searchCustomerForm = $("#searchClientStatusForm");
     var pageSize = searchCustomerForm.find('#pageSizeHidden').val();
@@ -38,7 +37,6 @@ function pageLoad() {
         showCustomerBottomDiv.find("#lastButton").attr("disabled", "disabled");
     }
 }
-
 function alignTableHeader(){
     var td = $("#clientStatusTable tr:first td");
     var ctd = $("#headerTable tr:first td");
@@ -46,26 +44,21 @@ function alignTableHeader(){
         ctd.eq(idx).width($(val).width());
     });
 }
-
 function changePaging(currentPageNumber, pageSize) {
     var searchClientStatusForm = $("#searchClientStatusForm");
     searchClientStatusForm.find("#currentPageNumberHidden").val(currentPageNumber);
     searchClientStatusForm.find("#pageSizeHidden").val(pageSize);
     searchClientStatusForm.submit();
 }
-
 function resetPageNumber() {
     $("#searchClientStatusForm").find("#currentPageNumberHidden").val(1);
 }
-
 function downloadVNCFile() {
     $("#downloadVNCForm").submit();
 }
-
 function downloadFullVNCFile() {
     $("#downloadFullVNCForm").submit();
 }
-
 function selectAll(self){
     var a = document.getElementsByName("clientID");
     if(self.checked){
@@ -78,7 +71,6 @@ function selectAll(self){
         }
     }
 }
-
 function showUploadVNCDialog() {
     $('#uploadVNCDialog').dialog({
         resizable: false,
@@ -99,7 +91,6 @@ function showUploadVNCDialog() {
                     alert("只能上传XML文件！");
                     return false;
                 }
-
                 var formData = new FormData();
                 formData.append('file', $("#uploadVNCDialog").find("#file")[0].files[0]);
                 $.ajax({
@@ -112,7 +103,6 @@ function showUploadVNCDialog() {
                     success: function (result) {
                         if (result) {
                             $().toastmessage('showSuccessToast', "上传成功");
-                            /* window.location.reload();*/
                         } else {
                             $().toastmessage('showErrorToast', "上传失败");
                         }
@@ -142,7 +132,6 @@ function showUploadVNCDialog() {
     });
     $('#uploadVNCDialog').window("resize",{top:$(document).scrollTop() + 100});
 }
-
 function showUploadVPSDialog() {
     $('#uploadVPSDialog').dialog({
         resizable: false,
@@ -199,7 +188,6 @@ function showUploadVPSDialog() {
     });
     $('#uploadVPSDialog').window("resize",{top:$(document).scrollTop() + 100});
 }
-
 function decideSelectAll() {
     var a = document.getElementsByName("clientID");
     var select=0;
@@ -214,7 +202,6 @@ function decideSelectAll() {
         $("#selectAllChecked").prop("checked",false);
     }
 }
-
 function delItem(clientID) {
     if (confirm("确定要删除这台终端吗?") == false) return;
     $.ajax({
@@ -233,7 +220,6 @@ function delItem(clientID) {
         }
     });
 }
-
 function delAllItems(self) {
     var clientIDs = getSelectedClientIDs();
     if (clientIDs === '') {
@@ -265,7 +251,6 @@ function delAllItems(self) {
         }
     });
 }
-
 function getSelectedClientIDs() {
     var clientIDs = '';
     $.each($("input[name=clientID]:checkbox:checked"), function () {
@@ -277,7 +262,6 @@ function getSelectedClientIDs() {
     });
     return clientIDs;
 }
-
 function resetRestartStatus() {
     if (confirm("确实要重设状态为Processing或者Logging终端的重启状态吗?") == false) return;
     $.ajax({
@@ -312,7 +296,6 @@ function changeStatus(clientID, status) {
         success: function (result) {
             if (result) {
                 $().toastmessage('showSuccessToast', "操作成功",true);
-                /* window.location.reload();*/
             } else {
                 $().toastmessage('showErrorToast', "操作失败");
             }
@@ -349,7 +332,6 @@ function updateGroup(self){
         }
     });
 }
-
 function changeTerminalType(clientID){
     var postData = {};
     postData.clientID = clientID;
@@ -375,7 +357,6 @@ function changeTerminalType(clientID){
         }
     });
 }
-
 function updateOperationType(self){
     var clientStatus = {};
     clientStatus.clientID = self.id.replace("operationType", "");
@@ -402,7 +383,6 @@ function updateOperationType(self){
         }
     });
 }
-
 function showSettingDialog(clientID, self){
     $.ajax({
         url: '/internal/clientstatus/getClientStatus/' + clientID,
@@ -524,7 +504,6 @@ function initSettingDialog(clientStatus, self){
     settingDialogDiv.find("#vpsBackendSystemPassword").val(clientStatus.vpsBackendSystemPassword != null ? clientStatus.vpsBackendSystemPassword : "doshows123");
     settingDialogDiv.show();
 }
-
 function saveChangeSetting(self){
     var settingDialogDiv = $("#changeSettingDialog");
     var clientStatus = {};
@@ -584,7 +563,6 @@ function saveChangeSetting(self){
     clientStatus.justClickSpecifiedTitle = settingDialogDiv.find("#justClickSpecifiedTitle:checked").val() === '1' ? 1 : 0;
     clientStatus.randomlyClickMoreLink = settingDialogDiv.find("#randomlyClickMoreLink:checked").val() === '1' ? 1 : 0;
     clientStatus.moveUp20 = settingDialogDiv.find("#moveUp20:checked").val() === '1' ? 1 : 0;
-
     $.ajax({
         url: '/internal/clientstatus/saveClientStatus',
         data: JSON.stringify(clientStatus),
@@ -609,7 +587,6 @@ function saveChangeSetting(self){
         }
     });
 }
-
 function showTargetVersionSettingDialog(self){
     if(getSelectedClientIDs().trim() === ''){
         alert("请选择要更新的终端！");
@@ -639,7 +616,6 @@ function showTargetVersionSettingDialog(self){
     });
     $('#targetVersionSettingDialog').window("resize",{top:$(document).scrollTop() + 100});
 }
-
 function saveTargetVersionSetting(self){
     var settingDialogDiv = $("#targetVersionSettingDialog");
     var clientStatus = {};
@@ -674,7 +650,6 @@ function saveTargetVersionSetting(self){
         }
     });
 }
-
 function showRenewalSettingDialog(self){
     if(getSelectedClientIDs().trim() === ''){
         alert("请先选择要续费的终端！");
@@ -704,7 +679,6 @@ function showRenewalSettingDialog(self){
     });
     $('#renewalSettingDialog').window("resize",{top:$(document).scrollTop() + 100});
 }
-
 function saveRenewalSetting(self){
     var settingDialogDiv = $("#renewalSettingDialog");
     var clientStatus = {};
@@ -745,7 +719,6 @@ function saveRenewalSetting(self){
         }
     });
 }
-
 function connectVNC(clientID){
     var obj = new ActiveXObject("wscript.shell");
     obj.run("file:///C:/vnc/" + clientID + ".vnc");
@@ -767,7 +740,6 @@ $(document).ready(function(){
         };
     }
 });
-
 function haveCustomerKeywordForOptimization(clientIDs) {
     $.ajax({
         url: '/internal/customerKeyword/haveCustomerKeywordForOptimization',

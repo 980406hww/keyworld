@@ -23,7 +23,6 @@ $(function () {
                 'setText', _text);
         });
 });
-
 function pageLoad() {
     var searchSupplierForm = $("#searchSupplierForm");
     var pages = searchSupplierForm.find('#pagesHidden').val();
@@ -49,7 +48,6 @@ function pageLoad() {
         showCustomerBottomDiv.find("#lastButton").attr("disabled", "disabled");
     }
 }
-
 function tickAllCheckboxForSupplierServiceType(self) {
     var b = document.getElementsByName("supplierServiceTypeMappings");
     if (self.checked) {
@@ -76,7 +74,6 @@ function tickAllCheckboxWhenAllItemsSelected() {
         $("#SupplierNexusAll").prop("checked",false);
     }
 }
-
 function selectAll(self) {
     var a = document.getElementsByName("uuid");
     if (self.checked) {
@@ -89,7 +86,6 @@ function selectAll(self) {
         }
     }
 }
-
 function decideSelectAll() {
     var a = document.getElementsByName("uuid");
     var select=0;
@@ -104,7 +100,6 @@ function decideSelectAll() {
         $("#selectAllChecked").prop("checked",false);
     }
 }
-
 function deleteSupplier(uuid) {
     if (confirm("确实要删除这个供应商吗?") == false) return;
     $.ajax({
@@ -122,7 +117,6 @@ function deleteSupplier(uuid) {
         }
     });
 }
-
 function deleteSuppliers(self) {
     var uuids = getSelectedIDs();
     if (uuids === '') {
@@ -153,7 +147,6 @@ function deleteSuppliers(self) {
         }
     });
 }
-
 function getSelectedIDs() {
     var uuids = '';
     $.each($("input[name=uuid]:checkbox:checked"), function () {
@@ -165,7 +158,6 @@ function getSelectedIDs() {
     });
     return uuids;
 }
-
 function resetPageNumber() {
     var searchSupplierForm = $("#searchSupplierForm");
     searchSupplierForm.find("#currentPageNumberHidden").val(1);
@@ -196,7 +188,6 @@ function initSupplierDialog(supplier) {
     //设置下拉选中值
     $('#supplierServiceTypeMappings').combo('setValue', _value).combo('setText', _text);
 }
-
 function modifySupplier(uuid) {
     getSupplier(uuid, function (supplier) {
         if (supplier != null) {
@@ -319,7 +310,6 @@ function saveSupplier(uuid) {
     $("#supplierDialog").dialog("close");
     $('#supplierForm')[0].reset();
 }
-
 function changePaging(currentPage, pageSize) {
     var searchSupplierForm = $("#searchSupplierForm");
     searchSupplierForm.find("#currentPageNumberHidden").val(currentPage);

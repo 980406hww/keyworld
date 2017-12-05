@@ -7,7 +7,6 @@ $(function () {
     window.onresize = function(){
         alignTableHeader();
     }
-
     var searchCustomerForm = $("#chargeForm");
     var pageSize = searchCustomerForm.find('#pageSizeHidden').val();
     var pages = searchCustomerForm.find('#pagesHidden').val();
@@ -33,10 +32,7 @@ $(function () {
         showCustomerBottomDiv.find("#nextButton").attr("disabled", "disabled");
         showCustomerBottomDiv.find("#lastButton").attr("disabled", "disabled");
     }
-
-
 });
-
 function alignTableHeader(){
     var td = $("#headerTable tr:first td");
     var ctd = $("#showQZSettingTable tr:first td");
@@ -44,14 +40,12 @@ function alignTableHeader(){
         ctd.eq(idx).width($(val).width());
     });
 }
-
 function changePaging(currentPage, pageSize) {
     var chargeForm = $("#chargeForm");
     chargeForm.find("#currentPageNumberHidden").val(currentPage);
     chargeForm.find("#pageSizeHidden").val(pageSize);
     chargeForm.submit();
 }
-
 function resetSearchCondition(days) {
     var chargeForm = $("#chargeForm");
     var customerInfo = chargeForm.find("#customerInfo").val();
@@ -61,7 +55,6 @@ function resetSearchCondition(days) {
     chargeForm.find("#currentPageNumberHidden").val(1);
     chargeForm.submit();
 }
-
 function selectAll(self){
     var a = document.getElementsByName("uuid");
     if(self.checked){
@@ -74,7 +67,6 @@ function selectAll(self){
         }
     }
 }
-
 function decideSelectAll() {
     var a = document.getElementsByName("uuid");
     var select=0;
@@ -89,7 +81,6 @@ function decideSelectAll() {
         $("#selectAllChecked").prop("checked",false);
     }
 }
-
 function delQZSetting(uuid) {
     if (confirm("确实要删除这个全站设置吗?") == false) return;
     $.ajax({
@@ -107,7 +98,6 @@ function delQZSetting(uuid) {
         }
     });
 }
-
 function getSelectedIDs() {
     var uuids = '';
     $.each($("input[name=uuid]:checkbox:checked"), function(){
@@ -119,7 +109,6 @@ function getSelectedIDs() {
     });
     return uuids;
 }
-
 function delSelectedQZSettings(self) {
     var uuids = getSelectedIDs();
     if(uuids === ''){
@@ -150,7 +139,6 @@ function delSelectedQZSettings(self) {
         }
     });
 }
-
 function updateImmediately(self) {
     var uuids = getSelectedIDs();
     if(uuids === ''){
@@ -181,7 +169,6 @@ function updateImmediately(self) {
         }
     });
 }
-
 function toTimeFormat(time) {
     var date = toDateFormat(time);
     var hours = time.getHours() < 10 ? ("0" + time.getHours()) : time.getHours();
@@ -189,13 +176,11 @@ function toTimeFormat(time) {
     var seconds = time.getSeconds() < 10 ? "0" + time.getSeconds() : time.getSeconds();
     return date + " " + hours + ":" + minutes + ":" + seconds;
 };
-
 function toDateFormat (time) {
     return time.getFullYear() + "-" +
         (time.getMonth() + 1) + "-" +
         time.getDate();
 };
-
 function saveChargeLog(self) {
     var chargeDialog = $("#chargeDialog");
     var selectedOperationTypes = chargeDialog.find("input[name=operationType]:checkbox:checked");
@@ -270,7 +255,6 @@ function saveChargeLog(self) {
         }
     }
 }
-
 function calTotalAmount() {
     var totalAmount = 0;
     var chargeDialog = $("#chargeDialog");
@@ -281,7 +265,6 @@ function calTotalAmount() {
     var total = str.replace( /\B(?=(?:\d{3})+$)/g, ',' );
     chargeDialog.find("#totalAmount").html(total + "元");
 }
-
 function showChargeLog(uuid, self) {
     $("#chargeLogListTable  tr:not(:first)").remove();
     $.ajax({
@@ -330,7 +313,6 @@ function showChargeLog(uuid, self) {
         }
     });
 }
-
 function showChargeDialog(uuid,contactPerson,domain,self) {
     var chargeDialogObj = $("#chargeDialog");
     chargeDialogObj.find("#qzSettingCustomer").val(contactPerson);
@@ -424,7 +406,6 @@ function showChargeDialog(uuid,contactPerson,domain,self) {
         }
     });
 }
-
 function resetChargeDialog() {
     var chargeDialogObj = $("#chargeDialog");
     chargeDialogObj.find("#PCChargeInfo").css("display","none");
@@ -444,7 +425,6 @@ function resetChargeDialog() {
         chargeDialogObj.find("#actualChargeDate" + val.id).val("");
     });
 }
-
 function dealChargeTable(operationType) {
     var chargeDialog = $("#chargeDialog");
     var checkboxObj = chargeDialog.find("#" + operationType);
@@ -460,7 +440,6 @@ function dealChargeTable(operationType) {
         chargeDialog.find("#chargeInfoTable").css("height",0);
     }
 }
-
 function createSettingDialog() {
     $("#changeSettingDialog").dialog({
         resizable: false,
@@ -495,7 +474,6 @@ function createSettingDialog() {
     $("#changeSettingDialog").window("resize",{top:$(document).scrollTop() + 100});
 
 }
-
 function resetSettingDialog() {
     var settingDialogDiv = $("#changeSettingDialog");
     settingDialogDiv.find("#qzSettingUuid").val("");
@@ -506,7 +484,6 @@ function resetSettingDialog() {
     settingDialogDiv.find("#qzSettingInterval").val("2");
     clearInfo("Both");
 }
-
 function clearInfo(type) {
     var settingDialogObj = $("#changeSettingDialog");
     if(type == "Both") {
@@ -525,7 +502,6 @@ function clearInfo(type) {
         settingDialogObj.find("#chargeRule" + type).css("display","none");
     }
 }
-
 function showSettingDialog(uuid, self) {
     resetSettingDialog();
     if(uuid == null){
@@ -548,7 +524,6 @@ function showSettingDialog(uuid, self) {
         }
     });
 }
-
 function initSettingDialog(qzSetting, self) {
     var PCType = false;
     var PhoneType = false;
@@ -564,7 +539,6 @@ function initSettingDialog(qzSetting, self) {
         qzSetting.updateInterval != null ? qzSetting.updateInterval : "");
     settingDialogDiv.find("#qzSettingEntryType").val(
         qzSetting.type != null ? qzSetting.type : "");
-
     // 操作类型表填充数据
     $.each(qzSetting.qzOperationTypes, function (idx, val) {
         settingDialogDiv.find("#group" + val.operationType).val(val.group);
@@ -574,7 +548,6 @@ function initSettingDialog(qzSetting, self) {
         settingDialogDiv.find("#currentKeywordCount" + val.operationType).val(
             val.currentKeywordCount);
         settingDialogDiv.find("#qzSettingUuid" + val.operationType).val(val.uuid);
-
         // 构造规则表
         $.each(val.qzChargeRules, function (chargeRuleIdx, chargeRuleVal) {
             addRow("chargeRule" + val.operationType, chargeRuleVal);
@@ -586,7 +559,6 @@ function initSettingDialog(qzSetting, self) {
             }
         });
     });
-
     if (PCType) {
         dealSettingTable("PC");
     }
@@ -595,7 +567,6 @@ function initSettingDialog(qzSetting, self) {
         dealSettingTable("Phone");
     }
 }
-
 //规则表验证
 var reg = /^[1-9]\d*$/;
 function saveChangeSetting(self) {
@@ -670,7 +641,6 @@ function saveChangeSetting(self) {
             validationFlag = false;
             return false;
         }
-
         //多条规则
         var endKeyWordCountValue = -1;
         var trObjs = ruleObj.find("tr:not(:first,:last)");
@@ -697,7 +667,6 @@ function saveChangeSetting(self) {
                 validationFlag = false;
                 return false;
             }
-
             var skc = Number(startKeywordCountObj.val());
             if (skc <= endKeyWordCountValue) {
                 alert("起始词数过小");
@@ -705,7 +674,6 @@ function saveChangeSetting(self) {
                 validationFlag = false;
                 return false;
             }
-
             if (idx < (trObjs.length - 1)) {
                 if (endKeywordCountObj.val() == null || endKeywordCountObj.val() == "") {
                     alert("请输入终止词数");
@@ -721,7 +689,6 @@ function saveChangeSetting(self) {
                     return false;
                 }
             }
-
             if (endKeywordCountObj.val() != "") {
                 if (!reg.test(endKeywordCountObj.val())) {
                     alert("请输入数字");
@@ -736,7 +703,6 @@ function saveChangeSetting(self) {
                     return false;
                 }
             }
-
             if (amountObj.val() == null || amountObj.val() == "") {
                 alert("请输入价格");
                 amountObj.focus();
@@ -785,11 +751,9 @@ function saveChangeSetting(self) {
         });
     }
 }
-
 function addRow(tableID){
     addRow(tableID, null);
 }
-
 function addRow(tableID, chargeRule){
     var tableObj = $("#" + tableID);
     var rowCount = tableObj.find("tr").length;
@@ -797,21 +761,15 @@ function addRow(tableID, chargeRule){
 
     var col1 = newRow.insertCell(0);
     col1.innerHTML="<input type='text' name='sequenceID' value='"+(rowCount - 1)+"' style='width:100%'/>";
-
     var col2 = newRow.insertCell(1);
     col2.innerHTML = "<input type='text' name='startKeywordCount' value='"+(chargeRule != null ? chargeRule.startKeywordCount : '')+"' style='width:100%'/>";
-
     var col3 = newRow.insertCell(2);
     col3.innerHTML = "<input type='text' name='endKeywordCount' value='"+((chargeRule != null && chargeRule.endKeywordCount != null) ? chargeRule.endKeywordCount : '')+"'  style='width:100%'/>";
-
     var col4 = newRow.insertCell(3);
     col4.innerHTML = "<input type='text' name='amount' value='"+(chargeRule != null ? chargeRule.amount : '')+"'  style='width:100%'/>";
-
     var col5 = newRow.insertCell(4);
     col5.innerHTML = "<input style='width:100%' type='button' value='删除' onclick='deleteCurrentRow(this.parentNode.parentNode)' />";
-
 }
-
 function deleteCurrentRow(currentRow) {
     var index = currentRow.rowIndex;
     var tableObj = currentRow.parentNode.parentNode;
@@ -824,7 +782,6 @@ function deleteCurrentRow(currentRow) {
         alert("删除失败，规则表不允许为空");
     }
 }
-
 function dealSettingTable(operationType) {
     var settingDialogDiv = $("#changeSettingDialog");
     var groupObj = settingDialogDiv.find('#operationTypeSummaryInfo' + operationType);

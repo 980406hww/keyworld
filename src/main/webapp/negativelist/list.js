@@ -44,11 +44,9 @@ function changePaging(currentPageNumber, pageSize) {
     searchNegativeListForm.find("#pageSizeHidden").val(pageSize);
     searchNegativeListForm.submit();
 }
-
 function resetPageNumber() {
     $("#searchNegativeListForm").find("#currentPageNumberHidden").val(1);
 }
-
 function editNegativeList(uuid) {
     $.ajax({
         url: '/internal/negativelist/getNegativeList/' + uuid,
@@ -73,7 +71,6 @@ function editNegativeList(uuid) {
         }
     });
 }
-
 function selectAll(self) {
     var a = document.getElementsByName("uuid");
     if (self.checked) {
@@ -86,7 +83,6 @@ function selectAll(self) {
         }
     }
 }
-
 function decideSelectAll() {
     var a = document.getElementsByName("uuid");
     var select=0;
@@ -101,7 +97,6 @@ function decideSelectAll() {
         $("#selectAllChecked").prop("checked",false);
     }
 }
-
 function deleteNegativeList(uuid) {
     if (confirm("确定要删除这条信息吗?") == false) return;
     $.ajax({
@@ -119,7 +114,6 @@ function deleteNegativeList(uuid) {
         }
     });
 }
-
 function deleteNegatives(self) {
     var uuids = getSelectedIDs();
     if (uuids === '') {
@@ -161,7 +155,6 @@ function getSelectedIDs() {
     });
     return uuids;
 }
-
 function saveNegativeList(uuid) {
     var negativeListObj = {};
     negativeListObj.uuid = uuid;
@@ -197,7 +190,6 @@ function saveNegativeList(uuid) {
     });
 
 }
-
 function showNegativeListDialog(uuid) {
     if (uuid == null) {
         $('#negativeListForm')[0].reset();

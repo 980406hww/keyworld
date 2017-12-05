@@ -9,12 +9,10 @@ function changePaging(currentPage, pageSize) {
     searchCaptureRankJobForm.find("#pageSizeHidden").val(pageSize);
     searchCaptureRankJobForm.submit();
 }
-
 function resetPageNumber() {
     var searchCaptureRankJobForm = $("#searchCaptureRankJobForm");
     searchCaptureRankJobForm.find("#currentPageNumberHidden").val(1);
 }
-
 function pageLoad() {
     var searchCustomerForm = $("#searchCaptureRankJobForm");
     var pageSize = searchCustomerForm.find('#pageSizeHidden').val();
@@ -139,7 +137,6 @@ function initGroupNames(data) {
         }
     });
 }
-
 function showCrawlRankingForm(uuid) {
     $("#crawlRankingDialog").dialog({
         resizable: false,
@@ -240,7 +237,6 @@ function saveCaptureRankJob(uuid) {
         }
     });
 }
-
 function initCrawlRankingForm(uuid) {
     $.ajax({
         url: '/internal/captureRank/getCaptureRankJob?uuid=' + uuid,
@@ -266,7 +262,6 @@ function initCrawlRankingForm(uuid) {
         }
     });
 }
-
 function modifyCaptureRankJob(uuid) {
     $.ajaxSetup({
         async: false
@@ -298,7 +293,6 @@ function deleteCaptureRankJob(uuid) {
         }
     });
 }
-
 function getUuids() {
     var a = document.getElementsByName("uuid");
     var uuids = '';
@@ -314,7 +308,6 @@ function getUuids() {
     }
     return uuids;
 }
-
 function deleteCaptureRankJobs() {
     var uuids = getUuids();
     if (uuids == null || uuids == '') {
@@ -346,7 +339,6 @@ function deleteCaptureRankJobs() {
         }
     });
 }
-
 function selectAll(self) {
     var a = document.getElementsByName("uuid");
     if (self.checked) {
@@ -359,7 +351,6 @@ function selectAll(self) {
         }
     }
 }
-
 function decideSelectAll() {
     var a = document.getElementsByName("uuid");
     var select = 0;
@@ -374,7 +365,6 @@ function decideSelectAll() {
         $("#selectAllChecked").prop("checked", false);
     }
 }
-function customerUuidReset()
-{
+function customerUuidReset() {
     $('#crawlRankingForm #customerUuid').combogrid("reset");
 }

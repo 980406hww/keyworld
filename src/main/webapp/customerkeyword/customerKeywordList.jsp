@@ -468,7 +468,6 @@
             showCustomerBottomDiv.find("#lastButton").attr("disabled", "disabled");
         }
     }
-
     function initNoPositionChecked() {
         if(${customerKeywordCriteria.noPosition == 1}){
             $("#noPosition").prop("checked",true);
@@ -477,7 +476,6 @@
         }
         noPositionValue();
     }
-
     //显示排名为0
     function noPositionValue() {
         if($("#noPosition").is(":checked")){

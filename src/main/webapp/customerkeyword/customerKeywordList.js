@@ -11,7 +11,6 @@ $(function () {
         alignTableHeader();
     }
 });
-
 function selectAll(self) {
     var a = document.getElementsByName("uuid");
     if (self.checked) {
@@ -24,7 +23,6 @@ function selectAll(self) {
         }
     }
 }
-
 function decideSelectAll() {
     var a = document.getElementsByName("uuid");
     var select=0;
@@ -39,7 +37,6 @@ function decideSelectAll() {
         $("#selectAllChecked").prop("checked",false);
     }
 }
-
 function setSecondThirdDefaultFee(self){
     $(self).val($(self).val().replace(/[^\d]*/g, ''));
     var positionFirstFee = document.getElementById("positionFirstFee");
@@ -58,7 +55,6 @@ function setSecondThirdDefaultFee(self){
         }
     }
 }
-
 function setThirdDefaultFee(self){
     $(self).val($(self).val().replace(/[^\d]*/g, ''));
     var positionSecondFee = document.getElementById("positionSecondFee");
@@ -71,7 +67,6 @@ function setThirdDefaultFee(self){
         }
     }
 }
-
 function setForthDefaultFee(self){
     $(self).val($(self).val().replace(/[^\d]*/g, ''));
     var positionForthFee = document.getElementById("positionForthFee");
@@ -84,7 +79,6 @@ function setForthDefaultFee(self){
         }
     }
 }
-
 function delItem(customerKeywordUuid) {
     if (confirm("确实要删除这个关键字吗?") == false) return;
     $.ajax({
@@ -103,7 +97,6 @@ function delItem(customerKeywordUuid) {
         }
     });
 }
-
 function delAllItems(deleteType,customerUuid) {
     var customerKeywordUuids = getUuids();
     switch (deleteType){
@@ -149,7 +142,6 @@ function delAllItems(deleteType,customerUuid) {
         }
     });
 }
-
 function getUuids() {
     var a = document.getElementsByName("uuid");
     var uuids = '';
@@ -164,7 +156,6 @@ function getUuids() {
     }
     return uuids;
 }
-
 function cleanTitle(customerUuid, cleanType) {
     var customerKeywordCleanCriteria = {};
     if (cleanType == 'SelectedCustomerKeywordTitle') {
@@ -205,21 +196,16 @@ function cleanTitle(customerUuid, cleanType) {
         }
     });
 }
-
-
 function changePaging(currentPage, pageSize) {
     var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
     searchCustomerKeywordForm.find("#currentPageNumberHidden").val(currentPage);
     searchCustomerKeywordForm.find("#pageSizeHidden").val(pageSize);
     searchCustomerKeywordForm.submit();
 }
-
 function resetPageNumber() {
     var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
     searchCustomerKeywordForm.find("#currentPageNumberHidden").val(1);
 }
-
-//通过排名修改分组
 function showGroupNameChangeByRankDialog(customerUuid) {
     $('#groupNameChangeByRankFrom')[0].reset();
     $("#groupChangeNameByRankDialog").dialog({
@@ -234,7 +220,6 @@ function showGroupNameChangeByRankDialog(customerUuid) {
             at:"center top+150",
             of:window
         },
-        //按钮
         buttons: [{
             text: '保存',
             iconCls: 'icon-ok',
@@ -296,8 +281,6 @@ function showGroupNameChangeByRankDialog(customerUuid) {
     $("#groupChangeNameByRankDialog").dialog("open");
     $('#groupChangeNameByRankDialog').window("resize",{top:$(document).scrollTop() + 200});
 }
-
-//修改所有组名
 function showGroupNameChangeDialog(changeGroupCriteria) {
     $("#groupChangeNameDialog").dialog({
         resizable: false,
@@ -311,7 +294,6 @@ function showGroupNameChangeDialog(changeGroupCriteria) {
             at:"center top+150",
             of:window
         },
-        //按钮
         buttons: [{
             text: '保存',
             iconCls: 'icon-ok',
@@ -345,7 +327,6 @@ function showGroupNameChangeDialog(changeGroupCriteria) {
     $("#groupChangeNameDialog").dialog("open");
     $('#groupChangeNameDialog').window("resize",{top:$(document).scrollTop() + 200});
 }
-
 function updateCustomerKeywordStatus(status) {
     var customerKeyword = {};
     var customerKeywordUuids = getUuids();
@@ -361,7 +342,6 @@ function updateCustomerKeywordStatus(status) {
     }
     customerKeyword.uuids = customerKeywordUuids.split(",");
     customerKeyword.status = status;
-
     $.ajax({
         url: '/internal/customerKeyword/updateCustomerKeywordStatus',
         data: JSON.stringify(customerKeyword),
@@ -384,13 +364,10 @@ function updateCustomerKeywordStatus(status) {
         }
     });
 }
-
 //下架
 function stopOptimization(customerUuid){
     changeGroupName({"customerUuid": customerUuid, "targetGroupName": "stop"});
 }
-
-//修改部分
 function updateSpecifiedCustomerKeywordGroupName() {
     var customerKeywordUuids = getUuids();
     if (customerKeywordUuids.trim() === '') {
@@ -400,7 +377,6 @@ function updateSpecifiedCustomerKeywordGroupName() {
     var changeGroupCriteria = {"title" : "修改选中关键字分组", "customerKeywordUuids":customerKeywordUuids.split(",")};
     showGroupNameChangeDialog(changeGroupCriteria);
 }
-
 function changeGroupName(customerKeywordUpdateGroupCriteria) {
     $.ajax({
         url:'/internal/customerKeyword/updateCustomerKeywordGroupName',
@@ -423,9 +399,6 @@ function changeGroupName(customerKeywordUpdateGroupCriteria) {
         }
     });
 }
-
-
-//增加新关键字
 function addCustomerKeyword(customerKeywordUuid) {
     if (customerKeywordUuid == null) {
         $("#customerKeywordForm")[0].reset();
@@ -465,7 +438,6 @@ function addCustomerKeyword(customerKeywordUuid) {
     $("#saveCustomerKeywordDialog").dialog("open");
     $('#saveCustomerKeywordDialog').window("resize",{top:$(document).scrollTop() + 100});
 }
-
 function saveCustomerKeyword(customerUuid) {
     var customerKeyword = {};
     var saveCustomerKeywordDialog= $("#saveCustomerKeywordDialog");
@@ -553,8 +525,6 @@ function saveCustomerKeyword(customerUuid) {
     });
     $(this).dialog("close");
 }
-
-//修改关键字
 function modifyCustomerKeyword(customerKeywordUuid) {
     var saveCustomerKeywordDialog= $("#saveCustomerKeywordDialog");
     $.ajax({
@@ -624,7 +594,6 @@ function uploadCustomerKeywords(customerUuid, excelType){
         height: 180,
         modal: true,
         closed: true,
-        //按钮
         buttons: [{
             text: '上传',
             iconCls: 'icon-ok',
@@ -685,7 +654,6 @@ function uploadCustomerKeywords(customerUuid, excelType){
     $("#uploadExcelDailog").dialog("open");
     $('#uploadExcelDailog').window("resize",{top:$(document).scrollTop() + 100});
 }
-
 //导出结果
 function downloadCustomerKeywordInfo() {
     var customerKeywordCrilteriaArray = $("#searchCustomerKeywordForm").serializeArray();
@@ -695,7 +663,6 @@ function downloadCustomerKeywordInfo() {
     });
     downloadCustomerKeywordInfoForm.submit();
 }
-
 //显示下架
 function displayStopValue() {
     if($("#displayStop").is(":checked")){
@@ -704,7 +671,6 @@ function displayStopValue() {
         $("#displayStop").val("");
     }
 }
-
 function alignTableHeader() {
     var td = $("#customerKeywordTable tr:first td");
     var ctd = $("#headerTable tr:first td");

@@ -1,7 +1,7 @@
 ﻿<%@ include file="/commons/global.jsp" %>
 <html>
 <head>
-    <title>客户端统计</title>
+    <title>终端分组统计</title>
     <style>
         #topDiv {
             position: fixed;
