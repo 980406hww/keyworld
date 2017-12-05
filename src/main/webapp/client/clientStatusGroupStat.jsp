@@ -52,6 +52,7 @@
 </table>
 </div>
 <script language="javascript" type="text/javascript">
+    document.write("<scr"+"ipt src=\"${staticPath }/static/toastmessage/jquery.toastmessage.js\"></sc"+"ript>");
     $(function () {
         $("#centerDiv").css("margin-top",$("#topDiv").height());
         alignTableHeader();

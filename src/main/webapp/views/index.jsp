@@ -1,15 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/commons/global.jsp" %>
-<!DOCTYPE html>
 <html>
 <head>
 <%@ include file="/commons/basejs.jsp" %>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" type="text/css" href="${staticPath }/static/ztree/css/zTreeStyle.css" />
 <title>权限管理</title>
 <script type="text/javascript">
     var index_tabs;
     var indexTabsMenu;
     var indexMenuZTree;
+    document.write("<scr"+"ipt src=\"${staticPath }/static/ztree/js/jquery.ztree.core.js\"></sc"+"ript>");
+    document.write("<scr"+"ipt src=\"${staticPath }/static/toastmessage/jquery.toastmessage.js\"></sc"+"ript>");
     $(function() {
         $('#index_layout').layout({fit : true});
         index_tabs = $('#index_tabs').tabs({

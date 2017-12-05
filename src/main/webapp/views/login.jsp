@@ -3,13 +3,9 @@
 <head>
     <title>用户登录</title>
     <meta name="viewport" content="width=device-width">
-    <link id="easyuiTheme" rel="stylesheet" type="text/css" href="${staticPath }/static/easyui/themes/gray/easyui.css" />
-    <link id="easyuiTheme" rel="stylesheet" type="text/css" href="${staticPath }/static/easyui/themes/icon.css" />
+    <%@ include file="/commons/basejs.jsp" %>
+    <script type="text/javascript" src="${staticPath }/static/login.js?v=20170115" charset="utf-8"></script>
     <link rel="stylesheet" type="text/css" href="${staticPath }/static/style/css/login.css?v=201612202107" />
-    <link rel="stylesheet" href="${staticPath }/static/toastmessage/css/jquery.toastmessage.css">
-    <%-- [扩展样式] --%>
-    <link rel="stylesheet" type="text/css" href="${staticPath }/static/style/css/dreamlu.css?v=10" />
-    <link rel="stylesheet" type="text/css" href="${staticPath }/static/foundation-icons/foundation-icons.css" />
 </head>
 <body onkeydown="enterlogin();">
 <div class="top_div"></div>
@@ -62,8 +58,8 @@
 </div>
 <div style="text-align:center;">
 </div>
-<script type="text/javascript" src="${staticPath }/static/easyui/jquery.min.js" charset="utf-8"></script>
 <script>
+    document.write("<scr"+"ipt src=\"${staticPath }/static/toastmessage/jquery.toastmessage.js\"></sc"+"ript>");
     var basePath = "${staticPath }";
     function checkEmail() {
         var loginName = $("#userName").val();
@@ -73,11 +69,5 @@
         window.location.href = "/internal/user/checkEmail/"+loginName;
     }
 </script>
-<script type="text/javascript" src="${staticPath }/static/easyui/jquery.easyui.min.js" charset="utf-8"></script>
-<script type="text/javascript" src="${staticPath }/static/easyui/locale/easyui-lang-zh_CN.js" charset="utf-8"></script>
-<script type="text/javascript" src="${staticPath }/static/extJs.js" charset="utf-8"></script>
-<script type="text/javascript" src="${staticPath }/static/login.js?v=20170115" charset="utf-8"></script>
-<script language="javascript" type="text/javascript" src="${staticPath }/static/toastmessage/jquery.toastmessage.js"></script>
-<script language="javascript" type="text/javascript" src="${staticPath }/static/jquery.poshytip.js"></script>
 </body>
 </html>
