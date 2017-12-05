@@ -217,6 +217,8 @@
     </div>
 </div>
 <script language="javascript">
+    document.write("<scr"+"ipt src=\"${staticPath}/customerkeyword/keywordfinderList.js\"></sc"+"ript>");
+    document.write("<scr"+"ipt src=\"${staticPath }/static/toastmessage/jquery.toastmessage.js\"></sc"+"ript>");
     $(function () {
         $("#showCustomerTableDiv").css("margin-top",$("#customerKeywordTopDiv").height());
         $(".floatTd").poshytip();
@@ -230,6 +232,54 @@
             alignTableHeader();
         }
     });
+
+    function initNoPositionChecked() {
+        if(${customerKeywordCriteria.noPosition == 1}){
+            $("#noPosition").prop("checked",true);
+        }else{
+            $("#noPosition").prop("checked",false);
+        }
+        if(${customerKeywordCriteria.displayStop == 1}){
+            $("#displayStop").prop("checked",true);
+        }else{
+            $("#displayStop").prop("checked",false);
+        }
+        if(${customerKeywordCriteria.pushPay == 1}){
+            $("#pushPay").prop("checked",true);
+        }else{
+            $("#pushPay").prop("checked",false);
+        }
+        noPositionValue();
+        displayStopValue();
+        pushPayValue();
+    }
+
+    //催缴
+    function pushPayValue() {
+        if($("#pushPay").is(":checked")){
+            $("#pushPay").val("1")
+        }else {
+            $("#pushPay").val("0");
+        }
+    }
+    //显示下架
+    function displayStopValue() {
+        if($("#displayStop").is(":checked")){
+            $("#displayStop").val("1")
+        }else {
+            $("#displayStop").val("0");
+        }
+    }
+
+    //显示排名为0
+    function noPositionValue() {
+        if($("#noPosition").is(":checked")){
+            $("#noPosition").val("1")
+        }else {
+            $("#noPosition").val("0");
+        }
+    }
+
     function initPaging() {
         var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
         var searchCustomerKeywordTable = searchCustomerKeywordForm.find("#searchCustomerKeywordTable");
@@ -259,147 +309,11 @@
 
     }
 
-    //查询
-    function changePaging(currentPage, pageSize) {
-        var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
-        searchCustomerKeywordForm.find("#currentPageNumberHidden").val(currentPage);
-        searchCustomerKeywordForm.find("#pageSizeHidden").val(pageSize);
-        searchCustomerKeywordForm.submit();
-    }
-
-    function resetPageNumber() {
-        var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
-        searchCustomerKeywordForm.find("#currentPageNumberHidden").val(1);
-    }
-
-    //显示排名为0
-    function noPositionValue() {
-        if($("#noPosition").is(":checked")){
-            $("#noPosition").val("1")
-        }else {
-            $("#noPosition").val("0");
-        }
-    }
-    //催缴
-    function pushPayValue() {
-        if($("#pushPay").is(":checked")){
-            $("#pushPay").val("1")
-        }else {
-            $("#pushPay").val("0");
-        }
-    }
-    //显示下架
-    function displayStopValue() {
-        if($("#displayStop").is(":checked")){
-            $("#displayStop").val("1")
-        }else {
-            $("#displayStop").val("0");
-        }
-    }
-
-    function selectAll(self) {
-        var a = document.getElementsByName("uuid");
-        if (self.checked) {
-            for (var i = 0; i < a.length; i++) {
-                a[i].checked = true;
-            }
-        } else {
-            for (var i = 0; i < a.length; i++) {
-                a[i].checked = false;
-            }
-        }
-    }
-
-    function decideSelectAll() {
-        var a = document.getElementsByName("uuid");
-        var select=0;
-        for(var i = 0; i < a.length; i++){
-            if (a[i].checked == true){
-                select++;
-            }
-        }
-        if(select == a.length){
-            $("#selectAllChecked").prop("checked",true);
-        }else {
-            $("#selectAllChecked").prop("checked",false);
-        }
-    }
-
-    function initNoPositionChecked() {
-        if(${customerKeywordCriteria.noPosition == 1}){
-            $("#noPosition").prop("checked",true);
-        }else{
-            $("#noPosition").prop("checked",false);
-        }
-        if(${customerKeywordCriteria.displayStop == 1}){
-            $("#displayStop").prop("checked",true);
-        }else{
-            $("#displayStop").prop("checked",false);
-        }
-        if(${customerKeywordCriteria.pushPay == 1}){
-            $("#pushPay").prop("checked",true);
-        }else{
-            $("#pushPay").prop("checked",false);
-        }
-        noPositionValue();
-        displayStopValue();
-        pushPayValue();
-    }
-
     function alignTableHeader() {
         var td = $("#customerKeywordTable tr:first td");
         var ctd = $("#headerTable tr:first td");
         $.each(td, function (idx, val) {
             ctd.eq(idx).width($(val).width());
-        });
-    }
-
-    function getSelectedIDs() {
-        var uuids = '';
-        $.each($("input[name=uuid]:checkbox:checked"), function () {
-            if (uuids === '') {
-                uuids = $(this).val();
-            } else {
-                uuids = uuids + "," + $(this).val();
-            }
-        });
-        return uuids;
-    }
-
-    function updateCustomerKeywordStatus(status) {
-        var customerKeyword = {};
-        var customerKeywordUuids = getSelectedIDs();
-        if (customerKeywordUuids === '') {
-            alert('请选择要操作的关键字');
-            return;
-        }
-        if(status == 0) {
-            if (confirm("确认要暂停选中的关键字吗?") == false) return;
-        } else {
-            if (confirm("确认要上线选中的关键字吗?") == false) return;
-        }
-        customerKeyword.uuids = customerKeywordUuids.split(",");
-        customerKeyword.status = status;
-        $.ajax({
-            url: '/internal/customerKeyword/updateCustomerKeywordStatus',
-            data: JSON.stringify(customerKeyword),
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            timeout: 5000,
-            type: 'POST',
-            success: function (status) {
-                if (status) {
-                    $().toastmessage('showSuccessToast', "操作成功");
-                    window.location.reload();
-                } else {
-                    $().toastmessage('showErrorToast', "操作失败");
-                }
-            },
-            error: function () {
-                $().toastmessage('showErrorToast', "操作失败");
-            }
         });
     }
 

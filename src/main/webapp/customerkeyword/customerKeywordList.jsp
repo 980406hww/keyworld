@@ -436,8 +436,38 @@
     document.write("<scr"+"ipt src=\"${staticPath}/customerkeyword/customerKeywordList.js\"></sc"+"ript>");
     document.write("<scr"+"ipt src=\"${staticPath }/static/toastmessage/jquery.toastmessage.js\"></sc"+"ript>");
     $(function () {
+        initPaging();
         initNoPositionChecked();//初始化排名为0的初始值
     });
+
+    function initPaging() {
+        var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
+        var searchCustomerKeywordTable = searchCustomerKeywordForm.find("#searchCustomerKeywordTable");
+        searchCustomerKeywordTable.find("#orderingElement").val('${orderingElement}');
+        searchCustomerKeywordTable.find("#status").val(${customerKeywordCriteria.status});
+        var pages = searchCustomerKeywordForm.find('#pagesHidden').val();
+        var currentPageNumber = searchCustomerKeywordForm.find('#currentPageNumberHidden').val();
+        var showCustomerBottomDiv = $('#showCustomerBottomDiv');
+        showCustomerBottomDiv.find("#chooseRecords").val(${page.size});
+
+        if(parseInt(currentPageNumber) > 1 && parseInt(currentPageNumber) < parseInt(pages)) {
+            showCustomerBottomDiv.find("#firstButton").removeAttr("disabled");
+            showCustomerBottomDiv.find("#upButton").removeAttr("disabled");
+            showCustomerBottomDiv.find("#nextButton").removeAttr("disabled");
+            showCustomerBottomDiv.find("#lastButton").removeAttr("disabled");
+        } else if (parseInt(pages) <= 1) {
+            showCustomerBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
+            showCustomerBottomDiv.find("#upButton").attr("disabled", "disabled");
+            showCustomerBottomDiv.find("#nextButton").attr("disabled", "disabled");
+            showCustomerBottomDiv.find("#lastButton").attr("disabled", "disabled");
+        } else if (parseInt(currentPageNumber) <= 1) {
+            showCustomerBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
+            showCustomerBottomDiv.find("#upButton").attr("disabled", "disabled");
+        } else {
+            showCustomerBottomDiv.find("#nextButton").attr("disabled", "disabled");
+            showCustomerBottomDiv.find("#lastButton").attr("disabled", "disabled");
+        }
+    }
 
     function initNoPositionChecked() {
         if(${customerKeywordCriteria.noPosition == 1}){
@@ -446,6 +476,15 @@
             $("#noPosition").prop("checked",false);
         }
         noPositionValue();
+    }
+
+    //显示排名为0
+    function noPositionValue() {
+        if($("#noPosition").is(":checked")){
+            $("#noPosition").val("1")
+        }else {
+            $("#noPosition").val("0");
+        }
     }
 </script>
 </body>

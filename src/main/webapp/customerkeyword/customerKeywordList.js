@@ -4,7 +4,6 @@ $(function () {
     $("#uploadExcelDailog").dialog("close");
     $("#saveCustomerKeywordDialog").dialog("close");
     $("#customerKeywordDiv").css("margin-top",$("#customerKeywordTopDiv").height());
-    initPaging();
 
     $(".floatTd").poshytip();
     alignTableHeader();
@@ -12,34 +11,6 @@ $(function () {
         alignTableHeader();
     }
 });
-function initPaging() {
-    var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
-    var searchCustomerKeywordTable = searchCustomerKeywordForm.find("#searchCustomerKeywordTable");
-    searchCustomerKeywordTable.find("#orderingElement").val('${orderingElement}');
-    searchCustomerKeywordTable.find("#status").val(${customerKeywordCriteria.status});
-    var pages = searchCustomerKeywordForm.find('#pagesHidden').val();
-    var currentPageNumber = searchCustomerKeywordForm.find('#currentPageNumberHidden').val();
-    var showCustomerBottomDiv = $('#showCustomerBottomDiv');
-    showCustomerBottomDiv.find("#chooseRecords").val(${page.size});
-
-    if(parseInt(currentPageNumber) > 1 && parseInt(currentPageNumber) < parseInt(pages)) {
-        showCustomerBottomDiv.find("#firstButton").removeAttr("disabled");
-        showCustomerBottomDiv.find("#upButton").removeAttr("disabled");
-        showCustomerBottomDiv.find("#nextButton").removeAttr("disabled");
-        showCustomerBottomDiv.find("#lastButton").removeAttr("disabled");
-    } else if (parseInt(pages) <= 1) {
-        showCustomerBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
-        showCustomerBottomDiv.find("#upButton").attr("disabled", "disabled");
-        showCustomerBottomDiv.find("#nextButton").attr("disabled", "disabled");
-        showCustomerBottomDiv.find("#lastButton").attr("disabled", "disabled");
-    } else if (parseInt(currentPageNumber) <= 1) {
-        showCustomerBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
-        showCustomerBottomDiv.find("#upButton").attr("disabled", "disabled");
-    } else {
-        showCustomerBottomDiv.find("#nextButton").attr("disabled", "disabled");
-        showCustomerBottomDiv.find("#lastButton").attr("disabled", "disabled");
-    }
-}
 
 function selectAll(self) {
     var a = document.getElementsByName("uuid");
@@ -724,14 +695,7 @@ function downloadCustomerKeywordInfo() {
     });
     downloadCustomerKeywordInfoForm.submit();
 }
-//显示排名为0
-function noPositionValue() {
-    if($("#noPosition").is(":checked")){
-        $("#noPosition").val("1")
-    }else {
-        $("#noPosition").val("0");
-    }
-}
+
 //显示下架
 function displayStopValue() {
     if($("#displayStop").is(":checked")){
