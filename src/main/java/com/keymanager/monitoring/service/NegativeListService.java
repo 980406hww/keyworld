@@ -35,7 +35,6 @@ public class NegativeListService extends ServiceImpl<NegativeListDao, NegativeLi
         return page;
     }
 
-
     public void saveNegativeList(NegativeList negativeList) {
         if (null != negativeList.getUuid()) {
             negativeList.setUpdateTime(new Date());
@@ -61,8 +60,10 @@ public class NegativeListService extends ServiceImpl<NegativeListDao, NegativeLi
                 negativeListCriteria.setTitle(negativeList.getTitle());
                 negativeListCriteria.setOriginalUrl(negativeList.getOriginalUrl());
                 NegativeList existingNegativeLists = negativeListDao.searchNegativeListsFullMatching(negativeListCriteria);
-                if(operationType.equals("update") && existingNegativeLists != null){
-                    deleteNegativeList(existingNegativeLists.getUuid(), existingNegativeLists);
+                if(operationType.equals("update")){
+                    if(null != existingNegativeLists) {
+                        deleteNegativeList(existingNegativeLists.getUuid(), existingNegativeLists);
+                    }
                 }else {
                     if (existingNegativeLists != null) {
                         negativeList.setUuid(existingNegativeLists.getUuid());
@@ -94,15 +95,11 @@ public class NegativeListService extends ServiceImpl<NegativeListDao, NegativeLi
         keywordNegativeCriteria.setNegative(false);
         negativeListDao.deleteById(uuid);
         negativeListsSynchronizeService.negativeListsSynchronize(keywordNegativeCriteria);
-//        Boolean isDelete =
-//        if(isDelete){
-//
-//        }
     }
 
     public void deleteAll(List<String> uuids) {
         for (String uuid : uuids) {
-            deleteNegativeList(Long.valueOf(uuid) , null);
+            deleteNegativeList(Long.valueOf(uuid) ,null);
         }
     }
 
@@ -113,5 +110,4 @@ public class NegativeListService extends ServiceImpl<NegativeListDao, NegativeLi
         }
         return negativeLists;
     }
-
 }

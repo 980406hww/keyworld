@@ -205,7 +205,6 @@ function saveCaptureRankJob(uuid) {
         }
     })
     CaptureRankJob.groupNames = groupNamesSelected;
-    //$("#crawlRankingForm #groupNames").val();
     CaptureRankJob.exectionType = $("#crawlRankingForm input[name=exectionType]:checked").val();
     if ($("#crawlRankingForm #exectionTime").val() == null || $("#crawlRankingForm #exectionTime").val() === '') {
         $().toastmessage('showWarningToast', "执行时间不能为空!");

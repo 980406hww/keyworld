@@ -38,11 +38,11 @@ public class ExternalNegativeListRestController extends SpringMVCBaseController 
 				for(NegativeList negativeList : negativeListCriteria.getNegativeLists()){
 					negativeList.setTerminalType(terminalType);
 					if(StringUtils.isNotEmpty(negativeList.getDesc())){
-						String desc = 	negativeList.getDesc().replace("\n" , "").replace(" ", "");
+						String desc = negativeList.getDesc().replace("\n" , "").replace(" ", "");
 						negativeList.setDesc(desc);
 					}
 				}
-					negativeListService.saveNegativeLists(negativeListCriteria.getNegativeLists() , negativeListCriteria.getOperationType());
+				negativeListService.saveNegativeLists(negativeListCriteria.getNegativeLists() , negativeListCriteria.getOperationType());
 				return new ResponseEntity<Object>(true, HttpStatus.OK);
 			}
 		}catch (Exception ex){

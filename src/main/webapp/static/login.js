@@ -73,9 +73,6 @@ $(function () {
 function submitForm(){
     $('#loginform').submit();
 }
-function clearForm(){
-    $('#loginform').form('clear');
-}
 //回车登录
 function enterlogin(){
     if (event.keyCode == 13){

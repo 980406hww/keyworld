@@ -48,7 +48,6 @@ function showAddMainKeywordDialog(uuid) {
         width: 350,
         height: 365,
         modal: true,
-        //按钮
         buttons:[{
             text:"保存",
             iconCls: 'icon-ok',
