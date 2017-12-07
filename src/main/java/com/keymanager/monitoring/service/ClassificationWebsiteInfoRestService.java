@@ -5,6 +5,9 @@ import com.keymanager.monitoring.dao.ClassificationRestDao;
 import com.keymanager.monitoring.dao.ClassificationWebsiteInfoRestDao;
 import com.keymanager.monitoring.entity.Classification;
 import com.keymanager.monitoring.entity.ClassificationWebsitInfo;
+import com.keymanager.monitoring.vo.ClassificationWebSiteInfoVO;
+import com.keymanager.util.common.StringUtil;
+import com.keymanager.util.shiro.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,5 +37,25 @@ public class ClassificationWebsiteInfoRestService extends ServiceImpl<Classifica
             classificationWebsitInfo.setCreateTime(new Date());
             classificationWebsiteInfoRestDao.insert(classificationWebsitInfo);
         }
+    }
+
+    public ClassificationWebSiteInfoVO getfetchKeywordClassificationEmail(Long uuid) {
+        int classificationUuid = uuid.intValue();
+        ClassificationWebsitInfo classificationWebsitInfo = classificationWebsiteInfoRestDao.getfetchKeywordClassificationEmail(classificationUuid);
+        ClassificationWebSiteInfoVO classificationWebSiteInfoVO = new ClassificationWebSiteInfoVO();
+        classificationWebSiteInfoVO.setUuid(classificationWebsitInfo.getUuid().intValue());
+        classificationWebSiteInfoVO.setClassificationUuid(classificationUuid);
+        classificationWebSiteInfoVO.setEmailAddress(classificationWebsitInfo.getEmailAddress());
+        classificationWebSiteInfoVO.setHref(classificationWebsitInfo.getHref());
+        return classificationWebSiteInfoVO;
+    }
+
+    public void updateEmailByUuid(Integer uuid, String emailAddress) {
+        ClassificationWebsitInfo classificationWebsitInfo = classificationWebsiteInfoRestDao.selectById(uuid);
+        if(StringUtils.isNotBlank(emailAddress)){
+            classificationWebsitInfo.setEmailAddress(emailAddress);
+        }
+        classificationWebsitInfo.setReCollection(true);
+        classificationWebsiteInfoRestDao.updateById(classificationWebsitInfo);
     }
 }

@@ -40,8 +40,19 @@ public class ClassificationWebsitInfo {
     @TableField(value = "fOrder")
     private Integer order;
 
+    @TableField(value = "fReCollection")
+    private Boolean reCollection;
+
     @TableField(value = "fCreateTime")
     private Date createTime;
+
+    public Boolean getReCollection() {
+        return reCollection;
+    }
+
+    public void setReCollection(Boolean reCollection) {
+        this.reCollection = reCollection;
+    }
 
     public Long getUuid() {
         return uuid;

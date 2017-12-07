@@ -18,4 +18,6 @@ public interface ClassificationRestDao extends BaseMapper<Classification> {
     Classification getClassificationgroupNotAll(@Param("groupInfo") String group);
 
     void updatefCaptured(@Param("uuid")Integer uuid);
+
+    Classification getClassificationgroupUuid(@Param("group")String group);
 }

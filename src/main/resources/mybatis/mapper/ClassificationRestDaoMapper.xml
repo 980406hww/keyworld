@@ -40,7 +40,22 @@
         fGroup = #{groupInfo}
         limit 1
     </select>
+
     <update id="updatefCaptured">
         UPDATE t_classification SET fCaptured = 1 WHERE fUuid = #{uuid}
     </update>
+
+    <select id="getClassificationgroupUuid" resultType="com.keymanager.monitoring.entity.Classification">
+        SELECT
+        <include refid="colID"/>
+        FROM
+            t_classification
+        WHERE
+            fQueried = 1
+        AND
+            fCaptured = 1
+        AND
+            fGroup = #{group}
+        limit 1
+    </select>
 </mapper>

@@ -4,8 +4,10 @@ import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.entity.Classification;
 import com.keymanager.monitoring.entity.ClassificationWebsitInfo;
 import com.keymanager.monitoring.service.ClassificationRestService;
+import com.keymanager.monitoring.service.ClassificationWebsiteInfoRestService;
 import com.keymanager.monitoring.service.VMwareService;
 import com.keymanager.monitoring.vo.ClassificationSupportingDataVo;
+import com.keymanager.monitoring.vo.ClassificationWebSiteInfoVO;
 import com.keymanager.util.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +35,9 @@ public class ExteernalClassificationRestController  extends SpringMVCBaseControl
 
     @Autowired
     private ClassificationRestService classificationRestService;
+
+    @Autowired
+    private ClassificationWebsiteInfoRestService classificationWebsiteInfoRestService;
 
     @RequestMapping(value = "/getClassification",method = RequestMethod.POST)
     public ResponseEntity<?> getClassification(@RequestBody Map<String, Object> requestMap, HttpServletRequest request){
@@ -108,6 +113,42 @@ public class ExteernalClassificationRestController  extends SpringMVCBaseControl
         } catch (Exception ex){
             logger.error(ex.getMessage());
             return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/getfetchKeywordClassificationEmail",method = RequestMethod.POST)
+    public ResponseEntity<?> getfetchKeywordClassificationEmail(@RequestBody Map<String, Object> requestMap, HttpServletRequest request){
+        String userName = (String) requestMap.get("userName");
+        String password = (String) requestMap.get("password");
+        String group = (String) requestMap.get("group");
+        try {
+            if(validUser(userName, password)) {
+                Classification classification = classificationRestService.getClassificationgroupUuid(group);
+                ClassificationWebSiteInfoVO classificationWebSiteInfoVO = classificationWebsiteInfoRestService.getfetchKeywordClassificationEmail(classification.getUuid());
+                return new ResponseEntity<Object>(classificationWebSiteInfoVO,HttpStatus.OK);
+            }
+            return new ResponseEntity<Object>(false,HttpStatus.BAD_REQUEST);
+        } catch (Exception ex){
+            logger.error(ex.getMessage());
+            return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/updateClassificationEmail" , method = RequestMethod.POST)
+    public ResponseEntity<?> updateClassificationEmail(@RequestBody Map<String, Object> requestMap) {
+        try {
+            String userName = (String) requestMap.get("userName");
+            String password = (String) requestMap.get("password");
+            Integer uuid = (Integer) requestMap.get("uuid");
+            String emailAddress = (String) requestMap.get("emailAddress");
+            if(validUser(userName, password)) {
+                classificationWebsiteInfoRestService.updateEmailByUuid(uuid, emailAddress);
+                return new ResponseEntity<Object>(true, HttpStatus.OK);
+            }
+            return new ResponseEntity<Object>(false,HttpStatus.BAD_REQUEST);
+        }catch (Exception ex){
+            logger.error(ex.getMessage());
+            return new ResponseEntity<Object>(false,HttpStatus.BAD_REQUEST);
         }
     }
 }

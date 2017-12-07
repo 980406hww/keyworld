@@ -26,7 +26,7 @@ public class Classification extends BaseEntity{
     @TableField(value = "fCaptured")
     private Boolean captured;
 
-   /* @TableField(exist = false)
+    @TableField(exist = false)
     private List<ClassificationWebsitInfo> searchResults;
 
     public List<ClassificationWebsitInfo> getSearchResults() {
@@ -35,7 +35,7 @@ public class Classification extends BaseEntity{
 
     public void setSearchResults(List<ClassificationWebsitInfo> searchResults) {
         this.searchResults = searchResults;
-    }*/
+    }
 
     public String getKeyword() {
         return keyword;

@@ -47,4 +47,8 @@ public class ClassificationRestService extends ServiceImpl<ClassificationRestDao
         classificationWebsiteInfoRestService.updateClassificationInfo(classificationWebsitInfoList,uuid);
         classificationRestDao.updatefCaptured(uuid.intValue());
     }
+
+    public Classification getClassificationgroupUuid(String group) {
+        return classificationRestDao.getClassificationgroupUuid(group);
+    }
 }
