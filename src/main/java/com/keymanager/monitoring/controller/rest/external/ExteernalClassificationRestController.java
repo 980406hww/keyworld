@@ -125,12 +125,16 @@ public class ExteernalClassificationRestController  extends SpringMVCBaseControl
             if(validUser(userName, password)) {
                 Classification classification = classificationRestService.getClassificationgroupUuid(group);
                 ClassificationWebSiteInfoVO classificationWebSiteInfoVO = classificationWebsiteInfoRestService.getfetchKeywordClassificationEmail(classification.getUuid());
-                return new ResponseEntity<Object>(classificationWebSiteInfoVO,HttpStatus.OK);
+                if(classificationWebSiteInfoVO != null){
+                    return new ResponseEntity<Object>(classificationWebSiteInfoVO,HttpStatus.OK);
+                }else {
+                    return new ResponseEntity<Object>(null,HttpStatus.OK);
+                }
             }
             return new ResponseEntity<Object>(false,HttpStatus.BAD_REQUEST);
         } catch (Exception ex){
             logger.error(ex.getMessage());
-            return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
         }
     }
 

@@ -42,12 +42,16 @@ public class ClassificationWebsiteInfoRestService extends ServiceImpl<Classifica
     public ClassificationWebSiteInfoVO getfetchKeywordClassificationEmail(Long uuid) {
         int classificationUuid = uuid.intValue();
         ClassificationWebsitInfo classificationWebsitInfo = classificationWebsiteInfoRestDao.getfetchKeywordClassificationEmail(classificationUuid);
-        ClassificationWebSiteInfoVO classificationWebSiteInfoVO = new ClassificationWebSiteInfoVO();
-        classificationWebSiteInfoVO.setUuid(classificationWebsitInfo.getUuid().intValue());
-        classificationWebSiteInfoVO.setClassificationUuid(classificationUuid);
-        classificationWebSiteInfoVO.setEmailAddress(classificationWebsitInfo.getEmailAddress());
-        classificationWebSiteInfoVO.setHref(classificationWebsitInfo.getHref());
-        return classificationWebSiteInfoVO;
+        if(classificationWebsitInfo != null){
+            ClassificationWebSiteInfoVO classificationWebSiteInfoVO = new ClassificationWebSiteInfoVO();
+            classificationWebSiteInfoVO.setUuid(classificationWebsitInfo.getUuid().intValue());
+            classificationWebSiteInfoVO.setClassificationUuid(classificationUuid);
+            classificationWebSiteInfoVO.setEmailAddress(classificationWebsitInfo.getEmailAddress());
+            classificationWebSiteInfoVO.setHref(classificationWebsitInfo.getHref());
+            return classificationWebSiteInfoVO;
+        }else {
+            return null;
+        }
     }
 
     public void updateEmailByUuid(Integer uuid, String emailAddress) {
