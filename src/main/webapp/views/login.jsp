@@ -3,8 +3,7 @@
 <head>
     <title>用户登录</title>
     <meta name="viewport" content="width=device-width">
-    <%@ include file="/commons/basejs.jsp" %>
-    <script type="text/javascript" src="${staticPath }/static/login.js?v=20170115" charset="utf-8"></script>
+    <link rel="stylesheet" href="${staticPath }/static/toastmessage/css/jquery.toastmessage.css">
     <link rel="stylesheet" type="text/css" href="${staticPath }/static/style/css/login.css?v=201612202107" />
 </head>
 <body onkeydown="enterlogin();">
@@ -18,18 +17,16 @@
             <div class="initial_right_hand" id="right_hand"></div>
         </div>
         <P style="padding: 30px 0px 10px; position: relative;">
-            <span class="fi-torso icon-black" style="color: gray;margin-left: -15px;"></span>&nbsp;&nbsp;
             <input class="ipt" type="text" name="username" id="userName" placeholder="请输入登录名"/>
         </P>
         <P style="position: relative;">
-            <span class="p_logo" style="color: gray;margin-left: -10px;"></span>&nbsp;&nbsp;
             <input class="ipt" id="password" type="password" name="password" placeholder="请输入密码"/>
         </P>
         <P style="padding: 10px 0px 10px; position: relative;">
-            <input class="captcha" type="text" name="captcha" placeholder="请输入验证码"/>
+            <input class="captcha" style="width: 192px;" type="text" name="captcha" placeholder="请输入验证码"/>
             <img id="captcha" alt="验证码" src="${path }/captcha" data-src="${path }/captcha?t=" style="vertical-align:middle;border-radius:4px;width:94.5px;height:35px;cursor:pointer;">
         </P>
-        <span style="position: relative;float: left;margin-left: 33px;">
+        <span style="position: relative;float: left;margin-left: 54px;">
             <select id="entryType" name="entryType" style="width: 120px;height:20px;padding:0px;" class="ipt">
                 <option value="qz">全站链接</option>
                 <option value="pt">普通链接</option>
@@ -59,6 +56,10 @@
 <div style="text-align:center;">
 </div>
 <script>
+    document.write("<scr"+"ipt src=\"${staticPath }/static/easyui/jquery.min.js\"></sc"+"ript>");
+    document.write("<scr"+"ipt src=\"${staticPath }/static/easyui/jquery.easyui.min.js\"></sc"+"ript>");
+    document.write("<scr"+"ipt src=\"${staticPath }/static/extJs-min.js\"></sc"+"ript>");
+    document.write("<scr"+"ipt src=\"${staticPath }/static/login.js?v=20170115\"></sc"+"ript>");
     document.write("<scr"+"ipt src=\"${staticPath }/static/toastmessage/jquery.toastmessage.js\"></sc"+"ript>");
     var basePath = "${staticPath }";
     function checkEmail() {

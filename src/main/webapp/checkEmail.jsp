@@ -3,45 +3,8 @@
 <head>
 	<title>验证邮箱</title>
 	<meta name="viewport" content="width=device-width">
-	<%@ include file="/commons/basejs.jsp" %>
+	<link rel="stylesheet" href="${staticPath }/static/toastmessage/css/jquery.toastmessage.css">
 	<link rel="stylesheet" type="text/css" href="${staticPath }/static/style/css/login.css?v=201612202107" />
-	<script>
-        function checkLoginNameEmail() {
-            var forgetPassword = $("#forgetPasswordDialog").find("#forgetPassword");
-            var loginNameEmail = {};
-            loginNameEmail.loginName = forgetPassword.find("#loginName").val();
-            loginNameEmail.email = forgetPassword.find("#email").val();
-            if(!(loginNameEmail.loginName!=null && loginNameEmail.loginName != '')){
-                alert( "登录名不能为空");
-                return;
-            }
-            if(!(/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(loginNameEmail.email)) && (loginNameEmail.email != '')){
-                alert("请输入正确的邮箱");
-                return;
-            }
-            $.ajax({
-                url: '/internal/user/forgetPassword',
-                data: JSON.stringify(loginNameEmail),
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                type: 'POST',
-                success: function (result) {
-                    if (result) {
-                        $().toastmessage('showSuccessToast', "请注意查收邮件",true);
-                    } else {
-                        $().toastmessage('showErrorToast', "身份验证失败");
-                    }
-                },
-                error: function () {
-                    $().toastmessage('showSuccessToast', "请注意查收邮件");
-                }
-            });
-            $("#forgetPasswordDialog").dialog("close");
-            $('#forgetPassword')[0].reset();
-        }
-	</script>
 </head>
 <body>
 <div class="top_div"></div>
@@ -54,12 +17,12 @@
 				<div class="initial_right_hand" id="right_hand"></div>
 			</div>
 			<P style="padding: 30px 0px 10px; position: relative;">
-				<span class="fi-torso icon-black" style="color: gray;margin-left: 15px;"></span>
+				<span>账号</span>
 				<input class="ipt" type="text" id="loginName" name="loginName" value="${loginName}" placeholder="请输入登录名" style="margin-left: 25px;"/>
 			</P>
-			<P style="padding: 25px 0px 10px;position: relative;">
-				<span class="u_logo" ></span>
-				<input class="ipt" id="email" type="email" name="email" placeholder="请输入邮箱" style="margin-left: 60px;"/>
+			<P style="padding: 0px 0px 10px;position: relative;">
+				<span>邮箱</span>
+				<input class="ipt" id="email" type="email" name="email" placeholder="请输入邮箱" style="margin-left: 25px;"/>
 			</P>
 			<div style="height: 50px; line-height: 50px; margin-top: 10px;border-top-color: rgb(231, 231, 231); border-top-width: 1px; border-top-style: solid;">
 				<P style="margin: 0px 35px 20px 45px;">
@@ -74,5 +37,47 @@
 	</div>
 </div>
 <div style="text-align:center;"></div>
+<script>
+    document.write("<scr"+"ipt src=\"${staticPath }/static/easyui/jquery.min.js\"></sc"+"ript>");
+    document.write("<scr"+"ipt src=\"${staticPath }/static/toastmessage/jquery.toastmessage.js\"></sc"+"ript>");
+    function checkLoginNameEmail() {
+        var forgetPassword = $("#forgetPasswordDialog").find("#forgetPassword");
+        var loginNameEmail = {};
+        loginNameEmail.loginName = forgetPassword.find("#loginName").val();
+        loginNameEmail.email = forgetPassword.find("#email").val();
+        if(!(loginNameEmail.loginName!=null && loginNameEmail.loginName != '')){
+            alert( "请输入登录名");
+            return;
+        }
+        if(loginNameEmail.email == '') {
+            alert("请输入邮箱");
+            return;
+		}
+        if(!(/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(loginNameEmail.email)) && loginNameEmail.email != ''){
+            alert("请输入正确的邮箱");
+            return;
+        }
+        $.ajax({
+            url: '/internal/user/forgetPassword',
+            data: JSON.stringify(loginNameEmail),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            type: 'POST',
+            success: function (result) {
+                if (result) {
+                    $().toastmessage('showSuccessToast', "请注意查收邮件",true);
+                } else {
+                    $().toastmessage('showErrorToast', "身份验证失败");
+                }
+            },
+            error: function () {
+                $().toastmessage('showSuccessToast', "请注意查收邮件");
+            }
+        });
+        $('#forgetPassword')[0].reset();
+    }
+</script>
 </body>
 </html>

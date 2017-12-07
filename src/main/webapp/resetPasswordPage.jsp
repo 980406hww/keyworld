@@ -4,7 +4,7 @@
 <head>
 	<title>重置密码</title>
 	<meta name="viewport" content="width=device-width">
-	<%@ include file="/commons/basejs.jsp" %>
+	<link rel="stylesheet" href="${staticPath }/static/toastmessage/css/jquery.toastmessage.css">
 	<link rel="stylesheet" type="text/css" href="${staticPath }/static/style/css/login.css?v=201612202107" />
 </head>
 <body>
@@ -37,6 +37,7 @@
 <div style="text-align:center;">
 </div>
 <script>
+    document.write("<scr"+"ipt src=\"${staticPath }/static/easyui/jquery.min.js\"></sc"+"ript>");
     document.write("<scr"+"ipt src=\"${staticPath }/static/toastmessage/jquery.toastmessage.js\"></sc"+"ript>");
     function checkPassword() {
         var password = $("#password").val();
@@ -63,10 +64,9 @@
             success: function (result) {
                 if (result) {
                     $().toastmessage('showSuccessToast', "修改密码成功,即将跳转登陆页面...");
-                    setTimeout(function(){window.location.href="/login"},4000);
+                    setTimeout(function(){window.location.href="/login"},3000);
                 } else {
                     $().toastmessage('showErrorToast', "修改密码失败!");
-                    captchaForgetPassword();
                 }
             },
             error: function () {
