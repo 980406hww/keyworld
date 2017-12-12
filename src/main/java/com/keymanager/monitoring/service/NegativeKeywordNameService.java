@@ -65,7 +65,7 @@ public class NegativeKeywordNameService extends ServiceImpl<NegativeKeywordNameD
     }
 
     public NegativeKeywordName getNegativeKeywordName(String type, String group) {
-        NegativeKeywordName negativeKeywordName = negativeKeywordName = negativeKeywordNameDao.getNegativeKeywordName(type, group);
+        NegativeKeywordName negativeKeywordName = negativeKeywordNameDao.getNegativeKeywordName(type, group);
         return negativeKeywordName;
     }
 
