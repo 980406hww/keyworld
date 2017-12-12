@@ -501,6 +501,7 @@
 		</tr>
 	</table>
 </div>
+<%@ include file="/commons/loadjs.jsp" %>
 <script language="javascript">
     var dateStr = new Date(); // 当天日期
     var m = dateStr.getMonth() + 1 < 10 ? "0" + (dateStr.getMonth() + 1) : (dateStr.getMonth() + 1);
@@ -508,7 +509,6 @@
     var today = dateStr.getFullYear() + "-" + m + "-" + d;
 
     document.write("<scr"+"ipt src=\"${staticPath}/qzsetting/list.js\"></sc"+"ript>");
-    document.write("<scr"+"ipt src=\"${staticPath }/static/toastmessage/jquery.toastmessage.js\"></sc"+"ript>");
 </script>
 </body>
 </html>

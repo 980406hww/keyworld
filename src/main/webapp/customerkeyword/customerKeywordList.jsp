@@ -432,9 +432,9 @@
     <input type="hidden" name="creationToTime" id="creationToTimeHidden" value="" />
     <input type="hidden" name="orderingElement" id="orderElementHidden" value="" />
 </form>
+<%@ include file="/commons/loadjs.jsp" %>
 <script language="javascript">
     document.write("<scr"+"ipt src=\"${staticPath}/customerkeyword/customerKeywordList.js\"></sc"+"ript>");
-    document.write("<scr"+"ipt src=\"${staticPath }/static/toastmessage/jquery.toastmessage.js\"></sc"+"ript>");
     $(function () {
         initPaging();
         initNoPositionChecked();//初始化排名为0的初始值

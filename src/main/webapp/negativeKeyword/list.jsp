@@ -118,9 +118,9 @@
     <input type="hidden" name="group" id="groupHidden" value="">
     <input type="hidden" name="hasEmail" id="hasEmailHidden" value=""/>
 </form>
+<%@ include file="/commons/loadjs.jsp" %>
 <script language="javascript" type="text/javascript">
     document.write("<scr"+"ipt src=\"${staticPath}/negativeKeyword/list.js\"></sc"+"ript>");
-    document.write("<scr"+"ipt src=\"${staticPath }/static/toastmessage/jquery.toastmessage.js\"></sc"+"ript>");
 
     <shiro:hasPermission name="/internal/negativeKeywordName/searchNegativeKeywordNames">
     function findPositionInfos(uuid) {

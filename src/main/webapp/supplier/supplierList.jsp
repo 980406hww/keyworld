@@ -207,9 +207,9 @@
     </select>
     </div>
 </div>
+<%@ include file="/commons/loadjs.jsp" %>
 <script>
     document.write("<scr"+"ipt src=\"${staticPath}/supplier/supplierList.js\"></sc"+"ript>");
-    document.write("<scr"+"ipt src=\"${staticPath }/static/toastmessage/jquery.toastmessage.js\"></sc"+"ript>");
 </script>
 </body>
 </html>

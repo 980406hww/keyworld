@@ -381,9 +381,9 @@
     </select>
     </div>
 </div>
+<%@ include file="/commons/loadjs.jsp" %>
 <script type="text/javascript">
     document.write("<scr"+"ipt src=\"${staticPath}/customer/customerlist.js\"></sc"+"ript>");
-    document.write("<scr"+"ipt src=\"${staticPath }/static/toastmessage/jquery.toastmessage.js\"></sc"+"ript>");
     $(function () {
         if(${isDepartmentManager}) {
             $("#loginName").val("${customerCriteria.loginName}");

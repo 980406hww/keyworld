@@ -176,9 +176,9 @@
 			</table>
 		</form>
 	</div>
+<%@ include file="/commons/loadjs.jsp" %>
 <script language="javascript">
     document.write("<scr"+"ipt src=\"${staticPath}/negativelist/list.js\"></sc"+"ript>");
-    document.write("<scr"+"ipt src=\"${staticPath }/static/toastmessage/jquery.toastmessage.js\"></sc"+"ript>");
 </script>
 </body>
 </html>

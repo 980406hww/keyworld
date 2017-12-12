@@ -58,7 +58,6 @@
 <script>
     document.write("<scr"+"ipt src=\"${staticPath }/static/easyui/jquery.min.js\"></sc"+"ript>");
     document.write("<scr"+"ipt src=\"${staticPath }/static/easyui/jquery.easyui.min.js\"></sc"+"ript>");
-    document.write("<scr"+"ipt src=\"${staticPath }/static/extJs-min.js\"></sc"+"ript>");
     document.write("<scr"+"ipt src=\"${staticPath }/static/login.js?v=20170115\"></sc"+"ript>");
     document.write("<scr"+"ipt src=\"${staticPath }/static/toastmessage/jquery.toastmessage.js\"></sc"+"ript>");
     var basePath = "${staticPath }";

@@ -43,16 +43,6 @@
             #customerKeywordTable td{
                 text-align: left;
             }
-            .tip-yellow {
-                z-index:1000;
-                text-align:left;
-                padding:7px;
-                font-size: 12px;
-                min-width:300px;
-                max-width:550px;
-                color:#8c3901;
-                background-color: #fff2de;
-            }
         </style>
         <title>关键字统计</title>
     </head>
@@ -217,12 +207,11 @@
     </select>
     </div>
 </div>
+<%@ include file="/commons/loadjs.jsp" %>
 <script language="javascript">
     document.write("<scr"+"ipt src=\"${staticPath}/customerkeyword/keywordfinderList.js\"></sc"+"ript>");
-    document.write("<scr"+"ipt src=\"${staticPath }/static/toastmessage/jquery.toastmessage.js\"></sc"+"ript>");
     $(function () {
         $("#showCustomerTableDiv").css("margin-top",$("#customerKeywordTopDiv").height());
-        $(".floatTd").poshytip();
         initPaging();
         initNoPositionChecked();
         alignTableHeader();

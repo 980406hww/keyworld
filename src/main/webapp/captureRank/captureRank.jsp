@@ -3,7 +3,6 @@
 <head>
     <%@ include file="/commons/basejs.jsp" %>
     <%@ include file="/commons/global.jsp" %>
-    <script language="javascript" type="text/javascript" src="/common.js"></script>
     <style type="text/css">
         ul{list-style: none}
         ul li{margin: 5px}
@@ -147,9 +146,9 @@
     </select>
     </div>
 </div>
+<%@ include file="/commons/loadjs.jsp" %>
 <script language="javascript" type="text/javascript">
     document.write("<scr"+"ipt src=\"${staticPath}/captureRank/captureRank.js\"></sc"+"ript>");
-    document.write("<scr"+"ipt src=\"${staticPath }/static/toastmessage/jquery.toastmessage.js\"></sc"+"ript>");
 </script>
 </body>
 </html>

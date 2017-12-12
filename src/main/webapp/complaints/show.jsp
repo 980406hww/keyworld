@@ -200,9 +200,9 @@
         </table>
     </form>
 </div>
+<%@ include file="/commons/loadjs.jsp" %>
 <script type="text/javascript">
     document.write("<scr"+"ipt src=\"${staticPath}/complaints/show.js\"></sc"+"ript>");
-    document.write("<scr"+"ipt src=\"${staticPath }/static/toastmessage/jquery.toastmessage.js\"></sc"+"ript>");
 </script>
 </body>
 </html>

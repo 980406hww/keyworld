@@ -148,6 +148,7 @@
 	<input type="hidden" name="optimizeGroupName" id="optimizeGroupName" value=""/>
 	<input type="hidden" name="invalidRefreshCount" id="invalidRefreshCount" value=""/>
 </form>
+<%@ include file="/commons/loadjs.jsp" %>
 <script language="javascript">
     $(function () {
         $("#showRefreshStatInfoDiv").css("margin-top",$("#topDiv").height());

@@ -806,9 +806,9 @@
 		<form id="downloadVNCForm" action="/internal/clientstatus/downloadVNCFile" method="post"></form>
 		<form id="downloadFullVNCForm" action="/internal/clientstatus/downloadFullVNCFile" method="post"></form>
 	</div>
+<%@ include file="/commons/loadjs.jsp" %>
 <script language="javascript">
     document.write("<scr"+"ipt src=\"${staticPath}/client/list.js\"></sc"+"ript>");
-    document.write("<scr"+"ipt src=\"${staticPath }/static/toastmessage/jquery.toastmessage.js\"></sc"+"ript>");
 
     <shiro:hasPermission name="/internal/clientstatus/updateUpgradeFailedReason">
     function updateUpgradeFailedReason(self){

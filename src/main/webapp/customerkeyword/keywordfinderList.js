@@ -70,8 +70,7 @@ function updateCustomerKeywordStatus(status) {
         type: 'POST',
         success: function (status) {
             if (status) {
-                $().toastmessage('showSuccessToast', "操作成功");
-                window.location.reload();
+                $().toastmessage('showSuccessToast', "操作成功", true);
             } else {
                 $().toastmessage('showErrorToast', "操作失败");
             }
