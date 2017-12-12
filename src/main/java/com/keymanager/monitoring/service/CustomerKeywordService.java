@@ -301,9 +301,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                 if (TerminalTypeEnum.PC.name().equals(customerKeyword.getTerminalType())) {
                     customerKeyword.setInitialIndexCount(baiduIndexCriteria.getPcIndex());
                     customerKeyword.setCurrentIndexCount(baiduIndexCriteria.getPcIndex());
+                    customerKeyword.setOptimizePlanCount(baiduIndexCriteria.getPcIndex());
                 } else {
                     customerKeyword.setInitialIndexCount(baiduIndexCriteria.getPhoneIndex());
                     customerKeyword.setCurrentIndexCount(baiduIndexCriteria.getPhoneIndex());
+                    customerKeyword.setOptimizePlanCount(baiduIndexCriteria.getPhoneIndex());
                 }
                 calculatePrice(customerKeyword);
                 customerKeyword.setUpdateTime(new Date());
