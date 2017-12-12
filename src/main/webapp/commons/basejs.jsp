@@ -7,7 +7,6 @@
 <%-- [菜单栏样式] --%>
 <link rel="stylesheet" type="text/css" href="${staticPath }/static/style/css/dreamlu.css?v=10" />
 <link rel="stylesheet" type="text/css" href="${staticPath }/static/foundation-icons/foundation-icons.css" />
-<script type="text/javascript" src="${staticPath}/static/My97DatePicker/WdatePicker.js"></script>
 <script type="text/javascript">
     var basePath = "${staticPath }";
     window.UEDITOR_HOME_URL = "${staticPath }/static/ueditor/";

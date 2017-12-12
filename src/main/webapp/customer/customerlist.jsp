@@ -382,8 +382,8 @@
     </div>
 </div>
 <%@ include file="/commons/loadjs.jsp" %>
+<script src="${staticPath }/customer/customerlist.js"></script>
 <script type="text/javascript">
-    document.write("<scr"+"ipt src=\"${staticPath}/customer/customerlist.js\"></sc"+"ript>");
     $(function () {
         if(${isDepartmentManager}) {
             $("#loginName").val("${customerCriteria.loginName}");

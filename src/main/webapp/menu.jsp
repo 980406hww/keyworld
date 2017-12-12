@@ -69,7 +69,6 @@
                 })
             }
         });
-        //$().maps();
         $(".venus-menu").show();
         $("#editUserPwdDiv").hide();
     });
@@ -101,16 +100,33 @@
     function logout(){
         $.messager.confirm('提示','确定要退出?',function(r){
             if (r){
-                progressLoad();
                 $.post('${path }/logout', function(result) {
                     if(result.success){
-                        progressClose();
                         window.location.href='${path }';
                     }
                 }, 'json');
             }
         });
     }
+
+    $.modalDialog = function(options) {
+        if ($.modalDialog.handler == undefined) {// 避免重复弹出
+            var opts = $.extend({
+                title : '',
+                width : 840,
+                height : 680,
+                modal : true,
+                onClose : function() {
+                    $.modalDialog.handler = undefined;
+                    $(this).dialog('destroy');
+                },
+                onOpen : function() {
+                }
+            }, options);
+            opts.modal = true;// 强制此dialog为模式化，无视传递过来的modal参数
+            return $.modalDialog.handler = $('<div/>').dialog(opts);
+        }
+    };
 
     function editUserPwd() {
         parent.$.modalDialog({

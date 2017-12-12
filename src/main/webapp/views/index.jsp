@@ -157,36 +157,6 @@
             tab.panel('refresh', options.href);
         }
     }
-    
-    function logout(){
-        $.messager.confirm('提示','确定要退出?',function(r){
-            if (r){
-                progressLoad();
-                $.post('${path }/logout', function(result) {
-                    if(result.success){
-                        progressClose();
-                        window.location.href='${path }';
-                    }
-                }, 'json');
-            }
-        });
-    }
-
-    function editUserPwd() {
-        parent.$.modalDialog({
-            title : '修改密码',
-            width : 300,
-            height : 250,
-            href : '${path }/user/editPwdPage',
-            buttons : [ {
-                text : '确定',
-                handler : function() {
-                    var f = parent.$.modalDialog.handler.find('#editUserPwdForm');
-                    f.submit();
-                }
-            } ]
-        });
-    }
 </script>
 </head>
 <body>
@@ -199,11 +169,6 @@
                 <%@include file="/menu.jsp"%>
             </div>
         </div>
-        <%--<div data-options="region:'west',split:true" title="菜单" style="width: 160px; overflow: hidden;overflow-y:auto; padding:0px">
-            <div class="well well-small" style="padding: 5px 5px 5px 5px;">
-                <ul id="layout_west_tree" class="ztree"></ul>
-            </div>
-        </div>--%>
         <ul id="layout_west_tree" class="ztree" style="display: none"></ul>
         <div data-options="region:'center'" style="overflow: hidden;">
             <div id="index_tabs" style="overflow: hidden;">

@@ -1,6 +1,7 @@
 <%@ include file="/commons/global.jsp" %>
 <html>
     <head>
+        <script type="text/javascript" src="${staticPath}/static/My97DatePicker/WdatePicker.js"></script>
         <%@ include file="/commons/basejs.jsp" %>
         <style>
             td{
@@ -208,8 +209,8 @@
     </div>
 </div>
 <%@ include file="/commons/loadjs.jsp" %>
+<script src="${staticPath }/customerkeyword/keywordfinderList.js"></script>
 <script language="javascript">
-    document.write("<scr"+"ipt src=\"${staticPath}/customerkeyword/keywordfinderList.js\"></sc"+"ript>");
     $(function () {
         $("#showCustomerTableDiv").css("margin-top",$("#customerKeywordTopDiv").height());
         initPaging();

@@ -47,6 +47,7 @@
 			display: none;
 		}
 	</style>
+	<script type="text/javascript" src="${staticPath}/static/My97DatePicker/WdatePicker.js"></script>
 </head>
 <body>
 <%@ include file="/commons/basejs.jsp" %>
@@ -502,13 +503,12 @@
 	</table>
 </div>
 <%@ include file="/commons/loadjs.jsp" %>
+<script src="${staticPath }/qzsetting/list.js"></script>
 <script language="javascript">
     var dateStr = new Date(); // 当天日期
     var m = dateStr.getMonth() + 1 < 10 ? "0" + (dateStr.getMonth() + 1) : (dateStr.getMonth() + 1);
     var d = dateStr.getDate() < 10 ? "0" + dateStr.getDate() : dateStr.getDate();
     var today = dateStr.getFullYear() + "-" + m + "-" + d;
-
-    document.write("<scr"+"ipt src=\"${staticPath}/qzsetting/list.js\"></sc"+"ript>");
 </script>
 </body>
 </html>

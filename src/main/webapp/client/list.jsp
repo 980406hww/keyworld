@@ -52,6 +52,7 @@
 }
 -->
 </style>
+<script type="text/javascript" src="${staticPath}/static/My97DatePicker/WdatePicker.js"></script>
 </head>
 <body>
 <%@ include file="/commons/basejs.jsp" %>
@@ -807,9 +808,8 @@
 		<form id="downloadFullVNCForm" action="/internal/clientstatus/downloadFullVNCFile" method="post"></form>
 	</div>
 <%@ include file="/commons/loadjs.jsp" %>
+<script src="${staticPath }/client/list.js"></script>
 <script language="javascript">
-    document.write("<scr"+"ipt src=\"${staticPath}/client/list.js\"></sc"+"ript>");
-
     <shiro:hasPermission name="/internal/clientstatus/updateUpgradeFailedReason">
     function updateUpgradeFailedReason(self){
         var clientStatus = {};

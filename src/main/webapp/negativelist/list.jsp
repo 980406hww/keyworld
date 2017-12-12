@@ -177,9 +177,7 @@
 		</form>
 	</div>
 <%@ include file="/commons/loadjs.jsp" %>
-<script language="javascript">
-    document.write("<scr"+"ipt src=\"${staticPath}/negativelist/list.js\"></sc"+"ript>");
-</script>
+<script src="${staticPath }/negativelist/list.js"></script>
 </body>
 </html>
 

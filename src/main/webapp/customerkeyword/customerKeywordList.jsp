@@ -51,7 +51,7 @@
             #saveCustomerKeywordDialog li{margin: 5px 0;}
             #saveCustomerKeywordDialog .customerKeywordSpanClass{width: 70px;display: inline-block;text-align: right;}
         </style>
-
+        <script type="text/javascript" src="${staticPath}/static/My97DatePicker/WdatePicker.js"></script>
     </head>
 <body>
 <%@include file="/commons/basejs.jsp" %>
@@ -433,8 +433,8 @@
     <input type="hidden" name="orderingElement" id="orderElementHidden" value="" />
 </form>
 <%@ include file="/commons/loadjs.jsp" %>
+<script src="${staticPath }/customerkeyword/customerKeywordList.js"></script>
 <script language="javascript">
-    document.write("<scr"+"ipt src=\"${staticPath}/customerkeyword/customerKeywordList.js\"></sc"+"ript>");
     $(function () {
         initPaging();
         initNoPositionChecked();//初始化排名为0的初始值

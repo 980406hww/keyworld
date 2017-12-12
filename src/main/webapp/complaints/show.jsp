@@ -201,8 +201,6 @@
     </form>
 </div>
 <%@ include file="/commons/loadjs.jsp" %>
-<script type="text/javascript">
-    document.write("<scr"+"ipt src=\"${staticPath}/complaints/show.js\"></sc"+"ript>");
-</script>
+<script src="${staticPath }/complaints/show.js"></script>
 </body>
 </html>

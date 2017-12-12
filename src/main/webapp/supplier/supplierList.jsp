@@ -208,8 +208,6 @@
     </div>
 </div>
 <%@ include file="/commons/loadjs.jsp" %>
-<script>
-    document.write("<scr"+"ipt src=\"${staticPath}/supplier/supplierList.js\"></sc"+"ript>");
-</script>
+<script src="${staticPath }/supplier/supplierList.js"></script>
 </body>
 </html>

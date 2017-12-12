@@ -147,8 +147,6 @@
     </div>
 </div>
 <%@ include file="/commons/loadjs.jsp" %>
-<script language="javascript" type="text/javascript">
-    document.write("<scr"+"ipt src=\"${staticPath}/captureRank/captureRank.js\"></sc"+"ript>");
-</script>
+<script src="${staticPath}/captureRank/captureRank.js"></script>
 </body>
 </html>
