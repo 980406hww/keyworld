@@ -3,16 +3,21 @@
 <mapper namespace="com.keymanager.monitoring.dao.ClientStatusDao">
     <select id="searchClientStatusForRefreshStat" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria" resultType="com.keymanager.monitoring.entity.ClientStatus">
         SELECT DISTINCT
-          <include refid="selectCol" />
-        FROM t_customer_keyword ck, t_customer c, t_client_status cs
+        cs.fPageNo AS "pageNo",
+        cs.fContinuousFailCount AS "continuousFailCount",
+        cs.fGroup AS "group",
+        cs.fLastVisitTime AS "lastVisitTime"
+        FROM t_customer_keyword ck, t_client_status cs
         WHERE ck.fType = #{customerKeywordRefreshStatInfoCriteria.entryType}
         AND cs.fTerminalType = #{customerKeywordRefreshStatInfoCriteria.terminalType}
         AND cs.fValid = 1
-        AND ck.fCustomerUuid = c.fUuid
         AND ck.fOptimizeGroupName = cs.fGroup
-        <if test="customerKeywordRefreshStatInfoCriteria.groupName!=null || customerKeywordRefreshStatInfoCriteria.groupName!=''">AND ck.fOptimizeGroupName like concat('%', #{customerKeywordRefreshStatInfoCriteria.groupName}, '%')</if>
-        <if test="customerKeywordRefreshStatInfoCriteria.customerName!=null || customerKeywordRefreshStatInfoCriteria.customerName!=''">AND c.fContactPerson like concat('%', #{customerKeywordRefreshStatInfoCriteria.customerName}, '%')</if>
-        ORDER BY ck.fOptimizeGroupName
+        <if test="customerKeywordRefreshStatInfoCriteria.groupName!=null and customerKeywordRefreshStatInfoCriteria.groupName!=''">AND ck.fOptimizeGroupName like '${customerKeywordRefreshStatInfoCriteria.groupName}%'</if>
+        <if test="customerKeywordRefreshStatInfoCriteria.customerName!=null and customerKeywordRefreshStatInfoCriteria.customerName!=''">
+            AND EXISTS  (select 1 from t_customer c where ck.fCustomerUuid = c.fUuid
+            AND c.fContactPerson like '%${customerKeywordRefreshStatInfoCriteria.customerName}%')
+        </if>
+        ORDER BY cs.fGroup
     </select>
 
     <sql id="selectCol">

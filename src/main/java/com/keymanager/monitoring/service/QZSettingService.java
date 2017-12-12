@@ -300,7 +300,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 									CustomerKeyword customerKeyword = createCustomerKeyword(qzSettingCriteria,qzOperationType,customerKeywordVO);
 									insertingCustomerKeywords.add(customerKeyword);
 								} else {
-									if(qzOperationType.equals(customerKeywordVO.getTerminalType())) {
+									if(qzOperationType.getOperationType().equals(customerKeywordVO.getTerminalType())) {
 										CustomerKeyword customerKeyword = createCustomerKeyword(qzSettingCriteria,qzOperationType,customerKeywordVO);
 										insertingCustomerKeywords.add(customerKeyword);
 									}

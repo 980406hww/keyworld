@@ -5,9 +5,7 @@
 	<title>重置密码</title>
 	<meta name="viewport" content="width=device-width">
 	<%@ include file="/commons/basejs.jsp" %>
-	<script language="javascript" type="text/javascript" src="/toastmessage/jquery.toastmessage.js"></script>
 	<script language="javascript" type="text/javascript" src="/static/login.js"></script>
-	<link rel="stylesheet" href="/toastmessage/css/jquery.toastmessage.css">
 	<link rel="stylesheet" type="text/css" href="${staticPath }/static/style/css/login.css?v=201612202107" />
 	<script>
 		function checkPassword() {

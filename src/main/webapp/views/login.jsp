@@ -4,8 +4,6 @@
     <title>用户登录</title>
     <meta name="viewport" content="width=device-width">
     <%@ include file="/commons/basejs.jsp" %>
-    <script language="javascript" type="text/javascript" src="/toastmessage/jquery.toastmessage.js"></script>
-    <link rel="stylesheet" href="/toastmessage/css/jquery.toastmessage.css">
     <link rel="stylesheet" type="text/css" href="${staticPath }/static/style/css/login.css?v=201612202107" />
     <script type="text/javascript" src="${staticPath }/static/login.js?v=20170115" charset="utf-8"></script>
     <script>

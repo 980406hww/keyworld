@@ -118,6 +118,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             }else {
                 captureTitle.setWholeUrl(qzSetting.getDomain());
             }
+            updateCaptureTitleQueryTime((long)captureTitle.getUuid());
             return captureTitle;
         }
     }
@@ -127,9 +128,16 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         qzCaptureTitleLog.setGroup(groupName);
         qzCaptureTitleLog.setTerminalType(terminalType);
         CustomerKeywordForCaptureTitle captureTitle = customerKeywordDao.searchCustomerKeywordForCaptureTitle(qzCaptureTitleLog,searchEngine);
-       // ObjectMapper mapper = new ObjectMapper();
-        //return mapper.writeValueAsString(captureTitle);
+        if(null != captureTitle) {
+            updateCaptureTitleQueryTime((long)captureTitle.getUuid());
+        }
         return captureTitle;
+    }
+
+    private void updateCaptureTitleQueryTime(Long uuid) {
+        CustomerKeyword customerKeyword = customerKeywordDao.selectById(uuid);
+        customerKeyword.setCaptureTitleQueryTime(new Date());
+        customerKeywordDao.updateById(customerKeyword);
     }
 
     public void cleanTitle(CustomerKeywordCleanCriteria customerKeywordCleanCriteria) {
@@ -680,6 +688,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeywordForCapturePosition.setUrl(customerKeyword.getUrl());
             customerKeywordForCapturePosition.setTitle(customerKeyword.getTitle());
             customerKeywordForCapturePosition.setSearchEngine(customerKeyword.getSearchEngine());
+            customerKeywordForCapturePosition.setTerminalType(customerKeyword.getTerminalType());
             customerKeyword.setCapturePositionQueryTime(new Date());
             customerKeywordDao.updateById(customerKeyword);
             return customerKeywordForCapturePosition;
