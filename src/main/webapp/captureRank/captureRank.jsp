@@ -314,6 +314,43 @@
             });
         }
 
+        function captureRankJobStatus(uuid,status) {
+            if(uuid==''){
+                alert('请选择要操作的关键字');
+                return;
+            }
+            if(status == true) {
+                if (confirm("确认要暂停选中的任务吗?") == false) return;
+            } else {
+                if (confirm("确认要取消暂停的任务吗?") == false) return;
+            }
+            var captureRankJob = {};
+            captureRankJob.uuid = parseInt(uuid);
+            captureRankJob.status = status;
+
+            $.ajax({
+                url: '/internal/captureRank/captureRankJobStatus',
+                data: JSON.stringify(captureRankJob),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                type: 'POST',
+                success: function (data) {
+                    if (data) {
+                        $().toastmessage('showSuccessToast', "暂停成功", true);
+                    }
+                    else {
+                        $().toastmessage('showErrorToast', "暂停失败");
+                    }
+                },
+                error: function () {
+                    $().toastmessage('showErrorToast', "暂停失败");
+                }
+            });
+        }
+
         function getUuids() {
             var a = document.getElementsByName("uuid");
             var uuids = '';
@@ -467,7 +504,7 @@
             </td>
             <td width=40><fmt:formatDate value="${captureRankJob.exectionTime}" pattern="HH:mm"/></td>
             <td width=60>${captureRankJob.lastExecutionDate}</td>
-            <td width=50>${captureRankJob.exectionStatus}</td>
+            <td width=50>${captureRankJob.exectionStatus}<font color="red">${captureRankJob.captureRankJobStatus == true ? "暂停中" : ""}</font></td>
             <td width=50>${captureRankJob.rowNumber}</td>
             <td width=60>${captureRankJob.captureInterval}</td>
             <td width=40>${captureRankJob.executionCycle}</td>
@@ -487,6 +524,16 @@
                 <shiro:hasPermission name="/internal/captureRank/deleteCaptureRankJob">
                 <a href="javascript:deleteCaptureRankJob('${captureRankJob.uuid}')">删除</a>
                 </shiro:hasPermission>
+               <%-- <a href="javascript:captureRankJobStatus('${captureRankJob.uuid}','true')">暂停</a>
+                <a href="javascript:captureRankJobStatus('${captureRankJob.uuid}','false'),false">取消暂停</a>--%>
+                <c:choose>
+                    <c:when test="${captureRankJob.captureRankJobStatus}">
+                        <a href="javascript:captureRankJobStatus('${captureRankJob.uuid}','false'),false">取消暂停</a>
+                    </c:when>
+                    <c:otherwise>
+                        <a href="javascript:captureRankJobStatus('${captureRankJob.uuid}','true')">暂停</a>
+                    </c:otherwise>
+                </c:choose>
             </td>
         </tr>
         </c:forEach>

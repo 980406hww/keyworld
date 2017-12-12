@@ -9,6 +9,7 @@
         c.fExectionType AS `exectionType`,
         c.fExectionTime AS `exectionTime`,
         c.fExectionStatus  AS `exectionStatus`,
+        c.fCaptureRankJobStatus  AS `captureRankJobStatus`,
         c.fStartTime AS `startTime`,
         c.fEndTime AS `endTime`,
         c.fCreateBy AS `createBy`,
@@ -42,6 +43,7 @@
         (c.fExectionStatus='Complete' and c.fExectionType='Everyday' and c.fLastExecutionDate &lt; curdate())
         )
         and c.fExectionTime &lt;= curtime()
+        AND c.fCaptureRankJobStatus = 0
         order By c.fExectionTime
         limit 1;
     </select>
@@ -51,6 +53,8 @@
         from t_capture_rank_job c
         where
         c.fExectionStatus='Processing'
+        AND
+        c.fCaptureRankJobStatus = 0
         order By c.fExectionTime
         limit 1;
     </select>

@@ -34,6 +34,9 @@ public class CaptureRankJob extends BaseEntity{
     @TableField(value = "fExectionStatus")
     private String exectionStatus;
 
+    @TableField(value = "fCaptureRankJobStatus")
+    private Boolean captureRankJobStatus;
+
     @TableField(value = "fStartTime")
     private Date startTime;
 
@@ -126,6 +129,14 @@ public class CaptureRankJob extends BaseEntity{
 
     public void setExectionType(String exectionType) {
         this.exectionType = exectionType;
+    }
+
+    public Boolean getCaptureRankJobStatus() {
+        return captureRankJobStatus;
+    }
+
+    public void setCaptureRankJobStatus(Boolean captureRankJobStatus) {
+        this.captureRankJobStatus = captureRankJobStatus;
     }
 
     public Time getExectionTime() {
