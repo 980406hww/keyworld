@@ -421,7 +421,10 @@
         WHERE ck.fOptimizeGroupName = #{groupName} and ck.fStatus = 1 and ck.fTerminalType = #{terminalType}
         and (ck.fQueryTime is NULL or DATE_SUB(NOW(), INTERVAL ck.fQueryInterval MINUTE) > ck.fQueryTime) and ck.fUrl <![CDATA[<>]]> ''
         and ((ck.fCurrentPosition = 0 and ck.fInvalidRefreshCount <![CDATA[<]]> 2) or (ck.fCurrentPosition > 0 and ck.fInvalidRefreshCount <![CDATA[<]]> #{maxInvalidCount}))
-        and ck.fBigKeyword = #{bigKeyowrd} and ((ck.fOptimizedCount <![CDATA[<]]> ck.fOptimizePlanCount) or (ck.fOptimizeDate is null) or (ck.fOptimizeDate <![CDATA[<]]> current_date()))
+        and ((ck.fOptimizedCount <![CDATA[<]]> ck.fOptimizePlanCount) or (ck.fOptimizeDate is null) or (ck.fOptimizeDate <![CDATA[<]]> current_date()))
+        <if test="bigKeyword == true">
+            and ck.fBigKeyword = 1
+        </if>
         order by ck.fQueryTime limit 1
     </select>
 

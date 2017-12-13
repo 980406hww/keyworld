@@ -497,7 +497,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         do{
             boolean isNormalKeyword = keywordOptimizationCountService.optimizeNormalKeyword(clientStatus.getGroup());
             customerKeyword = customerKeywordDao.getCustomerKeywordForOptimization(terminalType, clientStatus.getGroup(),
-                    Integer.parseInt(maxInvalidCountConfig.getValue()), isNormalKeyword ? 0 : 1);
+                    Integer.parseInt(maxInvalidCountConfig.getValue()), isNormalKeyword);
             retryCount++;
             if(customerKeyword == null){
                 keywordOptimizationCountService.init(clientStatus.getGroup());
@@ -607,9 +607,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void resetBigKeywordIndicator(String groupName, int maxInvalidCount) {
-        customerKeywordDao.cleanBigKeywordIndicator(groupName);
         List<Map> remainingOptimizationCountMap = customerKeywordDao.searchRemainingOptimizationCount(groupName, maxInvalidCount);
         if(CollectionUtils.isNotEmpty(remainingOptimizationCountMap)) {
+            customerKeywordDao.cleanBigKeywordIndicator(groupName);
             List<Long> customerKeywordUuids = new ArrayList<Long>();
             for(Map map : remainingOptimizationCountMap) {
                 customerKeywordUuids.add(Long.parseLong(map.get("uuid").toString()));
