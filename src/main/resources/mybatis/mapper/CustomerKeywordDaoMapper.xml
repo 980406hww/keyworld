@@ -421,7 +421,10 @@
         WHERE ck.fOptimizeGroupName = #{groupName} and ck.fStatus = 1 and ck.fTerminalType = #{terminalType}
         and (ck.fQueryTime is NULL or DATE_SUB(NOW(), INTERVAL ck.fQueryInterval MINUTE) > ck.fQueryTime) and ck.fUrl <![CDATA[<>]]> ''
         and ((ck.fCurrentPosition = 0 and ck.fInvalidRefreshCount <![CDATA[<]]> 2) or (ck.fCurrentPosition > 0 and ck.fInvalidRefreshCount <![CDATA[<]]> #{maxInvalidCount}))
-        and ck.fBigKeyword = #{bigKeyowrd} and ((ck.fOptimizedCount <![CDATA[<]]> ck.fOptimizePlanCount) or (ck.fOptimizeDate is null) or (ck.fOptimizeDate <![CDATA[<]]> current_date()))
+        and ((ck.fOptimizedCount <![CDATA[<]]> ck.fOptimizePlanCount) or (ck.fOptimizeDate is null) or (ck.fOptimizeDate <![CDATA[<]]> current_date()))
+        <if test="bigKeyword == true">
+            and ck.fBigKeyword = 1
+        </if>
         order by ck.fQueryTime limit 1
     </select>
 
@@ -433,7 +436,7 @@
     <update id="updateOptimizationResult">
         UPDATE t_customer_keyword
         SET fLastOptimizeDateTime = now(), fOptimizedCount = fOptimizedCount + #{count},
-        <if test="count == 0">fInvalidRefreshCount = 0, </if>
+        <if test="count > 0">fInvalidRefreshCount = 0, </if>
         fOptimizedPercentage = fOptimizedCount/fOptimizePlanCount, fOptimizeDate = CURRENT_DATE(),fUpdateTime = NOW()
 		WHERE fUuid = #{customerKeywordUuid}
     </update>
@@ -492,7 +495,16 @@
     <update id="resetInvalidRefreshCount" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria">
         UPDATE t_customer_keyword SET fInvalidRefreshCount = 0 WHERE fType = #{customerKeywordRefreshStatInfoCriteria.entryType} and fTerminalType = #{customerKeywordRefreshStatInfoCriteria.terminalType}
         <if test="customerKeywordRefreshStatInfoCriteria.customerName!=null and customerKeywordRefreshStatInfoCriteria.customerName!=''">AND EXISTS (SELECT 1 FROM t_customer c WHERE c.fUuid = fCustomerUuid AND c.fContactPerson LIKE concat('%', #{customerKeywordRefreshStatInfoCriteria.customerName}, '%'))</if>
-        <if test="customerKeywordRefreshStatInfoCriteria.groupName!=null and customerKeywordRefreshStatInfoCriteria.groupName!=''">AND fOptimizeGroupName LIKE concat('%', #{customerKeywordRefreshStatInfoCriteria.groupName}, '%')</if>
+        <if test="customerKeywordRefreshStatInfoCriteria.groupName!=null and customerKeywordRefreshStatInfoCriteria.groupName!=''">
+            <choose>
+                <when test="customerKeywordRefreshStatInfoCriteria.fullMatchGroup == true">
+                    AND fOptimizeGroupName = #{customerKeywordRefreshStatInfoCriteria.groupName}
+                </when>
+                <otherwise>
+                    AND fOptimizeGroupName LIKE concat('%', #{customerKeywordRefreshStatInfoCriteria.groupName}, '%')
+                </otherwise>
+            </choose>
+        </if>
     </update>
 
     <update id="updateCustomerKeywordStatus">

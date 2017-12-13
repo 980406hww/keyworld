@@ -1,4 +1,4 @@
-<%@ include file="/commons/global.jsp" %>
+﻿<%@ include file="/commons/global.jsp" %>
 <html>
 <head>
 	<title>刷量统计列表</title>
@@ -80,11 +80,11 @@
 							<c:choose>
 								<c:when test="${'总计' eq refreshStatInfoVO.group}">
 									<a target="_blank"
-									   href="javascript:resetInvaidRefreshCount('${refreshStatInfoCriteria.groupName == null ? "" : refreshStatInfoCriteria.groupName}', '${refreshStatInfoCriteria.customerName == null ? "" : refreshStatInfoCriteria.customerName}', this)">重置</a>
+									   href="javascript:resetInvaidRefreshCount('${refreshStatInfoCriteria.groupName == null ? "" : refreshStatInfoCriteria.groupName}', '${refreshStatInfoCriteria.customerName == null ? "" : refreshStatInfoCriteria.customerName}', false, this)">重置</a>
 								</c:when>
 								<c:otherwise>
 									<a target="_blank"
-									   href="javascript:resetInvaidRefreshCount('${refreshStatInfoVO.group}', '${refreshStatInfoCriteria.customerName == null ? "" : refreshStatInfoCriteria.customerName}', this)">重置</a>
+									   href="javascript:resetInvaidRefreshCount('${refreshStatInfoVO.group}', '${refreshStatInfoCriteria.customerName == null ? "" : refreshStatInfoCriteria.customerName}', true, this)">重置</a>
 								</c:otherwise>
 							</c:choose>
 						</c:if>
@@ -181,13 +181,14 @@
     }
     </shiro:hasPermission>
 
-    function resetInvaidRefreshCount(groupName, customerName, self){
-        var customerKeyword = {};
-        customerKeyword.customerName = customerName;
-        customerKeyword.groupName = groupName;
+    function resetInvaidRefreshCount(groupName, customerName, fullMatchGroup, self){
+        var customerKeywordRefreshStatInfoCriteria = {};
+        customerKeywordRefreshStatInfoCriteria.customerName = customerName;
+        customerKeywordRefreshStatInfoCriteria.groupName = groupName;
+        customerKeywordRefreshStatInfoCriteria.fullMatchGroup = fullMatchGroup;
         $.ajax({
             url: '/internal/customerKeyword/resetInvalidRefreshCount',
-            data: JSON.stringify(customerKeyword),
+            data: JSON.stringify(customerKeywordRefreshStatInfoCriteria),
             type: 'POST',
             headers: {
                 'Accept': 'application/json',

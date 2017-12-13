@@ -77,7 +77,6 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         String searchEngine = (String) requestMap.get("searchEngine");
         try {
             if (validUser(userName, password)) {
-                //String returnValue = "";
                 CustomerKeywordForCaptureTitle returnValue = null;
                 String terminalType = TerminalTypeMapping.getTerminalType(request);
                 if (StringUtils.isEmpty(groupName)) {

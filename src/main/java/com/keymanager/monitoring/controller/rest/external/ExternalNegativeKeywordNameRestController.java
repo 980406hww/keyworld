@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -138,5 +139,31 @@ public class ExternalNegativeKeywordNameRestController extends SpringMVCBaseCont
         }
     }
 
+    @RequestMapping(value = "/saveNeativeKeyword" , method = RequestMethod.POST)
+    public ResponseEntity<?> saveNeativeKeyword(@RequestBody Map<String, Object> requestMap) {
+        try {
+            String userName = (String) requestMap.get("userName");
+            String password = (String) requestMap.get("password");
+            String neativeKeyword = (String) requestMap.get("neativeKeyword");
+            Boolean isOk = true;
+            if(validUser(userName, password)) {
+                List<String> neativeKeywordList = negativeKeywordService.getNegativeKeyword();
+                for (String neativeKeywordName: neativeKeywordList) {
+                    if(neativeKeywordName.equals(neativeKeyword)){
+                        isOk = false;
+                        return new ResponseEntity<Object>(false, HttpStatus.OK);
+                    }
+                }
+                if(isOk){
+                    negativeKeywordService.saveNeativeKeyword(neativeKeyword);
+                    return new ResponseEntity<Object>(true, HttpStatus.OK);
+                }
+            }
+            return new ResponseEntity<Object>(false,HttpStatus.BAD_REQUEST);
+        }catch (Exception ex){
+            logger.error(ex.getMessage());
+            return new ResponseEntity<Object>(false,HttpStatus.BAD_REQUEST);
+        }
+    }
 
 }

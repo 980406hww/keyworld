@@ -118,6 +118,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             }else {
                 captureTitle.setWholeUrl(qzSetting.getDomain());
             }
+            updateCaptureTitleQueryTime((long)captureTitle.getUuid());
             return captureTitle;
         }
     }
@@ -127,9 +128,16 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         qzCaptureTitleLog.setGroup(groupName);
         qzCaptureTitleLog.setTerminalType(terminalType);
         CustomerKeywordForCaptureTitle captureTitle = customerKeywordDao.searchCustomerKeywordForCaptureTitle(qzCaptureTitleLog,searchEngine);
-       // ObjectMapper mapper = new ObjectMapper();
-        //return mapper.writeValueAsString(captureTitle);
+        if(null != captureTitle) {
+            updateCaptureTitleQueryTime((long)captureTitle.getUuid());
+        }
         return captureTitle;
+    }
+
+    private void updateCaptureTitleQueryTime(Long uuid) {
+        CustomerKeyword customerKeyword = customerKeywordDao.selectById(uuid);
+        customerKeyword.setCaptureTitleQueryTime(new Date());
+        customerKeywordDao.updateById(customerKeyword);
     }
 
     public void cleanTitle(CustomerKeywordCleanCriteria customerKeywordCleanCriteria) {
@@ -293,9 +301,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                 if (TerminalTypeEnum.PC.name().equals(customerKeyword.getTerminalType())) {
                     customerKeyword.setInitialIndexCount(baiduIndexCriteria.getPcIndex());
                     customerKeyword.setCurrentIndexCount(baiduIndexCriteria.getPcIndex());
+                    customerKeyword.setOptimizePlanCount(baiduIndexCriteria.getPcIndex() < 100 ? 100 : baiduIndexCriteria.getPcIndex());
                 } else {
                     customerKeyword.setInitialIndexCount(baiduIndexCriteria.getPhoneIndex());
                     customerKeyword.setCurrentIndexCount(baiduIndexCriteria.getPhoneIndex());
+                    customerKeyword.setOptimizePlanCount(baiduIndexCriteria.getPhoneIndex() < 100 ? 100 : baiduIndexCriteria.getPhoneIndex());
                 }
                 calculatePrice(customerKeyword);
                 customerKeyword.setUpdateTime(new Date());
@@ -487,7 +497,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         do{
             boolean isNormalKeyword = keywordOptimizationCountService.optimizeNormalKeyword(clientStatus.getGroup());
             customerKeyword = customerKeywordDao.getCustomerKeywordForOptimization(terminalType, clientStatus.getGroup(),
-                    Integer.parseInt(maxInvalidCountConfig.getValue()), isNormalKeyword ? 0 : 1);
+                    Integer.parseInt(maxInvalidCountConfig.getValue()), isNormalKeyword);
             retryCount++;
             if(customerKeyword == null){
                 keywordOptimizationCountService.init(clientStatus.getGroup());
@@ -597,9 +607,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void resetBigKeywordIndicator(String groupName, int maxInvalidCount) {
-        customerKeywordDao.cleanBigKeywordIndicator(groupName);
         List<Map> remainingOptimizationCountMap = customerKeywordDao.searchRemainingOptimizationCount(groupName, maxInvalidCount);
         if(CollectionUtils.isNotEmpty(remainingOptimizationCountMap)) {
+            customerKeywordDao.cleanBigKeywordIndicator(groupName);
             List<Long> customerKeywordUuids = new ArrayList<Long>();
             for(Map map : remainingOptimizationCountMap) {
                 customerKeywordUuids.add(Long.parseLong(map.get("uuid").toString()));
@@ -680,6 +690,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeywordForCapturePosition.setUrl(customerKeyword.getUrl());
             customerKeywordForCapturePosition.setTitle(customerKeyword.getTitle());
             customerKeywordForCapturePosition.setSearchEngine(customerKeyword.getSearchEngine());
+            customerKeywordForCapturePosition.setTerminalType(customerKeyword.getTerminalType());
             customerKeyword.setCapturePositionQueryTime(new Date());
             customerKeywordDao.updateById(customerKeyword);
             return customerKeywordForCapturePosition;
