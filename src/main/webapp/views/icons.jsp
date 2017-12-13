@@ -1487,7 +1487,9 @@
         </div>
     </div>
 </div>
+<%@ include file="/commons/loadjs.jsp" %>
 <script type="text/javascript">
+document.write("<scr"+"ipt src=\"${staticPath }/static/ztree/js/jquery.ztree.core.js\"></sc"+"ript>");
 $(function(){
     $('#clipIcon p').tooltip({
         position: 'bottom',

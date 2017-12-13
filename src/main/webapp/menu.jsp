@@ -1,80 +1,4 @@
-﻿<script type="text/javascript">
-
-    $(function () {
-        var li = $(".venus-menu li");
-        $.each(li, function (idx, val) {
-            if ($(val).attr("pid") != null && $(val).attr("pid") != '') {
-                $("li[lid=" + $(val).attr("pid") + "]").append("<ul id='" + $(val).attr("pid") + "'></ul>");
-                $.each(li, function (idx1, val1) {
-                    if ($(val1).attr("lid") == $(val).attr("pid")) {
-                        $("li").find("#" + $(val).attr("pid")).append($(val));
-                    }
-                })
-            }
-        });
-        //$().maps();
-        $(".venus-menu").show();
-        $("#editUserPwdDiv").hide();
-    });
-	//点击菜单
-    function openUrl(url,title,iconCls,openMode) {
-        var opts = {
-            title : title,
-            border : false,
-            closable : true,
-            fit : true,
-            iconCls :iconCls
-        };
-        if("${pageContext.request.getAttribute("javax.servlet.forward.request_uri")}"!='/login' && "${pageContext.request.getAttribute("javax.servlet.forward.request_uri")}"!='/index')
-        {
-            window.location.href=url+"?resource="+"${pageContext.request.getAttribute('javax.servlet.forward.request_uri')}";
-        }
-
-        if (url && url.indexOf("http") == -1) {
-            url = '${path }' + url;
-        }
-        if (openMode == 'iframe') {
-            opts.content = '<iframe src="' + url + '" frameborder="0" style="border:0;width:100%;height:99.5%;"></iframe>';
-            addTab(opts);
-        } else if (url) {
-            opts.href = url+"?resource="+"${pageContext.request.getAttribute("javax.servlet.forward.request_uri")}";
-            addTab(opts);
-        }
-    }
-    function logout(){
-        $.messager.confirm('提示','确定要退出?',function(r){
-            if (r){
-                progressLoad();
-                $.post('${path }/logout', function(result) {
-                    if(result.success){
-                        progressClose();
-                        window.location.href='${path }';
-                    }
-                }, 'json');
-            }
-        });
-    }
-
-    function editUserPwd() {
-        parent.$.modalDialog({
-            title : '修改密码',
-            width : 230,
-            height : 170,
-            href : '${path }/user/editPwdPage',
-            buttons : [ {
-                text : '确定',
-                handler : function() {
-                    var f = parent.$.modalDialog.handler.find('#editUserPwdForm');
-                    f.submit();
-                }
-            } ]
-        });
-        parent.$.modalDialog.handler.dialog("open");
-        parent.$.modalDialog.handler.window("resize",{top:$(document).scrollTop() + 100});
-    }
-</script>
-
-<div class="content" style="position:fixed;width: 100%;height:30px;">
+﻿<div class="content" style="position:fixed;width: 100%;height:30px;">
 	<ul class="venus-menu" style="display: none">
 		<c:choose>
 			<c:when test="${sessionScope.get('entryType')=='bc'}">
@@ -132,4 +56,93 @@
 		</div>
 	</ul>
 </div>
+<script type="text/javascript">
+    $(function () {
+        var li = $(".venus-menu li");
+        $.each(li, function (idx, val) {
+            if ($(val).attr("pid") != null && $(val).attr("pid") != '') {
+                $("li[lid=" + $(val).attr("pid") + "]").append("<ul id='" + $(val).attr("pid") + "'></ul>");
+                $.each(li, function (idx1, val1) {
+                    if ($(val1).attr("lid") == $(val).attr("pid")) {
+                        $("li").find("#" + $(val).attr("pid")).append($(val));
+                    }
+                })
+            }
+        });
+        $(".venus-menu").show();
+        $("#editUserPwdDiv").hide();
+    });
+    //点击菜单
+    function openUrl(url,title,iconCls,openMode) {
+        var opts = {
+            title : title,
+            border : false,
+            closable : true,
+            fit : true,
+            iconCls :iconCls
+        };
+        if("${pageContext.request.getAttribute("javax.servlet.forward.request_uri")}"!='/login' && "${pageContext.request.getAttribute("javax.servlet.forward.request_uri")}"!='/index')
+        {
+            window.location.href=url+"?resource="+"${pageContext.request.getAttribute('javax.servlet.forward.request_uri')}";
+        }
 
+        if (url && url.indexOf("http") == -1) {
+            url = '${path }' + url;
+        }
+        if (openMode == 'iframe') {
+            opts.content = '<iframe src="' + url + '" frameborder="0" style="border:0;width:100%;height:99.5%;"></iframe>';
+            addTab(opts);
+        } else if (url) {
+            opts.href = url+"?resource="+"${pageContext.request.getAttribute("javax.servlet.forward.request_uri")}";
+            addTab(opts);
+        }
+    }
+    function logout(){
+        $.messager.confirm('提示','确定要退出?',function(r){
+            if (r){
+                $.post('${path }/logout', function(result) {
+                    if(result.success){
+                        window.location.href='${path }';
+                    }
+                }, 'json');
+            }
+        });
+    }
+
+    $.modalDialog = function(options) {
+        if ($.modalDialog.handler == undefined) {// 避免重复弹出
+            var opts = $.extend({
+                title : '',
+                width : 840,
+                height : 680,
+                modal : true,
+                onClose : function() {
+                    $.modalDialog.handler = undefined;
+                    $(this).dialog('destroy');
+                },
+                onOpen : function() {
+                }
+            }, options);
+            opts.modal = true;// 强制此dialog为模式化，无视传递过来的modal参数
+            return $.modalDialog.handler = $('<div/>').dialog(opts);
+        }
+    };
+
+    function editUserPwd() {
+        parent.$.modalDialog({
+            title : '修改密码',
+            width : 230,
+            height : 170,
+            href : '${path }/user/editPwdPage',
+            buttons : [ {
+                text : '确定',
+                handler : function() {
+                    var f = parent.$.modalDialog.handler.find('#editUserPwdForm');
+                    f.submit();
+                }
+            } ]
+        });
+        parent.$.modalDialog.handler.dialog("open");
+        parent.$.modalDialog.handler.window("resize",{top:$(document).scrollTop() + 100});
+    }
+</script>

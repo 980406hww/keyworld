@@ -304,9 +304,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                 if (TerminalTypeEnum.PC.name().equals(customerKeyword.getTerminalType())) {
                     customerKeyword.setInitialIndexCount(baiduIndexCriteria.getPcIndex());
                     customerKeyword.setCurrentIndexCount(baiduIndexCriteria.getPcIndex());
+                    customerKeyword.setOptimizePlanCount(baiduIndexCriteria.getPcIndex() < 100 ? 100 : baiduIndexCriteria.getPcIndex());
                 } else {
                     customerKeyword.setInitialIndexCount(baiduIndexCriteria.getPhoneIndex());
                     customerKeyword.setCurrentIndexCount(baiduIndexCriteria.getPhoneIndex());
+                    customerKeyword.setOptimizePlanCount(baiduIndexCriteria.getPhoneIndex() < 100 ? 100 : baiduIndexCriteria.getPhoneIndex());
                 }
                 calculatePrice(customerKeyword);
                 customerKeyword.setUpdateTime(new Date());
@@ -498,7 +500,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         do{
             boolean isNormalKeyword = keywordOptimizationCountService.optimizeNormalKeyword(clientStatus.getGroup());
             customerKeyword = customerKeywordDao.getCustomerKeywordForOptimization(terminalType, clientStatus.getGroup(),
-                    Integer.parseInt(maxInvalidCountConfig.getValue()), isNormalKeyword ? 0 : 1);
+                    Integer.parseInt(maxInvalidCountConfig.getValue()), isNormalKeyword);
             retryCount++;
             if(customerKeyword == null){
                 keywordOptimizationCountService.init(clientStatus.getGroup());
@@ -608,9 +610,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void resetBigKeywordIndicator(String groupName, int maxInvalidCount) {
-        customerKeywordDao.cleanBigKeywordIndicator(groupName);
         List<Map> remainingOptimizationCountMap = customerKeywordDao.searchRemainingOptimizationCount(groupName, maxInvalidCount);
         if(CollectionUtils.isNotEmpty(remainingOptimizationCountMap)) {
+            customerKeywordDao.cleanBigKeywordIndicator(groupName);
             List<Long> customerKeywordUuids = new ArrayList<Long>();
             for(Map map : remainingOptimizationCountMap) {
                 customerKeywordUuids.add(Long.parseLong(map.get("uuid").toString()));

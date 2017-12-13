@@ -1,52 +1,13 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <html>
 <%@ include file="/commons/global.jsp" %>
 <head>
 	<title>重置密码</title>
 	<meta name="viewport" content="width=device-width">
-	<%@ include file="/commons/basejs.jsp" %>
-	<script language="javascript" type="text/javascript" src="/static/login.js"></script>
+	<link rel="stylesheet" href="${staticPath }/static/toastmessage/css/jquery.toastmessage.css">
 	<link rel="stylesheet" type="text/css" href="${staticPath }/static/style/css/login.css?v=201612202107" />
-	<script>
-		function checkPassword() {
-			var password = $("#password").val();
-			var confirmPassword = $("#confirmPassword").val()
-			if(!(password != null && password != '')){
-				alert("密码不能为空");
-				return;
-			}else if(confirmPassword != password) {
-                alert("两次密码不一致");
-                return;
-			}
-			var newUserInfo = {};
-            newUserInfo.password = password;
-			newUserInfo.loginName = $("#loginName").val();
-            $.ajax({
-                url: '/internal/user/resetPassword',
-                data: JSON.stringify(newUserInfo),
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                timeout: 5000,
-                type: 'POST',
-                success: function (result) {
-                    if (result) {
-                        $().toastmessage('showSuccessToast', "修改密码成功,即将跳转登陆页面...");
-                        setTimeout(function(){window.location.href="/login"},4000);
-                    } else {
-                        $().toastmessage('showErrorToast', "修改密码失败!");
-                        captchaForgetPassword();
-                    }
-                },
-                error: function () {
-                    $().toastmessage('showErrorToast', "修改密码失败!");
-                }
-            });
-        }
-	</script>
 </head>
-<body <%--onkeydown="enterlogin();"--%>>
+<body>
 <div class="top_div"></div>
 <div style="background: rgb(255, 255, 255); margin: -100px auto auto; border: 1px solid rgb(231, 231, 231);border-image:none;width:400px;text-align: center;">
 	<form method="post" id="forgetPassword">
@@ -75,5 +36,44 @@
 </div>
 <div style="text-align:center;">
 </div>
+<script>
+    document.write("<scr"+"ipt src=\"${staticPath }/static/easyui/jquery.min.js\"></sc"+"ript>");
+    document.write("<scr"+"ipt src=\"${staticPath }/static/toastmessage/jquery.toastmessage.js\"></sc"+"ript>");
+    function checkPassword() {
+        var password = $("#password").val();
+        var confirmPassword = $("#confirmPassword").val()
+        if(!(password != null && password != '')){
+            alert("密码不能为空");
+            return;
+        }else if(confirmPassword != password) {
+            alert("两次密码不一致");
+            return;
+        }
+        var newUserInfo = {};
+        newUserInfo.password = password;
+        newUserInfo.loginName = $("#loginName").val();
+        $.ajax({
+            url: '/internal/user/resetPassword',
+            data: JSON.stringify(newUserInfo),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            timeout: 5000,
+            type: 'POST',
+            success: function (result) {
+                if (result) {
+                    $().toastmessage('showSuccessToast', "修改密码成功,即将跳转登陆页面...");
+                    setTimeout(function(){window.location.href="/login"},3000);
+                } else {
+                    $().toastmessage('showErrorToast', "修改密码失败!");
+                }
+            },
+            error: function () {
+                $().toastmessage('showErrorToast', "修改密码失败!");
+            }
+        });
+    }
+</script>
 </body>
 </html>

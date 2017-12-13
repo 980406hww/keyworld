@@ -11,6 +11,8 @@ public class CustomerKeywordRefreshStatInfoCriteria extends BaseCriteria {
 
     private String terminalType;
 
+    private boolean fullMatchGroup;
+
     public String getEntryType() {
         return entryType;
     }
@@ -49,5 +51,13 @@ public class CustomerKeywordRefreshStatInfoCriteria extends BaseCriteria {
 
     public void setTerminalType(String terminalType) {
         this.terminalType = terminalType;
+    }
+
+    public boolean isFullMatchGroup() {
+        return fullMatchGroup;
+    }
+
+    public void setFullMatchGroup(boolean fullMatchGroup) {
+        this.fullMatchGroup = fullMatchGroup;
     }
 }

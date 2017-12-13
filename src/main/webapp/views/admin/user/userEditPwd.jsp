@@ -5,18 +5,12 @@
         $('#editUserPwdForm').form({
             url : '${path }/user/editUserPwd',
             onSubmit : function() {
-                progressLoad();
                 var isValid = $(this).form('validate');
-                if (!isValid) {
-                    progressClose();
-                }
                 return isValid;
             },
             success : function(result) {
-                progressClose();
                 result = $.parseJSON(result);
                 if (result.success) {
-                    /*parent.$.messager.alert('提示', result.msg, 'info');*/
                     parent.$.messager.show({
                         title:'提示',
                         msg:result.msg,

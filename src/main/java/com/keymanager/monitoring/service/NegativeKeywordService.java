@@ -24,4 +24,11 @@ public class NegativeKeywordService  extends ServiceImpl<NegativeKeywordDao, Neg
     public List<String> getNegativeKeyword() {
         return negativeKeywordDao.getNegativeKeyword();
     }
+
+    public void saveNeativeKeyword(String neativeKeyword) {
+        NegativeKeyword negativeKeyword = new NegativeKeyword();
+        negativeKeyword.setGroup("负面词更新1");
+        negativeKeyword.setKeyword(neativeKeyword);
+        negativeKeywordDao.insert(negativeKeyword);
+    }
 }
