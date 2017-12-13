@@ -43,7 +43,7 @@
         (c.fExectionStatus='Complete' and c.fExectionType='Everyday' and c.fLastExecutionDate &lt; curdate())
         )
         and c.fExectionTime &lt;= curtime()
-        AND c.fCaptureRankJobStatus = 0
+        AND c.fCaptureRankJobStatus = 1
         order By c.fExectionTime
         limit 1;
     </select>
@@ -54,7 +54,7 @@
         where
         c.fExectionStatus='Processing'
         AND
-        c.fCaptureRankJobStatus = 0
+        c.fCaptureRankJobStatus = 1
         order By c.fExectionTime
         limit 1;
     </select>

@@ -315,7 +315,7 @@
         }
 
         function changeCaptureRankJobStatus(uuid, status) {
-            if(status == true) {
+            if(status == false) {
                 if (confirm("确认要暂停选中的任务吗?") == false) return;
             } else {
                 if (confirm("确认要取消暂停的任务吗?") == false) return;
@@ -500,7 +500,7 @@
             </td>
             <td width=40><fmt:formatDate value="${captureRankJob.exectionTime}" pattern="HH:mm"/></td>
             <td width=60>${captureRankJob.lastExecutionDate}</td>
-            <td width=50>${captureRankJob.exectionStatus}<br><font color="red">${captureRankJob.captureRankJobStatus == true ? "暂停中" : ""}</font></td>
+            <td width=50>${captureRankJob.exectionStatus}<br><font color="red">${captureRankJob.captureRankJobStatus == false ? "暂停中" : ""}</font></td>
             <td width=50>${captureRankJob.rowNumber}</td>
             <td width=60>${captureRankJob.captureInterval}</td>
             <td width=40>${captureRankJob.executionCycle}</td>
@@ -520,14 +520,16 @@
                 <shiro:hasPermission name="/internal/captureRank/deleteCaptureRankJob">
                 <a href="javascript:deleteCaptureRankJob('${captureRankJob.uuid}')">删除</a>
                 </shiro:hasPermission>
+                <shiro:hasPermission name="/internal/captureRank/changeCaptureRankJobStatus">
                 <c:choose>
                     <c:when test="${captureRankJob.captureRankJobStatus}">
-                        <a href="javascript:changeCaptureRankJobStatus('${captureRankJob.uuid}', false)">取消暂停</a>
+                        <a href="javascript:changeCaptureRankJobStatus('${captureRankJob.uuid}', 'false')">暂停</a>
                     </c:when>
                     <c:otherwise>
-                        <a href="javascript:changeCaptureRankJobStatus('${captureRankJob.uuid}', true)">暂停</a>
+                        <a href="javascript:changeCaptureRankJobStatus('${captureRankJob.uuid}', 'true')">取消暂停</a>
                     </c:otherwise>
                 </c:choose>
+                </shiro:hasPermission>
             </td>
         </tr>
         </c:forEach>

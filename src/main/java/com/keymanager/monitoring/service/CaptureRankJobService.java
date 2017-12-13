@@ -83,4 +83,10 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
     public Boolean getCaptureRankJobStatus(Long captureRankJobUuid) {
         return captureRankJobDao.getCaptureRankJobStatus(captureRankJobUuid);
     }
+
+    public void changeCaptureRankJobStatus(Long uuid, String status) {
+        CaptureRankJob captureRankJob = captureRankJobDao.selectById(uuid);
+        captureRankJob.setCaptureRankJobStatus(status.equals("true")?true:false);
+        captureRankJobDao.updateById(captureRankJob);
+    }
 }

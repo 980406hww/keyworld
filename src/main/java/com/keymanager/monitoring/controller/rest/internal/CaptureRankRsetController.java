@@ -117,33 +117,14 @@ public class CaptureRankRsetController {
         }
     }
 
-    //@RequiresPermissions("/internal/captureRank/deleteCaptureRankJob")
+    @RequiresPermissions("/internal/captureRank/changeCaptureRankJobStatus")
     @RequestMapping(value = "/changeCaptureRankJobStatus", method = RequestMethod.POST)
     public ResponseEntity<?> changeCaptureRankJobStatus(@RequestBody Map<String,Object> requestMap) {
         try {
             Long uuid = ((Integer) requestMap.get("uuid")).longValue();
             String status = (String) requestMap.get("status");
-            CaptureRankJob captureRankJob = captureRankJobService.selectById(uuid);
-            if(captureRankJob.getExectionStatus().equals(CaptureRankExectionStatus.Processing.name())){
-                captureRankJob.setCaptureRankJobStatus(status.equals("true")?true:false);
-                captureRankJobService.updateById(captureRankJob);
-                return new ResponseEntity<Object>(true, HttpStatus.OK);
-            }
-            Boolean isNewStatus = captureRankJob.getExectionStatus().equals(CaptureRankExectionStatus.New.name());
-            Boolean isComplete = captureRankJob.getExectionStatus().equals(CaptureRankExectionStatus.Complete.name());
-            Boolean isEveryday = captureRankJob.getExectionType().equals(CaptureRankExectionType.Everyday.name());
-            Boolean isLastExecutionDate = (Utils.getIntervalDays(captureRankJob.getLastExecutionDate(),new Date()) > 0);
-            SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-            String currentTime = dateFormat.format(new Date());
-            Long currentTimes = dateFormat.parse(currentTime).getTime();
-            Long exectionTimes = captureRankJob.getExectionTime().getTime();
-            Boolean isExectionTime = ((currentTimes - exectionTimes) > 0);
-            if((isNewStatus|| (isComplete && isEveryday && isLastExecutionDate)) && isExectionTime){
-                captureRankJob.setCaptureRankJobStatus(status.equals("true")?true:false);
-                captureRankJobService.updateById(captureRankJob);
-                return new ResponseEntity<Object>(true, HttpStatus.OK);
-            }
-            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+            captureRankJobService.changeCaptureRankJobStatus(uuid,status);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
             return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);

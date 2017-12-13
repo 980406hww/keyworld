@@ -683,22 +683,25 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     public CustomerKeywordForCapturePosition getCustomerKeywordForCapturePosition(String terminalType, List<String> groupNames, Long customerUuid,
                                                                                   Date startTime, Integer minutes,Long captureRankJobUuid){
-        CustomerKeyword customerKeyword = customerKeywordDao.getCustomerKeywordForCapturePosition(terminalType, groupNames, customerUuid, startTime, minutes);
-        if(customerKeyword != null){
-            Boolean captureRankJobStatus = captureRankJobService.getCaptureRankJobStatus(captureRankJobUuid);
-            CustomerKeywordForCapturePosition customerKeywordForCapturePosition = new CustomerKeywordForCapturePosition();
-            customerKeywordForCapturePosition.setUuid(customerKeyword.getUuid());
-            customerKeywordForCapturePosition.setCaptureRankJobStatus(captureRankJobStatus);
-            customerKeywordForCapturePosition.setKeyword(customerKeyword.getKeyword());
-            customerKeywordForCapturePosition.setUrl(customerKeyword.getUrl());
-            customerKeywordForCapturePosition.setTitle(customerKeyword.getTitle());
-            customerKeywordForCapturePosition.setSearchEngine(customerKeyword.getSearchEngine());
-            customerKeywordForCapturePosition.setTerminalType(customerKeyword.getTerminalType());
-            customerKeyword.setCapturePositionQueryTime(new Date());
-            customerKeywordDao.updateById(customerKeyword);
-            return customerKeywordForCapturePosition;
+        CustomerKeywordForCapturePosition customerKeywordForCapturePosition = new CustomerKeywordForCapturePosition();
+        Boolean captureRankJobStatus = captureRankJobService.getCaptureRankJobStatus(captureRankJobUuid);
+        customerKeywordForCapturePosition.setCaptureRankJobStatus(captureRankJobStatus);
+        if(captureRankJobStatus){
+            CustomerKeyword customerKeyword = customerKeywordDao.getCustomerKeywordForCapturePosition(terminalType, groupNames, customerUuid, startTime, minutes);
+            if(customerKeyword != null){
+                customerKeywordForCapturePosition.setUuid(customerKeyword.getUuid());
+                customerKeywordForCapturePosition.setKeyword(customerKeyword.getKeyword());
+                customerKeywordForCapturePosition.setUrl(customerKeyword.getUrl());
+                customerKeywordForCapturePosition.setTitle(customerKeyword.getTitle());
+                customerKeywordForCapturePosition.setSearchEngine(customerKeyword.getSearchEngine());
+                customerKeywordForCapturePosition.setTerminalType(customerKeyword.getTerminalType());
+                customerKeyword.setCapturePositionQueryTime(new Date());
+                customerKeywordDao.updateById(customerKeyword);
+                return customerKeywordForCapturePosition;
+            }
+            return null;
         }
-        return null;
+        return customerKeywordForCapturePosition;
     }
 
     public void resetInvalidRefreshCount(CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria) throws Exception {
