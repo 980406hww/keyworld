@@ -314,31 +314,27 @@
             });
         }
 
-        function captureRankJobStatus(uuid,status) {
-            if(uuid==''){
-                alert('请选择要操作的关键字');
-                return;
-            }
+        function changeCaptureRankJobStatus(uuid, status) {
             if(status == true) {
                 if (confirm("确认要暂停选中的任务吗?") == false) return;
             } else {
                 if (confirm("确认要取消暂停的任务吗?") == false) return;
             }
-            var captureRankJob = {};
-            captureRankJob.uuid = parseInt(uuid);
-            captureRankJob.status = status;
+            var changeCaptureRankJobCriteria = {};
+            changeCaptureRankJobCriteria.uuid = parseInt(uuid);
+            changeCaptureRankJobCriteria.status = status;
 
             $.ajax({
-                url: '/internal/captureRank/captureRankJobStatus',
-                data: JSON.stringify(captureRankJob),
+                url: '/internal/captureRank/changeCaptureRankJobStatus',
+                data: JSON.stringify(changeCaptureRankJobCriteria),
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
                 timeout: 5000,
                 type: 'POST',
-                success: function (data) {
-                    if (data) {
+                success: function (changeStatus) {
+                    if (changeStatus) {
                         $().toastmessage('showSuccessToast', "操作成功", true);
                     }
                     else {
@@ -524,14 +520,12 @@
                 <shiro:hasPermission name="/internal/captureRank/deleteCaptureRankJob">
                 <a href="javascript:deleteCaptureRankJob('${captureRankJob.uuid}')">删除</a>
                 </shiro:hasPermission>
-               <%-- <a href="javascript:captureRankJobStatus('${captureRankJob.uuid}','true')">暂停</a>
-                <a href="javascript:captureRankJobStatus('${captureRankJob.uuid}','false'),false">取消暂停</a>--%>
                 <c:choose>
                     <c:when test="${captureRankJob.captureRankJobStatus}">
-                        <a href="javascript:captureRankJobStatus('${captureRankJob.uuid}','false'),false">取消暂停</a>
+                        <a href="javascript:changeCaptureRankJobStatus('${captureRankJob.uuid}', false)">取消暂停</a>
                     </c:when>
                     <c:otherwise>
-                        <a href="javascript:captureRankJobStatus('${captureRankJob.uuid}','true')">暂停</a>
+                        <a href="javascript:changeCaptureRankJobStatus('${captureRankJob.uuid}', true)">暂停</a>
                     </c:otherwise>
                 </c:choose>
             </td>

@@ -118,8 +118,8 @@ public class CaptureRankRsetController {
     }
 
     //@RequiresPermissions("/internal/captureRank/deleteCaptureRankJob")
-    @RequestMapping(value = "/captureRankJobStatus", method = RequestMethod.POST)
-    public ResponseEntity<?> captureRankJobStatus(@RequestBody Map<String,Object> requestMap) {
+    @RequestMapping(value = "/changeCaptureRankJobStatus", method = RequestMethod.POST)
+    public ResponseEntity<?> changeCaptureRankJobStatus(@RequestBody Map<String,Object> requestMap) {
         try {
             Long uuid = ((Integer) requestMap.get("uuid")).longValue();
             String status = (String) requestMap.get("status");
