@@ -59,5 +59,12 @@
         limit 1;
     </select>
 
+    <select id="getCaptureRankJobStatus" resultType="java.lang.Boolean">
+        select
+        c.fCaptureRankJobStatus
+        from t_capture_rank_job c
+        where
+        c.fUuid=#{captureRankJobUuid}
+    </select>
 
 </mapper>

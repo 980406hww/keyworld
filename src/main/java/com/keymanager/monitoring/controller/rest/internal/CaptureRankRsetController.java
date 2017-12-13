@@ -134,8 +134,10 @@ public class CaptureRankRsetController {
             Boolean isEveryday = captureRankJob.getExectionType().equals(CaptureRankExectionType.Everyday.name());
             Boolean isLastExecutionDate = (Utils.getIntervalDays(captureRankJob.getLastExecutionDate(),new Date()) > 0);
             SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-            //Boolean isExectionTime = ((captureRankJob.getExectionTime() <= dateFormat.format(new DateTime()));
-            Boolean isExectionTime = true;
+            String currentTime = dateFormat.format(new Date());
+            Long currentTimes = dateFormat.parse(currentTime).getTime();
+            Long exectionTimes = captureRankJob.getExectionTime().getTime();
+            Boolean isExectionTime = ((currentTimes - exectionTimes) > 0);
             if((isNewStatus|| (isComplete && isEveryday && isLastExecutionDate)) && isExectionTime){
                 captureRankJob.setCaptureRankJobStatus(status.equals("true")?true:false);
                 captureRankJobService.updateById(captureRankJob);

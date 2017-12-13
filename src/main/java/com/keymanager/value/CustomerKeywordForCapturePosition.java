@@ -2,6 +2,7 @@ package com.keymanager.value;
 
 public class CustomerKeywordForCapturePosition {
 	private Long uuid;
+	private Boolean captureRankJobStatus;
 	private String keyword;
 	private String url;
 	private String title;
@@ -22,6 +23,14 @@ public class CustomerKeywordForCapturePosition {
 
 	public void setUuid(Long uuid) {
 		this.uuid = uuid;
+	}
+
+	public Boolean getCaptureRankJobStatus() {
+		return captureRankJobStatus;
+	}
+
+	public void setCaptureRankJobStatus(Boolean captureRankJobStatus) {
+		this.captureRankJobStatus = captureRankJobStatus;
 	}
 
 	public String getUrl() {

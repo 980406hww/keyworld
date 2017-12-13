@@ -79,4 +79,8 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
         captureRankJob.setLastExecutionDate(new java.sql.Date(new Date().getTime()));
         captureRankJobDao.updateById(captureRankJob);
     }
+
+    public Boolean getCaptureRankJobStatus(Long captureRankJobUuid) {
+        return captureRankJobDao.getCaptureRankJobStatus(captureRankJobUuid);
+    }
 }

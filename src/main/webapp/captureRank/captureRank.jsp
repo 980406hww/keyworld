@@ -339,14 +339,14 @@
                 type: 'POST',
                 success: function (data) {
                     if (data) {
-                        $().toastmessage('showSuccessToast', "暂停成功", true);
+                        $().toastmessage('showSuccessToast', "操作成功", true);
                     }
                     else {
-                        $().toastmessage('showErrorToast', "暂停失败");
+                        $().toastmessage('showErrorToast', "操作失败");
                     }
                 },
                 error: function () {
-                    $().toastmessage('showErrorToast', "暂停失败");
+                    $().toastmessage('showErrorToast', "操作失败");
                 }
             });
         }
@@ -504,7 +504,7 @@
             </td>
             <td width=40><fmt:formatDate value="${captureRankJob.exectionTime}" pattern="HH:mm"/></td>
             <td width=60>${captureRankJob.lastExecutionDate}</td>
-            <td width=50>${captureRankJob.exectionStatus}<font color="red">${captureRankJob.captureRankJobStatus == true ? "暂停中" : ""}</font></td>
+            <td width=50>${captureRankJob.exectionStatus}<br><font color="red">${captureRankJob.captureRankJobStatus == true ? "暂停中" : ""}</font></td>
             <td width=50>${captureRankJob.rowNumber}</td>
             <td width=60>${captureRankJob.captureInterval}</td>
             <td width=40>${captureRankJob.executionCycle}</td>

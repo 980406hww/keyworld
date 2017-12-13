@@ -82,6 +82,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     private CustomerKeywordDao customerKeywordDao;
 
     @Autowired
+    private CaptureRankJobService captureRankJobService;
+
+    @Autowired
     private PerformanceService performanceService;
 
     public Page<CustomerKeyword> searchCustomerKeywords(Page<CustomerKeyword> page, CustomerKeywordCriteria customerKeywordCriteria){
@@ -679,11 +682,13 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public CustomerKeywordForCapturePosition getCustomerKeywordForCapturePosition(String terminalType, List<String> groupNames, Long customerUuid,
-                                                                                  Date startTime, Integer minutes){
+                                                                                  Date startTime, Integer minutes,Long captureRankJobUuid){
         CustomerKeyword customerKeyword = customerKeywordDao.getCustomerKeywordForCapturePosition(terminalType, groupNames, customerUuid, startTime, minutes);
         if(customerKeyword != null){
+            Boolean captureRankJobStatus = captureRankJobService.getCaptureRankJobStatus(captureRankJobUuid);
             CustomerKeywordForCapturePosition customerKeywordForCapturePosition = new CustomerKeywordForCapturePosition();
             customerKeywordForCapturePosition.setUuid(customerKeyword.getUuid());
+            customerKeywordForCapturePosition.setCaptureRankJobStatus(captureRankJobStatus);
             customerKeywordForCapturePosition.setKeyword(customerKeyword.getKeyword());
             customerKeywordForCapturePosition.setUrl(customerKeyword.getUrl());
             customerKeywordForCapturePosition.setTitle(customerKeyword.getTitle());
