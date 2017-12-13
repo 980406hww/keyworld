@@ -101,19 +101,20 @@
                 <shiro:hasPermission name="/internal/captureRank/saveCaptureRankJob">
                 <a href="javascript:modifyCaptureRankJob('${captureRankJob.uuid}')">修改</a>
                 </shiro:hasPermission>
+                <shiro:hasPermission name="/internal/captureRank/changeCaptureRankJobStatus">
+                    <c:choose>
+                        <c:when test="${captureRankJob.captureRankJobStatus}">
+                            <a href="javascript:changeCaptureRankJobStatus('${captureRankJob.uuid}', 'false')">暂停</a>
+                        </c:when>
+                        <c:otherwise>
+                            <a href="javascript:changeCaptureRankJobStatus('${captureRankJob.uuid}', 'true')">取消暂停</a>
+                        </c:otherwise>
+                    </c:choose>
+                </shiro:hasPermission>
                 <shiro:hasPermission name="/internal/captureRank/deleteCaptureRankJob">
                 <a href="javascript:deleteCaptureRankJob('${captureRankJob.uuid}')">删除</a>
                 </shiro:hasPermission>
-                <shiro:hasPermission name="/internal/captureRank/changeCaptureRankJobStatus">
-                <c:choose>
-                    <c:when test="${captureRankJob.captureRankJobStatus}">
-                        <a href="javascript:changeCaptureRankJobStatus('${captureRankJob.uuid}', 'false')">暂停</a>
-                    </c:when>
-                    <c:otherwise>
-                        <a href="javascript:changeCaptureRankJobStatus('${captureRankJob.uuid}', 'true')">取消暂停</a>
-                    </c:otherwise>
-                </c:choose>
-                </shiro:hasPermission>
+
             </td>
         </tr>
         </c:forEach>

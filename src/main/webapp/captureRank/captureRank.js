@@ -370,9 +370,9 @@ function customerUuidReset() {
 
 function changeCaptureRankJobStatus(uuid, status) {
     if(status == false) {
-        if (confirm("确认要暂停选中的任务吗?") == false) return;
+        if (confirm("确认要激活选中的任务吗?") == false) return;
     } else {
-        if (confirm("确认要取消暂停的任务吗?") == false) return;
+        if (confirm("确认要暂停的任务吗?") == false) return;
     }
     var changeCaptureRankJobCriteria = {};
     changeCaptureRankJobCriteria.uuid = parseInt(uuid);
