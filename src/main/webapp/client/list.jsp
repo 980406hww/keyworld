@@ -242,7 +242,6 @@
 					<select name="operationType${clientStatus.clientID}" id="operationType${clientStatus.clientID}"
 							disabled style="width: 100%;" />
 				</shiro:lacksPermission>
-
 				<c:forEach items="${operationTypeValues}" var="operationType">
 					<c:choose>
 						<c:when test="${operationType eq clientStatus.operationType}">
@@ -393,37 +392,9 @@
 							<th>操作类型</th>
 							<td>
 								<select name="settingOperationType" id="settingOperationType">
-									<c:choose>
-										<c:when test="${terminalType eq 'PC'}">
-											<option value="pc_pm">pc_pm</option>
-											<option value="pc_pm2">pc_pm2</option>
-											<option value="pc_pm3">pc_pm3</option>
-											<option value="pc_xg">pc_xg</option>
-											<option value="pc_xg2">pc_xg2</option>
-											<option value="pc_xg3">pc_xg3</option>
-											<option value="pc_xl">pc_xl</option>
-											<option value="pc_pm_sogou">pc_pm_sogou</option>
-											<option value="pc_pm_360">pc_pm_360</option>
-											<option value="pc_pm_58">pc_pm_58</option>
-											<option value="pc_pm_zhidao">pc_pm_zhidao</option>
-											<option value="pc_pm_wenku">pc_pm_wenku</option>
-											<option value="pc_tieba">pc_tieba</option>
-											<option value="pc_kpm">pc_kpm</option>
-											<option value="pc_xl_sogou">pc_xl_sogou</option>
-											<option value="pc_xunipm">pc_xunipm</option>
-										</c:when>
-										<c:otherwise>
-											<option value="m_pm">m_pm</option>
-											<option value="m_pm2">m_pm2</option>
-											<option value="m_xl">m_xl</option>
-											<option value="m_xg">m_xg</option>
-											<option value="m_pm_sm">m_pm_sm</option>
-											<option value="m_xl2">m_xl2</option>
-											<option value="m_kpm">m_kpm</option>
-											<option value="m_xl_sogou">m_xl_sogou</option>
-											<option value="m_xunipm">m_xunipm</option>
-										</c:otherwise>
-									</c:choose>
+								<c:forEach items="${operationTypeValues}" var="operationType">
+										<option value="${operationType}">${operationType}</option>
+								</c:forEach>
 								</select>
 							</td>
 						</tr>

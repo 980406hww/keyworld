@@ -12,6 +12,7 @@ import com.keymanager.monitoring.entity.ClientStatus;
 import com.keymanager.monitoring.entity.ClientStatusRestartLog;
 import com.keymanager.monitoring.entity.Config;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
+import com.keymanager.util.Constants;
 import com.keymanager.util.FileUtil;
 import com.keymanager.util.Utils;
 import com.keymanager.util.common.StringUtil;
@@ -840,5 +841,11 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 				MailHelper.sendClientDownNotification(emailAddress, sb.toString(), "续费通知");
 			}
 		}
+	}
+
+	public String[] getOperationTypeValues(String terminalType) {
+		Config config = configService.getConfig(Constants.CONFIG_TYPE_OPTIMIZATION_TYPE,terminalType);
+		String [] operationTypeValues = config.getValue().split(",");
+		return operationTypeValues;
 	}
 }

@@ -30,6 +30,7 @@ public class Constants {
 	public final static String CONFIG_KEY_MAX_INVALID_COUNT = "MaxInvalidCount";
 	public final static String CONFIG_KEY_VMWARE = "VMWARE";
 	public final static String CONFIG_TYPE_OPTIMIZATION_DATE = "OptimizationDate";
+	public final static String CONFIG_TYPE_OPTIMIZATION_TYPE = "OperationType";
 	
 	public final static Map<String, String> ACCOUNT_LOG_STATUS_MAP = new HashMap<String, String>();
 	static {
