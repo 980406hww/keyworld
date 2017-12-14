@@ -679,6 +679,13 @@ function showRenewalSettingDialog(self){
     });
     $('#renewalSettingDialog').window("resize",{top:$(document).scrollTop() + 100});
 }
+
+function isDate(s) {
+    var r, re;
+    re = /2[0-9]{3}-[0-9]{2}-[0-9]{2}/i;
+    r = s.match(re);
+    return (r == s) ? true : false;
+}
 function saveRenewalSetting(self){
     var settingDialogDiv = $("#renewalSettingDialog");
     var clientStatus = {};

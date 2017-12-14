@@ -592,6 +592,12 @@ function saveChangeSetting(self) {
     qzSetting.updateInterval = settingDialogDiv.find("#qzSettingInterval").val();
     qzSetting.pcGroup = settingDialogDiv.find("#groupPC").val();
     qzSetting.phoneGroup = settingDialogDiv.find("#groupPhone").val();
+    if(qzSetting.pcGroup == "") {
+        qzSetting.pcGroup = null;
+    }
+    if(qzSetting.phoneGroup == "") {
+        qzSetting.phoneGroup = null;
+    }
 
     if (customer != null && customer != '') {
         var customerArray = customer.split("_____");
