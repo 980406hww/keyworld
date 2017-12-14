@@ -379,7 +379,7 @@
 							</td>
 						</tr>
 						<tr>
-							<th>关闭统计</th>
+							<th>网站统计</th>
 							<td>
 								<select name="disableStatistics" id="disableStatistics">
 									<option value="0">开放</option>
@@ -387,7 +387,15 @@
 								</select>
 							</td>
 						</tr>
-
+						<tr>
+							<th>目标网站</th>
+							<td>
+								<select name="disableVisitWebsite" id="disableVisitWebsite">
+									<option value="0">访问</option>
+									<option value="1">不访问</option>
+								</select>
+							</td>
+						</tr>
 						<tr>
 							<th>操作类型</th>
 							<td>
@@ -508,6 +516,12 @@
 
 				<td>
 					<table id="td_2" style="font-size:12px">
+						<tr>
+							<th>流转分组</th>
+							<td>
+								<input type="text" name="switchGroupName" id="switchGroupName"  style="width:110px;"/>
+							</td>
+						</tr>
 						<tr>
 							<th>主机</th>
 							<td>

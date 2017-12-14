@@ -18,6 +18,7 @@ import com.keymanager.util.Utils;
 import com.keymanager.util.common.StringUtil;
 import com.keymanager.util.VNCAddressBookParser;
 import com.keymanager.value.*;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -195,6 +196,7 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 			oldClientStatus.setJustClickSpecifiedTitle(clientStatus.getJustClickSpecifiedTitle());
 			oldClientStatus.setRandomlyClickMoreLink(clientStatus.getRandomlyClickMoreLink());
 			oldClientStatus.setMoveUp20(clientStatus.getMoveUp20());
+			oldClientStatus.setSwitchGroupName(clientStatus.getSwitchGroupName());
 			clientStatusDao.updateById(oldClientStatus);
 		} else {
 			clientStatusDao.insert(clientStatus);
@@ -628,19 +630,38 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 
 	private void switchGroup(String terminalType) throws Exception{
 		List<ClientStatus> clientStatuses = clientStatusDao.getClientStatusesForSwitchGroup(terminalType);
+		if(CollectionUtils.isNotEmpty(clientStatuses)) {
+			Map<String, List<ClientStatus>> clientStatusMap = new HashMap<String, List<ClientStatus>>();
+			for(ClientStatus clientStatus : clientStatuses){
+				String key = clientStatus.getSwitchGroupName().toLowerCase();
+				List<ClientStatus> tmpClientStatuses = clientStatusMap.get(key);
+				if(tmpClientStatuses == null){
+					tmpClientStatuses = new ArrayList<ClientStatus>();
+					clientStatusMap.put(key, tmpClientStatuses);
+				}
+				tmpClientStatuses.add(clientStatus);
+			}
+
+			for(String key : clientStatusMap.keySet()){
+				this.switchClientStatuses(clientStatusMap.get(key));
+			}
+		}
+	}
+
+	private void switchClientStatuses(List<ClientStatus> clientStatuses){
 		List<ClientStatus> cloneClientStatuses = new ArrayList<ClientStatus>(clientStatuses);
 		Collections.shuffle(clientStatuses);
 		Collections.shuffle(clientStatuses);
 		Collections.shuffle(cloneClientStatuses);
 		Collections.shuffle(cloneClientStatuses);
 		Collections.shuffle(cloneClientStatuses);
-		for(int i = 0; i < clientStatuses.size(); i++){
+		for (int i = 0; i < clientStatuses.size(); i++) {
 			ClientStatus sourceClientStatus = clientStatuses.get(i);
 			ClientStatus targetClientStatus = cloneClientStatuses.get(i);
 			switchClientStatusInfo(sourceClientStatus, targetClientStatus);
 		}
 
-		for(ClientStatus clientStatus : clientStatuses){
+		for (ClientStatus clientStatus : clientStatuses) {
 			clientStatusDao.updateById(clientStatus);
 		}
 	}

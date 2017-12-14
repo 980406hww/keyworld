@@ -78,6 +78,9 @@ public class ClientStatus {
 	@TableField(value = "fDisableStatistics")
 	private int disableStatistics;
 
+	@TableField(value = "fSwitchGroupName")
+	private String switchGroupName;
+
 	@TableField(value = "fHost")
 	private String host;
 
@@ -851,5 +854,13 @@ public class ClientStatus {
 
 	public void setZhanwaiPercent(Integer zhanwaiPercent) {
 		this.zhanwaiPercent = zhanwaiPercent;
+	}
+
+	public String getSwitchGroupName() {
+		return switchGroupName;
+	}
+
+	public void setSwitchGroupName(String switchGroupName) {
+		this.switchGroupName = switchGroupName;
 	}
 }
