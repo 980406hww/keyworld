@@ -5,12 +5,18 @@ $(function () {
     $("#saveCustomerKeywordDialog").dialog("close");
     $("#customerKeywordDiv").css("margin-top",$("#customerKeywordTopDiv").height());
 
-    $(".floatTd").poshytip();
     alignTableHeader();
     window.onresize = function(){
         alignTableHeader();
     }
 });
+
+function trim(val)
+{
+    var re = /\s*((\S+\s*)*)/;
+    return val.replace(re, "$1");
+}
+
 function selectAll(self) {
     var a = document.getElementsByName("uuid");
     if (self.checked) {
@@ -305,7 +311,7 @@ function showGroupNameChangeDialog(changeGroupCriteria) {
                 }
                 changeGroupCriteria.targetGroupName = targetGroupName;
                 changeGroupName(changeGroupCriteria);
-                $(this).dialog("close");
+                $("#groupChangeNameDialog").dialog("close");
             }
         },
             {
@@ -399,13 +405,13 @@ function changeGroupName(customerKeywordUpdateGroupCriteria) {
         }
     });
 }
-function addCustomerKeyword(customerKeywordUuid) {
+function addCustomerKeyword(customerKeywordUuid, customerUuid) {
     if (customerKeywordUuid == null) {
         $("#customerKeywordForm")[0].reset();
         $("#customerKeywordForm").find("#uuid").val('');
         $("#customerKeywordForm").find("#status").val('');
     }
-    $( "#saveCustomerKeywordDialog").dialog({
+    $("#saveCustomerKeywordDialog").dialog({
         width: 410,
         height: 560,
         title : "添加关键字",
@@ -416,7 +422,7 @@ function addCustomerKeyword(customerKeywordUuid) {
             text: '保存',
             iconCls: 'icon-ok',
             handler: function () {
-                saveCustomerKeyword("${customerKeywordCriteria.customerUuid}");
+                saveCustomerKeyword(customerUuid);
             }
         },
             {
@@ -523,9 +529,9 @@ function saveCustomerKeyword(customerUuid) {
             $().toastmessage('showErrorToast', "操作失败");
         }
     });
-    $(this).dialog("close");
+    $("#saveCustomerKeywordDialog").dialog("close");
 }
-function modifyCustomerKeyword(customerKeywordUuid) {
+function modifyCustomerKeyword(customerKeywordUuid, customerUuid) {
     var saveCustomerKeywordDialog= $("#saveCustomerKeywordDialog");
     $.ajax({
         url: '/internal/customerKeyword/getCustomerKeywordByCustomerKeywordUuid/' + customerKeywordUuid,
@@ -567,7 +573,7 @@ function modifyCustomerKeyword(customerKeywordUuid) {
                 if(customerKeyword.positionFirstCost!=null||customerKeyword.positionSecondCost!=null||customerKeyword.positionThirdCost!=null||customerKeyword.positionForthCost!=null||customerKeyword.positionFifthCost!=null){
                     showCustomerKeywordCost();
                 }
-                addCustomerKeyword(customerKeywordUuid);
+                addCustomerKeyword(customerKeywordUuid, customerUuid);
             } else {
                 $().toastmessage('showErrorToast', "操作失败");
             }
@@ -639,7 +645,7 @@ function uploadCustomerKeywords(customerUuid, excelType){
                         }
                     });
                 }
-                $(this).dialog("close");
+                $("#uploadExcelDailog").dialog("close");
             }
         },
             {

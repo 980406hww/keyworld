@@ -241,7 +241,7 @@ function saveChargeLog(self) {
                     resetChargeDialog();
                     if (data != null && data != "") {
                         $().toastmessage('showSuccessToast', "收费成功！", true);
-                        $(self).dialog("close");
+                        $("#chargeDialog").dialog("close");
                     } else {
                         $().toastmessage('showErrorToast', "收费失败");
                     }
@@ -298,7 +298,6 @@ function showChargeLog(uuid, self) {
                         iconCls: 'icon-cancel',
                         handler: function () {
                             $("#chargeLogListDiv").dialog("close");
-                            $('#showRuleForm')[0].reset();
                         }
                     }]
                 });
@@ -743,7 +742,7 @@ function saveChangeSetting(self) {
                 } else {
                     $().toastmessage('showErrorToast', "更新失败！");
                 }
-                $(self).dialog("close");
+                $("#changeSettingDialog").dialog("close");
             },
             error: function () {
                 $().toastmessage('showErrorToast', "更新失败！");

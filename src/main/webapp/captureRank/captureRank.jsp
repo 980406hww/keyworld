@@ -159,5 +159,6 @@
 </div>
 <%@ include file="/commons/loadjs.jsp" %>
 <script src="${staticPath}/captureRank/captureRank.js"></script>
+<script type="text/javascript" src="${staticPath}/static/My97DatePicker/WdatePicker.js"></script>
 </body>
 </html>

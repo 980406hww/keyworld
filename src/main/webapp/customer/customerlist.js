@@ -580,7 +580,7 @@ function uploadDailyReportTemplate(uuid, self) {
                         }
                     });
                 }
-                $(this).dialog("close");
+                $("#uploadDailyReportTemplateDialog").dialog("close");
             }
         },
             {

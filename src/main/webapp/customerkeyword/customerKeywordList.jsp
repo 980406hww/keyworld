@@ -170,7 +170,7 @@
                    value=" 查询 ">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
-                <input type="button" class="ui-button ui-widget ui-corner-all" onclick="addCustomerKeyword()"
+                <input type="button" class="ui-button ui-widget ui-corner-all" onclick="addCustomerKeyword(null, '${customerKeywordCriteria.customerUuid}')"
                        value=" 增加 ">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/customerKeyword/deleteCustomerKeywords">
@@ -252,7 +252,7 @@
                 </td>
                 <td align="center" width=80>
                     <shiro:hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
-                        <a href="javascript:modifyCustomerKeyword('${customerKeyword.uuid}')">修改</a>
+                        <a href="javascript:modifyCustomerKeyword('${customerKeyword.uuid}', '${customerKeyword.customerUuid}')">修改</a>
                     </shiro:hasPermission>
                     <shiro:hasPermission name="/internal/customerKeyword/deleteCustomerKeyword">
                         | <a href="javascript:delItem('${customerKeyword.uuid}')">删除</a>
