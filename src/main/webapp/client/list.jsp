@@ -414,6 +414,7 @@
 										</c:when>
 										<c:otherwise>
 											<option value="m_pm">m_pm</option>
+											<option value="m_pm2">m_pm2</option>
 											<option value="m_xl">m_xl</option>
 											<option value="m_xg">m_xg</option>
 											<option value="m_pm_sm">m_pm_sm</option>
