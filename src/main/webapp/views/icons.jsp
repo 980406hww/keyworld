@@ -1489,7 +1489,14 @@
 </div>
 <%@ include file="/commons/loadjs.jsp" %>
 <script type="text/javascript">
-document.write("<scr"+"ipt src=\"${staticPath }/static/ztree/js/jquery.ztree.core.js\"></sc"+"ript>");
+function showMsg(msg) {
+    top.window.$.messager.show({
+        title: '提示',
+        msg:'<div class="light-info"><div class="light-tip icon-tip"></div><div>' + msg||"消息内容！" + '</div></div>',
+        timeout: 3000,
+        showType: 'slide'
+    });
+}
 $(function(){
     $('#clipIcon p').tooltip({
         position: 'bottom',

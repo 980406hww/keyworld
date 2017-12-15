@@ -26,6 +26,13 @@
 		<property name="freemarkerConfiguration" ref="freemarkerConfiguration" />
 	</bean>
 
+	<bean id="accessWebsiteMailService" class="com.keymanager.monitoring.common.email.AccessWebsiteFailMailService">
+		<property name="mailSender" ref="accessWebsiteMailSender" />
+		<property name="emailFrom" value="${accessWebsiteFail.emailFrom}" />
+		<property name="toEmail" value="${accessWebsiteFail.toEmail}" />
+		<property name="freemarkerConfiguration" ref="freemarkerConfiguration" />
+	</bean>
+
 	<!-- 用于生成HTML邮件内容的Freemarker配置 -->
 	<bean id="freemarkerConfiguration" class="org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean">
 		<property name="templateLoaderPath" value="classpath:/template" />
@@ -62,6 +69,19 @@
 		<property name="host" value="${forgetpassword.host}" />
 		<property name="username" value="${forgetpassword.username}" />
 		<property name="password" value="${forgetpassword.password}" />
+		<property name="defaultEncoding" value="UTF-8"/>
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.smtp.auth">true</prop>
+			</props>
+		</property>
+	</bean>
+
+	<!-- 访问网站失败邮件发送器 -->
+	<bean id="accessWebsiteMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="${accessWebsiteFail.host}" />
+		<property name="username" value="${accessWebsiteFail.username}" />
+		<property name="password" value="${accessWebsiteFail.password}" />
 		<property name="defaultEncoding" value="UTF-8"/>
 		<property name="javaMailProperties">
 			<props>

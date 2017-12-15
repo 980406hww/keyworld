@@ -12,6 +12,7 @@
 				<ref bean="cronTriggerSwitchClientStatusGroup" />
 				<ref bean="cronTriggerRenewalNotification" />
 				<ref bean="cronTriggerGenerateDailyReport" />
+				<ref bean="cronTriggerAccessWebsite" />
 			</list>
 		</property>
 		<!-- Quartz配置, 本地运行无需单独的quartz.properties文件，在此简单配置即可 -->
@@ -96,6 +97,18 @@
 
 	<bean id="cronJobDetailcomplaintsReportSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject" ref="complaintsReportSchedule" />
+		<property name="targetMethod" value="runTask" />
+		<property name="concurrent" value="false" />
+	</bean>
+
+	<!--访问Website-->
+	<bean id="cronTriggerAccessWebsite" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="cronTriggerAccessWebsiteSchedule" />
+		<property name="cronExpression" value="0 0/10 * * * ?" />
+	</bean>
+
+	<bean id="cronTriggerAccessWebsiteSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="accessWebsiteSchedule" />
 		<property name="targetMethod" value="runTask" />
 		<property name="concurrent" value="false" />
 	</bean>
