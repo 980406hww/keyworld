@@ -23,7 +23,7 @@ public class Website extends BaseEntity {
     @TableField(value = "fAccessFailCount")
     private Integer accessFailCount;
 
-    @TableField(value = "fAccessFailTime")
+    @TableField(value = "fAccessFailTime", strategy = FieldStrategy.IGNORED)
     private Date accessFailTime;
 
     @TableField(value = "fLastAccessTime")
