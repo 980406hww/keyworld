@@ -13,6 +13,7 @@ import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AccessWebsiteFailMailService {
@@ -24,16 +25,14 @@ public class AccessWebsiteFailMailService {
     private String emailFrom;
     private Template accessURLFailMailTemplate;
 
-    public void sendAccessWebsiteFailMail(Website website) throws Exception{
+    public void sendAccessWebsiteFailMail(List<Website> accessFailWebsites) throws Exception{
         MimeMessage msg = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(msg, true, DEFAULT_ENCODING);
         helper.setTo(toEmail);
         helper.setFrom(emailFrom);
         helper.setSubject("网站访问失败警告");
         Map<String, Object> context = new HashMap<String, Object>();
-        context.put("domain", website.getDomain());
-        context.put("accessFailCount", website.getAccessFailCount());
-        context.put("date", Utils.formatDate(website.getAccessFailTime(), "yyyy-MM-dd HH:mm:ss"));
+        context.put("accessFailWebsites", accessFailWebsites);
         String content = FreeMarkerTemplateUtils.processTemplateIntoString(accessURLFailMailTemplate, context);
         helper.setText(content, true);
         mailSender.send(msg);
