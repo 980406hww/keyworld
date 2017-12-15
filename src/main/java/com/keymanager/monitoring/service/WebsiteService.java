@@ -78,7 +78,9 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
                 httpURLConnection.setUseCaches(false);
                 httpURLConnection.setConnectTimeout(5000);
                 status = httpURLConnection.getResponseCode();
-                if (200 != status) {
+                if (200 == status) {
+                    website.setAccessFailCount(0);
+                } else {
                     recordAccessFailInfo(website);
                 }
             } catch (IOException e) {
