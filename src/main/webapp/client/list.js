@@ -455,6 +455,7 @@ function initSettingDialog(clientStatus, self){
     }
     settingDialogDiv.find("#allowSwitchGroup ").val(clientStatus.allowSwitchGroup );
     settingDialogDiv.find("#disableStatistics ").val(clientStatus.disableStatistics );
+    settingDialogDiv.find("#disableVisitWebsite ").val(clientStatus.disableVisitWebsite );
 
     settingDialogDiv.find("#entryPageMinCount").val(clientStatus.entryPageMinCount);
     settingDialogDiv.find("#entryPageMaxCount").val(clientStatus.entryPageMaxCount);
@@ -493,6 +494,7 @@ function initSettingDialog(clientStatus, self){
     settingDialogDiv.find("#waitTimeAfterClick").val(clientStatus.waitTimeAfterClick);
     settingDialogDiv.find("#maxUserCount").val(clientStatus.maxUserCount);
 
+    settingDialogDiv.find("#switchGroupName").val(clientStatus.switchGroupName != null ? clientStatus.switchGroupName : "");
     settingDialogDiv.find("#host").val(clientStatus.host != null ? clientStatus.host : "");
     settingDialogDiv.find("#port").val(clientStatus.port != null ? clientStatus.port : "");
     settingDialogDiv.find("#csUserName").val(clientStatus.userName != null ? clientStatus.userName : "Administrator");
@@ -521,6 +523,9 @@ function saveChangeSetting(self){
     clientStatus.clearCookie = settingDialogDiv.find("#clearCookie").val();
     clientStatus.allowSwitchGroup = settingDialogDiv.find("#allowSwitchGroup").val();
     clientStatus.disableStatistics = settingDialogDiv.find("#disableStatistics").val();
+    clientStatus.disableVisitWebsite = settingDialogDiv.find("#disableVisitWebsite").val();
+
+    clientStatus.switchGroupName = settingDialogDiv.find("#switchGroupName").val();
     clientStatus.host = settingDialogDiv.find("#host").val();
     clientStatus.port = settingDialogDiv.find("#port").val();
     clientStatus.userName = settingDialogDiv.find("#csUserName").val();
@@ -547,7 +552,6 @@ function saveChangeSetting(self){
     clientStatus.maxUserCount = settingDialogDiv.find("#maxUserCount").val();
     clientStatus.optimizeKeywordCountPerIP = settingDialogDiv.find("#optimizeKeywordCountPerIP").val();
 
-    clientStatus.disableVisitWebsite = settingDialogDiv.find("#disableVisitWebsite:checked").val() === '1' ? 1 : 0;
     clientStatus.oneIPOneUser = settingDialogDiv.find("#oneIPOneUser:checked").val() === '1' ? 1 : 0;
     clientStatus.randomlyClickNoResult = settingDialogDiv.find("#randomlyClickNoResult:checked").val() === '1' ? 1 : 0;
     clientStatus.justVisitSelfPage = settingDialogDiv.find("#justVisitSelfPage:checked").val() === '1' ? 1 : 0;
