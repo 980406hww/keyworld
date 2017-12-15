@@ -73,15 +73,6 @@
         </c:forEach>
     </table>
 </div>
-<div id="uploadTxtFileDialog" title="" class="easyui-dialog" style="left: 35%;">
-    <form method="post" id="uploadTxtFileForm" action="" enctype="multipart/form-data">
-        <table width="100%" style="font-size:14px;">
-            <tr><td>
-                <input type="file" id="file" name="file" size=50 height="50px" style="width: 180px;">
-            </td></tr>
-        </table>
-    </form>
-</div>
 <div id="showCustomerBottomPositioneDiv">
     <div id="showCustomerBottomDiv">
     <input id="fisrtButton" class="ui-button ui-widget ui-corner-all" type="button"
