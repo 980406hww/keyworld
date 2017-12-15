@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -26,9 +27,6 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
 
     @Autowired
     private WebsiteDao websiteDao;
-
-    @Autowired
-    private AccessWebsiteFailMailService accessWebsiteFailMailService;
 
     public Page<Website> searchWebsites(Page<Website> page, WebsiteCriteria websiteCriteria) {
         page.setRecords(websiteDao.searchWebsites(page, websiteCriteria));
@@ -67,7 +65,8 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
         }
     }
 
-    public void accessURL() {
+    public List<Website> accessURL() {
+        List<Website> accessFailWebsites = new ArrayList<Website>();
         List<Website> websites = websiteDao.takeWebsitesForAccess();
         for (Website website : websites) {
             try {
@@ -82,30 +81,27 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
                     website.setAccessFailTime(null);
                     website.setAccessFailCount(0);
                 } else {
-                    recordAccessFailInfo(website);
+                    recordAccessFailInfo(website, accessFailWebsites);
                 }
             } catch (IOException e) {
-                recordAccessFailInfo(website);
+                recordAccessFailInfo(website, accessFailWebsites);
             } finally {
                 website.setLastAccessTime(new Date());
                 websiteDao.updateById(website);
             }
         }
+        return accessFailWebsites;
     }
 
-    private void recordAccessFailInfo(Website website) {
-        try {
-            Integer accessFailCount = website.getAccessFailCount();
-            if(accessFailCount == 0) {
-                website.setAccessFailTime(new Date());
-            }
-            website.setAccessFailCount(accessFailCount + 1);
-            websiteDao.updateById(website);
-            if(accessFailCount == 2 || accessFailCount == 5) {
-                accessWebsiteFailMailService.sendAccessWebsiteFailMail(website);
-            }
-        } catch (Exception e) {
-            logger.info(e.getMessage());
+    private void recordAccessFailInfo(Website website, List<Website> accessFailWebsites) {
+        Integer accessFailCount = website.getAccessFailCount();
+        if(accessFailCount == 0) {
+            website.setAccessFailTime(new Date());
+        }
+        website.setAccessFailCount(accessFailCount + 1);
+        websiteDao.updateById(website);
+        if(accessFailCount == 2 || accessFailCount == 5) {
+            accessFailWebsites.add(website);
         }
     }
 }
