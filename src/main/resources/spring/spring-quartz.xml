@@ -79,7 +79,7 @@
 
 	<bean id="cronTriggerGenerateDailyReport" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="cronJobDetailGenerateDailyReport" />
-		<property name="cronExpression" value="1/30 * * * * ?" />
+		<property name="cronExpression" value="0 0/1 * * * ?" />
 	</bean>
 
 	<bean id="cronJobDetailGenerateDailyReport" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -104,7 +104,7 @@
 	<!--访问Website-->
 	<bean id="cronTriggerAccessWebsite" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="cronTriggerAccessWebsiteSchedule" />
-		<property name="cronExpression" value="0 0/10 * * * ?" />
+		<property name="cronExpression" value="0 0/5 * * * ?" />
 	</bean>
 
 	<bean id="cronTriggerAccessWebsiteSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
