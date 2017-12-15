@@ -26,9 +26,6 @@
             <shiro:hasPermission name="/internal/website/deleteWebsites">
             <input type="button" onclick="deleteWebsites()" value=" 删除所选 ">&nbsp;&nbsp;
             </shiro:hasPermission>
-            <shiro:hasPermission name="/internal/website/resetAccessFailCount">
-            <input type="button" value=" 重置失败次数 " onclick="resetAccessFailCount(null)">
-            </shiro:hasPermission>
         </form>
     </div>
     <table style="font-size:12px; width: 100%;" id="headerTable">
@@ -36,12 +33,11 @@
             <td align="center" width="10">
                 <input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/>
             </td>
-            <td align="center" width=30>编号</td>
             <td align="center" width=80>网站名称</td>
             <td align="center" width=100>网站域名</td>
             <td align="center" width=60>所属行业</td>
             <td align="center" width=40>访问失败次数</td>
-            <td align="center" width=50>访问故障时间</td>
+            <td align="center" width=50>发现故障时间</td>
             <td align="center" width=50>最近访问时间</td>
             <td align="center" width=50>更新时间</td>
             <td align="center" width=50>操作</td>
@@ -53,11 +49,10 @@
         <c:forEach items="${page.records}" var="website" varStatus="status">
         <tr align="left" height=30  <c:if test="${status.index%2==0}">bgcolor="#eeeeee"</c:if> >
             <td width=10 align="center"><input type="checkbox" name="uuid" value="${website.uuid}" onclick="decideSelectAll()"/></td>
-            <td width=30>${website.uuid}</td>
             <td width=80>${website.websiteName}</td>
             <td width=100><a target="_blank" href="http://${website.domain}">${website.domain}</a></td>
             <td width=60>${website.industry}</td>
-            <td width=40>${website.accessFailCount}</td>
+            <td width=40>${website.accessFailCount > 0 ? website.accessFailCount : ""}</td>
             <td width=50><fmt:formatDate value="${website.accessFailTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
             <td width=50><fmt:formatDate value="${website.lastAccessTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
             <td width=50><fmt:formatDate value="${website.updateTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
@@ -109,11 +104,6 @@
             <tr>
                 <td align="right">所属行业</td>
                 <td><input type="text" name="industry" id="industry" style="width:200px;">
-                </td>
-            </tr>
-            <tr>
-                <td align="right">访问失败次数</td>
-                <td><input type="text" name="accessFailCount" id="accessFailCount" style="width:200px;">
                 </td>
             </tr>
         </table>

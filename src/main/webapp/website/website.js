@@ -86,7 +86,6 @@ function editWebsiteInfo(uuid) {
                 websiteForm.find("#websiteName").val(websiteInfo.websiteName);
                 websiteForm.find("#domain").val(websiteInfo.domain);
                 websiteForm.find("#industry").val(websiteInfo.industry);
-                websiteForm.find("#accessFailCount").val(websiteInfo.accessFailCount);
                 showWebsiteDialog(websiteInfo.uuid);
             } else {
                 $().toastmessage('showErrorToast', "获取信息失败");
@@ -150,8 +149,8 @@ function showWebsiteDialog(uuid) {
     }
     $("#websiteDialog").dialog({
         resizable: false,
-        width: 320,
-        height: 170,
+        width: 280,
+        height: 145,
         modal: true,
         title: '网站信息',
         closed:true,
@@ -181,36 +180,6 @@ function showWebsiteDialog(uuid) {
     $("#websiteDialog").dialog("open");
     $('#websiteDialog').window("resize",{top:$(document).scrollTop() + 100});
 }
-function resetAccessFailCount() {
-    var uuids = getSelectedIDs();
-    if (uuids === '') {
-        alert('请选择要重置失败次数的网站');
-        return;
-    }
-    if (confirm("确定要重置失败次数吗?") == false) return;
-    var postData = {};
-    postData.uuids = uuids.split(",");
-    $.ajax({
-        url: '/internal/website/resetAccessFailCount',
-        data: JSON.stringify(postData),
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        timeout: 5000,
-        type: 'POST',
-        success: function (data) {
-            if (data) {
-                $().toastmessage('showSuccessToast', "操作成功",true);
-            } else {
-                $().toastmessage('showErrorToast', "操作失败");
-            }
-        },
-        error: function () {
-            $().toastmessage('showErrorToast', "操作失败");
-        }
-    });
-}
 function saveWebsite(uuid) {
     var websiteObj = {};
     if(uuid != null) {
@@ -219,7 +188,6 @@ function saveWebsite(uuid) {
     websiteObj.websiteName = $.trim($("#websiteForm").find("#websiteName").val());
     websiteObj.domain = $.trim($("#websiteForm").find("#domain").val());
     websiteObj.industry = $.trim($("#websiteForm").find("#industry").val());
-    websiteObj.accessFailCount = $.trim($("#websiteForm").find("#accessFailCount").val());
     $.ajax({
         url: '/internal/website/saveWebsite',
         data: JSON.stringify(websiteObj),
