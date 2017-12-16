@@ -18,6 +18,21 @@ import java.util.regex.Pattern;
 public class Utils {
 	public static String TIME_FORMAT = "yyyy-MM-dd HH:mm";
 
+	public static boolean isPower(int number){
+		if (number == 1) {
+			return true;
+		} else {
+			do {
+				if (number % 2 == 0) {
+					number = number / 2;
+				} else {
+					return false;
+				}
+			} while (number != 1);
+			return true;
+		}
+	}
+
 	public static int getIntervalDays(Date compareDate, Date date) {
 
 		Calendar calendar = Calendar.getInstance();

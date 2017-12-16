@@ -6,6 +6,7 @@ import com.keymanager.monitoring.common.email.AccessWebsiteFailMailService;
 import com.keymanager.monitoring.criteria.WebsiteCriteria;
 import com.keymanager.monitoring.dao.WebsiteDao;
 import com.keymanager.monitoring.entity.Website;
+import com.keymanager.util.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,7 +101,7 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
         }
         website.setAccessFailCount(accessFailCount + 1);
         websiteDao.updateById(website);
-        if(accessFailCount == 2 || accessFailCount == 5) {
+        if(accessFailCount > 1 && Utils.isPower(accessFailCount)) {
             accessFailWebsites.add(website);
         }
     }
