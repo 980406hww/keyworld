@@ -6,6 +6,7 @@ import com.keymanager.monitoring.criteria.ClientStatusCriteria;
 import com.keymanager.monitoring.entity.ClientStatus;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
 import com.keymanager.monitoring.service.ClientStatusService;
+import com.keymanager.monitoring.service.ConfigService;
 import com.keymanager.monitoring.service.PerformanceService;
 import com.keymanager.util.Constants;
 import com.keymanager.util.FileUtil;
@@ -95,7 +96,7 @@ public class ClientStatusRestController extends SpringMVCBaseController {
         String terminalType = TerminalTypeMapping.getTerminalType(request);
         clientStatusCriteria.setTerminalType(terminalType);
         Page<ClientStatus> page = clientStatusService.searchClientStatuses(new Page<ClientStatus>(currentPageNumber, pageSize), clientStatusCriteria, normalSearchFlag);
-        String[] operationTypeValues = Constants.operationTypeMap.get(terminalType);
+        String [] operationTypeValues = clientStatusService.getOperationTypeValues(terminalType);
 
         modelAndView.addObject("terminalType", terminalType);
         modelAndView.addObject("clientStatusCriteria", clientStatusCriteria);

@@ -30,6 +30,7 @@ public class Constants {
 	public final static String CONFIG_KEY_MAX_INVALID_COUNT = "MaxInvalidCount";
 	public final static String CONFIG_KEY_VMWARE = "VMWARE";
 	public final static String CONFIG_TYPE_OPTIMIZATION_DATE = "OptimizationDate";
+	public final static String CONFIG_TYPE_OPTIMIZATION_TYPE = "OperationType";
 	
 	public final static Map<String, String> ACCOUNT_LOG_STATUS_MAP = new HashMap<String, String>();
 	static {
@@ -78,14 +79,6 @@ public class Constants {
 		CLIENT_STATUS_ORDERBY_MAP.put("fRestartTime","重启时间");
 		CLIENT_STATUS_ORDERBY_MAP.put("fRestartOrderingTime","重启排序时间");
 		CLIENT_STATUS_ORDERBY_MAP.put("fRestartCount desc","重启次数");
-	}
-
-	public final static Map<String, String[]> operationTypeMap = new HashMap<String, String[]>();
-	static {
-		operationTypeMap.put(TerminalTypeEnum.PC.name(), new String[]{"",
-				"pc_pm","pc_pm2","pc_pm3","pc_xg","pc_xg2","pc_xg3","pc_xl","pc_pm_sogou","pc_pm_360","pc_pm_58",
-				"pc_pm_zhidao", "pc_pm_wenku", "pc_tieba", "pc_kpm", "pc_xl_sogou", "pc_xunipm"});
-		operationTypeMap.put(TerminalTypeEnum.Phone.name(), new String[]{"", "m_pm", "m_pm2", "m_xl", "m_xg", "m_pm_sm", "m_xl2", "m_kpm", "m_xl_sogou", "m_xunipm"});
 	}
 
 	public final static List<String> QZSETTING_STATUS_LIST = new ArrayList<String>();
