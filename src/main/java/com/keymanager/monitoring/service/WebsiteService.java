@@ -101,7 +101,7 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
         }
         website.setAccessFailCount(accessFailCount + 1);
         websiteDao.updateById(website);
-        if(accessFailCount > 2 && Utils.isPower(accessFailCount)) {
+        if(accessFailCount > 1 && Utils.isPower(accessFailCount)) {
             accessFailWebsites.add(website);
         }
     }
