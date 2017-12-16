@@ -861,4 +861,12 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return customerKeywordDao.searchCustomerKeywordSummaryInfo(entryType, customerUuid);
     }
 
+    public String[] searchCustomerNegativeKeywords(long customerUuid) {
+        String [] customerNegativeKeyword = customerKeywordDao.searchCustomerNegativeKeywords(customerUuid);
+        if(customerNegativeKeyword != null){
+            return customerNegativeKeyword;
+        }else {
+            return null;
+        }
+    }
 }
