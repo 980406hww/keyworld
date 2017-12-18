@@ -28,7 +28,8 @@ public class AccessWebsiteFailMailService {
     public void sendAccessWebsiteFailMail(List<Website> accessFailWebsites) throws Exception{
         MimeMessage msg = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(msg, true, DEFAULT_ENCODING);
-        helper.setTo(toEmail);
+        String[] toEmailArr = toEmail.split(";");
+        helper.setTo(toEmailArr);
         helper.setFrom(emailFrom);
         helper.setSubject("网站访问失败警告");
         Map<String, Object> context = new HashMap<String, Object>();
