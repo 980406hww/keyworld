@@ -606,7 +606,7 @@
     </select>
 
     <select id="searchCustomerNegativeKeywords" resultType="java.lang.String">
-        SELECT ck.fKeyword
+        SELECT DISTINCT ck.fKeyword
         FROM t_customer_keyword ck
         WHERE fCustomerUuid = #{customerUuid}
         and fType = 'fm'
