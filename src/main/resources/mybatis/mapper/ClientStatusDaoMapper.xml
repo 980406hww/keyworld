@@ -164,7 +164,7 @@
         t_client_status cs
         WHERE cs.fTerminalType = #{clientStatusCriteria.terminalType}
         <if test="clientStatusCriteria.groupName != null and clientStatusCriteria.groupName != ''">AND cs.fGroup = #{clientStatusCriteria.groupName}</if>
-        AND (cs.fContinuousFailCount &gt; 5 OR DATE_ADD(cs.fLastVisitTime, INTERVAL IF((10 &gt; (cs.fPageNo*3)), 10, (cs.fPageNo * 3)) MINUTE) &lt; NOW()) and cs.fValid = 1
+        AND (cs.fContinuousFailCount &gt; 5 OR DATE_ADD(cs.fLastVisitTime, INTERVAL 10 MINUTE) &lt; NOW()) and cs.fValid = 1
     </select>
 
     <select id="getClientStatusByClientID" parameterType="java.lang.String" resultType="com.keymanager.monitoring.entity.ClientStatus">
@@ -321,7 +321,7 @@
         FROM t_client_status cs
         WHERE (DATE_ADD(fLastVisitTime, INTERVAL 10 MINUTE) &lt; NOW() and fValid = 1
         AND (fRestartStatus = 'restarting' AND DATE_ADD(fRestartTime, INTERVAL 3 MINUTE) &lt; NOW())
-        AND (fHost is not null and fHost &lt;&gt; '')) order by fRestartOrderingTime
+        AND (fHost is not null and fHost &lt;&gt; '')) order by fRestartOrderingTime limit 20
     </select>
 
 
@@ -329,8 +329,8 @@
         SELECT
         <include refid="selectCol" />
         FROM t_client_status cs
-        WHERE (fContinuousFailCount > 5 OR DATE_ADD(fLastVisitTime, INTERVAL IF((10 > (fPageNo*3)), 10, (fPageNo * 3)) MINUTE) &lt; NOW())
+        WHERE (fContinuousFailCount > 5 OR DATE_ADD(fLastVisitTime, INTERVAL 10 MINUTE) &lt; NOW())
         AND (fRestartTime IS NULL OR DATE_ADD(fRestartTime, INTERVAL 10 MINUTE) &lt; NOW())
-        AND fValid = 1 AND (fHost is not null and fHost &lt;&gt; '') order by fRestartOrderingTime
+        AND fValid = 1 AND fHost &gt; '' order by fRestartOrderingTime
     </select>
 </mapper>
