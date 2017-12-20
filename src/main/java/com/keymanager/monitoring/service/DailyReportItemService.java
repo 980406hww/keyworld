@@ -56,7 +56,7 @@ public class DailyReportItemService extends ServiceImpl<DailyReportItemDao, Dail
 			Customer customer = customerService.getCustomer(dailyReportItem.getCustomerUuid());
 			CustomerKeywordDailyReportExcelWriter excelWriter = new CustomerKeywordDailyReportExcelWriter(terminalType, dailyReportItem
 					.getCustomerUuid() + "", dailyReportUuid);
-			excelWriter.writeDataToExcel(customerKeywords, customer.getContactPerson());
+			excelWriter.writeDataToExcel(customerKeywords, customer.getContactPerson(), terminalType);
 		}
 		dailyReportItem.setStatus(DailyReportStatusEnum.Completed.name());
 		dailyReportItem.setUpdateTime(new Date());

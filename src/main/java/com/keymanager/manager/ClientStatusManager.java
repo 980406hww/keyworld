@@ -1188,7 +1188,7 @@ public class ClientStatusManager {
 			}
 			String path = Thread.currentThread().getContextClassLoader().getResource("").toURI().getPath();
 			zipFileName = path + "vnc.zip";
-			ZipCompressor.zipMultiFile(path + "vnc/", zipFileName);
+			ZipCompressor.zipMultiFile(path + "vnc/", zipFileName, false);
 		}catch (Exception ex){
 			ex.printStackTrace();
 			throw new Exception("downloadVNCInfo error");

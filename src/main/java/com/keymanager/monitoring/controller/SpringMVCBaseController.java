@@ -82,7 +82,7 @@ public abstract class SpringMVCBaseController {
 			response.setContentType("application/octet-stream");
 			String path = Thread.currentThread().getContextClassLoader().getResource("").toURI().getPath();
 			String zipFilePath = path + fileName;
-			ZipCompressor.zipMultiFile(path + fileName.substring(0,fileName.indexOf(".")), zipFilePath);
+			ZipCompressor.zipMultiFile(path + fileName.substring(0,fileName.indexOf(".")), zipFilePath, false);
 			response.addHeader("Content-Disposition", "attachment;filename=" + fileName);
 			outputStream = response.getOutputStream();
 			fileInputStream = new FileInputStream(zipFilePath);

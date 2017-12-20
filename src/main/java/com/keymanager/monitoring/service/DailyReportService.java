@@ -78,7 +78,7 @@ public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport>
 
 			dailyReport.setReportPath(zipFileName);
 			dailyReportDao.updateById(dailyReport);
-			ZipCompressor.zipMultiFile(reportFolder, path + zipFileName);
+			ZipCompressor.zipMultiFile(reportFolder, path + zipFileName, true);
 
 			FileUtil.delFolder(reportFolder);
 		}
