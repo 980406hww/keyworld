@@ -400,7 +400,7 @@
     </update>
 
     <select id="getEntryTypes" resultType="String">
-        SELECT distinct ck.fType as typeName FROM t_customer_keyword ck WHERE ck.fOptimizeGroupName = #{groupName} AND ck.fStatus = 1
+        SELECT ck.fType as typeName FROM t_customer_keyword ck WHERE ck.fOptimizeGroupName = #{groupName} AND ck.fStatus = 1 limit 1
     </select>
 
     <update id="resetOptimizationInfo">
@@ -419,9 +419,9 @@
         <include refid="colID"/>
         FROM t_customer_keyword ck
         WHERE ck.fOptimizeGroupName = #{groupName} and ck.fStatus = 1 and ck.fTerminalType = #{terminalType}
-        and (ck.fQueryTime is NULL or DATE_SUB(NOW(), INTERVAL ck.fQueryInterval MINUTE) > ck.fQueryTime) and ck.fUrl <![CDATA[<>]]> ''
+        and (DATE_SUB(NOW(), INTERVAL ck.fQueryInterval MINUTE) > ck.fQueryTime) and ck.fUrl <![CDATA[>]]> ''
         and ((ck.fCurrentPosition = 0 and ck.fInvalidRefreshCount <![CDATA[<]]> 2) or (ck.fCurrentPosition > 0 and ck.fInvalidRefreshCount <![CDATA[<]]> #{maxInvalidCount}))
-        and ((ck.fOptimizedCount <![CDATA[<]]> ck.fOptimizePlanCount) or (ck.fOptimizeDate is null) or (ck.fOptimizeDate <![CDATA[<]]> current_date()))
+        and (ck.fOptimizedCount <![CDATA[<]]> ck.fOptimizePlanCount)
         <if test="bigKeyword == true">
             and ck.fBigKeyword = 1
         </if>

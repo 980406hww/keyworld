@@ -3,8 +3,10 @@ package com.keymanager.monitoring.service;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.dao.ClientStatusDao;
 import com.keymanager.monitoring.entity.ClientStatus;
+import com.keymanager.util.Utils;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,6 +19,7 @@ public class KeywordOptimizationCountService extends ServiceImpl<ClientStatusDao
 		if(keywordOptimizationCount == null){
 			keywordOptimizationCount = new KeywordOptimizationCount();
 			keywordOptimizationCount.setGroup(groupName);
+			keywordOptimizationCount.setLastResetTime(Utils.getCurrentTimestamp());
 			keywordOptimizationCountMap.put(groupName, keywordOptimizationCount);
 		}
 		return keywordOptimizationCount;
@@ -29,12 +32,12 @@ public class KeywordOptimizationCountService extends ServiceImpl<ClientStatusDao
 
 	public boolean optimizeNormalKeyword(String groupName){
 		KeywordOptimizationCount keywordOptimizationCount = get(groupName);
-		if(keywordOptimizationCount.fetchBigKeyword()){
-			keywordOptimizationCount.setBigKeywordOptimizedCount(keywordOptimizationCount.getBigKeywordOptimizedCount() + 1);
-			return false;
-		}else{
+		if(keywordOptimizationCount.fetchNormalKeyword()){
 			keywordOptimizationCount.setNormalKeywordOptimizedCount(keywordOptimizationCount.getNormalKeywordOptimizedCount() + 1);
 			return true;
+		}else{
+			keywordOptimizationCount.setBigKeywordOptimizedCount(keywordOptimizationCount.getBigKeywordOptimizedCount() + 1);
+			return false;
 		}
 	}
 
@@ -44,10 +47,21 @@ public class KeywordOptimizationCountService extends ServiceImpl<ClientStatusDao
 		keywordOptimizationCount.setNormalKeywordOptimizedCount(0);
 	}
 
+	public boolean allowResetBigKeywordIndicator(String groupName){
+		KeywordOptimizationCount keywordOptimizationCount = get(groupName);
+		return Utils.getCurrentTimestamp().after(Utils.addMinutes(keywordOptimizationCount.getLastResetTime(), 20));
+	}
+
+	public void setLastVisitTime(String groupName){
+		KeywordOptimizationCount keywordOptimizationCount = get(groupName);
+		keywordOptimizationCount.setLastResetTime(Utils.getCurrentTimestamp());
+	}
+
 	class KeywordOptimizationCount {
 		private String group;
 		private int normalKeywordOptimizedCount;
 		private int bigKeywordOptimizedCount;
+		private Timestamp lastResetTime;
 
 		public boolean fetchNormalKeyword(){
 			return this.normalKeywordOptimizedCount < 30;
@@ -79,6 +93,14 @@ public class KeywordOptimizationCountService extends ServiceImpl<ClientStatusDao
 
 		public void setBigKeywordOptimizedCount(int bigKeywordOptimizedCount) {
 			this.bigKeywordOptimizedCount = bigKeywordOptimizedCount;
+		}
+
+		public Timestamp getLastResetTime() {
+			return lastResetTime;
+		}
+
+		public void setLastResetTime(Timestamp lastResetTime) {
+			this.lastResetTime = lastResetTime;
 		}
 	}
 }
