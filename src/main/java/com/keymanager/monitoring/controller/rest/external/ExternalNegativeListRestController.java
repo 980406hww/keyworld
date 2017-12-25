@@ -55,8 +55,8 @@ public class ExternalNegativeListRestController extends SpringMVCBaseController 
 	public ResponseEntity<?> getSpecifiedKeywordNegativeLists(@RequestBody NegativeListCriteria negativeListCriteria, HttpServletRequest request) throws Exception{
 		try {
 			if (validUser(negativeListCriteria.getUserName(), negativeListCriteria.getPassword())) {
-				String terminalType = TerminalTypeMapping.getTerminalType(request);
-				List<NegativeList> negativeLists = negativeListService.getSpecifiedKeywordNegativeLists(terminalType, negativeListCriteria
+				//String terminalType = TerminalTypeMapping.getTerminalType(request);
+				List<NegativeList> negativeLists = negativeListService.getSpecifiedKeywordNegativeLists(null, negativeListCriteria
 						.getKeyword());
 				return new ResponseEntity<Object>(negativeLists, HttpStatus.OK);
 			}

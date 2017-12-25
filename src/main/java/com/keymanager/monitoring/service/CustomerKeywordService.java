@@ -8,15 +8,12 @@ import com.keymanager.monitoring.dao.CustomerKeywordDao;
 import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.enums.*;
 import com.keymanager.monitoring.excel.operator.AbstractExcelReader;
-import com.keymanager.monitoring.vo.CodeNameVo;
-import com.keymanager.monitoring.vo.SearchEngineResultItemVO;
-import com.keymanager.monitoring.vo.SearchEngineResultVO;
+import com.keymanager.monitoring.vo.*;
 import com.keymanager.util.Constants;
 import com.keymanager.util.Utils;
 import com.keymanager.util.common.StringUtil;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
-import com.keymanager.monitoring.vo.CustomerKeywordForOptimization;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.RowBounds;
@@ -868,5 +865,26 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }else {
             return null;
         }
+    }
+
+    public List<ZTreeVO> getCustomerSource() {
+        List<ZTreeVO> zTreeList = new ArrayList<ZTreeVO>();
+        List<Customer> customers = customerService.findNegativeCustomer();
+        Long currentTime = Utils.getCurrentTimestamp().getTime();
+        for (Customer customer : customers) {
+            zTreeList.add(new ZTreeVO(customer.getUuid(), 0L, customer.getContactPerson()));
+            String [] customerKeywords = customerKeywordDao.searchCustomerNegativeKeywords(customer.getUuid());
+            for (int i = 0; i < customerKeywords.length; i++) {
+                zTreeList.add(new ZTreeVO(currentTime, customer.getUuid(), customerKeywords[i]));
+                Long keywordTime = currentTime;
+                currentTime++;
+                for (String searchStyle : Constants.SEARCH_STYLE_LIST) {
+                    String searchStyleJson = "{id:customer" + currentTime + ", pId:" + keywordTime + ", name:" + searchStyle + "}";
+                    zTreeList.add(new ZTreeVO(currentTime, keywordTime, searchStyle));
+                    currentTime++;
+                }
+            }
+        }
+        return zTreeList;
     }
 }

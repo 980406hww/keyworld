@@ -609,6 +609,7 @@
         SELECT DISTINCT ck.fKeyword
         FROM t_customer_keyword ck
         WHERE fCustomerUuid = #{customerUuid}
-        and fType = 'fm'
+        AND fType = 'fm'
+        AND fStatus = 1
     </select>
 </mapper>

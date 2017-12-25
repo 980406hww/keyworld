@@ -64,4 +64,16 @@
         GROUP BY
             ck.fCustomerUuid
     </select>
+
+    <select id="findNegativeCustomer" resultType="com.keymanager.monitoring.entity.Customer">
+        SELECT
+            fUuid AS "uuid",
+            fContactPerson AS "contactPerson"
+        FROM
+            t_customer
+        WHERE
+            fEntryType = "fm"
+        AND
+            fStatus = 1
+    </select>
 </mapper>

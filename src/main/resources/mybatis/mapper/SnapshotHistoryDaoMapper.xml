@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.SnapshotHistoryDao">
+	<sql id="selectCol">
+		fUuid AS "uuid",
+		fCustomerUuid AS "customerUuid",
+		fContactPerson AS "contactPerson",
+		fKeywordTreeId AS "keywordTreeId",
+		fKeyword AS "keyword",
+		fSearchEngineTreeId AS "searchEngineTreeId",
+		fSearchEngine AS "searchEngine",
+		fClickCount AS "clickCount",
+		fTitle AS "title",
+		fDesc AS "desc",
+		fUrl AS "url",
+		fOrder AS "order",
+		fHref AS "href",
+		fHasOfficialWebsiteIndicator AS "hasOfficialWebsiteIndicator",
+		fIsNegative AS "isNegative",
+		fIsExistNegativeList AS "isExistNegativeList",
+		fIsExistPositiveList AS "isExistPositiveList",
+		fUpdateTime AS "updateTime",
+		fCreateTime AS "createTime"
+	</sql>
+
+	<select id="deleteSnapshotHistorys" parameterType="com.keymanager.monitoring.entity.SnapshotHistory">
+		DELETE FROM t_snapshot_history
+		WHERE fCustomerUuid = #{snapshotHistory.customerUuid}
+		AND fKeyword = #{snapshotHistory.keyword}
+		AND fSearchEngine = #{snapshotHistory.searchEngine}
+		AND fCreateTime BETWEEN #{snapshotHistory.createTime} AND DATE_ADD(#{snapshotHistory.createTime}, INTERVAL 1 DAY )
+	</select>
+
+	<select id="searchRelatedCustomerInfos" resultType="java.lang.String">
+		SELECT DISTINCT CONCAT(fCustomerUuid, ',', fContactPerson)
+		FROM t_snapshot_history
+		WHERE fCreateTime BETWEEN #{searchDate} AND DATE_ADD(#{searchDate}, INTERVAL 1 DAY )
+	</select>
+
+	<select id="searchRelatedEngineInfos" resultType="java.lang.String">
+		SELECT DISTINCT CONCAT(fCustomerUuid, ",",fContactPerson, ",", fKeywordTreeId, ",", fKeyword, ",", fSearchEngineTreeId, ',', fSearchEngine)
+		FROM t_snapshot_history
+		WHERE fCreateTime BETWEEN #{searchDate} AND DATE_ADD(#{searchDate}, INTERVAL 1 DAY )
+	</select>
+
+	<select id="searchSnapshotHistories" resultType="com.keymanager.monitoring.entity.SnapshotHistory">
+		SELECT
+		<include refid="selectCol" />
+		FROM t_snapshot_history
+		WHERE fCreateTime BETWEEN #{searchDate} AND DATE_ADD(#{searchDate}, INTERVAL 1 DAY )
+	</select>
+
+</mapper>

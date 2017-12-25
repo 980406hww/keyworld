@@ -10,6 +10,7 @@ import com.keymanager.monitoring.service.CustomerKeywordService;
 import com.keymanager.monitoring.service.PerformanceService;
 import com.keymanager.monitoring.vo.SearchEngineResultItemVO;
 import com.keymanager.monitoring.vo.SearchEngineResultVO;
+import com.keymanager.monitoring.vo.ZTreeVO;
 import com.keymanager.util.Constants;
 import com.keymanager.util.TerminalTypeMapping;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
@@ -332,6 +333,22 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 }else {
                     return new ResponseEntity<Object>(null,HttpStatus.OK);
                 }
+            }
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        }catch (Exception ex){
+            logger.error(ex.getMessage());
+        }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+    }
+
+    @RequestMapping(value = "/getCustomerSource", method = RequestMethod.POST)
+    public ResponseEntity<?> getCustomerSource(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) throws Exception {
+        try {
+            String userName = (String) requestMap.get("userName");
+            String password = (String) requestMap.get("password");
+            if (validUser(userName, password)) {
+                List<ZTreeVO> zTreeList = customerKeywordService.getCustomerSource();
+                return new ResponseEntity<Object>(zTreeList, HttpStatus.OK);
             }
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }catch (Exception ex){

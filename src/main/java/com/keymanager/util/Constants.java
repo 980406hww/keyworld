@@ -88,4 +88,14 @@ public class Constants {
 		QZSETTING_STATUS_LIST.add("Completed");
 		QZSETTING_STATUS_LIST.add("DownloadTimesUsed");
 	}
+
+	public final static List<String> SEARCH_STYLE_LIST = new ArrayList<String>();
+	static {
+		SEARCH_STYLE_LIST.add("神马");
+		SEARCH_STYLE_LIST.add("搜狗电脑");
+		SEARCH_STYLE_LIST.add("搜狗手机");
+		SEARCH_STYLE_LIST.add("360电脑");
+		SEARCH_STYLE_LIST.add("百度电脑");
+		SEARCH_STYLE_LIST.add("百度手机");
+	}
 }

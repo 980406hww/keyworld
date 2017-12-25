@@ -116,4 +116,8 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 	{
 		return customerDao.searchCustomerWithKeyword(groupNames,terminalType);
 	}
+
+	public List<Customer> findNegativeCustomer() {
+		return customerDao.findNegativeCustomer();
+	}
 }
