@@ -21,7 +21,7 @@ public class AccessWebsiteSchedule {
     private AccessWebsiteFailMailService accessWebsiteFailMailService;
 
     public void runTask(){
-        /*logger.info("============= "+" Access URL Task "+"===================");
+        logger.info("============= "+" Access URL Task "+"===================");
         try {
             List<Website> websites = websiteService.accessURL();
             if (websites.size() > 0) {
@@ -29,7 +29,7 @@ public class AccessWebsiteSchedule {
             }
         } catch (Exception e) {
             logger.error(" Access URL is error" + e.getMessage());
-        }*/
+        }
     }
 
 
