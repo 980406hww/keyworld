@@ -92,8 +92,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return page;
     }
 
-    public List<CustomerKeyword> searchCustomerKeywords(CustomerKeywordCriteria customerKeywordCriteria){
-        return customerKeywordDao.searchCustomerKeywords(customerKeywordCriteria);
+    public List<CustomerKeyword> searchCustomerKeywordsForDailyReport(CustomerKeywordCriteria customerKeywordCriteria){
+        return customerKeywordDao.searchCustomerKeywordsForDailyReport(customerKeywordCriteria);
     }
 
     public CustomerKeywordForCaptureTitle searchCustomerKeywordForCaptureTitle(String terminalType,String searchEngine) throws Exception {
@@ -212,6 +212,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeyword.setCurrentPosition(10);
         }
         customerKeyword.setAutoUpdateNegativeDateTime(Utils.getCurrentTimestamp());
+        customerKeyword.setStartOptimizedTime(new Date());
         customerKeyword.setQueryTime(new Date());
         customerKeyword.setQueryDate(new Date());
         customerKeyword.setUpdateTime(new Date());

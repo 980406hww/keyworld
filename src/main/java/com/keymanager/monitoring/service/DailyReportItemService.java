@@ -50,7 +50,7 @@ public class DailyReportItemService extends ServiceImpl<DailyReportItemDao, Dail
 		customerKeywordCriteria.setStatus("1");
 		customerKeywordCriteria.setOrderingElement("fSequence");
 		customerKeywordCriteria.setOrderingRule("ASC");
-		List<CustomerKeyword> customerKeywords = customerKeywordService.searchCustomerKeywords(customerKeywordCriteria);
+		List<CustomerKeyword> customerKeywords = customerKeywordService.searchCustomerKeywordsForDailyReport(customerKeywordCriteria);
 
 		if (!Utils.isEmpty(customerKeywords)) {
 			Customer customer = customerService.getCustomer(dailyReportItem.getCustomerUuid());

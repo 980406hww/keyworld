@@ -81,7 +81,7 @@ public class DailyReportRestController extends SpringMVCBaseController {
 		customerKeywordCriteria.setStatus("1");
 		customerKeywordCriteria.setOrderingElement("fSequence");
 		customerKeywordCriteria.setOrderingRule("ASC");
-		List<CustomerKeyword> customerKeywords = customerKeywordService.searchCustomerKeywords(customerKeywordCriteria);
+		List<CustomerKeyword> customerKeywords = customerKeywordService.searchCustomerKeywordsForDailyReport(customerKeywordCriteria);
 		if (!Utils.isEmpty(customerKeywords)) {
 			if(dayOfMonth == 1) {
 				String uuids = "" + customerUuid;
