@@ -469,7 +469,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
 
-    public CustomerKeywordForOptimization searchCustomerKeywordsForOptimization(String terminalType, String clientID, String version) {
+    public CustomerKeywordForOptimization searchCustomerKeywordsForOptimization(String terminalType, String clientID, String version, boolean updateQueryInfo) {
         ClientStatus clientStatus = clientStatusService.selectById(clientID);
         if(clientStatus == null) {
             clientStatusService.addSummaryClientStatus(terminalType, clientID, 500 + "", version, null);
@@ -513,6 +513,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                     keywordOptimizationCountService.setLastVisitTime(clientStatus.getGroup());
                     resetBigKeywordIndicator(clientStatus.getGroup(), Integer.parseInt(maxInvalidCountConfig.getValue()));
                 }
+            }else if(updateQueryInfo){
+                updateOptimizationQueryTime((customerKeyword.getUuid()));
             }
         }while(customerKeyword == null && retryCount < 2);
 
@@ -614,7 +616,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public boolean haveCustomerKeywordForOptimization(String terminalType, String clientID){
-        CustomerKeywordForOptimization customerKeywordForOptimization = searchCustomerKeywordsForOptimization(terminalType, clientID, null);
+        CustomerKeywordForOptimization customerKeywordForOptimization = searchCustomerKeywordsForOptimization(terminalType, clientID, null, false);
         return customerKeywordForOptimization != null;
     }
 
