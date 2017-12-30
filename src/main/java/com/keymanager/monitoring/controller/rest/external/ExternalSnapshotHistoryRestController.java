@@ -59,4 +59,17 @@ public class ExternalSnapshotHistoryRestController extends SpringMVCBaseControll
 		return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
 	}
 
+	@RequestMapping(value = "/getNegativeHistoryRanks", method = RequestMethod.POST)
+	public ResponseEntity<?> getNegativeHistoryRanks(@RequestBody SnapshotHistoryCriteria snapshotHistoryCriteria, HttpServletRequest request) throws Exception {
+		try {
+			if (validUser(snapshotHistoryCriteria.getUserName(), snapshotHistoryCriteria.getPassword())) {
+				SnapshotHistoryVO snapshotHistoryVO = snapshotHistoryService.getNegativeHistoryRanks(snapshotHistoryCriteria);
+				return new ResponseEntity<Object>(snapshotHistoryVO, HttpStatus.OK);
+			}
+		}catch (Exception ex){
+			logger.error(ex.getMessage());
+		}
+		return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+	}
+
 }

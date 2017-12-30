@@ -18,4 +18,6 @@ public interface SnapshotHistoryDao extends BaseMapper<SnapshotHistory> {
     List<String> searchRelatedCustomerInfos(@PathVariable("searchDate") Date searchDate);
 
     List<String> searchRelatedEngineInfos(@PathVariable("searchDate") Date searchDate);
+
+    List<SnapshotHistory> searchCustomerNegativeLists(@Param("snapshotHistoryCriteria") SnapshotHistoryCriteria snapshotHistoryCriteria);
 }
