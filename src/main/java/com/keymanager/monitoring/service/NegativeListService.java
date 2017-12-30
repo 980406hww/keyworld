@@ -55,7 +55,6 @@ public class NegativeListService extends ServiceImpl<NegativeListDao, NegativeLi
             for (NegativeList negativeList : negativeLists) {
                 NegativeListCriteria negativeListCriteria = new NegativeListCriteria();
                 negativeListCriteria.setKeyword(negativeList.getKeyword());
-                negativeListCriteria.setTerminalType(negativeList.getTerminalType());
                 negativeListCriteria.setUrl(negativeList.getUrl());
                 negativeListCriteria.setTitle(negativeList.getTitle());
                 negativeListCriteria.setOriginalUrl(negativeList.getOriginalUrl());
@@ -76,8 +75,8 @@ public class NegativeListService extends ServiceImpl<NegativeListDao, NegativeLi
         }
     }
 
-    public List<NegativeList> getSpecifiedKeywordNegativeLists(String terminalType, String keyword) {
-        return negativeListDao.getSpecifiedKeywordNegativeLists(terminalType, keyword);
+    public List<NegativeList> getSpecifiedKeywordNegativeLists(String keyword) {
+        return negativeListDao.getSpecifiedKeywordNegativeLists(keyword);
     }
 
     public NegativeList getNegativeList(long uuid) {

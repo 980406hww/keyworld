@@ -14,7 +14,7 @@ public interface NegativeListDao extends BaseMapper<NegativeList> {
 
     List<NegativeList> searchNegativeListsFullMatching(@Param("negativeListCriteria") NegativeListCriteria negativeListCriteria);
 
-    List<NegativeList> getSpecifiedKeywordNegativeLists(@Param("terminalType") String terminalType, @Param("keyword") String keyword);
+    List<NegativeList> getSpecifiedKeywordNegativeLists(@Param("keyword") String keyword);
 
     int selectLastId();
 

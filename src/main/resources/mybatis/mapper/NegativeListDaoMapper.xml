@@ -14,7 +14,7 @@
 			fCreateTime AS "createTime"
 		FROM
 			t_negative_list n
-		WHERE n.fTerminalType = #{negativeListCriteria.terminalType}
+		WHERE 1 = 1
 		<if test="negativeListCriteria.keyword != null and negativeListCriteria.keyword != ''">AND n.fKeyword like '%${negativeListCriteria.keyword}%'</if>
 		<if test="negativeListCriteria.url != null and negativeListCriteria.url != ''">AND n.fUrl like '%${negativeListCriteria.url}%'</if>
 		ORDER BY n.fCreateTime DESC
@@ -53,7 +53,6 @@
 		FROM
 		t_negative_list n
 		WHERE n.fKeyword = #{keyword}
-		<if test="terminalType != null and terminalType != ''">AND n.fTerminalType = #{terminalType}</if>
 		ORDER BY n.fCreateTime DESC
 	</select>
 

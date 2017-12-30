@@ -14,6 +14,6 @@ public interface PositiveListDao extends BaseMapper<PositiveList> {
 
     List<PositiveList> searchPositiveListsFullMatching(@Param("positiveListCriteria") PositiveListCriteria positiveListCriteria);
 
-    List<PositiveList> getSpecifiedKeywordPositiveLists(@Param("terminalType") String terminalType, @Param("keyword") String keyword);
+    List<PositiveList> getSpecifiedKeywordPositiveLists(@Param("keyword") String keyword);
 
 }

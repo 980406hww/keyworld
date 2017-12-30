@@ -41,7 +41,6 @@ public class PositiveListService extends ServiceImpl<PositiveListDao, PositiveLi
             for (PositiveList positiveList : positiveLists) {
                 PositiveListCriteria positiveListCriteria = new PositiveListCriteria();
                 positiveListCriteria.setKeyword(positiveList.getKeyword());
-                positiveListCriteria.setTerminalType(positiveList.getTerminalType());
                 positiveListCriteria.setUrl(positiveList.getUrl());
                 positiveListCriteria.setTitle(positiveList.getTitle());
                 positiveListCriteria.setOriginalUrl(positiveList.getOriginalUrl());
@@ -62,8 +61,8 @@ public class PositiveListService extends ServiceImpl<PositiveListDao, PositiveLi
         }
     }
 
-    public List<PositiveList> getSpecifiedKeywordPositiveLists(String terminalType, String keyword) {
-        return positiveListDao.getSpecifiedKeywordPositiveLists(terminalType, keyword);
+    public List<PositiveList> getSpecifiedKeywordPositiveLists(String keyword) {
+        return positiveListDao.getSpecifiedKeywordPositiveLists(keyword);
     }
 
     public PositiveList getPositiveList(long uuid) {

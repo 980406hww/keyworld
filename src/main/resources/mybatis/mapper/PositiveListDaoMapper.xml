@@ -19,7 +19,7 @@
 		<include refid="selectCol" />
 		FROM
 			t_positive_list n
-		WHERE n.fTerminalType = #{positiveListCriteria.terminalType}
+		WHERE 1 = 1
 		<if test="positiveListCriteria.keyword != null and positiveListCriteria.keyword != ''">AND n.fKeyword like '%${positiveListCriteria.keyword}%'</if>
 		<if test="positiveListCriteria.url != null and positiveListCriteria.url != ''">AND n.fUrl like '%${positiveListCriteria.url}%'</if>
 		ORDER BY n.fCreateTime DESC
@@ -51,7 +51,6 @@
 		FROM
 		t_positive_list n
 		WHERE n.fKeyword = #{keyword}
-		<if test="terminalType != null and terminalType != ''">AND n.fTerminalType = #{terminalType}</if>
 		ORDER BY n.fCreateTime DESC
 	</select>
 

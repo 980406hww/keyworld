@@ -54,7 +54,6 @@ function editNegativeList(uuid) {
         success: function (negativeList) {
             if (negativeList != null) {
                 var negativeListForm = $("#negativeListForm");
-                negativeListForm.find("#terminalType").val(negativeList.terminalType);
                 negativeListForm.find("#keyword").val(negativeList.keyword);
                 negativeListForm.find("#title").val(negativeList.title);
                 negativeListForm.find("#url").val(negativeList.url);

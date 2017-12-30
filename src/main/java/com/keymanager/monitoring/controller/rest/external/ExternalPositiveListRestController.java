@@ -33,9 +33,7 @@ public class ExternalPositiveListRestController extends SpringMVCBaseController 
 	public ResponseEntity<?> savePositiveLists(@RequestBody PositiveListCriteria positiveListCriteria, HttpServletRequest request) throws Exception{
 		try {
 			if (validUser(positiveListCriteria.getUserName(), positiveListCriteria.getPassword())) {
-				String terminalType = TerminalTypeMapping.getTerminalType(request);
 				for(PositiveList positiveList : positiveListCriteria.getPositiveLists()){
-					positiveList.setTerminalType(terminalType);
 					if(StringUtils.isNotEmpty(positiveList.getDesc())){
 						String desc = positiveList.getDesc().replace("\n" , "").replace(" ", "");
 						positiveList.setDesc(desc);
@@ -54,8 +52,7 @@ public class ExternalPositiveListRestController extends SpringMVCBaseController 
 	public ResponseEntity<?> getSpecifiedKeywordPositiveLists(@RequestBody PositiveListCriteria positiveListCriteria, HttpServletRequest request) throws Exception{
 		try {
 			if (validUser(positiveListCriteria.getUserName(), positiveListCriteria.getPassword())) {
-				//String terminalType = TerminalTypeMapping.getTerminalType(request);
-				List<PositiveList> positiveLists = positiveListService.getSpecifiedKeywordPositiveLists(null, positiveListCriteria.getKeyword());
+				List<PositiveList> positiveLists = positiveListService.getSpecifiedKeywordPositiveLists(positiveListCriteria.getKeyword());
 				return new ResponseEntity<Object>(positiveLists, HttpStatus.OK);
 			}
 		}catch (Exception ex){

@@ -52,11 +52,8 @@ public class NegativeListRestController {
 
     private ModelAndView constructNegativeListModelAndView(HttpServletRequest request, NegativeListCriteria negativeListCriteria, int currentPageNumber, int pageSize) {
         ModelAndView modelAndView = new ModelAndView("/negativelist/list");
-        String terminalType = TerminalTypeMapping.getTerminalType(request);
-        negativeListCriteria.setTerminalType(terminalType);
         Page<NegativeList> page = negativeListService.searchNegativeLists(new Page<NegativeList>(currentPageNumber,
                 pageSize), negativeListCriteria);
-        modelAndView.addObject("terminalType", terminalType);
         modelAndView.addObject("negativeListCriteria", negativeListCriteria);
         modelAndView.addObject("page", page);
         return modelAndView;
@@ -66,8 +63,6 @@ public class NegativeListRestController {
     @RequestMapping(value = "/saveNegativeList", method = RequestMethod.POST)
     public ResponseEntity<?> saveNegativeList(@RequestBody NegativeList negativeList, HttpServletRequest request) {
         try {
-            String terminalType = TerminalTypeMapping.getTerminalType(request);
-            negativeList.setTerminalType(terminalType);
             negativeListService.saveNegativeList(negativeList);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {

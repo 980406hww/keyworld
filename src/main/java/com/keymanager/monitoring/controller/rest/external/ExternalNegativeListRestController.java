@@ -34,9 +34,7 @@ public class ExternalNegativeListRestController extends SpringMVCBaseController 
 	public ResponseEntity<?> saveNegativeLists(@RequestBody NegativeListCriteria negativeListCriteria, HttpServletRequest request) throws Exception{
 		try {
 			if (validUser(negativeListCriteria.getUserName(), negativeListCriteria.getPassword())) {
-				String terminalType = TerminalTypeMapping.getTerminalType(request);
 				for(NegativeList negativeList : negativeListCriteria.getNegativeLists()){
-					negativeList.setTerminalType(terminalType);
 					if(StringUtils.isNotEmpty(negativeList.getDesc())){
 						String desc = negativeList.getDesc().replace("\n" , "").replace(" ", "");
 						negativeList.setDesc(desc);
@@ -55,9 +53,7 @@ public class ExternalNegativeListRestController extends SpringMVCBaseController 
 	public ResponseEntity<?> getSpecifiedKeywordNegativeLists(@RequestBody NegativeListCriteria negativeListCriteria, HttpServletRequest request) throws Exception{
 		try {
 			if (validUser(negativeListCriteria.getUserName(), negativeListCriteria.getPassword())) {
-				//String terminalType = TerminalTypeMapping.getTerminalType(request);
-				List<NegativeList> negativeLists = negativeListService.getSpecifiedKeywordNegativeLists(null, negativeListCriteria
-						.getKeyword());
+				List<NegativeList> negativeLists = negativeListService.getSpecifiedKeywordNegativeLists(negativeListCriteria.getKeyword());
 				return new ResponseEntity<Object>(negativeLists, HttpStatus.OK);
 			}
 		}catch (Exception ex){
@@ -73,8 +69,7 @@ public class ExternalNegativeListRestController extends SpringMVCBaseController 
 		String keyword = request.getParameter("keyword");
 		try {
 			if (validUser(userName, password)) {
-				String terminalType = TerminalTypeMapping.getTerminalType(request);
-				List<NegativeList> negativeLists = negativeListService.getSpecifiedKeywordNegativeLists(terminalType, keyword);
+				List<NegativeList> negativeLists = negativeListService.getSpecifiedKeywordNegativeLists(keyword);
 				StringBuilder sb = new StringBuilder(Constants.COLUMN_SPLITTOR);
 				if(CollectionUtils.isNotEmpty(negativeLists)){
 					for(NegativeList negativeList : negativeLists){

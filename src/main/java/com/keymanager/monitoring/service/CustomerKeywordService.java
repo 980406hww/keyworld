@@ -799,7 +799,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     public void autoUpdateNegativeCustomerKeywords(SearchEngineResultVO searchEngineResultVO, String terminalType, String loginName) throws Exception {
         if(searchEngineResultVO != null) {
-            List<NegativeList> negativeLists = negativeListService.getSpecifiedKeywordNegativeLists(terminalType, searchEngineResultVO.getKeyword());
+            List<NegativeList> negativeLists = negativeListService.getSpecifiedKeywordNegativeLists(searchEngineResultVO.getKeyword());
             List<CustomerKeyword> customerKeywords = new ArrayList<CustomerKeyword>();
             String searchEngine = searchEngineResultVO.getSearchEngine();
             for (SearchEngineResultItemVO searchEngineResultItemVO : searchEngineResultVO.getSearchEngineResultItemVOs()) {
