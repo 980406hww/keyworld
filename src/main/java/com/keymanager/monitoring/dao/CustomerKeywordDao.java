@@ -50,7 +50,7 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     int searchCustomerKeywordsCount(@Param("customerKeywordCriteria") CustomerKeywordCriteria customerKeywordCriteria);
 
-    List<CustomerKeyword> searchCustomerKeywords(@Param("customerKeywordCriteria") CustomerKeywordCriteria customerKeywordCriteria);
+    List<CustomerKeyword> searchCustomerKeywordsForDailyReport(@Param("customerKeywordCriteria") CustomerKeywordCriteria customerKeywordCriteria);
 
     void deleteCustomerKeywordsByUuid(@Param("customerKeywordUuids")List<String> customerKeywordUuids);
 

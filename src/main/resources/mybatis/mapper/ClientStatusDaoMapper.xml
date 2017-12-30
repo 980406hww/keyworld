@@ -2,20 +2,17 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.monitoring.dao.ClientStatusDao">
     <select id="searchClientStatusForRefreshStat" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria" resultType="com.keymanager.monitoring.entity.ClientStatus">
-        SELECT DISTINCT
+        SELECT
         cs.fPageNo AS "pageNo",
         cs.fContinuousFailCount AS "continuousFailCount",
         cs.fGroup AS "group",
         cs.fLastVisitTime AS "lastVisitTime"
-        FROM t_customer_keyword ck, t_client_status cs
-        WHERE ck.fType = #{customerKeywordRefreshStatInfoCriteria.entryType}
-        AND cs.fTerminalType = #{customerKeywordRefreshStatInfoCriteria.terminalType}
+        FROM t_client_status cs
+        WHERE cs.fTerminalType = #{customerKeywordRefreshStatInfoCriteria.terminalType}
         AND cs.fValid = 1
-        AND ck.fOptimizeGroupName = cs.fGroup
-        <if test="customerKeywordRefreshStatInfoCriteria.groupName!=null and customerKeywordRefreshStatInfoCriteria.groupName!=''">AND ck.fOptimizeGroupName like '${customerKeywordRefreshStatInfoCriteria.groupName}%'</if>
-        <if test="customerKeywordRefreshStatInfoCriteria.customerName!=null and customerKeywordRefreshStatInfoCriteria.customerName!=''">
-            AND EXISTS  (select 1 from t_customer c where ck.fCustomerUuid = c.fUuid
-            AND c.fContactPerson like '%${customerKeywordRefreshStatInfoCriteria.customerName}%')
+        <if test="customerKeywordRefreshStatInfoCriteria.groupName!=null and customerKeywordRefreshStatInfoCriteria.groupName!=''">
+            AND cs.fGroup like '${customerKeywordRefreshStatInfoCriteria.groupName}%'
+            AND EXISTS (SELECT 1 FROM t_customer_keyword ck WHERE ck.fType = #{customerKeywordRefreshStatInfoCriteria.entryType} AND ck.fOptimizeGroupName like '${customerKeywordRefreshStatInfoCriteria.groupName}%')
         </if>
         ORDER BY cs.fGroup
     </select>
@@ -167,7 +164,7 @@
         t_client_status cs
         WHERE cs.fTerminalType = #{clientStatusCriteria.terminalType}
         <if test="clientStatusCriteria.groupName != null and clientStatusCriteria.groupName != ''">AND cs.fGroup = #{clientStatusCriteria.groupName}</if>
-        AND (cs.fContinuousFailCount &gt; 5 OR DATE_ADD(cs.fLastVisitTime, INTERVAL IF((10 &gt; (cs.fPageNo*3)), 10, (cs.fPageNo * 3)) MINUTE) &lt; NOW()) and cs.fValid = 1
+        AND (cs.fContinuousFailCount &gt; 5 OR DATE_ADD(cs.fLastVisitTime, INTERVAL 10 MINUTE) &lt; NOW()) and cs.fValid = 1
     </select>
 
     <select id="getClientStatusByClientID" parameterType="java.lang.String" resultType="com.keymanager.monitoring.entity.ClientStatus">
@@ -324,7 +321,7 @@
         FROM t_client_status cs
         WHERE (DATE_ADD(fLastVisitTime, INTERVAL 10 MINUTE) &lt; NOW() and fValid = 1
         AND (fRestartStatus = 'restarting' AND DATE_ADD(fRestartTime, INTERVAL 3 MINUTE) &lt; NOW())
-        AND (fHost is not null and fHost &lt;&gt; '')) order by fRestartOrderingTime
+        AND (fHost is not null and fHost &lt;&gt; '')) order by fRestartOrderingTime limit 20
     </select>
 
 
@@ -332,8 +329,8 @@
         SELECT
         <include refid="selectCol" />
         FROM t_client_status cs
-        WHERE (fContinuousFailCount > 5 OR DATE_ADD(fLastVisitTime, INTERVAL IF((10 > (fPageNo*3)), 10, (fPageNo * 3)) MINUTE) &lt; NOW())
+        WHERE (fContinuousFailCount > 5 OR DATE_ADD(fLastVisitTime, INTERVAL 10 MINUTE) &lt; NOW())
         AND (fRestartTime IS NULL OR DATE_ADD(fRestartTime, INTERVAL 10 MINUTE) &lt; NOW())
-        AND fValid = 1 AND (fHost is not null and fHost &lt;&gt; '') order by fRestartOrderingTime
+        AND fValid = 1 AND fHost &gt; '' order by fRestartOrderingTime
     </select>
 </mapper>

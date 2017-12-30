@@ -3,6 +3,7 @@ package com.keymanager.monitoring.excel.operator;
 import com.keymanager.manager.CustomerManager;
 import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.CustomerKeyword;
+import com.keymanager.monitoring.enums.TerminalTypeEnum;
 import com.keymanager.monitoring.excel.definition.CustomerKeywordDailyReportDefinition;
 import com.keymanager.util.FileUtil;
 import com.keymanager.util.Utils;
@@ -227,14 +228,18 @@ public class CustomerKeywordDailyReportExcelWriter {
 		writer.addLabelCell(CustomerKeywordDailyReportDefinition.Index.getColumnIndex(), rowIndex, view.getCurrentIndexCount() == null ? 0 : view.getCurrentIndexCount());
 	}
 
-	public void writeDataToExcel(List<CustomerKeyword> views, String contactPerson) throws Exception {
+	public void writeDataToExcel(List<CustomerKeyword> views, String contactPerson, String terminalType) throws Exception {
 		writeDailyDetail(views);
 		writeMonthSummary(views);
 
 		saveAs(dailyReportFileName);
 		if(dailyReportUuid > 0) {
 			String fileName = "dailyreport/" + dailyReportUuid + "/" + contactPerson + "_" + Utils.formatDatetime(Utils
-					.getCurrentTimestamp(), "yyyy.MM.dd") + ".xls";
+					.getCurrentTimestamp(), "yyyy.MM.dd");
+			if(TerminalTypeEnum.Phone.name().equals(terminalType)){
+				fileName = fileName + "(Mobile)";
+			}
+			fileName = fileName + ".xls";
 			FileUtil.copyFile(webRootPath + dailyReportFileName, webRootPath + fileName, true);
 		}
 	}

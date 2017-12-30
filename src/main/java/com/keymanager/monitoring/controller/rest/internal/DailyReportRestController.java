@@ -81,7 +81,7 @@ public class DailyReportRestController extends SpringMVCBaseController {
 		customerKeywordCriteria.setStatus("1");
 		customerKeywordCriteria.setOrderingElement("fSequence");
 		customerKeywordCriteria.setOrderingRule("ASC");
-		List<CustomerKeyword> customerKeywords = customerKeywordService.searchCustomerKeywords(customerKeywordCriteria);
+		List<CustomerKeyword> customerKeywords = customerKeywordService.searchCustomerKeywordsForDailyReport(customerKeywordCriteria);
 		if (!Utils.isEmpty(customerKeywords)) {
 			if(dayOfMonth == 1) {
 				String uuids = "" + customerUuid;
@@ -90,7 +90,7 @@ public class DailyReportRestController extends SpringMVCBaseController {
 
 			CustomerKeywordDailyReportExcelWriter excelWriter = new CustomerKeywordDailyReportExcelWriter(terminalType, customerUuid + "", 0);
 			Customer customer = customerService.selectById(customerUuid);
-			excelWriter.writeDataToExcel(customerKeywords, customer.getContactPerson());
+			excelWriter.writeDataToExcel(customerKeywords, customer.getContactPerson(), terminalType);
 
 			FileInputStream fis = null;
 			BufferedInputStream bis = null;

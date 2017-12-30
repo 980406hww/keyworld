@@ -50,13 +50,13 @@ public class DailyReportItemService extends ServiceImpl<DailyReportItemDao, Dail
 		customerKeywordCriteria.setStatus("1");
 		customerKeywordCriteria.setOrderingElement("fSequence");
 		customerKeywordCriteria.setOrderingRule("ASC");
-		List<CustomerKeyword> customerKeywords = customerKeywordService.searchCustomerKeywords(customerKeywordCriteria);
+		List<CustomerKeyword> customerKeywords = customerKeywordService.searchCustomerKeywordsForDailyReport(customerKeywordCriteria);
 
 		if (!Utils.isEmpty(customerKeywords)) {
 			Customer customer = customerService.getCustomer(dailyReportItem.getCustomerUuid());
 			CustomerKeywordDailyReportExcelWriter excelWriter = new CustomerKeywordDailyReportExcelWriter(terminalType, dailyReportItem
 					.getCustomerUuid() + "", dailyReportUuid);
-			excelWriter.writeDataToExcel(customerKeywords, customer.getContactPerson());
+			excelWriter.writeDataToExcel(customerKeywords, customer.getContactPerson(), terminalType);
 		}
 		dailyReportItem.setStatus(DailyReportStatusEnum.Completed.name());
 		dailyReportItem.setUpdateTime(new Date());
