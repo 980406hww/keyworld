@@ -397,7 +397,7 @@
                     <option value="百度" selected>百度</option>
                     <option value="搜狗">搜狗</option>
                     <option value="360">360</option>
-                    <option value="谷歌">谷歌</option>
+                    <option value="神马">神马</option>
                 </select>
                 <input type="hidden" id="status" name="status" value="1">
                 排序:<input type="text" name="sequence" id="sequence" value="0" size="6" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)">
