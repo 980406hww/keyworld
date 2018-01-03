@@ -144,7 +144,7 @@
             无效点击数:
             <input type="text" name="invalidRefreshCount" id="invalidRefreshCount"
                    value="${customerKeywordCriteria.invalidRefreshCount}" style="width:20px;">
-            创建日期:<input name="creationFromTime" id="creationFromTime" class="Wdate"
+            <!-- 创建日期:<input name="creationFromTime" id="creationFromTime" class="Wdate"
                         type="text" style="width:90px;" onClick="WdatePicker()"
                         value="${customerKeywordCriteria.creationFromTime}">
             到<input
@@ -154,6 +154,15 @@
                 style="width:90px;"
                 onClick="WdatePicker()"
                 value="${customerKeywordCriteria.creationToTime}">
+                -->
+            搜索引擎:
+            <select name="searchEngine" id="searchEngine"  value="${customerKeywordCriteria.searchEngine}">
+                <option value="">全部</option>
+                <option value="百度">百度</option>
+                <option value="360">360</option>
+                <option value="搜狗">搜狗</option>
+                <option value="神马">神马</option>
+            </select>
             排序:
             <select name="orderingElement" id="orderingElement">
                 <option value="0">关键字</option>

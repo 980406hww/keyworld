@@ -91,10 +91,18 @@
             <input type="text" name="orderNumber" id="orderNumber" value="${customerKeywordCriteria.orderNumber}" style="width:100px;">
             无效点击数:
             <input type="text" name="invalidRefreshCount" id="invalidRefreshCount" value="${customerKeywordCriteria.invalidRefreshCount}" style="width:40px;">
+            搜索引擎:
+            <select name="searchEngine" id="searchEngine" value="${customerKeywordCriteria.searchEngine}">
+                <option value="">全部</option>
+                <option value="百度">百度</option>
+                <option value="360">360</option>
+                <option value="搜狗">搜狗</option>
+                <option value="神马">神马</option>
+            </select>
             创建日期:<input name="creationFromTime" id="creationFromTime" class="Wdate" type="text" style="width:90px;" onClick="WdatePicker()"
-                        value="${customerKeywordCriteria.creationFromTime}">
+            value="${customerKeywordCriteria.creationFromTime}">
             到&nbsp;<input name="creationToTime" id="creationToTime" class="Wdate" type="text" style="width:90px;"
-                onClick="WdatePicker()" value="${customerKeywordCriteria.creationToTime}">&nbsp;
+            onClick="WdatePicker()" value="${customerKeywordCriteria.creationToTime}">&nbsp;
             排序:
             <select name="orderingElement" id="orderingElement">
                 <option value="0">关键字</option>

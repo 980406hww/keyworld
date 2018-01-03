@@ -13,6 +13,7 @@ public class CustomerKeywordCriteria extends BaseCriteria{
     private String noPosition;//显示没有排名
     private String entryType;//
     private String terminalType;//8088 PC  8089  phone
+    private String searchEngine;
     private Integer optimizedCount;//已刷
     private Integer currentIndexCount;
 
@@ -203,5 +204,13 @@ public class CustomerKeywordCriteria extends BaseCriteria{
 
     public void setOrderingRule(String orderingRule) {
         this.orderingRule = orderingRule;
+    }
+
+    public String getSearchEngine() {
+        return searchEngine;
+    }
+
+    public void setSearchEngine(String searchEngine) {
+        this.searchEngine = searchEngine;
     }
 }

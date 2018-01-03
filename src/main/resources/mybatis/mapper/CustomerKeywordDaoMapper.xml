@@ -107,6 +107,7 @@
         <if test="customerKeywordCriteria.qq != null and customerKeywordCriteria.qq != ''">
             AND c.fQQ LIKE '${customerKeywordCriteria.qq}%'
         </if>
+        <if test="customerKeywordCriteria.searchEngine != null and customerKeywordCriteria.searchEngine != ''">AND ck.fSearchEngine = #{customerKeywordCriteria.searchEngine} </if>
         <if test="customerKeywordCriteria.userName != null and customerKeywordCriteria.userName != ''">
             AND c.fUserID = #{customerKeywordCriteria.userName}
         </if>
