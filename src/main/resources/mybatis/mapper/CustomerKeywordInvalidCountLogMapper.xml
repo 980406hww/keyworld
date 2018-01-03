@@ -12,7 +12,7 @@
 
     <select id="findInvalidCustomerKeyword" resultType="java.lang.Long">
         SELECT fCustomerKeywordUuid FROM t_ck_invalid_count_log
-        WHERE fInvalidCount > 6
+        WHERE fInvalidCount > 15
         AND fOptimizedDate >= DATE_SUB(CURDATE(), INTERVAL 3 DAY)
         GROUP BY fCustomerKeywordUuid
         HAVING count(*) = 3
