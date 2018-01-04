@@ -92,7 +92,7 @@
             无效点击数:
             <input type="text" name="invalidRefreshCount" id="invalidRefreshCount" value="${customerKeywordCriteria.invalidRefreshCount}" style="width:40px;">
             搜索引擎:
-            <select name="searchEngine" id="searchEngine" value="${customerKeywordCriteria.searchEngine}">
+            <select name="searchEngine" id="searchEngine">
                 <option value="">全部</option>
                 <option value="百度">百度</option>
                 <option value="360">360</option>
@@ -282,6 +282,17 @@
     function initPaging() {
         var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
         var searchCustomerKeywordTable = searchCustomerKeywordForm.find("#searchCustomerKeywordTable");
+        var orderStyle = "${customerKeywordCriteria.orderingElement}";
+        if(orderStyle == "fCreateTime") {
+            searchCustomerKeywordTable.find("#orderingElement").val(1);
+        } else if(orderStyle == "fCurrentPosition") {
+            searchCustomerKeywordTable.find("#orderingElement").val(2);
+        } else if(orderStyle == "fSequence") {
+            searchCustomerKeywordTable.find("#orderingElement").val(3);
+        } else {
+            searchCustomerKeywordTable.find("#orderingElement").val(0);
+        }
+        searchCustomerKeywordTable.find("#searchEngine").val('${customerKeywordCriteria.searchEngine}');
         searchCustomerKeywordTable.find("#orderingElement").val('${orderingElement}');
         searchCustomerKeywordTable.find("#status").val(${customerKeywordCriteria.status});
         var pages = searchCustomerKeywordForm.find('#pagesHidden').val();
