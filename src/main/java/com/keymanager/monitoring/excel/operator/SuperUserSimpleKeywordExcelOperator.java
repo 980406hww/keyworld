@@ -34,7 +34,12 @@ public class SuperUserSimpleKeywordExcelOperator extends AbstractExcelReader {
 		if(Utils.isNullOrEmpty(customerKeyword.getUrl())){
 			return null;
 		}
-		customerKeyword.setSearchEngine(Constants.SEARCH_ENGINE_BAIDU);
+		String searchEngine = getStringValue(SuperUserFullKeywordDefinition.SearchEngine.getColumnIndex(), rowIndex);
+		if(Utils.isNullOrEmpty(searchEngine)) {
+			customerKeyword.setSearchEngine(Constants.SEARCH_ENGINE_BAIDU);
+		} else {
+			customerKeyword.setSearchEngine(searchEngine);
+		}
 		customerKeyword.setStartOptimizedTime(Utils.getCurrentTimestamp());
 		
 		customerKeyword.setCollectMethod(getCollectMethodValue(getStringValue(SuperUserSimpleKeywordDefinition.CollectMethod.getColumnIndex(), rowIndex)));
