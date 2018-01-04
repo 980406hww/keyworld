@@ -2,22 +2,23 @@ package com.keymanager.monitoring.excel.definition;
 
 public enum SuperUserFullKeywordDefinition {
 	Keyword(0),
-	Sequnce(1),
-	IndexCount(2),
-	OptimizePlanCount(3),
-	CollectMethod(4),
-	OriginalURL(5),
-	URL(6),
-	PositionFirstFee(7),
-	PositionSecondFee(8),
-	PositionThirdFee(9),
-	PositionForthFee(10),
-	PositionFifthFee(11),
-	PositionFirstPageFee(12),
-	OptimizeGroupName(13),
-	Title(14),
-	OrderNumber(15),
-	Remarks(16);
+	SearchEngine(1),
+	Sequnce(2),
+	IndexCount(3),
+	OptimizePlanCount(4),
+	CollectMethod(5),
+	OriginalURL(6),
+	URL(7),
+	PositionFirstFee(8),
+	PositionSecondFee(9),
+	PositionThirdFee(10),
+	PositionForthFee(11),
+	PositionFifthFee(12),
+	PositionFirstPageFee(13),
+	OptimizeGroupName(14),
+	Title(15),
+	OrderNumber(16),
+	Remarks(17);
 	private int columnIndex;
 	
 	private SuperUserFullKeywordDefinition(int columnIndex){

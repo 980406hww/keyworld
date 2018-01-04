@@ -144,19 +144,9 @@
             无效点击数:
             <input type="text" name="invalidRefreshCount" id="invalidRefreshCount"
                    value="${customerKeywordCriteria.invalidRefreshCount}" style="width:20px;">
-            <!-- 创建日期:<input name="creationFromTime" id="creationFromTime" class="Wdate"
-                        type="text" style="width:90px;" onClick="WdatePicker()"
-                        value="${customerKeywordCriteria.creationFromTime}">
-            到<input
-                name="creationToTime"
-                id="creationToTime"
-                class="Wdate" type="text"
-                style="width:90px;"
-                onClick="WdatePicker()"
-                value="${customerKeywordCriteria.creationToTime}">
-                -->
+
             搜索引擎:
-            <select name="searchEngine" id="searchEngine"  value="${customerKeywordCriteria.searchEngine}">
+            <select name="searchEngine" id="searchEngine">
                 <option value="">全部</option>
                 <option value="百度">百度</option>
                 <option value="360">360</option>
@@ -452,7 +442,17 @@
     function initPaging() {
         var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
         var searchCustomerKeywordTable = searchCustomerKeywordForm.find("#searchCustomerKeywordTable");
-        searchCustomerKeywordTable.find("#orderingElement").val('${orderingElement}');
+        var orderStyle = "${customerKeywordCriteria.orderingElement}";
+        if(orderStyle == "fCreateTime") {
+            searchCustomerKeywordTable.find("#orderingElement").val(1);
+        } else if(orderStyle == "fCurrentPosition") {
+            searchCustomerKeywordTable.find("#orderingElement").val(2);
+        } else if(orderStyle == "fSequence") {
+            searchCustomerKeywordTable.find("#orderingElement").val(3);
+        } else {
+            searchCustomerKeywordTable.find("#orderingElement").val(0);
+        }
+        searchCustomerKeywordTable.find("#searchEngine").val('${customerKeywordCriteria.searchEngine}');
         searchCustomerKeywordTable.find("#status").val(${customerKeywordCriteria.status});
         var pages = searchCustomerKeywordForm.find('#pagesHidden').val();
         var currentPageNumber = searchCustomerKeywordForm.find('#currentPageNumberHidden').val();
