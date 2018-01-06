@@ -4,7 +4,6 @@
 	<select id="searchNegativeLists" parameterType="com.keymanager.monitoring.criteria.NegativeListCriteria" resultType="com.keymanager.monitoring.entity.NegativeList">
 		SELECT
 			fUuid AS "uuid",
-			fTerminalType AS "terminalType",
 			fKeyword AS "keyword",
 			fTitle AS "title",
 			fUrl AS "url",
@@ -23,7 +22,6 @@
 	<select id="searchNegativeListsFullMatching" parameterType="com.keymanager.monitoring.criteria.NegativeListCriteria" resultType="com.keymanager.monitoring.entity.NegativeList">
 		SELECT
 		fUuid AS "uuid",
-		fTerminalType AS "terminalType",
 		fKeyword AS "keyword",
 		fTitle AS "title",
 		fUrl AS "url",
@@ -35,7 +33,6 @@
 		t_negative_list n
 		WHERE 1 = 1
 		<if test="negativeListCriteria.keyword != null and negativeListCriteria.keyword != ''">AND n.fKeyword = #{negativeListCriteria.keyword}</if>
-		<if test="negativeListCriteria.url != null and negativeListCriteria.url != ''">AND n.fUrl = #{negativeListCriteria.url}</if>
 		<if test="negativeListCriteria.title != null and negativeListCriteria.title != ''">AND n.fTitle = #{negativeListCriteria.title}</if>
 		ORDER BY n.fCreateTime DESC
 	</select>
@@ -63,7 +60,6 @@
 	<select id="negativeListsSynchronizeOfDelete"  resultType="com.keymanager.monitoring.entity.NegativeList">
 		SELECT
 			fUuid AS "uuid",
-			fTerminalType AS "terminalType",
 			fKeyword AS "keyword",
 			fTitle AS "title",
 			fUrl AS "url",
