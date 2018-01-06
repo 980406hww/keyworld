@@ -41,9 +41,7 @@ public class PositiveListService extends ServiceImpl<PositiveListDao, PositiveLi
             for (PositiveList positiveList : positiveLists) {
                 PositiveListCriteria positiveListCriteria = new PositiveListCriteria();
                 positiveListCriteria.setKeyword(positiveList.getKeyword());
-                positiveListCriteria.setUrl(positiveList.getUrl());
                 positiveListCriteria.setTitle(positiveList.getTitle());
-                positiveListCriteria.setOriginalUrl(positiveList.getOriginalUrl());
                 List<PositiveList> existingPositiveLists = positiveListDao.searchPositiveListsFullMatching(positiveListCriteria);
                 if(operationType.equals("update")){
                     for (PositiveList existingPositiveList : existingPositiveLists) {

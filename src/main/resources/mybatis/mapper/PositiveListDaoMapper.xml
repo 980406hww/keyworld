@@ -3,7 +3,6 @@
 <mapper namespace="com.keymanager.monitoring.dao.PositiveListDao">
 	<sql id="selectCol">
 		fUuid AS "uuid",
-		fTerminalType AS "terminalType",
 		fKeyword AS "keyword",
 		fTitle AS "title",
 		fUrl AS "url",
@@ -32,7 +31,6 @@
 		t_positive_list n
 		WHERE 1 = 1
 		<if test="positiveListCriteria.keyword != null and positiveListCriteria.keyword != ''">AND n.fKeyword = #{positiveListCriteria.keyword}</if>
-		<if test="positiveListCriteria.url != null and positiveListCriteria.url != ''">AND n.fUrl = #{positiveListCriteria.url}</if>
 		<if test="positiveListCriteria.title != null and positiveListCriteria.title != ''">AND n.fTitle = #{positiveListCriteria.title}</if>
 		ORDER BY n.fCreateTime DESC
 	</select>

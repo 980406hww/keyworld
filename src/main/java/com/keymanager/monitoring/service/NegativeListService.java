@@ -55,9 +55,7 @@ public class NegativeListService extends ServiceImpl<NegativeListDao, NegativeLi
             for (NegativeList negativeList : negativeLists) {
                 NegativeListCriteria negativeListCriteria = new NegativeListCriteria();
                 negativeListCriteria.setKeyword(negativeList.getKeyword());
-                negativeListCriteria.setUrl(negativeList.getUrl());
                 negativeListCriteria.setTitle(negativeList.getTitle());
-                negativeListCriteria.setOriginalUrl(negativeList.getOriginalUrl());
                 List<NegativeList> existingNegativeLists = negativeListDao.searchNegativeListsFullMatching(negativeListCriteria);
                 if(operationType.equals("update")){
                     for (NegativeList existingNegativeList : existingNegativeLists) {
