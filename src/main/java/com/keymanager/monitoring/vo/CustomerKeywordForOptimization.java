@@ -62,7 +62,10 @@ public class CustomerKeywordForOptimization {
 
 	private String broadbandAccount;
 	private String broadbandPassword;
-	
+
+	private List<String> negativeKeywords;
+	private List<String> recommendedKeywords;
+
 	private List<String> excludeTitles; 
 
 	public String getKeyword() {
@@ -535,5 +538,21 @@ public class CustomerKeywordForOptimization {
 
 	public void setTerminalType(String terminalType) {
 		this.terminalType = terminalType;
+	}
+
+	public List<String> getNegativeKeywords() {
+		return negativeKeywords;
+	}
+
+	public void setNegativeKeywords(List<String> negativeKeywords) {
+		this.negativeKeywords = negativeKeywords;
+	}
+
+	public List<String> getRecommendedKeywords() {
+		return recommendedKeywords;
+	}
+
+	public void setRecommendedKeywords(List<String> recommendedKeywords) {
+		this.recommendedKeywords = recommendedKeywords;
 	}
 }

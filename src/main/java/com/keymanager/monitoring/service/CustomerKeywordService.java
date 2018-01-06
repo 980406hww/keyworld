@@ -603,6 +603,28 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeywordForOptimization.setMaxUserCount(clientStatus.getMaxUserCount());
             customerKeywordForOptimization.setSearchEngine(customerKeyword.getSearchEngine());
             customerKeywordForOptimization.setTerminalType(customerKeyword.getTerminalType());
+
+            if(StringUtils.isNotEmpty(customerKeyword.getRemarks()) && customerKeyword.getRemarks().indexOf("====") >= 0){
+                String [] elementParts = customerKeyword.getRemarks().trim().split("====", 2);
+                if(StringUtils.isNotEmpty(elementParts[0])){
+                    customerKeywordForOptimization.setNegativeKeywords(new ArrayList<String>());
+                    String[] subElements = elementParts[0].split(",");
+                    for(String subElement : subElements) {
+                        for (String negativeKeyword : subElement.split("，")) {
+                            customerKeywordForOptimization.getNegativeKeywords().add(negativeKeyword);
+                        }
+                    }
+                }
+                if(StringUtils.isNotEmpty(elementParts[1])){
+                    customerKeywordForOptimization.setRecommendedKeywords(new ArrayList<String>());
+                    String[] subElements = elementParts[1].split(",");
+                    for(String subElement : subElements) {
+                        for (String negativeKeyword : subElement.split("，")) {
+                            customerKeywordForOptimization.getRecommendedKeywords().add(negativeKeyword);
+                        }
+                    }
+                }
+            }
             return customerKeywordForOptimization;
         }
         return null;
