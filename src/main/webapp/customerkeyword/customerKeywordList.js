@@ -333,6 +333,40 @@ function showGroupNameChangeDialog(changeGroupCriteria) {
     $("#groupChangeNameDialog").dialog("open");
     $('#groupChangeNameDialog').window("resize",{top:$(document).scrollTop() + 200});
 }
+function showSearchEngineChangeDialog(searchEngineCriteria) {
+    $("#changeSearchEngineDialog").dialog({
+        resizable: false,
+        width: 220,
+        height: 100,
+        closed: true,
+        modal: true,
+        title: searchEngineCriteria.title,
+        position:{
+            my:"center top",
+            at:"center top+150",
+            of:window
+        },
+        buttons: [{
+            text: '保存',
+            iconCls: 'icon-ok',
+            handler: function () {
+                var targetSearchEngine = $("#changeSearchEngineForm").find("#searchEngineSelect").val();
+                searchEngineCriteria.targetSearchEngine = targetSearchEngine;
+                changeSearchEngine(searchEngineCriteria);
+                $("#changeSearchEngineDialog").dialog("close");
+            }
+        },
+            {
+                text: '取消',
+                iconCls: 'icon-cancel',
+                handler: function () {
+                    $("#changeSearchEngineDialog").dialog("close");
+                }
+            }]
+    });
+    $("#changeSearchEngineDialog").dialog("open");
+    $('#changeSearchEngineDialog').window("resize",{top:$(document).scrollTop() + 200});
+}
 function updateCustomerKeywordStatus(status) {
     var customerKeyword = {};
     var customerKeywordUuids = getUuids();
@@ -387,6 +421,37 @@ function changeGroupName(customerKeywordUpdateGroupCriteria) {
     $.ajax({
         url:'/internal/customerKeyword/updateCustomerKeywordGroupName',
         data:JSON.stringify(customerKeywordUpdateGroupCriteria),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        timeout: 5000,
+        type: 'POST',
+        success: function (result) {
+            if (result) {
+                $().toastmessage('showSuccessToast', "操作成功",true);
+            } else {
+                $().toastmessage('showErrorToast', "操作失败",true);
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "操作失败",true);
+        }
+    });
+}
+function updateSpecifiedCustomerKeywordSearchEngine() {
+    var customerKeywordUuids = getUuids();
+    if (customerKeywordUuids.trim() === '') {
+        alert("请选中要操作的关键词！");
+        return;
+    }
+    var changeSearchEngineCriteria = {"title" : "修改选中关键字搜索引擎", "customerKeywordUuids":customerKeywordUuids.split(",")};
+    showSearchEngineChangeDialog(changeSearchEngineCriteria);
+}
+function changeSearchEngine(searchEngineCriteria) {
+    $.ajax({
+        url:'/internal/customerKeyword/updateCustomerKeywordSearchEngine',
+        data:JSON.stringify(searchEngineCriteria),
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'

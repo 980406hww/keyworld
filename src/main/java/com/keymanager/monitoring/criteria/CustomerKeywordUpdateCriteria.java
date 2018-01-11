@@ -2,9 +2,10 @@ package com.keymanager.monitoring.criteria;
 
 import java.util.List;
 
-public class CustomerKeywordUpdateGroupCriteria {
+public class CustomerKeywordUpdateCriteria {
     private Long customerUuid;
     private String targetGroupName;
+    private String targetSearchEngine;
     private List<String> customerKeywordUuids;
     private String terminalType;
     private String entryType;
@@ -23,6 +24,14 @@ public class CustomerKeywordUpdateGroupCriteria {
 
     public void setTargetGroupName(String targetGroupName) {
         this.targetGroupName = targetGroupName;
+    }
+
+    public String getTargetSearchEngine() {
+        return targetSearchEngine;
+    }
+
+    public void setTargetSearchEngine(String targetSearchEngine) {
+        this.targetSearchEngine = targetSearchEngine;
     }
 
     public List<String> getCustomerKeywordUuids() {

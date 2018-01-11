@@ -2,18 +2,15 @@ package com.keymanager.monitoring.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
-import com.keymanager.monitoring.common.result.PageInfo;
 import com.keymanager.monitoring.criteria.CustomerKeywordCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
-import com.keymanager.monitoring.criteria.CustomerKeywordUpdateGroupCriteria;
+import com.keymanager.monitoring.criteria.CustomerKeywordUpdateCriteria;
 import com.keymanager.monitoring.entity.CustomerKeyword;
 import com.keymanager.monitoring.entity.QZCaptureTitleLog;
-import com.keymanager.monitoring.entity.QZOperationType;
 import com.keymanager.monitoring.vo.CodeNameVo;
 import com.keymanager.monitoring.vo.SearchEngineResultVO;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.session.RowBounds;
 
 import java.util.Date;
 import java.util.List;
@@ -56,7 +53,9 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     //重构部分
     //修改该用户关键字组名
-    void updateCustomerKeywordGroupName(@Param("customerKeywordUpdateGroupCriteria")CustomerKeywordUpdateGroupCriteria customerKeywordUpdateGroupCriteria);
+    void updateCustomerKeywordGroupName(@Param("customerKeywordUpdateCriteria")CustomerKeywordUpdateCriteria customerKeywordUpdateCriteria);
+
+    void updateCustomerKeywordSearchEngine(@Param("customerKeywordUpdateCriteria")CustomerKeywordUpdateCriteria customerKeywordUpdateCriteria);
 
     void updateCustomerKeywordGroupNameByRank(@Param("customerKeywordUuids") List<Long> customerKeywordUuids,@Param("targetGroupName") String targetGroupName);
 

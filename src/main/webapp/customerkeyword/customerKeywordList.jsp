@@ -92,10 +92,13 @@
     <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupNameByRank">
         <a href="javascript:showGroupNameChangeByRankDialog('${customerKeywordCriteria.customerUuid}')">按排名修改分组</a> |
     </shiro:hasPermission>
-
+    <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordSearchEngine">
+        <a href="javascript:showSearchEngineChangeDialog({'title': '修改所有关键字搜索引擎', 'customerUuid':'${customerKeywordCriteria.customerUuid}'})">修改所有搜索引擎</a> |
+        <a href="javascript:updateSpecifiedCustomerKeywordSearchEngine(${customerKeywordCriteria.customerUuid})">修改选中搜索引擎</a> |
+    </shiro:hasPermission>
     <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupName">
         <a href="javascript:showGroupNameChangeDialog({'title': '修改客户关键字分组', 'customerUuid':'${customerKeywordCriteria.customerUuid}'})">修改所有分组</a> |
-        <a href="javascript:updateSpecifiedCustomerKeywordGroupName(${customerKeywordCriteria.customerUuid})">修改选中分组</a> |
+        <a href="javascript:updateSpecifiedCustomerKeywordGroupName()">修改选中分组</a> |
         <a href="javascript:stopOptimization(${customerKeywordCriteria.customerUuid})">下架所有关键字</a>|
     </shiro:hasPermission>
     <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
@@ -290,6 +293,17 @@
        <span style="text-align: right;width: 52px;display:inline-block">分组名称:</span><input type="text" id="groupName" name="groupName" style="width:150px"><br><br>
        <span style="text-align: right;width: 52px;display:inline-block">排名:</span><input type="text" id="position" name="position" style="width:150px" value="20" onkeyup="onlyNumber(this)"><br><br>
        <span style="text-align: right;width: 52px;display:inline-block">天数:</span><input type="text" id="day" name="day" style="width:150px" value="3" onkeyup="onlyNumber(this)">
+    </form>
+</div>
+<div id="changeSearchEngineDialog"  style="text-align: center;left: 40%;" title="修改客户关键字搜索引擎" class="easyui-dialog">
+    <form id="changeSearchEngineForm" style="text-align: center;margin-top: 10px;">
+        目标搜索引擎:
+        <select id="searchEngineSelect" style="width:70px;">
+            <option value="百度">百度</option>
+            <option value="搜狗">搜狗</option>
+            <option value="360">360</option>
+            <option value="神马">神马</option>
+        </select>
     </form>
 </div>
 <div id="groupChangeNameDialog"  style="text-align: center;left: 40%;" title="修改客户关键字组名" class="easyui-dialog">

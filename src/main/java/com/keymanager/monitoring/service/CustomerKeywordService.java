@@ -402,9 +402,14 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return customerKeywordDao.getCustomerKeywordsCount(customerUuids, terminalType, entryType);
     }
 
-    public void updateCustomerKeywordGroupName(CustomerKeywordUpdateGroupCriteria customerKeywordUpdateGroupCriteria) {
-        customerKeywordDao.updateCustomerKeywordGroupName(customerKeywordUpdateGroupCriteria);
+    public void updateCustomerKeywordGroupName(CustomerKeywordUpdateCriteria customerKeywordUpdateCriteria) {
+        customerKeywordDao.updateCustomerKeywordGroupName(customerKeywordUpdateCriteria);
     }
+
+    public void updateCustomerKeywordSearchEngine(CustomerKeywordUpdateCriteria customerKeywordUpdateCriteria) {
+        customerKeywordDao.updateCustomerKeywordSearchEngine(customerKeywordUpdateCriteria);
+    }
+
     public void updateCustomerKeywordGroupNameByRank(Map<String,Object> resultMap) {
         List<Long>  customerKeywordUuids = customerKeywordDao.searchCustomerKeywordUuidByRank(resultMap);
         List<Long>  customerKeyowrdUuidsTmp = new ArrayList<Long>();

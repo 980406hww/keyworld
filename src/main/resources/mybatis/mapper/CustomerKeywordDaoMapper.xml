@@ -278,17 +278,30 @@
           <include refid="searchCustomerKeywordsCriteria"/>
     </select>
 
-    <update id="updateCustomerKeywordGroupName">
-        UPDATE t_customer_keyword SET fOptimizeGroupName = #{customerKeywordUpdateGroupCriteria.targetGroupName},fUpdateTime = CURRENT_TIMESTAMP WHERE
-        fTerminalType = #{customerKeywordUpdateGroupCriteria.terminalType}  AND fType = #{customerKeywordUpdateGroupCriteria.entryType}
-        <if test="customerKeywordUpdateGroupCriteria.customerUuid !=null and customerKeywordUpdateGroupCriteria.customerUuid != ''">
-            AND fCustomerUuid = #{customerKeywordUpdateGroupCriteria.customerUuid}
+    <update id="updateCustomerKeywordGroupName" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordUpdateCriteria">
+        UPDATE t_customer_keyword SET fOptimizeGroupName = #{customerKeywordUpdateCriteria.targetGroupName},fUpdateTime = CURRENT_TIMESTAMP WHERE
+        fTerminalType = #{customerKeywordUpdateCriteria.terminalType}  AND fType = #{customerKeywordUpdateCriteria.entryType}
+        <if test="customerKeywordUpdateCriteria.customerUuid !=null and customerKeywordUpdateCriteria.customerUuid != ''">
+            AND fCustomerUuid = #{customerKeywordUpdateCriteria.customerUuid}
         </if>
-         <if test="customerKeywordUpdateGroupCriteria.customerKeywordUuids != null"> AND fUuid IN
-             <foreach item="item" index="index" collection="customerKeywordUpdateGroupCriteria.customerKeywordUuids" open="(" separator="," close=")">
-                 #{item}
-             </foreach>
-         </if>
+        <if test="customerKeywordUpdateCriteria.customerKeywordUuids != null"> AND fUuid IN
+            <foreach item="item" index="index" collection="customerKeywordUpdateCriteria.customerKeywordUuids" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </update>
+
+    <update id="updateCustomerKeywordSearchEngine" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordUpdateCriteria">
+        UPDATE t_customer_keyword SET fSearchEngine = #{customerKeywordUpdateCriteria.targetSearchEngine},fUpdateTime = CURRENT_TIMESTAMP WHERE
+        fTerminalType = #{customerKeywordUpdateCriteria.terminalType}  AND fType = #{customerKeywordUpdateCriteria.entryType}
+        <if test="customerKeywordUpdateCriteria.customerUuid !=null and customerKeywordUpdateCriteria.customerUuid != ''">
+            AND fCustomerUuid = #{customerKeywordUpdateCriteria.customerUuid}
+        </if>
+        <if test="customerKeywordUpdateCriteria.customerKeywordUuids != null"> AND fUuid IN
+            <foreach item="item" index="index" collection="customerKeywordUpdateCriteria.customerKeywordUuids" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
     </update>
 
     <select id="searchCustomerKeywordUuidByRank" resultType="java.lang.Long">

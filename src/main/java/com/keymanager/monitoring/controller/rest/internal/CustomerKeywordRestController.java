@@ -5,7 +5,7 @@ import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.CustomerKeywordCleanCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
-import com.keymanager.monitoring.criteria.CustomerKeywordUpdateGroupCriteria;
+import com.keymanager.monitoring.criteria.CustomerKeywordUpdateCriteria;
 import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.CustomerKeyword;
 import com.keymanager.monitoring.entity.ServiceProvider;
@@ -161,13 +161,29 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	//修改该用户关键字组名
 	@RequiresPermissions("/internal/customerKeyword/updateCustomerKeywordGroupName")
 	@RequestMapping(value = "/updateCustomerKeywordGroupName", method = RequestMethod.POST)
-	public ResponseEntity<?> updateCustomerKeywordGroupName(@RequestBody CustomerKeywordUpdateGroupCriteria customerKeywordUpdateGroupCriteria, HttpServletRequest request) {
+	public ResponseEntity<?> updateCustomerKeywordGroupName(@RequestBody CustomerKeywordUpdateCriteria customerKeywordUpdateCriteria, HttpServletRequest request) {
 		try {
 			String terminalType = TerminalTypeMapping.getTerminalType(request);
 			String entryType = (String)request.getSession().getAttribute("entryType");
-			customerKeywordUpdateGroupCriteria.setTerminalType(terminalType);
-			customerKeywordUpdateGroupCriteria.setEntryType(entryType);
-			customerKeywordService.updateCustomerKeywordGroupName(customerKeywordUpdateGroupCriteria);
+			customerKeywordUpdateCriteria.setTerminalType(terminalType);
+			customerKeywordUpdateCriteria.setEntryType(entryType);
+			customerKeywordService.updateCustomerKeywordGroupName(customerKeywordUpdateCriteria);
+			return new ResponseEntity<Object>(true, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@RequiresPermissions("/internal/customerKeyword/updateCustomerKeywordSearchEngine")
+	@RequestMapping(value = "/updateCustomerKeywordSearchEngine", method = RequestMethod.POST)
+	public ResponseEntity<?> updateCustomerKeywordSearchEngine(@RequestBody CustomerKeywordUpdateCriteria customerKeywordUpdateCriteria, HttpServletRequest request) {
+		try {
+			String terminalType = TerminalTypeMapping.getTerminalType(request);
+			String entryType = (String)request.getSession().getAttribute("entryType");
+			customerKeywordUpdateCriteria.setTerminalType(terminalType);
+			customerKeywordUpdateCriteria.setEntryType(entryType);
+			customerKeywordService.updateCustomerKeywordSearchEngine(customerKeywordUpdateCriteria);
 			return new ResponseEntity<Object>(true, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
