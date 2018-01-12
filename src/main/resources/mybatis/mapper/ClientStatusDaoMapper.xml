@@ -379,4 +379,12 @@
         AND fTenMinsRestartTime &lt; NOW() and fRemainingKeyword = 1
         AND fValid = 1 AND fHost &gt; '' order by fRestartOrderingTime  limit 1
     </select>
+
+    <update id="updateRemainingKeywordIndicator">
+        UPDATE t_customer_keyword SET fRemainingKeyword = #{indicator} WHERE fOptimizeGroupName = #{groupName}
+    </update>
+
+    <update id="updateAllRemainingKeywordIndicator">
+        UPDATE t_customer_keyword SET fRemainingKeyword = #{indicator}
+    </update>
 </mapper>

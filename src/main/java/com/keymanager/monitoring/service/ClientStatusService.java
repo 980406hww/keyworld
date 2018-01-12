@@ -865,4 +865,12 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		String [] operationTypeValues = config.getValue().split(",");
 		return operationTypeValues;
 	}
+
+	public void updateRemainingKeywordIndicator(String groupName, int indicator){
+		clientStatusDao.updateRemainingKeywordIndicator(groupName, indicator);
+	}
+
+	public void updateAllRemainingKeywordIndicator(int indicator){
+		clientStatusDao.updateAllRemainingKeywordIndicator(indicator);
+	}
 }

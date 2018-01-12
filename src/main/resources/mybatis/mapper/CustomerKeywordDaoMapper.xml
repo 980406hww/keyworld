@@ -355,11 +355,7 @@
     </select>
 
     <update id="cleanBigKeywordIndicator">
-        UPDATE t_customer_keyword SET fBigKeyword = 0, fRemainingKwyword = 1 WHERE fOptimizeGroupName = #{groupName}
-    </update>
-
-    <update id="updateRemainingKeywordIndicator">
-        UPDATE t_customer_keyword SET fRemainingKwyword = #{indicator} WHERE fOptimizeGroupName = #{groupName}
+        UPDATE t_customer_keyword SET fBigKeyword = 0 WHERE fOptimizeGroupName = #{groupName}
     </update>
 
     <update id="setBigKeywordIndicator">

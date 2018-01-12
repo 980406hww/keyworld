@@ -75,8 +75,6 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void cleanBigKeywordIndicator(@Param("groupName")String groupName);
 
-    void updateRemainingKeywordIndicator(@Param("groupName")String groupName, @Param("indicator")int indicator);
-
     void setBigKeywordIndicator(@Param("uuids")List<Long> uuids);
 
     List<String> getEntryTypes(@Param("groupName")String groupName);

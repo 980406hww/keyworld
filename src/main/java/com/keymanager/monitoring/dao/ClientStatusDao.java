@@ -1,14 +1,14 @@
 package com.keymanager.monitoring.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
-import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.criteria.ClientStatusCriteria;
+import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
 import com.keymanager.monitoring.entity.ClientStatus;
 import com.keymanager.value.ClientStatusGroupSummaryVO;
 import com.keymanager.value.ClientStatusSummaryVO;
-import com.sun.deploy.util.SessionState;
 import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
 
 public interface ClientStatusDao extends BaseMapper<ClientStatus> {
@@ -52,4 +52,8 @@ public interface ClientStatusDao extends BaseMapper<ClientStatus> {
     void deleteClientStatus(@Param("clientIDs")List<String> clientIDs);
 
     void updateRestartStatus(@Param("clientID")String clientID, @Param("restartStatus")String restartStatus);
+
+    void updateRemainingKeywordIndicator(@Param("groupName")String groupName, @Param("indicator")int indicator);
+
+    void updateAllRemainingKeywordIndicator(@Param("indicator")int indicator);
 }

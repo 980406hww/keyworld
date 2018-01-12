@@ -492,6 +492,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeywordInvalidCountLogService.addCustomerKeywordInvalidCountLog();
             configService.updateOptimizationDateAsToday();
             customerKeywordDao.resetOptimizationInfo();
+            clientStatusService.updateAllRemainingKeywordIndicator(1);
         }
 
         Config maxInvalidCountConfig = configService.getConfig(Constants.CONFIG_KEY_MAX_INVALID_COUNT, typeName);
@@ -656,8 +657,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                 }
             }
             customerKeywordDao.setBigKeywordIndicator(customerKeywordUuids);
+            clientStatusService.updateRemainingKeywordIndicator(groupName, 1);
         }else{
-            customerKeywordDao.updateRemainingKeywordIndicator(groupName, 0);
+            clientStatusService.updateRemainingKeywordIndicator(groupName, 0);
         }
     }
 
