@@ -578,20 +578,20 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		ClientStatus tmpClientStatus = null;
 		List<ClientStatus> clientStatuses = clientStatusDao.searchRestartingClientStatuses();
 		for(ClientStatus clientStatus : clientStatuses){
-			if(customerKeywordService.haveCustomerKeywordForOptimization(clientStatus.getTerminalType(), clientStatus.getClientID())){
+//			if(customerKeywordService.haveCustomerKeywordForOptimization(clientStatus.getTerminalType(), clientStatus.getClientID())){
 				tmpClientStatus = clientStatus;
 				updateRestartStatus(clientStatus.getClientID(), "Logging");
 				break;
-			}
+//			}
 		}
 		if(tmpClientStatus == null) {
 			clientStatuses = clientStatusDao.searchWaitingRestartingClientStatuses();
 			for (ClientStatus clientStatus : clientStatuses) {
-				if (customerKeywordService.haveCustomerKeywordForOptimization(clientStatus.getTerminalType(), clientStatus.getClientID())) {
+//				if (customerKeywordService.haveCustomerKeywordForOptimization(clientStatus.getTerminalType(), clientStatus.getClientID())) {
 					tmpClientStatus = clientStatus;
 					updateRestartStatus(clientStatus.getClientID(), "Processing");
 					break;
-				}
+//				}
 			}
 		}
 		return tmpClientStatus;

@@ -656,6 +656,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                 }
             }
             customerKeywordDao.setBigKeywordIndicator(customerKeywordUuids);
+        }else{
+            customerKeywordDao.updateRemainingKeywordIndicator(groupName, 0);
         }
     }
 
