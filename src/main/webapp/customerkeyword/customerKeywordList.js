@@ -1,6 +1,7 @@
 $(function () {
     $("#groupChangeNameDialog").dialog("close");
     $("#groupChangeNameByRankDialog").dialog("close");
+    $("#changeSearchEngineDialog").dialog("close");
     $("#uploadExcelDailog").dialog("close");
     $("#saveCustomerKeywordDialog").dialog("close");
     $("#customerKeywordDiv").css("margin-top",$("#customerKeywordTopDiv").height());
