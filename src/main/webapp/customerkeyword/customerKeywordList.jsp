@@ -94,7 +94,7 @@
     </shiro:hasPermission>
     <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordSearchEngine">
         <a href="javascript:showSearchEngineChangeDialog({'title': '修改所有关键字搜索引擎', 'customerUuid':'${customerKeywordCriteria.customerUuid}'})">修改所有搜索引擎</a> |
-        <a href="javascript:updateSpecifiedCustomerKeywordSearchEngine(${customerKeywordCriteria.customerUuid})">修改选中搜索引擎</a> |
+        <a href="javascript:updateSpecifiedCustomerKeywordSearchEngine()">修改选中搜索引擎</a> |
     </shiro:hasPermission>
     <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupName">
         <a href="javascript:showGroupNameChangeDialog({'title': '修改客户关键字分组', 'customerUuid':'${customerKeywordCriteria.customerUuid}'})">修改所有分组</a> |
