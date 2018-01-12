@@ -127,7 +127,7 @@
         </if>
         <if test="clientStatusCriteria.city != null and clientStatusCriteria.city != ''"> AND cs.fCity like concat(#{clientStatusCriteria.city},'%')</if>
         <if test="clientStatusCriteria.valid != null and clientStatusCriteria.valid != ''"> AND cs.fValid = #{clientStatusCriteria.valid}</if>
-        <if test="clientStatusCriteria.hasProblem != null"> AND (cs.fContinuousFailCount &gt; 5 OR DATE_ADD(cs.fLastVisitTime, INTERVAL IF((10 &gt; (cs.fPageNo*3)), 10, (cs.fPageNo * 3)) MINUTE) &lt; NOW()) and cs.fValid = 1</if>
+        <if test="clientStatusCriteria.hasProblem != null"> AND (cs.fContinuousFailCount &gt; 5 OR cs.fTenMinsLastVisitTime &lt; NOW()) and cs.fValid = 1</if>
         <if test="clientStatusCriteria.renewal != null"> AND DATE_ADD(cs.fRenewalDate, INTERVAL -3 DAY) &lt; CURRENT_DATE() and cs.fValid = 1</if>
         <if test="clientStatusCriteria.noGroup != null"> AND (cs.fGroup is null or cs.fGroup = '')</if>
         <if test="clientStatusCriteria.noVNC != null"> AND (cs.fHost is null or cs.fHost = '')</if>
@@ -164,7 +164,7 @@
         t_client_status cs
         WHERE cs.fTerminalType = #{clientStatusCriteria.terminalType}
         <if test="clientStatusCriteria.groupName != null and clientStatusCriteria.groupName != ''">AND cs.fGroup = #{clientStatusCriteria.groupName}</if>
-        AND (cs.fContinuousFailCount &gt; 5 OR DATE_ADD(cs.fLastVisitTime, INTERVAL 10 MINUTE) &lt; NOW()) and cs.fValid = 1
+        AND (cs.fContinuousFailCount &gt; 5 OR cs.fTenMinsLastVisitTime &lt; NOW()) and cs.fValid = 1
     </select>
 
     <select id="getClientStatusByClientID" parameterType="java.lang.String" resultType="com.keymanager.monitoring.entity.ClientStatus">
@@ -209,6 +209,10 @@
         fPassword,
         fVPSBackendSystemComputerID,
         fLastVisitTime,
+        fTenMinsLastVisitTime,
+        fRestartTime,
+        fThreeMinsRestartTime,
+        fTenMinsRestartTime,
         fLastSendNotificationTime,
         fRenewalDate,
         fCreateTime)
@@ -224,6 +228,10 @@
         #{clientStatus.password},
         #{clientStatus.vpsBackendSystemComputerID},
         NOW(),
+        DATE_ADD(NOW(), INTERVAL 10 MINUTE ),
+        NOW(),
+        DATE_ADD(NOW(), INTERVAL 3 MINUTE ),
+        DATE_ADD(NOW(), INTERVAL 10 MINUTE ),
         NULL,
         DATE_ADD(CURRENT_DATE(), INTERVAL - 1 DAY),
         NOW())
@@ -245,6 +253,10 @@
         fBroadbandAccount,
         fBroadbandPassword,
         fLastVisitTime,
+        fTenMinsLastVisitTime,
+        fRestartTime,
+        fThreeMinsRestartTime,
+        fTenMinsRestartTime,
         fLastSendNotificationTime,
         fRenewalDate,
         fCreateTime)
@@ -262,6 +274,10 @@
         #{clientStatus.broadbandAccount},
         #{clientStatus.broadbandPassword},
         NOW(),
+        DATE_ADD(NOW(), INTERVAL 10 MINUTE ),
+        NOW(),
+        DATE_ADD(NOW(), INTERVAL 3 MINUTE ),
+        DATE_ADD(NOW(), INTERVAL 10 MINUTE ),
         NULL,
         DATE_ADD(CURRENT_DATE(), INTERVAL - 1 DAY),
         NOW())
@@ -274,6 +290,7 @@
         fOptimizationTotalCount = fOptimizationTotalCount + 1,
         fOptimizationSucceedCount = fOptimizationSucceedCount + #{count},
         fLastVisitTime = NOW(),
+        fTenMinsLastVisitTime = DATE_ADD(NOW(), INTERVAL 10 MINUTE ),
         <choose>
             <when test="count == 0">
                 fContinuousFailCount = fContinuousFailCount + 1,
@@ -290,9 +307,18 @@
         WHERE fClientID = #{clientID}
     </update>
 
+    <update id="updatePageNo">
+        UPDATE t_client_status
+        SET
+        fLastVisitTime = NOW(),
+        fTenMinsLastVisitTime = DATE_ADD(NOW(), INTERVAL 10 MINUTE ),
+        fPageNo = #{pageNo}
+        WHERE fClientID = #{clientID}
+    </update>
+
     <update id="updateRestartStatus">
         UPDATE t_client_status
-        SET fRestartStatus = #{restartStatus}, fRestartTime = now(), fRestartOrderingTime = now()
+        SET fRestartStatus = #{restartStatus}, fRestartTime = now(), fThreeMinsRestartTime = DATE_ADD(NOW(), INTERVAL 3 MINUTE ), fTenMinsRestartTime = DATE_ADD(NOW(), INTERVAL 10 MINUTE ), fRestartOrderingTime = now()
         WHERE fClientID = #{clientID}
     </update>
 
@@ -317,20 +343,40 @@
 
     <select id="searchRestartingClientStatuses" resultType="com.keymanager.monitoring.entity.ClientStatus">
         SELECT
-        <include refid="selectCol" />
+        cs.fClientID AS "clientID",
+        cs.fTerminalType AS "terminalType",
+        cs.fVPSBackendSystemComputerID AS "vPSBackendSystemComputerID",
+        cs.fContinuousFailCount AS "continuousFailCount",
+        cs.fLastVisitTime AS "lastVisitTime",
+        cs.fPageNo AS "pageNo",
+        cs.fHost AS "host",
+        cs.fPort AS "port",
+        cs.fUserName AS "userName",
+        cs.fPassword AS "password",
+        cs.fRestartStatus AS "restartStatus"
         FROM t_client_status cs
-        WHERE (DATE_ADD(fLastVisitTime, INTERVAL 10 MINUTE) &lt; NOW() and fValid = 1
-        AND (fRestartStatus = 'restarting' AND DATE_ADD(fRestartTime, INTERVAL 3 MINUTE) &lt; NOW())
-        AND (fHost is not null and fHost &lt;&gt; '')) order by fRestartOrderingTime limit 20
+        WHERE fTenMinsLastVisitTime &lt; NOW() and fValid = 1
+        AND fRestartStatus = 'restarting' AND fThreeMinsRestartTime &lt; NOW()
+        AND fHost &gt; '' order by fRestartOrderingTime limit 50
     </select>
 
 
     <select id="searchWaitingRestartingClientStatuses" resultType="com.keymanager.monitoring.entity.ClientStatus">
         SELECT
-        <include refid="selectCol" />
+        cs.fClientID AS "clientID",
+        cs.fTerminalType AS "terminalType",
+        cs.fVPSBackendSystemComputerID AS "vPSBackendSystemComputerID",
+        cs.fContinuousFailCount AS "continuousFailCount",
+        cs.fLastVisitTime AS "lastVisitTime",
+        cs.fPageNo AS "pageNo",
+        cs.fHost AS "host",
+        cs.fPort AS "port",
+        cs.fUserName AS "userName",
+        cs.fPassword AS "password",
+        cs.fRestartStatus AS "restartStatus"
         FROM t_client_status cs
-        WHERE (fContinuousFailCount > 5 OR DATE_ADD(fLastVisitTime, INTERVAL 10 MINUTE) &lt; NOW())
-        AND (fRestartTime IS NULL OR DATE_ADD(fRestartTime, INTERVAL 10 MINUTE) &lt; NOW())
-        AND fValid = 1 AND fHost &gt; '' order by fRestartOrderingTime
+        WHERE (fContinuousFailCount > 5 OR fTenMinsLastVisitTime &lt; NOW())
+        AND fTenMinsRestartTime &lt; NOW()
+        AND fValid = 1 AND fHost &gt; '' order by fRestartOrderingTime  limit 500
     </select>
 </mapper>

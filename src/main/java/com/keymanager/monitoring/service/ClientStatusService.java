@@ -68,12 +68,7 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 	}
 
 	public void updatePageNo(String clientID, int pageNo){
-		ClientStatus clientStatus = clientStatusDao.selectById(clientID);
-		if(clientStatus != null){
-			clientStatus.setPageNo(pageNo);
-			clientStatus.setLastVisitTime(Utils.getCurrentTimestamp());
-			clientStatusDao.updateById(clientStatus);
-		}
+		clientStatusDao.updatePageNo(clientID, pageNo);
 	}
 
 	public  void updateClientVersion(String clientID, String version){

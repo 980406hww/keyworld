@@ -47,6 +47,8 @@ public interface ClientStatusDao extends BaseMapper<ClientStatus> {
 
     void updateClientStatusTargetVersion(@Param("clientIDs")List<String> clientIDs, @Param("targetVersion")String targetVersion);
 
+    void updatePageNo(@Param("clientID")String clientID, @Param("pageNo")int pageNo);
+
     void deleteClientStatus(@Param("clientIDs")List<String> clientIDs);
 
     void updateRestartStatus(@Param("clientID")String clientID, @Param("restartStatus")String restartStatus);
