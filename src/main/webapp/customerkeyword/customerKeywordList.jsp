@@ -192,6 +192,7 @@
             <td align="center" width=30>指数</td>
             <td align="center" width=50>原排名</td>
             <td align="center" width=50>现排名</td>
+            <td align="center" width=50>搜索引擎</td>
             <td align="center" width=30>计价方式</td>
             <td align="center" width=30>要刷</td>
             <td align="center" width=30>已刷</td>
@@ -241,6 +242,7 @@
                             target="_blank">${customerKeyword.currentPosition}</a>
                     </div>
                 </td>
+                <td align="center" width=50>${customerKeyword.searchEngine}</td>
                 <td align="center" width=30 class="floatTd" title="优化日期：<fmt:formatDate value="${customerKeyword.optimizeDate}" pattern="yyyy-MM-dd"/> ，要刷：${customerKeyword.optimizePlanCount}，已刷：${customerKeyword.optimizedCount})">${customerKeyword.collectMethodName}</td>
                 <td align="center" width=30>${customerKeyword.optimizePlanCount}</td>
                 <td align="center" width=30>${customerKeyword.optimizedCount} </td>
