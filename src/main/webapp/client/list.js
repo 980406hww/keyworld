@@ -51,6 +51,35 @@ function changePaging(currentPageNumber, pageSize) {
     searchClientStatusForm.submit();
 }
 function resetPageNumber() {
+    var clientStatusFormObj = $("#searchClientStatusForm");
+    var clientId = clientStatusFormObj.find("#clientID").val();
+    var groupName = clientStatusFormObj.find("#groupName").val();
+    var version = clientStatusFormObj.find("#version").val();
+    var city = clientStatusFormObj.find("#city").val();
+    var upgradeFailedReason = clientStatusFormObj.find("#upgradeFailedReason").val();
+    var vpsBackendSystemComputerID = clientStatusFormObj.find("#vpsBackendSystemComputerID").val();
+    var switchGroupName = clientStatusFormObj.find("#switchGroupName").val();
+    if(clientId != "") {
+        clientStatusFormObj.find("#clientID").val($.trim(clientId));
+    }
+    if(groupName != "") {
+        clientStatusFormObj.find("#groupName").val($.trim(groupName));
+    }
+    if(version != "") {
+        clientStatusFormObj.find("#version").val($.trim(version));
+    }
+    if(city != "") {
+        clientStatusFormObj.find("#city").val($.trim(city));
+    }
+    if(upgradeFailedReason != "") {
+        clientStatusFormObj.find("#upgradeFailedReason").val($.trim(upgradeFailedReason));
+    }
+    if(vpsBackendSystemComputerID != "") {
+        clientStatusFormObj.find("#vpsBackendSystemComputerID").val($.trim(vpsBackendSystemComputerID));
+    }
+    if(switchGroupName != "") {
+        clientStatusFormObj.find("#switchGroupName").val($.trim(switchGroupName));
+    }
     $("#searchClientStatusForm").find("#currentPageNumberHidden").val(1);
 }
 function downloadVNCFile() {

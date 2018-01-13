@@ -67,16 +67,16 @@
 								<input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
 								<input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
 								客户端ID:<input type="text" name="clientID" id="clientID" value="${clientStatusCriteria.clientID}" style="width: 90px;">
-								&nbsp;&nbsp;&nbsp;
+								&nbsp;&nbsp;
 								优化组:<input type="text" name="groupName" id="groupName" value="${clientStatusCriteria.groupName}" style="width: 120px;">
-								&nbsp;&nbsp;&nbsp;
+								&nbsp;&nbsp;
 								版本:<input type="text" name="version" id="version" value="${clientStatusCriteria.version}" style="width: 60px;">
-								&nbsp;&nbsp;&nbsp;
+								&nbsp;&nbsp;
 								城市:<input type="text" name="city" id="city" value="${clientStatusCriteria.city}" style="width: 120px;">
-								&nbsp;&nbsp;&nbsp;
+								&nbsp;&nbsp;
 								失败原因:<input type="text" name="upgradeFailedReason" id="upgradeFailedReason" value="${clientStatusCriteria.upgradeFailedReason}"
 											  style="width: 50px;">
-								&nbsp;&nbsp;&nbsp;
+								&nbsp;&nbsp;
 								状态:<select name="valid" id="valid">
 								<c:forEach items="${validMap}" var="entry">
 									<c:choose>
@@ -85,7 +85,7 @@
 									</c:choose>
 								</c:forEach>
 							</select>
-							&nbsp;&nbsp;&nbsp;
+							&nbsp;&nbsp;
 							操作类型:<select name="operationType" id="operationType">
 								<c:forEach items="${operationTypeValues}" var="operationType">
 									<c:choose>
@@ -94,9 +94,11 @@
 									</c:choose>
 								</c:forEach>
 							</select>
-							&nbsp;&nbsp;&nbsp;
+							&nbsp;&nbsp;
 							服务器ID:<input type="text" name="vpsBackendSystemComputerID" id="vpsBackendSystemComputerID" value="${clientStatusCriteria.vpsBackendSystemComputerID}" style="width: 80px;">
-							&nbsp;&nbsp;&nbsp;
+							&nbsp;&nbsp;
+							流转分组:<input type="text" name="switchGroupName" id="switchGroupName" value="${clientStatusCriteria.switchGroupName}" style="width: 100px;">
+							&nbsp;&nbsp;
 							排序:<select name="orderBy" id="orderBy">
 								<c:forEach items="${orderByMap}" var="entry">
 									<c:choose>
@@ -104,22 +106,23 @@
 										<c:otherwise><option value="${entry.key}">${entry.value}</option></c:otherwise>
 									</c:choose>
 								</c:forEach>
-							</select></td>
+							</select>
+							</td>
 						</tr>
 						<tr>
 						<td align="left">
 							<input id="hasProblem" name="hasProblem" type="checkbox" value="hasProblem" ${clientStatusCriteria.hasProblem != null ? "checked=true" : ""}>停了</input>
-							&nbsp;&nbsp;&nbsp;
+							&nbsp;&nbsp;
 							<input id="renewal" name="renewal" type="checkbox" value="renewal" ${clientStatusCriteria.renewal != null ? "checked=true" : ""}>续费</input>
-							&nbsp;&nbsp;&nbsp;
+							&nbsp;&nbsp;
 							<input id="noGroup" name="noGroup" type="checkbox" value="noGroup" ${clientStatusCriteria.noGroup != null ? "checked=true" : ""}>没分组</input>
-							&nbsp;&nbsp;&nbsp;
+							&nbsp;&nbsp;
 							<input id="noOperationType" name="noOperationType" type="checkbox" value="noOperationType" ${clientStatusCriteria.noOperationType != null ? "checked=true" : ""}>没操作类型</input>
-							&nbsp;&nbsp;&nbsp;
+							&nbsp;&nbsp;
 							<input id="noVNC" name="noVNC" type="checkbox" value="noVNC" ${clientStatusCriteria.noVNC != null ? "checked=true" : ""}>没VNC</input>
-							&nbsp;&nbsp;&nbsp;
+							&nbsp;&nbsp;
 							<input id="noUpgrade" name="noUpgrade" type="checkbox" value="noUpgrade" ${clientStatusCriteria.noUpgrade != null ? "checked=true" : ""}>没升级</input>
-							&nbsp;&nbsp;&nbsp;
+							&nbsp;&nbsp;
 							<input id="showFetchKeywordStatus" name="showFetchKeywordStatus" type="checkbox" value="showFetchKeywordStatus"
 							${clientStatusCriteria.showFetchKeywordStatus != null ? "checked=true" : ""}>显示取词状态</input>
 

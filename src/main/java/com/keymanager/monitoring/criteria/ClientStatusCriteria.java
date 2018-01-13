@@ -18,6 +18,7 @@ public class ClientStatusCriteria extends BaseCriteria {
     private String noUpgrade; // 没升级
     private String orderBy; // 排序
     private String vpsBackendSystemComputerID;//服务器ID
+    private String switchGroupName;
 
     private String terminalType;
 
@@ -155,5 +156,13 @@ public class ClientStatusCriteria extends BaseCriteria {
 
     public void setVpsBackendSystemComputerID(String vpsBackendSystemComputerID) {
         this.vpsBackendSystemComputerID = vpsBackendSystemComputerID;
+    }
+
+    public String getSwitchGroupName() {
+        return switchGroupName;
+    }
+
+    public void setSwitchGroupName(String switchGroupName) {
+        this.switchGroupName = switchGroupName;
     }
 }
