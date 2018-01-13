@@ -160,6 +160,18 @@ function getSelectedIDs() {
 }
 function resetPageNumber() {
     var searchSupplierForm = $("#searchSupplierForm");
+    var contactPerson = searchSupplierForm.find("#contactPerson").val();
+    var qq = searchSupplierForm.find("#qq").val();
+    var phone = searchSupplierForm.find("#phone").val();
+    if(contactPerson != "") {
+        searchSupplierForm.find("#contactPerson").val($.trim(contactPerson));
+    }
+    if(qq != "") {
+        searchSupplierForm.find("#qq").val($.trim(qq));
+    }
+    if(phone != "") {
+        searchSupplierForm.find("#phone").val($.trim(phone));
+    }
     searchSupplierForm.find("#currentPageNumberHidden").val(1);
 }
 function initSupplierDialog(supplier) {

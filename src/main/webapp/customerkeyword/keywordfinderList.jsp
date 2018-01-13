@@ -111,7 +111,7 @@
                 <option value="3">添加序号</option>
             </select>
             &nbsp;
-            备注:<input type="text" name="remarks" style="width: 90px;" value="${customerKeywordCriteria.remarks}">
+            备注:<input type="text" id="remarks" name="remarks" style="width: 90px;" value="${customerKeywordCriteria.remarks}">
             <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
                 <input type="submit" onclick="resetPageNumber()" value=" 查询 ">&nbsp;&nbsp;
             </shiro:hasPermission>

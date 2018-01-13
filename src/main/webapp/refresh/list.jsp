@@ -18,7 +18,7 @@
 			<td align="right">
 				&nbsp;
 				<shiro:hasPermission name="/internal/refreshstatinfo/searchRefreshStatInfos">
-					<input type="submit" name="btnQuery" id="btnQuery" value=" 查询 ">
+					<input type="submit" name="btnQuery" id="btnQuery" value=" 查询 " onclick="trimSearchCondition()">
 				</shiro:hasPermission>
 			</td>
 		</tr>
@@ -165,7 +165,17 @@
             ctd.eq(idx).width($(val).width());
         });
     }
-
+    function trimSearchCondition() {
+        var searchRefreshStatInfoForm = $("#searchRefreshStatInfoForm");
+        var groupName = searchRefreshStatInfoForm.find("#groupName").val();
+        var customerName = searchRefreshStatInfoForm.find("#customerName").val();
+        if(groupName != "") {
+            searchRefreshStatInfoForm.find("#groupName").val($.trim(groupName));
+        }
+        if(customerName != "") {
+            searchRefreshStatInfoForm.find("#customerName").val($.trim(customerName));
+        }
+    }
     <shiro:hasPermission name="/internal/clientstatus/searchBadClientStatus">
     function findClientStatus(groupName) {
         $("#searchClientStatusForm").find("#groupName").val(groupName);

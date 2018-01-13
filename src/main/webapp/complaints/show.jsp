@@ -83,7 +83,7 @@
             <input type="hidden" id="currentPageHidden" name="currentPageHidden" value="${page.current}"/>
             <input type="hidden" id="displaysRecordsHidden" name="displaysRecordsHidden" value="${page.size}"/>
             <shiro:hasPermission name="/internal/complaints/findTSMainKeywords">
-            <input type="submit" class="ui-button ui-widget ui-corner-all" style="z-index: 0" ; value=" 查询 ">&nbsp;&nbsp;&nbsp;
+            <input type="submit" class="ui-button ui-widget ui-corner-all" style="z-index: 0" ; value=" 查询 " onclick="resetPageNumber()">&nbsp;&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/complaints/save">
             <input type="button" class="ui-button ui-widget ui-corner-all" style="z-index: 0" ; onclick="showAddMainKeywordDialog(null)" value=" 添加 "/>&nbsp;&nbsp;&nbsp;

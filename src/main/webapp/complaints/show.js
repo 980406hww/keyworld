@@ -250,3 +250,11 @@ function decideSelectAll() {
         $("#selectAllChecked").prop("checked",false);
     }
 }
+function resetPageNumber() {
+    var mainKeywordFormObj = $("#serachMainKeywordForm");
+    var itemKeyword = mainKeywordFormObj.find("#itemKeyword").val();
+    if(itemKeyword != "") {
+        mainKeywordFormObj.find("#itemKeyword").val($.trim(itemKeyword));
+    }
+    $("#serachMainKeywordForm").find("#currentPageHidden").val(1);
+}

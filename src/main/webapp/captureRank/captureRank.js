@@ -9,10 +9,6 @@ function changePaging(currentPage, pageSize) {
     searchCaptureRankJobForm.find("#pageSizeHidden").val(pageSize);
     searchCaptureRankJobForm.submit();
 }
-function resetPageNumber() {
-    var searchCaptureRankJobForm = $("#searchCaptureRankJobForm");
-    searchCaptureRankJobForm.find("#currentPageNumberHidden").val(1);
-}
 function pageLoad() {
     var searchCustomerForm = $("#searchCaptureRankJobForm");
     var pageSize = searchCustomerForm.find('#pageSizeHidden').val();
@@ -399,4 +395,16 @@ function changeCaptureRankJobStatus(uuid, status) {
             $().toastmessage('showErrorToast', "操作失败");
         }
     });
+}
+function resetPageNumber() {
+    var captureRankJobFormObj = $("#searchCaptureRankJobForm");
+    var groupNames = captureRankJobFormObj.find("#groupNames").val();
+    var customerUuid = captureRankJobFormObj.find("#customerUuid").val();
+    if(groupNames != "") {
+        captureRankJobFormObj.find("#groupNames").val($.trim(groupNames));
+    }
+    if(customerUuid != "") {
+        captureRankJobFormObj.find("#customerUuid").val($.trim(customerUuid));
+    }
+    $("#searchCaptureRankJobForm").find("#currentPageNumberHidden").val(1);
 }

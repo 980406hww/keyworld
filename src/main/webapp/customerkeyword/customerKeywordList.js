@@ -211,6 +211,38 @@ function changePaging(currentPage, pageSize) {
 }
 function resetPageNumber() {
     var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
+    var keyword = searchCustomerKeywordForm.find("#keyword").val();
+    var url = searchCustomerKeywordForm.find("#url").val();
+    var optimizeGroupName = searchCustomerKeywordForm.find("#optimizeGroupName").val();
+    var optimizedCount = searchCustomerKeywordForm.find("#optimizedCount").val();
+    var position = searchCustomerKeywordForm.find("#position").val();
+    var invalidRefreshCount = searchCustomerKeywordForm.find("#invalidRefreshCount").val();
+    var currentIndexCount = searchCustomerKeywordForm.find("#currentIndexCount").val();
+    var remarks = searchCustomerKeywordForm.find("#remarks").val();
+    if(keyword != "") {
+        searchCustomerKeywordForm.find("#keyword").val($.trim(keyword));
+    }
+    if(url != "") {
+        searchCustomerKeywordForm.find("#url").val($.trim(url));
+    }
+    if(optimizeGroupName != "") {
+        searchCustomerKeywordForm.find("#optimizeGroupName").val($.trim(optimizeGroupName));
+    }
+    if(optimizedCount != "") {
+        searchCustomerKeywordForm.find("#optimizedCount").val($.trim(optimizedCount));
+    }
+    if(position != "") {
+        searchCustomerKeywordForm.find("#position").val($.trim(position));
+    }
+    if(invalidRefreshCount != "") {
+        searchCustomerKeywordForm.find("#invalidRefreshCount").val($.trim(invalidRefreshCount));
+    }
+    if(currentIndexCount != "") {
+        searchCustomerKeywordForm.find("#currentIndexCount").val($.trim(currentIndexCount));
+    }
+    if(remarks != "") {
+        searchCustomerKeywordForm.find("#remarks").val($.trim(remarks));
+    }
     searchCustomerKeywordForm.find("#currentPageNumberHidden").val(1);
 }
 function showGroupNameChangeByRankDialog(customerUuid) {

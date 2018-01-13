@@ -845,8 +845,24 @@ function changePaging(currentPage, pageSize) {
     searchCustomerForm.submit();
 }
 function resetPageNumber() {
-    var searchCustomerForm = $("#searchCustomerForm");
-    searchCustomerForm.find("#currentPageNumberHidden").val(1);
+    var searchCustomerFormObj = $("#searchCustomerForm");
+    var contactPerson = searchCustomerFormObj.find("#contactPerson").val();
+    var qq = searchCustomerFormObj.find("#qq").val();
+    var telphone = searchCustomerFormObj.find("#telphone").val();
+    var remark = searchCustomerFormObj.find("#remark").val();
+    if(contactPerson != "") {
+        searchCustomerFormObj.find("#contactPerson").val($.trim(contactPerson));
+    }
+    if(qq != "") {
+        searchCustomerFormObj.find("#qq").val($.trim(qq));
+    }
+    if(telphone != "") {
+        searchCustomerFormObj.find("#telphone").val($.trim(telphone));
+    }
+    if(remark != "") {
+        searchCustomerFormObj.find("#remark").val($.trim(remark));
+    }
+    searchCustomerFormObj.find("#currentPageNumberHidden").val(1);
 }
 function viewAizhanRank(contactPerson) {
     var index = contactPerson.indexOf("整站");

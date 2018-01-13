@@ -11,6 +11,18 @@ function changePaging(currentPage, pageSize) {
 }
 function resetPageNumber() {
     var searchWebsiteForm = $("#searchWebsiteForm");
+    var websiteName = searchWebsiteForm.find("#websiteName").val();
+    var domain = searchWebsiteForm.find("#domain").val();
+    var accessFailCount = searchWebsiteForm.find("#accessFailCount").val();
+    if(websiteName != "") {
+        searchWebsiteForm.find("#websiteName").val($.trim(websiteName));
+    }
+    if(domain != "") {
+        searchWebsiteForm.find("#domain").val($.trim(domain));
+    }
+    if(accessFailCount != "") {
+        searchWebsiteForm.find("#accessFailCount").val($.trim(accessFailCount));
+    }
     searchWebsiteForm.find("#currentPageNumberHidden").val(1);
 }
 function pageLoad() {

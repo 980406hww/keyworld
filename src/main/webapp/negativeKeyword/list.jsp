@@ -17,7 +17,7 @@
             分组名称:<input type="text" name="group" id="group" value="${negativeKeywordNameCriteria.group}">&nbsp;&nbsp;
             <input type="checkbox" name="hasEmail" ${negativeKeywordNameCriteria.hasEmail != null ? "checked=true" : ""} />&nbsp;有Email&nbsp;&nbsp;
             <shiro:hasPermission name="/internal/negativeKeywordName/searchNegativeKeywordNames">
-            <input type="submit" value=" 查询 ">&nbsp;&nbsp;
+            <input type="submit" value=" 查询 " onclick="resetPageNumber()">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/negativeKeywordName/uploadTxtFile">
             <input type="button" value=" 导入 " onclick="showUploadTxtFileDialog()">&nbsp;&nbsp;

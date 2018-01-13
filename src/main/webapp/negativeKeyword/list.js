@@ -16,6 +16,10 @@ function changePaging(currentPage, pageSize) {
 }
 function resetPageNumber() {
     var negativeKeywordForm = $("#negativeKeywordForm");
+    var group = negativeKeywordForm.find("#group").val();
+    if(group != "") {
+        negativeKeywordForm.find("#group").val($.trim(group));
+    }
     negativeKeywordForm.find("#currentPageNumberHidden").val(1);
 }
 function pageLoad() {

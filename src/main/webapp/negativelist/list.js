@@ -45,7 +45,16 @@ function changePaging(currentPageNumber, pageSize) {
     searchNegativeListForm.submit();
 }
 function resetPageNumber() {
-    $("#searchNegativeListForm").find("#currentPageNumberHidden").val(1);
+    var searchNegativeListForm = $("#searchNegativeListForm");
+    var keyword = searchNegativeListForm.find("#keyword").val();
+    var url = searchNegativeListForm.find("#url").val();
+    if(keyword != "") {
+        searchNegativeListForm.find("#keyword").val($.trim(keyword));
+    }
+    if(url != "") {
+        searchNegativeListForm.find("#url").val($.trim(url));
+    }
+    searchNegativeListForm.find("#currentPageNumberHidden").val(1);
 }
 function editNegativeList(uuid) {
     $.ajax({

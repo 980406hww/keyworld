@@ -19,7 +19,7 @@
 <div id="topDiv">
     <%@include file="/menu.jsp"%>
     <form action="/internal/clientstatus/clientStatusGroupStat" method="post" id="searchClientStatusSummaryVOForm" style="margin: 35px 0 5px 10px;">
-        分组名称:<input type="text" name="group" value="${group}">&nbsp;&nbsp;
+        分组名称:<input type="text" name="group" id="group" value="${group}">&nbsp;&nbsp;
         终端类型:
         <select name="terminalType">
             <option value="">请选择终端类型</option>
@@ -27,7 +27,7 @@
             <option value="Phone" <c:if test="${requestScope.terminalType.equals('Phone')}">selected="selected"</c:if>>Phone</option>
         </select>&nbsp;&nbsp;
         <shiro:hasPermission name="/internal/clientstatus/clientStatusGroupStat">
-            <input type="submit" value=" 查询 ">
+            <input type="submit" value=" 查询 " onclick="trimSearchCondition()">
         </shiro:hasPermission>
     </form>
     <table width=40% style="font-size: 12px;" cellpadding=3 id="headerTable">
@@ -66,6 +66,13 @@
         $.each(td, function (idx, val) {
             ctd.eq(idx).width($(val).width());
         });
+    }
+    function trimSearchCondition() {
+        var clientStatusSummaryForm = $("#searchClientStatusSummaryVOForm");
+        var group = clientStatusSummaryForm.find("#group").val();
+        if(group != "") {
+            clientStatusSummaryForm.find("#group").val($.trim(group));
+        }
     }
 </script>
 </body>

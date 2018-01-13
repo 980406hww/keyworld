@@ -56,7 +56,7 @@
                                 </c:if>
                             </td>
                             <td>
-                                备注:<input type="text" value="${customerCriteria.remark}" name="remark" style="width: 90px;">
+                                备注:<input type="text" value="${customerCriteria.remark}" id="remark" name="remark" style="width: 90px;">
                             </td>
                             <td align="right">
                                 <input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}"/>

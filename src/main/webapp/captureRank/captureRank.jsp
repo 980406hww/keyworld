@@ -22,8 +22,8 @@
             <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
             <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
             <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
-            组名:<input type="text" name="groupNames" value="${captureRankJobSearchCriteria.groupNames}">
-            客户ID:<input type="text" name="customerUuid" value="${captureRankJobSearchCriteria.customerUuid}">
+            组名:<input type="text" name="groupNames" id="groupNames" value="${captureRankJobSearchCriteria.groupNames}">
+            客户ID:<input type="text" name="customerUuid" id="customerUuid" value="${captureRankJobSearchCriteria.customerUuid}">
             操作类型:
             <select name="operationType">
                 <option value="">请选择终端类型</option>
@@ -37,7 +37,7 @@
                 <option value="Everyday" <c:if test="${captureRankJobSearchCriteria.exectionType.equals('Everyday')}">selected="selected"</c:if>>Everyday</option>
             </select>&nbsp;&nbsp;
             <shiro:hasPermission name="/internal/captureRank/searchCaptureRankJobs">
-            <input type="submit" value=" 查询 ">&nbsp;&nbsp;
+            <input type="submit" value=" 查询 " onclick="resetPageNumber()">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/captureRank/saveCaptureRankJob">
             <input type="button" value=" 添加 " onclick="showCrawlRankingForm()">&nbsp;&nbsp;

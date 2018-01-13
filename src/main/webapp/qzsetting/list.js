@@ -52,6 +52,15 @@ function resetSearchCondition(days) {
     var customerUuid = customerInfo.substr(customerInfo.lastIndexOf("_") + 1);
     chargeForm.find("#customerUuid").val(customerUuid);
     chargeForm.find("#dateRangeType").val(days);
+
+    var domain = chargeForm.find("#domain").val();
+    var group = chargeForm.find("#group").val();
+    if(domain != "") {
+        chargeForm.find("#domain").val($.trim(domain));
+    }
+    if(group != "") {
+        chargeForm.find("#group").val($.trim(group));
+    }
     chargeForm.find("#currentPageNumberHidden").val(1);
     chargeForm.submit();
 }

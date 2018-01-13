@@ -6,6 +6,42 @@ function changePaging(currentPage, pageSize) {
 }
 function resetPageNumber() {
     var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
+    var keyword = searchCustomerKeywordForm.find("#keyword").val();
+    var qq = searchCustomerKeywordForm.find("#qq").val();
+    var url = searchCustomerKeywordForm.find("#url").val();
+    var optimizeGroupName = searchCustomerKeywordForm.find("#optimizeGroupName").val();
+    var optimizedCount = searchCustomerKeywordForm.find("#optimizedCount").val();
+    var position = searchCustomerKeywordForm.find("#position").val();
+    var orderNumber = searchCustomerKeywordForm.find("#orderNumber").val();
+    var invalidRefreshCount = searchCustomerKeywordForm.find("#invalidRefreshCount").val();
+    var remarks = searchCustomerKeywordForm.find("#remarks").val();
+    if(keyword != "") {
+        searchCustomerKeywordForm.find("#keyword").val($.trim(keyword));
+    }
+    if(qq != "") {
+        searchCustomerKeywordForm.find("#qq").val($.trim(qq));
+    }
+    if(url != "") {
+        searchCustomerKeywordForm.find("#url").val($.trim(url));
+    }
+    if(optimizeGroupName != "") {
+        searchCustomerKeywordForm.find("#optimizeGroupName").val($.trim(optimizeGroupName));
+    }
+    if(optimizedCount != "") {
+        searchCustomerKeywordForm.find("#optimizedCount").val($.trim(optimizedCount));
+    }
+    if(position != "") {
+        searchCustomerKeywordForm.find("#position").val($.trim(position));
+    }
+    if(orderNumber != "") {
+        searchCustomerKeywordForm.find("#orderNumber").val($.trim(orderNumber));
+    }
+    if(invalidRefreshCount != "") {
+        searchCustomerKeywordForm.find("#invalidRefreshCount").val($.trim(invalidRefreshCount));
+    }
+    if(remarks != "") {
+        searchCustomerKeywordForm.find("#remarks").val($.trim(remarks));
+    }
     searchCustomerKeywordForm.find("#currentPageNumberHidden").val(1);
 }
 function selectAll(self) {

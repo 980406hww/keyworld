@@ -18,7 +18,7 @@
             域名:<input type="text" name="domain" id="domain" value="${websiteCriteria.domain}">&nbsp;&nbsp;
             失败次数:<input type="text" name="accessFailCount" id="accessFailCount" value="${websiteCriteria.accessFailCount}">&nbsp;&nbsp;
             <shiro:hasPermission name="/internal/website/searchWebsites">
-            <input type="submit" value=" 查询 ">&nbsp;&nbsp;
+            <input type="submit" value=" 查询 " onclick="resetPageNumber()">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/website/saveWebsite">
             <input type="button" value=" 添加 " onclick="showWebsiteDialog(null)">&nbsp;&nbsp;
