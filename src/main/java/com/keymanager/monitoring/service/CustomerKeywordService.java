@@ -609,12 +609,21 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeywordForOptimization.setMaxUserCount(clientStatus.getMaxUserCount());
             customerKeywordForOptimization.setSearchEngine(customerKeyword.getSearchEngine());
             customerKeywordForOptimization.setTerminalType(customerKeyword.getTerminalType());
-            if(StringUtils.isNotBlank(customerKeyword.getExcludeKeywords())) {
+            if(StringUtils.isNotBlank(customerKeyword.getRemarks())) {
                 customerKeywordForOptimization.setNegativeKeywords(new ArrayList<String>());
-                String[] subElements = customerKeyword.getExcludeKeywords().split(",");
+                String[] subElements = customerKeyword.getRemarks().split(",");
                 for(String subElement : subElements) {
                     for (String negativeKeyword : subElement.split("，")) {
                         customerKeywordForOptimization.getNegativeKeywords().add(negativeKeyword);
+                    }
+                }
+            }
+            if(StringUtils.isNotBlank(customerKeyword.getExcludeKeywords())) {
+                customerKeywordForOptimization.setExcludeKeywords(new ArrayList<String>());
+                String[] subElements = customerKeyword.getExcludeKeywords().split(",");
+                for(String subElement : subElements) {
+                    for (String excludeKeyword : subElement.split("，")) {
+                        customerKeywordForOptimization.getExcludeKeywords().add(excludeKeyword);
                     }
                 }
             }

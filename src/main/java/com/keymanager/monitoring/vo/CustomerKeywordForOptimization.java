@@ -64,6 +64,7 @@ public class CustomerKeywordForOptimization {
 	private String broadbandPassword;
 
 	private List<String> negativeKeywords;
+	private List<String> excludeKeywords;
 	private List<String> recommendedKeywords;
 
 	private List<String> excludeTitles; 
@@ -546,6 +547,14 @@ public class CustomerKeywordForOptimization {
 
 	public void setNegativeKeywords(List<String> negativeKeywords) {
 		this.negativeKeywords = negativeKeywords;
+	}
+
+	public List<String> getExcludeKeywords() {
+		return excludeKeywords;
+	}
+
+	public void setExcludeKeywords(List<String> excludeKeywords) {
+		this.excludeKeywords = excludeKeywords;
 	}
 
 	public List<String> getRecommendedKeywords() {
