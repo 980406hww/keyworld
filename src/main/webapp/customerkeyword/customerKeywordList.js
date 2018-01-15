@@ -511,7 +511,7 @@ function addCustomerKeyword(customerKeywordUuid, customerUuid) {
     }
     $("#saveCustomerKeywordDialog").dialog({
         width: 410,
-        height: 560,
+        height: 585,
         title : "添加关键字",
         modal: true,
         resizable: false,
@@ -555,6 +555,10 @@ function saveCustomerKeyword(customerUuid) {
         return;
     }
     customerKeyword.keyword = keyword;
+    var recommendKeywords = $.trim(saveCustomerKeywordDialog.find("#recommendKeywords").val());
+    customerKeyword.recommendKeywords = recommendKeywords;
+    var excludeKeywords = $.trim(saveCustomerKeywordDialog.find("#excludeKeywords").val());
+    customerKeyword.excludeKeywords = excludeKeywords;
     var url = $.trim(saveCustomerKeywordDialog.find("#url").val())
     customerKeyword.url = url;
     var originalUrl = $.trim(saveCustomerKeywordDialog.find("#originalUrl").val());
@@ -643,6 +647,8 @@ function modifyCustomerKeyword(customerKeywordUuid, customerUuid) {
             if (customerKeyword != null) {
                 saveCustomerKeywordDialog.find("#uuid").val(customerKeyword.uuid);
                 saveCustomerKeywordDialog.find("#keyword").val(customerKeyword.keyword);
+                saveCustomerKeywordDialog.find("#recommendKeywords").val(customerKeyword.recommendKeywords);
+                saveCustomerKeywordDialog.find("#excludeKeywords").val(customerKeyword.excludeKeywords);
                 saveCustomerKeywordDialog.find("#searchEngine").val(customerKeyword.searchEngine);
                 saveCustomerKeywordDialog.find("#initialIndexCount").val(customerKeyword.currentIndexCount);
                 saveCustomerKeywordDialog.find("#initialPosition").val(customerKeyword.currentPosition == null ? '' : customerKeyword.currentPosition);

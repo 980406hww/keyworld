@@ -60,7 +60,9 @@
         ck.fOrderNumber	AS	'orderNumber',
         ck.fRemarks	AS	'remarks',
         ck.fStatus	AS	'status',
-        ck.fManualCleanTitle as 'manualCleanTitle',
+        ck.fManualCleanTitle AS 'manualCleanTitle',
+        ck.fRecommendKeywords AS 'recommendKeywords',
+        ck.fExcludeKeywords AS 'excludeKeywords',
         ck.fUpdateTime	AS	'updateTime',
         ck.fCreateTime	AS	'createTime'
     </sql>

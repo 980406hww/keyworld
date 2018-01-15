@@ -326,8 +326,9 @@
     <form id="customerKeywordForm">
         <ul>
             <input type="hidden" name="uuid" id="uuid" value="" style="width:300px;">
-            <li><span class="customerKeywordSpanClass">关键字:</span><input type="text" name="keyword" id="keyword" value="" style="width:300px;"/>
-            </li>
+            <li><span class="customerKeywordSpanClass">关键字:</span><input type="text" name="keyword" id="keyword" value="" style="width:300px;"/></li>
+            <li><span class="customerKeywordSpanClass">推荐词:</span><input type="text" name="recommendKeywords" id="recommendKeywords" value="" style="width:300px;"></li>
+            <li><span class="customerKeywordSpanClass">排除词:</span><input type="text" name="excludeKeywords" id="excludeKeywords" value="" style="width:300px;"></li>
 
             <hr style="height: 1px; border:none; border-top:1px dashed #CCCCCC;"/>
             <li><span class="customerKeywordSpanClass">标题:</span><input type="text" name="title" id="title" value="" style="width:300px;">
@@ -369,7 +370,7 @@
                     </li></ul>
 
 
-                    <ul id="customerKeywordCost" style="float: left; width: 200px;height:170px;text-align: center">
+                    <ul id="customerKeywordCost" style="float: left; width: 200px;height:146px;text-align: center">
                         <li><a href="javascript:showCustomerKeywordCost()">&nbsp;显示成本(再次点击关闭)</a></li>
                         <ul id="customerKeywordCostFrom" style="display: none;">
                             <li><span class="customerKeywordSpanClass">第一成本:</span><input name="positionFirstCost" id="positionFirstCost"
@@ -390,14 +391,13 @@
                             </li>
                         </ul>
                     </ul>
-
             </li>
-                <li style="float:none"><span class="customerKeywordSpanClass">服务提供商:</span>
-                    <select name="serviceProvider" id="serviceProvider" style="width: 296px">
-                        <c:forEach items="${serviceProviders}" var="serviceProvider">
-                            <option value="${serviceProvider.serviceProviderName}" <c:if test="${serviceProvider.serviceProviderName=='baidutop123'}">selected="selected"</c:if>>${serviceProvider.serviceProviderName}</option>
-                        </c:forEach>
-                    </select></li>
+            <li style="float:none"><span class="customerKeywordSpanClass">服务提供商:</span>
+                <select name="serviceProvider" id="serviceProvider" style="width: 296px">
+                    <c:forEach items="${serviceProviders}" var="serviceProvider">
+                        <option value="${serviceProvider.serviceProviderName}" <c:if test="${serviceProvider.serviceProviderName=='baidutop123'}">selected="selected"</c:if>>${serviceProvider.serviceProviderName}</option>
+                    </c:forEach>
+                </select></li>
 
             <hr style="height: 1px; border:none; border-top:1px dashed #CCCCCC;"/>
             <li><span class="customerKeywordSpanClass">收费方式:</span>

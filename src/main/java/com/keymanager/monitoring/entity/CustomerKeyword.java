@@ -179,6 +179,12 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(value = "fRelatedKeywords", strategy = FieldStrategy.IGNORED)
     private String relatedKeywords;
 
+    @TableField(value = "fRecommendKeywords", strategy = FieldStrategy.IGNORED)
+    private String recommendKeywords;
+
+    @TableField(value = "fExcludeKeywords", strategy = FieldStrategy.IGNORED)
+    private String excludeKeywords;
+
     @TableField(value = "fPaymentStatus", strategy = FieldStrategy.IGNORED)
     private String paymentStatus;
 
@@ -753,4 +759,19 @@ public class CustomerKeyword extends BaseEntity {
         this.setCurrentPosition(currentPosition);
     }
 
+    public String getRecommendKeywords() {
+        return recommendKeywords;
+    }
+
+    public void setRecommendKeywords(String recommendKeywords) {
+        this.recommendKeywords = recommendKeywords;
+    }
+
+    public String getExcludeKeywords() {
+        return excludeKeywords;
+    }
+
+    public void setExcludeKeywords(String excludeKeywords) {
+        this.excludeKeywords = excludeKeywords;
+    }
 }
