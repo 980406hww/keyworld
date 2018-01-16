@@ -503,15 +503,15 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
         CustomerKeyword customerKeyword = null;
         int retryCount = 0;
-        int noPositionMaxInvalidRefreshCount = 2;
+        int noPositionMaxInvalidCount = 2;
         if(clientStatus.getOperationType().contains(Constants.CONFIG_TYPE_ZHANNEI_SOGOU)) {
             Config configInvalidRefreshCount = configService.getConfig(Constants.CONFIG_TYPE_ZHANNEI_SOGOU, Constants.CONFIG_KEY_NOPOSITION_MAX_INVALID_COUNT);
-            noPositionMaxInvalidRefreshCount = Integer.parseInt(configInvalidRefreshCount.getValue());
+            noPositionMaxInvalidCount = Integer.parseInt(configInvalidRefreshCount.getValue());
         }
         do{
             boolean isNormalKeyword = keywordOptimizationCountService.optimizeNormalKeyword(clientStatus.getGroup());
             customerKeyword = customerKeywordDao.getCustomerKeywordForOptimization(terminalType, clientStatus.getGroup(),
-                    Integer.parseInt(maxInvalidCountConfig.getValue()), noPositionMaxInvalidRefreshCount, !isNormalKeyword);
+                    Integer.parseInt(maxInvalidCountConfig.getValue()), noPositionMaxInvalidCount, !isNormalKeyword);
 
             retryCount++;
             if(customerKeyword == null){
@@ -520,7 +520,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                 }
                 if(keywordOptimizationCountService.allowResetBigKeywordIndicator(clientStatus.getGroup())){
                     keywordOptimizationCountService.setLastVisitTime(clientStatus.getGroup());
-                    resetBigKeywordIndicator(clientStatus.getGroup(), Integer.parseInt(maxInvalidCountConfig.getValue()), noPositionMaxInvalidRefreshCount);
+                    resetBigKeywordIndicator(clientStatus.getGroup(), Integer.parseInt(maxInvalidCountConfig.getValue()), noPositionMaxInvalidCount);
                 }
             }else if(updateQueryInfo){
                 updateOptimizationQueryTime((customerKeyword.getUuid()));
@@ -616,9 +616,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeywordForOptimization.setSearchEngine(customerKeyword.getSearchEngine());
             customerKeywordForOptimization.setTerminalType(customerKeyword.getTerminalType());
             if(StringUtils.isNotBlank(customerKeywordForOptimization.getOperationType())) {
-                if(customerKeywordForOptimization.getOperationType().contains(Constants.CONFIG_TYPE_XL_TJ)) {
+                if(customerKeywordForOptimization.getOperationType().contains(Constants.CONFIG_TYPE_TJ_XG)) {
                     customerKeywordForOptimization.setNegativeKeywords(new ArrayList<String>());
-                    Config configNegativeKeywords = configService.getConfig(Constants.CONFIG_TYPE_XL_TJ, Constants.CONFIG_KEY_NEGATIVE_KEYWORDS);
+                    Config configNegativeKeywords = configService.getConfig(Constants.CONFIG_TYPE_TJ_XG, Constants.CONFIG_KEY_NEGATIVE_KEYWORDS);
                     Set<String> negativeKeywords = new HashSet<String>();
                     if(StringUtils.isNotBlank(configNegativeKeywords.getValue())) {
                         negativeKeywords.addAll(convertToSets(configNegativeKeywords.getValue()));
