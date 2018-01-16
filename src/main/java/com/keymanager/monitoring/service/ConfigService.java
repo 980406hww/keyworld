@@ -32,4 +32,12 @@ public class ConfigService extends ServiceImpl<ClientStatusDao, ClientStatus>{
 		optimizationDateConfig.setValue(currentDate);
 		configDao.updateConfig(optimizationDateConfig);
 	}
+
+	public void updateNegativeKeywordsFromConfig(String negativeKeywords) {
+		Config config = new Config();
+		config.setConfigType(Constants.CONFIG_TYPE_TJ_XG);
+		config.setKey(Constants.CONFIG_KEY_NEGATIVE_KEYWORDS);
+		config.setValue(negativeKeywords);
+		configDao.updateConfig(config);
+	}
 }
