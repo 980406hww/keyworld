@@ -102,6 +102,9 @@ public class ClientStatus {
 	@TableField(value = "fFreeSpace")
 	private Double freeSpace;
 
+	@TableField(value = "fTenMinsLastVisitTime")
+	private Timestamp tenMinsLastVisitTime;
+
 	@TableField(value = "fLastVisitTime")
 	private Timestamp lastVisitTime;
 
@@ -116,6 +119,12 @@ public class ClientStatus {
 
 	@TableField(value = "fRestartTime")
 	private Timestamp restartTime;
+
+	@TableField(value = "fThreeMinsRestartTime")
+	private Timestamp threeMinsRestartTime;
+
+	@TableField(value = "fTenMinsRestartTime")
+	private Timestamp tenMinsRestartTime;
 
 	@TableField(value = "fVPSBackendSystemComputerID")
 	private String vpsBackendSystemComputerID;
@@ -862,5 +871,29 @@ public class ClientStatus {
 
 	public void setSwitchGroupName(String switchGroupName) {
 		this.switchGroupName = switchGroupName;
+	}
+
+	public Timestamp getTenMinsLastVisitTime() {
+		return tenMinsLastVisitTime;
+	}
+
+	public void setTenMinsLastVisitTime(Timestamp tenMinsLastVisitTime) {
+		this.tenMinsLastVisitTime = tenMinsLastVisitTime;
+	}
+
+	public Timestamp getThreeMinsRestartTime() {
+		return threeMinsRestartTime;
+	}
+
+	public void setThreeMinsRestartTime(Timestamp threeMinsRestartTime) {
+		this.threeMinsRestartTime = threeMinsRestartTime;
+	}
+
+	public Timestamp getTenMinsRestartTime() {
+		return tenMinsRestartTime;
+	}
+
+	public void setTenMinsRestartTime(Timestamp tenMinsRestartTime) {
+		this.tenMinsRestartTime = tenMinsRestartTime;
 	}
 }
