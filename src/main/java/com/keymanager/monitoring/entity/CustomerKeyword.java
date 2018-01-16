@@ -179,6 +179,9 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(value = "fRelatedKeywords", strategy = FieldStrategy.IGNORED)
     private String relatedKeywords;
 
+    @TableField(value = "fNegativeKeywords", strategy = FieldStrategy.IGNORED)
+    private String negativeKeywords;
+
     @TableField(value = "fRecommendKeywords", strategy = FieldStrategy.IGNORED)
     private String recommendKeywords;
 
@@ -757,6 +760,14 @@ public class CustomerKeyword extends BaseEntity {
 
     public void setApplicableCurrentPosition(int currentPosition, String type) {
         this.setCurrentPosition(currentPosition);
+    }
+
+    public String getNegativeKeywords() {
+        return negativeKeywords;
+    }
+
+    public void setNegativeKeywords(String negativeKeywords) {
+        this.negativeKeywords = negativeKeywords;
     }
 
     public String getRecommendKeywords() {

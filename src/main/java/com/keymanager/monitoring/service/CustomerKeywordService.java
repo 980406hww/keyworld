@@ -505,8 +505,14 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         int retryCount = 0;
         do{
             boolean isNormalKeyword = keywordOptimizationCountService.optimizeNormalKeyword(clientStatus.getGroup());
+            int invalidRefreshCount = 2;
+            if(clientStatus.getOperationType().contains(Constants.CONFIG_TYPE_XL_TJ)) {
+                Config configInvalidRefreshCount = configService.getConfig(Constants.CONFIG_TYPE_ZHANNEI_SOUGOU, Constants.CONFIG_KEY_NOPOSITION_MAX_INVALID_COUNT);
+                invalidRefreshCount = Integer.parseInt(configInvalidRefreshCount.getValue());
+            }
             customerKeyword = customerKeywordDao.getCustomerKeywordForOptimization(terminalType, clientStatus.getGroup(),
-                    Integer.parseInt(maxInvalidCountConfig.getValue()), !isNormalKeyword);
+                    Integer.parseInt(maxInvalidCountConfig.getValue()), invalidRefreshCount, !isNormalKeyword);
+
             retryCount++;
             if(customerKeyword == null){
                 if(keywordOptimizationCountService.resetBigKeywordIndicator(clientStatus.getGroup())) {
@@ -609,30 +615,49 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeywordForOptimization.setMaxUserCount(clientStatus.getMaxUserCount());
             customerKeywordForOptimization.setSearchEngine(customerKeyword.getSearchEngine());
             customerKeywordForOptimization.setTerminalType(customerKeyword.getTerminalType());
-            if(StringUtils.isNotBlank(customerKeyword.getRemarks())) {
-                customerKeywordForOptimization.setNegativeKeywords(new ArrayList<String>());
-                String[] subElements = customerKeyword.getRemarks().split(",");
-                for(String subElement : subElements) {
-                    for (String negativeKeyword : subElement.split("，")) {
-                        customerKeywordForOptimization.getNegativeKeywords().add(negativeKeyword);
+            if(StringUtils.isNotBlank(customerKeywordForOptimization.getOperationType())) {
+                if(customerKeywordForOptimization.getOperationType().contains(Constants.CONFIG_TYPE_XL_TJ)) {
+                    customerKeywordForOptimization.setNegativeKeywords(new ArrayList<String>());
+                    Config configNegativeKeywords = configService.getConfig(Constants.CONFIG_TYPE_XL_TJ, Constants.CONFIG_KEY_NEGATIVE_KEYWORDS);
+                    if(StringUtils.isNotBlank(configNegativeKeywords.getValue())) {
+                        String[] subElements = configNegativeKeywords.getValue().split(",");
+                        for(String subElement : subElements) {
+                            for (String negativeKeyword : subElement.split("，")) {
+                                customerKeywordForOptimization.getNegativeKeywords().add(negativeKeyword);
+                            }
+                        }
                     }
-                }
-            }
-            if(StringUtils.isNotBlank(customerKeyword.getExcludeKeywords())) {
-                customerKeywordForOptimization.setExcludeKeywords(new ArrayList<String>());
-                String[] subElements = customerKeyword.getExcludeKeywords().split(",");
-                for(String subElement : subElements) {
-                    for (String excludeKeyword : subElement.split("，")) {
-                        customerKeywordForOptimization.getExcludeKeywords().add(excludeKeyword);
+                    if(StringUtils.isNotBlank(customerKeyword.getNegativeKeywords())) {
+                        String[] subElements = customerKeyword.getNegativeKeywords().split(",");
+                        for(String subElement : subElements) {
+                            for (String negativeKeyword : subElement.split("，")) {
+                                customerKeywordForOptimization.getNegativeKeywords().add(negativeKeyword);
+                            }
+                        }
+                        if(StringUtils.isNotBlank(configNegativeKeywords.getValue())) {
+                            HashSet<String> negativeKeywordSet = new HashSet<String>(customerKeywordForOptimization.getNegativeKeywords());
+                            customerKeywordForOptimization.getNegativeKeywords().clear();
+                            customerKeywordForOptimization.getNegativeKeywords().addAll(negativeKeywordSet);
+                        }
                     }
-                }
-            }
-            if(StringUtils.isNotBlank(customerKeyword.getRecommendKeywords())) {
-                customerKeywordForOptimization.setRecommendedKeywords(new ArrayList<String>());
-                String[] subElements = customerKeyword.getRecommendKeywords().split(",");
-                for(String subElement : subElements) {
-                    for (String recommendKeyword : subElement.split("，")) {
-                        customerKeywordForOptimization.getRecommendedKeywords().add(recommendKeyword);
+
+                    if(StringUtils.isNotBlank(customerKeyword.getExcludeKeywords())) {
+                        customerKeywordForOptimization.setExcludeKeywords(new ArrayList<String>());
+                        String[] subElements = customerKeyword.getExcludeKeywords().split(",");
+                        for(String subElement : subElements) {
+                            for (String excludeKeyword : subElement.split("，")) {
+                                customerKeywordForOptimization.getExcludeKeywords().add(excludeKeyword);
+                            }
+                        }
+                    }
+                    if(StringUtils.isNotBlank(customerKeyword.getRecommendKeywords())) {
+                        customerKeywordForOptimization.setRecommendedKeywords(new ArrayList<String>());
+                        String[] subElements = customerKeyword.getRecommendKeywords().split(",");
+                        for(String subElement : subElements) {
+                            for (String recommendKeyword : subElement.split("，")) {
+                                customerKeywordForOptimization.getRecommendedKeywords().add(recommendKeyword);
+                            }
+                        }
                     }
                 }
             }

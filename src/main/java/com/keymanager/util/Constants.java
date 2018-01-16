@@ -31,6 +31,10 @@ public class Constants {
 	public final static String CONFIG_KEY_VMWARE = "VMWARE";
 	public final static String CONFIG_TYPE_OPTIMIZATION_DATE = "OptimizationDate";
 	public final static String CONFIG_TYPE_OPTIMIZATION_TYPE = "OperationType";
+	public final static String CONFIG_TYPE_XL_TJ = "xl_tj";
+	public final static String CONFIG_KEY_NEGATIVE_KEYWORDS = "NegativeKeywords";
+	public final static String CONFIG_TYPE_ZHANNEI_SOUGOU = "zhannei_sougou";
+	public final static String CONFIG_KEY_NOPOSITION_MAX_INVALID_COUNT = "NoPositionMaxInvalidCount";
 	
 	public final static Map<String, String> ACCOUNT_LOG_STATUS_MAP = new HashMap<String, String>();
 	static {

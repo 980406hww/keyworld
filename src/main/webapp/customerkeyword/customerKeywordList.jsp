@@ -89,12 +89,12 @@
     </shiro:hasPermission>
         </div><div>
 
-    <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupNameByRank">
-        <a href="javascript:showGroupNameChangeByRankDialog('${customerKeywordCriteria.customerUuid}')">按排名修改分组</a> |
-    </shiro:hasPermission>
     <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordSearchEngine">
         <a href="javascript:showSearchEngineChangeDialog({'title': '修改所有关键字搜索引擎', 'customerUuid':'${customerKeywordCriteria.customerUuid}'})">修改所有搜索引擎</a> |
         <a href="javascript:updateSpecifiedCustomerKeywordSearchEngine()">修改选中搜索引擎</a> |
+    </shiro:hasPermission>
+    <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupNameByRank">
+        <a href="javascript:showGroupNameChangeByRankDialog('${customerKeywordCriteria.customerUuid}')">按排名修改分组</a> |
     </shiro:hasPermission>
     <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupName">
         <a href="javascript:showGroupNameChangeDialog({'title': '修改客户关键字分组', 'customerUuid':'${customerKeywordCriteria.customerUuid}'})">修改所有分组</a> |
@@ -327,8 +327,6 @@
         <ul>
             <input type="hidden" name="uuid" id="uuid" value="" style="width:300px;">
             <li><span class="customerKeywordSpanClass">关键字:</span><input type="text" name="keyword" id="keyword" value="" style="width:300px;"/></li>
-            <li><span class="customerKeywordSpanClass">推荐词:</span><input type="text" name="recommendKeywords" id="recommendKeywords" value="" style="width:300px;"></li>
-            <li><span class="customerKeywordSpanClass">排除词:</span><input type="text" name="excludeKeywords" id="excludeKeywords" value="" style="width:300px;"></li>
 
             <hr style="height: 1px; border:none; border-top:1px dashed #CCCCCC;"/>
             <li><span class="customerKeywordSpanClass">标题:</span><input type="text" name="title" id="title" value="" style="width:300px;">
@@ -428,6 +426,9 @@
                 <option value="4">跑路</option>
             </select>
             </li>
+            <li><span class="customerKeywordSpanClass">推荐词:</span><input type="text" name="recommendKeywords" id="recommendKeywords" value="" style="width:300px;"></li>
+            <li><span class="customerKeywordSpanClass">负面词:</span><input type="text" name="negativeKeywords" id="negativeKeywords" value="" style="width:300px;"></li>
+            <li><span class="customerKeywordSpanClass">排除词:</span><input type="text" name="excludeKeywords" id="excludeKeywords" value="" style="width:300px;"></li>
             <li>
                 <span class="customerKeywordSpanClass" style="display: inline-block;float: left;height: 80px;">备注:</span><textarea name="remarks" id="remarks" style="width:300px;height:80px;resize: none" placeholder="请写备注吧!"></textarea>
             </li>

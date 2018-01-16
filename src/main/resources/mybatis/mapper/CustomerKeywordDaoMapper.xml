@@ -62,6 +62,7 @@
         ck.fStatus	AS	'status',
         ck.fManualCleanTitle AS 'manualCleanTitle',
         ck.fRecommendKeywords AS 'recommendKeywords',
+        ck.fNegativeKeywords AS 'negativeKeywords',
         ck.fExcludeKeywords AS 'excludeKeywords',
         ck.fUpdateTime	AS	'updateTime',
         ck.fCreateTime	AS	'createTime'
@@ -378,7 +379,7 @@
     <select id="searchRemainingOptimizationCount" resultType="java.util.Map">
         SELECT ck.fUuid as 'uuid', (ck.fOptimizePlanCount - ck.fOptimizedCount) AS 'remainingCount' FROM t_customer_keyword ck
         WHERE ck.fOptimizeGroupName = #{groupName} AND ck.fOptimizePlanCount > ck.fOptimizedCount
-        and ((ck.fCurrentPosition = 0 and ck.fInvalidRefreshCount <![CDATA[<]]> 2) or (ck.fCurrentPosition > 0 and ck.fInvalidRefreshCount <![CDATA[<]]> #{maxInvalidCount}))
+        and ((ck.fCurrentPosition = 0 and ck.fInvalidRefreshCount <![CDATA[<]]> #{invalidRefreshCount}) or (ck.fCurrentPosition > 0 and ck.fInvalidRefreshCount <![CDATA[<]]> #{maxInvalidCount}))
         ORDER BY (ck.fOptimizePlanCount - ck.fOptimizedCount) DESC
     </select>
 
