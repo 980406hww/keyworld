@@ -379,7 +379,7 @@
     <select id="searchRemainingOptimizationCount" resultType="java.util.Map">
         SELECT ck.fUuid as 'uuid', (ck.fOptimizePlanCount - ck.fOptimizedCount) AS 'remainingCount' FROM t_customer_keyword ck
         WHERE ck.fOptimizeGroupName = #{groupName} AND ck.fOptimizePlanCount > ck.fOptimizedCount
-        and ((ck.fCurrentPosition = 0 and ck.fInvalidRefreshCount <![CDATA[<]]> #{invalidRefreshCount}) or (ck.fCurrentPosition > 0 and ck.fInvalidRefreshCount <![CDATA[<]]> #{maxInvalidCount}))
+        and ((ck.fCurrentPosition = 0 and ck.fInvalidRefreshCount <![CDATA[<]]> #{noPositionMaxInvalidCount}) or (ck.fCurrentPosition > 0 and ck.fInvalidRefreshCount <![CDATA[<]]> #{maxInvalidCount}))
         ORDER BY (ck.fOptimizePlanCount - ck.fOptimizedCount) DESC
     </select>
 
@@ -389,7 +389,7 @@
         FROM t_customer_keyword ck
         WHERE ck.fOptimizeGroupName = #{groupName} and ck.fStatus = 1 and ck.fTerminalType = #{terminalType}
         and (DATE_SUB(NOW(), INTERVAL ck.fQueryInterval MINUTE) > ck.fQueryTime) and ck.fUrl <![CDATA[>]]> ''
-        and ((ck.fCurrentPosition = 0 and ck.fInvalidRefreshCount <![CDATA[<]]> 2) or (ck.fCurrentPosition > 0 and ck.fInvalidRefreshCount <![CDATA[<]]> #{maxInvalidCount}))
+        and ((ck.fCurrentPosition = 0 and ck.fInvalidRefreshCount <![CDATA[<]]> #{noPositionMaxInvalidCount}) or (ck.fCurrentPosition > 0 and ck.fInvalidRefreshCount <![CDATA[<]]> #{maxInvalidCount}))
         and (ck.fOptimizedCount <![CDATA[<]]> ck.fOptimizePlanCount)
         <if test="bigKeyword == true">
             and ck.fBigKeyword = 1

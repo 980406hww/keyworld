@@ -71,7 +71,7 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     List<String> getGroups();
 
-    List<Map> searchRemainingOptimizationCount(@Param("groupName")String groupName, @Param("maxInvalidCount")int maxInvalidCount);
+    List<Map> searchRemainingOptimizationCount(@Param("groupName")String groupName, @Param("maxInvalidCount")int maxInvalidCount, @Param("noPositionMaxInvalidCount")int noPositionMaxInvalidCount);
 
     void cleanBigKeywordIndicator(@Param("groupName")String groupName);
 
@@ -82,7 +82,7 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void resetOptimizationInfo();
 
     CustomerKeyword getCustomerKeywordForOptimization(@Param("terminalType")String terminalType, @Param("groupName")String groupName,
-                                                      @Param("maxInvalidCount")int maxInvalidCount, @Param("invalidRefreshCount") int invalidRefreshCount, @Param("bigKeyword")boolean bigKeyword);
+                                                      @Param("maxInvalidCount")int maxInvalidCount, @Param("noPositionMaxInvalidRefreshCount") int noPositionMaxInvalidRefreshCount, @Param("bigKeyword")boolean bigKeyword);
 
     void updateOptimizationQueryTime(@Param("customerKeywordUuid")Long customerKeywordUuid);
 
