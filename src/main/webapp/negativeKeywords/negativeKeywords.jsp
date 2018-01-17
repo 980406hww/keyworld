@@ -1,7 +1,7 @@
 <%@ include file="/commons/global.jsp" %>
 <html>
 <head>
-    <title>负面词配置</title>
+    <title>设置</title>
     <link rel="stylesheet" href="${staticPath}/static/css/common.css">
     <link rel="stylesheet" href="${staticPath }/static/toastmessage/css/jquery.toastmessage.css">
 </head>
@@ -9,6 +9,10 @@
 <%@ include file="/commons/basejs.jsp" %>
 <script src="${staticPath }/static/toastmessage/jquery.toastmessage.js"></script>
 <script language="javascript">
+    function resetNegativeKeywords() {
+        $("#negativeKeywords").val("${negativeKeywords}");
+    }
+
     function updateNegativeKeywords() {
         var negativeKeywords = $("#negativeKeywords").val();
         negativeKeywords = negativeKeywords.replace(/，/g,",");
@@ -49,7 +53,11 @@
 <div id="centerDiv" style="margin-top: 20px;">
     负面词：<br><br>
     <textarea name="negativeKeywords" id="negativeKeywords" style="width: 500px;height: 100px;">${negativeKeywords}</textarea><br><br>
-    <input type="button" id="updateNegativeKeywords" onclick="updateNegativeKeywords()" value="更新" />
+    <span style="margin-left: 430px;">
+        <input type="button" id="updateNegativeKeywords" onclick="updateNegativeKeywords()" value="更新" />&nbsp;&nbsp;
+        <input type="button" id="resetNegativeKeywords" onclick="resetNegativeKeywords()" value="重置" />
+    </span>
+
 </div>
 </body>
 </html>
