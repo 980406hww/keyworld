@@ -38,7 +38,7 @@
 	</select>
 
 	<select id="getSpecifiedKeywordNegativeLists" resultType="com.keymanager.monitoring.entity.NegativeList">
-		SELECT DISTINCT
+		SELECT
 		fUuid AS "uuid",
 		fKeyword AS "keyword",
 		fTitle AS "title",
@@ -50,7 +50,6 @@
 		FROM
 		t_negative_list n
 		WHERE n.fKeyword = #{keyword}
-		ORDER BY n.fCreateTime DESC
 	</select>
 
 	<select id="selectLastId" resultType="int">
