@@ -433,7 +433,7 @@
         SELECT
         <include refid="fullColID"/>
         FROM t_customer_keyword ck
-        WHERE ck.fTerminalType = #{terminalType} and ck.fUrl > "" and ck.fStatus = 1
+        WHERE ck.fTerminalType = #{terminalType} and ck.fUrl > '' and ck.fStatus = 1
         <if test="startTime != null">
             AND ck.fCapturePositionQueryTime <![CDATA[<]]> #{startTime}
         </if>

@@ -1,7 +1,7 @@
 <%@ include file="/commons/global.jsp" %>
 <html>
 <head>
-    <title>设置</title>
+    <title>负面词设置</title>
     <link rel="stylesheet" href="${staticPath}/static/css/common.css">
     <link id="easyuiTheme" rel="stylesheet" type="text/css" href="${staticPath }/static/easyui/themes/gray/easyui.css" />
     <link id="easyuiTheme" rel="stylesheet" type="text/css" href="${staticPath }/static/easyui/themes/icon.css" />
