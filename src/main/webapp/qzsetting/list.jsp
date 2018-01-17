@@ -3,27 +3,6 @@
 <head>
 	<title>全站设置</title>
 	<style>
-		#div1{
-			display:none;
-			background-color :#f6f7f7;
-			color:#333333;
-			font-size:12px;
-			line-height:18px;
-			border:1px solid #e1e3e2;
-			width:450;
-			height:50;
-		}
-		#div2 {
-			display: none;
-			background-color: #ACF106;
-			color: #E80404;
-			font-size: 20px;
-			line-height: 18px;
-			border: 2px solid #104454;
-			width: 100px;
-			height: 22px;
-		}
-
 		#changeSettingDialog {
 			font-size: 12px;
 			line-height: 12px;
@@ -132,8 +111,6 @@
 			<td align="center" width=80>更新时间</td>
 			<td align="center" width=80>添加时间</td>
 			<td align="center" width=100>操作</td>
-			<div id="div1"></div>
-			<div id="div2"></div>
 		</tr>
 	</table>
 </div>

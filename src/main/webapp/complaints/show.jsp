@@ -39,27 +39,6 @@
 
     #nav .mainLevel ul {display:none; position:absolute;z-index: 10;}
     #nav .mainLevel li {border-top:1px solid #fff; background:#ffe60c; width:140px;z-index: 10;/*IE6 only*/}
-
-    #div1 {
-        display: none;
-        background-color: #f6f7f7;
-        color: #333333;
-        font-size: 12px;
-        line-height: 18px;
-        border: 1px solid #e1e3e2;
-        width: 450px;
-        height: 50px;
-    }
-    #div2 {
-        display: none;
-        background-color: #ACF106;
-        color: #E80404;
-        font-size: 20px;
-        line-height: 18px;
-        border: 2px solid #104454;
-        width: 100px;
-        height: 22px;
-    }
 </style>
     <title>投诉专用平台</title>
 </head>
@@ -101,8 +80,6 @@
                 <td align="center" width=100>更新时间</td>
                 <td align="center" width=100>创建时间</td>
                 <td align="center" width=80>操作</td>
-                <div id="div1"></div>
-                <div id="div2"></div>
             </tr>
         </table>
     </div>

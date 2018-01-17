@@ -240,7 +240,40 @@
     <!--重构部分-->
     <select id="searchCustomerKeywordsPage" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordCriteria" resultType="com.keymanager.monitoring.entity.CustomerKeyword">
         SELECT
-          <include refid="fullColID"/>
+        ck.fUuid	AS	'uuid',
+        ck.fTerminalType	AS	'terminalType',
+        ck.fCustomerUuid	AS	'customerUuid',
+        ck.fKeyword	AS	'keyword',
+        ck.fUrl	AS	'url',
+        ck.fType	AS	'type',
+        ck.fOriginalUrl	AS	'originalUrl',
+        ck.fTitle	AS	'title',
+        ck.fSearchEngine	AS	'searchEngine',
+        ck.fInitialPosition	AS	'initialPosition',
+        ck.fCurrentIndexCount	AS	'currentIndexCount',
+        ck.fCurrentPosition	AS	'currentPosition',
+        ck.fInvalidRefreshCount	AS	'invalidRefreshCount',
+        ck.fOptimizeGroupName	AS	'optimizeGroupName',
+        ck.fOptimizePlanCount	AS	'optimizePlanCount',
+        ck.fOptimizedCount	AS	'optimizedCount',
+        ck.fOptimizedPercentage	AS	'optimizedPercentage',
+        ck.fOptimizeDate	AS	'optimizeDate',
+        ck.fPositionFirstCost	AS	'positionFirstCost',
+        ck.fPositionSecondCost	AS	'positionSecondCost',
+        ck.fPositionThirdCost	AS	'positionThirdCost',
+        ck.fPositionForthCost	AS	'positionForthCost',
+        ck.fPositionFifthCost	AS	'positionFifthCost',
+        ck.fPositionFirstPageFee	AS	'positionFirstPageFee',
+        ck.fCollectMethod	AS	'collectMethod',
+        ck.fEffectiveFromTime	AS	'effectiveFromTime',
+        ck.fEffectiveToTime	AS	'effectiveToTime',
+        ck.fPaymentEffectiveFromTime	AS	'paymentEffectiveFromTime',
+        ck.fPaymentEffectiveToTime	AS	'paymentEffectiveToTime',
+        ck.fPaymentStatus	AS	'paymentStatus',
+        ck.fOrderNumber	AS	'orderNumber',
+        ck.fRemarks	AS	'remarks',
+        ck.fStatus	AS	'status',
+        ck.fCreateTime	AS	'createTime'
         FROM
         t_customer_keyword ck,
         t_customer c

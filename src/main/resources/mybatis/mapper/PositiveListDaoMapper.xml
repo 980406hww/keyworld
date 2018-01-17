@@ -32,11 +32,10 @@
 		WHERE 1 = 1
 		<if test="positiveListCriteria.keyword != null and positiveListCriteria.keyword != ''">AND n.fKeyword = #{positiveListCriteria.keyword}</if>
 		<if test="positiveListCriteria.title != null and positiveListCriteria.title != ''">AND n.fTitle = #{positiveListCriteria.title}</if>
-		ORDER BY n.fCreateTime DESC
 	</select>
 
 	<select id="getSpecifiedKeywordPositiveLists" resultType="com.keymanager.monitoring.entity.PositiveList">
-		SELECT DISTINCT
+		SELECT
 			fUuid AS "uuid",
 			fKeyword AS "keyword",
 			fTitle AS "title",
@@ -49,7 +48,6 @@
 		FROM
 		t_positive_list n
 		WHERE n.fKeyword = #{keyword}
-		ORDER BY n.fCreateTime DESC
 	</select>
 
 </mapper>

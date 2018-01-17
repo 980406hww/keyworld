@@ -12,17 +12,6 @@
                 width: 100%;
                 margin: auto;
             }
-            #div1 {
-                display: none;
-                background-color: #f6f7f7;
-                color: #333333;
-                font-size: 12px;
-                line-height: 18px;
-                border: 1px solid #e1e3e2;
-                width: 450px;
-                height: 50px;
-            }
-
             #customerKeywordTopDiv {
                 position: fixed;
                 top: 0px;
@@ -30,12 +19,6 @@
                 background-color: white;
                 width: 100%;
             }
-
-            #customerKeywordDiv {
-                width: 100%;
-                margin-bottom: 47PX;
-            }
-
             #customerKeywordTable {
                 width: 100%;
             }
@@ -58,7 +41,6 @@
             <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
             <input id="customerUuid" name="customerUuid" type="hidden" value="${customerKeywordCriteria.customerUuid}">
             关键字:&nbsp;<input type="text" name="keyword" id="keyword" value="${customerKeywordCriteria.keyword}" style="width:100px;">&nbsp;
-            QQ:<input type="text" name="qq" id="qq" value="${customerKeywordCriteria.qq}" style="width:100px;">&nbsp;
             URL:<input type="text" name="url" id="url" value="${customerKeywordCriteria.url}" style="width:100px;">&nbsp;
             关键字状态:
             <select name="status" id="status">
@@ -140,7 +122,6 @@
             <td align="center" width=100>订单号</td>
             <td align="center" width=60>付费状态</td>
             <td align="center" width=100>备注</td>
-            <div id="div1"></div>
         </tr>
     </table>
 </div>
@@ -283,18 +264,8 @@
     function initPaging() {
         var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
         var searchCustomerKeywordTable = searchCustomerKeywordForm.find("#searchCustomerKeywordTable");
-        var orderStyle = "${customerKeywordCriteria.orderingElement}";
-        if(orderStyle == "fCreateTime") {
-            searchCustomerKeywordTable.find("#orderingElement").val(1);
-        } else if(orderStyle == "fCurrentPosition") {
-            searchCustomerKeywordTable.find("#orderingElement").val(2);
-        } else if(orderStyle == "fSequence") {
-            searchCustomerKeywordTable.find("#orderingElement").val(3);
-        } else {
-            searchCustomerKeywordTable.find("#orderingElement").val(0);
-        }
         searchCustomerKeywordTable.find("#searchEngine").val('${customerKeywordCriteria.searchEngine}');
-        searchCustomerKeywordTable.find("#orderingElement").val('${orderingElement}');
+        searchCustomerKeywordTable.find("#orderingElement").val('${orderElement}');
         searchCustomerKeywordTable.find("#status").val(${customerKeywordCriteria.status});
         var pages = searchCustomerKeywordForm.find('#pagesHidden').val();
         var currentPageNumber = searchCustomerKeywordForm.find('#currentPageNumberHidden').val();

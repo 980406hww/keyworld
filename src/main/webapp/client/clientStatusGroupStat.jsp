@@ -35,8 +35,6 @@
             <td align="center" width=100>分组名称</td>
             <td align="center" width=100>终端类型</td>
             <td align="center" width=50>数量</td>
-            <div id="div1"></div>
-            <div id="div2"></div>
         </tr>
     </table>
 </div>

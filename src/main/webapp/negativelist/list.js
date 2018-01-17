@@ -47,9 +47,13 @@ function changePaging(currentPageNumber, pageSize) {
 function resetPageNumber() {
     var searchNegativeListForm = $("#searchNegativeListForm");
     var keyword = searchNegativeListForm.find("#keyword").val();
+    var title = searchNegativeListForm.find("#title").val();
     var url = searchNegativeListForm.find("#url").val();
     if(keyword != "") {
         searchNegativeListForm.find("#keyword").val($.trim(keyword));
+    }
+    if(title != "") {
+        searchNegativeListForm.find("#title").val($.trim(title));
     }
     if(url != "") {
         searchNegativeListForm.find("#url").val($.trim(url));

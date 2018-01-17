@@ -3,17 +3,6 @@
 <head>
 	<title>关键字负面清单</title>
 	<style>
-		#div2 {
-			display: none;
-			background-color: #ACF106;
-			color: #E80404;
-			font-size: 20px;
-			line-height: 18px;
-			border: 2px solid #104454;
-			width: 100px;
-			height: 22px;
-		}
-
 		#topDiv {
 			position: fixed;
 			top: 0px;
@@ -36,7 +25,6 @@
 			margin-right: 10px;
 		}
 	</style>
-
 </head>
 <body>
 <%@ include file="/commons/basejs.jsp" %>
@@ -56,9 +44,10 @@
 						<input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
 						<input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
 						<td align="right">关键字:</td> <td><input type="text" name="keyword" id="keyword" value="${negativeListCriteria.keyword}" style="width:200px;"></td>
+						<td align="right">标题:</td> <td><input type="text" name="title" id="title" value="${negativeListCriteria.title}" style="width:200px;"></td>
 						<td align="right">URL:</td> <td><input type="text" name="url" id="url" value="${negativeListCriteria.url}" style="width:170px;"></td>
 						<td align="right" width="50">
-							<shiro:hasPermission name="/internal/negativelist/searchNegativeLists">
+						<shiro:hasPermission name="/internal/negativelist/searchNegativeLists">
 							<input type="submit" name="btnQuery" id="btnQuery" onclick="resetPageNumber()" value=" 查询 " >&nbsp;
 						</shiro:hasPermission>
 						<td colspan="4" align="right">
@@ -86,7 +75,6 @@
 		  <td align="center" >排名</td>
 		  <td align="center" >采集日期</td>
 		  <td align="center" >操作</td>
-		  <div id="div2"></div>
 	  </tr>
 	</table>
 </div>
