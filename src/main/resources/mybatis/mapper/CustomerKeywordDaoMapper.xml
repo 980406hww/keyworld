@@ -433,19 +433,13 @@
         SELECT
         <include refid="fullColID"/>
         FROM t_customer_keyword ck
-        WHERE ck.fTerminalType = #{terminalType} and ck.fUrl is not null and ck.fStatus = 1
-        AND (ck.fCapturePositionQueryTime is null
+        WHERE ck.fTerminalType = #{terminalType} and ck.fUrl > "" and ck.fStatus = 1
         <if test="startTime != null">
-          or  ck.fCapturePositionQueryTime <![CDATA[<]]> #{startTime}
+            AND ck.fCapturePositionQueryTime <![CDATA[<]]> #{startTime}
         </if>
-        <if test="minutes != null">
-          or  ck.fCapturePositionQueryTime <![CDATA[<]]> DATE_SUB(NOW(), INTERVAL #{minutes} MINUTE )
-        </if>
-        )
         <if test="customerUuid != null">
             AND ck.fCustomerUuid = #{customerUuid}
         </if>
-
         <choose>
             <when test="groupNames != null">
                 AND ck.fOptimizeGroupName IN
@@ -457,7 +451,7 @@
                 AND (ck.fOptimizeGroupName IS NULL OR ck.fOptimizeGroupName <![CDATA[<>]]> 'stop')
             </otherwise>
         </choose>
-        ORDER BY ck.fCapturePositionQueryTime, fUpdateTime DESC
+        ORDER BY ck.fCapturePositionQueryTime DESC
         LIMIT 1
     </select>
 

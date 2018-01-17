@@ -209,6 +209,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeyword.setCurrentPosition(10);
         }
         customerKeyword.setAutoUpdateNegativeDateTime(Utils.getCurrentTimestamp());
+        customerKeyword.setCapturePositionQueryTime(Utils.addDay(Utils.getCurrentTimestamp(), -2));
         customerKeyword.setStartOptimizedTime(new Date());
         customerKeyword.setQueryTime(new Date());
         customerKeyword.setQueryDate(new Date());
@@ -739,12 +740,12 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public CustomerKeywordForCapturePosition getCustomerKeywordForCapturePosition(String terminalType, List<String> groupNames, Long customerUuid,
-                                                                                  Date startTime, Integer minutes,Long captureRankJobUuid){
+                                                                                  Date startTime,Long captureRankJobUuid){
         CustomerKeywordForCapturePosition customerKeywordForCapturePosition = new CustomerKeywordForCapturePosition();
         Boolean captureRankJobStatus = captureRankJobService.getCaptureRankJobStatus(captureRankJobUuid);
         customerKeywordForCapturePosition.setCaptureRankJobStatus(captureRankJobStatus);
         if(captureRankJobStatus){
-            CustomerKeyword customerKeyword = customerKeywordDao.getCustomerKeywordForCapturePosition(terminalType, groupNames, customerUuid, startTime, minutes);
+            CustomerKeyword customerKeyword = customerKeywordDao.getCustomerKeywordForCapturePosition(terminalType, groupNames, customerUuid, startTime);
             if(customerKeyword != null){
                 customerKeywordForCapturePosition.setUuid(customerKeyword.getUuid());
                 customerKeywordForCapturePosition.setKeyword(customerKeyword.getKeyword());

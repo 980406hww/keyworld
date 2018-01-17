@@ -94,7 +94,7 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
                                  @Param("queryInterval")int queryInterval);
 
     CustomerKeyword getCustomerKeywordForCapturePosition(@Param("terminalType")String terminalType, @Param("groupNames")List<String> groupNames,
-                                                         @Param("customerUuid")Long customerUuid, @Param("startTime")Date startTime, @Param("minutes")Integer minutes);
+                                                         @Param("customerUuid")Long customerUuid, @Param("startTime")Date startTime);
 
     void resetInvalidRefreshCount(@Param("customerKeywordRefreshStatInfoCriteria")CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria);
 
