@@ -42,11 +42,7 @@
 		fUuid AS "uuid",
 		fKeyword AS "keyword",
 		fTitle AS "title",
-		fUrl AS "url",
-		fDesc AS "desc",
-		fPosition AS "position",
-		fUpdateTime AS "updateTime",
-		fCreateTime AS "createTime"
+		fUrl AS "url"
 		FROM
 		t_negative_list n
 		WHERE n.fKeyword = #{keyword}
