@@ -1,73 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.monitoring.dao.CustomerKeywordDao">
-    <sql id="fullColID">
-        ck.fUuid	AS	'uuid',
-        ck.fTerminalType	AS	'terminalType',
-        ck.fCustomerUuid	AS	'customerUuid',
-        ck.fKeyword	AS	'keyword',
-        ck.fUrl	AS	'url',
-        ck.fType	AS	'type',
-        ck.fOriginalUrl	AS	'originalUrl',
-        ck.fTitle	AS	'title',
-        ck.fSequence	AS	'sequence',
-        ck.fCaptureTitleQueryTime	AS	'captureTitleQueryTime',
-        ck.fCapturedTitle	AS	'capturedTitle',
-        ck.fAutoUpdateNegativeDateTime	AS	'autoUpdateNegativeDateTime',
-        ck.fBigKeyword	AS	'bigKeyword',
-        ck.fSnapshotDateTime	AS	'snapshotDateTime',
-        ck.fSearchEngine	AS	'searchEngine',
-        ck.fInitialIndexCount	AS	'initialIndexCount',
-        ck.fInitialPosition	AS	'initialPosition',
-        ck.fCurrentIndexCount	AS	'currentIndexCount',
-        ck.fCurrentPosition	AS	'currentPosition',
-        ck.fQueryDate	AS	'queryDate',
-        ck.fQueryCount	AS	'queryCount',
-        ck.fInvalidRefreshCount	AS	'invalidRefreshCount',
-        ck.fQueryTime	AS	'queryTime',
-        ck.fQueryInterval	AS	'queryInterval',
-        ck.fServiceProvider	AS	'serviceProvider',
-        ck.fOptimizeGroupName	AS	'optimizeGroupName',
-        ck.fOptimizePlanCount	AS	'optimizePlanCount',
-        ck.fOptimizedCount	AS	'optimizedCount',
-        ck.fOptimizedPercentage	AS	'optimizedPercentage',
-        ck.fOptimizeDate	AS	'optimizeDate',
-        ck.fLastOptimizeDateTime	AS	'lastOptimizeDateTime',
-        ck.fOptimizePositionFirstPercentage	AS	'optimizePositionFirstPercentage',
-        ck.fOptimizePositionSecondPercentage	AS	'optimizePositionSecondPercentage',
-        ck.fOptimizePositionThirdPercentage	AS	'optimizePositionThirdPercentage',
-        ck.fPositionFirstCost	AS	'positionFirstCost',
-        ck.fPositionSecondCost	AS	'positionSecondCost',
-        ck.fPositionThirdCost	AS	'positionThirdCost',
-        ck.fPositionForthCost	AS	'positionForthCost',
-        ck.fPositionFifthCost	AS	'positionFifthCost',
-        ck.fPositionFirstFee	AS	'positionFirstFee',
-        ck.fPositionSecondFee	AS	'positionSecondFee',
-        ck.fPositionThirdFee	AS	'positionThirdFee',
-        ck.fPositionForthFee	AS	'positionForthFee',
-        ck.fPositionFifthFee	AS	'positionFifthFee',
-        ck.fPositionFirstPageFee	AS	'positionFirstPageFee',
-        ck.fCapturePositionQueryTime	AS	'capturePositionQueryTime',
-        ck.fCaptureIndexQueryTime	AS	'captureIndexQueryTime',
-        ck.fCollectMethod	AS	'collectMethod',
-        ck.fStartOptimizedTime	AS	'startOptimizedTime',
-        ck.fEffectiveFromTime	AS	'effectiveFromTime',
-        ck.fEffectiveToTime	AS	'effectiveToTime',
-        ck.fPaymentEffectiveFromTime	AS	'paymentEffectiveFromTime',
-        ck.fPaymentEffectiveToTime	AS	'paymentEffectiveToTime',
-        ck.fRelatedKeywords	AS	'relatedKeywords',
-        ck.fPaymentStatus	AS	'paymentStatus',
-        ck.fOrderNumber	AS	'orderNumber',
-        ck.fRemarks	AS	'remarks',
-        ck.fStatus	AS	'status',
-        ck.fManualCleanTitle AS 'manualCleanTitle',
-        ck.fRecommendKeywords AS 'recommendKeywords',
-        ck.fNegativeKeywords AS 'negativeKeywords',
-        ck.fExcludeKeywords AS 'excludeKeywords',
-        ck.fUpdateTime	AS	'updateTime',
-        ck.fCreateTime	AS	'createTime'
-    </sql>
-
     <sql id="dailyReportColID">
         ck.fUuid	AS	'uuid',
         ck.fTerminalType	AS	'terminalType',
@@ -210,7 +143,16 @@
 
     <select id="searchSameCustomerKeywords" resultType="com.keymanager.monitoring.entity.CustomerKeyword">
         SELECT
-        <include refid="fullColID"/>
+        ck.fUuid	AS	'uuid',
+        ck.fInitialIndexCount	AS	'initialIndexCount',
+        ck.fCurrentIndexCount	AS	'currentIndexCount',
+        ck.fOptimizePlanCount	AS	'optimizePlanCount',
+        ck.fPositionFirstFee	AS	'positionFirstFee',
+        ck.fPositionSecondFee	AS	'positionSecondFee',
+        ck.fPositionThirdFee	AS	'positionThirdFee',
+        ck.fPositionForthFee	AS	'positionForthFee',
+        ck.fPositionFifthFee	AS	'positionFifthFee',
+        ck.fPositionFirstPageFee	AS	'positionFirstPageFee'
         FROM t_customer_keyword ck
         WHERE ck.fKeyword = #{keyword} and ck.fTerminalType = #{terminalType} and ck.fCustomerUuid = #{customerUuid}
         order by ck.fCreateTime ASC
@@ -218,7 +160,7 @@
 
     <select id="getCustomerKeywordsForCaptureIndex" resultType="com.keymanager.monitoring.entity.CustomerKeyword">
         SELECT
-        <include refid="fullColID"/>
+        ck.fKeyword	AS	'keyword'
         FROM t_customer_keyword ck
         WHERE ck.fOptimizeGroupName IN ('pc_pm_xiaowu', 'm_pm_tiantian') AND ck.fCurrentIndexCount IS NULL AND ck.fPositionFirstFee IS NULL
         ORDER BY ck.fCaptureIndexQueryTime, ck.fCreateTime LIMIT 1
@@ -226,7 +168,9 @@
 
     <select id="searchCustomerKeywordsForUpdateIndex" resultType="com.keymanager.monitoring.entity.CustomerKeyword">
         SELECT
-        <include refid="fullColID"/>
+        ck.fTerminalType	AS	'terminalType',
+        ck.fCustomerUuid	AS	'customerUuid',
+        ck.fCurrentIndexCount	AS	'currentIndexCount'
         FROM t_customer_keyword ck
         WHERE ck.fOptimizeGroupName IN ('pc_pm_xiaowu', 'm_pm_tiantian') AND ck.fCurrentIndexCount IS NULL AND ck.fPositionFirstFee IS NULL
         AND ck.fKeyword = #{keyword}
@@ -245,15 +189,14 @@
         ck.fCustomerUuid	AS	'customerUuid',
         ck.fKeyword	AS	'keyword',
         ck.fUrl	AS	'url',
-        ck.fType	AS	'type',
         ck.fOriginalUrl	AS	'originalUrl',
         ck.fTitle	AS	'title',
         ck.fSearchEngine	AS	'searchEngine',
+        ck.fCollectMethod	AS	'collectMethod',
         ck.fInitialPosition	AS	'initialPosition',
         ck.fCurrentIndexCount	AS	'currentIndexCount',
         ck.fCurrentPosition	AS	'currentPosition',
         ck.fInvalidRefreshCount	AS	'invalidRefreshCount',
-        ck.fOptimizeGroupName	AS	'optimizeGroupName',
         ck.fOptimizePlanCount	AS	'optimizePlanCount',
         ck.fOptimizedCount	AS	'optimizedCount',
         ck.fOptimizedPercentage	AS	'optimizedPercentage',
@@ -264,16 +207,9 @@
         ck.fPositionForthCost	AS	'positionForthCost',
         ck.fPositionFifthCost	AS	'positionFifthCost',
         ck.fPositionFirstPageFee	AS	'positionFirstPageFee',
-        ck.fCollectMethod	AS	'collectMethod',
-        ck.fEffectiveFromTime	AS	'effectiveFromTime',
-        ck.fEffectiveToTime	AS	'effectiveToTime',
-        ck.fPaymentEffectiveFromTime	AS	'paymentEffectiveFromTime',
-        ck.fPaymentEffectiveToTime	AS	'paymentEffectiveToTime',
         ck.fPaymentStatus	AS	'paymentStatus',
         ck.fOrderNumber	AS	'orderNumber',
-        ck.fRemarks	AS	'remarks',
-        ck.fStatus	AS	'status',
-        ck.fCreateTime	AS	'createTime'
+        ck.fRemarks	AS	'remarks'
         FROM
         t_customer_keyword ck,
         t_customer c
@@ -304,9 +240,34 @@
         ORDER BY ck.fSequence
     </select>
 
-    <select id="searchCustomerKeywords" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordCriteria" resultType="com.keymanager.monitoring.entity.CustomerKeyword">
+    <select id="searchCustomerKeywordsPageForCustomer" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordCriteria" resultType="com.keymanager.monitoring.entity.CustomerKeyword">
         SELECT
-        <include refid="fullColID"/>
+        ck.fUuid	AS	'uuid',
+        ck.fTerminalType	AS	'terminalType',
+        ck.fKeyword	AS	'keyword',
+        ck.fUrl	AS	'url',
+        ck.fOriginalUrl	AS	'originalUrl',
+        ck.fTitle	AS	'title',
+        ck.fSearchEngine	AS	'searchEngine',
+        ck.fInitialPosition	AS	'initialPosition',
+        ck.fCurrentIndexCount	AS	'currentIndexCount',
+        ck.fCurrentPosition	AS	'currentPosition',
+        ck.fInvalidRefreshCount	AS	'invalidRefreshCount',
+        ck.fOptimizeGroupName	AS	'optimizeGroupName',
+        ck.fOptimizePlanCount	AS	'optimizePlanCount',
+        ck.fOptimizedCount	AS	'optimizedCount',
+        ck.fOptimizeDate	AS	'optimizeDate',
+        ck.fStartOptimizedTime	AS	'startOptimizedTime',
+        ck.fLastOptimizeDateTime	AS	'lastOptimizeDateTime',
+        ck.fPositionFirstFee	AS	'positionFirstFee',
+        ck.fPositionSecondFee	AS	'positionSecondFee',
+        ck.fPositionThirdFee	AS	'positionThirdFee',
+        ck.fPositionForthFee	AS	'positionForthFee',
+        ck.fPositionFifthFee	AS	'positionFifthFee',
+        ck.fPositionFirstPageFee	AS	'positionFirstPageFee',
+        ck.fCollectMethod	AS	'collectMethod',
+        ck.fOrderNumber	AS	'orderNumber',
+        ck.fRemarks	AS	'remarks'
         FROM
         t_customer_keyword ck,
         t_customer c
@@ -418,7 +379,19 @@
 
     <select id="getCustomerKeywordForOptimization" resultType="com.keymanager.monitoring.entity.CustomerKeyword">
         SELECT
-        <include refid="fullColID"/>
+        ck.fUuid	AS	'uuid',
+        ck.fTerminalType	AS	'terminalType',
+        ck.fKeyword	AS	'keyword',
+        ck.fUrl	AS	'url',
+        ck.fType	AS	'type',
+        ck.fOriginalUrl	AS	'originalUrl',
+        ck.fTitle	AS	'title',
+        ck.fSearchEngine	AS	'searchEngine',
+        ck.fCurrentPosition	AS	'currentPosition',
+        ck.fOptimizeGroupName	AS	'optimizeGroupName',
+        ck.fRecommendKeywords AS 'recommendKeywords',
+        ck.fNegativeKeywords AS 'negativeKeywords',
+        ck.fExcludeKeywords AS 'excludeKeywords'
         FROM t_customer_keyword ck
         WHERE ck.fOptimizeGroupName = #{groupName} and ck.fStatus = 1 and ck.fTerminalType = #{terminalType}
         and (DATE_SUB(NOW(), INTERVAL ck.fQueryInterval MINUTE) > ck.fQueryTime) and ck.fUrl <![CDATA[>]]> ''
@@ -464,7 +437,12 @@
 
     <select id="getCustomerKeywordForCapturePosition" resultType="com.keymanager.monitoring.entity.CustomerKeyword">
         SELECT
-        <include refid="fullColID"/>
+        ck.fUuid	AS	'uuid',
+        ck.fTerminalType	AS	'terminalType',
+        ck.fKeyword	AS	'keyword',
+        ck.fUrl	AS	'url',
+        ck.fTitle	AS	'title',
+        ck.fSearchEngine	AS	'searchEngine'
         FROM t_customer_keyword ck
         WHERE ck.fTerminalType = #{terminalType} and ck.fUrl > '' and ck.fStatus = 1
         <if test="startTime != null">

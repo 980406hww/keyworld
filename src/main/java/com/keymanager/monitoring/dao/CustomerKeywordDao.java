@@ -45,6 +45,8 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     List<CustomerKeyword> searchCustomerKeywordsPage(Page<CustomerKeyword> page, @Param("customerKeywordCriteria") CustomerKeywordCriteria customerKeywordCriteria);
 
+    List<CustomerKeyword> searchCustomerKeywordsPageForCustomer(Page<CustomerKeyword> page, @Param("customerKeywordCriteria") CustomerKeywordCriteria customerKeywordCriteria);
+
     int searchCustomerKeywordsCount(@Param("customerKeywordCriteria") CustomerKeywordCriteria customerKeywordCriteria);
 
     List<CustomerKeyword> searchCustomerKeywordsForDailyReport(@Param("customerKeywordCriteria") CustomerKeywordCriteria customerKeywordCriteria);

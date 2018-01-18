@@ -265,7 +265,7 @@
         var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
         var searchCustomerKeywordTable = searchCustomerKeywordForm.find("#searchCustomerKeywordTable");
         searchCustomerKeywordTable.find("#searchEngine").val('${customerKeywordCriteria.searchEngine}');
-        searchCustomerKeywordTable.find("#orderingElement").val('${orderElement}');
+        searchCustomerKeywordTable.find("#orderingElement").val("${orderElement == null ? '0' : orderElement}");
         searchCustomerKeywordTable.find("#status").val(${customerKeywordCriteria.status});
         var pages = searchCustomerKeywordForm.find('#pagesHidden').val();
         var currentPageNumber = searchCustomerKeywordForm.find('#currentPageNumberHidden').val();

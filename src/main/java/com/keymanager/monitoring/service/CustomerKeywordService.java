@@ -85,7 +85,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     private PerformanceService performanceService;
 
     public Page<CustomerKeyword> searchCustomerKeywords(Page<CustomerKeyword> page, CustomerKeywordCriteria customerKeywordCriteria){
-        page.setRecords(customerKeywordDao.searchCustomerKeywordsPage(page, customerKeywordCriteria));
+        page.setRecords(customerKeywordDao.searchCustomerKeywordsPageForCustomer(page, customerKeywordCriteria));
         return page;
     }
 
