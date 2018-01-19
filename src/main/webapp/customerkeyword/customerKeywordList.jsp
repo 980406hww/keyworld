@@ -390,7 +390,7 @@
                         </ul>
                     </ul>
             </li>
-            <li style="float:none"><span class="customerKeywordSpanClass">服务提供商:</span>
+            <li style="float:left"><span class="customerKeywordSpanClass">服务提供商:</span>
                 <select name="serviceProvider" id="serviceProvider" style="width: 296px">
                     <c:forEach items="${serviceProviders}" var="serviceProvider">
                         <option value="${serviceProvider.serviceProviderName}" <c:if test="${serviceProvider.serviceProviderName=='baidutop123'}">selected="selected"</c:if>>${serviceProvider.serviceProviderName}</option>
@@ -398,7 +398,7 @@
                 </select></li>
 
             <hr style="height: 1px; border:none; border-top:1px dashed #CCCCCC;"/>
-            <li><span class="customerKeywordSpanClass">收费方式:</span>
+            <li style="float:left"><span class="customerKeywordSpanClass">收费方式:</span>
                 <select name="collectMethod" id="collectMethod" onChange="setEffectiveToTime()">
                     <option value="PerMonth" selected>按月</option>
                     <option value="PerTenDay">十天</option>
@@ -416,7 +416,7 @@
                 排序:<input type="text" name="sequence" id="sequence" value="0" size="6" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)">
             </li>
             <hr style="height: 1px; border:none; border-top:1px dashed #CCCCCC;"/>
-            <li>
+            <li style="float:left">
                 <span class="customerKeywordSpanClass">订单号:</span><input name="orderNumber" id="orderNumber" type="text" style="width:120px;" />
                 <span class="customerKeywordSpanClass">收费状态:</span><select name="paymentStatus" id="paymentStatus">
                 <option value="0"></option>
@@ -426,10 +426,10 @@
                 <option value="4">跑路</option>
             </select>
             </li>
-            <li><span class="customerKeywordSpanClass">推荐词:</span><input type="text" name="recommendKeywords" id="recommendKeywords" value="" style="width:300px;"></li>
-            <li><span class="customerKeywordSpanClass">负面词:</span><input type="text" name="negativeKeywords" id="negativeKeywords" value="" style="width:300px;"></li>
-            <li><span class="customerKeywordSpanClass">排除词:</span><input type="text" name="excludeKeywords" id="excludeKeywords" value="" style="width:300px;"></li>
-            <li>
+            <li style="float:left"><span class="customerKeywordSpanClass">推荐词:</span><input type="text" name="recommendKeywords" id="recommendKeywords" value="" style="width:300px;"></li>
+            <li style="float:left"><span class="customerKeywordSpanClass">负面词:</span><input type="text" name="negativeKeywords" id="negativeKeywords" value="" style="width:300px;"></li>
+            <li style="float:left"><span class="customerKeywordSpanClass">排除词:</span><input type="text" name="excludeKeywords" id="excludeKeywords" value="" style="width:300px;"></li>
+            <li style="float:left">
                 <span class="customerKeywordSpanClass" style="display: inline-block;float: left;height: 80px;">备注:</span><textarea name="remarks" id="remarks" style="width:300px;height:80px;resize: none" placeholder="请写备注吧!"></textarea>
             </li>
         </ul>
