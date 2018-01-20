@@ -490,6 +490,11 @@
         </foreach>
     </update>
 
+    <update id="updateCapturePositionQueryTime">
+        UPDATE t_customer_keyword SET fCapturePositionQueryTime = NOW()
+        WHERE fUuid = #{uuid}
+    </update>
+
     <select id="getCustomerKeywordForAutoUpdateNegative" resultType="com.keymanager.monitoring.vo.SearchEngineResultVO">
         SELECT DISTINCT
           ck.fKeyword as 'keyword',

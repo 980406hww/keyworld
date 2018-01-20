@@ -753,8 +753,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                 customerKeywordForCapturePosition.setTitle(customerKeyword.getTitle());
                 customerKeywordForCapturePosition.setSearchEngine(customerKeyword.getSearchEngine());
                 customerKeywordForCapturePosition.setTerminalType(customerKeyword.getTerminalType());
-                customerKeyword.setCapturePositionQueryTime(new Date());
-                customerKeywordDao.updateById(customerKeyword);
+                customerKeywordDao.updateCapturePositionQueryTime(customerKeyword.getUuid());
                 return customerKeywordForCapturePosition;
             }
             return null;
