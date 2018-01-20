@@ -125,4 +125,6 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     List<String> searchCustomerKeywordSummaryInfo(@Param("entryType")String entryType, @Param("customerUuid")Long customerUuid);
 
     String[] searchCustomerNegativeKeywords(@Param("customerUuid")long customerUuid);
+
+    void updateCustomerKeywordIndex(@Param("customerKeyword") CustomerKeyword customerKeyword);
 }

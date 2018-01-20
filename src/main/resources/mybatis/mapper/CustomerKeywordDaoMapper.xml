@@ -177,7 +177,8 @@
 
     <select id="getCustomerKeywordsForCaptureIndex" resultType="com.keymanager.monitoring.entity.CustomerKeyword">
         SELECT
-        ck.fKeyword	AS	'keyword'
+        ck.fKeyword	AS	'keyword',
+        ck.fCollectMethod   AS  'collectMethod'
         FROM t_customer_keyword ck
         WHERE ck.fOptimizeGroupName IN ('pc_pm_xiaowu', 'm_pm_tiantian') AND ck.fCurrentIndexCount IS NULL AND ck.fPositionFirstFee IS NULL
         ORDER BY ck.fCaptureIndexQueryTime, ck.fCreateTime LIMIT 1
@@ -185,14 +186,36 @@
 
     <select id="searchCustomerKeywordsForUpdateIndex" resultType="com.keymanager.monitoring.entity.CustomerKeyword">
         SELECT
+        ck.fUuid AS 'uuid',
         ck.fTerminalType	AS	'terminalType',
         ck.fCustomerUuid	AS	'customerUuid',
-        ck.fCurrentIndexCount	AS	'currentIndexCount'
+        ck.fCurrentIndexCount	AS	'currentIndexCount',
+        ck.fPositionFirstFee	AS	'positionFirstFee',
+        ck.fPositionSecondFee	AS	'positionSecondFee',
+        ck.fPositionThirdFee	AS	'positionThirdFee',
+        ck.fPositionForthFee	AS	'positionForthFee',
+        ck.fPositionFifthFee	AS	'positionFifthFee',
+        ck.fPositionFirstPageFee	AS	'positionFirstPageFee'
         FROM t_customer_keyword ck
         WHERE ck.fOptimizeGroupName IN ('pc_pm_xiaowu', 'm_pm_tiantian') AND ck.fCurrentIndexCount IS NULL AND ck.fPositionFirstFee IS NULL
         AND ck.fKeyword = #{keyword}
         ORDER BY ck.fCaptureIndexQueryTime, ck.fCreateTime
     </select>
+
+    <update id="updateCustomerKeywordIndex" parameterType="com.keymanager.monitoring.entity.CustomerKeyword">
+        UPDATE t_customer_keyword SET
+        fInitialIndexCount = #{customerKeyword.initialIndexCount},
+        fCurrentIndexCount = #{customerKeyword.currentIndexCount},
+        fOptimizePlanCount = #{customerKeyword.optimizePlanCount},
+        fPositionFirstFee = #{customerKeyword.positionFirstFee},
+        fPositionSecondFee = #{customerKeyword.positionSecondFee},
+        fPositionThirdFee = #{customerKeyword.positionThirdFee},
+        fPositionForthFee = #{customerKeyword.positionForthFee},
+        fPositionFifthFee = #{customerKeyword.positionFifthFee},
+        fPositionFirstPageFee = #{customerKeyword.positionFirstPageFee},
+        fUpdateTime = #{customerKeyword.updateTime}
+        WHERE fUuid = #{customerKeyword.uuid}
+    </update>
 
     <select id="updateCaptureIndexQueryTime">
         UPDATE t_customer_keyword SET fCaptureIndexQueryTime = NOW() WHERE fKeyword = #{keyword} and fCurrentIndexCount IS NULL and fOptimizeGroupName IN ('pc_pm_xiaowu', 'm_pm_xiaowu')
