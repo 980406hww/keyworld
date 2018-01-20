@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.FieldStrategy;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.keymanager.enums.CollectMethod;
+import com.keymanager.monitoring.common.utils.StringUtils;
 import com.keymanager.util.Constants;
 import com.keymanager.util.Utils;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -685,7 +686,7 @@ public class CustomerKeyword extends BaseEntity {
     }
 
     public String getCollectMethodName(){
-        return CollectMethod.findByCode(this.getCollectMethod()).getName();
+        return StringUtils.isNotBlank(this.getCollectMethod()) ? CollectMethod.findByCode(this.getCollectMethod()).getName() : null;
     }
     public String getSearchEngineUrl(){
         return Constants.SEARCH_ENGINE_URL_MAP.get(this.getSearchEngine() + "_" + this.getTerminalType());

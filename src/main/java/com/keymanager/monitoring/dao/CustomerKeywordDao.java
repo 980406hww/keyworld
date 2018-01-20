@@ -106,6 +106,8 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void updateCustomerKeywordFromUI(@Param("CustomerKeyword")CustomerKeyword customerKeyword);
 
+    void updateCustomerKeywordIndex(@Param("CustomerKeyword")CustomerKeyword customerKeyword);
+
     CustomerKeyword searchTitleAndUrl(@Param("groupNames") String[] groupNames,@Param("customerUuid") Long customerUuid);
 
     List<CodeNameVo> searchGroups();

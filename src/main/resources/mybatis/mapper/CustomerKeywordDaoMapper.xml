@@ -118,6 +118,23 @@
         WHERE fUuid = #{customerKeyword.uuid}
     </update>
 
+
+    <update id="updateCustomerKeywordIndex" parameterType="com.keymanager.monitoring.entity.CustomerKeyword">
+        UPDATE t_customer_keyword
+        SET
+        fInitialIndexCount =#{customerKeyword.initialIndexCount},
+        fCurrentIndexCount =#{customerKeyword.currentIndexCount},
+        fOptimizePlanCount =#{customerKeyword.optimizePlanCount},
+        fPositionFirstFee =#{customerKeyword.positionFirstFee},
+        fPositionSecondFee =#{customerKeyword.positionSecondFee},
+        fPositionThirdFee =#{customerKeyword.positionThirdFee},
+        fPositionForthFee =#{customerKeyword.positionForthFee},
+        fPositionFifthFee =#{customerKeyword.positionFifthFee},
+        fPositionFirstPageFee =#{customerKeyword.positionFirstPageFee},
+        fUpdateTime =#{customerKeyword.updateTime}
+        WHERE fUuid = #{customerKeyword.uuid}
+    </update>
+
     <select id="getCustomerKeywordCount" resultType="int">
         SELECT COUNT(1) FROM t_customer_keyword ck WHERE ck.fType = #{entryType} and ck.fTerminalType = #{terminalType} and ck.fCustomerUuid = #{customerUuid}
     </select>
