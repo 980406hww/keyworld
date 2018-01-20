@@ -313,7 +313,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                 }
                 calculatePrice(customerKeyword);
                 customerKeyword.setUpdateTime(new Date());
-                customerKeywordDao.updateById(customerKeyword);
+                customerKeywordDao.updateCustomerKeywordIndex(customerKeyword);
             }
         }
     }
