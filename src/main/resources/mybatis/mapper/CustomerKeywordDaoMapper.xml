@@ -202,21 +202,6 @@
         ORDER BY ck.fCaptureIndexQueryTime, ck.fCreateTime
     </select>
 
-    <update id="updateCustomerKeywordIndex" parameterType="com.keymanager.monitoring.entity.CustomerKeyword">
-        UPDATE t_customer_keyword SET
-        fInitialIndexCount = #{customerKeyword.initialIndexCount},
-        fCurrentIndexCount = #{customerKeyword.currentIndexCount},
-        fOptimizePlanCount = #{customerKeyword.optimizePlanCount},
-        fPositionFirstFee = #{customerKeyword.positionFirstFee},
-        fPositionSecondFee = #{customerKeyword.positionSecondFee},
-        fPositionThirdFee = #{customerKeyword.positionThirdFee},
-        fPositionForthFee = #{customerKeyword.positionForthFee},
-        fPositionFifthFee = #{customerKeyword.positionFifthFee},
-        fPositionFirstPageFee = #{customerKeyword.positionFirstPageFee},
-        fUpdateTime = #{customerKeyword.updateTime}
-        WHERE fUuid = #{customerKeyword.uuid}
-    </update>
-
     <select id="updateCaptureIndexQueryTime">
         UPDATE t_customer_keyword SET fCaptureIndexQueryTime = NOW() WHERE fKeyword = #{keyword} and fCurrentIndexCount IS NULL and fOptimizeGroupName IN ('pc_pm_xiaowu', 'm_pm_xiaowu')
     </select>
