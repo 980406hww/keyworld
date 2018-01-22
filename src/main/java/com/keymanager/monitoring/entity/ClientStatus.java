@@ -255,6 +255,9 @@ public class ClientStatus {
 	@TableField(exist=false)
 	private boolean yellow;
 
+	@TableField(value = "fRemainingKeyword")
+	private int remainingKeyword;
+
 	public String getClientID() {
 		return clientID;
 	}
@@ -895,5 +898,13 @@ public class ClientStatus {
 
 	public void setTenMinsRestartTime(Timestamp tenMinsRestartTime) {
 		this.tenMinsRestartTime = tenMinsRestartTime;
+	}
+
+	public int getRemainingKeyword() {
+		return remainingKeyword;
+	}
+
+	public void setRemainingKeyword(int remainingKeyword) {
+		this.remainingKeyword = remainingKeyword;
 	}
 }

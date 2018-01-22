@@ -2,11 +2,9 @@ package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.keymanager.db.DBUtil;
 import com.keymanager.mail.MailHelper;
-import com.keymanager.manager.ConfigManager;
-import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
 import com.keymanager.monitoring.criteria.ClientStatusCriteria;
+import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
 import com.keymanager.monitoring.dao.ClientStatusDao;
 import com.keymanager.monitoring.entity.ClientStatus;
 import com.keymanager.monitoring.entity.ClientStatusRestartLog;
@@ -15,20 +13,20 @@ import com.keymanager.monitoring.enums.TerminalTypeEnum;
 import com.keymanager.util.Constants;
 import com.keymanager.util.FileUtil;
 import com.keymanager.util.Utils;
-import com.keymanager.util.common.StringUtil;
 import com.keymanager.util.VNCAddressBookParser;
-import com.keymanager.value.*;
+import com.keymanager.util.common.StringUtil;
+import com.keymanager.value.ClientStatusGroupSummaryVO;
+import com.keymanager.value.ClientStatusSummaryVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
-import java.sql.Connection;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.*;
-
-import java.util.List;
 
 @Service
 public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStatus>{
@@ -195,6 +193,7 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 			oldClientStatus.setSwitchGroupName(clientStatus.getSwitchGroupName());
 			clientStatusDao.updateById(oldClientStatus);
 		} else {
+			supplementAdditionalValue(clientStatus);
 			clientStatusDao.insert(clientStatus);
 		}
 	}
@@ -305,7 +304,16 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		clientStatus.setMoveRandomly(1);
 		clientStatus.setClearLocalStorage(1);
 
-		clientStatus.setLastVisitTime(Utils.getCurrentTimestamp());;
+		supplementAdditionalValue(clientStatus);
+	}
+
+
+	private void supplementAdditionalValue(ClientStatus clientStatus){
+		clientStatus.setLastVisitTime(Utils.getCurrentTimestamp());
+		clientStatus.setTenMinsLastVisitTime(Utils.addMinutes(Utils.getCurrentTimestamp(), 10));
+		clientStatus.setRestartTime(Utils.getCurrentTimestamp());
+		clientStatus.setThreeMinsRestartTime(Utils.addMinutes(Utils.getCurrentTimestamp(), 3));
+		clientStatus.setTenMinsRestartTime(Utils.addMinutes(Utils.getCurrentTimestamp(), 10));
 	}
 
 	public void getVNCFileInfo(String terminalType) throws Exception {
