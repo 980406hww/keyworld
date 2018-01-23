@@ -265,6 +265,30 @@
           <include refid="searchCustomerKeywordsCriteria"/>
     </select>
 
+    <select id="searchCustomerKeywordInfo" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordCriteria" resultType="com.keymanager.monitoring.entity.CustomerKeyword">
+        SELECT
+        ck.fKeyword	AS	'keyword',
+        ck.fUrl	AS	'url',
+        ck.fOriginalUrl	AS	'originalUrl',
+        ck.fTitle	AS	'title',
+        ck.fInitialPosition	AS	'initialPosition',
+        ck.fCurrentPosition	AS	'currentPosition',
+        ck.fOptimizePlanCount	AS	'optimizePlanCount',
+        ck.fOptimizedCount	AS	'optimizedCount',
+        ck.fPositionFirstFee	AS	'positionFirstFee',
+        ck.fPositionSecondFee	AS	'positionSecondFee',
+        ck.fPositionThirdFee	AS	'positionThirdFee',
+        ck.fPositionForthFee	AS	'positionForthFee',
+        ck.fPositionFifthFee	AS	'positionFifthFee',
+        ck.fPositionFirstPageFee	AS	'positionFirstPageFee',
+        ck.fCurrentIndexCount	AS	'currentIndexCount',
+        ck.fRemarks	AS	'remarks'
+        FROM
+        t_customer_keyword ck
+        WHERE 1 = 1
+        <include refid="searchCustomerKeywordsCriteria"/>
+    </select>
+
     <update id="updateCustomerKeywordGroupName" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordUpdateCriteria">
         UPDATE t_customer_keyword SET fOptimizeGroupName = #{customerKeywordUpdateCriteria.targetGroupName},fUpdateTime = CURRENT_TIMESTAMP WHERE
         fTerminalType = #{customerKeywordUpdateCriteria.terminalType}  AND fType = #{customerKeywordUpdateCriteria.entryType}

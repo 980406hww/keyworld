@@ -299,8 +299,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 			customerKeywordCriteria.setTerminalType(terminalType);
 			customerKeywordCriteria.setEntryType(entryType);
 			initOrderElemnet(customerKeywordCriteria.getOrderingElement(), customerKeywordCriteria);
-			Page<CustomerKeyword>  page = customerKeywordService.searchCustomerKeywords(new Page<CustomerKeyword>(1, 100000), customerKeywordCriteria);
-			List<CustomerKeyword> customerKeywords = page.getRecords();
+			List<CustomerKeyword> customerKeywords = customerKeywordService.searchCustomerKeywordInfo(customerKeywordCriteria);
 			if (!Utils.isEmpty(customerKeywords)) {
 				CustomerKeywordInfoExcelWriter excelWriter = new CustomerKeywordInfoExcelWriter();
 				excelWriter.writeDataToExcel(customerKeywords);
