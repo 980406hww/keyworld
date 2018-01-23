@@ -13,6 +13,7 @@ import com.keymanager.monitoring.vo.SearchEngineResultVO;
 import com.keymanager.monitoring.vo.ZTreeVO;
 import com.keymanager.util.Constants;
 import com.keymanager.util.TerminalTypeMapping;
+import com.keymanager.util.common.StringUtil;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
 import com.keymanager.monitoring.vo.CustomerKeywordForOptimization;
@@ -184,6 +185,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         String version = request.getParameter("version");
         String city = request.getParameter("city");
         String status = request.getParameter("status");
+        String position = request.getParameter("position");
 
         String ip = getIP(request);
 
@@ -191,6 +193,9 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             if (validUser(userName, password)) {
                 ClientStatus clientStatus = clientStatusService.selectById(clientID);
                 String terminalType = clientStatus.getTerminalType();
+                if(StringUtils.isNotBlank(position)) {
+                    customerKeywordService.updatePositionForOptimized(customerKeywordUuid, Integer.parseInt(position));
+                }
                 customerKeywordService.updateOptimizationResult(terminalType, customerKeywordUuid, Integer.parseInt(count.trim()), ip, city, clientID,
                         status, freeSpace, version);
                 performanceService.addPerformanceLog(terminalType + ":updateOptimizedCount", System.currentTimeMillis() - startMilleSeconds, null);

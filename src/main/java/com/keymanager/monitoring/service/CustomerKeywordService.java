@@ -722,6 +722,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                 customerKeywordDao.adjustOptimizePlanCount(uuid, optimizationPlanCount, queryInterval);
             }
         }
+        customerKeywordDao.updatePositionForBaiduMap();
+    }
+
+    public void updatePositionForOptimized(Long customerKeywordUuid, int position) {
+        customerKeywordDao.updatePositionForOptimized(customerKeywordUuid, position);
     }
 
     public void updateCustomerKeywordPosition(Long customerKeywordUuid, int position){
