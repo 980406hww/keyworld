@@ -13,7 +13,6 @@ import com.keymanager.monitoring.vo.SearchEngineResultVO;
 import com.keymanager.monitoring.vo.ZTreeVO;
 import com.keymanager.util.Constants;
 import com.keymanager.util.TerminalTypeMapping;
-import com.keymanager.util.common.StringUtil;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
 import com.keymanager.monitoring.vo.CustomerKeywordForOptimization;
