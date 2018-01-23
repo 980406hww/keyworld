@@ -13,6 +13,7 @@ import com.keymanager.monitoring.vo.SearchEngineResultVO;
 import com.keymanager.monitoring.vo.ZTreeVO;
 import com.keymanager.util.Constants;
 import com.keymanager.util.TerminalTypeMapping;
+import com.keymanager.util.Utils;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
 import com.keymanager.monitoring.vo.CustomerKeywordForOptimization;
@@ -193,7 +194,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 ClientStatus clientStatus = clientStatusService.selectById(clientID);
                 String terminalType = clientStatus.getTerminalType();
                 if(StringUtils.isNotBlank(position)) {
-                    customerKeywordService.updatePositionForOptimized(customerKeywordUuid, Integer.parseInt(position));
+                    customerKeywordService.updateCustomerKeywordPosition(customerKeywordUuid, Integer.parseInt(position), null);
                 }
                 customerKeywordService.updateOptimizationResult(terminalType, customerKeywordUuid, Integer.parseInt(count.trim()), ip, city, clientID,
                         status, freeSpace, version);
@@ -231,7 +232,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         int position = (Integer) requestMap.get("position");
         try {
             if (validUser(userName, password)) {
-                customerKeywordService.updateCustomerKeywordPosition(customerKeywordUuid, position);
+                customerKeywordService.updateCustomerKeywordPosition(customerKeywordUuid, position, Utils.getCurrentTimestamp());
                 return new ResponseEntity<Object>(true, HttpStatus.OK);
             }
         }catch (Exception ex){

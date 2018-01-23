@@ -722,24 +722,12 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                 customerKeywordDao.adjustOptimizePlanCount(uuid, optimizationPlanCount, queryInterval);
             }
         }
-        customerKeywordDao.updatePositionForBaiduMap();
+        customerKeywordDao.updateOptimizePlanCountForBaiduMap();
     }
 
-    public void updatePositionForOptimized(Long customerKeywordUuid, int position) {
-        customerKeywordDao.updatePositionForOptimized(customerKeywordUuid, position);
-    }
-
-    public void updateCustomerKeywordPosition(Long customerKeywordUuid, int position){
-        CustomerKeyword customerKeyword = customerKeywordDao.selectById(customerKeywordUuid);
-        if(customerKeyword != null){
-            customerKeyword.setCurrentPosition(position);
-            if(customerKeyword.getInitialPosition() == null){
-                customerKeyword.setInitialPosition(position);
-            }
-            customerKeyword.setCapturePositionQueryTime(Utils.getCurrentTimestamp());
-            customerKeyword.setUpdateTime(new Date());
-            customerKeywordDao.updateById(customerKeyword);
-
+    public void updateCustomerKeywordPosition(Long customerKeywordUuid, int position, Date capturePositionQueryTime){
+        customerKeywordDao.updatePosition(customerKeywordUuid, position, capturePositionQueryTime);
+        if(capturePositionQueryTime != null) {
             customerKeywordPositionSummaryService.savePositionSummary(customerKeywordUuid, position);
         }
     }

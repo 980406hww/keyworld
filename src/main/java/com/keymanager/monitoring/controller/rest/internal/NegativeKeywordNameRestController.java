@@ -93,7 +93,6 @@ public class NegativeKeywordNameRestController extends SpringMVCBaseController {
         try {
             List<NegativeKeywordName> negativeKeywordNames = negativeKeywordNameService.findAllNegativeKeywordName(negativeKeywordNameCriteria);
             if (!Utils.isEmpty(negativeKeywordNames)) {
-                // 需要将模板文件放在最外层项目文件夹下
                 NegativeKeywordNameExcelWriter excelWriter = new NegativeKeywordNameExcelWriter();
                 excelWriter.writeDataToExcel(negativeKeywordNames);
                 String fileName = negativeKeywordNameCriteria.getGroup() + ".xls";

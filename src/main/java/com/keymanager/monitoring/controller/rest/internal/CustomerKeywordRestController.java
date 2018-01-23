@@ -307,22 +307,11 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 				Customer customer = customerService.selectById(customerKeywordCriteria.getCustomerUuid());
 				String fileName = customer.getContactPerson() + Utils.formatDatetime(Utils.getCurrentTimestamp(), "yyyy.MM.dd") + ".xls";
 				fileName = new String(fileName.getBytes("gb2312"), "ISO8859-1");
-				// 以流的形式下载文件
 				byte[] buffer = excelWriter.getExcelContentBytes();
-				// 清空response
-				response.reset();
-				// 设置response的Header
-				response.addHeader("Content-Disposition", "attachment;filename=" + fileName);//new String(fileName.getBytes("utf-8"), "ISO-8859-1"));
-				response.addHeader("Content-Length", "" + buffer.length);
-				OutputStream toClient = new BufferedOutputStream(response.getOutputStream());
-				response.setContentType("application/octet-stream");
-				toClient.write(buffer);
-				toClient.flush();
-				toClient.close();
+				downExcelFile(response, fileName, buffer);
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
-			e.printStackTrace();
 			return new ResponseEntity<Object>(false,HttpStatus.OK);
 		}
 		return new ResponseEntity<Object>(true,HttpStatus.OK);

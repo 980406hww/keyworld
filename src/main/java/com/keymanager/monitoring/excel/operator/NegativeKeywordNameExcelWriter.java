@@ -53,7 +53,7 @@ public class NegativeKeywordNameExcelWriter {
 	}
 	
 	private void writeRow(int rowIndex, NegativeKeywordName view) throws ExcelWriteException{
-		writer.addLabelCell(NegativeKeywordNameDefinition.Name .getColumnIndex(), rowIndex, view.getName());
+		writer.addLabelCell(NegativeKeywordNameDefinition.Name.getColumnIndex(), rowIndex, view.getName());
 		writer.addLabelCell(NegativeKeywordNameDefinition.OfficialUrl.getColumnIndex(), rowIndex, view.getOfficialUrl());
 		writer.addLabelCell(NegativeKeywordNameDefinition.Email.getColumnIndex(), rowIndex, view.getEmail());
 	}

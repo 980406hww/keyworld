@@ -582,18 +582,23 @@
         AND fStatus = 1
     </select>
 
-    <update id="updatePositionForBaiduMap">
-        UPDATE t_customer_keyword SET fOptimizePlanCount = (SELECT FLOOR(3 + (RAND() * 8)))
-        WHERE fOptimizeGroupName LIKE "%baidumap%"
-        AND fCurrentPosition BETWEEN 0 AND 3
+    <update id="updateOptimizePlanCountForBaiduMap">
+        UPDATE
+            t_customer_keyword
+        SET
+            fOptimizePlanCount = (SELECT FLOOR(3 + (RAND() * 8)))
+        WHERE
+            fOptimizeGroupName = 'pc_baidumap'
+        AND fCurrentPosition BETWEEN 1 AND 3
     </update>
 
-    <update id="updatePositionForOptimized">
+    <update id="updatePosition">
         UPDATE
             t_customer_keyword
         SET
             fCurrentPosition = #{position},
             fInitialPosition = IFNULL(fInitialPosition, #{position}),
+            fCapturePositionQueryTime = IFNULL(#{capturePositionQueryTime}, fCapturePositionQueryTime),
             fUpdateTime = NOW()
         WHERE fUuid = #{uuid}
     </update>
