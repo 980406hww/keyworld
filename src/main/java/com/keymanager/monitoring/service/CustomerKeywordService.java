@@ -89,6 +89,10 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return page;
     }
 
+    public List<CustomerKeyword> searchCustomerKeywordInfo(CustomerKeywordCriteria customerKeywordCriteria) {
+        return customerKeywordDao.searchCustomerKeywordInfo(customerKeywordCriteria);
+    }
+
     public List<CustomerKeyword> searchCustomerKeywordsForDailyReport(CustomerKeywordCriteria customerKeywordCriteria){
         return customerKeywordDao.searchCustomerKeywordsForDailyReport(customerKeywordCriteria);
     }
