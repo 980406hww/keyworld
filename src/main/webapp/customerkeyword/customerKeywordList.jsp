@@ -442,11 +442,15 @@
     <input type="hidden" name="url" id="urlHidden" value="" />
     <input type="hidden" name="status" id="statusHidden" value="" />
     <input type="hidden" name="optimizeGroupName" id="optimizeGroupNameHidden" value="" />
+    <input type="hidden" name="optimizedCount" id="optimizedCountHidden" value="" />
     <input type="hidden" name="position" id="positionHidden" value="" />
+    <input type="hidden" name="noPosition" id="noPositionHidden" value="" />
+    <input type="hidden" name="displayStop" id="displayStopHidden" value="" />
     <input type="hidden" name="invalidRefreshCount" id="invalidRefreshCountHidden" value="" />
-    <input type="hidden" name="creationFromTime" id="creationFromTimeHidden" value="" />
-    <input type="hidden" name="creationToTime" id="creationToTimeHidden" value="" />
-    <input type="hidden" name="orderingElement" id="orderElementHidden" value="" />
+    <input type="hidden" name="searchEngine" id="searchEngineHidden" value="" />
+    <input type="hidden" name="orderingElement" id="orderingElementHidden" value="" />
+    <input type="hidden" name="currentIndexCount" id="currentIndexCountHidden" value="" />
+    <input type="hidden" name="remarks" id="remarksHidden" value="" />
 </form>
 <%@ include file="/commons/loadjs.jsp" %>
 <script src="${staticPath }/customerkeyword/customerKeywordList.js"></script>
