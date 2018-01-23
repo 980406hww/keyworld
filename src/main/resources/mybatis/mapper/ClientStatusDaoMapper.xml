@@ -382,10 +382,10 @@
     </select>
 
     <update id="updateRemainingKeywordIndicator">
-        UPDATE t_customer_keyword SET fRemainingKeyword = #{indicator} WHERE fOptimizeGroupName = #{groupName}
+        UPDATE t_client_status SET fRemainingKeyword = #{indicator} WHERE fGroup = #{groupName}
     </update>
 
     <update id="updateAllRemainingKeywordIndicator">
-        UPDATE t_customer_keyword SET fRemainingKeyword = #{indicator}
+        UPDATE t_client_status SET fRemainingKeyword = #{indicator}
     </update>
 </mapper>
