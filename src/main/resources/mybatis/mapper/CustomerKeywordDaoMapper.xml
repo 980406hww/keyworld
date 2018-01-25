@@ -626,4 +626,27 @@
             fUpdateTime = NOW()
         WHERE fUuid = #{uuid}
     </update>
+
+    <select id="observeOptimizationCount" resultType="com.keymanager.monitoring.vo.OptimizationCountVO">
+        SELECT
+            u.fLoginName AS 'loginName',
+            u.fEmail AS 'email',
+            ck.fKeyword AS 'keyword',
+            ck.fOptimizedCount AS 'optimizedCount',
+            ck.fInvalidRefreshCount AS 'invalidRefreshCount'
+        FROM
+            t_userinfo u,
+            t_customer c,
+            t_customer_keyword ck
+        WHERE c.fUuid = ck.fCustomerUuid
+        AND c.fUserID = u.fLoginName
+        AND ck.fStatus = 1
+        <if test="userID != null and userID != ''">
+        AND c.fUserID = #{userID}
+        </if>
+        AND (ck.fOptimizedCount = 0 OR ck.fInvalidRefreshCount &gt; 8)
+        <if test="userID == null">
+            GROUP BY u.fUserName
+        </if>
+    </select>
 </mapper>

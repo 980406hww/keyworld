@@ -3,6 +3,7 @@ package com.keymanager.monitoring.service;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.enums.CollectMethod;
+import com.keymanager.monitoring.common.email.ObserveOptimizationCountMailService;
 import com.keymanager.monitoring.criteria.*;
 import com.keymanager.monitoring.dao.CustomerKeywordDao;
 import com.keymanager.monitoring.entity.*;
@@ -83,6 +84,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     @Autowired
     private PerformanceService performanceService;
+
+    @Autowired
+    private ObserveOptimizationCountMailService observeOptimizationCountMailService;
 
     public Page<CustomerKeyword> searchCustomerKeywords(Page<CustomerKeyword> page, CustomerKeywordCriteria customerKeywordCriteria){
         page.setRecords(customerKeywordDao.searchCustomerKeywordsPageForCustomer(page, customerKeywordCriteria));
@@ -941,5 +945,15 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             }
         }
         return zTreeList;
+    }
+
+    public void observeOptimizationCount() throws Exception {
+        List<OptimizationCountVO> users = customerKeywordDao.observeOptimizationCount(null);
+        for (OptimizationCountVO user : users) {
+            if(StringUtils.isNotBlank(user.getEmail())) {
+                List<OptimizationCountVO> optimizationCountVOs = customerKeywordDao.observeOptimizationCount(user.getLoginName());
+                observeOptimizationCountMailService.sendObserveOptimizationCountMail(optimizationCountVOs);
+            }
+        }
     }
 }

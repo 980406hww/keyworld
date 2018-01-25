@@ -33,6 +33,12 @@
 		<property name="freemarkerConfiguration" ref="freemarkerConfiguration" />
 	</bean>
 
+	<bean id="observeOptimizationCountMailService" class="com.keymanager.monitoring.common.email.ObserveOptimizationCountMailService">
+		<property name="mailSender" ref="observeOptimizationCountMailSender" />
+		<property name="emailFrom" value="${email.emailFrom}" />
+		<property name="freemarkerConfiguration" ref="freemarkerConfiguration" />
+	</bean>
+
 	<!-- 用于生成HTML邮件内容的Freemarker配置 -->
 	<bean id="freemarkerConfiguration" class="org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean">
 		<property name="templateLoaderPath" value="classpath:/template" />
@@ -82,6 +88,19 @@
 		<property name="host" value="${accessWebsiteFail.host}" />
 		<property name="username" value="${accessWebsiteFail.username}" />
 		<property name="password" value="${accessWebsiteFail.password}" />
+		<property name="defaultEncoding" value="UTF-8"/>
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.smtp.auth">true</prop>
+			</props>
+		</property>
+	</bean>
+
+	<!-- 观察刷量异常邮件发送器 -->
+	<bean id="observeOptimizationCountMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="${email.host}" />
+		<property name="username" value="${email.username}" />
+		<property name="password" value="${email.password}" />
 		<property name="defaultEncoding" value="UTF-8"/>
 		<property name="javaMailProperties">
 			<props>

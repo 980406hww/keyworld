@@ -8,6 +8,7 @@ import com.keymanager.monitoring.criteria.CustomerKeywordUpdateCriteria;
 import com.keymanager.monitoring.entity.CustomerKeyword;
 import com.keymanager.monitoring.entity.QZCaptureTitleLog;
 import com.keymanager.monitoring.vo.CodeNameVo;
+import com.keymanager.monitoring.vo.OptimizationCountVO;
 import com.keymanager.monitoring.vo.SearchEngineResultVO;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
 import org.apache.ibatis.annotations.Param;
@@ -129,4 +130,6 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void updateOptimizePlanCountForBaiduMap();
 
     void updatePosition(@Param("uuid")Long uuid, @Param("position")Integer position, @Param("capturePositionQueryTime")Date capturePositionQueryTime);
+
+    List<OptimizationCountVO> observeOptimizationCount(@Param("userID") String userID);
 }
