@@ -637,6 +637,7 @@
             t_customer_keyword ck
         WHERE c.fUuid = ck.fCustomerUuid
         AND c.fUserID = u.fLoginName
+        AND u.fEmail > ''
         AND ck.fStatus = 1
         AND ck.fCurrentPosition &gt; 0
         AND ck.fOptimizeGroupName &lt;&gt; 'stop'
