@@ -640,26 +640,55 @@
         WHERE fUuid = #{uuid}
     </update>
 
-    <select id="observeOptimizationCount" resultType="com.keymanager.monitoring.vo.OptimizationCountVO">
+    <select id="tabkeOptimizationCountExceptionUsers" resultType="com.keymanager.monitoring.vo.OptimizationCountVO">
         SELECT
             u.fLoginName AS 'loginName',
-            u.fEmail AS 'email',
-            ck.fKeyword AS 'keyword',
-            ck.fOptimizedCount AS 'optimizedCount',
-            ck.fInvalidRefreshCount AS 'invalidRefreshCount'
+            u.fEmail AS 'email'
         FROM
             t_userinfo u,
             t_customer c,
             t_customer_keyword ck
         WHERE c.fUuid = ck.fCustomerUuid
         AND c.fUserID = u.fLoginName
+        AND u.fEmail > ''
         AND ck.fStatus = 1
-        <if test="userID != null and userID != ''">
+        AND ck.fCurrentPosition &gt; 0
+        AND ck.fOptimizeGroupName &lt;&gt; 'stop'
+        AND (ck.fOptimizedCount = 0 OR ck.fInvalidRefreshCount &gt;= 8)
+        GROUP BY u.fLoginName
+    </select>
+
+    <select id="observeGroupOptimizationCount" resultType="com.keymanager.monitoring.vo.OptimizationCountVO">
+        SELECT
+            ck.fOptimizeGroupName AS 'optimizeGroupName',
+            COUNT(fOptimizeGroupName) AS 'keywordCount'
+        FROM
+            t_customer c,
+            t_customer_keyword ck
+        WHERE c.fUuid = ck.fCustomerUuid
+        AND ck.fStatus = 1
+        AND ck.fCurrentPosition &gt; 0
+        AND ck.fOptimizeGroupName &lt;&gt; 'stop'
+        AND ck.fType &lt;&gt; 'pt'
         AND c.fUserID = #{userID}
-        </if>
-        AND (ck.fOptimizedCount = 0 OR ck.fInvalidRefreshCount &gt; 8)
-        <if test="userID == null">
-            GROUP BY u.fUserName
-        </if>
+        AND (ck.fOptimizedCount = 0 OR ck.fInvalidRefreshCount &gt;= 8)
+        GROUP BY fOptimizeGroupName
+    </select>
+
+    <select id="observeKeywordOptimizationCount" resultType="com.keymanager.monitoring.vo.OptimizationCountVO">
+        SELECT
+            ck.fKeyword AS 'keyword',
+            ck.fOptimizedCount AS 'optimizedCount',
+            ck.fInvalidRefreshCount AS 'invalidRefreshCount'
+        FROM
+            t_customer c,
+            t_customer_keyword ck
+        WHERE c.fUuid = ck.fCustomerUuid
+        AND ck.fStatus = 1
+        AND ck.fCurrentPosition &gt; 0
+        AND ck.fOptimizeGroupName &lt;&gt; 'stop'
+        AND ck.fType = 'pt'
+        AND c.fUserID = #{userID}
+        AND (ck.fOptimizedCount = 0 OR ck.fInvalidRefreshCount &gt;= 8)
     </select>
 </mapper>

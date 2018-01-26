@@ -948,12 +948,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void observeOptimizationCount() throws Exception {
-        List<OptimizationCountVO> users = customerKeywordDao.observeOptimizationCount(null);
+        List<OptimizationCountVO> users = customerKeywordDao.tabkeOptimizationCountExceptionUsers();
         for (OptimizationCountVO user : users) {
-            if(StringUtils.isNotBlank(user.getEmail())) {
-                List<OptimizationCountVO> optimizationCountVOs = customerKeywordDao.observeOptimizationCount(user.getLoginName());
-                observeOptimizationCountMailService.sendObserveOptimizationCountMail(optimizationCountVOs);
-            }
+            List<OptimizationCountVO> groupOptimizationCountInfo = customerKeywordDao.observeGroupOptimizationCount(user.getLoginName());
+            List<OptimizationCountVO> keywordOptimizationCountInfo = customerKeywordDao.observeKeywordOptimizationCount(user.getLoginName());
+            observeOptimizationCountMailService.sendObserveOptimizationCountMail(user.getEmail(), groupOptimizationCountInfo, keywordOptimizationCountInfo);
         }
     }
 

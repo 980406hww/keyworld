@@ -23,14 +23,15 @@ public class ObserveOptimizationCountMailService {
     private String emailFrom;
     private Template optimizationCountMailTemplate;
 
-    public void sendObserveOptimizationCountMail(List<OptimizationCountVO> optimizationCountVOs) throws Exception{
+    public void sendObserveOptimizationCountMail(String email, List<OptimizationCountVO> groupOptimizationCountInfo, List<OptimizationCountVO> keywordOptimizationCountInfo) throws Exception{
         MimeMessage msg = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(msg, true, DEFAULT_ENCODING);
-        helper.setTo(optimizationCountVOs.get(0).getEmail());
+        helper.setTo(email);
         helper.setFrom(emailFrom);
         helper.setSubject("刷量异常警告");
         Map<String, Object> context = new HashMap<String, Object>();
-        context.put("optimizationCountVOs", optimizationCountVOs);
+        context.put("groupOptimizationCountInfo", groupOptimizationCountInfo);
+        context.put("keywordOptimizationCountInfo", keywordOptimizationCountInfo);
         String content = FreeMarkerTemplateUtils.processTemplateIntoString(optimizationCountMailTemplate, context);
         helper.setText(content, true);
         mailSender.send(msg);

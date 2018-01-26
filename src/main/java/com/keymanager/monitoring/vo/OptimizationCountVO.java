@@ -7,6 +7,8 @@ public class OptimizationCountVO {
     private String loginName;
     private String email;
     private String keyword;
+    private String optimizeGroupName;
+    private Integer keywordCount;
     private Integer optimizedCount;
     private Integer invalidRefreshCount;
 
@@ -32,6 +34,22 @@ public class OptimizationCountVO {
 
     public void setKeyword(String keyword) {
         this.keyword = keyword;
+    }
+
+    public String getOptimizeGroupName() {
+        return optimizeGroupName;
+    }
+
+    public void setOptimizeGroupName(String optimizeGroupName) {
+        this.optimizeGroupName = optimizeGroupName;
+    }
+
+    public Integer getKeywordCount() {
+        return keywordCount;
+    }
+
+    public void setKeywordCount(Integer keywordCount) {
+        this.keywordCount = keywordCount;
     }
 
     public Integer getOptimizedCount() {
