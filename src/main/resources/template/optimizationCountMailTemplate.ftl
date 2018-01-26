@@ -1,5 +1,4 @@
 <p><b>您好，</b></p>
-以下分组出现刷量异常，请注意查看：
 <html>
 <head>
     <meta http-equiv='Content-Type' content='text/html; charset=utf-8'/>
@@ -24,6 +23,7 @@
 </head>
 <body>
 <#if groupOptimizationCountInfo ?? && (groupOptimizationCountInfo?size > 0)>
+以下全站分组出现刷量异常，请注意查看：
 <table>
     <tr>
         <th style="width: 200px;">优化组名</th>
@@ -39,16 +39,18 @@
 </#if>
 <br>
 <#if keywordOptimizationCountInfo ?? && (keywordOptimizationCountInfo?size > 0)>
-以下pt关键字出现刷量异常，请注意查看：
+以下关键字出现刷量异常，请注意查看：
 <table>
     <tr>
         <th style="width: 200px;">关键字</th>
+        <th style="width: 200px;">URL</th>
         <th style="width: 50px;">已刷数量</th>
         <th style="width: 50px;">无效点击</th>
     </tr>
     <#list keywordOptimizationCountInfo as info>
         <tr>
             <td class='content' style="width: 200px;">${info.keyword}</td>
+            <td class='content' style="width: 200px;">${info.url}</td>
             <td class='content' style="width: 50px;">${info.optimizedCount}</td>
             <td class='content' style="width: 50px;">${info.invalidRefreshCount}</td>
         </tr>

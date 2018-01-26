@@ -656,7 +656,7 @@
         AND ck.fStatus = 1
         AND ck.fCurrentPosition &gt; 0
         AND ck.fOptimizeGroupName &lt;&gt; 'stop'
-        AND ck.fType &lt;&gt; 'pt'
+        AND ck.fType = 'qz'
         AND c.fUserID = #{userID}
         AND (ck.fOptimizedCount = 0 OR ck.fInvalidRefreshCount &gt;= 8)
         GROUP BY fOptimizeGroupName
@@ -665,6 +665,7 @@
     <select id="observeKeywordOptimizationCount" resultType="com.keymanager.monitoring.vo.OptimizationCountVO">
         SELECT
             ck.fKeyword AS 'keyword',
+            ck.fUrl AS 'url',
             ck.fOptimizedCount AS 'optimizedCount',
             ck.fInvalidRefreshCount AS 'invalidRefreshCount'
         FROM
@@ -674,7 +675,7 @@
         AND ck.fStatus = 1
         AND ck.fCurrentPosition &gt; 0
         AND ck.fOptimizeGroupName &lt;&gt; 'stop'
-        AND ck.fType = 'pt'
+        AND ck.fType IN ('fm', 'pt', 'bc')
         AND c.fUserID = #{userID}
         AND (ck.fOptimizedCount = 0 OR ck.fInvalidRefreshCount &gt;= 8)
     </select>

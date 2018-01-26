@@ -227,6 +227,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void updateCustomerKeywordFromUI(CustomerKeyword customerKeyword, String userName){
+        try {
+            observeOptimizationCount();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
         if(isDepartmentManager) {
             customerKeyword.setStatus(1);
@@ -948,11 +953,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void observeOptimizationCount() throws Exception {
-        List<OptimizationCountVO> users = customerKeywordDao.tabkeOptimizationCountExceptionUsers();
-        for (OptimizationCountVO user : users) {
-            List<OptimizationCountVO> groupOptimizationCountInfo = customerKeywordDao.observeGroupOptimizationCount(user.getLoginName());
-            List<OptimizationCountVO> keywordOptimizationCountInfo = customerKeywordDao.observeKeywordOptimizationCount(user.getLoginName());
-            observeOptimizationCountMailService.sendObserveOptimizationCountMail(user.getEmail(), groupOptimizationCountInfo, keywordOptimizationCountInfo);
+        List<OptimizationCountVO> optimizationCountVOs = customerKeywordDao.tabkeOptimizationCountExceptionUsers();
+        for (OptimizationCountVO optimizationCountVO : optimizationCountVOs) {
+            List<OptimizationCountVO> groupOptimizationCountInfo = customerKeywordDao.observeGroupOptimizationCount(optimizationCountVO.getLoginName());
+            List<OptimizationCountVO> keywordOptimizationCountInfo = customerKeywordDao.observeKeywordOptimizationCount(optimizationCountVO.getLoginName());
+            observeOptimizationCountMailService.sendObserveOptimizationCountMail(optimizationCountVO.getEmail(), groupOptimizationCountInfo, keywordOptimizationCountInfo);
         }
     }
 }

@@ -7,6 +7,7 @@ public class OptimizationCountVO {
     private String loginName;
     private String email;
     private String keyword;
+    private String url;
     private String optimizeGroupName;
     private Integer keywordCount;
     private Integer optimizedCount;
@@ -34,6 +35,14 @@ public class OptimizationCountVO {
 
     public void setKeyword(String keyword) {
         this.keyword = keyword;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getOptimizeGroupName() {
