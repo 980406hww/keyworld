@@ -14,6 +14,7 @@
 				<ref bean="cronTriggerGenerateDailyReport" />
 				<ref bean="cronTriggerAccessWebsite" />
 				<ref bean="cronTriggerObserveOptimizationCount" />
+				<ref bean="cronTriggerRemainingKeywordIndicator" />
 			</list>
 		</property>
 		<!-- Quartz配置, 本地运行无需单独的quartz.properties文件，在此简单配置即可 -->
@@ -122,6 +123,18 @@
 
 	<bean id="cronTriggerObserveOptimizationCountSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject" ref="observeOptimizationCountSchedule" />
+		<property name="targetMethod" value="runTask" />
+		<property name="concurrent" value="false" />
+	</bean>
+
+	<!--控制词量标志-->
+	<bean id="cronTriggerRemainingKeywordIndicator" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="cronTriggerRemainingKeywordSchedule" />
+		<property name="cronExpression" value="0 */8 * * * ?" />
+	</bean>
+
+	<bean id="cronTriggerRemainingKeywordSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="controlRemainingKeywordIndicatorSchedule" />
 		<property name="targetMethod" value="runTask" />
 		<property name="concurrent" value="false" />
 	</bean>

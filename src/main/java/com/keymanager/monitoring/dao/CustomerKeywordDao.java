@@ -1,4 +1,4 @@
-package com.keymanager.monitoring.dao;
+﻿package com.keymanager.monitoring.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -133,6 +133,7 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     List<OptimizationCountVO> tabkeOptimizationCountExceptionUsers();
 
+    List<String> fetchOptimizationCompletedGroupNames(@Param("typesStr")String typesStr, @Param("maxInvalidCount")Integer maxInvalidCount);
     List<OptimizationCountVO> observeGroupOptimizationCount(@Param("userID") String userID);
 
     List<OptimizationCountVO> observeKeywordOptimizationCount(@Param("userID") String userID);

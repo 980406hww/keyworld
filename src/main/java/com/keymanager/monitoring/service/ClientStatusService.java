@@ -874,8 +874,8 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		return operationTypeValues;
 	}
 
-	public void updateRemainingKeywordIndicator(String groupName, int indicator){
-		clientStatusDao.updateRemainingKeywordIndicator(groupName, indicator);
+	public void updateRemainingKeywordIndicator(List<String> groupNames, int indicator){
+		clientStatusDao.updateRemainingKeywordIndicator(groupNames, indicator);
 	}
 
 	public void updateAllRemainingKeywordIndicator(int indicator){
