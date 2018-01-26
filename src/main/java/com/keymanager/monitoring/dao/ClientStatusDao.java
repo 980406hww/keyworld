@@ -53,7 +53,7 @@ public interface ClientStatusDao extends BaseMapper<ClientStatus> {
 
     void updateRestartStatus(@Param("clientID")String clientID, @Param("restartStatus")String restartStatus);
 
-    void updateRemainingKeywordIndicator(@Param("groupName")String groupName, @Param("indicator")int indicator);
+    void updateRemainingKeywordIndicator(@Param("groupNames")List<String> groupNames, @Param("indicator")int indicator);
 
     void updateAllRemainingKeywordIndicator(@Param("indicator")int indicator);
 }

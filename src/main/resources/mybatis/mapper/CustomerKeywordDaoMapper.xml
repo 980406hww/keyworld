@@ -380,6 +380,19 @@
         SELECT ck.fType as typeName FROM t_customer_keyword ck WHERE ck.fOptimizeGroupName = #{groupName} AND ck.fStatus = 1 limit 1
     </select>
 
+    <select id="fetchOptimizationCompletedGroupNames" resultType="String">
+        SELECT
+        ck.fOptimizeGroupName AS 'groupName'
+        FROM t_customer_keyword ck
+        WHERE ck.fOptimizePlanCount > ck.fOptimizedCount
+        AND ck.fType IN (#{typesStr})
+        AND (ck.fCurrentPosition = 0
+        AND ck.fInvalidRefreshCount &lt; 2)
+        OR ck.fInvalidRefreshCount &lt; #{maxInvalidCount}
+        GROUP BY ck.fOptimizeGroupName
+        HAVING SUM(ck.fOptimizePlanCount - ck.fOptimizedCount) = 0
+    </select>
+
     <update id="resetOptimizationInfo">
         UPDATE t_customer_keyword SET fOptimizedCount = 0, fInvalidRefreshCount = 0, fOptimizeDate = CURRENT_DATE(), fQueryCount = 0, fQueryDate = CURRENT_DATE()  WHERE fOptimizeDate != CURRENT_DATE()
     </update>

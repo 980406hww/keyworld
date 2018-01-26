@@ -382,7 +382,10 @@
     </select>
 
     <update id="updateRemainingKeywordIndicator">
-        UPDATE t_client_status SET fRemainingKeyword = #{indicator} WHERE fGroup = #{groupName}
+        UPDATE t_client_status SET fRemainingKeyword = #{indicator} WHERE fGroup in
+        <foreach item="item" collection="groupNames" open="(" separator="," close=")">
+            #{item}
+        </foreach>
     </update>
 
     <update id="updateAllRemainingKeywordIndicator">

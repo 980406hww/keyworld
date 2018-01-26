@@ -682,9 +682,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                 }
             }
             customerKeywordDao.setBigKeywordIndicator(customerKeywordUuids);
-            clientStatusService.updateRemainingKeywordIndicator(groupName, 1);
+//            clientStatusService.updateRemainingKeywordIndicator(groupName, 1);
         }else{
-            clientStatusService.updateRemainingKeywordIndicator(groupName, 0);
+//            clientStatusService.updateRemainingKeywordIndicator(groupName, 0);
         }
     }
 
@@ -954,6 +954,20 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                 List<OptimizationCountVO> optimizationCountVOs = customerKeywordDao.observeOptimizationCount(user.getLoginName());
                 observeOptimizationCountMailService.sendObserveOptimizationCountMail(optimizationCountVOs);
             }
+        }
+    }
+
+    public void controlRemainingKeywordIndicator(){
+        Config fmMaxInvalidCountConfig = configService.getConfig(Constants.CONFIG_KEY_MAX_INVALID_COUNT, "fm");
+        List<String> groupNames = customerKeywordDao.fetchOptimizationCompletedGroupNames("'fm'", Integer.parseInt(fmMaxInvalidCountConfig.getValue()));
+        if(CollectionUtils.isNotEmpty(groupNames)) {
+            clientStatusService.updateRemainingKeywordIndicator(groupNames, 0);
+        }
+
+        Config otherMaxInvalidCountConfig = configService.getConfig(Constants.CONFIG_KEY_MAX_INVALID_COUNT, "all");
+        groupNames = customerKeywordDao.fetchOptimizationCompletedGroupNames("'pt','qz', 'bc'", Integer.parseInt(otherMaxInvalidCountConfig.getValue()));
+        if(CollectionUtils.isNotEmpty(groupNames)) {
+            clientStatusService.updateRemainingKeywordIndicator(groupNames, 0);
         }
     }
 }
