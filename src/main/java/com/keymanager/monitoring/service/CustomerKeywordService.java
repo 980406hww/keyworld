@@ -227,11 +227,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void updateCustomerKeywordFromUI(CustomerKeyword customerKeyword, String userName){
-        try {
-            observeOptimizationCount();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
         if(isDepartmentManager) {
             customerKeyword.setStatus(1);
