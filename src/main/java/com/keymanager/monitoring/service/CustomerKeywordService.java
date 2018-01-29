@@ -693,6 +693,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeywordInvalidCountLogService.addCustomerKeywordInvalidCountLog();
             configService.updateOptimizationDateAsToday();
             customerKeywordDao.resetOptimizationInfo();
+            clientStatusService.updateAllRemainingKeywordIndicator(1);
         }
 
         customerKeywordDao.updateOptimizationResult(customerKeywordUuid, count);
