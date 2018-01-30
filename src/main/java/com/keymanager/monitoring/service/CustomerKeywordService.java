@@ -553,7 +553,12 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeywordForOptimization.setBroadbandAccount(clientStatus.getBroadbandAccount());
             customerKeywordForOptimization.setBroadbandPassword(clientStatus.getBroadbandPassword());
 
-            if("pc_pm_xiaowu".equals(customerKeyword.getOptimizeGroupName()) && (customerKeyword.getCurrentPosition() == 0 ||
+            Set<String> specialGruupNames = new HashSet<String>();
+            specialGruupNames.add("pc_pm_xiaowu");
+            specialGruupNames.add("pc_pm_learner");
+            specialGruupNames.add("pc_pm_51yza");
+
+            if(specialGruupNames.contains(customerKeyword.getOptimizeGroupName()) && (customerKeyword.getCurrentPosition() == 0 ||
                     customerKeyword.getCurrentPosition() > 20)) {
                 customerKeywordForOptimization.setPage(2);
             }else{
@@ -561,7 +566,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             }
 
             if(clientStatus.getPageSize() != null) {
-                if("pc_pm_xiaowu".equals(customerKeyword.getOptimizeGroupName()) && (customerKeyword.getCurrentPosition() == 0 ||
+                if(specialGruupNames.contains(customerKeyword.getOptimizeGroupName()) && (customerKeyword.getCurrentPosition() == 0 ||
                         customerKeyword.getCurrentPosition() > 20)){
                     customerKeywordForOptimization.setPageSize(50);
                 }else {
@@ -704,7 +709,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     public void adjustOptimizationCount(){
         List<String> groupNames = new ArrayList<String>();
         groupNames.add("pc_pm_xiaowu");
-        groupNames.add("pc_pm_xiaowu2");
+        groupNames.add("pc_pm_learner");
+        groupNames.add("pc_pm_51yza");
+        groupNames.add("m_pm_tiantian");
+        groupNames.add("m_pm_tianqi");
+        groupNames.add("m_pm_learner");
         List<Map> customerKeywordSummaries = customerKeywordDao.searchCustomerKeywordsForAdjustingOptimizationCount(groupNames);
         if(CollectionUtils.isNotEmpty(customerKeywordSummaries)){
             for(Map customerKeywordSummaryMap : customerKeywordSummaries) {
@@ -959,15 +968,24 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     public void controlRemainingKeywordIndicator(){
         Config fmMaxInvalidCountConfig = configService.getConfig(Constants.CONFIG_KEY_MAX_INVALID_COUNT, "fm");
+        clientStatusService.updateAllRemainingKeywordIndicator(1);
         List<String> groupNames = customerKeywordDao.fetchOptimizationCompletedGroupNames("'fm'", Integer.parseInt(fmMaxInvalidCountConfig.getValue()));
         if(CollectionUtils.isNotEmpty(groupNames)) {
-            clientStatusService.updateRemainingKeywordIndicator(groupNames, 0);
+            updateRemainingKeywordIndicator(groupNames);
         }
 
         Config otherMaxInvalidCountConfig = configService.getConfig(Constants.CONFIG_KEY_MAX_INVALID_COUNT, "all");
         groupNames = customerKeywordDao.fetchOptimizationCompletedGroupNames("'pt','qz', 'bc'", Integer.parseInt(otherMaxInvalidCountConfig.getValue()));
         if(CollectionUtils.isNotEmpty(groupNames)) {
-            clientStatusService.updateRemainingKeywordIndicator(groupNames, 0);
+            updateRemainingKeywordIndicator(groupNames);
         }
+    }
+
+    private void updateRemainingKeywordIndicator(List<String> groupNames) {
+        do {
+            List<String> subGroupNames = groupNames.subList(0, (groupNames.size() > 500) ? 500 : groupNames.size());
+            clientStatusService.updateRemainingKeywordIndicator(subGroupNames, 0);
+            groupNames.removeAll(subGroupNames);
+        } while (groupNames.size() > 0);
     }
 }
