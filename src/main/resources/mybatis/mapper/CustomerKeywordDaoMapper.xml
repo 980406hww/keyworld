@@ -448,12 +448,21 @@
         GROUP_CONCAT(CAST(ps.fPosition AS CHAR) ORDER BY ps.fCreateDate) AS 'positions'
         FROM t_customer_keyword ck JOIN t_ck_position_summary ps ON ck.fUuid = ps.fCustomerKeywordUuid
 		WHERE ps.fCreateDate >= DATE_SUB(CURRENT_DATE(), INTERVAL 3 DAY) and ck.fCurrentIndexCount is not NULL
-		AND ck.fStatus = 1 AND ck.fOptimizeGroupName
+		AND ck.fStatus = 1 AND ck.fType &lt;&gt; 'pt' AND ck.fOptimizeGroupName
         IN
         <foreach item="item" index="index" collection="groupNames" open="(" separator="," close=")">
             #{item}
         </foreach>
 		GROUP BY ck.fUuid, ck.fKeyword
+    </select>
+
+    <select id="searchPTKeywordsForAdjustingOptimizationCount" resultType="java.util.Map">
+        SELECT ck.fUuid AS 'uuid', ck.fKeyword as 'keyword', ck.fUrl as 'url', ck.fCurrentIndexCount as 'currentIndexCount',
+        GROUP_CONCAT(CAST(ps.fPosition AS CHAR) ORDER BY ps.fCreateDate) AS 'positions'
+        FROM t_customer_keyword ck JOIN t_ck_position_summary ps ON ck.fUuid = ps.fCustomerKeywordUuid
+        WHERE ps.fCreateDate >= DATE_SUB(CURRENT_DATE(), INTERVAL 3 DAY) and ck.fCurrentIndexCount is not NULL
+        AND ck.fStatus = 1 AND ck.fType = 'pt'
+        GROUP BY ck.fUuid, ck.fKeyword
     </select>
 
     <update id="adjustOptimizePlanCount">
