@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.criteria.CustomerKeywordCriteria;
 import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.CustomerKeyword;
+import com.keymanager.monitoring.entity.Performance;
 import com.keymanager.monitoring.excel.operator.CustomerKeywordDailyReportExcelWriter;
 import com.keymanager.manager.CustomerKeywordManager;
 import com.keymanager.monitoring.dao.DailyReportItemDao;
@@ -32,6 +33,10 @@ public class DailyReportItemService extends ServiceImpl<DailyReportItemDao, Dail
 	@Autowired
 	private CustomerKeywordService customerKeywordService;
 
+
+	@Autowired
+	private PerformanceService performanceService;
+
 	public void createDailyReportItem(int dailyReportUuid, int customerUuid){
 		DailyReportItem dailyReportItem = new DailyReportItem();
 		dailyReportItem.setStatus(DailyReportStatusEnum.New.name());
@@ -50,8 +55,12 @@ public class DailyReportItemService extends ServiceImpl<DailyReportItemDao, Dail
 		customerKeywordCriteria.setStatus("1");
 		customerKeywordCriteria.setOrderingElement("fSequence");
 		customerKeywordCriteria.setOrderingRule("ASC");
-		List<CustomerKeyword> customerKeywords = customerKeywordService.searchCustomerKeywordsForDailyReport(customerKeywordCriteria);
 
+		long startMilleSeconds = System.currentTimeMillis();
+		List<CustomerKeyword> customerKeywords = customerKeywordService.searchCustomerKeywordsForDailyReport(customerKeywordCriteria);
+		performanceService.addPerformanceLog(terminalType + ":searchCustomerKeywordsForDailyReport", System.currentTimeMillis() - startMilleSeconds, "customerUuid = " + dailyReportItem.getCustomerUuid());
+
+		startMilleSeconds = System.currentTimeMillis();
 		if (!Utils.isEmpty(customerKeywords)) {
 			Customer customer = customerService.getCustomer(dailyReportItem.getCustomerUuid());
 			CustomerKeywordDailyReportExcelWriter excelWriter = new CustomerKeywordDailyReportExcelWriter(terminalType, dailyReportItem
@@ -61,6 +70,7 @@ public class DailyReportItemService extends ServiceImpl<DailyReportItemDao, Dail
 		dailyReportItem.setStatus(DailyReportStatusEnum.Completed.name());
 		dailyReportItem.setUpdateTime(new Date());
 		dailyReportItemDao.updateById(dailyReportItem);
+		performanceService.addPerformanceLog(terminalType + ":generate report", System.currentTimeMillis() - startMilleSeconds, "customerUuid = " + dailyReportItem.getCustomerUuid());
 	}
 
 	public DailyReportItem findDailyReportItem(long dailyReportUuid, String status){
