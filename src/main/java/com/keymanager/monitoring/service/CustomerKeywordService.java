@@ -715,6 +715,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         groupNames.add("m_pm_tianqi");
         groupNames.add("m_pm_learner");
         List<Map> customerKeywordSummaries = customerKeywordDao.searchCustomerKeywordsForAdjustingOptimizationCount(groupNames);
+        List<Map> ptCustomerKeywordSummaries = customerKeywordDao.searchPTKeywordsForAdjustingOptimizationCount();
+        customerKeywordSummaries.addAll(ptCustomerKeywordSummaries);
         if(CollectionUtils.isNotEmpty(customerKeywordSummaries)){
             for(Map customerKeywordSummaryMap : customerKeywordSummaries) {
                 Long uuid = Long.parseLong(customerKeywordSummaryMap.get("uuid").toString());

@@ -95,6 +95,8 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     List<Map> searchCustomerKeywordsForAdjustingOptimizationCount(@Param("groupNames")List<String> groupNames);
 
+    List<Map> searchPTKeywordsForAdjustingOptimizationCount();
+
     void adjustOptimizePlanCount(@Param("customerKeywordUuid")Long customerKeywordUuid, @Param("optimizationPlanCount")int optimizationPlanCount,
                                  @Param("queryInterval")int queryInterval);
 
