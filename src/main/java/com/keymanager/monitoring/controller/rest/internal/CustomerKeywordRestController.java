@@ -427,4 +427,18 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	public List<CodeNameVo> searchGroups() {
 		return customerKeywordService.searchGroups();//查看到这里
 	}
+
+	@RequiresPermissions("/internal/customerKeyword/editOptimizePlanCount")
+	@RequestMapping(value = "/editOptimizePlanCount" , method = RequestMethod.POST)
+	public ResponseEntity<?> editOptimizePlanCount(@RequestBody Map<String, Object> requestMap){
+		try {
+			List<String> uuids = (List<String>) requestMap.get("uuids");
+			String settingType = (String) requestMap.get("settingType");
+			String optimizePlanCount = (String) requestMap.get("optimizePlanCount");
+			customerKeywordService.editCustomerOptimizePlanCount(Integer.parseInt(optimizePlanCount), settingType, uuids);
+			return new ResponseEntity<Object>(true, HttpStatus.OK);
+		}catch (Exception e){
+			return new ResponseEntity<Object>(false, HttpStatus.OK);
+		}
+	}
 }

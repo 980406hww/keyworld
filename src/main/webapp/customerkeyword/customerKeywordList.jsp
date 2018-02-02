@@ -4,17 +4,6 @@
         <title>关键字列表</title>
         <style>
             <!--
-            #div1 {
-                display: none;
-                background-color: #f6f7f7;
-                color: #333333;
-                font-size: 12px;
-                line-height: 18px;
-                border: 1px solid #e1e3e2;
-                width: 450px;
-                height: 50px;
-            }
-
             #customerKeywordTopDiv {
                 position: fixed;
                 top: 0px;
@@ -168,17 +157,18 @@
             <%--</c:if>--%>
             &nbsp;&nbsp;
             <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
-            <input type="submit" class="ui-button ui-widget ui-corner-all" onclick="resetPageNumber()"
+            <input type="submit" onclick="resetPageNumber()"
                    value=" 查询 ">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
-                <input type="button" class="ui-button ui-widget ui-corner-all" onclick="addCustomerKeyword(null, '${customerKeywordCriteria.customerUuid}')"
+                <input type="button" onclick="addCustomerKeyword(null, '${customerKeywordCriteria.customerUuid}')"
                        value=" 增加 ">&nbsp;&nbsp;
             </shiro:hasPermission>
+            <shiro:hasPermission name="/internal/customerKeyword/editOptimizePlanCount">
+            <input type="button" onclick="showOptimizePlanCountDialog()" value=" 修改刷量 ">&nbsp;&nbsp;
+            </shiro:hasPermission>
             <shiro:hasPermission name="/internal/customerKeyword/deleteCustomerKeywords">
-            <input type="button" class="ui-button ui-widget ui-corner-all"
-                   onclick="delAllItems('ByUuid','${customerKeywordCriteria.customerUuid}')"
-                   value=" 删除所选 ">
+            <input type="button" onclick="delAllItems('ByUuid','${customerKeywordCriteria.customerUuid}')" value=" 删除所选 ">
             </shiro:hasPermission>
         </div>
     </form>
@@ -204,7 +194,6 @@
             <td align="center" width=100>备注</td>
             <td align="center" width=60>优化组名</td>
             <td align="center" width=80>操作</td>
-            <div id="div1"></div>
         </tr>
     </table>
 </div>
@@ -321,11 +310,27 @@
         <input type="file" id="uploadExcelFile" name="file" >
     </form>
 </div>
-
+<div id="optimizePlanCountDialog" class="easyui-dialog" style="left: 40%;">
+    <table style="font-size:12px">
+        <tr>
+            <th>类型</th>
+            <td>
+                <input type="radio" name="settingType" value="setCurrentCount" checked />按当前刷量加减
+                <input type="radio" name="settingType" value="setSpecificCount" />指定刷量
+            </td>
+        </tr>
+        <tr>
+            <th>刷量</th>
+            <td>
+                <input name="optimizePlanCount" id="optimizePlanCount" type="text" style="width:160px;" value="">
+            </td>
+        </tr>
+    </table>
+</div>
 <div id="saveCustomerKeywordDialog" class="easyui-dialog" style="left: 35%;">
     <form id="customerKeywordForm">
         <ul>
-            <input type="hidden" name="uuid" id="uuid" value="" style="width:300px;">
+            <input type="hidden" id="uuid" value="" style="width:300px;">
             <li><span class="customerKeywordSpanClass">关键字:</span><input type="text" name="keyword" id="keyword" value="" style="width:300px;"/></li>
 
             <hr style="height: 1px; border:none; border-top:1px dashed #CCCCCC;"/>

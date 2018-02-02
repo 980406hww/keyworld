@@ -99,7 +99,10 @@
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
                 <input type="button" onclick="updateCustomerKeywordStatus(0)" value=" 暂停关键字 ">&nbsp;&nbsp;
-                <input type="button" onclick="updateCustomerKeywordStatus(1)" value=" 激活关键字 ">
+                <input type="button" onclick="updateCustomerKeywordStatus(1)" value=" 激活关键字 ">&nbsp;&nbsp;
+            </shiro:hasPermission>
+            <shiro:hasPermission name="/internal/customerKeyword/deleteCustomerKeywords">
+            <input type="button" onclick="deleteCustomerKeywords()" value=" 删除所选 ">
             </shiro:hasPermission>
         </div>
     </form>

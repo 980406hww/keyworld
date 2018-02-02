@@ -701,4 +701,18 @@
         AND c.fUserID = #{userID}
         AND (ck.fOptimizedCount = 0 OR ck.fInvalidRefreshCount &gt;= 8)
     </select>
+
+    <update id="editCustomerOptimizePlanCount">
+        UPDATE t_customer_keyword
+        <if test="settingType == 'setCurrentCount'">
+            SET fOptimizePlanCount = IF((fOptimizePlanCount + (#{optimizePlanCount})) > 0, (fOptimizePlanCount + (#{optimizePlanCount})), 0)
+        </if>
+        <if test="settingType == 'setSpecificCount'">
+            SET fOptimizePlanCount = #{optimizePlanCount}
+        </if>
+        WHERE fUuid IN
+        <foreach item="uuid"  collection="uuids" open="(" separator="," close=")">
+            #{uuid}
+        </foreach>
+    </update>
 </mapper>
