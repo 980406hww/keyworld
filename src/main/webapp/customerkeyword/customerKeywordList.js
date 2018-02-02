@@ -798,7 +798,7 @@ function onlyNumber(self) {
 function showOptimizePlanCountDialog() {
     var uuids = getUuids();
     if (uuids === '') {
-        alert('请选择要修改刷量的客户');
+        alert('请选择要修改刷量的关键字');
         return;
     }
     $("#optimizePlanCountDialog").dialog({
@@ -822,7 +822,7 @@ function showOptimizePlanCountDialog() {
                 }
             }]
     });
-    $('#optimizePlanCountDialog').window("resize",{top:$(document).scrollTop() + 100});
+    $('#optimizePlanCountDialog').window("resize",{top:$(document).scrollTop() + 150});
 }
 function editOptimizePlanCount(uuids) {
     var settingType = $("#optimizePlanCountDialog").find("input[name=settingType]:checked").val();
