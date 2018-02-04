@@ -81,6 +81,37 @@ function getSelectedIDs() {
     });
     return uuids;
 }
+function deleteCustomerKeywords() {
+    var uuids = getSelectedIDs();
+    if(uuids === ''){
+        alert('请选择要删除的关键字！');
+        return ;
+    }
+    if (confirm("确实要删除这些关键字吗?") == false) return;
+    var postData = {};
+    postData.uuids = uuids.split(",");
+    postData.deleteType = "ByUuid";
+    $.ajax({
+        url: '/internal/customerKeyword/deleteCustomerKeywords',
+        data: JSON.stringify(postData),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        timeout: 5000,
+        type: 'POST',
+        success: function (data) {
+            if(data){
+                $().toastmessage('showSuccessToast',"操作成功！", true);
+            }else{
+                $().toastmessage('showErrorToast', "操作失败！");
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "操作失败！");
+        }
+    });
+}
 function updateCustomerKeywordStatus(status) {
     var customerKeyword = {};
     var customerKeywordUuids = getSelectedIDs();

@@ -990,4 +990,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             groupNames.removeAll(subGroupNames);
         } while (groupNames.size() > 0);
     }
+
+    public void editCustomerOptimizePlanCount(Integer optimizePlanCount, String settingType, List<String> uuids) {
+        customerKeywordDao.editCustomerOptimizePlanCount(optimizePlanCount, settingType, uuids);
+    }
 }

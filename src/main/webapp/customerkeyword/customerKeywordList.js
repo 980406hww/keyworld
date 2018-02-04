@@ -4,6 +4,7 @@ $(function () {
     $("#changeSearchEngineDialog").dialog("close");
     $("#uploadExcelDailog").dialog("close");
     $("#saveCustomerKeywordDialog").dialog("close");
+    $("#optimizePlanCountDialog").dialog("close");
     $("#customerKeywordDiv").css("margin-top",$("#customerKeywordTopDiv").height());
 
     alignTableHeader();
@@ -793,4 +794,61 @@ function alignTableHeader() {
 }
 function onlyNumber(self) {
     $(self).val($(self).val().replace(/[^\d]*/g, ''));
+}
+function showOptimizePlanCountDialog() {
+    var uuids = getUuids();
+    if (uuids === '') {
+        alert('请选择要修改刷量的关键字');
+        return;
+    }
+    $("#optimizePlanCountDialog").dialog({
+        resizable: false,
+        title: "修改刷量",
+        height:120,
+        width: 225,
+        modal: true,
+        buttons: [{
+            text: '保存',
+            iconCls: 'icon-ok',
+            handler: function () {
+                editOptimizePlanCount(uuids);
+            }
+        },
+            {
+                text: '取消',
+                iconCls: 'icon-cancel',
+                handler: function () {
+                    $("#optimizePlanCountDialog").dialog("close");
+                }
+            }]
+    });
+    $('#optimizePlanCountDialog').window("resize",{top:$(document).scrollTop() + 150});
+}
+function editOptimizePlanCount(uuids) {
+    var settingType = $("#optimizePlanCountDialog").find("input[name=settingType]:checked").val();
+    var optimizePlanCount = $("#optimizePlanCountDialog").find("#optimizePlanCount").val();
+    var postData = {};
+    postData.uuids = uuids.split(",");
+    postData.settingType = settingType;
+    postData.optimizePlanCount = $.trim(optimizePlanCount);
+    $.ajax({
+        url: '/internal/customerKeyword/editOptimizePlanCount',
+        data: JSON.stringify(postData),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        timeout: 5000,
+        type: 'POST',
+        success: function (data) {
+            if (data) {
+                $().toastmessage('showSuccessToast', "操作成功",true);
+            } else {
+                $().toastmessage('showErrorToast', "操作失败");
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "操作失败");
+        }
+    });
 }
