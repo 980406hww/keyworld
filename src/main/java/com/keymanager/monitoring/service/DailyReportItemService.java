@@ -49,6 +49,9 @@ public class DailyReportItemService extends ServiceImpl<DailyReportItemDao, Dail
 
 	public void generateDailyReport(String terminalType, long dailyReportUuid, long dailyReportItemUuid) throws Exception {
 		DailyReportItem dailyReportItem = dailyReportItemDao.selectById(dailyReportItemUuid);
+		dailyReportItem.setStatus(DailyReportStatusEnum.Processing.name());
+		dailyReportItem.setUpdateTime(new Date());
+		dailyReportItemDao.updateById(dailyReportItem);
 		CustomerKeywordCriteria customerKeywordCriteria = new CustomerKeywordCriteria();
 		customerKeywordCriteria.setTerminalType(terminalType);
 		customerKeywordCriteria.setCustomerUuid(new Long(dailyReportItem.getCustomerUuid()));
