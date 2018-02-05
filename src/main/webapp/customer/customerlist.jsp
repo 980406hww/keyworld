@@ -35,13 +35,14 @@
                             <td align="right">联系人:</td>
                             <td><input type="text" name="contactPerson" id="contactPerson"
                                        value="${customerCriteria.contactPerson}"
-                                       style="width:200px;"></td>
+                                       style="width:160px;"></td>
+                            <td>分组:<input type="text" name="type" id="type" value="${customerCriteria.type}" style="width: 160px;"></td>
                             <td align="right">QQ:</td>
                             <td><input type="text" name="qq" id="qq" value="${customerCriteria.qq}"
-                                       style="width:200px;"></td>
+                                       style="width:160px;"></td>
                             <td align="right">联系电话:</td>
                             <td><input type="text" name="telphone" id="telphone" value="${customerCriteria.telphone}"
-                                       style="width:200px;">
+                                       style="width:160px;">
                             </td>
                             <td>
                                 <c:if test="${isDepartmentManager}">
@@ -91,19 +92,29 @@
             </td>
         </tr>
     </table>
+    <table align="right">
+        <tr align="right">
+            <shiro:hasPermission name="/internal/customer/searchCustomers">
+                <td>
+                    <c:forEach items="${customerTypes}" var="customerType" varStatus="status">
+                        <c:if test="${status.index > 0}"> |</c:if>
+                        <a href="javascript:searchCustomerByType('${customerType}')">${customerType}</a>
+                    </c:forEach>
+                </td>
+            </shiro:hasPermission>
+        </tr>
+    </table>
     <table style="font-size:12px; width: 100%;" id="headerTable">
         <tr bgcolor="" height="30">
             <td style="padding-left: 7px;" width=10><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
             <td align="center" width=80>用户名称</td>
             <td align="center" width=80>联系人</td>
             <td align="center" width=60>词数</td>
+            <td align="center" width=80>分组</td>
             <td align="center" width=60>QQ</td>
-            <td align="center" width=100>电话</td>
-            <td align="center" width=60>已付金额</td>
             <td align="center" width=140>备注</td>
-            <td align="center" width=60>类型</td>
-            <td align="center" width=40>状态</td>
-            <td align="center" width=80>创建时间</td>
+            <td align="center" width=20>状态</td>
+            <td align="center" width=50>创建时间</td>
             <td align="center" width=200>操作</td>
         </tr>
     </table>
@@ -118,28 +129,30 @@
                     <a href="#" onclick="searchCustomerKeywords('/internal/customerKeyword/searchCustomerKeywords/${customer.uuid}')">${customer.contactPerson}</a>
                 </td>
                 <td width=60>${customer.keywordCount}</td>
+                <td width=80><input type="text" id="${customer.uuid}" onchange="updateCustomerType(this)" value="${customer.type}" style="width: 100%;"></td>
                 <td width=60>${customer.qq}</td>
-                <td width=100>${customer.telphone} </td>
-                <td align="right" width=60>${customer.paidFee} </td>
                 <td width=140>${customer.remark}</td>
-                <td width=60>${customer.type}</td>
-                <td width=40>
+                <td width=20 style="text-align: center">
                     <c:choose>
                         <c:when test="${customer.status ==1}">
                             激活
                         </c:when>
                         <c:otherwise>
-                            暂停
+                            <span style="color: red;">暂停</span>
                         </c:otherwise>
                     </c:choose>
                 </td>
-                <td width=80><fmt:formatDate value="${customer.createTime}" pattern="yyyy-MM-dd"/></td>
+                <td width=50 style="text-align: center"><fmt:formatDate value="${customer.createTime}" pattern="yyyy-MM-dd"/></td>
                 <td width=200>
                     <shiro:hasPermission name="/internal/customer/saveCustomer">
                         <a href="javascript:modifyCustomer(${customer.uuid})">修改</a>
                     </shiro:hasPermission>
                     <shiro:hasPermission name="/internal/customer/delCustomer">
                         | <a href="javascript:delCustomer('${customer.uuid}')">删除</a>
+                    </shiro:hasPermission>
+                    <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
+                    | <a href="javascript:changeCustomerKeywordStatus('${customer.uuid}', 0)">暂停关键字</a>
+                    | <a href="javascript:changeCustomerKeywordStatus('${customer.uuid}', 1)">激活关键字</a>
                     </shiro:hasPermission>
                     <c:if test="${'bc'.equalsIgnoreCase(entryType)}">
                         <shiro:hasPermission name="/internal/customerChargeType/saveCustomerChargeType">
@@ -269,7 +282,6 @@
     </form>
 </div>
 
-
 </div>
 <div id="customerDialog" title="客户信息" class="easyui-dialog" style="left: 40%;">
     <form id="customerForm" method="post" action="customerlist.jsp">
@@ -279,7 +291,7 @@
                 <td><input type="text" name="contactPerson" id="contactPerson" style="width:200px;"></td>
             </tr>
             <tr>
-                <td align="right">QQ</td>
+                <td align="right">QQ:</td>
                 <td><input type="text" name="qq" id="qq" style="width:200px;">
                 </td>
             </tr>
@@ -291,10 +303,7 @@
             <tr>
                 <td align="right">客户类型:</td>
                 <td>
-                    <select name="type" id="type">
-                        <option value="普通客户">普通客户</option>
-                        <option value="代理">代理</option>
-                    </select>
+                    <input type="text" name="type" id="type" value="" style="width:200px;">
                 </td>
             </tr>
             <input type="hidden" id="entryTypeHidden" value="${entryType}">
@@ -393,6 +402,35 @@
     <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywords">
     function searchCustomerKeywords(url) {
         window.open(url);
+    }
+    </shiro:hasPermission>
+
+    <shiro:hasPermission name="/internal/customer/saveCustomer">
+    function updateCustomerType(self) {
+        var customerType = $("#showCustomerTableDiv").find("#customerType").val();
+        var data = {};
+        data.customerUuid = self.id;
+        data.customerType = $.trim(self.value);
+        $.ajax({
+            url: '/internal/customer/updateCustomerType',
+            data: JSON.stringify(data),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            timeout: 5000,
+            type: 'POST',
+            success: function (result) {
+                if (result) {
+                    $().toastmessage('showSuccessToast', "更新成功");
+                } else {
+                    $().toastmessage('showErrorToast', "更新失败");
+                }
+            },
+            error: function () {
+                $().toastmessage('showErrorToast', "更新失败");
+            }
+        });
     }
     </shiro:hasPermission>
 

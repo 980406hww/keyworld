@@ -18,4 +18,6 @@ public interface CustomerDao extends BaseMapper<Customer> {
     List<Customer> searchCustomerWithKeyword(@Param("groupNames") List<String> groupNames,@Param("terminalType") String terminalType);
 
     List<Customer> findNegativeCustomer();
+
+    List<String> searchCustomerTypes(@Param("customerCriteria")CustomerCriteria customerCriteria);
 }

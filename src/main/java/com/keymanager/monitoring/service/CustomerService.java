@@ -120,4 +120,14 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 	public List<Customer> findNegativeCustomer() {
 		return customerDao.findNegativeCustomer();
 	}
+
+	public List<String> searchCustomerTypes(CustomerCriteria customerCriteria) {
+		return customerDao.searchCustomerTypes(customerCriteria);
+	}
+
+	public void updateCustomerType(Long customerUuid, String customerType) {
+		Customer customer = customerDao.selectById(customerUuid);
+		customer.setType(customerType);
+		updateById(customer);
+	}
 }

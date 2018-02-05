@@ -4,6 +4,7 @@ public class CustomerCriteria extends BaseCriteria{
     private String terminalType;
     private String entryType;
     private String contactPerson;
+    private String type;
     private String qq;
     private String telphone;
     private String loginName;
@@ -24,6 +25,14 @@ public class CustomerCriteria extends BaseCriteria{
 
     public void setContactPerson(String contactPerson) {
         this.contactPerson = contactPerson;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getQq() {
