@@ -712,6 +712,7 @@
 								<input id="moveUp20" name="moveUp20" type="checkbox" value="1">向上偏移20</input>
 							</td>
 							<td>
+								<input id="optimizeRelatedKeyword" name="optimizeRelatedKeyword" type="checkbox" value="1">操作相关词</input>
 							</td>
 						</tr>
 					</table>

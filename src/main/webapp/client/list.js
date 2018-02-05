@@ -517,6 +517,7 @@ function initSettingDialog(clientStatus, self){
     settingDialogDiv.find("#justClickSpecifiedTitle")[0].checked = (clientStatus.justClickSpecifiedTitle == 1) ? true : false;
     settingDialogDiv.find("#randomlyClickMoreLink")[0].checked = (clientStatus.randomlyClickMoreLink == 1) ? true : false;
     settingDialogDiv.find("#moveUp20")[0].checked = (clientStatus.moveUp20 == 1) ? true : false;
+    settingDialogDiv.find("#optimizeRelatedKeyword")[0].checked = (clientStatus.optimizeRelatedKeyword == 1) ? true : false;
 
     settingDialogDiv.find("#waitTimeAfterOpenBaidu").val(clientStatus.waitTimeAfterOpenBaidu);
     settingDialogDiv.find("#waitTimeBeforeClick").val(clientStatus.waitTimeBeforeClick);
@@ -596,6 +597,7 @@ function saveChangeSetting(self){
     clientStatus.justClickSpecifiedTitle = settingDialogDiv.find("#justClickSpecifiedTitle:checked").val() === '1' ? 1 : 0;
     clientStatus.randomlyClickMoreLink = settingDialogDiv.find("#randomlyClickMoreLink:checked").val() === '1' ? 1 : 0;
     clientStatus.moveUp20 = settingDialogDiv.find("#moveUp20:checked").val() === '1' ? 1 : 0;
+    clientStatus.optimizeRelatedKeyword = settingDialogDiv.find("#optimizeRelatedKeyword:checked").val() === '1' ? 1 : 0;
     $.ajax({
         url: '/internal/clientstatus/saveClientStatus',
         data: JSON.stringify(clientStatus),

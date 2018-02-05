@@ -71,6 +71,7 @@
         cs.fWaitTimeBeforeClick AS "waitTimeBeforeClick",
         cs.fWaitTimeAfterClick AS "waitTimeAfterClick",
         cs.fMaxUserCount AS "maxUserCount",
+        cs.fOptimizeRelatedKeyword AS "optimizeRelatedKeyword",
         cs.fHost AS "host",
         cs.fPort AS "port",
         cs.fUserName AS "userName",

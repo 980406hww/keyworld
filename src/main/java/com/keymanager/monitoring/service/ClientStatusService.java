@@ -190,6 +190,7 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 			oldClientStatus.setJustClickSpecifiedTitle(clientStatus.getJustClickSpecifiedTitle());
 			oldClientStatus.setRandomlyClickMoreLink(clientStatus.getRandomlyClickMoreLink());
 			oldClientStatus.setMoveUp20(clientStatus.getMoveUp20());
+			oldClientStatus.setOptimizeRelatedKeyword(clientStatus.getOptimizeRelatedKeyword());
 			oldClientStatus.setSwitchGroupName(clientStatus.getSwitchGroupName());
 			clientStatusDao.updateById(oldClientStatus);
 		} else {
@@ -303,7 +304,7 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		clientStatus.setSupportPaste(1);
 		clientStatus.setMoveRandomly(1);
 		clientStatus.setClearLocalStorage(1);
-
+		clientStatus.setOptimizeRelatedKeyword(0);
 		supplementAdditionalValue(clientStatus);
 	}
 
@@ -846,6 +847,10 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		int maxUserCount = sourceClientStatus.getMaxUserCount();
 		sourceClientStatus.setMaxUserCount(targetClientStatus.getMaxUserCount());
 		targetClientStatus.setMaxUserCount(maxUserCount);
+
+		int optimizeRelatedKeyword = sourceClientStatus.getOptimizeRelatedKeyword();
+		sourceClientStatus.setOptimizeRelatedKeyword(targetClientStatus.getOptimizeRelatedKeyword());
+		targetClientStatus.setOptimizeRelatedKeyword(optimizeRelatedKeyword);
 	}
 
 	public void sendNotificationForRenewal() throws Exception{

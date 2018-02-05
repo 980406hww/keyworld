@@ -237,6 +237,9 @@ public class ClientStatus {
 	@TableField(value = "fMaxUserCount")
 	private int maxUserCount;
 
+	@TableField(value = "fOptimizeRelatedKeyword")
+	private int optimizeRelatedKeyword;
+
 	@TableField(value = "fRenewalDate")
 	private Timestamp renewalDate;
 
@@ -906,5 +909,13 @@ public class ClientStatus {
 
 	public void setRemainingKeyword(int remainingKeyword) {
 		this.remainingKeyword = remainingKeyword;
+	}
+
+	public int getOptimizeRelatedKeyword() {
+		return optimizeRelatedKeyword;
+	}
+
+	public void setOptimizeRelatedKeyword(int optimizeRelatedKeyword) {
+		this.optimizeRelatedKeyword = optimizeRelatedKeyword;
 	}
 }
