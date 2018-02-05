@@ -25,6 +25,7 @@
         FROM t_customer c
         WHERE c.fEntryType = #{customerCriteria.entryType}
         <if test="customerCriteria.contactPerson != null and customerCriteria.contactPerson != ''">AND c.fContactPerson like '%${customerCriteria.contactPerson}%'</if>
+        <if test="customerCriteria.type != null and customerCriteria.type != ''">AND c.fType = #{customerCriteria.type}</if>
         <if test="customerCriteria.qq != null and customerCriteria.qq != ''">AND c.fQQ like '${customerCriteria.qq}%'</if>
         <if test="customerCriteria.telphone != null and customerCriteria.telphone != ''">AND c.fTelphone like '%${customerCriteria.telphone}%'</if>
         <if test="customerCriteria.loginName != null and customerCriteria.loginName != ''">AND c.fUserID = #{customerCriteria.loginName}</if>
@@ -75,5 +76,12 @@
             fEntryType = "fm"
         AND
             fStatus = 1
+    </select>
+
+    <select id="searchCustomerTypes" parameterType="com.keymanager.monitoring.criteria.CustomerCriteria" resultType="java.lang.String">
+        SELECT DISTINCT fType
+        FROM t_customer
+        WHERE fEntryType = #{customerCriteria.entryType}
+        <if test="customerCriteria.loginName != null and customerCriteria.loginName != ''"> AND fUserID = #{customerCriteria.loginName}</if>
     </select>
 </mapper>

@@ -62,7 +62,6 @@ public class CustomerRestController {
 
     private ModelAndView constructCustomerModelAndView(HttpServletRequest request, CustomerCriteria customerCriteria, String currentPage, String pageSize) {
         ModelAndView modelAndView = new ModelAndView("/customer/customerlist");
-        Subject subject = SecurityUtils.getSubject();
         HttpSession session = request.getSession();
         String loginName = (String) session.getAttribute("username");
         UserInfo user = userInfoService.getUserInfo(loginName);
@@ -76,6 +75,8 @@ public class CustomerRestController {
             customerCriteria.setLoginName(loginName);
         }
         Page<Customer> page = customerService.searchCustomers(new Page<Customer>(Integer.parseInt(currentPage), Integer.parseInt(pageSize)), customerCriteria);
+        List<String> customerTypes = customerService.searchCustomerTypes(customerCriteria);
+        modelAndView.addObject("customerTypes", customerTypes);
         modelAndView.addObject("entryType", entryType);
         modelAndView.addObject("terminalType", terminalType);
         modelAndView.addObject("customerCriteria", customerCriteria);
@@ -156,5 +157,19 @@ public class CustomerRestController {
         String terminalType = TerminalTypeMapping.getTerminalType(request);
         List<String> groupNames=(List<String>) requestMap.get("groupNames");
         return customerService.searchCustomersWithKeyword(groupNames,terminalType);
+    }
+
+    @RequiresPermissions("/internal/customer/saveCustomer")
+    @RequestMapping(value = "/updateCustomerType", method = RequestMethod.POST)
+    public ResponseEntity<?> updateCustomerType(@RequestBody Map<String,Object> requestMap) {
+        try {
+            String customerUuid = (String) requestMap.get("customerUuid");
+            String customerType = (String) requestMap.get("customerType");
+            customerService.updateCustomerType(Long.parseLong(customerUuid), customerType);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.OK);
+        }
     }
 }

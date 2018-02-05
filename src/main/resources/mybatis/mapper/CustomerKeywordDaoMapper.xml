@@ -715,4 +715,11 @@
             #{uuid}
         </foreach>
     </update>
+
+    <update id="changeCustomerKeywordStatus">
+        UPDATE t_customer_keyword SET fStatus = #{status}
+        WHERE fTerminalType = #{terminalType}
+        AND fType = #{entryType}
+        AND fCustomerUuid = #{customerUuid}
+    </update>
 </mapper>

@@ -994,4 +994,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     public void editCustomerOptimizePlanCount(Integer optimizePlanCount, String settingType, List<String> uuids) {
         customerKeywordDao.editCustomerOptimizePlanCount(optimizePlanCount, settingType, uuids);
     }
+
+    public void changeCustomerKeywordStatus(String terminalType, String entryType, Long customerUuid, Integer status) {
+        customerKeywordDao.changeCustomerKeywordStatus(terminalType, entryType, customerUuid, status);
+    }
 }

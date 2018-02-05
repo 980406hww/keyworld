@@ -423,6 +423,22 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		}
 	}
 
+	@RequiresPermissions("/internal/customerKeyword/updateCustomerKeywordStatus")
+	@RequestMapping(value = "/changeCustomerKeywordStatus", method = RequestMethod.POST)
+	public ResponseEntity<?> changeCustomerKeywordStatus(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
+		try {
+			String terminalType = TerminalTypeMapping.getTerminalType(request);
+			String entryType = (String) request.getSession().getAttribute("entryType");
+			String customerUuid = (String) requestMap.get("customerUuid");
+			Integer status = (Integer) requestMap.get("status");
+			customerKeywordService.changeCustomerKeywordStatus(terminalType, entryType, Long.parseLong(customerUuid), status);
+			return new ResponseEntity<Object>(true, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+		}
+	}
+
 	@RequestMapping(value = "/searchGroups", method = RequestMethod.POST)
 	public List<CodeNameVo> searchGroups() {
 		return customerKeywordService.searchGroups();//查看到这里

@@ -602,7 +602,7 @@ function showCustomerDialog(uuid, loginName) {
     $("#customerDialog").dialog({
         resizable: false,
         width: 280,
-        height: 300,
+        height: 280,
         modal: true,
         buttons: [{
             text: '保存',
@@ -847,11 +847,15 @@ function changePaging(currentPage, pageSize) {
 function resetPageNumber() {
     var searchCustomerFormObj = $("#searchCustomerForm");
     var contactPerson = searchCustomerFormObj.find("#contactPerson").val();
+    var type = searchCustomerFormObj.find("#type").val();
     var qq = searchCustomerFormObj.find("#qq").val();
     var telphone = searchCustomerFormObj.find("#telphone").val();
     var remark = searchCustomerFormObj.find("#remark").val();
     if(contactPerson != "") {
         searchCustomerFormObj.find("#contactPerson").val($.trim(contactPerson));
+    }
+    if(type != "") {
+        searchCustomerFormObj.find("#type").val($.trim(type));
     }
     if(qq != "") {
         searchCustomerFormObj.find("#qq").val($.trim(qq));
@@ -870,4 +874,39 @@ function viewAizhanRank(contactPerson) {
         contactPerson = contactPerson.substr(0, index);
     }
     window.open("https://baidurank.aizhan.com/baidu/" + contactPerson);
+}
+function changeCustomerKeywordStatus(customerUuid, status) {
+    if(status == 0) {
+        if (confirm("确认要暂停此客户下所有的关键字吗?") == false) return;
+    } else {
+        if (confirm("确认要激活此客户下所有的关键字吗?") == false) return;
+    }
+    var data = {};
+    data.customerUuid = customerUuid;
+    data.status = status;
+    $.ajax({
+        url: '/internal/customerKeyword/changeCustomerKeywordStatus',
+        data: JSON.stringify(data),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        timeout: 5000,
+        type: 'POST',
+        success: function (result) {
+            if (result) {
+                $().toastmessage('showSuccessToast', "操作成功");
+            } else {
+                $().toastmessage('showErrorToast', "操作失败");
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "操作失败");
+        }
+    });
+}
+function searchCustomerByType(type) {
+    $("#searchCustomerForm").find("#type").val(type);
+    $("#searchCustomerForm").find("#currentPageNumberHidden").val(1);
+    $("#searchCustomerForm").submit();
 }

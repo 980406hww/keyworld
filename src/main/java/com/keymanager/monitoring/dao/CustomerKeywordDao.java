@@ -141,4 +141,6 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     List<OptimizationCountVO> observeKeywordOptimizationCount(@Param("userID") String userID);
 
     void editCustomerOptimizePlanCount(@Param("optimizePlanCount")Integer optimizePlanCount, @Param("settingType")String settingType, @Param("uuids")List<String> uuids);
+
+    void changeCustomerKeywordStatus(@Param("terminalType")String terminalType, @Param("entryType")String entryType, @Param("customerUuid")Long customerUuid, @Param("status")Integer status);
 }
