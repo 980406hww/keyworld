@@ -240,6 +240,13 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 			ClientStatus existingClientStatus = clientStatusDao.selectById(clientStatusInfo[0]);
 			if(null != existingClientStatus) {
 				saveClientStatusByVPSFile(existingClientStatus, clientStatusInfo);
+				if(clientStatusType.equals("startUp")) {
+					existingClientStatus.setStartUpStatus(ClientStartUpStatusEnum.New.name());
+					existingClientStatus.setDownloadProgramType(downloadProgramType);
+				} else {
+					existingClientStatus.setStartUpStatus(null);
+					existingClientStatus.setDownloadProgramType(null);
+				}
 				clientStatusDao.updateById(existingClientStatus);
 			} else {
 				ClientStatus clientStatus = new ClientStatus();
@@ -251,11 +258,7 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 				supplementDefaultValue(clientStatus);
 				if(clientStatusType.equals("startUp")) {
 					clientStatus.setStartUpStatus(ClientStartUpStatusEnum.New.name());
-					if(downloadProgramType.equals("New")) {
-						clientStatus.setDownloadProgramType("New");
-					} else {
-						clientStatus.setDownloadProgramType("Old");
-					}
+					clientStatus.setDownloadProgramType(downloadProgramType);
 				}
 				clientStatusDao.insert(clientStatus);
 			}
