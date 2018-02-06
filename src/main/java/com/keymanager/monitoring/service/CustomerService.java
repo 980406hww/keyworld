@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 @Service
@@ -49,14 +50,22 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 			}
 			List<Map> customerKeywordCountMap = customerKeywordService.getCustomerKeywordsCount(customerUuids, customerCriteria.getTerminalType(),
 					customerCriteria.getEntryType());
-			Map<Integer, Long> customerUuidKeywordCountMap = new HashMap<Integer, Long>();
+			Map<Integer, Map> customerUuidKeywordCountMap = new HashMap<Integer, Map>();
 			for(Map map : customerKeywordCountMap){
-				customerUuidKeywordCountMap.put((Integer)map.get("fCustomerUuid"), (Long)map.get("subCount"));
+				customerUuidKeywordCountMap.put((Integer)map.get("customerUuid"), map);
 			}
 			for(Customer customer : customers){
-				Long count = customerUuidKeywordCountMap.get(customer.getUuid().intValue());
-				if(count != null) {
-					customer.setKeywordCount(count.intValue());
+				Map map = customerUuidKeywordCountMap.get(customer.getUuid().intValue());
+				if(map != null) {
+					Long totalCount = (Long)map.get("totalCount");
+					if(totalCount != null) {
+						customer.setKeywordCount(totalCount.intValue());
+					}
+
+					BigDecimal activeCount = (BigDecimal)map.get("activeCount");
+					if(activeCount != null) {
+						customer.setActiveKeywordCount(activeCount.intValue());
+					}
 				}
 			}
 		}
@@ -121,7 +130,7 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 		return customerDao.findNegativeCustomer();
 	}
 
-	public List<String> searchCustomerTypes(CustomerCriteria customerCriteria) {
+	public List<Map> searchCustomerTypes(CustomerCriteria customerCriteria) {
 		return customerDao.searchCustomerTypes(customerCriteria);
 	}
 
