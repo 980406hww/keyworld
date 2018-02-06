@@ -899,6 +899,7 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		ClientStatus clientStatus = clientStatusDao.getClientStatusForStartUp();
 		if(clientStatus != null) {
 			clientStatus.setStartUpTime(Utils.getCurrentTimestamp());
+			clientStatus.setStartUpStatus("Processing");
 			clientStatusDao.updateById(clientStatus);
 		}
 		return clientStatus;
