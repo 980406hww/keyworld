@@ -161,7 +161,12 @@ function showUploadVNCDialog() {
     });
     $('#uploadVNCDialog').window("resize",{top:$(document).scrollTop() + 100});
 }
-function showUploadVPSDialog() {
+function showUploadVPSDialog(clientStatusType) {
+    if(clientStatusType == "startUp") {
+        $("#uploadVPSDialog").find("#programType").css("display", "block");
+    } else {
+        $("#uploadVPSDialog").find("#programType").css("display", "none");
+    }
     $('#uploadVPSDialog').dialog({
         resizable: false,
         width: 300,
@@ -184,6 +189,11 @@ function showUploadVPSDialog() {
 
                 var formData = new FormData();
                 formData.append('file', $("#uploadVPSDialog").find("#file")[0].files[0]);
+                formData.append('clientStatusType', clientStatusType);
+                if(clientStatusType == "startUp") {
+                    var downloadProgramType = $("#programType").find("input[name=downloadProgramType]:checked").val();
+                    formData.append('downloadProgramType', downloadProgramType);
+                }
                 $.ajax({
                     url: '/internal/clientstatus/uploadVPSFile',
                     type: 'POST',
@@ -193,8 +203,7 @@ function showUploadVPSDialog() {
                     contentType: false,
                     success: function (result) {
                         if (result) {
-                            $().toastmessage('showSuccessToast', "上传成功",true);
-                            /* window.location.reload();*/
+                            $().toastmessage('showSuccessToast', "上传成功", true);
                         } else {
                             $().toastmessage('showErrorToast', "上传失败");
                         }

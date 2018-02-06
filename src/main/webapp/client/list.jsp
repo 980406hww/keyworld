@@ -133,7 +133,8 @@
 								&nbsp;&nbsp;<input type="button" onclick="delAllItems(this)" value=" 删除 ">
 							</shiro:hasPermission>
 							<shiro:hasPermission name="/internal/clientstatus/uploadVPSFile">
-								&nbsp;&nbsp;<input type="button" name="btnFilter" onclick="showUploadVPSDialog()" value=" 导入 ">
+								&nbsp;&nbsp;<input type="button" name="btnFilter" onclick="showUploadVPSDialog('common')" value=" 导入普通终端 ">
+								&nbsp;&nbsp;<input type="button" onclick="showUploadVPSDialog('startUp')" value=" 导入开机终端 ">
 							</shiro:hasPermission>
 						</td>
 						<td width="50px">
@@ -773,10 +774,11 @@
 		<form method="post" id="uploadVPSForm" action="" enctype="multipart/form-data">
 			<table width="95%" style="margin-top: 10px;margin-left: 10px">
 				<tr>
-					<td></td>
-				</tr>
-				<tr>
-					<td></td>
+					<td id="programType" style="display: none;">
+						下载程序:
+						<input type="radio" name="downloadProgramType" value="New" checked /> 新程序
+						<input type="radio" name="downloadProgramType" value="Old" /> 旧程序
+					</td>
 				</tr>
 				<tr>
 					<td align="right">

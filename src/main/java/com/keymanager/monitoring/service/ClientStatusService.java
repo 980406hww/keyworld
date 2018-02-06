@@ -232,7 +232,7 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		}
 	}
 
-	public void uploadVPSFile(File file, String terminalType) throws Exception {
+	public void uploadVPSFile(String clientStatusType, String downloadProgramType, File file, String terminalType) throws Exception {
 		List<String> vpsInfos = FileUtil.readTxtFile(file,"UTF-8");
 		for (String vpsInfo : vpsInfos) {
 			String[] clientStatusInfo = vpsInfo.split("----");
@@ -248,6 +248,14 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 				clientStatus.setValid(true);
 				saveClientStatusByVPSFile(clientStatus, clientStatusInfo);
 				supplementDefaultValue(clientStatus);
+				if(clientStatusType.equals("startUp")) {
+					clientStatus.setStartUpStatus("New");
+					if(downloadProgramType.equals("New")) {
+						clientStatus.setDownloadProgramType("New");
+					} else {
+						clientStatus.setDownloadProgramType("Old");
+					}
+				}
 				clientStatusDao.insert(clientStatus);
 			}
 		}
@@ -885,5 +893,27 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 
 	public void updateAllRemainingKeywordIndicator(int indicator){
 		clientStatusDao.updateAllRemainingKeywordIndicator(indicator);
+	}
+
+    public ClientStatus getClientStatusForStartUp() {
+		ClientStatus clientStatus = clientStatusDao.getClientStatusForStartUp();
+		if(clientStatus != null) {
+			clientStatus.setStartUpTime(Utils.getCurrentTimestamp());
+			clientStatusDao.updateById(clientStatus);
+		}
+		return clientStatus;
+    }
+
+	public String getClientStartUpStatus(String clientID) {
+		ClientStatus clientStatus = clientStatusDao.selectById(clientID);
+		return clientStatus.getStartUpStatus();
+	}
+
+	public void updateClientStartUpStatus(String clientID) {
+		ClientStatus clientStatus = clientStatusDao.selectById(clientID);
+		if(clientStatus != null) {
+			clientStatus.setStartUpStatus("Complete");
+			clientStatusDao.updateById(clientStatus);
+		}
 	}
 }

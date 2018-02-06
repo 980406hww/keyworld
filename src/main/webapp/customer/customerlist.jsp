@@ -35,14 +35,14 @@
                             <td align="right">联系人:</td>
                             <td><input type="text" name="contactPerson" id="contactPerson"
                                        value="${customerCriteria.contactPerson}"
-                                       style="width:160px;"></td>
-                            <td>分组:<input type="text" name="type" id="type" value="${customerCriteria.type}" style="width: 160px;"></td>
+                                       style="width:150px;"></td>
+                            <td>分组:<input type="text" name="type" id="type" value="${customerCriteria.type}" style="width: 150px;"></td>
                             <td align="right">QQ:</td>
                             <td><input type="text" name="qq" id="qq" value="${customerCriteria.qq}"
-                                       style="width:160px;"></td>
+                                       style="width:150px;"></td>
                             <td align="right">联系电话:</td>
                             <td><input type="text" name="telphone" id="telphone" value="${customerCriteria.telphone}"
-                                       style="width:160px;">
+                                       style="width:150px;">
                             </td>
                             <td>
                                 <c:if test="${isDepartmentManager}">

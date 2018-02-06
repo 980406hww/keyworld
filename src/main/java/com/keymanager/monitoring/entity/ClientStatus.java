@@ -261,6 +261,15 @@ public class ClientStatus {
 	@TableField(value = "fRemainingKeyword")
 	private int remainingKeyword;
 
+	@TableField(value = "fStartUpTime")
+	private Timestamp startUpTime;
+
+	@TableField(value = "fStartUpStatus")
+	private String startUpStatus;
+
+	@TableField(value = "fDownloadProgramType")
+	private String downloadProgramType;
+
 	public String getClientID() {
 		return clientID;
 	}
@@ -917,5 +926,29 @@ public class ClientStatus {
 
 	public void setOptimizeRelatedKeyword(int optimizeRelatedKeyword) {
 		this.optimizeRelatedKeyword = optimizeRelatedKeyword;
+	}
+
+	public Timestamp getStartUpTime() {
+		return startUpTime;
+	}
+
+	public void setStartUpTime(Timestamp startUpTime) {
+		this.startUpTime = startUpTime;
+	}
+
+	public String getStartUpStatus() {
+		return startUpStatus;
+	}
+
+	public void setStartUpStatus(String startUpStatus) {
+		this.startUpStatus = startUpStatus;
+	}
+
+	public String getDownloadProgramType() {
+		return downloadProgramType;
+	}
+
+	public void setDownloadProgramType(String downloadProgramType) {
+		this.downloadProgramType = downloadProgramType;
 	}
 }
