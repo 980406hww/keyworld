@@ -9,6 +9,7 @@ import com.keymanager.monitoring.dao.ClientStatusDao;
 import com.keymanager.monitoring.entity.ClientStatus;
 import com.keymanager.monitoring.entity.ClientStatusRestartLog;
 import com.keymanager.monitoring.entity.Config;
+import com.keymanager.monitoring.enums.ClientStartUpStatusEnum;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
 import com.keymanager.util.Constants;
 import com.keymanager.util.FileUtil;
@@ -249,7 +250,7 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 				saveClientStatusByVPSFile(clientStatus, clientStatusInfo);
 				supplementDefaultValue(clientStatus);
 				if(clientStatusType.equals("startUp")) {
-					clientStatus.setStartUpStatus("New");
+					clientStatus.setStartUpStatus(ClientStartUpStatusEnum.New.name());
 					if(downloadProgramType.equals("New")) {
 						clientStatus.setDownloadProgramType("New");
 					} else {
@@ -899,7 +900,7 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		ClientStatus clientStatus = clientStatusDao.getClientStatusForStartUp();
 		if(clientStatus != null) {
 			clientStatus.setStartUpTime(Utils.getCurrentTimestamp());
-			clientStatus.setStartUpStatus("Processing");
+			clientStatus.setStartUpStatus(ClientStartUpStatusEnum.Processing.name());
 			clientStatusDao.updateById(clientStatus);
 		}
 		return clientStatus;
@@ -913,7 +914,7 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 	public void updateClientStartUpStatus(String clientID) {
 		ClientStatus clientStatus = clientStatusDao.selectById(clientID);
 		if(clientStatus != null) {
-			clientStatus.setStartUpStatus("Complete");
+			clientStatus.setStartUpStatus(ClientStartUpStatusEnum.Complete.name());
 			clientStatusDao.updateById(clientStatus);
 		}
 	}
