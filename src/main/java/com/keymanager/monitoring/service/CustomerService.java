@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.criteria.CustomerCriteria;
 import com.keymanager.monitoring.dao.CustomerDao;
 import com.keymanager.monitoring.entity.Customer;
+import com.keymanager.monitoring.enums.EntryTypeEnum;
+import com.keymanager.util.Utils;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -138,5 +140,29 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 		Customer customer = customerDao.selectById(customerUuid);
 		customer.setType(customerType);
 		updateById(customer);
+	}
+
+	public void setCustomerKeywordStatusSwitchTime(List<String> uuids, Integer activeHour, Integer inActiveHour) {
+		customerDao.setCustomerKeywordStatusSwitchTime(uuids, activeHour, inActiveHour);
+	}
+
+	public void autoSwitchCustomerKeywordStatus() {
+		Integer hour = Utils.getCurrentHour();
+		List<Long> activeCustomerUuids = new ArrayList<Long>();
+		List<Long> inActiveCustomerUuids = new ArrayList<Long>();
+		List<Customer> customers = customerDao.searchNeedSwitchCustomer(hour);
+		for (Customer customer : customers) {
+			if(customer.getActiveHour() == hour) {
+				activeCustomerUuids.add(customer.getUuid());
+			} else {
+				inActiveCustomerUuids.add(customer.getUuid());
+			}
+		}
+		if(CollectionUtils.isNotEmpty(activeCustomerUuids)) {
+			customerKeywordService.batchChangeCustomerKeywordStatus(EntryTypeEnum.fm.name(), activeCustomerUuids, 1);
+		}
+		if(CollectionUtils.isNotEmpty(inActiveCustomerUuids)) {
+			customerKeywordService.batchChangeCustomerKeywordStatus(EntryTypeEnum.fm.name(), inActiveCustomerUuids, 2);
+		}
 	}
 }

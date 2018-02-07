@@ -14,6 +14,8 @@
         c.fType AS `type`,
         c.fRemark AS `remark`,
         c.fStatus AS `status`,
+        c.fActiveHour AS `activeHour`,
+        c.fInActiveHour AS `inActiveHour`,
         c.fUpdateTime AS `updateTime`,
         c.fCreateTime AS `createTime`
     </sql>
@@ -84,5 +86,24 @@
         WHERE fEntryType = #{customerCriteria.entryType}
         <if test="customerCriteria.loginName != null and customerCriteria.loginName != ''"> AND fUserID = #{customerCriteria.loginName}</if>
         GROUP BY fType
+    </select>
+
+    <update id="setCustomerKeywordStatusSwitchTime">
+        UPDATE
+            t_customer
+        SET
+            fActiveHour = #{activeHour},fInActiveHour = #{inActiveHour}
+        WHERE fUuid IN
+        <foreach collection="uuids" item="uuid" open="(" close=")" separator=",">
+            #{uuid}
+        </foreach>
+    </update>
+
+    <select id="searchNeedSwitchCustomer" resultType="com.keymanager.monitoring.entity.Customer">
+        SELECT
+        <include refid="colID"/>
+        FROM t_customer c
+        WHERE (c.fActiveHour = #{hour} OR c.fInActiveHour = #{hour})
+        AND c.fStatus = 1
     </select>
 </mapper>

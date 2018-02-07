@@ -998,4 +998,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     public void changeCustomerKeywordStatus(String terminalType, String entryType, Long customerUuid, Integer status) {
         customerKeywordDao.changeCustomerKeywordStatus(terminalType, entryType, customerUuid, status);
     }
+
+    public void batchChangeCustomerKeywordStatus(String entryType, List<Long> customerUuids, Integer status) {
+        customerKeywordDao.batchChangeCustomerKeywordStatus(entryType, customerUuids, status);
+    }
 }

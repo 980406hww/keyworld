@@ -34,6 +34,12 @@ public class Customer extends BaseEntity{
 	@TableField(value = "fRemark")
 	private String remark;
 
+	@TableField(value = "fActiveHour")
+	private Integer activeHour;
+
+	@TableField(value = "fInActiveHour")
+	private Integer inActiveHour;
+
 	@TableField(value = "fType")
 	private String type;
 
@@ -148,5 +154,21 @@ public class Customer extends BaseEntity{
 
 	public void setActiveKeywordCount(int activeKeywordCount) {
 		this.activeKeywordCount = activeKeywordCount;
+	}
+
+	public Integer getActiveHour() {
+		return activeHour;
+	}
+
+	public void setActiveHour(Integer activeHour) {
+		this.activeHour = activeHour;
+	}
+
+	public Integer getInActiveHour() {
+		return inActiveHour;
+	}
+
+	public void setInActiveHour(Integer inActiveHour) {
+		this.inActiveHour = inActiveHour;
 	}
 }

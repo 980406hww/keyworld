@@ -29,65 +29,51 @@
         <tr>
             <td colspan=13>
                 <form method="post" id="searchCustomerForm" action="/internal/customer/searchCustomers" style="margin-bottom:0px ">
-                    <table style="font-size:12px;">
-                        <tr>
-
-                            <td align="right">联系人:</td>
-                            <td><input type="text" name="contactPerson" id="contactPerson"
-                                       value="${customerCriteria.contactPerson}"
-                                       style="width:160px;"></td>
-                            <td>分组:<input type="text" name="type" id="type" value="${customerCriteria.type}" style="width: 160px;"></td>
-                            <td align="right">QQ:</td>
-                            <td><input type="text" name="qq" id="qq" value="${customerCriteria.qq}"
-                                       style="width:160px;"></td>
-                            <td align="right">联系电话:</td>
-                            <td><input type="text" name="telphone" id="telphone" value="${customerCriteria.telphone}"
-                                       style="width:160px;">
-                            </td>
-                            <td>
-                                <c:if test="${isDepartmentManager}">
-                                    用户名称:
-                                    <select name="loginName" id="loginName">
-                                        <option value="">所有</option>
-                                        <option value="${user.loginName}">只显示自己</option>
-                                        <c:forEach items="${activeUsers}" var="activeUser">
-                                            <option value="${activeUser.loginName}">${activeUser.userName}</option>
-                                        </c:forEach>
-                                    </select>
-                                </c:if>
-                            </td>
-                            <td>
-                                备注:<input type="text" value="${customerCriteria.remark}" id="remark" name="remark" style="width: 90px;">
-                            </td>
-                            <td align="right">
-                                <input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}"/>
-                                <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
-                                <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
-                                <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
-                                <shiro:hasPermission name="/internal/customer/searchCustomers">
-                                    &nbsp;&nbsp;<input type="submit" class="ui-button ui-widget ui-corner-all" onclick="resetPageNumber()" name="btnQuery" id="btnQuery" value=" 查询 ">
-                                </shiro:hasPermission>
-                            </td>
-                            <td align="right">
-                                <shiro:hasPermission name="/internal/customer/saveCustomer">
-                                    &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 添加 " onclick="showCustomerDialog(null,'${user.loginName}')"/>
-                                </shiro:hasPermission>
-                            </td>
-                            <td align="right">
-                                <shiro:hasPermission name="/internal/customer/deleteCustomers">
-                                    &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 删除所选 " onclick="deleteCustomers(this)"/>
-                                </shiro:hasPermission>
-                            </td>
-                            <td align="right" width="100">
-                                <c:if test="${'bc'.equalsIgnoreCase(entryType)}">
-                                    <shiro:hasPermission name="/internal/dailyReport/triggerReportGeneration">
-                                       <input type="button" class="ui-button ui-widget ui-corner-all" value=" 触发日报表生成 " onclick="triggerDailyReportGeneration(this)"/>
-                                    </shiro:hasPermission>
-                                </c:if>
-                            </td>
-                            <td>&nbsp;&nbsp;<span id="dailyReportSpan"></span></td>
-                        </tr>
-                    </table>
+                    <div>
+                        联系人:<input type="text" name="contactPerson" id="contactPerson"
+                                   value="${customerCriteria.contactPerson}"
+                                   style="width:160px;">
+                        分组:<input type="text" name="type" id="type" value="${customerCriteria.type}" style="width: 160px;">
+                        QQ:<input type="text" name="qq" id="qq" value="${customerCriteria.qq}"
+                                   style="width:160px;">
+                        联系电话:<input type="text" name="telphone" id="telphone" value="${customerCriteria.telphone}"
+                                   style="width:160px;">
+                        <c:if test="${isDepartmentManager}">
+                            用户名称:
+                            <select name="loginName" id="loginName">
+                                <option value="">所有</option>
+                                <option value="${user.loginName}">只显示自己</option>
+                                <c:forEach items="${activeUsers}" var="activeUser">
+                                    <option value="${activeUser.loginName}">${activeUser.userName}</option>
+                                </c:forEach>
+                            </select>
+                        </c:if>
+                        备注:<input type="text" value="${customerCriteria.remark}" id="remark" name="remark" style="width: 90px;">
+                        <input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}"/>
+                        <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
+                        <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
+                        <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
+                        <shiro:hasPermission name="/internal/customer/searchCustomers">
+                            &nbsp;&nbsp;<input type="submit" class="ui-button ui-widget ui-corner-all" onclick="resetPageNumber()" name="btnQuery" id="btnQuery" value=" 查询 ">
+                        </shiro:hasPermission>
+                        <shiro:hasPermission name="/internal/customer/saveCustomer">
+                            &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 添加 " onclick="showCustomerDialog(null,'${user.loginName}')"/>
+                        </shiro:hasPermission>
+                        <shiro:hasPermission name="/internal/customer/deleteCustomers">
+                            &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 删除所选 " onclick="deleteCustomers(this)"/>
+                        </shiro:hasPermission>
+                        <c:if test="${'fm'.equalsIgnoreCase(entryType)}">
+                            <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
+                            &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 设置关键字启停时间 " onclick="autoSwitchCustomerKeywordStatus()"/>
+                            </shiro:hasPermission>
+                        </c:if>
+                        <c:if test="${'bc'.equalsIgnoreCase(entryType)}">
+                            <shiro:hasPermission name="/internal/dailyReport/triggerReportGeneration">
+                               <input type="button" class="ui-button ui-widget ui-corner-all" value=" 触发日报表生成 " onclick="triggerDailyReportGeneration(this)"/>
+                            </shiro:hasPermission>
+                        </c:if>
+                        &nbsp;&nbsp;<span id="dailyReportSpan"></span>
+                    </div>
                 </form>
             </td>
         </tr>
@@ -111,6 +97,9 @@
             <td align="center" width=80>联系人</td>
             <td align="center" width=80>分组</td>
             <td align="center" width=150>关键字信息</td>
+            <c:if test="${'fm'.equalsIgnoreCase(entryType)}">
+            <td align="center" width=60>关键字启停时间</td>
+            </c:if>
             <td align="center" width=60>QQ</td>
             <td align="center" width=140>备注</td>
             <td align="center" width=40>客户状态</td>
@@ -155,6 +144,14 @@
                     </c:choose>)
                     </c:if>
                 </td>
+                <c:if test="${'fm'.equalsIgnoreCase(entryType)}">
+                <td width=60 style="text-align: center">
+                    <c:if test="${customer.activeHour != null}">
+                        激活:每天<c:if test="${customer.activeHour < 10}">0</c:if>${customer.activeHour}:00<br>
+                        暂停:每天<c:if test="${customer.inActiveHour < 10}">0</c:if>${customer.inActiveHour}:00
+                    </c:if>
+                </td>
+                </c:if>
                 <td width=60>${customer.qq}</td>
                 <td width=140>${customer.remark}</td>
                 <td width=40 style="text-align: center">
@@ -388,7 +385,20 @@
         </c:choose>
     </form>
 </div>
-
+<div id="autoSwitchCustomerKeywordStatusDialog" class="easyui-dialog" style="left: 40%;">
+    <table width="95%" style="margin-top: 10px;margin-left: 10px">
+        <tr>
+            <td>
+                关键字激活时间:<input type="text" id="activeHour" value="" placeholder="输入0-23间的整数,重置不填"/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                关键字暂停时间:<input type="text" id="inActiveHour" value="" placeholder="输入0-23间的整数,重置不填"/>
+            </td>
+        </tr>
+    </table>
+</div>
 <div id="showCustomerBottomPositioneDiv">
     <div id="showCustomerBottomDiv">
         <input id="fisrtButton" class="ui-button ui-widget ui-corner-all" type="button"

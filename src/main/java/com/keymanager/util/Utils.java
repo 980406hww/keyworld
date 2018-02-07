@@ -49,6 +49,12 @@ public class Utils {
 
 	}
 
+	public static Integer getCurrentHour() {
+		Calendar calendar = Calendar.getInstance();
+		Integer hour = calendar.get(Calendar.HOUR_OF_DAY);
+		return hour;
+	}
+
 	public static int getDayOfMonth() {
 		Calendar calendar = Calendar.getInstance();
 		int day = calendar.get(Calendar.DAY_OF_MONTH);

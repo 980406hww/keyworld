@@ -172,4 +172,17 @@ public class CustomerRestController {
             return new ResponseEntity<Object>(false, HttpStatus.OK);
         }
     }
+
+    @RequestMapping(value = "/setCustomerKeywordStatusSwitchTime" , method = RequestMethod.POST)
+    public ResponseEntity<?> setCustomerKeywordStatusSwitchTime(@RequestBody Map<String, Object> requestMap){
+        try {
+            List<String> uuids = (List<String>) requestMap.get("uuids");
+            Integer activeHour = (Integer) requestMap.get("activeHour");
+            Integer inActiveHour = (Integer) requestMap.get("inActiveHour");
+            customerService.setCustomerKeywordStatusSwitchTime(uuids, activeHour, inActiveHour);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<Object>(false, HttpStatus.OK);
+        }
+    }
 }

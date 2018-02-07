@@ -3,6 +3,7 @@ $(function () {
     $("#uploadDailyReportTemplateDialog").dialog("close");
     $("#customerKeywordDialog").dialog("close");
     $("#customerChargeTypeDialog").dialog("close");
+    $("#autoSwitchCustomerKeywordStatusDialog").dialog("close");
     $("#showCustomerTableDiv").css("margin-top",$("#topDiv").height());
     pageLoad();
     onlyNumber();
@@ -895,7 +896,7 @@ function changeCustomerKeywordStatus(customerUuid, status) {
         type: 'POST',
         success: function (result) {
             if (result) {
-                $().toastmessage('showSuccessToast', "操作成功");
+                $().toastmessage('showSuccessToast', "操作成功", true);
             } else {
                 $().toastmessage('showErrorToast', "操作失败");
             }
@@ -909,4 +910,75 @@ function searchCustomerByType(type) {
     $("#searchCustomerForm").find("#type").val(type);
     $("#searchCustomerForm").find("#currentPageNumberHidden").val(1);
     $("#searchCustomerForm").submit();
+}
+function autoSwitchCustomerKeywordStatus() {
+    var uuids = getSelectedIDs();
+    if (uuids === '') {
+        alert('请选择要启停关键字的客户');
+        return;
+    }
+    $('#autoSwitchCustomerKeywordStatusDialog').dialog({
+        resizable: false,
+        width: 280,
+        modal: true,
+        title: '自动启停客户关键字',
+        buttons: [{
+            text: '保存',
+            iconCls: 'icon-ok',
+            handler: function () {
+                var activeHour = $("#autoSwitchCustomerKeywordStatusDialog").find("#activeHour").val();
+                var inActiveHour = $("#autoSwitchCustomerKeywordStatusDialog").find("#inActiveHour").val();
+                activeHour = parseInt(activeHour);
+                inActiveHour = parseInt(inActiveHour);
+                if(activeHour != "") {
+                    if(activeHour < 0 || activeHour > 23) {
+                        alert("请输入0-23内的正整数！")
+                        return false;
+                    }
+                }
+                if(inActiveHour != "") {
+                    if(inActiveHour < 0 || inActiveHour > 23) {
+                        alert("请输入0-23内的正整数！")
+                        return false;
+                    }
+                }
+                if(activeHour != "" && inActiveHour != "" && activeHour == inActiveHour) {
+                    alert("激活时间跟暂停时间不能一样！")
+                    return false;
+                }
+                var data = {};
+                data.uuids = uuids.split(",");
+                data.activeHour = activeHour;
+                data.inActiveHour = inActiveHour;
+                $.ajax({
+                    url: '/internal/customer/setCustomerKeywordStatusSwitchTime',
+                    data: JSON.stringify(data),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result) {
+                            $().toastmessage('showSuccessToast', "操作成功", true);
+                        } else {
+                            $().toastmessage('showErrorToast', "操作失败");
+                        }
+                    },
+                    error: function () {
+                        $().toastmessage('showErrorToast', "操作失败");
+                    }
+                });
+            }
+        },
+            {
+                text: '取消',
+                iconCls: 'icon-cancel',
+                handler: function () {
+                    $('#autoSwitchCustomerKeywordStatusDialog').dialog("close");
+                }
+            }]
+    });
+    $('#autoSwitchCustomerKeywordStatusDialog').window("resize",{top:$(document).scrollTop() + 150});
 }

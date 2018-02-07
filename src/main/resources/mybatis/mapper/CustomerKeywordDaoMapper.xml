@@ -723,4 +723,13 @@
         AND fType = #{entryType}
         AND fCustomerUuid = #{customerUuid}
     </update>
+
+    <update id="batchChangeCustomerKeywordStatus">
+        UPDATE t_customer_keyword SET fStatus = #{status}
+        WHERE fType = #{entryType}
+        AND fCustomerUuid IN
+        <foreach item="customerUuid"  collection="customerUuids" open="(" separator="," close=")">
+            #{customerUuid}
+        </foreach>
+    </update>
 </mapper>

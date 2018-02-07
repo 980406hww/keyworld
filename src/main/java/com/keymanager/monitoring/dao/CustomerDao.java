@@ -21,4 +21,8 @@ public interface CustomerDao extends BaseMapper<Customer> {
     List<Customer> findNegativeCustomer();
 
     List<Map> searchCustomerTypes(@Param("customerCriteria")CustomerCriteria customerCriteria);
+
+    void setCustomerKeywordStatusSwitchTime(@Param("uuids")List<String> uuids, @Param("activeHour")Integer activeHour, @Param("inActiveHour")Integer inActiveHour);
+
+    List<Customer> searchNeedSwitchCustomer(@Param("hour")Integer hour);
 }

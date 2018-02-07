@@ -15,6 +15,7 @@
 				<ref bean="cronTriggerAccessWebsite" />
 				<ref bean="cronTriggerObserveOptimizationCount" />
 				<ref bean="cronTriggerRemainingKeywordIndicator" />
+				<ref bean="cronTriggerAutoSwitchCustomerKeywordStatus" />
 			</list>
 		</property>
 		<!-- Quartz配置, 本地运行无需单独的quartz.properties文件，在此简单配置即可 -->
@@ -139,4 +140,15 @@
 		<property name="concurrent" value="false" />
 	</bean>
 
+	<!--自动启停关键字-->
+	<bean id="cronTriggerAutoSwitchCustomerKeywordStatus" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="cronTriggerAutoSwitchCustomerKeywordStatusSchedule" />
+		<property name="cronExpression" value="0 0 */1 * * ?" />
+	</bean>
+
+	<bean id="cronTriggerAutoSwitchCustomerKeywordStatusSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="autoSwitchCustomerKeywordStatusSchedule" />
+		<property name="targetMethod" value="runTask" />
+		<property name="concurrent" value="false" />
+	</bean>
 </beans>
