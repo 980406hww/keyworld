@@ -55,7 +55,7 @@ public class SuperUserFullKeywordExcelOperator extends AbstractExcelReader {
 			customerKeyword.setSearchEngine(searchEngine);
 		}
 		customerKeyword.setStartOptimizedTime(Utils.getCurrentTimestamp());
-		
+		customerKeyword.setManualCleanTitle(true);
 		customerKeyword.setServiceProvider("baidutop123");
 		
 		Integer indexCount = getIntValue(SuperUserFullKeywordDefinition.IndexCount.getColumnIndex(), rowIndex);

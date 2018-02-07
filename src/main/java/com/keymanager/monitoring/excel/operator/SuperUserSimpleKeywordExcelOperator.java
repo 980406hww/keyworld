@@ -46,8 +46,9 @@ public class SuperUserSimpleKeywordExcelOperator extends AbstractExcelReader {
 		if(Utils.isNullOrEmpty(customerKeyword.getCollectMethod())){
 			return null;
 		}
+		customerKeyword.setManualCleanTitle(true);
 		customerKeyword.setServiceProvider("baidutop123");
-		
+
 		Double pcFee = getDoubleValue(SuperUserSimpleKeywordDefinition.Fee.getColumnIndex(), rowIndex);
 		customerKeyword.setPositionFirstFee(pcFee);
 		customerKeyword.setPositionSecondFee(pcFee);
