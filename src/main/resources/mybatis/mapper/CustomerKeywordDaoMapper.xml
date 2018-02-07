@@ -104,7 +104,8 @@
     </select>
 
     <select id="getCustomerKeywordsCount" resultType="java.util.Map">
-        SELECT ck.fCustomerUuid, COUNT(1) as subCount FROM t_customer_keyword ck WHERE ck.fTerminalType = #{terminalType}
+        SELECT ck.fCustomerUuid as 'customerUuid', COUNT(1) as 'totalCount', SUM(IF(ck.fStatus = 1, 1, 0)) AS 'activeCount'
+        FROM t_customer_keyword ck WHERE ck.fTerminalType = #{terminalType}
         and ck.fType = #{entryType} and ck.fTerminalType = #{terminalType} and ck.fCustomerUuid IN
         <foreach item="item" index="index" collection="customerUuids" open="(" separator="," close=")">
             #{item}

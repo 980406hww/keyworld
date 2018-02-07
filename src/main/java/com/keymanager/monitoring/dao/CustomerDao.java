@@ -7,6 +7,7 @@ import com.keymanager.monitoring.entity.Customer;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 public interface CustomerDao extends BaseMapper<Customer> {
     List<Customer> searchCustomers(Page<Customer> page, @Param("customerCriteria")CustomerCriteria customerCriteria);
@@ -19,5 +20,5 @@ public interface CustomerDao extends BaseMapper<Customer> {
 
     List<Customer> findNegativeCustomer();
 
-    List<String> searchCustomerTypes(@Param("customerCriteria")CustomerCriteria customerCriteria);
+    List<Map> searchCustomerTypes(@Param("customerCriteria")CustomerCriteria customerCriteria);
 }

@@ -40,6 +40,9 @@ public class Customer extends BaseEntity{
 	@TableField(exist=false)
 	private int keywordCount;
 
+	@TableField(exist=false)
+	private int activeKeywordCount;
+
 	@TableField(value = "fStatus")
 	private int status;
 
@@ -137,5 +140,13 @@ public class Customer extends BaseEntity{
 
 	public void setStatus(int status) {
 		this.status = status;
+	}
+
+	public int getActiveKeywordCount() {
+		return activeKeywordCount;
+	}
+
+	public void setActiveKeywordCount(int activeKeywordCount) {
+		this.activeKeywordCount = activeKeywordCount;
 	}
 }

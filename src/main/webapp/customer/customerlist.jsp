@@ -98,7 +98,7 @@
                 <td>
                     <c:forEach items="${customerTypes}" var="customerType" varStatus="status">
                         <c:if test="${status.index > 0}"> |</c:if>
-                        <a href="javascript:searchCustomerByType('${customerType}')">${customerType}</a>
+                        <a href="javascript:searchCustomerByType('${customerType.type}')">${customerType.type}(${customerType.customerCount})</a>
                     </c:forEach>
                 </td>
             </shiro:hasPermission>
@@ -109,11 +109,11 @@
             <td style="padding-left: 7px;" width=10><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
             <td align="center" width=80>用户名称</td>
             <td align="center" width=80>联系人</td>
-            <td align="center" width=60>词数</td>
             <td align="center" width=80>分组</td>
+            <td align="center" width=150>关键字信息</td>
             <td align="center" width=60>QQ</td>
             <td align="center" width=140>备注</td>
-            <td align="center" width=20>状态</td>
+            <td align="center" width=40>客户状态</td>
             <td align="center" width=50>创建时间</td>
             <td align="center" width=200>操作</td>
         </tr>
@@ -128,11 +128,36 @@
                 <td width=80>
                     <a href="#" onclick="searchCustomerKeywords('/internal/customerKeyword/searchCustomerKeywords/${customer.uuid}')">${customer.contactPerson}</a>
                 </td>
-                <td width=60>${customer.keywordCount}</td>
                 <td width=80><input type="text" id="${customer.uuid}" onchange="updateCustomerType(this)" value="${customer.type}" style="width: 100%;"></td>
+                <td width=150>${customer.keywordCount}
+                    <c:if test="${customer.keywordCount > 0}">
+                    (
+                    <c:choose>
+                    <c:when test="${customer.keywordCount == customer.activeKeywordCount}">
+                        <span style="color: green;">激活</span>
+                        <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
+                            | <a href="javascript:changeCustomerKeywordStatus('${customer.uuid}', 0)">暂停关键字</a>
+                        </shiro:hasPermission>
+                    </c:when>
+                    <c:when test="${customer.keywordCount > 0 and customer.activeKeywordCount > 0}">
+                        <span style="color: yellowgreen;">部分暂停</span>
+                        <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
+                            | <a href="javascript:changeCustomerKeywordStatus('${customer.uuid}', 0)">暂停关键字</a>
+                            | <a href="javascript:changeCustomerKeywordStatus('${customer.uuid}', 1)">激活关键字</a>
+                        </shiro:hasPermission>
+                    </c:when>
+                    <c:otherwise>
+                        <span style="color: red;">暂停</span>
+                        <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
+                            | <a href="javascript:changeCustomerKeywordStatus('${customer.uuid}', 1)">激活关键字</a>
+                        </shiro:hasPermission>
+                    </c:otherwise>
+                    </c:choose>)
+                    </c:if>
+                </td>
                 <td width=60>${customer.qq}</td>
                 <td width=140>${customer.remark}</td>
-                <td width=20 style="text-align: center">
+                <td width=40 style="text-align: center">
                     <c:choose>
                         <c:when test="${customer.status ==1}">
                             激活
@@ -149,10 +174,6 @@
                     </shiro:hasPermission>
                     <shiro:hasPermission name="/internal/customer/delCustomer">
                         | <a href="javascript:delCustomer('${customer.uuid}')">删除</a>
-                    </shiro:hasPermission>
-                    <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
-                    | <a href="javascript:changeCustomerKeywordStatus('${customer.uuid}', 0)">暂停关键字</a>
-                    | <a href="javascript:changeCustomerKeywordStatus('${customer.uuid}', 1)">激活关键字</a>
                     </shiro:hasPermission>
                     <c:if test="${'bc'.equalsIgnoreCase(entryType)}">
                         <shiro:hasPermission name="/internal/customerChargeType/saveCustomerChargeType">

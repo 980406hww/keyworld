@@ -78,10 +78,11 @@
             fStatus = 1
     </select>
 
-    <select id="searchCustomerTypes" parameterType="com.keymanager.monitoring.criteria.CustomerCriteria" resultType="java.lang.String">
-        SELECT DISTINCT fType
+    <select id="searchCustomerTypes" parameterType="com.keymanager.monitoring.criteria.CustomerCriteria" resultType="java.util.Map">
+        SELECT fType as 'type', count(1) as 'customerCount'
         FROM t_customer
         WHERE fEntryType = #{customerCriteria.entryType}
         <if test="customerCriteria.loginName != null and customerCriteria.loginName != ''"> AND fUserID = #{customerCriteria.loginName}</if>
+        GROUP BY fType
     </select>
 </mapper>

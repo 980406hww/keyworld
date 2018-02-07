@@ -75,7 +75,7 @@ public class CustomerRestController {
             customerCriteria.setLoginName(loginName);
         }
         Page<Customer> page = customerService.searchCustomers(new Page<Customer>(Integer.parseInt(currentPage), Integer.parseInt(pageSize)), customerCriteria);
-        List<String> customerTypes = customerService.searchCustomerTypes(customerCriteria);
+        List<Map> customerTypes = customerService.searchCustomerTypes(customerCriteria);
         modelAndView.addObject("customerTypes", customerTypes);
         modelAndView.addObject("entryType", entryType);
         modelAndView.addObject("terminalType", terminalType);
