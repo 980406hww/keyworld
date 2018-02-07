@@ -35,9 +35,9 @@
                                    style="width:160px;">
                         分组:<input type="text" name="type" id="type" value="${customerCriteria.type}" style="width: 160px;">
                         QQ:<input type="text" name="qq" id="qq" value="${customerCriteria.qq}"
-                                   style="width:160px;">
+                                  style="width:160px;">
                         联系电话:<input type="text" name="telphone" id="telphone" value="${customerCriteria.telphone}"
-                                   style="width:160px;">
+                                    style="width:160px;">
                         <c:if test="${isDepartmentManager}">
                             用户名称:
                             <select name="loginName" id="loginName">
@@ -64,12 +64,12 @@
                         </shiro:hasPermission>
                         <c:if test="${'fm'.equalsIgnoreCase(entryType)}">
                             <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
-                            &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 设置关键字启停时间 " onclick="autoSwitchCustomerKeywordStatus()"/>
+                                &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 设置关键字启停时间 " onclick="autoSwitchCustomerKeywordStatus()"/>
                             </shiro:hasPermission>
                         </c:if>
                         <c:if test="${'bc'.equalsIgnoreCase(entryType)}">
                             <shiro:hasPermission name="/internal/dailyReport/triggerReportGeneration">
-                               <input type="button" class="ui-button ui-widget ui-corner-all" value=" 触发日报表生成 " onclick="triggerDailyReportGeneration(this)"/>
+                                <input type="button" class="ui-button ui-widget ui-corner-all" value=" 触发日报表生成 " onclick="triggerDailyReportGeneration(this)"/>
                             </shiro:hasPermission>
                         </c:if>
                         &nbsp;&nbsp;<span id="dailyReportSpan"></span>
@@ -98,7 +98,7 @@
             <td align="center" width=80>分组</td>
             <td align="center" width=150>关键字信息</td>
             <c:if test="${'fm'.equalsIgnoreCase(entryType)}">
-            <td align="center" width=60>关键字启停时间</td>
+                <td align="center" width=60>关键字启停时间</td>
             </c:if>
             <td align="center" width=60>QQ</td>
             <td align="center" width=140>备注</td>
@@ -120,37 +120,37 @@
                 <td width=80><input type="text" id="${customer.uuid}" onchange="updateCustomerType(this)" value="${customer.type}" style="width: 100%;"></td>
                 <td width=150>${customer.keywordCount}
                     <c:if test="${customer.keywordCount > 0}">
-                    (
-                    <c:choose>
-                    <c:when test="${customer.keywordCount == customer.activeKeywordCount}">
-                        <span style="color: green;">激活</span>
-                        <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
-                            | <a href="javascript:changeCustomerKeywordStatus('${customer.uuid}', 0)">暂停关键字</a>
-                        </shiro:hasPermission>
-                    </c:when>
-                    <c:when test="${customer.keywordCount > 0 and customer.activeKeywordCount > 0}">
-                        <span style="color: yellowgreen;">部分暂停</span>
-                        <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
-                            | <a href="javascript:changeCustomerKeywordStatus('${customer.uuid}', 0)">暂停关键字</a>
-                            | <a href="javascript:changeCustomerKeywordStatus('${customer.uuid}', 1)">激活关键字</a>
-                        </shiro:hasPermission>
-                    </c:when>
-                    <c:otherwise>
-                        <span style="color: red;">暂停</span>
-                        <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
-                            | <a href="javascript:changeCustomerKeywordStatus('${customer.uuid}', 1)">激活关键字</a>
-                        </shiro:hasPermission>
-                    </c:otherwise>
-                    </c:choose>)
+                        (
+                        <c:choose>
+                            <c:when test="${customer.keywordCount == customer.activeKeywordCount}">
+                                <span style="color: green;">激活</span>
+                                <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
+                                    | <a href="javascript:changeCustomerKeywordStatus('${customer.uuid}', 0)">暂停关键字</a>
+                                </shiro:hasPermission>
+                            </c:when>
+                            <c:when test="${customer.keywordCount > 0 and customer.activeKeywordCount > 0}">
+                                <span style="color: yellowgreen;">部分暂停</span>
+                                <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
+                                    | <a href="javascript:changeCustomerKeywordStatus('${customer.uuid}', 0)">暂停关键字</a>
+                                    | <a href="javascript:changeCustomerKeywordStatus('${customer.uuid}', 1)">激活关键字</a>
+                                </shiro:hasPermission>
+                            </c:when>
+                            <c:otherwise>
+                                <span style="color: red;">暂停</span>
+                                <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
+                                    | <a href="javascript:changeCustomerKeywordStatus('${customer.uuid}', 1)">激活关键字</a>
+                                </shiro:hasPermission>
+                            </c:otherwise>
+                        </c:choose>)
                     </c:if>
                 </td>
                 <c:if test="${'fm'.equalsIgnoreCase(entryType)}">
-                <td width=60 style="text-align: center">
-                    <c:if test="${customer.activeHour != null}">
-                        激活:每天<c:if test="${customer.activeHour < 10}">0</c:if>${customer.activeHour}:00<br>
-                        暂停:每天<c:if test="${customer.inActiveHour < 10}">0</c:if>${customer.inActiveHour}:00
-                    </c:if>
-                </td>
+                    <td width=60 style="text-align: center">
+                        <c:if test="${customer.activeHour != null}">
+                            激活:每天<c:if test="${customer.activeHour < 10}">0</c:if>${customer.activeHour}:00<br>
+                            暂停:每天<c:if test="${customer.inActiveHour < 10}">0</c:if>${customer.inActiveHour}:00
+                        </c:if>
+                    </td>
                 </c:if>
                 <td width=60>${customer.qq}</td>
                 <td width=140>${customer.remark}</td>
@@ -177,14 +177,14 @@
                             | <a href="javascript:changeCustomerChargeType('${customer.uuid}')">客户规则</a>
                         </shiro:hasPermission>
                         <shiro:hasPermission name="/internal/customerKeyword/saveCustomerKeywords">
-                             | <a href="javascript:showCustomerKeywordDialog(${customer.uuid})">快速加词</a>
+                            | <a href="javascript:showCustomerKeywordDialog(${customer.uuid})">快速加词</a>
                         </shiro:hasPermission>
                         <shiro:hasPermission name="/internal/customer/uploadDailyReportTemplate">
-                             | <a target="_blank" href="javascript:uploadDailyReportTemplate('${customer.uuid}', this)">上传日报表模板</a>
+                            | <a target="_blank" href="javascript:uploadDailyReportTemplate('${customer.uuid}', this)">上传日报表模板</a>
                         </shiro:hasPermission>
                     </c:if>
                     <c:if test="${'qz'.equalsIgnoreCase(entryType)}">
-                    | <a target="_blank" href="javascript:viewAizhanRank('${customer.contactPerson}')">查看爱站排名</a>
+                        | <a target="_blank" href="javascript:viewAizhanRank('${customer.contactPerson}')">查看爱站排名</a>
                     </c:if>
                 </td>
             </tr>

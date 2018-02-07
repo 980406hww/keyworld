@@ -92,6 +92,9 @@
         cs.fOptimizationTotalCount AS "optimizationTotalCount",
         cs.fOptimizationSucceedCount AS "optimizationSucceedCount",
         cs.fRenewalDate AS "renewalDate",
+        cs.fDownloadProgramType AS "downloadProgramType",
+        cs.fStartUpStatus AS "startUpStatus",
+        cs.fStartUpTime AS "startUpTime",
         cs.fStatus AS "status",
         cs.fUpgradeFailedReason AS "upgradeFailedReason",
         cs.fCreateTime AS "createTime"
@@ -359,6 +362,7 @@
         FROM t_client_status cs
         WHERE fTenMinsLastVisitTime &lt; NOW() and fValid = 1
         AND fRestartStatus = 'restarting' AND fThreeMinsRestartTime &lt; NOW()
+        AND fStartUpStatus = 'Completed'
         AND fHost &gt; '' order by fRestartOrderingTime limit 1
     </select>
 
@@ -379,6 +383,7 @@
         FROM t_client_status cs
         WHERE (fContinuousFailCount > 5 OR fTenMinsLastVisitTime &lt; NOW())
         AND fTenMinsRestartTime &lt; NOW() and fRemainingKeyword = 1
+        AND fStartUpStatus = 'Completed'
         AND fValid = 1 AND fHost &gt; '' order by fRestartOrderingTime  limit 1
     </select>
 
@@ -392,4 +397,13 @@
     <update id="updateAllRemainingKeywordIndicator">
         UPDATE t_client_status SET fRemainingKeyword = #{indicator}
     </update>
+
+    <select id="getClientStatusForStartUp" resultType="com.keymanager.monitoring.entity.ClientStatus">
+        SELECT
+        <include refid="selectCol" />
+        FROM t_client_status cs
+        WHERE (cs.fStartUpStatus = 'New' OR (cs.fStartUpStatus = 'Processing' AND DATE_ADD(cs.fStartUpTime, INTERVAL 30 MINUTE) &lt; NOW()))
+        ORDER BY cs.fStartUpTime
+        LIMIT 1
+    </select>
 </mapper>

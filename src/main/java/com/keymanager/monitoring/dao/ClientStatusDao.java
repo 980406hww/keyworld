@@ -56,4 +56,6 @@ public interface ClientStatusDao extends BaseMapper<ClientStatus> {
     void updateRemainingKeywordIndicator(@Param("groupNames")List<String> groupNames, @Param("indicator")int indicator);
 
     void updateAllRemainingKeywordIndicator(@Param("indicator")int indicator);
+
+    ClientStatus getClientStatusForStartUp();
 }

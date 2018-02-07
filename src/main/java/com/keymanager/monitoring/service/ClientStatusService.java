@@ -9,6 +9,7 @@ import com.keymanager.monitoring.dao.ClientStatusDao;
 import com.keymanager.monitoring.entity.ClientStatus;
 import com.keymanager.monitoring.entity.ClientStatusRestartLog;
 import com.keymanager.monitoring.entity.Config;
+import com.keymanager.monitoring.enums.ClientStartUpStatusEnum;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
 import com.keymanager.util.Constants;
 import com.keymanager.util.FileUtil;
@@ -232,13 +233,25 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		}
 	}
 
-	public void uploadVPSFile(File file, String terminalType) throws Exception {
+	public void uploadVPSFile(String clientStatusType, String downloadProgramType, File file, String terminalType) throws Exception {
 		List<String> vpsInfos = FileUtil.readTxtFile(file,"UTF-8");
 		for (String vpsInfo : vpsInfos) {
 			String[] clientStatusInfo = vpsInfo.split("----");
 			ClientStatus existingClientStatus = clientStatusDao.selectById(clientStatusInfo[0]);
 			if(null != existingClientStatus) {
 				saveClientStatusByVPSFile(existingClientStatus, clientStatusInfo);
+				if("New".equals(downloadProgramType)){
+					existingClientStatus.setSwitchGroupName("laodu");
+				}else{
+					existingClientStatus.setSwitchGroupName("Default");
+				}
+				if(clientStatusType.equals("startUp")) {
+					existingClientStatus.setStartUpStatus(ClientStartUpStatusEnum.New.name());
+					existingClientStatus.setDownloadProgramType(downloadProgramType);
+				} else {
+					existingClientStatus.setStartUpStatus(ClientStartUpStatusEnum.Completed.name());
+					existingClientStatus.setDownloadProgramType(null);
+				}
 				clientStatusDao.updateById(existingClientStatus);
 			} else {
 				ClientStatus clientStatus = new ClientStatus();
@@ -248,6 +261,17 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 				clientStatus.setValid(true);
 				saveClientStatusByVPSFile(clientStatus, clientStatusInfo);
 				supplementDefaultValue(clientStatus);
+				if("New".equals(downloadProgramType)){
+					clientStatus.setSwitchGroupName("laodu");
+				}else{
+					clientStatus.setSwitchGroupName("Default");
+				}
+				if(clientStatusType.equals("startUp")) {
+					clientStatus.setStartUpStatus(ClientStartUpStatusEnum.New.name());
+					clientStatus.setDownloadProgramType(downloadProgramType);
+				}else{
+					clientStatus.setStartUpStatus(ClientStartUpStatusEnum.Completed.name());
+				}
 				clientStatusDao.insert(clientStatus);
 			}
 		}
@@ -885,5 +909,28 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 
 	public void updateAllRemainingKeywordIndicator(int indicator){
 		clientStatusDao.updateAllRemainingKeywordIndicator(indicator);
+	}
+
+    public ClientStatus getClientStatusForStartUp() {
+		ClientStatus clientStatus = clientStatusDao.getClientStatusForStartUp();
+		if(clientStatus != null) {
+			clientStatus.setStartUpTime(Utils.getCurrentTimestamp());
+			clientStatus.setStartUpStatus(ClientStartUpStatusEnum.Processing.name());
+			clientStatusDao.updateById(clientStatus);
+		}
+		return clientStatus;
+    }
+
+	public String getClientStartUpStatus(String clientID) {
+		ClientStatus clientStatus = clientStatusDao.selectById(clientID);
+		return clientStatus.getStartUpStatus();
+	}
+
+	public void updateClientStartUpStatus(String clientID, String status) {
+		ClientStatus clientStatus = clientStatusDao.selectById(clientID);
+		if(clientStatus != null) {
+			clientStatus.setStartUpStatus(status);
+			clientStatusDao.updateById(clientStatus);
+		}
 	}
 }

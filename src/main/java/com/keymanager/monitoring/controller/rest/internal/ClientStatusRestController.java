@@ -254,20 +254,22 @@ public class ClientStatusRestController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/clientstatus/uploadVNCFile")
     @RequestMapping(value = "/uploadVNCFile", method = RequestMethod.POST)
-    public boolean uploadVNCFile(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request) {
+    public ResponseEntity<?> uploadVNCFile(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request) {
         try {
             String terminalType = TerminalTypeMapping.getTerminalType(request);
             clientStatusService.uploadVNCFile(file.getInputStream(), terminalType);
-            return true;
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
         }
-        return false;
     }
 
     @RequiresPermissions("/internal/clientstatus/uploadVPSFile")
     @RequestMapping(value = "/uploadVPSFile", method = RequestMethod.POST)
-    public boolean uploadVPSFile(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request) {
+    public ResponseEntity<?> uploadVPSFile(@RequestParam(value = "file", required = false) MultipartFile file,
+                                           @RequestParam(defaultValue = "common", name = "clientStatusType") String clientStatusType,
+                                           @RequestParam(defaultValue = "no", name = "downloadProgramType") String downloadProgramType, HttpServletRequest request) {
         try {
             String terminalType = TerminalTypeMapping.getTerminalType(request);
             String path = Utils.getWebRootPath() + "vpsfile";
@@ -276,13 +278,13 @@ public class ClientStatusRestController extends SpringMVCBaseController {
                 targetFile.mkdirs();
             }
             file.transferTo(targetFile);
-            clientStatusService.uploadVPSFile(targetFile, terminalType);
+            clientStatusService.uploadVPSFile(clientStatusType, downloadProgramType, targetFile, terminalType);
             FileUtil.delFolder(path);
-            return true;
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
         }
-        return false;
     }
 
     @RequiresPermissions("/internal/clientstatus/downloadVNCFile")

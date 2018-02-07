@@ -124,4 +124,52 @@ public class ExternalClientStatusRestController extends SpringMVCBaseController 
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
+
+    @RequestMapping(value = "/getClientStatusForStartUp", method = RequestMethod.GET)
+    public ResponseEntity<?> getClientStatusForStartUp(HttpServletRequest request) throws Exception {
+        String userName = request.getParameter("username");
+        String password = request.getParameter("password");
+        try {
+            if (validUser(userName, password)) {
+                ClientStatus clientStatus = clientStatusService.getClientStatusForStartUp();
+                return new ResponseEntity<Object>(clientStatus, HttpStatus.OK);
+            }
+        }catch (Exception ex){
+            logger.error(ex.getMessage());
+        }
+        return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
+    }
+
+    @RequestMapping(value = "/getClientStartUpStatus", method = RequestMethod.GET)
+    public ResponseEntity<?> getClientStartUpStatus(HttpServletRequest request) throws Exception {
+        String userName = request.getParameter("username");
+        String password = request.getParameter("password");
+        String clientID = request.getParameter("clientID");
+        try {
+            if (validUser(userName, password)) {
+                String clientOpenStatus = clientStatusService.getClientStartUpStatus(clientID);
+                return new ResponseEntity<Object>(clientOpenStatus, HttpStatus.OK);
+            }
+        }catch (Exception ex){
+            logger.error(ex.getMessage());
+        }
+        return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
+    }
+
+    @RequestMapping(value = "/updateClientStartUpStatus", method = RequestMethod.GET)
+    public ResponseEntity<?> updateClientStartUpStatus(HttpServletRequest request) throws Exception {
+        String userName = request.getParameter("username");
+        String password = request.getParameter("password");
+        String clientID = request.getParameter("clientID");
+        String status = request.getParameter("status");
+        try {
+            if (validUser(userName, password)) {
+                clientStatusService.updateClientStartUpStatus(clientID, status);
+                return new ResponseEntity<Object>(true, HttpStatus.OK);
+            }
+        }catch (Exception ex){
+            logger.error(ex.getMessage());
+        }
+        return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+    }
 }
