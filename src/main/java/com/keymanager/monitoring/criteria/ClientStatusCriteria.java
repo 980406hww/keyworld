@@ -19,6 +19,7 @@ public class ClientStatusCriteria extends BaseCriteria {
     private String orderBy; // 排序
     private String vpsBackendSystemComputerID;//服务器ID
     private String switchGroupName;
+    private String startUpClient; // 开机机器
 
     private String terminalType;
 
@@ -164,5 +165,13 @@ public class ClientStatusCriteria extends BaseCriteria {
 
     public void setSwitchGroupName(String switchGroupName) {
         this.switchGroupName = switchGroupName;
+    }
+
+    public String getStartUpClient() {
+        return startUpClient;
+    }
+
+    public void setStartUpClient(String startUpClient) {
+        this.startUpClient = startUpClient;
     }
 }
