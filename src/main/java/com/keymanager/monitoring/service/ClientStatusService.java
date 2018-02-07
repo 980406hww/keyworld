@@ -262,9 +262,9 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 				saveClientStatusByVPSFile(clientStatus, clientStatusInfo);
 				supplementDefaultValue(clientStatus);
 				if("New".equals(downloadProgramType)){
-					existingClientStatus.setSwitchGroupName("laodu");
+					clientStatus.setSwitchGroupName("laodu");
 				}else{
-					existingClientStatus.setSwitchGroupName("Default");
+					clientStatus.setSwitchGroupName("Default");
 				}
 				if(clientStatusType.equals("startUp")) {
 					clientStatus.setStartUpStatus(ClientStartUpStatusEnum.New.name());

@@ -383,7 +383,7 @@
         FROM t_client_status cs
         WHERE (fContinuousFailCount > 5 OR fTenMinsLastVisitTime &lt; NOW())
         AND fTenMinsRestartTime &lt; NOW() and fRemainingKeyword = 1
-        AND fStartUpStatus = 'Completed' 
+        AND fStartUpStatus = 'Completed'
         AND fValid = 1 AND fHost &gt; '' order by fRestartOrderingTime  limit 1
     </select>
 
