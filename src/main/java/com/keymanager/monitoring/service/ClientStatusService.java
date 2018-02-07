@@ -914,10 +914,10 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		return clientStatus.getStartUpStatus();
 	}
 
-	public void updateClientStartUpStatus(String clientID) {
+	public void updateClientStartUpStatus(String clientID, String status) {
 		ClientStatus clientStatus = clientStatusDao.selectById(clientID);
 		if(clientStatus != null) {
-			clientStatus.setStartUpStatus(ClientStartUpStatusEnum.Complete.name());
+			clientStatus.setStartUpStatus(status);
 			clientStatusDao.updateById(clientStatus);
 		}
 	}
