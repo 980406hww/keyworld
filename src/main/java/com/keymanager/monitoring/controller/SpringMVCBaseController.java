@@ -94,6 +94,7 @@ public abstract class SpringMVCBaseController {
 			}
 			outputStream.flush();
 		} catch (Exception e) {
+			e.printStackTrace();
 			logger.error(e.getMessage());
 		} finally {
 			if (fileInputStream != null) {
