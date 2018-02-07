@@ -4,5 +4,5 @@ public enum ClientStartUpStatusEnum {
     New,
     Processing,
     Setting,
-    Complete;
+    Completed;
 }

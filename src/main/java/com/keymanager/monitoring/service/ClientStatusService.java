@@ -240,11 +240,16 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 			ClientStatus existingClientStatus = clientStatusDao.selectById(clientStatusInfo[0]);
 			if(null != existingClientStatus) {
 				saveClientStatusByVPSFile(existingClientStatus, clientStatusInfo);
+				if("New".equals(downloadProgramType)){
+					existingClientStatus.setSwitchGroupName("laodu");
+				}else{
+					existingClientStatus.setSwitchGroupName("Default");
+				}
 				if(clientStatusType.equals("startUp")) {
 					existingClientStatus.setStartUpStatus(ClientStartUpStatusEnum.New.name());
 					existingClientStatus.setDownloadProgramType(downloadProgramType);
 				} else {
-					existingClientStatus.setStartUpStatus(null);
+					existingClientStatus.setStartUpStatus(ClientStartUpStatusEnum.Completed.name());
 					existingClientStatus.setDownloadProgramType(null);
 				}
 				clientStatusDao.updateById(existingClientStatus);
@@ -256,9 +261,16 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 				clientStatus.setValid(true);
 				saveClientStatusByVPSFile(clientStatus, clientStatusInfo);
 				supplementDefaultValue(clientStatus);
+				if("New".equals(downloadProgramType)){
+					existingClientStatus.setSwitchGroupName("laodu");
+				}else{
+					existingClientStatus.setSwitchGroupName("Default");
+				}
 				if(clientStatusType.equals("startUp")) {
 					clientStatus.setStartUpStatus(ClientStartUpStatusEnum.New.name());
 					clientStatus.setDownloadProgramType(downloadProgramType);
+				}else{
+					clientStatus.setStartUpStatus(ClientStartUpStatusEnum.Completed.name());
 				}
 				clientStatusDao.insert(clientStatus);
 			}
