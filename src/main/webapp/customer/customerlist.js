@@ -781,7 +781,7 @@ function addCustomerKeyword(uuid) {
             if (customerKeyword.url.length > 25) {
                 customerKeyword.url = customerKeyword.url.substring(0, 25);
             }
-
+            customerKeyword.manualCleanTitle = true;
             customerKeywords.push(customerKeyword);
         }
     });

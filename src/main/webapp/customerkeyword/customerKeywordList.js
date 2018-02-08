@@ -613,6 +613,7 @@ function saveCustomerKeyword(customerUuid) {
     customerKeyword.paymentStatus = paymentStatus;
     var remarks = $.trim(saveCustomerKeywordDialog.find("#remarks").val());
     customerKeyword.remarks = remarks;
+    customerKeyword.manualCleanTitle = true;
     $.ajax({
         url: '/internal/customerKeyword/saveCustomerKeyword',
         data: JSON.stringify(customerKeyword),
