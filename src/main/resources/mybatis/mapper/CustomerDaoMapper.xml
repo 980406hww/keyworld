@@ -103,7 +103,8 @@
         SELECT
         <include refid="colID"/>
         FROM t_customer c
-        WHERE (c.fActiveHour = #{hour} OR c.fInActiveHour = #{hour})
+        WHERE fActiveHour &gt;= 0
+        AND fInActiveHour &gt;= 0
         AND c.fEntryType = 'fm'
         AND c.fStatus = 1
     </select>

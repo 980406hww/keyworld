@@ -151,12 +151,20 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 		Integer hour = Utils.getCurrentHour();
 		List<Long> activeCustomerUuids = new ArrayList<Long>();
 		List<Long> inActiveCustomerUuids = new ArrayList<Long>();
-		List<Customer> customers = customerDao.searchNeedSwitchCustomer(hour);
+		List<Customer> customers = customerDao.searchNeedSwitchCustomer();
 		for (Customer customer : customers) {
-			if(customer.getActiveHour() == hour) {
-				activeCustomerUuids.add(customer.getUuid());
+			if(customer.getActiveHour() > customer.getInActiveHour()) {
+				if(hour >= customer.getInActiveHour() && hour < customer.getActiveHour()) {
+					inActiveCustomerUuids.add(customer.getUuid());
+				} else {
+					activeCustomerUuids.add(customer.getUuid());
+				}
 			} else {
-				inActiveCustomerUuids.add(customer.getUuid());
+				if(hour >= customer.getActiveHour() && hour < customer.getInActiveHour()) {
+					activeCustomerUuids.add(customer.getUuid());
+				} else {
+					inActiveCustomerUuids.add(customer.getUuid());
+				}
 			}
 		}
 		if(CollectionUtils.isNotEmpty(activeCustomerUuids)) {

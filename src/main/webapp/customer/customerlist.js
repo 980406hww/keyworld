@@ -930,20 +930,28 @@ function autoSwitchCustomerKeywordStatus() {
                 var inActiveHour = $("#autoSwitchCustomerKeywordStatusDialog").find("#inActiveHour").val();
                 activeHour = parseInt(activeHour);
                 inActiveHour = parseInt(inActiveHour);
-                if(activeHour != "") {
+                if(!isNaN(activeHour)) {
+                    if(isNaN(inActiveHour)) {
+                        alert("暂停时间不能为空！");
+                        return false;
+                    }
                     if(activeHour < 0 || activeHour > 23) {
-                        alert("请输入0-23内的正整数！")
+                        alert("请输入0-23内的正整数！");
                         return false;
                     }
                 }
-                if(inActiveHour != "") {
+                if(!isNaN(inActiveHour)) {
+                    if(isNaN(activeHour)) {
+                        alert("激活时间不能为空！");
+                        return false;
+                    }
                     if(inActiveHour < 0 || inActiveHour > 23) {
-                        alert("请输入0-23内的正整数！")
+                        alert("请输入0-23内的正整数！");
                         return false;
                     }
                 }
-                if(activeHour != "" && inActiveHour != "" && activeHour == inActiveHour) {
-                    alert("激活时间跟暂停时间不能一样！")
+                if(activeHour == inActiveHour) {
+                    alert("激活时间跟暂停时间不能一样！");
                     return false;
                 }
                 var data = {};
