@@ -98,7 +98,7 @@
             <td align="center" width=80>分组</td>
             <td align="center" width=150>关键字信息</td>
             <c:if test="${'fm'.equalsIgnoreCase(entryType)}">
-                <td align="center" width=60>关键字启停时间</td>
+                <td align="center" width=70>关键字启停小时数</td>
             </c:if>
             <td align="center" width=60>QQ</td>
             <td align="center" width=140>备注</td>
@@ -145,11 +145,9 @@
                     </c:if>
                 </td>
                 <c:if test="${'fm'.equalsIgnoreCase(entryType)}">
-                    <td width=60 style="text-align: center">
-                        <c:if test="${customer.activeHour != null}">
-                            激活:每天<c:if test="${customer.activeHour < 10}">0</c:if>${customer.activeHour}:00<br>
-                            暂停:每天<c:if test="${customer.inActiveHour < 10}">0</c:if>${customer.inActiveHour}:00
-                        </c:if>
+                    <td width=70 style="text-align: center">
+                        <input type="text" name="activeHour" onchange="editHourForSwitchStatus('${customer.uuid}', this)" value="${customer.activeHour}" style="width: 40%">
+                        <input type="text" name="inActiveHour" onchange="editHourForSwitchStatus('${customer.uuid}', this)" value="${customer.inActiveHour}" style="width: 40%">
                     </td>
                 </c:if>
                 <td width=60>${customer.qq}</td>
@@ -261,7 +259,7 @@
             </div>
         </div>
 
-        <div id="chargeTypeIntervalDiv" >
+        <div id="chargeTypeIntervalDiv">
             <input id="chargeTypeIntervalUuid" type="hidden"/>
             <input id="PC" type="checkbox" name="operationType" onclick="initRangeTable(this)"/>PC
             <div id="pcOperationTypeDiv">
@@ -433,6 +431,62 @@
     <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywords">
     function searchCustomerKeywords(url) {
         window.open(url);
+    }
+    </shiro:hasPermission>
+
+    <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
+    function editHourForSwitchStatus(uuid, self) {
+        var activeHour = $(self).parent().find("input[name=activeHour]").val();
+        var inActiveHour = $(self).parent().find("input[name=inActiveHour]").val();
+        activeHour = parseInt(activeHour);
+        inActiveHour = parseInt(inActiveHour);
+        if(!isNaN(activeHour)) {
+            if(isNaN(inActiveHour)) {
+                return false;
+            }
+            if(activeHour < 0 || activeHour > 23) {
+                alert("请输入0-23内的正整数！");
+                return false;
+            }
+        }
+        if(!isNaN(inActiveHour)) {
+            if(isNaN(activeHour)) {
+                return false;
+            }
+            if(inActiveHour < 0 || inActiveHour > 23) {
+                alert("请输入0-23内的正整数！");
+                return false;
+            }
+        }
+        if(activeHour == inActiveHour) {
+            $().toastmessage('showErrorToast', "激活时间跟暂停时间不能一样！");
+            return false;
+        }
+        var data = {};
+        var uuids = [uuid];
+        data.uuids = uuids;
+        data.activeHour = activeHour;
+        data.inActiveHour = inActiveHour;
+        $.ajax({
+            url: '/internal/customer/setCustomerKeywordStatusSwitchTime',
+            data: JSON.stringify(data),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            timeout: 5000,
+            type: 'POST',
+            success: function (result) {
+                if (result) {
+                    $().toastmessage('showSuccessToast', "操作成功");
+                } else {
+                    $().toastmessage('showErrorToast', "操作失败");
+                }
+            },
+            error: function () {
+                $().toastmessage('showErrorToast', "操作失败");
+            }
+        });
     }
     </shiro:hasPermission>
 
