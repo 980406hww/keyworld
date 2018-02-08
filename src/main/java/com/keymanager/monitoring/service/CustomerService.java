@@ -2,6 +2,7 @@ package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.keymanager.enums.CustomerKeywordStatus;
 import com.keymanager.monitoring.criteria.CustomerCriteria;
 import com.keymanager.monitoring.dao.CustomerDao;
 import com.keymanager.monitoring.entity.Customer;
@@ -159,10 +160,10 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 			}
 		}
 		if(CollectionUtils.isNotEmpty(activeCustomerUuids)) {
-			customerKeywordService.batchChangeCustomerKeywordStatus(EntryTypeEnum.fm.name(), activeCustomerUuids, 1);
+			customerKeywordService.batchChangeCustomerKeywordStatus(EntryTypeEnum.fm.name(), activeCustomerUuids, CustomerKeywordStatus.Active.getCode());
 		}
 		if(CollectionUtils.isNotEmpty(inActiveCustomerUuids)) {
-			customerKeywordService.batchChangeCustomerKeywordStatus(EntryTypeEnum.fm.name(), inActiveCustomerUuids, 0);
+			customerKeywordService.batchChangeCustomerKeywordStatus(EntryTypeEnum.fm.name(), inActiveCustomerUuids, CustomerKeywordStatus.Inactive.getCode());
 		}
 	}
 }
