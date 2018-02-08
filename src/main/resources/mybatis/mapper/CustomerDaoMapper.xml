@@ -104,6 +104,7 @@
         <include refid="colID"/>
         FROM t_customer c
         WHERE (c.fActiveHour = #{hour} OR c.fInActiveHour = #{hour})
+        AND c.fEntryType = 'fm'
         AND c.fStatus = 1
     </select>
 </mapper>
