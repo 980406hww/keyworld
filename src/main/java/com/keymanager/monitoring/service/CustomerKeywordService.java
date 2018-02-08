@@ -557,6 +557,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             specialGruupNames.add("pc_pm_xiaowu");
             specialGruupNames.add("pc_pm_learner");
             specialGruupNames.add("pc_pm_51yza");
+            specialGruupNames.add("pc_pm_yilufa");
 
             if(specialGruupNames.contains(customerKeyword.getOptimizeGroupName()) && (customerKeyword.getCurrentPosition() == 0 ||
                     customerKeyword.getCurrentPosition() > 20)) {
@@ -711,6 +712,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         groupNames.add("pc_pm_xiaowu");
         groupNames.add("pc_pm_learner");
         groupNames.add("pc_pm_51yza");
+        groupNames.add("pc_pm_yilufa");
         groupNames.add("m_pm_tiantian");
         groupNames.add("m_pm_tianqi");
         groupNames.add("m_pm_learner");
