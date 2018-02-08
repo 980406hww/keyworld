@@ -162,7 +162,7 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 			customerKeywordService.batchChangeCustomerKeywordStatus(EntryTypeEnum.fm.name(), activeCustomerUuids, 1);
 		}
 		if(CollectionUtils.isNotEmpty(inActiveCustomerUuids)) {
-			customerKeywordService.batchChangeCustomerKeywordStatus(EntryTypeEnum.fm.name(), inActiveCustomerUuids, 2);
+			customerKeywordService.batchChangeCustomerKeywordStatus(EntryTypeEnum.fm.name(), inActiveCustomerUuids, 0);
 		}
 	}
 }
