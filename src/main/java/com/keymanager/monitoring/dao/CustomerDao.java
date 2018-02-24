@@ -22,7 +22,7 @@ public interface CustomerDao extends BaseMapper<Customer> {
 
     List<Map> searchCustomerTypes(@Param("customerCriteria")CustomerCriteria customerCriteria);
 
-    void setCustomerKeywordStatusSwitchTime(@Param("uuids")List<String> uuids, @Param("activeHour")Integer activeHour, @Param("inActiveHour")Integer inActiveHour);
+    void setCustomerKeywordStatusSwitchTime(@Param("uuids")List<String> uuids, @Param("activeHour")String activeHour, @Param("inActiveHour")String inActiveHour);
 
     List<Customer> searchNeedSwitchCustomer();
 }

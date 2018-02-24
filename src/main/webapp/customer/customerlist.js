@@ -928,32 +928,14 @@ function autoSwitchCustomerKeywordStatus() {
             handler: function () {
                 var activeHour = $("#autoSwitchCustomerKeywordStatusDialog").find("#activeHour").val();
                 var inActiveHour = $("#autoSwitchCustomerKeywordStatusDialog").find("#inActiveHour").val();
-                activeHour = parseInt(activeHour);
-                inActiveHour = parseInt(inActiveHour);
-                if(!isNaN(activeHour)) {
-                    if(isNaN(inActiveHour)) {
-                        alert("暂停时间不能为空！");
-                        return false;
-                    }
-                    if(activeHour < 0 || activeHour > 23) {
-                        alert("请输入0-23内的正整数！");
-                        return false;
-                    }
-                }
-                if(!isNaN(inActiveHour)) {
-                    if(isNaN(activeHour)) {
-                        alert("激活时间不能为空！");
-                        return false;
-                    }
-                    if(inActiveHour < 0 || inActiveHour > 23) {
-                        alert("请输入0-23内的正整数！");
-                        return false;
-                    }
-                }
-                if(activeHour == inActiveHour) {
-                    alert("激活时间跟暂停时间不能一样！");
+                activeHour = activeHour.replace("，",",");
+                inActiveHour = inActiveHour.replace("，",",");
+                var activeHours = activeHour.split(",");
+                var inActiveHours = inActiveHour.split(",");
+                if(activeHours.length != inActiveHours.length) {
                     return false;
                 }
+
                 var data = {};
                 data.uuids = uuids.split(",");
                 data.activeHour = activeHour;

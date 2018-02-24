@@ -146,8 +146,8 @@
                 </td>
                 <c:if test="${'fm'.equalsIgnoreCase(entryType)}">
                     <td width=70 style="text-align: center">
-                        <input type="text" name="activeHour" onchange="editHourForSwitchStatus('${customer.uuid}', this)" value="${customer.activeHour}" style="width: 40%">
-                        <input type="text" name="inActiveHour" onchange="editHourForSwitchStatus('${customer.uuid}', this)" value="${customer.inActiveHour}" style="width: 40%">
+                        <input type="text" name="activeHour" onchange="editHourForSwitchStatus('${customer.uuid}', this)" value="${customer.activeHour}" style="width: 90%"><br>
+                        <input type="text" name="inActiveHour" onchange="editHourForSwitchStatus('${customer.uuid}', this)" value="${customer.inActiveHour}" style="width: 90%">
                     </td>
                 </c:if>
                 <td width=60>${customer.qq}</td>
@@ -438,30 +438,14 @@
     function editHourForSwitchStatus(uuid, self) {
         var activeHour = $(self).parent().find("input[name=activeHour]").val();
         var inActiveHour = $(self).parent().find("input[name=inActiveHour]").val();
-        activeHour = parseInt(activeHour);
-        inActiveHour = parseInt(inActiveHour);
-        if(!isNaN(activeHour)) {
-            if(isNaN(inActiveHour)) {
-                return false;
-            }
-            if(activeHour < 0 || activeHour > 23) {
-                alert("请输入0-23内的正整数！");
-                return false;
-            }
-        }
-        if(!isNaN(inActiveHour)) {
-            if(isNaN(activeHour)) {
-                return false;
-            }
-            if(inActiveHour < 0 || inActiveHour > 23) {
-                alert("请输入0-23内的正整数！");
-                return false;
-            }
-        }
-        if(activeHour == inActiveHour) {
-            $().toastmessage('showErrorToast', "激活时间跟暂停时间不能一样！");
+        activeHour = activeHour.replace("，",",");
+        inActiveHour = inActiveHour.replace("，",",");
+        var activeHours = activeHour.split(",");
+        var inActiveHours = inActiveHour.split(",");
+        if(activeHours.length != inActiveHours.length) {
             return false;
         }
+
         var data = {};
         var uuids = [uuid];
         data.uuids = uuids;

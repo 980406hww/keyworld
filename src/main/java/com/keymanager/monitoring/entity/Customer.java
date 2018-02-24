@@ -35,10 +35,10 @@ public class Customer extends BaseEntity{
 	private String remark;
 
 	@TableField(value = "fActiveHour")
-	private Integer activeHour;
+	private String activeHour;
 
 	@TableField(value = "fInActiveHour")
-	private Integer inActiveHour;
+	private String inActiveHour;
 
 	@TableField(value = "fType")
 	private String type;
@@ -156,19 +156,19 @@ public class Customer extends BaseEntity{
 		this.activeKeywordCount = activeKeywordCount;
 	}
 
-	public Integer getActiveHour() {
+	public String getActiveHour() {
 		return activeHour;
 	}
 
-	public void setActiveHour(Integer activeHour) {
+	public void setActiveHour(String activeHour) {
 		this.activeHour = activeHour;
 	}
 
-	public Integer getInActiveHour() {
+	public String getInActiveHour() {
 		return inActiveHour;
 	}
 
-	public void setInActiveHour(Integer inActiveHour) {
+	public void setInActiveHour(String inActiveHour) {
 		this.inActiveHour = inActiveHour;
 	}
 }

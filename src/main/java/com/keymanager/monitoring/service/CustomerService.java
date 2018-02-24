@@ -143,28 +143,37 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 		updateById(customer);
 	}
 
-	public void setCustomerKeywordStatusSwitchTime(List<String> uuids, Integer activeHour, Integer inActiveHour) {
+	public void setCustomerKeywordStatusSwitchTime(List<String> uuids, String activeHour, String inActiveHour) {
 		customerDao.setCustomerKeywordStatusSwitchTime(uuids, activeHour, inActiveHour);
 	}
 
 	public void autoSwitchCustomerKeywordStatus() {
+		boolean openFlag = false;
 		Integer hour = Utils.getCurrentHour();
 		List<Long> activeCustomerUuids = new ArrayList<Long>();
 		List<Long> inActiveCustomerUuids = new ArrayList<Long>();
 		List<Customer> customers = customerDao.searchNeedSwitchCustomer();
-		for (Customer customer : customers) {
-			if(customer.getActiveHour() > customer.getInActiveHour()) {
-				if(hour >= customer.getInActiveHour() && hour < customer.getActiveHour()) {
-					inActiveCustomerUuids.add(customer.getUuid());
+		for(Customer customer : customers) {
+			openFlag = false;
+			String[] activeHours = customer.getActiveHour().split(",");
+			String[] inActiveHours = customer.getInActiveHour().split(",");
+			for(int i = 0; i < activeHours.length; i++) {
+				if(Integer.parseInt(activeHours[i]) < Integer.parseInt(inActiveHours[i])) {
+					if(hour >= Integer.parseInt(activeHours[i]) && hour < Integer.parseInt(inActiveHours[i])) {
+						activeCustomerUuids.add(customer.getUuid());
+						openFlag = true;
+						break;
+					}
 				} else {
-					activeCustomerUuids.add(customer.getUuid());
+					if(hour >= Integer.parseInt(activeHours[i]) || hour < Integer.parseInt(inActiveHours[i])) {
+						activeCustomerUuids.add(customer.getUuid());
+						openFlag = true;
+						break;
+					}
 				}
-			} else {
-				if(hour >= customer.getActiveHour() && hour < customer.getInActiveHour()) {
-					activeCustomerUuids.add(customer.getUuid());
-				} else {
-					inActiveCustomerUuids.add(customer.getUuid());
-				}
+			}
+			if(!openFlag) {
+				inActiveCustomerUuids.add(customer.getUuid());
 			}
 		}
 		if(CollectionUtils.isNotEmpty(activeCustomerUuids)) {
