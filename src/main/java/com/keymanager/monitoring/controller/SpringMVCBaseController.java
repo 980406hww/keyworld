@@ -7,6 +7,7 @@ import com.keymanager.monitoring.common.shiro.ShiroUser;
 import com.keymanager.monitoring.entity.QZSetting;
 import com.keymanager.monitoring.vo.ExtendedUsernamePasswordToken;
 import com.keymanager.util.TerminalTypeMapping;
+import com.keymanager.util.Utils;
 import com.keymanager.util.ZipCompressor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
@@ -75,36 +76,14 @@ public abstract class SpringMVCBaseController {
 		return user;
 	}
 
-	public void downFile(HttpServletResponse response, String fileName) {
-		OutputStream outputStream = null;
-		FileInputStream fileInputStream = null;
+	public void downFile(String fileName) {
 		try {
-			response.setContentType("application/octet-stream");
 			String path = Thread.currentThread().getContextClassLoader().getResource("").toURI().getPath();
-			String zipFilePath = path + fileName;
-			ZipCompressor.zipMultiFile(path + fileName.substring(0,fileName.indexOf(".")), zipFilePath, false);
-			response.addHeader("Content-Disposition", "attachment;filename=" + fileName);
-			outputStream = response.getOutputStream();
-			fileInputStream = new FileInputStream(zipFilePath);
-
-			byte[] b = new byte[1024];
-			int i = 0;
-			while ((i = fileInputStream.read(b)) > 0) {
-				outputStream.write(b, 0, i);
-			}
-			outputStream.flush();
+			String filePath = Utils.getWebRootPath().substring(0, Utils.getWebRootPath().indexOf("target")) + "src/main/webapp/";
+			ZipCompressor.zipMultiFile(path + fileName.substring(0,fileName.indexOf(".")), filePath + fileName, false);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());
-		} finally {
-			if (fileInputStream != null) {
-				try {
-					fileInputStream.close();
-					fileInputStream = null;
-				} catch (IOException e) {
-					logger.error(e.getMessage());
-				}
-			}
 		}
 	}
 

@@ -798,11 +798,6 @@
 			</table>
 		</form>
 	</div>
-
-	<div style="display:none;">
-		<form id="downloadVNCForm" action="/internal/clientstatus/downloadVNCFile" method="post"></form>
-		<form id="downloadFullVNCForm" action="/internal/clientstatus/downloadFullVNCFile" method="post"></form>
-	</div>
 <%@ include file="/commons/loadjs.jsp" %>
 <script src="${staticPath }/client/list.js"></script>
 <script language="javascript">

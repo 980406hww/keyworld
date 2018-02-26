@@ -83,10 +83,36 @@ function resetPageNumber() {
     $("#searchClientStatusForm").find("#currentPageNumberHidden").val(1);
 }
 function downloadVNCFile() {
-    $("#downloadVNCForm").submit();
+    $.ajax({
+        url: '/internal/clientstatus/downloadVNCFile',
+        type: 'POST',
+        success: function (result) {
+            if (result) {
+                window.location.href="/vnc.zip";
+            } else {
+                $().toastmessage('showErrorToast', "下载失败");
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "下载失败");
+        }
+    });
 }
 function downloadFullVNCFile() {
-    $("#downloadFullVNCForm").submit();
+    $.ajax({
+        url: '/internal/clientstatus/downloadFullVNCFile',
+        type: 'POST',
+        success: function (result) {
+            if (result) {
+                window.location.href="/vncAll.zip";
+            } else {
+                $().toastmessage('showErrorToast', "下载失败");
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "下载失败");
+        }
+    });
 }
 function selectAll(self){
     var a = document.getElementsByName("clientID");

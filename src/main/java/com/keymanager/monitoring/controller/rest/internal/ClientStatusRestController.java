@@ -289,24 +289,28 @@ public class ClientStatusRestController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/clientstatus/downloadVNCFile")
     @RequestMapping(value = "/downloadVNCFile", method = RequestMethod.POST)
-    public void downloadVNCFile(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<?> downloadVNCFile(HttpServletRequest request, HttpServletResponse response) {
         try {
             clientStatusService.getVNCFileInfo(TerminalTypeMapping.getTerminalType(request));
-            downFile(response, "vnc.zip");
+            downFile("vnc.zip");
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
         }
 
     }
 
     @RequiresPermissions("/internal/clientstatus/downloadFullVNCFile")
     @RequestMapping(value = "/downloadFullVNCFile", method = RequestMethod.POST)
-    public void downloadFullVNCFile(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<?> downloadFullVNCFile(HttpServletRequest request, HttpServletResponse response) {
         try {
             clientStatusService.getFullVNCFileInfo(TerminalTypeMapping.getTerminalType(request));
-            downFile(response, "vncAll.zip");
+            downFile("vnc.zip");
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
         }
     }
 
