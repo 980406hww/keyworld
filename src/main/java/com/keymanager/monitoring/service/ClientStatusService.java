@@ -236,7 +236,7 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 	public void uploadVPSFile(String clientStatusType, String downloadProgramType, File file, String terminalType) throws Exception {
 		List<String> vpsInfos = FileUtil.readTxtFile(file,"UTF-8");
 		for (String vpsInfo : vpsInfos) {
-			String[] clientStatusInfo = vpsInfo.split("----");
+			String[] clientStatusInfo = vpsInfo.split("===");
 			ClientStatus existingClientStatus = clientStatusDao.selectById(clientStatusInfo[0]);
 			if(null != existingClientStatus) {
 				saveClientStatusByVPSFile(existingClientStatus, clientStatusInfo);
