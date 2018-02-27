@@ -79,8 +79,7 @@ public abstract class SpringMVCBaseController {
 	public void downFile(String fileName) {
 		try {
 			String path = Thread.currentThread().getContextClassLoader().getResource("").toURI().getPath();
-			String filePath = Utils.getWebRootPath().substring(0, Utils.getWebRootPath().indexOf("target")) + "src/main/webapp/";
-			ZipCompressor.zipMultiFile(path + fileName.substring(0,fileName.indexOf(".")), filePath + fileName, false);
+			ZipCompressor.zipMultiFile(path + fileName.substring(0,fileName.indexOf(".")), Utils.getWebRootPath() + fileName, false);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());

@@ -306,7 +306,7 @@ public class ClientStatusRestController extends SpringMVCBaseController {
     public ResponseEntity<?> downloadFullVNCFile(HttpServletRequest request, HttpServletResponse response) {
         try {
             clientStatusService.getFullVNCFileInfo(TerminalTypeMapping.getTerminalType(request));
-            downFile("vnc.zip");
+            downFile("vncAll.zip");
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
