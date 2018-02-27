@@ -177,8 +177,8 @@ public class CustomerRestController {
     public ResponseEntity<?> setCustomerKeywordStatusSwitchTime(@RequestBody Map<String, Object> requestMap){
         try {
             List<String> uuids = (List<String>) requestMap.get("uuids");
-            Integer activeHour = (Integer) requestMap.get("activeHour");
-            Integer inActiveHour = (Integer) requestMap.get("inActiveHour");
+            String activeHour = (String) requestMap.get("activeHour");
+            String inActiveHour = (String) requestMap.get("inActiveHour");
             customerService.setCustomerKeywordStatusSwitchTime(uuids, activeHour, inActiveHour);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         }catch (Exception e){
