@@ -134,6 +134,9 @@
 							<shiro:hasPermission name="/internal/clientstatus/deleteClientStatuses">
 								&nbsp;&nbsp;<input type="button" onclick="delAllItems(this)" value=" 删除 ">
 							</shiro:hasPermission>
+							<shiro:hasPermission name="/internal/clientstatus/saveClientStatus">
+								&nbsp;&nbsp;<input type="button" onclick="showReopenClientDialog()" value=" 重开机器 ">
+							</shiro:hasPermission>
 							<shiro:hasPermission name="/internal/clientstatus/uploadVPSFile">
 								&nbsp;&nbsp;<input type="button" name="btnFilter" onclick="showUploadVPSDialog('common')" value=" 导入普通终端 ">
 								&nbsp;&nbsp;<input type="button" onclick="showUploadVPSDialog('startUp')" value=" 导入开机终端 ">
@@ -797,6 +800,18 @@
 				</tr>
 			</table>
 		</form>
+	</div>
+
+	<div id="reopenClientDiv" class="easyui-dialog">
+		<table width="95%" style="margin-top: 10px;margin-left: 10px">
+			<tr>
+				<td>
+					下载程序:
+					<input type="radio" name="downloadProgramType" value="New" checked /> 新程序
+					<input type="radio" name="downloadProgramType" value="Old" /> 旧程序
+				</td>
+			</tr>
+		</table>
 	</div>
 <%@ include file="/commons/loadjs.jsp" %>
 <script src="${staticPath }/client/list.js"></script>

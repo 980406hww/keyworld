@@ -4,6 +4,7 @@ $(function () {
     $("#changeSettingDialog").dialog("close");
     $("#targetVersionSettingDialog").dialog("close");
     $("#renewalSettingDialog").dialog("close");
+    $("#reopenClientDiv").dialog("close");
     $("#clientStatusDiv").css("margin-top",$("#topDiv").height());
     pageLoad();
     alignTableHeader();
@@ -251,6 +252,59 @@ function showUploadVPSDialog(clientStatusType) {
             }]
     });
     $('#uploadVPSDialog').window("resize",{top:$(document).scrollTop() + 100});
+}
+function showReopenClientDialog() {
+    var clientIDs = getSelectedClientIDs();
+    if (clientIDs === '') {
+        alert('请选择要重开的终端');
+        return;
+    }
+    $('#reopenClientDiv').dialog({
+        resizable: false,
+        width: 300,
+        modal: true,
+        title: '重开机器',
+        buttons: [{
+            text: '保存',
+            iconCls: 'icon-ok',
+            handler: function () {
+                var downloadProgramType = $("#reopenClientDiv").find("input[name=downloadProgramType]:checked").val();
+                var postData = {};
+                postData.clientIDs = clientIDs.split(",");
+                postData.downloadProgramType = downloadProgramType;
+                $.ajax({
+                    url: '/internal/clientstatus/reopenClientStatus',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result) {
+                            $().toastmessage('showSuccessToast', "保存成功", true);
+                        } else {
+                            $().toastmessage('showErrorToast', "保存失败");
+                        }
+                        $('#reopenClientDiv').dialog("close");
+                    },
+                    error: function () {
+                        $().toastmessage('showErrorToast', "保存失败");
+                        $('#reopenClientDiv').dialog("close");
+                    }
+                });
+            }
+        },
+            {
+                text: '取消',
+                iconCls: 'icon-cancel',
+                handler: function () {
+                    $('#reopenClientDiv').dialog("close");
+                }
+            }]
+    });
+    $('#reopenClientDiv').window("resize",{top:$(document).scrollTop() + 100});
 }
 function decideSelectAll() {
     var a = document.getElementsByName("clientID");
