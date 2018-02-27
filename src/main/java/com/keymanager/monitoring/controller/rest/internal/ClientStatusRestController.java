@@ -358,4 +358,18 @@ public class ClientStatusRestController extends SpringMVCBaseController {
         }
         return modelAndView;
     }
+
+    @RequiresPermissions("/internal/clientstatus/saveClientStatus")
+    @RequestMapping(value = "/reopenClientStatus", method = RequestMethod.POST)
+    public ResponseEntity<?> reopenClientStatus(@RequestBody Map<String, Object> requestMap) {
+        try {
+            List<String> clientIDs = (List<String>) requestMap.get("clientIDs");
+            String downloadProgramType = (String) requestMap.get("downloadProgramType");
+            clientStatusService.reopenClientStatus(clientIDs, downloadProgramType);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
 }

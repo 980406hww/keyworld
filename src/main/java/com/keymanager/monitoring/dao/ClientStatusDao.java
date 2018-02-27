@@ -58,4 +58,6 @@ public interface ClientStatusDao extends BaseMapper<ClientStatus> {
     void updateAllRemainingKeywordIndicator(@Param("indicator")int indicator);
 
     ClientStatus getClientStatusForStartUp();
+
+    void reopenClientStatus(@Param("clientIDs")List<String> clientIDs, @Param("downloadProgramType")String downloadProgramType, @Param("switchGroupName")String switchGroupName);
 }

@@ -407,4 +407,18 @@
         ORDER BY cs.fStartUpTime
         LIMIT 1
     </select>
+
+    <update id="reopenClientStatus">
+        UPDATE
+            t_client_status
+        SET
+            fDownloadProgramType = #{downloadProgramType},
+            fSwitchGroupName = #{switchGroupName},
+            fStartUpStatus = 'New',
+            fStartUpTime = NULL
+        WHERE fClientID IN
+        <foreach item="clientID" collection="clientIDs" open="(" separator="," close=")">
+            #{clientID}
+        </foreach>
+    </update>
 </mapper>

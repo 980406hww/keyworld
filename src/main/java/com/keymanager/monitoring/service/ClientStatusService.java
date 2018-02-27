@@ -233,6 +233,14 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		}
 	}
 
+	public void reopenClientStatus(List<String> clientIDs, String downloadProgramType) {
+		if("New".equals(downloadProgramType)){
+			clientStatusDao.reopenClientStatus(clientIDs, downloadProgramType, "laodu");
+		}else{
+			clientStatusDao.reopenClientStatus(clientIDs, downloadProgramType, "Default");
+		}
+	}
+
 	public void uploadVPSFile(String clientStatusType, String downloadProgramType, File file, String terminalType) throws Exception {
 		List<String> vpsInfos = FileUtil.readTxtFile(file,"UTF-8");
 		for (String vpsInfo : vpsInfos) {
