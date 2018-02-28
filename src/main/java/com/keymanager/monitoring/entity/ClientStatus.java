@@ -258,6 +258,9 @@ public class ClientStatus {
 	@TableField(exist=false)
 	private boolean yellow;
 
+	@TableField(exist=false)
+	private boolean orange;
+
 	@TableField(value = "fRemainingKeyword")
 	private int remainingKeyword;
 
@@ -839,13 +842,21 @@ public class ClientStatus {
 	}
 
 	public boolean getRed(){
-		return (this.getContinuousFailCount() > 5) || (Utils.addMinutes(this.lastVisitTime, (10 > (this.getPageNo() * 3) ? (10 + 5) : (this.getPageNo() * 3 + 5)))
-				.compareTo(Utils.getCurrentTimestamp()) <	0);
+		return (Utils.addMinutes(this.lastVisitTime, (10 > (this.getPageNo() * 3) ? (10 + 5) : (this.getPageNo() * 3 + 5)))
+				.compareTo(Utils.getCurrentTimestamp()) < 0);
 	}
 
 	public boolean getYellow(){
 		Timestamp time = Utils.addMinutes(this.lastVisitTime, (10 > (this.getPageNo() * 3) ? 10 : (this.getPageNo() * 3)));
 		return time.compareTo(Utils.getCurrentTimestamp()) < 0 && (Utils.addMinutes(time, 5)).compareTo(Utils.getCurrentTimestamp()) > 0;
+	}
+
+	public boolean getOrange() {
+		return this.getContinuousFailCount() > 5;
+	}
+
+	public void setOrange(boolean orange) {
+		this.orange = orange;
 	}
 
 	public void setRed(boolean red) {
