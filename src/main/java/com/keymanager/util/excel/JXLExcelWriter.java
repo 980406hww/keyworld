@@ -29,7 +29,8 @@ public class JXLExcelWriter extends AbstractJXLExcel implements ExcelWriter {
   public JXLExcelWriter(File file) throws BiffException, IOException {
     workbookFile = file;
     WorkbookSettings settings = new WorkbookSettings ();  
-    settings.setWriteAccess(null);  
+    settings.setWriteAccess(null);
+    settings.setGCDisabled(true);
     if (workbookFile.exists()) {
       Workbook workbook = Workbook.getWorkbook(workbookFile);
       outputStream = new ByteArrayOutputStream();
