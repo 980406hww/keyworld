@@ -204,6 +204,10 @@
 							<c:set var="keywordColor" value="#FF0000"/>
 							<c:set var="isValidClient" value="false"/>
 						</c:when>
+						<c:when test="${clientStatus.orange}">
+							<c:set var="keywordColor" value="#e86e33"/>
+							<c:set var="isValidClient" value="false"/>
+						</c:when>
 						<c:when test="${clientStatus.yellow}">
 							<c:set var="keywordColor" value="#ef00ff"/>
 							<c:set var="isValidClient" value="false"/>
