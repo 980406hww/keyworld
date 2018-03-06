@@ -408,6 +408,10 @@
         LIMIT 1
     </select>
 
+    <select id="getDownloadingClientCount" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM t_client_status WHERE fStartUpStatus = "Downloading"
+    </select>
+
     <update id="reopenClientStatus">
         UPDATE
             t_client_status

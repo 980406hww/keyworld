@@ -941,4 +941,8 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 			clientStatusDao.updateById(clientStatus);
 		}
 	}
+
+	public Integer getDownloadingClientCount() {
+		return clientStatusDao.getDownloadingClientCount();
+	}
 }

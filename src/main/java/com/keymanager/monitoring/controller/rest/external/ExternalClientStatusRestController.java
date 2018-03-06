@@ -131,8 +131,13 @@ public class ExternalClientStatusRestController extends SpringMVCBaseController 
         String password = request.getParameter("password");
         try {
             if (validUser(userName, password)) {
-                ClientStatus clientStatus = clientStatusService.getClientStatusForStartUp();
-                return new ResponseEntity<Object>(clientStatus, HttpStatus.OK);
+                Integer downloadingClientCount = clientStatusService.getDownloadingClientCount();
+                if(downloadingClientCount >= 5) {
+                    return new ResponseEntity<Object>(null, HttpStatus.OK);
+                } else {
+                    ClientStatus clientStatus = clientStatusService.getClientStatusForStartUp();
+                    return new ResponseEntity<Object>(clientStatus, HttpStatus.OK);
+                }
             }
         }catch (Exception ex){
             logger.error(ex.getMessage());
