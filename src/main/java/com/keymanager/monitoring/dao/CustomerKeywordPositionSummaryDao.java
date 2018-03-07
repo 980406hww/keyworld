@@ -10,4 +10,5 @@ public interface CustomerKeywordPositionSummaryDao extends BaseMapper<CustomerKe
 
     CustomerKeywordPositionSummary getTodayPositionSummary(@Param("customerKeywordUuid") Long customerKeywordUuid);
 
+    void deletePositionSummaryFromAWeekAgo();
 }

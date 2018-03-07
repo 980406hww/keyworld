@@ -10,4 +10,6 @@ public interface CustomerKeywordInvalidCountLogDao extends BaseMapper<CustomerKe
     List<Long> findInvalidCustomerKeyword();
 
     void addCustomerKeywordInvalidCountLog();
+
+    void deleteInvalidCountLogFromAWeekAgo();
 }

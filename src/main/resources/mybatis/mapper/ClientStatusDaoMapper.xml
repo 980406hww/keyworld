@@ -409,7 +409,7 @@
     </select>
 
     <select id="getDownloadingClientCount" resultType="java.lang.Integer">
-        SELECT COUNT(*) FROM t_client_status WHERE fStartUpStatus = "Downloading"
+        SELECT COUNT(1) FROM t_client_status WHERE fStartUpStatus = "Downloading"
     </select>
 
     <update id="reopenClientStatus">

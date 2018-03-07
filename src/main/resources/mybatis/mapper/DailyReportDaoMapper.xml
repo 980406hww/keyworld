@@ -36,4 +36,8 @@
     <select id="selectLastId" resultType="int">
         select LAST_INSERT_ID()
     </select>
+
+    <delete id="deleteDailyReportFromAWeekAgo">
+        DELETE FROM t_daily_report WHERE fCreateTime &lt; DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+    </delete>
 </mapper>

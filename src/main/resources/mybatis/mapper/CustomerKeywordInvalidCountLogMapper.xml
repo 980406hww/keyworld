@@ -12,10 +12,13 @@
 
     <select id="findInvalidCustomerKeyword" resultType="java.lang.Long">
         SELECT fCustomerKeywordUuid FROM t_ck_invalid_count_log
-        WHERE fInvalidCount > 15
-        AND fOptimizedDate >= DATE_SUB(CURDATE(), INTERVAL 3 DAY)
+        WHERE fInvalidCount &gt; 15
+        AND fOptimizedDate &gt;= DATE_SUB(CURDATE(), INTERVAL 3 DAY)
         GROUP BY fCustomerKeywordUuid
-        HAVING count(*) = 3
+        HAVING count(1) = 3
     </select>
 
+    <delete id="deleteInvalidCountLogFromAWeekAgo">
+        DELETE FROM t_ck_invalid_count_log WHERE fOptimizedDate &lt; DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+    </delete>
 </mapper>

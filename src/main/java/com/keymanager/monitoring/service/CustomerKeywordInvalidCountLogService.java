@@ -24,4 +24,8 @@ public class CustomerKeywordInvalidCountLogService extends ServiceImpl<CustomerK
 	public List<Long> findInvalidCustomerKeyword() {
 		return customerKeywordInvalidCountLogDao.findInvalidCustomerKeyword();
 	}
+
+	public void deleteInvalidCountLogFromAWeekAgo() {
+		customerKeywordInvalidCountLogDao.deleteInvalidCountLogFromAWeekAgo();
+	}
 }

@@ -14,4 +14,8 @@
         AND dri.fStatus = #{status}
         limit 1
     </select>
+
+    <delete id="deleteDailyReportItemFromAWeekAgo">
+        DELETE FROM t_daily_report_item WHERE fCreateTime &lt; DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+    </delete>
 </mapper>

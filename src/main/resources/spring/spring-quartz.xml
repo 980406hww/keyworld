@@ -16,6 +16,8 @@
 				<ref bean="cronTriggerObserveOptimizationCount" />
 				<ref bean="cronTriggerRemainingKeywordIndicator" />
 				<ref bean="cronTriggerAutoSwitchCustomerKeywordStatus" />
+				<ref bean="cronTriggerCleanCKLogFromAWeekAgo" />
+				<ref bean="cronTriggerCleanCKLogFromAMonthAgo" />
 			</list>
 		</property>
 		<!-- Quartz配置, 本地运行无需单独的quartz.properties文件，在此简单配置即可 -->
@@ -148,6 +150,30 @@
 
 	<bean id="cronTriggerAutoSwitchCustomerKeywordStatusSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject" ref="autoSwitchCustomerKeywordStatusSchedule" />
+		<property name="targetMethod" value="runTask" />
+		<property name="concurrent" value="false" />
+	</bean>
+
+	<!--清空一周前日志-->
+	<bean id="cronTriggerCleanCKLogFromAWeekAgo" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="cronTriggerCleanCKLogFromAWeekAgoSchedule" />
+		<property name="cronExpression" value="0 0 0 ? * SUN" />
+	</bean>
+
+	<bean id="cronTriggerCleanCKLogFromAWeekAgoSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="cleanCKLogFromAWeekAgoSchedule" />
+		<property name="targetMethod" value="runTask" />
+		<property name="concurrent" value="false" />
+	</bean>
+
+	<!--清空一月前日志-->
+	<bean id="cronTriggerCleanCKLogFromAMonthAgo" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="cronTriggerCleanCKLogFromAMonthAgoSchedule" />
+		<property name="cronExpression" value="0 0 0 1 * ?" />
+	</bean>
+
+	<bean id="cronTriggerCleanCKLogFromAMonthAgoSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="cleanCKLogFromAMonthAgoSchedule" />
 		<property name="targetMethod" value="runTask" />
 		<property name="concurrent" value="false" />
 	</bean>

@@ -98,4 +98,8 @@ public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport>
 			}
 		}
 	}
+
+	public void deleteDailyReportFromAWeekAgo() {
+		dailyReportDao.deleteDailyReportFromAWeekAgo();
+	}
 }

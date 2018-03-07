@@ -88,6 +88,12 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     @Autowired
     private ObserveOptimizationCountMailService observeOptimizationCountMailService;
 
+    @Autowired
+    private DailyReportService dailyReportService;
+
+    @Autowired
+    private DailyReportItemService dailyReportItemService;
+
     public Page<CustomerKeyword> searchCustomerKeywords(Page<CustomerKeyword> page, CustomerKeywordCriteria customerKeywordCriteria){
         page.setRecords(customerKeywordDao.searchCustomerKeywordsPageForCustomer(page, customerKeywordCriteria));
         return page;
@@ -1003,5 +1009,16 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     public void batchChangeCustomerKeywordStatus(String entryType, List<Long> customerUuids, Integer status) {
         customerKeywordDao.batchChangeCustomerKeywordStatus(entryType, customerUuids, status);
+    }
+
+    public void cleanCKLogFromAWeekAgo() {
+        customerKeywordInvalidCountLogService.deleteInvalidCountLogFromAWeekAgo();
+        customerKeywordPositionSummaryService.deletePositionSummaryFromAWeekAgo();
+        dailyReportService.deleteDailyReportFromAWeekAgo();
+        dailyReportItemService.deleteDailyReportItemFromAWeekAgo();
+    }
+
+    public void cleanCKLogFromAMonthAgo() {
+        customerKeywordIPService.deleteCustomerKeywordIPFromAMonthAgo();
     }
 }

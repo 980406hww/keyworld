@@ -29,4 +29,8 @@ public class CustomerKeywordPositionSummaryService extends ServiceImpl<CustomerK
             customerKeywordPositionSummaryDao.addPositionSummary(positionSummary);
         }
     }
+
+    public void deletePositionSummaryFromAWeekAgo() {
+        customerKeywordPositionSummaryDao.deletePositionSummaryFromAWeekAgo();
+    }
 }

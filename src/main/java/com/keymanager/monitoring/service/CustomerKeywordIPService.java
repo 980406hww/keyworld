@@ -21,4 +21,8 @@ public class CustomerKeywordIPService extends ServiceImpl<CustomerKeywordIPDao, 
 		customerKeywordIP.setCreateTime(Utils.getCurrentTimestamp());
 		customerKeywordIPDao.insert(customerKeywordIP);
 	}
+
+	public void deleteCustomerKeywordIPFromAMonthAgo() {
+		customerKeywordIPDao.deleteCustomerKeywordIPFromAMonthAgo();
+	}
 }

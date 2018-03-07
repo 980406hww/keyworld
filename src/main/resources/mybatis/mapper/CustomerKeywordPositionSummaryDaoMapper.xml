@@ -21,4 +21,8 @@
         WHERE ps.fCustomerKeywordUuid = #{customerKeywordUuid}
         AND ps.fCreateDate = CURRENT_DATE()
     </select>
+
+    <delete id="deletePositionSummaryFromAWeekAgo">
+        DELETE FROM t_ck_position_summary WHERE fCreateDate &lt; DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+    </delete>
 </mapper>
