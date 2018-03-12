@@ -146,6 +146,8 @@ public class CustomerKeywordDailyReportExcelWriter {
 				todayPrice = view.getPositionFirstFee();
 			}else if(view.getCurrentPosition() <= 5 && view.getPositionForthFee() != null){
 				todayPrice = view.getPositionForthFee();
+			}else if(view.getCurrentPosition() <= 10 && view.getPositionFirstPageFee() != null){
+				todayPrice = view.getPositionFirstPageFee();
 			}
 			if(todayPrice > 0) {
 				writer.addLabelCell(CustomerKeywordDailyReportDefinition.TodayPrice.getColumnIndex(), rowIndex, todayPrice);
