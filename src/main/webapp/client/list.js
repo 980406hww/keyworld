@@ -89,7 +89,7 @@ function downloadVNCFile() {
         type: 'POST',
         success: function (result) {
             if (result) {
-                window.location.href="/vnc.zip";
+                window.location.href="/vnc.zip?t=" + new Date().getTime();
             } else {
                 $().toastmessage('showErrorToast', "下载失败");
             }
@@ -105,7 +105,7 @@ function downloadFullVNCFile() {
         type: 'POST',
         success: function (result) {
             if (result) {
-                window.location.href="/vncAll.zip";
+                window.location.href="/vncAll.zip?t=" + new Date().getTime();
             } else {
                 $().toastmessage('showErrorToast', "下载失败");
             }
