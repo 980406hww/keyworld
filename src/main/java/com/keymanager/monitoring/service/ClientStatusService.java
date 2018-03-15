@@ -193,6 +193,7 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 			oldClientStatus.setMoveUp20(clientStatus.getMoveUp20());
 			oldClientStatus.setOptimizeRelatedKeyword(clientStatus.getOptimizeRelatedKeyword());
 			oldClientStatus.setSwitchGroupName(clientStatus.getSwitchGroupName());
+			oldClientStatus.setStartUpStatus(clientStatus.getStartUpStatus());
 			clientStatusDao.updateById(oldClientStatus);
 		} else {
 			supplementAdditionalValue(clientStatus);

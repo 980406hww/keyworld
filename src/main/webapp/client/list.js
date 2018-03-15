@@ -623,6 +623,7 @@ function initSettingDialog(clientStatus, self){
     settingDialogDiv.find("#vpsBackendSystemComputerID").val(clientStatus.vpsBackendSystemComputerID != null ? clientStatus.vpsBackendSystemComputerID :
         "");
     settingDialogDiv.find("#vpsBackendSystemPassword").val(clientStatus.vpsBackendSystemPassword != null ? clientStatus.vpsBackendSystemPassword : "doshows123");
+    settingDialogDiv.find("#startUpStatus").val(clientStatus.startUpStatus);
     settingDialogDiv.show();
 }
 function saveChangeSetting(self){
@@ -687,6 +688,7 @@ function saveChangeSetting(self){
     clientStatus.randomlyClickMoreLink = settingDialogDiv.find("#randomlyClickMoreLink:checked").val() === '1' ? 1 : 0;
     clientStatus.moveUp20 = settingDialogDiv.find("#moveUp20:checked").val() === '1' ? 1 : 0;
     clientStatus.optimizeRelatedKeyword = settingDialogDiv.find("#optimizeRelatedKeyword:checked").val() === '1' ? 1 : 0;
+    clientStatus.startUpStatus = settingDialogDiv.find("#startUpStatus").val();
     $.ajax({
         url: '/internal/clientstatus/saveClientStatus',
         data: JSON.stringify(clientStatus),
