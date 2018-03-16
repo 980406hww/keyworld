@@ -420,7 +420,8 @@
         ck.fOptimizeGroupName	AS	'optimizeGroupName',
         ck.fRecommendKeywords AS 'recommendKeywords',
         ck.fNegativeKeywords AS 'negativeKeywords',
-        ck.fExcludeKeywords AS 'excludeKeywords'
+        ck.fExcludeKeywords AS 'excludeKeywords',
+        ck.fRemarks AS 'remarks'
         FROM t_customer_keyword ck
         WHERE ck.fOptimizeGroupName = #{groupName} and ck.fStatus = 1 and ck.fTerminalType = #{terminalType}
         and (DATE_SUB(NOW(), INTERVAL ck.fQueryInterval MINUTE) > ck.fQueryTime) and ck.fUrl <![CDATA[>]]> ''

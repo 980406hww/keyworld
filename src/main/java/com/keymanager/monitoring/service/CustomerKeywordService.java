@@ -636,6 +636,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeywordForOptimization.setMaxUserCount(clientStatus.getMaxUserCount());
             customerKeywordForOptimization.setSearchEngine(customerKeyword.getSearchEngine());
             customerKeywordForOptimization.setTerminalType(customerKeyword.getTerminalType());
+            customerKeywordForOptimization.setRemarks(customerKeyword.getRemarks());
             if(StringUtils.isNotBlank(customerKeywordForOptimization.getOperationType())) {
                 if(customerKeywordForOptimization.getOperationType().contains(Constants.CONFIG_TYPE_TJ_XG)) {
                     customerKeywordForOptimization.setNegativeKeywords(new ArrayList<String>());

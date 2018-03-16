@@ -67,7 +67,10 @@ public class CustomerKeywordForOptimization {
 	private List<String> excludeKeywords;
 	private List<String> recommendedKeywords;
 
-	private List<String> excludeTitles; 
+	private List<String> excludeTitles;
+
+
+	private String remarks;
 
 	public String getKeyword() {
 		return keyword;
@@ -563,5 +566,13 @@ public class CustomerKeywordForOptimization {
 
 	public void setRecommendedKeywords(List<String> recommendedKeywords) {
 		this.recommendedKeywords = recommendedKeywords;
+	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
 	}
 }
