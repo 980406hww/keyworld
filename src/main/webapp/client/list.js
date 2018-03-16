@@ -623,7 +623,6 @@ function initSettingDialog(clientStatus, self){
     settingDialogDiv.find("#vpsBackendSystemComputerID").val(clientStatus.vpsBackendSystemComputerID != null ? clientStatus.vpsBackendSystemComputerID :
         "");
     settingDialogDiv.find("#vpsBackendSystemPassword").val(clientStatus.vpsBackendSystemPassword != null ? clientStatus.vpsBackendSystemPassword : "doshows123");
-    settingDialogDiv.find("#startUpStatus").val(clientStatus.startUpStatus);
     settingDialogDiv.show();
 }
 function saveChangeSetting(self){
@@ -688,7 +687,6 @@ function saveChangeSetting(self){
     clientStatus.randomlyClickMoreLink = settingDialogDiv.find("#randomlyClickMoreLink:checked").val() === '1' ? 1 : 0;
     clientStatus.moveUp20 = settingDialogDiv.find("#moveUp20:checked").val() === '1' ? 1 : 0;
     clientStatus.optimizeRelatedKeyword = settingDialogDiv.find("#optimizeRelatedKeyword:checked").val() === '1' ? 1 : 0;
-    clientStatus.startUpStatus = settingDialogDiv.find("#startUpStatus").val();
     $.ajax({
         url: '/internal/clientstatus/saveClientStatus',
         data: JSON.stringify(clientStatus),
@@ -900,6 +898,36 @@ function haveCustomerKeywordForOptimization(clientIDs) {
         },
         error: function () {
             $().toastmessage('showErrorToast', "取词异常");
+        }
+    });
+}
+function finishStartUp() {
+    var clientIDs = getSelectedClientIDs();
+    if (clientIDs === '') {
+        alert('请选择要设置的终端');
+        return;
+    }
+    if (confirm("确定要将这些终端的开机状态修改为Completed吗?") == false) return;
+    var postData = {};
+    postData.clientIDs = clientIDs.split(",");
+    $.ajax({
+        url: '/internal/clientstatus/updateStartUpStatusForCompleted',
+        data: JSON.stringify(postData),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        timeout: 5000,
+        type: 'POST',
+        success: function (result) {
+            if (result) {
+                $().toastmessage('showSuccessToast', "操作成功", true);
+            } else {
+                $().toastmessage('showErrorToast', "操作失败");
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "操作失败");
         }
     });
 }

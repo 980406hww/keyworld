@@ -193,7 +193,6 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 			oldClientStatus.setMoveUp20(clientStatus.getMoveUp20());
 			oldClientStatus.setOptimizeRelatedKeyword(clientStatus.getOptimizeRelatedKeyword());
 			oldClientStatus.setSwitchGroupName(clientStatus.getSwitchGroupName());
-			oldClientStatus.setStartUpStatus(clientStatus.getStartUpStatus());
 			clientStatusDao.updateById(oldClientStatus);
 		} else {
 			supplementAdditionalValue(clientStatus);
@@ -945,5 +944,9 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 
 	public Integer getDownloadingClientCount() {
 		return clientStatusDao.getDownloadingClientCount();
+	}
+
+	public void updateStartUpStatusForCompleted(List<String> clientIDs) {
+		clientStatusDao.updateStartUpStatusForCompleted(clientIDs);
 	}
 }

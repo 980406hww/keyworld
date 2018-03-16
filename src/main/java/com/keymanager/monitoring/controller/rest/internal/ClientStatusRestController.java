@@ -372,4 +372,17 @@ public class ClientStatusRestController extends SpringMVCBaseController {
             return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
         }
     }
+
+    @RequiresPermissions("/internal/clientstatus/saveClientStatus")
+    @RequestMapping(value = "/updateStartUpStatusForCompleted", method = RequestMethod.POST)
+    public ResponseEntity<?> updateStartUpStatusForCompleted(@RequestBody Map<String, Object> requestMap) {
+        try {
+            List<String> clientIDs = (List<String>) requestMap.get("clientIDs");
+            clientStatusService.updateStartUpStatusForCompleted(clientIDs);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
 }

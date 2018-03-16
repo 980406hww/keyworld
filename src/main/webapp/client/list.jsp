@@ -136,6 +136,7 @@
 							</shiro:hasPermission>
 							<shiro:hasPermission name="/internal/clientstatus/saveClientStatus">
 								&nbsp;&nbsp;<input type="button" onclick="showReopenClientDialog()" value=" 重开机器 ">
+								&nbsp;&nbsp;<input type="button" onclick="finishStartUp()" value=" 完成开机 ">
 							</shiro:hasPermission>
 							<shiro:hasPermission name="/internal/clientstatus/uploadVPSFile">
 								&nbsp;&nbsp;<input type="button" name="btnFilter" onclick="showUploadVPSDialog('common')" value=" 导入普通终端 ">
@@ -654,17 +655,6 @@
 							<th>点击目标后等待</th>
 							<td>
 								<input type="text" name="waitTimeAfterClick" id="waitTimeAfterClick" value="5000"/>秒
-							</td>
-						</tr>
-						<tr>
-							<th>开机状态</th>
-							<td>
-								<select name="startUpStatus" id="startUpStatus" style="width: 85px;">
-									<option value="New">New</option>
-									<option value="Processing">Processing</option>
-									<option value="Downloading">Downloading</option>
-									<option value="Completed">Completed</option>
-								</select>
 							</td>
 						</tr>
 

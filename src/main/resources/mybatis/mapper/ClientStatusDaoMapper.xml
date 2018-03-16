@@ -425,4 +425,12 @@
             #{clientID}
         </foreach>
     </update>
+
+    <update id="updateStartUpStatusForCompleted">
+        UPDATE t_client_status SET fStartUpStatus = 'Completed'
+        WHERE fClientID IN
+        <foreach item="clientID" collection="clientIDs" open="(" separator="," close=")">
+            #{clientID}
+        </foreach>
+    </update>
 </mapper>
