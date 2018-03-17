@@ -268,6 +268,11 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 				clientStatus.setDisableStatistics(0);
 				clientStatus.setValid(true);
 				saveClientStatusByVPSFile(clientStatus, clientStatusInfo);
+				if(!Character.isDigit(clientStatusInfo[0].charAt(clientStatusInfo[0].length() - 1))) {
+					Integer maxClientID = clientStatusDao.selectMaxIdByClientID(clientStatusInfo[0]);
+					maxClientID = maxClientID == null ? 1 : maxClientID + 1;
+					clientStatus.setClientID(clientStatusInfo[0] + maxClientID);
+				}
 				supplementDefaultValue(clientStatus);
 				if("New".equals(downloadProgramType)){
 					clientStatus.setSwitchGroupName("laodu");

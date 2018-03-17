@@ -433,4 +433,10 @@
             #{clientID}
         </foreach>
     </update>
+
+    <select id="selectMaxIdByClientID" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT MAX(CAST(TRIM(LEADING #{clientID} FROM fClientID) AS DECIMAL)) AS clientID
+        FROM t_client_status
+        WHERE fClientID LIKE '${clientID}%'
+    </select>
 </mapper>
