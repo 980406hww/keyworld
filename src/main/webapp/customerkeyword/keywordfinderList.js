@@ -147,3 +147,68 @@ function updateCustomerKeywordStatus(status) {
         }
     });
 }
+function updateOptimizeGroupName(total) {
+    $("#targetGroupNameDialog").dialog({
+        resizable: false,
+        width: 260,
+        height: 100,
+        closed: true,
+        modal: true,
+        buttons: [{
+            text: '保存',
+            iconCls: 'icon-ok',
+            handler: function () {
+                var targetGroupName = $("#targetGroupNameFrom").find("#groupName").val();
+                if (targetGroupName == null || targetGroupName == '') {
+                    alert("请输入目标优化组名!");
+                    return;
+                }
+                var obj = {};
+                var postData = $("#searchCustomerKeywordForm").serializeArray();
+                $.each(postData, function() {
+                    if (obj[this.name]) {
+                        if (!obj[this.name].push) {
+                            obj[this.name] = [obj[this.name]];
+                        }
+                        obj[this.name].push(this.value || '');
+                    } else {
+                        obj[this.name] = this.value || '';
+                    }
+                });
+                obj.targetOptimizeGroupName = targetGroupName;
+                if (confirm("确定要修改当前查询条件下所有关键字的优化组名吗?") == false) return;
+                $.ajax({
+                    url: '/internal/customerKeyword/updateOptimizeGroupName',
+                    data: JSON.stringify(obj),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (data) {
+                        if(data){
+                            $().toastmessage('showSuccessToast',"操作成功", true);
+                        }else{
+                            $().toastmessage('showErrorToast', "操作失败");
+                        }
+                    },
+                    error: function () {
+                        $().toastmessage('showErrorToast', "操作失败");
+                    }
+                });
+                $("#targetGroupNameDialog").dialog("close");
+            }
+        },
+            {
+                text: '取消',
+                iconCls: 'icon-cancel',
+                handler: function () {
+                    $("#targetGroupNameDialog").dialog("close");
+                    $('#groupNameChangeFrom')[0].reset();
+            }
+        }]
+    });
+    $("#targetGroupNameDialog").dialog("open");
+    $('#targetGroupNameDialog').window("resize",{top:$(document).scrollTop() + 200});
+}

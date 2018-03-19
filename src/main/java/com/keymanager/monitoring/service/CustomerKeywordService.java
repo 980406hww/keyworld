@@ -1022,4 +1022,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     public void cleanCKLogFromAMonthAgo() {
         customerKeywordIPService.deleteCustomerKeywordIPFromAMonthAgo();
     }
+
+    public void updateOptimizeGroupName(CustomerKeywordCriteria customerKeywordCriteria) {
+        customerKeywordDao.updateOptimizeGroupName(customerKeywordCriteria);
+    }
 }

@@ -62,13 +62,22 @@
                     </c:forEach>
                 </select>
             </c:if>
+            排序:
+            <select name="orderingElement" id="orderingElement">
+                <option value="0">关键字</option>
+                <option value="1">创建日期</option>
+                <option value="2">当前排名</option>
+                <option value="3">添加序号</option>
+            </select>
+            &nbsp;
+            备注:<input type="text" id="remarks" name="remarks" style="width: 90px;" value="${customerKeywordCriteria.remarks}">&nbsp;
             <input id="pushPay" name="pushPay" type="checkbox"  onclick="pushPayValue()" value="${customerKeywordCriteria.pushPay}"/>催缴 &nbsp;
             <input id="displayStop" name="displayStop" type="checkbox"  onclick="displayStopValue()" value="${customerKeywordCriteria.displayStop}"/>显示下架 &nbsp;
+            <input id="noPosition" name="noPosition" type="checkbox"  onclick="noPositionValue()"/>显示排名为0 &nbsp;
             <br/>
             已刷:<input type="text" name="optimizedCount" id="optimizedCount" value="${customerKeywordCriteria.optimizedCount}" style="width:40px;"/>
             显示前:
             <input type="text" name="position" id="position" value="${customerKeywordCriteria.position}" style="width:40px;"/>
-            <input id="noPosition" name="noPosition" type="checkbox"  onclick="noPositionValue()"/>显示排名为0 &nbsp;
             订单号:
             <input type="text" name="orderNumber" id="orderNumber" value="${customerKeywordCriteria.orderNumber}" style="width:100px;">
             无效点击数:
@@ -85,21 +94,15 @@
             value="${customerKeywordCriteria.creationFromTime}">
             到&nbsp;<input name="creationToTime" id="creationToTime" class="Wdate" type="text" style="width:90px;"
             onClick="WdatePicker()" value="${customerKeywordCriteria.creationToTime}">&nbsp;
-            排序:
-            <select name="orderingElement" id="orderingElement">
-                <option value="0">关键字</option>
-                <option value="1">创建日期</option>
-                <option value="2">当前排名</option>
-                <option value="3">添加序号</option>
-            </select>
-            &nbsp;
-            备注:<input type="text" id="remarks" name="remarks" style="width: 90px;" value="${customerKeywordCriteria.remarks}">
             <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
                 <input type="submit" onclick="resetPageNumber()" value=" 查询 ">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
                 <input type="button" onclick="updateCustomerKeywordStatus(0)" value=" 暂停关键字 ">&nbsp;&nbsp;
                 <input type="button" onclick="updateCustomerKeywordStatus(1)" value=" 激活关键字 ">&nbsp;&nbsp;
+            </shiro:hasPermission>
+            <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupName">
+                <input type="button" onclick="updateOptimizeGroupName(${page.total})" value=" 修改当前关键字优化组 ">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/customerKeyword/deleteCustomerKeywords">
             <input type="button" onclick="deleteCustomerKeywords()" value=" 删除所选 ">
@@ -201,10 +204,16 @@
     </select>
     </div>
 </div>
+<div id="targetGroupNameDialog"  style="text-align: center;left: 40%;" title="修改关键字优化组名" class="easyui-dialog">
+    <form id="targetGroupNameFrom" style="text-align: center;margin-top: 10px;">
+        目标优化组名:<input type="text" id="groupName" name="groupName" style="width:150px">
+    </form>
+</div>
 <%@ include file="/commons/loadjs.jsp" %>
 <script src="${staticPath }/customerkeyword/keywordfinderList.js"></script>
 <script language="javascript">
     $(function () {
+        $("#targetGroupNameDialog").dialog("close");
         $("#showCustomerTableDiv").css("margin-top",$("#customerKeywordTopDiv").height());
         initPaging();
         initNoPositionChecked();

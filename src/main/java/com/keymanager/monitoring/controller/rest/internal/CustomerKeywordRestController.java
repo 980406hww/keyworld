@@ -457,4 +457,16 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 			return new ResponseEntity<Object>(false, HttpStatus.OK);
 		}
 	}
+
+	@RequiresPermissions("/internal/customerKeyword/updateCustomerKeywordGroupName")
+	@RequestMapping(value = "/updateOptimizeGroupName", method = RequestMethod.POST)
+	public ResponseEntity<?> updateOptimizeGroupName(@RequestBody CustomerKeywordCriteria customerKeywordCriteria) {
+		try {
+			customerKeywordService.updateOptimizeGroupName(customerKeywordCriteria);
+			return new ResponseEntity<Object>(true, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+		}
+	}
 }

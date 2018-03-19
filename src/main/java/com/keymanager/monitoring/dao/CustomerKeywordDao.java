@@ -145,4 +145,6 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void changeCustomerKeywordStatus(@Param("terminalType")String terminalType, @Param("entryType")String entryType, @Param("customerUuid")Long customerUuid, @Param("status")Integer status);
 
     void batchChangeCustomerKeywordStatus(@Param("entryType")String entryType, @Param("customerUuids")List<Long> customerUuids, @Param("status")Integer status);
+
+    void updateOptimizeGroupName(@Param("customerKeywordCriteria")CustomerKeywordCriteria customerKeywordCriteria);
 }

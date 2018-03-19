@@ -17,7 +17,6 @@ public class CustomerKeywordCriteria extends BaseCriteria{
     private Integer optimizedCount;//已刷
     private Integer currentIndexCount;
 
-
     private String qq;
     private String userName;
     private String pushPay;//催缴
@@ -27,6 +26,7 @@ public class CustomerKeywordCriteria extends BaseCriteria{
 
     private String orderingElement;
     private String orderingRule;
+    private String targetOptimizeGroupName;
 
     public Integer getCurrentIndexCount() {
         return currentIndexCount;
@@ -212,5 +212,13 @@ public class CustomerKeywordCriteria extends BaseCriteria{
 
     public void setSearchEngine(String searchEngine) {
         this.searchEngine = searchEngine;
+    }
+
+    public String getTargetOptimizeGroupName() {
+        return targetOptimizeGroupName;
+    }
+
+    public void setTargetOptimizeGroupName(String targetOptimizeGroupName) {
+        this.targetOptimizeGroupName = targetOptimizeGroupName;
     }
 }
