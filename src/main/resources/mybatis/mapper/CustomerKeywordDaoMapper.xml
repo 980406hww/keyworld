@@ -83,6 +83,19 @@
         where fTerminalType = #{terminalType} and fCustomerUuid = #{customerUuid}  and fType = #{entryType} and  fManualCleanTitle = 0
     </update>
 
+    <update id="cleanCaptureTitleBySelected">
+        UPDATE
+            t_customer_keyword
+        SET
+            fTitle = NULL,
+            fCaptureTitleQueryTime = NULL,
+            fCapturedTitle = 0
+        WHERE fUuid IN
+        <foreach item="item" index="index" collection="customerKeywordUuids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
     <update id="updateCustomerKeywordIndex" parameterType="com.keymanager.monitoring.entity.CustomerKeyword">
         UPDATE t_customer_keyword
         SET

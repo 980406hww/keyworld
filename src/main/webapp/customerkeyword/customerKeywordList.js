@@ -166,18 +166,20 @@ function getUuids() {
 }
 function cleanTitle(customerUuid, cleanType) {
     var customerKeywordCleanCriteria = {};
-    if (cleanType == 'SelectedCustomerKeywordTitle') {
+    if (cleanType == 'SelectedCustomerKeywordTitle' || cleanType == 'CaptureTitleBySelected') {
         var customerKeywordUuids = getUuids();
         if (customerKeywordUuids.trim() === '') {
             alert("请选中要操作的关键词！");
             return;
         }
-        if (confirm("确认要清空标题吗?") == false) return;
+        if (confirm("确认要清空所选关键词的标题吗?") == false) return;
         customerKeywordCleanCriteria.customerKeywordUuids = customerKeywordUuids.split(",");
     }else if(cleanType == 'CaptureTitleFlag'){
-        if (confirm("确认要重新采集标题?") == false) return;
+        if (confirm("确认要重新采集自动导入的关键词的标题吗?") == false) return;
+    }else if(cleanType == 'CaptureTitleBySelected'){
+        if (confirm("确认要重新采集所选关键词的标题吗?") == false) return;
     }else {
-        if (confirm("确认要清除所有标题?") == false) return;
+        if (confirm("确认要清空客户下所有关键词的标题吗?") == false) return;
     }
     customerKeywordCleanCriteria.cleanType = cleanType;
     customerKeywordCleanCriteria.customerUuid = customerUuid;

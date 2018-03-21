@@ -100,6 +100,7 @@
     </shiro:hasPermission>
     <shiro:hasPermission name="/internal/customerKeyword/cleanTitle">
         <a href="javascript:cleanTitle('${customerKeywordCriteria.customerUuid}','CaptureTitleFlag')">重采标题</a> |
+        <a href="javascript:cleanTitle('${customerKeywordCriteria.customerUuid}','CaptureTitleBySelected')">重采所选标题</a> |
         <a href="javascript:cleanTitle('${customerKeywordCriteria.customerUuid}', 'SelectedCustomerKeywordTitle')">清空所选标题</a> |
         <a href="javascript:cleanTitle('${customerKeywordCriteria.customerUuid}', 'CustomerTitle')">清空客户标题</a>&nbsp;&nbsp;
     </shiro:hasPermission>
