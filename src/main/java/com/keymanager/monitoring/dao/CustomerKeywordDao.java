@@ -8,6 +8,7 @@ import com.keymanager.monitoring.criteria.CustomerKeywordUpdateCriteria;
 import com.keymanager.monitoring.entity.CustomerKeyword;
 import com.keymanager.monitoring.entity.QZCaptureTitleLog;
 import com.keymanager.monitoring.vo.CodeNameVo;
+import com.keymanager.monitoring.vo.DateRangeTypeVO;
 import com.keymanager.monitoring.vo.OptimizationCountVO;
 import com.keymanager.monitoring.vo.SearchEngineResultVO;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
@@ -149,4 +150,8 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void batchChangeCustomerKeywordStatus(@Param("entryType")String entryType, @Param("customerUuids")List<Long> customerUuids, @Param("status")Integer status);
 
     void updateOptimizeGroupName(@Param("customerKeywordCriteria")CustomerKeywordCriteria customerKeywordCriteria);
+
+    void updateOptimizePlanCountForPrice();
+
+    List<DateRangeTypeVO> searchCustomerKeywordForNoReachStandard(@Param("customerKeywordCriteria")CustomerKeywordCriteria customerKeywordCriteria);
 }

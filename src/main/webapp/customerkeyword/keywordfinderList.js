@@ -4,7 +4,7 @@ function changePaging(currentPage, pageSize) {
     searchCustomerKeywordForm.find("#pageSizeHidden").val(pageSize);
     searchCustomerKeywordForm.submit();
 }
-function resetPageNumber() {
+function resetPageNumber(days) {
     var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
     var keyword = searchCustomerKeywordForm.find("#keyword").val();
     var qq = searchCustomerKeywordForm.find("#qq").val();
@@ -43,6 +43,10 @@ function resetPageNumber() {
         searchCustomerKeywordForm.find("#remarks").val($.trim(remarks));
     }
     searchCustomerKeywordForm.find("#currentPageNumberHidden").val(1);
+    searchCustomerKeywordForm.find("#reachDaysRange").val(days);
+    if(days != 1) {
+        searchCustomerKeywordForm.submit();
+    }
 }
 function selectAll(self) {
     var a = document.getElementsByName("uuid");
@@ -148,10 +152,12 @@ function updateCustomerKeywordStatus(status) {
     });
 }
 function updateOptimizeGroupName(total) {
+    $("#targetGroupNameDialog").css("display", "block");
     $("#targetGroupNameDialog").dialog({
         resizable: false,
         width: 260,
         height: 100,
+        title:"修改关键字优化组名",
         closed: true,
         modal: true,
         buttons: [{

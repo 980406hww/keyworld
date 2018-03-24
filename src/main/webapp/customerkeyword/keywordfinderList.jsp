@@ -39,6 +39,7 @@
             <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
             <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
             <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
+            <input type="hidden" id="reachDaysRange" name="reachDaysRange" value="${customerKeywordCriteria.reachDaysRange}"/>
             <input id="customerUuid" name="customerUuid" type="hidden" value="${customerKeywordCriteria.customerUuid}">
             关键字:&nbsp;<input type="text" name="keyword" id="keyword" value="${customerKeywordCriteria.keyword}" style="width:100px;">&nbsp;
             URL:<input type="text" name="url" id="url" value="${customerKeywordCriteria.url}" style="width:100px;">&nbsp;
@@ -95,7 +96,7 @@
             到&nbsp;<input name="creationToTime" id="creationToTime" class="Wdate" type="text" style="width:90px;"
             onClick="WdatePicker()" value="${customerKeywordCriteria.creationToTime}">&nbsp;
             <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
-                <input type="submit" onclick="resetPageNumber()" value=" 查询 ">&nbsp;&nbsp;
+                <input type="submit" onclick="resetPageNumber(1)" value=" 查询 ">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
                 <input type="button" onclick="updateCustomerKeywordStatus(0)" value=" 暂停关键字 ">&nbsp;&nbsp;
@@ -106,6 +107,14 @@
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/customerKeyword/deleteCustomerKeywords">
             <input type="button" onclick="deleteCustomerKeywords()" value=" 删除所选 ">
+            </shiro:hasPermission>
+            <br/>
+            <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
+            <div align="right">
+                <a target="_blank" href="javascript:resetPageNumber(7)">7天未达标(${reachDaysRangeMap['sevenDaysNoReachStandard']})</a>
+                | <a target="_blank" href="javascript:resetPageNumber(15)">15天未达标(${reachDaysRangeMap['fifteenDaysNoReachStandard']})</a>
+                | <a target="_blank" href="javascript:resetPageNumber(30)">30天未达标(${reachDaysRangeMap['thirtyDaysNoReachStandard']})</a>
+            </div>
             </shiro:hasPermission>
         </div>
     </form>
@@ -204,7 +213,7 @@
     </select>
     </div>
 </div>
-<div id="targetGroupNameDialog"  style="text-align: center;left: 40%;" title="修改关键字优化组名" class="easyui-dialog">
+<div id="targetGroupNameDialog"  style="text-align: center;left: 40%;display: none;">
     <form id="targetGroupNameFrom" style="text-align: center;margin-top: 10px;">
         目标优化组名:<input type="text" id="groupName" name="groupName" style="width:150px">
     </form>
@@ -213,7 +222,6 @@
 <script src="${staticPath }/customerkeyword/keywordfinderList.js"></script>
 <script language="javascript">
     $(function () {
-        $("#targetGroupNameDialog").dialog("close");
         $("#showCustomerTableDiv").css("margin-top",$("#customerKeywordTopDiv").height());
         initPaging();
         initNoPositionChecked();

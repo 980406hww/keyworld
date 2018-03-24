@@ -398,9 +398,13 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		if(!isDepartmentManager) {
 			customerKeywordCriteria.setUserName(userName);
 		}
-		Page<CustomerKeyword> page = customerKeywordService.searchCustomerKeywordLists(new Page<CustomerKeyword>(currentPage, pageSize), customerKeywordCriteria);
+		if(request.getMethod().equals("POST")) {
+			Page<CustomerKeyword> page = customerKeywordService.searchCustomerKeywordLists(new Page<CustomerKeyword>(currentPage, pageSize), customerKeywordCriteria);
+			modelAndView.addObject("page", page);
+		}
+		Map<String, Integer> reachDaysRangeMap = customerKeywordService.searchCustomerKeywordForNoReachStandard(customerKeywordCriteria);
+		modelAndView.addObject("reachDaysRangeMap", reachDaysRangeMap);
 		modelAndView.addObject("customerKeywordCriteria", customerKeywordCriteria);
-		modelAndView.addObject("page", page);
 		modelAndView.addObject("user", user);
 		modelAndView.addObject("activeUsers", activeUsers);
 		modelAndView.addObject("orderElement",orderElement);
@@ -431,7 +435,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 			String entryType = (String) request.getSession().getAttribute("entryType");
 			String customerUuid = (String) requestMap.get("customerUuid");
 			Integer status = (Integer) requestMap.get("status");
-			customerKeywordService.changeCustomerKeywordStatus(terminalType, entryType, Long.parseLong(customerUuid), status);
+ 			customerKeywordService.changeCustomerKeywordStatus(terminalType, entryType, Long.parseLong(customerUuid), status);
 			return new ResponseEntity<Object>(true, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.getMessage());

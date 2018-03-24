@@ -227,6 +227,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeyword.setAutoUpdateNegativeDateTime(Utils.getCurrentTimestamp());
         customerKeyword.setCapturePositionQueryTime(Utils.addDay(Utils.getCurrentTimestamp(), -2));
         customerKeyword.setStartOptimizedTime(new Date());
+        customerKeyword.setLastReachStandardDate(new Date());
         customerKeyword.setQueryTime(new Date());
         customerKeyword.setQueryDate(new Date());
         customerKeyword.setUpdateTime(new Date());
@@ -754,6 +755,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             }
         }
         customerKeywordDao.updateOptimizePlanCountForBaiduMap();
+        customerKeywordDao.updateOptimizePlanCountForPrice();
     }
 
     public void updateCustomerKeywordPosition(Long customerKeywordUuid, int position, Date capturePositionQueryTime){
@@ -1027,5 +1029,26 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     public void updateOptimizeGroupName(CustomerKeywordCriteria customerKeywordCriteria) {
         customerKeywordDao.updateOptimizeGroupName(customerKeywordCriteria);
+    }
+
+    public Map<String, Integer> searchCustomerKeywordForNoReachStandard(CustomerKeywordCriteria customerKeywordCriteria) {
+        Map<String, Integer> reachDaysRangeMap = new HashMap<String, Integer>();
+        List<DateRangeTypeVO> dateRangeTypeVOs = customerKeywordDao.searchCustomerKeywordForNoReachStandard(customerKeywordCriteria);
+
+        int sevenDaysNoReachStandard = 0, fifteenDaysNoReachStandard = 0, thirtyDaysNoReachStandard = 0;
+        for (DateRangeTypeVO dateRangeTypeVO : dateRangeTypeVOs) {
+            int intervalDays = Utils.getIntervalDays(dateRangeTypeVO.getLastReachStandardDate(), new Date());
+            if(intervalDays >= 30) {
+                thirtyDaysNoReachStandard++;
+            } else if(intervalDays >= 15) {
+                fifteenDaysNoReachStandard++;
+            } else if(intervalDays >= 7) {
+                sevenDaysNoReachStandard++;
+            }
+        }
+        reachDaysRangeMap.put("sevenDaysNoReachStandard", sevenDaysNoReachStandard);
+        reachDaysRangeMap.put("fifteenDaysNoReachStandard", fifteenDaysNoReachStandard);
+        reachDaysRangeMap.put("thirtyDaysNoReachStandard", thirtyDaysNoReachStandard);
+        return reachDaysRangeMap;
     }
 }

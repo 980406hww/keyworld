@@ -10,6 +10,8 @@ public class DateRangeTypeVO {
 
     private Date nextChargeDate;
 
+    private Date lastReachStandardDate;
+
     public Long getUuid() {
         return uuid;
     }
@@ -24,5 +26,13 @@ public class DateRangeTypeVO {
 
     public void setNextChargeDate(Date nextChargeDate) {
         this.nextChargeDate = nextChargeDate;
+    }
+
+    public Date getLastReachStandardDate() {
+        return lastReachStandardDate;
+    }
+
+    public void setLastReachStandardDate(Date lastReachStandardDate) {
+        this.lastReachStandardDate = lastReachStandardDate;
     }
 }

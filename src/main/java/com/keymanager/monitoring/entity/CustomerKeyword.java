@@ -110,6 +110,9 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(value = "fLastOptimizeDateTime")
     private Date lastOptimizeDateTime;
 
+    @TableField(value = "fLastReachStandardDate")
+    private Date lastReachStandardDate;
+
     @TableField(value = "fOptimizePositionFirstPercentage")
     private int optimizePositionFirstPercentage;
 
@@ -453,6 +456,14 @@ public class CustomerKeyword extends BaseEntity {
 
     public void setLastOptimizeDateTime(Date lastOptimizeDateTime) {
         this.lastOptimizeDateTime = lastOptimizeDateTime;
+    }
+
+    public Date getLastReachStandardDate() {
+        return lastReachStandardDate;
+    }
+
+    public void setLastReachStandardDate(Date lastReachStandardDate) {
+        this.lastReachStandardDate = lastReachStandardDate;
     }
 
     public int getOptimizePositionFirstPercentage() {

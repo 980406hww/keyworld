@@ -27,6 +27,7 @@ public class CustomerKeywordCriteria extends BaseCriteria{
     private String orderingElement;
     private String orderingRule;
     private String targetOptimizeGroupName;
+    private Integer reachDaysRange;
 
     public Integer getCurrentIndexCount() {
         return currentIndexCount;
@@ -220,5 +221,13 @@ public class CustomerKeywordCriteria extends BaseCriteria{
 
     public void setTargetOptimizeGroupName(String targetOptimizeGroupName) {
         this.targetOptimizeGroupName = targetOptimizeGroupName;
+    }
+
+    public Integer getReachDaysRange() {
+        return reachDaysRange;
+    }
+
+    public void setReachDaysRange(Integer reachDaysRange) {
+        this.reachDaysRange = reachDaysRange;
     }
 }
