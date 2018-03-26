@@ -1056,6 +1056,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     public Map<String, Integer> searchCustomerKeywordForNoReachStandard(CustomerKeywordCriteria customerKeywordCriteria) {
         Map<String, Integer> reachDaysRangeMap = new HashMap<String, Integer>();
+        Integer reachDaysRange = customerKeywordCriteria.getReachDaysRange();
+        customerKeywordCriteria.setReachDaysRange(1);
         List<DateRangeTypeVO> dateRangeTypeVOs = customerKeywordDao.searchCustomerKeywordForNoReachStandard(customerKeywordCriteria);
 
         int sevenDaysNoReachStandard = 0, fifteenDaysNoReachStandard = 0, thirtyDaysNoReachStandard = 0;
@@ -1069,6 +1071,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                 sevenDaysNoReachStandard++;
             }
         }
+        customerKeywordCriteria.setReachDaysRange(reachDaysRange);
         reachDaysRangeMap.put("sevenDaysNoReachStandard", sevenDaysNoReachStandard);
         reachDaysRangeMap.put("fifteenDaysNoReachStandard", fifteenDaysNoReachStandard);
         reachDaysRangeMap.put("thirtyDaysNoReachStandard", thirtyDaysNoReachStandard);
