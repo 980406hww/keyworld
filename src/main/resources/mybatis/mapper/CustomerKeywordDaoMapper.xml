@@ -639,7 +639,6 @@
         AND fType =  #{qzCaptureTitleLog.type}
         AND fSearchEngine =  #{searchEngine}
         AND fOptimizeGroupName =  #{qzCaptureTitleLog.group}
-        AND fCaptureTitleQueryTime IS NOT NULL
         AND ( fTitle = '' OR  fTitle IS NULL )
         AND fManualCleanTitle  = 0
     </delete>
