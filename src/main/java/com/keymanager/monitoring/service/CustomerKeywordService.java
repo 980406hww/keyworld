@@ -762,32 +762,24 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void updateCustomerKeywordPosition(Long customerKeywordUuid, int position, Date capturePositionQueryTime){
-        customerKeywordDao.updatePosition(customerKeywordUuid, position, capturePositionQueryTime);
+        boolean reachStandardFlag = false;
+        if(position > 0 && position <= 10) {
+            CustomerKeyword customerKeyword = customerKeywordDao.selectById(customerKeywordUuid);
+            if(customerKeyword.getPositionFifthFee() != null && customerKeyword.getPositionFifthFee() > 0 && position <= 5) {
+                reachStandardFlag = true;
+            } else if(customerKeyword.getPositionThirdFee() != null && customerKeyword.getPositionThirdFee() > 0 && position <= 3) {
+                reachStandardFlag = true;
+            } else if(customerKeyword.getPositionFirstPageFee() != null && customerKeyword.getPositionFirstPageFee() > 0 && position <= 10) {
+                reachStandardFlag = true;
+            } else if(customerKeyword.getPositionSecondFee() != null && customerKeyword.getPositionSecondFee() > 0 && position <= 2) {
+                reachStandardFlag = true;
+            } else if(customerKeyword.getPositionFirstFee() != null && customerKeyword.getPositionFirstFee() > 0 && position == 1) {
+                reachStandardFlag = true;
+            }
+        }
+        customerKeywordDao.updatePosition(customerKeywordUuid, position, capturePositionQueryTime, reachStandardFlag);
         if(capturePositionQueryTime != null) {
             customerKeywordPositionSummaryService.savePositionSummary(customerKeywordUuid, position);
-        }
-        updateCustomerKeywordLastReachStandardDate(customerKeywordUuid, position);
-    }
-
-    private void updateCustomerKeywordLastReachStandardDate(Long customerKeywordUuid, int position) {
-        CustomerKeyword customerKeyword = customerKeywordDao.selectById(customerKeywordUuid);
-        boolean updateFlag = false;
-        if(customerKeyword.getPositionFirstFee() != null && customerKeyword.getPositionFirstFee() > 0 && position == 1) {
-            updateFlag = true;
-        } else if(customerKeyword.getPositionSecondFee() != null && customerKeyword.getPositionSecondFee() > 0 && position == 2) {
-            updateFlag = true;
-        } else if(customerKeyword.getPositionThirdFee() != null && customerKeyword.getPositionThirdFee() > 0 && position == 3) {
-            updateFlag = true;
-        } else if(customerKeyword.getPositionForthFee() != null && customerKeyword.getPositionForthFee() > 0 && position == 4) {
-            updateFlag = true;
-        } else if(customerKeyword.getPositionFifthFee() != null && customerKeyword.getPositionFifthFee() > 0 && position == 5) {
-            updateFlag = true;
-        } else if(customerKeyword.getPositionFirstPageFee() != null && customerKeyword.getPositionFirstPageFee() > 0 && position >= 10) {
-            updateFlag = true;
-        }
-        if(updateFlag) {
-            customerKeyword.setLastReachStandardDate(new Date());
-            customerKeywordDao.updateById(customerKeyword);
         }
     }
 

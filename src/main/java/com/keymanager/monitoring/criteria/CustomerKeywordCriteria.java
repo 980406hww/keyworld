@@ -14,7 +14,8 @@ public class CustomerKeywordCriteria extends BaseCriteria{
     private String entryType;//
     private String terminalType;//8088 PC  8089  phone
     private String searchEngine;
-    private Integer optimizedCount;//已刷
+    private Integer gtOptimizedCount;
+    private Integer ltOptimizedCount;
     private Integer currentIndexCount;
 
     private String qq;
@@ -48,12 +49,20 @@ public class CustomerKeywordCriteria extends BaseCriteria{
         this.remarks = remarks;
     }
 
-    public Integer getOptimizedCount() {
-        return optimizedCount;
+    public Integer getGtOptimizedCount() {
+        return gtOptimizedCount;
     }
 
-    public void setOptimizedCount(Integer optimizedCount) {
-        this.optimizedCount = optimizedCount;
+    public void setGtOptimizedCount(Integer gtOptimizedCount) {
+        this.gtOptimizedCount = gtOptimizedCount;
+    }
+
+    public Integer getLtOptimizedCount() {
+        return ltOptimizedCount;
+    }
+
+    public void setLtOptimizedCount(Integer ltOptimizedCount) {
+        this.ltOptimizedCount = ltOptimizedCount;
     }
 
     public Long getCustomerUuid() {

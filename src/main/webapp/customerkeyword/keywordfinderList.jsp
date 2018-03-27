@@ -78,7 +78,8 @@
             <input id="displayStop" name="displayStop" type="checkbox"  onclick="displayStopValue()" value="${customerKeywordCriteria.displayStop}"/>显示下架 &nbsp;
             <input id="noPosition" name="noPosition" type="checkbox"  onclick="noPositionValue()"/>显示排名为0 &nbsp;
             <br/>
-            已刷:<input type="text" name="optimizedCount" id="optimizedCount" value="${customerKeywordCriteria.optimizedCount}" style="width:40px;"/>
+            已刷:<input type="text" name="gtOptimizedCount" id="gtOptimizedCount" placeholder=">=" value="${customerKeywordCriteria.gtOptimizedCount}" style="width:40px;"/>
+            <input type="text" name="ltOptimizedCount" id="ltOptimizedCount" placeholder="<="  value="${customerKeywordCriteria.ltOptimizedCount}" style="width:40px;"/>
             显示前:
             <input type="text" name="position" id="position" value="${customerKeywordCriteria.position}" style="width:40px;"/>
             订单号:

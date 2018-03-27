@@ -37,7 +37,8 @@
         <if test="customerKeywordCriteria.orderNumber != null and customerKeywordCriteria.orderNumber != ''">AND ck.fOrderNumber  like '%${customerKeywordCriteria.orderNumber}%'</if>
         <if test="customerKeywordCriteria.pushPay != null and customerKeywordCriteria.pushPay != ''">AND ((ck.fCollectMethod = 'PerDay' AND ck.fEffectiveToTime is not null) OR (ck.fEffectiveToTime &lt;= DATE_ADD(CURDATE(),INTERVAL 3 DAY))) </if>
         <if test="customerKeywordCriteria.terminalType != null and customerKeywordCriteria.terminalType != ''">AND fTerminalType =  #{customerKeywordCriteria.terminalType} </if>
-        <if test="customerKeywordCriteria.optimizedCount != null">AND ck.fOptimizedCount &gt;= #{customerKeywordCriteria.optimizedCount} </if>
+        <if test="customerKeywordCriteria.gtOptimizedCount != null">AND ck.fOptimizedCount &gt;= #{customerKeywordCriteria.gtOptimizedCount} </if>
+        <if test="customerKeywordCriteria.ltOptimizedCount != null">AND ck.fOptimizedCount &lt;= #{customerKeywordCriteria.ltOptimizedCount} </if>
         <if test="customerKeywordCriteria.remarks != null and customerKeywordCriteria.remarks != ''">AND ck.fRemarks like '%${customerKeywordCriteria.remarks}%' </if>
         <if test="customerKeywordCriteria.currentIndexCount != null and customerKeywordCriteria.currentIndexCount != ''">AND ck.fCurrentIndexCount &gt;= #{customerKeywordCriteria.currentIndexCount} </if>
         <if test="customerKeywordCriteria.qq != null and customerKeywordCriteria.qq != ''">
@@ -670,6 +671,9 @@
             fCurrentPosition = #{position},
             fInitialPosition = IFNULL(fInitialPosition, #{position}),
             fCapturePositionQueryTime = IFNULL(#{capturePositionQueryTime}, fCapturePositionQueryTime),
+            <if test="reachStandardFlag == true">
+                fLastReachStandardDate = CURRENT_DATE(),
+            </if>
             fUpdateTime = NOW()
         WHERE fUuid = #{uuid}
     </update>
@@ -777,7 +781,8 @@
         <if test="customerKeywordCriteria.orderNumber != null and customerKeywordCriteria.orderNumber != ''">AND ck.fOrderNumber  like '%${customerKeywordCriteria.orderNumber}%'</if>
         <if test="customerKeywordCriteria.pushPay != null and customerKeywordCriteria.pushPay != ''">AND ((ck.fCollectMethod = 'PerDay' AND ck.fEffectiveToTime is not null) OR (ck.fEffectiveToTime &lt;= DATE_ADD(CURDATE(),INTERVAL 3 DAY))) </if>
         <if test="customerKeywordCriteria.terminalType != null and customerKeywordCriteria.terminalType != ''">AND fTerminalType =  #{customerKeywordCriteria.terminalType} </if>
-        <if test="customerKeywordCriteria.optimizedCount != null">AND ck.fOptimizedCount &gt;= #{customerKeywordCriteria.optimizedCount} </if>
+        <if test="customerKeywordCriteria.gtOptimizedCount != null">AND ck.fOptimizedCount &gt;= #{customerKeywordCriteria.gtOptimizedCount} </if>
+        <if test="customerKeywordCriteria.ltOptimizedCount != null">AND ck.fOptimizedCount &lt;= #{customerKeywordCriteria.ltOptimizedCount} </if>
         <if test="customerKeywordCriteria.remarks != null and customerKeywordCriteria.remarks != ''">AND ck.fRemarks like '%${customerKeywordCriteria.remarks}%' </if>
         <if test="customerKeywordCriteria.currentIndexCount != null and customerKeywordCriteria.currentIndexCount != ''">AND ck.fCurrentIndexCount &gt;= #{customerKeywordCriteria.currentIndexCount} </if>
         <if test="customerKeywordCriteria.qq != null and customerKeywordCriteria.qq != ''">

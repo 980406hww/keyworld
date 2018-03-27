@@ -10,7 +10,8 @@ function resetPageNumber(days) {
     var qq = searchCustomerKeywordForm.find("#qq").val();
     var url = searchCustomerKeywordForm.find("#url").val();
     var optimizeGroupName = searchCustomerKeywordForm.find("#optimizeGroupName").val();
-    var optimizedCount = searchCustomerKeywordForm.find("#optimizedCount").val();
+    var gtOptimizedCount = searchCustomerKeywordForm.find("#gtOptimizedCount").val();
+    var ltOptimizedCount = searchCustomerKeywordForm.find("#ltOptimizedCount").val();
     var position = searchCustomerKeywordForm.find("#position").val();
     var orderNumber = searchCustomerKeywordForm.find("#orderNumber").val();
     var invalidRefreshCount = searchCustomerKeywordForm.find("#invalidRefreshCount").val();
@@ -28,8 +29,11 @@ function resetPageNumber(days) {
     if(optimizeGroupName != "") {
         searchCustomerKeywordForm.find("#optimizeGroupName").val($.trim(optimizeGroupName));
     }
-    if(optimizedCount != "") {
-        searchCustomerKeywordForm.find("#optimizedCount").val($.trim(optimizedCount));
+    if(gtOptimizedCount != "") {
+        searchCustomerKeywordForm.find("#gtOptimizedCount").val($.trim(gtOptimizedCount));
+    }
+    if(ltOptimizedCount != "") {
+        searchCustomerKeywordForm.find("#ltOptimizedCount").val($.trim(ltOptimizedCount));
     }
     if(position != "") {
         searchCustomerKeywordForm.find("#position").val($.trim(position));
