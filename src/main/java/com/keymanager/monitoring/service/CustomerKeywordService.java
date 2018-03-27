@@ -718,7 +718,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void adjustOptimizationCount(){
-        List<Long> priceCustomerKeywordUuids = null;
         List<String> groupNames = new ArrayList<String>();
         groupNames.add("pc_pm_xiaowu");
         groupNames.add("pc_pm_learner");
@@ -734,9 +733,13 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             for(Map customerKeywordSummaryMap : customerKeywordSummaries) {
                 Long uuid = Long.parseLong(customerKeywordSummaryMap.get("uuid").toString());
                 int currentIndexCount = (Integer) customerKeywordSummaryMap.get("currentIndexCount");
+                Integer positionFirstFee = (Integer) customerKeywordSummaryMap.get("positionFirstFee");
                 String positionStr = (String) customerKeywordSummaryMap.get("positions");
                 String[] positionArray = positionStr.split(",");
                 int optimizationPlanCount = currentIndexCount < 100 ? 150 : currentIndexCount;
+                if(positionFirstFee != null && positionFirstFee > 0) {
+                    optimizationPlanCount = (optimizationPlanCount + positionFirstFee * 4) / 2;
+                }
                 if (positionArray.length == 3) {
                     boolean lessFifth = true;
                     for (String position : positionArray) {
@@ -749,11 +752,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                     if (lessFifth) {
                         optimizationPlanCount = 20 + currentIndexCount / 50;
                     }
-                } else {
-                    if(priceCustomerKeywordUuids == null) {
-                        priceCustomerKeywordUuids = new ArrayList<Long>();
-                    }
-                    priceCustomerKeywordUuids.add(uuid);
                 }
                 int queryInterval = (23 * 60) / optimizationPlanCount;
 
@@ -761,9 +759,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             }
         }
         customerKeywordDao.updateOptimizePlanCountForBaiduMap();
-        if(priceCustomerKeywordUuids != null) {
-            customerKeywordDao.updateOptimizePlanCountForPrice(priceCustomerKeywordUuids);
-        }
     }
 
     public void updateCustomerKeywordPosition(Long customerKeywordUuid, int position, Date capturePositionQueryTime){

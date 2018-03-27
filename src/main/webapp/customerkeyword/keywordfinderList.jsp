@@ -119,9 +119,9 @@
                 <c:if test="${customerKeywordCriteria.entryType eq 'pt' or customerKeywordCriteria.entryType eq 'bc'}">
                 <div align="right">
                     未达标统计:
-                    <a target="_blank" href="javascript:resetPageNumber(7)">超过7天(${customerKeywordCriteria.sevenDaysNoReachStandard})</a>
+                    <a target="_blank" href="javascript:resetPageNumber(30)">超过30天(${customerKeywordCriteria.thirtyDaysNoReachStandard})</a>
                     | <a target="_blank" href="javascript:resetPageNumber(15)">超过15天(${customerKeywordCriteria.fifteenDaysNoReachStandard})</a>
-                    | <a target="_blank" href="javascript:resetPageNumber(30)">超过30天(${customerKeywordCriteria.thirtyDaysNoReachStandard})</a>
+                    | <a target="_blank" href="javascript:resetPageNumber(7)">超过7天(${customerKeywordCriteria.sevenDaysNoReachStandard})</a>
                 </div>
                 </c:if>
             </shiro:hasPermission>
