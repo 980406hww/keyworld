@@ -128,7 +128,8 @@
             <input type="text" name="optimizeGroupName" id="optimizeGroupName"
                    value="${customerKeywordCriteria.optimizeGroupName}" style="width:100px;">
             <%--<c:if test="${!user.vipType}">--%>
-            已刷:<input type="text" name="optimizedCount" id="optimizedCount" value="${customerKeywordCriteria.optimizedCount}" style="width:40px;"/>
+            已刷:<input type="text" name="gtOptimizedCount" id="gtOptimizedCount" placeholder=">=" value="${customerKeywordCriteria.gtOptimizedCount}" style="width:40px;"/>
+            <input type="text" name="ltOptimizedCount" id="ltOptimizedCount" placeholder="<="  value="${customerKeywordCriteria.ltOptimizedCount}" style="width:40px;"/>
             显示前:
             <input type="text" name="position" id="position" value="${customerKeywordCriteria.position}"
                    style="width:40px;"/>
@@ -448,7 +449,8 @@
     <input type="hidden" name="url" id="urlHidden" value="" />
     <input type="hidden" name="status" id="statusHidden" value="" />
     <input type="hidden" name="optimizeGroupName" id="optimizeGroupNameHidden" value="" />
-    <input type="hidden" name="optimizedCount" id="optimizedCountHidden" value="" />
+    <input type="hidden" name="gtOptimizedCount" id="gtOptimizedCountHidden" value="" />
+    <input type="hidden" name="lgtOptimizedCount" id="ltOptimizedCountHidden" value="" />
     <input type="hidden" name="position" id="positionHidden" value="" />
     <input type="hidden" name="noPosition" id="noPositionHidden" value="" />
     <input type="hidden" name="displayStop" id="displayStopHidden" value="" />
