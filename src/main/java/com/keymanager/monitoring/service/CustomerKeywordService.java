@@ -1054,27 +1054,17 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeywordDao.updateOptimizeGroupName(customerKeywordCriteria);
     }
 
-    public Map<String, Integer> searchCustomerKeywordForNoReachStandard(CustomerKeywordCriteria customerKeywordCriteria) {
-        Map<String, Integer> reachDaysRangeMap = new HashMap<String, Integer>();
-        Integer reachDaysRange = customerKeywordCriteria.getReachDaysRange();
-        customerKeywordCriteria.setReachDaysRange(1);
-        List<DateRangeTypeVO> dateRangeTypeVOs = customerKeywordDao.searchCustomerKeywordForNoReachStandard(customerKeywordCriteria);
-
-        int sevenDaysNoReachStandard = 0, fifteenDaysNoReachStandard = 0, thirtyDaysNoReachStandard = 0;
-        for (DateRangeTypeVO dateRangeTypeVO : dateRangeTypeVOs) {
-            int intervalDays = Utils.getIntervalDays(dateRangeTypeVO.getLastReachStandardDate(), new Date());
-            if(intervalDays >= 30) {
-                thirtyDaysNoReachStandard++;
-            } else if(intervalDays >= 15) {
-                fifteenDaysNoReachStandard++;
-            } else if(intervalDays >= 7) {
-                sevenDaysNoReachStandard++;
-            }
-        }
-        customerKeywordCriteria.setReachDaysRange(reachDaysRange);
-        reachDaysRangeMap.put("sevenDaysNoReachStandard", sevenDaysNoReachStandard);
-        reachDaysRangeMap.put("fifteenDaysNoReachStandard", fifteenDaysNoReachStandard);
-        reachDaysRangeMap.put("thirtyDaysNoReachStandard", thirtyDaysNoReachStandard);
-        return reachDaysRangeMap;
+    public void searchCustomerKeywordForNoReachStandard(CustomerKeywordCriteria customerKeywordCriteria) {
+        Integer noReachStandardDays = customerKeywordCriteria.getNoReachStandardDays();
+        customerKeywordCriteria.setNoReachStandardDays(7);
+        int sevenDaysNoReachStandard = customerKeywordDao.searchCustomerKeywordForNoReachStandard(customerKeywordCriteria);
+        customerKeywordCriteria.setNoReachStandardDays(15);
+        int fifteenDaysNoReachStandard = customerKeywordDao.searchCustomerKeywordForNoReachStandard(customerKeywordCriteria);
+        customerKeywordCriteria.setNoReachStandardDays(30);
+        int thirtyDaysNoReachStandard = customerKeywordDao.searchCustomerKeywordForNoReachStandard(customerKeywordCriteria);
+        customerKeywordCriteria.setNoReachStandardDays(noReachStandardDays);
+        customerKeywordCriteria.setSevenDaysNoReachStandard(sevenDaysNoReachStandard);
+        customerKeywordCriteria.setFifteenDaysNoReachStandard(fifteenDaysNoReachStandard);
+        customerKeywordCriteria.setThirtyDaysNoReachStandard(thirtyDaysNoReachStandard);
     }
 }

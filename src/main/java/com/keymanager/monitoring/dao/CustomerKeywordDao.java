@@ -153,5 +153,5 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void updateOptimizePlanCountForPrice();
 
-    List<DateRangeTypeVO> searchCustomerKeywordForNoReachStandard(@Param("customerKeywordCriteria")CustomerKeywordCriteria customerKeywordCriteria);
+    int searchCustomerKeywordForNoReachStandard(@Param("customerKeywordCriteria")CustomerKeywordCriteria customerKeywordCriteria);
 }

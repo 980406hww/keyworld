@@ -14,6 +14,7 @@ function resetPageNumber(days) {
     var position = searchCustomerKeywordForm.find("#position").val();
     var orderNumber = searchCustomerKeywordForm.find("#orderNumber").val();
     var invalidRefreshCount = searchCustomerKeywordForm.find("#invalidRefreshCount").val();
+    var noReachStandardDays = searchCustomerKeywordForm.find("#noReachStandardDays").val();
     var remarks = searchCustomerKeywordForm.find("#remarks").val();
     if(keyword != "") {
         searchCustomerKeywordForm.find("#keyword").val($.trim(keyword));
@@ -39,12 +40,18 @@ function resetPageNumber(days) {
     if(invalidRefreshCount != "") {
         searchCustomerKeywordForm.find("#invalidRefreshCount").val($.trim(invalidRefreshCount));
     }
+    if(days > 0) {
+        searchCustomerKeywordForm.find("#noReachStandardDays").val(days);
+    } else if(noReachStandardDays != "") {
+        searchCustomerKeywordForm.find("#noReachStandardDays").val($.trim(noReachStandardDays));
+    } else {
+        searchCustomerKeywordForm.find("#noReachStandardDays").val("");
+    }
     if(remarks != "") {
         searchCustomerKeywordForm.find("#remarks").val($.trim(remarks));
     }
     searchCustomerKeywordForm.find("#currentPageNumberHidden").val(1);
-    searchCustomerKeywordForm.find("#reachDaysRange").val(days);
-    if(days != 1) {
+    if(days != 0) {
         searchCustomerKeywordForm.submit();
     }
 }

@@ -2,8 +2,11 @@ package com.keymanager.monitoring.controller.rest.external;
 
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.entity.ClientStatus;
+import com.keymanager.monitoring.entity.Config;
 import com.keymanager.monitoring.service.ClientStatusService;
+import com.keymanager.monitoring.service.ConfigService;
 import com.keymanager.monitoring.service.VMwareService;
+import com.keymanager.util.Constants;
 import com.keymanager.util.TerminalTypeMapping;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +29,9 @@ public class ExternalClientStatusRestController extends SpringMVCBaseController 
 
     @Autowired
     private ClientStatusService clientStatusService;
+
+    @Autowired
+    private ConfigService configService;
 
     @RequestMapping(value = "/updatePageNo", method = RequestMethod.GET)
     public ResponseEntity<?> updatePageNo(HttpServletRequest request) throws Exception {
@@ -132,7 +138,9 @@ public class ExternalClientStatusRestController extends SpringMVCBaseController 
         try {
             if (validUser(userName, password)) {
                 Integer downloadingClientCount = clientStatusService.getDownloadingClientCount();
-                if(downloadingClientCount >= 5) {
+                Config config = configService.getConfig(Constants.CONFIG_TYPE_START_UP, Constants.CONFIG_KEY_DOWNLOADING_CLIENT_COUNT);
+                int maxDownloadingClientCount = Integer.parseInt(config.getValue());
+                if(downloadingClientCount >= maxDownloadingClientCount) {
                     return new ResponseEntity<Object>(null, HttpStatus.OK);
                 } else {
                     ClientStatus clientStatus = clientStatusService.getClientStatusForStartUp();

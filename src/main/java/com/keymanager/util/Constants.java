@@ -35,6 +35,8 @@ public class Constants {
 	public final static String CONFIG_KEY_NEGATIVE_KEYWORDS = "NegativeKeywords";
 	public final static String CONFIG_TYPE_ZHANNEI_SOGOU = "zhannei_sogou";
 	public final static String CONFIG_KEY_NOPOSITION_MAX_INVALID_COUNT = "NoPositionMaxInvalidCount";
+	public final static String CONFIG_TYPE_START_UP = "StartUp";
+	public final static String CONFIG_KEY_DOWNLOADING_CLIENT_COUNT = "DownloadingClientCount";
 	
 	public final static Map<String, String> ACCOUNT_LOG_STATUS_MAP = new HashMap<String, String>();
 	static {

@@ -401,9 +401,11 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		if(request.getMethod().equals("POST")) {
 			Page<CustomerKeyword> page = customerKeywordService.searchCustomerKeywordLists(new Page<CustomerKeyword>(currentPage, pageSize), customerKeywordCriteria);
 			modelAndView.addObject("page", page);
+		} else {
+			if(entryType.equals(EntryTypeEnum.pt.name()) || entryType.equals(EntryTypeEnum.bc.name())) {
+				customerKeywordService.searchCustomerKeywordForNoReachStandard(customerKeywordCriteria);
+			}
 		}
-		Map<String, Integer> reachDaysRangeMap = customerKeywordService.searchCustomerKeywordForNoReachStandard(customerKeywordCriteria);
-		modelAndView.addObject("reachDaysRangeMap", reachDaysRangeMap);
 		modelAndView.addObject("customerKeywordCriteria", customerKeywordCriteria);
 		modelAndView.addObject("user", user);
 		modelAndView.addObject("activeUsers", activeUsers);

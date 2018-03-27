@@ -27,7 +27,10 @@ public class CustomerKeywordCriteria extends BaseCriteria{
     private String orderingElement;
     private String orderingRule;
     private String targetOptimizeGroupName;
-    private Integer reachDaysRange;
+    private Integer noReachStandardDays;
+    private Integer sevenDaysNoReachStandard;
+    private Integer fifteenDaysNoReachStandard;
+    private Integer thirtyDaysNoReachStandard;
 
     public Integer getCurrentIndexCount() {
         return currentIndexCount;
@@ -223,11 +226,35 @@ public class CustomerKeywordCriteria extends BaseCriteria{
         this.targetOptimizeGroupName = targetOptimizeGroupName;
     }
 
-    public Integer getReachDaysRange() {
-        return reachDaysRange;
+    public Integer getNoReachStandardDays() {
+        return noReachStandardDays;
     }
 
-    public void setReachDaysRange(Integer reachDaysRange) {
-        this.reachDaysRange = reachDaysRange;
+    public void setNoReachStandardDays(Integer noReachStandardDays) {
+        this.noReachStandardDays = noReachStandardDays;
+    }
+
+    public Integer getSevenDaysNoReachStandard() {
+        return sevenDaysNoReachStandard;
+    }
+
+    public void setSevenDaysNoReachStandard(Integer sevenDaysNoReachStandard) {
+        this.sevenDaysNoReachStandard = sevenDaysNoReachStandard;
+    }
+
+    public Integer getFifteenDaysNoReachStandard() {
+        return fifteenDaysNoReachStandard;
+    }
+
+    public void setFifteenDaysNoReachStandard(Integer fifteenDaysNoReachStandard) {
+        this.fifteenDaysNoReachStandard = fifteenDaysNoReachStandard;
+    }
+
+    public Integer getThirtyDaysNoReachStandard() {
+        return thirtyDaysNoReachStandard;
+    }
+
+    public void setThirtyDaysNoReachStandard(Integer thirtyDaysNoReachStandard) {
+        this.thirtyDaysNoReachStandard = thirtyDaysNoReachStandard;
     }
 }

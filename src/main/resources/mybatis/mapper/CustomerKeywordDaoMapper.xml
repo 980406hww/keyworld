@@ -37,7 +37,7 @@
         <if test="customerKeywordCriteria.orderNumber != null and customerKeywordCriteria.orderNumber != ''">AND ck.fOrderNumber  like '%${customerKeywordCriteria.orderNumber}%'</if>
         <if test="customerKeywordCriteria.pushPay != null and customerKeywordCriteria.pushPay != ''">AND ((ck.fCollectMethod = 'PerDay' AND ck.fEffectiveToTime is not null) OR (ck.fEffectiveToTime &lt;= DATE_ADD(CURDATE(),INTERVAL 3 DAY))) </if>
         <if test="customerKeywordCriteria.terminalType != null and customerKeywordCriteria.terminalType != ''">AND fTerminalType =  #{customerKeywordCriteria.terminalType} </if>
-        <if test="customerKeywordCriteria.optimizedCount != null">AND ck.fOptimizedCount &lt;= #{customerKeywordCriteria.optimizedCount} </if>
+        <if test="customerKeywordCriteria.optimizedCount != null">AND ck.fOptimizedCount &gt;= #{customerKeywordCriteria.optimizedCount} </if>
         <if test="customerKeywordCriteria.remarks != null and customerKeywordCriteria.remarks != ''">AND ck.fRemarks like '%${customerKeywordCriteria.remarks}%' </if>
         <if test="customerKeywordCriteria.currentIndexCount != null and customerKeywordCriteria.currentIndexCount != ''">AND ck.fCurrentIndexCount &gt;= #{customerKeywordCriteria.currentIndexCount} </if>
         <if test="customerKeywordCriteria.qq != null and customerKeywordCriteria.qq != ''">
@@ -47,20 +47,9 @@
         <if test="customerKeywordCriteria.userName != null and customerKeywordCriteria.userName != ''">
             AND c.fUserID = #{customerKeywordCriteria.userName}
         </if>
-        <choose>
-            <when test="customerKeywordCriteria.reachDaysRange == 7">
-                AND ck.fLastReachStandardDate &lt;= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY)
-                AND ck.fLastReachStandardDate &gt; DATE_SUB(CURRENT_DATE(), INTERVAL 15 DAY)
-            </when>
-            <when test="customerKeywordCriteria.reachDaysRange == 15">
-                AND ck.fLastReachStandardDate &lt;= DATE_SUB(CURRENT_DATE(), INTERVAL 15 DAY)
-                AND ck.fLastReachStandardDate &gt; DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)
-            </when>
-            <when test="customerKeywordCriteria.reachDaysRange == 30">
-                AND ck.fLastReachStandardDate &lt;= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)
-            </when>
-            <otherwise></otherwise>
-        </choose>
+        <if test="customerKeywordCriteria.noReachStandardDays != null and customerKeywordCriteria.noReachStandardDays > 0">
+            AND ck.fLastReachStandardDate &lt;= DATE_SUB(CURRENT_DATE(), INTERVAL #{customerKeywordCriteria.noReachStandardDays} DAY)
+        </if>
         <choose>
             <when test="customerKeywordCriteria.optimizeGroupName != null and customerKeywordCriteria.optimizeGroupName != ''">
                 AND ck.fOptimizeGroupName  like '%${customerKeywordCriteria.optimizeGroupName}%'
@@ -816,15 +805,13 @@
         AND (fType = 'pt' OR fType = 'bc')
     </update>
 
-    <select id="searchCustomerKeywordForNoReachStandard" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordCriteria" resultType="com.keymanager.monitoring.vo.DateRangeTypeVO">
+    <select id="searchCustomerKeywordForNoReachStandard" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordCriteria" resultType="int">
         SELECT
-            ck.fUuid AS 'uuid',
-            ck.fLastReachStandardDate AS 'lastReachStandardDate'
+            COUNT(1)
         FROM
             t_customer_keyword ck,
             t_customer c
         WHERE c.fUuid = ck.fCustomerUuid
-        AND ck.fLastReachStandardDate &lt;= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY)
         <include refid="searchCustomerKeywordsCriteria"/>
     </select>
 </mapper>

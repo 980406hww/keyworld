@@ -39,7 +39,9 @@
             <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
             <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
             <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
-            <input type="hidden" id="reachDaysRange" name="reachDaysRange" value="${customerKeywordCriteria.reachDaysRange}"/>
+            <input type="hidden" id="sevenDaysNoReachStandard" name="sevenDaysNoReachStandard" value="${customerKeywordCriteria.sevenDaysNoReachStandard}"/>
+            <input type="hidden" id="fifteenDaysNoReachStandard" name="fifteenDaysNoReachStandard" value="${customerKeywordCriteria.fifteenDaysNoReachStandard}"/>
+            <input type="hidden" id="thirtyDaysNoReachStandard" name="thirtyDaysNoReachStandard" value="${customerKeywordCriteria.thirtyDaysNoReachStandard}"/>
             <input id="customerUuid" name="customerUuid" type="hidden" value="${customerKeywordCriteria.customerUuid}">
             关键字:&nbsp;<input type="text" name="keyword" id="keyword" value="${customerKeywordCriteria.keyword}" style="width:100px;">&nbsp;
             URL:<input type="text" name="url" id="url" value="${customerKeywordCriteria.url}" style="width:100px;">&nbsp;
@@ -83,6 +85,10 @@
             <input type="text" name="orderNumber" id="orderNumber" value="${customerKeywordCriteria.orderNumber}" style="width:100px;">
             无效点击数:
             <input type="text" name="invalidRefreshCount" id="invalidRefreshCount" value="${customerKeywordCriteria.invalidRefreshCount}" style="width:40px;">
+            <c:if test="${customerKeywordCriteria.entryType eq 'pt' or customerKeywordCriteria.entryType eq 'bc'}">
+            未达标天数:
+            <input type="text" name="noReachStandardDays" id="noReachStandardDays" value="${customerKeywordCriteria.noReachStandardDays}" style="width:40px;">
+            </c:if>
             搜索引擎:
             <select name="searchEngine" id="searchEngine">
                 <option value="">全部</option>
@@ -96,7 +102,7 @@
             到&nbsp;<input name="creationToTime" id="creationToTime" class="Wdate" type="text" style="width:90px;"
             onClick="WdatePicker()" value="${customerKeywordCriteria.creationToTime}">&nbsp;
             <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
-                <input type="submit" onclick="resetPageNumber(1)" value=" 查询 ">&nbsp;&nbsp;
+                <input type="submit" onclick="resetPageNumber(0)" value=" 查询 ">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
                 <input type="button" onclick="updateCustomerKeywordStatus(0)" value=" 暂停关键字 ">&nbsp;&nbsp;
@@ -110,11 +116,14 @@
             </shiro:hasPermission>
             <br/>
             <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
-            <div align="right">
-                <a target="_blank" href="javascript:resetPageNumber(7)">7天未达标(${reachDaysRangeMap['sevenDaysNoReachStandard']})</a>
-                | <a target="_blank" href="javascript:resetPageNumber(15)">15天未达标(${reachDaysRangeMap['fifteenDaysNoReachStandard']})</a>
-                | <a target="_blank" href="javascript:resetPageNumber(30)">30天未达标(${reachDaysRangeMap['thirtyDaysNoReachStandard']})</a>
-            </div>
+                <c:if test="${customerKeywordCriteria.entryType eq 'pt' or customerKeywordCriteria.entryType eq 'bc'}">
+                <div align="right">
+                    未达标统计:
+                    <a target="_blank" href="javascript:resetPageNumber(7)">超过7天(${customerKeywordCriteria.sevenDaysNoReachStandard})</a>
+                    | <a target="_blank" href="javascript:resetPageNumber(15)">超过15天(${customerKeywordCriteria.fifteenDaysNoReachStandard})</a>
+                    | <a target="_blank" href="javascript:resetPageNumber(30)">超过30天(${customerKeywordCriteria.thirtyDaysNoReachStandard})</a>
+                </div>
+                </c:if>
             </shiro:hasPermission>
         </div>
     </form>
