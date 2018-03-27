@@ -718,6 +718,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void adjustOptimizationCount(){
+        List<Long> priceCustomerKeywordUuids = null;
         List<String> groupNames = new ArrayList<String>();
         groupNames.add("pc_pm_xiaowu");
         groupNames.add("pc_pm_learner");
@@ -748,6 +749,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                     if (lessFifth) {
                         optimizationPlanCount = 20 + currentIndexCount / 50;
                     }
+                } else {
+                    if(priceCustomerKeywordUuids == null) {
+                        priceCustomerKeywordUuids = new ArrayList<Long>();
+                    }
+                    priceCustomerKeywordUuids.add(uuid);
                 }
                 int queryInterval = (23 * 60) / optimizationPlanCount;
 
@@ -755,7 +761,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             }
         }
         customerKeywordDao.updateOptimizePlanCountForBaiduMap();
-        customerKeywordDao.updateOptimizePlanCountForPrice();
+        if(priceCustomerKeywordUuids != null) {
+            customerKeywordDao.updateOptimizePlanCountForPrice(priceCustomerKeywordUuids);
+        }
     }
 
     public void updateCustomerKeywordPosition(Long customerKeywordUuid, int position, Date capturePositionQueryTime){

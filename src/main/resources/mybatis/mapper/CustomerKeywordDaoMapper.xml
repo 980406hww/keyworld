@@ -794,15 +794,16 @@
         </choose>
     </update>
 
-    <update id="updateOptimizePlanCountForPrice">
+    <update id="updateOptimizePlanCountForPrice" parameterType="java.lang.Long">
         UPDATE
             t_customer_keyword
         SET
             fOptimizePlanCount = ((fCurrentIndexCount + fPositionFirstFee * 4) / 2)
-        WHERE fStatus = 1
-        AND fCurrentIndexCount &gt; 0
-        AND fPositionFirstFee &gt; 0
-        AND (fType = 'pt' OR fType = 'bc')
+        WHERE fPositionFirstFee &gt; 0
+        AND fUuid IN
+        <foreach item="uuid"  collection="uuids" open="(" separator="," close=")">
+            #{uuid}
+        </foreach>
     </update>
 
     <select id="searchCustomerKeywordForNoReachStandard" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordCriteria" resultType="int">
