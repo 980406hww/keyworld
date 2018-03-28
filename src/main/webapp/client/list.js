@@ -60,6 +60,7 @@ function resetPageNumber() {
     var upgradeFailedReason = clientStatusFormObj.find("#upgradeFailedReason").val();
     var vpsBackendSystemComputerID = clientStatusFormObj.find("#vpsBackendSystemComputerID").val();
     var switchGroupName = clientStatusFormObj.find("#switchGroupName").val();
+    var startUpStatus = clientStatusFormObj.find("#startUpStatus").val();
     if(clientId != "") {
         clientStatusFormObj.find("#clientID").val($.trim(clientId));
     }
@@ -80,6 +81,9 @@ function resetPageNumber() {
     }
     if(switchGroupName != "") {
         clientStatusFormObj.find("#switchGroupName").val($.trim(switchGroupName));
+    }
+    if(startUpStatus != "") {
+        clientStatusFormObj.find("#startUpStatus").val($.trim(startUpStatus));
     }
     $("#searchClientStatusForm").find("#currentPageNumberHidden").val(1);
 }

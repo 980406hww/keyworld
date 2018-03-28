@@ -134,6 +134,8 @@
         <if test="clientStatusCriteria.hasProblem != null"> AND (cs.fContinuousFailCount &gt; 5 OR cs.fTenMinsLastVisitTime &lt; NOW()) and cs.fValid = 1</if>
         <if test="clientStatusCriteria.renewal != null"> AND DATE_ADD(cs.fRenewalDate, INTERVAL -3 DAY) &lt; CURRENT_DATE() and cs.fValid = 1</if>
         <if test="clientStatusCriteria.noGroup != null"> AND (cs.fGroup is null or cs.fGroup = '')</if>
+        <if test="clientStatusCriteria.hasGroup != null"> AND cs.fGroup > ''</if>
+        <if test="clientStatusCriteria.startUpStatus != null and clientStatusCriteria.startUpStatus != ''"> AND cs.fStartUpStatus = #{clientStatusCriteria.startUpStatus}</if>
         <if test="clientStatusCriteria.noVNC != null"> AND (cs.fHost is null or cs.fHost = '')</if>
         <if test="clientStatusCriteria.noUpgrade != null"> AND (cs.fVersion &lt;&gt; cs.fTargetVersion)</if>
         <if test="clientStatusCriteria.startUpClient != null"> AND cs.fDownloadProgramType > ''</if>

@@ -20,6 +20,8 @@ public class ClientStatusCriteria extends BaseCriteria {
     private String vpsBackendSystemComputerID;//服务器ID
     private String switchGroupName;
     private String startUpClient; // 开机机器
+    private String hasGroup; // 有分组
+    private String startUpStatus; // 开机状态
 
     private String terminalType;
 
@@ -173,5 +175,21 @@ public class ClientStatusCriteria extends BaseCriteria {
 
     public void setStartUpClient(String startUpClient) {
         this.startUpClient = startUpClient;
+    }
+
+    public String getHasGroup() {
+        return hasGroup;
+    }
+
+    public void setHasGroup(String hasGroup) {
+        this.hasGroup = hasGroup;
+    }
+
+    public String getStartUpStatus() {
+        return startUpStatus;
+    }
+
+    public void setStartUpStatus(String startUpStatus) {
+        this.startUpStatus = startUpStatus;
     }
 }

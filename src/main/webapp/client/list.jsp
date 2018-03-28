@@ -76,15 +76,6 @@
 								&nbsp;&nbsp;
 								失败原因:<input type="text" name="upgradeFailedReason" id="upgradeFailedReason" value="${clientStatusCriteria.upgradeFailedReason}"
 											  style="width: 50px;">
-								&nbsp;&nbsp;
-								状态:<select name="valid" id="valid">
-								<c:forEach items="${validMap}" var="entry">
-									<c:choose>
-										<c:when test="${entry.value eq clientStatusCriteria.valid}"><option selected value="${entry.value}">${entry.key}</option></c:when>
-										<c:otherwise><option value="${entry.value}">${entry.key}</option></c:otherwise>
-									</c:choose>
-								</c:forEach>
-							</select>
 							&nbsp;&nbsp;
 							操作类型:<select name="operationType" id="operationType">
 								<c:forEach items="${operationTypeValues}" var="operationType">
@@ -98,15 +89,7 @@
 							服务器ID:<input type="text" name="vpsBackendSystemComputerID" id="vpsBackendSystemComputerID" value="${clientStatusCriteria.vpsBackendSystemComputerID}" style="width: 80px;">
 							&nbsp;&nbsp;
 							流转分组:<input type="text" name="switchGroupName" id="switchGroupName" value="${clientStatusCriteria.switchGroupName}" style="width: 100px;">
-							&nbsp;&nbsp;
-							排序:<select name="orderBy" id="orderBy">
-								<c:forEach items="${orderByMap}" var="entry">
-									<c:choose>
-										<c:when test="${entry.key eq clientStatusCriteria.orderBy}"><option selected value="${entry.key}">${entry.value}</option></c:when>
-										<c:otherwise><option value="${entry.key}">${entry.value}</option></c:otherwise>
-									</c:choose>
-								</c:forEach>
-							</select>
+							开机状态:<input type="text" name="startUpStatus" id="startUpStatus" value="${clientStatusCriteria.startUpStatus}" style="width: 100px;">
 							</td>
 						</tr>
 						<tr>
@@ -114,6 +97,8 @@
 							<input id="hasProblem" name="hasProblem" type="checkbox" value="hasProblem" ${clientStatusCriteria.hasProblem != null ? "checked=true" : ""}>停了</input>
 							&nbsp;&nbsp;
 							<input id="renewal" name="renewal" type="checkbox" value="renewal" ${clientStatusCriteria.renewal != null ? "checked=true" : ""}>续费</input>
+							&nbsp;&nbsp;
+							<input id="hasGroup" name="hasGroup" type="checkbox" value="hasGroup" ${clientStatusCriteria.hasGroup != null ? "checked=true" : ""}>有分组</input>
 							&nbsp;&nbsp;
 							<input id="noGroup" name="noGroup" type="checkbox" value="noGroup" ${clientStatusCriteria.noGroup != null ? "checked=true" : ""}>没分组</input>
 							&nbsp;&nbsp;
@@ -127,6 +112,24 @@
 							&nbsp;&nbsp;
 							<input id="showFetchKeywordStatus" name="showFetchKeywordStatus" type="checkbox" value="showFetchKeywordStatus"
 							${clientStatusCriteria.showFetchKeywordStatus != null ? "checked=true" : ""}>显示取词状态</input>
+							&nbsp;&nbsp;
+							状态:<select name="valid" id="valid">
+							<c:forEach items="${validMap}" var="entry">
+								<c:choose>
+									<c:when test="${entry.value eq clientStatusCriteria.valid}"><option selected value="${entry.value}">${entry.key}</option></c:when>
+									<c:otherwise><option value="${entry.value}">${entry.key}</option></c:otherwise>
+								</c:choose>
+							</c:forEach>
+							</select>
+							&nbsp;&nbsp;
+							排序:<select name="orderBy" id="orderBy">
+							<c:forEach items="${orderByMap}" var="entry">
+								<c:choose>
+									<c:when test="${entry.key eq clientStatusCriteria.orderBy}"><option selected value="${entry.key}">${entry.value}</option></c:when>
+									<c:otherwise><option value="${entry.key}">${entry.value}</option></c:otherwise>
+								</c:choose>
+							</c:forEach>
+							</select>
 
 							<shiro:hasPermission name="/internal/clientstatus/searchClientStatuses">
 								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" onclick="resetPageNumber()" value=" 查询 ">
@@ -142,9 +145,6 @@
 								&nbsp;&nbsp;<input type="button" name="btnFilter" onclick="showUploadVPSDialog('common')" value=" 导入普通终端 ">
 								&nbsp;&nbsp;<input type="button" onclick="showUploadVPSDialog('startUp')" value=" 导入开机终端 ">
 							</shiro:hasPermission>
-						</td>
-						<td width="50px">
-
 						</td>
 						</tr>
 						<tr>
