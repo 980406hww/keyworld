@@ -217,8 +217,8 @@ function resetPageNumber() {
     var keyword = searchCustomerKeywordForm.find("#keyword").val();
     var url = searchCustomerKeywordForm.find("#url").val();
     var optimizeGroupName = searchCustomerKeywordForm.find("#optimizeGroupName").val();
-    var optimizeGroupName = searchCustomerKeywordForm.find("#optimizeGroupName").val();
     var gtOptimizedCount = searchCustomerKeywordForm.find("#gtOptimizedCount").val();
+    var ltOptimizedCount = searchCustomerKeywordForm.find("#ltOptimizedCount").val();
     var position = searchCustomerKeywordForm.find("#position").val();
     var invalidRefreshCount = searchCustomerKeywordForm.find("#invalidRefreshCount").val();
     var currentIndexCount = searchCustomerKeywordForm.find("#currentIndexCount").val();
