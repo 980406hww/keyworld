@@ -89,6 +89,7 @@
 							服务器ID:<input type="text" name="vpsBackendSystemComputerID" id="vpsBackendSystemComputerID" value="${clientStatusCriteria.vpsBackendSystemComputerID}" style="width: 80px;">
 							&nbsp;&nbsp;
 							流转分组:<input type="text" name="switchGroupName" id="switchGroupName" value="${clientStatusCriteria.switchGroupName}" style="width: 100px;">
+							&nbsp;&nbsp;
 							开机状态:<input type="text" name="startUpStatus" id="startUpStatus" value="${clientStatusCriteria.startUpStatus}" style="width: 100px;">
 							</td>
 						</tr>
