@@ -122,6 +122,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         if (captureTitle == null) {
             qzCaptureTitleLogService.completeQZCaptureTitleLog(qzCaptureTitleLog.getUuid());
             customerKeywordDao.deleteEmptyTitleCustomerKeyword(qzCaptureTitleLog,searchEngine);
+            logger.info("deleteEmptyTitleCustomerKeyword:" + qzCaptureTitleLog.getCustomerUuid() + "-" + qzCaptureTitleLog.getGroup());
             return null;
         } else {
             QZOperationType qzOperationType = qzOperationTypeService.selectById(qzCaptureTitleLog.getQzOperationTypeUuid());
@@ -261,18 +262,22 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void deleteCustomerKeywordsByUuid(List<String> customerKeywordUuids){
+        logger.info("deleteCustomerKeywordsByUuid:" + customerKeywordUuids.toString());
         customerKeywordDao.deleteCustomerKeywordsByUuid(customerKeywordUuids);
     }
 
     public void deleteCustomerKeywordsWhenEmptyTitleAndUrl(String terminalType, String entryType,String customerUuid){
+        logger.info("deleteCustomerKeywordsWhenEmptyTitleAndUrl:" + customerUuid);
         customerKeywordDao.deleteCustomerKeywordsWhenEmptyTitleAndUrl(terminalType, entryType,customerUuid);
     }
 
     public void deleteCustomerKeywordsWhenEmptyTitle(String terminalType, String entryType,String customerUuid){
+        logger.info("deleteCustomerKeywordsWhenEmptyTitle:" + customerUuid);
         customerKeywordDao.deleteCustomerKeywordsWhenEmptyTitle(terminalType, entryType,customerUuid);
     }
 
     public void deleteCustomerKeywords(long customerUuid) {
+        logger.info("deleteCustomerKeywords:" + customerUuid);
         customerKeywordDao.deleteCustomerKeywordsByCustomerUuid(customerUuid);
     }
 
@@ -926,6 +931,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                 }
             }
             customerKeywordDao.deleteCustomerKeywords(terminalType, searchEngineResultVO.getGroup(), searchEngineResultVO.getKeyword());
+            logger.info("autoUpdateNegativeCustomerKeywords:" + terminalType + "-" + searchEngineResultVO.getGroup() + "-" + searchEngineResultVO.getKeyword());
             this.addCustomerKeywords(customerKeywords, loginName);
         }
     }
@@ -948,6 +954,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         do {
             List<Long> subCustomerKeywordUuids = invalidCustomerKeywords.subList(0, (invalidCustomerKeywords.size() > 500) ? 500 : invalidCustomerKeywords.size());
             customerKeywordDao.deleteBatchIds(subCustomerKeywordUuids);
+            logger.info("controlCustomerKeywordStatus:" + subCustomerKeywordUuids.toString());
             invalidCustomerKeywords.removeAll(subCustomerKeywordUuids);
         } while (invalidCustomerKeywords.size() > 0);
     }
