@@ -6,6 +6,8 @@ public class CustomerKeywordRefreshStatInfoVO {
 	private int totalKeywordCount;
 	private int needOptimizeKeywordCount;
 	private int invalidKeywordCount;
+	private int zeroOptimizedCount;
+	private int reachStandardKeywordCount;
 	private int totalOptimizeCount;
 	private int totalOptimizedCount;
 	private int needOptimizeCount;
@@ -20,6 +22,10 @@ public class CustomerKeywordRefreshStatInfoVO {
 
 	public double getInvalidOptimizePercentage(){
 		return (this.getQueryCount() > 0) ? (((this.getQueryCount() - this.getTotalOptimizedCount()) * 1.0) / this.getQueryCount()) * 100 : 0;
+	}
+
+	public double getReachStandardPercentage() {
+		return (this.getReachStandardKeywordCount() * 1.0) / this.getTotalKeywordCount() * 100;
 	}
 	
 	public int getTotalKeywordCount() {
@@ -108,5 +114,21 @@ public class CustomerKeywordRefreshStatInfoVO {
 
 	public void setMaxInvalidCount(int maxInvalidCount) {
 		this.maxInvalidCount = maxInvalidCount;
+	}
+
+	public int getZeroOptimizedCount() {
+		return zeroOptimizedCount;
+	}
+
+	public void setZeroOptimizedCount(int zeroOptimizedCount) {
+		this.zeroOptimizedCount = zeroOptimizedCount;
+	}
+
+	public int getReachStandardKeywordCount() {
+		return reachStandardKeywordCount;
+	}
+
+	public void setReachStandardKeywordCount(int reachStandardKeywordCount) {
+		this.reachStandardKeywordCount = reachStandardKeywordCount;
 	}
 }

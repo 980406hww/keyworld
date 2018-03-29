@@ -27,16 +27,18 @@
 	<table style="font-size:12px;" id="headerTable" width=100%">
 		<tr bgcolor="#eeeeee" height=30>
 			<td align="center" width=100 rowspan="2">类型</td>
-			<td align="center" width=80 colspan="4">关键字</td>
+			<td align="center" width=80 colspan="7">关键字</td>
 			<td align="center" width=80 colspan="6">刷的次数</td>
 			<td align="center" width=100 colspan="2">机器数</td>
 		</tr>
 		<tr bgcolor="#eeeeee" height=30>
-			<%--<td align="center" width=80></td>--%>
 			<td align="center" width=80>总数</td>
 			<td align="center" width=80>待刷数</td>
 			<td align="center" width=80>无效刷量</td>
+			<td align="center" width=80>没有刷量</td>
 			<td align="center" width=80>无效占比</td>
+			<td align="center" width=80>达标数</td>
+			<td align="center" width=80>达标率</td>
 			<td align="center" width=60>总次数</td>
 			<td align="center" width=80>已刷次数</td>
 			<td align="center" width=80>待刷次数</td>
@@ -90,6 +92,7 @@
 						</c:if>
 					</shiro:hasPermission>
 				</td>
+				<td width=80>${refreshStatInfoVO.zeroOptimizedCount > 0 ? refreshStatInfoVO.zeroOptimizedCount : ""}</td>
 				<td width=80>
 					<font color="${refreshStatInfoVO.invalidKeywordPercentage > 20 ? "red" : (refreshStatInfoVO.invalidKeywordPercentage > 10 ? "purple" : "")}">
 						<c:if test="${refreshStatInfoVO.invalidKeywordPercentage > 0}">
@@ -97,6 +100,12 @@
 											  minFractionDigits="2"/>%
 						</c:if>
 					</font>
+				</td>
+				<td width=80>${refreshStatInfoVO.reachStandardKeywordCount > 0 ? refreshStatInfoVO.reachStandardKeywordCount : ""}</td>
+				<td width=80>
+					<c:if test="${refreshStatInfoVO.reachStandardPercentage > 0}">
+						<fmt:formatNumber value="${refreshStatInfoVO.reachStandardPercentage}" pattern="#.##" minFractionDigits="2"/>%
+					</c:if>
 				</td>
 				<td width=60>${refreshStatInfoVO.totalOptimizeCount > 0 ? refreshStatInfoVO.totalOptimizeCount : ""}</td>
 				<td width=80>${refreshStatInfoVO.totalOptimizedCount > 0 ? refreshStatInfoVO.totalOptimizedCount : ""}</td>

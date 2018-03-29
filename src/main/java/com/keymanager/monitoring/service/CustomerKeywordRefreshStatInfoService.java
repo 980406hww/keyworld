@@ -63,6 +63,8 @@ public class CustomerKeywordRefreshStatInfoService extends ServiceImpl<CustomerK
             total.setTotalOptimizeCount(total.getTotalOptimizeCount() + customerKeywordRefreshStatInfoVO.getTotalOptimizeCount());
             total.setTotalOptimizedCount(total.getTotalOptimizedCount() + customerKeywordRefreshStatInfoVO.getTotalOptimizedCount());
             total.setUnworkMachineCount(total.getUnworkMachineCount() + customerKeywordRefreshStatInfoVO.getUnworkMachineCount());
+            total.setZeroOptimizedCount(total.getZeroOptimizedCount() + customerKeywordRefreshStatInfoVO.getZeroOptimizedCount());
+            total.setReachStandardKeywordCount(total.getReachStandardKeywordCount() + customerKeywordRefreshStatInfoVO.getReachStandardKeywordCount());
             total.setMaxInvalidCount(customerKeywordRefreshStatInfoVO.getMaxInvalidCount());
         }
         customerKeywordRefreshStatInfoVOs.add(0, total);
@@ -80,6 +82,8 @@ public class CustomerKeywordRefreshStatInfoService extends ServiceImpl<CustomerK
             refreshStatInfoVO.setTotalKeywordCount(customerKeywordRefreshStatInfoVO.getTotalKeywordCount());
             refreshStatInfoVO.setNeedOptimizeKeywordCount(customerKeywordRefreshStatInfoVO.getNeedOptimizeKeywordCount());
             refreshStatInfoVO.setInvalidKeywordCount(customerKeywordRefreshStatInfoVO.getInvalidKeywordCount());
+            refreshStatInfoVO.setZeroOptimizedCount(customerKeywordRefreshStatInfoVO.getZeroOptimizedCount());
+            refreshStatInfoVO.setReachStandardKeywordCount(customerKeywordRefreshStatInfoVO.getReachStandardKeywordCount());
             refreshStatInfoVO.setTotalOptimizeCount(customerKeywordRefreshStatInfoVO.getTotalOptimizeCount());
             refreshStatInfoVO.setTotalOptimizedCount(customerKeywordRefreshStatInfoVO.getTotalOptimizedCount());
             refreshStatInfoVO.setNeedOptimizeCount(customerKeywordRefreshStatInfoVO.getNeedOptimizeCount());
