@@ -51,6 +51,9 @@
         <if test="customerKeywordCriteria.noReachStandardDays != null and customerKeywordCriteria.noReachStandardDays > 0">
             AND ck.fLastReachStandardDate &lt;= DATE_SUB(CURRENT_DATE(), INTERVAL #{customerKeywordCriteria.noReachStandardDays} DAY)
         </if>
+        <if test="customerKeywordCriteria.noReachStandardDays != null and customerKeywordCriteria.noReachStandardDays == -1">
+            AND ck.fLastReachStandardDate = CURRENT_DATE()
+        </if>
         <choose>
             <when test="customerKeywordCriteria.optimizeGroupName != null and customerKeywordCriteria.optimizeGroupName != ''">
                 AND ck.fOptimizeGroupName  like '%${customerKeywordCriteria.optimizeGroupName}%'

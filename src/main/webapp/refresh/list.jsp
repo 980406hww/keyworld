@@ -101,7 +101,18 @@
 						</c:if>
 					</font>
 				</td>
-				<td width=80>${refreshStatInfoVO.reachStandardKeywordCount > 0 ? refreshStatInfoVO.reachStandardKeywordCount : ""}</td>
+				<td width=80>
+					<c:if test="${refreshStatInfoVO.reachStandardKeywordCount > 0}">
+						<c:choose>
+							<c:when test="${'总计' eq refreshStatInfoVO.group}">
+								<a href="javascript:findKeyword(null , null)">${refreshStatInfoVO.reachStandardKeywordCount}</a>
+							</c:when>
+							<c:otherwise>
+								<a href="javascript:findKeyword('${refreshStatInfoVO.group}', null)">${refreshStatInfoVO.reachStandardKeywordCount}</a>
+							</c:otherwise>
+						</c:choose>
+					</c:if>
+				</td>
 				<td width=80>
 					<c:if test="${refreshStatInfoVO.reachStandardPercentage > 0}">
 						<fmt:formatNumber value="${refreshStatInfoVO.reachStandardPercentage}" pattern="#.##" minFractionDigits="2"/>%
@@ -156,6 +167,7 @@
 	  action="/internal/customerKeyword/searchCustomerKeywordLists">
 	<input type="hidden" name="optimizeGroupName" id="optimizeGroupName" value=""/>
 	<input type="hidden" name="invalidRefreshCount" id="invalidRefreshCount" value=""/>
+	<input type="hidden" name="noReachStandardDays" id="noReachStandardDays" value=""/>
 </form>
 <%@ include file="/commons/loadjs.jsp" %>
 <script language="javascript">
@@ -194,8 +206,13 @@
 
     <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
     function findKeyword(optimizeGroupName, invalidRefreshCount) {
-        $("#searchCustomerKeywordForm").find("#optimizeGroupName").val(optimizeGroupName);
+        if(invalidRefreshCount == null) {
+            $("#searchCustomerKeywordForm").find("#noReachStandardDays").val(-1);
+		} else {
+            $("#searchCustomerKeywordForm").find("#noReachStandardDays").val(0);
+		}
         $("#searchCustomerKeywordForm").find("#invalidRefreshCount").val(invalidRefreshCount);
+        $("#searchCustomerKeywordForm").find("#optimizeGroupName").val(optimizeGroupName);
         $("#searchCustomerKeywordForm").submit();
     }
     </shiro:hasPermission>
