@@ -229,3 +229,31 @@ function updateOptimizeGroupName(total) {
     $("#targetGroupNameDialog").dialog("open");
     $('#targetGroupNameDialog').window("resize",{top:$(document).scrollTop() + 200});
 }
+function searchCustomerKeywordForNoReachStandard(entryType, terminalType) {
+    var postData = {};
+    postData.entryType = entryType;
+    postData.terminalType = terminalType;
+    $.ajax({
+        url: '/internal/customerKeyword/searchCustomerKeywordForNoReachStandard',
+        data: JSON.stringify(postData),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        timeout: 5000,
+        type: 'POST',
+        success: function (data) {
+            var noReachStandardDiv = $("#noReachStandardDiv");
+            noReachStandardDiv.find("a").eq(0).text("超过30天(" + data.thirtyDaysNoReachStandard + ")");
+            noReachStandardDiv.find("a").eq(1).text("超过15天(" + data.fifteenDaysNoReachStandard + ")");
+            noReachStandardDiv.find("a").eq(2).text("超过7天(" + data.sevenDaysNoReachStandard + ")");
+            var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
+            searchCustomerKeywordForm.find("#thirtyDaysNoReachStandard").val(data.thirtyDaysNoReachStandard);
+            searchCustomerKeywordForm.find("#fifteenDaysNoReachStandard").val(data.fifteenDaysNoReachStandard);
+            searchCustomerKeywordForm.find("#sevenDaysNoReachStandard").val(data.sevenDaysNoReachStandard);
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "未达标统计失败");
+        }
+    });
+}

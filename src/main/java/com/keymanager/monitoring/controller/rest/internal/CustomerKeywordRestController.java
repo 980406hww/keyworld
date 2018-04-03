@@ -401,10 +401,6 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		if(request.getMethod().equals("POST")) {
 			Page<CustomerKeyword> page = customerKeywordService.searchCustomerKeywordLists(new Page<CustomerKeyword>(currentPage, pageSize), customerKeywordCriteria);
 			modelAndView.addObject("page", page);
-		} else {
-			if(entryType.equals(EntryTypeEnum.pt.name()) || entryType.equals(EntryTypeEnum.bc.name())) {
-				customerKeywordService.searchCustomerKeywordForNoReachStandard(customerKeywordCriteria);
-			}
 		}
 		modelAndView.addObject("customerKeywordCriteria", customerKeywordCriteria);
 		modelAndView.addObject("user", user);
@@ -473,6 +469,19 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@RequiresPermissions("/internal/customerKeyword/searchCustomerKeywordLists")
+	@RequestMapping(value = "/searchCustomerKeywordForNoReachStandard", method = RequestMethod.POST)
+	public ResponseEntity<?> searchCustomerKeywordForNoReachStandard(@RequestBody CustomerKeywordCriteria customerKeywordCriteria) {
+		try {
+			customerKeywordCriteria.setStatus("1");
+			customerKeywordService.searchCustomerKeywordForNoReachStandard(customerKeywordCriteria);
+			return new ResponseEntity<Object>(customerKeywordCriteria, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return new ResponseEntity<Object>(customerKeywordCriteria, HttpStatus.BAD_REQUEST);
 		}
 	}
 }
