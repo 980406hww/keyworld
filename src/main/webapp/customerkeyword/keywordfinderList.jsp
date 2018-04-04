@@ -118,7 +118,7 @@
             <br/>
             <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
                 <c:if test="${customerKeywordCriteria.entryType eq 'pt' or customerKeywordCriteria.entryType eq 'bc'}">
-                <div align="right">
+                <div id="noReachStandardDiv" align="right">
                     未达标统计:
                     <a target="_blank" href="javascript:resetPageNumber(30)">超过30天(${customerKeywordCriteria.thirtyDaysNoReachStandard})</a>
                     | <a target="_blank" href="javascript:resetPageNumber(15)">超过15天(${customerKeywordCriteria.fifteenDaysNoReachStandard})</a>
@@ -242,8 +242,12 @@
         window.onresize = function(){
             alignTableHeader();
         }
+        if(${customerKeywordCriteria.entryType eq 'bc' or customerKeywordCriteria.entryType eq 'pt'}) {
+            if(${customerKeywordCriteria.sevenDaysNoReachStandard == null}) {
+                searchCustomerKeywordForNoReachStandard('${customerKeywordCriteria.entryType}','${customerKeywordCriteria.terminalType}');
+            }
+        }
     });
-
     function initNoPositionChecked() {
         if(${customerKeywordCriteria.noPosition == 1}){
             $("#noPosition").prop("checked",true);
