@@ -33,12 +33,12 @@
 		</tr>
 		<tr bgcolor="#eeeeee" height=30>
 			<td align="center" width=80>总数</td>
-			<td align="center" width=80>待刷数</td>
-			<td align="center" width=80>无效刷量</td>
-			<td align="center" width=80>没有刷量</td>
-			<td align="center" width=80>无效占比</td>
 			<td align="center" width=80>达标数</td>
 			<td align="center" width=80>达标率</td>
+			<td align="center" width=80>没有刷量</td>
+			<td align="center" width=80>待刷数</td>
+			<td align="center" width=80>无效刷量</td>
+			<td align="center" width=80>无效占比</td>
 			<td align="center" width=60>总次数</td>
 			<td align="center" width=80>已刷次数</td>
 			<td align="center" width=80>待刷次数</td>
@@ -65,6 +65,24 @@
 				</c:choose>
 				<td width=100>${refreshStatInfoVO.group}</td>
 				<td width=80>${refreshStatInfoVO.totalKeywordCount}</td>
+				<td width=80>
+					<c:if test="${refreshStatInfoVO.reachStandardKeywordCount > 0}">
+						<c:choose>
+							<c:when test="${'总计' eq refreshStatInfoVO.group}">
+								<a href="javascript:findKeyword(null , null)">${refreshStatInfoVO.reachStandardKeywordCount}</a>
+							</c:when>
+							<c:otherwise>
+								<a href="javascript:findKeyword('${refreshStatInfoVO.group}', null)">${refreshStatInfoVO.reachStandardKeywordCount}</a>
+							</c:otherwise>
+						</c:choose>
+					</c:if>
+				</td>
+				<td width=80>
+					<c:if test="${refreshStatInfoVO.reachStandardPercentage > 0}">
+						<fmt:formatNumber value="${refreshStatInfoVO.reachStandardPercentage}" pattern="#.##" minFractionDigits="2"/>%
+					</c:if>
+				</td>
+				<td width=80>${refreshStatInfoVO.zeroOptimizedCount > 0 ? refreshStatInfoVO.zeroOptimizedCount : ""}</td>
 				<td width=80>${refreshStatInfoVO.needOptimizeKeywordCount > 0 ? refreshStatInfoVO.needOptimizeKeywordCount : ""}</td>
 				<td width=80>
 					<c:if test="${refreshStatInfoVO.invalidKeywordCount > 0}">
@@ -92,7 +110,7 @@
 						</c:if>
 					</shiro:hasPermission>
 				</td>
-				<td width=80>${refreshStatInfoVO.zeroOptimizedCount > 0 ? refreshStatInfoVO.zeroOptimizedCount : ""}</td>
+
 				<td width=80>
 					<font color="${refreshStatInfoVO.invalidKeywordPercentage > 20 ? "red" : (refreshStatInfoVO.invalidKeywordPercentage > 10 ? "purple" : "")}">
 						<c:if test="${refreshStatInfoVO.invalidKeywordPercentage > 0}">
@@ -100,23 +118,6 @@
 											  minFractionDigits="2"/>%
 						</c:if>
 					</font>
-				</td>
-				<td width=80>
-					<c:if test="${refreshStatInfoVO.reachStandardKeywordCount > 0}">
-						<c:choose>
-							<c:when test="${'总计' eq refreshStatInfoVO.group}">
-								<a href="javascript:findKeyword(null , null)">${refreshStatInfoVO.reachStandardKeywordCount}</a>
-							</c:when>
-							<c:otherwise>
-								<a href="javascript:findKeyword('${refreshStatInfoVO.group}', null)">${refreshStatInfoVO.reachStandardKeywordCount}</a>
-							</c:otherwise>
-						</c:choose>
-					</c:if>
-				</td>
-				<td width=80>
-					<c:if test="${refreshStatInfoVO.reachStandardPercentage > 0}">
-						<fmt:formatNumber value="${refreshStatInfoVO.reachStandardPercentage}" pattern="#.##" minFractionDigits="2"/>%
-					</c:if>
 				</td>
 				<td width=60>${refreshStatInfoVO.totalOptimizeCount > 0 ? refreshStatInfoVO.totalOptimizeCount : ""}</td>
 				<td width=80>${refreshStatInfoVO.totalOptimizedCount > 0 ? refreshStatInfoVO.totalOptimizedCount : ""}</td>
