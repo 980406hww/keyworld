@@ -66,6 +66,7 @@
 								<input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
 								<input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
 								<input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
+								<input type="hidden" name="startUpStatusHidden" id="startUpStatusHidden" value="${clientStatusCriteria.startUpStatus}"/>
 								客户端ID:<input type="text" name="clientID" id="clientID" value="${clientStatusCriteria.clientID}" style="width: 90px;">
 								&nbsp;&nbsp;
 								优化组:<input type="text" name="groupName" id="groupName" value="${clientStatusCriteria.groupName}" style="width: 120px;">
@@ -90,7 +91,15 @@
 							&nbsp;&nbsp;
 							流转分组:<input type="text" name="switchGroupName" id="switchGroupName" value="${clientStatusCriteria.switchGroupName}" style="width: 100px;">
 							&nbsp;&nbsp;
-							开机状态:<input type="text" name="startUpStatus" id="startUpStatus" value="${clientStatusCriteria.startUpStatus}" style="width: 100px;">
+							开机状态:
+							<select name="startUpStatus" id="startUpStatus">
+								<option value='New'>New</option>
+								<option value='Processing'>Processing</option>
+								<option value='Setting'>Setting</option>
+								<option value='Downloading'>Downloading</option>
+								<option value='Completed'>Completed</option>
+								<option value='Error'>Error</option>
+							</select>&nbsp;
 							</td>
 						</tr>
 						<tr>

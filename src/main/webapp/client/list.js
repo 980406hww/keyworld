@@ -19,6 +19,7 @@ function pageLoad() {
     var currentPageNumber = searchCustomerForm.find('#currentPageNumberHidden').val();
     var showCustomerBottomDiv = $('#showCustomerBottomDiv');
     showCustomerBottomDiv.find("#chooseRecords").val(pageSize);
+    searchCustomerForm.find("#startUpStatus").val($("#startUpStatusHidden").val());
 
     if (parseInt(currentPageNumber) > 1 && parseInt(currentPageNumber) < parseInt(pages)) {
         showCustomerBottomDiv.find("#firstButton").removeAttr("disabled");
@@ -455,6 +456,7 @@ function updateGroup(self){
     });
 }
 function changeTerminalType(clientID){
+    if (confirm("确定要变更终端类型吗?") == false) return;
     var postData = {};
     postData.clientID = clientID;
     $.ajax({
