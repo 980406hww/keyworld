@@ -538,7 +538,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
             if(customerKeyword == null){
                 customerKeyword = customerKeywordDao.getCustomerKeywordForOptimization(terminalType, clientStatus.getGroup(),
-                        Integer.parseInt(maxInvalidCountConfig.getValue()), noPositionMaxInvalidCount, true);
+                        Integer.parseInt(maxInvalidCountConfig.getValue()), noPositionMaxInvalidCount, false);
             }
             retryCount++;
             if(customerKeyword == null){
