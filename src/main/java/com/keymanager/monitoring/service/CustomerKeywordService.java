@@ -228,7 +228,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeyword.setAutoUpdateNegativeDateTime(Utils.getCurrentTimestamp());
         customerKeyword.setCapturePositionQueryTime(Utils.addDay(Utils.getCurrentTimestamp(), -2));
         customerKeyword.setStartOptimizedTime(new Date());
-        customerKeyword.setLastReachStandardDate(new Date());
+        customerKeyword.setLastReachStandardDate(Utils.yesterday());
         customerKeyword.setQueryTime(new Date());
         customerKeyword.setQueryDate(new Date());
         customerKeyword.setUpdateTime(new Date());
@@ -1072,5 +1072,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeywordCriteria.setSevenDaysNoReachStandard(sevenDaysNoReachStandard);
         customerKeywordCriteria.setFifteenDaysNoReachStandard(fifteenDaysNoReachStandard);
         customerKeywordCriteria.setThirtyDaysNoReachStandard(thirtyDaysNoReachStandard);
+    }
+
+    public List<String> findAllNegativeCustomerKeyword() {
+        return customerKeywordDao.findAllNegativeCustomerKeyword();
     }
 }

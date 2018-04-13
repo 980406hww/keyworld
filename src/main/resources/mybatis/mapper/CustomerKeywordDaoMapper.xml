@@ -816,4 +816,11 @@
         WHERE c.fUuid = ck.fCustomerUuid
         <include refid="searchCustomerKeywordsCriteria"/>
     </select>
+
+    <select id="findAllNegativeCustomerKeyword" resultType="java.lang.String">
+        SELECT DISTINCT ck.fKeyword
+        FROM t_customer_keyword ck
+        WHERE fType = 'fm'
+        AND fStatus = 1
+    </select>
 </mapper>

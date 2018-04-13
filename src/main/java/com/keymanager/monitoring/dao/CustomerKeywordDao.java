@@ -154,4 +154,6 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void updateOptimizePlanCountForPrice(@Param("uuids") List<Long> uuids);
 
     int searchCustomerKeywordForNoReachStandard(@Param("customerKeywordCriteria")CustomerKeywordCriteria customerKeywordCriteria);
+
+    List<String> findAllNegativeCustomerKeyword();
 }

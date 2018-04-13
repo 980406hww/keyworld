@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.NegativeRankDao">
+    <select id="findNegativeRanks" resultType="com.keymanager.monitoring.entity.NegativeRank">
+        SELECT
+            fUuid AS 'uuid',
+            fKeyword AS 'keyword',
+            fSearchEngine AS 'searchEngine',
+            fNegativeCount AS 'negativeCount',
+            fFirstPageRanks AS 'firstPageRanks',
+            fSecondPageRanks AS 'secondPageRanks',
+            fThirdPageRanks AS 'thirdPageRanks',
+            fFourthPageRanks AS 'fourthPageRanks',
+            fFifthPageRanks AS 'fifthPageRanks',
+            fOtherPageRanks AS 'otherPageRanks',
+            fUpdateTime AS 'updateTime',
+            fCreateTime AS 'createTime'
+        FROM t_negative_rank
+        WHERE fSearchEngine = #{searchEngine}
+        AND fCreateTime BETWEEN #{searchDate} AND DATE_ADD(#{searchDate}, INTERVAL 1 DAY)
+    </select>
+</mapper>
