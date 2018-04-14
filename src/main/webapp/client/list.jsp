@@ -93,6 +93,7 @@
 							&nbsp;&nbsp;
 							开机状态:
 							<select name="startUpStatus" id="startUpStatus">
+								<option value=''>All</option>
 								<option value='New'>New</option>
 								<option value='Processing'>Processing</option>
 								<option value='Setting'>Setting</option>
