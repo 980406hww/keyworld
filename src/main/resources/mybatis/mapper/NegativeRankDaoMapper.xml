@@ -19,4 +19,10 @@
         WHERE fSearchEngine = #{searchEngine}
         AND fCreateTime BETWEEN #{searchDate} AND DATE_ADD(#{searchDate}, INTERVAL 1 DAY)
     </select>
+
+    <delete id="deleteNegativeRanks">
+        DELETE FROM t_negative_rank
+        WHERE fSearchEngine = #{searchEngine}
+        AND fCreateTime BETWEEN #{deleteDate} AND DATE_ADD(#{deleteDate}, INTERVAL 1 DAY)
+    </delete>
 </mapper>

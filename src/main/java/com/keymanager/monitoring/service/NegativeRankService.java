@@ -5,6 +5,7 @@ import com.keymanager.monitoring.criteria.NegativeRankCriteria;
 import com.keymanager.monitoring.dao.NegativeRankDao;
 import com.keymanager.monitoring.entity.NegativeRank;
 import com.keymanager.util.Utils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,9 +24,14 @@ public class NegativeRankService extends ServiceImpl<NegativeRankDao, NegativeRa
     private NegativeRankDao negativeRankDao;
 
     public void saveNegativeRanks(List<NegativeRank> negativeRanks) {
-        for (NegativeRank negativeRank : negativeRanks) {
-            negativeRank.setCreateTime(new Date());
-            negativeRankDao.insert(negativeRank);
+        if(CollectionUtils.isNotEmpty(negativeRanks)) {
+            NegativeRank firstNegativeRank = negativeRanks.get(0);
+            Date date = DateUtils.setHours(new Date(), 0);
+            negativeRankDao.deleteNegativeRanks(firstNegativeRank.getSearchEngine(), date);
+            for (NegativeRank negativeRank : negativeRanks) {
+                negativeRank.setCreateTime(new Date());
+                negativeRankDao.insert(negativeRank);
+            }
         }
     }
 

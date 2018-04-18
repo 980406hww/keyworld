@@ -10,4 +10,6 @@ import java.util.List;
 public interface NegativeRankDao extends BaseMapper<NegativeRank> {
 
     List<NegativeRank> findNegativeRanks(@Param("searchEngine") String searchEngine, @Param("searchDate") Date searchDate);
+
+    void deleteNegativeRanks(@Param("searchEngine") String searchEngine, @Param("deleteDate") Date deleteDate);
 }
