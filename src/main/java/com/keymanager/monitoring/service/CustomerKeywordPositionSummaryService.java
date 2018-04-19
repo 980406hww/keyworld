@@ -18,7 +18,7 @@ public class CustomerKeywordPositionSummaryService extends ServiceImpl<CustomerK
     public void savePositionSummary(Long customerKeywordUuid, int position){
         CustomerKeywordPositionSummary positionSummary = customerKeywordPositionSummaryDao.getTodayPositionSummary(customerKeywordUuid);
         if(positionSummary != null){
-            if(positionSummary.getPosition() == null || positionSummary.getPosition() <= 0 || positionSummary.getPosition() > position) {
+            if((positionSummary.getPosition() == null || positionSummary.getPosition() <= 0) || (position > 0 && positionSummary.getPosition() > position)) {
                 positionSummary.setPosition(position);
                 customerKeywordPositionSummaryDao.updateById(positionSummary);
             }
