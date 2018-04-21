@@ -221,7 +221,8 @@ function resetPageNumber() {
     var ltOptimizedCount = searchCustomerKeywordForm.find("#ltOptimizedCount").val();
     var position = searchCustomerKeywordForm.find("#position").val();
     var invalidRefreshCount = searchCustomerKeywordForm.find("#invalidRefreshCount").val();
-    var currentIndexCount = searchCustomerKeywordForm.find("#currentIndexCount").val();
+    var gtCurrentIndexCount = searchCustomerKeywordForm.find("#gtCurrentIndexCount").val();
+    var ltCurrentIndexCount = searchCustomerKeywordForm.find("#ltCurrentIndexCount").val();
     var remarks = searchCustomerKeywordForm.find("#remarks").val();
     if(keyword != "") {
         searchCustomerKeywordForm.find("#keyword").val($.trim(keyword));
@@ -244,8 +245,11 @@ function resetPageNumber() {
     if(invalidRefreshCount != "") {
         searchCustomerKeywordForm.find("#invalidRefreshCount").val($.trim(invalidRefreshCount));
     }
-    if(currentIndexCount != "") {
-        searchCustomerKeywordForm.find("#currentIndexCount").val($.trim(currentIndexCount));
+    if(gtCurrentIndexCount != "") {
+        searchCustomerKeywordForm.find("#gtCurrentIndexCount").val($.trim(gtCurrentIndexCount));
+    }
+    if(ltCurrentIndexCount != "") {
+        searchCustomerKeywordForm.find("#ltCurrentIndexCount").val($.trim(ltCurrentIndexCount));
     }
     if(remarks != "") {
         searchCustomerKeywordForm.find("#remarks").val($.trim(remarks));

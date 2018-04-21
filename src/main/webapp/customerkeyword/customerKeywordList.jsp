@@ -154,7 +154,8 @@
                 <option value="2">当前排名</option>
                 <option value="3">添加序号</option>
             </select>
-            指数:<input type="text" id="currentIndexCount" name="currentIndexCount" value="${customerKeywordCriteria.currentIndexCount}" style="width: 40px;">
+            指数:<input type="text" id="gtCurrentIndexCount" name="gtCurrentIndexCount" placeholder=">=" value="${customerKeywordCriteria.gtCurrentIndexCount}" style="width: 40px;">
+            <input type="text" id="ltCurrentIndexCount" name="ltCurrentIndexCount" placeholder="<=" value="${customerKeywordCriteria.ltCurrentIndexCount}" style="width: 40px;">
             备注:<input type="text" id="remarks" name="remarks" value="${customerKeywordCriteria.remarks}" style="width: 90px;">
             <%--</c:if>--%>
             &nbsp;&nbsp;
@@ -457,7 +458,8 @@
     <input type="hidden" name="invalidRefreshCount" id="invalidRefreshCountHidden" value="" />
     <input type="hidden" name="searchEngine" id="searchEngineHidden" value="" />
     <input type="hidden" name="orderingElement" id="orderingElementHidden" value="" />
-    <input type="hidden" name="currentIndexCount" id="currentIndexCountHidden" value="" />
+    <input type="hidden" name="gtCurrentIndexCount" id="gtCurrentIndexCountHidden" value="" />
+    <input type="hidden" name="ltCurrentIndexCount" id="ltCurrentIndexCountHidden" value="" />
     <input type="hidden" name="remarks" id="remarksHidden" value="" />
 </form>
 <%@ include file="/commons/loadjs.jsp" %>

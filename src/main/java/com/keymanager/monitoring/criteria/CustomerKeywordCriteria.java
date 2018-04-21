@@ -16,7 +16,8 @@ public class CustomerKeywordCriteria extends BaseCriteria{
     private String searchEngine;
     private Integer gtOptimizedCount;
     private Integer ltOptimizedCount;
-    private Integer currentIndexCount;
+    private Integer gtCurrentIndexCount;
+    private Integer ltCurrentIndexCount;
 
     private String qq;
     private String userName;
@@ -33,12 +34,20 @@ public class CustomerKeywordCriteria extends BaseCriteria{
     private Integer fifteenDaysNoReachStandard;
     private Integer thirtyDaysNoReachStandard;
 
-    public Integer getCurrentIndexCount() {
-        return currentIndexCount;
+    public Integer getGtCurrentIndexCount() {
+        return gtCurrentIndexCount;
     }
 
-    public void setCurrentIndexCount(Integer currentIndexCount) {
-        this.currentIndexCount = currentIndexCount;
+    public void setGtCurrentIndexCount(Integer gtCurrentIndexCount) {
+        this.gtCurrentIndexCount = gtCurrentIndexCount;
+    }
+
+    public Integer getLtCurrentIndexCount() {
+        return ltCurrentIndexCount;
+    }
+
+    public void setLtCurrentIndexCount(Integer ltCurrentIndexCount) {
+        this.ltCurrentIndexCount = ltCurrentIndexCount;
     }
 
     public String getRemarks() {
