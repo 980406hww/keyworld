@@ -183,9 +183,8 @@
                     </div>
                 </td>
                 <td align="center" width=50>
-                    <div style="height:16;"><a
-                            href="${customerKeyword.searchEngineUrl}${customerKeyword.keyword}&pn=${customerKeyword.getPrepareBaiduPageNumber(customerKeyword.currentPosition)}"
-                            target="_blank" >${customerKeyword.currentPosition}</a>
+                    <div style="height:16;">
+                        <a href="${customerKeyword.searchEngineUrl}" target="_blank">${customerKeyword.currentPosition}</a>
                     </div>
                 </td>
                 <td align="center" width=50>${customerKeyword.searchEngine}</td>

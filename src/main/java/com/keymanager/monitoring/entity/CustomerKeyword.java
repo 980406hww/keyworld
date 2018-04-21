@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.enums.FieldStrategy;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.keymanager.enums.CollectMethod;
 import com.keymanager.monitoring.common.utils.StringUtils;
+import com.keymanager.monitoring.enums.TerminalTypeEnum;
 import com.keymanager.util.Constants;
 import com.keymanager.util.Utils;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -700,9 +701,23 @@ public class CustomerKeyword extends BaseEntity {
         return StringUtils.isNotBlank(this.getCollectMethod()) ? CollectMethod.findByCode(this.getCollectMethod()).getName() : null;
     }
     public String getSearchEngineUrl(){
-        return Constants.SEARCH_ENGINE_URL_MAP.get(this.getSearchEngine() + "_" + this.getTerminalType());
+        String searchEngineUrl = Constants.SEARCH_ENGINE_URL_MAP.get(this.getSearchEngine() + "_" + this.getTerminalType()) + this.getKeyword();
+        if(this.getSearchEngine().equals(Constants.SEARCH_ENGINE_BAIDU)) {
+            searchEngineUrl += "&pn=" + this.getPrepareBaiduPageNumber(this.getCurrentPosition());
+        } else if(this.getSearchEngine().equals(Constants.SEARCH_ENGINE_SOGOU)) {
+            if(this.getTerminalType().equals(TerminalTypeEnum.PC.name())) {
+                searchEngineUrl += "&page=" + ((this.getCurrentPosition() / 10) + 1);
+            } else {
+                searchEngineUrl += "&p=" + ((this.getCurrentPosition() / 10) + 1);
+            }
+        } else if(this.getSearchEngine().equals(Constants.SEARCH_ENGINE_360)) {
+            searchEngineUrl += "&pn=" + ((this.getCurrentPosition() / 10) + 1);
+        } else if(this.getSearchEngine().equals(Constants.SEARCH_ENGINE_SM)) {
+            searchEngineUrl += "&page=" + ((this.getCurrentPosition() / 10) + 1);
+        }
+        return searchEngineUrl;
     }
-    public  int getPrepareBaiduPageNumber(int value) {
+    public int getPrepareBaiduPageNumber(int value) {
         int tmpValue = (value > 0 ? (value - 1) : 0);
         String valueString = tmpValue + "";
         String lastDigit = valueString.substring(valueString.length() - 1);
