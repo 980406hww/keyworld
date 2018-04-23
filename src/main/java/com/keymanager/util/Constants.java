@@ -37,7 +37,11 @@ public class Constants {
 	public final static String CONFIG_KEY_NOPOSITION_MAX_INVALID_COUNT = "NoPositionMaxInvalidCount";
 	public final static String CONFIG_TYPE_START_UP = "StartUp";
 	public final static String CONFIG_KEY_DOWNLOADING_CLIENT_COUNT = "DownloadingClientCount";
-	
+	public final static String CONFIG_TYPE_NEGATIVE_KEYWORD = "NegativeKeyword";
+	public final static String CONFIG_KEY_BAIDU = "Baidu";
+	public final static String CONFIG_KEY_SOGOU = "Sogou";
+	public final static String CONFIG_KEY_360 = "360";
+
 	public final static Map<String, String> ACCOUNT_LOG_STATUS_MAP = new HashMap<String, String>();
 	static {
 		ACCOUNT_LOG_STATUS_MAP.put(ACCOUNT_LOG_STATUS_UN_PAID, "未付");

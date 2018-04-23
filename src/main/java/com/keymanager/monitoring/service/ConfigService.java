@@ -6,9 +6,14 @@ import com.keymanager.monitoring.dao.ConfigDao;
 import com.keymanager.monitoring.entity.ClientStatus;
 import com.keymanager.monitoring.entity.Config;
 import com.keymanager.util.Constants;
+import com.keymanager.util.FileUtil;
 import com.keymanager.util.Utils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.io.File;
+import java.util.List;
 
 @Service
 public class ConfigService extends ServiceImpl<ClientStatusDao, ClientStatus>{
@@ -38,6 +43,18 @@ public class ConfigService extends ServiceImpl<ClientStatusDao, ClientStatus>{
 		config.setConfigType(Constants.CONFIG_TYPE_TJ_XG);
 		config.setKey(Constants.CONFIG_KEY_NEGATIVE_KEYWORDS);
 		config.setValue(negativeKeywords);
+		configDao.updateConfig(config);
+	}
+
+	public void updateCustomerNegativeKeywords(File targetFile, String searchEngine) {
+		List<String> contents = FileUtil.readTxtFile(targetFile, "UTF-8");
+		String result = contents.toString();
+		result = StringUtils.deleteWhitespace(result);
+		result = result.substring(1, result.length() - 1);
+		Config config = new Config();
+		config.setConfigType(Constants.CONFIG_TYPE_NEGATIVE_KEYWORD);
+		config.setKey(searchEngine);
+		config.setValue(result);
 		configDao.updateConfig(config);
 	}
 }
