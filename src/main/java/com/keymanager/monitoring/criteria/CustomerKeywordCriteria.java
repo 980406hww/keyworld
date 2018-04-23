@@ -9,13 +9,16 @@ public class CustomerKeywordCriteria extends BaseCriteria{
     private String status;
     private String optimizeGroupName;//优化组名
     private String invalidRefreshCount;//无效点击数
-    private String position;//显示前几条
+    private Integer gtPosition;
+    private Integer ltPosition;
     private String noPosition;//显示没有排名
     private String entryType;//
     private String terminalType;//8088 PC  8089  phone
     private String searchEngine;
     private Integer gtOptimizedCount;
     private Integer ltOptimizedCount;
+    private Integer gtOptimizePlanCount;
+    private Integer ltOptimizePlanCount;
     private Integer gtCurrentIndexCount;
     private Integer ltCurrentIndexCount;
 
@@ -72,6 +75,22 @@ public class CustomerKeywordCriteria extends BaseCriteria{
 
     public void setLtOptimizedCount(Integer ltOptimizedCount) {
         this.ltOptimizedCount = ltOptimizedCount;
+    }
+
+    public Integer getGtOptimizePlanCount() {
+        return gtOptimizePlanCount;
+    }
+
+    public void setGtOptimizePlanCount(Integer gtOptimizePlanCount) {
+        this.gtOptimizePlanCount = gtOptimizePlanCount;
+    }
+
+    public Integer getLtOptimizePlanCount() {
+        return ltOptimizePlanCount;
+    }
+
+    public void setLtOptimizePlanCount(Integer ltOptimizePlanCount) {
+        this.ltOptimizePlanCount = ltOptimizePlanCount;
     }
 
     public Long getCustomerUuid() {
@@ -146,12 +165,20 @@ public class CustomerKeywordCriteria extends BaseCriteria{
         this.invalidRefreshCount = invalidRefreshCount;
     }
 
-    public String getPosition() {
-        return position;
+    public Integer getGtPosition() {
+        return gtPosition;
     }
 
-    public void setPosition(String position) {
-        this.position = position;
+    public void setGtPosition(Integer gtPosition) {
+        this.gtPosition = gtPosition;
+    }
+
+    public Integer getLtPosition() {
+        return ltPosition;
+    }
+
+    public void setLtPosition(Integer ltPosition) {
+        this.ltPosition = ltPosition;
     }
 
     public String getEntryType() {

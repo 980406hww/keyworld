@@ -127,12 +127,14 @@
             优化组名:
             <input type="text" name="optimizeGroupName" id="optimizeGroupName"
                    value="${customerKeywordCriteria.optimizeGroupName}" style="width:100px;">
-            <%--<c:if test="${!user.vipType}">--%>
+            要刷:<input type="text" name="gtOptimizePlanCount" id="gtOptimizePlanCount" placeholder=">=" value="${customerKeywordCriteria.gtOptimizePlanCount}" style="width:40px;"/>
+            <input type="text" name="ltOptimizePlanCount" id="ltOptimizePlanCount" placeholder="<="  value="${customerKeywordCriteria.ltOptimizePlanCount}" style="width:40px;"/>
             已刷:<input type="text" name="gtOptimizedCount" id="gtOptimizedCount" placeholder=">=" value="${customerKeywordCriteria.gtOptimizedCount}" style="width:40px;"/>
             <input type="text" name="ltOptimizedCount" id="ltOptimizedCount" placeholder="<="  value="${customerKeywordCriteria.ltOptimizedCount}" style="width:40px;"/>
-            显示前:
-            <input type="text" name="position" id="position" value="${customerKeywordCriteria.position}"
-                   style="width:40px;"/>
+            排名:
+            <input type="text" name="gtPosition" id="gtPosition" placeholder=">=" value="${customerKeywordCriteria.gtPosition}" style="width:40px;"/>
+            <input type="text" name="ltPosition" id="ltPosition" placeholder="<=" value="${customerKeywordCriteria.ltPosition}" style="width:40px;"/>
+
             <input id="noPosition" name="noPosition" type="checkbox"  onclick="noPositionValue()" />显示0 &nbsp;
             <input id="displayStop" name="displayStop" type="checkbox"  onclick="displayStopValue()" value="${customerKeywordCriteria.displayStop}" <c:if test="${customerKeywordCriteria.displayStop=='1'}">checked</c:if>/>显示下架 &nbsp;
             无效点击数:
@@ -451,7 +453,10 @@
     <input type="hidden" name="optimizeGroupName" id="optimizeGroupNameHidden" value="" />
     <input type="hidden" name="gtOptimizedCount" id="gtOptimizedCountHidden" value="" />
     <input type="hidden" name="lgtOptimizedCount" id="ltOptimizedCountHidden" value="" />
-    <input type="hidden" name="position" id="positionHidden" value="" />
+    <input type="hidden" name="gtOptimizePlanCount" id="gtOptimizePlanCountHidden" value="" />
+    <input type="hidden" name="ltOptimizePlanCount" id="ltOptimizePlanCountHidden" value="" />
+    <input type="hidden" name="gtPosition" id="gtPositionHidden" value="" />
+    <input type="hidden" name="ltPosition" id="ltPositionHidden" value="" />
     <input type="hidden" name="noPosition" id="noPositionHidden" value="" />
     <input type="hidden" name="displayStop" id="displayStopHidden" value="" />
     <input type="hidden" name="invalidRefreshCount" id="invalidRefreshCountHidden" value="" />

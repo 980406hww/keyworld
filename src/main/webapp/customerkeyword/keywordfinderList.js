@@ -12,7 +12,10 @@ function resetPageNumber(days) {
     var optimizeGroupName = searchCustomerKeywordForm.find("#optimizeGroupName").val();
     var gtOptimizedCount = searchCustomerKeywordForm.find("#gtOptimizedCount").val();
     var ltOptimizedCount = searchCustomerKeywordForm.find("#ltOptimizedCount").val();
-    var position = searchCustomerKeywordForm.find("#position").val();
+    var gtOptimizePlanCount = searchCustomerKeywordForm.find("#gtOptimizePlanCount").val();
+    var ltOptimizePlanCount = searchCustomerKeywordForm.find("#ltOptimizePlanCount").val();
+    var gtPosition = searchCustomerKeywordForm.find("#gtPosition").val();
+    var ltPosition = searchCustomerKeywordForm.find("#ltPosition").val();
     var orderNumber = searchCustomerKeywordForm.find("#orderNumber").val();
     var invalidRefreshCount = searchCustomerKeywordForm.find("#invalidRefreshCount").val();
     var noReachStandardDays = searchCustomerKeywordForm.find("#noReachStandardDays").val();
@@ -35,8 +38,17 @@ function resetPageNumber(days) {
     if(ltOptimizedCount != "") {
         searchCustomerKeywordForm.find("#ltOptimizedCount").val($.trim(ltOptimizedCount));
     }
-    if(position != "") {
-        searchCustomerKeywordForm.find("#position").val($.trim(position));
+    if(gtOptimizePlanCount != "") {
+        searchCustomerKeywordForm.find("#gtOptimizePlanCount").val($.trim(gtOptimizePlanCount));
+    }
+    if(ltOptimizePlanCount != "") {
+        searchCustomerKeywordForm.find("#ltOptimizePlanCount").val($.trim(ltOptimizePlanCount));
+    }
+    if(gtPosition != "") {
+        searchCustomerKeywordForm.find("#gtPosition").val($.trim(gtPosition));
+    }
+    if(ltPosition != "") {
+        searchCustomerKeywordForm.find("#ltPosition").val($.trim(ltPosition));
     }
     if(orderNumber != "") {
         searchCustomerKeywordForm.find("#orderNumber").val($.trim(orderNumber));
