@@ -148,6 +148,7 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 			oldClientStatus.setZhanwaiPercent(clientStatus.getZhanwaiPercent());
 			oldClientStatus.setKuaizhaoPercent(clientStatus.getKuaizhaoPercent());
 			oldClientStatus.setBaiduSemPercent(clientStatus.getBaiduSemPercent());
+			oldClientStatus.setSpecialCharPercent(clientStatus.getSpecialCharPercent());
 			oldClientStatus.setMultiBrowser(clientStatus.getMultiBrowser());
 			oldClientStatus.setClearCookie(clientStatus.getClearCookie());
 			oldClientStatus.setAllowSwitchGroup(clientStatus.getAllowSwitchGroup());
@@ -317,6 +318,7 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		clientStatus.setKuaizhaoPercent(0);
 		clientStatus.setBaiduSemPercent(0);
 		clientStatus.setDragPercent(0);
+		clientStatus.setSpecialCharPercent(0);
 		clientStatus.setMultiBrowser(1);
 		clientStatus.setClearCookie(0);
 		clientStatus.setEntryPageMinCount(0);
@@ -712,6 +714,10 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		Integer baiduSemPercent = sourceClientStatus.getBaiduSemPercent();
 		sourceClientStatus.setBaiduSemPercent(targetClientStatus.getBaiduSemPercent());
 		targetClientStatus.setBaiduSemPercent(baiduSemPercent);
+
+		Integer specialCharPercent = sourceClientStatus.getSpecialCharPercent();
+		sourceClientStatus.setSpecialCharPercent(targetClientStatus.getSpecialCharPercent());
+		targetClientStatus.setSpecialCharPercent(specialCharPercent);
 
 		int clearCookie = sourceClientStatus.getClearCookie();
 		sourceClientStatus.setClearCookie(targetClientStatus.getClearCookie());

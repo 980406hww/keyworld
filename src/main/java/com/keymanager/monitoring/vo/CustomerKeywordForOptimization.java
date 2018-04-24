@@ -23,6 +23,7 @@ public class CustomerKeywordForOptimization {
 	private int clearCookie;
 	private int zhanneiPercent;
 	private int zhanwaiPercent;
+	private int specialCharPercent;
 	private int openStatistics;
 	private int disableStatistics;
 	private int entryPageMinCount;
@@ -574,5 +575,13 @@ public class CustomerKeywordForOptimization {
 
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
+	}
+
+	public int getSpecialCharPercent() {
+		return specialCharPercent;
+	}
+
+	public void setSpecialCharPercent(int specialCharPercent) {
+		this.specialCharPercent = specialCharPercent;
 	}
 }
