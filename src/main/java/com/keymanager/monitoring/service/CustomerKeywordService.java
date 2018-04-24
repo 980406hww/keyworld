@@ -668,6 +668,14 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                     if(StringUtils.isNotBlank(customerKeyword.getRecommendKeywords())) {
                         customerKeywordForOptimization.setRecommendedKeywords(new ArrayList<String>(convertToSets(customerKeyword.getRecommendKeywords())));
                     }
+
+                    customerKeywordForOptimization.setNeedSelectKeyword(customerKeyword.getSelectKeyword());
+                    customerKeywordForOptimization.setNeedRelatedKeyword(customerKeyword.getRelatedKeyword());
+                    customerKeywordForOptimization.setNeedRecommendKeyword(customerKeyword.getRecommendKeyword());
+                    customerKeywordForOptimization.setNeedSearchAfterSelectKeyword(customerKeyword.getSearchAfterSelectKeyword());
+                    customerKeywordForOptimization.setClickUrl(customerKeyword.getClickUrl());
+                    customerKeywordForOptimization.setShowPage(customerKeyword.getShowPage());
+                    customerKeywordForOptimization.setRelatedKeywordPercentage(customerKeyword.getRelatedKeywordPercentage());
                 }
             }
             return customerKeywordForOptimization;
@@ -724,6 +732,10 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeywordDao.updateOptimizationResult(customerKeywordUuid, count);
         clientStatusService.logClientStatusTime(terminalType, clientID, status, freeSpace, version, city, count);
         customerKeywordIPService.addCustomerKeywordIP(customerKeywordUuid, city, ip);
+    }
+
+    public void batchUpdateOptimizedCount(List<Long> customerKeywordUuids) {
+        customerKeywordDao.batchUpdateOptimizedCount(customerKeywordUuids);
     }
 
     public void adjustOptimizationCount(){
@@ -1076,5 +1088,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     public List<String> findAllNegativeCustomerKeyword() {
         return customerKeywordDao.findAllNegativeCustomerKeyword();
+    }
+
+    public List<NegativeList> getNegativeKeywordList(String keyword) {
+        return customerKeywordDao.getNegativeKeywordList(keyword);
     }
 }

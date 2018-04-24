@@ -633,6 +633,23 @@ function saveCustomerKeyword(customerUuid) {
     customerKeyword.orderNumber = orderNumber;
     var paymentStatus = $.trim(saveCustomerKeywordDialog.find("#paymentStatus").val());
     customerKeyword.paymentStatus = paymentStatus;
+
+    var selectKeyword = $("#selectKeyword")[0].checked;
+    customerKeyword.selectKeyword = selectKeyword;
+    var relatedKeyword = $("#relatedKeyword")[0].checked;
+    customerKeyword.relatedKeyword = relatedKeyword;
+    var recommendKeyword = $("#recommendKeyword")[0].checked;
+    customerKeyword.recommendKeyword = recommendKeyword;
+    var searchAfterSelectKeyword = $("#searchAfterSelectKeyword")[0].checked;
+    customerKeyword.searchAfterSelectKeyword = searchAfterSelectKeyword;
+
+    var clickUrl = $("input[name='clickUrl']:checked").val();
+    customerKeyword.clickUrl = clickUrl;
+    var showPage = $.trim(saveCustomerKeywordDialog.find("#showPage").val());
+    customerKeyword.showPage = showPage;
+    var relatedKeywordPercentage = $.trim(saveCustomerKeywordDialog.find("#relatedKeywordPercentage").val());
+    customerKeyword.relatedKeywordPercentage = relatedKeywordPercentage;
+
     var remarks = $.trim(saveCustomerKeywordDialog.find("#remarks").val());
     customerKeyword.remarks = remarks;
     customerKeyword.manualCleanTitle = true;
@@ -700,6 +717,21 @@ function modifyCustomerKeyword(customerKeywordUuid, customerUuid) {
                 saveCustomerKeywordDialog.find("#collectMethod").val(customerKeyword.collectMethod);
                 saveCustomerKeywordDialog.find("#orderNumber").val(customerKeyword.orderNumber);
                 saveCustomerKeywordDialog.find("#paymentStatus").val(customerKeyword.paymentStatus);
+
+                if(customerKeyword.clickUrl == "clickPositiveUrl") {
+                    $("#clickPositiveUrl").prop("checked", true);
+                } else if(customerKeyword.clickUrl == "clickCommonUrl") {
+                    $("#clickCommonUrl").prop("checked", true);
+                } else {
+                    $("#clickPositiveUrl").prop("checked", false);
+                    $("#clickCommonUrl").prop("checked", false);
+                }
+                $("#selectKeyword").prop("checked", customerKeyword.selectKeyword);
+                $("#relatedKeyword").prop("checked", customerKeyword.relatedKeyword);
+                $("#recommendKeyword").prop("checked", customerKeyword.recommendKeyword);
+                $("#searchAfterSelectKeyword").prop("checked", customerKeyword.searchAfterSelectKeyword);
+                saveCustomerKeywordDialog.find("#showPage").val(customerKeyword.showPage);
+                saveCustomerKeywordDialog.find("#relatedKeywordPercentage").val(customerKeyword.relatedKeywordPercentage);
                 saveCustomerKeywordDialog.find("#remarks").val(customerKeyword.remarks);
                 if(customerKeyword.positionFirstCost!=null||customerKeyword.positionSecondCost!=null||customerKeyword.positionThirdCost!=null||customerKeyword.positionForthCost!=null||customerKeyword.positionFifthCost!=null){
                     showCustomerKeywordCost();

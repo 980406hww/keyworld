@@ -446,6 +446,13 @@
         ck.fRecommendKeywords AS 'recommendKeywords',
         ck.fNegativeKeywords AS 'negativeKeywords',
         ck.fExcludeKeywords AS 'excludeKeywords',
+        ck.fSelectKeyword AS 'selectKeyword',
+        ck.fRelatedKeyword AS 'relatedKeyword',
+        ck.fRecommendKeyword AS 'recommendKeyword',
+        ck.fSearchAfterSelectKeyword AS 'searchAfterSelectKeyword',
+        ck.fClickUrl AS 'clickUrl',
+        ck.fShowPage AS 'showPage',
+        ck.fRelatedKeywordPercentage AS 'relatedKeywordPercentage',
         ck.fRemarks AS 'remarks'
         FROM t_customer_keyword ck
         WHERE ck.fOptimizeGroupName = #{groupName} and ck.fStatus = 1 and ck.fTerminalType = #{terminalType}
@@ -469,6 +476,16 @@
         <if test="count > 0">fInvalidRefreshCount = 0, </if>
         fOptimizedPercentage = fOptimizedCount/fOptimizePlanCount, fOptimizeDate = CURRENT_DATE(),fUpdateTime = NOW()
 		WHERE fUuid = #{customerKeywordUuid}
+    </update>
+
+    <update id="batchUpdateOptimizedCount">
+        UPDATE t_customer_keyword
+        SET fLastOptimizeDateTime = now(), fOptimizedCount = fOptimizedCount + 1, fInvalidRefreshCount = 0,
+        fOptimizedPercentage = fOptimizedCount/fOptimizePlanCount, fOptimizeDate = CURRENT_DATE(),fUpdateTime = NOW()
+        WHERE fUuid IN
+        <foreach item="uuid" index="index" collection="customerKeywordUuids" open="(" separator="," close=")">
+            #{uuid}
+        </foreach>
     </update>
 
     <select id="searchCustomerKeywordsForAdjustingOptimizationCount" resultType="java.util.Map">
@@ -830,5 +847,17 @@
         FROM t_customer_keyword ck
         WHERE fType = 'fm'
         AND fStatus = 1
+    </select>
+
+    <select id="getNegativeKeywordList" parameterType="java.lang.String" resultType="com.keymanager.monitoring.entity.NegativeList">
+        SELECT
+            fUuid AS 'uuid',
+			fTitle AS 'title',
+			fUrl AS 'url'
+		FROM t_customer_keyword
+		WHERE fType = 'fm'
+		AND fKeyword = #{keyword}
+		AND fOptimizePlanCount &gt; fOptimizedCount
+		AND fStatus = 1
     </select>
 </mapper>

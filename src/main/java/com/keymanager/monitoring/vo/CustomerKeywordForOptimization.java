@@ -66,9 +66,15 @@ public class CustomerKeywordForOptimization {
 	private List<String> negativeKeywords;
 	private List<String> excludeKeywords;
 	private List<String> recommendedKeywords;
+	private Boolean needSelectKeyword;
+	private Boolean needRelatedKeyword;
+	private Boolean needRecommendKeyword;
+	private Boolean needSearchAfterSelectKeyword;
+	private String clickUrl;
+	private String showPage;
+	private String relatedKeywordPercentage;
 
 	private List<String> excludeTitles;
-
 
 	private String remarks;
 
@@ -574,5 +580,61 @@ public class CustomerKeywordForOptimization {
 
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
+	}
+
+	public Boolean getNeedSelectKeyword() {
+		return needSelectKeyword;
+	}
+
+	public void setNeedSelectKeyword(Boolean needSelectKeyword) {
+		this.needSelectKeyword = needSelectKeyword;
+	}
+
+	public Boolean getNeedRelatedKeyword() {
+		return needRelatedKeyword;
+	}
+
+	public void setNeedRelatedKeyword(Boolean needRelatedKeyword) {
+		this.needRelatedKeyword = needRelatedKeyword;
+	}
+
+	public Boolean getNeedRecommendKeyword() {
+		return needRecommendKeyword;
+	}
+
+	public void setNeedRecommendKeyword(Boolean needRecommendKeyword) {
+		this.needRecommendKeyword = needRecommendKeyword;
+	}
+
+	public Boolean getNeedSearchAfterSelectKeyword() {
+		return needSearchAfterSelectKeyword;
+	}
+
+	public void setNeedSearchAfterSelectKeyword(Boolean needSearchAfterSelectKeyword) {
+		this.needSearchAfterSelectKeyword = needSearchAfterSelectKeyword;
+	}
+
+	public String getClickUrl() {
+		return clickUrl;
+	}
+
+	public void setClickUrl(String clickUrl) {
+		this.clickUrl = clickUrl;
+	}
+
+	public String getShowPage() {
+		return showPage;
+	}
+
+	public void setShowPage(String showPage) {
+		this.showPage = showPage;
+	}
+
+	public String getRelatedKeywordPercentage() {
+		return relatedKeywordPercentage;
+	}
+
+	public void setRelatedKeywordPercentage(String relatedKeywordPercentage) {
+		this.relatedKeywordPercentage = relatedKeywordPercentage;
 	}
 }

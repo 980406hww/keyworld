@@ -5,6 +5,7 @@ import com.keymanager.monitoring.criteria.BaiduIndexCriteria;
 import com.keymanager.monitoring.criteria.BaseCriteria;
 import com.keymanager.monitoring.entity.ClientStatus;
 import com.keymanager.monitoring.entity.CustomerKeyword;
+import com.keymanager.monitoring.entity.NegativeList;
 import com.keymanager.monitoring.service.ClientStatusService;
 import com.keymanager.monitoring.service.CustomerKeywordService;
 import com.keymanager.monitoring.service.PerformanceService;
@@ -149,6 +150,22 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
+    @RequestMapping(value = "/getNegativeKeywordList", method = RequestMethod.POST)
+    public ResponseEntity<?> getNegativeKeywordList(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
+        String userName = (String) requestMap.get("userName");
+        String password = (String) requestMap.get("password");
+        String keyword = (String) requestMap.get("keyword");
+        try {
+            if (validUser(userName, password)) {
+                List<NegativeList> customerKeywordList = customerKeywordService.getNegativeKeywordList(keyword);
+                return new ResponseEntity<Object>(customerKeywordList, HttpStatus.OK);
+            }
+        }catch (Exception ex){
+            logger.error(ex.getMessage());
+        }
+        return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
+    }
+
     @RequestMapping(value = "/getCustomerKeyword", method = RequestMethod.GET)
     public ResponseEntity<?> getCustomerKeywordForOptimization(HttpServletRequest request) throws Exception {
         long startMilleSeconds = System.currentTimeMillis();
@@ -206,6 +223,22 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             logger.error(ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+    }
+
+    @RequestMapping(value = "/batchUpdateOptimizedCount", method = RequestMethod.POST)
+    public ResponseEntity<?> batchUpdateOptimizedCount(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
+        String userName = (String) requestMap.get("userName");
+        String password = (String) requestMap.get("password");
+        List<Long> customerKeywordUuids = (List<Long>) requestMap.get("customerKeywordUuids");
+        try {
+            if (validUser(userName, password)) {
+                customerKeywordService.batchUpdateOptimizedCount(customerKeywordUuids);
+                return new ResponseEntity<Object>(true, HttpStatus.OK);
+            }
+        }catch (Exception ex){
+            logger.error(ex.getMessage());
+        }
+        return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
     }
 
     @RequestMapping(value = "/adjustOptimizationCount", method = RequestMethod.POST)

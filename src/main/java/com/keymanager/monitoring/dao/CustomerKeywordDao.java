@@ -6,6 +6,7 @@ import com.keymanager.monitoring.criteria.CustomerKeywordCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordUpdateCriteria;
 import com.keymanager.monitoring.entity.CustomerKeyword;
+import com.keymanager.monitoring.entity.NegativeList;
 import com.keymanager.monitoring.entity.QZCaptureTitleLog;
 import com.keymanager.monitoring.vo.CodeNameVo;
 import com.keymanager.monitoring.vo.DateRangeTypeVO;
@@ -156,4 +157,8 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     int searchCustomerKeywordForNoReachStandard(@Param("customerKeywordCriteria")CustomerKeywordCriteria customerKeywordCriteria);
 
     List<String> findAllNegativeCustomerKeyword();
+
+    void batchUpdateOptimizedCount(@Param("customerKeywordUuids")List<Long> customerKeywordUuids);
+
+    List<NegativeList> getNegativeKeywordList(@Param("keyword")String keyword);
 }

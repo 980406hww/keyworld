@@ -181,6 +181,27 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(value = "fPaymentEffectiveFromTime")
     private Date paymentEffectiveToTime;
 
+    @TableField(value = "fSelectKeyword")
+    private Boolean selectKeyword;
+
+    @TableField(value = "fRelatedKeyword")
+    private Boolean relatedKeyword;
+
+    @TableField(value = "fRecommendKeyword")
+    private Boolean recommendKeyword;
+
+    @TableField(value = "fSearchAfterSelectKeyword")
+    private Boolean searchAfterSelectKeyword;
+
+    @TableField(value = "fClickUrl", strategy = FieldStrategy.IGNORED)
+    private String clickUrl;
+
+    @TableField(value = "fShowPage", strategy = FieldStrategy.IGNORED)
+    private String showPage;
+
+    @TableField(value = "fRelatedKeywordPercentage", strategy = FieldStrategy.IGNORED)
+    private String relatedKeywordPercentage;
+
     @TableField(value = "fRelatedKeywords", strategy = FieldStrategy.IGNORED)
     private String relatedKeywords;
 
@@ -811,5 +832,61 @@ public class CustomerKeyword extends BaseEntity {
 
     public void setExcludeKeywords(String excludeKeywords) {
         this.excludeKeywords = excludeKeywords;
+    }
+
+    public Boolean getSelectKeyword() {
+        return selectKeyword;
+    }
+
+    public void setSelectKeyword(Boolean selectKeyword) {
+        this.selectKeyword = selectKeyword;
+    }
+
+    public Boolean getRelatedKeyword() {
+        return relatedKeyword;
+    }
+
+    public void setRelatedKeyword(Boolean relatedKeyword) {
+        this.relatedKeyword = relatedKeyword;
+    }
+
+    public Boolean getRecommendKeyword() {
+        return recommendKeyword;
+    }
+
+    public void setRecommendKeyword(Boolean recommendKeyword) {
+        this.recommendKeyword = recommendKeyword;
+    }
+
+    public Boolean getSearchAfterSelectKeyword() {
+        return searchAfterSelectKeyword;
+    }
+
+    public void setSearchAfterSelectKeyword(Boolean searchAfterSelectKeyword) {
+        this.searchAfterSelectKeyword = searchAfterSelectKeyword;
+    }
+
+    public String getClickUrl() {
+        return clickUrl;
+    }
+
+    public void setClickUrl(String clickUrl) {
+        this.clickUrl = clickUrl;
+    }
+
+    public String getShowPage() {
+        return showPage;
+    }
+
+    public void setShowPage(String showPage) {
+        this.showPage = showPage;
+    }
+
+    public String getRelatedKeywordPercentage() {
+        return relatedKeywordPercentage;
+    }
+
+    public void setRelatedKeywordPercentage(String relatedKeywordPercentage) {
+        this.relatedKeywordPercentage = relatedKeywordPercentage;
     }
 }

@@ -435,9 +435,25 @@
                 <option value="4">跑路</option>
             </select>
             </li>
+            <li style="float:left;">
+                <span style="text-align: right;margin-left: 30px;">
+                <input type="radio" id="clickPositiveUrl" name="clickUrl" value="clickPositiveUrl">点击正面链接
+                <input type="radio" id="clickCommonUrl" name="clickUrl" value="clickCommonUrl">点击非负面清单链接
+                </span>
+            </li>
+            <li style="float:left">
+                <span style="text-align: right;margin-left: 30px;">
+                <input type="checkbox" id="selectKeyword" name="selectKeyword" value="selectKeyword">下拉词
+                <input type="checkbox" id="relatedKeyword" name="relatedKeyword" value="relatedKeyword">相关词
+                <input type="checkbox" id="recommendKeyword" name="recommendKeyword" value="recommendKeyword">推荐词
+                <input type="checkbox" id="searchAfterSelectKeyword" name="searchAfterSelectKeyword" value="searchAfterSelectKeyword">搜索后下拉词
+                </span>
+            </li>
             <li style="float:left"><span class="customerKeywordSpanClass">推荐词:</span><input type="text" name="recommendKeywords" id="recommendKeywords" value="" style="width:300px;"></li>
             <li style="float:left"><span class="customerKeywordSpanClass">负面词:</span><input type="text" name="negativeKeywords" id="negativeKeywords" value="" style="width:300px;"></li>
             <li style="float:left"><span class="customerKeywordSpanClass">排除词:</span><input type="text" name="excludeKeywords" id="excludeKeywords" value="" style="width:300px;"></li>
+            <li style="float:left"><span class="customerKeywordSpanClass">展现页码:</span><input type="text" name="showPage" id="showPage" value="" style="width:300px;"></li>
+            <li style="float:left"><span style="text-align: right;margin-left: 5px;">普通相关词占比:</span><input type="text" name="relatedKeywordPercentage" id="relatedKeywordPercentage" value="" style="width:280px;"></li>
             <li style="float:left">
                 <span class="customerKeywordSpanClass" style="display: inline-block;float: left;height: 80px;">备注:</span><textarea name="remarks" id="remarks" style="width:300px;height:80px;resize: none" placeholder="请写备注吧!"></textarea>
             </li>
