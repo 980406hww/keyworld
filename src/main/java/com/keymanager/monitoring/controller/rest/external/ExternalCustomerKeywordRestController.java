@@ -150,14 +150,14 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
-    @RequestMapping(value = "/getNegativeKeywordList", method = RequestMethod.POST)
-    public ResponseEntity<?> getNegativeKeywordList(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
+    @RequestMapping(value = "/getCustomerKeywordSummaryInfos", method = RequestMethod.POST)
+    public ResponseEntity<?> getCustomerKeywordSummaryInfos(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
         String userName = (String) requestMap.get("userName");
         String password = (String) requestMap.get("password");
         String keyword = (String) requestMap.get("keyword");
         try {
             if (validUser(userName, password)) {
-                List<NegativeList> customerKeywordList = customerKeywordService.getNegativeKeywordList(keyword);
+                List<NegativeList> customerKeywordList = customerKeywordService.getCustomerKeywordSummaryInfos(keyword);
                 return new ResponseEntity<Object>(customerKeywordList, HttpStatus.OK);
             }
         }catch (Exception ex){
