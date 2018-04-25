@@ -66,6 +66,9 @@ public class ClientStatus {
 	@TableField(value = "fZhanwaiPercent")
 	private Integer zhanwaiPercent;
 
+	@TableField(value = "fSpecialCharPercent")
+	private Integer specialCharPercent;
+
 	@TableField(value = "fMultiBrowser")
 	private Integer multiBrowser;
 
@@ -961,5 +964,13 @@ public class ClientStatus {
 
 	public void setDownloadProgramType(String downloadProgramType) {
 		this.downloadProgramType = downloadProgramType;
+	}
+
+	public Integer getSpecialCharPercent() {
+		return specialCharPercent;
+	}
+
+	public void setSpecialCharPercent(Integer specialCharPercent) {
+		this.specialCharPercent = specialCharPercent;
 	}
 }

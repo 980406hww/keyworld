@@ -571,6 +571,10 @@ function initSettingDialog(clientStatus, self){
     if(clientStatus.baiduSemPercent != null){
         settingDialogDiv.find("#baiduSemPercent").val(clientStatus.baiduSemPercent);
     }
+    if(clientStatus.specialCharPercent != null){
+        settingDialogDiv.find("#specialCharPercent").val(clientStatus.specialCharPercent);
+    }
+
     if(clientStatus.multiBrowser != null){
         settingDialogDiv.find("#multiBrowser").val(clientStatus.multiBrowser);
     }
@@ -644,6 +648,7 @@ function saveChangeSetting(self){
     clientStatus.zhanwaiPercent = settingDialogDiv.find("#zhanwaiPercent").val();
     clientStatus.kuaizhaoPercent = settingDialogDiv.find("#kuaizhaoPercent").val();
     clientStatus.baiduSemPercent = settingDialogDiv.find("#baiduSemPercent").val();
+    clientStatus.specialCharPercent = settingDialogDiv.find("#specialCharPercent").val();
     clientStatus.multiBrowser = settingDialogDiv.find("#multiBrowser").val();
     clientStatus.clearCookie = settingDialogDiv.find("#clearCookie").val();
     clientStatus.allowSwitchGroup = settingDialogDiv.find("#allowSwitchGroup").val();

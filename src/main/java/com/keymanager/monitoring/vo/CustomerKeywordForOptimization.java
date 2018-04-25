@@ -1,4 +1,4 @@
-package com.keymanager.monitoring.vo;
+﻿package com.keymanager.monitoring.vo;
 
 import java.util.List;
 
@@ -23,6 +23,7 @@ public class CustomerKeywordForOptimization {
 	private int clearCookie;
 	private int zhanneiPercent;
 	private int zhanwaiPercent;
+	private int specialCharPercent;
 	private int openStatistics;
 	private int disableStatistics;
 	private int entryPageMinCount;
@@ -582,12 +583,12 @@ public class CustomerKeywordForOptimization {
 		this.remarks = remarks;
 	}
 
-	public Boolean getNeedSelectKeyword() {
-		return needSelectKeyword;
+	public int getSpecialCharPercent() {
+		return specialCharPercent;
 	}
 
-	public void setNeedSelectKeyword(Boolean needSelectKeyword) {
-		this.needSelectKeyword = needSelectKeyword;
+	public void setSpecialCharPercent(int specialCharPercent) {
+		this.specialCharPercent = specialCharPercent;
 	}
 
 	public Boolean getNeedRelatedKeyword() {
@@ -636,5 +637,13 @@ public class CustomerKeywordForOptimization {
 
 	public void setRelatedKeywordPercentage(String relatedKeywordPercentage) {
 		this.relatedKeywordPercentage = relatedKeywordPercentage;
+	}
+
+	public Boolean getNeedSelectKeyword() {
+		return needSelectKeyword;
+	}
+
+	public void setNeedSelectKeyword(Boolean needSelectKeyword) {
+		this.needSelectKeyword = needSelectKeyword;
 	}
 }

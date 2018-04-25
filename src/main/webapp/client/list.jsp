@@ -505,6 +505,18 @@
 							</td>
 						</tr>
 						<tr>
+							<th>特殊字符比例</th>
+							<td>
+								<select name="specialCharPercent" id="specialCharPercent">
+									<option value="0">0%</option>
+									<option value="1">10%</option>
+									<option value="2">30%</option>
+									<option value="3">50%</option>
+									<option value="4">100%</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
 							<th>拖动标题的点击比例</th>
 							<td>
 								<select name="dragPercent" id="dragPercent">

@@ -32,6 +32,7 @@
         cs.fPageSize AS "pageSize",
         cs.fZhanneiPercent AS "zhanneiPercent",
         cs.fZhanwaiPercent AS "zhanwaiPercent",
+        cs.fSpecialCharPercent AS "specialCharPercent",
         cs.fKuaizhaoPercent AS "kuaizhaoPercent",
         cs.fBaiduSemPercent AS "baiduSemPercent",
         cs.fDragPercent AS "dragPercent",
