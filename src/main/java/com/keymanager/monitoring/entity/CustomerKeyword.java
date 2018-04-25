@@ -200,7 +200,7 @@ public class CustomerKeyword extends BaseEntity {
     private String showPage;
 
     @TableField(value = "fRelatedKeywordPercentage", strategy = FieldStrategy.IGNORED)
-    private String relatedKeywordPercentage;
+    private Integer relatedKeywordPercentage;
 
     @TableField(value = "fRelatedKeywords", strategy = FieldStrategy.IGNORED)
     private String relatedKeywords;
@@ -882,11 +882,11 @@ public class CustomerKeyword extends BaseEntity {
         this.showPage = showPage;
     }
 
-    public String getRelatedKeywordPercentage() {
+    public Integer getRelatedKeywordPercentage() {
         return relatedKeywordPercentage;
     }
 
-    public void setRelatedKeywordPercentage(String relatedKeywordPercentage) {
+    public void setRelatedKeywordPercentage(Integer relatedKeywordPercentage) {
         this.relatedKeywordPercentage = relatedKeywordPercentage;
     }
 }

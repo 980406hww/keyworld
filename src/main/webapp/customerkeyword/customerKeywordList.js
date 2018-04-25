@@ -731,7 +731,7 @@ function modifyCustomerKeyword(customerKeywordUuid, customerUuid) {
                 $("#operateRecommendKeyword").prop("checked", customerKeyword.operateRecommendKeyword);
                 $("#operateSearchAfterSelectKeyword").prop("checked", customerKeyword.operateSearchAfterSelectKeyword);
                 saveCustomerKeywordDialog.find("#showPage").val(customerKeyword.showPage);
-                saveCustomerKeywordDialog.find("#relatedKeywordPercentage").val(customerKeyword.relatedKeywordPercentage);
+                saveCustomerKeywordDialog.find("#relatedKeywordPercentage").spinner('setValue', customerKeyword.relatedKeywordPercentage);
                 saveCustomerKeywordDialog.find("#remarks").val(customerKeyword.remarks);
                 if(customerKeyword.positionFirstCost!=null||customerKeyword.positionSecondCost!=null||customerKeyword.positionThirdCost!=null||customerKeyword.positionForthCost!=null||customerKeyword.positionFifthCost!=null){
                     showCustomerKeywordCost();

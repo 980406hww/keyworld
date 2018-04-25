@@ -73,7 +73,7 @@ public class CustomerKeywordForOptimization {
     private Boolean operateSearchAfterSelectKeyword;
     private String clickUrl;
     private String showPage;
-    private String relatedKeywordPercentage;
+    private Integer relatedKeywordPercentage;
 
     private List<String> excludeTitles;
 
@@ -607,11 +607,11 @@ public class CustomerKeywordForOptimization {
         this.showPage = showPage;
     }
 
-    public String getRelatedKeywordPercentage() {
+    public Integer getRelatedKeywordPercentage() {
         return relatedKeywordPercentage;
     }
 
-    public void setRelatedKeywordPercentage(String relatedKeywordPercentage) {
+    public void setRelatedKeywordPercentage(Integer relatedKeywordPercentage) {
         this.relatedKeywordPercentage = relatedKeywordPercentage;
     }
 

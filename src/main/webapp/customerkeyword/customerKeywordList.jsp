@@ -453,7 +453,9 @@
             <li style="float:left"><span class="customerKeywordSpanClass">负面词:</span><input type="text" name="negativeKeywords" id="negativeKeywords" value="" style="width:300px;"></li>
             <li style="float:left"><span class="customerKeywordSpanClass">排除词:</span><input type="text" name="excludeKeywords" id="excludeKeywords" value="" style="width:300px;"></li>
             <li style="float:left"><span class="customerKeywordSpanClass">展现页码:</span><input type="text" name="showPage" id="showPage" value="" style="width:300px;"></li>
-            <li style="float:left"><span style="text-align: right;margin-left: 5px;">普通相关词占比:</span><input type="text" name="relatedKeywordPercentage" id="relatedKeywordPercentage" value="" style="width:280px;"></li>
+            <li style="float:left"><span style="text-align: right;margin-left: 5px;">普通相关词占比:</span>
+                <input type="text" name="relatedKeywordPercentage" id="relatedKeywordPercentage" class="easyui-numberspinner" data-options="min:0,max:1000,increment:10" style="width:280px;">
+            </li>
             <li style="float:left">
                 <span class="customerKeywordSpanClass" style="display: inline-block;float: left;height: 80px;">备注:</span><textarea name="remarks" id="remarks" style="width:300px;height:80px;resize: none" placeholder="请写备注吧!"></textarea>
             </li>
