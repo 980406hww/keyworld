@@ -155,9 +155,10 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         String userName = (String) requestMap.get("userName");
         String password = (String) requestMap.get("password");
         String keyword = (String) requestMap.get("keyword");
+        String terminalType = (String) requestMap.get("terminalType");
         try {
             if (validUser(userName, password)) {
-                List<NegativeList> customerKeywordList = customerKeywordService.getCustomerKeywordSummaryInfos(keyword);
+                List<NegativeList> customerKeywordList = customerKeywordService.getCustomerKeywordSummaryInfos(terminalType, keyword);
                 return new ResponseEntity<Object>(customerKeywordList, HttpStatus.OK);
             }
         }catch (Exception ex){

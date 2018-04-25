@@ -1094,7 +1094,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return config.getValue();
     }
 
-    public List<NegativeList> getCustomerKeywordSummaryInfos(String keyword) {
-        return customerKeywordDao.getCustomerKeywordSummaryInfos(keyword);
+    public List<NegativeList> getCustomerKeywordSummaryInfos(String terminalType, String keyword) {
+        return customerKeywordDao.getCustomerKeywordSummaryInfos(terminalType, keyword);
     }
 }

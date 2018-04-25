@@ -843,13 +843,14 @@
     </select>
 
     <select id="getCustomerKeywordSummaryInfos" parameterType="java.lang.String" resultType="com.keymanager.monitoring.entity.NegativeList">
-        SELECT
+        SELECT DISTINCT
             fUuid AS 'uuid',
 			fTitle AS 'title',
 			fUrl AS 'url'
 		FROM t_customer_keyword
 		WHERE fType = 'fm'
 		AND fKeyword = #{keyword}
+		AND fTerminalType = #{terminalType}
 		AND fOptimizePlanCount &gt; fOptimizedCount
 		AND fStatus = 1
     </select>

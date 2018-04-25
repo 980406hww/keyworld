@@ -158,5 +158,5 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void batchUpdateOptimizedCount(@Param("customerKeywordUuids")List<Long> customerKeywordUuids);
 
-    List<NegativeList> getCustomerKeywordSummaryInfos(@Param("keyword")String keyword);
+    List<NegativeList> getCustomerKeywordSummaryInfos(@Param("terminalType")String terminalType, @Param("keyword")String keyword);
 }
