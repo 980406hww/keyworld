@@ -1086,8 +1086,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeywordCriteria.setThirtyDaysNoReachStandard(thirtyDaysNoReachStandard);
     }
 
-    public List<String> findAllNegativeCustomerKeyword() {
-        return customerKeywordDao.findAllNegativeCustomerKeyword();
+    public String findAllNegativeCustomerKeyword(String searchEngine) {
+        Config config = configService.getConfig(Constants.CONFIG_TYPE_NEGATIVE_KEYWORD, searchEngine);
+        return config.getValue();
     }
 
     public List<NegativeList> getNegativeKeywordList(String keyword) {

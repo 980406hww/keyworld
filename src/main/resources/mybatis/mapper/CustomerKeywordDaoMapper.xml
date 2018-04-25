@@ -842,13 +842,6 @@
         <include refid="searchCustomerKeywordsCriteria"/>
     </select>
 
-    <select id="findAllNegativeCustomerKeyword" resultType="java.lang.String">
-        SELECT DISTINCT ck.fKeyword
-        FROM t_customer_keyword ck
-        WHERE fType = 'fm'
-        AND fStatus = 1
-    </select>
-
     <select id="getNegativeKeywordList" parameterType="java.lang.String" resultType="com.keymanager.monitoring.entity.NegativeList">
         SELECT
             fUuid AS 'uuid',

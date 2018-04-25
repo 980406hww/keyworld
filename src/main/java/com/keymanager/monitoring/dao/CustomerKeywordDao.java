@@ -156,8 +156,6 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     int searchCustomerKeywordForNoReachStandard(@Param("customerKeywordCriteria")CustomerKeywordCriteria customerKeywordCriteria);
 
-    List<String> findAllNegativeCustomerKeyword();
-
     void batchUpdateOptimizedCount(@Param("customerKeywordUuids")List<Long> customerKeywordUuids);
 
     List<NegativeList> getNegativeKeywordList(@Param("keyword")String keyword);
