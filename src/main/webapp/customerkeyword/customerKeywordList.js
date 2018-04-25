@@ -634,14 +634,14 @@ function saveCustomerKeyword(customerUuid) {
     var paymentStatus = $.trim(saveCustomerKeywordDialog.find("#paymentStatus").val());
     customerKeyword.paymentStatus = paymentStatus;
 
-    var selectKeyword = $("#selectKeyword")[0].checked;
-    customerKeyword.selectKeyword = selectKeyword;
-    var relatedKeyword = $("#relatedKeyword")[0].checked;
-    customerKeyword.relatedKeyword = relatedKeyword;
-    var recommendKeyword = $("#recommendKeyword")[0].checked;
-    customerKeyword.recommendKeyword = recommendKeyword;
-    var searchAfterSelectKeyword = $("#searchAfterSelectKeyword")[0].checked;
-    customerKeyword.searchAfterSelectKeyword = searchAfterSelectKeyword;
+    var operateSelectKeyword = $("#operateSelectKeyword")[0].checked;
+    customerKeyword.operateSelectKeyword = operateSelectKeyword;
+    var operateRelatedKeyword = $("#operateRelatedKeyword")[0].checked;
+    customerKeyword.operateRelatedKeyword = operateRelatedKeyword;
+    var operateRecommendKeyword = $("#operateRecommendKeyword")[0].checked;
+    customerKeyword.operateRecommendKeyword = operateRecommendKeyword;
+    var operateSearchAfterSelectKeyword = $("#operateSearchAfterSelectKeyword")[0].checked;
+    customerKeyword.operateSearchAfterSelectKeyword = operateSearchAfterSelectKeyword;
 
     var clickUrl = $("input[name='clickUrl']:checked").val();
     customerKeyword.clickUrl = clickUrl;
@@ -726,10 +726,10 @@ function modifyCustomerKeyword(customerKeywordUuid, customerUuid) {
                     $("#clickPositiveUrl").prop("checked", false);
                     $("#clickCommonUrl").prop("checked", false);
                 }
-                $("#selectKeyword").prop("checked", customerKeyword.selectKeyword);
-                $("#relatedKeyword").prop("checked", customerKeyword.relatedKeyword);
-                $("#recommendKeyword").prop("checked", customerKeyword.recommendKeyword);
-                $("#searchAfterSelectKeyword").prop("checked", customerKeyword.searchAfterSelectKeyword);
+                $("#operateSelectKeyword").prop("checked", customerKeyword.operateSelectKeyword);
+                $("#operateRelatedKeyword").prop("checked", customerKeyword.operateRelatedKeyword);
+                $("#operateRecommendKeyword").prop("checked", customerKeyword.operateRecommendKeyword);
+                $("#operateSearchAfterSelectKeyword").prop("checked", customerKeyword.operateSearchAfterSelectKeyword);
                 saveCustomerKeywordDialog.find("#showPage").val(customerKeyword.showPage);
                 saveCustomerKeywordDialog.find("#relatedKeywordPercentage").val(customerKeyword.relatedKeywordPercentage);
                 saveCustomerKeywordDialog.find("#remarks").val(customerKeyword.remarks);

@@ -67,10 +67,10 @@ public class CustomerKeywordForOptimization {
     private List<String> negativeKeywords;
     private List<String> excludeKeywords;
     private List<String> recommendedKeywords;
-    private Boolean needSelectKeyword;
-    private Boolean needRelatedKeyword;
-    private Boolean needRecommendKeyword;
-    private Boolean needSearchAfterSelectKeyword;
+    private Boolean operateSelectKeyword;
+    private Boolean operateRelatedKeyword;
+    private Boolean operateRecommendKeyword;
+    private Boolean operateSearchAfterSelectKeyword;
     private String clickUrl;
     private String showPage;
     private String relatedKeywordPercentage;
@@ -591,30 +591,6 @@ public class CustomerKeywordForOptimization {
         this.specialCharPercent = specialCharPercent;
     }
 
-    public Boolean getNeedRelatedKeyword() {
-        return needRelatedKeyword;
-    }
-
-    public void setNeedRelatedKeyword(Boolean needRelatedKeyword) {
-        this.needRelatedKeyword = needRelatedKeyword;
-    }
-
-    public Boolean getNeedRecommendKeyword() {
-        return needRecommendKeyword;
-    }
-
-    public void setNeedRecommendKeyword(Boolean needRecommendKeyword) {
-        this.needRecommendKeyword = needRecommendKeyword;
-    }
-
-    public Boolean getNeedSearchAfterSelectKeyword() {
-        return needSearchAfterSelectKeyword;
-    }
-
-    public void setNeedSearchAfterSelectKeyword(Boolean needSearchAfterSelectKeyword) {
-        this.needSearchAfterSelectKeyword = needSearchAfterSelectKeyword;
-    }
-
     public String getClickUrl() {
         return clickUrl;
     }
@@ -639,11 +615,35 @@ public class CustomerKeywordForOptimization {
         this.relatedKeywordPercentage = relatedKeywordPercentage;
     }
 
-    public Boolean getNeedSelectKeyword() {
-        return needSelectKeyword;
+    public Boolean getOperateSelectKeyword() {
+        return operateSelectKeyword;
     }
 
-    public void setNeedSelectKeyword(Boolean needSelectKeyword) {
-        this.needSelectKeyword = needSelectKeyword;
+    public void setOperateSelectKeyword(Boolean operateSelectKeyword) {
+        this.operateSelectKeyword = operateSelectKeyword;
+    }
+
+    public Boolean getOperateRelatedKeyword() {
+        return operateRelatedKeyword;
+    }
+
+    public void setOperateRelatedKeyword(Boolean operateRelatedKeyword) {
+        this.operateRelatedKeyword = operateRelatedKeyword;
+    }
+
+    public Boolean getOperateRecommendKeyword() {
+        return operateRecommendKeyword;
+    }
+
+    public void setOperateRecommendKeyword(Boolean operateRecommendKeyword) {
+        this.operateRecommendKeyword = operateRecommendKeyword;
+    }
+
+    public Boolean getOperateSearchAfterSelectKeyword() {
+        return operateSearchAfterSelectKeyword;
+    }
+
+    public void setOperateSearchAfterSelectKeyword(Boolean operateSearchAfterSelectKeyword) {
+        this.operateSearchAfterSelectKeyword = operateSearchAfterSelectKeyword;
     }
 }

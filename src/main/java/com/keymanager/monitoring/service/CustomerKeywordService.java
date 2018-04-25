@@ -672,10 +672,10 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                         customerKeywordForOptimization.setRecommendedKeywords(new ArrayList<String>(convertToSets(customerKeyword.getRecommendKeywords())));
                     }
 
-                    customerKeywordForOptimization.setNeedSelectKeyword(customerKeyword.getSelectKeyword());
-                    customerKeywordForOptimization.setNeedRelatedKeyword(customerKeyword.getRelatedKeyword());
-                    customerKeywordForOptimization.setNeedRecommendKeyword(customerKeyword.getRecommendKeyword());
-                    customerKeywordForOptimization.setNeedSearchAfterSelectKeyword(customerKeyword.getSearchAfterSelectKeyword());
+                    customerKeywordForOptimization.setOperateSelectKeyword(customerKeyword.getOperateSelectKeyword());
+                    customerKeywordForOptimization.setOperateRelatedKeyword(customerKeyword.getOperateRelatedKeyword());
+                    customerKeywordForOptimization.setOperateRecommendKeyword(customerKeyword.getOperateRecommendKeyword());
+                    customerKeywordForOptimization.setOperateSearchAfterSelectKeyword(customerKeyword.getOperateSearchAfterSelectKeyword());
                     customerKeywordForOptimization.setClickUrl(customerKeyword.getClickUrl());
                     customerKeywordForOptimization.setShowPage(customerKeyword.getShowPage());
                     customerKeywordForOptimization.setRelatedKeywordPercentage(customerKeyword.getRelatedKeywordPercentage());

@@ -181,17 +181,17 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(value = "fPaymentEffectiveFromTime")
     private Date paymentEffectiveToTime;
 
-    @TableField(value = "fSelectKeyword")
-    private Boolean selectKeyword;
+    @TableField(value = "fOperateSelectKeyword")
+    private Boolean operateSelectKeyword;
 
-    @TableField(value = "fRelatedKeyword")
-    private Boolean relatedKeyword;
+    @TableField(value = "fOperateRelatedKeyword")
+    private Boolean operateRelatedKeyword;
 
-    @TableField(value = "fRecommendKeyword")
-    private Boolean recommendKeyword;
+    @TableField(value = "fOperateRecommendKeyword")
+    private Boolean operateRecommendKeyword;
 
-    @TableField(value = "fSearchAfterSelectKeyword")
-    private Boolean searchAfterSelectKeyword;
+    @TableField(value = "fOperateSearchAfterSelectKeyword")
+    private Boolean operateSearchAfterSelectKeyword;
 
     @TableField(value = "fClickUrl", strategy = FieldStrategy.IGNORED)
     private String clickUrl;
@@ -834,36 +834,36 @@ public class CustomerKeyword extends BaseEntity {
         this.excludeKeywords = excludeKeywords;
     }
 
-    public Boolean getSelectKeyword() {
-        return selectKeyword;
+    public Boolean getOperateSelectKeyword() {
+        return operateSelectKeyword;
     }
 
-    public void setSelectKeyword(Boolean selectKeyword) {
-        this.selectKeyword = selectKeyword;
+    public void setOperateSelectKeyword(Boolean operateSelectKeyword) {
+        this.operateSelectKeyword = operateSelectKeyword;
     }
 
-    public Boolean getRelatedKeyword() {
-        return relatedKeyword;
+    public Boolean getOperateRelatedKeyword() {
+        return operateRelatedKeyword;
     }
 
-    public void setRelatedKeyword(Boolean relatedKeyword) {
-        this.relatedKeyword = relatedKeyword;
+    public void setOperateRelatedKeyword(Boolean operateRelatedKeyword) {
+        this.operateRelatedKeyword = operateRelatedKeyword;
     }
 
-    public Boolean getRecommendKeyword() {
-        return recommendKeyword;
+    public Boolean getOperateRecommendKeyword() {
+        return operateRecommendKeyword;
     }
 
-    public void setRecommendKeyword(Boolean recommendKeyword) {
-        this.recommendKeyword = recommendKeyword;
+    public void setOperateRecommendKeyword(Boolean operateRecommendKeyword) {
+        this.operateRecommendKeyword = operateRecommendKeyword;
     }
 
-    public Boolean getSearchAfterSelectKeyword() {
-        return searchAfterSelectKeyword;
+    public Boolean getOperateSearchAfterSelectKeyword() {
+        return operateSearchAfterSelectKeyword;
     }
 
-    public void setSearchAfterSelectKeyword(Boolean searchAfterSelectKeyword) {
-        this.searchAfterSelectKeyword = searchAfterSelectKeyword;
+    public void setOperateSearchAfterSelectKeyword(Boolean operateSearchAfterSelectKeyword) {
+        this.operateSearchAfterSelectKeyword = operateSearchAfterSelectKeyword;
     }
 
     public String getClickUrl() {

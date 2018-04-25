@@ -443,10 +443,10 @@
             </li>
             <li style="float:left">
                 <span style="text-align: right;margin-left: 30px;">
-                <input type="checkbox" id="selectKeyword" name="selectKeyword" value="selectKeyword">下拉词
-                <input type="checkbox" id="relatedKeyword" name="relatedKeyword" value="relatedKeyword">相关词
-                <input type="checkbox" id="recommendKeyword" name="recommendKeyword" value="recommendKeyword">推荐词
-                <input type="checkbox" id="searchAfterSelectKeyword" name="searchAfterSelectKeyword" value="searchAfterSelectKeyword">搜索后下拉词
+                <input type="checkbox" id="operateSelectKeyword" name="operateSelectKeyword" value="operateSelectKeyword">下拉词
+                <input type="checkbox" id="operateRelatedKeyword" name="operateRelatedKeyword" value="operateRelatedKeyword">相关词
+                <input type="checkbox" id="operateRecommendKeyword" name="operateRecommendKeyword" value="operateRecommendKeyword">推荐词
+                <input type="checkbox" id="operateSearchAfterSelectKeyword" name="operateSearchAfterSelectKeyword" value="operateSearchAfterSelectKeyword">搜索后下拉词
                 </span>
             </li>
             <li style="float:left"><span class="customerKeywordSpanClass">推荐词:</span><input type="text" name="recommendKeywords" id="recommendKeywords" value="" style="width:300px;"></li>
