@@ -364,7 +364,7 @@
 			   onclick="changePaging(1,'${page.size}')" value="首页"/>&nbsp;&nbsp;&nbsp;&nbsp;
 		<input id="upButton" type="button" class="ui-button ui-widget ui-corner-all"
 			   onclick="changePaging('${page.current-1}','${page.size}')" value="上一页"/>&nbsp;&nbsp;&nbsp;&nbsp;
-		${page.current}/${page.pages}&nbsp;&nbsp;
+		<input type="text" value="${page.current}" style="width:30px;" onchange="changePaging(this.value,'${page.size}')">/${page.pages}&nbsp;&nbsp;
 		<input id="nextButton" type="button" class="ui-button ui-widget ui-corner-all"
 			   onclick="changePaging('${page.current+1>=page.pages?page.pages:page.current+1}','${page.size}')"
 			   value="下一页">&nbsp;&nbsp;&nbsp;&nbsp;

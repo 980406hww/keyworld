@@ -659,6 +659,7 @@
         AND fSearchEngine =  #{searchEngine}
         AND fOptimizeGroupName =  #{qzCaptureTitleLog.group}
         AND ( fTitle = '' OR  fTitle IS NULL )
+        AND fCapturedTitle = 1
         AND fManualCleanTitle  = 0
     </delete>
 
