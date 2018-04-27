@@ -71,7 +71,7 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
         List<Website> websites = websiteDao.takeWebsitesForAccess();
         for (Website website : websites) {
             try {
-                String address = "http://" + website.getDomain() + System.currentTimeMillis();
+                String address = "http://" + website.getDomain() + "?" + System.currentTimeMillis();
                 int status = 404;
                 URL url = new URL(address);
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
