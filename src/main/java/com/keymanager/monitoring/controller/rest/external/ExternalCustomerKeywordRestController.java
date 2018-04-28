@@ -90,6 +90,10 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 } else {
                     returnValue = (customerKeywordService.searchCustomerKeywordForCaptureTitle(groupName, terminalType,searchEngine));
                 }
+                if(returnValue == null) {
+                    returnValue = new CustomerKeywordForCaptureTitle();
+                    returnValue.setKeyword("end");
+                }
                 return new ResponseEntity<Object>(returnValue, HttpStatus.OK);
             }
         }catch (Exception ex){
@@ -290,6 +294,10 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             if (validUser(userName, password)) {
                 CustomerKeywordForCapturePosition capturePosition = customerKeywordService.getCustomerKeywordForCapturePosition(terminalType,
                         groupNames, customerUuid != null ? customerUuid.longValue() : null, startTime, captureRankJobUuid.longValue());
+                if(capturePosition == null) {
+                    capturePosition = new CustomerKeywordForCapturePosition();
+                    capturePosition.setKeyword("end");
+                }
                 return new ResponseEntity<Object>(capturePosition, HttpStatus.OK);
             }
         }catch (Exception ex){

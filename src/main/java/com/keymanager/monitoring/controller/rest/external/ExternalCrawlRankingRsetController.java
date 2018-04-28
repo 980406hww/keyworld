@@ -37,6 +37,10 @@ public class ExternalCrawlRankingRsetController extends SpringMVCBaseController 
         try {
             if (validUser(userName, password)) {
                 CaptureRankJob captureRankJob = captureRankJobService.provideCaptureRankJob();
+                if(captureRankJob == null) {
+                    captureRankJob = new CaptureRankJob();
+                    captureRankJob.setGroupNames("end");
+                }
                 return new ResponseEntity<Object>(captureRankJob, HttpStatus.OK);
             }
         } catch (Exception e) {
