@@ -157,5 +157,5 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     List<NegativeList> getCustomerKeywordSummaryInfos(@Param("terminalType")String terminalType, @Param("keyword")String keyword);
 
-    List<KeywordSimpleVO> getQZCustomerKeywordSummaryInfos(@Param("terminalType")String terminalType, @Param("customerUuid")Long customerUuid);
+    List<KeywordSimpleVO> getQZCustomerKeywordSummaryInfos(@Param("terminalType")String terminalType, @Param("optimizeGroupName")String optimizeGroupName);
 }

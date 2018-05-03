@@ -866,9 +866,10 @@
         FROM t_customer_keyword
         WHERE fType = 'qz'
         AND fTerminalType = #{terminalType}
-        AND fCustomerUuid = #{customerUuid}
+        AND fOptimizeGroupName = #{optimizeGroupName}
         AND fOptimizePlanCount &gt; fOptimizedCount
         AND fStatus = 1
+        ORDER BY RAND()
         LIMIT 4
     </select>
 </mapper>
