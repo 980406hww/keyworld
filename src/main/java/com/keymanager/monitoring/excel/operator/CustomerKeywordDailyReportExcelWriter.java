@@ -41,7 +41,8 @@ public class CustomerKeywordDailyReportExcelWriter {
 		this.customerUuid = customerUuid;
 		this.dailyReportFileName = "dailyreport/" + terminalType + "/" + customerUuid + ".xls";
 		File file = getTemplateFile(dailyReportFileName);
-		if(!file.exists()){
+		int dayOfMonth = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+		if(!file.exists() || dayOfMonth == 1){
 			file = getTemplateFile(fileName);
 		}
 //		File file = getTemplateFile(fileName);
