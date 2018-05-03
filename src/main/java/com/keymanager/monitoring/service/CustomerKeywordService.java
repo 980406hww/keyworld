@@ -680,6 +680,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                     customerKeywordForOptimization.setShowPage(customerKeyword.getShowPage());
                     customerKeywordForOptimization.setRelatedKeywordPercentage(customerKeyword.getRelatedKeywordPercentage());
                 }
+
+                if(customerKeywordForOptimization.getEntryType().equals(EntryTypeEnum.qz.name()) && customerKeywordForOptimization.getOperationType().contains("qz_zhannei")) {
+                    List<KeywordSimpleVO> qzKeywords = customerKeywordDao.getQZCustomerKeywordSummaryInfos(terminalType, customerKeyword.getCustomerUuid());
+                    customerKeywordForOptimization.setRelatedQZKeywords(qzKeywords);
+                }
             }
             return customerKeywordForOptimization;
         }

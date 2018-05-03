@@ -434,6 +434,7 @@
     <select id="getCustomerKeywordForOptimization" resultType="com.keymanager.monitoring.entity.CustomerKeyword">
         SELECT
         ck.fUuid	AS	'uuid',
+        ck.fCustomerUuid AS 'customerUuid',
         ck.fTerminalType	AS	'terminalType',
         ck.fKeyword	AS	'keyword',
         ck.fUrl	AS	'url',
@@ -844,7 +845,7 @@
     </select>
 
     <select id="getCustomerKeywordSummaryInfos" parameterType="java.lang.String" resultType="com.keymanager.monitoring.entity.NegativeList">
-        SELECT DISTINCT
+        SELECT
             fUuid AS 'uuid',
 			fTitle AS 'title',
 			fUrl AS 'url'
@@ -854,5 +855,20 @@
 		AND fTerminalType = #{terminalType}
 		AND fOptimizePlanCount &gt; fOptimizedCount
 		AND fStatus = 1
+    </select>
+
+    <select id="getQZCustomerKeywordSummaryInfos" resultType="com.keymanager.monitoring.vo.KeywordSimpleVO">
+        SELECT
+            fUuid AS 'uuid',
+            fKeyword AS 'keyword',
+            fTitle AS 'title',
+            fUrl AS 'url'
+        FROM t_customer_keyword
+        WHERE fType = 'qz'
+        AND fTerminalType = #{terminalType}
+        AND fCustomerUuid = #{customerUuid}
+        AND fOptimizePlanCount &gt; fOptimizedCount
+        AND fStatus = 1
+        LIMIT 4
     </select>
 </mapper>

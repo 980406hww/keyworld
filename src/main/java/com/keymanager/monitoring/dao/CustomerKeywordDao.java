@@ -8,10 +8,7 @@ import com.keymanager.monitoring.criteria.CustomerKeywordUpdateCriteria;
 import com.keymanager.monitoring.entity.CustomerKeyword;
 import com.keymanager.monitoring.entity.NegativeList;
 import com.keymanager.monitoring.entity.QZCaptureTitleLog;
-import com.keymanager.monitoring.vo.CodeNameVo;
-import com.keymanager.monitoring.vo.DateRangeTypeVO;
-import com.keymanager.monitoring.vo.OptimizationCountVO;
-import com.keymanager.monitoring.vo.SearchEngineResultVO;
+import com.keymanager.monitoring.vo.*;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
 import org.apache.ibatis.annotations.Param;
 
@@ -159,4 +156,6 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void batchUpdateOptimizedCount(@Param("customerKeywordUuids")List<Long> customerKeywordUuids);
 
     List<NegativeList> getCustomerKeywordSummaryInfos(@Param("terminalType")String terminalType, @Param("keyword")String keyword);
+
+    List<KeywordSimpleVO> getQZCustomerKeywordSummaryInfos(@Param("terminalType")String terminalType, @Param("customerUuid")Long customerUuid);
 }

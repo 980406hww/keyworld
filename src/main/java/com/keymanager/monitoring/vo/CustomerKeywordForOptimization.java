@@ -76,6 +76,7 @@ public class CustomerKeywordForOptimization {
     private Integer relatedKeywordPercentage;
 
     private List<String> excludeTitles;
+    private List<KeywordSimpleVO> relatedQZKeywords;
 
     private String remarks;
 
@@ -645,5 +646,13 @@ public class CustomerKeywordForOptimization {
 
     public void setOperateSearchAfterSelectKeyword(Boolean operateSearchAfterSelectKeyword) {
         this.operateSearchAfterSelectKeyword = operateSearchAfterSelectKeyword;
+    }
+
+    public List<KeywordSimpleVO> getRelatedQZKeywords() {
+        return relatedQZKeywords;
+    }
+
+    public void setRelatedQZKeywords(List<KeywordSimpleVO> relatedQZKeywords) {
+        this.relatedQZKeywords = relatedQZKeywords;
     }
 }
