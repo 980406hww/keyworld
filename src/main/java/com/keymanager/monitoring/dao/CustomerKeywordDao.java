@@ -158,4 +158,8 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     List<NegativeList> getCustomerKeywordSummaryInfos(@Param("terminalType")String terminalType, @Param("keyword")String keyword);
 
     List<KeywordSimpleVO> getQZCustomerKeywordSummaryInfos(@Param("terminalType")String terminalType, @Param("optimizeGroupName")String optimizeGroupName);
+
+    List<String> searchKeywordUrlByGroup(@Param("terminalType")String terminalType, @Param("entryType")String entryType, @Param("optimizeGroupName")String optimizeGroupName);
+
+    void batchUpdatePosition(@Param("terminalType")String terminalType, @Param("entryType")String entryType, @Param("searchEngine")String searchEngine, @Param("reachStandardPosition")int reachStandardPosition, @Param("positionVOs")List<PositionVO> positionVOs);
 }

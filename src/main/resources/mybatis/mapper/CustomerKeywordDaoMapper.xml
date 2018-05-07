@@ -872,4 +872,30 @@
         ORDER BY RAND()
         LIMIT 4
     </select>
+
+    <select id="searchKeywordUrlByGroup" resultType="java.lang.String">
+        SELECT CONCAT(fUrl, ',', fKeyword) AS 'urlKeyword'
+        FROM t_customer_keyword
+        WHERE fTerminalType = #{terminalType}
+        AND fType = #{entryType}
+        AND fOptimizeGroupName = #{optimizeGroupName}
+        AND fKeyword > ''
+        AND fUrl > ''
+        AND fStatus = 1
+    </select>
+
+    <update id="batchUpdatePosition">
+        <foreach item="item" index="index" collection="positionVOs" open="" separator=";" close="">
+            UPDATE t_customer_keyword
+            SET fCurrentPosition = #{item.position}, fCapturePositionQueryTime = NOW()
+            <if test="reachStandardPosition &gt; 0 and item.position &gt; 0 and item.position &lt; reachStandardPosition">
+            ,fLastReachStandardDate = NOW()
+            </if>
+            WHERE fTerminalType = #{terminalType}
+            AND fType = #{entryType}
+            AND fSearchEngine = #{searchEngine}
+            AND fKeyword = #{item.keyword}
+            AND fUrl = #{item.url}
+        </foreach>
+    </update>
 </mapper>

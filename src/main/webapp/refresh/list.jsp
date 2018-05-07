@@ -18,14 +18,17 @@
 			<td align="right">
 				&nbsp;
 				<shiro:hasPermission name="/internal/refreshstatinfo/searchRefreshStatInfos">
-					<input type="submit" name="btnQuery" id="btnQuery" value=" 查询 " onclick="trimSearchCondition()">
+					<input type="submit" name="btnQuery" id="btnQuery" value=" 查询 " onclick="trimSearchCondition()">&nbsp;&nbsp;
 				</shiro:hasPermission>
+				<input type="button" value="导入" onclick="uploadCsv()">&nbsp;&nbsp;
+				<input type="button" value="导出" onclick="downloadTxt()">&nbsp;&nbsp;
 			</td>
 		</tr>
 	</table>
 </form>
 	<table style="font-size:12px;" id="headerTable" width=100%">
 		<tr bgcolor="#eeeeee" height=30>
+			<td align="center" width=30 rowspan="2"><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
 			<td align="center" width=100 rowspan="2">类型</td>
 			<td align="center" width=80 colspan="7">关键字</td>
 			<td align="center" width=80 colspan="6">刷的次数</td>
@@ -63,6 +66,7 @@
 						<tr onmouseover="doOver(this);" onmouseout="doOut(this);" height="30">
 					</c:otherwise>
 				</c:choose>
+				<td width=30 align="center"><input type="checkbox" name="uuid" value="${refreshStatInfoVO.group}" onclick="decideSelectAll()"/></td>
 				<td width=100>${refreshStatInfoVO.group}</td>
 				<td width=80>${refreshStatInfoVO.totalKeywordCount}</td>
 				<td width=80>
@@ -170,34 +174,47 @@
 	<input type="hidden" name="invalidRefreshCount" id="invalidRefreshCount" value=""/>
 	<input type="hidden" name="noReachStandardDays" id="noReachStandardDays" value=""/>
 </form>
+
+<div id="uploadCSVDialog" class="easyui-dialog" style="left: 40%;">
+	<form method="post" id="uploadCSVForm" action="" enctype="multipart/form-data" style="display:none;">
+		<table width="95%" style="margin-top: 10px;margin-left: 10px">
+			<tr>
+				<td align="right">
+					<table width="100%" style="font-size:14px;">
+						<tr>
+							<td>
+								搜索引擎:
+								<select name="searchEngine" id="searchEngine">
+									<option value="百度">百度</option>
+									<option value="搜狗">搜狗</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								设置达标:
+								<select name="reachStandardPosition" id="reachStandardPosition">
+									<option value="0"></option>
+									<option value="3">前3名</option>
+									<option value="5">前5名</option>
+									<option value="10">前10名</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="file" id="file" name="file" size=50 height="50px" style="width: 260px;">
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>
 <%@ include file="/commons/loadjs.jsp" %>
+<script src="${staticPath }/refresh/refresh.js"></script>
 <script language="javascript">
-    $(function () {
-        $("#showRefreshStatInfoDiv").css("margin-top",$("#topDiv").height());
-        alignTableHeader();
-        window.onresize = function(){
-            alignTableHeader();
-        }
-    });
-    function alignTableHeader(){
-        var td = $("#showRefreshStatInfoTable tr:first td:gt(0)");
-        var ctd = $("#headerTable tr:eq(1) td");
-        $("#headerTable tr:eq(0) td:eq(0)").width($("#showRefreshStatInfoTable tr:first td:eq(0)").width());
-        $.each(td, function (idx, val) {
-            ctd.eq(idx).width($(val).width());
-        });
-    }
-    function trimSearchCondition() {
-        var searchRefreshStatInfoForm = $("#searchRefreshStatInfoForm");
-        var groupName = searchRefreshStatInfoForm.find("#groupName").val();
-        var customerName = searchRefreshStatInfoForm.find("#customerName").val();
-        if(groupName != "") {
-            searchRefreshStatInfoForm.find("#groupName").val($.trim(groupName));
-        }
-        if(customerName != "") {
-            searchRefreshStatInfoForm.find("#customerName").val($.trim(customerName));
-        }
-    }
     <shiro:hasPermission name="/internal/clientstatus/searchBadClientStatus">
     function findClientStatus(groupName) {
         $("#searchClientStatusForm").find("#groupName").val(groupName);
@@ -217,33 +234,6 @@
         $("#searchCustomerKeywordForm").submit();
     }
     </shiro:hasPermission>
-
-    function resetInvaidRefreshCount(groupName, customerName, fullMatchGroup, self){
-        var customerKeywordRefreshStatInfoCriteria = {};
-        customerKeywordRefreshStatInfoCriteria.customerName = customerName;
-        customerKeywordRefreshStatInfoCriteria.groupName = groupName;
-        customerKeywordRefreshStatInfoCriteria.fullMatchGroup = fullMatchGroup;
-        $.ajax({
-            url: '/internal/customerKeyword/resetInvalidRefreshCount',
-            data: JSON.stringify(customerKeywordRefreshStatInfoCriteria),
-            type: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            success: function (result) {
-                if(result){
-                    $().toastmessage('showSuccessToast', "重置成功！");
-                    window.location.reload();
-                }else{
-                    $().toastmessage('showErrorToast', "重置失败！");
-                }
-            },
-            error: function () {
-                $().toastmessage('showErrorToast', "重置失败！");
-            }
-        });
-    }
 </script>
 </body>
 </html>

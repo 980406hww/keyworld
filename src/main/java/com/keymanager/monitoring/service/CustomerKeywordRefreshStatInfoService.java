@@ -2,20 +2,24 @@ package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
+import com.keymanager.monitoring.dao.CustomerKeywordDao;
 import com.keymanager.monitoring.dao.CustomerKeywordRefreshStatInfoDao;
 import com.keymanager.monitoring.entity.ClientStatus;
 import com.keymanager.monitoring.entity.Config;
 import com.keymanager.monitoring.vo.CustomerKeywordRefreshStatInfoVO;
+import com.keymanager.monitoring.vo.PositionVO;
 import com.keymanager.util.Constants;
+import com.keymanager.util.FileUtil;
+import com.keymanager.util.Utils;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.*;
 
 /**
  * Created by shunshikj08 on 2017/9/12.
@@ -30,6 +34,9 @@ public class CustomerKeywordRefreshStatInfoService extends ServiceImpl<CustomerK
 
     @Autowired
     private ClientStatusService clientStatusService;
+
+    @Autowired
+    private CustomerKeywordDao customerKeywordDao;
 
     @Autowired
     private CustomerKeywordRefreshStatInfoDao customerKeywordRefreshStatInfoDao;
@@ -92,5 +99,52 @@ public class CustomerKeywordRefreshStatInfoService extends ServiceImpl<CustomerK
             customerKeywordRefreshStatInfoVOList.add(refreshStatInfoVO);
         }
         return customerKeywordRefreshStatInfoVOList;
+    }
+
+    public void searchKeywordUrlByGroup(String terminalType, String entryType, List<String> groups) throws Exception {
+        List<String> keywordUrls = new ArrayList<String>();
+        for (String group : groups) {
+            List<String> keywordUrlList = customerKeywordDao.searchKeywordUrlByGroup(terminalType, entryType, group);
+            if(CollectionUtils.isNotEmpty(keywordUrlList)) {
+                keywordUrls.addAll(keywordUrlList);
+            }
+        }
+        writeTxtFile(keywordUrls);
+    }
+
+    private void writeTxtFile(List<String> keywordUrls) throws Exception {
+        FileOutputStream o = null;
+        Utils.createDir(Thread.currentThread().getContextClassLoader().getResource("").toURI().getPath() + "keywordUrl/");
+        String fileName = Thread.currentThread().getContextClassLoader().getResource("").toURI().getPath() + "keywordUrl/" + "keywordUrl.txt";
+        o = new FileOutputStream(fileName);
+        for (String keywordUrl : keywordUrls) {
+            o.write(keywordUrl.getBytes("UTF-8"));
+            o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+        }
+        o.close();
+    }
+
+    public void uploadCSVFile(String terminalType, String entryType, String searchEngine, int reachStandardPosition, File targetFile) {
+        FileUtil.readTxtFile(targetFile,"UTF-8");
+        List<String> contents = FileUtil.readTxtFile(targetFile,"GBK");
+        List<PositionVO> newContents = new ArrayList<PositionVO>();
+        if(contents.size() > 0) {
+            for (String content : contents) {
+                PositionVO positionVO = new PositionVO();
+                String[] positionInfo = content.split(",");
+                if(positionInfo[2].contains("名外") || positionInfo[2].contains("--") || positionInfo[2].contains("百度")) {
+                    positionInfo[2] = "0";
+                }
+                positionVO.setUrl(positionInfo[0]);
+                positionVO.setKeyword(positionInfo[1]);
+                positionVO.setPosition(Integer.parseInt(positionInfo[2]));
+                newContents.add(positionVO);
+            }
+        }
+        while(newContents.size() > 0) {
+            List<PositionVO> subContents = newContents.subList(0, (newContents.size() > 500) ? 500 : newContents.size());
+            customerKeywordDao.batchUpdatePosition(terminalType, entryType, searchEngine, reachStandardPosition + 1, subContents);
+            newContents.removeAll(subContents);
+        }
     }
 }
