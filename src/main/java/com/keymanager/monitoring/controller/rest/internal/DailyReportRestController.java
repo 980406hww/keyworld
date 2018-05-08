@@ -56,7 +56,7 @@ public class DailyReportRestController extends SpringMVCBaseController {
 				dailyReportService.resetDailyReportExcel(terminalType, customerUuids);
 			}
 			if(triggerType.equals("saveDailyReportTemplate")) {
-				configService.updateCustomerUuidsForDailyReport(customerUuids);
+				configService.updateCustomerUuidsForDailyReport(customerUuids, terminalType);
 			}
 			dailyReportService.triggerReportGeneration(terminalType, customerUuids);
 			returnValue = "{\"status\":true}";

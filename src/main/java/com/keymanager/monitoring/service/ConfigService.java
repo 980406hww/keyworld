@@ -58,10 +58,10 @@ public class ConfigService extends ServiceImpl<ClientStatusDao, ClientStatus>{
 		configDao.updateConfig(config);
 	}
 
-	public void updateCustomerUuidsForDailyReport(String customerUuids) {
+	public void updateCustomerUuidsForDailyReport(String customerUuids, String terminalType) {
 		Config config = new Config();
 		config.setConfigType(Constants.CONFIG_TYPE_DAILY_REPORT);
-		config.setKey(Constants.CONFIG_KEY_CUSTOMERUUIDS);
+		config.setKey(terminalType);
 		config.setValue(customerUuids);
 		configDao.updateConfig(config);
 	}

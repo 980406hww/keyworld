@@ -462,8 +462,12 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 
 	@RequiresPermissions("/internal/customerKeyword/updateCustomerKeywordGroupName")
 	@RequestMapping(value = "/updateOptimizeGroupName", method = RequestMethod.POST)
-	public ResponseEntity<?> updateOptimizeGroupName(@RequestBody CustomerKeywordCriteria customerKeywordCriteria) {
+	public ResponseEntity<?> updateOptimizeGroupName(@RequestBody CustomerKeywordCriteria customerKeywordCriteria, HttpServletRequest request) {
 		try {
+			String entryType = (String) request.getSession().getAttribute("entryType");
+			String terminalType = TerminalTypeMapping.getTerminalType(request);
+			customerKeywordCriteria.setEntryType(entryType);
+			customerKeywordCriteria.setTerminalType(terminalType);
 			customerKeywordService.updateOptimizeGroupName(customerKeywordCriteria);
 			return new ResponseEntity<Object>(true, HttpStatus.OK);
 		} catch (Exception e) {
