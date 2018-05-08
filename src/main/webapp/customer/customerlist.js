@@ -116,11 +116,19 @@ function decideSelectAll() {
         $("#selectAllChecked").prop("checked",false);
     }
 }
-function triggerDailyReportGeneration(self) {
-    if (confirm("确实要生成当天报表吗?") == false) return;
+function triggerDailyReportGeneration(triggerType) {
+    if(triggerType == "triggerDailyReportGeneration") {
+        if (confirm("确认要生成当天报表吗?") == false) return;
+    } else if(triggerType == "saveDailyReportTemplate") {
+        if (confirm("确认要生成当天报表并保存为模板吗?") == false) return;
+    } else if(triggerType == "exportDailyReportTemplate") {
+        if (confirm("确认要从模板中生成当天报表吗?") == false) return;
+    }
     var customerUuids = getSelectedIDs();
 
-    var postData = {"customerUuids": customerUuids}
+    var postData = {};
+    postData.customerUuids = customerUuids;
+    postData.triggerType = triggerType;
     $.ajax({
         url: '/internal/dailyReport/triggerReportGeneration',
         data: JSON.stringify(postData),

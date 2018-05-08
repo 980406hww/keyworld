@@ -183,4 +183,9 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 			customerKeywordService.batchChangeCustomerKeywordStatus(EntryTypeEnum.fm.name(), inActiveCustomerUuids, CustomerKeywordStatus.Inactive.getCode());
 		}
 	}
+
+	public List<String> searchContactPersonList(String customerUuids) {
+		String[] uuids = customerUuids.split(",");
+		return customerDao.searchContactPersonList(uuids);
+	}
 }

@@ -108,4 +108,13 @@
         AND c.fEntryType = 'fm'
         AND c.fStatus = 1
     </select>
+
+    <select id="searchContactPersonList" resultType="java.lang.String">
+        SELECT fContactPerson FROM t_customer
+        WHERE fUuid IN
+        <foreach collection="uuids" item="uuid" open="(" close=")" separator=",">
+            #{uuid}
+        </foreach>
+        ORDER BY fUpdateTime DESC
+    </select>
 </mapper>

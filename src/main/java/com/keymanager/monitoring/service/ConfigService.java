@@ -57,4 +57,13 @@ public class ConfigService extends ServiceImpl<ClientStatusDao, ClientStatus>{
 		config.setValue(result);
 		configDao.updateConfig(config);
 	}
+
+	public void updateCustomerUuidsForDailyReport(String customerUuids) {
+		Config config = new Config();
+		config.setConfigType(Constants.CONFIG_TYPE_DAILY_REPORT);
+		config.setKey(Constants.CONFIG_KEY_CUSTOMERUUIDS);
+		config.setValue(customerUuids);
+		configDao.updateConfig(config);
+	}
+
 }

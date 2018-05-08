@@ -67,6 +67,7 @@ public class CustomerKeywordRefreshStatInfoController extends SpringMVCBaseContr
         return modelAndView;
     }
 
+    @RequiresPermissions("/internal/customerKeyword/downloadCustomerKeywordInfo")
     @RequestMapping(value = "/downloadKeywordUrlByGroup", method = RequestMethod.POST)
     public ResponseEntity<?> downloadKeywordUrlByGroup(@RequestBody Map<String, Object> requestMap, HttpServletRequest request, HttpServletResponse response) {
         List<String> groups = (List<String>) requestMap.get("groups");
@@ -82,6 +83,7 @@ public class CustomerKeywordRefreshStatInfoController extends SpringMVCBaseContr
         }
     }
 
+    @RequiresPermissions("/internal/customerKeyword/uploadCustomerKeywords")
     @RequestMapping(value = "/uploadCSVFile", method = RequestMethod.POST)
     public ResponseEntity<?> uploadVPSFile(@RequestParam(value = "file", required = false) MultipartFile file,
                                            @RequestParam(defaultValue = "百度", name = "searchEngine") String searchEngine,

@@ -1,14 +1,17 @@
 package com.keymanager.monitoring.controller.rest.internal;
 
 import com.keymanager.monitoring.criteria.CustomerKeywordCriteria;
+import com.keymanager.monitoring.entity.Config;
 import com.keymanager.monitoring.entity.CustomerKeyword;
 import com.keymanager.monitoring.excel.operator.CustomerKeywordDailyReportExcelWriter;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.DailyReport;
+import com.keymanager.monitoring.service.ConfigService;
 import com.keymanager.monitoring.service.CustomerKeywordService;
 import com.keymanager.monitoring.service.CustomerService;
 import com.keymanager.monitoring.service.DailyReportService;
+import com.keymanager.util.Constants;
 import com.keymanager.util.TerminalTypeMapping;
 import com.keymanager.util.Utils;
 import org.slf4j.Logger;
@@ -38,15 +41,25 @@ public class DailyReportRestController extends SpringMVCBaseController {
 	@Autowired
 	private CustomerKeywordService customerKeywordService;
 
+	@Autowired
+	private ConfigService configService;
+
 	@RequestMapping(value = "/triggerReportGeneration", method = RequestMethod.POST)
 	public ResponseEntity<?> triggerReportGeneration(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) throws Exception{
 		int dayOfMonth = Utils.getDayOfMonth();
 		String customerUuids = (String) requestMap.get("customerUuids");
+		String triggerType = (String) requestMap.get("triggerType");
 		String terminalType = TerminalTypeMapping.getTerminalType(request);
 		String returnValue = null;
 		try {
 			if(dayOfMonth == 1) {
 				dailyReportService.resetDailyReportExcel(terminalType, customerUuids);
+			}
+			if(triggerType.equals("saveDailyReportTemplate")) {
+				configService.updateCustomerUuidsForDailyReport(customerUuids);
+			} else if(triggerType.equals("exportDailyReportTemplate")) {
+				Config config = configService.getConfig(Constants.CONFIG_TYPE_DAILY_REPORT, Constants.CONFIG_KEY_CUSTOMERUUIDS);
+				customerUuids = config.getValue();
 			}
 			dailyReportService.triggerReportGeneration(terminalType, customerUuids);
 			returnValue = "{\"status\":true}";

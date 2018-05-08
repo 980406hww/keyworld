@@ -92,7 +92,7 @@ function uploadCsv() {
     $("#uploadCSVForm").css("display", "block");
     $('#uploadCSVDialog').dialog({
         resizable: false,
-        width: 300,
+        width: 290,
         modal: true,
         title: '上传CSV文件',
         buttons: [{

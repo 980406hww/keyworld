@@ -2,11 +2,14 @@ package com.keymanager.monitoring.controller.rest.internal;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.criteria.CustomerCriteria;
+import com.keymanager.monitoring.entity.Config;
 import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.UserInfo;
+import com.keymanager.monitoring.service.ConfigService;
 import com.keymanager.monitoring.service.CustomerService;
 import com.keymanager.monitoring.service.IUserInfoService;
 import com.keymanager.monitoring.service.UserRoleService;
+import com.keymanager.util.Constants;
 import com.keymanager.util.TerminalTypeMapping;
 import com.keymanager.util.Utils;
 import org.apache.shiro.SecurityUtils;
@@ -40,6 +43,9 @@ public class CustomerRestController {
 
     @Autowired
     private UserRoleService userRoleService;
+
+    @Autowired
+    private ConfigService configService;
 
     @RequiresPermissions("/internal/customer/searchCustomers")
     @RequestMapping(value = "/searchCustomers", method = RequestMethod.GET)
@@ -76,6 +82,8 @@ public class CustomerRestController {
         }
         Page<Customer> page = customerService.searchCustomers(new Page<Customer>(Integer.parseInt(currentPage), Integer.parseInt(pageSize)), customerCriteria);
         List<Map> customerTypes = customerService.searchCustomerTypes(customerCriteria);
+        Config config = configService.getConfig(Constants.CONFIG_TYPE_DAILY_REPORT, Constants.CONFIG_KEY_CUSTOMERUUIDS);
+        List<String> contactPersons = customerService.searchContactPersonList(config.getValue());
         modelAndView.addObject("customerTypes", customerTypes);
         modelAndView.addObject("entryType", entryType);
         modelAndView.addObject("terminalType", terminalType);
@@ -84,6 +92,7 @@ public class CustomerRestController {
         modelAndView.addObject("user", user);
         modelAndView.addObject("isDepartmentManager", isDepartmentManager);
         modelAndView.addObject("activeUsers", activeUsers);
+        modelAndView.addObject("contactPersons", contactPersons.toString());
         return modelAndView;
     }
 

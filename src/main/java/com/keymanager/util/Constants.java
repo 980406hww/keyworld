@@ -41,6 +41,8 @@ public class Constants {
 	public final static String CONFIG_KEY_BAIDU = "Baidu";
 	public final static String CONFIG_KEY_SOGOU = "Sogou";
 	public final static String CONFIG_KEY_360 = "360";
+	public final static String CONFIG_TYPE_DAILY_REPORT = "DailyReport";
+	public final static String CONFIG_KEY_CUSTOMERUUIDS = "CustomerUuids";
 
 	public final static Map<String, String> ACCOUNT_LOG_STATUS_MAP = new HashMap<String, String>();
 	static {

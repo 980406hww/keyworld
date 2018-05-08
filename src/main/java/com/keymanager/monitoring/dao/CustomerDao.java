@@ -25,4 +25,6 @@ public interface CustomerDao extends BaseMapper<Customer> {
     void setCustomerKeywordStatusSwitchTime(@Param("uuids")List<String> uuids, @Param("activeHour")String activeHour, @Param("inActiveHour")String inActiveHour);
 
     List<Customer> searchNeedSwitchCustomer();
+
+    List<String> searchContactPersonList(@Param("uuids")String[] uuids);
 }

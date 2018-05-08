@@ -127,12 +127,13 @@ public class CustomerKeywordRefreshStatInfoService extends ServiceImpl<CustomerK
     public void uploadCSVFile(String terminalType, String entryType, String searchEngine, int reachStandardPosition, File targetFile) {
         FileUtil.readTxtFile(targetFile,"UTF-8");
         List<String> contents = FileUtil.readTxtFile(targetFile,"GBK");
+        contents.remove(0);
         List<PositionVO> newContents = new ArrayList<PositionVO>();
         if(contents.size() > 0) {
             for (String content : contents) {
                 PositionVO positionVO = new PositionVO();
                 String[] positionInfo = content.split(",");
-                if(positionInfo[2].contains("名外") || positionInfo[2].contains("--") || positionInfo[2].contains("百度")) {
+                if(positionInfo[2].contains("名外") || positionInfo[2].contains("--")) {
                     positionInfo[2] = "0";
                 }
                 positionVO.setUrl(positionInfo[0]);
