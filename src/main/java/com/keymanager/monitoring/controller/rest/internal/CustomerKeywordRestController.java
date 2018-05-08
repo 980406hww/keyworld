@@ -466,6 +466,11 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		try {
 			String entryType = (String) request.getSession().getAttribute("entryType");
 			String terminalType = TerminalTypeMapping.getTerminalType(request);
+			String userName = (String) request.getSession().getAttribute("username");
+			boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
+			if(!isDepartmentManager) {
+				customerKeywordCriteria.setUserName(userName);
+			}
 			customerKeywordCriteria.setEntryType(entryType);
 			customerKeywordCriteria.setTerminalType(terminalType);
 			customerKeywordService.updateOptimizeGroupName(customerKeywordCriteria);
