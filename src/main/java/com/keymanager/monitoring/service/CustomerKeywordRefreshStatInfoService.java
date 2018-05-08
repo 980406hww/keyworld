@@ -17,8 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -101,7 +100,7 @@ public class CustomerKeywordRefreshStatInfoService extends ServiceImpl<CustomerK
         return customerKeywordRefreshStatInfoVOList;
     }
 
-    public void searchKeywordUrlByGroup(String terminalType, String entryType, List<String> groups) throws Exception {
+    public List<String> searchKeywordUrlByGroup(String terminalType, String entryType, List<String> groups) throws Exception {
         List<String> keywordUrls = new ArrayList<String>();
         for (String group : groups) {
             List<String> keywordUrlList = customerKeywordDao.searchKeywordUrlByGroup(terminalType, entryType, group);
@@ -109,27 +108,35 @@ public class CustomerKeywordRefreshStatInfoService extends ServiceImpl<CustomerK
                 keywordUrls.addAll(keywordUrlList);
             }
         }
-        writeTxtFile(keywordUrls);
+        return keywordUrls;
     }
 
-    private void writeTxtFile(List<String> keywordUrls) throws Exception {
+    public void downloadTxtFile(List<String> keywordUrls) throws Exception {
         FileOutputStream o = null;
-        Utils.createDir(Thread.currentThread().getContextClassLoader().getResource("").toURI().getPath() + "keywordUrl/");
-        String fileName = Thread.currentThread().getContextClassLoader().getResource("").toURI().getPath() + "keywordUrl/" + "keywordUrl.txt";
-        o = new FileOutputStream(fileName);
+        String path = Thread.currentThread().getContextClassLoader().getResource("").toURI().getPath() + "keywordUrl.txt";
+        o = new FileOutputStream(path);
         for (String keywordUrl : keywordUrls) {
             o.write(keywordUrl.getBytes("UTF-8"));
             o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
         }
         o.close();
+
+        InputStream input = new FileInputStream(new File(path));
+        OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(new File(Utils.getWebRootPath() + "keywordUrl.txt")));
+        int temp = 0;
+        while ((temp = input.read()) != -1) {
+            outputStream.write(temp);
+        }
+        input.close();
+        outputStream.close();
     }
 
     public void uploadCSVFile(String terminalType, String entryType, String searchEngine, int reachStandardPosition, File targetFile) {
         FileUtil.readTxtFile(targetFile,"UTF-8");
         List<String> contents = FileUtil.readTxtFile(targetFile,"GBK");
-        contents.remove(0);
         List<PositionVO> newContents = new ArrayList<PositionVO>();
         if(contents.size() > 0) {
+            contents.remove(0);
             for (String content : contents) {
                 PositionVO positionVO = new PositionVO();
                 String[] positionInfo = content.split(",");
@@ -144,7 +151,7 @@ public class CustomerKeywordRefreshStatInfoService extends ServiceImpl<CustomerK
         }
         while(newContents.size() > 0) {
             List<PositionVO> subContents = newContents.subList(0, (newContents.size() > 500) ? 500 : newContents.size());
-            customerKeywordDao.batchUpdatePosition(terminalType, entryType, searchEngine, reachStandardPosition + 1, subContents);
+            customerKeywordDao.batchUpdatePosition(terminalType, entryType, searchEngine, reachStandardPosition, subContents);
             newContents.removeAll(subContents);
         }
     }

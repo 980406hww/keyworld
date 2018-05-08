@@ -183,35 +183,24 @@
 	<form method="post" id="uploadCSVForm" action="" enctype="multipart/form-data" style="display:none;">
 		<table width="95%" style="margin-top: 10px;margin-left: 10px">
 			<tr>
-				<td align="right">
-					<table width="100%" style="font-size:14px;">
-						<tr>
-							<td>
-								搜索引擎:
-								<select name="searchEngine" id="searchEngine">
-									<option value="百度">百度</option>
-									<option value="搜狗">搜狗</option>
-								</select>
-							</td>
-						</tr>
-						<tr></tr>
-						<tr>
-							<td>
-								设置达标:
-								<select name="reachStandardPosition" id="reachStandardPosition">
-									<option value="0"></option>
-									<option value="3">前3名</option>
-									<option value="5">前5名</option>
-									<option value="10">前10名</option>
-								</select>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="file" id="file" name="file" size=50 height="50px" style="width: 260px;">
-							</td>
-						</tr>
-					</table>
+				<td>
+					搜索引擎:
+					<select name="searchEngine" id="searchEngine" style="width: 150px;">
+						<option value="百度">百度</option>
+						<option value="搜狗">搜狗</option>
+					</select>
+				</td>
+			</tr>
+			<tr></tr>
+			<tr>
+				<td>
+					设置达标:
+					前<input type="text" name="reachStandardPosition" id="reachStandardPosition" class="easyui-numberspinner" data-options="min:0,max:10,increment:1" value="0" style="width:130px;">名
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="file" id="file" name="file" size=50 height="50px" style="width: 260px;">
 				</td>
 			</tr>
 		</table>

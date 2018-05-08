@@ -888,8 +888,8 @@
         <foreach item="item" index="index" collection="positionVOs" open="" separator=";" close="">
             UPDATE t_customer_keyword
             SET fCurrentPosition = #{item.position}, fCapturePositionQueryTime = NOW()
-            <if test="reachStandardPosition &gt; 0 and item.position &gt; 0 and item.position &lt; reachStandardPosition">
-            ,fLastReachStandardDate = NOW()
+            <if test="reachStandardPosition &gt; 0 and item.position &gt; 0 and item.position &lt;= reachStandardPosition">
+            ,fLastReachStandardDate = CURRENT_DATE()
             </if>
             WHERE fTerminalType = #{terminalType}
             AND fType = #{entryType}

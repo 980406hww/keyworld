@@ -57,9 +57,6 @@ public class DailyReportRestController extends SpringMVCBaseController {
 			}
 			if(triggerType.equals("saveDailyReportTemplate")) {
 				configService.updateCustomerUuidsForDailyReport(customerUuids);
-			} else if(triggerType.equals("exportDailyReportTemplate")) {
-				Config config = configService.getConfig(Constants.CONFIG_TYPE_DAILY_REPORT, Constants.CONFIG_KEY_CUSTOMERUUIDS);
-				customerUuids = config.getValue();
 			}
 			dailyReportService.triggerReportGeneration(terminalType, customerUuids);
 			returnValue = "{\"status\":true}";

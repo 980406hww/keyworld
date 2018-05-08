@@ -53,6 +53,7 @@
                         <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
                         <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
                         <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
+                        <input type="hidden" name="customerUuids" id="customerUuids" value="${customerUuids}"/>
                         <shiro:hasPermission name="/internal/customer/searchCustomers">
                             &nbsp;&nbsp;<input type="submit" class="ui-button ui-widget ui-corner-all" onclick="resetPageNumber()" name="btnQuery" id="btnQuery" value=" 查询 ">
                         </shiro:hasPermission>
@@ -71,7 +72,9 @@
                             <shiro:hasPermission name="/internal/dailyReport/triggerReportGeneration">
                                 <input type="button" value=" 触发日报表生成 " onclick="triggerDailyReportGeneration('triggerDailyReportGeneration')"/>
                                 <input type="button" value=" 生成报表并保存为模板 " onclick="triggerDailyReportGeneration('saveDailyReportTemplate')"/>
+                                <c:if test="${contactPersons != '[]'}">
                                 <input type="button" title="${contactPersons}" value=" 从模板中导出报表 " onclick="triggerDailyReportGeneration('exportDailyReportTemplate')"/>
+                                </c:if>
                             </shiro:hasPermission>
                         </c:if>
                         &nbsp;&nbsp;<span id="dailyReportSpan"></span>

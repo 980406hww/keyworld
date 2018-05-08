@@ -117,14 +117,15 @@ function decideSelectAll() {
     }
 }
 function triggerDailyReportGeneration(triggerType) {
+    var customerUuids = getSelectedIDs();
     if(triggerType == "triggerDailyReportGeneration") {
         if (confirm("确认要生成当天报表吗?") == false) return;
     } else if(triggerType == "saveDailyReportTemplate") {
         if (confirm("确认要生成当天报表并保存为模板吗?") == false) return;
     } else if(triggerType == "exportDailyReportTemplate") {
         if (confirm("确认要从模板中生成当天报表吗?") == false) return;
+        customerUuids = $("#customerUuids").val();
     }
-    var customerUuids = getSelectedIDs();
 
     var postData = {};
     postData.customerUuids = customerUuids;

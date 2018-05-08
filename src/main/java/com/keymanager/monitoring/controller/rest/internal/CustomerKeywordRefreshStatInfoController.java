@@ -74,8 +74,8 @@ public class CustomerKeywordRefreshStatInfoController extends SpringMVCBaseContr
         String terminalType = TerminalTypeMapping.getTerminalType(request);
         String entryType = (String) request.getSession().getAttribute("entryType");
         try {
-            customerKeywordRefreshStatInfoService.searchKeywordUrlByGroup(terminalType, entryType, groups);
-            downFile("keywordUrl.zip");
+            List<String> keywordUrls = customerKeywordRefreshStatInfoService.searchKeywordUrlByGroup(terminalType, entryType, groups);
+            customerKeywordRefreshStatInfoService.downloadTxtFile(keywordUrls);
             return new ResponseEntity<Object>(true , HttpStatus.OK);
         }catch(Exception ex){
             logger.error(ex.getMessage());

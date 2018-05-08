@@ -165,7 +165,7 @@ function downloadTxt() {
         type: 'POST',
         success: function (data) {
             if(data){
-                window.location.href = "/keywordUrl.zip?t=" + new Date().getTime();
+                window.location.href = "/keywordUrl.txt?t=" + new Date().getTime();
             }else{
                 $().toastmessage('showErrorToast', "导出失败！");
             }

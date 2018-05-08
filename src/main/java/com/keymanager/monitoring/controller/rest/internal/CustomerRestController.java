@@ -92,6 +92,7 @@ public class CustomerRestController {
         modelAndView.addObject("user", user);
         modelAndView.addObject("isDepartmentManager", isDepartmentManager);
         modelAndView.addObject("activeUsers", activeUsers);
+        modelAndView.addObject("customerUuids", config.getValue());
         modelAndView.addObject("contactPersons", contactPersons.toString());
         return modelAndView;
     }
