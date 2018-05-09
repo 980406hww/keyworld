@@ -21,10 +21,10 @@
 					<input type="submit" name="btnQuery" id="btnQuery" value=" 查询 " onclick="trimSearchCondition()">&nbsp;&nbsp;
 				</shiro:hasPermission>
 				<shiro:hasPermission name="/internal/customerKeyword/uploadCustomerKeywords">
-				<input type="button" value="导入" onclick="uploadCsv()">&nbsp;&nbsp;
+				<input type="button" value="导入从爱站抓取排名" onclick="uploadCsv()">&nbsp;&nbsp;
 				</shiro:hasPermission>
 				<shiro:hasPermission name="/internal/customerKeyword/downloadCustomerKeywordInfo">
-				<input type="button" value="导出" onclick="downloadTxt()">&nbsp;&nbsp;
+				<input type="button" value="导出关键字信息到爱站抓排名" onclick="downloadTxt()">&nbsp;&nbsp;
 				</shiro:hasPermission>
 			</td>
 		</tr>

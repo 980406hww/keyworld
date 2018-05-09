@@ -143,8 +143,8 @@ public class CustomerKeywordRefreshStatInfoService extends ServiceImpl<CustomerK
                 if(positionInfo[2].contains("名外") || positionInfo[2].contains("--")) {
                     positionInfo[2] = "0";
                 }
-                positionVO.setUrl(positionInfo[0]);
-                positionVO.setKeyword(positionInfo[1]);
+                positionVO.setUrl(positionInfo[0].replaceAll("\"",""));
+                positionVO.setKeyword(positionInfo[1].replaceAll("\"",""));
                 positionVO.setPosition(Integer.parseInt(positionInfo[2]));
                 newContents.add(positionVO);
             }
