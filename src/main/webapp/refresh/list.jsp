@@ -71,7 +71,7 @@
 					</c:otherwise>
 				</c:choose>
 				<td width=30 align="center"><input type="checkbox" name="uuid" value="${refreshStatInfoVO.group}" onclick="decideSelectAll()"/></td>
-				<td width=100>${refreshStatInfoVO.group}</td>
+				<td width=100><a href="javascript:searchCustomerKeywords('${refreshStatInfoVO.group}')">${refreshStatInfoVO.group}</a></td>
 				<td width=80>${refreshStatInfoVO.totalKeywordCount}</td>
 				<td width=80>
 					<c:if test="${refreshStatInfoVO.reachStandardKeywordCount > 0}">
@@ -224,6 +224,12 @@
             $("#searchCustomerKeywordForm").find("#noReachStandardDays").val(0);
 		}
         $("#searchCustomerKeywordForm").find("#invalidRefreshCount").val(invalidRefreshCount);
+        $("#searchCustomerKeywordForm").find("#optimizeGroupName").val(optimizeGroupName);
+        $("#searchCustomerKeywordForm").submit();
+    }
+    </shiro:hasPermission>
+    <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
+    function searchCustomerKeywords(optimizeGroupName) {
         $("#searchCustomerKeywordForm").find("#optimizeGroupName").val(optimizeGroupName);
         $("#searchCustomerKeywordForm").submit();
     }

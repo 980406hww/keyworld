@@ -2,7 +2,10 @@ package com.keymanager.monitoring.controller.rest.internal;
 
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
+import com.keymanager.monitoring.entity.UserInfo;
 import com.keymanager.monitoring.service.CustomerKeywordRefreshStatInfoService;
+import com.keymanager.monitoring.service.IUserInfoService;
+import com.keymanager.monitoring.service.UserRoleService;
 import com.keymanager.monitoring.vo.CustomerKeywordRefreshStatInfoVO;
 import com.keymanager.util.FileUtil;
 import com.keymanager.util.TerminalTypeMapping;
@@ -20,6 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +39,12 @@ public class CustomerKeywordRefreshStatInfoController extends SpringMVCBaseContr
 
     @Autowired
     private CustomerKeywordRefreshStatInfoService customerKeywordRefreshStatInfoService;
+
+    @Autowired
+    private IUserInfoService userInfoService;
+
+    @Autowired
+    private UserRoleService userRoleService;
 
     @RequiresPermissions("/internal/refreshstatinfo/searchRefreshStatInfos")
     @RequestMapping(value = "/searchRefreshStatInfos", method = RequestMethod.GET)
@@ -61,6 +71,12 @@ public class CustomerKeywordRefreshStatInfoController extends SpringMVCBaseContr
         String terminalType = TerminalTypeMapping.getTerminalType(request);
         refreshStatInfoCriteria.setTerminalType(terminalType);
 
+        HttpSession session = request.getSession();
+        String userName = (String) session.getAttribute("username");
+        boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
+        if(!isDepartmentManager) {
+            refreshStatInfoCriteria.setUserName(userName);
+        }
         List<CustomerKeywordRefreshStatInfoVO> refreshStatInfoVOs = customerKeywordRefreshStatInfoService.generateCustomerKeywordStatInfo(refreshStatInfoCriteria);
         modelAndView.addObject("refreshStatInfoCriteria", refreshStatInfoCriteria);
         modelAndView.addObject("refreshStatInfoVOs", refreshStatInfoVOs);

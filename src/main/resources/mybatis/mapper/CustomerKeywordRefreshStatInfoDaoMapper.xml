@@ -19,6 +19,7 @@
         AND ck.fCustomerUuid = c.fUuid
         <if test="customerKeywordRefreshStatInfoCriteria.groupName!=null and customerKeywordRefreshStatInfoCriteria.groupName!=''">AND ck.fOptimizeGroupName like concat('%', #{customerKeywordRefreshStatInfoCriteria.groupName}, "%")</if>
         <if test="customerKeywordRefreshStatInfoCriteria.customerName!=null and customerKeywordRefreshStatInfoCriteria.customerName!=''">AND c.fContactPerson like concat('%', #{customerKeywordRefreshStatInfoCriteria.customerName}, "%")</if>
+        <if test="customerKeywordRefreshStatInfoCriteria.userName!=null and customerKeywordRefreshStatInfoCriteria.userName!=''">AND c.fUserID = #{customerKeywordRefreshStatInfoCriteria.userName}</if>
         GROUP BY ck.fOptimizeGroupName
         ORDER BY ck.fOptimizeGroupName
     </select>
