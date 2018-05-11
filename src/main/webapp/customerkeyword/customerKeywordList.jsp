@@ -475,6 +475,7 @@
     <input type="hidden" name="customerUuid" id="customerUuidHidden" value="">
     <input type="hidden" name="keyword" id="keywordHidden" value=""/>
     <input type="hidden" name="url" id="urlHidden" value="" />
+    <input type="hidden" name="bearPawNumber" id="bearPawNumberHidden" value="" />
     <input type="hidden" name="status" id="statusHidden" value="" />
     <input type="hidden" name="optimizeGroupName" id="optimizeGroupNameHidden" value="" />
     <input type="hidden" name="gtOptimizedCount" id="gtOptimizedCountHidden" value="" />
