@@ -6,6 +6,7 @@ public class CustomerKeywordForOptimization {
     private String keyword;
     private long uuid;
     private String url;
+    private String bearPawNumber;
     private String group;
     private String entryType;
     private String operationType;
@@ -102,6 +103,14 @@ public class CustomerKeywordForOptimization {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getBearPawNumber() {
+        return bearPawNumber;
+    }
+
+    public void setBearPawNumber(String bearPawNumber) {
+        this.bearPawNumber = bearPawNumber;
     }
 
     public String getGroup() {

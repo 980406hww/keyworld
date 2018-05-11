@@ -9,6 +9,7 @@ function resetPageNumber(days) {
     var keyword = searchCustomerKeywordForm.find("#keyword").val();
     var qq = searchCustomerKeywordForm.find("#qq").val();
     var url = searchCustomerKeywordForm.find("#url").val();
+    var bearPawNumber = searchCustomerKeywordForm.find("#bearPawNumber").val();
     var optimizeGroupName = searchCustomerKeywordForm.find("#optimizeGroupName").val();
     var gtOptimizedCount = searchCustomerKeywordForm.find("#gtOptimizedCount").val();
     var ltOptimizedCount = searchCustomerKeywordForm.find("#ltOptimizedCount").val();
@@ -28,6 +29,9 @@ function resetPageNumber(days) {
     }
     if(url != "") {
         searchCustomerKeywordForm.find("#url").val($.trim(url));
+    }
+    if(bearPawNumber != "") {
+        searchCustomerKeywordForm.find("#bearPawNumber").val($.trim(bearPawNumber));
     }
     if(optimizeGroupName != "") {
         searchCustomerKeywordForm.find("#optimizeGroupName").val($.trim(optimizeGroupName));

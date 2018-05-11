@@ -45,6 +45,7 @@
             <input id="customerUuid" name="customerUuid" type="hidden" value="${customerKeywordCriteria.customerUuid}">
             关键字:&nbsp;<input type="text" name="keyword" id="keyword" value="${customerKeywordCriteria.keyword}" style="width:100px;">&nbsp;
             URL:<input type="text" name="url" id="url" value="${customerKeywordCriteria.url}" style="width:100px;">&nbsp;
+            熊掌号:<input type="text" name="bearPawNumber" id="bearPawNumber" value="${customerKeywordCriteria.bearPawNumber}" style="width:100px;">&nbsp;
             关键字状态:
             <select name="status" id="status">
                 <option value=''>所有</option>
@@ -137,6 +138,7 @@
             <td align="center" width=80>联系人</td>
             <td align="center" width=80>关键字</td>
             <td align="center" width=100>URL</td>
+            <td align="center" width=100>熊掌号</td>
             <td align="center" width=150>标题</td>
             <td align="center" width=30>指数</td>
             <td align="center" width=50>原排名</td>
@@ -171,7 +173,9 @@
                 <td align="center" width=100 class="floatTd" title="原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}" >
                         ${customerKeyword.url==null?'':customerKeyword.url}
                 </td>
-
+                <td align="center" width=100>
+                        ${customerKeyword.bearPawNumber == null ? "" : customerKeyword.bearPawNumber}
+                </td>
                 <td align="center" width=150>
                     ${customerKeyword.title == null ? "" : customerKeyword.title.trim()}
                 </td>

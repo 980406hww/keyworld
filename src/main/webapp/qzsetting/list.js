@@ -537,6 +537,7 @@ function initSettingDialog(qzSetting, self) {
     var PhoneType = false;
     var settingDialogDiv = $("#changeSettingDialog");
     settingDialogDiv.find("#qzSettingUuid").val(qzSetting.uuid);
+    settingDialogDiv.find("#bearPawNumber").val(qzSetting.bearPawNumber);
     settingDialogDiv.find("#qzSettingCustomer").val(
         qzSetting.contactPerson + "_____" + qzSetting.customerUuid);
     settingDialogDiv.find("#qzSettingDomain").val(
@@ -594,6 +595,7 @@ function saveChangeSetting(self) {
         settingDialogDiv.find("#qzSettingDomain").focus();
         return;
     }
+    qzSetting.bearPawNumber = settingDialogDiv.find("#bearPawNumber").val();
     qzSetting.ignoreNoIndex = settingDialogDiv.find("#qzSettingIgnoreNoIndex").val() === "1"
         ? true : false;
     qzSetting.ignoreNoOrder = settingDialogDiv.find("#qzSettingIgnoreNoOrder").val() === "1"

@@ -26,11 +26,11 @@ public class SuperUserSimpleKeywordExcelOperator extends AbstractExcelReader {
 	@Override
 	public CustomerKeyword readRow(int rowIndex){
 		CustomerKeyword customerKeyword = new CustomerKeyword();
-		customerKeyword.setKeyword(getStringValue(SuperUserSimpleKeywordDefinition.Keyword.getColumnIndex(), rowIndex));
+		customerKeyword.setKeyword(getStringValue(SuperUserSimpleKeywordDefinition.Keyword.getColumnIndex(), rowIndex).trim());
 		if(Utils.isNullOrEmpty(customerKeyword.getKeyword())){
 			return null;
 		}
-		customerKeyword.setUrl(getStringValue(SuperUserSimpleKeywordDefinition.URL.getColumnIndex(), rowIndex));
+		customerKeyword.setUrl(getStringValue(SuperUserSimpleKeywordDefinition.URL.getColumnIndex(), rowIndex).trim());
 		if(Utils.isNullOrEmpty(customerKeyword.getUrl())){
 			return null;
 		}
@@ -63,11 +63,11 @@ public class SuperUserSimpleKeywordExcelOperator extends AbstractExcelReader {
 		Integer optimizePlanCount = getIntValue(SuperUserFullKeywordDefinition.OptimizePlanCount.getColumnIndex(), rowIndex);
 		customerKeyword.setOptimizePlanCount(optimizePlanCount);
 		
-		customerKeyword.setOriginalUrl(getStringValue(SuperUserSimpleKeywordDefinition.OriginalURL.getColumnIndex(), rowIndex));
-		customerKeyword.setOptimizeGroupName(getStringValue(SuperUserSimpleKeywordDefinition.OptimizeGroupName.getColumnIndex(), rowIndex));
+		customerKeyword.setOriginalUrl(getStringValue(SuperUserSimpleKeywordDefinition.OriginalURL.getColumnIndex(), rowIndex).trim());
+		customerKeyword.setOptimizeGroupName(getStringValue(SuperUserSimpleKeywordDefinition.OptimizeGroupName.getColumnIndex(), rowIndex).trim());
 		
-		customerKeyword.setTitle(getStringValue(SuperUserSimpleKeywordDefinition.Title.getColumnIndex(), rowIndex));
-		customerKeyword.setOrderNumber(getStringValue(SuperUserSimpleKeywordDefinition.OrderNumber.getColumnIndex(), rowIndex));
+		customerKeyword.setTitle(getStringValue(SuperUserSimpleKeywordDefinition.Title.getColumnIndex(), rowIndex).trim());
+		customerKeyword.setOrderNumber(getStringValue(SuperUserSimpleKeywordDefinition.OrderNumber.getColumnIndex(), rowIndex).trim());
 		customerKeyword.setRemarks(getStringValue(SuperUserSimpleKeywordDefinition.Remarks.getColumnIndex(), rowIndex));
 		return customerKeyword;
 	}

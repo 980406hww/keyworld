@@ -117,6 +117,8 @@
                        style="width:80px;">
             URL:<input type="text" name="url" id="url" value="${customerKeywordCriteria.url}"
                        style="width:80px;">
+            熊掌号:<input type="text" name="bearPawNumber" id="bearPawNumber" value="${customerKeywordCriteria.bearPawNumber}"
+                       style="width:80px;">
             关键字状态:
             <select name="status" id="status">
                 <option value=''>所有</option>
@@ -156,6 +158,7 @@
                 <option value="2">当前排名</option>
                 <option value="3">添加序号</option>
             </select>
+            <br>
             指数:<input type="text" id="gtCurrentIndexCount" name="gtCurrentIndexCount" placeholder=">=" value="${customerKeywordCriteria.gtCurrentIndexCount}" style="width: 40px;">
             <input type="text" id="ltCurrentIndexCount" name="ltCurrentIndexCount" placeholder="<=" value="${customerKeywordCriteria.ltCurrentIndexCount}" style="width: 40px;">
             备注:<input type="text" id="remarks" name="remarks" value="${customerKeywordCriteria.remarks}" style="width: 90px;">
@@ -183,6 +186,7 @@
             <td width=10 style="padding-left:7px;"><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
             <td align="center" width=100>关键字</td>
             <td align="center" width=200>URL</td>
+            <td align="center" width=150>熊掌号</td>
             <td align="center" width=250>标题</td>
             <td align="center" width=30>指数</td>
             <td align="center" width=50>原排名</td>
@@ -216,7 +220,9 @@
                             ${customerKeyword.url==null?'':customerKeyword.url}
                     </div>
                 </td>
-
+                <td align="center" width=150>
+                        ${customerKeyword.bearPawNumber == null ? "" : customerKeyword.bearPawNumber}
+                </td>
                 <td align="center" width=250>
                         ${customerKeyword.title == null ? "" : customerKeyword.title.trim()}
                 </td>
@@ -341,6 +347,8 @@
             <li><span class="customerKeywordSpanClass">标题:</span><input type="text" name="title" id="title" value="" style="width:300px;">
             </li>
             <li><span class="customerKeywordSpanClass">域名:</span><input type="text" name="url" id="url" value="" style="width:300px;">
+            </li>
+            <li><span class="customerKeywordSpanClass">熊掌号:</span><input type="text" name="bearPawNumber" id="bearPawNumber" value="" style="width:300px;">
             </li>
             <li><span class="customerKeywordSpanClass">原始域名:</span><input type="text" name="originalUrl" id="originalUrl" value="" style="width:300px;">
             </li>

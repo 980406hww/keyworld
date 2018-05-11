@@ -465,9 +465,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void supplementInfo(List<CustomerKeyword> customerKeywords, int customerUuid, String type, String terminalType) {
+        String bearPawNumber = customerKeywordDao.getBearPawNumberByCustomerUuid(customerUuid, type, terminalType);
         for (CustomerKeyword customerKeyword : customerKeywords) {
             customerKeyword.setCustomerUuid(customerUuid);
             customerKeyword.setType(type);
+            customerKeyword.setBearPawNumber(bearPawNumber);
             customerKeyword.setCreateTime(Utils.getCurrentTimestamp());
             customerKeyword.setUpdateTime(Utils.getCurrentTimestamp());
             customerKeyword.setTerminalType(terminalType);
@@ -561,6 +563,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeywordForOptimization.setKeyword(customerKeyword.getKeyword());
             customerKeywordForOptimization.setUrl(customerKeyword.getUrl());
             customerKeywordForOptimization.setEntryType(customerKeyword.getType());
+            customerKeywordForOptimization.setBearPawNumber(customerKeyword.getBearPawNumber());
 
             customerKeywordForOptimization.setCurrentPosition(customerKeyword.getCurrentPosition());
             customerKeywordForOptimization.setOriginalUrl(customerKeyword.getOriginalUrl());
@@ -826,6 +829,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                 customerKeywordForCapturePosition.setTitle(customerKeyword.getTitle());
                 customerKeywordForCapturePosition.setSearchEngine(customerKeyword.getSearchEngine());
                 customerKeywordForCapturePosition.setTerminalType(customerKeyword.getTerminalType());
+                customerKeywordForCapturePosition.setBearPawNumber(customerKeyword.getBearPawNumber());
                 customerKeywordDao.updateCapturePositionQueryTime(customerKeyword.getUuid());
                 return customerKeywordForCapturePosition;
             }

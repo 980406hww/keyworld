@@ -192,6 +192,12 @@
 				<span style="margin-right: 28px;"></span>
 			</td>
 		</tr>
+		<tr>
+			<td style="width:60px" align="right">熊掌号</td>
+			<td>
+				<input type="text" name="bearPawNumber" id="bearPawNumber" style="width:240px" />
+			</td>
+		</tr>
 	</table>
 	<table style="font-size:12px" cellspacing="5">
 		<tr>

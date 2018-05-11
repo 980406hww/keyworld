@@ -104,6 +104,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			//修改qzSetting表
 			QZSetting existingQZSetting = qzSettingDao.selectById(qzSetting.getUuid());
 			existingQZSetting.setDomain(qzSetting.getDomain());
+			existingQZSetting.setBearPawNumber(qzSetting.getBearPawNumber());
 			existingQZSetting.setUpdateStatus(qzSetting.getUpdateStatus());
 			existingQZSetting.setCustomerUuid(qzSetting.getCustomerUuid());
 			existingQZSetting.setPcGroup(qzSetting.getPcGroup());
@@ -258,6 +259,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		CustomerKeyword customerKeyword = new CustomerKeyword();
 		customerKeyword.setKeyword(customerKeywordVO.getKeyword());
 		customerKeyword.setUrl(customerKeywordVO.getUrl());
+		customerKeyword.setBearPawNumber(qzSettingCriteria.getQzSetting().getBearPawNumber());
 		customerKeyword.setTitle(customerKeywordVO.getTitle());
 		customerKeyword.setOrderNumber(customerKeywordVO.getOrderNumber());
 		customerKeyword.setCurrentIndexCount(customerKeywordVO.getCurrentIndexCount());
