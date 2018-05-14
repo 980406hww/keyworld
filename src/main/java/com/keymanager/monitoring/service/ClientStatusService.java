@@ -565,8 +565,8 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 	}
 
 
-	public List<ClientStatusSummaryVO> searchClientStatusSummaryVO(String clientIDPrefix, String city) throws Exception {
-		List<ClientStatusSummaryVO> pcClientStatusSummaryVOs = clientStatusDao.searchClientStatusSummaryVO(clientIDPrefix,city);
+	public List<ClientStatusSummaryVO> searchClientStatusSummaryVO(String clientIDPrefix, String city, String switchGroupName) throws Exception {
+		List<ClientStatusSummaryVO> pcClientStatusSummaryVOs = clientStatusDao.searchClientStatusSummaryVO(clientIDPrefix, city, switchGroupName);
 		Collections.sort(pcClientStatusSummaryVOs);
 		ClientStatusSummaryVO previousClientIDPrefix = null;
 		ClientStatusSummaryVO previousType = null;

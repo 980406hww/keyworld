@@ -10,6 +10,7 @@
     <form action="/internal/clientstatus/clientStatusStat" method="post" id="searchClientStatusSummaryVOForm" style="margin-top: 35px;margin-left: 20px">
      客户端ID前缀:&nbsp;<input type="text" name="clientIDPrefix" id="clientIDPrefix" value="${clientIDPrefix}">
         &nbsp;&nbsp;城市: <input type="text" name="city" id="city" value="${city}">&nbsp;&nbsp;
+        流转分组: <input type="text" name="switchGroupName" id="switchGroupName" value="${switchGroupName}">&nbsp;&nbsp;
         <shiro:hasPermission name="/internal/clientstatus/clientStatusStat">
             <input type="submit" value=" 查询 " onclick="trimSearchCondition()">
         </shiro:hasPermission>
@@ -21,6 +22,7 @@
             <td align="center" width=120>类型</td>
             <td align="center" width=120>小计</td>
             <td align="center" width=100>城市</td>
+            <td align="center" width=100>流转分组</td>
             <td align="center" width=50>数量</td>
         </tr>
     </table>
@@ -39,6 +41,7 @@
                 <td rowspan="${clientStatusSummaryVO.typeCount}">${clientStatusSummaryVO.typeTotalCount}</td>
             </c:if>
             <td>${clientStatusSummaryVO.city}</td>
+            <td>${clientStatusSummaryVO.switchGroupName}</td>
             <td>${clientStatusSummaryVO.count}</td>
         </tr>
     </c:forEach>
@@ -64,11 +67,15 @@
         var clientStatusSummaryForm = $("#searchClientStatusSummaryVOForm");
         var clientIDPrefix = clientStatusSummaryForm.find("#clientIDPrefix").val();
         var city = clientStatusSummaryForm.find("#city").val();
+        var switchGroupName = clientStatusSummaryForm.find("#switchGroupName").val();
         if(clientIDPrefix != "") {
             clientStatusSummaryForm.find("#clientIDPrefix").val($.trim(clientIDPrefix));
         }
         if(city != "") {
             clientStatusSummaryForm.find("#city").val($.trim(city));
+        }
+        if(switchGroupName != "") {
+            clientStatusSummaryForm.find("#switchGroupName").val($.trim(switchGroupName));
         }
     }
 </script>

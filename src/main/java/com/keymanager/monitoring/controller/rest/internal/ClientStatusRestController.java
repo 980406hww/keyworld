@@ -316,21 +316,16 @@ public class ClientStatusRestController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/clientstatus/clientStatusStat")
     @RequestMapping(value = "/clientStatusStat", method = {RequestMethod.GET, RequestMethod.POST})
-    public ModelAndView clientStatusStat(String clientIDPrefix, String city, HttpServletRequest request) {
+    public ModelAndView clientStatusStat(String clientIDPrefix, String city, String switchGroupName, HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView("client/clientStatusStat");
         try {
             if(request.getMethod().equals("GET")){
                 return modelAndView;
             }
-            if (clientIDPrefix != null) {
-                clientIDPrefix = clientIDPrefix.trim();
-            }
-            if (city != null) {
-                city = city.trim();
-            }
-            List<ClientStatusSummaryVO> clientStatusSummaryVOs = clientStatusService.searchClientStatusSummaryVO(clientIDPrefix, city);
+            List<ClientStatusSummaryVO> clientStatusSummaryVOs = clientStatusService.searchClientStatusSummaryVO(clientIDPrefix, city, switchGroupName);
             modelAndView.addObject("clientIDPrefix", clientIDPrefix);
             modelAndView.addObject("city", city);
+            modelAndView.addObject("switchGroupName", switchGroupName);
             modelAndView.addObject("clientStatusSummaryVOs", clientStatusSummaryVOs);
         } catch (Exception e) {
             logger.error(e.getMessage());

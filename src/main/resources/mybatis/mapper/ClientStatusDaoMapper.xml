@@ -332,11 +332,12 @@
     </update>
 
     <select id="searchClientStatusSummaryVO" resultType="com.keymanager.value.ClientStatusSummaryVO">
-        SELECT cs.fClientIDPrefix as clientIDPrefix, cs.fTerminalType as type, cs.fCity as city, COUNT(1) as 'count'
+        SELECT cs.fClientIDPrefix as clientIDPrefix, cs.fTerminalType as type, cs.fCity as city, COUNT(1) as 'count', fSwitchGroupName as 'switchGroupName'
         FROM t_client_status cs
         <where> cs.fValid = 1
             <if test="clientIDPrefix!=null and clientIDPrefix!=''">and cs.fClientIDPrefix LIKE '%${clientIDPrefix}%'</if>
             <if test="city!=null and city!=''">and cs.fCity LIKE '%${city}%'</if>
+            <if test="switchGroupName!=null and switchGroupName!=''">and cs.fSwitchGroupName LIKE '%${switchGroupName}%'</if>
         </where>
         GROUP BY cs.fClientIDPrefix, cs.fTerminalType, cs.fCity ORDER BY cs.fClientIDPrefix
     </select>

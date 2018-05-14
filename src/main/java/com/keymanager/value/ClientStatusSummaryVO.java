@@ -10,6 +10,7 @@ public class ClientStatusSummaryVO implements Comparable{
 	private int typeTotalCount;
 
 	private String city;
+	private String switchGroupName;
 	private int count;
 
 	public String getClientIDPrefix() {
@@ -74,6 +75,14 @@ public class ClientStatusSummaryVO implements Comparable{
 
 	public void setTypeTotalCount(int typeTotalCount) {
 		this.typeTotalCount = typeTotalCount;
+	}
+
+	public String getSwitchGroupName() {
+		return switchGroupName;
+	}
+
+	public void setSwitchGroupName(String switchGroupName) {
+		this.switchGroupName = switchGroupName;
 	}
 
 	@Override
