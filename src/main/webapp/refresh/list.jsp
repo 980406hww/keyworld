@@ -177,6 +177,7 @@
 	<input type="hidden" name="optimizeGroupName" id="optimizeGroupName" value=""/>
 	<input type="hidden" name="invalidRefreshCount" id="invalidRefreshCount" value=""/>
 	<input type="hidden" name="noReachStandardDays" id="noReachStandardDays" value=""/>
+	<input type="hidden" name="status" id="status" value="1"/>
 </form>
 
 <div id="uploadCSVDialog" class="easyui-dialog" style="left: 40%;">
