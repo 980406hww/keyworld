@@ -109,6 +109,8 @@
 				/tj.js =anon
 				/terminalSetting/test.jsp = anon
 				/** = userInfo
+				/vnc.zip = authc
+				/vncAll.zip = authc
 			</value>
 		</property>
 		<property name="filters">
