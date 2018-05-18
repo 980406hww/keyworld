@@ -43,6 +43,8 @@ public class Constants {
 	public final static String CONFIG_KEY_360 = "360";
 	public final static String CONFIG_TYPE_DAILY_REPORT = "DailyReport";
 	public final static String CONFIG_TYPE_DEFAULT_OPTIMIZE_GROUPNAME = "DefaultOptimizeGroupName";
+	public final static String CONFIG_TYPE_KEYWORD_INFO_SYNCHRONIZE = "KeywordInfoSynchronize";
+	public final static String CONFIG_KEY_MOBILE = "mobile";
 
 	public final static Map<String, String> ACCOUNT_LOG_STATUS_MAP = new HashMap<String, String>();
 	static {

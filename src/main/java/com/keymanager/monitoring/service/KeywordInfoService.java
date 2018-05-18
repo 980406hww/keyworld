@@ -13,6 +13,7 @@ import com.keymanager.monitoring.vo.RequireDeleteKeywordVO;
 import com.keymanager.util.Constants;
 import com.keymanager.util.PropertiesUtil;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -62,6 +63,7 @@ public class KeywordInfoService extends ServiceImpl<KeywordInfoDao, KeywordInfo>
 						customerKeyword.setKeyword(info[0]);
 						customerKeyword.setUrl(info[1]);
 						customerKeyword.setOptimizeGroupName(config.getValue());
+						customerKeyword.setManualCleanTitle(true);
 						customerKeyword.setServiceProvider("baidutop123");
 						customerKeyword.setCurrentIndexCount(100);
 						customerKeyword.setCollectMethod(CollectMethod.PerMonth.name());
@@ -92,7 +94,10 @@ public class KeywordInfoService extends ServiceImpl<KeywordInfoDao, KeywordInfo>
 		}
 
 		if(hasRequireDeleteKeyword) {
-			smsService.sendSms(PropertiesUtil.phoneFrom, "系统标记了需要删除的关键词，请注意查看！");
+			Config config = configService.getConfig(Constants.CONFIG_TYPE_KEYWORD_INFO_SYNCHRONIZE, Constants.CONFIG_KEY_MOBILE);
+			if(StringUtils.isNotBlank(config.getValue())) {
+				smsService.sendSms(config.getValue(), "系统标记了需要删除的关键词，请注意查看！");
+			}
 		}
 	}
 
