@@ -188,4 +188,8 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 		String[] uuids = customerUuids.split(",");
 		return customerDao.searchContactPersonList(uuids);
 	}
+
+	public Customer findCustomerByUserName(String userName) {
+		return customerDao.findCustomerByUserName(userName);
+	}
 }

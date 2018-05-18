@@ -102,6 +102,7 @@
             <td align="center" width=80>联系人</td>
             <td align="center" width=80>分组</td>
             <td align="center" width=150>关键字信息</td>
+            <td align="center" width=100>客户信息</td>
             <c:if test="${'fm'.equalsIgnoreCase(entryType)}">
                 <td align="center" width=70>关键字启停小时数</td>
             </c:if>
@@ -149,6 +150,7 @@
                         </c:choose>)
                     </c:if>
                 </td>
+                <td width=100><input type="text" value="${customer.userName}" style="width: 100%"></td>
                 <c:if test="${'fm'.equalsIgnoreCase(entryType)}">
                     <td width=70 style="text-align: center">
                         <input type="text" name="activeHour" onchange="editHourForSwitchStatus('${customer.uuid}', this)" value="${customer.activeHour}" style="width: 90%"><br>

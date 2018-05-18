@@ -37,6 +37,8 @@ public class CustomerKeywordCriteria extends BaseCriteria{
     private Integer fifteenDaysNoReachStandard;
     private Integer thirtyDaysNoReachStandard;
 
+    private Boolean requireDelete;
+
     public Integer getGtCurrentIndexCount() {
         return gtCurrentIndexCount;
     }
@@ -301,5 +303,13 @@ public class CustomerKeywordCriteria extends BaseCriteria{
 
     public void setThirtyDaysNoReachStandard(Integer thirtyDaysNoReachStandard) {
         this.thirtyDaysNoReachStandard = thirtyDaysNoReachStandard;
+    }
+
+    public Boolean getRequireDelete() {
+        return requireDelete;
+    }
+
+    public void setRequireDelete(Boolean requireDelete) {
+        this.requireDelete = requireDelete;
     }
 }

@@ -11,5 +11,11 @@
 		<property name="password" value="${publicOpinion.password}" />
 		<property name="webPath" value="${publicOpinion.webPath}" />
 	</bean>
-	
+
+	<!-- 关键词信息同步服务类 -->
+	<bean id="keywordInfoSynchronizeService" class="com.keymanager.monitoring.service.KeywordInfoSynchronizeService">
+		<property name="username" value="${keyword.username}" />
+		<property name="password" value="${keyword.password}" />
+		<property name="webPath" value="${keyword.webPath}" />
+	</bean>
 </beans>

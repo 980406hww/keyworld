@@ -226,6 +226,9 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(value = "fStatus")
     private int status;
 
+    @TableField(value = "fRequireDelete")
+    private Boolean requireDelete;
+
     @TableField(value = "fManualCleanTitle")
     private Boolean manualCleanTitle;
 
@@ -890,5 +893,13 @@ public class CustomerKeyword extends BaseEntity {
 
     public void setRelatedKeywordPercentage(Integer relatedKeywordPercentage) {
         this.relatedKeywordPercentage = relatedKeywordPercentage;
+    }
+
+    public Boolean getRequireDelete() {
+        return requireDelete;
+    }
+
+    public void setRequireDelete(Boolean requireDelete) {
+        this.requireDelete = requireDelete;
     }
 }

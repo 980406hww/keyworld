@@ -10,6 +10,9 @@ public class Customer extends BaseEntity{
 	@TableField(value = "fUserID")
 	private String loginName;
 
+	@TableField(value = "fUserName")
+	private String userName;
+
 	@TableField(value = "fEntryType")
 	private String entryType;
 
@@ -58,6 +61,14 @@ public class Customer extends BaseEntity{
 
 	public void setLoginName(String loginName) {
 		this.loginName = loginName;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	public String getEntryType() {

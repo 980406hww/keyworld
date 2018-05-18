@@ -2,7 +2,6 @@ package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.keymanager.monitoring.common.email.AccessWebsiteFailMailService;
 import com.keymanager.monitoring.criteria.WebsiteCriteria;
 import com.keymanager.monitoring.dao.WebsiteDao;
 import com.keymanager.monitoring.entity.Website;
@@ -29,7 +28,11 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
     @Autowired
     private WebsiteDao websiteDao;
 
+    @Autowired
+    private KeywordInfoService keywordInfoService;
+
     public Page<Website> searchWebsites(Page<Website> page, WebsiteCriteria websiteCriteria) {
+        keywordInfoService.synchronizeKeyword();
         page.setRecords(websiteDao.searchWebsites(page, websiteCriteria));
         return page;
     }

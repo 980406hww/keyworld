@@ -215,11 +215,15 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeyword.setOriginalUrl(customerKeyword.getOriginalUrl() != null ? customerKeyword.getOriginalUrl().trim() : null);
         customerKeyword.setOrderNumber(customerKeyword.getOrderNumber() != null ? customerKeyword.getOrderNumber().trim() : null);
 
-        boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
-        if(isDepartmentManager) {
-            customerKeyword.setStatus(1);
+        if(StringUtils.isNotBlank(userName)) {
+            boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
+            if(isDepartmentManager) {
+                customerKeyword.setStatus(1);
+            } else {
+                customerKeyword.setStatus(2);
+            }
         } else {
-            customerKeyword.setStatus(2);
+            customerKeyword.setStatus(1);
         }
 
         if(customerKeyword.getCurrentPosition() == null){
@@ -1102,5 +1106,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     public List<NegativeList> getCustomerKeywordSummaryInfos(String terminalType, String keyword) {
         return customerKeywordDao.getCustomerKeywordSummaryInfos(terminalType, keyword);
+    }
+
+    public void updateCustomerKeywordRequireDalete(String searchEngine, String terminalType, String keyword, String url) {
+        customerKeywordDao.updateCustomerKeywordRequireDalete(searchEngine, terminalType, keyword, url);
     }
 }

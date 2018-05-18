@@ -58,6 +58,9 @@
         <if test="customerKeywordCriteria.noReachStandardDays != null and customerKeywordCriteria.noReachStandardDays == -1">
             AND ck.fLastReachStandardDate = CURRENT_DATE()
         </if>
+        <if test="customerKeywordCriteria.requireDelete == true">
+            AND ck.fRequireDelete = 1
+        </if>
         <choose>
             <when test="customerKeywordCriteria.optimizeGroupName != null and customerKeywordCriteria.optimizeGroupName != ''">
                 AND ck.fOptimizeGroupName  like '%${customerKeywordCriteria.optimizeGroupName}%'
@@ -897,5 +900,14 @@
             AND fKeyword = #{item.keyword}
             AND fUrl = #{item.url}
         </foreach>
+    </update>
+
+    <update id="updateCustomerKeywordRequireDalete">
+        UPDATE t_customer_keyword
+        SET fRequireDelete = 1
+        WHERE fTerminalType = #{terminalType}
+        AND fSearchEngine = #{searchEngine}
+        AND fKeyword = #{keyword}
+        AND fUrl = #{url}
     </update>
 </mapper>

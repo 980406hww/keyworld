@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.KeywordInfoDao">
+    <insert id="batchInsertKeyword" parameterType="com.keymanager.monitoring.vo.KeywordInfoVO">
+        INSERT INTO
+            t_keyword_info(fId, fUserName, fSpliterStr, fSearchEngine, fOperationType, fKeywordInfo, fStatus, fUpdateTime, fCreateTime)
+        VALUES
+        <foreach collection="keywordInfoVO" item="vo" separator=",">
+            (NULL,
+            #{vo.userName},
+            #{vo.spliterStr},
+            #{vo.searchEngine},
+            #{vo.operationType},
+            #{vo.keywordInfo},
+            '上线',
+            #{vo.updateTime},
+            #{vo.createTime})
+        </foreach>
+    </insert>
+</mapper>

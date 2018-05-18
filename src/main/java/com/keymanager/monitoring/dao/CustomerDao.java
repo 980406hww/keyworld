@@ -27,4 +27,6 @@ public interface CustomerDao extends BaseMapper<Customer> {
     List<Customer> searchNeedSwitchCustomer();
 
     List<String> searchContactPersonList(@Param("uuids")String[] uuids);
+
+    Customer findCustomerByUserName(@Param("userName")String userName);
 }

@@ -4,6 +4,7 @@
     <sql id="colID">
         c.fUuid AS `uuid`,
         c.fUserID AS `loginName`,
+        c.fUserName AS `userName`,
         c.fEntryType AS `entryType`,
         c.fContactPerson AS `contactPerson`,
         c.fQQ AS `qq`,
@@ -116,5 +117,13 @@
             #{uuid}
         </foreach>
         ORDER BY fUpdateTime DESC
+    </select>
+
+    <select id="findCustomerByUserName" resultType="com.keymanager.monitoring.entity.Customer">
+        SELECT
+        <include refid="colID"/>
+        FROM t_customer c
+        WHERE c.fUserName = #{userName}
+        AND c.fStatus = 1
     </select>
 </mapper>
