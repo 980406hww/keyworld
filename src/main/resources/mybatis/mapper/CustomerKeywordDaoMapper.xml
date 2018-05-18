@@ -694,7 +694,7 @@
         UPDATE
             t_customer_keyword
         SET
-            fCurrentPosition = #{position},
+            fCurrentPosition = IF(fLastReachStandardDate = CURRENT_DATE(),IF(#{position} > 0 AND #{position} &lt; fCurrentPosition, #{position}, fCurrentPosition), #{position}),
             fInitialPosition = IFNULL(fInitialPosition, #{position}),
             fCapturePositionQueryTime = IFNULL(#{capturePositionQueryTime}, fCapturePositionQueryTime),
             <if test="reachStandardFlag == true">
