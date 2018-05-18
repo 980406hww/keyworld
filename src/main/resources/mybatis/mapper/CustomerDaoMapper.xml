@@ -5,6 +5,7 @@
         c.fUuid AS `uuid`,
         c.fUserID AS `loginName`,
         c.fUserName AS `userName`,
+        c.fSearchEngine AS `searchEngine`,
         c.fEntryType AS `entryType`,
         c.fContactPerson AS `contactPerson`,
         c.fQQ AS `qq`,
@@ -124,6 +125,7 @@
         <include refid="colID"/>
         FROM t_customer c
         WHERE c.fUserName = #{userName}
+        AND c.fSearchEngine = #{searchEngine}
         AND c.fStatus = 1
     </select>
 </mapper>

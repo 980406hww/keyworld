@@ -197,6 +197,20 @@ public class CustomerRestController {
         }
     }
 
+    @RequiresPermissions("/internal/customer/saveCustomer")
+    @RequestMapping(value = "/updateCustomerSearchEngine", method = RequestMethod.POST)
+    public ResponseEntity<?> updateCustomerSearchEngine(@RequestBody Map<String,Object> requestMap) {
+        try {
+            String customerUuid = (String) requestMap.get("customerUuid");
+            String searchEngine = (String) requestMap.get("searchEngine");
+            customerService.updateCustomerSearchEngine(Long.parseLong(customerUuid), searchEngine);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.OK);
+        }
+    }
+
     @RequestMapping(value = "/setCustomerKeywordStatusSwitchTime" , method = RequestMethod.POST)
     public ResponseEntity<?> setCustomerKeywordStatusSwitchTime(@RequestBody Map<String, Object> requestMap){
         try {

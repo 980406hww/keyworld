@@ -149,6 +149,12 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 		updateById(customer);
 	}
 
+	public void updateCustomerSearchEngine(Long customerUuid, String searchEngine) {
+		Customer customer = customerDao.selectById(customerUuid);
+		customer.setSearchEngine(searchEngine);
+		updateById(customer);
+	}
+
 	public void setCustomerKeywordStatusSwitchTime(List<String> uuids, String activeHour, String inActiveHour) {
 		customerDao.setCustomerKeywordStatusSwitchTime(uuids, activeHour, inActiveHour);
 	}
@@ -195,7 +201,7 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 		return customerDao.searchContactPersonList(uuids);
 	}
 
-	public Customer findCustomerByUserName(String userName) {
-		return customerDao.findCustomerByUserName(userName);
+	public Customer findCustomerByUserName(String userName, String searchEngine) {
+		return customerDao.findCustomerByUserName(userName, searchEngine);
 	}
 }

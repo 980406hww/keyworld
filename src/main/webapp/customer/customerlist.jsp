@@ -102,7 +102,10 @@
             <td align="center" width=80>联系人</td>
             <td align="center" width=80>分组</td>
             <td align="center" width=150>关键字信息</td>
-            <td align="center" width=100>客户信息</td>
+            <c:if test="${'bc'.equalsIgnoreCase(entryType)}">
+                <td align="center" width=80>关键词账号</td>
+                <td align="center" width=60>搜索引擎</td>
+            </c:if>
             <c:if test="${'fm'.equalsIgnoreCase(entryType)}">
                 <td align="center" width=70>关键字启停小时数</td>
             </c:if>
@@ -150,7 +153,18 @@
                         </c:choose>)
                     </c:if>
                 </td>
-                <td width=100><input type="text" value="${customer.userName}" onchange="updateCustomerUserName('${customer.uuid}', this)" style="width: 100%"></td>
+                <c:if test="${'bc'.equalsIgnoreCase(entryType)}">
+                    <td width=80><input type="text" value="${customer.userName}" onchange="updateAccountInfo('${customer.uuid}', this)" style="width: 100%"></td>
+                    <td width=60>
+                        <select style="width: 100%" onchange="updateCustomerSearchEngine('${customer.uuid}', this)">
+                            <option value=""></option>
+                            <option value="百度" ${customer.searchEngine eq '百度' ? "selected" : ""}>百度</option>
+                            <option value="搜狗" ${customer.searchEngine eq '搜狗' ? "selected" : ""}>搜狗</option>
+                            <option value="360" ${customer.searchEngine eq '360' ? "selected" : ""}>360</option>
+                            <option value="神马" ${customer.searchEngine eq '神马' ? "selected" : ""}>神马</option>
+                        </select>
+                    </td>
+                </c:if>
                 <c:if test="${'fm'.equalsIgnoreCase(entryType)}">
                     <td width=70 style="text-align: center">
                         <input type="text" name="activeHour" onchange="editHourForSwitchStatus('${customer.uuid}', this)" value="${customer.activeHour}" style="width: 90%"><br>
@@ -482,12 +496,40 @@
     </shiro:hasPermission>
 
     <shiro:hasPermission name="/internal/customer/saveCustomer">
-    function updateCustomerUserName(uuid, self) {
+    function updateAccountInfo(uuid, self) {
         var data = {};
         data.customerUuid = uuid;
         data.userName = $.trim(self.value);
         $.ajax({
             url: '/internal/customer/updateCustomerUserName',
+            data: JSON.stringify(data),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            timeout: 5000,
+            type: 'POST',
+            success: function (result) {
+                if (result) {
+                    $().toastmessage('showSuccessToast', "更新成功");
+                } else {
+                    $().toastmessage('showErrorToast', "更新失败");
+                }
+            },
+            error: function () {
+                $().toastmessage('showErrorToast', "更新失败");
+            }
+        });
+    }
+    </shiro:hasPermission>
+
+    <shiro:hasPermission name="/internal/customer/saveCustomer">
+    function updateCustomerSearchEngine(uuid, self) {
+        var data = {};
+        data.customerUuid = uuid;
+        data.searchEngine = $(self).val();
+        $.ajax({
+            url: '/internal/customer/updateCustomerSearchEngine',
             data: JSON.stringify(data),
             headers: {
                 'Accept': 'application/json',

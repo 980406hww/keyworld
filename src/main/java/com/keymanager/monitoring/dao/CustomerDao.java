@@ -28,5 +28,5 @@ public interface CustomerDao extends BaseMapper<Customer> {
 
     List<String> searchContactPersonList(@Param("uuids")String[] uuids);
 
-    Customer findCustomerByUserName(@Param("userName")String userName);
+    Customer findCustomerByUserName(@Param("userName")String userName, @Param("searchEngine")String searchEngine);
 }

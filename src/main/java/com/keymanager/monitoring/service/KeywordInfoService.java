@@ -49,7 +49,7 @@ public class KeywordInfoService extends ServiceImpl<KeywordInfoDao, KeywordInfo>
 			String[] keywordInfos = keyword.getKeywordInfo().split("\n");
 
 			if(keyword.getOperationType().equals("add")) {
-				Customer customer = customerService.findCustomerByUserName(keyword.getUserName() + "_" + searchEngineInfo[0]);
+				Customer customer = customerService.findCustomerByUserName(keyword.getUserName(), searchEngineInfo[0]);
 				if(customer != null) {
 					Config config = configService.getConfig(Constants.CONFIG_TYPE_DEFAULT_OPTIMIZE_GROUPNAME, keyword.getSearchEngine());
 					for (String keywordInfo : keywordInfos) {

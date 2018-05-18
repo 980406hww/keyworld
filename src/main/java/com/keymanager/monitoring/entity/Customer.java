@@ -13,6 +13,9 @@ public class Customer extends BaseEntity{
 	@TableField(value = "fUserName")
 	private String userName;
 
+	@TableField(value = "fSearchEngine")
+	private String searchEngine;
+
 	@TableField(value = "fEntryType")
 	private String entryType;
 
@@ -69,6 +72,14 @@ public class Customer extends BaseEntity{
 
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+
+	public String getSearchEngine() {
+		return searchEngine;
+	}
+
+	public void setSearchEngine(String searchEngine) {
+		this.searchEngine = searchEngine;
 	}
 
 	public String getEntryType() {
