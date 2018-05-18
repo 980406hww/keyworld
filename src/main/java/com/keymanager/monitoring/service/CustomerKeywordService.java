@@ -17,6 +17,7 @@ import com.keymanager.value.CustomerKeywordForCapturePosition;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1102,5 +1103,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     public List<NegativeList> getCustomerKeywordSummaryInfos(String terminalType, String keyword) {
         return customerKeywordDao.getCustomerKeywordSummaryInfos(terminalType, keyword);
+    }
+
+    public void updateCustomerKeywordQueryTime(Long customerKeywordUuid, Date date) {
+        customerKeywordDao.updateCustomerKeywordQueryTime(customerKeywordUuid, DateUtils.addMinutes(date, -3));
     }
 }

@@ -898,4 +898,10 @@
             AND fUrl = #{item.url}
         </foreach>
     </update>
+
+    <update id="updateCustomerKeywordQueryTime">
+        UPDATE t_customer_keyword
+        SET fCapturePositionQueryTime = #{capturePositionQueryTime}
+        WHERE fUuid = #{customerKeywordUuid}
+    </update>
 </mapper>

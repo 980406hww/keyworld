@@ -268,9 +268,14 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
 
         Long customerKeywordUuid = Long.parseLong(requestMap.get("customerKeywordUuid").toString());
         int position = (Integer) requestMap.get("position");
+        Date startTime = new Date((Long) requestMap.get("startTime"));
         try {
             if (validUser(userName, password)) {
-                customerKeywordService.updateCustomerKeywordPosition(customerKeywordUuid, position, Utils.getCurrentTimestamp());
+                if(position > -1) {
+                    customerKeywordService.updateCustomerKeywordPosition(customerKeywordUuid, position, Utils.getCurrentTimestamp());
+                } else {
+                    customerKeywordService.updateCustomerKeywordQueryTime(customerKeywordUuid, startTime);
+                }
                 return new ResponseEntity<Object>(true, HttpStatus.OK);
             }
         }catch (Exception ex){
