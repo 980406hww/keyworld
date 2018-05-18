@@ -15,17 +15,19 @@ public class KeywordInfoSynchronizeService {
 	private String webPath;
 
 
-	public KeywordInfoVO getKeywordList(){
+	public KeywordInfoVO getKeywordList() throws Exception {
 		HashMap hashMap = new HashMap();
 		hashMap.put("username", username);
 		hashMap.put("password", password);
-		try {
-			KeywordInfoVO keywords = restTemplate.postForObject(webPath + "/external/getCustomerKeyword", hashMap, KeywordInfoVO.class);
-			return keywords;
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-		}
-		return null;
+		KeywordInfoVO keywords = restTemplate.postForObject(webPath + "/external/getCustomerKeyword", hashMap, KeywordInfoVO.class);
+		return keywords;
+	}
+
+	public Boolean deleteKeywordList() throws Exception {
+		HashMap hashMap = new HashMap();
+		hashMap.put("username", username);
+		hashMap.put("password", password);
+		return restTemplate.postForObject(webPath + "/external/delteCustomerKeyword", hashMap, Boolean.class);
 	}
 
 	public void setUsername(String username) {

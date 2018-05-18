@@ -32,7 +32,6 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
     private KeywordInfoService keywordInfoService;
 
     public Page<Website> searchWebsites(Page<Website> page, WebsiteCriteria websiteCriteria) {
-        keywordInfoService.synchronizeKeyword();
         page.setRecords(websiteDao.searchWebsites(page, websiteCriteria));
         return page;
     }

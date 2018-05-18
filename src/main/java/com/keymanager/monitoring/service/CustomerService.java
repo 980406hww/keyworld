@@ -143,6 +143,12 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 		updateById(customer);
 	}
 
+	public void updateCustomerUserName(Long customerUuid, String userName) {
+		Customer customer = customerDao.selectById(customerUuid);
+		customer.setUserName(userName);
+		updateById(customer);
+	}
+
 	public void setCustomerKeywordStatusSwitchTime(List<String> uuids, String activeHour, String inActiveHour) {
 		customerDao.setCustomerKeywordStatusSwitchTime(uuids, activeHour, inActiveHour);
 	}

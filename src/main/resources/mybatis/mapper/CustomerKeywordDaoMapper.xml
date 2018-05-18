@@ -902,12 +902,14 @@
         </foreach>
     </update>
 
-    <update id="updateCustomerKeywordRequireDalete">
-        UPDATE t_customer_keyword
-        SET fRequireDelete = 1
-        WHERE fTerminalType = #{terminalType}
-        AND fSearchEngine = #{searchEngine}
-        AND fKeyword = #{keyword}
-        AND fUrl = #{url}
+    <update id="batchUpdateRequireDalete">
+        <foreach item="item" index="index" collection="requireDeleteKeywordVOs" open="" separator=";" close="">
+            UPDATE t_customer_keyword
+            SET fRequireDelete = 1
+            WHERE fTerminalType = #{item.terminalType}
+            AND fSearchEngine = #{item.searchEngine}
+            AND fKeyword = #{item.keyword}
+            AND fUrl = #{item.url}
+        </foreach>
     </update>
 </mapper>

@@ -150,7 +150,7 @@
                         </c:choose>)
                     </c:if>
                 </td>
-                <td width=100><input type="text" value="${customer.userName}" style="width: 100%"></td>
+                <td width=100><input type="text" value="${customer.userName}" onchange="updateCustomerUserName('${customer.uuid}', this)" style="width: 100%"></td>
                 <c:if test="${'fm'.equalsIgnoreCase(entryType)}">
                     <td width=70 style="text-align: center">
                         <input type="text" name="activeHour" onchange="editHourForSwitchStatus('${customer.uuid}', this)" value="${customer.activeHour}" style="width: 90%"><br>
@@ -476,6 +476,34 @@
             },
             error: function () {
                 $().toastmessage('showErrorToast', "操作失败");
+            }
+        });
+    }
+    </shiro:hasPermission>
+
+    <shiro:hasPermission name="/internal/customer/saveCustomer">
+    function updateCustomerUserName(uuid, self) {
+        var data = {};
+        data.customerUuid = uuid;
+        data.userName = $.trim(self.value);
+        $.ajax({
+            url: '/internal/customer/updateCustomerUserName',
+            data: JSON.stringify(data),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            timeout: 5000,
+            type: 'POST',
+            success: function (result) {
+                if (result) {
+                    $().toastmessage('showSuccessToast', "更新成功");
+                } else {
+                    $().toastmessage('showErrorToast', "更新失败");
+                }
+            },
+            error: function () {
+                $().toastmessage('showErrorToast', "更新失败");
             }
         });
     }

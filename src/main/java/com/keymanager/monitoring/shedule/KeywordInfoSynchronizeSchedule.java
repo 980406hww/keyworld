@@ -17,7 +17,7 @@ public class KeywordInfoSynchronizeSchedule {
     public void runTask(){
         logger.info("============= "+" KeywordInfo Synchronize Task "+"===================");
         try {
-
+            keywordInfoService.synchronizeKeyword();
         } catch (Exception e) {
             logger.error(" KeywordInfo Synchronize is error" + e.getMessage());
         }

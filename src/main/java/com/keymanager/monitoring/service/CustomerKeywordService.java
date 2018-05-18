@@ -1108,7 +1108,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return customerKeywordDao.getCustomerKeywordSummaryInfos(terminalType, keyword);
     }
 
-    public void updateCustomerKeywordRequireDalete(String searchEngine, String terminalType, String keyword, String url) {
-        customerKeywordDao.updateCustomerKeywordRequireDalete(searchEngine, terminalType, keyword, url);
+    public void batchUpdateRequireDalete(List<RequireDeleteKeywordVO> requireDeleteKeywordVOs) {
+        customerKeywordDao.batchUpdateRequireDalete(requireDeleteKeywordVOs);
     }
 }
