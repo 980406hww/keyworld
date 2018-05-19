@@ -143,9 +143,9 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 		updateById(customer);
 	}
 
-	public void updateCustomerUserName(Long customerUuid, String userName) {
+	public void updateCustomerExternalAccount(Long customerUuid, String externalAccount) {
 		Customer customer = customerDao.selectById(customerUuid);
-		customer.setUserName(userName);
+		customer.setExternalAccount(externalAccount);
 		updateById(customer);
 	}
 
@@ -201,7 +201,7 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 		return customerDao.searchContactPersonList(uuids);
 	}
 
-	public Customer findCustomerByUserName(String userName, String searchEngine) {
-		return customerDao.findCustomerByUserName(userName, searchEngine);
+	public Customer findCustomerByExternalAccountInfo(String externalAccount, String searchEngine) {
+		return customerDao.findCustomerByExternalAccountInfo(externalAccount, searchEngine);
 	}
 }

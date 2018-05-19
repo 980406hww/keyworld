@@ -10,8 +10,8 @@ public class Customer extends BaseEntity{
 	@TableField(value = "fUserID")
 	private String loginName;
 
-	@TableField(value = "fUserName")
-	private String userName;
+	@TableField(value = "fExternalAccount")
+	private String externalAccount;
 
 	@TableField(value = "fSearchEngine")
 	private String searchEngine;
@@ -66,12 +66,12 @@ public class Customer extends BaseEntity{
 		this.loginName = loginName;
 	}
 
-	public String getUserName() {
-		return userName;
+	public String getExternalAccount() {
+		return externalAccount;
 	}
 
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setExternalAccount(String externalAccount) {
+		this.externalAccount = externalAccount;
 	}
 
 	public String getSearchEngine() {

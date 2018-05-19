@@ -4,7 +4,7 @@
     <sql id="colID">
         c.fUuid AS `uuid`,
         c.fUserID AS `loginName`,
-        c.fUserName AS `userName`,
+        c.fExternalAccount AS `externalAccount`,
         c.fSearchEngine AS `searchEngine`,
         c.fEntryType AS `entryType`,
         c.fContactPerson AS `contactPerson`,
@@ -120,11 +120,11 @@
         ORDER BY fUpdateTime DESC
     </select>
 
-    <select id="findCustomerByUserName" resultType="com.keymanager.monitoring.entity.Customer">
+    <select id="findCustomerByExternalAccountInfo" resultType="com.keymanager.monitoring.entity.Customer">
         SELECT
         <include refid="colID"/>
         FROM t_customer c
-        WHERE c.fUserName = #{userName}
+        WHERE c.fExternalAccount = #{externalAccount}
         AND c.fSearchEngine = #{searchEngine}
         AND c.fStatus = 1
     </select>

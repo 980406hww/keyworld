@@ -154,7 +154,7 @@
                     </c:if>
                 </td>
                 <c:if test="${'bc'.equalsIgnoreCase(entryType)}">
-                    <td width=80><input type="text" value="${customer.userName}" onchange="updateAccountInfo('${customer.uuid}', this)" style="width: 100%"></td>
+                    <td width=80><input type="text" value="${customer.externalAccount}" onchange="updateAccountInfo('${customer.uuid}', this)" style="width: 100%"></td>
                     <td width=60>
                         <select style="width: 100%" onchange="updateCustomerSearchEngine('${customer.uuid}', this)">
                             <option value=""></option>
@@ -499,9 +499,9 @@
     function updateAccountInfo(uuid, self) {
         var data = {};
         data.customerUuid = uuid;
-        data.userName = $.trim(self.value);
+        data.externalAccount = $.trim(self.value);
         $.ajax({
-            url: '/internal/customer/updateCustomerUserName',
+            url: '/internal/customer/updateCustomerExternalAccount',
             data: JSON.stringify(data),
             headers: {
                 'Accept': 'application/json',

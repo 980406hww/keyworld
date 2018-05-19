@@ -184,12 +184,12 @@ public class CustomerRestController {
     }
 
     @RequiresPermissions("/internal/customer/saveCustomer")
-    @RequestMapping(value = "/updateCustomerUserName", method = RequestMethod.POST)
-    public ResponseEntity<?> updateCustomerUserName(@RequestBody Map<String,Object> requestMap) {
+    @RequestMapping(value = "/updateCustomerExternalAccount", method = RequestMethod.POST)
+    public ResponseEntity<?> updateCustomerExternalAccount(@RequestBody Map<String,Object> requestMap) {
         try {
             String customerUuid = (String) requestMap.get("customerUuid");
-            String userName = (String) requestMap.get("userName");
-            customerService.updateCustomerUserName(Long.parseLong(customerUuid), userName);
+            String externalAccount = (String) requestMap.get("externalAccount");
+            customerService.updateCustomerExternalAccount(Long.parseLong(customerUuid), externalAccount);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());

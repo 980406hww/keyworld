@@ -906,7 +906,8 @@
         <foreach item="item" index="index" collection="requireDeleteKeywordVOs" open="" separator=";" close="">
             UPDATE t_customer_keyword
             SET fRequireDelete = 1
-            WHERE fTerminalType = #{item.terminalType}
+            WHERE fType = 'bc'
+            AND fTerminalType = #{item.terminalType}
             AND fSearchEngine = #{item.searchEngine}
             AND fKeyword = #{item.keyword}
             AND fUrl = #{item.url}
