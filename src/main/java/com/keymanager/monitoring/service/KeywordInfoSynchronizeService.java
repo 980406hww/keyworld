@@ -3,11 +3,13 @@ package com.keymanager.monitoring.service;
 import com.keymanager.monitoring.vo.KeywordInfoVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Service
 public class KeywordInfoSynchronizeService {
 	private static Logger logger = LoggerFactory.getLogger(KeywordInfoSynchronizeService.class);
 	public static final RestTemplate restTemplate = new RestTemplate();
