@@ -18,7 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class KeywordInfoService extends ServiceImpl<KeywordInfoDao, KeywordInfo> {
@@ -43,15 +45,21 @@ public class KeywordInfoService extends ServiceImpl<KeywordInfoDao, KeywordInfo>
 
 	public void synchronizeKeyword() throws Exception {
 		boolean hasRequireDeleteKeyword = false;
-		KeywordInfoVO keywordInfoVO = keywordInfoSynchronizeService.getKeywordList();
+		String username = configService.getConfig(Constants.CONFIG_TYPE_KEYWORD_INFO_SYNCHRONIZE, Constants.CONFIG_KEY_USERNAME).getValue();
+		String password = configService.getConfig(Constants.CONFIG_TYPE_KEYWORD_INFO_SYNCHRONIZE, Constants.CONFIG_KEY_PASSWORD).getValue();
+		String webPath = configService.getConfig(Constants.CONFIG_TYPE_KEYWORD_INFO_SYNCHRONIZE, Constants.CONFIG_KEY_WEBPATH).getValue();
+		Map map = new HashMap();
+		map.put("username", username);
+		map.put("password", password);
+
+		KeywordInfoVO keywordInfoVO = keywordInfoSynchronizeService.getKeywordList(webPath, map);
 		for (KeywordInfo keyword : keywordInfoVO) {
 			String spliterStr = keyword.getSpliterStr();
 			String[] searchEngineInfo = keyword.getSearchEngine().split("_");
 			String[] keywordInfos = keyword.getKeywordInfo().split("\n");
-
-			if(keyword.getOperationType().equals("add")) {
-				Customer customer = customerService.findCustomerByExternalAccountInfo(keyword.getUserName(), searchEngineInfo[0]);
-				if(customer != null) {
+			Customer customer = customerService.findCustomerByExternalAccountInfo(keyword.getUserName(), searchEngineInfo[0]);
+			if(customer != null) {
+				if(keyword.getOperationType().equals("add")) {
 					Config config = configService.getConfig(Constants.CONFIG_TYPE_DEFAULT_OPTIMIZE_GROUPNAME, keyword.getSearchEngine());
 					for (String keywordInfo : keywordInfos) {
 						String[] info = keywordInfo.split(spliterStr);
@@ -68,28 +76,30 @@ public class KeywordInfoService extends ServiceImpl<KeywordInfoDao, KeywordInfo>
 						customerKeyword.setCollectMethod(CollectMethod.PerMonth.name());
 						customerKeywordService.addCustomerKeyword(customerKeyword, null);
 					}
-				}
-			} else if(keyword.getOperationType().equals("delete")) {
-				List<RequireDeleteKeywordVO> requireDeleteKeywordVOs = new ArrayList<RequireDeleteKeywordVO>();
-				hasRequireDeleteKeyword = true;
-				for (String keywordInfo : keywordInfos) {
-					String[] info = keywordInfo.split(spliterStr);
-					RequireDeleteKeywordVO requireDeleteKeywordVO = new RequireDeleteKeywordVO();
-					requireDeleteKeywordVO.setSearchEngine(searchEngineInfo[0]);
-					requireDeleteKeywordVO.setTerminalType(searchEngineInfo[1]);
-					requireDeleteKeywordVO.setKeyword(info[0]);
-					requireDeleteKeywordVO.setUrl(info[1]);
-					requireDeleteKeywordVOs.add(requireDeleteKeywordVO);
-				}
-				if(CollectionUtils.isNotEmpty(requireDeleteKeywordVOs)) {
-					customerKeywordService.batchUpdateRequireDalete(requireDeleteKeywordVOs);
+				} else if(keyword.getOperationType().equals("delete")) {
+					List<RequireDeleteKeywordVO> requireDeleteKeywordVOs = new ArrayList<RequireDeleteKeywordVO>();
+					hasRequireDeleteKeyword = true;
+					for (String keywordInfo : keywordInfos) {
+						String[] info = keywordInfo.split(spliterStr);
+						RequireDeleteKeywordVO requireDeleteKeywordVO = new RequireDeleteKeywordVO();
+						requireDeleteKeywordVO.setCustomerUuid(customer.getUuid());
+						requireDeleteKeywordVO.setEntryType(customer.getEntryType());
+						requireDeleteKeywordVO.setSearchEngine(searchEngineInfo[0]);
+						requireDeleteKeywordVO.setTerminalType(searchEngineInfo[1]);
+						requireDeleteKeywordVO.setKeyword(info[0].trim());
+						requireDeleteKeywordVO.setUrl(info[1].trim());
+						requireDeleteKeywordVOs.add(requireDeleteKeywordVO);
+					}
+					if(CollectionUtils.isNotEmpty(requireDeleteKeywordVOs)) {
+						customerKeywordService.batchUpdateRequireDalete(requireDeleteKeywordVOs);
+					}
 				}
 			}
 		}
 		// 同步数据库
 		if(keywordInfoVO.size() > 0) {
 			keywordInfoDao.batchInsertKeyword(keywordInfoVO);
-			keywordInfoSynchronizeService.deleteKeywordList();
+			keywordInfoSynchronizeService.deleteKeywordList(webPath, map);
 		}
 
 		if(hasRequireDeleteKeyword) {
