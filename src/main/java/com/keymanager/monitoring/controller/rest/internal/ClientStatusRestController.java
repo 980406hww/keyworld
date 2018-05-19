@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/internal/clientstatus")
@@ -102,12 +103,11 @@ public class ClientStatusRestController extends SpringMVCBaseController {
         ModelAndView modelAndView = new ModelAndView("/client/list");
         String terminalType = TerminalTypeMapping.getTerminalType(request);
         clientStatusCriteria.setTerminalType(terminalType);
-
         String loginName = (String) request.getSession().getAttribute("username");
         Long userId = userInfoService.getUuidByLoginName(loginName);
         boolean isDepartmentManager = userRoleService.isDepartmentManager(userId);
         if(!isDepartmentManager) {
-            List<String> switchGroups = roleService.selectRoleNames(userId);
+            Set<String> switchGroups = getCurrentUser().getRoles();
             clientStatusCriteria.setSwitchGroups(switchGroups);
         }
 
