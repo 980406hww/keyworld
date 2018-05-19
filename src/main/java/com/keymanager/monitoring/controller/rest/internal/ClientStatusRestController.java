@@ -5,9 +5,7 @@ import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.ClientStatusCriteria;
 import com.keymanager.monitoring.entity.ClientStatus;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
-import com.keymanager.monitoring.service.ClientStatusService;
-import com.keymanager.monitoring.service.ConfigService;
-import com.keymanager.monitoring.service.PerformanceService;
+import com.keymanager.monitoring.service.*;
 import com.keymanager.util.Constants;
 import com.keymanager.util.FileUtil;
 import com.keymanager.util.TerminalTypeMapping;
@@ -41,6 +39,15 @@ public class ClientStatusRestController extends SpringMVCBaseController {
 
     @Autowired
     private PerformanceService performanceService;
+
+    @Autowired
+    private IUserInfoService userInfoService;
+
+    @Autowired
+    private RoleService roleService;
+
+    @Autowired
+    private UserRoleService userRoleService;
 
     @RequiresPermissions("/internal/clientstatus/changeTerminalType")
     @RequestMapping(value = "/changeTerminalType", method = RequestMethod.POST)
@@ -95,6 +102,15 @@ public class ClientStatusRestController extends SpringMVCBaseController {
         ModelAndView modelAndView = new ModelAndView("/client/list");
         String terminalType = TerminalTypeMapping.getTerminalType(request);
         clientStatusCriteria.setTerminalType(terminalType);
+
+        String loginName = (String) request.getSession().getAttribute("username");
+        Long userId = userInfoService.getUuidByLoginName(loginName);
+        boolean isDepartmentManager = userRoleService.isDepartmentManager(userId);
+        if(!isDepartmentManager) {
+            List<String> switchGroups = roleService.selectRoleNames(userId);
+            clientStatusCriteria.setSwitchGroups(switchGroups);
+        }
+
         Page<ClientStatus> page = clientStatusService.searchClientStatuses(new Page<ClientStatus>(currentPageNumber, pageSize), clientStatusCriteria, normalSearchFlag);
         String [] operationTypeValues = clientStatusService.getOperationTypeValues(terminalType);
 

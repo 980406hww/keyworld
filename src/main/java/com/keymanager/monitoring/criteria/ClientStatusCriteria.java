@@ -1,5 +1,7 @@
 package com.keymanager.monitoring.criteria;
 
+import java.util.List;
+
 public class ClientStatusCriteria extends BaseCriteria {
     private String clientID; // 客户端ID
     private String groupName; // 优化组
@@ -24,6 +26,7 @@ public class ClientStatusCriteria extends BaseCriteria {
     private String startUpStatus; // 开机状态
 
     private String terminalType;
+    private List<String> switchGroups;
 
     public String getClientID() {
         return clientID;
@@ -191,5 +194,13 @@ public class ClientStatusCriteria extends BaseCriteria {
 
     public void setStartUpStatus(String startUpStatus) {
         this.startUpStatus = startUpStatus;
+    }
+
+    public List<String> getSwitchGroups() {
+        return switchGroups;
+    }
+
+    public void setSwitchGroups(List<String> switchGroups) {
+        this.switchGroups = switchGroups;
     }
 }

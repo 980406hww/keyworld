@@ -23,4 +23,5 @@ public interface RoleDao extends BaseMapper<Role> {
 
     Long selectUuidByRoleName(@Param("roleName") String roleName);
 
+    List<String> selectRoleNames(@Param("uuids")List<Long> uuids);
 }
