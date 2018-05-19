@@ -27,9 +27,4 @@ public class UserRoleService extends ServiceImpl<UserRoleDao, UserRole> {
 		}
 		return false;
 	}
-
-	public List<UserRole> selectByUserId(Long userId) {
-		return userRoleDao.selectByUserId(userId);
-	}
-
 }

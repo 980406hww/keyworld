@@ -41,15 +41,6 @@ public class ClientStatusRestController extends SpringMVCBaseController {
     @Autowired
     private PerformanceService performanceService;
 
-    @Autowired
-    private IUserInfoService userInfoService;
-
-    @Autowired
-    private RoleService roleService;
-
-    @Autowired
-    private UserRoleService userRoleService;
-
     @RequiresPermissions("/internal/clientstatus/changeTerminalType")
     @RequestMapping(value = "/changeTerminalType", method = RequestMethod.POST)
     public ResponseEntity<?> changeTerminalType(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) throws Exception {
@@ -103,14 +94,11 @@ public class ClientStatusRestController extends SpringMVCBaseController {
         ModelAndView modelAndView = new ModelAndView("/client/list");
         String terminalType = TerminalTypeMapping.getTerminalType(request);
         clientStatusCriteria.setTerminalType(terminalType);
-        String loginName = (String) request.getSession().getAttribute("username");
-        Long userId = userInfoService.getUuidByLoginName(loginName);
-        boolean isDepartmentManager = userRoleService.isDepartmentManager(userId);
-        if(!isDepartmentManager) {
-            Set<String> switchGroups = getCurrentUser().getRoles();
+        boolean isDepartmentManager = false;
+        Set<String> switchGroups = getCurrentUser().getRoles();
+        if(!switchGroups.contains("DepartmentManager")) {
             clientStatusCriteria.setSwitchGroups(switchGroups);
         }
-
         Page<ClientStatus> page = clientStatusService.searchClientStatuses(new Page<ClientStatus>(currentPageNumber, pageSize), clientStatusCriteria, normalSearchFlag);
         String [] operationTypeValues = clientStatusService.getOperationTypeValues(terminalType);
 

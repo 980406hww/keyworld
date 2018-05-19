@@ -22,15 +22,6 @@
         fRoleName = #{roleName}
     </select>
 
-    <select id="selectRoleNames" resultType="java.lang.String">
-        SELECT DISTINCT fRoleName
-        FROM t_role
-        WHERE fUuid IN
-        <foreach collection="uuids" item="uuid" open="(" close=")" separator=",">
-            #{uuid}
-        </foreach>
-    </select>
-
     <select id="selectResourceIdListByRoleId" resultType="java.lang.Long" parameterType="java.lang.Long">
         SELECT
             e.fResourceID AS id
