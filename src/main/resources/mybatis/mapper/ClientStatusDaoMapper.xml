@@ -142,7 +142,13 @@
         <if test="clientStatusCriteria.startUpClient != null"> AND cs.fDownloadProgramType > ''</if>
         <if test="clientStatusCriteria.vpsBackendSystemComputerID != null and clientStatusCriteria.vpsBackendSystemComputerID != ''"> AND (cs.fVPSBackendSystemComputerID = #{clientStatusCriteria.vpsBackendSystemComputerID})</if>
         <if test="clientStatusCriteria.switchGroupName != null and clientStatusCriteria.switchGroupName != ''"> AND cs.fSwitchGroupName = #{clientStatusCriteria.switchGroupName}</if>
+        <if test="clientStatusCriteria.switchGroups != null"> AND cs.fSwitchGroupName IN
+            <foreach collection="clientStatusCriteria.switchGroups" item="switchGroup" open="(" close=")" separator=",">
+                #{switchGroup}
+            </foreach>
+        </if>
         <if test="clientStatusCriteria.orderBy != null and clientStatusCriteria.orderBy != ''"> ORDER BY ${clientStatusCriteria.orderBy}</if>
+
     </select>
 
     <select id="getClientStatusesForSwitchGroup" resultType="com.keymanager.monitoring.entity.ClientStatus">
@@ -172,8 +178,13 @@
         FROM
         t_client_status cs
         WHERE cs.fTerminalType = #{clientStatusCriteria.terminalType}
-        <if test="clientStatusCriteria.groupName != null and clientStatusCriteria.groupName != ''">AND cs.fGroup = #{clientStatusCriteria.groupName}</if>
         AND (cs.fContinuousFailCount &gt; 5 OR cs.fTenMinsLastVisitTime &lt; NOW()) and cs.fValid = 1
+        <if test="clientStatusCriteria.groupName != null and clientStatusCriteria.groupName != ''">AND cs.fGroup = #{clientStatusCriteria.groupName}</if>
+        <if test="clientStatusCriteria.switchGroups != null"> AND cs.fSwitchGroupName IN
+            <foreach collection="clientStatusCriteria.switchGroups" item="switchGroup" open="(" close=")" separator=",">
+                #{switchGroup}
+            </foreach>
+        </if>
     </select>
 
     <select id="getClientStatusByClientID" parameterType="java.lang.String" resultType="com.keymanager.monitoring.entity.ClientStatus">

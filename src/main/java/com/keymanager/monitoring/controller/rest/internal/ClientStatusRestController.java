@@ -5,9 +5,7 @@ import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.ClientStatusCriteria;
 import com.keymanager.monitoring.entity.ClientStatus;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
-import com.keymanager.monitoring.service.ClientStatusService;
-import com.keymanager.monitoring.service.ConfigService;
-import com.keymanager.monitoring.service.PerformanceService;
+import com.keymanager.monitoring.service.*;
 import com.keymanager.util.Constants;
 import com.keymanager.util.FileUtil;
 import com.keymanager.util.TerminalTypeMapping;
@@ -30,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/internal/clientstatus")
@@ -95,6 +94,11 @@ public class ClientStatusRestController extends SpringMVCBaseController {
         ModelAndView modelAndView = new ModelAndView("/client/list");
         String terminalType = TerminalTypeMapping.getTerminalType(request);
         clientStatusCriteria.setTerminalType(terminalType);
+        boolean isDepartmentManager = false;
+        Set<String> switchGroups = getCurrentUser().getRoles();
+        if(!switchGroups.contains("DepartmentManager")) {
+            clientStatusCriteria.setSwitchGroups(switchGroups);
+        }
         Page<ClientStatus> page = clientStatusService.searchClientStatuses(new Page<ClientStatus>(currentPageNumber, pageSize), clientStatusCriteria, normalSearchFlag);
         String [] operationTypeValues = clientStatusService.getOperationTypeValues(terminalType);
 

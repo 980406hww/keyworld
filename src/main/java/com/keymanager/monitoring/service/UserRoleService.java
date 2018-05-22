@@ -27,5 +27,4 @@ public class UserRoleService extends ServiceImpl<UserRoleDao, UserRole> {
 		}
 		return false;
 	}
-
 }
