@@ -1,4 +1,4 @@
-﻿package com.keymanager.monitoring.service;
+package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
@@ -1111,6 +1111,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     public void batchUpdateRequireDalete(List<RequireDeleteKeywordVO> requireDeleteKeywordVOs) {
         customerKeywordDao.batchUpdateRequireDalete(requireDeleteKeywordVOs);
+    }
+
     public void updateCustomerKeywordQueryTime(Long customerKeywordUuid, Date date) {
         customerKeywordDao.updateCustomerKeywordQueryTime(customerKeywordUuid, DateUtils.addMinutes(date, -3));
     }
