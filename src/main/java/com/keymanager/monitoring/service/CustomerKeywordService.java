@@ -97,9 +97,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     public Page<CustomerKeyword> searchCustomerKeywords(Page<CustomerKeyword> page, CustomerKeywordCriteria customerKeywordCriteria){
         page.setRecords(customerKeywordDao.searchCustomerKeywordsPageForCustomer(page, customerKeywordCriteria));
-        CustomerKeyword customerKeyword = customerKeywordDao.selectById(816295);
-        calculatePrice(customerKeyword);
-        customerKeywordDao.updateById(customerKeyword);
         return page;
     }
 
