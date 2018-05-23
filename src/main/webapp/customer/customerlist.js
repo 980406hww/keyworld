@@ -221,8 +221,8 @@ function changeCustomerChargeType(customerUuid) {
 function showCustomerChargeTypeDialog(customerUuid) {
     $("#customerChargeTypeDialog").dialog({
         resizable: false,
-        width: 500,
-        height:350,
+        width: 530,
+        height:370,
         modal: true,
         closed: true,
         buttons: [{
@@ -311,6 +311,7 @@ function saveCustomerChargeType(customerUuid) {
             return;
         }
         customerChargeType.customerChargeTypeIntervals = [];
+        customerChargeType.customerChargeTypePercentages = [];
         $.each(checkedTerminalTypeObjs, function (idx, val) {
             var trRowCount = chargeTypeIntervalDiv.find("#tab" + val.id + ' tr').length;
             if (parseInt(trRowCount) == 1) {
@@ -323,6 +324,22 @@ function saveCustomerChargeType(customerUuid) {
                 }
                 return false;
             }
+            // 添加收费百分比
+            var customerChargeTypePercentage = {};
+            customerChargeTypePercentage.operationType = val.id;
+            var firstChargePercentage = $("#firstChargePercentage"+val.id).val();
+            customerChargeTypePercentage.firstChargePercentage = firstChargePercentage == "" ? 0 : firstChargePercentage;
+            var secondChargePercentage = $("#secondChargePercentage"+val.id).val();
+            customerChargeTypePercentage.secondChargePercentage = secondChargePercentage == "" ? 0 : secondChargePercentage;
+            var thirdChargePercentage = $("#thirdChargePercentage"+val.id).val();
+            customerChargeTypePercentage.thirdChargePercentage = thirdChargePercentage == "" ? 0 : thirdChargePercentage;
+            var fourthChargePercentage = $("#fourthChargePercentage"+val.id).val();
+            customerChargeTypePercentage.fourthChargePercentage = fourthChargePercentage == "" ? 0 : fourthChargePercentage;
+            var fifthChargePercentage = $("#fifthChargePercentage"+val.id).val();
+            customerChargeTypePercentage.fifthChargePercentage = fifthChargePercentage == "" ? 0 : fifthChargePercentage;
+            var firstPageChargePercentage = $("#firstPageChargePercentage"+val.id).val();
+            customerChargeTypePercentage.firstPageChargePercentage = firstPageChargePercentage == "" ? 0 : firstPageChargePercentage;
+            customerChargeType.customerChargeTypePercentages.push(customerChargeTypePercentage);
 
             var previousEndIndex = null;
             $.each($("#tab" + val.id + " tr:not(:first)"), function (trIdx, trVal) {
@@ -440,6 +457,7 @@ function initCustomerChargeTypeDialog(customerChargeType) {
     var switchType = customerChargeType.chargeType;//判断收费方式
     var customerChargeTypeCalculations = customerChargeType.customerChargeTypeCalculations;
     var customerChargeTypeIntervals = customerChargeType.customerChargeTypeIntervals;
+    var customerChargeTypePercentages = customerChargeType.customerChargeTypePercentages;
     if (switchType == "Percentage") {
         initChargeTypePercentage();
         $.each(customerChargeTypeCalculations, function (idx, val) {
@@ -467,8 +485,6 @@ function initCustomerChargeTypeDialog(customerChargeType) {
         });
     } else {
         initChargeTypeInterval();
-        var customerChargeTypeIntervalPC = [];
-        var customerChargeTypeIntervalPhone = [];
         $.each(customerChargeTypeIntervals, function (idx, val) {
             chargeTypeIntervalDiv.find("#" + val.operationType).prop("checked", true);
             //如果有一条PC类型就在PCtable中加一"
@@ -476,6 +492,14 @@ function initCustomerChargeTypeDialog(customerChargeType) {
                 val.endIndex = '';
             }
             $("#tab" + val.operationType).append(intervalRowStr(val));
+        });
+        $.each(customerChargeTypePercentages, function (idx, val) {
+            $("#firstChargePercentage"+val.operationType).spinner('setValue', val.firstChargePercentage);
+            $("#secondChargePercentage"+val.operationType).spinner('setValue', val.secondChargePercentage);
+            $("#thirdChargePercentage"+val.operationType).spinner('setValue', val.thirdChargePercentage);
+            $("#fourthChargePercentage"+val.operationType).spinner('setValue', val.fourthChargePercentage);
+            $("#fifthChargePercentage"+val.operationType).spinner('setValue', val.fifthChargePercentage);
+            $("#firstPageChargePercentage"+val.operationType).spinner('setValue', val.firstPageChargePercentage);
         });
         resetSequence($("#tabPC"));
         resetSequence($("#tabPhone"));

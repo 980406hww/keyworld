@@ -2,9 +2,7 @@ package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.dao.CustomerChargeTypeDao;
-import com.keymanager.monitoring.entity.CustomerChargeType;
-import com.keymanager.monitoring.entity.CustomerChargeTypeCalculation;
-import com.keymanager.monitoring.entity.CustomerChargeTypeInterval;
+import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.enums.ChargeTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,10 +22,14 @@ public class CustomerChargeTypeService extends ServiceImpl<CustomerChargeTypeDao
     @Autowired
     private CustomerChargeTypeIntervalService customerChargeTypeIntervalService;
 
+    @Autowired
+    private CustomerChargeTypePercentageService customerChargeTypePercentageService;
+
     public void saveCustomerChargeType(CustomerChargeType customerChargeType) throws Exception {
         if (null != customerChargeType.getUuid()) {
             customerChargeTypeCalculationService.deleteByCustomerChargeTypeUuid(customerChargeType.getUuid().longValue());
             customerChargeTypeIntervalService.deleteByCustomerChargeTypeUuid(customerChargeType.getUuid().longValue());
+            customerChargeTypePercentageService.deleteByCustomerChargeTypeUuid(customerChargeType.getUuid().longValue());
             addCustomerChargeRules(customerChargeType);
             CustomerChargeType oldCustomerChargeType = customerChargeTypeDao.selectById(customerChargeType.getUuid());
             oldCustomerChargeType.setCustomerUuid(customerChargeType.getCustomerUuid());
@@ -57,6 +59,10 @@ public class CustomerChargeTypeService extends ServiceImpl<CustomerChargeTypeDao
                 customerChargeTypeInterval.setCustomerChargeTypeUuid(customerChargeType.getUuid().intValue());
                 customerChargeTypeIntervalService.insert(customerChargeTypeInterval);
             }
+            for (CustomerChargeTypePercentage customerChargeTypePercentage : customerChargeType.getCustomerChargeTypePercentages()) {
+                customerChargeTypePercentage.setCustomerChargeTypeUuid(customerChargeType.getUuid().intValue());
+                customerChargeTypePercentageService.insert(customerChargeTypePercentage);
+            }
         }
     }
 
@@ -70,6 +76,10 @@ public class CustomerChargeTypeService extends ServiceImpl<CustomerChargeTypeDao
             List<CustomerChargeTypeInterval> customerChargeTypeIntervals = customerChargeTypeIntervalService.searchCustomerChargeTypeIntervals(customerChargeType.getUuid());
             if (customerChargeTypeIntervals.size() > 0) {
                 customerChargeType.setCustomerChargeTypeIntervals(customerChargeTypeIntervals);
+            }
+            List<CustomerChargeTypePercentage> customerChargeTypePercentages = customerChargeTypePercentageService.searchCustomerChargeTypePercentages(customerChargeType.getUuid());
+            if (customerChargeTypePercentages.size() > 0) {
+                customerChargeType.setCustomerChargeTypePercentages(customerChargeTypePercentages);
             }
         }
         return customerChargeType;

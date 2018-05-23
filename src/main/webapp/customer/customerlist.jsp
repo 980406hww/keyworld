@@ -277,9 +277,13 @@
                         <td width="20%">操作</td>
                     </tr>
                 </table>
-                <div style="border:1px;
-                border-color:#00CC00;
-                margin-top:20px">
+                <div style="border:1px;border-color:#00CC00;margin-top:20px">
+                    一:<input id="firstChargePercentagePC" class="easyui-numberspinner" data-options="min:0,max:100,increment:10" style="width: 55px">%
+                    二:<input id="secondChargePercentagePC" class="easyui-numberspinner" data-options="min:0,max:100,increment:10" style="width: 55px">%
+                    三:<input id="thirdChargePercentagePC" class="easyui-numberspinner" data-options="min:0,max:100,increment:10" style="width: 55px">%
+                    四:<input id="fourthChargePercentagePC" class="easyui-numberspinner" data-options="min:0,max:100,increment:10" style="width: 55px">%
+                    五:<input id="fifthChargePercentagePC" class="easyui-numberspinner" data-options="min:0,max:100,increment:10" style="width: 55px">%
+                    十:<input id="firstPageChargePercentagePC" class="easyui-numberspinner" data-options="min:0,max:100,increment:10" style="width: 55px">%<br>
                     <input type="button" id="but" value="增加" onclick="addRow('PC')"/>
                 </div>
             </div>
@@ -296,6 +300,12 @@
                     </tr>
                 </table>
                 <div style="border:1px;border-color:#00CC00;margin-top:20px">
+                    一:<input id="firstChargePercentagePhone" class="easyui-numberspinner" data-options="min:0,max:100,increment:10" style="width: 55px">%
+                    二:<input id="secondChargePercentagePhone" class="easyui-numberspinner" data-options="min:0,max:100,increment:10" style="width: 55px">%
+                    三:<input id="thirdChargePercentagePhone" class="easyui-numberspinner" data-options="min:0,max:100,increment:10" style="width: 55px">%
+                    四:<input id="fourthChargePercentagePhone" class="easyui-numberspinner" data-options="min:0,max:100,increment:10" style="width: 55px">%
+                    五:<input id="fifthChargePercentagePhone" class="easyui-numberspinner" data-options="min:0,max:100,increment:10" style="width: 55px">%
+                    十:<input id="firstPageChargePercentagePhone" class="easyui-numberspinner" data-options="min:0,max:100,increment:10" style="width: 55px">%<br>
                     <input type="button" id="but" value="增加" onclick="addRow('Phone')"/>
                 </div>
             </div>

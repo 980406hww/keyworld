@@ -396,18 +396,17 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                         if (tmpCustomerChargeTypeInterval.getStartIndex() <= customerKeyword
                                 .getCurrentIndexCount() && (tmpCustomerChargeTypeInterval.getEndIndex() == null || customerKeyword
                                 .getCurrentIndexCount() <= tmpCustomerChargeTypeInterval.getEndIndex())) {
-                            customerKeyword.setPositionFirstFee(tmpCustomerChargeTypeInterval.getPrice().doubleValue());
-                            customerKeyword.setPositionSecondFee(tmpCustomerChargeTypeInterval.getPrice().doubleValue());
-                            customerKeyword.setPositionThirdFee(tmpCustomerChargeTypeInterval.getPrice().doubleValue());
-                            if(TerminalTypeEnum.PC.name().equals(customerKeyword.getTerminalType())) {
-                                customerKeyword.setPositionForthFee(tmpCustomerChargeTypeInterval.getPrice().doubleValue() / 2);
-                                customerKeyword.setPositionFifthFee(tmpCustomerChargeTypeInterval.getPrice().doubleValue() / 2);
-                            }else{
-                                customerKeyword.setPositionForthFee(null);
-                                customerKeyword.setPositionFifthFee(null);
+                            for (CustomerChargeTypePercentage customerChargeTypePercentage : customerChargeType.getCustomerChargeTypePercentages()) {
+                                if(customerChargeTypePercentage.getOperationType().equals(customerKeyword.getTerminalType())) {
+                                    customerKeyword.setPositionFirstFee(tmpCustomerChargeTypeInterval.getPrice().doubleValue() * customerChargeTypePercentage.getFirstChargePercentage() * 0.01);
+                                    customerKeyword.setPositionSecondFee(tmpCustomerChargeTypeInterval.getPrice().doubleValue() * customerChargeTypePercentage.getSecondChargePercentage() * 0.01);
+                                    customerKeyword.setPositionThirdFee(tmpCustomerChargeTypeInterval.getPrice().doubleValue() * customerChargeTypePercentage.getThirdChargePercentage() * 0.01);
+                                    customerKeyword.setPositionForthFee(tmpCustomerChargeTypeInterval.getPrice().doubleValue() * customerChargeTypePercentage.getFourthChargePercentage() * 0.01);
+                                    customerKeyword.setPositionFifthFee(tmpCustomerChargeTypeInterval.getPrice().doubleValue() * customerChargeTypePercentage.getFifthChargePercentage() * 0.01);
+                                    customerKeyword.setPositionFirstPageFee(tmpCustomerChargeTypeInterval.getPrice().doubleValue() * customerChargeTypePercentage.getFirstPageChargePercentage() * 0.01);
+                                    break;
+                                }
                             }
-                            customerKeyword.setPositionFirstPageFee(null);
-                            break;
                         }
                     }
                 }
