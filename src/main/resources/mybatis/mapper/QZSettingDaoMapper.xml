@@ -84,9 +84,10 @@
     </select>
 
     <select id="searchQZSettings" parameterType="com.keymanager.monitoring.criteria.QZSettingSearchCriteria"
-            resultType="com.keymanager.monitoring.vo.QZSettingVO">
+            resultType="com.keymanager.monitoring.entity.QZSetting">
         SELECT
         qs.fUuid AS 'uuid',
+        c.fUserID AS 'userID',
         qs.fCustomerUuid AS 'customerUuid',
         c.fContactPerson AS 'contactPerson',
         qs.fDomain AS 'domain',
@@ -107,6 +108,7 @@
         JOIN t_customer c
         ON qs.fCustomerUuid = c.fUuid
         WHERE 1 = 1
+        <if test="qzSettingSearchCriteria.loginName != null and qzSettingSearchCriteria.loginName != ''">AND c.fUserID = #{qzSettingSearchCriteria.loginName}</if>
         <if test="qzSettingSearchCriteria.customerUuid != null and qzSettingSearchCriteria.customerUuid != ''">AND qs.fCustomerUuid = #{qzSettingSearchCriteria.customerUuid}</if>
         <if test="qzSettingSearchCriteria.domain != null and qzSettingSearchCriteria.domain != ''">AND qs.fDomain = #{qzSettingSearchCriteria.domain}</if>
         <if test="qzSettingSearchCriteria.group != null and qzSettingSearchCriteria.group != ''">AND (qs.fPcGroup = #{qzSettingSearchCriteria.group} or qs.fPhoneGroup = #{qzSettingSearchCriteria.group})</if>

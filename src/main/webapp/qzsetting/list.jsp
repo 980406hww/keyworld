@@ -98,6 +98,9 @@
 	<table id="headerTable" style="width: 100%">
 		<tr bgcolor="#eeeeee" height=30>
 			<td align="center" width=25><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
+			<c:if test="${isDepartmentManager == true}">
+				<td align="center" width=60>用户名称</td>
+			</c:if>
 			<td align="center" width=150>客户</td>
 			<td align="center" width=100>域名</td>
 			<td align="center" width=50>入口类型</td>
@@ -119,6 +122,9 @@
 	<c:forEach items="${page.records}" var="qzSetting" varStatus="status">
 		<tr onmouseover="doOver(this);" onmouseout="doOut(this);" height=30 <c:if test="${status.index%2==0}">bgcolor="#eeeeee" </c:if> >
 			<td width=25 align="center"><input type="checkbox" name="uuid" value="${qzSetting.uuid}" onclick="decideSelectAll()"/></td>
+			<c:if test="${isDepartmentManager == true}">
+				<td width=60>${qzSetting.userID}</td>
+			</c:if>
 			<td width=150>${qzSetting.contactPerson}</td>
 			<td width=100>${qzSetting.domain}</td>
 			<td width=50>${qzSetting.type}</td>

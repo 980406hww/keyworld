@@ -202,6 +202,8 @@
     <select id="searchCustomerKeywordsPage" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordCriteria" resultType="com.keymanager.monitoring.entity.CustomerKeyword">
         SELECT
         ck.fUuid	AS	'uuid',
+        c.fUserID AS 'userID',
+        c.fContactPerson AS 'contactPerson',
         ck.fTerminalType	AS	'terminalType',
         ck.fCustomerUuid	AS	'customerUuid',
         ck.fKeyword	AS	'keyword',

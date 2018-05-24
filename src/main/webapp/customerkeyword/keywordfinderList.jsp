@@ -135,6 +135,9 @@
     <table style="font-size:12px; width: 100%;" id="headerTable">
         <tr bgcolor="#eeeeee" height=30>
             <td width="10" style="padding-left: 7px;"><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
+            <c:if test="${isDepartmentManager == true}">
+            <td align="center" width=60>用户名称</td>
+            </c:if>
             <td align="center" width=80>联系人</td>
             <td align="center" width=80>关键字</td>
             <td align="center" width=100>URL</td>
@@ -162,6 +165,11 @@
                 <td width="10" style="padding-left: 7px;">
                     <input type="checkbox" name="uuid" value="${customerKeyword.uuid}" onclick="decideSelectAll()"/>
                 </td>
+                <c:if test="${isDepartmentManager == true}">
+                <td align="center" width=60>
+                    ${customerKeyword.userID}
+                </td>
+                </c:if>
                 <td align="center" width=80>
                     <a href="#" onclick="searchCustomerKeywords('/internal/customerKeyword/searchCustomerKeywords/${customerKeyword.customerUuid}')">${customerKeyword.contactPerson}</a>
                 </td>

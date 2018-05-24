@@ -2,6 +2,7 @@ package com.keymanager.monitoring.controller.rest.internal;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
+import com.keymanager.monitoring.criteria.CustomerCriteria;
 import com.keymanager.monitoring.criteria.QZSettingSearchCriteria;
 import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.QZSetting;
@@ -96,7 +97,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
 	@RequiresPermissions("/internal/qzsetting/searchQZSettings")
 	@RequestMapping(value = "/searchQZSettings", method = RequestMethod.GET)
 	public ModelAndView searchQZSettingsGet(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request) {
-		return constructQZSettingModelAndView(new QZSettingSearchCriteria(), currentPageNumber, pageSize);
+		return constructQZSettingModelAndView(request, new QZSettingSearchCriteria(), currentPageNumber, pageSize);
 	}
 
 	@RequiresPermissions("/internal/qzsetting/searchQZSettings")
@@ -108,20 +109,33 @@ public class QZSettingRestController extends SpringMVCBaseController {
 			currentPageNumber = "1";
 			pageSize = "50";
 		}
-		return constructQZSettingModelAndView(qzSettingSearchCriteria, Integer.parseInt(currentPageNumber), Integer.parseInt(pageSize));
+		return constructQZSettingModelAndView(request, qzSettingSearchCriteria, Integer.parseInt(currentPageNumber), Integer.parseInt(pageSize));
 	}
 
-	private ModelAndView constructQZSettingModelAndView(QZSettingSearchCriteria qzSettingSearchCriteria, int currentPageNumber, int pageSize) {
+	private ModelAndView constructQZSettingModelAndView(HttpServletRequest request, QZSettingSearchCriteria qzSettingSearchCriteria, int currentPageNumber, int pageSize) {
 		ModelAndView modelAndView = new ModelAndView("/qzsetting/list");
 		Map<String, Integer> chargeRemindDataMap = qzSettingService.getChargeRemindData();
+
+		CustomerCriteria customerCriteria = new CustomerCriteria();
+		String entryType = (String) request.getSession().getAttribute("entryType");
+		customerCriteria.setEntryType(entryType);
+		boolean isDepartmentManager = true;
+		Set<String> roles = getCurrentUser().getRoles();
+		if(!roles.contains("DepartmentManager")) {
+			isDepartmentManager = false;
+			String loginName = (String) request.getSession().getAttribute("username");
+			customerCriteria.setLoginName(loginName);
+			qzSettingSearchCriteria.setLoginName(loginName);
+		}
 		Page<QZSetting> page = qzSettingService.searchQZSetting(new Page<QZSetting>(currentPageNumber, pageSize), qzSettingSearchCriteria);
-		List<Customer> customerList = customerService.getActiveCustomerSimpleInfo();
+		List<Customer> customerList = customerService.getActiveCustomerSimpleInfo(customerCriteria);
 
 		modelAndView.addObject("chargeRemindDataMap", chargeRemindDataMap);
 		modelAndView.addObject("customerList", customerList);
 		modelAndView.addObject("qzSettingSearchCriteria", qzSettingSearchCriteria);
 		modelAndView.addObject("statusList", Constants.QZSETTING_STATUS_LIST);
 		modelAndView.addObject("page", page);
+		modelAndView.addObject("isDepartmentManager", isDepartmentManager);
 		return modelAndView;
 	}
 }

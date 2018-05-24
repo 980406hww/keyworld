@@ -106,6 +106,9 @@ public class CustomerKeyword extends BaseEntity {
     private Date optimizeDate;
 
     @TableField(exist = false)
+    private String userID;
+
+    @TableField(exist = false)
     private String contactPerson;
 
     @TableField(value = "fLastOptimizeDateTime")
@@ -465,6 +468,14 @@ public class CustomerKeyword extends BaseEntity {
 
     public void setOptimizeDate(Date optimizeDate) {
         this.optimizeDate = optimizeDate;
+    }
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
     }
 
     public String getContactPerson() {

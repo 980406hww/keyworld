@@ -1,12 +1,21 @@
 package com.keymanager.monitoring.criteria;
 
 public class QZSettingSearchCriteria{
+    private String loginName;
     private String customerUuid;
     private String customerInfo;
     private String domain;
     private String group;
     private String updateStatus;
     private Integer dateRangeType;
+
+    public String getLoginName() {
+        return loginName;
+    }
+
+    public void setLoginName(String loginName) {
+        this.loginName = loginName;
+    }
 
     public String getCustomerUuid() {
         return customerUuid;
