@@ -493,14 +493,17 @@ function initCustomerChargeTypeDialog(customerChargeType) {
             }
             $("#tab" + val.operationType).append(intervalRowStr(val));
         });
-        $.each(customerChargeTypePercentages, function (idx, val) {
-            $("#firstChargePercentage"+val.operationType).spinner('setValue', val.firstChargePercentage);
-            $("#secondChargePercentage"+val.operationType).spinner('setValue', val.secondChargePercentage);
-            $("#thirdChargePercentage"+val.operationType).spinner('setValue', val.thirdChargePercentage);
-            $("#fourthChargePercentage"+val.operationType).spinner('setValue', val.fourthChargePercentage);
-            $("#fifthChargePercentage"+val.operationType).spinner('setValue', val.fifthChargePercentage);
-            $("#firstPageChargePercentage"+val.operationType).spinner('setValue', val.firstPageChargePercentage);
-        });
+        if(customerChargeTypePercentages != null){
+            $.each(customerChargeTypePercentages, function (idx, val) {
+                $("#firstChargePercentage"+val.operationType).spinner('setValue', val.firstChargePercentage);
+                $("#secondChargePercentage"+val.operationType).spinner('setValue', val.secondChargePercentage);
+                $("#thirdChargePercentage"+val.operationType).spinner('setValue', val.thirdChargePercentage);
+                $("#fourthChargePercentage"+val.operationType).spinner('setValue', val.fourthChargePercentage);
+                $("#fifthChargePercentage"+val.operationType).spinner('setValue', val.fifthChargePercentage);
+                $("#firstPageChargePercentage"+val.operationType).spinner('setValue', val.firstPageChargePercentage);
+            });
+        }
+
         resetSequence($("#tabPC"));
         resetSequence($("#tabPhone"));
         intervalInputOnlyNumberAllow();
