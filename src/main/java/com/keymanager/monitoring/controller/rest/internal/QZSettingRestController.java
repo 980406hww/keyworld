@@ -37,6 +37,20 @@ public class QZSettingRestController extends SpringMVCBaseController {
 	@Autowired
 	private CustomerService customerService;
 
+	@RequiresPermissions("/internal/qzsetting/updateStatus")
+	@RequestMapping(value = "/updateQZSettingStatus", method = RequestMethod.POST)
+	public ResponseEntity<?> updateQZSettingStatus(@RequestBody Map<String, Object> requestMap) throws Exception{
+		List<Long> uuids = (List<Long>) requestMap.get("uuids");
+		Integer status = (Integer) requestMap.get("status");
+		try {
+			qzSettingService.updateQZSettingStatus(uuids, status);
+			return new ResponseEntity<Object>(true, HttpStatus.OK);
+		}catch(Exception ex){
+			logger.error(ex.getMessage());
+		}
+		return new ResponseEntity<Object>(false, HttpStatus.OK);
+	}
+
 	@RequiresPermissions("/internal/qzsetting/updateImmediately")
 	@RequestMapping(value = "/updateImmediately", method = RequestMethod.POST)
 	public ResponseEntity<?> updateImmediately(@RequestBody Map<String, Object> requestMap) throws Exception{
@@ -55,8 +69,15 @@ public class QZSettingRestController extends SpringMVCBaseController {
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public ResponseEntity<?> saveQZSetting(@RequestBody QZSetting qzSetting){
 		try {
+			if(qzSetting.getUuid() == null) {
+				Set<String> roles = getCurrentUser().getRoles();
+				if(roles.contains("DepartmentManager")) {
+					qzSetting.setStatus(1);
+				} else {
+					qzSetting.setStatus(2);
+				}
+			}
 			qzSettingService.saveQZSetting(qzSetting);
-
 			return new ResponseEntity<Object>(qzSetting, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.getMessage());

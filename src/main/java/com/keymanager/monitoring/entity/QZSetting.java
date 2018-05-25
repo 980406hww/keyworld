@@ -57,6 +57,9 @@ public class QZSetting extends BaseEntity{
 	@TableField(value = "fCaptureCurrentKeywordStatus", strategy = FieldStrategy.IGNORED)
 	private String captureCurrentKeywordStatus;
 
+	@TableField(value = "fStatus")
+	private int status;
+
 	@TableField(exist=false)
 	private List<QZOperationType> qzOperationTypes;//qzOperationTypes为全站表子类  一对多
 
@@ -186,5 +189,13 @@ public class QZSetting extends BaseEntity{
 
 	public void setCaptureCurrentKeywordStatus(String captureCurrentKeywordStatus) {
 		this.captureCurrentKeywordStatus = captureCurrentKeywordStatus;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
 	}
 }

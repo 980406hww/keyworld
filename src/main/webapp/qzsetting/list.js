@@ -10,6 +10,7 @@ $(function () {
     var searchCustomerForm = $("#chargeForm");
     var pageSize = searchCustomerForm.find('#pageSizeHidden').val();
     var pages = searchCustomerForm.find('#pagesHidden').val();
+    $("#chargeForm").find("#status").val($("#statusHidden").val());
     var currentPageNumber = searchCustomerForm.find('#currentPageNumberHidden').val();
     var showCustomerBottomDiv = $('#showCustomerBottomDiv');
     showCustomerBottomDiv.find('#chooseRecords').val(pageSize);
@@ -159,6 +160,41 @@ function updateImmediately(self) {
     postData.uuids = uuids;
     $.ajax({
         url: '/internal/qzsetting/updateImmediately',
+        data: JSON.stringify(postData),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        timeout: 5000,
+        type: 'POST',
+        success: function (data) {
+            if(data){
+                $().toastmessage('showSuccessToast', "操作成功", true);
+            }else{
+                $().toastmessage('showErrorToast', "操作失败");
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "操作失败");
+        }
+    });
+}
+function updateQZSettingStatus(status) {
+    var uuids = getSelectedIDs();
+    if(uuids === ''){
+        alert('请选择要操作的整站！');
+        return ;
+    }
+    if(status == 1) {
+        if (confirm("确认要激活选中的整站吗？") == false) return;
+    } else {
+        if (confirm("确认要暂停选中的整站吗？") == false) return;
+    }
+    var postData = {};
+    postData.uuids = uuids.split(",");
+    postData.status = status;
+    $.ajax({
+        url: '/internal/qzsetting/updateQZSettingStatus',
         data: JSON.stringify(postData),
         headers: {
             'Accept': 'application/json',
