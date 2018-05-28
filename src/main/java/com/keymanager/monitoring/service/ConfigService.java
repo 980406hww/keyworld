@@ -48,9 +48,11 @@ public class ConfigService extends ServiceImpl<ClientStatusDao, ClientStatus>{
 
 	public void updateCustomerNegativeKeywords(File targetFile, String searchEngine) {
 		List<String> contents = FileUtil.readTxtFile(targetFile, "UTF-8");
-		String result = contents.toString();
-		result = StringUtils.deleteWhitespace(result);
-		result = result.substring(1, result.length() - 1);
+		String result = "";
+		for (String content : contents) {
+			result += "," + content;
+		}
+		result = result.substring(1, result.length());
 		Config config = new Config();
 		config.setConfigType(Constants.CONFIG_TYPE_NEGATIVE_KEYWORD);
 		config.setKey(searchEngine);
