@@ -168,6 +168,15 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
     }
 
+    public int getMaxSequence(String terminalType, String entryType, Long customerUuid) {
+        int maxSequence = 0;
+        try {
+            maxSequence = customerKeywordDao.getMaxSequence(terminalType, entryType, customerUuid);
+        } catch (Exception ex) {
+        }
+        return maxSequence;
+    }
+
     public void addCustomerKeywordsFromSimpleUI(List<CustomerKeyword> customerKeywords, String terminalType, String entryType, String userName) {
         if (CollectionUtils.isNotEmpty(customerKeywords)) {
             long customerUuid = customerKeywords.get(0).getCustomerUuid();
