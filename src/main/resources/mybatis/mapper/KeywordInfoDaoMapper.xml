@@ -45,7 +45,7 @@
         <if test="keywordInfoCriteria.OperationType != null and keywordInfoCriteria.OperationType != ''">AND kif.fOperationType = #{keywordInfoCriteria.operationType}</if>
         <if test="keywordInfoCriteria.keywordInfo != null and keywordInfoCriteria.keywordInfo != ''">AND kif.fKeywordInfo LIKE '%${keywordInfoCriteria.keywordInfo}%'</if>
         <if test="keywordInfoCriteria.createTime != null and keywordInfoCriteria.createTime !='' ">AND DATE_FORMAT(kif.fCreateTime,'%Y-%m-%d') = #{keywordInfoCriteria.createTime}</if>
-        ORDER BY createTime asc
+        ORDER BY createTime DESC
     </select>
 
 </mapper>
