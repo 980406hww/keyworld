@@ -180,12 +180,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     public void addCustomerKeywordsFromSimpleUI(List<CustomerKeyword> customerKeywords, String terminalType, String entryType, String userName) {
         if (CollectionUtils.isNotEmpty(customerKeywords)) {
             long customerUuid = customerKeywords.get(0).getCustomerUuid();
-            int maxSequence = 0;
-            try {
-                maxSequence = customerKeywordDao.getMaxSequence(terminalType, entryType, customerUuid);
-            } catch (Exception ex) {
-//                ex.printStackTrace();
-            }
+            int maxSequence = getMaxSequence(terminalType, entryType, customerUuid);
             for (CustomerKeyword customerKeyword : customerKeywords) {
                 supplementInfoFromSimpleUI(customerKeyword, terminalType, entryType, ++maxSequence);
                 supplementIndexAndPriceFromExisting(customerKeyword);
