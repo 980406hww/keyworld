@@ -1,10 +1,10 @@
 package com.keymanager.monitoring.service;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.criteria.NegativeRankCriteria;
 import com.keymanager.monitoring.dao.NegativeRankDao;
 import com.keymanager.monitoring.entity.NegativeRank;
-import com.keymanager.util.Utils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
@@ -38,5 +38,10 @@ public class NegativeRankService extends ServiceImpl<NegativeRankDao, NegativeRa
     public List<NegativeRank> findNegativeRanks(NegativeRankCriteria negativeRankCriteria) {
         negativeRankCriteria.setSearchDate(DateUtils.setHours(negativeRankCriteria.getSearchDate(), 0));
         return negativeRankDao.findNegativeRanks(negativeRankCriteria.getSearchEngine(), negativeRankCriteria.getSearchDate());
+    }
+
+    public Page<NegativeRank> searchNegativeRanks(Page page,NegativeRankCriteria negativeRankCriteria){
+        page.setRecords(negativeRankDao.searchNegativeRanks(page,negativeRankCriteria));
+        return page;
     }
 }
