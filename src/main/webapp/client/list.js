@@ -20,6 +20,7 @@ function pageLoad() {
     var showCustomerBottomDiv = $('#showCustomerBottomDiv');
     showCustomerBottomDiv.find("#chooseRecords").val(pageSize);
     searchCustomerForm.find("#startUpStatus").val($("#startUpStatusHidden").val());
+    searchCustomerForm.find("#runningProgramType").val($("#runningProgramTypeHidden").val());
 
     if (parseInt(currentPageNumber) > 1 && parseInt(currentPageNumber) < parseInt(pages)) {
         showCustomerBottomDiv.find("#firstButton").removeAttr("disabled");

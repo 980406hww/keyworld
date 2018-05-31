@@ -75,12 +75,12 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 	}
 
 	public void logClientStatusTime(String terminalType, String clientID, String status, String freeSpace, String version, String
-			city, int updateCount){
+			city, int updateCount, String runningProgramType){
 		ClientStatus clientStatus = clientStatusDao.selectById(clientID);
 		if(clientStatus == null){
 			addSummaryClientStatus(terminalType, clientID, freeSpace, version, city);
 		}else{
-			clientStatusDao.updateOptimizationResult(clientID, status, version, freeSpace, city, updateCount);
+			clientStatusDao.updateOptimizationResult(clientID, status, version, freeSpace, city, updateCount, runningProgramType);
 		}
 	}
 
