@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
-
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -25,25 +24,15 @@ public class keywordInfoController {
     @Autowired
     private KeywordInfoService keywordInfoService;
 
-    //初始化
-    @RequiresPermissions("/internal/keywordInfo/keywordInfos")
-    @RequestMapping(value = "/keywordInfos", method = RequestMethod.GET)
-    public ModelAndView searchWebsites(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request) {
-
-        KeywordInfoCriteria KeywordInfoCriteria=new KeywordInfoCriteria();
-        String terminalType = TerminalTypeMapping.getTerminalType(request);
-        if(terminalType!=null){
-            KeywordInfoCriteria.setPlatform(terminalType);
-            return constructWebsiteModelAndView(KeywordInfoCriteria, currentPageNumber, pageSize);
-        }else {
-            return constructWebsiteModelAndView(KeywordInfoCriteria, currentPageNumber, pageSize);
-        }
+    @RequiresPermissions("/internal/keywordInfo/searchKeywordInfos")
+    @RequestMapping(value = "/searchKeywordInfos", method = RequestMethod.GET)
+    public ModelAndView searchKeywordInfos(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request) {
+        return constructKeywordInfoModelAndView(request,new KeywordInfoCriteria(), currentPageNumber, pageSize);
     }
 
-
-    @RequiresPermissions("/internal/keywordInfo/keywordInfos")
-    @RequestMapping(value = "/keywordInfos", method = RequestMethod.POST)
-    public ModelAndView searchWebsitesPost(HttpServletRequest request, KeywordInfoCriteria KeywordInfoCriteria) {
+    @RequiresPermissions("/internal/keywordInfo/searchKeywordInfos")
+    @RequestMapping(value = "/searchKeywordInfos", method = RequestMethod.POST)
+    public ModelAndView searchKeywordInfoPost(HttpServletRequest request, KeywordInfoCriteria keywordInfoCriteria) {
 
         String currentPageNumber = request.getParameter("currentPageNumber");
         String pageSize = request.getParameter("pageSize");
@@ -51,20 +40,14 @@ public class keywordInfoController {
             currentPageNumber = "1";
             pageSize = "50";
         }
-        String terminalType = TerminalTypeMapping.getTerminalType(request);
-      if(terminalType!=null){
-          KeywordInfoCriteria.setPlatform(terminalType);
-          return constructWebsiteModelAndView(KeywordInfoCriteria, Integer.parseInt(currentPageNumber), Integer.parseInt(pageSize));
-        }else {
-            return constructWebsiteModelAndView(KeywordInfoCriteria, Integer.parseInt(currentPageNumber), Integer.parseInt(pageSize));
-        }
-
+        return constructKeywordInfoModelAndView(request,keywordInfoCriteria, Integer.parseInt(currentPageNumber), Integer.parseInt(pageSize));
     }
 
-    //分页视图
-    private ModelAndView constructWebsiteModelAndView(KeywordInfoCriteria KeywordInfoCriteria, int currentPageNumber, int pageSize) {
+    private ModelAndView constructKeywordInfoModelAndView(HttpServletRequest request,KeywordInfoCriteria KeywordInfoCriteria, int currentPageNumber, int pageSize) {
+        String terminalType = TerminalTypeMapping.getTerminalType(request);
+        KeywordInfoCriteria.setTerminalType(terminalType);
         ModelAndView modelAndView = new ModelAndView("keywordInfo/keywordInfo");
-        Page<KeywordInfo> page = keywordInfoService.searchKeywordInfo(new Page<KeywordInfo>(currentPageNumber,pageSize), KeywordInfoCriteria);
+        Page<KeywordInfo> page = keywordInfoService.searchKeywordInfos(new Page<KeywordInfo>(currentPageNumber,pageSize), KeywordInfoCriteria);
         modelAndView.addObject("KeywordInfoCriteria", KeywordInfoCriteria);
         modelAndView.addObject("page", page);
         return modelAndView;

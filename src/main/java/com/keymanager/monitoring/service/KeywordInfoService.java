@@ -40,7 +40,6 @@ public class KeywordInfoService extends ServiceImpl<KeywordInfoDao, KeywordInfo>
 
 	@Autowired
 	private KeywordInfoSynchronizeService keywordInfoSynchronizeService;
-	//同步
 	public void synchronizeKeyword() throws Exception {
 		boolean hasRequireDeleteKeyword = false;
 		String username = configService.getConfig(Constants.CONFIG_TYPE_KEYWORD_INFO_SYNCHRONIZE, Constants.CONFIG_KEY_USERNAME).getValue();
@@ -95,24 +94,23 @@ public class KeywordInfoService extends ServiceImpl<KeywordInfoDao, KeywordInfo>
 			}
 		}
 
-			// 同步数据库
-			if(keywordInfoVO.size() > 0) {
-				keywordInfoDao.batchInsertKeyword(keywordInfoVO);
-				keywordInfoSynchronizeService.deleteKeywordList(webPath, map);
-			}
+		// 同步数据库
+		if(keywordInfoVO.size() > 0) {
+			keywordInfoDao.batchInsertKeyword(keywordInfoVO);
+			keywordInfoSynchronizeService.deleteKeywordList(webPath, map);
+		}
 
-			if(hasRequireDeleteKeyword) {
-				Config config = configService.getConfig(Constants.CONFIG_TYPE_KEYWORD_INFO_SYNCHRONIZE, Constants.CONFIG_KEY_MOBILE);
-				if(StringUtils.isNotBlank(config.getValue())) {
-					smsService.sendSms(config.getValue(), "系统标记了需要删除的关键词，请注意查看！");
-				}
+		if(hasRequireDeleteKeyword) {
+			Config config = configService.getConfig(Constants.CONFIG_TYPE_KEYWORD_INFO_SYNCHRONIZE, Constants.CONFIG_KEY_MOBILE);
+			if(StringUtils.isNotBlank(config.getValue())) {
+				smsService.sendSms(config.getValue(), "系统标记了需要删除的关键词，请注意查看！");
 			}
+		}
 	}
 
 
-	//查询
-	public Page<KeywordInfo> searchKeywordInfo(Page<KeywordInfo> page, KeywordInfoCriteria KeywordInfoCriteria) {
-		page.setRecords(keywordInfoDao.searchKeywordInfo(page, KeywordInfoCriteria));
+	public Page<KeywordInfo> searchKeywordInfos(Page<KeywordInfo> page, KeywordInfoCriteria KeywordInfoCriteria) {
+		page.setRecords(keywordInfoDao.searchKeywordInfos(page, KeywordInfoCriteria));
 		return page;
 	}
 

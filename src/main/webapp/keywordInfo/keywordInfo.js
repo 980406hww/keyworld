@@ -1,7 +1,14 @@
     $(function () {
-        $('#websiteDialog').dialog("close");
+        $('#keywordInfos').dialog("close");
         $("#centerDiv").css("margin-top", $("#topDiv").height());
         pageLoad();
+    });
+
+    $(document).ready(function(){
+        $("#showKeywordInfoTable").find("a").click(function(){
+            var keywordinfo=$(this).text();
+            openUrls(keywordinfo);
+        });
     });
 
     function changePaging(currentPage, pageSize) {
@@ -14,39 +21,21 @@
     function resetPageNumber() {
         var searchwordInfoForm = $("#searchwordInfoForm");
         var userName = searchwordInfoForm.find("#userName").val();
-        var monitoring = searchwordInfoForm.find("#monitoring").val();
-        var operationType = searchwordInfoForm.find("#operationType").val();
+        var searchEngine = searchwordInfoForm.find("#searchEngine").val();
         var keywordInfo = searchwordInfoForm.find("#keywordInfo").val();
-        var createTime = searchwordInfoForm.find("#createTime").val();
-
         if (userName != "") {
             searchwordInfoForm.find("#userName").val($.trim(userName));
         }
-        if (monitoring != "") {
-            searchwordInfoForm.find("#monitoring").val($.trim(monitoring));
-        }
-        if (operationType != "") {
-            searchwordInfoForm.find("#operationType").val($.trim(operationType));
+        if (searchEngine != "") {
+            searchwordInfoForm.find("#searchEngine").val($.trim(searchEngine));
         }
         if (keywordInfo != "") {
             searchwordInfoForm.find("#keywordInfo").val($.trim(keywordInfo));
         }
-        if (createTime != "") {
-            searchwordInfoForm.find("#createTime").val($.trim(createTime));
-        }
         searchwordInfoForm.find("#currentPageNumberHidden").val(1);
     }
 
-    function resetDate(){
-        $("#userName").val(null);
-        $("#monitoring").val(null);
-        $("#operationType").val(null);
-        $("#keywordInfo").val(null);
-        window.location.href ='/internal/keywordInfo/keywordInfos';
-    };
-
     function pageLoad() {
-        $('#keywordInfos').dialog("close");
         var searchwordInfoForm = $("#searchwordInfoForm");
         var pageSize = searchwordInfoForm.find('#pageSizeHidden').val();
         var pages = searchwordInfoForm.find('#pagesHidden').val();
@@ -71,8 +60,8 @@
             showCustomerBottomDiv.find("#nextButton").attr("disabled", "disabled");
             showCustomerBottomDiv.find("#lastButton").attr("disabled", "disabled");
         }
-        var passflag=document.getElementById("autoflag");
-        $("#operationType").val(passflag.defaultValue);
+        $("#searchEngine").val($('#searchEngineHidden').val());
+        $("#operationType").val($('#autoflag').val());
     }
 
     function selectAll(self) {
@@ -103,35 +92,24 @@
         }
     }
 
-    function openUrls(keywordInfo,spliterStr) {
-        $("#keywordInfos").attr("style","display:block;");
-        var urls = keywordInfo.split(spliterStr);
-        var key=document.getElementById('typeKeyword');
-        key.value=null;
-        for (var i = 0; i<1; i++) {
-            key.value+=urls[i]+('\r\n');
-        }
-        var inp=document.getElementById('remark');
-            inp.value=null;
-        for (var i = 1; i<urls.length; i++) {
-            inp.value+=urls[i]+('\r\n');
-        }
-
+    function openUrls(keywordInfo) {
+        $("#keywordInfos").show();
+        $('#keywordInfoUrl').val(keywordInfo);
         $("#keywordInfos").dialog({
-                    resizable: false,
-                    width: 500,
-                    height: 300,
-                    modal: true,
-                    title: '关键字网站',
-                    closed: true,
-                    buttons: [
-                        {
-                            text: '确定',
-                            position: '25%',
-                            handler: function () {
-                                $('#keywordInfos').dialog("close");
-                            }
-                        }]
+            resizable: false,
+            width: 500,
+            height: 300,
+            modal: true,
+            title: '关键字网站',
+            closed: true,
+            buttons: [
+                {
+                    text: '确定',
+                    position: '25%',
+                    handler: function () {
+                        $('#keywordInfos').dialog("close");
+                    }
+                }]
         });
         $("#keywordInfos").dialog("open");
         $('#keywordInfos').window("resize", {top: $(document).scrollTop() + 150});

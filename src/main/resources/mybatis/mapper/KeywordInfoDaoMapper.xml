@@ -33,16 +33,16 @@
     </insert>
 
 
-    <select id="searchKeywordInfo" parameterType="com.keymanager.monitoring.criteria.KeywordInfoCriteria" resultType="com.keymanager.monitoring.entity.KeywordInfo">
+    <select id="searchKeywordInfos" parameterType="com.keymanager.monitoring.criteria.KeywordInfoCriteria" resultType="com.keymanager.monitoring.entity.KeywordInfo">
         SELECT
         <include refid="keywordinfoSQL" />
         FROM
         t_keyword_info kif
         WHERE 1 = 1
-        <if test="keywordInfoCriteria.UserName != null and keywordInfoCriteria.UserName != ''">AND kif.fUserName LIKE '%${keywordInfoCriteria.userName}%'</if>
-        <if test="keywordInfoCriteria.Monitoring != null and keywordInfoCriteria.Monitoring != ''">AND kif.fSearchEngine LIKE '${keywordInfoCriteria.monitoring}%'</if>
-        <if test="keywordInfoCriteria.platform != null and keywordInfoCriteria.platform != ''">AND kif.fSearchEngine LIKE '%${keywordInfoCriteria.platform}'</if>
-        <if test="keywordInfoCriteria.OperationType != null and keywordInfoCriteria.OperationType != ''">AND kif.fOperationType = #{keywordInfoCriteria.operationType}</if>
+        <if test="keywordInfoCriteria.userName != null and keywordInfoCriteria.userName != ''">AND kif.fUserName LIKE '%${keywordInfoCriteria.userName}%'</if>
+        <if test="keywordInfoCriteria.searchEngine != null and keywordInfoCriteria.searchEngine != ''">AND kif.fSearchEngine LIKE '${keywordInfoCriteria.searchEngine}%'</if>
+        <if test="keywordInfoCriteria.terminalType != null and keywordInfoCriteria.terminalType != ''">AND kif.fSearchEngine LIKE '%${keywordInfoCriteria.terminalType}'</if>
+        <if test="keywordInfoCriteria.operationType != null and keywordInfoCriteria.operationType != ''">AND kif.fOperationType = #{keywordInfoCriteria.operationType}</if>
         <if test="keywordInfoCriteria.keywordInfo != null and keywordInfoCriteria.keywordInfo != ''">AND kif.fKeywordInfo LIKE '%${keywordInfoCriteria.keywordInfo}%'</if>
         <if test="keywordInfoCriteria.createTime != null and keywordInfoCriteria.createTime !='' ">AND DATE_FORMAT(kif.fCreateTime,'%Y-%m-%d') = #{keywordInfoCriteria.createTime}</if>
         ORDER BY createTime DESC

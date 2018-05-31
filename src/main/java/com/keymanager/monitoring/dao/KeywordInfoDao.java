@@ -12,8 +12,8 @@ import java.util.List;
 public interface KeywordInfoDao extends BaseMapper<KeywordInfo> {
 
     void batchInsertKeyword(@Param("keywordInfoVO") KeywordInfoVO keywordInfoVO);
-    //初始化和多条件查询
-    List<KeywordInfo> searchKeywordInfo(Page<KeywordInfo> page, @Param("keywordInfoCriteria") KeywordInfoCriteria keywordInfoCriteria);
+
+    List<KeywordInfo> searchKeywordInfos(Page<KeywordInfo> page, @Param("keywordInfoCriteria") KeywordInfoCriteria keywordInfoCriteria);
 
 
 }
