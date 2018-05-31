@@ -1,17 +1,15 @@
 package com.keymanager.monitoring.service;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.enums.CollectMethod;
 import com.keymanager.monitoring.common.sms.SmsService;
+import com.keymanager.monitoring.criteria.KeywordInfoCriteria;
 import com.keymanager.monitoring.dao.KeywordInfoDao;
-import com.keymanager.monitoring.entity.Config;
-import com.keymanager.monitoring.entity.Customer;
-import com.keymanager.monitoring.entity.CustomerKeyword;
-import com.keymanager.monitoring.entity.KeywordInfo;
+import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.vo.KeywordInfoVO;
 import com.keymanager.monitoring.vo.RequireDeleteKeywordVO;
 import com.keymanager.util.Constants;
-import com.keymanager.util.PropertiesUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +40,6 @@ public class KeywordInfoService extends ServiceImpl<KeywordInfoDao, KeywordInfo>
 
 	@Autowired
 	private KeywordInfoSynchronizeService keywordInfoSynchronizeService;
-
 	public void synchronizeKeyword() throws Exception {
 		boolean hasRequireDeleteKeyword = false;
 		String username = configService.getConfig(Constants.CONFIG_TYPE_KEYWORD_INFO_SYNCHRONIZE, Constants.CONFIG_KEY_USERNAME).getValue();
@@ -98,6 +95,7 @@ public class KeywordInfoService extends ServiceImpl<KeywordInfoDao, KeywordInfo>
 				}
 			}
 		}
+
 		// 同步数据库
 		if(keywordInfoVO.size() > 0) {
 			keywordInfoDao.batchInsertKeyword(keywordInfoVO);
@@ -111,5 +109,13 @@ public class KeywordInfoService extends ServiceImpl<KeywordInfoDao, KeywordInfo>
 			}
 		}
 	}
+
+
+	public Page<KeywordInfo> searchKeywordInfos(Page<KeywordInfo> page, KeywordInfoCriteria KeywordInfoCriteria) {
+		page.setRecords(keywordInfoDao.searchKeywordInfos(page, KeywordInfoCriteria));
+		return page;
+	}
+
+
 
 }
