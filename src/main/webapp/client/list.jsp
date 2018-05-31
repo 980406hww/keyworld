@@ -204,8 +204,8 @@
 			<td align="center" width=40>重启排序时间<br>发通知时间</td>
 			<td align="center" width=30>成功次数<br>操作次数</td>
 			<td align="center" width=50>宽带账号<br>宽带密码</td>
-			<td align="center" width=50>运行程序类型</td>
-			<td align="center" width=50>开机状态<br>下载程序类型</td>
+			<td align="center" width=30>运行程序<br>类型</td>
+			<td align="center" width=40>开机状态<br>下载程序类型</td>
 			<td align="center" width=20>状态</td>
 			<td align="center" width=40>失败原因</td>
 			<td align="center" width=40>服务器ID</td>
@@ -310,8 +310,8 @@
 					color="${keywordColor}">${clientStatus.optimizationSucceedCount}<br>${clientStatus.optimizationTotalCount}</font>
 			</td>
 			<td width=50><font color="${keywordColor}">${clientStatus.broadbandAccount}<br>${clientStatus.broadbandPassword}</font></td>
-			<td width=50><font color="${keywordColor}">${clientStatus.runningProgramType}</font></td>
-			<td width=50><font color="${keywordColor}">${clientStatus.startUpStatus}<br>${clientStatus.downloadProgramType}</font></td>
+			<td width=30><font color="${keywordColor}">${clientStatus.runningProgramType}</font></td>
+			<td width=40><font color="${keywordColor}">${clientStatus.startUpStatus}<br>${clientStatus.downloadProgramType}</font></td>
 			<td width=20><font color="${keywordColor}">${clientStatus.valid ? "监控中" : "暂停监控"}</font></td>
 			<td width=40>
 				<shiro:hasPermission name="/internal/clientstatus/updateUpgradeFailedReason">
