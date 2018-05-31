@@ -21,7 +21,7 @@ public interface ClientStatusDao extends BaseMapper<ClientStatus> {
     void addClientStatusByVPSFile(@Param("clientStatus") ClientStatus clientStatus);
 
     void updateOptimizationResult(@Param("clientID") String clientID, @Param("status")String status, @Param("version")String version,
-                                  @Param("freeSpace")String freeSpace, @Param("city")String city, @Param("count")int count);
+                                  @Param("freeSpace")String freeSpace, @Param("city")String city, @Param("count")int count, @Param("runningProgramType")String runningProgramType);
 
     List<ClientStatus> searchClientStatusesOrByHost(@Param("terminalType") String terminalType, @Param("comfirm") String comfirm);
 

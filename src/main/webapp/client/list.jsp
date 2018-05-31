@@ -67,6 +67,7 @@
 								<input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
 								<input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
 								<input type="hidden" name="startUpStatusHidden" id="startUpStatusHidden" value="${clientStatusCriteria.startUpStatus}"/>
+								<input type="hidden" name="runningProgramTypeHidden" id="runningProgramTypeHidden" value="${clientStatusCriteria.runningProgramType}"/>
 								客户端ID:<input type="text" name="clientID" id="clientID" value="${clientStatusCriteria.clientID}" style="width: 90px;">
 								&nbsp;&nbsp;
 								优化组:<input type="text" name="groupName" id="groupName" value="${clientStatusCriteria.groupName}" style="width: 120px;">
@@ -91,16 +92,14 @@
 							&nbsp;&nbsp;
 							流转分组:<input type="text" name="switchGroupName" id="switchGroupName" value="${clientStatusCriteria.switchGroupName}" style="width: 100px;">
 							&nbsp;&nbsp;
-							开机状态:
-							<select name="startUpStatus" id="startUpStatus">
-								<option value=''>All</option>
-								<option value='New'>New</option>
-								<option value='Processing'>Processing</option>
-								<option value='Setting'>Setting</option>
-								<option value='Downloading'>Downloading</option>
-								<option value='Completed'>Completed</option>
-								<option value='Error'>Error</option>
-							</select>&nbsp;
+							排序:<select name="orderBy" id="orderBy">
+							<c:forEach items="${orderByMap}" var="entry">
+								<c:choose>
+									<c:when test="${entry.key eq clientStatusCriteria.orderBy}"><option selected value="${entry.key}">${entry.value}</option></c:when>
+									<c:otherwise><option value="${entry.key}">${entry.value}</option></c:otherwise>
+								</c:choose>
+							</c:forEach>
+							</select>
 							</td>
 						</tr>
 						<tr>
@@ -133,13 +132,21 @@
 							</c:forEach>
 							</select>
 							&nbsp;&nbsp;
-							排序:<select name="orderBy" id="orderBy">
-							<c:forEach items="${orderByMap}" var="entry">
-								<c:choose>
-									<c:when test="${entry.key eq clientStatusCriteria.orderBy}"><option selected value="${entry.key}">${entry.value}</option></c:when>
-									<c:otherwise><option value="${entry.key}">${entry.value}</option></c:otherwise>
-								</c:choose>
-							</c:forEach>
+							开机状态:
+							<select name="startUpStatus" id="startUpStatus">
+								<option value=''>All</option>
+								<option value='New'>New</option>
+								<option value='Processing'>Processing</option>
+								<option value='Setting'>Setting</option>
+								<option value='Downloading'>Downloading</option>
+								<option value='Completed'>Completed</option>
+								<option value='Error'>Error</option>
+							</select>&nbsp;&nbsp;
+							运行程序类型:
+							<select name="runningProgramType" id="runningProgramType">
+								<option value=''>All</option>
+								<option value='New'>New</option>
+								<option value='Old'>Old</option>
 							</select>
 
 							<shiro:hasPermission name="/internal/clientstatus/searchClientStatuses">
@@ -191,13 +198,14 @@
 			<td align="center" width=20>续费<br>日期</td>
 			<td align="center" width=30>现版本<br>目标版本</td>
 			<td align="center" width=40>重启数/重启状态<br>页码/失败次数</td>
-			<td align="center" width=100>所在城市<br>终端状态</td>
+			<td align="center" width=60>所在城市<br>终端状态</td>
 			<td align="center" width=30>剩余空间</td>
 			<td align="center" width=40>最新工作时间<br>重启时间</td>
 			<td align="center" width=40>重启排序时间<br>发通知时间</td>
 			<td align="center" width=30>成功次数<br>操作次数</td>
 			<td align="center" width=50>宽带账号<br>宽带密码</td>
-			<td align="center" width=40>开机状态<br>程序类型</td>
+			<td align="center" width=30>运行程序<br>类型</td>
+			<td align="center" width=40>开机状态<br>下载程序类型</td>
 			<td align="center" width=20>状态</td>
 			<td align="center" width=40>失败原因</td>
 			<td align="center" width=40>服务器ID</td>
@@ -288,7 +296,7 @@
 			<td width=40><font
 					color="${keywordColor}">${clientStatus.restartCount}/${clientStatus.restartStatus == null ? "" : clientStatus.restartStatus}<br>${clientStatus.pageNo}/${clientStatus.continuousFailCount}</font>
 			</td>
-			<td width=100 style="word-break: break-all;"><font
+			<td width=60 style="word-break: break-all;"><font
 					color="${keywordColor}">${clientStatus.city == null ? "" : clientStatus.city}<br>${clientStatus.status == null ? "" : clientStatus.status}</font>
 			</td>
 			<td width=30><font color="${keywordColor}">${clientStatus.freeSpace}</font></td>
@@ -302,6 +310,7 @@
 					color="${keywordColor}">${clientStatus.optimizationSucceedCount}<br>${clientStatus.optimizationTotalCount}</font>
 			</td>
 			<td width=50><font color="${keywordColor}">${clientStatus.broadbandAccount}<br>${clientStatus.broadbandPassword}</font></td>
+			<td width=30><font color="${keywordColor}">${clientStatus.runningProgramType}</font></td>
 			<td width=40><font color="${keywordColor}">${clientStatus.startUpStatus}<br>${clientStatus.downloadProgramType}</font></td>
 			<td width=20><font color="${keywordColor}">${clientStatus.valid ? "监控中" : "暂停监控"}</font></td>
 			<td width=40>

@@ -749,7 +749,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
     }
 
-    public void updateOptimizationResult(String terminalType, Long customerKeywordUuid, int count, String ip, String city, String clientID, String status, String freeSpace, String version){
+    public void updateOptimizationResult(String terminalType, Long customerKeywordUuid, int count, String ip, String city, String clientID, String status, String freeSpace, String version, String runningProgramType){
         if(configService.optimizationDateChanged()) {
             customerKeywordInvalidCountLogService.addCustomerKeywordInvalidCountLog();
             configService.updateOptimizationDateAsToday();
@@ -758,7 +758,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
 
         customerKeywordDao.updateOptimizationResult(customerKeywordUuid, count);
-        clientStatusService.logClientStatusTime(terminalType, clientID, status, freeSpace, version, city, count);
+        clientStatusService.logClientStatusTime(terminalType, clientID, status, freeSpace, version, city, count, runningProgramType);
         customerKeywordIPService.addCustomerKeywordIP(customerKeywordUuid, city, ip);
     }
 
