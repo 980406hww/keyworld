@@ -11,12 +11,12 @@
     <div id="topDiv">
         <%@include file="/menu.jsp" %>
          <div style="margin-top: 35px">
-            <form method="post" id="searchNegativeRankFrom" action="/internal/negativeRank/searchNegativeRank" style="margin-bottom:0px">
+            <form method="post" id="searchNegativeRankFrom" action="/internal/negativeRank/searchNegativeRanks" style="margin-bottom:0px">
                 <input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}"/>
                 <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
                 <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
                 <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
-                &nbsp;&nbsp;账户名称:<input type="text" name="keyword" id="keyword" value="${negativeRankCriteria.keyword}">&nbsp;&nbsp;
+                &nbsp;&nbsp;关键字:<input type="text" list="keyword_list" name="keyword" id="keyword" value="${negativeRankCriteria.keyword}" style="width:200px;">
                 <input type="hidden" name="searchEngineHidden" id="searchEngineHidden" value="${negativeRankCriteria.searchEngine}"/>&nbsp;&nbsp;
                 搜索引擎:
                   <select type="text" name="searchEngine" class="select" id="searchEngine" >
@@ -31,7 +31,7 @@
                   </select>
                 &nbsp;&nbsp;
                 创建日期:<input name="createTime" id="createTime" class="Wdate" type="text" style="width:90px;" onClick="WdatePicker()" value="${negativeRankCriteria.createTime}"/>
-                <shiro:hasPermission name="/internal/negativeRank/searchNegativeRank">
+                <shiro:hasPermission name="/internal/negativeRank/searchNegativeRanks">
                     <input type="submit" value="查询" onclick="submitPageNumber()"/>&nbsp;&nbsp;
                 </shiro:hasPermission>
             </form>
@@ -62,11 +62,11 @@
                     <td align="center" width=59>${NegativeRank.keyword}</td>
                     <td align="center" width=49>${NegativeRank.searchEngine}</td>
                     <td align="center" width=40>${NegativeRank.negativeCount}</td>
-                    <td align="center" width=40>${NegativeRank.firstPageRanks}</td>
-                    <td align="center" width=40>${NegativeRank.secondPageRanks}</td>
-                    <td align="center" width=39>${NegativeRank.thirdPageRanks}</td>
-                    <td align="center" width=40>${NegativeRank.fifthPageRanks}</td>
-                    <td align="center" width=40>${NegativeRank.otherPageRanks}</td>
+                    <td align="left" width=40>${NegativeRank.firstPageRanks}</td>
+                    <td align="left" width=40>${NegativeRank.secondPageRanks}</td>
+                    <td align="left" width=39>${NegativeRank.thirdPageRanks}</td>
+                    <td align="left" width=40>${NegativeRank.fifthPageRanks}</td>
+                    <td align="left" width=40>${NegativeRank.otherPageRanks}</td>
                     <td align="center" width=60><fmt:formatDate  value="${NegativeRank.createTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
                 </tr>
             </c:forEach>
@@ -95,6 +95,11 @@
         </select>
         </div>
     </div>
+    <datalist id="keyword_list">
+        <c:forEach items="${keywords}" var="keyword">
+            <option>${keyword}</option>
+        </c:forEach>
+    </datalist>
 
 <%@ include file="/commons/loadjs.jsp"%>
 <script src="${staticPath}/negativeRank/negativeRank.js"></script>
