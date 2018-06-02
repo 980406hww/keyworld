@@ -3,6 +3,7 @@ package com.keymanager.monitoring.service;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.mail.MailHelper;
+import com.keymanager.monitoring.criteria.ClientStatusBatchUpdateCriteria;
 import com.keymanager.monitoring.criteria.ClientStatusCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
 import com.keymanager.monitoring.dao.ClientStatusDao;
@@ -961,8 +962,8 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		clientStatusDao.updateStartUpStatusForCompleted(clientIDs);
 	}
 
-	public void batchUpdateClientStatus(ClientStatus clientStatus) {
-		String[] clientIDs = clientStatus.getClientID().split(",");
-		clientStatusDao.batchUpdateClientStatus(clientIDs, clientStatus);
+	public void batchUpdateClientStatus(ClientStatusBatchUpdateCriteria clientStatusBatchUpdateCriteria) {
+		String[] clientIDs = clientStatusBatchUpdateCriteria.getClientStatus().getClientID().split(",");
+		clientStatusDao.batchUpdateClientStatus(clientIDs, clientStatusBatchUpdateCriteria.getCs(), clientStatusBatchUpdateCriteria.getClientStatus());
 	}
 }

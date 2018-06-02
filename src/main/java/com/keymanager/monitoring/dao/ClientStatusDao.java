@@ -67,5 +67,5 @@ public interface ClientStatusDao extends BaseMapper<ClientStatus> {
 
     Integer selectMaxIdByClientID(@Param("clientID")String clientID);
 
-    void batchUpdateClientStatus(@Param("clientIDs")String[] clientIDs, @Param("clientStatus")ClientStatus clientStatus);
+    void batchUpdateClientStatus(@Param("clientIDs")String[] clientIDs, @Param("cs")ClientStatus cs, @Param("clientStatus")ClientStatus clientStatus);
 }

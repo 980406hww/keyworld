@@ -460,61 +460,62 @@
 
     <update id="batchUpdateClientStatus">
         UPDATE t_client_status
-        SET fOneIPOneUser = #{clientStatus.oneIPOneUser},
-        fRandomlyClickNoResult = #{clientStatus.randomlyClickNoResult},
-        fJustVisitSelfPage = #{clientStatus.justVisitSelfPage},
-        fSleepPer2Words = #{clientStatus.sleepPer2Words},
-        fSupportPaste = #{clientStatus.supportPaste},
-        fMoveRandomly = #{clientStatus.moveRandomly},
-        fParentSearchEntry = #{clientStatus.parentSearchEntry},
-        fClearLocalStorage = #{clientStatus.clearLocalStorage},
-        fLessClickAtNight = #{clientStatus.lessClickAtNight},
-        fSameCityUser = #{clientStatus.sameCityUser},
-        fLocateTitlePosition = #{clientStatus.locateTitlePosition},
-        fBaiduAllianceEntry = #{clientStatus.baiduAllianceEntry},
-        fJustClickSpecifiedTitle = #{clientStatus.justClickSpecifiedTitle},
-        fRandomlyClickMoreLink = #{clientStatus.randomlyClickMoreLink},
-        fMoveUp20 = #{clientStatus.moveUp20},
-        fOptimizeRelatedKeyword = #{clientStatus.optimizeRelatedKeyword}
-        <if test="clientStatus.group!=null and clientStatus.group!=''"> ,fGroup = #{clientStatus.group}</if>
-        <if test="clientStatus.allowSwitchGroup!=null and clientStatus.allowSwitchGroup!=''"> ,fAllowSwitchGroup = #{clientStatus.allowSwitchGroup}</if>
-        <if test="clientStatus.disableStatistics!=null and clientStatus.disableStatistics!=''"> ,fDisableStatistics = #{clientStatus.disableStatistics}</if>
-        <if test="clientStatus.disableVisitWebsite!=null and clientStatus.disableVisitWebsite!=''"> ,fDisableVisitWebsite = #{clientStatus.disableVisitWebsite}</if>
-        <if test="clientStatus.operationType!=null and clientStatus.operationType!=''"> ,fOperationType = #{clientStatus.operationType}</if>
-        <if test="clientStatus.page!=null and clientStatus.page!=''"> ,fPage = #{clientStatus.page}</if>
-        <if test="clientStatus.pageSize!=null and clientStatus.pageSize!=''"> ,fPageSize = #{clientStatus.pageSize}</if>
-        <if test="clientStatus.zhanneiPercent!=null and clientStatus.zhanneiPercent!=''"> ,fZhanneiPercent = #{clientStatus.zhanneiPercent}</if>
-        <if test="clientStatus.zhanwaiPercent!=null and clientStatus.zhanwaiPercent!=''"> ,fZhanwaiPercent = #{clientStatus.zhanwaiPercent}</if>
-        <if test="clientStatus.kuaizhaoPercent!=null and clientStatus.kuaizhaoPercent!=''"> ,fKuaizhaoPercent = #{clientStatus.kuaizhaoPercent}</if>
-        <if test="clientStatus.baiduSemPercent!=null and clientStatus.baiduSemPercent!=''"> ,fBaiduSemPercent = #{clientStatus.baiduSemPercent}</if>
-        <if test="clientStatus.specialCharPercent!=null and clientStatus.specialCharPercent!=''"> ,fSpecialCharPercent = #{clientStatus.specialCharPercent}</if>
-        <if test="clientStatus.dragPercent!=null and clientStatus.dragPercent!=''"> ,fDragPercent = #{clientStatus.dragPercent}</if>
-        <if test="clientStatus.multiBrowser!=null and clientStatus.multiBrowser!=''"> ,fMultiBrowser = #{clientStatus.multiBrowser}</if>
-        <if test="clientStatus.clearCookie!=null and clientStatus.clearCookie!=''"> ,fClearCookie = #{clientStatus.clearCookie}</if>
-        <if test="clientStatus.switchGroupName!=null and clientStatus.switchGroupName!=''"> ,fSwitchGroupName = #{clientStatus.switchGroupName}</if>
-        <if test="clientStatus.host!=null and clientStatus.host!=''"> ,fHost = #{clientStatus.host}</if>
-        <if test="clientStatus.port!=null and clientStatus.port!=''"> ,fPort = #{clientStatus.port}</if>
-        <if test="clientStatus.userName!=null and clientStatus.userName!=''"> ,fUserName = #{clientStatus.userName}</if>
-        <if test="clientStatus.password!=null and clientStatus.password!=''"> ,fPassword = #{clientStatus.password}</if>
-        <if test="clientStatus.vpsBackendSystemComputerID!=null and clientStatus.vpsBackendSystemComputerID!=''"> ,fVpsBackendSystemComputerID = #{clientStatus.vpsBackendSystemComputerID}</if>
-        <if test="clientStatus.vpsBackendSystemPassword!=null and clientStatus.vpsBackendSystemPassword!=''"> ,fVpsBackendSystemPassword = #{clientStatus.vpsBackendSystemPassword}</if>
-        <if test="clientStatus.maxUserCount!=null and clientStatus.maxUserCount!=''"> ,fMaxUserCount = #{clientStatus.maxUserCount}</if>
-        <if test="clientStatus.broadbandAccount!=null and clientStatus.broadbandAccount!=''"> ,fBroadbandAccount = #{clientStatus.broadbandAccount}</if>
-        <if test="clientStatus.broadbandPassword!=null and clientStatus.broadbandPassword!=''"> ,fBroadbandPassword = #{clientStatus.broadbandPassword}</if>
-        <if test="clientStatus.entryPageMinCount!=null and clientStatus.entryPageMinCount!=''"> ,fEntryPageMinCount = #{clientStatus.entryPageMinCount}</if>
-        <if test="clientStatus.entryPageMaxCount!=null and clientStatus.entryPageMaxCount!=''"> ,fEntryPageMaxCount = #{clientStatus.entryPageMaxCount}</if>
-        <if test="clientStatus.pageRemainMinTime!=null and clientStatus.pageRemainMinTime!=''"> ,fPageRemainMinTime = #{clientStatus.pageRemainMinTime}</if>
-        <if test="clientStatus.pageRemainMaxTime!=null and clientStatus.pageRemainMaxTime!=''"> ,fPageRemainMaxTime = #{clientStatus.pageRemainMaxTime}</if>
-        <if test="clientStatus.inputDelayMinTime!=null and clientStatus.inputDelayMinTime!=''"> ,fInputDelayMinTime = #{clientStatus.inputDelayMinTime}</if>
-        <if test="clientStatus.inputDelayMaxTime!=null and clientStatus.inputDelayMaxTime!=''"> ,fInputDelayMaxTime = #{clientStatus.inputDelayMaxTime}</if>
-        <if test="clientStatus.slideDelayMinTime!=null and clientStatus.slideDelayMinTime!=''"> ,fSlideDelayMinTime = #{clientStatus.slideDelayMinTime}</if>
-        <if test="clientStatus.slideDelayMaxTime!=null and clientStatus.slideDelayMaxTime!=''"> ,fSlideDelayMaxTime = #{clientStatus.slideDelayMaxTime}</if>
-        <if test="clientStatus.titleRemainMinTime!=null and clientStatus.titleRemainMinTime!=''"> ,fTitleRemainMinTime = #{clientStatus.titleRemainMinTime}</if>
-        <if test="clientStatus.titleRemainMaxTime!=null and clientStatus.titleRemainMaxTime!=''"> ,fTitleRemainMaxTime = #{clientStatus.titleRemainMaxTime}</if>
-        <if test="clientStatus.optimizeKeywordCountPerIP!=null and clientStatus.optimizeKeywordCountPerIP!=''"> ,fOptimizeKeywordCountPerIP = #{clientStatus.optimizeKeywordCountPerIP}</if>
-        <if test="clientStatus.waitTimeAfterOpenBaidu!=null and clientStatus.waitTimeAfterOpenBaidu!=''"> ,fWaitTimeAfterOpenBaidu = #{clientStatus.waitTimeAfterOpenBaidu}</if>
-        <if test="clientStatus.waitTimeBeforeClick!=null and clientStatus.waitTimeBeforeClick!=''"> ,fWaitTimeBeforeClick = #{clientStatus.waitTimeBeforeClick}</if>
-        <if test="clientStatus.waitTimeAfterClick!=null and clientStatus.waitTimeAfterClick!=''"> ,fWaitTimeAfterClick = #{clientStatus.waitTimeAfterClick}</if>
+        SET fTerminalType = fTerminalType
+        <if test="cs.group==1"> ,fGroup = #{clientStatus.group}</if>
+        <if test="cs.allowSwitchGroup==1"> ,fAllowSwitchGroup = #{clientStatus.allowSwitchGroup}</if>
+        <if test="cs.disableStatistics==1"> ,fDisableStatistics = #{clientStatus.disableStatistics}</if>
+        <if test="cs.disableVisitWebsite==1"> ,fDisableVisitWebsite = #{clientStatus.disableVisitWebsite}</if>
+        <if test="cs.operationType==1"> ,fOperationType = #{clientStatus.operationType}</if>
+        <if test="cs.page==1"> ,fPage = #{clientStatus.page}</if>
+        <if test="cs.pageSize==1"> ,fPageSize = #{clientStatus.pageSize}</if>
+        <if test="cs.zhanneiPercent==1"> ,fZhanneiPercent = #{clientStatus.zhanneiPercent}</if>
+        <if test="cs.zhanwaiPercent==1"> ,fZhanwaiPercent = #{clientStatus.zhanwaiPercent}</if>
+        <if test="cs.kuaizhaoPercent==1"> ,fKuaizhaoPercent = #{clientStatus.kuaizhaoPercent}</if>
+        <if test="cs.baiduSemPercent==1"> ,fBaiduSemPercent = #{clientStatus.baiduSemPercent}</if>
+        <if test="cs.specialCharPercent==1"> ,fSpecialCharPercent = #{clientStatus.specialCharPercent}</if>
+        <if test="cs.dragPercent==1"> ,fDragPercent = #{clientStatus.dragPercent}</if>
+        <if test="cs.multiBrowser==1"> ,fMultiBrowser = #{clientStatus.multiBrowser}</if>
+        <if test="cs.clearCookie==1"> ,fClearCookie = #{clientStatus.clearCookie}</if>
+        <if test="cs.switchGroupName==1"> ,fSwitchGroupName = #{clientStatus.switchGroupName}</if>
+        <if test="cs.host==1"> ,fHost = #{clientStatus.host}</if>
+        <if test="cs.port==1"> ,fPort = #{clientStatus.port}</if>
+        <if test="cs.userName==1"> ,fUserName = #{clientStatus.userName}</if>
+        <if test="cs.password==1"> ,fPassword = #{clientStatus.password}</if>
+        <if test="cs.vpsBackendSystemComputerID==1"> ,fVpsBackendSystemComputerID = #{clientStatus.vpsBackendSystemComputerID}</if>
+        <if test="cs.vpsBackendSystemPassword==1"> ,fVpsBackendSystemPassword = #{clientStatus.vpsBackendSystemPassword}</if>
+        <if test="cs.maxUserCount==1"> ,fMaxUserCount = #{clientStatus.maxUserCount}</if>
+        <if test="cs.broadbandAccount==1"> ,fBroadbandAccount = #{clientStatus.broadbandAccount}</if>
+        <if test="cs.broadbandPassword==1"> ,fBroadbandPassword = #{clientStatus.broadbandPassword}</if>
+        <if test="cs.entryPageMinCount==1"> ,fEntryPageMinCount = #{clientStatus.entryPageMinCount}</if>
+        <if test="cs.entryPageMaxCount==1"> ,fEntryPageMaxCount = #{clientStatus.entryPageMaxCount}</if>
+        <if test="cs.pageRemainMinTime==1"> ,fPageRemainMinTime = #{clientStatus.pageRemainMinTime}</if>
+        <if test="cs.pageRemainMaxTime==1"> ,fPageRemainMaxTime = #{clientStatus.pageRemainMaxTime}</if>
+        <if test="cs.inputDelayMinTime==1"> ,fInputDelayMinTime = #{clientStatus.inputDelayMinTime}</if>
+        <if test="cs.inputDelayMaxTime==1"> ,fInputDelayMaxTime = #{clientStatus.inputDelayMaxTime}</if>
+        <if test="cs.slideDelayMinTime==1"> ,fSlideDelayMinTime = #{clientStatus.slideDelayMinTime}</if>
+        <if test="cs.slideDelayMaxTime==1"> ,fSlideDelayMaxTime = #{clientStatus.slideDelayMaxTime}</if>
+        <if test="cs.titleRemainMinTime==1"> ,fTitleRemainMinTime = #{clientStatus.titleRemainMinTime}</if>
+        <if test="cs.titleRemainMaxTime==1"> ,fTitleRemainMaxTime = #{clientStatus.titleRemainMaxTime}</if>
+        <if test="cs.optimizeKeywordCountPerIP==1"> ,fOptimizeKeywordCountPerIP = #{clientStatus.optimizeKeywordCountPerIP}</if>
+        <if test="cs.waitTimeAfterOpenBaidu==1"> ,fWaitTimeAfterOpenBaidu = #{clientStatus.waitTimeAfterOpenBaidu}</if>
+        <if test="cs.waitTimeBeforeClick==1"> ,fWaitTimeBeforeClick = #{clientStatus.waitTimeBeforeClick}</if>
+        <if test="cs.waitTimeAfterClick==1"> ,fWaitTimeAfterClick = #{clientStatus.waitTimeAfterClick}</if>
+        <if test="cs.oneIPOneUser==1"> ,fOneIPOneUser = #{clientStatus.oneIPOneUser}</if>
+        <if test="cs.randomlyClickNoResult==1"> ,fRandomlyClickNoResult = #{clientStatus.randomlyClickNoResult}</if>
+        <if test="cs.justVisitSelfPage==1"> ,fJustVisitSelfPage = #{clientStatus.justVisitSelfPage}</if>
+        <if test="cs.sleepPer2Words==1"> ,fSleepPer2Words = #{clientStatus.sleepPer2Words}</if>
+        <if test="cs.supportPaste==1"> ,fSupportPaste = #{clientStatus.supportPaste}</if>
+        <if test="cs.moveRandomly==1"> ,fMoveRandomly = #{clientStatus.moveRandomly}</if>
+        <if test="cs.parentSearchEntry==1"> ,fParentSearchEntry = #{clientStatus.parentSearchEntry}</if>
+        <if test="cs.clearLocalStorage==1"> ,fClearLocalStorage = #{clientStatus.clearLocalStorage}</if>
+        <if test="cs.lessClickAtNight==1"> ,fLessClickAtNight = #{clientStatus.lessClickAtNight}</if>
+        <if test="cs.sameCityUser==1"> ,fSameCityUser = #{clientStatus.sameCityUser}</if>
+        <if test="cs.locateTitlePosition==1"> ,fLocateTitlePosition = #{clientStatus.locateTitlePosition}</if>
+        <if test="cs.baiduAllianceEntry==1"> ,fBaiduAllianceEntry = #{clientStatus.baiduAllianceEntry}</if>
+        <if test="cs.justClickSpecifiedTitle==1"> ,fJustClickSpecifiedTitle = #{clientStatus.justClickSpecifiedTitle}</if>
+        <if test="cs.randomlyClickMoreLink==1"> ,fRandomlyClickMoreLink = #{clientStatus.randomlyClickMoreLink}</if>
+        <if test="cs.moveUp20==1"> ,fMoveUp20 = #{clientStatus.moveUp20}</if>
+        <if test="cs.optimizeRelatedKeyword==1"> ,fOptimizeRelatedKeyword = #{clientStatus.optimizeRelatedKeyword}</if>
         WHERE fClientID IN
         <foreach item="clientID" collection="clientIDs" open="(" separator="," close=")">
             #{clientID}
