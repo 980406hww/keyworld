@@ -460,7 +460,22 @@
 
     <update id="batchUpdateClientStatus">
         UPDATE t_client_status
-        SET fTerminalType = fTerminalType
+        SET fOneIPOneUser = #{clientStatus.oneIPOneUser},
+        fRandomlyClickNoResult = #{clientStatus.randomlyClickNoResult},
+        fJustVisitSelfPage = #{clientStatus.justVisitSelfPage},
+        fSleepPer2Words = #{clientStatus.sleepPer2Words},
+        fSupportPaste = #{clientStatus.supportPaste},
+        fMoveRandomly = #{clientStatus.moveRandomly},
+        fParentSearchEntry = #{clientStatus.parentSearchEntry},
+        fClearLocalStorage = #{clientStatus.clearLocalStorage},
+        fLessClickAtNight = #{clientStatus.lessClickAtNight},
+        fSameCityUser = #{clientStatus.sameCityUser},
+        fLocateTitlePosition = #{clientStatus.locateTitlePosition},
+        fBaiduAllianceEntry = #{clientStatus.baiduAllianceEntry},
+        fJustClickSpecifiedTitle = #{clientStatus.justClickSpecifiedTitle},
+        fRandomlyClickMoreLink = #{clientStatus.randomlyClickMoreLink},
+        fMoveUp20 = #{clientStatus.moveUp20},
+        fOptimizeRelatedKeyword = #{clientStatus.optimizeRelatedKeyword}
         <if test="clientStatus.group!=null and clientStatus.group!=''"> ,fGroup = #{clientStatus.group}</if>
         <if test="clientStatus.allowSwitchGroup!=null and clientStatus.allowSwitchGroup!=''"> ,fAllowSwitchGroup = #{clientStatus.allowSwitchGroup}</if>
         <if test="clientStatus.disableStatistics!=null and clientStatus.disableStatistics!=''"> ,fDisableStatistics = #{clientStatus.disableStatistics}</if>
@@ -500,22 +515,6 @@
         <if test="clientStatus.waitTimeAfterOpenBaidu!=null and clientStatus.waitTimeAfterOpenBaidu!=''"> ,fWaitTimeAfterOpenBaidu = #{clientStatus.waitTimeAfterOpenBaidu}</if>
         <if test="clientStatus.waitTimeBeforeClick!=null and clientStatus.waitTimeBeforeClick!=''"> ,fWaitTimeBeforeClick = #{clientStatus.waitTimeBeforeClick}</if>
         <if test="clientStatus.waitTimeAfterClick!=null and clientStatus.waitTimeAfterClick!=''"> ,fWaitTimeAfterClick = #{clientStatus.waitTimeAfterClick}</if>
-        <if test="clientStatus.oneIPOneUser==1"> ,fOneIPOneUser = 1</if>
-        <if test="clientStatus.randomlyClickNoResult==1"> ,fRandomlyClickNoResult = 1</if>
-        <if test="clientStatus.justVisitSelfPage==1"> ,fJustVisitSelfPage = 1</if>
-        <if test="clientStatus.sleepPer2Words==1"> ,fSleepPer2Words = 1</if>
-        <if test="clientStatus.supportPaste==1"> ,fSupportPaste = 1</if>
-        <if test="clientStatus.moveRandomly==1"> ,fMoveRandomly = 1</if>
-        <if test="clientStatus.parentSearchEntry==1"> ,fParentSearchEntry = 1</if>
-        <if test="clientStatus.clearLocalStorage==1"> ,fClearLocalStorage = 1</if>
-        <if test="clientStatus.lessClickAtNight==1"> ,fLessClickAtNight = 1</if>
-        <if test="clientStatus.sameCityUser==1"> ,fSameCityUser = 1</if>
-        <if test="clientStatus.locateTitlePosition==1"> ,fLocateTitlePosition = 1</if>
-        <if test="clientStatus.baiduAllianceEntry==1"> ,fBaiduAllianceEntry = 1</if>
-        <if test="clientStatus.justClickSpecifiedTitle==1"> ,fJustClickSpecifiedTitle = 1</if>
-        <if test="clientStatus.randomlyClickMoreLink==1"> ,fRandomlyClickMoreLink = 1</if>
-        <if test="clientStatus.moveUp20==1"> ,fMoveUp20 = 1</if>
-        <if test="clientStatus.optimizeRelatedKeyword==1"> ,fOptimizeRelatedKeyword = 1</if>
         WHERE fClientID IN
         <foreach item="clientID" collection="clientIDs" open="(" separator="," close=")">
             #{clientID}

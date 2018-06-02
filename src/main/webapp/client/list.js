@@ -6,7 +6,6 @@ $(function () {
     $("#renewalSettingDialog").dialog("close");
     $("#reopenClientDiv").dialog("close");
     $("#headerTableDialog").dialog("close");
-    $("#clientStatusDiv").css("margin-top",$("#topDiv").height());
     pageLoad();
     alignTableHeader();
     window.onresize = function(){
@@ -58,6 +57,7 @@ function alignTableHeader(){
     $.each(td, function (idx, val) {
         ctd.eq(idx).width($(val).width());
     });
+    $("#clientStatusDiv").css("margin-top",$("#topDiv").height());
 }
 function changePaging(currentPageNumber, pageSize) {
     var searchClientStatusForm = $("#searchClientStatusForm");
