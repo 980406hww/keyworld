@@ -68,6 +68,7 @@
 								<input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
 								<input type="hidden" name="startUpStatusHidden" id="startUpStatusHidden" value="${clientStatusCriteria.startUpStatus}"/>
 								<input type="hidden" name="runningProgramTypeHidden" id="runningProgramTypeHidden" value="${clientStatusCriteria.runningProgramType}"/>
+								<input type="hidden" name="hiddenColumns" id="hiddenColumns" value="${clientStatusCriteria.hiddenColumns}"/>
 								客户端ID:<input type="text" name="clientID" id="clientID" value="${clientStatusCriteria.clientID}" style="width: 90px;">
 								&nbsp;&nbsp;
 								优化组:<input type="text" name="groupName" id="groupName" value="${clientStatusCriteria.groupName}" style="width: 120px;">
@@ -93,6 +94,7 @@
 							流转分组:<input type="text" name="switchGroupName" id="switchGroupName" value="${clientStatusCriteria.switchGroupName}" style="width: 100px;">
 							&nbsp;&nbsp;
 							排序:<select name="orderBy" id="orderBy">
+							<option value=""></option>
 							<c:forEach items="${orderByMap}" var="entry">
 								<c:choose>
 									<c:when test="${entry.key eq clientStatusCriteria.orderBy}"><option selected value="${entry.key}">${entry.value}</option></c:when>
@@ -163,6 +165,7 @@
 								&nbsp;&nbsp;<input type="button" name="btnFilter" onclick="showUploadVPSDialog('common')" value=" 导入普通终端 ">
 								&nbsp;&nbsp;<input type="button" onclick="showUploadVPSDialog('startUp')" value=" 导入开机终端 ">
 							</shiro:hasPermission>
+							&nbsp;&nbsp;<input type="button" onclick="headerTableSetting()" value="表格设置">
 						</td>
 						</tr>
 						<tr>
@@ -184,6 +187,9 @@
 							</shiro:hasPermission>
 							<shiro:hasPermission name="/internal/clientstatus/downloadFullVNCFile">
 								|<a target="_blank" href="javascript:downloadFullVNCFile()">下载完整版VNC文件</a>
+							</shiro:hasPermission>
+							<shiro:hasPermission name="/internal/clientstatus/saveClientStatus">
+								|<a target="_blank" href="javascript:clientStatusBatchUpdate()">批量设置</a>
 							</shiro:hasPermission>
 							</td>
 						</tr>
@@ -207,6 +213,7 @@
 			<td align="center" width=30>运行程序<br>类型</td>
 			<td align="center" width=40>开机状态<br>下载程序类型</td>
 			<td align="center" width=20>状态</td>
+			<td align="center" width=30>停留时间</td>
 			<td align="center" width=40>失败原因</td>
 			<td align="center" width=40>服务器ID</td>
 			<td align="center" width=80>操作</td>
@@ -313,6 +320,7 @@
 			<td width=30><font color="${keywordColor}">${clientStatus.runningProgramType}</font></td>
 			<td width=40><font color="${keywordColor}">${clientStatus.startUpStatus}<br>${clientStatus.downloadProgramType}</font></td>
 			<td width=20><font color="${keywordColor}">${clientStatus.valid ? "监控中" : "暂停监控"}</font></td>
+			<td width=30><font color="${keywordColor}">${clientStatus.pageRemainMinTime}<br>${clientStatus.pageRemainMaxTime}</font></td>
 			<td width=40>
 				<shiro:hasPermission name="/internal/clientstatus/updateUpgradeFailedReason">
 					<input type="text"
@@ -765,7 +773,6 @@
 
 			</tr>
 		</table>
-
 	</div>
 	
 	<div id="targetVersionSettingDialog" class="easyui-dialog" style="left: 40%;">
@@ -848,6 +855,30 @@
 					<input type="radio" name="downloadProgramType" value="Old" /> 旧程序
 				</td>
 			</tr>
+		</table>
+	</div>
+
+	<div id="headerTableDialog" class="easyui-dialog">
+		<table>
+			<tr><td><input type="checkbox" name="columnName" id="1">客户端ID</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="2">优化组</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="3">操作类型</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="4">续费日期</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="5">现版本-目标版本</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="6">重启数/重启状态-页码/失败次数</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="7">所在城市-终端状态</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="8">剩余空间</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="9">最新工作时间-重启时间</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="10">重启排序时间-发通知时间</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="11">成功次数-操作次数</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="12">宽带账号-宽带密码</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="13">运行程序-类型</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="14">开机状态-下载程序类型</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="15">状态</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="16">停留时间</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="17">失败原因</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="18">服务器ID</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="19">操作</td></tr>
 		</table>
 	</div>
 <%@ include file="/commons/loadjs.jsp" %>

@@ -774,6 +774,19 @@
         </foreach>
     </update>
 
+    <update id="editOptimizePlanCountByCustomerUuid">
+        UPDATE t_customer_keyword
+        <if test="settingType == 'setCurrentCount'">
+            SET fOptimizePlanCount = IF((fOptimizePlanCount + (#{optimizePlanCount})) > 0, (fOptimizePlanCount + (#{optimizePlanCount})), 0)
+        </if>
+        <if test="settingType == 'setSpecificCount'">
+            SET fOptimizePlanCount = #{optimizePlanCount}
+        </if>
+        WHERE fTerminalType = #{terminalType}
+        AND fType = #{entryType}
+        AND fCustomerUuid = #{customerUuid}
+    </update>
+
     <update id="changeCustomerKeywordStatus">
         UPDATE t_customer_keyword SET fStatus = #{status}
         WHERE fTerminalType = #{terminalType}

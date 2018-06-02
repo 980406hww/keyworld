@@ -5,6 +5,7 @@ $(function () {
     $("#targetVersionSettingDialog").dialog("close");
     $("#renewalSettingDialog").dialog("close");
     $("#reopenClientDiv").dialog("close");
+    $("#headerTableDialog").dialog("close");
     $("#clientStatusDiv").css("margin-top",$("#topDiv").height());
     pageLoad();
     alignTableHeader();
@@ -41,6 +42,17 @@ function pageLoad() {
     }
 }
 function alignTableHeader(){
+    var columns = $("#hiddenColumns").val().split(",");
+    $.each(columns, function (index, value) {
+        if(value != "") {
+            $("#headerTable tr").each(function () {
+                $(this).find("td").eq(value).css("display", "none");
+            });
+            $("#clientStatusTable tr").each(function () {
+                $(this).find("td").eq(value).css("display", "none");
+            });
+        }
+    });
     var td = $("#clientStatusTable tr:first td");
     var ctd = $("#headerTable tr:first td");
     $.each(td, function (idx, val) {
@@ -527,7 +539,7 @@ function showSettingDialog(clientID, self){
                         text: '保存',
                         iconCls: 'icon-ok',
                         handler: function () {
-                            saveChangeSetting(this);
+                            saveChangeSetting(null);
                         }
                     },
                         {
@@ -636,10 +648,14 @@ function initSettingDialog(clientStatus, self){
     settingDialogDiv.find("#vpsBackendSystemPassword").val(clientStatus.vpsBackendSystemPassword != null ? clientStatus.vpsBackendSystemPassword : "doshows123");
     settingDialogDiv.show();
 }
-function saveChangeSetting(self){
+function saveChangeSetting(clientIDs){
     var settingDialogDiv = $("#changeSettingDialog");
     var clientStatus = {};
-    clientStatus.clientID = settingDialogDiv.find("#settingClientID").val();
+    if(clientIDs != null) {
+        clientStatus.clientID = clientIDs;
+    } else {
+        clientStatus.clientID = settingDialogDiv.find("#settingClientID").val();
+    }
     clientStatus.group = settingDialogDiv.find("#settingGroup").val();
     clientStatus.operationType = settingDialogDiv.find("#settingOperationType").val();
     clientStatus.pageSize = settingDialogDiv.find("#pageSize").val();
@@ -861,6 +877,81 @@ function saveRenewalSetting(self){
             settingDialogDiv.dialog("close");
         }
     });
+}
+function clientStatusBatchUpdate() {
+    var clientIDs = getSelectedClientIDs();
+    if (clientIDs.indexOf(",") == -1) {
+        alert('请选择多个终端进行设置');
+        return;
+    }
+    $("#changeSettingDialog").find('input[type=text],select,input[type=hidden]').each(function() {
+        $(this).val('');
+    });
+    $("#changeSettingDialog").find('input[type=checkbox]').each(function() {
+        $(this).prop("checked",false);
+    });
+    $("#changeSettingDialog").show();
+    $("#changeSettingDialog").dialog({
+        resizable: false,
+        title: "终端批量设置",
+        width: 820,
+        maxHeight: 534,
+        modal: true,
+        buttons: [{
+            text: '保存',
+            iconCls: 'icon-ok',
+            handler: function () {
+                saveChangeSetting(clientIDs);
+            }
+        },
+            {
+                text: '取消',
+                iconCls: 'icon-cancel',
+                handler: function () {
+                    $("#changeSettingDialog").dialog("close");
+                }
+            }]
+    });
+    $('#changeSettingDialog').window("resize",{top:$(document).scrollTop() + 100});
+}
+function headerTableSetting() {
+    var columnArray = $("#hiddenColumns").val().split(",");
+    $("#headerTableDialog").find(":input[name=columnName]").each(function () {
+        if($.inArray(this.id, columnArray) > -1) {
+            $(this).prop("checked", true);
+        }
+    });
+    $("#headerTableDialog").dialog({
+        resizable: false,
+        title: "表格设置",
+        width: 320,
+        height: 420,
+        modal: true,
+        buttons: [{
+            text: '隐藏列',
+            iconCls: 'icon-ok',
+            handler: function () {
+                var columns = "";
+                $("#headerTableDialog").find(":input[name=columnName]:checked").each(function () {
+                    if(columns == "") {
+                        columns = this.id;
+                    } else {
+                        columns = columns + "," + this.id;
+                    }
+                });
+                $("#hiddenColumns").val(columns);
+                $("#searchClientStatusForm").submit();
+            }
+        },
+            {
+                text: '取消',
+                iconCls: 'icon-cancel',
+                handler: function () {
+                    $("#headerTableDialog").dialog("close");
+                }
+            }]
+    });
+    $('#headerTableDialog').window("resize",{top:$(document).scrollTop() + 100});
 }
 function connectVNC(clientID){
     var obj = new ActiveXObject("wscript.shell");

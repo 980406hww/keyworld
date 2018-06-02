@@ -851,22 +851,30 @@ function onlyNumber(self) {
     $(self).val($(self).val().replace(/[^\d]*/g, ''));
 }
 function showOptimizePlanCountDialog() {
-    var uuids = getUuids();
-    if (uuids === '') {
-        alert('请选择要修改刷量的关键字');
-        return;
-    }
+    var customerUuid = null;
+    var uuids = null;
+
     $("#optimizePlanCountDialog").dialog({
         resizable: false,
         title: "修改刷量",
-        height:120,
+        height:145,
         width: 225,
         modal: true,
         buttons: [{
             text: '保存',
             iconCls: 'icon-ok',
             handler: function () {
-                editOptimizePlanCount(uuids);
+                var range = $("#optimizePlanCountDialog").find("input[name=range]:checked").val();
+                if(range == "all") {
+                    customerUuid = $("#searchCustomerKeywordTable").find("#customerUuid").val();
+                } else {
+                    uuids = getUuids();
+                    if (uuids === '') {
+                        alert('请选择要修改刷量的关键字');
+                        return;
+                    }
+                }
+                editOptimizePlanCount(customerUuid, uuids);
             }
         },
             {
@@ -879,11 +887,16 @@ function showOptimizePlanCountDialog() {
     });
     $('#optimizePlanCountDialog').window("resize",{top:$(document).scrollTop() + 150});
 }
-function editOptimizePlanCount(uuids) {
+function editOptimizePlanCount(customerUuid, uuids) {
     var settingType = $("#optimizePlanCountDialog").find("input[name=settingType]:checked").val();
     var optimizePlanCount = $("#optimizePlanCountDialog").find("#optimizePlanCount").val();
+    if(optimizePlanCount == "") {
+        alert("请输入刷量");
+        return;
+    }
     var postData = {};
-    postData.uuids = uuids.split(",");
+    postData.customerUuid = customerUuid;
+    postData.uuids = uuids == null ? uuids : uuids.split(",");
     postData.settingType = settingType;
     postData.optimizePlanCount = $.trim(optimizePlanCount);
     $.ajax({

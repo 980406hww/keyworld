@@ -1077,6 +1077,10 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeywordDao.editCustomerOptimizePlanCount(optimizePlanCount, settingType, uuids);
     }
 
+    public void editOptimizePlanCountByCustomerUuid(String terminalType, String entryType, Long customerUuid, Integer optimizePlanCount, String settingType) {
+        customerKeywordDao.editOptimizePlanCountByCustomerUuid(terminalType, entryType, customerUuid, optimizePlanCount, settingType);
+    }
+
     public void changeCustomerKeywordStatus(String terminalType, String entryType, Long customerUuid, Integer status) {
         customerKeywordDao.changeCustomerKeywordStatus(terminalType, entryType, customerUuid, status);
     }

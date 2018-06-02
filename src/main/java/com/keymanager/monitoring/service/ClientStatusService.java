@@ -960,4 +960,9 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 	public void updateStartUpStatusForCompleted(List<String> clientIDs) {
 		clientStatusDao.updateStartUpStatusForCompleted(clientIDs);
 	}
+
+	public void batchUpdateClientStatus(ClientStatus clientStatus) {
+		String[] clientIDs = clientStatus.getClientID().split(",");
+		clientStatusDao.batchUpdateClientStatus(clientIDs, clientStatus);
+	}
 }

@@ -145,7 +145,11 @@ public class ClientStatusRestController extends SpringMVCBaseController {
     @RequestMapping(value = "/saveClientStatus", method = RequestMethod.POST)
     public ResponseEntity<?> saveClientStatus(@RequestBody ClientStatus clientStatus) {
         try {
-            clientStatusService.saveClientStatus(clientStatus);
+            if(clientStatus.getClientID().contains(",")) {
+                clientStatusService.batchUpdateClientStatus(clientStatus);
+            } else {
+                clientStatusService.saveClientStatus(clientStatus);
+            }
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
