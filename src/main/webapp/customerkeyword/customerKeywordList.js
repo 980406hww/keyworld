@@ -6,7 +6,7 @@ $(function () {
     $("#saveCustomerKeywordDialog").dialog("close");
     $("#optimizePlanCountDialog").dialog("close");
     $("#customerKeywordDiv").css("margin-top",$("#customerKeywordTopDiv").height());
-
+    $('#customerList').dialog("close");
     alignTableHeader();
     window.onresize = function(){
         alignTableHeader();
@@ -907,3 +907,81 @@ function editOptimizePlanCount(uuids) {
         }
     });
 }
+
+    function updateKeywordCustomerUuid() {
+        var customerKeywordUuids = getUuids();
+        if (customerKeywordUuids === '') {
+            alert('请选择要操作的信息');
+            return;
+        }
+        $("#customerList").show();
+        var keywordUuids = customerKeywordUuids.split(",");
+        $("#customerList").dialog({
+            resizable: false,
+            width: 450,
+            height: 100,
+            modal: true,
+            title: '更新关键字所属客户',
+            closed: true,
+            buttons: [{
+                    text: '确定',
+                    position: '25%',
+                    handler: function () {
+                        updateKeywordCustomerUuidRequest(keywordUuids);
+                    }
+                }]
+        });
+        $("#customerList").dialog("open");
+        $('#customerList').window("resize", {top: $(document).scrollTop() + 150});
+    }
+
+    function updateKeywordCustomerUuidRequest(keywordUuids) {
+        var condition = {};
+        var customerItem = $("#customerItem").val();
+        var customer_list = $("#customer_list").find("option");
+        if(customerItem == ''||customerItem == null){
+            alert('没有选择移动目标客户');
+            return;
+        }
+        var isFull=false;
+        customer_list.each(function (){
+            if (this.innerHTML == customerItem){
+                isFull=true;
+            }
+        });
+        if(isFull) {
+            var customerUuid = customerItem.split("_____")[1];
+            condition.customerUuid = customerUuid;
+            condition.keywordUuids = keywordUuids;
+            $.ajax({
+                url: '/internal/customerKeyword/updateKeywordCustomerUuid',
+                data: JSON.stringify(condition),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                type: 'POST',
+                success: function (data) {
+                    if (data) {
+                        $().toastmessage('showSuccessToast', "操作成功", true);
+                    } else {
+                        $().toastmessage('showErrorToast', "操作失败");
+                    }
+                },
+                error: function () {
+                    $().toastmessage('showErrorToast', "操作失败");
+                }
+            });
+        }else {
+            alert('数据不完整重新选择！');
+            return;
+        }
+    }
+
+
+
+
+
+
+

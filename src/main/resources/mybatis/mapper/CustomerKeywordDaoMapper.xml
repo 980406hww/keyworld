@@ -922,4 +922,15 @@
         SET fCapturePositionQueryTime = #{capturePositionQueryTime}
         WHERE fUuid = #{customerKeywordUuid}
     </update>
+
+    <update id="updateKeywordCustomerUuid">
+        UPDATE t_customer_keyword
+        SET  fCustomerUuid = #{customerUuid}
+        WHERE
+        fTerminalType = #{terminalType}
+        AND fUuid IN
+        <foreach item = "item" index = "index" collection = "keywordUuids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
 </mapper>

@@ -130,4 +130,14 @@
         AND c.fSearchEngine = #{searchEngine}
         AND c.fStatus = 1
     </select>
+
+    <select id="searchTargetCustomers" parameterType="com.keymanager.monitoring.criteria.CustomerCriteria" resultType="com.keymanager.monitoring.entity.Customer">
+        SELECT
+        <include refid="colID"/>
+        FROM t_customer c
+        WHERE c.fEntryType = #{entryType}
+        <if test="loginName != null and loginName != ''">AND c.fUserID = #{loginName}</if>
+        order by c.fUpdateTime DESC
+    </select>
+
 </mapper>

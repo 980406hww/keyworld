@@ -175,6 +175,10 @@
             <shiro:hasPermission name="/internal/customerKeyword/deleteCustomerKeywords">
             <input type="button" onclick="delAllItems('ByUuid','${customerKeywordCriteria.customerUuid}')" value=" 删除所选 ">
             </shiro:hasPermission>
+
+            <shiro:hasPermission name="/internal/customerKeyword/saveCustomerKeywords">
+                <input type="button" onclick="updateKeywordCustomerUuid()" value="移动所选">
+            </shiro:hasPermission>
         </div>
     </form>
     <%--</c:if>--%>
@@ -282,6 +286,7 @@
     </select>
     </div>
 </div>
+
 <%--Dialog部分--%>
 <div id="groupChangeNameByRankDialog"  style="text-align: center;left: 40%;"  class="easyui-dialog">
     <form id="groupNameChangeByRankFrom" style="text-align: center;margin-top: 10px;">
@@ -463,6 +468,15 @@
     </form>
 </div>
 
+<div id="customerList" title="更新关键字所属客户" class="easyui-dialog" style="left: 30%;display: none;">
+    <input type="text" id="customerItem" list="customer_list"  placeholder="请选择移动到的位置" style="width:97%;margin: 5px" />
+    <datalist id="customer_list">
+        <c:forEach items="${customerList}" var="keyword">
+            <option>${keyword.contactPerson} ${'_____'} ${keyword.uuid}</option>
+        </c:forEach>
+    </datalist>
+</div>
+
 <form id="downloadCustomerKeywordInfoForm" method="post" action="/internal/customerKeyword/downloadCustomerKeywordInfo">
     <input type="hidden" name="customerUuid" id="customerUuidHidden" value="">
     <input type="hidden" name="keyword" id="keywordHidden" value=""/>
@@ -489,7 +503,7 @@
 <script language="javascript">
     $(function () {
         initPaging();
-        initNoPositionChecked();//初始化排名为0的初始值
+        initNoPositionChecked();
     });
 
     function initPaging() {

@@ -1113,4 +1113,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     public void updateCustomerKeywordQueryTime(Long customerKeywordUuid, Date date) {
         customerKeywordDao.updateCustomerKeywordQueryTime(customerKeywordUuid, DateUtils.addMinutes(date, -3));
     }
+
+    public void updateKeywordCustomerUuid(List<String> keywordUuids,String customerUuid,String terminalType){
+        customerKeywordDao.updateKeywordCustomerUuid(keywordUuids,customerUuid,terminalType);
+    }
+
 }
