@@ -570,7 +570,7 @@
 				</td>
 
 
-				<td>
+				<td style="vertical-align:top;">
 					<table id="td_2" style="font-size:12px">
 						<tr name="trItem" onclick="checkItem(this)">
 							<th>流转分组</th>
@@ -594,12 +594,6 @@
 							<th>VNC和操作系统用户名</th>
 							<td>
 								<input type="text" name="csUserName" id="csUserName" value="Administrator"  style="width:110px;"/>
-							</td>
-						</tr>
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>VNC和操作系统密码</th>
-							<td>
-								<input type="text" name="password" id="password" value="doshows123"  style="width:110px;"/>
 							</td>
 						</tr>
 						<tr name="trItem" onclick="checkItem(this)">
