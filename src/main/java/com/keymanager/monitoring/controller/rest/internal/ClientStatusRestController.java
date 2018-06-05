@@ -125,6 +125,20 @@ public class ClientStatusRestController extends SpringMVCBaseController {
             return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
         }
     }
+    
+    @RequiresPermissions("/internal/clientstatus/saveClientStatus")
+    @RequestMapping(value = "/updateClientStatusTargetVPSPassword", method = RequestMethod.POST)
+    public ResponseEntity<?> updateClientStatusTargetVPSPassword(@RequestBody Map<String, Object> requestMap) {
+        try {
+            List<String> clientIDs = (List<String>) requestMap.get("clientIDs");
+            String targetVPSPassword = (String) requestMap.get("targetVPSPassword");
+            clientStatusService.updateClientStatusTargetVPSPassword(clientIDs, targetVPSPassword);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
 
     @RequiresPermissions("/internal/clientstatus/updateClientStatusRenewalDate")
     @RequestMapping(value = "/updateClientStatusRenewalDate", method = RequestMethod.POST)

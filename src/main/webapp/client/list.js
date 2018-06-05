@@ -752,18 +752,82 @@ function showTargetVersionSettingDialog(self){
     });
     $('#targetVersionSettingDialog').window("resize",{top:$(document).scrollTop() + 100});
 }
+function showTargetVPSPasswordSettingDialog(self){
+    if(getSelectedClientIDs().trim() === ''){
+        alert("请选择要更新的终端！");
+        return;
+    }
+    $("#targetVPSPasswordSettingDialog").find("#settingTargetVPSPassword").val("");
+    $("#targetVPSPasswordSettingDialog").dialog({
+        resizable: false,
+        title: "设定目标密码",
+        height:100,
+        width: 240,
+        modal: true,
+        buttons: [{
+            text: '保存',
+            iconCls: 'icon-ok',
+            handler: function () {
+                saveTargetVPSPasswordSetting(this);
+            }
+        },
+            {
+                text: '取消',
+                iconCls: 'icon-cancel',
+                handler: function () {
+                    $('#targetVPSPasswordSettingDialog').dialog("close");
+                }
+            }]
+    });
+    $('#targetVPSPasswordSettingDialog').window("resize",{top:$(document).scrollTop() + 100});
+}
 function saveTargetVersionSetting(self){
     var settingDialogDiv = $("#targetVersionSettingDialog");
     var clientStatus = {};
     clientStatus.clientIDs = getSelectedClientIDs();
     clientStatus.targetVersion = settingDialogDiv.find("#settingTargetVersion").val();
     if(clientStatus.targetVersion.trim() === ''){
-        alert("请输入目标版本！");
+        alert("请输入目标版1本！");
         return;
     }
     clientStatus.clientIDs = clientStatus.clientIDs.split(",");
     $.ajax({
         url: '/internal/clientstatus/updateClientStatusTargetVersion',
+        data: JSON.stringify(clientStatus),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        timeout: 5000,
+        type: 'POST',
+        success: function (result) {
+            if(result){
+                $().toastmessage('showSuccessToast', "更新成功",true);
+
+            }else{
+                $().toastmessage('showErrorToast', "更新失败");
+            }
+            settingDialogDiv.dialog("close");
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "更新失败");
+            settingDialogDiv.dialog("close");
+        }
+    });
+}
+
+function saveTargetVPSPasswordSetting(self){
+    var settingDialogDiv = $("#targetVPSPasswordSettingDialog");
+    var clientStatus = {};
+    clientStatus.clientIDs = getSelectedClientIDs();
+    clientStatus.targetVPSPassword = settingDialogDiv.find("#settingTargetVPSPassword").val();
+    if(clientStatus.targetVPSPassword.trim() === ''){
+        alert("请输入目标密码！");
+        return;
+    }
+    clientStatus.clientIDs = clientStatus.clientIDs.split(",");
+    $.ajax({
+        url: '/internal/clientstatus/updateClientStatusTargetVPSPassword',
         data: JSON.stringify(clientStatus),
         headers: {
             'Accept': 'application/json',

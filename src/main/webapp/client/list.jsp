@@ -170,6 +170,9 @@
 							<shiro:hasPermission name="/internal/clientstatus/updateClientStatusTargetVersion">
 								<a target="_blank" href="javascript:showTargetVersionSettingDialog(this)">设定目标版本</a>
 							</shiro:hasPermission>
+							<shiro:hasPermission name="/internal/clientstatus/saveClientStatus">
+								<a target="_blank" href="javascript:showTargetVPSPasswordSettingDialog(this)">设定目标密码</a>
+							</shiro:hasPermission>
 							<shiro:hasPermission name="/internal/clientstatus/updateClientStatusRenewalDate">
 								|<a target="_blank" href="javascript:showRenewalSettingDialog(this)">续费</a>
 							</shiro:hasPermission>
@@ -770,6 +773,9 @@
 	
 	<div id="targetVersionSettingDialog" class="easyui-dialog" style="left: 40%;">
 		目标版本：<input type="text" name="settingTargetVersion" id="settingTargetVersion" />
+	</div>
+	<div id="targetVPSPasswordSettingDialog" class="easyui-dialog" style="left: 40%;">
+		目标密码：<input type="text" name="settingTargetVPSPassword" id="settingTargetVPSPassword" />
 	</div>
 
 	<div id="renewalSettingDialog" class="easyui-dialog" style="left: 40%;">

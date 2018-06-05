@@ -109,6 +109,15 @@
             #{item}
         </foreach>
     </update>
+    
+    <update id="updateClientStatusTargetVPSPassword">
+        UPDATE t_client_status SET fTargetVPSPassword = #{targetVPSPassword}
+        WHERE fClientID IN
+        <foreach item="item" collection="clientIDs" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+    
 
     <delete id="deleteClientStatus">
         DELETE FROM t_client_status WHERE fClientID IN

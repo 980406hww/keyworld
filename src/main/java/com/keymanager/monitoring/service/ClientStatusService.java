@@ -104,6 +104,10 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 	public void updateClientStatusTargetVersion(List<String> clientIDs, String targetVersion) throws Exception {
 		clientStatusDao.updateClientStatusTargetVersion(clientIDs, targetVersion);
 	}
+	
+	public void updateClientStatusTargetVPSPassword(List<String> clientIDs, String targetVPSPassword) throws Exception {
+		clientStatusDao.updateClientStatusTargetVPSPassword(clientIDs, targetVPSPassword);
+	}
 
 	public void updateRenewalDate(String clientIDs,String settingType,String renewalDate) throws Exception {
 		String[] clientIDArray = clientIDs.split(",");
@@ -617,6 +621,28 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		if(clientStatus != null){
 			if(clientStatus.getTargetVersion() != null){
 				return clientStatus.getTargetVersion().equals(clientStatus.getVersion()) ? "" : clientStatus.getTargetVersion();
+			}
+		}
+		return "0";
+	}
+	
+	public String checkPassword(String clientID){
+		ClientStatus clientStatus = clientStatusDao.selectById(clientID);
+		if(clientStatus != null){
+			if(clientStatus.getTargetVPSPassword() != null){
+				return clientStatus.getTargetVPSPassword().equals(clientStatus.getPassword()) ? "" : clientStatus.getTargetVPSPassword();
+			}
+		}
+		return "0";
+	}
+	
+	public String updatePassword(String clientID){
+		ClientStatus clientStatus = clientStatusDao.selectById(clientID);
+		if(clientStatus != null){
+			if(clientStatus.getTargetVPSPassword() != null){
+				clientStatus.setPassword(clientStatus.getTargetVPSPassword());
+				clientStatusDao.updateById(clientStatus);
+				return "1";
 			}
 		}
 		return "0";
