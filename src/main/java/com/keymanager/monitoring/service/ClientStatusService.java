@@ -309,6 +309,7 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		clientStatus.setPort(vncInfos[1]);
 		clientStatus.setUserName(clientStatusInfo[3]);
 		clientStatus.setPassword(clientStatusInfo[4]);
+		clientStatus.setTargetVPSPassword(clientStatusInfo[4]);
 		clientStatus.setBroadbandAccount(clientStatusInfo[5]);
 		clientStatus.setBroadbandPassword(clientStatusInfo[6]);
 		clientStatus.setClientIDPrefix(Utils.removeDigital(clientStatusInfo[0]));
