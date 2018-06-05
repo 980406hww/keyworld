@@ -537,7 +537,6 @@ function updateOperationType(self){
     });
 }
 function showSettingDialog(clientID, self){
-    $("#changeSettingDialog").find("#password").parent().parent().css("display", "");
     resetTrItemColor();
     $.ajax({
         url: '/internal/clientstatus/getClientStatus/' + clientID,
@@ -658,7 +657,6 @@ function initSettingDialog(clientStatus, self){
     settingDialogDiv.find("#host").val(clientStatus.host != null ? clientStatus.host : "");
     settingDialogDiv.find("#port").val(clientStatus.port != null ? clientStatus.port : "");
     settingDialogDiv.find("#csUserName").val(clientStatus.userName != null ? clientStatus.userName : "Administrator");
-    settingDialogDiv.find("#password").val(clientStatus.password != null ? clientStatus.password : "doshows123");
     settingDialogDiv.find("#broadbandAccount").val(clientStatus.broadbandAccount != null ? clientStatus.broadbandAccount : "");
     settingDialogDiv.find("#broadbandPassword").val(clientStatus.broadbandPassword != null ? clientStatus.broadbandPassword : "");
     settingDialogDiv.find("#vpsBackendSystemComputerID").val(clientStatus.vpsBackendSystemComputerID != null ? clientStatus.vpsBackendSystemComputerID :
@@ -697,7 +695,6 @@ function saveChangeSetting(clientIDs){
     clientStatus.host = settingDialogDiv.find("#host").val();
     clientStatus.port = settingDialogDiv.find("#port").val();
     clientStatus.userName = settingDialogDiv.find("#csUserName").val();
-    clientStatus.password = settingDialogDiv.find("#password").val();
     clientStatus.broadbandAccount = settingDialogDiv.find("#broadbandAccount").val();
     clientStatus.broadbandPassword = settingDialogDiv.find("#broadbandPassword").val();
     clientStatus.vpsBackendSystemComputerID = settingDialogDiv.find("#vpsBackendSystemComputerID").val();
@@ -759,7 +756,6 @@ function saveChangeSetting(clientIDs){
         cs.host = isChecked("host");
         cs.port = isChecked("port");
         cs.userName = isChecked("csUserName");
-        cs.password = isChecked("password");
         cs.broadbandAccount = isChecked("broadbandAccount");
         cs.broadbandPassword = isChecked("broadbandPassword");
         cs.vpsBackendSystemComputerID = isChecked("vpsBackendSystemComputerID");
@@ -994,7 +990,6 @@ function clientStatusBatchUpdate() {
         alert('请选择多个终端进行设置');
         return;
     }
-    $("#changeSettingDialog").find("#password").parent().parent().css("display", "none");
     resetTrItemColor();
     $("#changeSettingDialog").find('input[type=text],select,input[type=hidden]').each(function() {
         $(this).val('');
