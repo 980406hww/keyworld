@@ -592,12 +592,6 @@
 							</td>
 						</tr>
 						<tr>
-							<th>VNC和操作系统密码</th>
-							<td>
-								<input type="text" name="password" id="password" value="doshows123"  style="width:110px;"/>
-							</td>
-						</tr>
-						<tr>
 							<th>VPS后台系统电脑ID</th>
 							<td>
 								<input type="text" name="vpsBackendSystemComputerID" id="vpsBackendSystemComputerID"  style="width:110px;"/>

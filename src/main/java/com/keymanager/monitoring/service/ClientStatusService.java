@@ -166,7 +166,7 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 			oldClientStatus.setHost(clientStatus.getHost());
 			oldClientStatus.setPort(clientStatus.getPort());
 			oldClientStatus.setUserName(clientStatus.getUserName());
-			oldClientStatus.setPassword(clientStatus.getPassword());
+//			oldClientStatus.setPassword(clientStatus.getPassword());
 			oldClientStatus.setBroadbandAccount(clientStatus.getBroadbandAccount());
 			oldClientStatus.setBroadbandPassword(clientStatus.getBroadbandPassword());
 			oldClientStatus.setVpsBackendSystemComputerID(clientStatus.getVpsBackendSystemComputerID());
