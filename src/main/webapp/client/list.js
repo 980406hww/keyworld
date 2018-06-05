@@ -3,6 +3,7 @@ $(function () {
     $('#uploadVPSDialog').dialog("close");
     $("#changeSettingDialog").dialog("close");
     $("#targetVersionSettingDialog").dialog("close");
+    $("#targetVPSPasswordSettingDialog").dialog("close");
     $("#renewalSettingDialog").dialog("close");
     $("#reopenClientDiv").dialog("close");
     $("#clientStatusDiv").css("margin-top",$("#topDiv").height());
@@ -823,6 +824,10 @@ function saveTargetVPSPasswordSetting(self){
     clientStatus.targetVPSPassword = settingDialogDiv.find("#settingTargetVPSPassword").val();
     if(clientStatus.targetVPSPassword.trim() === ''){
         alert("请输入目标密码！");
+        return;
+    }
+    if(clientStatus.targetVPSPassword.trim().length != 8){
+        alert("请输入8位密码！");
         return;
     }
     clientStatus.clientIDs = clientStatus.clientIDs.split(",");
