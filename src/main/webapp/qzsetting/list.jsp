@@ -32,69 +32,62 @@
 <%@ include file="/commons/basejs.jsp" %>
 <div id="topDiv">
 	<%@include file="/menu.jsp" %>
-	<table width="100%" style="font-size:12px; margin-top:40px;" cellpadding=3>
-		<tr>
-			<td colspan="14" align="right">
+	<div width="100%" style="font-size:12px; margin-top:40px;">
+		<div align="right">
+			<shiro:hasPermission name="/internal/qzsetting/searchQZSettings">
+			<a href="javascript:resetSearchCondition('-1')">过期未收费(${chargeRemindDataMap['expiredChargeSize']})</a>
+			| <a target="_blank" href="javascript:resetSearchCondition('0')">当天收费提醒(${chargeRemindDataMap['nowChargeSize']})</a>
+			| <a target="_blank" href="javascript:resetSearchCondition('3')">三天收费提醒(${chargeRemindDataMap['threeChargeSize']})</a>
+			| <a target="_blank" href="javascript:resetSearchCondition('7')">七天收费提醒(${chargeRemindDataMap['sevenChargeSize']})</a>
+			</shiro:hasPermission>
+		</div>
+		<div>
+			<form method="post" id="chargeForm" action="/internal/qzsetting/searchQZSettings">
+				<input type="hidden" id="dateRangeType" name="dateRangeType" value="${qzSettingSearchCriteria.dateRangeType}"/>
+				<input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}"/>
+				<input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
+				<input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
+				<input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
+				<input type="hidden" name="customerUuid" id="customerUuid" value="${qzSettingSearchCriteria.customerUuid}"/>
+				<input type="hidden" name="statusHidden" id="statusHidden" value="${qzSettingSearchCriteria.status}"/>
+				客户:<input type="text" list="customer_list" name="customerInfo" id="customerInfo" value="${qzSettingSearchCriteria.customerInfo}" style="width:200px;">
+				域名:<input type="text" name="domain" id="domain" value="${qzSettingSearchCriteria.domain}" style="width:150px;">
+				组名:<input type="text" name="group" id="group" value="${qzSettingSearchCriteria.group}" style="width:150px;">
+				状态:
+				<select name="status" id="status">
+					<option value=""></option>
+					<option value="1">激活</option>
+					<option value="0">暂停</option>
+					<option value="2">新增</option>
+				</select>
+				更新状态:
+				<select name="updateStatus" id="updateStatus">
+					<c:forEach items="${statusList}" var="status">
+						<c:choose>
+							<c:when test="${status eq qzSettingSearchCriteria.updateStatus}"><option selected>${status}</option></c:when>
+							<c:otherwise><option>${status}</option></c:otherwise>
+						</c:choose>
+					</c:forEach>
+				</select>
 				<shiro:hasPermission name="/internal/qzsetting/searchQZSettings">
-				<a href="javascript:resetSearchCondition('-1')">过期未收费(${chargeRemindDataMap['expiredChargeSize']})</a>
-				| <a target="_blank" href="javascript:resetSearchCondition('0')">当天收费提醒(${chargeRemindDataMap['nowChargeSize']})</a>
-				| <a target="_blank" href="javascript:resetSearchCondition('3')">三天收费提醒(${chargeRemindDataMap['threeChargeSize']})</a>
-				| <a target="_blank" href="javascript:resetSearchCondition('7')">七天收费提醒(${chargeRemindDataMap['sevenChargeSize']})</a>
+					<input class="ui-button ui-widget ui-corner-all" type="submit" onclick="resetSearchCondition('1')" value=" 查询 " >
 				</shiro:hasPermission>
-			</td>
-		</tr>
-		<tr>
-			<td colspan="11">
-				<form method="post" id="chargeForm" action="/internal/qzsetting/searchQZSettings">
-					<input type="hidden" id="dateRangeType" name="dateRangeType" value="${qzSettingSearchCriteria.dateRangeType}"/>
-					<table style="font-size:12px;">
-						<tr>
-							<input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}"/>
-							<input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
-							<input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
-							<input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
-							<input type="hidden" name="customerUuid" id="customerUuid" />
-							<td align="right">客户:</td> <td><input type="text" list="customer_list" name="customerInfo" id="customerInfo" value="${qzSettingSearchCriteria.customerInfo}" style="width:200px;"></td>
-							<td align="right">域名:</td> <td><input type="text" name="domain" id="domain" value="${qzSettingSearchCriteria.domain}" style="width:200px;"></td>
-							<td align="right">组名:</td> <td><input type="text" name="group" id="group" value="${qzSettingSearchCriteria.group}" style="width:200px;"></td>
-							<td align="right">状态:</td>
-							<td>
-								<select name="updateStatus" id="updateStatus" style="width:200px;">
-									<c:forEach items="${statusList}" var="status">
-										<c:choose>
-											<c:when test="${status eq qzSettingSearchCriteria.updateStatus}"><option selected>${status}</option></c:when>
-											<c:otherwise><option>${status}</option></c:otherwise>
-										</c:choose>
-									</c:forEach>
-								</select>
-							</td>
-							<td align="right" width="50">
-								<shiro:hasPermission name="/internal/qzsetting/searchQZSettings">
-									<input class="ui-button ui-widget ui-corner-all" type="submit" onclick="resetSearchCondition('1')" value=" 查询 " >
-								</shiro:hasPermission>
-							</td>
-							<td align="right" width="50">
-								<shiro:hasPermission name="/internal/qzsetting/save">
-									<input class="ui-button ui-widget ui-corner-all" type="button" onclick="showSettingDialog(null, this)" value=" 增加 " >
-								</shiro:hasPermission>
-							</td>
-							<td align="right" width="70">
-								<shiro:hasPermission name="/internal/qzsetting/updateImmediately">
-									<input class="ui-button ui-widget ui-corner-all" type="button" onclick="updateImmediately(this)" value=" 马上更新 " >
-								</shiro:hasPermission>
-							</td>
-							<td align="right" width="70" >
-								<shiro:hasPermission name="/internal/qzsetting/deleteQZSettings">
-									<input class="ui-button ui-widget ui-corner-all" type="button" onclick="delSelectedQZSettings(this)" value=" 删除所选 " >
-								</shiro:hasPermission>
-							</td>
-
-						</tr>
-					</table>
-				</form>
-			</td>
-		</tr>
-	</table>
+				<shiro:hasPermission name="/internal/qzsetting/save">
+					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="showSettingDialog(null, this)" value=" 增加 " >
+				</shiro:hasPermission>
+				<shiro:hasPermission name="/internal/qzsetting/updateImmediately">
+					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="updateImmediately(this)" value=" 马上更新 " >
+				</shiro:hasPermission>
+				<shiro:hasPermission name="/internal/qzsetting/updateStatus">
+				<input class="ui-button ui-widget ui-corner-all" type="button" onclick="updateQZSettingStatus(1)" value=" 激活整站 " >
+				<input class="ui-button ui-widget ui-corner-all" type="button" onclick="updateQZSettingStatus(0)" value=" 暂停整站 " >
+				</shiro:hasPermission>
+				<shiro:hasPermission name="/internal/qzsetting/deleteQZSettings">
+					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="delSelectedQZSettings(this)" value=" 删除所选 " >
+				</shiro:hasPermission>
+			</form>
+		</div>
+	</div>
 	<table id="headerTable" style="width: 100%">
 		<tr bgcolor="#eeeeee" height=30>
 			<td align="center" width=25><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
@@ -113,6 +106,7 @@
 			<td align="center" width=80>更新结束时间</td>
 			<td align="center" width=80>更新时间</td>
 			<td align="center" width=80>添加时间</td>
+			<td align="center" width=50>状态</td>
 			<td align="center" width=100>操作</td>
 		</tr>
 	</table>
@@ -140,6 +134,17 @@
 			<td width=80><fmt:formatDate value="${qzSetting.updateEndTime}" pattern="MM-dd HH:mm" /></td>
 			<td width=80><fmt:formatDate value="${qzSetting.updateTime}" pattern="MM-dd HH:mm" /></td>
 			<td width=80><fmt:formatDate value="${qzSetting.createTime}" pattern="MM-dd HH:mm" /></td>
+			<td width=50 align="center">
+				<c:choose>
+					<c:when test="${qzSetting.status == 1}">激活</c:when>
+					<c:when test="${qzSetting.status == 2}">
+						<span style="color: green;">新增</span>
+					</c:when>
+					<c:otherwise>
+						<span style="color: red;">暂停</span>
+					</c:otherwise>
+				</c:choose>
+			</td>
 			<td width=100>
 				<shiro:hasPermission name="/internal/qzchargelog/save">
 					<a href="javascript:showChargeDialog('${qzSetting.uuid}','${qzSetting.contactPerson}','${qzSetting.domain}',this)">收费</a> |

@@ -3,6 +3,7 @@ $(function () {
     $('#uploadVPSDialog').dialog("close");
     $("#changeSettingDialog").dialog("close");
     $("#targetVersionSettingDialog").dialog("close");
+    $("#targetVPSPasswordSettingDialog").dialog("close");
     $("#renewalSettingDialog").dialog("close");
     $("#reopenClientDiv").dialog("close");
     $("#clientStatusDiv").css("margin-top",$("#topDiv").height());
@@ -20,6 +21,7 @@ function pageLoad() {
     var showCustomerBottomDiv = $('#showCustomerBottomDiv');
     showCustomerBottomDiv.find("#chooseRecords").val(pageSize);
     searchCustomerForm.find("#startUpStatus").val($("#startUpStatusHidden").val());
+    searchCustomerForm.find("#runningProgramType").val($("#runningProgramTypeHidden").val());
 
     if (parseInt(currentPageNumber) > 1 && parseInt(currentPageNumber) < parseInt(pages)) {
         showCustomerBottomDiv.find("#firstButton").removeAttr("disabled");
@@ -631,7 +633,7 @@ function initSettingDialog(clientStatus, self){
     settingDialogDiv.find("#host").val(clientStatus.host != null ? clientStatus.host : "");
     settingDialogDiv.find("#port").val(clientStatus.port != null ? clientStatus.port : "");
     settingDialogDiv.find("#csUserName").val(clientStatus.userName != null ? clientStatus.userName : "Administrator");
-    settingDialogDiv.find("#password").val(clientStatus.password != null ? clientStatus.password : "doshows123");
+    // settingDialogDiv.find("#password").val(clientStatus.password != null ? clientStatus.password : "doshows123");
     settingDialogDiv.find("#broadbandAccount").val(clientStatus.broadbandAccount != null ? clientStatus.broadbandAccount : "");
     settingDialogDiv.find("#broadbandPassword").val(clientStatus.broadbandPassword != null ? clientStatus.broadbandPassword : "");
     settingDialogDiv.find("#vpsBackendSystemComputerID").val(clientStatus.vpsBackendSystemComputerID != null ? clientStatus.vpsBackendSystemComputerID :
@@ -663,7 +665,7 @@ function saveChangeSetting(self){
     clientStatus.host = settingDialogDiv.find("#host").val();
     clientStatus.port = settingDialogDiv.find("#port").val();
     clientStatus.userName = settingDialogDiv.find("#csUserName").val();
-    clientStatus.password = settingDialogDiv.find("#password").val();
+    // clientStatus.password = settingDialogDiv.find("#password").val();
     clientStatus.broadbandAccount = settingDialogDiv.find("#broadbandAccount").val();
     clientStatus.broadbandPassword = settingDialogDiv.find("#broadbandPassword").val();
     clientStatus.vpsBackendSystemComputerID = settingDialogDiv.find("#vpsBackendSystemComputerID").val();
@@ -756,18 +758,86 @@ function showTargetVersionSettingDialog(self){
     });
     $('#targetVersionSettingDialog').window("resize",{top:$(document).scrollTop() + 100});
 }
+function showTargetVPSPasswordSettingDialog(self){
+    if(getSelectedClientIDs().trim() === ''){
+        alert("请选择要更新的终端！");
+        return;
+    }
+    $("#targetVPSPasswordSettingDialog").find("#settingTargetVPSPassword").val("");
+    $("#targetVPSPasswordSettingDialog").dialog({
+        resizable: false,
+        title: "设定目标密码",
+        height:100,
+        width: 240,
+        modal: true,
+        buttons: [{
+            text: '保存',
+            iconCls: 'icon-ok',
+            handler: function () {
+                saveTargetVPSPasswordSetting(this);
+            }
+        },
+            {
+                text: '取消',
+                iconCls: 'icon-cancel',
+                handler: function () {
+                    $('#targetVPSPasswordSettingDialog').dialog("close");
+                }
+            }]
+    });
+    $('#targetVPSPasswordSettingDialog').window("resize",{top:$(document).scrollTop() + 100});
+}
 function saveTargetVersionSetting(self){
     var settingDialogDiv = $("#targetVersionSettingDialog");
     var clientStatus = {};
     clientStatus.clientIDs = getSelectedClientIDs();
     clientStatus.targetVersion = settingDialogDiv.find("#settingTargetVersion").val();
     if(clientStatus.targetVersion.trim() === ''){
-        alert("请输入目标版本！");
+        alert("请输入目标版1本！");
         return;
     }
     clientStatus.clientIDs = clientStatus.clientIDs.split(",");
     $.ajax({
         url: '/internal/clientstatus/updateClientStatusTargetVersion',
+        data: JSON.stringify(clientStatus),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        timeout: 5000,
+        type: 'POST',
+        success: function (result) {
+            if(result){
+                $().toastmessage('showSuccessToast', "更新成功",true);
+
+            }else{
+                $().toastmessage('showErrorToast', "更新失败");
+            }
+            settingDialogDiv.dialog("close");
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "更新失败");
+            settingDialogDiv.dialog("close");
+        }
+    });
+}
+
+function saveTargetVPSPasswordSetting(self){
+    var settingDialogDiv = $("#targetVPSPasswordSettingDialog");
+    var clientStatus = {};
+    clientStatus.clientIDs = getSelectedClientIDs();
+    clientStatus.targetVPSPassword = settingDialogDiv.find("#settingTargetVPSPassword").val();
+    if(clientStatus.targetVPSPassword.trim() === ''){
+        alert("请输入目标密码！");
+        return;
+    }
+    if(clientStatus.targetVPSPassword.trim().length != 8){
+        alert("请输入8位密码！");
+        return;
+    }
+    clientStatus.clientIDs = clientStatus.clientIDs.split(",");
+    $.ajax({
+        url: '/internal/clientstatus/updateClientStatusTargetVPSPassword',
         data: JSON.stringify(clientStatus),
         headers: {
             'Accept': 'application/json',

@@ -389,4 +389,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		}
 	}
 
+	public void updateQZSettingStatus(List<Long> uuids, Integer status) {
+		qzSettingDao.updateQZSettingStatus(uuids, status);
+	}
 }

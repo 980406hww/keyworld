@@ -8,6 +8,7 @@ public class QZSettingSearchCriteria{
     private String group;
     private String updateStatus;
     private Integer dateRangeType;
+    private Integer status;
 
     public String getLoginName() {
         return loginName;
@@ -63,5 +64,13 @@ public class QZSettingSearchCriteria{
 
     public void setDateRangeType(Integer dateRangeType) {
         this.dateRangeType = dateRangeType;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

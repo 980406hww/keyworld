@@ -168,15 +168,19 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
     }
 
+    public int getMaxSequence(String terminalType, String entryType, Long customerUuid) {
+        int maxSequence = 0;
+        try {
+            maxSequence = customerKeywordDao.getMaxSequence(terminalType, entryType, customerUuid);
+        } catch (Exception ex) {
+        }
+        return maxSequence;
+    }
+
     public void addCustomerKeywordsFromSimpleUI(List<CustomerKeyword> customerKeywords, String terminalType, String entryType, String userName) {
         if (CollectionUtils.isNotEmpty(customerKeywords)) {
             long customerUuid = customerKeywords.get(0).getCustomerUuid();
-            int maxSequence = 0;
-            try {
-                maxSequence = customerKeywordDao.getMaxSequence(terminalType, entryType, customerUuid);
-            } catch (Exception ex) {
-//                ex.printStackTrace();
-            }
+            int maxSequence = getMaxSequence(terminalType, entryType, customerUuid);
             for (CustomerKeyword customerKeyword : customerKeywords) {
                 supplementInfoFromSimpleUI(customerKeyword, terminalType, entryType, ++maxSequence);
                 supplementIndexAndPriceFromExisting(customerKeyword);
@@ -745,7 +749,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
     }
 
-    public void updateOptimizationResult(String terminalType, Long customerKeywordUuid, int count, String ip, String city, String clientID, String status, String freeSpace, String version){
+    public void updateOptimizationResult(String terminalType, Long customerKeywordUuid, int count, String ip, String city, String clientID, String status, String freeSpace, String version, String runningProgramType){
         if(configService.optimizationDateChanged()) {
             customerKeywordInvalidCountLogService.addCustomerKeywordInvalidCountLog();
             configService.updateOptimizationDateAsToday();
@@ -754,7 +758,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
 
         customerKeywordDao.updateOptimizationResult(customerKeywordUuid, count);
-        clientStatusService.logClientStatusTime(terminalType, clientID, status, freeSpace, version, city, count);
+        clientStatusService.logClientStatusTime(terminalType, clientID, status, freeSpace, version, city, count, runningProgramType);
         customerKeywordIPService.addCustomerKeywordIP(customerKeywordUuid, city, ip);
     }
 

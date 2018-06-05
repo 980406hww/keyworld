@@ -24,6 +24,7 @@ public class ClientStatusCriteria extends BaseCriteria {
     private String startUpClient; // 开机机器
     private String hasGroup; // 有分组
     private String startUpStatus; // 开机状态
+    private String runningProgramType;
 
     private String terminalType;
     private Set<String> switchGroups;
@@ -202,5 +203,13 @@ public class ClientStatusCriteria extends BaseCriteria {
 
     public void setSwitchGroups(Set<String> switchGroups) {
         this.switchGroups = switchGroups;
+    }
+
+    public String getRunningProgramType() {
+        return runningProgramType;
+    }
+
+    public void setRunningProgramType(String runningProgramType) {
+        this.runningProgramType = runningProgramType;
     }
 }

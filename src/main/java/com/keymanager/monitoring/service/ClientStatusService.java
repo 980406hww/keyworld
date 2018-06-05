@@ -1,5 +1,20 @@
 package com.keymanager.monitoring.service;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.mail.MailHelper;
@@ -12,22 +27,13 @@ import com.keymanager.monitoring.entity.Config;
 import com.keymanager.monitoring.enums.ClientStartUpStatusEnum;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
 import com.keymanager.util.Constants;
+import com.keymanager.util.DES;
 import com.keymanager.util.FileUtil;
 import com.keymanager.util.Utils;
 import com.keymanager.util.VNCAddressBookParser;
 import com.keymanager.util.common.StringUtil;
 import com.keymanager.value.ClientStatusGroupSummaryVO;
 import com.keymanager.value.ClientStatusSummaryVO;
-import org.apache.commons.collections.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.util.*;
 
 @Service
 public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStatus>{
@@ -75,12 +81,12 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 	}
 
 	public void logClientStatusTime(String terminalType, String clientID, String status, String freeSpace, String version, String
-			city, int updateCount){
+			city, int updateCount, String runningProgramType){
 		ClientStatus clientStatus = clientStatusDao.selectById(clientID);
 		if(clientStatus == null){
 			addSummaryClientStatus(terminalType, clientID, freeSpace, version, city);
 		}else{
-			clientStatusDao.updateOptimizationResult(clientID, status, version, freeSpace, city, updateCount);
+			clientStatusDao.updateOptimizationResult(clientID, status, version, freeSpace, city, updateCount, runningProgramType);
 		}
 	}
 
@@ -103,6 +109,10 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 
 	public void updateClientStatusTargetVersion(List<String> clientIDs, String targetVersion) throws Exception {
 		clientStatusDao.updateClientStatusTargetVersion(clientIDs, targetVersion);
+	}
+	
+	public void updateClientStatusTargetVPSPassword(List<String> clientIDs, String targetVPSPassword) throws Exception {
+		clientStatusDao.updateClientStatusTargetVPSPassword(clientIDs, targetVPSPassword);
 	}
 
 	public void updateRenewalDate(String clientIDs,String settingType,String renewalDate) throws Exception {
@@ -156,7 +166,7 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 			oldClientStatus.setHost(clientStatus.getHost());
 			oldClientStatus.setPort(clientStatus.getPort());
 			oldClientStatus.setUserName(clientStatus.getUserName());
-			oldClientStatus.setPassword(clientStatus.getPassword());
+//			oldClientStatus.setPassword(clientStatus.getPassword());
 			oldClientStatus.setBroadbandAccount(clientStatus.getBroadbandAccount());
 			oldClientStatus.setBroadbandPassword(clientStatus.getBroadbandPassword());
 			oldClientStatus.setVpsBackendSystemComputerID(clientStatus.getVpsBackendSystemComputerID());
@@ -299,6 +309,7 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		clientStatus.setPort(vncInfos[1]);
 		clientStatus.setUserName(clientStatusInfo[3]);
 		clientStatus.setPassword(clientStatusInfo[4]);
+		clientStatus.setTargetVPSPassword(clientStatusInfo[4]);
 		clientStatus.setBroadbandAccount(clientStatusInfo[5]);
 		clientStatus.setBroadbandPassword(clientStatusInfo[6]);
 		clientStatus.setClientIDPrefix(Utils.removeDigital(clientStatusInfo[0]));
@@ -499,6 +510,14 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		FileOutputStream o = null;
 		Utils.createDir(Thread.currentThread().getContextClassLoader().getResource("").toURI().getPath() + "vnc/");
 		String fileName = Thread.currentThread().getContextClassLoader().getResource("").toURI().getPath() + "vnc/" + clientStatus.getClientID() + ".vnc";
+		String password;
+		if(StringUtil.isNullOrEmpty(clientStatus.getPassword())) {
+			password = "";
+		}else if(clientStatus.getPassword().equals("doshows123")) {
+			password = "8e587919308fcab0c34af756358b9053";
+		}else {
+			password = DES.vncPasswordEncode(clientStatus.getPassword());
+		}
 		o = new FileOutputStream(fileName);
 		o.write("[Connection]".getBytes("UTF-8"));
 		o.write(((String)java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
@@ -508,7 +527,7 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		o.write(((String)java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
 		o.write(String.format("Username=%s", clientStatus.getUserName()).getBytes("UTF-8"));
 		o.write(((String)java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
-		o.write("Password=8e587919308fcab0c34af756358b9053".getBytes("UTF-8"));
+		o.write(("Password="+password).getBytes("UTF-8"));
 		o.write(((String)java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
 		o.write("[Options]".getBytes("UTF-8"));
 		o.write(((String)java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
@@ -617,6 +636,28 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 		if(clientStatus != null){
 			if(clientStatus.getTargetVersion() != null){
 				return clientStatus.getTargetVersion().equals(clientStatus.getVersion()) ? "" : clientStatus.getTargetVersion();
+			}
+		}
+		return "0";
+	}
+	
+	public String checkPassword(String clientID){
+		ClientStatus clientStatus = clientStatusDao.selectById(clientID);
+		if(clientStatus != null){
+			if(clientStatus.getTargetVPSPassword() != null){
+				return clientStatus.getTargetVPSPassword().equals(clientStatus.getPassword()) ? "" : clientStatus.getTargetVPSPassword();
+			}
+		}
+		return "0";
+	}
+	
+	public String updatePassword(String clientID){
+		ClientStatus clientStatus = clientStatusDao.selectById(clientID);
+		if(clientStatus != null){
+			if(clientStatus.getTargetVPSPassword() != null){
+				clientStatus.setPassword(clientStatus.getTargetVPSPassword());
+				clientStatusDao.updateById(clientStatus);
+				return "1";
 			}
 		}
 		return "0";
