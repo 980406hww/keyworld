@@ -66,6 +66,38 @@ public class ExternalClientStatusRestController extends SpringMVCBaseController 
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
+    
+    @RequestMapping(value = "/checkPassword", method = RequestMethod.GET)
+    public ResponseEntity<?> checkPassword(HttpServletRequest request) throws Exception {
+        String userName = request.getParameter("username");
+        String password = request.getParameter("password");
+        String clientID = request.getParameter("clientID");
+        try {
+            if (validUser(userName, password)) {
+                String returnValue = clientStatusService.checkPassword(clientID);
+                return new ResponseEntity<Object>(returnValue, HttpStatus.OK);
+            }
+        }catch (Exception ex){
+            logger.error(ex.getMessage());
+        }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+    }
+    
+    @RequestMapping(value = "/updatePassword", method = RequestMethod.GET)
+    public ResponseEntity<?> updatePassword(HttpServletRequest request) throws Exception {
+        String userName = request.getParameter("username");
+        String password = request.getParameter("password");
+        String clientID = request.getParameter("clientID");
+        try {
+            if (validUser(userName, password)) {
+                String returnValue = clientStatusService.updatePassword(clientID);
+                return new ResponseEntity<Object>(returnValue, HttpStatus.OK);
+            }
+        }catch (Exception ex){
+            logger.error(ex.getMessage());
+        }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+    }
 
     @RequestMapping(value = "/getStoppedClientStatuses", method = RequestMethod.GET)
     public ResponseEntity<?> getStoppedClientStatuses(HttpServletRequest request) throws Exception {
