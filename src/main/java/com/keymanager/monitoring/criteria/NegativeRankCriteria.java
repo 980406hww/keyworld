@@ -6,9 +6,27 @@ import java.util.Date;
 import java.util.List;
 
 public class NegativeRankCriteria extends BaseCriteria {
+    private  String keyword;
     private String searchEngine;
+    private String createTime;
     private Date searchDate;
     private List<NegativeRank> negativeRanks;
+
+    public String getKeyword() {
+        return keyword;
+    }
+
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
 
     public String getSearchEngine() {
         return searchEngine;

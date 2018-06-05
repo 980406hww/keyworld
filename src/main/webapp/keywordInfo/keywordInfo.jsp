@@ -10,8 +10,7 @@
     <div id="topDiv">
         <%@include file="/menu.jsp" %>
         <div style="margin-top: 35px">
-            <form method="post" id="searchwordInfoForm" action="/internal/keywordInfo/searchKeywordInfos" style="margin-bottom:0px ">
-
+            <form method="post" id="searchwordInfoForm" action="/internal/keywordInfo/searchKeywordInfos" style="margin-bottom:0px">
                 <input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}"/>
                 <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
                 <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
@@ -58,7 +57,7 @@
 
     <div id="centerDiv" style="margin-bottom: 30px;">
         <table style="font-size:12px; width: 100%; table-layout:fixed; " id="showKeywordInfoTable">
-            <c:forEach items="${page.records}" var="keywordinfo">
+            <c:forEach items="${page.records}" var="keywordinfo" varStatus="status">
             <tr align="left" height=30  <c:if test="${status.index%2==0}">bgcolor="#eeeeee"</c:if> >
                 <td align="center" width=13 align="center"><input type="checkbox" name="uuid" value="${keywordinfo.id}" onclick="decideSelectAll()"/></td>
                 <td align="center" width=59>${keywordinfo.userName}</td>

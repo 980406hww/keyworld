@@ -167,4 +167,6 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void batchUpdateRequireDalete(@Param("requireDeleteKeywordVOs")List<RequireDeleteKeywordVO> requireDeleteKeywordVOs);
     void updateCustomerKeywordQueryTime(@Param("customerKeywordUuid")Long customerKeywordUuid, @Param("capturePositionQueryTime")Date capturePositionQueryTime);
+
+    void updateKeywordCustomerUuid(@Param("keywordUuids")List<String> keywordUuids,@Param("customerUuid")String customerUuid, @Param("terminalType")String terminalType);
 }

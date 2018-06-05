@@ -51,8 +51,7 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 			for(Customer customer : customers){
 				customerUuids.add(customer.getUuid());
 			}
-			List<Map> customerKeywordCountMap = customerKeywordService.getCustomerKeywordsCount(customerUuids, customerCriteria.getTerminalType(),
-					customerCriteria.getEntryType());
+			List<Map> customerKeywordCountMap = customerKeywordService.getCustomerKeywordsCount(customerUuids, customerCriteria.getTerminalType(),customerCriteria.getEntryType());
 			Map<Integer, Map> customerUuidKeywordCountMap = new HashMap<Integer, Map>();
 			for(Map map : customerKeywordCountMap){
 				customerUuidKeywordCountMap.put((Integer)map.get("customerUuid"), map);
@@ -203,5 +202,10 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 
 	public Customer findCustomerByExternalAccountInfo(String externalAccount, String searchEngine) {
 		return customerDao.findCustomerByExternalAccountInfo(externalAccount, searchEngine);
+	}
+
+	public List<Customer> searchTargetCustomers(String entryType,String loginName){
+		List<Customer> customers = customerDao.searchTargetCustomers(entryType,loginName);
+		return customers;
 	}
 }

@@ -2,14 +2,8 @@ package com.keymanager.monitoring.controller.rest.internal;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
-import com.keymanager.monitoring.criteria.CustomerKeywordCleanCriteria;
-import com.keymanager.monitoring.criteria.CustomerKeywordCriteria;
-import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
-import com.keymanager.monitoring.criteria.CustomerKeywordUpdateCriteria;
-import com.keymanager.monitoring.entity.Customer;
-import com.keymanager.monitoring.entity.CustomerKeyword;
-import com.keymanager.monitoring.entity.ServiceProvider;
-import com.keymanager.monitoring.entity.UserInfo;
+import com.keymanager.monitoring.criteria.*;
+import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.enums.EntryTypeEnum;
 import com.keymanager.monitoring.excel.operator.CustomerKeywordInfoExcelWriter;
 import com.keymanager.monitoring.service.*;
@@ -99,6 +93,13 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		customerKeywordCriteria.setTerminalType(terminalType);
 		List<ServiceProvider> serviceProviders = serviceProviderService.searchServiceProviders();
 		Page<CustomerKeyword> page = customerKeywordService.searchCustomerKeywords(new Page<CustomerKeyword>(currentPage, pageSize), customerKeywordCriteria);
+		String  accountName=null;
+		Set<String> roles = getCurrentUser().getRoles();
+		if(!roles.contains("DepartmentManager")) {
+			accountName=loginName;
+		}
+		List<Customer> customerList=customerService.searchTargetCustomers(entryType,accountName);
+		modelAndView.addObject("customerList", customerList);
 		modelAndView.addObject("customerKeywordCriteria", customerKeywordCriteria);
 		modelAndView.addObject("page", page);
 		modelAndView.addObject("user", user);
@@ -498,6 +499,21 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return new ResponseEntity<Object>(customerKeywordCriteria, HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@RequiresPermissions("/internal/customerKeyword/saveCustomerKeywords")
+	@RequestMapping(value = "/updateKeywordCustomerUuid" , method = RequestMethod.POST)
+	public ResponseEntity<?> updateKeywordCustomerUuid(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
+		try {
+			List<String> keywordUuids = (List<String>)requestMap.get("keywordUuids");
+			String customerUuid = (String)requestMap.get("customerUuid");
+			String terminalType = TerminalTypeMapping.getTerminalType(request);
+			customerKeywordService.updateKeywordCustomerUuid(keywordUuids,customerUuid,terminalType);
+			return new ResponseEntity<Object>(true , HttpStatus.OK);
+		}catch (Exception e){
+			logger.error(e.getMessage());
+			return new ResponseEntity<Object>(false , HttpStatus.BAD_REQUEST);
 		}
 	}
 }
