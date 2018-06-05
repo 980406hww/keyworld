@@ -537,6 +537,7 @@ function updateOperationType(self){
     });
 }
 function showSettingDialog(clientID, self){
+    $("#changeSettingDialog").find("#password").parent().parent().css("display", "");
     resetTrItemColor();
     $.ajax({
         url: '/internal/clientstatus/getClientStatus/' + clientID,
@@ -993,6 +994,7 @@ function clientStatusBatchUpdate() {
         alert('请选择多个终端进行设置');
         return;
     }
+    $("#changeSettingDialog").find("#password").parent().parent().css("display", "none");
     resetTrItemColor();
     $("#changeSettingDialog").find('input[type=text],select,input[type=hidden]').each(function() {
         $(this).val('');

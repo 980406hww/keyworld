@@ -480,7 +480,6 @@
         <if test="cs.host==1"> ,fHost = #{clientStatus.host}</if>
         <if test="cs.port==1"> ,fPort = #{clientStatus.port}</if>
         <if test="cs.userName==1"> ,fUserName = #{clientStatus.userName}</if>
-        <if test="cs.password==1"> ,fPassword = #{clientStatus.password}</if>
         <if test="cs.vpsBackendSystemComputerID==1"> ,fVpsBackendSystemComputerID = #{clientStatus.vpsBackendSystemComputerID}</if>
         <if test="cs.vpsBackendSystemPassword==1"> ,fVpsBackendSystemPassword = #{clientStatus.vpsBackendSystemPassword}</if>
         <if test="cs.maxUserCount==1"> ,fMaxUserCount = #{clientStatus.maxUserCount}</if>
