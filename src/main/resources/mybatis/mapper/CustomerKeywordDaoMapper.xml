@@ -172,7 +172,7 @@
         ck.fKeyword	AS	'keyword',
         ck.fCollectMethod   AS  'collectMethod'
         FROM t_customer_keyword ck
-        WHERE ck.fOptimizeGroupName IN ('pc_pm_yilufa', 'pc_pm_xiaowu', 'pc_pm_learner', 'pc_pm_51yza', 'm_pm_tianqi', 'm_pm_tiantian', 'm_pm_learner') AND ck.fCurrentIndexCount IS NULL AND ck.fPositionFirstFee IS NULL
+        WHERE ck.fOptimizeGroupName IN ('pc_pm_yilufa', 'pc_pm_xiaowu', 'pc_pm_learner', 'pc_pm_51yza', 'm_pm_tianqi', 'm_pm_tiantian', 'm_pm_learner', 'sogou_pm_tiantian') AND ck.fCurrentIndexCount IS NULL AND ck.fPositionFirstFee IS NULL
         ORDER BY ck.fCaptureIndexQueryTime, ck.fCreateTime LIMIT 1
     </select>
 

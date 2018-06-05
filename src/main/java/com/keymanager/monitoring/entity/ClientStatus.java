@@ -276,6 +276,12 @@ public class ClientStatus {
 	@TableField(value = "fDownloadProgramType")
 	private String downloadProgramType;
 
+	@TableField(value = "fRunningProgramType")
+	private String runningProgramType;
+	
+	@TableField(value = "fTargetVPSPassword")
+	private String targetVPSPassword;
+
 	public String getClientID() {
 		return clientID;
 	}
@@ -972,5 +978,21 @@ public class ClientStatus {
 
 	public void setSpecialCharPercent(Integer specialCharPercent) {
 		this.specialCharPercent = specialCharPercent;
+	}
+
+	public String getRunningProgramType() {
+		return runningProgramType;
+	}
+
+	public void setRunningProgramType(String runningProgramType) {
+		this.runningProgramType = runningProgramType;
+	}
+
+	public String getTargetVPSPassword() {
+		return targetVPSPassword;
+	}
+
+	public void setTargetVPSPassword(String targetVPSPassword) {
+		this.targetVPSPassword = targetVPSPassword;
 	}
 }

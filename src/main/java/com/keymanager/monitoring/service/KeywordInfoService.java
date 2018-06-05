@@ -57,6 +57,7 @@ public class KeywordInfoService extends ServiceImpl<KeywordInfoDao, KeywordInfo>
 			Customer customer = customerService.findCustomerByExternalAccountInfo(keyword.getUserName(), searchEngineInfo[0]);
 			if(customer != null) {
 				if(keyword.getOperationType().equals("add")) {
+					int maxSequence = customerKeywordService.getMaxSequence(searchEngineInfo[1], customer.getEntryType(), customer.getUuid());
 					Config config = configService.getConfig(Constants.CONFIG_TYPE_DEFAULT_OPTIMIZE_GROUPNAME, keyword.getSearchEngine());
 					for (String keywordInfo : keywordInfos) {
 						String[] info = keywordInfo.split(spliterStr);
@@ -71,6 +72,7 @@ public class KeywordInfoService extends ServiceImpl<KeywordInfoDao, KeywordInfo>
 						customerKeyword.setManualCleanTitle(true);
 						customerKeyword.setServiceProvider("baidutop123");
 						customerKeyword.setCollectMethod(CollectMethod.PerMonth.name());
+						customerKeyword.setSequence(++maxSequence);
 						customerKeywordService.addCustomerKeyword(customerKeyword, null);
 					}
 				} else if(keyword.getOperationType().equals("delete")) {

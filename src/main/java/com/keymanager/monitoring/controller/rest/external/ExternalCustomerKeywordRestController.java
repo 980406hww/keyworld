@@ -208,6 +208,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         String city = request.getParameter("city");
         String status = request.getParameter("status");
         String position = request.getParameter("position");
+        String runningProgramType = request.getParameter("runningProgramType");
 
         String ip = getIP(request);
 
@@ -219,7 +220,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                     customerKeywordService.updateCustomerKeywordPosition(customerKeywordUuid, Integer.parseInt(position), null);
                 }
                 customerKeywordService.updateOptimizationResult(terminalType, customerKeywordUuid, Integer.parseInt(count.trim()), ip, city, clientID,
-                        status, freeSpace, version);
+                        status, freeSpace, version, runningProgramType);
                 performanceService.addPerformanceLog(terminalType + ":updateOptimizedCount", System.currentTimeMillis() - startMilleSeconds, null);
 
                 return new ResponseEntity<Object>(1, HttpStatus.OK);
