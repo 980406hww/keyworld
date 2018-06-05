@@ -206,6 +206,7 @@ function showPositiveListDialog(uuid) {
     if (uuid == null) {
         $('#positiveListForm')[0].reset();
     }
+    $("#positiveListDialog").show();
     $("#positiveListDialog").dialog({
         resizable: false,
         width: 490,

@@ -133,6 +133,7 @@ function selectAll(self){
     }
 }
 function showUploadVNCDialog() {
+    $("#uploadVNCDialog").show();
     $('#uploadVNCDialog').dialog({
         resizable: false,
         width: 300,
@@ -194,6 +195,7 @@ function showUploadVNCDialog() {
     $('#uploadVNCDialog').window("resize",{top:$(document).scrollTop() + 100});
 }
 function showUploadVPSDialog(clientStatusType) {
+    $("#uploadVPSDialog").show();
     if(clientStatusType == "startUp") {
         $("#uploadVPSDialog").find("#programType").css("display", "block");
     } else {
@@ -264,6 +266,7 @@ function showReopenClientDialog() {
         alert('请选择要重开的终端');
         return;
     }
+    $("#reopenClientDiv").show();
     $('#reopenClientDiv').dialog({
         resizable: false,
         width: 300,
@@ -516,6 +519,7 @@ function showSettingDialog(clientID, self){
                 $().toastmessage('showErrorToast', "获取信息失败");
             } else {
                 initSettingDialog(clientStatus, self);
+                $("#changeSettingDialog").show();
                 $("#changeSettingDialog").dialog({
                     resizable: false,
                     title: "设置",
@@ -728,6 +732,7 @@ function showTargetVersionSettingDialog(self){
         return;
     }
     $("#targetVersionSettingDialog").find("#settingTargetVersion").val("");
+    $("#targetVersionSettingDialog").show();
     $("#targetVersionSettingDialog").dialog({
         resizable: false,
         title: "设定目标版本",
@@ -791,6 +796,7 @@ function showRenewalSettingDialog(self){
         return;
     }
     $("#renewalSettingDialog").find("#renewalSettingDialog").val("");
+    $("#renewalSettingDialog").show();
     $("#renewalSettingDialog").dialog({
         resizable: false,
         title: "续费",

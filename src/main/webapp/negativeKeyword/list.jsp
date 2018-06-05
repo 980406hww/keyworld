@@ -66,7 +66,7 @@
         </c:forEach>
     </table>
 </div>
-<div id="uploadTxtFileDialog" title="" class="easyui-dialog" style="left: 35%;">
+<div id="uploadTxtFileDialog" title="" class="easyui-dialog" style="display:none;left: 35%;">
     <form method="post" id="uploadTxtFileForm" action="" enctype="multipart/form-data">
         <table width="100%" style="font-size:14px;">
             <tr><td>
@@ -101,7 +101,7 @@
     </div>
 </div>
 
-<div id="positionInfoDiv" class="easyui-dialog" style="left: 40%;" >
+<div id="positionInfoDiv" class="easyui-dialog" style="display:none ;left: 40%;" >
     <table id="positionInfoTable" border="1" cellpadding="10" style="font-size: 12px;background-color: white;border-collapse: collapse;margin: 10px 10px;width:96%;">
         <tr>
             <td width="45">编号</td>
@@ -152,6 +152,7 @@
                         });
                         $("#positionInfoTable")[0].lastChild.appendChild(newTr);
                     });
+                    $("#positionInfoDiv").show();
                     $("#positionInfoDiv").dialog({
                         resizable: false,
                         minWidth:530,

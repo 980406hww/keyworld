@@ -121,7 +121,7 @@
         </c:forEach>
     </table>
 </div>
-<div id="crawlRankingDialog" title="" class="easyui-dialog" style="left: 35%;">
+<div id="crawlRankingDialog" title="" class="easyui-dialog" style="display: none;left: 35%;">
 <form id="crawlRankingForm">
     <ul>
         <input type="hidden" name="captureRankJobUuid" id="captureRankJobUuid">

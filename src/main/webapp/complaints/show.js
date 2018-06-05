@@ -43,6 +43,7 @@ function showAddMainKeywordDialog(uuid) {
     if(uuid==null){
         $('#mainKeywordForm')[0].reset();
     }
+    $("#showAddMainKeywordDialog").show();
     $("#showAddMainKeywordDialog").dialog({
         resizable: false,
         width: 350,

@@ -270,6 +270,7 @@ function resetPageNumber() {
 }
 function showGroupNameChangeByRankDialog(customerUuid) {
     $('#groupNameChangeByRankFrom')[0].reset();
+    $("#groupChangeNameByRankDialog").show();
     $("#groupChangeNameByRankDialog").dialog({
         resizable: false,
         width: 240,
@@ -344,6 +345,7 @@ function showGroupNameChangeByRankDialog(customerUuid) {
     $('#groupChangeNameByRankDialog').window("resize",{top:$(document).scrollTop() + 200});
 }
 function showGroupNameChangeDialog(changeGroupCriteria) {
+    $("#groupChangeNameDialog").show();
     $("#groupChangeNameDialog").dialog({
         resizable: false,
         width: 260,
@@ -390,6 +392,7 @@ function showGroupNameChangeDialog(changeGroupCriteria) {
     $('#groupChangeNameDialog').window("resize",{top:$(document).scrollTop() + 200});
 }
 function showSearchEngineChangeDialog(searchEngineCriteria) {
+    $("#changeSearchEngineDialog").show();
     $("#changeSearchEngineDialog").dialog({
         resizable: false,
         width: 220,
@@ -532,6 +535,7 @@ function addCustomerKeyword(customerKeywordUuid, customerUuid) {
         $("#customerKeywordForm").find("#uuid").val('');
         $("#customerKeywordForm").find("#status").val('');
     }
+    $("#saveCustomerKeywordDialog").show();
     $("#saveCustomerKeywordDialog").dialog({
         width: 410,
         height: 605,
@@ -757,6 +761,7 @@ function uploadCustomerKeywords(customerUuid, excelType){
     }else{
         $('#uploadExcelForm').find("#excelType").html("(完整版)");
     }
+    $("#uploadExcelDailog").show();
     $("#uploadExcelDailog").dialog({
         resizable: false,
         width: 260,
@@ -856,6 +861,7 @@ function showOptimizePlanCountDialog() {
         alert('请选择要修改刷量的关键字');
         return;
     }
+    $("#optimizePlanCountDialog").show();
     $("#optimizePlanCountDialog").dialog({
         resizable: false,
         title: "修改刷量",

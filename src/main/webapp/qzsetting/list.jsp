@@ -181,7 +181,7 @@
 	</div>
 </div>
 
-<div id="changeSettingDialog" class="easyui-dialog" style="left: 40%;">
+<div id="changeSettingDialog" class="easyui-dialog" style="display: none;left: 40%;">
 	<form id="changeSettingForm">
 	<table style="font-size:12px" id="settingTable" align="center" cellspacing="5">
 		<tr>
@@ -345,7 +345,7 @@
 	</c:forEach>
 </datalist>
 <%--收费Dialog--%>
-<div id="chargeDialog" class="easyui-dialog" style="left: 40%;">
+<div id="chargeDialog" class="easyui-dialog" style="display: none;left: 40%;">
 	<table id="chargeDialogTable" cellspacing="5">
 		<tr>
 			<td align="right">客户</td>
@@ -474,7 +474,7 @@
 	</p>
 </div>
 <%--收费详情列表--%>
-<div id="chargeLogListDiv" class="easyui-dialog" style="left: 40%;" >
+<div id="chargeLogListDiv" class="easyui-dialog" style="display:none;left: 40%;" >
 	<table id="chargeLogListTable" border="1" cellpadding="10" style="font-size: 12px;background-color: white;border-collapse: collapse;margin: 10px 10px;width:92%;">
 		<tr>
 			<td>收费时间</td>

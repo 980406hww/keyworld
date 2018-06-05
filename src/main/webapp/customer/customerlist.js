@@ -219,6 +219,7 @@ function changeCustomerChargeType(customerUuid) {
     });
 }
 function showCustomerChargeTypeDialog(customerUuid) {
+    $("#customerChargeTypeDialog").show();
     $("#customerChargeTypeDialog").dialog({
         resizable: false,
         width: 530,
@@ -569,6 +570,7 @@ function autoFillPrice(self) {
 }
 function uploadDailyReportTemplate(uuid, self) {
     $('#dailyReportTemplateForm')[0].reset();
+    $("#uploadDailyReportTemplateDialog").show();
     $("#uploadDailyReportTemplateDialog").dialog({
         resizable: false,
         width: 350,
@@ -636,6 +638,7 @@ function showCustomerDialog(uuid, loginName) {
     if (uuid == null) {
         $('#customerForm')[0].reset();
     }
+    $("#customerDialog").show();
     $("#customerDialog").dialog({
         resizable: false,
         width: 280,
@@ -739,10 +742,11 @@ function getCustomer(uuid, callback) {
     });
 }
 function showCustomerKeywordDialog(uuid) {
+    $("#customerKeywordDialog").show();
     $("#customerKeywordDialog").dialog({
         resizable: false,
-        /* width: 510,
-         height: 320,*/
+        width: 510,
+         height: 320,
         modal: true,
         buttons: [{
             text: '保存',
@@ -953,6 +957,7 @@ function autoSwitchCustomerKeywordStatus() {
         alert('请选择要启停关键字的客户');
         return;
     }
+    $("#autoSwitchCustomerKeywordStatusDialog").show();
     $('#autoSwitchCustomerKeywordStatusDialog').dialog({
         resizable: false,
         width: 280,

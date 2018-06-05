@@ -210,7 +210,7 @@
         </c:forEach>
     </table>
 </div>
-<div id="customerChargeTypeDialog" title="客户规则" class="easyui-dialog" style="left: 35%;">
+<div id="customerChargeTypeDialog" title="客户规则" class="easyui-dialog" style="display: none;left: 35%;">
     <input type="hidden" id="customerChargeTypeUuid"/>
     <div id="showRuleRadioDiv" style="text-align: center">
         <input type="radio" id="chargeTypePercentage" onclick="chooseChargeType(this.value)" value="Percentage"
@@ -330,7 +330,7 @@
 </div>
 
 </div>
-<div id="customerDialog" title="客户信息" class="easyui-dialog" style="left: 40%;">
+<div id="customerDialog" title="客户信息" class="easyui-dialog" style="display:none;left: 40%;">
     <form id="customerForm" method="post" action="customerlist.jsp">
         <table style="font-size:14px;" cellpadding=5>
             <tr>
@@ -372,7 +372,7 @@
     </form>
 </div>
 <%--上传日报表模"onsubmit="return checkinput();"--%>
-<div id="uploadDailyReportTemplateDialog" title="上传日报表模板" class="easyui-dialog" style="left: 40%;">
+<div id="uploadDailyReportTemplateDialog" title="上传日报表模板" class="easyui-dialog" style=";display:none;left: 40%;">
     <form method="post" id="dailyReportTemplateForm" action=""
           enctype="multipart/form-data">
         <table width="100%" style="margin-top: 10px;margin-left: 10px">
@@ -399,22 +399,22 @@
     </form>
 </div>
 <%--添加客户关键字--%>
-<div id="customerKeywordDialog" title="客户关键字" class="easyui-dialog" style="left: 35%;">
+<div id="customerKeywordDialog" title="客户关键字" class="easyui-dialog" style="display:none;left: 35%;">
     <form id="customerKeywordForm">
-   <textarea id="customerKeywordTextarea" style="width:480px;height:180px;"
+   <textarea id="customerKeywordTextarea" style="width:502px;height:180px;resize: none;"
              placeholder="关键字 域名  关键字与域名以空格作为分割，一行一组"></textarea>
         <br>
         <c:choose>
             <c:when test="${'PC'.equalsIgnoreCase(terminalType)}">
-                <input type="input" id="group" style="width:480px" value="pc_pm_xiaowu"/>
+                <input type="input" id="group" style="width:502px" value="pc_pm_xiaowu"/>
             </c:when>
             <c:otherwise>
-                <input type="input" id="group" style="width:480px" value="m_pm_tiantian"/>
+                <input type="input" id="group" style="width:502px" value="m_pm_tiantian"/>
             </c:otherwise>
         </c:choose>
     </form>
 </div>
-<div id="autoSwitchCustomerKeywordStatusDialog" class="easyui-dialog" style="left: 40%;">
+<div id="autoSwitchCustomerKeywordStatusDialog" class="easyui-dialog" style="display: none;left: 40%;">
     <table width="95%" style="margin-top: 10px;margin-left: 10px">
         <tr>
             <td>

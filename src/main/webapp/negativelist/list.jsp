@@ -134,7 +134,7 @@
 	</div>
 </div>
 
-	<div id="negativeListDialog" class="easyui-dialog" style="left: 40%;">
+	<div id="negativeListDialog" class="easyui-dialog" style="display: none;left: 40%;">
 		<form id="negativeListForm" style="margin-bottom: 0px;" method="post" action="list.jsp">
 			<table style="font-size:14px;" cellpadding="5">
 				<tr>

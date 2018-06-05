@@ -384,7 +384,7 @@
 	<div style="display: none;">
 		<script src="http://s84.cnzz.com/stat.php?id=4204660&web_id=4204660" language="JavaScript"></script>
 	</div>
-	<div id="changeSettingDialog" class="easyui-dialog" style="left: 30%;">
+	<div id="changeSettingDialog" class="easyui-dialog" style="display: none;left: 30%;">
 		<table>
 			<tr>
 				<td>
@@ -759,11 +759,11 @@
 
 	</div>
 	
-	<div id="targetVersionSettingDialog" class="easyui-dialog" style="left: 40%;">
+	<div id="targetVersionSettingDialog" class="easyui-dialog" style="display: none;left: 40%;">
 		目标版本：<input type="text" name="settingTargetVersion" id="settingTargetVersion" />
 	</div>
 
-	<div id="renewalSettingDialog" class="easyui-dialog" style="left: 40%;">
+	<div id="renewalSettingDialog" class="easyui-dialog" style="display: none;left: 40%;">
 		<table style="font-size:12px">
 			<tr>
 				<th>类型</th>
@@ -781,7 +781,7 @@
 		</table>
 	</div>
 
-	<div id="uploadVNCDialog" class="easyui-dialog" style="left: 40%;">
+	<div id="uploadVNCDialog" class="easyui-dialog" style="display: none;left: 40%;">
 		<form method="post" id="uploadVNCForm" action="" enctype="multipart/form-data">
 			<table width="95%" style="margin-top: 10px;margin-left: 10px">
 				<tr>
@@ -805,11 +805,11 @@
 		</form>
 	</div>
 
-	<div id="uploadVPSDialog" class="easyui-dialog" style="left: 40%;">
+	<div id="uploadVPSDialog" class="easyui-dialog" style="display: none;left: 40%;">
 		<form method="post" id="uploadVPSForm" action="" enctype="multipart/form-data">
 			<table width="95%" style="margin-top: 10px;margin-left: 10px">
 				<tr>
-					<td id="programType" style="display: none;">
+					<td id="programType" >
 						下载程序:
 						<input type="radio" name="downloadProgramType" value="New" checked /> 新程序
 						<input type="radio" name="downloadProgramType" value="Old" /> 旧程序
@@ -830,7 +830,7 @@
 		</form>
 	</div>
 
-	<div id="reopenClientDiv" class="easyui-dialog">
+	<div id="reopenClientDiv" class="easyui-dialog" style="display: none">
 		<table width="95%" style="margin-top: 10px;margin-left: 10px">
 			<tr>
 				<td>
