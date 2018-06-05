@@ -18,6 +18,9 @@ public class QZSetting extends BaseEntity{
 	@TableField(exist=false)
 	private String contactPerson;
 
+	@TableField(exist=false)
+	private String userID;
+
 	@TableField(value = "fDomain")
 	private String domain;
 
@@ -54,8 +57,19 @@ public class QZSetting extends BaseEntity{
 	@TableField(value = "fCaptureCurrentKeywordStatus", strategy = FieldStrategy.IGNORED)
 	private String captureCurrentKeywordStatus;
 
+	@TableField(value = "fStatus")
+	private int status;
+
 	@TableField(exist=false)
 	private List<QZOperationType> qzOperationTypes;//qzOperationTypes为全站表子类  一对多
+
+	public String getUserID() {
+		return userID;
+	}
+
+	public void setUserID(String userID) {
+		this.userID = userID;
+	}
 
 	public int getCustomerUuid() {
 		return customerUuid;
@@ -175,5 +189,13 @@ public class QZSetting extends BaseEntity{
 
 	public void setCaptureCurrentKeywordStatus(String captureCurrentKeywordStatus) {
 		this.captureCurrentKeywordStatus = captureCurrentKeywordStatus;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
 	}
 }

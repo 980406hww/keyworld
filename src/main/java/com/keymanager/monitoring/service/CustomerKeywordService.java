@@ -860,22 +860,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     public Page<CustomerKeyword> searchCustomerKeywordLists(Page<CustomerKeyword> page, CustomerKeywordCriteria customerKeywordCriteria) {
         long startMilleSeconds = System.currentTimeMillis();
-        RowBounds rowBounds = new RowBounds(page.getOffset(),page.getLimit());
         List<CustomerKeyword> customerKeywords = customerKeywordDao.searchCustomerKeywordsPage(page, customerKeywordCriteria);
         performanceService.addPerformanceLog(this.getClass() + ":searchCustomerKeywordLists", System.currentTimeMillis() - startMilleSeconds, null);
-        List<CustomerKeyword> customerKeywordList = new ArrayList<CustomerKeyword>();
-        Map<Long,String> customerMap = new HashMap<Long, String>();
-        for (CustomerKeyword customerKeyword : customerKeywords) {
-            String contactPerson = customerMap.get(customerKeyword.getCustomerUuid());
-            if(contactPerson == null) {
-                Customer customer = customerService.selectById(customerKeyword.getCustomerUuid());
-                contactPerson = customer.getContactPerson();
-                customerMap.put(customer.getUuid(), customer.getContactPerson());
-            }
-            customerKeyword.setContactPerson(contactPerson);
-            customerKeywordList.add(customerKeyword);
-        }
-        page.setRecords(customerKeywordList);
+        page.setRecords(customerKeywords);
         return page;
     }
 

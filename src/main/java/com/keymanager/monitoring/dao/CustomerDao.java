@@ -12,7 +12,7 @@ import java.util.Map;
 public interface CustomerDao extends BaseMapper<Customer> {
     List<Customer> searchCustomers(Page<Customer> page, @Param("customerCriteria")CustomerCriteria customerCriteria);
 
-    List<Customer> getActiveCustomerSimpleInfo();
+    List<Customer> getActiveCustomerSimpleInfo(@Param("customerCriteria")CustomerCriteria customerCriteria);
 
     int selectLastId();
 

@@ -27,6 +27,7 @@
         AND DATE_SUB(NOW(), INTERVAL 10 MINUTE) > qs.fUpdateStartTime)
         OR (qs.fUpdateStatus = 'DownloadTimesUsed'
         AND DATE_SUB(NOW(), INTERVAL 1 DAY) > qs.fUpdateEndTime)
+        AND qs.fStatus = 1
         ORDER BY qs.fUpdateEndTime
     </select>
 
@@ -67,6 +68,7 @@
             qs.fCaptureCurrentKeywordStatus = 'Processing'
             AND DATE_SUB(NOW(), INTERVAL 10 MINUTE) > qs.fCaptureCurrentKeywordCountTime
         )
+        AND qs.fStatus = 1
         ORDER BY qs.fCaptureCurrentKeywordCountTime
     </select>
 
@@ -81,12 +83,14 @@
         qs.fUuid = ot.fQZSettingUuid
         AND ot.fNextChargeDate &lt;= date_add(CURDATE(), INTERVAL 7 DAY)
         AND ot.fIsDeleted = 0
+        AND qs.fStatus = 1
     </select>
 
     <select id="searchQZSettings" parameterType="com.keymanager.monitoring.criteria.QZSettingSearchCriteria"
-            resultType="com.keymanager.monitoring.vo.QZSettingVO">
+            resultType="com.keymanager.monitoring.entity.QZSetting">
         SELECT
         qs.fUuid AS 'uuid',
+        c.fUserID AS 'userID',
         qs.fCustomerUuid AS 'customerUuid',
         c.fContactPerson AS 'contactPerson',
         qs.fDomain AS 'domain',
@@ -102,15 +106,18 @@
         qs.fUpdateTime AS 'updateTime',
         qs.fCreateTime AS 'createTime',
         qs.fCaptureCurrentKeywordCountTime AS 'captureCurrentKeywordCountTime',
-        qs.fCaptureCurrentKeywordStatus AS 'captureCurrentKeywordStatus'
+        qs.fCaptureCurrentKeywordStatus AS 'captureCurrentKeywordStatus',
+        qs.fStatus AS 'status'
         FROM t_qz_setting qs
         JOIN t_customer c
         ON qs.fCustomerUuid = c.fUuid
         WHERE 1 = 1
+        <if test="qzSettingSearchCriteria.loginName != null and qzSettingSearchCriteria.loginName != ''">AND c.fUserID = #{qzSettingSearchCriteria.loginName}</if>
         <if test="qzSettingSearchCriteria.customerUuid != null and qzSettingSearchCriteria.customerUuid != ''">AND qs.fCustomerUuid = #{qzSettingSearchCriteria.customerUuid}</if>
         <if test="qzSettingSearchCriteria.domain != null and qzSettingSearchCriteria.domain != ''">AND qs.fDomain = #{qzSettingSearchCriteria.domain}</if>
         <if test="qzSettingSearchCriteria.group != null and qzSettingSearchCriteria.group != ''">AND (qs.fPcGroup = #{qzSettingSearchCriteria.group} or qs.fPhoneGroup = #{qzSettingSearchCriteria.group})</if>
         <if test="qzSettingSearchCriteria.updateStatus != null and qzSettingSearchCriteria.updateStatus != ''">AND qs.fUpdateStatus = #{qzSettingSearchCriteria.updateStatus}</if>
+        <if test="qzSettingSearchCriteria.status != null">AND qs.fStatus = #{qzSettingSearchCriteria.status}</if>
         <choose>
             <when test="qzSettingSearchCriteria.dateRangeType == 0">
                 AND EXISTS (select qs.fUuid from t_qz_operation_type ot where qs.fUuid = ot.fQZSettingUuid and ot.fNextChargeDate = CURDATE())
@@ -163,5 +170,14 @@
         UPDATE t_qz_setting
         SET fPcGroup = #{qzSetting.pcGroup},fPhoneGroup = #{qzSetting.phoneGroup}
         WHERE fUuid = #{qzSetting.uuid}
+    </update>
+
+    <update id="updateQZSettingStatus">
+        UPDATE t_qz_setting
+        SET fStatus = #{status}
+        WHERE fUuid IN
+        <foreach item="item" index="index" collection="uuids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
     </update>
 </mapper>
