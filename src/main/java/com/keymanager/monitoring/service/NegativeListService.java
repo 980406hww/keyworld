@@ -30,6 +30,9 @@ public class NegativeListService extends ServiceImpl<NegativeListDao, NegativeLi
     @Autowired
     private NegativeListsSynchronizeService negativeListsSynchronizeService;
 
+    @Autowired
+    private CustomerKeywordService customerKeywordService;
+
     public Page<NegativeList> searchNegativeLists(Page<NegativeList> page, NegativeListCriteria negativeListCriteria) {
         page.setRecords(negativeListDao.searchNegativeLists(page, negativeListCriteria));
         return page;
@@ -52,6 +55,7 @@ public class NegativeListService extends ServiceImpl<NegativeListDao, NegativeLi
 
     public void saveNegativeLists(List<NegativeList> negativeLists , String operationType) {
         if (CollectionUtils.isNotEmpty(negativeLists)) {
+            customerKeywordService.updateNegativeListUpdateTime(negativeLists.get(0).getKeyword());
             for (NegativeList negativeList : negativeLists) {
                 NegativeListCriteria negativeListCriteria = new NegativeListCriteria();
                 negativeListCriteria.setKeyword(negativeList.getKeyword());

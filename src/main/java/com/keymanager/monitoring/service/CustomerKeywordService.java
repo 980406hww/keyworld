@@ -584,6 +584,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeywordForOptimization.setCurrentPosition(customerKeyword.getCurrentPosition());
             customerKeywordForOptimization.setOriginalUrl(customerKeyword.getOriginalUrl());
             customerKeywordForOptimization.setTitle(customerKeyword.getTitle());
+            customerKeywordForOptimization.setNegativeListUpdateTime(customerKeyword.getNegativeListUpdateTime());
 
             customerKeywordForOptimization.setGroup(clientStatus.getGroup());
             customerKeywordForOptimization.setOperationType(clientStatus.getOperationType());
@@ -1126,4 +1127,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeywordDao.updateKeywordCustomerUuid(keywordUuids,customerUuid,terminalType);
     }
 
+    public void updateNegativeListUpdateTime(String keyword) {
+        customerKeywordDao.updateNegativeListUpdateTime(keyword);
+    }
 }

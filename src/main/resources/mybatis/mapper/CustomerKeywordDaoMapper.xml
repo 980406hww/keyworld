@@ -459,7 +459,8 @@
         ck.fClickUrl AS 'clickUrl',
         ck.fShowPage AS 'showPage',
         ck.fRelatedKeywordPercentage AS 'relatedKeywordPercentage',
-        ck.fRemarks AS 'remarks'
+        ck.fRemarks AS 'remarks',
+        ck.fNegativeListUpdateTime AS 'negativeListUpdateTime'
         FROM t_customer_keyword ck
         WHERE ck.fOptimizeGroupName = #{groupName} and ck.fStatus = 1 and ck.fTerminalType = #{terminalType}
         and (DATE_SUB(NOW(), INTERVAL ck.fQueryInterval MINUTE) > ck.fQueryTime) and ck.fUrl <![CDATA[>]]> ''
@@ -945,5 +946,10 @@
         <foreach item = "item" index = "index" collection = "keywordUuids" open="(" separator="," close=")">
             #{item}
         </foreach>
+    </update>
+
+    <update id="updateNegativeListUpdateTime">
+        UPDATE t_customer_keyword SET fNegativeListUpdateTime = NOW()
+        WHERE fKeyword = #{keyword}
     </update>
 </mapper>
