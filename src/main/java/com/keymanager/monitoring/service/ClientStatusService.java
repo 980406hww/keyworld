@@ -1,4 +1,4 @@
-package com.keymanager.monitoring.service;
+﻿package com.keymanager.monitoring.service;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.mail.MailHelper;
+import com.keymanager.monitoring.criteria.ClientStatusBatchUpdateCriteria;
 import com.keymanager.monitoring.criteria.ClientStatusCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
 import com.keymanager.monitoring.dao.ClientStatusDao;
@@ -166,7 +167,6 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 			oldClientStatus.setHost(clientStatus.getHost());
 			oldClientStatus.setPort(clientStatus.getPort());
 			oldClientStatus.setUserName(clientStatus.getUserName());
-//			oldClientStatus.setPassword(clientStatus.getPassword());
 			oldClientStatus.setBroadbandAccount(clientStatus.getBroadbandAccount());
 			oldClientStatus.setBroadbandPassword(clientStatus.getBroadbandPassword());
 			oldClientStatus.setVpsBackendSystemComputerID(clientStatus.getVpsBackendSystemComputerID());
@@ -1000,5 +1000,10 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 
 	public void updateStartUpStatusForCompleted(List<String> clientIDs) {
 		clientStatusDao.updateStartUpStatusForCompleted(clientIDs);
+	}
+
+	public void batchUpdateClientStatus(ClientStatusBatchUpdateCriteria clientStatusBatchUpdateCriteria) {
+		String[] clientIDs = clientStatusBatchUpdateCriteria.getClientStatus().getClientID().split(",");
+		clientStatusDao.batchUpdateClientStatus(clientIDs, clientStatusBatchUpdateCriteria.getCs(), clientStatusBatchUpdateCriteria.getClientStatus());
 	}
 }

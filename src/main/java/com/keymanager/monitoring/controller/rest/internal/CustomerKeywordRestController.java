@@ -449,12 +449,19 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 
 	@RequiresPermissions("/internal/customerKeyword/editOptimizePlanCount")
 	@RequestMapping(value = "/editOptimizePlanCount" , method = RequestMethod.POST)
-	public ResponseEntity<?> editOptimizePlanCount(@RequestBody Map<String, Object> requestMap){
+	public ResponseEntity<?> editOptimizePlanCount(@RequestBody Map<String, Object> requestMap, HttpServletRequest request){
 		try {
 			List<String> uuids = (List<String>) requestMap.get("uuids");
+			String customerUuid = (String) requestMap.get("customerUuid");
 			String settingType = (String) requestMap.get("settingType");
 			String optimizePlanCount = (String) requestMap.get("optimizePlanCount");
-			customerKeywordService.editCustomerOptimizePlanCount(Integer.parseInt(optimizePlanCount), settingType, uuids);
+			if(StringUtils.isNotBlank(customerUuid)) {
+				String terminalType = TerminalTypeMapping.getTerminalType(request);
+				String entryType = (String) request.getSession().getAttribute("entryType");
+				customerKeywordService.editOptimizePlanCountByCustomerUuid(terminalType, entryType, Long.parseLong(customerUuid), Integer.parseInt(optimizePlanCount), settingType);
+			} else {
+				customerKeywordService.editCustomerOptimizePlanCount(Integer.parseInt(optimizePlanCount), settingType, uuids);
+			}
 			return new ResponseEntity<Object>(true, HttpStatus.OK);
 		}catch (Exception e){
 			return new ResponseEntity<Object>(false, HttpStatus.OK);

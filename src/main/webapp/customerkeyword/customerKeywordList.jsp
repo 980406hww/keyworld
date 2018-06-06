@@ -321,6 +321,15 @@
 </div>
 <div id="optimizePlanCountDialog" class="easyui-dialog" style="display: none;left: 40%;">
     <table style="font-size:12px">
+        <tr></tr>
+        <tr>
+            <th>范围</th>
+            <td>
+                <input type="radio" name="range" value="all" checked />所有的
+                <input type="radio" name="range" value="appoint" />指定的
+            </td>
+        </tr>
+        <tr></tr>
         <tr>
             <th>类型</th>
             <td>
@@ -328,10 +337,11 @@
                 <input type="radio" name="settingType" value="setSpecificCount" />指定刷量
             </td>
         </tr>
+        <tr></tr>
         <tr>
             <th>刷量</th>
             <td>
-                <input name="optimizePlanCount" id="optimizePlanCount" type="text" style="width:160px;" value="">
+                <input name="optimizePlanCount" id="optimizePlanCount" type="text" style="width:160px;" class="easyui-numberspinner" required value="">
             </td>
         </tr>
     </table>
