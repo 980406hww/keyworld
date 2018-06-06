@@ -18,7 +18,6 @@ import com.keymanager.value.CustomerKeywordForCaptureTitle;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,6 +93,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     @Autowired
     private DailyReportItemService dailyReportItemService;
+
+    @Autowired
+    private NegativeListUpdateInfoService negativeListUpdateInfoService;
 
     public Page<CustomerKeyword> searchCustomerKeywords(Page<CustomerKeyword> page, CustomerKeywordCriteria customerKeywordCriteria){
         page.setRecords(customerKeywordDao.searchCustomerKeywordsPageForCustomer(page, customerKeywordCriteria));
@@ -584,12 +586,16 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeywordForOptimization.setCurrentPosition(customerKeyword.getCurrentPosition());
             customerKeywordForOptimization.setOriginalUrl(customerKeyword.getOriginalUrl());
             customerKeywordForOptimization.setTitle(customerKeyword.getTitle());
-            customerKeywordForOptimization.setNegativeListUpdateTime(customerKeyword.getNegativeListUpdateTime());
 
             customerKeywordForOptimization.setGroup(clientStatus.getGroup());
             customerKeywordForOptimization.setOperationType(clientStatus.getOperationType());
             customerKeywordForOptimization.setBroadbandAccount(clientStatus.getBroadbandAccount());
             customerKeywordForOptimization.setBroadbandPassword(clientStatus.getBroadbandPassword());
+
+            NegativeListUpdateInfo negativeListUpdateInfo = negativeListUpdateInfoService.getNegativeListUpdateInfo(customerKeyword.getKeyword());
+            if(negativeListUpdateInfo != null) {
+                customerKeywordForOptimization.setNegativeListUpdateTime(negativeListUpdateInfo.getNegativeListUpdateTime());
+            }
 
             Set<String> specialGruupNames = new HashSet<String>();
             specialGruupNames.add("pc_pm_xiaowu");
@@ -1125,9 +1131,5 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     public void updateKeywordCustomerUuid(List<String> keywordUuids,String customerUuid,String terminalType){
         customerKeywordDao.updateKeywordCustomerUuid(keywordUuids,customerUuid,terminalType);
-    }
-
-    public void updateNegativeListUpdateTime(String keyword) {
-        customerKeywordDao.updateNegativeListUpdateTime(keyword);
     }
 }

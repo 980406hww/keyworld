@@ -235,9 +235,6 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(value = "fManualCleanTitle")
     private Boolean manualCleanTitle;
 
-    @TableField(value = "fNegativeListUpdateTime")
-    private Date negativeListUpdateTime;
-
     @TableField(exist = false)
     private Timestamp autoUpdateNegativeTime;
 
@@ -915,13 +912,5 @@ public class CustomerKeyword extends BaseEntity {
 
     public void setRequireDelete(Boolean requireDelete) {
         this.requireDelete = requireDelete;
-    }
-
-    public Date getNegativeListUpdateTime() {
-        return negativeListUpdateTime;
-    }
-
-    public void setNegativeListUpdateTime(Date negativeListUpdateTime) {
-        this.negativeListUpdateTime = negativeListUpdateTime;
     }
 }
