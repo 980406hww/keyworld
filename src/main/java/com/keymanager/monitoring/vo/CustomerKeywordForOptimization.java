@@ -1,5 +1,6 @@
 package com.keymanager.monitoring.vo;
 
+import java.util.Date;
 import java.util.List;
 
 public class CustomerKeywordForOptimization {
@@ -79,6 +80,7 @@ public class CustomerKeywordForOptimization {
     private List<KeywordSimpleVO> relatedQZKeywords;
 
     private String remarks;
+    private Date negativeListUpdateTime;
 
     public String getKeyword() {
         return keyword;
@@ -654,5 +656,13 @@ public class CustomerKeywordForOptimization {
 
     public void setRelatedQZKeywords(List<KeywordSimpleVO> relatedQZKeywords) {
         this.relatedQZKeywords = relatedQZKeywords;
+    }
+
+    public Date getNegativeListUpdateTime() {
+        return negativeListUpdateTime;
+    }
+
+    public void setNegativeListUpdateTime(Date negativeListUpdateTime) {
+        this.negativeListUpdateTime = negativeListUpdateTime;
     }
 }

@@ -10,7 +10,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -30,12 +29,16 @@ public class NegativeListService extends ServiceImpl<NegativeListDao, NegativeLi
     @Autowired
     private NegativeListsSynchronizeService negativeListsSynchronizeService;
 
+    @Autowired
+    private NegativeListUpdateInfoService negativeListUpdateInfoService;
+
     public Page<NegativeList> searchNegativeLists(Page<NegativeList> page, NegativeListCriteria negativeListCriteria) {
         page.setRecords(negativeListDao.searchNegativeLists(page, negativeListCriteria));
         return page;
     }
 
     public void saveNegativeList(NegativeList negativeList) {
+        negativeListUpdateInfoService.saveNegativeListUpdateInfo(negativeList.getKeyword());
         if (null != negativeList.getUuid()) {
             negativeList.setUpdateTime(new Date());
             negativeListDao.updateById(negativeList);
@@ -62,6 +65,7 @@ public class NegativeListService extends ServiceImpl<NegativeListDao, NegativeLi
                         deleteNegativeList(existingNegativeList.getUuid(), existingNegativeList);
                     }
                 }else {
+                    negativeList.setCreateTime(new Date());
                     if (existingNegativeLists.size() > 0) {
                         NegativeList existingNegativeList = existingNegativeLists.get(0);
                         negativeList.setUuid(existingNegativeList.getUuid());
@@ -93,6 +97,8 @@ public class NegativeListService extends ServiceImpl<NegativeListDao, NegativeLi
         keywordNegativeCriteria.setNegative(false);
         negativeListDao.deleteById(uuid);
         negativeListsSynchronizeService.negativeListsSynchronize(keywordNegativeCriteria);
+        //设置关键词负面清单更新时间
+        negativeListUpdateInfoService.saveNegativeListUpdateInfo(negativeList.getKeyword());
     }
 
     public void deleteAll(List<String> uuids) {
