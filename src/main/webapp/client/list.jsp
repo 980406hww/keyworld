@@ -775,7 +775,7 @@
 	<div id="targetVersionSettingDialog" class="easyui-dialog" style="display: none;left: 40%;">
 		目标版本：<input type="text" name="settingTargetVersion" id="settingTargetVersion" />
 	</div>
-	<div id="targetVPSPasswordSettingDialog" class="easyui-dialog" style="left: 40%;">
+	<div id="targetVPSPasswordSettingDialog" class="easyui-dialog" style="display: none;left: 40%;">
 		目标密码：<input type="text" name="settingTargetVPSPassword" id="settingTargetVPSPassword" />
 	</div>
 
@@ -858,7 +858,7 @@
 		</table>
 	</div>
 
-	<div id="headerTableDialog" class="easyui-dialog">
+	<div id="headerTableDialog" class="easyui-dialog" style="display: none">
 		<table>
 			<tr><td><input type="checkbox" name="columnName" id="1">客户端ID</td></tr>
 			<tr><td><input type="checkbox" name="columnName" id="2">优化组</td></tr>

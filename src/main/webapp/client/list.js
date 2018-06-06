@@ -885,6 +885,7 @@ function showTargetVPSPasswordSettingDialog(self){
         alert("请选择要更新的终端！");
         return;
     }
+    $("#targetVPSPasswordSettingDialog").show();
     $("#targetVPSPasswordSettingDialog").find("#settingTargetVPSPassword").val("");
     $("#targetVPSPasswordSettingDialog").dialog({
         resizable: false,
@@ -1103,6 +1104,8 @@ function headerTableSetting() {
             $(this).prop("checked", true);
         }
     });
+
+    $("#headerTableDialog").show();
     $("#headerTableDialog").dialog({
         resizable: false,
         title: "表格设置",
