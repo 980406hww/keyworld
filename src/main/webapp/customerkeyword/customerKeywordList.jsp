@@ -177,7 +177,7 @@
             </shiro:hasPermission>
 
             <shiro:hasPermission name="/internal/customerKeyword/saveCustomerKeywords">
-                <input type="button" onclick="updateKeywordCustomerUuid()" value="移动所选">
+                <input type="button" onclick="updateKeywordCustomerUuid()" value="更改所选词客户">
             </shiro:hasPermission>
         </div>
     </form>
