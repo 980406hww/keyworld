@@ -746,7 +746,6 @@ function showCustomerKeywordDialog(uuid) {
     $("#customerKeywordDialog").dialog({
         resizable: false,
         width: 510,
-         height: 320,
         modal: true,
         buttons: [{
             text: '保存',
