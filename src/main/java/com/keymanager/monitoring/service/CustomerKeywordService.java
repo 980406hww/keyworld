@@ -818,22 +818,22 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void updateCustomerKeywordPosition(Long customerKeywordUuid, int position, Date capturePositionQueryTime){
-        boolean reachStandardFlag = false;
+        Double todayFee = null;
         if(position > 0 && position <= 10) {
             CustomerKeyword customerKeyword = customerKeywordDao.selectById(customerKeywordUuid);
             if(customerKeyword.getPositionFifthFee() != null && customerKeyword.getPositionFifthFee() > 0 && position <= 5) {
-                reachStandardFlag = true;
+                todayFee = customerKeyword.getPositionFifthFee();
             } else if(customerKeyword.getPositionThirdFee() != null && customerKeyword.getPositionThirdFee() > 0 && position <= 3) {
-                reachStandardFlag = true;
+                todayFee = customerKeyword.getPositionThirdFee();
             } else if(customerKeyword.getPositionFirstPageFee() != null && customerKeyword.getPositionFirstPageFee() > 0 && position <= 10) {
-                reachStandardFlag = true;
+                todayFee = customerKeyword.getPositionFirstPageFee();
             } else if(customerKeyword.getPositionSecondFee() != null && customerKeyword.getPositionSecondFee() > 0 && position <= 2) {
-                reachStandardFlag = true;
+                todayFee = customerKeyword.getPositionSecondFee();
             } else if(customerKeyword.getPositionFirstFee() != null && customerKeyword.getPositionFirstFee() > 0 && position == 1) {
-                reachStandardFlag = true;
+                todayFee = customerKeyword.getPositionFirstFee();
             }
         }
-        customerKeywordDao.updatePosition(customerKeywordUuid, position, capturePositionQueryTime, reachStandardFlag);
+        customerKeywordDao.updatePosition(customerKeywordUuid, position, capturePositionQueryTime, todayFee);
         if(capturePositionQueryTime != null) {
             customerKeywordPositionSummaryService.savePositionSummary(customerKeywordUuid, position);
         }

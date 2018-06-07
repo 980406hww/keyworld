@@ -132,7 +132,7 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void updateOptimizePlanCountForBaiduMap();
 
-    void updatePosition(@Param("uuid")Long uuid, @Param("position")Integer position, @Param("capturePositionQueryTime")Date capturePositionQueryTime, @Param("reachStandardFlag") boolean reachStandardFlag);
+    void updatePosition(@Param("uuid")Long uuid, @Param("position")Integer position, @Param("capturePositionQueryTime")Date capturePositionQueryTime, @Param("todayFee") Double todayFee);
 
     List<OptimizationCountVO> tabkeOptimizationCountExceptionUsers();
 

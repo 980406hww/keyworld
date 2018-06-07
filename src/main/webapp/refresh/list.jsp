@@ -40,7 +40,7 @@
 		</tr>
 		<tr bgcolor="#eeeeee" height=30>
 			<td align="center" width=80>总数</td>
-			<td align="center" width=80>达标数</td>
+			<td align="center" width=80>达标数（金额）</td>
 			<td align="center" width=80>达标率</td>
 			<td align="center" width=80>没有刷量</td>
 			<td align="center" width=80>待刷数</td>
@@ -77,10 +77,10 @@
 					<c:if test="${refreshStatInfoVO.reachStandardKeywordCount > 0}">
 						<c:choose>
 							<c:when test="${'总计' eq refreshStatInfoVO.group}">
-								<a href="javascript:findKeyword(null , null)">${refreshStatInfoVO.reachStandardKeywordCount}</a>
+								<a href="javascript:findKeyword(null , null)">${refreshStatInfoVO.reachStandardKeywordCount}(${refreshStatInfoVO.todaySubTotal})</a>
 							</c:when>
 							<c:otherwise>
-								<a href="javascript:findKeyword('${refreshStatInfoVO.group}', null)">${refreshStatInfoVO.reachStandardKeywordCount}</a>
+								<a href="javascript:findKeyword('${refreshStatInfoVO.group}', null)">${refreshStatInfoVO.reachStandardKeywordCount}(${refreshStatInfoVO.todaySubTotal})</a>
 							</c:otherwise>
 						</c:choose>
 					</c:if>

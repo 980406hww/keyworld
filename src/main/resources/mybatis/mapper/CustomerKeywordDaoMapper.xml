@@ -702,7 +702,8 @@
             fCurrentPosition = IF(fLastReachStandardDate = CURRENT_DATE(),IF(#{position} > 0 AND #{position} &lt; fCurrentPosition, #{position}, fCurrentPosition), #{position}),
             fInitialPosition = IFNULL(fInitialPosition, #{position}),
             fCapturePositionQueryTime = IFNULL(#{capturePositionQueryTime}, fCapturePositionQueryTime),
-            <if test="reachStandardFlag == true">
+            fTodayFee = #{todayFee},
+            <if test="todayFee != null">
                 fLastReachStandardDate = CURRENT_DATE(),
             </if>
             fUpdateTime = NOW()
