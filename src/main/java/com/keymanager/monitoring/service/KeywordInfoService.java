@@ -10,6 +10,7 @@ import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.vo.KeywordInfoVO;
 import com.keymanager.monitoring.vo.RequireDeleteKeywordVO;
 import com.keymanager.util.Constants;
+import com.keymanager.util.common.StringUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,7 +113,13 @@ public class KeywordInfoService extends ServiceImpl<KeywordInfoDao, KeywordInfo>
 
 
 	public Page<KeywordInfo> searchKeywordInfos(Page<KeywordInfo> page, KeywordInfoCriteria KeywordInfoCriteria) {
-		page.setRecords(keywordInfoDao.searchKeywordInfos(page, KeywordInfoCriteria));
+		List<KeywordInfo> keywordInfos = keywordInfoDao.searchKeywordInfos(page, KeywordInfoCriteria);
+		for(KeywordInfo keywordInfo : keywordInfos){
+			if(StringUtils.isNotEmpty(keywordInfo.getKeywordInfo())) {
+				keywordInfo.setKeywordCount(keywordInfo.getKeywordInfo().split("\n").length);
+			}
+		}
+		page.setRecords(keywordInfos);
 		return page;
 	}
 

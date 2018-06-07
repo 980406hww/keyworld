@@ -49,6 +49,7 @@
                 <td align="center" width=60>账户名称</td>
                 <td align="center" width=60>搜索引擎及端口</td>
                 <td align="center" width=60>操作类型</td>
+                <td align="center" width=60>词数</td>
                 <td align="center" width=140>关键词信息</td>
                 <td align="center" width=60>创建时间</td>
             </tr>
@@ -63,6 +64,7 @@
                 <td align="center" width=59>${keywordinfo.userName}</td>
                 <td align="center" width=59>${keywordinfo.searchEngine}</td>
                 <td align="center" width=60>${keywordinfo.operationType}</td>
+                <td align="center" width=60>${keywordinfo.keywordCount}</td>
                 <td align="center" width=99 style="padding-left: 20px;padding-right: 20px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
                     <a href="#">${keywordinfo.keywordInfo}</a>
                 </td>

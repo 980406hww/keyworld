@@ -27,6 +27,9 @@ public class KeywordInfo {
 	@TableField(value = "fOperationType")
 	private String operationType;
 
+    @TableField(exist = false)
+    private int keywordCount;
+
 	@TableField(value = "fKeywordInfo")
 	private String keywordInfo;
 
@@ -109,5 +112,13 @@ public class KeywordInfo {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public int getKeywordCount() {
+        return keywordCount;
+    }
+
+    public void setKeywordCount(int keywordCount) {
+        this.keywordCount = keywordCount;
     }
 }
