@@ -85,7 +85,8 @@ public class NegativeListRestController {
     @RequestMapping(value = "/deleteNegativeList/{uuid}", method = RequestMethod.POST)
     public ResponseEntity<?> deleteNegativeList(@PathVariable("uuid") Long uuid) {
         try {
-            negativeListService.deleteNegativeList(uuid , null);
+            NegativeList negativeList = negativeListService.selectById(uuid);
+            negativeListService.deleteNegativeList(uuid , negativeList);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
