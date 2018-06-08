@@ -8,6 +8,7 @@ public class CustomerKeywordRefreshStatInfoVO {
 	private int invalidKeywordCount;
 	private int zeroOptimizedCount;
 	private int reachStandardKeywordCount;
+	private double todaySubTotal;
 	private int totalOptimizeCount;
 	private int totalOptimizedCount;
 	private int needOptimizeCount;
@@ -130,5 +131,13 @@ public class CustomerKeywordRefreshStatInfoVO {
 
 	public void setReachStandardKeywordCount(int reachStandardKeywordCount) {
 		this.reachStandardKeywordCount = reachStandardKeywordCount;
+	}
+
+	public double getTodaySubTotal() {
+		return todaySubTotal;
+	}
+
+	public void setTodaySubTotal(double todaySubTotal) {
+		this.todaySubTotal = todaySubTotal;
 	}
 }

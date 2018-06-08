@@ -6,7 +6,7 @@ $(function () {
     $("#saveCustomerKeywordDialog").dialog("close");
     $("#optimizePlanCountDialog").dialog("close");
     $("#customerKeywordDiv").css("margin-top",$("#customerKeywordTopDiv").height());
-
+    $('#customerList').dialog("close");
     alignTableHeader();
     window.onresize = function(){
         alignTableHeader();
@@ -270,6 +270,7 @@ function resetPageNumber() {
 }
 function showGroupNameChangeByRankDialog(customerUuid) {
     $('#groupNameChangeByRankFrom')[0].reset();
+    $("#groupChangeNameByRankDialog").show();
     $("#groupChangeNameByRankDialog").dialog({
         resizable: false,
         width: 240,
@@ -344,6 +345,7 @@ function showGroupNameChangeByRankDialog(customerUuid) {
     $('#groupChangeNameByRankDialog').window("resize",{top:$(document).scrollTop() + 200});
 }
 function showGroupNameChangeDialog(changeGroupCriteria) {
+    $("#groupChangeNameDialog").show();
     $("#groupChangeNameDialog").dialog({
         resizable: false,
         width: 260,
@@ -390,6 +392,7 @@ function showGroupNameChangeDialog(changeGroupCriteria) {
     $('#groupChangeNameDialog').window("resize",{top:$(document).scrollTop() + 200});
 }
 function showSearchEngineChangeDialog(searchEngineCriteria) {
+    $("#changeSearchEngineDialog").show();
     $("#changeSearchEngineDialog").dialog({
         resizable: false,
         width: 220,
@@ -532,6 +535,7 @@ function addCustomerKeyword(customerKeywordUuid, customerUuid) {
         $("#customerKeywordForm").find("#uuid").val('');
         $("#customerKeywordForm").find("#status").val('');
     }
+    $("#saveCustomerKeywordDialog").show();
     $("#saveCustomerKeywordDialog").dialog({
         width: 410,
         height: 605,
@@ -757,6 +761,7 @@ function uploadCustomerKeywords(customerUuid, excelType){
     }else{
         $('#uploadExcelForm').find("#excelType").html("(完整版)");
     }
+    $("#uploadExcelDailog").show();
     $("#uploadExcelDailog").dialog({
         resizable: false,
         width: 260,
@@ -851,22 +856,31 @@ function onlyNumber(self) {
     $(self).val($(self).val().replace(/[^\d]*/g, ''));
 }
 function showOptimizePlanCountDialog() {
-    var uuids = getUuids();
-    if (uuids === '') {
-        alert('请选择要修改刷量的关键字');
-        return;
-    }
+    var customerUuid = null;
+    var uuids = null;
+
+    $("#optimizePlanCountDialog").show();
     $("#optimizePlanCountDialog").dialog({
         resizable: false,
         title: "修改刷量",
-        height:120,
+        height:145,
         width: 225,
         modal: true,
         buttons: [{
             text: '保存',
             iconCls: 'icon-ok',
             handler: function () {
-                editOptimizePlanCount(uuids);
+                var range = $("#optimizePlanCountDialog").find("input[name=range]:checked").val();
+                if(range == "all") {
+                    customerUuid = $("#searchCustomerKeywordTable").find("#customerUuid").val();
+                } else {
+                    uuids = getUuids();
+                    if (uuids === '') {
+                        alert('请选择要修改刷量的关键字');
+                        return;
+                    }
+                }
+                editOptimizePlanCount(customerUuid, uuids);
             }
         },
             {
@@ -879,11 +893,16 @@ function showOptimizePlanCountDialog() {
     });
     $('#optimizePlanCountDialog').window("resize",{top:$(document).scrollTop() + 150});
 }
-function editOptimizePlanCount(uuids) {
+function editOptimizePlanCount(customerUuid, uuids) {
     var settingType = $("#optimizePlanCountDialog").find("input[name=settingType]:checked").val();
     var optimizePlanCount = $("#optimizePlanCountDialog").find("#optimizePlanCount").val();
+    if(optimizePlanCount == "") {
+        alert("请输入刷量");
+        return;
+    }
     var postData = {};
-    postData.uuids = uuids.split(",");
+    postData.customerUuid = customerUuid;
+    postData.uuids = uuids == null ? uuids : uuids.split(",");
     postData.settingType = settingType;
     postData.optimizePlanCount = $.trim(optimizePlanCount);
     $.ajax({
@@ -907,3 +926,81 @@ function editOptimizePlanCount(uuids) {
         }
     });
 }
+
+    function updateKeywordCustomerUuid() {
+        var customerKeywordUuids = getUuids();
+        if (customerKeywordUuids === '') {
+            alert('请选择要操作的信息');
+            return;
+        }
+        $("#customerList").show();
+        var keywordUuids = customerKeywordUuids.split(",");
+        $("#customerList").dialog({
+            resizable: false,
+            width: 450,
+            height: 100,
+            modal: true,
+            title: '更新关键字所属客户',
+            closed: true,
+            buttons: [{
+                    text: '确定',
+                    position: '25%',
+                    handler: function () {
+                        updateKeywordCustomerUuidRequest(keywordUuids);
+                    }
+                }]
+        });
+        $("#customerList").dialog("open");
+        $('#customerList').window("resize", {top: $(document).scrollTop() + 150});
+    }
+
+    function updateKeywordCustomerUuidRequest(keywordUuids) {
+        var condition = {};
+        var customerItem = $("#customerItem").val();
+        var customer_list = $("#customer_list").find("option");
+        if(customerItem == ''||customerItem == null){
+            alert('没有选择移动目标客户');
+            return;
+        }
+        var isFull=false;
+        customer_list.each(function (){
+            if (this.innerHTML == customerItem){
+                isFull=true;
+            }
+        });
+        if(isFull) {
+            var customerUuid = customerItem.split("_____")[1];
+            condition.customerUuid = customerUuid;
+            condition.keywordUuids = keywordUuids;
+            $.ajax({
+                url: '/internal/customerKeyword/updateKeywordCustomerUuid',
+                data: JSON.stringify(condition),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                type: 'POST',
+                success: function (data) {
+                    if (data) {
+                        $().toastmessage('showSuccessToast', "操作成功", true);
+                    } else {
+                        $().toastmessage('showErrorToast', "操作失败");
+                    }
+                },
+                error: function () {
+                    $().toastmessage('showErrorToast', "操作失败");
+                }
+            });
+        }else {
+            alert('数据不完整重新选择！');
+            return;
+        }
+    }
+
+
+
+
+
+
+

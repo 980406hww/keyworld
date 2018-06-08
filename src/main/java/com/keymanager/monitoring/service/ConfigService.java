@@ -11,9 +11,10 @@ import com.keymanager.util.Utils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.io.File;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class ConfigService extends ServiceImpl<ClientStatusDao, ClientStatus>{
@@ -66,6 +67,18 @@ public class ConfigService extends ServiceImpl<ClientStatusDao, ClientStatus>{
 		config.setKey(terminalType);
 		config.setValue(customerUuids);
 		configDao.updateConfig(config);
+	}
+
+	public Set<String> getNegativeKeyword(){
+		List<Config> configs=configDao.getNegativeKeyword (Constants.CONFIG_TYPE_NEGATIVE_KEYWORD);
+		Set<String> keywords=new HashSet<String>();
+		for (Config config : configs){
+			String[] ky=config.getValue().split(",");
+			for(String keyword:ky){
+				keywords.add(keyword);
+			}
+		}
+		return keywords;
 	}
 
 }

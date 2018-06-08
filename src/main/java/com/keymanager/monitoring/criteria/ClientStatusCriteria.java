@@ -24,7 +24,8 @@ public class ClientStatusCriteria extends BaseCriteria {
     private String startUpClient; // 开机机器
     private String hasGroup; // 有分组
     private String startUpStatus; // 开机状态
-    private String runningProgramType;
+    private String runningProgramType; // 运行程序类型
+    private String hiddenColumns; // 隐藏列号
 
     private String terminalType;
     private Set<String> switchGroups;
@@ -211,5 +212,13 @@ public class ClientStatusCriteria extends BaseCriteria {
 
     public void setRunningProgramType(String runningProgramType) {
         this.runningProgramType = runningProgramType;
+    }
+
+    public String getHiddenColumns() {
+        return hiddenColumns;
+    }
+
+    public void setHiddenColumns(String hiddenColumns) {
+        this.hiddenColumns = hiddenColumns;
     }
 }

@@ -159,6 +159,7 @@ function showWebsiteDialog(uuid) {
     if (uuid == null) {
         $('#websiteForm')[0].reset();
     }
+    $("#websiteDialog").show();
     $("#websiteDialog").dialog({
         resizable: false,
         width: 280,

@@ -1,11 +1,12 @@
-$(function () {
+﻿$(function () {
     $('#uploadVNCDialog').dialog("close");
     $('#uploadVPSDialog').dialog("close");
     $("#changeSettingDialog").dialog("close");
     $("#targetVersionSettingDialog").dialog("close");
+    $("#targetVPSPasswordSettingDialog").dialog("close");
     $("#renewalSettingDialog").dialog("close");
     $("#reopenClientDiv").dialog("close");
-    $("#clientStatusDiv").css("margin-top",$("#topDiv").height());
+    $("#headerTableDialog").dialog("close");
     pageLoad();
     alignTableHeader();
     window.onresize = function(){
@@ -41,11 +42,23 @@ function pageLoad() {
     }
 }
 function alignTableHeader(){
+    var columns = $("#hiddenColumns").val().split(",");
+    $.each(columns, function (index, value) {
+        if(value != "") {
+            $("#headerTable tr").each(function () {
+                $(this).find("td").eq(value).css("display", "none");
+            });
+            $("#clientStatusTable tr").each(function () {
+                $(this).find("td").eq(value).css("display", "none");
+            });
+        }
+    });
     var td = $("#clientStatusTable tr:first td");
     var ctd = $("#headerTable tr:first td");
     $.each(td, function (idx, val) {
         ctd.eq(idx).width($(val).width());
     });
+    $("#clientStatusDiv").css("margin-top",$("#topDiv").height());
 }
 function changePaging(currentPageNumber, pageSize) {
     var searchClientStatusForm = $("#searchClientStatusForm");
@@ -88,6 +101,22 @@ function resetPageNumber() {
         clientStatusFormObj.find("#startUpStatus").val($.trim(startUpStatus));
     }
     $("#searchClientStatusForm").find("#currentPageNumberHidden").val(1);
+}
+function checkItem(self) {
+    var color = $(self).css("color");
+    if(color == "rgb(0, 0, 0)") {
+        $(self).css("color", "red");
+    } else {
+        $(self).css("color", "black");
+    }
+}
+function resetTrItemColor() {
+    $("tr[name='trItem']").each(function () {
+        $(this).css("color", "black");
+    });
+    $("td[name='trItem']").each(function () {
+        $(this).css("color", "black");
+    });
 }
 function downloadVNCFile() {
     $.ajax({
@@ -134,6 +163,7 @@ function selectAll(self){
     }
 }
 function showUploadVNCDialog() {
+    $("#uploadVNCDialog").show();
     $('#uploadVNCDialog').dialog({
         resizable: false,
         width: 300,
@@ -195,6 +225,7 @@ function showUploadVNCDialog() {
     $('#uploadVNCDialog').window("resize",{top:$(document).scrollTop() + 100});
 }
 function showUploadVPSDialog(clientStatusType) {
+    $("#uploadVPSDialog").show();
     if(clientStatusType == "startUp") {
         $("#uploadVPSDialog").find("#programType").css("display", "block");
     } else {
@@ -265,6 +296,7 @@ function showReopenClientDialog() {
         alert('请选择要重开的终端');
         return;
     }
+    $("#reopenClientDiv").show();
     $('#reopenClientDiv').dialog({
         resizable: false,
         width: 300,
@@ -509,6 +541,7 @@ function updateOperationType(self){
     });
 }
 function showSettingDialog(clientID, self){
+    resetTrItemColor();
     $.ajax({
         url: '/internal/clientstatus/getClientStatus/' + clientID,
         type: 'POST',
@@ -517,6 +550,7 @@ function showSettingDialog(clientID, self){
                 $().toastmessage('showErrorToast', "获取信息失败");
             } else {
                 initSettingDialog(clientStatus, self);
+                $("#changeSettingDialog").show();
                 $("#changeSettingDialog").dialog({
                     resizable: false,
                     title: "设置",
@@ -527,7 +561,7 @@ function showSettingDialog(clientID, self){
                         text: '保存',
                         iconCls: 'icon-ok',
                         handler: function () {
-                            saveChangeSetting(this);
+                            saveChangeSetting(null);
                         }
                     },
                         {
@@ -628,7 +662,6 @@ function initSettingDialog(clientStatus, self){
     settingDialogDiv.find("#host").val(clientStatus.host != null ? clientStatus.host : "");
     settingDialogDiv.find("#port").val(clientStatus.port != null ? clientStatus.port : "");
     settingDialogDiv.find("#csUserName").val(clientStatus.userName != null ? clientStatus.userName : "Administrator");
-    settingDialogDiv.find("#password").val(clientStatus.password != null ? clientStatus.password : "doshows123");
     settingDialogDiv.find("#broadbandAccount").val(clientStatus.broadbandAccount != null ? clientStatus.broadbandAccount : "");
     settingDialogDiv.find("#broadbandPassword").val(clientStatus.broadbandPassword != null ? clientStatus.broadbandPassword : "");
     settingDialogDiv.find("#vpsBackendSystemComputerID").val(clientStatus.vpsBackendSystemComputerID != null ? clientStatus.vpsBackendSystemComputerID :
@@ -636,10 +669,17 @@ function initSettingDialog(clientStatus, self){
     settingDialogDiv.find("#vpsBackendSystemPassword").val(clientStatus.vpsBackendSystemPassword != null ? clientStatus.vpsBackendSystemPassword : "doshows123");
     settingDialogDiv.show();
 }
-function saveChangeSetting(self){
+function isChecked(id) {
+    var color = $("#changeSettingDialog").find("#" + id).parent().css("color");
+    if(color == "rgb(255, 0, 0)") {
+        return "1";
+    } else {
+        return "0";
+    }
+}
+function saveChangeSetting(clientIDs){
     var settingDialogDiv = $("#changeSettingDialog");
     var clientStatus = {};
-    clientStatus.clientID = settingDialogDiv.find("#settingClientID").val();
     clientStatus.group = settingDialogDiv.find("#settingGroup").val();
     clientStatus.operationType = settingDialogDiv.find("#settingOperationType").val();
     clientStatus.pageSize = settingDialogDiv.find("#pageSize").val();
@@ -660,7 +700,6 @@ function saveChangeSetting(self){
     clientStatus.host = settingDialogDiv.find("#host").val();
     clientStatus.port = settingDialogDiv.find("#port").val();
     clientStatus.userName = settingDialogDiv.find("#csUserName").val();
-    clientStatus.password = settingDialogDiv.find("#password").val();
     clientStatus.broadbandAccount = settingDialogDiv.find("#broadbandAccount").val();
     clientStatus.broadbandPassword = settingDialogDiv.find("#broadbandPassword").val();
     clientStatus.vpsBackendSystemComputerID = settingDialogDiv.find("#vpsBackendSystemComputerID").val();
@@ -699,29 +738,117 @@ function saveChangeSetting(self){
     clientStatus.randomlyClickMoreLink = settingDialogDiv.find("#randomlyClickMoreLink:checked").val() === '1' ? 1 : 0;
     clientStatus.moveUp20 = settingDialogDiv.find("#moveUp20:checked").val() === '1' ? 1 : 0;
     clientStatus.optimizeRelatedKeyword = settingDialogDiv.find("#optimizeRelatedKeyword:checked").val() === '1' ? 1 : 0;
-    $.ajax({
-        url: '/internal/clientstatus/saveClientStatus',
-        data: JSON.stringify(clientStatus),
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        timeout: 5000,
-        type: 'POST',
-        success: function (result) {
-            if(result){
-                $().toastmessage('showSuccessToast', "更新成功");
+    if(clientIDs != null) {
+        clientStatus.clientID = clientIDs;
+        var cs = {};
+        cs.group = isChecked("settingGroup");
+        cs.operationType = isChecked("settingOperationType");
+        cs.pageSize = isChecked("pageSize");
+        cs.page = isChecked("page");
+        cs.dragPercent = isChecked("dragPercent");
+        cs.zhanneiPercent = isChecked("zhanneiPercent");
+        cs.zhanwaiPercent = isChecked("zhanwaiPercent");
+        cs.kuaizhaoPercent = isChecked("kuaizhaoPercent");
+        cs.baiduSemPercent = isChecked("baiduSemPercent");
+        cs.specialCharPercent = isChecked("specialCharPercent");
+        cs.multiBrowser = isChecked("multiBrowser");
+        cs.clearCookie = isChecked("clearCookie");
+        cs.allowSwitchGroup = isChecked("allowSwitchGroup");
+        cs.disableStatistics = isChecked("disableStatistics");
+        cs.disableVisitWebsite = isChecked("disableVisitWebsite");
 
-            }else{
+        cs.switchGroupName = isChecked("switchGroupName");
+        cs.host = isChecked("host");
+        cs.port = isChecked("port");
+        cs.userName = isChecked("csUserName");
+        cs.broadbandAccount = isChecked("broadbandAccount");
+        cs.broadbandPassword = isChecked("broadbandPassword");
+        cs.vpsBackendSystemComputerID = isChecked("vpsBackendSystemComputerID");
+        cs.vpsBackendSystemPassword = isChecked("vpsBackendSystemPassword");
+
+        cs.entryPageMinCount = isChecked("entryPageMinCount");
+        cs.entryPageMaxCount = isChecked("entryPageMaxCount");
+        cs.disableVisitWebsite = isChecked("disableVisitWebsite");
+        cs.pageRemainMinTime = isChecked("pageRemainMinTime");
+        cs.pageRemainMaxTime = isChecked("pageRemainMaxTime");
+        cs.inputDelayMinTime = isChecked("inputDelayMinTime");
+        cs.inputDelayMaxTime = isChecked("inputDelayMaxTime");
+        cs.slideDelayMinTime = isChecked("slideDelayMinTime");
+        cs.slideDelayMaxTime = isChecked("slideDelayMaxTime");
+        cs.titleRemainMinTime = isChecked("titleRemainMinTime");
+        cs.titleRemainMaxTime = isChecked("titleRemainMaxTime");
+        cs.waitTimeAfterOpenBaidu = isChecked("waitTimeAfterOpenBaidu");
+        cs.waitTimeBeforeClick = isChecked("waitTimeBeforeClick");
+        cs.waitTimeAfterClick = isChecked("waitTimeAfterClick");
+        cs.maxUserCount = isChecked("maxUserCount");
+        cs.optimizeKeywordCountPerIP = isChecked("optimizeKeywordCountPerIP");
+
+        cs.oneIPOneUser = isChecked("oneIPOneUser") === '1' ? 1 : 0;
+        cs.randomlyClickNoResult = isChecked("randomlyClickNoResult") === '1' ? 1 : 0;
+        cs.justVisitSelfPage = isChecked("justVisitSelfPage") === '1' ? 1 : 0;
+        cs.sleepPer2Words = isChecked("sleepPer2Words") === '1' ? 1 : 0;
+        cs.supportPaste = isChecked("supportPaste") === '1' ? 1 : 0;
+        cs.moveRandomly = isChecked("moveRandomly") === '1' ? 1 : 0;
+        cs.parentSearchEntry = isChecked("parentSearchEntry") === '1' ? 1 : 0;
+        cs.clearLocalStorage = isChecked("clearLocalStorage") === '1' ? 1 : 0;
+        cs.lessClickAtNight = isChecked("lessClickAtNight") === '1' ? 1 : 0;
+        cs.sameCityUser = isChecked("sameCityUser") === '1' ? 1 : 0;
+        cs.locateTitlePosition = isChecked("locateTitlePosition") === '1' ? 1 : 0;
+        cs.baiduAllianceEntry = isChecked("baiduAllianceEntry") === '1' ? 1 : 0;
+        cs.justClickSpecifiedTitle = isChecked("justClickSpecifiedTitle") === '1' ? 1 : 0;
+        cs.randomlyClickMoreLink = isChecked("randomlyClickMoreLink") === '1' ? 1 : 0;
+        cs.moveUp20 = isChecked("moveUp20") === '1' ? 1 : 0;
+        cs.optimizeRelatedKeyword = isChecked("optimizeRelatedKeyword") === '1' ? 1 : 0;
+        var postData = {};
+        postData.cs = cs;
+        postData.clientStatus = clientStatus;
+        $.ajax({
+            url: '/internal/clientstatus/batchUpdateClientStatus',
+            data: JSON.stringify(postData),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            timeout: 5000,
+            type: 'POST',
+            success: function (result) {
+                if(result){
+                    $().toastmessage('showSuccessToast', "更新成功");
+                }else{
+                    $().toastmessage('showErrorToast', "更新失败");
+                }
+                $("#changeSettingDialog").dialog("close");
+            },
+            error: function () {
                 $().toastmessage('showErrorToast', "更新失败");
+                $("#changeSettingDialog").dialog("close");
             }
-            $("#changeSettingDialog").dialog("close");
-        },
-        error: function () {
-            $().toastmessage('showErrorToast', "更新失败");
-            $("#changeSettingDialog").dialog("close");
-        }
-    });
+        });
+    } else {
+        clientStatus.clientID = settingDialogDiv.find("#settingClientID").val();
+        $.ajax({
+            url: '/internal/clientstatus/saveClientStatus',
+            data: JSON.stringify(clientStatus),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            timeout: 5000,
+            type: 'POST',
+            success: function (result) {
+                if(result){
+                    $().toastmessage('showSuccessToast', "更新成功");
+                }else{
+                    $().toastmessage('showErrorToast', "更新失败");
+                }
+                $("#changeSettingDialog").dialog("close");
+            },
+            error: function () {
+                $().toastmessage('showErrorToast', "更新失败");
+                $("#changeSettingDialog").dialog("close");
+            }
+        });
+    }
 }
 function showTargetVersionSettingDialog(self){
     if(getSelectedClientIDs().trim() === ''){
@@ -729,6 +856,7 @@ function showTargetVersionSettingDialog(self){
         return;
     }
     $("#targetVersionSettingDialog").find("#settingTargetVersion").val("");
+    $("#targetVersionSettingDialog").show();
     $("#targetVersionSettingDialog").dialog({
         resizable: false,
         title: "设定目标版本",
@@ -752,18 +880,87 @@ function showTargetVersionSettingDialog(self){
     });
     $('#targetVersionSettingDialog').window("resize",{top:$(document).scrollTop() + 100});
 }
+function showTargetVPSPasswordSettingDialog(self){
+    if(getSelectedClientIDs().trim() === ''){
+        alert("请选择要更新的终端！");
+        return;
+    }
+    $("#targetVPSPasswordSettingDialog").show();
+    $("#targetVPSPasswordSettingDialog").find("#settingTargetVPSPassword").val("");
+    $("#targetVPSPasswordSettingDialog").dialog({
+        resizable: false,
+        title: "设定目标密码",
+        height:100,
+        width: 240,
+        modal: true,
+        buttons: [{
+            text: '保存',
+            iconCls: 'icon-ok',
+            handler: function () {
+                saveTargetVPSPasswordSetting(this);
+            }
+        },
+            {
+                text: '取消',
+                iconCls: 'icon-cancel',
+                handler: function () {
+                    $('#targetVPSPasswordSettingDialog').dialog("close");
+                }
+            }]
+    });
+    $('#targetVPSPasswordSettingDialog').window("resize",{top:$(document).scrollTop() + 100});
+}
 function saveTargetVersionSetting(self){
     var settingDialogDiv = $("#targetVersionSettingDialog");
     var clientStatus = {};
     clientStatus.clientIDs = getSelectedClientIDs();
     clientStatus.targetVersion = settingDialogDiv.find("#settingTargetVersion").val();
     if(clientStatus.targetVersion.trim() === ''){
-        alert("请输入目标版本！");
+        alert("请输入目标版1本！");
         return;
     }
     clientStatus.clientIDs = clientStatus.clientIDs.split(",");
     $.ajax({
         url: '/internal/clientstatus/updateClientStatusTargetVersion',
+        data: JSON.stringify(clientStatus),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        timeout: 5000,
+        type: 'POST',
+        success: function (result) {
+            if(result){
+                $().toastmessage('showSuccessToast', "更新成功",true);
+
+            }else{
+                $().toastmessage('showErrorToast', "更新失败");
+            }
+            settingDialogDiv.dialog("close");
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "更新失败");
+            settingDialogDiv.dialog("close");
+        }
+    });
+}
+
+function saveTargetVPSPasswordSetting(self){
+    var settingDialogDiv = $("#targetVPSPasswordSettingDialog");
+    var clientStatus = {};
+    clientStatus.clientIDs = getSelectedClientIDs();
+    clientStatus.targetVPSPassword = settingDialogDiv.find("#settingTargetVPSPassword").val();
+    if(clientStatus.targetVPSPassword.trim() === ''){
+        alert("请输入目标密码！");
+        return;
+    }
+    if(clientStatus.targetVPSPassword.trim().length != 8){
+        alert("请输入8位密码！");
+        return;
+    }
+    clientStatus.clientIDs = clientStatus.clientIDs.split(",");
+    $.ajax({
+        url: '/internal/clientstatus/updateClientStatusTargetVPSPassword',
         data: JSON.stringify(clientStatus),
         headers: {
             'Accept': 'application/json',
@@ -792,6 +989,7 @@ function showRenewalSettingDialog(self){
         return;
     }
     $("#renewalSettingDialog").find("#renewalSettingDialog").val("");
+    $("#renewalSettingDialog").show();
     $("#renewalSettingDialog").dialog({
         resizable: false,
         title: "续费",
@@ -861,6 +1059,84 @@ function saveRenewalSetting(self){
             settingDialogDiv.dialog("close");
         }
     });
+}
+function clientStatusBatchUpdate() {
+    var clientIDs = getSelectedClientIDs();
+    if (clientIDs.indexOf(",") == -1) {
+        alert('请选择多个终端进行设置');
+        return;
+    }
+    resetTrItemColor();
+    $("#changeSettingDialog").find('input[type=text],select,input[type=hidden]').each(function() {
+        $(this).val('');
+    });
+    $("#changeSettingDialog").find('input[type=checkbox]').each(function() {
+        $(this).prop("checked",false);
+    });
+    $("#changeSettingDialog").show();
+    $("#changeSettingDialog").dialog({
+        resizable: false,
+        title: "终端批量设置(请将需要修改的字段点击标记为红色)",
+        width: 820,
+        maxHeight: 534,
+        modal: true,
+        buttons: [{
+            text: '保存',
+            iconCls: 'icon-ok',
+            handler: function () {
+                saveChangeSetting(clientIDs);
+            }
+        },
+            {
+                text: '取消',
+                iconCls: 'icon-cancel',
+                handler: function () {
+                    $("#changeSettingDialog").dialog("close");
+                }
+            }]
+    });
+    $('#changeSettingDialog').window("resize",{top:$(document).scrollTop() + 100});
+}
+function headerTableSetting() {
+    var columnArray = $("#hiddenColumns").val().split(",");
+    $("#headerTableDialog").find(":input[name=columnName]").each(function () {
+        if($.inArray(this.id, columnArray) > -1) {
+            $(this).prop("checked", true);
+        }
+    });
+
+    $("#headerTableDialog").show();
+    $("#headerTableDialog").dialog({
+        resizable: false,
+        title: "表格设置",
+        width: 320,
+        height: 420,
+        modal: true,
+        buttons: [{
+            text: '隐藏列',
+            iconCls: 'icon-ok',
+            handler: function () {
+                var columns = "";
+                $("#headerTableDialog").find(":input[name=columnName]:checked").each(function () {
+                    if(columns == "") {
+                        columns = this.id;
+                    } else {
+                        columns = columns + "," + this.id;
+                    }
+                });
+                $("#hiddenColumns").val(columns);
+                $("#searchClientStatusForm").submit();
+            }
+        },
+            {
+                text: '取消',
+                iconCls: 'icon-cancel',
+                handler: function () {
+                    $("#headerTableDialog").dialog("close");
+                }
+            }]
+    });
+    $('#headerTableDialog').window("resize",{top:$(document).scrollTop() + 100});
 }
 function connectVNC(clientID){
     var obj = new ActiveXObject("wscript.shell");

@@ -503,8 +503,8 @@
             ck.fPositionFirstFee AS 'positionFirstFee',
             GROUP_CONCAT(CAST(ps.fPosition AS CHAR) ORDER BY ps.fCreateDate) AS 'positions'
         FROM t_customer_keyword ck JOIN t_ck_position_summary ps ON ck.fUuid = ps.fCustomerKeywordUuid
-		WHERE ps.fCreateDate >= DATE_SUB(CURRENT_DATE(), INTERVAL 3 DAY) and ck.fCurrentIndexCount is not NULL
-		AND ck.fStatus = 1 AND ck.fType &lt;&gt; 'pt' AND ck.fOptimizeGroupName
+		WHERE ps.fCreateDate >= DATE_SUB(CURRENT_DATE(), INTERVAL 3 DAY) and ck.fCurrentIndexCount >= 0
+		AND ck.fStatus = 1 AND ck.fOptimizeGroupName
         IN
         <foreach item="item" index="index" collection="groupNames" open="(" separator="," close=")">
             #{item}
@@ -702,7 +702,8 @@
             fCurrentPosition = IF(fLastReachStandardDate = CURRENT_DATE(),IF(#{position} > 0 AND #{position} &lt; fCurrentPosition, #{position}, fCurrentPosition), #{position}),
             fInitialPosition = IFNULL(fInitialPosition, #{position}),
             fCapturePositionQueryTime = IFNULL(#{capturePositionQueryTime}, fCapturePositionQueryTime),
-            <if test="reachStandardFlag == true">
+            fTodayFee = #{todayFee},
+            <if test="todayFee != null">
                 fLastReachStandardDate = CURRENT_DATE(),
             </if>
             fUpdateTime = NOW()
@@ -774,6 +775,19 @@
         <foreach item="uuid"  collection="uuids" open="(" separator="," close=")">
             #{uuid}
         </foreach>
+    </update>
+
+    <update id="editOptimizePlanCountByCustomerUuid">
+        UPDATE t_customer_keyword
+        <if test="settingType == 'setCurrentCount'">
+            SET fOptimizePlanCount = IF((fOptimizePlanCount + (#{optimizePlanCount})) > 0, (fOptimizePlanCount + (#{optimizePlanCount})), 0)
+        </if>
+        <if test="settingType == 'setSpecificCount'">
+            SET fOptimizePlanCount = #{optimizePlanCount}
+        </if>
+        WHERE fTerminalType = #{terminalType}
+        AND fType = #{entryType}
+        AND fCustomerUuid = #{customerUuid}
     </update>
 
     <update id="changeCustomerKeywordStatus">
@@ -921,5 +935,16 @@
         UPDATE t_customer_keyword
         SET fCapturePositionQueryTime = #{capturePositionQueryTime}
         WHERE fUuid = #{customerKeywordUuid}
+    </update>
+
+    <update id="updateKeywordCustomerUuid">
+        UPDATE t_customer_keyword
+        SET  fCustomerUuid = #{customerUuid}
+        WHERE
+        fTerminalType = #{terminalType}
+        AND fUuid IN
+        <foreach item = "item" index = "index" collection = "keywordUuids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
     </update>
 </mapper>

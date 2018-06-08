@@ -132,7 +132,7 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void updateOptimizePlanCountForBaiduMap();
 
-    void updatePosition(@Param("uuid")Long uuid, @Param("position")Integer position, @Param("capturePositionQueryTime")Date capturePositionQueryTime, @Param("reachStandardFlag") boolean reachStandardFlag);
+    void updatePosition(@Param("uuid")Long uuid, @Param("position")Integer position, @Param("capturePositionQueryTime")Date capturePositionQueryTime, @Param("todayFee") Double todayFee);
 
     List<OptimizationCountVO> tabkeOptimizationCountExceptionUsers();
 
@@ -142,6 +142,8 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     List<OptimizationCountVO> observeKeywordOptimizationCount(@Param("userID") String userID);
 
     void editCustomerOptimizePlanCount(@Param("optimizePlanCount")Integer optimizePlanCount, @Param("settingType")String settingType, @Param("uuids")List<String> uuids);
+
+    void editOptimizePlanCountByCustomerUuid(@Param("terminalType")String terminalType, @Param("entryType")String entryType, @Param("customerUuid")Long customerUuid, @Param("optimizePlanCount")Integer optimizePlanCount, @Param("settingType")String settingType);
 
     void changeCustomerKeywordStatus(@Param("terminalType")String terminalType, @Param("entryType")String entryType, @Param("customerUuid")Long customerUuid, @Param("status")Integer status);
 
@@ -165,4 +167,6 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void batchUpdateRequireDalete(@Param("requireDeleteKeywordVOs")List<RequireDeleteKeywordVO> requireDeleteKeywordVOs);
     void updateCustomerKeywordQueryTime(@Param("customerKeywordUuid")Long customerKeywordUuid, @Param("capturePositionQueryTime")Date capturePositionQueryTime);
+
+    void updateKeywordCustomerUuid(@Param("keywordUuids")List<String> keywordUuids,@Param("customerUuid")String customerUuid, @Param("terminalType")String terminalType);
 }

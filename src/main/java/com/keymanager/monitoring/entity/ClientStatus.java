@@ -278,6 +278,9 @@ public class ClientStatus {
 
 	@TableField(value = "fRunningProgramType")
 	private String runningProgramType;
+	
+	@TableField(value = "fTargetVPSPassword")
+	private String targetVPSPassword;
 
 	public String getClientID() {
 		return clientID;
@@ -983,5 +986,13 @@ public class ClientStatus {
 
 	public void setRunningProgramType(String runningProgramType) {
 		this.runningProgramType = runningProgramType;
+	}
+
+	public String getTargetVPSPassword() {
+		return targetVPSPassword;
+	}
+
+	public void setTargetVPSPassword(String targetVPSPassword) {
+		this.targetVPSPassword = targetVPSPassword;
 	}
 }

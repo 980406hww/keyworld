@@ -206,6 +206,7 @@ function showNegativeListDialog(uuid) {
     if (uuid == null) {
         $('#negativeListForm')[0].reset();
     }
+    $("#negativeListDialog").show();
     $("#negativeListDialog").dialog({
         resizable: false,
         width: 490,

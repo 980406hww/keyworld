@@ -159,6 +159,9 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(value = "fPositionFirstPageFee", strategy = FieldStrategy.IGNORED)
     private Double positionFirstPageFee;
 
+    @TableField(value = "fTodayFee", strategy = FieldStrategy.IGNORED)
+    private Double todayFee;
+
     @TableField(value = "fCapturePositionQueryTime")
     private Date capturePositionQueryTime;
 
@@ -912,5 +915,13 @@ public class CustomerKeyword extends BaseEntity {
 
     public void setRequireDelete(Boolean requireDelete) {
         this.requireDelete = requireDelete;
+    }
+
+    public Double getTodayFee() {
+        return todayFee;
+    }
+
+    public void setTodayFee(Double todayFee) {
+        this.todayFee = todayFee;
     }
 }

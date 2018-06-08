@@ -10,8 +10,7 @@
     <div id="topDiv">
         <%@include file="/menu.jsp" %>
         <div style="margin-top: 35px">
-            <form method="post" id="searchwordInfoForm" action="/internal/keywordInfo/searchKeywordInfos" style="margin-bottom:0px ">
-
+            <form method="post" id="searchwordInfoForm" action="/internal/keywordInfo/searchKeywordInfos" style="margin-bottom:0px">
                 <input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}"/>
                 <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
                 <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
@@ -50,6 +49,7 @@
                 <td align="center" width=60>账户名称</td>
                 <td align="center" width=60>搜索引擎及端口</td>
                 <td align="center" width=60>操作类型</td>
+                <td align="center" width=60>词数</td>
                 <td align="center" width=140>关键词信息</td>
                 <td align="center" width=60>创建时间</td>
             </tr>
@@ -58,12 +58,13 @@
 
     <div id="centerDiv" style="margin-bottom: 30px;">
         <table style="font-size:12px; width: 100%; table-layout:fixed; " id="showKeywordInfoTable">
-            <c:forEach items="${page.records}" var="keywordinfo">
+            <c:forEach items="${page.records}" var="keywordinfo" varStatus="status">
             <tr align="left" height=30  <c:if test="${status.index%2==0}">bgcolor="#eeeeee"</c:if> >
                 <td align="center" width=13 align="center"><input type="checkbox" name="uuid" value="${keywordinfo.id}" onclick="decideSelectAll()"/></td>
                 <td align="center" width=59>${keywordinfo.userName}</td>
                 <td align="center" width=59>${keywordinfo.searchEngine}</td>
                 <td align="center" width=60>${keywordinfo.operationType}</td>
+                <td align="center" width=60>${keywordinfo.keywordCount}</td>
                 <td align="center" width=99 style="padding-left: 20px;padding-right: 20px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
                     <a href="#">${keywordinfo.keywordInfo}</a>
                 </td>

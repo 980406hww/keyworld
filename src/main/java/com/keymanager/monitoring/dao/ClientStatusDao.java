@@ -46,6 +46,8 @@ public interface ClientStatusDao extends BaseMapper<ClientStatus> {
     List<ClientStatus> searchWaitingRestartingClientStatuses();
 
     void updateClientStatusTargetVersion(@Param("clientIDs")List<String> clientIDs, @Param("targetVersion")String targetVersion);
+    
+    void updateClientStatusTargetVPSPassword(@Param("clientIDs")List<String> clientIDs, @Param("targetVPSPassword")String targetVPSPassword);
 
     void updatePageNo(@Param("clientID")String clientID, @Param("pageNo")int pageNo);
 
@@ -66,4 +68,6 @@ public interface ClientStatusDao extends BaseMapper<ClientStatus> {
     void updateStartUpStatusForCompleted(@Param("clientIDs")List<String> clientIDs);
 
     Integer selectMaxIdByClientID(@Param("clientID")String clientID);
+
+    void batchUpdateClientStatus(@Param("clientIDs")String[] clientIDs, @Param("cs")ClientStatus cs, @Param("clientStatus")ClientStatus clientStatus);
 }

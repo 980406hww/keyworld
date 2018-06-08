@@ -1,5 +1,4 @@
 $(function () {
-    $("#crawlRankingDialog").dialog("close");
     $("#centerDiv").css("margin-top", $("#topDiv").height());
     pageLoad();
 })
@@ -134,6 +133,7 @@ function initGroupNames(data) {
     });
 }
 function showCrawlRankingForm(uuid) {
+    $("#crawlRankingDialog").show();
     $("#crawlRankingDialog").dialog({
         resizable: false,
         title: "设置抓排名任务",

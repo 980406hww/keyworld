@@ -2,6 +2,7 @@ package com.keymanager.monitoring.controller.rest.internal;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
+import com.keymanager.monitoring.criteria.ClientStatusBatchUpdateCriteria;
 import com.keymanager.monitoring.criteria.ClientStatusCriteria;
 import com.keymanager.monitoring.entity.ClientStatus;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
@@ -125,6 +126,20 @@ public class ClientStatusRestController extends SpringMVCBaseController {
             return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
         }
     }
+    
+    @RequiresPermissions("/internal/clientstatus/saveClientStatus")
+    @RequestMapping(value = "/updateClientStatusTargetVPSPassword", method = RequestMethod.POST)
+    public ResponseEntity<?> updateClientStatusTargetVPSPassword(@RequestBody Map<String, Object> requestMap) {
+        try {
+            List<String> clientIDs = (List<String>) requestMap.get("clientIDs");
+            String targetVPSPassword = (String) requestMap.get("targetVPSPassword");
+            clientStatusService.updateClientStatusTargetVPSPassword(clientIDs, targetVPSPassword);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
 
     @RequiresPermissions("/internal/clientstatus/updateClientStatusRenewalDate")
     @RequestMapping(value = "/updateClientStatusRenewalDate", method = RequestMethod.POST)
@@ -146,6 +161,18 @@ public class ClientStatusRestController extends SpringMVCBaseController {
     public ResponseEntity<?> saveClientStatus(@RequestBody ClientStatus clientStatus) {
         try {
             clientStatusService.saveClientStatus(clientStatus);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequiresPermissions("/internal/clientstatus/saveClientStatus")
+    @RequestMapping(value = "/batchUpdateClientStatus", method = RequestMethod.POST)
+    public ResponseEntity<?> batchUpdateClientStatus(@RequestBody ClientStatusBatchUpdateCriteria clientStatusBatchUpdateCriteria) {
+        try {
+            clientStatusService.batchUpdateClientStatus(clientStatusBatchUpdateCriteria);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());

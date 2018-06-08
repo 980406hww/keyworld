@@ -333,6 +333,7 @@ function showChargeLog(uuid, self) {
                     });
                     $("#chargeLogListTable")[0].lastChild.appendChild(newTr);
                 });
+                $("#chargeLogListDiv").show();
                 $("#chargeLogListDiv").dialog({
                     resizable: false,
                     width: 370,
@@ -419,6 +420,7 @@ function showChargeDialog(uuid,contactPerson,domain,self) {
                 var s = new String(totalAmount);
                 var total = s.replace(/\B(?=(?:\d{3})+$)/g, ',');
                 chargeDialogObj.find("#totalAmount").html(total+"元");
+                $("#chargeDialog").show();
                 $("#chargeDialog").dialog({
                     resizable: false,
                     modal: true,
@@ -485,6 +487,7 @@ function dealChargeTable(operationType) {
     }
 }
 function createSettingDialog() {
+    $("#changeSettingDialog").show();
     $("#changeSettingDialog").dialog({
         resizable: false,
         height: 450,

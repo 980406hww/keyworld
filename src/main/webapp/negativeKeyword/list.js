@@ -49,6 +49,7 @@ function pageLoad() {
     }
 }
 function showUploadTxtFileDialog() {
+    $("#uploadTxtFileDialog").show();
     $('#uploadTxtFileDialog').dialog({
         resizable: true,
         width: 220,
