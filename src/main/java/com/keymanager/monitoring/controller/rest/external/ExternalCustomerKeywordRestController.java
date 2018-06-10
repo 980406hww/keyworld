@@ -162,7 +162,9 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         String terminalType = (String) requestMap.get("terminalType");
         try {
             if (validUser(userName, password)) {
+                long startMilleSeconds = System.currentTimeMillis();
                 List<NegativeList> customerKeywordList = customerKeywordService.getCustomerKeywordSummaryInfos(terminalType, keyword);
+                performanceService.addPerformanceLog(terminalType + ":getCustomerKeywordSummaryInfos", System.currentTimeMillis() - startMilleSeconds, "Record Count: " + (customerKeywordList != null ? customerKeywordList.size() : 0));
                 return new ResponseEntity<Object>(customerKeywordList, HttpStatus.OK);
             }
         }catch (Exception ex){

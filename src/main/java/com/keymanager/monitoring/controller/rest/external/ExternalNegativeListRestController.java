@@ -5,6 +5,7 @@ import com.keymanager.monitoring.criteria.KeywordNegativeCriteria;
 import com.keymanager.monitoring.criteria.NegativeListCriteria;
 import com.keymanager.monitoring.entity.NegativeList;
 import com.keymanager.monitoring.service.NegativeListService;
+import com.keymanager.monitoring.service.PerformanceService;
 import com.keymanager.util.Constants;
 import com.keymanager.util.TerminalTypeMapping;
 import org.apache.commons.collections.CollectionUtils;
@@ -29,6 +30,9 @@ public class ExternalNegativeListRestController extends SpringMVCBaseController 
 
 	@Autowired
 	private NegativeListService negativeListService;
+
+	@Autowired
+	private PerformanceService performanceService;
 
 	@RequestMapping(value = "/saveNegativeLists", method = RequestMethod.POST)
 	public ResponseEntity<?> saveNegativeLists(@RequestBody NegativeListCriteria negativeListCriteria, HttpServletRequest request) throws Exception{
@@ -69,6 +73,7 @@ public class ExternalNegativeListRestController extends SpringMVCBaseController 
 		String keyword = request.getParameter("keyword");
 		try {
 			if (validUser(userName, password)) {
+				long startMilleSeconds = System.currentTimeMillis();
 				List<NegativeList> negativeLists = negativeListService.getSpecifiedKeywordNegativeLists(keyword);
 				StringBuilder sb = new StringBuilder(Constants.COLUMN_SPLITTOR);
 				if(CollectionUtils.isNotEmpty(negativeLists)){
@@ -78,6 +83,7 @@ public class ExternalNegativeListRestController extends SpringMVCBaseController 
 						sb.append(negativeList.getTitle());
 						sb.append(Constants.COLUMN_SPLITTOR);
 					}
+					performanceService.addPerformanceLog("All:getSpecifiedKeywordNegativeLists", System.currentTimeMillis() - startMilleSeconds, "Record Count: " + (negativeLists != null ? negativeLists.size() : 0));
 				}
 				return new ResponseEntity<Object>(sb.toString(), HttpStatus.OK);
 			}
