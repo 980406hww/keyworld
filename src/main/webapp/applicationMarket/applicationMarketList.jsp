@@ -28,11 +28,6 @@
                         <tr>
                             <td align="right">应用市场名称: </td>
                             <td><input type="text" name="marketName" id="marketName" value="${applicationMarketCriteria.marketName}" style="width:200px;"></td>
-                            <%--<td align="right">&nbsp;&nbsp;QQ:&nbsp;</td>--%>
-                            <%--<td><input type="text" name="qq" id="qq" value="${supplierCriteria.qq}" style="width:200px;"></td>--%>
-                            <%--<td align="right">&nbsp;&nbsp;联系电话:&nbsp;</td>--%>
-                            <%--<td><input type="text" name="phone" id="phone" value="${supplierCriteria.phone}" style="width:200px;">--%>
-                            <%--</td>--%>
                             <td align="right" width="60">
                                 <input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}"/>
                                 <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>

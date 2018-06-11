@@ -66,9 +66,9 @@ public class ApplyKeywordController {
     }
 
     @RequestMapping(value = "/deleteApplyKeyword/{uuid}", method = RequestMethod.GET)
-    public ResponseEntity<?> deleteSupplier(@PathVariable("uuid") Long uuid) {
+    public ResponseEntity<?> deleteApplyKeyword(@PathVariable("uuid") Long uuid) {
         try {
-            applyKeywordService.deleteSupplier(uuid);
+            applyKeywordService.deleteApplyKeyword(uuid);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
