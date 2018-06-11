@@ -57,7 +57,7 @@ public class ApplicationMarketService extends ServiceImpl<ApplicationMarketDao, 
         }
     }
 
-    public Object getApplicationMarket(Long uuid) {
+    public ApplicationMarket getApplicationMarket(Long uuid) {
         ApplicationMarket applicationMarket = applicationMarketDao.selectById(uuid);
         return applicationMarket;
     }

@@ -1,4 +1,5 @@
 $(function () {
+    $('#serverAddressDialog').dialog("close");
     $("#showServerAddressListDiv").css("margin-top",$("#showServerAddressTableDiv").height());
     alignTableHeader();
     pageLoad();
@@ -74,4 +75,156 @@ function alignTableHeader(){
     $.each(td, function (idx, val) {
         ctd.eq(idx).width($(val).width());
     });
+}
+function deleteServerAddress(uuid) {
+    if (confirm("确实要删除这条记录?") == false) return;
+    $.ajax({
+        url: '/internal/serverAddress/deleteServerAddress/' + uuid,
+        type: 'Get',
+        success: function (result) {
+            if (result) {
+                $().toastmessage('showSuccessToast', "删除成功",true);
+            } else {
+                $().toastmessage('showErrorToast', "删除失败");
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "删除失败");
+        }
+    });
+}
+function deleteServerAddressList(self) {
+    var uuids = getSelectedIDs();
+    if (uuids === '') {
+        alert('请选择要操作的设置信息');
+        return;
+    }
+    if (confirm("确实要删除这些记录?") == false) return;
+    var postData = {};
+    postData.uuids = uuids.split(",");
+    $.ajax({
+        url: '/internal/serverAddress/deleteServerAddressList',
+        data: JSON.stringify(postData),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        timeout: 5000,
+        type: 'POST',
+        success: function (data) {
+            if (data) {
+                $().toastmessage('showSuccessToast', "操作成功",true);
+            } else {
+                $().toastmessage('showErrorToast', "操作失败");
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "操作失败");
+        }
+    });
+}
+function getSelectedIDs() {
+    var uuids = '';
+    $.each($("input[name=uuid]:checkbox:checked"), function () {
+        if (uuids === '') {
+            uuids = $(this).val();
+        } else {
+            uuids = uuids + "," + $(this).val();
+        }
+    });
+    return uuids;
+}
+function showServerAddressDialog(uuid) {
+    if (uuid == null) {
+        $('#serverAddressForm')[0].reset();
+    }
+    $("#serverAddressDialog").show();
+    $("#serverAddressDialog").dialog({
+        resizable: false,
+        width: 310,
+        height: 100,
+        modal: true,
+        buttons: [{
+            text: '保存',
+            iconCls: 'icon-ok',
+            handler: function () {
+                saveServerAddress(uuid);
+            }
+        },
+            {
+                text: '清空',
+                iconCls: 'fi-trash',
+                handler: function () {
+                    $('#serverAddressForm')[0].reset();
+                }
+            },
+            {
+                text: '取消',
+                iconCls: 'icon-cancel',
+                handler: function () {
+                    $('#serverAddressDialog').dialog("close");
+                    $('#serverAddressForm')[0].reset();
+                }
+            }]
+    });
+    $("#serverAddressDialog").dialog("open");
+    $('#serverAddressDialog').window("resize",{top:$(document).scrollTop() + 100});
+}
+function saveServerAddress(uuid) {
+    var serverAddressForm = $("#serverAddressDialog").find("#serverAddressForm");
+    var serverAddress = {};
+    serverAddress.uuid = uuid;
+    serverAddress.serverAddress = serverAddressForm.find("#serverAddress").val();
+    if(serverAddress.serverAddress == null || serverAddress.serverAddress== '' || serverAddress.serverAddress == ""){
+        alert("服务器地址不能为空!");
+        return;
+    }
+    $.ajax({
+        url: '/internal/serverAddress/saveServerAddress',
+        data: JSON.stringify(serverAddress),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        timeout: 5000,
+        type: 'POST',
+        success: function (result) {
+            if (result) {
+                $().toastmessage('showSuccessToast', "保存成功",true);
+            } else {
+                $().toastmessage('showErrorToast', "保存失败");
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "保存失败");
+        }
+    });
+    $("#applyInfoDialog").dialog("close");
+    $('#applyInfoForm')[0].reset();
+}
+function modifyServerAddress(uuid) {
+    getApplyInfo(uuid, function (serverAddress) {
+        if (serverAddress != null) {
+            initServerAddressDialog(serverAddress);
+            showServerAddressDialog(uuid);
+        } else {
+            $().toastmessage('showErrorToast', "获取信息失败");
+        }
+    })
+}
+function getApplyInfo(uuid, callback) {
+    $.ajax({
+        url: '/internal/serverAddress/getServerAddress/' + uuid,
+        type: 'Get',
+        success: function (serverAddress) {
+            callback(serverAddress);
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "获取信息失败");
+        }
+    });
+}
+function initServerAddressDialog(serverAddress) {
+    var serverAddressForm = $("#serverAddressForm");
+    serverAddressForm.find("#serverAddress").val(serverAddress.serverAddress);
 }

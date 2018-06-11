@@ -53,7 +53,7 @@ public class ApplyInfoService extends ServiceImpl<ApplyInfoDao, ApplyInfo> {
         }
     }
 
-    public Object getApplyInfo(Long uuid) {
+    public ApplyInfo getApplyInfo(Long uuid) {
         ApplyInfo applyInfo = applyInfoDao.selectById(uuid);
         return applyInfo;
     }

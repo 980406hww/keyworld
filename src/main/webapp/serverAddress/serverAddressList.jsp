@@ -42,15 +42,16 @@
                                     <input type="submit" onclick="resetPageNumber()" name="btnQuery" id="btnQuery" value=" 查询 ">&nbsp;&nbsp;
                                 <%--</shiro:hasPermission>--%>
                             </td>
-                            <%--<td>--%>
+                            <td>
                                 <%--<shiro:hasPermission name="/internal/supplier/saveSupplier">--%>
-                                    <%--<input type="button" onclick="showSupplierDialog()" value=" 添加 ">&nbsp;&nbsp;--%>
-                                <%--</shiro:hasPermission></td>--%>
-                            <%--<td>--%>
-                                <%--<shiro:hasPermission name="/internal/supplier/deleteSuppliers">--%>
-                                    <%--<input type="button" onclick="deleteSuppliers(this)" value=" 删除所选 ">--%>
+                                    <input type="button" onclick="showServerAddressDialog()" value=" 添加 ">&nbsp;&nbsp;
                                 <%--</shiro:hasPermission>--%>
-                            <%--</td>--%>
+                            </td>
+                            <td>
+                                <%--<shiro:hasPermission name="/internal/supplier/deleteSuppliers">--%>
+                                    <input type="button" onclick="deleteServerAddressList(this)" value=" 删除所选 ">
+                                <%--</shiro:hasPermission>--%>
+                            </td>
                         </tr>
                     </table>
                 </form>
@@ -72,12 +73,23 @@
                 <td width="10" style="padding-left: 7px;"><input type="checkbox" name="uuid" value="${serverAddress.uuid}" onclick="decideSelectAll()"/></td>
                 <td width="100">${serverAddress.serverAddress}</td>
                 <td style="text-align: center;" width="100">
-                    <a href="javascript:(0)">修改</a> |
-                    <a href="javascript:(0)">删除</a>
+                    <a href="javascript:modifyServerAddress(${serverAddress.uuid})">修改</a> |
+                    <a href="javascript:deleteServerAddress('${serverAddress.uuid}')">删除</a>
                 </td>
             </tr>
         </c:forEach>
     </table>
+</div>
+
+<div id="serverAddressDialog" title="关键词信息" class="easyui-dialog" style="left: 35%;">
+    <form id="serverAddressForm" method="post" action="serverAddressList.jsp">
+        <table style="font-size:14px;" cellpadding=10 cellspacing="5">
+            <tr>
+                <td align="right">服务器地址:</td>
+                <td><input type="text" name="serverAddress" id="serverAddress" style="width:200px;"></td>
+            </tr>
+        </table>
+    </form>
 </div>
 
 <div id="showCustomerBottomPositioneDiv">

@@ -142,7 +142,7 @@ function showApplicationMarketDialog(uuid) {
     $("#applicationMarketDialog").dialog({
         resizable: false,
         width: 310,
-        height: 300,
+        height: 270,
         modal: true,
         buttons: [{
             text: '保存',
