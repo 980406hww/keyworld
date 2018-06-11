@@ -908,12 +908,16 @@ function resetPageNumber() {
     }
     searchCustomerFormObj.find("#currentPageNumberHidden").val(1);
 }
-function viewAizhanRank(contactPerson) {
+function viewSitesdRank(contactPerson,type) {
     var index = contactPerson.indexOf("整站");
     if(index > -1) {
         contactPerson = contactPerson.substr(0, index);
     }
-    window.open("https://baidurank.aizhan.com/baidu/" + contactPerson);
+    if(type == 'aizhan'){
+        window.open("https://baidurank.aizhan.com/baidu/" + contactPerson);
+    }else if(type == '5118'){
+        window.open("http://5118.com/seo/baidurank/" + contactPerson);
+    }
 }
 function changeCustomerKeywordStatus(customerUuid, status) {
     if(status == 0) {

@@ -1124,7 +1124,12 @@ function headerTableSetting() {
                         columns = columns + "," + this.id;
                     }
                 });
+                if(columnArray==columns){
+                    alert('数据没有产生任何变化');
+                    return;
+                }
                 $("#hiddenColumns").val(columns);
+                $("#haveHiddenColumns").val(true);
                 $("#searchClientStatusForm").submit();
             }
         },

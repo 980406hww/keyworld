@@ -5,6 +5,7 @@ import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.ClientStatusBatchUpdateCriteria;
 import com.keymanager.monitoring.criteria.ClientStatusCriteria;
 import com.keymanager.monitoring.entity.ClientStatus;
+import com.keymanager.monitoring.entity.UserPageSetup;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
 import com.keymanager.monitoring.service.*;
 import com.keymanager.util.Constants;
@@ -14,7 +15,6 @@ import com.keymanager.util.Utils;
 import com.keymanager.value.ClientStatusGroupSummaryVO;
 import com.keymanager.value.ClientStatusSummaryVO;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +42,9 @@ public class ClientStatusRestController extends SpringMVCBaseController {
     @Autowired
     private PerformanceService performanceService;
 
+    @Autowired
+    private UserPageSetupService userPageSetupService;
+
     @RequiresPermissions("/internal/clientstatus/changeTerminalType")
     @RequestMapping(value = "/changeTerminalType", method = RequestMethod.POST)
     public ResponseEntity<?> changeTerminalType(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) throws Exception {
@@ -59,13 +62,28 @@ public class ClientStatusRestController extends SpringMVCBaseController {
     @RequiresPermissions("/internal/clientstatus/searchClientStatuses")
     @RequestMapping(value = "/searchClientStatuses", method = RequestMethod.GET)
     public ModelAndView searchClientStatuses(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request) {
-        return constructClientStatusModelAndView(request, new ClientStatusCriteria(), currentPageNumber, pageSize, true);
+        String loginName = getCurrentUser().getLoginName();
+        String requestURI = request.getRequestURI();
+        ClientStatusCriteria clientStatusCriteria = new ClientStatusCriteria();
+        UserPageSetup userPageSetup = userPageSetupService.searchUserPageSetup(loginName,requestURI);
+        if(userPageSetup != null){
+            clientStatusCriteria.setHiddenColumns(userPageSetup.getHiddenField());
+        }else {
+            userPageSetupService.addUserPageSetup(loginName,requestURI,clientStatusCriteria.getHiddenColumns());
+        }
+        return constructClientStatusModelAndView(request,clientStatusCriteria, currentPageNumber, pageSize, true);
     }
 
     @RequiresPermissions("/internal/clientstatus/searchClientStatuses")
     @RequestMapping(value = "/searchClientStatuses", method = RequestMethod.POST)
     public ModelAndView searchClientStatusesPost(HttpServletRequest request, ClientStatusCriteria clientStatusCriteria) {
         try {
+            String loginName = getCurrentUser().getLoginName();
+            String requestURI = request.getRequestURI();
+            if(clientStatusCriteria.getHaveHiddenColumns()){
+                userPageSetupService.updateUserPageSetup(loginName,requestURI,clientStatusCriteria.getHiddenColumns());
+                clientStatusCriteria.setHaveHiddenColumns(false);
+            }
             String currentPageNumber = request.getParameter("currentPageNumber");
             String pageSize = request.getParameter("pageSize");
             if (null == currentPageNumber && null == pageSize) {
@@ -102,7 +120,6 @@ public class ClientStatusRestController extends SpringMVCBaseController {
         }
         Page<ClientStatus> page = clientStatusService.searchClientStatuses(new Page<ClientStatus>(currentPageNumber, pageSize), clientStatusCriteria, normalSearchFlag);
         String [] operationTypeValues = clientStatusService.getOperationTypeValues(terminalType);
-
         modelAndView.addObject("terminalType", terminalType);
         modelAndView.addObject("clientStatusCriteria", clientStatusCriteria);
         modelAndView.addObject("validMap", Constants.CLIENT_STATUS_VALID_MAP);

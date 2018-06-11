@@ -69,6 +69,7 @@
 								<input type="hidden" name="startUpStatusHidden" id="startUpStatusHidden" value="${clientStatusCriteria.startUpStatus}"/>
 								<input type="hidden" name="runningProgramTypeHidden" id="runningProgramTypeHidden" value="${clientStatusCriteria.runningProgramType}"/>
 								<input type="hidden" name="hiddenColumns" id="hiddenColumns" value="${clientStatusCriteria.hiddenColumns}"/>
+								<input type="hidden" name="haveHiddenColumns" id="haveHiddenColumns" value="${clientStatusCriteria.haveHiddenColumns}"/>
 								客户端ID:<input type="text" name="clientID" id="clientID" value="${clientStatusCriteria.clientID}" style="width: 90px;">
 								&nbsp;&nbsp;
 								优化组:<input type="text" name="groupName" id="groupName" value="${clientStatusCriteria.groupName}" style="width: 120px;">
