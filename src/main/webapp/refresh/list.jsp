@@ -25,6 +25,7 @@
 				</shiro:hasPermission>
 				<shiro:hasPermission name="/internal/customerKeyword/downloadCustomerKeywordInfo">
 				<input type="button" value="导出关键字信息到爱站抓排名" onclick="downloadTxt()">&nbsp;&nbsp;
+				<a download="keywordUrl.txt" href="/keywordUrl.txt" target="blank" id="downTXT" style="display: none">点击下载</a>
 				</shiro:hasPermission>
 			</td>
 		</tr>
