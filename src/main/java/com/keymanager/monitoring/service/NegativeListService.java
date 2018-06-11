@@ -10,7 +10,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -30,12 +30,19 @@ public class NegativeListService extends ServiceImpl<NegativeListDao, NegativeLi
     @Autowired
     private NegativeListsSynchronizeService negativeListsSynchronizeService;
 
+    @Autowired
+    private NegativeListUpdateInfoService negativeListUpdateInfoService;
+
+    @Autowired
+    private NegativeListCacheService negativeListCacheService;
+
     public Page<NegativeList> searchNegativeLists(Page<NegativeList> page, NegativeListCriteria negativeListCriteria) {
         page.setRecords(negativeListDao.searchNegativeLists(page, negativeListCriteria));
         return page;
     }
 
     public void saveNegativeList(NegativeList negativeList) {
+        negativeListUpdateInfoService.saveNegativeListUpdateInfo(negativeList.getKeyword());
         if (null != negativeList.getUuid()) {
             negativeList.setUpdateTime(new Date());
             negativeListDao.updateById(negativeList);
@@ -48,6 +55,7 @@ public class NegativeListService extends ServiceImpl<NegativeListDao, NegativeLi
             negativeListDao.insert(negativeList);
             negativeListsSynchronizeService.negativeListsSynchronize(keywordNegativeCriteria);
         }
+        negativeListCacheService.negativeListCacheEvict(negativeList.getKeyword());
     }
 
     public void saveNegativeLists(List<NegativeList> negativeLists , String operationType) {
@@ -62,6 +70,7 @@ public class NegativeListService extends ServiceImpl<NegativeListDao, NegativeLi
                         deleteNegativeList(existingNegativeList.getUuid(), existingNegativeList);
                     }
                 }else {
+                    negativeList.setCreateTime(new Date());
                     if (existingNegativeLists.size() > 0) {
                         NegativeList existingNegativeList = existingNegativeLists.get(0);
                         negativeList.setUuid(existingNegativeList.getUuid());
@@ -73,6 +82,7 @@ public class NegativeListService extends ServiceImpl<NegativeListDao, NegativeLi
         }
     }
 
+    @Cacheable(value = "negativeList", key = "#keyword")
     public List<NegativeList> getSpecifiedKeywordNegativeLists(String keyword) {
         return negativeListDao.getSpecifiedKeywordNegativeLists(keyword);
     }
@@ -82,22 +92,23 @@ public class NegativeListService extends ServiceImpl<NegativeListDao, NegativeLi
         return negativeList;
     }
 
-    public void deleteNegativeList(long uuid , NegativeList existingNegativeLists) {
-        NegativeList negativeList = existingNegativeLists;
-        if (negativeList == null) {
-            negativeList = negativeListDao.selectById(uuid);
-        }
+    public void deleteNegativeList(long uuid , NegativeList negativeList) {
         //在opinion设置该值为负面
         KeywordNegativeCriteria keywordNegativeCriteria = new KeywordNegativeCriteria();
         keywordNegativeCriteria.setNegativeList(negativeList);
         keywordNegativeCriteria.setNegative(false);
         negativeListDao.deleteById(uuid);
         negativeListsSynchronizeService.negativeListsSynchronize(keywordNegativeCriteria);
+        //设置关键词负面清单更新时间
+        negativeListUpdateInfoService.saveNegativeListUpdateInfo(negativeList.getKeyword());
+        // 删除关键词缓存
+        negativeListCacheService.negativeListCacheEvict(negativeList.getKeyword());
     }
 
     public void deleteAll(List<String> uuids) {
         for (String uuid : uuids) {
-            deleteNegativeList(Long.valueOf(uuid) ,null);
+            NegativeList negativeList = negativeListDao.selectById(uuid);
+            deleteNegativeList(Long.valueOf(uuid) ,negativeList);
         }
     }
 

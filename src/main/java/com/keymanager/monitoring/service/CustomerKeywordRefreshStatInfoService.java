@@ -71,6 +71,7 @@ public class CustomerKeywordRefreshStatInfoService extends ServiceImpl<CustomerK
             total.setUnworkMachineCount(total.getUnworkMachineCount() + customerKeywordRefreshStatInfoVO.getUnworkMachineCount());
             total.setZeroOptimizedCount(total.getZeroOptimizedCount() + customerKeywordRefreshStatInfoVO.getZeroOptimizedCount());
             total.setReachStandardKeywordCount(total.getReachStandardKeywordCount() + customerKeywordRefreshStatInfoVO.getReachStandardKeywordCount());
+            total.setTodaySubTotal(total.getTodaySubTotal() + customerKeywordRefreshStatInfoVO.getTodaySubTotal());
             total.setMaxInvalidCount(customerKeywordRefreshStatInfoVO.getMaxInvalidCount());
         }
         customerKeywordRefreshStatInfoVOs.add(0, total);
@@ -90,6 +91,7 @@ public class CustomerKeywordRefreshStatInfoService extends ServiceImpl<CustomerK
             refreshStatInfoVO.setInvalidKeywordCount(customerKeywordRefreshStatInfoVO.getInvalidKeywordCount());
             refreshStatInfoVO.setZeroOptimizedCount(customerKeywordRefreshStatInfoVO.getZeroOptimizedCount());
             refreshStatInfoVO.setReachStandardKeywordCount(customerKeywordRefreshStatInfoVO.getReachStandardKeywordCount());
+            refreshStatInfoVO.setTodaySubTotal(customerKeywordRefreshStatInfoVO.getTodaySubTotal());
             refreshStatInfoVO.setTotalOptimizeCount(customerKeywordRefreshStatInfoVO.getTotalOptimizeCount());
             refreshStatInfoVO.setTotalOptimizedCount(customerKeywordRefreshStatInfoVO.getTotalOptimizedCount());
             refreshStatInfoVO.setNeedOptimizeCount(customerKeywordRefreshStatInfoVO.getNeedOptimizeCount());
