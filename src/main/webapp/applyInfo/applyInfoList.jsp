@@ -89,7 +89,7 @@
 </div>
 
 <div id="applyInfoDialog" title="关键词信息" class="easyui-dialog" style="left: 35%;">
-    <form id="applyInfoForm" method="post" action="applyKeywordList.jsp">
+    <form id="applyInfoForm" method="post" action="applyInfoList.jsp">
         <table style="font-size:14px;" cellpadding=10 cellspacing="5">
             <tr>
                 <td align="right">应用名:</td>

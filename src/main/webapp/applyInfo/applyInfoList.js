@@ -77,7 +77,7 @@ function alignTableHeader(){
     });
 }
 function deleteApplyInfo(uuid) {
-    if (confirm("确实要删除这个关键词?") == false) return;
+    if (confirm("确实要删除这条记录?") == false) return;
     $.ajax({
         url: '/internal/applyInfo/deleteApplyInfo/' + uuid,
         type: 'Get',
@@ -99,7 +99,7 @@ function deleteApplyInfos(self) {
         alert('请选择要操作的设置信息');
         return;
     }
-    if (confirm("确实要删除这些客户吗?") == false) return;
+    if (confirm("确实要删除这些记录?") == false) return;
     var postData = {};
     postData.uuids = uuids.split(",");
     $.ajax({
@@ -122,18 +122,17 @@ function deleteApplyInfos(self) {
             $().toastmessage('showErrorToast', "操作失败");
         }
     });
-
-    function getSelectedIDs() {
-        var uuids = '';
-        $.each($("input[name=uuid]:checkbox:checked"), function () {
-            if (uuids === '') {
-                uuids = $(this).val();
-            } else {
-                uuids = uuids + "," + $(this).val();
-            }
-        });
-        return uuids;
-    }
+}
+function getSelectedIDs() {
+    var uuids = '';
+    $.each($("input[name=uuid]:checkbox:checked"), function () {
+        if (uuids === '') {
+            uuids = $(this).val();
+        } else {
+            uuids = uuids + "," + $(this).val();
+        }
+    });
+    return uuids;
 }
 function showApplyInfoDialog(uuid) {
     if (uuid == null) {

@@ -47,7 +47,7 @@ public class ApplyInfoService extends ServiceImpl<ApplyInfoDao, ApplyInfo> {
 
     public void saveApplyInfo(ApplyInfo applyInfo) {
         if (null != applyInfo.getUuid()) {
-            updateById(applyInfo);
+            applyInfoDao.updateById(applyInfo);
         } else {
             applyInfoDao.insert(applyInfo);
         }

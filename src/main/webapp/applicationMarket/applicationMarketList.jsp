@@ -37,15 +37,16 @@
                                     <input type="submit" onclick="resetPageNumber()" name="btnQuery" id="btnQuery" value=" 查询 ">&nbsp;&nbsp;
                                 <%--</shiro:hasPermission>--%>
                             </td>
-                            <%--<td>--%>
+                            <td>
                                 <%--<shiro:hasPermission name="/internal/supplier/saveSupplier">--%>
-                                    <%--<input type="button" onclick="showSupplierDialog()" value=" 添加 ">&nbsp;&nbsp;--%>
-                                <%--</shiro:hasPermission></td>--%>
-                            <%--<td>--%>
-                                <%--<shiro:hasPermission name="/internal/supplier/deleteSuppliers">--%>
-                                    <%--<input type="button" onclick="deleteSuppliers(this)" value=" 删除所选 ">--%>
+                                    <input type="button" onclick="showApplicationMarketDialog()" value=" 添加 ">&nbsp;&nbsp;
                                 <%--</shiro:hasPermission>--%>
-                            <%--</td>--%>
+                            </td>
+                            <td>
+                                <%--<shiro:hasPermission name="/internal/supplier/deleteSuppliers">--%>
+                                    <input type="button" onclick="deleteApplicationMarkets(this)" value=" 删除所选 ">
+                                <%--</shiro:hasPermission>--%>
+                            </td>
                         </tr>
                     </table>
                 </form>
@@ -79,12 +80,47 @@
                 <td width="180">${applicationMarket.storageDBPath}</td>
                 <td width="150">${applicationMarket.fileType}</td>
                 <td style="text-align: center;" width="100">
-                    <a href="javascript:(0)">修改</a> |
-                    <a href="javascript:(0)">删除</a>
+                    <a href="javascript:modifyApplicationMarket(${applicationMarket.uuid})">修改</a> |
+                    <a href="javascript:deleteApplicationMarket('${applicationMarket.uuid}')">删除</a>
                 </td>
             </tr>
         </c:forEach>
     </table>
+</div>
+
+<div id="applicationMarketDialog" title="关键词信息" class="easyui-dialog" style="left: 35%;">
+    <form id="applicationMarketForm" method="post" action="applicationMarketList.jsp">
+        <table style="font-size:14px;" cellpadding=10 cellspacing="5">
+            <tr>
+                <td align="right">应用市场名称:</td>
+                <td><input type="text" name="marketName" id="marketName" style="width:200px;"></td>
+            </tr>
+            <tr>
+                <td align="right">应用市场包名:</td>
+                <td><input type="text" name="marketPackageName" id="marketPackageName" style="width:200px;"></td>
+            </tr>
+            <tr>
+                <td align="right">临时文件地址:</td>
+                <td><input type="text" name="tmpPath" id="tmpPath" style="width:200px;"></td>
+            </tr>
+            <tr>
+                <td align="right">安装包地址:</td>
+                <td><input type="text" name="apkPath" id="apkPath" style="width:200px;"></td>
+            </tr>
+            <tr>
+                <td align="right">App数据库地址:</td>
+                <td><input type="text" name="dataDBPath" id="dataDBPath" style="width:200px;"></td>
+            </tr>
+            <tr>
+                <td align="right">App存储数据库地址:</td>
+                <td><input type="text" name="storageDBPath" id="storageDBPath" style="width:200px;"></td>
+            </tr>
+            <tr>
+                <td align="right">文件类型:</td>
+                <td><input type="text" name="fileType" id="fileType" style="width:200px;"></td>
+            </tr>
+        </table>
+    </form>
 </div>
 
 <div id="showCustomerBottomPositioneDiv">
