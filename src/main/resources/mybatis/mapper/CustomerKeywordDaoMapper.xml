@@ -432,7 +432,7 @@
     <select id="searchRemainingOptimizationCount" resultType="java.util.Map">
         SELECT ck.fUuid as 'uuid', (ck.fOptimizePlanCount - ck.fOptimizedCount) AS 'remainingCount' FROM t_customer_keyword ck
         WHERE ck.fOptimizeGroupName = #{groupName} AND ck.fOptimizePlanCount > ck.fOptimizedCount and ck.fStatus = 1
-        and ((ck.fCurrentPosition = 0 and ck.fInvalidRefreshCount <![CDATA[<]]> #{noPositionMaxInvalidCount}) or (ck.fCurrentPosition > 0 and ck.fInvalidRefreshCount <![CDATA[<]]> #{maxInvalidCount}))
+        and ck.fInvalidRefreshCount <![CDATA[<]]> #{maxInvalidCount}
         ORDER BY (ck.fOptimizePlanCount - ck.fOptimizedCount) DESC
     </select>
 
@@ -463,7 +463,7 @@
         FROM t_customer_keyword ck
         WHERE ck.fOptimizeGroupName = #{groupName} and ck.fStatus = 1 and ck.fTerminalType = #{terminalType}
         and ck.fQueryTime <![CDATA[<]]> NOW() and ck.fUrl <![CDATA[>]]> ''
-        and ((ck.fCurrentPosition = 0 and ck.fInvalidRefreshCount <![CDATA[<]]> #{noPositionMaxInvalidCount}) or (ck.fCurrentPosition > 0 and ck.fInvalidRefreshCount <![CDATA[<]]> #{maxInvalidCount}))
+        and ck.fInvalidRefreshCount <![CDATA[<]]> #{maxInvalidCount}
         and (ck.fOptimizedCount <![CDATA[<]]> ck.fOptimizePlanCount)
         <if test="bigKeyword == true">
             and ck.fBigKeyword = 1
@@ -480,14 +480,14 @@
         UPDATE t_customer_keyword
         SET fLastOptimizeDateTime = now(), fOptimizedCount = fOptimizedCount + #{count},
         <if test="count > 0">fInvalidRefreshCount = 0, </if>
-        fOptimizedPercentage = fOptimizedCount/fOptimizePlanCount, fOptimizeDate = CURRENT_DATE(),fUpdateTime = NOW()
+        fOptimizeDate = CURRENT_DATE(),fUpdateTime = NOW()
 		WHERE fUuid = #{customerKeywordUuid}
     </update>
 
     <update id="batchUpdateOptimizedCount">
         UPDATE t_customer_keyword
         SET fLastOptimizeDateTime = now(), fOptimizedCount = fOptimizedCount + 1, fInvalidRefreshCount = 0,
-        fOptimizedPercentage = fOptimizedCount/fOptimizePlanCount, fOptimizeDate = CURRENT_DATE(),fUpdateTime = NOW()
+        fOptimizeDate = CURRENT_DATE(),fUpdateTime = NOW()
         WHERE fUuid IN
         <foreach item="uuid" index="index" collection="customerKeywordUuids" open="(" separator="," close=")">
             #{uuid}
