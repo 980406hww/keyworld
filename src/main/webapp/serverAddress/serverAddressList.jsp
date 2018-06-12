@@ -28,29 +28,24 @@
                         <tr>
                             <td align="right">服务器地址: </td>
                             <td><input type="text" name="serverAddress" id="serverAddress" value="${serverAddressCriteria.serverAddress}" style="width:200px;"></td>
-                            <%--<td align="right">&nbsp;&nbsp;QQ:&nbsp;</td>--%>
-                            <%--<td><input type="text" name="qq" id="qq" value="${supplierCriteria.qq}" style="width:200px;"></td>--%>
-                            <%--<td align="right">&nbsp;&nbsp;联系电话:&nbsp;</td>--%>
-                            <%--<td><input type="text" name="phone" id="phone" value="${supplierCriteria.phone}" style="width:200px;">--%>
-                            <%--</td>--%>
                             <td align="right" width="60">
                                 <input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}"/>
                                 <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
                                 <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
                                 <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
-                                <%--<shiro:hasPermission name="/internal/applicationMarket/searchApplicationMarket">--%>
+                                <shiro:hasPermission name="/internal/serverAddress/searchServerAddress">
                                     <input type="submit" onclick="resetPageNumber()" name="btnQuery" id="btnQuery" value=" 查询 ">&nbsp;&nbsp;
-                                <%--</shiro:hasPermission>--%>
+                                </shiro:hasPermission>
                             </td>
                             <td>
-                                <%--<shiro:hasPermission name="/internal/supplier/saveSupplier">--%>
+                                <shiro:hasPermission name="/internal/serverAddress/saveServerAddress">
                                     <input type="button" onclick="showServerAddressDialog()" value=" 添加 ">&nbsp;&nbsp;
-                                <%--</shiro:hasPermission>--%>
+                                </shiro:hasPermission>
                             </td>
                             <td>
-                                <%--<shiro:hasPermission name="/internal/supplier/deleteSuppliers">--%>
+                                <shiro:hasPermission name="/internal/serverAddress/deleteServerAddressList">
                                     <input type="button" onclick="deleteServerAddressList(this)" value=" 删除所选 ">
-                                <%--</shiro:hasPermission>--%>
+                                </shiro:hasPermission>
                             </td>
                         </tr>
                     </table>
@@ -73,8 +68,12 @@
                 <td width="10" style="padding-left: 7px;"><input type="checkbox" name="uuid" value="${serverAddress.uuid}" onclick="decideSelectAll()"/></td>
                 <td width="100">${serverAddress.serverAddress}</td>
                 <td style="text-align: center;" width="100">
+                    <shiro:hasPermission name="/internal/serverAddress/saveServerAddress">
                     <a href="javascript:modifyServerAddress(${serverAddress.uuid})">修改</a> |
+                    </shiro:hasPermission>
+                    <shiro:hasPermission name="/internal/serverAddress/deleteServerAddress">
                     <a href="javascript:deleteServerAddress('${serverAddress.uuid}')">删除</a>
+                    </shiro:hasPermission>
                 </td>
             </tr>
         </c:forEach>

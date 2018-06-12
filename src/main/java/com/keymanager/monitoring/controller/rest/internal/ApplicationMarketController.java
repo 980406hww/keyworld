@@ -31,12 +31,14 @@ public class ApplicationMarketController {
     @Autowired
     private ApplicationMarketService applicationMarketService;
 
+    @RequiresPermissions("/internal/applicationMarket/searchApplicationMarket")
     @RequestMapping(value = "/searchApplicationMarket", method = RequestMethod.GET)
     public ModelAndView searchApplicationMarket(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize,
                                         HttpServletRequest request) {
         return constructApplicationMarketModelAndView(request,new ApplicationMarketCriteria(),currentPageNumber, pageSize);
     }
 
+    @RequiresPermissions("/internal/applicationMarket/searchApplicationMarket")
     @RequestMapping(value = "/searchApplicationMarket", method = RequestMethod.POST)
     public ModelAndView searchApplicationMarket(ApplicationMarketCriteria applicationMarketCriteria,HttpServletRequest request) {
         try {
@@ -61,7 +63,7 @@ public class ApplicationMarketController {
         return modelAndView;
     }
 
-//    @RequiresPermissions("/internal/applyInfo/deleteApplyInfo")
+    @RequiresPermissions("/internal/applicationMarket/deleteApplicationMarket")
     @RequestMapping(value = "/deleteApplicationMarket/{uuid}", method = RequestMethod.GET)
     public ResponseEntity<?> deleteApplicationMarket(@PathVariable("uuid") Long uuid) {
         try {
@@ -73,6 +75,7 @@ public class ApplicationMarketController {
         }
     }
 
+    @RequiresPermissions("/internal/applicationMarket/deleteApplicationMarketList")
     @RequestMapping(value = "/deleteApplicationMarketList", method = RequestMethod.POST)
     public ResponseEntity<?> deleteApplicationMarketList(@RequestBody Map<String, Object> requestMap){
         try {
@@ -84,6 +87,7 @@ public class ApplicationMarketController {
         }
     }
 
+    @RequiresPermissions("/internal/applicationMarket/saveApplicationMarket")
     @RequestMapping(value = "/saveApplicationMarket", method = RequestMethod.POST)
     public ResponseEntity<?> saveApplicationMarket(@RequestBody ApplicationMarket applicationMarket) {
         try {

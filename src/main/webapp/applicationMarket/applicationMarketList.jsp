@@ -33,19 +33,19 @@
                                 <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
                                 <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
                                 <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
-                                <%--<shiro:hasPermission name="/internal/applicationMarket/searchApplicationMarket">--%>
+                                <shiro:hasPermission name="/internal/applicationMarket/searchApplicationMarket">
                                     <input type="submit" onclick="resetPageNumber()" name="btnQuery" id="btnQuery" value=" 查询 ">&nbsp;&nbsp;
-                                <%--</shiro:hasPermission>--%>
+                                </shiro:hasPermission>
                             </td>
                             <td>
-                                <%--<shiro:hasPermission name="/internal/supplier/saveSupplier">--%>
+                                <shiro:hasPermission name="/internal/applicationMarket/saveApplicationMarket">
                                     <input type="button" onclick="showApplicationMarketDialog()" value=" 添加 ">&nbsp;&nbsp;
-                                <%--</shiro:hasPermission>--%>
+                                </shiro:hasPermission>
                             </td>
                             <td>
-                                <%--<shiro:hasPermission name="/internal/supplier/deleteSuppliers">--%>
+                                <shiro:hasPermission name="/internal/applicationMarket/deleteApplicationMarketList">
                                     <input type="button" onclick="deleteApplicationMarkets(this)" value=" 删除所选 ">
-                                <%--</shiro:hasPermission>--%>
+                                </shiro:hasPermission>
                             </td>
                         </tr>
                     </table>
@@ -80,8 +80,12 @@
                 <td width="180">${applicationMarket.storageDBPath}</td>
                 <td width="150">${applicationMarket.fileType}</td>
                 <td style="text-align: center;" width="100">
+                    <shiro:hasPermission name="/internal/applicationMarket/saveApplicationMarket">
                     <a href="javascript:modifyApplicationMarket(${applicationMarket.uuid})">修改</a> |
+                    </shiro:hasPermission>
+                    <shiro:hasPermission name="/internal/applicationMarket/deleteApplicationMarket">
                     <a href="javascript:deleteApplicationMarket('${applicationMarket.uuid}')">删除</a>
+                    </shiro:hasPermission>
                 </td>
             </tr>
         </c:forEach>
