@@ -821,16 +821,18 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         Double todayFee = null;
         if(position > 0 && position <= 10) {
             CustomerKeyword customerKeyword = customerKeywordDao.selectById(customerKeywordUuid);
-            if(customerKeyword.getPositionFifthFee() != null && customerKeyword.getPositionFifthFee() > 0 && position <= 5) {
-                todayFee = customerKeyword.getPositionFifthFee();
-            } else if(customerKeyword.getPositionThirdFee() != null && customerKeyword.getPositionThirdFee() > 0 && position <= 3) {
-                todayFee = customerKeyword.getPositionThirdFee();
-            } else if(customerKeyword.getPositionFirstPageFee() != null && customerKeyword.getPositionFirstPageFee() > 0 && position <= 10) {
-                todayFee = customerKeyword.getPositionFirstPageFee();
-            } else if(customerKeyword.getPositionSecondFee() != null && customerKeyword.getPositionSecondFee() > 0 && position <= 2) {
-                todayFee = customerKeyword.getPositionSecondFee();
-            } else if(customerKeyword.getPositionFirstFee() != null && customerKeyword.getPositionFirstFee() > 0 && position == 1) {
+            if(customerKeyword.getPositionFirstFee() != null && customerKeyword.getPositionFirstFee() > 0 && position == 1) {
                 todayFee = customerKeyword.getPositionFirstFee();
+            } else if(customerKeyword.getPositionSecondFee() != null && customerKeyword.getPositionSecondFee() > 0 && position == 2) {
+                todayFee = customerKeyword.getPositionSecondFee();
+            } else if(customerKeyword.getPositionThirdFee() != null && customerKeyword.getPositionThirdFee() > 0 && position == 3) {
+                todayFee = customerKeyword.getPositionThirdFee();
+            } else if(customerKeyword.getPositionForthFee() != null && customerKeyword.getPositionForthFee() > 0 && position == 4) {
+                todayFee = customerKeyword.getPositionForthFee();
+            } else if(customerKeyword.getPositionFifthFee() != null && customerKeyword.getPositionFifthFee() > 0 && position == 5) {
+                todayFee = customerKeyword.getPositionFifthFee();
+            } else if(customerKeyword.getPositionFirstPageFee() != null && customerKeyword.getPositionFirstPageFee() > 0) {
+                todayFee = customerKeyword.getPositionFirstPageFee();
             }
         }
         customerKeywordDao.updatePosition(customerKeywordUuid, position, capturePositionQueryTime, todayFee);

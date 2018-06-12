@@ -9,7 +9,7 @@
             SUM(IF(ck.fInvalidRefreshCount > (#{customerKeywordRefreshStatInfoCriteria.configValue} - 1), 1, 0)) AS "invalidKeywordCount",
             SUM(IF(ck.fOptimizedCount = 0, 1, 0)) AS "zeroOptimizedCount",
             SUM(IF(ck.fLastReachStandardDate = CURRENT_DATE(), 1, 0)) AS "reachStandardKeywordCount",
-            SUM(ck.fTodayFee) as "todaySubTotal",
+            SUM(IF(ck.fLastReachStandardDate = CURRENT_DATE(),ck.fTodayFee, 0)) as "todaySubTotal",
             SUM(ck.fOptimizePlanCount) AS "totalOptimizeCount",
             SUM(ck.fOptimizedCount) AS "totalOptimizedCount",
             SUM(ck.fOptimizePlanCount - ck.fOptimizedCount) AS "needOptimizeCount",

@@ -462,7 +462,7 @@
         ck.fRemarks AS 'remarks'
         FROM t_customer_keyword ck
         WHERE ck.fOptimizeGroupName = #{groupName} and ck.fStatus = 1 and ck.fTerminalType = #{terminalType}
-        and (DATE_SUB(NOW(), INTERVAL ck.fQueryInterval MINUTE) > ck.fQueryTime) and ck.fUrl <![CDATA[>]]> ''
+        and ck.fQueryTime <![CDATA[<]]> NOW() and ck.fUrl <![CDATA[>]]> ''
         and ((ck.fCurrentPosition = 0 and ck.fInvalidRefreshCount <![CDATA[<]]> #{noPositionMaxInvalidCount}) or (ck.fCurrentPosition > 0 and ck.fInvalidRefreshCount <![CDATA[<]]> #{maxInvalidCount}))
         and (ck.fOptimizedCount <![CDATA[<]]> ck.fOptimizePlanCount)
         <if test="bigKeyword == true">
@@ -472,7 +472,7 @@
     </select>
 
     <update id="updateOptimizationQueryTime">
-        UPDATE t_customer_keyword set fQueryDate = CURRENT_DATE(), fQueryCount = fQueryCount + 1, fInvalidRefreshCount = fInvalidRefreshCount + 1, fQueryTime = now()
+        UPDATE t_customer_keyword set fQueryDate = CURRENT_DATE(), fQueryCount = fQueryCount + 1, fInvalidRefreshCount = fInvalidRefreshCount + 1, fQueryTime = now() + fQueryInterval
         WHERE fUuid = #{customerKeywordUuid}
     </update>
 
