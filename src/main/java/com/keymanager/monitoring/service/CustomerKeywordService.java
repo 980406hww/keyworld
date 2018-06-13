@@ -1038,7 +1038,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void observeOptimizationCount() throws Exception {
-        List<OptimizationCountVO> optimizationCountVOs = customerKeywordDao.tabkeOptimizationCountExceptionUsers();
+        List<OptimizationCountVO> optimizationCountVOs = customerKeywordDao.takeOptimizationCountExceptionUsers();
         for (OptimizationCountVO optimizationCountVO : optimizationCountVOs) {
             List<OptimizationCountVO> groupOptimizationCountInfo = customerKeywordDao.observeGroupOptimizationCount(optimizationCountVO.getLoginName());
             List<OptimizationCountVO> keywordOptimizationCountInfo = customerKeywordDao.observeKeywordOptimizationCount(optimizationCountVO.getLoginName());
