@@ -212,6 +212,13 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         } else {
             originalUrl = null;
         }
+
+        if(!EntryTypeEnum.fm.name().equals(customerKeyword.getType())) {
+            Integer sameCustomerKeywordCount = customerKeywordDao.getSameCustomerKeywordCount(customerKeyword.getTerminalType(), customerKeyword.getCustomerUuid(), customerKeyword.getKeyword(), customerKeyword.getUrl());
+            if(sameCustomerKeywordCount != null && sameCustomerKeywordCount > 0) {
+                return;
+            }
+        }
         if (!EntryTypeEnum.fm.name().equals(customerKeyword.getType()) && haveDuplicatedCustomerKeyword(customerKeyword.getTerminalType(),
                 customerKeyword.getCustomerUuid(), customerKeyword.getKeyword(), originalUrl)) {
             return;

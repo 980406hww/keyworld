@@ -145,6 +145,14 @@
         and fOriginalUrl <![CDATA[ <> ]]> '' and fOriginalUrl like concat('%', #{originalUrl});
     </select>
 
+    <select id="getSameCustomerKeywordCount" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM t_customer_keyword
+        WHERE fKeyword = #{keyword}
+        AND fTerminalType = #{terminalType}
+        AND fCustomerUuid = #{customerUuid}
+        AND fUrl = #{url}
+    </select>
+
     <select id="getMaxSequence" resultType="int">
         select max(fSequence) from t_customer_keyword where fTerminalType = #{terminalType} and fType = #{entryType} and fCustomerUuid =
         #{customerUuid};

@@ -35,7 +35,12 @@ public class SuperUserFullKeywordExcelOperator extends AbstractExcelReader {
 		}
 
 		customerKeyword.setOriginalUrl(getStringValue(SuperUserFullKeywordDefinition.OriginalURL.getColumnIndex(), rowIndex));
-		customerKeyword.setUrl(getStringValue(SuperUserFullKeywordDefinition.URL.getColumnIndex(), rowIndex));
+
+		String url = getStringValue(SuperUserFullKeywordDefinition.URL.getColumnIndex(), rowIndex);
+		if(url.substring(url.length() - 1).equals("/")) {
+			url = url.substring(0, url.length() - 1);
+		}
+		customerKeyword.setUrl(url);
 		
 		customerKeyword.setPositionFirstFee(getDoubleValue(SuperUserFullKeywordDefinition.PositionFirstFee.getColumnIndex(), rowIndex));
 		customerKeyword.setPositionSecondFee(getDoubleValue(SuperUserFullKeywordDefinition.PositionSecondFee.getColumnIndex(), rowIndex));
