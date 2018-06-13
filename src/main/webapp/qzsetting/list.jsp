@@ -85,6 +85,9 @@
 				<shiro:hasPermission name="/internal/qzsetting/deleteQZSettings">
 					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="delSelectedQZSettings(this)" value=" 删除所选 " >
 				</shiro:hasPermission>
+				<shiro:hasPermission name="/internal/qzsetting/searchQZSettings">
+				<input class="ui-button ui-widget ui-corner-all" type="button" onclick="getAvailableQZSettings()" value="查看更新队列">
+				</shiro:hasPermission>
 			</form>
 		</div>
 	</div>
@@ -477,6 +480,9 @@
 	<p>
 		<span style="margin-left: 55px"></span>合计:<sapn id="totalAmount"></sapn>
 	</p>
+</div>
+<div id="getAvailableQZSettings" class="easyui-dialog"  style="display: none">
+	<textarea id="getAvailableQZSettingsContent"  style="width:100%;height:100%;resize: none"></textarea>
 </div>
 <%--收费详情列表--%>
 <div id="chargeLogListDiv" class="easyui-dialog" style="display:none;left: 40%;" >

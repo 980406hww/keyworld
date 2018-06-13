@@ -7,7 +7,6 @@ import com.keymanager.monitoring.criteria.QZSettingCriteria;
 import com.keymanager.monitoring.criteria.QZSettingSearchCriteria;
 import com.keymanager.monitoring.dao.QZSettingDao;
 import com.keymanager.monitoring.entity.*;
-import com.keymanager.monitoring.enums.EntryTypeEnum;
 import com.keymanager.monitoring.enums.QZCaptureTitleLogStatusEnum;
 import com.keymanager.monitoring.enums.QZSettingStatusEnum;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
@@ -46,7 +45,6 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 	@Autowired
 	private CustomerKeywordService customerKeywordService;
-
 	public QZSetting getAvailableQZSetting(){
 		List<QZSetting> qzSettings = qzSettingDao.getAvailableQZSettings();
 		QZSetting qzSetting = null;
@@ -391,5 +389,9 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 	public void updateQZSettingStatus(List<Long> uuids, Integer status) {
 		qzSettingDao.updateQZSettingStatus(uuids, status);
+	}
+
+	public List<QZSetting> getAvailableQZSettings(){
+		return qzSettingDao.getAvailableQZSettings();
 	}
 }

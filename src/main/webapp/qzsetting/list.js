@@ -2,6 +2,7 @@ $(function () {
     $("#chargeLogListDiv").dialog("close");
     $("#chargeDialog").dialog("close");
     $("#changeSettingDialog").dialog("close");
+    $("#getAvailableQZSettings").dialog("close");
     $("#showQZSettingDiv").css("margin-top",$("#topDiv").height());
     alignTableHeader();
     window.onresize = function(){
@@ -675,9 +676,13 @@ function saveChangeSetting(self) {
         operationType.currentKeywordCount = settingDialogDiv.find(
             "#currentKeywordCount" + val.id).val();
         operationType.subDomainName = settingDialogDiv.find("#subDomainName" + val.id).val();
-
         if (operationType.group == null || operationType.group === "") {
             alert("请输入分组");
+            settingDialogDiv.find("#group" + val.id).focus();
+            validationFlag = false;
+            return false;
+        }else if(operationType.group.length>20){
+            alert(operationType.operationType+"分组大于20位，请重新输入");
             settingDialogDiv.find("#group" + val.id).focus();
             validationFlag = false;
             return false;
@@ -856,4 +861,61 @@ function dealSettingTable(operationType) {
         ruleObj.css("display","none");
         checkboxObj[0].checked = false;
     }
+}
+
+function getAvailableQZSettings() {
+    $.ajax({
+        url:'/internal/qzsetting/getAvailableQZSettings',
+        headers:{
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        timeout:'5000',
+        type:'POST',
+        success: function (data) {
+            var text = "";
+            $.each(data,function(index,element) {
+                text += element.domain;
+                if(element.updateEndTime!=null&&element.updateEndTime!=''){
+                    text += '______'+getMyDate(element.updateEndTime);
+                }
+                text += '\r';
+            });
+            $("#getAvailableQZSettingsContent").val(text);
+        }
+    });
+    $("#getAvailableQZSettings").show();
+    $("#getAvailableQZSettings").dialog({
+        resizable: false,
+        height: 450,
+        width: 340,
+        title: '查看更新列队',
+        modal: true,
+        buttons: [{
+            text: '确定',
+            iconCls: 'icon-ok',
+            handler: function () {
+                $("#getAvailableQZSettings").dialog("close")
+            }
+        }]
+    });
+    $("#getAvailableQZSettings").dialog("open");
+    $("#getAvailableQZSettings").window("resize",{top:$(document).scrollTop() + 100});
+}
+function getMyDate(str){
+    var oDate = new Date(str),
+        oYear = oDate.getFullYear(),
+        oMonth = oDate.getMonth()+1,
+        oDay = oDate.getDate(),
+        oHour = oDate.getHours(),
+        oMin = oDate.getMinutes(),
+        oSen = oDate.getSeconds(),
+        oTime = oYear +'-'+ getzf(oMonth) +'-'+ getzf(oDay) +' '+ getzf(oHour) +':'+ getzf(oMin) +':'+getzf(oSen);
+    return oTime;
+}
+function getzf(num){
+    if(parseInt(num) < 10){
+        num = '0'+num;
+    }
+    return num;
 }
