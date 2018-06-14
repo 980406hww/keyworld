@@ -67,7 +67,8 @@ public class SuperUserSimpleKeywordExcelOperator extends AbstractExcelReader {
 
 		Integer optimizePlanCount = getIntValue(SuperUserFullKeywordDefinition.OptimizePlanCount.getColumnIndex(), rowIndex);
 		customerKeyword.setOptimizePlanCount(optimizePlanCount);
-		
+		customerKeyword.setOptimizeRemainingCount(optimizePlanCount);
+
 		customerKeyword.setOriginalUrl(getStringValue(SuperUserSimpleKeywordDefinition.OriginalURL.getColumnIndex(), rowIndex));
 		customerKeyword.setOptimizeGroupName(getStringValue(SuperUserSimpleKeywordDefinition.OptimizeGroupName.getColumnIndex(), rowIndex));
 		

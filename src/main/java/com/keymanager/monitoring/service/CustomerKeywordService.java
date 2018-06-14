@@ -319,6 +319,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeyword.setInitialIndexCount(existingCustomerKeyword.getInitialIndexCount());
             customerKeyword.setCurrentIndexCount(existingCustomerKeyword.getCurrentIndexCount());
             customerKeyword.setOptimizePlanCount(existingCustomerKeyword.getOptimizePlanCount());
+            customerKeyword.setOptimizeRemainingCount(existingCustomerKeyword.getOptimizePlanCount());
 
             customerKeyword.setPositionFirstFee(existingCustomerKeyword.getPositionFirstFee());
             customerKeyword.setPositionSecondFee(existingCustomerKeyword.getPositionSecondFee());
@@ -346,10 +347,12 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                     customerKeyword.setInitialIndexCount(baiduIndexCriteria.getPcIndex());
                     customerKeyword.setCurrentIndexCount(baiduIndexCriteria.getPcIndex());
                     customerKeyword.setOptimizePlanCount(baiduIndexCriteria.getPcIndex() < 100 ? 100 : baiduIndexCriteria.getPcIndex());
+                    customerKeyword.setOptimizeRemainingCount(baiduIndexCriteria.getPcIndex() < 100 ? 100 : baiduIndexCriteria.getPcIndex());
                 } else {
                     customerKeyword.setInitialIndexCount(baiduIndexCriteria.getPhoneIndex());
                     customerKeyword.setCurrentIndexCount(baiduIndexCriteria.getPhoneIndex());
                     customerKeyword.setOptimizePlanCount(baiduIndexCriteria.getPhoneIndex() < 100 ? 100 : baiduIndexCriteria.getPhoneIndex());
+                    customerKeyword.setOptimizeRemainingCount(baiduIndexCriteria.getPhoneIndex() < 100 ? 100 : baiduIndexCriteria.getPhoneIndex());
                 }
                 calculatePrice(customerKeyword);
                 customerKeyword.setUpdateTime(new Date());
@@ -914,6 +917,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeyword.setInitialPosition(searchEngineResultItemVO.getOrder());
         customerKeyword.setOptimizeGroupName(groupName);
         customerKeyword.setOptimizePlanCount(searchEngineResultItemVO.getClickCount());
+        customerKeyword.setOptimizeRemainingCount(searchEngineResultItemVO.getClickCount());
         customerKeyword.setKeyword(searchEngineResultItemVO.getKeyword());
         customerKeyword.setTitle(searchEngineResultItemVO.getTitle());
         customerKeyword.setType(searchEngineResultItemVO.getType());
