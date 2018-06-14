@@ -34,6 +34,8 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     int getSimilarCustomerKeywordCount(@Param("terminalType") String terminalType, @Param("customerUuid") long customerUuid, @Param("keyword") String
             keyword, @Param("originalUrl") String originalUrl);
 
+    Integer getSameCustomerKeywordCount(@Param("terminalType")String terminalType, @Param("customerUuid") long customerUuid, @Param("keyword") String keyword, @Param("url")String url);
+
     int getMaxSequence(@Param("terminalType") String terminalType, @Param("entryType") String entryType, @Param("customerUuid") long customerUuid);
 
     List<CustomerKeyword> searchSameCustomerKeywords(@Param("terminalType") String terminalType, @Param("customerUuid") long customerUuid,
@@ -134,7 +136,7 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void updatePosition(@Param("uuid")Long uuid, @Param("position")Integer position, @Param("capturePositionQueryTime")Date capturePositionQueryTime, @Param("todayFee") Double todayFee);
 
-    List<OptimizationCountVO> tabkeOptimizationCountExceptionUsers();
+    List<OptimizationCountVO> takeOptimizationCountExceptionUsers();
 
     List<String> fetchOptimizationCompletedGroupNames(@Param("typesStr")String typesStr, @Param("maxInvalidCount")Integer maxInvalidCount);
     List<OptimizationCountVO> observeGroupOptimizationCount(@Param("userID") String userID);

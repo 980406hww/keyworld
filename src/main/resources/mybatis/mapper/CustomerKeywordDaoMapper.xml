@@ -145,6 +145,14 @@
         and fOriginalUrl <![CDATA[ <> ]]> '' and fOriginalUrl like concat('%', #{originalUrl});
     </select>
 
+    <select id="getSameCustomerKeywordCount" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM t_customer_keyword
+        WHERE fKeyword = #{keyword}
+        AND fTerminalType = #{terminalType}
+        AND fCustomerUuid = #{customerUuid}
+        AND fUrl = #{url}
+    </select>
+
     <select id="getMaxSequence" resultType="int">
         select max(fSequence) from t_customer_keyword where fTerminalType = #{terminalType} and fType = #{entryType} and fCustomerUuid =
         #{customerUuid};
@@ -415,25 +423,23 @@
         SELECT
         ck.fOptimizeGroupName AS 'groupName'
         FROM t_customer_keyword ck
-        WHERE ck.fOptimizePlanCount > ck.fOptimizedCount
+        WHERE ck.fOptimizeRemainingCount > 0
         AND ck.fStatus = 1
         AND ck.fType IN (#{typesStr})
-        AND (ck.fCurrentPosition = 0
-        AND ck.fInvalidRefreshCount &lt; 2)
-        OR ck.fInvalidRefreshCount &lt; #{maxInvalidCount}
+        AND ck.fInvalidRefreshCount &lt; #{maxInvalidCount}
         GROUP BY ck.fOptimizeGroupName
-        HAVING SUM(ck.fOptimizePlanCount - ck.fOptimizedCount) = 0
+        HAVING count(1) = 0
     </select>
 
     <update id="resetOptimizationInfo">
-        UPDATE t_customer_keyword SET fOptimizedCount = 0, fInvalidRefreshCount = 0, fOptimizeDate = CURRENT_DATE(), fQueryCount = 0, fQueryDate = CURRENT_DATE()  WHERE fOptimizeDate != CURRENT_DATE()
+        UPDATE t_customer_keyword SET fOptimizedCount = 0, fOptimizeRemainingCount = fOptimizePlanCount, fInvalidRefreshCount = 0, fOptimizeDate = CURRENT_DATE(), fQueryCount = 0, fQueryDate = CURRENT_DATE()  WHERE fOptimizeDate != CURRENT_DATE()
     </update>
 
     <select id="searchRemainingOptimizationCount" resultType="java.util.Map">
-        SELECT ck.fUuid as 'uuid', (ck.fOptimizePlanCount - ck.fOptimizedCount) AS 'remainingCount' FROM t_customer_keyword ck
-        WHERE ck.fOptimizeGroupName = #{groupName} AND ck.fOptimizePlanCount > ck.fOptimizedCount and ck.fStatus = 1
-        and ((ck.fCurrentPosition = 0 and ck.fInvalidRefreshCount <![CDATA[<]]> #{noPositionMaxInvalidCount}) or (ck.fCurrentPosition > 0 and ck.fInvalidRefreshCount <![CDATA[<]]> #{maxInvalidCount}))
-        ORDER BY (ck.fOptimizePlanCount - ck.fOptimizedCount) DESC
+        SELECT ck.fUuid as 'uuid', fOptimizeRemainingCount AS 'remainingCount' FROM t_customer_keyword ck
+        WHERE ck.fOptimizeGroupName = #{groupName} AND ck.fOptimizeRemainingCount > 0 and ck.fStatus = 1
+        and ck.fInvalidRefreshCount <![CDATA[<]]> #{maxInvalidCount}
+        ORDER BY ck.fOptimizeRemainingCount DESC
     </select>
 
     <select id="getCustomerKeywordForOptimization" resultType="com.keymanager.monitoring.entity.CustomerKeyword">
@@ -462,9 +468,9 @@
         ck.fRemarks AS 'remarks'
         FROM t_customer_keyword ck
         WHERE ck.fOptimizeGroupName = #{groupName} and ck.fStatus = 1 and ck.fTerminalType = #{terminalType}
-        and ck.fQueryTime <![CDATA[<]]> NOW() and ck.fUrl <![CDATA[>]]> ''
-        and ((ck.fCurrentPosition = 0 and ck.fInvalidRefreshCount <![CDATA[<]]> #{noPositionMaxInvalidCount}) or (ck.fCurrentPosition > 0 and ck.fInvalidRefreshCount <![CDATA[<]]> #{maxInvalidCount}))
-        and (ck.fOptimizedCount <![CDATA[<]]> ck.fOptimizePlanCount)
+        and ck.fQueryTime <![CDATA[<]]> NOW() and ck.fUrl > ''
+        and ck.fInvalidRefreshCount <![CDATA[<]]> #{maxInvalidCount}
+        and (ck.fOptimizeRemainingCount > 0)
         <if test="bigKeyword == true">
             and ck.fBigKeyword = 1
         </if>
@@ -479,15 +485,15 @@
     <update id="updateOptimizationResult">
         UPDATE t_customer_keyword
         SET fLastOptimizeDateTime = now(), fOptimizedCount = fOptimizedCount + #{count},
-        <if test="count > 0">fInvalidRefreshCount = 0, </if>
-        fOptimizedPercentage = fOptimizedCount/fOptimizePlanCount, fOptimizeDate = CURRENT_DATE(),fUpdateTime = NOW()
+        <if test="count > 0">fInvalidRefreshCount = 0, fOptimizeRemainingCount = fOptimizeRemainingCount - 1, </if>
+        fOptimizeDate = CURRENT_DATE(),fUpdateTime = NOW()
 		WHERE fUuid = #{customerKeywordUuid}
     </update>
 
     <update id="batchUpdateOptimizedCount">
         UPDATE t_customer_keyword
-        SET fLastOptimizeDateTime = now(), fOptimizedCount = fOptimizedCount + 1, fInvalidRefreshCount = 0,
-        fOptimizedPercentage = fOptimizedCount/fOptimizePlanCount, fOptimizeDate = CURRENT_DATE(),fUpdateTime = NOW()
+        SET fLastOptimizeDateTime = now(), fOptimizedCount = fOptimizedCount + 1, fOptimizeRemainingCount = fOptimizeRemainingCount - 1, fInvalidRefreshCount = 0,
+        fOptimizeDate = CURRENT_DATE(),fUpdateTime = NOW()
         WHERE fUuid IN
         <foreach item="uuid" index="index" collection="customerKeywordUuids" open="(" separator="," close=")">
             #{uuid}
@@ -523,7 +529,7 @@
 
     <update id="adjustOptimizePlanCount">
         UPDATE t_customer_keyword
-        SET fOptimizePlanCount = #{optimizationPlanCount}, fQueryInterval = #{queryInterval}
+        SET fOptimizePlanCount = #{optimizationPlanCount}, fOptimizeRemainingCount = #{optimizationPlanCount}, fQueryInterval = #{queryInterval}
         WHERE fUuid = #{customerKeywordUuid}
     </update>
 
@@ -689,7 +695,7 @@
         UPDATE
             t_customer_keyword
         SET
-            fOptimizePlanCount = (SELECT FLOOR(3 + (RAND() * 8)))
+            fOptimizePlanCount = (SELECT FLOOR(3 + (RAND() * 8))), fOptimizeRemainingCount = fOptimizePlanCount
         WHERE
             fOptimizeGroupName = 'pc_baidumap'
         AND fCurrentPosition BETWEEN 1 AND 3
@@ -710,7 +716,7 @@
         WHERE fUuid = #{uuid}
     </update>
 
-    <select id="tabkeOptimizationCountExceptionUsers" resultType="com.keymanager.monitoring.vo.OptimizationCountVO">
+    <select id="takeOptimizationCountExceptionUsers" resultType="com.keymanager.monitoring.vo.OptimizationCountVO">
         SELECT
             u.fLoginName AS 'loginName',
             u.fEmail AS 'email'
@@ -872,7 +878,7 @@
 		WHERE fType = 'fm'
 		AND fKeyword = #{keyword}
 		AND fTerminalType = #{terminalType}
-		AND fOptimizePlanCount &gt; fOptimizedCount
+		AND fOptimizeRemainingCount &gt; 0
 		AND fStatus = 1
     </select>
 
@@ -886,7 +892,7 @@
         WHERE fType = 'qz'
         AND fTerminalType = #{terminalType}
         AND fOptimizeGroupName = #{optimizeGroupName}
-        AND fOptimizePlanCount &gt; fOptimizedCount
+        AND fOptimizeRemainingCount &gt; 0
         AND fStatus = 1
         ORDER BY RAND()
         LIMIT 4

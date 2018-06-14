@@ -212,6 +212,13 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         } else {
             originalUrl = null;
         }
+
+        if(!EntryTypeEnum.fm.name().equals(customerKeyword.getType())) {
+            Integer sameCustomerKeywordCount = customerKeywordDao.getSameCustomerKeywordCount(customerKeyword.getTerminalType(), customerKeyword.getCustomerUuid(), customerKeyword.getKeyword(), customerKeyword.getUrl());
+            if(sameCustomerKeywordCount != null && sameCustomerKeywordCount > 0) {
+                return;
+            }
+        }
         if (!EntryTypeEnum.fm.name().equals(customerKeyword.getType()) && haveDuplicatedCustomerKeyword(customerKeyword.getTerminalType(),
                 customerKeyword.getCustomerUuid(), customerKeyword.getKeyword(), originalUrl)) {
             return;
@@ -312,6 +319,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeyword.setInitialIndexCount(existingCustomerKeyword.getInitialIndexCount());
             customerKeyword.setCurrentIndexCount(existingCustomerKeyword.getCurrentIndexCount());
             customerKeyword.setOptimizePlanCount(existingCustomerKeyword.getOptimizePlanCount());
+            customerKeyword.setOptimizeRemainingCount(existingCustomerKeyword.getOptimizePlanCount());
 
             customerKeyword.setPositionFirstFee(existingCustomerKeyword.getPositionFirstFee());
             customerKeyword.setPositionSecondFee(existingCustomerKeyword.getPositionSecondFee());
@@ -339,10 +347,12 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                     customerKeyword.setInitialIndexCount(baiduIndexCriteria.getPcIndex());
                     customerKeyword.setCurrentIndexCount(baiduIndexCriteria.getPcIndex());
                     customerKeyword.setOptimizePlanCount(baiduIndexCriteria.getPcIndex() < 100 ? 100 : baiduIndexCriteria.getPcIndex());
+                    customerKeyword.setOptimizeRemainingCount(baiduIndexCriteria.getPcIndex() < 100 ? 100 : baiduIndexCriteria.getPcIndex());
                 } else {
                     customerKeyword.setInitialIndexCount(baiduIndexCriteria.getPhoneIndex());
                     customerKeyword.setCurrentIndexCount(baiduIndexCriteria.getPhoneIndex());
                     customerKeyword.setOptimizePlanCount(baiduIndexCriteria.getPhoneIndex() < 100 ? 100 : baiduIndexCriteria.getPhoneIndex());
+                    customerKeyword.setOptimizeRemainingCount(baiduIndexCriteria.getPhoneIndex() < 100 ? 100 : baiduIndexCriteria.getPhoneIndex());
                 }
                 calculatePrice(customerKeyword);
                 customerKeyword.setUpdateTime(new Date());
@@ -907,6 +917,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeyword.setInitialPosition(searchEngineResultItemVO.getOrder());
         customerKeyword.setOptimizeGroupName(groupName);
         customerKeyword.setOptimizePlanCount(searchEngineResultItemVO.getClickCount());
+        customerKeyword.setOptimizeRemainingCount(searchEngineResultItemVO.getClickCount());
         customerKeyword.setKeyword(searchEngineResultItemVO.getKeyword());
         customerKeyword.setTitle(searchEngineResultItemVO.getTitle());
         customerKeyword.setType(searchEngineResultItemVO.getType());
@@ -1038,7 +1049,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void observeOptimizationCount() throws Exception {
-        List<OptimizationCountVO> optimizationCountVOs = customerKeywordDao.tabkeOptimizationCountExceptionUsers();
+        List<OptimizationCountVO> optimizationCountVOs = customerKeywordDao.takeOptimizationCountExceptionUsers();
         for (OptimizationCountVO optimizationCountVO : optimizationCountVOs) {
             List<OptimizationCountVO> groupOptimizationCountInfo = customerKeywordDao.observeGroupOptimizationCount(optimizationCountVO.getLoginName());
             List<OptimizationCountVO> keywordOptimizationCountInfo = customerKeywordDao.observeKeywordOptimizationCount(optimizationCountVO.getLoginName());
