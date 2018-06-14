@@ -161,7 +161,12 @@ public class QZSettingRestController extends SpringMVCBaseController {
 	@RequiresPermissions("/internal/qzsetting/searchQZSettings")
 	@RequestMapping(value = "/getAvailableQZSettings", method = RequestMethod.POST)
 	public ResponseEntity<?> getAvailableQZSettings(HttpServletRequest request){
-		List<QZSetting>	qzSettings = qzSettingService.getAvailableQZSettings();
+		try {
+			List<QZSetting>	qzSettings = qzSettingService.getAvailableQZSettings();
 			return new ResponseEntity<Object>(qzSettings,HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
+		return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
 	}
 }

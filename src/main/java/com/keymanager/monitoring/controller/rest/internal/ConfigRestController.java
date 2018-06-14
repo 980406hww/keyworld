@@ -79,4 +79,17 @@ public class ConfigRestController {
         }
         return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
     }
+
+    @RequestMapping(value = "/refreshCustomerNegativeKeywords" , method = RequestMethod.POST)
+    public ResponseEntity<?> refreshCustomerNegativeKeywords(@RequestBody Map<String, Object> requestMap){
+        try{
+        String searchEngine = (String)requestMap.get("searchEngine");
+        String negativeKeywords = (String) requestMap.get("negativeKeywords");
+        configService.refreshCustomerNegativeKeywords(searchEngine,negativeKeywords);
+        return new ResponseEntity<Object>(true,HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+    }
 }

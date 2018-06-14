@@ -877,7 +877,7 @@ function getAvailableQZSettings() {
             $.each(data,function(index,element) {
                 text += element.domain;
                 if(element.updateEndTime!=null&&element.updateEndTime!=''){
-                    text += '______'+getMyDate(element.updateEndTime);
+                    text += '______'+ toTimeFormat(new Date(element.updateEndTime));
                 }
                 text += '\r';
             });
@@ -901,21 +901,4 @@ function getAvailableQZSettings() {
     });
     $("#getAvailableQZSettings").dialog("open");
     $("#getAvailableQZSettings").window("resize",{top:$(document).scrollTop() + 100});
-}
-function getMyDate(str){
-    var oDate = new Date(str),
-        oYear = oDate.getFullYear(),
-        oMonth = oDate.getMonth()+1,
-        oDay = oDate.getDate(),
-        oHour = oDate.getHours(),
-        oMin = oDate.getMinutes(),
-        oSen = oDate.getSeconds(),
-        oTime = oYear +'-'+ getzf(oMonth) +'-'+ getzf(oDay) +' '+ getzf(oHour) +':'+ getzf(oMin) +':'+getzf(oSen);
-    return oTime;
-}
-function getzf(num){
-    if(parseInt(num) < 10){
-        num = '0'+num;
-    }
-    return num;
 }
