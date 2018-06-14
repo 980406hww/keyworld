@@ -1,4 +1,5 @@
 $(function () {
+    $('#applicationMarketDialog').dialog("close");
     $("#showApplicationMarketListDiv").css("margin-top",$("#showApplicationMarketTableDiv").height());
     alignTableHeader();
     pageLoad();
@@ -74,4 +75,192 @@ function alignTableHeader(){
     $.each(td, function (idx, val) {
         ctd.eq(idx).width($(val).width());
     });
+}
+function deleteApplicationMarket(uuid) {
+    if (confirm("确实要删除这条记录?") == false) return;
+    $.ajax({
+        url: '/internal/applicationMarket/deleteApplicationMarket/' + uuid,
+        type: 'Get',
+        success: function (result) {
+            if (result) {
+                $().toastmessage('showSuccessToast', "删除成功",true);
+            } else {
+                $().toastmessage('showErrorToast', "删除失败");
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "删除失败");
+        }
+    });
+}
+function deleteApplicationMarkets(self) {
+    var uuids = getSelectedIDs();
+    if (uuids === '') {
+        alert('请选择要操作的设置信息');
+        return;
+    }
+    if (confirm("确实要删除这些记录 ?") == false) return;
+    var postData = {};
+    postData.uuids = uuids.split(",");
+    $.ajax({
+        url: '/internal/applicationMarket/deleteApplicationMarketList',
+        data: JSON.stringify(postData),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        timeout: 5000,
+        type: 'POST',
+        success: function (data) {
+            if (data) {
+                $().toastmessage('showSuccessToast', "操作成功",true);
+            } else {
+                $().toastmessage('showErrorToast', "操作失败");
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "操作失败");
+        }
+    });
+}
+function getSelectedIDs() {
+    var uuids = '';
+    $.each($("input[name=uuid]:checkbox:checked"), function () {
+        if (uuids === '') {
+            uuids = $(this).val();
+        } else {
+            uuids = uuids + "," + $(this).val();
+        }
+    });
+    return uuids;
+}
+function showApplicationMarketDialog(uuid) {
+    if (uuid == null) {
+        $('#applicationMarketForm')[0].reset();
+    }
+    $("#applicationMarketDialog").show();
+    $("#applicationMarketDialog").dialog({
+        resizable: false,
+        width: 320,
+        height: 280,
+        modal: true,
+        buttons: [{
+            text: '保存',
+            iconCls: 'icon-ok',
+            handler: function () {
+                saveApplication(uuid);
+            }
+        },
+            {
+                text: '清空',
+                iconCls: 'fi-trash',
+                handler: function () {
+                    $('#applicationMarketForm')[0].reset();
+                }
+            },
+            {
+                text: '取消',
+                iconCls: 'icon-cancel',
+                handler: function () {
+                    $('#applicationMarketDialog').dialog("close");
+                    $('#applicationMarketForm')[0].reset();
+                }
+            }]
+    });
+    $("#applicationMarketDialog").dialog("open");
+    $('#applicationMarketDialog').window("resize",{top:$(document).scrollTop() + 100});
+}
+function saveApplication(uuid) {
+    var applicationMarketForm = $("#applicationMarketDialog").find("#applicationMarketForm");
+    var applicationMarket = {};
+    applicationMarket.uuid = uuid;
+    applicationMarket.marketName = applicationMarketForm.find("#marketName").val();
+    applicationMarket.marketPackageName = applicationMarketForm.find("#marketPackageName").val();
+    applicationMarket.tmpPath = applicationMarketForm.find("#tmpPath").val();
+    applicationMarket.apkPath = applicationMarketForm.find("#apkPath").val();
+    applicationMarket.dataDBPath = applicationMarketForm.find("#dataDBPath").val();
+    applicationMarket.storageDBPath = applicationMarketForm.find("#storageDBPath").val();
+    applicationMarket.fileType = applicationMarketForm.find("#fileType").val();
+    if(applicationMarket.marketName == null || applicationMarket.marketName== '' || applicationMarket.marketName == ""){
+        alert("应用市场名称不能为空!");
+        return;
+    }
+    if(applicationMarket.marketPackageName == null || applicationMarket.marketPackageName== '' || applicationMarket.marketPackageName == ""){
+        alert("应用市场包名不能为空!");
+        return;
+    }
+    if(applicationMarket.tmpPath == null || applicationMarket.tmpPath== '' || applicationMarket.tmpPath == ""){
+        alert("临时文件地址不能为空!");
+        return;
+    }
+    if(applicationMarket.apkPath == null || applicationMarket.apkPath== '' || applicationMarket.apkPath == ""){
+        alert("安装包地址不能为空!");
+        return;
+    }
+    if(applicationMarket.dataDBPath == null || applicationMarket.dataDBPath== '' || applicationMarket.dataDBPath == ""){
+        alert("App数据库地址不能为空!");
+        return;
+    }
+    if(applicationMarket.storageDBPath == null || applicationMarket.storageDBPath== '' || applicationMarket.storageDBPath == ""){
+        alert("App存储数据库地址不能为空!");
+        return;
+    }
+    if(applicationMarket.fileType == null || applicationMarket.fileType== '' || applicationMarket.fileType == ""){
+        alert("文件类型不能为空!");
+        return;
+    }
+    $.ajax({
+        url: '/internal/applicationMarket/saveApplicationMarket',
+        data: JSON.stringify(applicationMarket),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        timeout: 5000,
+        type: 'POST',
+        success: function (result) {
+            if (result) {
+                $().toastmessage('showSuccessToast', "保存成功",true);
+            } else {
+                $().toastmessage('showErrorToast', "保存失败");
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "保存失败");
+        }
+    });
+    $("#applicationMarketDialog").dialog("close");
+    $('#applicationMarketForm')[0].reset();
+}
+function modifyApplicationMarket(uuid) {
+    getApplicationMarket(uuid, function (applicationMarket) {
+        if (applicationMarket != null) {
+            initApplicationMarketDialog(applicationMarket);
+            showApplicationMarketDialog(uuid);
+        } else {
+            $().toastmessage('showErrorToast', "获取信息失败");
+        }
+    })
+}
+function getApplicationMarket(uuid, callback) {
+    $.ajax({
+        url: '/internal/applicationMarket/getApplicationMarket/' + uuid,
+        type: 'Get',
+        success: function (applicationMarket) {
+            callback(applicationMarket);
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "获取信息失败");
+        }
+    });
+}
+function initApplicationMarketDialog(applicationMarket) {
+    var applicationMarketForm = $("#applicationMarketForm");
+    applicationMarketForm.find("#marketName").val(applicationMarket.marketName);
+    applicationMarketForm.find("#marketPackageName").val(applicationMarket.marketPackageName);
+    applicationMarketForm.find("#tmpPath").val(applicationMarket.tmpPath);
+    applicationMarketForm.find("#apkPath").val(applicationMarket.apkPath);
+    applicationMarketForm.find("#dataDBPath").val(applicationMarket.dataDBPath);
+    applicationMarketForm.find("#storageDBPath").val(applicationMarket.storageDBPath);
+    applicationMarketForm.find("#fileType").val(applicationMarket.fileType);
 }

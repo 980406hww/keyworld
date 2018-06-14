@@ -7,6 +7,7 @@ import com.keymanager.monitoring.entity.ApplyInfo;
 import com.keymanager.monitoring.entity.ApplyKeyword;
 import com.keymanager.monitoring.service.ApplyInfoService;
 import com.keymanager.monitoring.service.ApplyKeywordService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,12 +34,14 @@ public class ApplyKeywordController {
     @Autowired
     private ApplyInfoService applyInfoService;
 
+    @RequiresPermissions("/internal/applyKeyword/searchApplyKeyword")
     @RequestMapping(value = "/searchApplyKeyword", method = RequestMethod.GET)
     public ModelAndView searchApplyKeyword(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize,
                                         HttpServletRequest request) {
         return constructApplyKeywordModelAndView(request,new ApplyKeywordCriteria(),currentPageNumber, pageSize);
     }
 
+    @RequiresPermissions("/internal/applyKeyword/searchApplyKeyword")
     @RequestMapping(value = "/searchApplyKeyword", method = RequestMethod.POST)
     public ModelAndView searchApplyKeyword(ApplyKeywordCriteria applyKeywordCriteria,HttpServletRequest request) {
         try {
@@ -65,10 +68,11 @@ public class ApplyKeywordController {
         return modelAndView;
     }
 
+    @RequiresPermissions("/internal/applyKeyword/deleteApplyKeyword")
     @RequestMapping(value = "/deleteApplyKeyword/{uuid}", method = RequestMethod.GET)
-    public ResponseEntity<?> deleteSupplier(@PathVariable("uuid") Long uuid) {
+    public ResponseEntity<?> deleteApplyKeyword(@PathVariable("uuid") Long uuid) {
         try {
-            applyKeywordService.deleteSupplier(uuid);
+            applyKeywordService.deleteApplyKeyword(uuid);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -76,6 +80,7 @@ public class ApplyKeywordController {
         }
     }
 
+    @RequiresPermissions("/internal/applyKeyword/deleteApplyKeywordList")
     @RequestMapping(value = "/deleteApplyKeywordList" , method = RequestMethod.POST)
     public ResponseEntity<?> deleteApplyKeywordList(@RequestBody Map<String, Object> requestMap){
         try {
@@ -87,6 +92,7 @@ public class ApplyKeywordController {
         }
     }
 
+    @RequiresPermissions("/internal/applyKeyword/saveapplyKeyword")
     @RequestMapping(value = "/saveapplyKeyword" , method = RequestMethod.POST)
     public ResponseEntity<?> saveapplyKeyword(HttpServletRequest request){
         try {
