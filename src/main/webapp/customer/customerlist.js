@@ -1012,11 +1012,15 @@ function autoSwitchCustomerKeywordStatus() {
     });
     $('#autoSwitchCustomerKeywordStatusDialog').window("resize",{top:$(document).scrollTop() + 150});
 }
-function setCustomerUpdateInterval() {
+function setCustomerUpdateInterval(uuid) {
     var uuids = getSelectedIDs();
-    if (uuids === '') {
-        alert('请选择要设置启停关键字间隔的客户！');
-        return;
+    if(uuid == null) {
+        if (uuids === '') {
+            alert('请选择要设置启停关键字间隔的客户！');
+            return;
+        }
+    } else {
+        uuids = uuid;
     }
     $.messager.prompt('提示', '请输入关键字启停间隔天数：', function(updateInterval){
         if(updateInterval != undefined) {
