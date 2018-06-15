@@ -94,10 +94,7 @@ function editWebsiteInfo(uuid) {
         type: 'Get',
         success: function (websiteInfo) {
             if (websiteInfo != null) {
-                var websiteForm = $("#websiteForm");
-                websiteForm.find("#websiteName").val(websiteInfo.websiteName);
-                websiteForm.find("#domain").val(websiteInfo.domain);
-                websiteForm.find("#industry").val(websiteInfo.industry);
+                assignment(websiteInfo);
                 showWebsiteDialog(websiteInfo.uuid);
             } else {
                 $().toastmessage('showErrorToast', "获取信息失败");
@@ -107,6 +104,29 @@ function editWebsiteInfo(uuid) {
             $().toastmessage('showErrorToast', "获取信息失败");
         }
     });
+}
+
+function assignment(websiteInfo) {
+    var websiteForm = $("#websiteForm");
+    websiteForm.find("#websiteName").val(websiteInfo.websiteName);
+    websiteForm.find("#industry").val(websiteInfo.industry);
+    websiteForm.find("#domain").val(websiteInfo.domain);
+    websiteForm.find("#registrar").val(websiteInfo.registrar);
+    websiteForm.find("#analysis").val(websiteInfo.analysis);
+    websiteForm.find("#databaseName").val(websiteInfo.databaseName);
+    websiteForm.find("#databaseUserName").val(websiteInfo.databaseUserName);
+    websiteForm.find("#databasePassword").val(websiteInfo.databasePassword);
+    websiteForm.find("#serverIP").val(websiteInfo.serverIP);
+    websiteForm.find("#serverUserName").val(websiteInfo.serverUserName);
+    websiteForm.find("#serverPassword").val(websiteInfo.serverPassword);
+    websiteForm.find("#expiryTime").val(userDate(websiteInfo.expiryTime));
+}
+function userDate(uData){
+    var myDate = new Date(uData);
+    var year = myDate.getFullYear();
+    var month = myDate.getMonth() + 1;
+    var day = myDate.getDate();
+    return year + '-' + month + '-' + day;
 }
 function deleteWebsite(uuid) {
     if (confirm("确认要删除这个网站吗?") == false) return;
@@ -162,8 +182,8 @@ function showWebsiteDialog(uuid) {
     $("#websiteDialog").show();
     $("#websiteDialog").dialog({
         resizable: false,
-        width: 280,
-        height: 145,
+        width: 300,
+        height: 365,
         modal: true,
         title: '网站信息',
         closed:true,
@@ -199,8 +219,17 @@ function saveWebsite(uuid) {
         websiteObj.uuid = uuid;
     }
     websiteObj.websiteName = $.trim($("#websiteForm").find("#websiteName").val());
-    websiteObj.domain = $.trim($("#websiteForm").find("#domain").val());
     websiteObj.industry = $.trim($("#websiteForm").find("#industry").val());
+    websiteObj.domain = $.trim($("#websiteForm").find("#domain").val());
+    websiteObj.registrar = $.trim($("#websiteForm").find("#registrar").val());
+    websiteObj.analysis = $.trim($("#websiteForm").find("#analysis").val());
+    websiteObj.expiryTime = $.trim($("#websiteForm").find("#expiryTime").val());
+    websiteObj.databaseName = $.trim($("#websiteForm").find("#databaseName").val());
+    websiteObj.databaseUserName = $.trim($("#websiteForm").find("#databaseUserName").val());
+    websiteObj.databasePassword = $.trim($("#websiteForm").find("#databasePassword").val());
+    websiteObj.serverIP = $.trim($("#websiteForm").find("#serverIP").val());
+    websiteObj.serverUserName = $.trim($("#websiteForm").find("#serverUserName").val());
+    websiteObj.serverPassword = $.trim($("#websiteForm").find("#serverPassword").val());
     $.ajax({
         url: '/internal/website/saveWebsite',
         data: JSON.stringify(websiteObj),

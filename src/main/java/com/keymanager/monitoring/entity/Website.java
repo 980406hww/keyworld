@@ -20,6 +20,34 @@ public class Website extends BaseEntity {
     @TableField(value = "fIndustry", strategy = FieldStrategy.IGNORED)
     private String industry;
 
+    @TableField(value = "fRegistrar")//注册商
+    private String registrar;
+
+    @TableField(value = "fAnalysis")//解析商
+    private String analysis;
+
+
+    @TableField(value = "fExpiryTime")//到期时间
+    private Date expiryTime;
+
+    @TableField(value = "fDatabaseName")//数据库名称
+    private String databaseName;
+
+    @TableField(value = "fDatabaseUserName")
+    private String databaseUserName;
+
+    @TableField(value = "fDatabasePassword")
+    private String databasePassword;
+
+    @TableField(value = "fServerIP")
+    private String serverIP;
+
+    @TableField(value = "fServerUserName")
+    private String serverUserName;
+
+    @TableField(value = "fServerPassword")
+    private String serverPassword;
+
     @TableField(value = "fAccessFailCount")
     private Integer accessFailCount;
 
@@ -75,5 +103,77 @@ public class Website extends BaseEntity {
 
     public void setLastAccessTime(Date lastAccessTime) {
         this.lastAccessTime = lastAccessTime;
+    }
+
+    public String getRegistrar() {
+        return registrar;
+    }
+
+    public void setRegistrar(String registrar) {
+        this.registrar = registrar;
+    }
+
+    public String getAnalysis() {
+        return analysis;
+    }
+
+    public void setAnalysis(String analysis) {
+        this.analysis = analysis;
+    }
+
+    public Date getExpiryTime() {
+        return expiryTime;
+    }
+
+    public void setExpiryTime(Date expiryTime) {
+        this.expiryTime = expiryTime;
+    }
+
+    public String getDatabaseName() {
+        return databaseName;
+    }
+
+    public void setDatabaseName(String databaseName) {
+        this.databaseName = databaseName;
+    }
+
+    public String getDatabaseUserName() {
+        return databaseUserName;
+    }
+
+    public void setDatabaseUserName(String databaseUserName) {
+        this.databaseUserName = databaseUserName;
+    }
+
+    public String getDatabasePassword() {
+        return databasePassword;
+    }
+
+    public void setDatabasePassword(String databasePassword) {
+        this.databasePassword = databasePassword;
+    }
+
+    public String getServerIP() {
+        return serverIP;
+    }
+
+    public void setServerIP(String serverIP) {
+        this.serverIP = serverIP;
+    }
+
+    public String getServerUserName() {
+        return serverUserName;
+    }
+
+    public void setServerUserName(String serverUserName) {
+        this.serverUserName = serverUserName;
+    }
+
+    public String getServerPassword() {
+        return serverPassword;
+    }
+
+    public void setServerPassword(String serverPassword) {
+        this.serverPassword = serverPassword;
     }
 }

@@ -1,5 +1,5 @@
 <p><b>您好，</b></p>
-&nbsp;&nbsp;以下网站出现<font color="red">访问故障</font>，请及时进行查看：
+&nbsp;&nbsp;以下网站的域名<font color="red">即将到期</font>，<font color="red">请注意续费：</font>
 <html>
 <head>
     <meta http-equiv='Content-Type' content='text/html; charset=utf-8'/>
@@ -15,12 +15,12 @@
             border: solid #8BC34A;
             border-width: 0 1px 1px 0;
             padding: 2px;
-            width: 180px
+            width: 180px;
+            text-align: center;
         }
 
         .content {
             background-color: #FBE1E1;
-            text-align: center;
         }
     </style>
 </head>
@@ -29,14 +29,13 @@
     <tr>
         <th>网站名称</th>
         <th>网站域名</th>
-        <th>访问失败次数</th>
         <th>注册商</th>
         <th>解析商</th>
         <th>服务器IP</th>
         <th>数据库名称</th>
-        <th style="color: red;">出现故障时间</th>
+        <th style="color: #ffb319;">到期时间</th>
     </tr>
-    <#list accessFailWebsites as website>
+    <#list websites as website>
     <tr>
         <#if website.websiteName??>
             <td class='content'>${website.websiteName}</td>
@@ -45,11 +44,6 @@
         </#if>
         <#if website.domain??>
             <td class='content'>${website.domain}</td>
-        <#else>
-            <td>---</td>
-        </#if>
-        <#if website.accessFailCount??>
-            <td class='content'>${website.accessFailCount!""}</td>
         <#else>
             <td>---</td>
         </#if>
@@ -73,8 +67,8 @@
         <#else>
             <td>---</td>
         </#if>
-        <#if website.accessFailTime??>
-            <td class='content'>${website.accessFailTime?datetime}</td>
+        <#if website.expiryTime??>
+            <td class='content'>${website.expiryTime?datetime}</td>
         <#else>
             <td>---</td>
         </#if>
