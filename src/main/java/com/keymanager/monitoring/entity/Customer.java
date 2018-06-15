@@ -58,6 +58,9 @@ public class Customer extends BaseEntity{
 	@TableField(value = "fStatus")
 	private int status;
 
+	@TableField(value = "fUpdateInterval")
+	private String updateInterval;
+
 	public String getLoginName() {
 		return loginName;
 	}
@@ -192,5 +195,13 @@ public class Customer extends BaseEntity{
 
 	public void setInActiveHour(String inActiveHour) {
 		this.inActiveHour = inActiveHour;
+	}
+
+	public String getUpdateInterval() {
+		return updateInterval;
+	}
+
+	public void setUpdateInterval(String updateInterval) {
+		this.updateInterval = updateInterval;
 	}
 }
