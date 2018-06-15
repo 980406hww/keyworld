@@ -167,21 +167,19 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 		List<Long> inActiveCustomerUuids = new ArrayList<Long>();
 		List<Customer> customers = customerDao.searchNeedSwitchCustomer();
 		for(Customer customer : customers) {
+			openFlag = false;
 			// 按日期启停
 			if(StringUtils.isNotBlank(customer.getUpdateInterval())) {
 				String[] updateIntervals = customer.getUpdateInterval().split(",");
 				for (String updateInterval : updateIntervals) {
 					if(updateInterval.equals(day)) {
 						activeCustomerUuids.add(customer.getUuid());
-						break;
-					} else {
-						inActiveCustomerUuids.add(customer.getUuid());
+						openFlag = true;
 						break;
 					}
 				}
 			} else {
 				// 按小时启停
-				openFlag = false;
 				String[] activeHours = customer.getActiveHour().split(",");
 				String[] inActiveHours = customer.getInActiveHour().split(",");
 				for(int i = 0; i < activeHours.length; i++) {
@@ -199,9 +197,9 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 						}
 					}
 				}
-				if(!openFlag) {
-					inActiveCustomerUuids.add(customer.getUuid());
-				}
+			}
+			if(!openFlag) {
+				inActiveCustomerUuids.add(customer.getUuid());
 			}
 		}
 		if(CollectionUtils.isNotEmpty(activeCustomerUuids)) {
