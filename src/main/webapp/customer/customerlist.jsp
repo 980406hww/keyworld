@@ -65,8 +65,8 @@
                         </shiro:hasPermission>
                         <c:if test="${'fm'.equalsIgnoreCase(entryType)}">
                             <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
-                                &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 设置关键字启停时间 " onclick="autoSwitchCustomerKeywordStatus()"/>
-                                &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 设置关键字启停间隔 " onclick="setCustomerUpdateInterval(null)"/>
+                                &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 设置关键字启停小时 " onclick="autoSwitchCustomerKeywordStatus()"/>
+                                &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 设置关键字启停天数 " onclick="setCustomerUpdateInterval(null)"/>
                             </shiro:hasPermission>
                         </c:if>
                         <c:if test="${'bc'.equalsIgnoreCase(entryType)}">
