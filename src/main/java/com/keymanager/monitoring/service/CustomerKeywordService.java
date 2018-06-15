@@ -121,13 +121,14 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         if (qzCaptureTitleLog == null) {
             return null;
         }
-        CustomerKeywordForCaptureTitle captureTitle = customerKeywordDao.searchCustomerKeywordForCaptureTitle(qzCaptureTitleLog,searchEngine);
-        if (captureTitle == null) {
+        Long customerKeywordUuid = customerKeywordDao.searchCustomerKeywordUuidForCaptureTitle(qzCaptureTitleLog,searchEngine);
+        if (customerKeywordUuid == null) {
             qzCaptureTitleLogService.completeQZCaptureTitleLog(qzCaptureTitleLog.getUuid());
             customerKeywordDao.deleteEmptyTitleCustomerKeyword(qzCaptureTitleLog,searchEngine);
             logger.info("deleteEmptyTitleCustomerKeyword:" + qzCaptureTitleLog.getCustomerUuid() + "-" + qzCaptureTitleLog.getGroup());
             return null;
         } else {
+            CustomerKeywordForCaptureTitle captureTitle = customerKeywordDao.searchCustomerKeywordForCaptureTitle(customerKeywordUuid);
             QZOperationType qzOperationType = qzOperationTypeService.selectById(qzCaptureTitleLog.getQzOperationTypeUuid());
             QZSetting qzSetting = qzSettingService.selectById(qzOperationType.getQzSettingUuid());
             String subDomainName = qzOperationType.getSubDomainName();
@@ -145,8 +146,10 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         QZCaptureTitleLog qzCaptureTitleLog = new QZCaptureTitleLog();
         qzCaptureTitleLog.setGroup(groupName);
         qzCaptureTitleLog.setTerminalType(terminalType);
-        CustomerKeywordForCaptureTitle captureTitle = customerKeywordDao.searchCustomerKeywordForCaptureTitle(qzCaptureTitleLog,searchEngine);
-        if(null != captureTitle) {
+        Long customerKeywordUuid = customerKeywordDao.searchCustomerKeywordUuidForCaptureTitle(qzCaptureTitleLog,searchEngine);
+        CustomerKeywordForCaptureTitle captureTitle = null;
+        if(null != customerKeywordUuid) {
+            captureTitle = customerKeywordDao.searchCustomerKeywordForCaptureTitle(customerKeywordUuid);
             updateCaptureTitleQueryTime((long)captureTitle.getUuid());
         }
         return captureTitle;
@@ -555,7 +558,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 //            resetBigKeywordIndicator(clientStatus.getGroup(), Integer.parseInt(maxInvalidCountConfig.getValue()));
         }
 
+        Long customerKeywordUuid = null;
         CustomerKeyword customerKeyword = null;
+
         int retryCount = 0;
         int noPositionMaxInvalidCount = 2;
         if(clientStatus.getOperationType().contains(Constants.CONFIG_TYPE_ZHANNEI_SOGOU)) {
@@ -564,11 +569,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
         do{
             boolean isNormalKeyword = keywordOptimizationCountService.optimizeNormalKeyword(clientStatus.getGroup());
-            customerKeyword = customerKeywordDao.getCustomerKeywordForOptimization(terminalType, clientStatus.getGroup(),
+            customerKeywordUuid = customerKeywordDao.getCustomerKeywordUuidForOptimization(terminalType, clientStatus.getGroup(),
                     Integer.parseInt(maxInvalidCountConfig.getValue()), noPositionMaxInvalidCount, !isNormalKeyword);
 
-            if(customerKeyword == null){
-                customerKeyword = customerKeywordDao.getCustomerKeywordForOptimization(terminalType, clientStatus.getGroup(),
+            if(customerKeywordUuid == null){
+                customerKeywordUuid = customerKeywordDao.getCustomerKeywordUuidForOptimization(terminalType, clientStatus.getGroup(),
                         Integer.parseInt(maxInvalidCountConfig.getValue()), noPositionMaxInvalidCount, false);
             }
             retryCount++;
@@ -583,9 +588,10 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             }else if(updateQueryInfo){
                 updateOptimizationQueryTime((customerKeyword.getUuid()));
             }
-        }while(customerKeyword == null && retryCount < 2);
+        }while(customerKeywordUuid == null && retryCount < 2);
 
-        if(customerKeyword != null){
+        if(customerKeywordUuid != null){
+            customerKeyword = customerKeywordDao.getCustomerKeywordForOptimization(customerKeywordUuid);
             clientStatusService.updatePageNo(clientID, 0);
             CustomerKeywordForOptimization customerKeywordForOptimization = new CustomerKeywordForOptimization();
             customerKeywordForOptimization.setUuid(customerKeyword.getUuid());
@@ -857,8 +863,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         Boolean captureRankJobStatus = captureRankJobService.getCaptureRankJobStatus(captureRankJobUuid);
         customerKeywordForCapturePosition.setCaptureRankJobStatus(captureRankJobStatus);
         if(captureRankJobStatus){
-            CustomerKeyword customerKeyword = customerKeywordDao.getCustomerKeywordForCapturePosition(terminalType, groupNames, customerUuid, startTime);
-            if(customerKeyword != null){
+            Long customerKeywordUuid = customerKeywordDao.getCustomerKeywordUuidForCapturePosition(terminalType, groupNames, customerUuid, startTime);
+            if(customerKeywordUuid != null){
+                CustomerKeyword customerKeyword = customerKeywordDao.getCustomerKeywordForCapturePosition(customerKeywordUuid);
                 customerKeywordForCapturePosition.setUuid(customerKeyword.getUuid());
                 customerKeywordForCapturePosition.setKeyword(customerKeyword.getKeyword());
                 customerKeywordForCapturePosition.setUrl(customerKeyword.getUrl());

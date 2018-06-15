@@ -442,6 +442,20 @@
         ORDER BY ck.fOptimizeRemainingCount DESC
     </select>
 
+    <select id="getCustomerKeywordUuidForOptimization" resultType="Long">
+        SELECT
+        ck.fUuid	AS	'uuid'
+        FROM t_customer_keyword ck
+        WHERE ck.fOptimizeGroupName = #{groupName} and ck.fStatus = 1 and ck.fTerminalType = #{terminalType}
+        and ck.fQueryTime <![CDATA[<]]> NOW() and ck.fUrl > ''
+        and ck.fInvalidRefreshCount <![CDATA[<]]> #{maxInvalidCount}
+        and (ck.fOptimizeRemainingCount > 0)
+        <if test="bigKeyword == true">
+            and ck.fBigKeyword = 1
+        </if>
+        order by ck.fQueryTime limit 1
+    </select>
+
     <select id="getCustomerKeywordForOptimization" resultType="com.keymanager.monitoring.entity.CustomerKeyword">
         SELECT
         ck.fUuid	AS	'uuid',
@@ -467,14 +481,7 @@
         ck.fRelatedKeywordPercentage AS 'relatedKeywordPercentage',
         ck.fRemarks AS 'remarks'
         FROM t_customer_keyword ck
-        WHERE ck.fOptimizeGroupName = #{groupName} and ck.fStatus = 1 and ck.fTerminalType = #{terminalType}
-        and ck.fQueryTime <![CDATA[<]]> NOW() and ck.fUrl > ''
-        and ck.fInvalidRefreshCount <![CDATA[<]]> #{maxInvalidCount}
-        and (ck.fOptimizeRemainingCount > 0)
-        <if test="bigKeyword == true">
-            and ck.fBigKeyword = 1
-        </if>
-        order by ck.fQueryTime limit 1
+        WHERE ck.fUuid = #{uuid}
     </select>
 
     <update id="updateOptimizationQueryTime">
@@ -533,14 +540,9 @@
         WHERE fUuid = #{customerKeywordUuid}
     </update>
 
-    <select id="getCustomerKeywordForCapturePosition" resultType="com.keymanager.monitoring.entity.CustomerKeyword">
+    <select id="getCustomerKeywordUuidForCapturePosition" resultType="Long">
         SELECT
-        ck.fUuid	AS	'uuid',
-        ck.fTerminalType	AS	'terminalType',
-        ck.fKeyword	AS	'keyword',
-        ck.fUrl	AS	'url',
-        ck.fTitle	AS	'title',
-        ck.fSearchEngine	AS	'searchEngine'
+        ck.fUuid	AS	'uuid'
         FROM t_customer_keyword ck
         WHERE ck.fTerminalType = #{terminalType} and ck.fUrl > '' and ck.fStatus = 1
         <if test="startTime != null">
@@ -562,6 +564,18 @@
         </choose>
         ORDER BY ck.fCapturePositionQueryTime DESC
         LIMIT 1
+    </select>
+
+    <select id="getCustomerKeywordForCapturePosition" resultType="com.keymanager.monitoring.entity.CustomerKeyword">
+        SELECT
+        ck.fUuid	AS	'uuid',
+        ck.fTerminalType	AS	'terminalType',
+        ck.fKeyword	AS	'keyword',
+        ck.fUrl	AS	'url',
+        ck.fTitle	AS	'title',
+        ck.fSearchEngine	AS	'searchEngine'
+        FROM t_customer_keyword ck
+        WHERE ck.fUuid = #{uuid}
     </select>
 
     <update id="resetInvalidRefreshCount" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria">
@@ -635,6 +649,28 @@
             GROUP BY fOptimizeGroupName
     </select>
 
+    <select id="searchCustomerKeywordUuidForCaptureTitle" resultType="Long">
+        SELECT
+        ck.fUuid  AS `uuid`
+        FROM
+        t_customer_keyword ck
+        WHERE 1 = 1
+        <if test="qzCaptureTitleLog.terminalType != null and qzCaptureTitleLog.terminalType != ''">
+            AND ck.fTerminalType = #{qzCaptureTitleLog.terminalType}
+        </if>
+        <if test="qzCaptureTitleLog.group != null and qzCaptureTitleLog.group != ''">
+            AND ck.fOptimizeGroupName = #{qzCaptureTitleLog.group}
+        </if>
+        <if test="qzCaptureTitleLog.customerUuid != null and qzCaptureTitleLog.customerUuid != ''">
+            AND ck.fCustomerUuid = #{qzCaptureTitleLog.customerUuid}
+        </if>
+        AND ck.fCapturedTitle = 0
+        AND ck.fSearchEngine = #{searchEngine}
+        AND ck.fCaptureTitleQueryTime IS NULL
+        AND (ck.fTitle IS NULL OR ck.fTitle = '')
+        LIMIT 1
+    </select>
+
     <select id="searchCustomerKeywordForCaptureTitle" resultType="com.keymanager.value.CustomerKeywordForCaptureTitle">
             SELECT
                 ck.fKeyword  AS `keyword`,
@@ -643,21 +679,7 @@
                 ck.fOriginalUrl  AS `wholeUrl`
             FROM
                 t_customer_keyword ck
-            WHERE 1 = 1
-            <if test="qzCaptureTitleLog.terminalType != null and qzCaptureTitleLog.terminalType != ''">
-                AND ck.fTerminalType = #{qzCaptureTitleLog.terminalType}
-            </if>
-            <if test="qzCaptureTitleLog.group != null and qzCaptureTitleLog.group != ''">
-                AND ck.fOptimizeGroupName = #{qzCaptureTitleLog.group}
-            </if>
-            <if test="qzCaptureTitleLog.customerUuid != null and qzCaptureTitleLog.customerUuid != ''">
-                AND ck.fCustomerUuid = #{qzCaptureTitleLog.customerUuid}
-            </if>
-            AND ck.fCapturedTitle = 0
-            AND ck.fSearchEngine = #{searchEngine}
-            AND ck.fCaptureTitleQueryTime IS NULL
-            AND (ck.fTitle IS NULL OR ck.fTitle = '')
-            LIMIT 1
+            WHERE ck.fUuid = #{uuid}
     </select>
 
     <delete id="deleteEmptyTitleCustomerKeyword">
