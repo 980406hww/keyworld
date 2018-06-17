@@ -485,7 +485,7 @@
     </select>
 
     <update id="updateOptimizationQueryTime">
-        UPDATE t_customer_keyword set fQueryDate = CURRENT_DATE(), fQueryCount = fQueryCount + 1, fInvalidRefreshCount = fInvalidRefreshCount + 1, fQueryTime = now() + fQueryInterval
+        UPDATE t_customer_keyword set fQueryDate = CURRENT_DATE(), fQueryCount = fQueryCount + 1, fInvalidRefreshCount = fInvalidRefreshCount + 1, fQueryTime = DATE_ADD(NOW(), INTERVAL fQueryInterval MINUTE)
         WHERE fUuid = #{customerKeywordUuid}
     </update>
 

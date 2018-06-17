@@ -231,6 +231,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeyword.setTitle(customerKeyword.getTitle() != null ? customerKeyword.getTitle().trim() : null);
         customerKeyword.setOriginalUrl(customerKeyword.getOriginalUrl() != null ? customerKeyword.getOriginalUrl().trim() : null);
         customerKeyword.setOrderNumber(customerKeyword.getOrderNumber() != null ? customerKeyword.getOrderNumber().trim() : null);
+        customerKeyword.setOptimizeRemainingCount(customerKeyword.getOptimizePlanCount());
 
         if(StringUtils.isNotBlank(userName)) {
             boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
@@ -577,7 +578,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                         Integer.parseInt(maxInvalidCountConfig.getValue()), noPositionMaxInvalidCount, false);
             }
             retryCount++;
-            if(customerKeyword == null){
+            if(customerKeywordUuid == null){
                 if(keywordOptimizationCountService.resetBigKeywordIndicator(clientStatus.getGroup())) {
                     keywordOptimizationCountService.init(clientStatus.getGroup());
                 }
@@ -586,7 +587,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                     resetBigKeywordIndicator(clientStatus.getGroup(), Integer.parseInt(maxInvalidCountConfig.getValue()), noPositionMaxInvalidCount);
                 }
             }else if(updateQueryInfo){
-                updateOptimizationQueryTime((customerKeyword.getUuid()));
+                updateOptimizationQueryTime(customerKeywordUuid);
             }
         }while(customerKeywordUuid == null && retryCount < 2);
 
