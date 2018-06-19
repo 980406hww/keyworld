@@ -1,6 +1,7 @@
 <%@ include file="/commons/global.jsp" %>
 <html>
 <head>
+    <script type="text/javascript" src="${staticPath}/static/My97DatePicker/WdatePicker.js"></script>
     <style>
         td{
             display: table-cell;
@@ -30,27 +31,25 @@
                             <td><input type="text" name="userName" id="userName" value="${vpnInfoCriteria.userName}" style="width:200px;"></td>
                             <td align="right">&nbsp;&nbsp;IMEI号:&nbsp;</td>
                             <td><input type="text" name="imei" id="imei" value="${vpnInfoCriteria.imei}" style="width:200px;"></td>
-                            <%--<td align="right">&nbsp;&nbsp;联系电话:&nbsp;</td>--%>
-                            <%--<td><input type="text" name="phone" id="phone" value="${supplierCriteria.phone}" style="width:200px;">--%>
-                            <%--</td>--%>
                             <td align="right" width="60">
                                 <input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}"/>
                                 <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
                                 <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
                                 <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
-                                <%--<shiro:hasPermission name="/internal/applicationMarket/searchApplicationMarket">--%>
+                                <shiro:hasPermission name="/internal/vpnInfo/searchVpnInfo">
                                     <input type="submit" onclick="resetPageNumber()" name="btnQuery" id="btnQuery" value=" 查询 ">&nbsp;&nbsp;
-                                <%--</shiro:hasPermission>--%>
+                                </shiro:hasPermission>
                             </td>
-                            <%--<td>--%>
-                                <%--<shiro:hasPermission name="/internal/supplier/saveSupplier">--%>
-                                    <%--<input type="button" onclick="showSupplierDialog()" value=" 添加 ">&nbsp;&nbsp;--%>
-                                <%--</shiro:hasPermission></td>--%>
-                            <%--<td>--%>
-                                <%--<shiro:hasPermission name="/internal/supplier/deleteSuppliers">--%>
-                                    <%--<input type="button" onclick="deleteSuppliers(this)" value=" 删除所选 ">--%>
-                                <%--</shiro:hasPermission>--%>
-                            <%--</td>--%>
+                            <td>
+                                <shiro:hasPermission name="/internal/vpnInfo/saveVpnInfo">
+                                    <input type="button" onclick="showVpnInfoDialog()" value=" 添加 ">&nbsp;&nbsp;
+                                </shiro:hasPermission>
+                            </td>
+                            <td>
+                                <shiro:hasPermission name="/internal/vpnInfo/deleteVpnInfoList">
+                                    <input type="button" onclick="deleteVpnInfos(this)" value=" 删除所选 ">
+                                </shiro:hasPermission>
+                            </td>
                         </tr>
                     </table>
                 </form>
@@ -77,15 +76,50 @@
                 <td width="100">${vpnInfo.userName}</td>
                 <td width="80">${vpnInfo.password}</td>
                 <td width="80">${vpnInfo.imei}</td>
-                <td width="80"><fmt:formatDate value="${vpnInfo.startTime}" pattern="yyyy-MM-dd HH:mm" /></td>
-                <td width="80"><fmt:formatDate value="${vpnInfo.stopTime}" pattern="yyyy-MM-dd HH:mm" /></td>
+                <td width="80"><fmt:formatDate value="${vpnInfo.startTime}" pattern="yyyy-MM-dd" /></td>
+                <td width="80"><fmt:formatDate value="${vpnInfo.stopTime}" pattern="yyyy-MM-dd" /></td>
                 <td style="text-align: center;" width="100">
-                    <a href="javascript:(0)">修改</a> |
-                    <a href="javascript:(0)">删除</a>
+                    <shiro:hasPermission name="/internal/vpnInfo/saveVpnInfo">
+                    <a href="javascript:modifyVpnInfo(${vpnInfo.uuid})">修改</a> |
+                    </shiro:hasPermission>
+                    <shiro:hasPermission name="/internal/vpnInfo/deleteVpnInfo">
+                    <a href="javascript:deleteVpnInfo('${vpnInfo.uuid}')">删除</a>
+                    </shiro:hasPermission>
                 </td>
             </tr>
         </c:forEach>
     </table>
+</div>
+
+<div id="vpnInfoDialog" title="关键词信息" class="easyui-dialog" style="left: 35%;">
+    <form id="vpnInfoForm" method="post" action="vpnInfoList.jsp">
+        <table style="font-size:14px;" cellpadding=10 cellspacing="5">
+            <tr>
+                <td align="right">VPN账号:</td>
+                <td><input type="text" name="userName" id="userName" style="width:200px;"></td>
+            </tr>
+            <tr>
+                <td align="right">VPN密码:</td>
+                <td><input type="text" name="password" id="password" style="width:200px;"></td>
+            </tr>
+            <tr>
+                <td align="right">IMEI号:</td>
+                <td><input type="text" name="imei" id="imei" style="width:200px;"></td>
+            </tr>
+            <tr>
+                <td align="right">启用时间:</td>
+                <td>
+                    <input name="startTime" id="startTime" class="Wdate" type="text" style="width:200px;" onClick="WdatePicker()">
+                </td>
+            </tr>
+            <tr>
+                <td align="right">停用时间:</td>
+                <td>
+                    <input name="stopTime" id="stopTime" class="Wdate" type="text" style="width:200px;" onClick="WdatePicker()">
+                </td>
+            </tr>
+        </table>
+    </form>
 </div>
 
 <div id="showCustomerBottomPositioneDiv">

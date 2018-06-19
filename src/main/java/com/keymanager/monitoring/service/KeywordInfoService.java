@@ -68,12 +68,18 @@ public class KeywordInfoService extends ServiceImpl<KeywordInfoDao, KeywordInfo>
 						customerKeyword.setSearchEngine(searchEngineInfo[0]);
 						customerKeyword.setTerminalType(searchEngineInfo[1]);
 						customerKeyword.setKeyword(info[0].trim());
-						customerKeyword.setUrl(info[1].trim());
+						String url = info[1].trim();
+						if(url.substring(url.length() - 1).equals("/")) {
+							url = url.substring(0, url.length() - 1);
+						}
+						customerKeyword.setUrl(url);
 						customerKeyword.setOptimizeGroupName(config.getValue());
 						customerKeyword.setManualCleanTitle(true);
 						customerKeyword.setServiceProvider("baidutop123");
 						customerKeyword.setCollectMethod(CollectMethod.PerMonth.name());
 						customerKeyword.setSequence(++maxSequence);
+						customerKeyword.setCurrentIndexCount(-1);
+						customerKeyword.setPositionFirstFee(-1d);
 						customerKeywordService.addCustomerKeyword(customerKeyword, null);
 					}
 				} else if(keyword.getOperationType().equals("delete")) {

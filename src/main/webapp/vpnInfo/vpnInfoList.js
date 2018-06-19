@@ -1,4 +1,5 @@
 $(function () {
+    $('#vpnInfoDialog').dialog("close");
     $("#showVpnInfoListDiv").css("margin-top",$("#showVpnInfoTableDiv").height());
     alignTableHeader();
     pageLoad();
@@ -78,4 +79,183 @@ function alignTableHeader(){
     $.each(td, function (idx, val) {
         ctd.eq(idx).width($(val).width());
     });
+}
+function deleteVpnInfo(uuid) {
+    if (confirm("确实要删除这条记录?") == false) return;
+    $.ajax({
+        url: '/internal/vpnInfo/deleteVpnInfo/' + uuid,
+        type: 'Get',
+        success: function (result) {
+            if (result) {
+                $().toastmessage('showSuccessToast', "删除成功",true);
+            } else {
+                $().toastmessage('showErrorToast', "删除失败");
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "删除失败");
+        }
+    });
+}
+function deleteVpnInfos(self) {
+    var uuids = getSelectedIDs();
+    if (uuids === '') {
+        alert('请选择要操作的设置信息');
+        return;
+    }
+    if (confirm("确实要删除这些记录?") == false) return;
+    var postData = {};
+    postData.uuids = uuids.split(",");
+    $.ajax({
+        url: '/internal/vpnInfo/deleteVpnInfoList',
+        data: JSON.stringify(postData),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        timeout: 5000,
+        type: 'POST',
+        success: function (data) {
+            if (data) {
+                $().toastmessage('showSuccessToast', "操作成功",true);
+            } else {
+                $().toastmessage('showErrorToast', "操作失败");
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "操作失败");
+        }
+    });
+}
+function getSelectedIDs() {
+    var uuids = '';
+    $.each($("input[name=uuid]:checkbox:checked"), function () {
+        if (uuids === '') {
+            uuids = $(this).val();
+        } else {
+            uuids = uuids + "," + $(this).val();
+        }
+    });
+    return uuids;
+}
+function showVpnInfoDialog(uuid) {
+    if (uuid == null) {
+        $('#vpnInfoForm')[0].reset();
+    }
+    $("#vpnInfoDialog").show();
+    $("#vpnInfoDialog").dialog({
+        resizable: false,
+        width: 310,
+        height: 200,
+        modal: true,
+        buttons: [{
+            text: '保存',
+            iconCls: 'icon-ok',
+            handler: function () {
+                saveVpnInfo(uuid);
+            }
+        },
+            {
+                text: '清空',
+                iconCls: 'fi-trash',
+                handler: function () {
+                    $('#vpnInfoForm')[0].reset();
+                }
+            },
+            {
+                text: '取消',
+                iconCls: 'icon-cancel',
+                handler: function () {
+                    $('#vpnInfoDialog').dialog("close");
+                    $('#vpnInfoForm')[0].reset();
+                }
+            }]
+    });
+    $("#vpnInfoDialog").dialog("open");
+    $('#vpnInfoDialog').window("resize",{top:$(document).scrollTop() + 100});
+}
+function saveVpnInfo(uuid) {
+    var vpnInfoForm = $("#vpnInfoDialog").find("#vpnInfoForm");
+    var vpnInfo = {};
+    vpnInfo.uuid = uuid;
+    vpnInfo.userName = vpnInfoForm.find("#userName").val();
+    vpnInfo.password = vpnInfoForm.find("#password").val();
+    vpnInfo.imei = vpnInfoForm.find("#imei").val();
+    vpnInfo.startTime = vpnInfoForm.find("#startTime").val();
+    vpnInfo.stopTime = vpnInfoForm.find("#stopTime").val();
+    if(vpnInfo.userName == null || vpnInfo.userName== '' || vpnInfo.userName == ""){
+        alert("VPN账号不能为空!");
+        return;
+    }
+    if(vpnInfo.password == null || vpnInfo.password== '' || vpnInfo.password == ""){
+        alert("VPN密码不能为空!");
+        return;
+    }
+    if(vpnInfo.startTime == null || vpnInfo.startTime== '' || vpnInfo.startTime == ""){
+        alert("启用时间不能为空!");
+        return;
+    }
+    if(vpnInfo.stopTime == null || vpnInfo.stopTime== '' || vpnInfo.stopTime == ""){
+        alert("停用时间不能为空!");
+        return;
+    }
+    $.ajax({
+        url: '/internal/vpnInfo/saveVpnInfo',
+        data: JSON.stringify(vpnInfo),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        timeout: 5000,
+        type: 'POST',
+        success: function (result) {
+            if (result) {
+                $().toastmessage('showSuccessToast', "保存成功",true);
+            } else {
+                $().toastmessage('showErrorToast', "保存失败");
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "保存失败");
+        }
+    });
+    $("#vpnInfoDialog").dialog("close");
+    $('#vpnInfoForm')[0].reset();
+}
+function modifyVpnInfo(uuid) {
+    getApplyInfo(uuid, function (vpnInfo) {
+        if (vpnInfo != null) {
+            initVpnInfoDialog(vpnInfo);
+            showVpnInfoDialog(uuid);
+        } else {
+            $().toastmessage('showErrorToast', "获取信息失败");
+        }
+    })
+}
+function getApplyInfo(uuid, callback) {
+    $.ajax({
+        url: '/internal/vpnInfo/getVpnInfo/' + uuid,
+        type: 'Get',
+        success: function (vpnInfo) {
+            callback(vpnInfo);
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "获取信息失败");
+        }
+    });
+}
+function initVpnInfoDialog(vpnInfo) {
+    var vpnInfoForm = $("#vpnInfoForm");
+    vpnInfoForm.find("#userName").val(vpnInfo.userName);
+    vpnInfoForm.find("#password").val(vpnInfo.password);
+    vpnInfoForm.find("#imei").val(vpnInfo.imei);
+    vpnInfoForm.find("#startTime").val(userDate(vpnInfo.startTime));
+    vpnInfoForm.find("#stopTime").val(userDate(vpnInfo.stopTime));
+}
+function userDate(uData){
+    var myDate = new Date(uData);
+    var year = myDate.getFullYear();
+    var month = myDate.getMonth() + 1;
+    var day = myDate.getDate();
+    return year + '-' + month + '-' + day;
 }
