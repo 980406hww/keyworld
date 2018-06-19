@@ -2,18 +2,19 @@ package com.keymanager.monitoring.controller.rest.internal;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.criteria.NegativeRankCriteria;
-import com.keymanager.monitoring.dao.ConfigDao;
-import com.keymanager.monitoring.entity.Config;
 import com.keymanager.monitoring.entity.NegativeRank;
 import com.keymanager.monitoring.service.ConfigService;
 import com.keymanager.monitoring.service.NegativeRankService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashSet;
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -22,6 +23,8 @@ import java.util.Set;
 @RestController
 @RequestMapping(value = "/internal/negativeRank")
 public class NegativeRankController {
+
+    private static Logger logger = LoggerFactory.getLogger(NegativeListRestController.class);
 
     @Autowired
     NegativeRankService  negativeRankService;
@@ -57,4 +60,15 @@ public class NegativeRankController {
         return modelAndView;
     }
 
+    @RequiresPermissions("/internal/negativeRank/updateNegativeRankKeyword")
+    @RequestMapping(value = "updateNegativeRankKeyword",method = RequestMethod.POST)
+    public ResponseEntity<?> updateNegativeRankKeyword(@RequestBody Map<String,Object> requestMap){
+       try {
+           negativeRankService.updateNegativeRankKeyword(requestMap);
+           return new ResponseEntity<Object>(true, HttpStatus.OK);
+       }catch (Exception e){
+           logger.error(e.getMessage());
+           return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+       }
+    }
 }
