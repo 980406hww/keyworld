@@ -263,6 +263,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		customerKeyword.setCurrentIndexCount(customerKeywordVO.getCurrentIndexCount());
 		customerKeyword.setCustomerUuid(qzSettingCriteria.getQzSetting().getCustomerUuid());
 		customerKeyword.setOptimizePlanCount(customerKeywordVO.getCurrentIndexCount() + 8);
+		customerKeyword.setOptimizeRemainingCount(customerKeywordVO.getCurrentIndexCount() + 8);
 		customerKeyword.setServiceProvider("baidutop123");
 		customerKeyword.setSearchEngine(Constants.SEARCH_ENGINE_BAIDU);
 		customerKeyword.setCollectMethod(CollectMethod.PerMonth.name());

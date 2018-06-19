@@ -136,7 +136,7 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void updatePosition(@Param("uuid")Long uuid, @Param("position")Integer position, @Param("capturePositionQueryTime")Date capturePositionQueryTime, @Param("todayFee") Double todayFee);
 
-    List<OptimizationCountVO> tabkeOptimizationCountExceptionUsers();
+    List<OptimizationCountVO> takeOptimizationCountExceptionUsers();
 
     List<String> fetchOptimizationCompletedGroupNames(@Param("typesStr")String typesStr, @Param("maxInvalidCount")Integer maxInvalidCount);
     List<OptimizationCountVO> observeGroupOptimizationCount(@Param("userID") String userID);

@@ -99,6 +99,9 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(value = "fOptimizedCount")
     private int optimizedCount;
 
+    @TableField(value = "fOptimizeRemainingCount")
+    private int optimizeRemainingCount;
+
     @TableField(value = "fOptimizedPercentage")
     private Double optimizedPercentage;
 
@@ -923,5 +926,13 @@ public class CustomerKeyword extends BaseEntity {
 
     public void setTodayFee(Double todayFee) {
         this.todayFee = todayFee;
+    }
+
+    public int getOptimizeRemainingCount() {
+        return optimizeRemainingCount;
+    }
+
+    public void setOptimizeRemainingCount(int optimizeRemainingCount) {
+        this.optimizeRemainingCount = optimizeRemainingCount;
     }
 }
