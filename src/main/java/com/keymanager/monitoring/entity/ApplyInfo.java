@@ -22,6 +22,12 @@ public class ApplyInfo {
     @TableField(value = "fAppName")
     private String appName;
 
+    @TableField(value = "fApplicationMarketUuid")
+    private Long applicationMarketUuid;
+
+    @TableField(value = "fApplicationMarketName")
+    private String applicationMarketName;
+
     @TableField(value = "fPackageName")
     private String packageName;
 
@@ -102,5 +108,21 @@ public class ApplyInfo {
 
     public void setKeywords(String[] keywords) {
         this.keywords = keywords;
+    }
+
+    public Long getApplicationMarketUuid() {
+        return applicationMarketUuid;
+    }
+
+    public void setApplicationMarketUuid(Long applicationMarketUuid) {
+        this.applicationMarketUuid = applicationMarketUuid;
+    }
+
+    public String getApplicationMarketName() {
+        return applicationMarketName;
+    }
+
+    public void setApplicationMarketName(String applicationMarketName) {
+        this.applicationMarketName = applicationMarketName;
     }
 }

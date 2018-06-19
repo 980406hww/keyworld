@@ -18,4 +18,6 @@ public interface ApplyKeywordDao extends BaseMapper<ApplyKeyword> {
     ApplyKeyword selectApplyKeyword(@Param("applyUuid")Long applyUuid,@Param("keyword") String keyword);
 
     List<ApplyKeyword> searchApplyKeyword(Page<ApplyKeyword> page, @Param("applyKeywordCriteria")ApplyKeywordCriteria applyKeywordCriteria);
+
+    void deleteapplyKeywordInfo(@Param("applyUuid")Long applyInfoUuid);
 }
