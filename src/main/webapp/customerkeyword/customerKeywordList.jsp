@@ -176,7 +176,7 @@
             <input type="button" onclick="delAllItems('ByUuid','${customerKeywordCriteria.customerUuid}')" value=" 删除所选 ">
             </shiro:hasPermission>
 
-            <shiro:hasPermission name="/internal/customerKeyword/saveCustomerKeywords">
+            <shiro:hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
                 <input type="button" onclick="updateKeywordCustomerUuid()" value="更改所选词客户">
             </shiro:hasPermission>
         </div>

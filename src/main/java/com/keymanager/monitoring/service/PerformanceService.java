@@ -22,12 +22,12 @@ public class PerformanceService extends ServiceImpl<ClientStatusDao, ClientStatu
 	private PerformanceDao performanceDao;
 
 	public void addPerformanceLog(String module, long milleSeconds, String remarks){
-		Performance performance = new Performance();
-		performance.setModule(module);
-		performance.setMilleSecond(milleSeconds);
-		performance.setCurrentMemory(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
-		performance.setRemarks(remarks);
-		performance.setCreateTime(new Date());
-		performanceDao.insert(performance);
+//		Performance performance = new Performance();
+//		performance.setModule(module);
+//		performance.setMilleSecond(milleSeconds);
+//		performance.setCurrentMemory(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
+//		performance.setRemarks(remarks);
+//		performance.setCreateTime(new Date());
+//		performanceDao.insert(performance);
 	}
 }

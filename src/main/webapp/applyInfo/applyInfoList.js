@@ -141,8 +141,8 @@ function showApplyInfoDialog(uuid) {
     $("#applyInfoDialog").show();
     $("#applyInfoDialog").dialog({
         resizable: false,
-        width: 310,
-        height: 200,
+        width: 320,
+        height: 220,
         modal: true,
         buttons: [{
             text: '保存',
@@ -174,6 +174,8 @@ function saveApplyInfo(uuid) {
     var applyInfoForm = $("#applyInfoDialog").find("#applyInfoForm");
     var applyInfo = {};
     applyInfo.uuid = uuid;
+    applyInfo.applicationMarketUuid = applyInfoForm.find("#applicationName").val();
+    applyInfo.applicationMarketName = applyInfoForm.find("select option:selected").text();
     applyInfo.appName = applyInfoForm.find("#appName").val();
     applyInfo.packageName = applyInfoForm.find("#packageName").val();
     applyInfo.id = applyInfoForm.find("#id").val();
@@ -181,6 +183,10 @@ function saveApplyInfo(uuid) {
     applyInfo.posandcolor = applyInfoForm.find("#posandcolor").val();
     if(applyInfo.appName == null || applyInfo.appName== '' || applyInfo.appName == ""){
         alert("应用名不能为空!");
+        return;
+    }
+    if(!(applyInfo.applicationMarketUuid != "" && applyInfo.applicationMarketUuid != null && applyInfo.applicationMarketUuid != '')){
+        alert("所属应用不能为空！");
         return;
     }
     if(applyInfo.packageName == null || applyInfo.packageName== '' || applyInfo.packageName == ""){
@@ -243,4 +249,10 @@ function initApplyInfoDialog(applyInfo) {
     applyInfoForm.find("#id").val(applyInfo.id);
     applyInfoForm.find("#color").val(applyInfo.color);
     applyInfoForm.find("#posandcolor").val(applyInfo.posandcolor);
+    $("#applyInfoForm select").children("option").each(function(){
+        var temp_value = $(this).val();
+        if(temp_value == applyInfo.applicationMarketUuid){
+            $(this).attr("selected","selected");
+        }
+    });
 }

@@ -61,4 +61,8 @@ public class ApplicationMarketService extends ServiceImpl<ApplicationMarketDao, 
         ApplicationMarket applicationMarket = applicationMarketDao.selectById(uuid);
         return applicationMarket;
     }
+
+    public List<ApplicationMarket> selectApplicationMarket() {
+        return applicationMarketDao.selectApplicationMarket();
+    }
 }

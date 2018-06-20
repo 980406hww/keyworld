@@ -48,7 +48,7 @@ public class ExternalApplicationMarketRestController extends SpringMVCBaseContro
 			if(!StringUtils.isNotBlank(imeiStr)){
 				return new ResponseEntity<Object>(false,HttpStatus.OK);
 			}else {
-				if(validUser(userName, password)){
+				if(StringUtils.isNotBlank(userName) && StringUtils.isNotBlank(password) && validUser(userName, password)){
 					VpnInfo vpnInfo = new VpnInfo();
 					List<VpnInfo> vpnInfos = vpnInfoService.selectVpnImei(imeiStr);
 					if(vpnInfos.size() == 0){
@@ -79,7 +79,7 @@ public class ExternalApplicationMarketRestController extends SpringMVCBaseContro
 		String userName = (String) request.getParameter("userName");
 		String password = (String) request.getParameter("password");
 		try {
-			if(validUser(userName,password)){
+			if(StringUtils.isNotBlank(userName) && StringUtils.isNotBlank(password) && validUser(userName,password)){
 				List<ServerAddress> serverAddressesList = serverAddressService.selectList(null);
 				if(serverAddressesList.size()>0){
 					int num = new Random().nextInt(serverAddressesList.size());
@@ -94,13 +94,13 @@ public class ExternalApplicationMarketRestController extends SpringMVCBaseContro
 		return new ResponseEntity<Object>(null,HttpStatus.BAD_REQUEST);
 	}
 
-	//获取应用市场信息
+	//获取应用市场配置信息
 	@RequestMapping(value = "/getMarketInfo" , method = RequestMethod.POST)
 	public ResponseEntity<?> getMarketInfo(HttpServletRequest request) {
 		String userName = (String) request.getParameter("userName");
 		String password = (String) request.getParameter("password");
 		try {
-			if(validUser(userName,password)){
+			if(StringUtils.isNotBlank(userName) && StringUtils.isNotBlank(password) && validUser(userName,password)){
 				ApplicationMarket applicationMarket = new ApplicationMarket();
 				List<ApplicationMarket> applicationMarketList = applicationMarketService.getmarketInfo();
 				if(applicationMarketList.size() > 0){
@@ -125,9 +125,10 @@ public class ExternalApplicationMarketRestController extends SpringMVCBaseContro
 	public ResponseEntity<?> getMasrketInfo(HttpServletRequest request) {
  		String userName = (String) request.getParameter("userName");
 		String password = (String) request.getParameter("password");
+		Long applicationMarketUuid = Long.valueOf((String)request.getParameter("applicationMarketUuid"));
 		try {
-			if(validUser(userName,password)){
-				List<ApplyInfo> applyInfoList = applyInfoService.selectList(null);
+			if(StringUtils.isNotBlank(userName) && StringUtils.isNotBlank(password) && validUser(userName,password)){
+				List<ApplyInfo> applyInfoList = applyInfoService.selectApplyList(applicationMarketUuid);
 				ApplyInfo applyInfo = new ApplyInfo();
 				if(applyInfoList.size() > 0){
 					int num = new Random().nextInt(applyInfoList.size());
@@ -154,7 +155,7 @@ public class ExternalApplicationMarketRestController extends SpringMVCBaseContro
 		Boolean isSuccess = Boolean.parseBoolean((String) request.getParameter("isSuccess"));
 		String keyword = (String) request.getParameter("keyword");
 		try {
-			if(validUser(userName,password)){
+			if(StringUtils.isNotBlank(userName) && StringUtils.isNotBlank(password) && validUser(userName,password)){
 				ApplyKeyword applyKeyword = applyKeywordService.selectApplyKeyword(applyUuid,keyword);
 				if(!StringUtils.isEmpty(applyKeyword)){
 					int brushNumber = applyKeyword.getBrushNumber();
