@@ -24,6 +24,8 @@ public class AccessWebsiteFailMailService {
     private String toEmail;
     private String emailFrom;
     private Template accessURLFailMailTemplate;
+    private Template accessURLSuccessMailTemplate;
+    private Template expireTimeWebsiteMailTemplate;
 
     public void sendAccessWebsiteFailMail(List<Website> accessFailWebsites) throws Exception{
         MimeMessage msg = mailSender.createMimeMessage();
@@ -40,12 +42,44 @@ public class AccessWebsiteFailMailService {
         logger.info("HTML版邮件已发送");
     }
 
+    public void sendAccessWebsiteSuccessMail(List<Website> accessSuccessWebsites) throws Exception{
+        MimeMessage msg = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(msg, true, DEFAULT_ENCODING);
+        String[] toEmailArr = toEmail.split(";");
+        helper.setTo(toEmailArr);
+        helper.setFrom(emailFrom);
+        helper.setSubject("网站恢复访问提醒");
+        Map<String, Object> context = new HashMap<String, Object>();
+        context.put("accessSuccessWebsites", accessSuccessWebsites);
+        String content = FreeMarkerTemplateUtils.processTemplateIntoString(accessURLSuccessMailTemplate, context);
+        helper.setText(content, true);
+        mailSender.send(msg);
+        logger.info("HTML版邮件已发送");
+    }
+
+    public void sendExpireTimeWebsiteFailMail(List<Website> websites) throws Exception{
+        MimeMessage msg = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(msg, true, DEFAULT_ENCODING);
+        String[] toEmailArr = toEmail.split(";");
+        helper.setTo(toEmailArr);
+        helper.setFrom(emailFrom);
+        helper.setSubject("域名过期提醒");
+        Map<String, Object> context = new HashMap<String, Object>();
+        context.put("websites", websites);
+        String content = FreeMarkerTemplateUtils.processTemplateIntoString(expireTimeWebsiteMailTemplate, context);
+        helper.setText(content, true);
+        mailSender.send(msg);
+        logger.info("域名提醒--> HTML版邮件已发送");
+    }
+
     public void setMailSender(JavaMailSender mailSender) {
     this.mailSender = mailSender;
     }
 
     public void setFreemarkerConfiguration(Configuration freemarkerConfiguration) throws IOException {
       accessURLFailMailTemplate = freemarkerConfiguration.getTemplate("accessURLFailMailTemplate.ftl", DEFAULT_ENCODING);
+      accessURLSuccessMailTemplate = freemarkerConfiguration.getTemplate("accessURLSuccessMailTemplate.ftl", DEFAULT_ENCODING);
+      expireTimeWebsiteMailTemplate = freemarkerConfiguration.getTemplate("expireTimeWebsiteMailTemplate.ftl", DEFAULT_ENCODING);
     }
 
     public void setToEmail(String toEmail) {

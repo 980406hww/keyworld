@@ -29,5 +29,12 @@
             and am.fMarketName like '%${applicationMarketCriteria.marketName}%'
         </if>
     </select>
+    <select id="selectApplicationMarket" resultType="com.keymanager.monitoring.entity.ApplicationMarket">
+        SELECT
+          am.fUuid AS 'uuid',
+          am.fMarketName AS 'marketName'
+        FROM
+          t_application_market_info am
+    </select>
 
 </mapper>
