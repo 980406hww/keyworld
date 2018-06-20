@@ -13,6 +13,7 @@
 				<ref bean="cronTriggerRenewalNotification" />
 				<ref bean="cronTriggerGenerateDailyReport" />
 				<ref bean="cronTriggerAccessWebsite" />
+				<ref bean="cronTriggerExpiryTimeWebsite" />
 				<ref bean="cronTriggerObserveOptimizationCount" />
 				<ref bean="cronTriggerRemainingKeywordIndicator" />
 				<ref bean="cronTriggerAutoSwitchCustomerKeywordStatus" />
@@ -115,6 +116,18 @@
 
 	<bean id="cronTriggerAccessWebsiteSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject" ref="accessWebsiteSchedule" />
+		<property name="targetMethod" value="runTask" />
+		<property name="concurrent" value="false" />
+	</bean>
+
+	<!--访问Website,域名到期时间-->
+	<bean id="cronTriggerExpiryTimeWebsite" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="cronTriggerExpiryTimeWebsiteSchedule" />
+		<property name="cronExpression" value="0 0 4 1/3 * ?" />
+	</bean>
+
+	<bean id="cronTriggerExpiryTimeWebsiteSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="expireTimeWebsiteSchedule" />
 		<property name="targetMethod" value="runTask" />
 		<property name="concurrent" value="false" />
 	</bean>

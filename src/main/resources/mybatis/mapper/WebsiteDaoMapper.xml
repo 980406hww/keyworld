@@ -6,6 +6,15 @@
 		fWebsiteName AS "websiteName",
 		fDomain AS "domain",
 		fIndustry AS "industry",
+		fRegistrar AS "registrar",
+		fAnalysis AS "analysis",
+		fExpiryTime AS "expiryTime",
+		fDatabaseName AS "databaseName",
+		fDatabaseUserName AS "databaseUserName",
+		fDatabasePassword AS "databasePassword",
+		fServerIP AS "serverIP",
+		fServerUserName AS "serverUserName",
+		fServerPassword AS "serverPassword",
 		fAccessFailCount AS "accessFailCount",
 		fLastAccessTime AS "lastAccessTime",
 		fAccessFailTime AS "accessFailTime",
@@ -31,6 +40,15 @@
 		FROM
 		t_website w
 		ORDER BY fLastAccessTime
+	</select>
+
+	<select id="searchExpireTime" resultType="com.keymanager.monitoring.entity.Website">
+		SELECT
+		  <include refid="selectCol"/>
+		FROM
+		t_website w
+		WHERE
+		fExpiryTime <![CDATA[<=]]> date_add(NOW(), interval 1 MONTH)
 	</select>
 
 </mapper>

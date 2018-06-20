@@ -188,9 +188,6 @@
 							<shiro:hasPermission name="/internal/clientstatus/downloadVNCFile">
 								|<a target="_blank" href="javascript:downloadVNCFile()">下载VNC连接压缩文件</a>
 							</shiro:hasPermission>
-							<shiro:hasPermission name="/internal/clientstatus/downloadFullVNCFile">
-								|<a target="_blank" href="javascript:downloadFullVNCFile()">下载完整版VNC文件</a>
-							</shiro:hasPermission>
 							<shiro:hasPermission name="/internal/clientstatus/saveClientStatus">
 								|<a target="_blank" href="javascript:clientStatusBatchUpdate()">批量设置</a>
 							</shiro:hasPermission>
