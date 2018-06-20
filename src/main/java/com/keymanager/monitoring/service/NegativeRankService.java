@@ -56,6 +56,8 @@ public class NegativeRankService extends ServiceImpl<NegativeRankDao, NegativeRa
             initialNegativeRankMap.put(negativeRank.getKeyword(), negativeRank);
         }
         return initialNegativeRankMap;
+    }
+
     public void updateNegativeRankKeyword(Map<String,Object> requestMap){
         NegativeRank negativeRank = new NegativeRank();
         Long uuid = Long.valueOf((String) requestMap.get("uuid"));
