@@ -9,7 +9,7 @@
         FROM t_vpn_info vpn
         WHERE
         <if test="imeiStr != null and imeiStr != ''">vpn.fIMEI = #{imeiStr}</if>
-        <if test="imeiStr == null or imeiStr == ''">vpn.fIMEI is null</if>
+        <if test="imeiStr == null or imeiStr == ''">vpn.fIMEI =''</if>
         and fStopTime > now()
     </select>
 

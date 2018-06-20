@@ -7,29 +7,30 @@
 <%@ include file="/commons/basejs.jsp" %>
 <div id="topDiv">
 	<%@include file="/menu.jsp" %>
-<form method="post" id="searchRefreshStatInfoForm" action="/internal/refreshstatinfo/searchRefreshStatInfos"
-	  style="margin-top: 35px;">
-	<table style="font-size:12px;">
-		<tr>
-			<td align="right">分组名称:<input name="groupName" id="groupName" type="text" style="width:200px;"
-										  value="${refreshStatInfoCriteria.groupName}"></td>
-			<td align="right">客户名称:<input name="customerName" id="customerName" type="text" style="width:200px;"
-										  value="${refreshStatInfoCriteria.customerName}"></td>
-			<td align="right">
-				&nbsp;
-				<shiro:hasPermission name="/internal/refreshstatinfo/searchRefreshStatInfos">
-					<input type="submit" name="btnQuery" id="btnQuery" value=" 查询 " onclick="trimSearchCondition()">&nbsp;&nbsp;
-				</shiro:hasPermission>
-				<shiro:hasPermission name="/internal/customerKeyword/uploadCustomerKeywords">
-				<input type="button" value="导入从爱站抓取排名" onclick="uploadCsv()">&nbsp;&nbsp;
-				</shiro:hasPermission>
-				<shiro:hasPermission name="/internal/customerKeyword/downloadCustomerKeywordInfo">
-				<input type="button" value="导出关键字信息到爱站抓排名" onclick="downloadTxt()">&nbsp;&nbsp;
-				</shiro:hasPermission>
-			</td>
-		</tr>
-	</table>
-</form>
+	<form method="post" id="searchRefreshStatInfoForm" action="/internal/refreshstatinfo/searchRefreshStatInfos"
+		  style="margin-top: 35px;">
+		<table style="font-size:12px;">
+			<tr>
+				<td align="right">分组名称:<input name="groupName" id="groupName" type="text" style="width:200px;"
+											  value="${refreshStatInfoCriteria.groupName}"></td>
+				<td align="right">客户名称:<input name="customerName" id="customerName" type="text" style="width:200px;"
+											  value="${refreshStatInfoCriteria.customerName}"></td>
+				<td align="right">
+					&nbsp;
+					<shiro:hasPermission name="/internal/refreshstatinfo/searchRefreshStatInfos">
+						<input type="submit" name="btnQuery" id="btnQuery" value=" 查询 " onclick="trimSearchCondition()">&nbsp;&nbsp;
+					</shiro:hasPermission>
+					<shiro:hasPermission name="/internal/customerKeyword/uploadCustomerKeywords">
+					<input type="button" value="导入从爱站抓取排名" onclick="uploadCsv()">&nbsp;&nbsp;
+					</shiro:hasPermission>
+					<shiro:hasPermission name="/internal/customerKeyword/downloadCustomerKeywordInfo">
+					<input type="button" value="导出关键字信息到爱站抓排名" onclick="downloadTxt()">&nbsp;&nbsp;
+					<a download="keywordUrl.txt" href="/keywordUrl.txt" target="blank" id="downTXT" style="display: none">点击下载</a>
+					</shiro:hasPermission>
+				</td>
+			</tr>
+		</table>
+	</form>
 	<table style="font-size:12px;" id="headerTable" width=100%">
 		<tr bgcolor="#eeeeee" height=30>
 			<td align="center" width=30 rowspan="2"><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
@@ -51,11 +52,10 @@
 			<td align="center" width=80>待刷次数</td>
 			<td align="center" width=80>平均有效刷量</td>
 			<td align="center" width=80>取词次数</td>
-			<td align="center" width=60>无效占比</td>
+			<td align="center" width=80>无效占比</td>
 			<td align="center" width=100>总数</td>
 			<td align="center" width=60>已停数</td>
 		</tr>
-
 	</table>
 
 </div>

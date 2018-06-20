@@ -30,6 +30,18 @@ public class ClientStatusCriteria extends BaseCriteria {
     private String terminalType;
     private Set<String> switchGroups;
 
+    private boolean haveHiddenColumns; //是否为设置隐藏弹窗提交的
+
+
+
+    public boolean getHaveHiddenColumns() {
+        return haveHiddenColumns;
+    }
+
+    public void setHaveHiddenColumns(boolean haveHiddenColumns) {
+        this.haveHiddenColumns = haveHiddenColumns;
+    }
+
     public String getClientID() {
         return clientID;
     }
@@ -221,4 +233,6 @@ public class ClientStatusCriteria extends BaseCriteria {
     public void setHiddenColumns(String hiddenColumns) {
         this.hiddenColumns = hiddenColumns;
     }
+
+
 }

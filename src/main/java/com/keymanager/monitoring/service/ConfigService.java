@@ -81,4 +81,12 @@ public class ConfigService extends ServiceImpl<ClientStatusDao, ClientStatus>{
 		return keywords;
 	}
 
+	public void refreshCustomerNegativeKeywords(String searchEngine,String negativeKeywords){
+		Config config = new Config();
+		config.setConfigType(Constants.CONFIG_TYPE_NEGATIVE_KEYWORD);
+		config.setKey(searchEngine);
+		config.setValue(negativeKeywords);
+		configDao.updateConfig(config);
+	}
+
 }

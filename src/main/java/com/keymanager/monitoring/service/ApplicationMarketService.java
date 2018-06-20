@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -34,5 +35,34 @@ public class ApplicationMarketService extends ServiceImpl<ApplicationMarketDao, 
     public Page<ApplicationMarket> searchapplicationMarket(Page<ApplicationMarket> page, ApplicationMarketCriteria applicationMarketCriteria) {
         page.setRecords(applicationMarketDao.searchpplicationMarket(page,applicationMarketCriteria));
         return page;
+    }
+
+    public void deleteApplicationMarket(Long uuid) {
+        applicationMarketDao.deleteById(uuid);
+    }
+
+    public void deleteApplicationMarketList(List<String> uuids) {
+        List<Long> uuidList = new ArrayList<Long>();
+        for (String uuid : uuids){
+            uuidList.add(Long.valueOf(uuid));
+        }
+        applicationMarketDao.deleteBatchIds(uuidList);
+    }
+
+    public void saveApplicationMarket(ApplicationMarket applicationMarket) {
+        if (null != applicationMarket.getUuid()) {
+            applicationMarketDao.updateById(applicationMarket);
+        } else {
+            applicationMarketDao.insert(applicationMarket);
+        }
+    }
+
+    public ApplicationMarket getApplicationMarket(Long uuid) {
+        ApplicationMarket applicationMarket = applicationMarketDao.selectById(uuid);
+        return applicationMarket;
+    }
+
+    public List<ApplicationMarket> selectApplicationMarket() {
+        return applicationMarketDao.selectApplicationMarket();
     }
 }

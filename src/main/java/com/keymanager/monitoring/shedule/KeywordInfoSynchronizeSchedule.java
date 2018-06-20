@@ -19,8 +19,10 @@ public class KeywordInfoSynchronizeSchedule {
         try {
             keywordInfoService.synchronizeKeyword();
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(" KeywordInfo Synchronize is error" + e.getMessage());
         }
+        logger.info("============= "+" End KeywordInfo Synchronize Task "+"===================");
     }
 
 

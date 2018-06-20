@@ -29,11 +29,21 @@
 </div>
 <div id="centerDiv">
 <table width=60% style="font-size: 12px" id="clientStatusSummaryTable" cellpadding=3>
+    <c:set var="color" scope="session" value="#eeeeff"/>
     <c:forEach items="${clientStatusSummaryVOs}" var="clientStatusSummaryVO" varStatus="status">
-
-        <tr align="left" <c:if test="${status.index%2==0}">bgcolor="#eeeeee" </c:if>>
             <c:if test="${clientStatusSummaryVO.clientIDPrefixCount>0}">
-                <td style="padding-left: 7px;" rowspan="${clientStatusSummaryVO.clientIDPrefixCount}">${clientStatusSummaryVO.clientIDPrefix}</td>
+                <c:choose>
+                    <c:when test="${color == '#eeeeff'}">
+                        <c:set var="color" scope="session" value="#ffeeee"/>
+                    </c:when>
+                    <c:when test="${color == '#ffeeee'}">
+                        <c:set var="color" scope="session" value="#eeeeff"/>
+                    </c:when>
+                </c:choose>
+            </c:if>
+        <tr align="left" bgcolor="${color}">
+            <c:if test="${clientStatusSummaryVO.clientIDPrefixCount>0}">
+                <td rowspan="${clientStatusSummaryVO.clientIDPrefixCount}">${clientStatusSummaryVO.clientIDPrefix}</td>
                 <td rowspan="${clientStatusSummaryVO.clientIDPrefixCount}">${clientStatusSummaryVO.clientIDPrefixTotalCount}</td>
             </c:if>
             <c:if test="${clientStatusSummaryVO.typeCount>0}">

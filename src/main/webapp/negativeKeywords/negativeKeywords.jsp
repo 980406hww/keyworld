@@ -15,12 +15,13 @@
     $(function () {
         $('#uploadTxtFileDialog').dialog("close");
         $("#searchEngine").val("${searchEngine}");
+        $("#customerNegativeKeywords").val($("#customerNegativeKeywords").val().replace(/,/g,'\r'));
     });
 
     function resetNegativeKeywords() {
         $("#negativeKeywords").val("${negativeKeywords}");
     }
-    
+
     function distinctKeywords(negativeKeywords) {
         negativeKeywords = negativeKeywords.replace(/，/g,",");
         var negativeJson = {};
@@ -123,6 +124,7 @@
             type: 'POST',
             success: function (result) {
                 if (result) {
+                    result = result.replace(/,/g,'\r');
                     $("#customerNegativeKeywords").val(result);
                     $().toastmessage('showSuccessToast', "操作成功");
                 } else {
@@ -133,7 +135,36 @@
                 $().toastmessage('showErrorToast', "操作失败");
             }
         });
+    }
 
+    function refreshCustomerNegativeKeywords () {
+        var config = {};
+        var negativeKeywords = $("#customerNegativeKeywords").val().replace(/\n/g,',');
+            config.negativeKeywords = negativeKeywords.replace(/,,/g,',');
+            if(negativeKeywords.lastIndexOf(',') == negativeKeywords.length-1){
+                config.negativeKeywords = config.negativeKeywords.substring(0,negativeKeywords.length-1);
+            }
+            config.searchEngine = $("#searchEngine").val();
+        $.ajax({
+            url: '/internal/config/refreshCustomerNegativeKeywords',
+            data: JSON.stringify(config),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            timeout: 5000,
+            type: 'POST',
+            success: function (data) {
+                if (data) {
+                    findCustomerNegativeKeywords();
+                } else {
+                    $().toastmessage('showErrorToast', "数据更新失败");
+                }
+            },
+            error: function () {
+                $().toastmessage('showErrorToast', "数据更新失败");
+            }
+        });
     }
 </script>
 <div id="topDiv">
@@ -153,7 +184,7 @@
         <option value="Sogou">搜狗</option>
         <option value="360">360</option>
     </select><br><br>
-    <textarea name="customerNegativeKeywords" id="customerNegativeKeywords" style="width: 500px;height: 300px;">${customerNegativeKeywords}</textarea><br><br>
+    <textarea name="customerNegativeKeywords" id="customerNegativeKeywords"  onchange="refreshCustomerNegativeKeywords()" style="width: 500px;height: 300px;">${customerNegativeKeywords}</textarea><br><br>
     <span style="margin-left: 470px;">
         <input type="button" id="updateCustomerNegativeKeywords" onclick="updateCustomerNegativeKeywords()" value="更新" />
     </span>

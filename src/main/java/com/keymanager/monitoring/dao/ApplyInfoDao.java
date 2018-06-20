@@ -19,4 +19,7 @@ public interface ApplyInfoDao extends BaseMapper<ApplyInfo> {
     List<ApplyInfo> selectApplyInfoList();
 
     List<ApplyInfo> searchApplyInfoList(Page<ApplyInfo> page, @Param("applyInfoCriteria") ApplyInfoCriteria applyInfoCriteria);
+
+    List<ApplyInfo> selectApplyList(@Param("applicationMarketUuid")Long applicationMarketUuid);
+
 }

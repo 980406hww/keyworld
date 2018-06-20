@@ -116,6 +116,7 @@
         fInitialIndexCount =#{customerKeyword.initialIndexCount},
         fCurrentIndexCount =#{customerKeyword.currentIndexCount},
         fOptimizePlanCount =#{customerKeyword.optimizePlanCount},
+        fOptimizeRemainingCount =#{customerKeyword.optimizePlanCount},
         fPositionFirstFee =#{customerKeyword.positionFirstFee},
         fPositionSecondFee =#{customerKeyword.positionSecondFee},
         fPositionThirdFee =#{customerKeyword.positionThirdFee},
@@ -145,6 +146,14 @@
         and fOriginalUrl <![CDATA[ <> ]]> '' and fOriginalUrl like concat('%', #{originalUrl});
     </select>
 
+    <select id="getSameCustomerKeywordCount" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM t_customer_keyword
+        WHERE fKeyword = #{keyword}
+        AND fTerminalType = #{terminalType}
+        AND fCustomerUuid = #{customerUuid}
+        AND fUrl = #{url}
+    </select>
+
     <select id="getMaxSequence" resultType="int">
         select max(fSequence) from t_customer_keyword where fTerminalType = #{terminalType} and fType = #{entryType} and fCustomerUuid =
         #{customerUuid};
@@ -172,7 +181,7 @@
         ck.fKeyword	AS	'keyword',
         ck.fCollectMethod   AS  'collectMethod'
         FROM t_customer_keyword ck
-        WHERE ck.fOptimizeGroupName IN ('pc_pm_yilufa', 'pc_pm_xiaowu', 'pc_pm_learner', 'pc_pm_51yza', 'm_pm_tianqi', 'm_pm_tiantian', 'm_pm_learner', 'sogou_pm_tiantian') AND ck.fCurrentIndexCount IS NULL AND ck.fPositionFirstFee IS NULL
+        WHERE ck.fOptimizeGroupName IN ('pc_pm_meishoulu', 'pc_pm_xiaowu', 'pc_pm_learner', 'pc_pm_51yza', 'pc_pm_yilufa', 'm_pm_tianqi', 'm_pm_tiantian', 'm_pm_meishoulu', 'm_pm_learner', 'sogou_pm_tiantian', '360_pm_tiantian') AND ck.fCurrentIndexCount = -1 AND ck.fPositionFirstFee = -1
         ORDER BY ck.fCaptureIndexQueryTime, ck.fCreateTime LIMIT 1
     </select>
 
@@ -189,13 +198,13 @@
         ck.fPositionFifthFee	AS	'positionFifthFee',
         ck.fPositionFirstPageFee	AS	'positionFirstPageFee'
         FROM t_customer_keyword ck
-        WHERE ck.fOptimizeGroupName IN ('pc_pm_yilufa', 'pc_pm_xiaowu', 'pc_pm_learner', 'pc_pm_51yza', 'm_pm_tianqi', 'm_pm_tiantian', 'm_pm_learner') AND ck.fCurrentIndexCount IS NULL AND ck.fPositionFirstFee IS NULL
+        WHERE ck.fOptimizeGroupName IN ('pc_pm_meishoulu', 'pc_pm_xiaowu', 'pc_pm_learner', 'pc_pm_51yza', 'pc_pm_yilufa', 'm_pm_tianqi', 'm_pm_tiantian', 'm_pm_meishoulu', 'm_pm_learner', 'sogou_pm_tiantian', '360_pm_tiantian') AND ck.fCurrentIndexCount = -1 AND ck.fPositionFirstFee = -1
         AND ck.fKeyword = #{keyword}
         ORDER BY ck.fCaptureIndexQueryTime, ck.fCreateTime
     </select>
 
     <select id="updateCaptureIndexQueryTime">
-        UPDATE t_customer_keyword SET fCaptureIndexQueryTime = NOW() WHERE fKeyword = #{keyword} and fCurrentIndexCount IS NULL and fOptimizeGroupName IN ('pc_pm_yilufa', 'pc_pm_xiaowu', 'pc_pm_learner', 'pc_pm_51yza', 'm_pm_tianqi', 'm_pm_tiantian', 'm_pm_learner')
+        UPDATE t_customer_keyword SET fCaptureIndexQueryTime = NOW() WHERE fKeyword = #{keyword} and fOptimizeGroupName IN ('pc_pm_meishoulu', 'pc_pm_xiaowu', 'pc_pm_learner', 'pc_pm_51yza', 'pc_pm_yilufa', 'm_pm_tianqi', 'm_pm_tiantian', 'm_pm_meishoulu', 'm_pm_learner', 'sogou_pm_tiantian', '360_pm_tiantian') AND fCurrentIndexCount = -1 AND fPositionFirstFee = -1
     </select>
 
     <!--重构部分-->
@@ -415,25 +424,37 @@
         SELECT
         ck.fOptimizeGroupName AS 'groupName'
         FROM t_customer_keyword ck
-        WHERE ck.fOptimizePlanCount > ck.fOptimizedCount
+        WHERE ck.fOptimizeRemainingCount > 0
         AND ck.fStatus = 1
         AND ck.fType IN (#{typesStr})
-        AND (ck.fCurrentPosition = 0
-        AND ck.fInvalidRefreshCount &lt; 2)
-        OR ck.fInvalidRefreshCount &lt; #{maxInvalidCount}
+        AND ck.fInvalidRefreshCount &lt; #{maxInvalidCount}
         GROUP BY ck.fOptimizeGroupName
-        HAVING SUM(ck.fOptimizePlanCount - ck.fOptimizedCount) = 0
+        HAVING count(1) = 0
     </select>
 
     <update id="resetOptimizationInfo">
-        UPDATE t_customer_keyword SET fOptimizedCount = 0, fInvalidRefreshCount = 0, fOptimizeDate = CURRENT_DATE(), fQueryCount = 0, fQueryDate = CURRENT_DATE()  WHERE fOptimizeDate != CURRENT_DATE()
+        UPDATE t_customer_keyword SET fOptimizedCount = 0, fOptimizeRemainingCount = fOptimizePlanCount, fInvalidRefreshCount = 0, fOptimizeDate = CURRENT_DATE(), fQueryCount = 0, fQueryDate = CURRENT_DATE()  WHERE fOptimizeDate != CURRENT_DATE()
     </update>
 
     <select id="searchRemainingOptimizationCount" resultType="java.util.Map">
-        SELECT ck.fUuid as 'uuid', (ck.fOptimizePlanCount - ck.fOptimizedCount) AS 'remainingCount' FROM t_customer_keyword ck
-        WHERE ck.fOptimizeGroupName = #{groupName} AND ck.fOptimizePlanCount > ck.fOptimizedCount and ck.fStatus = 1
-        and ((ck.fCurrentPosition = 0 and ck.fInvalidRefreshCount <![CDATA[<]]> #{noPositionMaxInvalidCount}) or (ck.fCurrentPosition > 0 and ck.fInvalidRefreshCount <![CDATA[<]]> #{maxInvalidCount}))
-        ORDER BY (ck.fOptimizePlanCount - ck.fOptimizedCount) DESC
+        SELECT ck.fUuid as 'uuid', fOptimizeRemainingCount AS 'remainingCount' FROM t_customer_keyword ck
+        WHERE ck.fOptimizeGroupName = #{groupName} AND ck.fOptimizeRemainingCount > 0 and ck.fStatus = 1
+        and ck.fInvalidRefreshCount <![CDATA[<]]> #{maxInvalidCount}
+        ORDER BY ck.fOptimizeRemainingCount DESC
+    </select>
+
+    <select id="getCustomerKeywordUuidForOptimization" resultType="Long">
+        SELECT
+        ck.fUuid	AS	'uuid'
+        FROM t_customer_keyword ck
+        WHERE ck.fOptimizeGroupName = #{groupName} and ck.fStatus = 1 and ck.fTerminalType = #{terminalType}
+        and ck.fQueryTime <![CDATA[<]]> NOW()
+        and ck.fInvalidRefreshCount <![CDATA[<]]> #{maxInvalidCount}
+        and (ck.fOptimizeRemainingCount > 0)
+        <if test="bigKeyword == true">
+            and ck.fBigKeyword = 1
+        </if>
+        order by ck.fQueryTime limit 1
     </select>
 
     <select id="getCustomerKeywordForOptimization" resultType="com.keymanager.monitoring.entity.CustomerKeyword">
@@ -461,33 +482,26 @@
         ck.fRelatedKeywordPercentage AS 'relatedKeywordPercentage',
         ck.fRemarks AS 'remarks'
         FROM t_customer_keyword ck
-        WHERE ck.fOptimizeGroupName = #{groupName} and ck.fStatus = 1 and ck.fTerminalType = #{terminalType}
-        and ck.fQueryTime <![CDATA[<]]> NOW() and ck.fUrl <![CDATA[>]]> ''
-        and ((ck.fCurrentPosition = 0 and ck.fInvalidRefreshCount <![CDATA[<]]> #{noPositionMaxInvalidCount}) or (ck.fCurrentPosition > 0 and ck.fInvalidRefreshCount <![CDATA[<]]> #{maxInvalidCount}))
-        and (ck.fOptimizedCount <![CDATA[<]]> ck.fOptimizePlanCount)
-        <if test="bigKeyword == true">
-            and ck.fBigKeyword = 1
-        </if>
-        order by ck.fQueryTime limit 1
+        WHERE ck.fUuid = #{uuid}
     </select>
 
     <update id="updateOptimizationQueryTime">
-        UPDATE t_customer_keyword set fQueryDate = CURRENT_DATE(), fQueryCount = fQueryCount + 1, fInvalidRefreshCount = fInvalidRefreshCount + 1, fQueryTime = now() + fQueryInterval
+        UPDATE t_customer_keyword set fQueryDate = CURRENT_DATE(), fQueryCount = fQueryCount + 1, fInvalidRefreshCount = fInvalidRefreshCount + 1, fQueryTime = DATE_ADD(NOW(), INTERVAL fQueryInterval MINUTE)
         WHERE fUuid = #{customerKeywordUuid}
     </update>
 
     <update id="updateOptimizationResult">
         UPDATE t_customer_keyword
         SET fLastOptimizeDateTime = now(), fOptimizedCount = fOptimizedCount + #{count},
-        <if test="count > 0">fInvalidRefreshCount = 0, </if>
-        fOptimizedPercentage = fOptimizedCount/fOptimizePlanCount, fOptimizeDate = CURRENT_DATE(),fUpdateTime = NOW()
+        <if test="count > 0">fInvalidRefreshCount = 0, fOptimizeRemainingCount = fOptimizeRemainingCount - 1, </if>
+        fOptimizeDate = CURRENT_DATE(),fUpdateTime = NOW()
 		WHERE fUuid = #{customerKeywordUuid}
     </update>
 
     <update id="batchUpdateOptimizedCount">
         UPDATE t_customer_keyword
-        SET fLastOptimizeDateTime = now(), fOptimizedCount = fOptimizedCount + 1, fInvalidRefreshCount = 0,
-        fOptimizedPercentage = fOptimizedCount/fOptimizePlanCount, fOptimizeDate = CURRENT_DATE(),fUpdateTime = NOW()
+        SET fLastOptimizeDateTime = now(), fOptimizedCount = fOptimizedCount + 1, fOptimizeRemainingCount = fOptimizeRemainingCount - 1, fInvalidRefreshCount = 0,
+        fOptimizeDate = CURRENT_DATE(),fUpdateTime = NOW()
         WHERE fUuid IN
         <foreach item="uuid" index="index" collection="customerKeywordUuids" open="(" separator="," close=")">
             #{uuid}
@@ -523,20 +537,15 @@
 
     <update id="adjustOptimizePlanCount">
         UPDATE t_customer_keyword
-        SET fOptimizePlanCount = #{optimizationPlanCount}, fQueryInterval = #{queryInterval}
+        SET fOptimizePlanCount = #{optimizationPlanCount}, fOptimizeRemainingCount = #{optimizationPlanCount}, fQueryInterval = #{queryInterval}
         WHERE fUuid = #{customerKeywordUuid}
     </update>
 
-    <select id="getCustomerKeywordForCapturePosition" resultType="com.keymanager.monitoring.entity.CustomerKeyword">
+    <select id="getCustomerKeywordUuidForCapturePosition" resultType="Long">
         SELECT
-        ck.fUuid	AS	'uuid',
-        ck.fTerminalType	AS	'terminalType',
-        ck.fKeyword	AS	'keyword',
-        ck.fUrl	AS	'url',
-        ck.fTitle	AS	'title',
-        ck.fSearchEngine	AS	'searchEngine'
+        ck.fUuid	AS	'uuid'
         FROM t_customer_keyword ck
-        WHERE ck.fTerminalType = #{terminalType} and ck.fUrl > '' and ck.fStatus = 1
+        WHERE ck.fTerminalType = #{terminalType} and ck.fStatus = 1
         <if test="startTime != null">
             AND ck.fCapturePositionQueryTime <![CDATA[<]]> #{startTime}
         </if>
@@ -556,6 +565,18 @@
         </choose>
         ORDER BY ck.fCapturePositionQueryTime DESC
         LIMIT 1
+    </select>
+
+    <select id="getCustomerKeywordForCapturePosition" resultType="com.keymanager.monitoring.entity.CustomerKeyword">
+        SELECT
+        ck.fUuid	AS	'uuid',
+        ck.fTerminalType	AS	'terminalType',
+        ck.fKeyword	AS	'keyword',
+        ck.fUrl	AS	'url',
+        ck.fTitle	AS	'title',
+        ck.fSearchEngine	AS	'searchEngine'
+        FROM t_customer_keyword ck
+        WHERE ck.fUuid = #{uuid}
     </select>
 
     <update id="resetInvalidRefreshCount" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria">
@@ -629,6 +650,28 @@
             GROUP BY fOptimizeGroupName
     </select>
 
+    <select id="searchCustomerKeywordUuidForCaptureTitle" resultType="Long">
+        SELECT
+        ck.fUuid  AS `uuid`
+        FROM
+        t_customer_keyword ck
+        WHERE 1 = 1
+        <if test="qzCaptureTitleLog.terminalType != null and qzCaptureTitleLog.terminalType != ''">
+            AND ck.fTerminalType = #{qzCaptureTitleLog.terminalType}
+        </if>
+        <if test="qzCaptureTitleLog.group != null and qzCaptureTitleLog.group != ''">
+            AND ck.fOptimizeGroupName = #{qzCaptureTitleLog.group}
+        </if>
+        <if test="qzCaptureTitleLog.customerUuid != null and qzCaptureTitleLog.customerUuid != ''">
+            AND ck.fCustomerUuid = #{qzCaptureTitleLog.customerUuid}
+        </if>
+        AND ck.fCapturedTitle = 0
+        AND ck.fSearchEngine = #{searchEngine}
+        AND ck.fCaptureTitleQueryTime IS NULL
+        AND (ck.fTitle IS NULL OR ck.fTitle = '')
+        LIMIT 1
+    </select>
+
     <select id="searchCustomerKeywordForCaptureTitle" resultType="com.keymanager.value.CustomerKeywordForCaptureTitle">
             SELECT
                 ck.fKeyword  AS `keyword`,
@@ -637,21 +680,7 @@
                 ck.fOriginalUrl  AS `wholeUrl`
             FROM
                 t_customer_keyword ck
-            WHERE 1 = 1
-            <if test="qzCaptureTitleLog.terminalType != null and qzCaptureTitleLog.terminalType != ''">
-                AND ck.fTerminalType = #{qzCaptureTitleLog.terminalType}
-            </if>
-            <if test="qzCaptureTitleLog.group != null and qzCaptureTitleLog.group != ''">
-                AND ck.fOptimizeGroupName = #{qzCaptureTitleLog.group}
-            </if>
-            <if test="qzCaptureTitleLog.customerUuid != null and qzCaptureTitleLog.customerUuid != ''">
-                AND ck.fCustomerUuid = #{qzCaptureTitleLog.customerUuid}
-            </if>
-            AND ck.fCapturedTitle = 0
-            AND ck.fSearchEngine = #{searchEngine}
-            AND ck.fCaptureTitleQueryTime IS NULL
-            AND (ck.fTitle IS NULL OR ck.fTitle = '')
-            LIMIT 1
+            WHERE ck.fUuid = #{uuid}
     </select>
 
     <delete id="deleteEmptyTitleCustomerKeyword">
@@ -689,7 +718,7 @@
         UPDATE
             t_customer_keyword
         SET
-            fOptimizePlanCount = (SELECT FLOOR(3 + (RAND() * 8)))
+            fOptimizePlanCount = (SELECT FLOOR(3 + (RAND() * 8))), fOptimizeRemainingCount = fOptimizePlanCount
         WHERE
             fOptimizeGroupName = 'pc_baidumap'
         AND fCurrentPosition BETWEEN 1 AND 3
@@ -710,7 +739,7 @@
         WHERE fUuid = #{uuid}
     </update>
 
-    <select id="tabkeOptimizationCountExceptionUsers" resultType="com.keymanager.monitoring.vo.OptimizationCountVO">
+    <select id="takeOptimizationCountExceptionUsers" resultType="com.keymanager.monitoring.vo.OptimizationCountVO">
         SELECT
             u.fLoginName AS 'loginName',
             u.fEmail AS 'email'
@@ -872,7 +901,7 @@
 		WHERE fType = 'fm'
 		AND fKeyword = #{keyword}
 		AND fTerminalType = #{terminalType}
-		AND fOptimizePlanCount &gt; fOptimizedCount
+		AND fOptimizeRemainingCount &gt; 0
 		AND fStatus = 1
     </select>
 
@@ -886,7 +915,7 @@
         WHERE fType = 'qz'
         AND fTerminalType = #{terminalType}
         AND fOptimizeGroupName = #{optimizeGroupName}
-        AND fOptimizePlanCount &gt; fOptimizedCount
+        AND fOptimizeRemainingCount &gt; 0
         AND fStatus = 1
         ORDER BY RAND()
         LIMIT 4

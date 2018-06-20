@@ -42,7 +42,7 @@ public class ApplyKeywordService extends ServiceImpl<ApplyKeywordDao, ApplyKeywo
         return page;
     }
 
-    public void deleteSupplier(Long uuid) {
+    public void deleteApplyKeyword(Long uuid) {
         applyKeywordDao.deleteById(uuid);
     }
 

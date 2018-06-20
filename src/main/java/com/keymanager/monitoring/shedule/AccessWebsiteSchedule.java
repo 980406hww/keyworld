@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class AccessWebsiteSchedule {
@@ -23,9 +24,15 @@ public class AccessWebsiteSchedule {
     public void runTask(){
         logger.info("============= "+" Access URL Task "+"===================");
         try {
-            List<Website> websites = websiteService.accessURL();
-            if (websites.size() > 0) {
-                accessWebsiteFailMailService.sendAccessWebsiteFailMail(websites);
+//            List<Website> websites = websiteService.accessURL();
+            Map<String, Object> websitesMap = websiteService.accessURL();
+            List<Website> websitesFails = (List<Website>) websitesMap.get("accessFailWebsites");
+            if (websitesFails.size() > 0) {
+                accessWebsiteFailMailService.sendAccessWebsiteFailMail(websitesFails);
+            }
+            List<Website> websiteSuccess = (List<Website>) websitesMap.get("accessSuccessWebsites");
+            if (websiteSuccess.size() > 0) {
+                accessWebsiteFailMailService.sendAccessWebsiteSuccessMail(websiteSuccess);
             }
         } catch (Exception e) {
             logger.error(" Access URL is error" + e.getMessage());

@@ -16,4 +16,6 @@ public interface ApplicationMarketDao extends BaseMapper<ApplicationMarket> {
     List<ApplicationMarket> getmarketInfo();
 
     List<ApplicationMarket> searchpplicationMarket(Page<ApplicationMarket> page,@Param("applicationMarketCriteria") ApplicationMarketCriteria applicationMarketCriteria);
+
+    List<ApplicationMarket> selectApplicationMarket();
 }
