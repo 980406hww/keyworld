@@ -1,10 +1,11 @@
-package com.keymanager.monitoring.service;
+﻿package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.criteria.NegativeRankCriteria;
 import com.keymanager.monitoring.dao.NegativeRankDao;
 import com.keymanager.monitoring.entity.NegativeRank;
+import com.keymanager.util.Utils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -46,6 +48,14 @@ public class NegativeRankService extends ServiceImpl<NegativeRankDao, NegativeRa
         return page;
     }
 
+    public Map<String, Object> findInitialNegativeRanks(NegativeRankCriteria negativeRankCriteria) {
+        negativeRankCriteria.setSearchDate(DateUtils.setHours(negativeRankCriteria.getSearchDate(), 0));
+        List<NegativeRank> negativeRanks = negativeRankDao.findInitialNegativeRanks(negativeRankCriteria.getSearchEngine(), negativeRankCriteria.getSearchDate());
+        Map<String, Object> initialNegativeRankMap = new HashMap<String, Object>();
+        for (NegativeRank negativeRank : negativeRanks) {
+            initialNegativeRankMap.put(negativeRank.getKeyword(), negativeRank);
+        }
+        return initialNegativeRankMap;
     public void updateNegativeRankKeyword(Map<String,Object> requestMap){
         NegativeRank negativeRank = new NegativeRank();
         Long uuid = Long.valueOf((String) requestMap.get("uuid"));
