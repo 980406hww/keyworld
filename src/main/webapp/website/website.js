@@ -230,6 +230,10 @@ function saveWebsite(uuid) {
     websiteObj.serverIP = $.trim($("#websiteForm").find("#serverIP").val());
     websiteObj.serverUserName = $.trim($("#websiteForm").find("#serverUserName").val());
     websiteObj.serverPassword = $.trim($("#websiteForm").find("#serverPassword").val());
+    if(websiteObj.domain == null || websiteObj.domain=="" || websiteObj.domain ==''){
+        alert("域名不能为空");
+        return;
+    }
     $.ajax({
         url: '/internal/website/saveWebsite',
         data: JSON.stringify(websiteObj),
