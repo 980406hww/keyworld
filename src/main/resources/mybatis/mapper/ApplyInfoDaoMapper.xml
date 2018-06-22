@@ -14,6 +14,8 @@
         SELECT
           ai.fUuid AS 'uuid',
           ai.fAppName AS 'appName',
+          ai.fApplicationMarketUuid AS 'applicationMarketUuid',
+          ai.fApplicationMarketName AS 'applicationMarketName',
           ai.fPackageName AS 'packageName',
           ai.fID AS 'id',
           ai.fColor AS 'color',
@@ -23,6 +25,21 @@
         <if test="applyInfoCriteria.appName != null and applyInfoCriteria.appName != ''">
             AND ai.fAppName LIKE '%${applyInfoCriteria.appName}%'
         </if>
+        <if test="applyInfoCriteria.applicationMarketName != null and applyInfoCriteria.applicationMarketName != ''">
+            AND ai.fApplicationMarketName LIKE '%${applyInfoCriteria.applicationMarketName}%'
+        </if>
+    </select>
+    <select id="selectApplyList" resultType="com.keymanager.monitoring.entity.ApplyInfo">
+        SELECT
+          ai.fUuid AS 'uuid',
+          ai.fAppName AS 'appName',
+          ai.fPackageName AS 'packageName',
+          ai.fID AS 'id',
+          ai.fColor AS 'color',
+          ai.fPosandcolor AS 'posandcolor'
+        FROM t_apply_info ai
+        WHERE
+        ai.fApplicationMarketUuid = #{applicationMarketUuid}
     </select>
 
 </mapper>

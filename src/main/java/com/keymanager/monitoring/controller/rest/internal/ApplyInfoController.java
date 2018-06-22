@@ -33,6 +33,9 @@ public class ApplyInfoController {
     @Autowired
     private ApplyInfoService applyInfoService;
 
+    @Autowired
+    private ApplicationMarketService applicationMarketService;
+
     @RequiresPermissions("/internal/applyInfo/searchApplyInfo")
     @RequestMapping(value = "/searchApplyInfo", method = RequestMethod.GET)
     public ModelAndView searchApplyInfo(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize,
@@ -60,7 +63,9 @@ public class ApplyInfoController {
     private ModelAndView constructApplicationMarketModelAndView(HttpServletRequest request, ApplyInfoCriteria applyInfoCriteria , int currentPageNumber, int pageSize) {
         ModelAndView modelAndView = new ModelAndView("/applyInfo/applyInfoList");
         Page<ApplyInfo> page = applyInfoService.searchApplyInfoList(new Page<ApplyInfo>(currentPageNumber,pageSize),applyInfoCriteria);
+        List<ApplicationMarket> applicationMarkets = applicationMarketService.selectApplicationMarket();
         modelAndView.addObject("applyInfoCriteria",applyInfoCriteria);
+        modelAndView.addObject("applicationMarkets",applicationMarkets);
         modelAndView.addObject("page", page);
         return modelAndView;
     }
