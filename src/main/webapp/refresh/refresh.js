@@ -1,19 +1,8 @@
 $(function () {
     $("#uploadCSVDialog").dialog("close");
     $("#showRefreshStatInfoDiv").css("margin-top",$("#topDiv").height());
-    alignTableHeader();
-    window.onresize = function(){
-        alignTableHeader();
-    }
 });
-function alignTableHeader(){
-    var td = $("#showRefreshStatInfoTable tr:first td:gt(0)");
-    var ctd = $("#headerTable tr:eq(1) td");
-    $("#headerTable tr:eq(0) td:eq(0)").width($("#showRefreshStatInfoTable tr:first td:eq(0)").width());
-    $.each(td, function (idx, val) {
-        ctd.eq(idx).width($(val).width());
-    });
-}
+
 function trimSearchCondition() {
     var searchRefreshStatInfoForm = $("#searchRefreshStatInfoForm");
     var groupName = searchRefreshStatInfoForm.find("#groupName").val();
@@ -165,7 +154,7 @@ function downloadTxt() {
         type: 'POST',
         success: function (data) {
             if(data){
-                window.location.href = "/keywordUrl.txt?t=" + new Date().getTime();
+                document.getElementById("downTXT").click();
             }else{
                 $().toastmessage('showErrorToast', "导出失败！");
             }
@@ -174,5 +163,5 @@ function downloadTxt() {
             $().toastmessage('showErrorToast', "导出失败！");
         }
     });
-    
+
 }

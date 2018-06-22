@@ -71,7 +71,8 @@ public class SuperUserFullKeywordExcelOperator extends AbstractExcelReader {
 
 		Integer optimizePlanCount = getIntValue(SuperUserFullKeywordDefinition.OptimizePlanCount.getColumnIndex(), rowIndex);
 		customerKeyword.setOptimizePlanCount(optimizePlanCount);
-		
+		customerKeyword.setOptimizeRemainingCount(optimizePlanCount);
+
 		customerKeyword.setOptimizeGroupName(getStringValue(SuperUserFullKeywordDefinition.OptimizeGroupName.getColumnIndex(), rowIndex));
 		customerKeyword.setTitle(getStringValue(SuperUserFullKeywordDefinition.Title.getColumnIndex(), rowIndex));
 		customerKeyword.setOrderNumber(getStringValue(SuperUserFullKeywordDefinition.OrderNumber.getColumnIndex(), rowIndex));

@@ -76,3 +76,22 @@
             $("#selectAllChecked").prop("checked", false);
         }
     }
+
+    function count(rankTag){
+        var negativeCount = 0;
+       $.each(rankTag,function (index,value) {
+           var index = removeAllSpace($(value).text());
+           if(index!=""){
+             negativeCount+= index.replace("，",",").split(',').length;
+           }
+       });
+        var index = removeAllSpace(rankTag.context.value);
+        if(index!=""){
+            negativeCount+= index.replace("，",",").split(',').length;
+        }
+        return negativeCount;
+    }
+
+    function removeAllSpace(str) {
+        return str.replace(/\s+/g, "");
+    }

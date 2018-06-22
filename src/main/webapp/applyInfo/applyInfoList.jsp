@@ -28,6 +28,8 @@
                         <tr>
                             <td align="right">应用名: </td>
                             <td><input type="text" name="appName" id="appName" value="${applyInfoCriteria.appName}" style="width:200px;"></td>
+                            <td align="right">所属应用市场: </td>
+                            <td><input type="text" name="applicationMarketName" id="applicationMarketName" value="${applyInfoCriteria.applicationMarketName}" style="width:200px;"></td>
                             <td align="right" width="60">
                                 <input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}"/>
                                 <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
@@ -56,7 +58,8 @@
     <table id="headerTable" width="100%">
         <tr bgcolor="#eeeeee" height=30>
             <td align="left" width="10" style="padding-left: 7px;"><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
-            <td align="center" width=100>应用名</td>
+            <td align="center" width=80>应用名</td>
+            <td align="center" width=80>所属应用市场</td>
             <td align="center" width=80>包名</td>
             <td align="center" width=80>应用市场ID</td>
             <td align="center" width=80>标志颜色</td>
@@ -70,7 +73,8 @@
         <c:forEach items="${page.records}" var="applyInfo" varStatus="status">
             <tr onmouseover="doOver(this);" onmouseout="doOut(this);" height=30 <c:if test="${status.index%2==0}">bgcolor="#eeeeee" </c:if> >
                 <td width="10" style="padding-left: 7px;"><input type="checkbox" name="uuid" value="${applyInfo.uuid}" onclick="decideSelectAll()"/></td>
-                <td width="100">${applyInfo.appName}</td>
+                <td width="80">${applyInfo.appName}</td>
+                <td width="80">${applyInfo.applicationMarketName}</td>
                 <td width="80">${applyInfo.packageName}</td>
                 <td width="80">${applyInfo.id}</td>
                 <td width="80">${applyInfo.color}</td>
@@ -94,6 +98,17 @@
             <tr>
                 <td align="right">应用名:</td>
                 <td><input type="text" name="appName" id="appName" style="width:200px;"></td>
+            </tr>
+            <tr>
+                <td align="right">所属应用市场:</td>
+                <td>
+                    <select name="applicationName" id="applicationName" style="width:200px;">
+                        <option value="">==请选择==</option>
+                        <c:forEach items="${applicationMarkets}" var="applicationMarket">
+                            <option value="${applicationMarket.uuid}">${applicationMarket.marketName}</option>
+                        </c:forEach>
+                    </select>
+                </td>
             </tr>
             <tr>
                 <td align="right">包  名:</td>

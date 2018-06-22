@@ -48,6 +48,7 @@
                 <td align="center" width=40>第二页负面排名</td>
                 <td align="center" width=40>第三页负面排名</td>
                 <td align="center" width=40>第四页负面排名</td>
+                <td align="center" width=40>第五页负面排名</td>
                 <td align="center" width=40>其他负面排名</td>
                 <td align="center" width=60>创建时间</td>
             </tr>
@@ -62,11 +63,12 @@
                     <td align="center" width=59>${NegativeRank.keyword}</td>
                     <td align="center" width=49>${NegativeRank.searchEngine}</td>
                     <td align="center" width=40>${NegativeRank.negativeCount}</td>
-                    <td align="left" width=40>${NegativeRank.firstPageRanks}</td>
-                    <td align="left" width=40>${NegativeRank.secondPageRanks}</td>
-                    <td align="left" width=39>${NegativeRank.thirdPageRanks}</td>
-                    <td align="left" width=40>${NegativeRank.fifthPageRanks}</td>
-                    <td align="left" width=40>${NegativeRank.otherPageRanks}</td>
+                    <td align="left" name="clickEvent" class="1" width=40>${NegativeRank.firstPageRanks}</td>
+                    <td align="left" name="clickEvent" class="2" width=40>${NegativeRank.secondPageRanks}</td>
+                    <td align="left" name="clickEvent" class="3" width=39>${NegativeRank.thirdPageRanks}</td>
+                    <td align="left" name="clickEvent" class="4" width=39>${NegativeRank.fourthPageRanks}</td>
+                    <td align="left" name="clickEvent" class="5" width=40>${NegativeRank.fifthPageRanks}</td>
+                    <td align="left" name="clickEvent" class="66" width=40>${NegativeRank.otherPageRanks}</td>
                     <td align="center" width=60><fmt:formatDate  value="${NegativeRank.createTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
                 </tr>
             </c:forEach>
@@ -103,6 +105,59 @@
 
 <%@ include file="/commons/loadjs.jsp"%>
 <script src="${staticPath}/negativeRank/negativeRank.js"></script>
+<script language="javascript">
+    <shiro:hasPermission name="/internal/negativeRank/updateNegativeRankKeyword">
+    $(function () {
+        $('table td').click(function(){
+            if(!$(this).is('.input')){
+                if($(this).is("td[name='clickEvent']")){
+                    var notModified = $(this).text();
+                    $(this).addClass('input').html('<input type="text" value="'+ $(this).text() +'"/>').find('input').focus().blur(function(){
+                        var negativeRank = {};
+                        var thisvalue = removeAllSpace($(this).val());
+                        if(notModified != thisvalue){
+                            var allTdTag = $(this).parent().siblings('td');
+                            negativeRank.uuid = allTdTag.eq(0).find('input').val();
+                            negativeRank.keyword = allTdTag.eq(1).text();
+                            negativeRank.searchEngine = allTdTag.eq(2).text();
+                            negativeRank.thisName = $(this).parent().attr('class').split(" ")[0];
+                            negativeRank.thisvalue = thisvalue;
+                            var rankTag = $(this).parent().siblings("td[name='clickEvent']");
+                            $(this).parent().removeClass('input').html($(this).val() || '');
+                            negativeRank.negativeCount = count(rankTag);
+                            updateNegativeRank(negativeRank);
+                        }else {
+                            $(this).parent().removeClass('input').html($(this).val() || '');
+                        }
+                    });
+                }
+            }
+        });
+    });
+    function updateNegativeRank(negativeRank){
+        $.ajax({
+            url: '/internal/negativeRank/updateNegativeRankKeyword',
+            data: JSON.stringify(negativeRank),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            timeout: 5000,
+            type: 'POST',
+            success: function (result) {
+                if (result) {
+                    $().toastmessage('showSuccessToast', "操作成功");
+                } else {
+                    $().toastmessage('showErrorToast', "操作失败");
+                }
+            },
+            error: function () {
+                $().toastmessage('showErrorToast', "操作失败");
+            }
+        });
+    }
+    </shiro:hasPermission>
+</script>
 </body>
 </html>
 

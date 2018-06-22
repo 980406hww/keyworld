@@ -28,8 +28,11 @@ public class NegativeRelatedKeywordService extends ServiceImpl<NegativeRelatedKe
         NegativeRelatedKeyword negativeRelatedKeyword = new NegativeRelatedKeyword();
         negativeRelatedKeyword.setMainKeyword(negativeRelatedKeywordCriteria.getMainKeyword());
         negativeRelatedKeyword.setRelatedKeyword(negativeRelatedKeywordCriteria.getRelatedKeyword());
-        negativeRelatedKeyword.setCreateTime(new Date());
-        negativeRelatedKeywordDao.insert(negativeRelatedKeyword);
+        NegativeRelatedKeyword getNegativeRelatedKeyword = negativeRelatedKeywordDao.selectOne(negativeRelatedKeyword);
+        if (getNegativeRelatedKeyword==null){
+            negativeRelatedKeyword.setCreateTime(new Date());
+            negativeRelatedKeywordDao.insert(negativeRelatedKeyword);
+        }
     }
 
     public void deleteNegativeRelatedKeywords(String relatedKeyword) {

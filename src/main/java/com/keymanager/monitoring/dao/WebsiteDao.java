@@ -13,4 +13,6 @@ public interface WebsiteDao extends BaseMapper<Website> {
     List<Website> searchWebsites(Page<Website> page, @Param("websiteCriteria") WebsiteCriteria websiteCriteria);
 
     List<Website> takeWebsitesForAccess();
+
+    List<Website> searchExpireTime();
 }

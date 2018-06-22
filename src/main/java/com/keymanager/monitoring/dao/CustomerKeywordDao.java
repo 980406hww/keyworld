@@ -89,8 +89,10 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void resetOptimizationInfo();
 
-    CustomerKeyword getCustomerKeywordForOptimization(@Param("terminalType")String terminalType, @Param("groupName")String groupName,
+    Long getCustomerKeywordUuidForOptimization(@Param("terminalType")String terminalType, @Param("groupName")String groupName,
                                                       @Param("maxInvalidCount")int maxInvalidCount, @Param("noPositionMaxInvalidCount") int noPositionMaxInvalidCount, @Param("bigKeyword")boolean bigKeyword);
+
+    CustomerKeyword getCustomerKeywordForOptimization(@Param("uuid")Long uuid);
 
     void updateOptimizationQueryTime(@Param("customerKeywordUuid")Long customerKeywordUuid);
 
@@ -103,8 +105,10 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void adjustOptimizePlanCount(@Param("customerKeywordUuid")Long customerKeywordUuid, @Param("optimizationPlanCount")int optimizationPlanCount,
                                  @Param("queryInterval")int queryInterval);
 
-    CustomerKeyword getCustomerKeywordForCapturePosition(@Param("terminalType")String terminalType, @Param("groupNames")List<String> groupNames,
+    Long getCustomerKeywordUuidForCapturePosition(@Param("terminalType")String terminalType, @Param("groupNames")List<String> groupNames,
                                                          @Param("customerUuid")Long customerUuid, @Param("startTime")Date startTime);
+
+    CustomerKeyword getCustomerKeywordForCapturePosition(@Param("uuid")Long uuid);
 
     void updateCapturePositionQueryTime(@Param("uuid")Long uuid);
 
@@ -124,7 +128,9 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void updateAutoUpdateNegativeTimeAs4MinutesAgo(@Param("terminalType")String terminalType, @Param("groupName")String groupName);
 
-    CustomerKeywordForCaptureTitle searchCustomerKeywordForCaptureTitle(@Param("qzCaptureTitleLog") QZCaptureTitleLog qzCaptureTitleLog,@Param("searchEngine")String searchEngine);
+    Long searchCustomerKeywordUuidForCaptureTitle(@Param("qzCaptureTitleLog") QZCaptureTitleLog qzCaptureTitleLog,@Param("searchEngine")String searchEngine);
+
+    CustomerKeywordForCaptureTitle searchCustomerKeywordForCaptureTitle(@Param("uuid") Long uuid);
 
     void  deleteEmptyTitleCustomerKeyword(@Param("qzCaptureTitleLog")QZCaptureTitleLog qzCaptureTitleLog,@Param("searchEngine")String searchEngine);
 
@@ -136,7 +142,7 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void updatePosition(@Param("uuid")Long uuid, @Param("position")Integer position, @Param("capturePositionQueryTime")Date capturePositionQueryTime, @Param("todayFee") Double todayFee);
 
-    List<OptimizationCountVO> tabkeOptimizationCountExceptionUsers();
+    List<OptimizationCountVO> takeOptimizationCountExceptionUsers();
 
     List<String> fetchOptimizationCompletedGroupNames(@Param("typesStr")String typesStr, @Param("maxInvalidCount")Integer maxInvalidCount);
     List<OptimizationCountVO> observeGroupOptimizationCount(@Param("userID") String userID);

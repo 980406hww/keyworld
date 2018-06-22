@@ -208,7 +208,8 @@
                         </shiro:hasPermission>
                     </c:if>
                     <c:if test="${'qz'.equalsIgnoreCase(entryType)}">
-                        | <a target="_blank" href="javascript:viewAizhanRank('${customer.contactPerson}')">查看爱站排名</a>
+                        | <a target="_blank" href="javascript:viewSitesdRank('${customer.contactPerson}','aizhan')">爱站排名</a>
+                        | <a target="_blank" href="javascript:viewSitesdRank('${customer.contactPerson}','5118')">5118排名</a>
                     </c:if>
                 </td>
             </tr>

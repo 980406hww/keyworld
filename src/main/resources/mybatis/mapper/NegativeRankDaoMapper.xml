@@ -51,4 +51,28 @@
         <if test="negativeRankCriteria.createTime != null and negativeRankCriteria.createTime != ''">AND DATE_FORMAT(tnr.fCreateTime,'%Y-%m-%d') = #{negativeRankCriteria.createTime}</if>
         ORDER BY tnr.fCreateTime DESC
     </select>
+
+    <select id="findInitialNegativeRanks" resultType="com.keymanager.monitoring.entity.NegativeRank">
+        SELECT
+            fUuid AS 'uuid',
+            fKeyword AS 'keyword',
+            fSearchEngine AS 'searchEngine',
+            fNegativeCount AS 'negativeCount',
+            fFirstPageRanks AS 'firstPageRanks',
+            fSecondPageRanks AS 'secondPageRanks',
+            fThirdPageRanks AS 'thirdPageRanks',
+            fFourthPageRanks AS 'fourthPageRanks',
+            fFifthPageRanks AS 'fifthPageRanks',
+            fOtherPageRanks AS 'otherPageRanks',
+            fUpdateTime AS 'updateTime',
+            fCreateTime AS 'createTime'
+        FROM t_negative_rank
+        GROUP BY fKeyword,fSearchEngine
+        HAVING fSearchEngine = #{searchEngine}
+        AND MIN(fCreateTime)
+        AND fKeyword IN (
+        SELECT fKeyword FROM t_negative_rank
+        WHERE fSearchEngine = #{searchEngine}
+        AND fCreateTime BETWEEN #{createTime} AND DATE_ADD(#{createTime}, INTERVAL 1 DAY))
+    </select>
 </mapper>
