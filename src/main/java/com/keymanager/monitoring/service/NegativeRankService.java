@@ -46,33 +46,7 @@ public class NegativeRankService extends ServiceImpl<NegativeRankDao, NegativeRa
         return page;
     }
 
-    public void updateNegativeRankKeyword(Map<String,Object> requestMap){
-        NegativeRank negativeRank = new NegativeRank();
-        Long uuid = Long.valueOf((String) requestMap.get("uuid"));
-        Integer thisName = Integer.valueOf((String) requestMap.get("thisName"));
-        String thisvalue = (String)requestMap.get("thisvalue");
-        negativeRank.setUuid(uuid);
-        negativeRank.setNegativeCount((Integer) requestMap.get("negativeCount"));
-        switch (thisName){
-            case 1:
-                negativeRank.setFirstPageRanks(thisvalue);
-                break;
-            case 2:
-                negativeRank.setSecondPageRanks(thisvalue);
-                break;
-            case 3:
-                negativeRank.setThirdPageRanks(thisvalue);
-                break;
-            case 4:
-                negativeRank.setFourthPageRanks(thisvalue);
-                break;
-            case 5:
-                negativeRank.setFifthPageRanks(thisvalue);
-                break;
-            case 66:
-                negativeRank.setOtherPageRanks(thisvalue);
-                break;
-        }
+    public void updateNegativeRankKeyword(NegativeRank negativeRank){
         negativeRankDao.updateById(negativeRank);
     }
 }
