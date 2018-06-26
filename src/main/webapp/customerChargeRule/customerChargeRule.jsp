@@ -16,9 +16,15 @@
             <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
             <input type="hidden" name="customerUuid" id="customerUuid" value="${customerChargeRuleCriteria.customerUuid}"/>
             客户：<input type="text" list="customer_list" name="customerInfo" id="customerInfo" value="${customerChargeRuleCriteria.customerInfo}" style="width:200px;">
+            <shiro:hasPermission name="/internal/customerChargeRule/searchCustomerChargeRules">
             <input type="submit" value=" 查询 " onclick="resetPageNumber()">&nbsp;&nbsp;
+            </shiro:hasPermission>
+            <shiro:hasPermission name="/internal/customerChargeRule/saveCustomerChargeRule">
             <input type="button" value=" 添加 " onclick="showCustomerChargeRuleDialog()">&nbsp;&nbsp;
+            </shiro:hasPermission>
+            <shiro:hasPermission name="/internal/customerChargeRule/deleteCustomerChargeRules">
             <input type="button" onclick="deleteCustomerChargeRules()" value=" 删除所选 ">&nbsp;&nbsp;
+            </shiro:hasPermission>
         </form>
     </div>
     <table style="font-size:12px; width: 100%;" id="headerTable">
@@ -69,7 +75,9 @@
             <td width="80" align="center"><fmt:formatDate value="${customerChargeRule.createTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
             <td style="text-align: center;" width="80">
                 <input type="hidden" name="customerUuid" value="${customerChargeRule.customerUuid}">
+                <shiro:hasPermission name="/internal/customerChargeRule/deleteCustomerChargeRule">
                 <a href="javascript:deleteCustomerChargeRule('${customerChargeRule.uuid}')">删除</a>
+                </shiro:hasPermission>
             </td>
         </tr>
         </c:forEach>
@@ -171,6 +179,7 @@
 <%@ include file="/commons/loadjs.jsp" %>
 <script src="${staticPath }/customerChargeRule/customerChargeRule.js"></script>
 <script>
+    <shiro:hasPermission name="/internal/customerChargeRule/saveCustomerChargeRule">
     $(document).ready(function(){
         $('table td').click(function(){
             if(!$(this).is('.input')){
@@ -231,6 +240,7 @@
             }
         });
     });
+    </shiro:hasPermission>
 </script>
 </body>
 </html>

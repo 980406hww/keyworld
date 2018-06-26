@@ -8,6 +8,7 @@ import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.CustomerChargeRule;
 import com.keymanager.monitoring.service.CustomerChargeRuleService;
 import com.keymanager.monitoring.service.CustomerService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +33,13 @@ public class CustomerChargeRuleRestController extends SpringMVCBaseController {
     @Autowired
     private CustomerChargeRuleService customerChargeRuleService;
 
+    @RequiresPermissions("/internal/customerChargeRule/searchCustomerChargeRules")
     @RequestMapping(value = "/searchCustomerChargeRules", method = RequestMethod.GET)
     public ModelAndView searchCustomerChargeRules(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request) {
         return constructCustomerChargeRuleModelAndView(request, new CustomerChargeRuleCriteria(), currentPageNumber, pageSize);
     }
 
+    @RequiresPermissions("/internal/customerChargeRule/searchCustomerChargeRules")
     @RequestMapping(value = "/searchCustomerChargeRules", method = RequestMethod.POST)
     public ModelAndView searchCustomerChargeRulesPost(HttpServletRequest request, CustomerChargeRuleCriteria customerChargeRuleCriteria) {
         try {
@@ -72,6 +75,7 @@ public class CustomerChargeRuleRestController extends SpringMVCBaseController {
         return modelAndView;
     }
 
+    @RequiresPermissions("/internal/customerChargeRule/saveCustomerChargeRule")
     @RequestMapping(value = "/saveCustomerChargeRule", method = RequestMethod.POST)
     public ResponseEntity<?> saveCustomerChargeRule(@RequestBody CustomerChargeRule customerChargeRule) {
         try {
@@ -83,6 +87,7 @@ public class CustomerChargeRuleRestController extends SpringMVCBaseController {
         }
     }
 
+    @RequiresPermissions("/internal/customerChargeRule/deleteCustomerChargeRule")
     @RequestMapping(value = "/deleteCustomerChargeRule/{uuid}", method = RequestMethod.GET)
     public ResponseEntity<?> deleteCustomerChargeRule(@PathVariable("uuid") Long uuid) {
         try {
@@ -94,6 +99,7 @@ public class CustomerChargeRuleRestController extends SpringMVCBaseController {
         }
     }
 
+    @RequiresPermissions("/internal/customerChargeRule/deleteCustomerChargeRules")
     @RequestMapping(value = "/deleteCustomerChargeRules" , method = RequestMethod.POST)
     public ResponseEntity<?> deleteCustomerChargeRules(@RequestBody Map<String, Object> requestMap){
         try {
