@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.WarnListDao">
+	<sql id="selectCol">
+		fUuid AS "uuid",
+		fKeyword AS "keyword",
+		fTitle AS "title",
+		fUrl AS "url",
+		fOriginalUrl AS "originalUrl",
+		fDesc AS "desc",
+		fPosition AS "position",
+		fUpdateTime AS "updateTime",
+		fCreateTime AS "createTime"
+	</sql>
+
+	<select id="searchWarnLists" parameterType="com.keymanager.monitoring.criteria.WarnListCriteria" resultType="com.keymanager.monitoring.entity.WarnList">
+		SELECT
+		<include refid="selectCol" />
+		FROM
+			t_warn_list n
+		WHERE 1 = 1
+		<if test="warnListCriteria.keyword != null and warnListCriteria.keyword != ''">AND n.fKeyword = #{warnListCriteria.keyword}</if>
+		<if test="warnListCriteria.title != null and warnListCriteria.title != ''">AND n.fTitle  like  '%${warnListCriteria.title}%'</if>
+		<if test="warnListCriteria.url != null and warnListCriteria.url != ''">AND n.fUrl like '%${warnListCriteria.url}%'</if>
+		ORDER BY n.fCreateTime DESC
+	</select>
+
+	<select id="searchWarnListsFullMatching" parameterType="com.keymanager.monitoring.criteria.WarnListCriteria" resultType="com.keymanager.monitoring.entity.WarnList">
+		SELECT
+		<include refid="selectCol" />
+		FROM
+		t_warn_list n
+		WHERE 1 = 1
+		<if test="warnListCriteria.keyword != null and warnListCriteria.keyword != ''">AND n.fKeyword = #{warnListCriteria.keyword}</if>
+		<if test="warnListCriteria.title != null and warnListCriteria.title != ''">AND n.fTitle = #{warnListCriteria.title}</if>
+	</select>
+
+	<select id="getSpecifiedKeywordWarnLists" resultType="com.keymanager.monitoring.entity.WarnList">
+		SELECT
+			fUuid AS "uuid",
+			fKeyword AS "keyword",
+			fTitle AS "title",
+			fUrl AS "url",
+			fOriginalUrl AS "originalUrl",
+			fDesc AS "desc",
+			fPosition AS "position",
+			fUpdateTime AS "updateTime",
+			fCreateTime AS "createTime"
+		FROM
+		t_warn_list n
+		WHERE n.fKeyword = #{keyword}
+	</select>
+</mapper>
