@@ -1016,3 +1016,59 @@ function autoSwitchCustomerKeywordStatus() {
     });
     $('#autoSwitchCustomerKeywordStatusDialog').window("resize",{top:$(document).scrollTop() + 150});
 }
+function setCustomerUpdateInterval(uuid) {
+    var uuids = getSelectedIDs();
+    if(uuid == null) {
+        if (uuids === '') {
+            alert('请选择要设置启停关键字间隔的客户！');
+            return;
+        }
+    } else {
+        uuids = uuid;
+    }
+    $.messager.prompt('提示', '请输入关键字启停间隔天数：', function(updateInterval){
+        if(updateInterval != undefined) {
+            updateInterval = updateInterval.replace("，",",");
+            if(updateInterval.indexOf("-") > -1) {
+                var intervalDays = "";
+                $.each(updateInterval.split(","), function (index, value) {
+                    if(value.indexOf("-") > -1) {
+                        var days = value.split("-");
+                        intervalDays += "," + days[0];
+                        for(var i = 0; i < parseInt(days[1]) - parseInt(days[0]); i++) {
+                            intervalDays += "," + (parseInt(days[0]) + i + 1);
+                        }
+                    } else {
+                        intervalDays += "," + value;
+                    }
+                });
+                if(intervalDays.indexOf(",") == 0) {
+                    updateInterval = intervalDays.substring(1);
+                }
+            }
+            var data = {};
+            data.uuids = uuids.split(",");
+            data.updateInterval = updateInterval;
+            $.ajax({
+                url: '/internal/customer/setCustomerUpdateInterval',
+                data: JSON.stringify(data),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                type: 'POST',
+                success: function (result) {
+                    if (result) {
+                        $().toastmessage('showSuccessToast', "操作成功", true);
+                    } else {
+                        $().toastmessage('showErrorToast', "操作失败");
+                    }
+                },
+                error: function () {
+                    $().toastmessage('showErrorToast', "操作失败");
+                }
+            });
+        }
+    });
+}

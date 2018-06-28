@@ -42,7 +42,7 @@ public class ExternalControllerRealm extends AuthorizingRealm {
 	@Override
 	protected AuthenticationInfo doGetAuthenticationInfo(
 			AuthenticationToken authcToken) throws AuthenticationException {
-		LOGGER.info("外部Shiro开始登录认证");
+//		LOGGER.info("外部Shiro开始登录认证");
 		ExtendedUsernamePasswordToken token = (ExtendedUsernamePasswordToken) authcToken;
 		UserVO uservo = new UserVO();
 		uservo.setLoginName(token.getUsername());

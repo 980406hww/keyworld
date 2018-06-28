@@ -14,15 +14,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/external/negativeRank")
-public class ExternalNegativeRanRestController extends SpringMVCBaseController {
+public class ExternalNegativeRankRestController extends SpringMVCBaseController {
 
-    private static Logger logger = LoggerFactory.getLogger(ExternalNegativeRanRestController.class);
+    private static Logger logger = LoggerFactory.getLogger(ExternalNegativeRankRestController.class);
 
     @Autowired
     private NegativeRankService negativeRankService;
@@ -50,6 +49,21 @@ public class ExternalNegativeRanRestController extends SpringMVCBaseController {
             if (validUser(userName, password)) {
                 List<NegativeRank> negativeRanks = negativeRankService.findNegativeRanks(negativeRankCriteria);
                 return new ResponseEntity<Object>(negativeRanks, HttpStatus.OK);
+            }
+        }catch (Exception ex){
+            logger.error(ex.getMessage());
+        }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+    }
+
+    @RequestMapping(value = "/findInitialNegativeRanks", method = RequestMethod.POST)
+    public ResponseEntity<?> findInitialNegativeRanks(@RequestBody NegativeRankCriteria negativeRankCriteria) {
+        try {
+            String userName = negativeRankCriteria.getUserName();
+            String password = negativeRankCriteria.getPassword();
+            if (validUser(userName, password)) {
+                Map<String, Object> initialNegativeRanks = negativeRankService.findInitialNegativeRanks(negativeRankCriteria);
+                return new ResponseEntity<Object>(initialNegativeRanks, HttpStatus.OK);
             }
         }catch (Exception ex){
             logger.error(ex.getMessage());

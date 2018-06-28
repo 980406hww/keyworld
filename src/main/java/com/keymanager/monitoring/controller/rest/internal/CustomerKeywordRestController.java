@@ -502,7 +502,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		}
 	}
 
-	@RequiresPermissions("/internal/customerKeyword/saveCustomerKeywords")
+	@RequiresPermissions("/internal/customerKeyword/saveCustomerKeyword")
 	@RequestMapping(value = "/updateKeywordCustomerUuid" , method = RequestMethod.POST)
 	public ResponseEntity<?> updateKeywordCustomerUuid(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
 		try {

@@ -65,7 +65,8 @@
                         </shiro:hasPermission>
                         <c:if test="${'fm'.equalsIgnoreCase(entryType)}">
                             <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
-                                &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 设置关键字启停时间 " onclick="autoSwitchCustomerKeywordStatus()"/>
+                                &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 设置关键字启停小时 " onclick="autoSwitchCustomerKeywordStatus()"/>
+                                &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 设置关键字启停天数 " onclick="setCustomerUpdateInterval(null)"/>
                             </shiro:hasPermission>
                         </c:if>
                         <c:if test="${'bc'.equalsIgnoreCase(entryType)}">
@@ -107,7 +108,8 @@
                 <td align="center" width=60>搜索引擎</td>
             </c:if>
             <c:if test="${'fm'.equalsIgnoreCase(entryType)}">
-                <td align="center" width=70>关键字启停小时数</td>
+                <td align="center" width=70>关键字<br>启停小时数</td>
+                <td align="center" width=120>关键字<br>启停间隔天数</td>
             </c:if>
             <td align="center" width=60>QQ</td>
             <td align="center" width=140>备注</td>
@@ -169,6 +171,9 @@
                     <td width=70 style="text-align: center">
                         <input type="text" name="activeHour" onchange="editHourForSwitchStatus('${customer.uuid}', this)" value="${customer.activeHour}" style="width: 90%"><br>
                         <input type="text" name="inActiveHour" onchange="editHourForSwitchStatus('${customer.uuid}', this)" value="${customer.inActiveHour}" style="width: 90%">
+                    </td>
+                    <td width=120 style="text-align: center" onclick="setCustomerUpdateInterval('${customer.uuid}')">
+                        ${customer.updateInterval}
                     </td>
                 </c:if>
                 <td width=60>${customer.qq}</td>

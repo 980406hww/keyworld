@@ -18,6 +18,7 @@
         c.fStatus AS `status`,
         c.fActiveHour AS `activeHour`,
         c.fInActiveHour AS `inActiveHour`,
+        c.fUpdateInterval AS `updateInterval`,
         c.fUpdateTime AS `updateTime`,
         c.fCreateTime AS `createTime`
     </sql>
@@ -107,9 +108,9 @@
         SELECT
         <include refid="colID"/>
         FROM t_customer c
-        WHERE fActiveHour &gt; ''
-        AND fInActiveHour &gt; ''
-        AND c.fEntryType = 'fm'
+        WHERE c.fEntryType = 'fm'
+        AND (c.fActiveHour &gt; '' AND c.fInActiveHour &gt; '')
+        OR c.fUpdateInterval &gt; ''
         AND c.fStatus = 1
     </select>
 
@@ -140,4 +141,12 @@
         order by c.fUpdateTime DESC
     </select>
 
+    <update id="setCustomerUpdateInterval">
+        UPDATE t_customer
+        SET fUpdateInterval = #{updateInterval}
+        WHERE fUuid IN
+        <foreach collection="uuids" item="uuid" open="(" close=")" separator=",">
+            #{uuid}
+        </foreach>
+    </update>
 </mapper>

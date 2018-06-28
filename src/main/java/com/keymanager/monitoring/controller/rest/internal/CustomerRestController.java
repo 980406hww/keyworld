@@ -223,4 +223,16 @@ public class CustomerRestController {
             return new ResponseEntity<Object>(false, HttpStatus.OK);
         }
     }
+
+    @RequestMapping(value = "/setCustomerUpdateInterval" , method = RequestMethod.POST)
+    public ResponseEntity<?> setCustomerUpdateInterval(@RequestBody Map<String, Object> requestMap){
+        try {
+            List<String> uuids = (List<String>) requestMap.get("uuids");
+            String updateInterval = (String) requestMap.get("updateInterval");
+            customerService.setCustomerUpdateInterval(uuids, updateInterval);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<Object>(false, HttpStatus.OK);
+        }
+    }
 }

@@ -31,4 +31,6 @@ public interface CustomerDao extends BaseMapper<Customer> {
     Customer findCustomerByExternalAccountInfo(@Param("externalAccount")String externalAccount, @Param("searchEngine")String searchEngine);
 
     List<Customer> searchTargetCustomers(@Param("entryType")String entryType,@Param("loginName")String loginName);
+
+    void setCustomerUpdateInterval(@Param("uuids")List<String> uuids, @Param("updateInterval")String updateInterval);
 }
