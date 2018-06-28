@@ -795,10 +795,12 @@
     <update id="editCustomerOptimizePlanCount">
         UPDATE t_customer_keyword
         <if test="settingType == 'setCurrentCount'">
-            SET fOptimizePlanCount = IF((fOptimizePlanCount + (#{optimizePlanCount})) > 0, (fOptimizePlanCount + (#{optimizePlanCount})), 0)
+            SET fOptimizePlanCount = IF((fOptimizePlanCount + (#{optimizePlanCount})) > 0, (fOptimizePlanCount + (#{optimizePlanCount})), 0),
+            fOptimizeRemainingCount = IF(fOptimizePlanCount - fOptimizedCount > 0, fOptimizePlanCount - fOptimizedCount, 0)
         </if>
         <if test="settingType == 'setSpecificCount'">
-            SET fOptimizePlanCount = #{optimizePlanCount}
+            SET fOptimizePlanCount = #{optimizePlanCount},
+            fOptimizeRemainingCount = IF(#{optimizePlanCount} - fOptimizedCount > 0, #{optimizePlanCount} - fOptimizedCount, 0)
         </if>
         WHERE fUuid IN
         <foreach item="uuid"  collection="uuids" open="(" separator="," close=")">
@@ -809,10 +811,12 @@
     <update id="editOptimizePlanCountByCustomerUuid">
         UPDATE t_customer_keyword
         <if test="settingType == 'setCurrentCount'">
-            SET fOptimizePlanCount = IF((fOptimizePlanCount + (#{optimizePlanCount})) > 0, (fOptimizePlanCount + (#{optimizePlanCount})), 0)
+            SET fOptimizePlanCount = IF((fOptimizePlanCount + (#{optimizePlanCount})) > 0, (fOptimizePlanCount + (#{optimizePlanCount})), 0),
+            fOptimizeRemainingCount = IF(fOptimizePlanCount - fOptimizedCount > 0, fOptimizePlanCount - fOptimizedCount, 0)
         </if>
         <if test="settingType == 'setSpecificCount'">
-            SET fOptimizePlanCount = #{optimizePlanCount}
+            SET fOptimizePlanCount = #{optimizePlanCount},
+            fOptimizeRemainingCount = IF(#{optimizePlanCount} - fOptimizedCount > 0, #{optimizePlanCount} - fOptimizedCount, 0)
         </if>
         WHERE fTerminalType = #{terminalType}
         AND fType = #{entryType}
