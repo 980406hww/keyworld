@@ -63,12 +63,12 @@
                     <td align="center" width=59>${NegativeRank.keyword}</td>
                     <td align="center" width=49>${NegativeRank.searchEngine}</td>
                     <td align="center" width=40>${NegativeRank.negativeCount}</td>
-                    <td align="left" name="clickEvent" class="1" width=40>${NegativeRank.firstPageRanks}</td>
-                    <td align="left" name="clickEvent" class="2" width=40>${NegativeRank.secondPageRanks}</td>
-                    <td align="left" name="clickEvent" class="3" width=39>${NegativeRank.thirdPageRanks}</td>
-                    <td align="left" name="clickEvent" class="4" width=39>${NegativeRank.fourthPageRanks}</td>
-                    <td align="left" name="clickEvent" class="5" width=40>${NegativeRank.fifthPageRanks}</td>
-                    <td align="left" name="clickEvent" class="66" width=40>${NegativeRank.otherPageRanks}</td>
+                    <td align="left" name="clickEvent" class="firstPageRanks" width=40>${NegativeRank.firstPageRanks}</td>
+                    <td align="left" name="clickEvent" class="secondPageRanks" width=40>${NegativeRank.secondPageRanks}</td>
+                    <td align="left" name="clickEvent" class="thirdPageRanks" width=39>${NegativeRank.thirdPageRanks}</td>
+                    <td align="left" name="clickEvent" class="fourthPageRanks" width=39>${NegativeRank.fourthPageRanks}</td>
+                    <td align="left" name="clickEvent" class="fifthPageRanks" width=40>${NegativeRank.fifthPageRanks}</td>
+                    <td align="left" name="clickEvent" class="otherPageRanks" width=40>${NegativeRank.otherPageRanks}</td>
                     <td align="center" width=60><fmt:formatDate  value="${NegativeRank.createTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
                 </tr>
             </c:forEach>
@@ -117,11 +117,22 @@
                         var thisvalue = removeAllSpace($(this).val());
                         if(notModified != thisvalue){
                             var allTdTag = $(this).parent().siblings('td');
-                            negativeRank.uuid = allTdTag.eq(0).find('input').val();
-                            negativeRank.keyword = allTdTag.eq(1).text();
-                            negativeRank.searchEngine = allTdTag.eq(2).text();
-                            negativeRank.thisName = $(this).parent().attr('class').split(" ")[0];
-                            negativeRank.thisvalue = thisvalue;
+                            negativeRank.uuid = parseInt(allTdTag.eq(0).find('input').val());
+                            var thisName = $(this).parent().attr('class').split(" ")[0];
+                            var thisvalue = thisvalue;
+                            if(thisName == "firstPageRanks"){
+                                negativeRank.firstPageRanks = thisvalue;
+                            }else if(thisName == "secondPageRanks"){
+                                negativeRank.secondPageRanks = thisvalue;
+                            }else if(thisName == "thirdPageRanks"){
+                                negativeRank.thirdPageRanks = thisvalue;
+                            }else if(thisName == "fourthPageRanks"){
+                                negativeRank.fourthPageRanks = thisvalue;
+                            }else if(thisName == "fifthPageRanks"){
+                                negativeRank.fifthPageRanks = thisvalue;
+                            }else if(thisName == "otherPageRanks"){
+                                negativeRank.otherPageRanks = thisvalue;
+                            }
                             var rankTag = $(this).parent().siblings("td[name='clickEvent']");
                             $(this).parent().removeClass('input').html($(this).val() || '');
                             negativeRank.negativeCount = count(rankTag);
