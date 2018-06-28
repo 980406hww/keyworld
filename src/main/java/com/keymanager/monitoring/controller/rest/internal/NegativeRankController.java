@@ -62,9 +62,9 @@ public class NegativeRankController {
 
     @RequiresPermissions("/internal/negativeRank/updateNegativeRankKeyword")
     @RequestMapping(value = "updateNegativeRankKeyword",method = RequestMethod.POST)
-    public ResponseEntity<?> updateNegativeRankKeyword(@RequestBody Map<String,Object> requestMap){
+    public ResponseEntity<?> updateNegativeRankKeyword(@RequestBody NegativeRank negativeRank){
        try {
-           negativeRankService.updateNegativeRankKeyword(requestMap);
+           negativeRankService.updateNegativeRankKeyword(negativeRank);
            return new ResponseEntity<Object>(true, HttpStatus.OK);
        }catch (Exception e){
            logger.error(e.getMessage());
