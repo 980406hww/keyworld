@@ -1,4 +1,4 @@
-﻿package com.keymanager.monitoring.service;
+package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
@@ -36,6 +36,16 @@ public class NegativeRankService extends ServiceImpl<NegativeRankDao, NegativeRa
                 negativeRankDao.insert(negativeRank);
             }
         }
+    }
+
+    public Map<String, Object> findInitialNegativeRanks(NegativeRankCriteria negativeRankCriteria) {
+        negativeRankCriteria.setSearchDate(DateUtils.setHours(negativeRankCriteria.getSearchDate(), 0));
+        List<NegativeRank> negativeRanks = negativeRankDao.findInitialNegativeRanks(negativeRankCriteria.getSearchEngine(), negativeRankCriteria.getSearchDate());
+        Map<String, Object> initialNegativeRankMap = new HashMap<String, Object>();
+        for (NegativeRank negativeRank : negativeRanks) {
+            initialNegativeRankMap.put(negativeRank.getKeyword(), negativeRank);
+        }
+        return initialNegativeRankMap;
     }
 
     public List<NegativeRank> findNegativeRanks(NegativeRankCriteria negativeRankCriteria) {
