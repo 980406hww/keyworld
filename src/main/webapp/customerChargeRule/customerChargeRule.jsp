@@ -3,6 +3,7 @@
 <html>
 <head>
     <title>客户收费</title>
+    <script type="text/javascript" src="${staticPath}/static/My97DatePicker/WdatePicker.js"></script>
 </head>
 <body>
 <%@ include file="/commons/basejs.jsp" %>
@@ -22,6 +23,9 @@
             <shiro:hasPermission name="/internal/customerChargeRule/saveCustomerChargeRule">
             <input type="button" value=" 添加 " onclick="showCustomerChargeRuleDialog()">&nbsp;&nbsp;
             </shiro:hasPermission>
+            <shiro:hasPermission name="/internal/customerChargeLog/addCustomerChargeLog">
+            <input type="button" value=" 收费 " onclick="addCustomerChargeLog('${sessionScope.username}')">&nbsp;&nbsp;
+            </shiro:hasPermission>
             <shiro:hasPermission name="/internal/customerChargeRule/deleteCustomerChargeRules">
             <input type="button" onclick="deleteCustomerChargeRules()" value=" 删除所选 ">&nbsp;&nbsp;
             </shiro:hasPermission>
@@ -33,7 +37,7 @@
                 <input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/>
             </td>
             <td align="center" width=80>联系人</td>
-            <td align="center" width=60>收费总额</td>
+            <td align="center" width=50>收费总额</td>
             <td align="center" width=40>一月收费<br>(比率)</td>
             <td align="center" width=40>二月收费<br>(比率)</td>
             <td align="center" width=40>三月收费<br>(比率)</td>
@@ -46,7 +50,7 @@
             <td align="center" width=40>十月收费<br>(比率)</td>
             <td align="center" width=40>十一月收费<br>(比率)</td>
             <td align="center" width=40>十二月收费<br>(比率)</td>
-            <td align="center" width=40>收费天号</td>
+            <td align="center" width=50>下次收费日期</td>
             <td align="center" width=80>创建时间</td>
             <td align="center" width=80>操作</td>
         </tr>
@@ -58,7 +62,7 @@
         <tr align="left" height="30" onmouseover="doOver(this);" onmouseout="doOut(this);" <c:if test="${status.index%2==0}">bgcolor="#eeeeee"</c:if>>
             <td width="10" align="center"><input type="checkbox" name="uuid" value="${customerChargeRule.uuid}" onclick="decideSelectAll()"/></td>
             <td width="80">${customerChargeRule.contactPerson}</td>
-            <td width="60">${customerChargeRule.chargeTotal}</td>
+            <td width="50" name="clickEvent">${customerChargeRule.chargeTotal}</td>
             <td width="40" name="clickEvent">${customerChargeRule.januaryFee == 0 ? "" : customerChargeRule.januaryFee}<c:if test="${customerChargeRule.januaryFee>0}">(${customerChargeRule.januaryRate}%)</c:if></td>
             <td width="40" name="clickEvent">${customerChargeRule.februaryFee == 0 ? "" : customerChargeRule.februaryFee}<c:if test="${customerChargeRule.februaryFee>0}">(${customerChargeRule.februaryRate}%)</c:if></td>
             <td width="40" name="clickEvent">${customerChargeRule.marchFee == 0 ? "" : customerChargeRule.marchFee}<c:if test="${customerChargeRule.marchFee>0}">(${customerChargeRule.marchRate}%)</c:if></td>
@@ -71,12 +75,15 @@
             <td width="40" name="clickEvent">${customerChargeRule.octoberFee == 0 ? "" : customerChargeRule.octoberFee}<c:if test="${customerChargeRule.octoberFee>0}">(${customerChargeRule.octoberRate}%)</c:if></td>
             <td width="40" name="clickEvent">${customerChargeRule.novemberFee == 0 ? "" : customerChargeRule.novemberFee}<c:if test="${customerChargeRule.novemberFee>0}">(${customerChargeRule.novemberRate}%)</c:if></td>
             <td width="40" name="clickEvent">${customerChargeRule.decemberFee == 0 ? "" : customerChargeRule.decemberFee}<c:if test="${customerChargeRule.decemberFee>0}">(${customerChargeRule.decemberRate}%)</c:if></td>
-            <td width="40" name="clickEvent">${customerChargeRule.chargeDay}</td>
+            <td width="50" name="clickEvent"><fmt:formatDate value="${customerChargeRule.nextChargeDate}" pattern="yyyy-MM-dd"/></td>
             <td width="80" align="center"><fmt:formatDate value="${customerChargeRule.createTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
             <td style="text-align: center;" width="80">
                 <input type="hidden" name="customerUuid" value="${customerChargeRule.customerUuid}">
+                <shiro:hasPermission name="/internal/customerChargeLog/findCustomerChargeLogs">
+                <a href="javascript:findCustomerChargeLogs('${customerChargeRule.customerUuid}')">收费明细</a>
+                </shiro:hasPermission>
                 <shiro:hasPermission name="/internal/customerChargeRule/deleteCustomerChargeRule">
-                <a href="javascript:deleteCustomerChargeRule('${customerChargeRule.uuid}')">删除</a>
+                | <a href="javascript:deleteCustomerChargeRule('${customerChargeRule.uuid}')">删除</a>
                 </shiro:hasPermission>
             </td>
         </tr>
@@ -92,9 +99,6 @@
             </tr>
             <tr>
                 <td colspan="2"><span style="margin-left: 12px;">收费总额:</span><input type="text" class="easyui-numberspinner" name="chargeTotal" id="chargeTotal" style="width:228px;"></td>
-            </tr>
-            <tr>
-                <td colspan="2"><span style="margin-left: 12px;">收费天号:</span><input type="text" class="easyui-numberspinner" name="chargeDay" id="chargeDay" style="width:228px;"></td>
             </tr>
             <tr>
                 <td align="right">一月收费:<input type="text" class="easyui-numberspinner" name="januaryFee" id="januaryFee" style="width:80px;"></td>
@@ -144,8 +148,29 @@
                 <td align="right">十二月收费:<input type="text" class="easyui-numberspinner" name="decemberFee" id="decemberFee" style="width:80px;"></td>
                 <td align="right">十二月比率:<input type="text" class="easyui-numberspinner" name="decemberRate" id="decemberRate" style="width:80px;"></td>
             </tr>
+            <tr>
+                <td colspan="2"><span>下次收费日期:</span><input type="text" class="Wdate" onClick="WdatePicker()" name="nextChargeDate" id="nextChargeDate" style="width:216px;"></td>
+            </tr>
         </table>
     </form>
+</div>
+
+<div id="confirmChargeDialog" title="收费" class="easyui-dialog" style="display: none;left: 40%;">
+    <form id="confirmChargeForm" style="margin-left: 3%;margin-top: 2%;">
+        预收费用:<input type="text" id="planChargeAmount" class="easyui-numberspinner" value=""><br>
+        实际收费:<input type="text" id="actualChargeAmount" class="easyui-numberspinner" value="">
+    </form>
+</div>
+
+<div id="customerChargeLogDialog" title="收费明细" class="easyui-dialog" style="display: none;left: 40%;">
+    <table id="customerChargeLogTable" border="1" cellpadding="10" style="font-size: 12px;background-color: white;border-collapse: collapse;margin: 10px 10px;width:92%;">
+        <tr>
+            <td>收费时间</td>
+            <td>预收金额</td>
+            <td>实收金额</td>
+            <td>收费人员</td>
+        </tr>
+    </table>
 </div>
 
 <datalist id="customer_list">
@@ -192,6 +217,7 @@
                         if(notModified != thisvalue){
                             var customerChargeRule = {};
                             customerChargeRule.uuid = tdObjs.eq(0).find("input[name='uuid']").val();
+                            customerChargeRule.chargeTotal = tdObjs.eq(2).text();
                             var januaryInfo = tdObjs.eq(3).text();
                             var februaryInfo = tdObjs.eq(4).text();
                             var marchInfo = tdObjs.eq(5).text();
@@ -231,7 +257,7 @@
                             customerChargeRule.novemverRate = novemverInfo.substring(novemverInfo.indexOf("(") + 1, novemverInfo.length - 2);
                             customerChargeRule.decemberRate = decemberInfo.substring(decemberInfo.indexOf("(") + 1, decemberInfo.length - 2);
 
-                            customerChargeRule.chargeDay = tdObjs.eq(15).text();
+                            customerChargeRule.nextChargeDate = tdObjs.eq(15).text();
                             customerChargeRule.customerUuid = tdObjs.eq(17).find("input[name='customerUuid']").val();
                             saveCustomerChargeRule(customerChargeRule, "update");
                         }

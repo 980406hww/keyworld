@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.FieldStrategy;
 
+import java.util.Date;
+
 @TableName(value = "t_customer_charge_rule")
 public class CustomerChargeRule extends BaseEntity {
 
@@ -88,8 +90,8 @@ public class CustomerChargeRule extends BaseEntity {
 	@TableField(value = "fDecemberRate")
 	private int decemberRate;
 
-	@TableField(value = "fChargeDay")
-	private int chargeDay;
+	@TableField(value = "fNextChargeDate")
+	private Date nextChargeDate;
 
 	public String getContactPerson() {
 		return contactPerson;
@@ -307,11 +309,11 @@ public class CustomerChargeRule extends BaseEntity {
 		this.decemberRate = decemberRate;
 	}
 
-	public int getChargeDay() {
-		return chargeDay;
+	public Date getNextChargeDate() {
+		return nextChargeDate;
 	}
 
-	public void setChargeDay(int chargeDay) {
-		this.chargeDay = chargeDay;
+	public void setNextChargeDate(Date nextChargeDate) {
+		this.nextChargeDate = nextChargeDate;
 	}
 }

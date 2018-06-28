@@ -28,8 +28,11 @@ public class CustomerChargeRuleService extends ServiceImpl<CustomerChargeRuleDao
 
 	public void saveCustomerChargeRule(CustomerChargeRule customerChargeRule) {
 		if(customerChargeRule.getUuid() == null) {
-			customerChargeRule.setCreateTime(new Date());
-			customerChargeRuleDao.insert(customerChargeRule);
+			CustomerChargeRule oldCustomerChargeRule = customerChargeRuleDao.findCustomerChargeRule(customerChargeRule.getCustomerUuid());
+			if(oldCustomerChargeRule == null) {
+				customerChargeRule.setCreateTime(new Date());
+				customerChargeRuleDao.insert(customerChargeRule);
+			}
 		} else {
 			customerChargeRuleDao.updateById(customerChargeRule);
 		}

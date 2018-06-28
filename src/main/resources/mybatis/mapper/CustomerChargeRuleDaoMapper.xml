@@ -31,7 +31,7 @@
 			ccr.fOctoberRate AS 'octoberRate',
 			ccr.fNovemberRate AS 'novemberRate',
 			ccr.fDecemberRate AS 'decemberRate',
-			ccr.fChargeDay AS 'chargeDay',
+			ccr.fNextChargeDate AS 'nextChargeDate',
 			ccr.fUpdateTime AS 'updateTime',
 			ccr.fCreateTime AS 'createTime'
 		FROM
@@ -40,5 +40,12 @@
 		<if test="customerChargeRuleCriteria.customerUuid!=null and customerChargeRuleCriteria.customerUuid!=''">
 		AND ccr.fCustomerUuid = #{customerChargeRuleCriteria.customerUuid}
 		</if>
+		<if test="customerChargeRuleCriteria.loginName!=null and customerChargeRuleCriteria.loginName!=''">
+		AND c.fUserID = #{customerChargeRuleCriteria.loginName}
+		</if>
+	</select>
+
+	<select id="findCustomerChargeRule" resultType="com.keymanager.monitoring.entity.CustomerChargeRule">
+		SELECT fUuid FROM t_customer_charge_rule WHERE fCustomerUuid = #{customerUuid}
 	</select>
 </mapper>

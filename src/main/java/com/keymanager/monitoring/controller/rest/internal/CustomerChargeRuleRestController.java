@@ -65,6 +65,7 @@ public class CustomerChargeRuleRestController extends SpringMVCBaseController {
         if(!roles.contains("DepartmentManager")) {
             String loginName = (String) request.getSession().getAttribute("username");
             customerCriteria.setLoginName(loginName);
+            customerChargeRuleCriteria.setLoginName(loginName);
         }
         List<Customer> customerList = customerService.getActiveCustomerSimpleInfo(customerCriteria);
 
