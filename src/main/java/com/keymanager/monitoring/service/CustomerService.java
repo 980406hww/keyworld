@@ -9,6 +9,7 @@ import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.enums.EntryTypeEnum;
 import com.keymanager.util.Utils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -169,31 +170,36 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 		for(Customer customer : customers) {
 			openFlag = false;
 			// 按日期启停
-			if(StringUtils.isNotBlank(customer.getUpdateInterval())) {
+			if(StringUtils.isNotBlank(customer.getUpdateInterval()) && StringUtils.isBlank(customer.getActiveHour())) {
 				String[] updateIntervals = customer.getUpdateInterval().split(",");
-				for (String updateInterval : updateIntervals) {
-					if(updateInterval.equals(day)) {
-						activeCustomerUuids.add(customer.getUuid());
-						openFlag = true;
-						break;
-					}
+				openFlag = ArrayUtils.contains(updateIntervals, day);
+				if(openFlag) {
+					activeCustomerUuids.add(customer.getUuid());
 				}
-			} else {
-				// 按小时启停
-				String[] activeHours = customer.getActiveHour().split(",");
-				String[] inActiveHours = customer.getInActiveHour().split(",");
-				for(int i = 0; i < activeHours.length; i++) {
-					if(Integer.parseInt(activeHours[i]) < Integer.parseInt(inActiveHours[i])) {
-						if(hour >= Integer.parseInt(activeHours[i]) && hour < Integer.parseInt(inActiveHours[i])) {
-							activeCustomerUuids.add(customer.getUuid());
-							openFlag = true;
-							break;
-						}
-					} else {
-						if(hour >= Integer.parseInt(activeHours[i]) || hour < Integer.parseInt(inActiveHours[i])) {
-							activeCustomerUuids.add(customer.getUuid());
-							openFlag = true;
-							break;
+			}
+			// 按小时启停
+			if(StringUtils.isNotBlank(customer.getActiveHour())) {
+				boolean existFlag = true;
+				if(StringUtils.isNotBlank(customer.getUpdateInterval())) {
+					String[] updateIntervals = customer.getUpdateInterval().split(",");
+					existFlag = ArrayUtils.contains(updateIntervals, day);
+				}
+				if(existFlag) {
+					String[] activeHours = customer.getActiveHour().split(",");
+					String[] inActiveHours = customer.getInActiveHour().split(",");
+					for(int i = 0; i < activeHours.length; i++) {
+						if(Integer.parseInt(activeHours[i]) < Integer.parseInt(inActiveHours[i])) {
+							if(hour >= Integer.parseInt(activeHours[i]) && hour < Integer.parseInt(inActiveHours[i])) {
+								activeCustomerUuids.add(customer.getUuid());
+								openFlag = true;
+								break;
+							}
+						} else {
+							if(hour >= Integer.parseInt(activeHours[i]) || hour < Integer.parseInt(inActiveHours[i])) {
+								activeCustomerUuids.add(customer.getUuid());
+								openFlag = true;
+								break;
+							}
 						}
 					}
 				}
