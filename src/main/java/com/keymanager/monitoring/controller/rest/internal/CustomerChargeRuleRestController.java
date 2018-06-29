@@ -36,7 +36,9 @@ public class CustomerChargeRuleRestController extends SpringMVCBaseController {
     @RequiresPermissions("/internal/customerChargeRule/searchCustomerChargeRules")
     @RequestMapping(value = "/searchCustomerChargeRules", method = RequestMethod.GET)
     public ModelAndView searchCustomerChargeRules(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request) {
-        return constructCustomerChargeRuleModelAndView(request, new CustomerChargeRuleCriteria(), currentPageNumber, pageSize);
+        CustomerChargeRuleCriteria customerChargeRuleCriteria = new CustomerChargeRuleCriteria();
+        customerChargeRuleService.getChargeRemindCustomer(customerChargeRuleCriteria);
+        return constructCustomerChargeRuleModelAndView(request, customerChargeRuleCriteria, currentPageNumber, pageSize);
     }
 
     @RequiresPermissions("/internal/customerChargeRule/searchCustomerChargeRules")

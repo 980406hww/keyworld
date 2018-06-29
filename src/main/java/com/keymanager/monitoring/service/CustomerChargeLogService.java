@@ -19,7 +19,10 @@ public class CustomerChargeLogService extends ServiceImpl<CustomerChargeLogDao, 
 	@Autowired
 	private CustomerChargeLogDao customerChargeLogDao;
 
-	public void addCustomerChargeLog(List<String> customerUuids, Integer planChargeAmount, Integer actualChargeAmount, String cashier) {
+	@Autowired
+	private CustomerChargeRuleService customerChargeRuleService;
+
+	public void addCustomerChargeLog(List<String> customerUuids, Integer planChargeAmount, Integer actualChargeAmount, String cashier, String nextChargeDate) {
 		for (String customerUuid : customerUuids) {
 			CustomerChargeLog customerChargeLog = new CustomerChargeLog();
 			customerChargeLog.setCustomerUuid(Integer.parseInt(customerUuid));
@@ -29,6 +32,7 @@ public class CustomerChargeLogService extends ServiceImpl<CustomerChargeLogDao, 
 			customerChargeLog.setCreateTime(new Date());
 			customerChargeLogDao.insert(customerChargeLog);
 		}
+		customerChargeRuleService.updateNextChargeDate(customerUuids, nextChargeDate);
 	}
 
 	public List<CustomerChargeLog> findCustomerChargeLogs(Integer customerUuid) {

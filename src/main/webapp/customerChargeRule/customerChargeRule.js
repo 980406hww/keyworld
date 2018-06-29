@@ -11,12 +11,14 @@ function changePaging(currentPage, pageSize) {
     searchCustomerChargeRuleForm.find("#pageSizeHidden").val(pageSize);
     searchCustomerChargeRuleForm.submit();
 }
-function resetPageNumber() {
+function resetPageNumber(chargeDay) {
     var searchCustomerChargeRuleForm = $("#searchCustomerChargeRuleForm");
     var customerInfo = searchCustomerChargeRuleForm.find("#customerInfo").val();
-    var customerUuid = searchCustomerChargeRuleForm.substr(customerInfo.lastIndexOf("_") + 1);
+    var customerUuid = customerInfo.substring(customerInfo.lastIndexOf("_") + 1);
     searchCustomerChargeRuleForm.find("#customerUuid").val(customerUuid);
+    searchCustomerChargeRuleForm.find("#chargeDays").val(chargeDay)
     searchCustomerChargeRuleForm.find("#currentPageNumberHidden").val(1);
+    searchCustomerChargeRuleForm.submit();
 }
 function pageLoad() {
     var searchCustomerChargeRuleForm = $("#searchCustomerChargeRuleForm");
@@ -259,7 +261,7 @@ function addCustomerChargeLog(loginName) {
     $("#confirmChargeDialog").dialog({
         resizable: false,
         width: 248,
-        height: 120,
+        height: 145,
         modal: true,
         buttons: [{
             text: '保存',
@@ -273,6 +275,7 @@ function addCustomerChargeLog(loginName) {
                 postData.planChargeAmount = planChargeAmount == "" ? 0 : parseInt(planChargeAmount);
                 postData.actualChargeAmount = actualChargeAmount == "" ? 0 : parseInt(actualChargeAmount);
                 postData.cashier = loginName;
+                postData.nextChargeDate = confirmChargeForm.find("#nextChargeDate").val();
                 $.ajax({
                     url: '/internal/customerChargeLog/addCustomerChargeLog',
                     data: JSON.stringify(postData),

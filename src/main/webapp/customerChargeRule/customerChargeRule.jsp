@@ -16,9 +16,14 @@
             <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
             <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
             <input type="hidden" name="customerUuid" id="customerUuid" value="${customerChargeRuleCriteria.customerUuid}"/>
+            <input type="hidden" name="expiredChargeCount" id="expiredChargeCount" value="${customerChargeRuleCriteria.expiredChargeCount}"/>
+            <input type="hidden" name="nowChargeCount" id="nowChargeCount" value="${customerChargeRuleCriteria.nowChargeCount}"/>
+            <input type="hidden" name="threeDayChargeCount" id="threeDayChargeCount" value="${customerChargeRuleCriteria.threeDayChargeCount}"/>
+            <input type="hidden" name="sevenChargeCount" id="sevenChargeCount" value="${customerChargeRuleCriteria.sevenChargeCount}"/>
+            <input type="hidden" name="chargeDays" id="chargeDays" value="${customerChargeRuleCriteria.chargeDays}"/>
             客户：<input type="text" list="customer_list" name="customerInfo" id="customerInfo" value="${customerChargeRuleCriteria.customerInfo}" style="width:200px;">
             <shiro:hasPermission name="/internal/customerChargeRule/searchCustomerChargeRules">
-            <input type="submit" value=" 查询 " onclick="resetPageNumber()">&nbsp;&nbsp;
+            <input type="button" value=" 查询 " onclick="resetPageNumber(null)">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/customerChargeRule/saveCustomerChargeRule">
             <input type="button" value=" 添加 " onclick="showCustomerChargeRuleDialog()">&nbsp;&nbsp;
@@ -30,6 +35,14 @@
             <input type="button" onclick="deleteCustomerChargeRules()" value=" 删除所选 ">&nbsp;&nbsp;
             </shiro:hasPermission>
         </form>
+    </div>
+    <div align="right">
+        <shiro:hasPermission name="/internal/customerChargeRule/searchCustomerChargeRules">
+        <a href="javascript:resetPageNumber(-1)">过期未收费(${customerChargeRuleCriteria.expiredChargeCount})</a>
+        | <a href="javascript:resetPageNumber(0)">当天收费提醒(${customerChargeRuleCriteria.nowChargeCount})</a>
+        | <a href="javascript:resetPageNumber(3)">三天收费提醒(${customerChargeRuleCriteria.threeDayChargeCount})</a>
+        | <a href="javascript:resetPageNumber(7)">七天收费提醒(${customerChargeRuleCriteria.sevenChargeCount})</a>
+        </shiro:hasPermission>
     </div>
     <table style="font-size:12px; width: 100%;" id="headerTable">
         <tr bgcolor="" height="30">
@@ -158,7 +171,8 @@
 <div id="confirmChargeDialog" title="收费" class="easyui-dialog" style="display: none;left: 40%;">
     <form id="confirmChargeForm" style="margin-left: 3%;margin-top: 2%;">
         预收费用:<input type="text" id="planChargeAmount" class="easyui-numberspinner" value=""><br>
-        实际收费:<input type="text" id="actualChargeAmount" class="easyui-numberspinner" value="">
+        实际收费:<input type="text" id="actualChargeAmount" class="easyui-numberspinner" value=""><br>
+        下次收费日期:<input type="text" class="Wdate" onClick="WdatePicker()" name="nextChargeDate" id="nextChargeDate" style="width:140px;">
     </form>
 </div>
 

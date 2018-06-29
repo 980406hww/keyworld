@@ -38,14 +38,73 @@
 			t_customer_charge_rule ccr, t_customer c
 		WHERE ccr.fCustomerUuid = c.fUuid
 		<if test="customerChargeRuleCriteria.customerUuid!=null and customerChargeRuleCriteria.customerUuid!=''">
-		AND ccr.fCustomerUuid = #{customerChargeRuleCriteria.customerUuid}
+			AND ccr.fCustomerUuid = #{customerChargeRuleCriteria.customerUuid}
 		</if>
 		<if test="customerChargeRuleCriteria.loginName!=null and customerChargeRuleCriteria.loginName!=''">
-		AND c.fUserID = #{customerChargeRuleCriteria.loginName}
+			AND c.fUserID = #{customerChargeRuleCriteria.loginName}
 		</if>
+		<if test="customerChargeRuleCriteria.chargeDays == -1">
+			AND ccr.fNextChargeDate &lt; CURRENT_DATE()
+		</if>
+		<if test="customerChargeRuleCriteria.chargeDays == 0">
+			AND ccr.fNextChargeDate = CURRENT_DATE()
+		</if>
+		<if test="customerChargeRuleCriteria.chargeDays == 3">
+			AND ccr.fNextChargeDate BETWEEN DATE_ADD(CURRENT_DATE(), INTERVAL 1 DAY) AND DATE_ADD(CURRENT_DATE(), INTERVAL 3 DAY)
+		</if>
+		<if test="customerChargeRuleCriteria.chargeDays == 7">
+			AND ccr.fNextChargeDate BETWEEN DATE_ADD(CURRENT_DATE(), INTERVAL 4 DAY) AND DATE_ADD(CURRENT_DATE(), INTERVAL 7 DAY)
+		</if>
+		ORDER BY fNextChargeDate
 	</select>
 
 	<select id="findCustomerChargeRule" resultType="com.keymanager.monitoring.entity.CustomerChargeRule">
 		SELECT fUuid FROM t_customer_charge_rule WHERE fCustomerUuid = #{customerUuid}
 	</select>
+
+	<select id="getChargeRemindCustomer" resultType="com.keymanager.monitoring.entity.CustomerChargeRule">
+		SELECT
+			fUuid AS 'uuid',
+			fCustomerUuid AS 'customerUuid',
+			fChargeTotal AS 'chargeTotal',
+			fJanuaryFee AS 'januaryFee',
+			fFebruaryFee AS 'februaryFee',
+			fMarchFee AS 'marchFee',
+			fAprilFee AS 'aprilFee',
+			fMayFee AS 'mayFee',
+			fJuneFee AS 'juneFee',
+			fJulyFee AS 'julyFee',
+			fAugustFee AS 'augustFee',
+			fSeptemberFee AS 'septemberFee',
+			fOctoberFee AS 'octoberFee',
+			fNovemberFee AS 'novemberFee',
+			fDecemberFee AS 'decemberFee',
+			fJanuaryRate AS 'januaryRate',
+			fFebruaryRate AS 'februaryRate',
+			fMarchRate AS 'marchRate',
+			fAprilRate AS 'aprilRate',
+			fMayRate AS 'mayRate',
+			fJuneRate AS 'juneRate',
+			fJulyRate AS 'julyRate',
+			fAugustRate AS 'augustRate',
+			fSeptemberRate AS 'septemberRate',
+			fOctoberRate AS 'octoberRate',
+			fNovemberRate AS 'novemberRate',
+			fDecemberRate AS 'decemberRate',
+			fNextChargeDate AS 'nextChargeDate',
+			fUpdateTime AS 'updateTime',
+			fCreateTime AS 'createTime'
+		FROM
+			t_customer_charge_rule
+		WHERE fNextChargeDate &lt;= DATE_ADD(CURRENT_DATE(), INTERVAL 7 DAY)
+	</select>
+
+	<update id="updateNextChargeDate">
+		UPDATE t_customer_charge_rule
+		SET fNextChargeDate = #{nextChargeDate}
+		WHERE fCustomerUuid IN
+		<foreach item="customerUuid"  collection="customerUuids" open="(" separator="," close=")">
+			#{customerUuid}
+		</foreach>
+	</update>
 </mapper>
