@@ -28,10 +28,11 @@ public class PositiveListService extends ServiceImpl<PositiveListDao, PositiveLi
     }
 
     public void savePositiveList(PositiveList positiveList) {
-        positiveList.setUpdateTime(new Date());
         if (null != positiveList.getUuid()) {
+            positiveList.setUpdateTime(new Date());
             positiveListDao.updateById(positiveList);
         } else {
+            positiveList.setCreateTime(new Date());
             positiveListDao.insert(positiveList);
         }
     }
