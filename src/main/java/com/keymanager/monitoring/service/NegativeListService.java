@@ -47,7 +47,7 @@ public class NegativeListService extends ServiceImpl<NegativeListDao, NegativeLi
             negativeList.setUpdateTime(new Date());
             negativeListDao.updateById(negativeList);
         } else {
-            negativeList.setUpdateTime(new Date());
+            negativeList.setCreateTime(new Date());
             //在opinion设置该值为负面
             KeywordNegativeCriteria keywordNegativeCriteria = new KeywordNegativeCriteria();
             keywordNegativeCriteria.setNegativeList(negativeList);
@@ -70,7 +70,6 @@ public class NegativeListService extends ServiceImpl<NegativeListDao, NegativeLi
                         deleteNegativeList(existingNegativeList.getUuid(), existingNegativeList);
                     }
                 }else {
-                    negativeList.setCreateTime(new Date());
                     if (existingNegativeLists.size() > 0) {
                         NegativeList existingNegativeList = existingNegativeLists.get(0);
                         negativeList.setUuid(existingNegativeList.getUuid());

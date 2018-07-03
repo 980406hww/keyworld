@@ -28,10 +28,11 @@ public class WarnListService extends ServiceImpl<WarnListDao, WarnList> {
     }
 
     public void saveWarnList(WarnList warnList) {
-        warnList.setUpdateTime(new Date());
         if (null != warnList.getUuid()) {
+            warnList.setUpdateTime(new Date());
             warnListDao.updateById(warnList);
         } else {
+            warnList.setCreateTime(new Date());
             warnListDao.insert(warnList);
         }
     }

@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping(value ="/internal/keywordInfo")
-public class keywordInfoController {
+public class KeywordInfoController {
 
     @Autowired
     private KeywordInfoService keywordInfoService;
