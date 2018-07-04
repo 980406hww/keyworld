@@ -172,7 +172,7 @@
         ck.fPositionFifthFee	AS	'positionFifthFee',
         ck.fPositionFirstPageFee	AS	'positionFirstPageFee'
         FROM t_customer_keyword ck
-        WHERE ck.fKeyword = #{keyword} and ck.fTerminalType = #{terminalType} and ck.fCustomerUuid = #{customerUuid}
+        WHERE ck.fKeyword = #{keyword} and ck.fTerminalType = #{terminalType} and ck.fCustomerUuid = #{customerUuid} and ck.fSearchEngine = #{searchEngine}
         order by ck.fCreateTime ASC
     </select>
 
