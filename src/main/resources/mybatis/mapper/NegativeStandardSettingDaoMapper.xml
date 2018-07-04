@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.NegativeStandardSettingDao">
+    <sql id="sqlCode">
+        fUuid AS 'uuid',
+        fCustomerUuid AS 'customerUuid',
+        fKeyword AS 'keyword',
+        fSearchEngine AS 'searchEngine',
+        fTopOnePageNegativeCount  AS 'topOnePageNegativeCount',
+        fTopTwoPageNegativeCount AS 'topTwoPageNegativeCount' ,
+        fTopThreePageNegativeCount AS 'topThreePageNegativeCount',
+        fTopFourPageNegativeCount AS 'topFourPageNegativeCount',
+        fTopFivePageNegativeCount AS 'topFivePageNegativeCount',
+        fReachStandard AS 'reachStandard',
+        fUpdateTime  AS 'updateTime',
+        fCreateTime AS 'createTime'
+    </sql>
+
+    <select id="searchNegativeStandardSetting" parameterType="com.keymanager.monitoring.criteria.NegativeStandardSettingCriteria" resultType="com.keymanager.monitoring.entity.NegativeStandardSetting">
+      SELECT
+      <include refid="sqlCode"/>
+       FROM t_negative_standard_setting tnss
+       WHERE 1=1
+          <if test="negativeStandardSettingCriteria.customerUuid!=null and negativeStandardSettingCriteria.customerUuid!=''"> AND tnss.fCustomerUuid = #{negativeStandardSettingCriteria.customerUuid} </if>
+          <if test="negativeStandardSettingCriteria.keyword!=null and negativeStandardSettingCriteria.keyword!='' ">  AND tnss.fKeyword = #{negativeStandardSettingCriteria.keyword}</if>
+          <if test="negativeStandardSettingCriteria.reachStandard !=null"> AND tnss.fReachStandard = #{negativeStandardSettingCriteria.reachStandard}</if>
+          <if test="negativeStandardSettingCriteria.searchEngine!=null and negativeStandardSettingCriteria.searchEngine!='' "> AND tnss.fSearchEngine = #{negativeStandardSettingCriteria.searchEngine}</if>
+        ORDER BY tnss.fKeyword
+    </select>
+
+    <select id="findNegativeStandardSetting" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT
+        COUNT(1)
+        FROM t_negative_standard_setting tnss
+        WHERE 1=1
+        <if test="customerUuid!=null and customerUuid!=''"> AND tnss.fCustomerUuid = #{customerUuid}</if>
+        <if test="keyword!=null and keyword!=''"> AND tnss.fKeyword = #{keyword}</if>
+        <if test="searchEngine!=null and searchEngine!=''"> AND tnss.fSearchEngine = #{searchEngine}</if>
+    </select>
+</mapper>
