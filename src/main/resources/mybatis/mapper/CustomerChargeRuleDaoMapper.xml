@@ -1,39 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.monitoring.dao.CustomerChargeRuleDao">
+	<sql id="pageCol">
+		ccr.fUuid AS 'uuid',
+		c.fContactPerson AS 'contactPerson',
+		ccr.fCustomerUuid AS 'customerUuid',
+		ccr.fChargeTotal AS 'chargeTotal',
+		ccr.fJanuaryFee AS 'januaryFee',
+		ccr.fFebruaryFee AS 'februaryFee',
+		ccr.fMarchFee AS 'marchFee',
+		ccr.fAprilFee AS 'aprilFee',
+		ccr.fMayFee AS 'mayFee',
+		ccr.fJuneFee AS 'juneFee',
+		ccr.fJulyFee AS 'julyFee',
+		ccr.fAugustFee AS 'augustFee',
+		ccr.fSeptemberFee AS 'septemberFee',
+		ccr.fOctoberFee AS 'octoberFee',
+		ccr.fNovemberFee AS 'novemberFee',
+		ccr.fDecemberFee AS 'decemberFee',
+		ccr.fJanuaryRate AS 'januaryRate',
+		ccr.fFebruaryRate AS 'februaryRate',
+		ccr.fMarchRate AS 'marchRate',
+		ccr.fAprilRate AS 'aprilRate',
+		ccr.fMayRate AS 'mayRate',
+		ccr.fJuneRate AS 'juneRate',
+		ccr.fJulyRate AS 'julyRate',
+		ccr.fAugustRate AS 'augustRate',
+		ccr.fSeptemberRate AS 'septemberRate',
+		ccr.fOctoberRate AS 'octoberRate',
+		ccr.fNovemberRate AS 'novemberRate',
+		ccr.fDecemberRate AS 'decemberRate',
+		ccr.fNextChargeDate AS 'nextChargeDate',
+		ccr.fUpdateTime AS 'updateTime',
+		ccr.fCreateTime AS 'createTime'
+	</sql>
+
 	<select id="searchCustomerChargeRules" parameterType="com.keymanager.monitoring.criteria.CustomerChargeRuleCriteria" resultType="com.keymanager.monitoring.entity.CustomerChargeRule">
 		SELECT
-			ccr.fUuid AS 'uuid',
-			c.fContactPerson AS 'contactPerson',
-			ccr.fCustomerUuid AS 'customerUuid',
-			ccr.fChargeTotal AS 'chargeTotal',
-			ccr.fJanuaryFee AS 'januaryFee',
-			ccr.fFebruaryFee AS 'februaryFee',
-			ccr.fMarchFee AS 'marchFee',
-			ccr.fAprilFee AS 'aprilFee',
-			ccr.fMayFee AS 'mayFee',
-			ccr.fJuneFee AS 'juneFee',
-			ccr.fJulyFee AS 'julyFee',
-			ccr.fAugustFee AS 'augustFee',
-			ccr.fSeptemberFee AS 'septemberFee',
-			ccr.fOctoberFee AS 'octoberFee',
-			ccr.fNovemberFee AS 'novemberFee',
-			ccr.fDecemberFee AS 'decemberFee',
-			ccr.fJanuaryRate AS 'januaryRate',
-			ccr.fFebruaryRate AS 'februaryRate',
-			ccr.fMarchRate AS 'marchRate',
-			ccr.fAprilRate AS 'aprilRate',
-			ccr.fMayRate AS 'mayRate',
-			ccr.fJuneRate AS 'juneRate',
-			ccr.fJulyRate AS 'julyRate',
-			ccr.fAugustRate AS 'augustRate',
-			ccr.fSeptemberRate AS 'septemberRate',
-			ccr.fOctoberRate AS 'octoberRate',
-			ccr.fNovemberRate AS 'novemberRate',
-			ccr.fDecemberRate AS 'decemberRate',
-			ccr.fNextChargeDate AS 'nextChargeDate',
-			ccr.fUpdateTime AS 'updateTime',
-			ccr.fCreateTime AS 'createTime'
+			<include refid="pageCol" />
 		FROM
 			t_customer_charge_rule ccr, t_customer c
 		WHERE ccr.fCustomerUuid = c.fUuid
@@ -107,4 +111,28 @@
 			#{customerUuid}
 		</foreach>
 	</update>
+
+	<select id="getUpcomingCustomerChargeRule" resultType="com.keymanager.monitoring.entity.CustomerChargeRule">
+		SELECT
+			<include refid="pageCol" />
+		FROM
+			t_customer c,t_customer_charge_rule ccr
+		WHERE c.fUuid = ccr.fCustomerUuid
+		AND c.fUserID = #{userID}
+		AND (ccr.fNextChargeDate = DATE_ADD(CURRENT_DATE(), INTERVAL 7 DAY)
+		OR ccr.fNextChargeDate = CURRENT_DATE())
+		ORDER BY ccr.fNextChargeDate
+	</select>
+
+	<select id="getCustomerChargeUser" resultType="com.keymanager.monitoring.entity.UserInfo">
+		SELECT DISTINCT
+			u.fLoginName AS 'loginName',
+			u.fEmail AS 'email'
+		FROM
+		t_userinfo u,t_customer c,t_customer_charge_rule ccr
+		WHERE c.fUuid = ccr.fCustomerUuid
+		AND c.fUserID = u.fLoginName
+		AND u.fEmail &gt; ''
+		AND (ccr.fNextChargeDate = DATE_ADD(CURRENT_DATE(), INTERVAL 7 DAY) OR ccr.fNextChargeDate = CURRENT_DATE())
+	</select>
 </mapper>

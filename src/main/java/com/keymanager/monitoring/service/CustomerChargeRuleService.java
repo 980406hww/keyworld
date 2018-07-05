@@ -2,10 +2,12 @@ package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.keymanager.monitoring.common.email.CustomerChargeRemindMailService;
 import com.keymanager.monitoring.criteria.CustomerChargeRuleCriteria;
 import com.keymanager.monitoring.dao.CustomerChargeRuleDao;
 import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.CustomerChargeRule;
+import com.keymanager.monitoring.entity.UserInfo;
 import com.keymanager.util.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +23,9 @@ public class CustomerChargeRuleService extends ServiceImpl<CustomerChargeRuleDao
 
 	@Autowired
 	private CustomerChargeRuleDao customerChargeRuleDao;
+
+	@Autowired
+	private CustomerChargeRemindMailService customerChargeRemindMailService;
 
 	public Page<CustomerChargeRule> searchCustomerChargeRules(Page<CustomerChargeRule> page, CustomerChargeRuleCriteria customerChargeRuleCriteria) {
 		page.setRecords(customerChargeRuleDao.searchCustomerChargeRules(page, customerChargeRuleCriteria));
@@ -75,5 +80,13 @@ public class CustomerChargeRuleService extends ServiceImpl<CustomerChargeRuleDao
 
 	public void updateNextChargeDate(List<String> customerUuids, String nextChargeDate) {
 		customerChargeRuleDao.updateNextChargeDate(customerUuids, nextChargeDate);
+	}
+
+	public void customerChargeRemind() throws Exception {
+		List<UserInfo> userInfos = customerChargeRuleDao.getCustomerChargeUser();
+		for (UserInfo userInfo : userInfos) {
+			List<CustomerChargeRule> customerChargeRules = customerChargeRuleDao.getUpcomingCustomerChargeRule(userInfo.getLoginName());
+			customerChargeRemindMailService.sendCustomerChargeRemindMail(userInfo.getEmail(), customerChargeRules);
+		}
 	}
 }

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.criteria.CustomerChargeRuleCriteria;
 import com.keymanager.monitoring.entity.CustomerChargeRule;
+import com.keymanager.monitoring.entity.UserInfo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -17,4 +18,8 @@ public interface CustomerChargeRuleDao extends BaseMapper<CustomerChargeRule> {
     List<CustomerChargeRule> getChargeRemindCustomer();
 
     void updateNextChargeDate(@Param("customerUuids")List<String> customerUuids, @Param("nextChargeDate")String nextChargeDate);
+
+    List<CustomerChargeRule> getUpcomingCustomerChargeRule(@Param("userID")String userID);
+
+    List<UserInfo> getCustomerChargeUser();
 }
