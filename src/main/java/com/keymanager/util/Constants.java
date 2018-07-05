@@ -48,6 +48,7 @@ public class Constants {
 	public final static String CONFIG_KEY_USERNAME = "UserName";
 	public final static String CONFIG_KEY_PASSWORD = "Password";
 	public final static String CONFIG_KEY_WEBPATH = "WebPath";
+	public final static String CONFIG_TYPE_ZIP_ENCRYPTION = "ZipEncryption";
 
 	public final static Map<String, String> ACCOUNT_LOG_STATUS_MAP = new HashMap<String, String>();
 	static {
