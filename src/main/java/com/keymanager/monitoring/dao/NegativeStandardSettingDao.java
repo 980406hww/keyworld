@@ -17,4 +17,6 @@ public interface NegativeStandardSettingDao extends BaseMapper<NegativeStandardS
     List<NegativeStandardSetting> searchNegativeStandardSetting(Page<NegativeStandardSetting> page, @Param("negativeStandardSettingCriteria")NegativeStandardSettingCriteria negativeStandardSettingCriteria);
 
     int  findNegativeStandardSetting(@Param("customerUuid") Long customerUuid,@Param("keyword") String keyword,@Param("searchEngine") String searchEngine);
+
+    List<NegativeStandardSetting> allNegativeStandardSetting(Page<NegativeStandardSetting> page, @Param("negativeStandardSettingCriteria")NegativeStandardSettingCriteria negativeStandardSettingCriteria);
 }

@@ -19,6 +19,9 @@ public class NegativeStandardSetting  extends BaseEntity {
     @TableField(value = "fSearchEngine")
     private String searchEngine;
 
+    @TableField(exist = false)
+    private String contactPerson;
+
     @TableField(value = "fTopOnePageNegativeCount")
     private int topOnePageNegativeCount;
 
@@ -108,5 +111,13 @@ public class NegativeStandardSetting  extends BaseEntity {
 
     public void setReachStandard(boolean reachStandard) {
         this.reachStandard = reachStandard;
+    }
+
+    public String getContactPerson() {
+        return contactPerson;
+    }
+
+    public void setContactPerson(String contactPerson) {
+        this.contactPerson = contactPerson;
     }
 }

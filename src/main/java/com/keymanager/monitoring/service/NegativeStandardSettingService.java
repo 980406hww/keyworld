@@ -47,4 +47,9 @@ public class NegativeStandardSettingService extends ServiceImpl<NegativeStandard
     public int findNegativeStandardSetting(Long customerUuid,String keyword,String searchEngine){
         return negativeStandardSettingDao.findNegativeStandardSetting(customerUuid,keyword,searchEngine);
     }
+
+    public Page<NegativeStandardSetting> allNegativeStandardSetting(Page<NegativeStandardSetting> page,NegativeStandardSettingCriteria negativeStandardSettingCriteria){
+        page.setRecords(negativeStandardSettingDao.allNegativeStandardSetting(page,negativeStandardSettingCriteria));
+        return page;
+    }
 }

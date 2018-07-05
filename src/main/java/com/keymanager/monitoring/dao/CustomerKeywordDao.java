@@ -15,6 +15,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface
 CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
@@ -177,4 +178,6 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void updateCustomerKeywordQueryTime(@Param("customerKeywordUuid")Long customerKeywordUuid, @Param("capturePositionQueryTime")Date capturePositionQueryTime);
 
     void updateKeywordCustomerUuid(@Param("keywordUuids")List<String> keywordUuids,@Param("customerUuid")String customerUuid, @Param("terminalType")String terminalType);
+
+    Set<String> getCustomerKeywordInfo(@Param("customerKeywordCriteria") CustomerKeywordCriteria customerKeywordCriteria);
 }

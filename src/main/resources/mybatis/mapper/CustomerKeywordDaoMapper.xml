@@ -976,4 +976,13 @@
             #{item}
         </foreach>
     </update>
+
+    <select id="getCustomerKeywordInfo"  parameterType="com.keymanager.monitoring.criteria.CustomerKeywordCriteria" resultType="java.lang.String">
+        SELECT
+        ck.fKeyword	AS	'keyword'
+        FROM
+        t_customer_keyword ck
+        WHERE 1 = 1
+        <include refid="searchCustomerKeywordsCriteria"/>
+    </select>
 </mapper>

@@ -55,6 +55,13 @@ public class NegativeStandardSettingController  extends SpringMVCBaseController 
         return constructNegativeStandardSetting(request , negativeStandardSettingCriteria , currentPageNumber , pageSize);
     }
 
+    @RequiresPermissions("/internal/negativeStandardSetting/allNegativeStandardSetting")
+    @RequestMapping(value = "/allNegativeStandardSetting")
+    public ModelAndView allNegativeStandardSetting(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request){
+        NegativeStandardSettingCriteria negativeStandardSettingCriteria = new NegativeStandardSettingCriteria();
+        return  constructNegativeStandardSetting(request,negativeStandardSettingCriteria ,currentPageNumber+"",pageSize+"");
+    }
+
     public  ModelAndView constructNegativeStandardSetting(HttpServletRequest request,NegativeStandardSettingCriteria negativeStandardSettingCriteria, String currentPageNumber, String pageSize){
         ModelAndView modelAndView = new ModelAndView("negativeStandardSetting/negativeStandardSetting");
         CustomerKeywordCriteria customerKeywordCriteria = new CustomerKeywordCriteria();
@@ -63,12 +70,14 @@ public class NegativeStandardSettingController  extends SpringMVCBaseController 
         customerKeywordCriteria.setTerminalType(terminalType);
         customerKeywordCriteria.setEntryType(entryType);
         customerKeywordCriteria.setCustomerUuid(negativeStandardSettingCriteria.getCustomerUuid());
-        Set<String> setCustomerKeywords = new HashSet<String>();
-        List<CustomerKeyword> customerKeywords = customerKeywordService.searchCustomerKeywordInfo(customerKeywordCriteria);
-        for(CustomerKeyword customerKeyword :customerKeywords){
-           setCustomerKeywords.add(customerKeyword.getKeyword());
+        Page<NegativeStandardSetting>  page = null;
+        Set<String> setCustomerKeywords = null;
+        if(negativeStandardSettingCriteria.getCustomerUuid()!=null){
+            setCustomerKeywords = customerKeywordService.getCustomerKeywordInfo(customerKeywordCriteria);
+            page = negativeStandardSettingService.searchNegaStandardSetting(new Page<NegativeStandardSetting>(Integer.parseInt(currentPageNumber),Integer.parseInt(pageSize)),negativeStandardSettingCriteria);
+        }else {
+            page = negativeStandardSettingService.allNegativeStandardSetting(new Page<NegativeStandardSetting>(Integer.parseInt(currentPageNumber),Integer.parseInt(pageSize)),negativeStandardSettingCriteria);
         }
-        Page<NegativeStandardSetting>  page = negativeStandardSettingService.searchNegaStandardSetting(new Page<NegativeStandardSetting>(Integer.parseInt(currentPageNumber),Integer.parseInt(pageSize)),negativeStandardSettingCriteria);
         modelAndView.addObject("page",page);
         modelAndView.addObject("setCustomerKeywords",setCustomerKeywords);
         modelAndView.addObject("negativeStandardSettingCriteria",negativeStandardSettingCriteria);

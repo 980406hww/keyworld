@@ -2,18 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.monitoring.dao.NegativeStandardSettingDao">
     <sql id="sqlCode">
-        fUuid AS 'uuid',
-        fCustomerUuid AS 'customerUuid',
-        fKeyword AS 'keyword',
-        fSearchEngine AS 'searchEngine',
-        fTopOnePageNegativeCount  AS 'topOnePageNegativeCount',
-        fTopTwoPageNegativeCount AS 'topTwoPageNegativeCount' ,
-        fTopThreePageNegativeCount AS 'topThreePageNegativeCount',
-        fTopFourPageNegativeCount AS 'topFourPageNegativeCount',
-        fTopFivePageNegativeCount AS 'topFivePageNegativeCount',
-        fReachStandard AS 'reachStandard',
-        fUpdateTime  AS 'updateTime',
-        fCreateTime AS 'createTime'
+        tnss.fUuid AS 'uuid',
+        tnss.fCustomerUuid AS 'customerUuid',
+        tnss.fKeyword AS 'keyword',
+        tnss.fSearchEngine AS 'searchEngine',
+        tnss.fTopOnePageNegativeCount  AS 'topOnePageNegativeCount',
+        tnss.fTopTwoPageNegativeCount AS 'topTwoPageNegativeCount' ,
+        tnss.fTopThreePageNegativeCount AS 'topThreePageNegativeCount',
+        tnss.fTopFourPageNegativeCount AS 'topFourPageNegativeCount',
+        tnss.fTopFivePageNegativeCount AS 'topFivePageNegativeCount',
+        tnss.fReachStandard AS 'reachStandard',
+        tnss.fUpdateTime  AS 'updateTime',
+        tnss.fCreateTime AS 'createTime'
     </sql>
 
     <select id="searchNegativeStandardSetting" parameterType="com.keymanager.monitoring.criteria.NegativeStandardSettingCriteria" resultType="com.keymanager.monitoring.entity.NegativeStandardSetting">
@@ -36,5 +36,29 @@
         <if test="customerUuid!=null and customerUuid!=''"> AND tnss.fCustomerUuid = #{customerUuid}</if>
         <if test="keyword!=null and keyword!=''"> AND tnss.fKeyword = #{keyword}</if>
         <if test="searchEngine!=null and searchEngine!=''"> AND tnss.fSearchEngine = #{searchEngine}</if>
+    </select>
+
+    <select id="allNegativeStandardSetting" parameterType="com.keymanager.monitoring.criteria.NegativeStandardSettingCriteria" resultType="com.keymanager.monitoring.entity.NegativeStandardSetting">
+        SELECT
+        tnss.fUuid AS 'uuid',
+        tnss.fCustomerUuid AS 'customerUuid',
+        customer.fContactPerson AS 'contactPerson',
+        tnss.fKeyword AS 'keyword',
+        tnss.fSearchEngine AS 'searchEngine',
+        tnss.fTopOnePageNegativeCount  AS 'topOnePageNegativeCount',
+        tnss.fTopTwoPageNegativeCount AS 'topTwoPageNegativeCount' ,
+        tnss.fTopThreePageNegativeCount AS 'topThreePageNegativeCount',
+        tnss.fTopFourPageNegativeCount AS 'topFourPageNegativeCount',
+        tnss.fTopFivePageNegativeCount AS 'topFivePageNegativeCount',
+        tnss.fReachStandard AS 'reachStandard',
+        tnss.fUpdateTime  AS 'updateTime',
+        tnss.fCreateTime AS 'createTime'
+        FROM t_negative_standard_setting tnss  LEFT JOIN  t_customer customer ON tnss.fCustomerUuid = customer.fUuid
+        WHERE 1=1
+        <if test="negativeStandardSettingCriteria.customerUuid!=null and negativeStandardSettingCriteria.customerUuid!=''"> AND tnss.fCustomerUuid = #{negativeStandardSettingCriteria.customerUuid}</if>
+        <if test="negativeStandardSettingCriteria.keyword!=null and negativeStandardSettingCriteria.keyword!='' ">  AND tnss.fKeyword = #{negativeStandardSettingCriteria.keyword}</if>
+        <if test="negativeStandardSettingCriteria.reachStandard !=null"> AND tnss.fReachStandard = #{negativeStandardSettingCriteria.reachStandard}</if>
+        <if test="negativeStandardSettingCriteria.searchEngine!=null and negativeStandardSettingCriteria.searchEngine!='' "> AND tnss.fSearchEngine = #{negativeStandardSettingCriteria.searchEngine}</if>
+        ORDER BY customer.fContactPerson,tnss.fKeyword
     </select>
 </mapper>

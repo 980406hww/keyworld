@@ -45,7 +45,9 @@
                 <input type="submit" value="查询" onclick="submitPageNumber()"/>&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/negativeStandardSetting/addNegativeStandardSetting">
+                <c:if test="${negativeStandardSettingCriteria.customerUuid!=null}">
                 <input type="button" value="添加" onclick="addNegativeStandardSetting(${negativeStandardSettingCriteria.customerUuid})" >
+                </c:if>
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/negativeStandardSetting/deleteNegativeStandardSettings">
                 <input type="button" value="删除所选" onclick="deleteNegativeStandardSettings()">
@@ -55,7 +57,10 @@
     <table style="font-size:12px; width: 100%;" id="headerTable">
         <tr bgcolor="" height="30">
             <td align="center" width=10><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
-            <td align="center" width=150>关键字</td>
+            <c:if test="${negativeStandardSettingCriteria.customerUuid==null}">
+                <td align="center" width=60>客户</td>
+            </c:if>
+            <td align="center" width=100>关键字</td>
             <td align="center" width=60>搜索引擎</td>
             <td align="center" width=40>首页负面数量</td>
             <td align="center" width=40>前两页负面数量</td>
@@ -72,7 +77,10 @@
         <c:forEach items="${page.records}" var="negativeStandardSetting" varStatus="status">
             <tr id="${negativeStandardSetting.uuid}" onmouseover="doOver(this);" onmouseout="doOut(this);"  height=30 <c:if test="${status.index%2==0}">bgcolor="#eeeeee"</c:if> >
                 <td align="center" width=12 ><input type="checkbox" name="uuid" value="${negativeStandardSetting.uuid}"/></td>
-                <td name="keyword" width=150>${negativeStandardSetting.keyword}</td>
+                <c:if test="${negativeStandardSettingCriteria.customerUuid==null}">
+                    <td align="center" width=60>${negativeStandardSetting.contactPerson}</td>
+                </c:if>
+                <td name="keyword" width=100>${negativeStandardSetting.keyword}</td>
                 <td align="center" name="searchEngine" width=60>${negativeStandardSetting.searchEngine}</td>
                 <td align="center" name="topOnePageNegativeCount" width=40>${negativeStandardSetting.topOnePageNegativeCount}</td>
                 <td align="center" name="topTwoPageNegativeCount" width=40>${negativeStandardSetting.topTwoPageNegativeCount}</td>
