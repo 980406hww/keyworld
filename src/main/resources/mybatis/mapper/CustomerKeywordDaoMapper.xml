@@ -980,4 +980,25 @@
             #{item}
         </foreach>
     </update>
+
+    <update id="moveNoRankingCustomerKeyword">
+        UPDATE t_customer_keyword
+        SET fOptimizeGroupName = #{noRankingOptimizeGroupName}
+        WHERE fOptimizedCount = 0
+        AND fCurrentPosition = 0
+        AND fOptimizeGroupName IN (#{monitoringOptimizeGroupName})
+    </update>
+
+    <update id="moveMonitoringCustomer">
+        UPDATE t_customer_keyword ck
+        SET ck.fOptimizeGroupName = (
+            SELECT c.fValue
+            FROM t_config c
+            WHERE c.fConfigType = #{defaultOptimizeGroupNameConfigType}
+            AND c.fKey = CONCAT(ck.fSearchEngine, '_', ck.fTerminalType)
+        )
+        WHERE fOptimizedCount &gt; 0
+        AND fCurrentPosition &gt; 0
+        AND fOptimizeGroupName = #{noRankingOptimizeGroupName}
+    </update>
 </mapper>

@@ -1153,4 +1153,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     public void updateKeywordCustomerUuid(List<String> keywordUuids,String customerUuid,String terminalType){
         customerKeywordDao.updateKeywordCustomerUuid(keywordUuids,customerUuid,terminalType);
     }
+
+    public void changeOptimizeGroupName() {
+        Config monitoringOptimizeGroupName = configService.getConfig(Constants.CONFIG_TYPE_OPTIMIZE_GROUPNAME, Constants.CONFIG_KEY_MONITORING);
+        Config noRankingOptimizeGroupName = configService.getConfig(Constants.CONFIG_TYPE_OPTIMIZE_GROUPNAME, Constants.CONFIG_KEY_NO_RANKING);
+        customerKeywordDao.moveNoRankingCustomerKeyword(monitoringOptimizeGroupName.getValue(), noRankingOptimizeGroupName.getValue());
+        customerKeywordDao.moveMonitoringCustomer(Constants.CONFIG_TYPE_DEFAULT_OPTIMIZE_GROUPNAME, noRankingOptimizeGroupName.getValue());
+    }
 }
