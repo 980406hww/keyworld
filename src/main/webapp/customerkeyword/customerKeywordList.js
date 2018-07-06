@@ -529,8 +529,8 @@ function changeSearchEngine(searchEngineCriteria) {
         }
     });
 }
-function addCustomerKeyword(customerKeywordUuid, customerUuid) {
-    if (customerKeywordUuid == null) {
+function addCustomerKeyword(customerKeyword, customerUuid) {
+    if (customerKeyword == null) {
         $("#customerKeywordForm")[0].reset();
         $("#customerKeywordForm").find("#uuid").val('');
         $("#customerKeywordForm").find("#status").val('');
@@ -547,7 +547,7 @@ function addCustomerKeyword(customerKeywordUuid, customerUuid) {
             text: '保存',
             iconCls: 'icon-ok',
             handler: function () {
-                saveCustomerKeyword(customerUuid);
+                saveCustomerKeyword(customerKeyword, customerUuid);
             }
         },
             {
@@ -569,8 +569,11 @@ function addCustomerKeyword(customerKeywordUuid, customerUuid) {
     $("#saveCustomerKeywordDialog").dialog("open");
     $('#saveCustomerKeywordDialog').window("resize",{top:$(document).scrollTop() + 100});
 }
-function saveCustomerKeyword(customerUuid) {
-    var customerKeyword = {};
+function saveCustomerKeyword(customerKeyword, customerUuid) {
+    var customerKeyword = customerKeyword;
+    if(customerKeyword == null) {
+        customerKeyword = {};
+    }
     var saveCustomerKeywordDialog= $("#saveCustomerKeywordDialog");
     customerKeyword.uuid = saveCustomerKeywordDialog.find("#uuid").val();
     customerKeyword.customerUuid = customerUuid;
@@ -657,6 +660,9 @@ function saveCustomerKeyword(customerUuid) {
     var remarks = $.trim(saveCustomerKeywordDialog.find("#remarks").val());
     customerKeyword.remarks = remarks;
     customerKeyword.manualCleanTitle = true;
+    var optimizedCount = saveCustomerKeywordDialog.find("#optimizedCount").val();
+    var optimizeRemainingCount = customerKeyword.optimizePlanCount - optimizedCount;
+    customerKeyword.optimizeRemainingCount = optimizeRemainingCount > 0 ? optimizeRemainingCount : 0;
     $.ajax({
         url: '/internal/customerKeyword/saveCustomerKeyword',
         data: JSON.stringify(customerKeyword),
@@ -693,6 +699,7 @@ function modifyCustomerKeyword(customerKeywordUuid, customerUuid) {
         success: function (customerKeyword) {
             if (customerKeyword != null) {
                 saveCustomerKeywordDialog.find("#uuid").val(customerKeyword.uuid);
+                saveCustomerKeywordDialog.find("#optimizedCount").val(customerKeyword.optimizedCount);
                 saveCustomerKeywordDialog.find("#keyword").val(customerKeyword.keyword);
                 saveCustomerKeywordDialog.find("#recommendKeywords").val(customerKeyword.recommendKeywords);
                 saveCustomerKeywordDialog.find("#negativeKeywords").val(customerKeyword.negativeKeywords);
@@ -740,7 +747,7 @@ function modifyCustomerKeyword(customerKeywordUuid, customerUuid) {
                 if(customerKeyword.positionFirstCost!=null||customerKeyword.positionSecondCost!=null||customerKeyword.positionThirdCost!=null||customerKeyword.positionForthCost!=null||customerKeyword.positionFifthCost!=null){
                     showCustomerKeywordCost();
                 }
-                addCustomerKeyword(customerKeywordUuid, customerUuid);
+                addCustomerKeyword(customerKeyword, customerUuid);
             } else {
                 $().toastmessage('showErrorToast', "操作失败");
             }

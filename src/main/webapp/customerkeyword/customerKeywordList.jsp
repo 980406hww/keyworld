@@ -350,6 +350,7 @@
     <form id="customerKeywordForm">
         <ul>
             <input type="hidden" id="uuid" value="" style="width:300px;">
+            <input type="hidden" id="optimizedCount" value="" style="width:300px;">
             <li><span class="customerKeywordSpanClass">关键字:</span><input type="text" name="keyword" id="keyword" value="" style="width:300px;"/></li>
 
             <hr style="height: 1px; border:none; border-top:1px dashed #CCCCCC;"/>
