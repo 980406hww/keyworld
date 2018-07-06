@@ -78,8 +78,11 @@ public class KeywordInfoService extends ServiceImpl<KeywordInfoDao, KeywordInfo>
 						customerKeyword.setServiceProvider("baidutop123");
 						customerKeyword.setCollectMethod(CollectMethod.PerMonth.name());
 						customerKeyword.setSequence(++maxSequence);
-						customerKeyword.setCurrentIndexCount(-1);
-						customerKeyword.setPositionFirstFee(-1d);
+						customerKeywordService.supplementIndexAndPriceFromExisting(customerKeyword);
+						if(customerKeyword.getCurrentIndexCount() == null) {
+							customerKeyword.setCurrentIndexCount(-1);
+							customerKeyword.setPositionFirstFee(-1d);
+						}
 						customerKeywordService.addCustomerKeyword(customerKeyword, null);
 					}
 				} else if(keyword.getOperationType().equals("delete")) {
