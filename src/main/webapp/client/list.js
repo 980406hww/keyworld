@@ -71,6 +71,7 @@ function resetPageNumber() {
     var clientId = clientStatusFormObj.find("#clientID").val();
     var groupName = clientStatusFormObj.find("#groupName").val();
     var version = clientStatusFormObj.find("#version").val();
+    var targetVersion = clientStatusFormObj.find("#targetVersion").val();
     var city = clientStatusFormObj.find("#city").val();
     var upgradeFailedReason = clientStatusFormObj.find("#upgradeFailedReason").val();
     var vpsBackendSystemComputerID = clientStatusFormObj.find("#vpsBackendSystemComputerID").val();
@@ -84,6 +85,9 @@ function resetPageNumber() {
     }
     if(version != "") {
         clientStatusFormObj.find("#version").val($.trim(version));
+    }
+    if(targetVersion != "") {
+        clientStatusFormObj.find("#targetVersion").val($.trim(targetVersion));
     }
     if(city != "") {
         clientStatusFormObj.find("#city").val($.trim(city));

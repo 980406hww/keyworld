@@ -136,6 +136,7 @@
         <if test="clientStatusCriteria.groupName != null and clientStatusCriteria.groupName != ''"> AND cs.fGroup like '%${clientStatusCriteria.groupName}%'</if>
         <if test="clientStatusCriteria.upgradeFailedReason != null and clientStatusCriteria.upgradeFailedReason != ''"> AND cs.fUpgradeFailedReason like '%${clientStatusCriteria.upgradeFailedReason}%'</if>
         <if test="clientStatusCriteria.version != null and clientStatusCriteria.version != ''"> AND cs.fVersion like concat(#{clientStatusCriteria.version},'%')</if>
+        <if test="clientStatusCriteria.targetVersion != null and clientStatusCriteria.targetVersion != ''"> AND cs.fTargetVersion like concat(#{clientStatusCriteria.targetVersion},'%')</if>
         <if test="clientStatusCriteria.noOperationType != null and clientStatusCriteria.noOperationType != ''"> AND (cs.fOperationType is null or cs.fOperationType = '')</if>
         <if test="clientStatusCriteria.noOperationType == null and clientStatusCriteria.operationType != null and clientStatusCriteria.operationType != ''">
             AND cs.fOperationType = #{clientStatusCriteria.operationType}

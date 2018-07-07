@@ -74,7 +74,9 @@
 								&nbsp;&nbsp;
 								优化组:<input type="text" name="groupName" id="groupName" value="${clientStatusCriteria.groupName}" style="width: 120px;">
 								&nbsp;&nbsp;
-								版本:<input type="text" name="version" id="version" value="${clientStatusCriteria.version}" style="width: 60px;">
+								版本:<input type="text" name="version" id="version" value="${clientStatusCriteria.version}" style="width: 20px;">
+								&nbsp;&nbsp;
+								目标版本:<input type="text" name="targetVersion" id="targetVersion" value="${clientStatusCriteria.targetVersion}" style="width: 20px;">
 								&nbsp;&nbsp;
 								城市:<input type="text" name="city" id="city" value="${clientStatusCriteria.city}" style="width: 120px;">
 								&nbsp;&nbsp;
