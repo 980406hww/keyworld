@@ -21,4 +21,14 @@
         FROM t_config c
         WHERE  c.fConfigType = #{configType}
     </select>
+
+    <select id="getSameCustomerKeywordCount" resultType="java.util.Map">
+        SELECT
+            a.fValue AS 'group',
+            b.fValue AS 'count'
+        FROM t_config a,t_config b
+        WHERE a.fKey = b.fKey
+        AND a.fConfigType = #{defaultOptimizeGroupNameConfigType}
+        AND b.fConfigType = #{sameCustomerKeywordCountConfigType}
+    </select>
 </mapper>

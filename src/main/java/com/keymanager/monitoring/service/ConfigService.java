@@ -12,9 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.io.File;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class ConfigService extends ServiceImpl<ClientStatusDao, ClientStatus>{
@@ -87,6 +85,15 @@ public class ConfigService extends ServiceImpl<ClientStatusDao, ClientStatus>{
 		config.setKey(searchEngine);
 		config.setValue(negativeKeywords);
 		configDao.updateConfig(config);
+	}
+
+	public Map<String, Integer> getSameCustomerKeywordCount() {
+		Map<String, Integer> sameCustomerKeywordCountMap = new HashMap<String, Integer>();
+		List<Map> map = configDao.getSameCustomerKeywordCount(Constants.CONFIG_TYPE_DEFAULT_OPTIMIZE_GROUPNAME, Constants.CONFIG_TYPE_SAME_CUSTOMER_KEYWORD_COUNT);
+		for (Map m : map) {
+			sameCustomerKeywordCountMap.put((String)m.get("group"), Integer.parseInt((String)m.get("count")));
+		}
+		return sameCustomerKeywordCountMap;
 	}
 
 }

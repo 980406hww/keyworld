@@ -178,7 +178,11 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void updateKeywordCustomerUuid(@Param("keywordUuids")List<String> keywordUuids,@Param("customerUuid")String customerUuid, @Param("terminalType")String terminalType);
 
-    void moveNoRankingCustomerKeyword(@Param("monitoringOptimizeGroupName")String monitoringOptimizeGroupName, @Param("noRankingOptimizeGroupName")String noRankingOptimizeGroupName);
+    void moveOutNoRankingCustomerKeyword(@Param("monitoringOptimizeGroupName")String[] monitoringOptimizeGroupName, @Param("noRankingOptimizeGroupName")String noRankingOptimizeGroupName);
 
-    void moveMonitoringCustomer(@Param("defaultOptimizeGroupNameConfigType")String defaultOptimizeGroupNameConfigType, @Param("noRankingOptimizeGroupName")String noRankingOptimizeGroupName);
+    void moveOutMonitoringCustomerKeyword(@Param("defaultOptimizeGroupNameConfigType")String defaultOptimizeGroupNameConfigType, @Param("noRankingOptimizeGroupName")String noRankingOptimizeGroupName);
+
+    List<CustomerKeywordSortVO> sortCustomerKeywordForOptimize(@Param("monitoringOptimizeGroupName")String[] monitoringOptimizeGroupName);
+
+    void setNoRankingCustomerKeyword(@Param("needMoveUuids")List<String> needMoveUuids, @Param("noRankingOptimizeGroupName")String noRankingOptimizeGroupName);
 }

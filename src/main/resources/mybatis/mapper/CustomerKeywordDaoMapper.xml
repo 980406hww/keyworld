@@ -981,15 +981,27 @@
         </foreach>
     </update>
 
-    <update id="moveNoRankingCustomerKeyword">
+    <update id="moveOutNoRankingCustomerKeyword">
         UPDATE t_customer_keyword
         SET fOptimizeGroupName = #{noRankingOptimizeGroupName}
         WHERE fOptimizedCount = 0
         AND fCurrentPosition = 0
-        AND fOptimizeGroupName IN (#{monitoringOptimizeGroupName})
+        AND fOptimizeGroupName IN
+        <foreach item = "item" index = "index" collection = "monitoringOptimizeGroupName" open="(" separator="," close=")">
+            #{item}
+        </foreach>
     </update>
 
-    <update id="moveMonitoringCustomer">
+    <update id="setNoRankingCustomerKeyword">
+        UPDATE t_customer_keyword
+        SET fOptimizeGroupName = #{noRankingOptimizeGroupName}
+        WHERE fUuid IN
+        <foreach item = "item" collection = "needMoveUuids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <update id="moveOutMonitoringCustomerKeyword">
         UPDATE t_customer_keyword ck
         SET ck.fOptimizeGroupName = (
             SELECT c.fValue
@@ -997,8 +1009,33 @@
             WHERE c.fConfigType = #{defaultOptimizeGroupNameConfigType}
             AND c.fKey = CONCAT(ck.fSearchEngine, '_', ck.fTerminalType)
         )
-        WHERE fOptimizedCount &gt; 0
-        AND fCurrentPosition &gt; 0
-        AND fOptimizeGroupName = #{noRankingOptimizeGroupName}
+        WHERE ck.fOptimizeGroupName = #{noRankingOptimizeGroupName}
+        AND (ck.fOptimizedCount &gt; 0 OR ck.fCurrentPosition &gt; 0)
     </update>
+
+    <select id="sortCustomerKeywordForOptimize" resultType="com.keymanager.monitoring.vo.CustomerKeywordSortVO">
+        SELECT
+            a.fKeyword AS 'keyword',
+            a.fOptimizeGroupName AS 'optimizeGroupName',
+            GROUP_CONCAT(a.ids ORDER BY a.idx SEPARATOR ',') AS 'uuids'
+        FROM
+            (SELECT fKeyword, fOptimizeGroupName, '1' AS 'idx', GROUP_CONCAT(fUuid ORDER BY fCurrentPosition SEPARATOR ',') AS 'ids'
+            FROM t_customer_keyword
+            WHERE fCurrentPosition &gt; 0
+            AND fOptimizeGroupName IN
+            <foreach item = "item" collection = "monitoringOptimizeGroupName" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            GROUP BY fKeyword,fOptimizeGroupName
+            UNION ALL
+            SELECT fKeyword, fOptimizeGroupName, '2' AS 'idx', GROUP_CONCAT(fUuid ORDER BY fPositionFirstFee DESC SEPARATOR ',') AS 'ids'
+            FROM t_customer_keyword
+            WHERE fCurrentPosition = 0
+            AND fOptimizeGroupName IN
+            <foreach item = "item" collection = "monitoringOptimizeGroupName" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            GROUP BY fKeyword,fOptimizeGroupName) AS a
+        GROUP BY a.fKeyword,a.fOptimizeGroupName
+    </select>
 </mapper>

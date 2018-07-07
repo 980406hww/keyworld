@@ -20,6 +20,7 @@
 				<ref bean="cronTriggerCleanCKLogFromAWeekAgo" />
 				<ref bean="cronTriggerCleanCKLogFromAMonthAgo" />
 				<ref bean="cronTriggerKeywordInfoSynchronize" />
+				<ref bean="cronTriggerChangeOptimizeGroupName" />
 			</list>
 		</property>
 		<!-- Quartz配置, 本地运行无需单独的quartz.properties文件，在此简单配置即可 -->
@@ -200,6 +201,18 @@
 
 	<bean id="cronTriggerKeywordInfoSynchronizeSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject" ref="keywordInfoSynchronizeSchedule" />
+		<property name="targetMethod" value="runTask" />
+		<property name="concurrent" value="false" />
+	</bean>
+
+	<!--更换优化组-->
+	<bean id="cronTriggerChangeOptimizeGroupName" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="cronTriggerChangeOptimizeGroupNameSchedule" />
+		<property name="cronExpression" value="0 45 23 * * ?" />
+	</bean>
+
+	<bean id="cronTriggerChangeOptimizeGroupNameSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="changeOptimizeGroupNameSchedule" />
 		<property name="targetMethod" value="runTask" />
 		<property name="concurrent" value="false" />
 	</bean>
