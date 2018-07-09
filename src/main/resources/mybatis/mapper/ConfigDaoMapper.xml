@@ -13,7 +13,7 @@
         AND fKey = #{config.key}
     </update>
 
-    <select id="getNegativeKeyword" resultType="com.keymanager.monitoring.entity.Config">
+    <select id="findConfigs" resultType="com.keymanager.monitoring.entity.Config">
         SELECT
             c.fConfigType as 'configType',
             c.fKey as 'key',
@@ -28,7 +28,7 @@
             b.fValue AS 'count'
         FROM t_config a,t_config b
         WHERE a.fKey = b.fKey
-        AND a.fConfigType = #{defaultOptimizeGroupNameConfigType}
+        AND a.fConfigType = #{monitorOptimizeGroupNameConfigType}
         AND b.fConfigType = #{sameCustomerKeywordCountConfigType}
     </select>
 </mapper>

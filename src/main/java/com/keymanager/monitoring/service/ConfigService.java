@@ -68,7 +68,7 @@ public class ConfigService extends ServiceImpl<ClientStatusDao, ClientStatus>{
 	}
 
 	public Set<String> getNegativeKeyword(){
-		List<Config> configs=configDao.getNegativeKeyword (Constants.CONFIG_TYPE_NEGATIVE_KEYWORD);
+		List<Config> configs = findConfigs(Constants.CONFIG_TYPE_NEGATIVE_KEYWORD);
 		Set<String> keywords=new HashSet<String>();
 		for (Config config : configs){
 			String[] ky=config.getValue().split(",");
@@ -87,9 +87,13 @@ public class ConfigService extends ServiceImpl<ClientStatusDao, ClientStatus>{
 		configDao.updateConfig(config);
 	}
 
+	public List<Config> findConfigs(String configType) {
+		return configDao.findConfigs(configType);
+	}
+
 	public Map<String, Integer> getSameCustomerKeywordCount() {
 		Map<String, Integer> sameCustomerKeywordCountMap = new HashMap<String, Integer>();
-		List<Map> map = configDao.getSameCustomerKeywordCount(Constants.CONFIG_TYPE_DEFAULT_OPTIMIZE_GROUPNAME, Constants.CONFIG_TYPE_SAME_CUSTOMER_KEYWORD_COUNT);
+		List<Map> map = configDao.getSameCustomerKeywordCount(Constants.CONFIG_TYPE_MONITOR_OPTIMIZE_GROUPNAME, Constants.CONFIG_TYPE_SAME_CUSTOMER_KEYWORD_COUNT);
 		for (Map m : map) {
 			sameCustomerKeywordCountMap.put((String)m.get("group"), Integer.parseInt((String)m.get("count")));
 		}

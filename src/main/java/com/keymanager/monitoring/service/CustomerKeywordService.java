@@ -1156,27 +1156,27 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void changeOptimizeGroupName() {
-        Config monitoringOptimizeGroupName = configService.getConfig(Constants.CONFIG_TYPE_OPTIMIZE_GROUPNAME, Constants.CONFIG_KEY_MONITORING);
-        Config noRankingOptimizeGroupName = configService.getConfig(Constants.CONFIG_TYPE_OPTIMIZE_GROUPNAME, Constants.CONFIG_KEY_NO_RANKING);
         // 移出monitoringOptimizeGroupName没刷量没排名关键字
-        customerKeywordDao.moveOutNoRankingCustomerKeyword(monitoringOptimizeGroupName.getValue().split(","), noRankingOptimizeGroupName.getValue());
+        List<Config> monitorConfigs = configService.findConfigs(Constants.CONFIG_TYPE_MONITOR_OPTIMIZE_GROUPNAME);
+        customerKeywordDao.moveOutNoRankingCustomerKeyword(monitorConfigs, Constants.CONFIG_TYPE_NORANK_OPTIMIZE_GROUPNAME);
         // 移出noRankingOptimizeGroupName有刷量有排名关键字
-        customerKeywordDao.moveOutMonitoringCustomerKeyword(Constants.CONFIG_TYPE_DEFAULT_OPTIMIZE_GROUPNAME, noRankingOptimizeGroupName.getValue());
+        List<Config> noRankConfigs = configService.findConfigs(Constants.CONFIG_TYPE_NORANK_OPTIMIZE_GROUPNAME);
+        customerKeywordDao.moveOutDefaultCustomerKeyword(noRankConfigs, Constants.CONFIG_TYPE_DEFAULT_OPTIMIZE_GROUPNAME);
         // 排序关键字（优先排名，其次第一报价）
-        List<CustomerKeywordSortVO> customerKeywordSortVOList = customerKeywordDao.sortCustomerKeywordForOptimize(monitoringOptimizeGroupName.getValue().split(","));
+        List<CustomerKeywordSortVO> customerKeywordSortVOList = customerKeywordDao.sortCustomerKeywordForOptimize(monitorConfigs);
         // 限制分组下相同关键字个数
         List<String> needMoveUuids = new ArrayList<String>();
         Map<String, Integer> sameCustomerKeywordCountMap = configService.getSameCustomerKeywordCount();
         for (CustomerKeywordSortVO customerKeywordSortVO : customerKeywordSortVOList) {
             List<String> uuids = Arrays.asList(customerKeywordSortVO.getUuids().split(","));
-            int maxCount = sameCustomerKeywordCountMap.get(customerKeywordSortVO.getOptimizeGroupName());
-            if(uuids.size() > maxCount) {
+            Integer maxCount = sameCustomerKeywordCountMap.get(customerKeywordSortVO.getOptimizeGroupName());
+            if(maxCount != null && uuids.size() > maxCount) {
                 needMoveUuids.addAll(uuids.subList(maxCount, uuids.size()));
             }
         }
         // 移出超出个数的关键字到noRankingOptimizeGroupName
         if(CollectionUtils.isNotEmpty(needMoveUuids)) {
-            customerKeywordDao.setNoRankingCustomerKeyword(needMoveUuids, noRankingOptimizeGroupName.getValue());
+            customerKeywordDao.setNoRankingCustomerKeyword(needMoveUuids, Constants.CONFIG_TYPE_NORANK_OPTIMIZE_GROUPNAME);
         }
     }
 }

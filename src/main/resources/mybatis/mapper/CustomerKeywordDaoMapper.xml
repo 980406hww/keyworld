@@ -983,25 +983,33 @@
 
     <update id="moveOutNoRankingCustomerKeyword">
         UPDATE t_customer_keyword
-        SET fOptimizeGroupName = #{noRankingOptimizeGroupName}
+        SET fOptimizeGroupName = (
+            SELECT c.fValue FROM t_config c
+            WHERE c.fConfigType = #{noRankOptimizeGroupNameConfigType}
+            AND c.fKey = CONCAT(fSearchEngine, '_', fTerminalType)
+        )
         WHERE fOptimizedCount = 0
         AND fCurrentPosition = 0
         AND fOptimizeGroupName IN
-        <foreach item = "item" index = "index" collection = "monitoringOptimizeGroupName" open="(" separator="," close=")">
-            #{item}
+        <foreach item = "item" collection = "monitorConfigs" open="(" separator="," close=")">
+            #{item.value}
         </foreach>
     </update>
 
     <update id="setNoRankingCustomerKeyword">
         UPDATE t_customer_keyword
-        SET fOptimizeGroupName = #{noRankingOptimizeGroupName}
+        SET fOptimizeGroupName = (
+            SELECT c.fValue FROM t_config c
+            WHERE c.fConfigType = #{noRankOptimizeGroupNameConfigType}
+            AND c.fKey = CONCAT(fSearchEngine, '_', fTerminalType)
+        )
         WHERE fUuid IN
         <foreach item = "item" collection = "needMoveUuids" open="(" separator="," close=")">
             #{item}
         </foreach>
     </update>
 
-    <update id="moveOutMonitoringCustomerKeyword">
+    <update id="moveOutDefaultCustomerKeyword">
         UPDATE t_customer_keyword ck
         SET ck.fOptimizeGroupName = (
             SELECT c.fValue
@@ -1009,8 +1017,11 @@
             WHERE c.fConfigType = #{defaultOptimizeGroupNameConfigType}
             AND c.fKey = CONCAT(ck.fSearchEngine, '_', ck.fTerminalType)
         )
-        WHERE ck.fOptimizeGroupName = #{noRankingOptimizeGroupName}
-        AND (ck.fOptimizedCount &gt; 0 OR ck.fCurrentPosition &gt; 0)
+        WHERE (ck.fOptimizedCount &gt; 0 OR ck.fCurrentPosition &gt; 0)
+        AND ck.fOptimizeGroupName IN
+        <foreach item = "item" collection = "noRankConfigs" open="(" separator="," close=")">
+            #{item.value}
+        </foreach>
     </update>
 
     <select id="sortCustomerKeywordForOptimize" resultType="com.keymanager.monitoring.vo.CustomerKeywordSortVO">
@@ -1023,8 +1034,8 @@
             FROM t_customer_keyword
             WHERE fCurrentPosition &gt; 0
             AND fOptimizeGroupName IN
-            <foreach item = "item" collection = "monitoringOptimizeGroupName" open="(" separator="," close=")">
-                #{item}
+            <foreach item = "item" collection = "monitorConfigs" open="(" separator="," close=")">
+                #{item.value}
             </foreach>
             GROUP BY fKeyword,fOptimizeGroupName
             UNION ALL
@@ -1032,8 +1043,8 @@
             FROM t_customer_keyword
             WHERE fCurrentPosition = 0
             AND fOptimizeGroupName IN
-            <foreach item = "item" collection = "monitoringOptimizeGroupName" open="(" separator="," close=")">
-                #{item}
+            <foreach item = "item" collection = "monitorConfigs" open="(" separator="," close=")">
+                #{item.value}
             </foreach>
             GROUP BY fKeyword,fOptimizeGroupName) AS a
         GROUP BY a.fKeyword,a.fOptimizeGroupName

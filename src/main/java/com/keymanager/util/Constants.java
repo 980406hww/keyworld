@@ -48,9 +48,8 @@ public class Constants {
 	public final static String CONFIG_KEY_USERNAME = "UserName";
 	public final static String CONFIG_KEY_PASSWORD = "Password";
 	public final static String CONFIG_KEY_WEBPATH = "WebPath";
-	public final static String CONFIG_TYPE_OPTIMIZE_GROUPNAME = "OptimizeGroupName";
-	public final static String CONFIG_KEY_MONITORING = "Monitoring";
-	public final static String CONFIG_KEY_NO_RANKING = "NoRanking";
+	public final static String CONFIG_TYPE_MONITOR_OPTIMIZE_GROUPNAME = "MonitorOptimizeGroupName";
+	public final static String CONFIG_TYPE_NORANK_OPTIMIZE_GROUPNAME = "NoRankOptimizeGroupName";
 	public final static String CONFIG_TYPE_SAME_CUSTOMER_KEYWORD_COUNT = "SameCustomerKeywordCount";
 
 	public final static Map<String, String> ACCOUNT_LOG_STATUS_MAP = new HashMap<String, String>();
