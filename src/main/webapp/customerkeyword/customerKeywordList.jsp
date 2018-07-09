@@ -48,11 +48,11 @@
     <%@include file="/menu.jsp" %>
             <table width=100% style="border:1px solid #000000;font-size:12px;margin-top: 30px" cellpadding=3>
                 <tr border="1" height=30>
-                    <td width=250>联系人: ${customer.contactPerson}</td>
-                    <td width=200>QQ: ${customer.qq}</td>
-                    <td width=200>电话: ${customer.telphone}</td>
-                    <td width=120>关键字数: ${customer.keywordCount}</td>
-                    <td width=250>创建时间: <fmt:formatDate value="${customer.createTime}" pattern=" yyyy-MM-dd HH:mm"/></td>
+                    <td width=150>联系人: ${customer.contactPerson}</td>
+                    <td width=100>QQ: ${customer.qq}</td>
+                    <td width=100>电话: ${customer.telphone}</td>
+                    <td width=80>关键字数: ${customer.keywordCount}</td>
+                    <td width=250>备注: ${customer.remark}</td>
                 </tr>
             </table>
 
