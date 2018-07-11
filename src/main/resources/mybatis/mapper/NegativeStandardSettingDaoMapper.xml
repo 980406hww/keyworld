@@ -53,12 +53,53 @@
         tnss.fReachStandard AS 'reachStandard',
         tnss.fUpdateTime  AS 'updateTime',
         tnss.fCreateTime AS 'createTime'
-        FROM t_negative_standard_setting tnss  LEFT JOIN  t_customer customer ON tnss.fCustomerUuid = customer.fUuid
-        WHERE 1=1
+        FROM t_negative_standard_setting tnss,
+        t_customer customer
+        WHERE
+        tnss.fCustomerUuid = customer.fUuid
         <if test="negativeStandardSettingCriteria.customerUuid!=null and negativeStandardSettingCriteria.customerUuid!=''"> AND tnss.fCustomerUuid = #{negativeStandardSettingCriteria.customerUuid}</if>
         <if test="negativeStandardSettingCriteria.keyword!=null and negativeStandardSettingCriteria.keyword!='' ">  AND tnss.fKeyword = #{negativeStandardSettingCriteria.keyword}</if>
         <if test="negativeStandardSettingCriteria.reachStandard !=null"> AND tnss.fReachStandard = #{negativeStandardSettingCriteria.reachStandard}</if>
         <if test="negativeStandardSettingCriteria.searchEngine!=null and negativeStandardSettingCriteria.searchEngine!='' "> AND tnss.fSearchEngine = #{negativeStandardSettingCriteria.searchEngine}</if>
         ORDER BY customer.fContactPerson,tnss.fKeyword
+    </select>
+
+    <select id="getNegativeStandardSetting" parameterType="java.lang.String" resultType="com.keymanager.monitoring.entity.NegativeStandardSetting">
+        SELECT
+        tnss.fUuid AS 'uuid',
+        tnss.fCustomerUuid AS 'customerUuid',
+        tc.fContactPerson AS 'contactPerson',
+        tnss.fKeyword AS 'keyword',
+        tnss.fSearchEngine AS 'searchEngine',
+        tnss.fTopOnePageNegativeCount  AS 'topOnePageNegativeCount',
+        tnss.fTopTwoPageNegativeCount AS 'topTwoPageNegativeCount' ,
+        tnss.fTopThreePageNegativeCount AS 'topThreePageNegativeCount',
+        tnss.fTopFourPageNegativeCount AS 'topFourPageNegativeCount',
+        tnss.fTopFivePageNegativeCount AS 'topFivePageNegativeCount',
+        tnss.fReachStandard AS 'reachStandard',
+        tnss.fUpdateTime  AS 'updateTime',
+        tnss.fCreateTime AS 'createTime'
+        FROM
+        t_negative_standard_setting tnss,
+        t_customer tc
+        WHERE
+        tc.fUuid = tnss.fCustomerUuid
+        AND tc.fUserID = #{userID}
+    </select>
+
+    <select id="findUsers" resultType="java.util.Map">
+        SELECT
+        DISTINCT
+        u.fUuid AS 'uuid',
+        u.fLoginName AS 'loginName',
+        u.fEmail AS 'email',
+        u.fUserName AS 'userName'
+        FROM
+        t_userinfo u,
+        t_customer tc,
+        t_negative_standard_setting tnss
+        WHERE
+        tc.fUserID = u.fLoginName
+        AND tc.fUuid = tnss.fCustomerUuid
     </select>
 </mapper>

@@ -3,6 +3,7 @@ package com.keymanager.monitoring.entity;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 
+import java.util.Date;
 
 
 /**
@@ -40,6 +41,8 @@ public class NegativeStandardSetting  extends BaseEntity {
     @TableField(value = "fReachStandard")
     private boolean reachStandard;
 
+    @TableField(value = "fStandardTime")
+    private Date standardTime;
 
     public Long getCustomerUuid() {
         return customerUuid;
@@ -119,5 +122,13 @@ public class NegativeStandardSetting  extends BaseEntity {
 
     public void setContactPerson(String contactPerson) {
         this.contactPerson = contactPerson;
+    }
+
+    public Date getStandardTime() {
+        return standardTime;
+    }
+
+    public void setStandardTime(Date standardTime) {
+        this.standardTime = standardTime;
     }
 }
