@@ -244,10 +244,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		if(StringUtils.isNotEmpty(uuids)){
 			String [] uuidArray = uuids.split(",");
 			for(String uuid : uuidArray){
-				QZSetting qzSetting = this.qzSettingDao.selectById(uuid);
-				qzSetting.setUpdateStatus(null);
-				qzSetting.setUpdateTime(new Date());
-				qzSettingDao.updateById(qzSetting);
+				qzSettingDao.updateImmediately(uuid);
 			}
 		}
 	}

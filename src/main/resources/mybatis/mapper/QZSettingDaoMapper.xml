@@ -2,32 +2,33 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.monitoring.dao.QZSettingDao">
     <select id="getAvailableQZSettings" resultType="com.keymanager.monitoring.entity.QZSetting">
-       SELECT
-              qs.fUuid            AS 'uuid',
-              qs.fCustomerUuid    AS 'customerUuid',
-              qs.fDomain          AS 'domain',
-              qs.fPcGroup         AS 'pcGroup',
-              qs.fPhoneGroup      AS 'phoneGroup',
-              qs.fType            AS 'type',
-              qs.fIgnoreNoIndex   AS 'ignoreNoIndex',
-              qs.fIgnoreNoOrder   AS 'ignoreNoOrder',
-              qs.fUpdateInterval  AS 'updateInterval',
-              qs.fUpdateStatus    AS 'updateStatus',
-              qs.fUpdateStartTime AS 'updateStartTime',
-              qs.fUpdateEndTime   AS 'updateEndTime',
-              qs.fUpdateTime      AS 'updateTime',
-              qs.fCreateTime      AS 'createTime',
-              qs.fCaptureCurrentKeywordCountTime AS 'captureCurrentKeywordCountTime',
-              qs.fCaptureCurrentKeywordStatus    AS 'captureCurrentKeywordStatus'
+        SELECT
+            qs.fUuid                           AS 'uuid',
+            qs.fCustomerUuid                   AS 'customerUuid',
+            qs.fDomain                         AS 'domain',
+            qs.fPcGroup                        AS 'pcGroup',
+            qs.fPhoneGroup                     AS 'phoneGroup',
+            qs.fType                           AS 'type',
+            qs.fIgnoreNoIndex                  AS 'ignoreNoIndex',
+            qs.fIgnoreNoOrder                  AS 'ignoreNoOrder',
+            qs.fUpdateInterval                 AS 'updateInterval',
+            qs.fUpdateStatus                   AS 'updateStatus',
+            qs.fUpdateStartTime                AS 'updateStartTime',
+            qs.fUpdateEndTime                  AS 'updateEndTime',
+            qs.fUpdateTime                     AS 'updateTime',
+            qs.fCreateTime                     AS 'createTime',
+            qs.fCaptureCurrentKeywordCountTime AS 'captureCurrentKeywordCountTime',
+            qs.fCaptureCurrentKeywordStatus    AS 'captureCurrentKeywordStatus'
         FROM t_qz_setting qs
-        WHERE qs.fUpdateStatus IS NULL
-        OR (qs.fUpdateStatus = 'Completed'
-        AND DATE_SUB(NOW(), INTERVAL qs.fUpdateInterval DAY) > qs.fUpdateEndTime)
-        OR (qs.fUpdateStatus = 'Processing'
-        AND DATE_SUB(NOW(), INTERVAL 10 MINUTE) > qs.fUpdateStartTime)
-        OR (qs.fUpdateStatus = 'DownloadTimesUsed'
-        AND DATE_SUB(NOW(), INTERVAL 1 DAY) > qs.fUpdateEndTime)
-        AND qs.fStatus = 1
+        WHERE (qs.fUpdateStatus IS NULL
+               OR qs.fUpdateEndTime IS NULL
+               OR (qs.fUpdateStatus = 'Completed'
+                   AND DATE_SUB(NOW(), INTERVAL qs.fUpdateInterval DAY) > qs.fUpdateEndTime)
+               OR (qs.fUpdateStatus = 'Processing'
+                   AND DATE_SUB(NOW(), INTERVAL 10 MINUTE) > qs.fUpdateStartTime)
+               OR (qs.fUpdateStatus = 'DownloadTimesUsed'
+                   AND DATE_SUB(NOW(), INTERVAL 1 DAY) > qs.fUpdateEndTime)
+              ) AND qs.fStatus = 1
         ORDER BY qs.fUpdateEndTime
     </select>
 
@@ -180,4 +181,13 @@
             #{item}
         </foreach>
     </update>
+
+    <update id="updateImmediately" parameterType="java.lang.String">
+        UPDATE t_qz_setting  qs
+        SET qs.fUpdateStatus = NULL,
+            qs.fUpdateTime = NOW(),
+            qs.fUpdateEndTime = NULL
+        WHERE  fUuid = #{uuid}
+    </update>
+
 </mapper>

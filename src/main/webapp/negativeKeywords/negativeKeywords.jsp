@@ -16,6 +16,8 @@
         $('#uploadTxtFileDialog').dialog("close");
         $("#searchEngine").val("${searchEngine}");
         $("#customerNegativeKeywords").val($("#customerNegativeKeywords").val().replace(/,/g,'\r'));
+        $("#websiteWhiteList").val($("#websiteWhiteList").val().replace(/,/g,'\r'));
+
     });
 
     function resetNegativeKeywords() {
@@ -166,30 +168,124 @@
             }
         });
     }
+
+    function refreshWebsiteWhiteList() {
+        var websiteList = $("#websiteWhiteList").val().replace(/\n/g,',');
+        var websiteWhiteList = websiteList.replace(/,,/g,',');
+        if(websiteList.lastIndexOf(',') == websiteList.length-1){
+            websiteWhiteList = websiteWhiteList.substring(0,websiteList.length-1);
+        }
+        $.ajax({
+            url: '/internal/config/refreshWebsiteWhiteList',
+            data: websiteWhiteList,
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            timeout: 5000,
+            type: 'POST',
+            success: function (data) {
+                if (data) {
+                    $().toastmessage('showSuccessToast', "操作成功",true);
+                } else {
+                    $().toastmessage('showErrorToast', "数据更新失败");
+                }
+            },
+            error: function () {
+                $().toastmessage('showErrorToast', "数据更新失败");
+            }
+        });
+    }
+
+    function updateWebsiteWhiteList() {
+        $("#uploadTxtFileDiv").css("display", "block");
+        $('#uploadTxtFileDialog').dialog({
+            resizable: true,
+            width: 220,
+            modal: true,
+            buttons: [{
+                text: '上传',
+                iconCls: 'icon-ok',
+                handler: function () {
+                    var fileValue = $("#uploadTxtFileDialog").find("#file").val();
+                    if(fileValue == ""){
+                        alert("请选择要上传的网站白名单txt文件!");
+                        return false;
+                    }
+                    var posIndex = fileValue.indexOf(".txt");
+                    if (posIndex == -1) {
+                        alert("只能上传txt文件！");
+                        return false;
+                    }
+                    var formData = new FormData();
+                    formData.append('file', $("#uploadTxtFileDialog").find("#file")[0].files[0]);
+                    $('#uploadTxtFileDialog').dialog("close");
+                    $.ajax({
+                        url: '/internal/config/updateWebsiteWhiteList',
+                        type: 'POST',
+                        cache: false,
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function (result) {
+                            if (result) {
+                                $().toastmessage('showSuccessToast', "上传成功", true);
+                            } else {
+                                $().toastmessage('showErrorToast', "上传失败");
+                            }
+                        },
+                        error: function () {
+                            $().toastmessage('showErrorToast', "上传失败");
+                            $('#uploadTxtFileDialog').dialog("close");
+                        }
+                    });
+                }
+            },
+                {
+                    text: '取消',
+                    iconCls: 'icon-cancel',
+                    handler: function () {
+                        $('#uploadTxtFileDialog').dialog("close");
+                    }
+                }]
+        });
+        $('#uploadTxtFileDialog').window("resize",{top:$(document).scrollTop() + 100});
+    }
 </script>
 <div id="topDiv">
     <%@include file="/menu.jsp" %>
 </div>
 <div id="centerDiv" style="margin-top: 20px;">
-    负面词:<br><br>
-    <textarea name="negativeKeywords" id="negativeKeywords" style="width: 500px;height: 100px;">${negativeKeywords}</textarea><br><br>
-    <span style="margin-left: 430px;">
-        <input type="button" id="updateNegativeKeywords" onclick="updateNegativeKeywords()" value="更新" />&nbsp;&nbsp;
-        <input type="button" id="resetNegativeKeywords" onclick="resetNegativeKeywords()" value="重置" />
-    </span>
+   <div>
+        负面词:<br><br>
+        <textarea name="negativeKeywords" id="negativeKeywords" style="width: 500px;height: 100px;">${negativeKeywords}</textarea><br><br>
+        <span style="margin-left: 430px;">
+            <input type="button" id="updateNegativeKeywords" onclick="updateNegativeKeywords()" value="更新" />&nbsp;&nbsp;
+            <input type="button" id="resetNegativeKeywords" onclick="resetNegativeKeywords()" value="重置" />
+        </span>
+   </div>
     <br><br>
-    搜索引擎:
-    <select name="searchEngine" id="searchEngine" onchange="findCustomerNegativeKeywords()">
-        <option value="Baidu">百度</option>
-        <option value="Sogou">搜狗</option>
-        <option value="360">360</option>
-    </select><br><br>
-    <textarea name="customerNegativeKeywords" id="customerNegativeKeywords"  onchange="refreshCustomerNegativeKeywords()" style="width: 500px;height: 300px;">${customerNegativeKeywords}</textarea><br><br>
-    <span style="margin-left: 470px;">
-        <input type="button" id="updateCustomerNegativeKeywords" onclick="updateCustomerNegativeKeywords()" value="更新" />
-    </span>
+    <div>
+        搜索引擎:
+        <select name="searchEngine" id="searchEngine" onchange="findCustomerNegativeKeywords()">
+            <option value="Baidu">百度</option>
+            <option value="Sogou">搜狗</option>
+            <option value="360">360</option>
+        </select><br><br>
+        <textarea name="customerNegativeKeywords" id="customerNegativeKeywords"  onchange="refreshCustomerNegativeKeywords()" style="width: 500px;height: 300px;">${customerNegativeKeywords}</textarea><br><br>
+        <span style="margin-left: 470px;">
+            <input type="button" id="updateCustomerNegativeKeywords" onclick="updateCustomerNegativeKeywords()" value="上传" />
+        </span>
+    </div>
+    <div>
+        网站白名单：<br/><br/>
+        <textarea name="websiteWhiteList" id="websiteWhiteList"  onchange="refreshWebsiteWhiteList()" style="width: 500px;height: 300px;">${websiteWhiteList}</textarea><br><br>
+        <span style="margin-left: 470px;">
+            <input type="button" id="updateWebsiteWhiteList" onclick="updateWebsiteWhiteList()" value="上传" />
+        </span>
+    </div>
 </div>
-<div id="uploadTxtFileDialog" title="更新客户负面词" class="easyui-dialog" style="left: 35%;">
+<div id="uploadTxtFileDialog" title="上传数据" class="easyui-dialog" style="left: 35%;">
     <div id="uploadTxtFileDiv" style="display: none;">
         <form method="post" id="uploadTxtFileForm" action="" enctype="multipart/form-data">
             <table width="100%" style="font-size:14px;">

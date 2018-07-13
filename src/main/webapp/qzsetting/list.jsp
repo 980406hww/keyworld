@@ -86,7 +86,7 @@
 					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="delSelectedQZSettings(this)" value=" 删除所选 " >
 				</shiro:hasPermission>
 				<shiro:hasPermission name="/internal/qzsetting/searchQZSettings">
-				<input class="ui-button ui-widget ui-corner-all" type="button" onclick="getAvailableQZSettings()" value="查看更新队列">
+				<input class="ui-button ui-widget ui-corner-all" type="button" onclick="getAvailableQZSettings()" value="查看更新队列(${availableQZSettingCount})">
 				</shiro:hasPermission>
 			</form>
 		</div>

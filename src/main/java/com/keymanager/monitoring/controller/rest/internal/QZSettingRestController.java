@@ -150,12 +150,14 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		}
 		Page<QZSetting> page = qzSettingService.searchQZSetting(new Page<QZSetting>(currentPageNumber, pageSize), qzSettingSearchCriteria);
 		List<Customer> customerList = customerService.getActiveCustomerSimpleInfo(customerCriteria);
+		Integer availableQZSettingCount = qzSettingService.getAvailableQZSettings().size();
 		modelAndView.addObject("chargeRemindDataMap", chargeRemindDataMap);
 		modelAndView.addObject("customerList", customerList);
 		modelAndView.addObject("qzSettingSearchCriteria", qzSettingSearchCriteria);
 		modelAndView.addObject("statusList", Constants.QZSETTING_STATUS_LIST);
 		modelAndView.addObject("page", page);
 		modelAndView.addObject("isDepartmentManager", isDepartmentManager);
+		modelAndView.addObject("availableQZSettingCount", availableQZSettingCount);
 		return modelAndView;
 	}
 	@RequiresPermissions("/internal/qzsetting/searchQZSettings")

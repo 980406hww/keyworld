@@ -47,7 +47,7 @@ public class ConfigService extends ServiceImpl<ClientStatusDao, ClientStatus>{
 		configDao.updateConfig(config);
 	}
 
-	public void updateCustomerNegativeKeywords(File targetFile, String searchEngine) {
+	public void updateCustomerNegativeKeywords(File targetFile, String searchEngine) throws Exception {
 		List<String> contents = FileUtil.readTxtFile(targetFile, "UTF-8");
 		String result = "";
 		for (String content : contents) {
@@ -89,4 +89,25 @@ public class ConfigService extends ServiceImpl<ClientStatusDao, ClientStatus>{
 		configDao.updateConfig(config);
 	}
 
+	public void refreshWebsiteWhiteList(String websiteWhiteList){
+		Config config = new Config();
+		config.setConfigType(Constants.CONFIG_TYPE_WEBSITE_WHITE_LIST);
+		config.setKey(Constants.CONFIG_KEY_URL);
+		config.setValue(websiteWhiteList);
+		configDao.updateConfig(config);
+	}
+
+	public void updateWebsiteWhiteList(File targetFile) throws Exception {
+		List<String> contents = FileUtil.readTxtFile(targetFile, "UTF-8");
+		String result = "";
+		for (String content : contents) {
+			result += "," + content;
+		}
+		result = result.substring(1, result.length());
+		Config config = new Config();
+		config.setConfigType(Constants.CONFIG_TYPE_WEBSITE_WHITE_LIST);
+		config.setKey(Constants.CONFIG_KEY_URL);
+		config.setValue(result);
+		configDao.updateConfig(config);
+	}
 }
