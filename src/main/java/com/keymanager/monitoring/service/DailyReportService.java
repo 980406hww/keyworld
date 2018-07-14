@@ -3,9 +3,11 @@ package com.keymanager.monitoring.service;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.toolkit.StringUtils;
 import com.keymanager.monitoring.dao.DailyReportDao;
+import com.keymanager.monitoring.entity.Config;
 import com.keymanager.monitoring.entity.DailyReport;
 import com.keymanager.monitoring.entity.DailyReportItem;
 import com.keymanager.monitoring.enums.DailyReportStatusEnum;
+import com.keymanager.util.Constants;
 import com.keymanager.util.FileUtil;
 import com.keymanager.util.Utils;
 import com.keymanager.util.ZipCompressor;
@@ -26,6 +28,9 @@ public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport>
 
 	@Autowired
 	private DailyReportDao dailyReportDao;
+
+	@Autowired
+	private ConfigService configService;
 
 	@Autowired
 	private DailyReportItemService dailyReportItemService;
@@ -78,7 +83,8 @@ public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport>
 
 			dailyReport.setReportPath(zipFileName);
 			dailyReportDao.updateById(dailyReport);
-			ZipCompressor.zipMultiFile(reportFolder, path + zipFileName, true);
+			Config config = configService.getConfig(Constants.CONFIG_TYPE_ZIP_ENCRYPTION, Constants.CONFIG_KEY_PASSWORD);
+			ZipCompressor.createEncryptionZip(reportFolder, path + zipFileName, config.getValue() + Utils.getCurrentDate());
 
 			FileUtil.delFolder(reportFolder);
 		}

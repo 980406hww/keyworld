@@ -40,7 +40,7 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     int getMaxSequence(@Param("terminalType") String terminalType, @Param("entryType") String entryType, @Param("customerUuid") long customerUuid);
 
     List<CustomerKeyword> searchSameCustomerKeywords(@Param("terminalType") String terminalType, @Param("customerUuid") long customerUuid,
-                                                     @Param("keyword") String keyword);
+                                                     @Param("keyword") String keyword, @Param("searchEngine") String searchEngine);
 
     List<CustomerKeyword> searchCustomerKeywordsForUpdateIndex(@Param("keyword") String keyword);
 

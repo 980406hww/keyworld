@@ -5,6 +5,7 @@ import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.ClientStatusBatchUpdateCriteria;
 import com.keymanager.monitoring.criteria.ClientStatusCriteria;
 import com.keymanager.monitoring.entity.ClientStatus;
+import com.keymanager.monitoring.entity.Config;
 import com.keymanager.monitoring.entity.UserPageSetup;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
 import com.keymanager.monitoring.service.*;
@@ -44,6 +45,9 @@ public class ClientStatusRestController extends SpringMVCBaseController {
 
     @Autowired
     private UserPageSetupService userPageSetupService;
+
+    @Autowired
+    private ConfigService configService;
 
     @RequiresPermissions("/internal/clientstatus/changeTerminalType")
     @RequestMapping(value = "/changeTerminalType", method = RequestMethod.POST)
@@ -125,9 +129,16 @@ public class ClientStatusRestController extends SpringMVCBaseController {
         modelAndView.addObject("validMap", Constants.CLIENT_STATUS_VALID_MAP);
         modelAndView.addObject("orderByMap", Constants.CLIENT_STATUS_ORDERBY_MAP);
         modelAndView.addObject("operationTypeValues", operationTypeValues);
+        modelAndView.addObject("urlPrefix", getUrlPrefix(request));
         modelAndView.addObject("page", page);
         performanceService.addPerformanceLog(terminalType + ":searchCustomerKeywords", System.currentTimeMillis() - startMilleSeconds, null);
         return modelAndView;
+    }
+
+    private String getUrlPrefix(HttpServletRequest request){
+        String url = request.getRequestURL().toString();
+        String urlPrefix = url.split("\\.")[0];
+        return urlPrefix.replace("http://", "");
     }
 
     @RequiresPermissions("/internal/clientstatus/updateClientStatusTargetVersion")
@@ -340,7 +351,8 @@ public class ClientStatusRestController extends SpringMVCBaseController {
     public ResponseEntity<?> downloadVNCFile(HttpServletRequest request, HttpServletResponse response) {
         try {
             clientStatusService.getVNCFileInfo(TerminalTypeMapping.getTerminalType(request));
-            downFile("vnc.zip");
+            Config config = configService.getConfig(Constants.CONFIG_TYPE_ZIP_ENCRYPTION, Constants.CONFIG_KEY_PASSWORD);
+            downFile("vnc.zip", config.getValue() + Utils.getCurrentDate());
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -354,7 +366,8 @@ public class ClientStatusRestController extends SpringMVCBaseController {
     public ResponseEntity<?> downloadFullVNCFile(HttpServletRequest request, HttpServletResponse response) {
         try {
             clientStatusService.getFullVNCFileInfo(TerminalTypeMapping.getTerminalType(request));
-            downFile("vncAll.zip");
+            Config config = configService.getConfig(Constants.CONFIG_TYPE_ZIP_ENCRYPTION, Constants.CONFIG_KEY_PASSWORD);
+            downFile("vncAll.zip", config.getValue() + Utils.getCurrentDate());
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());

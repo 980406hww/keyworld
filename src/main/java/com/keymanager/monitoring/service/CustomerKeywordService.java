@@ -316,9 +316,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeyword.setUpdateTime(Utils.getCurrentTimestamp());
     }
 
-    private void supplementIndexAndPriceFromExisting(CustomerKeyword customerKeyword) {
+    public void supplementIndexAndPriceFromExisting(CustomerKeyword customerKeyword) {
         List<CustomerKeyword> existingCustomerKeywords = customerKeywordDao.searchSameCustomerKeywords(customerKeyword.getTerminalType(),
-                customerKeyword.getCustomerUuid(), customerKeyword.getKeyword());
+                customerKeyword.getCustomerUuid(), customerKeyword.getKeyword(), customerKeyword.getSearchEngine());
         if (CollectionUtils.isNotEmpty(existingCustomerKeywords)) {
             CustomerKeyword existingCustomerKeyword = existingCustomerKeywords.get(0);
             customerKeyword.setInitialIndexCount(existingCustomerKeyword.getInitialIndexCount());

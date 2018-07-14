@@ -7,6 +7,7 @@ public class ClientStatusCriteria extends BaseCriteria {
     private String groupName; // 优化组
     private String noGroup; // 没分组
     private String version; // 版本
+    private String targetVersion;
     private String city; // 城市
     private String upgradeFailedReason; // 失败原因
     private String valid; // 状态
@@ -234,5 +235,11 @@ public class ClientStatusCriteria extends BaseCriteria {
         this.hiddenColumns = hiddenColumns;
     }
 
+    public String getTargetVersion() {
+        return targetVersion;
+    }
 
+    public void setTargetVersion(String targetVersion) {
+        this.targetVersion = targetVersion;
+    }
 }
