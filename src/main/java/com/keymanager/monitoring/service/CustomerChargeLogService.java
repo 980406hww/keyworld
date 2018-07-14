@@ -38,4 +38,8 @@ public class CustomerChargeLogService extends ServiceImpl<CustomerChargeLogDao, 
 	public List<CustomerChargeLog> findCustomerChargeLogs(Integer customerUuid) {
 		return customerChargeLogDao.findCustomerChargeLog(customerUuid);
 	}
+
+	public void deleteCustomerChargeLogs(Integer customerUuid) {
+		customerChargeLogDao.deleteCustomerChargeLogs(customerUuid);
+	}
 }

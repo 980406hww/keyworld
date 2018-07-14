@@ -11,4 +11,6 @@ import java.util.List;
 public interface CustomerChargeLogDao extends BaseMapper<CustomerChargeLog> {
 
     List<CustomerChargeLog> findCustomerChargeLog(@Param("customerUuid") Integer customerUuid);
+
+    void deleteCustomerChargeLogs(@Param("customerUuid")Integer customerUuid);
 }

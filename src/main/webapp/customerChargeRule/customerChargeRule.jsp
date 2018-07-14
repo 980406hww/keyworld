@@ -90,14 +90,18 @@
             <td width="40" name="clickEvent">${customerChargeRule.decemberFee == 0 ? "" : customerChargeRule.decemberFee}<c:if test="${customerChargeRule.decemberFee>0}">(${customerChargeRule.decemberRate}%)</c:if></td>
             <td width="50" name="clickEvent"><fmt:formatDate value="${customerChargeRule.nextChargeDate}" pattern="yyyy-MM-dd"/></td>
             <td width="80" align="center"><fmt:formatDate value="${customerChargeRule.createTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
-            <td style="text-align: center;" width="80">
+            <td style="text-align: left;" width="80">
                 <input type="hidden" name="customerUuid" value="${customerChargeRule.customerUuid}">
                 <shiro:hasPermission name="/internal/customerChargeLog/findCustomerChargeLogs">
                 <a href="javascript:findCustomerChargeLogs('${customerChargeRule.customerUuid}')">收费明细</a>
                 </shiro:hasPermission>
                 <shiro:hasPermission name="/internal/customerChargeRule/deleteCustomerChargeRule">
-                | <a href="javascript:deleteCustomerChargeRule('${customerChargeRule.uuid}')">删除</a>
+                    | <a href="javascript:deleteCustomerChargeRule('${customerChargeRule.uuid}')">删除</a>
                 </shiro:hasPermission>
+                <br>
+                <a href="javascript:addProjectFollow('${customerChargeRule.customerUuid}')">新增跟进</a>
+                | <a href="javascript:findProjectFollows('${customerChargeRule.customerUuid}')">跟进详情</a>
+
             </td>
         </tr>
         </c:forEach>
@@ -185,6 +189,22 @@
             <td>收费人员</td>
         </tr>
     </table>
+</div>
+
+<div id="projectFollowDialog" title="项目跟进详情" class="easyui-dialog" style="display: none;left: 40%;">
+    <table id="projectFollowTable" border="1" cellpadding="10" style="font-size: 12px;background-color: white;border-collapse: collapse;margin: 10px 10px;width:92%;">
+        <tr>
+            <td style="width: 10%">序号</td>
+            <td style="width: 50%">跟进内容</td>
+            <td style="width: 10%">跟进人</td>
+            <td style="width: 20%">跟进时间</td>
+            <td style="width: 10%">操作</td>
+        </tr>
+    </table>
+</div>
+
+<div id="addProjectFollowDialog" title="增加项目跟进" class="easyui-dialog" style="display: none;left: 40%;">
+    <textarea id="projectFollowContent" style="width: 100%;height: 100%;"></textarea>
 </div>
 
 <datalist id="customer_list">
@@ -281,6 +301,25 @@
         });
     });
     </shiro:hasPermission>
+
+    function deleteProjectFollow(uuid) {
+        if (confirm("确定要删除这条跟进内容吗?") == false) return;
+        $.ajax({
+            url: '/internal/projectFollow/deleteProjectFollow/' + uuid,
+            type: 'POST',
+            success: function (result) {
+                if (result) {
+                    $("#projectFollowTable").find("#"+uuid).parent().remove();
+                    $().toastmessage('showSuccessToast', "操作成功");
+                } else {
+                    $().toastmessage('showErrorToast', "操作失败");
+                }
+            },
+            error: function () {
+                $().toastmessage('showErrorToast', "操作失败");
+            }
+        });
+    }
 </script>
 </body>
 </html>

@@ -2,6 +2,8 @@ $(function () {
     $('#customerChargeRuleDialog').dialog("close");
     $("#confirmChargeDialog").dialog("close");
     $("#customerChargeLogDialog").dialog("close");
+    $("#projectFollowDialog").dialog("close");
+    $("#addProjectFollowDialog").dialog("close");
     $("#centerDiv").css("margin-top", $("#topDiv").height());
     pageLoad();
 });
@@ -346,4 +348,97 @@ function findCustomerChargeLogs(customerUuid) {
             $().toastmessage('showErrorToast', "查询失败");
         }
     });
+}
+function findProjectFollows(customerUuid) {
+    $("#projectFollowTable").find("tr:eq(0)").nextAll().remove();
+    $.ajax({
+        url: '/internal/projectFollow/findProjectFollows/' + customerUuid,
+        type: 'Get',
+        success: function (projectFollows) {
+            if (projectFollows.length > 0) {
+                $.each(projectFollows, function (index, value) {
+                    index++;
+                    var date = new Date(value.createTime).toLocaleString();
+                    $("#projectFollowTable").append("<tr>" +
+                        "<td>" + index + "</td>" +
+                        "<td>" + value.followContent + "</td>" +
+                        "<td>" + value.followPerson + "</td>" +
+                        "<td>" + date + "</td>" +
+                        "<td id='"+value.uuid+"'><a href='javascript:deleteProjectFollow(" + value.uuid + ")'>删除</a></td></tr>");
+                });
+                $("#projectFollowDialog").show();
+                $("#projectFollowDialog").dialog({
+                    resizable: false,
+                    width: 480,
+                    height: 300,
+                    modal: true,
+                    buttons: [
+                        {
+                            text: '取消',
+                            iconCls: 'icon-cancel',
+                            handler: function () {
+                                $("#projectFollowDialog").dialog("close");
+                            }
+                        }]
+                });
+                $("#projectFollowDialog").dialog("open");
+                $('#projectFollowDialog').window("resize",{top:$(document).scrollTop() + 100});
+            } else {
+                alert("暂无数据");
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "查询失败");
+        }
+    });
+}
+function addProjectFollow(customerUuid) {
+    $("#projectFollowContent").val("");
+    $("#addProjectFollowDialog").show();
+    $("#addProjectFollowDialog").dialog({
+        resizable: false,
+        width: 300,
+        height: 260,
+        modal: true,
+        buttons: [{
+            text: '保存',
+            iconCls: 'icon-ok',
+            handler: function () {
+                var postData = {};
+                var content = $("#projectFollowContent").val();
+                postData.customerUuid = customerUuid;
+                postData.followContent = content;
+                $.ajax({
+                    url: '/internal/projectFollow/saveProjectFollow',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result) {
+                            $().toastmessage('showSuccessToast', "操作成功");
+                        } else {
+                            $().toastmessage('showErrorToast', "操作失败");
+                        }
+                    },
+                    error: function () {
+                        $().toastmessage('showErrorToast', "操作失败");
+                    }
+                });
+                $("#addProjectFollowDialog").dialog("close");
+            }
+        },
+            {
+                text: '取消',
+                iconCls: 'icon-cancel',
+                handler: function () {
+                    $("#addProjectFollowDialog").dialog("close");
+                }
+            }]
+    });
+    $("#addProjectFollowDialog").dialog("open");
+    $('#addProjectFollowDialog').window("resize",{top:$(document).scrollTop() + 100});
 }

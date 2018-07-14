@@ -7,6 +7,7 @@ import com.keymanager.monitoring.criteria.CustomerChargeRuleCriteria;
 import com.keymanager.monitoring.dao.CustomerChargeRuleDao;
 import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.CustomerChargeRule;
+import com.keymanager.monitoring.entity.ProjectFollow;
 import com.keymanager.monitoring.entity.UserInfo;
 import com.keymanager.util.Utils;
 import org.slf4j.Logger;
@@ -23,6 +24,12 @@ public class CustomerChargeRuleService extends ServiceImpl<CustomerChargeRuleDao
 
 	@Autowired
 	private CustomerChargeRuleDao customerChargeRuleDao;
+
+	@Autowired
+	private CustomerChargeLogService customerChargeLogService;
+
+	@Autowired
+	private ProjectFollowService projectFollowService;
 
 	@Autowired
 	private CustomerChargeRemindMailService customerChargeRemindMailService;
@@ -45,12 +52,15 @@ public class CustomerChargeRuleService extends ServiceImpl<CustomerChargeRuleDao
 	}
 
 	public void deleteCustomerChargeRule(Long uuid) {
+		CustomerChargeRule customerChargeRule = customerChargeRuleDao.selectById(uuid);
+		customerChargeLogService.deleteCustomerChargeLogs(customerChargeRule.getCustomerUuid());
+		projectFollowService.deleteProjectFollows(customerChargeRule.getCustomerUuid());
 		customerChargeRuleDao.deleteById(uuid);
 	}
 
 	public void deleteCustomerChargeRules(List<String> uuids) {
 		for (String uuid : uuids) {
-			customerChargeRuleDao.deleteById(Long.parseLong(uuid));
+			deleteCustomerChargeRule(Long.parseLong(uuid));
 		}
 	}
 
