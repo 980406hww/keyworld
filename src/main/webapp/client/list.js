@@ -1147,9 +1147,9 @@ function headerTableSetting() {
     });
     $('#headerTableDialog').window("resize",{top:$(document).scrollTop() + 100});
 }
-function connectVNC(clientID){
+function connectVNC(clientID, urlPrefix){
     var obj = new ActiveXObject("wscript.shell");
-    obj.run("file:///C:/vnc/" + clientID + ".vnc");
+    obj.run("file:///C:/vnc/" + urlPrefix + "/" + clientID + ".vnc");
     obj = null;
 }
 
