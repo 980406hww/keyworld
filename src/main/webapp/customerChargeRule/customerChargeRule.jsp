@@ -99,8 +99,12 @@
                     | <a href="javascript:deleteCustomerChargeRule('${customerChargeRule.uuid}')">删除</a>
                 </shiro:hasPermission>
                 <br>
+                <shiro:hasPermission name="/internal/projectFollow/saveProjectFollow">
                 <a href="javascript:addProjectFollow('${customerChargeRule.customerUuid}')">新增跟进</a>
+                </shiro:hasPermission>
+                <shiro:hasPermission name="/internal/projectFollow/findProjectFollows">
                 | <a href="javascript:findProjectFollows('${customerChargeRule.customerUuid}')">跟进详情</a>
+                </shiro:hasPermission>
 
             </td>
         </tr>
@@ -302,6 +306,7 @@
     });
     </shiro:hasPermission>
 
+    <shiro:hasPermission name="/internal/projectFollow/deleteProjectFollow">
     function deleteProjectFollow(uuid) {
         if (confirm("确定要删除这条跟进内容吗?") == false) return;
         $.ajax({
@@ -320,6 +325,7 @@
             }
         });
     }
+    </shiro:hasPermission>
 </script>
 </body>
 </html>

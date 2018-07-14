@@ -24,6 +24,7 @@ public class ProjectFollowRestController extends SpringMVCBaseController {
     @Autowired
     private ProjectFollowService projectFollowService;
 
+    @RequiresPermissions("/internal/projectFollow/findProjectFollows")
     @RequestMapping(value = "/findProjectFollows/{customerUuid}" , method = RequestMethod.GET)
     public ResponseEntity<?> findProjectFollows(@PathVariable("customerUuid")Integer customerUuid){
         try {
@@ -34,6 +35,7 @@ public class ProjectFollowRestController extends SpringMVCBaseController {
         }
     }
 
+    @RequiresPermissions("/internal/projectFollow/deleteProjectFollow")
     @RequestMapping(value = "/deleteProjectFollow/{uuid}", method = RequestMethod.POST)
     public ResponseEntity<?> deleteProjectFollow(@PathVariable("uuid") Long uuid) {
         try {
@@ -45,6 +47,7 @@ public class ProjectFollowRestController extends SpringMVCBaseController {
         }
     }
 
+    @RequiresPermissions("/internal/projectFollow/saveProjectFollow")
     @RequestMapping(value = "/saveProjectFollow", method = RequestMethod.POST)
     public ResponseEntity<?> saveProjectFollow(@RequestBody ProjectFollow projectFollow, HttpServletRequest request) {
         try {
