@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.dao.CustomerChargeLogDao;
 import com.keymanager.monitoring.entity.CustomerChargeLog;
+import com.keymanager.monitoring.vo.CustomerChargeStatVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,5 +42,9 @@ public class CustomerChargeLogService extends ServiceImpl<CustomerChargeLogDao, 
 
 	public void deleteCustomerChargeLogs(Integer customerUuid) {
 		customerChargeLogDao.deleteCustomerChargeLogs(customerUuid);
+	}
+
+	public CustomerChargeStatVO addUpCustomerChargeLogs(String loginName, String beginDate, String endDate) {
+		return customerChargeLogDao.addUpCustomerChargeLogs(loginName, beginDate, endDate);
 	}
 }

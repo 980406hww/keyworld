@@ -32,8 +32,8 @@ public class CustomerChargeLogRestController extends SpringMVCBaseController {
             List<String> customerUuids = (List<String>) requestMap.get("customerUuids");
             Integer planChargeAmount = (Integer) requestMap.get("planChargeAmount");
             Integer actualChargeAmount = (Integer) requestMap.get("actualChargeAmount");
-            String cashier = (String) requestMap.get("cashier");
             String nextChargeDate = (String) requestMap.get("nextChargeDate");
+            String cashier = getCurrentUser().getName();
             customerChargeLogService.addCustomerChargeLog(customerUuids, planChargeAmount, actualChargeAmount, cashier, nextChargeDate);
             return new ResponseEntity<Object>(true , HttpStatus.OK);
         }catch (Exception e){

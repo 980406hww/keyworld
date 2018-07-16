@@ -69,7 +69,7 @@ public class CustomerChargeRuleService extends ServiceImpl<CustomerChargeRuleDao
 		int nowChargeCount = 0;
 		int threeDayChargeCount = 0;
 		int sevenDayChargeCount = 0;
-		List<CustomerChargeRule> customerChargeRules = customerChargeRuleDao.getChargeRemindCustomer();
+		List<CustomerChargeRule> customerChargeRules = customerChargeRuleDao.getChargeRemindCustomer(customerChargeRuleCriteria);
 		for (CustomerChargeRule customerChargeRule : customerChargeRules) {
 			int intervalDays = Utils.getIntervalDays(new Date(),customerChargeRule.getNextChargeDate());
 			if(intervalDays < 0) {
@@ -98,5 +98,9 @@ public class CustomerChargeRuleService extends ServiceImpl<CustomerChargeRuleDao
 			List<CustomerChargeRule> customerChargeRules = customerChargeRuleDao.getUpcomingCustomerChargeRule(userInfo.getLoginName());
 			customerChargeRemindMailService.sendCustomerChargeRemindMail(userInfo.getEmail(), customerChargeRules);
 		}
+	}
+
+	public Integer addUpCustomerChargeAmount(String loginName, String month) {
+		return customerChargeRuleDao.addUpCustomerChargeAmount(loginName, month);
 	}
 }

@@ -22,6 +22,20 @@
             <input type="hidden" name="sevenChargeCount" id="sevenChargeCount" value="${customerChargeRuleCriteria.sevenChargeCount}"/>
             <input type="hidden" name="chargeDays" id="chargeDays" value="${customerChargeRuleCriteria.chargeDays}"/>
             客户：<input type="text" list="customer_list" name="customerInfo" id="customerInfo" value="${customerChargeRuleCriteria.customerInfo}" style="width:200px;">
+            <c:if test="${isDepartmentManager}">
+                用户名称:
+                <select name="loginName" id="loginName">
+                    <option value="">所有</option>
+                    <c:forEach items="${activeUsers}" var="activeUser">
+                        <option value="${activeUser.loginName}">${activeUser.userName}</option>
+                    </c:forEach>
+                </select>
+            </c:if>
+            排序：<select name="orderBy" id="orderBy">
+                <option value="fNextChargeDate">下次收费日期</option>
+                <option value="fChargeTotal DESC">收费总额</option>
+                <option value="fCreateTime DESC">创建时间</option>
+            </select>
             <shiro:hasPermission name="/internal/customerChargeRule/searchCustomerChargeRules">
             <input type="button" value=" 查询 " onclick="resetPageNumber(null)">&nbsp;&nbsp;
             </shiro:hasPermission>
@@ -29,7 +43,10 @@
             <input type="button" value=" 添加 " onclick="showCustomerChargeRuleDialog()">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/customerChargeLog/addCustomerChargeLog">
-            <input type="button" value=" 收费 " onclick="addCustomerChargeLog('${sessionScope.username}')">&nbsp;&nbsp;
+            <input type="button" value=" 收费 " onclick="addCustomerChargeLog()">&nbsp;&nbsp;
+            </shiro:hasPermission>
+            <shiro:hasPermission name="/internal/customerChargeLog/findCustomerChargeLogs">
+                <input type="button" value=" 收费统计 " onclick="chargeStat()">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/customerChargeRule/deleteCustomerChargeRules">
             <input type="button" onclick="deleteCustomerChargeRules()" value=" 删除所选 ">&nbsp;&nbsp;
@@ -184,6 +201,28 @@
     </form>
 </div>
 
+<div id="chargeStatDialog" title="收费统计" class="easyui-dialog" style="display: none;left: 40%;">
+    <form id="chargeStatForm" style="margin-left: 6%;margin-top: 2%;">
+        <input type="hidden" id="isDepartmentManager" value="${isDepartmentManager}">
+        年：<input type="text" id="year" style="width: 50px;"/>
+        月：<select name="month" id="month">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+        </select><br>
+        <div id="chargeInfo" style="color: red;"></div>
+    </form>
+</div>
+
 <div id="customerChargeLogDialog" title="收费明细" class="easyui-dialog" style="display: none;left: 40%;">
     <table id="customerChargeLogTable" border="1" cellpadding="10" style="font-size: 12px;background-color: white;border-collapse: collapse;margin: 10px 10px;width:92%;">
         <tr>
@@ -242,6 +281,11 @@
 <%@ include file="/commons/loadjs.jsp" %>
 <script src="${staticPath }/customerChargeRule/customerChargeRule.js"></script>
 <script>
+    $(function () {
+        $("#loginName").val("${customerChargeRuleCriteria.loginName}");
+        $("#orderBy").val("${customerChargeRuleCriteria.orderBy}");
+    });
+
     <shiro:hasPermission name="/internal/customerChargeRule/saveCustomerChargeRule">
     $(document).ready(function(){
         $('table td').click(function(){

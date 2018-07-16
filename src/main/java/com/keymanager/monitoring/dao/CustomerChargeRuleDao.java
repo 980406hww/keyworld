@@ -15,11 +15,13 @@ public interface CustomerChargeRuleDao extends BaseMapper<CustomerChargeRule> {
 
     CustomerChargeRule findCustomerChargeRule(@Param("customerUuid")Integer customerUuid);
 
-    List<CustomerChargeRule> getChargeRemindCustomer();
+    List<CustomerChargeRule> getChargeRemindCustomer(@Param("customerChargeRuleCriteria")CustomerChargeRuleCriteria customerChargeRuleCriteria);
 
     void updateNextChargeDate(@Param("customerUuids")List<String> customerUuids, @Param("nextChargeDate")String nextChargeDate);
 
     List<CustomerChargeRule> getUpcomingCustomerChargeRule(@Param("userID")String userID);
 
     List<UserInfo> getCustomerChargeUser();
+
+    Integer addUpCustomerChargeAmount(@Param("loginName")String loginName, @Param("month")String month);
 }

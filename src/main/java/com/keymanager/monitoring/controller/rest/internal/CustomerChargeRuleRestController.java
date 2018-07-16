@@ -5,9 +5,14 @@ import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.CustomerChargeRuleCriteria;
 import com.keymanager.monitoring.criteria.CustomerCriteria;
 import com.keymanager.monitoring.entity.Customer;
+import com.keymanager.monitoring.entity.CustomerChargeLog;
 import com.keymanager.monitoring.entity.CustomerChargeRule;
+import com.keymanager.monitoring.entity.UserInfo;
+import com.keymanager.monitoring.service.CustomerChargeLogService;
 import com.keymanager.monitoring.service.CustomerChargeRuleService;
 import com.keymanager.monitoring.service.CustomerService;
+import com.keymanager.monitoring.service.IUserInfoService;
+import com.keymanager.monitoring.vo.CustomerChargeStatVO;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,14 +36,18 @@ public class CustomerChargeRuleRestController extends SpringMVCBaseController {
     private CustomerService customerService;
 
     @Autowired
+    private IUserInfoService userInfoService;
+
+    @Autowired
+    private CustomerChargeLogService customerChargeLogService;
+
+    @Autowired
     private CustomerChargeRuleService customerChargeRuleService;
 
     @RequiresPermissions("/internal/customerChargeRule/searchCustomerChargeRules")
     @RequestMapping(value = "/searchCustomerChargeRules", method = RequestMethod.GET)
     public ModelAndView searchCustomerChargeRules(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request) {
-        CustomerChargeRuleCriteria customerChargeRuleCriteria = new CustomerChargeRuleCriteria();
-        customerChargeRuleService.getChargeRemindCustomer(customerChargeRuleCriteria);
-        return constructCustomerChargeRuleModelAndView(request, customerChargeRuleCriteria, currentPageNumber, pageSize);
+        return constructCustomerChargeRuleModelAndView(request, new CustomerChargeRuleCriteria(), currentPageNumber, pageSize);
     }
 
     @RequiresPermissions("/internal/customerChargeRule/searchCustomerChargeRules")
@@ -64,15 +73,24 @@ public class CustomerChargeRuleRestController extends SpringMVCBaseController {
         String entryType = (String) request.getSession().getAttribute("entryType");
         customerCriteria.setEntryType(entryType);
         Set<String> roles = getCurrentUser().getRoles();
+        boolean isDepartmentManager = true;
         if(!roles.contains("DepartmentManager")) {
+            isDepartmentManager = false;
             String loginName = (String) request.getSession().getAttribute("username");
             customerCriteria.setLoginName(loginName);
             customerChargeRuleCriteria.setLoginName(loginName);
         }
+        if(request.getMethod().equals("GET")) {
+            customerChargeRuleService.getChargeRemindCustomer(customerChargeRuleCriteria);
+            customerChargeRuleCriteria.setOrderBy("fNextChargeDate");
+        }
         List<Customer> customerList = customerService.getActiveCustomerSimpleInfo(customerCriteria);
+        List<UserInfo> activeUsers = userInfoService.findActiveUsers();
 
         Page<CustomerChargeRule> page = customerChargeRuleService.searchCustomerChargeRules(new Page<CustomerChargeRule>(currentPageNumber, pageSize), customerChargeRuleCriteria);
         modelAndView.addObject("customerList", customerList);
+        modelAndView.addObject("isDepartmentManager", isDepartmentManager);
+        modelAndView.addObject("activeUsers", activeUsers);
         modelAndView.addObject("customerChargeRuleCriteria", customerChargeRuleCriteria);
         modelAndView.addObject("page", page);
         return modelAndView;
@@ -111,6 +129,30 @@ public class CustomerChargeRuleRestController extends SpringMVCBaseController {
             return new ResponseEntity<Object>(true , HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<Object>(false , HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/customerChargeStat" , method = RequestMethod.POST)
+    public ResponseEntity<?> customerChargeStat(@RequestBody Map<String, Object> requestMap){
+        try {
+            String beginDate = (String) requestMap.get("beginDate");
+            String endDate = (String) requestMap.get("endDate");
+            String month = (String) requestMap.get("month");
+            String isDepartmentManager = (String) requestMap.get("isDepartmentManager");
+            String loginName = getCurrentUser().getLoginName();
+            if(isDepartmentManager.equals("true")) {
+                loginName = null;
+            }
+            Integer chargeTotal = customerChargeRuleService.addUpCustomerChargeAmount(loginName, month);
+            chargeTotal = chargeTotal == null ? 0 : chargeTotal;
+            CustomerChargeStatVO customerChargeStatVO = customerChargeLogService.addUpCustomerChargeLogs(loginName, beginDate, endDate);
+            if(customerChargeStatVO == null) {
+                customerChargeStatVO = new CustomerChargeStatVO();
+            }
+            customerChargeStatVO.setChargeTotal(chargeTotal);
+            return new ResponseEntity<Object>(customerChargeStatVO , HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<Object>(null , HttpStatus.BAD_REQUEST);
         }
     }
 }

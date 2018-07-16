@@ -9,6 +9,7 @@ public class CustomerChargeRuleCriteria extends BaseCriteria {
     private Integer threeDayChargeCount;
     private Integer sevenChargeCount;
     private Integer chargeDays;
+    private String orderBy;
 
     public String getCustomerUuid() {
         return customerUuid;
@@ -72,5 +73,13 @@ public class CustomerChargeRuleCriteria extends BaseCriteria {
 
     public void setChargeDays(Integer chargeDays) {
         this.chargeDays = chargeDays;
+    }
+
+    public String getOrderBy() {
+        return orderBy;
+    }
+
+    public void setOrderBy(String orderBy) {
+        this.orderBy = orderBy;
     }
 }

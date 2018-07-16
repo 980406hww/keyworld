@@ -59,48 +59,52 @@
 		<if test="customerChargeRuleCriteria.chargeDays == 7">
 			AND ccr.fNextChargeDate BETWEEN DATE_ADD(CURRENT_DATE(), INTERVAL 4 DAY) AND DATE_ADD(CURRENT_DATE(), INTERVAL 7 DAY)
 		</if>
-		ORDER BY fNextChargeDate
+		ORDER BY ccr.${customerChargeRuleCriteria.orderBy}
 	</select>
 
 	<select id="findCustomerChargeRule" resultType="com.keymanager.monitoring.entity.CustomerChargeRule">
 		SELECT fUuid FROM t_customer_charge_rule WHERE fCustomerUuid = #{customerUuid}
 	</select>
 
-	<select id="getChargeRemindCustomer" resultType="com.keymanager.monitoring.entity.CustomerChargeRule">
+	<select id="getChargeRemindCustomer" parameterType="com.keymanager.monitoring.criteria.CustomerChargeRuleCriteria" resultType="com.keymanager.monitoring.entity.CustomerChargeRule">
 		SELECT
-			fUuid AS 'uuid',
-			fCustomerUuid AS 'customerUuid',
-			fChargeTotal AS 'chargeTotal',
-			fJanuaryFee AS 'januaryFee',
-			fFebruaryFee AS 'februaryFee',
-			fMarchFee AS 'marchFee',
-			fAprilFee AS 'aprilFee',
-			fMayFee AS 'mayFee',
-			fJuneFee AS 'juneFee',
-			fJulyFee AS 'julyFee',
-			fAugustFee AS 'augustFee',
-			fSeptemberFee AS 'septemberFee',
-			fOctoberFee AS 'octoberFee',
-			fNovemberFee AS 'novemberFee',
-			fDecemberFee AS 'decemberFee',
-			fJanuaryRate AS 'januaryRate',
-			fFebruaryRate AS 'februaryRate',
-			fMarchRate AS 'marchRate',
-			fAprilRate AS 'aprilRate',
-			fMayRate AS 'mayRate',
-			fJuneRate AS 'juneRate',
-			fJulyRate AS 'julyRate',
-			fAugustRate AS 'augustRate',
-			fSeptemberRate AS 'septemberRate',
-			fOctoberRate AS 'octoberRate',
-			fNovemberRate AS 'novemberRate',
-			fDecemberRate AS 'decemberRate',
-			fNextChargeDate AS 'nextChargeDate',
-			fUpdateTime AS 'updateTime',
-			fCreateTime AS 'createTime'
+			ccr.fUuid AS 'uuid',
+			ccr.fCustomerUuid AS 'customerUuid',
+			ccr.fChargeTotal AS 'chargeTotal',
+			ccr.fJanuaryFee AS 'januaryFee',
+			ccr.fFebruaryFee AS 'februaryFee',
+			ccr.fMarchFee AS 'marchFee',
+			ccr.fAprilFee AS 'aprilFee',
+			ccr.fMayFee AS 'mayFee',
+			ccr.fJuneFee AS 'juneFee',
+			ccr.fJulyFee AS 'julyFee',
+			ccr.fAugustFee AS 'augustFee',
+			ccr.fSeptemberFee AS 'septemberFee',
+			ccr.fOctoberFee AS 'octoberFee',
+			ccr.fNovemberFee AS 'novemberFee',
+			ccr.fDecemberFee AS 'decemberFee',
+			ccr.fJanuaryRate AS 'januaryRate',
+			ccr.fFebruaryRate AS 'februaryRate',
+			ccr.fMarchRate AS 'marchRate',
+			ccr.fAprilRate AS 'aprilRate',
+			ccr.fMayRate AS 'mayRate',
+			ccr.fJuneRate AS 'juneRate',
+			ccr.fJulyRate AS 'julyRate',
+			ccr.fAugustRate AS 'augustRate',
+			ccr.fSeptemberRate AS 'septemberRate',
+			ccr.fOctoberRate AS 'octoberRate',
+			ccr.fNovemberRate AS 'novemberRate',
+			ccr.fDecemberRate AS 'decemberRate',
+			ccr.fNextChargeDate AS 'nextChargeDate',
+			ccr.fUpdateTime AS 'updateTime',
+			ccr.fCreateTime AS 'createTime'
 		FROM
-			t_customer_charge_rule
-		WHERE fNextChargeDate &lt;= DATE_ADD(CURRENT_DATE(), INTERVAL 7 DAY)
+			t_customer_charge_rule ccr, t_customer c
+		WHERE ccr.fCustomerUuid = c.fUuid
+		AND ccr.fNextChargeDate &lt;= DATE_ADD(CURRENT_DATE(), INTERVAL 7 DAY)
+		<if test="customerChargeRuleCriteria.loginName!=null and customerChargeRuleCriteria.loginName!=''">
+			AND c.fUserID = #{customerChargeRuleCriteria.loginName}
+		</if>
 	</select>
 
 	<update id="updateNextChargeDate">
@@ -134,5 +138,14 @@
 		AND c.fUserID = u.fLoginName
 		AND u.fEmail &gt; ''
 		AND (ccr.fNextChargeDate = DATE_ADD(CURRENT_DATE(), INTERVAL 7 DAY) OR ccr.fNextChargeDate = CURRENT_DATE())
+	</select>
+
+	<select id="addUpCustomerChargeAmount" resultType="java.lang.Integer">
+		SELECT SUM(ccr.${month})
+		FROM t_customer_charge_rule ccr, t_customer c
+		WHERE ccr.fCustomerUuid = c.fUuid
+		<if test="loginName!=null and loginName!=''">
+			AND c.fUserID = #{loginName}
+		</if>
 	</select>
 </mapper>

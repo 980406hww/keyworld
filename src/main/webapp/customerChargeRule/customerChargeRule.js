@@ -1,6 +1,7 @@
 $(function () {
     $('#customerChargeRuleDialog').dialog("close");
     $("#confirmChargeDialog").dialog("close");
+    $("#chargeStatDialog").dialog("close");
     $("#customerChargeLogDialog").dialog("close");
     $("#projectFollowDialog").dialog("close");
     $("#addProjectFollowDialog").dialog("close");
@@ -252,7 +253,7 @@ function deleteCustomerChargeRules() {
         }
     });
 }
-function addCustomerChargeLog(loginName) {
+function addCustomerChargeLog() {
     var customerUuids = getCustomerUuids();
     if (customerUuids === '') {
         alert("请选择要收费的项目");
@@ -276,7 +277,6 @@ function addCustomerChargeLog(loginName) {
                 var actualChargeAmount = confirmChargeForm.find("#actualChargeAmount").val();
                 postData.planChargeAmount = planChargeAmount == "" ? 0 : parseInt(planChargeAmount);
                 postData.actualChargeAmount = actualChargeAmount == "" ? 0 : parseInt(actualChargeAmount);
-                postData.cashier = loginName;
                 postData.nextChargeDate = confirmChargeForm.find("#nextChargeDate").val();
                 $.ajax({
                     url: '/internal/customerChargeLog/addCustomerChargeLog',
@@ -289,7 +289,7 @@ function addCustomerChargeLog(loginName) {
                     type: 'POST',
                     success: function (data) {
                         if (data) {
-                            $().toastmessage('showSuccessToast', "操作成功", true);
+                            $().toastmessage('showSuccessToast', "操作成功");
                         } else {
                             $().toastmessage('showErrorToast', "操作失败");
                         }
@@ -312,6 +312,62 @@ function addCustomerChargeLog(loginName) {
     $("#confirmChargeDialog").dialog("open");
     $('#confirmChargeDialog').window("resize",{top:$(document).scrollTop() + 100});
 }
+function chargeStat() {
+    $("#chargeStatDialog").show();
+    $("#chargeStatDialog").dialog({
+        resizable: false,
+        width: 240,
+        height: 140,
+        modal: true,
+        buttons: [{
+            text: '查询',
+            iconCls: 'icon-ok',
+            handler: function () {
+                var months = ["fJanuaryFee", "fFebruaryFee", "fMarchFee", "fAprilFee", "fMayFee", "fJuneFee", "fJulyFee", "fAugustFee", "fSeptemberFee", "fOctoberFee", "fNovemberFee", "fDecemberFee"];
+                var postData = {};
+                var isDepartmentManager = $("#chargeStatForm").find("#isDepartmentManager").val();
+                postData.isDepartmentManager = isDepartmentManager;
+                var year = $("#chargeStatForm").find("#year").val();
+                var month = $("#chargeStatForm").find("#month").val();
+                postData.beginDate = year + "-" + month + "-01 0:0:0";
+                var date = new Date(year, month, 0);
+                postData.endDate = year + "-" + month + "-" + date.getDate() + " 23:59:59";
+                postData.month = months[month - 1];
+                $.ajax({
+                    url: '/internal/customerChargeRule/customerChargeStat',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (data) {
+                        if (data) {
+                            $("#chargeInfo").html("费用总额：" + data.chargeTotal +
+                                ";<br>预收金额：" + data.planChargeAmount +
+                                ";<br>实收金额：" + data.actualChargeAmount + ";");
+                        } else {
+                            $().toastmessage('showErrorToast', "查询失败");
+                        }
+                    },
+                    error: function () {
+                        $().toastmessage('showErrorToast', "查询失败");
+                    }
+                });
+            }
+        },
+            {
+                text: '取消',
+                iconCls: 'icon-cancel',
+                handler: function () {
+                    $("#chargeStatDialog").dialog("close");
+                }
+            }]
+    });
+    $("#chargeStatDialog").dialog("open");
+    $('#chargeStatDialog').window("resize",{top:$(document).scrollTop() + 100});
+}
 function findCustomerChargeLogs(customerUuid) {
     $("#customerChargeLogTable").find("tr:eq(0)").nextAll().remove();
     $.ajax({
@@ -320,7 +376,7 @@ function findCustomerChargeLogs(customerUuid) {
         success: function (customerChargeLogs) {
             if (customerChargeLogs.length > 0) {
                 $.each(customerChargeLogs, function (index, value) {
-                    var date = new Date(value.createTime).toLocaleString();
+                    var date = new Date(value.createTime).toLocaleDateString();
                     $("#customerChargeLogTable").append("<tr><td>" + date + "</td><td>" + value.planChargeAmount + "</td><td>" + value.actualChargeAmount + "</td><td>" + value.cashier + "</td></tr>");
                 });
                 $("#customerChargeLogDialog").show();

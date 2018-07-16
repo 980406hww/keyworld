@@ -19,4 +19,16 @@
 		DELETE FROM t_customer_charge_log
 		WHERE fCustomerUuid = #{customerUuid}
 	</delete>
+
+	<select id="addUpCustomerChargeLogs" resultType="com.keymanager.monitoring.vo.CustomerChargeStatVO">
+		SELECT
+			SUM(ccl.fPlanChargeAmount) AS 'planChargeAmount',
+			SUM(ccl.fActualChargeAmount) AS 'actualChargeAmount'
+		FROM t_customer_charge_log ccl, t_customer c
+		WHERE ccl.fCustomerUuid = c.fUuid
+		AND ccl.fCreateTime BETWEEN #{beginDate} AND #{endDate}
+		<if test="loginName!=null and loginName!=''">
+			AND c.fUserID = #{loginName}
+		</if>
+	</select>
 </mapper>
