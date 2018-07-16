@@ -28,6 +28,7 @@ public class ConfigRestController {
     @Autowired
     private ConfigService configService;
 
+    @RequiresPermissions("/internal/config/searchNegativeKeywords")
     @RequestMapping(value = "/searchNegativeKeywords", method = RequestMethod.GET)
     public ModelAndView searchNegativeKeywords(HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView("/negativeKeywords/negativeKeywords");
@@ -52,6 +53,7 @@ public class ConfigRestController {
         }
     }
 
+    @RequiresPermissions("/internal/config/updateNegativeKeywords")
     @RequestMapping(value = "/updateNegativeKeywords", method = RequestMethod.POST)
     public ResponseEntity<?> updateNegativeKeywords(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
         try {
@@ -64,6 +66,7 @@ public class ConfigRestController {
         }
     }
 
+    @RequiresPermissions("/internal/config/updateCustomerNegativeKeywords")
     @RequestMapping(value = "/updateCustomerNegativeKeywords", method = RequestMethod.POST)
     public ResponseEntity<?> updateCustomerNegativeKeywords(@RequestParam(value = "file", required = false) MultipartFile file, @RequestParam(value = "searchEngine") String searchEngine, HttpServletRequest request) {
         try {
@@ -82,6 +85,7 @@ public class ConfigRestController {
         return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
     }
 
+    @RequiresPermissions("/internal/config/refreshCustomerNegativeKeywords")
     @RequestMapping(value = "/refreshCustomerNegativeKeywords" , method = RequestMethod.POST)
     public ResponseEntity<?> refreshCustomerNegativeKeywords(@RequestBody Map<String, Object> requestMap){
         try{
@@ -95,6 +99,7 @@ public class ConfigRestController {
         return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
     }
 
+    @RequiresPermissions("/internal/config/refreshWebsiteWhiteList")
     @RequestMapping(value = "/refreshWebsiteWhiteList" , method = RequestMethod.POST)
     public ResponseEntity<?> refreshWebsiteWhiteList(@RequestBody String websiteWhiteList){
         try{
@@ -106,6 +111,7 @@ public class ConfigRestController {
         return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
     }
 
+    @RequiresPermissions("/internal/config/updateWebsiteWhiteList")
     @RequestMapping(value = "/updateWebsiteWhiteList", method = RequestMethod.POST)
     public ResponseEntity<?> updateWebsiteWhiteList(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request) {
         try {

@@ -139,6 +139,7 @@
         });
     }
 
+    <shiro:hasPermission name="/internal/config/refreshCustomerNegativeKeywords">
     function refreshCustomerNegativeKeywords () {
         var config = {};
         var negativeKeywords = $("#customerNegativeKeywords").val().replace(/\n/g,',');
@@ -168,7 +169,9 @@
             }
         });
     }
+    </shiro:hasPermission>
 
+    <shiro:hasPermission name="/internal/config/refreshCustomerNegativeKeywords">
     function refreshWebsiteWhiteList() {
         var websiteList = $("#websiteWhiteList").val().replace(/\n/g,',');
         var websiteWhiteList = websiteList.replace(/,,/g,',');
@@ -196,6 +199,7 @@
             }
         });
     }
+    </shiro:hasPermission>
 
     function updateWebsiteWhiteList() {
         $("#uploadTxtFileDiv").css("display", "block");
@@ -260,7 +264,9 @@
         负面词:<br><br>
         <textarea name="negativeKeywords" id="negativeKeywords" style="width: 500px;height: 100px;">${negativeKeywords}</textarea><br><br>
         <span style="margin-left: 430px;">
+        <shiro:hasPermission name="/internal/config/updateNegativeKeywords">
             <input type="button" id="updateNegativeKeywords" onclick="updateNegativeKeywords()" value="更新" />&nbsp;&nbsp;
+        </shiro:hasPermission>
             <input type="button" id="resetNegativeKeywords" onclick="resetNegativeKeywords()" value="重置" />
         </span>
    </div>
@@ -274,14 +280,18 @@
         </select><br><br>
         <textarea name="customerNegativeKeywords" id="customerNegativeKeywords"  onchange="refreshCustomerNegativeKeywords()" style="width: 500px;height: 300px;">${customerNegativeKeywords}</textarea><br><br>
         <span style="margin-left: 470px;">
-            <input type="button" id="updateCustomerNegativeKeywords" onclick="updateCustomerNegativeKeywords()" value="上传" />
+            <shiro:hasPermission name="/internal/config/updateCustomerNegativeKeywords">
+                        <input type="button" id="updateCustomerNegativeKeywords" onclick="updateCustomerNegativeKeywords()" value="上传" />
+            </shiro:hasPermission>
         </span>
     </div>
     <div>
         网站白名单：<br/><br/>
         <textarea name="websiteWhiteList" id="websiteWhiteList"  onchange="refreshWebsiteWhiteList()" style="width: 500px;height: 300px;">${websiteWhiteList}</textarea><br><br>
         <span style="margin-left: 470px;">
-            <input type="button" id="updateWebsiteWhiteList" onclick="updateWebsiteWhiteList()" value="上传" />
+            <shiro:hasPermission name="/internal/config/updateWebsiteWhiteList">
+                <input type="button" id="updateWebsiteWhiteList" onclick="updateWebsiteWhiteList()" value="上传" />
+            </shiro:hasPermission>
         </span>
     </div>
 </div>

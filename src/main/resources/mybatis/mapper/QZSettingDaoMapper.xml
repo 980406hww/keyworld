@@ -187,7 +187,7 @@
         SET qs.fUpdateStatus = NULL,
             qs.fUpdateTime = NOW(),
             qs.fUpdateEndTime = NULL
-        WHERE  fUuid = #{uuid}
+        WHERE qs.fUuid IN (${uuids})
     </update>
 
 </mapper>

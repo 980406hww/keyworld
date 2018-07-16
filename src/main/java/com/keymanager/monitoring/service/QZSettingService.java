@@ -242,10 +242,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 	public void updateImmediately(String uuids){
 		if(StringUtils.isNotEmpty(uuids)){
-			String [] uuidArray = uuids.split(",");
-			for(String uuid : uuidArray){
-				qzSettingDao.updateImmediately(uuid);
-			}
+				qzSettingDao.updateImmediately(uuids);
 		}
 	}
 

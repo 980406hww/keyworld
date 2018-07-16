@@ -29,6 +29,6 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
 
     void updateQZSettingStatus(@Param("uuids") List<Long> uuids, @Param("status") Integer status);
 
-    void updateImmediately(@Param("uuid") String uuid);
+    void updateImmediately(@Param("uuids") String uuids);
 }
 
