@@ -132,6 +132,7 @@ public class CustomerChargeRuleRestController extends SpringMVCBaseController {
         }
     }
 
+    @RequiresPermissions("/internal/customerChargeRule/customerChargeStat")
     @RequestMapping(value = "/customerChargeStat" , method = RequestMethod.POST)
     public ResponseEntity<?> customerChargeStat(@RequestBody Map<String, Object> requestMap){
         try {

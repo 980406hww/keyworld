@@ -45,7 +45,7 @@
             <shiro:hasPermission name="/internal/customerChargeLog/addCustomerChargeLog">
             <input type="button" value=" 收费 " onclick="addCustomerChargeLog()">&nbsp;&nbsp;
             </shiro:hasPermission>
-            <shiro:hasPermission name="/internal/customerChargeLog/findCustomerChargeLogs">
+            <shiro:hasPermission name="/internal/customerChargeRule/customerChargeStat">
                 <input type="button" value=" 收费统计 " onclick="chargeStat()">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/customerChargeRule/deleteCustomerChargeRules">

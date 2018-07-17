@@ -313,6 +313,9 @@ function addCustomerChargeLog() {
     $('#confirmChargeDialog').window("resize",{top:$(document).scrollTop() + 100});
 }
 function chargeStat() {
+    var today = new Date();
+    $("#chargeStatForm").find("#year").val(today.getFullYear());
+    $("#chargeStatForm").find("#month").val(today.getMonth() + 1);
     $("#chargeStatDialog").show();
     $("#chargeStatDialog").dialog({
         resizable: false,
@@ -328,6 +331,10 @@ function chargeStat() {
                 var isDepartmentManager = $("#chargeStatForm").find("#isDepartmentManager").val();
                 postData.isDepartmentManager = isDepartmentManager;
                 var year = $("#chargeStatForm").find("#year").val();
+                if(year == "") {
+                    year = today.getFullYear();
+                    $("#chargeStatForm").find("#year").val(year);
+                }
                 var month = $("#chargeStatForm").find("#month").val();
                 postData.beginDate = year + "-" + month + "-01 0:0:0";
                 var date = new Date(year, month, 0);
@@ -344,6 +351,7 @@ function chargeStat() {
                     type: 'POST',
                     success: function (data) {
                         if (data) {
+                            $().toastmessage('showSuccessToast', "查询成功");
                             $("#chargeInfo").html("费用总额：" + data.chargeTotal +
                                 ";<br>预收金额：" + data.planChargeAmount +
                                 ";<br>实收金额：" + data.actualChargeAmount + ";");
