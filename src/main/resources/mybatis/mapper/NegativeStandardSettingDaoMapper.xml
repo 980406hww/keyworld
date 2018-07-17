@@ -61,6 +61,7 @@
         <if test="negativeStandardSettingCriteria.keyword!=null and negativeStandardSettingCriteria.keyword!='' ">  AND tnss.fKeyword = #{negativeStandardSettingCriteria.keyword}</if>
         <if test="negativeStandardSettingCriteria.reachStandard !=null"> AND tnss.fReachStandard = #{negativeStandardSettingCriteria.reachStandard}</if>
         <if test="negativeStandardSettingCriteria.searchEngine!=null and negativeStandardSettingCriteria.searchEngine!='' "> AND tnss.fSearchEngine = #{negativeStandardSettingCriteria.searchEngine}</if>
+        <if test="negativeStandardSettingCriteria.userID!=null and negativeStandardSettingCriteria.userID!='' "> AND customer.fUserID = #{negativeStandardSettingCriteria.userID}</if>
         ORDER BY customer.fContactPerson,tnss.fKeyword
     </select>
 

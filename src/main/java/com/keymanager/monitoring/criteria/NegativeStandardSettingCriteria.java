@@ -17,6 +17,16 @@ public class NegativeStandardSettingCriteria {
 
     private Long customerUuid;
 
+    private String userID;
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
+
     public Long getUuid() {
         return uuid;
     }

@@ -76,6 +76,10 @@ public class NegativeStandardSettingController  extends SpringMVCBaseController 
             setCustomerKeywords = customerKeywordService.getCustomerKeywordInfo(customerKeywordCriteria);
             page = negativeStandardSettingService.searchNegaStandardSetting(new Page<NegativeStandardSetting>(Integer.parseInt(currentPageNumber),Integer.parseInt(pageSize)),negativeStandardSettingCriteria);
         }else {
+            Set<String> roles = getCurrentUser().getRoles();
+            if(!roles.contains("DepartmentManager")) {
+                negativeStandardSettingCriteria.setUserID((String) request.getSession().getAttribute("username"));
+            }
             page = negativeStandardSettingService.allNegativeStandardSetting(new Page<NegativeStandardSetting>(Integer.parseInt(currentPageNumber),Integer.parseInt(pageSize)),negativeStandardSettingCriteria);
         }
         modelAndView.addObject("page",page);
