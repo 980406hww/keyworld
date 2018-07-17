@@ -91,7 +91,7 @@ public class ConfigService extends ServiceImpl<ClientStatusDao, ClientStatus>{
 		return configDao.findConfigs(configType);
 	}
 
-	public List<String> getMonitorOptimizeFroupName(String configType) {
+	public List<String> getMonitorOptimizeGroupName(String configType) {
 		List<String> configList = new ArrayList<String>();
 		List<Config> configs = findConfigs(configType);
 		for (Config config : configs) {
