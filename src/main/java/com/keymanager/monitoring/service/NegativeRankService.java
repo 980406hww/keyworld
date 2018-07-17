@@ -61,4 +61,8 @@ public class NegativeRankService extends ServiceImpl<NegativeRankDao, NegativeRa
     public void updateNegativeRankKeyword(NegativeRank negativeRank){
         negativeRankDao.updateById(negativeRank);
     }
+
+    public List<NegativeRank> getTodayNegativeRanks(){
+        return negativeRankDao.getTodayNegativeRanks();
+    }
 }
