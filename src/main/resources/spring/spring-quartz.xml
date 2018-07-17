@@ -20,6 +20,7 @@
 				<ref bean="cronTriggerCleanCKLogFromAWeekAgo" />
 				<ref bean="cronTriggerCleanCKLogFromAMonthAgo" />
 				<ref bean="cronTriggerKeywordInfoSynchronize" />
+				<ref bean="cronTriggerCustomerChargeRemind" />
 			</list>
 		</property>
 		<!-- Quartz配置, 本地运行无需单独的quartz.properties文件，在此简单配置即可 -->
@@ -200,6 +201,18 @@
 
 	<bean id="cronTriggerKeywordInfoSynchronizeSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject" ref="keywordInfoSynchronizeSchedule" />
+		<property name="targetMethod" value="runTask" />
+		<property name="concurrent" value="false" />
+	</bean>
+
+	<!--客户收费提醒-->
+	<bean id="cronTriggerCustomerChargeRemind" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="cronTriggerCustomerChargeRemindSchedule" />
+		<property name="cronExpression" value="0 30 15 * * ?" />
+	</bean>
+
+	<bean id="cronTriggerCustomerChargeRemindSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="customerChargeRemindSchedule" />
 		<property name="targetMethod" value="runTask" />
 		<property name="concurrent" value="false" />
 	</bean>
