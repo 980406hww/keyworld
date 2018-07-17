@@ -1157,7 +1157,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     public void changeOptimizeGroupName() {
         // 移出monitoringOptimizeGroupName没刷量没排名关键字
-        List<Config> monitorConfigs = configService.findConfigs(Constants.CONFIG_TYPE_MONITOR_OPTIMIZE_GROUPNAME);
+        List<String> monitorConfigs = configService.getMonitorOptimizeGroupName(Constants.CONFIG_TYPE_MONITOR_OPTIMIZE_GROUPNAME);
         customerKeywordDao.moveOutNoRankingCustomerKeyword(monitorConfigs, Constants.CONFIG_TYPE_NORANK_OPTIMIZE_GROUPNAME);
         // 移出noRankingOptimizeGroupName有刷量有排名关键字
         List<Config> noRankConfigs = configService.findConfigs(Constants.CONFIG_TYPE_NORANK_OPTIMIZE_GROUPNAME);

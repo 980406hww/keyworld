@@ -992,7 +992,7 @@
         AND fCurrentPosition = 0
         AND fOptimizeGroupName IN
         <foreach item = "item" collection = "monitorConfigs" open="(" separator="," close=")">
-            #{item.value}
+            #{item}
         </foreach>
     </update>
 
@@ -1035,7 +1035,7 @@
             WHERE fCurrentPosition &gt; 0
             AND fOptimizeGroupName IN
             <foreach item = "item" collection = "monitorConfigs" open="(" separator="," close=")">
-                #{item.value}
+                #{item}
             </foreach>
             GROUP BY fKeyword,fOptimizeGroupName
             UNION ALL
@@ -1044,7 +1044,7 @@
             WHERE fCurrentPosition = 0
             AND fOptimizeGroupName IN
             <foreach item = "item" collection = "monitorConfigs" open="(" separator="," close=")">
-                #{item.value}
+                #{item}
             </foreach>
             GROUP BY fKeyword,fOptimizeGroupName) AS a
         GROUP BY a.fKeyword,a.fOptimizeGroupName
