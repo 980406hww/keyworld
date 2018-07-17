@@ -21,7 +21,7 @@
 				<ref bean="cronTriggerCleanCKLogFromAMonthAgo" />
 				<ref bean="cronTriggerKeywordInfoSynchronize" />
 				<ref bean="cronTriggerCustomerChargeRemind" />
-				<ref bean="cronTriggerNegativeStandardSettingCountSchedule" />
+				<ref bean="cronTriggerNegativeStandardSettingCount" />
 			</list>
 		</property>
 		<!-- Quartz配置, 本地运行无需单独的quartz.properties文件，在此简单配置即可 -->
@@ -219,12 +219,12 @@
 	</bean>
 
 	<!--负面达标统计-->
-	<bean id="cronTriggerNegativeStandardSettingCountSchedule" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-		<property name="jobDetail" ref="cronTriggerNegativeStandardSettingCountScheduleSchedule"/>
+	<bean id="cronTriggerNegativeStandardSettingCount" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="cronTriggerNegativeStandardSettingCountSchedule"/>
 		<property name="cronExpression" value="0 0 22 * * ?" />
 	</bean>
 
-	<bean id="cronTriggerNegativeStandardSettingCountScheduleSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	<bean id="cronTriggerNegativeStandardSettingCountSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject" ref="negativeStandardSettingCountSchedule" />
 		<property name="targetMethod" value="runTask" />
 		<property name="concurrent" value="false" />
