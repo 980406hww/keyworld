@@ -91,13 +91,31 @@ public class ConfigService extends ServiceImpl<ClientStatusDao, ClientStatus>{
 		return configDao.findConfigs(configType);
 	}
 
+	public List<String> getMonitorOptimizeFroupName(String configType) {
+		List<String> configList = new ArrayList<String>();
+		List<Config> configs = findConfigs(configType);
+		for (Config config : configs) {
+			String[] temp = config.getValue().split(",");
+			configList.addAll(Arrays.asList(temp));
+		}
+		return configList;
+	}
+
 	public Map<String, Integer> getSameCustomerKeywordCount() {
 		Map<String, Integer> sameCustomerKeywordCountMap = new HashMap<String, Integer>();
 		List<Map> map = configDao.getSameCustomerKeywordCount(Constants.CONFIG_TYPE_MONITOR_OPTIMIZE_GROUPNAME, Constants.CONFIG_TYPE_SAME_CUSTOMER_KEYWORD_COUNT);
 		for (Map m : map) {
-			sameCustomerKeywordCountMap.put((String)m.get("group"), Integer.parseInt((String)m.get("count")));
+			String group = (String)m.get("group");
+			String count = (String)m.get("count");
+			if(group.contains(",")) {
+				String[] groups = group.split(",");
+				for (String gro : groups) {
+					sameCustomerKeywordCountMap.put(gro, Integer.parseInt(count));
+				}
+			} else {
+				sameCustomerKeywordCountMap.put(group, Integer.parseInt(count));
+			}
 		}
 		return sameCustomerKeywordCountMap;
 	}
-
 }
