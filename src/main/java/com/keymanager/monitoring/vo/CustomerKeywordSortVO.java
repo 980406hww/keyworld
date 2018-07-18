@@ -5,7 +5,8 @@ package com.keymanager.monitoring.vo;
  */
 public class CustomerKeywordSortVO {
     private String keyword;
-    private String optimizeGroupName;
+    private String searchEngine;
+    private String terminalType;
     private String uuids;
 
     public String getKeyword() {
@@ -16,12 +17,20 @@ public class CustomerKeywordSortVO {
         this.keyword = keyword;
     }
 
-    public String getOptimizeGroupName() {
-        return optimizeGroupName;
+    public String getSearchEngine() {
+        return searchEngine;
     }
 
-    public void setOptimizeGroupName(String optimizeGroupName) {
-        this.optimizeGroupName = optimizeGroupName;
+    public void setSearchEngine(String searchEngine) {
+        this.searchEngine = searchEngine;
+    }
+
+    public String getTerminalType() {
+        return terminalType;
+    }
+
+    public void setTerminalType(String terminalType) {
+        this.terminalType = terminalType;
     }
 
     public String getUuids() {
