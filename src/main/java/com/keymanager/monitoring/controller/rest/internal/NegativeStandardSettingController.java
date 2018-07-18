@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.CustomerKeywordCriteria;
 import com.keymanager.monitoring.criteria.NegativeStandardSettingCriteria;
-import com.keymanager.monitoring.entity.CustomerKeyword;
 import com.keymanager.monitoring.entity.NegativeStandardSetting;
 import com.keymanager.monitoring.service.CustomerKeywordService;
 import com.keymanager.monitoring.service.NegativeStandardSettingService;
@@ -70,20 +69,23 @@ public class NegativeStandardSettingController  extends SpringMVCBaseController 
         customerKeywordCriteria.setTerminalType(terminalType);
         customerKeywordCriteria.setEntryType(entryType);
         customerKeywordCriteria.setCustomerUuid(negativeStandardSettingCriteria.getCustomerUuid());
-        Page<NegativeStandardSetting>  page = null;
-        Set<String> setCustomerKeywords = null;
+        Page<NegativeStandardSetting> page = null;
+        List<String> customerKeywords = null;
+        List<String> contactPersons = null;
         if(negativeStandardSettingCriteria.getCustomerUuid()!=null){
-            setCustomerKeywords = customerKeywordService.getCustomerKeywordInfo(customerKeywordCriteria);
+            customerKeywords = customerKeywordService.getCustomerKeywordInfo(customerKeywordCriteria);
             page = negativeStandardSettingService.searchNegaStandardSetting(new Page<NegativeStandardSetting>(Integer.parseInt(currentPageNumber),Integer.parseInt(pageSize)),negativeStandardSettingCriteria);
         }else {
             Set<String> roles = getCurrentUser().getRoles();
             if(!roles.contains("DepartmentManager")) {
                 negativeStandardSettingCriteria.setUserID((String) request.getSession().getAttribute("username"));
             }
+            contactPersons = negativeStandardSettingService.findContactPersons(negativeStandardSettingCriteria);
             page = negativeStandardSettingService.allNegativeStandardSetting(new Page<NegativeStandardSetting>(Integer.parseInt(currentPageNumber),Integer.parseInt(pageSize)),negativeStandardSettingCriteria);
         }
         modelAndView.addObject("page",page);
-        modelAndView.addObject("setCustomerKeywords",setCustomerKeywords);
+        modelAndView.addObject("contactPersons",contactPersons);
+        modelAndView.addObject("customerKeywords",customerKeywords);
         modelAndView.addObject("negativeStandardSettingCriteria",negativeStandardSettingCriteria);
         return modelAndView;
     }

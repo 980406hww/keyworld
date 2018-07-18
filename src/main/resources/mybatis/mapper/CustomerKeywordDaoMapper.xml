@@ -983,6 +983,7 @@
 
     <select id="getCustomerKeywordInfo"  parameterType="com.keymanager.monitoring.criteria.CustomerKeywordCriteria" resultType="java.lang.String">
         SELECT
+        DISTINCT
         ck.fKeyword	AS	'keyword'
         FROM
         t_customer_keyword ck

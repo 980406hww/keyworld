@@ -7,8 +7,6 @@ import com.keymanager.monitoring.criteria.NegativeStandardSettingCriteria;
 import com.keymanager.monitoring.dao.NegativeStandardSettingDao;
 import com.keymanager.monitoring.entity.NegativeRank;
 import com.keymanager.monitoring.entity.NegativeStandardSetting;
-import com.keymanager.monitoring.service.impl.UserInfoServiceImpl;
-import com.keymanager.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.*;
@@ -124,5 +122,9 @@ public class NegativeStandardSettingService extends ServiceImpl<NegativeStandard
                 }
             }
         }
+    }
+
+    public  List<String>  findContactPersons(NegativeStandardSettingCriteria negativeStandardSettingCriteria){
+        return  negativeStandardSettingDao.findContactPersons(negativeStandardSettingCriteria);
     }
 }

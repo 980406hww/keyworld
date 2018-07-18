@@ -25,7 +25,7 @@
           <if test="negativeStandardSettingCriteria.keyword!=null and negativeStandardSettingCriteria.keyword!='' ">  AND tnss.fKeyword = #{negativeStandardSettingCriteria.keyword}</if>
           <if test="negativeStandardSettingCriteria.reachStandard !=null"> AND tnss.fReachStandard = #{negativeStandardSettingCriteria.reachStandard}</if>
           <if test="negativeStandardSettingCriteria.searchEngine!=null and negativeStandardSettingCriteria.searchEngine!='' "> AND tnss.fSearchEngine = #{negativeStandardSettingCriteria.searchEngine}</if>
-        ORDER BY tnss.fKeyword
+        ORDER BY tnss.fKeyword,tnss.fCreateTime
     </select>
 
     <select id="findNegativeStandardSetting" parameterType="java.lang.String" resultType="java.lang.Integer">
@@ -62,7 +62,8 @@
         <if test="negativeStandardSettingCriteria.reachStandard !=null"> AND tnss.fReachStandard = #{negativeStandardSettingCriteria.reachStandard}</if>
         <if test="negativeStandardSettingCriteria.searchEngine!=null and negativeStandardSettingCriteria.searchEngine!='' "> AND tnss.fSearchEngine = #{negativeStandardSettingCriteria.searchEngine}</if>
         <if test="negativeStandardSettingCriteria.userID!=null and negativeStandardSettingCriteria.userID!='' "> AND customer.fUserID = #{negativeStandardSettingCriteria.userID}</if>
-        ORDER BY customer.fContactPerson,tnss.fKeyword
+        <if test="negativeStandardSettingCriteria.contactPerson!=null and negativeStandardSettingCriteria.contactPerson!='' "> AND customer.fContactPerson = #{negativeStandardSettingCriteria.contactPerson}</if>
+        ORDER BY customer.fContactPerson,tnss.fCreateTime
     </select>
 
     <select id="getNegativeStandardSetting" parameterType="java.lang.String" resultType="com.keymanager.monitoring.entity.NegativeStandardSetting">
@@ -102,5 +103,16 @@
         WHERE
         tc.fUserID = u.fLoginName
         AND tc.fUuid = tnss.fCustomerUuid
+    </select>
+
+    <select id="findContactPersons" resultType="java.lang.String" parameterType="com.keymanager.monitoring.criteria.NegativeStandardSettingCriteria">
+        SELECT
+          DISTINCT
+          customer.fContactPerson AS 'contactPerson'
+        FROM t_negative_standard_setting tnss,
+            t_customer customer
+        WHERE
+            tnss.fCustomerUuid = customer.fUuid
+        <if test="negativeStandardSettingCriteria.userID!=null and negativeStandardSettingCriteria.userID!='' "> AND customer.fUserID = #{negativeStandardSettingCriteria.userID}</if>
     </select>
 </mapper>

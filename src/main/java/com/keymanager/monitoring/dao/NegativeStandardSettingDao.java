@@ -24,4 +24,6 @@ public interface NegativeStandardSettingDao extends BaseMapper<NegativeStandardS
     List<NegativeStandardSetting> getNegativeStandardSetting(@Param("userID") String userID);
 
     List<Map> findUsers();
+
+    List<String> findContactPersons(@Param("negativeStandardSettingCriteria")NegativeStandardSettingCriteria negativeStandardSettingCriteria);
 }

@@ -16,9 +16,17 @@
             <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
             <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
             <input type="hidden" name="customerUuid" id="customerUuid" value="${negativeStandardSettingCriteria.customerUuid}">
+            <c:if test="${negativeStandardSettingCriteria.customerUuid==null}">
+                客户名<input type="text" name="contactPerson" list="contactPerson_list" id="contactPerson" value="${negativeStandardSettingCriteria.contactPerson}"/>
+                <datalist id="contactPerson_list">
+                    <c:forEach items="${contactPersons}" var="contactPerson">
+                        <option>${contactPerson}</option>
+                    </c:forEach>
+                </datalist>
+            </c:if>
             关键字<input type="text" name="keyword" list="keyword_list"  id="keyword" value="${negativeStandardSettingCriteria.keyword}">
             <datalist id="keyword_list">
-                <c:forEach items="${setCustomerKeywords}" var="keyword">
+                <c:forEach items="${customerKeywords}" var="keyword">
                     <option>${keyword}</option>
                 </c:forEach>
             </datalist>
@@ -46,11 +54,11 @@
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/negativeStandardSetting/addNegativeStandardSetting">
                 <c:if test="${negativeStandardSettingCriteria.customerUuid!=null}">
-                <input type="button" value="添加" onclick="addNegativeStandardSetting(${negativeStandardSettingCriteria.customerUuid})" >
+                <input type="button" value="添加" onclick="addNegativeStandardSetting(${negativeStandardSettingCriteria.customerUuid})" >&nbsp;&nbsp;
                 </c:if>
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/negativeStandardSetting/deleteNegativeStandardSettings">
-                <input type="button" value="删除所选" onclick="deleteNegativeStandardSettings()">
+                <input type="button" value="删除所选" onclick="deleteNegativeStandardSettings()">&nbsp;&nbsp;
             </shiro:hasPermission>
         </form>
     </div>
@@ -68,6 +76,7 @@
             <td align="center" width=40>前四页负面数量</td>
             <td align="center" width=40>前五页负面数量</td>
             <td align="center" width=40>是否达标</td>
+            <td align="center" width=40>创建时间</td>
             <td align="center" width=80>操作</td>
         </tr>
     </table>
@@ -91,6 +100,7 @@
                     <c:if test="${negativeStandardSetting.reachStandard == false}">否</c:if>
                     <c:if test="${negativeStandardSetting.reachStandard == true}">是</c:if>
                 </td>
+                <td align="center" width=40 name="createTime"><fmt:formatDate  value="${negativeStandardSetting.createTime}" pattern="yyyy-MM-dd"/></td>
                 <td align="center" width=80>
                     <shiro:hasPermission name="/internal/negativeStandardSetting/updateNegativeStandardSetting">
                     <a href="javascript:updateNegativeStandardSetting('${negativeStandardSetting.uuid}','${negativeStandardSetting.reachStandard}')">修改</a>
@@ -130,9 +140,9 @@
 <div id="showNegativeStandardSettingDiv" style="display: none">
     <table>
         <tr><td>关键字</td><td>
-            <input type="text" id="keywordDiv" list="keywordDiv_list"  placeholder="请选择关键字" style="width:97%;margin: 5px" />
+            <input type="text" id="keywordDiv" list="keywordDiv_list"  placeholder="请选择关键字" style="width:97%" />
             <datalist id="keywordDiv_list">
-                <c:forEach items="${setCustomerKeywords}" var="keyword">
+                <c:forEach items="${customerKeywords}" var="keyword">
                     <option>${keyword}</option>
                 </c:forEach>
             </datalist>

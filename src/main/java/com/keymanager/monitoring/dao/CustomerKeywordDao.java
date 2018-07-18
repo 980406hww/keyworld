@@ -179,5 +179,5 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void updateKeywordCustomerUuid(@Param("keywordUuids")List<String> keywordUuids,@Param("customerUuid")String customerUuid, @Param("terminalType")String terminalType);
 
-    Set<String> getCustomerKeywordInfo(@Param("customerKeywordCriteria") CustomerKeywordCriteria customerKeywordCriteria);
+    List<String> getCustomerKeywordInfo(@Param("customerKeywordCriteria") CustomerKeywordCriteria customerKeywordCriteria);
 }

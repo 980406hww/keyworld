@@ -1154,7 +1154,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeywordDao.updateKeywordCustomerUuid(keywordUuids,customerUuid,terminalType);
     }
 
-    public Set<String> getCustomerKeywordInfo(CustomerKeywordCriteria customerKeywordCriteria){
+    public List<String> getCustomerKeywordInfo(CustomerKeywordCriteria customerKeywordCriteria){
         return customerKeywordDao.getCustomerKeywordInfo(customerKeywordCriteria);
     }
 }

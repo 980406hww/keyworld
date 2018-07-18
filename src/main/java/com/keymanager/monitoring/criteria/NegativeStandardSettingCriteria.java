@@ -19,6 +19,8 @@ public class NegativeStandardSettingCriteria {
 
     private String userID;
 
+    private String contactPerson;
+
     public String getUserID() {
         return userID;
     }
@@ -65,5 +67,13 @@ public class NegativeStandardSettingCriteria {
 
     public void setCustomerUuid(Long customerUuid) {
         this.customerUuid = customerUuid;
+    }
+
+    public String getContactPerson() {
+        return contactPerson;
+    }
+
+    public void setContactPerson(String contactPerson) {
+        this.contactPerson = contactPerson;
     }
 }
