@@ -13,6 +13,4 @@ public interface ConfigDao extends BaseMapper<Config> {
     void updateConfig(@Param("config") Config config);
 
     List<Config> findConfigs(@Param("configType")String configType);
-
-    List<Map> getSameCustomerKeywordCount(@Param("monitorOptimizeGroupNameConfigType")String monitorOptimizeGroupNameConfigType, @Param("sameCustomerKeywordCountConfigType")String sameCustomerKeywordCountConfigType);
 }

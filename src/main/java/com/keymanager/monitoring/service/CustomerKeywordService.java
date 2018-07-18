@@ -1169,14 +1169,39 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         Map<String, Integer> sameCustomerKeywordCountMap = configService.getSameCustomerKeywordCount();
         for (CustomerKeywordSortVO customerKeywordSortVO : customerKeywordSortVOList) {
             List<String> uuids = Arrays.asList(customerKeywordSortVO.getUuids().split(","));
-            Integer maxCount = sameCustomerKeywordCountMap.get(customerKeywordSortVO.getOptimizeGroupName());
+            String key = customerKeywordSortVO.getSearchEngine() + "_" + customerKeywordSortVO.getTerminalType();
+            Integer maxCount = sameCustomerKeywordCountMap.get(key);
             if(maxCount != null && uuids.size() > maxCount) {
-                needMoveUuids.addAll(uuids.subList(maxCount, uuids.size()));
+                int split = 0;
+                for (String uuid : uuids) {
+                    if(uuid.indexOf("0") == 0) {
+                        split++;
+                    } else {
+                        int count = uuids.size();
+                        int hasPositionKeywordCount = count - split;
+                        if(hasPositionKeywordCount >= maxCount) {
+                            needMoveUuids.addAll(uuids.subList(0, split));
+                            if(hasPositionKeywordCount > maxCount) {
+                                needMoveUuids.addAll(uuids.subList(split + maxCount, count));
+                            }
+                        } else {
+                            needMoveUuids.addAll(uuids.subList(maxCount - hasPositionKeywordCount, split));
+                        }
+                        break;
+                    }
+                    if(split == uuids.size() && CollectionUtils.isEmpty(needMoveUuids)) {
+                        needMoveUuids.addAll(uuids.subList(maxCount, uuids.size()));
+                    }
+                }
             }
         }
         // 移出超出个数的关键字到noRankingOptimizeGroupName
         if(CollectionUtils.isNotEmpty(needMoveUuids)) {
-            customerKeywordDao.setNoRankingCustomerKeyword(needMoveUuids, Constants.CONFIG_TYPE_NORANK_OPTIMIZE_GROUPNAME);
+            List<String> uuidList = new ArrayList<String>();
+            for (String needMoveUuid : needMoveUuids) {
+                uuidList.add(needMoveUuid.substring(needMoveUuid.indexOf("_") + 1));
+            }
+            customerKeywordDao.setNoRankingCustomerKeyword(uuidList, Constants.CONFIG_TYPE_NORANK_OPTIMIZE_GROUPNAME);
         }
     }
 }
