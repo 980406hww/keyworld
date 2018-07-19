@@ -117,11 +117,13 @@
 	  总记录数:${page.total}&nbsp;&nbsp;
 	  每页显示条数:
 	  <select id="chooseRecords" onchange="changePaging(${page.current},this.value)" style="margin-right: 10px;">
-		  <option>10</option>
-		  <option>25</option>
-		  <option>50</option>
-		  <option>75</option>
-		  <option>100</option>
+          <option>10</option>
+          <option>25</option>
+          <option>50</option>
+          <option>75</option>
+          <option>100</option>
+          <option>500</option>
+          <option>1000</option>
 	  </select>
 	  <input type="hidden" id="currentPageHidden" value="${page.current}"/>
 	  <input type="hidden" id="pageSizeHidden" value="${page.size}"/>
