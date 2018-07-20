@@ -1,4 +1,4 @@
-package com.keymanager.monitoring.service;
+﻿package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.dao.ClientStatusDao;
@@ -12,9 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.io.File;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class ConfigService extends ServiceImpl<ClientStatusDao, ClientStatus>{
@@ -70,7 +68,7 @@ public class ConfigService extends ServiceImpl<ClientStatusDao, ClientStatus>{
 	}
 
 	public Set<String> getNegativeKeyword(){
-		List<Config> configs=configDao.getNegativeKeyword (Constants.CONFIG_TYPE_NEGATIVE_KEYWORD);
+		List<Config> configs = findConfigs(Constants.CONFIG_TYPE_NEGATIVE_KEYWORD);
 		Set<String> keywords=new HashSet<String>();
 		for (Config config : configs){
 			String[] ky=config.getValue().split(",");
@@ -109,5 +107,27 @@ public class ConfigService extends ServiceImpl<ClientStatusDao, ClientStatus>{
 		config.setKey(Constants.CONFIG_KEY_URL);
 		config.setValue(result);
 		configDao.updateConfig(config);
+	}
+	public List<Config> findConfigs(String configType) {
+		return configDao.findConfigs(configType);
+	}
+
+	public List<String> getMonitorOptimizeGroupName(String configType) {
+		List<String> configList = new ArrayList<String>();
+		List<Config> configs = findConfigs(configType);
+		for (Config config : configs) {
+			String[] temp = config.getValue().split(",");
+			configList.addAll(Arrays.asList(temp));
+		}
+		return configList;
+	}
+
+	public Map<String, Integer> getSameCustomerKeywordCount() {
+		Map<String, Integer> sameCustomerKeywordCountMap = new HashMap<String, Integer>();
+		List<Config> configs = findConfigs(Constants.CONFIG_TYPE_SAME_CUSTOMER_KEYWORD_COUNT);
+		for (Config config : configs) {
+			sameCustomerKeywordCountMap.put(config.getKey(), Integer.parseInt(config.getValue()));
+		}
+		return sameCustomerKeywordCountMap;
 	}
 }

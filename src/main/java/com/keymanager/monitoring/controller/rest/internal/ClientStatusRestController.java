@@ -129,9 +129,16 @@ public class ClientStatusRestController extends SpringMVCBaseController {
         modelAndView.addObject("validMap", Constants.CLIENT_STATUS_VALID_MAP);
         modelAndView.addObject("orderByMap", Constants.CLIENT_STATUS_ORDERBY_MAP);
         modelAndView.addObject("operationTypeValues", operationTypeValues);
+        modelAndView.addObject("urlPrefix", getUrlPrefix(request));
         modelAndView.addObject("page", page);
         performanceService.addPerformanceLog(terminalType + ":searchCustomerKeywords", System.currentTimeMillis() - startMilleSeconds, null);
         return modelAndView;
+    }
+
+    private String getUrlPrefix(HttpServletRequest request){
+        String url = request.getRequestURL().toString();
+        String urlPrefix = url.split("\\.")[0];
+        return urlPrefix.replace("http://", "");
     }
 
     @RequiresPermissions("/internal/clientstatus/updateClientStatusTargetVersion")

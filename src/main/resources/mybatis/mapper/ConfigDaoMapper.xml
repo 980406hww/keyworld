@@ -13,7 +13,7 @@
         AND fKey = #{config.key}
     </update>
 
-    <select id="getNegativeKeyword" resultType="com.keymanager.monitoring.entity.Config">
+    <select id="findConfigs" resultType="com.keymanager.monitoring.entity.Config">
         SELECT
             c.fConfigType as 'configType',
             c.fKey as 'key',
