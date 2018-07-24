@@ -1,10 +1,11 @@
-package com.keymanager.monitoring.dao;
+﻿package com.keymanager.monitoring.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.criteria.CustomerKeywordCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordUpdateCriteria;
+import com.keymanager.monitoring.entity.Config;
 import com.keymanager.monitoring.entity.CustomerKeyword;
 import com.keymanager.monitoring.entity.NegativeList;
 import com.keymanager.monitoring.entity.QZCaptureTitleLog;
@@ -180,4 +181,11 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void updateKeywordCustomerUuid(@Param("keywordUuids")List<String> keywordUuids,@Param("customerUuid")String customerUuid, @Param("terminalType")String terminalType);
 
     List<String> getCustomerKeywordInfo(@Param("customerKeywordCriteria") CustomerKeywordCriteria customerKeywordCriteria);
+    void moveOutNoRankingCustomerKeyword(@Param("monitorConfigs")List<String> monitorConfigs, @Param("noRankOptimizeGroupNameConfigType")String noRankOptimizeGroupNameConfigType);
+
+    void moveOutDefaultCustomerKeyword(@Param("noRankConfigs")List<Config> noRankConfigs, @Param("defaultOptimizeGroupNameConfigType")String defaultOptimizeGroupNameConfigType);
+
+    List<CustomerKeywordSortVO> sortCustomerKeywordForOptimize(@Param("monitorConfigs")List<String> monitorConfigs);
+
+    void setNoRankingCustomerKeyword(@Param("needMoveUuids")List<String> needMoveUuids, @Param("noRankOptimizeGroupNameConfigType")String noRankOptimizeGroupNameConfigType);
 }

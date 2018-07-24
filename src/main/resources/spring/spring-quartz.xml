@@ -21,6 +21,7 @@
 				<ref bean="cronTriggerCleanCKLogFromAMonthAgo" />
 				<ref bean="cronTriggerKeywordInfoSynchronize" />
 				<ref bean="cronTriggerCustomerChargeRemind" />
+				<ref bean="cronTriggerChangeOptimizeGroupName" />
 				<ref bean="cronTriggerNegativeStandardSettingCount" />
 			</list>
 		</property>
@@ -202,6 +203,18 @@
 
 	<bean id="cronTriggerKeywordInfoSynchronizeSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject" ref="keywordInfoSynchronizeSchedule" />
+		<property name="targetMethod" value="runTask" />
+		<property name="concurrent" value="false" />
+	</bean>
+
+	<!--更换优化组-->
+	<bean id="cronTriggerChangeOptimizeGroupName" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="cronTriggerChangeOptimizeGroupNameSchedule" />
+		<property name="cronExpression" value="0 45 23 * * ?" />
+	</bean>
+
+	<bean id="cronTriggerChangeOptimizeGroupNameSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="changeOptimizeGroupNameSchedule" />
 		<property name="targetMethod" value="runTask" />
 		<property name="concurrent" value="false" />
 	</bean>
