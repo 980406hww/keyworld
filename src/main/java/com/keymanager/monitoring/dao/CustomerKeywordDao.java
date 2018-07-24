@@ -16,6 +16,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface
 CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
@@ -91,7 +92,7 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void resetOptimizationInfo();
 
     Long getCustomerKeywordUuidForOptimization(@Param("terminalType")String terminalType, @Param("groupName")String groupName,
-                                                      @Param("maxInvalidCount")int maxInvalidCount, @Param("noPositionMaxInvalidCount") int noPositionMaxInvalidCount, @Param("bigKeyword")boolean bigKeyword);
+                                               @Param("maxInvalidCount")int maxInvalidCount, @Param("noPositionMaxInvalidCount") int noPositionMaxInvalidCount, @Param("bigKeyword")boolean bigKeyword);
 
     CustomerKeyword getCustomerKeywordForOptimization(@Param("uuid")Long uuid);
 
@@ -107,7 +108,7 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
                                  @Param("queryInterval")int queryInterval);
 
     Long getCustomerKeywordUuidForCapturePosition(@Param("terminalType")String terminalType, @Param("groupNames")List<String> groupNames,
-                                                         @Param("customerUuid")Long customerUuid, @Param("startTime")Date startTime);
+                                                  @Param("customerUuid")Long customerUuid, @Param("startTime")Date startTime);
 
     CustomerKeyword getCustomerKeywordForCapturePosition(@Param("uuid")Long uuid);
 
@@ -179,6 +180,7 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void updateKeywordCustomerUuid(@Param("keywordUuids")List<String> keywordUuids,@Param("customerUuid")String customerUuid, @Param("terminalType")String terminalType);
 
+    List<String> getCustomerKeywordInfo(@Param("customerKeywordCriteria") CustomerKeywordCriteria customerKeywordCriteria);
     void moveOutNoRankingCustomerKeyword(@Param("monitorConfigs")List<String> monitorConfigs, @Param("noRankOptimizeGroupNameConfigType")String noRankOptimizeGroupNameConfigType);
 
     void moveOutDefaultCustomerKeyword(@Param("noRankConfigs")List<Config> noRankConfigs, @Param("defaultOptimizeGroupNameConfigType")String defaultOptimizeGroupNameConfigType);

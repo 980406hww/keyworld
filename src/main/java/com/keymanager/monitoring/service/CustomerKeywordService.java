@@ -1204,4 +1204,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeywordDao.setNoRankingCustomerKeyword(uuidList, Constants.CONFIG_TYPE_NORANK_OPTIMIZE_GROUPNAME);
         }
     }
+
+    public List<String> getCustomerKeywordInfo(CustomerKeywordCriteria customerKeywordCriteria){
+        return customerKeywordDao.getCustomerKeywordInfo(customerKeywordCriteria);
+    }
 }

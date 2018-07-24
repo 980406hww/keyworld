@@ -39,6 +39,19 @@
 		<property name="freemarkerConfiguration" ref="freemarkerConfiguration" />
 	</bean>
 
+	<bean id="customerChargeRemindMailService" class="com.keymanager.monitoring.common.email.CustomerChargeRemindMailService">
+		<property name="mailSender" ref="customerChargeRemindMailSender" />
+		<property name="emailFrom" value="${email.emailFrom}" />
+		<property name="freemarkerConfiguration" ref="freemarkerConfiguration" />
+	</bean>
+
+	<bean id="negativeStandardSettingMailService" class="com.keymanager.monitoring.common.email.NegativeStandardSettingMailService">
+		<property name="mailSender" ref="negativeStandardSettingMailSender" />
+		<property name="emailFrom" value="${email.emailFrom}" />
+		<property name="freemarkerConfiguration" ref="freemarkerConfiguration" />
+	</bean>
+
+
 	<!-- 用于生成HTML邮件内容的Freemarker配置 -->
 	<bean id="freemarkerConfiguration" class="org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean">
 		<property name="templateLoaderPath" value="classpath:/template" />
@@ -114,6 +127,40 @@
 
 	<!-- 观察刷量异常邮件发送器 -->
 	<bean id="observeOptimizationCountMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="${email.host}" />
+		<property name="username" value="${email.username}" />
+		<property name="password" value="${email.password}" />
+		<property name="defaultEncoding" value="UTF-8"/>
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.smtp.auth">true</prop>
+				<prop key="mail.smtp.port">465</prop>
+				<prop key="mail.smtp.socketFactory.port">465</prop>
+				<prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory</prop>
+				<prop key="mail.smtp.socketFactory.fallback">false</prop>
+			</props>
+		</property>
+	</bean>
+
+	<!-- 客户收费提醒发送器 -->
+	<bean id="customerChargeRemindMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="${email.host}" />
+		<property name="username" value="${email.username}" />
+		<property name="password" value="${email.password}" />
+		<property name="defaultEncoding" value="UTF-8"/>
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.smtp.auth">true</prop>
+				<prop key="mail.smtp.port">465</prop>
+				<prop key="mail.smtp.socketFactory.port">465</prop>
+				<prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory</prop>
+				<prop key="mail.smtp.socketFactory.fallback">false</prop>
+			</props>
+		</property>
+	</bean>
+
+	<!-- 负面达标邮件发送器 -->
+	<bean id="negativeStandardSettingMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
 		<property name="host" value="${email.host}" />
 		<property name="username" value="${email.username}" />
 		<property name="password" value="${email.password}" />

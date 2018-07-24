@@ -114,7 +114,7 @@
             if(!$(this).is('.input')){
                 if($(this).is("td[name='clickEvent']")){
                     var notModified = $(this).text();
-                    $(this).addClass('input').html('<input type="text" value="'+ $(this).text() +'"/>').find('input').focus().blur(function(){
+                    $(this).addClass('input').html('<input type="text" style="width: 100%" value="'+ $(this).text() +'"/>').find('input').focus().blur(function(){
                         var negativeRank = {};
                         var thisvalue = removeAllSpace($(this).val());
                         if(notModified != thisvalue){

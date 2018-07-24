@@ -1016,6 +1016,9 @@ function autoSwitchCustomerKeywordStatus() {
     });
     $('#autoSwitchCustomerKeywordStatusDialog').window("resize",{top:$(document).scrollTop() + 150});
 }
+function openNegativeStandardSetting(url) {
+    window.open(url);
+}
 function setCustomerUpdateInterval(uuid) {
     var uuids = getSelectedIDs();
     if(uuid == null) {
@@ -1038,7 +1041,7 @@ function setCustomerUpdateInterval(uuid) {
                         for(var i = 0; i < parseInt(days[1]) - parseInt(days[0]); i++) {
                             intervalDays += "," + (parseInt(days[0]) + i + 1);
                         }
-                    } else {
+                    }else {
                         intervalDays += "," + value;
                     }
                 });

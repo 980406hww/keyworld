@@ -211,6 +211,9 @@
                         | <a target="_blank" href="javascript:viewSitesdRank('${customer.contactPerson}','aizhan')">爱站排名</a>
                         | <a target="_blank" href="javascript:viewSitesdRank('${customer.contactPerson}','5118')">5118排名</a>
                     </c:if>
+                <shiro:hasPermission name="/internal/negativeStandardSetting/searchNegativeStandardSetting">
+                   | <a href="javascript:openNegativeStandardSetting('/internal/negativeStandardSetting/searchNegativeStandardSetting/${customer.uuid}')">负面达标设置</a>
+                </shiro:hasPermission>
                 </td>
             </tr>
         </c:forEach>

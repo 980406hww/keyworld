@@ -17,4 +17,6 @@ public interface NegativeRankDao extends BaseMapper<NegativeRank> {
     List<NegativeRank> searchNegativeRanks(Page<NegativeRank> page,@Param("negativeRankCriteria") NegativeRankCriteria negativeRankCriteria);
 
     List<NegativeRank> findInitialNegativeRanks(@Param("searchEngine")String searchEngine, @Param("createTime")Date createTime);
+
+    List<NegativeRank> getTodayNegativeRanks();
 }
