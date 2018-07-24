@@ -1,4 +1,4 @@
-﻿package com.keymanager.monitoring.service;
+package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
