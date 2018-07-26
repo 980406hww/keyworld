@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.CookieDao">
+    <sql id="selectCol">
+        fUuid AS 'uuid',
+        fCookie AS 'cookie',
+        fSearchEngine AS 'searchEngine',
+        fStatus AS 'status',
+        fUpdateTime AS 'updateTime',
+        fCreateTime AS 'createTime'
+    </sql>
+
+    <update id="updateCookieStatus">
+        UPDATE t_cookie
+        SET fStatus = #{status}
+        WHERE fCookie IN
+        <foreach item="item" collection="cookies" open="(" separator="," close=")">
+            #{item.cookie}
+        </foreach>
+    </update>
+
+    <select id="findCookies" resultType="com.keymanager.monitoring.entity.Cookie">
+        SELECT
+            <include refid="selectCol"/>
+        FROM t_cookie
+        WHERE fSearchEngine = #{searchEngine}
+        AND fStatus = #{status}
+        LIMIT 0,#{total}
+    </select>
+</mapper>

@@ -530,4 +530,13 @@
             #{clientID}
         </foreach>
     </update>
+
+    <update id="updateCookieCount">
+        UPDATE t_client_status
+        SET fCookieCount = (
+            SELECT COUNT(1) FROM t_client_cookie
+            WHERE fClientID = #{clientID}
+        )
+        WHERE fClientID = #{clientID}
+    </update>
 </mapper>

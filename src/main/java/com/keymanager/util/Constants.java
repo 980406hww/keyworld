@@ -54,6 +54,7 @@ public class Constants {
     public final static String CONFIG_TYPE_WEBSITE_WHITE_LIST = "WebsiteWhiteList";
     public final static String CONFIG_KEY_URL = "Url";
     public final static String CONFIG_TYPE_SAME_CUSTOMER_KEYWORD_COUNT = "SameCustomerKeywordCount";
+    public final static String CONFIG_KEY_CLIENT_COOKIE_COUNT = "ClientCookieCount";
 
     public final static Map<String, String> ACCOUNT_LOG_STATUS_MAP = new HashMap<String, String>();
     static {

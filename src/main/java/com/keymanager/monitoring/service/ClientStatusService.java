@@ -1023,4 +1023,8 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
         String[] clientIDs = clientStatusBatchUpdateCriteria.getClientStatus().getClientID().split(",");
         clientStatusDao.batchUpdateClientStatus(clientIDs, clientStatusBatchUpdateCriteria.getCs(), clientStatusBatchUpdateCriteria.getClientStatus());
     }
+
+    public void updateCookieCount(String clientID) {
+        clientStatusDao.updateCookieCount(clientID);
+    }
 }

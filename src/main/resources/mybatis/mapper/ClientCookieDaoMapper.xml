@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.ClientCookieDao">
+    <delete id="deleteClientCookies">
+        DELETE FROM t_client_cookie
+        WHERE fCookieUuid IN (
+            SELECT c.fUuid FROM t_cookie c
+            WHERE c.fStatus = #{status}
+        )
+    </delete>
+
+    <select id="findCookieCountByClientID" resultType="int">
+        SELECT COUNT(1) FROM t_client_cookie
+        WHERE fClientID = #{clientID}
+    </select>
+
+    <insert id="batchInsertClientCookie">
+        INSERT INTO
+        t_client_cookie(fUuid, fClientID, fCookieUuid, fUpdateTime, fCreateTime)
+        VALUES
+        <foreach collection="cookieList" item="cookie" separator=",">
+            (NULL,
+            #{clientID},
+            #{cookie.uuid},
+            NULL,
+            NOW())
+        </foreach>
+    </insert>
+</mapper>
