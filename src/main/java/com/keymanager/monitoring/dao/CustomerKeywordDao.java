@@ -1,4 +1,4 @@
-﻿package com.keymanager.monitoring.dao;
+package com.keymanager.monitoring.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;

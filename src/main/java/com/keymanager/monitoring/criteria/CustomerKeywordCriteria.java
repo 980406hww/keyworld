@@ -1,4 +1,4 @@
-﻿package com.keymanager.monitoring.criteria;
+package com.keymanager.monitoring.criteria;
 
 public class CustomerKeywordCriteria extends BaseCriteria{
     private Long customerUuid;

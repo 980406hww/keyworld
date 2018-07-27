@@ -1,4 +1,4 @@
-﻿package com.keymanager.monitoring.excel.operator;
+package com.keymanager.monitoring.excel.operator;
 
 import java.io.IOException;
 import java.io.InputStream;
