@@ -113,7 +113,6 @@ public class CookieService extends ServiceImpl<CookieDao, Cookie> {
 	}
 
 	public Page<Cookie> searchCookies(Page<Cookie> page, CookieCriteria cookieCriteria) {
-		allotCookieForClient();
 		page.setRecords(cookieDao.searchCookies(page, cookieCriteria));
 		return page;
 	}
