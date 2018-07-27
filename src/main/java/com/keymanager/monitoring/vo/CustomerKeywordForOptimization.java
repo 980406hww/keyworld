@@ -81,6 +81,7 @@ public class CustomerKeywordForOptimization {
     private List<KeywordSimpleVO> relatedQZKeywords;
 
     private String remarks;
+    private String ct;
     private Date negativeListUpdateTime;
 
     public String getKeyword() {
@@ -673,5 +674,13 @@ public class CustomerKeywordForOptimization {
 
     public void setSwitchGroupName(String switchGroupName) {
         this.switchGroupName = switchGroupName;
+    }
+
+    public String getCt() {
+        return ct;
+    }
+
+    public void setCt(String ct) {
+        this.ct = ct;
     }
 }

@@ -726,6 +726,12 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                     customerKeywordForOptimization.setRelatedKeywordPercentage(customerKeyword.getRelatedKeywordPercentage());
                 }
 
+                if("verify_ct".equals(customerKeywordForOptimization.getOperationType())){
+                    Config configCt = configService.getConfig(Constants.CONFIG_TYPE_CT, customerKeywordForOptimization.getGroup());
+                    if(configCt != null) {
+                        customerKeywordForOptimization.setCt(configCt.getValue());
+                    }
+                }
                 if(customerKeywordForOptimization.getEntryType().equals(EntryTypeEnum.qz.name()) &&
                         (customerKeywordForOptimization.getOperationType().contains("qz_zhannei") || customerKeywordForOptimization.getOperationType().contains("pc_zhannei_360"))) {
                     List<KeywordSimpleVO> qzKeywords = customerKeywordDao.getQZCustomerKeywordSummaryInfos(terminalType, customerKeyword.getOptimizeGroupName());
