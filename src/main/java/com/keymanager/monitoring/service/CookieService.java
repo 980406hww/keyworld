@@ -65,8 +65,6 @@ public class CookieService extends ServiceImpl<CookieDao, Cookie> {
 	public void allotCookieStr(String searchEngine, ClientCookie clientCookie, String type, int count) {
 		StringBuilder stringBuilder = new StringBuilder();
 		while (count > 0) {
-			System.out.println("begin");
-			System.out.println(clientCookie.getClientID());
 			Cookie cookie = cookieDao.getCookie(searchEngine);
 			if(cookie != null) {
 				if(cookie.getCookieCount() > count) {
@@ -86,7 +84,6 @@ public class CookieService extends ServiceImpl<CookieDao, Cookie> {
 			} else {
 				count = 0;
 			}
-			System.out.println("over");
         }
 		if(type.equals("update")) {
             clientCookie.setCookieStr(clientCookie.getCookieStr() + stringBuilder.toString());
