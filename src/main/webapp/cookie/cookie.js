@@ -113,7 +113,7 @@ function uploadCookieTxt() {
                     contentType: false,
                     success: function (result) {
                         if (result) {
-                            $().toastmessage('showSuccessToast', "上传成功", true);
+                            $().toastmessage('showSuccessToast', "上传成功");
                         } else {
                             $().toastmessage('showErrorToast', "上传失败");
                         }

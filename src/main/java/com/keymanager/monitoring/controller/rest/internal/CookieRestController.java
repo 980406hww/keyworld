@@ -6,6 +6,7 @@ import com.keymanager.monitoring.entity.Cookie;
 import com.keymanager.monitoring.service.CookieService;
 import com.keymanager.util.FileUtil;
 import com.keymanager.util.Utils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,8 +41,10 @@ public class CookieRestController {
     public ModelAndView searchCookiesPost(HttpServletRequest request, CookieCriteria cookieCriteria) {
         String currentPageNumber = request.getParameter("currentPageNumber");
         String pageSize = request.getParameter("pageSize");
-        if (null == currentPageNumber && null == pageSize) {
+        if(StringUtils.isEmpty(currentPageNumber)){
             currentPageNumber = "1";
+        }
+        if(StringUtils.isEmpty(pageSize)){
             pageSize = "50";
         }
         return constructCookieModelAndView(cookieCriteria, Integer.parseInt(currentPageNumber), Integer.parseInt(pageSize), request);
@@ -49,8 +52,10 @@ public class CookieRestController {
 
     private ModelAndView constructCookieModelAndView(CookieCriteria cookieCriteria, int currentPageNumber, int pageSize, HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView("/cookie/cookie");
-        Page<Cookie> page = cookieService.searchCookies(new Page<Cookie>(currentPageNumber,pageSize), cookieCriteria);
-        modelAndView.addObject("page", page);
+        if(request.getMethod().equals("POST")) {
+            Page<Cookie> page = cookieService.searchCookies(new Page<Cookie>(currentPageNumber,pageSize), cookieCriteria);
+            modelAndView.addObject("page", page);
+        }
         modelAndView.addObject("cookieCriteria", cookieCriteria);
         return modelAndView;
     }
