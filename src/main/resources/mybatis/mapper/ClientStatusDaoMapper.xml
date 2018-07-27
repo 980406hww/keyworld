@@ -531,12 +531,19 @@
         </foreach>
     </update>
 
-    <update id="updateCookieCount">
-        UPDATE t_client_status
-        SET fCookieCount = (
-            SELECT COUNT(1) FROM t_client_cookie
-            WHERE fClientID = #{clientID}
-        )
-        WHERE fClientID = #{clientID}
-    </update>
+    <select id="searchClientForAllotCookie" resultType="com.keymanager.monitoring.vo.CookieVO">
+        SELECT
+            cs.fClientID AS 'clientID',
+            cs.fOperationType AS 'operationType',
+            cc.fCookieCount AS 'cookieCount',
+            cc.fCookieStr AS 'cookieStr'
+        FROM t_client_status cs
+        LEFT JOIN t_client_cookie cc
+        ON cs.fClientID = cc.fClientID
+        WHERE (cc.fCookieCount &lt; #{clientCookieCount} OR cc.fCookieCount IS NULL)
+        AND cs.fSwitchGroupName IN
+        <foreach item="groupName" collection="switchGroupNames" open="(" separator="," close=")">
+            #{groupName}
+        </foreach>
+    </select>
 </mapper>

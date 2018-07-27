@@ -609,6 +609,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeywordForOptimization.setOperationType(clientStatus.getOperationType());
             customerKeywordForOptimization.setBroadbandAccount(clientStatus.getBroadbandAccount());
             customerKeywordForOptimization.setBroadbandPassword(clientStatus.getBroadbandPassword());
+            customerKeywordForOptimization.setSwitchGroupName(clientStatus.getSwitchGroupName());
 
             NegativeListUpdateInfo negativeListUpdateInfo = negativeListUpdateInfoService.getNegativeListUpdateInfo(customerKeyword.getKeyword());
             if(negativeListUpdateInfo != null) {

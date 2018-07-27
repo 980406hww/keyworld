@@ -1,6 +1,7 @@
 package com.keymanager.monitoring.controller.rest.external;
 
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
+import com.keymanager.monitoring.entity.ClientCookie;
 import com.keymanager.monitoring.entity.Cookie;
 import com.keymanager.monitoring.service.CookieService;
 import com.keymanager.monitoring.vo.CookieVO;
@@ -25,29 +26,14 @@ public class ExternalCookieRestController extends SpringMVCBaseController {
 	@Autowired
 	private CookieService cookieService;
 
-	@RequestMapping(value = "/updateInvalidCookies", method = RequestMethod.POST)
-	public ResponseEntity<?> updateInvalidCookies(@RequestBody CookieVO cookieVO, HttpServletRequest request) throws Exception {
+	@RequestMapping(value = "/getCookieStrForClient", method = RequestMethod.POST)
+	public ResponseEntity<?> getCookieStrForClient(@RequestBody CookieVO cookieVO, HttpServletRequest request) throws Exception{
 		try {
 			String userName = cookieVO.getUserName();
 			String password = cookieVO.getPassword();
 			if (validUser(userName, password)) {
-				List<Cookie> cookieList = cookieService.updateInvalidCookies(cookieVO.getClientID(), cookieVO.getCookies());
-				return new ResponseEntity<Object>(cookieList, HttpStatus.OK);
-			}
-		}catch (Exception ex){
-			logger.error(ex.getMessage());
-		}
-		return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
-	}
-
-	@RequestMapping(value = "/getCookieList", method = RequestMethod.POST)
-	public ResponseEntity<?> getCookieList(@RequestBody CookieVO cookieVO, HttpServletRequest request) throws Exception{
-		try {
-			String userName = cookieVO.getUserName();
-			String password = cookieVO.getPassword();
-			if (validUser(userName, password)) {
-				List<Cookie> cookieList = cookieService.getCookieList(cookieVO.getClientID(), cookieVO.getCookieCount());
-				return new ResponseEntity<Object>(cookieList, HttpStatus.OK);
+				ClientCookie clientCookie  = cookieService.getCookieStrForClient(cookieVO.getClientID());
+				return new ResponseEntity<Object>(clientCookie, HttpStatus.OK);
 			}
 		}catch (Exception ex){
 			logger.error(ex.getMessage());

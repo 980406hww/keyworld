@@ -12,7 +12,8 @@ public class CookieVO {
     private String password;
     private String clientID;
     private int cookieCount;
-    private List<Cookie> cookies;
+    private String cookieStr;
+    private String operationType;
 
     public String getUserName() {
         return userName;
@@ -46,11 +47,19 @@ public class CookieVO {
         this.cookieCount = cookieCount;
     }
 
-    public List<Cookie> getCookies() {
-        return cookies;
+    public String getCookieStr() {
+        return cookieStr;
     }
 
-    public void setCookies(List<Cookie> cookies) {
-        this.cookies = cookies;
+    public void setCookieStr(String cookieStr) {
+        this.cookieStr = cookieStr;
+    }
+
+    public String getOperationType() {
+        return operationType;
+    }
+
+    public void setOperationType(String operationType) {
+        this.operationType = operationType;
     }
 }

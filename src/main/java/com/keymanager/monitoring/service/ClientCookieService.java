@@ -18,15 +18,7 @@ public class ClientCookieService extends ServiceImpl<ClientCookieDao, ClientCook
 	@Autowired
 	private ClientCookieDao clientCookieDao;
 
-	public void deleteClientCookies(String status) {
-		clientCookieDao.deleteClientCookies(status);
-	}
-
-	public int findCookieCountByClientID(String clientID) {
-		return clientCookieDao.findCookieCountByClientID(clientID);
-	}
-
-	public void batchInsertClientCookie(String clientID, List<Cookie> cookieList) {
-		clientCookieDao.batchInsertClientCookie(clientID, cookieList);
+	public ClientCookie findClientCookieByClientID(String clientID) {
+		return clientCookieDao.findClientCookieByClientID(clientID);
 	}
 }

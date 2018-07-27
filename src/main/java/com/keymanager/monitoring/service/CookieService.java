@@ -1,21 +1,28 @@
 package com.keymanager.monitoring.service;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.keymanager.monitoring.criteria.CookieCriteria;
 import com.keymanager.monitoring.dao.CookieDao;
+import com.keymanager.monitoring.entity.ClientCookie;
 import com.keymanager.monitoring.entity.ClientStatus;
 import com.keymanager.monitoring.entity.Config;
 import com.keymanager.monitoring.entity.Cookie;
-import com.keymanager.monitoring.enums.CookieStatusEnum;
+import com.keymanager.monitoring.vo.CookieVO;
 import com.keymanager.util.Constants;
+import com.keymanager.util.FileUtil;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CookieService extends ServiceImpl<CookieDao, Cookie> {
@@ -33,47 +40,130 @@ public class CookieService extends ServiceImpl<CookieDao, Cookie> {
 	@Autowired
 	private ClientStatusService clientStatusService;
 
-	public List<Cookie> updateInvalidCookies(String clientID, List<Cookie> invalidCookies) {
-		List<Cookie> cookieList = null;
-		if(CollectionUtils.isNotEmpty(invalidCookies)) {
-			cookieDao.updateCookieStatus(invalidCookies, CookieStatusEnum.invalid.name());
-			// 获取cookie类型
-			String searchEngine = getSearchEngineClientID(clientID);
-			// 删除无效cookie映射
-			clientCookieService.deleteClientCookies(CookieStatusEnum.invalid.name());
-			// 分配新的cookie到终端
-			Config config = configService.getConfig(Constants.CONFIG_KEY_CLIENT_COOKIE_COUNT, Constants.CONFIG_KEY_CLIENT_COOKIE_COUNT);
-			int total = clientCookieService.findCookieCountByClientID(clientID);
-			total = Integer.parseInt(config.getValue()) - total;
-			if(total > 0) {
-				cookieList = cookieDao.findCookies(total, searchEngine, CookieStatusEnum.normal.name());
-				if(CollectionUtils.isNotEmpty(cookieList)) {
-					cookieDao.updateCookieStatus(cookieList, CookieStatusEnum.inUse.name());
-					clientCookieService.batchInsertClientCookie(clientID, cookieList);
-					clientStatusService.updateCookieCount(clientID);
-				}
+	public ClientCookie getCookieStrForClient(String clientID) throws Exception {
+		synchronized (Cookie.class) {
+			String searchEngine = getSearchEngineForClientID(clientID);
+			ClientCookie clientCookie = clientCookieService.findClientCookieByClientID(clientID);
+			String type = "update";
+			if (clientCookie == null) {
+				type = "insert";
+				clientCookie = new ClientCookie();
+				clientCookie.setClientID(clientID);
+				clientCookie.setCreateTime(new Date());
 			}
+			Config clientCookieCountConfig = configService.getConfig(Constants.CONFIG_KEY_CLIENT_COOKIE_COUNT, Constants.CONFIG_KEY_CLIENT_COOKIE_COUNT);
+			int clientCookieCount = Integer.parseInt(clientCookieCountConfig.getValue());
+			// 需要分配
+			int count = clientCookieCount - clientCookie.getCookieCount();
+			if (count > 0) {
+				allotCookieStr(searchEngine, clientCookie, type, count);
+			}
+			return clientCookie;
 		}
-		return cookieList;
 	}
 
-	public List<Cookie> getCookieList(String clientID, int cookieCount) {
-		String searchEngine = getSearchEngineClientID(clientID);
-		List<Cookie> cookieList = cookieDao.findCookies(cookieCount, searchEngine, CookieStatusEnum.normal.name());
-		if(CollectionUtils.isNotEmpty(cookieList)) {
-			cookieDao.updateCookieStatus(cookieList, CookieStatusEnum.inUse.name());
-			clientCookieService.batchInsertClientCookie(clientID, cookieList);
-			clientStatusService.updateCookieCount(clientID);
-		}
-		return cookieList;
+	public void allotCookieStr(String searchEngine, ClientCookie clientCookie, String type, int count) {
+		StringBuilder stringBuilder = new StringBuilder();
+		while (count > 0) {
+			System.out.println("begin");
+			System.out.println(clientCookie.getClientID());
+			Cookie cookie = cookieDao.getCookie(searchEngine);
+			if(cookie != null) {
+				if(cookie.getCookieCount() > count) {
+					int index = StringUtils.ordinalIndexOf(cookie.getCookieStr(), "\r\n", count);
+					String cookieSub = cookie.getCookieStr().substring(0, index + 2);
+					stringBuilder.append(cookieSub);
+					cookie.setCookieStr(cookie.getCookieStr().substring(index + 2));
+					cookie.setCookieCount(cookie.getCookieCount() - count);
+					cookieDao.updateById(cookie);
+					count = 0;
+				} else {
+					// 数量不满足，需要再次循环
+					stringBuilder.append(cookie.getCookieStr());
+					cookieDao.deleteById(cookie);
+					count = count - cookie.getCookieCount();
+				}
+			} else {
+				count = 0;
+			}
+			System.out.println("over");
+        }
+		if(type.equals("update")) {
+            clientCookie.setCookieStr(clientCookie.getCookieStr() + stringBuilder.toString());
+			clientCookie.setCookieCount(StringUtils.countMatches(clientCookie.getCookieStr(), "\r\n"));
+            clientCookieService.updateById(clientCookie);
+        } else {
+            clientCookie.setCookieStr(stringBuilder.toString());
+			clientCookie.setCookieCount(StringUtils.countMatches(clientCookie.getCookieStr(), "\r\n"));
+            clientCookieService.insert(clientCookie);
+        }
 	}
 
-	private String getSearchEngineClientID(String clientID) {
+	private String getSearchEngineForClientID(String clientID) {
 		ClientStatus clientStatus = clientStatusService.selectById(clientID);
 		String searchEngine = Constants.SEARCH_ENGINE_BAIDU;
 		if(clientStatus.getOperationType().contains(Constants.CONFIG_KEY_360)) {
 			searchEngine = Constants.CONFIG_KEY_360;
 		}
 		return searchEngine;
+	}
+
+	public Page<Cookie> searchCookies(Page<Cookie> page, CookieCriteria cookieCriteria) {
+		allotCookieForClient();
+		page.setRecords(cookieDao.searchCookies(page, cookieCriteria));
+		return page;
+	}
+
+	public void saveCookieByFile(String filePath, String searchEngine) throws Exception {
+		String cookieStr = FileUtil.readTxtFile(filePath, "UTF-8");
+		if(StringUtils.isNotBlank(cookieStr)) {
+			int subCount = 1000;
+			int total = StringUtils.countMatches(cookieStr, "\r\n");
+			for(int i = 0; i < total / subCount; i++) {
+				Cookie cookie = new Cookie();
+				cookie.setCookieCount(subCount);
+				int index = StringUtils.ordinalIndexOf(cookieStr, "\r\n", subCount);
+				cookie.setCookieStr(cookieStr.substring(0, index + 2));
+				cookieStr = cookieStr.substring(index + 2);
+				cookie.setSearchEngine(searchEngine);
+				cookie.setCreateTime(new Date());
+				cookieDao.insert(cookie);
+			}
+			if (StringUtils.isNotBlank(cookieStr)) {
+				Cookie cookie = new Cookie();
+				cookie.setCookieCount(StringUtils.countMatches(cookieStr, "\r\n"));
+				cookie.setCookieStr(cookieStr);
+				cookie.setSearchEngine(searchEngine);
+				cookie.setCreateTime(new Date());
+				cookieDao.insert(cookie);
+			}
+		}
+	}
+
+	public void allotCookieForClient() {
+		synchronized (Cookie.class) {
+			Config clientCookieCountConfig = configService.getConfig(Constants.CONFIG_KEY_CLIENT_COOKIE_COUNT, Constants.CONFIG_KEY_CLIENT_COOKIE_COUNT);
+			Config cookieGroupConfig = configService.getConfig(Constants.CONFIG_TYPE_COOKIE_GROUP, Constants.CONFIG_KEY_SWITCH_GROUP_NAME);
+			int clientCookieCount = Integer.parseInt(clientCookieCountConfig.getValue());
+			String[] clientCookieGroups = cookieGroupConfig.getValue().split(",");
+			// 获取需要分配cookie的机器
+			List<CookieVO> clientList = clientStatusService.searchClientForAllotCookie(clientCookieCount, clientCookieGroups);
+			for (CookieVO client : clientList) {
+				int count = clientCookieCount - client.getCookieCount();
+				String searchEngine = Constants.SEARCH_ENGINE_BAIDU;
+				if (client.getOperationType().contains(Constants.CONFIG_KEY_360)) {
+					searchEngine = Constants.CONFIG_KEY_360;
+				}
+				ClientCookie clientCookie = clientCookieService.findClientCookieByClientID(client.getClientID());
+				String type = "update";
+				if (clientCookie == null) {
+					type = "insert";
+					clientCookie = new ClientCookie();
+					clientCookie.setClientID(client.getClientID());
+					clientCookie.setCreateTime(new Date());
+				}
+				allotCookieStr(searchEngine, clientCookie, type, count);
+			}
+		}
 	}
 }

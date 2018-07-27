@@ -61,6 +61,7 @@ public class CustomerKeywordForOptimization {
     private String currentTime;
     private String searchEngine;
     private String terminalType;
+    private String switchGroupName;
 
     private String broadbandAccount;
     private String broadbandPassword;
@@ -664,5 +665,13 @@ public class CustomerKeywordForOptimization {
 
     public void setNegativeListUpdateTime(Date negativeListUpdateTime) {
         this.negativeListUpdateTime = negativeListUpdateTime;
+    }
+
+    public String getSwitchGroupName() {
+        return switchGroupName;
+    }
+
+    public void setSwitchGroupName(String switchGroupName) {
+        this.switchGroupName = switchGroupName;
     }
 }

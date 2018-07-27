@@ -23,6 +23,7 @@
 				<ref bean="cronTriggerCustomerChargeRemind" />
 				<ref bean="cronTriggerChangeOptimizeGroupName" />
 				<ref bean="cronTriggerNegativeStandardSettingCount" />
+				<ref bean="cronTriggerAllotCookie" />
 			</list>
 		</property>
 		<!-- Quartz配置, 本地运行无需单独的quartz.properties文件，在此简单配置即可 -->
@@ -243,4 +244,15 @@
 		<property name="concurrent" value="false" />
 	</bean>
 
+	<!--分配cookie-->
+	<bean id="cronTriggerAllotCookie" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="cronTriggerAllotCookieSchedule"/>
+		<property name="cronExpression" value="0 0/30 * * * ?" />
+	</bean>
+
+	<bean id="cronTriggerAllotCookieSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="allotCookieSchedule" />
+		<property name="targetMethod" value="runTask" />
+		<property name="concurrent" value="false" />
+	</bean>
 </beans>

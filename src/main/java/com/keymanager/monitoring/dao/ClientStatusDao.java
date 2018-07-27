@@ -5,11 +5,13 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.criteria.ClientStatusCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
 import com.keymanager.monitoring.entity.ClientStatus;
+import com.keymanager.monitoring.vo.CookieVO;
 import com.keymanager.value.ClientStatusGroupSummaryVO;
 import com.keymanager.value.ClientStatusSummaryVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ClientStatusDao extends BaseMapper<ClientStatus> {
     List<ClientStatus> searchClientStatusForRefreshStat(@Param("customerKeywordRefreshStatInfoCriteria")CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria);
@@ -71,5 +73,5 @@ public interface ClientStatusDao extends BaseMapper<ClientStatus> {
 
     void batchUpdateClientStatus(@Param("clientIDs")String[] clientIDs, @Param("cs")ClientStatus cs, @Param("clientStatus")ClientStatus clientStatus);
 
-    void updateCookieCount(@Param("clientID")String clientID);
+    List<CookieVO> searchClientForAllotCookie(@Param("clientCookieCount")int clientCookieCount, @Param("switchGroupNames")String[] switchGroupNames);
 }

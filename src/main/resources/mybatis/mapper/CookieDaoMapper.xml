@@ -3,28 +3,29 @@
 <mapper namespace="com.keymanager.monitoring.dao.CookieDao">
     <sql id="selectCol">
         fUuid AS 'uuid',
-        fCookie AS 'cookie',
+        fCookieCount AS 'cookieCount',
+        fCookieStr AS 'cookieStr',
         fSearchEngine AS 'searchEngine',
-        fStatus AS 'status',
         fUpdateTime AS 'updateTime',
         fCreateTime AS 'createTime'
     </sql>
 
-    <update id="updateCookieStatus">
-        UPDATE t_cookie
-        SET fStatus = #{status}
-        WHERE fCookie IN
-        <foreach item="item" collection="cookies" open="(" separator="," close=")">
-            #{item.cookie}
-        </foreach>
-    </update>
-
-    <select id="findCookies" resultType="com.keymanager.monitoring.entity.Cookie">
+    <select id="getCookie" resultType="com.keymanager.monitoring.entity.Cookie">
         SELECT
             <include refid="selectCol"/>
         FROM t_cookie
         WHERE fSearchEngine = #{searchEngine}
-        AND fStatus = #{status}
-        LIMIT 0,#{total}
+        LIMIT 1
+    </select>
+
+    <select id="searchCookies" parameterType="com.keymanager.monitoring.criteria.CookieCriteria" resultType="com.keymanager.monitoring.entity.Cookie">
+        SELECT
+            <include refid="selectCol"/>
+        FROM t_cookie
+        WHERE 1 = 1
+        <if test="cookieCriteria.searchEngine != null and cookieCriteria.searchEngine != ''">AND fSearchEngine = #{cookieCriteria.searchEngine}</if>
+        <if test="cookieCriteria.createTime != null and cookieCriteria.createTime != ''">AND fCreateTime = #{cookieCriteria.createTime}</if>
+        <if test="cookieCriteria.cookieStr != null and cookieCriteria.cookieStr != ''">AND fCookieStr LIKE '%${cookieCriteria.cookieStr}%'</if>
+        ORDER BY fCreateTime
     </select>
 </mapper>

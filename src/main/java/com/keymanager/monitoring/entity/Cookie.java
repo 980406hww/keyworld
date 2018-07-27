@@ -6,21 +6,29 @@ import com.baomidou.mybatisplus.annotations.TableName;
 @TableName(value = "t_cookie")
 public class Cookie extends BaseEntity {
 
-	@TableField(value = "fCookie")
-	private String cookie;
+	@TableField(value = "fCookieCount")
+	private int cookieCount;
+
+	@TableField(value = "fCookieStr")
+	private String cookieStr;
 
 	@TableField(value = "fSearchEngine")
 	private String searchEngine;
 
-	@TableField(value = "fStatus")
-	private String status;
-
-	public String getCookie() {
-		return cookie;
+	public int getCookieCount() {
+		return cookieCount;
 	}
 
-	public void setCookie(String cookie) {
-		this.cookie = cookie;
+	public void setCookieCount(int cookieCount) {
+		this.cookieCount = cookieCount;
+	}
+
+	public String getCookieStr() {
+		return cookieStr;
+	}
+
+	public void setCookieStr(String cookieStr) {
+		this.cookieStr = cookieStr;
 	}
 
 	public String getSearchEngine() {
@@ -29,13 +37,5 @@ public class Cookie extends BaseEntity {
 
 	public void setSearchEngine(String searchEngine) {
 		this.searchEngine = searchEngine;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
 	}
 }

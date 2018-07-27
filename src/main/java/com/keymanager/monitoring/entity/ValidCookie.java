@@ -3,11 +3,8 @@ package com.keymanager.monitoring.entity;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 
-@TableName(value = "t_client_cookie")
-public class ClientCookie extends BaseEntity {
-
-	@TableField(value = "fClientID")
-	private String clientID;
+@TableName(value = "t_valid_cookie")
+public class ValidCookie extends BaseEntity {
 
 	@TableField(value = "fCookieCount")
 	private int cookieCount;
@@ -15,13 +12,8 @@ public class ClientCookie extends BaseEntity {
 	@TableField(value = "fCookieStr")
 	private String cookieStr;
 
-	public String getClientID() {
-		return clientID;
-	}
-
-	public void setClientID(String clientID) {
-		this.clientID = clientID;
-	}
+	@TableField(value = "fSearchEngine")
+	private String searchEngine;
 
 	public int getCookieCount() {
 		return cookieCount;
@@ -37,5 +29,13 @@ public class ClientCookie extends BaseEntity {
 
 	public void setCookieStr(String cookieStr) {
 		this.cookieStr = cookieStr;
+	}
+
+	public String getSearchEngine() {
+		return searchEngine;
+	}
+
+	public void setSearchEngine(String searchEngine) {
+		this.searchEngine = searchEngine;
 	}
 }

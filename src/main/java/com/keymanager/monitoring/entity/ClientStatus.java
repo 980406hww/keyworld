@@ -282,9 +282,6 @@ public class ClientStatus {
 	@TableField(value = "fTargetVPSPassword")
 	private String targetVPSPassword;
 
-	@TableField(value = "fCookieCount")
-	private int cookieCount;
-
 	public String getClientID() {
 		return clientID;
 	}
@@ -997,13 +994,5 @@ public class ClientStatus {
 
 	public void setTargetVPSPassword(String targetVPSPassword) {
 		this.targetVPSPassword = targetVPSPassword;
-	}
-
-	public int getCookieCount() {
-		return cookieCount;
-	}
-
-	public void setCookieCount(int cookieCount) {
-		this.cookieCount = cookieCount;
 	}
 }

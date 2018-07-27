@@ -1,5 +1,7 @@
 package com.keymanager.util;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,8 +59,10 @@ public class FileUtil {
             try {
                 String read = "";
                 while ((read = bufferedReader.readLine()) != null) {
-                    result.append(read);
-                    result.append("\r\n");
+                    if(StringUtils.isNotBlank(read)) {
+                        result.append(read);
+                        result.append("\r\n");
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -70,7 +74,6 @@ public class FileUtil {
                 bufferedReader.close();
             }
         }
-        System.out.println("读取出来的文件内容是：" + "\r\n" + result.toString());
         return result.toString();
     }
 
