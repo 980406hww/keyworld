@@ -102,11 +102,17 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(value = "fOptimizedCount")
     private int optimizedCount;
 
+    @TableField(value = "fOptimizeRemainingCount")
+    private int optimizeRemainingCount;
+
     @TableField(value = "fOptimizedPercentage")
     private Double optimizedPercentage;
 
     @TableField(value = "fOptimizeDate")
     private Date optimizeDate;
+
+    @TableField(exist = false)
+    private String userID;
 
     @TableField(exist = false)
     private String contactPerson;
@@ -158,6 +164,9 @@ public class CustomerKeyword extends BaseEntity {
 
     @TableField(value = "fPositionFirstPageFee", strategy = FieldStrategy.IGNORED)
     private Double positionFirstPageFee;
+
+    @TableField(value = "fTodayFee", strategy = FieldStrategy.IGNORED)
+    private Double todayFee;
 
     @TableField(value = "fCapturePositionQueryTime")
     private Date capturePositionQueryTime;
@@ -228,6 +237,9 @@ public class CustomerKeyword extends BaseEntity {
 
     @TableField(value = "fStatus")
     private int status;
+
+    @TableField(value = "fRequireDelete")
+    private Boolean requireDelete;
 
     @TableField(value = "fManualCleanTitle")
     private Boolean manualCleanTitle;
@@ -473,6 +485,14 @@ public class CustomerKeyword extends BaseEntity {
 
     public void setOptimizeDate(Date optimizeDate) {
         this.optimizeDate = optimizeDate;
+    }
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
     }
 
     public String getContactPerson() {
@@ -901,5 +921,29 @@ public class CustomerKeyword extends BaseEntity {
 
     public void setRelatedKeywordPercentage(Integer relatedKeywordPercentage) {
         this.relatedKeywordPercentage = relatedKeywordPercentage;
+    }
+
+    public Boolean getRequireDelete() {
+        return requireDelete;
+    }
+
+    public void setRequireDelete(Boolean requireDelete) {
+        this.requireDelete = requireDelete;
+    }
+
+    public Double getTodayFee() {
+        return todayFee;
+    }
+
+    public void setTodayFee(Double todayFee) {
+        this.todayFee = todayFee;
+    }
+
+    public int getOptimizeRemainingCount() {
+        return optimizeRemainingCount;
+    }
+
+    public void setOptimizeRemainingCount(int optimizeRemainingCount) {
+        this.optimizeRemainingCount = optimizeRemainingCount;
     }
 }

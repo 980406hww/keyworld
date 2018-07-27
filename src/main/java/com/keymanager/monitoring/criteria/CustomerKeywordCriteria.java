@@ -1,4 +1,4 @@
-package com.keymanager.monitoring.criteria;
+﻿package com.keymanager.monitoring.criteria;
 
 public class CustomerKeywordCriteria extends BaseCriteria{
     private Long customerUuid;
@@ -45,6 +45,8 @@ public class CustomerKeywordCriteria extends BaseCriteria{
     public void setBearPawNumber(String bearPawNumber) {
         this.bearPawNumber = bearPawNumber;
     }
+
+    private Boolean requireDelete;
 
     public Integer getGtCurrentIndexCount() {
         return gtCurrentIndexCount;
@@ -310,5 +312,13 @@ public class CustomerKeywordCriteria extends BaseCriteria{
 
     public void setThirtyDaysNoReachStandard(Integer thirtyDaysNoReachStandard) {
         this.thirtyDaysNoReachStandard = thirtyDaysNoReachStandard;
+    }
+
+    public Boolean getRequireDelete() {
+        return requireDelete;
+    }
+
+    public void setRequireDelete(Boolean requireDelete) {
+        this.requireDelete = requireDelete;
     }
 }

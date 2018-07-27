@@ -48,11 +48,11 @@
     <%@include file="/menu.jsp" %>
             <table width=100% style="border:1px solid #000000;font-size:12px;margin-top: 30px" cellpadding=3>
                 <tr border="1" height=30>
-                    <td width=250>联系人: ${customer.contactPerson}</td>
-                    <td width=200>QQ: ${customer.qq}</td>
-                    <td width=200>电话: ${customer.telphone}</td>
-                    <td width=120>关键字数: ${customer.keywordCount}</td>
-                    <td width=250>创建时间: <fmt:formatDate value="${customer.createTime}" pattern=" yyyy-MM-dd HH:mm"/></td>
+                    <td width=150>联系人: ${customer.contactPerson}</td>
+                    <td width=100>QQ: ${customer.qq}</td>
+                    <td width=100>电话: ${customer.telphone}</td>
+                    <td width=80>关键字数: ${customer.keywordCount}</td>
+                    <td width=250>备注: ${customer.remark}</td>
                 </tr>
             </table>
 
@@ -178,6 +178,10 @@
             <shiro:hasPermission name="/internal/customerKeyword/deleteCustomerKeywords">
             <input type="button" onclick="delAllItems('ByUuid','${customerKeywordCriteria.customerUuid}')" value=" 删除所选 ">
             </shiro:hasPermission>
+
+            <shiro:hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
+                <input type="button" onclick="updateKeywordCustomerUuid()" value="更改所选词客户">
+            </shiro:hasPermission>
         </div>
     </form>
     <%--</c:if>--%>
@@ -285,18 +289,21 @@
         <option>50</option>
         <option>75</option>
         <option>100</option>
+        <option>500</option>
+        <option>1000</option>
     </select>
     </div>
 </div>
+
 <%--Dialog部分--%>
-<div id="groupChangeNameByRankDialog"  style="text-align: center;left: 40%;"  class="easyui-dialog">
+<div id="groupChangeNameByRankDialog"  style="display: none;text-align: center;left: 40%;"  class="easyui-dialog">
     <form id="groupNameChangeByRankFrom" style="text-align: center;margin-top: 10px;">
        <span style="text-align: right;width: 52px;display:inline-block">分组名称:</span><input type="text" id="groupName" name="groupName" style="width:150px"><br><br>
        <span style="text-align: right;width: 52px;display:inline-block">排名:</span><input type="text" id="position" name="position" style="width:150px" value="20" onkeyup="onlyNumber(this)"><br><br>
        <span style="text-align: right;width: 52px;display:inline-block">天数:</span><input type="text" id="day" name="day" style="width:150px" value="3" onkeyup="onlyNumber(this)">
     </form>
 </div>
-<div id="changeSearchEngineDialog"  style="text-align: center;left: 40%;" title="修改客户关键字搜索引擎" class="easyui-dialog">
+<div id="changeSearchEngineDialog"  style="display: none;text-align: center;left: 40%;" title="修改客户关键字搜索引擎" class="easyui-dialog">
     <form id="changeSearchEngineForm" style="text-align: center;margin-top: 10px;">
         目标搜索引擎:
         <select id="searchEngineSelect" style="width:70px;">
@@ -307,12 +314,12 @@
         </select>
     </form>
 </div>
-<div id="groupChangeNameDialog"  style="text-align: center;left: 40%;" title="修改客户关键字组名" class="easyui-dialog">
+<div id="groupChangeNameDialog"  style="display: none;text-align: center;left: 40%;" title="修改客户关键字组名" class="easyui-dialog">
     <form id="groupNameChangeFrom" style="text-align: center;margin-top: 10px;">
         目标组名称:<input type="text" id="groupName" name="groupName" style="width:150px">
     </form>
 </div>
-<div id="uploadExcelDailog"  style="text-align: left;height: 60px; left: 40%;" title="Excel文件上传" class="easyui-dialog">
+<div id="uploadExcelDailog"  style="display: none;text-align: left;height: 60px; left: 40%;" title="Excel文件上传" class="easyui-dialog">
     <form method="post" id="uploadExcelForm" style="margin-top: 10px"  enctype="multipart/form-data" >
         <input type="hidden" id="customerUuid" name="customerUuid" value="${customerKeywordCriteria.customerUuid}">
         <span>请选择要上传的文件<label id="excelType" style="color: red"></label></span>
@@ -320,8 +327,17 @@
         <input type="file" id="uploadExcelFile" name="file" >
     </form>
 </div>
-<div id="optimizePlanCountDialog" class="easyui-dialog" style="left: 40%;">
+<div id="optimizePlanCountDialog" class="easyui-dialog" style="display: none;left: 40%;">
     <table style="font-size:12px">
+        <tr></tr>
+        <tr>
+            <th>范围</th>
+            <td>
+                <input type="radio" name="range" value="all" checked />所有的
+                <input type="radio" name="range" value="appoint" />指定的
+            </td>
+        </tr>
+        <tr></tr>
         <tr>
             <th>类型</th>
             <td>
@@ -329,18 +345,20 @@
                 <input type="radio" name="settingType" value="setSpecificCount" />指定刷量
             </td>
         </tr>
+        <tr></tr>
         <tr>
             <th>刷量</th>
             <td>
-                <input name="optimizePlanCount" id="optimizePlanCount" type="text" style="width:160px;" value="">
+                <input name="optimizePlanCount" id="optimizePlanCount" type="text" style="width:160px;" class="easyui-numberspinner" required value="">
             </td>
         </tr>
     </table>
 </div>
-<div id="saveCustomerKeywordDialog" class="easyui-dialog" style="left: 35%;">
+<div id="saveCustomerKeywordDialog" class="easyui-dialog" style="display: none;left: 35%;">
     <form id="customerKeywordForm">
         <ul>
             <input type="hidden" id="uuid" value="" style="width:300px;">
+            <input type="hidden" id="optimizedCount" value="" style="width:300px;">
             <li><span class="customerKeywordSpanClass">关键字:</span><input type="text" name="keyword" id="keyword" value="" style="width:300px;"/></li>
 
             <hr style="height: 1px; border:none; border-top:1px dashed #CCCCCC;"/>
@@ -471,6 +489,15 @@
     </form>
 </div>
 
+<div id="customerList" title="更新关键字所属客户" class="easyui-dialog" style="left: 30%;display: none;">
+    <input type="text" id="customerItem" list="customer_list"  placeholder="请选择移动到的位置" style="width:97%;margin: 5px" />
+    <datalist id="customer_list">
+        <c:forEach items="${customerList}" var="keyword">
+            <option>${keyword.contactPerson} ${'_____'} ${keyword.uuid}</option>
+        </c:forEach>
+    </datalist>
+</div>
+
 <form id="downloadCustomerKeywordInfoForm" method="post" action="/internal/customerKeyword/downloadCustomerKeywordInfo">
     <input type="hidden" name="customerUuid" id="customerUuidHidden" value="">
     <input type="hidden" name="keyword" id="keywordHidden" value=""/>
@@ -498,7 +525,7 @@
 <script language="javascript">
     $(function () {
         initPaging();
-        initNoPositionChecked();//初始化排名为0的初始值
+        initNoPositionChecked();
     });
 
     function initPaging() {

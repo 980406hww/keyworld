@@ -12,7 +12,7 @@ import java.util.Map;
 public interface CustomerDao extends BaseMapper<Customer> {
     List<Customer> searchCustomers(Page<Customer> page, @Param("customerCriteria")CustomerCriteria customerCriteria);
 
-    List<Customer> getActiveCustomerSimpleInfo();
+    List<Customer> getActiveCustomerSimpleInfo(@Param("customerCriteria")CustomerCriteria customerCriteria);
 
     int selectLastId();
 
@@ -27,4 +27,10 @@ public interface CustomerDao extends BaseMapper<Customer> {
     List<Customer> searchNeedSwitchCustomer();
 
     List<String> searchContactPersonList(@Param("uuids")String[] uuids);
+
+    Customer findCustomerByExternalAccountInfo(@Param("externalAccount")String externalAccount, @Param("searchEngine")String searchEngine);
+
+    List<Customer> searchTargetCustomers(@Param("entryType")String entryType,@Param("loginName")String loginName);
+
+    void setCustomerUpdateInterval(@Param("uuids")List<String> uuids, @Param("updateInterval")String updateInterval);
 }

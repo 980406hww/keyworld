@@ -162,7 +162,9 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         String terminalType = (String) requestMap.get("terminalType");
         try {
             if (validUser(userName, password)) {
+                long startMilleSeconds = System.currentTimeMillis();
                 List<NegativeList> customerKeywordList = customerKeywordService.getCustomerKeywordSummaryInfos(terminalType, keyword);
+                performanceService.addPerformanceLog(terminalType + ":getCustomerKeywordSummaryInfos", System.currentTimeMillis() - startMilleSeconds, "Record Count: " + (customerKeywordList != null ? customerKeywordList.size() : 0));
                 return new ResponseEntity<Object>(customerKeywordList, HttpStatus.OK);
             }
         }catch (Exception ex){
@@ -208,6 +210,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         String city = request.getParameter("city");
         String status = request.getParameter("status");
         String position = request.getParameter("position");
+        String runningProgramType = request.getParameter("runningProgramType");
 
         String ip = getIP(request);
 
@@ -219,7 +222,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                     customerKeywordService.updateCustomerKeywordPosition(customerKeywordUuid, Integer.parseInt(position), null);
                 }
                 customerKeywordService.updateOptimizationResult(terminalType, customerKeywordUuid, Integer.parseInt(count.trim()), ip, city, clientID,
-                        status, freeSpace, version);
+                        status, freeSpace, version, runningProgramType);
                 performanceService.addPerformanceLog(terminalType + ":updateOptimizedCount", System.currentTimeMillis() - startMilleSeconds, null);
 
                 return new ResponseEntity<Object>(1, HttpStatus.OK);
@@ -268,9 +271,14 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
 
         Long customerKeywordUuid = Long.parseLong(requestMap.get("customerKeywordUuid").toString());
         int position = (Integer) requestMap.get("position");
+        Date startTime = new Date((Long) requestMap.get("startTime"));
         try {
             if (validUser(userName, password)) {
-                customerKeywordService.updateCustomerKeywordPosition(customerKeywordUuid, position, Utils.getCurrentTimestamp());
+                if(position > -1) {
+                    customerKeywordService.updateCustomerKeywordPosition(customerKeywordUuid, position, Utils.getCurrentTimestamp());
+                } else {
+                    customerKeywordService.updateCustomerKeywordQueryTime(customerKeywordUuid, startTime);
+                }
                 return new ResponseEntity<Object>(true, HttpStatus.OK);
             }
         }catch (Exception ex){

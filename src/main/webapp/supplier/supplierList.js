@@ -226,6 +226,7 @@ function showSupplierDialog(uuid) {
     if (uuid == null) {
         $('#supplierForm')[0].reset();
     }
+    $("#supplierDialog").show();
     $("#supplierDialog").dialog({
         resizable: false,
         width: 310,

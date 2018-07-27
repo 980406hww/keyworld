@@ -1,10 +1,13 @@
 package com.keymanager.monitoring.criteria;
 
+import java.util.Set;
+
 public class ClientStatusCriteria extends BaseCriteria {
     private String clientID; // 客户端ID
     private String groupName; // 优化组
     private String noGroup; // 没分组
     private String version; // 版本
+    private String targetVersion;
     private String city; // 城市
     private String upgradeFailedReason; // 失败原因
     private String valid; // 状态
@@ -22,8 +25,23 @@ public class ClientStatusCriteria extends BaseCriteria {
     private String startUpClient; // 开机机器
     private String hasGroup; // 有分组
     private String startUpStatus; // 开机状态
+    private String runningProgramType; // 运行程序类型
+    private String hiddenColumns; // 隐藏列号
 
     private String terminalType;
+    private Set<String> switchGroups;
+
+    private boolean haveHiddenColumns; //是否为设置隐藏弹窗提交的
+
+
+
+    public boolean getHaveHiddenColumns() {
+        return haveHiddenColumns;
+    }
+
+    public void setHaveHiddenColumns(boolean haveHiddenColumns) {
+        this.haveHiddenColumns = haveHiddenColumns;
+    }
 
     public String getClientID() {
         return clientID;
@@ -191,5 +209,37 @@ public class ClientStatusCriteria extends BaseCriteria {
 
     public void setStartUpStatus(String startUpStatus) {
         this.startUpStatus = startUpStatus;
+    }
+
+    public Set<String> getSwitchGroups() {
+        return switchGroups;
+    }
+
+    public void setSwitchGroups(Set<String> switchGroups) {
+        this.switchGroups = switchGroups;
+    }
+
+    public String getRunningProgramType() {
+        return runningProgramType;
+    }
+
+    public void setRunningProgramType(String runningProgramType) {
+        this.runningProgramType = runningProgramType;
+    }
+
+    public String getHiddenColumns() {
+        return hiddenColumns;
+    }
+
+    public void setHiddenColumns(String hiddenColumns) {
+        this.hiddenColumns = hiddenColumns;
+    }
+
+    public String getTargetVersion() {
+        return targetVersion;
+    }
+
+    public void setTargetVersion(String targetVersion) {
+        this.targetVersion = targetVersion;
     }
 }

@@ -2,6 +2,7 @@ package com.keymanager.monitoring.controller.rest.internal;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
+import com.keymanager.monitoring.criteria.CustomerCriteria;
 import com.keymanager.monitoring.criteria.QZSettingSearchCriteria;
 import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.QZSetting;
@@ -36,6 +37,20 @@ public class QZSettingRestController extends SpringMVCBaseController {
 	@Autowired
 	private CustomerService customerService;
 
+	@RequiresPermissions("/internal/qzsetting/updateStatus")
+	@RequestMapping(value = "/updateQZSettingStatus", method = RequestMethod.POST)
+	public ResponseEntity<?> updateQZSettingStatus(@RequestBody Map<String, Object> requestMap) throws Exception{
+		List<Long> uuids = (List<Long>) requestMap.get("uuids");
+		Integer status = (Integer) requestMap.get("status");
+		try {
+			qzSettingService.updateQZSettingStatus(uuids, status);
+			return new ResponseEntity<Object>(true, HttpStatus.OK);
+		}catch(Exception ex){
+			logger.error(ex.getMessage());
+		}
+		return new ResponseEntity<Object>(false, HttpStatus.OK);
+	}
+
 	@RequiresPermissions("/internal/qzsetting/updateImmediately")
 	@RequestMapping(value = "/updateImmediately", method = RequestMethod.POST)
 	public ResponseEntity<?> updateImmediately(@RequestBody Map<String, Object> requestMap) throws Exception{
@@ -54,8 +69,15 @@ public class QZSettingRestController extends SpringMVCBaseController {
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public ResponseEntity<?> saveQZSetting(@RequestBody QZSetting qzSetting){
 		try {
+			if(qzSetting.getUuid() == null) {
+				Set<String> roles = getCurrentUser().getRoles();
+				if(roles.contains("DepartmentManager")) {
+					qzSetting.setStatus(1);
+				} else {
+					qzSetting.setStatus(2);
+				}
+			}
 			qzSettingService.saveQZSetting(qzSetting);
-
 			return new ResponseEntity<Object>(qzSetting, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
@@ -96,7 +118,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
 	@RequiresPermissions("/internal/qzsetting/searchQZSettings")
 	@RequestMapping(value = "/searchQZSettings", method = RequestMethod.GET)
 	public ModelAndView searchQZSettingsGet(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request) {
-		return constructQZSettingModelAndView(new QZSettingSearchCriteria(), currentPageNumber, pageSize);
+		return constructQZSettingModelAndView(request, new QZSettingSearchCriteria(), currentPageNumber, pageSize);
 	}
 
 	@RequiresPermissions("/internal/qzsetting/searchQZSettings")
@@ -108,20 +130,45 @@ public class QZSettingRestController extends SpringMVCBaseController {
 			currentPageNumber = "1";
 			pageSize = "50";
 		}
-		return constructQZSettingModelAndView(qzSettingSearchCriteria, Integer.parseInt(currentPageNumber), Integer.parseInt(pageSize));
+		return constructQZSettingModelAndView(request, qzSettingSearchCriteria, Integer.parseInt(currentPageNumber), Integer.parseInt(pageSize));
 	}
 
-	private ModelAndView constructQZSettingModelAndView(QZSettingSearchCriteria qzSettingSearchCriteria, int currentPageNumber, int pageSize) {
+	private ModelAndView constructQZSettingModelAndView(HttpServletRequest request, QZSettingSearchCriteria qzSettingSearchCriteria, int currentPageNumber, int pageSize) {
 		ModelAndView modelAndView = new ModelAndView("/qzsetting/list");
 		Map<String, Integer> chargeRemindDataMap = qzSettingService.getChargeRemindData();
-		Page<QZSetting> page = qzSettingService.searchQZSetting(new Page<QZSetting>(currentPageNumber, pageSize), qzSettingSearchCriteria);
-		List<Customer> customerList = customerService.getActiveCustomerSimpleInfo();
 
+		CustomerCriteria customerCriteria = new CustomerCriteria();
+		String entryType = (String) request.getSession().getAttribute("entryType");
+		customerCriteria.setEntryType(entryType);
+		boolean isDepartmentManager = true;
+		Set<String> roles = getCurrentUser().getRoles();
+		if(!roles.contains("DepartmentManager")) {
+			isDepartmentManager = false;
+			String loginName = (String) request.getSession().getAttribute("username");
+			customerCriteria.setLoginName(loginName);
+			qzSettingSearchCriteria.setLoginName(loginName);
+		}
+		Page<QZSetting> page = qzSettingService.searchQZSetting(new Page<QZSetting>(currentPageNumber, pageSize), qzSettingSearchCriteria);
+		List<Customer> customerList = customerService.getActiveCustomerSimpleInfo(customerCriteria);
+		Integer availableQZSettingCount = qzSettingService.getAvailableQZSettings().size();
 		modelAndView.addObject("chargeRemindDataMap", chargeRemindDataMap);
 		modelAndView.addObject("customerList", customerList);
 		modelAndView.addObject("qzSettingSearchCriteria", qzSettingSearchCriteria);
 		modelAndView.addObject("statusList", Constants.QZSETTING_STATUS_LIST);
 		modelAndView.addObject("page", page);
+		modelAndView.addObject("isDepartmentManager", isDepartmentManager);
+		modelAndView.addObject("availableQZSettingCount", availableQZSettingCount);
 		return modelAndView;
+	}
+	@RequiresPermissions("/internal/qzsetting/searchQZSettings")
+	@RequestMapping(value = "/getAvailableQZSettings", method = RequestMethod.POST)
+	public ResponseEntity<?> getAvailableQZSettings(HttpServletRequest request){
+		try {
+			List<QZSetting>	qzSettings = qzSettingService.getAvailableQZSettings();
+			return new ResponseEntity<Object>(qzSettings,HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
+		return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
 	}
 }

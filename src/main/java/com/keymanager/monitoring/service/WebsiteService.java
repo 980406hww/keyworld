@@ -15,9 +15,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by shunshikj08 on 2017/12/14.
@@ -28,6 +26,9 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
 
     @Autowired
     private WebsiteDao websiteDao;
+
+    @Autowired
+    private KeywordInfoService keywordInfoService;
 
     public Page<Website> searchWebsites(Page<Website> page, WebsiteCriteria websiteCriteria) {
         page.setRecords(websiteDao.searchWebsites(page, websiteCriteria));
@@ -66,8 +67,10 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
         }
     }
 
-    public List<Website> accessURL() {
+    public Map<String, Object> accessURL() {
+        Map<String, Object> dataBase = new HashMap<String, Object>();
         List<Website> accessFailWebsites = new ArrayList<Website>();
+        List<Website> accessSuccessWebsites = new ArrayList<Website>();
         List<Website> websites = websiteDao.takeWebsitesForAccess();
         for (Website website : websites) {
             try {
@@ -79,6 +82,9 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
                 httpURLConnection.setConnectTimeout(5000);
                 status = httpURLConnection.getResponseCode();
                 if (200 == status) {
+                    if(website.getAccessFailCount() > 0){
+                        accessSuccessWebsites.add(website);
+                    }
                     website.setAccessFailTime(null);
                     website.setAccessFailCount(0);
                 } else {
@@ -91,7 +97,9 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
                 websiteDao.updateById(website);
             }
         }
-        return accessFailWebsites;
+        dataBase.put("accessFailWebsites",accessFailWebsites);
+        dataBase.put("accessSuccessWebsites",accessSuccessWebsites);
+        return dataBase;
     }
 
     private void recordAccessFailInfo(Website website, List<Website> accessFailWebsites) {
@@ -104,5 +112,10 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
         if(accessFailCount > 1 && Utils.isPower(accessFailCount)) {
             accessFailWebsites.add(website);
         }
+    }
+
+    public List<Website> accessExpireTimeURL() {
+        List<Website> websites = websiteDao.searchExpireTime();
+        return websites;
     }
 }

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.KeywordInfoDao">
+
+    <sql id="keywordinfoSQL">
+        fId AS "id",
+        fUserName as "userName",
+        fSpliterStr as "spliterStr",
+        fSearchEngine as "searchEngine",
+        fOperationType as "operationType",
+        fKeywordInfo as "keywordInfo",
+        fStatus as "status",
+        fUpdateTime as "updateTime",
+        fCreateTime as "createTime"
+    </sql>
+
+
+    <insert id="batchInsertKeyword" parameterType="com.keymanager.monitoring.vo.KeywordInfoVO">
+        INSERT INTO
+            t_keyword_info(fId, fUserName, fSpliterStr, fSearchEngine, fOperationType, fKeywordInfo, fStatus, fUpdateTime, fCreateTime)
+        VALUES
+        <foreach collection="keywordInfoVO" item="vo" separator=",">
+            (NULL,
+            #{vo.userName},
+            #{vo.spliterStr},
+            #{vo.searchEngine},
+            #{vo.operationType},
+            #{vo.keywordInfo},
+            '上线',
+            #{vo.updateTime},
+            #{vo.createTime})
+        </foreach>
+    </insert>
+
+
+    <select id="searchKeywordInfos" parameterType="com.keymanager.monitoring.criteria.KeywordInfoCriteria" resultType="com.keymanager.monitoring.entity.KeywordInfo">
+        SELECT
+        <include refid="keywordinfoSQL" />
+        FROM
+        t_keyword_info kif
+        WHERE 1 = 1
+        <if test="keywordInfoCriteria.userName != null and keywordInfoCriteria.userName != ''">AND kif.fUserName LIKE '%${keywordInfoCriteria.userName}%'</if>
+        <if test="keywordInfoCriteria.searchEngine != null and keywordInfoCriteria.searchEngine != ''">AND kif.fSearchEngine LIKE '${keywordInfoCriteria.searchEngine}%'</if>
+        <if test="keywordInfoCriteria.terminalType != null and keywordInfoCriteria.terminalType != ''">AND kif.fSearchEngine LIKE '%${keywordInfoCriteria.terminalType}'</if>
+        <if test="keywordInfoCriteria.operationType != null and keywordInfoCriteria.operationType != ''">AND kif.fOperationType = #{keywordInfoCriteria.operationType}</if>
+        <if test="keywordInfoCriteria.keywordInfo != null and keywordInfoCriteria.keywordInfo != ''">AND kif.fKeywordInfo LIKE '%${keywordInfoCriteria.keywordInfo}%'</if>
+        <if test="keywordInfoCriteria.createTime != null and keywordInfoCriteria.createTime !='' ">AND DATE_FORMAT(kif.fCreateTime,'%Y-%m-%d') = #{keywordInfoCriteria.createTime}</if>
+        ORDER BY createTime DESC
+    </select>
+
+</mapper>

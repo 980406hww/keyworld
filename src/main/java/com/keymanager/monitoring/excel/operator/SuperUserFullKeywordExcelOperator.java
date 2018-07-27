@@ -1,4 +1,4 @@
-package com.keymanager.monitoring.excel.operator;
+﻿package com.keymanager.monitoring.excel.operator;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,7 +35,12 @@ public class SuperUserFullKeywordExcelOperator extends AbstractExcelReader {
 		}
 
 		customerKeyword.setOriginalUrl(getStringValue(SuperUserFullKeywordDefinition.OriginalURL.getColumnIndex(), rowIndex).trim());
-		customerKeyword.setUrl(getStringValue(SuperUserFullKeywordDefinition.URL.getColumnIndex(), rowIndex).trim());
+
+		String url = getStringValue(SuperUserFullKeywordDefinition.URL.getColumnIndex(), rowIndex);
+		if(url.substring(url.length() - 1).equals("/")) {
+			url = url.substring(0, url.length() - 1);
+		}
+		customerKeyword.setUrl(url);
 		
 		customerKeyword.setPositionFirstFee(getDoubleValue(SuperUserFullKeywordDefinition.PositionFirstFee.getColumnIndex(), rowIndex));
 		customerKeyword.setPositionSecondFee(getDoubleValue(SuperUserFullKeywordDefinition.PositionSecondFee.getColumnIndex(), rowIndex));
@@ -66,7 +71,8 @@ public class SuperUserFullKeywordExcelOperator extends AbstractExcelReader {
 
 		Integer optimizePlanCount = getIntValue(SuperUserFullKeywordDefinition.OptimizePlanCount.getColumnIndex(), rowIndex);
 		customerKeyword.setOptimizePlanCount(optimizePlanCount);
-		
+		customerKeyword.setOptimizeRemainingCount(optimizePlanCount);
+
 		customerKeyword.setOptimizeGroupName(getStringValue(SuperUserFullKeywordDefinition.OptimizeGroupName.getColumnIndex(), rowIndex).trim());
 		customerKeyword.setTitle(getStringValue(SuperUserFullKeywordDefinition.Title.getColumnIndex(), rowIndex).trim());
 		customerKeyword.setOrderNumber(getStringValue(SuperUserFullKeywordDefinition.OrderNumber.getColumnIndex(), rowIndex).trim());

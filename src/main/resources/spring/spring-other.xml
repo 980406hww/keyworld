@@ -11,5 +11,4 @@
 		<property name="password" value="${publicOpinion.password}" />
 		<property name="webPath" value="${publicOpinion.webPath}" />
 	</bean>
-	
 </beans>

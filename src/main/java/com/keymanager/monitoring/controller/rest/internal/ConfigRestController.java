@@ -28,14 +28,17 @@ public class ConfigRestController {
     @Autowired
     private ConfigService configService;
 
+    @RequiresPermissions("/internal/config/searchNegativeKeywords")
     @RequestMapping(value = "/searchNegativeKeywords", method = RequestMethod.GET)
     public ModelAndView searchNegativeKeywords(HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView("/negativeKeywords/negativeKeywords");
         Config config = configService.getConfig(Constants.CONFIG_TYPE_TJ_XG, Constants.CONFIG_KEY_NEGATIVE_KEYWORDS);
         Config negativeKeywordConfig = configService.getConfig(Constants.CONFIG_TYPE_NEGATIVE_KEYWORD, Constants.CONFIG_KEY_BAIDU);
+        Config websiteWhiteList = configService.getConfig(Constants.CONFIG_TYPE_WEBSITE_WHITE_LIST,Constants.CONFIG_KEY_URL);
         modelAndView.addObject("searchEngine", Constants.CONFIG_KEY_BAIDU);
         modelAndView.addObject("negativeKeywords", config.getValue());
         modelAndView.addObject("customerNegativeKeywords", negativeKeywordConfig.getValue());
+        modelAndView.addObject("websiteWhiteList",websiteWhiteList.getValue());
         return modelAndView;
     }
 
@@ -50,6 +53,7 @@ public class ConfigRestController {
         }
     }
 
+    @RequiresPermissions("/internal/config/updateNegativeKeywords")
     @RequestMapping(value = "/updateNegativeKeywords", method = RequestMethod.POST)
     public ResponseEntity<?> updateNegativeKeywords(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
         try {
@@ -62,6 +66,7 @@ public class ConfigRestController {
         }
     }
 
+    @RequiresPermissions("/internal/config/updateCustomerNegativeKeywords")
     @RequestMapping(value = "/updateCustomerNegativeKeywords", method = RequestMethod.POST)
     public ResponseEntity<?> updateCustomerNegativeKeywords(@RequestParam(value = "file", required = false) MultipartFile file, @RequestParam(value = "searchEngine") String searchEngine, HttpServletRequest request) {
         try {
@@ -72,6 +77,51 @@ public class ConfigRestController {
             }
             file.transferTo(targetFile);
             configService.updateCustomerNegativeKeywords(targetFile, searchEngine);
+            FileUtil.delFolder(path);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+    }
+
+    @RequiresPermissions("/internal/config/refreshCustomerNegativeKeywords")
+    @RequestMapping(value = "/refreshCustomerNegativeKeywords" , method = RequestMethod.POST)
+    public ResponseEntity<?> refreshCustomerNegativeKeywords(@RequestBody Map<String, Object> requestMap){
+        try{
+        String searchEngine = (String)requestMap.get("searchEngine");
+        String negativeKeywords = (String) requestMap.get("negativeKeywords");
+        configService.refreshCustomerNegativeKeywords(searchEngine,negativeKeywords);
+        return new ResponseEntity<Object>(true,HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+    }
+
+    @RequiresPermissions("/internal/config/refreshWebsiteWhiteList")
+    @RequestMapping(value = "/refreshWebsiteWhiteList" , method = RequestMethod.POST)
+    public ResponseEntity<?> refreshWebsiteWhiteList(@RequestBody String websiteWhiteList){
+        try{
+            configService.refreshWebsiteWhiteList(websiteWhiteList);
+            return new ResponseEntity<Object>(true,HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+    }
+
+    @RequiresPermissions("/internal/config/updateWebsiteWhiteList")
+    @RequestMapping(value = "/updateWebsiteWhiteList", method = RequestMethod.POST)
+    public ResponseEntity<?> updateWebsiteWhiteList(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request) {
+        try {
+            String path = Utils.getWebRootPath() + "txtTemp";
+            File targetFile = new File(path, "WebsiteWhiteList.txt");
+            if(!targetFile.exists()){
+                targetFile.mkdirs();
+            }
+            file.transferTo(targetFile);
+            configService.updateWebsiteWhiteList(targetFile);
             FileUtil.delFolder(path);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {

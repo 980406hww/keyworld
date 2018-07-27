@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.NegativeStandardSettingDao">
+    <sql id="sqlCode">
+        tnss.fUuid AS 'uuid',
+        tnss.fCustomerUuid AS 'customerUuid',
+        tnss.fKeyword AS 'keyword',
+        tnss.fSearchEngine AS 'searchEngine',
+        tnss.fTopOnePageNegativeCount  AS 'topOnePageNegativeCount',
+        tnss.fTopTwoPageNegativeCount AS 'topTwoPageNegativeCount' ,
+        tnss.fTopThreePageNegativeCount AS 'topThreePageNegativeCount',
+        tnss.fTopFourPageNegativeCount AS 'topFourPageNegativeCount',
+        tnss.fTopFivePageNegativeCount AS 'topFivePageNegativeCount',
+        tnss.fReachStandard AS 'reachStandard',
+        tnss.fUpdateTime  AS 'updateTime',
+        tnss.fCreateTime AS 'createTime'
+    </sql>
+
+    <select id="searchNegativeStandardSetting" parameterType="com.keymanager.monitoring.criteria.NegativeStandardSettingCriteria" resultType="com.keymanager.monitoring.entity.NegativeStandardSetting">
+      SELECT
+      <include refid="sqlCode"/>
+       FROM t_negative_standard_setting tnss
+       WHERE 1=1
+          <if test="negativeStandardSettingCriteria.customerUuid!=null and negativeStandardSettingCriteria.customerUuid!=''"> AND tnss.fCustomerUuid = #{negativeStandardSettingCriteria.customerUuid} </if>
+          <if test="negativeStandardSettingCriteria.keyword!=null and negativeStandardSettingCriteria.keyword!='' ">  AND tnss.fKeyword = #{negativeStandardSettingCriteria.keyword}</if>
+          <if test="negativeStandardSettingCriteria.reachStandard !=null"> AND tnss.fReachStandard = #{negativeStandardSettingCriteria.reachStandard}</if>
+          <if test="negativeStandardSettingCriteria.searchEngine!=null and negativeStandardSettingCriteria.searchEngine!='' "> AND tnss.fSearchEngine = #{negativeStandardSettingCriteria.searchEngine}</if>
+        ORDER BY tnss.fKeyword,tnss.fCreateTime
+    </select>
+
+    <select id="findNegativeStandardSetting" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT
+        COUNT(1)
+        FROM t_negative_standard_setting tnss
+        WHERE 1=1
+        <if test="customerUuid!=null and customerUuid!=''"> AND tnss.fCustomerUuid = #{customerUuid}</if>
+        <if test="keyword!=null and keyword!=''"> AND tnss.fKeyword = #{keyword}</if>
+        <if test="searchEngine!=null and searchEngine!=''"> AND tnss.fSearchEngine = #{searchEngine}</if>
+    </select>
+
+    <select id="allNegativeStandardSetting" parameterType="com.keymanager.monitoring.criteria.NegativeStandardSettingCriteria" resultType="com.keymanager.monitoring.entity.NegativeStandardSetting">
+        SELECT
+        tnss.fUuid AS 'uuid',
+        tnss.fCustomerUuid AS 'customerUuid',
+        customer.fContactPerson AS 'contactPerson',
+        tnss.fKeyword AS 'keyword',
+        tnss.fSearchEngine AS 'searchEngine',
+        tnss.fTopOnePageNegativeCount  AS 'topOnePageNegativeCount',
+        tnss.fTopTwoPageNegativeCount AS 'topTwoPageNegativeCount' ,
+        tnss.fTopThreePageNegativeCount AS 'topThreePageNegativeCount',
+        tnss.fTopFourPageNegativeCount AS 'topFourPageNegativeCount',
+        tnss.fTopFivePageNegativeCount AS 'topFivePageNegativeCount',
+        tnss.fReachStandard AS 'reachStandard',
+        tnss.fUpdateTime  AS 'updateTime',
+        tnss.fCreateTime AS 'createTime'
+        FROM t_negative_standard_setting tnss,
+        t_customer customer
+        WHERE
+        tnss.fCustomerUuid = customer.fUuid
+        <if test="negativeStandardSettingCriteria.customerUuid!=null and negativeStandardSettingCriteria.customerUuid!=''"> AND tnss.fCustomerUuid = #{negativeStandardSettingCriteria.customerUuid}</if>
+        <if test="negativeStandardSettingCriteria.keyword!=null and negativeStandardSettingCriteria.keyword!='' ">  AND tnss.fKeyword = #{negativeStandardSettingCriteria.keyword}</if>
+        <if test="negativeStandardSettingCriteria.reachStandard !=null"> AND tnss.fReachStandard = #{negativeStandardSettingCriteria.reachStandard}</if>
+        <if test="negativeStandardSettingCriteria.searchEngine!=null and negativeStandardSettingCriteria.searchEngine!='' "> AND tnss.fSearchEngine = #{negativeStandardSettingCriteria.searchEngine}</if>
+        <if test="negativeStandardSettingCriteria.userID!=null and negativeStandardSettingCriteria.userID!='' "> AND customer.fUserID = #{negativeStandardSettingCriteria.userID}</if>
+        <if test="negativeStandardSettingCriteria.contactPerson!=null and negativeStandardSettingCriteria.contactPerson!='' "> AND customer.fContactPerson = #{negativeStandardSettingCriteria.contactPerson}</if>
+        ORDER BY customer.fContactPerson,tnss.fCreateTime
+    </select>
+
+    <select id="getNegativeStandardSetting" parameterType="java.lang.String" resultType="com.keymanager.monitoring.entity.NegativeStandardSetting">
+        SELECT
+        tnss.fUuid AS 'uuid',
+        tnss.fCustomerUuid AS 'customerUuid',
+        tc.fContactPerson AS 'contactPerson',
+        tnss.fKeyword AS 'keyword',
+        tnss.fSearchEngine AS 'searchEngine',
+        tnss.fTopOnePageNegativeCount  AS 'topOnePageNegativeCount',
+        tnss.fTopTwoPageNegativeCount AS 'topTwoPageNegativeCount' ,
+        tnss.fTopThreePageNegativeCount AS 'topThreePageNegativeCount',
+        tnss.fTopFourPageNegativeCount AS 'topFourPageNegativeCount',
+        tnss.fTopFivePageNegativeCount AS 'topFivePageNegativeCount',
+        tnss.fReachStandard AS 'reachStandard',
+        tnss.fUpdateTime  AS 'updateTime',
+        tnss.fCreateTime AS 'createTime'
+        FROM
+        t_negative_standard_setting tnss,
+        t_customer tc
+        WHERE
+        tc.fUuid = tnss.fCustomerUuid
+        AND tc.fUserID = #{userID}
+    </select>
+
+    <select id="findUsers" resultType="java.util.Map">
+        SELECT
+        DISTINCT
+        u.fUuid AS 'uuid',
+        u.fLoginName AS 'loginName',
+        u.fEmail AS 'email',
+        u.fUserName AS 'userName'
+        FROM
+        t_userinfo u,
+        t_customer tc,
+        t_negative_standard_setting tnss
+        WHERE
+        tc.fUserID = u.fLoginName
+        AND tc.fUuid = tnss.fCustomerUuid
+    </select>
+
+    <select id="findContactPersons" resultType="java.lang.String" parameterType="com.keymanager.monitoring.criteria.NegativeStandardSettingCriteria">
+        SELECT
+          DISTINCT
+          customer.fContactPerson AS 'contactPerson'
+        FROM t_negative_standard_setting tnss,
+            t_customer customer
+        WHERE
+            tnss.fCustomerUuid = customer.fUuid
+        <if test="negativeStandardSettingCriteria.userID!=null and negativeStandardSettingCriteria.userID!='' "> AND customer.fUserID = #{negativeStandardSettingCriteria.userID}</if>
+    </select>
+</mapper>

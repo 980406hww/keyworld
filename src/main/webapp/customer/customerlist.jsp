@@ -65,7 +65,8 @@
                         </shiro:hasPermission>
                         <c:if test="${'fm'.equalsIgnoreCase(entryType)}">
                             <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
-                                &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 设置关键字启停时间 " onclick="autoSwitchCustomerKeywordStatus()"/>
+                                &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 设置关键字启停小时 " onclick="autoSwitchCustomerKeywordStatus()"/>
+                                &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 设置关键字启停天数 " onclick="setCustomerUpdateInterval(null)"/>
                             </shiro:hasPermission>
                         </c:if>
                         <c:if test="${'bc'.equalsIgnoreCase(entryType)}">
@@ -102,8 +103,13 @@
             <td align="center" width=80>联系人</td>
             <td align="center" width=80>分组</td>
             <td align="center" width=150>关键字信息</td>
+            <c:if test="${'bc'.equalsIgnoreCase(entryType)}">
+                <td align="center" width=80>关键词账号</td>
+                <td align="center" width=60>搜索引擎</td>
+            </c:if>
             <c:if test="${'fm'.equalsIgnoreCase(entryType)}">
-                <td align="center" width=70>关键字启停小时数</td>
+                <td align="center" width=70>关键字<br>启停小时数</td>
+                <td align="center" width=120>关键字<br>启停间隔天数</td>
             </c:if>
             <td align="center" width=60>QQ</td>
             <td align="center" width=140>备注</td>
@@ -149,10 +155,25 @@
                         </c:choose>)
                     </c:if>
                 </td>
+                <c:if test="${'bc'.equalsIgnoreCase(entryType)}">
+                    <td width=80><input type="text" value="${customer.externalAccount}" onchange="updateAccountInfo('${customer.uuid}', this)" style="width: 100%"></td>
+                    <td width=60>
+                        <select style="width: 100%" onchange="updateCustomerSearchEngine('${customer.uuid}', this)">
+                            <option value=""></option>
+                            <option value="百度" ${customer.searchEngine eq '百度' ? "selected" : ""}>百度</option>
+                            <option value="搜狗" ${customer.searchEngine eq '搜狗' ? "selected" : ""}>搜狗</option>
+                            <option value="360" ${customer.searchEngine eq '360' ? "selected" : ""}>360</option>
+                            <option value="神马" ${customer.searchEngine eq '神马' ? "selected" : ""}>神马</option>
+                        </select>
+                    </td>
+                </c:if>
                 <c:if test="${'fm'.equalsIgnoreCase(entryType)}">
                     <td width=70 style="text-align: center">
                         <input type="text" name="activeHour" onchange="editHourForSwitchStatus('${customer.uuid}', this)" value="${customer.activeHour}" style="width: 90%"><br>
                         <input type="text" name="inActiveHour" onchange="editHourForSwitchStatus('${customer.uuid}', this)" value="${customer.inActiveHour}" style="width: 90%">
+                    </td>
+                    <td width=120 style="text-align: center" onclick="setCustomerUpdateInterval('${customer.uuid}')">
+                        ${customer.updateInterval}
                     </td>
                 </c:if>
                 <td width=60>${customer.qq}</td>
@@ -187,14 +208,18 @@
                         </shiro:hasPermission>
                     </c:if>
                     <c:if test="${'qz'.equalsIgnoreCase(entryType)}">
-                        | <a target="_blank" href="javascript:viewAizhanRank('${customer.contactPerson}')">查看爱站排名</a>
+                        | <a target="_blank" href="javascript:viewSitesdRank('${customer.contactPerson}','aizhan')">爱站排名</a>
+                        | <a target="_blank" href="javascript:viewSitesdRank('${customer.contactPerson}','5118')">5118排名</a>
                     </c:if>
+                <shiro:hasPermission name="/internal/negativeStandardSetting/searchNegativeStandardSetting">
+                   | <a href="javascript:openNegativeStandardSetting('/internal/negativeStandardSetting/searchNegativeStandardSetting/${customer.uuid}')">负面达标设置</a>
+                </shiro:hasPermission>
                 </td>
             </tr>
         </c:forEach>
     </table>
 </div>
-<div id="customerChargeTypeDialog" title="客户规则" class="easyui-dialog" style="left: 35%;">
+<div id="customerChargeTypeDialog" title="客户规则" class="easyui-dialog" style="display: none;left: 35%;">
     <input type="hidden" id="customerChargeTypeUuid"/>
     <div id="showRuleRadioDiv" style="text-align: center">
         <input type="radio" id="chargeTypePercentage" onclick="chooseChargeType(this.value)" value="Percentage"
@@ -277,9 +302,13 @@
                         <td width="20%">操作</td>
                     </tr>
                 </table>
-                <div style="border:1px;
-                border-color:#00CC00;
-                margin-top:20px">
+                <div style="border:1px;border-color:#00CC00;margin-top:20px">
+                    一:<input id="firstChargePercentagePC" class="easyui-numberspinner" data-options="min:0,max:100,increment:10" value="100" style="width: 55px">%
+                    二:<input id="secondChargePercentagePC" class="easyui-numberspinner" data-options="min:0,max:100,increment:10" value="100" style="width: 55px">%
+                    三:<input id="thirdChargePercentagePC" class="easyui-numberspinner" data-options="min:0,max:100,increment:10" value="100" style="width: 55px">%
+                    四:<input id="fourthChargePercentagePC" class="easyui-numberspinner" data-options="min:0,max:100,increment:10" value="50" style="width: 55px">%
+                    五:<input id="fifthChargePercentagePC" class="easyui-numberspinner" data-options="min:0,max:100,increment:10" value="50" style="width: 55px">%
+                    十:<input id="firstPageChargePercentagePC" class="easyui-numberspinner" data-options="min:0,max:100,increment:10" value="0" style="width: 55px">%<br>
                     <input type="button" id="but" value="增加" onclick="addRow('PC')"/>
                 </div>
             </div>
@@ -296,6 +325,12 @@
                     </tr>
                 </table>
                 <div style="border:1px;border-color:#00CC00;margin-top:20px">
+                    一:<input id="firstChargePercentagePhone" class="easyui-numberspinner" data-options="min:0,max:100,increment:10" value="100" style="width: 55px">%
+                    二:<input id="secondChargePercentagePhone" class="easyui-numberspinner" data-options="min:0,max:100,increment:10" value="100" style="width: 55px">%
+                    三:<input id="thirdChargePercentagePhone" class="easyui-numberspinner" data-options="min:0,max:100,increment:10" value="100" style="width: 55px">%
+                    四:<input id="fourthChargePercentagePhone" class="easyui-numberspinner" data-options="min:0,max:100,increment:10" value="0" style="width: 55px">%
+                    五:<input id="fifthChargePercentagePhone" class="easyui-numberspinner" data-options="min:0,max:100,increment:10" value="0" style="width: 55px">%
+                    十:<input id="firstPageChargePercentagePhone" class="easyui-numberspinner" data-options="min:0,max:100,increment:10" value="0" style="width: 55px">%<br>
                     <input type="button" id="but" value="增加" onclick="addRow('Phone')"/>
                 </div>
             </div>
@@ -304,7 +339,7 @@
 </div>
 
 </div>
-<div id="customerDialog" title="客户信息" class="easyui-dialog" style="left: 40%;">
+<div id="customerDialog" title="客户信息" class="easyui-dialog" style="display:none;left: 40%;">
     <form id="customerForm" method="post" action="customerlist.jsp">
         <table style="font-size:14px;" cellpadding=5>
             <tr>
@@ -346,7 +381,7 @@
     </form>
 </div>
 <%--上传日报表模"onsubmit="return checkinput();"--%>
-<div id="uploadDailyReportTemplateDialog" title="上传日报表模板" class="easyui-dialog" style="left: 40%;">
+<div id="uploadDailyReportTemplateDialog" title="上传日报表模板" class="easyui-dialog" style=";display:none;left: 40%;">
     <form method="post" id="dailyReportTemplateForm" action=""
           enctype="multipart/form-data">
         <table width="100%" style="margin-top: 10px;margin-left: 10px">
@@ -373,22 +408,22 @@
     </form>
 </div>
 <%--添加客户关键字--%>
-<div id="customerKeywordDialog" title="客户关键字" class="easyui-dialog" style="left: 35%;">
+<div id="customerKeywordDialog" title="客户关键字" class="easyui-dialog" style="display:none;left: 35%;">
     <form id="customerKeywordForm">
-   <textarea id="customerKeywordTextarea" style="width:480px;height:180px;"
+   <textarea id="customerKeywordTextarea" style="width:502px;height:180px;resize: none;"
              placeholder="关键字 域名  关键字与域名以空格作为分割，一行一组"></textarea>
         <br>
         <c:choose>
             <c:when test="${'PC'.equalsIgnoreCase(terminalType)}">
-                <input type="input" id="group" style="width:480px" value="pc_pm_xiaowu"/>
+                <input type="input" id="group" style="width:502px" value="pc_pm_xiaowu"/>
             </c:when>
             <c:otherwise>
-                <input type="input" id="group" style="width:480px" value="m_pm_tiantian"/>
+                <input type="input" id="group" style="width:502px" value="m_pm_tiantian"/>
             </c:otherwise>
         </c:choose>
     </form>
 </div>
-<div id="autoSwitchCustomerKeywordStatusDialog" class="easyui-dialog" style="left: 40%;">
+<div id="autoSwitchCustomerKeywordStatusDialog" class="easyui-dialog" style="display: none;left: 40%;">
     <table width="95%" style="margin-top: 10px;margin-left: 10px">
         <tr>
             <td>
@@ -421,6 +456,8 @@
         <option>50</option>
         <option>75</option>
         <option>100</option>
+        <option>500</option>
+        <option>1000</option>
     </select>
     </div>
 </div>
@@ -474,6 +511,62 @@
             },
             error: function () {
                 $().toastmessage('showErrorToast', "操作失败");
+            }
+        });
+    }
+    </shiro:hasPermission>
+
+    <shiro:hasPermission name="/internal/customer/saveCustomer">
+    function updateAccountInfo(uuid, self) {
+        var data = {};
+        data.customerUuid = uuid;
+        data.externalAccount = $.trim(self.value);
+        $.ajax({
+            url: '/internal/customer/updateCustomerExternalAccount',
+            data: JSON.stringify(data),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            timeout: 5000,
+            type: 'POST',
+            success: function (result) {
+                if (result) {
+                    $().toastmessage('showSuccessToast', "更新成功");
+                } else {
+                    $().toastmessage('showErrorToast', "更新失败");
+                }
+            },
+            error: function () {
+                $().toastmessage('showErrorToast', "更新失败");
+            }
+        });
+    }
+    </shiro:hasPermission>
+
+    <shiro:hasPermission name="/internal/customer/saveCustomer">
+    function updateCustomerSearchEngine(uuid, self) {
+        var data = {};
+        data.customerUuid = uuid;
+        data.searchEngine = $(self).val();
+        $.ajax({
+            url: '/internal/customer/updateCustomerSearchEngine',
+            data: JSON.stringify(data),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            timeout: 5000,
+            type: 'POST',
+            success: function (result) {
+                if (result) {
+                    $().toastmessage('showSuccessToast', "更新成功");
+                } else {
+                    $().toastmessage('showErrorToast', "更新失败");
+                }
+            },
+            error: function () {
+                $().toastmessage('showErrorToast', "更新失败");
             }
         });
     }

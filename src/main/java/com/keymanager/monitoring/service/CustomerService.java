@@ -9,6 +9,8 @@ import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.enums.EntryTypeEnum;
 import com.keymanager.util.Utils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,8 +53,7 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 			for(Customer customer : customers){
 				customerUuids.add(customer.getUuid());
 			}
-			List<Map> customerKeywordCountMap = customerKeywordService.getCustomerKeywordsCount(customerUuids, customerCriteria.getTerminalType(),
-					customerCriteria.getEntryType());
+			List<Map> customerKeywordCountMap = customerKeywordService.getCustomerKeywordsCount(customerUuids, customerCriteria.getTerminalType(),customerCriteria.getEntryType());
 			Map<Integer, Map> customerUuidKeywordCountMap = new HashMap<Integer, Map>();
 			for(Map map : customerKeywordCountMap){
 				customerUuidKeywordCountMap.put((Integer)map.get("customerUuid"), map);
@@ -116,8 +117,8 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 		}
 	}
 
-	public List<Customer> getActiveCustomerSimpleInfo(){
-		return customerDao.getActiveCustomerSimpleInfo();
+	public List<Customer> getActiveCustomerSimpleInfo(CustomerCriteria customerCriteria){
+		return customerDao.getActiveCustomerSimpleInfo(customerCriteria);
 	}
 
     public Customer getCustomer(int customerUuid) {
@@ -143,32 +144,63 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 		updateById(customer);
 	}
 
+	public void updateCustomerExternalAccount(Long customerUuid, String externalAccount) {
+		Customer customer = customerDao.selectById(customerUuid);
+		customer.setExternalAccount(externalAccount);
+		updateById(customer);
+	}
+
+	public void updateCustomerSearchEngine(Long customerUuid, String searchEngine) {
+		Customer customer = customerDao.selectById(customerUuid);
+		customer.setSearchEngine(searchEngine);
+		updateById(customer);
+	}
+
 	public void setCustomerKeywordStatusSwitchTime(List<String> uuids, String activeHour, String inActiveHour) {
 		customerDao.setCustomerKeywordStatusSwitchTime(uuids, activeHour, inActiveHour);
 	}
 
 	public void autoSwitchCustomerKeywordStatus() {
 		boolean openFlag = false;
+		String day = "" + Utils.getDayOfMonth();
 		Integer hour = Utils.getCurrentHour();
 		List<Long> activeCustomerUuids = new ArrayList<Long>();
 		List<Long> inActiveCustomerUuids = new ArrayList<Long>();
 		List<Customer> customers = customerDao.searchNeedSwitchCustomer();
 		for(Customer customer : customers) {
 			openFlag = false;
-			String[] activeHours = customer.getActiveHour().split(",");
-			String[] inActiveHours = customer.getInActiveHour().split(",");
-			for(int i = 0; i < activeHours.length; i++) {
-				if(Integer.parseInt(activeHours[i]) < Integer.parseInt(inActiveHours[i])) {
-					if(hour >= Integer.parseInt(activeHours[i]) && hour < Integer.parseInt(inActiveHours[i])) {
-						activeCustomerUuids.add(customer.getUuid());
-						openFlag = true;
-						break;
-					}
-				} else {
-					if(hour >= Integer.parseInt(activeHours[i]) || hour < Integer.parseInt(inActiveHours[i])) {
-						activeCustomerUuids.add(customer.getUuid());
-						openFlag = true;
-						break;
+			// 按日期启停
+			if(StringUtils.isNotBlank(customer.getUpdateInterval()) && StringUtils.isBlank(customer.getActiveHour())) {
+				String[] updateIntervals = customer.getUpdateInterval().split(",");
+				openFlag = ArrayUtils.contains(updateIntervals, day);
+				if(openFlag) {
+					activeCustomerUuids.add(customer.getUuid());
+				}
+			}
+			// 按小时启停
+			if(StringUtils.isNotBlank(customer.getActiveHour())) {
+				boolean existFlag = true;
+				if(StringUtils.isNotBlank(customer.getUpdateInterval())) {
+					String[] updateIntervals = customer.getUpdateInterval().split(",");
+					existFlag = ArrayUtils.contains(updateIntervals, day);
+				}
+				if(existFlag) {
+					String[] activeHours = customer.getActiveHour().split(",");
+					String[] inActiveHours = customer.getInActiveHour().split(",");
+					for(int i = 0; i < activeHours.length; i++) {
+						if(Integer.parseInt(activeHours[i]) < Integer.parseInt(inActiveHours[i])) {
+							if(hour >= Integer.parseInt(activeHours[i]) && hour < Integer.parseInt(inActiveHours[i])) {
+								activeCustomerUuids.add(customer.getUuid());
+								openFlag = true;
+								break;
+							}
+						} else {
+							if(hour >= Integer.parseInt(activeHours[i]) || hour < Integer.parseInt(inActiveHours[i])) {
+								activeCustomerUuids.add(customer.getUuid());
+								openFlag = true;
+								break;
+							}
+						}
 					}
 				}
 			}
@@ -187,5 +219,18 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 	public List<String> searchContactPersonList(String customerUuids) {
 		String[] uuids = customerUuids.split(",");
 		return customerDao.searchContactPersonList(uuids);
+	}
+
+	public Customer findCustomerByExternalAccountInfo(String externalAccount, String searchEngine) {
+		return customerDao.findCustomerByExternalAccountInfo(externalAccount, searchEngine);
+	}
+
+	public List<Customer> searchTargetCustomers(String entryType,String loginName){
+		List<Customer> customers = customerDao.searchTargetCustomers(entryType,loginName);
+		return customers;
+	}
+
+	public void setCustomerUpdateInterval(List<String> uuids, String updateInterval) {
+		customerDao.setCustomerUpdateInterval(uuids, updateInterval);
 	}
 }

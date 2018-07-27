@@ -1,4 +1,4 @@
-package com.keymanager.monitoring.excel.operator;
+﻿package com.keymanager.monitoring.excel.operator;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,7 +30,12 @@ public class SuperUserSimpleKeywordExcelOperator extends AbstractExcelReader {
 		if(Utils.isNullOrEmpty(customerKeyword.getKeyword())){
 			return null;
 		}
-		customerKeyword.setUrl(getStringValue(SuperUserSimpleKeywordDefinition.URL.getColumnIndex(), rowIndex).trim());
+
+		String url = getStringValue(SuperUserSimpleKeywordDefinition.URL.getColumnIndex(), rowIndex);
+		if(url.substring(url.length() - 1).equals("/")) {
+			url = url.substring(0, url.length() - 1);
+		}
+		customerKeyword.setUrl(url);
 		if(Utils.isNullOrEmpty(customerKeyword.getUrl())){
 			return null;
 		}
@@ -62,7 +67,8 @@ public class SuperUserSimpleKeywordExcelOperator extends AbstractExcelReader {
 
 		Integer optimizePlanCount = getIntValue(SuperUserFullKeywordDefinition.OptimizePlanCount.getColumnIndex(), rowIndex);
 		customerKeyword.setOptimizePlanCount(optimizePlanCount);
-		
+		customerKeyword.setOptimizeRemainingCount(optimizePlanCount);
+
 		customerKeyword.setOriginalUrl(getStringValue(SuperUserSimpleKeywordDefinition.OriginalURL.getColumnIndex(), rowIndex).trim());
 		customerKeyword.setOptimizeGroupName(getStringValue(SuperUserSimpleKeywordDefinition.OptimizeGroupName.getColumnIndex(), rowIndex).trim());
 		

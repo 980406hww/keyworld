@@ -2,12 +2,13 @@ package com.keymanager.monitoring.controller.rest.internal;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
+import com.keymanager.monitoring.criteria.ClientStatusBatchUpdateCriteria;
 import com.keymanager.monitoring.criteria.ClientStatusCriteria;
 import com.keymanager.monitoring.entity.ClientStatus;
+import com.keymanager.monitoring.entity.Config;
+import com.keymanager.monitoring.entity.UserPageSetup;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
-import com.keymanager.monitoring.service.ClientStatusService;
-import com.keymanager.monitoring.service.ConfigService;
-import com.keymanager.monitoring.service.PerformanceService;
+import com.keymanager.monitoring.service.*;
 import com.keymanager.util.Constants;
 import com.keymanager.util.FileUtil;
 import com.keymanager.util.TerminalTypeMapping;
@@ -15,7 +16,6 @@ import com.keymanager.util.Utils;
 import com.keymanager.value.ClientStatusGroupSummaryVO;
 import com.keymanager.value.ClientStatusSummaryVO;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/internal/clientstatus")
@@ -41,6 +42,12 @@ public class ClientStatusRestController extends SpringMVCBaseController {
 
     @Autowired
     private PerformanceService performanceService;
+
+    @Autowired
+    private UserPageSetupService userPageSetupService;
+
+    @Autowired
+    private ConfigService configService;
 
     @RequiresPermissions("/internal/clientstatus/changeTerminalType")
     @RequestMapping(value = "/changeTerminalType", method = RequestMethod.POST)
@@ -59,13 +66,28 @@ public class ClientStatusRestController extends SpringMVCBaseController {
     @RequiresPermissions("/internal/clientstatus/searchClientStatuses")
     @RequestMapping(value = "/searchClientStatuses", method = RequestMethod.GET)
     public ModelAndView searchClientStatuses(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request) {
-        return constructClientStatusModelAndView(request, new ClientStatusCriteria(), currentPageNumber, pageSize, true);
+        String loginName = getCurrentUser().getLoginName();
+        String requestURI = request.getRequestURI();
+        ClientStatusCriteria clientStatusCriteria = new ClientStatusCriteria();
+        UserPageSetup userPageSetup = userPageSetupService.searchUserPageSetup(loginName,requestURI);
+        if(userPageSetup != null){
+            clientStatusCriteria.setHiddenColumns(userPageSetup.getHiddenField());
+        }else {
+            userPageSetupService.addUserPageSetup(loginName,requestURI,clientStatusCriteria.getHiddenColumns());
+        }
+        return constructClientStatusModelAndView(request,clientStatusCriteria, currentPageNumber, pageSize, true);
     }
 
     @RequiresPermissions("/internal/clientstatus/searchClientStatuses")
     @RequestMapping(value = "/searchClientStatuses", method = RequestMethod.POST)
     public ModelAndView searchClientStatusesPost(HttpServletRequest request, ClientStatusCriteria clientStatusCriteria) {
         try {
+            String loginName = getCurrentUser().getLoginName();
+            String requestURI = request.getRequestURI();
+            if(clientStatusCriteria.getHaveHiddenColumns()){
+                userPageSetupService.updateUserPageSetup(loginName,requestURI,clientStatusCriteria.getHiddenColumns());
+                clientStatusCriteria.setHaveHiddenColumns(false);
+            }
             String currentPageNumber = request.getParameter("currentPageNumber");
             String pageSize = request.getParameter("pageSize");
             if (null == currentPageNumber && null == pageSize) {
@@ -95,17 +117,28 @@ public class ClientStatusRestController extends SpringMVCBaseController {
         ModelAndView modelAndView = new ModelAndView("/client/list");
         String terminalType = TerminalTypeMapping.getTerminalType(request);
         clientStatusCriteria.setTerminalType(terminalType);
+        boolean isDepartmentManager = false;
+        Set<String> switchGroups = getCurrentUser().getRoles();
+        if(!switchGroups.contains("DepartmentManager")) {
+            clientStatusCriteria.setSwitchGroups(switchGroups);
+        }
         Page<ClientStatus> page = clientStatusService.searchClientStatuses(new Page<ClientStatus>(currentPageNumber, pageSize), clientStatusCriteria, normalSearchFlag);
         String [] operationTypeValues = clientStatusService.getOperationTypeValues(terminalType);
-
         modelAndView.addObject("terminalType", terminalType);
         modelAndView.addObject("clientStatusCriteria", clientStatusCriteria);
         modelAndView.addObject("validMap", Constants.CLIENT_STATUS_VALID_MAP);
         modelAndView.addObject("orderByMap", Constants.CLIENT_STATUS_ORDERBY_MAP);
         modelAndView.addObject("operationTypeValues", operationTypeValues);
+        modelAndView.addObject("urlPrefix", getUrlPrefix(request));
         modelAndView.addObject("page", page);
         performanceService.addPerformanceLog(terminalType + ":searchCustomerKeywords", System.currentTimeMillis() - startMilleSeconds, null);
         return modelAndView;
+    }
+
+    private String getUrlPrefix(HttpServletRequest request){
+        String url = request.getRequestURL().toString();
+        String urlPrefix = url.split("\\.")[0];
+        return urlPrefix.replace("http://", "");
     }
 
     @RequiresPermissions("/internal/clientstatus/updateClientStatusTargetVersion")
@@ -115,6 +148,20 @@ public class ClientStatusRestController extends SpringMVCBaseController {
             List<String> clientIDs = (List<String>) requestMap.get("clientIDs");
             String targetVersion = (String) requestMap.get("targetVersion");
             clientStatusService.updateClientStatusTargetVersion(clientIDs, targetVersion);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
+    
+    @RequiresPermissions("/internal/clientstatus/saveClientStatus")
+    @RequestMapping(value = "/updateClientStatusTargetVPSPassword", method = RequestMethod.POST)
+    public ResponseEntity<?> updateClientStatusTargetVPSPassword(@RequestBody Map<String, Object> requestMap) {
+        try {
+            List<String> clientIDs = (List<String>) requestMap.get("clientIDs");
+            String targetVPSPassword = (String) requestMap.get("targetVPSPassword");
+            clientStatusService.updateClientStatusTargetVPSPassword(clientIDs, targetVPSPassword);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -142,6 +189,18 @@ public class ClientStatusRestController extends SpringMVCBaseController {
     public ResponseEntity<?> saveClientStatus(@RequestBody ClientStatus clientStatus) {
         try {
             clientStatusService.saveClientStatus(clientStatus);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequiresPermissions("/internal/clientstatus/saveClientStatus")
+    @RequestMapping(value = "/batchUpdateClientStatus", method = RequestMethod.POST)
+    public ResponseEntity<?> batchUpdateClientStatus(@RequestBody ClientStatusBatchUpdateCriteria clientStatusBatchUpdateCriteria) {
+        try {
+            clientStatusService.batchUpdateClientStatus(clientStatusBatchUpdateCriteria);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -292,7 +351,8 @@ public class ClientStatusRestController extends SpringMVCBaseController {
     public ResponseEntity<?> downloadVNCFile(HttpServletRequest request, HttpServletResponse response) {
         try {
             clientStatusService.getVNCFileInfo(TerminalTypeMapping.getTerminalType(request));
-            downFile("vnc.zip");
+            Config config = configService.getConfig(Constants.CONFIG_TYPE_ZIP_ENCRYPTION, Constants.CONFIG_KEY_PASSWORD);
+            downFile("vnc.zip", config.getValue() + Utils.getCurrentDate());
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -306,7 +366,8 @@ public class ClientStatusRestController extends SpringMVCBaseController {
     public ResponseEntity<?> downloadFullVNCFile(HttpServletRequest request, HttpServletResponse response) {
         try {
             clientStatusService.getFullVNCFileInfo(TerminalTypeMapping.getTerminalType(request));
-            downFile("vncAll.zip");
+            Config config = configService.getConfig(Constants.CONFIG_TYPE_ZIP_ENCRYPTION, Constants.CONFIG_KEY_PASSWORD);
+            downFile("vncAll.zip", config.getValue() + Utils.getCurrentDate());
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -316,21 +377,16 @@ public class ClientStatusRestController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/clientstatus/clientStatusStat")
     @RequestMapping(value = "/clientStatusStat", method = {RequestMethod.GET, RequestMethod.POST})
-    public ModelAndView clientStatusStat(String clientIDPrefix, String city, HttpServletRequest request) {
+    public ModelAndView clientStatusStat(String clientIDPrefix, String city, String switchGroupName, HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView("client/clientStatusStat");
         try {
             if(request.getMethod().equals("GET")){
                 return modelAndView;
             }
-            if (clientIDPrefix != null) {
-                clientIDPrefix = clientIDPrefix.trim();
-            }
-            if (city != null) {
-                city = city.trim();
-            }
-            List<ClientStatusSummaryVO> clientStatusSummaryVOs = clientStatusService.searchClientStatusSummaryVO(clientIDPrefix, city);
+            List<ClientStatusSummaryVO> clientStatusSummaryVOs = clientStatusService.searchClientStatusSummaryVO(clientIDPrefix, city, switchGroupName);
             modelAndView.addObject("clientIDPrefix", clientIDPrefix);
             modelAndView.addObject("city", city);
+            modelAndView.addObject("switchGroupName", switchGroupName);
             modelAndView.addObject("clientStatusSummaryVOs", clientStatusSummaryVOs);
         } catch (Exception e) {
             logger.error(e.getMessage());

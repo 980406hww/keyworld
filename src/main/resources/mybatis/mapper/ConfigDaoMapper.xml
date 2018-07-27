@@ -12,4 +12,13 @@
         WHERE fConfigType = #{config.configType}
         AND fKey = #{config.key}
     </update>
+
+    <select id="findConfigs" resultType="com.keymanager.monitoring.entity.Config">
+        SELECT
+            c.fConfigType as 'configType',
+            c.fKey as 'key',
+            c.fValue as 'value'
+        FROM t_config c
+        WHERE  c.fConfigType = #{configType}
+    </select>
 </mapper>

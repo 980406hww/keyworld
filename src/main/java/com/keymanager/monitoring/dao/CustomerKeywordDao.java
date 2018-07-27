@@ -1,10 +1,11 @@
-package com.keymanager.monitoring.dao;
+﻿package com.keymanager.monitoring.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.criteria.CustomerKeywordCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordUpdateCriteria;
+import com.keymanager.monitoring.entity.Config;
 import com.keymanager.monitoring.entity.CustomerKeyword;
 import com.keymanager.monitoring.entity.NegativeList;
 import com.keymanager.monitoring.entity.QZCaptureTitleLog;
@@ -15,6 +16,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface
 CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
@@ -34,10 +36,12 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     int getSimilarCustomerKeywordCount(@Param("terminalType") String terminalType, @Param("customerUuid") long customerUuid, @Param("keyword") String
             keyword, @Param("originalUrl") String originalUrl);
 
+    Integer getSameCustomerKeywordCount(@Param("terminalType")String terminalType, @Param("customerUuid") long customerUuid, @Param("keyword") String keyword, @Param("url")String url);
+
     int getMaxSequence(@Param("terminalType") String terminalType, @Param("entryType") String entryType, @Param("customerUuid") long customerUuid);
 
     List<CustomerKeyword> searchSameCustomerKeywords(@Param("terminalType") String terminalType, @Param("customerUuid") long customerUuid,
-                                                     @Param("keyword") String keyword);
+                                                     @Param("keyword") String keyword, @Param("searchEngine") String searchEngine);
 
     List<CustomerKeyword> searchCustomerKeywordsForUpdateIndex(@Param("keyword") String keyword);
 
@@ -87,8 +91,10 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void resetOptimizationInfo();
 
-    CustomerKeyword getCustomerKeywordForOptimization(@Param("terminalType")String terminalType, @Param("groupName")String groupName,
-                                                      @Param("maxInvalidCount")int maxInvalidCount, @Param("noPositionMaxInvalidCount") int noPositionMaxInvalidCount, @Param("bigKeyword")boolean bigKeyword);
+    Long getCustomerKeywordUuidForOptimization(@Param("terminalType")String terminalType, @Param("groupName")String groupName,
+                                               @Param("maxInvalidCount")int maxInvalidCount, @Param("noPositionMaxInvalidCount") int noPositionMaxInvalidCount, @Param("bigKeyword")boolean bigKeyword);
+
+    CustomerKeyword getCustomerKeywordForOptimization(@Param("uuid")Long uuid);
 
     void updateOptimizationQueryTime(@Param("customerKeywordUuid")Long customerKeywordUuid);
 
@@ -101,8 +107,10 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void adjustOptimizePlanCount(@Param("customerKeywordUuid")Long customerKeywordUuid, @Param("optimizationPlanCount")int optimizationPlanCount,
                                  @Param("queryInterval")int queryInterval);
 
-    CustomerKeyword getCustomerKeywordForCapturePosition(@Param("terminalType")String terminalType, @Param("groupNames")List<String> groupNames,
-                                                         @Param("customerUuid")Long customerUuid, @Param("startTime")Date startTime);
+    Long getCustomerKeywordUuidForCapturePosition(@Param("terminalType")String terminalType, @Param("groupNames")List<String> groupNames,
+                                                  @Param("customerUuid")Long customerUuid, @Param("startTime")Date startTime);
+
+    CustomerKeyword getCustomerKeywordForCapturePosition(@Param("uuid")Long uuid);
 
     void updateCapturePositionQueryTime(@Param("uuid")Long uuid);
 
@@ -122,7 +130,9 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void updateAutoUpdateNegativeTimeAs4MinutesAgo(@Param("terminalType")String terminalType, @Param("groupName")String groupName);
 
-    CustomerKeywordForCaptureTitle searchCustomerKeywordForCaptureTitle(@Param("qzCaptureTitleLog") QZCaptureTitleLog qzCaptureTitleLog,@Param("searchEngine")String searchEngine);
+    Long searchCustomerKeywordUuidForCaptureTitle(@Param("qzCaptureTitleLog") QZCaptureTitleLog qzCaptureTitleLog,@Param("searchEngine")String searchEngine);
+
+    CustomerKeywordForCaptureTitle searchCustomerKeywordForCaptureTitle(@Param("uuid") Long uuid);
 
     void  deleteEmptyTitleCustomerKeyword(@Param("qzCaptureTitleLog")QZCaptureTitleLog qzCaptureTitleLog,@Param("searchEngine")String searchEngine);
 
@@ -132,9 +142,9 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void updateOptimizePlanCountForBaiduMap();
 
-    void updatePosition(@Param("uuid")Long uuid, @Param("position")Integer position, @Param("capturePositionQueryTime")Date capturePositionQueryTime, @Param("reachStandardFlag") boolean reachStandardFlag);
+    void updatePosition(@Param("uuid")Long uuid, @Param("position")Integer position, @Param("capturePositionQueryTime")Date capturePositionQueryTime, @Param("todayFee") Double todayFee);
 
-    List<OptimizationCountVO> tabkeOptimizationCountExceptionUsers();
+    List<OptimizationCountVO> takeOptimizationCountExceptionUsers();
 
     List<String> fetchOptimizationCompletedGroupNames(@Param("typesStr")String typesStr, @Param("maxInvalidCount")Integer maxInvalidCount);
     List<OptimizationCountVO> observeGroupOptimizationCount(@Param("userID") String userID);
@@ -142,6 +152,8 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     List<OptimizationCountVO> observeKeywordOptimizationCount(@Param("userID") String userID);
 
     void editCustomerOptimizePlanCount(@Param("optimizePlanCount")Integer optimizePlanCount, @Param("settingType")String settingType, @Param("uuids")List<String> uuids);
+
+    void editOptimizePlanCountByCustomerUuid(@Param("terminalType")String terminalType, @Param("entryType")String entryType, @Param("customerUuid")Long customerUuid, @Param("optimizePlanCount")Integer optimizePlanCount, @Param("settingType")String settingType);
 
     void changeCustomerKeywordStatus(@Param("terminalType")String terminalType, @Param("entryType")String entryType, @Param("customerUuid")Long customerUuid, @Param("status")Integer status);
 
@@ -164,4 +176,17 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void batchUpdatePosition(@Param("terminalType")String terminalType, @Param("entryType")String entryType, @Param("searchEngine")String searchEngine, @Param("reachStandardPosition")int reachStandardPosition, @Param("positionVOs")List<PositionVO> positionVOs);
 
     String getBearPawNumberByCustomerUuid(@Param("customerUuid")int customerUuid, @Param("entryType")String entryType, @Param("terminalType")String terminalType);
+    void batchUpdateRequireDalete(@Param("requireDeleteKeywordVOs")List<RequireDeleteKeywordVO> requireDeleteKeywordVOs);
+    void updateCustomerKeywordQueryTime(@Param("customerKeywordUuid")Long customerKeywordUuid, @Param("capturePositionQueryTime")Date capturePositionQueryTime);
+
+    void updateKeywordCustomerUuid(@Param("keywordUuids")List<String> keywordUuids,@Param("customerUuid")String customerUuid, @Param("terminalType")String terminalType);
+
+    List<String> getCustomerKeywordInfo(@Param("customerKeywordCriteria") CustomerKeywordCriteria customerKeywordCriteria);
+    void moveOutNoRankingCustomerKeyword(@Param("monitorConfigs")List<String> monitorConfigs, @Param("noRankOptimizeGroupNameConfigType")String noRankOptimizeGroupNameConfigType);
+
+    void moveOutDefaultCustomerKeyword(@Param("noRankConfigs")List<Config> noRankConfigs, @Param("defaultOptimizeGroupNameConfigType")String defaultOptimizeGroupNameConfigType);
+
+    List<CustomerKeywordSortVO> sortCustomerKeywordForOptimize(@Param("monitorConfigs")List<String> monitorConfigs);
+
+    void setNoRankingCustomerKeyword(@Param("needMoveUuids")List<String> needMoveUuids, @Param("noRankOptimizeGroupNameConfigType")String noRankOptimizeGroupNameConfigType);
 }

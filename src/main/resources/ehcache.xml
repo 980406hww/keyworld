@@ -58,6 +58,16 @@
         timeToLiveSeconds="86400" 
         overflowToDisk="false" 
         diskPersistent="false" />
+
+    <!--负面清单缓存 -->
+    <cache name="negativeList"
+        maxElementsInMemory="10000"
+        maxElementsOnDisk="100000"
+        eternal="false"
+        timeToIdleSeconds="604800"
+        timeToLiveSeconds="604800"
+        overflowToDisk="false"
+        diskPersistent="false" />
     
     <!--
         name:缓存名称。

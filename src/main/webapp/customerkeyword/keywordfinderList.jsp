@@ -77,6 +77,7 @@
             备注:<input type="text" id="remarks" name="remarks" style="width: 90px;" value="${customerKeywordCriteria.remarks}">&nbsp;
             <input id="pushPay" name="pushPay" type="checkbox"  onclick="pushPayValue()" value="${customerKeywordCriteria.pushPay}"/>催缴 &nbsp;
             <input id="displayStop" name="displayStop" type="checkbox"  onclick="displayStopValue()" value="${customerKeywordCriteria.displayStop}"/>显示下架 &nbsp;
+            <input id="requireDelete" name="requireDelete" type="checkbox"  ${customerKeywordCriteria.requireDelete == true ? "checked=true" : ""}/>要求删除 &nbsp;
             <input id="noPosition" name="noPosition" type="checkbox"  onclick="noPositionValue()"/>显示排名为0 &nbsp;
             <br/>
             要刷:<input type="text" name="gtOptimizePlanCount" id="gtOptimizePlanCount" placeholder=">=" value="${customerKeywordCriteria.gtOptimizePlanCount}" style="width:40px;"/>
@@ -135,6 +136,9 @@
     <table style="font-size:12px; width: 100%;" id="headerTable">
         <tr bgcolor="#eeeeee" height=30>
             <td width="10" style="padding-left: 7px;"><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
+            <c:if test="${isDepartmentManager == true}">
+            <td align="center" width=60>用户名称</td>
+            </c:if>
             <td align="center" width=80>联系人</td>
             <td align="center" width=80>关键字</td>
             <td align="center" width=100>URL</td>
@@ -163,6 +167,11 @@
                 <td width="10" style="padding-left: 7px;">
                     <input type="checkbox" name="uuid" value="${customerKeyword.uuid}" onclick="decideSelectAll()"/>
                 </td>
+                <c:if test="${isDepartmentManager == true}">
+                <td align="center" width=60>
+                    ${customerKeyword.userID}
+                </td>
+                </c:if>
                 <td align="center" width=80>
                     <a href="#" onclick="searchCustomerKeywords('/internal/customerKeyword/searchCustomerKeywords/${customerKeyword.customerUuid}')">${customerKeyword.contactPerson}</a>
                 </td>
@@ -226,6 +235,8 @@
         <option>50</option>
         <option>75</option>
         <option>100</option>
+        <option>500</option>
+        <option>1000</option>
     </select>
     </div>
 </div>

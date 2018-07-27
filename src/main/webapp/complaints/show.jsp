@@ -142,13 +142,15 @@
         <option>50</option>
         <option>75</option>
         <option>100</option>
+        <option>500</option>
+        <option>1000</option>
     </select>
         <input type="hidden" id="currentPageHidden" value="${page.current}"/>
         <input type="hidden" id="displaysRecordsHidden" value="${page.size}"/>
         <input type="hidden" id="pagesHidden" value="${page.pages}"/>
     </div>
 </div>
-<div id="showAddMainKeywordDialog" class="easyui-dialog" title="添加投诉关键字" style="left: 35%;">
+<div id="showAddMainKeywordDialog" class="easyui-dialog" title="添加投诉关键字" style="display: none;left: 35%;">
     <form id="mainKeywordForm" action="show.jsp">
         <table style="border-spacing:15px;">
             <tr>

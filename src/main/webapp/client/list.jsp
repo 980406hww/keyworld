@@ -67,11 +67,16 @@
 								<input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
 								<input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
 								<input type="hidden" name="startUpStatusHidden" id="startUpStatusHidden" value="${clientStatusCriteria.startUpStatus}"/>
+								<input type="hidden" name="runningProgramTypeHidden" id="runningProgramTypeHidden" value="${clientStatusCriteria.runningProgramType}"/>
+								<input type="hidden" name="hiddenColumns" id="hiddenColumns" value="${clientStatusCriteria.hiddenColumns}"/>
+								<input type="hidden" name="haveHiddenColumns" id="haveHiddenColumns" value="${clientStatusCriteria.haveHiddenColumns}"/>
 								客户端ID:<input type="text" name="clientID" id="clientID" value="${clientStatusCriteria.clientID}" style="width: 90px;">
 								&nbsp;&nbsp;
 								优化组:<input type="text" name="groupName" id="groupName" value="${clientStatusCriteria.groupName}" style="width: 120px;">
 								&nbsp;&nbsp;
-								版本:<input type="text" name="version" id="version" value="${clientStatusCriteria.version}" style="width: 60px;">
+								版本:<input type="text" name="version" id="version" value="${clientStatusCriteria.version}" style="width: 20px;">
+								&nbsp;&nbsp;
+								目标版本:<input type="text" name="targetVersion" id="targetVersion" value="${clientStatusCriteria.targetVersion}" style="width: 20px;">
 								&nbsp;&nbsp;
 								城市:<input type="text" name="city" id="city" value="${clientStatusCriteria.city}" style="width: 120px;">
 								&nbsp;&nbsp;
@@ -91,16 +96,15 @@
 							&nbsp;&nbsp;
 							流转分组:<input type="text" name="switchGroupName" id="switchGroupName" value="${clientStatusCriteria.switchGroupName}" style="width: 100px;">
 							&nbsp;&nbsp;
-							开机状态:
-							<select name="startUpStatus" id="startUpStatus">
-								<option value=''>All</option>
-								<option value='New'>New</option>
-								<option value='Processing'>Processing</option>
-								<option value='Setting'>Setting</option>
-								<option value='Downloading'>Downloading</option>
-								<option value='Completed'>Completed</option>
-								<option value='Error'>Error</option>
-							</select>&nbsp;
+							排序:<select name="orderBy" id="orderBy">
+							<option value=""></option>
+							<c:forEach items="${orderByMap}" var="entry">
+								<c:choose>
+									<c:when test="${entry.key eq clientStatusCriteria.orderBy}"><option selected value="${entry.key}">${entry.value}</option></c:when>
+									<c:otherwise><option value="${entry.key}">${entry.value}</option></c:otherwise>
+								</c:choose>
+							</c:forEach>
+							</select>
 							</td>
 						</tr>
 						<tr>
@@ -133,13 +137,21 @@
 							</c:forEach>
 							</select>
 							&nbsp;&nbsp;
-							排序:<select name="orderBy" id="orderBy">
-							<c:forEach items="${orderByMap}" var="entry">
-								<c:choose>
-									<c:when test="${entry.key eq clientStatusCriteria.orderBy}"><option selected value="${entry.key}">${entry.value}</option></c:when>
-									<c:otherwise><option value="${entry.key}">${entry.value}</option></c:otherwise>
-								</c:choose>
-							</c:forEach>
+							开机状态:
+							<select name="startUpStatus" id="startUpStatus">
+								<option value=''>All</option>
+								<option value='New'>New</option>
+								<option value='Processing'>Processing</option>
+								<option value='Setting'>Setting</option>
+								<option value='Downloading'>Downloading</option>
+								<option value='Completed'>Completed</option>
+								<option value='Error'>Error</option>
+							</select>&nbsp;&nbsp;
+							运行程序类型:
+							<select name="runningProgramType" id="runningProgramType">
+								<option value=''>All</option>
+								<option value='New'>New</option>
+								<option value='Old'>Old</option>
 							</select>
 
 							<shiro:hasPermission name="/internal/clientstatus/searchClientStatuses">
@@ -156,12 +168,16 @@
 								&nbsp;&nbsp;<input type="button" name="btnFilter" onclick="showUploadVPSDialog('common')" value=" 导入普通终端 ">
 								&nbsp;&nbsp;<input type="button" onclick="showUploadVPSDialog('startUp')" value=" 导入开机终端 ">
 							</shiro:hasPermission>
+							&nbsp;&nbsp;<input type="button" onclick="headerTableSetting()" value="表格设置">
 						</td>
 						</tr>
 						<tr>
 							<td colspan="2" align="right">
 							<shiro:hasPermission name="/internal/clientstatus/updateClientStatusTargetVersion">
 								<a target="_blank" href="javascript:showTargetVersionSettingDialog(this)">设定目标版本</a>
+							</shiro:hasPermission>
+							<shiro:hasPermission name="/internal/clientstatus/saveClientStatus">
+								<a target="_blank" href="javascript:showTargetVPSPasswordSettingDialog(this)">设定目标密码</a>
 							</shiro:hasPermission>
 							<shiro:hasPermission name="/internal/clientstatus/updateClientStatusRenewalDate">
 								|<a target="_blank" href="javascript:showRenewalSettingDialog(this)">续费</a>
@@ -175,8 +191,8 @@
 							<shiro:hasPermission name="/internal/clientstatus/downloadVNCFile">
 								|<a target="_blank" href="javascript:downloadVNCFile()">下载VNC连接压缩文件</a>
 							</shiro:hasPermission>
-							<shiro:hasPermission name="/internal/clientstatus/downloadFullVNCFile">
-								|<a target="_blank" href="javascript:downloadFullVNCFile()">下载完整版VNC文件</a>
+							<shiro:hasPermission name="/internal/clientstatus/saveClientStatus">
+								|<a target="_blank" href="javascript:clientStatusBatchUpdate()">批量设置</a>
 							</shiro:hasPermission>
 							</td>
 						</tr>
@@ -191,14 +207,16 @@
 			<td align="center" width=20>续费<br>日期</td>
 			<td align="center" width=30>现版本<br>目标版本</td>
 			<td align="center" width=40>重启数/重启状态<br>页码/失败次数</td>
-			<td align="center" width=100>所在城市<br>终端状态</td>
+			<td align="center" width=60>所在城市<br>终端状态</td>
 			<td align="center" width=30>剩余空间</td>
 			<td align="center" width=40>最新工作时间<br>重启时间</td>
 			<td align="center" width=40>重启排序时间<br>发通知时间</td>
 			<td align="center" width=30>成功次数<br>操作次数</td>
 			<td align="center" width=50>宽带账号<br>宽带密码</td>
-			<td align="center" width=40>开机状态<br>程序类型</td>
+			<td align="center" width=30>运行程序<br>类型</td>
+			<td align="center" width=40>开机状态<br>下载程序类型</td>
 			<td align="center" width=20>状态</td>
+			<td align="center" width=30>停留时间</td>
 			<td align="center" width=40>失败原因</td>
 			<td align="center" width=40>服务器ID</td>
 			<td align="center" width=80>操作</td>
@@ -288,7 +306,7 @@
 			<td width=40><font
 					color="${keywordColor}">${clientStatus.restartCount}/${clientStatus.restartStatus == null ? "" : clientStatus.restartStatus}<br>${clientStatus.pageNo}/${clientStatus.continuousFailCount}</font>
 			</td>
-			<td width=100 style="word-break: break-all;"><font
+			<td width=60 style="word-break: break-all;"><font
 					color="${keywordColor}">${clientStatus.city == null ? "" : clientStatus.city}<br>${clientStatus.status == null ? "" : clientStatus.status}</font>
 			</td>
 			<td width=30><font color="${keywordColor}">${clientStatus.freeSpace}</font></td>
@@ -302,8 +320,10 @@
 					color="${keywordColor}">${clientStatus.optimizationSucceedCount}<br>${clientStatus.optimizationTotalCount}</font>
 			</td>
 			<td width=50><font color="${keywordColor}">${clientStatus.broadbandAccount}<br>${clientStatus.broadbandPassword}</font></td>
+			<td width=30><font color="${keywordColor}">${clientStatus.runningProgramType}</font></td>
 			<td width=40><font color="${keywordColor}">${clientStatus.startUpStatus}<br>${clientStatus.downloadProgramType}</font></td>
 			<td width=20><font color="${keywordColor}">${clientStatus.valid ? "监控中" : "暂停监控"}</font></td>
+			<td width=30><font color="${keywordColor}">${clientStatus.pageRemainMinTime}<br>${clientStatus.pageRemainMaxTime}</font></td>
 			<td width=40>
 				<shiro:hasPermission name="/internal/clientstatus/updateUpgradeFailedReason">
 					<input type="text"
@@ -323,7 +343,7 @@
 				<c:choose>
 					<c:when test="${null != clientStatus.host and '' != clientStatus.host}">
 						<shiro:hasPermission name="/internal/clientstatus/saveClientStatus">
-							<a href="javascript:connectVNC('${clientStatus.clientID}')">VNC</a>
+							<a href="javascript:connectVNC('${clientStatus.clientID}', '${urlPrefix}')">VNC</a>
 						</shiro:hasPermission>
 					</c:when>
 					<c:otherwise>
@@ -377,6 +397,8 @@
 		<option>50</option>
 		<option>75</option>
 		<option>100</option>
+		<option>500</option>
+		<option>1000</option>
 	</select>
 	</div>
 </div>
@@ -384,19 +406,19 @@
 	<div style="display: none;">
 		<script src="http://s84.cnzz.com/stat.php?id=4204660&web_id=4204660" language="JavaScript"></script>
 	</div>
-	<div id="changeSettingDialog" class="easyui-dialog" style="left: 30%;">
+	<div id="changeSettingDialog" class="easyui-dialog" style="display: none;left: 30%;">
 		<table>
 			<tr>
 				<td>
 					<table id="td_1" style="font-size:12px">
-						<tr>
+						<tr name="trItem" onclick="checkItem(this)">
 							<th>分组</th>
 							<td>
 								<input type="hidden" id="settingClientID" />
 								<input type="text" name="settingGroup" id="settingGroup" />
 							</td>
 						</tr>
-						<tr>
+						<tr name="trItem" onclick="checkItem(this)">
 							<th>允许换组</th>
 							<td>
 								<select name="allowSwitchGroup" id="allowSwitchGroup">
@@ -405,7 +427,7 @@
 								</select>
 							</td>
 						</tr>
-						<tr>
+						<tr name="trItem" onclick="checkItem(this)">
 							<th>网站统计</th>
 							<td>
 								<select name="disableStatistics" id="disableStatistics">
@@ -414,7 +436,7 @@
 								</select>
 							</td>
 						</tr>
-						<tr>
+						<tr name="trItem" onclick="checkItem(this)">
 							<th>目标网站</th>
 							<td>
 								<select name="disableVisitWebsite" id="disableVisitWebsite">
@@ -423,7 +445,7 @@
 								</select>
 							</td>
 						</tr>
-						<tr>
+						<tr name="trItem" onclick="checkItem(this)">
 							<th>操作类型</th>
 							<td>
 								<select name="settingOperationType" id="settingOperationType">
@@ -433,7 +455,7 @@
 								</select>
 							</td>
 						</tr>
-						<tr>
+						<tr name="trItem" onclick="checkItem(this)">
 							<th>页数</th>
 							<td>
 								<c:choose>
@@ -446,7 +468,7 @@
 								</c:choose>
 							</td>
 						</tr>
-						<tr>
+						<tr name="trItem" onclick="checkItem(this)">
 							<th>每页</th>
 							<td>
 								<select name="pageSize" id="pageSize">
@@ -456,7 +478,7 @@
 								</select>条
 							</td>
 						</tr>
-						<tr>
+						<tr name="trItem" onclick="checkItem(this)">
 							<th>站内搜索</th>
 							<td>
 								<select name="zhanneiPercent" id="zhanneiPercent">
@@ -468,7 +490,7 @@
 								</select>
 							</td>
 						</tr>
-						<tr>
+						<tr name="trItem" onclick="checkItem(this)">
 							<th>外链检索</th>
 							<td>
 								<select name="zhanwaiPercent" id="zhanwaiPercent">
@@ -480,7 +502,7 @@
 								</select>
 							</td>
 						</tr>
-						<tr>
+						<tr name="trItem" onclick="checkItem(this)">
 							<th>快照点击比例</th>
 							<td>
 								<select name="kuaizhaoPercent" id="kuaizhaoPercent">
@@ -492,7 +514,7 @@
 								</select>
 							</td>
 						</tr>
-						<tr>
+						<tr name="trItem" onclick="checkItem(this)">
 							<th>竞价点击比例</th>
 							<td>
 								<select name="baiduSemPercent" id="baiduSemPercent">
@@ -504,7 +526,7 @@
 								</select>
 							</td>
 						</tr>
-						<tr>
+						<tr name="trItem" onclick="checkItem(this)">
 							<th>特殊字符比例</th>
 							<td>
 								<select name="specialCharPercent" id="specialCharPercent">
@@ -516,7 +538,7 @@
 								</select>
 							</td>
 						</tr>
-						<tr>
+						<tr name="trItem" onclick="checkItem(this)">
 							<th>拖动标题的点击比例</th>
 							<td>
 								<select name="dragPercent" id="dragPercent">
@@ -528,7 +550,7 @@
 								</select>
 							</td>
 						</tr>
-						<tr>
+						<tr name="trItem" onclick="checkItem(this)">
 							<th>浏览器设置</th>
 							<td>
 								<select name="multiBrowser" id="multiBrowser">
@@ -538,7 +560,7 @@
 								</select>
 							</td>
 						</tr>
-						<tr>
+						<tr name="trItem" onclick="checkItem(this)">
 							<th>Cookie设置</th>
 							<td>
 								<select name="clearCookie" id="clearCookie">
@@ -553,83 +575,77 @@
 				</td>
 
 
-				<td>
+				<td style="vertical-align:top;">
 					<table id="td_2" style="font-size:12px">
-						<tr>
+						<tr name="trItem" onclick="checkItem(this)">
 							<th>流转分组</th>
 							<td>
 								<input type="text" name="switchGroupName" id="switchGroupName"  style="width:110px;"/>
 							</td>
 						</tr>
-						<tr>
+						<tr name="trItem" onclick="checkItem(this)">
 							<th>主机</th>
 							<td>
 								<input type="text" name="host" id="host"  style="width:110px;"/>
 							</td>
 						</tr>
-						<tr>
+						<tr name="trItem" onclick="checkItem(this)">
 							<th>端口</th>
 							<td>
 								<input type="text" name="port" id="port"  style="width:110px;"/>
 							</td>
 						</tr>
-						<tr>
+						<tr name="trItem" onclick="checkItem(this)">
 							<th>VNC和操作系统用户名</th>
 							<td>
 								<input type="text" name="csUserName" id="csUserName" value="Administrator"  style="width:110px;"/>
 							</td>
 						</tr>
-						<tr>
-							<th>VNC和操作系统密码</th>
-							<td>
-								<input type="text" name="password" id="password" value="doshows123"  style="width:110px;"/>
-							</td>
-						</tr>
-						<tr>
+						<tr name="trItem" onclick="checkItem(this)">
 							<th>VPS后台系统电脑ID</th>
 							<td>
 								<input type="text" name="vpsBackendSystemComputerID" id="vpsBackendSystemComputerID"  style="width:110px;"/>
 							</td>
 						</tr>
-						<tr>
+						<tr name="trItem" onclick="checkItem(this)">
 							<th>VPS后台系统密码</th>
 							<td>
 								<input type="text" name="vpsBackendSystemPassword" id="vpsBackendSystemPassword"  style="width:110px;"/>
 							</td>
 						</tr>
-						<tr>
+						<tr name="trItem" onclick="checkItem(this)">
 							<th>最大用户数</th>
 							<td>
 								<input type="text" name="maxUserCount" id="maxUserCount" value="300"  style="width:110px;"/>
 							</td>
 						</tr>
-						<tr>
+						<tr name="trItem" onclick="checkItem(this)">
 							<th>宽带账号</th>
 							<td>
 								<input type="text" name="broadbandAccount" id="broadbandAccount" value="" style="width:110px;"/>
 							</td>
 						</tr>
-						<tr>
+						<tr name="trItem" onclick="checkItem(this)">
 							<th>宽带密码</th>
 							<td>
 								<input type="text" name="broadbandPassword" id="broadbandPassword" value="" style="width:110px;"/>
 							</td>
 						</tr>
-						<tr>
+						<tr name="trItem" onclick="checkItem(this)">
 							<th>进入页</th>
 							<td>
 								<input type="text" name="entryPageMinCount" id="entryPageMinCount" value="0" /> -
 								<input type="text" name="entryPageMaxCount" id="entryPageMaxCount" value="0" />次
 							</td>
 						</tr>
-						<tr>
+						<tr name="trItem" onclick="checkItem(this)">
 							<th>页面停留</th>
 							<td>
 								<input type="text" name="pageRemainMinTime" id="pageRemainMinTime" value="3000"/> -
 								<input type="text" name="pageRemainMaxTime" id="pageRemainMaxTime" value="5000"/>毫秒
 							</td>
 						</tr>
-						<tr>
+						<tr name="trItem" onclick="checkItem(this)">
 							<th>输入延时</th>
 							<td>
 								<input type="text" name="inputDelayMinTime" id="inputDelayMinTime" value="50"/> -
@@ -637,7 +653,7 @@
 							</td>
 						</tr>
 
-						<tr>
+						<tr name="trItem" onclick="checkItem(this)">
 							<th>滑动延时</th>
 							<td>
 								<input type="text" name="slideDelayMinTime" id="slideDelayMinTime" value="700"/> -
@@ -649,32 +665,32 @@
 
 				<td style="vertical-align:top;">
 					<table id="td_2" style="font-size:12px">
-						<tr>
+						<tr name="trItem" onclick="checkItem(this)">
 							<th>标题停留</th>
 							<td>
 								<input type="text" name="titleRemainMinTime" id="titleRemainMinTime" value="1000"/> -
 								<input type="text" name="titleRemainMaxTime" id="titleRemainMaxTime" value="3000"/>毫秒
 							</td>
 						</tr>
-						<tr>
+						<tr name="trItem" onclick="checkItem(this)">
 							<th>刷多少</th>
 							<td>
 								<input type="text" name="optimizeKeywordCountPerIP" id="optimizeKeywordCountPerIP" value="1"/>个词换IP
 							</td>
 						</tr>
-						<tr>
+						<tr name="trItem" onclick="checkItem(this)">
 							<th>打开百度等待</th>
 							<td>
 								<input type="text" name="waitTimeAfterOpenBaidu" id="waitTimeAfterOpenBaidu" value="1000"/>秒
 							</td>
 						</tr>
-						<tr>
+						<tr name="trItem" onclick="checkItem(this)">
 							<th>点击目标等待</th>
 							<td>
 								<input type="text" name="waitTimeBeforeClick" id="waitTimeBeforeClick" value="1000"/>秒
 							</td>
 						</tr>
-						<tr>
+						<tr name="trItem" onclick="checkItem(this)">
 							<th>点击目标后等待</th>
 							<td>
 								<input type="text" name="waitTimeAfterClick" id="waitTimeAfterClick" value="5000"/>秒
@@ -682,72 +698,72 @@
 						</tr>
 
 						<tr>
-							<td>
+							<td name="trItem" onclick="checkItem(this)">
 								<input id="oneIPOneUser" name="oneIPOneUser" type="checkbox" value="1">每IP对每用户</input>
 							</td>
-							<td>
+							<td name="trItem" onclick="checkItem(this)">
 								<input id="randomlyClickNoResult" name="randomlyClickNoResult" type="checkbox" value="1">没结果则随机点</input>
 							</td>
 						</tr>
 						<tr>
-							<td>
+							<td name="trItem" onclick="checkItem(this)">
 								<input id="justVisitSelfPage" name="justVisitSelfPage" type="checkbox" value="1">在域名下访问</input>
 							</td>
-							<td>
+							<td name="trItem" onclick="checkItem(this)">
 								<input id="sleepPer2Words" name="sleepPer2Words" type="checkbox" value="1">输入2字稍微停顿</input>
 							</td>
 						</tr>
 
 						<tr>
-							<td>
+							<td name="trItem" onclick="checkItem(this)">
 								<input id="supportPaste" name="supportPaste" type="checkbox" value="1">支持粘贴输入</input>
 							</td>
-							<td>
+							<td name="trItem" onclick="checkItem(this)">
 								<input id="moveRandomly" name="moveRandomly" type="checkbox" value="1">随机移动</input>
 							</td>
 						</tr>
 
 						<tr>
-							<td>
+							<td name="trItem" onclick="checkItem(this)">
 								<input id="parentSearchEntry" name="parentSearchEntry" type="checkbox" value="1">爸妈搜索入口</input>
 							</td>
-							<td>
+							<td name="trItem" onclick="checkItem(this)">
 								<input id="clearLocalStorage" name="clearLocalStorage" type="checkbox" value="1">清除LocalStorage</input>
 							</td>
 						</tr>
 
 						<tr>
-							<td>
+							<td name="trItem" onclick="checkItem(this)">
 								<input id="lessClickAtNight" name="lessClickAtNight" type="checkbox" value="1">晚上减少点击</input>
 							</td>
-							<td>
+							<td name="trItem" onclick="checkItem(this)">
 								<input id="sameCityUser" name="sameCityUser" type="checkbox" value="1">同城用户</input>
 							</td>
 						</tr>
 
 						<tr>
-							<td>
+							<td name="trItem" onclick="checkItem(this)">
 								<input id="locateTitlePosition" name="locateTitlePosition" type="checkbox" value="1">直接获取标题位置</input>
 							</td>
-							<td>
+							<td name="trItem" onclick="checkItem(this)">
 								<input id="baiduAllianceEntry" name="baiduAllianceEntry" type="checkbox" value="1">百度联盟入口</input>
 							</td>
 						</tr>
 
 						<tr>
-							<td>
+							<td name="trItem" onclick="checkItem(this)">
 								<input id="justClickSpecifiedTitle" name="justClickSpecifiedTitle" type="checkbox" value="1">随机只点指定标题</input>
 							</td>
-							<td>
+							<td name="trItem" onclick="checkItem(this)">
 								<input id="randomlyClickMoreLink" name="randomlyClickMoreLink" type="checkbox" value="1">随机多点一些链接</input>
 							</td>
 						</tr>
 
 						<tr>
-							<td>
+							<td name="trItem" onclick="checkItem(this)">
 								<input id="moveUp20" name="moveUp20" type="checkbox" value="1">向上偏移20</input>
 							</td>
-							<td>
+							<td name="trItem" onclick="checkItem(this)">
 								<input id="optimizeRelatedKeyword" name="optimizeRelatedKeyword" type="checkbox" value="1">操作相关词</input>
 							</td>
 						</tr>
@@ -756,14 +772,16 @@
 
 			</tr>
 		</table>
-
 	</div>
 	
-	<div id="targetVersionSettingDialog" class="easyui-dialog" style="left: 40%;">
+	<div id="targetVersionSettingDialog" class="easyui-dialog" style="display: none;left: 40%;">
 		目标版本：<input type="text" name="settingTargetVersion" id="settingTargetVersion" />
 	</div>
+	<div id="targetVPSPasswordSettingDialog" class="easyui-dialog" style="display: none;left: 40%;">
+		目标密码：<input type="text" name="settingTargetVPSPassword" id="settingTargetVPSPassword" />
+	</div>
 
-	<div id="renewalSettingDialog" class="easyui-dialog" style="left: 40%;">
+	<div id="renewalSettingDialog" class="easyui-dialog" style="display: none;left: 40%;">
 		<table style="font-size:12px">
 			<tr>
 				<th>类型</th>
@@ -781,7 +799,7 @@
 		</table>
 	</div>
 
-	<div id="uploadVNCDialog" class="easyui-dialog" style="left: 40%;">
+	<div id="uploadVNCDialog" class="easyui-dialog" style="display: none;left: 40%;">
 		<form method="post" id="uploadVNCForm" action="" enctype="multipart/form-data">
 			<table width="95%" style="margin-top: 10px;margin-left: 10px">
 				<tr>
@@ -805,11 +823,11 @@
 		</form>
 	</div>
 
-	<div id="uploadVPSDialog" class="easyui-dialog" style="left: 40%;">
+	<div id="uploadVPSDialog" class="easyui-dialog" style="display: none;left: 40%;">
 		<form method="post" id="uploadVPSForm" action="" enctype="multipart/form-data">
 			<table width="95%" style="margin-top: 10px;margin-left: 10px">
 				<tr>
-					<td id="programType" style="display: none;">
+					<td id="programType" >
 						下载程序:
 						<input type="radio" name="downloadProgramType" value="New" checked /> 新程序
 						<input type="radio" name="downloadProgramType" value="Old" /> 旧程序
@@ -830,7 +848,7 @@
 		</form>
 	</div>
 
-	<div id="reopenClientDiv" class="easyui-dialog">
+	<div id="reopenClientDiv" class="easyui-dialog" style="display: none">
 		<table width="95%" style="margin-top: 10px;margin-left: 10px">
 			<tr>
 				<td>
@@ -839,6 +857,30 @@
 					<input type="radio" name="downloadProgramType" value="Old" /> 旧程序
 				</td>
 			</tr>
+		</table>
+	</div>
+
+	<div id="headerTableDialog" class="easyui-dialog" style="display: none">
+		<table>
+			<tr><td><input type="checkbox" name="columnName" id="1">客户端ID</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="2">优化组</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="3">操作类型</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="4">续费日期</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="5">现版本-目标版本</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="6">重启数/重启状态-页码/失败次数</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="7">所在城市-终端状态</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="8">剩余空间</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="9">最新工作时间-重启时间</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="10">重启排序时间-发通知时间</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="11">成功次数-操作次数</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="12">宽带账号-宽带密码</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="13">运行程序-类型</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="14">开机状态-下载程序类型</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="15">状态</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="16">停留时间</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="17">失败原因</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="18">服务器ID</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="19">操作</td></tr>
 		</table>
 	</div>
 <%@ include file="/commons/loadjs.jsp" %>

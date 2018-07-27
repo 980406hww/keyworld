@@ -21,6 +21,9 @@ public class CustomerChargeType extends BaseEntity{
 	@TableField(exist = false)
 	private List<CustomerChargeTypeInterval> customerChargeTypeIntervals;
 
+	@TableField(exist = false)
+	private List<CustomerChargeTypePercentage> customerChargeTypePercentages;
+
 	public Integer getCustomerUuid() {
 		return customerUuid;
 	}
@@ -51,5 +54,13 @@ public class CustomerChargeType extends BaseEntity{
 
 	public void setCustomerChargeTypeIntervals(List<CustomerChargeTypeInterval> customerChargeTypeIntervals) {
 		this.customerChargeTypeIntervals = customerChargeTypeIntervals;
+	}
+
+	public List<CustomerChargeTypePercentage> getCustomerChargeTypePercentages() {
+		return customerChargeTypePercentages;
+	}
+
+	public void setCustomerChargeTypePercentages(List<CustomerChargeTypePercentage> customerChargeTypePercentages) {
+		this.customerChargeTypePercentages = customerChargeTypePercentages;
 	}
 }

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.ProjectFollowDao">
+	<select id="findProjectFollows" resultType="com.keymanager.monitoring.entity.ProjectFollow">
+		SELECT
+			fUuid AS 'uuid',
+			fCustomerUuid AS 'customerUuid',
+			fFollowContent AS 'followContent',
+			fFollowPerson AS 'followPerson',
+			fUpdateTime AS 'updateTime',
+			fCreateTime AS 'createTime'
+		FROM
+			t_project_follow
+		WHERE fCustomerUuid = #{customerUuid}
+	</select>
+
+	<delete id="deleteProjectFollows">
+		DELETE FROM t_project_follow
+		WHERE fCustomerUuid = #{customerUuid}
+	</delete>
+</mapper>

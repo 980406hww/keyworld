@@ -183,6 +183,34 @@ public class CustomerRestController {
         }
     }
 
+    @RequiresPermissions("/internal/customer/saveCustomer")
+    @RequestMapping(value = "/updateCustomerExternalAccount", method = RequestMethod.POST)
+    public ResponseEntity<?> updateCustomerExternalAccount(@RequestBody Map<String,Object> requestMap) {
+        try {
+            String customerUuid = (String) requestMap.get("customerUuid");
+            String externalAccount = (String) requestMap.get("externalAccount");
+            customerService.updateCustomerExternalAccount(Long.parseLong(customerUuid), externalAccount);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.OK);
+        }
+    }
+
+    @RequiresPermissions("/internal/customer/saveCustomer")
+    @RequestMapping(value = "/updateCustomerSearchEngine", method = RequestMethod.POST)
+    public ResponseEntity<?> updateCustomerSearchEngine(@RequestBody Map<String,Object> requestMap) {
+        try {
+            String customerUuid = (String) requestMap.get("customerUuid");
+            String searchEngine = (String) requestMap.get("searchEngine");
+            customerService.updateCustomerSearchEngine(Long.parseLong(customerUuid), searchEngine);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.OK);
+        }
+    }
+
     @RequestMapping(value = "/setCustomerKeywordStatusSwitchTime" , method = RequestMethod.POST)
     public ResponseEntity<?> setCustomerKeywordStatusSwitchTime(@RequestBody Map<String, Object> requestMap){
         try {
@@ -190,6 +218,18 @@ public class CustomerRestController {
             String activeHour = (String) requestMap.get("activeHour");
             String inActiveHour = (String) requestMap.get("inActiveHour");
             customerService.setCustomerKeywordStatusSwitchTime(uuids, activeHour, inActiveHour);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<Object>(false, HttpStatus.OK);
+        }
+    }
+
+    @RequestMapping(value = "/setCustomerUpdateInterval" , method = RequestMethod.POST)
+    public ResponseEntity<?> setCustomerUpdateInterval(@RequestBody Map<String, Object> requestMap){
+        try {
+            List<String> uuids = (List<String>) requestMap.get("uuids");
+            String updateInterval = (String) requestMap.get("updateInterval");
+            customerService.setCustomerUpdateInterval(uuids, updateInterval);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<Object>(false, HttpStatus.OK);

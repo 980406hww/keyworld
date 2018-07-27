@@ -2,6 +2,7 @@ $(function () {
     $("#chargeLogListDiv").dialog("close");
     $("#chargeDialog").dialog("close");
     $("#changeSettingDialog").dialog("close");
+    $("#getAvailableQZSettings").dialog("close");
     $("#showQZSettingDiv").css("margin-top",$("#topDiv").height());
     alignTableHeader();
     window.onresize = function(){
@@ -10,6 +11,7 @@ $(function () {
     var searchCustomerForm = $("#chargeForm");
     var pageSize = searchCustomerForm.find('#pageSizeHidden').val();
     var pages = searchCustomerForm.find('#pagesHidden').val();
+    $("#chargeForm").find("#status").val($("#statusHidden").val());
     var currentPageNumber = searchCustomerForm.find('#currentPageNumberHidden').val();
     var showCustomerBottomDiv = $('#showCustomerBottomDiv');
     showCustomerBottomDiv.find('#chooseRecords').val(pageSize);
@@ -178,6 +180,41 @@ function updateImmediately(self) {
         }
     });
 }
+function updateQZSettingStatus(status) {
+    var uuids = getSelectedIDs();
+    if(uuids === ''){
+        alert('请选择要操作的整站！');
+        return ;
+    }
+    if(status == 1) {
+        if (confirm("确认要激活选中的整站吗？") == false) return;
+    } else {
+        if (confirm("确认要暂停选中的整站吗？") == false) return;
+    }
+    var postData = {};
+    postData.uuids = uuids.split(",");
+    postData.status = status;
+    $.ajax({
+        url: '/internal/qzsetting/updateQZSettingStatus',
+        data: JSON.stringify(postData),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        timeout: 5000,
+        type: 'POST',
+        success: function (data) {
+            if(data){
+                $().toastmessage('showSuccessToast', "操作成功", true);
+            }else{
+                $().toastmessage('showErrorToast', "操作失败");
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "操作失败");
+        }
+    });
+}
 function toTimeFormat(time) {
     var date = toDateFormat(time);
     var hours = time.getHours() < 10 ? ("0" + time.getHours()) : time.getHours();
@@ -297,6 +334,7 @@ function showChargeLog(uuid, self) {
                     });
                     $("#chargeLogListTable")[0].lastChild.appendChild(newTr);
                 });
+                $("#chargeLogListDiv").show();
                 $("#chargeLogListDiv").dialog({
                     resizable: false,
                     width: 370,
@@ -383,6 +421,7 @@ function showChargeDialog(uuid,contactPerson,domain,self) {
                 var s = new String(totalAmount);
                 var total = s.replace(/\B(?=(?:\d{3})+$)/g, ',');
                 chargeDialogObj.find("#totalAmount").html(total+"元");
+                $("#chargeDialog").show();
                 $("#chargeDialog").dialog({
                     resizable: false,
                     modal: true,
@@ -449,6 +488,7 @@ function dealChargeTable(operationType) {
     }
 }
 function createSettingDialog() {
+    $("#changeSettingDialog").show();
     $("#changeSettingDialog").dialog({
         resizable: false,
         height: 450,
@@ -638,9 +678,13 @@ function saveChangeSetting(self) {
         operationType.currentKeywordCount = settingDialogDiv.find(
             "#currentKeywordCount" + val.id).val();
         operationType.subDomainName = settingDialogDiv.find("#subDomainName" + val.id).val();
-
         if (operationType.group == null || operationType.group === "") {
             alert("请输入分组");
+            settingDialogDiv.find("#group" + val.id).focus();
+            validationFlag = false;
+            return false;
+        }else if(operationType.group.length>20){
+            alert(operationType.operationType+"分组大于20位，请重新输入");
             settingDialogDiv.find("#group" + val.id).focus();
             validationFlag = false;
             return false;
@@ -819,4 +863,44 @@ function dealSettingTable(operationType) {
         ruleObj.css("display","none");
         checkboxObj[0].checked = false;
     }
+}
+
+function getAvailableQZSettings() {
+    $.ajax({
+        url:'/internal/qzsetting/getAvailableQZSettings',
+        headers:{
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        timeout:'5000',
+        type:'POST',
+        success: function (data) {
+            var text = "";
+            $.each(data,function(index,element) {
+                text += element.domain;
+                if(element.updateEndTime!=null&&element.updateEndTime!=''){
+                    text += '______'+ toTimeFormat(new Date(element.updateEndTime));
+                }
+                text += '\r';
+            });
+            $("#getAvailableQZSettingsContent").val(text);
+        }
+    });
+    $("#getAvailableQZSettings").show();
+    $("#getAvailableQZSettings").dialog({
+        resizable: false,
+        height: 450,
+        width: 340,
+        title: '查看更新列队',
+        modal: true,
+        buttons: [{
+            text: '确定',
+            iconCls: 'icon-ok',
+            handler: function () {
+                $("#getAvailableQZSettings").dialog("close")
+            }
+        }]
+    });
+    $("#getAvailableQZSettings").dialog("open");
+    $("#getAvailableQZSettings").window("resize",{top:$(document).scrollTop() + 100});
 }

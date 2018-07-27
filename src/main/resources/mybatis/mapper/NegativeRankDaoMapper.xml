@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.monitoring.dao.NegativeRankDao">
+
+    <sql id="negativeRankSQL">
+        fUuid  as 'uuid',
+        fKeyword  as 'keyword',
+        fSearchEngine  as 'searchEngine',
+        fNegativeCount  as 'negativeCount',
+        fFirstPageRanks  as  'firstPageRanks',
+        fSecondPageRanks as  'secondPageRanks',
+        fThirdPageRanks  as  'thirdPageRanks',
+        fFourthPageRanks  as  'fourthPageRanks',
+        fFifthPageRanks  as  'fifthPageRanks',
+        fOtherPageRanks  as  'otherPageRanks',
+        fUpdateTime  as  'updateTime',
+        fCreateTime  as  'createTime'
+    </sql>
     <select id="findNegativeRanks" resultType="com.keymanager.monitoring.entity.NegativeRank">
         SELECT
             fUuid AS 'uuid',
@@ -25,4 +40,47 @@
         WHERE fSearchEngine = #{searchEngine}
         AND fCreateTime BETWEEN #{deleteDate} AND DATE_ADD(#{deleteDate}, INTERVAL 1 DAY)
     </delete>
+
+    <select id="searchNegativeRanks" parameterType="com.keymanager.monitoring.criteria.NegativeRankCriteria" resultType="com.keymanager.monitoring.entity.NegativeRank">
+        SELECT
+          <include refid="negativeRankSQL"/>
+        FROM t_negative_rank as tnr
+        where 1 = 1
+        <if test="negativeRankCriteria.keyword != null and negativeRankCriteria.keyword != ''">AND tnr.fKeyword LIKE '%${negativeRankCriteria.keyword}%'</if>
+        <if test="negativeRankCriteria.searchEngine != null and negativeRankCriteria.searchEngine != ''">AND tnr.fSearchEngine = #{negativeRankCriteria.searchEngine}</if>
+        <if test="negativeRankCriteria.createTime != null and negativeRankCriteria.createTime != ''">AND DATE_FORMAT(tnr.fCreateTime,'%Y-%m-%d') = #{negativeRankCriteria.createTime}</if>
+        ORDER BY tnr.fCreateTime DESC
+    </select>
+
+    <select id="findInitialNegativeRanks" resultType="com.keymanager.monitoring.entity.NegativeRank">
+        SELECT
+            fUuid AS 'uuid',
+            fKeyword AS 'keyword',
+            fSearchEngine AS 'searchEngine',
+            fNegativeCount AS 'negativeCount',
+            fFirstPageRanks AS 'firstPageRanks',
+            fSecondPageRanks AS 'secondPageRanks',
+            fThirdPageRanks AS 'thirdPageRanks',
+            fFourthPageRanks AS 'fourthPageRanks',
+            fFifthPageRanks AS 'fifthPageRanks',
+            fOtherPageRanks AS 'otherPageRanks',
+            fUpdateTime AS 'updateTime',
+            fCreateTime AS 'createTime'
+        FROM t_negative_rank
+        GROUP BY fKeyword,fSearchEngine
+        HAVING fSearchEngine = #{searchEngine}
+        AND MIN(fCreateTime)
+        AND fKeyword IN (
+        SELECT fKeyword FROM t_negative_rank
+        WHERE fSearchEngine = #{searchEngine}
+        AND fCreateTime BETWEEN #{createTime} AND DATE_ADD(#{createTime}, INTERVAL 1 DAY))
+    </select>
+
+    <select id="getTodayNegativeRanks" resultType="com.keymanager.monitoring.entity.NegativeRank">
+        SELECT
+       <include refid="negativeRankSQL"/>
+        FROM t_negative_rank tnr
+        WHERE
+        TO_DAYS(fCreateTime) = TO_DAYS(NOW())
+    </select>
 </mapper>

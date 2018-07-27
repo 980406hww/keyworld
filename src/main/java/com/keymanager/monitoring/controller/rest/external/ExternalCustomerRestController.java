@@ -35,7 +35,7 @@ public class ExternalCustomerRestController extends SpringMVCBaseController {
     public ResponseEntity<?> getActiveCustomerSimpleInfo(@RequestBody CustomerCriteria customerCriteria) throws Exception{
         try {
             if (validUser(customerCriteria.getUserName(), customerCriteria.getPassword())) {
-                List<Customer> customers = customerService.getActiveCustomerSimpleInfo();
+                List<Customer> customers = customerService.getActiveCustomerSimpleInfo(new CustomerCriteria());
                 return new ResponseEntity<Object>(customers, HttpStatus.OK);
             }
         }catch (Exception ex){

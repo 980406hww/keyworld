@@ -1,12 +1,22 @@
 package com.keymanager.monitoring.criteria;
 
 public class QZSettingSearchCriteria{
+    private String loginName;
     private String customerUuid;
     private String customerInfo;
     private String domain;
     private String group;
     private String updateStatus;
     private Integer dateRangeType;
+    private Integer status;
+
+    public String getLoginName() {
+        return loginName;
+    }
+
+    public void setLoginName(String loginName) {
+        this.loginName = loginName;
+    }
 
     public String getCustomerUuid() {
         return customerUuid;
@@ -54,5 +64,13 @@ public class QZSettingSearchCriteria{
 
     public void setDateRangeType(Integer dateRangeType) {
         this.dateRangeType = dateRangeType;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

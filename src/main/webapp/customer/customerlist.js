@@ -219,10 +219,11 @@ function changeCustomerChargeType(customerUuid) {
     });
 }
 function showCustomerChargeTypeDialog(customerUuid) {
+    $("#customerChargeTypeDialog").show();
     $("#customerChargeTypeDialog").dialog({
         resizable: false,
-        width: 500,
-        height:350,
+        width: 530,
+        height:370,
         modal: true,
         closed: true,
         buttons: [{
@@ -311,6 +312,7 @@ function saveCustomerChargeType(customerUuid) {
             return;
         }
         customerChargeType.customerChargeTypeIntervals = [];
+        customerChargeType.customerChargeTypePercentages = [];
         $.each(checkedTerminalTypeObjs, function (idx, val) {
             var trRowCount = chargeTypeIntervalDiv.find("#tab" + val.id + ' tr').length;
             if (parseInt(trRowCount) == 1) {
@@ -323,6 +325,22 @@ function saveCustomerChargeType(customerUuid) {
                 }
                 return false;
             }
+            // 添加收费百分比
+            var customerChargeTypePercentage = {};
+            customerChargeTypePercentage.operationType = val.id;
+            var firstChargePercentage = $("#firstChargePercentage"+val.id).val();
+            customerChargeTypePercentage.firstChargePercentage = firstChargePercentage == "" ? 0 : firstChargePercentage;
+            var secondChargePercentage = $("#secondChargePercentage"+val.id).val();
+            customerChargeTypePercentage.secondChargePercentage = secondChargePercentage == "" ? 0 : secondChargePercentage;
+            var thirdChargePercentage = $("#thirdChargePercentage"+val.id).val();
+            customerChargeTypePercentage.thirdChargePercentage = thirdChargePercentage == "" ? 0 : thirdChargePercentage;
+            var fourthChargePercentage = $("#fourthChargePercentage"+val.id).val();
+            customerChargeTypePercentage.fourthChargePercentage = fourthChargePercentage == "" ? 0 : fourthChargePercentage;
+            var fifthChargePercentage = $("#fifthChargePercentage"+val.id).val();
+            customerChargeTypePercentage.fifthChargePercentage = fifthChargePercentage == "" ? 0 : fifthChargePercentage;
+            var firstPageChargePercentage = $("#firstPageChargePercentage"+val.id).val();
+            customerChargeTypePercentage.firstPageChargePercentage = firstPageChargePercentage == "" ? 0 : firstPageChargePercentage;
+            customerChargeType.customerChargeTypePercentages.push(customerChargeTypePercentage);
 
             var previousEndIndex = null;
             $.each($("#tab" + val.id + " tr:not(:first)"), function (trIdx, trVal) {
@@ -440,6 +458,7 @@ function initCustomerChargeTypeDialog(customerChargeType) {
     var switchType = customerChargeType.chargeType;//判断收费方式
     var customerChargeTypeCalculations = customerChargeType.customerChargeTypeCalculations;
     var customerChargeTypeIntervals = customerChargeType.customerChargeTypeIntervals;
+    var customerChargeTypePercentages = customerChargeType.customerChargeTypePercentages;
     if (switchType == "Percentage") {
         initChargeTypePercentage();
         $.each(customerChargeTypeCalculations, function (idx, val) {
@@ -467,8 +486,6 @@ function initCustomerChargeTypeDialog(customerChargeType) {
         });
     } else {
         initChargeTypeInterval();
-        var customerChargeTypeIntervalPC = [];
-        var customerChargeTypeIntervalPhone = [];
         $.each(customerChargeTypeIntervals, function (idx, val) {
             chargeTypeIntervalDiv.find("#" + val.operationType).prop("checked", true);
             //如果有一条PC类型就在PCtable中加一"
@@ -477,6 +494,17 @@ function initCustomerChargeTypeDialog(customerChargeType) {
             }
             $("#tab" + val.operationType).append(intervalRowStr(val));
         });
+        if(customerChargeTypePercentages != null){
+            $.each(customerChargeTypePercentages, function (idx, val) {
+                $("#firstChargePercentage"+val.operationType).spinner('setValue', val.firstChargePercentage);
+                $("#secondChargePercentage"+val.operationType).spinner('setValue', val.secondChargePercentage);
+                $("#thirdChargePercentage"+val.operationType).spinner('setValue', val.thirdChargePercentage);
+                $("#fourthChargePercentage"+val.operationType).spinner('setValue', val.fourthChargePercentage);
+                $("#fifthChargePercentage"+val.operationType).spinner('setValue', val.fifthChargePercentage);
+                $("#firstPageChargePercentage"+val.operationType).spinner('setValue', val.firstPageChargePercentage);
+            });
+        }
+
         resetSequence($("#tabPC"));
         resetSequence($("#tabPhone"));
         intervalInputOnlyNumberAllow();
@@ -542,6 +570,7 @@ function autoFillPrice(self) {
 }
 function uploadDailyReportTemplate(uuid, self) {
     $('#dailyReportTemplateForm')[0].reset();
+    $("#uploadDailyReportTemplateDialog").show();
     $("#uploadDailyReportTemplateDialog").dialog({
         resizable: false,
         width: 350,
@@ -609,6 +638,7 @@ function showCustomerDialog(uuid, loginName) {
     if (uuid == null) {
         $('#customerForm')[0].reset();
     }
+    $("#customerDialog").show();
     $("#customerDialog").dialog({
         resizable: false,
         width: 280,
@@ -712,10 +742,10 @@ function getCustomer(uuid, callback) {
     });
 }
 function showCustomerKeywordDialog(uuid) {
+    $("#customerKeywordDialog").show();
     $("#customerKeywordDialog").dialog({
         resizable: false,
-        /* width: 510,
-         height: 320,*/
+        width: 510,
         modal: true,
         buttons: [{
             text: '保存',
@@ -878,12 +908,16 @@ function resetPageNumber() {
     }
     searchCustomerFormObj.find("#currentPageNumberHidden").val(1);
 }
-function viewAizhanRank(contactPerson) {
+function viewSitesdRank(contactPerson,type) {
     var index = contactPerson.indexOf("整站");
     if(index > -1) {
         contactPerson = contactPerson.substr(0, index);
     }
-    window.open("https://baidurank.aizhan.com/baidu/" + contactPerson);
+    if(type == 'aizhan'){
+        window.open("https://baidurank.aizhan.com/baidu/" + contactPerson);
+    }else if(type == '5118'){
+        window.open("http://5118.com/seo/baidurank/" + contactPerson);
+    }
 }
 function changeCustomerKeywordStatus(customerUuid, status) {
     if(status == 0) {
@@ -926,6 +960,7 @@ function autoSwitchCustomerKeywordStatus() {
         alert('请选择要启停关键字的客户');
         return;
     }
+    $("#autoSwitchCustomerKeywordStatusDialog").show();
     $('#autoSwitchCustomerKeywordStatusDialog').dialog({
         resizable: false,
         width: 280,
@@ -980,4 +1015,63 @@ function autoSwitchCustomerKeywordStatus() {
             }]
     });
     $('#autoSwitchCustomerKeywordStatusDialog').window("resize",{top:$(document).scrollTop() + 150});
+}
+function openNegativeStandardSetting(url) {
+    window.open(url);
+}
+function setCustomerUpdateInterval(uuid) {
+    var uuids = getSelectedIDs();
+    if(uuid == null) {
+        if (uuids === '') {
+            alert('请选择要设置启停关键字间隔的客户！');
+            return;
+        }
+    } else {
+        uuids = uuid;
+    }
+    $.messager.prompt('提示', '请输入关键字启停间隔天数：', function(updateInterval){
+        if(updateInterval != undefined) {
+            updateInterval = updateInterval.replace("，",",");
+            if(updateInterval.indexOf("-") > -1) {
+                var intervalDays = "";
+                $.each(updateInterval.split(","), function (index, value) {
+                    if(value.indexOf("-") > -1) {
+                        var days = value.split("-");
+                        intervalDays += "," + days[0];
+                        for(var i = 0; i < parseInt(days[1]) - parseInt(days[0]); i++) {
+                            intervalDays += "," + (parseInt(days[0]) + i + 1);
+                        }
+                    }else {
+                        intervalDays += "," + value;
+                    }
+                });
+                if(intervalDays.indexOf(",") == 0) {
+                    updateInterval = intervalDays.substring(1);
+                }
+            }
+            var data = {};
+            data.uuids = uuids.split(",");
+            data.updateInterval = updateInterval;
+            $.ajax({
+                url: '/internal/customer/setCustomerUpdateInterval',
+                data: JSON.stringify(data),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                type: 'POST',
+                success: function (result) {
+                    if (result) {
+                        $().toastmessage('showSuccessToast', "操作成功", true);
+                    } else {
+                        $().toastmessage('showErrorToast', "操作失败");
+                    }
+                },
+                error: function () {
+                    $().toastmessage('showErrorToast', "操作失败");
+                }
+            });
+        }
+    });
 }

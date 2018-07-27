@@ -3,6 +3,7 @@
 <html>
 <head>
     <title>网站管理</title>
+    <script type="text/javascript" src="${staticPath}/static/My97DatePicker/WdatePicker.js"></script>
 </head>
 <body>
 <%@ include file="/commons/basejs.jsp" %>
@@ -29,7 +30,7 @@
         </form>
     </div>
     <table style="font-size:12px; width: 100%;" id="headerTable">
-        <tr bgcolor="" height="30">
+        <%--<tr bgcolor="" height="30">
             <td align="center" width="10">
                 <input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/>
             </td>
@@ -41,22 +42,58 @@
             <td align="center" width=50>最近访问时间</td>
             <td align="center" width=50>更新时间</td>
             <td align="center" width=50>操作</td>
-        </tr>
+        </tr>--%>
+            <tr bgcolor="" height="22">
+                <td width="35" align="center" rowspan="2">
+                    <input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/>
+                </td>
+                <td width="80" align="center" rowspan="2">网站名称</td>
+                <td width="80" align="center" rowspan="2">所属行业</td>
+                <td width="80" align="center" rowspan="2">访问失败次数</td>
+                <td width="80" align="center" rowspan="2">发现故障时间</td>
+                <td width="80" align="center" rowspan="2">最近访问时间</td>
+                <td width="80" align="center" rowspan="2">更新时间</td>
+                <td width="270" align="center" colspan="4">域名信息</td>
+                <td width="210" colspan="3" align="center">数据库信息</td>
+                <td width="210" colspan="3" align="center">服务器信息</td>
+                <td width="80" align="center" rowspan="2">操作</td>
+            </tr>
+            <tr height="23">
+                <td width="70" align="center">网站域名</td>
+                <td width="70" align="center">注册商</td>
+                <td width="70" align="center">解析商</td>
+                <td width="70" align="center">到期时间</td>
+                <td width="70" align="center">数据库名称</td>
+                <td width="70" align="center">用户名</td>
+                <td width="70" align="center">密码</td>
+                <td width="70" align="center">IP</td>
+                <td width="70" align="center">用户名</td>
+                <td width="70" align="center">密码</td>
+            </tr>
     </table>
 </div>
 <div id="centerDiv" style="margin-bottom: 30px;">
     <table style="font-size:12px; width: 100%;" id="showWebsiteTable">
         <c:forEach items="${page.records}" var="website" varStatus="status">
         <tr align="left" height=30  <c:if test="${status.index%2==0}">bgcolor="#eeeeee"</c:if> >
-            <td width=10 align="center"><input type="checkbox" name="uuid" value="${website.uuid}" onclick="decideSelectAll()"/></td>
+            <td width=35 align="center"><input type="checkbox" name="uuid" value="${website.uuid}" onclick="decideSelectAll()"/></td>
             <td width=80>${website.websiteName}</td>
-            <td width=100><a target="_blank" href="http://${website.domain}">${website.domain}</a></td>
-            <td width=60>${website.industry}</td>
-            <td width=40>${website.accessFailCount > 0 ? website.accessFailCount : ""}</td>
-            <td width=50><fmt:formatDate value="${website.accessFailTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
-            <td width=50><fmt:formatDate value="${website.lastAccessTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
-            <td width=50><fmt:formatDate value="${website.updateTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
-            <td style="text-align: center;" width="50">
+            <td width=80>${website.industry}</td>
+            <td width=80>${website.accessFailCount > 0 ? website.accessFailCount : ""}</td>
+            <td width=80><fmt:formatDate value="${website.accessFailTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+            <td width=80><fmt:formatDate value="${website.lastAccessTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+            <td width=80><fmt:formatDate value="${website.updateTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+            <td width=70><a target="_blank" href="http://${website.domain}">${website.domain}</a></td>
+            <td width=70>${website.registrar}</td>
+            <td width=70>${website.analysis}</td>
+            <td width=70><fmt:formatDate value="${website.expiryTime}" pattern="yyyy-MM-dd"/></td>
+            <td width=70>${website.databaseName}</td>
+            <td width=70>${website.databaseUserName}</td>
+            <td width=70>${website.databasePassword}</td>
+            <td width=70>${website.serverIP}</td>
+            <td width=70>${website.serverUserName}</td>
+            <td width=70>${website.serverPassword}</td>
+            <td style="text-align: center;" width="80">
                 <shiro:hasPermission name="/internal/website/saveWebsite">
                 <a href="javascript:editWebsiteInfo('${website.uuid}')">修改</a>
                 </shiro:hasPermission>
@@ -82,15 +119,17 @@
            onclick="changePaging('${page.pages}','${page.size}')" value="末页">&nbsp;&nbsp;&nbsp;&nbsp;
     总记录数:${page.total}&nbsp;&nbsp;&nbsp;&nbsp;
     每页显示条数:<select id="chooseRecords" onchange="changePaging(${page.current},this.value)">
-    <option>10</option>
-    <option>25</option>
-    <option>50</option>
-    <option>75</option>
-    <option>100</option>
+        <option>10</option>
+        <option>25</option>
+        <option>50</option>
+        <option>75</option>
+        <option>100</option>
+        <option>500</option>
+        <option>1000</option>
     </select>
     </div>
 </div>
-<div id="websiteDialog" title="网站信息" class="easyui-dialog" style="left: 35%;">
+<div id="websiteDialog" title="网站信息" class="easyui-dialog" style="display: none;left: 35%;">
     <form id="websiteForm" method="post">
         <table style="font-size:14px;" cellpadding=10 cellspacing="5">
             <tr>
@@ -98,13 +137,50 @@
                 <td><input type="text" name="websiteName" id="websiteName" style="width:200px;"></td>
             </tr>
             <tr>
+                <td align="right">所属行业</td>
+                <td><input type="text" name="industry" id="industry" style="width:200px;"></td>
+            </tr>
+            <tr>
                 <td align="right">网站域名:</td>
                 <td><input type="text" name="domain" id="domain" style="width:200px;"></td>
             </tr>
             <tr>
-                <td align="right">所属行业</td>
-                <td><input type="text" name="industry" id="industry" style="width:200px;">
+                <td align="right">域名注册商:</td>
+                <td><input type="text" name="registrar" id="registrar" style="width:200px;"></td>
+            </tr>
+            <tr>
+                <td align="right">域名解析商:</td>
+                <td><input type="text" name="analysis" id="analysis" style="width:200px;"></td>
+            </tr>
+            <tr>
+                <td align="right">域名到期时间:</td>
+                <td>
+                    <input name="expiryTime" id="expiryTime" class="Wdate" type="text" style="width:200px;" onClick="WdatePicker()">
                 </td>
+            </tr>
+            <tr>
+                <td align="right">数据库名称:</td>
+                <td><input type="text" name="databaseName" id="databaseName" style="width:200px;"></td>
+            </tr>
+            <tr>
+                <td align="right">数据库用户名:</td>
+                <td><input type="text" name="databaseUserName" id="databaseUserName" style="width:200px;"></td>
+            </tr>
+            <tr>
+                <td align="right">数据库密码:</td>
+                <td><input type="text" name="databasePassword" id="databasePassword" style="width:200px;"></td>
+            </tr>
+            <tr>
+                <td align="right">服务器IP:</td>
+                <td><input type="text" name="serverIP" id="serverIP" style="width:200px;"></td>
+            </tr>
+            <tr>
+                <td align="right">服务器用户名:</td>
+                <td><input type="text" name="serverUserName" id="serverUserName" style="width:200px;"></td>
+            </tr>
+            <tr>
+                <td align="right">服务器密码:</td>
+                <td><input type="text" name="serverPassword" id="serverPassword" style="width:200px;"></td>
             </tr>
         </table>
     </form>

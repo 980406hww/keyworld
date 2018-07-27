@@ -7,29 +7,30 @@
 <%@ include file="/commons/basejs.jsp" %>
 <div id="topDiv">
 	<%@include file="/menu.jsp" %>
-<form method="post" id="searchRefreshStatInfoForm" action="/internal/refreshstatinfo/searchRefreshStatInfos"
-	  style="margin-top: 35px;">
-	<table style="font-size:12px;">
-		<tr>
-			<td align="right">分组名称:<input name="groupName" id="groupName" type="text" style="width:200px;"
-										  value="${refreshStatInfoCriteria.groupName}"></td>
-			<td align="right">客户名称:<input name="customerName" id="customerName" type="text" style="width:200px;"
-										  value="${refreshStatInfoCriteria.customerName}"></td>
-			<td align="right">
-				&nbsp;
-				<shiro:hasPermission name="/internal/refreshstatinfo/searchRefreshStatInfos">
-					<input type="submit" name="btnQuery" id="btnQuery" value=" 查询 " onclick="trimSearchCondition()">&nbsp;&nbsp;
-				</shiro:hasPermission>
-				<shiro:hasPermission name="/internal/customerKeyword/uploadCustomerKeywords">
-				<input type="button" value="导入从爱站抓取排名" onclick="uploadCsv()">&nbsp;&nbsp;
-				</shiro:hasPermission>
-				<shiro:hasPermission name="/internal/customerKeyword/downloadCustomerKeywordInfo">
-				<input type="button" value="导出关键字信息到爱站抓排名" onclick="downloadTxt()">&nbsp;&nbsp;
-				</shiro:hasPermission>
-			</td>
-		</tr>
-	</table>
-</form>
+	<form method="post" id="searchRefreshStatInfoForm" action="/internal/refreshstatinfo/searchRefreshStatInfos"
+		  style="margin-top: 35px;">
+		<table style="font-size:12px;">
+			<tr>
+				<td align="right">分组名称:<input name="groupName" id="groupName" type="text" style="width:200px;"
+											  value="${refreshStatInfoCriteria.groupName}"></td>
+				<td align="right">客户名称:<input name="customerName" id="customerName" type="text" style="width:200px;"
+											  value="${refreshStatInfoCriteria.customerName}"></td>
+				<td align="right">
+					&nbsp;
+					<shiro:hasPermission name="/internal/refreshstatinfo/searchRefreshStatInfos">
+						<input type="submit" name="btnQuery" id="btnQuery" value=" 查询 " onclick="trimSearchCondition()">&nbsp;&nbsp;
+					</shiro:hasPermission>
+					<shiro:hasPermission name="/internal/customerKeyword/uploadCustomerKeywords">
+					<input type="button" value="导入从爱站抓取排名" onclick="uploadCsv()">&nbsp;&nbsp;
+					</shiro:hasPermission>
+					<shiro:hasPermission name="/internal/customerKeyword/downloadCustomerKeywordInfo">
+					<input type="button" value="导出关键字信息到爱站抓排名" onclick="downloadTxt()">&nbsp;&nbsp;
+					<a download="keywordUrl.txt" href="/keywordUrl.txt" target="blank" id="downTXT" style="display: none">点击下载</a>
+					</shiro:hasPermission>
+				</td>
+			</tr>
+		</table>
+	</form>
 	<table style="font-size:12px;" id="headerTable" width=100%">
 		<tr bgcolor="#eeeeee" height=30>
 			<td align="center" width=30 rowspan="2"><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
@@ -40,7 +41,7 @@
 		</tr>
 		<tr bgcolor="#eeeeee" height=30>
 			<td align="center" width=80>总数</td>
-			<td align="center" width=80>达标数</td>
+			<td align="center" width=80>达标数（金额）</td>
 			<td align="center" width=80>达标率</td>
 			<td align="center" width=80>没有刷量</td>
 			<td align="center" width=80>待刷数</td>
@@ -51,11 +52,10 @@
 			<td align="center" width=80>待刷次数</td>
 			<td align="center" width=80>平均有效刷量</td>
 			<td align="center" width=80>取词次数</td>
-			<td align="center" width=60>无效占比</td>
+			<td align="center" width=80>无效占比</td>
 			<td align="center" width=100>总数</td>
 			<td align="center" width=60>已停数</td>
 		</tr>
-
 	</table>
 
 </div>
@@ -71,16 +71,16 @@
 					</c:otherwise>
 				</c:choose>
 				<td width=30 align="center"><input type="checkbox" name="uuid" value="${refreshStatInfoVO.group}" onclick="decideSelectAll()"/></td>
-				<td width=100>${refreshStatInfoVO.group}</td>
+				<td width=100><a href="javascript:searchCustomerKeywords('${refreshStatInfoVO.group}')">${refreshStatInfoVO.group}</a></td>
 				<td width=80>${refreshStatInfoVO.totalKeywordCount}</td>
 				<td width=80>
 					<c:if test="${refreshStatInfoVO.reachStandardKeywordCount > 0}">
 						<c:choose>
 							<c:when test="${'总计' eq refreshStatInfoVO.group}">
-								<a href="javascript:findKeyword(null , null)">${refreshStatInfoVO.reachStandardKeywordCount}</a>
+								<a href="javascript:findKeyword(null , null)">${refreshStatInfoVO.reachStandardKeywordCount}(${refreshStatInfoVO.todaySubTotal})</a>
 							</c:when>
 							<c:otherwise>
-								<a href="javascript:findKeyword('${refreshStatInfoVO.group}', null)">${refreshStatInfoVO.reachStandardKeywordCount}</a>
+								<a href="javascript:findKeyword('${refreshStatInfoVO.group}', null)">${refreshStatInfoVO.reachStandardKeywordCount}(${refreshStatInfoVO.todaySubTotal})</a>
 							</c:otherwise>
 						</c:choose>
 					</c:if>
@@ -177,6 +177,7 @@
 	<input type="hidden" name="optimizeGroupName" id="optimizeGroupName" value=""/>
 	<input type="hidden" name="invalidRefreshCount" id="invalidRefreshCount" value=""/>
 	<input type="hidden" name="noReachStandardDays" id="noReachStandardDays" value=""/>
+	<input type="hidden" name="status" id="status" value="1"/>
 </form>
 
 <div id="uploadCSVDialog" class="easyui-dialog" style="left: 40%;">
@@ -224,6 +225,12 @@
             $("#searchCustomerKeywordForm").find("#noReachStandardDays").val(0);
 		}
         $("#searchCustomerKeywordForm").find("#invalidRefreshCount").val(invalidRefreshCount);
+        $("#searchCustomerKeywordForm").find("#optimizeGroupName").val(optimizeGroupName);
+        $("#searchCustomerKeywordForm").submit();
+    }
+    </shiro:hasPermission>
+    <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
+    function searchCustomerKeywords(optimizeGroupName) {
         $("#searchCustomerKeywordForm").find("#optimizeGroupName").val(optimizeGroupName);
         $("#searchCustomerKeywordForm").submit();
     }

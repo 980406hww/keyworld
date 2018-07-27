@@ -76,10 +76,10 @@ public abstract class SpringMVCBaseController {
 		return user;
 	}
 
-	public void downFile(String fileName) {
+	public void downFile(String fileName, String password) {
 		try {
 			String path = Thread.currentThread().getContextClassLoader().getResource("").toURI().getPath();
-			ZipCompressor.zipMultiFile(path + fileName.substring(0,fileName.indexOf(".")), Utils.getWebRootPath() + fileName, false);
+			ZipCompressor.createEncryptionZip(path + fileName.substring(0,fileName.indexOf(".")), Utils.getWebRootPath() + fileName, password);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.VpnInfoDao">
+    <select id="selectVpnImei" resultType="com.keymanager.monitoring.entity.VpnInfo">
+        SELECT
+        vpn.fUuid AS 'uuid',
+        vpn.fUserName AS 'userName',
+        vpn.fPassword AS 'password'
+        FROM t_vpn_info vpn
+        WHERE
+        <if test="imeiStr != null and imeiStr != ''">vpn.fIMEI = #{imeiStr}</if>
+        <if test="imeiStr == null or imeiStr == ''">vpn.fIMEI =''</if>
+        and fStopTime > now()
+    </select>
+
+    <select id="searchVpnInfoList" resultType="com.keymanager.monitoring.entity.VpnInfo">
+        SELECT
+        vpn.fUuid AS 'uuid',
+        vpn.fUserName AS 'userName',
+        vpn.fPassword AS 'password',
+        vpn.fIMEI AS 'imei',
+        vpn.fStartTime AS 'startTime',
+        vpn.fStopTime AS 'stopTime'
+        FROM t_vpn_info vpn
+        WHERE 1=1
+        <if test="vpnInfoCriteria.userName != null and vpnInfoCriteria.userName != ''">
+            AND vpn.fUserName LIKE '%${vpnInfoCriteria.userName}%'
+        </if>
+        <if test="vpnInfoCriteria.imei != null and vpnInfoCriteria.imei != ''">
+            AND vpn.fIMEI LIKE '%${vpnInfoCriteria.imei}%'
+        </if>
+    </select>
+</mapper>
