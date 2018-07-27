@@ -1025,8 +1025,8 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
         clientStatusDao.batchUpdateClientStatus(clientIDs, clientStatusBatchUpdateCriteria.getCs(), clientStatusBatchUpdateCriteria.getClientStatus());
     }
 
-    public List<CookieVO> searchClientForAllotCookie(int clientCookieCount, String[] switchGroupNames) {
-        List<CookieVO> clientCookieCountList = clientStatusDao.searchClientForAllotCookie(clientCookieCount, switchGroupNames);
+    public List<CookieVO> searchClientForAllotCookie(int clientCookieCount, String cookieGroupForBaidu, String cookieGroupFor360) {
+        List<CookieVO> clientCookieCountList = clientStatusDao.searchClientForAllotCookie(clientCookieCount, cookieGroupForBaidu, cookieGroupFor360);
         return clientCookieCountList;
     }
 }

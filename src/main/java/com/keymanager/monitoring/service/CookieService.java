@@ -43,6 +43,9 @@ public class CookieService extends ServiceImpl<CookieDao, Cookie> {
 	public ClientCookie getCookieStrForClient(String clientID) throws Exception {
 		synchronized (Cookie.class) {
 			String searchEngine = getSearchEngineForClientID(clientID);
+			if(searchEngine == null) {
+				return null;
+			}
 			ClientCookie clientCookie = clientCookieService.findClientCookieByClientID(clientID);
 			String type = "update";
 			if (clientCookie == null) {
@@ -98,9 +101,13 @@ public class CookieService extends ServiceImpl<CookieDao, Cookie> {
 
 	private String getSearchEngineForClientID(String clientID) {
 		ClientStatus clientStatus = clientStatusService.selectById(clientID);
-		String searchEngine = Constants.SEARCH_ENGINE_BAIDU;
-		if(clientStatus.getOperationType().contains(Constants.CONFIG_KEY_360)) {
-			searchEngine = Constants.CONFIG_KEY_360;
+		Config cookieGroupForBaiduConfig = configService.getConfig(Constants.CONFIG_TYPE_COOKIE_GROUP, Constants.SEARCH_ENGINE_BAIDU);
+		Config cookieGroupFor360Config = configService.getConfig(Constants.CONFIG_TYPE_COOKIE_GROUP, Constants.SEARCH_ENGINE_360);
+		String searchEngine = null;
+		if(clientStatus.getSwitchGroupName().contains(cookieGroupForBaiduConfig.getValue())) {
+			searchEngine = Constants.SEARCH_ENGINE_BAIDU;
+		} else if (clientStatus.getSwitchGroupName().contains(cookieGroupFor360Config.getValue())) {
+			searchEngine = Constants.SEARCH_ENGINE_360;
 		}
 		return searchEngine;
 	}
@@ -140,15 +147,15 @@ public class CookieService extends ServiceImpl<CookieDao, Cookie> {
 	public void allotCookieForClient() {
 		synchronized (Cookie.class) {
 			Config clientCookieCountConfig = configService.getConfig(Constants.CONFIG_KEY_CLIENT_COOKIE_COUNT, Constants.CONFIG_KEY_CLIENT_COOKIE_COUNT);
-			Config cookieGroupConfig = configService.getConfig(Constants.CONFIG_TYPE_COOKIE_GROUP, Constants.CONFIG_KEY_SWITCH_GROUP_NAME);
+			Config cookieGroupForBaiduConfig = configService.getConfig(Constants.CONFIG_TYPE_COOKIE_GROUP, Constants.SEARCH_ENGINE_BAIDU);
+			Config cookieGroupFor360Config = configService.getConfig(Constants.CONFIG_TYPE_COOKIE_GROUP, Constants.SEARCH_ENGINE_360);
 			int clientCookieCount = Integer.parseInt(clientCookieCountConfig.getValue());
-			String[] clientCookieGroups = cookieGroupConfig.getValue().split(",");
 			// 获取需要分配cookie的机器
-			List<CookieVO> clientList = clientStatusService.searchClientForAllotCookie(clientCookieCount, clientCookieGroups);
+			List<CookieVO> clientList = clientStatusService.searchClientForAllotCookie(clientCookieCount, cookieGroupForBaiduConfig.getValue(), cookieGroupFor360Config.getValue());
 			for (CookieVO client : clientList) {
 				int count = clientCookieCount - client.getCookieCount();
 				String searchEngine = Constants.SEARCH_ENGINE_BAIDU;
-				if (client.getOperationType().contains(Constants.CONFIG_KEY_360)) {
+				if (client.getSwitchGroupName().contains(Constants.CONFIG_KEY_360)) {
 					searchEngine = Constants.CONFIG_KEY_360;
 				}
 				ClientCookie clientCookie = clientCookieService.findClientCookieByClientID(client.getClientID());

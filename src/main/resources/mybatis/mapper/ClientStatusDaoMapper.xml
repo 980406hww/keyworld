@@ -534,16 +534,13 @@
     <select id="searchClientForAllotCookie" resultType="com.keymanager.monitoring.vo.CookieVO">
         SELECT
             cs.fClientID AS 'clientID',
-            cs.fOperationType AS 'operationType',
+            cs.fSwitchGroupName AS 'switchGroupName',
             cc.fCookieCount AS 'cookieCount',
             cc.fCookieStr AS 'cookieStr'
         FROM t_client_status cs
         LEFT JOIN t_client_cookie cc
         ON cs.fClientID = cc.fClientID
         WHERE (cc.fCookieCount &lt; #{clientCookieCount} OR cc.fCookieCount IS NULL)
-        AND cs.fSwitchGroupName IN
-        <foreach item="groupName" collection="switchGroupNames" open="(" separator="," close=")">
-            #{groupName}
-        </foreach>
+        AND (cs.fSwitchGroupName LIKE '${cookieGroupForBaidu}%' OR cs.fSwitchGroupName LIKE '${cookieGroupFor360}%')
     </select>
 </mapper>

@@ -13,7 +13,7 @@ public class CookieVO {
     private String clientID;
     private int cookieCount;
     private String cookieStr;
-    private String operationType;
+    private String switchGroupName;
 
     public String getUserName() {
         return userName;
@@ -55,11 +55,11 @@ public class CookieVO {
         this.cookieStr = cookieStr;
     }
 
-    public String getOperationType() {
-        return operationType;
+    public String getSwitchGroupName() {
+        return switchGroupName;
     }
 
-    public void setOperationType(String operationType) {
-        this.operationType = operationType;
+    public void setSwitchGroupName(String switchGroupName) {
+        this.switchGroupName = switchGroupName;
     }
 }

@@ -56,7 +56,6 @@ public class Constants {
     public final static String CONFIG_TYPE_SAME_CUSTOMER_KEYWORD_COUNT = "SameCustomerKeywordCount";
     public final static String CONFIG_KEY_CLIENT_COOKIE_COUNT = "ClientCookieCount";
     public final static String CONFIG_TYPE_COOKIE_GROUP = "CookieGroup";
-    public final static String CONFIG_KEY_SWITCH_GROUP_NAME = "SwitchGroupName";
 
     public final static Map<String, String> ACCOUNT_LOG_STATUS_MAP = new HashMap<String, String>();
     static {
