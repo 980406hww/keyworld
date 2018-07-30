@@ -27,6 +27,7 @@
         <if test="customerKeywordCriteria.customerUuid != null and customerKeywordCriteria.customerUuid != ''">AND ck.fCustomerUuid = #{customerKeywordCriteria.customerUuid}</if>
         <if test="customerKeywordCriteria.keyword != null and customerKeywordCriteria.keyword != ''">AND ck.fKeyword like '${customerKeywordCriteria.keyword}%'</if>
         <if test="customerKeywordCriteria.url != null and customerKeywordCriteria.url != ''">AND ck.fUrl like '%${customerKeywordCriteria.url}%'</if>
+        <if test="customerKeywordCriteria.bearPawNumber != null and customerKeywordCriteria.bearPawNumber != ''">AND ck.fBearPawNumber like '${customerKeywordCriteria.bearPawNumber}%'</if>
         <if test="customerKeywordCriteria.status != null and customerKeywordCriteria.status != ''">AND ck.fStatus = #{customerKeywordCriteria.status}</if>
         <if test="customerKeywordCriteria.invalidRefreshCount != null and customerKeywordCriteria.invalidRefreshCount != ''">AND ck.fInvalidRefreshCount &gt;= #{customerKeywordCriteria.invalidRefreshCount}</if>
         <if test="customerKeywordCriteria.creationFromTime != null and customerKeywordCriteria.creationFromTime != ''">AND ck.fCreateTime &gt;= #{customerKeywordCriteria.creationFromTime}</if>
@@ -218,6 +219,7 @@
         ck.fKeyword	AS	'keyword',
         ck.fUrl	AS	'url',
         ck.fOriginalUrl	AS	'originalUrl',
+        ck.fBearPawNumber AS 'bearPawNumber',
         ck.fTitle	AS	'title',
         ck.fSearchEngine	AS	'searchEngine',
         ck.fCollectMethod	AS	'collectMethod',
@@ -276,6 +278,7 @@
         ck.fKeyword	AS	'keyword',
         ck.fUrl	AS	'url',
         ck.fOriginalUrl	AS	'originalUrl',
+        ck.fBearPawNumber AS 'bearPawNumber',
         ck.fTitle	AS	'title',
         ck.fSearchEngine	AS	'searchEngine',
         ck.fInitialPosition	AS	'initialPosition',
@@ -464,6 +467,7 @@
         ck.fTerminalType	AS	'terminalType',
         ck.fKeyword	AS	'keyword',
         ck.fUrl	AS	'url',
+        ck.fBearPawNumber AS 'bearPawNumber',
         ck.fType	AS	'type',
         ck.fOriginalUrl	AS	'originalUrl',
         ck.fTitle	AS	'title',
@@ -543,7 +547,8 @@
 
     <select id="getCustomerKeywordUuidForCapturePosition" resultType="Long">
         SELECT
-        ck.fUuid	AS	'uuid'
+        ck.fUuid	AS	'uuid',
+        ck.fBearPawNumber AS 'bearPawNumber'
         FROM t_customer_keyword ck
         WHERE ck.fTerminalType = #{terminalType} and ck.fStatus = 1
         <if test="startTime != null">
@@ -652,7 +657,8 @@
 
     <select id="searchCustomerKeywordUuidForCaptureTitle" resultType="Long">
         SELECT
-        ck.fUuid  AS `uuid`
+        ck.fUuid  AS `uuid`,
+        ck.fBearPawNumber AS `bearPawNumber`
         FROM
         t_customer_keyword ck
         WHERE 1 = 1
@@ -677,6 +683,7 @@
                 ck.fKeyword  AS `keyword`,
                 ck.fUrl  AS `url`,
                 ck.fUuid  AS `uuid`,
+                ck.fBearPawNumber AS 'bearPawNumber',
                 ck.fOriginalUrl  AS `wholeUrl`
             FROM
                 t_customer_keyword ck
@@ -951,6 +958,15 @@
         </foreach>
     </update>
 
+    <select id="getBearPawNumberByCustomerUuid" resultType="java.lang.String">
+        SELECT fBearPawNumber AS 'bearPawNumber'
+        FROM t_customer_keyword
+        WHERE fCustomerUuid = #{customerUuid}
+        AND fTerminalType = #{terminalType}
+        AND fType = #{entryType}
+        AND fBearPawNumber &gt; ''
+        LIMIT 1
+    </select>
     <update id="batchUpdateRequireDalete">
         <foreach item="item" index="index" collection="requireDeleteKeywordVOs" open="" separator=";" close="">
             UPDATE t_customer_keyword

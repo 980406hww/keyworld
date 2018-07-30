@@ -8,7 +8,8 @@ public class CustomerKeywordForCapturePosition {
 	private String title;
 	private String searchEngine;
 	private String terminalType;
-	
+	private String bearPawNumber;
+
 	public String getKeyword() {
 		return keyword;
 	}
@@ -64,5 +65,13 @@ public class CustomerKeywordForCapturePosition {
 
 	public void setTerminalType(String terminalType) {
 		this.terminalType = terminalType;
+	}
+
+	public String getBearPawNumber() {
+		return bearPawNumber;
+	}
+
+	public void setBearPawNumber(String bearPawNumber) {
+		this.bearPawNumber = bearPawNumber;
 	}
 }

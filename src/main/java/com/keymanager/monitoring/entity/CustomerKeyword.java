@@ -33,6 +33,9 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(value = "fType")
     private String type;
 
+    @TableField(value = "fBearPawNumber", strategy = FieldStrategy.IGNORED)
+    private String bearPawNumber;
+
     @TableField(value = "fOriginalUrl", strategy = FieldStrategy.IGNORED)
     private String originalUrl;
 
@@ -282,6 +285,14 @@ public class CustomerKeyword extends BaseEntity {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getBearPawNumber() {
+        return bearPawNumber;
+    }
+
+    public void setBearPawNumber(String bearPawNumber) {
+        this.bearPawNumber = bearPawNumber;
     }
 
     public String getOriginalUrl() {

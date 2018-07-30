@@ -3,6 +3,7 @@ package com.keymanager.monitoring.criteria;
 public class CustomerKeywordCriteria extends BaseCriteria{
     private Long customerUuid;
     private String url;
+    private String bearPawNumber;
     private String keyword;
     private String creationFromTime;//添加时间
     private String creationToTime;
@@ -36,6 +37,14 @@ public class CustomerKeywordCriteria extends BaseCriteria{
     private Integer sevenDaysNoReachStandard;
     private Integer fifteenDaysNoReachStandard;
     private Integer thirtyDaysNoReachStandard;
+
+    public String getBearPawNumber() {
+        return bearPawNumber;
+    }
+
+    public void setBearPawNumber(String bearPawNumber) {
+        this.bearPawNumber = bearPawNumber;
+    }
 
     private Boolean requireDelete;
 

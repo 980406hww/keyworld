@@ -216,6 +216,7 @@ function resetPageNumber() {
     var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
     var keyword = searchCustomerKeywordForm.find("#keyword").val();
     var url = searchCustomerKeywordForm.find("#url").val();
+    var bearPawNumber = searchCustomerKeywordForm.find("#bearPawNumber").val();
     var optimizeGroupName = searchCustomerKeywordForm.find("#optimizeGroupName").val();
     var gtOptimizedCount = searchCustomerKeywordForm.find("#gtOptimizedCount").val();
     var ltOptimizedCount = searchCustomerKeywordForm.find("#ltOptimizedCount").val();
@@ -232,6 +233,9 @@ function resetPageNumber() {
     }
     if(url != "") {
         searchCustomerKeywordForm.find("#url").val($.trim(url));
+    }
+    if(bearPawNumber != "") {
+        searchCustomerKeywordForm.find("#bearPawNumber").val($.trim(bearPawNumber));
     }
     if(optimizeGroupName != "") {
         searchCustomerKeywordForm.find("#optimizeGroupName").val($.trim(optimizeGroupName));
@@ -595,6 +599,8 @@ function saveCustomerKeyword(customerKeyword, customerUuid) {
     customerKeyword.url = url;
     var originalUrl = $.trim(saveCustomerKeywordDialog.find("#originalUrl").val());
     customerKeyword.originalUrl = originalUrl;
+    var bearPawNumber = $.trim(saveCustomerKeywordDialog.find("#bearPawNumber").val())
+    customerKeyword.bearPawNumber = bearPawNumber;
     var optimizePlanCount = $.trim(saveCustomerKeywordDialog.find("#optimizePlanCount").val());
     customerKeyword.optimizePlanCount = optimizePlanCount;
     var regNumber = /^\d+$/;
@@ -701,6 +707,7 @@ function modifyCustomerKeyword(customerKeywordUuid, customerUuid) {
                 saveCustomerKeywordDialog.find("#uuid").val(customerKeyword.uuid);
                 saveCustomerKeywordDialog.find("#optimizedCount").val(customerKeyword.optimizedCount);
                 saveCustomerKeywordDialog.find("#keyword").val(customerKeyword.keyword);
+                saveCustomerKeywordDialog.find("#bearPawNumber").val(customerKeyword.bearPawNumber);
                 saveCustomerKeywordDialog.find("#recommendKeywords").val(customerKeyword.recommendKeywords);
                 saveCustomerKeywordDialog.find("#negativeKeywords").val(customerKeyword.negativeKeywords);
                 saveCustomerKeywordDialog.find("#excludeKeywords").val(customerKeyword.excludeKeywords);

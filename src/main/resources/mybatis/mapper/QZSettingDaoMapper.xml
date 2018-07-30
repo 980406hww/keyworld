@@ -6,6 +6,7 @@
             qs.fUuid                           AS 'uuid',
             qs.fCustomerUuid                   AS 'customerUuid',
             qs.fDomain                         AS 'domain',
+              qs.fBearPawNumber   AS 'bearPawNumber',
             qs.fPcGroup                        AS 'pcGroup',
             qs.fPhoneGroup                     AS 'phoneGroup',
             qs.fType                           AS 'type',

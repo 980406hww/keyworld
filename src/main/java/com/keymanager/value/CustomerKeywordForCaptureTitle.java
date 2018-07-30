@@ -5,6 +5,7 @@ public class CustomerKeywordForCaptureTitle {
 	private String url;
 	private int uuid;
 	private String wholeUrl;
+	private String bearPawNumber;
 
 	public String getKeyword() {
 		return keyword;
@@ -36,5 +37,13 @@ public class CustomerKeywordForCaptureTitle {
 
 	public void setWholeUrl(String wholeUrl) {
 		this.wholeUrl = wholeUrl;
+	}
+
+	public String getBearPawNumber() {
+		return bearPawNumber;
+	}
+
+	public void setBearPawNumber(String bearPawNumber) {
+		this.bearPawNumber = bearPawNumber;
 	}
 }

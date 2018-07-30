@@ -25,7 +25,7 @@ public class SuperUserFullKeywordExcelOperator extends AbstractExcelReader {
 	@Override
 	public CustomerKeyword readRow(int rowIndex){
 		CustomerKeyword customerKeyword = new CustomerKeyword();
-		customerKeyword.setKeyword(getStringValue(SuperUserFullKeywordDefinition.Keyword.getColumnIndex(), rowIndex));
+		customerKeyword.setKeyword(getStringValue(SuperUserFullKeywordDefinition.Keyword.getColumnIndex(), rowIndex).trim());
 		if(Utils.isNullOrEmpty(customerKeyword.getKeyword())){
 			return null;
 		}
@@ -34,7 +34,7 @@ public class SuperUserFullKeywordExcelOperator extends AbstractExcelReader {
 			return null;
 		}
 
-		customerKeyword.setOriginalUrl(getStringValue(SuperUserFullKeywordDefinition.OriginalURL.getColumnIndex(), rowIndex));
+		customerKeyword.setOriginalUrl(getStringValue(SuperUserFullKeywordDefinition.OriginalURL.getColumnIndex(), rowIndex).trim());
 
 		String url = getStringValue(SuperUserFullKeywordDefinition.URL.getColumnIndex(), rowIndex);
 		if(url.substring(url.length() - 1).equals("/")) {
@@ -73,9 +73,9 @@ public class SuperUserFullKeywordExcelOperator extends AbstractExcelReader {
 		customerKeyword.setOptimizePlanCount(optimizePlanCount);
 		customerKeyword.setOptimizeRemainingCount(optimizePlanCount);
 
-		customerKeyword.setOptimizeGroupName(getStringValue(SuperUserFullKeywordDefinition.OptimizeGroupName.getColumnIndex(), rowIndex));
-		customerKeyword.setTitle(getStringValue(SuperUserFullKeywordDefinition.Title.getColumnIndex(), rowIndex));
-		customerKeyword.setOrderNumber(getStringValue(SuperUserFullKeywordDefinition.OrderNumber.getColumnIndex(), rowIndex));
+		customerKeyword.setOptimizeGroupName(getStringValue(SuperUserFullKeywordDefinition.OptimizeGroupName.getColumnIndex(), rowIndex).trim());
+		customerKeyword.setTitle(getStringValue(SuperUserFullKeywordDefinition.Title.getColumnIndex(), rowIndex).trim());
+		customerKeyword.setOrderNumber(getStringValue(SuperUserFullKeywordDefinition.OrderNumber.getColumnIndex(), rowIndex).trim());
 		customerKeyword.setRemarks(getStringValue(SuperUserFullKeywordDefinition.Remarks.getColumnIndex(), rowIndex));
 		return customerKeyword;
 	}

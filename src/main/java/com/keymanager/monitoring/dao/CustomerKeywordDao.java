@@ -175,6 +175,7 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void batchUpdatePosition(@Param("terminalType")String terminalType, @Param("entryType")String entryType, @Param("searchEngine")String searchEngine, @Param("reachStandardPosition")int reachStandardPosition, @Param("positionVOs")List<PositionVO> positionVOs);
 
+    String getBearPawNumberByCustomerUuid(@Param("customerUuid")int customerUuid, @Param("entryType")String entryType, @Param("terminalType")String terminalType);
     void batchUpdateRequireDalete(@Param("requireDeleteKeywordVOs")List<RequireDeleteKeywordVO> requireDeleteKeywordVOs);
     void updateCustomerKeywordQueryTime(@Param("customerKeywordUuid")Long customerKeywordUuid, @Param("capturePositionQueryTime")Date capturePositionQueryTime);
 

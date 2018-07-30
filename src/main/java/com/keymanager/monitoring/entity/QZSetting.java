@@ -24,6 +24,9 @@ public class QZSetting extends BaseEntity{
 	@TableField(value = "fDomain")
 	private String domain;
 
+	@TableField(value = "fBearPawNumber", strategy = FieldStrategy.IGNORED)
+	private String bearPawNumber;
+
 	@TableField(value = "fPCGroup")
 	private String pcGroup;
 
@@ -85,6 +88,14 @@ public class QZSetting extends BaseEntity{
 
 	public void setDomain(String domain) {
 		this.domain = domain;
+	}
+
+	public String getBearPawNumber() {
+		return bearPawNumber;
+	}
+
+	public void setBearPawNumber(String bearPawNumber) {
+		this.bearPawNumber = bearPawNumber;
 	}
 
 	public String getPcGroup() {
