@@ -547,7 +547,7 @@
 
     <select id="getCustomerKeywordUuidForCapturePosition" resultType="Long">
         SELECT
-        ck.fUuid	AS	'uuid'
+        ck.fUuid	AS	'uuid',
         ck.fBearPawNumber AS 'bearPawNumber'
         FROM t_customer_keyword ck
         WHERE ck.fTerminalType = #{terminalType} and ck.fStatus = 1
@@ -657,8 +657,8 @@
 
     <select id="searchCustomerKeywordUuidForCaptureTitle" resultType="Long">
         SELECT
-        ck.fUuid  AS `uuid`
-                ck.fBearPawNumber AS `bearPawNumber`
+        ck.fUuid  AS `uuid`,
+        ck.fBearPawNumber AS `bearPawNumber`
         FROM
         t_customer_keyword ck
         WHERE 1 = 1
