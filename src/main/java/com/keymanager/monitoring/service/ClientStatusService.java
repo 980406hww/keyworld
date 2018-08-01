@@ -697,11 +697,30 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 //				if (customerKeywordService.haveCustomerKeywordForOptimization(clientStatus.getTerminalType(), clientStatus.getClientID())) {
                 tmpClientStatus = clientStatus;
                 updateRestartStatus(clientStatus.getClientID(), "Processing");
+                String vpsServiceProvideName = this.detectVPSServiceProvider(clientStatus.getVpsBackendSystemComputerID());
+                Config vpsBackendAccount = configService.getConfig(Constants.CONFIG_TYPE_VPS_BACKEND_ACCOUNT, vpsServiceProvideName);
+                if(vpsBackendAccount != null){
+                    clientStatus.setUserName(vpsBackendAccount.getValue());
+                }
+                Config vpsBackendPassword = configService.getConfig(Constants.CONFIG_TYPE_VPS_BACKEND_PASSWORD, vpsServiceProvideName);
+                if(vpsBackendPassword != null){
+                    clientStatus.setPassword(vpsBackendPassword.getValue());
+                }
                 break;
 //				}
             }
         }
         return tmpClientStatus;
+    }
+
+    private String detectVPSServiceProvider(String backendComputerID){
+        if(backendComputerID.indexOf("k") == 0){
+            return "yongtian";
+        }else if(backendComputerID.indexOf("y") == 0){
+            return "yiyang";
+        }else{
+            return "263";
+        }
     }
 
     private void updateRestartStatus(String clientID, String restartStatus){

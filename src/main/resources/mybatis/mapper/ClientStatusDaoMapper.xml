@@ -404,10 +404,6 @@
         cs.fContinuousFailCount AS "continuousFailCount",
         cs.fLastVisitTime AS "lastVisitTime",
         cs.fPageNo AS "pageNo",
-        cs.fHost AS "host",
-        cs.fPort AS "port",
-        cs.fUserName AS "userName",
-        cs.fPassword AS "password",
         cs.fRestartStatus AS "restartStatus"
         FROM t_client_status cs
         WHERE (fContinuousFailCount > 5 OR fTenMinsLastVisitTime &lt; NOW())
