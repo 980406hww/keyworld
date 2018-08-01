@@ -40,8 +40,7 @@ public class CookieService extends ServiceImpl<CookieDao, Cookie> {
 	@Autowired
 	private ClientStatusService clientStatusService;
 
-	public ClientCookie getCookieStrForClient(String clientID) throws Exception {
-		synchronized (Cookie.class) {
+	public synchronized ClientCookie getCookieStrForClient(String clientID) throws Exception {
 			String searchEngine = getSearchEngineForClientID(clientID);
 			if(searchEngine == null) {
 				return null;
@@ -62,7 +61,6 @@ public class CookieService extends ServiceImpl<CookieDao, Cookie> {
 				allotCookieStr(searchEngine, clientCookie, type, count);
 			}
 			return clientCookie;
-		}
 	}
 
 	public void allotCookieStr(String searchEngine, ClientCookie clientCookie, String type, int count) {
