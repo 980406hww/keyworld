@@ -40,27 +40,9 @@ public class CookieService extends ServiceImpl<CookieDao, Cookie> {
 	@Autowired
 	private ClientStatusService clientStatusService;
 
-	public synchronized ClientCookie getCookieStrForClient(String clientID) throws Exception {
-			String searchEngine = getSearchEngineForClientID(clientID);
-			if(searchEngine == null) {
-				return null;
-			}
-			ClientCookie clientCookie = clientCookieService.findClientCookieByClientID(clientID);
-			String type = "update";
-			if (clientCookie == null) {
-				type = "insert";
-				clientCookie = new ClientCookie();
-				clientCookie.setClientID(clientID);
-				clientCookie.setCreateTime(new Date());
-			}
-			Config clientCookieCountConfig = configService.getConfig(Constants.CONFIG_KEY_CLIENT_COOKIE_COUNT, Constants.CONFIG_KEY_CLIENT_COOKIE_COUNT);
-			int clientCookieCount = Integer.parseInt(clientCookieCountConfig.getValue());
-			// 需要分配
-			int count = clientCookieCount - clientCookie.getCookieCount();
-			if (count > 0) {
-				allotCookieStr(searchEngine, clientCookie, type, count);
-			}
-			return clientCookie;
+	public ClientCookie getCookieStrForClient(String clientID) throws Exception {
+		ClientCookie clientCookie = clientCookieService.findClientCookieByClientID(clientID);
+		return clientCookie;
 	}
 
 	public void allotCookieStr(String searchEngine, ClientCookie clientCookie, String type, int count) {
