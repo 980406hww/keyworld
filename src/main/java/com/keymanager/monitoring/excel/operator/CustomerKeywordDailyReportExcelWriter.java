@@ -42,7 +42,7 @@ public class CustomerKeywordDailyReportExcelWriter {
 		this.dailyReportFileName = "dailyreport/" + terminalType + "/" + customerUuid + ".xls";
 		File file = getTemplateFile(dailyReportFileName);
 		int dayOfMonth = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-		if(!file.exists() || dayOfMonth == 1){
+		if(!file.exists() || dayOfMonth == 1 || dayOfMonth == 11 || dayOfMonth == 21){
 			file = getTemplateFile(fileName);
 		}
 //		File file = getTemplateFile(fileName);
