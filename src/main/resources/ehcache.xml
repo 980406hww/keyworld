@@ -68,6 +68,16 @@
         timeToLiveSeconds="604800"
         overflowToDisk="false"
         diskPersistent="false" />
+
+   <!--config缓存 -->
+   <cache name="configList"
+        maxElementsInMemory="10000"
+        maxElementsOnDisk="100000"
+        eternal="false"
+        timeToIdleSeconds="604800"
+        timeToLiveSeconds="604800"
+        overflowToDisk="false"
+        diskPersistent="false" />
     
     <!--
         name:缓存名称。

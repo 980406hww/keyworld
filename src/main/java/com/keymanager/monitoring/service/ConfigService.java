@@ -10,6 +10,8 @@ import com.keymanager.util.FileUtil;
 import com.keymanager.util.Utils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import java.io.File;
 import java.util.*;
@@ -20,8 +22,17 @@ public class ConfigService extends ServiceImpl<ClientStatusDao, ClientStatus>{
     @Autowired
     private ConfigDao configDao;
 
+    @Autowired
+    private ConfigCacheService configCacheService;
+
+    @Cacheable(value = "configList", key = "#configType + #key")
     public Config getConfig(String configType, String key){
         return configDao.getConfig(configType, key);
+    }
+
+    public void updateConfig(Config config) {
+        configDao.updateConfig(config);
+        configCacheService.configCacheEvict(config);
     }
 
     public boolean optimizationDateChanged(){
@@ -34,7 +45,7 @@ public class ConfigService extends ServiceImpl<ClientStatusDao, ClientStatus>{
         Config optimizationDateConfig = getConfig(Constants.CONFIG_TYPE_OPTIMIZATION_DATE, Constants.CONFIG_TYPE_OPTIMIZATION_DATE);
         String currentDate = Utils.getCurrentDate();
         optimizationDateConfig.setValue(currentDate);
-        configDao.updateConfig(optimizationDateConfig);
+        updateConfig(optimizationDateConfig);
     }
 
     public void updateNegativeKeywordsFromConfig(String negativeKeywords) {
@@ -42,7 +53,7 @@ public class ConfigService extends ServiceImpl<ClientStatusDao, ClientStatus>{
         config.setConfigType(Constants.CONFIG_TYPE_TJ_XG);
         config.setKey(Constants.CONFIG_KEY_NEGATIVE_KEYWORDS);
         config.setValue(negativeKeywords);
-        configDao.updateConfig(config);
+        updateConfig(config);
     }
 
     public void updateCustomerNegativeKeywords(File targetFile, String searchEngine) throws Exception {
@@ -56,7 +67,7 @@ public class ConfigService extends ServiceImpl<ClientStatusDao, ClientStatus>{
         config.setConfigType(Constants.CONFIG_TYPE_NEGATIVE_KEYWORD);
         config.setKey(searchEngine);
         config.setValue(result);
-        configDao.updateConfig(config);
+        updateConfig(config);
     }
 
     public void updateCustomerUuidsForDailyReport(String customerUuids, String terminalType) {
@@ -64,7 +75,7 @@ public class ConfigService extends ServiceImpl<ClientStatusDao, ClientStatus>{
         config.setConfigType(Constants.CONFIG_TYPE_DAILY_REPORT);
         config.setKey(terminalType);
         config.setValue(customerUuids);
-        configDao.updateConfig(config);
+        updateConfig(config);
     }
 
     public Set<String> getNegativeKeyword(){
@@ -84,7 +95,7 @@ public class ConfigService extends ServiceImpl<ClientStatusDao, ClientStatus>{
         config.setConfigType(Constants.CONFIG_TYPE_NEGATIVE_KEYWORD);
         config.setKey(searchEngine);
         config.setValue(negativeKeywords);
-        configDao.updateConfig(config);
+        updateConfig(config);
     }
 
     public void refreshWebsiteWhiteList(String websiteWhiteList){
@@ -92,7 +103,7 @@ public class ConfigService extends ServiceImpl<ClientStatusDao, ClientStatus>{
         config.setConfigType(Constants.CONFIG_TYPE_WEBSITE_WHITE_LIST);
         config.setKey(Constants.CONFIG_KEY_URL);
         config.setValue(websiteWhiteList);
-        configDao.updateConfig(config);
+        updateConfig(config);
     }
 
     public void updateWebsiteWhiteList(File targetFile) throws Exception {
@@ -106,7 +117,7 @@ public class ConfigService extends ServiceImpl<ClientStatusDao, ClientStatus>{
         config.setConfigType(Constants.CONFIG_TYPE_WEBSITE_WHITE_LIST);
         config.setKey(Constants.CONFIG_KEY_URL);
         config.setValue(result);
-        configDao.updateConfig(config);
+        updateConfig(config);
     }
     public List<Config> findConfigs(String configType) {
         return configDao.findConfigs(configType);
