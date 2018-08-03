@@ -1,6 +1,7 @@
 package com.keymanager.monitoring.controller.rest.internal;
 
 import com.keymanager.monitoring.entity.Config;
+import com.keymanager.monitoring.service.ConfigCacheService;
 import com.keymanager.monitoring.service.ConfigService;
 import com.keymanager.util.Constants;
 import com.keymanager.util.FileUtil;
@@ -27,6 +28,9 @@ public class ConfigRestController {
 
     @Autowired
     private ConfigService configService;
+
+    @Autowired
+    private ConfigCacheService configCacheService;
 
     @RequiresPermissions("/internal/config/searchNegativeKeywords")
     @RequestMapping(value = "/searchNegativeKeywords", method = RequestMethod.GET)
@@ -123,6 +127,18 @@ public class ConfigRestController {
             file.transferTo(targetFile);
             configService.updateWebsiteWhiteList(targetFile);
             FileUtil.delFolder(path);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+    }
+
+    @RequiresPermissions("/internal/config/evictAllConfigCache")
+    @RequestMapping(value = "/evictAllConfigCache", method = RequestMethod.GET)
+    public ResponseEntity<?> evictAllConfigCache(HttpServletRequest request) {
+        try {
+            configCacheService.evictAllConfigCache();
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());

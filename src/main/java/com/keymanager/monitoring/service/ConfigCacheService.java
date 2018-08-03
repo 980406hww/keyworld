@@ -15,4 +15,9 @@ public class ConfigCacheService {
     public void configCacheEvict(Config config) {
         logger.info("CacheEvict:" + config.getConfigType() + "-" + config.getKey());
     }
+
+    @CacheEvict(value = "configList", allEntries = true)
+    public void evictAllConfigCache() {
+        logger.info("CacheEvict: all config cache");
+    }
 }
