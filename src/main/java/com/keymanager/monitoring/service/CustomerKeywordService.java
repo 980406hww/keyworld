@@ -794,7 +794,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
         customerKeywordDao.updateOptimizationResult(customerKeywordUuid, count);
         clientStatusService.logClientStatusTime(terminalType, clientID, status, freeSpace, version, city, count, runningProgramType);
-        customerKeywordIPService.addCustomerKeywordIP(customerKeywordUuid, city, ip);
+//        customerKeywordIPService.addCustomerKeywordIP(customerKeywordUuid, city, ip);
     }
 
     public void batchUpdateOptimizedCount(List<Long> customerKeywordUuids) {

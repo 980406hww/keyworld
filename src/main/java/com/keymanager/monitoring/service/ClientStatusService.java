@@ -683,16 +683,16 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 
     public ClientStatus getStoppedClientStatuses(){
         ClientStatus tmpClientStatus = null;
-        List<ClientStatus> clientStatuses = clientStatusDao.searchRestartingClientStatuses();
-        for(ClientStatus clientStatus : clientStatuses){
-//			if(customerKeywordService.haveCustomerKeywordForOptimization(clientStatus.getTerminalType(), clientStatus.getClientID())){
-            tmpClientStatus = clientStatus;
-            updateRestartStatus(clientStatus.getClientID(), "Logging");
-            break;
-//			}
-        }
+//        List<ClientStatus> clientStatuses = clientStatusDao.searchRestartingClientStatuses();
+//        for(ClientStatus clientStatus : clientStatuses){
+////			if(customerKeywordService.haveCustomerKeywordForOptimization(clientStatus.getTerminalType(), clientStatus.getClientID())){
+//            tmpClientStatus = clientStatus;
+//            updateRestartStatus(clientStatus.getClientID(), "Logging");
+//            break;
+////			}
+//        }
         if(tmpClientStatus == null) {
-            clientStatuses = clientStatusDao.searchWaitingRestartingClientStatuses();
+            List<ClientStatus> clientStatuses = clientStatusDao.searchWaitingRestartingClientStatuses();
             for (ClientStatus clientStatus : clientStatuses) {
 //				if (customerKeywordService.haveCustomerKeywordForOptimization(clientStatus.getTerminalType(), clientStatus.getClientID())) {
                 tmpClientStatus = clientStatus;
@@ -714,6 +714,7 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
     }
 
     private String detectVPSServiceProvider(String backendComputerID){
+        backendComputerID = backendComputerID.toLowerCase();
         if(backendComputerID.indexOf("k") == 0){
             return "yongtian";
         }else if(backendComputerID.indexOf("y") == 0){
