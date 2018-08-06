@@ -189,4 +189,6 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     List<CustomerKeywordSortVO> sortCustomerKeywordForOptimize(@Param("monitorConfigs")List<String> monitorConfigs);
 
     void setNoRankingCustomerKeyword(@Param("needMoveUuids")List<String> needMoveUuids, @Param("noRankOptimizeGroupNameConfigType")String noRankOptimizeGroupNameConfigType);
+
+    void updateCustomerKeywordCt(@Param("customerKeywordUuid")Long customerKeywordUuid, @Param("ct")String ct);
 }

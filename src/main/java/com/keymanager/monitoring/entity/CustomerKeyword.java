@@ -247,6 +247,9 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(exist = false)
     private Timestamp autoUpdateNegativeTime;
 
+    @TableField(value = "fCt")
+    private String ct;
+
     public long getCustomerUuid() {
         return customerUuid;
     }
@@ -945,5 +948,13 @@ public class CustomerKeyword extends BaseEntity {
 
     public void setOptimizeRemainingCount(int optimizeRemainingCount) {
         this.optimizeRemainingCount = optimizeRemainingCount;
+    }
+
+    public String getCt() {
+        return ct;
+    }
+
+    public void setCt(String ct) {
+        this.ct = ct;
     }
 }

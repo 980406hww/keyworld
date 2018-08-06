@@ -730,9 +730,17 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                 }
 
                 if("verify_ct".equals(customerKeywordForOptimization.getOperationType())){
-                    Config configCt = configService.getConfig(Constants.CONFIG_TYPE_CT, customerKeywordForOptimization.getGroup());
-                    if(configCt != null) {
-                        customerKeywordForOptimization.setCt(configCt.getValue());
+                    if(customerKeyword.getOptimizeGroupName().indexOf("verify_ct") == 0) {
+                        if(StringUtils.isNotBlank(customerKeyword.getCt())) {
+                            customerKeywordForOptimization.setCt(customerKeyword.getCt());
+                        } else {
+                            settingCustomerKeywordCt(customerKeywordUuid, customerKeywordForOptimization);
+                        }
+                    } else {
+                        Config configCt = configService.getConfig(Constants.CONFIG_TYPE_CT, customerKeywordForOptimization.getGroup());
+                        if(configCt != null) {
+                            customerKeywordForOptimization.setCt(configCt.getValue());
+                        }
                     }
                 }
                 if(customerKeywordForOptimization.getEntryType().equals(EntryTypeEnum.qz.name()) &&
@@ -744,6 +752,52 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             return customerKeywordForOptimization;
         }
         return null;
+    }
+
+    private synchronized void settingCustomerKeywordCt(Long customerKeywordUuid, CustomerKeywordForOptimization customerKeywordForOptimization) {
+        Config configCt = configService.getConfig(Constants.CONFIG_TYPE_CT, customerKeywordForOptimization.getGroup());
+        if (configCt != null) {
+            String ctValue = configCt.getValue();
+            if (ctValue.indexOf("_") == -1) { // 未开始分配，分配第一个ct
+                int index = ctValue.indexOf(",");
+                String ct = ctValue.substring(0, index);
+                configCt.setValue(ct + "_1" + ctValue.substring(index));
+                customerKeywordForOptimization.setCt(ct);
+            } else if (ctValue.indexOf("_") == ctValue.length() - 2) { // 分配到最后一个ct
+                int count = Integer.parseInt(ctValue.substring(ctValue.indexOf("_") + 1));
+                if (count == 3) {
+                    customerKeywordForOptimization.setCt(ctValue.substring(0, ctValue.length() - 2));
+                } else {
+                    count = count + 1;
+                    configCt.setValue(ctValue.substring(0, ctValue.indexOf("_") + 1) + count);
+                    customerKeywordForOptimization.setCt(ctValue.substring(ctValue.lastIndexOf(",") + 1, ctValue.indexOf("_")));
+                }
+            } else { // 分配到中间的ct
+                int index = ctValue.indexOf("_");
+                int count = Integer.parseInt(ctValue.substring(index + 1, index + 2));
+                if (count == 3) {
+                    String beginCt = ctValue.substring(0, index);
+                    String endCt = ctValue.substring(index);
+                    endCt = endCt.substring(endCt.indexOf(",") + 1);
+                    if (endCt.indexOf(",") > -1) {
+                        String ct = endCt.substring(0, endCt.indexOf(","));
+                        customerKeywordForOptimization.setCt(ct);
+                        configCt.setValue(beginCt + "," + ct + "_1" + endCt.substring(endCt.indexOf(",")));
+                    } else {
+                        customerKeywordForOptimization.setCt(endCt);
+                        configCt.setValue(beginCt + "," + endCt + "_1");
+                    }
+                } else {
+                    count = count + 1;
+                    String beginCt = ctValue.substring(0, index);
+                    String endCt = ctValue.substring(index + 2);
+                    customerKeywordForOptimization.setCt(beginCt.substring(beginCt.lastIndexOf(",") + 1));
+                    configCt.setValue(beginCt + "_" + count + endCt);
+                }
+            }
+            configService.updateConfig(configCt);
+            customerKeywordDao.updateCustomerKeywordCt(customerKeywordUuid, customerKeywordForOptimization.getCt());
+        }
     }
 
     private Set<String> convertToSets(String str){

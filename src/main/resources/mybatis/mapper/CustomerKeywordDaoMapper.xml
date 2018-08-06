@@ -484,7 +484,8 @@
         ck.fClickUrl AS 'clickUrl',
         ck.fShowPage AS 'showPage',
         ck.fRelatedKeywordPercentage AS 'relatedKeywordPercentage',
-        ck.fRemarks AS 'remarks'
+        ck.fRemarks AS 'remarks',
+        ck.fCt as 'ct'
         FROM t_customer_keyword ck
         WHERE ck.fUuid = #{uuid}
     </select>
@@ -1063,4 +1064,9 @@
         GROUP BY fKeyword,fTerminalType,fSearchEngine
         HAVING count(1) &gt; 10
     </select>
+
+    <update id="updateCustomerKeywordCt">
+        UPDATE t_customer_keyword SET fCt = #{ct}
+        WHERE fUuid = #{customerKeywordUuid}
+    </update>
 </mapper>
