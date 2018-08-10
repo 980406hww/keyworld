@@ -485,7 +485,8 @@
         ck.fShowPage AS 'showPage',
         ck.fRelatedKeywordPercentage AS 'relatedKeywordPercentage',
         ck.fRemarks AS 'remarks',
-        ck.fCt as 'ct'
+        ck.fCt as 'ct',
+        ck.fFromSource as 'fromSource'
         FROM t_customer_keyword ck
         WHERE ck.fUuid = #{uuid}
     </select>
@@ -1067,6 +1068,11 @@
 
     <update id="updateCustomerKeywordCt">
         UPDATE t_customer_keyword SET fCt = #{ct}
+        WHERE fUuid = #{customerKeywordUuid}
+    </update>
+
+    <update id="updateCustomerKeywordFromSource">
+        UPDATE t_customer_keyword SET fFromSource = #{fromSource}
         WHERE fUuid = #{customerKeywordUuid}
     </update>
 </mapper>

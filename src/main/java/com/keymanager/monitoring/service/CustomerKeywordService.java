@@ -779,7 +779,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         Config configFromSource = configService.getConfig(Constants.CONFIG_TYPE_FROM_SOURCE, customerKeywordForOptimization.getGroup());
         String configValue = assignConfigValue(configFromSource, "_count_");
         customerKeywordForOptimization.setFromSource(configValue);
-        customerKeywordDao.updateCustomerKeywordCt(customerKeywordUuid, configValue);
+        customerKeywordDao.updateCustomerKeywordFromSource(customerKeywordUuid, configValue);
     }
 
     private String assignConfigValue(Config configCt, String splitStr) {
@@ -791,18 +791,20 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                 String ct = ctValue.substring(0, index);
                 configCt.setValue(ct + splitStr + "1" + ctValue.substring(index));
                 configValue = ct;
-            } else if (ctValue.indexOf(splitStr) == ctValue.length() - 2) { // 分配到最后一个ct
-                int count = Integer.parseInt(ctValue.substring(ctValue.indexOf(splitStr) + 1));
+            } else if (ctValue.indexOf(splitStr) == ctValue.length() - 1 - splitStr.length()) { // 分配到最后一个ct
+                int count = Integer.parseInt(ctValue.substring(ctValue.indexOf(splitStr) + splitStr.length()));
                 if (count == 3) {
-                    configValue = ctValue.substring(0, ctValue.length() - 2);
+                    configValue = ctValue.substring(0, ctValue.length() - splitStr.length() - 1);
+                    configCt.setValue(configValue);
+                    configValue = configValue.substring(configValue.lastIndexOf(",") + 1);
                 } else {
                     count = count + 1;
-                    configCt.setValue(ctValue.substring(0, ctValue.indexOf(splitStr) + 1) + count);
+                    configCt.setValue(ctValue.substring(0, ctValue.indexOf(splitStr)) + splitStr + count);
                     configValue = ctValue.substring(ctValue.lastIndexOf(",") + 1, ctValue.indexOf(splitStr));
                 }
             } else { // 分配到中间的ct
                 int index = ctValue.indexOf(splitStr);
-                int count = Integer.parseInt(ctValue.substring(index + 1, index + 2));
+                int count = Integer.parseInt(ctValue.substring(index + splitStr.length(), index + 1 + splitStr.length()));
                 if (count == 3) {
                     String beginCt = ctValue.substring(0, index);
                     String endCt = ctValue.substring(index);
@@ -818,7 +820,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                 } else {
                     count = count + 1;
                     String beginCt = ctValue.substring(0, index);
-                    String endCt = ctValue.substring(index + 2);
+                    String endCt = ctValue.substring(index + 1 + splitStr.length());
                     configValue = beginCt.substring(beginCt.lastIndexOf(",") + 1);
                     configCt.setValue(beginCt + splitStr + count + endCt);
                 }

@@ -191,4 +191,6 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void setNoRankingCustomerKeyword(@Param("needMoveUuids")List<String> needMoveUuids, @Param("noRankOptimizeGroupNameConfigType")String noRankOptimizeGroupNameConfigType);
 
     void updateCustomerKeywordCt(@Param("customerKeywordUuid")Long customerKeywordUuid, @Param("ct")String ct);
+
+    void updateCustomerKeywordFromSource(@Param("customerKeywordUuid")Long customerKeywordUuid, @Param("fromSource")String fromSource);
 }
