@@ -83,6 +83,7 @@ public class CustomerKeywordForOptimization {
 
     private String remarks;
     private String ct;
+    private String fromSource;
     private Date negativeListUpdateTime;
 
     public String getKeyword() {
@@ -691,5 +692,13 @@ public class CustomerKeywordForOptimization {
 
     public void setCt(String ct) {
         this.ct = ct;
+    }
+
+    public String getFromSource() {
+        return fromSource;
+    }
+
+    public void setFromSource(String fromSource) {
+        this.fromSource = fromSource;
     }
 }

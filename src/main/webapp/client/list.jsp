@@ -397,6 +397,7 @@
 		<option>50</option>
 		<option>75</option>
 		<option>100</option>
+		<option>250</option>
 		<option>500</option>
 		<option>1000</option>
 	</select>

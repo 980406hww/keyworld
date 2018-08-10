@@ -250,6 +250,9 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(value = "fCt")
     private String ct;
 
+    @TableField(value = "fFromSource")
+    private String fromSource;
+
     public long getCustomerUuid() {
         return customerUuid;
     }
@@ -956,5 +959,13 @@ public class CustomerKeyword extends BaseEntity {
 
     public void setCt(String ct) {
         this.ct = ct;
+    }
+
+    public String getFromSource() {
+        return fromSource;
+    }
+
+    public void setFromSource(String fromSource) {
+        this.fromSource = fromSource;
     }
 }
