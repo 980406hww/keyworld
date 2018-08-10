@@ -66,10 +66,12 @@ public class ShiroDbRealm extends AuthorizingRealm {
 		Set<String> urls = resourceMap.get("urls");
 		Set<String> roles = resourceMap.get("roles");
 
+
 //		if(EntryTypeEnum.fm.name().equalsIgnoreCase(token.getEntryType()) && !roles.contains("FMSpecial")) {
 //			roles = new HashSet<String>();
 //			urls = new HashSet<String>();
 //		}
+		LOGGER.info("urls is   " + urls == null? "null" : urls.toString());
 		ShiroUser shiroUser = new ShiroUser(user.getUuid(), user.getLoginName(), user.getUserName(), urls);
 		shiroUser.setRoles(roles);
 		shiroUser.setName(user.getUserName());
@@ -85,13 +87,18 @@ public class ShiroDbRealm extends AuthorizingRealm {
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(
 			PrincipalCollection principals) {
-		ShiroUser shiroUser = (ShiroUser) principals.getPrimaryPrincipal();
+		try{
+			ShiroUser shiroUser = (ShiroUser) principals.getPrimaryPrincipal();
 
-		SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-		info.setRoles(shiroUser.getRoles());
-		info.addStringPermissions(shiroUser.getUrlSet());
+			SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+			info.setRoles(shiroUser.getRoles());
+			info.addStringPermissions(shiroUser.getUrlSet());
 
-		return info;
+			return info;
+		}catch (Exception e){
+			LOGGER.error(e.getMessage(),e);
+		}
+		return null;
 	}
 
 	@Override
