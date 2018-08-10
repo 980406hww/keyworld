@@ -443,7 +443,9 @@
             fDownloadProgramType = #{downloadProgramType},
             fSwitchGroupName = #{switchGroupName},
             fStartUpStatus = 'New',
-            fStartUpTime = NULL
+            fStartUpTime = NULL,
+            fTargetVersion = NULL,
+            fVersion = NULL
         WHERE fClientID IN
         <foreach item="clientID" collection="clientIDs" open="(" separator="," close=")">
             #{clientID}

@@ -654,6 +654,8 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
         if(clientStatus != null){
             if(clientStatus.getTargetVersion() != null){
                 return clientStatus.getTargetVersion().equals(clientStatus.getVersion()) ? "" : clientStatus.getTargetVersion();
+            }else{
+                return "New".equalsIgnoreCase(clientStatus.getStartUpStatus()) ? "reopen" : "";
             }
         }
         return "0";
