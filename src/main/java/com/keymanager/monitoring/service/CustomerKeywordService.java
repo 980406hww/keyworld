@@ -16,7 +16,6 @@ import com.keymanager.util.common.StringUtil;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
@@ -770,19 +769,21 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     private synchronized void settingCustomerKeywordCt(Long customerKeywordUuid, CustomerKeywordForOptimization customerKeywordForOptimization) {
         Config configCt = configService.getConfig(Constants.CONFIG_TYPE_CT, customerKeywordForOptimization.getGroup());
-        String configValue = assignConfigValue(configCt, "_");
+        Config configCountPerElement = configService.getConfig(Constants.CONFIG_TYPE_COUNT_PER_ELEMENT, customerKeywordForOptimization.getGroup());
+        String configValue = assignConfigValue(configCt, "_", Integer.parseInt(configCountPerElement.getValue()));
         customerKeywordForOptimization.setCt(configValue);
         customerKeywordDao.updateCustomerKeywordCt(customerKeywordUuid, configValue);
     }
 
     private synchronized void settingCustomerKeywordFromSource(Long customerKeywordUuid, CustomerKeywordForOptimization customerKeywordForOptimization) {
         Config configFromSource = configService.getConfig(Constants.CONFIG_TYPE_FROM_SOURCE, customerKeywordForOptimization.getGroup());
-        String configValue = assignConfigValue(configFromSource, "_count_");
+        Config configCountPerElement = configService.getConfig(Constants.CONFIG_TYPE_COUNT_PER_ELEMENT, customerKeywordForOptimization.getGroup());
+        String configValue = assignConfigValue(configFromSource, "_count_", Integer.parseInt(configCountPerElement.getValue()));
         customerKeywordForOptimization.setFromSource(configValue);
         customerKeywordDao.updateCustomerKeywordFromSource(customerKeywordUuid, configValue);
     }
 
-    private String assignConfigValue(Config configCt, String splitStr) {
+    private String assignConfigValue(Config configCt, String splitStr, int countPerElement) {
         String configValue = null;
         if (configCt != null) {
             String ctValue = configCt.getValue();
@@ -793,7 +794,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                 configValue = ct;
             } else if (ctValue.indexOf(splitStr) == ctValue.length() - 1 - splitStr.length()) { // 分配到最后一个ct
                 int count = Integer.parseInt(ctValue.substring(ctValue.indexOf(splitStr) + splitStr.length()));
-                if (count == 3) {
+                if (count == countPerElement) {
                     configValue = ctValue.substring(0, ctValue.length() - splitStr.length() - 1);
                     configCt.setValue(configValue);
                     configValue = configValue.substring(configValue.lastIndexOf(",") + 1);
@@ -805,7 +806,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             } else { // 分配到中间的ct
                 int index = ctValue.indexOf(splitStr);
                 int count = Integer.parseInt(ctValue.substring(index + splitStr.length(), index + 1 + splitStr.length()));
-                if (count == 3) {
+                if (count == countPerElement) {
                     String beginCt = ctValue.substring(0, index);
                     String endCt = ctValue.substring(index);
                     endCt = endCt.substring(endCt.indexOf(",") + 1);
