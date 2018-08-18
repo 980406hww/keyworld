@@ -516,4 +516,16 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 			return new ResponseEntity<Object>(false , HttpStatus.BAD_REQUEST);
 		}
 	}
+
+	@RequiresPermissions("/internal/customerKeyword/saveCustomerKeyword")
+    @RequestMapping(value="batchUpdateKeywordStatus",method = RequestMethod.POST)
+    public ResponseEntity<?> batchUpdateKeywordStatus(@RequestBody KeywordStatusBatchUpdateCriteria keywordStatusBatchUpdateCriteria){
+        try {
+          customerKeywordService.batchUpdateKeywordStatus(keywordStatusBatchUpdateCriteria);
+          return new ResponseEntity<Object>(true,HttpStatus.OK);
+        }catch (Exception e){
+        	logger.error(e.getMessage());
+        	return new ResponseEntity<Object>(false,HttpStatus.BAD_REQUEST);
+		}
+    }
 }

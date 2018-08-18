@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -1302,5 +1303,10 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     public List<String> getCustomerKeywordInfo(CustomerKeywordCriteria customerKeywordCriteria){
         return customerKeywordDao.getCustomerKeywordInfo(customerKeywordCriteria);
+    }
+    //客户关键字批量设置
+    public void batchUpdateKeywordStatus(KeywordStatusBatchUpdateCriteria keywordStatusBatchUpdateCriteria){
+       String[] keywordIDs = keywordStatusBatchUpdateCriteria.getCustomerUuids().split(",");
+       customerKeywordDao.batchUpdateKeywordStatus(keywordIDs,keywordStatusBatchUpdateCriteria.getKs(),keywordStatusBatchUpdateCriteria.getKeywordStatus());
     }
 }

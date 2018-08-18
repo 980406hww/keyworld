@@ -5,10 +5,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.criteria.CustomerKeywordCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordUpdateCriteria;
-import com.keymanager.monitoring.entity.Config;
-import com.keymanager.monitoring.entity.CustomerKeyword;
-import com.keymanager.monitoring.entity.NegativeList;
-import com.keymanager.monitoring.entity.QZCaptureTitleLog;
+import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.vo.*;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
 import org.apache.ibatis.annotations.Param;
@@ -193,4 +190,6 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void updateCustomerKeywordCt(@Param("customerKeywordUuid")Long customerKeywordUuid, @Param("ct")String ct);
 
     void updateCustomerKeywordFromSource(@Param("customerKeywordUuid")Long customerKeywordUuid, @Param("fromSource")String fromSource);
+    //客户关键字批量设置
+    void batchUpdateKeywordStatus(@Param("keywordIDs")String[] keywordIDs, @Param("ks") CustomerKeyword ks, @Param("keywordStatus")CustomerKeyword keywordStatus);
 }

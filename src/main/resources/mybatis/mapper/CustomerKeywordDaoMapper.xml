@@ -1075,4 +1075,52 @@
         UPDATE t_customer_keyword SET fFromSource = #{fromSource}
         WHERE fUuid = #{customerKeywordUuid}
     </update>
+
+    <update id="batchUpdateKeywordStatus">
+        UPDATE t_customer_keyword
+        SET fTerminalType = fTerminalType
+        <if test="ks.keyword==1">,fKeyword = #{keywordStatus.keyword}</if>
+        <if test="ks.title==1"> ,fTitle = #{keywordStatus.title}</if>
+        <if test="ks.bearPawNumber==1"> ,fBearPawNumber = #{keywordStatus.bearPawNumber}</if>
+        <if test="ks.url==1"> ,fUrl = #{keywordStatus.url}</if>
+        <if test="ks.originalUrl==1"> ,fOriginalUrl = #{keywordStatus.originalUrl}</if>
+        <if test="ks.optimizePlanCount==1"> ,fOptimizePlanCount = #{keywordStatus.optimizePlanCount}</if>
+        <if test="ks.optimizeGroupName==1"> ,fOptimizeGroupName = #{keywordStatus.optimizeGroupName}</if>
+        <if test="ks.initialIndexCount==1"> ,fInitialIndexCount = #{keywordStatus.initialIndexCount}</if>
+        <if test="ks.initialPosition==1"> ,fInitialPosition = #{keywordStatus.initialPosition}</if>
+        <if test="ks.positionFirstFee==1"> ,fPositionFirstFee = #{keywordStatus.positionFirstFee}</if>
+        <if test="ks.positionSecondFee==1"> ,fPositionSecondFee = #{keywordStatus.positionSecondFee}</if>
+        <if test="ks.positionThirdFee==1"> ,fPositionThirdFee = #{keywordStatus.positionThirdFee}</if>
+        <if test="ks.positionForthFee==1"> ,fPositionForthFee = #{keywordStatus.positionForthFee}</if>
+        <if test="ks.positionFifthFee==1"> ,fPositionFifthFee = #{keywordStatus.positionFifthFee}</if>
+        <if test="ks.positionFirstPageFee==1"> ,fPositionFirstPageFee = #{keywordStatus.positionFirstPageFee}</if>
+        <if test="ks.serviceProvider==1"> ,fServiceProvider = #{keywordStatus.serviceProvider}</if>
+        <if test="ks.collectMethod==1"> ,fCollectMethod = #{keywordStatus.collectMethod}</if>
+        <if test="ks.searchEngine==1"> ,fSearchEngine = #{keywordStatus.searchEngine}</if>
+        <if test="ks.sequence==1"> ,fSequence = #{keywordStatus.sequence}</if>
+        <if test="ks.orderNumber==1"> ,fOrderNumber = #{keywordStatus.orderNumber}</if>
+        <if test="ks.paymentStatus==1"> ,fPaymentStatus = #{keywordStatus.paymentStatus}</if>
+        <if test="ks.recommendKeywords==1"> ,fRecommendKeywords = #{keywordStatus.recommendKeywords}</if>
+        <if test="ks.negativeKeywords==1"> ,fNegativeKeywords = #{keywordStatus.negativeKeywords}</if>
+        <if test="ks.excludeKeywords==1"> ,fExcludeKeywords = #{keywordStatus.excludeKeywords}</if>
+        <if test="ks.showPage==1"> ,fShowPage = #{keywordStatus.showPage}</if>
+        <if test="ks.relatedKeywordPercentage==1"> ,frelatedKeywordPercentage = #{keywordStatus.relatedKeywordPercentage}</if>
+        <if test="ks.remarks==1"> ,fRemarks = #{keywordStatus.remarks}</if>
+        <if test="ks.positionFirstCost==1"> ,fPositionFirstCost = #{keywordStatus.positionFirstCost}</if>
+        <if test="ks.positionSecondCost==1"> ,fPositionSecondCost = #{keywordStatus.positionSecondCost}</if>
+        <if test="ks.positionThirdCost==1"> ,fPositionThirdCost = #{keywordStatus.positionThirdCost}</if>
+        <if test="ks.positionForthCost==1"> ,fPositionForthCost = #{keywordStatus.positionForthCost}</if>
+        <if test="ks.positionFifthCost==1"> ,fPositionFifthCost = #{keywordStatus.positionFifthCost}</if>
+        <if test="ks.operateSelectKeyword==1"> ,fOperateSelectKeyword = #{keywordStatus.operateSelectKeyword}</if>
+        <if test="ks.operateRelatedKeyword==1"> ,fOperateRelatedKeyword = #{keywordStatus.operateRelatedKeyword}</if>
+        <if test="ks.operateRecommendKeyword==1"> ,fOperateRecommendKeyword = #{keywordStatus.operateRecommendKeyword}</if>
+        <if test="ks.operateSearchAfterSelectKeyword==1"> ,fOperateSearchAfterSelectKeyword = #{keywordStatus.operateSearchAfterSelectKeyword}</if>
+        <if test="keywordStatus.clickUrl!=null"> ,fClickUrl = #{keywordStatus.clickUrl}</if>
+        WHERE fUuid IN
+        <foreach item="keywordID" collection="keywordIDs" open="(" separator="," close=")">
+            #{keywordID}
+        </foreach>
+    </update>
+        
+    
 </mapper>
