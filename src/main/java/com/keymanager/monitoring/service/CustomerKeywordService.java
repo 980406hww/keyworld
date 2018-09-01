@@ -787,43 +787,48 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         String configValue = null;
         if (configCt != null) {
             String ctValue = configCt.getValue();
-            if (ctValue.indexOf(splitStr) == -1) { // 未开始分配，分配第一个ct
+            int splitIndex = ctValue.indexOf(splitStr);
+            if (splitIndex == -1) { // 未开始分配，分配第一个ct
                 int index = ctValue.indexOf(",");
                 String ct = ctValue.substring(0, index);
                 configCt.setValue(ct + splitStr + "1" + ctValue.substring(index));
                 configValue = ct;
-            } else if (ctValue.indexOf(splitStr) == ctValue.length() - 1 - splitStr.length()) { // 分配到最后一个ct
-                int count = Integer.parseInt(ctValue.substring(ctValue.indexOf(splitStr) + splitStr.length()));
-                if (count == countPerElement) {
-                    configValue = ctValue.substring(0, ctValue.length() - splitStr.length() - 1);
-                    configCt.setValue(configValue);
-                    configValue = configValue.substring(configValue.lastIndexOf(",") + 1);
-                } else {
-                    count = count + 1;
-                    configCt.setValue(ctValue.substring(0, ctValue.indexOf(splitStr)) + splitStr + count);
-                    configValue = ctValue.substring(ctValue.lastIndexOf(",") + 1, ctValue.indexOf(splitStr));
-                }
-            } else { // 分配到中间的ct
-                int index = ctValue.indexOf(splitStr);
-                int count = Integer.parseInt(ctValue.substring(index + splitStr.length(), index + 1 + splitStr.length()));
-                if (count == countPerElement) {
-                    String beginCt = ctValue.substring(0, index);
-                    String endCt = ctValue.substring(index);
-                    endCt = endCt.substring(endCt.indexOf(",") + 1);
-                    if (endCt.indexOf(",") > -1) {
-                        String ct = endCt.substring(0, endCt.indexOf(","));
-                        configValue = ct;
-                        configCt.setValue(beginCt + "," + ct + splitStr + "1" + endCt.substring(endCt.indexOf(",")));
+            } else {
+                String afterSplitStr = ctValue.substring(splitIndex + splitStr.length());
+                if (afterSplitStr.indexOf(",") == -1) { // 分配到最后一个ct
+                    int count = Integer.parseInt(ctValue.substring(splitIndex + splitStr.length()));
+                    int countLength = (count + "").length();
+                    if (count == countPerElement) {
+                        configValue = ctValue.substring(0, ctValue.length() - splitStr.length() - countLength);
+                        configCt.setValue(configValue);
+                        configValue = configValue.substring(configValue.lastIndexOf(",") + countLength);
                     } else {
-                        configValue = endCt;
-                        configCt.setValue(beginCt + "," + endCt + splitStr + "1");
+                        count = count + 1;
+                        configCt.setValue(ctValue.substring(0, splitIndex) + splitStr + count);
+                        configValue = ctValue.substring(ctValue.lastIndexOf(",") + countLength, splitIndex);
                     }
-                } else {
-                    count = count + 1;
-                    String beginCt = ctValue.substring(0, index);
-                    String endCt = ctValue.substring(index + 1 + splitStr.length());
-                    configValue = beginCt.substring(beginCt.lastIndexOf(",") + 1);
-                    configCt.setValue(beginCt + splitStr + count + endCt);
+                } else { // 分配到中间的ct
+                    int count = Integer.parseInt(ctValue.substring(splitIndex + splitStr.length(), splitIndex + splitStr.length() + afterSplitStr.indexOf(",")));
+                    int countLength = (count + "").length();
+                    if (count == countPerElement) {
+                        String beginCt = ctValue.substring(0, splitIndex);
+                        String endCt = ctValue.substring(splitIndex);
+                        endCt = endCt.substring(endCt.indexOf(",") + countLength);
+                        if (endCt.indexOf(",") > -1) {
+                            String ct = endCt.substring(0, endCt.indexOf(","));
+                            configValue = ct;
+                            configCt.setValue(beginCt + "," + ct + splitStr + "1" + endCt.substring(endCt.indexOf(",")));
+                        } else {
+                            configValue = endCt;
+                            configCt.setValue(beginCt + "," + endCt + splitStr + "1");
+                        }
+                    } else {
+                        count = count + 1;
+                        String beginCt = ctValue.substring(0, splitIndex);
+                        String endCt = ctValue.substring(splitIndex + countLength + splitStr.length());
+                        configValue = beginCt.substring(beginCt.lastIndexOf(",") + countLength);
+                        configCt.setValue(beginCt + splitStr + count + endCt);
+                    }
                 }
             }
             configService.updateConfig(configCt);
