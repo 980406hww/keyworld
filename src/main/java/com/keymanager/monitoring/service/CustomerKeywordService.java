@@ -453,7 +453,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         if (fixedPrice != null && currentIndexCount <= 100) {
             return fixedPrice.doubleValue();
         }
-        return Math.round((currentIndexCount * pricePercentage.doubleValue()) / 1000 - 0.5) * 10;
+        double price = Math.round((currentIndexCount * pricePercentage.doubleValue()) / 1000.0) * 10;
+        return price < fixedPrice.doubleValue() ? fixedPrice.doubleValue() : price;
     }
 
     public List<Map> getCustomerKeywordsCount(List<Long> customerUuids, String terminalType, String entryType){
@@ -790,8 +791,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             int splitIndex = ctValue.indexOf(splitStr);
             if (splitIndex == -1) { // 未开始分配，分配第一个ct
                 int index = ctValue.indexOf(",");
-                String ct = ctValue.substring(0, index);
-                configCt.setValue(ct + splitStr + "1" + ctValue.substring(index));
+                String ct = ctValue;
+                if(index > 0){
+                    ct = ctValue.substring(0, index);
+                    configCt.setValue(ct + splitStr + "1" + ctValue.substring(index));
+                }
                 configValue = ct;
             } else {
                 String afterSplitStr = ctValue.substring(splitIndex + splitStr.length());

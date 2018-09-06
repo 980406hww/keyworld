@@ -182,7 +182,7 @@
         ck.fKeyword	AS	'keyword',
         ck.fCollectMethod   AS  'collectMethod'
         FROM t_customer_keyword ck
-        WHERE ck.fOptimizeGroupName IN ('pc_pm_meishoulu', 'pc_pm_xiaowu', 'pc_pm_learner', 'pc_pm_51yza', 'pc_pm_yilufa', 'm_pm_tianqi', 'm_pm_tiantian', 'm_pm_meishoulu', 'm_pm_learner', 'sogou_pm_tiantian', '360_pm_tiantian', 'm_zhannei_sogou') AND ck.fCurrentIndexCount = -1 AND ck.fPositionFirstFee = -1
+        WHERE ck.fCurrentIndexCount = -1 AND ck.fPositionFirstFee = -1
         ORDER BY ck.fCaptureIndexQueryTime, ck.fCreateTime LIMIT 1
     </select>
 
@@ -190,6 +190,7 @@
         SELECT
         ck.fUuid AS 'uuid',
         ck.fTerminalType	AS	'terminalType',
+        ck.fSearchEngine    AS  'searchEngine',
         ck.fCustomerUuid	AS	'customerUuid',
         ck.fCurrentIndexCount	AS	'currentIndexCount',
         ck.fPositionFirstFee	AS	'positionFirstFee',
@@ -199,7 +200,7 @@
         ck.fPositionFifthFee	AS	'positionFifthFee',
         ck.fPositionFirstPageFee	AS	'positionFirstPageFee'
         FROM t_customer_keyword ck
-        WHERE ck.fOptimizeGroupName IN ('pc_pm_meishoulu', 'pc_pm_xiaowu', 'pc_pm_learner', 'pc_pm_51yza', 'pc_pm_yilufa', 'm_pm_tianqi', 'm_pm_tiantian', 'm_pm_meishoulu', 'm_pm_learner', 'sogou_pm_tiantian', '360_pm_tiantian', 'm_zhannei_sogou') AND ck.fCurrentIndexCount = -1 AND ck.fPositionFirstFee = -1
+        WHERE ck.fCurrentIndexCount = -1 AND ck.fPositionFirstFee = -1
         AND ck.fKeyword = #{keyword}
         ORDER BY ck.fCaptureIndexQueryTime, ck.fCreateTime
     </select>
