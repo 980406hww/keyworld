@@ -553,7 +553,7 @@ function delRow(rowHref) {
         alert("至少填写一条规则");
         return;
     }
-    currentRow.remove();
+    $(currentRow).remove();
     intervalInputOnlyNumberAllow();
     autoCheckTerminalType();
     resetSequence($("#tabPC"));
