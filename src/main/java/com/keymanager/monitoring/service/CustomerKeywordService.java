@@ -1307,6 +1307,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     //客户关键字批量设置
     public void batchUpdateKeywordStatus(KeywordStatusBatchUpdateCriteria keywordStatusBatchUpdateCriteria){
        String[] keywordIDs = keywordStatusBatchUpdateCriteria.getCustomerUuids().split(",");
-       customerKeywordDao.batchUpdateKeywordStatus(keywordIDs,keywordStatusBatchUpdateCriteria.getKs(),keywordStatusBatchUpdateCriteria.getKeywordStatus());
+       customerKeywordDao.batchUpdateKeywordStatus(keywordIDs,keywordStatusBatchUpdateCriteria.getKeywordChecks(),keywordStatusBatchUpdateCriteria.getKeywordStatus());
     }
 }

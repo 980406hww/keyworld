@@ -191,5 +191,5 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void updateCustomerKeywordFromSource(@Param("customerKeywordUuid")Long customerKeywordUuid, @Param("fromSource")String fromSource);
     //客户关键字批量设置
-    void batchUpdateKeywordStatus(@Param("keywordIDs")String[] keywordIDs, @Param("ks") CustomerKeyword ks, @Param("keywordStatus")CustomerKeyword keywordStatus);
+    void batchUpdateKeywordStatus(@Param("keywordIDs")String[] keywordIDs, @Param("keywordChecks") CustomerKeyword keywordChecks, @Param("keywordStatus")CustomerKeyword keywordStatus);
 }
