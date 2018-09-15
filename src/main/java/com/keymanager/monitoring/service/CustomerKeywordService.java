@@ -16,7 +16,6 @@ import com.keymanager.util.common.StringUtil;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
@@ -25,7 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -1305,8 +1303,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return customerKeywordDao.getCustomerKeywordInfo(customerKeywordCriteria);
     }
     //客户关键字批量设置
-    public void batchUpdateKeywordStatus(KeywordStatusBatchUpdateCriteria keywordStatusBatchUpdateCriteria){
-       String[] keywordIDs = keywordStatusBatchUpdateCriteria.getCustomerUuids().split(",");
-       customerKeywordDao.batchUpdateKeywordStatus(keywordIDs,keywordStatusBatchUpdateCriteria.getKeywordChecks(),keywordStatusBatchUpdateCriteria.getKeywordStatus());
+    public void batchUpdateKeywordStatus(KeywordStatusBatchUpdateVO keywordStatusBatchUpdateVO){
+       String[] keywordIDs = keywordStatusBatchUpdateVO.getCustomerUuids().split(",");
+       customerKeywordDao.batchUpdateKeywordStatus(keywordIDs, keywordStatusBatchUpdateVO.getKeywordChecks(), keywordStatusBatchUpdateVO.getKeywordStatus());
     }
 }

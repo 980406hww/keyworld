@@ -2,7 +2,7 @@ package com.keymanager.monitoring.vo;
 
 import com.keymanager.monitoring.entity.CustomerKeyword;
 
-public class KeywordStatusBatchUpdateCriteria {
+public class KeywordStatusBatchUpdateVO {
     private CustomerKeyword keywordChecks;
     private CustomerKeyword keywordStatus;
     private String customerUuids;
