@@ -233,4 +233,8 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 	public void setCustomerUpdateInterval(List<String> uuids, String updateInterval) {
 		customerDao.setCustomerUpdateInterval(uuids, updateInterval);
 	}
+
+	public void updateCustomerUserID(List<String> uuids, String userID) {
+		customerDao.updateCustomerUserID(uuids, userID);
+	}
 }

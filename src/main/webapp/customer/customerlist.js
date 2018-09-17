@@ -4,6 +4,7 @@ $(function () {
     $("#customerKeywordDialog").dialog("close");
     $("#customerChargeTypeDialog").dialog("close");
     $("#autoSwitchCustomerKeywordStatusDialog").dialog("close");
+    $("#updateCustomerUserIDDialog").dialog("close");
     $("#showCustomerTableDiv").css("margin-top",$("#topDiv").height());
     pageLoad();
     onlyNumber();
@@ -1074,4 +1075,50 @@ function setCustomerUpdateInterval(uuid) {
             });
         }
     });
+}
+function updateCustomerUserID() {
+    var uuids = getSelectedIDs();
+    if (uuids === '') {
+        alert('请选择要修改所属用户的客户');
+        return;
+    }
+    $("#updateCustomerUserIDDialog").show();
+    $("#updateCustomerUserIDDialog").dialog({
+        resizable: false,
+        width: 250,
+        height: 100,
+        modal: true,
+        closed: true,
+        buttons: [{
+            text: '确定',
+            position: '25%',
+            handler: function () {
+                var data = {};
+                data.uuids = uuids.split(",");
+                data.userID = $("#userID").val();
+                $.ajax({
+                    url: '/internal/customer/updateCustomerUserID',
+                    data: JSON.stringify(data),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result) {
+                            $().toastmessage('showSuccessToast', "操作成功", true);
+                        } else {
+                            $().toastmessage('showErrorToast', "操作失败");
+                        }
+                    },
+                    error: function () {
+                        $().toastmessage('showErrorToast', "操作失败");
+                    }
+                });
+            }
+        }]
+    });
+    $("#updateCustomerUserIDDialog").dialog("open");
+    $('#updateCustomerUserIDDialog').window("resize", {top: $(document).scrollTop() + 150});
 }

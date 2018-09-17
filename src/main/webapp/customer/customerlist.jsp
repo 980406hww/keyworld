@@ -59,6 +59,7 @@
                         </shiro:hasPermission>
                         <shiro:hasPermission name="/internal/customer/saveCustomer">
                             &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 添加 " onclick="showCustomerDialog(null,'${user.loginName}')"/>
+                            &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 修改客户归属 " onclick="updateCustomerUserID()"/>
                         </shiro:hasPermission>
                         <shiro:hasPermission name="/internal/customer/deleteCustomers">
                             &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 删除所选 " onclick="deleteCustomers(this)"/>
@@ -436,6 +437,14 @@
             </td>
         </tr>
     </table>
+</div>
+<div id="updateCustomerUserIDDialog" title="修改客户归属" class="easyui-dialog" style="left: 30%;display: none;">
+    请选择客户归属:
+    <select id="userID">
+        <c:forEach items="${activeUsers}" var="activeUser">
+            <option value="${activeUser.loginName}">${activeUser.userName}</option>
+        </c:forEach>
+    </select>
 </div>
 <div id="showCustomerBottomPositioneDiv">
     <div id="showCustomerBottomDiv">
