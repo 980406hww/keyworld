@@ -19,6 +19,7 @@ public class ClientStatusCriteria extends BaseCriteria {
     private String noOperationType; // 没操作类型
     private String noVNC; // 没VNC
     private String noUpgrade; // 没升级
+    private String noChangePassword;
     private String orderBy; // 排序
     private String vpsBackendSystemComputerID;//服务器ID
     private String switchGroupName;
@@ -241,5 +242,13 @@ public class ClientStatusCriteria extends BaseCriteria {
 
     public void setTargetVersion(String targetVersion) {
         this.targetVersion = targetVersion;
+    }
+
+    public String getNoChangePassword() {
+        return noChangePassword;
+    }
+
+    public void setNoChangePassword(String noChangePassword) {
+        this.noChangePassword = noChangePassword;
     }
 }
