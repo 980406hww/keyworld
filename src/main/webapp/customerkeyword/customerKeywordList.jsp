@@ -77,7 +77,7 @@
         | <a target="_blank" href="javascript:downloadCustomerKeywordInfo()">导出结果</a>&nbsp;&nbsp;
     </shiro:hasPermission>
     <shiro:hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
-        | <a target="_blank" href="javascript:CustomerKeywordBatchUpdate()">批量设置</a>
+        | <a target="_blank" href="javascript:CustomerKeywordBatchUpdate('${sessionScope.entryType}')">批量设置</a>
     </shiro:hasPermission>
         </div><div>
 
@@ -366,9 +366,10 @@
         <ul id="tcontent">
             <input type="hidden" id="uuid" value="" style="width:300px;">
             <input type="hidden" id="optimizedCount" value="" style="width:300px;">
-            <li onclick="checkItem(this)" ><span class="customerKeywordSpanClass">关键字:</span><input type="text" name="keyword" id="keyword" value="" style="width:300px;"/></li>
-
-            <hr style="height: 1px; border:none; border-top:1px dashed #CCCCCC;"/>
+            <div id="KeywordDiv">
+                <li onclick="checkItem(this)" ><span class="customerKeywordSpanClass">关键字:</span><input type="text" name="keyword" id="keyword" value="" style="width:300px;"/></li>
+                <hr style="height: 1px; border:none; border-top:1px dashed #CCCCCC;"/>
+            </div>
             <li onclick="checkItem(this)" ><span class="customerKeywordSpanClass">标题:</span><input type="text" name="title" id="title" value="" style="width:300px;">
             </li>
             <li onclick="checkItem(this)" ><span class="customerKeywordSpanClass">域名:</span><input type="text" name="url" id="url" value="" style="width:300px;">

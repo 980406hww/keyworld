@@ -1115,7 +1115,7 @@
         <if test="keywordChecks.operateRelatedKeyword==1"> ,fOperateRelatedKeyword = #{keywordStatus.operateRelatedKeyword}</if>
         <if test="keywordChecks.operateRecommendKeyword==1"> ,fOperateRecommendKeyword = #{keywordStatus.operateRecommendKeyword}</if>
         <if test="keywordChecks.operateSearchAfterSelectKeyword==1"> ,fOperateSearchAfterSelectKeyword = #{keywordStatus.operateSearchAfterSelectKeyword}</if>
-        <if test="keywordStatus.clickUrl!=null"> ,fClickUrl = #{keywordStatus.clickUrl}</if>
+        <if test="keywordChecks.clickUrl==1"> ,fClickUrl = #{keywordStatus.clickUrl}</if>
         WHERE fUuid IN
         <foreach item="keywordID" collection="keywordIDs" open="(" separator="," close=")">
             #{keywordID}

@@ -1013,7 +1013,7 @@ function editOptimizePlanCount(customerUuid, uuids) {
         }
     }
    //批量设置
-     function CustomerKeywordBatchUpdate() {
+     function CustomerKeywordBatchUpdate(entryType) {
         var CustomerUuids = getSelectedCustomerUuids();
         if (CustomerUuids.indexOf(",") == -1) {
             alert('请选择多个关键字进行设置');
@@ -1027,17 +1027,28 @@ function editOptimizePlanCount(customerUuid, uuids) {
             $(this).prop("checked",false);
         });
         $("#saveCustomerKeywordDialog").show();
+        if(entryType !== "fm" ){
+             $("#KeywordDiv").hide();
+        }
         $("#saveCustomerKeywordDialog").dialog({
             resizable: false,
             title: "关键字批量设置(请将需要修改的字段点击标记为红色)",
             width: 410,
             maxHeight: 605,
             modal: true,
+            onBeforeClose:function(){
+                $("#KeywordDiv").show();
+            },
             buttons: [{
                 text: '保存',
                 iconCls: 'icon-ok',
                 handler: function () {
-                    saveChangeSetting(CustomerUuids);
+                    if(isChecked("keyword")=="1" && $("#keyword").val()==""){
+                        alert("关键字不能为空");
+                        return;
+                    }else {
+                        saveChangeSetting(CustomerUuids);
+                    }
                 }
             },
                 {
@@ -1143,6 +1154,7 @@ function saveChangeSetting(CustomerUuids){
         keywordChecks.sequence =isChecked("sequence");
         keywordChecks.orderNumber = isChecked("orderNumber");
         keywordChecks.paymentStatus = isChecked("paymentStatus");
+        keywordChecks.clickUrl = isChecked($("input[name='clickUrl']:checked").val());
         keywordChecks.recommendKeywords = isChecked("recommendKeywords");
         keywordChecks.negativeKeywords = isChecked("negativeKeywords");
         keywordChecks.excludeKeywords = isChecked("excludeKeywords");
