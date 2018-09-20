@@ -182,6 +182,11 @@
             <shiro:hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
                 <input type="button" onclick="updateKeywordCustomerUuid()" value="更改所选词客户">
             </shiro:hasPermission>
+            <shiro:hasPermission name="/internal/customerKeyword/deleteCustomerKeywords">
+                <c:if test="${sessionScope.get('entryType') eq 'qz'}">
+                    <input type="button" onclick="deleteRepeatQZKeyword(${customerKeywordCriteria.customerUuid})" value="删除重复全站词">
+                </c:if>
+            </shiro:hasPermission>
         </div>
     </form>
     <%--</c:if>--%>

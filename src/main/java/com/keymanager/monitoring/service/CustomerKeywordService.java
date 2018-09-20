@@ -1313,4 +1313,22 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     public List<String> getCustomerKeywordInfo(CustomerKeywordCriteria customerKeywordCriteria){
         return customerKeywordDao.getCustomerKeywordInfo(customerKeywordCriteria);
     }
+
+    public List<String> deleteRepeatCustomerKeywords(CustomerKeywordCriteria customerKeywordCriteria){
+        return searchRepeatQZKeyword(customerKeywordDao.searchCustomerKeywordsPageForCustomer(customerKeywordCriteria));
+    }
+
+    public  List<String> searchRepeatQZKeyword(List<CustomerKeyword> orderList) {
+        HashMap<String, String> repeatMap = new HashMap<String, String>();
+        List<String> tempList = new ArrayList<String>();
+        for (CustomerKeyword customerKeyword : orderList) {
+            String keyword = customerKeyword.getKeyword();
+            if (repeatMap.containsKey(keyword)) {
+                tempList.add(customerKeyword.getUuid().toString());
+            } else {
+                repeatMap.put(keyword, keyword);
+            }
+        }
+        return tempList;
+    }
 }

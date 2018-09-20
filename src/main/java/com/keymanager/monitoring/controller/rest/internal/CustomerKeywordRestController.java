@@ -516,4 +516,18 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 			return new ResponseEntity<Object>(false , HttpStatus.BAD_REQUEST);
 		}
 	}
+
+	@RequiresPermissions("/internal/customerKeyword/deleteCustomerKeywords")
+	@RequestMapping(value = "/deleteRepeatQZKeyword/{customerUuid}" , method = RequestMethod.POST)
+	public ModelAndView deleteRepeatQZKeyword(@PathVariable("customerUuid") Long customerUuid,HttpServletRequest request,HttpSession session) {
+		CustomerKeywordCriteria customerKeywordCriteria = new CustomerKeywordCriteria();
+		customerKeywordCriteria.setCustomerUuid(customerUuid);
+		customerKeywordCriteria.setEntryType(EntryTypeEnum.qz.name());
+		String terminalType = TerminalTypeMapping.getTerminalType(request);
+		customerKeywordCriteria.setTerminalType(terminalType);
+		List<String> repeatList = customerKeywordService.deleteRepeatCustomerKeywords(customerKeywordCriteria);
+		customerKeywordService.deleteCustomerKeywordsByUuid(repeatList);
+		ModelAndView modelAndView = new ModelAndView("/customerkeyword/customerKeywordList");
+		return modelAndView;
+	}
 }
