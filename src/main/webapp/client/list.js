@@ -507,7 +507,7 @@ function changeTerminalType(clientID){
         type: 'POST',
         success: function (result) {
             if(result){
-                $().toastmessage('showSuccessToast', "更新成功");
+                $().toastmessage('showSuccessToast', "更新成功",true);
 
             }else{
                 $().toastmessage('showErrorToast', "更新失败");
@@ -1219,6 +1219,89 @@ function finishStartUp() {
         success: function (result) {
             if (result) {
                 $().toastmessage('showSuccessToast', "操作成功", true);
+            } else {
+                $().toastmessage('showErrorToast', "操作失败");
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "操作失败");
+        }
+    });
+}
+
+function batchChangeTerminalType(){
+    var clientIDs = getSelectedClientIDs();
+    if (clientIDs.indexOf(",") == -1) {
+        alert('请选择多个终端进行设置');
+        return;
+    }
+    if (confirm("确定要批量变更终端类型吗?") == false) return;
+    var postData = {};
+    postData.clientID = clientIDs;
+    $.ajax({
+        url: '/internal/clientstatus/batchChangeTerminalType',
+        data: JSON.stringify(postData),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        timeout: 5000,
+        type: 'POST',
+        success: function (result) {
+            console.log(JSON.stringify(postData));
+            if(result){
+                $().toastmessage('showSuccessToast', "操作成功",true);
+
+            }else{
+                $().toastmessage('showErrorToast', "操作失败");
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "操作失败");
+        }
+    });
+}
+
+function changeStatusStart() {
+    var clientIDs = getSelectedClientIDs();
+    if (clientIDs.indexOf(",") == -1) {
+        alert('请选择多个终端进行设置');
+        return;
+    }
+    if (confirm("确定要批量开始监控这些终端吗?") == false) {
+        return;
+    }
+    $.ajax({
+        url: '/internal/clientstatus/changeStatusStart/' + clientIDs,
+        type: 'POST',
+        success: function (result) {
+            if (result) {
+                $().toastmessage('showSuccessToast', "操作成功",true);
+            } else {
+                $().toastmessage('showErrorToast', "操作失败");
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "操作失败");
+        }
+    });
+}
+
+function changeStatusStop() {
+    var clientIDs = getSelectedClientIDs();
+    if (clientIDs.indexOf(",") == -1) {
+        alert('请选择多个终端进行设置');
+        return;
+    }
+    if (confirm("确定要批量停止监控这些终端吗?") == false) {
+        return;
+    }
+    $.ajax({
+        url: '/internal/clientstatus/changeStatusStop/' + clientIDs,
+        type: 'POST',
+        success: function (result) {
+            if (result) {
+                $().toastmessage('showSuccessToast', "操作成功",true);
             } else {
                 $().toastmessage('showErrorToast', "操作失败");
             }

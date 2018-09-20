@@ -1051,4 +1051,22 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
         List<CookieVO> clientCookieCountList = clientStatusDao.searchClientForAllotCookie(clientCookieCount, cookieGroupForBaidu, cookieGroupFor360);
         return clientCookieCountList;
     }
+
+    public void changeStatusStart(String clientIDs) {
+        String[] clientID = clientIDs.split(",");
+        for (int i=0;i<clientID.length;i++){
+            ClientStatus clientStatus = clientStatusDao.selectById(clientID[i]);
+            clientStatus.setValid(true);
+            clientStatusDao.updateById(clientStatus);
+        }
+    }
+
+    public void changeStatusStop(String clientIDs) {
+        String[] clientID = clientIDs.split(",");
+        for (int i=0;i<clientID.length;i++){
+            ClientStatus clientStatus = clientStatusDao.selectById(clientID[i]);
+            clientStatus.setValid(false);
+            clientStatusDao.updateById(clientStatus);
+        }
+    }
 }

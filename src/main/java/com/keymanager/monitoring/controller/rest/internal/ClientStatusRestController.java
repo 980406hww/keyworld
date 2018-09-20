@@ -441,4 +441,45 @@ public class ClientStatusRestController extends SpringMVCBaseController {
             return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
         }
     }
+
+    @RequiresPermissions("/internal/clientstatus/changeStatus")
+    @RequestMapping(value = "/changeStatusStart/{clientIDs}", method = RequestMethod.POST)
+    public ResponseEntity<?> changeStatusStart(@PathVariable("clientIDs") String clientIDs) {
+        try {
+            clientStatusService.changeStatusStart(clientIDs);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequiresPermissions("/internal/clientstatus/changeStatus")
+    @RequestMapping(value = "/changeStatusStop/{clientIDs}", method = RequestMethod.POST)
+    public ResponseEntity<?> changeStatusStop(@PathVariable("clientIDs") String clientIDs) {
+        try {
+            clientStatusService.changeStatusStop(clientIDs);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequiresPermissions("/internal/clientstatus/changeTerminalType")
+    @RequestMapping(value = "/batchChangeTerminalType", method = RequestMethod.POST)
+    public ResponseEntity<?> batchChangeTerminalType(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) throws Exception {
+        String terminalType = TerminalTypeMapping.getTerminalType(request);
+        String clientIDs = (String) requestMap.get("clientID");
+        String[] clientID = clientIDs.split(",");
+        try {
+            for (int i=0;i<clientID.length;i++) {
+                clientStatusService.changeTerminalType(clientID[i], TerminalTypeEnum.PC.name().equals(terminalType) ? TerminalTypeEnum.Phone.name() :
+                        TerminalTypeEnum.PC.name());
+            }
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
 }
