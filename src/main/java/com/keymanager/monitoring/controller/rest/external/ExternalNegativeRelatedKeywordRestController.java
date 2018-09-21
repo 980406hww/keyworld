@@ -24,7 +24,7 @@ public class ExternalNegativeRelatedKeywordRestController extends SpringMVCBaseC
     @Autowired
     private NegativeRelatedKeywordService negativeRelatedKeywordCriteriaService;
 
-    @RequestMapping(value = "findNegativeRelatedKeyword" , method = RequestMethod.POST)
+    @RequestMapping(value = "/findNegativeRelatedKeyword" , method = RequestMethod.POST)
     public ResponseEntity<?> findNegativeRelatedKeyword(@RequestBody NegativeRelatedKeywordCriteria negativeRelatedKeywordCriteria) {
         try {
             if (validUser(negativeRelatedKeywordCriteria.getUserName(), negativeRelatedKeywordCriteria.getPassword())) {
@@ -37,7 +37,7 @@ public class ExternalNegativeRelatedKeywordRestController extends SpringMVCBaseC
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
-    @RequestMapping(value = "saveNegativeRelatedKeyword" , method = RequestMethod.POST)
+    @RequestMapping(value = "/saveNegativeRelatedKeyword" , method = RequestMethod.POST)
     public ResponseEntity<?> saveNegativeRelatedKeyword(@RequestBody NegativeRelatedKeywordCriteria negativeRelatedKeywordCriteria) {
         try {
             if (validUser(negativeRelatedKeywordCriteria.getUserName(), negativeRelatedKeywordCriteria.getPassword())) {
@@ -50,7 +50,7 @@ public class ExternalNegativeRelatedKeywordRestController extends SpringMVCBaseC
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
-    @RequestMapping(value = "deleteNegativeRelatedKeyword" , method = RequestMethod.POST)
+    @RequestMapping(value = "/deleteNegativeRelatedKeyword" , method = RequestMethod.POST)
     public ResponseEntity<?> deleteNegativeRelatedKeyword(@RequestBody NegativeRelatedKeywordCriteria negativeRelatedKeywordCriteria) {
         try {
             if (validUser(negativeRelatedKeywordCriteria.getUserName(), negativeRelatedKeywordCriteria.getPassword())) {
