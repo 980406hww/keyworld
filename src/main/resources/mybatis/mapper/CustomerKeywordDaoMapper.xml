@@ -925,15 +925,13 @@
             fKeyword AS 'keyword',
             fTitle AS 'title',
             fUrl AS 'url'
-        FROM t_customer_keyword AS t1
-        JOIN (SELECT ROUND(RAND() * ((SELECT MAX(fUuid) FROM t_customer_keyword)-(SELECT MIN(fUuid) FROM t_customer_keyword))+(SELECT MIN(fUuid) FROM t_customer_keyword)) AS id) AS t2
-        WHERE t1.fUuid &gt;= t2.id
-        AND fType = 'qz'
+        FROM t_customer_keyword
+        WHERE fType = 'qz'
         AND fTerminalType = #{terminalType}
         AND fOptimizeGroupName = #{optimizeGroupName}
         AND fOptimizeRemainingCount &gt; 0
         AND fStatus = 1
-        ORDER BY t1.fUuid
+        ORDER BY fQueryTime
         LIMIT 4
     </select>
 
