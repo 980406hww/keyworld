@@ -453,7 +453,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         if (fixedPrice != null && currentIndexCount <= 100) {
             return fixedPrice.doubleValue();
         }
-        return Math.round((currentIndexCount * pricePercentage.doubleValue()) / 1000 - 0.5) * 10;
+        double price = Math.round((currentIndexCount * pricePercentage.doubleValue()) / 1000.0) * 10;
+        return price < fixedPrice.doubleValue() ? fixedPrice.doubleValue() : price;
     }
 
     public List<Map> getCustomerKeywordsCount(List<Long> customerUuids, String terminalType, String entryType){
@@ -769,59 +770,69 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     private synchronized void settingCustomerKeywordCt(Long customerKeywordUuid, CustomerKeywordForOptimization customerKeywordForOptimization) {
         Config configCt = configService.getConfig(Constants.CONFIG_TYPE_CT, customerKeywordForOptimization.getGroup());
-        String configValue = assignConfigValue(configCt, "_");
+        Config configCountPerElement = configService.getConfig(Constants.CONFIG_TYPE_COUNT_PER_ELEMENT, customerKeywordForOptimization.getGroup());
+        String configValue = assignConfigValue(configCt, "_", Integer.parseInt(configCountPerElement.getValue()));
         customerKeywordForOptimization.setCt(configValue);
         customerKeywordDao.updateCustomerKeywordCt(customerKeywordUuid, configValue);
     }
 
     private synchronized void settingCustomerKeywordFromSource(Long customerKeywordUuid, CustomerKeywordForOptimization customerKeywordForOptimization) {
         Config configFromSource = configService.getConfig(Constants.CONFIG_TYPE_FROM_SOURCE, customerKeywordForOptimization.getGroup());
-        String configValue = assignConfigValue(configFromSource, "_count_");
+        Config configCountPerElement = configService.getConfig(Constants.CONFIG_TYPE_COUNT_PER_ELEMENT, customerKeywordForOptimization.getGroup());
+        String configValue = assignConfigValue(configFromSource, "_count_", Integer.parseInt(configCountPerElement.getValue()));
         customerKeywordForOptimization.setFromSource(configValue);
         customerKeywordDao.updateCustomerKeywordFromSource(customerKeywordUuid, configValue);
     }
 
-    private String assignConfigValue(Config configCt, String splitStr) {
+    private String assignConfigValue(Config configCt, String splitStr, int countPerElement) {
         String configValue = null;
         if (configCt != null) {
             String ctValue = configCt.getValue();
-            if (ctValue.indexOf(splitStr) == -1) { // 未开始分配，分配第一个ct
+            int splitIndex = ctValue.indexOf(splitStr);
+            if (splitIndex == -1) { // 未开始分配，分配第一个ct
                 int index = ctValue.indexOf(",");
-                String ct = ctValue.substring(0, index);
-                configCt.setValue(ct + splitStr + "1" + ctValue.substring(index));
-                configValue = ct;
-            } else if (ctValue.indexOf(splitStr) == ctValue.length() - 1 - splitStr.length()) { // 分配到最后一个ct
-                int count = Integer.parseInt(ctValue.substring(ctValue.indexOf(splitStr) + splitStr.length()));
-                if (count == 3) {
-                    configValue = ctValue.substring(0, ctValue.length() - splitStr.length() - 1);
-                    configCt.setValue(configValue);
-                    configValue = configValue.substring(configValue.lastIndexOf(",") + 1);
-                } else {
-                    count = count + 1;
-                    configCt.setValue(ctValue.substring(0, ctValue.indexOf(splitStr)) + splitStr + count);
-                    configValue = ctValue.substring(ctValue.lastIndexOf(",") + 1, ctValue.indexOf(splitStr));
+                String ct = ctValue;
+                if(index > 0){
+                    ct = ctValue.substring(0, index);
+                    configCt.setValue(ct + splitStr + "1" + ctValue.substring(index));
                 }
-            } else { // 分配到中间的ct
-                int index = ctValue.indexOf(splitStr);
-                int count = Integer.parseInt(ctValue.substring(index + splitStr.length(), index + 1 + splitStr.length()));
-                if (count == 3) {
-                    String beginCt = ctValue.substring(0, index);
-                    String endCt = ctValue.substring(index);
-                    endCt = endCt.substring(endCt.indexOf(",") + 1);
-                    if (endCt.indexOf(",") > -1) {
-                        String ct = endCt.substring(0, endCt.indexOf(","));
-                        configValue = ct;
-                        configCt.setValue(beginCt + "," + ct + splitStr + "1" + endCt.substring(endCt.indexOf(",")));
+                configValue = ct;
+            } else {
+                String afterSplitStr = ctValue.substring(splitIndex + splitStr.length());
+                if (afterSplitStr.indexOf(",") == -1) { // 分配到最后一个ct
+                    int count = Integer.parseInt(ctValue.substring(splitIndex + splitStr.length()));
+                    int countLength = (count + "").length();
+                    if (count == countPerElement) {
+                        configValue = ctValue.substring(0, ctValue.length() - splitStr.length() - countLength);
+                        configCt.setValue(configValue);
+                        configValue = configValue.substring(configValue.lastIndexOf(",") + countLength);
                     } else {
-                        configValue = endCt;
-                        configCt.setValue(beginCt + "," + endCt + splitStr + "1");
+                        count = count + 1;
+                        configCt.setValue(ctValue.substring(0, splitIndex) + splitStr + count);
+                        configValue = ctValue.substring(ctValue.lastIndexOf(",") + countLength, splitIndex);
                     }
-                } else {
-                    count = count + 1;
-                    String beginCt = ctValue.substring(0, index);
-                    String endCt = ctValue.substring(index + 1 + splitStr.length());
-                    configValue = beginCt.substring(beginCt.lastIndexOf(",") + 1);
-                    configCt.setValue(beginCt + splitStr + count + endCt);
+                } else { // 分配到中间的ct
+                    int count = Integer.parseInt(ctValue.substring(splitIndex + splitStr.length(), splitIndex + splitStr.length() + afterSplitStr.indexOf(",")));
+                    int countLength = (count + "").length();
+                    if (count == countPerElement) {
+                        String beginCt = ctValue.substring(0, splitIndex);
+                        String endCt = ctValue.substring(splitIndex);
+                        endCt = endCt.substring(endCt.indexOf(",") + countLength);
+                        if (endCt.indexOf(",") > -1) {
+                            String ct = endCt.substring(0, endCt.indexOf(","));
+                            configValue = ct;
+                            configCt.setValue(beginCt + "," + ct + splitStr + "1" + endCt.substring(endCt.indexOf(",")));
+                        } else {
+                            configValue = endCt;
+                            configCt.setValue(beginCt + "," + endCt + splitStr + "1");
+                        }
+                    } else {
+                        count = count + 1;
+                        String beginCt = ctValue.substring(0, splitIndex);
+                        String endCt = ctValue.substring(splitIndex + countLength + splitStr.length());
+                        configValue = beginCt.substring(beginCt.lastIndexOf(",") + countLength);
+                        configCt.setValue(beginCt + splitStr + count + endCt);
+                    }
                 }
             }
             configService.updateConfig(configCt);

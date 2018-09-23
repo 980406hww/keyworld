@@ -151,6 +151,7 @@
         <if test="clientStatusCriteria.runningProgramType != null and clientStatusCriteria.runningProgramType != ''"> AND cs.fRunningProgramType = #{clientStatusCriteria.runningProgramType}</if>
         <if test="clientStatusCriteria.noVNC != null"> AND (cs.fHost is null or cs.fHost = '')</if>
         <if test="clientStatusCriteria.noUpgrade != null"> AND (cs.fVersion &lt;&gt; cs.fTargetVersion)</if>
+        <if test="clientStatusCriteria.noChangePassword != null"> AND (cs.fPassword &lt;&gt; cs.fTargetVPSPassword)</if>
         <if test="clientStatusCriteria.startUpClient != null"> AND cs.fDownloadProgramType > ''</if>
         <if test="clientStatusCriteria.vpsBackendSystemComputerID != null and clientStatusCriteria.vpsBackendSystemComputerID != ''"> AND (cs.fVPSBackendSystemComputerID = #{clientStatusCriteria.vpsBackendSystemComputerID})</if>
         <if test="clientStatusCriteria.switchGroupName != null and clientStatusCriteria.switchGroupName != ''"> AND cs.fSwitchGroupName = #{clientStatusCriteria.switchGroupName}</if>

@@ -123,6 +123,8 @@
 							&nbsp;&nbsp;
 							<input id="noUpgrade" name="noUpgrade" type="checkbox" value="noUpgrade" ${clientStatusCriteria.noUpgrade != null ? "checked=true" : ""}>没升级</input>
 							&nbsp;&nbsp;
+							<input id="noChangePassword" name="noChangePassword" type="checkbox" value="noChangePassword" ${clientStatusCriteria.noChangePassword != null ? "checked=true" : ""}>没修改密码</input>
+							&nbsp;&nbsp;
 							<input id="startUpClient" name="startUpClient" type="checkbox" value="startUpClient" ${clientStatusCriteria.startUpClient != null ? "checked=true" : ""}>开机机器</input>
 							&nbsp;&nbsp;
 							<input id="showFetchKeywordStatus" name="showFetchKeywordStatus" type="checkbox" value="showFetchKeywordStatus"
