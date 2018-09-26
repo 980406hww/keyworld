@@ -1,5 +1,6 @@
 package com.keymanager.monitoring.service;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.enums.CollectMethod;
@@ -110,7 +111,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return customerKeywordDao.searchCustomerKeywordsForDailyReport(customerKeywordCriteria);
     }
 
-    public CustomerKeywordForCaptureTitle searchCustomerKeywordForCaptureTitle(String terminalType,String searchEngine) throws Exception {
+    // new
+    public List<CustomerKeywordForCaptureTitle> searchCustomerKeywordsForCaptureTitle(String terminalType,String searchEngine,Integer batchCount) throws Exception {
         QZCaptureTitleLog qzCaptureTitleLog = qzCaptureTitleLogService.getAvailableQZSetting(QZCaptureTitleLogStatusEnum.Processing.getValue(), terminalType);
         if (qzCaptureTitleLog == null) {
             qzCaptureTitleLog = qzCaptureTitleLogService.getAvailableQZSetting(QZCaptureTitleLogStatusEnum.New.getValue(), terminalType);
@@ -121,38 +123,46 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         if (qzCaptureTitleLog == null) {
             return null;
         }
-        Long customerKeywordUuid = customerKeywordDao.searchCustomerKeywordUuidForCaptureTitle(qzCaptureTitleLog,searchEngine);
-        if (customerKeywordUuid == null) {
+        List<Long> customerKeywordUuids = customerKeywordDao.searchCustomerKeywordsUuidForCaptureTitle(qzCaptureTitleLog, searchEngine, batchCount);
+        if (CollectionUtils.isEmpty(customerKeywordUuids)) {
             qzCaptureTitleLogService.completeQZCaptureTitleLog(qzCaptureTitleLog.getUuid());
             customerKeywordDao.deleteEmptyTitleCustomerKeyword(qzCaptureTitleLog,searchEngine);
             logger.info("deleteEmptyTitleCustomerKeyword:" + qzCaptureTitleLog.getCustomerUuid() + "-" + qzCaptureTitleLog.getGroup());
             return null;
         } else {
-            CustomerKeywordForCaptureTitle captureTitle = customerKeywordDao.searchCustomerKeywordForCaptureTitle(customerKeywordUuid);
+            List<CustomerKeywordForCaptureTitle> customerKeywordForCaptureTitles = new ArrayList<CustomerKeywordForCaptureTitle>();
             QZOperationType qzOperationType = qzOperationTypeService.selectById(qzCaptureTitleLog.getQzOperationTypeUuid());
             QZSetting qzSetting = qzSettingService.selectById(qzOperationType.getQzSettingUuid());
             String subDomainName = qzOperationType.getSubDomainName();
-            if(StringUtils.isNotEmpty(subDomainName)){
-                captureTitle.setWholeUrl(subDomainName);
-            }else {
-                captureTitle.setWholeUrl(qzSetting.getDomain());
+            for (Long customerKeywordUuid : customerKeywordUuids) {
+                CustomerKeywordForCaptureTitle captureTitle = customerKeywordDao.searchCustomerKeywordForCaptureTitle(customerKeywordUuid);
+                if(StringUtils.isNotEmpty(subDomainName)){
+                    captureTitle.setWholeUrl(subDomainName);
+                }else {
+                    captureTitle.setWholeUrl(qzSetting.getDomain());
+                }
+                updateCaptureTitleQueryTime((long)captureTitle.getUuid());
+                customerKeywordForCaptureTitles.add(captureTitle);
             }
-            updateCaptureTitleQueryTime((long)captureTitle.getUuid());
-            return captureTitle;
+            return customerKeywordForCaptureTitles;
         }
     }
 
-    public CustomerKeywordForCaptureTitle searchCustomerKeywordForCaptureTitle(String groupName, String terminalType,String searchEngine) throws Exception {
+    // new
+    public List<CustomerKeywordForCaptureTitle> searchCustomerKeywordsForCaptureTitle(String groupName, String terminalType,String searchEngine,Integer batchCount) throws Exception {
         QZCaptureTitleLog qzCaptureTitleLog = new QZCaptureTitleLog();
         qzCaptureTitleLog.setGroup(groupName);
         qzCaptureTitleLog.setTerminalType(terminalType);
-        Long customerKeywordUuid = customerKeywordDao.searchCustomerKeywordUuidForCaptureTitle(qzCaptureTitleLog,searchEngine);
-        CustomerKeywordForCaptureTitle captureTitle = null;
-        if(null != customerKeywordUuid) {
-            captureTitle = customerKeywordDao.searchCustomerKeywordForCaptureTitle(customerKeywordUuid);
-            updateCaptureTitleQueryTime((long)captureTitle.getUuid());
+        List<Long> customerKeywordUuids = customerKeywordDao.searchCustomerKeywordsUuidForCaptureTitle(qzCaptureTitleLog, searchEngine, batchCount);
+        List<CustomerKeywordForCaptureTitle> captureTitles = new ArrayList<CustomerKeywordForCaptureTitle>();
+        if(CollectionUtils.isNotEmpty(customerKeywordUuids)) {
+            for (Long customerKeywordUuid : customerKeywordUuids) {
+                CustomerKeywordForCaptureTitle captureTitle = customerKeywordDao.searchCustomerKeywordForCaptureTitle(customerKeywordUuid);
+                updateCaptureTitleQueryTime((long)captureTitle.getUuid());
+                captureTitles.add(captureTitle);
+            }
         }
-        return captureTitle;
+        return captureTitles;
     }
 
     private void updateCaptureTitleQueryTime(Long uuid) {
@@ -1011,6 +1021,17 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeyword.setCapturedTitle(1);
             customerKeywordDao.updateById(customerKeyword);
         }
+    }
+
+    // new
+    public void updateCustomerKeywordsTitle(List<SearchEngineResultItemVO> searchEngineResultItemVOs) {
+        List<SearchEngineResultItemVO> havingUrlSearchEngineResultItemVOs = new ArrayList<SearchEngineResultItemVO>();
+        for(SearchEngineResultItemVO searchEngineResultItemVO : searchEngineResultItemVOs){
+            if (searchEngineResultItemVO.getUrl() != null){
+                havingUrlSearchEngineResultItemVOs.add(searchEngineResultItemVO);
+            }
+        }
+        customerKeywordDao.updateCustomerKeywordsTitle(havingUrlSearchEngineResultItemVOs);
     }
 
     public void addCustomerKeywords(SearchEngineResultVO searchEngineResultVO, String terminalType, String userName) throws Exception {

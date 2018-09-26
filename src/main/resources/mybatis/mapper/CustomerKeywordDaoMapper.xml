@@ -658,13 +658,14 @@
             GROUP BY fOptimizeGroupName
     </select>
 
-    <select id="searchCustomerKeywordUuidForCaptureTitle" resultType="Long">
+    <select id="searchCustomerKeywordsUuidForCaptureTitle" resultType="Long">
         SELECT
-        ck.fUuid  AS `uuid`,
-        ck.fBearPawNumber AS `bearPawNumber`
+        ck.fUuid  AS `uuid`
         FROM
         t_customer_keyword ck
-        WHERE 1 = 1
+        WHERE ck.fCapturedTitle = 0
+        AND ck.fSearchEngine = #{searchEngine}
+        AND ck.fCaptureTitleQueryTime IS NULL
         <if test="qzCaptureTitleLog.terminalType != null and qzCaptureTitleLog.terminalType != ''">
             AND ck.fTerminalType = #{qzCaptureTitleLog.terminalType}
         </if>
@@ -674,11 +675,12 @@
         <if test="qzCaptureTitleLog.customerUuid != null and qzCaptureTitleLog.customerUuid != ''">
             AND ck.fCustomerUuid = #{qzCaptureTitleLog.customerUuid}
         </if>
-        AND ck.fCapturedTitle = 0
-        AND ck.fSearchEngine = #{searchEngine}
-        AND ck.fCaptureTitleQueryTime IS NULL
         AND (ck.fTitle IS NULL OR ck.fTitle = '')
-        LIMIT 1
+        /*LIMIT 1*/
+
+        <if test="batchCount != null and batchCount != 0">
+            limit batchCount
+        </if>
     </select>
 
     <select id="searchCustomerKeywordForCaptureTitle" resultType="com.keymanager.value.CustomerKeywordForCaptureTitle">
@@ -1049,6 +1051,18 @@
         AND ck.fOptimizeGroupName IN
         <foreach item = "item" collection = "noRankConfigs" open="(" separator="," close=")">
             #{item.value}
+        </foreach>
+    </update>
+
+    <update id="updateCustomerKeywordsTitle">
+        <foreach collection="searchEngineResultItemVOs" item="item" open="" separator=";" close="">
+        UPDATE t_customer_keyword SET
+            fUrl = #{item.url},
+            fTitle = #{item.title},
+            fInitialPosition = #{item.order}，
+            fCurrentPosition = #{item.order},
+            fCapturedTitle = 1
+            WHERE fUuid = #{item.uuid}
         </foreach>
     </update>
 
