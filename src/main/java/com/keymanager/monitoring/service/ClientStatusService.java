@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.keymanager.monitoring.entity.ClientUpgrade;
 import com.keymanager.monitoring.vo.CookieVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
@@ -1050,5 +1051,13 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
     public List<CookieVO> searchClientForAllotCookie(int clientCookieCount, String cookieGroupForBaidu, String cookieGroupFor360) {
         List<CookieVO> clientCookieCountList = clientStatusDao.searchClientForAllotCookie(clientCookieCount, cookieGroupForBaidu, cookieGroupFor360);
         return clientCookieCountList;
+    }
+
+    public Integer getUpgradingClientCount(ClientUpgrade clientUpgrade) {
+        return clientStatusDao.getUpgradingClientCount(clientUpgrade);
+    }
+
+    public void updateClientTargetVersion(ClientUpgrade clientUpgrade) {
+        clientStatusDao.updateClientTargetVersion(clientUpgrade);
     }
 }

@@ -437,6 +437,13 @@
         SELECT COUNT(1) FROM t_client_status WHERE fStartUpStatus = "Downloading"
     </select>
 
+    <select id="getUpgradingClientCount" parameterType="com.keymanager.monitoring.entity.ClientUpgrade" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM t_client_status
+        WHERE fVersion = #{clientUpgrade.version}
+        AND fRunningProgramType = #{clientUpgrade.type}
+        AND fTargetVersion = #{clientUpgrade.targetVersion}
+    </select>
+
     <update id="reopenClientStatus">
         UPDATE
             t_client_status
@@ -553,4 +560,12 @@
         WHERE cs.fSwitchGroupName LIKE '${cookieGroupFor360}%'
         AND (cc.fCookieCount &lt; #{clientCookieCount} OR cc.fCookieCount IS NULL)
     </select>
+
+    <update id="updateClientTargetVersion" parameterType="com.keymanager.monitoring.entity.ClientUpgrade">
+        UPDATE t_client_status
+        SET fTargetVersion = #{clientUpgrade.targetVersion}
+        WHERE fVersion = #{clientUpgrade.version}
+        AND fRunningProgramType = #{clientUpgrade.type}
+        LIMIT #{clientUpgrade.maxUpgradeCount}
+    </update>
 </mapper>
