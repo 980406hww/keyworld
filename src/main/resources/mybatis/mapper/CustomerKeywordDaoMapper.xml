@@ -679,7 +679,7 @@
         /*LIMIT 1*/
 
         <if test="batchCount != null and batchCount != 0">
-            limit batchCount
+            limit #{batchCount}
         </if>
     </select>
 
