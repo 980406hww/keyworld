@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface ClientUpgradeDao extends BaseMapper<ClientUpgrade> {
     List<ClientUpgrade> searchClientUpgrades(Page<ClientUpgrade> page);
+
+    List<ClientUpgrade> findClientUpgradeJobs();
 }

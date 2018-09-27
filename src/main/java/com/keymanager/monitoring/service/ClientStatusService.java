@@ -1060,4 +1060,8 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
     public void updateClientTargetVersion(ClientUpgrade clientUpgrade) {
         clientStatusDao.updateClientTargetVersion(clientUpgrade);
     }
+
+    public Integer getResidualClientCount(ClientUpgrade clientUpgrade) {
+        return clientStatusDao.getResidualClientCount(clientUpgrade);
+    }
 }
