@@ -721,6 +721,8 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
             return "yongtian";
         }else if(backendComputerID.indexOf("y") == 0){
             return "yiyang";
+        }else if(backendComputerID.indexOf("nuo") == 0){
+            return "nuobin";
         }else{
             return "263";
         }
