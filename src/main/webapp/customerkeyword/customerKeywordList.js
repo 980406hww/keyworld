@@ -430,7 +430,7 @@ function showSearchEngineChangeDialog(searchEngineCriteria) {
     $("#changeSearchEngineDialog").dialog("open");
     $('#changeSearchEngineDialog').window("resize",{top:$(document).scrollTop() + 200});
 }
-function updateCustomerKeywordStatus(status) {
+function updateCustomerkeywordStatus(status) {
     var customerKeyword = {};
     var customerKeywordUuids = getUuids();
     if (customerKeywordUuids.trim() === '') {
@@ -446,7 +446,7 @@ function updateCustomerKeywordStatus(status) {
     customerKeyword.uuids = customerKeywordUuids.split(",");
     customerKeyword.status = status;
     $.ajax({
-        url: '/internal/customerKeyword/updateCustomerKeywordStatus',
+        url: '/internal/customerKeyword/updateCustomerkeywordStatus',
         data: JSON.stringify(customerKeyword),
         headers: {
             'Accept': 'application/json',
@@ -693,6 +693,7 @@ function saveCustomerKeyword(customerKeyword, customerUuid) {
     $("#saveCustomerKeywordDialog").dialog("close");
 }
 function modifyCustomerKeyword(customerKeywordUuid, customerUuid) {
+    resetliItemColor();
     var saveCustomerKeywordDialog= $("#saveCustomerKeywordDialog");
     $.ajax({
         url: '/internal/customerKeyword/getCustomerKeywordByCustomerKeywordUuid/' + customerKeywordUuid,
@@ -1011,7 +1012,224 @@ function editOptimizePlanCount(customerUuid, uuids) {
             return;
         }
     }
-
+   //批量设置
+     function CustomerKeywordBatchUpdate(entryType) {
+        var CustomerUuids = getSelectedCustomerUuids();
+        if (CustomerUuids.indexOf(",") == -1) {
+            alert('请选择多个关键字进行设置');
+            return;
+        }
+         resetliItemColor();
+        $("#saveCustomerKeywordDialog").find('input[type=text],select,input[type=hidden]').each(function() {
+            $(this).val('');
+        });
+        $("#saveCustomerKeywordDialog").find('input[type=checkbox]').each(function() {
+            $(this).prop("checked",false);
+        });
+        $("#saveCustomerKeywordDialog").show();
+        if(entryType !== "fm" ){
+             $("#KeywordDiv").hide();
+        }
+        $("#saveCustomerKeywordDialog").dialog({
+            resizable: false,
+            title: "关键字批量设置(请将需要修改的字段点击标记为红色)",
+            width: 410,
+            maxHeight: 605,
+            modal: true,
+            onBeforeClose:function(){
+                $("#KeywordDiv").show();
+            },
+            buttons: [{
+                text: '保存',
+                iconCls: 'icon-ok',
+                handler: function () {
+                    if(isChecked("keyword")=="1" && $("#keyword").val()==""){
+                        alert("关键字不能为空");
+                        return;
+                    }else {
+                        saveChangeSetting(CustomerUuids);
+                    }
+                }
+            },
+                {
+                    text: '取消',
+                    iconCls: 'icon-cancel',
+                    handler: function () {
+                        $("#saveCustomerKeywordDialog").dialog("close");
+                    }
+                }]
+        });
+        $('#saveCustomerKeywordDialog').window("resize",{top:$(document).scrollTop() + 100});
+}
+//得到选中的uuid
+function getSelectedCustomerUuids() {
+    var CustomerUuids = '';
+    $.each($("input[name=uuid]:checkbox:checked"), function () {
+        if (CustomerUuids === '') {
+            CustomerUuids = $(this).val();
+        } else {
+            CustomerUuids = CustomerUuids + "," + $(this).val();
+        }
+    });
+    return CustomerUuids;
+}
+//将li标签的文字默认为黑色
+function resetliItemColor() {
+    $("li").each(function () {
+        $("li").css("color", "black");
+    });
+    $(".customerKeywordSpanClassa").each(function () {
+        $(".customerKeywordSpanClassa").css("color", "black");
+    });
+}
+function checkItem(self) {
+    var color = $(self).css("color");
+    if(color == "rgb(0, 0, 0)") {
+        $(self).css("color", "red");
+    } else {
+        $(self).css("color", "black");
+    }
+}
+function saveChangeSetting(CustomerUuids){
+    var KeywordDialogDiv = $("#saveCustomerKeywordDialog");
+    var keywordStatus = {};
+    keywordStatus.keyword = KeywordDialogDiv.find("#keyword").val();
+    keywordStatus.title = KeywordDialogDiv.find("#title").val();
+    keywordStatus.bearPawNumber = KeywordDialogDiv.find("#bearPawNumber").val();
+    keywordStatus.url = KeywordDialogDiv.find("#url").val();
+    keywordStatus.originalUrl = KeywordDialogDiv.find("#originalUrl").val();
+    keywordStatus.optimizePlanCount = KeywordDialogDiv.find("#optimizePlanCount").val();
+    keywordStatus.optimizeGroupName = KeywordDialogDiv.find("#optimizeGroupName").val();
+    keywordStatus.initialIndexCount = KeywordDialogDiv.find("#initialIndexCount").val();
+    keywordStatus.initialPosition = KeywordDialogDiv.find("#initialPosition").val();
+    keywordStatus.positionFirstFee = KeywordDialogDiv.find("#positionFirstFee").val();
+    keywordStatus.positionSecondFee = KeywordDialogDiv.find("#positionSecondFee").val();
+    keywordStatus.positionThirdFee = KeywordDialogDiv.find("#positionThirdFee").val();
+    keywordStatus.positionForthFee = KeywordDialogDiv.find("#positionForthFee").val();
+    keywordStatus.positionFifthFee = KeywordDialogDiv.find("#positionFifthFee").val();
+    keywordStatus.positionFirstPageFee = KeywordDialogDiv.find("#positionFirstPageFee").val();
+    keywordStatus.serviceProvider = KeywordDialogDiv.find("#serviceProvider").val();
+    keywordStatus.collectMethod = KeywordDialogDiv.find("#collectMethod").val();
+    keywordStatus.searchEngine = KeywordDialogDiv.find("#searchEngine").val();
+    keywordStatus.sequence = KeywordDialogDiv.find("#sequence").val();
+    keywordStatus.orderNumber = KeywordDialogDiv.find("#orderNumber").val();
+    keywordStatus.paymentStatus = KeywordDialogDiv.find("#paymentStatus").val();
+    keywordStatus.clickUrl = $("input[name='clickUrl']:checked").val();
+    keywordStatus.recommendKeywords = KeywordDialogDiv.find("#recommendKeywords").val();
+    keywordStatus.negativeKeywords = KeywordDialogDiv.find("#negativeKeywords").val();
+    keywordStatus.excludeKeywords = KeywordDialogDiv.find("#excludeKeywords").val();
+    keywordStatus.showPage = KeywordDialogDiv.find("#showPage").val();
+    keywordStatus.relatedKeywordPercentage = KeywordDialogDiv.find("#relatedKeywordPercentage").val();
+    keywordStatus.remarks = KeywordDialogDiv.find("#remarks").val();
+    keywordStatus.positionFirstCost = KeywordDialogDiv.find("#positionFirstCost").val();
+    keywordStatus.positionSecondCost = KeywordDialogDiv.find("#positionSecondCost").val();
+    keywordStatus.positionThirdCost = KeywordDialogDiv.find("#positionThirdCost").val();
+    keywordStatus.positionForthCost = KeywordDialogDiv.find("#positionForthCost").val();
+    keywordStatus.positionFifthCost = KeywordDialogDiv.find("#positionFifthCost").val();
+    keywordStatus.operateSelectKeyword = KeywordDialogDiv.find("#operateSelectKeyword:checked").val() === '1' ? 1 : 0;
+    keywordStatus.operateRelatedKeyword = KeywordDialogDiv.find("#operateRelatedKeyword:checked").val() === '1' ? 1 : 0;
+    keywordStatus.operateRecommendKeyword = KeywordDialogDiv.find("#operateRecommendKeyword:checked").val() === '1' ? 1 : 0;
+    keywordStatus.operateSearchAfterSelectKeyword = KeywordDialogDiv.find("#operateSearchAfterSelectKeyword:checked").val() === '1' ? 1 : 0;
+    if(CustomerUuids != null) {
+        var fCustomerUuids = CustomerUuids;
+        var keywordChecks = {};
+        keywordChecks.keyword =isChecked("keyword");
+        keywordChecks.title = isChecked("title");
+        keywordChecks.bearPawNumber = isChecked("bearPawNumber");
+        keywordChecks.url = isChecked("url");
+        keywordChecks.originalUrl = isChecked("originalUrl");
+        keywordChecks.optimizePlanCount = isChecked("optimizePlanCount");
+        keywordChecks.optimizeGroupName =isChecked("optimizeGroupName");
+        keywordChecks.initialIndexCount = isChecked("initialIndexCount");
+        keywordChecks.initialPosition =isChecked("initialPosition");
+        keywordChecks.positionFirstFee =isChecked("positionFirstFee");
+        keywordChecks.positionSecondFee = isChecked("positionSecondFee");
+        keywordChecks.positionThirdFee = isChecked("positionThirdFee");
+        keywordChecks.positionForthFee = isChecked("positionForthFee");
+        keywordChecks.positionFifthFee = isChecked("positionFifthFee");
+        keywordChecks.positionFirstPageFee =isChecked("positionFirstPageFee");
+        keywordChecks.serviceProvider = isChecked("serviceProvider");
+        keywordChecks.collectMethod =isChecked("collectMethod");
+        keywordChecks.searchEngine =isChecked("searchEngine");
+        keywordChecks.sequence =isChecked("sequence");
+        keywordChecks.orderNumber = isChecked("orderNumber");
+        keywordChecks.paymentStatus = isChecked("paymentStatus");
+        keywordChecks.clickUrl = isChecked($("input[name='clickUrl']:checked").val());
+        keywordChecks.recommendKeywords = isChecked("recommendKeywords");
+        keywordChecks.negativeKeywords = isChecked("negativeKeywords");
+        keywordChecks.excludeKeywords = isChecked("excludeKeywords");
+        keywordChecks.showPage =  isChecked("showPage");
+        keywordChecks.relatedKeywordPercentage = isChecked("relatedKeywordPercentage");
+        keywordChecks.remarks =isChecked("remarks");
+        keywordChecks.positionFirstCost = isChecked("positionFirstCost");
+        keywordChecks.positionSecondCost = isChecked("positionSecondCost");
+        keywordChecks.positionThirdCost = isChecked("positionThirdCost");
+        keywordChecks.positionForthCost = isChecked("positionForthCost");
+        keywordChecks.positionFifthCost = isChecked("positionFifthCost");
+        keywordChecks.operateSelectKeyword = isChecked("operateSelectKeyword") === '1' ? 1 : 0;
+        keywordChecks.operateRelatedKeyword =isChecked("operateRelatedKeyword") === '1' ? 1 : 0;
+        keywordChecks.operateRecommendKeyword = isChecked("operateRecommendKeyword") === '1' ? 1 : 0;
+        keywordChecks.operateSearchAfterSelectKeyword = isChecked("operateSearchAfterSelectKeyword") === '1' ? 1 : 0;
+        var postData = {};
+        postData.keywordChecks = keywordChecks;
+        postData.keywordStatus = keywordStatus;
+        postData.customerUuids = fCustomerUuids;
+        $.ajax({
+            url: '/internal/customerKeyword/batchUpdateKeywordStatus',
+            data: JSON.stringify(postData),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            timeout: 5000,
+            type: 'POST',
+            success: function (result) {
+                if(result){
+                    $().toastmessage('showSuccessToast', "更新成功",true);
+                }else{
+                    $().toastmessage('showErrorToast', "更新失败");
+                }
+                $("#saveCustomerKeywordDialog").dialog("close");
+            },
+            error: function () {
+                $().toastmessage('showErrorToast', "更新失败");
+                $("#saveCustomerKeywordDialog").dialog("close");
+            }
+        });
+    } else {
+        keywordStatus.CustomerUuid = settingDialogDiv.find("#uuid").val();
+        $.ajax({
+            url: '/internal/customerKeyword/saveCustomerKeyword',
+            data: JSON.stringify(keywordStatus),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            timeout: 5000,
+            type: 'POST',
+            success: function (result) {
+                if(result){
+                    $().toastmessage('showSuccessToast', "更新成功");
+                }else{
+                    $().toastmessage('showErrorToast', "更新失败");
+                }
+                $("#saveCustomerKeywordDialog").dialog("close");
+            },
+            error: function () {
+                $().toastmessage('showErrorToast', "更新失败");
+                $("#saveCustomerKeywordDialog").dialog("close");
+            }
+        });
+    }
+}
+function isChecked(id) {
+    var color = $("#saveCustomerKeywordDialog").find("#" + id).parent().css("color");
+    if(color == "rgb(255, 0, 0)") {
+        return "1";
+    } else {
+        return "0";
+    }
+}
 
 
 

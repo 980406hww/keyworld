@@ -3,6 +3,7 @@ package com.keymanager.monitoring.controller.rest.internal;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.criteria.NegativeListCriteria;
 import com.keymanager.monitoring.entity.NegativeList;
+import com.keymanager.monitoring.service.NegativeListCacheService;
 import com.keymanager.monitoring.service.NegativeListService;
 import com.keymanager.util.TerminalTypeMapping;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -26,6 +27,9 @@ public class NegativeListRestController {
 
     @Autowired
     private NegativeListService negativeListService;
+
+    @Autowired
+    private NegativeListCacheService negativeListCacheService;
 
     @RequiresPermissions("/internal/negativelist/searchNegativeLists")
     @RequestMapping(value = "/searchNegativeLists", method = RequestMethod.GET)
@@ -105,5 +109,17 @@ public class NegativeListRestController {
             logger.error(e.getMessage());
             return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @RequiresPermissions("/internal/negativelist/evictAllNegativeListCache")
+    @RequestMapping(value = "/evictAllNegativeListCache", method = RequestMethod.GET)
+    public ResponseEntity<?> evictAllNegativeListCache(HttpServletRequest request) {
+        try {
+            negativeListCacheService.evictAllNegativeListCache();
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
     }
 }

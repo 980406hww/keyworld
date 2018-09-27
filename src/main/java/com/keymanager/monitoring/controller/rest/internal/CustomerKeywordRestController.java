@@ -8,6 +8,7 @@ import com.keymanager.monitoring.enums.EntryTypeEnum;
 import com.keymanager.monitoring.excel.operator.CustomerKeywordInfoExcelWriter;
 import com.keymanager.monitoring.service.*;
 import com.keymanager.monitoring.vo.CodeNameVo;
+import com.keymanager.monitoring.vo.KeywordStatusBatchUpdateVO;
 import com.keymanager.util.TerminalTypeMapping;
 import com.keymanager.util.Utils;
 import org.apache.commons.lang3.StringUtils;
@@ -25,8 +26,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.BufferedOutputStream;
-import java.io.OutputStream;
 import java.util.*;
 
 @RestController
@@ -516,4 +515,16 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 			return new ResponseEntity<Object>(false , HttpStatus.BAD_REQUEST);
 		}
 	}
+
+	@RequiresPermissions("/internal/customerKeyword/saveCustomerKeyword")
+    @RequestMapping(value="batchUpdateKeywordStatus",method = RequestMethod.POST)
+    public ResponseEntity<?> batchUpdateKeywordStatus(@RequestBody KeywordStatusBatchUpdateVO keywordStatusBatchUpdateVO){
+        try {
+          customerKeywordService.batchUpdateKeywordStatus(keywordStatusBatchUpdateVO);
+          return new ResponseEntity<Object>(true,HttpStatus.OK);
+        }catch (Exception e){
+        	logger.error(e.getMessage());
+        	return new ResponseEntity<Object>(false,HttpStatus.BAD_REQUEST);
+		}
+    }
 }
