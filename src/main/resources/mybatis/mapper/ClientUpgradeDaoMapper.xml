@@ -14,6 +14,7 @@
             fUpdateTime AS 'updateTime',
             fCreateTime AS 'createTime'
         FROM t_client_upgrade
+        WHERE fTerminalType = #{terminalType}
     </select>
 
     <select id="findClientUpgradeJobs" resultType="com.keymanager.monitoring.entity.ClientUpgrade">
@@ -32,4 +33,10 @@
         WHERE fStatus = 1
         AND fResidualUpgradeCount &gt; 0
     </select>
+
+    <update id="updateClientUpgradeStatus">
+        UPDATE t_client_upgrade
+        SET fStatus = #{status}
+        WHERE fUuid = #{uuid}
+    </update>
 </mapper>

@@ -20,13 +20,15 @@ public class ClientUpgradeService extends ServiceImpl<ClientUpgradeDao, ClientUp
     @Autowired
     private ClientStatusService clientStatusService;
 
-    public Page<ClientUpgrade> searchClientUpgrades(Page<ClientUpgrade> page) {
-        page.setRecords(clientUpgradeDao.searchClientUpgrades(page));
+    public Page<ClientUpgrade> searchClientUpgrades(Page<ClientUpgrade> page, String terminalType) {
+        page.setRecords(clientUpgradeDao.searchClientUpgrades(page, terminalType));
         return page;
     }
 
-    public void saveClientUpgrade(ClientUpgrade clientUpgrade) throws Exception {
+    public void saveClientUpgrade(String terminalType, ClientUpgrade clientUpgrade) throws Exception {
         if(clientUpgrade.getUuid() == null) {
+            clientUpgrade.setTerminalType(terminalType);
+            clientUpgrade.setResidualUpgradeCount(1);
             clientUpgrade.setCreateTime(new Date());
             clientUpgradeDao.insert(clientUpgrade);
         } else {
@@ -54,5 +56,9 @@ public class ClientUpgradeService extends ServiceImpl<ClientUpgradeDao, ClientUp
                 clientUpgradeDao.updateById(clientUpgrade);
             }
         }
+    }
+
+    public void updateClientUpgradeStatus(Long uuid, Boolean status) {
+        clientUpgradeDao.updateClientUpgradeStatus(uuid, status);
     }
 }
