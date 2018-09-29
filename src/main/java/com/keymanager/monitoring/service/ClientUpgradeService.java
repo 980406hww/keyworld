@@ -35,21 +35,23 @@ public class ClientUpgradeService extends ServiceImpl<ClientUpgradeDao, ClientUp
     }
 
     public void clientAutoUpgrade() throws Exception {
-        // 获取升级任务
-        ClientUpgrade clientUpgrade = new ClientUpgrade();
-        clientUpgrade.setStatus(true);
-        List<ClientUpgrade> clientUpgradeList = clientUpgradeDao.selectList(new EntityWrapper<ClientUpgrade>(clientUpgrade));
-        for (ClientUpgrade cu : clientUpgradeList) {
+        List<ClientUpgrade> clientUpgradeList = clientUpgradeDao.findClientUpgradeJobs();
+        for (ClientUpgrade clientUpgrade : clientUpgradeList) {
             // 获取正在升级的机器数量
-            Integer clientCount = clientStatusService.getUpgradingClientCount(clientUpgrade);
-            if(clientCount == null) {
-                clientStatusService.updateClientTargetVersion(cu);
+            Integer upgradingCount = clientStatusService.getUpgradingClientCount(clientUpgrade);
+            // 获取剩余升级机器数量
+            Integer residualCount = clientStatusService.getResidualClientCount(clientUpgrade);
+
+            upgradingCount = clientUpgrade.getMaxUpgradeCount() - upgradingCount;
+            if(upgradingCount > 0 && residualCount > 0) {
+                clientUpgrade.setResidualUpgradeCount(residualCount - upgradingCount);
+                clientUpgradeDao.updateById(clientUpgrade);
+                // 修改目标版本号
+                clientUpgrade.setMaxUpgradeCount(upgradingCount);
+                clientStatusService.updateClientTargetVersion(clientUpgrade);
             } else {
-                clientCount = cu.getMaxUpgradeCount() - clientCount;
-                if(clientCount > 0) {
-                    cu.setMaxUpgradeCount(clientCount);
-                    clientStatusService.updateClientTargetVersion(cu);
-                }
+                clientUpgrade.setResidualUpgradeCount(residualCount);
+                clientUpgradeDao.updateById(clientUpgrade);
             }
         }
     }

@@ -437,11 +437,20 @@
         SELECT COUNT(1) FROM t_client_status WHERE fStartUpStatus = "Downloading"
     </select>
 
-    <select id="getUpgradingClientCount" parameterType="com.keymanager.monitoring.entity.ClientUpgrade" resultType="java.lang.Integer">
+    <select id="getUpgradingClientCount" parameterType="com.keymanager.monitoring.entity.ClientUpgrade" resultType="int">
         SELECT COUNT(1) FROM t_client_status
         WHERE fVersion = #{clientUpgrade.version}
-        AND fRunningProgramType = #{clientUpgrade.type}
+        AND fRunningProgramType = #{clientUpgrade.programType}
         AND fTargetVersion = #{clientUpgrade.targetVersion}
+        AND fTerminalType = #{clientUpgrade.terminalType}
+    </select>
+
+    <select id="getResidualClientCount" parameterType="com.keymanager.monitoring.entity.ClientUpgrade" resultType="int">
+        SELECT COUNT(1) FROM t_client_status
+        WHERE fVersion = #{clientUpgrade.version}
+        AND fRunningProgramType = #{clientUpgrade.programType}
+        AND fTargetVersion &lt;&gt; #{clientUpgrade.targetVersion}
+        AND fTerminalType = #{clientUpgrade.terminalType}
     </select>
 
     <update id="reopenClientStatus">
@@ -565,7 +574,9 @@
         UPDATE t_client_status
         SET fTargetVersion = #{clientUpgrade.targetVersion}
         WHERE fVersion = #{clientUpgrade.version}
-        AND fRunningProgramType = #{clientUpgrade.type}
+        AND fRunningProgramType = #{clientUpgrade.programType}
+        AND fTerminalType = #{clientUpgrade.terminalType}
+        AND fTargetVersion &lt;&gt; #{clientUpgrade.targetVersion}
         LIMIT #{clientUpgrade.maxUpgradeCount}
     </update>
 </mapper>

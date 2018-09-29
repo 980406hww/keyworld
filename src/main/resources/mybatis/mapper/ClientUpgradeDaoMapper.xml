@@ -4,13 +4,32 @@
     <select id="searchClientUpgrades" resultType="com.keymanager.monitoring.entity.ClientUpgrade">
         SELECT
             fUuid AS 'uuid',
-            fType AS 'type',
+            fProgramType AS 'programType',
+            fTerminalType AS 'terminalType',
             fVersion AS 'version',
             fTargetVersion AS 'targetVersion',
             fStatus AS 'status',
             fMaxUpgradeCount AS 'maxUpgradeCount',
+            fResidualUpgradeCount AS 'residualUpgradeCount',
             fUpdateTime AS 'updateTime',
             fCreateTime AS 'createTime'
         FROM t_client_upgrade
+    </select>
+
+    <select id="findClientUpgradeJobs" resultType="com.keymanager.monitoring.entity.ClientUpgrade">
+        SELECT
+            fUuid AS 'uuid',
+            fTerminalType AS 'terminalType',
+            fProgramType AS 'programType',
+            fVersion AS 'version',
+            fTargetVersion AS 'targetVersion',
+            fStatus AS 'status',
+            fMaxUpgradeCount AS 'maxUpgradeCount',
+            fResidualUpgradeCount AS 'residualUpgradeCount',
+            fUpdateTime AS 'updateTime',
+            fCreateTime AS 'createTime'
+        FROM t_client_upgrade
+        WHERE fStatus = 1
+        AND fResidualUpgradeCount &gt; 0
     </select>
 </mapper>

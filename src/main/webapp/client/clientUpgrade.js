@@ -75,10 +75,12 @@ function showClientUpgrade(uuid) {
             success: function (data) {
                 if (data != null) {
                     var clientUpgradeForm = $("#clientUpgradeForm");
-                    clientUpgradeForm.find("#type").val(data.type);
+                    clientUpgradeForm.find("#terminalType").val(data.terminalType);
+                    clientUpgradeForm.find("#programType").val(data.programType);
                     clientUpgradeForm.find("#version").val(data.version);
                     clientUpgradeForm.find("#targetVersion").val(data.targetVersion);
                     clientUpgradeForm.find("#maxUpgradeCount").val(data.maxUpgradeCount);
+                    clientUpgradeForm.find("#residualUpgradeCount").val(data.residualUpgradeCount);
                     clientUpgradeForm.find("#status").val("" + data.status);
                 } else {
                     $().toastmessage('showErrorToast', "获取信息失败");
@@ -126,18 +128,22 @@ function showClientUpgrade(uuid) {
 function saveClientUpgrade(uuid) {
     var clientUpgradeObj = {};
     clientUpgradeObj.uuid = uuid;
-    var type = $("#clientUpgradeForm").find("#type").val();
+    var terminalType = $("#clientUpgradeForm").find("#terminalType").val();
+    var programType = $("#clientUpgradeForm").find("#programType").val();
     var version = $("#clientUpgradeForm").find("#version").val();
     var targetVersion = $("#clientUpgradeForm").find("#targetVersion").val();
     var maxUpgradeCount = $("#clientUpgradeForm").find("#maxUpgradeCount").val();
+    var residualUpgradeCount = $("#clientUpgradeForm").find("#residualUpgradeCount").val();
     var status = $("#clientUpgradeForm").find("#status").val();
-    if(type == "" || version == "" || targetVersion == "" || maxUpgradeCount == "" || status == "") {
+    if(terminalType == "" || programType == "" || version == "" || targetVersion == "" || maxUpgradeCount == "" || residualUpgradeCount == "" || status == "") {
         alert("请完善升级信息");
     }
-    clientUpgradeObj.type = type;
+    clientUpgradeObj.terminalType = terminalType;
+    clientUpgradeObj.programType = programType;
     clientUpgradeObj.version = version;
     clientUpgradeObj.targetVersion = targetVersion;
     clientUpgradeObj.maxUpgradeCount = maxUpgradeCount;
+    clientUpgradeObj.residualUpgradeCount = residualUpgradeCount;
     clientUpgradeObj.status = status;
     $.ajax({
         url: '/internal/clientUpgrade/saveClientUpgrade',

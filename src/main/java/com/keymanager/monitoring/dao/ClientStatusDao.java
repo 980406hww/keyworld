@@ -68,6 +68,8 @@ public interface ClientStatusDao extends BaseMapper<ClientStatus> {
 
     Integer getUpgradingClientCount(@Param("clientUpgrade") ClientUpgrade clientUpgrade);
 
+    Integer getResidualClientCount(@Param("clientUpgrade") ClientUpgrade clientUpgrade);
+
     void reopenClientStatus(@Param("clientIDs")List<String> clientIDs, @Param("downloadProgramType")String downloadProgramType, @Param("switchGroupName")String switchGroupName);
 
     void updateStartUpStatusForCompleted(@Param("clientIDs")List<String> clientIDs);
