@@ -449,7 +449,7 @@
         SELECT COUNT(1) FROM t_client_status
         WHERE fVersion = #{clientUpgrade.version}
         AND fRunningProgramType = #{clientUpgrade.programType}
-        AND fTargetVersion &lt;&gt; #{clientUpgrade.targetVersion}
+        AND (fTargetVersion is null or fTargetVersion &lt;&gt; #{clientUpgrade.targetVersion})
         AND fTerminalType = #{clientUpgrade.terminalType}
     </select>
 
@@ -576,7 +576,7 @@
         WHERE fVersion = #{clientUpgrade.version}
         AND fRunningProgramType = #{clientUpgrade.programType}
         AND fTerminalType = #{clientUpgrade.terminalType}
-        AND fTargetVersion &lt;&gt; #{clientUpgrade.targetVersion}
+        AND (fTargetVersion is null or fTargetVersion &lt;&gt; #{clientUpgrade.targetVersion})
         LIMIT #{clientUpgrade.maxUpgradeCount}
     </update>
 </mapper>
