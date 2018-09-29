@@ -25,13 +25,12 @@
 			<td align="center" width="10">
 				<input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/>
 			</td>
-			<td align="center" width=60>终端类型</td>
 			<td align="center" width=60>程序类型</td>
 			<td align="center" width=50>当前版本</td>
 			<td align="center" width=50>目标版本</td>
 			<td align="center" width=50>最大升级数</td>
-			<td align="center" width=50>剩余升级数</td>
-			<td align="center" width=40>升级状态</td>
+			<td align="center" width=50>升级情况</td>
+			<td align="center" width=40>任务状态</td>
 			<td align="center" width=60>创建时间</td>
 			<td align="center" width=50>操作</td>
 		</tr>
@@ -43,17 +42,17 @@
 		<c:forEach items="${page.records}" var="info" varStatus="status">
 			<tr align="left" height=30  <c:if test="${status.index%2==0}">bgcolor="#eeeeee"</c:if> >
 				<td align="center" width=13 align="center"><input type="checkbox" name="uuid" value="${info.uuid}" onclick="decideSelectAll()"/></td>
-				<td align="center" width=60>${info.terminalType}</td>
 				<td align="center" width=60>${info.programType}</td>
 				<td align="center" width=50>${info.version}</td>
 				<td align="center" width=50>${info.targetVersion}</td>
 				<td align="center" width=50>${info.maxUpgradeCount}</td>
-				<td align="center" width=50>${info.residualUpgradeCount}</td>
-				<td align="center" width=40>${info.status == true ? "激活" : "暂停"}</td>
+				<td align="center" width=50>${info.residualUpgradeCount > 0 ? "Processing" : "Completed"}</td>
+				<td align="center" width=40>${info.status == true ? "开始" : "暂停"}</td>
 				<td align="center" width=60><fmt:formatDate  value="${info.createTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
 				<td align="center" width=50>
                     <shiro:hasPermission name="/internal/clientUpgrade/saveClientUpgrade">
-					<a href="javascript:showClientUpgrade(${info.uuid})">修改</a>
+					<a href="javascript:updateClientUpgradeStatus('${info.uuid}','${info.status}')">${info.status == true ? "暂停" : "开始"}</a>
+					| <a href="javascript:showClientUpgrade(${info.uuid})">修改</a>
                     </shiro:hasPermission>
                     <shiro:hasPermission name="/internal/clientUpgrade/deleteClientUpgrade">
 					| <a href="javascript:deleteClientUpgrade(${info.uuid})">删除</a>
@@ -93,12 +92,13 @@
 	<form id="clientUpgradeForm" style="margin-bottom: 0px;" method="post" action="">
 		<table style="font-size:14px;" cellpadding="5">
 			<tr>
-				<td align="right">终端类型<label style="color: red">*</label>：</td>
-				<td><input type="text" id="terminalType" style="width:150px;"></td>
-			</tr>
-			<tr>
 				<td align="right">程序类型<label style="color: red">*</label>：</td>
-				<td><input type="text" id="programType" style="width:150px;"></td>
+				<td>
+					<select id="programType">
+						<option value="New">New</option>
+						<option value="Old">Old</option>
+					</select>
+				</td>
 			</tr>
 			<tr>
 				<td align="right">当前版本<label style="color: red">*</label>：</td>
@@ -111,10 +111,6 @@
 			<tr>
 				<td align="right">最大升级数<label style="color: red">*</label>：</td>
 				<td><input type="text" id="maxUpgradeCount" style="width:150px;"></td>
-			</tr>
-			<tr>
-				<td align="right">剩余升级数<label style="color: red">*</label>：</td>
-				<td><input type="text" id="residualUpgradeCount" style="width:150px;" placeholder="填写大于0的任意数字即可"></td>
 			</tr>
 			<tr>
 				<td align="right">升级状态<label style="color: red">*</label>：</td>

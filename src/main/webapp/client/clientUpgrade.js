@@ -128,22 +128,18 @@ function showClientUpgrade(uuid) {
 function saveClientUpgrade(uuid) {
     var clientUpgradeObj = {};
     clientUpgradeObj.uuid = uuid;
-    var terminalType = $("#clientUpgradeForm").find("#terminalType").val();
     var programType = $("#clientUpgradeForm").find("#programType").val();
     var version = $("#clientUpgradeForm").find("#version").val();
     var targetVersion = $("#clientUpgradeForm").find("#targetVersion").val();
     var maxUpgradeCount = $("#clientUpgradeForm").find("#maxUpgradeCount").val();
-    var residualUpgradeCount = $("#clientUpgradeForm").find("#residualUpgradeCount").val();
     var status = $("#clientUpgradeForm").find("#status").val();
-    if(terminalType == "" || programType == "" || version == "" || targetVersion == "" || maxUpgradeCount == "" || residualUpgradeCount == "" || status == "") {
+    if(programType == "" || version == "" || targetVersion == "" || maxUpgradeCount == "" || status == "") {
         alert("请完善升级信息");
     }
-    clientUpgradeObj.terminalType = terminalType;
     clientUpgradeObj.programType = programType;
     clientUpgradeObj.version = version;
     clientUpgradeObj.targetVersion = targetVersion;
     clientUpgradeObj.maxUpgradeCount = maxUpgradeCount;
-    clientUpgradeObj.residualUpgradeCount = residualUpgradeCount;
     clientUpgradeObj.status = status;
     $.ajax({
         url: '/internal/clientUpgrade/saveClientUpgrade',
@@ -171,6 +167,32 @@ function deleteClientUpgrade(uuid) {
     if (confirm("确定要删除这条信息吗?") == false) return;
     $.ajax({
         url: '/internal/clientUpgrade/deleteClientUpgrade/' + uuid,
+        type: 'POST',
+        success: function (result) {
+            if (result) {
+                $().toastmessage('showSuccessToast', "操作成功", true);
+            } else {
+                $().toastmessage('showErrorToast', "操作失败");
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "操作失败");
+        }
+    });
+}
+
+function updateClientUpgradeStatus(uuid, status) {
+    var clientUpgradeObj = {};
+    clientUpgradeObj.uuid = parseInt(uuid);
+    clientUpgradeObj.status = status == "true" ? false : true;
+    $.ajax({
+        url: '/internal/clientUpgrade/updateClientUpgradeStatus',
+        data: JSON.stringify(clientUpgradeObj),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        timeout: 5000,
         type: 'POST',
         success: function (result) {
             if (result) {
