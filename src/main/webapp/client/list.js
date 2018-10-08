@@ -12,6 +12,11 @@
     window.onresize = function(){
         alignTableHeader();
     }
+
+    var menuHeight = $(".venus-menu").height();
+    $("#searchClientStatusForm").css("margin-top", menuHeight + 5);
+    $("#clientStatusDiv").css("margin-top", menuHeight + 171);;
+
 });
 function pageLoad() {
     var searchCustomerForm = $("#searchClientStatusForm");

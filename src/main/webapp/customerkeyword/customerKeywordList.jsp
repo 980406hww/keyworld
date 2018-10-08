@@ -544,6 +544,9 @@
     $(function () {
         initPaging();
         initNoPositionChecked();
+
+        var menuHeight = $(".venus-menu").height();
+        $("#customerKeywordDiv").css("margin-top", menuHeight + 195);
     });
 
     function initPaging() {
