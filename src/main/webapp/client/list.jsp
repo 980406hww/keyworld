@@ -195,10 +195,10 @@
 								|<a target="_blank" href="javascript:clientStatusBatchUpdate()">批量设置</a>
 							</shiro:hasPermission>
 							<shiro:hasPermission name="/internal/clientstatus/changeStatus">
-								|<a target="_blank" href="javascript:changeStatusStart()">批量开始</a>
+								|<a target="_blank" href="javascript:batchChangeStatus(true)">批量开始</a>
 							</shiro:hasPermission>
 							<shiro:hasPermission name="/internal/clientstatus/changeStatus">
-								|<a target="_blank" href="javascript:changeStatusStop()">批量暂停</a>
+								|<a target="_blank" href="javascript:batchChangeStatus(false)">批量暂停</a>
 							</shiro:hasPermission>
 							<shiro:hasPermission name="/internal/clientstatus/changeTerminalType">
 								|<a target="_blank" href="javascript:batchChangeTerminalType()">批量变更终端类型</a>

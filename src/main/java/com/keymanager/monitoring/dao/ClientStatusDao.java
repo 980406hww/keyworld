@@ -74,4 +74,6 @@ public interface ClientStatusDao extends BaseMapper<ClientStatus> {
     void batchUpdateClientStatus(@Param("clientIDs")String[] clientIDs, @Param("cs")ClientStatus cs, @Param("clientStatus")ClientStatus clientStatus);
 
     List<CookieVO> searchClientForAllotCookie(@Param("clientCookieCount")int clientCookieCount, @Param("cookieGroupForBaidu")String cookieGroupForBaidu, @Param("cookieGroupFor360")String cookieGroupFor360);
+
+    void batchChangeStatus(@Param("clientIds")String[] clientIds, @Param("valid")Boolean valid);
 }

@@ -1262,43 +1262,26 @@ function batchChangeTerminalType(){
     });
 }
 
-function changeStatusStart() {
+function batchChangeStatus(status) {
     var clientIDs = getSelectedClientIDs();
     if (clientIDs.indexOf(",") == -1) {
         alert('请选择多个终端进行设置');
         return;
     }
-    if (confirm("确定要批量开始监控这些终端吗?") == false) {
-        return;
-    }
-    $.ajax({
-        url: '/internal/clientstatus/changeStatusStart/' + clientIDs,
-        type: 'POST',
-        success: function (result) {
-            if (result) {
-                $().toastmessage('showSuccessToast', "操作成功",true);
-            } else {
-                $().toastmessage('showErrorToast', "操作失败");
-            }
-        },
-        error: function () {
-            $().toastmessage('showErrorToast', "操作失败");
+    if (status){
+        if (confirm("确定要批量开始监控这些终端吗?") == false) {
+            return;
         }
-    });
-}
+    }else {
+        if (confirm("确定要批量停止监控这些终端吗?") == false) {
+            return;
+        }
+    }
 
-function changeStatusStop() {
-    var clientIDs = getSelectedClientIDs();
-    if (clientIDs.indexOf(",") == -1) {
-        alert('请选择多个终端进行设置');
-        return;
-    }
-    if (confirm("确定要批量停止监控这些终端吗?") == false) {
-        return;
-    }
     $.ajax({
-        url: '/internal/clientstatus/changeStatusStop/' + clientIDs,
+        url: '/internal/clientstatus/batchChangeStatus',
         type: 'POST',
+        data: {"clientIDs":clientIDs,"status":status},
         success: function (result) {
             if (result) {
                 $().toastmessage('showSuccessToast', "操作成功",true);

@@ -552,4 +552,13 @@
         WHERE cs.fSwitchGroupName LIKE '${cookieGroupFor360}%'
         AND (cc.fCookieCount &lt; #{clientCookieCount} OR cc.fCookieCount IS NULL)
     </select>
+
+    <update id="batchChangeStatus">
+        UPDATE t_client_status
+        SET fValid = #{valid}
+        WHERE fClientID IN
+        <foreach collection="clientIds" item="clientID" open="(" close=")" separator=",">
+            #{clientID}
+        </foreach>
+    </update>
 </mapper>

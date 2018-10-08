@@ -3,11 +3,7 @@ package com.keymanager.monitoring.service;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.keymanager.monitoring.vo.CookieVO;
 import org.apache.commons.collections.CollectionUtils;
@@ -1052,21 +1048,18 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
         return clientCookieCountList;
     }
 
-    public void changeStatusStart(String clientIDs) {
-        String[] clientID = clientIDs.split(",");
-        for (int i=0;i<clientID.length;i++){
-            ClientStatus clientStatus = clientStatusDao.selectById(clientID[i]);
-            clientStatus.setValid(true);
-            clientStatusDao.updateById(clientStatus);
-        }
+    public void batchChangeStatus(String clientIDs,Boolean status) {
+        String[] clientIds = clientIDs.split(",");
+        clientStatusDao.batchChangeStatus(clientIds,status);
     }
 
-    public void changeStatusStop(String clientIDs) {
-        String[] clientID = clientIDs.split(",");
-        for (int i=0;i<clientID.length;i++){
-            ClientStatus clientStatus = clientStatusDao.selectById(clientID[i]);
-            clientStatus.setValid(false);
-            clientStatusDao.updateById(clientStatus);
+    public void batchChangeTerminalType(String[] clientIDs, String terminalType){
+        for (String clientID: clientIDs) {
+            ClientStatus clientStatus = clientStatusDao.selectById(clientID);
+            if(clientStatus != null){
+                clientStatus.setTerminalType(terminalType);
+                clientStatusDao.updateById(clientStatus);
+            }
         }
     }
 }
