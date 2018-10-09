@@ -15,9 +15,9 @@ import java.util.List;
 import java.util.Map;
 
 public interface ClientStatusDao extends BaseMapper<ClientStatus> {
-    List<ClientStatus> searchClientStatusForRefreshStat(@Param("customerKeywordRefreshStatInfoCriteria")CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria);
+    List<com.keymanager.monitoring.vo.CustomerKeywordRefreshStatInfoVO> searchClientStatusForRefreshStat(@Param("customerKeywordRefreshStatInfoCriteria")CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria);
 
-    void updateClientVersion(@Param("clientID") String clientID, @Param("version")String version);
+    void updateClientVersion(@Param("clientID") String clientID, @Param("version")String version, @Param("hasKeyword") boolean hasKeyword);
 
     void addSummaryClientStatus(@Param("clientStatus") ClientStatus clientStatus);
 

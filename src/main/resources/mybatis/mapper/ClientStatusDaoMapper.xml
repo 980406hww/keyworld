@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.monitoring.dao.ClientStatusDao">
-    <select id="searchClientStatusForRefreshStat" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria" resultType="com.keymanager.monitoring.entity.ClientStatus">
+    <select id="searchClientStatusForRefreshStat" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria" resultType="com.keymanager.monitoring.vo.CustomerKeywordRefreshStatInfoVO">
         SELECT
-        cs.fPageNo AS "pageNo",
-        cs.fContinuousFailCount AS "continuousFailCount",
         cs.fGroup AS "group",
-        cs.fLastVisitTime AS "lastVisitTime"
+        SUM(IF(DATE_ADD(cs.fLastVisitTime, INTERVAL IF(10 > cs.fPageNo * 3, 15, cs.fPageNo * 3 + 5) MINUTE) &lt; NOW(), 1, 0)) AS 'unworkMachineCount',
+        SUM(cs.fIdleTotalMinutes) AS "idleTotalMinutes",
+        COUNT(1)  AS 'totalMachineCount'
         FROM t_client_status cs
         WHERE cs.fTerminalType = #{customerKeywordRefreshStatInfoCriteria.terminalType}
         AND cs.fValid = 1
@@ -14,6 +14,7 @@
             AND cs.fGroup like '${customerKeywordRefreshStatInfoCriteria.groupName}%'
             AND EXISTS (SELECT 1 FROM t_customer_keyword ck WHERE ck.fType = #{customerKeywordRefreshStatInfoCriteria.entryType} AND ck.fOptimizeGroupName like '${customerKeywordRefreshStatInfoCriteria.groupName}%')
         </if>
+        GROUP BY cs.fGroup
         ORDER BY cs.fGroup
     </select>
 
@@ -225,6 +226,14 @@
     <update id="updateClientVersion">
         UPDATE t_client_status
         SET fVersion = #{version}, fRestartCount = 0, fRestartStatus = null
+        <choose>
+            <when test="hasKeyword == 1">
+                ,fIdleTotalMinutes = IF(fIdleStartTime IS NULL, fIdleTotalMinutes, fIdleTotalMinutes + TIMESTAMPDIFF(MINUTE, fIdleStartTime, NOW())), fIdleStartTime = NULL
+            </when>
+            <when test="hasKeyword == 0">
+                ,fIdleStartTime = IF(fIdleStartTime IS NULL, NOW(), fIdleStartTime)
+            </when>
+        </choose>
         WHERE fClientID = #{clientID}
     </update>
 
@@ -421,7 +430,7 @@
     </update>
 
     <update id="updateAllRemainingKeywordIndicator">
-        UPDATE t_client_status SET fRemainingKeyword = #{indicator}
+        UPDATE t_client_status SET fRemainingKeyword = #{indicator}, fIdleStartTime = null, fIdleTotalMinutes = 0
     </update>
 
     <select id="getClientStatusForStartUp" resultType="com.keymanager.monitoring.entity.ClientStatus">

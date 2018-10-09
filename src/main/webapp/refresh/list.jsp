@@ -37,7 +37,7 @@
 			<td align="center" width=100 rowspan="2">类型</td>
 			<td align="center" width=80 colspan="7">关键字</td>
 			<td align="center" width=80 colspan="6">刷的次数</td>
-			<td align="center" width=100 colspan="2">机器数</td>
+			<td align="center" width=100 colspan="3">机器数</td>
 		</tr>
 		<tr bgcolor="#eeeeee" height=30>
 			<td align="center" width=80>总数</td>
@@ -53,7 +53,8 @@
 			<td align="center" width=80>平均有效刷量</td>
 			<td align="center" width=80>取词次数</td>
 			<td align="center" width=80>无效占比</td>
-			<td align="center" width=100>总数</td>
+			<td align="center" width=50>总数</td>
+			<td align="center" width=50>空闲率</td>
 			<td align="center" width=60>已停数</td>
 		</tr>
 	</table>
@@ -147,7 +148,8 @@
 						</c:if>
 					</font>
 				</td>
-				<td width=100>${refreshStatInfoVO.totalMachineCount > 0 ? refreshStatInfoVO.totalMachineCount : ""}</td>
+				<td width=50>${refreshStatInfoVO.totalMachineCount > 0 ? refreshStatInfoVO.totalMachineCount : ""}</td>
+				<td width=50>${refreshStatInfoVO.idleTotalMinutes > 0 ? Math.round(refreshStatInfoVO.idleTotalMinutes / (refreshStatInfoVO.totalMachineCount*24*60)) : ""}</td>
 				<td width=60>
 					<c:if test="${refreshStatInfoVO.unworkMachineCount > 0}">
 						<c:choose>

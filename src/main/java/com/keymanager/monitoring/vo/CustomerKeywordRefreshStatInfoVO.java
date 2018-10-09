@@ -16,6 +16,7 @@ public class CustomerKeywordRefreshStatInfoVO {
 	private int totalMachineCount;
 	private int unworkMachineCount;
 	private int maxInvalidCount;
+	private long idleTotalMinutes;
 
 	public double getInvalidKeywordPercentage(){
 		return (this.getTotalKeywordCount() > 0) ? ((this.getInvalidKeywordCount() * 1.0) / this.getTotalKeywordCount()) * 100 : 0;
@@ -139,5 +140,13 @@ public class CustomerKeywordRefreshStatInfoVO {
 
 	public void setTodaySubTotal(double todaySubTotal) {
 		this.todaySubTotal = todaySubTotal;
+	}
+
+	public long getIdleTotalMinutes() {
+		return idleTotalMinutes;
+	}
+
+	public void setIdleTotalMinutes(long idleTotalMinutes) {
+		this.idleTotalMinutes = idleTotalMinutes;
 	}
 }

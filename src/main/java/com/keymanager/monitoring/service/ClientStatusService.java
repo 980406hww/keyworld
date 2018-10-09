@@ -3,6 +3,7 @@ package com.keymanager.monitoring.service;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -11,6 +12,7 @@ import java.util.Map;
 
 import com.keymanager.monitoring.entity.ClientUpgrade;
 import com.keymanager.monitoring.vo.CookieVO;
+import com.keymanager.monitoring.vo.CustomerKeywordRefreshStatInfoVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,8 +81,8 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
         clientStatusDao.updatePageNo(clientID, pageNo);
     }
 
-    public  void updateClientVersion(String clientID, String version){
-        clientStatusDao.updateClientVersion(clientID, version);
+    public  void updateClientVersion(String clientID, String version, boolean hasKeyword){
+        clientStatusDao.updateClientVersion(clientID, version, hasKeyword);
     }
 
     public void logClientStatusTime(String terminalType, String clientID, String status, String freeSpace, String version, String
@@ -93,7 +95,7 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
         }
     }
 
-    public List<ClientStatus> searchClientStatusForRefreshStat(CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria) {
+    public List<CustomerKeywordRefreshStatInfoVO> searchClientStatusForRefreshStat(CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria) {
         return clientStatusDao.searchClientStatusForRefreshStat(customerKeywordRefreshStatInfoCriteria);
     }
 
@@ -978,6 +980,14 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
         int optimizeRelatedKeyword = sourceClientStatus.getOptimizeRelatedKeyword();
         sourceClientStatus.setOptimizeRelatedKeyword(targetClientStatus.getOptimizeRelatedKeyword());
         targetClientStatus.setOptimizeRelatedKeyword(optimizeRelatedKeyword);
+
+        Timestamp idleStartTime = sourceClientStatus.getIdleStartTime();
+        sourceClientStatus.setIdleStartTime(targetClientStatus.getIdleStartTime());
+        targetClientStatus.setIdleStartTime(idleStartTime);
+
+        long idleTotalMinutes = sourceClientStatus.getIdleTotalMinutes();
+        sourceClientStatus.setIdleTotalMinutes(targetClientStatus.getIdleTotalMinutes());
+        targetClientStatus.setIdleTotalMinutes(idleTotalMinutes);
     }
 
     public void sendNotificationForRenewal() throws Exception{
