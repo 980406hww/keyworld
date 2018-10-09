@@ -149,7 +149,12 @@
 					</font>
 				</td>
 				<td width=50>${refreshStatInfoVO.totalMachineCount > 0 ? refreshStatInfoVO.totalMachineCount : ""}</td>
-				<td width=50>${refreshStatInfoVO.idleTotalMinutes > 0 ? Math.round(refreshStatInfoVO.idleTotalMinutes / (refreshStatInfoVO.totalMachineCount*24*60)) : ""}</td>
+				<td width=50>
+					<c:if test="${refreshStatInfoVO.idlePercentage > 0}">
+						<fmt:formatNumber value="${refreshStatInfoVO.idlePercentage}" pattern="#.##"
+										  minFractionDigits="2"/>%
+					</c:if>
+				</td>
 				<td width=60>
 					<c:if test="${refreshStatInfoVO.unworkMachineCount > 0}">
 						<c:choose>
