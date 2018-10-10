@@ -720,12 +720,12 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 
     private String detectVPSServiceProvider(String backendComputerID){
         backendComputerID = backendComputerID.toLowerCase();
-        if(backendComputerID.indexOf("k") == 0){
+        if(backendComputerID.matches("^[0-9]*$")){
+            return "nuobin";
+        }else if(backendComputerID.indexOf("k") == 0){
             return "yongtian";
         }else if(backendComputerID.indexOf("y") == 0){
             return "yiyang";
-        }else if(backendComputerID.indexOf("nuo") == 0){
-            return "nuobin";
         }else{
             return "263";
         }
