@@ -24,9 +24,8 @@ public class RelatedKeywordWithTypeService extends ServiceImpl<RelatedKeywordWit
         List<RelatedKeyWordWithType> relatedKeywordWordWithTypes = relatedKeywordWithTypeDao.findRelatedKeywordWithType(mainKeyword);
         List<String> relatedKeywords = new ArrayList<String>();
 
-        for (RelatedKeyWordWithType relatedKeyWordWithType:relatedKeywordWordWithTypes) {
-            String relatedKeyWordJson = "{" + '"' + "relatedKeyword"  + '"' + ':' + '"' + relatedKeyWordWithType.getRelatedKeyword() + '"' + ", " + '"' + "type" + '"' + ':' + '"' + relatedKeyWordWithType.getType() + '"' +"}";
-            relatedKeywords.add(relatedKeyWordJson);
+        for (RelatedKeyWordWithType relatedKeyWordWithType : relatedKeywordWordWithTypes) {
+            relatedKeywords.add(relatedKeyWordWithType.getRelatedKeyword()+","+relatedKeyWordWithType.getType());
         }
         return relatedKeywords;
     }
