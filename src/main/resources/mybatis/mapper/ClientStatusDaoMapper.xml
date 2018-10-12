@@ -430,7 +430,7 @@
     </update>
 
     <update id="updateAllRemainingKeywordIndicator">
-        UPDATE t_client_status SET fRemainingKeyword = #{indicator}, fIdleStartTime = null, fIdleTotalMinutes = 0
+        UPDATE t_client_status SET fRemainingKeyword = #{indicator}
     </update>
 
     <select id="getClientStatusForStartUp" resultType="com.keymanager.monitoring.entity.ClientStatus">
@@ -587,5 +587,9 @@
         AND fTerminalType = #{clientUpgrade.terminalType}
         AND (fTargetVersion is null or fTargetVersion &lt;&gt; #{clientUpgrade.targetVersion})
         LIMIT #{clientUpgrade.maxUpgradeCount}
+    </update>
+
+    <update id="resetOptimizationInfo">
+        UPDATE t_client_status SET fRemainingKeyword = 1, fIdleStartTime = null, fIdleTotalMinutes = 0
     </update>
 </mapper>

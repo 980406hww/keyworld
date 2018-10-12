@@ -1076,4 +1076,8 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
     public Integer getResidualClientCount(ClientUpgrade clientUpgrade) {
         return clientStatusDao.getResidualClientCount(clientUpgrade);
     }
+
+    public void resetOptimizationInfo() {
+        clientStatusDao.resetOptimizationInfo();
+    }
 }

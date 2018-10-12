@@ -563,7 +563,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeywordInvalidCountLogService.addCustomerKeywordInvalidCountLog();
             configService.updateOptimizationDateAsToday();
             customerKeywordDao.resetOptimizationInfo();
-            clientStatusService.updateAllRemainingKeywordIndicator(1);
+            clientStatusService.resetOptimizationInfo();
         }
 
         Config maxInvalidCountConfig = configService.getConfig(Constants.CONFIG_KEY_MAX_INVALID_COUNT, typeName);

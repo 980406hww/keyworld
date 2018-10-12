@@ -1059,7 +1059,7 @@
         UPDATE t_customer_keyword SET
             fUrl = #{item.url},
             fTitle = #{item.title},
-            fInitialPosition = #{item.order}，
+            fInitialPosition = #{item.order},
             fCurrentPosition = #{item.order},
             fCapturedTitle = 1
             WHERE fUuid = #{item.uuid}

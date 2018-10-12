@@ -81,4 +81,6 @@ public interface ClientStatusDao extends BaseMapper<ClientStatus> {
     List<CookieVO> searchClientForAllotCookie(@Param("clientCookieCount")int clientCookieCount, @Param("cookieGroupForBaidu")String cookieGroupForBaidu, @Param("cookieGroupFor360")String cookieGroupFor360);
 
     void updateClientTargetVersion(@Param("clientUpgrade") ClientUpgrade clientUpgrade);
+
+    void resetOptimizationInfo();
 }

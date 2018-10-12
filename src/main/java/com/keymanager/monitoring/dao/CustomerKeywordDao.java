@@ -193,5 +193,5 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     //客户关键字批量设置
     void batchUpdateKeywordStatus(@Param("keywordIDs")String[] keywordIDs, @Param("keywordChecks") CustomerKeyword keywordChecks, @Param("keywordStatus")CustomerKeyword keywordStatus);
 
-    void updateCustomerKeywordsTitle(List<SearchEngineResultItemVO> searchEngineResultItemVOs);
+    void updateCustomerKeywordsTitle(@Param("searchEngineResultItemVOs") List<SearchEngineResultItemVO> searchEngineResultItemVOs);
 }
