@@ -1,5 +1,6 @@
 package com.keymanager.monitoring.controller.rest.external;
 
+import com.keymanager.monitoring.common.utils.StringUtils;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.entity.ClientStatus;
 import com.keymanager.monitoring.entity.Config;
@@ -35,7 +36,10 @@ public class ExternalClientStatusRestController extends SpringMVCBaseController 
 
     @RequestMapping(value = "/updatePageNo", method = RequestMethod.GET)
     public ResponseEntity<?> updatePageNo(HttpServletRequest request) throws Exception {
-        String userName = request.getParameter("username");
+        String userName = request.getParameter("userName");
+        if(StringUtils.isBlank(userName)){
+            userName = request.getParameter("username");
+        }
         String password = request.getParameter("password");
         String clientID = request.getParameter("clientID");
         String pageNo = request.getParameter("pageNo");
@@ -53,7 +57,10 @@ public class ExternalClientStatusRestController extends SpringMVCBaseController 
 
     @RequestMapping(value = "/checkUpgrade", method = RequestMethod.GET)
     public ResponseEntity<?> checkUpgrade(HttpServletRequest request) throws Exception {
-        String userName = request.getParameter("username");
+        String userName = request.getParameter("userName");
+        if(StringUtils.isBlank(userName)){
+            userName = request.getParameter("username");
+        }
         String password = request.getParameter("password");
         String clientID = request.getParameter("clientID");
         try {
@@ -69,7 +76,10 @@ public class ExternalClientStatusRestController extends SpringMVCBaseController 
     
     @RequestMapping(value = "/checkPassword", method = RequestMethod.GET)
     public ResponseEntity<?> checkPassword(HttpServletRequest request) throws Exception {
-        String userName = request.getParameter("username");
+        String userName = request.getParameter("userName");
+        if(StringUtils.isBlank(userName)){
+            userName = request.getParameter("username");
+        }
         String password = request.getParameter("password");
         String clientID = request.getParameter("clientID");
         try {
@@ -85,7 +95,10 @@ public class ExternalClientStatusRestController extends SpringMVCBaseController 
     
     @RequestMapping(value = "/updatePassword", method = RequestMethod.GET)
     public ResponseEntity<?> updatePassword(HttpServletRequest request) throws Exception {
-        String userName = request.getParameter("username");
+        String userName = request.getParameter("userName");
+        if(StringUtils.isBlank(userName)){
+            userName = request.getParameter("username");
+        }
         String password = request.getParameter("password");
         String clientID = request.getParameter("clientID");
         try {
@@ -101,7 +114,10 @@ public class ExternalClientStatusRestController extends SpringMVCBaseController 
 
     @RequestMapping(value = "/getStoppedClientStatuses", method = RequestMethod.GET)
     public ResponseEntity<?> getStoppedClientStatuses(HttpServletRequest request) throws Exception {
-        String userName = request.getParameter("username");
+        String userName = request.getParameter("userName");
+        if(StringUtils.isBlank(userName)){
+            userName = request.getParameter("username");
+        }
         String password = request.getParameter("password");
         try {
             if (validUser(userName, password)) {
@@ -116,7 +132,10 @@ public class ExternalClientStatusRestController extends SpringMVCBaseController 
 
     @RequestMapping(value = "/updateClientStatusRestartStatus", method = RequestMethod.GET)
     public ResponseEntity<?> updateClientStatusRestartStatus(HttpServletRequest request) throws Exception {
-        String userName = request.getParameter("username");
+        String userName = request.getParameter("userName");
+        if(StringUtils.isBlank(userName)){
+            userName = request.getParameter("username");
+        }
         String password = request.getParameter("password");
         String clientID = request.getParameter("clientID");
         String status = request.getParameter("status");
@@ -133,7 +152,10 @@ public class ExternalClientStatusRestController extends SpringMVCBaseController 
 
     @RequestMapping(value = "/restartVPS", method = RequestMethod.GET)
     public ResponseEntity<?> restartVPS(HttpServletRequest request) throws Exception {
-        String userName = request.getParameter("username");
+        String userName = request.getParameter("userName");
+        if(StringUtils.isBlank(userName)){
+            userName = request.getParameter("username");
+        }
         String password = request.getParameter("password");
         String vmName = request.getParameter("vmname");
         try {
@@ -149,7 +171,10 @@ public class ExternalClientStatusRestController extends SpringMVCBaseController 
 
     @RequestMapping(value = "/getVPSStatus", method = RequestMethod.GET)
     public ResponseEntity<?> getVPSStatus(HttpServletRequest request) throws Exception {
-        String userName = request.getParameter("username");
+        String userName = request.getParameter("userName");
+        if(StringUtils.isBlank(userName)){
+            userName = request.getParameter("username");
+        }
         String password = request.getParameter("password");
         String vmName = request.getParameter("vmname");
         try {
@@ -165,7 +190,10 @@ public class ExternalClientStatusRestController extends SpringMVCBaseController 
 
     @RequestMapping(value = "/getClientStatusForStartUp", method = RequestMethod.GET)
     public ResponseEntity<?> getClientStatusForStartUp(HttpServletRequest request) throws Exception {
-        String userName = request.getParameter("username");
+        String userName = request.getParameter("userName");
+        if(StringUtils.isBlank(userName)){
+            userName = request.getParameter("username");
+        }
         String password = request.getParameter("password");
         try {
             if (validUser(userName, password)) {
@@ -187,7 +215,10 @@ public class ExternalClientStatusRestController extends SpringMVCBaseController 
 
     @RequestMapping(value = "/getClientStartUpStatus", method = RequestMethod.GET)
     public ResponseEntity<?> getClientStartUpStatus(HttpServletRequest request) throws Exception {
-        String userName = request.getParameter("username");
+        String userName = request.getParameter("userName");
+        if(StringUtils.isBlank(userName)){
+            userName = request.getParameter("username");
+        }
         String password = request.getParameter("password");
         String clientID = request.getParameter("clientID");
         try {
@@ -203,7 +234,10 @@ public class ExternalClientStatusRestController extends SpringMVCBaseController 
 
     @RequestMapping(value = "/updateClientStartUpStatus", method = RequestMethod.GET)
     public ResponseEntity<?> updateClientStartUpStatus(HttpServletRequest request) throws Exception {
-        String userName = request.getParameter("username");
+        String userName = request.getParameter("userName");
+        if(StringUtils.isBlank(userName)){
+            userName = request.getParameter("username");
+        }
         String password = request.getParameter("password");
         String clientID = request.getParameter("clientID");
         String status = request.getParameter("status");

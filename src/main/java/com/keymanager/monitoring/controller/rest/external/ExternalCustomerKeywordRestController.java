@@ -254,7 +254,10 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
     @RequestMapping(value = "/updateOptimizedCount", method = RequestMethod.GET)
     public ResponseEntity<?> updateOptimizedCount(HttpServletRequest request) throws Exception {
         long startMilleSeconds = System.currentTimeMillis();
-        String userName = request.getParameter("username");
+        String userName = request.getParameter("userName");
+        if(com.keymanager.monitoring.common.utils.StringUtils.isBlank(userName)){
+            userName = request.getParameter("username");
+        }
         String password = request.getParameter("password");
 
         Long customerKeywordUuid = Long.parseLong(request.getParameter("uuid").trim());
