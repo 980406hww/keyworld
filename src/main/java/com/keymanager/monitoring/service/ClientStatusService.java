@@ -386,20 +386,24 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 
     public void getVNCFileInfo(String terminalType) throws Exception {
         List<ClientStatus> clientStatuses = clientStatusDao.searchClientStatusesOrByHost(terminalType,"yes");
-        Map<String, String> passwordMap = new HashMap<String, String>();
-        for (ClientStatus clientStatus : clientStatuses) {
-            String password = passwordMap.get(clientStatus.getPassword());
-            if(password == null) {
-                if (StringUtil.isNullOrEmpty(clientStatus.getPassword())) {
-                    password = "";
-                } else if (clientStatus.getPassword().equals("doshows123")) {
-                    password = "8e587919308fcab0c34af756358b9053";
-                } else {
-                    password = DES.vncPasswordEncode(clientStatus.getPassword());
+        if(CollectionUtils.isNotEmpty(clientStatuses)) {
+            Utils.removeDir(Thread.currentThread().getContextClassLoader().getResource("").toURI().getPath() + "vnc");
+            Utils.createDir(Thread.currentThread().getContextClassLoader().getResource("").toURI().getPath() + "vnc/");
+            Map<String, String> passwordMap = new HashMap<String, String>();
+            for (ClientStatus clientStatus : clientStatuses) {
+                String password = passwordMap.get(clientStatus.getPassword());
+                if (password == null) {
+                    if (StringUtil.isNullOrEmpty(clientStatus.getPassword())) {
+                        password = "";
+                    } else if (clientStatus.getPassword().equals("doshows123")) {
+                        password = "8e587919308fcab0c34af756358b9053";
+                    } else {
+                        password = DES.vncPasswordEncode(clientStatus.getPassword());
+                    }
+                    passwordMap.put(clientStatus.getPassword(), password);
                 }
-                passwordMap.put(clientStatus.getPassword(), password);
+                writeTxtFile(clientStatus, password);
             }
-            writeTxtFile(clientStatus, password);
         }
     }
 
@@ -537,7 +541,6 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 
     public void writeTxtFile(ClientStatus clientStatus, String password) throws Exception {
         FileOutputStream o = null;
-        Utils.createDir(Thread.currentThread().getContextClassLoader().getResource("").toURI().getPath() + "vnc/");
         String fileName = Thread.currentThread().getContextClassLoader().getResource("").toURI().getPath() + "vnc/" + clientStatus.getClientID() + ".vnc";
         o = new FileOutputStream(fileName);
         o.write("[Connection]".getBytes("UTF-8"));

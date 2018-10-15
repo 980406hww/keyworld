@@ -55,6 +55,10 @@ public class ZipCompressor {
 				}
 			}
 
+			File tmpZipFile = new File(zippath);
+			if(tmpZipFile.exists()){
+				tmpZipFile.delete();
+			}
 			//创建压缩文件
 			ZipFile zipFile = new ZipFile(zippath);
 
