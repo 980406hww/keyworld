@@ -430,7 +430,7 @@ function showSearchEngineChangeDialog(searchEngineCriteria) {
     $("#changeSearchEngineDialog").dialog("open");
     $('#changeSearchEngineDialog').window("resize",{top:$(document).scrollTop() + 200});
 }
-function updateCustomerkeywordStatus(status) {
+function updateCustomerKeywordStatus(status) {
     var customerKeyword = {};
     var customerKeywordUuids = getUuids();
     if (customerKeywordUuids.trim() === '') {
@@ -446,7 +446,7 @@ function updateCustomerkeywordStatus(status) {
     customerKeyword.uuids = customerKeywordUuids.split(",");
     customerKeyword.status = status;
     $.ajax({
-        url: '/internal/customerKeyword/updateCustomerkeywordStatus',
+        url: '/internal/customerKeyword/updateCustomerKeywordStatus',
         data: JSON.stringify(customerKeyword),
         headers: {
             'Accept': 'application/json',
