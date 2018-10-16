@@ -10,6 +10,6 @@
 
     <delete id="deleteRelatedKeywordWithType">
         DELETE FROM t_related_keyword_with_type
-        WHERE fRelatedKeyword = #{relatedKeyword}
+        WHERE fMainKeyword = #{mainKeyword} and fRelatedKeyword = #{relatedKeyword}
     </delete>
 </mapper>

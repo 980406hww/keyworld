@@ -2,6 +2,7 @@ package com.keymanager.monitoring.controller.rest.external;
 
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.RelatedKeywordWithTypeCriteria;
+import com.keymanager.monitoring.entity.RelatedKeyWordWithType;
 import com.keymanager.monitoring.service.RelatedKeywordWithTypeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,13 +23,13 @@ public class ExternalRelatedKeywordWithTypeRestController extends SpringMVCBaseC
     private static Logger logger = LoggerFactory.getLogger(ExternalRelatedKeywordWithTypeRestController.class);
 
     @Autowired
-    private RelatedKeywordWithTypeService relatedKeywordWithTypeCriteriaService;
+    private RelatedKeywordWithTypeService relatedKeywordWithTypeService;
 
     @RequestMapping(value = "/findRelatedKeywordWithType", method = RequestMethod.POST)
     public ResponseEntity<?> findRelatedKeywordWithType(@RequestBody RelatedKeywordWithTypeCriteria relatedKeywordWithTypeCriteria){
         try {
             if (validUser(relatedKeywordWithTypeCriteria.getUserName(), relatedKeywordWithTypeCriteria.getPassword())){
-                List<String> relatedKeywords = relatedKeywordWithTypeCriteriaService.findRelatedKeywordWithType(relatedKeywordWithTypeCriteria.getMainKeyword());
+                List<RelatedKeyWordWithType> relatedKeywords = relatedKeywordWithTypeService.findRelatedKeywordWithType(relatedKeywordWithTypeCriteria.getMainKeyword());
                 return new ResponseEntity<Object>(relatedKeywords, HttpStatus.OK);
             }
         } catch (Exception e) {
@@ -41,7 +42,7 @@ public class ExternalRelatedKeywordWithTypeRestController extends SpringMVCBaseC
     public ResponseEntity<?> saveRelatedKeywordWithType(@RequestBody RelatedKeywordWithTypeCriteria relatedKeywordWithTypeCriteria){
         try {
             if(validUser(relatedKeywordWithTypeCriteria.getUserName(), relatedKeywordWithTypeCriteria.getPassword())){
-                relatedKeywordWithTypeCriteriaService.saveRelatedKeywordWithType(relatedKeywordWithTypeCriteria);
+                relatedKeywordWithTypeService.saveRelatedKeywordWithType(relatedKeywordWithTypeCriteria);
                 return new ResponseEntity<Object>(true, HttpStatus.OK);
             }
         } catch (Exception e) {
@@ -54,7 +55,7 @@ public class ExternalRelatedKeywordWithTypeRestController extends SpringMVCBaseC
     public ResponseEntity<?> deleteRelatedKeywordWithType(@RequestBody RelatedKeywordWithTypeCriteria relatedKeywordWithTypeCriteria){
         try {
             if (validUser(relatedKeywordWithTypeCriteria.getUserName(), relatedKeywordWithTypeCriteria.getPassword())){
-                relatedKeywordWithTypeCriteriaService.deleteRelatedKeywordWithType(relatedKeywordWithTypeCriteria.getRelatedKeyword());
+                relatedKeywordWithTypeService.deleteRelatedKeywordWithType(relatedKeywordWithTypeCriteria.getMainKeyword(),relatedKeywordWithTypeCriteria.getRelatedKeyword());
                 return new ResponseEntity<Object>(true, HttpStatus.OK);
             }
         } catch (Exception e) {

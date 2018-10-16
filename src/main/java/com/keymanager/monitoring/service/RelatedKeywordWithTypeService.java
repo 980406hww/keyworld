@@ -20,35 +20,30 @@ public class RelatedKeywordWithTypeService extends ServiceImpl<RelatedKeywordWit
     @Autowired
     private RelatedKeywordWithTypeDao relatedKeywordWithTypeDao;
 
-    public List<String> findRelatedKeywordWithType(String mainKeyword){
+    public List<RelatedKeyWordWithType> findRelatedKeywordWithType(String mainKeyword){
         List<RelatedKeyWordWithType> relatedKeywordWordWithTypes = relatedKeywordWithTypeDao.findRelatedKeywordWithType(mainKeyword);
-        List<String> relatedKeywords = new ArrayList<String>();
-
-        for (RelatedKeyWordWithType relatedKeyWordWithType : relatedKeywordWordWithTypes) {
-            relatedKeywords.add(relatedKeyWordWithType.getRelatedKeyword()+","+relatedKeyWordWithType.getType());
-        }
-        return relatedKeywords;
+        return relatedKeywordWordWithTypes;
     }
 
     public void saveRelatedKeywordWithType(RelatedKeywordWithTypeCriteria relatedKeywordWithTypeCriteria){
-        RelatedKeyWordWithType relatedKeyWordWithType = new RelatedKeyWordWithType();
-        relatedKeyWordWithType.setMainKeyword(relatedKeywordWithTypeCriteria.getMainKeyword());
-        relatedKeyWordWithType.setRelatedKeyword(relatedKeywordWithTypeCriteria.getRelatedKeyword());
-        RelatedKeyWordWithType getRelatedKeywordWithType = relatedKeywordWithTypeDao.selectOne(relatedKeyWordWithType);
+        RelatedKeyWordWithType relatedKeyWordWithTypeCriteria = new RelatedKeyWordWithType();
+        relatedKeyWordWithTypeCriteria.setMainKeyword(relatedKeywordWithTypeCriteria.getMainKeyword());
+        relatedKeyWordWithTypeCriteria.setRelatedKeyword(relatedKeywordWithTypeCriteria.getRelatedKeyword());
+        RelatedKeyWordWithType existRelatedKeywordWithType = relatedKeywordWithTypeDao.selectOne(relatedKeyWordWithTypeCriteria);
 
-        if (getRelatedKeywordWithType == null){
-            relatedKeyWordWithType.setCreateTime(new Date());
-            relatedKeyWordWithType.setType(relatedKeywordWithTypeCriteria.getType());
-            relatedKeywordWithTypeDao.insert(relatedKeyWordWithType);
+        if (existRelatedKeywordWithType == null){
+            relatedKeyWordWithTypeCriteria.setCreateTime(new Date());
+            relatedKeyWordWithTypeCriteria.setType(relatedKeywordWithTypeCriteria.getType());
+            relatedKeywordWithTypeDao.insert(relatedKeyWordWithTypeCriteria);
         }
         else{
-            getRelatedKeywordWithType.setUpdateTime(new Date());
-            getRelatedKeywordWithType.setType(relatedKeywordWithTypeCriteria.getType());
-            relatedKeywordWithTypeDao.updateById(getRelatedKeywordWithType);
+            existRelatedKeywordWithType.setUpdateTime(new Date());
+            existRelatedKeywordWithType.setType(relatedKeywordWithTypeCriteria.getType());
+            relatedKeywordWithTypeDao.updateById(existRelatedKeywordWithType);
         }
     }
 
-    public void deleteRelatedKeywordWithType(String relatedKeyword){
-        relatedKeywordWithTypeDao.deleteRelatedKeywordWithType(relatedKeyword);
+    public void deleteRelatedKeywordWithType(String mainKeyword, String relatedKeyword){
+        relatedKeywordWithTypeDao.deleteRelatedKeywordWithType(mainKeyword,relatedKeyword);
     }
 }
