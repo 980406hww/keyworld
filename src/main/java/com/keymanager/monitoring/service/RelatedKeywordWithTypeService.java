@@ -1,5 +1,6 @@
 package com.keymanager.monitoring.service;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.criteria.RelatedKeywordWithTypeCriteria;
 import com.keymanager.monitoring.dao.RelatedKeywordWithTypeDao;
@@ -44,6 +45,8 @@ public class RelatedKeywordWithTypeService extends ServiceImpl<RelatedKeywordWit
     }
 
     public void deleteRelatedKeywordWithType(String mainKeyword, String relatedKeyword){
-        relatedKeywordWithTypeDao.deleteRelatedKeywordWithType(mainKeyword,relatedKeyword);
+        relatedKeywordWithTypeDao.delete(new EntityWrapper<RelatedKeyWordWithType>()
+                .eq("fMainKeyword", mainKeyword)
+                .eq("fRelatedKeyword", relatedKeyword));
     }
 }

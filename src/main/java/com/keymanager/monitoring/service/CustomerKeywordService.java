@@ -1156,7 +1156,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                     secondNum = 1;
                     for (String searchStyle : Constants.SEARCH_STYLE_LIST) {
                         keywordSecondTime = keywordTime + secondNum;
-                        // String searchStyleJson = "{id:'" + keywordSecondTime + "', pId:'" + keywordTime + "', name:'" + searchStyle + "'}";
                         zTreeList.add(new ZTreeVO(keywordSecondTime, keywordTime, searchStyle));
                         secondNum++;
                     }
