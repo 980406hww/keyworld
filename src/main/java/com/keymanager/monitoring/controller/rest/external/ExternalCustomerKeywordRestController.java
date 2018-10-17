@@ -233,6 +233,9 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         long startMilleSeconds = System.currentTimeMillis();
         String clientID = request.getParameter("clientID");
         String userName = request.getParameter("userName");
+        if(StringUtils.isBlank(userName)){
+            userName = request.getParameter("username");
+        }
         String password = request.getParameter("password");
         String version = request.getParameter("version");
         try {
@@ -255,7 +258,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
     public ResponseEntity<?> updateOptimizedCount(HttpServletRequest request) throws Exception {
         long startMilleSeconds = System.currentTimeMillis();
         String userName = request.getParameter("userName");
-        if(com.keymanager.monitoring.common.utils.StringUtils.isBlank(userName)){
+        if(StringUtils.isBlank(userName)){
             userName = request.getParameter("username");
         }
         String password = request.getParameter("password");
