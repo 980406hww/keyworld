@@ -7,4 +7,23 @@
         FROM t_related_keyword_with_type
         WHERE fMainKeyword = #{mainKeyword}
     </select>
+
+    <delete id="deleteRelatedKeywordWithType" parameterMap="relatedKeyWordWithTypeParameterMap">
+        DELETE FROM t_related_keyword_with_type
+        WHERE fMainKeyword = #{mainKeyword} AND fRelatedKeyword =#{relatedKeyword}
+    </delete>
+
+    <resultMap id="relatedKeyWordWithTypeResultMap" type="com.keymanager.monitoring.entity.RelatedKeyWordWithType">
+        <id column="fUuid" property="uuid" jdbcType="BIGINT"/>
+        <result column="fMainKeyword" property="mainKeyword" jdbcType="VARCHAR"/>
+        <result column="fRelatedKeyword" property="relatedKeyword" jdbcType="VARCHAR"/>
+        <result column="fUpdateTime" property="updateTime" jdbcType="DATE"/>
+        <result column="fCreateTime" property="createTime" jdbcType="DATE"/>
+        <result column="fType" property="type" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <parameterMap id="relatedKeyWordWithTypeParameterMap" type="com.keymanager.monitoring.entity.RelatedKeyWordWithType">
+        <parameter property="mainKeyword" resultMap="relatedKeyWordWithTypeResultMap"/>
+        <parameter property="relatedKeyword" resultMap="relatedKeyWordWithTypeResultMap"/>
+    </parameterMap>
 </mapper>

@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface RelatedKeywordWithTypeDao extends BaseMapper<RelatedKeyWordWithType>{
     List<RelatedKeyWordWithType> findRelatedKeywordWithType(@Param("mainKeyword") String mainKeyword);
+    void deleteRelatedKeywordWithType(@Param("mainKeyword") String mainKeyword, @Param("relatedKeyword") String relatedKeyword);
 }

@@ -45,8 +45,6 @@ public class RelatedKeywordWithTypeService extends ServiceImpl<RelatedKeywordWit
     }
 
     public void deleteRelatedKeywordWithType(String mainKeyword, String relatedKeyword){
-        relatedKeywordWithTypeDao.delete(new EntityWrapper<RelatedKeyWordWithType>()
-                .eq("fMainKeyword", mainKeyword)
-                .eq("fRelatedKeyword", relatedKeyword));
+        relatedKeywordWithTypeDao.deleteRelatedKeywordWithType(mainKeyword, relatedKeyword);
     }
 }
