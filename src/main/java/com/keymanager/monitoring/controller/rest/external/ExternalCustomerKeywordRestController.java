@@ -11,7 +11,7 @@ import com.keymanager.monitoring.service.CustomerKeywordService;
 import com.keymanager.monitoring.service.PerformanceService;
 import com.keymanager.monitoring.vo.SearchEngineResultItemVO;
 import com.keymanager.monitoring.vo.SearchEngineResultVO;
-import com.keymanager.monitoring.vo.ZTreeVO;
+import com.keymanager.monitoring.vo.customerSourceVO;
 import com.keymanager.util.Constants;
 import com.keymanager.util.TerminalTypeMapping;
 import com.keymanager.util.Utils;
@@ -408,7 +408,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
 
     @RequestMapping(value = "/getCustomerSources", method = RequestMethod.POST)
     public ResponseEntity<?> getCustomerSources(){
-        List customerSources = customerKeywordService.getCustomerSource();
+        List<customerSourceVO> customerSources = customerKeywordService.getCustomerSource();
         return new ResponseEntity<Object>(customerSources, HttpStatus.OK);
     }
 

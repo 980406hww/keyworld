@@ -7,6 +7,7 @@ import com.keymanager.monitoring.criteria.CustomerCriteria;
 import com.keymanager.monitoring.dao.CustomerDao;
 import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.enums.EntryTypeEnum;
+import com.keymanager.monitoring.vo.customerSourceVO;
 import com.keymanager.util.Utils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
@@ -130,10 +131,6 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 		return customerDao.searchCustomerWithKeyword(groupNames,terminalType);
 	}
 
-	public List<Customer> findNegativeCustomer() {
-		return customerDao.findNegativeCustomer();
-	}
-
 	public List<Map> searchCustomerTypes(CustomerCriteria customerCriteria) {
 		return customerDao.searchCustomerTypes(customerCriteria);
 	}
@@ -232,5 +229,9 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 
 	public void setCustomerUpdateInterval(List<String> uuids, String updateInterval) {
 		customerDao.setCustomerUpdateInterval(uuids, updateInterval);
+	}
+
+	public List<customerSourceVO> findCustomerKeywordSource () {
+		return customerDao.findCustomerKeywordSource();
 	}
 }

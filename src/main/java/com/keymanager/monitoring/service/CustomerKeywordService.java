@@ -1131,20 +1131,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
     }
 
-    public List getCustomerSource() {
-        List<Customer> customers = customerService.findNegativeCustomer();
-        List customerSources = new ArrayList();
-        for (Customer customer : customers) {
-            List customerSource = new ArrayList();
-            long id = customer.getUuid();
-            String[] customerKeywords = customerKeywordDao.searchCustomerNegativeKeywords(id);
-            if (customerKeywords.length > 0){
-                customerSource.add(customer);
-                customerSource.add(customerKeywords);
-                customerSources.add(customerSource);
-            }
-        }
-        return customerSources;
+    public List<customerSourceVO> getCustomerSource() {
+        return customerService.findCustomerKeywordSource();
     }
 
     public void observeOptimizationCount() throws Exception {
