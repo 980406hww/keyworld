@@ -442,6 +442,10 @@
         LIMIT 1
     </select>
 
+    <select id="getClientStatusID" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT fClientID as 'clientID' FROM t_client_status WHERE fVPSBackendSystemComputerID = #{vpsBackendSystemComputerID}
+    </select>
+
     <select id="getDownloadingClientCount" resultType="java.lang.Integer">
         SELECT COUNT(1) FROM t_client_status WHERE fStartUpStatus = "Downloading"
     </select>

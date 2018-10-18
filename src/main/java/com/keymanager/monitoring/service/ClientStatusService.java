@@ -1042,6 +1042,10 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
         return clientStatus.getStartUpStatus();
     }
 
+    public String getClientStatusID(String vpsBackendSystemComputerID) {
+        return clientStatusDao.getClientStatusID(vpsBackendSystemComputerID);
+    }
+
     public void updateClientStartUpStatus(String clientID, String status) {
         ClientStatus clientStatus = clientStatusDao.selectById(clientID);
         if(clientStatus != null) {

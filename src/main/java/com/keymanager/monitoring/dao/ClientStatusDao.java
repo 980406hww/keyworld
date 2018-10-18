@@ -83,4 +83,6 @@ public interface ClientStatusDao extends BaseMapper<ClientStatus> {
     void updateClientTargetVersion(@Param("clientUpgrade") ClientUpgrade clientUpgrade);
 
     void resetOptimizationInfo();
+
+    String getClientStatusID(@Param("vpsBackendSystemComputerID")String vpsBackendSystemComputerID);
 }

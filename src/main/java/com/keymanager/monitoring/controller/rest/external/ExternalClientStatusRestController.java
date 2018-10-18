@@ -251,4 +251,24 @@ public class ExternalClientStatusRestController extends SpringMVCBaseController 
         }
         return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
     }
+
+    @RequestMapping(value = "/getClientStatusID", method = RequestMethod.GET)
+    public ResponseEntity<?> getClientStartID(HttpServletRequest request) throws Exception {
+        String userName = request.getParameter("userName");
+        if(StringUtils.isBlank(userName)){
+            userName = request.getParameter("username");
+        }
+        String password = request.getParameter("password");
+        String computerID = request.getParameter("computerID");
+        try {
+            if (validUser(userName, password)) {
+                String clientStatusID = clientStatusService.getClientStatusID(computerID);
+                return new ResponseEntity<Object>(clientStatusID, HttpStatus.OK);
+            }
+        }catch (Exception ex){
+            logger.error(ex.getMessage());
+        }
+        return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
+    }
+
 }
