@@ -1131,39 +1131,20 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
     }
 
-    public List<ZTreeVO> getCustomerSource() {
-        List<ZTreeVO> zTreeList = new ArrayList<ZTreeVO>();
+    public List getCustomerSource() {
         List<Customer> customers = customerService.findNegativeCustomer();
-
-        long id; //根id
-        long keywordTime; // 一级节点id
-        long keywordSecondTime; // 二级节点id
-        long firstNum; // 一级循环的增量
-        long secondNum; // 二级循环的增量
-
+        List customerSources = new ArrayList();
         for (Customer customer : customers) {
-            id = customer.getUuid();
+            List customerSource = new ArrayList();
+            long id = customer.getUuid();
             String[] customerKeywords = customerKeywordDao.searchCustomerNegativeKeywords(id);
-
             if (customerKeywords.length > 0){
-                firstNum = 1;
-                zTreeList.add(new ZTreeVO(id, 0L, customer.getContactPerson()));
-
-                for (int i = 0; i < customerKeywords.length; i++) {
-                    keywordTime = id * 1000000 + (firstNum * 100); // 限定了一级的范围为1-9999，二级的范围为1-99
-                    zTreeList.add(new ZTreeVO(keywordTime, id, customerKeywords[i]));
-
-                    secondNum = 1;
-                    for (String searchStyle : Constants.SEARCH_STYLE_LIST) {
-                        keywordSecondTime = keywordTime + secondNum;
-                        zTreeList.add(new ZTreeVO(keywordSecondTime, keywordTime, searchStyle));
-                        secondNum++;
-                    }
-                    firstNum++;
-                }
+                customerSource.add(customer);
+                customerSource.add(customerKeywords);
+                customerSources.add(customerSource);
             }
         }
-        return zTreeList;
+        return customerSources;
     }
 
     public void observeOptimizationCount() throws Exception {

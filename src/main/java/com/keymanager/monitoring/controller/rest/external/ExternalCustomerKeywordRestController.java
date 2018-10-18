@@ -408,8 +408,8 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
 
     @RequestMapping(value = "/getCustomerSources", method = RequestMethod.POST)
     public ResponseEntity<?> getCustomerSources(){
-        List<ZTreeVO> zTreeList = customerKeywordService.getCustomerSource();
-        return new ResponseEntity<Object>(zTreeList, HttpStatus.OK);
+        List customerSources = customerKeywordService.getCustomerSource();
+        return new ResponseEntity<Object>(customerSources, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/findAllNegativeCustomerKeyword", method = RequestMethod.POST)
