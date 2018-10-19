@@ -20,12 +20,7 @@ public class NegativeListsSynchronizeService {
 	public Boolean negativeListsSynchronize(KeywordNegativeCriteria keywordNegativeCriteria){
 		keywordNegativeCriteria.setUserName(username);
 		keywordNegativeCriteria.setPassword(password);
-		try {
-			return restTemplate.postForObject(webPath + "/external/negativeListsSynchronize", keywordNegativeCriteria, Boolean.class);
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-		}
-		return false;
+		return restTemplate.postForObject(webPath + "/external/negativeListsSynchronize", keywordNegativeCriteria, Boolean.class);
 	}
 
 	public void setUsername(String username) {

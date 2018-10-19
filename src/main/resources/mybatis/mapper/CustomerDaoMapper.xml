@@ -154,4 +154,13 @@
             #{uuid}
         </foreach>
     </update>
+
+    <update id="updateCustomerUserID">
+        UPDATE t_customer
+        SET fUserID = #{userID}
+        WHERE fUuid IN
+        <foreach collection="uuids" item="uuid" open="(" close=")" separator=",">
+            #{uuid}
+        </foreach>
+    </update>
 </mapper>

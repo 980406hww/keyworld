@@ -264,6 +264,10 @@
                 searchCustomerKeywordForNoReachStandard('${customerKeywordCriteria.entryType}','${customerKeywordCriteria.terminalType}');
             }
         }
+
+        var menuHeight = $(".venus-menu").height();
+        $("#searchCustomerKeywordForm").css("margin-top", menuHeight + 5);
+        $("#showCustomerTableDiv").css("margin-top", menuHeight + 118);
     });
     function initNoPositionChecked() {
         if(${customerKeywordCriteria.noPosition == 1}){

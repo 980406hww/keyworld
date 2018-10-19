@@ -34,4 +34,5 @@ public interface CustomerDao extends BaseMapper<Customer> {
     void setCustomerUpdateInterval(@Param("uuids")List<String> uuids, @Param("updateInterval")String updateInterval);
 
     List<customerSourceVO> findCustomerKeywordSource ();
+    void updateCustomerUserID(@Param("uuids")List<String> uuids, @Param("userID")String userID);
 }

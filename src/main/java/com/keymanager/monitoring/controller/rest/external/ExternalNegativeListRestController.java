@@ -68,7 +68,10 @@ public class ExternalNegativeListRestController extends SpringMVCBaseController 
 
 	@RequestMapping(value = "/getSpecifiedKeywordNegativeLists", method = RequestMethod.GET)
 	public ResponseEntity<?> getSpecifiedKeywordNegativeLists(HttpServletRequest request) throws Exception{
-		String userName = request.getParameter("username");
+		String userName = request.getParameter("userName");
+		if(com.keymanager.monitoring.common.utils.StringUtils.isBlank(userName)){
+			userName = request.getParameter("username");
+		}
 		String password = request.getParameter("password");
 		String keyword = request.getParameter("keyword");
 		try {

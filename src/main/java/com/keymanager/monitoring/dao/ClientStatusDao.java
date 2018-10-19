@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.criteria.ClientStatusCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
 import com.keymanager.monitoring.entity.ClientStatus;
+import com.keymanager.monitoring.entity.ClientUpgrade;
 import com.keymanager.monitoring.vo.CookieVO;
 import com.keymanager.value.ClientStatusGroupSummaryVO;
 import com.keymanager.value.ClientStatusSummaryVO;
@@ -14,9 +15,9 @@ import java.util.List;
 import java.util.Map;
 
 public interface ClientStatusDao extends BaseMapper<ClientStatus> {
-    List<ClientStatus> searchClientStatusForRefreshStat(@Param("customerKeywordRefreshStatInfoCriteria")CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria);
+    List<com.keymanager.monitoring.vo.CustomerKeywordRefreshStatInfoVO> searchClientStatusForRefreshStat(@Param("customerKeywordRefreshStatInfoCriteria")CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria);
 
-    void updateClientVersion(@Param("clientID") String clientID, @Param("version")String version);
+    void updateClientVersion(@Param("clientID") String clientID, @Param("version")String version, @Param("hasKeyword") boolean hasKeyword);
 
     void addSummaryClientStatus(@Param("clientStatus") ClientStatus clientStatus);
 
@@ -65,6 +66,10 @@ public interface ClientStatusDao extends BaseMapper<ClientStatus> {
 
     Integer getDownloadingClientCount();
 
+    Integer getUpgradingClientCount(@Param("clientUpgrade") ClientUpgrade clientUpgrade);
+
+    Integer getResidualClientCount(@Param("clientUpgrade") ClientUpgrade clientUpgrade);
+
     void reopenClientStatus(@Param("clientIDs")List<String> clientIDs, @Param("downloadProgramType")String downloadProgramType, @Param("switchGroupName")String switchGroupName);
 
     void updateStartUpStatusForCompleted(@Param("clientIDs")List<String> clientIDs);
@@ -74,4 +79,10 @@ public interface ClientStatusDao extends BaseMapper<ClientStatus> {
     void batchUpdateClientStatus(@Param("clientIDs")String[] clientIDs, @Param("cs")ClientStatus cs, @Param("clientStatus")ClientStatus clientStatus);
 
     List<CookieVO> searchClientForAllotCookie(@Param("clientCookieCount")int clientCookieCount, @Param("cookieGroupForBaidu")String cookieGroupForBaidu, @Param("cookieGroupFor360")String cookieGroupFor360);
+
+    void updateClientTargetVersion(@Param("clientUpgrade") ClientUpgrade clientUpgrade);
+
+    void resetOptimizationInfo();
+
+    String getClientStatusID(@Param("vpsBackendSystemComputerID")String vpsBackendSystemComputerID);
 }

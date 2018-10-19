@@ -211,6 +211,7 @@ public class CustomerRestController {
         }
     }
 
+    @RequiresPermissions("/internal/customer/saveCustomer")
     @RequestMapping(value = "/setCustomerKeywordStatusSwitchTime" , method = RequestMethod.POST)
     public ResponseEntity<?> setCustomerKeywordStatusSwitchTime(@RequestBody Map<String, Object> requestMap){
         try {
@@ -224,12 +225,26 @@ public class CustomerRestController {
         }
     }
 
+    @RequiresPermissions("/internal/customer/saveCustomer")
     @RequestMapping(value = "/setCustomerUpdateInterval" , method = RequestMethod.POST)
     public ResponseEntity<?> setCustomerUpdateInterval(@RequestBody Map<String, Object> requestMap){
         try {
             List<String> uuids = (List<String>) requestMap.get("uuids");
             String updateInterval = (String) requestMap.get("updateInterval");
             customerService.setCustomerUpdateInterval(uuids, updateInterval);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<Object>(false, HttpStatus.OK);
+        }
+    }
+
+    @RequiresPermissions("/internal/customer/saveCustomer")
+    @RequestMapping(value = "/updateCustomerUserID" , method = RequestMethod.POST)
+    public ResponseEntity<?> updateCustomerUserID(@RequestBody Map<String, Object> requestMap){
+        try {
+            List<String> uuids = (List<String>) requestMap.get("uuids");
+            String userID = (String) requestMap.get("userID");
+            customerService.updateCustomerUserID(uuids, userID);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<Object>(false, HttpStatus.OK);

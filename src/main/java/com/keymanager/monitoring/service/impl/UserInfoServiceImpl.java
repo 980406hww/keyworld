@@ -42,13 +42,16 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoDao, UserInfo> impl
     }
 
     public List<UserInfo> selectByLoginName(UserVO userVo) {
-        UserInfo userInfo = new UserInfo();
-        userInfo.setLoginName(userVo.getLoginName());
-        EntityWrapper<UserInfo> wrapper = new EntityWrapper<UserInfo>(userInfo);
-        if (null != userVo.getUserUuid()) {
-            wrapper.where("fuuid != {0}", userVo.getUserUuid());
+        if(null != userVo.getLoginName()) {
+            UserInfo userInfo = new UserInfo();
+            userInfo.setLoginName(userVo.getLoginName());
+            EntityWrapper<UserInfo> wrapper = new EntityWrapper<UserInfo>(userInfo);
+            if (null != userVo.getUserUuid()) {
+                wrapper.where("fuuid != {0}", userVo.getUserUuid());
+            }
+            return this.selectList(wrapper);
         }
-        return this.selectList(wrapper);
+        return null;
     }
 
     public void insertByVo(UserVO userVo) {

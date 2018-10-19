@@ -28,12 +28,16 @@ public class Constants {
     public final static String CONFIG_KEY_PAGE_PC_PERCENTAGE = "PCPercentage";
     public final static String CONFIG_KEY_PAGE_PHONE_PERCENTAGE = "PhonePercentage";
     public final static String CONFIG_KEY_MAX_INVALID_COUNT = "MaxInvalidCount";
+    // new
+    public final static String CONFIG_TYPE_CAPTURE_TITLE = "CaptureTitle";
+
     public final static String CONFIG_KEY_VMWARE = "VMWARE";
     public final static String CONFIG_TYPE_OPTIMIZATION_DATE = "OptimizationDate";
     public final static String CONFIG_TYPE_OPTIMIZATION_TYPE = "OperationType";
     public final static String CONFIG_TYPE_TJ_XG = "tj_xg";
     public final static String CONFIG_TYPE_CT = "ct";
     public final static String CONFIG_TYPE_FROM_SOURCE = "src";
+    public final static String CONFIG_TYPE_COUNT_PER_ELEMENT = "CountPerElement";
     public final static String CONFIG_KEY_NEGATIVE_KEYWORDS = "NegativeKeywords";
     public final static String CONFIG_TYPE_ZHANNEI_SOGOU = "zhannei_sogou";
     public final static String CONFIG_KEY_NOPOSITION_MAX_INVALID_COUNT = "NoPositionMaxInvalidCount";

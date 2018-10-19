@@ -1,5 +1,6 @@
 package com.keymanager.monitoring.service;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.enums.CollectMethod;
@@ -16,7 +17,6 @@ import com.keymanager.util.common.StringUtil;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
@@ -111,7 +111,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return customerKeywordDao.searchCustomerKeywordsForDailyReport(customerKeywordCriteria);
     }
 
-    public CustomerKeywordForCaptureTitle searchCustomerKeywordForCaptureTitle(String terminalType,String searchEngine) throws Exception {
+    // new
+    public List<CustomerKeywordForCaptureTitle> searchCustomerKeywordsForCaptureTitle(String terminalType,String searchEngine,Integer batchCount) throws Exception {
         QZCaptureTitleLog qzCaptureTitleLog = qzCaptureTitleLogService.getAvailableQZSetting(QZCaptureTitleLogStatusEnum.Processing.getValue(), terminalType);
         if (qzCaptureTitleLog == null) {
             qzCaptureTitleLog = qzCaptureTitleLogService.getAvailableQZSetting(QZCaptureTitleLogStatusEnum.New.getValue(), terminalType);
@@ -122,38 +123,46 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         if (qzCaptureTitleLog == null) {
             return null;
         }
-        Long customerKeywordUuid = customerKeywordDao.searchCustomerKeywordUuidForCaptureTitle(qzCaptureTitleLog,searchEngine);
-        if (customerKeywordUuid == null) {
+        List<Long> customerKeywordUuids = customerKeywordDao.searchCustomerKeywordsUuidForCaptureTitle(qzCaptureTitleLog, searchEngine, batchCount);
+        if (CollectionUtils.isEmpty(customerKeywordUuids)) {
             qzCaptureTitleLogService.completeQZCaptureTitleLog(qzCaptureTitleLog.getUuid());
             customerKeywordDao.deleteEmptyTitleCustomerKeyword(qzCaptureTitleLog,searchEngine);
             logger.info("deleteEmptyTitleCustomerKeyword:" + qzCaptureTitleLog.getCustomerUuid() + "-" + qzCaptureTitleLog.getGroup());
             return null;
         } else {
-            CustomerKeywordForCaptureTitle captureTitle = customerKeywordDao.searchCustomerKeywordForCaptureTitle(customerKeywordUuid);
+            List<CustomerKeywordForCaptureTitle> customerKeywordForCaptureTitles = new ArrayList<CustomerKeywordForCaptureTitle>();
             QZOperationType qzOperationType = qzOperationTypeService.selectById(qzCaptureTitleLog.getQzOperationTypeUuid());
             QZSetting qzSetting = qzSettingService.selectById(qzOperationType.getQzSettingUuid());
             String subDomainName = qzOperationType.getSubDomainName();
-            if(StringUtils.isNotEmpty(subDomainName)){
-                captureTitle.setWholeUrl(subDomainName);
-            }else {
-                captureTitle.setWholeUrl(qzSetting.getDomain());
+            for (Long customerKeywordUuid : customerKeywordUuids) {
+                CustomerKeywordForCaptureTitle captureTitle = customerKeywordDao.searchCustomerKeywordForCaptureTitle(customerKeywordUuid);
+                if(StringUtils.isNotEmpty(subDomainName)){
+                    captureTitle.setWholeUrl(subDomainName);
+                }else {
+                    captureTitle.setWholeUrl(qzSetting.getDomain());
+                }
+                updateCaptureTitleQueryTime((long)captureTitle.getUuid());
+                customerKeywordForCaptureTitles.add(captureTitle);
             }
-            updateCaptureTitleQueryTime((long)captureTitle.getUuid());
-            return captureTitle;
+            return customerKeywordForCaptureTitles;
         }
     }
 
-    public CustomerKeywordForCaptureTitle searchCustomerKeywordForCaptureTitle(String groupName, String terminalType,String searchEngine) throws Exception {
+    // new
+    public List<CustomerKeywordForCaptureTitle> searchCustomerKeywordsForCaptureTitle(String groupName, String terminalType,String searchEngine,Integer batchCount) throws Exception {
         QZCaptureTitleLog qzCaptureTitleLog = new QZCaptureTitleLog();
         qzCaptureTitleLog.setGroup(groupName);
         qzCaptureTitleLog.setTerminalType(terminalType);
-        Long customerKeywordUuid = customerKeywordDao.searchCustomerKeywordUuidForCaptureTitle(qzCaptureTitleLog,searchEngine);
-        CustomerKeywordForCaptureTitle captureTitle = null;
-        if(null != customerKeywordUuid) {
-            captureTitle = customerKeywordDao.searchCustomerKeywordForCaptureTitle(customerKeywordUuid);
-            updateCaptureTitleQueryTime((long)captureTitle.getUuid());
+        List<Long> customerKeywordUuids = customerKeywordDao.searchCustomerKeywordsUuidForCaptureTitle(qzCaptureTitleLog, searchEngine, batchCount);
+        List<CustomerKeywordForCaptureTitle> captureTitles = new ArrayList<CustomerKeywordForCaptureTitle>();
+        if(CollectionUtils.isNotEmpty(customerKeywordUuids)) {
+            for (Long customerKeywordUuid : customerKeywordUuids) {
+                CustomerKeywordForCaptureTitle captureTitle = customerKeywordDao.searchCustomerKeywordForCaptureTitle(customerKeywordUuid);
+                updateCaptureTitleQueryTime((long)captureTitle.getUuid());
+                captureTitles.add(captureTitle);
+            }
         }
-        return captureTitle;
+        return captureTitles;
     }
 
     private void updateCaptureTitleQueryTime(Long uuid) {
@@ -454,7 +463,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         if (fixedPrice != null && currentIndexCount <= 100) {
             return fixedPrice.doubleValue();
         }
-        return Math.round((currentIndexCount * pricePercentage.doubleValue()) / 1000 - 0.5) * 10;
+        double price = Math.round((currentIndexCount * pricePercentage.doubleValue()) / 1000.0) * 10;
+        return price < fixedPrice.doubleValue() ? fixedPrice.doubleValue() : price;
     }
 
     public List<Map> getCustomerKeywordsCount(List<Long> customerUuids, String terminalType, String entryType){
@@ -553,7 +563,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeywordInvalidCountLogService.addCustomerKeywordInvalidCountLog();
             configService.updateOptimizationDateAsToday();
             customerKeywordDao.resetOptimizationInfo();
-            clientStatusService.updateAllRemainingKeywordIndicator(1);
+            clientStatusService.resetOptimizationInfo();
         }
 
         Config maxInvalidCountConfig = configService.getConfig(Constants.CONFIG_KEY_MAX_INVALID_COUNT, typeName);
@@ -770,59 +780,69 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     private synchronized void settingCustomerKeywordCt(Long customerKeywordUuid, CustomerKeywordForOptimization customerKeywordForOptimization) {
         Config configCt = configService.getConfig(Constants.CONFIG_TYPE_CT, customerKeywordForOptimization.getGroup());
-        String configValue = assignConfigValue(configCt, "_");
+        Config configCountPerElement = configService.getConfig(Constants.CONFIG_TYPE_COUNT_PER_ELEMENT, customerKeywordForOptimization.getGroup());
+        String configValue = assignConfigValue(configCt, "_", Integer.parseInt(configCountPerElement.getValue()));
         customerKeywordForOptimization.setCt(configValue);
         customerKeywordDao.updateCustomerKeywordCt(customerKeywordUuid, configValue);
     }
 
     private synchronized void settingCustomerKeywordFromSource(Long customerKeywordUuid, CustomerKeywordForOptimization customerKeywordForOptimization) {
         Config configFromSource = configService.getConfig(Constants.CONFIG_TYPE_FROM_SOURCE, customerKeywordForOptimization.getGroup());
-        String configValue = assignConfigValue(configFromSource, "_count_");
+        Config configCountPerElement = configService.getConfig(Constants.CONFIG_TYPE_COUNT_PER_ELEMENT, customerKeywordForOptimization.getGroup());
+        String configValue = assignConfigValue(configFromSource, "_count_", Integer.parseInt(configCountPerElement.getValue()));
         customerKeywordForOptimization.setFromSource(configValue);
         customerKeywordDao.updateCustomerKeywordFromSource(customerKeywordUuid, configValue);
     }
 
-    private String assignConfigValue(Config configCt, String splitStr) {
+    private String assignConfigValue(Config configCt, String splitStr, int countPerElement) {
         String configValue = null;
         if (configCt != null) {
             String ctValue = configCt.getValue();
-            if (ctValue.indexOf(splitStr) == -1) { // 未开始分配，分配第一个ct
+            int splitIndex = ctValue.indexOf(splitStr);
+            if (splitIndex == -1) { // 未开始分配，分配第一个ct
                 int index = ctValue.indexOf(",");
-                String ct = ctValue.substring(0, index);
-                configCt.setValue(ct + splitStr + "1" + ctValue.substring(index));
-                configValue = ct;
-            } else if (ctValue.indexOf(splitStr) == ctValue.length() - 1 - splitStr.length()) { // 分配到最后一个ct
-                int count = Integer.parseInt(ctValue.substring(ctValue.indexOf(splitStr) + splitStr.length()));
-                if (count == 3) {
-                    configValue = ctValue.substring(0, ctValue.length() - splitStr.length() - 1);
-                    configCt.setValue(configValue);
-                    configValue = configValue.substring(configValue.lastIndexOf(",") + 1);
-                } else {
-                    count = count + 1;
-                    configCt.setValue(ctValue.substring(0, ctValue.indexOf(splitStr)) + splitStr + count);
-                    configValue = ctValue.substring(ctValue.lastIndexOf(",") + 1, ctValue.indexOf(splitStr));
+                String ct = ctValue;
+                if(index > 0){
+                    ct = ctValue.substring(0, index);
+                    configCt.setValue(ct + splitStr + "1" + ctValue.substring(index));
                 }
-            } else { // 分配到中间的ct
-                int index = ctValue.indexOf(splitStr);
-                int count = Integer.parseInt(ctValue.substring(index + splitStr.length(), index + 1 + splitStr.length()));
-                if (count == 3) {
-                    String beginCt = ctValue.substring(0, index);
-                    String endCt = ctValue.substring(index);
-                    endCt = endCt.substring(endCt.indexOf(",") + 1);
-                    if (endCt.indexOf(",") > -1) {
-                        String ct = endCt.substring(0, endCt.indexOf(","));
-                        configValue = ct;
-                        configCt.setValue(beginCt + "," + ct + splitStr + "1" + endCt.substring(endCt.indexOf(",")));
+                configValue = ct;
+            } else {
+                String afterSplitStr = ctValue.substring(splitIndex + splitStr.length());
+                if (afterSplitStr.indexOf(",") == -1) { // 分配到最后一个ct
+                    int count = Integer.parseInt(ctValue.substring(splitIndex + splitStr.length()));
+                    int countLength = (count + "").length();
+                    if (count == countPerElement) {
+                        configValue = ctValue.substring(0, ctValue.length() - splitStr.length() - countLength);
+                        configCt.setValue(configValue);
+                        configValue = configValue.substring(configValue.lastIndexOf(",") + countLength);
                     } else {
-                        configValue = endCt;
-                        configCt.setValue(beginCt + "," + endCt + splitStr + "1");
+                        count = count + 1;
+                        configCt.setValue(ctValue.substring(0, splitIndex) + splitStr + count);
+                        configValue = ctValue.substring(ctValue.lastIndexOf(",") + countLength, splitIndex);
                     }
-                } else {
-                    count = count + 1;
-                    String beginCt = ctValue.substring(0, index);
-                    String endCt = ctValue.substring(index + 1 + splitStr.length());
-                    configValue = beginCt.substring(beginCt.lastIndexOf(",") + 1);
-                    configCt.setValue(beginCt + splitStr + count + endCt);
+                } else { // 分配到中间的ct
+                    int count = Integer.parseInt(ctValue.substring(splitIndex + splitStr.length(), splitIndex + splitStr.length() + afterSplitStr.indexOf(",")));
+                    int countLength = (count + "").length();
+                    if (count == countPerElement) {
+                        String beginCt = ctValue.substring(0, splitIndex);
+                        String endCt = ctValue.substring(splitIndex);
+                        endCt = endCt.substring(endCt.indexOf(",") + countLength);
+                        if (endCt.indexOf(",") > -1) {
+                            String ct = endCt.substring(0, endCt.indexOf(","));
+                            configValue = ct;
+                            configCt.setValue(beginCt + "," + ct + splitStr + "1" + endCt.substring(endCt.indexOf(",")));
+                        } else {
+                            configValue = endCt;
+                            configCt.setValue(beginCt + "," + endCt + splitStr + "1");
+                        }
+                    } else {
+                        count = count + 1;
+                        String beginCt = ctValue.substring(0, splitIndex);
+                        String endCt = ctValue.substring(splitIndex + countLength + splitStr.length());
+                        configValue = beginCt.substring(beginCt.lastIndexOf(",") + countLength);
+                        configCt.setValue(beginCt + splitStr + count + endCt);
+                    }
                 }
             }
             configService.updateConfig(configCt);
@@ -1001,6 +1021,17 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeyword.setCapturedTitle(1);
             customerKeywordDao.updateById(customerKeyword);
         }
+    }
+
+    // new
+    public void updateCustomerKeywordsTitle(List<SearchEngineResultItemVO> searchEngineResultItemVOs) {
+        List<SearchEngineResultItemVO> havingUrlSearchEngineResultItemVOs = new ArrayList<SearchEngineResultItemVO>();
+        for(SearchEngineResultItemVO searchEngineResultItemVO : searchEngineResultItemVOs){
+            if (searchEngineResultItemVO.getUrl() != null){
+                havingUrlSearchEngineResultItemVOs.add(searchEngineResultItemVO);
+            }
+        }
+        customerKeywordDao.updateCustomerKeywordsTitle(havingUrlSearchEngineResultItemVOs);
     }
 
     public void addCustomerKeywords(SearchEngineResultVO searchEngineResultVO, String terminalType, String userName) throws Exception {
@@ -1285,5 +1316,10 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     public List<String> getCustomerKeywordInfo(CustomerKeywordCriteria customerKeywordCriteria){
         return customerKeywordDao.getCustomerKeywordInfo(customerKeywordCriteria);
+    }
+    //客户关键字批量设置
+    public void batchUpdateKeywordStatus(KeywordStatusBatchUpdateVO keywordStatusBatchUpdateVO){
+       String[] keywordIDs = keywordStatusBatchUpdateVO.getCustomerUuids().split(",");
+       customerKeywordDao.batchUpdateKeywordStatus(keywordIDs, keywordStatusBatchUpdateVO.getKeywordChecks(), keywordStatusBatchUpdateVO.getKeywordStatus());
     }
 }
