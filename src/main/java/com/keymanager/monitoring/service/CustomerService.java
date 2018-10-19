@@ -166,14 +166,16 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 		List<Customer> customers = customerDao.searchNeedSwitchCustomer();
 		for(Customer customer : customers) {
 			openFlag = false;
-			// 按日期启�			if(StringUtils.isNotBlank(customer.getUpdateInterval()) && StringUtils.isBlank(customer.getActiveHour())) {
+			// 按日期启停
+			if(StringUtils.isNotBlank(customer.getUpdateInterval()) && StringUtils.isBlank(customer.getActiveHour())) {
 				String[] updateIntervals = customer.getUpdateInterval().split(",");
 				openFlag = ArrayUtils.contains(updateIntervals, day);
 				if(openFlag) {
 					activeCustomerUuids.add(customer.getUuid());
 				}
 			}
-			// 按小时启�			if(StringUtils.isNotBlank(customer.getActiveHour())) {
+			// 按小时启停
+			if(StringUtils.isNotBlank(customer.getActiveHour())) {
 				boolean existFlag = true;
 				if(StringUtils.isNotBlank(customer.getUpdateInterval())) {
 					String[] updateIntervals = customer.getUpdateInterval().split(",");
