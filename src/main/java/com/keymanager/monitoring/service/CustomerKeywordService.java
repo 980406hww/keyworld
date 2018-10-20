@@ -1,6 +1,5 @@
 package com.keymanager.monitoring.service;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.enums.CollectMethod;
@@ -907,18 +906,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     public void adjustOptimizationCount(){
         List<String> groupNames = new ArrayList<String>();
-        groupNames.add("pc_pm_xiaowu");
-        groupNames.add("pc_pm_learner");
-        groupNames.add("pc_pm_51yza");
-        groupNames.add("pc_pm_yilufa");
-        groupNames.add("m_pm_tiantian");
-        groupNames.add("m_pm_tianqi");
-        groupNames.add("m_pm_learner");
-        List<Map> customerKeywordSummaries = customerKeywordDao.searchCustomerKeywordsForAdjustingOptimizationCount(groupNames);
-        List<Map> ptCustomerKeywordSummaries = customerKeywordDao.searchPTKeywordsForAdjustingOptimizationCount();
-        customerKeywordSummaries.addAll(ptCustomerKeywordSummaries);
-        if(CollectionUtils.isNotEmpty(customerKeywordSummaries)){
-            for(Map customerKeywordSummaryMap : customerKeywordSummaries) {
+        List<Map> bcCustomerKeywordSummaries = customerKeywordDao.searchKeywordsForAdjustingOptimizationCount("bc");
+        List<Map> ptCustomerKeywordSummaries = customerKeywordDao.searchKeywordsForAdjustingOptimizationCount("pt");
+        bcCustomerKeywordSummaries.addAll(ptCustomerKeywordSummaries);
+        if(CollectionUtils.isNotEmpty(bcCustomerKeywordSummaries)){
+            for(Map customerKeywordSummaryMap : bcCustomerKeywordSummaries) {
                 Long uuid = Long.parseLong(customerKeywordSummaryMap.get("uuid").toString());
                 int currentIndexCount = (Integer) customerKeywordSummaryMap.get("currentIndexCount");
                 Integer positionFirstFee = (Integer) customerKeywordSummaryMap.get("positionFirstFee");
