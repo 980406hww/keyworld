@@ -33,7 +33,7 @@
 <body>
 <div id="customerKeywordTopDiv">
     <%@include file="/menu.jsp" %>
-    <form id="searchCustomerKeywordForm" style="font-size:12px; width: 100%;margin-top: 40px;" action="/internal/customerKeyword/searchCustomerKeywordLists" method="post" >
+    <form id="searchCustomerKeywordForm" style="font-size:12px; width: 100%;" action="/internal/customerKeyword/searchCustomerKeywordLists" method="post">
         <div id="searchCustomerKeywordTable">
             <input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}"/>
             <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
@@ -257,6 +257,7 @@
             $("#userName").val("${customerKeywordCriteria.userName}");
         }
         window.onresize = function(){
+            $("#showCustomerTableDiv").css("margin-top",$("#customerKeywordTopDiv").height());
             alignTableHeader();
         }
         if(${customerKeywordCriteria.entryType eq 'bc' or customerKeywordCriteria.entryType eq 'pt'}) {
@@ -264,10 +265,6 @@
                 searchCustomerKeywordForNoReachStandard('${customerKeywordCriteria.entryType}','${customerKeywordCriteria.terminalType}');
             }
         }
-
-        var menuHeight = $(".venus-menu").height();
-        $("#searchCustomerKeywordForm").css("margin-top", menuHeight + 5);
-        $("#showCustomerTableDiv").css("margin-top", menuHeight + 118);
     });
     function initNoPositionChecked() {
         if(${customerKeywordCriteria.noPosition == 1}){

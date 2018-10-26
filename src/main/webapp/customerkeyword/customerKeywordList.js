@@ -5,12 +5,7 @@ $(function () {
     $("#uploadExcelDailog").dialog("close");
     $("#saveCustomerKeywordDialog").dialog("close");
     $("#optimizePlanCountDialog").dialog("close");
-    $("#customerKeywordDiv").css("margin-top",$("#customerKeywordTopDiv").height());
     $('#customerList').dialog("close");
-    alignTableHeader();
-    window.onresize = function(){
-        alignTableHeader();
-    }
 });
 
 function trim(val)
@@ -859,13 +854,6 @@ function displayStopValue() {
     }else {
         $("#displayStop").val("");
     }
-}
-function alignTableHeader() {
-    var td = $("#customerKeywordTable tr:first td");
-    var ctd = $("#headerTable tr:first td");
-    $.each(td, function (idx, val) {
-        ctd.eq(idx).width($(val).width());
-    });
 }
 function onlyNumber(self) {
     $(self).val($(self).val().replace(/[^\d]*/g, ''));

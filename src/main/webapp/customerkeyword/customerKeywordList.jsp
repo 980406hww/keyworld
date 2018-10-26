@@ -46,7 +46,7 @@
 <%@include file="/commons/basejs.jsp" %>
 <div id="customerKeywordTopDiv" >
     <%@include file="/menu.jsp" %>
-            <table width=100% style="border:1px solid #000000;font-size:12px;margin-top: 30px" cellpadding=3>
+            <table width=100% style="border:1px solid #000000;font-size:12px;" cellpadding=3>
                 <tr border="1" height=30>
                     <td width=150>联系人: ${customer.contactPerson}</td>
                     <td width=100>QQ: ${customer.qq}</td>
@@ -544,10 +544,20 @@
     $(function () {
         initPaging();
         initNoPositionChecked();
-
-        var menuHeight = $(".venus-menu").height();
-        $("#customerKeywordDiv").css("margin-top", menuHeight + 195);
+        $("#customerKeywordDiv").css("margin-top",$("#customerKeywordTopDiv").height());
+        alignTableHeader();
+        window.onresize = function(){
+            $("#customerKeywordDiv").css("margin-top",$("#customerKeywordTopDiv").height());
+            alignTableHeader();
+        }
     });
+    function alignTableHeader() {
+        var td = $("#customerKeywordTable tr:first td");
+        var ctd = $("#headerTable tr:first td");
+        $.each(td, function (idx, val) {
+            ctd.eq(idx).width($(val).width());
+        });
+    }
 
     function initPaging() {
         var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");

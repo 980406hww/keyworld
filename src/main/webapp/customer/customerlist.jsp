@@ -25,7 +25,7 @@
 <%@ include file="/commons/basejs.jsp" %>
 <div id="topDiv">
     <%@include file="/menu.jsp" %>
-    <table width="100%" style="font-size:12px; margin-top:30px" cellpadding=3>
+    <table width="100%" style="font-size:12px;" cellpadding=3>
         <tr>
             <td colspan=13>
                 <form method="post" id="searchCustomerForm" action="/internal/customer/searchCustomers" style="margin-bottom:0px ">
@@ -474,6 +474,9 @@
 <script src="${staticPath }/customer/customerlist.js"></script>
 <script type="text/javascript">
     $(function () {
+        window.onresize = function(){
+            $("#showCustomerTableDiv").css("margin-top",$("#topDiv").height());
+        }
         if(${isDepartmentManager}) {
             $("#loginName").val("${customerCriteria.loginName}");
         }
