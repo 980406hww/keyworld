@@ -1076,4 +1076,32 @@
         UPDATE t_customer_keyword SET fFromSource = #{fromSource}
         WHERE fUuid = #{customerKeywordUuid}
     </update>
+
+    <delete id="deleteDuplicateQZCustomerKeywords">
+        DELETE
+        FROM
+            t_customer_keyword
+        WHERE
+            fUuid
+        NOT IN
+        (SELECT
+            a.fUuid
+        FROM
+        (Select
+            MIN(fUuid) fUuid
+            From
+                t_customer_keyword
+            Group By
+                fKeyword Having Count(*)>1
+        UNION
+        Select
+            MIN(fUuid) fUuid
+            From
+                t_customer_keyword
+            Group By
+                fKeyword Having Count(*)=1) a)
+        AND fCustomerUuid = #{customerKeywordCriteria.customerUuid}
+        AND fType = #{customerKeywordCriteria.entryType}
+        AND fTerminalType =  #{customerKeywordCriteria.terminalType}
+    </delete>
 </mapper>

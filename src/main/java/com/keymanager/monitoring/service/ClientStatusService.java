@@ -1053,13 +1053,7 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
         clientStatusDao.batchChangeStatus(clientIds,status);
     }
 
-    public void batchChangeTerminalType(String[] clientIDs, String terminalType){
-        for (String clientID: clientIDs) {
-            ClientStatus clientStatus = clientStatusDao.selectById(clientID);
-            if(clientStatus != null){
-                clientStatus.setTerminalType(terminalType);
-                clientStatusDao.updateById(clientStatus);
-            }
-        }
+    public void batchChangeTerminalType(String[] clientIds, String terminalType){
+        clientStatusDao.batchChangeTerminalType(clientIds,terminalType);
     }
 }

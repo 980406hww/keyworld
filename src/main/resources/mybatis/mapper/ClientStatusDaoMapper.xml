@@ -561,4 +561,13 @@
             #{clientID}
         </foreach>
     </update>
+
+    <update id="batchChangeTerminalType">
+        UPDATE t_client_status
+        SET fTerminalType = #{terminalType}
+        WHERE fClientID IN
+        <foreach collection="clientIds" item="clientID" open="(" close=")" separator=",">
+            #{clientID}
+        </foreach>
+    </update>
 </mapper>
