@@ -184,7 +184,7 @@
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/customerKeyword/deleteCustomerKeywords">
                 <c:if test="${sessionScope.get('entryType') eq 'qz'}">
-                    <input type="button" onclick="deleteDuplicateQZKeyword(${customerKeywordCriteria.customerUuid})" value="删除重复全站词">
+                    <input type="button" onclick="deleteDuplicateCustomerKeyword(${customerKeywordCriteria.customerUuid})" value="删除重复关键字">
                 </c:if>
             </shiro:hasPermission>
         </div>

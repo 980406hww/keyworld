@@ -518,15 +518,28 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	}
 
 	@RequiresPermissions("/internal/customerKeyword/deleteCustomerKeywords")
-    @RequestMapping(value = "/deleteDuplicateQZKeyword/{customerUuid}" , method = RequestMethod.POST)
-    public ModelAndView deleteDuplicateQZKeyword(@PathVariable("customerUuid") Long customerUuid,HttpServletRequest request,HttpSession session) {
-        CustomerKeywordCriteria customerKeywordCriteria = new CustomerKeywordCriteria();
-		customerKeywordCriteria.setCustomerUuid(customerUuid);
-		customerKeywordCriteria.setEntryType(EntryTypeEnum.qz.name());
-		String terminalType = TerminalTypeMapping.getTerminalType(request);
-		customerKeywordCriteria.setTerminalType(terminalType);
-		customerKeywordService.deleteDuplicateQZCustomerKeywords(customerKeywordCriteria);
-		ModelAndView modelAndView = new ModelAndView("/customerkeyword/customerKeywordList");
-		return modelAndView;
+    @RequestMapping(value = "/deleteDuplicateCustomerKeyword/{customerUuid}" , method = RequestMethod.POST)
+    public ResponseEntity<?>  deleteDuplicateCustomerKeyword(@PathVariable("customerUuid") Long customerUuid,HttpServletRequest request,HttpSession session) {
+	    try{
+            String terminalType = TerminalTypeMapping.getTerminalType(request);
+            customerKeywordService.deleteDuplicateKeywords(customerUuid,terminalType);
+            return new ResponseEntity<Object>(true , HttpStatus.OK);
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false , HttpStatus.BAD_REQUEST);
+        }
+	}
+
+	@RequiresPermissions("/internal/customerKeyword/deleteCustomerKeywords")
+	@RequestMapping(value = "/deleteDuplicateQZKeyword" , method = RequestMethod.POST)
+	public ResponseEntity<?>  deleteDuplicateQZKeyword(HttpServletRequest request) {
+	    try{
+            String terminalType = TerminalTypeMapping.getTerminalType(request);
+            customerKeywordService.deleteDuplicateKeywords(null,terminalType);
+            return new ResponseEntity<Object>(true , HttpStatus.OK);
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false , HttpStatus.BAD_REQUEST);
+        }
 	}
 }

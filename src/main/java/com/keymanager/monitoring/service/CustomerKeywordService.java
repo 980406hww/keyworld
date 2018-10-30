@@ -15,6 +15,7 @@ import com.keymanager.util.Utils;
 import com.keymanager.util.common.StringUtil;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
+import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -1314,8 +1315,23 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return customerKeywordDao.getCustomerKeywordInfo(customerKeywordCriteria);
     }
 
-
-    public void deleteDuplicateQZCustomerKeywords(CustomerKeywordCriteria customerKeywordCriteria){
-        customerKeywordDao.deleteDuplicateQZCustomerKeywords(customerKeywordCriteria);
+    public void deleteDuplicateKeywords(Long customerUuid, String terminalType){
+        CustomerKeywordCriteria customerKeywordCriteria = new CustomerKeywordCriteria();
+        customerKeywordCriteria.setCustomerUuid(customerUuid);
+        customerKeywordCriteria.setEntryType(EntryTypeEnum.qz.name());
+        customerKeywordCriteria.setTerminalType(terminalType);
+        List<String> uuidsList = customerKeywordDao.selectDuplicateKeywords(customerKeywordCriteria);
+        List<Long> customerKeywordUuids = new ArrayList<Long>();
+        for (String uuids: uuidsList){
+            ArrayList<Long> listIds = new ArrayList<Long>(Arrays.asList((Long[]) ConvertUtils.convert(uuids.split(","), Long.class)));
+            listIds.remove(0);
+            customerKeywordUuids.addAll(listIds);
+        }
+        while(customerKeywordUuids.size()>0){
+            List<Long> subCustomerKeywordUuids = customerKeywordUuids.subList(0, (customerKeywordUuids.size() > 500) ? 500 : customerKeywordUuids.size());
+            customerKeywordDao.deleteBatchIds(subCustomerKeywordUuids);
+            logger.info("controlCustomerKeywordStatus:" + subCustomerKeywordUuids.toString());
+            customerKeywordUuids.removeAll(subCustomerKeywordUuids);
+        }
     }
 }

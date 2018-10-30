@@ -1012,9 +1012,9 @@ function editOptimizePlanCount(customerUuid, uuids) {
         }
     }
 
-function deleteDuplicateQZKeyword(customerUuid) {
+function deleteDuplicateCustomerKeyword(customerUuid) {
     $.ajax({
-        url: '/internal/customerKeyword/deleteDuplicateQZKeyword/' + customerUuid,
+        url: '/internal/customerKeyword/deleteDuplicateCustomerKeyword/' + customerUuid,
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'

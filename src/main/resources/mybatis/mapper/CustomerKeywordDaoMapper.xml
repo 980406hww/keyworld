@@ -1077,31 +1077,18 @@
         WHERE fUuid = #{customerKeywordUuid}
     </update>
 
-    <delete id="deleteDuplicateQZCustomerKeywords">
-        DELETE
+    <select id="selectDuplicateKeywords" resultType="java.lang.String">
+        SELECT
+            GROUP_CONCAT(CAST(fUuid AS CHAR) ORDER BY fUuid) AS 'uuids'
         FROM
             t_customer_keyword
         WHERE
-            fUuid
-        NOT IN
-        (SELECT
-            a.fUuid
-        FROM
-        (Select
-            MIN(fUuid) fUuid
-            From
-                t_customer_keyword
-            Group By
-                fKeyword Having Count(*)>1
-        UNION
-        Select
-            MIN(fUuid) fUuid
-            From
-                t_customer_keyword
-            Group By
-                fKeyword Having Count(*)=1) a)
-        AND fCustomerUuid = #{customerKeywordCriteria.customerUuid}
-        AND fType = #{customerKeywordCriteria.entryType}
-        AND fTerminalType =  #{customerKeywordCriteria.terminalType}
-    </delete>
+            fType = 'qz'
+        AND fTerminalType = 'PC'
+        <if test="customerKeywordCriteria.customerUuid != null and customerKeywordCriteria.customerUuid != ''">
+            AND fCustomerUuid = #{customerKeywordCriteria.customerUuid}
+        </if>
+        GROUP BY fKeyword,fUrl, fCustomerUuid
+        HAVING COUNT(1) > 1
+    </select>
 </mapper>

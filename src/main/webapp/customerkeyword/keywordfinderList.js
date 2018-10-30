@@ -273,3 +273,27 @@ function searchCustomerKeywordForNoReachStandard(entryType, terminalType) {
         }
     });
 }
+
+
+function deleteDuplicateQZKeyword() {
+    $.ajax({
+        url: '/internal/customerKeyword/deleteDuplicateQZKeyword',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        timeout: 5000,
+        type: 'POST',
+        success: function (result) {
+            console.log(result);
+            if (result) {
+                $().toastmessage('showSuccessToast', "操作成功", true);
+            } else {
+                $().toastmessage('showErrorToast', "操作失败");
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "操作失败");
+        }
+    });
+}
