@@ -1077,14 +1077,14 @@
         WHERE fUuid = #{customerKeywordUuid}
     </update>
 
-    <select id="selectDuplicateKeywords" resultType="java.lang.String">
+    <select id="searchDuplicateKeywords" resultType="java.lang.String">
         SELECT
             GROUP_CONCAT(CAST(fUuid AS CHAR) ORDER BY fUuid) AS 'uuids'
         FROM
             t_customer_keyword
         WHERE
-            fType = 'qz'
-        AND fTerminalType = 'PC'
+            fType = #{customerKeywordCriteria.entryType}
+            AND fTerminalType =  #{customerKeywordCriteria.terminalType}
         <if test="customerKeywordCriteria.customerUuid != null and customerKeywordCriteria.customerUuid != ''">
             AND fCustomerUuid = #{customerKeywordCriteria.customerUuid}
         </if>

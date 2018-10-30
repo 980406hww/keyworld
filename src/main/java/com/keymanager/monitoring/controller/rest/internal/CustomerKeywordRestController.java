@@ -521,8 +521,9 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
     @RequestMapping(value = "/deleteDuplicateCustomerKeyword/{customerUuid}" , method = RequestMethod.POST)
     public ResponseEntity<?>  deleteDuplicateCustomerKeyword(@PathVariable("customerUuid") Long customerUuid,HttpServletRequest request,HttpSession session) {
 	    try{
+	        String entryType = EntryTypeEnum.qz.name();
             String terminalType = TerminalTypeMapping.getTerminalType(request);
-            customerKeywordService.deleteDuplicateKeywords(customerUuid,terminalType);
+            customerKeywordService.deleteDuplicateKeywords(customerUuid,terminalType,entryType);
             return new ResponseEntity<Object>(true , HttpStatus.OK);
         }catch (Exception e){
             logger.error(e.getMessage());
@@ -534,8 +535,9 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	@RequestMapping(value = "/deleteDuplicateQZKeyword" , method = RequestMethod.POST)
 	public ResponseEntity<?>  deleteDuplicateQZKeyword(HttpServletRequest request) {
 	    try{
+            String entryType = EntryTypeEnum.qz.name();
             String terminalType = TerminalTypeMapping.getTerminalType(request);
-            customerKeywordService.deleteDuplicateKeywords(null,terminalType);
+            customerKeywordService.deleteDuplicateKeywords(null,terminalType,entryType);
             return new ResponseEntity<Object>(true , HttpStatus.OK);
         }catch (Exception e){
             logger.error(e.getMessage());

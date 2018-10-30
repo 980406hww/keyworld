@@ -1315,12 +1315,12 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return customerKeywordDao.getCustomerKeywordInfo(customerKeywordCriteria);
     }
 
-    public void deleteDuplicateKeywords(Long customerUuid, String terminalType){
+    public void deleteDuplicateKeywords(Long customerUuid, String terminalType, String entryType){
         CustomerKeywordCriteria customerKeywordCriteria = new CustomerKeywordCriteria();
         customerKeywordCriteria.setCustomerUuid(customerUuid);
-        customerKeywordCriteria.setEntryType(EntryTypeEnum.qz.name());
+        customerKeywordCriteria.setEntryType(entryType);
         customerKeywordCriteria.setTerminalType(terminalType);
-        List<String> uuidsList = customerKeywordDao.selectDuplicateKeywords(customerKeywordCriteria);
+        List<String> uuidsList = customerKeywordDao.searchDuplicateKeywords(customerKeywordCriteria);
         List<Long> customerKeywordUuids = new ArrayList<Long>();
         for (String uuids: uuidsList){
             ArrayList<Long> listIds = new ArrayList<Long>(Arrays.asList((Long[]) ConvertUtils.convert(uuids.split(","), Long.class)));
