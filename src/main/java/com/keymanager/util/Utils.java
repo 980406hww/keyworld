@@ -357,6 +357,24 @@ public class Utils {
 		return value != null ? value.trim() : "";
 	}
 
+	public static void removeDir(String destDirName) {
+		File dir = new File(destDirName);
+		if (dir.exists()) {// 判断目录是否存在
+			deleteAll(dir);
+		}
+	}
+
+	public static void deleteAll(File file) {
+		if (file.isFile() || file.list().length == 0) {
+			file.delete();
+		} else {
+			for (File f : file.listFiles()) {
+				deleteAll(f);
+			}
+			file.delete();
+		}
+	}
+
 	public static boolean createDir(String destDirName) {
 		File dir = new File(destDirName);
 		if (dir.exists()) {// 判断目录是否存在

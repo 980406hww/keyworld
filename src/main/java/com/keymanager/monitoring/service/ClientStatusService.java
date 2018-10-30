@@ -4,8 +4,16 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.*;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import com.keymanager.monitoring.entity.ClientUpgrade;
 import com.keymanager.monitoring.vo.CookieVO;
+import com.keymanager.monitoring.vo.CustomerKeywordRefreshStatInfoVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,8 +82,8 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
         clientStatusDao.updatePageNo(clientID, pageNo);
     }
 
-    public  void updateClientVersion(String clientID, String version){
-        clientStatusDao.updateClientVersion(clientID, version);
+    public  void updateClientVersion(String clientID, String version, boolean hasKeyword){
+        clientStatusDao.updateClientVersion(clientID, version, hasKeyword);
     }
 
     public void logClientStatusTime(String terminalType, String clientID, String status, String freeSpace, String version, String
@@ -88,7 +96,7 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
         }
     }
 
-    public List<ClientStatus> searchClientStatusForRefreshStat(CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria) {
+    public List<CustomerKeywordRefreshStatInfoVO> searchClientStatusForRefreshStat(CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria) {
         return clientStatusDao.searchClientStatusForRefreshStat(customerKeywordRefreshStatInfoCriteria);
     }
 
@@ -379,20 +387,24 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 
     public void getVNCFileInfo(String terminalType) throws Exception {
         List<ClientStatus> clientStatuses = clientStatusDao.searchClientStatusesOrByHost(terminalType,"yes");
-        Map<String, String> passwordMap = new HashMap<String, String>();
-        for (ClientStatus clientStatus : clientStatuses) {
-            String password = passwordMap.get(clientStatus.getPassword());
-            if(password == null) {
-                if (StringUtil.isNullOrEmpty(clientStatus.getPassword())) {
-                    password = "";
-                } else if (clientStatus.getPassword().equals("doshows123")) {
-                    password = "8e587919308fcab0c34af756358b9053";
-                } else {
-                    password = DES.vncPasswordEncode(clientStatus.getPassword());
+        if(CollectionUtils.isNotEmpty(clientStatuses)) {
+            Utils.removeDir(Thread.currentThread().getContextClassLoader().getResource("").toURI().getPath() + "vnc");
+            Utils.createDir(Thread.currentThread().getContextClassLoader().getResource("").toURI().getPath() + "vnc/");
+            Map<String, String> passwordMap = new HashMap<String, String>();
+            for (ClientStatus clientStatus : clientStatuses) {
+                String password = passwordMap.get(clientStatus.getPassword());
+                if (password == null) {
+                    if (StringUtil.isNullOrEmpty(clientStatus.getPassword())) {
+                        password = "";
+                    } else if (clientStatus.getPassword().equals("doshows123")) {
+                        password = "8e587919308fcab0c34af756358b9053";
+                    } else {
+                        password = DES.vncPasswordEncode(clientStatus.getPassword());
+                    }
+                    passwordMap.put(clientStatus.getPassword(), password);
                 }
-                passwordMap.put(clientStatus.getPassword(), password);
+                writeTxtFile(clientStatus, password);
             }
-            writeTxtFile(clientStatus, password);
         }
     }
 
@@ -530,7 +542,6 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 
     public void writeTxtFile(ClientStatus clientStatus, String password) throws Exception {
         FileOutputStream o = null;
-        Utils.createDir(Thread.currentThread().getContextClassLoader().getResource("").toURI().getPath() + "vnc/");
         String fileName = Thread.currentThread().getContextClassLoader().getResource("").toURI().getPath() + "vnc/" + clientStatus.getClientID() + ".vnc";
         o = new FileOutputStream(fileName);
         o.write("[Connection]".getBytes("UTF-8"));
@@ -713,7 +724,9 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 
     private String detectVPSServiceProvider(String backendComputerID){
         backendComputerID = backendComputerID.toLowerCase();
-        if(backendComputerID.indexOf("k") == 0){
+        if(backendComputerID.matches("^[0-9]*$")){
+            return "nuobin";
+        }else if(backendComputerID.indexOf("k") == 0){
             return "yongtian";
         }else if(backendComputerID.indexOf("y") == 0){
             return "yiyang";
@@ -971,6 +984,14 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
         int optimizeRelatedKeyword = sourceClientStatus.getOptimizeRelatedKeyword();
         sourceClientStatus.setOptimizeRelatedKeyword(targetClientStatus.getOptimizeRelatedKeyword());
         targetClientStatus.setOptimizeRelatedKeyword(optimizeRelatedKeyword);
+
+        Timestamp idleStartTime = sourceClientStatus.getIdleStartTime();
+        sourceClientStatus.setIdleStartTime(targetClientStatus.getIdleStartTime());
+        targetClientStatus.setIdleStartTime(idleStartTime);
+
+        long idleTotalMinutes = sourceClientStatus.getIdleTotalMinutes();
+        sourceClientStatus.setIdleTotalMinutes(targetClientStatus.getIdleTotalMinutes());
+        targetClientStatus.setIdleTotalMinutes(idleTotalMinutes);
     }
 
     public void sendNotificationForRenewal() throws Exception{
@@ -1022,6 +1043,10 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
         return clientStatus.getStartUpStatus();
     }
 
+    public String getClientStatusID(String vpsBackendSystemComputerID) {
+        return clientStatusDao.getClientStatusID(vpsBackendSystemComputerID);
+    }
+
     public void updateClientStartUpStatus(String clientID, String status) {
         ClientStatus clientStatus = clientStatusDao.selectById(clientID);
         if(clientStatus != null) {
@@ -1053,7 +1078,23 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
         clientStatusDao.batchChangeStatus(clientIds,status);
     }
 
-    public void batchChangeTerminalType(String[] clientIds, String terminalType){
-        clientStatusDao.batchChangeTerminalType(clientIds,terminalType);
+    public void batchChangeTerminalType(String[] clientIds, String terminalType) {
+        clientStatusDao.batchChangeTerminalType(clientIds, terminalType);
+    }
+
+    public Integer getUpgradingClientCount(ClientUpgrade clientUpgrade) {
+        return clientStatusDao.getUpgradingClientCount(clientUpgrade);
+    }
+
+    public void updateClientTargetVersion(ClientUpgrade clientUpgrade) {
+        clientStatusDao.updateClientTargetVersion(clientUpgrade);
+    }
+
+    public Integer getResidualClientCount(ClientUpgrade clientUpgrade) {
+        return clientStatusDao.getResidualClientCount(clientUpgrade);
+    }
+
+    public void resetOptimizationInfo() {
+        clientStatusDao.resetOptimizationInfo();
     }
 }

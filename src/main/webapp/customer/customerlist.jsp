@@ -25,7 +25,7 @@
 <%@ include file="/commons/basejs.jsp" %>
 <div id="topDiv">
     <%@include file="/menu.jsp" %>
-    <table width="100%" style="font-size:12px; margin-top:30px" cellpadding=3>
+    <table width="100%" style="font-size:12px;" cellpadding=3>
         <tr>
             <td colspan=13>
                 <form method="post" id="searchCustomerForm" action="/internal/customer/searchCustomers" style="margin-bottom:0px ">
@@ -59,6 +59,7 @@
                         </shiro:hasPermission>
                         <shiro:hasPermission name="/internal/customer/saveCustomer">
                             &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 添加 " onclick="showCustomerDialog(null,'${user.loginName}')"/>
+                            &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 修改客户归属 " onclick="updateCustomerUserID()"/>
                         </shiro:hasPermission>
                         <shiro:hasPermission name="/internal/customer/deleteCustomers">
                             &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 删除所选 " onclick="deleteCustomers(this)"/>
@@ -437,6 +438,14 @@
         </tr>
     </table>
 </div>
+<div id="updateCustomerUserIDDialog" title="修改客户归属" class="easyui-dialog" style="left: 30%;display: none;">
+    请选择客户归属:
+    <select id="userID">
+        <c:forEach items="${activeUsers}" var="activeUser">
+            <option value="${activeUser.loginName}">${activeUser.userName}</option>
+        </c:forEach>
+    </select>
+</div>
 <div id="showCustomerBottomPositioneDiv">
     <div id="showCustomerBottomDiv">
         <input id="fisrtButton" class="ui-button ui-widget ui-corner-all" type="button"
@@ -465,6 +474,9 @@
 <script src="${staticPath }/customer/customerlist.js"></script>
 <script type="text/javascript">
     $(function () {
+        window.onresize = function(){
+            $("#showCustomerTableDiv").css("margin-top",$("#topDiv").height());
+        }
         if(${isDepartmentManager}) {
             $("#loginName").val("${customerCriteria.loginName}");
         }

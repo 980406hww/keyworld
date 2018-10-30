@@ -16,4 +16,9 @@ public class NegativeListCacheService {
     public void negativeListCacheEvict(String keyword) {
         logger.info("CacheEvict:" + keyword);
     }
+
+    @CacheEvict(value = "negativeList", allEntries = true)
+    public void evictAllNegativeListCache() {
+        logger.info("CacheEvict: all negativeList cache");
+    }
 }

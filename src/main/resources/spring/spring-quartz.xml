@@ -24,6 +24,7 @@
 				<ref bean="cronTriggerChangeOptimizeGroupName" />
 				<ref bean="cronTriggerNegativeStandardSettingCount" />
 				<ref bean="cronTriggerAllotCookie" />
+				<ref bean="cronTriggerClientUpgrade" />
 			</list>
 		</property>
 		<!-- Quartz配置, 本地运行无需单独的quartz.properties文件，在此简单配置即可 -->
@@ -252,6 +253,18 @@
 
 	<bean id="cronTriggerAllotCookieSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject" ref="allotCookieSchedule" />
+		<property name="targetMethod" value="runTask" />
+		<property name="concurrent" value="false" />
+	</bean>
+
+	<!--机器自动升级-->
+	<bean id="cronTriggerClientUpgrade" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="cronTriggerClientUpgradeSchedule"/>
+		<property name="cronExpression" value="0 0/2 * * * ?" />
+	</bean>
+
+	<bean id="cronTriggerClientUpgradeSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="clientUpgradeSchedule" />
 		<property name="targetMethod" value="runTask" />
 		<property name="concurrent" value="false" />
 	</bean>

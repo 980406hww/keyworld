@@ -4,20 +4,21 @@ import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.BaiduIndexCriteria;
 import com.keymanager.monitoring.criteria.BaseCriteria;
 import com.keymanager.monitoring.entity.ClientStatus;
+import com.keymanager.monitoring.entity.Config;
 import com.keymanager.monitoring.entity.CustomerKeyword;
 import com.keymanager.monitoring.entity.NegativeList;
 import com.keymanager.monitoring.service.ClientStatusService;
+import com.keymanager.monitoring.service.ConfigService;
 import com.keymanager.monitoring.service.CustomerKeywordService;
 import com.keymanager.monitoring.service.PerformanceService;
-import com.keymanager.monitoring.vo.SearchEngineResultItemVO;
-import com.keymanager.monitoring.vo.SearchEngineResultVO;
-import com.keymanager.monitoring.vo.ZTreeVO;
+import com.keymanager.monitoring.vo.*;
+import com.keymanager.monitoring.vo.customerSourceVO;
 import com.keymanager.util.Constants;
 import com.keymanager.util.TerminalTypeMapping;
 import com.keymanager.util.Utils;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
-import com.keymanager.monitoring.vo.CustomerKeywordForOptimization;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,9 +31,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = "/external/customerkeyword")
@@ -48,6 +47,9 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
 
     @Autowired
     private PerformanceService performanceService;
+
+    @Autowired
+    private ConfigService configService;
 
     private String getIP(HttpServletRequest request) {
         String ip = request.getHeader("X-Forwarded-For");
@@ -80,21 +82,24 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         String searchEngine = (String) requestMap.get("searchEngine");
         try {
             if (validUser(userName, password)) {
-                CustomerKeywordForCaptureTitle returnValue = null;
+                List<CustomerKeywordForCaptureTitle> customerKeywordForCaptureTitles = null;
                 String terminalType = TerminalTypeMapping.getTerminalType(request);
                 if (StringUtils.isEmpty(groupName)) {
                     //just baidu have whole site
                     if(Constants.SEARCH_ENGINE_BAIDU.equals(searchEngine)) {
-                        returnValue = customerKeywordService.searchCustomerKeywordForCaptureTitle(terminalType, searchEngine);
+                        customerKeywordForCaptureTitles = customerKeywordService.searchCustomerKeywordsForCaptureTitle(terminalType, searchEngine, 1);
                     }
                 } else {
-                    returnValue = (customerKeywordService.searchCustomerKeywordForCaptureTitle(groupName, terminalType,searchEngine));
+                    customerKeywordForCaptureTitles = (customerKeywordService.searchCustomerKeywordsForCaptureTitle(groupName, terminalType,searchEngine,1));
                 }
-                if(returnValue == null) {
-                    returnValue = new CustomerKeywordForCaptureTitle();
-                    returnValue.setKeyword("end");
+                CustomerKeywordForCaptureTitle customerKeywordForCaptureTitle = null;
+                if (CollectionUtils.isNotEmpty(customerKeywordForCaptureTitles)){
+                    customerKeywordForCaptureTitle = customerKeywordForCaptureTitles.get(0);
+                } else {
+                    customerKeywordForCaptureTitle = new CustomerKeywordForCaptureTitle();
+                    customerKeywordForCaptureTitle.setKeyword("end");
                 }
-                return new ResponseEntity<Object>(returnValue, HttpStatus.OK);
+                return new ResponseEntity<Object>(customerKeywordForCaptureTitle, HttpStatus.OK);
             }
         }catch (Exception ex){
             logger.error(ex.getMessage());
@@ -108,6 +113,57 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             if (validUser(searchEngineResultItemVO.getUserName(), searchEngineResultItemVO.getPassword())) {
                 customerKeywordService.updateCustomerKeywordTitle(searchEngineResultItemVO);
                 return new ResponseEntity<Object>(1, HttpStatus.OK);
+            }
+        }catch (Exception ex){
+            logger.error(ex.getMessage());
+        }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+    }
+
+    // new
+    @RequestMapping(value = "/updateCustomerKeywordsForCaptureTitle", method = RequestMethod.POST)
+    public ResponseEntity<?> updateCustomerKeywordsForCaptureTitle(@RequestBody SearchEngineResultItemsVO searchEngineResultItemsVO) throws Exception {
+        try {
+            if (validUser(searchEngineResultItemsVO.getUserName(), searchEngineResultItemsVO.getPassword())) {
+                customerKeywordService.updateCustomerKeywordsTitle(searchEngineResultItemsVO.getSearchEngineResultItemVOs());
+                return new ResponseEntity<Object>(1, HttpStatus.OK);
+            }
+        }catch (Exception ex){
+            logger.error(ex.getMessage());
+        }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+    }
+
+    // new
+    @RequestMapping(value = "/getKeywordsForCaptureTitle", method = RequestMethod.POST)
+    public ResponseEntity<?> getKeywordsForCaptureTitle(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) throws Exception {
+        String groupName = (String) requestMap.get("group");
+        String userName = (String) requestMap.get("userName");
+        String password = (String) requestMap.get("password");
+        String searchEngine = (String) requestMap.get("searchEngine");
+        try {
+            if (validUser(userName, password)) {
+                List<CustomerKeywordForCaptureTitle> customerKeywordForCaptureTitles = null;
+                String terminalType = TerminalTypeMapping.getTerminalType(request);
+                Config countConfig = configService.getConfig(Constants.CONFIG_TYPE_CAPTURE_TITLE, "BatchCount");
+                Integer batchCount = Integer.parseInt(countConfig.getValue());
+                if (StringUtils.isEmpty(groupName)) {
+                    //just baidu have whole site
+                    if(Constants.SEARCH_ENGINE_BAIDU.equals(searchEngine)) {
+                        customerKeywordForCaptureTitles = customerKeywordService.searchCustomerKeywordsForCaptureTitle(terminalType, searchEngine, batchCount);
+                    }
+                } else {
+                    customerKeywordForCaptureTitles = (customerKeywordService.searchCustomerKeywordsForCaptureTitle(groupName, terminalType,searchEngine,batchCount));
+                }
+                if (customerKeywordForCaptureTitles == null) {
+                    customerKeywordForCaptureTitles = new ArrayList<CustomerKeywordForCaptureTitle>();
+                }
+                if(CollectionUtils.isEmpty(customerKeywordForCaptureTitles)){
+                    CustomerKeywordForCaptureTitle customerKeywordForCaptureTitle = new CustomerKeywordForCaptureTitle();
+                    customerKeywordForCaptureTitle.setKeyword("end");
+                    customerKeywordForCaptureTitles.add(customerKeywordForCaptureTitle);
+                }
+                return new ResponseEntity<Object>(customerKeywordForCaptureTitles, HttpStatus.OK);
             }
         }catch (Exception ex){
             logger.error(ex.getMessage());
@@ -178,6 +234,9 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         long startMilleSeconds = System.currentTimeMillis();
         String clientID = request.getParameter("clientID");
         String userName = request.getParameter("userName");
+        if(StringUtils.isBlank(userName)){
+            userName = request.getParameter("username");
+        }
         String password = request.getParameter("password");
         String version = request.getParameter("version");
         try {
@@ -186,7 +245,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 String terminalType = clientStatus.getTerminalType();
 
                 CustomerKeywordForOptimization customerKeywordForOptimization = customerKeywordService.searchCustomerKeywordsForOptimization(terminalType, clientID, version, true);
-                clientStatusService.updateClientVersion(clientID, version);
+                clientStatusService.updateClientVersion(clientID, version, customerKeywordForOptimization != null);
                 performanceService.addPerformanceLog(terminalType + ":getCustomerKeyword", System.currentTimeMillis() - startMilleSeconds, null);
                 return new ResponseEntity<Object>(customerKeywordForOptimization, HttpStatus.OK);
             }
@@ -199,7 +258,10 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
     @RequestMapping(value = "/updateOptimizedCount", method = RequestMethod.GET)
     public ResponseEntity<?> updateOptimizedCount(HttpServletRequest request) throws Exception {
         long startMilleSeconds = System.currentTimeMillis();
-        String userName = request.getParameter("username");
+        String userName = request.getParameter("userName");
+        if(StringUtils.isBlank(userName)){
+            userName = request.getParameter("username");
+        }
         String password = request.getParameter("password");
 
         Long customerKeywordUuid = Long.parseLong(request.getParameter("uuid").trim());
@@ -397,14 +459,19 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             String userName = (String) requestMap.get("userName");
             String password = (String) requestMap.get("password");
             if (validUser(userName, password)) {
-                List<ZTreeVO> zTreeList = customerKeywordService.getCustomerSource();
-                return new ResponseEntity<Object>(zTreeList, HttpStatus.OK);
+                return new ResponseEntity<Object>(HttpStatus.OK);
             }
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }catch (Exception ex){
             logger.error(ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+    }
+
+    @RequestMapping(value = "/getCustomerSources", method = RequestMethod.POST)
+    public ResponseEntity<?> getCustomerSources(){
+        List<customerSourceVO> customerSources = customerKeywordService.getCustomerSource();
+        return new ResponseEntity<Object>(customerSources, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/findAllNegativeCustomerKeyword", method = RequestMethod.POST)

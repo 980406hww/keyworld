@@ -47,14 +47,13 @@ public class CustomerKeywordRefreshStatInfoService extends ServiceImpl<CustomerK
             customerKeywordRefreshStatInfoVOMap.put(customerKeywordRefreshStatInfoVO.getGroup(), customerKeywordRefreshStatInfoVO);
         }
 
-        List<ClientStatus> clientStatuses = clientStatusService.searchClientStatusForRefreshStat(customerKeywordRefreshStatInfoCriteria);
-        for (ClientStatus clientStatus : clientStatuses) {
-            CustomerKeywordRefreshStatInfoVO customerKeywordRefreshStatInfoVO = customerKeywordRefreshStatInfoVOMap.get(clientStatus.getGroup());
+        List<CustomerKeywordRefreshStatInfoVO> csCustomerKeywordRefreshStatInfoVOs = clientStatusService.searchClientStatusForRefreshStat(customerKeywordRefreshStatInfoCriteria);
+        for (CustomerKeywordRefreshStatInfoVO csCustomerKeywordRefreshStatInfoVO : csCustomerKeywordRefreshStatInfoVOs) {
+            CustomerKeywordRefreshStatInfoVO customerKeywordRefreshStatInfoVO = customerKeywordRefreshStatInfoVOMap.get(csCustomerKeywordRefreshStatInfoVO.getGroup());
             if (customerKeywordRefreshStatInfoVO != null) {
-                customerKeywordRefreshStatInfoVO.setTotalMachineCount(customerKeywordRefreshStatInfoVO.getTotalMachineCount() + 1);
-                if (clientStatus.getRed()) {
-                    customerKeywordRefreshStatInfoVO.setUnworkMachineCount(customerKeywordRefreshStatInfoVO.getUnworkMachineCount() + 1);
-                }
+                customerKeywordRefreshStatInfoVO.setIdleTotalMinutes(csCustomerKeywordRefreshStatInfoVO.getIdleTotalMinutes());
+                customerKeywordRefreshStatInfoVO.setTotalMachineCount(csCustomerKeywordRefreshStatInfoVO.getTotalMachineCount());
+                customerKeywordRefreshStatInfoVO.setUnworkMachineCount(csCustomerKeywordRefreshStatInfoVO.getUnworkMachineCount());
             }
         }
         CustomerKeywordRefreshStatInfoVO total = new CustomerKeywordRefreshStatInfoVO();
@@ -73,6 +72,7 @@ public class CustomerKeywordRefreshStatInfoService extends ServiceImpl<CustomerK
             total.setReachStandardKeywordCount(total.getReachStandardKeywordCount() + customerKeywordRefreshStatInfoVO.getReachStandardKeywordCount());
             total.setTodaySubTotal(total.getTodaySubTotal() + customerKeywordRefreshStatInfoVO.getTodaySubTotal());
             total.setMaxInvalidCount(customerKeywordRefreshStatInfoVO.getMaxInvalidCount());
+            total.setIdleTotalMinutes(total.getIdleTotalMinutes() + customerKeywordRefreshStatInfoVO.getIdleTotalMinutes());
         }
         customerKeywordRefreshStatInfoVOs.add(0, total);
         return customerKeywordRefreshStatInfoVOs;

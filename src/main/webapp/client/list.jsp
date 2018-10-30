@@ -58,7 +58,7 @@
 <%@ include file="/commons/basejs.jsp" %>
 <div id="topDiv">
 	<%@ include file="/menu.jsp"%>
-				<form id="searchClientStatusForm" method="post" action="/internal/clientstatus/searchClientStatuses" style="font-size: 12px;margin-top: 35px" cellpadding=3>
+				<form id="searchClientStatusForm" method="post" action="/internal/clientstatus/searchClientStatuses" style="font-size: 12px;" cellpadding=3>
 					<table style="font-size: 12px;width:100%">
 						<tr>
 							<td align="left" colspan="2">
@@ -122,6 +122,8 @@
 							<input id="noVNC" name="noVNC" type="checkbox" value="noVNC" ${clientStatusCriteria.noVNC != null ? "checked=true" : ""}>没VNC</input>
 							&nbsp;&nbsp;
 							<input id="noUpgrade" name="noUpgrade" type="checkbox" value="noUpgrade" ${clientStatusCriteria.noUpgrade != null ? "checked=true" : ""}>没升级</input>
+							&nbsp;&nbsp;
+							<input id="noChangePassword" name="noChangePassword" type="checkbox" value="noChangePassword" ${clientStatusCriteria.noChangePassword != null ? "checked=true" : ""}>没修改密码</input>
 							&nbsp;&nbsp;
 							<input id="startUpClient" name="startUpClient" type="checkbox" value="startUpClient" ${clientStatusCriteria.startUpClient != null ? "checked=true" : ""}>开机机器</input>
 							&nbsp;&nbsp;

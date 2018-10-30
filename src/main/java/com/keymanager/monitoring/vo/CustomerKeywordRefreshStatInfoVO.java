@@ -1,7 +1,9 @@
 package com.keymanager.monitoring.vo;
 
 
-public class CustomerKeywordRefreshStatInfoVO {	
+import java.math.BigDecimal;
+
+public class CustomerKeywordRefreshStatInfoVO {
 	private String group;
 	private int totalKeywordCount;
 	private int needOptimizeKeywordCount;
@@ -16,6 +18,7 @@ public class CustomerKeywordRefreshStatInfoVO {
 	private int totalMachineCount;
 	private int unworkMachineCount;
 	private int maxInvalidCount;
+	private long idleTotalMinutes;
 
 	public double getInvalidKeywordPercentage(){
 		return (this.getTotalKeywordCount() > 0) ? ((this.getInvalidKeywordCount() * 1.0) / this.getTotalKeywordCount()) * 100 : 0;
@@ -139,5 +142,22 @@ public class CustomerKeywordRefreshStatInfoVO {
 
 	public void setTodaySubTotal(double todaySubTotal) {
 		this.todaySubTotal = todaySubTotal;
+	}
+
+	public long getIdleTotalMinutes() {
+		return idleTotalMinutes;
+	}
+
+	public void setIdleTotalMinutes(long idleTotalMinutes) {
+		this.idleTotalMinutes = idleTotalMinutes;
+	}
+
+	public double getIdlePercentage(){
+		if(this.getIdleTotalMinutes() > 0) {
+			BigDecimal b = new BigDecimal(this.getIdleTotalMinutes() / (this.getTotalMachineCount() * 24 * 60.0));
+			return b.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue()*100;
+		}else{
+			return 0;
+		}
 	}
 }

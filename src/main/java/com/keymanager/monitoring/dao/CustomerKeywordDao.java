@@ -5,10 +5,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.criteria.CustomerKeywordCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordUpdateCriteria;
-import com.keymanager.monitoring.entity.Config;
-import com.keymanager.monitoring.entity.CustomerKeyword;
-import com.keymanager.monitoring.entity.NegativeList;
-import com.keymanager.monitoring.entity.QZCaptureTitleLog;
+import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.vo.*;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
 import org.apache.ibatis.annotations.Param;
@@ -102,7 +99,7 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     List<Map> searchCustomerKeywordsForAdjustingOptimizationCount(@Param("groupNames")List<String> groupNames);
 
-    List<Map> searchPTKeywordsForAdjustingOptimizationCount();
+    List<Map> searchKeywordsForAdjustingOptimizationCount(@Param("type")String type);
 
     void adjustOptimizePlanCount(@Param("customerKeywordUuid")Long customerKeywordUuid, @Param("optimizationPlanCount")int optimizationPlanCount,
                                  @Param("queryInterval")int queryInterval);
@@ -130,7 +127,7 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void updateAutoUpdateNegativeTimeAs4MinutesAgo(@Param("terminalType")String terminalType, @Param("groupName")String groupName);
 
-    Long searchCustomerKeywordUuidForCaptureTitle(@Param("qzCaptureTitleLog") QZCaptureTitleLog qzCaptureTitleLog,@Param("searchEngine")String searchEngine);
+    List<Long> searchCustomerKeywordsUuidForCaptureTitle(@Param("qzCaptureTitleLog") QZCaptureTitleLog qzCaptureTitleLog,@Param("searchEngine")String searchEngine, @Param("batchCount")Integer batchCount);
 
     CustomerKeywordForCaptureTitle searchCustomerKeywordForCaptureTitle(@Param("uuid") Long uuid);
 
@@ -196,5 +193,9 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     List<CustomerKeyword> searchCustomerKeywordsPageForCustomer(@Param("customerKeywordCriteria") CustomerKeywordCriteria customerKeywordCriteria);
 
+    //客户关键字批量设�
+    void batchUpdateKeywordStatus(@Param("keywordIDs")String[] keywordIDs, @Param("keywordChecks") CustomerKeyword keywordChecks, @Param("keywordStatus")CustomerKeyword keywordStatus);
+
+    void updateCustomerKeywordsTitle(@Param("searchEngineResultItemVOs") List<SearchEngineResultItemVO> searchEngineResultItemVOs);
     List<String> searchDuplicateKeywords(@Param("customerKeywordCriteria") CustomerKeywordCriteria customerKeywordCriteria);
 }

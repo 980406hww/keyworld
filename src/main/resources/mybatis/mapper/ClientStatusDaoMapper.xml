@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.monitoring.dao.ClientStatusDao">
-    <select id="searchClientStatusForRefreshStat" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria" resultType="com.keymanager.monitoring.entity.ClientStatus">
+    <select id="searchClientStatusForRefreshStat" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria" resultType="com.keymanager.monitoring.vo.CustomerKeywordRefreshStatInfoVO">
         SELECT
-        cs.fPageNo AS "pageNo",
-        cs.fContinuousFailCount AS "continuousFailCount",
         cs.fGroup AS "group",
-        cs.fLastVisitTime AS "lastVisitTime"
+        SUM(IF(DATE_ADD(cs.fLastVisitTime, INTERVAL IF(10 > cs.fPageNo * 3, 15, cs.fPageNo * 3 + 5) MINUTE) &lt; NOW(), 1, 0)) AS 'unworkMachineCount',
+        SUM(cs.fIdleTotalMinutes) AS "idleTotalMinutes",
+        COUNT(1)  AS 'totalMachineCount'
         FROM t_client_status cs
         WHERE cs.fTerminalType = #{customerKeywordRefreshStatInfoCriteria.terminalType}
         AND cs.fValid = 1
@@ -14,6 +14,7 @@
             AND cs.fGroup like '${customerKeywordRefreshStatInfoCriteria.groupName}%'
             AND EXISTS (SELECT 1 FROM t_customer_keyword ck WHERE ck.fType = #{customerKeywordRefreshStatInfoCriteria.entryType} AND ck.fOptimizeGroupName like '${customerKeywordRefreshStatInfoCriteria.groupName}%')
         </if>
+        GROUP BY cs.fGroup
         ORDER BY cs.fGroup
     </select>
 
@@ -151,6 +152,7 @@
         <if test="clientStatusCriteria.runningProgramType != null and clientStatusCriteria.runningProgramType != ''"> AND cs.fRunningProgramType = #{clientStatusCriteria.runningProgramType}</if>
         <if test="clientStatusCriteria.noVNC != null"> AND (cs.fHost is null or cs.fHost = '')</if>
         <if test="clientStatusCriteria.noUpgrade != null"> AND (cs.fVersion &lt;&gt; cs.fTargetVersion)</if>
+        <if test="clientStatusCriteria.noChangePassword != null"> AND (cs.fPassword &lt;&gt; cs.fTargetVPSPassword)</if>
         <if test="clientStatusCriteria.startUpClient != null"> AND cs.fDownloadProgramType > ''</if>
         <if test="clientStatusCriteria.vpsBackendSystemComputerID != null and clientStatusCriteria.vpsBackendSystemComputerID != ''"> AND (cs.fVPSBackendSystemComputerID = #{clientStatusCriteria.vpsBackendSystemComputerID})</if>
         <if test="clientStatusCriteria.switchGroupName != null and clientStatusCriteria.switchGroupName != ''"> AND cs.fSwitchGroupName = #{clientStatusCriteria.switchGroupName}</if>
@@ -224,6 +226,14 @@
     <update id="updateClientVersion">
         UPDATE t_client_status
         SET fVersion = #{version}, fRestartCount = 0, fRestartStatus = null
+        <choose>
+            <when test="hasKeyword == 1">
+                ,fIdleTotalMinutes = IF(fIdleStartTime IS NULL, fIdleTotalMinutes, fIdleTotalMinutes + TIMESTAMPDIFF(MINUTE, fIdleStartTime, NOW())), fIdleStartTime = NULL
+            </when>
+            <when test="hasKeyword == 0">
+                ,fIdleStartTime = IF(fIdleStartTime IS NULL, NOW(), fIdleStartTime)
+            </when>
+        </choose>
         WHERE fClientID = #{clientID}
     </update>
 
@@ -409,7 +419,8 @@
         WHERE (fContinuousFailCount > 5 OR fTenMinsLastVisitTime &lt; NOW())
         AND fTenMinsRestartTime &lt; NOW() and fRemainingKeyword = 1
         AND fStartUpStatus = 'Completed'
-        AND fValid = 1 AND fHost &gt; '' order by fRestartOrderingTime  limit 1
+        AND fGroup &gt; ''
+        AND fValid = 1 AND fHost &gt; '' order by fRestartOrderingTime limit 1
     </select>
 
     <update id="updateRemainingKeywordIndicator">
@@ -432,8 +443,28 @@
         LIMIT 1
     </select>
 
+    <select id="getClientStatusID" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT fClientID as 'clientID' FROM t_client_status WHERE fVPSBackendSystemComputerID = #{vpsBackendSystemComputerID}
+    </select>
+
     <select id="getDownloadingClientCount" resultType="java.lang.Integer">
         SELECT COUNT(1) FROM t_client_status WHERE fStartUpStatus = "Downloading"
+    </select>
+
+    <select id="getUpgradingClientCount" parameterType="com.keymanager.monitoring.entity.ClientUpgrade" resultType="int">
+        SELECT COUNT(1) FROM t_client_status
+        WHERE fVersion = #{clientUpgrade.version}
+        AND fRunningProgramType = #{clientUpgrade.programType}
+        AND fTargetVersion = #{clientUpgrade.targetVersion}
+        AND fTerminalType = #{clientUpgrade.terminalType}
+    </select>
+
+    <select id="getResidualClientCount" parameterType="com.keymanager.monitoring.entity.ClientUpgrade" resultType="int">
+        SELECT COUNT(1) FROM t_client_status
+        WHERE fVersion = #{clientUpgrade.version}
+        AND fRunningProgramType = #{clientUpgrade.programType}
+        AND (fTargetVersion is null or fTargetVersion &lt;&gt; #{clientUpgrade.targetVersion})
+        AND fTerminalType = #{clientUpgrade.terminalType}
     </select>
 
     <update id="reopenClientStatus">
@@ -569,5 +600,19 @@
         <foreach collection="clientIds" item="clientID" open="(" close=")" separator=",">
             #{clientID}
         </foreach>
+    </update>
+    
+    <update id="updateClientTargetVersion" parameterType="com.keymanager.monitoring.entity.ClientUpgrade">
+        UPDATE t_client_status
+        SET fTargetVersion = #{clientUpgrade.targetVersion}
+        WHERE fVersion = #{clientUpgrade.version}
+        AND fRunningProgramType = #{clientUpgrade.programType}
+        AND fTerminalType = #{clientUpgrade.terminalType}
+        AND (fTargetVersion is null or fTargetVersion &lt;&gt; #{clientUpgrade.targetVersion})
+        LIMIT #{clientUpgrade.maxUpgradeCount}
+    </update>
+
+    <update id="resetOptimizationInfo">
+        UPDATE t_client_status SET fRemainingKeyword = 1, fIdleStartTime = null, fIdleTotalMinutes = 0
     </update>
 </mapper>

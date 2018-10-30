@@ -282,6 +282,12 @@ public class ClientStatus {
 	@TableField(value = "fTargetVPSPassword")
 	private String targetVPSPassword;
 
+	@TableField(value = "fIdleStartTime")
+	private Timestamp idleStartTime;
+
+	@TableField(value = "fIdleTotalMinutes")
+	private long idleTotalMinutes;
+
 	public String getClientID() {
 		return clientID;
 	}
@@ -994,5 +1000,21 @@ public class ClientStatus {
 
 	public void setTargetVPSPassword(String targetVPSPassword) {
 		this.targetVPSPassword = targetVPSPassword;
+	}
+
+	public Timestamp getIdleStartTime() {
+		return idleStartTime;
+	}
+
+	public void setIdleStartTime(Timestamp idleStartTime) {
+		this.idleStartTime = idleStartTime;
+	}
+
+	public long getIdleTotalMinutes() {
+		return idleTotalMinutes;
+	}
+
+	public void setIdleTotalMinutes(long idleTotalMinutes) {
+		this.idleTotalMinutes = idleTotalMinutes;
 	}
 }

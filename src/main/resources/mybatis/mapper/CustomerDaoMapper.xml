@@ -73,19 +73,8 @@
             ck.fCustomerUuid
     </select>
 
-    <select id="findNegativeCustomer" resultType="com.keymanager.monitoring.entity.Customer">
-        SELECT
-            fUuid AS "uuid",
-            fContactPerson AS "contactPerson"
-        FROM
-            t_customer
-        WHERE
-            fEntryType = "fm"
-        AND
-            fStatus = 1
-    </select>
-
-    <select id="searchCustomerTypes" parameterType="com.keymanager.monitoring.criteria.CustomerCriteria" resultType="java.util.Map">
+    <select id="searchCustomerTypes" parameterType="com.keymanager.monitoring.criteria.CustomerCriteria"
+            resultType="java.util.Map">
         SELECT fType as 'type', count(1) as 'customerCount'
         FROM t_customer
         WHERE fEntryType = #{customerCriteria.entryType}
@@ -132,7 +121,8 @@
         AND c.fStatus = 1
     </select>
 
-    <select id="searchTargetCustomers" parameterType="com.keymanager.monitoring.criteria.CustomerCriteria" resultType="com.keymanager.monitoring.entity.Customer">
+    <select id="searchTargetCustomers" parameterType="com.keymanager.monitoring.criteria.CustomerCriteria"
+            resultType="com.keymanager.monitoring.entity.Customer">
         SELECT
         <include refid="colID"/>
         FROM t_customer c
@@ -141,9 +131,33 @@
         order by c.fUpdateTime DESC
     </select>
 
+    <select id="findCustomerKeywordSource" resultType="com.keymanager.monitoring.vo.customerSourceVO">
+        SELECT DISTINCT
+          c.fUuid          AS 'uuid',
+          c.fContactPerson AS 'contactPerson',
+          ck.fKeyword      AS 'keyword'
+        FROM t_customer_keyword ck,
+          t_customer c
+        WHERE fCustomerUuid = c.fUuid
+            AND ck.fType = 'fm'
+            AND ck.fStatus = 1
+            AND c.fEntryType = 'fm'
+            AND c.fStatus = 1
+        ORDER BY c.fUuid
+    </select>
+
     <update id="setCustomerUpdateInterval">
         UPDATE t_customer
         SET fUpdateInterval = #{updateInterval}
+        WHERE fUuid IN
+        <foreach collection="uuids" item="uuid" open="(" close=")" separator=",">
+            #{uuid}
+        </foreach>
+    </update>
+
+    <update id="updateCustomerUserID">
+        UPDATE t_customer
+        SET fUserID = #{userID}
         WHERE fUuid IN
         <foreach collection="uuids" item="uuid" open="(" close=")" separator=",">
             #{uuid}

@@ -111,7 +111,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return customerKeywordDao.searchCustomerKeywordsForDailyReport(customerKeywordCriteria);
     }
 
-    public CustomerKeywordForCaptureTitle searchCustomerKeywordForCaptureTitle(String terminalType,String searchEngine) throws Exception {
+    // new
+    public List<CustomerKeywordForCaptureTitle> searchCustomerKeywordsForCaptureTitle(String terminalType,String searchEngine,Integer batchCount) throws Exception {
         QZCaptureTitleLog qzCaptureTitleLog = qzCaptureTitleLogService.getAvailableQZSetting(QZCaptureTitleLogStatusEnum.Processing.getValue(), terminalType);
         if (qzCaptureTitleLog == null) {
             qzCaptureTitleLog = qzCaptureTitleLogService.getAvailableQZSetting(QZCaptureTitleLogStatusEnum.New.getValue(), terminalType);
@@ -122,38 +123,46 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         if (qzCaptureTitleLog == null) {
             return null;
         }
-        Long customerKeywordUuid = customerKeywordDao.searchCustomerKeywordUuidForCaptureTitle(qzCaptureTitleLog,searchEngine);
-        if (customerKeywordUuid == null) {
+        List<Long> customerKeywordUuids = customerKeywordDao.searchCustomerKeywordsUuidForCaptureTitle(qzCaptureTitleLog, searchEngine, batchCount);
+        if (CollectionUtils.isEmpty(customerKeywordUuids)) {
             qzCaptureTitleLogService.completeQZCaptureTitleLog(qzCaptureTitleLog.getUuid());
             customerKeywordDao.deleteEmptyTitleCustomerKeyword(qzCaptureTitleLog,searchEngine);
             logger.info("deleteEmptyTitleCustomerKeyword:" + qzCaptureTitleLog.getCustomerUuid() + "-" + qzCaptureTitleLog.getGroup());
             return null;
         } else {
-            CustomerKeywordForCaptureTitle captureTitle = customerKeywordDao.searchCustomerKeywordForCaptureTitle(customerKeywordUuid);
+            List<CustomerKeywordForCaptureTitle> customerKeywordForCaptureTitles = new ArrayList<CustomerKeywordForCaptureTitle>();
             QZOperationType qzOperationType = qzOperationTypeService.selectById(qzCaptureTitleLog.getQzOperationTypeUuid());
             QZSetting qzSetting = qzSettingService.selectById(qzOperationType.getQzSettingUuid());
             String subDomainName = qzOperationType.getSubDomainName();
-            if(StringUtils.isNotEmpty(subDomainName)){
-                captureTitle.setWholeUrl(subDomainName);
-            }else {
-                captureTitle.setWholeUrl(qzSetting.getDomain());
+            for (Long customerKeywordUuid : customerKeywordUuids) {
+                CustomerKeywordForCaptureTitle captureTitle = customerKeywordDao.searchCustomerKeywordForCaptureTitle(customerKeywordUuid);
+                if(StringUtils.isNotEmpty(subDomainName)){
+                    captureTitle.setWholeUrl(subDomainName);
+                }else {
+                    captureTitle.setWholeUrl(qzSetting.getDomain());
+                }
+                updateCaptureTitleQueryTime((long)captureTitle.getUuid());
+                customerKeywordForCaptureTitles.add(captureTitle);
             }
-            updateCaptureTitleQueryTime((long)captureTitle.getUuid());
-            return captureTitle;
+            return customerKeywordForCaptureTitles;
         }
     }
 
-    public CustomerKeywordForCaptureTitle searchCustomerKeywordForCaptureTitle(String groupName, String terminalType,String searchEngine) throws Exception {
+    // new
+    public List<CustomerKeywordForCaptureTitle> searchCustomerKeywordsForCaptureTitle(String groupName, String terminalType,String searchEngine,Integer batchCount) throws Exception {
         QZCaptureTitleLog qzCaptureTitleLog = new QZCaptureTitleLog();
         qzCaptureTitleLog.setGroup(groupName);
         qzCaptureTitleLog.setTerminalType(terminalType);
-        Long customerKeywordUuid = customerKeywordDao.searchCustomerKeywordUuidForCaptureTitle(qzCaptureTitleLog,searchEngine);
-        CustomerKeywordForCaptureTitle captureTitle = null;
-        if(null != customerKeywordUuid) {
-            captureTitle = customerKeywordDao.searchCustomerKeywordForCaptureTitle(customerKeywordUuid);
-            updateCaptureTitleQueryTime((long)captureTitle.getUuid());
+        List<Long> customerKeywordUuids = customerKeywordDao.searchCustomerKeywordsUuidForCaptureTitle(qzCaptureTitleLog, searchEngine, batchCount);
+        List<CustomerKeywordForCaptureTitle> captureTitles = new ArrayList<CustomerKeywordForCaptureTitle>();
+        if(CollectionUtils.isNotEmpty(customerKeywordUuids)) {
+            for (Long customerKeywordUuid : customerKeywordUuids) {
+                CustomerKeywordForCaptureTitle captureTitle = customerKeywordDao.searchCustomerKeywordForCaptureTitle(customerKeywordUuid);
+                updateCaptureTitleQueryTime((long)captureTitle.getUuid());
+                captureTitles.add(captureTitle);
+            }
         }
-        return captureTitle;
+        return captureTitles;
     }
 
     private void updateCaptureTitleQueryTime(Long uuid) {
@@ -554,7 +563,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeywordInvalidCountLogService.addCustomerKeywordInvalidCountLog();
             configService.updateOptimizationDateAsToday();
             customerKeywordDao.resetOptimizationInfo();
-            clientStatusService.updateAllRemainingKeywordIndicator(1);
+            clientStatusService.resetOptimizationInfo();
         }
 
         Config maxInvalidCountConfig = configService.getConfig(Constants.CONFIG_KEY_MAX_INVALID_COUNT, typeName);
@@ -730,7 +739,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                     customerKeywordForOptimization.setRelatedKeywordPercentage(customerKeyword.getRelatedKeywordPercentage());
                 }
 
-                if("verify_ct".equals(customerKeywordForOptimization.getOperationType())){
+                if(customerKeywordForOptimization.getOperationType().indexOf("verify_ct") == 0){
                     if(customerKeyword.getOptimizeGroupName().indexOf("verify_ct") == 0) {
                         if(StringUtils.isNotBlank(customerKeyword.getCt())) {
                             customerKeywordForOptimization.setCt(customerKeyword.getCt());
@@ -898,18 +907,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     public void adjustOptimizationCount(){
         List<String> groupNames = new ArrayList<String>();
-        groupNames.add("pc_pm_xiaowu");
-        groupNames.add("pc_pm_learner");
-        groupNames.add("pc_pm_51yza");
-        groupNames.add("pc_pm_yilufa");
-        groupNames.add("m_pm_tiantian");
-        groupNames.add("m_pm_tianqi");
-        groupNames.add("m_pm_learner");
-        List<Map> customerKeywordSummaries = customerKeywordDao.searchCustomerKeywordsForAdjustingOptimizationCount(groupNames);
-        List<Map> ptCustomerKeywordSummaries = customerKeywordDao.searchPTKeywordsForAdjustingOptimizationCount();
-        customerKeywordSummaries.addAll(ptCustomerKeywordSummaries);
-        if(CollectionUtils.isNotEmpty(customerKeywordSummaries)){
-            for(Map customerKeywordSummaryMap : customerKeywordSummaries) {
+        List<Map> bcCustomerKeywordSummaries = customerKeywordDao.searchKeywordsForAdjustingOptimizationCount("bc");
+        List<Map> ptCustomerKeywordSummaries = customerKeywordDao.searchKeywordsForAdjustingOptimizationCount("pt");
+        bcCustomerKeywordSummaries.addAll(ptCustomerKeywordSummaries);
+        if(CollectionUtils.isNotEmpty(bcCustomerKeywordSummaries)){
+            for(Map customerKeywordSummaryMap : bcCustomerKeywordSummaries) {
                 Long uuid = Long.parseLong(customerKeywordSummaryMap.get("uuid").toString());
                 int currentIndexCount = (Integer) customerKeywordSummaryMap.get("currentIndexCount");
                 Integer positionFirstFee = (Integer) customerKeywordSummaryMap.get("positionFirstFee");
@@ -1012,6 +1014,17 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeyword.setCapturedTitle(1);
             customerKeywordDao.updateById(customerKeyword);
         }
+    }
+
+    // new
+    public void updateCustomerKeywordsTitle(List<SearchEngineResultItemVO> searchEngineResultItemVOs) {
+        List<SearchEngineResultItemVO> havingUrlSearchEngineResultItemVOs = new ArrayList<SearchEngineResultItemVO>();
+        for(SearchEngineResultItemVO searchEngineResultItemVO : searchEngineResultItemVOs){
+            if (searchEngineResultItemVO.getUrl() != null){
+                havingUrlSearchEngineResultItemVOs.add(searchEngineResultItemVO);
+            }
+        }
+        customerKeywordDao.updateCustomerKeywordsTitle(havingUrlSearchEngineResultItemVOs);
     }
 
     public void addCustomerKeywords(SearchEngineResultVO searchEngineResultVO, String terminalType, String userName) throws Exception {
@@ -1142,25 +1155,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
     }
 
-    public List<ZTreeVO> getCustomerSource() {
-        List<ZTreeVO> zTreeList = new ArrayList<ZTreeVO>();
-        List<Customer> customers = customerService.findNegativeCustomer();
-        Long currentTime = Utils.getCurrentTimestamp().getTime();
-        for (Customer customer : customers) {
-            zTreeList.add(new ZTreeVO(customer.getUuid(), 0L, customer.getContactPerson()));
-            String [] customerKeywords = customerKeywordDao.searchCustomerNegativeKeywords(customer.getUuid());
-            for (int i = 0; i < customerKeywords.length; i++) {
-                zTreeList.add(new ZTreeVO(currentTime, customer.getUuid(), customerKeywords[i]));
-                Long keywordTime = currentTime;
-                currentTime++;
-                for (String searchStyle : Constants.SEARCH_STYLE_LIST) {
-                    String searchStyleJson = "{id:customer" + currentTime + ", pId:" + keywordTime + ", name:" + searchStyle + "}";
-                    zTreeList.add(new ZTreeVO(currentTime, keywordTime, searchStyle));
-                    currentTime++;
-                }
-            }
-        }
-        return zTreeList;
+    public List<customerSourceVO> getCustomerSource() {
+        return customerService.findCustomerKeywordSource();
     }
 
     public void observeOptimizationCount() throws Exception {
@@ -1315,23 +1311,29 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return customerKeywordDao.getCustomerKeywordInfo(customerKeywordCriteria);
     }
 
-    public void deleteDuplicateKeywords(Long customerUuid, String terminalType, String entryType){
+    public void deleteDuplicateKeywords(Long customerUuid, String terminalType, String entryType) {
         CustomerKeywordCriteria customerKeywordCriteria = new CustomerKeywordCriteria();
         customerKeywordCriteria.setCustomerUuid(customerUuid);
         customerKeywordCriteria.setEntryType(entryType);
         customerKeywordCriteria.setTerminalType(terminalType);
         List<String> uuidsList = customerKeywordDao.searchDuplicateKeywords(customerKeywordCriteria);
         List<Long> customerKeywordUuids = new ArrayList<Long>();
-        for (String uuids: uuidsList){
+        for (String uuids : uuidsList) {
             ArrayList<Long> listIds = new ArrayList<Long>(Arrays.asList((Long[]) ConvertUtils.convert(uuids.split(","), Long.class)));
             listIds.remove(0);
             customerKeywordUuids.addAll(listIds);
         }
-        while(customerKeywordUuids.size()>0){
+        while (customerKeywordUuids.size() > 0) {
             List<Long> subCustomerKeywordUuids = customerKeywordUuids.subList(0, (customerKeywordUuids.size() > 500) ? 500 : customerKeywordUuids.size());
             customerKeywordDao.deleteBatchIds(subCustomerKeywordUuids);
             logger.info("controlCustomerKeywordStatus:" + subCustomerKeywordUuids.toString());
             customerKeywordUuids.removeAll(subCustomerKeywordUuids);
         }
+    }
+
+    //客户关键字批量设置
+    public void batchUpdateKeywordStatus(KeywordStatusBatchUpdateVO keywordStatusBatchUpdateVO){
+        String[] keywordIDs = keywordStatusBatchUpdateVO.getCustomerUuids().split(",");
+        customerKeywordDao.batchUpdateKeywordStatus(keywordIDs, keywordStatusBatchUpdateVO.getKeywordChecks(), keywordStatusBatchUpdateVO.getKeywordStatus());
     }
 }
