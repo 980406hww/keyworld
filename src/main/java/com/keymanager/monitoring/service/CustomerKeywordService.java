@@ -738,7 +738,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                     customerKeywordForOptimization.setRelatedKeywordPercentage(customerKeyword.getRelatedKeywordPercentage());
                 }
 
-                if("verify_ct".equals(customerKeywordForOptimization.getOperationType())){
+                if(customerKeywordForOptimization.getOperationType().indexOf("verify_ct") == 0){
                     if(customerKeyword.getOptimizeGroupName().indexOf("verify_ct") == 0) {
                         if(StringUtils.isNotBlank(customerKeyword.getCt())) {
                             customerKeywordForOptimization.setCt(customerKeyword.getCt());
