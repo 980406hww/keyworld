@@ -166,8 +166,8 @@ function downloadTxt() {
 
 }
 
-$(function () {
-    var menuHeight = $(".venus-menu").height();
-    $("#searchRefreshStatInfoForm").css("margin-top", menuHeight + 5);
-    $("#showRefreshStatInfoDiv").css("margin-top", menuHeight + 98);
-});
+// $(function () {
+//     var menuHeight = $(".venus-menu").height();
+//     $("#searchRefreshStatInfoForm").css("margin-top", menuHeight + 5);
+//     $("#showRefreshStatInfoDiv").css("margin-top", menuHeight + 98);
+// });

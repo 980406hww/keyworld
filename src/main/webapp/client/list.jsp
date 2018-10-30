@@ -58,7 +58,7 @@
 <%@ include file="/commons/basejs.jsp" %>
 <div id="topDiv">
 	<%@ include file="/menu.jsp"%>
-				<form id="searchClientStatusForm" method="post" action="/internal/clientstatus/searchClientStatuses" style="font-size: 12px;margin-top: 35px" cellpadding=3>
+				<form id="searchClientStatusForm" method="post" action="/internal/clientstatus/searchClientStatuses" style="font-size: 12px;" cellpadding=3>
 					<table style="font-size: 12px;width:100%">
 						<tr>
 							<td align="left" colspan="2">
