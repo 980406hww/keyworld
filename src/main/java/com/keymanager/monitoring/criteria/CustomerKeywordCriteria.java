@@ -19,6 +19,7 @@ public class CustomerKeywordCriteria extends BaseCriteria{
     private String entryType;//
     private String terminalType;//8088 PC  8089  phone
     private String searchEngine;
+    private String titleFlag;
     private Integer gtOptimizedCount;
     private Integer ltOptimizedCount;
     private Integer gtOptimizePlanCount;
@@ -331,5 +332,13 @@ public class CustomerKeywordCriteria extends BaseCriteria{
 
     public void setUuids(List<Long> uuids) {
         this.uuids = uuids;
+    }
+
+    public String getTitleFlag() {
+        return titleFlag;
+    }
+
+    public void setTitleFlag(String titleFlag) {
+        this.titleFlag = titleFlag;
     }
 }

@@ -162,6 +162,12 @@
                 <option value="2">当前排名</option>
                 <option value="3">添加序号</option>
             </select>
+            标题:
+            <select name="titleFlag" id="titleFlag">
+                <option value=""></option>
+                <option value="1">无</option>
+                <option value="2">有</option>
+            </select>
             <br>
             指数:<input type="text" id="gtCurrentIndexCount" name="gtCurrentIndexCount" placeholder=">=" value="${customerKeywordCriteria.gtCurrentIndexCount}" style="width: 40px;">
             <input type="text" id="ltCurrentIndexCount" name="ltCurrentIndexCount" placeholder="<=" value="${customerKeywordCriteria.ltCurrentIndexCount}" style="width: 40px;">
@@ -539,6 +545,7 @@
     <input type="hidden" name="invalidRefreshCount" id="invalidRefreshCountHidden" value="" />
     <input type="hidden" name="searchEngine" id="searchEngineHidden" value="" />
     <input type="hidden" name="orderingElement" id="orderingElementHidden" value="" />
+    <input type="hidden" name="titleFlag" id="titleFlagHidden" value="" />
     <input type="hidden" name="gtCurrentIndexCount" id="gtCurrentIndexCountHidden" value="" />
     <input type="hidden" name="ltCurrentIndexCount" id="ltCurrentIndexCountHidden" value="" />
     <input type="hidden" name="remarks" id="remarksHidden" value="" />
@@ -568,6 +575,7 @@
         var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
         var searchCustomerKeywordTable = searchCustomerKeywordForm.find("#searchCustomerKeywordTable");
         searchCustomerKeywordTable.find("#orderingElement").val("${orderElement == null ? '0' : orderElement}");
+        searchCustomerKeywordTable.find("#titleFlag").val(${customerKeywordCriteria.titleFlag});
         searchCustomerKeywordTable.find("#searchEngine").val('${customerKeywordCriteria.searchEngine}');
         searchCustomerKeywordTable.find("#status").val(${customerKeywordCriteria.status});
         var pages = searchCustomerKeywordForm.find('#pagesHidden').val();
