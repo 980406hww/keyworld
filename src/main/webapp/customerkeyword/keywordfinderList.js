@@ -200,7 +200,7 @@ function updateOptimizeGroupName(changeType) {
                 if ("selected" === changeType){
                     var uuids = getSelectedIDs();
                     if(uuids === ''){
-                        alert('请选择要删除的关键字！');
+                        alert('请选择要修改优化组的关键字！');
                         return ;
                     }
                     if (confirm("确定要修改选中关键字的优化组名吗?") == false) return;
