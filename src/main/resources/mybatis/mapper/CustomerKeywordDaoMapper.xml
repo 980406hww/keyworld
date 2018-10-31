@@ -858,6 +858,11 @@
             ck.fOptimizeGroupName = #{customerKeywordCriteria.targetOptimizeGroupName},
             ck.fUpdateTime = NOW()
         WHERE c.fUuid = ck.fCustomerUuid
+        <if test="customerKeywordCriteria.uuids != null"> AND ck.fUuid IN
+            <foreach item = "item" collection = "customerKeywordCriteria.uuids" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
         <if test="customerKeywordCriteria.customerUuid != null and customerKeywordCriteria.customerUuid != ''">AND ck.fCustomerUuid = #{customerKeywordCriteria.customerUuid}</if>
         <if test="customerKeywordCriteria.keyword != null and customerKeywordCriteria.keyword != ''">AND ck.fKeyword like '${customerKeywordCriteria.keyword}%'</if>
         <if test="customerKeywordCriteria.url != null and customerKeywordCriteria.url != ''">AND ck.fUrl like '%${customerKeywordCriteria.url}%'</if>

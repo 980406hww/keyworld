@@ -1,6 +1,9 @@
 package com.keymanager.monitoring.criteria;
 
+import java.util.List;
+
 public class CustomerKeywordCriteria extends BaseCriteria{
+    private List<Long> uuids;
     private Long customerUuid;
     private String url;
     private String bearPawNumber;
@@ -320,5 +323,13 @@ public class CustomerKeywordCriteria extends BaseCriteria{
 
     public void setRequireDelete(Boolean requireDelete) {
         this.requireDelete = requireDelete;
+    }
+
+    public List<Long> getUuids() {
+        return uuids;
+    }
+
+    public void setUuids(List<Long> uuids) {
+        this.uuids = uuids;
     }
 }

@@ -115,7 +115,10 @@
                 <input type="button" onclick="updateCustomerKeywordStatus(1)" value=" 激活关键字 ">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupName">
-                <input type="button" onclick="updateOptimizeGroupName(${page.total})" value=" 修改当前关键字优化组 ">&nbsp;&nbsp;
+                <input type="button" onclick="updateOptimizeGroupName('total')" value=" 修改当前关键字优化组 ">&nbsp;&nbsp;
+            </shiro:hasPermission>
+            <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupName">
+                <input type="button" onclick="updateOptimizeGroupName('selected')" value=" 修改选中关键字优化组 ">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/customerKeyword/deleteCustomerKeywords">
             <input type="button" onclick="deleteCustomerKeywords()" value=" 删除所选 ">

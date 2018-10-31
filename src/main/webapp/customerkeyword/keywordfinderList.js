@@ -178,7 +178,7 @@ function updateCustomerKeywordStatus(status) {
         }
     });
 }
-function updateOptimizeGroupName(total) {
+function updateOptimizeGroupName(changeType) {
     $("#targetGroupNameDialog").css("display", "block");
     $("#targetGroupNameDialog").dialog({
         resizable: false,
@@ -197,19 +197,30 @@ function updateOptimizeGroupName(total) {
                     return;
                 }
                 var obj = {};
-                var postData = $("#searchCustomerKeywordForm").serializeArray();
-                $.each(postData, function() {
-                    if (obj[this.name]) {
-                        if (!obj[this.name].push) {
-                            obj[this.name] = [obj[this.name]];
-                        }
-                        obj[this.name].push(this.value || '');
-                    } else {
-                        obj[this.name] = this.value || '';
+                if ("selected" === changeType){
+                    var uuids = getSelectedIDs();
+                    if(uuids === ''){
+                        alert('请选择要删除的关键字！');
+                        return ;
                     }
-                });
+                    if (confirm("确定要修改选中关键字的优化组名吗?") == false) return;
+                    obj['uuids'] = uuids.split(",");
+                }else{
+                    if (confirm("确定要修改当前查询条件下所有关键字的优化组名吗?") == false) return;
+                    var postData = $("#searchCustomerKeywordForm").serializeArray();
+                    $.each(postData, function() {
+                        if (obj[this.name]) {
+                            if (!obj[this.name].push) {
+                                obj[this.name] = [obj[this.name]];
+                            }
+                            obj[this.name].push(this.value || '');
+                        } else {
+                            obj[this.name] = this.value || '';
+                        }
+                    });
+                }
                 obj.targetOptimizeGroupName = targetGroupName;
-                if (confirm("确定要修改当前查询条件下所有关键字的优化组名吗?") == false) return;
+
                 $.ajax({
                     url: '/internal/customerKeyword/updateOptimizeGroupName',
                     data: JSON.stringify(obj),
