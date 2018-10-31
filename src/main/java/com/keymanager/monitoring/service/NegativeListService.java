@@ -70,7 +70,7 @@ public class NegativeListService extends ServiceImpl<NegativeListDao, NegativeLi
                         deleteNegativeList(existingNegativeList.getUuid(), existingNegativeList);
                     }
                 }else {
-                    if (existingNegativeLists.size() > 0) {
+                    if (CollectionUtils.isNotEmpty(existingNegativeLists)) {
                         NegativeList existingNegativeList = existingNegativeLists.get(0);
                         negativeList.setUuid(existingNegativeList.getUuid());
                         negativeList.setCreateTime(existingNegativeList.getCreateTime());

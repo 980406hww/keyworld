@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -34,6 +36,21 @@ public class ExternalConfigRestController extends SpringMVCBaseController {
 				return new ResponseEntity<Object>(config, HttpStatus.OK);
 			}
 		}catch (Exception ex){
+			logger.error(ex.getMessage());
+		}
+		return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+	}
+
+	@RequestMapping(value = "/getOptimizeWayAndNewsSource", method = RequestMethod.POST)
+	public ResponseEntity<?> getOptimizeWayAndNewsSource(@RequestBody Map<String, Object> requestMap) {
+		try {
+			String userName = (String) requestMap.get("userName");
+			String password = (String) requestMap.get("password");
+			if (validUser(userName, password)) {
+				List<Config> configs = configService.findConfigs(Constants.CONFIG_TYPE_OPTIMIZE_WAY_GROUPNAME);
+				return new ResponseEntity<Object>(configs, HttpStatus.OK);
+			}
+		} catch(Exception ex) {
 			logger.error(ex.getMessage());
 		}
 		return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);

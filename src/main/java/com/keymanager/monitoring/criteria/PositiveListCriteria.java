@@ -10,6 +10,7 @@ import java.util.List;
  * Created by shunshikj08 on 2017/8/29.
  */
 public class PositiveListCriteria extends BaseCriteria {
+    private String terminalType;
     private String keyword;
     private String title;
     private String url;
@@ -17,7 +18,16 @@ public class PositiveListCriteria extends BaseCriteria {
     private Integer position;
     private String operationType;
     private String originalUrl;
+    private String btnType;
     private List<PositiveList> positiveLists;
+
+    public String getTerminalType () {
+        return terminalType;
+    }
+
+    public void setTerminalType (String terminalType) {
+        this.terminalType = terminalType;
+    }
 
     public String getKeyword() {
         return keyword;
@@ -73,6 +83,14 @@ public class PositiveListCriteria extends BaseCriteria {
 
     public void setOperationType(String operationType) {
         this.operationType = operationType;
+    }
+
+    public String getBtnType () {
+        return btnType;
+    }
+
+    public void setBtnType (String btnType) {
+        this.btnType = btnType;
     }
 
     public List<PositiveList> getPositiveLists() {

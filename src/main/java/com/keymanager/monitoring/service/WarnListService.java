@@ -49,7 +49,7 @@ public class WarnListService extends ServiceImpl<WarnListDao, WarnList> {
                         deleteWarnList(existingWarnList.getUuid());
                     }
                 }else {
-                    if (existingWarnLists.size() > 0) {
+                    if (CollectionUtils.isNotEmpty(existingWarnLists)) {
                         WarnList existingWarnList = existingWarnLists.get(0);
                         warnList.setUuid(existingWarnList.getUuid());
                         warnList.setCreateTime(existingWarnList.getCreateTime());

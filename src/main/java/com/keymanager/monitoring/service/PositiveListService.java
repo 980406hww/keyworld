@@ -37,19 +37,25 @@ public class PositiveListService extends ServiceImpl<PositiveListDao, PositiveLi
         }
     }
 
-    public void savePositiveLists(List<PositiveList> positiveLists , String operationType) {
+    public void savePositiveLists(List<PositiveList> positiveLists , String operationType, String btnType) {
         if (CollectionUtils.isNotEmpty(positiveLists)) {
             for (PositiveList positiveList : positiveLists) {
                 PositiveListCriteria positiveListCriteria = new PositiveListCriteria();
                 positiveListCriteria.setKeyword(positiveList.getKeyword());
                 positiveListCriteria.setTitle(positiveList.getTitle());
+                positiveListCriteria.setTerminalType(positiveList.getTerminalType());
                 List<PositiveList> existingPositiveLists = positiveListDao.searchPositiveListsFullMatching(positiveListCriteria);
                 if(operationType.equals("update")){
                     for (PositiveList existingPositiveList : existingPositiveLists) {
-                        deletePositiveList(existingPositiveList.getUuid());
+                        if (btnType.equals("1")) {
+                            existingPositiveList.setOptimizeWay("");
+                            updatePositiveList(existingPositiveList);
+                        } else {
+                            deletePositiveList(existingPositiveList.getUuid());
+                        }
                     }
-                }else {
-                    if (existingPositiveLists.size() > 0) {
+                } else {
+                    if (CollectionUtils.isNotEmpty(existingPositiveLists)) {
                         PositiveList existingPositiveList = existingPositiveLists.get(0);
                         positiveList.setUuid(existingPositiveList.getUuid());
                         positiveList.setCreateTime(existingPositiveList.getCreateTime());
@@ -60,17 +66,20 @@ public class PositiveListService extends ServiceImpl<PositiveListDao, PositiveLi
         }
     }
 
-    public List<PositiveList> getSpecifiedKeywordPositiveLists(String keyword) {
-        return positiveListDao.getSpecifiedKeywordPositiveLists(keyword);
+    public List<PositiveList> getSpecifiedKeywordPositiveLists(String keyword, String terminalType) {
+        return positiveListDao.getSpecifiedKeywordPositiveLists(keyword, terminalType);
     }
 
     public PositiveList getPositiveList(long uuid) {
-        PositiveList positiveList = positiveListDao.selectById(uuid);
-        return positiveList;
+        return positiveListDao.selectById(uuid);
     }
 
     public void deletePositiveList(long uuid) {
         positiveListDao.deleteById(uuid);
+    }
+
+    public void updatePositiveList(PositiveList positiveList){
+        positiveListDao.updateById(positiveList);
     }
 
     public void deletePositiveLists(List<String> uuids) {

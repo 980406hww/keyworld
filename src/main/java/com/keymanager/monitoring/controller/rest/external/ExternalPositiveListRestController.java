@@ -30,7 +30,7 @@ public class ExternalPositiveListRestController extends SpringMVCBaseController 
 	private PositiveListService positiveListService;
 
 	@RequestMapping(value = "/savePositiveLists", method = RequestMethod.POST)
-	public ResponseEntity<?> savePositiveLists(@RequestBody PositiveListCriteria positiveListCriteria, HttpServletRequest request) throws Exception{
+	public ResponseEntity<?> savePositiveLists(@RequestBody PositiveListCriteria positiveListCriteria) {
 		try {
 			if (validUser(positiveListCriteria.getUserName(), positiveListCriteria.getPassword())) {
 				for(PositiveList positiveList : positiveListCriteria.getPositiveLists()){
@@ -39,7 +39,7 @@ public class ExternalPositiveListRestController extends SpringMVCBaseController 
 						positiveList.setDesc(desc);
 					}
 				}
-				positiveListService.savePositiveLists(positiveListCriteria.getPositiveLists() , positiveListCriteria.getOperationType());
+				positiveListService.savePositiveLists(positiveListCriteria.getPositiveLists(), positiveListCriteria.getOperationType(), positiveListCriteria.getBtnType());
 				return new ResponseEntity<Object>(true, HttpStatus.OK);
 			}
 		}catch (Exception ex){
@@ -49,10 +49,10 @@ public class ExternalPositiveListRestController extends SpringMVCBaseController 
 	}
 
 	@RequestMapping(value = "/getSpecifiedKeywordPositiveLists", method = RequestMethod.POST)
-	public ResponseEntity<?> getSpecifiedKeywordPositiveLists(@RequestBody PositiveListCriteria positiveListCriteria, HttpServletRequest request) throws Exception{
+	public ResponseEntity<?> getSpecifiedKeywordPositiveLists(@RequestBody PositiveListCriteria positiveListCriteria) {
 		try {
 			if (validUser(positiveListCriteria.getUserName(), positiveListCriteria.getPassword())) {
-				List<PositiveList> positiveLists = positiveListService.getSpecifiedKeywordPositiveLists(positiveListCriteria.getKeyword());
+				List<PositiveList> positiveLists = positiveListService.getSpecifiedKeywordPositiveLists(positiveListCriteria.getKeyword(), positiveListCriteria.getTerminalType());
 				return new ResponseEntity<Object>(positiveLists, HttpStatus.OK);
 			}
 		}catch (Exception ex){
