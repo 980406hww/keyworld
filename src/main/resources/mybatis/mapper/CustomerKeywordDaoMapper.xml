@@ -63,10 +63,10 @@
             AND ck.fRequireDelete = 1
         </if>
         <if test="customerKeywordCriteria.titleFlag == 1">
-            AND 1 = 1
+            AND (ck.fTitle = '' OR ck.fTitle IS NULL)
         </if>
-        <if test="customerKeywordCriteria.titleFlag == '1'">
-            AND 1 = 2
+        <if test="customerKeywordCriteria.titleFlag == 2">
+            AND ck.fTitle > ''
         </if>
         <choose>
             <when test="customerKeywordCriteria.optimizeGroupName != null and customerKeywordCriteria.optimizeGroupName != ''">
@@ -77,14 +77,6 @@
                     AND (ck.fOptimizeGroupName != 'stop')
                 </if>
             </otherwise>
-        </choose>
-        <choose>
-            <when test="customerKeywordCriteria.titleFlag == '1'">
-                AND (ck.fTitle = '' OR ck.fTitle IS NULL)
-            </when>
-            <when test="customerKeywordCriteria.titleFlag == '2'">
-                AND ck.fTitle > ''
-            </when>
         </choose>
         <choose>
             <when test="customerKeywordCriteria.orderingElement != null and customerKeywordCriteria.orderingElement != ''">
