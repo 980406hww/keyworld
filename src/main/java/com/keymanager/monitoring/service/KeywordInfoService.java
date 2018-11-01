@@ -112,12 +112,12 @@ public class KeywordInfoService extends ServiceImpl<KeywordInfoDao, KeywordInfo>
 			keywordInfoSynchronizeService.deleteKeywordList(webPath, map);
 		}
 
-		if(hasRequireDeleteKeyword) {
-			Config config = configService.getConfig(Constants.CONFIG_TYPE_KEYWORD_INFO_SYNCHRONIZE, Constants.CONFIG_KEY_MOBILE);
-			if(StringUtils.isNotBlank(config.getValue())) {
-				smsService.sendSms(config.getValue(), "系统标记了需要删除的关键词，请注意查看！");
-			}
-		}
+//		if(hasRequireDeleteKeyword) {
+//			Config config = configService.getConfig(Constants.CONFIG_TYPE_KEYWORD_INFO_SYNCHRONIZE, Constants.CONFIG_KEY_MOBILE);
+//			if(StringUtils.isNotBlank(config.getValue())) {
+//				smsService.sendSms(config.getValue(), "系统标记了需要删除的关键词，请注意查看！");
+//			}
+//		}
 	}
 
 
