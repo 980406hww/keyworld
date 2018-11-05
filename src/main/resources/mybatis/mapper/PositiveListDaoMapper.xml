@@ -10,7 +10,7 @@
 		fOriginalUrl AS "originalUrl",
 		fDesc AS "desc",
 		fPosition AS "position",
-		fOptimizeWay AS "optimizeWay",
+		fOptimizeMethod AS "optimizeMethod",
 		fNewsSource AS "newsSource",
 		fUpdateTime AS "updateTime",
 		fCreateTime AS "createTime"
@@ -22,7 +22,7 @@
 		FROM
 			t_positive_list n
 		WHERE 1 = 1
-		<if test="positiveListCriteria.keyword != null and positiveListCriteria.keyword != ''">AND n.fKeyword = '%${positiveListCriteria.keyword}%'</if>
+		<if test="positiveListCriteria.keyword != null and positiveListCriteria.keyword != ''">AND n.fKeyword = #{positiveListCriteria.keyword}</if>
 		<if test="positiveListCriteria.title != null and positiveListCriteria.title != ''">AND n.fTitle = #{positiveListCriteria.title}</if>
 		<if test="positiveListCriteria.url != null and positiveListCriteria.url != ''">AND n.fUrl like '%${positiveListCriteria.url}%'</if>
 		ORDER BY n.fCreateTime DESC
@@ -37,6 +37,7 @@
 		<if test="positiveListCriteria.keyword != null and positiveListCriteria.keyword != ''">AND n.fKeyword = #{positiveListCriteria.keyword}</if>
 		<if test="positiveListCriteria.title != null and positiveListCriteria.title != ''">AND n.fTitle = #{positiveListCriteria.title}</if>
 		<if test="positiveListCriteria.terminalType != null and positiveListCriteria.terminalType != ''">AND n.fTerminalType = #{positiveListCriteria.terminalType}</if>
+		ORDER BY n.fCreateTime DESC
 	</select>
 
 	<select id="getSpecifiedKeywordPositiveLists" resultType="com.keymanager.monitoring.entity.PositiveList">

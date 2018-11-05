@@ -1,9 +1,7 @@
 package com.keymanager.monitoring.criteria;
 
-import com.keymanager.monitoring.entity.NegativeList;
 import com.keymanager.monitoring.entity.PositiveList;
 
-import java.util.Date;
 import java.util.List;
 
 /**

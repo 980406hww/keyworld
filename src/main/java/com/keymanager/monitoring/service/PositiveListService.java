@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.criteria.PositiveListCriteria;
 import com.keymanager.monitoring.dao.PositiveListDao;
+import com.keymanager.monitoring.dao.PositiveListUpdateInfoDao;
 import com.keymanager.monitoring.entity.PositiveList;
+import com.keymanager.monitoring.entity.PositiveListUpdateInfo;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +24,9 @@ public class PositiveListService extends ServiceImpl<PositiveListDao, PositiveLi
     @Autowired
     private PositiveListDao positiveListDao;
 
+    @Autowired
+    private PositiveListUpdateInfoService positiveListUpdateInfoService;
+
     public Page<PositiveList> searchPositiveLists(Page<PositiveList> page, PositiveListCriteria positiveListCriteria) {
         page.setRecords(positiveListDao.searchPositiveLists(page, positiveListCriteria));
         return page;
@@ -34,6 +39,7 @@ public class PositiveListService extends ServiceImpl<PositiveListDao, PositiveLi
         } else {
             positiveList.setCreateTime(new Date());
             positiveListDao.insert(positiveList);
+            positiveListUpdateInfoService.savePositiveListUpdateInfo(positiveList);
         }
     }
 
@@ -48,8 +54,9 @@ public class PositiveListService extends ServiceImpl<PositiveListDao, PositiveLi
                 if(operationType.equals("update")){
                     for (PositiveList existingPositiveList : existingPositiveLists) {
                         if (btnType.equals("1")) {
-                            existingPositiveList.setOptimizeWay("");
+                            existingPositiveList.setOptimizeMethod(positiveList.getOptimizeMethod());
                             updatePositiveList(existingPositiveList);
+                            positiveListUpdateInfoService.savePositiveListUpdateInfo(existingPositiveList);
                         } else {
                             deletePositiveList(existingPositiveList.getUuid());
                         }
@@ -59,6 +66,9 @@ public class PositiveListService extends ServiceImpl<PositiveListDao, PositiveLi
                         PositiveList existingPositiveList = existingPositiveLists.get(0);
                         positiveList.setUuid(existingPositiveList.getUuid());
                         positiveList.setCreateTime(existingPositiveList.getCreateTime());
+                        if (btnType.equals("1")) {
+                            positiveListUpdateInfoService.savePositiveListUpdateInfo(positiveList);
+                        }
                     }
                     this.savePositiveList(positiveList);
                 }
@@ -67,7 +77,14 @@ public class PositiveListService extends ServiceImpl<PositiveListDao, PositiveLi
     }
 
     public List<PositiveList> getSpecifiedKeywordPositiveLists(String keyword, String terminalType) {
-        return positiveListDao.getSpecifiedKeywordPositiveLists(keyword, terminalType);
+        List<PositiveList> positiveLists = positiveListDao.getSpecifiedKeywordPositiveLists(keyword, terminalType);
+        if (CollectionUtils.isNotEmpty(positiveLists)) {
+            for (PositiveList positiveList : positiveLists) {
+                List<PositiveListUpdateInfo> positiveListUpdateInfos = positiveListUpdateInfoService.findPositiveListUpdateInfos(positiveList.getUuid());
+                positiveList.setPositiveListUpdateInfos(positiveListUpdateInfos);
+            }
+        }
+        return positiveLists;
     }
 
     public PositiveList getPositiveList(long uuid) {

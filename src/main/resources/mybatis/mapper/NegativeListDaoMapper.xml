@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.monitoring.dao.NegativeListDao">
+	<sql id="selectCol">
+		fUuid AS "uuid",
+		fKeyword AS "keyword",
+		fTitle AS "title",
+		fUrl AS "url",
+		fDesc AS "desc",
+		fPosition AS "position",
+	  	fUpdateTime AS "updateTime",
+	  	fCreateTime AS "createTime"
+	</sql>
 	<select id="searchNegativeLists" parameterType="com.keymanager.monitoring.criteria.NegativeListCriteria" resultType="com.keymanager.monitoring.entity.NegativeList">
 		SELECT
-			fUuid AS "uuid",
-			fKeyword AS "keyword",
-			fTitle AS "title",
-			fUrl AS "url",
-			fDesc AS "desc",
-			fPosition AS "position",
-			fUpdateTime AS "updateTime",
-			fCreateTime AS "createTime"
+		<include refid="selectCol" />
 		FROM
 			t_negative_list n
 		WHERE 1 = 1
-		<if test="negativeListCriteria.keyword != null and negativeListCriteria.keyword != ''">AND n.fKeyword like '%${negativeListCriteria.keyword}%'</if>
+		<if test="negativeListCriteria.keyword != null and negativeListCriteria.keyword != ''">AND n.fKeyword like #{negativeListCriteria.keyword}</if>
 		<if test="negativeListCriteria.title != null and negativeListCriteria.title != ''">AND n.fTitle = #{negativeListCriteria.title}</if>
 		<if test="negativeListCriteria.url != null and negativeListCriteria.url != ''">AND n.fUrl like '%${negativeListCriteria.url}%'</if>
 		ORDER BY n.fCreateTime DESC
@@ -22,14 +25,7 @@
 
 	<select id="searchNegativeListsFullMatching" parameterType="com.keymanager.monitoring.criteria.NegativeListCriteria" resultType="com.keymanager.monitoring.entity.NegativeList">
 		SELECT
-		fUuid AS "uuid",
-		fKeyword AS "keyword",
-		fTitle AS "title",
-		fUrl AS "url",
-		fDesc AS "desc",
-		fPosition AS "position",
-		fUpdateTime AS "updateTime",
-		fCreateTime AS "createTime"
+		<include refid="selectCol" />
 		FROM
 		t_negative_list n
 		WHERE 1 = 1
@@ -54,14 +50,7 @@
 
 	<select id="negativeListsSynchronizeOfDelete"  resultType="com.keymanager.monitoring.entity.NegativeList">
 		SELECT
-			fUuid AS "uuid",
-			fKeyword AS "keyword",
-			fTitle AS "title",
-			fUrl AS "url",
-			fDesc AS "desc",
-			fPosition AS "position",
-			fUpdateTime AS "updateTime",
-			fCreateTime AS "createTime"
+		<include refid="selectCol" />
 		FROM
 		t_negative_list n
 		WHERE fKeyword = #{negativeList.keyword}

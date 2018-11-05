@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.FieldStrategy;
 
+import java.util.List;
+
 @TableName(value = "t_positive_list")
 public class PositiveList extends BaseEntity {
 	@TableField(value = "fTerminalType")
@@ -27,11 +29,21 @@ public class PositiveList extends BaseEntity {
 	@TableField(value = "fOriginalUrl")
 	private String originalUrl;
 
-	@TableField(value = "fOptimizeWay")
-	private String optimizeWay;
+	@TableField(value = "fOptimizeMethod")
+	private String optimizeMethod;
 
 	@TableField(value = "fNewsSource")
 	private String newsSource;
+
+	public List<PositiveListUpdateInfo> getPositiveListUpdateInfos () {
+		return positiveListUpdateInfos;
+	}
+
+	public void setPositiveListUpdateInfos (List<PositiveListUpdateInfo> positiveListUpdateInfos) {
+		this.positiveListUpdateInfos = positiveListUpdateInfos;
+	}
+
+	private List<PositiveListUpdateInfo> positiveListUpdateInfos;
 
 	public String getTerminalType () {
 		return terminalType;
@@ -89,12 +101,12 @@ public class PositiveList extends BaseEntity {
 		this.originalUrl = originalUrl;
 	}
 
-	public String getOptimizeWay () {
-		return optimizeWay;
+	public String getOptimizeMethod () {
+		return optimizeMethod;
 	}
 
-	public void setOptimizeWay (String optimizeWay) {
-		this.optimizeWay = optimizeWay;
+	public void setOptimizeMethod (String optimizeMethod) {
+		this.optimizeMethod = optimizeMethod;
 	}
 
 	public String getNewsSource () {

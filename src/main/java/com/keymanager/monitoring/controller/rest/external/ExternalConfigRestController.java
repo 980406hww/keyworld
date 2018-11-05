@@ -41,13 +41,13 @@ public class ExternalConfigRestController extends SpringMVCBaseController {
 		return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
 	}
 
-	@RequestMapping(value = "/getOptimizeWayAndNewsSource", method = RequestMethod.POST)
-	public ResponseEntity<?> getOptimizeWayAndNewsSource(@RequestBody Map<String, Object> requestMap) {
+	@RequestMapping(value = "/getPositiveListNewsSource", method = RequestMethod.POST)
+	public ResponseEntity<?> getPositiveListNewsSource(@RequestBody Map<String, Object> requestMap) {
 		try {
 			String userName = (String) requestMap.get("userName");
 			String password = (String) requestMap.get("password");
 			if (validUser(userName, password)) {
-				List<Config> configs = configService.findConfigs(Constants.CONFIG_TYPE_OPTIMIZE_WAY_GROUPNAME);
+				List<Config> configs = configService.findConfigs(Constants.CONFIG_TYPE_OPTIMIZE_Method_GROUPNAME);
 				return new ResponseEntity<Object>(configs, HttpStatus.OK);
 			}
 		} catch(Exception ex) {
