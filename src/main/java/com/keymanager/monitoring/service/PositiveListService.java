@@ -55,6 +55,8 @@ public class PositiveListService extends ServiceImpl<PositiveListDao, PositiveLi
                     for (PositiveList existingPositiveList : existingPositiveLists) {
                         if (btnType.equals("1")) {
                             existingPositiveList.setOptimizeMethod(positiveList.getOptimizeMethod());
+                            existingPositiveList.setNewsSource(positiveList.getNewsSource());
+                            existingPositiveList.setUpdateTime(new Date());
                             updatePositiveList(existingPositiveList);
                             positiveListUpdateInfoService.savePositiveListUpdateInfo(existingPositiveList);
                         } else {
