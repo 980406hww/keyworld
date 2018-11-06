@@ -346,9 +346,13 @@
 			<td>
 				<select name="qzSettingInterval" id="qzSettingInterval"  style="width:240px">
 					<option value="1">1天</option>
-					<option value="2" selected>2天</option>
+					<option value="2">2天</option>
 					<option value="3">3天</option>
-					<option value="5">5天</option>
+					<option value="5" selected>5天</option>
+					<option value="7">7天</option>
+					<option value="10">10天</option>
+					<option value="12">12天</option>
+					<option value="15">15天</option>
 				</select>
 			</td>
 		</tr>
