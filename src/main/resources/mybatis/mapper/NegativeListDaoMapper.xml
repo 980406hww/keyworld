@@ -17,7 +17,7 @@
 		FROM
 			t_negative_list n
 		WHERE 1 = 1
-		<if test="negativeListCriteria.keyword != null and negativeListCriteria.keyword != ''">AND n.fKeyword like #{negativeListCriteria.keyword}</if>
+		<if test="negativeListCriteria.keyword != null and negativeListCriteria.keyword != ''">AND n.fKeyword like '%#{negativeListCriteria.keyword}%'</if>
 		<if test="negativeListCriteria.title != null and negativeListCriteria.title != ''">AND n.fTitle = #{negativeListCriteria.title}</if>
 		<if test="negativeListCriteria.url != null and negativeListCriteria.url != ''">AND n.fUrl like '%${negativeListCriteria.url}%'</if>
 		ORDER BY n.fCreateTime DESC
