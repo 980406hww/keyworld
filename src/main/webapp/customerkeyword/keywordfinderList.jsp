@@ -27,6 +27,9 @@
             #customerKeywordTable td{
                 text-align: left;
             }
+            #saveCustomerKeywordDialog ul{list-style: none;margin: 0px;padding: 0px;}
+            #saveCustomerKeywordDialog li{margin: 5px 0;}
+            #saveCustomerKeywordDialog .customerKeywordSpanClass{width: 70px;display: inline-block;text-align: right;}
         </style>
         <title>关键字统计</title>
     </head>
@@ -115,10 +118,21 @@
                 <input type="button" onclick="updateCustomerKeywordStatus(1)" value=" 激活关键字 ">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupName">
-                <input type="button" onclick="updateOptimizeGroupName(${page.total})" value=" 修改当前关键字优化组 ">&nbsp;&nbsp;
+                <input type="button" onclick="updateOptimizeGroupName('total')" value=" 修改当前关键字优化组 ">&nbsp;&nbsp;
+            </shiro:hasPermission>
+            <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupName">
+                <input type="button" onclick="updateOptimizeGroupName('selected')" value=" 修改选中关键字优化组 ">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/customerKeyword/deleteCustomerKeywords">
-            <input type="button" onclick="deleteCustomerKeywords()" value=" 删除所选 ">
+                <input type="button" onclick="deleteCustomerKeywords()" value=" 删除所选 ">
+            </shiro:hasPermission>
+            <shiro:hasPermission name="/internal/customerKeyword/deleteCustomerKeywords">
+                <c:if test="${sessionScope.get('entryType') eq 'qz'}">
+                    <input type="button" onclick="deleteDuplicateQZKeyword()" value="删除所有重复关键字">
+                </c:if>
+            </shiro:hasPermission>
+            <shiro:hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
+                <input type="button" onclick="CustomerKeywordBatchUpdate('${sessionScope.entryType}')" value=" 批量修改 ">
             </shiro:hasPermission>
             <br/>
             <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
@@ -245,7 +259,10 @@
         目标优化组名:<input type="text" id="groupName" name="groupName" style="width:150px">
     </form>
 </div>
+<%@ include file="/customerkeyword/customerKeywordCommon.jsp" %>
+
 <%@ include file="/commons/loadjs.jsp" %>
+<script src="${staticPath }/customerkeyword/customerKeywordCommon.js"></script>
 <script src="${staticPath }/customerkeyword/keywordfinderList.js"></script>
 <script language="javascript">
     $(function () {

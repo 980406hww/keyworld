@@ -58,7 +58,7 @@
 <%@ include file="/commons/basejs.jsp" %>
 <div id="topDiv">
 	<%@ include file="/menu.jsp"%>
-				<form id="searchClientStatusForm" method="post" action="/internal/clientstatus/searchClientStatuses" style="font-size: 12px;margin-top: 35px" cellpadding=3>
+				<form id="searchClientStatusForm" method="post" action="/internal/clientstatus/searchClientStatuses" style="font-size: 12px;" cellpadding=3>
 					<table style="font-size: 12px;width:100%">
 						<tr>
 							<td align="left" colspan="2">
@@ -195,6 +195,15 @@
 							</shiro:hasPermission>
 							<shiro:hasPermission name="/internal/clientstatus/saveClientStatus">
 								|<a target="_blank" href="javascript:clientStatusBatchUpdate()">批量设置</a>
+							</shiro:hasPermission>
+							<shiro:hasPermission name="/internal/clientstatus/changeStatus">
+								|<a target="_blank" href="javascript:batchChangeStatus(true)">批量开始</a>
+							</shiro:hasPermission>
+							<shiro:hasPermission name="/internal/clientstatus/changeStatus">
+								|<a target="_blank" href="javascript:batchChangeStatus(false)">批量暂停</a>
+							</shiro:hasPermission>
+							<shiro:hasPermission name="/internal/clientstatus/changeTerminalType">
+								|<a target="_blank" href="javascript:batchChangeTerminalType()">批量变更终端类型</a>
 							</shiro:hasPermission>
 							</td>
 						</tr>

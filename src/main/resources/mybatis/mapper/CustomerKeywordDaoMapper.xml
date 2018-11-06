@@ -62,6 +62,12 @@
         <if test="customerKeywordCriteria.requireDelete == true">
             AND ck.fRequireDelete = 1
         </if>
+        <if test="customerKeywordCriteria.titleFlag == 1">
+            AND (ck.fTitle = '' OR ck.fTitle IS NULL)
+        </if>
+        <if test="customerKeywordCriteria.titleFlag == 2">
+            AND ck.fTitle > ''
+        </if>
         <choose>
             <when test="customerKeywordCriteria.optimizeGroupName != null and customerKeywordCriteria.optimizeGroupName != ''">
                 AND ck.fOptimizeGroupName  like '${customerKeywordCriteria.optimizeGroupName}%'
@@ -858,6 +864,11 @@
             ck.fOptimizeGroupName = #{customerKeywordCriteria.targetOptimizeGroupName},
             ck.fUpdateTime = NOW()
         WHERE c.fUuid = ck.fCustomerUuid
+        <if test="customerKeywordCriteria.uuids != null"> AND ck.fUuid IN
+            <foreach item = "item" collection = "customerKeywordCriteria.uuids" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
         <if test="customerKeywordCriteria.customerUuid != null and customerKeywordCriteria.customerUuid != ''">AND ck.fCustomerUuid = #{customerKeywordCriteria.customerUuid}</if>
         <if test="customerKeywordCriteria.keyword != null and customerKeywordCriteria.keyword != ''">AND ck.fKeyword like '${customerKeywordCriteria.keyword}%'</if>
         <if test="customerKeywordCriteria.url != null and customerKeywordCriteria.url != ''">AND ck.fUrl like '%${customerKeywordCriteria.url}%'</if>
@@ -1091,6 +1102,21 @@
         WHERE fUuid = #{customerKeywordUuid}
     </update>
 
+    <select id="searchDuplicateKeywords" resultType="java.lang.String">
+        SELECT
+            GROUP_CONCAT(CAST(fUuid AS CHAR) ORDER BY fUuid) AS 'uuids'
+        FROM
+            t_customer_keyword
+        WHERE
+            fType = #{customerKeywordCriteria.entryType}
+            AND fTerminalType =  #{customerKeywordCriteria.terminalType}
+        <if test="customerKeywordCriteria.customerUuid != null and customerKeywordCriteria.customerUuid != ''">
+            AND fCustomerUuid = #{customerKeywordCriteria.customerUuid}
+        </if>
+        GROUP BY fKeyword,fUrl, fCustomerUuid
+        HAVING COUNT(1) > 1
+    </select>
+    
     <update id="batchUpdateKeywordStatus">
         UPDATE t_customer_keyword
         SET fTerminalType = fTerminalType
