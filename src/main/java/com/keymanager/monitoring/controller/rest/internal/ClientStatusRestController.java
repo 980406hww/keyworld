@@ -15,6 +15,7 @@ import com.keymanager.util.TerminalTypeMapping;
 import com.keymanager.util.Utils;
 import com.keymanager.value.ClientStatusGroupSummaryVO;
 import com.keymanager.value.ClientStatusSummaryVO;
+import org.apache.ibatis.annotations.Param;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -435,6 +436,33 @@ public class ClientStatusRestController extends SpringMVCBaseController {
         try {
             List<String> clientIDs = (List<String>) requestMap.get("clientIDs");
             clientStatusService.updateStartUpStatusForCompleted(clientIDs);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequiresPermissions("/internal/clientstatus/changeTerminalType")
+    @RequestMapping(value = "/batchChangeTerminalType", method = RequestMethod.POST)
+    public ResponseEntity<?> batchChangeTerminalType(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) throws Exception {
+        String terminalType = TerminalTypeMapping.getTerminalType(request);
+        String clientIDs = (String) requestMap.get("clientID");
+        String[] clientID = clientIDs.split(",");
+        try {
+            clientStatusService.batchChangeTerminalType(clientID, TerminalTypeEnum.PC.name().equals(terminalType) ? TerminalTypeEnum.Phone.name() :
+                    TerminalTypeEnum.PC.name());
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequiresPermissions("/internal/clientstatus/changeStatus")
+    @RequestMapping(value = "/batchChangeStatus", method = RequestMethod.POST)
+    public ResponseEntity<?> batchChangeStatus(@Param("clientIDs") String clientIDs,@Param("status")Boolean status) {
+        try {
+            clientStatusService.batchChangeStatus(clientIDs,status);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());

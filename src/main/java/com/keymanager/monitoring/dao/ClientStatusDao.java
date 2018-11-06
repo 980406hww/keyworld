@@ -80,8 +80,10 @@ public interface ClientStatusDao extends BaseMapper<ClientStatus> {
 
     List<CookieVO> searchClientForAllotCookie(@Param("clientCookieCount")int clientCookieCount, @Param("cookieGroupForBaidu")String cookieGroupForBaidu, @Param("cookieGroupFor360")String cookieGroupFor360);
 
+    void batchChangeStatus(@Param("clientIds")String[] clientIds, @Param("valid")Boolean valid);
     void updateClientTargetVersion(@Param("clientUpgrade") ClientUpgrade clientUpgrade);
 
+    void batchChangeTerminalType(@Param("clientIds")String[] clientIds, @Param("terminalType")String terminalType);
     void resetOptimizationInfo();
 
     String getClientStatusID(@Param("vpsBackendSystemComputerID")String vpsBackendSystemComputerID);

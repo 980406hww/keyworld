@@ -584,6 +584,24 @@
         AND (cc.fCookieCount &lt; #{clientCookieCount} OR cc.fCookieCount IS NULL)
     </select>
 
+    <update id="batchChangeStatus">
+        UPDATE t_client_status
+        SET fValid = #{valid}
+        WHERE fClientID IN
+        <foreach collection="clientIds" item="clientID" open="(" close=")" separator=",">
+            #{clientID}
+        </foreach>
+    </update>
+
+    <update id="batchChangeTerminalType">
+        UPDATE t_client_status
+        SET fTerminalType = #{terminalType}
+        WHERE fClientID IN
+        <foreach collection="clientIds" item="clientID" open="(" close=")" separator=",">
+            #{clientID}
+        </foreach>
+    </update>
+    
     <update id="updateClientTargetVersion" parameterType="com.keymanager.monitoring.entity.ClientUpgrade">
         UPDATE t_client_status
         SET fTargetVersion = #{clientUpgrade.targetVersion}

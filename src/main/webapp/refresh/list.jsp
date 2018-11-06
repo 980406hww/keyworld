@@ -8,7 +8,7 @@
 <div id="topDiv">
 	<%@include file="/menu.jsp" %>
 	<form method="post" id="searchRefreshStatInfoForm" action="/internal/refreshstatinfo/searchRefreshStatInfos"
-		  style="margin-top: 35px;">
+		  >
 		<table style="font-size:12px;">
 			<tr>
 				<td align="right">分组名称:<input name="groupName" id="groupName" type="text" style="width:200px;"

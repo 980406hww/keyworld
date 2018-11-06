@@ -3,6 +3,7 @@ package com.keymanager.monitoring.service;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -1070,6 +1071,15 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
     public List<CookieVO> searchClientForAllotCookie(int clientCookieCount, String cookieGroupForBaidu, String cookieGroupFor360) {
         List<CookieVO> clientCookieCountList = clientStatusDao.searchClientForAllotCookie(clientCookieCount, cookieGroupForBaidu, cookieGroupFor360);
         return clientCookieCountList;
+    }
+
+    public void batchChangeStatus(String clientIDs,Boolean status) {
+        String[] clientIds = clientIDs.split(",");
+        clientStatusDao.batchChangeStatus(clientIds,status);
+    }
+
+    public void batchChangeTerminalType(String[] clientIds, String terminalType) {
+        clientStatusDao.batchChangeTerminalType(clientIds, terminalType);
     }
 
     public Integer getUpgradingClientCount(ClientUpgrade clientUpgrade) {
