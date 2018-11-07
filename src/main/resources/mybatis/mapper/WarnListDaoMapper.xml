@@ -20,7 +20,7 @@
 			t_warn_list n
 		WHERE 1 = 1
 		<if test="warnListCriteria.keyword != null and warnListCriteria.keyword != ''">AND n.fKeyword = #{warnListCriteria.keyword}</if>
-		<if test="warnListCriteria.title != null and warnListCriteria.title != ''">AND n.fTitle  like  '%#{warnListCriteria.title}%'</if>
+		<if test="warnListCriteria.title != null and warnListCriteria.title != ''">AND n.fTitle  like  '%${warnListCriteria.title}%'</if>
 		<if test="warnListCriteria.url != null and warnListCriteria.url != ''">AND n.fUrl like '%${warnListCriteria.url}%'</if>
 		ORDER BY n.fCreateTime DESC
 	</select>
