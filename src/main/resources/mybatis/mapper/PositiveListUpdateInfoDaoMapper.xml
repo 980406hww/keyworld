@@ -5,6 +5,7 @@
 		fUuid AS "uuid",
 		fPid AS "pid",
 		fOptimizeMethod AS "optimizeMethod",
+		fUserName AS "userName",
 		fUpdateTime AS "updateTime",
 		fCreateTime AS "createTime",
 		fPosition AS "position"
@@ -19,4 +20,9 @@
         ORDER BY tplui.fCreateTime DESC
         LIMIT 5
     </select>
+
+    <delete id="deleteByPid">
+        DELETE FROM t_positive_list_update_info
+        WHERE fPid = #{pid}
+    </delete>
 </mapper>

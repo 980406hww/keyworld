@@ -62,7 +62,7 @@ public class PositiveListRestController {
     @RequestMapping(value = "/savePositiveList", method = RequestMethod.POST)
     public ResponseEntity<?> savePositiveList(@RequestBody PositiveList positiveList, HttpServletRequest request) {
         try {
-            positiveListService.savePositiveList(positiveList);
+            positiveListService.savePositiveList(positiveList, null);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
