@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.criteria.PositiveListCriteria;
 import com.keymanager.monitoring.dao.PositiveListDao;
-import com.keymanager.monitoring.dao.PositiveListUpdateInfoDao;
 import com.keymanager.monitoring.entity.PositiveList;
 import com.keymanager.monitoring.entity.PositiveListUpdateInfo;
 import org.apache.commons.collections.CollectionUtils;
@@ -50,6 +49,15 @@ public class PositiveListService extends ServiceImpl<PositiveListDao, PositiveLi
                 positiveListCriteria.setKeyword(positiveList.getKeyword());
                 positiveListCriteria.setTitle(positiveList.getTitle());
                 positiveListCriteria.setTerminalType(positiveList.getTerminalType());
+                String[] strings = positiveList.getNewsSource().split(",");
+                if (strings.length > 0){
+                    if (strings.length > 1){
+                        positiveListCriteria.setPosition(Integer.valueOf(strings[1]));
+                    }
+                    positiveList.setNewsSource(strings[0]);
+                } else {
+                    positiveList.setNewsSource("");
+                }
                 List<PositiveList> existingPositiveLists = positiveListDao.searchPositiveListsFullMatching(positiveListCriteria);
                 if(operationType.equals("update")){
                     for (PositiveList existingPositiveList : existingPositiveLists) {
@@ -65,11 +73,13 @@ public class PositiveListService extends ServiceImpl<PositiveListDao, PositiveLi
                     }
                 } else {
                     if (CollectionUtils.isNotEmpty(existingPositiveLists)) {
-                        PositiveList existingPositiveList = existingPositiveLists.get(0);
-                        positiveList.setUuid(existingPositiveList.getUuid());
-                        positiveList.setCreateTime(existingPositiveList.getCreateTime());
-                        if (btnType.equals("1")) {
-                            positiveListUpdateInfoService.savePositiveListUpdateInfo(positiveList);
+                        if (null != positiveListCriteria.getPosition()) {
+                            PositiveList existingPositiveList = existingPositiveLists.get(0);
+                            positiveList.setUuid(existingPositiveList.getUuid());
+                            positiveList.setCreateTime(existingPositiveList.getCreateTime());
+                            if (btnType.equals("1")) {
+                                positiveListUpdateInfoService.savePositiveListUpdateInfo(positiveList);
+                            }
                         }
                     }
                     this.savePositiveList(positiveList);
