@@ -139,7 +139,8 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void updateOptimizePlanCountForBaiduMap();
 
-    void updatePosition(@Param("uuid")Long uuid, @Param("position")Integer position, @Param("capturePositionQueryTime")Date capturePositionQueryTime, @Param("todayFee") Double todayFee);
+    void updatePosition(@Param("uuid")Long uuid, @Param("position")Integer position, @Param("capturePositionQueryTime")Date capturePositionQueryTime, @Param("todayFee") Double todayFee,
+                        @Param("ip") String ip, @Param("city") String city);
 
     List<OptimizationCountVO> takeOptimizationCountExceptionUsers();
 
@@ -193,9 +194,11 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     List<CustomerKeyword> searchCustomerKeywordsPageForCustomer(@Param("customerKeywordCriteria") CustomerKeywordCriteria customerKeywordCriteria);
 
-    //客户关键字批量设�
+    //客户关键字批量设�
     void batchUpdateKeywordStatus(@Param("keywordIDs")String[] keywordIDs, @Param("keywordChecks") CustomerKeyword keywordChecks, @Param("keywordStatus")CustomerKeyword keywordStatus);
 
     void updateCustomerKeywordsTitle(@Param("searchEngineResultItemVOs") List<SearchEngineResultItemVO> searchEngineResultItemVOs);
     List<String> searchDuplicateKeywords(@Param("customerKeywordCriteria") CustomerKeywordCriteria customerKeywordCriteria);
+
+    CustomerKeyword getCustomerKeywordFee(@Param("uuid")Long uuid);
 }

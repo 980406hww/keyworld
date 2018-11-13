@@ -29,12 +29,6 @@ public class ExternalWarnListRestController extends SpringMVCBaseController {
 	public ResponseEntity<?> savewWarnLists(@RequestBody WarnListCriteria warnListCriteria) throws Exception{
 		try {
 			if (validUser(warnListCriteria.getUserName(), warnListCriteria.getPassword())) {
-				for(WarnList warnList : warnListCriteria.getWarnLists()){
-					if(StringUtils.isNotEmpty(warnList.getDesc())){
-						String desc = warnList.getDesc().replace("\n" , "").replace(" ", "");
-						warnList.setDesc(desc);
-					}
-				}
 				warnListService.saveWarnLists(warnListCriteria.getWarnLists() , warnListCriteria.getOperationType());
 				return new ResponseEntity<Object>(true, HttpStatus.OK);
 			}

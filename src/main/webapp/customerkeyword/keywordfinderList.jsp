@@ -212,7 +212,7 @@
                     <div style="height:16;">${customerKeyword.initialPosition}
                     </div>
                 </td>
-                <td align="center" width=50>
+                <td align="center" width=50 class="floatTd" title="排名采集城市: ${customerKeyword.capturePositionCity}">
                     <div style="height:16;">
                         <a href="${customerKeyword.searchEngineUrl}" target="_blank">${customerKeyword.currentPosition}</a>
                     </div>
