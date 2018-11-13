@@ -38,12 +38,6 @@ public class ExternalNegativeListRestController extends SpringMVCBaseController 
 	public ResponseEntity<?> saveNegativeLists(@RequestBody NegativeListCriteria negativeListCriteria, HttpServletRequest request) throws Exception{
 		try {
 			if (validUser(negativeListCriteria.getUserName(), negativeListCriteria.getPassword())) {
-				for(NegativeList negativeList : negativeListCriteria.getNegativeLists()){
-					if(StringUtils.isNotEmpty(negativeList.getDesc())){
-						String desc = negativeList.getDesc().replace("\n" , "").replace(" ", "");
-						negativeList.setDesc(desc);
-					}
-				}
 				negativeListService.saveNegativeLists(negativeListCriteria.getNegativeLists() , negativeListCriteria.getOperationType());
 				return new ResponseEntity<Object>(true, HttpStatus.OK);
 			}

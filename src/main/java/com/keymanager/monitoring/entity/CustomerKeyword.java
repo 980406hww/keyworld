@@ -253,6 +253,12 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(value = "fFromSource")
     private String fromSource;
 
+    @TableField(value = "fCapturePositionIP")
+    private String capturePositionIP;
+
+    @TableField(value = "fCapturePositionCity")
+    private String capturePositionCity;
+
     public long getCustomerUuid() {
         return customerUuid;
     }
@@ -967,5 +973,21 @@ public class CustomerKeyword extends BaseEntity {
 
     public void setFromSource(String fromSource) {
         this.fromSource = fromSource;
+    }
+
+    public String getCapturePositionIP() {
+        return capturePositionIP;
+    }
+
+    public void setCapturePositionIP(String capturePositionIP) {
+        this.capturePositionIP = capturePositionIP;
+    }
+
+    public String getCapturePositionCity() {
+        return capturePositionCity;
+    }
+
+    public void setCapturePositionCity(String capturePositionCity) {
+        this.capturePositionCity = capturePositionCity;
     }
 }
