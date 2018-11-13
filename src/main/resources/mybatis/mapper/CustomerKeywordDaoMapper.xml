@@ -9,6 +9,8 @@
         ck.fUrl	AS	'url',
         ck.fOriginalUrl	AS	'originalUrl',
         ck.fTitle	AS	'title',
+        ck.fCapturePositionCity AS 'capturePositionCity',
+        ck.fTodayFee  AS 'todayFee',
         ck.fSequence	AS	'sequence',
         ck.fSearchEngine	AS	'searchEngine',
         ck.fInitialIndexCount	AS	'initialIndexCount',
@@ -287,6 +289,7 @@
         ck.fOriginalUrl	AS	'originalUrl',
         ck.fBearPawNumber AS 'bearPawNumber',
         ck.fTitle	AS	'title',
+        ck.fCapturePositionCity AS 'capturePositionCity',
         ck.fSearchEngine	AS	'searchEngine',
         ck.fInitialPosition	AS	'initialPosition',
         ck.fCurrentIndexCount	AS	'currentIndexCount',
@@ -494,6 +497,19 @@
         ck.fRemarks AS 'remarks',
         ck.fCt as 'ct',
         ck.fFromSource as 'fromSource'
+        FROM t_customer_keyword ck
+        WHERE ck.fUuid = #{uuid}
+    </select>
+
+    <select id="getCustomerKeywordFee" resultType="com.keymanager.monitoring.entity.CustomerKeyword">
+        SELECT
+          ck.fUuid                 AS 'uuid',
+          ck.fPositionFirstFee     AS 'positionFirstFee',
+          ck.fPositionSecondFee    AS 'positionSecondFee',
+          ck.fPositionThirdFee     AS 'positionThirdFee',
+          ck.fPositionForthFee     AS 'positionForthFee',
+          ck.fPositionFifthFee     AS 'positionFifthFee',
+          ck.fPositionFirstPageFee AS 'positionFirstPageFee'
         FROM t_customer_keyword ck
         WHERE ck.fUuid = #{uuid}
     </select>
@@ -750,6 +766,7 @@
             fInitialPosition = IFNULL(fInitialPosition, #{position}),
             fCapturePositionQueryTime = IFNULL(#{capturePositionQueryTime}, fCapturePositionQueryTime),
             fTodayFee = if(fLastReachStandardDate = CURRENT_DATE(), if(fTodayFee > #{todayFee} OR #{todayFee} is null, fTodayFee, #{todayFee}), #{todayFee}),
+            fCapturePositionIP = #{ip}, fCapturePositionCity = #{city},
             <if test="todayFee != null">
                 fLastReachStandardDate = CURRENT_DATE(),
             </if>

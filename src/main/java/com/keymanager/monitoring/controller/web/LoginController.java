@@ -66,7 +66,7 @@ public class LoginController extends BaseController {
 	public String login() {
 		logger.info("GET请求登录");
 		if (SecurityUtils.getSubject().isAuthenticated()) {
-			return "/views/index";
+			return "/customerkeyword/keywordfinderList";
 		}
 		return "/views/login";
 }

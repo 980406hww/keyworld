@@ -281,7 +281,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 ClientStatus clientStatus = clientStatusService.selectById(clientID);
                 String terminalType = clientStatus.getTerminalType();
                 if(StringUtils.isNotBlank(position)) {
-                    customerKeywordService.updateCustomerKeywordPosition(customerKeywordUuid, Integer.parseInt(position), null);
+                    customerKeywordService.updateCustomerKeywordPosition(customerKeywordUuid, Integer.parseInt(position), null, null, null);
                 }
                 customerKeywordService.updateOptimizationResult(terminalType, customerKeywordUuid, Integer.parseInt(count.trim()), ip, city, clientID,
                         status, freeSpace, version, runningProgramType);
@@ -333,11 +333,13 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
 
         Long customerKeywordUuid = Long.parseLong(requestMap.get("customerKeywordUuid").toString());
         int position = (Integer) requestMap.get("position");
+        String ip = (String) requestMap.get("capturePositionIP");
+        String city = (String) requestMap.get("capturePositionCity");
         Date startTime = new Date((Long) requestMap.get("startTime"));
         try {
             if (validUser(userName, password)) {
                 if(position > -1) {
-                    customerKeywordService.updateCustomerKeywordPosition(customerKeywordUuid, position, Utils.getCurrentTimestamp());
+                    customerKeywordService.updateCustomerKeywordPosition(customerKeywordUuid, position, Utils.getCurrentTimestamp(), ip, city);
                 } else {
                     customerKeywordService.updateCustomerKeywordQueryTime(customerKeywordUuid, startTime);
                 }

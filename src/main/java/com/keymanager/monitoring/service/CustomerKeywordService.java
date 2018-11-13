@@ -942,10 +942,10 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeywordDao.updateOptimizePlanCountForBaiduMap();
     }
 
-    public void updateCustomerKeywordPosition(Long customerKeywordUuid, int position, Date capturePositionQueryTime){
+    public void updateCustomerKeywordPosition(Long customerKeywordUuid, int position, Date capturePositionQueryTime, String ip, String city){
         Double todayFee = null;
         if(position > 0 && position <= 10) {
-            CustomerKeyword customerKeyword = customerKeywordDao.selectById(customerKeywordUuid);
+            CustomerKeyword customerKeyword = customerKeywordDao.getCustomerKeywordFee(customerKeywordUuid);
             if(customerKeyword.getPositionFirstFee() != null && customerKeyword.getPositionFirstFee() > 0 && position == 1) {
                 todayFee = customerKeyword.getPositionFirstFee();
             } else if(customerKeyword.getPositionSecondFee() != null && customerKeyword.getPositionSecondFee() > 0 && position == 2) {
@@ -960,7 +960,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                 todayFee = customerKeyword.getPositionFirstPageFee();
             }
         }
-        customerKeywordDao.updatePosition(customerKeywordUuid, position, capturePositionQueryTime, todayFee);
+        customerKeywordDao.updatePosition(customerKeywordUuid, position, capturePositionQueryTime, todayFee, ip, city);
         if(capturePositionQueryTime != null) {
             customerKeywordPositionSummaryService.savePositionSummary(customerKeywordUuid, position);
         }
