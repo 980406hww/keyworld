@@ -12,6 +12,9 @@ public class PositiveListUpdateInfo extends BaseEntity {
 	@TableField(value = "fOptimizeMethod")
 	private String optimizeMethod;
 
+	@TableField(value = "fUserName")
+	private String userName;
+
 	@TableField(value = "fPosition")
 	private Integer position;
 
@@ -29,6 +32,14 @@ public class PositiveListUpdateInfo extends BaseEntity {
 
 	public void setOptimizeMethod (String optimizeMethod) {
 		this.optimizeMethod = optimizeMethod;
+	}
+
+	public String getUserName () {
+		return userName;
+	}
+
+	public void setUserName (String userName) {
+		this.userName = userName;
 	}
 
 	public Integer getPosition () {

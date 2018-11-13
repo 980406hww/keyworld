@@ -9,4 +9,6 @@ import java.util.List;
 public interface PositiveListUpdateInfoDao extends BaseMapper<PositiveListUpdateInfo> {
 
     List<PositiveListUpdateInfo> findMostRecentPositiveListUpdateInfo (@Param("pid") Long pid);
+
+    void deleteByPid (@Param("pid") long pid);
 }

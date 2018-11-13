@@ -31,18 +31,20 @@ public class PositiveListService extends ServiceImpl<PositiveListDao, PositiveLi
         return page;
     }
 
-    public void savePositiveList(PositiveList positiveList) {
+    public void savePositiveList(PositiveList positiveList, String userName) {
         if (null != positiveList.getUuid()) {
             positiveList.setUpdateTime(new Date());
             positiveListDao.updateById(positiveList);
         } else {
             positiveList.setCreateTime(new Date());
             positiveListDao.insert(positiveList);
-            positiveListUpdateInfoService.savePositiveListUpdateInfo(positiveList);
+            if (!positiveList.getOptimizeMethod().equals("")) {
+                positiveListUpdateInfoService.savePositiveListUpdateInfo(positiveList, userName);
+            }
         }
     }
 
-    public void savePositiveLists(List<PositiveList> positiveLists , String operationType, String btnType) {
+    public void savePositiveLists(List<PositiveList> positiveLists, String operationType, String btnType, String userName) {
         if (CollectionUtils.isNotEmpty(positiveLists)) {
             for (PositiveList positiveList : positiveLists) {
                 PositiveListCriteria positiveListCriteria = new PositiveListCriteria();
@@ -66,7 +68,7 @@ public class PositiveListService extends ServiceImpl<PositiveListDao, PositiveLi
                             existingPositiveList.setNewsSource(positiveList.getNewsSource());
                             existingPositiveList.setUpdateTime(new Date());
                             updatePositiveList(existingPositiveList);
-                            positiveListUpdateInfoService.savePositiveListUpdateInfo(existingPositiveList);
+                            positiveListUpdateInfoService.savePositiveListUpdateInfo(existingPositiveList, userName);
                         } else {
                             deletePositiveList(existingPositiveList.getUuid());
                         }
@@ -78,11 +80,11 @@ public class PositiveListService extends ServiceImpl<PositiveListDao, PositiveLi
                             positiveList.setUuid(existingPositiveList.getUuid());
                             positiveList.setCreateTime(existingPositiveList.getCreateTime());
                             if (btnType.equals("1")) {
-                                positiveListUpdateInfoService.savePositiveListUpdateInfo(positiveList);
+                            positiveListUpdateInfoService.savePositiveListUpdateInfo(positiveList, userName);
                             }
                         }
                     }
-                    this.savePositiveList(positiveList);
+                    this.savePositiveList(positiveList, userName);
                 }
             }
         }
@@ -105,6 +107,7 @@ public class PositiveListService extends ServiceImpl<PositiveListDao, PositiveLi
 
     public void deletePositiveList(long uuid) {
         positiveListDao.deleteById(uuid);
+        positiveListUpdateInfoService.deleteByPid(uuid);
     }
 
     public void updatePositiveList(PositiveList positiveList){

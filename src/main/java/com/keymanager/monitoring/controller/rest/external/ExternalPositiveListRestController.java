@@ -33,7 +33,7 @@ public class ExternalPositiveListRestController extends SpringMVCBaseController 
 	public ResponseEntity<?> savePositiveLists(@RequestBody PositiveListCriteria positiveListCriteria) {
 		try {
 			if (validUser(positiveListCriteria.getUserName(), positiveListCriteria.getPassword())) {
-				positiveListService.savePositiveLists(positiveListCriteria.getPositiveLists(), positiveListCriteria.getOperationType(), positiveListCriteria.getBtnType());
+				positiveListService.savePositiveLists(positiveListCriteria.getPositiveLists(), positiveListCriteria.getOperationType(), positiveListCriteria.getBtnType(), positiveListCriteria.getUserName());
 				return new ResponseEntity<Object>(true, HttpStatus.OK);
 			}
 		}catch (Exception ex){

@@ -22,7 +22,7 @@ public class PositiveListUpdateInfoService extends ServiceImpl<PositiveListUpdat
     @Autowired
     private PositiveListUpdateInfoDao positiveListUpdateInfoDao;
 
-    public void savePositiveListUpdateInfo (PositiveList positiveList) {
+    public void savePositiveListUpdateInfo (PositiveList positiveList, String userName) {
         List<PositiveListUpdateInfo> existingPositiveListUpdateInfos = positiveListUpdateInfoDao.findMostRecentPositiveListUpdateInfo(positiveList.getUuid());
         if (CollectionUtils.isNotEmpty(existingPositiveListUpdateInfos)) {
             PositiveListUpdateInfo positiveListUpdateInfo = existingPositiveListUpdateInfos.get(0);
@@ -32,6 +32,7 @@ public class PositiveListUpdateInfoService extends ServiceImpl<PositiveListUpdat
         PositiveListUpdateInfo positiveListUpdateInfo = new PositiveListUpdateInfo();
         positiveListUpdateInfo.setPid(positiveList.getUuid());
         positiveListUpdateInfo.setOptimizeMethod(positiveList.getOptimizeMethod());
+        positiveListUpdateInfo.setUserName(userName);
         positiveListUpdateInfo.setCreateTime(new Date());
         positiveListUpdateInfo.setPosition(positiveList.getPosition());
         positiveListUpdateInfoDao.insert(positiveListUpdateInfo);
@@ -39,5 +40,9 @@ public class PositiveListUpdateInfoService extends ServiceImpl<PositiveListUpdat
 
     public List<PositiveListUpdateInfo> findPositiveListUpdateInfos (Long pid) {
         return positiveListUpdateInfoDao.findMostRecentPositiveListUpdateInfo(pid);
+    }
+
+    public void deleteByPid (long pid) {
+        positiveListUpdateInfoDao.deleteByPid(pid);
     }
 }
