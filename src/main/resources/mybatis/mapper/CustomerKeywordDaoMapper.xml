@@ -236,6 +236,7 @@
         ck.fCurrentIndexCount	AS	'currentIndexCount',
         ck.fCurrentPosition	AS	'currentPosition',
         ck.fInvalidRefreshCount	AS	'invalidRefreshCount',
+        ck.fCapturePositionCity AS 'capturePositionCity',
         ck.fOptimizePlanCount	AS	'optimizePlanCount',
         ck.fOptimizedCount	AS	'optimizedCount',
         ck.fOptimizedPercentage	AS	'optimizedPercentage',
