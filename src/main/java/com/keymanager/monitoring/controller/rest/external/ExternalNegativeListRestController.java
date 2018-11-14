@@ -7,9 +7,7 @@ import com.keymanager.monitoring.entity.NegativeList;
 import com.keymanager.monitoring.service.NegativeListService;
 import com.keymanager.monitoring.service.PerformanceService;
 import com.keymanager.util.Constants;
-import com.keymanager.util.TerminalTypeMapping;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,16 +89,14 @@ public class ExternalNegativeListRestController extends SpringMVCBaseController 
 	}
 	//负面信息同步
 	@RequestMapping(value = "/negativeListsSynchronize", method = RequestMethod.POST)
-	public ResponseEntity<?> negativeListsSynchronize(@RequestBody KeywordNegativeCriteria keywordNegativeCriteria) throws Exception{
-		String userName = keywordNegativeCriteria.getUserName();
-		String password = keywordNegativeCriteria.getPassword();
+	public ResponseEntity<?> negativeListsSynchronize(@RequestBody KeywordNegativeCriteria keywordNegativeCriteria) throws Exception {
 		try {
-			if (validUser(userName, password)) {
+			if (validUser(keywordNegativeCriteria.getUserName(), keywordNegativeCriteria.getPassword())) {
 				NegativeList negativeList = keywordNegativeCriteria.getNegativeList();
-				List<NegativeList> existNegativeList = negativeListService.negativeListsSynchronizeOfDelete(negativeList);
-				if(existNegativeList!=null){
-					for(NegativeList negativeList1 : existNegativeList){
-						negativeListService.deleteById(negativeList1.getUuid());
+				List<NegativeList> existNegativeLists = negativeListService.negativeListsSynchronizeOfDelete(negativeList);
+				if(CollectionUtils.isNotEmpty(existNegativeLists)){
+					for(NegativeList existNegativeList : existNegativeLists){
+						negativeListService.deleteById(existNegativeList.getUuid());
 					}
 				}
 				if(keywordNegativeCriteria.getNegative()){

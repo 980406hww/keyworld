@@ -38,7 +38,7 @@ public class PositiveListService extends ServiceImpl<PositiveListDao, PositiveLi
         } else {
             positiveList.setCreateTime(new Date());
             positiveListDao.insert(positiveList);
-            if (!positiveList.getOptimizeMethod().equals("")) {
+            if (null !=positiveList.getOptimizeMethod()) {
                 positiveListUpdateInfoService.savePositiveListUpdateInfo(positiveList, userName);
             }
         }
