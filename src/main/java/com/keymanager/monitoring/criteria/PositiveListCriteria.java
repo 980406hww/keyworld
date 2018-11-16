@@ -1,6 +1,6 @@
 package com.keymanager.monitoring.criteria;
 
-import com.keymanager.monitoring.entity.PositiveList;
+import com.keymanager.monitoring.vo.PositiveListVO;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ public class PositiveListCriteria extends BaseCriteria {
     private String operationType;
     private String originalUrl;
     private String btnType;
-    private List<PositiveList> positiveLists;
+    private List<PositiveListVO> positiveListVOS;
 
     public String getTerminalType () {
         return terminalType;
@@ -91,11 +91,12 @@ public class PositiveListCriteria extends BaseCriteria {
         this.btnType = btnType;
     }
 
-    public List<PositiveList> getPositiveLists() {
-        return positiveLists;
+    public List<PositiveListVO> getPositiveListVOS () {
+        return positiveListVOS;
     }
 
-    public void setPositiveLists(List<PositiveList> positiveLists) {
-        this.positiveLists = positiveLists;
+    public void setPositiveListVOS (List<PositiveListVO> positiveListVOS) {
+        this.positiveListVOS = positiveListVOS;
     }
+
 }

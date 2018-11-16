@@ -1,10 +1,9 @@
 package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.keymanager.monitoring.dao.PositiveListDao;
 import com.keymanager.monitoring.dao.PositiveListUpdateInfoDao;
-import com.keymanager.monitoring.entity.PositiveList;
 import com.keymanager.monitoring.entity.PositiveListUpdateInfo;
+import com.keymanager.monitoring.vo.PositiveListVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,19 +21,19 @@ public class PositiveListUpdateInfoService extends ServiceImpl<PositiveListUpdat
     @Autowired
     private PositiveListUpdateInfoDao positiveListUpdateInfoDao;
 
-    public void savePositiveListUpdateInfo (PositiveList positiveList, String userName) {
-        List<PositiveListUpdateInfo> existingPositiveListUpdateInfos = positiveListUpdateInfoDao.findMostRecentPositiveListUpdateInfo(positiveList.getUuid());
-        if (CollectionUtils.isNotEmpty(existingPositiveListUpdateInfos)) {
-            PositiveListUpdateInfo positiveListUpdateInfo = existingPositiveListUpdateInfos.get(0);
+    public void savePositiveListUpdateInfo (PositiveListVO positiveListVO, String userName) {
+        if (CollectionUtils.isNotEmpty(positiveListVO.getPositiveListUpdateInfoList())) {
+            List<PositiveListUpdateInfo> mostRecentPositiveListUpdateInfo = positiveListUpdateInfoDao.findMostRecentPositiveListUpdateInfo(positiveListVO.getPositiveList().getUuid());
+            PositiveListUpdateInfo positiveListUpdateInfo = mostRecentPositiveListUpdateInfo.get(0);
             positiveListUpdateInfo.setUpdateTime(new Date());
             positiveListUpdateInfoDao.updateById(positiveListUpdateInfo);
         }
         PositiveListUpdateInfo positiveListUpdateInfo = new PositiveListUpdateInfo();
-        positiveListUpdateInfo.setPid(positiveList.getUuid());
-        positiveListUpdateInfo.setOptimizeMethod(positiveList.getOptimizeMethod());
+        positiveListUpdateInfo.setPid(positiveListVO.getPositiveList().getUuid());
+        positiveListUpdateInfo.setOptimizeMethod(positiveListVO.getPositiveList().getOptimizeMethod());
         positiveListUpdateInfo.setUserName(userName);
         positiveListUpdateInfo.setCreateTime(new Date());
-        positiveListUpdateInfo.setPosition(positiveList.getPosition());
+        positiveListUpdateInfo.setPosition(positiveListVO.getPositiveList().getPosition());
         positiveListUpdateInfoDao.insert(positiveListUpdateInfo);
     }
 

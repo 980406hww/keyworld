@@ -2,9 +2,7 @@ package com.keymanager.monitoring.entity;
 
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
-import com.baomidou.mybatisplus.enums.FieldStrategy;
-
-import java.util.List;
+import com.baomidou.mybatisplus.enums.FieldFill;
 
 @TableName(value = "t_positive_list")
 public class PositiveList extends BaseEntity {
@@ -29,21 +27,11 @@ public class PositiveList extends BaseEntity {
 	@TableField(value = "fOriginalUrl")
 	private String originalUrl;
 
-	@TableField(value = "fOptimizeMethod")
+	@TableField(value = "fOptimizeMethod", fill = FieldFill.INSERT_UPDATE)
 	private String optimizeMethod;
 
-	@TableField(value = "fNewsSource")
+	@TableField(value = "fNewsSource", fill = FieldFill.INSERT_UPDATE)
 	private String newsSource;
-
-	public List<PositiveListUpdateInfo> getPositiveListUpdateInfos () {
-		return positiveListUpdateInfos;
-	}
-
-	public void setPositiveListUpdateInfos (List<PositiveListUpdateInfo> positiveListUpdateInfos) {
-		this.positiveListUpdateInfos = positiveListUpdateInfos;
-	}
-
-	private List<PositiveListUpdateInfo> positiveListUpdateInfos;
 
 	public String getTerminalType () {
 		return terminalType;
