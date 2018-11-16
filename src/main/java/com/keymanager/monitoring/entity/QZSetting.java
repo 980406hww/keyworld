@@ -36,6 +36,12 @@ public class QZSetting extends BaseEntity{
 	@TableField(value = "fType")
 	private String type;
 
+	@TableField(value = "fPcKeywordExceedMaxCount")
+	private boolean pcKeywordExceedMaxCount;
+
+	@TableField(value = "fPhoneKeywordExceedMaxCount")
+	private boolean phoneKeywordExceedMaxCount;
+
 	@TableField(value = "fIgnoreNoIndex")
 	private boolean ignoreNoIndex;
 
@@ -208,5 +214,21 @@ public class QZSetting extends BaseEntity{
 
 	public void setStatus(int status) {
 		this.status = status;
+	}
+
+	public boolean isPcKeywordExceedMaxCount() {
+		return pcKeywordExceedMaxCount;
+	}
+
+	public void setPcKeywordExceedMaxCount(boolean pcKeywordExceedMaxCount) {
+		this.pcKeywordExceedMaxCount = pcKeywordExceedMaxCount;
+	}
+
+	public boolean isPhoneKeywordExceedMaxCount() {
+		return phoneKeywordExceedMaxCount;
+	}
+
+	public void setPhoneKeywordExceedMaxCount(boolean phoneKeywordExceedMaxCount) {
+		this.phoneKeywordExceedMaxCount = phoneKeywordExceedMaxCount;
 	}
 }

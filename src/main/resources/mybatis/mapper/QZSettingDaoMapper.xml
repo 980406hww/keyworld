@@ -30,6 +30,8 @@
                OR (qs.fUpdateStatus = 'DownloadTimesUsed'
                    AND DATE_SUB(NOW(), INTERVAL 1 DAY) > qs.fUpdateEndTime)
               ) AND qs.fStatus = 1
+              AND ((qs.fPcGroup > '' AND qs.fPcKeywordExceedMaxCount = 0)
+              OR  (qs.fPhoneGroup > '' AND qs.fPhoneKeywordExceedMaxCount = 0))
         ORDER BY qs.fUpdateEndTime
     </select>
 
@@ -191,4 +193,52 @@
         WHERE qs.fUuid IN (${uuids})
     </update>
 
+    <update id="updateExceedMaxCountFlag">
+        UPDATE t_qz_setting
+        SET fPcKeywordExceedMaxCount = #{pcKeywordExceedMaxCount}, fPhoneKeywordExceedMaxCount = #{phoneKeywordExceedMaxCount}
+    </update>
+
+    <update id="updatePCExceedMaxCountFlag">
+        UPDATE t_qz_setting
+        SET fPcKeywordExceedMaxCount = #{pcKeywordExceedMaxCount}
+        WHERE fUuid IN
+        <foreach item="item" index="index" collection="uuids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <update id="updatePhoneExceedMaxCountFlag">
+        UPDATE t_qz_setting
+        SET fPhoneKeywordExceedMaxCount = #{phoneKeywordExceedMaxCount}
+        WHERE fUuid IN
+        <foreach item="item" index="index" collection="uuids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <select id="getPCKeywordExceedMaxCount" resultType="java.lang.Long">
+        SELECT
+          qs.fUuid
+        FROM t_qz_setting qs
+          LEFT JOIN t_customer_keyword ck
+            ON qs.fPcGroup = ck.fOptimizeGroupName
+        WHERE ck.fType = 'qz'
+            AND ck.fTerminalType = 'PC'
+            AND ck.fStatus > 0
+        GROUP BY qs.fUuid
+        HAVING COUNT(1) > #{maxCount}
+    </select>
+
+    <select id="getPhoneKeywordExceedMaxCount" resultType="java.lang.Long">
+        SELECT
+        qs.fUuid
+        FROM t_qz_setting qs
+        LEFT JOIN t_customer_keyword ck
+        ON qs.fPhoneGroup = ck.fOptimizeGroupName
+        WHERE ck.fType = 'qz'
+        AND ck.fTerminalType = 'Phone'
+        AND ck.fStatus > 0
+        GROUP BY qs.fUuid
+        HAVING COUNT(1) > #{maxCount}
+    </select>
 </mapper>

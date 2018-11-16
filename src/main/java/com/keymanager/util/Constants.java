@@ -65,6 +65,8 @@ public class Constants {
     public final static String CONFIG_TYPE_VPS_BACKEND_ACCOUNT = "VPSBackendAccount";
     public final static String CONFIG_TYPE_VPS_BACKEND_PASSWORD = "VPSBackendPassword";
     public final static String CONFIG_TYPE_OPTIMIZE_Method_GROUPNAME = "OptimizeMethodGroupName";
+    public final static String CONFIG_TYPE_QZ_KEYWORD = "QZKeyword";
+    public final static String CONFIG_KEY_KEYWORD_MAX_COUNT = "MaxCount";
 
     public final static Map<String, String> ACCOUNT_LOG_STATUS_MAP = new HashMap<String, String>();
     static {
