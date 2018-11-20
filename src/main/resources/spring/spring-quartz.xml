@@ -25,6 +25,7 @@
 				<ref bean="cronTriggerNegativeStandardSettingCount" />
 				<ref bean="cronTriggerAllotCookie" />
 				<ref bean="cronTriggerClientUpgrade" />
+				<ref bean="cronTriggerExceedMaxCount" />
 			</list>
 		</property>
 		<!-- Quartz配置, 本地运行无需单独的quartz.properties文件，在此简单配置即可 -->
@@ -265,6 +266,18 @@
 
 	<bean id="cronTriggerClientUpgradeSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject" ref="clientUpgradeSchedule" />
+		<property name="targetMethod" value="runTask" />
+		<property name="concurrent" value="false" />
+	</bean>
+
+	<!--设置整站关键字词数是否达到上限的标志-->
+	<bean id="cronTriggerExceedMaxCount" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="cronTriggerExceedMaxCountSchedule"/>
+		<property name="cronExpression" value="0 0 0/3 * * ?" />
+	</bean>
+
+	<bean id="cronTriggerExceedMaxCountSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="QZKeywordExceedMaxCountSchedule" />
 		<property name="targetMethod" value="runTask" />
 		<property name="concurrent" value="false" />
 	</bean>

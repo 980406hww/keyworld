@@ -45,6 +45,10 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 	@Autowired
 	private CustomerKeywordService customerKeywordService;
+
+	@Autowired
+	private ConfigService configService;
+
 	public QZSetting getAvailableQZSetting(){
 		List<QZSetting> qzSettings = qzSettingDao.getAvailableQZSettings();
 		QZSetting qzSetting = null;
@@ -390,5 +394,20 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 	public List<QZSetting> getAvailableQZSettings(){
 		return qzSettingDao.getAvailableQZSettings();
+	}
+
+	public void detectExceedMaxCountFlag(){
+		qzSettingDao.updateExceedMaxCountFlag(false, false);
+		Config maxCountConfig = configService.getConfig(Constants.CONFIG_TYPE_QZ_KEYWORD, Constants.CONFIG_KEY_KEYWORD_MAX_COUNT);
+		int maxCount = Integer.parseInt(maxCountConfig.getValue());
+		List<Long> pcExceedMaxCountUuids = qzSettingDao.getPCKeywordExceedMaxCount(maxCount);
+		if(CollectionUtils.isNotEmpty(pcExceedMaxCountUuids)){
+			qzSettingDao.updatePCExceedMaxCountFlag(true, pcExceedMaxCountUuids);
+		}
+
+		List<Long> phoneExceedMaxCountUuids = qzSettingDao.getPhoneKeywordExceedMaxCount(maxCount);
+		if(CollectionUtils.isNotEmpty(phoneExceedMaxCountUuids)){
+			qzSettingDao.updatePhoneExceedMaxCountFlag(true, phoneExceedMaxCountUuids);
+		}
 	}
 }

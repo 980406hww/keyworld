@@ -152,7 +152,7 @@
 
     <select id="getSimilarCustomerKeywordCount" resultType="int">
         select Count(1) from t_customer_keyword where fKeyword = #{keyword} and fTerminalType = #{terminalType} and fCustomerUuid = #{customerUuid}
-        and fOriginalUrl <![CDATA[ <> ]]> '' and fOriginalUrl like concat('%', #{originalUrl});
+        and fOriginalUrl <![CDATA[ > ]]> '' and fOriginalUrl like concat('%', #{originalUrl});
     </select>
 
     <select id="getSameCustomerKeywordCount" resultType="java.lang.Integer">
@@ -415,8 +415,8 @@
     </delete>
 
     <select id="getGroups" resultType="String">
-        SELECT DISTINCT ck.fOptimizeGroupName as 'group' FROM t_customer_keyword ck WHERE ck.fStatus = 1 AND ck.fOptimizeGroupName IS NOT NULL
-        AND ck.fOptimizeGroupName <![CDATA[<>]]>'' ORDER BY ck.fOptimizeGroupName
+        SELECT DISTINCT ck.fOptimizeGroupName as 'group' FROM t_customer_keyword ck WHERE ck.fStatus = 1
+        AND ck.fOptimizeGroupName <![CDATA[>]]>'' ORDER BY ck.fOptimizeGroupName
     </select>
 
     <update id="cleanBigKeywordIndicator">

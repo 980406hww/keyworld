@@ -25,7 +25,7 @@ public class ExternalSupportRestController extends SpringMVCBaseController {
 	@RequestMapping(value = "/getRealUrls", method = RequestMethod.POST)
 	public ResponseEntity<?> getRealUrls(@RequestBody CaptureRealUrlCriteria captureRealUrlCriteria) throws Exception{
 		try {
-			if (validUser(captureRealUrlCriteria.getUserName(), captureRealUrlCriteria.getUserName())) {
+			if (validUser(captureRealUrlCriteria.getUserName(), captureRealUrlCriteria.getPassword())) {
 				BaiduUrl baiduUrl = captureRealUrlService.fetch(captureRealUrlCriteria.getSourceUrl());
 				return new ResponseEntity<Object>(baiduUrl, HttpStatus.OK);
 			}
