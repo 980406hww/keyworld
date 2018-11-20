@@ -17,9 +17,9 @@ public class Constants {
     public final static String POSITIVELIST_OPERATION_TYPE = "1";
 
     public final static String COLLECT_METHOD_ALL = "全收";
-    public final static String COLLECT_METHOD_JUSTPC = "都有排名，只收电�;
-    public final static String COLLECT_METHOD_JUSTSHOUJI = "都有排名，只收手�;
-    public final static String COLLECT_METHOD_BOTHPC_AND_SHOUJI_JUSTONE = "电脑和手机都收，手机只收一�;
+    public final static String COLLECT_METHOD_JUSTPC = "都有排名，只收电脑";
+    public final static String COLLECT_METHOD_JUSTSHOUJI = "都有排名，只收手机";
+    public final static String COLLECT_METHOD_BOTHPC_AND_SHOUJI_JUSTONE = "电脑和手机都收，手机只收一个";
 
     public final static String BAIDU_TYPE_PC = "PC";
     public final static String BAIDU_TYPE_JISU = "Jisu";
@@ -107,13 +107,13 @@ public class Constants {
     static {
         CLIENT_STATUS_VALID_MAP.put("全部","");
         CLIENT_STATUS_VALID_MAP.put("暂停","0");
-        CLIENT_STATUS_VALID_MAP.put("监控�,"1");
+        CLIENT_STATUS_VALID_MAP.put("监控中","1");
     }
 
     public final static Map<String, String> CLIENT_STATUS_ORDERBY_MAP = new LinkedHashMap<String, String>();
     static {
         CLIENT_STATUS_ORDERBY_MAP.put("fClientID","ID");
-        CLIENT_STATUS_ORDERBY_MAP.put("fLastVisitTime","最后工作时�);
+        CLIENT_STATUS_ORDERBY_MAP.put("fLastVisitTime","最后工作时间");
         CLIENT_STATUS_ORDERBY_MAP.put("fLastSendNotificationTime","发通知时间");
         CLIENT_STATUS_ORDERBY_MAP.put("fRestartTime","重启时间");
         CLIENT_STATUS_ORDERBY_MAP.put("fRestartOrderingTime","重启排序时间");
