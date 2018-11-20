@@ -47,7 +47,7 @@ public class ExternalConfigRestController extends SpringMVCBaseController {
 			String userName = (String) requestMap.get("userName");
 			String password = (String) requestMap.get("password");
 			if (validUser(userName, password)) {
-				List<Config> configs = configService.findConfigs(Constants.CONFIG_TYPE_OPTIMIZE_Method_GROUPNAME);
+				List<Config> configs = configService.findConfigs(Constants.CONFIG_TYPE_OPTIMIZE_METHOD_GROUPNAME);
 				return new ResponseEntity<Object>(configs, HttpStatus.OK);
 			}
 		} catch(Exception ex) {

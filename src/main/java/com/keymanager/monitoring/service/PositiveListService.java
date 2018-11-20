@@ -7,6 +7,7 @@ import com.keymanager.monitoring.dao.PositiveListDao;
 import com.keymanager.monitoring.entity.PositiveList;
 import com.keymanager.monitoring.entity.PositiveListUpdateInfo;
 import com.keymanager.monitoring.vo.PositiveListVO;
+import com.keymanager.util.Constants;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,23 +56,25 @@ public class PositiveListService extends ServiceImpl<PositiveListDao, PositiveLi
                 positiveListCriteria.setKeyword(positiveListVO.getPositiveList().getKeyword());
                 positiveListCriteria.setTitle(positiveListVO.getPositiveList().getTitle());
                 positiveListCriteria.setTerminalType(positiveListVO.getPositiveList().getTerminalType());
-                String[] strings = positiveListVO.getPositiveList().getNewsSource().split(",");
-                if (strings.length > 0){
-                    if (strings.length > 1){
-                        positiveListCriteria.setPosition(Integer.valueOf(strings[1]));
-                    }
-                    if (strings[0].equals("null")) {
-                        positiveListVO.getPositiveList().setNewsSource(null);
+                if (null != positiveListVO.getPositiveList().getNewsSource()){
+                    String[] strings = positiveListVO.getPositiveList().getNewsSource().split(",");
+                    if (strings.length > 0){
+                        if (strings.length > 1){
+                            positiveListCriteria.setPosition(Integer.valueOf(strings[1]));
+                        }
+                        if (strings[0].equals("null")) {
+                            positiveListVO.getPositiveList().setNewsSource(null);
+                        } else {
+                            positiveListVO.getPositiveList().setNewsSource(strings[0]);
+                        }
                     } else {
-                        positiveListVO.getPositiveList().setNewsSource(strings[0]);
+                        positiveListVO.getPositiveList().setNewsSource(null);
                     }
-                } else {
-                    positiveListVO.getPositiveList().setNewsSource(null);
                 }
                 List<PositiveList> existingPositiveLists = positiveListDao.searchPositiveListsFullMatching(positiveListCriteria);
                 if(operationType.equals("update")){
                     for (PositiveList existingPositiveList : existingPositiveLists) {
-                        if (btnType.equals("1")) {
+                        if (btnType.equals(Constants.POSITIVELIST_OPERATION_TYPE)) {
                             existingPositiveList.setOptimizeMethod(positiveListVO.getPositiveList().getOptimizeMethod());
                             existingPositiveList.setNewsSource(positiveListVO.getPositiveList().getNewsSource());
                             existingPositiveList.setUpdateTime(new Date());
@@ -88,7 +91,7 @@ public class PositiveListService extends ServiceImpl<PositiveListDao, PositiveLi
                             PositiveList existingPositiveList = existingPositiveLists.get(0);
                             positiveListVO.getPositiveList().setUuid(existingPositiveList.getUuid());
                             positiveListVO.getPositiveList().setCreateTime(existingPositiveList.getCreateTime());
-                            if (btnType.equals("1") || CollectionUtils.isNotEmpty(positiveListVO.getPositiveListUpdateInfoList())) {
+                            if (btnType.equals(Constants.POSITIVELIST_OPERATION_TYPE) || positiveListVO.isHasUpdateInfo()) {
                                 positiveListUpdateInfoService.savePositiveListUpdateInfo(positiveListVO, userName);
                             }
                         }

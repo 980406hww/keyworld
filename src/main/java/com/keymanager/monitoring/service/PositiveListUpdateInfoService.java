@@ -22,7 +22,7 @@ public class PositiveListUpdateInfoService extends ServiceImpl<PositiveListUpdat
     private PositiveListUpdateInfoDao positiveListUpdateInfoDao;
 
     public void savePositiveListUpdateInfo (PositiveListVO positiveListVO, String userName) {
-        if (CollectionUtils.isNotEmpty(positiveListVO.getPositiveListUpdateInfoList())) {
+        if (positiveListVO.isHasUpdateInfo()) {
             List<PositiveListUpdateInfo> mostRecentPositiveListUpdateInfo = positiveListUpdateInfoDao.findMostRecentPositiveListUpdateInfo(positiveListVO.getPositiveList().getUuid());
             PositiveListUpdateInfo positiveListUpdateInfo = mostRecentPositiveListUpdateInfo.get(0);
             positiveListUpdateInfo.setUpdateTime(new Date());

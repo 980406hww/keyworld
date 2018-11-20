@@ -12,6 +12,15 @@ import java.util.List;
 public class PositiveListVO {
     private PositiveList positiveList;
     private List<PositiveListUpdateInfo> positiveListUpdateInfoList;
+    private boolean hasUpdateInfo;
+
+    public boolean isHasUpdateInfo () {
+        return hasUpdateInfo;
+    }
+
+    public void setHasUpdateInfo (boolean hasUpdateInfo) {
+        this.hasUpdateInfo = hasUpdateInfo;
+    }
 
     public void setPositiveListUpdateInfoList (List<PositiveListUpdateInfo> positiveListUpdateInfoList) {
         this.positiveListUpdateInfoList = positiveListUpdateInfoList;

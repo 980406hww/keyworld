@@ -14,6 +14,7 @@ public class Constants {
     public final static String ACCOUNT_LOG_STATUS_UN_PAID = "UnPaid";
     public final static String ACCOUNT_LOG_STATUS_PAID_PARTIALLY = "PaidPartially";
     public final static String ACCOUNT_LOG_STATUS_PAID_ALL = "PaidAll";
+    public final static String POSITIVELIST_OPERATION_TYPE = "1";
 
     public final static String COLLECT_METHOD_ALL = "全收";
     public final static String COLLECT_METHOD_JUSTPC = "都有排名，只收电脑";
@@ -64,7 +65,7 @@ public class Constants {
     public final static String CONFIG_TYPE_COOKIE_GROUP = "CookieSwitchGroup";
     public final static String CONFIG_TYPE_VPS_BACKEND_ACCOUNT = "VPSBackendAccount";
     public final static String CONFIG_TYPE_VPS_BACKEND_PASSWORD = "VPSBackendPassword";
-    public final static String CONFIG_TYPE_OPTIMIZE_Method_GROUPNAME = "OptimizeMethodGroupName";
+    public final static String CONFIG_TYPE_OPTIMIZE_METHOD_GROUPNAME = "OptimizeMethodGroupName";
 
     public final static Map<String, String> ACCOUNT_LOG_STATUS_MAP = new HashMap<String, String>();
     static {
