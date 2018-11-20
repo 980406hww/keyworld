@@ -28,7 +28,7 @@ public class ExternalPositiveListRestController extends SpringMVCBaseController 
 	public ResponseEntity<?> savePositiveLists(@RequestBody PositiveListCriteria positiveListCriteria) {
 		try {
 			if (validUser(positiveListCriteria.getUserName(), positiveListCriteria.getPassword())) {
-				positiveListService.savePositiveLists(positiveListCriteria.getPositiveListVOS(), positiveListCriteria.getOperationType(), positiveListCriteria.getBtnType(), positiveListCriteria.getUserName());
+				positiveListService.savePositiveLists(positiveListCriteria.getPositiveListVOs(), positiveListCriteria.getOperationType(), positiveListCriteria.getBtnType(), positiveListCriteria.getUserName());
 				return new ResponseEntity<Object>(true, HttpStatus.OK);
 			}
 		}catch (Exception ex){
@@ -41,8 +41,8 @@ public class ExternalPositiveListRestController extends SpringMVCBaseController 
 	public ResponseEntity<?> getSpecifiedKeywordPositiveLists(@RequestBody PositiveListCriteria positiveListCriteria) {
 		try {
 			if (validUser(positiveListCriteria.getUserName(), positiveListCriteria.getPassword())) {
-				List<PositiveListVO> positiveListVOS = positiveListService.getSpecifiedKeywordPositiveLists(positiveListCriteria.getKeyword(), positiveListCriteria.getTerminalType());
-				return new ResponseEntity<Object>(positiveListVOS, HttpStatus.OK);
+				List<PositiveListVO> positiveListVOs = positiveListService.getSpecifiedKeywordPositiveLists(positiveListCriteria.getKeyword(), positiveListCriteria.getTerminalType());
+				return new ResponseEntity<Object>(positiveListVOs, HttpStatus.OK);
 			}
 		}catch (Exception ex){
 			logger.error(ex.getMessage());

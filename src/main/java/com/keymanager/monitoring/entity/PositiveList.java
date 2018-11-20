@@ -33,6 +33,17 @@ public class PositiveList extends BaseEntity {
 	@TableField(value = "fNewsSource", fill = FieldFill.INSERT_UPDATE)
 	private String newsSource;
 
+	@TableField(exist = false)
+	private Integer originalPosition;
+
+	public Integer getOriginalPosition () {
+		return originalPosition;
+	}
+
+	public void setOriginalPosition (Integer originalPosition) {
+		this.originalPosition = originalPosition;
+	}
+
 	public String getTerminalType () {
 		return terminalType;
 	}

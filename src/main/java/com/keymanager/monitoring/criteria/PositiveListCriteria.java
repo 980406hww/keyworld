@@ -17,7 +17,7 @@ public class PositiveListCriteria extends BaseCriteria {
     private String operationType;
     private String originalUrl;
     private String btnType;
-    private List<PositiveListVO> positiveListVOS;
+    private List<PositiveListVO> positiveListVOs;
 
     public String getTerminalType () {
         return terminalType;
@@ -91,12 +91,11 @@ public class PositiveListCriteria extends BaseCriteria {
         this.btnType = btnType;
     }
 
-    public List<PositiveListVO> getPositiveListVOS () {
-        return positiveListVOS;
+    public List<PositiveListVO> getPositiveListVOs () {
+        return positiveListVOs;
     }
 
-    public void setPositiveListVOS (List<PositiveListVO> positiveListVOS) {
-        this.positiveListVOS = positiveListVOS;
+    public void setPositiveListVOs (List<PositiveListVO> positiveListVOs) {
+        this.positiveListVOs = positiveListVOs;
     }
-
 }

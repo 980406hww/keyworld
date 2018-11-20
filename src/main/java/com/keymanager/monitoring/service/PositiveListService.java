@@ -49,28 +49,14 @@ public class PositiveListService extends ServiceImpl<PositiveListDao, PositiveLi
         }
     }
 
-    public void savePositiveLists(List<PositiveListVO> positiveListVOS, String operationType, String btnType, String userName) {
-        if (CollectionUtils.isNotEmpty(positiveListVOS)) {
-            for (PositiveListVO positiveListVO : positiveListVOS) {
+    public void savePositiveLists(List<PositiveListVO> positiveListVOs, String operationType, String btnType, String userName) {
+        if (CollectionUtils.isNotEmpty(positiveListVOs)) {
+            for (PositiveListVO positiveListVO : positiveListVOs) {
                 PositiveListCriteria positiveListCriteria = new PositiveListCriteria();
                 positiveListCriteria.setKeyword(positiveListVO.getPositiveList().getKeyword());
                 positiveListCriteria.setTitle(positiveListVO.getPositiveList().getTitle());
                 positiveListCriteria.setTerminalType(positiveListVO.getPositiveList().getTerminalType());
-                if (null != positiveListVO.getPositiveList().getNewsSource()){
-                    String[] strings = positiveListVO.getPositiveList().getNewsSource().split(",");
-                    if (strings.length > 0){
-                        if (strings.length > 1){
-                            positiveListCriteria.setPosition(Integer.valueOf(strings[1]));
-                        }
-                        if (strings[0].equals("null")) {
-                            positiveListVO.getPositiveList().setNewsSource(null);
-                        } else {
-                            positiveListVO.getPositiveList().setNewsSource(strings[0]);
-                        }
-                    } else {
-                        positiveListVO.getPositiveList().setNewsSource(null);
-                    }
-                }
+                positiveListCriteria.setPosition(positiveListVO.getPositiveList().getOriginalPosition());
                 List<PositiveList> existingPositiveLists = positiveListDao.searchPositiveListsFullMatching(positiveListCriteria);
                 if(operationType.equals("update")){
                     for (PositiveList existingPositiveList : existingPositiveLists) {
@@ -103,7 +89,7 @@ public class PositiveListService extends ServiceImpl<PositiveListDao, PositiveLi
     }
 
     public List<PositiveListVO> getSpecifiedKeywordPositiveLists(String keyword, String terminalType) {
-        List<PositiveListVO> positiveListVOS = new ArrayList<PositiveListVO>();
+        List<PositiveListVO> positiveListVOs = new ArrayList<PositiveListVO>();
         List<PositiveList> positiveLists = positiveListDao.getSpecifiedKeywordPositiveLists(keyword, terminalType);
         if (CollectionUtils.isNotEmpty(positiveLists)) {
             for (PositiveList positiveList : positiveLists) {
@@ -111,10 +97,10 @@ public class PositiveListService extends ServiceImpl<PositiveListDao, PositiveLi
                 List<PositiveListUpdateInfo> positiveListUpdateInfoList = positiveListUpdateInfoService.findPositiveListUpdateInfos(positiveList.getUuid());
                 positiveListVO.setPositiveList(positiveList);
                 positiveListVO.setPositiveListUpdateInfoList(positiveListUpdateInfoList);
-                positiveListVOS.add(positiveListVO);
+                positiveListVOs.add(positiveListVO);
             }
         }
-        return positiveListVOS;
+        return positiveListVOs;
     }
 
     public PositiveList getPositiveList(long uuid) {
