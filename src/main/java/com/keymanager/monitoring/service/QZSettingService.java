@@ -118,8 +118,6 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			existingQZSetting.setUpdateTime(new Date());
 			existingQZSetting.setCaptureCurrentKeywordCountTime(qzSetting.getCaptureCurrentKeywordCountTime());
 			existingQZSetting.setCaptureCurrentKeywordStatus(qzSetting.getCaptureCurrentKeywordStatus());
-			existingQZSetting.setPcMaxKeywordCount(qzSetting.getPcMaxKeywordCount());
-			existingQZSetting.setPhoneMaxKeywordCount(qzSetting.getPhoneMaxKeywordCount());
 			qzSettingDao.updateById(existingQZSetting);
 			//修改部分
 			List<QZOperationType> OldOperationTypes = qzOperationTypeService.searchQZOperationTypesIsDelete(qzSetting.getUuid());
@@ -187,6 +185,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		oldOperationType.setCurrentKeywordCount(newOperationType.getCurrentKeywordCount());
 		oldOperationType.setGroup(newOperationType.getGroup());
 		oldOperationType.setSubDomainName(newOperationType.getSubDomainName());
+		oldOperationType.setMaxKeywordCount(newOperationType.getMaxKeywordCount());
 
 		oldOperationType.setIsDeleted(0); //只要是发生改变那么就让它的状态为0
 		qzOperationTypeService.updateById(oldOperationType);
@@ -400,12 +399,12 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 	public void detectExceedMaxCountFlag(){
 		qzSettingDao.updateExceedMaxCountFlag(false, false);
-		List<Long> pcExceedMaxCountUuids = qzSettingDao.getPCKeywordExceedMaxCount();
+		List<Long> pcExceedMaxCountUuids = qzSettingDao.getKeywordExceedMaxCount(Constants.QZ_OPERATION_TYPE_PC);
 		if(CollectionUtils.isNotEmpty(pcExceedMaxCountUuids)){
 			qzSettingDao.updatePCExceedMaxCountFlag(true, pcExceedMaxCountUuids);
 		}
 
-		List<Long> phoneExceedMaxCountUuids = qzSettingDao.getPhoneKeywordExceedMaxCount();
+		List<Long> phoneExceedMaxCountUuids = qzSettingDao.getKeywordExceedMaxCount(Constants.QZ_OPERATION_TYPE_PHONE);
 		if(CollectionUtils.isNotEmpty(phoneExceedMaxCountUuids)){
 			qzSettingDao.updatePhoneExceedMaxCountFlag(true, phoneExceedMaxCountUuids);
 		}

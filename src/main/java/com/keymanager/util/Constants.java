@@ -15,6 +15,8 @@ public class Constants {
     public final static String ACCOUNT_LOG_STATUS_PAID_PARTIALLY = "PaidPartially";
     public final static String ACCOUNT_LOG_STATUS_PAID_ALL = "PaidAll";
     public final static String POSITIVELIST_OPERATION_TYPE = "1";
+    public final static String QZ_OPERATION_TYPE_PC = "PC";
+    public final static String QZ_OPERATION_TYPE_PHONE = "Phone";
 
     public final static String COLLECT_METHOD_ALL = "全收";
     public final static String COLLECT_METHOD_JUSTPC = "都有排名，只收电脑";

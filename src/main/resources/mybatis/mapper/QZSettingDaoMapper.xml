@@ -216,35 +216,19 @@
         </foreach>
     </update>
 
-    <select id="getPCKeywordExceedMaxCount" resultType="java.lang.Long">
-        SELECT qz.fUuid
+    <select id="getKeywordExceedMaxCount" resultType="java.lang.Long">
+        SELECT qz.fQZSettingUuid
         FROM
         (
-            SELECT qs.fUuid, qs.fPcMaxKeywordCount
-            FROM t_qz_setting qs
+            SELECT qot.fQZSettingUuid, qot.fMaxKeywordCount
+            FROM t_qz_operation_type qot
             LEFT JOIN t_customer_keyword ck
-            ON qs.fPcGroup = ck.fOptimizeGroupName
+            ON qot.fGroup = ck.fOptimizeGroupName
             WHERE ck.fType = 'qz'
-            AND ck.fTerminalType = 'PC'
+            AND ck.fTerminalType = #{operationType}
             AND ck.fStatus > 0
-            GROUP BY qs.fUuid
-            HAVING COUNT(1) > qs.fPcMaxKeywordCount
-        ) qz;
-    </select>
-
-    <select id="getPhoneKeywordExceedMaxCount" resultType="java.lang.Long">
-        SELECT qz.fUuid
-        FROM
-        (
-            SELECT qs.fUuid, qs.fPhoneMaxKeywordCount
-            FROM t_qz_setting qs
-            LEFT JOIN t_customer_keyword ck
-            ON qs.fPhoneGroup = ck.fOptimizeGroupName
-            WHERE ck.fType = 'qz'
-            AND ck.fTerminalType = 'Phone'
-            AND ck.fStatus > 0
-            GROUP BY qs.fUuid
-            HAVING COUNT(1) > qs.fPhoneMaxKeywordCount
+            GROUP BY qot.fUuid
+            HAVING COUNT(1) > qot.fMaxKeywordCount
         ) qz;
     </select>
 </mapper>
