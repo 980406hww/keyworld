@@ -118,6 +118,8 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			existingQZSetting.setUpdateTime(new Date());
 			existingQZSetting.setCaptureCurrentKeywordCountTime(qzSetting.getCaptureCurrentKeywordCountTime());
 			existingQZSetting.setCaptureCurrentKeywordStatus(qzSetting.getCaptureCurrentKeywordStatus());
+			existingQZSetting.setPcMaxKeywordCount(qzSetting.getPcMaxKeywordCount());
+			existingQZSetting.setPhoneMaxKeywordCount(qzSetting.getPhoneMaxKeywordCount());
 			qzSettingDao.updateById(existingQZSetting);
 			//修改部分
 			List<QZOperationType> OldOperationTypes = qzOperationTypeService.searchQZOperationTypesIsDelete(qzSetting.getUuid());
@@ -186,7 +188,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		oldOperationType.setGroup(newOperationType.getGroup());
 		oldOperationType.setSubDomainName(newOperationType.getSubDomainName());
 
-		oldOperationType.setIsDeleted(0);//只要是发生改变那么就让它的状态为1
+		oldOperationType.setIsDeleted(0); //只要是发生改变那么就让它的状态为0
 		qzOperationTypeService.updateById(oldOperationType);
 		//删除规则
 		qzChargeRuleService.deleteByQZOperationTypeUuid(oldOperationType.getUuid());
@@ -398,14 +400,12 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 	public void detectExceedMaxCountFlag(){
 		qzSettingDao.updateExceedMaxCountFlag(false, false);
-		Config maxCountConfig = configService.getConfig(Constants.CONFIG_TYPE_QZ_KEYWORD, Constants.CONFIG_KEY_KEYWORD_MAX_COUNT);
-		int maxCount = Integer.parseInt(maxCountConfig.getValue());
-		List<Long> pcExceedMaxCountUuids = qzSettingDao.getPCKeywordExceedMaxCount(maxCount);
+		List<Long> pcExceedMaxCountUuids = qzSettingDao.getPCKeywordExceedMaxCount();
 		if(CollectionUtils.isNotEmpty(pcExceedMaxCountUuids)){
 			qzSettingDao.updatePCExceedMaxCountFlag(true, pcExceedMaxCountUuids);
 		}
 
-		List<Long> phoneExceedMaxCountUuids = qzSettingDao.getPhoneKeywordExceedMaxCount(maxCount);
+		List<Long> phoneExceedMaxCountUuids = qzSettingDao.getPhoneKeywordExceedMaxCount();
 		if(CollectionUtils.isNotEmpty(phoneExceedMaxCountUuids)){
 			qzSettingDao.updatePhoneExceedMaxCountFlag(true, phoneExceedMaxCountUuids);
 		}

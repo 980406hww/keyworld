@@ -69,6 +69,12 @@ public class QZSetting extends BaseEntity{
 	@TableField(value = "fStatus")
 	private int status;
 
+	@TableField(value = "fPcMaxKeywordCount")
+	private int pcMaxKeywordCount;
+
+	@TableField(value = "fPhoneMaxKeywordCount")
+	private int phoneMaxKeywordCount;
+
 	@TableField(exist=false)
 	private List<QZOperationType> qzOperationTypes;//qzOperationTypes为全站表子类  一对多
 
@@ -214,6 +220,22 @@ public class QZSetting extends BaseEntity{
 
 	public void setStatus(int status) {
 		this.status = status;
+	}
+
+	public int getPcMaxKeywordCount () {
+		return pcMaxKeywordCount;
+	}
+
+	public void setPcMaxKeywordCount (int pcMaxKeywordCount) {
+		this.pcMaxKeywordCount = pcMaxKeywordCount;
+	}
+
+	public int getPhoneMaxKeywordCount () {
+		return phoneMaxKeywordCount;
+	}
+
+	public void setPhoneMaxKeywordCount (int phoneMaxKeywordCount) {
+		this.phoneMaxKeywordCount = phoneMaxKeywordCount;
 	}
 
 	public boolean isPcKeywordExceedMaxCount() {
