@@ -88,13 +88,19 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		}
 	}
 
-	public void completeQZSetting(Long uuid, boolean downloadTimesUsed){
+	public void completeQZSetting(Long uuid, boolean downloadTimesUsed, boolean pcKeywordExceedMaxCount, boolean phoneKeywordExceedMaxCount){
 		QZSetting qzSetting = qzSettingDao.selectById(uuid);
 		if(qzSetting != null){
 			if(downloadTimesUsed){
 				qzSetting.setUpdateStatus(QZSettingStatusEnum.DownloadTimesUsed.getValue());
-			}else {
+			} else {
 				qzSetting.setUpdateStatus(QZSettingStatusEnum.Completed.getValue());
+			}
+			if (pcKeywordExceedMaxCount) {
+				qzSetting.setPcKeywordExceedMaxCount(pcKeywordExceedMaxCount);
+			}
+			if(phoneKeywordExceedMaxCount) {
+				qzSetting.setPhoneKeywordExceedMaxCount(phoneKeywordExceedMaxCount);
 			}
 			qzSetting.setUpdateEndTime(new Date());
 			qzSettingDao.updateById(qzSetting);
@@ -296,12 +302,18 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 						for(QZOperationType qzOperationType : qzOperationTypes){
 							if(!customerKeywordSummaryInfoMap.containsKey(String.format("%s__%s", customerKeywordVO.getKeyword(), qzOperationType.getOperationType()))) {
 								if(StringUtils.isBlank(customerKeywordVO.getTerminalType())) {
-									CustomerKeyword customerKeyword = createCustomerKeyword(qzSettingCriteria,qzOperationType,customerKeywordVO);
-									insertingCustomerKeywords.add(customerKeyword);
-								} else {
-									if(qzOperationType.getOperationType().equals(customerKeywordVO.getTerminalType())) {
+									if (qzOperationType.getDifferenceCountNum() > 0) {
 										CustomerKeyword customerKeyword = createCustomerKeyword(qzSettingCriteria,qzOperationType,customerKeywordVO);
 										insertingCustomerKeywords.add(customerKeyword);
+										qzOperationType.setDifferenceCountNum(qzOperationType.getDifferenceCountNum()-1);
+									}
+								} else {
+									if(qzOperationType.getOperationType().equals(customerKeywordVO.getTerminalType())) {
+										if (qzOperationType.getDifferenceCountNum() > 0) {
+											CustomerKeyword customerKeyword = createCustomerKeyword(qzSettingCriteria,qzOperationType,customerKeywordVO);
+											insertingCustomerKeywords.add(customerKeyword);
+											qzOperationType.setDifferenceCountNum(qzOperationType.getDifferenceCountNum()-1);
+										}
 									}
 								}
 							}
@@ -312,6 +324,13 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 						qzCaptureTitleLog.setTerminalType(qzOperationType.getOperationType());
 						qzCaptureTitleLog.setQzOperationTypeUuid(qzOperationType.getUuid());
 						qzCaptureTitleLogService.addQZCaptureTitleLog(qzCaptureTitleLog);
+						if (qzOperationType.getDifferenceCountNum() <= 0){
+							if (qzOperationType.getOperationType().equals(Constants.QZ_OPERATION_TYPE_PC)) {
+								qzSettingCriteria.getQzSetting().setPcKeywordExceedMaxCount(true);
+							} else {
+								qzSettingCriteria.getQzSetting().setPhoneKeywordExceedMaxCount(true);
+							}
+						}
 					}
 
 					if (CollectionUtils.isNotEmpty(insertingCustomerKeywords)) {
@@ -321,7 +340,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			}
 		}
 		QZSetting qzSetting = qzSettingCriteria.getQzSetting();
-		this.completeQZSetting(qzSetting.getUuid(), qzSettingCriteria.isDownloadTimesUsed());
+		this.completeQZSetting(qzSetting.getUuid(), qzSettingCriteria.isDownloadTimesUsed(), qzSetting.isPcKeywordExceedMaxCount(), qzSetting.isPhoneKeywordExceedMaxCount());
 	}
 
 	//更新当前词量

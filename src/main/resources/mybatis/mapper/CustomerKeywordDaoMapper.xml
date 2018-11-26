@@ -737,7 +737,8 @@
         SELECT CONCAT(fKeyword, '__', fTerminalType) AS keyword_terminal
         FROM t_customer_keyword
         WHERE fCustomerUuid = #{customerUuid}
-        and fType = #{entryType}
+        AND fType = #{entryType}
+        AND fStatus > 0
         GROUP BY fKeyword,fTerminalType
     </select>
 

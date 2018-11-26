@@ -41,6 +41,12 @@ public class QZOperationType extends BaseEntity {
   @TableField(value = "fIsDeleted")
   private Integer isDeleted;//状态
 
+  @TableField(value = "fMaxKeywordCount")
+  private Integer maxKeywordCount; // 最大限制词数
+
+  @TableField(exist = false)
+  private Integer differenceCountNum; // 距离最大限制词数的差值
+
   @TableField(exist = false)
   protected List<QZChargeRule> qzChargeRules;//一个操作类型对应多个规则
 
@@ -122,5 +128,21 @@ public class QZOperationType extends BaseEntity {
 
   public void setIsDeleted(Integer isDeleted) {
     this.isDeleted = isDeleted;
+  }
+
+  public Integer getMaxKeywordCount () {
+    return maxKeywordCount;
+  }
+
+  public void setMaxKeywordCount (Integer maxKeywordCount) {
+    this.maxKeywordCount = maxKeywordCount;
+  }
+
+  public Integer getDifferenceCountNum () {
+    return differenceCountNum;
+  }
+
+  public void setDifferenceCountNum (Integer differenceCountNum) {
+    this.differenceCountNum = differenceCountNum;
   }
 }

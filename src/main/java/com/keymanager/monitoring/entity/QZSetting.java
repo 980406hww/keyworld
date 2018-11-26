@@ -27,7 +27,7 @@ public class QZSetting extends BaseEntity{
 	@TableField(value = "fBearPawNumber", strategy = FieldStrategy.IGNORED)
 	private String bearPawNumber;
 
-	@TableField(value = "fPCGroup")
+	@TableField(value = "fPcGroup")
 	private String pcGroup;
 
 	@TableField(value = "fPhoneGroup")

@@ -4,20 +4,30 @@
 
   <!--查询判断对应的操作类型表中是否存在IsDelete为0-->
     <select id="searchQZOperationTypesByQZSettingUuid" resultType="com.keymanager.monitoring.entity.QZOperationType">
-      SELECT
-       qopty.fUuid             AS 'uuid',
-       qopty.fQZSettingUuid    AS 'qzsettingUuid',
-       qopty.fOperationtype          AS 'operationType',
-       qopty.fInitialKeywordCount    AS 'initialKeywordCount',
-       qopty.fCurrentKeywordCount    AS 'currentkeywordcount',
-       qopty.fGroup            AS 'group',
-       qopty.fReachTargetDate  AS 'reachTargetDate',
-       qopty.fNextChargeDate   AS 'nextChargeDate',
-       qopty.fUpdateTime       AS 'updateTime',
-       qopty.fCreateTime       AS 'createTime',
-       qopty.fIsDeleted        AS 'isDeleted'
-      FROM t_qz_operation_type  qopty
-      WHERE  qopty.fQZSettingUuid  = #{qzSettingUuid}  AND qopty.fIsDeleted = 0
+        SELECT
+            qopty.fUuid             AS 'uuid',
+            qopty.fQZSettingUuid    AS 'qzsettingUuid',
+            qopty.fOperationtype          AS 'operationType',
+            qopty.fInitialKeywordCount    AS 'initialKeywordCount',
+            qopty.fCurrentKeywordCount    AS 'currentkeywordcount',
+            qopty.fGroup            AS 'group',
+            qopty.fReachTargetDate  AS 'reachTargetDate',
+            qopty.fNextChargeDate   AS 'nextChargeDate',
+            qopty.fUpdateTime       AS 'updateTime',
+            qopty.fCreateTime       AS 'createTime',
+            qopty.fIsDeleted        AS 'isDeleted',
+            qopty.fMaxKeywordCount  AS 'maxKeywordCount',
+            qopty.fMaxKeywordCount - COUNT(1) AS differenceCountNum
+        FROM t_qz_operation_type  qopty
+        LEFT JOIN t_customer_keyword ck
+        ON qopty.fGroup = ck.fOptimizeGroupName
+        WHERE ck.fType = 'qz'
+        AND ck.fStatus > 0
+        AND qopty.fQZSettingUuid = #{qzSettingUuid}
+        AND qopty.fIsDeleted = 0
+        GROUP BY qopty.fUuid
+        HAVING COUNT(1) &lt; qopty.fMaxKeywordCount
+        ORDER BY qopty.fUuid
     </select>
   <!--查询多条操作类型信息-->
     <select id="searchQZOperationTypesIsDelete" resultType="com.keymanager.monitoring.entity.QZOperationType">
