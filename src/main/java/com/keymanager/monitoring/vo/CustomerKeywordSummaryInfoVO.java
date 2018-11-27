@@ -5,16 +5,16 @@ package com.keymanager.monitoring.vo;
  * @Date 2018/11/27 15:46
  **/
 public class CustomerKeywordSummaryInfoVO {
-    private String keyword_terminal;
+    private String keyword;
     private String terminalType;
     private int status;
 
-    public String getKeyword_terminal () {
-        return keyword_terminal;
+    public String getKeyword () {
+        return keyword;
     }
 
-    public void setKeyword_terminal (String keyword_terminal) {
-        this.keyword_terminal = keyword_terminal;
+    public void setKeyword (String keyword) {
+        this.keyword = keyword;
     }
 
     public String getTerminalType () {
@@ -33,3 +33,4 @@ public class CustomerKeywordSummaryInfoVO {
         this.status = status;
     }
 }
+

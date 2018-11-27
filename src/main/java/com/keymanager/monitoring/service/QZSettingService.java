@@ -255,7 +255,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 	public void updateImmediately(String uuids){
 		if(StringUtils.isNotEmpty(uuids)){
-				qzSettingDao.updateImmediately(uuids);
+			qzSettingDao.updateImmediately(uuids);
 		}
 	}
 
@@ -290,7 +290,8 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 				List<QZOperationType> qzOperationTypes = qzOperationTypeService.searchQZOperationTypesByQZSettingUuid(qzSettingCriteria.getQzSetting().getUuid());
 				List<CustomerKeywordSummaryInfoVO> customerKeywordSummaryInfoVOs = customerKeywordService.searchCustomerKeywordSummaryInfo(qzSettingCriteria.getQzSetting().getType(), (long)qzSettingCriteria.getQzSetting().getCustomerUuid());
 				Map<String, String> customerKeywordSummaryInfoMap = new HashMap<String, String>();
-				int pcKeywordCountNum = -1, phoneKeywordCountNum = -1;
+				Map<String, Map<String, String>> customerKeywordSummaryInfoMaps = new HashMap<String, Map<String, String>>();
+				int pcKeywordCountNum = 0, phoneKeywordCountNum = 0;
 				if(CollectionUtils.isNotEmpty(customerKeywordSummaryInfoVOs)){
 					for(CustomerKeywordSummaryInfoVO customerKeywordSummaryInfoVO : customerKeywordSummaryInfoVOs) {
 						if (customerKeywordSummaryInfoVO.getStatus() > 0){
@@ -300,14 +301,15 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 								phoneKeywordCountNum++;
 							}
 						}
-						customerKeywordSummaryInfoMap.put(customerKeywordSummaryInfoVO.getKeyword_terminal(), customerKeywordSummaryInfoVO.getKeyword_terminal());
+						customerKeywordSummaryInfoMap.put(customerKeywordSummaryInfoVO.getTerminalType(), customerKeywordSummaryInfoVO.getTerminalType());
+						customerKeywordSummaryInfoMaps.put(customerKeywordSummaryInfoVO.getKeyword(), customerKeywordSummaryInfoMap);
 					}
 				}
 				for(QZOperationType qzOperationType : qzOperationTypes){
 					if (qzOperationType.getOperationType().equals(Constants.QZ_OPERATION_TYPE_PC)) {
-						pcKeywordCountNum = qzOperationType.getMaxKeywordCount() - pcKeywordCountNum - 1;
+						pcKeywordCountNum = qzOperationType.getMaxKeywordCount() - pcKeywordCountNum;
 					} else {
-						phoneKeywordCountNum = qzOperationType.getMaxKeywordCount() - phoneKeywordCountNum - 1;
+						phoneKeywordCountNum = qzOperationType.getMaxKeywordCount() - phoneKeywordCountNum;
 					}
 				}
 				QZCaptureTitleLog qzCaptureTitleLog = new QZCaptureTitleLog();
@@ -317,7 +319,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 					for (CustomerKeywordVO customerKeywordVO : qzSettingCriteria.getCustomerKeywordVOs()) {
 						// 遍历需要添加的终端类型
 						for(QZOperationType qzOperationType : qzOperationTypes){
-							if(!customerKeywordSummaryInfoMap.containsKey(String.format("%s__%s", customerKeywordVO.getKeyword(), qzOperationType.getOperationType()))) {
+							if(!(customerKeywordSummaryInfoMaps.containsKey(customerKeywordVO.getKeyword()) && customerKeywordSummaryInfoMaps.get(customerKeywordVO.getKeyword()).containsKey(qzOperationType.getOperationType()))) {
 								if(StringUtils.isBlank(customerKeywordVO.getTerminalType()) || qzOperationType.getOperationType().equals(customerKeywordVO.getTerminalType())) {
 									if (qzOperationType.getOperationType().equals(Constants.QZ_OPERATION_TYPE_PC)) {
 										if (pcKeywordCountNum > 0) {
@@ -341,10 +343,11 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 						qzCaptureTitleLog.setTerminalType(qzOperationType.getOperationType());
 						qzCaptureTitleLog.setQzOperationTypeUuid(qzOperationType.getUuid());
 						qzCaptureTitleLogService.addQZCaptureTitleLog(qzCaptureTitleLog);
+						// 全站下不存在的终端类型，默认其是达标的
 						if (pcKeywordCountNum == 0) {
 							qzSettingCriteria.getQzSetting().setPcKeywordExceedMaxCount(true);
 						}
-						if (phoneKeywordCountNum == 0){
+						if (phoneKeywordCountNum == 0) {
 							qzSettingCriteria.getQzSetting().setPhoneKeywordExceedMaxCount(true);
 						}
 					}
