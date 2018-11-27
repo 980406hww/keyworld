@@ -596,6 +596,8 @@ function initSettingDialog(qzSetting, self) {
             val.initialKeywordCount);
         settingDialogDiv.find("#currentKeywordCount" + val.operationType).val(
             val.currentKeywordCount);
+        /* 限制最大词数 */
+        settingDialogDiv.find("#maxKeywordCount" + val.operationType).val(val.maxKeywordCount);
         settingDialogDiv.find("#qzSettingUuid" + val.operationType).val(val.uuid);
         // 构造规则表
         $.each(val.qzChargeRules, function (chargeRuleIdx, chargeRuleVal) {
@@ -677,6 +679,7 @@ function saveChangeSetting(self) {
             "#initialKeywordCount" + val.id).val();
         operationType.currentKeywordCount = settingDialogDiv.find(
             "#currentKeywordCount" + val.id).val();
+        operationType.maxKeywordCount = settingDialogDiv.find("#maxKeywordCount" + val.id).val();
         operationType.subDomainName = settingDialogDiv.find("#subDomainName" + val.id).val();
         if (operationType.group == null || operationType.group === "") {
             alert("请输入分组");
@@ -695,9 +698,15 @@ function saveChangeSetting(self) {
 //          validationFlag = false;
 //          return false;
 //        }
-        if (operationType.initialKeywordCount != "" && !reg.test(operationType.initialKeywordCount)) {
+        if (operationType.initialKeywordCount == "" || !reg.test(operationType.initialKeywordCount)) {
             alert("请输入数字");
             settingDialogDiv.find("#initialKeywordCount" + val.id).focus();
+            validationFlag = false;
+            return false;
+        }
+        if (operationType.maxKeywordCount == "" || !reg.test(operationType.maxKeywordCount)){
+            alert("请输入PC限制词量");
+            settingDialogDiv.find("#maxKeywordCount" + val.id).focus();
             validationFlag = false;
             return false;
         }

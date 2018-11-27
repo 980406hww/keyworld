@@ -6,7 +6,7 @@
             qs.fUuid                           AS 'uuid',
             qs.fCustomerUuid                   AS 'customerUuid',
             qs.fDomain                         AS 'domain',
-              qs.fBearPawNumber   AS 'bearPawNumber',
+            qs.fBearPawNumber                  AS 'bearPawNumber',
             qs.fPcGroup                        AS 'pcGroup',
             qs.fPhoneGroup                     AS 'phoneGroup',
             qs.fType                           AS 'type',
@@ -216,29 +216,19 @@
         </foreach>
     </update>
 
-    <select id="getPCKeywordExceedMaxCount" resultType="java.lang.Long">
-        SELECT
-          qs.fUuid
-        FROM t_qz_setting qs
-          LEFT JOIN t_customer_keyword ck
-            ON qs.fPcGroup = ck.fOptimizeGroupName
-        WHERE ck.fType = 'qz'
-            AND ck.fTerminalType = 'PC'
+    <select id="getKeywordExceedMaxCount" resultType="java.lang.Long">
+        SELECT qz.fQZSettingUuid
+        FROM
+        (
+            SELECT qot.fQZSettingUuid, qot.fMaxKeywordCount
+            FROM t_qz_operation_type qot
+            LEFT JOIN t_customer_keyword ck
+            ON qot.fGroup = ck.fOptimizeGroupName
+            WHERE ck.fType = 'qz'
+            AND ck.fTerminalType = #{operationType}
             AND ck.fStatus > 0
-        GROUP BY qs.fUuid
-        HAVING COUNT(1) > #{maxCount}
-    </select>
-
-    <select id="getPhoneKeywordExceedMaxCount" resultType="java.lang.Long">
-        SELECT
-        qs.fUuid
-        FROM t_qz_setting qs
-        LEFT JOIN t_customer_keyword ck
-        ON qs.fPhoneGroup = ck.fOptimizeGroupName
-        WHERE ck.fType = 'qz'
-        AND ck.fTerminalType = 'Phone'
-        AND ck.fStatus > 0
-        GROUP BY qs.fUuid
-        HAVING COUNT(1) > #{maxCount}
+            GROUP BY qot.fUuid
+            HAVING COUNT(1) > qot.fMaxKeywordCount
+        ) qz;
     </select>
 </mapper>

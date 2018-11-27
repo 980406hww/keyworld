@@ -195,7 +195,7 @@
 	<form id="changeSettingForm">
 	<table style="font-size:12px" id="settingTable" align="center" cellspacing="5">
 		<tr>
-			<td style="width:60x" align="right">客户</td>
+			<td style="width:60px" align="right">客户</td>
 			<td>
 				<input type="hidden" id="qzSettingUuid" />
 				<input type="text" list="customer_list" name="qzSettingCustomer" id="qzSettingCustomer" style="width:240px" />
@@ -241,6 +241,10 @@
 						<td align="right" style="width:72px">当前词量</td>
 						<td colspan="4"><input type="text" name="currentKeywordCount" id="currentKeywordCountPC" style="width:240px;margin-left: -6;" readonly/></td>
 					</tr>
+					<tr>
+						<td align="right" style="width:72px">限制词量</td>
+						<td colspan="4"><input type="text" name="maxKeywordCount" id="maxKeywordCountPC" style="width:240px;margin-left: -6;"/></td>
+					</tr>
 					<input type="hidden" id="qzSettingUuidPC" name="qzOperationTypeUuid" value="" />
 				</table>
 			</td>
@@ -274,20 +278,24 @@
 			<td colspan="2" id="groupHeightPhone">
 				<table border="0" style="display:none;font-size:12px;" cellspacing="5" cellpadding="0" id="operationTypeSummaryInfoPhone">
 					<tr>
-						<td align="right" style="width:72px;"><span style="margin-right:14;">分组</span></td>
+						<td align="right" style="width:72px;">分组</td>
 						<td><input type="text" name="group" id="groupPhone" style="width:240px;margin-left: -6;"/></td>
 					</tr>
 					<tr>
-						<td align="right" style="width:72px;"><span style="margin-right:14;">手机域名</span></td>
+						<td align="right" style="width:72px;">手机域名</td>
 						<td><input type="text" name="subDomainName" id="subDomainNamePhone" style="width:240px;margin-left: -6;"/></td>
 					</tr>
 					<tr>
-						<td align="right" style="width:72px"><span style="margin-right:14;">初始词量</span></td>
+						<td align="right" style="width:72px">初始词量</td>
 						<td colspan="4"><input type="text" name="initialKeywordCount" id="initialKeywordCountPhone"  style="width:240px;margin-left: -6;"/></td>
 					</tr>
 					<tr>
-						<td align="right" style="width:72px"><span style="margin-right:14;">当前词量</span></td>
+						<td align="right" style="width:72px">当前词量</td>
 						<td colspan="4"><input type="text" name="currentKeywordCount" id="currentKeywordCountPhone"  style="width:240px;margin-left: -6;" readonly/></td>
+					</tr>
+					<tr>
+						<td align="right" style="width:72px">限制词量</td>
+						<td colspan="4"><input type="text" name="maxKeywordCount" id="maxKeywordCountPhone" style="width:240px;margin-left: -6;"/></td>
 					</tr>
 					<input type="hidden" id="qzSettingUuidPhone" name="qzOperationTypeUuid" value="" />
 				</table>

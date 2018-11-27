@@ -43,7 +43,8 @@
        qopty.fNextChargeDate   AS 'nextChargeDate',
        qopty.fUpdateTime       AS 'updateTime',
        qopty.fCreateTime       AS 'createTime',
-       qopty.fIsDeleted        AS 'isDeleted'
+       qopty.fIsDeleted        AS 'isDeleted',
+       qopty.fMaxKeywordCount  AS 'maxKeywordCount'
       FROM t_qz_operation_type  qopty
       WHERE  qopty.fQZSettingUuid  = #{qzSettingUuid}
     </select>
