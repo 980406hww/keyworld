@@ -289,11 +289,11 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			if (CollectionUtils.isNotEmpty(qzSettingCriteria.getCustomerKeywordVOs())) {
 				List<QZOperationType> qzOperationTypes = qzOperationTypeService.searchQZOperationTypesByQZSettingUuid(qzSettingCriteria.getQzSetting().getUuid());
 				List<CustomerKeywordSummaryInfoVO> customerKeywordSummaryInfoVOs = customerKeywordService.searchCustomerKeywordSummaryInfo(qzSettingCriteria.getQzSetting().getType(), (long)qzSettingCriteria.getQzSetting().getCustomerUuid());
-				Map<String, String> customerKeywordSummaryInfoMap = new HashMap<String, String>();
 				Map<String, Map<String, String>> customerKeywordSummaryInfoMaps = new HashMap<String, Map<String, String>>();
 				int pcKeywordCountNum = 0, phoneKeywordCountNum = 0;
 				if(CollectionUtils.isNotEmpty(customerKeywordSummaryInfoVOs)){
 					for(CustomerKeywordSummaryInfoVO customerKeywordSummaryInfoVO : customerKeywordSummaryInfoVOs) {
+						Map<String, String> customerKeywordSummaryInfoMap = new HashMap<String, String>();
 						if (customerKeywordSummaryInfoVO.getStatus() > 0){
 							if (customerKeywordSummaryInfoVO.getTerminalType().equals(Constants.QZ_OPERATION_TYPE_PC)) {
 								pcKeywordCountNum++;
