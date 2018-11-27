@@ -733,12 +733,11 @@
         AND fManualCleanTitle  = 0
     </delete>
 
-    <select id="searchCustomerKeywordSummaryInfo" resultType="java.lang.String">
-        SELECT CONCAT(fKeyword, '__', fTerminalType) AS keyword_terminal
+    <select id="searchCustomerKeywordSummaryInfo" resultType="com.keymanager.monitoring.vo.CustomerKeywordSummaryInfoVO">
+        SELECT CONCAT(fKeyword, '__', fTerminalType) AS keyword_terminal, fTerminalType AS terminalType, fStatus AS status
         FROM t_customer_keyword
         WHERE fCustomerUuid = #{customerUuid}
         AND fType = #{entryType}
-        AND fStatus > 0
         GROUP BY fKeyword,fTerminalType
     </select>
 
