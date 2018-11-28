@@ -16,6 +16,9 @@ public class DailyReportItem extends BaseEntity{
 	@TableField(value = "fTerminalType")
 	private String terminalType;
 
+	@TableField(value = "fTodayFee")
+	private double todayFee;
+
 	@TableField(value = "fStatus")
 	private String status;
 
@@ -49,5 +52,13 @@ public class DailyReportItem extends BaseEntity{
 
 	public void setTerminalType(String terminalType) {
 		this.terminalType = terminalType;
+	}
+
+	public double getTodayFee() {
+		return todayFee;
+	}
+
+	public void setTodayFee(double todayFee) {
+		this.todayFee = todayFee;
 	}
 }
