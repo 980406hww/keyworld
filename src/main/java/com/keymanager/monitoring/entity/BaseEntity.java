@@ -13,7 +13,10 @@ public class BaseEntity implements Serializable {
 	
 	@TableId(value = "fUuid", type= IdType.AUTO)
 	private Long uuid;
-	
+
+	@TableField(value = "fTodayFee")
+	private double todayFee;
+
 	@TableField(value = "fUpdateTime")
 	private Date updateTime;
 	
@@ -42,5 +45,13 @@ public class BaseEntity implements Serializable {
 
 	public void setUuid(Long uuid) {
 		this.uuid = uuid;
+	}
+
+	public double getTodayFee() {
+		return todayFee;
+	}
+
+	public void setTodayFee(double todayFee) {
+		this.todayFee = todayFee;
 	}
 }

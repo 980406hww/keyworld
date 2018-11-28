@@ -4,25 +4,27 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.toolkit.StringUtils;
 import com.keymanager.monitoring.dao.DailyReportDao;
 import com.keymanager.monitoring.entity.Config;
+import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.DailyReport;
 import com.keymanager.monitoring.entity.DailyReportItem;
 import com.keymanager.monitoring.enums.DailyReportStatusEnum;
 import com.keymanager.monitoring.enums.DailyReportTriggerModeEnum;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
+import com.keymanager.monitoring.excel.operator.CustomerKeywordDailyReportSummaryExcelWriter;
 import com.keymanager.util.Constants;
 import com.keymanager.util.FileUtil;
 import com.keymanager.util.Utils;
 import com.keymanager.util.ZipCompressor;
+import javafx.beans.binding.DoubleBinding;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.ibatis.annotations.Param;
+import org.apache.shiro.crypto.hash.Hash;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport> {
@@ -33,6 +35,9 @@ public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport>
 
 	@Autowired
 	private ConfigService configService;
+
+	@Autowired
+	private CustomerService customerService;
 
 	@Autowired
 	private CaptureRankJobService captureRankJobService;
@@ -102,13 +107,23 @@ public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport>
 		}
 		DailyReportItem dailyReportItem = dailyReportItemService.findDailyReportItem(dailyReport.getUuid(), DailyReportStatusEnum.New.name());
 		if(dailyReportItem != null){
-			dailyReportItemService.generateDailyReport(dailyReport.getTerminalType(), dailyReport.getUuid(), dailyReportItem.getUuid());
+			dailyReportItemService.generateDailyReport(dailyReport.getUuid(), dailyReportItem.getUuid());
 		}else{
 			dailyReport.setStatus(DailyReportStatusEnum.Completed.name());
 			dailyReport.setCompleteTime(new Date());
-
+			Map<String, Map<String, String>> loginNameAndSummaryFeeMap = generateDailyReportSummaryData(dailyReport.getUuid());
 			String path = Utils.getWebRootPath();
-			String zipFileName = String.format("/dailyreport/DailyReport_%s_%d.zip", Utils.formatDatetime(Utils.getCurrentTimestamp(),
+			for(String loginName : loginNameAndSummaryFeeMap.keySet()){
+				Config config = configService.getConfig(Constants.DAILY_REPORT_PERCENTAGE, loginName);
+				CustomerKeywordDailyReportSummaryExcelWriter excelWriter = new CustomerKeywordDailyReportSummaryExcelWriter(dailyReport.getUuid(), loginName);
+				excelWriter.writeDailySummaryRow(loginNameAndSummaryFeeMap.get(loginName), config == null ? 1d : Double.parseDouble(config.getValue()));
+				String dailyReportFolder = String.format("%sdailyreport/%d/", path, dailyReport.getUuid());
+				String loginUserReportFolder = dailyReportFolder + loginName + "/";
+				ZipCompressor.createEncryptionZip(loginUserReportFolder, dailyReportFolder + String.format("%s_%s.zip", loginName, Utils.formatDatetime(Utils.getCurrentTimestamp(),
+						"yyyy.MM.dd")), loginName + Utils.getCurrentDate());
+				FileUtil.delFolder(loginUserReportFolder);
+			}
+			String zipFileName = String.format("/dailyreport/TotalReport_%s_%d.zip", Utils.formatDatetime(Utils.getCurrentTimestamp(),
 					"yyyy.MM.dd"), dailyReport.getUuid());
 			String reportFolder = String.format("%sdailyreport/%d/", path, dailyReport.getUuid());
 
@@ -134,6 +149,21 @@ public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport>
 				FileUtil.copyFile(srcFilePath, dailyReportFilePath, true);
 			}
 		}
+	}
+
+	private Map<String, Map<String, String>> generateDailyReportSummaryData(long dailyReportUuid){
+		List<DailyReportItem> dailyReportItems = dailyReportItemService.searchDailyReportItems(dailyReportUuid);
+		Map<String, Map<String, String>> loginNameAndSummaryFeeMap = new HashMap<String, Map<String, String>>();
+		for(DailyReportItem dailyReportItem : dailyReportItems){
+			Customer customer = customerService.getCustomer(dailyReportItem.getCustomerUuid());
+			Map<String, String> summaryFeeMap = loginNameAndSummaryFeeMap.get(customer.getLoginName());
+			if(summaryFeeMap == null){
+				summaryFeeMap = new HashMap<String, String>();
+				loginNameAndSummaryFeeMap.put(customer.getLoginName(), summaryFeeMap);
+			}
+			summaryFeeMap.put(customer.getSearchEngine() + "_" + dailyReportItem.getTerminalType(), dailyReportItem.getTodayFee() + "");
+		}
+		return loginNameAndSummaryFeeMap;
 	}
 
 	public void deleteDailyReportFromAWeekAgo() {

@@ -69,7 +69,8 @@ public class DailyReportItemService extends ServiceImpl<DailyReportItemDao, Dail
 			Customer customer = customerService.getCustomer(dailyReportItem.getCustomerUuid());
 			CustomerKeywordDailyReportExcelWriter excelWriter = new CustomerKeywordDailyReportExcelWriter(dailyReportItem.getTerminalType(), dailyReportItem
 					.getCustomerUuid() + "", dailyReportUuid);
-			excelWriter.writeDataToExcel(customerKeywords, customer.getContactPerson(), dailyReportItem.getTerminalType());
+			double todayFee = excelWriter.writeDataToExcel(customerKeywords, customer.getLoginName(), customer.getContactPerson(), dailyReportItem.getTerminalType());
+			dailyReportItem.setTodayFee(todayFee);
 		}
 		dailyReportItem.setStatus(DailyReportStatusEnum.Completed.name());
 		dailyReportItem.setUpdateTime(new Date());
@@ -83,5 +84,9 @@ public class DailyReportItemService extends ServiceImpl<DailyReportItemDao, Dail
 
 	public void deleteDailyReportItemFromAWeekAgo() {
 		dailyReportItemDao.deleteDailyReportItemFromAWeekAgo();
+	}
+
+	public List<DailyReportItem> searchDailyReportItems(long dailyReportUuid){
+		return dailyReportItemDao.searchDailyReportItems(dailyReportUuid);
 	}
 }
