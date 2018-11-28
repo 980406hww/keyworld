@@ -37,23 +37,24 @@ public class DailyReportItemService extends ServiceImpl<DailyReportItemDao, Dail
 	@Autowired
 	private PerformanceService performanceService;
 
-	public void createDailyReportItem(int dailyReportUuid, int customerUuid){
+	public void createDailyReportItem(long dailyReportUuid, String terminalType, int customerUuid){
 		DailyReportItem dailyReportItem = new DailyReportItem();
 		dailyReportItem.setStatus(DailyReportStatusEnum.New.name());
 		dailyReportItem.setCustomerUuid(customerUuid);
 		dailyReportItem.setDailyReportUuid(dailyReportUuid);
+		dailyReportItem.setTerminalType(terminalType);
 		dailyReportItem.setUpdateTime(new Date());
 		dailyReportItem.setCreateTime(new Date());
 		dailyReportItemDao.insert(dailyReportItem);
 	}
 
-	public void generateDailyReport(String terminalType, long dailyReportUuid, long dailyReportItemUuid) throws Exception {
+	public void generateDailyReport(long dailyReportUuid, long dailyReportItemUuid) throws Exception {
 		DailyReportItem dailyReportItem = dailyReportItemDao.selectById(dailyReportItemUuid);
 		dailyReportItem.setStatus(DailyReportStatusEnum.Processing.name());
 		dailyReportItem.setUpdateTime(new Date());
 		dailyReportItemDao.updateById(dailyReportItem);
 		CustomerKeywordCriteria customerKeywordCriteria = new CustomerKeywordCriteria();
-		customerKeywordCriteria.setTerminalType(terminalType);
+		customerKeywordCriteria.setTerminalType(dailyReportItem.getTerminalType());
 		customerKeywordCriteria.setCustomerUuid(new Long(dailyReportItem.getCustomerUuid()));
 		customerKeywordCriteria.setStatus("1");
 		customerKeywordCriteria.setOrderingElement("fSequence");
@@ -61,19 +62,19 @@ public class DailyReportItemService extends ServiceImpl<DailyReportItemDao, Dail
 
 		long startMilleSeconds = System.currentTimeMillis();
 		List<CustomerKeyword> customerKeywords = customerKeywordService.searchCustomerKeywordsForDailyReport(customerKeywordCriteria);
-		performanceService.addPerformanceLog(terminalType + ":searchCustomerKeywordsForDailyReport", System.currentTimeMillis() - startMilleSeconds, "customerUuid = " + dailyReportItem.getCustomerUuid());
+		performanceService.addPerformanceLog(dailyReportItem.getTerminalType() + ":searchCustomerKeywordsForDailyReport", System.currentTimeMillis() - startMilleSeconds, "customerUuid = " + dailyReportItem.getCustomerUuid());
 
 		startMilleSeconds = System.currentTimeMillis();
 		if (!Utils.isEmpty(customerKeywords)) {
 			Customer customer = customerService.getCustomer(dailyReportItem.getCustomerUuid());
-			CustomerKeywordDailyReportExcelWriter excelWriter = new CustomerKeywordDailyReportExcelWriter(terminalType, dailyReportItem
+			CustomerKeywordDailyReportExcelWriter excelWriter = new CustomerKeywordDailyReportExcelWriter(dailyReportItem.getTerminalType(), dailyReportItem
 					.getCustomerUuid() + "", dailyReportUuid);
-			excelWriter.writeDataToExcel(customerKeywords, customer.getContactPerson(), terminalType);
+			excelWriter.writeDataToExcel(customerKeywords, customer.getContactPerson(), dailyReportItem.getTerminalType());
 		}
 		dailyReportItem.setStatus(DailyReportStatusEnum.Completed.name());
 		dailyReportItem.setUpdateTime(new Date());
 		dailyReportItemDao.updateById(dailyReportItem);
-		performanceService.addPerformanceLog(terminalType + ":generate report", System.currentTimeMillis() - startMilleSeconds, "customerUuid = " + dailyReportItem.getCustomerUuid());
+		performanceService.addPerformanceLog(dailyReportItem.getTerminalType() + ":generate report", System.currentTimeMillis() - startMilleSeconds, "customerUuid = " + dailyReportItem.getCustomerUuid());
 	}
 
 	public DailyReportItem findDailyReportItem(long dailyReportUuid, String status){

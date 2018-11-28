@@ -26,6 +26,7 @@
 				<ref bean="cronTriggerAllotCookie" />
 				<ref bean="cronTriggerClientUpgrade" />
 				<ref bean="cronTriggerExceedMaxCount" />
+				<ref bean="cronAutoTriggerDailyReport" />
 			</list>
 		</property>
 		<!-- Quartz配置, 本地运行无需单独的quartz.properties文件，在此简单配置即可 -->
@@ -278,6 +279,19 @@
 
 	<bean id="cronTriggerExceedMaxCountSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject" ref="QZKeywordExceedMaxCountSchedule" />
+		<property name="targetMethod" value="runTask" />
+		<property name="concurrent" value="false" />
+	</bean>
+
+
+	<!--自动触发每天的报表-->
+	<bean id="cronAutoTriggerDailyReport" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="cronAutoTriggerDailyReportSchedule"/>
+		<property name="cronExpression" value="0 0/2 * * * ?" />
+	</bean>
+
+	<bean id="cronAutoTriggerDailyReportSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="autoTriggerDailyReportSchedule" />
 		<property name="targetMethod" value="runTask" />
 		<property name="concurrent" value="false" />
 	</bean>

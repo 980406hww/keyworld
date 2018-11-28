@@ -8,10 +8,13 @@ public class DailyReportItem extends BaseEntity{
 	private static final long serialVersionUID = -1101942701283949852L;
 
 	@TableField(value = "fDailyReportUuid")
-	private int dailyReportUuid;
+	private long dailyReportUuid;
 
 	@TableField(value = "fCustomerUuid")
 	private int customerUuid;
+
+	@TableField(value = "fTerminalType")
+	private String terminalType;
 
 	@TableField(value = "fStatus")
 	private String status;
@@ -32,11 +35,19 @@ public class DailyReportItem extends BaseEntity{
 		this.status = status;
 	}
 
-	public int getDailyReportUuid() {
+	public long getDailyReportUuid() {
 		return dailyReportUuid;
 	}
 
-	public void setDailyReportUuid(int dailyReportUuid) {
+	public void setDailyReportUuid(long dailyReportUuid) {
 		this.dailyReportUuid = dailyReportUuid;
+	}
+
+	public String getTerminalType() {
+		return terminalType;
+	}
+
+	public void setTerminalType(String terminalType) {
+		this.terminalType = terminalType;
 	}
 }

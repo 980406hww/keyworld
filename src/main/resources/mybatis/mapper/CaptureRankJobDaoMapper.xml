@@ -47,6 +47,7 @@
         order By c.fExectionTime
         limit 1;
     </select>
+
     <select id="getProcessingJob" resultType="com.keymanager.monitoring.entity.CaptureRankJob">
         select
         <include refid="colID"/>
@@ -67,4 +68,16 @@
         c.fUuid=#{captureRankJobUuid}
     </select>
 
+    <select id="hasCaptureRankJob" resultType="java.lang.Boolean">
+        SELECT 1
+        FROM t_capture_rank_job c
+        WHERE (
+        c.fExectionStatus = 'New'
+        OR (c.fExectionStatus = 'Complete'
+        AND c.fExectionType = 'Everyday'
+        AND c.fLastExecutionDate < curdate())
+        )
+        AND c.fCaptureRankJobStatus = 1
+        LIMIT 1
+    </select>
 </mapper>

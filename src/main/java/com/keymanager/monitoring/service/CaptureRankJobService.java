@@ -89,4 +89,8 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
         captureRankJob.setCaptureRankJobStatus(status.equals("true")?true:false);
         captureRankJobDao.updateById(captureRankJob);
     }
+
+    public Boolean hasCaptureRankJob(){
+        return captureRankJobDao.hasCaptureRankJob();
+    }
 }

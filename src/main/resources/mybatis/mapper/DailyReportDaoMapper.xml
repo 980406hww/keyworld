@@ -30,7 +30,7 @@
         FROM t_daily_report dr
         WHERE dr.fTerminalType = #{terminalType}
             AND dr.fStatus = 'Completed'
-            AND DATE(dr.fCompleteTime) = CURRENT_DATE()
+            AND dr.fCompleteTime > CURRENT_DATE()
     </select>
 
     <select id="selectLastId" resultType="int">
@@ -40,4 +40,12 @@
     <delete id="deleteDailyReportFromAWeekAgo">
         DELETE FROM t_daily_report WHERE fCreateTime &lt; DATE_SUB(CURDATE(), INTERVAL 7 DAY)
     </delete>
+
+    <select id="hasDailyReportTriggeredInToday" resultType="java.lang.Boolean">
+        SELECT
+        1
+        FROM t_daily_report dr
+        WHERE dr.fTriggerMode = #{triggerMode}
+        AND dr.fCreateTime > CURRENT_DATE()
+    </select>
 </mapper>

@@ -20,4 +20,6 @@ public interface CaptureRankJobDao extends BaseMapper<CaptureRankJob> {
    public CaptureRankJob getProcessingJob();
 
    Boolean getCaptureRankJobStatus(@Param("captureRankJobUuid")Long captureRankJobUuid);
+
+   Boolean hasCaptureRankJob();
 }

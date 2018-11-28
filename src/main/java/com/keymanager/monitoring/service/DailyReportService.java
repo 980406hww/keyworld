@@ -7,6 +7,8 @@ import com.keymanager.monitoring.entity.Config;
 import com.keymanager.monitoring.entity.DailyReport;
 import com.keymanager.monitoring.entity.DailyReportItem;
 import com.keymanager.monitoring.enums.DailyReportStatusEnum;
+import com.keymanager.monitoring.enums.DailyReportTriggerModeEnum;
+import com.keymanager.monitoring.enums.TerminalTypeEnum;
 import com.keymanager.util.Constants;
 import com.keymanager.util.FileUtil;
 import com.keymanager.util.Utils;
@@ -33,23 +35,52 @@ public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport>
 	private ConfigService configService;
 
 	@Autowired
+	private CaptureRankJobService captureRankJobService;
+
+	@Autowired
 	private DailyReportItemService dailyReportItemService;
 
+	public void autoTriggerDailyReport(){
+		if(!captureRankJobService.hasCaptureRankJob() && !dailyReportDao.hasDailyReportTriggeredInToday(DailyReportTriggerModeEnum.Auto.name())){
+			long dailyReportUuid = createDailyReport(null, DailyReportTriggerModeEnum.Auto.name());
+			Config pcDailyReportCustomerUuids = configService.getConfig(Constants.CONFIG_TYPE_DAILY_REPORT, TerminalTypeEnum.PC.name());
+			if(StringUtils.isNotEmpty(pcDailyReportCustomerUuids.getValue())){
+				String [] customerUuidArray = pcDailyReportCustomerUuids.getValue().trim().split(",");
+				for(String customerUuid : customerUuidArray){
+					dailyReportItemService.createDailyReportItem(dailyReportUuid, TerminalTypeEnum.PC.name(), Integer.parseInt(customerUuid));
+				}
+			}
+
+			Config phoneDailyReportCustomerUuids = configService.getConfig(Constants.CONFIG_TYPE_DAILY_REPORT, TerminalTypeEnum.Phone.name());
+			if(StringUtils.isNotEmpty(phoneDailyReportCustomerUuids.getValue())){
+				String [] customerUuidArray = phoneDailyReportCustomerUuids.getValue().trim().split(",");
+				for(String customerUuid : customerUuidArray){
+					dailyReportItemService.createDailyReportItem(dailyReportUuid, TerminalTypeEnum.Phone.name(), Integer.parseInt(customerUuid));
+				}
+			}
+		}
+	}
+
 	public void triggerReportGeneration(String terminalType, String customerUuids){
+		long dailyReportUuid = createDailyReport(terminalType, DailyReportTriggerModeEnum.Manual.name());
+		if(StringUtils.isNotEmpty(customerUuids)){
+			String [] customerUuidArray = customerUuids.trim().split(",");
+			for(String customerUuid : customerUuidArray){
+				dailyReportItemService.createDailyReportItem(dailyReportUuid, terminalType, Integer.parseInt(customerUuid));
+			}
+		}
+	}
+
+	private long createDailyReport(String terminalType, String triggerMode) {
 		DailyReport dailyReport = new DailyReport();
 		dailyReport.setTriggerTime(new Date());
 		dailyReport.setCompleteTime(null);
+		dailyReport.setTriggerMode(triggerMode);
 		dailyReport.setTerminalType(terminalType);
 		dailyReport.setStatus(DailyReportStatusEnum.New.name());
 		dailyReport.setCreateTime(new Date());
 		dailyReportDao.insert(dailyReport);
-		if(StringUtils.isNotEmpty(customerUuids)){
-			String [] customerUuidArray = customerUuids.trim().split(",");
-			int dailyReportUuid = dailyReportDao.selectLastId();
-			for(String customerUuid : customerUuidArray){
-				dailyReportItemService.createDailyReportItem(dailyReportUuid, Integer.parseInt(customerUuid));
-			}
-		}
+		return dailyReportDao.selectLastId();
 	}
 
 	public void generateReport() throws Exception {
