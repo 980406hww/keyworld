@@ -75,7 +75,7 @@
         c.fExectionStatus = 'New'
         OR (c.fExectionStatus = 'Complete'
         AND c.fExectionType = 'Everyday'
-        AND c.fLastExecutionDate < curdate())
+        AND c.fLastExecutionDate &lt; curdate())
         )
         AND c.fCaptureRankJobStatus = 1
         LIMIT 1
