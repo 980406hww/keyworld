@@ -289,28 +289,27 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			if (CollectionUtils.isNotEmpty(qzSettingCriteria.getCustomerKeywordVOs())) {
 				List<QZOperationType> qzOperationTypes = qzOperationTypeService.searchQZOperationTypesByQZSettingUuid(qzSettingCriteria.getQzSetting().getUuid());
 				List<CustomerKeywordSummaryInfoVO> customerKeywordSummaryInfoVOs = customerKeywordService.searchCustomerKeywordSummaryInfo(qzSettingCriteria.getQzSetting().getType(), (long)qzSettingCriteria.getQzSetting().getCustomerUuid());
-				Map<String, Map<String, String>> customerKeywordSummaryInfoMaps = new HashMap<String, Map<String, String>>();
+				Map<String, Set<String>> customerKeywordSummaryInfoMaps = new HashMap<String, Set<String>>();
 				int pcKeywordCountNum = 0, phoneKeywordCountNum = 0;
 				if(CollectionUtils.isNotEmpty(customerKeywordSummaryInfoVOs)){
 					for(CustomerKeywordSummaryInfoVO customerKeywordSummaryInfoVO : customerKeywordSummaryInfoVOs) {
-						Map<String, String> customerKeywordSummaryInfoMap = new HashMap<String, String>();
 						if (customerKeywordSummaryInfoVO.getStatus() > 0){
-							if (customerKeywordSummaryInfoVO.getTerminalType().equals(Constants.QZ_OPERATION_TYPE_PC)) {
+							if (customerKeywordSummaryInfoVO.getTerminalType().equals(TerminalTypeEnum.PC.name())) {
 								pcKeywordCountNum++;
 							} else {
 								phoneKeywordCountNum++;
 							}
 						}
-						customerKeywordSummaryInfoMap.put(customerKeywordSummaryInfoVO.getTerminalType(), customerKeywordSummaryInfoVO.getTerminalType());
-						// 如果customerKeywordSummaryInfoMaps已经存在了这个key，将两个map合并后存入
-						if (customerKeywordSummaryInfoMaps.containsKey(customerKeywordSummaryInfoVO.getKeyword())) {
-							customerKeywordSummaryInfoMap.putAll(customerKeywordSummaryInfoMaps.get(customerKeywordSummaryInfoVO.getKeyword()));
+						Set<String> terminalTypeSet = customerKeywordSummaryInfoMaps.get(customerKeywordSummaryInfoVO.getKeyword());
+						if (terminalTypeSet == null) {
+							terminalTypeSet = new HashSet<String>();
+							customerKeywordSummaryInfoMaps.put(customerKeywordSummaryInfoVO.getKeyword(), terminalTypeSet);
 						}
-						customerKeywordSummaryInfoMaps.put(customerKeywordSummaryInfoVO.getKeyword(), customerKeywordSummaryInfoMap);
+						terminalTypeSet.add(customerKeywordSummaryInfoVO.getTerminalType());
 					}
 				}
 				for(QZOperationType qzOperationType : qzOperationTypes){
-					if (qzOperationType.getOperationType().equals(Constants.QZ_OPERATION_TYPE_PC)) {
+					if (qzOperationType.getOperationType().equals(TerminalTypeEnum.PC.name())) {
 						pcKeywordCountNum = qzOperationType.getMaxKeywordCount() - pcKeywordCountNum;
 					} else {
 						phoneKeywordCountNum = qzOperationType.getMaxKeywordCount() - phoneKeywordCountNum;
@@ -323,9 +322,9 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 					for (CustomerKeywordVO customerKeywordVO : qzSettingCriteria.getCustomerKeywordVOs()) {
 						// 遍历需要添加的终端类型
 						for(QZOperationType qzOperationType : qzOperationTypes){
-							if(!(customerKeywordSummaryInfoMaps.containsKey(customerKeywordVO.getKeyword()) && customerKeywordSummaryInfoMaps.get(customerKeywordVO.getKeyword()).containsKey(qzOperationType.getOperationType()))) {
+							if(!(customerKeywordSummaryInfoMaps.containsKey(customerKeywordVO.getKeyword()) && customerKeywordSummaryInfoMaps.get(customerKeywordVO.getKeyword()).contains(qzOperationType.getOperationType()))) {
 								if(StringUtils.isBlank(customerKeywordVO.getTerminalType()) || qzOperationType.getOperationType().equals(customerKeywordVO.getTerminalType())) {
-									if (qzOperationType.getOperationType().equals(Constants.QZ_OPERATION_TYPE_PC)) {
+									if (qzOperationType.getOperationType().equals(TerminalTypeEnum.PC.name())) {
 										if (pcKeywordCountNum > 0) {
 											CustomerKeyword customerKeyword = createCustomerKeyword(qzSettingCriteria,qzOperationType,customerKeywordVO);
 											insertingCustomerKeywords.add(customerKeyword);
@@ -440,12 +439,12 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 	public void detectExceedMaxCountFlag(){
 		qzSettingDao.updateExceedMaxCountFlag(false, false);
-		List<Long> pcExceedMaxCountUuids = qzSettingDao.getKeywordExceedMaxCount(Constants.QZ_OPERATION_TYPE_PC);
+		List<Long> pcExceedMaxCountUuids = qzSettingDao.getKeywordExceedMaxCount(TerminalTypeEnum.PC.name());
 		if(CollectionUtils.isNotEmpty(pcExceedMaxCountUuids)){
 			qzSettingDao.updatePCExceedMaxCountFlag(true, pcExceedMaxCountUuids);
 		}
 
-		List<Long> phoneExceedMaxCountUuids = qzSettingDao.getKeywordExceedMaxCount(Constants.QZ_OPERATION_TYPE_PHONE);
+		List<Long> phoneExceedMaxCountUuids = qzSettingDao.getKeywordExceedMaxCount(TerminalTypeEnum.Phone.name());
 		if(CollectionUtils.isNotEmpty(phoneExceedMaxCountUuids)){
 			qzSettingDao.updatePhoneExceedMaxCountFlag(true, phoneExceedMaxCountUuids);
 		}
