@@ -1142,7 +1142,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return customerKeywordDao.searchGroups();
     }
 
-    public List<String> searchCustomerKeywordSummaryInfo(String entryType, Long customerUuid) {
+    public List<CustomerKeywordSummaryInfoVO> searchCustomerKeywordSummaryInfo(String entryType, Long customerUuid) {
         return customerKeywordDao.searchCustomerKeywordSummaryInfo(entryType, customerUuid);
     }
 

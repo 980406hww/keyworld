@@ -29,6 +29,5 @@ public class QZOperationTypeService extends ServiceImpl<QZOperationTypeDao, QZOp
 
 	public  void deleteByQZSettingUuid(Long qzSettingUuid){
 		qzOperationTypeDao.deleteByQZSettingUuid(qzSettingUuid);
-	};
-
+	}
 }
