@@ -91,6 +91,6 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
     }
 
     public Boolean hasCaptureRankJob(){
-        return captureRankJobDao.hasCaptureRankJob();
+        return captureRankJobDao.fetchCaptureRankJob() != null;
     }
 }

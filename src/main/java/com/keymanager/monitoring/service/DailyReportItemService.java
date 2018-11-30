@@ -69,7 +69,7 @@ public class DailyReportItemService extends ServiceImpl<DailyReportItemDao, Dail
 			Customer customer = customerService.getCustomer(dailyReportItem.getCustomerUuid());
 			CustomerKeywordDailyReportExcelWriter excelWriter = new CustomerKeywordDailyReportExcelWriter(dailyReportItem.getTerminalType(), dailyReportItem
 					.getCustomerUuid() + "", dailyReportUuid);
-			double todayFee = excelWriter.writeDataToExcel(customerKeywords, customer.getLoginName(), customer.getContactPerson(), dailyReportItem.getTerminalType());
+			double todayFee = excelWriter.writeDataToExcel(customerKeywords, customer.getExternalAccount(), customer.getContactPerson(), dailyReportItem.getTerminalType());
 			dailyReportItem.setTodayFee(todayFee);
 		}
 		dailyReportItem.setStatus(DailyReportStatusEnum.Completed.name());

@@ -1,20 +1,16 @@
 package com.keymanager.monitoring.excel.operator;
 
-import com.keymanager.monitoring.entity.CustomerKeyword;
-import com.keymanager.monitoring.enums.TerminalTypeEnum;
 import com.keymanager.monitoring.excel.definition.CustomerKeywordDailyReportSummaryDefinition;
 import com.keymanager.util.FileUtil;
 import com.keymanager.util.Utils;
 import com.keymanager.util.excel.ExcelWriteException;
 import com.keymanager.util.excel.JXLExcelWriter;
-import jxl.Sheet;
 import jxl.read.biff.BiffException;
-import org.apache.commons.collections.MapUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.DoubleBuffer;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Map;
 
 public class CustomerKeywordDailyReportSummaryExcelWriter {
@@ -24,10 +20,10 @@ public class CustomerKeywordDailyReportSummaryExcelWriter {
 	private String dailyReportFileName;
 	private String webRootPath = null;
 
-	public CustomerKeywordDailyReportSummaryExcelWriter(long dailyReportUuid, String loginName) throws BiffException, IOException {
+	public CustomerKeywordDailyReportSummaryExcelWriter(long dailyReportUuid, String externalAccount) throws BiffException, IOException {
 		super();
 		this.webRootPath = Utils.getWebRootPath();
-		this.dailyReportFileName = "dailyreport/summary/" + loginName + ".xls";
+		this.dailyReportFileName = "dailyreport/summary/" + externalAccount + ".xls";
 		File file = getTemplateFile(dailyReportFileName);
 		int dayOfMonth = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
 		if(!file.exists() || dayOfMonth == 1 || dayOfMonth == 11 || dayOfMonth == 21){
@@ -59,14 +55,33 @@ public class CustomerKeywordDailyReportSummaryExcelWriter {
 		int endOfMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
 
 		int rowIndex = day;
+		double total = 0d;
 		writer.addLabelCell(CustomerKeywordDailyReportSummaryDefinition.Date.getColumnIndex(), rowIndex, day);
-		writer.addLabelCell(CustomerKeywordDailyReportSummaryDefinition.BaiduPC.getColumnIndex(), rowIndex, summaryMap.get("百度_PC") == null ? "" : summaryMap.get("百度_PC"));
-		writer.addLabelCell(CustomerKeywordDailyReportSummaryDefinition.BaiduPhone.getColumnIndex(), rowIndex, summaryMap.get("百度_Phone") == null ? "" : summaryMap.get("百度_Phone"));
-		writer.addLabelCell(CustomerKeywordDailyReportSummaryDefinition.SogouPC.getColumnIndex(), rowIndex, summaryMap.get("搜狗_PC") == null ? "" : summaryMap.get("搜狗_PC"));
-		writer.addLabelCell(CustomerKeywordDailyReportSummaryDefinition.SogouPhone.getColumnIndex(), rowIndex, summaryMap.get("搜狗_Phone") == null ? "" : summaryMap.get("搜狗_Phone"));
-		writer.addLabelCell(CustomerKeywordDailyReportSummaryDefinition.So.getColumnIndex(), rowIndex, summaryMap.get("360") == null ? "" : summaryMap.get("360"));
-		writer.addLabelCell(CustomerKeywordDailyReportSummaryDefinition.UC.getColumnIndex(), rowIndex, summaryMap.get("UC") == null ? "" : summaryMap.get("UC"));
-		writer.addLabelCell(CustomerKeywordDailyReportSummaryDefinition.TodayFee.getColumnIndex(), rowIndex, "SUM(B" + rowIndex + ":G" + rowIndex + ")");
+		if(summaryMap.get("百度_PC") != null) {
+			writer.addLabelCell(CustomerKeywordDailyReportSummaryDefinition.BaiduPC.getColumnIndex(), rowIndex, summaryMap.get("百度_PC"));
+			total = total + Double.parseDouble(summaryMap.get("百度_PC"));
+		}
+		if(summaryMap.get("百度_Phone") != null) {
+			writer.addLabelCell(CustomerKeywordDailyReportSummaryDefinition.BaiduPhone.getColumnIndex(), rowIndex, summaryMap.get("百度_Phone"));
+			total = total + Double.parseDouble(summaryMap.get("百度_Phone"));
+		}
+		if(summaryMap.get("搜狗_PC") != null) {
+			writer.addLabelCell(CustomerKeywordDailyReportSummaryDefinition.SogouPC.getColumnIndex(), rowIndex, summaryMap.get("搜狗_PC"));
+			total = total + Double.parseDouble(summaryMap.get("搜狗_PC"));
+		}
+		if(summaryMap.get("搜狗_Phone") != null) {
+			writer.addLabelCell(CustomerKeywordDailyReportSummaryDefinition.SogouPhone.getColumnIndex(), rowIndex, summaryMap.get("搜狗_Phone"));
+			total = total + Double.parseDouble(summaryMap.get("搜狗_Phone"));
+		}
+		if(summaryMap.get("360") != null) {
+			writer.addLabelCell(CustomerKeywordDailyReportSummaryDefinition.So.getColumnIndex(), rowIndex, summaryMap.get("360"));
+			total = total + Double.parseDouble(summaryMap.get("360"));
+		}
+		if(summaryMap.get("UC") != null) {
+			writer.addLabelCell(CustomerKeywordDailyReportSummaryDefinition.UC.getColumnIndex(), rowIndex, summaryMap.get("UC"));
+			total = total + Double.parseDouble(summaryMap.get("UC"));
+		}
+		writer.addLabelCell(CustomerKeywordDailyReportSummaryDefinition.TodayFee.getColumnIndex(), rowIndex, total);
 
 		if(day == 10){
 			writer.addFormulanCell(CustomerKeywordDailyReportSummaryDefinition.TodayFee.getColumnIndex() + 1, day, "SUM(H2:H11)*" + percentage);
@@ -77,13 +92,9 @@ public class CustomerKeywordDailyReportSummaryExcelWriter {
 		}
 	}
 
-	public void writeDataToExcel(List<CustomerKeyword> views, String loginName, String contactPerson, String terminalType) throws Exception {
+	public void writeDataToExcel(String externalAccount) throws Exception {
 		saveAs(dailyReportFileName);
-		String fileName = "dailyreport/" + dailyReportUuid + "/" + loginName + "/" + contactPerson;
-		if(TerminalTypeEnum.Phone.name().equals(terminalType)){
-			fileName = fileName + "(Mobile)";
-		}
-		fileName = fileName + ".xls";
+		String fileName = "dailyreport/" + dailyReportUuid + "/" + externalAccount + "/" + externalAccount + "_小计.xls";
 		FileUtil.copyFile(webRootPath + dailyReportFileName, webRootPath + fileName, true);
 	}
 }

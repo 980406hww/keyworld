@@ -68,8 +68,9 @@
         c.fUuid=#{captureRankJobUuid}
     </select>
 
-    <select id="hasCaptureRankJob" resultType="java.lang.Boolean">
-        SELECT 1
+    <select id="fetchCaptureRankJob" resultType="com.keymanager.monitoring.entity.CaptureRankJob">
+        SELECT
+        <include refid="colID"/>
         FROM t_capture_rank_job c
         WHERE (
         c.fExectionStatus = 'New'
