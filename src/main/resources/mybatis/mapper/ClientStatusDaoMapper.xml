@@ -4,17 +4,18 @@
     <select id="searchClientStatusForRefreshStat" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria" resultType="com.keymanager.monitoring.vo.CustomerKeywordRefreshStatInfoVO">
         SELECT
         cs.fGroup AS "group",
+        cs.fTerminalType AS "terminalType",
         SUM(IF(DATE_ADD(cs.fLastVisitTime, INTERVAL IF(10 > cs.fPageNo * 3, 15, cs.fPageNo * 3 + 5) MINUTE) &lt; NOW(), 1, 0)) AS 'unworkMachineCount',
         SUM(cs.fIdleTotalMinutes) AS "idleTotalMinutes",
         COUNT(1)  AS 'totalMachineCount'
         FROM t_client_status cs
-        WHERE cs.fTerminalType = #{customerKeywordRefreshStatInfoCriteria.terminalType}
-        AND cs.fValid = 1
+        WHERE cs.fValid = 1
+        <if test="customerKeywordRefreshStatInfoCriteria.terminalType!=null and customerKeywordRefreshStatInfoCriteria.terminalType!=''">AND cs.fTerminalType = #{customerKeywordRefreshStatInfoCriteria.terminalType}</if>
         <if test="customerKeywordRefreshStatInfoCriteria.groupName!=null and customerKeywordRefreshStatInfoCriteria.groupName!=''">
             AND cs.fGroup like '${customerKeywordRefreshStatInfoCriteria.groupName}%'
             AND EXISTS (SELECT 1 FROM t_customer_keyword ck WHERE ck.fType = #{customerKeywordRefreshStatInfoCriteria.entryType} AND ck.fOptimizeGroupName like '${customerKeywordRefreshStatInfoCriteria.groupName}%')
         </if>
-        GROUP BY cs.fGroup
+        GROUP BY cs.fGroup, cs.fTerminalType
         ORDER BY cs.fGroup
     </select>
 

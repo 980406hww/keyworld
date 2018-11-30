@@ -1,7 +1,6 @@
 package com.keymanager.monitoring.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
-import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
 import com.keymanager.monitoring.vo.CustomerKeywordRefreshStatInfoVO;
 import org.apache.ibatis.annotations.Param;

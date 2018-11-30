@@ -7,6 +7,7 @@ import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria
 import com.keymanager.monitoring.entity.ClientStatus;
 import com.keymanager.monitoring.entity.ClientUpgrade;
 import com.keymanager.monitoring.vo.CookieVO;
+import com.keymanager.monitoring.vo.CustomerKeywordRefreshStatInfoVO;
 import com.keymanager.value.ClientStatusGroupSummaryVO;
 import com.keymanager.value.ClientStatusSummaryVO;
 import org.apache.ibatis.annotations.Param;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface ClientStatusDao extends BaseMapper<ClientStatus> {
-    List<com.keymanager.monitoring.vo.CustomerKeywordRefreshStatInfoVO> searchClientStatusForRefreshStat(@Param("customerKeywordRefreshStatInfoCriteria")CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria);
+    List<CustomerKeywordRefreshStatInfoVO> searchClientStatusForRefreshStat(@Param("customerKeywordRefreshStatInfoCriteria")CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria);
 
     void updateClientVersion(@Param("clientID") String clientID, @Param("version")String version, @Param("hasKeyword") boolean hasKeyword);
 

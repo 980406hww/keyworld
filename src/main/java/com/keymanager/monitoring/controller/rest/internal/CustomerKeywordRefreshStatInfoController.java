@@ -4,6 +4,7 @@ import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
 import com.keymanager.monitoring.entity.UserInfo;
 import com.keymanager.monitoring.service.CustomerKeywordRefreshStatInfoService;
+import com.keymanager.monitoring.service.CustomerKeywordTerminalRefreshStatRecordService;
 import com.keymanager.monitoring.service.IUserInfoService;
 import com.keymanager.monitoring.service.UserRoleService;
 import com.keymanager.monitoring.vo.CustomerKeywordRefreshStatInfoVO;
@@ -39,6 +40,9 @@ public class CustomerKeywordRefreshStatInfoController extends SpringMVCBaseContr
 
     @Autowired
     private CustomerKeywordRefreshStatInfoService customerKeywordRefreshStatInfoService;
+
+    @Autowired
+    private CustomerKeywordTerminalRefreshStatRecordService customerKeywordTerminalRefreshStatRecordService;
 
     @Autowired
     private IUserInfoService userInfoService;
@@ -77,7 +81,12 @@ public class CustomerKeywordRefreshStatInfoController extends SpringMVCBaseContr
         if(!isDepartmentManager) {
             refreshStatInfoCriteria.setUserName(userName);
         }
-        List<CustomerKeywordRefreshStatInfoVO> refreshStatInfoVOs = customerKeywordRefreshStatInfoService.generateCustomerKeywordStatInfo(refreshStatInfoCriteria);
+        List<CustomerKeywordRefreshStatInfoVO> refreshStatInfoVOs;
+        if (refreshStatInfoCriteria.getDayNum() > 0) {
+            refreshStatInfoVOs = customerKeywordTerminalRefreshStatRecordService.getHistoryTerminalRefreshStatRecord(refreshStatInfoCriteria);
+        } else {
+            refreshStatInfoVOs = customerKeywordRefreshStatInfoService.generateCustomerKeywordStatInfo(refreshStatInfoCriteria);
+        }
         modelAndView.addObject("refreshStatInfoCriteria", refreshStatInfoCriteria);
         modelAndView.addObject("refreshStatInfoVOs", refreshStatInfoVOs);
         return modelAndView;

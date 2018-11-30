@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
 import com.keymanager.monitoring.dao.CustomerKeywordDao;
 import com.keymanager.monitoring.dao.CustomerKeywordRefreshStatInfoDao;
+import com.keymanager.monitoring.dao.CustomerKeywordTerminalRefreshStatRecordDao;
 import com.keymanager.monitoring.entity.ClientStatus;
 import com.keymanager.monitoring.entity.Config;
 import com.keymanager.monitoring.vo.CustomerKeywordRefreshStatInfoVO;
@@ -40,6 +41,9 @@ public class CustomerKeywordRefreshStatInfoService extends ServiceImpl<CustomerK
     @Autowired
     private CustomerKeywordRefreshStatInfoDao customerKeywordRefreshStatInfoDao;
 
+    @Autowired
+    private CustomerKeywordTerminalRefreshStatRecordDao customerKeywordTerminalRefreshStatRecordDao;
+
     public List<CustomerKeywordRefreshStatInfoVO> generateCustomerKeywordStatInfo(CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria) {
         List<CustomerKeywordRefreshStatInfoVO> customerKeywordRefreshStatInfoVOs = getCustomerKeywordStatInfoVOs(customerKeywordRefreshStatInfoCriteria);
         Map<String, CustomerKeywordRefreshStatInfoVO> customerKeywordRefreshStatInfoVOMap = new HashMap<String, CustomerKeywordRefreshStatInfoVO>();
@@ -50,12 +54,17 @@ public class CustomerKeywordRefreshStatInfoService extends ServiceImpl<CustomerK
         List<CustomerKeywordRefreshStatInfoVO> csCustomerKeywordRefreshStatInfoVOs = clientStatusService.searchClientStatusForRefreshStat(customerKeywordRefreshStatInfoCriteria);
         for (CustomerKeywordRefreshStatInfoVO csCustomerKeywordRefreshStatInfoVO : csCustomerKeywordRefreshStatInfoVOs) {
             CustomerKeywordRefreshStatInfoVO customerKeywordRefreshStatInfoVO = customerKeywordRefreshStatInfoVOMap.get(csCustomerKeywordRefreshStatInfoVO.getGroup());
-            if (customerKeywordRefreshStatInfoVO != null) {
+            if (null != customerKeywordRefreshStatInfoVO) {
                 customerKeywordRefreshStatInfoVO.setIdleTotalMinutes(csCustomerKeywordRefreshStatInfoVO.getIdleTotalMinutes());
                 customerKeywordRefreshStatInfoVO.setTotalMachineCount(csCustomerKeywordRefreshStatInfoVO.getTotalMachineCount());
                 customerKeywordRefreshStatInfoVO.setUnworkMachineCount(csCustomerKeywordRefreshStatInfoVO.getUnworkMachineCount());
             }
         }
+        this.SetCountCustomerKeywordRefreshStatInfoVO(customerKeywordRefreshStatInfoVOs);
+        return customerKeywordRefreshStatInfoVOs;
+    }
+
+    public void SetCountCustomerKeywordRefreshStatInfoVO(List<CustomerKeywordRefreshStatInfoVO> customerKeywordRefreshStatInfoVOs){
         CustomerKeywordRefreshStatInfoVO total = new CustomerKeywordRefreshStatInfoVO();
         total.setGroup("总计");
         for (CustomerKeywordRefreshStatInfoVO customerKeywordRefreshStatInfoVO : customerKeywordRefreshStatInfoVOs) {
@@ -75,31 +84,20 @@ public class CustomerKeywordRefreshStatInfoService extends ServiceImpl<CustomerK
             total.setIdleTotalMinutes(total.getIdleTotalMinutes() + customerKeywordRefreshStatInfoVO.getIdleTotalMinutes());
         }
         customerKeywordRefreshStatInfoVOs.add(0, total);
-        return customerKeywordRefreshStatInfoVOs;
     }
 
     private List<CustomerKeywordRefreshStatInfoVO> getCustomerKeywordStatInfoVOs(CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria) {
         Config config = configService.getConfig(Constants.CONFIG_KEY_MAX_INVALID_COUNT, customerKeywordRefreshStatInfoCriteria.getEntryType());
-        customerKeywordRefreshStatInfoCriteria.setConfigValue(config.getValue());
-        List<CustomerKeywordRefreshStatInfoVO> customerKeywordRefreshStatInfoVOs = customerKeywordRefreshStatInfoDao.searchCustomerKeywordStatInfoVOs(customerKeywordRefreshStatInfoCriteria);
-        List<CustomerKeywordRefreshStatInfoVO> customerKeywordRefreshStatInfoVOList = new ArrayList<CustomerKeywordRefreshStatInfoVO>();
-        for(CustomerKeywordRefreshStatInfoVO customerKeywordRefreshStatInfoVO : customerKeywordRefreshStatInfoVOs) {
-            CustomerKeywordRefreshStatInfoVO refreshStatInfoVO = new CustomerKeywordRefreshStatInfoVO();
-            refreshStatInfoVO.setGroup(customerKeywordRefreshStatInfoVO.getGroup());
-            refreshStatInfoVO.setTotalKeywordCount(customerKeywordRefreshStatInfoVO.getTotalKeywordCount());
-            refreshStatInfoVO.setNeedOptimizeKeywordCount(customerKeywordRefreshStatInfoVO.getNeedOptimizeKeywordCount());
-            refreshStatInfoVO.setInvalidKeywordCount(customerKeywordRefreshStatInfoVO.getInvalidKeywordCount());
-            refreshStatInfoVO.setZeroOptimizedCount(customerKeywordRefreshStatInfoVO.getZeroOptimizedCount());
-            refreshStatInfoVO.setReachStandardKeywordCount(customerKeywordRefreshStatInfoVO.getReachStandardKeywordCount());
-            refreshStatInfoVO.setTodaySubTotal(customerKeywordRefreshStatInfoVO.getTodaySubTotal());
-            refreshStatInfoVO.setTotalOptimizeCount(customerKeywordRefreshStatInfoVO.getTotalOptimizeCount());
-            refreshStatInfoVO.setTotalOptimizedCount(customerKeywordRefreshStatInfoVO.getTotalOptimizedCount());
-            refreshStatInfoVO.setNeedOptimizeCount(customerKeywordRefreshStatInfoVO.getNeedOptimizeCount());
-            refreshStatInfoVO.setQueryCount(customerKeywordRefreshStatInfoVO.getQueryCount());
-            refreshStatInfoVO.setMaxInvalidCount(Integer.parseInt(config.getValue()));
-            customerKeywordRefreshStatInfoVOList.add(refreshStatInfoVO);
+        if (null != config){
+            customerKeywordRefreshStatInfoCriteria.setConfigValue(config.getValue());
+        } else {
+            customerKeywordRefreshStatInfoCriteria.setConfigValue(Constants.CUSTOMER_KEYWORD_REFRESH_STAT_INFO_CONFIG_VALUE);
         }
-        return customerKeywordRefreshStatInfoVOList;
+        List<CustomerKeywordRefreshStatInfoVO> customerKeywordRefreshStatInfoVOs = customerKeywordRefreshStatInfoDao.searchCustomerKeywordStatInfoVOs(customerKeywordRefreshStatInfoCriteria);
+        for(CustomerKeywordRefreshStatInfoVO customerKeywordRefreshStatInfoVO : customerKeywordRefreshStatInfoVOs) {
+            customerKeywordRefreshStatInfoVO.setMaxInvalidCount(Integer.parseInt(customerKeywordRefreshStatInfoCriteria.getConfigValue()));
+        }
+        return customerKeywordRefreshStatInfoVOs;
     }
 
     public List<String> searchKeywordUrlByGroup(String terminalType, String entryType, List<String> groups) throws Exception {
@@ -156,5 +154,50 @@ public class CustomerKeywordRefreshStatInfoService extends ServiceImpl<CustomerK
             customerKeywordDao.batchUpdatePosition(terminalType, entryType, searchEngine, reachStandardPosition, subContents);
             newContents.removeAll(subContents);
         }
+    }
+
+    public void updateCustomerKeywordStatInfo (){
+        List<Long> uuids = customerKeywordTerminalRefreshStatRecordDao.findMostDistantCustomerKeywordTerminalRefreshStatRecord();
+        if (CollectionUtils.isNotEmpty(uuids)) {
+            customerKeywordTerminalRefreshStatRecordDao.deleteBatchIds(uuids);
+        }
+        List<CustomerKeywordRefreshStatInfoVO> refreshStatInfoVOs = generateAllCustomerKeywordStatInfo(new CustomerKeywordRefreshStatInfoCriteria());
+        for (CustomerKeywordRefreshStatInfoVO refreshStatInfoVO : refreshStatInfoVOs) {
+            customerKeywordTerminalRefreshStatRecordDao.insert(refreshStatInfoVO);
+        }
+    }
+
+    public List<CustomerKeywordRefreshStatInfoVO> generateAllCustomerKeywordStatInfo(CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria) {
+        List<CustomerKeywordRefreshStatInfoVO> customerKeywordStatInfoVOs = getCustomerKeywordStatInfoVOs(customerKeywordRefreshStatInfoCriteria);
+        Map<String, Map<String, Map<String, CustomerKeywordRefreshStatInfoVO>>> refreshStatInfoVOGroupMap = new HashMap<String, Map<String, Map<String, CustomerKeywordRefreshStatInfoVO>>>();
+        for (CustomerKeywordRefreshStatInfoVO customerKeywordRefreshStatInfoVO : customerKeywordStatInfoVOs) {
+            Map<String, Map<String, CustomerKeywordRefreshStatInfoVO>> refreshStatInfoVOTerminalTypeMap = refreshStatInfoVOGroupMap.get(customerKeywordRefreshStatInfoVO.getGroup());
+            if (null == refreshStatInfoVOTerminalTypeMap) {
+                refreshStatInfoVOTerminalTypeMap = new HashMap<String, Map<String, CustomerKeywordRefreshStatInfoVO>>();
+            }
+            Map<String, CustomerKeywordRefreshStatInfoVO> refreshStatInfoVOTypeMap = refreshStatInfoVOTerminalTypeMap.get(customerKeywordRefreshStatInfoVO.getTerminalType());
+            if (null == refreshStatInfoVOTypeMap) {
+                refreshStatInfoVOTypeMap = new HashMap<String, CustomerKeywordRefreshStatInfoVO>();
+            }
+            refreshStatInfoVOTypeMap.put(customerKeywordRefreshStatInfoVO.getType(), customerKeywordRefreshStatInfoVO);
+            refreshStatInfoVOTerminalTypeMap.put(customerKeywordRefreshStatInfoVO.getTerminalType(), refreshStatInfoVOTypeMap);
+            refreshStatInfoVOGroupMap.put(customerKeywordRefreshStatInfoVO.getGroup(), refreshStatInfoVOTerminalTypeMap);
+        }
+
+        List<CustomerKeywordRefreshStatInfoVO> searchClientStatusForRefreshStatVOs = clientStatusService.searchClientStatusForRefreshStat(customerKeywordRefreshStatInfoCriteria);
+        for (CustomerKeywordRefreshStatInfoVO csCustomerKeywordRefreshStatInfoVO : searchClientStatusForRefreshStatVOs) {
+            Map<String, Map<String, CustomerKeywordRefreshStatInfoVO>> csCustomerKeywordRefreshStatInfoVOTerminalTypeMap = refreshStatInfoVOGroupMap.get(csCustomerKeywordRefreshStatInfoVO.getGroup());
+            if (null != csCustomerKeywordRefreshStatInfoVOTerminalTypeMap) {
+                Map<String, CustomerKeywordRefreshStatInfoVO> csCustomerKeywordRefreshStatInfoVOTypeMap = csCustomerKeywordRefreshStatInfoVOTerminalTypeMap.get(csCustomerKeywordRefreshStatInfoVO.getTerminalType());
+                if (null != csCustomerKeywordRefreshStatInfoVOTypeMap) {
+                    for (CustomerKeywordRefreshStatInfoVO customerKeywordRefreshStatInfoVO : csCustomerKeywordRefreshStatInfoVOTypeMap.values()) {
+                        customerKeywordRefreshStatInfoVO.setIdleTotalMinutes(csCustomerKeywordRefreshStatInfoVO.getIdleTotalMinutes());
+                        customerKeywordRefreshStatInfoVO.setTotalMachineCount(csCustomerKeywordRefreshStatInfoVO.getTotalMachineCount());
+                        customerKeywordRefreshStatInfoVO.setUnworkMachineCount(csCustomerKeywordRefreshStatInfoVO.getUnworkMachineCount());
+                    }
+                }
+            }
+        }
+        return customerKeywordStatInfoVOs;
     }
 }

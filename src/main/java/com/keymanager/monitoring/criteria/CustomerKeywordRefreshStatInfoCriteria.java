@@ -13,6 +13,16 @@ public class CustomerKeywordRefreshStatInfoCriteria extends BaseCriteria {
 
     private boolean fullMatchGroup;
 
+    private int dayNum;
+
+    public int getDayNum () {
+        return dayNum > 0 ? dayNum : 0;
+    }
+
+    public void setDayNum (int dayNum) {
+        this.dayNum = dayNum;
+    }
+
     public String getEntryType() {
         return entryType;
     }

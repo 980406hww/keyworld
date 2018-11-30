@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.CustomerKeywordTerminalRefreshStatRecordDao">
+    <select id="findMostDistantCustomerKeywordTerminalRefreshStatRecord" resultType="java.lang.Integer">
+        SELECT
+          cktrsr.fUuid AS 'uuid'
+        FROM t_customer_keyword_terminal_refresh_stat_record cktrsr
+        WHERE DATE_SUB(CURDATE(), INTERVAL 6 DAY) = DATE(cktrsr.fCreateTime)
+        GROUP BY cktrsr.fUuid
+    </select>
+
+    <select id="getHistoryTerminalRefreshStatRecord" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria" resultType="com.keymanager.monitoring.vo.CustomerKeywordRefreshStatInfoVO">
+        SELECT
+            cktrsr.fGroup AS 'group',
+            cktrsr.fTotalKeywordCount AS 'totalKeywordCount',
+            cktrsr.fNeedOptimizeKeywordCount AS 'needOptimizeKeywordCount',
+            cktrsr.fInvalidKeywordCount AS 'invalidKeywordCount',
+            cktrsr.fZeroOptimizedCount AS 'zeroOptimizedCount',
+            cktrsr.fReachStandardKeywordCount AS 'reachStandardKeywordCount',
+            cktrsr.fTodaySubTotal AS 'todaySubTotal',
+            cktrsr.fTotalOptimizeCount AS 'totalOptimizeCount',
+            cktrsr.fTotalOptimizedCount AS 'totalOptimizedCount',
+            cktrsr.fNeedOptimizeCount AS 'needOptimizeCount',
+            cktrsr.fQueryCount AS 'queryCount',
+            cktrsr.fTotalMachineCount AS 'totalMachineCount',
+            cktrsr.fUnworkMachineCount AS 'unworkMachineCount',
+            cktrsr.fMaxInvalidCount AS 'maxInvalidCount',
+            cktrsr.fIdleTotalMinutes AS 'idleTotalMinutes'
+        FROM t_customer_keyword_terminal_refresh_stat_record cktrsr
+        WHERE DATE_SUB(CURDATE(), INTERVAL #{customerKeywordRefreshStatInfoCriteria.dayNum} DAY) = DATE(cktrsr.fCreateTime)
+        AND cktrsr.fType = #{customerKeywordRefreshStatInfoCriteria.entryType}
+        AND cktrsr.fTerminalType = #{customerKeywordRefreshStatInfoCriteria.terminalType}
+        GROUP BY cktrsr.fUuid
+        ORDER BY cktrsr.fGroup
+    </select>
+</mapper>

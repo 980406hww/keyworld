@@ -7,11 +7,15 @@ function trimSearchCondition() {
     var searchRefreshStatInfoForm = $("#searchRefreshStatInfoForm");
     var groupName = searchRefreshStatInfoForm.find("#groupName").val();
     var customerName = searchRefreshStatInfoForm.find("#customerName").val();
+    var dayNum = searchRefreshStatInfoForm.find("#dayNum").val();
     if(groupName != "") {
         searchRefreshStatInfoForm.find("#groupName").val($.trim(groupName));
     }
     if(customerName != "") {
         searchRefreshStatInfoForm.find("#customerName").val($.trim(customerName));
+    }
+    if (dayNum != ""){
+        searchRefreshStatInfoForm.find("#dayNum").val(dayNum);
     }
 }
 function resetInvaidRefreshCount(groupName, customerName, fullMatchGroup, self){

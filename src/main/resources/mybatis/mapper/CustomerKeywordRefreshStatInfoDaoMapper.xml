@@ -4,6 +4,8 @@
     <select id="searchCustomerKeywordStatInfoVOs" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria" resultType="com.keymanager.monitoring.vo.CustomerKeywordRefreshStatInfoVO">
         SELECT
             ck.fOptimizeGroupName AS "group",
+            ck.fType AS "type",
+            ck.fTerminalType AS "terminalType",
             COUNT(1) AS "totalKeywordCount",
             SUM(IF(ck.fOptimizeRemainingCount > 0, 1, 0)) AS "needOptimizeKeywordCount",
             SUM(IF(ck.fInvalidRefreshCount > (#{customerKeywordRefreshStatInfoCriteria.configValue} - 1), 1, 0)) AS "invalidKeywordCount",
@@ -15,14 +17,14 @@
             SUM(ck.fOptimizeRemainingCount) AS "needOptimizeCount",
             SUM(ck.fQueryCount) AS "queryCount"
         FROM t_customer_keyword ck, t_customer c
-        WHERE ck.fType = #{customerKeywordRefreshStatInfoCriteria.entryType}
-        AND ck.fTerminalType = #{customerKeywordRefreshStatInfoCriteria.terminalType}
-        AND ck.fCustomerUuid = c.fUuid
+        WHERE ck.fCustomerUuid = c.fUuid
         AND ck.fStatus = 1
+        <if test="customerKeywordRefreshStatInfoCriteria.entryType!=null and customerKeywordRefreshStatInfoCriteria.entryType!=''">AND ck.fType = #{customerKeywordRefreshStatInfoCriteria.entryType}</if>
+        <if test="customerKeywordRefreshStatInfoCriteria.terminalType!=null and customerKeywordRefreshStatInfoCriteria.terminalType!=''">AND ck.fTerminalType = #{customerKeywordRefreshStatInfoCriteria.terminalType}</if>
         <if test="customerKeywordRefreshStatInfoCriteria.groupName!=null and customerKeywordRefreshStatInfoCriteria.groupName!=''">AND ck.fOptimizeGroupName like concat('%', #{customerKeywordRefreshStatInfoCriteria.groupName}, "%")</if>
         <if test="customerKeywordRefreshStatInfoCriteria.customerName!=null and customerKeywordRefreshStatInfoCriteria.customerName!=''">AND c.fContactPerson like concat('%', #{customerKeywordRefreshStatInfoCriteria.customerName}, "%")</if>
         <if test="customerKeywordRefreshStatInfoCriteria.userName!=null and customerKeywordRefreshStatInfoCriteria.userName!=''">AND c.fUserID = #{customerKeywordRefreshStatInfoCriteria.userName}</if>
-        GROUP BY ck.fOptimizeGroupName
+        GROUP BY ck.fOptimizeGroupName, ck.fType, ck.fTerminalType
         ORDER BY ck.fOptimizeGroupName
     </select>
 
