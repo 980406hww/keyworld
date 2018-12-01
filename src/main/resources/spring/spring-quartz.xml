@@ -292,7 +292,6 @@
 
 	<bean id="cronTriggerRefreshStatInfoSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject" ref="terminalRefreshStatInfoSchedule" />
-		<property name="targetObject" ref="autoTriggerDailyReportSchedule" />
 		<property name="targetMethod" value="runTask" />
 		<property name="concurrent" value="false" />
 	</bean>
