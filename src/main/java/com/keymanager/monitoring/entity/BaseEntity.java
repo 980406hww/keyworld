@@ -13,7 +13,7 @@ public class BaseEntity implements Serializable {
 	
 	@TableId(value = "fUuid", type= IdType.AUTO)
 	private Long uuid;
-	
+
 	@TableField(value = "fUpdateTime")
 	private Date updateTime;
 	

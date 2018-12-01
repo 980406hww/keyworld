@@ -28,16 +28,31 @@
           dr.fUpdateTime   AS 'updateTime',
           dr.fCreateTime   AS 'createTime'
         FROM t_daily_report dr
-        WHERE dr.fTerminalType = #{terminalType}
-            AND dr.fStatus = 'Completed'
-            AND DATE(dr.fCompleteTime) = CURRENT_DATE()
+        WHERE dr.fStatus = 'Completed'
+            AND dr.fCompleteTime > CURRENT_DATE()
     </select>
 
-    <select id="selectLastId" resultType="int">
+    <select id="selectLastId" resultType="long">
         select LAST_INSERT_ID()
     </select>
 
     <delete id="deleteDailyReportFromAWeekAgo">
         DELETE FROM t_daily_report WHERE fCreateTime &lt; DATE_SUB(CURDATE(), INTERVAL 7 DAY)
     </delete>
+
+    <select id="fetchDailyReportTriggeredInToday" resultType="com.keymanager.monitoring.entity.DailyReport">
+        SELECT
+          dr.fUuid         AS 'uuid',
+          dr.fTerminalType AS 'terminalType',
+          dr.fTriggerTime  AS 'triggerTime',
+          dr.fCompleteTime AS 'completeTime',
+          dr.fStatus       AS 'status',
+          dr.fReportPath   AS 'reportPath',
+          dr.fUpdateTime   AS 'updateTime',
+          dr.fCreateTime   AS 'createTime'
+        FROM t_daily_report dr
+        WHERE dr.fTriggerMode = #{triggerMode}
+        AND dr.fCreateTime > CURRENT_DATE()
+        limit 1
+    </select>
 </mapper>

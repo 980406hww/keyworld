@@ -11,7 +11,9 @@ public interface DailyReportDao extends BaseMapper<DailyReport> {
 
     List<DailyReport> searchCurrentDateCompletedReports(@Param("terminalType") String terminalType);
 
-    int selectLastId();
+    long selectLastId();
 
     void deleteDailyReportFromAWeekAgo();
+
+    DailyReport fetchDailyReportTriggeredInToday(@Param("triggerMode") String triggerMode);
 }

@@ -1,7 +1,5 @@
 package com.keymanager.monitoring.excel.operator;
 
-import com.keymanager.manager.CustomerManager;
-import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.CustomerKeyword;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
 import com.keymanager.monitoring.excel.definition.CustomerKeywordDailyReportDefinition;
@@ -75,7 +73,7 @@ public class CustomerKeywordDailyReportExcelWriter {
 		return new File(path);
 	}
 
-	private void writeDailyDetail(List<CustomerKeyword> views) throws Exception {
+	private double writeDailyDetail(List<CustomerKeyword> views) throws Exception {
 		if(!Utils.isEmpty(views)){
 			String sheetName = Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "";
 			createOrReplaceSheet(sheetName, writer.getNumberOfSheets());
@@ -102,7 +100,10 @@ public class CustomerKeywordDailyReportExcelWriter {
 			writer.setColumnView(CustomerKeywordDailyReportDefinition.TodayPrice.getColumnIndex(), todayPriceWidth + 6);
 
 			writeDailySubTotal(rowIndex);
+
+			return totalFee;
 		}
+		return 0;
 	}
 
 	private void writeDailyTitle(int rowIndex) throws ExcelWriteException{
@@ -231,19 +232,19 @@ public class CustomerKeywordDailyReportExcelWriter {
 		writer.addLabelCell(CustomerKeywordDailyReportDefinition.Index.getColumnIndex(), rowIndex, view.getCurrentIndexCount() == null ? 0 : view.getCurrentIndexCount());
 	}
 
-	public void writeDataToExcel(List<CustomerKeyword> views, String contactPerson, String terminalType) throws Exception {
-		writeDailyDetail(views);
+	public double writeDataToExcel(List<CustomerKeyword> views, String loginName, String contactPerson, String terminalType) throws Exception {
+		double todayFee = writeDailyDetail(views);
 		writeMonthSummary(views);
 
 		saveAs(dailyReportFileName);
 		if(dailyReportUuid > 0) {
-			String fileName = "dailyreport/" + dailyReportUuid + "/" + contactPerson + "_" + Utils.formatDatetime(Utils
-					.getCurrentTimestamp(), "yyyy.MM.dd");
+			String fileName = "dailyreport/" + dailyReportUuid + "/" + loginName + "/" + contactPerson;
 			if(TerminalTypeEnum.Phone.name().equals(terminalType)){
 				fileName = fileName + "(Mobile)";
 			}
 			fileName = fileName + ".xls";
 			FileUtil.copyFile(webRootPath + dailyReportFileName, webRootPath + fileName, true);
 		}
+		return todayFee;
 	}
 }

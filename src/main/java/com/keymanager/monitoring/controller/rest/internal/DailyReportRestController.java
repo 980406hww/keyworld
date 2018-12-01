@@ -100,7 +100,7 @@ public class DailyReportRestController extends SpringMVCBaseController {
 
 			CustomerKeywordDailyReportExcelWriter excelWriter = new CustomerKeywordDailyReportExcelWriter(terminalType, customerUuid + "", 0);
 			Customer customer = customerService.selectById(customerUuid);
-			excelWriter.writeDataToExcel(customerKeywords, customer.getContactPerson(), terminalType);
+			excelWriter.writeDataToExcel(customerKeywords, customer.getExternalAccount(), customer.getContactPerson(), terminalType);
 
 			FileInputStream fis = null;
 			BufferedInputStream bis = null;

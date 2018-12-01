@@ -21,6 +21,9 @@ public class DailyReport extends BaseEntity{
 	@TableField(value = "fReportPath")
 	private String reportPath;
 
+	@TableField(value = "fTriggerMode")
+	private String triggerMode;
+
 	@TableField(value = "fStatus")
 	private String status;
 
@@ -62,5 +65,13 @@ public class DailyReport extends BaseEntity{
 
 	public void setReportPath(String reportPath) {
 		this.reportPath = reportPath;
+	}
+
+	public String getTriggerMode() {
+		return triggerMode;
+	}
+
+	public void setTriggerMode(String triggerMode) {
+		this.triggerMode = triggerMode;
 	}
 }

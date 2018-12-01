@@ -6,6 +6,8 @@
           dri.fUuid            AS 'uuid',
           dri.fDailyReportUuid AS 'dailyReportUuid',
           dri.fCustomerUuid    AS 'customerUuid',
+          dri.fTerminalType    AS 'terminalType',
+          dri.fTodayFee        AS 'todayFee',
           dri.fStatus          AS 'status',
           dri.fUpdateTime      AS 'updateTime',
           dri.fCreateTime      AS 'createTime'
@@ -18,4 +20,13 @@
     <delete id="deleteDailyReportItemFromAWeekAgo">
         DELETE FROM t_daily_report_item WHERE fCreateTime &lt; DATE_SUB(CURDATE(), INTERVAL 7 DAY)
     </delete>
+
+    <select id="searchDailyReportItems" resultType="com.keymanager.monitoring.entity.DailyReportItem">
+        SELECT
+          dri.fCustomerUuid    AS 'customerUuid',
+          dri.fTerminalType    AS 'terminalType',
+          dri.fTodayFee        AS 'todayFee'
+        FROM t_daily_report_item dri
+        WHERE dri.fDailyReportUuid = #{dailyReportUuid}
+    </select>
 </mapper>

@@ -4,23 +4,24 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.toolkit.StringUtils;
 import com.keymanager.monitoring.dao.DailyReportDao;
 import com.keymanager.monitoring.entity.Config;
+import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.DailyReport;
 import com.keymanager.monitoring.entity.DailyReportItem;
 import com.keymanager.monitoring.enums.DailyReportStatusEnum;
+import com.keymanager.monitoring.enums.DailyReportTriggerModeEnum;
+import com.keymanager.monitoring.enums.TerminalTypeEnum;
+import com.keymanager.monitoring.excel.operator.CustomerKeywordDailyReportSummaryExcelWriter;
 import com.keymanager.util.Constants;
 import com.keymanager.util.FileUtil;
 import com.keymanager.util.Utils;
 import com.keymanager.util.ZipCompressor;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport> {
@@ -33,23 +34,55 @@ public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport>
 	private ConfigService configService;
 
 	@Autowired
+	private CustomerService customerService;
+
+	@Autowired
+	private CaptureRankJobService captureRankJobService;
+
+	@Autowired
 	private DailyReportItemService dailyReportItemService;
 
+	public void autoTriggerDailyReport(){
+		if(!captureRankJobService.hasCaptureRankJob() && dailyReportDao.fetchDailyReportTriggeredInToday(DailyReportTriggerModeEnum.Auto.name()) == null){
+			long dailyReportUuid = createDailyReport(null, DailyReportTriggerModeEnum.Auto.name());
+			Config pcDailyReportCustomerUuids = configService.getConfig(Constants.CONFIG_TYPE_DAILY_REPORT, TerminalTypeEnum.PC.name());
+			if(StringUtils.isNotEmpty(pcDailyReportCustomerUuids.getValue())){
+				String [] customerUuidArray = pcDailyReportCustomerUuids.getValue().trim().split(",");
+				for(String customerUuid : customerUuidArray){
+					dailyReportItemService.createDailyReportItem(dailyReportUuid, TerminalTypeEnum.PC.name(), Integer.parseInt(customerUuid));
+				}
+			}
+
+			Config phoneDailyReportCustomerUuids = configService.getConfig(Constants.CONFIG_TYPE_DAILY_REPORT, TerminalTypeEnum.Phone.name());
+			if(StringUtils.isNotEmpty(phoneDailyReportCustomerUuids.getValue())){
+				String [] customerUuidArray = phoneDailyReportCustomerUuids.getValue().trim().split(",");
+				for(String customerUuid : customerUuidArray){
+					dailyReportItemService.createDailyReportItem(dailyReportUuid, TerminalTypeEnum.Phone.name(), Integer.parseInt(customerUuid));
+				}
+			}
+		}
+	}
+
 	public void triggerReportGeneration(String terminalType, String customerUuids){
+		long dailyReportUuid = createDailyReport(terminalType, DailyReportTriggerModeEnum.Manual.name());
+		if(StringUtils.isNotEmpty(customerUuids)){
+			String [] customerUuidArray = customerUuids.trim().split(",");
+			for(String customerUuid : customerUuidArray){
+				dailyReportItemService.createDailyReportItem(dailyReportUuid, terminalType, Integer.parseInt(customerUuid));
+			}
+		}
+	}
+
+	private long createDailyReport(String terminalType, String triggerMode) {
 		DailyReport dailyReport = new DailyReport();
 		dailyReport.setTriggerTime(new Date());
 		dailyReport.setCompleteTime(null);
+		dailyReport.setTriggerMode(triggerMode);
 		dailyReport.setTerminalType(terminalType);
 		dailyReport.setStatus(DailyReportStatusEnum.New.name());
 		dailyReport.setCreateTime(new Date());
 		dailyReportDao.insert(dailyReport);
-		if(StringUtils.isNotEmpty(customerUuids)){
-			String [] customerUuidArray = customerUuids.trim().split(",");
-			int dailyReportUuid = dailyReportDao.selectLastId();
-			for(String customerUuid : customerUuidArray){
-				dailyReportItemService.createDailyReportItem(dailyReportUuid, Integer.parseInt(customerUuid));
-			}
-		}
+		return dailyReportDao.selectLastId();
 	}
 
 	public void generateReport() throws Exception {
@@ -71,13 +104,24 @@ public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport>
 		}
 		DailyReportItem dailyReportItem = dailyReportItemService.findDailyReportItem(dailyReport.getUuid(), DailyReportStatusEnum.New.name());
 		if(dailyReportItem != null){
-			dailyReportItemService.generateDailyReport(dailyReport.getTerminalType(), dailyReport.getUuid(), dailyReportItem.getUuid());
+			dailyReportItemService.generateDailyReport(dailyReport.getUuid(), dailyReportItem.getUuid());
 		}else{
 			dailyReport.setStatus(DailyReportStatusEnum.Completed.name());
 			dailyReport.setCompleteTime(new Date());
-
+			Map<String, Map<String, String>> externalAccountAndSummaryFeeMap = generateDailyReportSummaryData(dailyReport.getUuid());
 			String path = Utils.getWebRootPath();
-			String zipFileName = String.format("/dailyreport/DailyReport_%s_%d.zip", Utils.formatDatetime(Utils.getCurrentTimestamp(),
+			for(String externalAccount : externalAccountAndSummaryFeeMap.keySet()){
+				Config config = configService.getConfig(Constants.DAILY_REPORT_PERCENTAGE, externalAccount);
+				CustomerKeywordDailyReportSummaryExcelWriter excelWriter = new CustomerKeywordDailyReportSummaryExcelWriter(dailyReport.getUuid(), externalAccount);
+				excelWriter.writeDailySummaryRow(externalAccountAndSummaryFeeMap.get(externalAccount), config == null ? 1d : Double.parseDouble(config.getValue()));
+				excelWriter.writeDataToExcel(externalAccount);
+				String dailyReportFolder = String.format("%sdailyreport/%d/", path, dailyReport.getUuid());
+				String loginUserReportFolder = dailyReportFolder + externalAccount + "/";
+				ZipCompressor.createEncryptionZip(loginUserReportFolder, dailyReportFolder + String.format("%s_%s.zip", externalAccount, Utils.formatDatetime(Utils.getCurrentTimestamp(),
+						"yyyy.MM.dd")), externalAccount + Utils.getCurrentDate());
+				FileUtil.delFolder(loginUserReportFolder);
+			}
+			String zipFileName = String.format("/dailyreport/TotalReport_%s_%d.zip", Utils.formatDatetime(Utils.getCurrentTimestamp(),
 					"yyyy.MM.dd"), dailyReport.getUuid());
 			String reportFolder = String.format("%sdailyreport/%d/", path, dailyReport.getUuid());
 
@@ -103,6 +147,21 @@ public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport>
 				FileUtil.copyFile(srcFilePath, dailyReportFilePath, true);
 			}
 		}
+	}
+
+	private Map<String, Map<String, String>> generateDailyReportSummaryData(long dailyReportUuid){
+		List<DailyReportItem> dailyReportItems = dailyReportItemService.searchDailyReportItems(dailyReportUuid);
+		Map<String, Map<String, String>> externalAccountAndSummaryFeeMap = new HashMap<String, Map<String, String>>();
+		for(DailyReportItem dailyReportItem : dailyReportItems){
+			Customer customer = customerService.getCustomer(dailyReportItem.getCustomerUuid());
+			Map<String, String> summaryFeeMap = externalAccountAndSummaryFeeMap.get(customer.getExternalAccount());
+			if(summaryFeeMap == null){
+				summaryFeeMap = new HashMap<String, String>();
+				externalAccountAndSummaryFeeMap.put(customer.getExternalAccount(), summaryFeeMap);
+			}
+			summaryFeeMap.put(customer.getSearchEngine() + "_" + dailyReportItem.getTerminalType(), dailyReportItem.getTodayFee() + "");
+		}
+		return externalAccountAndSummaryFeeMap;
 	}
 
 	public void deleteDailyReportFromAWeekAgo() {
