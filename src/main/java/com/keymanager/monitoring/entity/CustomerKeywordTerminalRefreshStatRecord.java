@@ -13,7 +13,7 @@ import java.util.Date;
  * @Author zhoukai
  * @Date 2018/11/28 17:32
  **/
-@TableName(value = "t_customer_keyword_terminal_refresh_stat_record")
+@TableName(value = "t_ck_refresh_stat_record")
 public class CustomerKeywordTerminalRefreshStatRecord implements Serializable{
 
     private static final long serialVersionUID = 3922222059082125030L;
@@ -72,8 +72,8 @@ public class CustomerKeywordTerminalRefreshStatRecord implements Serializable{
     @TableField(value = "fIdleTotalMinutes")
     protected long idleTotalMinutes;
 
-    @TableField(value = "fCreateTime")
-    private Date createTime;
+    @TableField(value = "fCreateDate")
+    private Date createDate;
 
     public Long getUuid () {
         return uuid;
@@ -227,12 +227,12 @@ public class CustomerKeywordTerminalRefreshStatRecord implements Serializable{
         return idleTotalMinutes;
     }
 
-    public Date getCreateTime () {
-        return createTime;
+    public Date getCreateDate () {
+        return createDate;
     }
 
-    public void setCreateTime (Date createTime) {
-        this.createTime = createTime;
+    public void setCreateDate (Date createDate) {
+        this.createDate = createDate;
     }
 
     public void setIdleTotalMinutes(long idleTotalMinutes) {

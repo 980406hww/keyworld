@@ -162,6 +162,7 @@ public class CustomerKeywordRefreshStatInfoService extends ServiceImpl<CustomerK
         }
         List<CustomerKeywordTerminalRefreshStatRecord> refreshStatInfoRecords = generateAllCustomerKeywordStatInfo(new CustomerKeywordRefreshStatInfoCriteria());
         for (CustomerKeywordTerminalRefreshStatRecord refreshStatInfoRecord : refreshStatInfoRecords) {
+            refreshStatInfoRecord.setCreateDate(new Date());
             customerKeywordTerminalRefreshStatRecordDao.insert(refreshStatInfoRecord);
         }
     }

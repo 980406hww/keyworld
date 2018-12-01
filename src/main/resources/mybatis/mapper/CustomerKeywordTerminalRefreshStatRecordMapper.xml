@@ -3,34 +3,34 @@
 <mapper namespace="com.keymanager.monitoring.dao.CustomerKeywordTerminalRefreshStatRecordDao">
     <select id="findMostDistantCustomerKeywordTerminalRefreshStatRecord" resultType="java.lang.Integer">
         SELECT
-          cktrsr.fUuid AS 'uuid'
-        FROM t_customer_keyword_terminal_refresh_stat_record cktrsr
-        WHERE DATE_SUB(CURDATE(), INTERVAL 6 DAY) = DATE(cktrsr.fCreateTime)
-        GROUP BY cktrsr.fUuid
+          ckrsr.fUuid AS 'uuid'
+        FROM t_ck_refresh_stat_record ckrsr
+        WHERE DATE_SUB(CURDATE(), INTERVAL 6 DAY) = ckrsr.fCreateDate
+        GROUP BY ckrsr.fUuid
     </select>
 
     <select id="getHistoryTerminalRefreshStatRecord" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria" resultType="com.keymanager.monitoring.entity.CustomerKeywordTerminalRefreshStatRecord">
         SELECT
-            cktrsr.fGroup AS 'group',
-            cktrsr.fTotalKeywordCount AS 'totalKeywordCount',
-            cktrsr.fNeedOptimizeKeywordCount AS 'needOptimizeKeywordCount',
-            cktrsr.fInvalidKeywordCount AS 'invalidKeywordCount',
-            cktrsr.fZeroOptimizedCount AS 'zeroOptimizedCount',
-            cktrsr.fReachStandardKeywordCount AS 'reachStandardKeywordCount',
-            cktrsr.fTodaySubTotal AS 'todaySubTotal',
-            cktrsr.fTotalOptimizeCount AS 'totalOptimizeCount',
-            cktrsr.fTotalOptimizedCount AS 'totalOptimizedCount',
-            cktrsr.fNeedOptimizeCount AS 'needOptimizeCount',
-            cktrsr.fQueryCount AS 'queryCount',
-            cktrsr.fTotalMachineCount AS 'totalMachineCount',
-            cktrsr.fUnworkMachineCount AS 'unworkMachineCount',
-            cktrsr.fMaxInvalidCount AS 'maxInvalidCount',
-            cktrsr.fIdleTotalMinutes AS 'idleTotalMinutes'
-        FROM t_customer_keyword_terminal_refresh_stat_record cktrsr
-        WHERE DATE_SUB(CURDATE(), INTERVAL #{customerKeywordRefreshStatInfoCriteria.dayNum} DAY) = DATE(cktrsr.fCreateTime)
-        AND cktrsr.fType = #{customerKeywordRefreshStatInfoCriteria.entryType}
-        AND cktrsr.fTerminalType = #{customerKeywordRefreshStatInfoCriteria.terminalType}
-        GROUP BY cktrsr.fUuid
-        ORDER BY cktrsr.fGroup
+            ckrsr.fGroup AS 'group',
+            ckrsr.fTotalKeywordCount AS 'totalKeywordCount',
+            ckrsr.fNeedOptimizeKeywordCount AS 'needOptimizeKeywordCount',
+            ckrsr.fInvalidKeywordCount AS 'invalidKeywordCount',
+            ckrsr.fZeroOptimizedCount AS 'zeroOptimizedCount',
+            ckrsr.fReachStandardKeywordCount AS 'reachStandardKeywordCount',
+            ckrsr.fTodaySubTotal AS 'todaySubTotal',
+            ckrsr.fTotalOptimizeCount AS 'totalOptimizeCount',
+            ckrsr.fTotalOptimizedCount AS 'totalOptimizedCount',
+            ckrsr.fNeedOptimizeCount AS 'needOptimizeCount',
+            ckrsr.fQueryCount AS 'queryCount',
+            ckrsr.fTotalMachineCount AS 'totalMachineCount',
+            ckrsr.fUnworkMachineCount AS 'unworkMachineCount',
+            ckrsr.fMaxInvalidCount AS 'maxInvalidCount',
+            ckrsr.fIdleTotalMinutes AS 'idleTotalMinutes'
+        FROM t_ck_refresh_stat_record ckrsr
+        WHERE DATE_SUB(CURDATE(), INTERVAL #{customerKeywordRefreshStatInfoCriteria.dayNum} DAY) = ckrsr.fCreateDate
+        AND ckrsr.fType = #{customerKeywordRefreshStatInfoCriteria.entryType}
+        AND ckrsr.fTerminalType = #{customerKeywordRefreshStatInfoCriteria.terminalType}
+        GROUP BY ckrsr.fUuid
+        ORDER BY ckrsr.fGroup
     </select>
 </mapper>
