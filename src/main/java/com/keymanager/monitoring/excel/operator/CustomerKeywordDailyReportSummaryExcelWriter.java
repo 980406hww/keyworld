@@ -73,13 +73,13 @@ public class CustomerKeywordDailyReportSummaryExcelWriter {
 			writer.addLabelCell(CustomerKeywordDailyReportSummaryDefinition.SogouPhone.getColumnIndex(), rowIndex, summaryMap.get("搜狗_Phone"));
 			total = total + Double.parseDouble(summaryMap.get("搜狗_Phone"));
 		}
-		if(summaryMap.get("360") != null) {
-			writer.addLabelCell(CustomerKeywordDailyReportSummaryDefinition.So.getColumnIndex(), rowIndex, summaryMap.get("360"));
-			total = total + Double.parseDouble(summaryMap.get("360"));
+		if(summaryMap.get("360_PC") != null) {
+			writer.addLabelCell(CustomerKeywordDailyReportSummaryDefinition.So.getColumnIndex(), rowIndex, summaryMap.get("360_PC"));
+			total = total + Double.parseDouble(summaryMap.get("360_PC"));
 		}
-		if(summaryMap.get("UC") != null) {
-			writer.addLabelCell(CustomerKeywordDailyReportSummaryDefinition.UC.getColumnIndex(), rowIndex, summaryMap.get("UC"));
-			total = total + Double.parseDouble(summaryMap.get("UC"));
+		if(summaryMap.get("UC_Phone") != null) {
+			writer.addLabelCell(CustomerKeywordDailyReportSummaryDefinition.UC.getColumnIndex(), rowIndex, summaryMap.get("UC_Phone"));
+			total = total + Double.parseDouble(summaryMap.get("UC_Phone"));
 		}
 		writer.addLabelCell(CustomerKeywordDailyReportSummaryDefinition.TodayFee.getColumnIndex(), rowIndex, total);
 
@@ -94,7 +94,7 @@ public class CustomerKeywordDailyReportSummaryExcelWriter {
 
 	public void writeDataToExcel(String externalAccount) throws Exception {
 		saveAs(dailyReportFileName);
-		String fileName = "dailyreport/" + dailyReportUuid + "/" + externalAccount + "/" + externalAccount + "_小计.xls";
+		String fileName = "dailyreport/" + dailyReportUuid + "/" + externalAccount + "/" + externalAccount + "_Total.xls";
 		FileUtil.copyFile(webRootPath + dailyReportFileName, webRootPath + fileName, true);
 	}
 }

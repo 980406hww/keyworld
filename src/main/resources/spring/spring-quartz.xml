@@ -93,7 +93,7 @@
 
 	<bean id="cronTriggerGenerateDailyReport" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="cronJobDetailGenerateDailyReport" />
-		<property name="cronExpression" value="1/30 * * * * ?" />
+		<property name="cronExpression" value="1/5 * * * * ?" />
 	</bean>
 
 	<bean id="cronJobDetailGenerateDailyReport" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
