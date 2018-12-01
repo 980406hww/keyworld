@@ -3,7 +3,6 @@ package com.keymanager.monitoring.service;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.util.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,7 +12,7 @@ import java.util.Map;
 
 import com.keymanager.monitoring.entity.ClientUpgrade;
 import com.keymanager.monitoring.vo.CookieVO;
-import com.keymanager.monitoring.vo.CustomerKeywordRefreshStatInfoVO;
+import com.keymanager.monitoring.entity.CustomerKeywordTerminalRefreshStatRecord;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,7 +95,7 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
         }
     }
 
-    public List<CustomerKeywordRefreshStatInfoVO> searchClientStatusForRefreshStat(CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria) {
+    public List<CustomerKeywordTerminalRefreshStatRecord> searchClientStatusForRefreshStat(CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria) {
         return clientStatusDao.searchClientStatusForRefreshStat(customerKeywordRefreshStatInfoCriteria);
     }
 

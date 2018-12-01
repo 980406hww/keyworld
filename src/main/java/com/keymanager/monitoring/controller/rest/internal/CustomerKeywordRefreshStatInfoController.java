@@ -2,16 +2,14 @@ package com.keymanager.monitoring.controller.rest.internal;
 
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
-import com.keymanager.monitoring.entity.UserInfo;
 import com.keymanager.monitoring.service.CustomerKeywordRefreshStatInfoService;
 import com.keymanager.monitoring.service.CustomerKeywordTerminalRefreshStatRecordService;
 import com.keymanager.monitoring.service.IUserInfoService;
 import com.keymanager.monitoring.service.UserRoleService;
-import com.keymanager.monitoring.vo.CustomerKeywordRefreshStatInfoVO;
+import com.keymanager.monitoring.entity.CustomerKeywordTerminalRefreshStatRecord;
 import com.keymanager.util.FileUtil;
 import com.keymanager.util.TerminalTypeMapping;
 import com.keymanager.util.Utils;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,14 +79,14 @@ public class CustomerKeywordRefreshStatInfoController extends SpringMVCBaseContr
         if(!isDepartmentManager) {
             refreshStatInfoCriteria.setUserName(userName);
         }
-        List<CustomerKeywordRefreshStatInfoVO> refreshStatInfoVOs;
+        List<CustomerKeywordTerminalRefreshStatRecord> refreshStatInfos;
         if (refreshStatInfoCriteria.getDayNum() > 0) {
-            refreshStatInfoVOs = customerKeywordTerminalRefreshStatRecordService.getHistoryTerminalRefreshStatRecord(refreshStatInfoCriteria);
+            refreshStatInfos = customerKeywordTerminalRefreshStatRecordService.getHistoryTerminalRefreshStatRecord(refreshStatInfoCriteria);
         } else {
-            refreshStatInfoVOs = customerKeywordRefreshStatInfoService.generateCustomerKeywordStatInfo(refreshStatInfoCriteria);
+            refreshStatInfos = customerKeywordRefreshStatInfoService.generateCustomerKeywordStatInfo(refreshStatInfoCriteria);
         }
         modelAndView.addObject("refreshStatInfoCriteria", refreshStatInfoCriteria);
-        modelAndView.addObject("refreshStatInfoVOs", refreshStatInfoVOs);
+        modelAndView.addObject("refreshStatInfos", refreshStatInfos);
         return modelAndView;
     }
 

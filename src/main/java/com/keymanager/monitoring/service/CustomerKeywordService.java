@@ -1132,9 +1132,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         List<Long> invalidCustomerKeywords = customerKeywordInvalidCountLogService.findInvalidCustomerKeyword();
         do {
             List<Long> subCustomerKeywordUuids = invalidCustomerKeywords.subList(0, (invalidCustomerKeywords.size() > 500) ? 500 : invalidCustomerKeywords.size());
-            customerKeywordDao.deleteBatchIds(subCustomerKeywordUuids);
-            logger.info("controlCustomerKeywordStatus:" + subCustomerKeywordUuids.toString());
-            invalidCustomerKeywords.removeAll(subCustomerKeywordUuids);
+            if (CollectionUtils.isNotEmpty(subCustomerKeywordUuids)) {
+                customerKeywordDao.deleteBatchIds(subCustomerKeywordUuids);
+                logger.info("controlCustomerKeywordStatus:" + subCustomerKeywordUuids.toString());
+                invalidCustomerKeywords.removeAll(subCustomerKeywordUuids);
+            }
         } while (invalidCustomerKeywords.size() > 0);
     }
 

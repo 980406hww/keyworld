@@ -74,7 +74,7 @@
 </div>
 	<div id="showRefreshStatInfoDiv">
 		<table id="showRefreshStatInfoTable" width=100%">
-			<c:forEach items="${refreshStatInfoVOs}" var="refreshStatInfoVO" varStatus="tr">
+			<c:forEach items="${refreshStatInfos}" var="refreshStatInfo" varStatus="tr">
 				<c:choose>
 					<c:when test="${tr.count % 2 != 0}">
 						<tr onmouseover="doOver(this);" onmouseout="doOut(this);" style="background-color: #eeeeee;" height="30">
@@ -83,49 +83,49 @@
 						<tr onmouseover="doOver(this);" onmouseout="doOut(this);" height="30">
 					</c:otherwise>
 				</c:choose>
-				<td width=30 align="center"><input type="checkbox" name="uuid" value="${refreshStatInfoVO.group}" onclick="decideSelectAll()"/></td>
-				<td width=100><a href="javascript:searchCustomerKeywords('${refreshStatInfoVO.group}')">${refreshStatInfoVO.group}</a></td>
-				<td width=80>${refreshStatInfoVO.totalKeywordCount}</td>
+				<td width=30 align="center"><input type="checkbox" name="uuid" value="${refreshStatInfo.group}" onclick="decideSelectAll()"/></td>
+				<td width=100><a href="javascript:searchCustomerKeywords('${refreshStatInfo.group}')">${refreshStatInfo.group}</a></td>
+				<td width=80>${refreshStatInfo.totalKeywordCount}</td>
 				<td width=80>
-					<c:if test="${refreshStatInfoVO.reachStandardKeywordCount > 0}">
+					<c:if test="${refreshStatInfo.reachStandardKeywordCount > 0}">
 						<c:choose>
-							<c:when test="${'总计' eq refreshStatInfoVO.group}">
-								<a href="javascript:findKeyword(null , null)">${refreshStatInfoVO.reachStandardKeywordCount}(${refreshStatInfoVO.todaySubTotal})</a>
+							<c:when test="${'总计' eq refreshStatInfo.group}">
+								<a href="javascript:findKeyword(null , null)">${refreshStatInfo.reachStandardKeywordCount}(${refreshStatInfo.todaySubTotal})</a>
 							</c:when>
 							<c:otherwise>
-								<a href="javascript:findKeyword('${refreshStatInfoVO.group}', null)">${refreshStatInfoVO.reachStandardKeywordCount}(${refreshStatInfoVO.todaySubTotal})</a>
+								<a href="javascript:findKeyword('${refreshStatInfo.group}', null)">${refreshStatInfo.reachStandardKeywordCount}(${refreshStatInfo.todaySubTotal})</a>
 							</c:otherwise>
 						</c:choose>
 					</c:if>
 				</td>
 				<td width=80>
-					<c:if test="${refreshStatInfoVO.reachStandardPercentage > 0}">
-						<fmt:formatNumber value="${refreshStatInfoVO.reachStandardPercentage}" pattern="#.##" minFractionDigits="2"/>%
+					<c:if test="${refreshStatInfo.reachStandardPercentage > 0}">
+						<fmt:formatNumber value="${refreshStatInfo.reachStandardPercentage}" pattern="#.##" minFractionDigits="2"/>%
 					</c:if>
 				</td>
-				<td width=80>${refreshStatInfoVO.zeroOptimizedCount > 0 ? refreshStatInfoVO.zeroOptimizedCount : ""}</td>
-				<td width=80>${refreshStatInfoVO.needOptimizeKeywordCount > 0 ? refreshStatInfoVO.needOptimizeKeywordCount : ""}</td>
+				<td width=80>${refreshStatInfo.zeroOptimizedCount > 0 ? refreshStatInfo.zeroOptimizedCount : ""}</td>
+				<td width=80>${refreshStatInfo.needOptimizeKeywordCount > 0 ? refreshStatInfo.needOptimizeKeywordCount : ""}</td>
 				<td width=80>
-					<c:if test="${refreshStatInfoVO.invalidKeywordCount > 0}">
+					<c:if test="${refreshStatInfo.invalidKeywordCount > 0}">
 						<c:choose>
-							<c:when test="${'总计' eq refreshStatInfoVO.group}">
-								<a href="javascript:findKeyword(null, '${refreshStatInfoVO.maxInvalidCount}')">${refreshStatInfoVO.invalidKeywordCount}</a>
+							<c:when test="${'总计' eq refreshStatInfo.group}">
+								<a href="javascript:findKeyword(null, '${refreshStatInfo.maxInvalidCount}')">${refreshStatInfo.invalidKeywordCount}</a>
 							</c:when>
 							<c:otherwise>
-								<a href="javascript:findKeyword('${refreshStatInfoVO.group}', '${refreshStatInfoVO.maxInvalidCount}')">${refreshStatInfoVO.invalidKeywordCount}</a>
+								<a href="javascript:findKeyword('${refreshStatInfo.group}', '${refreshStatInfo.maxInvalidCount}')">${refreshStatInfo.invalidKeywordCount}</a>
 							</c:otherwise>
 						</c:choose>
 					</c:if>
 					<shiro:hasPermission name="/internal/customerKeyword/resetInvalidRefreshCount">
-						<c:if test="${refreshStatInfoVO.invalidKeywordCount > 0}">
+						<c:if test="${refreshStatInfo.invalidKeywordCount > 0}">
 							<c:choose>
-								<c:when test="${'总计' eq refreshStatInfoVO.group}">
+								<c:when test="${'总计' eq refreshStatInfo.group}">
 									<a target="_blank"
 									   href="javascript:resetInvaidRefreshCount('${refreshStatInfoCriteria.groupName == null ? "" : refreshStatInfoCriteria.groupName}', '${refreshStatInfoCriteria.customerName == null ? "" : refreshStatInfoCriteria.customerName}', false, this)">重置</a>
 								</c:when>
 								<c:otherwise>
 									<a target="_blank"
-									   href="javascript:resetInvaidRefreshCount('${refreshStatInfoVO.group}', '${refreshStatInfoCriteria.customerName == null ? "" : refreshStatInfoCriteria.customerName}', true, this)">重置</a>
+									   href="javascript:resetInvaidRefreshCount('${refreshStatInfo.group}', '${refreshStatInfoCriteria.customerName == null ? "" : refreshStatInfoCriteria.customerName}', true, this)">重置</a>
 								</c:otherwise>
 							</c:choose>
 						</c:if>
@@ -133,50 +133,50 @@
 				</td>
 
 				<td width=80>
-					<font color="${refreshStatInfoVO.invalidKeywordPercentage > 20 ? "red" : (refreshStatInfoVO.invalidKeywordPercentage > 10 ? "purple" : "")}">
-						<c:if test="${refreshStatInfoVO.invalidKeywordPercentage > 0}">
-							<fmt:formatNumber value="${refreshStatInfoVO.invalidKeywordPercentage}" pattern="#.##"
+					<font color="${refreshStatInfo.invalidKeywordPercentage > 20 ? "red" : (refreshStatInfo.invalidKeywordPercentage > 10 ? "purple" : "")}">
+						<c:if test="${refreshStatInfo.invalidKeywordPercentage > 0}">
+							<fmt:formatNumber value="${refreshStatInfo.invalidKeywordPercentage}" pattern="#.##"
 											  minFractionDigits="2"/>%
 						</c:if>
 					</font>
 				</td>
-				<td width=60>${refreshStatInfoVO.totalOptimizeCount > 0 ? refreshStatInfoVO.totalOptimizeCount : ""}</td>
-				<td width=80>${refreshStatInfoVO.totalOptimizedCount > 0 ? refreshStatInfoVO.totalOptimizedCount : ""}</td>
-				<td width=80>${refreshStatInfoVO.needOptimizeCount > 0 ? refreshStatInfoVO.needOptimizeCount : ""}</td>
+				<td width=60>${refreshStatInfo.totalOptimizeCount > 0 ? refreshStatInfo.totalOptimizeCount : ""}</td>
+				<td width=80>${refreshStatInfo.totalOptimizedCount > 0 ? refreshStatInfo.totalOptimizedCount : ""}</td>
+				<td width=80>${refreshStatInfo.needOptimizeCount > 0 ? refreshStatInfo.needOptimizeCount : ""}</td>
 				<td width=80>
-					<c:if test="${refreshStatInfoVO.totalOptimizedCount > 0}">
-						<c:set var="avgOptimizedCount" value="${refreshStatInfoVO.totalOptimizedCount / refreshStatInfoVO.totalKeywordCount}"/>
+					<c:if test="${refreshStatInfo.totalOptimizedCount > 0}">
+						<c:set var="avgOptimizedCount" value="${refreshStatInfo.totalOptimizedCount / refreshStatInfo.totalKeywordCount}"/>
 						<font color="${avgOptimizedCount <= 30 ? "red" : "black"}">
 							<fmt:formatNumber value="${avgOptimizedCount}" pattern="#.##" minFractionDigits="2"/>
 						</font>
 					</c:if>
 				</td>
-				<td width=80>${refreshStatInfoVO.queryCount > 0 ? refreshStatInfoVO.queryCount : ""}</td>
+				<td width=80>${refreshStatInfo.queryCount > 0 ? refreshStatInfo.queryCount : ""}</td>
 				<td width=80>
-					<font color="${refreshStatInfoVO.invalidOptimizePercentage > 20 ? "red" : (refreshStatInfoVO.invalidOptimizePercentage > 10 ? "purple" : "")}">
-						<c:if test="${refreshStatInfoVO.invalidOptimizePercentage > 0}">
-							<fmt:formatNumber value="${refreshStatInfoVO.invalidOptimizePercentage}" pattern="#.##"
+					<font color="${refreshStatInfo.invalidOptimizePercentage > 20 ? "red" : (refreshStatInfo.invalidOptimizePercentage > 10 ? "purple" : "")}">
+						<c:if test="${refreshStatInfo.invalidOptimizePercentage > 0}">
+							<fmt:formatNumber value="${refreshStatInfo.invalidOptimizePercentage}" pattern="#.##"
 											  minFractionDigits="2"/>%
 						</c:if>
 					</font>
 				</td>
-				<td width=50>${refreshStatInfoVO.totalMachineCount > 0 ? refreshStatInfoVO.totalMachineCount : ""}</td>
+				<td width=50>${refreshStatInfo.totalMachineCount > 0 ? refreshStatInfo.totalMachineCount : ""}</td>
 				<td width=50>
-					<c:if test="${refreshStatInfoVO.idlePercentage > 0}">
-						<fmt:formatNumber value="${refreshStatInfoVO.idlePercentage}" pattern="#.##"
+					<c:if test="${refreshStatInfo.idlePercentage > 0}">
+						<fmt:formatNumber value="${refreshStatInfo.idlePercentage}" pattern="#.##"
 										  minFractionDigits="2"/>%
 					</c:if>
 				</td>
 				<td width=60>
-					<c:if test="${refreshStatInfoVO.unworkMachineCount > 0}">
+					<c:if test="${refreshStatInfo.unworkMachineCount > 0}">
 						<c:choose>
-							<c:when test="${'总计' eq refreshStatInfoVO.group}">
+							<c:when test="${'总计' eq refreshStatInfo.group}">
 								<a target="_blank"
-								   href="javascript:findClientStatus(null)">${refreshStatInfoVO.unworkMachineCount}</a>
+								   href="javascript:findClientStatus(null)">${refreshStatInfo.unworkMachineCount}</a>
 							</c:when>
 							<c:otherwise>
 								<a target="_blank"
-								   href="javascript:findClientStatus('${refreshStatInfoVO.group}')">${refreshStatInfoVO.unworkMachineCount}</a>
+								   href="javascript:findClientStatus('${refreshStatInfo.group}')">${refreshStatInfo.unworkMachineCount}</a>
 							</c:otherwise>
 						</c:choose>
 					</c:if>

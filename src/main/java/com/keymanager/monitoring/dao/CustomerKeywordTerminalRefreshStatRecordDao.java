@@ -3,7 +3,6 @@ package com.keymanager.monitoring.dao;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
 import com.keymanager.monitoring.entity.CustomerKeywordTerminalRefreshStatRecord;
-import com.keymanager.monitoring.vo.CustomerKeywordRefreshStatInfoVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -16,5 +15,5 @@ public interface CustomerKeywordTerminalRefreshStatRecordDao extends BaseMapper<
 
     List<Long> findMostDistantCustomerKeywordTerminalRefreshStatRecord ();
 
-    List<CustomerKeywordRefreshStatInfoVO> getHistoryTerminalRefreshStatRecord (@Param("customerKeywordRefreshStatInfoCriteria") CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria);
+    List<CustomerKeywordTerminalRefreshStatRecord> getHistoryTerminalRefreshStatRecord (@Param("customerKeywordRefreshStatInfoCriteria") CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria);
 }

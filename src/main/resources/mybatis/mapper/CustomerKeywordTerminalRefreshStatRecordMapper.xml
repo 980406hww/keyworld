@@ -9,7 +9,7 @@
         GROUP BY cktrsr.fUuid
     </select>
 
-    <select id="getHistoryTerminalRefreshStatRecord" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria" resultType="com.keymanager.monitoring.vo.CustomerKeywordRefreshStatInfoVO">
+    <select id="getHistoryTerminalRefreshStatRecord" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria" resultType="com.keymanager.monitoring.entity.CustomerKeywordTerminalRefreshStatRecord">
         SELECT
             cktrsr.fGroup AS 'group',
             cktrsr.fTotalKeywordCount AS 'totalKeywordCount',

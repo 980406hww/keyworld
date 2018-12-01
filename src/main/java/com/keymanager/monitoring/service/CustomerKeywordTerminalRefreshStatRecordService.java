@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
 import com.keymanager.monitoring.dao.CustomerKeywordTerminalRefreshStatRecordDao;
 import com.keymanager.monitoring.entity.CustomerKeywordTerminalRefreshStatRecord;
-import com.keymanager.monitoring.vo.CustomerKeywordRefreshStatInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,9 +22,9 @@ public class CustomerKeywordTerminalRefreshStatRecordService extends ServiceImpl
     @Autowired
     private CustomerKeywordRefreshStatInfoService customerKeywordRefreshStatInfoService;
 
-    public List<CustomerKeywordRefreshStatInfoVO> getHistoryTerminalRefreshStatRecord (CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria) {
-        List<CustomerKeywordRefreshStatInfoVO> historyTerminalRefreshStatRecords = customerKeywordTerminalRefreshStatRecordDao.getHistoryTerminalRefreshStatRecord(customerKeywordRefreshStatInfoCriteria);
-        customerKeywordRefreshStatInfoService.SetCountCustomerKeywordRefreshStatInfoVO(historyTerminalRefreshStatRecords);
+    public List<CustomerKeywordTerminalRefreshStatRecord> getHistoryTerminalRefreshStatRecord (CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria) {
+        List<CustomerKeywordTerminalRefreshStatRecord> historyTerminalRefreshStatRecords = customerKeywordTerminalRefreshStatRecordDao.getHistoryTerminalRefreshStatRecord(customerKeywordRefreshStatInfoCriteria);
+        customerKeywordRefreshStatInfoService.SetCountCustomerKeywordRefreshStatInfo(historyTerminalRefreshStatRecords);
         return historyTerminalRefreshStatRecords;
     }
 }
