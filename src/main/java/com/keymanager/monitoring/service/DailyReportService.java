@@ -11,6 +11,7 @@ import com.keymanager.monitoring.enums.DailyReportStatusEnum;
 import com.keymanager.monitoring.enums.DailyReportTriggerModeEnum;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
 import com.keymanager.monitoring.excel.operator.CustomerKeywordDailyReportSummaryExcelWriter;
+import com.keymanager.monitoring.excel.operator.CustomerKeywordDailyReportTotalExcelWriter;
 import com.keymanager.util.Constants;
 import com.keymanager.util.FileUtil;
 import com.keymanager.util.Utils;
@@ -120,6 +121,11 @@ public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport>
 				ZipCompressor.createEncryptionZip(loginUserReportFolder, dailyReportFolder + String.format("%s_%s.zip", externalAccount, Utils.formatDatetime(Utils.getCurrentTimestamp(),
 						"yyyy.MM.dd")), externalAccount + Utils.getCurrentDate());
 				FileUtil.delFolder(loginUserReportFolder);
+
+				CustomerKeywordDailyReportTotalExcelWriter totalExcelWriter = new CustomerKeywordDailyReportTotalExcelWriter(dailyReport.getUuid(), externalAccount);
+				totalExcelWriter.writeDailyTotalTitle(0);
+				totalExcelWriter.writeDailyTotalRow(externalAccountAndSummaryFeeMap.get(externalAccount), config == null ? 1d : Double.parseDouble(config.getValue()));
+				totalExcelWriter.writeDataToExcel(externalAccount);
 			}
 			String zipFileName = String.format("/dailyreport/TotalReport_%s_%d.zip", Utils.formatDatetime(Utils.getCurrentTimestamp(),
 					"yyyy.MM.dd"), dailyReport.getUuid());

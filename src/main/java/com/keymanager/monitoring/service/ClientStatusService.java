@@ -1096,4 +1096,8 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
     public void resetOptimizationInfo() {
         clientStatusDao.resetOptimizationInfo();
     }
+
+    public void updateVersion(String clientID, String version){
+        clientStatusDao.updateVersion(clientID, version);
+    }
 }

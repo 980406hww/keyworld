@@ -616,4 +616,9 @@
     <update id="resetOptimizationInfo">
         UPDATE t_client_status SET fRemainingKeyword = 1, fIdleStartTime = null, fIdleTotalMinutes = 0
     </update>
+
+    <update id="updateVersion">
+        UPDATE t_client_status SET fVersion = #{version}
+        WHERE fClientID = #{clientID}
+    </update>
 </mapper>

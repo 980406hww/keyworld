@@ -271,4 +271,24 @@ public class ExternalClientStatusRestController extends SpringMVCBaseController 
         return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
     }
 
+
+    @RequestMapping(value = "/updateVersion", method = RequestMethod.POST)
+    public ResponseEntity<?> updateVersion(HttpServletRequest request) throws Exception {
+        String userName = request.getParameter("userName");
+        if(StringUtils.isBlank(userName)){
+            userName = request.getParameter("username");
+        }
+        String password = request.getParameter("password");
+        String clientID = request.getParameter("clientID");
+        String version = request.getParameter("version");
+        try {
+            if (validUser(userName, password)) {
+                clientStatusService.updateVersion(clientID, version);
+                return new ResponseEntity<Object>(true, HttpStatus.OK);
+            }
+        }catch (Exception ex){
+            logger.error(ex.getMessage());
+        }
+        return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+    }
 }
