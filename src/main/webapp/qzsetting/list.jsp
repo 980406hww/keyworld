@@ -27,6 +27,7 @@
 		}
 	</style>
 	<script type="text/javascript" src="${staticPath}/static/My97DatePicker/WdatePicker.js"></script>
+	<link rel="stylesheet" href="${staticPath}/qzsetting/base.css">
 </head>
 <body>
 <%@ include file="/commons/basejs.jsp" %>
@@ -91,6 +92,7 @@
 			</form>
 		</div>
 	</div>
+	<%@include file="info.jsp" %>
 	<table id="headerTable" style="width: 100%">
 		<tr bgcolor="#eeeeee" height=30>
 			<td align="center" width=25><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
@@ -114,8 +116,9 @@
 		</tr>
 	</table>
 </div>
+
 <div id="showQZSettingDiv" style="margin-bottom: 30px">
-<table id="showQZSettingTable"  style="font-size:12px;width: 100%;" cellpadding=3 >
+<table id="showQZSettingTable" style="font-size:12px;width: 100%;" cellpadding=3 >
 	<c:forEach items="${page.records}" var="qzSetting" varStatus="status">
 		<tr onmouseover="doOver(this);" onmouseout="doOut(this);" height=30 <c:if test="${status.index%2==0}">bgcolor="#eeeeee" </c:if> >
 			<td width=25 align="center"><input type="checkbox" name="uuid" value="${qzSetting.uuid}" onclick="decideSelectAll()"/></td>
