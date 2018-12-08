@@ -34,7 +34,71 @@ $(function () {
         showCustomerBottomDiv.find("#nextButton").attr("disabled", "disabled");
         showCustomerBottomDiv.find("#lastButton").attr("disabled", "disabled");
     }
+    var moreSearchCondition = $("div.conn[name='moreSearchCondition']");
+    var customerInfo = moreSearchCondition.find("ul li.condition input[name='customerInfo']").val();
+    var group =  moreSearchCondition.find("ul li.condition input[name='group']").val();
+    var status = moreSearchCondition.find("select[name='status']").val();
+    var updateStatus = moreSearchCondition.find("select[name='updateStatus']").val();
+    var vals = customerInfo + group + status + updateStatus;
+    if (vals != "") {
+        moreSearchCondition.css("display", "block");
+    }
 });
+function checkTerminalType(obj, terminalType) {
+    $(obj).parent().parent().find("li").removeClass("active");
+    $(obj).parent().addClass("active");
+    if (terminalType == "PC") {
+        $(".datalist").find("li.phoneGroup").each(function () {
+            $(this).css("display", "none")
+        });
+        $(".datalist").find("li.pcGroup").each(function () {
+            $(this).css("display", "block");
+        });
+    }
+    if (terminalType == "Phone") {
+        $(".datalist").find(".pcGroup").each(function () {
+            $(this).css("display", "none")
+        });
+        $(".datalist").find(".phoneGroup").each(function () {
+            $(this).css("display", "block");
+        });
+    }
+}
+
+function trimSearchCondition(days) {
+    var chargeForm = $("#chargeForm");
+    var customerInfo = $(".conn").find(".condition").find("input[name='customerInfo']").val();
+    var customerUuid = customerInfo.substr(customerInfo.lastIndexOf("_") + 1);
+    chargeForm.find("#customerInfo").val($.trim(customerInfo));
+    chargeForm.find("#customerUuid").val(customerUuid);
+    chargeForm.find("#dateRangeType").val(days);
+
+    var domain = $(".conn").find(".search-wrap input").val();
+    var group = $(".conn").find(".condition").find("input[name='group']").val();
+    var status = $(".conn").find("select[name='status']").val();
+    var updateStatus = $(".conn").find("select[name='updateStatus']").val();
+    chargeForm.find("#domain").val($.trim(domain));
+    chargeForm.find("#group").val($.trim(group));
+    if (status != "") {
+        chargeForm.find("#status").val($.trim(status));
+    } else {
+        chargeForm.find("#status").val(null);
+    }
+    if (updateStatus != "") {
+        chargeForm.find("#updateStatus").val($.trim(updateStatus));
+    }
+    chargeForm.find("#currentPageNumberHidden").val(1);
+    var moreSearchCondition = $("div.conn[name='moreSearchCondition']");
+    $("div.conn div.search-wrap input").val(domain);
+    moreSearchCondition.find("ul li.condition input[name='group']").val($.trim(group));
+    moreSearchCondition.find("ul li select[name='updateStatus']").val($.trim(updateStatus));
+    chargeForm.submit();
+}
+
+function showMoreSearchCondition() {
+    $(".mytabs").find("div[name='moreSearchCondition']").toggle();
+}
+
 function alignTableHeader(){
     var td = $("#headerTable tr:first td");
     var ctd = $("#showQZSettingTable tr:first td");
@@ -80,7 +144,7 @@ function selectAll(self){
 }
 function decideSelectAll() {
     var a = document.getElementsByName("uuid");
-    var select=0;
+    var select = 0;
     for(var i = 0; i < a.length; i++){
         if (a[i].checked == true){
             select++;

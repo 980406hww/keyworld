@@ -1,37 +1,24 @@
 *, :after, :before {
     box-sizing: border-box
 }
-html {
-    font-family: sans-serif;
-    -ms-text-size-adjust: 100%;
-    -webkit-text-size-adjust: 100%
-}
-body {
-    margin: 0
-}
-/*section {*/
-    /*display: block*/
-/*}*/
+
 a {
-    background-color: transparent
+    background-color: transparent;
+    text-decoration: none
 }
 
 a:active, a:hover {
     outline: 0
 }
-a {
-    text-decoration: none
-}
 
 a:hover {
     color: #0c7df5
 }
+
 b {
     font-weight: 700
 }
-svg:not(:root) {
-    overflow: hidden
-}
+
 input {
     line-height: normal;
     color: inherit;
@@ -41,222 +28,174 @@ input[type=checkbox] {
     box-sizing: border-box;
     padding: 0
 }
-a, input, select, textarea {
+a, input, select {
     outline: none
 }
-
+label {
+    vertical-align: middle
+}
 ul {
     list-style: none;
     margin: 0;
     padding: 0
 }
 
-/*section.wrapper {*/
-    /*width: 1180px;*/
-    /*min-width: 1180px;*/
-    /*margin: 0 auto;*/
-    /*overflow: visible*/
-/*}*/
-
-/*section.content {*/
-    /*padding-bottom: 294px*/
-/*}*/
-
-/*section.content:after, section.content:before {*/
-    /*content: " ";*/
-    /*display: table*/
-/*}*/
-
-/*section.content:after {*/
-    /*clear: both*/
-/*}*/
-
 .icon-rank-up {
     display: inline-block;
     font-size: 0;
-    /*background-image:url(../images/sprite.icon.png?v=2f5a9992f2);*/
-    /*background-position:-318px -258px*/
-    width: 14px;
-    height: 14px
+    background-image: url(/qzsetting/images/rank.up.icon.png);
+    background-position:-325px -258px;
+    width: 16px;
+    height: 16px;
 }
 
 .icon-rank-down {
     display: inline-block;
     font-size: 0;
-    /*background-image:url(../images/sprite.icon.png?v=2f5a9992f2);*/
-    /*background-position: -318px -201px;*/
-    width: 14px;
-    height: 14px
-}
-
-.icon-look-active {
-    display: inline-block;
-    font-size: 0;
-    /*background-image:url(../images/sprite.icon.png?v=2f5a9992f2);*/
-    /*background-position:-231px -292px;*/
+    background-image: url(/qzsetting/images/rank.down.icon.png);
+    background-position: -325px -205px;
     width: 16px;
-    height: 16px
+    height: 16px;
 }
 
-/*section.container {*/
-
-/*}*/
-
-.tabs {
-    align-self: center;
+.mytabs {
+    /*margin: 55px 50px 0px 100px;*/
+    width: 80%;
+    margin: 55px auto 0px auto;
     box-shadow: 0 0 2px 2px hsla(0, 0%, 79%, .2)
 }
 
-.tabs li {
-    float: left
+.mytabs li {
+    float: left;
 }
 
-.tabs li.right {
-    float: right
+.mytabs li.right {
+    float: right;
 }
 
-.tabs a {
+.mytabs a {
     display: inline-block;
     text-decoration: none;
     color: #555
 }
 
-.tabs a:hover {
+.mytabs a:hover {
     color: #0c7df5
 }
 
-.tabs i {
+.mytabs i {
     margin-right: 2px;
     vertical-align: -3px
 }
 
-.tabs .link {
+.mytabs .link {
     margin-bottom: -1px;
     border-left: 1px solid #e6e6e6;
     border-right: 1px solid #e6e6e6;
     background-color: #f6f6f6
 }
 
-.tabs .link li {
+.mytabs .link li {
     float: left;
     height: 40px;
     line-height: 40px;
     font-size: 14px
 }
 
-.tabs .link li:first-child.active {
+.mytabs .link li:first-child.active {
     border-left: none
 }
 
-.tabs .link li.active {
+.mytabs .link li.active {
     border-top: 1px solid #0c7df5;
     border-left: 1px solid #e6e6e6;
     border-right: 1px solid #e6e6e6;
     background-color: #fff
 }
 
-.tabs .link li.active a {
+.mytabs .link li.active a {
     color: #0c7df5
 }
 
-.tabs .link a {
+.mytabs .link a {
     padding: 0 15px
 }
 
-.tabs .link:after, .tabs .link:before {
+.mytabs .link:after, .mytabs .link:before {
     content: " ";
     display: table
 }
 
-.tabs .link:after {
+.mytabs .link:after {
     clear: both
 }
 
-.tabs .conn {
+.mytabs .conn {
     padding: 10px;
     border: 1px solid #e6e6e6;
     background-color: #fff
 }
 
-.tabs .conn .friendlink-right {
-    float: right
-}
-
-.tabs .conn .friendlink-right li {
-    height: 30px;
-    line-height: 30px;
-    margin-left: 10px;
-    color: #555
-}
-
-.tabs .conn .friendlink-right li a {
-    padding: 2px 5px;
-    color: #7b7b7b;
-    height: auto
-}
-
-.tabs .conn .friendlink-right li a.active, .tabs .conn .friendlink-right li a:hover {
-    color: #fff;
-    border-radius: 2px;
-    background-color: #0c7df5
-}
-
-.tabs .conn li {
+.mytabs .conn li {
     height: 30px;
     line-height: 30px;
     margin-left: 10px
 }
 
-.tabs .conn li:first-child {
+.mytabs .conn li:first-child {
     margin-left: 0
 }
 
-.tabs .conn a {
+.mytabs .conn a {
     position: relative;
     display: inline
 }
 
-.tabs .conn .search-wrap {
+.mytabs .conn .search-wrap {
     position: relative;
     display: inline-block
 }
 
-.tabs .conn .search-wrap a {
+.mytabs .conn .search-wrap a {
     background-position: -293px -226px;
     position: absolute;
     top: 50%;
-    margin-top: -9px;
-    right: 5px
+    margin-top: -15px;
+    right: 5px;
 }
 
-.tabs .conn .search-wrap a, .tabs .conn .search-wrap a:hover {
+.mytabs .conn .search-wrap a, .mytabs .conn .search-wrap a:hover {
     display: inline-block;
-    font-size: 0;
-    background-image: url(../images/sprite.icon.png?v=2f5a9992f2);
-    width: 16px;
-    height: 17px
+    font-size: 12px;
 }
 
-.tabs .conn .search-wrap a:hover {
-    background-position: -293px -270px
+.mytabs .conn .search-wrap a:hover {
+    background-position: -293px -270px;
 }
 
-.tabs .conn .search-wrap input {
-    padding: 0 7px;
-    padding-right: 24px;
+.mytabs .conn .search-wrap input {
     width: 200px;
     height: 30px;
     line-height: 30px;
-    font-size: 12px
+    font-size: 12px;
+    padding-left: 7px;
+    padding-right: 24px;
 }
 
-.tabs .conn .sort {
+.mytabs .conn ul li.condition input {
+    width: 200px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 12px;
+}
+
+.mytabs .conn .sort {
     padding: 2px 3px;
     padding-right: 12px;
     height: auto
 }
 
-.tabs .conn .sort b {
+.mytabs .conn .sort b {
     position: absolute;
     bottom: 0;
     right: 3px;
@@ -267,7 +206,7 @@ ul {
     border-style: solid dashed dashed
 }
 
-.tabs .conn .sort b:first-child {
+.mytabs .conn .sort b:first-child {
     top: 0;
     bottom: auto;
     display: inline-block;
@@ -277,17 +216,17 @@ ul {
     border-style: dashed dashed solid
 }
 
-.tabs .conn .sort.none {
+.mytabs .conn .sort.none {
     padding: 2px 3px
 }
 
-.tabs .conn .sort.active {
+.mytabs .conn .sort.active {
     color: #fff;
     border-radius: 2px;
     background-color: #0c7df5
 }
 
-.tabs .conn .sort.active.up b {
+.mytabs .conn .sort.active.up b {
     display: inline-block;
     font-size: 0;
     border-width: 4px;
@@ -295,7 +234,7 @@ ul {
     border-style: solid dashed dashed
 }
 
-.tabs .conn .sort.active.up b:first-child {
+.mytabs .conn .sort.active.up b:first-child {
     display: inline-block;
     font-size: 0;
     border-width: 4px;
@@ -303,7 +242,7 @@ ul {
     border-style: dashed dashed solid
 }
 
-.tabs .conn .sort.active.down b {
+.mytabs .conn .sort.active.down b {
     display: inline-block;
     font-size: 0;
     border-width: 4px;
@@ -311,7 +250,7 @@ ul {
     border-style: solid dashed dashed
 }
 
-.tabs .conn .sort.active.down b:first-child {
+.mytabs .conn .sort.active.down b:first-child {
     display: inline-block;
     font-size: 0;
     border-width: 4px;
@@ -319,7 +258,7 @@ ul {
     border-style: dashed dashed solid
 }
 
-.tabs .conn .btns {
+.mytabs .conn .btns {
     float: left;
     margin-top: 1px;
     width: 25px;
@@ -328,25 +267,25 @@ ul {
     border: 1px solid #e6e6e6
 }
 
-.tabs .conn .btns:first-child {
+.mytabs .conn .btns:first-child {
     border-top-left-radius: 2px;
     border-bottom-left-radius: 2px
 }
 
-.tabs .conn .btns:last-child {
+.mytabs .conn .btns:last-child {
     border-top-right-radius: 2px;
     border-bottom-right-radius: 2px
 }
 
-.tabs .conn .btns:nth-child(2) {
+.mytabs .conn .btns:nth-child(2) {
     border-left: none
 }
 
-.tabs .conn .btns.active, .tabs .conn .btns:hover {
+.mytabs .conn .btns.active, .mytabs .conn .btns:hover {
     background-color: #0c7df5
 }
 
-.tabs .conn .btns.active .icon-data-line, .tabs .conn .btns:hover .icon-data-line {
+.mytabs .conn .btns.active .icon-data-line, .mytabs .conn .btns:hover .icon-data-line {
     display: inline-block;
     font-size: 0;
     /*background-image: url(../images/sprite.icon.png?v=2f5a9992f2);*/
@@ -355,7 +294,7 @@ ul {
     height: 13px
 }
 
-.tabs .conn .btns.active .icon-data-list, .tabs .conn .btns:hover .icon-data-list {
+.mytabs .conn .btns.active .icon-data-list, .mytabs .conn .btns:hover .icon-data-list {
     display: inline-block;
     font-size: 0;
     /*background-image: url(../images/sprite.icon.png?v=2f5a9992f2);*/
@@ -364,7 +303,7 @@ ul {
     height: 13px
 }
 
-.tabs .conn .btns.active .icon-data-grid, .tabs .conn .btns:hover .icon-data-grid {
+.mytabs .conn .btns.active .icon-data-grid, .mytabs .conn .btns:hover .icon-data-grid {
     display: inline-block;
     font-size: 0;
     /*background-image: url(../images/sprite.icon.png?v=2f5a9992f2);*/
@@ -373,24 +312,25 @@ ul {
     height: 14px
 }
 
-.tabs .conn .btns i {
+.mytabs .conn .btns i {
     vertical-align: -1px;
     margin: 0;
     padding: 0
 }
 
-.tabs .conn:after, .tabs .conn:before {
+.mytabs .conn:after, .mytabs .conn:before {
     content: " ";
     display: table
 }
 
-.tabs .conn:after {
+.mytabs .conn:after {
     clear: both
 }
 
 .datalist {
-    padding: 60px 10px;
-    margin-top: 14px;
+    /*margin: 15px 50px 15px 100px;*/
+    width: 80%;
+    margin: 15px auto 40px auto;
     overflow: visible
 }
 
@@ -399,7 +339,7 @@ ul {
     border: 1px solid #e6e6e6;
     box-shadow: 0 0 2px 2px hsla(0, 0%, 79%, .2);
     margin-bottom: 14px;
-    height: 166px
+    height: 196px
 }
 
 .datalist-list li:hover {
@@ -411,13 +351,13 @@ ul {
     display: block
 }
 
-.datalist-list .top100-link > a {
+.datalist-list .top50-link > a {
     display: block;
     width: auto;
     height: auto
 }
 
-.datalist-list .top100-link > a:hover {
+.datalist-list .top50-link > a:hover {
     color: #666
 }
 
@@ -425,18 +365,23 @@ ul {
     width: 100%;
     height: 44px;
     border-bottom: 1px solid #e6e6e6;
-    font-size: 14px;
-    color: #666;
-    padding: 0 10px
+    font-size: 16px;
+    /*color: #666;*/
+    padding: 0 20px;
 }
 
 .datalist-list .header a {
     display: block;
     float: left;
     margin-right: 5px;
-    margin-top: 12px;
+    margin-top: 14px;
     text-decoration: none;
-    color: #666
+    font-size: 14px;
+    /*color: #666*/
+}
+
+.datalist-list .header a:hover {
+    color: #1a81ea;
 }
 
 .datalist-list .header span {
@@ -444,6 +389,11 @@ ul {
     float: left;
     height: 44px;
     line-height: 44px
+}
+
+.datalist-list .header span input{
+    align-self: center;
+    margin: 15px 5px;
 }
 
 .datalist-list .header .site-name {
@@ -458,19 +408,19 @@ ul {
 .datalist-list .header .handle {
     display: none;
     float: right;
-    font-size: 12px
+    font-size: 14px
 }
 
 .datalist-list .header .handle a.blue {
-    color: #1a81ea
+    color: #1a81ea;
 }
 
 .datalist-list .header .handle a.blue:hover {
-    color: #f60
+    color: #f60;
 }
 
 .datalist-list .body {
-    height: 120px
+    height: 150px
 }
 
 .datalist-list .body .chart-include > a, .datalist-list .body .chart-ranking > a {
@@ -480,101 +430,92 @@ ul {
 }
 
 .datalist-list .body .data-info-wrap {
-    width: 338px;
+    width: 592px;
     float: left;
-    height: 120px;
-    color: #999;
+    height: 150px;
+    /*color: #999;*/
     text-align: center
 }
 
-.datalist-list .body .include-wrap {
-    display: block;
-    width: 260px;
-    float: left;
-    border-left: 1px solid #e6e6e6;
-    border-right: 1px solid #e6e6e6;
-    height: 120px;
-    padding: 12px 6px
-}
-
 .datalist-list .body .rank-wrap {
-    width: 400px;
+    width: 500px;
     float: left;
-    height: 120px;
-    padding: 12px 0
+    height: 150px;
+    padding: 12px 0;
+    border-left: 1px solid #e6e6e6;
 }
 
 .datalist-list .body .rank-wrap > a {
     padding: 0 5px;
     white-space: nowrap;
-    text-overflow: ellipsis
+    text-overflow: ellipsis;
 }
 
 .datalist-list .body .rank-wrap > a, .datalist-list .body .rank-wrap > div {
-    color: #999;
+    /*color: #999;*/
     float: left;
     font-size: 12px;
-    height: 96px;
-    line-height: 96px;
-    display: block
+    height: 120px;
+    line-height: 120px;
+    display: block;
 }
 
 .datalist-list .body .rank-wrap > div {
-    padding: 0 10px
+    padding: 0 10px;
 }
 
 .datalist-list .body .rank-wrap > div:last-child {
-    border-left: 1px dashed #e6e6e6
+    border-left: 1px dashed #e6e6e6;
 }
 
 .datalist-list .body .rank-wrap > div .row4 {
-    line-height: 2
+    line-height: 2;
 }
 
 .datalist-list .body .rank-wrap > div span {
     display: block;
     float: left;
     width: 50%;
-    text-align: left
+    text-align: left;
 }
 
 .datalist-list .body .rank-wrap > div span:last-child {
-    text-align: center
+    text-align: center;
 }
 
 .datalist-list .body .rank-wrap > div span.red {
-    color: #ff3d3d
+    color: #ff3d3d;
 }
 
 .datalist-list .body .rank-wrap > div span.green {
-    color: #60c54b
+    color: #60c54b;
 }
 
 .datalist-list .body .rank-wrap > div span a {
-    text-decoration: none
+    text-decoration: none;
 }
 
 .datalist-list .body .rank-wrap > div span a.red {
-    color: #ff3d3d
+    color: #ff3d3d;
 }
 
 .datalist-list .body .rank-wrap > div span a.green {
-    color: #60c54b
+    color: #60c54b;
 }
 
 .datalist-list .body .rank-wrap > div span .red {
-    color: #ff3d3d
+    color: #ff3d3d;
 }
 
 .datalist-list .body .rank-wrap > div span .green {
-    color: #60c54b
+    color: #60c54b;
 }
 
 .datalist-list .body .baidu-rank {
     float: left;
     width: 84px;
     border-right: 1px solid #e6e6e6;
-    height: 120px;
+    height: 150px;
     display: block
 }
 
@@ -582,24 +523,21 @@ ul {
     clear: both
 }
 
-.datalist-list .body .baidu-rank:hover {
-    color: #666
-}
-
 .datalist-list .body .baidu-rank span {
     display: block
 }
 
 .datalist-list .body .baidu-rank span:last-child {
-    color: #999
+    margin-top: 5px;
+    color: #000;
 }
 
 .datalist-list .body .baidu-rank span.line1 {
-    color: #555;
-    font-size: 18px;
-    margin-top: 30px;
+    /*color: #555;*/
+    font-size: 14px;
+    margin-top: 45px;
     overflow: hidden;
-    text-overflow: ellipsis
+    text-overflow: ellipsis;
 }
 
 .datalist-list .body .baidu-rank span.line1:hover {
@@ -608,50 +546,54 @@ ul {
 
 .datalist-list .body .baidu-rank span.line1 sub {
     font-weight: 400;
-    color: #999
+    /*color: #999*/
 }
 
 .datalist-list .body .other-rank {
     float: left;
-    width: 254px
+    width: 508px;
 }
 
 .datalist-list .body .other-rank .row {
-    height: 60px
+    height: 75px
 }
 
-.datalist-list .body .other-rank .row .line1 a {
-    color: #555
+.datalist-list .body .other-rank .row .line1 {
+    display:inline-block;
+    width:80%;
+    word-wrap:break-word;
+    white-space:normal;
 }
+
+/*.datalist-list .body .other-rank .row .line1 a {*/
+    /*color: #555*/
+/*}*/
 
 .datalist-list .body .other-rank .row .line1 a:hover {
     color: #0c7df5
 }
 
 .datalist-list .body .other-rank .row span:last-child a {
-    color: #999
+    display:inline-block;
+    width:80%;
+    word-wrap:break-word;
+    white-space:normal;
+    margin-top: 5px;
+    color: #000;
 }
 
-/*.datalist-list .body .other-rank .row:last-child {*/
-    /*display: block;*/
-    /*height: 59px;*/
-    /*border-top: 1px solid #e6e6e6*/
-/*}*/
-
-/*.datalist-list .body .other-rank .row:last-child:hover {*/
-    /*color: #666*/
-/*}*/
+.datalist-list .body .other-rank .row:last-child {
+    display: block;
+    height: 74px;
+    border-top: 1px solid #e6e6e6
+}
 
 .datalist-list .body .other-rank .row > div {
     display: block;
     float: left;
-    height: 60px;
+    height: 75px;
     width: 84px;
     border-right: 1px solid #e6e6e6
-}
-
-.datalist-list .body .other-rank .row > div:hover {
-    color: #666
 }
 
 .datalist-list .body .other-rank .row > div:last-child {
@@ -664,8 +606,7 @@ ul {
 
 .datalist-list .body .other-rank .row span.line1 {
     font-size: 18px;
-    color: #666;
-    margin-top: 8px
+    margin-top: 18px;
 }
 
 .datalist-list .body .other-rank .row span.line1:hover {
@@ -675,4 +616,37 @@ ul {
 .datalist-list .body .other-rank .row span sub {
     font-weight: 400;
     padding-left: 5px
+}
+
+.col-1 {
+    float: left;
+    width: 5%;
+    text-align: left
+}
+
+.col-3 {
+    float: left;
+    width: 20%;
+    text-align: left;
+}
+
+.col-8 {
+    float: left;
+    width: 75%;
+    text-align: left;
+}
+
+#moreSearchCondition {
+    display: block;
+    height: 25px;
+    width: 150px;
+    text-align: center;
+    background: #F00;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+    padding-top: 3px;
+    margin-top:3px;
+    border-radius:10px;
 }

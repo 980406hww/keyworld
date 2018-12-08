@@ -33,36 +33,87 @@
 <%@ include file="/commons/basejs.jsp" %>
 <div id="topDiv">
 	<%@include file="/menu.jsp" %>
-	<div width="100%" style="font-size:12px; margin-top:40px;">
-		<div align="right">
-			<shiro:hasPermission name="/internal/qzsetting/searchQZSettings">
-			<a href="javascript:resetSearchCondition('-1')">过期未收费(${chargeRemindDataMap['expiredChargeSize']})</a>
-			| <a target="_blank" href="javascript:resetSearchCondition('0')">当天收费提醒(${chargeRemindDataMap['nowChargeSize']})</a>
-			| <a target="_blank" href="javascript:resetSearchCondition('3')">三天收费提醒(${chargeRemindDataMap['threeChargeSize']})</a>
-			| <a target="_blank" href="javascript:resetSearchCondition('7')">七天收费提醒(${chargeRemindDataMap['sevenChargeSize']})</a>
+</div>
+
+<div class="mytabs">
+	<ul class="link">
+		<li class="active"><a href="javascript:;" onclick="checkTerminalType(this, 'PC')">百度PC</a></li>
+		<li class=""><a href="javascript:;" onclick="checkTerminalType(this, 'Phone')">百度移动</a></li>
+	</ul>
+	<div class="conn">
+		<ul>
+			<li>
+				<div class="search-wrap">
+					<input type="text" title="请输入网站域名" placeholder="请输入网站域名" value="${qzSettingSearchCriteria.domain}">
+					<a href="javascript:;" onclick="trimSearchCondition('1');">搜索</a>
+				</div>
+			</li>
+
+			<li>
+				<a href="javascript:;" onclick="showMoreSearchCondition();">更多搜索条件</a>
+			</li>
+			<shiro:hasPermission name="/internal/qzsetting/save">
+				<li>
+					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="showSettingDialog(null, this)" value=" 增加 " >
+				</li>
 			</shiro:hasPermission>
-		</div>
-		<div>
-			<form method="post" id="chargeForm" action="/internal/qzsetting/searchQZSettings">
-				<input type="hidden" id="dateRangeType" name="dateRangeType" value="${qzSettingSearchCriteria.dateRangeType}"/>
-				<input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}"/>
-				<input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
-				<input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
-				<input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
-				<input type="hidden" name="customerUuid" id="customerUuid" value="${qzSettingSearchCriteria.customerUuid}"/>
-				<input type="hidden" name="statusHidden" id="statusHidden" value="${qzSettingSearchCriteria.status}"/>
-				客户:<input type="text" list="customer_list" name="customerInfo" id="customerInfo" value="${qzSettingSearchCriteria.customerInfo}" style="width:200px;">
-				域名:<input type="text" name="domain" id="domain" value="${qzSettingSearchCriteria.domain}" style="width:150px;">
-				组名:<input type="text" name="group" id="group" value="${qzSettingSearchCriteria.group}" style="width:150px;">
-				状态:
-				<select name="status" id="status">
-					<option value=""></option>
-					<option value="1">激活</option>
-					<option value="0">暂停</option>
-					<option value="2">新增</option>
+			<shiro:hasPermission name="/internal/qzsetting/updateImmediately">
+				<li>
+					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="updateImmediately(this)" value=" 马上更新 " >
+				</li>
+			</shiro:hasPermission>
+			<shiro:hasPermission name="/internal/qzsetting/updateStatus">
+				<li>
+					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="updateQZSettingStatus(0)" value=" 暂停整站 " >
+					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="updateQZSettingStatus(1)" value=" 激活整站 " >
+				</li>
+			</shiro:hasPermission>
+			<shiro:hasPermission name="/internal/qzsetting/deleteQZSettings">
+				<li>
+					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="delSelectedQZSettings(this)" value=" 删除所选 " >
+				</li>
+			</shiro:hasPermission>
+			<shiro:hasPermission name="/internal/qzsetting/searchQZSettings">
+				<li>
+					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="getAvailableQZSettings()" value="查看更新队列(${availableQZSettingCount})">
+				</li>
+			</shiro:hasPermission>
+			<li>
+				<label title="网站关键词一星期排名趋势涨幅&gt;0.0">
+					<input type="checkbox">
+					<i class="icon-rank-down"></i>骤降 (0)
+				</label>
+			</li>
+			<li>
+				<label title="网站关键词一星期排名趋势涨幅&lt;0.0">
+					<input type="checkbox">
+					<i class="icon-rank-up"></i>暴涨 (0)
+				</label>
+			</li>
+		</ul>
+	</div>
+	<div class="conn" name="moreSearchCondition" style="display: none;">
+		<ul>
+			<li class="condition">
+				<span>客户: </span>
+				<input type="text" list="customer_list" name="customerInfo" value="${qzSettingSearchCriteria.customerInfo}">
+			</li>
+			<li class="condition">
+				<span>组名: </span>
+				<input type="text" name="group" value="${qzSettingSearchCriteria.group}" style="width:150px;">
+			</li>
+			<li>
+				<span>状态: </span>
+				<select name="status">
+					<option value="" <c:if test="${qzSettingSearchCriteria.status == null}">selected</c:if>></option>
+					<option value="1" <c:if test="${qzSettingSearchCriteria.status == 1}">selected</c:if>>激活</option>
+					<option value="0" <c:if test="${qzSettingSearchCriteria.status == 0}">selected</c:if>>暂停</option>
+					<option value="2" <c:if test="${qzSettingSearchCriteria.status == 2}">selected</c:if>>新增</option>
 				</select>
-				更新状态:
-				<select name="updateStatus" id="updateStatus">
+			</li>
+			<li>
+				<span>更新状态: </span>
+				<select name="updateStatus">
 					<c:forEach items="${statusList}" var="status">
 						<c:choose>
 							<c:when test="${status eq qzSettingSearchCriteria.updateStatus}"><option selected>${status}</option></c:when>
@@ -70,105 +121,468 @@
 						</c:choose>
 					</c:forEach>
 				</select>
-				<shiro:hasPermission name="/internal/qzsetting/searchQZSettings">
-					<input class="ui-button ui-widget ui-corner-all" type="submit" onclick="resetSearchCondition('1')" value=" 查询 " >
-				</shiro:hasPermission>
-				<shiro:hasPermission name="/internal/qzsetting/save">
-					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="showSettingDialog(null, this)" value=" 增加 " >
-				</shiro:hasPermission>
-				<shiro:hasPermission name="/internal/qzsetting/updateImmediately">
-					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="updateImmediately(this)" value=" 马上更新 " >
-				</shiro:hasPermission>
-				<shiro:hasPermission name="/internal/qzsetting/updateStatus">
-				<input class="ui-button ui-widget ui-corner-all" type="button" onclick="updateQZSettingStatus(1)" value=" 激活整站 " >
-				<input class="ui-button ui-widget ui-corner-all" type="button" onclick="updateQZSettingStatus(0)" value=" 暂停整站 " >
-				</shiro:hasPermission>
-				<shiro:hasPermission name="/internal/qzsetting/deleteQZSettings">
-					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="delSelectedQZSettings(this)" value=" 删除所选 " >
-				</shiro:hasPermission>
-				<shiro:hasPermission name="/internal/qzsetting/searchQZSettings">
-				<input class="ui-button ui-widget ui-corner-all" type="button" onclick="getAvailableQZSettings()" value="查看更新队列(${availableQZSettingCount})">
-				</shiro:hasPermission>
-			</form>
-		</div>
+			</li>
+			<shiro:hasPermission name="/internal/qzsetting/searchQZSettings">
+				<li><a href="javascript:resetSearchCondition('-1')">过期未收费(${chargeRemindDataMap['expiredChargeSize']})</a></li>
+				<li><a target="_blank" href="javascript:resetSearchCondition('0')">当天收费提醒(${chargeRemindDataMap['nowChargeSize']})</a></li>
+				<li><a target="_blank" href="javascript:resetSearchCondition('3')">三天收费提醒(${chargeRemindDataMap['threeChargeSize']})</a></li>
+				<li><a target="_blank" href="javascript:resetSearchCondition('7')">七天收费提醒(${chargeRemindDataMap['sevenChargeSize']})</a></li>
+			</shiro:hasPermission>
+		</ul>
 	</div>
-	<%@include file="info.jsp" %>
-	<table id="headerTable" style="width: 100%">
-		<tr bgcolor="#eeeeee" height=30>
-			<td align="center" width=25><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
-			<c:if test="${isDepartmentManager == true}">
-				<td align="center" width=60>用户名称</td>
-			</c:if>
-			<td align="center" width=150>客户</td>
-			<td align="center" width=100>域名</td>
-			<td align="center" width=50>入口类型</td>
-			<td align="center" width=120>分组</td>
-			<td align="center" width=80>去掉没指数</td>
-			<td align="center" width=80>去掉没排名</td>
-			<td align="center" width=60>更新间隔</td>
-			<td align="center" width=60>更新状态</td>
-			<td align="center" width=80>更新开始时间</td>
-			<td align="center" width=80>更新结束时间</td>
-			<td align="center" width=80>更新时间</td>
-			<td align="center" width=80>添加时间</td>
-			<td align="center" width=50>状态</td>
-			<td align="center" width=100>操作</td>
-		</tr>
-	</table>
 </div>
 
-<div id="showQZSettingDiv" style="margin-bottom: 30px">
-<table id="showQZSettingTable" style="font-size:12px;width: 100%;" cellpadding=3 >
-	<c:forEach items="${page.records}" var="qzSetting" varStatus="status">
-		<tr onmouseover="doOver(this);" onmouseout="doOut(this);" height=30 <c:if test="${status.index%2==0}">bgcolor="#eeeeee" </c:if> >
-			<td width=25 align="center"><input type="checkbox" name="uuid" value="${qzSetting.uuid}" onclick="decideSelectAll()"/></td>
-			<c:if test="${isDepartmentManager == true}">
-				<td width=60>${qzSetting.userID}</td>
-			</c:if>
-			<td width=150>${qzSetting.contactPerson}</td>
-			<td width=100>${qzSetting.domain}</td>
-			<td width=50>${qzSetting.type}</td>
-			<td width=80>
-				${qzSetting.pcGroup == null ? "" : "pc:"}${qzSetting.pcGroup == null ? "" : qzSetting.pcGroup}<br>
-				${qzSetting.phoneGroup == null ? "" : "m:"}${qzSetting.phoneGroup == null ? "" : qzSetting.phoneGroup}
-			</td>
-			<td width=80>${qzSetting.ignoreNoIndex == true ? "是" : "否"}</td>
-			<td width=80>${qzSetting.ignoreNoOrder == true ? "是" : "否"}</td>
-			<td width=60>${qzSetting.updateInterval}</td>
-			<td width=60>${qzSetting.updateStatus == null ? "" : qzSetting.updateStatus}</td>
-			<td width=80><fmt:formatDate value="${qzSetting.updateStartTime}" pattern="MM-dd HH:mm" /></td>
-			<td width=80><fmt:formatDate value="${qzSetting.updateEndTime}" pattern="MM-dd HH:mm" /></td>
-			<td width=80><fmt:formatDate value="${qzSetting.updateTime}" pattern="MM-dd HH:mm" /></td>
-			<td width=80><fmt:formatDate value="${qzSetting.createTime}" pattern="MM-dd HH:mm" /></td>
-			<td width=50 align="center">
-				<c:choose>
-					<c:when test="${qzSetting.status == 1}">激活</c:when>
-					<c:when test="${qzSetting.status == 2}">
-						<span style="color: green;">新增</span>
-					</c:when>
-					<c:otherwise>
-						<span style="color: red;">暂停</span>
-					</c:otherwise>
-				</c:choose>
-			</td>
-			<td width=100>
-				<shiro:hasPermission name="/internal/qzchargelog/save">
-					<a href="javascript:showChargeDialog('${qzSetting.uuid}','${qzSetting.contactPerson}','${qzSetting.domain}',this)">收费</a> |
-				</shiro:hasPermission>
-				<shiro:hasPermission name="/internal/qzsetting/save">
-					<a href="javascript:showSettingDialog('${qzSetting.uuid}', this)">修改</a><br>
-				</shiro:hasPermission>
-				<shiro:hasPermission name="/internal/qzsetting/delete">
-					<a href="javascript:delQZSetting(${qzSetting.uuid})">删除</a> |
-				</shiro:hasPermission>
-				<shiro:hasPermission name="/internal/qzchargelog/chargesList">
-					<a href="javascript:showChargeLog('${qzSetting.uuid}', this)">收费记录</a>
-				</shiro:hasPermission>
-			</td>
-		</tr>
-	</c:forEach>
-</table>
+<form method="post" id="chargeForm" action="/internal/qzsetting/searchQZSettings">
+	<input type="hidden" name="dateRangeType" id="dateRangeType" value="${qzSettingSearchCriteria.dateRangeType}"/>
+	<input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}"/>
+	<input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
+	<input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
+	<input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
+	<input type="hidden" name="domain" id="domain" value="${qzSettingSearchCriteria.domain}">
+	<input type="hidden" name="group" id="group" value="${qzSettingSearchCriteria.group}">
+	<input type="hidden" name="customerUuid" id="customerUuid" value="${qzSettingSearchCriteria.customerUuid}"/>
+	<input type="hidden" name="statusHidden" id="statusHidden" value="${qzSettingSearchCriteria.status}"/>
+	<input type="hidden" name="customerInfo" id="customerInfo" value="${qzSettingSearchCriteria.customerInfo}">
+	<input type="hidden" name="status" id="status" value="${qzSettingSearchCriteria.status}"/>
+	<input type="hidden" name="updateStatus" id="updateStatus" value="${qzSettingSearchCriteria.updateStatus}"/>
+</form>
+
+
+<div class="datalist">
+	<div class="datalist-list">
+		<ul>
+			<c:forEach items="${page.records}" var="qzSetting" varStatus="status">
+				<c:if test="${qzSetting.pcGroup != null}">
+					<li class="pcGroup">
+						<div class="header">
+							<span>
+								<input type="checkbox" name="uuid" value="${qzSetting.uuid}" onclick="decideSelectAll();"/>
+							</span>
+							<span class="site-name">客户名称: ${qzSetting.contactPerson}</span>
+							<span style="padding: 0 10px"> —— </span>
+							<a href="javascript:;" title="网站域名">${qzSetting.domain}</a>
+
+							<div class="handle">
+								<shiro:hasPermission name="/internal/qzchargelog/save">
+									<a class="blue" href="javascript:showChargeDialog('${qzSetting.uuid}','${qzSetting.contactPerson}','${qzSetting.domain}',this)">收费</a>
+								</shiro:hasPermission>
+								<shiro:hasPermission name="/internal/qzsetting/save">
+									<a class="blue" href="javascript:showSettingDialog('${qzSetting.uuid}', this)">修改</a>
+								</shiro:hasPermission>
+								<shiro:hasPermission name="/internal/qzsetting/delete">
+									<a class="blue" href="javascript:delQZSetting(${qzSetting.uuid})">删除</a>
+								</shiro:hasPermission>
+								<shiro:hasPermission name="/internal/qzchargelog/chargesList">
+									<a class="blue" href="javascript:showChargeLog('${qzSetting.uuid}', this)">收费记录</a>
+								</shiro:hasPermission>
+							</div>
+						</div>
+
+						<div class="body">
+							<div class="data-info-wrap">
+								<div class="baidu-rank">
+									<a href="javascript:;">
+										<span class="line1">${qzSetting.userID}</span>
+										<span title="用户名称">用户名称</span>
+									</a>
+								</div>
+
+								<div class="other-rank">
+									<div class="row">
+										<div>
+									<span class="line1">
+										<a href="javascript:;">8 </a>
+									</span>
+											<span title="录入时前10数">
+										<a href="javascript:;">录入时前10数 </a>
+									</span>
+										</div>
+										<div>
+									<span class="line1">
+										<a href="javascript:;">8 </a>
+									</span>
+											<span title="录入时前50数">
+										<a href="javascript:;">录入时前50数 </a>
+									</span>
+										</div>
+
+										<div>
+									<span class="line1">
+										<a href="javascript:;">
+											${qzSetting.pcGroup == null or qzSetting.pcGroup == "" ? "无" : qzSetting.pcGroup}
+										</a>
+									</span>
+											<span title="优化分组">
+										<a href="javascript:;">优化分组</a>
+									</span>
+										</div>
+
+										<div>
+									<span class="line1">
+										<a href="javascript:;">${qzSetting.type} </a>
+									</span>
+											<span title="入口类型">
+										<a href="javascript:;">入口类型 </a>
+									</span>
+										</div>
+
+										<div>
+									<span class="line1">
+										<a href="javascript:;">${qzSetting.updateStatus == null ? "无" : qzSetting.updateStatus} </a>
+									</span>
+											<span title="更新状态">
+										<a href="javascript:;">更新状态 </a>
+									</span>
+										</div>
+
+										<div>
+									<span class="line1">
+										<a href="javascript:;">${qzSetting.updateInterval} </a>
+									</span>
+											<span title="更新间隔">
+										<a href="javascript:;">更新间隔 </a>
+									</span>
+										</div>
+									</div>
+
+									<div class="row">
+										<div>
+										<span class="line1">
+											<a href="javascript:;">10 </a>
+										</span>
+										<span title="前10数">
+										<a href="javascript:;">前10数 </a>
+									</span>
+										</div>
+
+										<div>
+									<span class="line1">
+										<a href="javascript:;">10 </a>
+									</span>
+											<span title="前50数">
+										<a href="javascript:;">前50数 </a>
+									</span>
+										</div>
+
+										<div>
+									<span class="line1">
+										<a href="javascript:;">${qzSetting.ignoreNoIndex == true ? "是" : "否"} </a>
+									</span>
+											<span title="去掉没指数">
+										<a href="javascript:;">去掉没指数 </a>
+									</span>
+										</div>
+
+										<div>
+									<span class="line1">
+										<a href="javascript:;">${qzSetting.ignoreNoOrder == true ? "是" : "否"} </a>
+									</span>
+											<span title="去掉没排名">
+										<a href="javascript:;">去掉没排名 </a>
+									</span>
+										</div>
+
+										<div>
+									<span class="line1">
+										<a href="javascript:;">
+										   <c:choose>
+											   <c:when test="${qzSetting.status == 1}">激活</c:when>
+											   <c:when test="${qzSetting.status == 2}">
+												   <span style="color: green;">新增</span>
+											   </c:when>
+											   <c:otherwise>
+												   <span style="color: red;">暂停</span>
+											   </c:otherwise>
+										   </c:choose>
+										</a>
+									</span>
+											<span title="状态">
+										<a href="javascript:;">状态</a>
+									</span>
+										</div>
+
+										<div>
+									<span class="line1">
+										<a href="javascript:;"> </a>
+									</span>
+											<span title="">
+										<a href="javascript:;"></a>
+									</span>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="rank-wrap">
+								<a class="col-8 chart-ranking" href="javascript:;" data-highcharts-chart="4">
+									<div class="highcharts-container" id="highcharts-16" style="position: relative; overflow: visible; width: 450px; height: 140px; text-align: left; line-height: normal; z-index: 0; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
+
+										<div class="highcharts-tooltip" style="position: absolute; left: -65px; top: -9999px; opacity: 0; visibility: visible;">
+									<span style="position: absolute; font-family: 'Lucida Grande', 'Lucida Sans Unicode', Arial, Helvetica, sans-serif; font-size: 12px; white-space: nowrap; color: rgb(51, 51, 51); margin-left: 0px; margin-top: 0px; left: 8px; top: 8px;" zindex="1">
+										<span>日期：11/09</span><br>
+										<span style="color:#F79C27">●</span> 前100名数量: <b>36 693</b><br>
+										<span style="color:#35BCE9">●</span> 前50名数量: <b>22 651</b><br>
+										<span style="color:#4F99F0">●</span> 前20名数量: <b>4 088</b><br>
+										<span style="color:#5FC848">●</span> 前10名数量: <b>1 386</b><br>
+									</span>
+										</div>
+									</div>
+								</a>
+
+								<div class="col-1">
+								</div>
+
+								<div class="col-3 top50-link">
+									<div class="row4 line1">
+										<span>前50</span>
+										<span class="top50">
+											<a class="red" href="javascript:;">-11167</a>
+										</span>
+									</div>
+
+									<div class="row4">
+										<span>前40</span>
+										<span class="top40">
+									<a class="red" href="javascript:;">-3638</a>
+								</span>
+									</div>
+
+									<div class="row4">
+										<span>前30</span>
+										<span class="top30">
+									<a class="red" href="javascript:;">-224</a>
+								</span>
+									</div>
+
+									<div class="row4">
+										<span>前20</span>
+										<span class="top20">
+									<a class="red" href="javascript:;">-224</a>
+								</span>
+									</div>
+
+									<div class="row4">
+										<span>前10</span>
+										<span class="top10">
+									<a class="red" href="javascript:;">-28</a>
+								</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</li>
+					<!--v-if-->
+				</c:if>
+				<c:if test="${qzSetting.phoneGroup != null}">
+					<li class="phoneGroup" style="display: none;">
+						<div class="header">
+							<span>
+								<input type="checkbox" name="uuid" value="${qzSetting.uuid}" onclick="decideSelectAll();"/>
+							</span>
+							<span class="site-name">客户名称: ${qzSetting.contactPerson}</span>
+							<span style="padding: 0 10px"> —— </span>
+							<a href="javascript:;" title="网站域名">${qzSetting.domain}</a>
+						</div>
+
+						<div class="body">
+							<div class="data-info-wrap">
+								<div class="baidu-rank">
+									<a href="javascript:;">
+										<span class="line1">${qzSetting.userID}</span>
+										<span title="用户名称">用户名称</span>
+									</a>
+								</div>
+
+								<div class="other-rank">
+									<div class="row">
+										<div>
+											<span class="line1">
+												<a href="javascript:;">8 </a>
+											</span>
+											<span title="录入时前10数">
+												<a href="javascript:;">录入时前10数 </a>
+											</span>
+										</div>
+										<div>
+											<span class="line1">
+												<a href="javascript:;">8 </a>
+											</span>
+											<span title="录入时前50数">
+												<a href="javascript:;">录入时前50数 </a>
+											</span>
+										</div>
+
+										<div>
+											<span class="line1">
+												<a href="javascript:;">
+													${qzSetting.phoneGroup == null or qzSetting.phoneGroup == "" ? "无" : qzSetting.phoneGroup}
+												</a>
+											</span>
+											<span title="优化分组">
+												<a href="javascript:;">优化分组</a>
+											</span>
+										</div>
+
+										<div>
+									<span class="line1">
+										<a href="javascript:;">${qzSetting.type} </a>
+									</span>
+											<span title="入口类型">
+										<a href="javascript:;">入口类型 </a>
+									</span>
+										</div>
+
+										<div>
+									<span class="line1">
+										<a href="javascript:;">${qzSetting.updateStatus == null ? "无" : qzSetting.updateStatus} </a>
+									</span>
+											<span title="更新状态">
+										<a href="javascript:;">更新状态 </a>
+									</span>
+										</div>
+
+										<div>
+									<span class="line1">
+										<a href="javascript:;">${qzSetting.updateInterval} </a>
+									</span>
+											<span title="更新间隔">
+										<a href="javascript:;">更新间隔 </a>
+									</span>
+										</div>
+									</div>
+
+									<div class="row">
+										<div>
+									<span class="line1">
+										<a href="javascript:;">10 </a>
+									</span>
+											<span title="前10数">
+										<a href="javascript:;">前10数 </a>
+									</span>
+										</div>
+
+										<div>
+									<span class="line1">
+										<a href="javascript:;">10 </a>
+									</span>
+											<span title="前50数">
+										<a href="javascript:;">前50数 </a>
+									</span>
+										</div>
+
+										<div>
+									<span class="line1">
+										<a href="javascript:;">${qzSetting.ignoreNoIndex == true ? "是" : "否"} </a>
+									</span>
+											<span title="去掉没指数">
+										<a href="javascript:;">去掉没指数 </a>
+									</span>
+										</div>
+
+										<div>
+									<span class="line1">
+										<a href="javascript:;">${qzSetting.ignoreNoOrder == true ? "是" : "否"} </a>
+									</span>
+											<span title="去掉没排名">
+										<a href="javascript:;">去掉没排名 </a>
+									</span>
+										</div>
+
+										<div>
+									<span class="line1">
+										<a href="javascript:;">
+										   <c:choose>
+											   <c:when test="${qzSetting.status == 1}">激活</c:when>
+											   <c:when test="${qzSetting.status == 2}">
+												   <span style="color: green;">新增</span>
+											   </c:when>
+											   <c:otherwise>
+												   <span style="color: red;">暂停</span>
+											   </c:otherwise>
+										   </c:choose>
+										</a>
+									</span>
+											<span title="状态">
+										<a href="javascript:;">状态</a>
+									</span>
+										</div>
+
+										<div>
+									<span class="line1">
+										<a href="javascript:;"> </a>
+									</span>
+											<span title="">
+										<a href="javascript:;"></a>
+									</span>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="rank-wrap">
+								<a class="col-8 chart-ranking" href="javascript:;" data-highcharts-chart="4">
+									<div class="highcharts-container" id="highcharts-16" style="position: relative; overflow: visible; width: 450px; height: 140px; text-align: left; line-height: normal; z-index: 0; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
+										<div class="highcharts-tooltip" style="position: absolute; left: -65px; top: -9999px; opacity: 0; visibility: visible;">
+									<span style="position: absolute; font-family: 'Lucida Grande', 'Lucida Sans Unicode', Arial, Helvetica, sans-serif; font-size: 12px; white-space: nowrap; color: rgb(51, 51, 51); margin-left: 0px; margin-top: 0px; left: 8px; top: 8px;" zindex="1">
+										<span>日期：11/09</span><br>
+										<span style="color:#F79C27">●</span> 前100名数量: <b>36 693</b><br>
+										<span style="color:#35BCE9">●</span> 前50名数量: <b>22 651</b><br>
+										<span style="color:#4F99F0">●</span> 前20名数量: <b>4 088</b><br>
+										<span style="color:#5FC848">●</span> 前10名数量: <b>1 386</b><br>
+									</span>
+										</div>
+									</div>
+								</a>
+
+								<div class="col-1">
+								</div>
+
+								<div class="col-3 top50-link">
+									<div class="row4 line1">
+										<span>前50</span>
+										<span class="top50">
+									<a class="red" href="javascript:;">-11167</a>
+								</span>
+									</div>
+
+									<div class="row4">
+										<span>前40</span>
+										<span class="top40">
+									<a class="red" href="javascript:;">-3638</a>
+								</span>
+									</div>
+
+									<div class="row4">
+										<span>前30</span>
+										<span class="top30">
+									<a class="red" href="javascript:;">-224</a>
+								</span>
+									</div>
+
+									<div class="row4">
+										<span>前20</span>
+										<span class="top20">
+									<a class="red" href="javascript:;">-224</a>
+								</span>
+									</div>
+
+									<div class="row4">
+										<span>前10</span>
+										<span class="top10">
+									<a class="red" href="javascript:;">-28</a>
+								</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</li>
+					<!--v-if-->
+				</c:if>
+			</c:forEach>
+		</ul>
+	</div>
 </div>
+
 <div id="showCustomerBottomPositioneDiv">
 	<div id="showCustomerBottomDiv">
 		<input id="fisrtButton" class="ui-button ui-widget ui-corner-all" type="button"
