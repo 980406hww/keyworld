@@ -37,8 +37,8 @@
 
 <div class="mytabs">
 	<ul class="link">
-		<li class="active"><a href="javascript:;" onclick="checkTerminalType(this, 'PC')">百度PC</a></li>
-		<li class=""><a href="javascript:;" onclick="checkTerminalType(this, 'Phone')">百度移动</a></li>
+		<li><a href="javascript:;" onclick="checkTerminalType(this, 'PC')">百度PC</a></li>
+		<li><a href="javascript:;" onclick="checkTerminalType(this, 'Phone')">百度移动</a></li>
 	</ul>
 	<div class="conn">
 		<ul>
@@ -191,7 +191,7 @@
 									<div class="row">
 										<div>
 									<span class="line1">
-										<a href="javascript:;">8 </a>
+										<a href="javascript:;">${qzSetting.pcCreateTopTenNum == null ? 0 : qzSetting.pcCreateTopTenNum} </a>
 									</span>
 											<span title="录入时前10数">
 										<a href="javascript:;">录入时前10数 </a>
@@ -199,7 +199,7 @@
 										</div>
 										<div>
 									<span class="line1">
-										<a href="javascript:;">8 </a>
+										<a href="javascript:;">${qzSetting.pcCreateTopFiftyNum == null ? 0 : qzSetting.pcCreateTopFiftyNum} </a>
 									</span>
 											<span title="录入时前50数">
 										<a href="javascript:;">录入时前50数 </a>
@@ -316,16 +316,16 @@
 							<div class="rank-wrap">
 								<a class="col-8 chart-ranking" href="javascript:;" data-highcharts-chart="4">
 									<div class="highcharts-container" id="highcharts-16" style="position: relative; overflow: visible; width: 450px; height: 140px; text-align: left; line-height: normal; z-index: 0; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
-
-										<div class="highcharts-tooltip" style="position: absolute; left: -65px; top: -9999px; opacity: 0; visibility: visible;">
-									<span style="position: absolute; font-family: 'Lucida Grande', 'Lucida Sans Unicode', Arial, Helvetica, sans-serif; font-size: 12px; white-space: nowrap; color: rgb(51, 51, 51); margin-left: 0px; margin-top: 0px; left: 8px; top: 8px;" zindex="1">
-										<span>日期：11/09</span><br>
-										<span style="color:#F79C27">●</span> 前100名数量: <b>36 693</b><br>
-										<span style="color:#35BCE9">●</span> 前50名数量: <b>22 651</b><br>
-										<span style="color:#4F99F0">●</span> 前20名数量: <b>4 088</b><br>
-										<span style="color:#5FC848">●</span> 前10名数量: <b>1 386</b><br>
-									</span>
-										</div>
+                                        <span>${qzSetting.qzKeywordRankInfoMap.get("PC") == null ? "PC图表暂无数据" : "PC图表"} </span>
+										<%--<div class="highcharts-tooltip" style="position: absolute; left: -65px; top: -9999px; opacity: 0; visibility: visible;">
+                                            <span style="position: absolute; font-family: 'Lucida Grande', 'Lucida Sans Unicode', Arial, Helvetica, sans-serif; font-size: 12px; white-space: nowrap; color: rgb(51, 51, 51); margin-left: 0px; margin-top: 0px; left: 8px; top: 8px;" zindex="1">
+                                                <span>日期：11/09</span><br>
+                                                <span style="color:#F79C27">●</span> 前100名数量: <b>36 693</b><br>
+                                                <span style="color:#35BCE9">●</span> 前50名数量: <b>22 651</b><br>
+                                                <span style="color:#4F99F0">●</span> 前20名数量: <b>4 088</b><br>
+                                                <span style="color:#5FC848">●</span> 前10名数量: <b>1 386</b><br>
+                                            </span>
+										</div>--%>
 									</div>
 								</a>
 
@@ -397,7 +397,7 @@
 									<div class="row">
 										<div>
 											<span class="line1">
-												<a href="javascript:;">8 </a>
+												<a href="javascript:;">${qzSetting.phoneCreateTopTenNum == null ? 0 : qzSetting.phoneCreateTopTenNum} </a>
 											</span>
 											<span title="录入时前10数">
 												<a href="javascript:;">录入时前10数 </a>
@@ -405,7 +405,7 @@
 										</div>
 										<div>
 											<span class="line1">
-												<a href="javascript:;">8 </a>
+												<a href="javascript:;">${qzSetting.phoneCreateTopFiftyNum == null ? 0 : qzSetting.phoneCreateTopFiftyNum} </a>
 											</span>
 											<span title="录入时前50数">
 												<a href="javascript:;">录入时前50数 </a>
@@ -522,15 +522,16 @@
 							<div class="rank-wrap">
 								<a class="col-8 chart-ranking" href="javascript:;" data-highcharts-chart="4">
 									<div class="highcharts-container" id="highcharts-16" style="position: relative; overflow: visible; width: 450px; height: 140px; text-align: left; line-height: normal; z-index: 0; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
-										<div class="highcharts-tooltip" style="position: absolute; left: -65px; top: -9999px; opacity: 0; visibility: visible;">
-									<span style="position: absolute; font-family: 'Lucida Grande', 'Lucida Sans Unicode', Arial, Helvetica, sans-serif; font-size: 12px; white-space: nowrap; color: rgb(51, 51, 51); margin-left: 0px; margin-top: 0px; left: 8px; top: 8px;" zindex="1">
-										<span>日期：11/09</span><br>
-										<span style="color:#F79C27">●</span> 前100名数量: <b>36 693</b><br>
-										<span style="color:#35BCE9">●</span> 前50名数量: <b>22 651</b><br>
-										<span style="color:#4F99F0">●</span> 前20名数量: <b>4 088</b><br>
-										<span style="color:#5FC848">●</span> 前10名数量: <b>1 386</b><br>
-									</span>
-										</div>
+                                        <span>${qzSetting.qzKeywordRankInfoMap.get("Phone") == null ? "Phone图表暂无数据" : "Phone图表"} </span>
+										<%--<div class="highcharts-tooltip" style="position: absolute; left: -65px; top: -9999px; opacity: 0; visibility: visible;">
+                                            <span style="position: absolute; font-family: 'Lucida Grande', 'Lucida Sans Unicode', Arial, Helvetica, sans-serif; font-size: 12px; white-space: nowrap; color: rgb(51, 51, 51); margin-left: 0px; margin-top: 0px; left: 8px; top: 8px;" zindex="1">
+                                                <span>日期：11/09</span><br>
+                                                <span style="color:#F79C27">●</span> 前100名数量: <b>36 693</b><br>
+                                                <span style="color:#35BCE9">●</span> 前50名数量: <b>22 651</b><br>
+                                                <span style="color:#4F99F0">●</span> 前20名数量: <b>4 088</b><br>
+                                                <span style="color:#5FC848">●</span> 前10名数量: <b>1 386</b><br>
+                                            </span>
+										</div>--%>
 									</div>
 								</a>
 

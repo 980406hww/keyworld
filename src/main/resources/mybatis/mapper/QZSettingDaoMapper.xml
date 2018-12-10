@@ -111,7 +111,11 @@
         qs.fCreateTime AS 'createTime',
         qs.fCaptureCurrentKeywordCountTime AS 'captureCurrentKeywordCountTime',
         qs.fCaptureCurrentKeywordStatus AS 'captureCurrentKeywordStatus',
-        qs.fStatus AS 'status'
+        qs.fStatus AS 'status',
+        qs.fPcCreateTopTenNum AS 'pcCreateTopTenNum',
+        qs.fPcCreateTopFiftyNum AS 'pcCreateTopFiftyNum',
+        qs.fPhoneCreateTopTenNum AS 'phoneCreateTopTenNum',
+        qs.fPhoneCreateTopFiftyNum AS 'phoneCreateTopFiftyNum'
         FROM t_qz_setting qs
         JOIN t_customer c
         ON qs.fCustomerUuid = c.fUuid

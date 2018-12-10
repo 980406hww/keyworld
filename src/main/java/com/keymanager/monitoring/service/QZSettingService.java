@@ -50,6 +50,9 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 	@Autowired
 	private ConfigService configService;
 
+	@Autowired
+	private QZKeywordRankInfoService qzKeywordRankInfoService;
+
 	public QZSetting getAvailableQZSetting(){
 		List<QZSetting> qzSettings = qzSettingDao.getAvailableQZSettings();
 		QZSetting qzSetting = null;
@@ -126,10 +129,13 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			existingQZSetting.setCaptureCurrentKeywordCountTime(qzSetting.getCaptureCurrentKeywordCountTime());
 			existingQZSetting.setCaptureCurrentKeywordStatus(qzSetting.getCaptureCurrentKeywordStatus());
 			qzSettingDao.updateById(existingQZSetting);
+
 			//修改部分
 			List<QZOperationType> OldOperationTypes = qzOperationTypeService.searchQZOperationTypesIsDelete(qzSetting.getUuid());
 			List<QZOperationType> updOperationTypes = qzSetting.getQzOperationTypes();
 			updateOpretionTypeAndChargeRule(OldOperationTypes,updOperationTypes,qzSetting.getUuid());
+			List<QZKeywordRankInfo> existingQZKeywordRankInfoList = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid());
+			updateQZKeywordRankInfo(existingQZKeywordRankInfoList, updOperationTypes, qzSetting.getUuid());
 		}else{
 			qzSetting.setUpdateTime(new Date());
 			qzSettingDao.insert(qzSetting);
@@ -137,9 +143,14 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			for (QZOperationType qzOperationType : qzSetting.getQzOperationTypes()){
 				qzOperationType.setQzSettingUuid(qzSettingUuid);
 				qzOperationTypeService.insert(qzOperationType);
-				Long qzOperationTypeUuid  = new Long(qzOperationTypeService.selectLastId());//插入qzOperationType时的uuid
+				// 在qzKeywordRankInfo表中插入对应终端类型的记录
+				QZKeywordRankInfo qzKeywordRankInfo = new QZKeywordRankInfo();
+				qzKeywordRankInfo.setQzSettingUuid(qzSettingUuid);
+				qzKeywordRankInfo.setTerminalType(qzOperationType.getOperationType());
+                qzKeywordRankInfoService.insert(qzKeywordRankInfo);
+
 				for(QZChargeRule qzChargeRule : qzOperationType.getQzChargeRules()){
-					qzChargeRule.setQzOperationTypeUuid(qzOperationTypeUuid);
+					qzChargeRule.setQzOperationTypeUuid(qzOperationType.getUuid());
 					qzChargeRuleService.insert(qzChargeRule);
 				}
 			}
@@ -196,6 +207,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 		oldOperationType.setIsDeleted(0); //只要是发生改变那么就让它的状态为0
 		qzOperationTypeService.updateById(oldOperationType);
+
 		//删除规则
 		qzChargeRuleService.deleteByQZOperationTypeUuid(oldOperationType.getUuid());
 		for (QZChargeRule qzChargeRule : newOperationType.getQzChargeRules()) {
@@ -204,10 +216,47 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		}
 	}
 
+	public void updateQZKeywordRankInfo(List<QZKeywordRankInfo> existingQZKeywordRankInfoList, List<QZOperationType> qzOperationTypeList, Long qzSettingUuid){
+		Map<String, QZKeywordRankInfo> existingQZKeywordRankInfoMap = new HashMap<String, QZKeywordRankInfo>();
+		for (QZKeywordRankInfo qzKeywordRankInfo : existingQZKeywordRankInfoList) {
+            existingQZKeywordRankInfoMap.put(qzKeywordRankInfo.getTerminalType(), qzKeywordRankInfo);
+		}
+		for (QZOperationType qzOperationType : qzOperationTypeList) {
+            QZKeywordRankInfo qzKeywordRankInfo = existingQZKeywordRankInfoMap.get(qzOperationType.getOperationType());
+            if (null != qzKeywordRankInfo) {
+                qzKeywordRankInfo.setUpdateTime(new Date());
+                qzKeywordRankInfoService.updateById(qzKeywordRankInfo);
+                existingQZKeywordRankInfoMap.remove(qzOperationType.getOperationType());
+            } else {
+                qzKeywordRankInfo = new QZKeywordRankInfo();
+                qzKeywordRankInfo.setQzSettingUuid(qzSettingUuid);
+                qzKeywordRankInfo.setTerminalType(qzOperationType.getOperationType());
+                qzKeywordRankInfoService.insert(qzKeywordRankInfo);
+            }
+		}
+
+		for (QZKeywordRankInfo qzKeywordRankInfo : existingQZKeywordRankInfoMap.values()) {
+		    qzKeywordRankInfoService.deleteById(qzKeywordRankInfo);
+        }
+	}
+
 	public Page<QZSetting> searchQZSetting(Page<QZSetting> page, QZSettingSearchCriteria qzSettingSearchCriteria){
 		page.setRecords(qzSettingDao.searchQZSettings(page, qzSettingSearchCriteria));
+        CalculatedQZKeywordRankInfo(page);
 		return page;
 	}
+
+	public Page<QZSetting> CalculatedQZKeywordRankInfo (Page<QZSetting> page){
+        for(QZSetting qzSetting : page.getRecords()){
+            List<QZKeywordRankInfo> qzKeywordRankInfos = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid());
+            Map<String, QZKeywordRankInfo> qzKeywordRankInfoMap = new HashMap<String, QZKeywordRankInfo>();
+            for (QZKeywordRankInfo qzKeywordRankInfo : qzKeywordRankInfos) {
+                qzKeywordRankInfoMap.put(qzKeywordRankInfo.getTerminalType(), qzKeywordRankInfo);
+            }
+            qzSetting.setQzKeywordRankInfoMap(qzKeywordRankInfoMap);
+        }
+        return page;
+    }
 
 	public Map<String,Integer> getChargeRemindData() {
 		Map<String,Integer> dateRangeTypeMap = new HashMap<String, Integer>();
@@ -414,13 +463,14 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 	public void deleteOne(Long uuid){
 		//根据数据库中的uuid去查询
 		List<QZOperationType> qzOperationTypes =  qzOperationTypeService.searchQZOperationTypesByQZSettingUuid(uuid);
-		if(qzOperationTypes.size()>0){
+		if(CollectionUtils.isNotEmpty(qzOperationTypes)){
 			for(QZOperationType qzOperationType : qzOperationTypes){
 				qzChargeRuleService.deleteByQZOperationTypeUuid(qzOperationType.getUuid());
 			}
 			qzOperationTypeService.deleteByQZSettingUuid(uuid);
 		}
-		qzSettingDao.deleteById(uuid);
+        qzKeywordRankInfoService.deleteByQZSettingUuid(uuid);
+        qzSettingDao.deleteById(uuid);
 	}
 
 	public void deleteAll(List<String> uuids){

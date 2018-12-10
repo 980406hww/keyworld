@@ -2,4 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.monitoring.dao.QZKeywordRankInfoDao">
 
+    <select id="searchExistingQZKeywordRankInfo" parameterType="java.lang.Long" resultType="com.keymanager.monitoring.entity.QZKeywordRankInfo">
+        SELECT
+            qzkri.fUuid AS "uuid",
+            qzkri.fQZSettingUuid AS "qzSettingUuid",
+            qzkri.fTerminalType AS "terminalType"
+        FROM t_qz_keyword_rank_info qzkri
+        WHERE qzkri.fQZSettingUuid = #{qzSettingUuid}
+    </select>
+
+    <delete id="deleteByQZSettingUuid" parameterType="java.lang.Long">
+        DELETE FROM t_qz_keyword_rank_info
+        WHERE fQZSettingUuid = #{qzSettingUuid}
+    </delete>
+
 </mapper>

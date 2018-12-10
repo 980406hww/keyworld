@@ -218,7 +218,7 @@ function updateImmediately(self) {
     var uuids = getSelectedIDs();
     if(uuids === ''){
         alert('请选择要操作的设置信息！');
-        return ;
+        return;
     }
     if (confirm("确实要马上更新这些设置吗？") == false) return;
     var postData = {};
@@ -951,7 +951,7 @@ function getAvailableQZSettings() {
             var text = "";
             $.each(data,function(index,element) {
                 text += element.domain;
-                if(element.updateEndTime!=null&&element.updateEndTime!=''){
+                if(element.updateEndTime != null && element.updateEndTime != ''){
                     text += '______'+ toTimeFormat(new Date(element.updateEndTime));
                 }
                 text += '\r';
