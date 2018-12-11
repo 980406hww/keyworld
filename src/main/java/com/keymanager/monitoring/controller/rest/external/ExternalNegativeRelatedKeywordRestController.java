@@ -3,6 +3,7 @@ package com.keymanager.monitoring.controller.rest.external;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.NegativeRelatedKeywordCriteria;
 import com.keymanager.monitoring.service.NegativeRelatedKeywordService;
+import com.keymanager.monitoring.service.PerformanceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +23,18 @@ public class ExternalNegativeRelatedKeywordRestController extends SpringMVCBaseC
     private static Logger logger = LoggerFactory.getLogger(ExternalNegativeRelatedKeywordRestController.class);
 
     @Autowired
+    private PerformanceService performanceService;
+
+    @Autowired
     private NegativeRelatedKeywordService negativeRelatedKeywordCriteriaService;
 
     @RequestMapping(value = "/findNegativeRelatedKeyword" , method = RequestMethod.POST)
     public ResponseEntity<?> findNegativeRelatedKeyword(@RequestBody NegativeRelatedKeywordCriteria negativeRelatedKeywordCriteria) {
         try {
             if (validUser(negativeRelatedKeywordCriteria.getUserName(), negativeRelatedKeywordCriteria.getPassword())) {
+                long startMilleSeconds = System.currentTimeMillis();
                 List<String> negativeRelatedKeywords = negativeRelatedKeywordCriteriaService.findNegativeRelatedKeyword(negativeRelatedKeywordCriteria.getMainKeyword());
+                performanceService.addPerformanceLog("findNegativeRelatedKeyword", System.currentTimeMillis() - startMilleSeconds, "");
                 return new ResponseEntity<Object>(negativeRelatedKeywords, HttpStatus.OK);
             }
         }catch (Exception ex){

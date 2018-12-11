@@ -351,6 +351,17 @@
         WHERE fClientID = #{clientID}
     </update>
 
+    <update id="updateClientStatusForCapturePosition">
+        UPDATE t_client_status
+        SET fRestartOrderingTime = NOW(),
+        fOptimizationStartDate = IF(fOptimizationStartDate IS NULL, CURRENT_DATE(), fOptimizationStartDate),
+        fOptimizationTotalCount = fOptimizationTotalCount + 1,
+        fLastVisitTime = NOW(),
+        fTenMinsLastVisitTime = DATE_ADD(NOW(), INTERVAL 10 MINUTE ),
+        fLastSendNotificationTime = NULL
+        WHERE fClientID = #{clientID}
+    </update>
+
     <update id="updatePageNo">
         UPDATE t_client_status
         SET

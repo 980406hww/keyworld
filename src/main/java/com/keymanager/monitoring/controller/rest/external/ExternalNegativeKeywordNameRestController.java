@@ -1,5 +1,6 @@
 package com.keymanager.monitoring.controller.rest.external;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.entity.NegativeKeywordName;
 import com.keymanager.monitoring.service.*;
@@ -37,6 +38,9 @@ public class ExternalNegativeKeywordNameRestController extends SpringMVCBaseCont
 
     @Autowired
     private NegativeExcludeKeywordService negativeExcludeKeywordService;
+
+    @Autowired
+    private PerformanceService performanceService;
 
     @RequestMapping(value = "/getNegativeKeywordName" , method = RequestMethod.POST)
     public ResponseEntity<?> getNegativeKeywordName(@RequestBody Map<String, Object> requestMap) {
@@ -125,12 +129,38 @@ public class ExternalNegativeKeywordNameRestController extends SpringMVCBaseCont
             String userName = (String) requestMap.get("userName");
             String password = (String) requestMap.get("password");
             if(validUser(userName, password)) {
+                long startMilleSeconds = System.currentTimeMillis();
                 NegativeSupportingDataVO negativeSupportingDataVO = new NegativeSupportingDataVO();
                 negativeSupportingDataVO.setContactKeywords(negativeSiteContactKeywordService.getContactKeyword());
                 negativeSupportingDataVO.setExcludeKeywords(negativeExcludeKeywordService.getNegativeExcludeKeyword());
                 negativeSupportingDataVO.setNegativeGroups(negativeKeywordNameService.getNegativeGroup());
                 negativeSupportingDataVO.setNegativeKeywords(negativeKeywordService.getNegativeKeyword());
+                performanceService.addPerformanceLog("getNegativeSupportingData", System.currentTimeMillis() - startMilleSeconds, "");
                 return new ResponseEntity<Object>(negativeSupportingDataVO, HttpStatus.OK);
+            }
+            return new ResponseEntity<Object>(false,HttpStatus.BAD_REQUEST);
+        }catch (Exception ex){
+            logger.error(ex.getMessage());
+            return new ResponseEntity<Object>(null,HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/getNegativeSupportingDataZip" , method = RequestMethod.POST)
+    public ResponseEntity<?> getNegativeSupportingDataZip(@RequestBody Map<String, Object> requestMap) {
+        try {
+            String userName = (String) requestMap.get("userName");
+            String password = (String) requestMap.get("password");
+            if(validUser(userName, password)) {
+                long startMilleSeconds = System.currentTimeMillis();
+                NegativeSupportingDataVO negativeSupportingDataVO = new NegativeSupportingDataVO();
+                negativeSupportingDataVO.setContactKeywords(negativeSiteContactKeywordService.getContactKeyword());
+                negativeSupportingDataVO.setExcludeKeywords(negativeExcludeKeywordService.getNegativeExcludeKeyword());
+                negativeSupportingDataVO.setNegativeGroups(negativeKeywordNameService.getNegativeGroup());
+                negativeSupportingDataVO.setNegativeKeywords(negativeKeywordService.getNegativeKeyword());
+                ObjectMapper mapper = new ObjectMapper();
+                String result = mapper.writeValueAsString(negativeSupportingDataVO);
+                performanceService.addPerformanceLog("getNegativeSupportingData", System.currentTimeMillis() - startMilleSeconds, "");
+                return new ResponseEntity<Object>(result, HttpStatus.OK);
             }
             return new ResponseEntity<Object>(false,HttpStatus.BAD_REQUEST);
         }catch (Exception ex){
