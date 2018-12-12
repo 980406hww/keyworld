@@ -438,30 +438,23 @@ ul {
 }
 
 .datalist-list .body .rank-wrap {
-    width: 500px;
+    width: 540px;
     float: left;
     height: 150px;
-    padding: 12px 0;
+    padding: 5px 0;
     border-left: 1px solid #e6e6e6;
 }
 
-.datalist-list .body .rank-wrap > a {
-    padding: 0 5px;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-}
-
-.datalist-list .body .rank-wrap > a, .datalist-list .body .rank-wrap > div {
-    /*color: #999;*/
+.datalist-list .body .rank-wrap > div {
     float: left;
     font-size: 12px;
-    height: 120px;
+    height: 140px;
     line-height: 120px;
     display: block;
 }
 
 .datalist-list .body .rank-wrap > div {
-    padding: 0 10px;
+    padding: 0 5px;
 }
 
 .datalist-list .body .rank-wrap > div:last-child {
@@ -618,22 +611,17 @@ ul {
     padding-left: 5px
 }
 
-.col-1 {
-    float: left;
-    width: 5%;
-    text-align: left
-}
-
 .col-3 {
     float: left;
-    width: 20%;
+    width: 17%;
     text-align: left;
 }
 
 .col-8 {
     float: left;
-    width: 75%;
+    width: 82%;
     text-align: left;
+    text-overflow: ellipsis;
 }
 
 #moreSearchCondition {

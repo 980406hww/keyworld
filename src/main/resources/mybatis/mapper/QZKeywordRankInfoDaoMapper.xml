@@ -6,7 +6,16 @@
         SELECT
             qzkri.fUuid AS "uuid",
             qzkri.fQZSettingUuid AS "qzSettingUuid",
-            qzkri.fTerminalType AS "terminalType"
+            qzkri.fTerminalType AS "terminalType",
+            qzkri.fWebSiteType AS "websiteType",
+            qzkri.fTopTen AS "topTen",
+            qzkri.fTopTwenty AS "topTwenty",
+            qzkri.fTopThirty AS "topThirty",
+            qzkri.fTopForty AS "topForty",
+            qzkri.fTopFifty AS "topFifty",
+            qzkri.fDate AS "date",
+            qzkri.fFullDate AS "fullDate",
+            qzkri.fIncrease AS "increase"
         FROM t_qz_keyword_rank_info qzkri
         WHERE qzkri.fQZSettingUuid = #{qzSettingUuid}
     </select>

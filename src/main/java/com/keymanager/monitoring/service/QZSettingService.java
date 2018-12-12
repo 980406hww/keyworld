@@ -14,7 +14,9 @@ import com.keymanager.monitoring.vo.CustomerKeywordSummaryInfoVO;
 import com.keymanager.monitoring.vo.DateRangeTypeVO;
 import com.keymanager.util.Constants;
 import com.keymanager.util.Utils;
+import com.keymanager.util.common.StringUtil;
 import com.keymanager.value.CustomerKeywordVO;
+import net.sf.json.JSONObject;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -242,20 +244,56 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 	public Page<QZSetting> searchQZSetting(Page<QZSetting> page, QZSettingSearchCriteria qzSettingSearchCriteria){
 		page.setRecords(qzSettingDao.searchQZSettings(page, qzSettingSearchCriteria));
-        CalculatedQZKeywordRankInfo(page);
+		addingQZKeywordRankInfo(page);
 		return page;
 	}
 
-	public Page<QZSetting> CalculatedQZKeywordRankInfo (Page<QZSetting> page){
+	public Page<QZSetting> addingQZKeywordRankInfo (Page<QZSetting> page){
         for(QZSetting qzSetting : page.getRecords()){
             List<QZKeywordRankInfo> qzKeywordRankInfos = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid());
-            Map<String, QZKeywordRankInfo> qzKeywordRankInfoMap = new HashMap<String, QZKeywordRankInfo>();
+            Map<String, JSONObject> qzKeywordRankInfoMap = new HashMap<String, JSONObject>();
             for (QZKeywordRankInfo qzKeywordRankInfo : qzKeywordRankInfos) {
-                qzKeywordRankInfoMap.put(qzKeywordRankInfo.getTerminalType(), qzKeywordRankInfo);
+                calculatedQZKeywordRankInfo(qzKeywordRankInfo);
+                qzKeywordRankInfoMap.put(qzKeywordRankInfo.getTerminalType(), new JSONObject().fromObject(qzKeywordRankInfo));
             }
             qzSetting.setQzKeywordRankInfoMap(qzKeywordRankInfoMap);
         }
         return page;
+    }
+
+    public QZKeywordRankInfo calculatedQZKeywordRankInfo(QZKeywordRankInfo qzKeywordRankInfo) {
+        Map<String, Object> map;
+        if (!StringUtils.isBlank(qzKeywordRankInfo.getTopTen())) {
+            map = calculate(qzKeywordRankInfo.getTopTen());
+            qzKeywordRankInfo.setTopTenIncrement((Integer) map.get("increment"));
+            qzKeywordRankInfo.setTopTenNum((Integer) map.get("topNum"));
+        }
+        if (!StringUtils.isBlank(qzKeywordRankInfo.getTopTwenty())) {
+            map = calculate(qzKeywordRankInfo.getTopTwenty());
+            qzKeywordRankInfo.setTopTwentyIncrement((Integer) map.get("increment"));
+        }
+        if (!StringUtils.isBlank(qzKeywordRankInfo.getTopThirty())) {
+            map = calculate(qzKeywordRankInfo.getTopThirty());
+            qzKeywordRankInfo.setTopThirtyIncrement((Integer) map.get("increment"));
+        }
+        if (!StringUtils.isBlank(qzKeywordRankInfo.getTopForty())) {
+            map = calculate(qzKeywordRankInfo.getTopForty());
+            qzKeywordRankInfo.setTopFortyIncrement((Integer) map.get("increment"));
+        }
+        if (!StringUtils.isBlank(qzKeywordRankInfo.getTopFifty())) {
+            map = calculate(qzKeywordRankInfo.getTopFifty());
+            qzKeywordRankInfo.setTopFiftyIncrement((Integer) map.get("increment"));
+            qzKeywordRankInfo.setTopFiftyNum((Integer) map.get("topNum"));
+        }
+	    return qzKeywordRankInfo;
+    }
+
+    public Map<String, Object> calculate(String topString) {
+	    Map<String, Object> map = new HashMap<String, Object>();
+        String[] topArr = topString.replace("[", "").replace("]", "").split(", ");
+        map.put("increment", Integer.parseInt(topArr[0]) - Integer.parseInt(topArr[1]));
+        map.put("topNum", Integer.parseInt(topArr[0]));
+        return map;
     }
 
 	public Map<String,Integer> getChargeRemindData() {

@@ -34,16 +34,166 @@ $(function () {
         showCustomerBottomDiv.find("#nextButton").attr("disabled", "disabled");
         showCustomerBottomDiv.find("#lastButton").attr("disabled", "disabled");
     }
+    detectedMoreSearchConditionDivShow();
+    detectedTopNum(null);
+});
+function detectedMoreSearchConditionDivShow() {
     var moreSearchCondition = $("div.conn[name='moreSearchCondition']");
     var customerInfo = moreSearchCondition.find("ul li.condition input[name='customerInfo']").val();
     var group =  moreSearchCondition.find("ul li.condition input[name='group']").val();
     var status = moreSearchCondition.find("select[name='status']").val();
     var updateStatus = moreSearchCondition.find("select[name='updateStatus']").val();
-    var vals = customerInfo + group + status + updateStatus;
-    if (vals != "") {
+    var values = customerInfo + group + status + updateStatus;
+    if (values != "") {
         moreSearchCondition.css("display", "block");
     }
-});
+}
+function detectedTopNum(terminalType) {
+    var type = "PC";
+    var rankWrap;
+    if (terminalType != null){
+        type = terminalType;
+    }
+    if (type == "PC") {
+        rankWrap = $(".pcGroup .body .rank-wrap");
+    }
+    if (type == "Phone") {
+        rankWrap = $(".phoneGroup .body .rank-wrap");
+    }
+    $(rankWrap).each(function () {
+        generateQZKeywordTrendCharts($(this).find("#keywordTrendCharts")[0], $(this).find("div[name='rankInfo'] span").text());
+        $(this).find(".row4").each(function () {
+            var a = $(this).find("span:last-child a");
+            if (a[0].innerHTML.trim() >= 0) {
+                $(a).addClass("green");
+            } else if (a[0].innerHTML.trim() < 0) {
+                $(a).addClass("red");
+            }
+        });
+    });
+}
+function generateQZKeywordTrendCharts(domElement, data) {
+    if (domElement == undefined) {
+        return;
+    }
+    if (JSON.parse(data).date == '') {
+        domElement.innerHTML = "<h1 style='text-align: center'> 暂无数据 </h1>";
+        return;
+    }
+    var result = JSON.parse(data);
+    var date = result.date.replace("['", "").replace("']", "").split("', '").reverse();
+    var topTen = stringToArray(result.topTen);
+    var topTwenty = stringToArray(result.topTwenty);
+    var topThirty = stringToArray(result.topThirty);
+    var topForty = stringToArray(result.topForty);
+    var topFifty = stringToArray(result.topFifty);
+    var keywordTrendCharts = echarts.init(domElement);
+    var option = {
+        color: ['#ffd285', '#ff733f', '#ec4863'],
+        tooltip: {
+            trigger: 'axis'
+        },
+        legend: {
+            textStyle: {
+                color: '#ffd285',
+            },
+            data: ['前10名', '前20名', '前30名', '前40名', '前50名']
+        },
+        grid: {
+            left: '1%',
+            right: '3%',
+            top: '20%',
+            bottom: '1%',
+            containLabel: true
+        },
+        toolbox: {
+            show: false,
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        xAxis: {
+            type: 'category',
+            axisLine: {
+                lineStyle: {
+                    color: '#404A59'
+                }
+            },
+            axisTick: {
+                show: true
+            },
+            axisLabel: {
+                textStyle: {
+                    color: '#404A59'
+                }
+            },
+            boundaryGap: false,
+            data: date
+        },
+        yAxis: {
+            axisLine: {
+                lineStyle: {
+                    color: '#404A59'
+                }
+            },
+            splitLine: {
+                show: true,
+                lineStyle: {
+                    color: '#404A59'
+                }
+            },
+            axisTick: {
+                show: false
+            },
+            axisLabel: {
+                textStyle: {
+                    color: '#404A59'
+                }
+            },
+            type: 'value'
+        },
+        series: [{
+            name: '前10名',
+            smooth: true,
+            type: 'line',
+            symbolSize: 2,
+            symbol: 'rect',
+            data: topTen
+        }, {
+            name: '前20名',
+            smooth: true,
+            type: 'line',
+            symbolSize: 2,
+            symbol: 'roundRect',
+            data: topTwenty
+        }, {
+            name: '前30名',
+            smooth: true,
+            type: 'line',
+            symbolSize: 2,
+            symbol: 'circle',
+            data: topThirty
+        }, {
+            name: '前40名',
+            smooth: true,
+            type: 'line',
+            symbolSize: 2,
+            symbol: 'triangle',
+            data: topForty
+        }, {
+            name: '前50名',
+            smooth: true,
+            type: 'line',
+            symbolSize: 2,
+            symbol: 'diamond',
+            data: topFifty
+        }]
+    };
+    keywordTrendCharts.setOption(option);
+}
+function stringToArray(str) {
+    return str.replace('[', '').replace(']', '').split(', ').reverse();
+}
 function checkTerminalType(obj, terminalType) {
     $(obj).parent().parent().find("li").removeClass("active");
     $(obj).parent().addClass("active");
@@ -63,8 +213,8 @@ function checkTerminalType(obj, terminalType) {
             $(this).css("display", "block");
         });
     }
+    detectedTopNum(terminalType);
 }
-
 function trimSearchCondition(days) {
     var chargeForm = $("#chargeForm");
     var customerInfo = $(".conn").find(".condition").find("input[name='customerInfo']").val();
@@ -86,6 +236,8 @@ function trimSearchCondition(days) {
     }
     if (updateStatus != "") {
         chargeForm.find("#updateStatus").val($.trim(updateStatus));
+    } else {
+        chargeForm.find("#updateStatus").val(null);
     }
     chargeForm.find("#currentPageNumberHidden").val(1);
     var moreSearchCondition = $("div.conn[name='moreSearchCondition']");
@@ -94,11 +246,9 @@ function trimSearchCondition(days) {
     moreSearchCondition.find("ul li select[name='updateStatus']").val($.trim(updateStatus));
     chargeForm.submit();
 }
-
 function showMoreSearchCondition() {
     $(".mytabs").find("div[name='moreSearchCondition']").toggle();
 }
-
 function alignTableHeader(){
     var td = $("#headerTable tr:first td");
     var ctd = $("#showQZSettingTable tr:first td");

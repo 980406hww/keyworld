@@ -147,7 +147,6 @@
 	<input type="hidden" name="updateStatus" id="updateStatus" value="${qzSettingSearchCriteria.updateStatus}"/>
 </form>
 
-
 <div class="datalist">
 	<div class="datalist-list">
 		<ul>
@@ -191,7 +190,7 @@
 									<div class="row">
 										<div>
 									<span class="line1">
-										<a href="javascript:;">${qzSetting.pcCreateTopTenNum == null ? 0 : qzSetting.pcCreateTopTenNum} </a>
+										<a href="javascript:;">${qzSetting.pcCreateTopTenNum == null ? "无数据" : qzSetting.pcCreateTopTenNum}</a>
 									</span>
 											<span title="录入时前10数">
 										<a href="javascript:;">录入时前10数 </a>
@@ -199,7 +198,7 @@
 										</div>
 										<div>
 									<span class="line1">
-										<a href="javascript:;">${qzSetting.pcCreateTopFiftyNum == null ? 0 : qzSetting.pcCreateTopFiftyNum} </a>
+										<a href="javascript:;">${qzSetting.pcCreateTopFiftyNum == null ? "无数据" : qzSetting.pcCreateTopFiftyNum}</a>
 									</span>
 											<span title="录入时前50数">
 										<a href="javascript:;">录入时前50数 </a>
@@ -209,7 +208,7 @@
 										<div>
 									<span class="line1">
 										<a href="javascript:;">
-											${qzSetting.pcGroup == null or qzSetting.pcGroup == "" ? "无" : qzSetting.pcGroup}
+											${qzSetting.pcGroup == null or qzSetting.pcGroup == "" ? "无数据" : qzSetting.pcGroup}
 										</a>
 									</span>
 											<span title="优化分组">
@@ -228,7 +227,9 @@
 
 										<div>
 									<span class="line1">
-										<a href="javascript:;">${qzSetting.updateStatus == null ? "无" : qzSetting.updateStatus} </a>
+										<a href="javascript:;">
+											${qzSetting.updateStatus == null ? "无数据" : qzSetting.updateStatus}
+										</a>
 									</span>
 											<span title="更新状态">
 										<a href="javascript:;">更新状态 </a>
@@ -247,21 +248,25 @@
 
 									<div class="row">
 										<div>
-										<span class="line1">
-											<a href="javascript:;">10 </a>
-										</span>
-										<span title="前10数">
-										<a href="javascript:;">前10数 </a>
-									</span>
+											<span class="line1">
+												<a href="javascript:;">
+													${qzSetting.qzKeywordRankInfoMap["PC"].topTenNum == null ? "无数据" : qzSetting.qzKeywordRankInfoMap["PC"].topTenNum}
+												</a>
+											</span>
+											<span title="前10数">
+												<a href="javascript:;">前10数 </a>
+											</span>
 										</div>
 
 										<div>
-									<span class="line1">
-										<a href="javascript:;">10 </a>
-									</span>
+											<span class="line1">
+												<a href="javascript:;">
+													${qzSetting.qzKeywordRankInfoMap["PC"].topFiftyNum == null ? "无数据" : qzSetting.qzKeywordRankInfoMap["PC"].topFiftyNum}
+												</a>
+											</span>
 											<span title="前50数">
-										<a href="javascript:;">前50数 </a>
-									</span>
+												<a href="javascript:;">前50数 </a>
+											</span>
 										</div>
 
 										<div>
@@ -314,57 +319,63 @@
 							</div>
 
 							<div class="rank-wrap">
-								<a class="col-8 chart-ranking" href="javascript:;" data-highcharts-chart="4">
-									<div class="highcharts-container" id="highcharts-16" style="position: relative; overflow: visible; width: 450px; height: 140px; text-align: left; line-height: normal; z-index: 0; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
-                                        <span>${qzSetting.qzKeywordRankInfoMap.get("PC") == null ? "PC图表暂无数据" : "PC图表"} </span>
-										<%--<div class="highcharts-tooltip" style="position: absolute; left: -65px; top: -9999px; opacity: 0; visibility: visible;">
-                                            <span style="position: absolute; font-family: 'Lucida Grande', 'Lucida Sans Unicode', Arial, Helvetica, sans-serif; font-size: 12px; white-space: nowrap; color: rgb(51, 51, 51); margin-left: 0px; margin-top: 0px; left: 8px; top: 8px;" zindex="1">
-                                                <span>日期：11/09</span><br>
-                                                <span style="color:#F79C27">●</span> 前100名数量: <b>36 693</b><br>
-                                                <span style="color:#35BCE9">●</span> 前50名数量: <b>22 651</b><br>
-                                                <span style="color:#4F99F0">●</span> 前20名数量: <b>4 088</b><br>
-                                                <span style="color:#5FC848">●</span> 前10名数量: <b>1 386</b><br>
-                                            </span>
-										</div>--%>
-									</div>
-								</a>
-
-								<div class="col-1">
-								</div>
-
+								<c:choose>
+									<c:when test="${qzSetting.qzKeywordRankInfoMap['PC'] != null}">
+										<div name="rankInfo" style="display: none;">
+											<span>${qzSetting.qzKeywordRankInfoMap["PC"]}</span>
+										</div>
+										<div class="col-8" id="keywordTrendCharts" style="width: 420px; height: 140px;"></div>
+									</c:when>
+									<c:otherwise>
+										<div class="col-8" style="width: 420px; height: 140px;">
+											<h1 style="text-align: center"> 暂无数据 </h1>
+										</div>
+									</c:otherwise>
+								</c:choose>
+								
 								<div class="col-3 top50-link">
-									<div class="row4 line1">
+									<div class="row4">
 										<span>前50</span>
 										<span class="top50">
-											<a class="red" href="javascript:;">-11167</a>
+											<a href="javascript:;">
+												${qzSetting.qzKeywordRankInfoMap["PC"].topFiftyIncrement == null ? '无数据' : qzSetting.qzKeywordRankInfoMap["PC"].topFiftyIncrement}
+											</a>
 										</span>
 									</div>
 
 									<div class="row4">
 										<span>前40</span>
 										<span class="top40">
-									<a class="red" href="javascript:;">-3638</a>
-								</span>
+											<a href="javascript:;">
+												${qzSetting.qzKeywordRankInfoMap["PC"].topFortyIncrement == null ? '无数据' : qzSetting.qzKeywordRankInfoMap["PC"].topFortyIncrement}
+											</a>
+										</span>
 									</div>
 
 									<div class="row4">
 										<span>前30</span>
 										<span class="top30">
-									<a class="red" href="javascript:;">-224</a>
+									<a href="javascript:;">
+										${qzSetting.qzKeywordRankInfoMap["PC"].topThirtyIncrement == null ? '无数据' : qzSetting.qzKeywordRankInfoMap["PC"].topThirtyIncrement}
+									</a>
 								</span>
 									</div>
 
 									<div class="row4">
 										<span>前20</span>
 										<span class="top20">
-									<a class="red" href="javascript:;">-224</a>
+									<a href="javascript:;">
+										${qzSetting.qzKeywordRankInfoMap["PC"].topTwentyIncrement == null ? '无数据' : qzSetting.qzKeywordRankInfoMap["PC"].topTwentyIncrement}
+									</a>
 								</span>
 									</div>
 
 									<div class="row4">
 										<span>前10</span>
 										<span class="top10">
-									<a class="red" href="javascript:;">-28</a>
+									<a href="javascript:;">
+										${qzSetting.qzKeywordRankInfoMap["PC"].topTenIncrement == null ? '无数据' : qzSetting.qzKeywordRankInfoMap["PC"].topTenIncrement}
+									</a>
 								</span>
 									</div>
 								</div>
@@ -397,7 +408,7 @@
 									<div class="row">
 										<div>
 											<span class="line1">
-												<a href="javascript:;">${qzSetting.phoneCreateTopTenNum == null ? 0 : qzSetting.phoneCreateTopTenNum} </a>
+												<a href="javascript:;">${qzSetting.phoneCreateTopTenNum == null ? "无数据" : qzSetting.phoneCreateTopTenNum} </a>
 											</span>
 											<span title="录入时前10数">
 												<a href="javascript:;">录入时前10数 </a>
@@ -405,7 +416,7 @@
 										</div>
 										<div>
 											<span class="line1">
-												<a href="javascript:;">${qzSetting.phoneCreateTopFiftyNum == null ? 0 : qzSetting.phoneCreateTopFiftyNum} </a>
+												<a href="javascript:;">${qzSetting.phoneCreateTopFiftyNum == null ? "无数据" : qzSetting.phoneCreateTopFiftyNum} </a>
 											</span>
 											<span title="录入时前50数">
 												<a href="javascript:;">录入时前50数 </a>
@@ -415,7 +426,7 @@
 										<div>
 											<span class="line1">
 												<a href="javascript:;">
-													${qzSetting.phoneGroup == null or qzSetting.phoneGroup == "" ? "无" : qzSetting.phoneGroup}
+													${qzSetting.phoneGroup == null or qzSetting.phoneGroup == "" ? "无数据" : qzSetting.phoneGroup}
 												</a>
 											</span>
 											<span title="优化分组">
@@ -434,7 +445,7 @@
 
 										<div>
 									<span class="line1">
-										<a href="javascript:;">${qzSetting.updateStatus == null ? "无" : qzSetting.updateStatus} </a>
+										<a href="javascript:;">${qzSetting.updateStatus == null ? "无数据" : qzSetting.updateStatus} </a>
 									</span>
 											<span title="更新状态">
 										<a href="javascript:;">更新状态 </a>
@@ -454,7 +465,9 @@
 									<div class="row">
 										<div>
 									<span class="line1">
-										<a href="javascript:;">10 </a>
+										<a href="javascript:;">
+											${qzSetting.qzKeywordRankInfoMap["Phone"].topTenNum == null ? "无数据" : qzSetting.qzKeywordRankInfoMap["Phone"].topTenNum}
+										</a>
 									</span>
 											<span title="前10数">
 										<a href="javascript:;">前10数 </a>
@@ -463,7 +476,9 @@
 
 										<div>
 									<span class="line1">
-										<a href="javascript:;">10 </a>
+										<a href="javascript:;">
+											${qzSetting.qzKeywordRankInfoMap["Phone"].topFiftyNum == null ? "无数据" : qzSetting.qzKeywordRankInfoMap["Phone"].topFiftyNum}
+										</a>
 									</span>
 											<span title="前50数">
 										<a href="javascript:;">前50数 </a>
@@ -520,57 +535,63 @@
 							</div>
 
 							<div class="rank-wrap">
-								<a class="col-8 chart-ranking" href="javascript:;" data-highcharts-chart="4">
-									<div class="highcharts-container" id="highcharts-16" style="position: relative; overflow: visible; width: 450px; height: 140px; text-align: left; line-height: normal; z-index: 0; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
-                                        <span>${qzSetting.qzKeywordRankInfoMap.get("Phone") == null ? "Phone图表暂无数据" : "Phone图表"} </span>
-										<%--<div class="highcharts-tooltip" style="position: absolute; left: -65px; top: -9999px; opacity: 0; visibility: visible;">
-                                            <span style="position: absolute; font-family: 'Lucida Grande', 'Lucida Sans Unicode', Arial, Helvetica, sans-serif; font-size: 12px; white-space: nowrap; color: rgb(51, 51, 51); margin-left: 0px; margin-top: 0px; left: 8px; top: 8px;" zindex="1">
-                                                <span>日期：11/09</span><br>
-                                                <span style="color:#F79C27">●</span> 前100名数量: <b>36 693</b><br>
-                                                <span style="color:#35BCE9">●</span> 前50名数量: <b>22 651</b><br>
-                                                <span style="color:#4F99F0">●</span> 前20名数量: <b>4 088</b><br>
-                                                <span style="color:#5FC848">●</span> 前10名数量: <b>1 386</b><br>
-                                            </span>
-										</div>--%>
-									</div>
-								</a>
-
-								<div class="col-1">
-								</div>
+								<c:choose>
+									<c:when test="${qzSetting.qzKeywordRankInfoMap['Phone'] != null}">
+										<div name="rankInfo" style="display: none;">
+											<span>${qzSetting.qzKeywordRankInfoMap["Phone"]}</span>
+										</div>
+										<div class="col-8" id="keywordTrendCharts" style="width: 420px; height: 140px;"></div>
+									</c:when>
+									<c:otherwise>
+										<div class="col-8" style="width: 420px; height: 140px;">
+											<h1 style="text-align: center"> 暂无数据 </h1>
+										</div>
+									</c:otherwise>
+								</c:choose>
 
 								<div class="col-3 top50-link">
-									<div class="row4 line1">
+									<div class="row4">
 										<span>前50</span>
 										<span class="top50">
-									<a class="red" href="javascript:;">-11167</a>
-								</span>
+											<a href="javascript:;">
+												${qzSetting.qzKeywordRankInfoMap["Phone"].topFiftyIncrement == null ? '无数据' : qzSetting.qzKeywordRankInfoMap["Phone"].topFiftyIncrement}
+											</a>
+										</span>
 									</div>
 
 									<div class="row4">
 										<span>前40</span>
 										<span class="top40">
-									<a class="red" href="javascript:;">-3638</a>
+									<a href="javascript:;">
+										${qzSetting.qzKeywordRankInfoMap["Phone"].topFortyIncrement == null ? '无数据' : qzSetting.qzKeywordRankInfoMap["Phone"].topFortyIncrement}
+									</a>
 								</span>
 									</div>
 
 									<div class="row4">
 										<span>前30</span>
 										<span class="top30">
-									<a class="red" href="javascript:;">-224</a>
+									<a href="javascript:;">
+										${qzSetting.qzKeywordRankInfoMap["Phone"].topThirtyIncrement == null ? '无数据' : qzSetting.qzKeywordRankInfoMap["Phone"].topThirtyIncrement}
+									</a>
 								</span>
 									</div>
 
 									<div class="row4">
 										<span>前20</span>
 										<span class="top20">
-									<a class="red" href="javascript:;">-224</a>
+									<a href="javascript:;">
+										${qzSetting.qzKeywordRankInfoMap["Phone"].topTwentyIncrement == null ? '无数据' : qzSetting.qzKeywordRankInfoMap["Phone"].topTwentyIncrement}
+									</a>
 								</span>
 									</div>
 
 									<div class="row4">
 										<span>前10</span>
 										<span class="top10">
-									<a class="red" href="javascript:;">-28</a>
+									<a href="javascript:;">
+										${qzSetting.qzKeywordRankInfoMap["Phone"].topTenIncrement == null ? '无数据' : qzSetting.qzKeywordRankInfoMap["Phone"].topTenIncrement}
+									</a>
 								</span>
 									</div>
 								</div>
@@ -935,6 +956,7 @@
 	</table>
 </div>
 <%@ include file="/commons/loadjs.jsp" %>
+<script src="${staticPath}/js/echarts.min.js"></script>
 <script src="${staticPath }/qzsetting/list.js"></script>
 <script language="javascript">
     var dateStr = new Date(); // 当天日期

@@ -56,13 +56,33 @@ public class QZKeywordRankInfo extends BaseEntity {
     @TableField(value = "fIncrease")
     private Double increase;
 
-    /* 爬取的时间 */
-    @TableField(value = "fCrawlTime")
-    private Date crawlTime;
+    /* 前10的增长数（有正负） */
+    @TableField(exist = false)
+    private int topTenIncrement;
 
-    /* 修改的类型 （new，finish） */
-    @TableField(value = "fUpdateStatus")
-    private String updateStatus;
+    /* 前20的增长数 */
+    @TableField(exist = false)
+    private int topTwentyIncrement;
+
+    /* 前30的增长数 */
+    @TableField(exist = false)
+    private int topThirtyIncrement;
+
+    /* 前40的增长数 */
+    @TableField(exist = false)
+    private int topFortyIncrement;
+
+    /* 前50的增长数 */
+    @TableField(exist = false)
+    private int topFiftyIncrement;
+
+    /* 前10数 */
+    @TableField(exist = false)
+    private int topTenNum;
+
+    /* 前50数 */
+    @TableField(exist = false)
+    private int topFiftyNum;
 
     public Long getQzSettingUuid () {
         return qzSettingUuid;
@@ -152,19 +172,59 @@ public class QZKeywordRankInfo extends BaseEntity {
         this.increase = increase;
     }
 
-    public Date getCrawlTime () {
-        return crawlTime;
+    public int getTopTenIncrement () {
+        return topTenIncrement;
     }
 
-    public void setCrawlTime (Date crawlTime) {
-        this.crawlTime = crawlTime;
+    public void setTopTenIncrement (int topTenIncrement) {
+        this.topTenIncrement = topTenIncrement;
     }
 
-    public String getUpdateStatus () {
-        return updateStatus;
+    public int getTopTwentyIncrement () {
+        return topTwentyIncrement;
     }
 
-    public void setUpdateStatus (String updateStatus) {
-        this.updateStatus = updateStatus;
+    public void setTopTwentyIncrement (int topTwentyIncrement) {
+        this.topTwentyIncrement = topTwentyIncrement;
+    }
+
+    public int getTopThirtyIncrement () {
+        return topThirtyIncrement;
+    }
+
+    public void setTopThirtyIncrement (int topThirtyIncrement) {
+        this.topThirtyIncrement = topThirtyIncrement;
+    }
+
+    public int getTopFortyIncrement () {
+        return topFortyIncrement;
+    }
+
+    public void setTopFortyIncrement (int topFortyIncrement) {
+        this.topFortyIncrement = topFortyIncrement;
+    }
+
+    public int getTopFiftyIncrement () {
+        return topFiftyIncrement;
+    }
+
+    public void setTopFiftyIncrement (int topFiftyIncrement) {
+        this.topFiftyIncrement = topFiftyIncrement;
+    }
+
+    public int getTopTenNum () {
+        return topTenNum;
+    }
+
+    public void setTopTenNum (int topTenNum) {
+        this.topTenNum = topTenNum;
+    }
+
+    public int getTopFiftyNum () {
+        return topFiftyNum;
+    }
+
+    public void setTopFiftyNum (int topFiftyNum) {
+        this.topFiftyNum = topFiftyNum;
     }
 }

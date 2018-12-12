@@ -3,6 +3,7 @@ package com.keymanager.monitoring.entity;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.FieldStrategy;
+import net.sf.json.JSONObject;
 
 import java.util.Date;
 import java.util.List;
@@ -82,10 +83,10 @@ public class QZSetting extends BaseEntity{
 	private int status;
 
 	@TableField(exist = false)
-	private List<QZOperationType> qzOperationTypes;//qzOperationTypes为全站表子类  一对多
+	private List<QZOperationType> qzOperationTypes; //qzOperationTypes为全站表子类  一对多
 
 	@TableField(exist = false)
-	private Map<String, QZKeywordRankInfo> qzKeywordRankInfoMap; // QZKeywordRankInfo为全站表子表  一对多
+	private Map<String, JSONObject> qzKeywordRankInfoMap; // QZKeywordRankInfo为全站表子类 一对多
 
 	public String getUserID() {
 		return userID;
@@ -279,11 +280,11 @@ public class QZSetting extends BaseEntity{
 		this.phoneCreateTopFiftyNum = phoneCreateTopFiftyNum;
 	}
 
-	public Map<String, QZKeywordRankInfo> getQzKeywordRankInfoMap () {
+	public Map<String, JSONObject> getQzKeywordRankInfoMap () {
 		return qzKeywordRankInfoMap;
 	}
 
-	public void setQzKeywordRankInfoMap (Map<String, QZKeywordRankInfo> qzKeywordRankInfoMap) {
+	public void setQzKeywordRankInfoMap (Map<String, JSONObject> qzKeywordRankInfoMap) {
 		this.qzKeywordRankInfoMap = qzKeywordRankInfoMap;
 	}
 }
