@@ -235,4 +235,39 @@
             HAVING COUNT(1) > qot.fMaxKeywordCount
         ) qz;
     </select>
+
+    <update id="updateQzSetting">
+        update t_qz_setting
+        <set>
+            <if test="qzSetting.crawlerTime != null">fCrawlerTime = #{qzSetting.crawlerTime},</if>
+            <if test="qzSetting.crawlerStatus != null and qzSetting.crawlerStatus != ''">fCrawlerStatus = #{qzSetting.crawlerStatus},</if>
+            <if test="qzSetting.pcCreateTopTenNum != null">fPcCreateTopTenNum = #{qzSetting.pcCreateTopTenNum},</if>
+            <if test="qzSetting.pcCreateTopFiftyNum != null">fPcCreateTopFiftyNum = #{qzSetting.pcCreateTopFiftyNum},</if>
+            <if test="qzSetting.phoneCreateTopTenNum != null">fPhoneCreateTopTenNum = #{qzSetting.phoneCreateTopTenNum},</if>
+            <if test="qzSetting.phoneCreateTopFiftyNum != null">fPhoneCreateTopFiftyNum = #{qzSetting.phoneCreateTopFiftyNum}</if>
+        </set>
+        WHERE fUuid = #{qzSetting.uuid}
+    </update>
+
+    <select id="findQzSetting" parameterType="java.lang.Long" resultType="com.keymanager.monitoring.entity.QZSetting">
+        SELECT
+            qs.fUuid AS "uuid",
+            qs.fPcCreateTopTenNum AS "pcCreateTopTenNum",
+            qs.fPcCreateTopFiftyNum AS "pcCreateTopFiftyNum",
+            qs.fPhoneCreateTopTenNum AS "phoneCreateTopTenNum",
+            qs.fPhoneCreateTopFiftyNum AS "phoneCreateTopFiftyNum"
+        FROM t_qz_setting qs
+        WHERE fUuid = #{fUuid}
+    </select>
+
+    <update id="updateCrawlerStatus">
+        update t_qz_setting
+        <set>
+            fCrawlerStatus='processing'
+        </set>
+        WHERE fUuid IN
+        <foreach collection="uuids" item="uuid" index="index"  open="(" separator="," close=")">
+            #{uuid}
+        </foreach>
+    </update>
 </mapper>

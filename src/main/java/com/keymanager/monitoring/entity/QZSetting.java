@@ -88,6 +88,14 @@ public class QZSetting extends BaseEntity{
 	@TableField(exist = false)
 	private Map<String, JSONObject> qzKeywordRankInfoMap; // QZKeywordRankInfo为全站表子类 一对多
 
+	/* 爬取的时间 */
+	@TableField(value = "fCrawlerTime")
+	private Date crawlerTime;
+
+	/* 爬取的状态 (new, finish) */
+	@TableField(value = "fCrawlerStatus")
+	private String crawlerStatus;
+
 	public String getUserID() {
 		return userID;
 	}
@@ -286,5 +294,21 @@ public class QZSetting extends BaseEntity{
 
 	public void setQzKeywordRankInfoMap (Map<String, JSONObject> qzKeywordRankInfoMap) {
 		this.qzKeywordRankInfoMap = qzKeywordRankInfoMap;
+	}
+
+	public Date getCrawlerTime() {
+		return crawlerTime;
+	}
+
+	public void setCrawlerTime(Date crawlerTime) {
+		this.crawlerTime = crawlerTime;
+	}
+
+	public String getCrawlerStatus() {
+		return crawlerStatus;
+	}
+
+	public void setCrawlerStatus(String crawlerStatus) {
+		this.crawlerStatus = crawlerStatus;
 	}
 }

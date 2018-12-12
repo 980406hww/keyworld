@@ -38,5 +38,11 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
     void updatePhoneExceedMaxCountFlag(@Param("phoneKeywordExceedMaxCount") boolean phoneKeywordExceedMaxCount, @Param("uuids") List<Long> uuids);
 
     List<Long> getKeywordExceedMaxCount(@Param("operationType") String operationType);
+
+    void updateQzSetting(@Param("qzSetting") QZSetting qzSetting);
+
+    QZSetting findQzSetting(@Param("fUuid") Long fUuid);
+
+    void updateCrawlerStatus(@Param("uuids")Long[] uuids);
 }
 

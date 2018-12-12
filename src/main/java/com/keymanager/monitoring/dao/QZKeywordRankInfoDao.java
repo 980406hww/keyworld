@@ -2,6 +2,7 @@ package com.keymanager.monitoring.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.keymanager.monitoring.entity.QZKeywordRankInfo;
+import com.keymanager.monitoring.vo.ExternalQzSettingVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -15,4 +16,9 @@ public interface QZKeywordRankInfoDao extends BaseMapper<QZKeywordRankInfo> {
     List<QZKeywordRankInfo> searchExistingQZKeywordRankInfo (@Param("qzSettingUuid") Long qzSettingUuid);
 
     void deleteByQZSettingUuid (@Param("qzSettingUuid") Long qzSettingUuid);
+
+    List<ExternalQzSettingVo> getQZSettingTask();
+
+    List<QZKeywordRankInfo> getQzKeywordRankInfoID();
+
 }
