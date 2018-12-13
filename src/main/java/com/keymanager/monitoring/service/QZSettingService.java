@@ -14,7 +14,6 @@ import com.keymanager.monitoring.vo.CustomerKeywordSummaryInfoVO;
 import com.keymanager.monitoring.vo.DateRangeTypeVO;
 import com.keymanager.util.Constants;
 import com.keymanager.util.Utils;
-import com.keymanager.util.common.StringUtil;
 import com.keymanager.value.CustomerKeywordVO;
 import net.sf.json.JSONObject;
 import org.apache.commons.collections.CollectionUtils;
@@ -242,6 +241,12 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
         }
 	}
 
+	public Page<QZSetting> searchRiseOrFallQZSetting (Page<QZSetting> page, QZSettingSearchCriteria qzSettingSearchCriteria) {
+		page.setRecords(qzSettingDao.searchRiseOrFallQZSetting(page, qzSettingSearchCriteria));
+		addingQZKeywordRankInfo(page);
+		return page;
+	}
+
 	public Page<QZSetting> searchQZSetting(Page<QZSetting> page, QZSettingSearchCriteria qzSettingSearchCriteria){
 		page.setRecords(qzSettingDao.searchQZSettings(page, qzSettingSearchCriteria));
 		addingQZKeywordRankInfo(page);
@@ -253,8 +258,8 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
             List<QZKeywordRankInfo> qzKeywordRankInfos = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid());
             Map<String, JSONObject> qzKeywordRankInfoMap = new HashMap<String, JSONObject>();
             for (QZKeywordRankInfo qzKeywordRankInfo : qzKeywordRankInfos) {
-                calculatedQZKeywordRankInfo(qzKeywordRankInfo);
-                qzKeywordRankInfoMap.put(qzKeywordRankInfo.getTerminalType(), new JSONObject().fromObject(qzKeywordRankInfo));
+				calculatedQZKeywordRankInfo(qzKeywordRankInfo);
+				qzKeywordRankInfoMap.put(qzKeywordRankInfo.getTerminalType(), new JSONObject().fromObject(qzKeywordRankInfo));
             }
             qzSetting.setQzKeywordRankInfoMap(qzKeywordRankInfoMap);
         }

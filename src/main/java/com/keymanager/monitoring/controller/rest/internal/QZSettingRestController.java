@@ -148,7 +148,12 @@ public class QZSettingRestController extends SpringMVCBaseController {
 			customerCriteria.setLoginName(loginName);
 			qzSettingSearchCriteria.setLoginName(loginName);
 		}
-		Page<QZSetting> page = qzSettingService.searchQZSetting(new Page<QZSetting>(currentPageNumber, pageSize), qzSettingSearchCriteria);
+		Page<QZSetting> page;
+		if (null != qzSettingSearchCriteria.getIncreaseType()) {
+			page = qzSettingService.searchRiseOrFallQZSetting(new Page<QZSetting>(currentPageNumber, pageSize), qzSettingSearchCriteria);
+		} else {
+			page = qzSettingService.searchQZSetting(new Page<QZSetting>(currentPageNumber, pageSize), qzSettingSearchCriteria);
+		}
 		List<Customer> customerList = customerService.getActiveCustomerSimpleInfo(customerCriteria);
 		Integer availableQZSettingCount = qzSettingService.getAvailableQZSettings().size();
 		modelAndView.addObject("chargeRemindDataMap", chargeRemindDataMap);
@@ -160,6 +165,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		modelAndView.addObject("availableQZSettingCount", availableQZSettingCount);
 		return modelAndView;
 	}
+
 	@RequiresPermissions("/internal/qzsetting/searchQZSettings")
 	@RequestMapping(value = "/getAvailableQZSettings", method = RequestMethod.POST)
 	public ResponseEntity<?> getAvailableQZSettings(HttpServletRequest request){

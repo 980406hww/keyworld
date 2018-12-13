@@ -1,5 +1,7 @@
 package com.keymanager.monitoring.criteria;
 
+import com.keymanager.util.Constants;
+
 public class QZSettingSearchCriteria{
     private String loginName;
     private String customerUuid;
@@ -9,6 +11,10 @@ public class QZSettingSearchCriteria{
     private String updateStatus;
     private Integer dateRangeType;
     private Integer status;
+    private double upperValue = Constants.QZSETTING_KEYWORD_RANK_UPPER_VALUE;
+    private double lowerValue = Constants.QZSETTING_KEYWORD_RANK_LOWER_VALUE;
+    private Boolean increaseType;
+    private String terminalType;
 
     public String getLoginName() {
         return loginName;
@@ -72,5 +78,37 @@ public class QZSettingSearchCriteria{
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public double getUpperValue () {
+        return upperValue;
+    }
+
+    public void setUpperValue (double upperValue) {
+        this.upperValue = upperValue;
+    }
+
+    public double getLowerValue () {
+        return lowerValue;
+    }
+
+    public void setLowerValue (double lowerValue) {
+        this.lowerValue = lowerValue;
+    }
+
+    public Boolean getIncreaseType () {
+        return increaseType;
+    }
+
+    public void setIncreaseType (Boolean increaseType) {
+        this.increaseType = increaseType;
+    }
+
+    public String getTerminalType () {
+        return terminalType;
+    }
+
+    public void setTerminalType (String terminalType) {
+        this.terminalType = terminalType;
     }
 }
