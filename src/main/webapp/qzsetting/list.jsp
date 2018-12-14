@@ -37,8 +37,8 @@
 
 <div class="mytabs">
 	<ul class="link">
-		<li><a href="javascript:;" onclick="checkTerminalType(this, 'PC')">百度PC</a></li>
-		<li><a href="javascript:;" onclick="checkTerminalType(this, 'Phone')">百度移动</a></li>
+		<li name="PC"><a href="javascript:;" onclick="checkTerminalType('PC')">百度PC</a></li>
+		<li name="Phone"><a href="javascript:;" onclick="checkTerminalType('Phone')">百度移动</a></li>
 	</ul>
 	<div class="conn">
 		<ul>
@@ -79,14 +79,14 @@
 				</li>
 			</shiro:hasPermission>
 			<li>
-				<label title="网站关键词一星期排名趋势涨幅&gt;0.0">
-					<input type="checkbox">
+				<label name="lower" title="网站关键词(PC+Phone)一星期排名趋势涨幅&lt;${qzSettingSearchCriteria.lowerValue}">
+					<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.increaseType != null and !qzSettingSearchCriteria.increaseType}">checked</c:if>>
 					<i class="icon-rank-down"></i>骤降 (${down == null?0:down})
 				</label>
 			</li>
 			<li>
-				<label title="网站关键词一星期排名趋势涨幅&lt;0.0">
-					<input type="checkbox">
+				<label name="upper" title="网站关键词(PC+Phone)一星期排名趋势涨幅&gt;${qzSettingSearchCriteria.upperValue}">
+					<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.increaseType}">checked</c:if>>
 					<i class="icon-rank-up"></i>暴涨 (${up == null?0:up})
 				</label>
 			</li>
@@ -145,6 +145,8 @@
 	<input type="hidden" name="customerInfo" id="customerInfo" value="${qzSettingSearchCriteria.customerInfo}">
 	<input type="hidden" name="status" id="status" value="${qzSettingSearchCriteria.status}"/>
 	<input type="hidden" name="updateStatus" id="updateStatus" value="${qzSettingSearchCriteria.updateStatus}"/>
+	<input type="hidden" name="increaseType" id="increaseType" value="${qzSettingSearchCriteria.increaseType}"/>
+	<input type="hidden" name="terminalType" id="terminalType" value="${qzSettingSearchCriteria.terminalType}">
 </form>
 
 <div class="datalist">
@@ -307,12 +309,18 @@
 										</div>
 
 										<div>
-									<span class="line1">
-										<a href="javascript:;"> </a>
-									</span>
-											<span title="">
-										<a href="javascript:;"></a>
-									</span>
+											<span class="line1">
+												<a href="javascript:;">
+													<c:choose>
+													<c:when test="${qzSetting.qzKeywordRankInfoMap['PC'].increase >= 0}"><span style="color: green;">${qzSetting.qzKeywordRankInfoMap['PC'].increase}</span></c:when>
+													<c:when test="${qzSetting.qzKeywordRankInfoMap['PC'].increase < 0}"><span style="color: red;">${qzSetting.qzKeywordRankInfoMap['PC'].increase}</span></c:when>
+													<c:otherwise><span> 无数据 </span></c:otherwise>
+													</c:choose>
+												</a>
+											</span>
+											<span title="涨幅">
+												<a href="javascript:;">涨幅</a>
+											</span>
 										</div>
 									</div>
 								</div>
@@ -382,7 +390,7 @@
 							</div>
 						</div>
 					</li>
-					<!--v-if-->
+					<!--v-if-pc-->
 				</c:if>
 				<c:if test="${qzSetting.phoneGroup != null}">
 					<li class="phoneGroup" style="display: none;">
@@ -523,12 +531,18 @@
 										</div>
 
 										<div>
-									<span class="line1">
-										<a href="javascript:;"> </a>
-									</span>
-											<span title="">
-										<a href="javascript:;"></a>
-									</span>
+											<span class="line1">
+												<a href="javascript:;">
+													<c:choose>
+														<c:when test="${qzSetting.qzKeywordRankInfoMap['Phone'].increase >= 0}"><span style="color: green;">${qzSetting.qzKeywordRankInfoMap['Phone'].increase}</span></c:when>
+														<c:when test="${qzSetting.qzKeywordRankInfoMap['Phone'].increase < 0}"><span style="color: red;">${qzSetting.qzKeywordRankInfoMap['Phone'].increase}</span></c:when>
+														<c:otherwise><span> 无数据 </span></c:otherwise>
+													</c:choose>
+												</a>
+											</span>
+											<span title="涨幅">
+												<a href="javascript:;">涨幅</a>
+											</span>
 										</div>
 									</div>
 								</div>
@@ -598,7 +612,7 @@
 							</div>
 						</div>
 					</li>
-					<!--v-if-->
+					<!--v-if-phone-->
 				</c:if>
 			</c:forEach>
 		</ul>

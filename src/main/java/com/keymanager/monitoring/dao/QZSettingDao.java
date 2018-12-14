@@ -23,6 +23,8 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
 
     List<QZSetting> searchQZSettings(Page<QZSetting> page, @Param("qzSettingSearchCriteria")QZSettingSearchCriteria qzSettingSearchCriteria);
 
+    List<QZSetting> searchRiseOrFallQZSetting (Page<QZSetting> page, @Param("qzSettingSearchCriteria")QZSettingSearchCriteria qzSettingSearchCriteria);
+
     int selectLastId();
 
     void deleteQZSettingGroup(@Param("qzSetting") QZSetting qzSetting);

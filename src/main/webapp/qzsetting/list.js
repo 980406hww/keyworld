@@ -34,9 +34,36 @@ $(function () {
         showCustomerBottomDiv.find("#nextButton").attr("disabled", "disabled");
         showCustomerBottomDiv.find("#lastButton").attr("disabled", "disabled");
     }
+    loadingCheckTerminalType();
+    searchRiseOrFall();
     detectedMoreSearchConditionDivShow();
     detectedTopNum(null);
 });
+function loadingCheckTerminalType() {
+    var terminalType = $("#chargeForm").find("#terminalType").val();
+    if (terminalType == "") {
+        terminalType = "PC";
+    }
+    checkTerminalType(terminalType);
+}
+function searchRiseOrFall() {
+    $(".mytabs div:eq(0)").find("input:checkbox").click(function () {
+        var increaseType;
+        if (!$(this).prop("checked")) {
+            increaseType = null;
+        } else {
+            var parentName = $(this).parent().attr("name");
+            if (parentName == "upper") {
+                increaseType = 1;
+            }
+            if (parentName == "lower") {
+                increaseType = 0;
+            }
+        }
+        $("#chargeForm").find("#increaseType").val(increaseType);
+        trimSearchCondition('1');
+    });
+}
 function detectedMoreSearchConditionDivShow() {
     var moreSearchCondition = $("div.conn[name='moreSearchCondition']");
     var customerInfo = moreSearchCondition.find("ul li.condition input[name='customerInfo']").val();
@@ -214,10 +241,11 @@ function generateQZKeywordTrendCharts(domElement, data) {
 function stringToArray(str) {
     return str.replace('[', '').replace(']', '').split(', ').reverse();
 }
-function checkTerminalType(obj, terminalType) {
-    $(obj).parent().parent().find("li").removeClass("active");
-    $(obj).parent().addClass("active");
+function checkTerminalType(terminalType) {
+    $(".mytabs .link").find("li").removeClass("active");
     if (terminalType == "PC") {
+        $(".mytabs .link").find("li[name='PC']").addClass("active");
+        $("#chargeForm").find("#terminalType").val($.trim(terminalType));
         $(".datalist").find("li.phoneGroup").each(function () {
             $(this).css("display", "none")
         });
@@ -226,6 +254,8 @@ function checkTerminalType(obj, terminalType) {
         });
     }
     if (terminalType == "Phone") {
+        $(".mytabs .link").find("li[name='Phone']").addClass("active");
+        $("#chargeForm").find("#terminalType").val($.trim(terminalType));
         $(".datalist").find(".pcGroup").each(function () {
             $(this).css("display", "none")
         });
