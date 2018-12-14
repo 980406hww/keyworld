@@ -129,14 +129,15 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			existingQZSetting.setUpdateTime(new Date());
 			existingQZSetting.setCaptureCurrentKeywordCountTime(qzSetting.getCaptureCurrentKeywordCountTime());
 			existingQZSetting.setCaptureCurrentKeywordStatus(qzSetting.getCaptureCurrentKeywordStatus());
-			qzSettingDao.updateById(existingQZSetting);
+			existingQZSetting.setCrawlerStatus(Constants.QZ_SETTING_CRAWLER_STATUS_NEW);
 
 			//修改部分
 			List<QZOperationType> OldOperationTypes = qzOperationTypeService.searchQZOperationTypesIsDelete(qzSetting.getUuid());
 			List<QZOperationType> updOperationTypes = qzSetting.getQzOperationTypes();
 			updateOpretionTypeAndChargeRule(OldOperationTypes,updOperationTypes,qzSetting.getUuid());
 			List<QZKeywordRankInfo> existingQZKeywordRankInfoList = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid());
-			updateQZKeywordRankInfo(existingQZKeywordRankInfoList, updOperationTypes, qzSetting.getUuid());
+			updateQZKeywordRankInfo(existingQZKeywordRankInfoList, updOperationTypes, existingQZSetting);
+			qzSettingDao.updateById(existingQZSetting);
 		}else{
 			qzSetting.setUpdateTime(new Date());
 			qzSettingDao.insert(qzSetting);
@@ -217,7 +218,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		}
 	}
 
-	public void updateQZKeywordRankInfo(List<QZKeywordRankInfo> existingQZKeywordRankInfoList, List<QZOperationType> qzOperationTypeList, Long qzSettingUuid){
+	public void updateQZKeywordRankInfo(List<QZKeywordRankInfo> existingQZKeywordRankInfoList, List<QZOperationType> qzOperationTypeList, QZSetting qzSetting){
 		Map<String, QZKeywordRankInfo> existingQZKeywordRankInfoMap = new HashMap<String, QZKeywordRankInfo>();
 		for (QZKeywordRankInfo qzKeywordRankInfo : existingQZKeywordRankInfoList) {
             existingQZKeywordRankInfoMap.put(qzKeywordRankInfo.getTerminalType(), qzKeywordRankInfo);
@@ -230,13 +231,21 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
                 existingQZKeywordRankInfoMap.remove(qzOperationType.getOperationType());
             } else {
                 qzKeywordRankInfo = new QZKeywordRankInfo();
-                qzKeywordRankInfo.setQzSettingUuid(qzSettingUuid);
+                qzKeywordRankInfo.setQzSettingUuid(qzSetting.getUuid());
                 qzKeywordRankInfo.setTerminalType(qzOperationType.getOperationType());
                 qzKeywordRankInfoService.insert(qzKeywordRankInfo);
             }
 		}
 
 		for (QZKeywordRankInfo qzKeywordRankInfo : existingQZKeywordRankInfoMap.values()) {
+			if (qzKeywordRankInfo.getTerminalType().equals("PC")) {
+				qzSetting.setPcCreateTopTenNum(null);
+				qzSetting.setPcCreateTopFiftyNum(null);
+			}
+			if (qzKeywordRankInfo.getTerminalType().equals("Phone")) {
+				qzSetting.setPhoneCreateTopTenNum(null);
+				qzSetting.setPhoneCreateTopFiftyNum(null);
+			}
 		    qzKeywordRankInfoService.deleteById(qzKeywordRankInfo);
         }
 	}

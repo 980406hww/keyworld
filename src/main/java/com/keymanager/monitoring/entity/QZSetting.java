@@ -2,6 +2,7 @@ package com.keymanager.monitoring.entity;
 
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.FieldFill;
 import com.baomidou.mybatisplus.enums.FieldStrategy;
 import net.sf.json.JSONObject;
 
@@ -55,16 +56,16 @@ public class QZSetting extends BaseEntity{
 	@TableField(value = "fUpdateStatus", strategy = FieldStrategy.IGNORED)
 	private String updateStatus;
 
-	@TableField(value = "fPcCreateTopTenNum")
+	@TableField(value = "fPcCreateTopTenNum", fill = FieldFill.INSERT_UPDATE)
 	private Integer pcCreateTopTenNum;
 
-	@TableField(value = "fPcCreateTopFiftyNum")
+	@TableField(value = "fPcCreateTopFiftyNum", fill = FieldFill.INSERT_UPDATE)
 	private Integer pcCreateTopFiftyNum;
 
-	@TableField(value = "fPhoneCreateTopTenNum")
+	@TableField(value = "fPhoneCreateTopTenNum", fill = FieldFill.INSERT_UPDATE)
 	private Integer phoneCreateTopTenNum;
 
-	@TableField(value = "fPhoneCreateTopFiftyNum")
+	@TableField(value = "fPhoneCreateTopFiftyNum", fill = FieldFill.INSERT_UPDATE)
 	private Integer phoneCreateTopFiftyNum;
 
 	@TableField(value = "fUpdateStartTime")

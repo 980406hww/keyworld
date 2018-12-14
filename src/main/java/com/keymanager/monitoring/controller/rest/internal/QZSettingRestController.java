@@ -141,6 +141,8 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		ModelAndView modelAndView = new ModelAndView("/qzsetting/list");
 		Map<String, Integer> chargeRemindDataMap = qzSettingService.getChargeRemindData();
         QZSettingSearchCriteria qzSettingCriteria = qzKeywordRankInfoDao.getCountDownAndUp();
+        qzSettingSearchCriteria.setDownNum(qzSettingCriteria.getDownNum());
+        qzSettingSearchCriteria.setUpNum(qzSettingCriteria.getUpNum());
 		CustomerCriteria customerCriteria = new CustomerCriteria();
 		String entryType = (String) request.getSession().getAttribute("entryType");
 		customerCriteria.setEntryType(entryType);
@@ -167,8 +169,6 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		modelAndView.addObject("page", page);
 		modelAndView.addObject("isDepartmentManager", isDepartmentManager);
 		modelAndView.addObject("availableQZSettingCount", availableQZSettingCount);
-		modelAndView.addObject("down",qzSettingCriteria.getDownNum());
-		modelAndView.addObject("up",qzSettingCriteria.getUpNum());
 		return modelAndView;
 	}
 

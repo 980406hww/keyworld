@@ -145,7 +145,7 @@
 
             </otherwise>
         </choose>
-        order by qs.fUpdateEndTime
+        ORDER BY qs.fUpdateEndTime
     </select>
 
     <select id="searchRiseOrFallQZSetting" parameterType="com.keymanager.monitoring.criteria.QZSettingSearchCriteria"
@@ -211,7 +211,8 @@
 
             </otherwise>
         </choose>
-        order by qs.fUpdateEndTime
+        GROUP BY qs.fUuid
+        ORDER BY qs.fUpdateEndTime
     </select>
 
     <select id="searchQZSettingsByUuids" resultType="com.keymanager.monitoring.entity.QZSetting">
