@@ -3,6 +3,7 @@ package com.keymanager.monitoring.service;
 import com.alibaba.druid.support.logging.Log;
 import com.alibaba.druid.support.logging.LogFactory;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.keymanager.monitoring.criteria.QZSettingSearchCriteria;
 import com.keymanager.monitoring.dao.QZKeywordRankInfoDao;
 import com.keymanager.monitoring.dao.QZSettingDao;
 import com.keymanager.monitoring.entity.QZKeywordRankInfo;
@@ -54,20 +55,30 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
     public void updateQzKeywordRankInfo(Map<String, Object> resultMap){
         QZKeywordRankInfo rankInfo = getQZKeywordRankInfo(resultMap);
         QZSetting qzSetting = getQZSetting(resultMap);
-        List<QZKeywordRankInfo> rankInfos= qzKeywordRankInfoDao.getQzKeywordRankInfoID();
-        for (QZKeywordRankInfo rank:rankInfos) {
-            if (rank.getQzSettingUuid().toString().equals
-                    (resultMap.get("fQZSettingUuid").toString())
-                    && rank.getTerminalType().equals(resultMap.get("fTerminalType"))){
-                rankInfo.setUuid(rank.getUuid());
-                qzKeywordRankInfoDao.updateById(rankInfo);
-                qzSettingDao.updateQzSetting(qzSetting);
-                return;
+        try {
+            List<QZKeywordRankInfo> rankInfos= qzKeywordRankInfoDao.getQzKeywordRankInfoID();
+            for (QZKeywordRankInfo rank:rankInfos) {
+                if (rank.getQzSettingUuid().toString().equals
+                        (resultMap.get("fQZSettingUuid").toString())
+                        && rank.getTerminalType().equals(resultMap.get("fTerminalType"))){
+                    rankInfo.setUuid(rank.getUuid());
+                    qzKeywordRankInfoDao.updateById(rankInfo);
+                    qzSettingDao.updateQzSetting(qzSetting);
+                    return;
+                }
             }
+            qzKeywordRankInfoDao.insert(rankInfo);
+            qzSettingDao.updateQzSetting(qzSetting);
+        }catch (Exception e){
+            qzSettingDao.updateQzSetting(qzSetting);
+            logger.error("数据更新异常"+e.getMessage());
         }
-        qzKeywordRankInfoDao.insert(rankInfo);
-        qzSettingDao.updateQzSetting(qzSetting);
     }
+
+    public QZSettingSearchCriteria getCountDownAndUp(){
+        return qzKeywordRankInfoDao.getCountDownAndUp();
+    }
+
     public QZKeywordRankInfo getQZKeywordRankInfo(Map<String, Object> resultMap){
         QZKeywordRankInfo qzKeywordRankInfo = new QZKeywordRankInfo();
         try {
@@ -91,11 +102,11 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
     public QZSetting getQZSetting(Map<String, Object> resultMap){
         QZSetting qzSetting = qzSettingDao.findQzSetting(Long.valueOf(resultMap.get("fQZSettingUuid").toString()));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Integer fpcCreateTopTenNum = Integer.parseInt(resultMap.get("fpcCreateTopTenNum").toString());
-        Integer fpcCreateTopFiftyNum = Integer.parseInt(resultMap.get("fpcCreateTopFiftyNum").toString());
-        Integer fphoneCreateTopFiftyNum = Integer.parseInt(resultMap.get("fphoneCreateTopFiftyNum").toString());
-        Integer fphoneCreateTopTenNum = Integer.parseInt(resultMap.get("fphoneCreateTopTenNum").toString());
         try {
+            Integer fpcCreateTopTenNum = Integer.parseInt(resultMap.get("fpcCreateTopTenNum").toString());
+            Integer fpcCreateTopFiftyNum = Integer.parseInt(resultMap.get("fpcCreateTopFiftyNum").toString());
+            Integer fphoneCreateTopFiftyNum = Integer.parseInt(resultMap.get("fphoneCreateTopFiftyNum").toString());
+            Integer fphoneCreateTopTenNum = Integer.parseInt(resultMap.get("fphoneCreateTopTenNum").toString());
             qzSetting.setUuid(Long.valueOf(resultMap.get("fQZSettingUuid").toString()));
             qzSetting.setCrawlerStatus("finish");
             qzSetting.setCrawlerTime(simpleDateFormat.parse((resultMap.get("fCrawlTime").toString())));

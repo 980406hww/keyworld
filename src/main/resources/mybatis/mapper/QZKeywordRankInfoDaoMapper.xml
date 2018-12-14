@@ -43,6 +43,7 @@
            (fCrawlerStatus = 'finish' AND DATE_ADD(fCrawlerTime,INTERVAL 8 HOUR) &lt;= NOW())
         OR (fCrawlerStatus = 'processing' AND DATE_ADD(fCrawlerTime,INTERVAL 8 HOUR) &lt;= NOW())
         )
+        limit 500
     </select>
 
     <select id="getQzKeywordRankInfoID" resultType="com.keymanager.monitoring.entity.QZKeywordRankInfo">
@@ -52,5 +53,12 @@
       fQZSettingUuid AS 'qzSettingUuid'
     FROM
       t_qz_keyword_rank_info
+    </select>
+
+    <select id="getCountDownAndUp" resultType="com.keymanager.monitoring.criteria.QZSettingSearchCriteria">
+        SELECT
+            COUNT(fIncrease &lt;= (-0.1) OR NULL) AS downNum,
+            COUNT(fIncrease &gt;= 0.1 OR NULL) AS upNum
+        FROM t_qz_keyword_rank_info
     </select>
 </mapper>

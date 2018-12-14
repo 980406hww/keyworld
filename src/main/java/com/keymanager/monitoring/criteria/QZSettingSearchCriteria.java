@@ -9,6 +9,8 @@ public class QZSettingSearchCriteria{
     private String updateStatus;
     private Integer dateRangeType;
     private Integer status;
+    private Integer downNum;
+    private Integer upNum;
 
     public String getLoginName() {
         return loginName;
@@ -72,5 +74,21 @@ public class QZSettingSearchCriteria{
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Integer getDownNum() {
+        return downNum;
+    }
+
+    public void setDownNum(Integer downNum) {
+        this.downNum = downNum;
+    }
+
+    public Integer getUpNum() {
+        return upNum;
+    }
+
+    public void setUpNum(Integer upNum) {
+        this.upNum = upNum;
     }
 }

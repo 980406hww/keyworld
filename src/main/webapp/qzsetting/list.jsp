@@ -81,13 +81,13 @@
 			<li>
 				<label title="网站关键词一星期排名趋势涨幅&gt;0.0">
 					<input type="checkbox">
-					<i class="icon-rank-down"></i>骤降 (0)
+					<i class="icon-rank-down"></i>骤降 (${down == null?0:down})
 				</label>
 			</li>
 			<li>
 				<label title="网站关键词一星期排名趋势涨幅&lt;0.0">
 					<input type="checkbox">
-					<i class="icon-rank-up"></i>暴涨 (0)
+					<i class="icon-rank-up"></i>暴涨 (${up == null?0:up})
 				</label>
 			</li>
 		</ul>
