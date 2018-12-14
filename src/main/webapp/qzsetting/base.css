@@ -15,22 +15,11 @@ a:hover {
     color: #0c7df5
 }
 
-b {
-    font-weight: 700
-}
-
-input {
-    line-height: normal;
-    color: inherit;
-    margin: 0
-}
 input[type=checkbox] {
     box-sizing: border-box;
     padding: 0
 }
-a, input, select {
-    outline: none
-}
+
 label {
     vertical-align: middle
 }
@@ -59,9 +48,8 @@ ul {
 }
 
 .mytabs {
-    /*margin: 55px 50px 0px 100px;*/
     width: 80%;
-    margin: 55px auto 0px auto;
+    margin: 15px auto 0px auto;
     box-shadow: 0 0 2px 2px hsla(0, 0%, 79%, .2)
 }
 
@@ -146,38 +134,11 @@ ul {
     margin-left: 0
 }
 
-.mytabs .conn a {
-    position: relative;
-    display: inline
-}
-
-.mytabs .conn .search-wrap {
-    position: relative;
-    display: inline-block
-}
-
-.mytabs .conn .search-wrap a {
-    background-position: -293px -226px;
-    position: absolute;
-    top: 50%;
-    margin-top: -15px;
-    right: 5px;
-}
-
-.mytabs .conn .search-wrap a, .mytabs .conn .search-wrap a:hover {
-    display: inline-block;
-    font-size: 12px;
-}
-
-.mytabs .conn .search-wrap a:hover {
-    background-position: -293px -270px;
-}
-
-.mytabs .conn .search-wrap input {
-    width: 200px;
+.mytabs .conn li:first-child input {
+    width: 180px;
     height: 30px;
     line-height: 30px;
-    font-size: 12px;
+    font-size: 14px;
     padding-left: 7px;
     padding-right: 24px;
 }
@@ -189,149 +150,19 @@ ul {
     font-size: 12px;
 }
 
-.mytabs .conn .sort {
-    padding: 2px 3px;
-    padding-right: 12px;
-    height: auto
-}
-
-.mytabs .conn .sort b {
-    position: absolute;
-    bottom: 0;
-    right: 3px;
-    display: inline-block;
-    font-size: 0;
-    border-width: 4px;
-    border-color: #adadad transparent transparent;
-    border-style: solid dashed dashed
-}
-
-.mytabs .conn .sort b:first-child {
-    top: 0;
-    bottom: auto;
-    display: inline-block;
-    font-size: 0;
-    border-width: 4px;
-    border-color: transparent transparent #adadad;
-    border-style: dashed dashed solid
-}
-
-.mytabs .conn .sort.none {
-    padding: 2px 3px
-}
-
-.mytabs .conn .sort.active {
-    color: #fff;
-    border-radius: 2px;
-    background-color: #0c7df5
-}
-
-.mytabs .conn .sort.active.up b {
-    display: inline-block;
-    font-size: 0;
-    border-width: 4px;
-    border-color: hsla(0, 0%, 100%, .5) transparent transparent;
-    border-style: solid dashed dashed
-}
-
-.mytabs .conn .sort.active.up b:first-child {
-    display: inline-block;
-    font-size: 0;
-    border-width: 4px;
-    border-color: transparent transparent #fff;
-    border-style: dashed dashed solid
-}
-
-.mytabs .conn .sort.active.down b {
-    display: inline-block;
-    font-size: 0;
-    border-width: 4px;
-    border-color: #fff transparent transparent;
-    border-style: solid dashed dashed
-}
-
-.mytabs .conn .sort.active.down b:first-child {
-    display: inline-block;
-    font-size: 0;
-    border-width: 4px;
-    border-color: transparent transparent hsla(0, 0%, 100%, .5);
-    border-style: dashed dashed solid
-}
-
-.mytabs .conn .btns {
-    float: left;
-    margin-top: 1px;
-    width: 25px;
-    height: 28px;
-    text-align: center;
-    border: 1px solid #e6e6e6
-}
-
-.mytabs .conn .btns:first-child {
-    border-top-left-radius: 2px;
-    border-bottom-left-radius: 2px
-}
-
-.mytabs .conn .btns:last-child {
-    border-top-right-radius: 2px;
-    border-bottom-right-radius: 2px
-}
-
-.mytabs .conn .btns:nth-child(2) {
-    border-left: none
-}
-
-.mytabs .conn .btns.active, .mytabs .conn .btns:hover {
-    background-color: #0c7df5
-}
-
-.mytabs .conn .btns.active .icon-data-line, .mytabs .conn .btns:hover .icon-data-line {
-    display: inline-block;
-    font-size: 0;
-    /*background-image: url(../images/sprite.icon.png?v=2f5a9992f2);*/
-    /*background-position: -339px -19px;*/
-    width: 14px;
-    height: 13px
-}
-
-.mytabs .conn .btns.active .icon-data-list, .mytabs .conn .btns:hover .icon-data-list {
-    display: inline-block;
-    font-size: 0;
-    /*background-image: url(../images/sprite.icon.png?v=2f5a9992f2);*/
-    /*background-position: -339px -91px;*/
-    width: 14px;
-    height: 13px
-}
-
-.mytabs .conn .btns.active .icon-data-grid, .mytabs .conn .btns:hover .icon-data-grid {
-    display: inline-block;
-    font-size: 0;
-    /*background-image: url(../images/sprite.icon.png?v=2f5a9992f2);*/
-    /*background-position: -318px -220px;*/
-    width: 14px;
-    height: 14px
-}
-
-.mytabs .conn .btns i {
-    vertical-align: -1px;
-    margin: 0;
-    padding: 0
-}
-
 .mytabs .conn:after, .mytabs .conn:before {
     content: " ";
-    display: table
+    display: table;
 }
 
 .mytabs .conn:after {
-    clear: both
+    clear: both;
 }
 
 .datalist {
-    /*margin: 15px 50px 15px 100px;*/
     width: 80%;
-    margin: 15px auto 40px auto;
-    overflow: visible
+    margin: 0px auto 40px auto;
+    overflow: visible;
 }
 
 .datalist-list li {
@@ -366,7 +197,6 @@ ul {
     height: 44px;
     border-bottom: 1px solid #e6e6e6;
     font-size: 16px;
-    /*color: #666;*/
     padding: 0 20px;
 }
 
@@ -377,7 +207,6 @@ ul {
     margin-top: 14px;
     text-decoration: none;
     font-size: 14px;
-    /*color: #666*/
 }
 
 .datalist-list .header a:hover {
@@ -396,7 +225,7 @@ ul {
     margin: 15px 5px;
 }
 
-.datalist-list .header .site-name {
+.datalist-list .header .contactPerson-name {
     color: #333;
     font-weight: 700;
     max-width: 200px;
@@ -423,17 +252,10 @@ ul {
     height: 150px
 }
 
-.datalist-list .body .chart-include > a, .datalist-list .body .chart-ranking > a {
-    display: block;
-    width: 100%;
-    height: 100%
-}
-
 .datalist-list .body .data-info-wrap {
     width: 592px;
     float: left;
     height: 150px;
-    /*color: #999;*/
     text-align: center
 }
 
@@ -509,15 +331,15 @@ ul {
     width: 84px;
     border-right: 1px solid #e6e6e6;
     height: 150px;
-    display: block
+    display: block;
 }
 
 .datalist-list .body .baidu-rank a {
-    clear: both
+    clear: both;
 }
 
 .datalist-list .body .baidu-rank span {
-    display: block
+    display: block;
 }
 
 .datalist-list .body .baidu-rank span:last-child {
@@ -526,7 +348,6 @@ ul {
 }
 
 .datalist-list .body .baidu-rank span.line1 {
-    /*color: #555;*/
     font-size: 14px;
     margin-top: 45px;
     overflow: hidden;
@@ -534,12 +355,11 @@ ul {
 }
 
 .datalist-list .body .baidu-rank span.line1:hover {
-    color: #0c7df5
+    color: #0c7df5;
 }
 
 .datalist-list .body .baidu-rank span.line1 sub {
     font-weight: 400;
-    /*color: #999*/
 }
 
 .datalist-list .body .other-rank {
@@ -548,29 +368,25 @@ ul {
 }
 
 .datalist-list .body .other-rank .row {
-    height: 75px
+    height: 75px;
 }
 
 .datalist-list .body .other-rank .row .line1 {
-    display:inline-block;
-    width:80%;
-    word-wrap:break-word;
-    white-space:normal;
+    display: inline-block;
+    width: 80%;
+    word-wrap: break-word;
+    white-space: normal;
 }
 
-/*.datalist-list .body .other-rank .row .line1 a {*/
-    /*color: #555*/
-/*}*/
-
 .datalist-list .body .other-rank .row .line1 a:hover {
-    color: #0c7df5
+    color: #0c7df5;
 }
 
 .datalist-list .body .other-rank .row span:last-child a {
-    display:inline-block;
-    width:80%;
-    word-wrap:break-word;
-    white-space:normal;
+    display: inline-block;
+    width: 80%;
+    word-wrap: break-word;
+    white-space: normal;
     margin-top: 5px;
     color: #000;
 }
@@ -578,7 +394,7 @@ ul {
 .datalist-list .body .other-rank .row:last-child {
     display: block;
     height: 74px;
-    border-top: 1px solid #e6e6e6
+    border-top: 1px solid #e6e6e6;
 }
 
 .datalist-list .body .other-rank .row > div {
@@ -586,15 +402,15 @@ ul {
     float: left;
     height: 75px;
     width: 84px;
-    border-right: 1px solid #e6e6e6
+    border-right: 1px solid #e6e6e6;
 }
 
 .datalist-list .body .other-rank .row > div:last-child {
-    border: 0
+    border: 0;
 }
 
 .datalist-list .body .other-rank .row span {
-    display: block
+    display: block;
 }
 
 .datalist-list .body .other-rank .row span.line1 {
@@ -603,12 +419,12 @@ ul {
 }
 
 .datalist-list .body .other-rank .row span.line1:hover {
-    color: #0c7df5
+    color: #0c7df5;
 }
 
 .datalist-list .body .other-rank .row span sub {
     font-weight: 400;
-    padding-left: 5px
+    padding-left: 5px;
 }
 
 .col-3 {
@@ -617,11 +433,9 @@ ul {
     text-align: left;
 }
 
-.col-8 {
-    float: left;
+.rank-wrap .col-8 {
     width: 82%;
     text-align: left;
-    text-overflow: ellipsis;
 }
 
 #moreSearchCondition {
