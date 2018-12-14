@@ -40,8 +40,8 @@
         FROM
           t_qz_setting
         WHERE
-           (fCrawlerStatus = 'finish' AND DATE_ADD(fCrawlerTime,INTERVAL 8 HOUR) &lt;= NOW())
-        OR (fCrawlerStatus = 'processing' AND DATE_ADD(fCrawlerTime,INTERVAL 8 HOUR) &lt;= NOW())
+           (fCrawlerStatus = 'finish' AND DATE_ADD(fCrawlerTime,INTERVAL #{crawlerHour} HOUR) &lt;= NOW())
+        OR (fCrawlerStatus = 'processing' AND DATE_ADD(fCrawlerTime,INTERVAL #{crawlerHour} HOUR) &lt;= NOW())
         )
         limit 500
     </select>
@@ -57,8 +57,8 @@
 
     <select id="getCountDownAndUp" resultType="com.keymanager.monitoring.criteria.QZSettingSearchCriteria">
         SELECT
-            COUNT(fIncrease &lt;= (-0.1) OR NULL) AS downNum,
-            COUNT(fIncrease &gt;= 0.1 OR NULL) AS upNum
+            COUNT(fIncrease &lt;= #{lower} OR NULL) AS downNum,
+            COUNT(fIncrease &gt;= #{upper} OR NULL) AS upNum
         FROM t_qz_keyword_rank_info
     </select>
 </mapper>

@@ -19,6 +19,7 @@ public class Constants {
 
     public final static double QZSETTING_KEYWORD_RANK_UPPER_VALUE = 0.1;
     public final static double QZSETTING_KEYWORD_RANK_LOWER_VALUE = -0.1;
+    public final static Integer QZSETTING_KEYWORD_RANK_CRAWLER_HOUR = 1;
 
     public final static String QZ_SETTING_CRAWLER_STATUS_NEW = "new";
 

@@ -39,7 +39,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
 	private CustomerService customerService;
 
 	@Autowired
-	private QZKeywordRankInfoDao qzKeywordRankInfoDao;
+	private QZKeywordRankInfoService qzKeywordRankInfoService;
 
 	@RequiresPermissions("/internal/qzsetting/updateStatus")
 	@RequestMapping(value = "/updateQZSettingStatus", method = RequestMethod.POST)
@@ -140,7 +140,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
 	private ModelAndView constructQZSettingModelAndView(HttpServletRequest request, QZSettingSearchCriteria qzSettingSearchCriteria, int currentPageNumber, int pageSize) {
 		ModelAndView modelAndView = new ModelAndView("/qzsetting/list");
 		Map<String, Integer> chargeRemindDataMap = qzSettingService.getChargeRemindData();
-        QZSettingSearchCriteria qzSettingCriteria = qzKeywordRankInfoDao.getCountDownAndUp();
+        QZSettingSearchCriteria qzSettingCriteria = qzKeywordRankInfoService.getCountDownAndUp(Constants.QZSETTING_KEYWORD_RANK_UPPER_VALUE,Constants.QZSETTING_KEYWORD_RANK_LOWER_VALUE);
         qzSettingSearchCriteria.setDownNum(qzSettingCriteria.getDownNum());
         qzSettingSearchCriteria.setUpNum(qzSettingCriteria.getUpNum());
 		CustomerCriteria customerCriteria = new CustomerCriteria();
