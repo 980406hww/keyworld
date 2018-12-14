@@ -11,6 +11,8 @@ public class QZSettingSearchCriteria{
     private String updateStatus;
     private Integer dateRangeType;
     private Integer status;
+    private Integer downNum;
+    private Integer upNum;
     private double upperValue = Constants.QZSETTING_KEYWORD_RANK_UPPER_VALUE;
     private double lowerValue = Constants.QZSETTING_KEYWORD_RANK_LOWER_VALUE;
     private Boolean increaseType;
@@ -80,16 +82,16 @@ public class QZSettingSearchCriteria{
         this.status = status;
     }
 
-    public double getUpperValue () {
-        return upperValue;
+    public Integer getDownNum() {
+        return downNum;
     }
 
     public void setUpperValue (double upperValue) {
         this.upperValue = upperValue;
     }
 
-    public double getLowerValue () {
-        return lowerValue;
+    public Integer getUpNum() {
+        return upNum;
     }
 
     public void setLowerValue (double lowerValue) {
@@ -110,5 +112,21 @@ public class QZSettingSearchCriteria{
 
     public void setTerminalType (String terminalType) {
         this.terminalType = terminalType;
+    }
+
+    public void setDownNum(Integer downNum) {
+        this.downNum = downNum;
+    }
+
+    public void setUpNum(Integer upNum) {
+        this.upNum = upNum;
+    }
+
+    public double getUpperValue() {
+        return upperValue;
+    }
+
+    public double getLowerValue() {
+        return lowerValue;
     }
 }

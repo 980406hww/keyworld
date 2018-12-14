@@ -78,13 +78,13 @@
 				<li>
 					<label name="lower" title="网站关键词(PC,Phone)一星期排名趋势涨幅&lt;${qzSettingSearchCriteria.lowerValue}">
 						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.increaseType != null and !qzSettingSearchCriteria.increaseType}">checked</c:if>>
-						<i class="icon-rank-down"></i>骤降 (0)
+					<i class="icon-rank-down"></i>骤降 (${down == null?0:down})
 					</label>
 				</li>
 				<li>
 					<label name="upper" title="网站关键词(PC,Phone)一星期排名趋势涨幅&gt;${qzSettingSearchCriteria.upperValue}">
 						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.increaseType}">checked</c:if>>
-						<i class="icon-rank-up"></i>暴涨 (0)
+					<i class="icon-rank-up"></i>暴涨 (${up == null?0:up})
 					</label>
 				</li>
 			</ul>

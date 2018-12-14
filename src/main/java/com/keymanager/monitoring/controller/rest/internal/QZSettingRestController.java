@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.CustomerCriteria;
 import com.keymanager.monitoring.criteria.QZSettingSearchCriteria;
+import com.keymanager.monitoring.dao.QZKeywordRankInfoDao;
 import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.QZSetting;
 import com.keymanager.monitoring.service.*;
@@ -36,6 +37,9 @@ public class QZSettingRestController extends SpringMVCBaseController {
 
 	@Autowired
 	private CustomerService customerService;
+
+	@Autowired
+	private QZKeywordRankInfoDao qzKeywordRankInfoDao;
 
 	@RequiresPermissions("/internal/qzsetting/updateStatus")
 	@RequestMapping(value = "/updateQZSettingStatus", method = RequestMethod.POST)
@@ -136,7 +140,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
 	private ModelAndView constructQZSettingModelAndView(HttpServletRequest request, QZSettingSearchCriteria qzSettingSearchCriteria, int currentPageNumber, int pageSize) {
 		ModelAndView modelAndView = new ModelAndView("/qzsetting/list");
 		Map<String, Integer> chargeRemindDataMap = qzSettingService.getChargeRemindData();
-
+        QZSettingSearchCriteria qzSettingCriteria = qzKeywordRankInfoDao.getCountDownAndUp();
 		CustomerCriteria customerCriteria = new CustomerCriteria();
 		String entryType = (String) request.getSession().getAttribute("entryType");
 		customerCriteria.setEntryType(entryType);
@@ -163,6 +167,8 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		modelAndView.addObject("page", page);
 		modelAndView.addObject("isDepartmentManager", isDepartmentManager);
 		modelAndView.addObject("availableQZSettingCount", availableQZSettingCount);
+		modelAndView.addObject("down",qzSettingCriteria.getDownNum());
+		modelAndView.addObject("up",qzSettingCriteria.getUpNum());
 		return modelAndView;
 	}
 

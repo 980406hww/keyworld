@@ -107,14 +107,14 @@ function generateQZKeywordTrendCharts(domElement, data) {
     var topFifty = stringToArray(result.topFifty);
     var keywordTrendCharts = echarts.init(domElement);
     var option = {
-        color: ['#ffd285', '#ff733f', '#ec4863'],
+        color: ['#2328ff', '#ff733f', '#090A07','#C184FF','#FF2F57'],
         tooltip: {
             trigger: 'axis'
         },
         legend: {
             symbolKeepAspect: true,
             textStyle: {
-                color: '#ffd285',
+                color: '#2328ff',
             },
             data: ['前10名', '前20名', '前30名', '前40名', '前50名']
         },
@@ -143,7 +143,7 @@ function generateQZKeywordTrendCharts(domElement, data) {
             },
             axisLabel: {
                 textStyle: {
-                    color: '#404A59'
+                    color: '#080908'
                 }
             },
             boundaryGap: false,
@@ -158,7 +158,7 @@ function generateQZKeywordTrendCharts(domElement, data) {
             splitLine: {
                 show: true,
                 lineStyle: {
-                    color: '#404A59'
+                    color: '#949DB1'
                 }
             },
             axisTick: {
@@ -166,7 +166,7 @@ function generateQZKeywordTrendCharts(domElement, data) {
             },
             axisLabel: {
                 textStyle: {
-                    color: '#404A59'
+                    color: '#080908'
                 }
             },
             type: 'value'
@@ -177,35 +177,55 @@ function generateQZKeywordTrendCharts(domElement, data) {
             type: 'line',
             symbolSize: 2,
             symbol: 'rect',
-            data: topTen
+            data: topTen,
+            lineStyle:{
+                type:"solid",
+                width: 2
+            }
         }, {
             name: '前20名',
             smooth: true,
             type: 'line',
             symbolSize: 2,
             symbol: 'roundRect',
-            data: topTwenty
+            data: topTwenty,
+            lineStyle:{
+                type:"solid",
+                width: 2
+            }
         }, {
             name: '前30名',
             smooth: true,
             type: 'line',
             symbolSize: 2,
             symbol: 'circle',
-            data: topThirty
+            data: topThirty,
+            lineStyle:{
+                type:"solid",
+                width: 2
+            }
         }, {
             name: '前40名',
             smooth: true,
             type: 'line',
             symbolSize: 2,
             symbol: 'triangle',
-            data: topForty
+            data: topForty,
+            lineStyle:{
+                type:"solid",
+                width: 2
+            }
         }, {
             name: '前50名',
             smooth: true,
             type: 'line',
             symbolSize: 2,
             symbol: 'diamond',
-            data: topFifty
+            data: topFifty,
+            lineStyle:{
+                type:"solid",
+                width: 2
+            }
         }]
     };
     keywordTrendCharts.setOption(option);

@@ -1,6 +1,7 @@
 package com.keymanager.monitoring.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.keymanager.monitoring.criteria.QZSettingSearchCriteria;
 import com.keymanager.monitoring.entity.QZKeywordRankInfo;
 import com.keymanager.monitoring.vo.ExternalQzSettingVo;
 import org.apache.ibatis.annotations.Param;
@@ -21,4 +22,5 @@ public interface QZKeywordRankInfoDao extends BaseMapper<QZKeywordRankInfo> {
 
     List<QZKeywordRankInfo> getQzKeywordRankInfoID();
 
+    QZSettingSearchCriteria getCountDownAndUp();
 }
