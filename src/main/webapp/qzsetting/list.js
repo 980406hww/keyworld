@@ -3,11 +3,7 @@ $(function () {
     $("#chargeDialog").dialog("close");
     $("#changeSettingDialog").dialog("close");
     $("#getAvailableQZSettings").dialog("close");
-    $("#showQZSettingDiv").css("margin-top",$("#topDiv").height());
-    alignTableHeader();
-    window.onresize = function(){
-        alignTableHeader();
-    }
+
     var searchCustomerForm = $("#chargeForm");
     var pageSize = searchCustomerForm.find('#pageSizeHidden').val();
     var pages = searchCustomerForm.find('#pagesHidden').val();
@@ -37,13 +33,9 @@ $(function () {
     loadingCheckTerminalType();
     searchRiseOrFall();
     detectedMoreSearchConditionDivShow();
-    detectedTopNum(null);
 });
 function loadingCheckTerminalType() {
     var terminalType = $("#chargeForm").find("#terminalType").val();
-    if (terminalType == "") {
-        terminalType = "PC";
-    }
     checkTerminalType(terminalType);
 }
 function searchRiseOrFall() {
@@ -76,19 +68,18 @@ function detectedMoreSearchConditionDivShow() {
     }
 }
 function detectedTopNum(terminalType) {
-    var type = "PC";
     var rankWrap;
-    if (terminalType != null){
-        type = terminalType;
-    }
-    if (type == "PC") {
+    if (terminalType == "PC") {
         rankWrap = $(".pcGroup .body .rank-wrap");
     }
-    if (type == "Phone") {
+    if (terminalType == "Phone") {
         rankWrap = $(".phoneGroup .body .rank-wrap");
     }
     $(rankWrap).each(function () {
         generateQZKeywordTrendCharts($(this).find("#keywordTrendCharts")[0], $(this).find("div[name='rankInfo'] span").text());
+        $(this).find("#keywordTrendCharts").css("position", "static");
+        $(this).find("#keywordTrendCharts").children().css("position", "static");
+        $(this).find("#keywordTrendCharts").children().children().css("position", "static");
         $(this).find(".row4").each(function () {
             var a = $(this).find("span:last-child a");
             if (a[0].innerHTML.trim() >= 0) {
@@ -121,6 +112,7 @@ function generateQZKeywordTrendCharts(domElement, data) {
             trigger: 'axis'
         },
         legend: {
+            symbolKeepAspect: true,
             textStyle: {
                 color: '#2328ff',
             },
@@ -242,6 +234,13 @@ function stringToArray(str) {
     return str.replace('[', '').replace(']', '').split(', ').reverse();
 }
 function checkTerminalType(terminalType) {
+    if (terminalType == "") {
+        terminalType = "PC";
+    }
+    var a = $(".mytabs .link").find("li.active a");
+    if (a[0] != undefined && a[0].innerHTML.substring(2) == terminalType) {
+        return;
+    }
     $(".mytabs .link").find("li").removeClass("active");
     if (terminalType == "PC") {
         $(".mytabs .link").find("li[name='PC']").addClass("active");
@@ -263,7 +262,9 @@ function checkTerminalType(terminalType) {
             $(this).css("display", "block");
         });
     }
-    detectedTopNum(terminalType);
+    setTimeout(function (){
+        detectedTopNum(terminalType);
+    }, 0);
 }
 function trimSearchCondition(days) {
     var chargeForm = $("#chargeForm");
@@ -273,7 +274,7 @@ function trimSearchCondition(days) {
     chargeForm.find("#customerUuid").val(customerUuid);
     chargeForm.find("#dateRangeType").val(days);
 
-    var domain = $(".conn").find(".search-wrap input").val();
+    var domain = $(".conn").find("li:first-child input[name='domain']").val();
     var group = $(".conn").find(".condition").find("input[name='group']").val();
     var status = $(".conn").find("select[name='status']").val();
     var updateStatus = $(".conn").find("select[name='updateStatus']").val();
@@ -289,22 +290,14 @@ function trimSearchCondition(days) {
     } else {
         chargeForm.find("#updateStatus").val(null);
     }
-    chargeForm.find("#currentPageNumberHidden").val(1);
     var moreSearchCondition = $("div.conn[name='moreSearchCondition']");
-    $("div.conn div.search-wrap input").val(domain);
+    $("div.conn li:first-child input[name='domain']").val(domain);
     moreSearchCondition.find("ul li.condition input[name='group']").val($.trim(group));
     moreSearchCondition.find("ul li select[name='updateStatus']").val($.trim(updateStatus));
     chargeForm.submit();
 }
 function showMoreSearchCondition() {
     $(".mytabs").find("div[name='moreSearchCondition']").toggle();
-}
-function alignTableHeader(){
-    var td = $("#headerTable tr:first td");
-    var ctd = $("#showQZSettingTable tr:first td");
-    $.each(td, function (idx, val) {
-        ctd.eq(idx).width($(val).width());
-    });
 }
 function changePaging(currentPage, pageSize) {
     var chargeForm = $("#chargeForm");

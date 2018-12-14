@@ -33,102 +33,100 @@
 <%@ include file="/commons/basejs.jsp" %>
 <div id="topDiv">
 	<%@include file="/menu.jsp" %>
-</div>
+	<div class="mytabs">
+		<ul class="link">
+			<li name="PC"><a href="javascript:;" onclick="checkTerminalType('PC')">百度PC</a></li>
+			<li name="Phone"><a href="javascript:;" onclick="checkTerminalType('Phone')">百度Phone</a></li>
+		</ul>
+		<div class="conn">
+			<ul>
+				<li>
+					<input type="text" title="请输入网站域名" name="domain" placeholder="请输入网站域名" value="${qzSettingSearchCriteria.domain}">
+				</li>
 
-<div class="mytabs">
-	<ul class="link">
-		<li name="PC"><a href="javascript:;" onclick="checkTerminalType('PC')">百度PC</a></li>
-		<li name="Phone"><a href="javascript:;" onclick="checkTerminalType('Phone')">百度移动</a></li>
-	</ul>
-	<div class="conn">
-		<ul>
-			<li>
-				<div class="search-wrap">
-					<input type="text" title="请输入网站域名" placeholder="请输入网站域名" value="${qzSettingSearchCriteria.domain}">
-					<a href="javascript:;" onclick="trimSearchCondition('1');">搜索</a>
-				</div>
-			</li>
-
-			<li>
-				<a href="javascript:;" onclick="showMoreSearchCondition();">更多搜索条件</a>
-			</li>
-			<shiro:hasPermission name="/internal/qzsetting/save">
 				<li>
-					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="showSettingDialog(null, this)" value=" 增加 " >
+					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="trimSearchCondition('1')" value=" 搜索 " >
+					&nbsp;
+					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="showMoreSearchCondition()" value=" 更多搜索条件 " >
 				</li>
-			</shiro:hasPermission>
-			<shiro:hasPermission name="/internal/qzsetting/updateImmediately">
+				<shiro:hasPermission name="/internal/qzsetting/save">
+					<li>
+						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="showSettingDialog(null, this)" value=" 增加 " >
+					</li>
+				</shiro:hasPermission>
+				<shiro:hasPermission name="/internal/qzsetting/updateImmediately">
+					<li>
+						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="updateImmediately(this)" value=" 马上更新 " >
+					</li>
+				</shiro:hasPermission>
+				<shiro:hasPermission name="/internal/qzsetting/updateStatus">
+					<li>
+						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="updateQZSettingStatus(0)" value=" 暂停整站 " >
+						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="updateQZSettingStatus(1)" value=" 激活整站 " >
+					</li>
+				</shiro:hasPermission>
+				<shiro:hasPermission name="/internal/qzsetting/deleteQZSettings">
+					<li>
+						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="delSelectedQZSettings(this)" value=" 删除所选 " >
+					</li>
+				</shiro:hasPermission>
+				<shiro:hasPermission name="/internal/qzsetting/searchQZSettings">
+					<li>
+						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="getAvailableQZSettings()" value="查看更新队列(${availableQZSettingCount})">
+					</li>
+				</shiro:hasPermission>
 				<li>
-					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="updateImmediately(this)" value=" 马上更新 " >
-				</li>
-			</shiro:hasPermission>
-			<shiro:hasPermission name="/internal/qzsetting/updateStatus">
-				<li>
-					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="updateQZSettingStatus(0)" value=" 暂停整站 " >
-					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="updateQZSettingStatus(1)" value=" 激活整站 " >
-				</li>
-			</shiro:hasPermission>
-			<shiro:hasPermission name="/internal/qzsetting/deleteQZSettings">
-				<li>
-					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="delSelectedQZSettings(this)" value=" 删除所选 " >
-				</li>
-			</shiro:hasPermission>
-			<shiro:hasPermission name="/internal/qzsetting/searchQZSettings">
-				<li>
-					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="getAvailableQZSettings()" value="查看更新队列(${availableQZSettingCount})">
-				</li>
-			</shiro:hasPermission>
-			<li>
-				<label name="lower" title="网站关键词(PC+Phone)一星期排名趋势涨幅&lt;${qzSettingSearchCriteria.lowerValue}">
-					<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.increaseType != null and !qzSettingSearchCriteria.increaseType}">checked</c:if>>
+					<label name="lower" title="网站关键词(PC,Phone)一星期排名趋势涨幅&lt;${qzSettingSearchCriteria.lowerValue}">
+						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.increaseType != null and !qzSettingSearchCriteria.increaseType}">checked</c:if>>
 					<i class="icon-rank-down"></i>骤降 (${down == null?0:down})
-				</label>
-			</li>
-			<li>
-				<label name="upper" title="网站关键词(PC+Phone)一星期排名趋势涨幅&gt;${qzSettingSearchCriteria.upperValue}">
-					<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.increaseType}">checked</c:if>>
+					</label>
+				</li>
+				<li>
+					<label name="upper" title="网站关键词(PC,Phone)一星期排名趋势涨幅&gt;${qzSettingSearchCriteria.upperValue}">
+						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.increaseType}">checked</c:if>>
 					<i class="icon-rank-up"></i>暴涨 (${up == null?0:up})
-				</label>
-			</li>
-		</ul>
-	</div>
-	<div class="conn" name="moreSearchCondition" style="display: none;">
-		<ul>
-			<li class="condition">
-				<span>客户: </span>
-				<input type="text" list="customer_list" name="customerInfo" value="${qzSettingSearchCriteria.customerInfo}">
-			</li>
-			<li class="condition">
-				<span>组名: </span>
-				<input type="text" name="group" value="${qzSettingSearchCriteria.group}" style="width:150px;">
-			</li>
-			<li>
-				<span>状态: </span>
-				<select name="status">
-					<option value="" <c:if test="${qzSettingSearchCriteria.status == null}">selected</c:if>></option>
-					<option value="1" <c:if test="${qzSettingSearchCriteria.status == 1}">selected</c:if>>激活</option>
-					<option value="0" <c:if test="${qzSettingSearchCriteria.status == 0}">selected</c:if>>暂停</option>
-					<option value="2" <c:if test="${qzSettingSearchCriteria.status == 2}">selected</c:if>>新增</option>
-				</select>
-			</li>
-			<li>
-				<span>更新状态: </span>
-				<select name="updateStatus">
-					<c:forEach items="${statusList}" var="status">
-						<c:choose>
-							<c:when test="${status eq qzSettingSearchCriteria.updateStatus}"><option selected>${status}</option></c:when>
-							<c:otherwise><option>${status}</option></c:otherwise>
-						</c:choose>
-					</c:forEach>
-				</select>
-			</li>
-			<shiro:hasPermission name="/internal/qzsetting/searchQZSettings">
-				<li><a href="javascript:resetSearchCondition('-1')">过期未收费(${chargeRemindDataMap['expiredChargeSize']})</a></li>
-				<li><a target="_blank" href="javascript:resetSearchCondition('0')">当天收费提醒(${chargeRemindDataMap['nowChargeSize']})</a></li>
-				<li><a target="_blank" href="javascript:resetSearchCondition('3')">三天收费提醒(${chargeRemindDataMap['threeChargeSize']})</a></li>
-				<li><a target="_blank" href="javascript:resetSearchCondition('7')">七天收费提醒(${chargeRemindDataMap['sevenChargeSize']})</a></li>
-			</shiro:hasPermission>
-		</ul>
+					</label>
+				</li>
+			</ul>
+		</div>
+		<div class="conn" name="moreSearchCondition" style="display: none;">
+			<ul>
+				<li class="condition">
+					<span>客户: </span>
+					<input type="text" list="customer_list" name="customerInfo" value="${qzSettingSearchCriteria.customerInfo}">
+				</li>
+				<li class="condition">
+					<span>组名: </span>
+					<input type="text" name="group" value="${qzSettingSearchCriteria.group}" style="width:150px;">
+				</li>
+				<li>
+					<span>状态: </span>
+					<select name="status">
+						<option value="" <c:if test="${qzSettingSearchCriteria.status == null}">selected</c:if>></option>
+						<option value="1" <c:if test="${qzSettingSearchCriteria.status == 1}">selected</c:if>>激活</option>
+						<option value="0" <c:if test="${qzSettingSearchCriteria.status == 0}">selected</c:if>>暂停</option>
+						<option value="2" <c:if test="${qzSettingSearchCriteria.status == 2}">selected</c:if>>新增</option>
+					</select>
+				</li>
+				<li>
+					<span>更新状态: </span>
+					<select name="updateStatus">
+						<c:forEach items="${statusList}" var="status">
+							<c:choose>
+								<c:when test="${status eq qzSettingSearchCriteria.updateStatus}"><option selected>${status}</option></c:when>
+								<c:otherwise><option>${status}</option></c:otherwise>
+							</c:choose>
+						</c:forEach>
+					</select>
+				</li>
+				<shiro:hasPermission name="/internal/qzsetting/searchQZSettings">
+					<li><a href="javascript:resetSearchCondition('-1')">过期未收费(${chargeRemindDataMap['expiredChargeSize']})</a></li>
+					<li><a target="_blank" href="javascript:resetSearchCondition('0')">当天收费提醒(${chargeRemindDataMap['nowChargeSize']})</a></li>
+					<li><a target="_blank" href="javascript:resetSearchCondition('3')">三天收费提醒(${chargeRemindDataMap['threeChargeSize']})</a></li>
+					<li><a target="_blank" href="javascript:resetSearchCondition('7')">七天收费提醒(${chargeRemindDataMap['sevenChargeSize']})</a></li>
+				</shiro:hasPermission>
+			</ul>
+		</div>
 	</div>
 </div>
 
@@ -159,7 +157,7 @@
 							<span>
 								<input type="checkbox" name="uuid" value="${qzSetting.uuid}" onclick="decideSelectAll();"/>
 							</span>
-							<span class="site-name">客户名称: ${qzSetting.contactPerson}</span>
+							<span class="contactPerson-name">客户名称: ${qzSetting.contactPerson}</span>
 							<span style="padding: 0 10px"> —— </span>
 							<a href="javascript:;" title="网站域名">${qzSetting.domain}</a>
 
@@ -332,15 +330,15 @@
 										<div name="rankInfo" style="display: none;">
 											<span>${qzSetting.qzKeywordRankInfoMap["PC"]}</span>
 										</div>
-										<div class="col-8" id="keywordTrendCharts" style="width: 420px; height: 140px;"></div>
+										<div class="col-8" id="keywordTrendCharts" style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
 									</c:when>
 									<c:otherwise>
-										<div class="col-8" style="width: 420px; height: 140px;">
+										<div class="col-8">
 											<h1 style="text-align: center"> 暂无数据 </h1>
 										</div>
 									</c:otherwise>
 								</c:choose>
-								
+
 								<div class="col-3 top50-link">
 									<div class="row4">
 										<span>前50</span>
@@ -977,6 +975,12 @@
     var m = dateStr.getMonth() + 1 < 10 ? "0" + (dateStr.getMonth() + 1) : (dateStr.getMonth() + 1);
     var d = dateStr.getDate() < 10 ? "0" + dateStr.getDate() : dateStr.getDate();
     var today = dateStr.getFullYear() + "-" + m + "-" + d;
+    $(function () {
+        $(".datalist").css("margin-top", $("#topDiv").height()+15);
+        window.onresize = function(){
+            $(".datalist").css("margin-top", $("#topDiv").height()+15);
+        }
+    });
 </script>
 </body>
 </html>
