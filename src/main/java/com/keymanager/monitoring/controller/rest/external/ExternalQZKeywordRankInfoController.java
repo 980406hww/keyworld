@@ -6,6 +6,8 @@ import com.keymanager.monitoring.entity.QZKeywordRankInfo;
 import com.keymanager.monitoring.service.QZKeywordRankInfoService;
 import com.keymanager.monitoring.service.QZSettingService;
 import com.keymanager.monitoring.vo.ExternalQzSettingVo;
+import com.keymanager.util.Constants;
+import org.aspectj.apache.bcel.classfile.Constant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +37,7 @@ public class ExternalQZKeywordRankInfoController extends SpringMVCBaseController
         String password = (String) request.getParameter("password");
         try {
             if(StringUtils.isNotBlank(userName) && StringUtils.isNotBlank(password) && validUser(userName, password)) {
-                List<ExternalQzSettingVo> qzSettingTasks = qzKeywordRankInfoService.getQZSettingTask();
+                List<ExternalQzSettingVo> qzSettingTasks = qzKeywordRankInfoService.getQZSettingTask(Constants.QZSETTING_KEYWORD_RANK_CRAWLER_HOUR);
                 return new ResponseEntity<Object>(qzSettingTasks, HttpStatus.OK);
             }
         } catch (Exception ex) {

@@ -18,6 +18,7 @@ public class Constants {
     public final static String CUSTOMER_KEYWORD_REFRESH_STAT_INFO_CONFIG_VALUE = "8";
     public final static double QZSETTING_KEYWORD_RANK_UPPER_VALUE = 0.1;
     public final static double QZSETTING_KEYWORD_RANK_LOWER_VALUE = -0.1;
+    public final static Integer QZSETTING_KEYWORD_RANK_CRAWLER_HOUR = 1;
 
     public final static String COLLECT_METHOD_ALL = "全收";
     public final static String COLLECT_METHOD_JUSTPC = "都有排名，只收电脑";
