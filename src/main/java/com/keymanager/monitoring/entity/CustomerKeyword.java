@@ -21,6 +21,9 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(value = "fCustomerUuid")
     private long customerUuid;
 
+    @TableField(value = "fQZSettingUuid")
+    private long qzSettingUuid;
+
     @TableField(value = "fTerminalType")
     private String terminalType;
 
@@ -265,6 +268,14 @@ public class CustomerKeyword extends BaseEntity {
 
     public void setCustomerUuid(long customerUuid) {
         this.customerUuid = customerUuid;
+    }
+
+    public long getQzSettingUuid () {
+        return qzSettingUuid;
+    }
+
+    public void setQzSettingUuid (long qzSettingUuid) {
+        this.qzSettingUuid = qzSettingUuid;
     }
 
     public String getTerminalType() {

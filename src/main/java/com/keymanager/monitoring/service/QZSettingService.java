@@ -362,6 +362,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 	private CustomerKeyword createCustomerKeyword(QZSettingCriteria qzSettingCriteria, QZOperationType qzOperationType, CustomerKeywordVO customerKeywordVO) {
 		CustomerKeyword customerKeyword = new CustomerKeyword();
+		customerKeyword.setQzSettingUuid(qzSettingCriteria.getQzSetting().getUuid());
 		customerKeyword.setKeyword(customerKeywordVO.getKeyword());
 		customerKeyword.setUrl(customerKeywordVO.getUrl());
 		customerKeyword.setBearPawNumber(qzSettingCriteria.getQzSetting().getBearPawNumber());
@@ -421,7 +422,6 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 				if(CollectionUtils.isNotEmpty(qzOperationTypes)) {
 					List<CustomerKeyword> insertingCustomerKeywords = new ArrayList<CustomerKeyword>();
 					for (CustomerKeywordVO customerKeywordVO : qzSettingCriteria.getCustomerKeywordVOs()) {
-						// 遍历需要添加的终端类型
 						for(QZOperationType qzOperationType : qzOperationTypes){
 							if(!(customerKeywordSummaryInfoMaps.containsKey(customerKeywordVO.getKeyword()) && customerKeywordSummaryInfoMaps.get(customerKeywordVO.getKeyword()).contains(qzOperationType.getOperationType()))) {
 								if(StringUtils.isBlank(customerKeywordVO.getTerminalType()) || qzOperationType.getOperationType().equals(customerKeywordVO.getTerminalType())) {
