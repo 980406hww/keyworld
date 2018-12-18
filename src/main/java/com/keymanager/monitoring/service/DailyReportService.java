@@ -9,6 +9,7 @@ import com.keymanager.monitoring.entity.DailyReport;
 import com.keymanager.monitoring.entity.DailyReportItem;
 import com.keymanager.monitoring.enums.DailyReportStatusEnum;
 import com.keymanager.monitoring.enums.DailyReportTriggerModeEnum;
+import com.keymanager.monitoring.enums.EntryTypeEnum;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
 import com.keymanager.monitoring.excel.operator.CustomerKeywordDailyReportSummaryExcelWriter;
 import com.keymanager.monitoring.excel.operator.CustomerKeywordDailyReportTotalExcelWriter;
@@ -16,6 +17,7 @@ import com.keymanager.util.Constants;
 import com.keymanager.util.FileUtil;
 import com.keymanager.util.Utils;
 import com.keymanager.util.ZipCompressor;
+import com.keymanager.util.common.StringUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +40,9 @@ public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport>
 	private CustomerService customerService;
 
 	@Autowired
+	private CustomerKeywordService customerKeywordService;
+
+	@Autowired
 	private CaptureRankJobService captureRankJobService;
 
 	@Autowired
@@ -46,20 +51,14 @@ public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport>
 	public void autoTriggerDailyReport(){
 		if(!captureRankJobService.hasCaptureRankJob() && dailyReportDao.fetchDailyReportTriggeredInToday(DailyReportTriggerModeEnum.Auto.name()) == null){
 			long dailyReportUuid = createDailyReport(null, DailyReportTriggerModeEnum.Auto.name());
-			Config pcDailyReportCustomerUuids = configService.getConfig(Constants.CONFIG_TYPE_DAILY_REPORT, TerminalTypeEnum.PC.name());
-			if(StringUtils.isNotEmpty(pcDailyReportCustomerUuids.getValue())){
-				String [] customerUuidArray = pcDailyReportCustomerUuids.getValue().trim().split(",");
-				for(String customerUuid : customerUuidArray){
-					dailyReportItemService.createDailyReportItem(dailyReportUuid, TerminalTypeEnum.PC.name(), Integer.parseInt(customerUuid));
-				}
+			List<Long> pcCustomerUuids = customerKeywordService.getCustomerUuids(EntryTypeEnum.bc.name(), TerminalTypeEnum.PC.name());
+			for(Long customerUuid : pcCustomerUuids){
+				dailyReportItemService.createDailyReportItem(dailyReportUuid, TerminalTypeEnum.PC.name(), customerUuid.intValue());
 			}
 
-			Config phoneDailyReportCustomerUuids = configService.getConfig(Constants.CONFIG_TYPE_DAILY_REPORT, TerminalTypeEnum.Phone.name());
-			if(StringUtils.isNotEmpty(phoneDailyReportCustomerUuids.getValue())){
-				String [] customerUuidArray = phoneDailyReportCustomerUuids.getValue().trim().split(",");
-				for(String customerUuid : customerUuidArray){
-					dailyReportItemService.createDailyReportItem(dailyReportUuid, TerminalTypeEnum.Phone.name(), Integer.parseInt(customerUuid));
-				}
+			List<Long> phoneCustomerUuids = customerKeywordService.getCustomerUuids(EntryTypeEnum.bc.name(), TerminalTypeEnum.Phone.name());
+			for(Long customerUuid : phoneCustomerUuids){
+				dailyReportItemService.createDailyReportItem(dailyReportUuid, TerminalTypeEnum.Phone.name(), customerUuid.intValue());
 			}
 		}
 	}
@@ -161,12 +160,14 @@ public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport>
 		Map<String, Map<String, String>> externalAccountAndSummaryFeeMap = new HashMap<String, Map<String, String>>();
 		for(DailyReportItem dailyReportItem : dailyReportItems){
 			Customer customer = customerService.getCustomer(dailyReportItem.getCustomerUuid());
-			Map<String, String> summaryFeeMap = externalAccountAndSummaryFeeMap.get(customer.getExternalAccount());
-			if(summaryFeeMap == null){
-				summaryFeeMap = new HashMap<String, String>();
-				externalAccountAndSummaryFeeMap.put(customer.getExternalAccount(), summaryFeeMap);
+			if(StringUtil.isNotNullNorEmpty(customer.getExternalAccount())) {
+				Map<String, String> summaryFeeMap = externalAccountAndSummaryFeeMap.get(customer.getExternalAccount());
+				if (summaryFeeMap == null) {
+					summaryFeeMap = new HashMap<String, String>();
+					externalAccountAndSummaryFeeMap.put(customer.getExternalAccount(), summaryFeeMap);
+				}
+				summaryFeeMap.put(customer.getSearchEngine() + "_" + dailyReportItem.getTerminalType(), dailyReportItem.getTodayFee() + "");
 			}
-			summaryFeeMap.put(customer.getSearchEngine() + "_" + dailyReportItem.getTerminalType(), dailyReportItem.getTodayFee() + "");
 		}
 		return externalAccountAndSummaryFeeMap;
 	}

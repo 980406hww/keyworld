@@ -1180,6 +1180,8 @@
             #{keywordID}
         </foreach>
     </update>
-        
-    
+
+    <select id="getCustomerUuids" resultType="Long">
+        SELECT DISTINCT ck.fCustomerUuid FROM t_customer_keyword ck WHERE ck.fType = #{entryType} AND ck.fTerminalType = #{terminalType} AND ck.fStatus = 1
+    </select>
 </mapper>
