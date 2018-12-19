@@ -12,4 +12,6 @@ public interface DailyReportItemDao extends BaseMapper<DailyReportItem> {
     void deleteDailyReportItemFromAWeekAgo();
 
     public List<DailyReportItem> searchDailyReportItems(@Param("dailyReportUuid") long dailyReportUuid);
+
+    public void deleteDailyReportItems(@Param("dailyReportUuid") long dailyReportUuid);
 }

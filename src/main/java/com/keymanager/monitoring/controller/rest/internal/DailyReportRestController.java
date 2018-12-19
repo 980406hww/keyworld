@@ -45,20 +45,10 @@ public class DailyReportRestController extends SpringMVCBaseController {
 	private ConfigService configService;
 
 	@RequestMapping(value = "/triggerReportGeneration", method = RequestMethod.POST)
-	public ResponseEntity<?> triggerReportGeneration(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) throws Exception{
-		int dayOfMonth = Utils.getDayOfMonth();
-		String customerUuids = (String) requestMap.get("customerUuids");
-		String triggerType = (String) requestMap.get("triggerType");
-		String terminalType = TerminalTypeMapping.getTerminalType(request);
+	public ResponseEntity<?> triggerReportGeneration(HttpServletRequest request) throws Exception{
 		String returnValue = null;
 		try {
-			if(dayOfMonth == 1) {
-				dailyReportService.resetDailyReportExcel(terminalType, customerUuids);
-			}
-			if(triggerType.equals("saveDailyReportTemplate")) {
-				configService.updateCustomerUuidsForDailyReport(customerUuids, terminalType);
-			}
-			dailyReportService.triggerReportGeneration(terminalType, customerUuids);
+			dailyReportService.removeDailyReportInToday();
 			returnValue = "{\"status\":true}";
 		}catch(Exception ex){
 			logger.error(ex.getMessage());

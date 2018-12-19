@@ -72,11 +72,7 @@
                         </c:if>
                         <c:if test="${'bc'.equalsIgnoreCase(entryType)}">
                             <shiro:hasPermission name="/internal/dailyReport/triggerReportGeneration">
-                                <input type="button" value=" 触发日报表生成 " onclick="triggerDailyReportGeneration('triggerDailyReportGeneration')"/>
-                                <input type="button" value=" 生成报表并保存为模板 " onclick="triggerDailyReportGeneration('saveDailyReportTemplate')"/>
-                                <c:if test="${contactPersons != '[]'}">
-                                <input type="button" title="${contactPersons}" value=" 从模板中导出报表 " onclick="triggerDailyReportGeneration('exportDailyReportTemplate')"/>
-                                </c:if>
+                                <input type="button" value=" 重新触发日报表 " onclick="triggerDailyReportGeneration('triggerDailyReportGeneration')"/>
                             </shiro:hasPermission>
                         </c:if>
                         &nbsp;&nbsp;<span id="dailyReportSpan"></span>

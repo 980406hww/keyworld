@@ -175,4 +175,12 @@ public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport>
 	public void deleteDailyReportFromAWeekAgo() {
 		dailyReportDao.deleteDailyReportFromAWeekAgo();
 	}
+
+	public void removeDailyReportInToday(){
+		DailyReport dailyReport = dailyReportDao.fetchDailyReportTriggeredInToday(DailyReportTriggerModeEnum.Auto.name());
+		if(dailyReport != null){
+			dailyReportItemService.deleteDailyReportItems(dailyReport.getUuid());
+			dailyReportDao.deleteById(dailyReport.getUuid());
+		}
+	}
 }
