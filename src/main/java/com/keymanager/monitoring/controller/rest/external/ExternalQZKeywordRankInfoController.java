@@ -37,7 +37,7 @@ public class ExternalQZKeywordRankInfoController extends SpringMVCBaseController
         String password = (String) request.getParameter("password");
         try {
             if(StringUtils.isNotBlank(userName) && StringUtils.isNotBlank(password) && validUser(userName, password)) {
-                List<ExternalQzSettingVo> qzSettingTasks = qzKeywordRankInfoService.getQZSettingTask(Constants.QZSETTING_KEYWORD_RANK_CRAWLER_HOUR);
+                List<ExternalQzSettingVo> qzSettingTasks = qzKeywordRankInfoService.getQZSettingTask();
                 return new ResponseEntity<Object>(qzSettingTasks, HttpStatus.OK);
             }
         } catch (Exception ex) {

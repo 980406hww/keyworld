@@ -38,6 +38,9 @@ public class QZSetting extends BaseEntity{
 	@TableField(value = "fType")
 	private String type;
 
+	@TableField(value = "fCrawlKeywords")
+	private boolean crawlKeywords;
+
 	@TableField(value = "fPcKeywordExceedMaxCount")
 	private boolean pcKeywordExceedMaxCount;
 
@@ -89,11 +92,9 @@ public class QZSetting extends BaseEntity{
 	@TableField(exist = false)
 	private Map<String, JSONObject> qzKeywordRankInfoMap; // QZKeywordRankInfo为全站表子类 一对多
 
-	/* 爬取的时间 */
 	@TableField(value = "fCrawlerTime")
 	private Date crawlerTime;
 
-	/* 爬取的状态 (new, finish) */
 	@TableField(value = "fCrawlerStatus")
 	private String crawlerStatus;
 
@@ -239,6 +240,14 @@ public class QZSetting extends BaseEntity{
 
 	public void setStatus(int status) {
 		this.status = status;
+	}
+
+	public boolean isCrawlKeywords () {
+		return crawlKeywords;
+	}
+
+	public void setCrawlKeywords (boolean crawlKeywords) {
+		this.crawlKeywords = crawlKeywords;
 	}
 
 	public boolean isPcKeywordExceedMaxCount() {

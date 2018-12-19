@@ -621,4 +621,15 @@
         UPDATE t_client_status SET fVersion = #{version}
         WHERE fClientID = #{clientID}
     </update>
+    
+    <select id="getClientStatusVOs" resultType="com.keymanager.monitoring.vo.ClientStatusVO" parameterType="com.keymanager.monitoring.criteria.QZSettingSearchClientGroupInfoCriteria">
+        SELECT
+            cs.fOperationType AS 'operationType',
+            COUNT(cs.fOperationType) AS 'operationTypeCount'
+        FROM t_client_status cs
+        WHERE cs.fTerminalType = #{qzSettingSearchClientGroupInfoCriteria.terminalType}
+        AND cs.fGroup = #{qzSettingSearchClientGroupInfoCriteria.optimizeGroupName}
+        GROUP BY cs.fOperationType;
+    </select>
+
 </mapper>

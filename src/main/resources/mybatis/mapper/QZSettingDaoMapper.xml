@@ -32,6 +32,7 @@
               ) AND qs.fStatus = 1
               AND ((qs.fPcGroup > '' AND qs.fPcKeywordExceedMaxCount = 0)
               OR  (qs.fPhoneGroup > '' AND qs.fPhoneKeywordExceedMaxCount = 0))
+              AND qs.fCrawlKeywords IS TRUE
         ORDER BY qs.fUpdateEndTime
     </select>
 
@@ -93,7 +94,7 @@
     <select id="searchQZSettings" parameterType="com.keymanager.monitoring.criteria.QZSettingSearchCriteria"
             resultType="com.keymanager.monitoring.entity.QZSetting">
         SELECT
-        qs.fUuid AS 'uuid',
+        DISTINCT(qs.fUuid) AS 'uuid',
         c.fUserID AS 'userID',
         qs.fCustomerUuid AS 'customerUuid',
         c.fContactPerson AS 'contactPerson',
@@ -119,6 +120,10 @@
         FROM t_qz_setting qs
         JOIN t_customer c
         ON qs.fCustomerUuid = c.fUuid
+        <if test="qzSettingSearchCriteria.increaseType != null">
+            JOIN t_qz_keyword_rank_info qk
+            ON qs.fUuid = qk.fQZSettingUuid
+        </if>
         WHERE 1 = 1
         <if test="qzSettingSearchCriteria.loginName != null and qzSettingSearchCriteria.loginName != ''">AND c.fUserID = #{qzSettingSearchCriteria.loginName}</if>
         <if test="qzSettingSearchCriteria.customerUuid != null and qzSettingSearchCriteria.customerUuid != ''">AND qs.fCustomerUuid = #{qzSettingSearchCriteria.customerUuid}</if>
@@ -126,6 +131,16 @@
         <if test="qzSettingSearchCriteria.group != null and qzSettingSearchCriteria.group != ''">AND (qs.fPcGroup = #{qzSettingSearchCriteria.group} or qs.fPhoneGroup = #{qzSettingSearchCriteria.group})</if>
         <if test="qzSettingSearchCriteria.updateStatus != null and qzSettingSearchCriteria.updateStatus != ''">AND qs.fUpdateStatus = #{qzSettingSearchCriteria.updateStatus}</if>
         <if test="qzSettingSearchCriteria.status != null">AND qs.fStatus = #{qzSettingSearchCriteria.status}</if>
+        <if test="qzSettingSearchCriteria.increaseType != null">
+            <choose>
+                <when test="qzSettingSearchCriteria.increaseType">
+                    AND qk.fIncrease &gt;= #{qzSettingSearchCriteria.upperValue}
+                </when>
+                <when test="!qzSettingSearchCriteria.increaseType">
+                    AND qk.fIncrease &lt;= #{qzSettingSearchCriteria.lowerValue}
+                </when>
+            </choose>
+        </if>
         <choose>
             <when test="qzSettingSearchCriteria.dateRangeType == 0">
                 AND EXISTS (select qs.fUuid from t_qz_operation_type ot where qs.fUuid = ot.fQZSettingUuid and ot.fNextChargeDate = CURDATE())
@@ -145,73 +160,6 @@
 
             </otherwise>
         </choose>
-        ORDER BY qs.fUpdateEndTime
-    </select>
-
-    <select id="searchRiseOrFallQZSetting" parameterType="com.keymanager.monitoring.criteria.QZSettingSearchCriteria"
-            resultType="com.keymanager.monitoring.entity.QZSetting">
-        SELECT
-        qs.fUuid AS 'uuid',
-        c.fUserID AS 'userID',
-        qs.fCustomerUuid AS 'customerUuid',
-        c.fContactPerson AS 'contactPerson',
-        qs.fDomain AS 'domain',
-        qs.fPcGroup AS 'pcGroup',
-        qs.fPhoneGroup AS 'phoneGroup',
-        qs.fType AS 'type',
-        qs.fIgnoreNoIndex AS 'ignoreNoIndex',
-        qs.fIgnoreNoOrder AS 'ignoreNoOrder',
-        qs.fUpdateInterval AS 'updateInterval',
-        qs.fUpdateStatus AS 'updateStatus',
-        qs.fUpdateStartTime AS 'updateStartTime',
-        qs.fUpdateEndTime AS 'updateEndTime',
-        qs.fUpdateTime AS 'updateTime',
-        qs.fCreateTime AS 'createTime',
-        qs.fCaptureCurrentKeywordCountTime AS 'captureCurrentKeywordCountTime',
-        qs.fCaptureCurrentKeywordStatus AS 'captureCurrentKeywordStatus',
-        qs.fStatus AS 'status',
-        qs.fPcCreateTopTenNum AS 'pcCreateTopTenNum',
-        qs.fPcCreateTopFiftyNum AS 'pcCreateTopFiftyNum',
-        qs.fPhoneCreateTopTenNum AS 'phoneCreateTopTenNum',
-        qs.fPhoneCreateTopFiftyNum AS 'phoneCreateTopFiftyNum'
-        FROM t_qz_setting qs
-        JOIN t_customer c
-        ON qs.fCustomerUuid = c.fUuid
-        JOIN t_qz_keyword_rank_info qk
-        ON qs.fUuid = qk.fQZSettingUuid
-        WHERE 1 = 1
-        <if test="qzSettingSearchCriteria.loginName != null and qzSettingSearchCriteria.loginName != ''">AND c.fUserID = #{qzSettingSearchCriteria.loginName}</if>
-        <if test="qzSettingSearchCriteria.customerUuid != null and qzSettingSearchCriteria.customerUuid != ''">AND qs.fCustomerUuid = #{qzSettingSearchCriteria.customerUuid}</if>
-        <if test="qzSettingSearchCriteria.domain != null and qzSettingSearchCriteria.domain != ''">AND qs.fDomain = #{qzSettingSearchCriteria.domain}</if>
-        <if test="qzSettingSearchCriteria.group != null and qzSettingSearchCriteria.group != ''">AND (qs.fPcGroup = #{qzSettingSearchCriteria.group} or qs.fPhoneGroup = #{qzSettingSearchCriteria.group})</if>
-        <if test="qzSettingSearchCriteria.updateStatus != null and qzSettingSearchCriteria.updateStatus != ''">AND qs.fUpdateStatus = #{qzSettingSearchCriteria.updateStatus}</if>
-        <if test="qzSettingSearchCriteria.status != null">AND qs.fStatus = #{qzSettingSearchCriteria.status}</if>
-        <choose>
-            <when test="qzSettingSearchCriteria.increaseType">
-                AND qk.fIncrease &gt;= #{qzSettingSearchCriteria.upperValue}
-            </when>
-            <when test="!qzSettingSearchCriteria.increaseType">
-                AND qk.fIncrease &lt;= #{qzSettingSearchCriteria.lowerValue}
-            </when>
-            <when test="qzSettingSearchCriteria.dateRangeType == 0">
-                AND EXISTS (select qs.fUuid from t_qz_operation_type ot where qs.fUuid = ot.fQZSettingUuid and ot.fNextChargeDate = CURDATE())
-            </when>
-            <when test="qzSettingSearchCriteria.dateRangeType == -1">
-                AND EXISTS (select qs.fUuid from t_qz_operation_type ot where qs.fUuid = ot.fQZSettingUuid and ot.fNextChargeDate &lt; CURDATE())
-            </when>
-            <when test="qzSettingSearchCriteria.dateRangeType == 3">
-                AND EXISTS (select qs.fUuid from t_qz_operation_type ot where qs.fUuid = ot.fQZSettingUuid and ot.fNextChargeDate BETWEEN
-                date_add(CURDATE(), INTERVAL 1 DAY) AND date_add(CURDATE(), INTERVAL 3 DAY))
-            </when>
-            <when test="qzSettingSearchCriteria.dateRangeType == 7">
-                AND EXISTS (select qs.fUuid from t_qz_operation_type ot where qs.fUuid = ot.fQZSettingUuid and ot.fNextChargeDate BETWEEN
-                date_add(CURDATE(), INTERVAL 4 DAY) AND date_add(CURDATE(), INTERVAL 7 DAY))
-            </when>
-            <otherwise>
-
-            </otherwise>
-        </choose>
-        GROUP BY qs.fUuid
         ORDER BY qs.fUpdateEndTime
     </select>
 
@@ -337,4 +285,16 @@
             #{uuid}
         </foreach>
     </update>
+
+    <select id="getQZSettingClientGroupInfo" resultType="java.lang.Integer" parameterType="com.keymanager.monitoring.criteria.QZSettingSearchClientGroupInfoCriteria">
+        SELECT COUNT(1)
+        FROM t_customer_keyword ck
+        LEFT JOIN t_qz_setting qs
+        ON qs.fCustomerUuid = ck.fCustomerUuid
+        WHERE qs.fUuid = #{qzSettingSearchClientGroupInfoCriteria.qzSettingUuid}
+        <if test="qzSettingSearchClientGroupInfoCriteria.terminalType != ''">AND ck.fTerminalType = #{qzSettingSearchClientGroupInfoCriteria.terminalType}</if>
+        <if test="qzSettingSearchClientGroupInfoCriteria.type != ''">AND ck.fType = #{qzSettingSearchClientGroupInfoCriteria.type}</if>
+        <if test="qzSettingSearchClientGroupInfoCriteria.optimizeGroupName != ''">AND ck.fOptimizeGroupName LIKE '${qzSettingSearchClientGroupInfoCriteria.optimizeGroupName}%'</if>
+    </select>
+
 </mapper>

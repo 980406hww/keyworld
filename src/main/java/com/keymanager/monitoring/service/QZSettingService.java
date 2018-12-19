@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.enums.CollectMethod;
 import com.keymanager.monitoring.criteria.QZSettingCriteria;
+import com.keymanager.monitoring.criteria.QZSettingSearchClientGroupInfoCriteria;
 import com.keymanager.monitoring.criteria.QZSettingSearchCriteria;
 import com.keymanager.monitoring.dao.QZSettingDao;
 import com.keymanager.monitoring.entity.*;
@@ -12,8 +13,10 @@ import com.keymanager.monitoring.enums.QZSettingStatusEnum;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
 import com.keymanager.monitoring.vo.CustomerKeywordSummaryInfoVO;
 import com.keymanager.monitoring.vo.DateRangeTypeVO;
+import com.keymanager.monitoring.vo.QZSettingSearchClientGroupInfoVO;
 import com.keymanager.util.Constants;
 import com.keymanager.util.Utils;
+import com.keymanager.monitoring.vo.ClientStatusVO;
 import com.keymanager.value.CustomerKeywordVO;
 import net.sf.json.JSONObject;
 import org.apache.commons.collections.CollectionUtils;
@@ -49,7 +52,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 	private CustomerKeywordService customerKeywordService;
 
 	@Autowired
-	private ConfigService configService;
+	private ClientStatusService clientStatusService;
 
 	@Autowired
 	private QZKeywordRankInfoService qzKeywordRankInfoService;
@@ -135,7 +138,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			List<QZOperationType> OldOperationTypes = qzOperationTypeService.searchQZOperationTypesIsDelete(qzSetting.getUuid());
 			List<QZOperationType> updOperationTypes = qzSetting.getQzOperationTypes();
 			updateOpretionTypeAndChargeRule(OldOperationTypes,updOperationTypes,qzSetting.getUuid());
-			List<QZKeywordRankInfo> existingQZKeywordRankInfoList = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid());
+			List<QZKeywordRankInfo> existingQZKeywordRankInfoList = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), null);
 			updateQZKeywordRankInfo(existingQZKeywordRankInfoList, updOperationTypes, existingQZSetting);
 			qzSettingDao.updateById(existingQZSetting);
 		}else{
@@ -250,21 +253,15 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
         }
 	}
 
-	public Page<QZSetting> searchRiseOrFallQZSetting (Page<QZSetting> page, QZSettingSearchCriteria qzSettingSearchCriteria) {
-		page.setRecords(qzSettingDao.searchRiseOrFallQZSetting(page, qzSettingSearchCriteria));
-		addingQZKeywordRankInfo(page);
-		return page;
-	}
-
 	public Page<QZSetting> searchQZSetting(Page<QZSetting> page, QZSettingSearchCriteria qzSettingSearchCriteria){
 		page.setRecords(qzSettingDao.searchQZSettings(page, qzSettingSearchCriteria));
-		addingQZKeywordRankInfo(page);
+		addingQZKeywordRankInfo(page, qzSettingSearchCriteria.getIncreaseType());
 		return page;
 	}
 
-	public Page<QZSetting> addingQZKeywordRankInfo (Page<QZSetting> page){
+	public Page<QZSetting> addingQZKeywordRankInfo (Page<QZSetting> page, Boolean increaseType){
         for(QZSetting qzSetting : page.getRecords()){
-            List<QZKeywordRankInfo> qzKeywordRankInfos = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid());
+            List<QZKeywordRankInfo> qzKeywordRankInfos = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(),increaseType);
             Map<String, JSONObject> qzKeywordRankInfoMap = new HashMap<String, JSONObject>();
             for (QZKeywordRankInfo qzKeywordRankInfo : qzKeywordRankInfos) {
 				calculatedQZKeywordRankInfo(qzKeywordRankInfo);
@@ -550,5 +547,12 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		if(CollectionUtils.isNotEmpty(phoneExceedMaxCountUuids)){
 			qzSettingDao.updatePhoneExceedMaxCountFlag(true, phoneExceedMaxCountUuids);
 		}
+	}
+
+	public QZSettingSearchClientGroupInfoVO getQZSettingClientGroupInfo (QZSettingSearchClientGroupInfoCriteria qzSettingSearchClientGroupInfoCriteria) {
+		QZSettingSearchClientGroupInfoVO qzSettingSearchClientGroupInfoVO = new QZSettingSearchClientGroupInfoVO();
+		qzSettingSearchClientGroupInfoVO.setCustomerKeywordCount(qzSettingDao.getQZSettingClientGroupInfo(qzSettingSearchClientGroupInfoCriteria));
+		qzSettingSearchClientGroupInfoVO.setClientStatusVOs(clientStatusService.getClientStatusVOs(qzSettingSearchClientGroupInfoCriteria));
+		return qzSettingSearchClientGroupInfoVO;
 	}
 }

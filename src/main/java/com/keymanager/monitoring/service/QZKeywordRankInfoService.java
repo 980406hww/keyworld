@@ -6,9 +6,11 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.criteria.QZSettingSearchCriteria;
 import com.keymanager.monitoring.dao.QZKeywordRankInfoDao;
 import com.keymanager.monitoring.dao.QZSettingDao;
+import com.keymanager.monitoring.entity.Config;
 import com.keymanager.monitoring.entity.QZKeywordRankInfo;
 import com.keymanager.monitoring.entity.QZSetting;
 import com.keymanager.monitoring.vo.ExternalQzSettingVo;
+import com.keymanager.util.Constants;
 import com.keymanager.util.PaginationRewriteQueryTotalInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,16 +32,20 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
     @Autowired
     private QZSettingDao qzSettingDao;
 
-    public List<QZKeywordRankInfo> searchExistingQZKeywordRankInfo (Long uuid) {
-        return qzKeywordRankInfoDao.searchExistingQZKeywordRankInfo(uuid);
+    @Autowired
+    private ConfigService configService;
+
+    public List<QZKeywordRankInfo> searchExistingQZKeywordRankInfo (Long uuid, Boolean increaseType) {
+        return qzKeywordRankInfoDao.searchExistingQZKeywordRankInfo(uuid, increaseType);
     }
 
     public void deleteByQZSettingUuid (Long uuid) {
         qzKeywordRankInfoDao.deleteByQZSettingUuid(uuid);
     }
 
-    public List<ExternalQzSettingVo> getQZSettingTask(Integer crawlerHour){
-        List<ExternalQzSettingVo> qzSettingTasks = qzKeywordRankInfoDao.getQZSettingTask(crawlerHour);
+    public List<ExternalQzSettingVo> getQZSettingTask(){
+        Config config = configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK, Constants.CONFIG_KEY_CRAWLER_HOUR);
+        List<ExternalQzSettingVo> qzSettingTasks = qzKeywordRankInfoDao.getQZSettingTask(Integer.parseInt(config.getValue()));
         if (qzSettingTasks.size()>0){
             Long[] uuids=new Long[qzSettingTasks.size()];
             int index = 0;
@@ -75,10 +81,6 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
         }
     }
 
-    public QZSettingSearchCriteria getCountDownAndUp(double upper, double lower){
-        return qzKeywordRankInfoDao.getCountDownAndUp(upper,lower);
-    }
-
     public QZKeywordRankInfo getQZKeywordRankInfo(Map<String, Object> resultMap){
         QZKeywordRankInfo qzKeywordRankInfo = new QZKeywordRankInfo();
         try {
@@ -97,6 +99,17 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
             logger.error("数据封装异常"+e.getMessage());
         }
         return qzKeywordRankInfo;
+    }
+
+    public QZSettingSearchCriteria getCountDownAndUp(QZSettingSearchCriteria qzSettingSearchCriteria){
+        Config uppperConfig = configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK, Constants.CONFIG_KEY_UPPER_VALUE);
+        Config lowerConfig = configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK, Constants.CONFIG_KEY_LOWER_VALUE);
+        QZSettingSearchCriteria countDownAndUpQZSettingSearchCriteria = qzKeywordRankInfoDao.getCountDownAndUp(Double.parseDouble(uppperConfig.getValue()), Double.parseDouble(lowerConfig.getValue()));
+        qzSettingSearchCriteria.setUpperValue(Double.parseDouble(uppperConfig.getValue()));
+        qzSettingSearchCriteria.setLowerValue(Double.parseDouble(lowerConfig.getValue()));
+        qzSettingSearchCriteria.setUpNum(countDownAndUpQZSettingSearchCriteria.getUpNum());
+        qzSettingSearchCriteria.setDownNum(countDownAndUpQZSettingSearchCriteria.getDownNum());
+        return qzSettingSearchCriteria;
     }
 
     public QZSetting getQZSetting(Map<String, Object> resultMap){
