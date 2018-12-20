@@ -10,7 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.keymanager.monitoring.criteria.QZSettingSearchClientGroupInfoCriteria;
 import com.keymanager.monitoring.entity.ClientUpgrade;
+import com.keymanager.monitoring.vo.ClientStatusVO;
 import com.keymanager.monitoring.vo.CookieVO;
 import com.keymanager.monitoring.entity.CustomerKeywordTerminalRefreshStatRecord;
 import org.apache.commons.collections.CollectionUtils;
@@ -1099,5 +1101,9 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 
     public void updateVersion(String clientID, String version){
         clientStatusDao.updateVersion(clientID, version);
+    }
+
+    public List<ClientStatusVO> getClientStatusVOs (QZSettingSearchClientGroupInfoCriteria qzSettingSearchClientGroupInfoCriteria) {
+        return clientStatusDao.getClientStatusVOs(qzSettingSearchClientGroupInfoCriteria);
     }
 }

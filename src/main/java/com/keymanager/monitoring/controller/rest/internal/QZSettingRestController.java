@@ -3,11 +3,12 @@ package com.keymanager.monitoring.controller.rest.internal;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.CustomerCriteria;
+import com.keymanager.monitoring.criteria.QZSettingSearchClientGroupInfoCriteria;
 import com.keymanager.monitoring.criteria.QZSettingSearchCriteria;
-import com.keymanager.monitoring.dao.QZKeywordRankInfoDao;
 import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.QZSetting;
 import com.keymanager.monitoring.service.*;
+import com.keymanager.monitoring.vo.QZSettingSearchClientGroupInfoVO;
 import com.keymanager.util.Constants;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
@@ -140,9 +141,8 @@ public class QZSettingRestController extends SpringMVCBaseController {
 	private ModelAndView constructQZSettingModelAndView(HttpServletRequest request, QZSettingSearchCriteria qzSettingSearchCriteria, int currentPageNumber, int pageSize) {
 		ModelAndView modelAndView = new ModelAndView("/qzsetting/list");
 		Map<String, Integer> chargeRemindDataMap = qzSettingService.getChargeRemindData();
-        QZSettingSearchCriteria qzSettingCriteria = qzKeywordRankInfoService.getCountDownAndUp(Constants.QZSETTING_KEYWORD_RANK_UPPER_VALUE,Constants.QZSETTING_KEYWORD_RANK_LOWER_VALUE);
-        qzSettingSearchCriteria.setDownNum(qzSettingCriteria.getDownNum());
-        qzSettingSearchCriteria.setUpNum(qzSettingCriteria.getUpNum());
+        qzKeywordRankInfoService.getCountDownAndUp(qzSettingSearchCriteria);
+
 		CustomerCriteria customerCriteria = new CustomerCriteria();
 		String entryType = (String) request.getSession().getAttribute("entryType");
 		customerCriteria.setEntryType(entryType);
@@ -154,12 +154,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
 			customerCriteria.setLoginName(loginName);
 			qzSettingSearchCriteria.setLoginName(loginName);
 		}
-		Page<QZSetting> page;
-		if (null != qzSettingSearchCriteria.getIncreaseType()) {
-			page = qzSettingService.searchRiseOrFallQZSetting(new Page<QZSetting>(currentPageNumber, pageSize), qzSettingSearchCriteria);
-		} else {
-			page = qzSettingService.searchQZSetting(new Page<QZSetting>(currentPageNumber, pageSize), qzSettingSearchCriteria);
-		}
+		Page<QZSetting> page = qzSettingService.searchQZSetting(new Page<QZSetting>(currentPageNumber, pageSize), qzSettingSearchCriteria);
 		List<Customer> customerList = customerService.getActiveCustomerSimpleInfo(customerCriteria);
 		Integer availableQZSettingCount = qzSettingService.getAvailableQZSettings().size();
 		modelAndView.addObject("chargeRemindDataMap", chargeRemindDataMap);
@@ -178,6 +173,18 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		try {
 			List<QZSetting>	qzSettings = qzSettingService.getAvailableQZSettings();
 			return new ResponseEntity<Object>(qzSettings,HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
+		return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
+	}
+
+	@RequiresPermissions("/internal/qzsetting/searchQZSettings")
+	@RequestMapping(value = "/getQZSettingClientGroupInfo", method = RequestMethod.POST)
+	public ResponseEntity<?> getQZSettingClientGroupInfo(@RequestBody QZSettingSearchClientGroupInfoCriteria qzSettingSearchClientGroupInfoCriteria) {
+		try {
+			QZSettingSearchClientGroupInfoVO qzSettingSearchClientGroupInfoVO = qzSettingService.getQZSettingClientGroupInfo(qzSettingSearchClientGroupInfoCriteria);
+			return new ResponseEntity<Object>(qzSettingSearchClientGroupInfoVO, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}

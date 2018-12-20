@@ -1,7 +1,5 @@
 package com.keymanager.monitoring.criteria;
 
-import com.keymanager.util.Constants;
-
 public class QZSettingSearchCriteria{
     private String loginName;
     private String customerUuid;
@@ -13,8 +11,8 @@ public class QZSettingSearchCriteria{
     private Integer status;
     private Integer downNum;
     private Integer upNum;
-    private double upperValue = Constants.QZSETTING_KEYWORD_RANK_UPPER_VALUE;
-    private double lowerValue = Constants.QZSETTING_KEYWORD_RANK_LOWER_VALUE;
+    private double upperValue;
+    private double lowerValue;
     private Boolean increaseType;
     private String terminalType;
 

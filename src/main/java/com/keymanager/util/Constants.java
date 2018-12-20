@@ -17,10 +17,6 @@ public class Constants {
     public final static String POSITIVELIST_OPERATION_TYPE = "1";
     public final static String CUSTOMER_KEYWORD_REFRESH_STAT_INFO_CONFIG_VALUE = "8";
 
-    public final static double QZSETTING_KEYWORD_RANK_UPPER_VALUE = 0.1;
-    public final static double QZSETTING_KEYWORD_RANK_LOWER_VALUE = -0.1;
-    public final static Integer QZSETTING_KEYWORD_RANK_CRAWLER_HOUR = 1;
-
     public final static String QZ_SETTING_CRAWLER_STATUS_NEW = "new";
 
     public final static String COLLECT_METHOD_ALL = "全收";
@@ -75,6 +71,10 @@ public class Constants {
     public final static String CONFIG_TYPE_OPTIMIZE_METHOD_GROUPNAME = "OptimizeMethodGroupName";
     public final static String CONFIG_TYPE_QZ_KEYWORD = "QZKeyword";
     public final static String CONFIG_KEY_KEYWORD_MAX_COUNT = "MaxCount";
+    public final static String CONFIG_TYPE_QZSETTING_KEYWORD_RANK = "QZSettingKeywordRank";
+    public final static String CONFIG_KEY_UPPER_VALUE = "UpperValue";
+    public final static String CONFIG_KEY_LOWER_VALUE = "LowerValue";
+    public final static String CONFIG_KEY_CRAWLER_HOUR = "CrawlerHour";
 
     public final static Map<String, String> ACCOUNT_LOG_STATUS_MAP = new HashMap<String, String>();
     static {

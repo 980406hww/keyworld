@@ -3,6 +3,7 @@ package com.keymanager.monitoring.dao;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
+import com.keymanager.monitoring.criteria.QZSettingSearchClientGroupInfoCriteria;
 import com.keymanager.monitoring.criteria.QZSettingSearchCriteria;
 import com.keymanager.monitoring.entity.QZSetting;
 import com.keymanager.monitoring.vo.DateRangeTypeVO;
@@ -22,8 +23,6 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
     List<QZSetting> searchQZSettingsByUuids(@Param("uuids") String uuids);
 
     List<QZSetting> searchQZSettings(Page<QZSetting> page, @Param("qzSettingSearchCriteria")QZSettingSearchCriteria qzSettingSearchCriteria);
-
-    List<QZSetting> searchRiseOrFallQZSetting (Page<QZSetting> page, @Param("qzSettingSearchCriteria")QZSettingSearchCriteria qzSettingSearchCriteria);
 
     int selectLastId();
 
@@ -46,5 +45,7 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
     QZSetting findQzSetting(@Param("fUuid") Long fUuid);
 
     void updateCrawlerStatus(@Param("uuids")Long[] uuids);
+
+    int getQZSettingClientGroupInfo (@Param("qzSettingSearchClientGroupInfoCriteria") QZSettingSearchClientGroupInfoCriteria qzSettingSearchClientGroupInfoCriteria);
 }
 

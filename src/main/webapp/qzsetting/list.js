@@ -33,6 +33,7 @@ $(function () {
     loadingCheckTerminalType();
     searchRiseOrFall();
     detectedMoreSearchConditionDivShow();
+    clientStatusOperationTypeChange();
 });
 function loadingCheckTerminalType() {
     var terminalType = $("#chargeForm").find("#terminalType").val();
@@ -67,15 +68,47 @@ function detectedMoreSearchConditionDivShow() {
         moreSearchCondition.css("display", "block");
     }
 }
-function detectedTopNum(terminalType) {
-    var rankWrap;
+function checkTerminalType(terminalType) {
+    var body;
+    if (terminalType == "") {
+        terminalType = "PC";
+    }
+    var a = $(".mytabs .link").find("li.active a");
+    if (a[0] != undefined && a[0].innerHTML.substring(2) == terminalType) {
+        return;
+    }
+    $(".mytabs .link").find("li").removeClass("active");
     if (terminalType == "PC") {
-        rankWrap = $(".pcGroup .body .rank-wrap");
+        body = $(".pcGroup .body");
+        $(".mytabs .link").find("li[name='PC']").addClass("active");
+        $("#chargeForm").find("#terminalType").val($.trim(terminalType));
+        $(".datalist").find("li.phoneGroup").each(function () {
+            $(this).css("display", "none")
+        });
+        $(".datalist").find("li.pcGroup").each(function () {
+            $(this).css("display", "block");
+        });
     }
     if (terminalType == "Phone") {
-        rankWrap = $(".phoneGroup .body .rank-wrap");
+        body = $(".phoneGroup .body");
+        $(".mytabs .link").find("li[name='Phone']").addClass("active");
+        $("#chargeForm").find("#terminalType").val($.trim(terminalType));
+        $(".datalist").find(".pcGroup").each(function () {
+            $(this).css("display", "none")
+        });
+        $(".datalist").find(".phoneGroup").each(function () {
+            $(this).css("display", "block");
+        });
     }
-    $(rankWrap).each(function () {
+    setTimeout(function (){
+        detectedTopNum(body);
+    }, 300);
+    setTimeout(function () {
+        getQZSettingClientGroupInfo(body, terminalType);
+    }, 2000);
+}
+function detectedTopNum(body) {
+    $(body).find(".rank-wrap").each(function () {
         generateQZKeywordTrendCharts($(this).find("#keywordTrendCharts")[0], $(this).find("div[name='rankInfo'] span").text());
         $(this).find("#keywordTrendCharts").css("position", "static");
         $(this).find("#keywordTrendCharts").children().css("position", "static");
@@ -233,38 +266,48 @@ function generateQZKeywordTrendCharts(domElement, data) {
 function stringToArray(str) {
     return str.replace('[', '').replace(']', '').split(', ').reverse();
 }
-function checkTerminalType(terminalType) {
-    if (terminalType == "") {
-        terminalType = "PC";
-    }
-    var a = $(".mytabs .link").find("li.active a");
-    if (a[0] != undefined && a[0].innerHTML.substring(2) == terminalType) {
-        return;
-    }
-    $(".mytabs .link").find("li").removeClass("active");
-    if (terminalType == "PC") {
-        $(".mytabs .link").find("li[name='PC']").addClass("active");
-        $("#chargeForm").find("#terminalType").val($.trim(terminalType));
-        $(".datalist").find("li.phoneGroup").each(function () {
-            $(this).css("display", "none")
+function getQZSettingClientGroupInfo(body, terminalType) {
+    $(body).find(".other-rank").each(function () {
+        var div = $(this);
+        var uuid = div.parent().parent().parent().find(".header input[name='uuid']").val();
+        var optimizeGroupName = div.find(".row:first-child").find("div:eq(2) span.line1 a").text();
+        if (optimizeGroupName.indexOf("(") == -1) {
+            optimizeGroupName = $.trim(optimizeGroupName);
+        } else {
+            optimizeGroupName = $.trim(optimizeGroupName.substring(0,optimizeGroupName.indexOf("(")));
+        }
+        var postData = {};
+        postData.qzSettingUuid = uuid;
+        postData.terminalType = terminalType;
+        postData.type = $.trim(div.find(".row:last-child").find("div:eq(4) span.line1 a").text());
+        postData.optimizeGroupName = optimizeGroupName;
+        $.ajax({
+            url: '/internal/qzsetting/getQZSettingClientGroupInfo',
+            type: 'POST',
+            data: JSON.stringify(postData),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            success: function (data) {
+                div.find(".row:first-child").find("div:eq(4) span.line1 a").text(data.customerKeywordCount);
+                var clientCount = 0;
+                if (data.clientStatusVOs != null) {
+                    var select = div.find(".row:first-child").find("div:eq(3) select");
+                    select.empty();
+                    $(select).append("<option value=''></option>");
+                    $.each(data.clientStatusVOs, function (idx, val) {
+                        clientCount += val.operationTypeCount;
+                        $(select).append("<option value='" + val.operationType + "(" + val.operationTypeCount + ")" +"'>"+val.operationType + "(" + val.operationTypeCount + ")"+"</option>");
+                    });
+                }
+                div.find(".row:first-child").find("div:eq(2) span.line1 a").text(optimizeGroupName+" ("+clientCount+")");
+            },
+            error: function () {
+                console.log("get QZSettingClientGroupInfo failed");
+            }
         });
-        $(".datalist").find("li.pcGroup").each(function () {
-            $(this).css("display", "block");
-        });
-    }
-    if (terminalType == "Phone") {
-        $(".mytabs .link").find("li[name='Phone']").addClass("active");
-        $("#chargeForm").find("#terminalType").val($.trim(terminalType));
-        $(".datalist").find(".pcGroup").each(function () {
-            $(this).css("display", "none")
-        });
-        $(".datalist").find(".phoneGroup").each(function () {
-            $(this).css("display", "block");
-        });
-    }
-    setTimeout(function (){
-        detectedTopNum(terminalType);
-    }, 0);
+    });
 }
 function trimSearchCondition(days) {
     var chargeForm = $("#chargeForm");
@@ -298,6 +341,51 @@ function trimSearchCondition(days) {
 }
 function showMoreSearchCondition() {
     $(".mytabs").find("div[name='moreSearchCondition']").toggle();
+}
+function searchClientStatus(optimizeGroup, operationType) {
+    var searchClientStatusFrom = $("#searchClientStatusForm");
+    var terminalType = $("#chargeForm").find("#terminalType").val();
+    var url;
+    searchClientStatusFrom.find("#groupName").val($.trim(optimizeGroup));
+    if (operationType != null) {
+        searchClientStatusFrom.find("#operationType").val($.trim(operationType));
+    }
+    if (terminalType == 'PC') {
+        url = "http://pcsskj.shunshikj.com/internal/clientstatus/searchClientStatuses";
+    }
+    if (terminalType == 'Phone') {
+        url = "http://msskj.shunshikj.com/internal/clientstatus/searchClientStatuses";
+    }
+    searchClientStatusFrom.attr("action", url);
+    searchClientStatusFrom.submit();
+}
+function searchCustomerKeywords(customerUuid, optimizeGroupName, status) {
+    console.log(customerUuid, optimizeGroupName, status);
+    var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
+    var terminalType = $("#chargeForm").find("#terminalType").val();
+    var url;
+    searchCustomerKeywordForm.find("#customerUuid").val(customerUuid);
+    searchCustomerKeywordForm.find("#optimizeGroupName").val(optimizeGroupName);
+    searchCustomerKeywordForm.find("#status").val(status);
+    if (terminalType == 'PC') {
+        url = "http://pcsskj.shunshikj.com/internal/customerKeyword/searchCustomerKeywords";
+    }
+    if (terminalType == 'Phone') {
+        url = "http://msskj.shunshikj.com/internal/customerKeyword/searchCustomerKeywords";
+    }
+    console.log(url, terminalType);
+    searchCustomerKeywordForm.attr("action", url);
+    searchCustomerKeywordForm.submit();
+}
+function clientStatusOperationTypeChange() {
+    $(".body").find(".other-rank").each(function (){
+        $(this).find(".row:first-child").find("div:eq(3) select").change(function () {
+            var operationType = $(this).val().substring(0, $(this).val().indexOf("("));
+            var optimizeGroup = $(this).parent().parent().find("div:eq(2) span.line1 a").text();
+            optimizeGroup = optimizeGroup.substring(0, optimizeGroup.indexOf("("));
+            searchClientStatus(optimizeGroup, operationType);
+        });
+    });
 }
 function changePaging(currentPage, pageSize) {
     var chargeForm = $("#chargeForm");
@@ -895,10 +983,9 @@ function saveChangeSetting(self) {
         return;
     }
     qzSetting.bearPawNumber = settingDialogDiv.find("#bearPawNumber").val();
-    qzSetting.ignoreNoIndex = settingDialogDiv.find("#qzSettingIgnoreNoIndex").val() === "1"
-        ? true : false;
-    qzSetting.ignoreNoOrder = settingDialogDiv.find("#qzSettingIgnoreNoOrder").val() === "1"
-        ? true : false;
+    qzSetting.crawlKeywords = settingDialogDiv.find("#qzSettingCrawlKeywords").val() === "1" ? true : false;
+    qzSetting.ignoreNoIndex = settingDialogDiv.find("#qzSettingIgnoreNoIndex").val() === "1" ? true : false;
+    qzSetting.ignoreNoOrder = settingDialogDiv.find("#qzSettingIgnoreNoOrder").val() === "1" ? true : false;
     qzSetting.updateInterval = settingDialogDiv.find("#qzSettingInterval").val();
     qzSetting.pcGroup = settingDialogDiv.find("#groupPC").val();
     qzSetting.phoneGroup = settingDialogDiv.find("#groupPhone").val();
@@ -961,7 +1048,7 @@ function saveChangeSetting(self) {
             validationFlag = false;
             return false;
         }
-        if (operationType.maxKeywordCount == "" || !reg.test(operationType.maxKeywordCount)){
+        if (qzSetting.crawlKeywords && (operationType.maxKeywordCount == "" || !reg.test(operationType.maxKeywordCount))){
             alert("请输入PC限制词量");
             settingDialogDiv.find("#maxKeywordCount" + val.id).focus();
             validationFlag = false;

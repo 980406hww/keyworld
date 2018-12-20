@@ -139,12 +139,10 @@ ul {
     height: 30px;
     line-height: 30px;
     font-size: 14px;
-    padding-left: 7px;
-    padding-right: 24px;
 }
 
 .mytabs .conn ul li.condition input {
-    width: 200px;
+    width: 180px;
     height: 30px;
     line-height: 30px;
     font-size: 12px;
@@ -253,7 +251,7 @@ ul {
 }
 
 .datalist-list .body .data-info-wrap {
-    width: 592px;
+    width: 792px;
     float: left;
     height: 150px;
     text-align: center
@@ -364,7 +362,11 @@ ul {
 
 .datalist-list .body .other-rank {
     float: left;
-    width: 508px;
+    width: 704px;
+}
+
+.datalist-list .body .other-rank select {
+    margin-top: 14px;
 }
 
 .datalist-list .body .other-rank .row {
@@ -401,7 +403,7 @@ ul {
     display: block;
     float: left;
     height: 75px;
-    width: 84px;
+    width: 100px;
     border-right: 1px solid #e6e6e6;
 }
 
@@ -415,7 +417,7 @@ ul {
 
 .datalist-list .body .other-rank .row span.line1 {
     font-size: 18px;
-    margin-top: 18px;
+    margin-top: 14px;
 }
 
 .datalist-list .body .other-rank .row span.line1:hover {
