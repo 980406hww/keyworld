@@ -277,9 +277,7 @@
 
     <update id="updateCrawlerStatus">
         update t_qz_setting
-        <set>
-            fCrawlerStatus='processing'
-        </set>
+        SET fCrawlerStatus='processing'
         WHERE fUuid IN
         <foreach collection="uuids" item="uuid" index="index"  open="(" separator="," close=")">
             #{uuid}

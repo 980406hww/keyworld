@@ -34,7 +34,7 @@
         DELETE FROM t_qz_keyword_rank_info
         WHERE fQZSettingUuid = #{qzSettingUuid}
     </delete>
-    <select id="getQZSettingTask" resultType="com.keymanager.monitoring.vo.ExternalQzSettingVo">
+    <select id="getQZSettingTask" resultType="com.keymanager.monitoring.vo.ExternalQzSettingVO">
         SELECT
             qs.fUuid AS 'uuid',
             qs.fDomain AS 'domain',
@@ -44,19 +44,14 @@
         FROM t_qz_setting qs
         JOIN t_customer c
         ON qs.fCustomerUuid = c.fUuid
-        WHERE qs.fCrawlerStatus='new' OR qs.fUuid IN(
-        SELECT
-          fUuid
-        FROM
-          t_qz_setting
-        WHERE
+        WHERE qs.fCrawlerStatus='new' OR
            (fCrawlerStatus = 'finish' AND DATE_ADD(fCrawlerTime,INTERVAL #{crawlerHour} HOUR) &lt;= NOW())
         OR (fCrawlerStatus = 'processing' AND DATE_ADD(fCrawlerTime,INTERVAL #{crawlerHour} HOUR) &lt;= NOW())
-        )
+        ORDER BY qs.fCreateTime DESC
         limit 500
     </select>
 
-    <select id="getQzKeywordRankInfoID" resultType="com.keymanager.monitoring.entity.QZKeywordRankInfo">
+    <select id="getQzKeywordRankInfos" resultType="com.keymanager.monitoring.entity.QZKeywordRankInfo">
     SELECT
       fUuid AS 'uuid',
       fTerminalType AS 'terminalType',

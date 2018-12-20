@@ -4,9 +4,9 @@ import com.keymanager.monitoring.common.utils.StringUtils;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.entity.QZKeywordRankInfo;
 import com.keymanager.monitoring.service.QZKeywordRankInfoService;
-import com.keymanager.monitoring.service.QZSettingService;
-import com.keymanager.monitoring.vo.ExternalQzSettingVo;
-import com.keymanager.util.Constants;
+import com.keymanager.monitoring.vo.ExternalQzKeywordRankInfoVO;
+import com.keymanager.monitoring.vo.ExternalQzSettingVO;
+import com.keymanager.util.Constants;import org.aspectj.apache.bcel.classfile.Constant;
 import org.aspectj.apache.bcel.classfile.Constant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,11 +33,11 @@ public class ExternalQZKeywordRankInfoController extends SpringMVCBaseController
 
     @RequestMapping(value = "/getQZSettingsTask", method = RequestMethod.POST)
     public ResponseEntity<?> getQZSettingsTask(HttpServletRequest request) {
-        String userName = (String) request.getParameter("username");
+        String userName = (String) request.getParameter("userName");
         String password = (String) request.getParameter("password");
         try {
             if(StringUtils.isNotBlank(userName) && StringUtils.isNotBlank(password) && validUser(userName, password)) {
-                List<ExternalQzSettingVo> qzSettingTasks = qzKeywordRankInfoService.getQZSettingTask();
+                List<ExternalQzSettingVO> qzSettingTasks = qzKeywordRankInfoService.getQZSettingTask();
                 return new ResponseEntity<Object>(qzSettingTasks, HttpStatus.OK);
             }
         } catch (Exception ex) {
@@ -48,12 +48,12 @@ public class ExternalQZKeywordRankInfoController extends SpringMVCBaseController
     }
 
     @RequestMapping(value = "/updateQZSettingsTasks", method = RequestMethod.POST)
-    public ResponseEntity<?> updateQZSettingsTask(@RequestParam Map requestMap, HttpServletRequest request) {
-        String userName = request.getParameter("username");
-        String password = request.getParameter("password");
+    public ResponseEntity<?> updateQZSettingsTask(@RequestBody ExternalQzKeywordRankInfoVO externalQzKeywordRankInfoVO,HttpServletRequest request) {
+        String userName = externalQzKeywordRankInfoVO.getUserName();
+        String password = externalQzKeywordRankInfoVO.getPassword();
         try {
             if(StringUtils.isNotBlank(userName) && StringUtils.isNotBlank(password) && validUser(userName, password)) {
-                qzKeywordRankInfoService.updateQzKeywordRankInfo(requestMap);
+                qzKeywordRankInfoService.updateQzKeywordRankInfo(externalQzKeywordRankInfoVO);
                 return new ResponseEntity<Object>(true, HttpStatus.OK);
             }
         } catch (Exception ex) {
