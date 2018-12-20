@@ -33,7 +33,7 @@ $(function () {
     loadingCheckTerminalType();
     searchRiseOrFall();
     detectedMoreSearchConditionDivShow();
-    clientStatusOperationTypeChange();
+    $("#showAllOperationType").dialog("close");
 });
 function loadingCheckTerminalType() {
     var terminalType = $("#chargeForm").find("#terminalType").val();
@@ -267,7 +267,7 @@ function stringToArray(str) {
     return str.replace('[', '').replace(']', '').split(', ').reverse();
 }
 function getQZSettingClientGroupInfo(body, terminalType) {
-    $(body).find(".other-rank").each(function () {
+    $(body).find(".other-rank").each(function (index) {
         var div = $(this);
         var uuid = div.parent().parent().parent().find(".header input[name='uuid']").val();
         var optimizeGroupName = div.find(".row:first-child").find("div:eq(2) span.line1 a").text();
@@ -290,16 +290,29 @@ function getQZSettingClientGroupInfo(body, terminalType) {
                 'Content-Type': 'application/json'
             },
             success: function (data) {
-                div.find(".row:first-child").find("div:eq(4) span.line1 a").text(data.customerKeywordCount);
+                div.find(".row:first-child").find("div[name='operationKeywordNum']").find("span.line1 a").text(data.customerKeywordCount);
                 var clientCount = 0;
-                if (data.clientStatusVOs != null) {
-                    var select = div.find(".row:first-child").find("div:eq(3) select");
-                    select.empty();
-                    $(select).append("<option value=''></option>");
+                var showSomeOperationType = div.find(".row:first-child").find("#showSomeOperationType");
+                showSomeOperationType.empty();
+                if (data.clientStatusVOs.length > 0) {
+                    var allOperationType = '';
+                    var flag = false;
                     $.each(data.clientStatusVOs, function (idx, val) {
+                        allOperationType += optimizeGroupName + " " +val.operationType + "(" + val.operationTypeCount + ")"  + ",";
                         clientCount += val.operationTypeCount;
-                        $(select).append("<option value='" + val.operationType + "(" + val.operationTypeCount + ")" +"'>"+val.operationType + "(" + val.operationTypeCount + ")"+"</option>");
+                        if (idx < 2) {
+                            $(showSomeOperationType).append("<span name='"+ optimizeGroupName + " " + val.operationType +"'><a href='javascript:;' onclick='findOptimizeGroupAndOperationType($(this))'>"+ val.operationType + "(" + val.operationTypeCount + ")" +"</a></span>");
+                        } else {
+                            $(showSomeOperationType).append("<span style='font-size: 18px'><a name='showAllOperationType' href='javascript:;' onclick='showAllOperationType($(this))'> . . . </a></span>");
+                            flag = true;
+                        }
                     });
+                    if (flag) {
+                        allOperationType = allOperationType.substring(0, allOperationType.length-1);
+                        $(showSomeOperationType).parent().find("input[name='allOperationType']").val(allOperationType);
+                    }
+                } else {
+                    $(showSomeOperationType).append("<span> 无 </span>");
                 }
                 div.find(".row:first-child").find("div:eq(2) span.line1 a").text(optimizeGroupName+" ("+clientCount+")");
             },
@@ -360,7 +373,6 @@ function searchClientStatus(optimizeGroup, operationType) {
     searchClientStatusFrom.submit();
 }
 function searchCustomerKeywords(customerUuid, optimizeGroupName, status) {
-    console.log(customerUuid, optimizeGroupName, status);
     var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
     var terminalType = $("#chargeForm").find("#terminalType").val();
     var url;
@@ -373,19 +385,49 @@ function searchCustomerKeywords(customerUuid, optimizeGroupName, status) {
     if (terminalType == 'Phone') {
         url = "http://msskj.shunshikj.com/internal/customerKeyword/searchCustomerKeywords";
     }
-    console.log(url, terminalType);
     searchCustomerKeywordForm.attr("action", url);
     searchCustomerKeywordForm.submit();
 }
-function clientStatusOperationTypeChange() {
-    $(".body").find(".other-rank").each(function (){
-        $(this).find(".row:first-child").find("div:eq(3) select").change(function () {
-            var operationType = $(this).val().substring(0, $(this).val().indexOf("("));
-            var optimizeGroup = $(this).parent().parent().find("div:eq(2) span.line1 a").text();
-            optimizeGroup = optimizeGroup.substring(0, optimizeGroup.indexOf("("));
-            searchClientStatus(optimizeGroup, operationType);
-        });
+function showAllOperationType(self, e) {
+    var event = e||window.event;
+    var pageX = event.pageX;
+    var pageY = event.pageY;
+    if(pageX==undefined) {
+        pageX = event.clientX+document.body.scrollLeft||document.documentElement.scrollLeft;
+    }
+    if(pageY==undefined) {
+        pageY = event.clientY+document.body.scrollTop||document.documentElement.scrollTop;
+    }
+    var allOperationType = $(self).parent().parent().parent().find("input[name='allOperationType']").val();
+    $(self).parent().parent().parent().parent().find()
+    var showAllOperationType = $("#showAllOperationType");
+    showAllOperationType.empty();
+    var operationTypes = allOperationType.split(',');
+    $.each(operationTypes, function (idx, val) {
+        showAllOperationType.append("<span name='"+ val.substring(0, val.indexOf("(")) +"'>" + "<a href='javascript:;' onclick='findOptimizeGroupAndOperationType($(this))'>" + val.split(" ")[1] + "</a>" + "</span>" + "<br>");
     });
+    showAllOperationType.show();
+    showAllOperationType.dialog({
+        resizable: false,
+        height: 300,
+        width: 200,
+        title: '查看操作类型',
+        modal: false,
+        buttons: [{
+            text: '确定',
+            iconCls: 'icon-ok',
+            handler: function () {
+                showAllOperationType.dialog("close")
+            }
+        }]
+    });
+    showAllOperationType.dialog("open");
+    showAllOperationType.window("resize",{top: pageY + 30, left: pageX - 60});
+}
+function findOptimizeGroupAndOperationType(self) {
+    var name = $(self).parent().attr("name");
+    var args = name.split(" ");
+    searchClientStatus(args[0], args[1]);
 }
 function changePaging(currentPage, pageSize) {
     var chargeForm = $("#chargeForm");

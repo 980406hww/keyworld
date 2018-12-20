@@ -221,15 +221,14 @@
 										</div>
 
 										<div>
-											<select style="width: 90px">
-												<option value=""> </option>
-											</select>
+											<div id="showSomeOperationType"></div>
+                                            <input type="hidden" name="allOperationType">
 											<span title="操作类型">
 												<a href="javascript:;">操作类型</a>
 											</span>
 										</div>
 
-										<div>
+										<div name="operationKeywordNum">
 											<span class="line1">
 												<a target="_blank" href="javascript:searchCustomerKeywords('${qzSetting.customerUuid}', '${qzSetting.pcGroup}', '${qzSetting.status}');">0</a>
 											</span>
@@ -276,7 +275,6 @@
 												<a href="javascript:;">初始前50数</a>
 											</span>
 										</div>
-
 
 										<div>
 									<span class="line1">
@@ -680,11 +678,14 @@
     <input type="text" name="groupName" id="groupName">
     <input type="text" name="operationType" id="operationType">
 </form>
+
 <form id="searchCustomerKeywordForm" method="post" target="_blank" action="/internal/customerKeyword/searchCustomerKeywords" style="display: none;">
 	<input type="text" name="customerUuid" id="customerUuid">
 	<input type="text" name="optimizeGroupName" id="optimizeGroupName">
 	<input type="text" name="status" id="status">
 </form>
+
+<div id="showAllOperationType" class="easyui-dialog"  style="display: none"></div>
 <div id="changeSettingDialog" class="easyui-dialog" style="display: none;left: 40%;">
 	<form id="changeSettingForm">
 	<table style="font-size:12px" id="settingTable" align="center" cellspacing="5">
@@ -1032,7 +1033,20 @@
         window.onresize = function(){
             $(".datalist").css("margin-top", $("#topDiv").height()+15);
         }
+
+        var flag = false;
+        window.onclick = function (e) {
+            if ($("#showAllOperationType").css("display") == "block") {
+                if (flag &&!$("#showAllOperationType").is(e.target) && $("#showAllOperationType").has(e.target).length === 0 ){
+                    $("#showAllOperationType").dialog("close");
+                    flag = false;
+                    return;
+                }
+                flag = true;
+            }
+        }
     });
+
 </script>
 </body>
 </html>
