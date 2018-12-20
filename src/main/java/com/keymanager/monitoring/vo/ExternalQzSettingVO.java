@@ -1,6 +1,6 @@
 package com.keymanager.monitoring.vo;
 
-public class ExternalQzSettingVo{
+public class ExternalQzSettingVO {
 
     private Long uuid;
 

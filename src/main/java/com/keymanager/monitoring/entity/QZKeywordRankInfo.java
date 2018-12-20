@@ -3,8 +3,6 @@ package com.keymanager.monitoring.entity;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 
-import java.util.Date;
-
 /**
  * @Author zhoukai
  * @Date 2018/12/6 10:56
@@ -56,6 +54,18 @@ public class QZKeywordRankInfo extends BaseEntity {
     @TableField(value = "fIncrease")
     private Double increase;
 
+    /* ip来路 */
+    @TableField(value = "fIpRoute")
+    private String ipRoute;
+
+    /* 百度权重 */
+    @TableField(value = "fBaiduWeight")
+    private int baiduWeight;
+
+    /* 百度收录 */
+    @TableField(value = "fBaiduRecord")
+    private int baiduRecord;
+
     /* 前10的增长数（有正负） */
     @TableField(exist = false)
     private int topTenIncrement;
@@ -83,6 +93,30 @@ public class QZKeywordRankInfo extends BaseEntity {
     /* 前50数 */
     @TableField(exist = false)
     private int topFiftyNum;
+
+    public String getIpRoute() {
+        return ipRoute;
+    }
+
+    public void setIpRoute(String ipRoute) {
+        this.ipRoute = ipRoute;
+    }
+
+    public int getBaiduWeight() {
+        return baiduWeight;
+    }
+
+    public void setBaiduWeight(int baiduWeight) {
+        this.baiduWeight = baiduWeight;
+    }
+
+    public int getBaiduRecord() {
+        return baiduRecord;
+    }
+
+    public void setBaiduRecord(int baiduRecord) {
+        this.baiduRecord = baiduRecord;
+    }
 
     public Long getQzSettingUuid () {
         return qzSettingUuid;
