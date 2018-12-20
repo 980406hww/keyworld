@@ -11,6 +11,7 @@ import com.keymanager.monitoring.entity.QZKeywordRankInfo;
 import com.keymanager.monitoring.entity.QZSetting;
 import com.keymanager.monitoring.vo.ExternalQzKeywordRankInfoVO;
 import com.keymanager.monitoring.vo.ExternalQzSettingVO;
+import com.keymanager.util.Constants;
 import com.keymanager.util.PaginationRewriteQueryTotalInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,9 +44,9 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
         qzKeywordRankInfoDao.deleteByQZSettingUuid(uuid);
     }
 
-    public List<ExternalQzSettingVo> getQZSettingTask(){
+    public List<ExternalQzSettingVO> getQZSettingTask(){
         Config config = configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK, Constants.CONFIG_KEY_CRAWLER_HOUR);
-        List<ExternalQzSettingVo> qzSettingTasks = qzKeywordRankInfoDao.getQZSettingTask(Integer.parseInt(config.getValue()));
+        List<ExternalQzSettingVO> qzSettingTasks = qzKeywordRankInfoDao.getQZSettingTask(Integer.parseInt(config.getValue()));
         if (qzSettingTasks.size()>0){
             Long[] uuids=new Long[qzSettingTasks.size()];
             int index = 0;
