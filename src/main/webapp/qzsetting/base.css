@@ -48,9 +48,9 @@ ul {
 }
 
 .mytabs {
-    width: 80%;
+    width: 90%;
     margin: 15px auto 0px auto;
-    box-shadow: 0 0 2px 2px hsla(0, 0%, 79%, .2)
+    box-shadow: 0 0 2px 2px hsla(0, 0%, 89%, .2)
 }
 
 .mytabs li {
@@ -102,7 +102,7 @@ ul {
 }
 
 .mytabs .link li.active a {
-    color: #0c7df5
+    color: #0c7df5;
 }
 
 .mytabs .link a {
@@ -145,7 +145,7 @@ ul {
     width: 180px;
     height: 30px;
     line-height: 30px;
-    font-size: 12px;
+    font-size: 14px;
 }
 
 .mytabs .conn:after, .mytabs .conn:before {
@@ -158,7 +158,7 @@ ul {
 }
 
 .datalist {
-    width: 80%;
+    width: 90%;
     margin: 0px auto 40px auto;
     overflow: visible;
 }
@@ -183,7 +183,7 @@ ul {
 .datalist-list .top50-link > a {
     display: block;
     width: auto;
-    height: auto
+    height: auto;
 }
 
 .datalist-list .top50-link > a:hover {
@@ -194,11 +194,11 @@ ul {
     width: 100%;
     height: 44px;
     border-bottom: 1px solid #e6e6e6;
-    font-size: 16px;
+    font-size: 18px;
     padding: 0 20px;
 }
 
-.datalist-list .header a {
+.datalist-list .header .handle a {
     display: block;
     float: left;
     margin-right: 5px;
@@ -223,19 +223,35 @@ ul {
     margin: 15px 5px;
 }
 
-.datalist-list .header .contactPerson-name {
-    color: #333;
+.datalist-list .header span a {
+    font-size: 12px;
+    margin: 0 5px;
+}
+
+.datalist-list .header span.contactPerson-name a {
     font-weight: 700;
+    color: #000000;
     max-width: 200px;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap
+    white-space: nowrap;
+}
+.datalist-list .header span.domain a:hover {
+    color: #0c7df5;
+}
+
+.datalist-list .header span.to-aizhan a {
+    color: #000000;
+}
+
+.datalist-list .header span.to-5118 a {
+    color: #000000;
 }
 
 .datalist-list .header .handle {
     display: none;
     float: right;
-    font-size: 14px
+    font-size: 14px;
 }
 
 .datalist-list .header .handle a.blue {
@@ -251,25 +267,23 @@ ul {
 }
 
 .datalist-list .body .data-info-wrap {
-    width: 792px;
+    width: 990px;
     float: left;
     height: 150px;
     text-align: center
 }
 
 .datalist-list .body .rank-wrap {
-    width: 540px;
+    width: 400px;
     float: left;
     height: 150px;
-    padding: 5px 0;
     border-left: 1px solid #e6e6e6;
 }
 
 .datalist-list .body .rank-wrap > div {
     float: left;
     font-size: 12px;
-    height: 140px;
-    line-height: 120px;
+    height: 150px;
     display: block;
 }
 
@@ -286,6 +300,7 @@ ul {
 }
 
 .datalist-list .body .rank-wrap > div span {
+    font-size: 10px;
     display: block;
     float: left;
     width: 50%;
@@ -305,6 +320,7 @@ ul {
 }
 
 .datalist-list .body .rank-wrap > div span a {
+    font-size: 10px;
     text-decoration: none;
 }
 
@@ -341,8 +357,8 @@ ul {
 }
 
 .datalist-list .body .baidu-rank span:last-child {
-    margin-top: 5px;
-    color: #000;
+    margin-top: 10px;
+    color: #999;
 }
 
 .datalist-list .body .baidu-rank span.line1 {
@@ -350,6 +366,7 @@ ul {
     margin-top: 45px;
     overflow: hidden;
     text-overflow: ellipsis;
+    color: #000;
 }
 
 .datalist-list .body .baidu-rank span.line1:hover {
@@ -358,6 +375,13 @@ ul {
 
 .datalist-list .body .baidu-rank span.line1 sub {
     font-weight: 400;
+    color: #999;
+}
+
+.datalist-list .body .other-rank_1 {
+    float: left;
+    width: 202px;
+    border-right: 1px solid #e6e6e6;
 }
 
 .datalist-list .body .other-rank {
@@ -365,78 +389,101 @@ ul {
     width: 704px;
 }
 
-.datalist-list .body .other-rank select {
-    margin-top: 14px;
-}
-
-.datalist-list .body .other-rank .row {
+.datalist-list .body .other-rank .row, .datalist-list .body .other-rank_1 .row {
     height: 75px;
 }
 
-.datalist-list .body .other-rank .row .line1 {
+.datalist-list .body .other-rank .row .line1, .datalist-list .body .other-rank_1 .row .line1 {
     display: inline-block;
-    width: 80%;
+    width: 100%;
     word-wrap: break-word;
     white-space: normal;
 }
 
-.datalist-list .body .other-rank .row .line1 a:hover {
-    color: #0c7df5;
-}
-
-.datalist-list .body .other-rank .row span:last-child a {
-    display: inline-block;
-    width: 80%;
-    word-wrap: break-word;
-    white-space: normal;
-    margin-top: 5px;
+.datalist-list .body .other-rank .row .line1 a, .datalist-list .body .other-rank_1 .row .line1 a {
+    font-size: 14px;
     color: #000;
 }
 
-.datalist-list .body .other-rank .row:last-child {
+.datalist-list .body .other-rank .row .line1 a:hover, .datalist-list .body .other-rank_1 .row .line1 a:hover {
+    color: #0c7df5;
+}
+
+.datalist-list .body .other-rank .row span:last-child a, .datalist-list .body .other-rank_1 .row span:last-child a {
+    display: inline-block;
+    width: 90%;
+    word-wrap: break-word;
+    white-space: normal;
+    color: #999;
+}
+
+.datalist-list .body .other-rank .row:last-child, .datalist-list .body .other-rank_1 .row:last-child {
     display: block;
     height: 74px;
     border-top: 1px solid #e6e6e6;
 }
 
-.datalist-list .body .other-rank .row > div {
+.datalist-list .body .other-rank .row > div, .datalist-list .body .other-rank_1 .row > div {
     display: block;
     float: left;
-    height: 75px;
+    height: 74px;
     width: 100px;
     border-right: 1px solid #e6e6e6;
 }
 
-.datalist-list .body .other-rank .row > div:last-child {
+.datalist-list .body .other-rank .row > div:last-child, .datalist-list .body .other-rank_1 .row > div:last-child {
     border: 0;
 }
 
-.datalist-list .body .other-rank .row span {
+.datalist-list .body .other-rank .row span, .datalist-list .body .other-rank_1 .row span {
     display: block;
 }
 
-.datalist-list .body .other-rank .row span.line1 {
+.datalist-list .body .other-rank .row span.line1, .datalist-list .body .other-rank_1 .row span.line1 {
     font-size: 18px;
-    margin-top: 14px;
+    margin-top: 10px;
+    height: 60%;
 }
 
-.datalist-list .body .other-rank .row span.line1:hover {
+.datalist-list .body .other-rank .row span:last-child, .datalist-list .body .other-rank_1 .row span:last-child {
+    height: 30%;
+}
+
+.datalist-list .body .other-rank .row span.line1:hover, .datalist-list .body .other-rank_1 .row span.line1:hover {
     color: #0c7df5;
 }
 
-.datalist-list .body .other-rank .row span sub {
+.datalist-list .body .other-rank .row:first-child div.showSomeOperationType {
+    margin-top: 10px;
+    height: 60%;
+}
+
+.datalist-list .body .other-rank .row:first-child div.showSomeOperationType span a {
+    font-size: 14px;
+    color: #000;
+}
+
+.datalist-list .body .other-rank .row:first-child div.showSomeOperationType span a:hover {
+    color: #0c7df5;
+}
+
+.datalist-list .body .other-rank .row:first-child div.operationTypeSpan span {
+    height: 30%;
+}
+
+.datalist-list .body .other-rank_1 .row span sub {
     font-weight: 400;
     padding-left: 5px;
 }
 
 .col-3 {
     float: left;
-    width: 17%;
+    width: 19%;
     text-align: left;
 }
 
 .rank-wrap .col-8 {
-    width: 82%;
+    width: 80%;
     text-align: left;
 }
 

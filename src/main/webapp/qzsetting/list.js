@@ -140,22 +140,15 @@ function generateQZKeywordTrendCharts(domElement, data) {
     var topFifty = stringToArray(result.topFifty);
     var keywordTrendCharts = echarts.init(domElement);
     var option = {
-        color: ['#2328ff', '#ff733f', '#090A07','#C184FF','#FF2F57'],
+        color: ['#228B22', '#0000FF', '#FF6100', '#000000', '#FF0000'],
         tooltip: {
             trigger: 'axis'
         },
-        legend: {
-            symbolKeepAspect: true,
-            textStyle: {
-                color: '#2328ff',
-            },
-            data: ['前10名', '前20名', '前30名', '前40名', '前50名']
-        },
         grid: {
-            left: '1%',
-            right: '3%',
-            top: '20%',
-            bottom: '1%',
+            left: '0%',
+            right: '1%',
+            top: '3%',
+            bottom: '0%',
             containLabel: true
         },
         toolbox: {
@@ -165,25 +158,23 @@ function generateQZKeywordTrendCharts(domElement, data) {
             }
         },
         xAxis: {
+            show: false,
             type: 'category',
             axisLine: {
+                show: false,
                 lineStyle: {
                     color: '#404A59'
                 }
             },
             axisTick: {
-                show: true
+                show: false
             },
-            axisLabel: {
-                textStyle: {
-                    color: '#080908'
-                }
-            },
-            boundaryGap: false,
+            boundaryGap: true,
             data: date
         },
         yAxis: {
             axisLine: {
+                show: false,
                 lineStyle: {
                     color: '#404A59'
                 }
@@ -191,15 +182,18 @@ function generateQZKeywordTrendCharts(domElement, data) {
             splitLine: {
                 show: true,
                 lineStyle: {
-                    color: '#949DB1'
+                    color: '#DCDCDC',
+                    width: 1,
+                    type: 'solid'
                 }
             },
             axisTick: {
                 show: false
             },
             axisLabel: {
+                fontStyle: 'italic',
                 textStyle: {
-                    color: '#080908'
+                    color: '#000'
                 }
             },
             type: 'value'
@@ -208,56 +202,56 @@ function generateQZKeywordTrendCharts(domElement, data) {
             name: '前10名',
             smooth: true,
             type: 'line',
-            symbolSize: 2,
-            symbol: 'rect',
+            symbolSize: 1,
+            symbol: 'none',
             data: topTen,
             lineStyle:{
                 type:"solid",
-                width: 2
+                width: 1
             }
         }, {
             name: '前20名',
             smooth: true,
             type: 'line',
-            symbolSize: 2,
-            symbol: 'roundRect',
+            symbolSize: 1,
+            symbol: 'none',
             data: topTwenty,
             lineStyle:{
                 type:"solid",
-                width: 2
+                width: 1
             }
         }, {
             name: '前30名',
             smooth: true,
             type: 'line',
-            symbolSize: 2,
-            symbol: 'circle',
+            symbolSize: 1,
+            symbol: 'none',
             data: topThirty,
             lineStyle:{
                 type:"solid",
-                width: 2
+                width: 1
             }
         }, {
             name: '前40名',
             smooth: true,
             type: 'line',
-            symbolSize: 2,
-            symbol: 'triangle',
+            symbolSize: 1,
+            symbol: 'none',
             data: topForty,
             lineStyle:{
                 type:"solid",
-                width: 2
+                width: 1
             }
         }, {
             name: '前50名',
             smooth: true,
             type: 'line',
-            symbolSize: 2,
-            symbol: 'diamond',
+            symbolSize: 1,
+            symbol: 'none',
             data: topFifty,
             lineStyle:{
                 type:"solid",
-                width: 2
+                width: 1
             }
         }]
     };
@@ -267,7 +261,7 @@ function stringToArray(str) {
     return str.replace('[', '').replace(']', '').split(', ').reverse();
 }
 function getQZSettingClientGroupInfo(body, terminalType) {
-    $(body).find(".other-rank").each(function (index) {
+    $(body).find(".other-rank").each(function () {
         var div = $(this);
         var uuid = div.parent().parent().parent().find(".header input[name='uuid']").val();
         var optimizeGroupName = div.find(".row:first-child").find("div:eq(2) span.line1 a").text();
@@ -292,9 +286,9 @@ function getQZSettingClientGroupInfo(body, terminalType) {
             success: function (data) {
                 div.find(".row:first-child").find("div[name='operationKeywordNum']").find("span.line1 a").text(data.customerKeywordCount);
                 var clientCount = 0;
-                var showSomeOperationType = div.find(".row:first-child").find("#showSomeOperationType");
-                showSomeOperationType.empty();
+                var showSomeOperationType = div.find(".row:first-child").find("div[name='showSomeOperationType']");
                 if (data.clientStatusVOs.length > 0) {
+                    showSomeOperationType.empty();
                     var allOperationType = '';
                     var flag = false;
                     $.each(data.clientStatusVOs, function (idx, val) {
@@ -303,7 +297,8 @@ function getQZSettingClientGroupInfo(body, terminalType) {
                         if (idx < 2) {
                             $(showSomeOperationType).append("<span name='"+ optimizeGroupName + " " + val.operationType +"'><a href='javascript:;' onclick='findOptimizeGroupAndOperationType($(this))'>"+ val.operationType + "(" + val.operationTypeCount + ")" +"</a></span>");
                         } else {
-                            $(showSomeOperationType).append("<span style='font-size: 18px'><a name='showAllOperationType' href='javascript:;' onclick='showAllOperationType($(this))'> . . . </a></span>");
+                            $(showSomeOperationType).append("<span><a name='showAllOperationType' href='javascript:;' onclick='showAllOperationType($(this))'>. . .</a></span>");
+                            $(showSomeOperationType).find("span a").css("font-size", "10px");
                             flag = true;
                         }
                     });
@@ -311,8 +306,6 @@ function getQZSettingClientGroupInfo(body, terminalType) {
                         allOperationType = allOperationType.substring(0, allOperationType.length-1);
                         $(showSomeOperationType).parent().find("input[name='allOperationType']").val(allOperationType);
                     }
-                } else {
-                    $(showSomeOperationType).append("<span> 无 </span>");
                 }
                 div.find(".row:first-child").find("div:eq(2) span.line1 a").text(optimizeGroupName+" ("+clientCount+")");
             },
