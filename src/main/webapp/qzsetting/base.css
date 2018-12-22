@@ -127,7 +127,7 @@ ul {
 .mytabs .conn li {
     height: 30px;
     line-height: 30px;
-    margin-left: 10px
+    margin: auto 5px;
 }
 
 .mytabs .conn li:first-child {
@@ -135,13 +135,6 @@ ul {
 }
 
 .mytabs .conn li:first-child input {
-    width: 180px;
-    height: 30px;
-    line-height: 30px;
-    font-size: 14px;
-}
-
-.mytabs .conn ul li.condition input {
     width: 180px;
     height: 30px;
     line-height: 30px;

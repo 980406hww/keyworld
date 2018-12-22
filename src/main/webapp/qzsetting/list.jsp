@@ -62,6 +62,7 @@
 				<shiro:hasPermission name="/internal/qzsetting/updateStatus">
 					<li>
 						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="updateQZSettingStatus(0)" value=" 暂停整站 " >
+						&nbsp;
 						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="updateQZSettingStatus(1)" value=" 激活整站 " >
 					</li>
 				</shiro:hasPermission>
@@ -151,7 +152,7 @@
 	<div class="datalist-list">
 		<ul>
 			<c:forEach items="${page.records}" var="qzSetting" varStatus="status">
-				<c:if test="${qzSetting.pcGroup != null and qzSetting.qzKeywordRankInfoMap['PC'] != null}">
+				<c:if test="${qzSetting.pcGroup != null or qzSetting.qzKeywordRankInfoMap['PC'] != null}">
 					<li class="pcGroup">
 						<div class="header">
 							<span>
@@ -187,23 +188,24 @@
 										<span>用户名称</span>
 									</a>
 								</div>
+
 								<div class="other-rank_1">
 									<div class="row">
 										<div name="baiduWeight">
 											<span class="line1">
-												<a href="javascript:;">${qzSetting.qzKeywordRankInfoMap["PC"].baiduWeight}</a>
+												<a href="javascript:;">${qzSetting.qzKeywordRankInfoMap["PC"].baiduWeight == "" or qzSetting.qzKeywordRankInfoMap["PC"].baiduWeight == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["PC"].baiduWeight}</a>
 											</span>
 											<span><a href="javascript:;">百度权重</a></span>
 										</div>
 										<div name="baiduRecord">
 											<span class="line1">
-												<a href="javascript:;">${qzSetting.qzKeywordRankInfoMap["PC"].baiduRecord}</a>
+												<a href="javascript:;">${qzSetting.qzKeywordRankInfoMap["PC"].baiduRecord == "" or qzSetting.qzKeywordRankInfoMap["PC"].baiduRecord == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["PC"].baiduRecord}</a>
 											</span>
 											<span><a href="javascript:;">百度收录</a></span>
 										</div>
 									</div>
 									<div class="row">
-										<span class="line1"><a href="https://www.5118.com/seo/baidupc/ip/${qzSetting.domain}" target="_blank">${qzSetting.qzKeywordRankInfoMap["PC"].ipRoute == "" ? "暂无" : qzSetting.qzKeywordRankInfoMap["PC"].ipRoute}</a> <sub>IP</sub></span>
+										<span class="line1"><a href="https://www.5118.com/seo/baidupc/ip/${qzSetting.domain}" target="_blank">${qzSetting.qzKeywordRankInfoMap["PC"].ipRoute == "" or qzSetting.qzKeywordRankInfoMap["PC"].ipRoute == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["PC"].ipRoute}</a> <sub>IP</sub></span>
 										<span><a href="javascript:;">预计百度来路</a></span>
 									</div>
 								</div>
@@ -433,7 +435,7 @@
 						</div>
 					</li>
 				</c:if>
-				<c:if test="${qzSetting.phoneGroup != null and qzSetting.qzKeywordRankInfoMap['Phone'] != null}">
+				<c:if test="${qzSetting.phoneGroup != null or qzSetting.qzKeywordRankInfoMap['Phone'] != null}">
 					<li class="phoneGroup" style="display: none;">
 						<div class="header">
 							<span>
@@ -459,19 +461,19 @@
 									<div class="row">
 										<div name="baiduWeight">
 											<span class="line1">
-												<a href="javascript:;">${qzSetting.qzKeywordRankInfoMap["Phone"].baiduWeight}</a>
+												<a href="javascript:;">${qzSetting.qzKeywordRankInfoMap["Phone"].baiduWeight == "" or qzSetting.qzKeywordRankInfoMap["Phone"].baiduWeight == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["Phone"].baiduWeight}</a>
 											</span>
 											<span><a href="javascript:;">百度权重</a></span>
 										</div>
 										<div name="baiduRecord">
 											<span class="line1">
-												<a href="javascript:;">${qzSetting.qzKeywordRankInfoMap["Phone"].baiduRecord}</a>
+												<a href="javascript:;">${qzSetting.qzKeywordRankInfoMap["Phone"].baiduRecord == "" or qzSetting.qzKeywordRankInfoMap["Phone"].baiduRecord == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["Phone"].baiduRecord}</a>
 											</span>
 											<span><a href="javascript:;">百度收录</a></span>
 										</div>
 									</div>
 									<div class="row">
-										<span class="line1"><a href="javascript:;">${qzSetting.qzKeywordRankInfoMap["Phone"].ipRoute == "" ? "暂无" : qzSetting.qzKeywordRankInfoMap["Phone"].ipRoute}</a> <sub>IP</sub></span>
+										<span class="line1"><a href="javascript:;">${qzSetting.qzKeywordRankInfoMap["Phone"].ipRoute == "" or qzSetting.qzKeywordRankInfoMap["Phone"].ipRoute == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["Phone"].ipRoute}</a> <sub>IP</sub></span>
 										<span><a href="javascript:;">预计百度来路</a></span>
 									</div>
 								</div>
