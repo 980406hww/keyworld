@@ -29,4 +29,8 @@
         FROM t_daily_report_item dri
         WHERE dri.fDailyReportUuid = #{dailyReportUuid}
     </select>
+
+    <delete id="deleteDailyReportItems">
+        DELETE FROM t_daily_report_item WHERE fDailyReportUuid = #{dailyReportUuid}
+    </delete>
 </mapper>

@@ -1338,4 +1338,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         String[] keywordIDs = keywordStatusBatchUpdateVO.getCustomerUuids().split(",");
         customerKeywordDao.batchUpdateKeywordStatus(keywordIDs, keywordStatusBatchUpdateVO.getKeywordChecks(), keywordStatusBatchUpdateVO.getKeywordStatus());
     }
+
+    public List<Long> getCustomerUuids(String entryType, String terminalType){
+        return customerKeywordDao.getCustomerUuids(entryType, terminalType);
+    }
 }

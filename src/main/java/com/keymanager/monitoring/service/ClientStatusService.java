@@ -114,6 +114,10 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
         clientStatusDao.updateById(clientStatus);
     }
 
+    public void updateClientStatusForCapturePosition(String clientID) {
+        clientStatusDao.updateClientStatusForCapturePosition(clientID);
+    }
+
     public void updateClientStatusTargetVersion(List<String> clientIDs, String targetVersion) throws Exception {
         clientStatusDao.updateClientStatusTargetVersion(clientIDs, targetVersion);
     }

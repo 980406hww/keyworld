@@ -3,7 +3,9 @@ package com.keymanager.monitoring.controller.rest.external;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.entity.ClientCookie;
 import com.keymanager.monitoring.entity.Cookie;
+import com.keymanager.monitoring.entity.Performance;
 import com.keymanager.monitoring.service.CookieService;
+import com.keymanager.monitoring.service.PerformanceService;
 import com.keymanager.monitoring.vo.CookieVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,13 +28,18 @@ public class ExternalCookieRestController extends SpringMVCBaseController {
 	@Autowired
 	private CookieService cookieService;
 
+	@Autowired
+	private PerformanceService performanceService;
+
 	@RequestMapping(value = "/getCookieStrForClient", method = RequestMethod.POST)
 	public ResponseEntity<?> getCookieStrForClient(@RequestBody CookieVO cookieVO, HttpServletRequest request) throws Exception{
 		try {
 			String userName = cookieVO.getUserName();
 			String password = cookieVO.getPassword();
 			if (validUser(userName, password)) {
+				long startMilleSeconds = System.currentTimeMillis();
 				ClientCookie clientCookie  = cookieService.getCookieStrForClient(cookieVO.getClientID());
+				performanceService.addPerformanceLog("getCookieStrForClient", System.currentTimeMillis() - startMilleSeconds, "");
 				return new ResponseEntity<Object>(clientCookie, HttpStatus.OK);
 			}
 		}catch (Exception ex){
