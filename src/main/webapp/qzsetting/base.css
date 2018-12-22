@@ -188,7 +188,7 @@ ul {
     height: 44px;
     border-bottom: 1px solid #e6e6e6;
     font-size: 18px;
-    padding: 0 20px;
+    padding: 0 10px;
 }
 
 .datalist-list .header .handle a {
@@ -260,7 +260,7 @@ ul {
 }
 
 .datalist-list .body .data-info-wrap {
-    width: 990px;
+    width: 956px;
     float: left;
     height: 150px;
     text-align: center
@@ -373,36 +373,42 @@ ul {
 
 .datalist-list .body .other-rank_1 {
     float: left;
-    width: 202px;
+    width: 182px;
     border-right: 1px solid #e6e6e6;
 }
 
 .datalist-list .body .other-rank {
     float: left;
-    width: 704px;
+    width: 508px;
 }
 
-.datalist-list .body .other-rank .row, .datalist-list .body .other-rank_1 .row {
+.datalist-list .body .other-rank_2 {
+    float: left;
+    width: 182px;
+    border-left: 1px solid #e6e6e6;
+}
+
+.datalist-list .body .other-rank .row, .datalist-list .body .other-rank_1 .row, .datalist-list .body .other-rank_2 .row {
     height: 75px;
 }
 
-.datalist-list .body .other-rank .row .line1, .datalist-list .body .other-rank_1 .row .line1 {
+.datalist-list .body .other-rank .row .line1, .datalist-list .body .other-rank_1 .row .line1, .datalist-list .body .other-rank_2 .row .line1 {
     display: inline-block;
     width: 100%;
     word-wrap: break-word;
     white-space: normal;
 }
 
-.datalist-list .body .other-rank .row .line1 a, .datalist-list .body .other-rank_1 .row .line1 a {
+.datalist-list .body .other-rank .row .line1 a, .datalist-list .body .other-rank_1 .row .line1 a, .datalist-list .body .other-rank_2 .row .line1 a {
     font-size: 14px;
     color: #000;
 }
 
-.datalist-list .body .other-rank .row .line1 a:hover, .datalist-list .body .other-rank_1 .row .line1 a:hover {
+.datalist-list .body .other-rank .row .line1 a:hover, .datalist-list .body .other-rank_1 .row .line1 a:hover, .datalist-list .body .other-rank_2 .row .line1 a:hover {
     color: #0c7df5;
 }
 
-.datalist-list .body .other-rank .row span:last-child a, .datalist-list .body .other-rank_1 .row span:last-child a {
+.datalist-list .body .other-rank .row span:last-child a, .datalist-list .body .other-rank_1 .row span:last-child a, .datalist-list .body .other-rank_2 .row span:last-child a {
     display: inline-block;
     width: 90%;
     word-wrap: break-word;
@@ -410,57 +416,68 @@ ul {
     color: #999;
 }
 
-.datalist-list .body .other-rank .row:last-child, .datalist-list .body .other-rank_1 .row:last-child {
+.datalist-list .body .other-rank .row:last-child, .datalist-list .body .other-rank_1 .row:last-child, .datalist-list .body .other-rank_2 .row:last-child {
     display: block;
     height: 74px;
     border-top: 1px solid #e6e6e6;
 }
 
-.datalist-list .body .other-rank .row > div, .datalist-list .body .other-rank_1 .row > div {
+.datalist-list .body .other-rank .row > div, .datalist-list .body .other-rank_1 .row > div, .datalist-list .body .other-rank_2 .row > div {
     display: block;
     float: left;
     height: 74px;
-    width: 100px;
     border-right: 1px solid #e6e6e6;
 }
 
-.datalist-list .body .other-rank .row > div:last-child, .datalist-list .body .other-rank_1 .row > div:last-child {
+.datalist-list .body .other-rank .row > div {
+    width: 84px;
+}
+
+.datalist-list .body .other-rank_1 .row > div {
+    width: 90px;
+}
+
+.datalist-list .body .other-rank_2 .row > div {
+    width: 180px;
+}
+
+.datalist-list .body .other-rank .row > div:last-child, .datalist-list .body .other-rank_1 .row > div:last-child, .datalist-list .body .other-rank_2 .row > div:last-child {
     border: 0;
 }
 
-.datalist-list .body .other-rank .row span, .datalist-list .body .other-rank_1 .row span {
+.datalist-list .body .other-rank .row span, .datalist-list .body .other-rank_1 .row span, .datalist-list .body .other-rank_2 .row span {
     display: block;
 }
 
-.datalist-list .body .other-rank .row span.line1, .datalist-list .body .other-rank_1 .row span.line1 {
+.datalist-list .body .other-rank .row span.line1, .datalist-list .body .other-rank_1 .row span.line1, .datalist-list .body .other-rank_2 .row span.line1 {
     font-size: 18px;
     margin-top: 10px;
     height: 60%;
 }
 
-.datalist-list .body .other-rank .row span:last-child, .datalist-list .body .other-rank_1 .row span:last-child {
+.datalist-list .body .other-rank .row span:last-child, .datalist-list .body .other-rank_1 .row span:last-child, .datalist-list .body .other-rank_2 .row span:last-child {
     height: 30%;
 }
 
-.datalist-list .body .other-rank .row span.line1:hover, .datalist-list .body .other-rank_1 .row span.line1:hover {
+.datalist-list .body .other-rank .row span.line1:hover, .datalist-list .body .other-rank_1 .row span.line1:hover, .datalist-list .body .other-rank_2 .row span.line1:hover {
     color: #0c7df5;
 }
 
-.datalist-list .body .other-rank .row:first-child div.showSomeOperationType {
+.datalist-list .body .other-rank_2 .row:last-child div.showSomeOperationType {
     margin-top: 10px;
     height: 60%;
 }
 
-.datalist-list .body .other-rank .row:first-child div.showSomeOperationType span a {
+.datalist-list .body .other-rank_2 .row:last-child div.showSomeOperationType span a {
     font-size: 14px;
     color: #000;
 }
 
-.datalist-list .body .other-rank .row:first-child div.showSomeOperationType span a:hover {
+.datalist-list .body .other-rank_2 .row:last-child div.showSomeOperationType span a:hover {
     color: #0c7df5;
 }
 
-.datalist-list .body .other-rank .row:first-child div.operationTypeSpan span {
+.datalist-list .body .other-rank_2 .row:last-child div.operationTypeSpan span {
     height: 30%;
 }
 

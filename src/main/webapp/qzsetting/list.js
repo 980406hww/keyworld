@@ -261,10 +261,10 @@ function stringToArray(str) {
     return str.replace('[', '').replace(']', '').split(', ').reverse();
 }
 function getQZSettingClientGroupInfo(body, terminalType) {
-    $(body).find(".other-rank").each(function () {
+    $(body).find(".other-rank_2").each(function () {
         var div = $(this);
         var uuid = div.parent().parent().parent().find(".header input[name='uuid']").val();
-        var optimizeGroupName = div.find(".row:first-child").find("div:eq(2) span.line1 a").text();
+        var optimizeGroupName = div.find(".row:first-child").find("div:eq(0) span.line1 a").text();
         if (optimizeGroupName.indexOf("(") == -1) {
             optimizeGroupName = $.trim(optimizeGroupName);
         } else {
@@ -273,7 +273,7 @@ function getQZSettingClientGroupInfo(body, terminalType) {
         var postData = {};
         postData.qzSettingUuid = uuid;
         postData.terminalType = terminalType;
-        postData.type = $.trim(div.find(".row:last-child").find("div:eq(4) span.line1 a").text());
+        postData.type = $.trim(div.parent().find(".other-rank .row:last-child").find("div:eq(3) span.line1 a").text());
         postData.optimizeGroupName = optimizeGroupName;
         $.ajax({
             url: '/internal/qzsetting/getQZSettingClientGroupInfo',
@@ -284,9 +284,9 @@ function getQZSettingClientGroupInfo(body, terminalType) {
                 'Content-Type': 'application/json'
             },
             success: function (data) {
-                div.find(".row:first-child").find("div[name='operationKeywordNum']").find("span.line1 a").text(data.customerKeywordCount);
+                div.parent().find(".other-rank .row:first-child").find("div[name='operationKeywordNum']").find("span.line1 a").text(data.customerKeywordCount);
                 var clientCount = 0;
-                var showSomeOperationType = div.find(".row:first-child").find("div[name='showSomeOperationType']");
+                var showSomeOperationType = div.find(".row:last-child").find("div[name='showSomeOperationType']");
                 if (data.clientStatusVOs.length > 0) {
                     showSomeOperationType.empty();
                     var allOperationType = '';
@@ -298,7 +298,8 @@ function getQZSettingClientGroupInfo(body, terminalType) {
                             $(showSomeOperationType).append("<span name='"+ optimizeGroupName + " " + val.operationType +"'><a href='javascript:;' onclick='findOptimizeGroupAndOperationType($(this))'>"+ val.operationType + "(" + val.operationTypeCount + ")" +"</a></span>");
                         } else {
                             $(showSomeOperationType).append("<span><a name='showAllOperationType' href='javascript:;' onclick='showAllOperationType($(this))'>. . .</a></span>");
-                            $(showSomeOperationType).find("span a").css("font-size", "10px");
+                            $(showSomeOperationType).parent().parent().parent().parent().find("span.line1 a").css("font-size", "12px");
+                            $(showSomeOperationType).find("span a").css("font-size", "12px");
                             flag = true;
                         }
                     });
@@ -307,7 +308,7 @@ function getQZSettingClientGroupInfo(body, terminalType) {
                         $(showSomeOperationType).parent().find("input[name='allOperationType']").val(allOperationType);
                     }
                 }
-                div.find(".row:first-child").find("div:eq(2) span.line1 a").text(optimizeGroupName+" ("+clientCount+")");
+                div.find(".row:first-child").find("div:eq(0) span.line1 a").text(optimizeGroupName+" ("+clientCount+")");
             },
             error: function () {
                 console.log("get QZSettingClientGroupInfo failed");
@@ -350,35 +351,17 @@ function showMoreSearchCondition() {
 }
 function searchClientStatus(optimizeGroup, operationType) {
     var searchClientStatusFrom = $("#searchClientStatusForm");
-    var terminalType = $("#chargeForm").find("#terminalType").val();
-    var url;
     searchClientStatusFrom.find("#groupName").val($.trim(optimizeGroup));
     if (operationType != null) {
         searchClientStatusFrom.find("#operationType").val($.trim(operationType));
     }
-    if (terminalType == 'PC') {
-        url = "http://pcsskj.shunshikj.com/internal/clientstatus/searchClientStatuses";
-    }
-    if (terminalType == 'Phone') {
-        url = "http://msskj.shunshikj.com/internal/clientstatus/searchClientStatuses";
-    }
-    searchClientStatusFrom.attr("action", url);
     searchClientStatusFrom.submit();
 }
 function searchCustomerKeywords(customerUuid, optimizeGroupName) {
     var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
-    var terminalType = $("#chargeForm").find("#terminalType").val();
-    var url;
     searchCustomerKeywordForm.find("#customerUuid").val(customerUuid);
     searchCustomerKeywordForm.find("#optimizeGroupName").val(optimizeGroupName);
     searchCustomerKeywordForm.find("#status").val(1);
-    if (terminalType == 'PC') {
-        url = "http://pcsskj.shunshikj.com/internal/customerKeyword/searchCustomerKeywords";
-    }
-    if (terminalType == 'Phone') {
-        url = "http://msskj.shunshikj.com/internal/customerKeyword/searchCustomerKeywords";
-    }
-    searchCustomerKeywordForm.attr("action", url);
     searchCustomerKeywordForm.submit();
 }
 function showAllOperationType(self, e) {
