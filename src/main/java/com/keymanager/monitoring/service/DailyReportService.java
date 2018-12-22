@@ -160,7 +160,7 @@ public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport>
 		Map<String, Map<String, String>> externalAccountAndSummaryFeeMap = new HashMap<String, Map<String, String>>();
 		for(DailyReportItem dailyReportItem : dailyReportItems){
 			Customer customer = customerService.getCustomer(dailyReportItem.getCustomerUuid());
-			if(StringUtil.isNotNullNorEmpty(customer.getExternalAccount())) {
+			if(customer != null && StringUtil.isNotNullNorEmpty(customer.getExternalAccount())) {
 				Map<String, String> summaryFeeMap = externalAccountAndSummaryFeeMap.get(customer.getExternalAccount());
 				if (summaryFeeMap == null) {
 					summaryFeeMap = new HashMap<String, String>();
