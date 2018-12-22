@@ -191,19 +191,19 @@
 									<div class="row">
 										<div name="baiduWeight">
 											<span class="line1">
-												<a href="javascript:;">${qzSetting.qzKeywordRankInfoMap["PC"].baiduWeight == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["PC"].baiduWeight}</a>
+												<a href="javascript:;">${qzSetting.qzKeywordRankInfoMap["PC"].baiduWeight}</a>
 											</span>
 											<span><a href="javascript:;">百度权重</a></span>
 										</div>
 										<div name="baiduRecord">
 											<span class="line1">
-												<a href="javascript:;">${qzSetting.qzKeywordRankInfoMap["PC"].baiduRecord == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["PC"].baiduRecord}</a>
+												<a href="javascript:;">${qzSetting.qzKeywordRankInfoMap["PC"].baiduRecord}</a>
 											</span>
 											<span><a href="javascript:;">百度收录</a></span>
 										</div>
 									</div>
 									<div class="row">
-										<span class="line1"><a href="https://www.5118.com/seo/baidupc/ip/${qzSetting.domain}" target="_blank">${qzSetting.qzKeywordRankInfoMap["PC"].ipRoute == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["PC"].ipRoute}</a> <sub>IP</sub></span>
+										<span class="line1"><a href="https://www.5118.com/seo/baidupc/ip/${qzSetting.domain}" target="_blank">${qzSetting.qzKeywordRankInfoMap["PC"].ipRoute == "" ? "暂无" : qzSetting.qzKeywordRankInfoMap["PC"].ipRoute}</a> <sub>IP</sub></span>
 										<span><a href="javascript:;">预计百度来路</a></span>
 									</div>
 								</div>
@@ -255,7 +255,7 @@
 
 										<div name="operationKeywordNum">
 											<span class="line1">
-												<a target="_blank" href="javascript:searchCustomerKeywords('${qzSetting.customerUuid}', '${qzSetting.pcGroup}', '${qzSetting.status}');">0</a>
+												<a target="_blank" href="javascript:searchCustomerKeywords('${qzSetting.customerUuid}', '${qzSetting.pcGroup}');">0</a>
 											</span>
 											<span title="点击链接跳转到关键字列表">
 												<a href="javascript:;">操作词数</a>
@@ -378,7 +378,7 @@
 									</c:when>
 									<c:otherwise>
 										<div class="col-8">
-											<h1 style="text-align: center"> 暂无数据 </h1>
+											<h1> 暂无数据 </h1>
 										</div>
 									</c:otherwise>
 								</c:choose>
@@ -439,11 +439,11 @@
 							<span>
 								<input type="checkbox" name="uuid" value="${qzSetting.uuid}" onclick="decideSelectAll();"/>
 							</span>
-							<span class="site-name">客户名称: ${qzSetting.contactPerson}</span>
+							<span class="contactPerson-name"><a href="javascript:;">${qzSetting.contactPerson}</a></span>
 							<span style="padding: 0 10px"> —— </span>
-							<a href="javascript:;">${qzSetting.domain}&nbsp;&nbsp;</a>
-							<a href="https://www.aizhan.com/cha/${qzSetting.domain}/" target="_blank" title="查看爱站">爱站&nbsp;&nbsp;</a>
-							<a href="https://www.5118.com/seo/${qzSetting.domain}" target="_blank" title="查看5118,需要登录">5118</a>
+							<span class="domain"><a href="javascript:;">${qzSetting.domain}</a></span>&nbsp;&nbsp;&nbsp;&nbsp;
+							<span class="to-aizhan"><a href="https://www.aizhan.com/cha/${qzSetting.domain}/" target="_blank" title="查看爱站">爱站</a></span>&nbsp;&nbsp;&nbsp;&nbsp;
+							<span class="to-5118"><a  href="https://www.5118.com/seo/${qzSetting.domain}" target="_blank" title="查看5118,需要登录">5118</a></span>
 						</div>
 
 						<div class="body">
@@ -451,7 +451,7 @@
 								<div class="baidu-rank">
 									<a href="javascript:;">
 										<span class="line1">${qzSetting.userID}</span>
-										<span title="用户名称">用户名称</span>
+										<span>用户名称</span>
 									</a>
 								</div>
 
@@ -459,19 +459,19 @@
 									<div class="row">
 										<div name="baiduWeight">
 											<span class="line1">
-												<a href="javascript:;">${qzSetting.qzKeywordRankInfoMap["Phone"].baiduWeight == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["Phone"].baiduWeight}</a>
+												<a href="javascript:;">${qzSetting.qzKeywordRankInfoMap["Phone"].baiduWeight}</a>
 											</span>
 											<span><a href="javascript:;">百度权重</a></span>
 										</div>
 										<div name="baiduRecord">
 											<span class="line1">
-												<a href="javascript:;">${qzSetting.qzKeywordRankInfoMap["Phone"].baiduRecord == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["Phone"].baiduRecord}</a>
+												<a href="javascript:;">${qzSetting.qzKeywordRankInfoMap["Phone"].baiduRecord}</a>
 											</span>
 											<span><a href="javascript:;">百度收录</a></span>
 										</div>
 									</div>
 									<div class="row">
-										<span class="line1"><a href="javascript:;">${qzSetting.qzKeywordRankInfoMap["Phone"].ipRoute == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["Phone"].ipRoute}</a> <sub>IP</sub></span>
+										<span class="line1"><a href="javascript:;">${qzSetting.qzKeywordRankInfoMap["Phone"].ipRoute == "" ? "暂无" : qzSetting.qzKeywordRankInfoMap["Phone"].ipRoute}</a> <sub>IP</sub></span>
 										<span><a href="javascript:;">预计百度来路</a></span>
 									</div>
 								</div>
@@ -523,7 +523,7 @@
 
 										<div>
 											<span class="line1">
-												<a target="_blank" href="javascript:searchCustomerKeywords('${qzSetting.customerUuid}', '${qzSetting.phoneGroup}', '${qzSetting.status}');">0</a>
+												<a target="_blank" href="javascript:searchCustomerKeywords('${qzSetting.customerUuid}', '${qzSetting.phoneGroup}');">0</a>
 											</span>
 											<span title="点击链接跳转到关键字列表">
 												<a href="javascript:;">操作词数</a>
@@ -554,7 +554,7 @@
 											<span class="line1">
 												<a href="javascript:;">${qzSetting.phoneCreateTopTenNum == null ? "暂无" : qzSetting.phoneCreateTopTenNum} </a>
 											</span>
-											<span title="初始前10数">
+											<span>
 												<a href="javascript:;">初始前10数 </a>
 											</span>
 										</div>
@@ -562,7 +562,7 @@
 											<span class="line1">
 												<a href="javascript:;">${qzSetting.phoneCreateTopFiftyNum == null ? "暂无" : qzSetting.phoneCreateTopFiftyNum} </a>
 											</span>
-											<span title="初始前50数">
+											<span>
 												<a href="javascript:;">初始前50数</a>
 											</span>
 										</div>
@@ -571,7 +571,7 @@
 									<span class="line1">
 										<a href="javascript:;">${qzSetting.ignoreNoIndex == true ? "是" : "否"} </a>
 									</span>
-											<span title="去掉没指数">
+											<span>
 										<a href="javascript:;">去掉没指数</a>
 									</span>
 										</div>
@@ -580,7 +580,7 @@
 									<span class="line1">
 										<a href="javascript:;">${qzSetting.ignoreNoOrder == true ? "是" : "否"} </a>
 									</span>
-											<span title="去掉没排名">
+											<span>
 										<a href="javascript:;">去掉没排名</a>
 									</span>
 										</div>
@@ -589,7 +589,7 @@
 											<span class="line1">
 												<a href="javascript:;">${qzSetting.type} </a>
 											</span>
-											<span title="入口类型">
+											<span>
 												<a href="javascript:;">入口类型</a>
 											</span>
 										</div>
@@ -608,7 +608,7 @@
 										   </c:choose>
 										</a>
 									</span>
-											<span title="状态">
+											<span>
 										<a href="javascript:;">状态</a>
 									</span>
 										</div>
@@ -623,7 +623,7 @@
 													</c:choose>
 												</a>
 											</span>
-											<span title="涨幅">
+											<span>
 												<a href="javascript:;">涨幅</a>
 											</span>
 										</div>
@@ -881,7 +881,7 @@
 		<tr>
 			<td align="right" style="margin-right:4px;">爬取关键字</td>
 			<td>
-				<select name="qzSettingCrawlKeywords" id="qzSettingCrawlKeywords" style="width:240px">
+				<select name="qzSettingAutoCrawlKeywordFlag" id="qzSettingAutoCrawlKeywordFlag" style="width:240px">
 					<option value="1" selected>是</option>
 					<option value="0">否</option>
 				</select>

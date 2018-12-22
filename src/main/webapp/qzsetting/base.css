@@ -487,6 +487,11 @@ ul {
     text-align: left;
 }
 
+.rank-wrap .col-8 h1 {
+    text-align: center;
+    padding-top: 65px;
+}
+
 #moreSearchCondition {
     display: block;
     height: 25px;

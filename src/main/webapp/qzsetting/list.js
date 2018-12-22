@@ -365,13 +365,13 @@ function searchClientStatus(optimizeGroup, operationType) {
     searchClientStatusFrom.attr("action", url);
     searchClientStatusFrom.submit();
 }
-function searchCustomerKeywords(customerUuid, optimizeGroupName, status) {
+function searchCustomerKeywords(customerUuid, optimizeGroupName) {
     var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
     var terminalType = $("#chargeForm").find("#terminalType").val();
     var url;
     searchCustomerKeywordForm.find("#customerUuid").val(customerUuid);
     searchCustomerKeywordForm.find("#optimizeGroupName").val(optimizeGroupName);
-    searchCustomerKeywordForm.find("#status").val(status);
+    searchCustomerKeywordForm.find("#status").val(1);
     if (terminalType == 'PC') {
         url = "http://pcsskj.shunshikj.com/internal/customerKeyword/searchCustomerKeywords";
     }
@@ -1018,7 +1018,7 @@ function saveChangeSetting(self) {
         return;
     }
     qzSetting.bearPawNumber = settingDialogDiv.find("#bearPawNumber").val();
-    qzSetting.crawlKeywords = settingDialogDiv.find("#qzSettingCrawlKeywords").val() === "1" ? true : false;
+    qzSetting.autoCrawlKeywordFlag = settingDialogDiv.find("#qzSettingAutoCrawlKeywordFlag").val() === "1" ? true : false;
     qzSetting.ignoreNoIndex = settingDialogDiv.find("#qzSettingIgnoreNoIndex").val() === "1" ? true : false;
     qzSetting.ignoreNoOrder = settingDialogDiv.find("#qzSettingIgnoreNoOrder").val() === "1" ? true : false;
     qzSetting.updateInterval = settingDialogDiv.find("#qzSettingInterval").val();
@@ -1083,7 +1083,7 @@ function saveChangeSetting(self) {
             validationFlag = false;
             return false;
         }
-        if (qzSetting.crawlKeywords && (operationType.maxKeywordCount == "" || !reg.test(operationType.maxKeywordCount))){
+        if (qzSetting.autoCrawlKeywordFlag && (operationType.maxKeywordCount == "" || !reg.test(operationType.maxKeywordCount))){
             alert("请输入PC限制词量");
             settingDialogDiv.find("#maxKeywordCount" + val.id).focus();
             validationFlag = false;
