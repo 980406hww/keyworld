@@ -46,34 +46,34 @@
 
 				<li>
 					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="trimSearchCondition('1')" value=" 搜索 " >
-					&nbsp;
+					&nbsp;&nbsp;
 					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="showMoreSearchCondition()" value=" 更多搜索条件 " >
 				</li>
 				<shiro:hasPermission name="/internal/qzsetting/save">
 					<li>
-						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="showSettingDialog(null, this)" value=" 增加 " >
+						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="showSettingDialog(null, this)" value=" 增加 " >&nbsp;
 					</li>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="/internal/qzsetting/updateImmediately">
 					<li>
-						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="updateImmediately(this)" value=" 马上更新 " >
+						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="updateImmediately(this)" value=" 马上更新 " >&nbsp;
 					</li>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="/internal/qzsetting/updateStatus">
 					<li>
 						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="updateQZSettingStatus(0)" value=" 暂停整站 " >
-						&nbsp;
+						&nbsp;&nbsp;
 						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="updateQZSettingStatus(1)" value=" 激活整站 " >
 					</li>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="/internal/qzsetting/deleteQZSettings">
 					<li>
-						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="delSelectedQZSettings(this)" value=" 删除所选 " >
+						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="delSelectedQZSettings(this)" value=" 删除所选 " >&nbsp;
 					</li>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="/internal/qzsetting/searchQZSettings">
 					<li>
-						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="getAvailableQZSettings()" value="查看更新队列(${availableQZSettingCount})">
+						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="getAvailableQZSettings()" value="查看更新队列(${availableQZSettingCount})">&nbsp;
 					</li>
 				</shiro:hasPermission>
 				<li>
