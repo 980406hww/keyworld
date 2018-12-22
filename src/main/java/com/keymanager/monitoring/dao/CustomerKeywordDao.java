@@ -201,4 +201,6 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     List<String> searchDuplicateKeywords(@Param("customerKeywordCriteria") CustomerKeywordCriteria customerKeywordCriteria);
 
     CustomerKeyword getCustomerKeywordFee(@Param("uuid")Long uuid);
+
+    List<Long> getCustomerUuids(@Param("entryType")String entryType, @Param("terminalType")String terminalType);
 }

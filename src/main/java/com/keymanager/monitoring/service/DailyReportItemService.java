@@ -89,4 +89,8 @@ public class DailyReportItemService extends ServiceImpl<DailyReportItemDao, Dail
 	public List<DailyReportItem> searchDailyReportItems(long dailyReportUuid){
 		return dailyReportItemDao.searchDailyReportItems(dailyReportUuid);
 	}
+
+	public void deleteDailyReportItems(long dailyReportUuid) {
+		dailyReportItemDao.deleteDailyReportItems(dailyReportUuid);
+	}
 }

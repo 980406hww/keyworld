@@ -28,17 +28,20 @@ public class CustomerKeywordDailyReportTotalExcelWriter {
 	private int ucWidth;
 	private int todayFeeWidth;
 
-	public CustomerKeywordDailyReportTotalExcelWriter(long dailyReportUuid, String externalAccount) throws BiffException, IOException {
+	public CustomerKeywordDailyReportTotalExcelWriter(long dailyReportUuid) throws BiffException, IOException {
 		super();
 		this.webRootPath = Utils.getWebRootPath();
 		this.dailyReportFileName = "dailyreport/summary/total.xls";
 		File file = getTemplateFile(dailyReportFileName);
 		int dayOfMonth = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-		if(!file.exists() || dayOfMonth == 1 || dayOfMonth == 11 || dayOfMonth == 21){
+		if (!file.exists() || dayOfMonth == 1 || dayOfMonth == 11 || dayOfMonth == 21) {
 			file = getTemplateFile(fileName);
 		}
 		writer = new JXLExcelWriter(file);
 		this.dailyReportUuid = dailyReportUuid;
+	}
+
+	public void initSheet(String externalAccount) {
 		writer.removeSheet("Default");
 		Sheet sheet = writer.getSheetByName(externalAccount);
 		if(sheet != null){
@@ -154,7 +157,7 @@ public class CustomerKeywordDailyReportTotalExcelWriter {
 		writer.setColumnView(CustomerKeywordDailyReportSummaryDefinition.TodayFee.getColumnIndex() + 1, todayFeeWidth + 20);
 	}
 
-	public void writeDataToExcel(String externalAccount) throws Exception {
+	public void writeDataToExcel() throws Exception {
 		saveAs(dailyReportFileName);
 		String fileName = "dailyreport/" + dailyReportUuid + "/Total.xls";
 		FileUtil.copyFile(webRootPath + dailyReportFileName, webRootPath + fileName, true);

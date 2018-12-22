@@ -82,8 +82,6 @@ public class CustomerRestController {
         }
         Page<Customer> page = customerService.searchCustomers(new Page<Customer>(Integer.parseInt(currentPage), Integer.parseInt(pageSize)), customerCriteria);
         List<Map> customerTypes = customerService.searchCustomerTypes(customerCriteria);
-        Config config = configService.getConfig(Constants.CONFIG_TYPE_DAILY_REPORT, terminalType);
-        List<String> contactPersons = customerService.searchContactPersonList(config.getValue());
         modelAndView.addObject("customerTypes", customerTypes);
         modelAndView.addObject("entryType", entryType);
         modelAndView.addObject("terminalType", terminalType);
@@ -92,8 +90,6 @@ public class CustomerRestController {
         modelAndView.addObject("user", user);
         modelAndView.addObject("isDepartmentManager", isDepartmentManager);
         modelAndView.addObject("activeUsers", activeUsers);
-        modelAndView.addObject("customerUuids", config.getValue());
-        modelAndView.addObject("contactPersons", contactPersons.toString());
         return modelAndView;
     }
 
