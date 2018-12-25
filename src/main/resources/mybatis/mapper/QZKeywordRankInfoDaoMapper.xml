@@ -30,6 +30,7 @@
                     AND qzkri.fIncrease &lt;= -0.1
                 </when>
             </choose>
+            AND qzkri.fTerminalType = #{terminalType}
         </if>
     </select>
 
@@ -67,6 +68,10 @@
         SELECT
             COUNT(fIncrease &lt;= #{lower} OR NULL) AS downNum,
             COUNT(fIncrease &gt;= #{upper} OR NULL) AS upNum
-        FROM t_qz_keyword_rank_info
+        FROM t_qz_keyword_rank_info qk
+        WHERE 1=1
+        <if test="terminalType != null and terminalType !=''">
+            AND qk.fTerminalType = #{terminalType}
+        </if>
     </select>
 </mapper>

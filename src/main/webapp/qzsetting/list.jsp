@@ -137,22 +137,22 @@
 	<input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
 	<input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
 	<input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
-	<input type="hidden" name="domain" id="domain" value="${qzSettingSearchCriteria.domain}">
-	<input type="hidden" name="group" id="group" value="${qzSettingSearchCriteria.group}">
+	<input type="hidden" name="domain" id="domain" value="${qzSettingSearchCriteria.domain}"/>
+	<input type="hidden" name="group" id="group" value="${qzSettingSearchCriteria.group}"/>
 	<input type="hidden" name="customerUuid" id="customerUuid" value="${qzSettingSearchCriteria.customerUuid}"/>
 	<input type="hidden" name="statusHidden" id="statusHidden" value="${qzSettingSearchCriteria.status}"/>
 	<input type="hidden" name="customerInfo" id="customerInfo" value="${qzSettingSearchCriteria.customerInfo}">
 	<input type="hidden" name="status" id="status" value="${qzSettingSearchCriteria.status}"/>
 	<input type="hidden" name="updateStatus" id="updateStatus" value="${qzSettingSearchCriteria.updateStatus}"/>
 	<input type="hidden" name="increaseType" id="increaseType" value="${qzSettingSearchCriteria.increaseType}"/>
-	<input type="hidden" name="terminalType" id="terminalType" value="${qzSettingSearchCriteria.terminalType}">
+	<input type="hidden" name="terminalType" id="terminalType" value="${qzSettingSearchCriteria.terminalType}"/>
 </form>
 
 <div class="datalist">
 	<div class="datalist-list">
 		<ul>
 			<c:forEach items="${page.records}" var="qzSetting" varStatus="status">
-				<c:if test="${qzSetting.pcGroup != null or qzSetting.qzKeywordRankInfoMap['PC'] != null}">
+				<c:if test="${qzSetting.pcGroup != null and (qzSetting.crawlerStatus != 'finish' or qzSetting.qzKeywordRankInfoMap['PC'] != null)}">
 					<li class="pcGroup">
 						<div class="header">
 							<span>
@@ -440,7 +440,7 @@
 					</li>
 					<!--li-end-pc-->
 				</c:if>
-				<c:if test="${qzSetting.phoneGroup != null or qzSetting.qzKeywordRankInfoMap['Phone'] != null}">
+				<c:if test="${qzSetting.phoneGroup != null and (qzSetting.crawlerStatus != 'finish' or qzSetting.qzKeywordRankInfoMap['Phone'] != null)}">
 					<li class="phoneGroup" style="display: none;">
 						<div class="header">
 							<span>
@@ -1112,7 +1112,7 @@
 				<td>
 					<select name="qzSettingEntryType" id="qzSettingEntryType" style="width:240px">
 						<option value="qz" selected>全站</option>
-						<option value="bc">bc</option>
+						<option value="bc">其他</option>
 						<option value="pt">普通</option>
 						<option value="fm">负面</option>
 					</select>
@@ -1124,6 +1124,7 @@
 					<select name="searchEngine" id="searchEngine" style="width:240px">
 						<option value="百度" selected>百度</option>
 						<option value="360">360</option>
+						<option value="UC">UC</option>
 						<option value="搜狗">搜狗</option>
 					</select>
 				</td>
