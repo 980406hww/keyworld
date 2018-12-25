@@ -139,7 +139,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			List<QZOperationType> OldOperationTypes = qzOperationTypeService.searchQZOperationTypesIsDelete(qzSetting.getUuid());
 			List<QZOperationType> updOperationTypes = qzSetting.getQzOperationTypes();
 			updateOpretionTypeAndChargeRule(OldOperationTypes,updOperationTypes,qzSetting.getUuid());
-			List<QZKeywordRankInfo> existingQZKeywordRankInfoList = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), null);
+			List<QZKeywordRankInfo> existingQZKeywordRankInfoList = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), null, null);
 			updateQZKeywordRankInfo(existingQZKeywordRankInfoList, updOperationTypes, existingQZSetting);
 			qzSettingDao.updateById(existingQZSetting);
 		}else{
@@ -256,13 +256,13 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 	public Page<QZSetting> searchQZSetting(Page<QZSetting> page, QZSettingSearchCriteria qzSettingSearchCriteria){
 		page.setRecords(qzSettingDao.searchQZSettings(page, qzSettingSearchCriteria));
-		addingQZKeywordRankInfo(page, qzSettingSearchCriteria.getIncreaseType());
+		addingQZKeywordRankInfo(page, qzSettingSearchCriteria.getIncreaseType(), qzSettingSearchCriteria.getTerminalType());
 		return page;
 	}
 
-	public Page<QZSetting> addingQZKeywordRankInfo (Page<QZSetting> page, Boolean increaseType){
+	public Page<QZSetting> addingQZKeywordRankInfo (Page<QZSetting> page, Boolean increaseType, String terminalType){
         for(QZSetting qzSetting : page.getRecords()){
-            List<QZKeywordRankInfo> qzKeywordRankInfos = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(),increaseType);
+            List<QZKeywordRankInfo> qzKeywordRankInfos = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), increaseType, terminalType);
             Map<String, JSONObject> qzKeywordRankInfoMap = new HashMap<String, JSONObject>();
             for (QZKeywordRankInfo qzKeywordRankInfo : qzKeywordRankInfos) {
 				calculatedQZKeywordRankInfo(qzKeywordRankInfo);

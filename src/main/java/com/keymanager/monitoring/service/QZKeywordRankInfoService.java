@@ -36,8 +36,8 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
     @Autowired
     private ConfigService configService;
 
-    public List<QZKeywordRankInfo> searchExistingQZKeywordRankInfo (Long uuid, Boolean increaseType) {
-        return qzKeywordRankInfoDao.searchExistingQZKeywordRankInfo(uuid, increaseType);
+    public List<QZKeywordRankInfo> searchExistingQZKeywordRankInfo (Long uuid, Boolean increaseType, String terminalType) {
+        return qzKeywordRankInfoDao.searchExistingQZKeywordRankInfo(uuid, increaseType, terminalType);
     }
 
     public void deleteByQZSettingUuid (Long uuid) {
@@ -108,7 +108,10 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
     public QZSettingSearchCriteria getCountDownAndUp(QZSettingSearchCriteria qzSettingSearchCriteria){
         Config uppperConfig = configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK, Constants.CONFIG_KEY_UPPER_VALUE);
         Config lowerConfig = configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK, Constants.CONFIG_KEY_LOWER_VALUE);
-        QZSettingSearchCriteria countDownAndUpQZSettingSearchCriteria = qzKeywordRankInfoDao.getCountDownAndUp(Double.parseDouble(uppperConfig.getValue()), Double.parseDouble(lowerConfig.getValue()));
+        if (null == qzSettingSearchCriteria.getTerminalType()) {
+            qzSettingSearchCriteria.setTerminalType("PC");
+        }
+        QZSettingSearchCriteria countDownAndUpQZSettingSearchCriteria = qzKeywordRankInfoDao.getCountDownAndUp(Double.parseDouble(uppperConfig.getValue()), Double.parseDouble(lowerConfig.getValue()), qzSettingSearchCriteria.getTerminalType());
         qzSettingSearchCriteria.setUpperValue(Double.parseDouble(uppperConfig.getValue()));
         qzSettingSearchCriteria.setLowerValue(Double.parseDouble(lowerConfig.getValue()));
         qzSettingSearchCriteria.setUpNum(countDownAndUpQZSettingSearchCriteria.getUpNum());

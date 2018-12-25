@@ -116,7 +116,8 @@
         qs.fPcCreateTopTenNum AS 'pcCreateTopTenNum',
         qs.fPcCreateTopFiftyNum AS 'pcCreateTopFiftyNum',
         qs.fPhoneCreateTopTenNum AS 'phoneCreateTopTenNum',
-        qs.fPhoneCreateTopFiftyNum AS 'phoneCreateTopFiftyNum'
+        qs.fPhoneCreateTopFiftyNum AS 'phoneCreateTopFiftyNum',
+        qs.fCrawlerStatus AS 'crawlerStatus'
         FROM t_qz_setting qs
         JOIN t_customer c
         ON qs.fCustomerUuid = c.fUuid
@@ -140,6 +141,7 @@
                     AND qk.fIncrease &lt;= #{qzSettingSearchCriteria.lowerValue}
                 </when>
             </choose>
+            AND qk.fTerminalType = #{qzSettingSearchCriteria.terminalType}
         </if>
         <choose>
             <when test="qzSettingSearchCriteria.dateRangeType == 0">
