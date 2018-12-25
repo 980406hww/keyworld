@@ -41,7 +41,7 @@
 		<div class="conn">
 			<ul>
 				<li>
-					<input type="text" title="请输入网站域名" name="domain" placeholder="请输入网站域名" value="${qzSettingSearchCriteria.domain}">
+					<input type="text" title="请输入网站域名" name="domain" placeholder="请输入网站域名" onkeydown="enterIn(event);" value="${qzSettingSearchCriteria.domain}">
 				</li>
 
 				<li>
@@ -165,6 +165,7 @@
 							<span class="to-5118"><a  href="https://www.5118.com/seo/${qzSetting.domain}" target="_blank" title="查看5118,需要登录">5118</a></span>
 
 							<div class="handle">
+								<a class="blue" href="javascript:showKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain}','${qzSetting.pcGroup}')">指定关键字</a>
 								<shiro:hasPermission name="/internal/qzchargelog/save">
 									<a class="blue" href="javascript:showChargeDialog('${qzSetting.uuid}','${qzSetting.contactPerson}','${qzSetting.domain}',this)">收费</a>
 								</shiro:hasPermission>
@@ -243,12 +244,12 @@
 											</span>
 										</div>
 
-										<div name="operationKeywordNum" title="点击链接跳转到关键字列表">
+										<div>
 											<span class="line1">
-												<a target="_blank" href="javascript:searchCustomerKeywords('${qzSetting.customerUuid}', '${qzSetting.pcGroup}');">0</a>
+												<a href="javascript:;">${qzSetting.updateInterval}</a>
 											</span>
 											<span>
-												<a href="javascript:;">操作词数</a>
+												<a href="javascript:;">更新间隔</a>
 											</span>
 										</div>
 
@@ -263,15 +264,14 @@
 											</span>
 										</div>
 
-										<div>
-									<span class="line1">
-										<a href="javascript:;">${qzSetting.updateInterval}</a>
-									</span>
+										<div name="operationKeywordNum" title="点击链接跳转到关键字列表">
+											<span class="line1">
+												<a target="_blank" href="javascript:searchCustomerKeywords('${qzSetting.customerUuid}', '${qzSetting.pcGroup}');">0</a>
+											</span>
 											<span>
-										<a href="javascript:;">更新间隔</a>
-									</span>
+												<a href="javascript:;">操作词数</a>
+											</span>
 										</div>
-
 									</div>
 
 									<div class="row">
@@ -372,7 +372,6 @@
 										</div>
 									</div>
 								</div>
-
 							</div>
 
 							<div class="rank-wrap">
@@ -385,7 +384,7 @@
 									</c:when>
 									<c:otherwise>
 										<div class="col-8">
-											<h1> 暂无数据 </h1>
+											<h1>暂无数据</h1>
 										</div>
 									</c:otherwise>
 								</c:choose>
@@ -442,7 +441,6 @@
 					<!--li-end-pc-->
 				</c:if>
 				<c:if test="${qzSetting.phoneGroup != null or qzSetting.qzKeywordRankInfoMap['Phone'] != null}">
-
 					<li class="phoneGroup" style="display: none;">
 						<div class="header">
 							<span>
@@ -453,6 +451,23 @@
 							<span class="domain"><a href="javascript:;">${qzSetting.domain}</a></span>&nbsp;&nbsp;&nbsp;&nbsp;
 							<span class="to-aizhan"><a href="https://www.aizhan.com/cha/${qzSetting.domain}/" target="_blank" title="查看爱站">爱站</a></span>&nbsp;&nbsp;&nbsp;&nbsp;
 							<span class="to-5118"><a  href="https://www.5118.com/seo/${qzSetting.domain}" target="_blank" title="查看5118,需要登录">5118</a></span>
+							<c:if test="${qzSetting.pcGroup == null}">
+								<div class="handle">
+									<a class="blue" href="javascript:showKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain}','${qzSetting.phoneGroup}')">指定关键字</a>
+									<shiro:hasPermission name="/internal/qzchargelog/save">
+										<a class="blue" href="javascript:showChargeDialog('${qzSetting.uuid}','${qzSetting.contactPerson}','${qzSetting.domain}',this)">收费</a>
+									</shiro:hasPermission>
+									<shiro:hasPermission name="/internal/qzsetting/save">
+										<a class="blue" href="javascript:showSettingDialog('${qzSetting.uuid}', this)">修改</a>
+									</shiro:hasPermission>
+									<shiro:hasPermission name="/internal/qzsetting/delete">
+										<a class="blue" href="javascript:delQZSetting(${qzSetting.uuid})">删除</a>
+									</shiro:hasPermission>
+									<shiro:hasPermission name="/internal/qzchargelog/chargesList">
+										<a class="blue" href="javascript:showChargeLog('${qzSetting.uuid}', this)">收费记录</a>
+									</shiro:hasPermission>
+								</div>
+							</c:if>
 						</div>
 
 						<div class="body">
@@ -518,12 +533,12 @@
 											</span>
 										</div>
 
-										<div name="operationKeywordNum" title="点击链接跳转到关键字列表">
+										<div>
 											<span class="line1">
-												<a target="_blank" href="javascript:searchCustomerKeywords('${qzSetting.customerUuid}', '${qzSetting.phoneGroup}');">0</a>
+												<a href="javascript:;">${qzSetting.updateInterval}</a>
 											</span>
 											<span>
-												<a href="javascript:;">操作词数</a>
+												<a href="javascript:;">更新间隔</a>
 											</span>
 										</div>
 
@@ -538,13 +553,13 @@
 											</span>
 										</div>
 
-										<div>
-									<span class="line1">
-										<a href="javascript:;">${qzSetting.updateInterval}</a>
-									</span>
+										<div name="operationKeywordNum" title="点击链接跳转到关键字列表">
+											<span class="line1">
+												<a target="_blank" href="javascript:searchCustomerKeywords('${qzSetting.customerUuid}', '${qzSetting.phoneGroup}');">0</a>
+											</span>
 											<span>
-										<a href="javascript:;">更新间隔</a>
-									</span>
+												<a href="javascript:;">操作词数</a>
+											</span>
 										</div>
 
 									</div>
@@ -715,7 +730,6 @@
 					</li>
 					<!--li-end-phone-->
 				</c:if>
-
 			</c:forEach>
 		</ul>
 	</div>
@@ -757,7 +771,7 @@
 	<input type="text" name="status" id="status">
 </form>
 
-<div id="showAllOperationType" class="easyui-dialog"  style="display: none"></div>
+<div id="showAllOperationType" class="easyui-dialog" style="display: none;"></div>
 <div id="changeSettingDialog" class="easyui-dialog" style="display: none;left: 40%;">
 	<form id="changeSettingForm">
 	<table style="font-size:12px" id="settingTable" align="center" cellspacing="5">
@@ -1077,8 +1091,52 @@
 		<span style="margin-left: 55px"></span>合计:<sapn id="totalAmount"></sapn>
 	</p>
 </div>
-<div id="getAvailableQZSettings" class="easyui-dialog"  style="display: none">
+<%--更新队列Dialog--%>
+<div id="getAvailableQZSettings" class="easyui-dialog" style="display: none">
 	<textarea id="getAvailableQZSettingsContent"  style="width:100%;height:100%;resize: none"></textarea>
+</div>
+<%--指定关键字Dialog--%>
+<div id="customerKeywordDialog" class="easyui-dialog" style="display: none">
+	<form id="customerKeywordForm">
+		<table style="font-size:12px" id="customerKeywordTable" align="center" cellspacing="5">
+			<tr>
+				<td style="width:60px" align="right">域名</td>
+				<td>
+					<input type="hidden" name="qzSettingUuid" id="qzSettingUuid" />
+					<input type="hidden" name="customerUuid" id="customerUuid" />
+					<input type="text" name="domain" id="domain" style="width:240px" />
+				</td>
+			</tr>
+			<tr>
+				<td align="right" style="margin-right:4px;">入口</td>
+				<td>
+					<select name="qzSettingEntryType" id="qzSettingEntryType" style="width:240px">
+						<option value="qz" selected>全站</option>
+						<option value="bc">bc</option>
+						<option value="pt">普通</option>
+						<option value="fm">负面</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td align="right" style="margin-right:4px;">引擎</td>
+				<td>
+					<select name="searchEngine" id="searchEngine" style="width:240px">
+						<option value="百度" selected>百度</option>
+						<option value="360">360</option>
+						<option value="搜狗">搜狗</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td style="width:60px" align="right">关键字</td>
+			</tr>
+			<tr>
+				<td style="width:60px" align="right"></td>
+				<td><textarea id="customerKeywordDialogContent" style="width:240px; height: 260px; resize: none"></textarea></td>
+			</tr>
+		</table>
+	</form>
 </div>
 <%--收费详情列表--%>
 <div id="chargeLogListDiv" class="easyui-dialog" style="display:none;left: 40%;" >
@@ -1108,7 +1166,7 @@
 
         var flag = false;
         window.onclick = function (e) {
-            if ($("#showAllOperationType").css("display") == "block") {
+            if ($("#showAllOperationType").css("display") === "block") {
                 if (flag &&!$("#showAllOperationType").is(e.target) && $("#showAllOperationType").has(e.target).length === 0 ){
                     $("#showAllOperationType").dialog("close");
                     flag = false;

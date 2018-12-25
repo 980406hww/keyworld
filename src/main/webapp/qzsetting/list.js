@@ -3,6 +3,7 @@ $(function () {
     $("#chargeDialog").dialog("close");
     $("#changeSettingDialog").dialog("close");
     $("#getAvailableQZSettings").dialog("close");
+    $("#showAllOperationType").dialog("close");
 
     var searchCustomerForm = $("#chargeForm");
     var pageSize = searchCustomerForm.find('#pageSizeHidden').val();
@@ -33,8 +34,14 @@ $(function () {
     loadingCheckTerminalType();
     searchRiseOrFall();
     detectedMoreSearchConditionDivShow();
-    $("#showAllOperationType").dialog("close");
 });
+function enterIn(e) {
+    var e = e || event,
+    keyCode = e.which || e.keyCode;
+    if (keyCode == 13) {
+        trimSearchCondition('1');
+    }
+}
 function loadingCheckTerminalType() {
     var terminalType = $("#chargeForm").find("#terminalType").val();
     checkTerminalType(terminalType);
@@ -273,7 +280,7 @@ function getQZSettingClientGroupInfo(body, terminalType) {
         var postData = {};
         postData.qzSettingUuid = uuid;
         postData.terminalType = terminalType;
-        postData.type = $.trim(div.parent().find(".other-rank .row:last-child").find("div:eq(3) span.line1 a").text());
+        postData.type = $.trim(div.parent().find(".other-rank .row:last-child").find("div:eq(5) span.line1 a").text());
         postData.optimizeGroupName = optimizeGroupName;
         $.ajax({
             url: '/internal/qzsetting/getQZSettingClientGroupInfo',
@@ -297,13 +304,13 @@ function getQZSettingClientGroupInfo(body, terminalType) {
                         if (idx < 2) {
                             $(showSomeOperationType).append("<span name='"+ optimizeGroupName + " " + val.operationType +"'><a href='javascript:;' onclick='findOptimizeGroupAndOperationType($(this))'>"+ val.operationType + "(" + val.operationTypeCount + ")" +"</a></span>");
                         } else {
-                            $(showSomeOperationType).append("<span><a name='showAllOperationType' href='javascript:;' onclick='showAllOperationType($(this))'>. . .</a></span>");
-                            $(showSomeOperationType).parent().parent().parent().parent().find("span.line1 a").css("font-size", "12px");
-                            $(showSomeOperationType).find("span a").css("font-size", "12px");
                             flag = true;
                         }
                     });
                     if (flag) {
+                        $(showSomeOperationType).append("<span><a name='showAllOperationType' href='javascript:;' onclick='showAllOperationType($(this))'>. . .</a></span>");
+                        $(showSomeOperationType).parent().parent().parent().parent().find("span.line1 a").css("font-size", "11px");
+                        $(showSomeOperationType).find("span a").css("font-size", "11px");
                         allOperationType = allOperationType.substring(0, allOperationType.length-1);
                         $(showSomeOperationType).parent().find("input[name='allOperationType']").val(allOperationType);
                     }
@@ -393,7 +400,7 @@ function showAllOperationType(self, e) {
             text: '确定',
             iconCls: 'icon-ok',
             handler: function () {
-                showAllOperationType.dialog("close")
+                showAllOperationType.dialog("close");
             }
         }]
     });
@@ -404,6 +411,88 @@ function findOptimizeGroupAndOperationType(self) {
     var name = $(self).parent().attr("name");
     var args = name.split(" ");
     searchClientStatus(args[0], args[1]);
+}
+function showKeywordDialog(qzSettingUuid, customerUuid, domain, optimizedGroupName) {
+    var customerKeywordDialog = $("#customerKeywordDialog");
+    customerKeywordDialog.find('#customerKeywordForm')[0].reset();
+    customerKeywordDialog.find("#qzSettingUuid").val(qzSettingUuid);
+    customerKeywordDialog.find("#customerUuid").val(customerUuid);
+    customerKeywordDialog.find("#domain").val(domain);
+    customerKeywordDialog.show();
+    customerKeywordDialog.dialog({
+        resizable: false,
+        height: 450,
+        width: 340,
+        title: '指定关键字',
+        modal: false,
+        buttons: [{
+            text: '保存',
+            iconCls: 'icon-ok',
+            handler: function () {
+                saveCustomerKeywords(qzSettingUuid, customerUuid, optimizedGroupName);
+            }
+        }, {
+            text: '取消',
+            iconCls: 'icon-cancel',
+            handler: function () {
+                $("#customerKeywordDialog").dialog("close");
+                $('#customerKeywordForm')[0].reset();
+            }
+        }]
+    });
+    customerKeywordDialog.dialog("open");
+    customerKeywordDialog.window("resize",{top:$(document).scrollTop() + 100});
+}
+function saveCustomerKeywords(qzSettingUuid, customerUuid, optimizedGroupName) {
+    var terminalType = $("#chargeForm").find("#terminalType").val();
+    if (terminalType == "") {
+        terminalType = "PC";
+    }
+    var customerKeywordDialog = $("#customerKeywordDialog");
+    var domain = customerKeywordDialog.find("#domain").val();
+    if (domain == '') {
+        alert("请输入域名");
+        customerKeywordDialog.find("#domain").focus();
+        return;
+    }
+    var keywordStr = customerKeywordDialog.find("#customerKeywordDialogContent").val()
+    if (keywordStr == "") {
+        alert("请输入关键字");
+        customerKeywordDialog.find("#customerKeywordDialogContent").focus();
+        return;
+    }
+    var keywords = keywordStr.replace(/[，|\r\n]/g, ",").replace(/[\s+]/g, "").split(',');
+    var type = customerKeywordDialog.find("#qzSettingEntryType").val();
+    var searchEngine = customerKeywordDialog.find("#searchEngine").val();
+    var postData = {};
+    postData.qzSettingUuid = qzSettingUuid;
+    postData.customerUuid = customerUuid;
+    postData.domain = $.trim(domain);
+    postData.optimizeGroupName = optimizedGroupName;
+    postData.type = type;
+    postData.searchEngine = searchEngine;
+    postData.terminalType = $.trim(terminalType);
+    postData.keywords = keywords;
+    $.ajax({
+        url: '/internal/qzsetting/saveQZSettingCustomerKeywords',
+        type: 'POST',
+        data: JSON.stringify(postData),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        success: function (data) {
+            if (data) {
+                $().toastmessage('showErrorToast', "保存成功！");
+                $("#customerKeywordDialog").dialog("close");
+            } else {
+                $().toastmessage('showErrorToast', "保存失败！");
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "保存失败！");
+        }
+    });
 }
 function changePaging(currentPage, pageSize) {
     var chargeForm = $("#chargeForm");

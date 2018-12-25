@@ -3,6 +3,7 @@ package com.keymanager.monitoring.controller.rest.internal;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.CustomerCriteria;
+import com.keymanager.monitoring.criteria.QZSettingSaveCustomerKeywordsCriteria;
 import com.keymanager.monitoring.criteria.QZSettingSearchClientGroupInfoCriteria;
 import com.keymanager.monitoring.criteria.QZSettingSearchCriteria;
 import com.keymanager.monitoring.entity.Customer;
@@ -189,5 +190,17 @@ public class QZSettingRestController extends SpringMVCBaseController {
 			logger.error(e.getMessage());
 		}
 		return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
+	}
+
+	@RequestMapping(value = "saveQZSettingCustomerKeywords", method = RequestMethod.POST)
+	public ResponseEntity<?> saveQZSettingCustomerKeywords(HttpServletRequest request, @RequestBody QZSettingSaveCustomerKeywordsCriteria qzSettingSaveCustomerKeywordsCriteria) {
+		try {
+			String userName = (String) request.getSession().getAttribute("username");
+			qzSettingService.saveQZSettingCustomerKeywords(qzSettingSaveCustomerKeywordsCriteria, userName);
+			return new ResponseEntity<Object>(true, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
+		return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
 	}
 }
