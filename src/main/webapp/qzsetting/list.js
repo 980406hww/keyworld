@@ -4,6 +4,7 @@ $(function () {
     $("#changeSettingDialog").dialog("close");
     $("#getAvailableQZSettings").dialog("close");
     $("#showAllOperationType").dialog("close");
+    $("#customerKeywordDialog").dialog("close");
 
     var searchCustomerForm = $("#chargeForm");
     var pageSize = searchCustomerForm.find('#pageSizeHidden').val();
@@ -280,7 +281,7 @@ function getQZSettingClientGroupInfo(body, terminalType) {
         var postData = {};
         postData.qzSettingUuid = uuid;
         postData.terminalType = terminalType;
-        postData.type = $.trim(div.parent().find(".other-rank .row:last-child").find("div:eq(5) span.line1 a").text());
+        postData.type = $.trim(div.parent().find(".other-rank .row:last-child").find("div:eq(3) span.line1 a").text());
         postData.optimizeGroupName = optimizeGroupName;
         $.ajax({
             url: '/internal/qzsetting/getQZSettingClientGroupInfo',
@@ -382,7 +383,6 @@ function showAllOperationType(self, e) {
         pageY = event.clientY+document.body.scrollTop||document.documentElement.scrollTop;
     }
     var allOperationType = $(self).parent().parent().parent().find("input[name='allOperationType']").val();
-    $(self).parent().parent().parent().parent().find()
     var showAllOperationType = $("#showAllOperationType");
     showAllOperationType.empty();
     var operationTypes = allOperationType.split(',');

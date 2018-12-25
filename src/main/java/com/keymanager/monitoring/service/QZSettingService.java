@@ -566,21 +566,13 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		customerKeyword.setTerminalType(qzSettingSaveCustomerKeywordsCriteria.getTerminalType());
 		customerKeyword.setUrl(qzSettingSaveCustomerKeywordsCriteria.getDomain());
 		customerKeyword.setOptimizeGroupName(qzSettingSaveCustomerKeywordsCriteria.getOptimizeGroupName());
-		customerKeyword.setManualCleanTitle(true);
 		customerKeyword.setServiceProvider("baidutop123");
 		customerKeyword.setCollectMethod(CollectMethod.PerMonth.name());
+        customerKeyword.setCurrentIndexCount(-1);
+        customerKeyword.setPositionFirstFee(-1d);
 		for (String keyword : qzSettingSaveCustomerKeywordsCriteria.getKeywords()) {
 			customerKeyword.setKeyword(keyword);
-			customerKeywordService.supplementIndexAndPriceFromExisting(customerKeyword);
-			if(null == customerKeyword.getCurrentIndexCount()) {
-				customerKeyword.setCurrentIndexCount(-1);
-				customerKeyword.setPositionFirstFee(-1d);
-			}
 			customerKeywordService.addCustomerKeyword(customerKeyword, userName);
 		}
-        QZSetting qzExistSetting = qzSettingDao.selectById(qzSettingSaveCustomerKeywordsCriteria.getQzSettingUuid());
-		qzExistSetting.setDomain(qzSettingSaveCustomerKeywordsCriteria.getDomain());
-		qzExistSetting.setType(qzSettingSaveCustomerKeywordsCriteria.getType());
-		qzSettingDao.updateById(qzExistSetting);
     }
 }
