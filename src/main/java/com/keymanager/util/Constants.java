@@ -75,6 +75,8 @@ public class Constants {
     public final static String CONFIG_KEY_UPPER_VALUE = "UpperValue";
     public final static String CONFIG_KEY_LOWER_VALUE = "LowerValue";
     public final static String CONFIG_KEY_CRAWLER_HOUR = "CrawlerHour";
+    public final static String CONFIG_TYPE_QZSETTING = "QZSetting";
+    public final static String CONFIG_KEY_QZ_TASKNUMBER = "TaskNumber";
 
     public final static Map<String, String> ACCOUNT_LOG_STATUS_MAP = new HashMap<String, String>();
     static {

@@ -62,9 +62,17 @@ public class QZKeywordRankInfo extends BaseEntity {
     @TableField(value = "fBaiduWeight")
     private int baiduWeight;
 
+//    /* 百度收录 */
+//    @TableField(value = "fBaiduRecord")
+//    private String baiduRecord;
+
     /* 百度收录 */
-    @TableField(value = "fBaiduRecord")
-    private int baiduRecord;
+    @TableField(value = "fRecord")
+    private String baiduRecord;
+
+    /* 百度收录日期 */
+    @TableField(value = "fBaiduRecordFullDate")
+    private String baiduRecordFullDate;
 
     /* 前10的增长数（有正负） */
     @TableField(exist = false)
@@ -110,11 +118,11 @@ public class QZKeywordRankInfo extends BaseEntity {
         this.baiduWeight = baiduWeight;
     }
 
-    public int getBaiduRecord() {
+    public String getBaiduRecord() {
         return baiduRecord;
     }
 
-    public void setBaiduRecord(int baiduRecord) {
+    public void setBaiduRecord(String baiduRecord) {
         this.baiduRecord = baiduRecord;
     }
 
@@ -260,5 +268,13 @@ public class QZKeywordRankInfo extends BaseEntity {
 
     public void setTopFiftyNum (int topFiftyNum) {
         this.topFiftyNum = topFiftyNum;
+    }
+
+    public String getBaiduRecordFullDate() {
+        return baiduRecordFullDate;
+    }
+
+    public void setBaiduRecordFullDate(String baiduRecordFullDate) {
+        this.baiduRecordFullDate = baiduRecordFullDate;
     }
 }

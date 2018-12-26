@@ -45,8 +45,9 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
     }
 
     public List<ExternalQzSettingVO> getQZSettingTask(){
+        Config taskNumber = configService.getConfig(Constants.CONFIG_TYPE_QZSETTING, Constants.CONFIG_KEY_QZ_TASKNUMBER);
         Config config = configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK, Constants.CONFIG_KEY_CRAWLER_HOUR);
-        List<ExternalQzSettingVO> qzSettingTasks = qzKeywordRankInfoDao.getQZSettingTask(Integer.parseInt(config.getValue()));
+        List<ExternalQzSettingVO> qzSettingTasks = qzKeywordRankInfoDao.getQZSettingTask(Integer.parseInt(config.getValue()),Integer.parseInt(taskNumber.getValue()));
         if (qzSettingTasks.size()>0){
             Long[] uuids=new Long[qzSettingTasks.size()];
             int index = 0;
@@ -99,6 +100,7 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
             qzKeywordRankInfo.setIpRoute(externalQzKeywordRankInfoVO.getIpRoute());
             qzKeywordRankInfo.setBaiduWeight(externalQzKeywordRankInfoVO.getBaiduWeight());
             qzKeywordRankInfo.setBaiduRecord(externalQzKeywordRankInfoVO.getBaiduRecord());
+            qzKeywordRankInfo.setBaiduRecordFullDate(externalQzKeywordRankInfoVO.getBaiduRecordFullDate());
         }catch (Exception e){
             logger.error("数据封装异常"+e.getMessage());
         }

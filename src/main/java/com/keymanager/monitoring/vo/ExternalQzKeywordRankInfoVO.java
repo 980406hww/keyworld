@@ -27,7 +27,16 @@ public class ExternalQzKeywordRankInfoVO {
     private String crawlerStatus;
     private String ipRoute;
     private Integer baiduWeight;
-    private Integer baiduRecord;
+    private String baiduRecord;
+    private String baiduRecordFullDate;
+
+    public String getBaiduRecordFullDate() {
+        return baiduRecordFullDate;
+    }
+
+    public void setBaiduRecordFullDate(String baiduRecordFullDate) {
+        this.baiduRecordFullDate = baiduRecordFullDate;
+    }
 
     public String getIpRoute() {
         return ipRoute;
@@ -45,11 +54,11 @@ public class ExternalQzKeywordRankInfoVO {
         this.baiduWeight = baiduWeight;
     }
 
-    public Integer getBaiduRecord() {
+    public String getBaiduRecord() {
         return baiduRecord;
     }
 
-    public void setBaiduRecord(Integer baiduRecord) {
+    public void setBaiduRecord(String baiduRecord) {
         this.baiduRecord = baiduRecord;
     }
 
