@@ -64,6 +64,8 @@
 						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="updateQZSettingStatus(0)" value=" 暂停整站 " >
 						&nbsp;&nbsp;
 						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="updateQZSettingStatus(1)" value=" 激活整站 " >
+						&nbsp;&nbsp;
+						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="updateQZSettingStatus(3)" value=" 暂停续费 " >
 					</li>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="/internal/qzsetting/deleteQZSettings">
@@ -79,13 +81,31 @@
 				<li>
 					<label name="lower" title="网站关键词(PC,Phone)一星期排名趋势涨幅&lt;${qzSettingSearchCriteria.lowerValue}">
 						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.increaseType != null and !qzSettingSearchCriteria.increaseType}">checked</c:if>>
-					<i class="icon-rank-down"></i>骤降 (${qzSettingSearchCriteria.downNum == null ? 0 : qzSettingSearchCriteria.downNum})
+						<i class="icon-rank-down"></i>骤降 (${qzSettingSearchCriteria.downNum == null ? 0 : qzSettingSearchCriteria.downNum})
 					</label>
 				</li>
 				<li>
 					<label name="upper" title="网站关键词(PC,Phone)一星期排名趋势涨幅&gt;${qzSettingSearchCriteria.upperValue}">
 						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.increaseType}">checked</c:if>>
-					<i class="icon-rank-up"></i>暴涨 (${qzSettingSearchCriteria.upNum == null ? 0 : qzSettingSearchCriteria.upNum})
+						<i class="icon-rank-up"></i>暴涨 (${qzSettingSearchCriteria.upNum == null ? 0 : qzSettingSearchCriteria.upNum})
+					</label>
+				</li>
+				<li>
+					<label name="lower" title="标识最少有一条规则达标">
+						<input type="checkbox" name="checkbox">
+						达标 (100)
+					</label>
+				</li>
+				<li>
+					<label name="upper" title="标识一条规则都未达标">
+						<input type="checkbox" name="checkbox">
+						未达标 (1000)
+					</label>
+				</li>
+				<li>
+					<label name="upper" title="标识下条规则接近达标">
+						<input type="checkbox" name="checkbox">
+						接近达标 (100)
 					</label>
 				</li>
 			</ul>
@@ -107,6 +127,7 @@
 						<option value="1" <c:if test="${qzSettingSearchCriteria.status == 1}">selected</c:if>>激活</option>
 						<option value="0" <c:if test="${qzSettingSearchCriteria.status == 0}">selected</c:if>>暂停</option>
 						<option value="2" <c:if test="${qzSettingSearchCriteria.status == 2}">selected</c:if>>新增</option>
+						<option value="3" <c:if test="${qzSettingSearchCriteria.status == 3}">selected</c:if>>暂停收费</option>
 					</select>
 				</li>
 				<li>
@@ -294,7 +315,7 @@
 
 										<div>
 									<span class="line1">
-										<a href="javascript:;">${qzSetting.ignoreNoOrder == true ? "是" : "否"} </a>
+										<a href="javascript:;">${qzSetting.ignoreNoOrder == true ? "是" : "否"}</a>
 									</span>
 											<span>
 										<a href="javascript:;">没排名</a>
@@ -303,20 +324,23 @@
 
 										<div>
 											<span class="line1">
-												<a href="javascript:;">${qzSetting.type} </a>
+												<a href="javascript:;">${qzSetting.autoCrawlKeywordFlag == true ? "是" : "否"}</a>
 											</span>
 											<span>
-												<a href="javascript:;">入口类型</a>
+												<a href="javascript:;">爬取关键字</a>
 											</span>
 										</div>
 
 										<div>
 											<span class="line1">
-												<a href="javascript:;">
+												<a href="javascript:;" status="${qzSetting.status}">
 												   <c:choose>
 													   <c:when test="${qzSetting.status == 1}">激活</c:when>
 													   <c:when test="${qzSetting.status == 2}">
 														   <span style="color: green;">新增</span>
+													   </c:when>
+													   <c:when test="${qzSetting.status == 3}">
+														   <span style="color: red;">暂停收费</span>
 													   </c:when>
 													   <c:otherwise>
 														   <span style="color: red;">暂停</span>
@@ -451,9 +475,9 @@
 							<span class="domain"><a href="javascript:;">${qzSetting.domain}</a></span>&nbsp;&nbsp;&nbsp;&nbsp;
 							<span class="to-aizhan"><a href="https://www.aizhan.com/cha/${qzSetting.domain}/" target="_blank" title="查看爱站">爱站</a></span>&nbsp;&nbsp;&nbsp;&nbsp;
 							<span class="to-5118"><a  href="https://www.5118.com/seo/${qzSetting.domain}" target="_blank" title="查看5118,需要登录">5118</a></span>
-							<c:if test="${qzSetting.pcGroup == null}">
-								<div class="handle">
-									<a class="blue" href="javascript:showKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain}','${qzSetting.phoneGroup}')">指定关键字</a>
+							<div class="handle">
+								<a class="blue" href="javascript:showKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain}','${qzSetting.phoneGroup}')">指定关键字</a>
+								<c:if test="${qzSetting.pcGroup == null}">
 									<shiro:hasPermission name="/internal/qzchargelog/save">
 										<a class="blue" href="javascript:showChargeDialog('${qzSetting.uuid}','${qzSetting.contactPerson}','${qzSetting.domain}',this)">收费</a>
 									</shiro:hasPermission>
@@ -466,8 +490,8 @@
 									<shiro:hasPermission name="/internal/qzchargelog/chargesList">
 										<a class="blue" href="javascript:showChargeLog('${qzSetting.uuid}', this)">收费记录</a>
 									</shiro:hasPermission>
-								</div>
-							</c:if>
+								</c:if>
+							</div>
 						</div>
 
 						<div class="body">
@@ -602,11 +626,14 @@
 
 										<div>
 											<span class="line1">
-												<a href="javascript:;">
+												<a href="javascript:;" status="${qzSetting.status}">
 												   <c:choose>
 													   <c:when test="${qzSetting.status == 1}">激活</c:when>
 													   <c:when test="${qzSetting.status == 2}">
 														   <span style="color: green;">新增</span>
+													   </c:when>
+													   <c:when test="${qzSetting.status == 3}">
+														   <span style="color: red;">暂停收费</span>
 													   </c:when>
 													   <c:otherwise>
 														   <span style="color: red;">暂停</span>
@@ -786,7 +813,6 @@
 			<td style="width:60px" align="right">域名</td>
 			<td>
 				<input type="text" name="qzSettingDomain" id="qzSettingDomain" style="width:240px" />
-				<span style="margin-right: 28px;"></span>
 			</td>
 		</tr>
 		<tr>
@@ -902,7 +928,7 @@
 		</tr>
 
 		<tr>
-			<td align="right" style="margin-right:4px;">入口</td>
+			<td style="width:60px" align="right">入口</td>
 			<td>
 				<select name="qzSettingEntryType" id="qzSettingEntryType"  style="width:240px">
 					<option value="qz" selected>全站</option>
@@ -913,7 +939,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td align="right" style="margin-right:4px;">爬取关键字</td>
+			<td style="width:60px" align="right">爬取关键字</td>
 			<td>
 				<select name="qzSettingAutoCrawlKeywordFlag" id="qzSettingAutoCrawlKeywordFlag" style="width:240px">
 					<option value="1" selected>是</option>
@@ -922,7 +948,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td align="right" style="margin-right:4px;">去掉没指数</td>
+			<td style="width:60px" align="right">去掉没指数</td>
 			<td>
 				<select name="qzSettingIgnoreNoIndex" id="qzSettingIgnoreNoIndex"  style="width:240px">
 					<option value="1" selected>是</option>
@@ -931,7 +957,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td align="right" style="margin-right:4px;">去掉没排名</td>
+			<td style="width:60px" align="right">去掉没排名</td>
 			<td>
 				<select name="qzSettingIgnoreNoOrder" id="qzSettingIgnoreNoOrder"  style="width:240px">
 					<option value="1" selected>是</option>
@@ -940,7 +966,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td align="right" style="margin-right:4px;">更新间隔</td>
+			<td style="width:60px" align="right">更新间隔</td>
 			<td>
 				<select name="qzSettingInterval" id="qzSettingInterval"  style="width:240px">
 					<option value="1">1天</option>

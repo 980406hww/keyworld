@@ -309,17 +309,19 @@ function getQZSettingClientGroupInfo(body, terminalType) {
                         }
                     });
                     if (flag) {
-                        $(showSomeOperationType).append("<span><a name='showAllOperationType' href='javascript:;' onclick='showAllOperationType($(this))'>. . .</a></span>");
-                        $(showSomeOperationType).parent().parent().parent().parent().find("span.line1 a").css("font-size", "11px");
-                        $(showSomeOperationType).find("span a").css("font-size", "11px");
+                        $(showSomeOperationType).append("<span><a name='showAllOperationType' href='javascript:;' onclick='showAllOperationType($(this))'><strong> . . . </strong></a></span>");
                         allOperationType = allOperationType.substring(0, allOperationType.length-1);
                         $(showSomeOperationType).parent().find("input[name='allOperationType']").val(allOperationType);
                     }
                 }
+                var status = div.parent().find(".other-rank .row:last-child").find("div:eq(4) span.line1 a").attr("status");
                 div.find(".row:first-child").find("div:eq(0) span.line1 a").text(optimizeGroupName+" ("+clientCount+")");
+                if (status == "3") {
+                    div.find(".row:first-child").find("div:eq(0) span.line1 a").css("color", "red");
+                }
             },
             error: function () {
-                console.log("get QZSettingClientGroupInfo failed");
+                alert("获取优化分组机器信息失败，请刷新重试或提交问题给开发人员！");
             }
         });
     });
@@ -405,7 +407,7 @@ function showAllOperationType(self, e) {
         }]
     });
     showAllOperationType.dialog("open");
-    showAllOperationType.window("resize",{top: pageY + 30, left: pageX - 60});
+    showAllOperationType.window("resize",{top: pageY + 20, left: pageX - 80});
 }
 function findOptimizeGroupAndOperationType(self) {
     var name = $(self).parent().attr("name");
@@ -640,9 +642,12 @@ function updateQZSettingStatus(status) {
     }
     if(status == 1) {
         if (confirm("确认要激活选中的整站吗？") == false) return;
+    } else if (status == 2) {
+        if (confirm("确认要暂停收费选中的整站吗？") == false) return;
     } else {
         if (confirm("确认要暂停选中的整站吗？") == false) return;
     }
+
     var postData = {};
     postData.uuids = uuids.split(",");
     postData.status = status;
@@ -1034,6 +1039,7 @@ function initSettingDialog(qzSetting, self) {
         qzSetting.contactPerson + "_____" + qzSetting.customerUuid);
     settingDialogDiv.find("#qzSettingDomain").val(
         qzSetting.domain != null ? qzSetting.domain : "");
+    settingDialogDiv.find("#qzSettingAutoCrawlKeywordFlag").val(qzSetting.autoCrawlKeywordFlag ? "1" : "0");
     settingDialogDiv.find("#qzSettingIgnoreNoIndex").val(qzSetting.ignoreNoIndex ? "1" : "0");
     settingDialogDiv.find("#qzSettingIgnoreNoOrder").val(qzSetting.ignoreNoOrder ? "1" : "0");
     settingDialogDiv.find("#qzSettingInterval").val(

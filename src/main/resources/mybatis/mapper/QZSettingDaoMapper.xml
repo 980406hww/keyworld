@@ -117,7 +117,8 @@
         qs.fPcCreateTopFiftyNum AS 'pcCreateTopFiftyNum',
         qs.fPhoneCreateTopTenNum AS 'phoneCreateTopTenNum',
         qs.fPhoneCreateTopFiftyNum AS 'phoneCreateTopFiftyNum',
-        qs.fCrawlerStatus AS 'crawlerStatus'
+        qs.fCrawlerStatus AS 'crawlerStatus',
+        qs.fAutoCrawlKeywordFlag AS 'autoCrawlKeywordFlag'
         FROM t_qz_setting qs
         JOIN t_customer c
         ON qs.fCustomerUuid = c.fUuid
@@ -200,6 +201,9 @@
     <update id="updateQZSettingStatus">
         UPDATE t_qz_setting
         SET fStatus = #{status}
+        <if test="status == 3">
+            , fAutoCrawlKeywordFlag = FALSE
+        </if>
         WHERE fUuid IN
         <foreach item="item" index="index" collection="uuids" open="(" separator="," close=")">
             #{item}
