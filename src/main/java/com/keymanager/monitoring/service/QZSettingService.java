@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.enums.CollectMethod;
 import com.keymanager.monitoring.criteria.QZSettingCriteria;
+import com.keymanager.monitoring.criteria.QZSettingSaveCustomerKeywordsCriteria;
 import com.keymanager.monitoring.criteria.QZSettingSearchClientGroupInfoCriteria;
 import com.keymanager.monitoring.criteria.QZSettingSearchCriteria;
 import com.keymanager.monitoring.dao.QZSettingDao;
@@ -138,7 +139,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			List<QZOperationType> OldOperationTypes = qzOperationTypeService.searchQZOperationTypesIsDelete(qzSetting.getUuid());
 			List<QZOperationType> updOperationTypes = qzSetting.getQzOperationTypes();
 			updateOpretionTypeAndChargeRule(OldOperationTypes,updOperationTypes,qzSetting.getUuid());
-			List<QZKeywordRankInfo> existingQZKeywordRankInfoList = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), null);
+			List<QZKeywordRankInfo> existingQZKeywordRankInfoList = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), null, null);
 			updateQZKeywordRankInfo(existingQZKeywordRankInfoList, updOperationTypes, existingQZSetting);
 			qzSettingDao.updateById(existingQZSetting);
 		}else{
@@ -255,13 +256,13 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 	public Page<QZSetting> searchQZSetting(Page<QZSetting> page, QZSettingSearchCriteria qzSettingSearchCriteria){
 		page.setRecords(qzSettingDao.searchQZSettings(page, qzSettingSearchCriteria));
-		addingQZKeywordRankInfo(page, qzSettingSearchCriteria.getIncreaseType());
+		addingQZKeywordRankInfo(page, qzSettingSearchCriteria.getIncreaseType(), qzSettingSearchCriteria.getTerminalType());
 		return page;
 	}
 
-	public Page<QZSetting> addingQZKeywordRankInfo (Page<QZSetting> page, Boolean increaseType){
+	public Page<QZSetting> addingQZKeywordRankInfo (Page<QZSetting> page, Boolean increaseType, String terminalType){
         for(QZSetting qzSetting : page.getRecords()){
-            List<QZKeywordRankInfo> qzKeywordRankInfos = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(),increaseType);
+            List<QZKeywordRankInfo> qzKeywordRankInfos = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), increaseType, terminalType);
             Map<String, JSONObject> qzKeywordRankInfoMap = new HashMap<String, JSONObject>();
             for (QZKeywordRankInfo qzKeywordRankInfo : qzKeywordRankInfos) {
 				calculatedQZKeywordRankInfo(qzKeywordRankInfo);
@@ -555,4 +556,23 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		qzSettingSearchClientGroupInfoVO.setClientStatusVOs(clientStatusService.getClientStatusVOs(qzSettingSearchClientGroupInfoCriteria));
 		return qzSettingSearchClientGroupInfoVO;
 	}
+
+	public void saveQZSettingCustomerKeywords (QZSettingSaveCustomerKeywordsCriteria qzSettingSaveCustomerKeywordsCriteria, String userName) {
+		CustomerKeyword customerKeyword = new CustomerKeyword();
+		customerKeyword.setQzSettingUuid(qzSettingSaveCustomerKeywordsCriteria.getQzSettingUuid());
+		customerKeyword.setCustomerUuid(qzSettingSaveCustomerKeywordsCriteria.getCustomerUuid());
+		customerKeyword.setType(qzSettingSaveCustomerKeywordsCriteria.getType());
+		customerKeyword.setSearchEngine(qzSettingSaveCustomerKeywordsCriteria.getSearchEngine());
+		customerKeyword.setTerminalType(qzSettingSaveCustomerKeywordsCriteria.getTerminalType());
+		customerKeyword.setUrl(qzSettingSaveCustomerKeywordsCriteria.getDomain());
+		customerKeyword.setOptimizeGroupName(qzSettingSaveCustomerKeywordsCriteria.getOptimizeGroupName());
+		customerKeyword.setServiceProvider("baidutop123");
+		customerKeyword.setCollectMethod(CollectMethod.PerMonth.name());
+        customerKeyword.setCurrentIndexCount(-1);
+        customerKeyword.setPositionFirstFee(-1d);
+		for (String keyword : qzSettingSaveCustomerKeywordsCriteria.getKeywords()) {
+			customerKeyword.setKeyword(keyword);
+			customerKeywordService.addCustomerKeyword(customerKeyword, userName);
+		}
+    }
 }

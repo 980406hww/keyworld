@@ -6,6 +6,7 @@ import com.keymanager.monitoring.entity.ClientStatus;
 import com.keymanager.monitoring.entity.Config;
 import com.keymanager.monitoring.service.ClientStatusService;
 import com.keymanager.monitoring.service.ConfigService;
+import com.keymanager.monitoring.service.PerformanceService;
 import com.keymanager.monitoring.service.VMwareService;
 import com.keymanager.util.Constants;
 import com.keymanager.util.TerminalTypeMapping;
@@ -33,6 +34,9 @@ public class ExternalClientStatusRestController extends SpringMVCBaseController 
 
     @Autowired
     private ConfigService configService;
+
+    @Autowired
+    private PerformanceService performanceService;
 
     @RequestMapping(value = "/updatePageNo", method = RequestMethod.GET)
     public ResponseEntity<?> updatePageNo(HttpServletRequest request) throws Exception {
@@ -223,7 +227,9 @@ public class ExternalClientStatusRestController extends SpringMVCBaseController 
         String clientID = request.getParameter("clientID");
         try {
             if (validUser(userName, password)) {
+                long startMilleSeconds = System.currentTimeMillis();
                 String clientOpenStatus = clientStatusService.getClientStartUpStatus(clientID);
+                performanceService.addPerformanceLog("getClientStartUpStatus", System.currentTimeMillis() - startMilleSeconds, "");
                 return new ResponseEntity<Object>(clientOpenStatus, HttpStatus.OK);
             }
         }catch (Exception ex){
@@ -272,7 +278,7 @@ public class ExternalClientStatusRestController extends SpringMVCBaseController 
     }
 
 
-    @RequestMapping(value = "/updateVersion", method = RequestMethod.POST)
+    @RequestMapping(value = "/updateVersion", method = RequestMethod.GET)
     public ResponseEntity<?> updateVersion(HttpServletRequest request) throws Exception {
         String userName = request.getParameter("userName");
         if(StringUtils.isBlank(userName)){

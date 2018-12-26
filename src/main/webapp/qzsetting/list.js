@@ -3,6 +3,8 @@ $(function () {
     $("#chargeDialog").dialog("close");
     $("#changeSettingDialog").dialog("close");
     $("#getAvailableQZSettings").dialog("close");
+    $("#showAllOperationType").dialog("close");
+    $("#customerKeywordDialog").dialog("close");
 
     var searchCustomerForm = $("#chargeForm");
     var pageSize = searchCustomerForm.find('#pageSizeHidden').val();
@@ -33,8 +35,14 @@ $(function () {
     loadingCheckTerminalType();
     searchRiseOrFall();
     detectedMoreSearchConditionDivShow();
-    clientStatusOperationTypeChange();
 });
+function enterIn(e) {
+    var e = e || event,
+    keyCode = e.which || e.keyCode;
+    if (keyCode == 13) {
+        trimSearchCondition('1');
+    }
+}
 function loadingCheckTerminalType() {
     var terminalType = $("#chargeForm").find("#terminalType").val();
     checkTerminalType(terminalType);
@@ -140,22 +148,15 @@ function generateQZKeywordTrendCharts(domElement, data) {
     var topFifty = stringToArray(result.topFifty);
     var keywordTrendCharts = echarts.init(domElement);
     var option = {
-        color: ['#2328ff', '#ff733f', '#090A07','#C184FF','#FF2F57'],
+        color: ['#228B22', '#0000FF', '#FF6100', '#000000', '#FF0000'],
         tooltip: {
             trigger: 'axis'
         },
-        legend: {
-            symbolKeepAspect: true,
-            textStyle: {
-                color: '#2328ff',
-            },
-            data: ['前10名', '前20名', '前30名', '前40名', '前50名']
-        },
         grid: {
-            left: '1%',
-            right: '3%',
-            top: '20%',
-            bottom: '1%',
+            left: '0%',
+            right: '1%',
+            top: '3%',
+            bottom: '0%',
             containLabel: true
         },
         toolbox: {
@@ -165,25 +166,23 @@ function generateQZKeywordTrendCharts(domElement, data) {
             }
         },
         xAxis: {
+            show: false,
             type: 'category',
             axisLine: {
+                show: false,
                 lineStyle: {
                     color: '#404A59'
                 }
             },
             axisTick: {
-                show: true
+                show: false
             },
-            axisLabel: {
-                textStyle: {
-                    color: '#080908'
-                }
-            },
-            boundaryGap: false,
+            boundaryGap: true,
             data: date
         },
         yAxis: {
             axisLine: {
+                show: false,
                 lineStyle: {
                     color: '#404A59'
                 }
@@ -191,15 +190,18 @@ function generateQZKeywordTrendCharts(domElement, data) {
             splitLine: {
                 show: true,
                 lineStyle: {
-                    color: '#949DB1'
+                    color: '#DCDCDC',
+                    width: 1,
+                    type: 'solid'
                 }
             },
             axisTick: {
                 show: false
             },
             axisLabel: {
+                fontStyle: 'italic',
                 textStyle: {
-                    color: '#080908'
+                    color: '#000'
                 }
             },
             type: 'value'
@@ -208,56 +210,56 @@ function generateQZKeywordTrendCharts(domElement, data) {
             name: '前10名',
             smooth: true,
             type: 'line',
-            symbolSize: 2,
-            symbol: 'rect',
+            symbolSize: 1,
+            symbol: 'none',
             data: topTen,
             lineStyle:{
                 type:"solid",
-                width: 2
+                width: 1
             }
         }, {
             name: '前20名',
             smooth: true,
             type: 'line',
-            symbolSize: 2,
-            symbol: 'roundRect',
+            symbolSize: 1,
+            symbol: 'none',
             data: topTwenty,
             lineStyle:{
                 type:"solid",
-                width: 2
+                width: 1
             }
         }, {
             name: '前30名',
             smooth: true,
             type: 'line',
-            symbolSize: 2,
-            symbol: 'circle',
+            symbolSize: 1,
+            symbol: 'none',
             data: topThirty,
             lineStyle:{
                 type:"solid",
-                width: 2
+                width: 1
             }
         }, {
             name: '前40名',
             smooth: true,
             type: 'line',
-            symbolSize: 2,
-            symbol: 'triangle',
+            symbolSize: 1,
+            symbol: 'none',
             data: topForty,
             lineStyle:{
                 type:"solid",
-                width: 2
+                width: 1
             }
         }, {
             name: '前50名',
             smooth: true,
             type: 'line',
-            symbolSize: 2,
-            symbol: 'diamond',
+            symbolSize: 1,
+            symbol: 'none',
             data: topFifty,
             lineStyle:{
                 type:"solid",
-                width: 2
+                width: 1
             }
         }]
     };
@@ -267,10 +269,10 @@ function stringToArray(str) {
     return str.replace('[', '').replace(']', '').split(', ').reverse();
 }
 function getQZSettingClientGroupInfo(body, terminalType) {
-    $(body).find(".other-rank").each(function () {
+    $(body).find(".other-rank_2").each(function () {
         var div = $(this);
         var uuid = div.parent().parent().parent().find(".header input[name='uuid']").val();
-        var optimizeGroupName = div.find(".row:first-child").find("div:eq(2) span.line1 a").text();
+        var optimizeGroupName = div.find(".row:first-child").find("div:eq(0) span.line1 a").text();
         if (optimizeGroupName.indexOf("(") == -1) {
             optimizeGroupName = $.trim(optimizeGroupName);
         } else {
@@ -279,7 +281,7 @@ function getQZSettingClientGroupInfo(body, terminalType) {
         var postData = {};
         postData.qzSettingUuid = uuid;
         postData.terminalType = terminalType;
-        postData.type = $.trim(div.find(".row:last-child").find("div:eq(4) span.line1 a").text());
+        postData.type = $.trim(div.parent().find(".other-rank .row:last-child").find("div:eq(3) span.line1 a").text());
         postData.optimizeGroupName = optimizeGroupName;
         $.ajax({
             url: '/internal/qzsetting/getQZSettingClientGroupInfo',
@@ -290,21 +292,36 @@ function getQZSettingClientGroupInfo(body, terminalType) {
                 'Content-Type': 'application/json'
             },
             success: function (data) {
-                div.find(".row:first-child").find("div:eq(4) span.line1 a").text(data.customerKeywordCount);
+                div.parent().find(".other-rank .row:first-child").find("div[name='operationKeywordNum']").find("span.line1 a").text(data.customerKeywordCount);
                 var clientCount = 0;
-                if (data.clientStatusVOs != null) {
-                    var select = div.find(".row:first-child").find("div:eq(3) select");
-                    select.empty();
-                    $(select).append("<option value=''></option>");
+                var showSomeOperationType = div.find(".row:last-child").find("div[name='showSomeOperationType']");
+                if (data.clientStatusVOs.length > 0) {
+                    showSomeOperationType.empty();
+                    var allOperationType = '';
+                    var flag = false;
                     $.each(data.clientStatusVOs, function (idx, val) {
+                        allOperationType += optimizeGroupName + " " +val.operationType + "(" + val.operationTypeCount + ")"  + ",";
                         clientCount += val.operationTypeCount;
-                        $(select).append("<option value='" + val.operationType + "(" + val.operationTypeCount + ")" +"'>"+val.operationType + "(" + val.operationTypeCount + ")"+"</option>");
+                        if (idx < 2) {
+                            $(showSomeOperationType).append("<span name='"+ optimizeGroupName + " " + val.operationType +"'><a href='javascript:;' onclick='findOptimizeGroupAndOperationType($(this))'>"+ val.operationType + "(" + val.operationTypeCount + ")" +"</a></span>");
+                        } else {
+                            flag = true;
+                        }
                     });
+                    if (flag) {
+                        $(showSomeOperationType).append("<span><a name='showAllOperationType' href='javascript:;' onclick='showAllOperationType($(this))'><strong> . . . </strong></a></span>");
+                        allOperationType = allOperationType.substring(0, allOperationType.length-1);
+                        $(showSomeOperationType).parent().find("input[name='allOperationType']").val(allOperationType);
+                    }
                 }
-                div.find(".row:first-child").find("div:eq(2) span.line1 a").text(optimizeGroupName+" ("+clientCount+")");
+                var status = div.parent().find(".other-rank .row:last-child").find("div:eq(4) span.line1 a").attr("status");
+                div.find(".row:first-child").find("div:eq(0) span.line1 a").text(optimizeGroupName+" ("+clientCount+")");
+                if (status == "3") {
+                    div.find(".row:first-child").find("div:eq(0) span.line1 a").css("color", "red");
+                }
             },
             error: function () {
-                console.log("get QZSettingClientGroupInfo failed");
+                alert("获取优化分组机器信息失败，请刷新重试或提交问题给开发人员！");
             }
         });
     });
@@ -344,47 +361,139 @@ function showMoreSearchCondition() {
 }
 function searchClientStatus(optimizeGroup, operationType) {
     var searchClientStatusFrom = $("#searchClientStatusForm");
-    var terminalType = $("#chargeForm").find("#terminalType").val();
-    var url;
     searchClientStatusFrom.find("#groupName").val($.trim(optimizeGroup));
     if (operationType != null) {
         searchClientStatusFrom.find("#operationType").val($.trim(operationType));
     }
-    if (terminalType == 'PC') {
-        url = "http://pcsskj.shunshikj.com/internal/clientstatus/searchClientStatuses";
-    }
-    if (terminalType == 'Phone') {
-        url = "http://msskj.shunshikj.com/internal/clientstatus/searchClientStatuses";
-    }
-    searchClientStatusFrom.attr("action", url);
     searchClientStatusFrom.submit();
 }
-function searchCustomerKeywords(customerUuid, optimizeGroupName, status) {
-    console.log(customerUuid, optimizeGroupName, status);
+function searchCustomerKeywords(customerUuid, optimizeGroupName) {
     var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
-    var terminalType = $("#chargeForm").find("#terminalType").val();
-    var url;
     searchCustomerKeywordForm.find("#customerUuid").val(customerUuid);
     searchCustomerKeywordForm.find("#optimizeGroupName").val(optimizeGroupName);
-    searchCustomerKeywordForm.find("#status").val(status);
-    if (terminalType == 'PC') {
-        url = "http://pcsskj.shunshikj.com/internal/customerKeyword/searchCustomerKeywords";
-    }
-    if (terminalType == 'Phone') {
-        url = "http://msskj.shunshikj.com/internal/customerKeyword/searchCustomerKeywords";
-    }
-    console.log(url, terminalType);
-    searchCustomerKeywordForm.attr("action", url);
+    searchCustomerKeywordForm.find("#status").val(1);
     searchCustomerKeywordForm.submit();
 }
-function clientStatusOperationTypeChange() {
-    $(".body").find(".other-rank").each(function (){
-        $(this).find(".row:first-child").find("div:eq(3) select").change(function () {
-            var operationType = $(this).val().substring(0, $(this).val().indexOf("("));
-            var optimizeGroup = $(this).parent().parent().find("div:eq(2) span.line1 a").text();
-            optimizeGroup = optimizeGroup.substring(0, optimizeGroup.indexOf("("));
-            searchClientStatus(optimizeGroup, operationType);
-        });
+function showAllOperationType(self, e) {
+    var event = e||window.event;
+    var pageX = event.pageX;
+    var pageY = event.pageY;
+    if(pageX==undefined) {
+        pageX = event.clientX+document.body.scrollLeft||document.documentElement.scrollLeft;
+    }
+    if(pageY==undefined) {
+        pageY = event.clientY+document.body.scrollTop||document.documentElement.scrollTop;
+    }
+    var allOperationType = $(self).parent().parent().parent().find("input[name='allOperationType']").val();
+    var showAllOperationType = $("#showAllOperationType");
+    showAllOperationType.empty();
+    var operationTypes = allOperationType.split(',');
+    $.each(operationTypes, function (idx, val) {
+        showAllOperationType.append("<span name='"+ val.substring(0, val.indexOf("(")) +"'>" + "<a href='javascript:;' onclick='findOptimizeGroupAndOperationType($(this))'>" + val.split(" ")[1] + "</a>" + "</span>" + "<br>");
+    });
+    showAllOperationType.show();
+    showAllOperationType.dialog({
+        resizable: false,
+        height: 300,
+        width: 200,
+        title: '查看操作类型',
+        modal: false,
+        buttons: [{
+            text: '确定',
+            iconCls: 'icon-ok',
+            handler: function () {
+                showAllOperationType.dialog("close");
+            }
+        }]
+    });
+    showAllOperationType.dialog("open");
+    showAllOperationType.window("resize",{top: pageY + 20, left: pageX - 80});
+}
+function findOptimizeGroupAndOperationType(self) {
+    var name = $(self).parent().attr("name");
+    var args = name.split(" ");
+    searchClientStatus(args[0], args[1]);
+}
+function showKeywordDialog(qzSettingUuid, customerUuid, domain, optimizedGroupName) {
+    var customerKeywordDialog = $("#customerKeywordDialog");
+    customerKeywordDialog.find('#customerKeywordForm')[0].reset();
+    customerKeywordDialog.find("#qzSettingUuid").val(qzSettingUuid);
+    customerKeywordDialog.find("#customerUuid").val(customerUuid);
+    customerKeywordDialog.find("#domain").val(domain);
+    customerKeywordDialog.show();
+    customerKeywordDialog.dialog({
+        resizable: false,
+        height: 450,
+        width: 340,
+        title: '指定关键字',
+        modal: false,
+        buttons: [{
+            text: '保存',
+            iconCls: 'icon-ok',
+            handler: function () {
+                saveCustomerKeywords(qzSettingUuid, customerUuid, optimizedGroupName);
+            }
+        }, {
+            text: '取消',
+            iconCls: 'icon-cancel',
+            handler: function () {
+                $("#customerKeywordDialog").dialog("close");
+                $('#customerKeywordForm')[0].reset();
+            }
+        }]
+    });
+    customerKeywordDialog.dialog("open");
+    customerKeywordDialog.window("resize",{top:$(document).scrollTop() + 100});
+}
+function saveCustomerKeywords(qzSettingUuid, customerUuid, optimizedGroupName) {
+    var terminalType = $("#chargeForm").find("#terminalType").val();
+    if (terminalType == "") {
+        terminalType = "PC";
+    }
+    var customerKeywordDialog = $("#customerKeywordDialog");
+    var domain = customerKeywordDialog.find("#domain").val();
+    if (domain == '') {
+        alert("请输入域名");
+        customerKeywordDialog.find("#domain").focus();
+        return;
+    }
+    var keywordStr = customerKeywordDialog.find("#customerKeywordDialogContent").val()
+    if (keywordStr == "") {
+        alert("请输入关键字");
+        customerKeywordDialog.find("#customerKeywordDialogContent").focus();
+        return;
+    }
+    var keywords = keywordStr.replace(/[，|\r\n]/g, ",").replace(/[\s+]/g, "").split(',');
+    var type = customerKeywordDialog.find("#qzSettingEntryType").val();
+    var searchEngine = customerKeywordDialog.find("#searchEngine").val();
+    var postData = {};
+    postData.qzSettingUuid = qzSettingUuid;
+    postData.customerUuid = customerUuid;
+    postData.domain = $.trim(domain);
+    postData.optimizeGroupName = optimizedGroupName;
+    postData.type = type;
+    postData.searchEngine = searchEngine;
+    postData.terminalType = $.trim(terminalType);
+    postData.keywords = keywords;
+    $.ajax({
+        url: '/internal/qzsetting/saveQZSettingCustomerKeywords',
+        type: 'POST',
+        data: JSON.stringify(postData),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        success: function (data) {
+            if (data) {
+                $().toastmessage('showErrorToast', "保存成功！");
+                $("#customerKeywordDialog").dialog("close");
+            } else {
+                $().toastmessage('showErrorToast', "保存失败！");
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "保存失败！");
+        }
     });
 }
 function changePaging(currentPage, pageSize) {
@@ -533,9 +642,12 @@ function updateQZSettingStatus(status) {
     }
     if(status == 1) {
         if (confirm("确认要激活选中的整站吗？") == false) return;
+    } else if (status == 2) {
+        if (confirm("确认要暂停收费选中的整站吗？") == false) return;
     } else {
         if (confirm("确认要暂停选中的整站吗？") == false) return;
     }
+
     var postData = {};
     postData.uuids = uuids.split(",");
     postData.status = status;
@@ -927,6 +1039,7 @@ function initSettingDialog(qzSetting, self) {
         qzSetting.contactPerson + "_____" + qzSetting.customerUuid);
     settingDialogDiv.find("#qzSettingDomain").val(
         qzSetting.domain != null ? qzSetting.domain : "");
+    settingDialogDiv.find("#qzSettingAutoCrawlKeywordFlag").val(qzSetting.autoCrawlKeywordFlag ? "1" : "0");
     settingDialogDiv.find("#qzSettingIgnoreNoIndex").val(qzSetting.ignoreNoIndex ? "1" : "0");
     settingDialogDiv.find("#qzSettingIgnoreNoOrder").val(qzSetting.ignoreNoOrder ? "1" : "0");
     settingDialogDiv.find("#qzSettingInterval").val(
@@ -983,7 +1096,7 @@ function saveChangeSetting(self) {
         return;
     }
     qzSetting.bearPawNumber = settingDialogDiv.find("#bearPawNumber").val();
-    qzSetting.crawlKeywords = settingDialogDiv.find("#qzSettingCrawlKeywords").val() === "1" ? true : false;
+    qzSetting.autoCrawlKeywordFlag = settingDialogDiv.find("#qzSettingAutoCrawlKeywordFlag").val() === "1" ? true : false;
     qzSetting.ignoreNoIndex = settingDialogDiv.find("#qzSettingIgnoreNoIndex").val() === "1" ? true : false;
     qzSetting.ignoreNoOrder = settingDialogDiv.find("#qzSettingIgnoreNoOrder").val() === "1" ? true : false;
     qzSetting.updateInterval = settingDialogDiv.find("#qzSettingInterval").val();
@@ -1048,7 +1161,7 @@ function saveChangeSetting(self) {
             validationFlag = false;
             return false;
         }
-        if (qzSetting.crawlKeywords && (operationType.maxKeywordCount == "" || !reg.test(operationType.maxKeywordCount))){
+        if (qzSetting.autoCrawlKeywordFlag && (operationType.maxKeywordCount == "" || !reg.test(operationType.maxKeywordCount))){
             alert("请输入PC限制词量");
             settingDialogDiv.find("#maxKeywordCount" + val.id).focus();
             validationFlag = false;

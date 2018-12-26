@@ -1,5 +1,6 @@
 package com.keymanager.monitoring.controller.rest.external;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.BaiduIndexCriteria;
 import com.keymanager.monitoring.criteria.BaseCriteria;
@@ -12,10 +13,11 @@ import com.keymanager.monitoring.service.ConfigService;
 import com.keymanager.monitoring.service.CustomerKeywordService;
 import com.keymanager.monitoring.service.PerformanceService;
 import com.keymanager.monitoring.vo.*;
-import com.keymanager.monitoring.vo.customerSourceVO;
 import com.keymanager.util.Constants;
 import com.keymanager.util.TerminalTypeMapping;
 import com.keymanager.util.Utils;
+import com.keymanager.util.ZipCompressor;
+import com.keymanager.util.common.StringUtil;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
 import org.apache.commons.collections.CollectionUtils;
@@ -31,7 +33,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/external/customerkeyword")
@@ -247,7 +252,35 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 CustomerKeywordForOptimization customerKeywordForOptimization = customerKeywordService.searchCustomerKeywordsForOptimization(terminalType, clientID, version, true);
                 clientStatusService.updateClientVersion(clientID, version, customerKeywordForOptimization != null);
                 performanceService.addPerformanceLog(terminalType + ":getCustomerKeyword", System.currentTimeMillis() - startMilleSeconds, null);
-                return new ResponseEntity<Object>(customerKeywordForOptimization, HttpStatus.OK);
+                return ResponseEntity.status(HttpStatus.OK).body(customerKeywordForOptimization);
+            }
+        }catch (Exception ex){
+            logger.error(ex.getMessage());
+        }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+    }
+
+    @RequestMapping(value = "/getCustomerKeywordZip", method = RequestMethod.GET)
+    public ResponseEntity<?> getCustomerKeywordForOptimizationZip(HttpServletRequest request) throws Exception {
+        long startMilleSeconds = System.currentTimeMillis();
+        String clientID = request.getParameter("clientID");
+        String userName = request.getParameter("userName");
+        if(StringUtils.isBlank(userName)){
+            userName = request.getParameter("username");
+        }
+        String password = request.getParameter("password");
+        String version = request.getParameter("version");
+        try {
+            if (validUser(userName, password)) {
+                ClientStatus clientStatus = clientStatusService.selectById(clientID);
+                String terminalType = clientStatus.getTerminalType();
+
+                CustomerKeywordForOptimization customerKeywordForOptimization = customerKeywordService.searchCustomerKeywordsForOptimization(terminalType, clientID, version, true);
+                clientStatusService.updateClientVersion(clientID, version, customerKeywordForOptimization != null);
+                performanceService.addPerformanceLog(terminalType + ":getCustomerKeyword", System.currentTimeMillis() - startMilleSeconds, null);
+                ObjectMapper mapper = new ObjectMapper();
+                String result = mapper.writeValueAsString(customerKeywordForOptimization);
+                return ResponseEntity.status(HttpStatus.OK).body(ZipCompressor.compress(result));
             }
         }catch (Exception ex){
             logger.error(ex.getMessage());
@@ -334,6 +367,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         Long customerKeywordUuid = Long.parseLong(requestMap.get("customerKeywordUuid").toString());
         int position = (Integer) requestMap.get("position");
         String ip = (String) requestMap.get("capturePositionIP");
+        String clientID = (String) requestMap.get("clientID");
         String city = (String) requestMap.get("capturePositionCity");
         Date startTime = new Date((Long) requestMap.get("startTime"));
         try {
@@ -342,6 +376,9 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                     customerKeywordService.updateCustomerKeywordPosition(customerKeywordUuid, position, Utils.getCurrentTimestamp(), ip, city);
                 } else {
                     customerKeywordService.updateCustomerKeywordQueryTime(customerKeywordUuid, startTime);
+                }
+                if(StringUtil.isNotNullNorEmpty(clientID)) {
+                    clientStatusService.updateClientStatusForCapturePosition(clientID);
                 }
                 return new ResponseEntity<Object>(true, HttpStatus.OK);
             }

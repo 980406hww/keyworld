@@ -38,8 +38,8 @@ public class QZSetting extends BaseEntity{
 	@TableField(value = "fType")
 	private String type;
 
-	@TableField(value = "fCrawlKeywords")
-	private boolean crawlKeywords;
+	@TableField(value = "fAutoCrawlKeywordFlag")
+	private boolean autoCrawlKeywordFlag;
 
 	@TableField(value = "fPcKeywordExceedMaxCount")
 	private boolean pcKeywordExceedMaxCount;
@@ -242,12 +242,12 @@ public class QZSetting extends BaseEntity{
 		this.status = status;
 	}
 
-	public boolean isCrawlKeywords () {
-		return crawlKeywords;
+	public boolean isAutoCrawlKeywordFlag () {
+		return autoCrawlKeywordFlag;
 	}
 
-	public void setCrawlKeywords (boolean crawlKeywords) {
-		this.crawlKeywords = crawlKeywords;
+	public void setAutoCrawlKeywordFlag (boolean autoCrawlKeywordFlag) {
+		this.autoCrawlKeywordFlag = autoCrawlKeywordFlag;
 	}
 
 	public boolean isPcKeywordExceedMaxCount() {

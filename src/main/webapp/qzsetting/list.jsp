@@ -41,50 +41,71 @@
 		<div class="conn">
 			<ul>
 				<li>
-					<input type="text" title="请输入网站域名" name="domain" placeholder="请输入网站域名" value="${qzSettingSearchCriteria.domain}">
+					<input type="text" title="请输入网站域名" name="domain" placeholder="请输入网站域名" onkeydown="enterIn(event);" value="${qzSettingSearchCriteria.domain}">
 				</li>
 
 				<li>
 					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="trimSearchCondition('1')" value=" 搜索 " >
-					&nbsp;
+					&nbsp;&nbsp;
 					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="showMoreSearchCondition()" value=" 更多搜索条件 " >
 				</li>
 				<shiro:hasPermission name="/internal/qzsetting/save">
 					<li>
-						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="showSettingDialog(null, this)" value=" 增加 " >
+						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="showSettingDialog(null, this)" value=" 增加 " >&nbsp;
 					</li>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="/internal/qzsetting/updateImmediately">
 					<li>
-						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="updateImmediately(this)" value=" 马上更新 " >
+						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="updateImmediately(this)" value=" 马上更新 " >&nbsp;
 					</li>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="/internal/qzsetting/updateStatus">
 					<li>
 						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="updateQZSettingStatus(0)" value=" 暂停整站 " >
+						&nbsp;&nbsp;
 						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="updateQZSettingStatus(1)" value=" 激活整站 " >
+						&nbsp;&nbsp;
+						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="updateQZSettingStatus(3)" value=" 暂停续费 " >
 					</li>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="/internal/qzsetting/deleteQZSettings">
 					<li>
-						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="delSelectedQZSettings(this)" value=" 删除所选 " >
+						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="delSelectedQZSettings(this)" value=" 删除所选 " >&nbsp;
 					</li>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="/internal/qzsetting/searchQZSettings">
 					<li>
-						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="getAvailableQZSettings()" value="查看更新队列(${availableQZSettingCount})">
+						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="getAvailableQZSettings()" value="查看更新队列(${availableQZSettingCount})">&nbsp;
 					</li>
 				</shiro:hasPermission>
 				<li>
 					<label name="lower" title="网站关键词(PC,Phone)一星期排名趋势涨幅&lt;${qzSettingSearchCriteria.lowerValue}">
 						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.increaseType != null and !qzSettingSearchCriteria.increaseType}">checked</c:if>>
-					<i class="icon-rank-down"></i>骤降 (${qzSettingSearchCriteria.downNum == null ? 0 : qzSettingSearchCriteria.downNum})
+						<i class="icon-rank-down"></i>骤降 (${qzSettingSearchCriteria.downNum == null ? 0 : qzSettingSearchCriteria.downNum})
 					</label>
 				</li>
 				<li>
 					<label name="upper" title="网站关键词(PC,Phone)一星期排名趋势涨幅&gt;${qzSettingSearchCriteria.upperValue}">
 						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.increaseType}">checked</c:if>>
-					<i class="icon-rank-up"></i>暴涨 (${qzSettingSearchCriteria.upNum == null ? 0 : qzSettingSearchCriteria.upNum})
+						<i class="icon-rank-up"></i>暴涨 (${qzSettingSearchCriteria.upNum == null ? 0 : qzSettingSearchCriteria.upNum})
+					</label>
+				</li>
+				<li>
+					<label name="lower" title="标识最少有一条规则达标">
+						<input type="checkbox" name="checkbox">
+						达标 (100)
+					</label>
+				</li>
+				<li>
+					<label name="upper" title="标识一条规则都未达标">
+						<input type="checkbox" name="checkbox">
+						未达标 (1000)
+					</label>
+				</li>
+				<li>
+					<label name="upper" title="标识下条规则接近达标">
+						<input type="checkbox" name="checkbox">
+						接近达标 (100)
 					</label>
 				</li>
 			</ul>
@@ -106,6 +127,7 @@
 						<option value="1" <c:if test="${qzSettingSearchCriteria.status == 1}">selected</c:if>>激活</option>
 						<option value="0" <c:if test="${qzSettingSearchCriteria.status == 0}">selected</c:if>>暂停</option>
 						<option value="2" <c:if test="${qzSettingSearchCriteria.status == 2}">selected</c:if>>新增</option>
+						<option value="3" <c:if test="${qzSettingSearchCriteria.status == 3}">selected</c:if>>暂停收费</option>
 					</select>
 				</li>
 				<li>
@@ -136,33 +158,35 @@
 	<input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
 	<input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
 	<input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
-	<input type="hidden" name="domain" id="domain" value="${qzSettingSearchCriteria.domain}">
-	<input type="hidden" name="group" id="group" value="${qzSettingSearchCriteria.group}">
+	<input type="hidden" name="domain" id="domain" value="${qzSettingSearchCriteria.domain}"/>
+	<input type="hidden" name="group" id="group" value="${qzSettingSearchCriteria.group}"/>
 	<input type="hidden" name="customerUuid" id="customerUuid" value="${qzSettingSearchCriteria.customerUuid}"/>
 	<input type="hidden" name="statusHidden" id="statusHidden" value="${qzSettingSearchCriteria.status}"/>
 	<input type="hidden" name="customerInfo" id="customerInfo" value="${qzSettingSearchCriteria.customerInfo}">
 	<input type="hidden" name="status" id="status" value="${qzSettingSearchCriteria.status}"/>
 	<input type="hidden" name="updateStatus" id="updateStatus" value="${qzSettingSearchCriteria.updateStatus}"/>
 	<input type="hidden" name="increaseType" id="increaseType" value="${qzSettingSearchCriteria.increaseType}"/>
-	<input type="hidden" name="terminalType" id="terminalType" value="${qzSettingSearchCriteria.terminalType}">
+	<input type="hidden" name="terminalType" id="terminalType" value="${qzSettingSearchCriteria.terminalType}"/>
 </form>
 
 <div class="datalist">
 	<div class="datalist-list">
 		<ul>
 			<c:forEach items="${page.records}" var="qzSetting" varStatus="status">
-				<c:if test="${qzSetting.pcGroup != null and qzSetting.qzKeywordRankInfoMap['PC'] != null}">
+				<c:if test="${qzSetting.pcGroup != null and (qzSetting.crawlerStatus != 'finish' or qzSetting.qzKeywordRankInfoMap['PC'] != null)}">
 					<li class="pcGroup">
 						<div class="header">
 							<span>
 								<input type="checkbox" name="uuid" value="${qzSetting.uuid}" onclick="decideSelectAll();"/>
 							</span>
-							<span class="contactPerson-name">客户名称: ${qzSetting.contactPerson}</span>
+							<span class="contactPerson-name" title="${qzSetting.contactPerson}"><a href="javascript:;">${qzSetting.contactPerson}</a></span>
 							<span style="padding: 0 10px"> —— </span>
-							<a href="javascript:;">${qzSetting.domain}&nbsp;&nbsp;</a>
-							<a href="https://www.aizhan.com/cha/${qzSetting.domain}/" target="_blank" title="查看爱站">爱站&nbsp;&nbsp;</a>
-							<a href="https://www.5118.com/seo/${qzSetting.domain}" target="_blank" title="查看5118,需要登录">5118</a>
+							<span class="domain"><a href="javascript:;">${qzSetting.domain}</a></span>&nbsp;&nbsp;&nbsp;&nbsp;
+							<span class="to-aizhan"><a href="https://www.aizhan.com/cha/${qzSetting.domain}/" target="_blank" title="查看爱站">爱站</a></span>&nbsp;&nbsp;&nbsp;&nbsp;
+							<span class="to-5118"><a  href="https://www.5118.com/seo/${qzSetting.domain}" target="_blank" title="查看5118,需要登录">5118</a></span>
+
 							<div class="handle">
+								<a class="blue" href="javascript:showKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain}','${qzSetting.pcGroup}')">指定关键字</a>
 								<shiro:hasPermission name="/internal/qzchargelog/save">
 									<a class="blue" href="javascript:showChargeDialog('${qzSetting.uuid}','${qzSetting.contactPerson}','${qzSetting.domain}',this)">收费</a>
 								</shiro:hasPermission>
@@ -182,9 +206,30 @@
 							<div class="data-info-wrap">
 								<div class="baidu-rank">
 									<a href="javascript:;">
-										<span class="line1">${qzSetting.userID}</span>
-										<span title="用户名称">用户名称</span>
+										<span class="line1" title="${qzSetting.userID}">${qzSetting.userID}</span>
+										<span>用户名称</span>
 									</a>
+								</div>
+
+								<div class="other-rank_1">
+									<div class="row">
+										<div name="baiduWeight">
+											<span class="line1">
+												<a href="javascript:;">${qzSetting.qzKeywordRankInfoMap["PC"] == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["PC"].baiduWeight}</a>
+											</span>
+											<span><a href="javascript:;">百度权重</a></span>
+										</div>
+										<div name="baiduRecord">
+											<span class="line1">
+												<a href="javascript:;">${qzSetting.qzKeywordRankInfoMap["PC"] == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["PC"].baiduRecord}</a>
+											</span>
+											<span><a href="javascript:;">百度收录</a></span>
+										</div>
+									</div>
+									<div class="row" title="预计百度来路,点击可跳转到详情页面查看变动">
+										<span class="line1"><a href="https://www.5118.com/seo/baidupc/ip/${qzSetting.domain}" target="_blank">${qzSetting.qzKeywordRankInfoMap["PC"] == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["PC"].ipRoute}</a> <sub>IP</sub></span>
+										<span><a href="javascript:;">预计百度来路</a></span>
+									</div>
 								</div>
 
 								<div class="other-rank">
@@ -192,126 +237,110 @@
 										<div>
 											<span class="line1">
 												<a href="javascript:;">
-														${qzSetting.qzKeywordRankInfoMap["PC"].topTenNum == null ? "无数据" : qzSetting.qzKeywordRankInfoMap["PC"].topTenNum}
+														${qzSetting.qzKeywordRankInfoMap["PC"].topTenNum == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["PC"].topTenNum}
 												</a>
 											</span>
-											<span title="前10数">
-												<a href="javascript:;">前10数</a>
+											<span>
+												<a href="javascript:;">前10</a>
 											</span>
 										</div>
 
 										<div>
 											<span class="line1">
 												<a href="javascript:;">
-														${qzSetting.qzKeywordRankInfoMap["PC"].topFiftyNum == null ? "无数据" : qzSetting.qzKeywordRankInfoMap["PC"].topFiftyNum}
+														${qzSetting.qzKeywordRankInfoMap["PC"].topFiftyNum == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["PC"].topFiftyNum}
 												</a>
 											</span>
-											<span title="前50数">
-												<a href="javascript:;">前50数</a>
+											<span>
+												<a href="javascript:;">前50</a>
 											</span>
 										</div>
 
 										<div>
 											<span class="line1">
-												<a target="_blank" href="javascript:searchClientStatus('${qzSetting.pcGroup}', null)">${qzSetting.pcGroup == null or qzSetting.pcGroup == "" ? "无数据" : qzSetting.pcGroup}</a>
+												<a href="javascript:;">${qzSetting.ignoreNoIndex == true ? "是" : "否"} </a>
 											</span>
-											<span title="优化分组">
-												<a href="javascript:;">优化分组</a>
-											</span>
-										</div>
-
-										<div>
-											<select style="width: 90px">
-												<option value=""> </option>
-											</select>
-											<span title="操作类型">
-												<a href="javascript:;">操作类型</a>
+											<span>
+												<a href="javascript:;">没指数</a>
 											</span>
 										</div>
 
 										<div>
 											<span class="line1">
-												<a target="_blank" href="javascript:searchCustomerKeywords('${qzSetting.customerUuid}', '${qzSetting.pcGroup}', '${qzSetting.status}');">0</a>
+												<a href="javascript:;">${qzSetting.updateInterval}</a>
 											</span>
-											<span title="操作词数">
-												<a href="javascript:;">操作词数</a>
+											<span>
+												<a href="javascript:;">更新间隔</a>
 											</span>
 										</div>
 
 										<div>
 											<span class="line1">
 												<a href="javascript:;">
-														${qzSetting.updateStatus == null ? "无数据" : qzSetting.updateStatus}
+													${qzSetting.updateStatus == null ? "暂无" : qzSetting.updateStatus}
 												</a>
 											</span>
-											<span title="更新状态">
+											<span>
 												<a href="javascript:;">更新状态</a>
 											</span>
 										</div>
 
-										<div>
-									<span class="line1">
-										<a href="javascript:;">${qzSetting.updateInterval} </a>
-									</span>
-											<span title="更新间隔">
-										<a href="javascript:;">更新间隔</a>
-									</span>
+										<div name="operationKeywordNum" title="点击链接跳转到关键字列表">
+											<span class="line1">
+												<a target="_blank" href="javascript:searchCustomerKeywords('${qzSetting.customerUuid}', '${qzSetting.pcGroup}');">0</a>
+											</span>
+											<span>
+												<a href="javascript:;">操作词数</a>
+											</span>
 										</div>
 									</div>
 
 									<div class="row">
 										<div>
 											<span class="line1">
-												<a href="javascript:;">${qzSetting.pcCreateTopTenNum == null ? "无数据" : qzSetting.pcCreateTopTenNum}</a>
+												<a href="javascript:;">${qzSetting.pcCreateTopTenNum == null ? "暂无" : qzSetting.pcCreateTopTenNum}</a>
 											</span>
-											<span title="初始前10数">
-												<a href="javascript:;">初始前10数</a>
+											<span>
+												<a href="javascript:;">初始前10</a>
 											</span>
 										</div>
 										<div>
 											<span class="line1">
-												<a href="javascript:;">${qzSetting.pcCreateTopFiftyNum == null ? "无数据" : qzSetting.pcCreateTopFiftyNum}</a>
+												<a href="javascript:;">${qzSetting.pcCreateTopFiftyNum == null ? "暂无" : qzSetting.pcCreateTopFiftyNum}</a>
 											</span>
-											<span title="初始前50数">
-												<a href="javascript:;">初始前50数</a>
+											<span>
+												<a href="javascript:;">初始前50</a>
 											</span>
-										</div>
-
-
-										<div>
-									<span class="line1">
-										<a href="javascript:;">${qzSetting.ignoreNoIndex == true ? "是" : "否"} </a>
-									</span>
-											<span title="去掉没指数">
-										<a href="javascript:;">去掉没指数</a>
-									</span>
 										</div>
 
 										<div>
 									<span class="line1">
-										<a href="javascript:;">${qzSetting.ignoreNoOrder == true ? "是" : "否"} </a>
+										<a href="javascript:;">${qzSetting.ignoreNoOrder == true ? "是" : "否"}</a>
 									</span>
-											<span title="去掉没排名">
-										<a href="javascript:;">去掉没排名</a>
+											<span>
+										<a href="javascript:;">没排名</a>
 									</span>
 										</div>
 
 										<div>
 											<span class="line1">
-												<a href="javascript:;">${qzSetting.type} </a>
+												<a href="javascript:;">${qzSetting.autoCrawlKeywordFlag == true ? "是" : "否"}</a>
 											</span>
-											<span title="入口类型">
-												<a href="javascript:;">入口类型</a>
+											<span>
+												<a href="javascript:;">爬取关键字</a>
 											</span>
 										</div>
 
 										<div>
 											<span class="line1">
-												<a href="javascript:;">
+												<a href="javascript:;" status="${qzSetting.status}">
 												   <c:choose>
 													   <c:when test="${qzSetting.status == 1}">激活</c:when>
 													   <c:when test="${qzSetting.status == 2}">
 														   <span style="color: green;">新增</span>
+													   </c:when>
+													   <c:when test="${qzSetting.status == 3}">
+														   <span style="color: red;">暂停收费</span>
 													   </c:when>
 													   <c:otherwise>
 														   <span style="color: red;">暂停</span>
@@ -319,7 +348,7 @@
 												   </c:choose>
 												</a>
 											</span>
-											<span title="状态">
+											<span>
 												<a href="javascript:;">状态</a>
 											</span>
 										</div>
@@ -330,13 +359,40 @@
 													<c:choose>
 														<c:when test="${qzSetting.qzKeywordRankInfoMap['PC'].increase >= 0}"><span style="color: green;">${qzSetting.qzKeywordRankInfoMap['PC'].increase}</span></c:when>
 														<c:when test="${qzSetting.qzKeywordRankInfoMap['PC'].increase < 0}"><span style="color: red;">${qzSetting.qzKeywordRankInfoMap['PC'].increase}</span></c:when>
-														<c:otherwise><span> 无数据 </span></c:otherwise>
+														<c:otherwise><span> 暂无 </span></c:otherwise>
 													</c:choose>
 												</a>
 											</span>
-											<span title="涨幅">
+											<span>
 												<a href="javascript:;">涨幅</a>
 											</span>
+										</div>
+
+									</div>
+								</div>
+
+								<div class="other-rank_2">
+									<div class="row">
+										<div title="该站下该分组所有机器数, 点击链接跳转到终端监控">
+											<span class="line1">
+												<a target="_blank" href="javascript:searchClientStatus('${qzSetting.pcGroup}', null)">${qzSetting.pcGroup == null or qzSetting.pcGroup == "" ? "暂无" : qzSetting.pcGroup}</a>
+											</span>
+											<span>
+												<a href="javascript:;">优化分组</a>
+											</span>
+										</div>
+									</div>
+									<div class="row">
+										<div title="该分组下所有操作类型对应的机器数, 点击链接跳转到终端监控">
+											<div class="showSomeOperationType" name="showSomeOperationType">
+												<span><a href="javascript:;"> 无 </a></span>
+											</div>
+											<input type="hidden" name="allOperationType">
+											<div class="operationTypeSpan">
+												<span>
+													<a href="javascript:;">操作类型</a>
+												</span>
+											</div>
 										</div>
 									</div>
 								</div>
@@ -352,7 +408,7 @@
 									</c:when>
 									<c:otherwise>
 										<div class="col-8">
-											<h1 style="text-align: center"> 暂无数据 </h1>
+											<h1>暂无数据</h1>
 										</div>
 									</c:otherwise>
 								</c:choose>
@@ -362,7 +418,7 @@
 										<span>前50</span>
 										<span class="top50">
 											<a href="javascript:;">
-													${qzSetting.qzKeywordRankInfoMap["PC"].topFiftyIncrement == null ? '无数据' : qzSetting.qzKeywordRankInfoMap["PC"].topFiftyIncrement}
+													${qzSetting.qzKeywordRankInfoMap["PC"].topFiftyIncrement == null ? '暂无' : qzSetting.qzKeywordRankInfoMap["PC"].topFiftyIncrement}
 											</a>
 										</span>
 									</div>
@@ -371,7 +427,7 @@
 										<span>前40</span>
 										<span class="top40">
 											<a href="javascript:;">
-													${qzSetting.qzKeywordRankInfoMap["PC"].topFortyIncrement == null ? '无数据' : qzSetting.qzKeywordRankInfoMap["PC"].topFortyIncrement}
+													${qzSetting.qzKeywordRankInfoMap["PC"].topFortyIncrement == null ? '暂无' : qzSetting.qzKeywordRankInfoMap["PC"].topFortyIncrement}
 											</a>
 										</span>
 									</div>
@@ -380,7 +436,7 @@
 										<span>前30</span>
 										<span class="top30">
 									<a href="javascript:;">
-											${qzSetting.qzKeywordRankInfoMap["PC"].topThirtyIncrement == null ? '无数据' : qzSetting.qzKeywordRankInfoMap["PC"].topThirtyIncrement}
+											${qzSetting.qzKeywordRankInfoMap["PC"].topThirtyIncrement == null ? '暂无' : qzSetting.qzKeywordRankInfoMap["PC"].topThirtyIncrement}
 									</a>
 								</span>
 									</div>
@@ -389,7 +445,7 @@
 										<span>前20</span>
 										<span class="top20">
 									<a href="javascript:;">
-											${qzSetting.qzKeywordRankInfoMap["PC"].topTwentyIncrement == null ? '无数据' : qzSetting.qzKeywordRankInfoMap["PC"].topTwentyIncrement}
+											${qzSetting.qzKeywordRankInfoMap["PC"].topTwentyIncrement == null ? '暂无' : qzSetting.qzKeywordRankInfoMap["PC"].topTwentyIncrement}
 									</a>
 								</span>
 									</div>
@@ -398,7 +454,7 @@
 										<span>前10</span>
 										<span class="top10">
 									<a href="javascript:;">
-											${qzSetting.qzKeywordRankInfoMap["PC"].topTenIncrement == null ? '无数据' : qzSetting.qzKeywordRankInfoMap["PC"].topTenIncrement}
+											${qzSetting.qzKeywordRankInfoMap["PC"].topTenIncrement == null ? '暂无' : qzSetting.qzKeywordRankInfoMap["PC"].topTenIncrement}
 									</a>
 								</span>
 									</div>
@@ -406,18 +462,36 @@
 							</div>
 						</div>
 					</li>
+					<!--li-end-pc-->
 				</c:if>
-				<c:if test="${qzSetting.phoneGroup != null and qzSetting.qzKeywordRankInfoMap['Phone'] != null}">
+				<c:if test="${qzSetting.phoneGroup != null and (qzSetting.crawlerStatus != 'finish' or qzSetting.qzKeywordRankInfoMap['Phone'] != null)}">
 					<li class="phoneGroup" style="display: none;">
 						<div class="header">
 							<span>
 								<input type="checkbox" name="uuid" value="${qzSetting.uuid}" onclick="decideSelectAll();"/>
 							</span>
-							<span class="site-name">客户名称: ${qzSetting.contactPerson}</span>
+							<span class="contactPerson-name"><a href="javascript:;">${qzSetting.contactPerson}</a></span>
 							<span style="padding: 0 10px"> —— </span>
-							<a href="javascript:;">${qzSetting.domain}&nbsp;&nbsp;</a>
-							<a href="https://www.aizhan.com/cha/${qzSetting.domain}/" target="_blank" title="查看爱站">爱站&nbsp;&nbsp;</a>
-							<a href="https://www.5118.com/seo/${qzSetting.domain}" target="_blank" title="查看5118,需要登录">5118</a>
+							<span class="domain"><a href="javascript:;">${qzSetting.domain}</a></span>&nbsp;&nbsp;&nbsp;&nbsp;
+							<span class="to-aizhan"><a href="https://www.aizhan.com/cha/${qzSetting.domain}/" target="_blank" title="查看爱站">爱站</a></span>&nbsp;&nbsp;&nbsp;&nbsp;
+							<span class="to-5118"><a  href="https://www.5118.com/seo/${qzSetting.domain}" target="_blank" title="查看5118,需要登录">5118</a></span>
+							<div class="handle">
+								<a class="blue" href="javascript:showKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain}','${qzSetting.phoneGroup}')">指定关键字</a>
+								<c:if test="${qzSetting.pcGroup == null}">
+									<shiro:hasPermission name="/internal/qzchargelog/save">
+										<a class="blue" href="javascript:showChargeDialog('${qzSetting.uuid}','${qzSetting.contactPerson}','${qzSetting.domain}',this)">收费</a>
+									</shiro:hasPermission>
+									<shiro:hasPermission name="/internal/qzsetting/save">
+										<a class="blue" href="javascript:showSettingDialog('${qzSetting.uuid}', this)">修改</a>
+									</shiro:hasPermission>
+									<shiro:hasPermission name="/internal/qzsetting/delete">
+										<a class="blue" href="javascript:delQZSetting(${qzSetting.uuid})">删除</a>
+									</shiro:hasPermission>
+									<shiro:hasPermission name="/internal/qzchargelog/chargesList">
+										<a class="blue" href="javascript:showChargeLog('${qzSetting.uuid}', this)">收费记录</a>
+									</shiro:hasPermission>
+								</c:if>
+							</div>
 						</div>
 
 						<div class="body">
@@ -425,113 +499,119 @@
 								<div class="baidu-rank">
 									<a href="javascript:;">
 										<span class="line1">${qzSetting.userID}</span>
-										<span title="用户名称">用户名称</span>
+										<span>用户名称</span>
 									</a>
 								</div>
 
-								<div class="other-rank" id="">
+								<div class="other-rank_1">
+									<div class="row">
+										<div name="baiduWeight">
+											<span class="line1">
+												<a href="javascript:;">${qzSetting.qzKeywordRankInfoMap["Phone"] == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["Phone"].baiduWeight}</a>
+											</span>
+											<span><a href="javascript:;">百度权重</a></span>
+										</div>
+										<div name="baiduRecord">
+											<span class="line1">
+												<a href="javascript:;">${qzSetting.qzKeywordRankInfoMap["Phone"] == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["Phone"].baiduRecord}</a>
+											</span>
+											<span><a href="javascript:;">百度收录</a></span>
+										</div>
+									</div>
+									<div class="row">
+										<span class="line1"><a href="javascript:;">${qzSetting.qzKeywordRankInfoMap["Phone"] == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["Phone"].ipRoute}</a> <sub>IP</sub></span>
+										<span><a href="javascript:;">预计百度来路</a></span>
+									</div>
+								</div>
+
+								<div class="other-rank">
 									<div class="row">
 										<div>
 											<span class="line1">
 												<a href="javascript:;">
-													${qzSetting.qzKeywordRankInfoMap["Phone"].topTenNum == null ? "无数据" : qzSetting.qzKeywordRankInfoMap["Phone"].topTenNum}
+														${qzSetting.qzKeywordRankInfoMap["Phone"].topTenNum == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["Phone"].topTenNum}
 												</a>
 											</span>
-											<span title="前10数">
-												<a href="javascript:;">前10数</a>
+											<span>
+												<a href="javascript:;">前10</a>
 											</span>
 										</div>
 
 										<div>
 											<span class="line1">
 												<a href="javascript:;">
-														${qzSetting.qzKeywordRankInfoMap["Phone"].topFiftyNum == null ? "无数据" : qzSetting.qzKeywordRankInfoMap["Phone"].topFiftyNum}
+														${qzSetting.qzKeywordRankInfoMap["Phone"].topFiftyNum == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["Phone"].topFiftyNum}
 												</a>
 											</span>
-											<span title="前50数">
-												<a href="javascript:;">前50数</a>
+											<span>
+												<a href="javascript:;">前50</a>
 											</span>
 										</div>
 
 										<div>
 											<span class="line1">
-												<a target="_blank" href="javascript:searchClientStatus('${qzSetting.phoneGroup}', null)">${qzSetting.phoneGroup == null or qzSetting.phoneGroup == "" ? "无数据" : qzSetting.phoneGroup}</a>
+												<a href="javascript:;">${qzSetting.ignoreNoIndex == true ? "是" : "否"} </a>
 											</span>
-											<span title="优化分组">
-												<a href="javascript:;">优化分组</a>
-											</span>
-										</div>
-
-										<div>
-											<select style="width: 90px">
-												<option value=""></option>
-											</select>
-											<span title="操作类型">
-												<a href="javascript:;">操作类型</a>
+											<span>
+												<a href="javascript:;">没指数</a>
 											</span>
 										</div>
 
 										<div>
 											<span class="line1">
-												<a target="_blank" href="javascript:searchCustomerKeywords('${qzSetting.customerUuid}', '${qzSetting.phoneGroup}', '${qzSetting.status}');">0</a>
+												<a href="javascript:;">${qzSetting.updateInterval}</a>
 											</span>
-											<span title="操作词数">
-												<a href="javascript:;">操作词数</a>
+											<span>
+												<a href="javascript:;">更新间隔</a>
 											</span>
 										</div>
 
 										<div>
 											<span class="line1">
-												<a href="javascript:;">${qzSetting.updateStatus == null ? "无数据" : qzSetting.updateStatus}</a>
+												<a href="javascript:;">
+														${qzSetting.updateStatus == null ? "暂无" : qzSetting.updateStatus}
+												</a>
 											</span>
-											<span title="更新状态">
+											<span>
 												<a href="javascript:;">更新状态</a>
 											</span>
 										</div>
 
-										<div>
+										<div name="operationKeywordNum" title="点击链接跳转到关键字列表">
 											<span class="line1">
-												<a href="javascript:;">${qzSetting.updateInterval}天</a>
+												<a target="_blank" href="javascript:searchCustomerKeywords('${qzSetting.customerUuid}', '${qzSetting.phoneGroup}');">0</a>
 											</span>
-											<span title="更新间隔">
-												<a href="javascript:;">更新间隔</a>
+											<span>
+												<a href="javascript:;">操作词数</a>
 											</span>
 										</div>
+
 									</div>
 
 									<div class="row">
 										<div>
 											<span class="line1">
-												<a href="javascript:;">${qzSetting.phoneCreateTopTenNum == null ? "无数据" : qzSetting.phoneCreateTopTenNum} </a>
+												<a href="javascript:;">${qzSetting.phoneCreateTopTenNum == null ? "暂无" : qzSetting.phoneCreateTopTenNum}</a>
 											</span>
-											<span title="初始前10数">
-												<a href="javascript:;">初始前10数 </a>
+											<span>
+												<a href="javascript:;">初始前10</a>
 											</span>
 										</div>
 										<div>
 											<span class="line1">
-												<a href="javascript:;">${qzSetting.phoneCreateTopFiftyNum == null ? "无数据" : qzSetting.phoneCreateTopFiftyNum} </a>
+												<a href="javascript:;">${qzSetting.phoneCreateTopFiftyNum == null ? "暂无" : qzSetting.phoneCreateTopFiftyNum}</a>
 											</span>
-											<span title="初始前50数">
-												<a href="javascript:;">初始前50数</a>
+											<span>
+												<a href="javascript:;">初始前50</a>
 											</span>
-										</div>
-
-										<div>
-									<span class="line1">
-										<a href="javascript:;">${qzSetting.ignoreNoIndex == true ? "是" : "否"} </a>
-									</span>
-											<span title="去掉没指数">
-										<a href="javascript:;">去掉没指数</a>
-									</span>
 										</div>
 
 										<div>
 									<span class="line1">
 										<a href="javascript:;">${qzSetting.ignoreNoOrder == true ? "是" : "否"} </a>
 									</span>
-											<span title="去掉没排名">
-										<a href="javascript:;">去掉没排名</a>
+											<span>
+										<a href="javascript:;">没排名</a>
 									</span>
 										</div>
 
@@ -539,28 +619,31 @@
 											<span class="line1">
 												<a href="javascript:;">${qzSetting.type} </a>
 											</span>
-											<span title="入口类型">
+											<span>
 												<a href="javascript:;">入口类型</a>
 											</span>
 										</div>
 
 										<div>
-									<span class="line1">
-										<a href="javascript:;">
-										   <c:choose>
-											   <c:when test="${qzSetting.status == 1}">激活</c:when>
-											   <c:when test="${qzSetting.status == 2}">
-												   <span style="color: green;">新增</span>
-											   </c:when>
-											   <c:otherwise>
-												   <span style="color: red;">暂停</span>
-											   </c:otherwise>
-										   </c:choose>
-										</a>
-									</span>
-											<span title="状态">
-										<a href="javascript:;">状态</a>
-									</span>
+											<span class="line1">
+												<a href="javascript:;" status="${qzSetting.status}">
+												   <c:choose>
+													   <c:when test="${qzSetting.status == 1}">激活</c:when>
+													   <c:when test="${qzSetting.status == 2}">
+														   <span style="color: green;">新增</span>
+													   </c:when>
+													   <c:when test="${qzSetting.status == 3}">
+														   <span style="color: red;">暂停收费</span>
+													   </c:when>
+													   <c:otherwise>
+														   <span style="color: red;">暂停</span>
+													   </c:otherwise>
+												   </c:choose>
+												</a>
+											</span>
+											<span>
+												<a href="javascript:;">状态</a>
+											</span>
 										</div>
 
 										<div>
@@ -569,13 +652,40 @@
 													<c:choose>
 														<c:when test="${qzSetting.qzKeywordRankInfoMap['Phone'].increase >= 0}"><span style="color: green;">${qzSetting.qzKeywordRankInfoMap['Phone'].increase}</span></c:when>
 														<c:when test="${qzSetting.qzKeywordRankInfoMap['Phone'].increase < 0}"><span style="color: red;">${qzSetting.qzKeywordRankInfoMap['Phone'].increase}</span></c:when>
-														<c:otherwise><span> 无数据 </span></c:otherwise>
+														<c:otherwise><span> 暂无 </span></c:otherwise>
 													</c:choose>
 												</a>
 											</span>
-											<span title="涨幅">
+											<span>
 												<a href="javascript:;">涨幅</a>
 											</span>
+										</div>
+
+									</div>
+								</div>
+
+								<div class="other-rank_2">
+									<div class="row">
+										<div title="该站下该分组所有机器数, 点击链接跳转到终端监控">
+											<span class="line1">
+												<a target="_blank" href="javascript:searchClientStatus('${qzSetting.phoneGroup}', null)">${qzSetting.phoneGroup == null or qzSetting.phoneGroup == "" ? "暂无" : qzSetting.phoneGroup}</a>
+											</span>
+											<span>
+												<a href="javascript:;">优化分组</a>
+											</span>
+										</div>
+									</div>
+									<div class="row">
+										<div title="该分组下所有操作类型对应的机器数, 点击链接跳转到终端监控">
+											<div class="showSomeOperationType" name="showSomeOperationType">
+												<span><a href="javascript:;"> 无 </a></span>
+											</div>
+											<input type="hidden" name="allOperationType">
+											<div class="operationTypeSpan">
+												<span>
+													<a href="javascript:;">操作类型</a>
+												</span>
+											</div>
 										</div>
 									</div>
 								</div>
@@ -587,10 +697,10 @@
 										<div name="rankInfo" style="display: none;">
 											<span>${qzSetting.qzKeywordRankInfoMap["Phone"]}</span>
 										</div>
-										<div class="col-8" id="keywordTrendCharts" style="width: 420px; height: 140px;"></div>
+										<div class="col-8" id="keywordTrendCharts" style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
 									</c:when>
 									<c:otherwise>
-										<div class="col-8" style="width: 420px; height: 140px;">
+										<div class="col-8">
 											<h1 style="text-align: center"> 暂无数据 </h1>
 										</div>
 									</c:otherwise>
@@ -601,7 +711,7 @@
 										<span>前50</span>
 										<span class="top50">
 											<a href="javascript:;">
-												${qzSetting.qzKeywordRankInfoMap["Phone"].topFiftyIncrement == null ? '无数据' : qzSetting.qzKeywordRankInfoMap["Phone"].topFiftyIncrement}
+												${qzSetting.qzKeywordRankInfoMap["Phone"].topFiftyIncrement == null ? '暂无' : qzSetting.qzKeywordRankInfoMap["Phone"].topFiftyIncrement}
 											</a>
 										</span>
 									</div>
@@ -610,7 +720,7 @@
 										<span>前40</span>
 										<span class="top40">
 									<a href="javascript:;">
-										${qzSetting.qzKeywordRankInfoMap["Phone"].topFortyIncrement == null ? '无数据' : qzSetting.qzKeywordRankInfoMap["Phone"].topFortyIncrement}
+										${qzSetting.qzKeywordRankInfoMap["Phone"].topFortyIncrement == null ? '暂无' : qzSetting.qzKeywordRankInfoMap["Phone"].topFortyIncrement}
 									</a>
 								</span>
 									</div>
@@ -619,7 +729,7 @@
 										<span>前30</span>
 										<span class="top30">
 									<a href="javascript:;">
-										${qzSetting.qzKeywordRankInfoMap["Phone"].topThirtyIncrement == null ? '无数据' : qzSetting.qzKeywordRankInfoMap["Phone"].topThirtyIncrement}
+										${qzSetting.qzKeywordRankInfoMap["Phone"].topThirtyIncrement == null ? '暂无' : qzSetting.qzKeywordRankInfoMap["Phone"].topThirtyIncrement}
 									</a>
 								</span>
 									</div>
@@ -628,7 +738,7 @@
 										<span>前20</span>
 										<span class="top20">
 									<a href="javascript:;">
-										${qzSetting.qzKeywordRankInfoMap["Phone"].topTwentyIncrement == null ? '无数据' : qzSetting.qzKeywordRankInfoMap["Phone"].topTwentyIncrement}
+										${qzSetting.qzKeywordRankInfoMap["Phone"].topTwentyIncrement == null ? '暂无' : qzSetting.qzKeywordRankInfoMap["Phone"].topTwentyIncrement}
 									</a>
 								</span>
 									</div>
@@ -637,7 +747,7 @@
 										<span>前10</span>
 										<span class="top10">
 									<a href="javascript:;">
-										${qzSetting.qzKeywordRankInfoMap["Phone"].topTenIncrement == null ? '无数据' : qzSetting.qzKeywordRankInfoMap["Phone"].topTenIncrement}
+										${qzSetting.qzKeywordRankInfoMap["Phone"].topTenIncrement == null ? '暂无' : qzSetting.qzKeywordRankInfoMap["Phone"].topTenIncrement}
 									</a>
 								</span>
 									</div>
@@ -645,6 +755,7 @@
 							</div>
 						</div>
 					</li>
+					<!--li-end-phone-->
 				</c:if>
 			</c:forEach>
 		</ul>
@@ -680,11 +791,14 @@
     <input type="text" name="groupName" id="groupName">
     <input type="text" name="operationType" id="operationType">
 </form>
+
 <form id="searchCustomerKeywordForm" method="post" target="_blank" action="/internal/customerKeyword/searchCustomerKeywords" style="display: none;">
 	<input type="text" name="customerUuid" id="customerUuid">
 	<input type="text" name="optimizeGroupName" id="optimizeGroupName">
 	<input type="text" name="status" id="status">
 </form>
+
+<div id="showAllOperationType" class="easyui-dialog" style="display: none;"></div>
 <div id="changeSettingDialog" class="easyui-dialog" style="display: none;left: 40%;">
 	<form id="changeSettingForm">
 	<table style="font-size:12px" id="settingTable" align="center" cellspacing="5">
@@ -699,7 +813,6 @@
 			<td style="width:60px" align="right">域名</td>
 			<td>
 				<input type="text" name="qzSettingDomain" id="qzSettingDomain" style="width:240px" />
-				<span style="margin-right: 28px;"></span>
 			</td>
 		</tr>
 		<tr>
@@ -815,7 +928,7 @@
 		</tr>
 
 		<tr>
-			<td align="right" style="margin-right:4px;">入口</td>
+			<td style="width:60px" align="right">入口</td>
 			<td>
 				<select name="qzSettingEntryType" id="qzSettingEntryType"  style="width:240px">
 					<option value="qz" selected>全站</option>
@@ -826,16 +939,16 @@
 			</td>
 		</tr>
 		<tr>
-			<td align="right" style="margin-right:4px;">爬取关键字</td>
+			<td style="width:60px" align="right">爬取关键字</td>
 			<td>
-				<select name="qzSettingCrawlKeywords" id="qzSettingCrawlKeywords" style="width:240px">
+				<select name="qzSettingAutoCrawlKeywordFlag" id="qzSettingAutoCrawlKeywordFlag" style="width:240px">
 					<option value="1" selected>是</option>
 					<option value="0">否</option>
 				</select>
 			</td>
 		</tr>
 		<tr>
-			<td align="right" style="margin-right:4px;">去掉没指数</td>
+			<td style="width:60px" align="right">去掉没指数</td>
 			<td>
 				<select name="qzSettingIgnoreNoIndex" id="qzSettingIgnoreNoIndex"  style="width:240px">
 					<option value="1" selected>是</option>
@@ -844,7 +957,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td align="right" style="margin-right:4px;">去掉没排名</td>
+			<td style="width:60px" align="right">去掉没排名</td>
 			<td>
 				<select name="qzSettingIgnoreNoOrder" id="qzSettingIgnoreNoOrder"  style="width:240px">
 					<option value="1" selected>是</option>
@@ -853,7 +966,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td align="right" style="margin-right:4px;">更新间隔</td>
+			<td style="width:60px" align="right">更新间隔</td>
 			<td>
 				<select name="qzSettingInterval" id="qzSettingInterval"  style="width:240px">
 					<option value="1">1天</option>
@@ -1004,8 +1117,53 @@
 		<span style="margin-left: 55px"></span>合计:<sapn id="totalAmount"></sapn>
 	</p>
 </div>
-<div id="getAvailableQZSettings" class="easyui-dialog"  style="display: none">
+<%--更新队列Dialog--%>
+<div id="getAvailableQZSettings" class="easyui-dialog" style="display: none">
 	<textarea id="getAvailableQZSettingsContent"  style="width:100%;height:100%;resize: none"></textarea>
+</div>
+<%--指定关键字Dialog--%>
+<div id="customerKeywordDialog" class="easyui-dialog" style="display: none">
+	<form id="customerKeywordForm">
+		<table style="font-size:12px" id="customerKeywordTable" align="center" cellspacing="5">
+			<tr>
+				<td style="width:60px" align="right">域名</td>
+				<td>
+					<input type="hidden" name="qzSettingUuid" id="qzSettingUuid" />
+					<input type="hidden" name="customerUuid" id="customerUuid" />
+					<input type="text" name="domain" id="domain" style="width:240px" />
+				</td>
+			</tr>
+			<tr>
+				<td align="right" style="margin-right:4px;">入口</td>
+				<td>
+					<select name="qzSettingEntryType" id="qzSettingEntryType" style="width:240px">
+						<option value="qz" selected>全站</option>
+						<option value="bc">其他</option>
+						<option value="pt">普通</option>
+						<option value="fm">负面</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td align="right" style="margin-right:4px;">引擎</td>
+				<td>
+					<select name="searchEngine" id="searchEngine" style="width:240px">
+						<option value="百度" selected>百度</option>
+						<option value="360">360</option>
+						<option value="UC">UC</option>
+						<option value="搜狗">搜狗</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td style="width:60px" align="right">关键字</td>
+			</tr>
+			<tr>
+				<td style="width:60px" align="right"></td>
+				<td><textarea id="customerKeywordDialogContent" style="width:240px; height: 260px; resize: none"></textarea></td>
+			</tr>
+		</table>
+	</form>
 </div>
 <%--收费详情列表--%>
 <div id="chargeLogListDiv" class="easyui-dialog" style="display:none;left: 40%;" >
@@ -1032,7 +1190,20 @@
         window.onresize = function(){
             $(".datalist").css("margin-top", $("#topDiv").height()+15);
         }
+
+        var flag = false;
+        window.onclick = function (e) {
+            if ($("#showAllOperationType").css("display") === "block") {
+                if (flag &&!$("#showAllOperationType").is(e.target) && $("#showAllOperationType").has(e.target).length === 0 ){
+                    $("#showAllOperationType").dialog("close");
+                    flag = false;
+                    return;
+                }
+                flag = true;
+            }
+        }
     });
+
 </script>
 </body>
 </html>
