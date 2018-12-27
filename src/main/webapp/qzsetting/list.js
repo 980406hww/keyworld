@@ -484,7 +484,7 @@ function saveCustomerKeywords(qzSettingUuid, customerUuid, optimizedGroupName) {
         },
         success: function (data) {
             if (data) {
-                $().toastmessage('showErrorToast', "保存成功！");
+                $().toastmessage('showSuccessToast', "保存成功！");
                 $("#customerKeywordDialog").dialog("close");
             } else {
                 $().toastmessage('showErrorToast', "保存失败！");
