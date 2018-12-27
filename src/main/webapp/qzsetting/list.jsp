@@ -112,13 +112,17 @@
 		</div>
 		<div class="conn" name="moreSearchCondition" style="display: none;">
 			<ul>
-				<li class="condition">
+				<li class="customerInfo condition">
 					<span>客户: </span>
 					<input type="text" list="customer_list" name="customerInfo" value="${qzSettingSearchCriteria.customerInfo}">
 				</li>
-				<li class="condition">
+				<li class="category condition">
+					<span>分类标签: </span>
+					<input type="text" list="categoryTag_list" name="categoryTag" value="${qzSettingSearchCriteria.categoryTag}">
+				</li>
+				<li class="group condition">
 					<span>组名: </span>
-					<input type="text" name="group" value="${qzSettingSearchCriteria.group}" style="width:150px;">
+					<input type="text" name="group" value="${qzSettingSearchCriteria.group}">
 				</li>
 				<li>
 					<span>状态: </span>
@@ -167,6 +171,7 @@
 	<input type="hidden" name="updateStatus" id="updateStatus" value="${qzSettingSearchCriteria.updateStatus}"/>
 	<input type="hidden" name="increaseType" id="increaseType" value="${qzSettingSearchCriteria.increaseType}"/>
 	<input type="hidden" name="terminalType" id="terminalType" value="${qzSettingSearchCriteria.terminalType}"/>
+	<input type="hidden" name="categoryTag" id="categoryTag" value="${qzSettingSearchCriteria.categoryTag}"/>
 </form>
 
 <div class="datalist">
@@ -799,6 +804,7 @@
 </form>
 
 <div id="showAllOperationType" class="easyui-dialog" style="display: none;"></div>
+<%--增加,修改对话框--%>
 <div id="changeSettingDialog" class="easyui-dialog" style="display: none;left: 40%;">
 	<form id="changeSettingForm">
 	<table style="font-size:12px" id="settingTable" align="center" cellspacing="5">
@@ -927,14 +933,20 @@
 			</td>
 		</tr>
 
+        <tr>
+            <td style="width:60px" align="right">标签</td>
+            <td>
+                <input type="text" name="qzCategoryTagNames" id="qzCategoryTagNames" placeholder="按正确方式输入：阿卡索,MBA,算法" style="width:240px">
+            </td>
+        </tr>
 		<tr>
 			<td style="width:60px" align="right">入口</td>
 			<td>
-				<select name="qzSettingEntryType" id="qzSettingEntryType"  style="width:240px">
+				<select name="qzSettingEntryType" id="qzSettingEntryType" style="width:240px">
 					<option value="qz" selected>全站</option>
-					<option value="bc">bc</option>
 					<option value="pt">普通</option>
 					<option value="fm">负面</option>
+					<option value="bc">其他</option>
 				</select>
 			</td>
 		</tr>
@@ -984,8 +996,13 @@
 	</form>
 </div>
 <datalist id="customer_list">
-	<c:forEach items="${customerList}" var="costomer">
-		<option>${costomer.contactPerson} ${'_____'} ${costomer.uuid}</option>
+	<c:forEach items="${customerList}" var="customer">
+		<option>${customer.contactPerson} ${'_____'} ${customer.uuid}</option>
+	</c:forEach>
+</datalist>
+<datalist id="categoryTag_list">
+	<c:forEach items="${categoryTagList}" var="categoryTag">
+		<option>${categoryTag.tagName}</option>
 	</c:forEach>
 </datalist>
 <%--收费Dialog--%>
@@ -1138,9 +1155,9 @@
 				<td>
 					<select name="qzSettingEntryType" id="qzSettingEntryType" style="width:240px">
 						<option value="qz" selected>全站</option>
-						<option value="bc">其他</option>
 						<option value="pt">普通</option>
 						<option value="fm">负面</option>
+						<option value="bc">其他</option>
 					</select>
 				</td>
 			</tr>

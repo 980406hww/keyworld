@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.QZCategoryTagDao">
+    <select id="searchCategoryTagByQZSettingUuid" parameterType="java.lang.Long" resultType="com.keymanager.monitoring.entity.QZCategoryTag">
+        SELECT
+          fUuid AS "uuid",
+          fQZSettingUuid AS "qzSettingUuid",
+          fTagName AS "tagName"
+        FROM t_qz_category_tag qc
+        WHERE qc.fQZSettingUuid = #{qzSettingUuid}
+        ORDER BY qc.fCreateTime
+    </select>
+
+    <select id="getAllCategoryTagName" resultType="com.keymanager.monitoring.entity.QZCategoryTag">
+        SELECT
+          qc.fTagName AS "tagName"
+        FROM t_qz_category_tag qc
+        GROUP BY qc.fTagName
+    </select>
+</mapper>

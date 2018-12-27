@@ -67,11 +67,12 @@ function searchRiseOrFall() {
 }
 function detectedMoreSearchConditionDivShow() {
     var moreSearchCondition = $("div.conn[name='moreSearchCondition']");
-    var customerInfo = moreSearchCondition.find("ul li.condition input[name='customerInfo']").val();
-    var group =  moreSearchCondition.find("ul li.condition input[name='group']").val();
+    var customerInfo = moreSearchCondition.find("ul li.customerInfo input").val();
+    var categoryTag = moreSearchCondition.find("ul li.category input").val();
+    var group =  moreSearchCondition.find("ul li.group input").val();
     var status = moreSearchCondition.find("select[name='status']").val();
     var updateStatus = moreSearchCondition.find("select[name='updateStatus']").val();
-    var values = customerInfo + group + status + updateStatus;
+    var values = customerInfo + categoryTag + group + status + updateStatus;
     if (values != "") {
         moreSearchCondition.css("display", "block");
     }
@@ -328,17 +329,19 @@ function getQZSettingClientGroupInfo(body, terminalType) {
 }
 function trimSearchCondition(days) {
     var chargeForm = $("#chargeForm");
-    var customerInfo = $(".conn").find(".condition").find("input[name='customerInfo']").val();
+    var customerInfo = $(".conn").find(".customerInfo").find("input[name='customerInfo']").val();
     var customerUuid = customerInfo.substr(customerInfo.lastIndexOf("_") + 1);
     chargeForm.find("#customerInfo").val($.trim(customerInfo));
     chargeForm.find("#customerUuid").val(customerUuid);
     chargeForm.find("#dateRangeType").val(days);
 
     var domain = $(".conn").find("li:first-child input[name='domain']").val();
-    var group = $(".conn").find(".condition").find("input[name='group']").val();
+    var categoryTag = $(".conn").find(".category").find("input[name='categoryTag']").val();
+    var group = $(".conn").find(".group").find("input[name='group']").val();
     var status = $(".conn").find("select[name='status']").val();
     var updateStatus = $(".conn").find("select[name='updateStatus']").val();
     chargeForm.find("#domain").val($.trim(domain));
+    chargeForm.find("#categoryTag").val($.trim(categoryTag));
     chargeForm.find("#group").val($.trim(group));
     if (status != "") {
         chargeForm.find("#status").val($.trim(status));
@@ -350,10 +353,6 @@ function trimSearchCondition(days) {
     } else {
         chargeForm.find("#updateStatus").val(null);
     }
-    var moreSearchCondition = $("div.conn[name='moreSearchCondition']");
-    $("div.conn li:first-child input[name='domain']").val(domain);
-    moreSearchCondition.find("ul li.condition input[name='group']").val($.trim(group));
-    moreSearchCondition.find("ul li select[name='updateStatus']").val($.trim(updateStatus));
     chargeForm.submit();
 }
 function showMoreSearchCondition() {
@@ -984,6 +983,8 @@ function resetSettingDialog() {
     settingDialogDiv.find("#qzSettingUuid").val("");
     settingDialogDiv.find("#qzSettingCustomer").val("");
     settingDialogDiv.find("#qzSettingDomain").val("");
+    settingDialogDiv.find("#qzCategoryTagNames").val("");
+    settingDialogDiv.find("#qzSettingAutoCrawlKeywordFlag").val("1");
     settingDialogDiv.find("#qzSettingIgnoreNoIndex").val("1");
     settingDialogDiv.find("#qzSettingIgnoreNoOrder").val("1");
     settingDialogDiv.find("#qzSettingInterval").val("2");
@@ -1068,6 +1069,12 @@ function initSettingDialog(qzSetting, self) {
             }
         });
     });
+    // 分类标签
+    var tagNames = "";
+    $.each(qzSetting.qzCategoryTags, function (idx, val) {
+        tagNames += val.tagName + ",";
+    });
+    settingDialogDiv.find("#qzCategoryTagNames").val(tagNames.substring(0,tagNames.length-1));
     if (PCType) {
         dealSettingTable("PC");
     }
@@ -1123,7 +1130,17 @@ function saveChangeSetting(self) {
     qzSetting.type = entryType;
     qzSetting.qzOperationTypes = [];//操作类型表
     qzSetting.qzOperationTypes.qzChargeRules = [];//收费规则
+    qzSetting.qzCategoryTags = []; //分类标签表
 
+    var tagNames = settingDialogDiv.find("#qzCategoryTagNames").val();
+    if (tagNames != "") {
+        var tagNameArr = tagNames.split(",");
+        $.each(tagNameArr, function (idx, val) {
+            var qzCategoryTag = {};
+            qzCategoryTag.tagName = val;
+            qzSetting.qzCategoryTags.push(qzCategoryTag);
+        });
+    }
     var checkedObjs = settingDialogDiv.find("input[name=operationType]:checkbox:checked");
     var validationFlag = true;
     $.each(checkedObjs, function (idx, val) {
@@ -1155,8 +1172,8 @@ function saveChangeSetting(self) {
 //          validationFlag = false;
 //          return false;
 //        }
-        if (operationType.initialKeywordCount == "" || !reg.test(operationType.initialKeywordCount)) {
-            alert("请输入数字");
+        if (parseInt(operationType.initialKeywordCount) < 0 && (operationType.initialKeywordCount == "" || !reg.test(operationType.initialKeywordCount))) {
+            alert("请输入正整数");
             settingDialogDiv.find("#initialKeywordCount" + val.id).focus();
             validationFlag = false;
             return false;
