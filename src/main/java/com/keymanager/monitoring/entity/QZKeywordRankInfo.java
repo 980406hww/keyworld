@@ -74,6 +74,22 @@ public class QZKeywordRankInfo extends BaseEntity {
     @TableField(value = "fBaiduRecordFullDate")
     private String baiduRecordFullDate;
 
+    /* 达到等级 */
+    @TableField(value = "fAchieveLevel")
+    private int achieveLevel;
+
+    /* 总级数 */
+    @TableField(value = "fSumSeries")
+    private int sumSeries;
+
+    /* 下级差值 */
+    @TableField(value = "fDifferenceValue")
+    private Double differenceValue;
+
+    /* 当前级别价格 */
+    @TableField(value = "fCurrentPrice")
+    private int currentPrice;
+
     /* 前10的增长数（有正负） */
     @TableField(exist = false)
     private int topTenIncrement;
@@ -101,6 +117,38 @@ public class QZKeywordRankInfo extends BaseEntity {
     /* 前50数 */
     @TableField(exist = false)
     private int topFiftyNum;
+
+    public int getAchieveLevel() {
+        return achieveLevel;
+    }
+
+    public void setAchieveLevel(int achieveLevel) {
+        this.achieveLevel = achieveLevel;
+    }
+
+    public int getSumSeries() {
+        return sumSeries;
+    }
+
+    public void setSumSeries(int sumSeries) {
+        this.sumSeries = sumSeries;
+    }
+
+    public Double getDifferenceValue() {
+        return differenceValue;
+    }
+
+    public void setDifferenceValue(Double differenceValue) {
+        this.differenceValue = differenceValue;
+    }
+
+    public int getCurrentPrice() {
+        return currentPrice;
+    }
+
+    public void setCurrentPrice(int currentPrice) {
+        this.currentPrice = currentPrice;
+    }
 
     public String getIpRoute() {
         return ipRoute;

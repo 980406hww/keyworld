@@ -47,4 +47,20 @@
     <delete id="deleteByQZSettingUuid">
         DELETE FROM t_qz_operation_type WHERE   fQZSettingUuid = #{qzSettingUuid}
     </delete>
+
+    <select id="findQZOperationTypes" resultType="com.keymanager.monitoring.vo.QZOperationTypeVO">
+       SELECT
+            op.fQZSettingUuid AS 'qzSettingUuid',
+            op.fOperationtype AS 'operationType',
+            op.fMaxKeywordCount AS 'maxKeywordCount',
+            cr.fStartKeywordCount AS 'startKeywordCount',
+            cr.fEndKeywordCount AS 'endKeywordCount',
+            cr.fAmount AS 'amount'
+            FROM t_qz_operation_type op
+        JOIN t_qz_charge_rule cr
+        ON op.fUuid = cr.fQZOperationTypeUuid
+        GROUP BY op.fUuid
+        ORDER BY fStartKeywordCount ASC
+    </select>
+
 </mapper>

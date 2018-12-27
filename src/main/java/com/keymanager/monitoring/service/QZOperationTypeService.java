@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.dao.QZOperationTypeDao;
 import com.keymanager.monitoring.entity.QZOperationType;
 import com.keymanager.monitoring.entity.QZSetting;
+import com.keymanager.monitoring.vo.QZOperationTypeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,5 +30,9 @@ public class QZOperationTypeService extends ServiceImpl<QZOperationTypeDao, QZOp
 
 	public  void deleteByQZSettingUuid(Long qzSettingUuid){
 		qzOperationTypeDao.deleteByQZSettingUuid(qzSettingUuid);
+	}
+
+	public List<QZOperationTypeVO> findQZOperationTypes(){
+		return qzOperationTypeDao.findQZOperationTypes();
 	}
 }

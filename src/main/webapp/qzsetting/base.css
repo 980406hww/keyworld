@@ -502,6 +502,16 @@ ul {
     padding-top: 65px;
 }
 
+.rank-wrap .col-7 {
+    width: 80%;
+    text-align: left;
+}
+
+.rank-wrap .col-7 h1 {
+    text-align: center;
+    padding-top: 65px;
+}
+
 #moreSearchCondition {
     display: block;
     height: 25px;

@@ -3,6 +3,7 @@ package com.keymanager.monitoring.dao;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.keymanager.monitoring.entity.QZOperationType;
 import com.keymanager.monitoring.entity.QZSetting;
+import com.keymanager.monitoring.vo.QZOperationTypeVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -22,4 +23,5 @@ public interface QZOperationTypeDao extends BaseMapper<QZOperationType> {
     //上一级的主键
     int selectLastId();
 
+    List<QZOperationTypeVO> findQZOperationTypes();
 }

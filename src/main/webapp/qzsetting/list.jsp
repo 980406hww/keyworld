@@ -221,7 +221,7 @@
 										</div>
 										<div name="baiduRecord">
 											<span class="line1">
-												<a href="javascript:;">${qzSetting.qzKeywordRankInfoMap["PC"] == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["PC"].baiduRecord}</a>
+												<a href="javascript:;">10</a>
 											</span>
 											<span><a href="javascript:;">百度收录</a></span>
 										</div>
@@ -400,6 +400,22 @@
 
 							<div class="rank-wrap">
 								<c:choose>
+									<c:when test="${qzSetting.qzKeywordRankInfoMap['baiduRecord'] != null}">
+										<div name="rankInfo" style="display: none;">
+											<span>${qzSetting.qzKeywordRankInfoMap["PC"]}</span>
+										</div>
+										<div class="col-7" id="keywordRecordCharts" style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
+									</c:when>
+									<c:otherwise>
+										<div class="col-7">
+											<h1>暂无数据</h1>
+										</div>
+									</c:otherwise>
+								</c:choose>
+							</div>
+
+							<div class="rank-wrap">
+								<c:choose>
 									<c:when test="${qzSetting.qzKeywordRankInfoMap['PC'] != null}">
 										<div name="rankInfo" style="display: none;">
 											<span>${qzSetting.qzKeywordRankInfoMap["PC"]}</span>
@@ -511,10 +527,10 @@
 											</span>
 											<span><a href="javascript:;">百度权重</a></span>
 										</div>
-										<div name="baiduRecord">
+										<div name="">
 											<span class="line1">
-												<a href="javascript:;">${qzSetting.qzKeywordRankInfoMap["Phone"] == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["Phone"].baiduRecord}</a>
-											</span>
+												<a href="javascript:;">0</a>
+											</span>baiduRecord
 											<span><a href="javascript:;">百度收录</a></span>
 										</div>
 									</div>
@@ -693,10 +709,24 @@
 
 							<div class="rank-wrap">
 								<c:choose>
-									<c:when test="${qzSetting.qzKeywordRankInfoMap['Phone'] != null}">
+									<c:when test="${qzSetting.qzKeywordRankInfoMap['baiduRecord'] != null}">
 										<div name="rankInfo" style="display: none;">
-											<span>${qzSetting.qzKeywordRankInfoMap["Phone"]}</span>
+											<span>${qzSetting.qzKeywordRankInfoMap["PC"]}</span>
 										</div>
+										<div class="col-7" id="keywordRecordCharts" style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none
+										;"></div>
+									</c:when>
+									<c:otherwise>
+										<div class="col-7">
+											<h1 style="text-align: center"> 暂无数据 </h1>
+										</div>
+									</c:otherwise>
+								</c:choose>
+							</div>
+
+							<div class="rank-wrap">
+								<c:choose>
+									<c:when test="${qzSetting.qzKeywordRankInfoMap['Phone'] != null}">
 										<div class="col-8" id="keywordTrendCharts" style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
 									</c:when>
 									<c:otherwise>

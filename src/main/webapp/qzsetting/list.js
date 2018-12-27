@@ -118,6 +118,7 @@ function checkTerminalType(terminalType) {
 function detectedTopNum(body) {
     $(body).find(".rank-wrap").each(function () {
         generateQZKeywordTrendCharts($(this).find("#keywordTrendCharts")[0], $(this).find("div[name='rankInfo'] span").text());
+        generateQZKeywordRecordCharts($(this).find("#keywordRecordCharts")[0], $(this).find("div[name='rankInfo'] span").text());
         $(this).find("#keywordTrendCharts").css("position", "static");
         $(this).find("#keywordTrendCharts").children().css("position", "static");
         $(this).find("#keywordTrendCharts").children().children().css("position", "static");
@@ -131,6 +132,99 @@ function detectedTopNum(body) {
         });
     });
 }
+
+function generateQZKeywordRecordCharts(domElement, data) {
+    if (domElement == undefined) {
+        return;
+    }
+    if (JSON.parse(data).date == '') {
+        domElement.innerHTML = "<h1 style='text-align: center'> 暂无数据 </h1>";
+        return;
+    }
+    var result = JSON.parse(data);
+    var date = result.baiduRecordFullDate.replace("['", "").replace("']", "").split("', '").reverse();
+    var baiduRecord = result.baiduRecord.replace("['", "").replace("']", "").split("', '").reverse();
+    var keywordRecordCharts = echarts.init(domElement);
+    var option = {
+        color: ['#E61A37'],
+        title : {
+            text: '百度收录趋势',
+            x:'center',
+            y: 'bottom',
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        grid: {
+            left: '0%',
+            right: '1%',
+            top: '3%',
+            bottom: '0%',
+            containLabel: true
+        },
+        toolbox: {
+            show: false,
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        xAxis: {
+            show: false,
+            type: 'category',
+            axisLine: {
+                show: false,
+                lineStyle: {
+                    color: '#404A59'
+                }
+            },
+            axisTick: {
+                show: false
+            },
+            boundaryGap: true,
+            data: date
+        },
+        yAxis: {
+            axisLine: {
+                show: false,
+                lineStyle: {
+                    color: '#404A59'
+                }
+            },
+            splitLine: {
+                show: true,
+                lineStyle: {
+                    color: '#DCDCDC',
+                    width: 1,
+                    type: 'solid'
+                }
+            },
+            axisTick: {
+                show: false
+            },
+            axisLabel: {
+                fontStyle: 'italic',
+                textStyle: {
+                    color: '#000'
+                }
+            },
+            type: 'value'
+        },
+        series: [{
+            name: '收录',
+            smooth: true,
+            type: 'line',
+            symbolSize: 2,
+            symbol: 'none',
+            data: baiduRecord,
+            lineStyle:{
+                type:"solid",
+                width: 2
+            }
+        }]
+    };
+    keywordRecordCharts.setOption(option);
+}
+
 function generateQZKeywordTrendCharts(domElement, data) {
     if (domElement == undefined) {
         return;
@@ -149,6 +243,11 @@ function generateQZKeywordTrendCharts(domElement, data) {
     var keywordTrendCharts = echarts.init(domElement);
     var option = {
         color: ['#228B22', '#0000FF', '#FF6100', '#000000', '#FF0000'],
+        title : {
+            text: '关键词排名趋势',
+            x:'center',
+            y: 'bottom',
+        },
         tooltip: {
             trigger: 'axis'
         },
