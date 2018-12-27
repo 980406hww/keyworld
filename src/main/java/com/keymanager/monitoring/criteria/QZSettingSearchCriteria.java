@@ -15,6 +15,7 @@ public class QZSettingSearchCriteria{
     private double lowerValue;
     private Boolean increaseType;
     private String terminalType;
+    private String categoryTag;
 
     public String getLoginName() {
         return loginName;
@@ -126,5 +127,13 @@ public class QZSettingSearchCriteria{
 
     public double getLowerValue() {
         return lowerValue;
+    }
+
+    public String getCategoryTag () {
+        return categoryTag;
+    }
+
+    public void setCategoryTag (String categoryTag) {
+        this.categoryTag = categoryTag;
     }
 }

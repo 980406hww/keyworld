@@ -98,6 +98,9 @@ public class QZSetting extends BaseEntity{
 	@TableField(value = "fCrawlerStatus")
 	private String crawlerStatus;
 
+	@TableField(exist = false)
+	private List<QZCategoryTag> qzCategoryTags; // QZCategoryTag为全站表子类 一对多
+
 	public String getUserID() {
 		return userID;
 	}
@@ -320,5 +323,13 @@ public class QZSetting extends BaseEntity{
 
 	public void setCrawlerStatus(String crawlerStatus) {
 		this.crawlerStatus = crawlerStatus;
+	}
+
+	public List<QZCategoryTag> getQzCategoryTags () {
+		return qzCategoryTags;
+	}
+
+	public void setQzCategoryTags (List<QZCategoryTag> qzCategoryTags) {
+		this.qzCategoryTags = qzCategoryTags;
 	}
 }

@@ -17,7 +17,6 @@ import com.keymanager.monitoring.vo.DateRangeTypeVO;
 import com.keymanager.monitoring.vo.QZSettingSearchClientGroupInfoVO;
 import com.keymanager.util.Constants;
 import com.keymanager.util.Utils;
-import com.keymanager.monitoring.vo.ClientStatusVO;
 import com.keymanager.value.CustomerKeywordVO;
 import net.sf.json.JSONObject;
 import org.apache.commons.collections.CollectionUtils;
@@ -57,6 +56,9 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 	@Autowired
 	private QZKeywordRankInfoService qzKeywordRankInfoService;
+
+	@Autowired
+	private QZCategoryTagService qzCategoryTagService;
 
 	public QZSetting getAvailableQZSetting(){
 		List<QZSetting> qzSettings = qzSettingDao.getAvailableQZSettings();
@@ -141,6 +143,10 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			updateOpretionTypeAndChargeRule(OldOperationTypes,updOperationTypes,qzSetting.getUuid());
 			List<QZKeywordRankInfo> existingQZKeywordRankInfoList = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), null, null);
 			updateQZKeywordRankInfo(existingQZKeywordRankInfoList, updOperationTypes, existingQZSetting);
+			// 修改标签
+			List<QZCategoryTag> existingQZCategoryTags = qzCategoryTagService.searchCategoryTagByQZSettingUuid(qzSetting.getUuid());
+			List<QZCategoryTag> updateQZCategoryTags = qzSetting.getQzCategoryTags();
+			updateQZCategoryTag(existingQZCategoryTags, updateQZCategoryTags, qzSetting.getUuid());
 			qzSettingDao.updateById(existingQZSetting);
 		}else{
 			qzSetting.setUpdateTime(new Date());
@@ -159,6 +165,11 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 					qzChargeRule.setQzOperationTypeUuid(qzOperationType.getUuid());
 					qzChargeRuleService.insert(qzChargeRule);
 				}
+			}
+			// 添加标签
+			for (QZCategoryTag qzCategoryTag : qzSetting.getQzCategoryTags()) {
+				qzCategoryTag.setQzSettingUuid(qzSettingUuid);
+				qzCategoryTagService.insert(qzCategoryTag);
 			}
 		}
 	}
@@ -251,6 +262,28 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 				qzSetting.setPhoneCreateTopFiftyNum(null);
 			}
 		    qzKeywordRankInfoService.deleteById(qzKeywordRankInfo);
+        }
+	}
+
+	public void updateQZCategoryTag(List<QZCategoryTag> existingQZCategoryTags, List<QZCategoryTag> updateQZCategoryTags, long qzSettingUuid){
+		Map<String, QZCategoryTag> existingQZCategoryTagMap = new HashMap<String, QZCategoryTag>();
+		for (QZCategoryTag qzCategoryTag : existingQZCategoryTags) {
+			existingQZCategoryTagMap.put(qzCategoryTag.getTagName(), qzCategoryTag);
+		}
+		for (QZCategoryTag newQZCategoryTag : updateQZCategoryTags) {
+            QZCategoryTag oldQZCategoryTag = existingQZCategoryTagMap.get(newQZCategoryTag.getTagName());
+            if (null != oldQZCategoryTag) {
+                oldQZCategoryTag.setUpdateTime(new Date());
+                qzCategoryTagService.updateById(oldQZCategoryTag);
+                existingQZCategoryTagMap.remove(newQZCategoryTag.getTagName());
+            } else {
+                newQZCategoryTag.setQzSettingUuid(qzSettingUuid);
+                qzCategoryTagService.insert(newQZCategoryTag);
+            }
+        }
+
+        for (QZCategoryTag qzCategoryTag : existingQZCategoryTagMap.values()) {
+            qzCategoryTagService.deleteById(qzCategoryTag);
         }
 	}
 
@@ -348,6 +381,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 				qzOperationType.setQzChargeRules(qzChargeRules);
 			}
 			qzSetting.setQzOperationTypes(qzOperationTypes);
+			qzSetting.setQzCategoryTags(qzCategoryTagService.searchCategoryTagByQZSettingUuid(qzSetting.getUuid()));
 		}
 		return qzSetting;
 	}

@@ -126,6 +126,10 @@
             JOIN t_qz_keyword_rank_info qk
             ON qs.fUuid = qk.fQZSettingUuid
         </if>
+        <if test="qzSettingSearchCriteria.categoryTag != null and qzSettingSearchCriteria.categoryTag != ''">
+            JOIN t_qz_category_tag qc
+            ON qs.fUuid = qc.fQZSettingUuid
+        </if>
         WHERE 1 = 1
         <if test="qzSettingSearchCriteria.loginName != null and qzSettingSearchCriteria.loginName != ''">AND c.fUserID = #{qzSettingSearchCriteria.loginName}</if>
         <if test="qzSettingSearchCriteria.customerUuid != null and qzSettingSearchCriteria.customerUuid != ''">AND qs.fCustomerUuid = #{qzSettingSearchCriteria.customerUuid}</if>
@@ -135,14 +139,17 @@
         <if test="qzSettingSearchCriteria.status != null">AND qs.fStatus = #{qzSettingSearchCriteria.status}</if>
         <if test="qzSettingSearchCriteria.increaseType != null">
             <choose>
-                <when test="qzSettingSearchCriteria.increaseType">
+                <when test="qzSettingSearchCriteria.increaseType == 1">
                     AND qk.fIncrease &gt;= #{qzSettingSearchCriteria.upperValue}
                 </when>
-                <when test="!qzSettingSearchCriteria.increaseType">
+                <when test="qzSettingSearchCriteria.increaseType == 0">
                     AND qk.fIncrease &lt;= #{qzSettingSearchCriteria.lowerValue}
                 </when>
             </choose>
             AND qk.fTerminalType = #{qzSettingSearchCriteria.terminalType}
+        </if>
+        <if test="qzSettingSearchCriteria.categoryTag != null and qzSettingSearchCriteria.categoryTag != ''">
+            AND qc.fTagName = #{qzSettingSearchCriteria.categoryTag}
         </if>
         <choose>
             <when test="qzSettingSearchCriteria.dateRangeType == 0">
