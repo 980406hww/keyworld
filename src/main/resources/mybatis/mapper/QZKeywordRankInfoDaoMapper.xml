@@ -18,7 +18,7 @@
             qzkri.fIncrease AS "increase",
             qzkri.fIpRoute AS "ipRoute",
             qzkri.fBaiduWeight AS "baiduWeight",
-            qzkri.fBaiduRecord AS "baiduRecord"
+            qzkri.fRecord AS "baiduRecord"
         FROM t_qz_keyword_rank_info qzkri
         WHERE qzkri.fQZSettingUuid = #{qzSettingUuid}
         <if test="increaseType != null">

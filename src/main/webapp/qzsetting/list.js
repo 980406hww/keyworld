@@ -118,8 +118,11 @@ function checkTerminalType(terminalType) {
 }
 function detectedTopNum(body) {
     $(body).find(".rank-wrap").each(function () {
-        generateQZKeywordTrendCharts($(this).find("#keywordTrendCharts")[0], $(this).find("div[name='rankInfo'] span").text());
         generateQZKeywordRecordCharts($(this).find("#keywordRecordCharts")[0], $(this).find("div[name='rankInfo'] span").text());
+        generateQZKeywordTrendCharts($(this).find("#keywordTrendCharts")[0], $(this).find("div[name='rankInfo'] span").text());
+        $(this).find("#keywordRecordCharts").css("position", "static");
+        $(this).find("#keywordRecordCharts").children().css("position", "static");
+        $(this).find("#keywordRecordCharts").children().children().css("position", "static");
         $(this).find("#keywordTrendCharts").css("position", "static");
         $(this).find("#keywordTrendCharts").children().css("position", "static");
         $(this).find("#keywordTrendCharts").children().children().css("position", "static");
@@ -133,7 +136,6 @@ function detectedTopNum(body) {
         });
     });
 }
-
 function generateQZKeywordRecordCharts(domElement, data) {
     if (domElement == undefined) {
         return;
@@ -143,15 +145,21 @@ function generateQZKeywordRecordCharts(domElement, data) {
         return;
     }
     var result = JSON.parse(data);
-    var date = result.baiduRecordFullDate.replace("['", "").replace("']", "").split("', '").reverse();
+    var date = result.date.replace("['", "").replace("']", "").split("', '").reverse();
     var baiduRecord = result.baiduRecord.replace("['", "").replace("']", "").split("', '").reverse();
     var keywordRecordCharts = echarts.init(domElement);
     var option = {
-        color: ['#E61A37'],
+        color: ['#0000FF'],
         title : {
             text: '百度收录趋势',
+            textStyle: {
+                color: '#999',
+                fontFamily: "Arial",
+                fontWeight: 400,
+                fontSize: 12
+            },
             x:'center',
-            y: 'bottom',
+            bottom: -3
         },
         tooltip: {
             trigger: 'axis'
@@ -214,18 +222,17 @@ function generateQZKeywordRecordCharts(domElement, data) {
             name: '收录',
             smooth: true,
             type: 'line',
-            symbolSize: 2,
+            symbolSize: 1,
             symbol: 'none',
             data: baiduRecord,
             lineStyle:{
                 type:"solid",
-                width: 2
+                width: 1
             }
         }]
     };
     keywordRecordCharts.setOption(option);
 }
-
 function generateQZKeywordTrendCharts(domElement, data) {
     if (domElement == undefined) {
         return;
@@ -246,8 +253,14 @@ function generateQZKeywordTrendCharts(domElement, data) {
         color: ['#228B22', '#0000FF', '#FF6100', '#000000', '#FF0000'],
         title : {
             text: '关键词排名趋势',
+            textStyle: {
+                color: '#999',
+                fontFamily: "Arial",
+                fontWeight: 400,
+                fontSize: 12
+            },
             x:'center',
-            y: 'bottom',
+            bottom: -3
         },
         tooltip: {
             trigger: 'axis'
@@ -381,7 +394,7 @@ function getQZSettingClientGroupInfo(body, terminalType) {
         var postData = {};
         postData.qzSettingUuid = uuid;
         postData.terminalType = terminalType;
-        postData.type = $.trim(div.parent().find(".other-rank .row:last-child").find("div:eq(3) span.line1 a").text());
+        postData.type = $.trim(div.parent().find(".other-rank .row:last-child").find("div:eq(2) span.line1 input[name='type']").val());
         postData.optimizeGroupName = optimizeGroupName;
         $.ajax({
             url: '/internal/qzsetting/getQZSettingClientGroupInfo',
@@ -414,7 +427,7 @@ function getQZSettingClientGroupInfo(body, terminalType) {
                         $(showSomeOperationType).parent().find("input[name='allOperationType']").val(allOperationType);
                     }
                 }
-                var status = div.parent().find(".other-rank .row:last-child").find("div:eq(4) span.line1 a").attr("status");
+                var status = div.parent().find(".other-rank .row:last-child").find("div:eq(3) span.line1 a").attr("status");
                 div.find(".row:first-child").find("div:eq(0) span.line1 a").text(optimizeGroupName+" ("+clientCount+")");
                 if (status == "3") {
                     div.find(".row:first-child").find("div:eq(0) span.line1 a").css("color", "red");
@@ -471,6 +484,9 @@ function searchCustomerKeywords(customerUuid, optimizeGroupName) {
     searchCustomerKeywordForm.find("#optimizeGroupName").val(optimizeGroupName);
     searchCustomerKeywordForm.find("#status").val(1);
     searchCustomerKeywordForm.submit();
+}
+function showAllChargeRule() {
+    alert("功能未完成");
 }
 function showAllOperationType(self, e) {
     var event = e||window.event;

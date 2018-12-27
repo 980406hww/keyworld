@@ -218,18 +218,11 @@
 
 								<div class="other-rank_1">
 									<div class="row">
-										<div name="baiduWeight">
-											<span class="line1">
-												<a href="javascript:;">${qzSetting.qzKeywordRankInfoMap["PC"] == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["PC"].baiduWeight}</a>
-											</span>
-											<span><a href="javascript:;">百度权重</a></span>
-										</div>
-										<div name="baiduRecord">
-											<span class="line1">
-												<a href="javascript:;">10</a>
-											</span>
-											<span><a href="javascript:;">百度收录</a></span>
-										</div>
+										<span class="line1">
+											<a href="javascript:;" title="进行中的达标信息">2 / 3 (100000 &yen;)</a><br>
+											<a title="达标信息详情" href="javascript: showAllChargeRule();"><strong> . . . </strong></a>
+										</span>
+										<span><a href="javascript:;">全站达标信息</a></span>
 									</div>
 									<div class="row" title="预计百度来路,点击可跳转到详情页面查看变动">
 										<span class="line1"><a href="https://www.5118.com/seo/baidupc/ip/${qzSetting.domain}" target="_blank">${qzSetting.qzKeywordRankInfoMap["PC"] == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["PC"].ipRoute}</a> <sub>IP</sub></span>
@@ -261,22 +254,11 @@
 											</span>
 										</div>
 
-										<div>
+										<div name="baiduWeight">
 											<span class="line1">
-												<a href="javascript:;">${qzSetting.ignoreNoIndex == true ? "是" : "否"} </a>
+												<a href="javascript:;">${qzSetting.qzKeywordRankInfoMap["PC"] == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["PC"].baiduWeight}</a>
 											</span>
-											<span>
-												<a href="javascript:;">没指数</a>
-											</span>
-										</div>
-
-										<div>
-											<span class="line1">
-												<a href="javascript:;">${qzSetting.updateInterval}</a>
-											</span>
-											<span>
-												<a href="javascript:;">更新间隔</a>
-											</span>
+											<span><a href="javascript:;">百度权重</a></span>
 										</div>
 
 										<div>
@@ -319,16 +301,8 @@
 										</div>
 
 										<div>
-									<span class="line1">
-										<a href="javascript:;">${qzSetting.ignoreNoOrder == true ? "是" : "否"}</a>
-									</span>
-											<span>
-										<a href="javascript:;">没排名</a>
-									</span>
-										</div>
-
-										<div>
 											<span class="line1">
+												<input type="hidden" name="type" value="${qzSetting.type}">
 												<a href="javascript:;">${qzSetting.autoCrawlKeywordFlag == true ? "是" : "否"}</a>
 											</span>
 											<span>
@@ -405,30 +379,18 @@
 
 							<div class="rank-wrap">
 								<c:choose>
-									<c:when test="${qzSetting.qzKeywordRankInfoMap['baiduRecord'] != null}">
-										<div name="rankInfo" style="display: none;">
-											<span>${qzSetting.qzKeywordRankInfoMap["PC"]}</span>
-										</div>
-										<div class="col-7" id="keywordRecordCharts" style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
-									</c:when>
-									<c:otherwise>
-										<div class="col-7">
-											<h1>暂无数据</h1>
-										</div>
-									</c:otherwise>
-								</c:choose>
-							</div>
-
-							<div class="rank-wrap">
-								<c:choose>
 									<c:when test="${qzSetting.qzKeywordRankInfoMap['PC'] != null}">
 										<div name="rankInfo" style="display: none;">
 											<span>${qzSetting.qzKeywordRankInfoMap["PC"]}</span>
 										</div>
-										<div class="col-8" id="keywordTrendCharts" style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
+										<div class="col-1" id="keywordRecordCharts" style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
+										<div class="col-2" id="keywordTrendCharts" style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
 									</c:when>
 									<c:otherwise>
-										<div class="col-8">
+										<div class="col-1">
+											<h1>暂无数据</h1>
+										</div>
+										<div class="col-2">
 											<h1>暂无数据</h1>
 										</div>
 									</c:otherwise>
@@ -526,18 +488,11 @@
 
 								<div class="other-rank_1">
 									<div class="row">
-										<div name="baiduWeight">
-											<span class="line1">
-												<a href="javascript:;">${qzSetting.qzKeywordRankInfoMap["Phone"] == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["Phone"].baiduWeight}</a>
-											</span>
-											<span><a href="javascript:;">百度权重</a></span>
-										</div>
-										<div name="">
-											<span class="line1">
-												<a href="javascript:;">0</a>
-											</span>baiduRecord
-											<span><a href="javascript:;">百度收录</a></span>
-										</div>
+										<span class="line1">
+											<a href="javascript:;" title="进行中的达标信息">2 / 3 (100000 &yen;)</a><br>
+											<a title="达标信息详情" href="javascript: showAllChargeRule();"><strong> . . . </strong></a>
+										</span>
+										<span><a href="javascript:;">全站达标信息</a></span>
 									</div>
 									<div class="row">
 										<span class="line1"><a href="javascript:;">${qzSetting.qzKeywordRankInfoMap["Phone"] == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["Phone"].ipRoute}</a> <sub>IP</sub></span>
@@ -569,22 +524,11 @@
 											</span>
 										</div>
 
-										<div>
+										<div name="baiduWeight">
 											<span class="line1">
-												<a href="javascript:;">${qzSetting.ignoreNoIndex == true ? "是" : "否"} </a>
+												<a href="javascript:;">${qzSetting.qzKeywordRankInfoMap["Phone"] == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["Phone"].baiduWeight}</a>
 											</span>
-											<span>
-												<a href="javascript:;">没指数</a>
-											</span>
-										</div>
-
-										<div>
-											<span class="line1">
-												<a href="javascript:;">${qzSetting.updateInterval}</a>
-											</span>
-											<span>
-												<a href="javascript:;">更新间隔</a>
-											</span>
+											<span><a href="javascript:;">百度权重</a></span>
 										</div>
 
 										<div>
@@ -628,20 +572,12 @@
 										</div>
 
 										<div>
-									<span class="line1">
-										<a href="javascript:;">${qzSetting.ignoreNoOrder == true ? "是" : "否"} </a>
-									</span>
-											<span>
-										<a href="javascript:;">没排名</a>
-									</span>
-										</div>
-
-										<div>
 											<span class="line1">
-												<a href="javascript:;">${qzSetting.type} </a>
+												<input type="hidden" name="type" value="${qzSetting.type}">
+												<a href="javascript:;">${qzSetting.autoCrawlKeywordFlag == true ? "是" : "否"}</a>
 											</span>
 											<span>
-												<a href="javascript:;">入口类型</a>
+												<a href="javascript:;">爬取关键字</a>
 											</span>
 										</div>
 
@@ -714,29 +650,19 @@
 
 							<div class="rank-wrap">
 								<c:choose>
-									<c:when test="${qzSetting.qzKeywordRankInfoMap['baiduRecord'] != null}">
-										<div name="rankInfo" style="display: none;">
-											<span>${qzSetting.qzKeywordRankInfoMap["PC"]}</span>
-										</div>
-										<div class="col-7" id="keywordRecordCharts" style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none
-										;"></div>
-									</c:when>
-									<c:otherwise>
-										<div class="col-7">
-											<h1 style="text-align: center"> 暂无数据 </h1>
-										</div>
-									</c:otherwise>
-								</c:choose>
-							</div>
-
-							<div class="rank-wrap">
-								<c:choose>
 									<c:when test="${qzSetting.qzKeywordRankInfoMap['Phone'] != null}">
-										<div class="col-8" id="keywordTrendCharts" style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
+										<div name="rankInfo" style="display: none;">
+											<span>${qzSetting.qzKeywordRankInfoMap["Phone"]}</span>
+										</div>
+										<div class="col-1" id="keywordRecordCharts" style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
+										<div class="col-2" id="keywordTrendCharts" style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
 									</c:when>
 									<c:otherwise>
-										<div class="col-8">
-											<h1 style="text-align: center"> 暂无数据 </h1>
+										<div class="col-1">
+											<h1>暂无数据</h1>
+										</div>
+										<div class="col-2">
+											<h1>暂无数据</h1>
 										</div>
 									</c:otherwise>
 								</c:choose>
