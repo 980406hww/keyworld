@@ -1,6 +1,7 @@
 package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.keymanager.monitoring.criteria.QZSettingSearchChargeRuleCriteria;
 import com.keymanager.monitoring.dao.QZChargeRuleDao;
 import com.keymanager.monitoring.entity.QZChargeRule;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,4 +23,8 @@ public class QZChargeRuleService extends ServiceImpl<QZChargeRuleDao, QZChargeRu
 	public void  deleteByQZOperationTypeUuid (Long QZOperationTypeUuid ){
 		qzChargeRuleDao.deleteByQZOperationTypeUuid(QZOperationTypeUuid);
 	}
+
+    public List<QZChargeRule> searchChargeRules (QZSettingSearchChargeRuleCriteria qzSettingSearchChargeRuleCriteria) {
+		return qzChargeRuleDao.searchQZChargeRules(qzSettingSearchChargeRuleCriteria);
+    }
 }

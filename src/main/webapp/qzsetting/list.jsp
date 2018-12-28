@@ -80,32 +80,32 @@
 				</shiro:hasPermission>
 				<li>
 					<label name="lower" title="网站关键词(PC,Phone)一星期排名趋势涨幅&lt;${qzSettingSearchCriteria.lowerValue}">
-						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.increaseType != null and !qzSettingSearchCriteria.increaseType}">checked</c:if>>
+						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.checkStatus == 1}">checked</c:if>>
 						<i class="icon-rank-down"></i>骤降 (${qzSettingSearchCriteria.downNum == null ? 0 : qzSettingSearchCriteria.downNum})
 					</label>
 				</li>
 				<li>
 					<label name="upper" title="网站关键词(PC,Phone)一星期排名趋势涨幅&gt;${qzSettingSearchCriteria.upperValue}">
-						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.increaseType}">checked</c:if>>
+						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.checkStatus == 2}">checked</c:if>>
 						<i class="icon-rank-up"></i>暴涨 (${qzSettingSearchCriteria.upNum == null ? 0 : qzSettingSearchCriteria.upNum})
 					</label>
 				</li>
 				<li>
-					<label name="lower" title="标识最少有一条规则达标">
-						<input type="checkbox" name="checkbox">
-						达标 (100)
+					<label name="atLeastStandard" title="标识最少有一条规则达标">
+						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.checkStatus == 3}">checked</c:if>>
+						达标 (${qzSettingSearchCriteria.atLeastStandardNum == null ? 0 : qzSettingSearchCriteria.atLeastStandardNum})
 					</label>
 				</li>
 				<li>
-					<label name="upper" title="标识一条规则都未达标">
-						<input type="checkbox" name="checkbox">
-						未达标 (1000)
+					<label name="neverStandard" title="标识一条规则都未达标">
+						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.checkStatus == 4}">checked</c:if>>
+						未达标 (${qzSettingSearchCriteria.neverStandardNum == null ? 0 : qzSettingSearchCriteria.neverStandardNum})
 					</label>
 				</li>
 				<li>
-					<label name="upper" title="标识下条规则接近达标">
-						<input type="checkbox" name="checkbox">
-						接近达标 (100)
+					<label name="closeStandard" title="标识下条规则接近达标,未完成度&lt;${qzSettingSearchCriteria.differenceValue}">
+						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.checkStatus == 5}">checked</c:if>>
+						接近达标 (${qzSettingSearchCriteria.closeStandardNum == null ? 0 :qzSettingSearchCriteria.closeStandardNum})
 					</label>
 				</li>
 			</ul>
@@ -169,7 +169,7 @@
 	<input type="hidden" name="customerInfo" id="customerInfo" value="${qzSettingSearchCriteria.customerInfo}">
 	<input type="hidden" name="status" id="status" value="${qzSettingSearchCriteria.status}"/>
 	<input type="hidden" name="updateStatus" id="updateStatus" value="${qzSettingSearchCriteria.updateStatus}"/>
-	<input type="hidden" name="increaseType" id="increaseType" value="${qzSettingSearchCriteria.increaseType}"/>
+	<input type="hidden" name="checkStatus" id="checkStatus" value="${qzSettingSearchCriteria.checkStatus}"/>
 	<input type="hidden" name="terminalType" id="terminalType" value="${qzSettingSearchCriteria.terminalType}"/>
 	<input type="hidden" name="categoryTag" id="categoryTag" value="${qzSettingSearchCriteria.categoryTag}"/>
 </form>
@@ -219,8 +219,23 @@
 								<div class="other-rank_1">
 									<div class="row">
 										<span class="line1">
-											<a href="javascript:;" title="进行中的达标信息">2 / 3 (100000 &yen;)</a><br>
-											<a title="达标信息详情" href="javascript: showAllChargeRule();"><strong> . . . </strong></a>
+											<a href="javascript:;" title="进行中的达标信息">
+												<c:if test="${qzSetting.qzKeywordRankInfoMap['PC'].sumSeries != null}">
+													<c:choose>
+														<c:when test="${qzSetting.qzKeywordRankInfoMap['PC'].achieveLevel == qzSetting.qzKeywordRankInfoMap['PC'].sumSeries and qzSetting.qzKeywordRankInfoMap['PC'].differenceValue == 2}">
+															<font style="background-color: darkgreen;font-size: 14px;">${qzSetting.qzKeywordRankInfoMap['PC'].achieveLevel} / ${qzSetting.qzKeywordRankInfoMap['PC'].sumSeries} (${qzSetting.qzKeywordRankInfoMap['PC'].currentPrice})</font>
+														</c:when>
+														<c:when test="${qzSetting.qzKeywordRankInfoMap['PC'].achieveLevel > 1}">
+															<font style="background-color: orange;font-size: 14px;">${qzSetting.qzKeywordRankInfoMap['PC'].achieveLevel} / ${qzSetting.qzKeywordRankInfoMap['PC'].sumSeries} (${qzSetting.qzKeywordRankInfoMap['PC'].currentPrice})</font>
+														</c:when>
+														<c:otherwise>
+															<font style="background-color: red;font-size: 14px;">${qzSetting.qzKeywordRankInfoMap['PC'].achieveLevel} / ${qzSetting.qzKeywordRankInfoMap['PC'].sumSeries} (${qzSetting.qzKeywordRankInfoMap['PC'].currentPrice})</font>
+														</c:otherwise>
+													</c:choose>
+												</c:if>
+												<c:if test="${qzSetting.qzKeywordRankInfoMap['PC'].sumSeries == null}">暂无</c:if>
+											</a><br>
+											<a title="达标信息详情" href="javascript:showAllChargeRule('${qzSetting.uuid}', 'PC', '${qzSetting.qzKeywordRankInfoMap['PC'].achieveLevel}', '${qzSetting.qzKeywordRankInfoMap['PC'].differenceValue}')"><strong> . . . </strong></a>
 										</span>
 										<span><a href="javascript:;">全站达标信息</a></span>
 									</div>
@@ -489,8 +504,23 @@
 								<div class="other-rank_1">
 									<div class="row">
 										<span class="line1">
-											<a href="javascript:;" title="进行中的达标信息">2 / 3 (100000 &yen;)</a><br>
-											<a title="达标信息详情" href="javascript: showAllChargeRule();"><strong> . . . </strong></a>
+											<a href="javascript:;" title="进行中的达标信息">
+												<c:if test="${qzSetting.qzKeywordRankInfoMap['Phone'].sumSeries != null}">
+													<c:choose>
+														<c:when test="${qzSetting.qzKeywordRankInfoMap['Phone'].achieveLevel == qzSetting.qzKeywordRankInfoMap['Phone'].sumSeries and qzSetting.qzKeywordRankInfoMap['Phone'].differenceValue == 2}">
+															<font style="background-color: darkgreen;font-size: 14px;">${qzSetting.qzKeywordRankInfoMap['Phone'].achieveLevel} / ${qzSetting.qzKeywordRankInfoMap['Phone'].sumSeries} (${qzSetting.qzKeywordRankInfoMap['Phone'].currentPrice})</font>
+														</c:when>
+														<c:when test="${qzSetting.qzKeywordRankInfoMap['Phone'].achieveLevel > 1}">
+															<font style="background-color: orange;font-size: 14px;">${qzSetting.qzKeywordRankInfoMap['Phone'].achieveLevel} / ${qzSetting.qzKeywordRankInfoMap['Phone'].sumSeries} (${qzSetting.qzKeywordRankInfoMap['Phone'].currentPrice})</font>
+														</c:when>
+														<c:otherwise>
+															<font style="background-color: red;font-size: 14px;">${qzSetting.qzKeywordRankInfoMap['Phone'].achieveLevel} / ${qzSetting.qzKeywordRankInfoMap['Phone'].sumSeries} (${qzSetting.qzKeywordRankInfoMap['Phone'].currentPrice})</font>
+														</c:otherwise>
+													</c:choose>
+												</c:if>
+												<c:if test="${qzSetting.qzKeywordRankInfoMap['Phone'].sumSeries == null}">暂无</c:if>
+											</a><br>
+											<a title="达标信息详情" href="javascript:showAllChargeRule('${qzSetting.uuid}', 'Phone', '${qzSetting.qzKeywordRankInfoMap['Phone'].achieveLevel}', '${qzSetting.qzKeywordRankInfoMap['Phone'].differenceValue}')"><strong> . . . </strong></a>
 										</span>
 										<span><a href="javascript:;">全站达标信息</a></span>
 									</div>
@@ -1139,7 +1169,7 @@
 	</form>
 </div>
 <%--收费详情列表--%>
-<div id="chargeLogListDiv" class="easyui-dialog" style="display:none;left: 40%;" >
+<div id="chargeLogListDiv" class="easyui-dialog" style="display:none;left: 40%;">
 	<table id="chargeLogListTable" border="1" cellpadding="10" style="font-size: 12px;background-color: white;border-collapse: collapse;margin: 10px 10px;width:92%;">
 		<tr>
 			<td>收费时间</td>
@@ -1147,6 +1177,17 @@
 			<td>收费金额</td>
 			<td>收费人员</td>
 			<td>创建时间</td>
+		</tr>
+	</table>
+</div>
+<%--达标信息详情列表--%>
+<div id="chargeRulesDialog" class="easyui-dialog" style="display:none;left: 40%;">
+	<table id="chargeRulesListTable" border="1" cellpadding="10" style="font-size: 12px;background-color: white;border-collapse: collapse;margin: 10px 10px;width:92%;">
+		<tr>
+			<td>序号</td>
+			<td>初始词量</td>
+			<td>达标词量</td>
+			<td>价格</td>
 		</tr>
 	</table>
 </div>

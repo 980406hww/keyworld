@@ -36,8 +36,8 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
     @Autowired
     private ConfigService configService;
 
-    public List<QZKeywordRankInfo> searchExistingQZKeywordRankInfo (Long uuid, Boolean increaseType, String terminalType) {
-        return qzKeywordRankInfoDao.searchExistingQZKeywordRankInfo(uuid, increaseType, terminalType);
+    public List<QZKeywordRankInfo> searchExistingQZKeywordRankInfo (Long uuid, Integer checkStatus, String terminalType) {
+        return qzKeywordRankInfoDao.searchExistingQZKeywordRankInfo(uuid, checkStatus, terminalType);
     }
 
     public void deleteByQZSettingUuid (Long uuid) {
@@ -107,17 +107,25 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
         return qzKeywordRankInfo;
     }
 
-    public QZSettingSearchCriteria getCountDownAndUp(QZSettingSearchCriteria qzSettingSearchCriteria){
-        Config uppperConfig = configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK, Constants.CONFIG_KEY_UPPER_VALUE);
+    public QZSettingSearchCriteria getCountNumOfRankInfo(QZSettingSearchCriteria qzSettingSearchCriteria){
+        Config upperConfig = configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK, Constants.CONFIG_KEY_UPPER_VALUE);
         Config lowerConfig = configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK, Constants.CONFIG_KEY_LOWER_VALUE);
+        Config differenceValueConfig = configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK, Constants.CONFIG_KEY_DIFFERENCEVALUE_VALUE);
         if (null == qzSettingSearchCriteria.getTerminalType()) {
             qzSettingSearchCriteria.setTerminalType("PC");
         }
-        QZSettingSearchCriteria countDownAndUpQZSettingSearchCriteria = qzKeywordRankInfoDao.getCountDownAndUp(Double.parseDouble(uppperConfig.getValue()), Double.parseDouble(lowerConfig.getValue()), qzSettingSearchCriteria.getTerminalType());
-        qzSettingSearchCriteria.setUpperValue(Double.parseDouble(uppperConfig.getValue()));
-        qzSettingSearchCriteria.setLowerValue(Double.parseDouble(lowerConfig.getValue()));
-        qzSettingSearchCriteria.setUpNum(countDownAndUpQZSettingSearchCriteria.getUpNum());
-        qzSettingSearchCriteria.setDownNum(countDownAndUpQZSettingSearchCriteria.getDownNum());
+        double upperValue = Double.parseDouble(upperConfig.getValue());
+        double lowerValue = Double.parseDouble(lowerConfig.getValue());
+        double differenceValue = Double.parseDouble(differenceValueConfig.getValue());
+        QZSettingSearchCriteria countNumOfRankInfoQZSettingSearchCriteria = qzKeywordRankInfoDao.getCountNumOfRankInfo(upperValue, lowerValue, differenceValue, qzSettingSearchCriteria.getTerminalType());
+        qzSettingSearchCriteria.setUpperValue(upperValue);
+        qzSettingSearchCriteria.setLowerValue(lowerValue);
+        qzSettingSearchCriteria.setDifferenceValue(differenceValue);
+        qzSettingSearchCriteria.setUpNum(countNumOfRankInfoQZSettingSearchCriteria.getUpNum());
+        qzSettingSearchCriteria.setDownNum(countNumOfRankInfoQZSettingSearchCriteria.getDownNum());
+        qzSettingSearchCriteria.setAtLeastStandardNum(countNumOfRankInfoQZSettingSearchCriteria.getAtLeastStandardNum());
+        qzSettingSearchCriteria.setNeverStandardNum(countNumOfRankInfoQZSettingSearchCriteria.getNeverStandardNum());
+        qzSettingSearchCriteria.setCloseStandardNum(countNumOfRankInfoQZSettingSearchCriteria.getCloseStandardNum());
         return qzSettingSearchCriteria;
     }
 

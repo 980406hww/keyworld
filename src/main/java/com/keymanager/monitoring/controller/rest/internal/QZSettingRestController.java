@@ -2,10 +2,7 @@ package com.keymanager.monitoring.controller.rest.internal;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
-import com.keymanager.monitoring.criteria.CustomerCriteria;
-import com.keymanager.monitoring.criteria.QZSettingSaveCustomerKeywordsCriteria;
-import com.keymanager.monitoring.criteria.QZSettingSearchClientGroupInfoCriteria;
-import com.keymanager.monitoring.criteria.QZSettingSearchCriteria;
+import com.keymanager.monitoring.criteria.*;
 import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.QZCategoryTag;
 import com.keymanager.monitoring.entity.QZSetting;
@@ -125,6 +122,16 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		return new ResponseEntity<Object>(qzSettingService.getQZSetting(uuid), HttpStatus.OK);
 	}
 
+	@RequestMapping(value = "/getChargeRule", method = RequestMethod.POST)
+    public ResponseEntity<?> getChargeRules(@RequestBody QZSettingSearchChargeRuleCriteria qzSettingSearchChargeRuleCriteria) {
+	    try{
+            return new ResponseEntity<Object>(qzChargeRuleService.searchChargeRules(qzSettingSearchChargeRuleCriteria), HttpStatus.OK);
+        } catch (Exception e) {
+	        logger.error(e.getMessage());
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
 	@RequiresPermissions("/internal/qzsetting/searchQZSettings")
 	@RequestMapping(value = "/searchQZSettings", method = RequestMethod.GET)
 	public ModelAndView searchQZSettingsGet(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request) {
@@ -146,7 +153,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
 	private ModelAndView constructQZSettingModelAndView(HttpServletRequest request, QZSettingSearchCriteria qzSettingSearchCriteria, int currentPageNumber, int pageSize) {
 		ModelAndView modelAndView = new ModelAndView("/qzsetting/list");
 		Map<String, Integer> chargeRemindDataMap = qzSettingService.getChargeRemindData();
-        qzKeywordRankInfoService.getCountDownAndUp(qzSettingSearchCriteria);
+        qzKeywordRankInfoService.getCountNumOfRankInfo(qzSettingSearchCriteria);
 
 		CustomerCriteria customerCriteria = new CustomerCriteria();
 		String entryType = (String) request.getSession().getAttribute("entryType");

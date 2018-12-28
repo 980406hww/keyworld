@@ -14,7 +14,7 @@ import java.util.List;
  **/
 public interface QZKeywordRankInfoDao extends BaseMapper<QZKeywordRankInfo> {
 
-    List<QZKeywordRankInfo> searchExistingQZKeywordRankInfo (@Param("qzSettingUuid") Long qzSettingUuid, @Param("increaseType") Boolean increaseType, @Param("terminalType") String terminalType);
+    List<QZKeywordRankInfo> searchExistingQZKeywordRankInfo (@Param("qzSettingUuid") Long qzSettingUuid, @Param("checkStatus") Integer checkStatus, @Param("terminalType") String terminalType);
 
     void deleteByQZSettingUuid (@Param("qzSettingUuid") Long qzSettingUuid);
 
@@ -22,5 +22,5 @@ public interface QZKeywordRankInfoDao extends BaseMapper<QZKeywordRankInfo> {
 
     List<QZKeywordRankInfo> getQzKeywordRankInfos();
 
-    QZSettingSearchCriteria getCountDownAndUp(@Param("upper")double upper, @Param("lower")double lower, @Param("terminalType") String terminalType);
+    QZSettingSearchCriteria getCountNumOfRankInfo(@Param("upper")double upper, @Param("lower")double lower, @Param("differenceValue") double differenceValue, @Param("terminalType") String terminalType);
 }

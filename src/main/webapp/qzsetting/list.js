@@ -5,6 +5,7 @@ $(function () {
     $("#getAvailableQZSettings").dialog("close");
     $("#showAllOperationType").dialog("close");
     $("#customerKeywordDialog").dialog("close");
+    $("#chargeRulesDialog").dialog("close");
 
     var searchCustomerForm = $("#chargeForm");
     var pageSize = searchCustomerForm.find('#pageSizeHidden').val();
@@ -49,19 +50,28 @@ function loadingCheckTerminalType() {
 }
 function searchRiseOrFall() {
     $(".mytabs div:eq(0)").find("input:checkbox").click(function () {
-        var increaseType;
+        var checkStatus;
         if (!$(this).prop("checked")) {
-            increaseType = null;
+            checkStatus = null;
         } else {
             var parentName = $(this).parent().attr("name");
-            if (parentName == "upper") {
-                increaseType = 1;
-            }
             if (parentName == "lower") {
-                increaseType = 0;
+                checkStatus = 1;
+            }
+            if (parentName == "upper") {
+                checkStatus = 2;
+            }
+            if (parentName == "atLeastStandard") {
+                checkStatus = 3;
+            }
+            if (parentName == "neverStandard") {
+                checkStatus = 4;
+            }
+            if (parentName == "closeStandard") {
+                checkStatus = 5;
             }
         }
-        $("#chargeForm").find("#increaseType").val(increaseType);
+        $("#chargeForm").find("#checkStatus").val(checkStatus);
         trimSearchCondition('1');
     });
 }
@@ -434,7 +444,7 @@ function getQZSettingClientGroupInfo(body, terminalType) {
                 }
             },
             error: function () {
-                alert("获取优化分组机器信息失败，请刷新重试或提交问题给开发人员！");
+                console.log("获取优化分组机器信息失败，请刷新重试或提交问题给开发人员！");
             }
         });
     });
@@ -485,8 +495,67 @@ function searchCustomerKeywords(customerUuid, optimizeGroupName) {
     searchCustomerKeywordForm.find("#status").val(1);
     searchCustomerKeywordForm.submit();
 }
-function showAllChargeRule() {
-    alert("功能未完成");
+function showAllChargeRule(qzSettingUuid, terminalType, achieveLevel, differenceValue) {
+    var postData = {};
+    postData.qzSettingUuid = parseInt(qzSettingUuid);
+    postData.terminalType = terminalType;
+    $.ajax({
+        url: '/internal/qzsetting/getChargeRule',
+        type: 'POST',
+        data: JSON.stringify(postData),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        success: function (qzChargeRules) {
+            if(qzChargeRules != null && qzChargeRules.length > 0) {
+                $("#chargeRulesListTable  tr:not(:first)").remove();
+                $.each(qzChargeRules, function (idx, val) {
+                   var newTr = document.createElement("tr");
+                   var chargeRuleElements = [
+                       idx + 1,
+                       val.startKeywordCount,
+                       val.endKeywordCount,
+                       val.amount
+                   ];
+                   $.each(chargeRuleElements, function (index, v) {
+                       var newTd = document.createElement("td");
+                       newTr.appendChild(newTd);
+                       if (v == null) {
+                           newTd.innerHTML = "";
+                       } else {
+                           newTd.innerHTML = v;
+                       }
+                   });
+                   if (idx + 1 < parseInt(achieveLevel) || (idx + 1 == parseInt(achieveLevel) && parseInt(differenceValue) == 2)) {
+                       $(newTr).css("background-color", "green");
+                   }
+                   $("#chargeRulesListTable")[0].lastChild.appendChild(newTr);
+                });
+                $("#chargeRulesDialog").show();
+                $("#chargeRulesDialog").dialog({
+                    resizable: false,
+                    width: 300,
+                    title: "达标信息详情",
+                    modal: true,
+                    buttons: [{
+                        text: '关闭',
+                        iconCls: 'icon-cancel',
+                        handler: function () {
+                            $("#chargeRulesDialog").dialog("close");
+                        }
+                    }]
+                });
+                $("#chargeRulesDialog").dialog("open");
+                $("#chargeRulesDialog").window("resize",{top:$(document).scrollTop() + 300});
+            } else {
+                alert("暂无达标信息");
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "获取信息失败！");
+        }
+    });
 }
 function showAllOperationType(self, e) {
     var event = e||window.event;
@@ -792,12 +861,12 @@ function toTimeFormat(time) {
     var minutes = time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes();
     var seconds = time.getSeconds() < 10 ? "0" + time.getSeconds() : time.getSeconds();
     return date + " " + hours + ":" + minutes + ":" + seconds;
-};
+}
 function toDateFormat (time) {
     return time.getFullYear() + "-" +
         (time.getMonth() + 1) + "-" +
         time.getDate();
-};
+}
 function saveChargeLog(self) {
     var chargeDialog = $("#chargeDialog");
     var selectedOperationTypes = chargeDialog.find("input[name=operationType]:checkbox:checked");
