@@ -101,6 +101,10 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
             qzKeywordRankInfo.setBaiduWeight(externalQzKeywordRankInfoVO.getBaiduWeight());
             qzKeywordRankInfo.setBaiduRecord(externalQzKeywordRankInfoVO.getBaiduRecord());
             qzKeywordRankInfo.setBaiduRecordFullDate(externalQzKeywordRankInfoVO.getBaiduRecordFullDate());
+            qzKeywordRankInfo.setAchieveLevel(externalQzKeywordRankInfoVO.getAchieveLevel());
+            qzKeywordRankInfo.setSumSeries(externalQzKeywordRankInfoVO.getSumSeries());
+            qzKeywordRankInfo.setDifferenceValue(externalQzKeywordRankInfoVO.getDifferenceValue());
+            qzKeywordRankInfo.setCurrentPrice(externalQzKeywordRankInfoVO.getCurrentPrice());
         }catch (Exception e){
             logger.error("数据封装异常"+e.getMessage());
         }

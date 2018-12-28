@@ -76,11 +76,11 @@ public class QZKeywordRankInfo extends BaseEntity {
 
     /* 达到等级 */
     @TableField(value = "fAchieveLevel")
-    private int achieveLevel;
+    private Integer achieveLevel;
 
     /* 总级数 */
     @TableField(value = "fSumSeries")
-    private int sumSeries;
+    private Integer sumSeries;
 
     /* 下级差值 */
     @TableField(value = "fDifferenceValue")
@@ -88,7 +88,7 @@ public class QZKeywordRankInfo extends BaseEntity {
 
     /* 当前级别价格 */
     @TableField(value = "fCurrentPrice")
-    private int currentPrice;
+    private Integer currentPrice;
 
     /* 前10的增长数（有正负） */
     @TableField(exist = false)
@@ -118,19 +118,19 @@ public class QZKeywordRankInfo extends BaseEntity {
     @TableField(exist = false)
     private int topFiftyNum;
 
-    public int getAchieveLevel() {
+    public Integer getAchieveLevel() {
         return achieveLevel;
     }
 
-    public void setAchieveLevel(int achieveLevel) {
+    public void setAchieveLevel(Integer achieveLevel) {
         this.achieveLevel = achieveLevel;
     }
 
-    public int getSumSeries() {
+    public Integer getSumSeries() {
         return sumSeries;
     }
 
-    public void setSumSeries(int sumSeries) {
+    public void setSumSeries(Integer sumSeries) {
         this.sumSeries = sumSeries;
     }
 
@@ -142,11 +142,11 @@ public class QZKeywordRankInfo extends BaseEntity {
         this.differenceValue = differenceValue;
     }
 
-    public int getCurrentPrice() {
+    public Integer getCurrentPrice() {
         return currentPrice;
     }
 
-    public void setCurrentPrice(int currentPrice) {
+    public void setCurrentPrice(Integer currentPrice) {
         this.currentPrice = currentPrice;
     }
 

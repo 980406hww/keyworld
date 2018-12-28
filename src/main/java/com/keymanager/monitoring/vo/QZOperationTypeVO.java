@@ -3,9 +3,9 @@ package com.keymanager.monitoring.vo;
 public class QZOperationTypeVO {
      private Long qzSettingUuid;
      private String operationType;
-     private Integer startKeywordCount;
-     private Integer endKeywordCount;
-     private Integer amount;
+     private String startKeywordCount;
+     private String endKeywordCount;
+     private String amount;
 
     public Long getQzSettingUuid() {
         return qzSettingUuid;
@@ -23,27 +23,27 @@ public class QZOperationTypeVO {
         this.operationType = operationType;
     }
 
-    public int getStartKeywordCount() {
+    public String getStartKeywordCount() {
         return startKeywordCount;
     }
 
-    public void setStartKeywordCount(int startKeywordCount) {
+    public void setStartKeywordCount(String startKeywordCount) {
         this.startKeywordCount = startKeywordCount;
     }
 
-    public int getEndKeywordCount() {
+    public String getEndKeywordCount() {
         return endKeywordCount;
     }
 
-    public void setEndKeywordCount(int endKeywordCount) {
+    public void setEndKeywordCount(String endKeywordCount) {
         this.endKeywordCount = endKeywordCount;
     }
 
-    public int getAmount() {
+    public String getAmount() {
         return amount;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(String amount) {
         this.amount = amount;
     }
 }

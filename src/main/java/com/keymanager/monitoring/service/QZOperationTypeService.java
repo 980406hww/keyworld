@@ -1,6 +1,7 @@
 package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.google.common.annotations.VisibleForTesting;
 import com.keymanager.monitoring.dao.QZOperationTypeDao;
 import com.keymanager.monitoring.entity.QZOperationType;
 import com.keymanager.monitoring.entity.QZSetting;
@@ -32,7 +33,7 @@ public class QZOperationTypeService extends ServiceImpl<QZOperationTypeDao, QZOp
 		qzOperationTypeDao.deleteByQZSettingUuid(qzSettingUuid);
 	}
 
-	public List<QZOperationTypeVO> findQZOperationTypes(){
-		return qzOperationTypeDao.findQZOperationTypes();
+	public List<QZOperationTypeVO> findQZOperationTypes(String qzSettingUuid, String operationType,String group){
+		return qzOperationTypeDao.findQZOperationTypes(qzSettingUuid,operationType,group);
 	}
 }

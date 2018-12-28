@@ -23,5 +23,5 @@ public interface QZOperationTypeDao extends BaseMapper<QZOperationType> {
     //上一级的主键
     int selectLastId();
 
-    List<QZOperationTypeVO> findQZOperationTypes();
+    List<QZOperationTypeVO> findQZOperationTypes(@Param("qzSettingUuid")String qzSettingUuid,@Param("operationType")String operationType,@Param("group")String group);
 }

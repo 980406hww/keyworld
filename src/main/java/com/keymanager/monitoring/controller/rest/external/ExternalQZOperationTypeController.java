@@ -27,12 +27,15 @@ public class ExternalQZOperationTypeController extends SpringMVCBaseController {
     private QZOperationTypeService qzOperationTypeService;
 
     @RequestMapping(value = "/findQZOperationType", method = RequestMethod.POST)
-    public ResponseEntity<?> getQZSettingsTask(HttpServletRequest request) {
+    public ResponseEntity<?> findQZOperationType(HttpServletRequest request) {
         String userName = (String) request.getParameter("userName");
         String password = (String) request.getParameter("password");
+        String qzSettingUuid = request.getParameter("uuid");
+        String operationType = request.getParameter("operationType");
+        String group = request.getParameter("group");
         try {
             if(StringUtils.isNotBlank(userName) && StringUtils.isNotBlank(password) && validUser(userName, password)) {
-                List<QZOperationTypeVO> qzOperationTypes = qzOperationTypeService.findQZOperationTypes();
+                List<QZOperationTypeVO> qzOperationTypes = qzOperationTypeService.findQZOperationTypes(qzSettingUuid,operationType,group);
                 return new ResponseEntity<Object>(qzOperationTypes, HttpStatus.OK);
             }
         } catch (Exception ex) {
