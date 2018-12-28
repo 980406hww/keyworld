@@ -289,13 +289,13 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 	public Page<QZSetting> searchQZSetting(Page<QZSetting> page, QZSettingSearchCriteria qzSettingSearchCriteria){
 		page.setRecords(qzSettingDao.searchQZSettings(page, qzSettingSearchCriteria));
-		addingQZKeywordRankInfo(page, qzSettingSearchCriteria.getIncreaseType(), qzSettingSearchCriteria.getTerminalType());
+		addingQZKeywordRankInfo(page, qzSettingSearchCriteria.getCheckStatus(), qzSettingSearchCriteria.getTerminalType());
 		return page;
 	}
 
-	public Page<QZSetting> addingQZKeywordRankInfo (Page<QZSetting> page, Boolean increaseType, String terminalType){
+	public Page<QZSetting> addingQZKeywordRankInfo (Page<QZSetting> page, Integer checkStatus, String terminalType){
         for(QZSetting qzSetting : page.getRecords()){
-            List<QZKeywordRankInfo> qzKeywordRankInfos = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), increaseType, terminalType);
+            List<QZKeywordRankInfo> qzKeywordRankInfos = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), checkStatus, terminalType);
             Map<String, JSONObject> qzKeywordRankInfoMap = new HashMap<String, JSONObject>();
             for (QZKeywordRankInfo qzKeywordRankInfo : qzKeywordRankInfos) {
 				calculatedQZKeywordRankInfo(qzKeywordRankInfo);
@@ -554,7 +554,13 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			qzOperationTypeService.deleteByQZSettingUuid(uuid);
 		}
         qzKeywordRankInfoService.deleteByQZSettingUuid(uuid);
-        qzSettingDao.deleteById(uuid);
+		List<QZCategoryTag> qzCategoryTags = qzCategoryTagService.searchCategoryTagByQZSettingUuid(uuid);
+		if (CollectionUtils.isNotEmpty(qzCategoryTags)) {
+			for (QZCategoryTag qzCategoryTag : qzCategoryTags) {
+				qzCategoryTagService.deleteById(qzCategoryTag.getUuid());
+			}
+		}
+		qzSettingDao.deleteById(uuid);
 	}
 
 	public void deleteAll(List<String> uuids){

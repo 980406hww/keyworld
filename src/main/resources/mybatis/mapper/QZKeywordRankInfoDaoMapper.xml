@@ -18,15 +18,19 @@
             qzkri.fIncrease AS "increase",
             qzkri.fIpRoute AS "ipRoute",
             qzkri.fBaiduWeight AS "baiduWeight",
-            qzkri.fBaiduRecord AS "baiduRecord"
+            qzkri.fRecord AS "baiduRecord",
+            qzkri.fAchieveLevel AS "achieveLevel",
+            qzkri.fSumSeries AS "sumSeries",
+            qzkri.fDifferenceValue AS "differenceValue",
+            qzkri.fCurrentPrice AS "currentPrice"
         FROM t_qz_keyword_rank_info qzkri
         WHERE qzkri.fQZSettingUuid = #{qzSettingUuid}
-        <if test="increaseType != null">
+        <if test="checkStatus != null">
             <choose>
-                <when test="increaseType">
+                <when test="checkStatus == 2">
                     AND qzkri.fIncrease &gt;= 0.1
                 </when>
-                <when test="!increaseType">
+                <when test="checkStatus == 1">
                     AND qzkri.fIncrease &lt;= -0.1
                 </when>
             </choose>
@@ -63,11 +67,18 @@
       t_qz_keyword_rank_info
     </select>
 
-    <select id="getCountDownAndUp" resultType="com.keymanager.monitoring.criteria.QZSettingSearchCriteria">
+    <select id="getCountNumOfRankInfo" resultType="com.keymanager.monitoring.criteria.QZSettingSearchCriteria">
         SELECT
-            COUNT(fIncrease &lt;= #{lower} OR NULL) AS downNum,
-            COUNT(fIncrease &gt;= #{upper} OR NULL) AS upNum
+            COUNT(qk.fIncrease &lt;= #{lower} OR NULL) AS downNum,
+            COUNT(qk.fIncrease &gt;= #{upper} OR NULL) AS upNum,
+            COUNT(qk.fAchieveLevel &gt; 1 OR (qk.fAchieveLevel = 1 AND qk.fDifferenceValue = 2) OR NULL) AS atLeastStandardNum,
+            COUNT((qk.fAchieveLevel = 1 AND qk.fDifferenceValue &lt;&gt; 2) OR NULL) AS neverStandardNum,
+            COUNT(qk.fDifferenceValue &lt;= #{differenceValue} OR NULL) AS closeStandardNum
         FROM t_qz_keyword_rank_info qk
+        JOIN t_qz_setting qs
+        ON qs.fUuid = qk.fQZSettingUuid
+        JOIN t_customer c
+        ON c.fUuid = qs.fCustomerUuid
         WHERE 1=1
         <if test="terminalType != null and terminalType !=''">
             AND qk.fTerminalType = #{terminalType}

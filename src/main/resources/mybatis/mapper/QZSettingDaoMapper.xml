@@ -122,7 +122,7 @@
         FROM t_qz_setting qs
         JOIN t_customer c
         ON qs.fCustomerUuid = c.fUuid
-        <if test="qzSettingSearchCriteria.increaseType != null">
+        <if test="qzSettingSearchCriteria.checkStatus != null and qzSettingSearchCriteria.checkStatus != ''">
             JOIN t_qz_keyword_rank_info qk
             ON qs.fUuid = qk.fQZSettingUuid
         </if>
@@ -137,13 +137,22 @@
         <if test="qzSettingSearchCriteria.group != null and qzSettingSearchCriteria.group != ''">AND (qs.fPcGroup = #{qzSettingSearchCriteria.group} or qs.fPhoneGroup = #{qzSettingSearchCriteria.group})</if>
         <if test="qzSettingSearchCriteria.updateStatus != null and qzSettingSearchCriteria.updateStatus != ''">AND qs.fUpdateStatus = #{qzSettingSearchCriteria.updateStatus}</if>
         <if test="qzSettingSearchCriteria.status != null">AND qs.fStatus = #{qzSettingSearchCriteria.status}</if>
-        <if test="qzSettingSearchCriteria.increaseType != null">
+        <if test="qzSettingSearchCriteria.checkStatus != null and qzSettingSearchCriteria.checkStatus != ''">
             <choose>
-                <when test="qzSettingSearchCriteria.increaseType == 1">
+                <when test="qzSettingSearchCriteria.checkStatus == 1">
+                    AND qk.fIncrease &lt;= #{qzSettingSearchCriteria.lowerValue}
+                </when>
+                <when test="qzSettingSearchCriteria.checkStatus == 2">
                     AND qk.fIncrease &gt;= #{qzSettingSearchCriteria.upperValue}
                 </when>
-                <when test="qzSettingSearchCriteria.increaseType == 0">
-                    AND qk.fIncrease &lt;= #{qzSettingSearchCriteria.lowerValue}
+                <when test="qzSettingSearchCriteria.checkStatus == 3">
+                    AND (qk.fAchieveLevel &gt; 1 OR (qk.fAchieveLevel = 1 AND qk.fDifferenceValue = 2))
+                </when>
+                <when test="qzSettingSearchCriteria.checkStatus == 4">
+                    AND (qk.fAchieveLevel = 1 AND qk.fDifferenceValue &lt;&gt; 2)
+                </when>
+                <when test="qzSettingSearchCriteria.checkStatus == 5">
+                    AND qk.fDifferenceValue &lt;= #{qzSettingSearchCriteria.differenceValue}
                 </when>
             </choose>
             AND qk.fTerminalType = #{qzSettingSearchCriteria.terminalType}

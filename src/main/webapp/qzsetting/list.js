@@ -5,6 +5,7 @@ $(function () {
     $("#getAvailableQZSettings").dialog("close");
     $("#showAllOperationType").dialog("close");
     $("#customerKeywordDialog").dialog("close");
+    $("#chargeRulesDialog").dialog("close");
 
     var searchCustomerForm = $("#chargeForm");
     var pageSize = searchCustomerForm.find('#pageSizeHidden').val();
@@ -49,19 +50,28 @@ function loadingCheckTerminalType() {
 }
 function searchRiseOrFall() {
     $(".mytabs div:eq(0)").find("input:checkbox").click(function () {
-        var increaseType;
+        var checkStatus;
         if (!$(this).prop("checked")) {
-            increaseType = null;
+            checkStatus = null;
         } else {
             var parentName = $(this).parent().attr("name");
-            if (parentName == "upper") {
-                increaseType = 1;
-            }
             if (parentName == "lower") {
-                increaseType = 0;
+                checkStatus = 1;
+            }
+            if (parentName == "upper") {
+                checkStatus = 2;
+            }
+            if (parentName == "atLeastStandard") {
+                checkStatus = 3;
+            }
+            if (parentName == "neverStandard") {
+                checkStatus = 4;
+            }
+            if (parentName == "closeStandard") {
+                checkStatus = 5;
             }
         }
-        $("#chargeForm").find("#increaseType").val(increaseType);
+        $("#chargeForm").find("#checkStatus").val(checkStatus);
         trimSearchCondition('1');
     });
 }
@@ -118,8 +128,11 @@ function checkTerminalType(terminalType) {
 }
 function detectedTopNum(body) {
     $(body).find(".rank-wrap").each(function () {
-        generateQZKeywordTrendCharts($(this).find("#keywordTrendCharts")[0], $(this).find("div[name='rankInfo'] span").text());
         generateQZKeywordRecordCharts($(this).find("#keywordRecordCharts")[0], $(this).find("div[name='rankInfo'] span").text());
+        generateQZKeywordTrendCharts($(this).find("#keywordTrendCharts")[0], $(this).find("div[name='rankInfo'] span").text());
+        $(this).find("#keywordRecordCharts").css("position", "static");
+        $(this).find("#keywordRecordCharts").children().css("position", "static");
+        $(this).find("#keywordRecordCharts").children().children().css("position", "static");
         $(this).find("#keywordTrendCharts").css("position", "static");
         $(this).find("#keywordTrendCharts").children().css("position", "static");
         $(this).find("#keywordTrendCharts").children().children().css("position", "static");
@@ -133,7 +146,6 @@ function detectedTopNum(body) {
         });
     });
 }
-
 function generateQZKeywordRecordCharts(domElement, data) {
     if (domElement == undefined) {
         return;
@@ -143,15 +155,21 @@ function generateQZKeywordRecordCharts(domElement, data) {
         return;
     }
     var result = JSON.parse(data);
-    var date = result.baiduRecordFullDate.replace("['", "").replace("']", "").split("', '").reverse();
+    var date = result.date.replace("['", "").replace("']", "").split("', '").reverse();
     var baiduRecord = result.baiduRecord.replace("['", "").replace("']", "").split("', '").reverse();
     var keywordRecordCharts = echarts.init(domElement);
     var option = {
-        color: ['#E61A37'],
+        color: ['#0000FF'],
         title : {
             text: '百度收录趋势',
+            textStyle: {
+                color: '#999',
+                fontFamily: "Arial",
+                fontWeight: 400,
+                fontSize: 12
+            },
             x:'center',
-            y: 'bottom',
+            bottom: -3
         },
         tooltip: {
             trigger: 'axis'
@@ -214,18 +232,17 @@ function generateQZKeywordRecordCharts(domElement, data) {
             name: '收录',
             smooth: true,
             type: 'line',
-            symbolSize: 2,
+            symbolSize: 1,
             symbol: 'none',
             data: baiduRecord,
             lineStyle:{
                 type:"solid",
-                width: 2
+                width: 1
             }
         }]
     };
     keywordRecordCharts.setOption(option);
 }
-
 function generateQZKeywordTrendCharts(domElement, data) {
     if (domElement == undefined) {
         return;
@@ -246,8 +263,14 @@ function generateQZKeywordTrendCharts(domElement, data) {
         color: ['#228B22', '#0000FF', '#FF6100', '#000000', '#FF0000'],
         title : {
             text: '关键词排名趋势',
+            textStyle: {
+                color: '#999',
+                fontFamily: "Arial",
+                fontWeight: 400,
+                fontSize: 12
+            },
             x:'center',
-            y: 'bottom',
+            bottom: -3
         },
         tooltip: {
             trigger: 'axis'
@@ -381,7 +404,7 @@ function getQZSettingClientGroupInfo(body, terminalType) {
         var postData = {};
         postData.qzSettingUuid = uuid;
         postData.terminalType = terminalType;
-        postData.type = $.trim(div.parent().find(".other-rank .row:last-child").find("div:eq(3) span.line1 a").text());
+        postData.type = $.trim(div.parent().find(".other-rank .row:last-child").find("div:eq(2) span.line1 input[name='type']").val());
         postData.optimizeGroupName = optimizeGroupName;
         $.ajax({
             url: '/internal/qzsetting/getQZSettingClientGroupInfo',
@@ -414,14 +437,14 @@ function getQZSettingClientGroupInfo(body, terminalType) {
                         $(showSomeOperationType).parent().find("input[name='allOperationType']").val(allOperationType);
                     }
                 }
-                var status = div.parent().find(".other-rank .row:last-child").find("div:eq(4) span.line1 a").attr("status");
+                var status = div.parent().find(".other-rank .row:last-child").find("div:eq(3) span.line1 a").attr("status");
                 div.find(".row:first-child").find("div:eq(0) span.line1 a").text(optimizeGroupName+" ("+clientCount+")");
                 if (status == "3") {
                     div.find(".row:first-child").find("div:eq(0) span.line1 a").css("color", "red");
                 }
             },
             error: function () {
-                alert("获取优化分组机器信息失败，请刷新重试或提交问题给开发人员！");
+                console.log("获取优化分组机器信息失败，请刷新重试或提交问题给开发人员！");
             }
         });
     });
@@ -471,6 +494,68 @@ function searchCustomerKeywords(customerUuid, optimizeGroupName) {
     searchCustomerKeywordForm.find("#optimizeGroupName").val(optimizeGroupName);
     searchCustomerKeywordForm.find("#status").val(1);
     searchCustomerKeywordForm.submit();
+}
+function showAllChargeRule(qzSettingUuid, terminalType, achieveLevel, differenceValue) {
+    var postData = {};
+    postData.qzSettingUuid = parseInt(qzSettingUuid);
+    postData.terminalType = terminalType;
+    $.ajax({
+        url: '/internal/qzsetting/getChargeRule',
+        type: 'POST',
+        data: JSON.stringify(postData),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        success: function (qzChargeRules) {
+            if(qzChargeRules != null && qzChargeRules.length > 0) {
+                $("#chargeRulesListTable  tr:not(:first)").remove();
+                $.each(qzChargeRules, function (idx, val) {
+                   var newTr = document.createElement("tr");
+                   var chargeRuleElements = [
+                       idx + 1,
+                       val.startKeywordCount,
+                       val.endKeywordCount,
+                       val.amount
+                   ];
+                   $.each(chargeRuleElements, function (index, v) {
+                       var newTd = document.createElement("td");
+                       newTr.appendChild(newTd);
+                       if (v == null) {
+                           newTd.innerHTML = "";
+                       } else {
+                           newTd.innerHTML = v;
+                       }
+                   });
+                   if (idx + 1 < parseInt(achieveLevel) || (idx + 1 == parseInt(achieveLevel) && parseInt(differenceValue) == 2)) {
+                       $(newTr).css("background-color", "green");
+                   }
+                   $("#chargeRulesListTable")[0].lastChild.appendChild(newTr);
+                });
+                $("#chargeRulesDialog").show();
+                $("#chargeRulesDialog").dialog({
+                    resizable: false,
+                    width: 300,
+                    title: "达标信息详情",
+                    modal: true,
+                    buttons: [{
+                        text: '关闭',
+                        iconCls: 'icon-cancel',
+                        handler: function () {
+                            $("#chargeRulesDialog").dialog("close");
+                        }
+                    }]
+                });
+                $("#chargeRulesDialog").dialog("open");
+                $("#chargeRulesDialog").window("resize",{top:$(document).scrollTop() + 300});
+            } else {
+                alert("暂无达标信息");
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "获取信息失败！");
+        }
+    });
 }
 function showAllOperationType(self, e) {
     var event = e||window.event;
@@ -776,12 +861,12 @@ function toTimeFormat(time) {
     var minutes = time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes();
     var seconds = time.getSeconds() < 10 ? "0" + time.getSeconds() : time.getSeconds();
     return date + " " + hours + ":" + minutes + ":" + seconds;
-};
+}
 function toDateFormat (time) {
     return time.getFullYear() + "-" +
         (time.getMonth() + 1) + "-" +
         time.getDate();
-};
+}
 function saveChargeLog(self) {
     var chargeDialog = $("#chargeDialog");
     var selectedOperationTypes = chargeDialog.find("input[name=operationType]:checkbox:checked");

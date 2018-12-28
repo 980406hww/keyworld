@@ -267,14 +267,14 @@ ul {
 }
 
 .datalist-list .body .data-info-wrap {
-    width: 956px;
+    width: 872px;
     float: left;
     height: 150px;
     text-align: center
 }
 
 .datalist-list .body .rank-wrap {
-    width: 400px;
+    width: 690px;
     float: left;
     height: 150px;
     border-left: 1px solid #e6e6e6;
@@ -386,7 +386,7 @@ ul {
 
 .datalist-list .body .other-rank {
     float: left;
-    width: 508px;
+    width: 424px;
 }
 
 .datalist-list .body .other-rank_2 {
@@ -495,26 +495,16 @@ ul {
 
 .rank-wrap .col-3 {
     float: left;
-    width: 19%;
+    width: 10%;
     text-align: left;
 }
 
-.rank-wrap .col-8 {
-    width: 80%;
+.rank-wrap .col-1, .rank-wrap .col-2 {
+    width: 45%;
     text-align: left;
 }
 
-.rank-wrap .col-8 h1 {
-    text-align: center;
-    padding-top: 65px;
-}
-
-.rank-wrap .col-7 {
-    width: 80%;
-    text-align: left;
-}
-
-.rank-wrap .col-7 h1 {
+.rank-wrap .col-1 h1, .rank-wrap .col-2 h1 {
     text-align: center;
     padding-top: 65px;
 }

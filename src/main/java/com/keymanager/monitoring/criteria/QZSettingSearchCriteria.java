@@ -11,9 +11,13 @@ public class QZSettingSearchCriteria{
     private Integer status;
     private Integer downNum;
     private Integer upNum;
+    private Integer atLeastStandardNum;
+    private Integer neverStandardNum;
+    private Integer closeStandardNum;
     private double upperValue;
     private double lowerValue;
-    private Boolean increaseType;
+    private double differenceValue;
+    private Integer checkStatus;
     private String terminalType;
     private String categoryTag;
 
@@ -97,12 +101,12 @@ public class QZSettingSearchCriteria{
         this.lowerValue = lowerValue;
     }
 
-    public Boolean getIncreaseType () {
-        return increaseType;
+    public Integer getCheckStatus () {
+        return checkStatus;
     }
 
-    public void setIncreaseType (Boolean increaseType) {
-        this.increaseType = increaseType;
+    public void setCheckStatus (Integer checkStatus) {
+        this.checkStatus = checkStatus;
     }
 
     public String getTerminalType () {
@@ -135,5 +139,37 @@ public class QZSettingSearchCriteria{
 
     public void setCategoryTag (String categoryTag) {
         this.categoryTag = categoryTag;
+    }
+
+    public Integer getAtLeastStandardNum () {
+        return atLeastStandardNum;
+    }
+
+    public void setAtLeastStandardNum (Integer atLeastStandardNum) {
+        this.atLeastStandardNum = atLeastStandardNum;
+    }
+
+    public Integer getNeverStandardNum () {
+        return neverStandardNum;
+    }
+
+    public void setNeverStandardNum (Integer neverStandardNum) {
+        this.neverStandardNum = neverStandardNum;
+    }
+
+    public Integer getCloseStandardNum () {
+        return closeStandardNum;
+    }
+
+    public void setCloseStandardNum (Integer closeStandardNum) {
+        this.closeStandardNum = closeStandardNum;
+    }
+
+    public double getDifferenceValue () {
+        return differenceValue;
+    }
+
+    public void setDifferenceValue (double differenceValue) {
+        this.differenceValue = differenceValue;
     }
 }

@@ -62,10 +62,6 @@ public class QZKeywordRankInfo extends BaseEntity {
     @TableField(value = "fBaiduWeight")
     private int baiduWeight;
 
-//    /* 百度收录 */
-//    @TableField(value = "fBaiduRecord")
-//    private String baiduRecord;
-
     /* 百度收录 */
     @TableField(value = "fRecord")
     private String baiduRecord;
