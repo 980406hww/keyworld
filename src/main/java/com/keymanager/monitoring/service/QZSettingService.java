@@ -607,6 +607,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		customerKeyword.setUrl(qzSettingSaveCustomerKeywordsCriteria.getDomain());
 		customerKeyword.setOptimizeGroupName(qzSettingSaveCustomerKeywordsCriteria.getOptimizeGroupName());
 		customerKeyword.setServiceProvider("baidutop123");
+		customerKeyword.setManualCleanTitle(true);
 		customerKeyword.setCollectMethod(CollectMethod.PerMonth.name());
         customerKeyword.setCurrentIndexCount(-1);
         customerKeyword.setPositionFirstFee(-1d);

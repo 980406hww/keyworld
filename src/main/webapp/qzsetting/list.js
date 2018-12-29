@@ -495,7 +495,22 @@ function searchCustomerKeywords(customerUuid, optimizeGroupName) {
     searchCustomerKeywordForm.find("#status").val(1);
     searchCustomerKeywordForm.submit();
 }
-function showAllChargeRule(qzSettingUuid, terminalType, achieveLevel, differenceValue) {
+function showChargeRulesDiv(self, e) {
+    var event = e||window.event;
+    var pageX = event.pageX;
+    var pageY = event.pageY;
+    if(pageX==undefined) {
+        pageX = event.clientX+document.body.scrollLeft||document.documentElement.scrollLeft;
+    }
+    if(pageY==undefined) {
+        pageY = event.clientY+document.body.scrollTop||document.documentElement.scrollTop;
+    }
+    var qzSettingUuid = $(self).attr("id");
+    var terminalType = $("#chargeForm").find("#terminalType").val();
+    if (terminalType == "") {
+        terminalType = "PC";
+    }
+    $("#chargeRulesDivTable  tr:not(:first)").remove();
     var postData = {};
     postData.qzSettingUuid = parseInt(qzSettingUuid);
     postData.terminalType = terminalType;
@@ -508,54 +523,47 @@ function showAllChargeRule(qzSettingUuid, terminalType, achieveLevel, difference
             'Content-Type': 'application/json'
         },
         success: function (qzChargeRules) {
+            $("#chargeRulesDivTable  tr:not(:first)").remove();
             if(qzChargeRules != null && qzChargeRules.length > 0) {
-                $("#chargeRulesListTable  tr:not(:first)").remove();
+                var achieveLevel = $(self).attr("level");
+                var differenceValue = $(self).attr("diffValue");
                 $.each(qzChargeRules, function (idx, val) {
-                   var newTr = document.createElement("tr");
-                   var chargeRuleElements = [
-                       idx + 1,
-                       val.startKeywordCount,
-                       val.endKeywordCount,
-                       val.amount
-                   ];
-                   $.each(chargeRuleElements, function (index, v) {
-                       var newTd = document.createElement("td");
-                       newTr.appendChild(newTd);
-                       if (v == null) {
-                           newTd.innerHTML = "";
-                       } else {
-                           newTd.innerHTML = v;
-                       }
-                   });
-                   if (idx + 1 < parseInt(achieveLevel) || (idx + 1 == parseInt(achieveLevel) && parseInt(differenceValue) == 2)) {
-                       $(newTr).css("background-color", "green");
-                   }
-                   $("#chargeRulesListTable")[0].lastChild.appendChild(newTr);
-                });
-                $("#chargeRulesDialog").show();
-                $("#chargeRulesDialog").dialog({
-                    resizable: false,
-                    width: 300,
-                    title: "达标信息详情",
-                    modal: true,
-                    buttons: [{
-                        text: '关闭',
-                        iconCls: 'icon-cancel',
-                        handler: function () {
-                            $("#chargeRulesDialog").dialog("close");
+                    var newTr = document.createElement("tr");
+                    var chargeRuleElements = [
+                        idx + 1,
+                        val.startKeywordCount,
+                        val.endKeywordCount,
+                        val.amount
+                    ];
+                    $.each(chargeRuleElements, function (index, v) {
+                        var newTd = document.createElement("td");
+                        newTr.appendChild(newTd);
+                        if (v == null) {
+                            newTd.innerHTML = "";
+                        } else {
+                            newTd.innerHTML = v;
                         }
-                    }]
+                    });
+                    if (idx + 1 < parseInt(achieveLevel) || (idx + 1 == parseInt(achieveLevel) && parseInt(differenceValue) == 2)) {
+                        $(newTr).css("background-color", "green");
+                    }
+                    $("#chargeRulesDivTable")[0].lastChild.appendChild(newTr);
                 });
-                $("#chargeRulesDialog").dialog("open");
-                $("#chargeRulesDialog").window("resize",{top:$(document).scrollTop() + 300});
-            } else {
-                alert("暂无达标信息");
             }
         },
         error: function () {
             $().toastmessage('showErrorToast', "获取信息失败！");
         }
     });
+    var chargeRulesDiv = document.getElementById('chargeRulesDiv');
+    chargeRulesDiv.style.display="block";
+    chargeRulesDiv.style.left=(pageX) + "px";
+    chargeRulesDiv.style.top=(pageY) + "px";
+    chargeRulesDiv.style.zIndex=1000;
+    chargeRulesDiv.style.position="absolute";
+}
+function closeChargeRulesDiv() {
+    $("#chargeRulesDiv").css("display", "none");
 }
 function showAllOperationType(self, e) {
     var event = e||window.event;

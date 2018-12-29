@@ -411,7 +411,7 @@ ul {
     color: #000;
 }
 
-.datalist-list .body .other-rank .row .line1 a:hover, .datalist-list .body .other-rank_1 .row .line1 a:hover, .datalist-list .body .other-rank_2 .row .line1 a:hover {
+.datalist-list .body .other-rank .row .line1 a:hover, .datalist-list .body .other-rank_1 .row .line1:last-child a:hover, .datalist-list .body .other-rank_2 .row .line1 a:hover {
     color: #0c7df5;
 }
 

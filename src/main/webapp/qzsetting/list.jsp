@@ -219,11 +219,11 @@
 								<div class="other-rank_1">
 									<div class="row">
 										<span class="line1">
-											<a href="javascript:;" title="进行中的达标信息">
-												<c:if test="${qzSetting.qzKeywordRankInfoMap['PC'].sumSeries != null}">
+											<c:if test="${qzSetting.qzKeywordRankInfoMap['PC'].sumSeries != null}">
+												<a href="javascript:;" id="${qzSetting.uuid}" level="${qzSetting.qzKeywordRankInfoMap['PC'].achieveLevel}" diffValue="${qzSetting.qzKeywordRankInfoMap['PC'].differenceValue}" onmouseover="showChargeRulesDiv($(this))" onmouseout="closeChargeRulesDiv()">
 													<c:choose>
 														<c:when test="${qzSetting.qzKeywordRankInfoMap['PC'].achieveLevel == qzSetting.qzKeywordRankInfoMap['PC'].sumSeries and qzSetting.qzKeywordRankInfoMap['PC'].differenceValue == 2}">
-															<font style="background-color: darkgreen;font-size: 14px;">${qzSetting.qzKeywordRankInfoMap['PC'].achieveLevel} / ${qzSetting.qzKeywordRankInfoMap['PC'].sumSeries} (${qzSetting.qzKeywordRankInfoMap['PC'].currentPrice})</font>
+															<font style="background-color: forestgreen;font-size: 14px;">${qzSetting.qzKeywordRankInfoMap['PC'].achieveLevel} / ${qzSetting.qzKeywordRankInfoMap['PC'].sumSeries} (${qzSetting.qzKeywordRankInfoMap['PC'].currentPrice})</font>
 														</c:when>
 														<c:when test="${qzSetting.qzKeywordRankInfoMap['PC'].achieveLevel > 1}">
 															<font style="background-color: orange;font-size: 14px;">${qzSetting.qzKeywordRankInfoMap['PC'].achieveLevel} / ${qzSetting.qzKeywordRankInfoMap['PC'].sumSeries} (${qzSetting.qzKeywordRankInfoMap['PC'].currentPrice})</font>
@@ -232,10 +232,9 @@
 															<font style="background-color: red;font-size: 14px;">${qzSetting.qzKeywordRankInfoMap['PC'].achieveLevel} / ${qzSetting.qzKeywordRankInfoMap['PC'].sumSeries} (${qzSetting.qzKeywordRankInfoMap['PC'].currentPrice})</font>
 														</c:otherwise>
 													</c:choose>
-												</c:if>
-												<c:if test="${qzSetting.qzKeywordRankInfoMap['PC'].sumSeries == null}">暂无</c:if>
-											</a><br>
-											<a title="达标信息详情" href="javascript:showAllChargeRule('${qzSetting.uuid}', 'PC', '${qzSetting.qzKeywordRankInfoMap['PC'].achieveLevel}', '${qzSetting.qzKeywordRankInfoMap['PC'].differenceValue}')"><strong> . . . </strong></a>
+												</a>
+											</c:if>
+											<c:if test="${qzSetting.qzKeywordRankInfoMap['PC'].sumSeries == null}"><a href="javascript:;">暂无</a></c:if>
 										</span>
 										<span><a href="javascript:;">全站达标信息</a></span>
 									</div>
@@ -504,11 +503,11 @@
 								<div class="other-rank_1">
 									<div class="row">
 										<span class="line1">
-											<a href="javascript:;" title="进行中的达标信息">
-												<c:if test="${qzSetting.qzKeywordRankInfoMap['Phone'].sumSeries != null}">
+											<c:if test="${qzSetting.qzKeywordRankInfoMap['Phone'].sumSeries != null}">
+												<a href="javascript:;" id="${qzSetting.uuid}" level="${qzSetting.qzKeywordRankInfoMap['Phone'].achieveLevel}" diffValue="${qzSetting.qzKeywordRankInfoMap['Phone'].differenceValue}" onmouseover="showChargeRulesDiv($(this))" onmouseout="closeChargeRulesDiv()">
 													<c:choose>
 														<c:when test="${qzSetting.qzKeywordRankInfoMap['Phone'].achieveLevel == qzSetting.qzKeywordRankInfoMap['Phone'].sumSeries and qzSetting.qzKeywordRankInfoMap['Phone'].differenceValue == 2}">
-															<font style="background-color: darkgreen;font-size: 14px;">${qzSetting.qzKeywordRankInfoMap['Phone'].achieveLevel} / ${qzSetting.qzKeywordRankInfoMap['Phone'].sumSeries} (${qzSetting.qzKeywordRankInfoMap['Phone'].currentPrice})</font>
+															<font style="background-color: forestgreen;font-size: 14px;">${qzSetting.qzKeywordRankInfoMap['Phone'].achieveLevel} / ${qzSetting.qzKeywordRankInfoMap['Phone'].sumSeries} (${qzSetting.qzKeywordRankInfoMap['Phone'].currentPrice})</font>
 														</c:when>
 														<c:when test="${qzSetting.qzKeywordRankInfoMap['Phone'].achieveLevel > 1}">
 															<font style="background-color: orange;font-size: 14px;">${qzSetting.qzKeywordRankInfoMap['Phone'].achieveLevel} / ${qzSetting.qzKeywordRankInfoMap['Phone'].sumSeries} (${qzSetting.qzKeywordRankInfoMap['Phone'].currentPrice})</font>
@@ -517,10 +516,9 @@
 															<font style="background-color: red;font-size: 14px;">${qzSetting.qzKeywordRankInfoMap['Phone'].achieveLevel} / ${qzSetting.qzKeywordRankInfoMap['Phone'].sumSeries} (${qzSetting.qzKeywordRankInfoMap['Phone'].currentPrice})</font>
 														</c:otherwise>
 													</c:choose>
-												</c:if>
-												<c:if test="${qzSetting.qzKeywordRankInfoMap['Phone'].sumSeries == null}">暂无</c:if>
-											</a><br>
-											<a title="达标信息详情" href="javascript:showAllChargeRule('${qzSetting.uuid}', 'Phone', '${qzSetting.qzKeywordRankInfoMap['Phone'].achieveLevel}', '${qzSetting.qzKeywordRankInfoMap['Phone'].differenceValue}')"><strong> . . . </strong></a>
+												</a>
+											</c:if>
+											<c:if test="${qzSetting.qzKeywordRankInfoMap['Phone'].sumSeries == null}"><a href="javascript:;">暂无</a></c:if>
 										</span>
 										<span><a href="javascript:;">全站达标信息</a></span>
 									</div>
@@ -1183,6 +1181,16 @@
 <%--达标信息详情列表--%>
 <div id="chargeRulesDialog" class="easyui-dialog" style="display:none;left: 40%;">
 	<table id="chargeRulesListTable" border="1" cellpadding="10" style="font-size: 12px;background-color: white;border-collapse: collapse;margin: 10px 10px;width:92%;">
+		<tr>
+			<td>序号</td>
+			<td>初始词量</td>
+			<td>达标词量</td>
+			<td>价格</td>
+		</tr>
+	</table>
+</div>
+<div id="chargeRulesDiv" style="display:none;width:300px;">
+	<table id="chargeRulesDivTable" border="1" cellpadding="10" style="font-size: 12px;background-color: white;border-collapse: collapse;margin: 10px 10px;width:92%;">
 		<tr>
 			<td>序号</td>
 			<td>初始词量</td>
