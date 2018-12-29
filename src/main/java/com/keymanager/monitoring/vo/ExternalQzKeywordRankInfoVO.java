@@ -29,14 +29,41 @@ public class ExternalQzKeywordRankInfoVO {
     private Integer baiduWeight;
     private String baiduRecord;
     private String baiduRecordFullDate;
-    private String group;
+    private Integer achieveLevel;
+    private Integer sumSeries;
+    private Double differenceValue;
+    private Integer currentPrice;
 
-    public String getGroup() {
-        return group;
+    public Integer getAchieveLevel() {
+        return achieveLevel;
     }
 
-    public void setGroup(String group) {
-        this.group = group;
+    public void setAchieveLevel(Integer achieveLevel) {
+        this.achieveLevel = achieveLevel;
+    }
+
+    public Integer getSumSeries() {
+        return sumSeries;
+    }
+
+    public void setSumSeries(Integer sumSeries) {
+        this.sumSeries = sumSeries;
+    }
+
+    public Double getDifferenceValue() {
+        return differenceValue;
+    }
+
+    public void setDifferenceValue(Double differenceValue) {
+        this.differenceValue = differenceValue;
+    }
+
+    public Integer getCurrentPrice() {
+        return currentPrice;
+    }
+
+    public void setCurrentPrice(Integer currentPrice) {
+        this.currentPrice = currentPrice;
     }
 
     public String getBaiduRecordFullDate() {

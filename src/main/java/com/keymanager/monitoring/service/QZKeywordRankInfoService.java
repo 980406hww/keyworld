@@ -11,16 +11,12 @@ import com.keymanager.monitoring.entity.QZKeywordRankInfo;
 import com.keymanager.monitoring.entity.QZSetting;
 import com.keymanager.monitoring.vo.ExternalQzKeywordRankInfoVO;
 import com.keymanager.monitoring.vo.ExternalQzSettingVO;
-import com.keymanager.monitoring.vo.QZOperationTypeVO;
 import com.keymanager.util.Constants;
 import com.keymanager.util.PaginationRewriteQueryTotalInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,9 +35,6 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
 
     @Autowired
     private ConfigService configService;
-
-    @Autowired
-    private QZOperationTypeService qzOperationTypeService;
 
     public List<QZKeywordRankInfo> searchExistingQZKeywordRankInfo (Long uuid, Integer checkStatus, String terminalType) {
         return qzKeywordRankInfoDao.searchExistingQZKeywordRankInfo(uuid, checkStatus, terminalType);
@@ -68,7 +61,6 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
     }
 
     public void updateQzKeywordRankInfo(ExternalQzKeywordRankInfoVO externalQzKeywordRankInfoVO){
-
         QZKeywordRankInfo rankInfo = getQZKeywordRankInfo(externalQzKeywordRankInfoVO);
         QZSetting qzSetting = getQZSetting(externalQzKeywordRankInfoVO);
         try {
@@ -93,9 +85,6 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
 
     public QZKeywordRankInfo getQZKeywordRankInfo(ExternalQzKeywordRankInfoVO externalQzKeywordRankInfoVO){
         QZKeywordRankInfo qzKeywordRankInfo = new QZKeywordRankInfo();
-        List<QZOperationTypeVO> operationTypes=qzOperationTypeService.findQZOperationTypes(externalQzKeywordRankInfoVO.getQzSettingUuid(),
-                                                    externalQzKeywordRankInfoVO.getTerminalType(),externalQzKeywordRankInfoVO.getGroup());
-        Map standard = standardCalculation(operationTypes,externalQzKeywordRankInfoVO);
         try {
             qzKeywordRankInfo.setQzSettingUuid(externalQzKeywordRankInfoVO.getQzSettingUuid());
             qzKeywordRankInfo.setTerminalType(externalQzKeywordRankInfoVO.getTerminalType());
@@ -112,10 +101,10 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
             qzKeywordRankInfo.setBaiduWeight(externalQzKeywordRankInfoVO.getBaiduWeight());
             qzKeywordRankInfo.setBaiduRecord(externalQzKeywordRankInfoVO.getBaiduRecord());
             qzKeywordRankInfo.setBaiduRecordFullDate(externalQzKeywordRankInfoVO.getBaiduRecordFullDate());
-            qzKeywordRankInfo.setDifferenceValue(Double.parseDouble(standard.get("differenceValue").toString()));
-            qzKeywordRankInfo.setAchieveLevel(Integer.parseInt(standard.get("achieveLevel").toString()));
-            qzKeywordRankInfo.setSumSeries(Integer.parseInt(standard.get("sumSeries").toString()));
-            qzKeywordRankInfo.setCurrentPrice(Integer.parseInt(standard.get("currentPrice").toString()));
+            qzKeywordRankInfo.setAchieveLevel(externalQzKeywordRankInfoVO.getAchieveLevel());
+            qzKeywordRankInfo.setSumSeries(externalQzKeywordRankInfoVO.getSumSeries());
+            qzKeywordRankInfo.setDifferenceValue(externalQzKeywordRankInfoVO.getDifferenceValue());
+            qzKeywordRankInfo.setCurrentPrice(externalQzKeywordRankInfoVO.getCurrentPrice());
         }catch (Exception e){
             logger.error("数据封装异常"+e.getMessage());
         }
@@ -167,52 +156,5 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
             logger.error("数据封装异常"+e.getMessage());
         }
         return qzSetting;
-    }
-    public Map standardCalculation(List<QZOperationTypeVO> operationTypes,ExternalQzKeywordRankInfoVO externalQzKeywordRankInfoVO){
-        Map<String,Object> standardInformation = new HashMap<String, Object>();
-         if(operationTypes.size()==0){
-             standardInformation.put("achieveLevel",null);
-             standardInformation.put("sumSeries",null);
-             standardInformation.put("differenceValue",null);
-             standardInformation.put("currentPrice",null);
-             return standardInformation;
-         }
-         for(int i=0;i<operationTypes.size();i++){
-             if (operationTypes.get(i).getEndKeywordCount() == null){
-                 standardInformation.put("achieveLevel",i+1);
-                 standardInformation.put("sumSeries",operationTypes.size());
-                 standardInformation.put("differenceValue",1);
-                 standardInformation.put("currentPrice",operationTypes.get(i).getAmount());
-                 return standardInformation;
-             }else {
-                 if (operationTypes.size() >=1 ){
-                     try {
-                         double topTen = Integer.parseInt(externalQzKeywordRankInfoVO.getTopTen().
-                                 replace("[","").replace("]","").split(",")[0]);
-                         double endKeywordCount = Integer.parseInt(operationTypes.get(i).getEndKeywordCount());
-                         if (topTen < Integer.parseInt(operationTypes.get(i).getEndKeywordCount())){
-                             DecimalFormat decimalFormat = new DecimalFormat("#.0000");
-                             standardInformation.put("achieveLevel",i+1);
-                             standardInformation.put("sumSeries",operationTypes.size());
-                             double differenceValue = (endKeywordCount - topTen) / endKeywordCount;
-                             standardInformation.put("differenceValue",decimalFormat.format(differenceValue));
-                             standardInformation.put("currentPrice",operationTypes.get(i).getAmount());
-                             return standardInformation;
-                         }
-                         if (operationTypes.get(operationTypes.size()-1).getEndKeywordCount()!=null
-                                 && topTen >= Integer.parseInt(operationTypes.get(operationTypes.size()-1).getEndKeywordCount())){
-                             standardInformation.put("achieveLevel",operationTypes.size());
-                             standardInformation.put("sumSeries",operationTypes.size());
-                             standardInformation.put("differenceValue",2);
-                             standardInformation.put("currentPrice",operationTypes.get(i).getAmount());
-                             return standardInformation;
-                         }
-                     }catch (NumberFormatException e){
-                         standardInformation.put("differenceValue",null);
-                     }
-                 }
-             }
-         }
-         return standardInformation;
     }
 }
