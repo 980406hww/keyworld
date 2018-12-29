@@ -360,13 +360,23 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                 if (TerminalTypeEnum.PC.name().equals(customerKeyword.getTerminalType())) {
                     customerKeyword.setInitialIndexCount(baiduIndexCriteria.getPcIndex());
                     customerKeyword.setCurrentIndexCount(baiduIndexCriteria.getPcIndex());
-                    customerKeyword.setOptimizePlanCount(baiduIndexCriteria.getPcIndex() < 100 ? 100 : baiduIndexCriteria.getPcIndex());
-                    customerKeyword.setOptimizeRemainingCount(baiduIndexCriteria.getPcIndex() < 100 ? 100 : baiduIndexCriteria.getPcIndex());
+                    if(EntryTypeEnum.qz.name().equals(customerKeyword.getType())){
+                        customerKeyword.setOptimizePlanCount(baiduIndexCriteria.getPcIndex() == 0 ? 5 : baiduIndexCriteria.getPcIndex());
+                        customerKeyword.setOptimizeRemainingCount(baiduIndexCriteria.getPcIndex() == 0 ? 5 : baiduIndexCriteria.getPcIndex());
+                    }else {
+                        customerKeyword.setOptimizePlanCount(baiduIndexCriteria.getPcIndex() < 100 ? 100 : baiduIndexCriteria.getPcIndex());
+                        customerKeyword.setOptimizeRemainingCount(baiduIndexCriteria.getPcIndex() < 100 ? 100 : baiduIndexCriteria.getPcIndex());
+                    }
                 } else {
                     customerKeyword.setInitialIndexCount(baiduIndexCriteria.getPhoneIndex());
                     customerKeyword.setCurrentIndexCount(baiduIndexCriteria.getPhoneIndex());
-                    customerKeyword.setOptimizePlanCount(baiduIndexCriteria.getPhoneIndex() < 100 ? 100 : baiduIndexCriteria.getPhoneIndex());
-                    customerKeyword.setOptimizeRemainingCount(baiduIndexCriteria.getPhoneIndex() < 100 ? 100 : baiduIndexCriteria.getPhoneIndex());
+                    if(EntryTypeEnum.qz.name().equals(customerKeyword.getType())){
+                        customerKeyword.setOptimizePlanCount(baiduIndexCriteria.getPhoneIndex() == 0 ? 5 : baiduIndexCriteria.getPhoneIndex());
+                        customerKeyword.setOptimizeRemainingCount(baiduIndexCriteria.getPhoneIndex() == 0 ? 5 : baiduIndexCriteria.getPhoneIndex());
+                    }else {
+                        customerKeyword.setOptimizePlanCount(baiduIndexCriteria.getPhoneIndex() < 100 ? 100 : baiduIndexCriteria.getPhoneIndex());
+                        customerKeyword.setOptimizeRemainingCount(baiduIndexCriteria.getPhoneIndex() < 100 ? 100 : baiduIndexCriteria.getPhoneIndex());
+                    }
                 }
                 calculatePrice(customerKeyword);
                 customerKeyword.setUpdateTime(new Date());

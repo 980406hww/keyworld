@@ -198,6 +198,7 @@
         SELECT
         ck.fUuid AS 'uuid',
         ck.fTerminalType	AS	'terminalType',
+        ck.fType            AS  'type',
         ck.fSearchEngine    AS  'searchEngine',
         ck.fCustomerUuid	AS	'customerUuid',
         ck.fCurrentIndexCount	AS	'currentIndexCount',
