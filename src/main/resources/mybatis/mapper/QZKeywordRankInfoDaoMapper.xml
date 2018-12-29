@@ -22,7 +22,8 @@
             qzkri.fAchieveLevel AS "achieveLevel",
             qzkri.fSumSeries AS "sumSeries",
             qzkri.fDifferenceValue AS "differenceValue",
-            qzkri.fCurrentPrice AS "currentPrice"
+            qzkri.fCurrentPrice AS "currentPrice",
+            qzkri.fBaiduRecordFullDate AS "baiduRecordFullDate"
         FROM t_qz_keyword_rank_info qzkri
         WHERE qzkri.fQZSettingUuid = #{qzSettingUuid}
         <if test="checkStatus != null">
