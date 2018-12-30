@@ -448,7 +448,7 @@
     </select>
 
     <update id="resetOptimizationInfo">
-        UPDATE t_customer_keyword SET fOptimizedCount = 0, fOptimizeRemainingCount = fOptimizePlanCount, fInvalidRefreshCount = 0, fOptimizeDate = CURRENT_DATE(), fQueryCount = 0, fQueryDate = CURRENT_DATE(), fQueryTime = NOW()  WHERE fOptimizeDate != CURRENT_DATE()
+        UPDATE t_customer_keyword SET fOptimizedCount = 0, fOptimizeRemainingCount = fOptimizePlanCount, fInvalidRefreshCount = 0, fOptimizeDate = CURRENT_DATE(), fQueryCount = 0, fQueryDate = CURRENT_DATE(), fQueryTime = NOW()
     </update>
 
     <select id="searchRemainingOptimizationCount" resultType="java.util.Map">

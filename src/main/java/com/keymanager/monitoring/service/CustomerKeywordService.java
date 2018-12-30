@@ -569,13 +569,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             typeName = entryTypes.get(0);
         }
 
-        if(configService.optimizationDateChanged()) {
-            customerKeywordInvalidCountLogService.addCustomerKeywordInvalidCountLog();
-            configService.updateOptimizationDateAsToday();
-            customerKeywordDao.resetOptimizationInfo();
-            clientStatusService.resetOptimizationInfo();
-        }
-
         Config maxInvalidCountConfig = configService.getConfig(Constants.CONFIG_KEY_MAX_INVALID_COUNT, typeName);
         if(keywordOptimizationCountService.resetBigKeywordIndicator(clientStatus.getGroup())) {
             keywordOptimizationCountService.init(clientStatus.getGroup());
@@ -871,6 +864,10 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return elements;
     }
 
+    public void resetOptimizationInfo(){
+        customerKeywordDao.resetOptimizationInfo();
+    }
+
     public void updateOptimizationQueryTime(Long customerKeywordUuid){
         customerKeywordDao.updateOptimizationQueryTime(customerKeywordUuid);
     }
@@ -899,13 +896,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void updateOptimizationResult(String terminalType, Long customerKeywordUuid, int count, String ip, String city, String clientID, String status, String freeSpace, String version, String runningProgramType){
-        if(configService.optimizationDateChanged()) {
-            customerKeywordInvalidCountLogService.addCustomerKeywordInvalidCountLog();
-            configService.updateOptimizationDateAsToday();
-            customerKeywordDao.resetOptimizationInfo();
-            clientStatusService.updateAllRemainingKeywordIndicator(1);
-        }
-
         customerKeywordDao.updateOptimizationResult(customerKeywordUuid, count);
         clientStatusService.logClientStatusTime(terminalType, clientID, status, freeSpace, version, city, count, runningProgramType);
 //        customerKeywordIPService.addCustomerKeywordIP(customerKeywordUuid, city, ip);
