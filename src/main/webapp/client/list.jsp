@@ -354,7 +354,7 @@
 				<c:choose>
 					<c:when test="${null != clientStatus.host and '' != clientStatus.host}">
 						<shiro:hasPermission name="/internal/clientstatus/saveClientStatus">
-							<a href="javascript:connectVNC('${clientStatus.clientID}', '${urlPrefix}')">VNC</a>
+							<a href="javascript:connectVNC('${clientStatus.host}', '${clientStatus.port}', '${clientStatus.userName}', '${clientStatus.password}')">VNC</a>
 						</shiro:hasPermission>
 					</c:when>
 					<c:otherwise>
