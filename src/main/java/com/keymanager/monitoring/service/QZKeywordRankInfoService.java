@@ -190,20 +190,20 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
                          double topTen = Integer.parseInt(externalQzKeywordRankInfoVO.getTopTen().
                                  replace("[","").replace("]","").split(",")[0]);
                          double endKeywordCount = Integer.parseInt(operationTypes.get(i).getEndKeywordCount());
+                         if (operationTypes.get(operationTypes.size()-1).getEndKeywordCount()!=null
+                                 && topTen >= Integer.parseInt(operationTypes.get(operationTypes.size()-1).getEndKeywordCount())){
+                             standardInformation.put("achieveLevel",operationTypes.size());
+                             standardInformation.put("sumSeries",operationTypes.size());
+                             standardInformation.put("differenceValue",2);
+                             standardInformation.put("currentPrice",operationTypes.get(i).getAmount());
+                             return standardInformation;
+                         }
                          if (topTen < Integer.parseInt(operationTypes.get(i).getEndKeywordCount())){
                              DecimalFormat decimalFormat = new DecimalFormat("#.0000");
                              standardInformation.put("achieveLevel",i+1);
                              standardInformation.put("sumSeries",operationTypes.size());
                              double differenceValue = (endKeywordCount - topTen) / endKeywordCount;
                              standardInformation.put("differenceValue",decimalFormat.format(differenceValue));
-                             standardInformation.put("currentPrice",operationTypes.get(i).getAmount());
-                             return standardInformation;
-                         }
-                         if (operationTypes.get(operationTypes.size()-1).getEndKeywordCount()!=null
-                                 && topTen >= Integer.parseInt(operationTypes.get(operationTypes.size()-1).getEndKeywordCount())){
-                             standardInformation.put("achieveLevel",operationTypes.size());
-                             standardInformation.put("sumSeries",operationTypes.size());
-                             standardInformation.put("differenceValue",2);
                              standardInformation.put("currentPrice",operationTypes.get(i).getAmount());
                              return standardInformation;
                          }
