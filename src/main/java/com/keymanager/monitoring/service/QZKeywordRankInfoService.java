@@ -36,8 +36,8 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
     @Autowired
     private ConfigService configService;
 
-    public List<QZKeywordRankInfo> searchExistingQZKeywordRankInfo (Long uuid, Integer checkStatus, String terminalType) {
-        return qzKeywordRankInfoDao.searchExistingQZKeywordRankInfo(uuid, checkStatus, terminalType);
+    public List<QZKeywordRankInfo> searchExistingQZKeywordRankInfo (Long uuid, Integer checkStatus, Integer baiduWeight, String terminalType) {
+        return qzKeywordRankInfoDao.searchExistingQZKeywordRankInfo(uuid, checkStatus, baiduWeight, terminalType);
     }
 
     public void deleteByQZSettingUuid (Long uuid) {
@@ -115,9 +115,6 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
         Config upperConfig = configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK, Constants.CONFIG_KEY_UPPER_VALUE);
         Config lowerConfig = configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK, Constants.CONFIG_KEY_LOWER_VALUE);
         Config differenceValueConfig = configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK, Constants.CONFIG_KEY_DIFFERENCEVALUE_VALUE);
-        if (null == qzSettingSearchCriteria.getTerminalType()) {
-            qzSettingSearchCriteria.setTerminalType("PC");
-        }
         double upperValue = Double.parseDouble(upperConfig.getValue());
         double lowerValue = Double.parseDouble(lowerConfig.getValue());
         double differenceValue = Double.parseDouble(differenceValueConfig.getValue());

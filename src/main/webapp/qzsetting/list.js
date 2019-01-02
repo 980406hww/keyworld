@@ -5,7 +5,6 @@ $(function () {
     $("#getAvailableQZSettings").dialog("close");
     $("#showAllOperationType").dialog("close");
     $("#customerKeywordDialog").dialog("close");
-    $("#chargeRulesDialog").dialog("close");
 
     var searchCustomerForm = $("#chargeForm");
     var pageSize = searchCustomerForm.find('#pageSizeHidden').val();
@@ -46,7 +45,7 @@ function enterIn(e) {
 }
 function loadingCheckTerminalType() {
     var terminalType = $("#chargeForm").find("#terminalType").val();
-    checkTerminalType(terminalType);
+    checkTerminalType(terminalType, false);
 }
 function searchRiseOrFall() {
     $(".mytabs div:eq(0)").find("input:checkbox").click(function () {
@@ -82,52 +81,38 @@ function detectedMoreSearchConditionDivShow() {
     var group =  moreSearchCondition.find("ul li.group input").val();
     var status = moreSearchCondition.find("select[name='status']").val();
     var updateStatus = moreSearchCondition.find("select[name='updateStatus']").val();
-    var values = customerInfo + categoryTag + group + status + updateStatus;
+    var baiduWeight = moreSearchCondition.find("select[name='weight']").val();
+    var values = customerInfo + categoryTag + group + status + updateStatus + baiduWeight;
     if (values != "") {
         moreSearchCondition.css("display", "block");
     }
 }
-function checkTerminalType(terminalType) {
-    var body;
-    if (terminalType == "") {
-        terminalType = "PC";
-    }
+function checkTerminalType(terminalType, isManualSwitch) {
     var a = $(".mytabs .link").find("li.active a");
     if (a[0] != undefined && a[0].innerHTML.substring(2) == terminalType) {
         return;
     }
     $(".mytabs .link").find("li").removeClass("active");
     if (terminalType == "PC") {
-        body = $(".pcGroup .body");
         $(".mytabs .link").find("li[name='PC']").addClass("active");
         $("#chargeForm").find("#terminalType").val($.trim(terminalType));
-        $(".datalist").find("li.phoneGroup").each(function () {
-            $(this).css("display", "none")
-        });
-        $(".datalist").find("li.pcGroup").each(function () {
-            $(this).css("display", "block");
-        });
     }
     if (terminalType == "Phone") {
-        body = $(".phoneGroup .body");
         $(".mytabs .link").find("li[name='Phone']").addClass("active");
         $("#chargeForm").find("#terminalType").val($.trim(terminalType));
-        $(".datalist").find(".pcGroup").each(function () {
-            $(this).css("display", "none")
-        });
-        $(".datalist").find(".phoneGroup").each(function () {
-            $(this).css("display", "block");
-        });
+    }
+    if (isManualSwitch) {
+        trimSearchCondition('1');
     }
     setTimeout(function (){
-        detectedTopNum(body);
-    }, 300);
+        detectedTopNum();
+    }, 600);
     setTimeout(function () {
-        getQZSettingClientGroupInfo(body, terminalType);
-    }, 2000);
+        getQZSettingClientGroupInfo(terminalType);
+    }, 300);
 }
-function detectedTopNum(body) {
-    $(body).find(".rank-wrap").each(function () {
+function detectedTopNum() {
+    $(".body").find(".rank-wrap").each(function () {
         generateQZKeywordRecordCharts($(this).find("#keywordRecordCharts")[0], $(this).find("div[name='rankInfo'] span").text());
         generateQZKeywordTrendCharts($(this).find("#keywordTrendCharts")[0], $(this).find("div[name='rankInfo'] span").text());
         $(this).find("#keywordRecordCharts").css("position", "static");
@@ -391,8 +376,8 @@ function generateQZKeywordTrendCharts(domElement, data) {
 function stringToArray(str) {
     return str.replace('[', '').replace(']', '').split(', ').reverse();
 }
-function getQZSettingClientGroupInfo(body, terminalType) {
-    $(body).find(".other-rank_2").each(function () {
+function getQZSettingClientGroupInfo(terminalType) {
+    $(".body").find(".other-rank_2").each(function () {
         var div = $(this);
         var uuid = div.parent().parent().parent().find(".header input[name='uuid']").val();
         var optimizeGroupName = div.find(".row:first-child").find("div:eq(0) span.line1 a").text();
@@ -462,6 +447,7 @@ function trimSearchCondition(days) {
     var group = $(".conn").find(".group").find("input[name='group']").val();
     var status = $(".conn").find("select[name='status']").val();
     var updateStatus = $(".conn").find("select[name='updateStatus']").val();
+    var baiduWeight = $(".conn").find("select[name='weight']").val();
     chargeForm.find("#domain").val($.trim(domain));
     chargeForm.find("#categoryTag").val($.trim(categoryTag));
     chargeForm.find("#group").val($.trim(group));
@@ -474,6 +460,11 @@ function trimSearchCondition(days) {
         chargeForm.find("#updateStatus").val($.trim(updateStatus));
     } else {
         chargeForm.find("#updateStatus").val(null);
+    }
+    if (baiduWeight != "") {
+        chargeForm.find("#baiduWeight").val($.trim(baiduWeight));
+    } else {
+        chargeForm.find("#baiduWeight").val(null);
     }
     chargeForm.submit();
 }
@@ -507,9 +498,6 @@ function showChargeRulesDiv(self, e) {
     }
     var qzSettingUuid = $(self).attr("id");
     var terminalType = $("#chargeForm").find("#terminalType").val();
-    if (terminalType == "") {
-        terminalType = "PC";
-    }
     $("#chargeRulesDivTable  tr:not(:first)").remove();
     var postData = {};
     postData.qzSettingUuid = parseInt(qzSettingUuid);
@@ -638,9 +626,6 @@ function showKeywordDialog(qzSettingUuid, customerUuid, domain, optimizedGroupNa
 }
 function saveCustomerKeywords(qzSettingUuid, customerUuid, optimizedGroupName) {
     var terminalType = $("#chargeForm").find("#terminalType").val();
-    if (terminalType == "") {
-        terminalType = "PC";
-    }
     var customerKeywordDialog = $("#customerKeywordDialog");
     var domain = customerKeywordDialog.find("#domain").val();
     if (domain == '') {

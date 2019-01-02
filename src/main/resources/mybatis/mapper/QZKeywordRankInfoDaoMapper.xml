@@ -25,8 +25,11 @@
             qzkri.fCurrentPrice AS "currentPrice"
         FROM t_qz_keyword_rank_info qzkri
         WHERE qzkri.fQZSettingUuid = #{qzSettingUuid}
-        <if test="checkStatus != null">
+        <if test="checkStatus != null or baiduWeight != null">
             <choose>
+                <when test="baiduWeight != null">
+                    AND qzkri.fBaiduWeight = #{baiduWeight}
+                </when>
                 <when test="checkStatus == 2">
                     AND qzkri.fIncrease &gt;= 0.1
                 </when>

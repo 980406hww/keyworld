@@ -35,8 +35,8 @@
 	<%@include file="/menu.jsp" %>
 	<div class="mytabs">
 		<ul class="link">
-			<li name="PC"><a href="javascript:;" onclick="checkTerminalType('PC')">百度PC</a></li>
-			<li name="Phone"><a href="javascript:;" onclick="checkTerminalType('Phone')">百度Phone</a></li>
+			<li name="PC"><a href="javascript:;" onclick="checkTerminalType('PC', true)">百度PC</a></li>
+			<li name="Phone"><a href="javascript:;" onclick="checkTerminalType('Phone', true)">百度Phone</a></li>
 		</ul>
 		<div class="conn">
 			<ul>
@@ -125,6 +125,20 @@
 					<input type="text" name="group" value="${qzSettingSearchCriteria.group}">
 				</li>
 				<li>
+					<span>权重: </span>
+					<span>
+						<select name="weight" style="width: 50px;">
+							<option></option>
+							<c:forEach begin="0" end="9" step="1" var="weight">
+								<c:choose>
+									<c:when test="${weight eq qzSettingSearchCriteria.baiduWeight}"><option selected>${weight}</option></c:when>
+									<c:otherwise><option>${weight}</option></c:otherwise>
+								</c:choose>
+							</c:forEach>
+						</select>
+					</span>
+				</li>
+				<li>
 					<span>状态: </span>
 					<select name="status">
 						<option value="" <c:if test="${qzSettingSearchCriteria.status == null}">selected</c:if>></option>
@@ -172,14 +186,16 @@
 	<input type="hidden" name="checkStatus" id="checkStatus" value="${qzSettingSearchCriteria.checkStatus}"/>
 	<input type="hidden" name="terminalType" id="terminalType" value="${qzSettingSearchCriteria.terminalType}"/>
 	<input type="hidden" name="categoryTag" id="categoryTag" value="${qzSettingSearchCriteria.categoryTag}"/>
+	<input type="hidden" name="baiduWeight" id="baiduWeight" value="${qzSettingSearchCriteria.baiduWeight}"/>
 </form>
 
 <div class="datalist">
 	<div class="datalist-list">
 		<ul>
 			<c:forEach items="${page.records}" var="qzSetting" varStatus="status">
-				<c:if test="${qzSetting.pcGroup != null and (qzSetting.crawlerStatus != 'finish' or qzSetting.qzKeywordRankInfoMap['PC'] != null)}">
-					<li class="pcGroup">
+				<c:choose>
+					<c:when test="${qzSetting.pcGroup != null and (qzSetting.crawlerStatus != 'finish' or qzSetting.qzKeywordRankInfoMap['PC'] != null)}">
+					<li>
 						<div class="header">
 							<span>
 								<input type="checkbox" name="uuid" value="${qzSetting.uuid}" onclick="decideSelectAll();"/>
@@ -247,118 +263,122 @@
 								<div class="other-rank">
 									<div class="row">
 										<div>
-											<span class="line1">
-												<a href="javascript:;">
-														${qzSetting.qzKeywordRankInfoMap["PC"].topTenNum == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["PC"].topTenNum}
-												</a>
-											</span>
+										<span class="line1">
+											<a href="javascript:;">
+													${qzSetting.qzKeywordRankInfoMap["PC"].topTenNum == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["PC"].topTenNum}
+											</a>
+										</span>
 											<span>
-												<a href="javascript:;">前10</a>
-											</span>
+											<a href="javascript:;">前10</a>
+										</span>
 										</div>
 
 										<div>
-											<span class="line1">
-												<a href="javascript:;">
-														${qzSetting.qzKeywordRankInfoMap["PC"].topFiftyNum == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["PC"].topFiftyNum}
-												</a>
-											</span>
+										<span class="line1">
+											<a href="javascript:;">
+													${qzSetting.qzKeywordRankInfoMap["PC"].topFiftyNum == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["PC"].topFiftyNum}
+											</a>
+										</span>
 											<span>
-												<a href="javascript:;">前50</a>
-											</span>
+											<a href="javascript:;">前50</a>
+										</span>
 										</div>
 
 										<div name="baiduWeight">
-											<span class="line1">
-												<a href="javascript:;">${qzSetting.qzKeywordRankInfoMap["PC"] == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["PC"].baiduWeight}</a>
-											</span>
+										<span class="line1">
+											<a href="javascript:;">${qzSetting.qzKeywordRankInfoMap["PC"] == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["PC"].baiduWeight}</a>
+										</span>
 											<span><a href="javascript:;">百度权重</a></span>
 										</div>
 
 										<div>
-											<span class="line1">
-												<a href="javascript:;">
+										<span class="line1">
+											<a href="javascript:;">
 													${qzSetting.updateStatus == null ? "暂无" : qzSetting.updateStatus}
-												</a>
-											</span>
+											</a>
+										</span>
 											<span>
-												<a href="javascript:;">更新状态</a>
-											</span>
+											<a href="javascript:;">更新状态</a>
+										</span>
 										</div>
 
 										<div name="operationKeywordNum" title="点击链接跳转到关键字列表">
-											<span class="line1">
-												<a target="_blank" href="javascript:searchCustomerKeywords('${qzSetting.customerUuid}', '${qzSetting.pcGroup}');">0</a>
-											</span>
+										<span class="line1">
+											<a target="_blank" href="javascript:searchCustomerKeywords('${qzSetting.customerUuid}', '${qzSetting.pcGroup}');">0</a>
+										</span>
 											<span>
-												<a href="javascript:;">操作词数</a>
-											</span>
+											<a href="javascript:;">操作词数</a>
+										</span>
 										</div>
 									</div>
 
 									<div class="row">
 										<div>
-											<span class="line1">
-												<a href="javascript:;">${qzSetting.pcCreateTopTenNum == null ? "暂无" : qzSetting.pcCreateTopTenNum}</a>
-											</span>
+										<span class="line1">
+											<a href="javascript:;">${qzSetting.pcCreateTopTenNum == null ? "暂无" : qzSetting.pcCreateTopTenNum}</a>
+										</span>
 											<span>
-												<a href="javascript:;">初始前10</a>
-											</span>
+											<a href="javascript:;">初始前10</a>
+										</span>
 										</div>
 										<div>
-											<span class="line1">
-												<a href="javascript:;">${qzSetting.pcCreateTopFiftyNum == null ? "暂无" : qzSetting.pcCreateTopFiftyNum}</a>
-											</span>
+										<span class="line1">
+											<a href="javascript:;">${qzSetting.pcCreateTopFiftyNum == null ? "暂无" : qzSetting.pcCreateTopFiftyNum}</a>
+										</span>
 											<span>
-												<a href="javascript:;">初始前50</a>
-											</span>
-										</div>
-
-										<div>
-											<span class="line1">
-												<input type="hidden" name="type" value="${qzSetting.type}">
-												<a href="javascript:;">${qzSetting.autoCrawlKeywordFlag == true ? "是" : "否"}</a>
-											</span>
-											<span>
-												<a href="javascript:;">爬取关键字</a>
-											</span>
+											<a href="javascript:;">初始前50</a>
+										</span>
 										</div>
 
 										<div>
-											<span class="line1">
-												<a href="javascript:;" status="${qzSetting.status}">
-												   <c:choose>
-													   <c:when test="${qzSetting.status == 1}">激活</c:when>
-													   <c:when test="${qzSetting.status == 2}">
-														   <span style="color: green;">新增</span>
-													   </c:when>
-													   <c:when test="${qzSetting.status == 3}">
-														   <span style="color: red;">暂停收费</span>
-													   </c:when>
-													   <c:otherwise>
-														   <span style="color: red;">暂停</span>
-													   </c:otherwise>
-												   </c:choose>
-												</a>
-											</span>
+										<span class="line1">
+											<input type="hidden" name="type" value="${qzSetting.type}">
+											<a href="javascript:;">${qzSetting.autoCrawlKeywordFlag == true ? "是" : "否"}</a>
+										</span>
 											<span>
-												<a href="javascript:;">状态</a>
-											</span>
+											<a href="javascript:;">爬取关键字</a>
+										</span>
 										</div>
 
 										<div>
-											<span class="line1">
-												<a href="javascript:;">
-													<c:choose>
-														<c:when test="${qzSetting.qzKeywordRankInfoMap['PC'].increase >= 0}"><span style="color: green;">${qzSetting.qzKeywordRankInfoMap['PC'].increase}</span></c:when>
-														<c:when test="${qzSetting.qzKeywordRankInfoMap['PC'].increase < 0}"><span style="color: red;">${qzSetting.qzKeywordRankInfoMap['PC'].increase}</span></c:when>
-														<c:otherwise><span> 暂无 </span></c:otherwise>
-													</c:choose>
-												</a>
-											</span>
+										<span class="line1">
+											<a href="javascript:;" status="${qzSetting.status}">
+											   <c:choose>
+												   <c:when test="${qzSetting.status == 1}">激活</c:when>
+												   <c:when test="${qzSetting.status == 2}">
+													   <span style="color: green;">新增</span>
+												   </c:when>
+												   <c:when test="${qzSetting.status == 3}">
+													   <span style="color: red;">暂停收费</span>
+												   </c:when>
+												   <c:otherwise>
+													   <span style="color: red;">暂停</span>
+												   </c:otherwise>
+											   </c:choose>
+											</a>
+										</span>
 											<span>
-												<a href="javascript:;">涨幅</a>
-											</span>
+											<a href="javascript:;">状态</a>
+										</span>
+										</div>
+
+										<div>
+										<span class="line1">
+											<a href="javascript:;">
+												<c:choose>
+													<c:when test="${qzSetting.qzKeywordRankInfoMap['PC'].increase >= 0}">
+														<span style="color: green;"><fmt:formatNumber value="${qzSetting.qzKeywordRankInfoMap['PC'].increase}" pattern="#.####" minFractionDigits="4" > </fmt:formatNumber></span>
+													</c:when>
+													<c:when test="${qzSetting.qzKeywordRankInfoMap['PC'].increase < 0}">
+														<span style="color: red;"><fmt:formatNumber value="${qzSetting.qzKeywordRankInfoMap['PC'].increase}" pattern="#.####" minFractionDigits="4" > </fmt:formatNumber></span>
+													</c:when>
+													<c:otherwise><span> 暂无 </span></c:otherwise>
+												</c:choose>
+											</a>
+										</span>
+											<span>
+											<a href="javascript:;">涨幅</a>
+										</span>
 										</div>
 
 									</div>
@@ -367,12 +387,12 @@
 								<div class="other-rank_2">
 									<div class="row">
 										<div title="该站下该分组所有机器数, 点击链接跳转到终端监控">
-											<span class="line1">
-												<a target="_blank" href="javascript:searchClientStatus('${qzSetting.pcGroup}', null)">${qzSetting.pcGroup == null or qzSetting.pcGroup == "" ? "暂无" : qzSetting.pcGroup}</a>
-											</span>
+										<span class="line1">
+											<a target="_blank" href="javascript:searchClientStatus('${qzSetting.pcGroup}', null)">${qzSetting.pcGroup == null or qzSetting.pcGroup == "" ? "暂无" : qzSetting.pcGroup}</a>
+										</span>
 											<span>
-												<a href="javascript:;">优化分组</a>
-											</span>
+											<a href="javascript:;">优化分组</a>
+										</span>
 										</div>
 									</div>
 									<div class="row">
@@ -382,9 +402,9 @@
 											</div>
 											<input type="hidden" name="allOperationType">
 											<div class="operationTypeSpan">
-												<span>
-													<a href="javascript:;">操作类型</a>
-												</span>
+											<span>
+												<a href="javascript:;">操作类型</a>
+											</span>
 											</div>
 										</div>
 									</div>
@@ -414,55 +434,55 @@
 									<div class="row4">
 										<span>前50</span>
 										<span class="top50">
-											<a href="javascript:;">
-													${qzSetting.qzKeywordRankInfoMap["PC"].topFiftyIncrement == null ? '暂无' : qzSetting.qzKeywordRankInfoMap["PC"].topFiftyIncrement}
-											</a>
-										</span>
+										<a href="javascript:;">
+												${qzSetting.qzKeywordRankInfoMap["PC"].topFiftyIncrement == null ? '暂无' : qzSetting.qzKeywordRankInfoMap["PC"].topFiftyIncrement}
+										</a>
+									</span>
 									</div>
 
 									<div class="row4">
 										<span>前40</span>
 										<span class="top40">
-											<a href="javascript:;">
-													${qzSetting.qzKeywordRankInfoMap["PC"].topFortyIncrement == null ? '暂无' : qzSetting.qzKeywordRankInfoMap["PC"].topFortyIncrement}
-											</a>
-										</span>
+										<a href="javascript:;">
+												${qzSetting.qzKeywordRankInfoMap["PC"].topFortyIncrement == null ? '暂无' : qzSetting.qzKeywordRankInfoMap["PC"].topFortyIncrement}
+										</a>
+									</span>
 									</div>
 
 									<div class="row4">
 										<span>前30</span>
 										<span class="top30">
-									<a href="javascript:;">
-											${qzSetting.qzKeywordRankInfoMap["PC"].topThirtyIncrement == null ? '暂无' : qzSetting.qzKeywordRankInfoMap["PC"].topThirtyIncrement}
-									</a>
-								</span>
+								<a href="javascript:;">
+										${qzSetting.qzKeywordRankInfoMap["PC"].topThirtyIncrement == null ? '暂无' : qzSetting.qzKeywordRankInfoMap["PC"].topThirtyIncrement}
+								</a>
+							</span>
 									</div>
 
 									<div class="row4">
 										<span>前20</span>
 										<span class="top20">
-									<a href="javascript:;">
-											${qzSetting.qzKeywordRankInfoMap["PC"].topTwentyIncrement == null ? '暂无' : qzSetting.qzKeywordRankInfoMap["PC"].topTwentyIncrement}
-									</a>
-								</span>
+								<a href="javascript:;">
+										${qzSetting.qzKeywordRankInfoMap["PC"].topTwentyIncrement == null ? '暂无' : qzSetting.qzKeywordRankInfoMap["PC"].topTwentyIncrement}
+								</a>
+							</span>
 									</div>
 
 									<div class="row4">
 										<span>前10</span>
 										<span class="top10">
-									<a href="javascript:;">
-											${qzSetting.qzKeywordRankInfoMap["PC"].topTenIncrement == null ? '暂无' : qzSetting.qzKeywordRankInfoMap["PC"].topTenIncrement}
-									</a>
-								</span>
+								<a href="javascript:;">
+										${qzSetting.qzKeywordRankInfoMap["PC"].topTenIncrement == null ? '暂无' : qzSetting.qzKeywordRankInfoMap["PC"].topTenIncrement}
+								</a>
+							</span>
 									</div>
 								</div>
 							</div>
 						</div>
 					</li>
 					<!--li-end-pc-->
-				</c:if>
-				<c:if test="${qzSetting.phoneGroup != null and (qzSetting.crawlerStatus != 'finish' or qzSetting.qzKeywordRankInfoMap['Phone'] != null)}">
-					<li class="phoneGroup" style="display: none;">
+					</c:when>
+					<c:when test="${qzSetting.phoneGroup != null and (qzSetting.crawlerStatus != 'finish' or qzSetting.qzKeywordRankInfoMap['Phone'] != null)}">
+					<li>
 						<div class="header">
 							<span>
 								<input type="checkbox" name="uuid" value="${qzSetting.uuid}" onclick="decideSelectAll();"/>
@@ -531,119 +551,123 @@
 								<div class="other-rank">
 									<div class="row">
 										<div>
-											<span class="line1">
-												<a href="javascript:;">
-														${qzSetting.qzKeywordRankInfoMap["Phone"].topTenNum == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["Phone"].topTenNum}
-												</a>
-											</span>
+										<span class="line1">
+											<a href="javascript:;">
+													${qzSetting.qzKeywordRankInfoMap["Phone"].topTenNum == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["Phone"].topTenNum}
+											</a>
+										</span>
 											<span>
-												<a href="javascript:;">前10</a>
-											</span>
+											<a href="javascript:;">前10</a>
+										</span>
 										</div>
 
 										<div>
-											<span class="line1">
-												<a href="javascript:;">
-														${qzSetting.qzKeywordRankInfoMap["Phone"].topFiftyNum == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["Phone"].topFiftyNum}
-												</a>
-											</span>
+										<span class="line1">
+											<a href="javascript:;">
+													${qzSetting.qzKeywordRankInfoMap["Phone"].topFiftyNum == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["Phone"].topFiftyNum}
+											</a>
+										</span>
 											<span>
-												<a href="javascript:;">前50</a>
-											</span>
+											<a href="javascript:;">前50</a>
+										</span>
 										</div>
 
 										<div name="baiduWeight">
-											<span class="line1">
-												<a href="javascript:;">${qzSetting.qzKeywordRankInfoMap["Phone"] == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["Phone"].baiduWeight}</a>
-											</span>
+										<span class="line1">
+											<a href="javascript:;">${qzSetting.qzKeywordRankInfoMap["Phone"] == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["Phone"].baiduWeight}</a>
+										</span>
 											<span><a href="javascript:;">百度权重</a></span>
 										</div>
 
 										<div>
-											<span class="line1">
-												<a href="javascript:;">
-														${qzSetting.updateStatus == null ? "暂无" : qzSetting.updateStatus}
-												</a>
-											</span>
+										<span class="line1">
+											<a href="javascript:;">
+													${qzSetting.updateStatus == null ? "暂无" : qzSetting.updateStatus}
+											</a>
+										</span>
 											<span>
-												<a href="javascript:;">更新状态</a>
-											</span>
+											<a href="javascript:;">更新状态</a>
+										</span>
 										</div>
 
 										<div name="operationKeywordNum" title="点击链接跳转到关键字列表">
-											<span class="line1">
-												<a target="_blank" href="javascript:searchCustomerKeywords('${qzSetting.customerUuid}', '${qzSetting.phoneGroup}');">0</a>
-											</span>
+										<span class="line1">
+											<a target="_blank" href="javascript:searchCustomerKeywords('${qzSetting.customerUuid}', '${qzSetting.phoneGroup}');">0</a>
+										</span>
 											<span>
-												<a href="javascript:;">操作词数</a>
-											</span>
+											<a href="javascript:;">操作词数</a>
+										</span>
 										</div>
 
 									</div>
 
 									<div class="row">
 										<div>
-											<span class="line1">
-												<a href="javascript:;">${qzSetting.phoneCreateTopTenNum == null ? "暂无" : qzSetting.phoneCreateTopTenNum}</a>
-											</span>
+										<span class="line1">
+											<a href="javascript:;">${qzSetting.phoneCreateTopTenNum == null ? "暂无" : qzSetting.phoneCreateTopTenNum}</a>
+										</span>
 											<span>
-												<a href="javascript:;">初始前10</a>
-											</span>
+											<a href="javascript:;">初始前10</a>
+										</span>
 										</div>
 										<div>
-											<span class="line1">
-												<a href="javascript:;">${qzSetting.phoneCreateTopFiftyNum == null ? "暂无" : qzSetting.phoneCreateTopFiftyNum}</a>
-											</span>
+										<span class="line1">
+											<a href="javascript:;">${qzSetting.phoneCreateTopFiftyNum == null ? "暂无" : qzSetting.phoneCreateTopFiftyNum}</a>
+										</span>
 											<span>
-												<a href="javascript:;">初始前50</a>
-											</span>
-										</div>
-
-										<div>
-											<span class="line1">
-												<input type="hidden" name="type" value="${qzSetting.type}">
-												<a href="javascript:;">${qzSetting.autoCrawlKeywordFlag == true ? "是" : "否"}</a>
-											</span>
-											<span>
-												<a href="javascript:;">爬取关键字</a>
-											</span>
+											<a href="javascript:;">初始前50</a>
+										</span>
 										</div>
 
 										<div>
-											<span class="line1">
-												<a href="javascript:;" status="${qzSetting.status}">
-												   <c:choose>
-													   <c:when test="${qzSetting.status == 1}">激活</c:when>
-													   <c:when test="${qzSetting.status == 2}">
-														   <span style="color: green;">新增</span>
-													   </c:when>
-													   <c:when test="${qzSetting.status == 3}">
-														   <span style="color: red;">暂停收费</span>
-													   </c:when>
-													   <c:otherwise>
-														   <span style="color: red;">暂停</span>
-													   </c:otherwise>
-												   </c:choose>
-												</a>
-											</span>
+										<span class="line1">
+											<input type="hidden" name="type" value="${qzSetting.type}">
+											<a href="javascript:;">${qzSetting.autoCrawlKeywordFlag == true ? "是" : "否"}</a>
+										</span>
 											<span>
-												<a href="javascript:;">状态</a>
-											</span>
+											<a href="javascript:;">爬取关键字</a>
+										</span>
 										</div>
 
 										<div>
-											<span class="line1">
-												<a href="javascript:;">
-													<c:choose>
-														<c:when test="${qzSetting.qzKeywordRankInfoMap['Phone'].increase >= 0}"><span style="color: green;">${qzSetting.qzKeywordRankInfoMap['Phone'].increase}</span></c:when>
-														<c:when test="${qzSetting.qzKeywordRankInfoMap['Phone'].increase < 0}"><span style="color: red;">${qzSetting.qzKeywordRankInfoMap['Phone'].increase}</span></c:when>
-														<c:otherwise><span> 暂无 </span></c:otherwise>
-													</c:choose>
-												</a>
-											</span>
+										<span class="line1">
+											<a href="javascript:;" status="${qzSetting.status}">
+											   <c:choose>
+												   <c:when test="${qzSetting.status == 1}">激活</c:when>
+												   <c:when test="${qzSetting.status == 2}">
+													   <span style="color: green;">新增</span>
+												   </c:when>
+												   <c:when test="${qzSetting.status == 3}">
+													   <span style="color: red;">暂停收费</span>
+												   </c:when>
+												   <c:otherwise>
+													   <span style="color: red;">暂停</span>
+												   </c:otherwise>
+											   </c:choose>
+											</a>
+										</span>
 											<span>
-												<a href="javascript:;">涨幅</a>
-											</span>
+											<a href="javascript:;">状态</a>
+										</span>
+										</div>
+
+										<div>
+										<span class="line1">
+											<a href="javascript:;">
+												<c:choose>
+													<c:when test="${qzSetting.qzKeywordRankInfoMap['Phone'].increase >= 0}">
+														<span style="color: green;"><fmt:formatNumber value="${qzSetting.qzKeywordRankInfoMap['Phone'].increase}" pattern="#.####" minFractionDigits="4" > </fmt:formatNumber></span>
+													</c:when>
+													<c:when test="${qzSetting.qzKeywordRankInfoMap['Phone'].increase < 0}">
+														<span style="color: red;"><fmt:formatNumber value="${qzSetting.qzKeywordRankInfoMap['Phone'].increase}" pattern="#.####" minFractionDigits="4" > </fmt:formatNumber></span>
+													</c:when>
+													<c:otherwise><span> 暂无 </span></c:otherwise>
+												</c:choose>
+											</a>
+										</span>
+											<span>
+											<a href="javascript:;">涨幅</a>
+										</span>
 										</div>
 
 									</div>
@@ -652,12 +676,12 @@
 								<div class="other-rank_2">
 									<div class="row">
 										<div title="该站下该分组所有机器数, 点击链接跳转到终端监控">
-											<span class="line1">
-												<a target="_blank" href="javascript:searchClientStatus('${qzSetting.phoneGroup}', null)">${qzSetting.phoneGroup == null or qzSetting.phoneGroup == "" ? "暂无" : qzSetting.phoneGroup}</a>
-											</span>
+										<span class="line1">
+											<a target="_blank" href="javascript:searchClientStatus('${qzSetting.phoneGroup}', null)">${qzSetting.phoneGroup == null or qzSetting.phoneGroup == "" ? "暂无" : qzSetting.phoneGroup}</a>
+										</span>
 											<span>
-												<a href="javascript:;">优化分组</a>
-											</span>
+											<a href="javascript:;">优化分组</a>
+										</span>
 										</div>
 									</div>
 									<div class="row">
@@ -667,9 +691,9 @@
 											</div>
 											<input type="hidden" name="allOperationType">
 											<div class="operationTypeSpan">
-												<span>
-													<a href="javascript:;">操作类型</a>
-												</span>
+											<span>
+												<a href="javascript:;">操作类型</a>
+											</span>
 											</div>
 										</div>
 									</div>
@@ -699,53 +723,54 @@
 									<div class="row4">
 										<span>前50</span>
 										<span class="top50">
-											<a href="javascript:;">
+										<a href="javascript:;">
 												${qzSetting.qzKeywordRankInfoMap["Phone"].topFiftyIncrement == null ? '暂无' : qzSetting.qzKeywordRankInfoMap["Phone"].topFiftyIncrement}
-											</a>
-										</span>
+										</a>
+									</span>
 									</div>
 
 									<div class="row4">
 										<span>前40</span>
 										<span class="top40">
-									<a href="javascript:;">
+								<a href="javascript:;">
 										${qzSetting.qzKeywordRankInfoMap["Phone"].topFortyIncrement == null ? '暂无' : qzSetting.qzKeywordRankInfoMap["Phone"].topFortyIncrement}
-									</a>
-								</span>
+								</a>
+							</span>
 									</div>
 
 									<div class="row4">
 										<span>前30</span>
 										<span class="top30">
-									<a href="javascript:;">
+								<a href="javascript:;">
 										${qzSetting.qzKeywordRankInfoMap["Phone"].topThirtyIncrement == null ? '暂无' : qzSetting.qzKeywordRankInfoMap["Phone"].topThirtyIncrement}
-									</a>
-								</span>
+								</a>
+							</span>
 									</div>
 
 									<div class="row4">
 										<span>前20</span>
 										<span class="top20">
-									<a href="javascript:;">
+								<a href="javascript:;">
 										${qzSetting.qzKeywordRankInfoMap["Phone"].topTwentyIncrement == null ? '暂无' : qzSetting.qzKeywordRankInfoMap["Phone"].topTwentyIncrement}
-									</a>
-								</span>
+								</a>
+							</span>
 									</div>
 
 									<div class="row4">
 										<span>前10</span>
 										<span class="top10">
-									<a href="javascript:;">
+								<a href="javascript:;">
 										${qzSetting.qzKeywordRankInfoMap["Phone"].topTenIncrement == null ? '暂无' : qzSetting.qzKeywordRankInfoMap["Phone"].topTenIncrement}
-									</a>
-								</span>
+								</a>
+							</span>
 									</div>
 								</div>
 							</div>
 						</div>
 					</li>
 					<!--li-end-phone-->
-				</c:if>
+					</c:when>
+				</c:choose>
 			</c:forEach>
 		</ul>
 	</div>
@@ -1178,17 +1203,7 @@
 		</tr>
 	</table>
 </div>
-<%--达标信息详情列表--%>
-<div id="chargeRulesDialog" class="easyui-dialog" style="display:none;left: 40%;">
-	<table id="chargeRulesListTable" border="1" cellpadding="10" style="font-size: 12px;background-color: white;border-collapse: collapse;margin: 10px 10px;width:92%;">
-		<tr>
-			<td>序号</td>
-			<td>初始词量</td>
-			<td>达标词量</td>
-			<td>价格</td>
-		</tr>
-	</table>
-</div>
+<%--达标信息详情DIV--%>
 <div id="chargeRulesDiv" style="display:none;width:300px;">
 	<table id="chargeRulesDivTable" border="1" cellpadding="10" style="font-size: 12px;background-color: white;border-collapse: collapse;margin: 10px 10px;width:92%;">
 		<tr>

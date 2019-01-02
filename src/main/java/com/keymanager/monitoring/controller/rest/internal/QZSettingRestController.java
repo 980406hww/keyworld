@@ -9,6 +9,7 @@ import com.keymanager.monitoring.entity.QZSetting;
 import com.keymanager.monitoring.service.*;
 import com.keymanager.monitoring.vo.QZSettingSearchClientGroupInfoVO;
 import com.keymanager.util.Constants;
+import com.keymanager.util.TerminalTypeMapping;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -153,8 +154,11 @@ public class QZSettingRestController extends SpringMVCBaseController {
 	private ModelAndView constructQZSettingModelAndView(HttpServletRequest request, QZSettingSearchCriteria qzSettingSearchCriteria, int currentPageNumber, int pageSize) {
 		ModelAndView modelAndView = new ModelAndView("/qzsetting/list");
 		Map<String, Integer> chargeRemindDataMap = qzSettingService.getChargeRemindData();
+		if (null == qzSettingSearchCriteria.getTerminalType()) {
+            String terminalType = TerminalTypeMapping.getTerminalType(request);
+            qzSettingSearchCriteria.setTerminalType(terminalType);
+        }
         qzKeywordRankInfoService.getCountNumOfRankInfo(qzSettingSearchCriteria);
-
 		CustomerCriteria customerCriteria = new CustomerCriteria();
 		String entryType = (String) request.getSession().getAttribute("entryType");
 		customerCriteria.setEntryType(entryType);

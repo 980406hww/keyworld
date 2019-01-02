@@ -411,8 +411,12 @@ ul {
     color: #000;
 }
 
-.datalist-list .body .other-rank .row .line1 a:hover, .datalist-list .body .other-rank_1 .row .line1:last-child a:hover, .datalist-list .body .other-rank_2 .row .line1 a:hover {
+.datalist-list .body .other-rank .row .line1 a:hover, .datalist-list .body .other-rank_1 .row .line1 a:hover, .datalist-list .body .other-rank_2 .row .line1 a:hover {
     color: #0c7df5;
+}
+
+.datalist-list .body .other-rank_1 .row:first-child .line1 a:hover {
+    color: #000;
 }
 
 .datalist-list .body .other-rank .row span:last-child a, .datalist-list .body .other-rank_1 .row span:last-child a, .datalist-list .body .other-rank_2 .row span:last-child a {

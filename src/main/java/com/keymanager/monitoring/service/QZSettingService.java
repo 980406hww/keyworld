@@ -141,7 +141,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			List<QZOperationType> OldOperationTypes = qzOperationTypeService.searchQZOperationTypesIsDelete(qzSetting.getUuid());
 			List<QZOperationType> updOperationTypes = qzSetting.getQzOperationTypes();
 			updateOpretionTypeAndChargeRule(OldOperationTypes,updOperationTypes,qzSetting.getUuid());
-			List<QZKeywordRankInfo> existingQZKeywordRankInfoList = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), null, null);
+			List<QZKeywordRankInfo> existingQZKeywordRankInfoList = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), null,null, null);
 			updateQZKeywordRankInfo(existingQZKeywordRankInfoList, updOperationTypes, existingQZSetting);
 			// 修改标签
 			List<QZCategoryTag> existingQZCategoryTags = qzCategoryTagService.searchCategoryTagByQZSettingUuid(qzSetting.getUuid());
@@ -289,13 +289,13 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 	public Page<QZSetting> searchQZSetting(Page<QZSetting> page, QZSettingSearchCriteria qzSettingSearchCriteria){
 		page.setRecords(qzSettingDao.searchQZSettings(page, qzSettingSearchCriteria));
-		addingQZKeywordRankInfo(page, qzSettingSearchCriteria.getCheckStatus(), qzSettingSearchCriteria.getTerminalType());
+		addingQZKeywordRankInfo(page, qzSettingSearchCriteria.getCheckStatus(), qzSettingSearchCriteria.getBaiduWeight(), qzSettingSearchCriteria.getTerminalType());
 		return page;
 	}
 
-	public Page<QZSetting> addingQZKeywordRankInfo (Page<QZSetting> page, Integer checkStatus, String terminalType){
+	public Page<QZSetting> addingQZKeywordRankInfo (Page<QZSetting> page, Integer checkStatus, Integer baiduWeight, String terminalType){
         for(QZSetting qzSetting : page.getRecords()){
-            List<QZKeywordRankInfo> qzKeywordRankInfos = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), checkStatus, terminalType);
+            List<QZKeywordRankInfo> qzKeywordRankInfos = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), checkStatus, baiduWeight, terminalType);
             Map<String, JSONObject> qzKeywordRankInfoMap = new HashMap<String, JSONObject>();
             for (QZKeywordRankInfo qzKeywordRankInfo : qzKeywordRankInfos) {
 				calculatedQZKeywordRankInfo(qzKeywordRankInfo);

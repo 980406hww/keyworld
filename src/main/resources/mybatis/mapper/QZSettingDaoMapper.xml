@@ -99,8 +99,16 @@
         qs.fCustomerUuid AS 'customerUuid',
         c.fContactPerson AS 'contactPerson',
         qs.fDomain AS 'domain',
-        qs.fPcGroup AS 'pcGroup',
-        qs.fPhoneGroup AS 'phoneGroup',
+        <if test="qzSettingSearchCriteria.terminalType != null">
+            <choose>
+                <when test="qzSettingSearchCriteria.terminalType == 'PC'">
+                    qs.fPcGroup AS 'pcGroup',
+                </when>
+                <when test="qzSettingSearchCriteria.terminalType == 'Phone'">
+                    qs.fPhoneGroup AS 'phoneGroup',
+                </when>
+            </choose>
+        </if>
         qs.fType AS 'type',
         qs.fIgnoreNoIndex AS 'ignoreNoIndex',
         qs.fIgnoreNoOrder AS 'ignoreNoOrder',
@@ -122,7 +130,7 @@
         FROM t_qz_setting qs
         JOIN t_customer c
         ON qs.fCustomerUuid = c.fUuid
-        <if test="qzSettingSearchCriteria.checkStatus != null and qzSettingSearchCriteria.checkStatus != ''">
+        <if test="qzSettingSearchCriteria.checkStatus != null or qzSettingSearchCriteria.baiduWeight != null">
             JOIN t_qz_keyword_rank_info qk
             ON qs.fUuid = qk.fQZSettingUuid
         </if>
@@ -137,8 +145,21 @@
         <if test="qzSettingSearchCriteria.group != null and qzSettingSearchCriteria.group != ''">AND (qs.fPcGroup = #{qzSettingSearchCriteria.group} or qs.fPhoneGroup = #{qzSettingSearchCriteria.group})</if>
         <if test="qzSettingSearchCriteria.updateStatus != null and qzSettingSearchCriteria.updateStatus != ''">AND qs.fUpdateStatus = #{qzSettingSearchCriteria.updateStatus}</if>
         <if test="qzSettingSearchCriteria.status != null">AND qs.fStatus = #{qzSettingSearchCriteria.status}</if>
-        <if test="qzSettingSearchCriteria.checkStatus != null and qzSettingSearchCriteria.checkStatus != ''">
+        <if test="qzSettingSearchCriteria.terminalType != null">
             <choose>
+                <when test="qzSettingSearchCriteria.terminalType == 'PC'">
+                    AND qs.fPcGroup IS NOT NULL
+                </when>
+                <when test="qzSettingSearchCriteria.terminalType == 'Phone'">
+                    AND qs.fPhoneGroup IS NOT NULL
+                </when>
+            </choose>
+        </if>
+        <if test="qzSettingSearchCriteria.checkStatus != null or qzSettingSearchCriteria.baiduWeight != null">
+            <choose>
+                <when test="qzSettingSearchCriteria.baiduWeight != null">
+                    AND qk.fBaiduWeight = #{qzSettingSearchCriteria.baiduWeight}
+                </when>
                 <when test="qzSettingSearchCriteria.checkStatus == 1">
                     AND qk.fIncrease &lt;= #{qzSettingSearchCriteria.lowerValue}
                 </when>
