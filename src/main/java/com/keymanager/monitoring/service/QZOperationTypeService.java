@@ -32,7 +32,7 @@ public class QZOperationTypeService extends ServiceImpl<QZOperationTypeDao, QZOp
 		qzOperationTypeDao.deleteByQZSettingUuid(qzSettingUuid);
 	}
 
-	public List<QZOperationTypeVO> findQZOperationTypes(String qzSettingUuid, String operationType,String group){
+	public List<QZOperationTypeVO> findQZOperationTypes(Long qzSettingUuid, String operationType,String group){
 		return qzOperationTypeDao.findQZOperationTypes(qzSettingUuid,operationType,group);
 	}
 }

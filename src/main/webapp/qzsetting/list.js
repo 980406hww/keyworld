@@ -136,11 +136,11 @@ function generateQZKeywordRecordCharts(domElement, data) {
         return;
     }
     if (JSON.parse(data).date == '') {
-        domElement.innerHTML = "<h1 style='text-align: center'> 暂无数据 </h1>";
+        $("#keywordRecordCharts").append("<h1 style='text-align: center'> 暂无数据 </h1>")
         return;
     }
     var result = JSON.parse(data);
-    var date = result.date.replace("['", "").replace("']", "").split("', '").reverse();
+    var date = result.baiduRecordFullDate.replace("['", "").replace("']", "").split("', '").reverse();
     var baiduRecord = result.baiduRecord.replace("['", "").replace("']", "").split("', '").reverse();
     var keywordRecordCharts = echarts.init(domElement);
     var option = {
