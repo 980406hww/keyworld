@@ -3,10 +3,7 @@ package com.keymanager.monitoring.service;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.enums.CollectMethod;
-import com.keymanager.monitoring.criteria.QZSettingCriteria;
-import com.keymanager.monitoring.criteria.QZSettingSaveCustomerKeywordsCriteria;
-import com.keymanager.monitoring.criteria.QZSettingSearchClientGroupInfoCriteria;
-import com.keymanager.monitoring.criteria.QZSettingSearchCriteria;
+import com.keymanager.monitoring.criteria.*;
 import com.keymanager.monitoring.dao.QZSettingDao;
 import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.enums.QZCaptureTitleLogStatusEnum;
@@ -141,7 +138,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			List<QZOperationType> OldOperationTypes = qzOperationTypeService.searchQZOperationTypesIsDelete(qzSetting.getUuid());
 			List<QZOperationType> updOperationTypes = qzSetting.getQzOperationTypes();
 			updateOpretionTypeAndChargeRule(OldOperationTypes,updOperationTypes,qzSetting.getUuid());
-			List<QZKeywordRankInfo> existingQZKeywordRankInfoList = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), null,null, null);
+			List<QZKeywordRankInfo> existingQZKeywordRankInfoList = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), new QZSettingSearchCriteria());
 			updateQZKeywordRankInfo(existingQZKeywordRankInfoList, updOperationTypes, existingQZSetting);
 			// 修改标签
 			List<QZCategoryTag> existingQZCategoryTags = qzCategoryTagService.searchCategoryTagByQZSettingUuid(qzSetting.getUuid());
@@ -273,8 +270,6 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		for (QZCategoryTag newQZCategoryTag : updateQZCategoryTags) {
             QZCategoryTag oldQZCategoryTag = existingQZCategoryTagMap.get(newQZCategoryTag.getTagName());
             if (null != oldQZCategoryTag) {
-                oldQZCategoryTag.setUpdateTime(new Date());
-                qzCategoryTagService.updateById(oldQZCategoryTag);
                 existingQZCategoryTagMap.remove(newQZCategoryTag.getTagName());
             } else {
                 newQZCategoryTag.setQzSettingUuid(qzSettingUuid);
@@ -289,13 +284,13 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 	public Page<QZSetting> searchQZSetting(Page<QZSetting> page, QZSettingSearchCriteria qzSettingSearchCriteria){
 		page.setRecords(qzSettingDao.searchQZSettings(page, qzSettingSearchCriteria));
-		addingQZKeywordRankInfo(page, qzSettingSearchCriteria.getCheckStatus(), qzSettingSearchCriteria.getBaiduWeight(), qzSettingSearchCriteria.getTerminalType());
+		addingQZKeywordRankInfo(page, qzSettingSearchCriteria);
 		return page;
 	}
 
-	public Page<QZSetting> addingQZKeywordRankInfo (Page<QZSetting> page, Integer checkStatus, Integer baiduWeight, String terminalType){
+	public Page<QZSetting> addingQZKeywordRankInfo (Page<QZSetting> page, QZSettingSearchCriteria qzSettingSearchCriteria){
         for(QZSetting qzSetting : page.getRecords()){
-            List<QZKeywordRankInfo> qzKeywordRankInfos = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), checkStatus, baiduWeight, terminalType);
+            List<QZKeywordRankInfo> qzKeywordRankInfos = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), qzSettingSearchCriteria);
             Map<String, JSONObject> qzKeywordRankInfoMap = new HashMap<String, JSONObject>();
             for (QZKeywordRankInfo qzKeywordRankInfo : qzKeywordRankInfos) {
 				calculatedQZKeywordRankInfo(qzKeywordRankInfo);
