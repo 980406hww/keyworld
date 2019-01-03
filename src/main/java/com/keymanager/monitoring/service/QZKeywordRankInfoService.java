@@ -168,7 +168,6 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
     }
     public Map standardCalculation(List<QZOperationTypeVO> operationTypes,ExternalQzKeywordRankInfoVO externalQzKeywordRankInfoVO){
         Map<String,Object> standardInformation = new HashMap<String, Object>();
-        DecimalFormat decimalFormat = new DecimalFormat("#.0000");
         double topTen = Integer.parseInt(externalQzKeywordRankInfoVO.getTopTen().
                 replace("[", "").replace("]", "").split(",")[0]);
          if(!CollectionUtils.isNotEmpty(operationTypes)){
@@ -196,6 +195,7 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
                          return standardInformation;
                      }
                      if(topTen < Integer.parseInt(operationTypes.get(i).getEndKeywordCount())) {
+                         DecimalFormat decimalFormat = new DecimalFormat("#.0000");
                          double endKeywordCount = Integer.parseInt(operationTypes.get(i).getEndKeywordCount());
                          standardInformation.put("achieveLevel", i + 1);
                          double differenceValue = (endKeywordCount - topTen) / endKeywordCount;
@@ -211,6 +211,7 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
                          return standardInformation;
                         }
                      if(topTen < Integer.parseInt(operationTypes.get(i).getStartKeywordCount())) {
+                         DecimalFormat decimalFormat = new DecimalFormat("#.0000");
                          double startKeywordCount = Integer.parseInt(operationTypes.get(i).getStartKeywordCount());
                               standardInformation.put("achieveLevel", i + 1);
                               double differenceValue = (startKeywordCount - topTen) / startKeywordCount;
