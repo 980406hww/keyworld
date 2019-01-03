@@ -270,8 +270,6 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		for (QZCategoryTag newQZCategoryTag : updateQZCategoryTags) {
             QZCategoryTag oldQZCategoryTag = existingQZCategoryTagMap.get(newQZCategoryTag.getTagName());
             if (null != oldQZCategoryTag) {
-                oldQZCategoryTag.setUpdateTime(new Date());
-                qzCategoryTagService.updateById(oldQZCategoryTag);
                 existingQZCategoryTagMap.remove(newQZCategoryTag.getTagName());
             } else {
                 newQZCategoryTag.setQzSettingUuid(qzSettingUuid);
