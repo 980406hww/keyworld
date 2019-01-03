@@ -26,19 +26,19 @@
             qzkri.fBaiduRecordFullDate AS "baiduRecordFullDate"
         FROM t_qz_keyword_rank_info qzkri
         WHERE qzkri.fQZSettingUuid = #{qzSettingUuid}
-        <if test="checkStatus != null or baiduWeight != null">
+        <if test="qzSettingSearchCriteria.checkStatus != null or qzSettingSearchCriteria.baiduWeight != null">
             <choose>
-                <when test="baiduWeight != null">
-                    AND qzkri.fBaiduWeight = #{baiduWeight}
+                <when test="qzSettingSearchCriteria.baiduWeight != null">
+                    AND qzkri.fBaiduWeight = #{qzSettingSearchCriteria.baiduWeight}
                 </when>
-                <when test="checkStatus == 2">
-                    AND qzkri.fIncrease &gt;= 0.1
+                <when test="qzSettingSearchCriteria.checkStatus == 2">
+                    AND qzkri.fIncrease &gt;= #{qzSettingSearchCriteria.upperValue}
                 </when>
-                <when test="checkStatus == 1">
-                    AND qzkri.fIncrease &lt;= -0.1
+                <when test="qzSettingSearchCriteria.checkStatus == 1">
+                    AND qzkri.fIncrease &lt;= #{qzSettingSearchCriteria.lowerValue}
                 </when>
             </choose>
-            AND qzkri.fTerminalType = #{terminalType}
+            AND qzkri.fTerminalType = #{qzSettingSearchCriteria.terminalType}
         </if>
     </select>
 
