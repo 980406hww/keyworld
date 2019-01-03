@@ -168,6 +168,8 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
     }
     public Map standardCalculation(List<QZOperationTypeVO> operationTypes,ExternalQzKeywordRankInfoVO externalQzKeywordRankInfoVO){
         Map<String,Object> standardInformation = new HashMap<String, Object>();
+        double topTen = Integer.parseInt(externalQzKeywordRankInfoVO.getTopTen().
+                replace("[", "").replace("]", "").split(",")[0]);
          if(!CollectionUtils.isNotEmpty(operationTypes)){
              standardInformation.put("achieveLevel",null);
              standardInformation.put("sumSeries",null);
@@ -176,39 +178,40 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
              return standardInformation;
          }
          for(int i = 0; i < operationTypes.size(); i++){
-             if (operationTypes.get(i).getEndKeywordCount() == null){
-                 standardInformation.put("achieveLevel",i+1);
+             try {
                  standardInformation.put("sumSeries",operationTypes.size());
-                 standardInformation.put("differenceValue",1);
-                 standardInformation.put("currentPrice",operationTypes.get(i).getAmount());
-                 return standardInformation;
-             }else {
-                 if (CollectionUtils.isNotEmpty(operationTypes)){
-                     try {
-                         double topTen = Integer.parseInt(externalQzKeywordRankInfoVO.getTopTen().
-                                 replace("[","").replace("]","").split(",")[0]);
-                         double endKeywordCount = Integer.parseInt(operationTypes.get(i).getEndKeywordCount());
-                         if (operationTypes.get(operationTypes.size()-1).getEndKeywordCount()!=null
-                                 && topTen >= Integer.parseInt(operationTypes.get(operationTypes.size()-1).getEndKeywordCount())){
-                             standardInformation.put("achieveLevel",operationTypes.size());
-                             standardInformation.put("sumSeries",operationTypes.size());
-                             standardInformation.put("differenceValue",2);
-                             standardInformation.put("currentPrice",operationTypes.get(i).getAmount());
-                             return standardInformation;
-                         }
-                         if (topTen < Integer.parseInt(operationTypes.get(i).getEndKeywordCount())){
-                             DecimalFormat decimalFormat = new DecimalFormat("#.0000");
-                             standardInformation.put("achieveLevel",i+1);
-                             standardInformation.put("sumSeries",operationTypes.size());
-                             double differenceValue = (endKeywordCount - topTen) / endKeywordCount;
-                             standardInformation.put("differenceValue",decimalFormat.format(differenceValue));
-                             standardInformation.put("currentPrice",operationTypes.get(i).getAmount());
-                             return standardInformation;
-                         }
-                     }catch (NumberFormatException e){
-                         standardInformation.put("differenceValue",null);
+                 if (topTen<Integer.parseInt(operationTypes.get(0).getStartKeywordCount())){
+                         standardInformation.put("achieveLevel",i+1);
+                         standardInformation.put("differenceValue",1);
+                         standardInformation.put("currentPrice",operationTypes.get(i).getAmount());
+                         return standardInformation;
+                 }
+                 if (operationTypes.get(operationTypes.size() - 1).getEndKeywordCount() != null){
+                     if (topTen >= Integer.parseInt(operationTypes.get(operationTypes.size() - 1).getEndKeywordCount())) {
+                         standardInformation.put("achieveLevel", operationTypes.size());
+                         standardInformation.put("differenceValue", 2);
+                         standardInformation.put("currentPrice", operationTypes.get(operationTypes.size() - 1).getAmount());
+                         return standardInformation;
+                     }
+                 } else {
+                      if (topTen >= Integer.parseInt(operationTypes.get(operationTypes.size() - 1).getStartKeywordCount())){
+                         standardInformation.put("achieveLevel", operationTypes.size());
+                         standardInformation.put("differenceValue", 2);
+                         standardInformation.put("currentPrice", operationTypes.get(operationTypes.size() - 1).getAmount());
+                         return standardInformation;
                      }
                  }
+                 if(topTen < Integer.parseInt(operationTypes.get(i).getEndKeywordCount())) {
+                         double endKeywordCount = Integer.parseInt(operationTypes.get(i).getEndKeywordCount());
+                         DecimalFormat decimalFormat = new DecimalFormat("#.0000");
+                         standardInformation.put("achieveLevel", i + 1);
+                         double differenceValue = (endKeywordCount - topTen) / endKeywordCount;
+                         standardInformation.put("differenceValue", decimalFormat.format(differenceValue));
+                         standardInformation.put("currentPrice", operationTypes.get(i).getAmount());
+                         return standardInformation;
+                 }
+             }catch (NumberFormatException e){
+                 standardInformation.put("differenceValue",null);
              }
          }
          return standardInformation;
