@@ -74,8 +74,7 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
 
         List<QZKeywordRankInfo> rankInfos= qzKeywordRankInfoDao.getQzKeywordRankInfos();
         for (QZKeywordRankInfo rank:rankInfos) {
-            if (rank.getQzSettingUuid().toString().equals
-                    (externalQzKeywordRankInfoVO.getQzSettingUuid().toString())
+            if (rank.getQzSettingUuid().toString().equals(externalQzKeywordRankInfoVO.getQzSettingUuid().toString())
                     && rank.getTerminalType().equals(externalQzKeywordRankInfoVO.getTerminalType())){
                 rankInfo.setUuid(rank.getUuid());
                 qzKeywordRankInfoDao.updateById(rankInfo);
@@ -107,7 +106,7 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
         qzKeywordRankInfo.setBaiduWeight(externalQzKeywordRankInfoVO.getBaiduWeight());
         qzKeywordRankInfo.setBaiduRecord(externalQzKeywordRankInfoVO.getBaiduRecord());
         qzKeywordRankInfo.setBaiduRecordFullDate(externalQzKeywordRankInfoVO.getBaiduRecordFullDate());
-        if (!CollectionUtils.isNotEmpty(operationTypes)) {
+        if (CollectionUtils.isNotEmpty(operationTypes)) {
             Map standard = standardCalculation(operationTypes,externalQzKeywordRankInfoVO);
             qzKeywordRankInfo.setDifferenceValue(Double.parseDouble(standard.get("differenceValue").toString()));
             qzKeywordRankInfo.setAchieveLevel(Integer.parseInt(standard.get("achieveLevel").toString()));
