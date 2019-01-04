@@ -28,6 +28,7 @@
 				<ref bean="cronTriggerExceedMaxCount" />
 				<ref bean="cronTriggerRefreshStatInfo" />
 				<ref bean="cronAutoTriggerDailyReport" />
+				<ref bean="cronAutoTriggerResetInfoDaily" />
 			</list>
 		</property>
 		<!-- Quartz配置, 本地运行无需单独的quartz.properties文件，在此简单配置即可 -->
@@ -307,5 +308,17 @@
 		<property name="targetMethod" value="runTask" />
 		<property name="concurrent" value="false" />
 	</bean>
-	
+
+
+	<!--自动触发每天的报表-->
+	<bean id="cronAutoTriggerResetInfoDaily" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="cronAutoTriggerResetInfoDailySchedule"/>
+		<property name="cronExpression" value="0 1 0 * * ?" />
+	</bean>
+
+	<bean id="cronAutoTriggerResetInfoDailySchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="resetInfoDailySchedule" />
+		<property name="targetMethod" value="runTask" />
+		<property name="concurrent" value="false" />
+	</bean>
 </beans>

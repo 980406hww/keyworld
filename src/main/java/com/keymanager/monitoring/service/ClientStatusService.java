@@ -107,6 +107,21 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
         } else {
             page.setRecords(clientStatusDao.searchBadClientStatus(page, clientStatusCriteria));
         }
+        Map<String, String> passwordMap = new HashMap<String, String>();
+        for(ClientStatus clientStatus : page.getRecords()) {
+            String password = passwordMap.get(clientStatus.getPassword());
+            if (password == null) {
+                if (StringUtil.isNullOrEmpty(clientStatus.getPassword())) {
+                    password = "";
+                } else if (clientStatus.getPassword().equals("doshows123")) {
+                    password = "8e587919308fcab0c34af756358b9053";
+                } else {
+                    password = DES.vncPasswordEncode(clientStatus.getPassword());
+                }
+                passwordMap.put(clientStatus.getPassword(), password);
+            }
+            clientStatus.setPassword(password);
+        }
         return page;
     }
 

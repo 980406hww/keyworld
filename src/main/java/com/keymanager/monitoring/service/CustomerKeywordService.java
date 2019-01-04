@@ -360,13 +360,23 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                 if (TerminalTypeEnum.PC.name().equals(customerKeyword.getTerminalType())) {
                     customerKeyword.setInitialIndexCount(baiduIndexCriteria.getPcIndex());
                     customerKeyword.setCurrentIndexCount(baiduIndexCriteria.getPcIndex());
-                    customerKeyword.setOptimizePlanCount(baiduIndexCriteria.getPcIndex() < 100 ? 100 : baiduIndexCriteria.getPcIndex());
-                    customerKeyword.setOptimizeRemainingCount(baiduIndexCriteria.getPcIndex() < 100 ? 100 : baiduIndexCriteria.getPcIndex());
+                    if(EntryTypeEnum.qz.name().equals(customerKeyword.getType())){
+                        customerKeyword.setOptimizePlanCount(baiduIndexCriteria.getPcIndex() == 0 ? 5 : baiduIndexCriteria.getPcIndex());
+                        customerKeyword.setOptimizeRemainingCount(baiduIndexCriteria.getPcIndex() == 0 ? 5 : baiduIndexCriteria.getPcIndex());
+                    }else {
+                        customerKeyword.setOptimizePlanCount(baiduIndexCriteria.getPcIndex() < 100 ? 100 : baiduIndexCriteria.getPcIndex());
+                        customerKeyword.setOptimizeRemainingCount(baiduIndexCriteria.getPcIndex() < 100 ? 100 : baiduIndexCriteria.getPcIndex());
+                    }
                 } else {
                     customerKeyword.setInitialIndexCount(baiduIndexCriteria.getPhoneIndex());
                     customerKeyword.setCurrentIndexCount(baiduIndexCriteria.getPhoneIndex());
-                    customerKeyword.setOptimizePlanCount(baiduIndexCriteria.getPhoneIndex() < 100 ? 100 : baiduIndexCriteria.getPhoneIndex());
-                    customerKeyword.setOptimizeRemainingCount(baiduIndexCriteria.getPhoneIndex() < 100 ? 100 : baiduIndexCriteria.getPhoneIndex());
+                    if(EntryTypeEnum.qz.name().equals(customerKeyword.getType())){
+                        customerKeyword.setOptimizePlanCount(baiduIndexCriteria.getPhoneIndex() == 0 ? 5 : baiduIndexCriteria.getPhoneIndex());
+                        customerKeyword.setOptimizeRemainingCount(baiduIndexCriteria.getPhoneIndex() == 0 ? 5 : baiduIndexCriteria.getPhoneIndex());
+                    }else {
+                        customerKeyword.setOptimizePlanCount(baiduIndexCriteria.getPhoneIndex() < 100 ? 100 : baiduIndexCriteria.getPhoneIndex());
+                        customerKeyword.setOptimizeRemainingCount(baiduIndexCriteria.getPhoneIndex() < 100 ? 100 : baiduIndexCriteria.getPhoneIndex());
+                    }
                 }
                 calculatePrice(customerKeyword);
                 customerKeyword.setUpdateTime(new Date());
@@ -557,13 +567,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         List<String> entryTypes = customerKeywordDao.getEntryTypes(clientStatus.getGroup());
         if(!Utils.isEmpty(entryTypes) && entryTypes.size() == 1){
             typeName = entryTypes.get(0);
-        }
-
-        if(configService.optimizationDateChanged()) {
-            customerKeywordInvalidCountLogService.addCustomerKeywordInvalidCountLog();
-            configService.updateOptimizationDateAsToday();
-            customerKeywordDao.resetOptimizationInfo();
-            clientStatusService.resetOptimizationInfo();
         }
 
         Config maxInvalidCountConfig = configService.getConfig(Constants.CONFIG_KEY_MAX_INVALID_COUNT, typeName);
@@ -861,6 +864,10 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return elements;
     }
 
+    public void resetOptimizationInfo(){
+        customerKeywordDao.resetOptimizationInfo();
+    }
+
     public void updateOptimizationQueryTime(Long customerKeywordUuid){
         customerKeywordDao.updateOptimizationQueryTime(customerKeywordUuid);
     }
@@ -889,13 +896,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void updateOptimizationResult(String terminalType, Long customerKeywordUuid, int count, String ip, String city, String clientID, String status, String freeSpace, String version, String runningProgramType){
-        if(configService.optimizationDateChanged()) {
-            customerKeywordInvalidCountLogService.addCustomerKeywordInvalidCountLog();
-            configService.updateOptimizationDateAsToday();
-            customerKeywordDao.resetOptimizationInfo();
-            clientStatusService.updateAllRemainingKeywordIndicator(1);
-        }
-
         customerKeywordDao.updateOptimizationResult(customerKeywordUuid, count);
         clientStatusService.logClientStatusTime(terminalType, clientID, status, freeSpace, version, city, count, runningProgramType);
 //        customerKeywordIPService.addCustomerKeywordIP(customerKeywordUuid, city, ip);

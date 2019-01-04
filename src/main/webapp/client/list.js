@@ -1152,11 +1152,11 @@ function headerTableSetting() {
     });
     $('#headerTableDialog').window("resize",{top:$(document).scrollTop() + 100});
 }
-function connectVNC(clientID, urlPrefix){
-    var obj = new ActiveXObject("wscript.shell");
-    obj.run("file:///C:/vnc/" + urlPrefix + "/" + clientID + ".vnc");
-    obj = null;
-}
+// function connectVNC(clientID, urlPrefix){
+//     var obj = new ActiveXObject("wscript.shell");
+//     obj.run("file:///C:/vnc/" + urlPrefix + "/" + clientID + ".vnc");
+//     obj = null;
+// }
 
 $(document).ready(function(){
     if($("#showFetchKeywordStatus").attr("checked") === "checked"){
@@ -1265,6 +1265,56 @@ function batchChangeTerminalType(){
             $().toastmessage('showErrorToast', "操作失败");
         }
     });
+}
+
+function connectVNC(host, port, vncUser, vncPwd) {
+    try {
+        var fso = new ActiveXObject("Scripting.FileSystemObject");
+        if (!fso.FolderExists("C:\\vnc")) {
+            fso.CreateFolder ("C:\\vnc");
+        }
+
+        var fileName = "C:\\vnc\\temp_openVNC_file.vnc";
+        if (fso.FileExists(fileName)) {
+            var f1 = fso.GetFile(fileName);
+            f1.Delete();
+        }
+        var tf = fso.CreateTextFile(fileName, true, false);
+        tf.WriteLine("[Connection]");
+        tf.WriteLine("Host=" + host);
+        tf.WriteLine("Port=" + port);
+        tf.WriteLine("Username=" + vncUser);
+        tf.WriteLine("Password=" + vncPwd);
+        tf.WriteLine("[Options]");
+        tf.WriteLine("UseLocalCursor=1");
+        tf.WriteLine("UseDesktopResize=1");
+        tf.WriteLine("FullScreen=0");
+        tf.WriteLine("FullColour=0");
+        tf.WriteLine("LowColourLevel=1");
+        tf.WriteLine("PreferredEncoding=ZRLE");
+        tf.WriteLine("AutoSelect=1");
+        tf.WriteLine("Shared=0");
+        tf.WriteLine("SendPtrEvents=1");
+        tf.WriteLine("SendKeyEvents=1");
+        tf.WriteLine("SendCutText=1");
+        tf.WriteLine("AcceptCutText=1");
+        tf.WriteLine("Emulate3=0");
+        tf.WriteLine("PointerEventInterval=0");
+        tf.WriteLine("Monitor=");
+        tf.WriteLine("MenuKey=F8");
+        tf.close();
+        tf = null;
+        // 运行
+        var obj = new ActiveXObject("wscript.shell");
+        obj.run(fileName);
+        obj = null;
+    } catch (e) {
+        if (e.name === "ReferenceError") {
+            alert("请更换到带IE内核的浏览器！")
+        } else {
+            alert("未找到对应的.vnc文件或其他的错误")
+        }
+    }
 }
 
 function batchChangeStatus(status) {

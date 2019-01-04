@@ -198,6 +198,7 @@
         SELECT
         ck.fUuid AS 'uuid',
         ck.fTerminalType	AS	'terminalType',
+        ck.fType            AS  'type',
         ck.fSearchEngine    AS  'searchEngine',
         ck.fCustomerUuid	AS	'customerUuid',
         ck.fCurrentIndexCount	AS	'currentIndexCount',
@@ -447,7 +448,7 @@
     </select>
 
     <update id="resetOptimizationInfo">
-        UPDATE t_customer_keyword SET fOptimizedCount = 0, fOptimizeRemainingCount = fOptimizePlanCount, fInvalidRefreshCount = 0, fOptimizeDate = CURRENT_DATE(), fQueryCount = 0, fQueryDate = CURRENT_DATE(), fQueryTime = NOW()  WHERE fOptimizeDate != CURRENT_DATE()
+        UPDATE t_customer_keyword SET fOptimizedCount = 0, fOptimizeRemainingCount = fOptimizePlanCount, fInvalidRefreshCount = 0, fOptimizeDate = CURRENT_DATE(), fQueryCount = 0, fQueryDate = CURRENT_DATE(), fQueryTime = NOW()
     </update>
 
     <select id="searchRemainingOptimizationCount" resultType="java.util.Map">
@@ -524,14 +525,14 @@
         UPDATE t_customer_keyword
         SET fLastOptimizeDateTime = now(), fOptimizedCount = fOptimizedCount + #{count}, fQueryTime = if(fOptimizePlanCount > fOptimizedCount, fQueryTime, DATE_ADD(NOW(), INTERVAL 1 DAY)),
         <if test="count > 0">fInvalidRefreshCount = 0, fOptimizeRemainingCount = fOptimizeRemainingCount - 1, </if>
-        fOptimizeDate = CURRENT_DATE(),fUpdateTime = NOW()
+        fUpdateTime = NOW()
 		WHERE fUuid = #{customerKeywordUuid}
     </update>
 
     <update id="batchUpdateOptimizedCount">
         UPDATE t_customer_keyword
         SET fLastOptimizeDateTime = now(), fOptimizedCount = fOptimizedCount + 1, fOptimizeRemainingCount = fOptimizeRemainingCount - 1, fInvalidRefreshCount = 0,
-        fOptimizeDate = CURRENT_DATE(),fUpdateTime = NOW(), fQueryTime = if(fOptimizePlanCount > fOptimizedCount, fQueryTime, DATE_ADD(NOW(), INTERVAL 1 DAY))
+        fUpdateTime = NOW(), fQueryTime = if(fOptimizePlanCount > fOptimizedCount, fQueryTime, DATE_ADD(NOW(), INTERVAL 1 DAY))
         WHERE fUuid IN
         <foreach item="uuid" index="index" collection="customerKeywordUuids" open="(" separator="," close=")">
             #{uuid}
