@@ -31,6 +31,7 @@ public class ResetInfoDailySchedule {
 			configService.updateOptimizationDateAsToday();
 			customerKeywordService.resetOptimizationInfo();
 			clientStatusService.resetOptimizationInfo();
+			logger.info("============= "+" End Reset informaiton Daily Task "+"===================");
 		} catch (Exception e) {
 			logger.error("Client Upgrade is error" + e.getMessage());
 		}
