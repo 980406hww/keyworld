@@ -169,7 +169,7 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
         standardInformation.put("sumSeries", operationTypes.size());
         if (topTen < beginStartKeywordCount) {
             standardInformation.put("achieveLevel", 0);
-            standardInformation.put("differenceValue", decimalFormat.format((beginStartKeywordCount - topTen) / beginStartKeywordCount));
+            standardInformation.put("differenceValue", decimalFormat.format((beginStartKeywordCount - topTen)*1.0 / beginStartKeywordCount));
             standardInformation.put("currentPrice", 0);
             return standardInformation;
         } else if (topTen >= lastStartKeywordCount) {
@@ -183,7 +183,7 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
                 if (topTen >= currentStartKeywordCount) {
                     int nextStartKeywordCount = Integer.parseInt(operationTypes.get(i + 1).getStartKeywordCount());
                     standardInformation.put("achieveLevel", i + 1);
-                    standardInformation.put("differenceValue", decimalFormat.format((nextStartKeywordCount - topTen) / nextStartKeywordCount));
+                    standardInformation.put("differenceValue", decimalFormat.format((nextStartKeywordCount - topTen)*1.0 / nextStartKeywordCount));
                     standardInformation.put("currentPrice", operationTypes.get(i).getAmount());
                 }
             }
