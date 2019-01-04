@@ -75,8 +75,8 @@
         SELECT
             COUNT(qk.fIncrease &lt;= #{lower} OR NULL) AS downNum,
             COUNT(qk.fIncrease &gt;= #{upper} OR NULL) AS upNum,
-            COUNT(qk.fAchieveLevel &gt; 1 OR (qk.fAchieveLevel = 1 AND qk.fDifferenceValue = 2) OR NULL) AS atLeastStandardNum,
-            COUNT((qk.fAchieveLevel = 1 AND qk.fDifferenceValue &lt;&gt; 2) OR NULL) AS neverStandardNum,
+            COUNT(qk.fAchieveLevel &gt; 0 OR NULL) AS atLeastStandardNum,
+            COUNT(qk.fAchieveLevel = 0 OR NULL) AS neverStandardNum,
             COUNT(qk.fDifferenceValue &lt;= #{differenceValue} OR NULL) AS closeStandardNum
         FROM t_qz_keyword_rank_info qk
         JOIN t_qz_setting qs
