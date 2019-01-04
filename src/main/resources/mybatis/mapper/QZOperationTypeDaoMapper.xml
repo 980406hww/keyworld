@@ -59,7 +59,7 @@
     JOIN t_qz_charge_rule cr
     ON op.fUuid = cr.fQZOperationTypeUuid
     WHERE fQZSettingUuid = #{qzSettingUuid} and fOperationtype = #{operationType} and fGroup = #{group}
-    ORDER BY cr.fUuid
+    ORDER BY cr.fStartKeywordCount
     </select>
 
 </mapper>
