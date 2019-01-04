@@ -145,7 +145,7 @@
 						<option value="1" <c:if test="${qzSettingSearchCriteria.status == 1}">selected</c:if>>激活</option>
 						<option value="0" <c:if test="${qzSettingSearchCriteria.status == 0}">selected</c:if>>暂停</option>
 						<option value="2" <c:if test="${qzSettingSearchCriteria.status == 2}">selected</c:if>>新增</option>
-						<option value="3" <c:if test="${qzSettingSearchCriteria.status == 3}">selected</c:if>>暂停收费</option>
+						<option value="3" <c:if test="${qzSettingSearchCriteria.status == 3}">selected</c:if>>暂停续费</option>
 					</select>
 				</li>
 				<li>
@@ -235,27 +235,27 @@
 								<div class="other-rank_1">
 									<div class="row">
 										<span class="line1">
-											<c:if test="${qzSetting.qzKeywordRankInfoMap['PC'].sumSeries != null}">
-												<a href="javascript:;" id="${qzSetting.uuid}" level="${qzSetting.qzKeywordRankInfoMap['PC'].achieveLevel}" diffValue="${qzSetting.qzKeywordRankInfoMap['PC'].differenceValue}" onmouseover="showChargeRulesDiv($(this))" onmouseout="closeChargeRulesDiv()">
+											<c:if test="${qzSetting.qzKeywordRankInfoMap['PC'].sumSeries > 0}">
+												<a href="javascript:;" id="${qzSetting.uuid}" level="${qzSetting.qzKeywordRankInfoMap['PC'].achieveLevel}" onmouseover="showChargeRulesDiv($(this))" onmouseout="closeChargeRulesDiv()">
 													<c:choose>
-														<c:when test="${qzSetting.qzKeywordRankInfoMap['PC'].achieveLevel == qzSetting.qzKeywordRankInfoMap['PC'].sumSeries and qzSetting.qzKeywordRankInfoMap['PC'].differenceValue == 2}">
+														<c:when test="${qzSetting.qzKeywordRankInfoMap['PC'].achieveLevel == qzSetting.qzKeywordRankInfoMap['PC'].sumSeries}">
 															<font style="background-color: forestgreen;font-size: 14px;">${qzSetting.qzKeywordRankInfoMap['PC'].achieveLevel} / ${qzSetting.qzKeywordRankInfoMap['PC'].sumSeries} (${qzSetting.qzKeywordRankInfoMap['PC'].currentPrice})</font>
 														</c:when>
-														<c:when test="${qzSetting.qzKeywordRankInfoMap['PC'].achieveLevel > 1}">
+														<c:when test="${qzSetting.qzKeywordRankInfoMap['PC'].achieveLevel == 0}">
+															<font style="background-color: red;font-size: 14px;">${qzSetting.qzKeywordRankInfoMap['PC'].achieveLevel} / ${qzSetting.qzKeywordRankInfoMap['PC'].sumSeries} (${qzSetting.qzKeywordRankInfoMap['PC'].currentPrice})</font>
+														</c:when>
+														<c:when test="${qzSetting.qzKeywordRankInfoMap['PC'].achieveLevel >= 1 and qzSetting.qzKeywordRankInfoMap['PC'].differenceValue < 1}">
 															<font style="background-color: orange;font-size: 14px;">${qzSetting.qzKeywordRankInfoMap['PC'].achieveLevel} / ${qzSetting.qzKeywordRankInfoMap['PC'].sumSeries} (${qzSetting.qzKeywordRankInfoMap['PC'].currentPrice})</font>
 														</c:when>
-														<c:otherwise>
-															<font style="background-color: red;font-size: 14px;">${qzSetting.qzKeywordRankInfoMap['PC'].achieveLevel} / ${qzSetting.qzKeywordRankInfoMap['PC'].sumSeries} (${qzSetting.qzKeywordRankInfoMap['PC'].currentPrice})</font>
-														</c:otherwise>
 													</c:choose>
 												</a>
 											</c:if>
-											<c:if test="${qzSetting.qzKeywordRankInfoMap['PC'].sumSeries == null}"><a href="javascript:;">暂无</a></c:if>
+											<c:if test="${qzSetting.qzKeywordRankInfoMap['PC'].sumSeries == 0}"><a href="javascript:;">暂无</a></c:if>
 										</span>
 										<span><a href="javascript:;">全站达标信息</a></span>
 									</div>
 									<div class="row" title="预计百度来路,点击可跳转到详情页面查看变动">
-										<span class="line1"><a href="https://www.5118.com/seo/baidupc/ip/${qzSetting.domain}" target="_blank">${qzSetting.qzKeywordRankInfoMap["PC"] == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["PC"].ipRoute}</a> <sub>IP</sub></span>
+										<span class="line1"><a href="https://www.5118.com/seo/baidupc/ip/${qzSetting.domain}" target="_blank">${qzSetting.qzKeywordRankInfoMap["PC"].ipRoute == "" ? "暂无" : qzSetting.qzKeywordRankInfoMap["PC"].ipRoute}</a> <sub>IP</sub></span>
 										<span><a href="javascript:;">预计百度来路</a></span>
 									</div>
 								</div>
@@ -349,7 +349,7 @@
 													   <span style="color: green;">新增</span>
 												   </c:when>
 												   <c:when test="${qzSetting.status == 3}">
-													   <span style="color: red;">暂停收费</span>
+													   <span style="color: red;">暂停续费</span>
 												   </c:when>
 												   <c:otherwise>
 													   <span style="color: red;">暂停</span>
@@ -523,27 +523,27 @@
 								<div class="other-rank_1">
 									<div class="row">
 										<span class="line1">
-											<c:if test="${qzSetting.qzKeywordRankInfoMap['Phone'].sumSeries != null}">
-												<a href="javascript:;" id="${qzSetting.uuid}" level="${qzSetting.qzKeywordRankInfoMap['Phone'].achieveLevel}" diffValue="${qzSetting.qzKeywordRankInfoMap['Phone'].differenceValue}" onmouseover="showChargeRulesDiv($(this))" onmouseout="closeChargeRulesDiv()">
+											<c:if test="${qzSetting.qzKeywordRankInfoMap['Phone'].sumSeries > 0}">
+												<a href="javascript:;" id="${qzSetting.uuid}" level="${qzSetting.qzKeywordRankInfoMap['Phone'].achieveLevel}" onmouseover="showChargeRulesDiv($(this))" onmouseout="closeChargeRulesDiv()">
 													<c:choose>
-														<c:when test="${qzSetting.qzKeywordRankInfoMap['Phone'].achieveLevel == qzSetting.qzKeywordRankInfoMap['Phone'].sumSeries and qzSetting.qzKeywordRankInfoMap['Phone'].differenceValue == 2}">
+														<c:when test="${qzSetting.qzKeywordRankInfoMap['Phone'].achieveLevel == qzSetting.qzKeywordRankInfoMap['Phone'].sumSeries}">
 															<font style="background-color: forestgreen;font-size: 14px;">${qzSetting.qzKeywordRankInfoMap['Phone'].achieveLevel} / ${qzSetting.qzKeywordRankInfoMap['Phone'].sumSeries} (${qzSetting.qzKeywordRankInfoMap['Phone'].currentPrice})</font>
 														</c:when>
-														<c:when test="${qzSetting.qzKeywordRankInfoMap['Phone'].achieveLevel > 1}">
+														<c:when test="${qzSetting.qzKeywordRankInfoMap['Phone'].achieveLevel == 0}">
+															<font style="background-color: red;font-size: 14px;">${qzSetting.qzKeywordRankInfoMap['Phone'].achieveLevel} / ${qzSetting.qzKeywordRankInfoMap['Phone'].sumSeries} (${qzSetting.qzKeywordRankInfoMap['Phone'].currentPrice})</font>
+														</c:when>
+														<c:when test="${qzSetting.qzKeywordRankInfoMap['Phone'].achieveLevel >= 1 and qzSetting.qzKeywordRankInfoMap['Phone'].differenceValue < 1}">
 															<font style="background-color: orange;font-size: 14px;">${qzSetting.qzKeywordRankInfoMap['Phone'].achieveLevel} / ${qzSetting.qzKeywordRankInfoMap['Phone'].sumSeries} (${qzSetting.qzKeywordRankInfoMap['Phone'].currentPrice})</font>
 														</c:when>
-														<c:otherwise>
-															<font style="background-color: red;font-size: 14px;">${qzSetting.qzKeywordRankInfoMap['Phone'].achieveLevel} / ${qzSetting.qzKeywordRankInfoMap['Phone'].sumSeries} (${qzSetting.qzKeywordRankInfoMap['Phone'].currentPrice})</font>
-														</c:otherwise>
 													</c:choose>
 												</a>
 											</c:if>
-											<c:if test="${qzSetting.qzKeywordRankInfoMap['Phone'].sumSeries == null}"><a href="javascript:;">暂无</a></c:if>
+											<c:if test="${qzSetting.qzKeywordRankInfoMap['Phone'].sumSeries == 0}"><a href="javascript:;">暂无</a></c:if>
 										</span>
 										<span><a href="javascript:;">全站达标信息</a></span>
 									</div>
 									<div class="row">
-										<span class="line1"><a href="javascript:;">${qzSetting.qzKeywordRankInfoMap["Phone"] == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["Phone"].ipRoute}</a> <sub>IP</sub></span>
+										<span class="line1"><a href="javascript:;">${qzSetting.qzKeywordRankInfoMap["Phone"].ipRoute == "" ? "暂无" : qzSetting.qzKeywordRankInfoMap["Phone"].ipRoute}</a> <sub>IP</sub></span>
 										<span><a href="javascript:;">预计百度来路</a></span>
 									</div>
 								</div>
@@ -638,7 +638,7 @@
 													   <span style="color: green;">新增</span>
 												   </c:when>
 												   <c:when test="${qzSetting.status == 3}">
-													   <span style="color: red;">暂停收费</span>
+													   <span style="color: red;">暂停续费</span>
 												   </c:when>
 												   <c:otherwise>
 													   <span style="color: red;">暂停</span>

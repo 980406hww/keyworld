@@ -167,10 +167,10 @@
                     AND qk.fIncrease &gt;= #{qzSettingSearchCriteria.upperValue}
                 </when>
                 <when test="qzSettingSearchCriteria.checkStatus == 3">
-                    AND (qk.fAchieveLevel &gt; 1 OR (qk.fAchieveLevel = 1 AND qk.fDifferenceValue = 2))
+                    AND qk.fAchieveLevel &gt; 0
                 </when>
                 <when test="qzSettingSearchCriteria.checkStatus == 4">
-                    AND (qk.fAchieveLevel = 1 AND qk.fDifferenceValue &lt;&gt; 2)
+                    AND qk.fAchieveLevel = 0
                 </when>
                 <when test="qzSettingSearchCriteria.checkStatus == 5">
                     AND qk.fDifferenceValue &lt;= #{qzSettingSearchCriteria.differenceValue}

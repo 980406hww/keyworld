@@ -136,7 +136,7 @@ function generateQZKeywordRecordCharts(domElement, data) {
         return;
     }
     if (JSON.parse(data).date == '') {
-        $("#keywordRecordCharts").append("<h1 style='text-align: center'> 暂无数据 </h1>")
+        domElement.innerHTML = "<h1 style='text-align: center'> 暂无数据 </h1>";
         return;
     }
     var result = JSON.parse(data);
@@ -514,7 +514,6 @@ function showChargeRulesDiv(self, e) {
             $("#chargeRulesDivTable  tr:not(:first)").remove();
             if(qzChargeRules != null && qzChargeRules.length > 0) {
                 var achieveLevel = $(self).attr("level");
-                var differenceValue = $(self).attr("diffValue");
                 $.each(qzChargeRules, function (idx, val) {
                     var newTr = document.createElement("tr");
                     var chargeRuleElements = [
@@ -532,7 +531,7 @@ function showChargeRulesDiv(self, e) {
                             newTd.innerHTML = v;
                         }
                     });
-                    if (idx + 1 < parseInt(achieveLevel) || (idx + 1 == parseInt(achieveLevel) && parseInt(differenceValue) == 2)) {
+                    if (idx + 1 <= parseInt(achieveLevel)) {
                         $(newTr).css("background-color", "green");
                     }
                     $("#chargeRulesDivTable")[0].lastChild.appendChild(newTr);
