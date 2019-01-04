@@ -363,24 +363,7 @@
 										</div>
 
 										<div>
-										<span class="line1">
-											<a href="javascript:;">
-												<c:choose>
-													<c:when test="${qzSetting.qzKeywordRankInfoMap['PC'].increase >= 0}">
-														<span style="color: green;"><fmt:formatNumber value="${qzSetting.qzKeywordRankInfoMap['PC'].increase}" pattern="#.####" minFractionDigits="4" > </fmt:formatNumber></span>
-													</c:when>
-													<c:when test="${qzSetting.qzKeywordRankInfoMap['PC'].increase < 0}">
-														<span style="color: red;"><fmt:formatNumber value="${qzSetting.qzKeywordRankInfoMap['PC'].increase}" pattern="#.####" minFractionDigits="4" > </fmt:formatNumber></span>
-													</c:when>
-													<c:otherwise><span> 暂无 </span></c:otherwise>
-												</c:choose>
-											</a>
-										</span>
-											<span>
-											<a href="javascript:;">涨幅</a>
-										</span>
 										</div>
-
 									</div>
 								</div>
 
@@ -652,22 +635,7 @@
 										</div>
 
 										<div>
-										<span class="line1">
-											<a href="javascript:;">
-												<c:choose>
-													<c:when test="${qzSetting.qzKeywordRankInfoMap['Phone'].increase >= 0}">
-														<span style="color: green;"><fmt:formatNumber value="${qzSetting.qzKeywordRankInfoMap['Phone'].increase}" pattern="#.####" minFractionDigits="4" > </fmt:formatNumber></span>
-													</c:when>
-													<c:when test="${qzSetting.qzKeywordRankInfoMap['Phone'].increase < 0}">
-														<span style="color: red;"><fmt:formatNumber value="${qzSetting.qzKeywordRankInfoMap['Phone'].increase}" pattern="#.####" minFractionDigits="4" > </fmt:formatNumber></span>
-													</c:when>
-													<c:otherwise><span> 暂无 </span></c:otherwise>
-												</c:choose>
-											</a>
-										</span>
-											<span>
-											<a href="javascript:;">涨幅</a>
-										</span>
+
 										</div>
 
 									</div>
@@ -878,7 +846,7 @@
 					<tr>
 						<td style="width:50px">序号</td>
 						<td style="width:72px">起始词数</td>
-						<td style="width:72px">达标词数</td>
+						<td style="width:72px">终止词数</td>
 						<td style="width:50px">价格</td>
 						<td style="width:46px">操作</td>
 					</tr>
@@ -930,7 +898,7 @@
 					<tr>
 						<td style="width:50px">序号</td>
 						<td style="width:72px">起始词数</td>
-						<td style="width:72px">达标词数</td>
+						<td style="width:72px">终止词数</td>
 						<td style="width:50px">价格</td>
 						<td style="width:46px">操作</td>
 					</tr>

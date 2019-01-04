@@ -238,8 +238,6 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		for (QZOperationType qzOperationType : qzOperationTypeList) {
             QZKeywordRankInfo qzKeywordRankInfo = existingQZKeywordRankInfoMap.get(qzOperationType.getOperationType());
             if (null != qzKeywordRankInfo) {
-                qzKeywordRankInfo.setUpdateTime(new Date());
-                qzKeywordRankInfoService.updateById(qzKeywordRankInfo);
                 existingQZKeywordRankInfoMap.remove(qzOperationType.getOperationType());
             } else {
                 qzKeywordRankInfo = new QZKeywordRankInfo();

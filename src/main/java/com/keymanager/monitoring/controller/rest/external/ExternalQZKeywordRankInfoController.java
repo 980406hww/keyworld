@@ -2,12 +2,9 @@ package com.keymanager.monitoring.controller.rest.external;
 
 import com.keymanager.monitoring.common.utils.StringUtils;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
-import com.keymanager.monitoring.entity.QZKeywordRankInfo;
 import com.keymanager.monitoring.service.QZKeywordRankInfoService;
 import com.keymanager.monitoring.vo.ExternalQzKeywordRankInfoVO;
 import com.keymanager.monitoring.vo.ExternalQzSettingVO;
-import com.keymanager.util.Constants;import org.aspectj.apache.bcel.classfile.Constant;
-import org.aspectj.apache.bcel.classfile.Constant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Map;
-
 /**
  * @Author zhoukai
  * @Date 2018/12/6 11:33
