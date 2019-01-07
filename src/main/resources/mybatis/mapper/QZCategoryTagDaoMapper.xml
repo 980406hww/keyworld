@@ -17,4 +17,11 @@
         FROM t_qz_category_tag qc
         GROUP BY qc.fTagName
     </select>
+
+    <select id="findTagNamesByQZSettingUuid" resultType="java.lang.String">
+        SELECT
+            qc.fTagName AS "tagName"
+        FROM t_qz_category_tag qc
+        WHERE qc.fQZSettingUuid = #{qzSettingUuid}
+    </select>
 </mapper>

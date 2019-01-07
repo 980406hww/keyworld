@@ -143,7 +143,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			// 修改标签
 			List<QZCategoryTag> existingQZCategoryTags = qzCategoryTagService.searchCategoryTagByQZSettingUuid(qzSetting.getUuid());
 			List<QZCategoryTag> updateQZCategoryTags = qzSetting.getQzCategoryTags();
-			updateQZCategoryTag(existingQZCategoryTags, updateQZCategoryTags, qzSetting.getUuid());
+			qzCategoryTagService.updateQZCategoryTag(existingQZCategoryTags, updateQZCategoryTags, qzSetting.getUuid());
 			qzSettingDao.updateById(existingQZSetting);
 		}else{
 			qzSetting.setUpdateTime(new Date());
@@ -257,26 +257,6 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 				qzSetting.setPhoneCreateTopFiftyNum(null);
 			}
 		    qzKeywordRankInfoService.deleteById(qzKeywordRankInfo);
-        }
-	}
-
-	public void updateQZCategoryTag(List<QZCategoryTag> existingQZCategoryTags, List<QZCategoryTag> updateQZCategoryTags, long qzSettingUuid){
-		Map<String, QZCategoryTag> existingQZCategoryTagMap = new HashMap<String, QZCategoryTag>();
-		for (QZCategoryTag qzCategoryTag : existingQZCategoryTags) {
-			existingQZCategoryTagMap.put(qzCategoryTag.getTagName(), qzCategoryTag);
-		}
-		for (QZCategoryTag newQZCategoryTag : updateQZCategoryTags) {
-            QZCategoryTag oldQZCategoryTag = existingQZCategoryTagMap.get(newQZCategoryTag.getTagName());
-            if (null != oldQZCategoryTag) {
-                existingQZCategoryTagMap.remove(newQZCategoryTag.getTagName());
-            } else {
-                newQZCategoryTag.setQzSettingUuid(qzSettingUuid);
-                qzCategoryTagService.insert(newQZCategoryTag);
-            }
-        }
-
-        for (QZCategoryTag qzCategoryTag : existingQZCategoryTagMap.values()) {
-            qzCategoryTagService.deleteById(qzCategoryTag);
         }
 	}
 
@@ -587,6 +567,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		QZSettingSearchClientGroupInfoVO qzSettingSearchClientGroupInfoVO = new QZSettingSearchClientGroupInfoVO();
 		qzSettingSearchClientGroupInfoVO.setCustomerKeywordCount(qzSettingDao.getQZSettingClientGroupInfo(qzSettingSearchClientGroupInfoCriteria));
 		qzSettingSearchClientGroupInfoVO.setClientStatusVOs(clientStatusService.getClientStatusVOs(qzSettingSearchClientGroupInfoCriteria));
+		qzSettingSearchClientGroupInfoVO.setCategoryTagNames(qzCategoryTagService.findTagNamesByQZSettingUuid(qzSettingSearchClientGroupInfoCriteria.getQzSettingUuid()));
 		return qzSettingSearchClientGroupInfoVO;
 	}
 

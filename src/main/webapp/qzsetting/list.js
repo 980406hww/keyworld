@@ -109,7 +109,7 @@ function checkTerminalType(terminalType, isManualSwitch) {
     }, 600);
     setTimeout(function () {
         getQZSettingClientGroupInfo(terminalType);
-    }, 300);
+    }, 400);
 }
 function detectedTopNum() {
     $(".body").find(".rank-wrap").each(function () {
@@ -403,6 +403,15 @@ function getQZSettingClientGroupInfo(terminalType) {
                 div.parent().find(".other-rank .row:first-child").find("div[name='operationKeywordNum']").find("span.line1 a").text(data.customerKeywordCount);
                 var clientCount = 0;
                 var showSomeOperationType = div.find(".row:last-child").find("div[name='showSomeOperationType']");
+                if (data.categoryTagNames.length > 0) {
+                    var tagNameStr = "";
+                    var span = $(div).parent().parent().parent().find(".header span.tagNames");
+                    $(span).append("<label>" + "分组标签: " + "</label>");
+                    $.each(data.categoryTagNames, function (idx, val) {
+                        tagNameStr += val + ",";
+                    });
+                    $(span).append("<label class='tagNameStr' ondblclick='editTagNameStr(this, true)'>" + tagNameStr.substring(0, tagNameStr.length-1) + "</label>");
+                }
                 if (data.clientStatusVOs.length > 0) {
                     showSomeOperationType.empty();
                     var allOperationType = '';
@@ -433,6 +442,51 @@ function getQZSettingClientGroupInfo(terminalType) {
             }
         });
     });
+}
+function editTagNameStr(o, edit){
+    if (edit) {
+        var uuid = $(o).parent().parent().find("input[name='uuid']").val();
+        o.innerHTML = '<input type="text" uuid="'+ uuid +'" value="' + o.innerHTML.replace(/"/g,'&quot;') + '" onblur="editTagNameStr(this)">';
+        o.getElementsByTagName('input')[0].focus();
+    } else {
+        o.value = o.value.replace(/( +)/g, "").replace(/(，+)|(,+)/g, ",");
+        var postData = {};
+        var qzCategoryTags = [];
+        var categoryTagNames = o.value.split(",");
+        if (o.value != "") {
+            $.each(categoryTagNames, function (idx, val) {
+                if (val != "") {
+                    var qzCategoryTag = {};
+                    qzCategoryTag.tagName = $.trim(val);
+                    qzCategoryTags.push(qzCategoryTag);
+                }
+            });
+        }
+        var qzSettingUuid = $(o).attr("uuid");
+        postData.qzSettingUuid = $.trim(qzSettingUuid);
+        postData.qzCategoryTags = qzCategoryTags;
+        $.ajax({
+            url: "/internal/qzcategorytag/save",
+            type: "POST",
+            data: JSON.stringify(postData),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            success: function (data) {
+                console.log(data);
+                if (data) {
+                    $().toastmessage('showSuccessToast', "保存成功！");
+                } else {
+                    $().toastmessage('showErrorToast', "保存失败！");
+                }
+            },
+            error: function () {
+                $().toastmessage('showErrorToast', "保存失败！");
+            }
+        });
+        o.parentNode.innerHTML = $.trim(o.value);
+    }
 }
 function trimSearchCondition(days) {
     var chargeForm = $("#chargeForm");
@@ -531,7 +585,7 @@ function showChargeRulesDiv(self, e) {
                             newTd.innerHTML = v;
                         }
                     });
-                    if (idx + 1 <= parseInt(achieveLevel)) {
+                    if (idx + 1 === parseInt(achieveLevel)) {
                         $(newTr).css("background-color", "green");
                     }
                     $("#chargeRulesDivTable")[0].lastChild.appendChild(newTr);
@@ -1308,12 +1362,12 @@ function saveChangeSetting(self) {
     qzSetting.qzOperationTypes.qzChargeRules = [];//收费规则
     qzSetting.qzCategoryTags = []; //分类标签表
 
-    var tagNames = settingDialogDiv.find("#qzCategoryTagNames").val();
+    var tagNames = settingDialogDiv.find("#qzCategoryTagNames").val().replace(/(，)+/g, ",");
     if (tagNames != "") {
         var tagNameArr = tagNames.split(",");
         $.each(tagNameArr, function (idx, val) {
             var qzCategoryTag = {};
-            qzCategoryTag.tagName = val;
+            qzCategoryTag.tagName = $.trim(val);
             qzSetting.qzCategoryTags.push(qzCategoryTag);
         });
     }

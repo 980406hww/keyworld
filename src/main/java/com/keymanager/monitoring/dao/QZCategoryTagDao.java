@@ -11,7 +11,9 @@ import java.util.List;
  * @Date 2018/12/27 9:16
  **/
 public interface QZCategoryTagDao extends BaseMapper<QZCategoryTag> {
-    List<QZCategoryTag> searchCategoryTagByQZSettingUuid (@Param("qzSettingUuid") Long qzSettinguUuid);
+    List<QZCategoryTag> searchCategoryTagByQZSettingUuid (@Param("qzSettingUuid") Long qzSettingUuid);
 
     List<QZCategoryTag> getAllCategoryTagName ();
+
+    List<String> findTagNamesByQZSettingUuid (@Param("qzSettingUuid") int qzSettingUuid);
 }

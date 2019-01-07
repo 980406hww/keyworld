@@ -204,8 +204,8 @@
 							<span style="padding: 0 10px"> —— </span>
 							<span class="domain"><a href="javascript:;">${qzSetting.domain}</a></span>&nbsp;&nbsp;&nbsp;&nbsp;
 							<span class="to-aizhan"><a href="https://www.aizhan.com/cha/${qzSetting.domain}/" target="_blank" title="查看爱站">爱站</a></span>&nbsp;&nbsp;&nbsp;&nbsp;
-							<span class="to-5118"><a  href="https://www.5118.com/seo/${qzSetting.domain}" target="_blank" title="查看5118,需要登录">5118</a></span>
-
+							<span class="to-5118"><a  href="https://www.5118.com/seo/${qzSetting.domain}" target="_blank" title="查看5118,需要登录">5118</a></span>&nbsp;&nbsp;&nbsp;&nbsp;
+							<span class="tagNames"></span>&nbsp;&nbsp;&nbsp;&nbsp;
 							<div class="handle">
 								<a class="blue" href="javascript:showKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain}','${qzSetting.pcGroup}')">指定关键字</a>
 								<shiro:hasPermission name="/internal/qzchargelog/save">
@@ -474,7 +474,8 @@
 							<span style="padding: 0 10px"> —— </span>
 							<span class="domain"><a href="javascript:;">${qzSetting.domain}</a></span>&nbsp;&nbsp;&nbsp;&nbsp;
 							<span class="to-aizhan"><a href="https://www.aizhan.com/cha/${qzSetting.domain}/" target="_blank" title="查看爱站">爱站</a></span>&nbsp;&nbsp;&nbsp;&nbsp;
-							<span class="to-5118"><a  href="https://www.5118.com/seo/${qzSetting.domain}" target="_blank" title="查看5118,需要登录">5118</a></span>
+							<span class="to-5118"><a  href="https://www.5118.com/seo/${qzSetting.domain}" target="_blank" title="查看5118,需要登录">5118</a></span>&nbsp;&nbsp;&nbsp;&nbsp;
+							<span class="tagNames"></span>&nbsp;&nbsp;&nbsp;&nbsp;
 							<div class="handle">
 								<a class="blue" href="javascript:showKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain}','${qzSetting.phoneGroup}')">指定关键字</a>
 								<c:if test="${qzSetting.pcGroup == null}">
@@ -1176,8 +1177,8 @@
 	<table id="chargeRulesDivTable" border="1" cellpadding="10" style="font-size: 12px;background-color: white;border-collapse: collapse;margin: 10px 10px;width:92%;">
 		<tr>
 			<td>序号</td>
-			<td>初始词量</td>
-			<td>达标词量</td>
+			<td>起始词量</td>
+			<td>终止词量</td>
 			<td>价格</td>
 		</tr>
 	</table>

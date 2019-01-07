@@ -1,12 +1,16 @@
 package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.keymanager.monitoring.criteria.QZCategoryTagCriteria;
 import com.keymanager.monitoring.dao.QZCategoryTagDao;
 import com.keymanager.monitoring.entity.QZCategoryTag;
+import com.keymanager.monitoring.entity.QZSetting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author zhoukai
@@ -18,11 +22,40 @@ public class QZCategoryTagService extends ServiceImpl<QZCategoryTagDao, QZCatego
     @Autowired
     private QZCategoryTagDao qzCategoryTagDao;
 
-    public List<QZCategoryTag> searchCategoryTagByQZSettingUuid (Long qzSettinguUuid) {
-        return qzCategoryTagDao.searchCategoryTagByQZSettingUuid(qzSettinguUuid);
+    public List<QZCategoryTag> searchCategoryTagByQZSettingUuid (Long qzSettingUuid) {
+        return qzCategoryTagDao.searchCategoryTagByQZSettingUuid(qzSettingUuid);
     }
 
     public List<QZCategoryTag> getAllCategoryTagName () {
         return qzCategoryTagDao.getAllCategoryTagName();
+    }
+
+    public List<String> findTagNamesByQZSettingUuid (int qzSettingUuid) {
+        return qzCategoryTagDao.findTagNamesByQZSettingUuid(qzSettingUuid);
+    }
+
+    public void saveCategoryTagNames (QZCategoryTagCriteria qzCategoryTagCriteria) {
+        List<QZCategoryTag> existingQZCategoryTags = searchCategoryTagByQZSettingUuid(qzCategoryTagCriteria.getQzSettingUuid());
+        updateQZCategoryTag(existingQZCategoryTags, qzCategoryTagCriteria.getQzCategoryTags(), qzCategoryTagCriteria.getQzSettingUuid());
+    }
+
+    public void updateQZCategoryTag(List<QZCategoryTag> existingQZCategoryTags, List<QZCategoryTag> updateQZCategoryTags, long qzSettingUuid){
+        Map<String, QZCategoryTag> existingQZCategoryTagMap = new HashMap<String, QZCategoryTag>();
+        for (QZCategoryTag qzCategoryTag : existingQZCategoryTags) {
+            existingQZCategoryTagMap.put(qzCategoryTag.getTagName(), qzCategoryTag);
+        }
+        for (QZCategoryTag newQZCategoryTag : updateQZCategoryTags) {
+            QZCategoryTag oldQZCategoryTag = existingQZCategoryTagMap.get(newQZCategoryTag.getTagName());
+            if (null != oldQZCategoryTag) {
+                existingQZCategoryTagMap.remove(newQZCategoryTag.getTagName());
+            } else {
+                newQZCategoryTag.setQzSettingUuid(qzSettingUuid);
+                qzCategoryTagDao.insert(newQZCategoryTag);
+            }
+        }
+
+        for (QZCategoryTag qzCategoryTag : existingQZCategoryTagMap.values()) {
+            qzCategoryTagDao.deleteById(qzCategoryTag);
+        }
     }
 }
