@@ -158,7 +158,7 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
 
     public Map standardCalculation(List<QZOperationTypeVO> operationTypes, ExternalQzKeywordRankInfoVO externalQzKeywordRankInfoVO) throws Exception{
         Map<String, Object> standardInformation = new HashMap<String, Object>(4);
-        DecimalFormat decimalFormat = new DecimalFormat("#.0000");
+        DecimalFormat decimalFormat = new DecimalFormat("0.0000");
 
         double topTen = Integer.parseInt(externalQzKeywordRankInfoVO.getTopTen().
                 replace("[", "").replace("]", "").split(",")[0]);
@@ -168,7 +168,7 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
         standardInformation.put("sumSeries", operationTypes.size());
         if (topTen < beginStartKeywordCount) {
             standardInformation.put("achieveLevel", 0);
-            standardInformation.put("differenceValue", decimalFormat.format((beginStartKeywordCount - topTen)*1.0 / beginStartKeywordCount));
+            standardInformation.put("differenceValue", decimalFormat.format(((beginStartKeywordCount - topTen)*1.0) / beginStartKeywordCount));
             standardInformation.put("currentPrice", 0);
             return standardInformation;
         } else if (topTen >= lastStartKeywordCount) {
@@ -182,7 +182,7 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
                 if (topTen >= currentStartKeywordCount) {
                     int nextStartKeywordCount = Integer.parseInt(operationTypes.get(i + 1).getStartKeywordCount());
                     standardInformation.put("achieveLevel", i + 1);
-                    standardInformation.put("differenceValue", decimalFormat.format((nextStartKeywordCount - topTen)*1.0 / nextStartKeywordCount));
+                    standardInformation.put("differenceValue", decimalFormat.format(((nextStartKeywordCount - topTen)*1.0) / nextStartKeywordCount));
                     standardInformation.put("currentPrice", operationTypes.get(i).getAmount());
                 }
             }
