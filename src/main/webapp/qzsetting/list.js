@@ -115,12 +115,6 @@ function detectedTopNum() {
     $(".body").find(".rank-wrap").each(function () {
         generateQZKeywordRecordCharts($(this).find("#keywordRecordCharts")[0], $(this).find("div[name='rankInfo'] span").text());
         generateQZKeywordTrendCharts($(this).find("#keywordTrendCharts")[0], $(this).find("div[name='rankInfo'] span").text());
-        $(this).find("#keywordRecordCharts").css("position", "static");
-        $(this).find("#keywordRecordCharts").children().css("position", "static");
-        $(this).find("#keywordRecordCharts").children().children().css("position", "static");
-        $(this).find("#keywordTrendCharts").css("position", "static");
-        $(this).find("#keywordTrendCharts").children().css("position", "static");
-        $(this).find("#keywordTrendCharts").children().children().css("position", "static");
         $(this).find(".row4").each(function () {
             var a = $(this).find("span:last-child a");
             if (a[0].innerHTML.trim() >= 0) {
@@ -406,11 +400,10 @@ function getQZSettingClientGroupInfo(terminalType) {
                 if (data.categoryTagNames.length > 0) {
                     var tagNameStr = "";
                     var span = $(div).parent().parent().parent().find(".header span.tagNames");
-                    $(span).append("<label>" + "分组标签: " + "</label>");
                     $.each(data.categoryTagNames, function (idx, val) {
                         tagNameStr += val + ",";
                     });
-                    $(span).append("<label class='tagNameStr' ondblclick='editTagNameStr(this, true)'>" + tagNameStr.substring(0, tagNameStr.length-1) + "</label>");
+                    $(span).find("label.tagNameStr").html(tagNameStr.substring(0, tagNameStr.length-1));
                 }
                 if (data.clientStatusVOs.length > 0) {
                     showSomeOperationType.empty();
@@ -445,46 +438,63 @@ function getQZSettingClientGroupInfo(terminalType) {
 }
 function editTagNameStr(o, edit){
     if (edit) {
+        o.innerHTML = o.innerHTML.replace(/(暂无)/g, '');
         var uuid = $(o).parent().parent().find("input[name='uuid']").val();
-        o.innerHTML = '<input type="text" uuid="'+ uuid +'" value="' + o.innerHTML.replace(/"/g,'&quot;') + '" onblur="editTagNameStr(this)">';
+        o.innerHTML = '<input type="text" label="'+ o.innerHTML +'" uuid="'+ uuid +'" style="width: 400px;" value="' + o.innerHTML + '" onblur="editTagNameStr(this)">';
         o.getElementsByTagName('input')[0].focus();
     } else {
-        o.value = o.value.replace(/( +)/g, "").replace(/(，+)|(,+)/g, ",");
-        var postData = {};
-        var qzCategoryTags = [];
-        var categoryTagNames = o.value.split(",");
-        if (o.value != "") {
-            $.each(categoryTagNames, function (idx, val) {
-                if (val != "") {
-                    var qzCategoryTag = {};
-                    qzCategoryTag.tagName = $.trim(val);
-                    qzCategoryTags.push(qzCategoryTag);
+        var isChange = true;
+        var label = $(o).attr("label");
+        o.value = o.value.replace(/( )+/g,"").replace(/(，)+|(,)+/g, ",");
+        if ($.trim(o.value) == $.trim(label)) {
+            isChange = false;
+        }
+        if (isChange) {
+            var postData = {};
+            var qzCategoryTags = [];
+            var categoryTagNames = o.value.split(",");
+            categoryTagNames = Array.from(new Set(categoryTagNames));
+            if (o.value != "") {
+                o.value = "";
+                $.each(categoryTagNames, function (idx, val) {
+                    if (val != "") {
+                        var qzCategoryTag = {};
+                        qzCategoryTag.tagName = $.trim(val);
+                        qzCategoryTags.push(qzCategoryTag);
+                        o.value += val + ",";
+                    }
+                });
+                o.value = o.value.substring(0, o.value.length-1);
+            }
+            var qzSettingUuid = $(o).attr("uuid");
+            postData.qzSettingUuid = $.trim(qzSettingUuid);
+            postData.qzCategoryTags = qzCategoryTags;
+            $.ajax({
+                url: "/internal/qzcategorytag/save",
+                type: "POST",
+                data: JSON.stringify(postData),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                success: function (data) {
+                    console.log(data);
+                    if (data) {
+                        $().toastmessage('showSuccessToast', "保存成功！");
+                    } else {
+                        $().toastmessage('showErrorToast', "保存失败！");
+                        o.parentNode.innerHTML = $.trim(label);
+                    }
+                },
+                error: function () {
+                    $().toastmessage('showErrorToast', "保存失败！");
+                    o.parentNode.innerHTML = $.trim(label);
                 }
             });
         }
-        var qzSettingUuid = $(o).attr("uuid");
-        postData.qzSettingUuid = $.trim(qzSettingUuid);
-        postData.qzCategoryTags = qzCategoryTags;
-        $.ajax({
-            url: "/internal/qzcategorytag/save",
-            type: "POST",
-            data: JSON.stringify(postData),
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            success: function (data) {
-                console.log(data);
-                if (data) {
-                    $().toastmessage('showSuccessToast', "保存成功！");
-                } else {
-                    $().toastmessage('showErrorToast', "保存失败！");
-                }
-            },
-            error: function () {
-                $().toastmessage('showErrorToast', "保存失败！");
-            }
-        });
+        if ($.trim(o.value) == "") {
+            o.value = "暂无";
+        }
         o.parentNode.innerHTML = $.trim(o.value);
     }
 }
