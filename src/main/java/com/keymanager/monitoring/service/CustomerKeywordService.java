@@ -404,29 +404,34 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
                 if (percentageCustomerChargeTypeCalculation != null) {
                     if (percentageCustomerChargeTypeCalculation.getChargesOfFirst() != null) {
-                        customerKeyword.setPositionFirstFee(calculatePrice(customerKeyword.getCurrentIndexCount(),
+                        double positionFirstFee = calculatePrice(customerKeyword.getCurrentIndexCount(),
                                 (fixedPriceCustomerChargeTypeCalculation != null ? fixedPriceCustomerChargeTypeCalculation.getChargesOfFirst() :
-                                        null), percentageCustomerChargeTypeCalculation.getChargesOfFirst()));
+                                        null), percentageCustomerChargeTypeCalculation.getChargesOfFirst());
+                        customerKeyword.setPositionFirstFee(positionFirstFee > 1000 ? 1000 : positionFirstFee);
                     }
                     if (percentageCustomerChargeTypeCalculation.getChargesOfSecond() != null) {
-                        customerKeyword.setPositionSecondFee(calculatePrice(customerKeyword.getCurrentIndexCount(),
+                        double positionSecondFee = calculatePrice(customerKeyword.getCurrentIndexCount(),
                                 (fixedPriceCustomerChargeTypeCalculation != null ? fixedPriceCustomerChargeTypeCalculation.getChargesOfSecond() :
-                                        null), percentageCustomerChargeTypeCalculation.getChargesOfSecond()));
+                                        null), percentageCustomerChargeTypeCalculation.getChargesOfSecond());
+                        customerKeyword.setPositionSecondFee(positionSecondFee > 1000 ? 1000 : positionSecondFee);
                     }
                     if (percentageCustomerChargeTypeCalculation.getChargesOfThird() != null) {
-                        customerKeyword.setPositionThirdFee(calculatePrice(customerKeyword.getCurrentIndexCount(),
+                        double positionThirdFee = calculatePrice(customerKeyword.getCurrentIndexCount(),
                                 (fixedPriceCustomerChargeTypeCalculation != null ? fixedPriceCustomerChargeTypeCalculation.getChargesOfThird() :
-                                        null), percentageCustomerChargeTypeCalculation.getChargesOfThird()));
+                                        null), percentageCustomerChargeTypeCalculation.getChargesOfThird());
+                        customerKeyword.setPositionThirdFee(positionThirdFee > 1000 ? 1000 : positionThirdFee);
                     }
                     if (percentageCustomerChargeTypeCalculation.getChargesOfFourth() != null) {
-                        customerKeyword.setPositionForthFee(calculatePrice(customerKeyword.getCurrentIndexCount(),
+                        double positionForthFee = calculatePrice(customerKeyword.getCurrentIndexCount(),
                                 (fixedPriceCustomerChargeTypeCalculation != null ? fixedPriceCustomerChargeTypeCalculation.getChargesOfFourth() :
-                                        null), percentageCustomerChargeTypeCalculation.getChargesOfFourth()));
+                                        null), percentageCustomerChargeTypeCalculation.getChargesOfFourth());
+                        customerKeyword.setPositionForthFee(positionForthFee > 500 ? 500 : positionForthFee);
                     }
                     if (percentageCustomerChargeTypeCalculation.getChargesOfFifth() != null) {
-                        customerKeyword.setPositionFifthFee(calculatePrice(customerKeyword.getCurrentIndexCount(),
+                        double positionFifthFee = calculatePrice(customerKeyword.getCurrentIndexCount(),
                                 (fixedPriceCustomerChargeTypeCalculation != null ? fixedPriceCustomerChargeTypeCalculation.getChargesOfFifth() :
-                                        null), percentageCustomerChargeTypeCalculation.getChargesOfFifth()));
+                                        null), percentageCustomerChargeTypeCalculation.getChargesOfFifth());
+                        customerKeyword.setPositionFifthFee(positionFifthFee > 500 ? 500 : positionFifthFee);
                     }
                     if (percentageCustomerChargeTypeCalculation.getChargesOfFirstPage() != null) {
                         customerKeyword.setPositionFirstPageFee(calculatePrice(customerKeyword.getCurrentIndexCount(),
