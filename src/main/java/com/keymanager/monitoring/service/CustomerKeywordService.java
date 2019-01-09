@@ -590,19 +590,18 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                     Integer.parseInt(maxInvalidCountConfig.getValue()), noPositionMaxInvalidCount, !isNormalKeyword);
 
             if(customerKeywordUuid == null){
-                customerKeywordUuid = customerKeywordDao.getCustomerKeywordUuidForOptimization(terminalType, clientStatus.getGroup(),
-                        Integer.parseInt(maxInvalidCountConfig.getValue()), noPositionMaxInvalidCount, false);
-            }
-            retryCount++;
-            if(customerKeywordUuid == null){
                 if(keywordOptimizationCountService.resetBigKeywordIndicator(clientStatus.getGroup())) {
                     keywordOptimizationCountService.init(clientStatus.getGroup());
                 }
-                if(keywordOptimizationCountService.allowResetBigKeywordIndicator(clientStatus.getGroup())){
-                    keywordOptimizationCountService.setLastVisitTime(clientStatus.getGroup());
-                    resetBigKeywordIndicator(clientStatus.getGroup(), Integer.parseInt(maxInvalidCountConfig.getValue()), noPositionMaxInvalidCount);
-                }
-            }else if(updateQueryInfo){
+                customerKeywordUuid = customerKeywordDao.getCustomerKeywordUuidForOptimization(terminalType, clientStatus.getGroup(),
+                        Integer.parseInt(maxInvalidCountConfig.getValue()), noPositionMaxInvalidCount, false);
+            }
+            if(keywordOptimizationCountService.allowResetBigKeywordIndicator(clientStatus.getGroup())){
+                keywordOptimizationCountService.setLastVisitTime(clientStatus.getGroup());
+                resetBigKeywordIndicator(clientStatus.getGroup(), Integer.parseInt(maxInvalidCountConfig.getValue()), noPositionMaxInvalidCount);
+            }
+            retryCount++;
+            if(customerKeywordUuid != null && updateQueryInfo){
                 updateOptimizationQueryTime(customerKeywordUuid);
             }
         }while(customerKeywordUuid == null && retryCount < 2);

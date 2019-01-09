@@ -12,7 +12,7 @@ public class DES {
          //密码，长度要是8的倍数
          byte[] password = {(byte) 232,74,(byte) 214, 96, (byte) 196, 114, 26, (byte) 224};
          byte[] result = DES.encrypt(rawStr.getBytes(),password);
-         System.out.println("加密后："+new String(result));
+//         System.out.println("加密后："+new String(result));
          StringBuffer resultStr = new StringBuffer();
          for(byte b:result) {
         	 resultStr.append(String.format("%02x", new Integer(b & 0xff)));

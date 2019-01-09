@@ -439,7 +439,7 @@
         SELECT
         ck.fOptimizeGroupName AS 'groupName'
         FROM t_customer_keyword ck
-        WHERE ck.fOptimizeRemainingCount > 0
+        WHERE ck.fOptimizeRemainingCount > 1
         AND ck.fStatus = 1
         AND ck.fType IN (#{typesStr})
         AND ck.fInvalidRefreshCount &lt; #{maxInvalidCount}
@@ -453,7 +453,7 @@
 
     <select id="searchRemainingOptimizationCount" resultType="java.util.Map">
         SELECT ck.fUuid as 'uuid', fOptimizeRemainingCount AS 'remainingCount' FROM t_customer_keyword ck
-        WHERE ck.fOptimizeGroupName = #{groupName} AND ck.fOptimizeRemainingCount > 0 and ck.fStatus = 1
+        WHERE ck.fOptimizeGroupName = #{groupName} AND ck.fOptimizeRemainingCount > 1 and ck.fStatus = 1
         and ck.fInvalidRefreshCount <![CDATA[<]]> #{maxInvalidCount}
         ORDER BY ck.fOptimizeRemainingCount DESC
     </select>
@@ -465,7 +465,7 @@
         WHERE ck.fOptimizeGroupName = #{groupName} and ck.fStatus = 1 and ck.fTerminalType = #{terminalType}
         and ck.fQueryTime <![CDATA[<]]> NOW()
         and ck.fInvalidRefreshCount <![CDATA[<]]> #{maxInvalidCount}
-        and (ck.fOptimizeRemainingCount > 0)
+        and (ck.fOptimizeRemainingCount > 1)
         <if test="bigKeyword == true">
             and ck.fBigKeyword = 1
         </if>
