@@ -483,12 +483,12 @@ function editTagNameStr(o, edit){
                         $().toastmessage('showSuccessToast', "保存成功！");
                     } else {
                         $().toastmessage('showErrorToast', "保存失败！");
-                        o.parentNode.innerHTML = $.trim(label);
+                        o.value = $.trim(label);
                     }
                 },
                 error: function () {
                     $().toastmessage('showErrorToast', "保存失败！");
-                    o.parentNode.innerHTML = $.trim(label);
+                    o.value = $.trim(label);
                 }
             });
         }
