@@ -39,7 +39,7 @@
     }
 
     function updateNegativeKeywords() {
-        var negativeKeywords = $("#negativeKeywords").val();
+        var negativeKeywords = $("#negativeKeywords").val().replace(/[\r\n]/g, "");
         negativeKeywords = distinctKeywords(negativeKeywords);
         $.ajax({
             url: '/internal/config/updateNegativeKeywords',
@@ -142,12 +142,12 @@
     <shiro:hasPermission name="/internal/config/refreshCustomerNegativeKeywords">
     function refreshCustomerNegativeKeywords () {
         var config = {};
-        var negativeKeywords = $("#customerNegativeKeywords").val().replace(/\n/g,',');
-            config.negativeKeywords = negativeKeywords.replace(/,,/g,',');
-            if(negativeKeywords.lastIndexOf(',') == negativeKeywords.length-1){
-                config.negativeKeywords = config.negativeKeywords.substring(0,negativeKeywords.length-1);
-            }
-            config.searchEngine = $("#searchEngine").val();
+        var negativeKeywords = $("#customerNegativeKeywords").val().replace(/\n/g, ',');
+        config.negativeKeywords = negativeKeywords.replace(/,,/g, ',');
+        if(negativeKeywords.lastIndexOf(',') == negativeKeywords.length-1){
+            config.negativeKeywords = config.negativeKeywords.substring(0,negativeKeywords.length-1);
+        }
+        config.searchEngine = $("#searchEngine").val();
         $.ajax({
             url: '/internal/config/refreshCustomerNegativeKeywords',
             data: JSON.stringify(config),
@@ -281,7 +281,7 @@
         <textarea name="customerNegativeKeywords" id="customerNegativeKeywords"  onchange="refreshCustomerNegativeKeywords()" style="width: 500px;height: 300px;">${customerNegativeKeywords}</textarea><br><br>
         <span style="margin-left: 470px;">
             <shiro:hasPermission name="/internal/config/updateCustomerNegativeKeywords">
-                        <input type="button" id="updateCustomerNegativeKeywords" onclick="updateCustomerNegativeKeywords()" value="上传" />
+                <input type="button" id="updateCustomerNegativeKeywords" onclick="updateCustomerNegativeKeywords()" value="上传" />
             </shiro:hasPermission>
         </span>
     </div>
