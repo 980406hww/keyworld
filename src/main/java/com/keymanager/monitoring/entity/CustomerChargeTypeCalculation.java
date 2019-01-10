@@ -37,6 +37,9 @@ public class CustomerChargeTypeCalculation extends BaseEntity{
 	@TableField(value = "fChargesOfFirstPage")
 	private BigDecimal chargesOfFirstPage;
 
+	@TableField(value = "fMaxPrice")
+	private Double maxPrice;
+
 	public int getCustomerChargeTypeUuid() {
 		return customerChargeTypeUuid;
 	}
@@ -107,5 +110,13 @@ public class CustomerChargeTypeCalculation extends BaseEntity{
 
 	public void setChargesOfFirstPage(BigDecimal chargesOfFirstPage) {
 		this.chargesOfFirstPage = chargesOfFirstPage;
+	}
+
+	public Double getMaxPrice() {
+		return maxPrice;
+	}
+
+	public void setMaxPrice(Double maxPrice) {
+		this.maxPrice = maxPrice;
 	}
 }

@@ -12,7 +12,8 @@
         t.fChargesOfThird AS `chargesOfThird`,
         t.fChargesOfFourth AS `chargesOfFourth`,
         t.fChargesOfFifth AS `chargesOfFifth`,
-        t.fChargesOfFirstPage AS `chargesOfFirstPage`
+        t.fChargesOfFirstPage AS `chargesOfFirstPage`,
+        t.fMaxPrice AS 'maxPrice'
     </sql>
 
     <select id="searchCustomerChargeTypeCalculations" resultType="com.keymanager.monitoring.entity.CustomerChargeTypeCalculation">
