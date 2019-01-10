@@ -1,6 +1,7 @@
 package com.keymanager.monitoring.controller.rest.internal;
 
 import com.keymanager.monitoring.criteria.QZCategoryTagCriteria;
+import com.keymanager.monitoring.entity.QZCategoryTag;
 import com.keymanager.monitoring.service.QZCategoryTagService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,10 +29,15 @@ public class QZCategoryTagRestController {
     public ResponseEntity<?> saveCategoryTagNames(@RequestBody QZCategoryTagCriteria qzCategoryTagCriteria) {
         try {
             qzCategoryTagService.saveCategoryTagNames(qzCategoryTagCriteria);
-            return  new ResponseEntity<Object>(true, HttpStatus.OK);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
             return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @RequestMapping(value = "/getAllCategoryTagNames", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllCategoryTagNames() {
+        return new ResponseEntity<Object>(qzCategoryTagService.getAllCategoryTagName(),HttpStatus.OK);
     }
 }

@@ -478,7 +478,7 @@ function editTagNameStr(o, edit){
                 },
                 success: function (data) {
                     if (data) {
-                        $().toastmessage('showSuccessToast', "保存成功！", true);
+                        $().toastmessage('showSuccessToast', "保存成功！");
                     } else {
                         $().toastmessage('showErrorToast', "保存失败！");
                         o.value = $.trim(label);
@@ -540,6 +540,21 @@ function trimSearchCondition(days) {
 }
 function showMoreSearchCondition() {
     $(".mytabs").find("div[name='moreSearchCondition']").toggle();
+    $.ajax({
+        url: "/internal/qzcategorytag/getAllCategoryTagNames",
+        type: "GET",
+        success: function (categoryTagNames) {
+            $("#categoryTag_list").find('option').remove();
+            if (categoryTagNames != null) {
+                $.each(categoryTagNames, function (idx, val) {
+                    $("#categoryTag_list").append("<option value='" + val.tagName + "'></option>")
+                });
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "获取标签信息失败！");
+        }
+    });
 }
 function searchClientStatus(optimizeGroup, operationType) {
     var searchClientStatusFrom = $("#searchClientStatusForm");
