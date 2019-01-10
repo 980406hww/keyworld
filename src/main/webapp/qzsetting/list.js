@@ -478,7 +478,7 @@ function editTagNameStr(o, edit){
                 },
                 success: function (data) {
                     if (data) {
-                        $().toastmessage('showSuccessToast', "保存成功！");
+                        $().toastmessage('showSuccessToast', "保存成功！", true);
                     } else {
                         $().toastmessage('showErrorToast', "保存失败！");
                         o.value = $.trim(label);
