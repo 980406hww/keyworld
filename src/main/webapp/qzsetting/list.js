@@ -1396,6 +1396,7 @@ function saveChangeSetting(self) {
     var tagNames = settingDialogDiv.find("#qzCategoryTagNames").val().replace(/(，)+/g, ",");
     if (tagNames != "") {
         var tagNameArr = tagNames.split(",");
+        tagNameArr = unique(tagNameArr);
         $.each(tagNameArr, function (idx, val) {
             var qzCategoryTag = {};
             qzCategoryTag.tagName = $.trim(val);
