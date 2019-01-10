@@ -126,6 +126,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			existingQZSetting.setPcGroup(qzSetting.getPcGroup());
 			existingQZSetting.setPhoneGroup(qzSetting.getPhoneGroup());
 			existingQZSetting.setType(qzSetting.getType());
+			existingQZSetting.setAutoCrawlKeywordFlag(qzSetting.isAutoCrawlKeywordFlag());
 			existingQZSetting.setIgnoreNoIndex(qzSetting.isIgnoreNoIndex());
 			existingQZSetting.setIgnoreNoOrder(qzSetting.isIgnoreNoOrder());
 			existingQZSetting.setUpdateInterval(qzSetting.getUpdateInterval());
