@@ -290,6 +290,7 @@ function saveCustomerChargeType(customerUuid) {
                 customerChargeTypeCalculationGT.chargesOfFourth = chargeTypeCalculationDiv.find("#chargesOfFourthGT" + val.id).val();
                 customerChargeTypeCalculationGT.chargesOfFifth = chargeTypeCalculationDiv.find("#chargesOfFifthGT" + val.id).val();
                 customerChargeTypeCalculationGT.chargesOfFirstPage = chargeTypeCalculationDiv.find("#chargesOfFirstPageGT" + val.id).val();
+                customerChargeTypeCalculationGT.maxPrice = chargeTypeCalculationDiv.find("#maxPriceGT" + val.id).val();
                 customerChargeType.customerChargeTypeCalculations.push(customerChargeTypeCalculationGT);
             }
         });
@@ -470,6 +471,7 @@ function initCustomerChargeTypeDialog(customerChargeType) {
                 chargesGT.find("#chargesOfFourthGT" + val.operationType).val(val.chargesOfFourth);
                 chargesGT.find("#chargesOfFifthGT" + val.operationType).val(val.chargesOfFifth);
                 chargesGT.find("#chargesOfFirstPageGT" + val.operationType).val(val.chargesOfFirstPage);
+                chargesGT.find("#maxPriceGT" + val.operationType).val(val.maxPrice);
             }
             initRangeTable(val.operationType);
         });

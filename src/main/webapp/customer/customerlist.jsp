@@ -253,7 +253,8 @@
                     第四 <input id="chargesOfFourthGTPC" type="text"
                               onblur="autoFillPrice(this)"/><span></span><br>
                     第五 <input id="chargesOfFifthGTPC" type="text"/><span></span><br>
-                    首页 <input id="chargesOfFirstPageGTPC" type="text"/><span></span>
+                    首页 <input id="chargesOfFirstPageGTPC" type="text"/><span></span><br>
+                    最大 <input id="maxPriceGTPC" type="text"/>
                 </div>
             </div>
             <div id="phoneOperationTypeDiv" style="float: left;width: 48%;;margin-top: 5px;">
@@ -281,7 +282,8 @@
                     第四 <input id="chargesOfFourthGTPhone" type="text"
                               onblur="autoFillPrice(this)"/><span></span><br>
                     第五 <input id="chargesOfFifthGTPhone" type="text"/><span></span><br>
-                    首页 <input id="chargesOfFirstPageGTPhone" type="text"/><span></span>
+                    首页 <input id="chargesOfFirstPageGTPhone" type="text"/><span></span><br>
+                    最大 <input id="maxPriceGTPhone" type="text"/>
                 </div>
             </div>
         </div>
