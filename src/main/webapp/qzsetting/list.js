@@ -444,28 +444,27 @@ function editTagNameStr(o, edit){
         o.getElementsByTagName('input')[0].focus();
     } else {
         var isChange = true;
+        var qzCategoryTags = [];
+        var categoryTagNames = o.value.replace(/( )+/g,"").replace(/(，)+|(,)+/g, ",").split(",");
+        categoryTagNames = Array.from(new Set(categoryTagNames));
+        if (o.value != "") {
+            o.value = "";
+            $.each(categoryTagNames, function (idx, val) {
+                if (val != "") {
+                    var qzCategoryTag = {};
+                    qzCategoryTag.tagName = $.trim(val);
+                    qzCategoryTags.push(qzCategoryTag);
+                    o.value += val + ",";
+                }
+            });
+            o.value = o.value.substring(0, o.value.length-1);
+        }
         var label = $(o).attr("label");
-        o.value = o.value.replace(/( )+/g,"").replace(/(，)+|(,)+/g, ",");
         if ($.trim(o.value) == $.trim(label)) {
             isChange = false;
         }
         if (isChange) {
             var postData = {};
-            var qzCategoryTags = [];
-            var categoryTagNames = o.value.split(",");
-            categoryTagNames = Array.from(new Set(categoryTagNames));
-            if (o.value != "") {
-                o.value = "";
-                $.each(categoryTagNames, function (idx, val) {
-                    if (val != "") {
-                        var qzCategoryTag = {};
-                        qzCategoryTag.tagName = $.trim(val);
-                        qzCategoryTags.push(qzCategoryTag);
-                        o.value += val + ",";
-                    }
-                });
-                o.value = o.value.substring(0, o.value.length-1);
-            }
             var qzSettingUuid = $(o).attr("uuid");
             postData.qzSettingUuid = $.trim(qzSettingUuid);
             postData.qzCategoryTags = qzCategoryTags;
@@ -478,7 +477,6 @@ function editTagNameStr(o, edit){
                     'Content-Type': 'application/json'
                 },
                 success: function (data) {
-                    console.log(data);
                     if (data) {
                         $().toastmessage('showSuccessToast', "保存成功！");
                     } else {
@@ -492,10 +490,12 @@ function editTagNameStr(o, edit){
                 }
             });
         }
-        if ($.trim(o.value) == "") {
-            o.value = "暂无";
-        }
-        o.parentNode.innerHTML = $.trim(o.value);
+        setTimeout(function(){
+            if ($.trim(o.value) == "") {
+                o.value = "暂无";
+            }
+            o.parentNode.innerHTML = $.trim(o.value);
+        }, 100);
     }
 }
 function trimSearchCondition(days) {

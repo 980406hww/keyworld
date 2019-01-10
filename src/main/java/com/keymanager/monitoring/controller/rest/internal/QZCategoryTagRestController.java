@@ -31,7 +31,7 @@ public class QZCategoryTagRestController {
             return  new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
     }
 }

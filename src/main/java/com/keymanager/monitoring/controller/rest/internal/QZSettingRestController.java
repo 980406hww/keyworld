@@ -193,8 +193,8 @@ public class QZSettingRestController extends SpringMVCBaseController {
 			return new ResponseEntity<Object>(qzSettings,HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
+			return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
 	}
 
 	@RequiresPermissions("/internal/qzsetting/searchQZSettings")
@@ -205,8 +205,8 @@ public class QZSettingRestController extends SpringMVCBaseController {
 			return new ResponseEntity<Object>(qzSettingSearchClientGroupInfoVO, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
+			return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
 	}
 
 	@RequestMapping(value = "saveQZSettingCustomerKeywords", method = RequestMethod.POST)
@@ -217,7 +217,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
 			return new ResponseEntity<Object>(true, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
+			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
 	}
 }
