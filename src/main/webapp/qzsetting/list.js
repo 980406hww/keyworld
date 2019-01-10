@@ -106,10 +106,10 @@ function checkTerminalType(terminalType, isManualSwitch) {
     }
     setTimeout(function (){
         detectedTopNum();
-    }, 600);
+    }, 200);
     setTimeout(function () {
         getQZSettingClientGroupInfo(terminalType);
-    }, 400);
+    }, 100);
 }
 function detectedTopNum() {
     $(".body").find(".rank-wrap").each(function () {

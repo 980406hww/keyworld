@@ -12,7 +12,7 @@ td,.wrap {
     position: fixed;
     top: 0px;
     left: 0px;
-    z-index: 9999;
+    z-index: 999;
     background-color: white;
     width: 100%;
 }
@@ -20,7 +20,7 @@ td,.wrap {
     position: fixed;
     bottom: 0px;
     right: 0px;
-    z-index: 9999;
+    z-index: 999;
     /*background-color:#dedede;*/
     background: #ADD1FF;
     padding-top: 5px;
