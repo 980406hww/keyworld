@@ -106,10 +106,10 @@ function checkTerminalType(terminalType, isManualSwitch) {
     }
     setTimeout(function (){
         detectedTopNum();
-    }, 600);
+    }, 200);
     setTimeout(function () {
         getQZSettingClientGroupInfo(terminalType);
-    }, 400);
+    }, 100);
 }
 function detectedTopNum() {
     $(".body").find(".rank-wrap").each(function () {
@@ -446,7 +446,7 @@ function editTagNameStr(o, edit){
         var isChange = true;
         var qzCategoryTags = [];
         var categoryTagNames = o.value.replace(/( )+/g,"").replace(/(，)+|(,)+/g, ",").split(",");
-        categoryTagNames = Array.from(new Set(categoryTagNames));
+        categoryTagNames = unique(categoryTagNames);
         if (o.value != "") {
             o.value = "";
             $.each(categoryTagNames, function (idx, val) {
@@ -497,6 +497,12 @@ function editTagNameStr(o, edit){
             o.parentNode.innerHTML = $.trim(o.value);
         }, 100);
     }
+}
+function unique(a) {
+    var seen = {};
+    return a.filter(function(item) {
+        return seen.hasOwnProperty(item) ? false : (seen[item] = true);
+    });
 }
 function trimSearchCondition(days) {
     var chargeForm = $("#chargeForm");

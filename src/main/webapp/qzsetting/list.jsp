@@ -476,20 +476,18 @@
 							<span class="tagNames" ondblclick="editTagNameStr($(this).find('label.tagNameStr')[0], true)"><label>分组标签:</label>&nbsp;&nbsp;<label class="tagNameStr">暂无</label></span>
 							<div class="handle">
 								<a class="blue" href="javascript:showKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain}','${qzSetting.phoneGroup}')">指定关键字</a>
-								<c:if test="${qzSetting.pcGroup == null}">
-									<shiro:hasPermission name="/internal/qzchargelog/save">
-										<a class="blue" href="javascript:showChargeDialog('${qzSetting.uuid}','${qzSetting.contactPerson}','${qzSetting.domain}',this)">收费</a>
-									</shiro:hasPermission>
-									<shiro:hasPermission name="/internal/qzsetting/save">
-										<a class="blue" href="javascript:showSettingDialog('${qzSetting.uuid}', this)">修改</a>
-									</shiro:hasPermission>
-									<shiro:hasPermission name="/internal/qzsetting/delete">
-										<a class="blue" href="javascript:delQZSetting(${qzSetting.uuid})">删除</a>
-									</shiro:hasPermission>
-									<shiro:hasPermission name="/internal/qzchargelog/chargesList">
-										<a class="blue" href="javascript:showChargeLog('${qzSetting.uuid}', this)">收费记录</a>
-									</shiro:hasPermission>
-								</c:if>
+								<shiro:hasPermission name="/internal/qzchargelog/save">
+									<a class="blue" href="javascript:showChargeDialog('${qzSetting.uuid}','${qzSetting.contactPerson}','${qzSetting.domain}',this)">收费</a>
+								</shiro:hasPermission>
+								<shiro:hasPermission name="/internal/qzsetting/save">
+									<a class="blue" href="javascript:showSettingDialog('${qzSetting.uuid}', this)">修改</a>
+								</shiro:hasPermission>
+								<shiro:hasPermission name="/internal/qzsetting/delete">
+									<a class="blue" href="javascript:delQZSetting(${qzSetting.uuid})">删除</a>
+								</shiro:hasPermission>
+								<shiro:hasPermission name="/internal/qzchargelog/chargesList">
+									<a class="blue" href="javascript:showChargeLog('${qzSetting.uuid}', this)">收费记录</a>
+								</shiro:hasPermission>
 							</div>
 						</div>
 
