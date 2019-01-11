@@ -22,7 +22,9 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/external/qzsetting")
 public class ExternalQZKeywordRankInfoController extends SpringMVCBaseController {
+
     private static Logger logger = LoggerFactory.getLogger(ExternalQZSettingRestController.class);
+
     @Autowired
     private QZKeywordRankInfoService qzKeywordRankInfoService;
 
