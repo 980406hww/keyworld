@@ -46,71 +46,72 @@ public class KeywordInfoService extends ServiceImpl<KeywordInfoDao, KeywordInfo>
 		String username = configService.getConfig(Constants.CONFIG_TYPE_KEYWORD_INFO_SYNCHRONIZE, Constants.CONFIG_KEY_USERNAME).getValue();
 		String password = configService.getConfig(Constants.CONFIG_TYPE_KEYWORD_INFO_SYNCHRONIZE, Constants.CONFIG_KEY_PASSWORD).getValue();
 		String webPath = configService.getConfig(Constants.CONFIG_TYPE_KEYWORD_INFO_SYNCHRONIZE, Constants.CONFIG_KEY_WEBPATH).getValue();
-		Map map = new HashMap();
-		map.put("username", username);
-		map.put("password", password);
+		if(StringUtils.isNotBlank(webPath)) {
+			Map map = new HashMap();
+			map.put("username", username);
+			map.put("password", password);
 
-		KeywordInfoVO keywordInfoVO = keywordInfoSynchronizeService.getKeywordList(webPath, map);
-		for (KeywordInfo keyword : keywordInfoVO) {
-			String spliterStr = keyword.getSpliterStr();
-			String[] searchEngineInfo = keyword.getSearchEngine().split("_");
-			String[] keywordInfos = keyword.getKeywordInfo().split("\n");
-			Customer customer = customerService.findCustomerByExternalAccountInfo(keyword.getUserName(), searchEngineInfo[0]);
-			if(customer != null) {
-				if(keyword.getOperationType().equals("add")) {
-					int maxSequence = customerKeywordService.getMaxSequence(searchEngineInfo[1], customer.getEntryType(), customer.getUuid());
-					Config config = configService.getConfig(Constants.CONFIG_TYPE_DEFAULT_OPTIMIZE_GROUPNAME, keyword.getSearchEngine());
-					for (String keywordInfo : keywordInfos) {
-						String[] info = keywordInfo.split(spliterStr);
-						CustomerKeyword customerKeyword = new CustomerKeyword();
-						customerKeyword.setCustomerUuid(customer.getUuid());
-						customerKeyword.setType(customer.getEntryType());
-						customerKeyword.setSearchEngine(searchEngineInfo[0]);
-						customerKeyword.setTerminalType(searchEngineInfo[1]);
-						customerKeyword.setKeyword(info[0].trim());
-						String url = info[1].trim();
-						if(url.substring(url.length() - 1).equals("/")) {
-							url = url.substring(0, url.length() - 1);
+			KeywordInfoVO keywordInfoVO = keywordInfoSynchronizeService.getKeywordList(webPath, map);
+			for (KeywordInfo keyword : keywordInfoVO) {
+				String spliterStr = keyword.getSpliterStr();
+				String[] searchEngineInfo = keyword.getSearchEngine().split("_");
+				String[] keywordInfos = keyword.getKeywordInfo().split("\n");
+				Customer customer = customerService.findCustomerByExternalAccountInfo(keyword.getUserName(), searchEngineInfo[0]);
+				if (customer != null) {
+					if (keyword.getOperationType().equals("add")) {
+						int maxSequence = customerKeywordService.getMaxSequence(searchEngineInfo[1], customer.getEntryType(), customer.getUuid());
+						Config config = configService.getConfig(Constants.CONFIG_TYPE_DEFAULT_OPTIMIZE_GROUPNAME, keyword.getSearchEngine());
+						for (String keywordInfo : keywordInfos) {
+							String[] info = keywordInfo.split(spliterStr);
+							CustomerKeyword customerKeyword = new CustomerKeyword();
+							customerKeyword.setCustomerUuid(customer.getUuid());
+							customerKeyword.setType(customer.getEntryType());
+							customerKeyword.setSearchEngine(searchEngineInfo[0]);
+							customerKeyword.setTerminalType(searchEngineInfo[1]);
+							customerKeyword.setKeyword(info[0].trim());
+							String url = info[1].trim();
+							if (url.substring(url.length() - 1).equals("/")) {
+								url = url.substring(0, url.length() - 1);
+							}
+							customerKeyword.setUrl(url);
+							customerKeyword.setOptimizeGroupName(config.getValue());
+							customerKeyword.setManualCleanTitle(true);
+							customerKeyword.setServiceProvider("baidutop123");
+							customerKeyword.setCollectMethod(CollectMethod.PerMonth.name());
+							customerKeyword.setSequence(++maxSequence);
+							customerKeywordService.supplementIndexAndPriceFromExisting(customerKeyword);
+							if (customerKeyword.getCurrentIndexCount() == null) {
+								customerKeyword.setCurrentIndexCount(-1);
+								customerKeyword.setPositionFirstFee(-1d);
+							}
+							customerKeywordService.addCustomerKeyword(customerKeyword, null);
 						}
-						customerKeyword.setUrl(url);
-						customerKeyword.setOptimizeGroupName(config.getValue());
-						customerKeyword.setManualCleanTitle(true);
-						customerKeyword.setServiceProvider("baidutop123");
-						customerKeyword.setCollectMethod(CollectMethod.PerMonth.name());
-						customerKeyword.setSequence(++maxSequence);
-						customerKeywordService.supplementIndexAndPriceFromExisting(customerKeyword);
-						if(customerKeyword.getCurrentIndexCount() == null) {
-							customerKeyword.setCurrentIndexCount(-1);
-							customerKeyword.setPositionFirstFee(-1d);
+					} else if (keyword.getOperationType().equals("delete")) {
+						List<RequireDeleteKeywordVO> requireDeleteKeywordVOs = new ArrayList<RequireDeleteKeywordVO>();
+						hasRequireDeleteKeyword = true;
+						for (String keywordInfo : keywordInfos) {
+							String[] info = keywordInfo.split(spliterStr);
+							RequireDeleteKeywordVO requireDeleteKeywordVO = new RequireDeleteKeywordVO();
+							requireDeleteKeywordVO.setCustomerUuid(customer.getUuid());
+							requireDeleteKeywordVO.setEntryType(customer.getEntryType());
+							requireDeleteKeywordVO.setSearchEngine(searchEngineInfo[0]);
+							requireDeleteKeywordVO.setTerminalType(searchEngineInfo[1]);
+							requireDeleteKeywordVO.setKeyword(info[0].trim());
+							requireDeleteKeywordVO.setUrl(info[1].trim());
+							requireDeleteKeywordVOs.add(requireDeleteKeywordVO);
 						}
-						customerKeywordService.addCustomerKeyword(customerKeyword, null);
-					}
-				} else if(keyword.getOperationType().equals("delete")) {
-					List<RequireDeleteKeywordVO> requireDeleteKeywordVOs = new ArrayList<RequireDeleteKeywordVO>();
-					hasRequireDeleteKeyword = true;
-					for (String keywordInfo : keywordInfos) {
-						String[] info = keywordInfo.split(spliterStr);
-						RequireDeleteKeywordVO requireDeleteKeywordVO = new RequireDeleteKeywordVO();
-						requireDeleteKeywordVO.setCustomerUuid(customer.getUuid());
-						requireDeleteKeywordVO.setEntryType(customer.getEntryType());
-						requireDeleteKeywordVO.setSearchEngine(searchEngineInfo[0]);
-						requireDeleteKeywordVO.setTerminalType(searchEngineInfo[1]);
-						requireDeleteKeywordVO.setKeyword(info[0].trim());
-						requireDeleteKeywordVO.setUrl(info[1].trim());
-						requireDeleteKeywordVOs.add(requireDeleteKeywordVO);
-					}
-					if(CollectionUtils.isNotEmpty(requireDeleteKeywordVOs)) {
-						customerKeywordService.batchUpdateRequireDalete(requireDeleteKeywordVOs);
+						if (CollectionUtils.isNotEmpty(requireDeleteKeywordVOs)) {
+							customerKeywordService.batchUpdateRequireDalete(requireDeleteKeywordVOs);
+						}
 					}
 				}
 			}
-		}
 
-		// 同步数据库
-		if(keywordInfoVO.size() > 0) {
-			keywordInfoDao.batchInsertKeyword(keywordInfoVO);
-			keywordInfoSynchronizeService.deleteKeywordList(webPath, map);
-		}
+			// 同步数据库
+			if (keywordInfoVO.size() > 0) {
+				keywordInfoDao.batchInsertKeyword(keywordInfoVO);
+				keywordInfoSynchronizeService.deleteKeywordList(webPath, map);
+			}
 
 //		if(hasRequireDeleteKeyword) {
 //			Config config = configService.getConfig(Constants.CONFIG_TYPE_KEYWORD_INFO_SYNCHRONIZE, Constants.CONFIG_KEY_MOBILE);
@@ -118,6 +119,7 @@ public class KeywordInfoService extends ServiceImpl<KeywordInfoDao, KeywordInfo>
 //				smsService.sendSms(config.getValue(), "系统标记了需要删除的关键词，请注意查看！");
 //			}
 //		}
+		}
 	}
 
 
