@@ -975,9 +975,6 @@
 	</c:forEach>
 </datalist>
 <datalist id="categoryTag_list">
-	<c:forEach items="${categoryTagList}" var="categoryTag">
-		<option>${categoryTag.tagName}</option>
-	</c:forEach>
 </datalist>
 <%--收费Dialog--%>
 <div id="chargeDialog" class="easyui-dialog" style="display: none;left: 40%;">

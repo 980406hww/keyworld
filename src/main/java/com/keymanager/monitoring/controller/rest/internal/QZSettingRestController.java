@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.*;
 import com.keymanager.monitoring.entity.Customer;
-import com.keymanager.monitoring.entity.QZCategoryTag;
 import com.keymanager.monitoring.entity.QZSetting;
 import com.keymanager.monitoring.service.*;
 import com.keymanager.monitoring.vo.QZSettingSearchClientGroupInfoVO;
@@ -172,11 +171,9 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		}
 		Page<QZSetting> page = qzSettingService.searchQZSetting(new Page<QZSetting>(currentPageNumber, pageSize), qzSettingSearchCriteria);
 		List<Customer> customerList = customerService.getActiveCustomerSimpleInfo(customerCriteria);
-		List<QZCategoryTag> categoryTagList = qzCategoryTagService.getAllCategoryTagName();
 		Integer availableQZSettingCount = qzSettingService.getAvailableQZSettings().size();
 		modelAndView.addObject("chargeRemindDataMap", chargeRemindDataMap);
 		modelAndView.addObject("customerList", customerList);
-		modelAndView.addObject("categoryTagList", categoryTagList);
 		modelAndView.addObject("qzSettingSearchCriteria", qzSettingSearchCriteria);
 		modelAndView.addObject("statusList", Constants.QZSETTING_STATUS_LIST);
 		modelAndView.addObject("page", page);

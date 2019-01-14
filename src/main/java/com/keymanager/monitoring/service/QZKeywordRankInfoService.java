@@ -55,10 +55,10 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
         Config taskNumber = configService.getConfig(Constants.CONFIG_TYPE_QZSETTING, Constants.CONFIG_KEY_QZ_TASKNUMBER);
         Config config = configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK, Constants.CONFIG_KEY_CRAWLER_HOUR);
         List<ExternalQzSettingVO> qzSettingTasks = qzKeywordRankInfoDao.getQZSettingTask(Integer.parseInt(config.getValue()),Integer.parseInt(taskNumber.getValue()));
-        if (qzSettingTasks.size()>0){
-            Long[] uuids=new Long[qzSettingTasks.size()];
+        if (CollectionUtils.isNotEmpty(qzSettingTasks)){
+            Long[] uuids = new Long[qzSettingTasks.size()];
             int index = 0;
-            for (ExternalQzSettingVO qzSettingTask:qzSettingTasks) {
+            for (ExternalQzSettingVO qzSettingTask : qzSettingTasks) {
                 uuids[index] = qzSettingTask.getUuid();
                 index++;
             }
@@ -70,24 +70,19 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
     public void updateQzKeywordRankInfo(ExternalQzKeywordRankInfoVO externalQzKeywordRankInfoVO) throws Exception {
         QZKeywordRankInfo rankInfo = getQZKeywordRankInfo(externalQzKeywordRankInfoVO);
         QZSetting qzSetting = getQZSetting(externalQzKeywordRankInfoVO);
-
-        List<QZKeywordRankInfo> rankInfos= qzKeywordRankInfoDao.getQzKeywordRankInfos();
-        for (QZKeywordRankInfo rank:rankInfos) {
-            if (rank.getQzSettingUuid().toString().equals(externalQzKeywordRankInfoVO.getQzSettingUuid().toString())
-                    && rank.getTerminalType().equals(externalQzKeywordRankInfoVO.getTerminalType())){
-                rankInfo.setUuid(rank.getUuid());
-                qzKeywordRankInfoDao.updateById(rankInfo);
-                qzSettingDao.updateQzSetting(qzSetting);
-                return;
-            }
+        List<Long> rankInfoUuids = qzKeywordRankInfoDao.getQzKeywordRankInfos(rankInfo.getQzSettingUuid(), rankInfo.getTerminalType());
+        if (CollectionUtils.isNotEmpty(rankInfoUuids)){
+            rankInfo.setUuid(rankInfoUuids.get(0));
+            qzKeywordRankInfoDao.updateById(rankInfo);
+        } else {
+            qzKeywordRankInfoDao.insert(rankInfo);
         }
-        qzKeywordRankInfoDao.insert(rankInfo);
         qzSettingDao.updateQzSetting(qzSetting);
     }
 
     public QZKeywordRankInfo getQZKeywordRankInfo(ExternalQzKeywordRankInfoVO externalQzKeywordRankInfoVO) throws Exception{
         QZKeywordRankInfo qzKeywordRankInfo = new QZKeywordRankInfo();
-        List<QZOperationTypeVO> operationTypes=qzOperationTypeService.findQZOperationTypes(externalQzKeywordRankInfoVO.getQzSettingUuid(),
+        List<QZOperationTypeVO> operationTypes = qzOperationTypeService.findQZOperationTypes(externalQzKeywordRankInfoVO.getQzSettingUuid(),
                 externalQzKeywordRankInfoVO.getTerminalType(),externalQzKeywordRankInfoVO.getGroup());
 
         qzKeywordRankInfo.setQzSettingUuid(externalQzKeywordRankInfoVO.getQzSettingUuid());

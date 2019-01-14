@@ -408,7 +408,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                                 (fixedPriceCustomerChargeTypeCalculation != null ? fixedPriceCustomerChargeTypeCalculation.getChargesOfFirst() :
                                         null), percentageCustomerChargeTypeCalculation.getChargesOfFirst());
                         if(percentageCustomerChargeTypeCalculation.getMaxPrice() != null){
-                            double maxPrice = Math.round((percentageCustomerChargeTypeCalculation.getMaxPrice() * percentageCustomerChargeTypeCalculation.getChargesOfFirst().doubleValue()) / 1000.0) * 10;
+                            double maxPrice = percentageCustomerChargeTypeCalculation.getMaxPrice();
                             positionFirstFee = positionFirstFee > maxPrice ? maxPrice : positionFirstFee;
                         }
                         customerKeyword.setPositionFirstFee(positionFirstFee);
@@ -418,7 +418,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                                 (fixedPriceCustomerChargeTypeCalculation != null ? fixedPriceCustomerChargeTypeCalculation.getChargesOfSecond() :
                                         null), percentageCustomerChargeTypeCalculation.getChargesOfSecond());
                         if(percentageCustomerChargeTypeCalculation.getMaxPrice() != null){
-                            double maxPrice = Math.round((percentageCustomerChargeTypeCalculation.getMaxPrice() * percentageCustomerChargeTypeCalculation.getChargesOfSecond().doubleValue()) / 1000.0) * 10;
+                            double maxPrice = percentageCustomerChargeTypeCalculation.getMaxPrice();
                             positionSecondFee = positionSecondFee > maxPrice ? maxPrice : positionSecondFee;
                         }
                         customerKeyword.setPositionSecondFee(positionSecondFee);
@@ -428,7 +428,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                                 (fixedPriceCustomerChargeTypeCalculation != null ? fixedPriceCustomerChargeTypeCalculation.getChargesOfThird() :
                                         null), percentageCustomerChargeTypeCalculation.getChargesOfThird());
                         if(percentageCustomerChargeTypeCalculation.getMaxPrice() != null){
-                            double maxPrice = Math.round((percentageCustomerChargeTypeCalculation.getMaxPrice() * percentageCustomerChargeTypeCalculation.getChargesOfThird().doubleValue()) / 1000.0) * 10;
+                            double maxPrice = percentageCustomerChargeTypeCalculation.getMaxPrice();
                             positionThirdFee = positionThirdFee > maxPrice ? maxPrice : positionThirdFee;
                         }
                         customerKeyword.setPositionThirdFee(positionThirdFee);
@@ -438,7 +438,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                                 (fixedPriceCustomerChargeTypeCalculation != null ? fixedPriceCustomerChargeTypeCalculation.getChargesOfFourth() :
                                         null), percentageCustomerChargeTypeCalculation.getChargesOfFourth());
                         if(percentageCustomerChargeTypeCalculation.getMaxPrice() != null){
-                            double maxPrice = Math.round((percentageCustomerChargeTypeCalculation.getMaxPrice() * percentageCustomerChargeTypeCalculation.getChargesOfFourth().doubleValue()) / 1000.0) * 10;
+                            double maxPrice = percentageCustomerChargeTypeCalculation.getMaxPrice();
                             positionForthFee = positionForthFee > maxPrice ? maxPrice : positionForthFee;
                         }
                         customerKeyword.setPositionForthFee(positionForthFee);
@@ -448,7 +448,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                                 (fixedPriceCustomerChargeTypeCalculation != null ? fixedPriceCustomerChargeTypeCalculation.getChargesOfFifth() :
                                         null), percentageCustomerChargeTypeCalculation.getChargesOfFifth());
                         if(percentageCustomerChargeTypeCalculation.getMaxPrice() != null){
-                            double maxPrice = Math.round((percentageCustomerChargeTypeCalculation.getMaxPrice() * percentageCustomerChargeTypeCalculation.getChargesOfFifth().doubleValue()) / 1000.0) * 10;
+                            double maxPrice = percentageCustomerChargeTypeCalculation.getMaxPrice();
                             positionFifthFee = positionFifthFee > maxPrice ? maxPrice : positionFifthFee;
                         }
                         customerKeyword.setPositionFifthFee(positionFifthFee);
@@ -458,7 +458,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                                 fixedPriceCustomerChargeTypeCalculation.getChargesOfFirstPage(), percentageCustomerChargeTypeCalculation
                                         .getChargesOfFirstPage());
                         if(percentageCustomerChargeTypeCalculation.getMaxPrice() != null) {
-                            double maxPrice = Math.round((percentageCustomerChargeTypeCalculation.getMaxPrice() * percentageCustomerChargeTypeCalculation.getChargesOfFirstPage().doubleValue()) / 1000.0) * 10;
+                            double maxPrice = percentageCustomerChargeTypeCalculation.getMaxPrice();
                             positionFirstPageFee = positionFirstPageFee > maxPrice ? maxPrice : positionFirstPageFee;
                         }
                         customerKeyword.setPositionFirstPageFee(positionFirstPageFee);
