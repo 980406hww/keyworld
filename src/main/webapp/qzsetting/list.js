@@ -540,6 +540,21 @@ function trimSearchCondition(days) {
 }
 function showMoreSearchCondition() {
     $(".mytabs").find("div[name='moreSearchCondition']").toggle();
+    $.ajax({
+        url: "/internal/qzcategorytag/getAllCategoryTagNames",
+        type: "GET",
+        success: function (categoryTagNames) {
+            $("#categoryTag_list").find('option').remove();
+            if (categoryTagNames != null) {
+                $.each(categoryTagNames, function (idx, val) {
+                    $("#categoryTag_list").append("<option value='" + val.tagName + "'></option>")
+                });
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "获取标签信息失败！");
+        }
+    });
 }
 function searchClientStatus(optimizeGroup, operationType) {
     var searchClientStatusFrom = $("#searchClientStatusForm");
@@ -1381,6 +1396,7 @@ function saveChangeSetting(self) {
     var tagNames = settingDialogDiv.find("#qzCategoryTagNames").val().replace(/(，)+/g, ",");
     if (tagNames != "") {
         var tagNameArr = tagNames.split(",");
+        tagNameArr = unique(tagNameArr);
         $.each(tagNameArr, function (idx, val) {
             var qzCategoryTag = {};
             qzCategoryTag.tagName = $.trim(val);
