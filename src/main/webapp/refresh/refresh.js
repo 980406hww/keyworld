@@ -1,6 +1,6 @@
 $(function () {
     $("#uploadCSVDialog").dialog("close");
-    $("#showRefreshStatInfoDiv").css("margin-top",$("#topDiv").height());
+    $("#showRefreshStatInfoDiv").css("margin-top",$("#topDiv").height()-5);
 });
 
 function trimSearchCondition() {
