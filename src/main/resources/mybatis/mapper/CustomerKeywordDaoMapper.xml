@@ -215,7 +215,7 @@
     </select>
 
     <select id="updateCaptureIndexQueryTime">
-        UPDATE t_customer_keyword SET fCaptureIndexQueryTime = NOW() WHERE fKeyword = #{keyword} and fOptimizeGroupName IN ('pc_pm_meishoulu', 'pc_pm_xiaowu', 'pc_pm_learner', 'pc_pm_51yza', 'pc_pm_yilufa', 'm_pm_tianqi', 'm_pm_tiantian', 'm_pm_meishoulu', 'm_pm_learner', 'sogou_pm_tiantian', '360_pm_tiantian', 'm_zhannei_sogou') AND fCurrentIndexCount = -1 AND fPositionFirstFee = -1
+        UPDATE t_customer_keyword SET fCaptureIndexQueryTime = NOW() WHERE fKeyword = #{keyword} AND fCurrentIndexCount = -1 AND fPositionFirstFee = -1
     </select>
 
     <!--重构部分-->
@@ -767,7 +767,7 @@
             fCurrentPosition = IF(fLastReachStandardDate = CURRENT_DATE(),IF(#{position} > 0 AND #{position} &lt; fCurrentPosition, #{position}, fCurrentPosition), #{position}),
             fInitialPosition = IFNULL(fInitialPosition, #{position}),
             fCapturePositionQueryTime = IFNULL(#{capturePositionQueryTime}, fCapturePositionQueryTime),
-            fTodayFee = if(fLastReachStandardDate = CURRENT_DATE(), if(fTodayFee > #{todayFee} OR #{todayFee} is null, fTodayFee, #{todayFee}), #{todayFee}),
+            fTodayFee = if(fLastReachStandardDate = CURRENT_DATE(), if(fTodayFee > #{todayFee}, fTodayFee, #{todayFee}), #{todayFee}),
             fCapturePositionIP = #{ip}, fCapturePositionCity = #{city},
             <if test="todayFee != null">
                 fLastReachStandardDate = CURRENT_DATE(),
