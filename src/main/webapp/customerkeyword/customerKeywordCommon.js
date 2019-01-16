@@ -351,11 +351,14 @@ function CustomerKeywordBatchUpdate(entryType) {
             text: '保存',
             iconCls: 'icon-ok',
             handler: function () {
-                if(isChecked("keyword")=="1" && $("#keyword").val()==""){
+                if(isChecked("keyword") == "1" && $("#saveCustomerKeywordDialog").find("input[name='keyword']").val() !=""){
+                    saveChangeSetting(CustomerUuids);
+                }else if(isChecked("keyword") == "0") {
+                    alert("请点击关键字标记为红色");
+                    return;
+                } else {
                     alert("关键字不能为空");
                     return;
-                }else {
-                    saveChangeSetting(CustomerUuids);
                 }
             }
         },
