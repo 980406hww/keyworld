@@ -897,6 +897,10 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeywordDao.resetOptimizationInfo();
     }
 
+    public void resetOptimizationInfoForNoOptimizeDate(){
+        customerKeywordDao.resetOptimizationInfoForNoOptimizeDate();
+    }
+
     public void updateOptimizationQueryTime(Long customerKeywordUuid){
         customerKeywordDao.updateOptimizationQueryTime(customerKeywordUuid);
     }
