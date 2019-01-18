@@ -448,7 +448,7 @@
     </select>
 
     <update id="resetOptimizationInfoForNoOptimizeDate">
-        UPDATE t_customer_keyword SET fOptimizedCount = 0, fOptimizeRemainingCount = fOptimizePlanCount, fInvalidRefreshCount = 0, fOptimizeDate = CURRENT_DATE(), fQueryCount = 0, fQueryDate = CURRENT_DATE(), fQueryTime = NOW()
+        UPDATE t_customer_keyword SET fOptimizedCount = 0, fOptimizeRemainingCount = fOptimizePlanCount, fInvalidRefreshCount = 0, fOptimizeDate = CURRENT_DATE(), fQueryCount = 0, fQueryDate = CURRENT_DATE(), fQueryTime = NOW() WHERE fOptimizeDate IS NULL
     </update>
 
     <update id="resetOptimizationInfo">
