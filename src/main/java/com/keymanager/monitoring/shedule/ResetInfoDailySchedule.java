@@ -34,14 +34,22 @@ public class ResetInfoDailySchedule {
 			performanceService.addPerformanceLog("ResetInfoDailySchedule", System.currentTimeMillis() - startMilleSeconds, "starting");
 
 			customerKeywordInvalidCountLogService.addCustomerKeywordInvalidCountLog();
+			performanceService.addPerformanceLog("ResetInfoDailySchedule", System.currentTimeMillis() - startMilleSeconds, "starting 2");
 			configService.updateOptimizationDateAsToday();
-			customerKeywordService.resetOptimizationInfo();
+			performanceService.addPerformanceLog("ResetInfoDailySchedule", System.currentTimeMillis() - startMilleSeconds, "starting 3");
+			for(int i = 0; i < 10; i++) {
+				customerKeywordService.resetOptimizationInfo();
+			}
+			performanceService.addPerformanceLog("ResetInfoDailySchedule", System.currentTimeMillis() - startMilleSeconds, "starting 4");
+			customerKeywordService.resetOptimizationInfoForNoOptimizeDate();
+			performanceService.addPerformanceLog("ResetInfoDailySchedule", System.currentTimeMillis() - startMilleSeconds, "starting 5");
 			clientStatusService.resetOptimizationInfo();
 
 			performanceService.addPerformanceLog("ResetInfoDailySchedule", System.currentTimeMillis() - startMilleSeconds, "ended");
 			logger.info("============= "+" End Reset informaiton Daily Task "+"===================");
 		} catch (Exception e) {
-			logger.error("Client Upgrade is error" + e.getMessage());
+			e.printStackTrace();
+			logger.error("Reset informaiton Daily Task is error" + e.getMessage());
 		}
 	}
 }

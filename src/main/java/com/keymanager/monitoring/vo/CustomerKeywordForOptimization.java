@@ -86,6 +86,8 @@ public class CustomerKeywordForOptimization {
     private String fromSource;
     private Date negativeListUpdateTime;
 
+    private String disableVisitUrl;
+
     public String getKeyword() {
         return keyword;
     }
@@ -700,5 +702,13 @@ public class CustomerKeywordForOptimization {
 
     public void setFromSource(String fromSource) {
         this.fromSource = fromSource;
+    }
+
+    public String getDisableVisitUrl() {
+        return disableVisitUrl;
+    }
+
+    public void setDisableVisitUrl(String disableVisitUrl) {
+        this.disableVisitUrl = disableVisitUrl;
     }
 }

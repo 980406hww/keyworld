@@ -88,6 +88,8 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void resetOptimizationInfo();
 
+    void resetOptimizationInfoForNoOptimizeDate();
+
     Long getCustomerKeywordUuidForOptimization(@Param("terminalType")String terminalType, @Param("groupName")String groupName,
                                                @Param("maxInvalidCount")int maxInvalidCount, @Param("noPositionMaxInvalidCount") int noPositionMaxInvalidCount, @Param("bigKeyword")boolean bigKeyword);
 
