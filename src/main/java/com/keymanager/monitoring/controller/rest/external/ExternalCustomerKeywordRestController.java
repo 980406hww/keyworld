@@ -13,10 +13,7 @@ import com.keymanager.monitoring.service.ConfigService;
 import com.keymanager.monitoring.service.CustomerKeywordService;
 import com.keymanager.monitoring.service.PerformanceService;
 import com.keymanager.monitoring.vo.*;
-import com.keymanager.util.Constants;
-import com.keymanager.util.TerminalTypeMapping;
-import com.keymanager.util.Utils;
-import com.keymanager.util.ZipCompressor;
+import com.keymanager.util.*;
 import com.keymanager.util.common.StringUtil;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
@@ -278,9 +275,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 CustomerKeywordForOptimization customerKeywordForOptimization = customerKeywordService.searchCustomerKeywordsForOptimization(terminalType, clientID, version, true);
                 clientStatusService.updateClientVersion(clientID, version, customerKeywordForOptimization != null);
                 performanceService.addPerformanceLog(terminalType + ":getCustomerKeyword", System.currentTimeMillis() - startMilleSeconds, null);
-                ObjectMapper mapper = new ObjectMapper();
-                String result = mapper.writeValueAsString(customerKeywordForOptimization);
-                return ResponseEntity.status(HttpStatus.OK).body(ZipCompressor.compress(result));
+                return ResponseEntity.status(HttpStatus.OK).body(ZipCompressor.compress(AESUtils.encrypt(customerKeywordForOptimization)));
             }
         }catch (Exception ex){
             logger.error(ex.getMessage());
