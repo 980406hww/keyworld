@@ -578,8 +578,7 @@
 
     <select id="getCustomerKeywordUuidForCapturePosition" resultType="Long">
         SELECT
-        ck.fUuid	AS	'uuid',
-        ck.fBearPawNumber AS 'bearPawNumber'
+        ck.fUuid	AS	'uuid'
         FROM t_customer_keyword ck
         WHERE ck.fTerminalType = #{terminalType} and ck.fStatus = 1
         <if test="startTime != null">
@@ -610,7 +609,8 @@
         ck.fKeyword	AS	'keyword',
         ck.fUrl	AS	'url',
         ck.fTitle	AS	'title',
-        ck.fSearchEngine	AS	'searchEngine'
+        ck.fSearchEngine	AS	'searchEngine',
+        ck.fBearPawNumber AS 'bearPawNumber'
         FROM t_customer_keyword ck
         WHERE ck.fUuid = #{uuid}
     </select>
