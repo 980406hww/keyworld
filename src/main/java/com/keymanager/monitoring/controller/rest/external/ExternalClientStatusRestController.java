@@ -8,8 +8,11 @@ import com.keymanager.monitoring.service.ClientStatusService;
 import com.keymanager.monitoring.service.ConfigService;
 import com.keymanager.monitoring.service.PerformanceService;
 import com.keymanager.monitoring.service.VMwareService;
+import com.keymanager.monitoring.vo.ClientStatusForOptimization;
+import com.keymanager.util.AESUtils;
 import com.keymanager.util.Constants;
 import com.keymanager.util.TerminalTypeMapping;
+import com.keymanager.util.ZipCompressor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -296,5 +299,24 @@ public class ExternalClientStatusRestController extends SpringMVCBaseController 
             logger.error(ex.getMessage());
         }
         return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+    }
+
+    @RequestMapping(value = "/getClientStatusZip", method = RequestMethod.GET)
+    public ResponseEntity<?> getClientStart(HttpServletRequest request) throws Exception {
+        String userName = request.getParameter("userName");
+        if(StringUtils.isBlank(userName)){
+            userName = request.getParameter("username");
+        }
+        String password = request.getParameter("password");
+        String clientID = request.getParameter("clientID");
+        try {
+            if (validUser(userName, password)) {
+                ClientStatusForOptimization clientStatus = clientStatusService.getClientStatusForOptimization(clientID);
+                return new ResponseEntity<Object>(ZipCompressor.compress(AESUtils.encrypt(clientStatus)), HttpStatus.OK);
+            }
+        }catch (Exception ex){
+            logger.error(ex.getMessage());
+        }
+        return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
     }
 }

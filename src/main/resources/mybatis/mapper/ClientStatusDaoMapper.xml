@@ -166,6 +166,58 @@
 
     </select>
 
+    <select id="getClientStatusForOptimization" resultType="com.keymanager.monitoring.vo.ClientStatusForOptimization">
+        SELECT
+            cs.fGroup AS "group",
+            cs.fOperationType AS "operationType",
+            cs.fKuaizhaoPercent AS "kuaizhaoPercent",
+            cs.fBaiduSemPercent AS "baiduSemPercent",
+            cs.fDragPercent AS "dragPercent",
+            cs.fMultiBrowser AS "multiBrowser",
+            cs.fClearCookie AS "clearCookie",
+            cs.fZhanneiPercent AS "zhanneiPercent",
+            cs.fZhanwaiPercent AS "zhanwaiPercent",
+            cs.fSpecialCharPercent AS "specialCharPercent",
+            cs.fDisableStatistics AS "disableStatistics",
+            cs.fEntryPageMinCount AS "entryPageMinCount",
+            cs.fEntryPageMaxCount AS "entryPageMaxCount",
+            cs.fDisableVisitWebsite AS "disableVisitWebsite",
+            cs.fPageRemainMinTime AS "pageRemainMinTime",
+            cs.fPageRemainMaxTime AS "pageRemainMaxTime",
+            cs.fInputDelayMinTime AS "inputDelayMinTime",
+            cs.fInputDelayMaxTime AS "inputDelayMaxTime",
+            cs.fSlideDelayMinTime AS "slideDelayMinTime",
+            cs.fSlideDelayMaxTime AS "slideDelayMaxTime",
+            cs.fTitleRemainMinTime AS "titleRemainMinTime",
+            cs.fTitleRemainMaxTime AS "titleRemainMaxTime",
+            cs.fOptimizeKeywordCountPerIP AS "optimizeKeywordCountPerIP",
+            cs.fOneIPOneUser AS "oneIPOneUser",
+            cs.fRandomlyClickNoResult AS "randomlyClickNoResult",
+            cs.fJustVisitSelfPage AS "justVisitSelfPage",
+            cs.fSleepPer2Words AS "sleepPer2Words",
+            cs.fSupportPaste AS "supportPaste",
+            cs.fMoveRandomly AS "moveRandomly",
+            cs.fParentSearchEntry AS "parentSearchEntry",
+            cs.fClearLocalStorage AS "clearLocalStorage",
+            cs.fLessClickAtNight AS "lessClickAtNight",
+            cs.fSameCityUser AS "sameCityUser",
+            cs.fLocateTitlePosition AS "locateTitlePosition",
+            cs.fBaiduAllianceEntry AS "baiduAllianceEntry",
+            cs.fJustClickSpecifiedTitle AS "justClickSpecifiedTitle",
+            cs.fRandomlyClickMoreLink AS "randomlyClickMoreLink",
+            cs.fMoveUp20 AS "moveUp20",
+            cs.fWaitTimeAfterOpenBaidu AS "waitTimeAfterOpenBaidu",
+            cs.fWaitTimeBeforeClick AS "waitTimeBeforeClick",
+            cs.fWaitTimeAfterClick AS "waitTimeAfterClick",
+            cs.fMaxUserCount AS "maxUserCount",
+            cs.fSwitchGroupName AS "switchGroupName",
+            cs.fBroadbandAccount AS "broadbandAccount",
+            cs.fBroadbandPassword AS "broadbandPassword"
+        FROM
+        t_client_status cs
+        WHERE cs.fClientID = #{clientID}
+    </select>
+
     <select id="getClientStatusesForSwitchGroup" resultType="com.keymanager.monitoring.entity.ClientStatus">
         SELECT
         <include refid="selectCol" />

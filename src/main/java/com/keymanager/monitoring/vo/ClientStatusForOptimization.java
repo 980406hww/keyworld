@@ -1,6 +1,6 @@
 package com.keymanager.monitoring.vo;
 
-public class CustomerKeywordForOptimization extends CustomerKeywordForOptimizationSimple{
+public class ClientStatusForOptimization{
     private int kuaizhaoPercent;
     private int baiduSemPercent;
     private int dragPercent;
@@ -9,6 +9,7 @@ public class CustomerKeywordForOptimization extends CustomerKeywordForOptimizati
     private int zhanneiPercent;
     private int zhanwaiPercent;
     private int specialCharPercent;
+
     private int openStatistics;
     private int disableStatistics;
     private int entryPageMinCount;
