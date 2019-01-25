@@ -77,7 +77,7 @@
         | <a target="_blank" href="javascript:downloadCustomerKeywordInfo()">导出结果</a>&nbsp;&nbsp;
     </shiro:hasPermission>
     <shiro:hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
-        | <a target="_blank" href="javascript:updateBearPawNumber()">更改熊掌号</a>
+        | <a target="_blank" href="javascript:updateBearPawNumber('total', '${customerKeywordCriteria.customerUuid}')">更改熊掌号</a>
         | <a target="_blank" href="javascript:CustomerKeywordBatchUpdate('${sessionScope.entryType}')">批量设置</a>
     </shiro:hasPermission>
         </div><div>
