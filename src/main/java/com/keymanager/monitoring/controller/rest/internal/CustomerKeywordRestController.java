@@ -488,6 +488,27 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		}
 	}
 
+	@RequiresPermissions("/internal/customerKeyword/saveCustomerKeyword")
+	@RequestMapping(value = "/updateBearPawNumber", method = RequestMethod.POST)
+	public ResponseEntity<?> updateBearPawNumber(@RequestBody CustomerKeywordCriteria customerKeywordCriteria, HttpServletRequest request) {
+		try {
+			String entryType = (String) request.getSession().getAttribute("entryType");
+			String terminalType = TerminalTypeMapping.getTerminalType(request);
+			String userName = (String) request.getSession().getAttribute("username");
+			boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
+			if(!isDepartmentManager) {
+				customerKeywordCriteria.setUserName(userName);
+			}
+			customerKeywordCriteria.setEntryType(entryType);
+			customerKeywordCriteria.setTerminalType(terminalType);
+			customerKeywordService.updateBearPawNumber(customerKeywordCriteria);
+			return new ResponseEntity<Object>(true, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+		}
+	}
+
 	@RequiresPermissions("/internal/customerKeyword/searchCustomerKeywordLists")
 	@RequestMapping(value = "/searchCustomerKeywordForNoReachStandard", method = RequestMethod.POST)
 	public ResponseEntity<?> searchCustomerKeywordForNoReachStandard(@RequestBody CustomerKeywordCriteria customerKeywordCriteria) {

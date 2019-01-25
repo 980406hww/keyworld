@@ -1433,6 +1433,10 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeywordDao.updateOptimizeGroupName(customerKeywordCriteria);
     }
 
+    public void updateBearPawNumber(CustomerKeywordCriteria customerKeywordCriteria) {
+        customerKeywordDao.updateBearPawNumber(customerKeywordCriteria);
+    }
+
     public void searchCustomerKeywordForNoReachStandard(CustomerKeywordCriteria customerKeywordCriteria) {
         Integer noReachStandardDays = customerKeywordCriteria.getNoReachStandardDays();
         customerKeywordCriteria.setNoReachStandardDays(7);
