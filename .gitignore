@@ -18,3 +18,4 @@ target/
 .project
 *.idea*
 *.iml
+src/main/resources/rebel.xml

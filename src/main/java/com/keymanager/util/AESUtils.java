@@ -6,9 +6,13 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.UUID;
+import java.util.zip.Deflater;
+import java.util.zip.GZIPOutputStream;
 
 public class AESUtils {
 
@@ -16,7 +20,7 @@ public class AESUtils {
     private static final byte[] myKeyBytes = myKey.getBytes(StandardCharsets.UTF_8);
 
     // 二进制转十六进制
-    private static String parseByte2HexStr(byte buf[]) {
+    public static String parseByte2HexStr(byte buf[]) {
         StringBuffer sb = new StringBuffer();
         for (byte aBuf : buf) {
             String hex = Integer.toHexString(aBuf & 0xFF);
@@ -29,7 +33,7 @@ public class AESUtils {
     }
 
     // 十六进制转二进制
-    private static byte[] parseHexStr2Byte(String hexStr) {
+    public static byte[] parseHexStr2Byte(String hexStr) {
         if (hexStr.length() < 1)
             return null;
         byte[] result = new byte[hexStr.length() / 2];
@@ -93,6 +97,54 @@ public class AESUtils {
             e.printStackTrace();
             return "解密异常！请及时处理";
         }
+    }
+
+    public static byte[] compress(byte[] inputByte) throws IOException {
+        int len = 0;
+        Deflater defl = new Deflater();
+        defl.setInput(inputByte);
+        defl.finish();
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        byte[] outputByte = new byte[1024];
+        try {
+            while (!defl.finished()) {
+                // 压缩并将压缩后的内容输出到字节输出流bos中
+                len = defl.deflate(outputByte);
+                bos.write(outputByte, 0, len);
+            }
+            defl.end();
+        } finally {
+            bos.close();
+        }
+        return bos.toByteArray();
+    }
+
+    public static byte[] compress1(String str) {
+        if (str == null || str.length() == 0) {
+            return null;
+        }
+        ByteArrayOutputStream out = null;
+        GZIPOutputStream gzip = null;
+        byte[] compress;
+        try {
+            out = new ByteArrayOutputStream();
+            gzip = new GZIPOutputStream(out);
+            gzip.write(str.getBytes("utf-8"));
+            gzip.close();
+            compress = out.toByteArray();
+            return compress;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (null != out) {
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return null;
     }
 
 }
