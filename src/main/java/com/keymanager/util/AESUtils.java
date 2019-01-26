@@ -2,6 +2,7 @@ package com.keymanager.util;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -51,7 +52,9 @@ public class AESUtils {
             byte[] myIvBytes = myIv.getBytes(StandardCharsets.UTF_8);
 
             // 明文
-            String data = JSON.toJSONString(obj, SerializerFeature.WriteMapNullValue);
+//            String data = JSON.toJSONString(obj, SerializerFeature.WriteMapNullValue);
+            ObjectMapper mapper = new ObjectMapper();
+            String data = mapper.writeValueAsString(obj);
 
             Cipher cipher = Cipher.getInstance("AES/CFB8/NOPadding");
             SecretKeySpec sks = new SecretKeySpec(myKeyBytes, "AES");
