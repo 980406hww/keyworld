@@ -551,16 +551,15 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void supplementInfo(List<CustomerKeyword> customerKeywords, int customerUuid, String type, String terminalType) {
-        String bearPawNumber = customerKeywordDao.getBearPawNumberByCustomerUuid(customerUuid, type, terminalType);
         for (CustomerKeyword customerKeyword : customerKeywords) {
             customerKeyword.setCustomerUuid(customerUuid);
             customerKeyword.setType(type);
-            customerKeyword.setBearPawNumber(bearPawNumber);
             customerKeyword.setCreateTime(Utils.getCurrentTimestamp());
             customerKeyword.setUpdateTime(Utils.getCurrentTimestamp());
             customerKeyword.setTerminalType(terminalType);
         }
     }
+
     public void addCustomerKeywords(List<CustomerKeyword> customerKeywords, String loginName) throws Exception {
         for (CustomerKeyword customerKeyword : customerKeywords) {
             addCustomerKeyword(customerKeyword, loginName);
@@ -1431,6 +1430,10 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     public void updateOptimizeGroupName(CustomerKeywordCriteria customerKeywordCriteria) {
         customerKeywordDao.updateOptimizeGroupName(customerKeywordCriteria);
+    }
+
+    public void updateBearPawNumber(CustomerKeywordCriteria customerKeywordCriteria) {
+        customerKeywordDao.updateBearPawNumber(customerKeywordCriteria);
     }
 
     public void searchCustomerKeywordForNoReachStandard(CustomerKeywordCriteria customerKeywordCriteria) {

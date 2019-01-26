@@ -37,6 +37,7 @@ public class CustomerKeywordCriteria extends BaseCriteria{
     private String orderingElement;
     private String orderingRule;
     private String targetOptimizeGroupName;
+    private String targetBearPawNumber;
     private Integer noReachStandardDays;
     private Integer sevenDaysNoReachStandard;
     private Integer fifteenDaysNoReachStandard;
@@ -340,5 +341,13 @@ public class CustomerKeywordCriteria extends BaseCriteria{
 
     public void setTitleFlag(String titleFlag) {
         this.titleFlag = titleFlag;
+    }
+
+    public String getTargetBearPawNumber() {
+        return targetBearPawNumber;
+    }
+
+    public void setTargetBearPawNumber(String targetBearPawNumber) {
+        this.targetBearPawNumber = targetBearPawNumber;
     }
 }

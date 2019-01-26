@@ -74,6 +74,8 @@ public class SuperUserFullKeywordExcelOperator extends AbstractExcelReader {
 		customerKeyword.setOptimizeRemainingCount(optimizePlanCount);
 
 		customerKeyword.setOptimizeGroupName(getStringValue(SuperUserFullKeywordDefinition.OptimizeGroupName.getColumnIndex(), rowIndex).trim());
+
+		customerKeyword.setBearPawNumber(getStringValue(SuperUserFullKeywordDefinition.BearPawNumber.getColumnIndex(), rowIndex).trim());
 		customerKeyword.setTitle(getStringValue(SuperUserFullKeywordDefinition.Title.getColumnIndex(), rowIndex).trim());
 		customerKeyword.setOrderNumber(getStringValue(SuperUserFullKeywordDefinition.OrderNumber.getColumnIndex(), rowIndex).trim());
 		customerKeyword.setRemarks(getStringValue(SuperUserFullKeywordDefinition.Remarks.getColumnIndex(), rowIndex));

@@ -161,6 +161,8 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void updateOptimizeGroupName(@Param("customerKeywordCriteria")CustomerKeywordCriteria customerKeywordCriteria);
 
+    void updateBearPawNumber(@Param("customerKeywordCriteria")CustomerKeywordCriteria customerKeywordCriteria);
+
     void updateOptimizePlanCountForPrice(@Param("uuids") List<Long> uuids);
 
     int searchCustomerKeywordForNoReachStandard(@Param("customerKeywordCriteria")CustomerKeywordCriteria customerKeywordCriteria);

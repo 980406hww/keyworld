@@ -77,6 +77,7 @@
         | <a target="_blank" href="javascript:downloadCustomerKeywordInfo()">导出结果</a>&nbsp;&nbsp;
     </shiro:hasPermission>
     <shiro:hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
+        | <a target="_blank" href="javascript:updateBearPawNumber('total', '${customerKeywordCriteria.customerUuid}')">更改熊掌号</a>
         | <a target="_blank" href="javascript:CustomerKeywordBatchUpdate('${sessionScope.entryType}')">批量设置</a>
     </shiro:hasPermission>
         </div><div>
@@ -314,6 +315,11 @@
 </div>
 
 <%--Dialog部分--%>
+<div id="targetBearPawNumberDialog"  style="text-align: center;left: 40%;display: none;">
+    <form id="bearPawNumberChangeFrom" style="text-align: center;margin-top: 10px;">
+        熊掌号:<input type="text" id="targetBearPawNumber" name="targetBearPawNumber" style="width:150px">
+    </form>
+</div>
 <div id="groupChangeNameByRankDialog"  style="display: none;text-align: center;left: 40%;"  class="easyui-dialog">
     <form id="groupNameChangeByRankFrom" style="text-align: center;margin-top: 10px;">
        <span style="text-align: right;width: 52px;display:inline-block">分组名称:</span><input type="text" id="groupName" name="groupName" style="width:150px"><br><br>
