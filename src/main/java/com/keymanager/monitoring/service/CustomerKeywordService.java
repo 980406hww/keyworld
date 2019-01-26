@@ -551,16 +551,15 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void supplementInfo(List<CustomerKeyword> customerKeywords, int customerUuid, String type, String terminalType) {
-        String bearPawNumber = customerKeywordDao.getBearPawNumberByCustomerUuid(customerUuid, type, terminalType);
         for (CustomerKeyword customerKeyword : customerKeywords) {
             customerKeyword.setCustomerUuid(customerUuid);
             customerKeyword.setType(type);
-            customerKeyword.setBearPawNumber(bearPawNumber);
             customerKeyword.setCreateTime(Utils.getCurrentTimestamp());
             customerKeyword.setUpdateTime(Utils.getCurrentTimestamp());
             customerKeyword.setTerminalType(terminalType);
         }
     }
+
     public void addCustomerKeywords(List<CustomerKeyword> customerKeywords, String loginName) throws Exception {
         for (CustomerKeyword customerKeyword : customerKeywords) {
             addCustomerKeyword(customerKeyword, loginName);
@@ -814,7 +813,179 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return null;
     }
 
-    private synchronized void settingCustomerKeywordCt(Long customerKeywordUuid, CustomerKeywordForOptimization customerKeywordForOptimization) {
+    public CustomerKeywordForOptimizationSimple searchCustomerKeywordsForOptimizationZip(String terminalType, String clientID, String version, boolean updateQueryInfo) {
+        ClientStatus clientStatus = clientStatusService.selectById(clientID);
+        if(clientStatus == null) {
+            clientStatusService.addSummaryClientStatus(terminalType, clientID, 500 + "", version, null);
+            return null;
+        }
+
+        if(!clientStatus.getValid() || StringUtils.isEmpty(clientStatus.getGroup())){
+            return null;
+        }
+
+        String typeName = "all";
+        List<String> entryTypes = customerKeywordDao.getEntryTypes(clientStatus.getGroup());
+        if(!Utils.isEmpty(entryTypes) && entryTypes.size() == 1){
+            typeName = entryTypes.get(0);
+        }
+
+        Config maxInvalidCountConfig = configService.getConfig(Constants.CONFIG_KEY_MAX_INVALID_COUNT, typeName);
+        if(keywordOptimizationCountService.resetBigKeywordIndicator(clientStatus.getGroup())) {
+            keywordOptimizationCountService.init(clientStatus.getGroup());
+//            resetBigKeywordIndicator(clientStatus.getGroup(), Integer.parseInt(maxInvalidCountConfig.getValue()));
+        }
+
+        Long customerKeywordUuid = null;
+        CustomerKeyword customerKeyword = null;
+
+        int retryCount = 0;
+        int noPositionMaxInvalidCount = 2;
+        if(clientStatus.getOperationType().contains(Constants.CONFIG_TYPE_ZHANNEI_SOGOU)) {
+            Config configInvalidRefreshCount = configService.getConfig(Constants.CONFIG_TYPE_ZHANNEI_SOGOU, Constants.CONFIG_KEY_NOPOSITION_MAX_INVALID_COUNT);
+            noPositionMaxInvalidCount = Integer.parseInt(configInvalidRefreshCount.getValue());
+        }
+        do{
+            boolean isNormalKeyword = keywordOptimizationCountService.optimizeNormalKeyword(clientStatus.getGroup());
+            customerKeywordUuid = customerKeywordDao.getCustomerKeywordUuidForOptimization(terminalType, clientStatus.getGroup(),
+                    Integer.parseInt(maxInvalidCountConfig.getValue()), noPositionMaxInvalidCount, !isNormalKeyword);
+
+            if(customerKeywordUuid == null){
+                if(keywordOptimizationCountService.resetBigKeywordIndicator(clientStatus.getGroup())) {
+                    keywordOptimizationCountService.init(clientStatus.getGroup());
+                }
+                customerKeywordUuid = customerKeywordDao.getCustomerKeywordUuidForOptimization(terminalType, clientStatus.getGroup(),
+                        Integer.parseInt(maxInvalidCountConfig.getValue()), noPositionMaxInvalidCount, false);
+            }
+            if(keywordOptimizationCountService.allowResetBigKeywordIndicator(clientStatus.getGroup())){
+                keywordOptimizationCountService.setLastVisitTime(clientStatus.getGroup());
+                resetBigKeywordIndicator(clientStatus.getGroup(), Integer.parseInt(maxInvalidCountConfig.getValue()), noPositionMaxInvalidCount);
+            }
+            retryCount++;
+            if(customerKeywordUuid != null && updateQueryInfo){
+                updateOptimizationQueryTime(customerKeywordUuid);
+            }
+        }while(customerKeywordUuid == null && retryCount < 2);
+
+        if(customerKeywordUuid != null){
+            customerKeyword = customerKeywordDao.getCustomerKeywordForOptimization(customerKeywordUuid);
+            clientStatusService.updatePageNo(clientID, 0);
+            CustomerKeywordForOptimizationSimple customerKeywordForOptimization = new CustomerKeywordForOptimizationSimple();
+            customerKeywordForOptimization.setUuid(customerKeyword.getUuid());
+            customerKeywordForOptimization.setKeyword(customerKeyword.getKeyword());
+            customerKeywordForOptimization.setUrl(customerKeyword.getUrl());
+            customerKeywordForOptimization.setEntryType(customerKeyword.getType());
+            customerKeywordForOptimization.setBearPawNumber(customerKeyword.getBearPawNumber());
+            customerKeywordForOptimization.setSearchEngine(customerKeyword.getSearchEngine());
+            customerKeywordForOptimization.setTerminalType(customerKeyword.getTerminalType());
+
+            customerKeywordForOptimization.setCurrentPosition(customerKeyword.getCurrentPosition());
+            customerKeywordForOptimization.setOriginalUrl(customerKeyword.getOriginalUrl());
+            customerKeywordForOptimization.setTitle(customerKeyword.getTitle());
+
+            customerKeywordForOptimization.setGroup(clientStatus.getGroup());
+            customerKeywordForOptimization.setOperationType(clientStatus.getOperationType());
+
+            NegativeListUpdateInfo negativeListUpdateInfo = negativeListUpdateInfoService.getNegativeListUpdateInfo(customerKeyword.getKeyword());
+            if(negativeListUpdateInfo != null) {
+                customerKeywordForOptimization.setNegativeListUpdateTime(negativeListUpdateInfo.getNegativeListUpdateTime());
+            }
+
+            Set<String> specialGruupNames = new HashSet<String>();
+            specialGruupNames.add("pc_pm_xiaowu");
+            specialGruupNames.add("pc_pm_learner");
+            specialGruupNames.add("pc_pm_51yza");
+            specialGruupNames.add("pc_pm_yilufa");
+
+            if(specialGruupNames.contains(customerKeyword.getOptimizeGroupName()) && (customerKeyword.getCurrentPosition() == 0 ||
+                    customerKeyword.getCurrentPosition() > 20)) {
+                customerKeywordForOptimization.setPage(2);
+            }else{
+                customerKeywordForOptimization.setPage(clientStatus.getPage());
+            }
+
+            if(clientStatus.getPageSize() != null) {
+                if(specialGruupNames.contains(customerKeyword.getOptimizeGroupName()) && (customerKeyword.getCurrentPosition() == 0 ||
+                        customerKeyword.getCurrentPosition() > 20)){
+                    customerKeywordForOptimization.setPageSize(50);
+                }else {
+                    customerKeywordForOptimization.setPageSize(clientStatus.getPageSize());
+                }
+            }
+            customerKeywordForOptimization.setRemarks(customerKeyword.getRemarks());
+            if(StringUtils.isNotBlank(customerKeywordForOptimization.getOperationType())) {
+                if(customerKeywordForOptimization.getOperationType().contains(Constants.CONFIG_TYPE_TJ_XG)) {
+                    customerKeywordForOptimization.setNegativeKeywords(new ArrayList<String>());
+                    Config configNegativeKeywords = configService.getConfig(Constants.CONFIG_TYPE_TJ_XG, Constants.CONFIG_KEY_NEGATIVE_KEYWORDS);
+                    Set<String> negativeKeywords = new HashSet<String>();
+                    if(StringUtils.isNotBlank(configNegativeKeywords.getValue())) {
+                        negativeKeywords.addAll(convertToSets(configNegativeKeywords.getValue()));
+                    }
+                    if(StringUtils.isNotBlank(customerKeyword.getNegativeKeywords())) {
+                        negativeKeywords.addAll(convertToSets(customerKeyword.getNegativeKeywords()));
+                    }
+                    customerKeywordForOptimization.getNegativeKeywords().addAll(negativeKeywords);
+
+                    if(StringUtils.isNotBlank(customerKeyword.getExcludeKeywords())) {
+                        customerKeywordForOptimization.setExcludeKeywords(new ArrayList<String>(convertToSets(customerKeyword.getExcludeKeywords())));
+                    }
+                    if(StringUtils.isNotBlank(customerKeyword.getRecommendKeywords())) {
+                        customerKeywordForOptimization.setRecommendedKeywords(new ArrayList<String>(convertToSets(customerKeyword.getRecommendKeywords())));
+                    }
+
+                    customerKeywordForOptimization.setOperateSelectKeyword(customerKeyword.getOperateSelectKeyword());
+                    customerKeywordForOptimization.setOperateRelatedKeyword(customerKeyword.getOperateRelatedKeyword());
+                    customerKeywordForOptimization.setOperateRecommendKeyword(customerKeyword.getOperateRecommendKeyword());
+                    customerKeywordForOptimization.setOperateSearchAfterSelectKeyword(customerKeyword.getOperateSearchAfterSelectKeyword());
+                    customerKeywordForOptimization.setClickUrl(customerKeyword.getClickUrl());
+                    customerKeywordForOptimization.setShowPage(customerKeyword.getShowPage());
+                    customerKeywordForOptimization.setRelatedKeywordPercentage(customerKeyword.getRelatedKeywordPercentage());
+                }
+
+                if(customerKeywordForOptimization.getOperationType().indexOf("verify_ct") == 0){
+                    if(customerKeyword.getOptimizeGroupName().indexOf("verify_ct") == 0) {
+                        if(StringUtils.isNotBlank(customerKeyword.getCt())) {
+                            customerKeywordForOptimization.setCt(customerKeyword.getCt());
+                        } else {
+                            settingCustomerKeywordCt(customerKeywordUuid, customerKeywordForOptimization);
+                        }
+                    } else {
+                        Config configCt = configService.getConfig(Constants.CONFIG_TYPE_CT, customerKeywordForOptimization.getGroup());
+                        if(configCt != null) {
+                            customerKeywordForOptimization.setCt(configCt.getValue());
+                        }
+                    }
+                }
+                if("verify_src".equals(customerKeywordForOptimization.getOperationType())){
+                    if(customerKeyword.getOptimizeGroupName().indexOf("verify_src") == 0) {
+                        if(StringUtils.isNotBlank(customerKeyword.getFromSource())) {
+                            customerKeywordForOptimization.setFromSource(customerKeyword.getFromSource());
+                        } else {
+                            settingCustomerKeywordFromSource(customerKeywordUuid, customerKeywordForOptimization);
+                        }
+                    } else {
+                        Config configFromSource = configService.getConfig(Constants.CONFIG_TYPE_FROM_SOURCE, customerKeywordForOptimization.getGroup());
+                        if(configFromSource != null) {
+                            customerKeywordForOptimization.setFromSource(configFromSource.getValue());
+                        }
+                    }
+                }
+                if(customerKeywordForOptimization.getEntryType().equals(EntryTypeEnum.qz.name()) &&
+                        (customerKeywordForOptimization.getOperationType().contains("qz_zhannei") || customerKeywordForOptimization.getOperationType().contains("pc_zhannei_360"))) {
+                    List<KeywordSimpleVO> qzKeywords = customerKeywordDao.getQZCustomerKeywordSummaryInfos(terminalType, customerKeyword.getOptimizeGroupName());
+                    customerKeywordForOptimization.setRelatedQZKeywords(qzKeywords);
+                }
+                Config configDisableVisitUrl = configService.getConfig(Constants.CONFIG_TYPE_DISABLE_VISIT_URL, customerKeywordForOptimization.getGroup());
+                if(configDisableVisitUrl != null){
+                    customerKeywordForOptimization.setDisableVisitUrl(configDisableVisitUrl.getValue());
+                }
+            }
+            return customerKeywordForOptimization;
+        }
+        return null;
+    }
+
+    private synchronized void settingCustomerKeywordCt(Long customerKeywordUuid, CustomerKeywordForOptimizationSimple customerKeywordForOptimization) {
         Config configCt = configService.getConfig(Constants.CONFIG_TYPE_CT, customerKeywordForOptimization.getGroup());
         Config configCountPerElement = configService.getConfig(Constants.CONFIG_TYPE_COUNT_PER_ELEMENT, customerKeywordForOptimization.getGroup());
         String configValue = assignConfigValue(configCt, "_", Integer.parseInt(configCountPerElement.getValue()));
@@ -822,7 +993,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeywordDao.updateCustomerKeywordCt(customerKeywordUuid, configValue);
     }
 
-    private synchronized void settingCustomerKeywordFromSource(Long customerKeywordUuid, CustomerKeywordForOptimization customerKeywordForOptimization) {
+    private synchronized void settingCustomerKeywordFromSource(Long customerKeywordUuid, CustomerKeywordForOptimizationSimple customerKeywordForOptimization) {
         Config configFromSource = configService.getConfig(Constants.CONFIG_TYPE_FROM_SOURCE, customerKeywordForOptimization.getGroup());
         Config configCountPerElement = configService.getConfig(Constants.CONFIG_TYPE_COUNT_PER_ELEMENT, customerKeywordForOptimization.getGroup());
         String configValue = assignConfigValue(configFromSource, "_count_", Integer.parseInt(configCountPerElement.getValue()));
@@ -1259,6 +1430,10 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     public void updateOptimizeGroupName(CustomerKeywordCriteria customerKeywordCriteria) {
         customerKeywordDao.updateOptimizeGroupName(customerKeywordCriteria);
+    }
+
+    public void updateBearPawNumber(CustomerKeywordCriteria customerKeywordCriteria) {
+        customerKeywordDao.updateBearPawNumber(customerKeywordCriteria);
     }
 
     public void searchCustomerKeywordForNoReachStandard(CustomerKeywordCriteria customerKeywordCriteria) {

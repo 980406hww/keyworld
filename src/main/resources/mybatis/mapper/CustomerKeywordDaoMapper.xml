@@ -90,6 +90,68 @@
         </choose>
     </sql>
 
+    <sql id="updateCustomerKeywordsCriteria">
+        <if test="customerKeywordCriteria.uuids != null"> AND ck.fUuid IN
+            <foreach item = "item" collection = "customerKeywordCriteria.uuids" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="customerKeywordCriteria.customerUuid != null and customerKeywordCriteria.customerUuid != ''">AND ck.fCustomerUuid = #{customerKeywordCriteria.customerUuid}</if>
+        <if test="customerKeywordCriteria.keyword != null and customerKeywordCriteria.keyword != ''">AND ck.fKeyword like '${customerKeywordCriteria.keyword}%'</if>
+        <if test="customerKeywordCriteria.url != null and customerKeywordCriteria.url != ''">AND ck.fUrl like '%${customerKeywordCriteria.url}%'</if>
+        <if test="customerKeywordCriteria.bearPawNumber != null and customerKeywordCriteria.bearPawNumber != ''">AND ck.fBearPawNumber like '${customerKeywordCriteria.bearPawNumber}%'</if>
+        <if test="customerKeywordCriteria.status != null and customerKeywordCriteria.status != ''">AND ck.fStatus = #{customerKeywordCriteria.status}</if>
+        <if test="customerKeywordCriteria.invalidRefreshCount != null and customerKeywordCriteria.invalidRefreshCount != ''">AND ck.fInvalidRefreshCount &gt;= #{customerKeywordCriteria.invalidRefreshCount}</if>
+        <if test="customerKeywordCriteria.creationFromTime != null and customerKeywordCriteria.creationFromTime != ''">AND ck.fCreateTime &gt;= #{customerKeywordCriteria.creationFromTime}</if>
+        <if test="customerKeywordCriteria.creationToTime != null and customerKeywordCriteria.creationToTime != ''">AND ck.fCreateTime &lt;= #{customerKeywordCriteria.creationToTime}</if>
+        <if test="customerKeywordCriteria.entryType != null and customerKeywordCriteria.entryType != ''">AND ck.fType = #{customerKeywordCriteria.entryType}</if>
+        <if test="customerKeywordCriteria.gtPosition != null and customerKeywordCriteria.noPosition == null "> AND ck.fCurrentPosition &gt;= #{customerKeywordCriteria.gtPosition}</if>
+        <if test="customerKeywordCriteria.ltPosition != null and customerKeywordCriteria.noPosition == null "> AND ck.fCurrentPosition &lt;= #{customerKeywordCriteria.ltPosition}</if>
+        <if test="customerKeywordCriteria.noPosition == 1 ">AND ck.fCurrentPosition =  0    </if>
+        <if test="customerKeywordCriteria.orderNumber != null and customerKeywordCriteria.orderNumber != ''">AND ck.fOrderNumber  like '%${customerKeywordCriteria.orderNumber}%'</if>
+        <if test="customerKeywordCriteria.pushPay != null and customerKeywordCriteria.pushPay != ''">AND ((ck.fCollectMethod = 'PerDay' AND ck.fEffectiveToTime is not null) OR (ck.fEffectiveToTime &lt;= DATE_ADD(CURDATE(),INTERVAL 3 DAY))) </if>
+        <if test="customerKeywordCriteria.terminalType != null and customerKeywordCriteria.terminalType != ''">AND fTerminalType =  #{customerKeywordCriteria.terminalType} </if>
+        <if test="customerKeywordCriteria.gtOptimizedCount != null">AND ck.fOptimizedCount &gt;= #{customerKeywordCriteria.gtOptimizedCount} </if>
+        <if test="customerKeywordCriteria.ltOptimizedCount != null">AND ck.fOptimizedCount &lt;= #{customerKeywordCriteria.ltOptimizedCount} </if>
+        <if test="customerKeywordCriteria.gtOptimizePlanCount != null">AND ck.fOptimizePlanCount &gt;= #{customerKeywordCriteria.gtOptimizePlanCount} </if>
+        <if test="customerKeywordCriteria.ltOptimizePlanCount != null">AND ck.fOptimizePlanCount &lt;= #{customerKeywordCriteria.ltOptimizePlanCount} </if>
+        <if test="customerKeywordCriteria.remarks != null and customerKeywordCriteria.remarks != ''">AND ck.fRemarks like '%${customerKeywordCriteria.remarks}%' </if>
+        <if test="customerKeywordCriteria.gtCurrentIndexCount != null">AND ck.fCurrentIndexCount &gt;= #{customerKeywordCriteria.gtCurrentIndexCount} </if>
+        <if test="customerKeywordCriteria.ltCurrentIndexCount != null">AND ck.fCurrentIndexCount &lt;= #{customerKeywordCriteria.ltCurrentIndexCount} </if>
+        <if test="customerKeywordCriteria.qq != null and customerKeywordCriteria.qq != ''">
+            AND c.fQQ LIKE '${customerKeywordCriteria.qq}%'
+        </if>
+        <if test="customerKeywordCriteria.searchEngine != null and customerKeywordCriteria.searchEngine != ''">AND ck.fSearchEngine = #{customerKeywordCriteria.searchEngine} </if>
+        <if test="customerKeywordCriteria.userName != null and customerKeywordCriteria.userName != ''">
+            AND c.fUserID = #{customerKeywordCriteria.userName}
+        </if>
+        <if test="customerKeywordCriteria.noReachStandardDays != null and customerKeywordCriteria.noReachStandardDays > 0">
+            AND ck.fLastReachStandardDate &lt;= DATE_SUB(CURRENT_DATE(), INTERVAL #{customerKeywordCriteria.noReachStandardDays} DAY)
+        </if>
+        <if test="customerKeywordCriteria.noReachStandardDays != null and customerKeywordCriteria.noReachStandardDays == -1">
+            AND ck.fLastReachStandardDate = CURRENT_DATE()
+        </if>
+        <if test="customerKeywordCriteria.requireDelete == true">
+            AND ck.fRequireDelete = 1
+        </if>
+        <if test="customerKeywordCriteria.titleFlag == 1">
+            AND (ck.fTitle = '' OR ck.fTitle IS NULL)
+        </if>
+        <if test="customerKeywordCriteria.titleFlag == 2">
+            AND ck.fTitle > ''
+        </if>
+        <choose>
+            <when test="customerKeywordCriteria.optimizeGroupName != null and customerKeywordCriteria.optimizeGroupName != ''">
+                AND ck.fOptimizeGroupName  like '${customerKeywordCriteria.optimizeGroupName}%'
+            </when>
+            <otherwise>
+                <if test="customerKeywordCriteria.displayStop == null or customerKeywordCriteria.displayStop == ''">
+                    AND (ck.fOptimizeGroupName != 'stop')
+                </if>
+            </otherwise>
+        </choose>
+    </sql>
+
     <update id="cleanSelectedCustomerKeywordTitle">
         UPDATE t_customer_keyword set fTitle = null , fManualCleanTitle = 1 where fUuid in
         <foreach item="item" index="index" collection="uuids" open="(" separator="," close=")">
@@ -337,6 +399,7 @@
         ck.fPositionFifthFee	AS	'positionFifthFee',
         ck.fPositionFirstPageFee	AS	'positionFirstPageFee',
         ck.fCurrentIndexCount	AS	'currentIndexCount',
+        ck.fBearPawNumber       AS 'bearPawNumber',
         ck.fRemarks	AS	'remarks'
         FROM
         t_customer_keyword ck
@@ -578,8 +641,7 @@
 
     <select id="getCustomerKeywordUuidForCapturePosition" resultType="Long">
         SELECT
-        ck.fUuid	AS	'uuid',
-        ck.fBearPawNumber AS 'bearPawNumber'
+        ck.fUuid	AS	'uuid'
         FROM t_customer_keyword ck
         WHERE ck.fTerminalType = #{terminalType} and ck.fStatus = 1
         <if test="startTime != null">
@@ -610,7 +672,8 @@
         ck.fKeyword	AS	'keyword',
         ck.fUrl	AS	'url',
         ck.fTitle	AS	'title',
-        ck.fSearchEngine	AS	'searchEngine'
+        ck.fSearchEngine	AS	'searchEngine',
+        ck.fBearPawNumber AS 'bearPawNumber'
         FROM t_customer_keyword ck
         WHERE ck.fUuid = #{uuid}
     </select>
@@ -887,49 +950,17 @@
             ck.fOptimizeGroupName = #{customerKeywordCriteria.targetOptimizeGroupName},
             ck.fUpdateTime = NOW()
         WHERE c.fUuid = ck.fCustomerUuid
-        <if test="customerKeywordCriteria.uuids != null"> AND ck.fUuid IN
-            <foreach item = "item" collection = "customerKeywordCriteria.uuids" open="(" separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="customerKeywordCriteria.customerUuid != null and customerKeywordCriteria.customerUuid != ''">AND ck.fCustomerUuid = #{customerKeywordCriteria.customerUuid}</if>
-        <if test="customerKeywordCriteria.keyword != null and customerKeywordCriteria.keyword != ''">AND ck.fKeyword like '${customerKeywordCriteria.keyword}%'</if>
-        <if test="customerKeywordCriteria.url != null and customerKeywordCriteria.url != ''">AND ck.fUrl like '%${customerKeywordCriteria.url}%'</if>
-        <if test="customerKeywordCriteria.status != null and customerKeywordCriteria.status != ''">AND ck.fStatus = #{customerKeywordCriteria.status}</if>
-        <if test="customerKeywordCriteria.invalidRefreshCount != null and customerKeywordCriteria.invalidRefreshCount != ''">AND ck.fInvalidRefreshCount &gt;= #{customerKeywordCriteria.invalidRefreshCount}</if>
-        <if test="customerKeywordCriteria.creationFromTime != null and customerKeywordCriteria.creationFromTime != ''">AND ck.fCreateTime &gt;= #{customerKeywordCriteria.creationFromTime}</if>
-        <if test="customerKeywordCriteria.creationToTime != null and customerKeywordCriteria.creationToTime != ''">AND ck.fCreateTime &lt;= #{customerKeywordCriteria.creationToTime}</if>
-        <if test="customerKeywordCriteria.entryType != null and customerKeywordCriteria.entryType != ''">AND ck.fType = #{customerKeywordCriteria.entryType}</if>
-        <if test="customerKeywordCriteria.gtPosition != null and customerKeywordCriteria.noPosition == null "> AND ck.fCurrentPosition &gt;= #{customerKeywordCriteria.gtPosition}</if>
-        <if test="customerKeywordCriteria.ltPosition != null and customerKeywordCriteria.noPosition == null "> AND ck.fCurrentPosition &lt;= #{customerKeywordCriteria.ltPosition}</if>
-        <if test="customerKeywordCriteria.noPosition == 1 ">AND ck.fCurrentPosition =  0    </if>
-        <if test="customerKeywordCriteria.orderNumber != null and customerKeywordCriteria.orderNumber != ''">AND ck.fOrderNumber  like '%${customerKeywordCriteria.orderNumber}%'</if>
-        <if test="customerKeywordCriteria.pushPay != null and customerKeywordCriteria.pushPay != ''">AND ((ck.fCollectMethod = 'PerDay' AND ck.fEffectiveToTime is not null) OR (ck.fEffectiveToTime &lt;= DATE_ADD(CURDATE(),INTERVAL 3 DAY))) </if>
-        <if test="customerKeywordCriteria.terminalType != null and customerKeywordCriteria.terminalType != ''">AND fTerminalType =  #{customerKeywordCriteria.terminalType} </if>
-        <if test="customerKeywordCriteria.gtOptimizedCount != null">AND ck.fOptimizedCount &gt;= #{customerKeywordCriteria.gtOptimizedCount} </if>
-        <if test="customerKeywordCriteria.ltOptimizedCount != null">AND ck.fOptimizedCount &lt;= #{customerKeywordCriteria.ltOptimizedCount} </if>
-        <if test="customerKeywordCriteria.gtOptimizePlanCount != null">AND ck.fOptimizePlanCount &gt;= #{customerKeywordCriteria.gtOptimizePlanCount} </if>
-        <if test="customerKeywordCriteria.ltOptimizePlanCount != null">AND ck.fOptimizePlanCount &lt;= #{customerKeywordCriteria.ltOptimizePlanCount} </if>
-        <if test="customerKeywordCriteria.remarks != null and customerKeywordCriteria.remarks != ''">AND ck.fRemarks like '%${customerKeywordCriteria.remarks}%' </if>
-        <if test="customerKeywordCriteria.gtCurrentIndexCount != null">AND ck.fCurrentIndexCount &gt;= #{customerKeywordCriteria.gtCurrentIndexCount} </if>
-        <if test="customerKeywordCriteria.ltCurrentIndexCount != null">AND ck.fCurrentIndexCount &lt;= #{customerKeywordCriteria.ltCurrentIndexCount} </if>
-        <if test="customerKeywordCriteria.qq != null and customerKeywordCriteria.qq != ''">
-            AND c.fQQ LIKE '${customerKeywordCriteria.qq}%'
-        </if>
-        <if test="customerKeywordCriteria.searchEngine != null and customerKeywordCriteria.searchEngine != ''">AND ck.fSearchEngine = #{customerKeywordCriteria.searchEngine} </if>
-        <if test="customerKeywordCriteria.userName != null and customerKeywordCriteria.userName != ''">
-            AND c.fUserID = #{customerKeywordCriteria.userName}
-        </if>
-        <choose>
-            <when test="customerKeywordCriteria.optimizeGroupName != null and customerKeywordCriteria.optimizeGroupName != ''">
-                AND ck.fOptimizeGroupName  like '${customerKeywordCriteria.optimizeGroupName}%'
-            </when>
-            <otherwise>
-                <if test="customerKeywordCriteria.displayStop == null or customerKeywordCriteria.displayStop == ''">
-                    AND (ck.fOptimizeGroupName != 'stop')
-                </if>
-            </otherwise>
-        </choose>
+        <include refid="updateCustomerKeywordsCriteria"/>
+    </update>
+
+    <update id="updateBearPawNumber" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordCriteria">
+        UPDATE
+        t_customer_keyword ck,t_customer c
+        SET
+        ck.fBearPawNumber = #{customerKeywordCriteria.targetBearPawNumber},
+        ck.fUpdateTime = NOW()
+        WHERE c.fUuid = ck.fCustomerUuid
+        <include refid="updateCustomerKeywordsCriteria"/>
     </update>
 
     <select id="searchCustomerKeywordForNoReachStandard" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordCriteria" resultType="int">

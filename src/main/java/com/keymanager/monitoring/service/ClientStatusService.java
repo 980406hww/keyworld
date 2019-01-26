@@ -1,46 +1,34 @@
 package com.keymanager.monitoring.service;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.keymanager.monitoring.criteria.QZSettingSearchClientGroupInfoCriteria;
-import com.keymanager.monitoring.entity.ClientUpgrade;
-import com.keymanager.monitoring.vo.ClientStatusVO;
-import com.keymanager.monitoring.vo.CookieVO;
-import com.keymanager.monitoring.entity.CustomerKeywordTerminalRefreshStatRecord;
-import org.apache.commons.collections.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.mail.MailHelper;
 import com.keymanager.monitoring.criteria.ClientStatusBatchUpdateCriteria;
 import com.keymanager.monitoring.criteria.ClientStatusCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
+import com.keymanager.monitoring.criteria.QZSettingSearchClientGroupInfoCriteria;
 import com.keymanager.monitoring.dao.ClientStatusDao;
-import com.keymanager.monitoring.entity.ClientStatus;
-import com.keymanager.monitoring.entity.ClientStatusRestartLog;
-import com.keymanager.monitoring.entity.Config;
+import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.enums.ClientStartUpStatusEnum;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
-import com.keymanager.util.Constants;
-import com.keymanager.util.DES;
-import com.keymanager.util.FileUtil;
-import com.keymanager.util.Utils;
-import com.keymanager.util.VNCAddressBookParser;
+import com.keymanager.monitoring.vo.ClientStatusForOptimization;
+import com.keymanager.monitoring.vo.ClientStatusVO;
+import com.keymanager.monitoring.vo.CookieVO;
+import com.keymanager.util.*;
 import com.keymanager.util.common.StringUtil;
 import com.keymanager.value.ClientStatusGroupSummaryVO;
 import com.keymanager.value.ClientStatusSummaryVO;
+import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.sql.Timestamp;
+import java.util.*;
 
 @Service
 public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStatus>{
@@ -1124,5 +1112,14 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
 
     public List<ClientStatusVO> getClientStatusVOs (QZSettingSearchClientGroupInfoCriteria qzSettingSearchClientGroupInfoCriteria) {
         return clientStatusDao.getClientStatusVOs(qzSettingSearchClientGroupInfoCriteria);
+    }
+
+    public ClientStatusForOptimization getClientStatusForOptimization(String clientID){
+        ClientStatusForOptimization clientStatusForOptimization = clientStatusDao.getClientStatusForOptimization(clientID);
+        if(clientStatusForOptimization != null){
+            clientStatusForOptimization.setOpenStatistics(clientStatusForOptimization.getDisableStatistics() == 1 ? 0 : 1);
+            clientStatusForOptimization.setCurrentTime(Utils.formatDate(new Date(), Utils.TIME_FORMAT));
+        }
+        return clientStatusForOptimization;
     }
 }
