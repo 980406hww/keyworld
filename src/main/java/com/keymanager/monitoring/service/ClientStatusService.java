@@ -217,6 +217,7 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
             oldClientStatus.setMoveUp20(clientStatus.getMoveUp20());
             oldClientStatus.setOptimizeRelatedKeyword(clientStatus.getOptimizeRelatedKeyword());
             oldClientStatus.setSwitchGroupName(clientStatus.getSwitchGroupName());
+            oldClientStatus.setUpdateSettingTime(Utils.getCurrentTimestamp());
             clientStatusDao.updateById(oldClientStatus);
         } else {
             supplementAdditionalValue(clientStatus);
@@ -804,6 +805,7 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
         }
 
         for (ClientStatus clientStatus : clientStatuses) {
+            clientStatus.setUpdateSettingTime(Utils.getCurrentTimestamp());
             clientStatusDao.updateById(clientStatus);
         }
     }
