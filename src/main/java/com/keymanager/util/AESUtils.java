@@ -2,6 +2,7 @@ package com.keymanager.util;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.crypto.Cipher;
@@ -58,7 +59,15 @@ public class AESUtils {
             // 明文
 //            String data = JSON.toJSONString(obj, SerializerFeature.WriteMapNullValue);
             ObjectMapper mapper = new ObjectMapper();
+            mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+
+            //通过该方法对mapper对象进行设置，所有序列化的对象都将按改规则进行系列化
+            //Include.Include.ALWAYS 默认
+            //Include.NON_DEFAULT 属性为默认值不序列化
+            //Include.NON_EMPTY 属性为 空（“”） 或者为 NULL 都不序列化
+            //Include.NON_NULL 属性为NULL 不序列化
             String data = mapper.writeValueAsString(obj);
+
 
             Cipher cipher = Cipher.getInstance("AES/CFB8/NOPadding");
             SecretKeySpec sks = new SecretKeySpec(myKeyBytes, "AES");
