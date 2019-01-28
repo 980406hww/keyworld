@@ -31,9 +31,9 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
             ("entryType") String entryType);
 
     int getSimilarCustomerKeywordCount(@Param("terminalType") String terminalType, @Param("customerUuid") long customerUuid, @Param("keyword") String
-            keyword, @Param("originalUrl") String originalUrl);
+            keyword, @Param("originalUrl") String originalUrl, @Param("title") String title);
 
-    Integer getSameCustomerKeywordCount(@Param("terminalType")String terminalType, @Param("customerUuid") long customerUuid, @Param("keyword") String keyword, @Param("url")String url);
+    Integer getSameCustomerKeywordCount(@Param("terminalType")String terminalType, @Param("customerUuid") long customerUuid, @Param("keyword") String keyword, @Param("url")String url, @Param("title")String title);
 
     int getMaxSequence(@Param("terminalType") String terminalType, @Param("entryType") String entryType, @Param("customerUuid") long customerUuid);
 

@@ -6,6 +6,7 @@
 		fKeyword AS "keyword",
 		fTitle AS "title",
 		fUrl AS "url",
+		fBearPawNumber AS "bearPawNumber",
 		fDesc AS "desc",
 		fPosition AS "position",
 	  	fUpdateTime AS "updateTime",

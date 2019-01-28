@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.FieldStrategy;
 
+import java.lang.reflect.Field;
+
 @TableName(value = "t_negative_list")
 public class NegativeList extends BaseEntity {
 	@TableField(value = "fTerminalType")
@@ -18,14 +20,17 @@ public class NegativeList extends BaseEntity {
 	@TableField(value = "fUrl")
 	private String url;
 
-	@TableField(value = "fDesc")
+	@TableField(value = "fDesc", strategy = FieldStrategy.IGNORED)
 	private String desc;
 
 	@TableField(value = "fPosition")
 	private Integer position;
 
-	@TableField(value = "fOriginalUrl",strategy = FieldStrategy.IGNORED)
+	@TableField(value = "fOriginalUrl", strategy = FieldStrategy.IGNORED)
 	private String originalUrl;
+
+	@TableField(value = "fBearPawNumber", strategy = FieldStrategy.IGNORED)
+	private  String bearPawNumber;
 
 	public String getTerminalType() {
 		return terminalType;
@@ -81,5 +86,13 @@ public class NegativeList extends BaseEntity {
 
 	public void setOriginalUrl(String originalUrl) {
 		this.originalUrl = originalUrl;
+	}
+
+	public String getBearPawNumber () {
+		return bearPawNumber;
+	}
+
+	public void setBearPawNumber (String bearPawNumber) {
+		this.bearPawNumber = bearPawNumber;
 	}
 }

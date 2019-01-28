@@ -213,8 +213,20 @@
     </select>
 
     <select id="getSimilarCustomerKeywordCount" resultType="int">
-        select Count(1) from t_customer_keyword where fKeyword = #{keyword} and fTerminalType = #{terminalType} and fCustomerUuid = #{customerUuid}
-        and fOriginalUrl <![CDATA[ > ]]> '' and fOriginalUrl like concat('%', #{originalUrl});
+        SELECT Count(1) FROM t_customer_keyword
+        WHERE fKeyword = #{keyword}
+        AND fTerminalType = #{terminalType}
+        AND fCustomerUuid = #{customerUuid}
+        <choose>
+            <when test="originalUrl == 'NoUrl'">
+                AND fTitle = #{title}
+            </when>
+            <otherwise>
+                AND fOriginalUrl <![CDATA[ > ]]> ''
+                AND fOriginalUrl like concat('%', #{originalUrl});
+            </otherwise>
+        </choose>
+
     </select>
 
     <select id="getSameCustomerKeywordCount" resultType="java.lang.Integer">
@@ -222,7 +234,14 @@
         WHERE fKeyword = #{keyword}
         AND fTerminalType = #{terminalType}
         AND fCustomerUuid = #{customerUuid}
-        AND fUrl = #{url}
+        <choose>
+            <when test="url == 'NoUrl'">
+                AND fTitle = #{title}
+            </when>
+            <otherwise>
+                AND fUrl = #{url}
+            </otherwise>
+        </choose>
     </select>
 
     <select id="getMaxSequence" resultType="int">

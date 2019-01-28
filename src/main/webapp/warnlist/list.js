@@ -71,6 +71,7 @@ function editWarnList(uuid) {
                 warnListForm.find("#title").val(warnList.title);
                 warnListForm.find("#url").val(warnList.url);
                 warnListForm.find("#originalUrl").val(warnList.originalUrl);
+                warnListForm.find("#bearPawNumber").val(warnList.bearPawNumber);
                 warnListForm.find("#desc").val(warnList.desc);
                 warnListForm.find("#position").val(warnList.position);
                 showWarnListDialog(warnList.uuid);
@@ -174,6 +175,7 @@ function saveWarnList(uuid) {
     warnListObj.title = $("#warnListForm").find("#title").val().trim();
     warnListObj.url = $("#warnListForm").find("#url").val().trim();
     warnListObj.originalUrl = $("#warnListForm").find("#originalUrl").val().trim();
+    warnListObj.bearPawNumber = $("#warnListForm").find("#bearPawNumber").val();
     warnListObj.desc = $("#warnListForm").find("#desc").val();
     warnListObj.position = $("#warnListForm").find("#position").val();
     if (!(/^[0-9]*$/.test(warnListObj.position)) && (warnListObj.position != '')) {

@@ -72,6 +72,7 @@ function editNegativeList(uuid) {
                 negativeListForm.find("#url").val(negativeList.url);
                 negativeListForm.find("#originalUrl").val(negativeList.originalUrl);
                 negativeListForm.find("#desc").val(negativeList.desc);
+                negativeListForm.find("#bearPawNumber").val(negativeList.bearPawNumber);
                 negativeListForm.find("#position").val(negativeList.position);
                 showNegativeListDialog(negativeList.uuid);
             } else {
@@ -174,6 +175,7 @@ function saveNegativeList(uuid) {
     negativeListObj.title = $("#negativeListForm").find("#title").val().trim();
     negativeListObj.url = $("#negativeListForm").find("#url").val().trim();
     negativeListObj.originalUrl = $("#negativeListForm").find("#originalUrl").val().trim();
+    negativeListObj.bearPawNumber = $("#negativeListForm").find("#bearPawNumber").val();
     negativeListObj.desc = $("#negativeListForm").find("#desc").val();
     negativeListObj.position = $("#negativeListForm").find("#position").val();
     if (!(/^[0-9]*$/.test(negativeListObj.position)) && (negativeListObj.position != '')) {

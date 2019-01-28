@@ -13,6 +13,7 @@ public class SearchEngineResultItemVO extends BaseCriteria{
 	private int clickCount;
 	private String type;
 	private String keyword;
+	private String bearPawNumber;
 
 	public int getUuid() {
 		return uuid;
@@ -92,5 +93,13 @@ public class SearchEngineResultItemVO extends BaseCriteria{
 
 	public void setKeyword(String keyword) {
 		this.keyword = keyword;
+	}
+
+	public String getBearPawNumber () {
+		return bearPawNumber;
+	}
+
+	public void setBearPawNumber (String bearPawNumber) {
+		this.bearPawNumber = bearPawNumber;
 	}
 }
