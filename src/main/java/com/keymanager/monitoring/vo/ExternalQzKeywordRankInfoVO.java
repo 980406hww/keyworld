@@ -8,7 +8,7 @@ public class ExternalQzKeywordRankInfoVO {
     private String websiteType;
     private String topTen;
     private String topTwenty;
-    private  String topThirty;
+    private String topThirty;
     private String topForty;
     private String topFifty;
     private String date;
@@ -30,6 +30,7 @@ public class ExternalQzKeywordRankInfoVO {
     private String baiduRecord;
     private String baiduRecordFullDate;
     private String group;
+    private Integer todayDifference;
 
     public String getGroup() {
         return group;
@@ -261,5 +262,13 @@ public class ExternalQzKeywordRankInfoVO {
 
     public void setPhoneCreateTopFiftyNum(Integer phoneCreateTopFiftyNum) {
         this.phoneCreateTopFiftyNum = phoneCreateTopFiftyNum;
+    }
+
+    public Integer getTodayDifference() {
+        return todayDifference;
+    }
+
+    public void setTodayDifference(Integer todayDifference) {
+        this.todayDifference = todayDifference;
     }
 }

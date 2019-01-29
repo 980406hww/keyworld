@@ -86,6 +86,10 @@ public class QZKeywordRankInfo extends BaseEntity {
     @TableField(value = "fCurrentPrice")
     private Integer currentPrice;
 
+    /* 今日top10差值 */
+    @TableField(value = "fTodayDifference")
+    private Integer todayDifference;
+
     /* 前10的增长数（有正负） */
     @TableField(exist = false)
     private int topTenIncrement;
@@ -320,5 +324,13 @@ public class QZKeywordRankInfo extends BaseEntity {
 
     public void setBaiduRecordFullDate(String baiduRecordFullDate) {
         this.baiduRecordFullDate = baiduRecordFullDate;
+    }
+
+    public Integer getTodayDifference() {
+        return todayDifference;
+    }
+
+    public void setTodayDifference(Integer todayDifference) {
+        this.todayDifference = todayDifference;
     }
 }
