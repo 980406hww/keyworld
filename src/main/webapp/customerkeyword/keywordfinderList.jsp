@@ -111,17 +111,17 @@
             到&nbsp;<input name="creationToTime" id="creationToTime" class="Wdate" type="text" style="width:90px;"
             onClick="WdatePicker()" value="${customerKeywordCriteria.creationToTime}">&nbsp;
             <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
-                <input type="submit" onclick="resetPageNumber(0)" value=" 查询 ">&nbsp;&nbsp;
+                <input type="submit" onclick="resetPageNumber(0)" value=" 查询 ">&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
-                <input type="button" onclick="updateCustomerKeywordStatus(0)" value=" 暂停关键字 ">&nbsp;&nbsp;
-                <input type="button" onclick="updateCustomerKeywordStatus(1)" value=" 激活关键字 ">&nbsp;&nbsp;
+                <input type="button" onclick="updateCustomerKeywordStatus(0)" value=" 暂停关键字 ">&nbsp;
+                <input type="button" onclick="updateCustomerKeywordStatus(1)" value=" 激活关键字 ">&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupName">
-                <input type="button" onclick="updateOptimizeGroupName('total')" value=" 修改当前关键字优化组 ">&nbsp;&nbsp;
+                <input type="button" onclick="updateOptimizeGroupName('total')" value=" 修改当前关键字优化组 ">&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupName">
-                <input type="button" onclick="updateOptimizeGroupName('selected')" value=" 修改选中关键字优化组 ">&nbsp;&nbsp;
+                <input type="button" onclick="updateOptimizeGroupName('selected')" value=" 修改选中关键字优化组 ">&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/customerKeyword/deleteCustomerKeywords">
                 <input type="button" onclick="deleteCustomerKeywords()" value=" 删除所选 ">
@@ -135,7 +135,8 @@
                 <input type="button" onclick="CustomerKeywordBatchUpdate('${sessionScope.entryType}')" value=" 批量修改 ">
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
-                <input type="button" onclick="assignBearPawNumber()" value=" 指定熊掌号 ">
+                <input type="button" onclick="updateBearPawNumber('total','${customerKeywordCriteria.customerUuid}')" value=" 修改当前熊掌号 ">
+                <input type="button" onclick="updateBearPawNumber('selected','${customerKeywordCriteria.customerUuid}')" value=" 修改选中熊掌号 ">
             </shiro:hasPermission>
             <br/>
             <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
@@ -261,9 +262,6 @@
     <form id="targetGroupNameFrom" style="text-align: center;margin-top: 10px;">
         目标优化组名:<input type="text" id="groupName" name="groupName" style="width:150px">
     </form>
-</div>
-<div id="targetBearPawNumberDialog" class="easyui-dialog" style="text-align: center;left: 40%;">
-    指定熊掌号:<input type="text" name="bearPawNumber" style="width: 150px; margin-top: 10px;">
 </div>
 <%@ include file="/customerkeyword/customerKeywordCommon.jsp" %>
 

@@ -1,6 +1,5 @@
 $(function () {
     $("#saveCustomerKeywordDialog").dialog("close");
-    $("#targetBearPawNumberDialog").dialog("close");
 });
 
 function trim(val)
@@ -540,30 +539,72 @@ function isChecked(id) {
         return "0";
     }
 }
-//指定关键字
-function assignBearPawNumber() {
-    var CustomerUuids = getSelectedCustomerUuids();
-    if (CustomerUuids === '') {
-        alert('请选择关键字进行修改');
-        return;
-    }
-    $("#targetBearPawNumberDialog").show();
+// 修改熊掌号
+function updateBearPawNumber(changeType, customerUuid) {
+    $("#targetBearPawNumberDialog").css("display", "block");
     $("#targetBearPawNumberDialog").dialog({
         resizable: false,
-        title: "指定熊掌号",
         width: 260,
         height: 100,
+        title:"修改关键字熊掌号",
+        closed: true,
         modal: true,
         buttons: [{
             text: '保存',
             iconCls: 'icon-ok',
             handler: function () {
-                var bearPawNumber = $("#targetBearPawNumberDialog").find("input[name='bearPawNumber']").val();
-                if (bearPawNumber == '') {
-                    alert('请输入熊掌号');
-                } else{
-                    saveBearPawNumber(CustomerUuids, bearPawNumber);
+                var targetBearPawNumber = $("#bearPawNumberChangeForm").find("#targetBearPawNumber").val();
+                if (targetBearPawNumber == null || targetBearPawNumber == '') {
+                    alert("请输入目标熊掌号!");
+                    return;
                 }
+                var obj = {};
+                if ("selected" === changeType){
+                    var uuids = getSelectedCustomerUuids();
+                    if(uuids === ''){
+                        alert('请选择要修改熊掌号的关键字！');
+                        return ;
+                    }
+                    if (confirm("确定要修改选中关键字的熊掌号吗?") == false) return;
+                    obj['uuids'] = uuids.split(",");
+                }else{
+                    if (confirm("确定要修改当前查询条件下所有关键字的熊掌号吗?") == false) return;
+                    var postData = $("#searchCustomerKeywordForm").serializeArray();
+                    $.each(postData, function() {
+                        if (obj[this.name]) {
+                            if (!obj[this.name].push) {
+                                obj[this.name] = [obj[this.name]];
+                            }
+                            obj[this.name].push(this.value || '');
+                        } else {
+                            obj[this.name] = this.value || '';
+                        }
+                    });
+                }
+                obj.targetBearPawNumber = targetBearPawNumber;
+                obj.customerUuid = customerUuid;
+
+                $.ajax({
+                    url: '/internal/customerKeyword/updateBearPawNumber',
+                    data: JSON.stringify(obj),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (data) {
+                        if(data){
+                            $().toastmessage('showSuccessToast',"操作成功", true);
+                        }else{
+                            $().toastmessage('showErrorToast', "操作失败");
+                        }
+                    },
+                    error: function () {
+                        $().toastmessage('showErrorToast', "操作失败");
+                    }
+                });
+                $("#targetBearPawNumberDialog").dialog("close");
             }
         },
             {
@@ -571,44 +612,16 @@ function assignBearPawNumber() {
                 iconCls: 'icon-cancel',
                 handler: function () {
                     $("#targetBearPawNumberDialog").dialog("close");
+                    $('#bearPawNumberChangeForm')[0].reset();
                 }
             }],
-        onClose:function () {
-            $("#targetBearPawNumberDialog").find("input[name='bearPawNumber']").val('');
+        onClose: function () {
+            $('#bearPawNumberChangeForm')[0].reset();
         }
     });
     $("#targetBearPawNumberDialog").dialog("open");
-    $('#targetBearPawNumberDialog').window("resize",{top:$(document).scrollTop() + 100});
+    $('#targetBearPawNumberDialog').window("resize",{top:$(document).scrollTop() + 200});
 }
-
-function saveBearPawNumber(CustomerUuids, bearPawNumber) {
-    var postData = {};
-    postData.customerUuids = CustomerUuids;
-    postData.bearPawNumber = bearPawNumber;
-    $.ajax({
-        url: '/internal/customerKeyword/saveBearPawNumber',
-        type: 'POST',
-        data: JSON.stringify(postData),
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        success: function (result) {
-            if(result){
-                $().toastmessage('showSuccessToast', "更新成功", true);
-            }else{
-                $().toastmessage('showErrorToast', "更新失败");
-            }
-            $("#targetBearPawNumberDialog").dialog("close");
-        },
-        error: function () {
-            $().toastmessage('showErrorToast', "更新失败");
-            $("#targetBearPawNumberDialog").dialog("close");
-        }
-    });
-}
-
-
 
 
 
