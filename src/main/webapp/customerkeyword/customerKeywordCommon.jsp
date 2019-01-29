@@ -145,3 +145,9 @@
     </form>
 </div>
 
+<%--Dialog部分--%>
+<div id="targetBearPawNumberDialog" style="text-align: center;left: 40%;display: none;">
+    <form id="bearPawNumberChangeForm" style="text-align: center;margin-top: 10px;" onkeydown="if(event.keyCode==13)return false;">
+        熊掌号:<input type="text" id="targetBearPawNumber" name="targetBearPawNumber" style="width:150px;"><%-- margin-top: 10px;--%>
+    </form>
+</div>

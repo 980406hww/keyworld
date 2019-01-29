@@ -7,6 +7,7 @@
 		fTitle AS "title",
 		fUrl AS "url",
 		fOriginalUrl AS "originalUrl",
+		fBearPawNumber AS "bearPawNumber",
 		fDesc AS "desc",
 		fPosition AS "position",
 		fUpdateTime AS "updateTime",

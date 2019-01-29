@@ -227,13 +227,13 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
 
         if(!EntryTypeEnum.fm.name().equals(customerKeyword.getType())) {
-            Integer sameCustomerKeywordCount = customerKeywordDao.getSameCustomerKeywordCount(customerKeyword.getTerminalType(), customerKeyword.getCustomerUuid(), customerKeyword.getKeyword(), customerKeyword.getUrl());
+            Integer sameCustomerKeywordCount = customerKeywordDao.getSameCustomerKeywordCount(customerKeyword.getTerminalType(), customerKeyword.getCustomerUuid(), customerKeyword.getKeyword(), customerKeyword.getUrl(), customerKeyword.getTitle());
             if(sameCustomerKeywordCount != null && sameCustomerKeywordCount > 0) {
                 return;
             }
         }
         if (!EntryTypeEnum.fm.name().equals(customerKeyword.getType()) && haveDuplicatedCustomerKeyword(customerKeyword.getTerminalType(),
-                customerKeyword.getCustomerUuid(), customerKeyword.getKeyword(), originalUrl)) {
+                customerKeyword.getCustomerUuid(), customerKeyword.getKeyword(), originalUrl, customerKeyword.getTitle())) {
             return;
         }
         customerKeyword.setKeyword(customerKeyword.getKeyword().trim());
@@ -279,10 +279,10 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeywordDao.updateById(customerKeyword);
     }
 
-    public boolean haveDuplicatedCustomerKeyword(String terminalType, long customerUuid, String keyword, String originalUrl) {
+    public boolean haveDuplicatedCustomerKeyword(String terminalType, long customerUuid, String keyword, String originalUrl, String title) {
         int customerKeywordCount = 0;
         try {
-            customerKeywordCount = customerKeywordDao.getSimilarCustomerKeywordCount(terminalType, customerUuid, keyword, originalUrl);
+            customerKeywordCount = customerKeywordDao.getSimilarCustomerKeywordCount(terminalType, customerUuid, keyword, originalUrl, title);
         } catch (Exception ex) {
 //            ex.printStackTrace();
         }
@@ -1257,6 +1257,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeyword.setOptimizeRemainingCount(searchEngineResultItemVO.getClickCount());
         customerKeyword.setKeyword(searchEngineResultItemVO.getKeyword());
         customerKeyword.setTitle(searchEngineResultItemVO.getTitle());
+        customerKeyword.setBearPawNumber(searchEngineResultItemVO.getBearPawNumber());
         customerKeyword.setType(searchEngineResultItemVO.getType());
         customerKeyword.setTerminalType(terminalType);
         customerKeyword.setOriginalUrl(searchEngineResultItemVO.getHref());

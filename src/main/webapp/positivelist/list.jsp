@@ -68,6 +68,7 @@
 		  <td align="center" >关键字</td>
 		  <td align="center" >标题</td>
 		  <td align="center" >URL</td>
+		  <td align="center" >熊掌号</td>
 		  <td align="center" >描述</td>
 		  <td align="center" >排名</td>
 		  <td align="center" >采集日期</td>
@@ -90,7 +91,8 @@
 			  <td width="70">${positiveList.keyword}</td>
 			  <td width="280">${positiveList.title} </td>
 			  <td width="120">${positiveList.url}</td>
-			  <td width="720">${positiveList.desc}</td>
+			  <td width="120">${positiveList.bearPawNumber}</td>
+			  <td width="600">${positiveList.desc}</td>
 			  <td width="50">${positiveList.position}</td>
 			  <td width="60"><fmt:formatDate value="${positiveList.createTime}" pattern="yyyy-MM-dd"/></td>
 			  <td align="center" width="80">
@@ -151,6 +153,10 @@
 				<tr>
 					<td align="right">原始URL<label style="color: red">*</label>：</td>
 					<td><input type="text" id="originalUrl" style="width:400px;"></td>
+				</tr>
+				<tr>
+					<td align="right">熊掌号：</td>
+					<td><input type="text" id="bearPawNumber" style="width:400px;"></td>
 				</tr>
 				<tr>
 					<td align="right">排名：</td>

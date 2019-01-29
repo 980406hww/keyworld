@@ -71,6 +71,7 @@ function editPositiveList(uuid) {
                 positiveListForm.find("#title").val(positiveList.title);
                 positiveListForm.find("#url").val(positiveList.url);
                 positiveListForm.find("#originalUrl").val(positiveList.originalUrl);
+                positiveListForm.find("#bearPawNumber").val(positiveList.bearPawNumber);
                 positiveListForm.find("#desc").val(positiveList.desc);
                 positiveListForm.find("#position").val(positiveList.position);
                 showPositiveListDialog(positiveList.uuid);
@@ -174,6 +175,7 @@ function savePositiveList(uuid) {
     positiveListObj.title = $("#positiveListForm").find("#title").val().trim();
     positiveListObj.url = $("#positiveListForm").find("#url").val().trim();
     positiveListObj.originalUrl = $("#positiveListForm").find("#originalUrl").val().trim();
+    positiveListObj.bearPawNumber = $("#positiveListForm").find("#bearPawNumber").val();
     positiveListObj.desc = $("#positiveListForm").find("#desc").val();
     positiveListObj.position = $("#positiveListForm").find("#position").val();
     if (!(/^[0-9]*$/.test(positiveListObj.position)) && (positiveListObj.position != '')) {
