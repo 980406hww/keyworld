@@ -10,6 +10,7 @@ public class QZSettingSearchCriteria{
     private Integer dateRangeType;
     private Integer status;
     private Integer baiduWeight;
+    private Integer unchangedNum;
     private Integer downNum;
     private Integer upNum;
     private Integer atLeastStandardNum;
@@ -116,6 +117,14 @@ public class QZSettingSearchCriteria{
 
     public void setTerminalType (String terminalType) {
         this.terminalType = terminalType;
+    }
+
+    public Integer getUnchangedNum () {
+        return unchangedNum;
+    }
+
+    public void setUnchangedNum (Integer unchangedNum) {
+        this.unchangedNum = unchangedNum;
     }
 
     public void setDownNum(Integer downNum) {

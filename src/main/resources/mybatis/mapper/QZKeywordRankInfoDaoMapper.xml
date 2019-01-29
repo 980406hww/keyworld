@@ -74,6 +74,7 @@
 
     <select id="getCountNumOfRankInfo" resultType="com.keymanager.monitoring.criteria.QZSettingSearchCriteria">
         SELECT
+            COUNT(qk.fIncrease = 0 OR NULL) AS unchangedNum,
             COUNT(qk.fIncrease &lt;= #{lower} OR NULL) AS downNum,
             COUNT(qk.fIncrease &gt;= #{upper} OR NULL) AS upNum,
             COUNT(qk.fAchieveLevel &gt; 0 OR NULL) AS atLeastStandardNum,

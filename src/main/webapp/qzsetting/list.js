@@ -69,6 +69,9 @@ function searchRiseOrFall() {
             if (parentName == "closeStandard") {
                 checkStatus = 5;
             }
+            if (parentName == "unchanged") {
+                checkStatus = 6;
+            }
         }
         $("#chargeForm").find("#checkStatus").val(checkStatus);
         trimSearchCondition('1');

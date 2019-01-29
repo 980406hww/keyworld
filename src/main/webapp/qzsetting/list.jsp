@@ -91,6 +91,12 @@
 					</label>
 				</li>
 				<li>
+					<label name="unchanged" title="网站关键词(PC,Phone)一星期排名趋势涨幅不变">
+						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.checkStatus == 6}">checked</c:if>>
+						未改变 (${qzSettingSearchCriteria.unchangedNum == null ? 0 : qzSettingSearchCriteria.unchangedNum})
+					</label>
+				</li>
+				<li>
 					<label name="atLeastStandard" title="标识最少有一条规则达标">
 						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.checkStatus == 3}">checked</c:if>>
 						达标 (${qzSettingSearchCriteria.atLeastStandardNum == null ? 0 : qzSettingSearchCriteria.atLeastStandardNum})

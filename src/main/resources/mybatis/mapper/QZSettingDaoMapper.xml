@@ -175,6 +175,9 @@
                 <when test="qzSettingSearchCriteria.checkStatus == 5">
                     AND qk.fDifferenceValue &lt;= #{qzSettingSearchCriteria.differenceValue}
                 </when>
+                <when test="qzSettingSearchCriteria.checkStatus == 6">
+                    AND qk.fIncrease = 0
+                </when>
             </choose>
             AND qk.fTerminalType = #{qzSettingSearchCriteria.terminalType}
         </if>
