@@ -85,15 +85,33 @@
 					</label>
 				</li>
 				<li>
+					<label name="unchanged" title="网站关键词(PC,Phone)一星期排名趋势涨幅不变">
+						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.checkStatus == 6}">checked</c:if>>
+						无变化 (${qzSettingSearchCriteria.unchangedNum == null ? 0 : qzSettingSearchCriteria.unchangedNum})
+					</label>
+				</li>
+				<li>
 					<label name="upper" title="网站关键词(PC,Phone)一星期排名趋势涨幅&gt;${qzSettingSearchCriteria.upperValue}">
 						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.checkStatus == 2}">checked</c:if>>
 						<i class="icon-rank-up"></i>暴涨 (${qzSettingSearchCriteria.upNum == null ? 0 : qzSettingSearchCriteria.upNum})
 					</label>
 				</li>
 				<li>
-					<label name="unchanged" title="网站关键词(PC,Phone)一星期排名趋势涨幅不变">
-						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.checkStatus == 6}">checked</c:if>>
-						未改变 (${qzSettingSearchCriteria.unchangedNum == null ? 0 : qzSettingSearchCriteria.unchangedNum})
+					<label name="lowerDifference" title="网站关键词(PC,Phone)今天前10下降">
+						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.checkStatus == 7}">checked</c:if>>
+						下降 (${qzSettingSearchCriteria.downDifferenceNum == null ? 0 : qzSettingSearchCriteria.downDifferenceNum})
+					</label>
+				</li>
+				<li>
+					<label name="unchangedDifference" title="网站关键词(PC,Phone)今天前10不变">
+						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.checkStatus == 8}">checked</c:if>>
+						不变 (${qzSettingSearchCriteria.unchangedDifferenceNum == null ? 0 : qzSettingSearchCriteria.unchangedDifferenceNum})
+					</label>
+				</li>
+				<li>
+					<label name="upperDifference" title="网站关键词(PC,Phone)今天前10上升">
+						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.checkStatus == 9}">checked</c:if>>
+						上升 (${qzSettingSearchCriteria.upDifferenceNum == null ? 0 : qzSettingSearchCriteria.upDifferenceNum})
 					</label>
 				</li>
 				<li>

@@ -79,7 +79,10 @@
             COUNT(qk.fIncrease &gt;= #{upper} OR NULL) AS upNum,
             COUNT(qk.fAchieveLevel &gt; 0 OR NULL) AS atLeastStandardNum,
             COUNT(qk.fAchieveLevel = 0 OR NULL) AS neverStandardNum,
-            COUNT(qk.fDifferenceValue &lt;= #{differenceValue} OR NULL) AS closeStandardNum
+            COUNT(qk.fDifferenceValue &lt;= #{differenceValue} OR NULL) AS closeStandardNum,
+            COUNT(qk.fTodayDifference =0 OR NULL) AS unchangedDifferenceNum,
+            COUNT(qk.fTodayDifference &gt;0 OR NULL) AS upDifferenceNum,
+            COUNT(qk.fTodayDifference &lt;0 OR NULL) AS downDifferenceNum
         FROM t_qz_keyword_rank_info qk
         JOIN t_qz_setting qs
         ON qs.fUuid = qk.fQZSettingUuid

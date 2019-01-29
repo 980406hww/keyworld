@@ -22,6 +22,9 @@ public class QZSettingSearchCriteria{
     private Integer checkStatus;
     private String terminalType;
     private String categoryTag;
+    private Integer unchangedDifferenceNum;
+    private Integer upDifferenceNum;
+    private Integer downDifferenceNum;
 
     public String getLoginName() {
         return loginName;
@@ -189,5 +192,29 @@ public class QZSettingSearchCriteria{
 
     public void setBaiduWeight (Integer baiduWeight) {
         this.baiduWeight = baiduWeight;
+    }
+
+    public Integer getUnchangedDifferenceNum () {
+        return unchangedDifferenceNum;
+    }
+
+    public void setUnchangedDifferenceNum (Integer unchangedDifferenceNum) {
+        this.unchangedDifferenceNum = unchangedDifferenceNum;
+    }
+
+    public Integer getUpDifferenceNum () {
+        return upDifferenceNum;
+    }
+
+    public void setUpDifferenceNum (Integer upDifferenceNum) {
+        this.upDifferenceNum = upDifferenceNum;
+    }
+
+    public Integer getDownDifferenceNum () {
+        return downDifferenceNum;
+    }
+
+    public void setDownDifferenceNum (Integer downDifferenceNum) {
+        this.downDifferenceNum = downDifferenceNum;
     }
 }

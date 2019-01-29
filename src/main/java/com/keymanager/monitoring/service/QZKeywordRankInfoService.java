@@ -128,6 +128,9 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
         qzSettingSearchCriteria.setAtLeastStandardNum(countNumOfRankInfoQZSettingSearchCriteria.getAtLeastStandardNum());
         qzSettingSearchCriteria.setNeverStandardNum(countNumOfRankInfoQZSettingSearchCriteria.getNeverStandardNum());
         qzSettingSearchCriteria.setCloseStandardNum(countNumOfRankInfoQZSettingSearchCriteria.getCloseStandardNum());
+        qzSettingSearchCriteria.setUnchangedDifferenceNum(countNumOfRankInfoQZSettingSearchCriteria.getUnchangedDifferenceNum());
+        qzSettingSearchCriteria.setUpDifferenceNum(countNumOfRankInfoQZSettingSearchCriteria.getUpDifferenceNum());
+        qzSettingSearchCriteria.setDownDifferenceNum(countNumOfRankInfoQZSettingSearchCriteria.getDownDifferenceNum());
         return qzSettingSearchCriteria;
     }
 

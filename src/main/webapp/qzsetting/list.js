@@ -72,6 +72,15 @@ function searchRiseOrFall() {
             if (parentName == "unchanged") {
                 checkStatus = 6;
             }
+            if (parentName =="lowerDifference") {
+                checkStatus = 7;
+            }
+            if (parentName =="unchangedDifference") {
+                checkStatus = 8;
+            }
+            if (parentName =="upperDifference") {
+                checkStatus = 9;
+            }
         }
         $("#chargeForm").find("#checkStatus").val(checkStatus);
         trimSearchCondition('1');
