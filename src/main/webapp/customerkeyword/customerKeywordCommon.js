@@ -1,5 +1,6 @@
 $(function () {
     $("#saveCustomerKeywordDialog").dialog("close");
+    $("#targetBearPawNumberDialog").dialog("close");
 });
 
 function trim(val)
@@ -538,6 +539,73 @@ function isChecked(id) {
     } else {
         return "0";
     }
+}
+//指定关键字
+function assignBearPawNumber() {
+    var CustomerUuids = getSelectedCustomerUuids();
+    if (CustomerUuids === '') {
+        alert('请选择关键字进行修改');
+        return;
+    }
+    $("#targetBearPawNumberDialog").show();
+    $("#targetBearPawNumberDialog").dialog({
+        resizable: false,
+        title: "指定熊掌号",
+        width: 260,
+        height: 100,
+        modal: true,
+        buttons: [{
+            text: '保存',
+            iconCls: 'icon-ok',
+            handler: function () {
+                var bearPawNumber = $("#targetBearPawNumberDialog").find("input[name='bearPawNumber']").val();
+                if (bearPawNumber == '') {
+                    alert('请输入熊掌号');
+                } else{
+                    saveBearPawNumber(CustomerUuids, bearPawNumber);
+                }
+            }
+        },
+            {
+                text: '取消',
+                iconCls: 'icon-cancel',
+                handler: function () {
+                    $("#targetBearPawNumberDialog").dialog("close");
+                }
+            }],
+        onClose:function () {
+            $("#targetBearPawNumberDialog").find("input[name='bearPawNumber']").val('');
+        }
+    });
+    $("#targetBearPawNumberDialog").dialog("open");
+    $('#targetBearPawNumberDialog').window("resize",{top:$(document).scrollTop() + 100});
+}
+
+function saveBearPawNumber(CustomerUuids, bearPawNumber) {
+    var postData = {};
+    postData.customerUuids = CustomerUuids;
+    postData.bearPawNumber = bearPawNumber;
+    $.ajax({
+        url: '/internal/customerKeyword/saveBearPawNumber',
+        type: 'POST',
+        data: JSON.stringify(postData),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        success: function (result) {
+            if(result){
+                $().toastmessage('showSuccessToast', "更新成功", true);
+            }else{
+                $().toastmessage('showErrorToast', "更新失败");
+            }
+            $("#targetBearPawNumberDialog").dialog("close");
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "更新失败");
+            $("#targetBearPawNumberDialog").dialog("close");
+        }
+    });
 }
 
 

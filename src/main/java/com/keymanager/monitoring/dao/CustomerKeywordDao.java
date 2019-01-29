@@ -207,4 +207,6 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     CustomerKeyword getCustomerKeywordFee(@Param("uuid")Long uuid);
 
     List<Long> getCustomerUuids(@Param("entryType")String entryType, @Param("terminalType")String terminalType);
+
+    void saveBearPawNumber (@Param("customerUuids") String[] customerUuids, @Param("bearPawNumber") String bearPawNumber);
 }

@@ -1239,4 +1239,13 @@
     <select id="getCustomerUuids" resultType="Long">
         SELECT DISTINCT ck.fCustomerUuid FROM t_customer_keyword ck WHERE ck.fType = #{entryType} AND ck.fTerminalType = #{terminalType} AND ck.fStatus = 1
     </select>
+
+    <update id="saveBearPawNumber">
+        UPDATE t_customer_keyword
+        SET fBearPawNumber = #{bearPawNumber}
+        WHERE fUuid IN
+        <foreach item="customerUuid" collection="customerUuids" open="(" separator="," close=")">
+            #{customerUuid}
+        </foreach>
+    </update>
 </mapper>

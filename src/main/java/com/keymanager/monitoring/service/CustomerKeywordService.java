@@ -1555,4 +1555,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     public List<Long> getCustomerUuids(String entryType, String terminalType){
         return customerKeywordDao.getCustomerUuids(entryType, terminalType);
     }
+
+    public void saveBearPawNumber (CustomerKeywordUpdateBearPawNumberCriteria customerKeywordUpdateBearPawNumberCriteria) {
+        String[] customerUuids = customerKeywordUpdateBearPawNumberCriteria.getCustomerUuids().split(",");
+        customerKeywordDao.saveBearPawNumber(customerUuids, customerKeywordUpdateBearPawNumberCriteria.getBearPawNumber());
+    }
 }

@@ -575,4 +575,16 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
             return new ResponseEntity<Object>(false , HttpStatus.BAD_REQUEST);
         }
 	}
+
+	@RequiresPermissions("/internal/customerKeyword/saveCustomerKeyword")
+	@RequestMapping(value = "/saveBearPawNumber", method = RequestMethod.POST)
+	public ResponseEntity<?> saveBearPawNumber(@RequestBody CustomerKeywordUpdateBearPawNumberCriteria customerKeywordUpdateBearPawNumberCriteria){
+		try {
+			customerKeywordService.saveBearPawNumber(customerKeywordUpdateBearPawNumberCriteria);
+			return new ResponseEntity<Object>(true, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return new ResponseEntity<Object>(false,HttpStatus.BAD_REQUEST);
+		}
+	}
 }

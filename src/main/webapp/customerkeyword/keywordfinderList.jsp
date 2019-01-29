@@ -134,6 +134,9 @@
             <shiro:hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
                 <input type="button" onclick="CustomerKeywordBatchUpdate('${sessionScope.entryType}')" value=" 批量修改 ">
             </shiro:hasPermission>
+            <shiro:hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
+                <input type="button" onclick="assignBearPawNumber()" value=" 指定熊掌号 ">
+            </shiro:hasPermission>
             <br/>
             <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
                 <c:if test="${customerKeywordCriteria.entryType eq 'pt' or customerKeywordCriteria.entryType eq 'bc'}">
@@ -254,10 +257,13 @@
     </select>
     </div>
 </div>
-<div id="targetGroupNameDialog"  style="text-align: center;left: 40%;display: none;">
+<div id="targetGroupNameDialog" style="text-align: center;left: 40%;display: none;">
     <form id="targetGroupNameFrom" style="text-align: center;margin-top: 10px;">
         目标优化组名:<input type="text" id="groupName" name="groupName" style="width:150px">
     </form>
+</div>
+<div id="targetBearPawNumberDialog" class="easyui-dialog" style="text-align: center;left: 40%;">
+    指定熊掌号:<input type="text" name="bearPawNumber" style="width: 150px; margin-top: 10px;">
 </div>
 <%@ include file="/customerkeyword/customerKeywordCommon.jsp" %>
 
