@@ -13,7 +13,6 @@ import org.apache.ibatis.annotations.Param;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public interface
 CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
@@ -207,6 +206,4 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     CustomerKeyword getCustomerKeywordFee(@Param("uuid")Long uuid);
 
     List<Long> getCustomerUuids(@Param("entryType")String entryType, @Param("terminalType")String terminalType);
-
-    void saveBearPawNumber (@Param("customerUuids") String[] customerUuids, @Param("bearPawNumber") String bearPawNumber);
 }
