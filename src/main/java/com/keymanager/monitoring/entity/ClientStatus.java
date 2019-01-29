@@ -288,6 +288,9 @@ public class ClientStatus {
 	@TableField(value = "fIdleTotalMinutes")
 	private long idleTotalMinutes;
 
+	@TableField(value = "fUpdateSettingTime")
+	private Timestamp updateSettingTime;
+
 	public String getClientID() {
 		return clientID;
 	}
@@ -1016,5 +1019,13 @@ public class ClientStatus {
 
 	public void setIdleTotalMinutes(long idleTotalMinutes) {
 		this.idleTotalMinutes = idleTotalMinutes;
+	}
+
+	public Timestamp getUpdateSettingTime() {
+		return updateSettingTime;
+	}
+
+	public void setUpdateSettingTime(Timestamp updateSettingTime) {
+		this.updateSettingTime = updateSettingTime;
 	}
 }

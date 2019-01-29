@@ -1,5 +1,6 @@
 package com.keymanager.monitoring.vo;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
@@ -39,6 +40,7 @@ public class CustomerKeywordForOptimizationSimple {
     private String ct;
     private String fromSource;
     private Date negativeListUpdateTime;
+    private Timestamp updateSettingTime;
 
     private String disableVisitUrl;
 
@@ -304,5 +306,13 @@ public class CustomerKeywordForOptimizationSimple {
 
     public void setTerminalType(String terminalType) {
         this.terminalType = terminalType;
+    }
+
+    public Timestamp getUpdateSettingTime() {
+        return updateSettingTime;
+    }
+
+    public void setUpdateSettingTime(Timestamp updateSettingTime) {
+        this.updateSettingTime = updateSettingTime;
     }
 }

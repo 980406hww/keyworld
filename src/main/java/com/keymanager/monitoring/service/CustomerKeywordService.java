@@ -885,6 +885,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
             customerKeywordForOptimization.setGroup(clientStatus.getGroup());
             customerKeywordForOptimization.setOperationType(clientStatus.getOperationType());
+            customerKeywordForOptimization.setUpdateSettingTime(clientStatus.getUpdateSettingTime());
 
             NegativeListUpdateInfo negativeListUpdateInfo = negativeListUpdateInfoService.getNegativeListUpdateInfo(customerKeyword.getKeyword());
             if(negativeListUpdateInfo != null) {

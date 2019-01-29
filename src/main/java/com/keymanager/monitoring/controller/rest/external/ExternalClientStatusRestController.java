@@ -300,7 +300,7 @@ public class ExternalClientStatusRestController extends SpringMVCBaseController 
         return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
     }
 
-    @RequestMapping(value = "/getClientStatusZip", method = RequestMethod.POST)
+    @RequestMapping(value = "/getClientStatusZip", method = RequestMethod.GET)
     public ResponseEntity<?> getClientStart(HttpServletRequest request) throws Exception {
         String userName = request.getParameter("userName");
         if (StringUtils.isBlank(userName)) {

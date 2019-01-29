@@ -274,8 +274,10 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
 
                 CustomerKeywordForOptimizationSimple customerKeywordForOptimization = customerKeywordService.searchCustomerKeywordsForOptimizationZip(terminalType, clientID, version, true);
                 clientStatusService.updateClientVersion(clientID, version, customerKeywordForOptimization != null);
+                byte[] compress = AESUtils.compress(AESUtils.encrypt(customerKeywordForOptimization).getBytes());
+                String s = AESUtils.parseByte2HexStr(compress);
                 performanceService.addPerformanceLog(terminalType + ":getCustomerKeyword", System.currentTimeMillis() - startMilleSeconds, null);
-                return ResponseEntity.status(HttpStatus.OK).body(ZipCompressor.compress(AESUtils.encrypt(customerKeywordForOptimization)));
+                return ResponseEntity.status(HttpStatus.OK).body(s);
             }
         }catch (Exception ex){
             logger.error(ex.getMessage());
