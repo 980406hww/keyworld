@@ -57,8 +57,7 @@
         FROM t_qz_setting qs
         WHERE qs.fCrawlerStatus = 'new'
         OR qs.fCrawlerTime IS NULL
-        OR(fCrawlerStatus = 'finish' AND DATE_ADD(fCrawlerTime, INTERVAL #{crawlerHour} HOUR) &lt;= NOW())
-        OR DATE_ADD(fCrawlerTime, INTERVAL #{crawlerHour} HOUR) &lt;= NOW()
+        OR qs.fCrawlerTime &lt;= DATE_SUB(NOW(), INTERVAL 8 HOUR)
         ORDER BY qs.fCreateTime DESC
         limit #{taskNumber}
     </select>

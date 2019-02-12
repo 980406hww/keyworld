@@ -13,12 +13,6 @@ public class ExternalQzKeywordRankInfoVO {
     private String topFifty;
     private String date;
     private String fullDate;
-    private Double increase;
-    private Integer topTenIncrement;
-    private Integer topTwentyIncrement;
-    private Integer topThirtyIncrement;
-    private Integer topFortyIncrement;
-    private Integer topFiftyIncrement;
     private Integer pcCreateTopTenNum;
     private Integer pcCreateTopFiftyNum;
     private Integer phoneCreateTopTenNum;
@@ -30,7 +24,6 @@ public class ExternalQzKeywordRankInfoVO {
     private String baiduRecord;
     private String baiduRecordFullDate;
     private String group;
-    private Integer todayDifference;
 
     public String getGroup() {
         return group;
@@ -184,54 +177,6 @@ public class ExternalQzKeywordRankInfoVO {
         this.fullDate = fullDate;
     }
 
-    public Double getIncrease() {
-        return increase;
-    }
-
-    public void setIncrease(Double increase) {
-        this.increase = increase;
-    }
-
-    public Integer getTopTenIncrement() {
-        return topTenIncrement;
-    }
-
-    public void setTopTenIncrement(Integer topTenIncrement) {
-        this.topTenIncrement = topTenIncrement;
-    }
-
-    public Integer getTopTwentyIncrement() {
-        return topTwentyIncrement;
-    }
-
-    public void setTopTwentyIncrement(Integer topTwentyIncrement) {
-        this.topTwentyIncrement = topTwentyIncrement;
-    }
-
-    public Integer getTopThirtyIncrement() {
-        return topThirtyIncrement;
-    }
-
-    public void setTopThirtyIncrement(Integer topThirtyIncrement) {
-        this.topThirtyIncrement = topThirtyIncrement;
-    }
-
-    public Integer getTopFortyIncrement() {
-        return topFortyIncrement;
-    }
-
-    public void setTopFortyIncrement(Integer topFortyIncrement) {
-        this.topFortyIncrement = topFortyIncrement;
-    }
-
-    public Integer getTopFiftyIncrement() {
-        return topFiftyIncrement;
-    }
-
-    public void setTopFiftyIncrement(Integer topFiftyIncrement) {
-        this.topFiftyIncrement = topFiftyIncrement;
-    }
-
     public Integer getPcCreateTopTenNum() {
         return pcCreateTopTenNum;
     }
@@ -262,13 +207,5 @@ public class ExternalQzKeywordRankInfoVO {
 
     public void setPhoneCreateTopFiftyNum(Integer phoneCreateTopFiftyNum) {
         this.phoneCreateTopFiftyNum = phoneCreateTopFiftyNum;
-    }
-
-    public Integer getTodayDifference() {
-        return todayDifference;
-    }
-
-    public void setTodayDifference(Integer todayDifference) {
-        this.todayDifference = todayDifference;
     }
 }

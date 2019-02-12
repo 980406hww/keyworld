@@ -15,6 +15,7 @@ import com.keymanager.monitoring.vo.QZOperationTypeVO;
 import com.keymanager.util.Constants;
 import com.keymanager.util.PaginationRewriteQueryTotalInterceptor;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -82,25 +83,25 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
 
     public QZKeywordRankInfo getQZKeywordRankInfo(ExternalQzKeywordRankInfoVO externalQzKeywordRankInfoVO) throws Exception{
         QZKeywordRankInfo qzKeywordRankInfo = new QZKeywordRankInfo();
-        List<QZOperationTypeVO> operationTypes = qzOperationTypeService.findQZOperationTypes(externalQzKeywordRankInfoVO.getQzSettingUuid(),
-                externalQzKeywordRankInfoVO.getTerminalType(),externalQzKeywordRankInfoVO.getGroup());
+        List<QZOperationTypeVO> operationTypes = qzOperationTypeService.findQZOperationTypes(externalQzKeywordRankInfoVO.getQzSettingUuid(), externalQzKeywordRankInfoVO.getTerminalType(),externalQzKeywordRankInfoVO.getGroup());
 
         qzKeywordRankInfo.setQzSettingUuid(externalQzKeywordRankInfoVO.getQzSettingUuid());
         qzKeywordRankInfo.setTerminalType(externalQzKeywordRankInfoVO.getTerminalType());
-        qzKeywordRankInfo.setFullDate(externalQzKeywordRankInfoVO.getFullDate());
-        qzKeywordRankInfo.setIncrease(externalQzKeywordRankInfoVO.getIncrease());
-        qzKeywordRankInfo.setTopTen(externalQzKeywordRankInfoVO.getTopTen());
         qzKeywordRankInfo.setTopFifty(externalQzKeywordRankInfoVO.getTopFifty());
         qzKeywordRankInfo.setTopForty(externalQzKeywordRankInfoVO.getTopForty());
         qzKeywordRankInfo.setTopThirty(externalQzKeywordRankInfoVO.getTopThirty());
         qzKeywordRankInfo.setTopTwenty(externalQzKeywordRankInfoVO.getTopTwenty());
-        qzKeywordRankInfo.setWebsiteType(externalQzKeywordRankInfoVO.getWebsiteType());
+        qzKeywordRankInfo.setTopTen(externalQzKeywordRankInfoVO.getTopTen());
+        qzKeywordRankInfo.setFullDate(externalQzKeywordRankInfoVO.getFullDate());
         qzKeywordRankInfo.setDate(externalQzKeywordRankInfoVO.getDate());
-        qzKeywordRankInfo.setIpRoute(externalQzKeywordRankInfoVO.getIpRoute());
+        qzKeywordRankInfo.setWebsiteType(externalQzKeywordRankInfoVO.getWebsiteType());
+        qzKeywordRankInfo.setIpRoute(externalQzKeywordRankInfoVO.getIpRoute().replaceAll(",", ""));
         qzKeywordRankInfo.setBaiduWeight(externalQzKeywordRankInfoVO.getBaiduWeight());
         qzKeywordRankInfo.setBaiduRecord(externalQzKeywordRankInfoVO.getBaiduRecord());
         qzKeywordRankInfo.setBaiduRecordFullDate(externalQzKeywordRankInfoVO.getBaiduRecordFullDate());
-        qzKeywordRankInfo.setTodayDifference(externalQzKeywordRankInfoVO.getTodayDifference());
+        if (StringUtils.isNotBlank(externalQzKeywordRankInfoVO.getTopTen())) {
+            toCalculated(qzKeywordRankInfo);
+        }
         if (CollectionUtils.isNotEmpty(operationTypes)) {
             Map standard = standardCalculation(operationTypes,externalQzKeywordRankInfoVO);
             qzKeywordRankInfo.setDifferenceValue(Double.parseDouble(standard.get("differenceValue").toString()));
@@ -188,5 +189,23 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
             }
             return standardInformation;
         }
+    }
+
+    private QZKeywordRankInfo toCalculated(QZKeywordRankInfo qzKeywordRankInfo) {
+        DecimalFormat decimalFormat = new DecimalFormat("0.0000");
+        String[] arr = qzKeywordRankInfo.getTopTen().replace("[", "").replace("]", "").split(", ");
+        if (Integer.parseInt(arr[6]) > 0) {
+            String increase = decimalFormat.format((Integer.parseInt(arr[0]) - Integer.parseInt(arr[6])) * 1.0 / Integer.parseInt(arr[6]));
+            qzKeywordRankInfo.setIncrease(Double.parseDouble(increase));
+        } else {
+            if ((Integer.parseInt(arr[0]) - Integer.parseInt(arr[6])) > 0) {
+                qzKeywordRankInfo.setIncrease(1.0);
+            } else {
+                qzKeywordRankInfo.setIncrease(0.0);
+            }
+        }
+        Integer todayDifference = Integer.parseInt(arr[0]) - Integer.parseInt(arr[1]);
+        qzKeywordRankInfo.setTodayDifference(todayDifference);
+        return qzKeywordRankInfo;
     }
 }
