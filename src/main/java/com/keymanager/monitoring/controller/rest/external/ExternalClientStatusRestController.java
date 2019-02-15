@@ -136,6 +136,26 @@ public class ExternalClientStatusRestController extends SpringMVCBaseController 
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
+    @RequestMapping(value = "/getStoppedClientStatusesZip", method = RequestMethod.GET)
+    public ResponseEntity<?> getStoppedClientStatusesZip(HttpServletRequest request) throws Exception {
+        String userName = request.getParameter("userName");
+        if (StringUtils.isBlank(userName)) {
+            userName = request.getParameter("username");
+        }
+        String password = request.getParameter("password");
+        try {
+            if (validUser(userName, password)) {
+                ClientStatus clientStatus = clientStatusService.getStoppedClientStatuses();
+                byte[] compress = AESUtils.compress(AESUtils.encrypt(clientStatus).getBytes());
+                String s = AESUtils.parseByte2HexStr(compress);
+                return new ResponseEntity<Object>(s, HttpStatus.OK);
+            }
+        } catch (Exception ex) {
+            logger.error(ex.getMessage());
+        }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+    }
+
     @RequestMapping(value = "/updateClientStatusRestartStatus", method = RequestMethod.GET)
     public ResponseEntity<?> updateClientStatusRestartStatus(HttpServletRequest request) throws Exception {
         String userName = request.getParameter("userName");
