@@ -100,7 +100,7 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
         qzKeywordRankInfo.setBaiduRecord(externalQzKeywordRankInfoVO.getBaiduRecord());
         qzKeywordRankInfo.setBaiduRecordFullDate(externalQzKeywordRankInfoVO.getBaiduRecordFullDate());
         if (StringUtils.isNotBlank(externalQzKeywordRankInfoVO.getTopTen())) {
-            toCalculated(qzKeywordRankInfo);
+            setIncreaseAndTodayDifference(qzKeywordRankInfo);
         }
         if (CollectionUtils.isNotEmpty(operationTypes)) {
             Map standard = standardCalculation(operationTypes,externalQzKeywordRankInfoVO);
@@ -191,7 +191,7 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
         }
     }
 
-    private QZKeywordRankInfo toCalculated(QZKeywordRankInfo qzKeywordRankInfo) {
+    private QZKeywordRankInfo setIncreaseAndTodayDifference(QZKeywordRankInfo qzKeywordRankInfo) {
         DecimalFormat decimalFormat = new DecimalFormat("0.0000");
         String[] arr = qzKeywordRankInfo.getTopTen().replace("[", "").replace("]", "").split(", ");
         if (Integer.parseInt(arr[6]) > 0) {
