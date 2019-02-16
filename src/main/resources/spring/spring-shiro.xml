@@ -134,6 +134,12 @@
 		<!-- url上带sessionId 默认为true -->
 		<property name="sessionIdUrlRewritingEnabled" value="false"/>
 		<property name="sessionDAO" ref="sessionDAO"/>
+		<property name="sessionIdCookie" ref="simpleCookie" />
+	</bean>
+
+	<bean id="simpleCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+		<constructor-arg name="name" value="shiro.session"/>
+		<property name="path" value="/" />
 	</bean>
 
 	<!-- 会话DAO 用于会话的CRUD -->
