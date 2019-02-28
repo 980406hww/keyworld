@@ -14,6 +14,7 @@
         c.fAlipay AS `alipay`,
         c.fPaidFee AS `paidFee`,
         c.fType AS `type`,
+        c.fSaleRemark AS 'saleRemark',
         c.fRemark AS `remark`,
         c.fStatus AS `status`,
         c.fActiveHour AS `activeHour`,

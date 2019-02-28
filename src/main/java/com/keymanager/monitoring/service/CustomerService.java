@@ -39,9 +39,15 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 		}
 	}
 
-	public Customer getCustomerWithKeywordCount(String terminalType, String entryType, long customerUuid){
+	public Customer getCustomerWithKeywordCount(String terminalType, String entryType, long customerUuid, String loginName){
 		Customer customer = customerDao.selectById(customerUuid);
 		if(customer != null){
+			if(!customer.getLoginName().equals(loginName)){
+				customer.setEmail(null);
+				customer.setQq(null);
+				customer.setTelphone(null);
+				customer.setSaleRemark(null);
+			}
 			customer.setKeywordCount(customerKeywordService.getCustomerKeywordCount(terminalType, entryType, customerUuid));
 		}
 		return customer;
@@ -60,6 +66,12 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 				customerUuidKeywordCountMap.put((Integer)map.get("customerUuid"), map);
 			}
 			for(Customer customer : customers){
+				if(!customer.getLoginName().equals(customerCriteria.getLoginName())){
+					customer.setSaleRemark(null);
+					customer.setTelphone(null);
+					customer.setQq(null);
+					customer.setEmail(null);
+				}
 				Map map = customerUuidKeywordCountMap.get(customer.getUuid().intValue());
 				if(map != null) {
 					Long totalCount = (Long)map.get("totalCount");
@@ -78,13 +90,16 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 		return page;
 	}
 
-	public void updateCustomer(Customer customer) {
+	public void updateCustomer(Customer customer, String loginName) {
 		Customer oldCustomer = customerDao.selectById(customer.getUuid());
 		if (oldCustomer != null) {
+			if(oldCustomer.getLoginName().equals(loginName)) {
+				oldCustomer.setQq(customer.getQq());
+				oldCustomer.setEmail(customer.getEmail());
+				oldCustomer.setTelphone(customer.getTelphone());
+				oldCustomer.setSaleRemark(customer.getSaleRemark());
+			}
 			oldCustomer.setContactPerson(customer.getContactPerson());
-			oldCustomer.setQq(customer.getQq());
-			oldCustomer.setEmail(customer.getEmail());
-			oldCustomer.setTelphone(customer.getTelphone());
 			oldCustomer.setAlipay(customer.getAlipay());
 			oldCustomer.setPaidFee(customer.getPaidFee());
 			oldCustomer.setRemark(customer.getRemark());
@@ -97,10 +112,10 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 		}
 	}
 
-	public void saveCustomer(Customer customer) {
+	public void saveCustomer(Customer customer, String loginName) {
 		//修改
 		if (null != customer.getUuid()) {
-			updateCustomer(customer);
+			updateCustomer(customer, loginName);
 		} else {//添加
 			customer.setUpdateTime(new Date());
 			customerDao.insert(customer);
