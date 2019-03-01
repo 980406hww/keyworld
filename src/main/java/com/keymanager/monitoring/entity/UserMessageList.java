@@ -10,14 +10,11 @@ import com.baomidou.mybatisplus.annotations.TableName;
 @TableName(value = "t_user_message_list")
 public class UserMessageList extends BaseEntity {
 
-    @TableField(value = "fSenderID")
-    private Integer senderID;
+    @TableField(value = "fSenderUserName")
+    private String fSenderUserName;
 
-    @TableField(value = "fReceiverID")
-    private Integer receiverID;
-
-    @TableField(value = "fTerminalType")
-    private String terminalType;
+    @TableField(value = "fReceiverUserName")
+    private String fReceiverUserName;
 
     @TableField(value = "fStatus")
     private String status;
@@ -25,28 +22,20 @@ public class UserMessageList extends BaseEntity {
     @TableField(value = "fContent")
     private String content;
 
-    public Integer getSenderID () {
-        return senderID;
+    public String getfSenderUserName() {
+        return fSenderUserName;
     }
 
-    public void setSenderID (Integer senderID) {
-        this.senderID = senderID;
+    public void setfSenderUserName(String fSenderUserName) {
+        this.fSenderUserName = fSenderUserName;
     }
 
-    public Integer getReceiverID () {
-        return receiverID;
+    public String getfReceiverUserName() {
+        return fReceiverUserName;
     }
 
-    public void setReceiverID (Integer receiverID) {
-        this.receiverID = receiverID;
-    }
-
-    public String getTerminalType () {
-        return terminalType;
-    }
-
-    public void setTerminalType (String terminalType) {
-        this.terminalType = terminalType;
+    public void setfReceiverUserName(String fReceiverUserName) {
+        this.fReceiverUserName = fReceiverUserName;
     }
 
     public String getStatus () {

@@ -2,4 +2,87 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.monitoring.dao.UserMessageListDao">
 
+    <select id="getUserMessageLists" resultType="com.keymanager.monitoring.entity.UserMessageList">
+        SELECT
+            fUuid,
+            <if test="userMessageListCriteria.messageStatus == 1">
+                fSenderUserName,
+            </if>
+            <if test="userMessageListCriteria.messageStatus == 2">
+                fReceiverUserName,
+            </if>
+            fStatus,fContent
+        FROM
+            t_user_message_list
+        WHERE
+            <if test="userMessageListCriteria.messageStatus == 1">
+                fReceiverUserName = #{userName}
+                <if test="userMessageListCriteria.targetUserName.size() > 0">
+                    AND
+                        fSenderUserName IN
+                        <foreach collection="userMessageListCriteria.targetUserName" item="targetUserName" index="index" open="(" close=")" separator=",">
+                            #{targetUserName}
+                        </foreach>
+                </if>
+            </if>
+            <if test="userMessageListCriteria.messageStatus == 2">
+                fSenderUserName = #{userName}
+                <if test="userMessageListCriteria.targetUserName.size() > 0">
+                    AND
+                        fReceiverUserName IN
+                        <foreach collection="userMessageListCriteria.targetUserName" item="targetUserName" index="index" open="(" close=")" separator=",">
+                            #{targetUserName}
+                        </foreach>
+                </if>
+            </if>
+        AND
+            fStatus IN
+            <foreach collection="userMessageListCriteria.status" item="status" index="index" open="(" close=")" separator=",">
+                #{status}
+            </foreach>
+        ORDER BY
+            fUpdateTime DESC
+    </select>
+
+    <select id="getUserMessageByUuid" resultType="com.keymanager.monitoring.entity.UserMessageList">
+        SELECT
+            fSenderUserName,fReceiverUserName,fStatus,fContent
+        FROM
+            t_user_message_list
+        WHERE
+            fUuid = #{uuid}
+    </select>
+
+    <insert id="saveUserMessages">
+        INSERT INTO
+            t_user_message_list
+            (fSenderUserName,
+            fReceiverUserName,
+            fStatus,
+            fContent,
+            fUpdateTime)
+        VALUES
+        <foreach collection="userMessageListCriteria.targetUserName" item="targetUserName" index="index" open="(" close=")" separator=",">
+            #{userName},
+            #{targetUserName},
+            0,
+            #{userMessageListCriteria.content},
+            #{now}
+        </foreach>
+    </insert>
+
+    <update id="updateUserMessages">
+        UPDATE
+            t_user_message_list
+        SET
+            <if test="userMessageListCriteria.status == null">
+                fStatus = #{userMessageListCriteria.status},
+            </if>
+            <if test="userMessageListCriteria.content == null">
+                fContent = #{userMessageListCriteria.content},
+            </if>
+            fUpdateTime = #{now}
+        WHERE
+            fUuid = #{userMessageListCriteria.uuid}
+    </update>
 </mapper>

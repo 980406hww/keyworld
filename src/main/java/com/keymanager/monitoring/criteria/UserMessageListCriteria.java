@@ -3,12 +3,21 @@ package com.keymanager.monitoring.criteria;
 import java.util.List;
 
 public class UserMessageListCriteria {
+    private Integer uuid;
     private Integer messageStatus;
     private String userName;
     private List<Integer> status;
     private List<String> targetUserName;
     private Integer pageNumber;
     private String content;
+
+    public Integer getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(Integer uuid) {
+        this.uuid = uuid;
+    }
 
     public Integer getMessageStatus() {
         return messageStatus;
