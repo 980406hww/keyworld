@@ -22,4 +22,6 @@ public interface UserMessageListDao extends BaseMapper<UserMessageList> {
     void saveUserMessages( @Param("userMessageListCriteria") UserMessageListCriteria userMessageListCriteria, @Param("userName") String userName, @Param("now") Date now);
 
     void updateUserMessages( @Param("userMessageListCriteria") UserMessageListCriteria userMessageListCriteria, @Param("now") Date now);
+
+    Integer checkMessageInboxCount(@Param("userName") String userName);
 }

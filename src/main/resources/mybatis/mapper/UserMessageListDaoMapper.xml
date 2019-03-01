@@ -85,4 +85,11 @@
         WHERE
             fUuid = #{userMessageListCriteria.uuid}
     </update>
+
+    <select id="checkMessageInboxCount" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT
+            COUNT(*)
+        FROM
+            t_user_message_list
+    </select>
 </mapper>

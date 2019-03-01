@@ -46,4 +46,8 @@ public class UserMessageListService  extends ServiceImpl<UserMessageListDao, Use
             userMessageListDao.updateUserMessages(userMessageListCriteria, now);
         }
     }
+
+    public Integer checkMessageInboxCount(String userName){
+        return userMessageListDao.checkMessageInboxCount(userName);
+    }
 }

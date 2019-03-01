@@ -77,4 +77,16 @@ public class UserMessageListRestController extends SpringMVCBaseController {
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @RequestMapping(value = "/checkMessageInbox", method = RequestMethod.POST)
+    public ResponseEntity<?> checkMessageInbox(HttpServletRequest request) {
+        try {
+            String userName = (String) request.getSession().getAttribute("username");
+            Integer messageInboxCount = userMessageListService.checkMessageInboxCount(userName);
+            return new ResponseEntity<Object>(messageInboxCount, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        }
+    }
 }
