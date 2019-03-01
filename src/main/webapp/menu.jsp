@@ -63,29 +63,59 @@
 
 <%--留言列表Dialog--%>
 <div id="showUserMessageListDialog" class="easyui-dialog" style="display: none">
-	<form id="showUserMessageListForm" method="post">
-		<table>
+	<form id="showUserMessageListForm">
+		<table id="customerKeywordTable" border="1" cellpadding="10" style="font-size: 12px;background-color: white;border-collapse: collapse;">
 			<tr>
-				<td>
+				<td colspan="2">
 					<span class="fi-comment" style="font-size: 12px;color: green;"></span>
-					<a href="javascript:void(0)" onclick="OpenMessageList()" style="text-decoration: none;font-size: 12px; color: black">留言</a>
+					<a href="javascript:void(0)" onclick="openMessageBox()" style="text-decoration: none;font-size: 12px; color: black">留言</a>
 					<span class="fi-comment" style="font-size: 12px;color: green;">状态: </span>
-					<a href="javascript:void(0)" onclick="OpenMessageList()" style="text-decoration: none;font-size: 12px; color: black">留言列表</a>
-				</td>
-				<td>
 					<span class="fi-comment" style="font-size: 12px;color: green;">用户名称: </span>
-					<a href="javascript:void(0)" onclick="OpenMessageList()" style="text-decoration: none;font-size: 12px; color: black">留言列表</a>
+				</td>
+			</tr>
+			<tr style="height: 30px;">
+				<td style="align-self: center">
+					<a href="javascript:void(0)" onclick="" style="text-decoration: none;"><strong style="font-size: 18px; color: black; clear: both;">接收</strong></a>
+				</td>
+				<td style="align-self: center">
+					<a href="javascript:void(0)" onclick="" style="text-decoration: none;"><strong style="font-size: 18px; color: black; clear: both;">发送</strong></a>
 				</td>
 			</tr>
 			<tr>
-				<td>
-					<span class="fi-comment" style="font-size: 12px;color: green;"></span>
-					<a href="javascript:void(0)" onclick="OpenMessageList()" style="text-decoration: none;font-size: 12px; color: black">接收</a>
-				</td>
-				<td>
-					<span class="fi-comment" style="font-size: 12px;color: green;"></span>
-					<a href="javascript:void(0)" onclick="OpenMessageList()" style="text-decoration: none;font-size: 12px; color: black">发送</a>
-				</td>
+				<td>msg1</td>
+				<td>未处理</td>
+			</tr>
+			<tr>
+				<td>msg1</td>
+				<td>未处理</td>
+			</tr>
+			<tr>
+				<td>msg1</td>
+				<td>未处理</td>
+			</tr>
+			<tr>
+				<td>msg1</td>
+				<td>未处理</td>
+			</tr>
+			<tr>
+				<td>msg1</td>
+				<td>未处理</td>
+			</tr>
+			<tr>
+				<td>msg1</td>
+				<td>未处理</td>
+			</tr>
+			<tr>
+				<td>msg1</td>
+				<td>未处理</td>
+			</tr>
+			<tr>
+				<td>msg1</td>
+				<td>未处理</td>
+			</tr>
+			<tr>
+				<td>msg1</td>
+				<td>未处理</td>
 			</tr>
 			<tr>
 				<td>msg1</td>
@@ -102,7 +132,7 @@
 
 <%--留言栏Dialog--%>
 <div id="showUserMessageDialog" class="easyui-dialog" style="display: none">
-	<form id="showUserMessageForm" method="post">
+	<form id="showUserMessageForm">
 		<table>
 			<tr>
 				<td>发送人</td>
@@ -126,7 +156,7 @@
 			<tr>
 				<td>内容</td>
 				<td>
-					<textarea></textarea>
+					<textarea rows="5"></textarea>
 				</td>
 			</tr>
 		</table>
@@ -222,6 +252,7 @@
         parent.$.modalDialog.handler.dialog("open");
         parent.$.modalDialog.handler.window("resize",{top:$(document).scrollTop() + 100});
     }
+
     function OpenMessageList() {
         // getUserMessage()
         var showUserMessageListDialog = $("#showUserMessageListDialog");
@@ -229,7 +260,7 @@
         showUserMessageListDialog.show();
         showUserMessageListDialog.dialog({
 			resizable: false,
-			height: 650,
+			height: 450,
 			width: 300,
 			title: '留言列表',
 			modal: false,
@@ -250,5 +281,34 @@
 		});
         showUserMessageListDialog.dialog("open");
         showUserMessageListDialog.window("resize", {top: $(document).scrollTop() + 100});
+    }
+
+    function openMessageBox() {
+		var showUserMessageDialog = $("#showUserMessageDialog");
+        // 判断 新增还是修改  => 赋值
+		showUserMessageDialog.show();
+		showUserMessageDialog.dialog({
+			resizable: false,
+			height: 300,
+			width: 200,
+			title: '留言框',
+			modal: false,
+			buttons: [{
+			    text: '发送',
+				iconCls: "icon-ok",
+				handler: function () {
+					// saveUserMessage();
+                }
+			}, {
+			    text: '取消',
+				iconCls: 'icon-cancel',
+				handler: function () {
+					$("#showUserMessageDialog").dialog("close");
+					$("#showUserMessageForm")[0].reset();
+                }
+			}]
+		});
+		showUserMessageDialog.dialog("open");
+		showUserMessageDialog.window("resize", {top: $(document).scrollTop() + 100});
     }
 </script>
