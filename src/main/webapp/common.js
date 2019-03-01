@@ -1,3 +1,7 @@
+$(function () {
+    $("#showUserMessageListDialog").dialog("close");
+    $("#showUserMessageDialog").dialog("close");
+});
 function doOver(obj) {
 	obj.style.backgroundColor = "green";
 }

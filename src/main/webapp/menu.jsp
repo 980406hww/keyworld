@@ -49,6 +49,8 @@
 				</c:choose>
 			</span>|
 				<span class="fi-web icon-black" style="font-size: 12px;color: red;"></span><span style="color: black">&nbsp;${sessionScope.get("terminalType")}端&nbsp;|</span>&nbsp;
+				<span class="fi-comments" style="font-size: 12px;color: green;"></span>
+				<a href="javascript:void(0)" onclick="OpenMessageList()" style="text-decoration: none;font-size: 12px; color: black">留言列表</a>|
 				<shiro:hasPermission name="/user/editPwdPage">
 					<span class="fi-unlock icon-green" style="font-size: 12px;color: green"></span>
 					<a href="javascript:void(0)" onclick="editUserPwd()"  style="text-decoration: none;font-size: 12px;color: black">修改密码</a>|
@@ -59,6 +61,77 @@
 	</div>
 </nav>
 
+<%--留言列表Dialog--%>
+<div id="showUserMessageListDialog" class="easyui-dialog" style="display: none">
+	<form id="showUserMessageListForm" method="post">
+		<table>
+			<tr>
+				<td>
+					<span class="fi-comment" style="font-size: 12px;color: green;"></span>
+					<a href="javascript:void(0)" onclick="OpenMessageList()" style="text-decoration: none;font-size: 12px; color: black">留言</a>
+					<span class="fi-comment" style="font-size: 12px;color: green;">状态: </span>
+					<a href="javascript:void(0)" onclick="OpenMessageList()" style="text-decoration: none;font-size: 12px; color: black">留言列表</a>
+				</td>
+				<td>
+					<span class="fi-comment" style="font-size: 12px;color: green;">用户名称: </span>
+					<a href="javascript:void(0)" onclick="OpenMessageList()" style="text-decoration: none;font-size: 12px; color: black">留言列表</a>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<span class="fi-comment" style="font-size: 12px;color: green;"></span>
+					<a href="javascript:void(0)" onclick="OpenMessageList()" style="text-decoration: none;font-size: 12px; color: black">接收</a>
+				</td>
+				<td>
+					<span class="fi-comment" style="font-size: 12px;color: green;"></span>
+					<a href="javascript:void(0)" onclick="OpenMessageList()" style="text-decoration: none;font-size: 12px; color: black">发送</a>
+				</td>
+			</tr>
+			<tr>
+				<td>msg1</td>
+				<td>未处理</td>
+			</tr>
+		</table>
+		<div style="color: black;font-size: 12px; height: 12px;" align="center">
+			<span class="fi-comment" style="font-size: 12px;color: green;"><a>上一页</a></span>
+			<span class="fi-comment" style="font-size: 12px;color: green;"><a>2</a></span>
+			<span class="fi-comment" style="font-size: 12px;color: green;"><a>下一页</a></span>
+		</div>
+	</form>
+</div>
+
+<%--留言栏Dialog--%>
+<div id="showUserMessageDialog" class="easyui-dialog" style="display: none">
+	<form id="showUserMessageForm" method="post">
+		<table>
+			<tr>
+				<td>发送人</td>
+				<td>
+					<select> <%-- 复选框 --%>
+						<option value="1">张三</option>
+						<option value="2">李四</option>
+						<option value="3">王五</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>状态</td>
+				<td>
+					<select>
+						<option value="0">未处理完成</option>
+						<option value="1">处理完成</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>内容</td>
+				<td>
+					<textarea></textarea>
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>
 
 <script type="text/javascript">
     $(function () {
@@ -148,5 +221,34 @@
         });
         parent.$.modalDialog.handler.dialog("open");
         parent.$.modalDialog.handler.window("resize",{top:$(document).scrollTop() + 100});
+    }
+    function OpenMessageList() {
+        // getUserMessage()
+        var showUserMessageListDialog = $("#showUserMessageListDialog");
+        // 初始赋值
+        showUserMessageListDialog.show();
+        showUserMessageListDialog.dialog({
+			resizable: false,
+			height: 650,
+			width: 300,
+			title: '留言列表',
+			modal: false,
+			buttons: [{
+			    text: '发送',
+				iconCls: 'icon-ok',
+				handler: function () {
+					// saveUserMessage()
+                }
+			}, {
+			    text: '取消',
+				iconCls: 'icon-cancel',
+				handler: function () {
+					$("#showUserMessageListDialog").dialog("close");
+					$("#showUserMessageListForm")[0].reset();
+                }
+			}]
+		});
+        showUserMessageListDialog.dialog("open");
+        showUserMessageListDialog.window("resize", {top: $(document).scrollTop() + 100});
     }
 </script>
