@@ -67,3 +67,9 @@ td .tree-title {
 	height: 28px;
 	line-height: 28px;
 }
+#userMessageStatus thead th {
+    background-color: dimgrey;
+}
+#userMessageStatus thead th.statusAlive {
+    background-color: #0c7df5;
+}
