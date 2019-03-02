@@ -21,17 +21,17 @@ public class UserMessageListService  extends ServiceImpl<UserMessageListDao, Use
     @Autowired
     private UserMessageListDao userMessageListDao;
 
-    public UserMessageListVO getUserMessageListVO(UserMessageListCriteria userMessageListCriteria, String userName) {
-        UserMessageListVO userMessageListVO = new UserMessageListVO();
-        userMessageListVO.setMessageStatus(userMessageListCriteria.getMessageStatus());
-        userMessageListVO.setPageNumber(userMessageListCriteria.getPageNumber());
-        userMessageListVO.setStatus(userMessageListCriteria.getStatus());
-        userMessageListVO.setTargetUserName(userMessageListCriteria.getTargetUserName());
+    public UserMessageListVO getUserMessageList(UserMessageListCriteria userMessageListCriteria) {
+        UserMessageListVO userMessageListVo = new UserMessageListVO();
+        userMessageListVo.setMessageStatus(userMessageListCriteria.getMessageStatus());
+        userMessageListVo.setPageNumber(userMessageListCriteria.getPageNumber());
+        userMessageListVo.setStatus(userMessageListCriteria.getStatus());
+        userMessageListVo.setTargetUserName(userMessageListCriteria.getTargetUserName());
         Page<UserMessageList> page = new Page<UserMessageList>(userMessageListCriteria.getPageNumber(), 10);
-        page.setRecords(userMessageListDao.getUserMessageLists(page, userMessageListCriteria, userName));
-        userMessageListVO.setPageTotalNumber(page.getPages());
-        userMessageListVO.setUserMessageLists(page.getRecords());
-        return userMessageListVO;
+        page.setRecords(userMessageListDao.getUserMessageLists(page, userMessageListCriteria));
+        userMessageListVo.setPageTotalNumber(page.getPages());
+        userMessageListVo.setUserMessageLists(page.getRecords());
+        return userMessageListVo;
     }
 
     public UserMessageList getUserMessageByUuid(Integer uuid){

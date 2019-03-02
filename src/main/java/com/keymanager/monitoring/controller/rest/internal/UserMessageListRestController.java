@@ -36,8 +36,9 @@ public class UserMessageListRestController extends SpringMVCBaseController {
     public ResponseEntity<?> getUserMessageList(@RequestBody UserMessageListCriteria userMessageListCriteria, HttpServletRequest request) {
         try {
             String userName = (String) request.getSession().getAttribute("username");
-            UserMessageListVO userMessageListVO = userMessageListService.getUserMessageListVO(userMessageListCriteria, userName);
-            return new ResponseEntity<Object>(userMessageListVO, HttpStatus.OK);
+            userMessageListCriteria.setUserName(userName);
+            UserMessageListVO userMessageListVo = userMessageListService.getUserMessageList(userMessageListCriteria);
+            return new ResponseEntity<Object>(userMessageListVo, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);

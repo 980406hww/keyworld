@@ -16,7 +16,7 @@
             t_user_message_list
         WHERE
             <if test="userMessageListCriteria.messageStatus == 1">
-                fReceiverUserName = #{userName}
+                fReceiverUserName = #{userMessageListCriteria.userName}
                 <if test="userMessageListCriteria.targetUserName.size() > 0">
                     AND
                         fSenderUserName IN
@@ -26,7 +26,7 @@
                 </if>
             </if>
             <if test="userMessageListCriteria.messageStatus == 2">
-                fSenderUserName = #{userName}
+                fSenderUserName = #{userMessageListCriteria.userName}
                 <if test="userMessageListCriteria.targetUserName.size() > 0">
                     AND
                         fReceiverUserName IN
