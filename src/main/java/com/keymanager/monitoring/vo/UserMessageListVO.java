@@ -1,5 +1,6 @@
 package com.keymanager.monitoring.vo;
 
+import com.keymanager.monitoring.entity.UserInfo;
 import com.keymanager.monitoring.entity.UserMessageList;
 
 import java.util.List;
@@ -11,6 +12,7 @@ public class UserMessageListVO {
     private Integer pageNumber;
     private Integer pageTotalNumber;
     private List<UserMessageList> userMessageLists;
+    private List<UserInfo> userInfoList;
 
     public Integer getMessageStatus() {
         return messageStatus;
@@ -58,5 +60,13 @@ public class UserMessageListVO {
 
     public void setUserMessageLists(List<UserMessageList> userMessageLists) {
         this.userMessageLists = userMessageLists;
+    }
+
+    public List<UserInfo> getUserInfoList() {
+        return userInfoList;
+    }
+
+    public void setUserInfoList(List<UserInfo> userInfoList) {
+        this.userInfoList = userInfoList;
     }
 }

@@ -15,8 +15,14 @@
         FROM
             t_user_message_list
         WHERE
-            <if test="userMessageListCriteria.messageStatus == 1">
-                fReceiverUserName = #{userMessageListCriteria.userName}
+            fStatus IN
+            <foreach collection="userMessageListCriteria.status" item="status" index="index" open="(" close=")" separator=",">
+                #{status}
+            </foreach>
+            AND
+                HOUR(timediff( now(), fUpdateTime) ) &lt;= 24
+            <if test="userMessageListCriteria.messageStatus == 1 and userMessageListCriteria.userName != null">
+                AND   fReceiverUserName = #{userMessageListCriteria.userName}
                 <if test="userMessageListCriteria.targetUserName.size() > 0">
                     AND
                         fSenderUserName IN
@@ -25,8 +31,8 @@
                         </foreach>
                 </if>
             </if>
-            <if test="userMessageListCriteria.messageStatus == 2">
-                fSenderUserName = #{userMessageListCriteria.userName}
+            <if test="userMessageListCriteria.messageStatus == 2 and userMessageListCriteria.userName != null">
+                AND   fSenderUserName = #{userMessageListCriteria.userName}
                 <if test="userMessageListCriteria.targetUserName.size() > 0">
                     AND
                         fReceiverUserName IN
@@ -35,11 +41,6 @@
                         </foreach>
                 </if>
             </if>
-        AND
-            fStatus IN
-            <foreach collection="userMessageListCriteria.status" item="status" index="index" open="(" close=")" separator=",">
-                #{status}
-            </foreach>
         ORDER BY
             fUpdateTime DESC
     </select>
@@ -62,12 +63,12 @@
             fContent,
             fUpdateTime)
         VALUES
-        <foreach collection="userMessageListCriteria.targetUserName" item="targetUserName" index="index" open="(" close=")" separator=",">
-            #{userName},
+        <foreach collection="userMessageListCriteria.targetUserName" item="targetUserName" index="index" separator=",">
+            (#{userName},
             #{targetUserName},
-            0,
+            #{userMessageListCriteria.status[0]},
             #{userMessageListCriteria.content},
-            #{now}
+            #{now})
         </foreach>
     </insert>
 
@@ -75,10 +76,10 @@
         UPDATE
             t_user_message_list
         SET
-            <if test="userMessageListCriteria.status == null">
-                fStatus = #{userMessageListCriteria.status},
+            <if test="userMessageListCriteria.status != null">
+                fStatus = #{userMessageListCriteria.status[0]},
             </if>
-            <if test="userMessageListCriteria.content == null">
+            <if test="userMessageListCriteria.content != null">
                 fContent = #{userMessageListCriteria.content},
             </if>
             fUpdateTime = #{now}
@@ -91,5 +92,11 @@
             COUNT(*)
         FROM
             t_user_message_list
+        <where>
+            fStatus IN (0,1)
+            <if test="userName != null">
+                AND fReceiverUserName = #{userName}
+            </if>
+        </where>
     </select>
 </mapper>
