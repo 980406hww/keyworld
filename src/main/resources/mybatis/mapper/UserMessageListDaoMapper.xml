@@ -16,10 +16,12 @@
         FROM
             t_user_message_list
         WHERE
-            fStatus IN
-            <foreach collection="userMessageListCriteria.status" item="status" index="index" open="(" close=")" separator=",">
-                #{status}
-            </foreach>
+            <if test="userMessageListCriteria.status.size() > 0">
+                fStatus IN
+                <foreach collection="userMessageListCriteria.status" item="status" index="index" open="(" close=")" separator=",">
+                    #{status}
+                </foreach>
+            </if>
             AND (fStatus !=2 || (fStatus = 2 &amp;&amp; HOUR(timediff( now(), fUpdateTime)) &lt;= 24))
             <if test="userMessageListCriteria.messageStatus == 1">
                 <choose>
