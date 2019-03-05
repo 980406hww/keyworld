@@ -76,7 +76,11 @@ public class UserMessageListRestController extends SpringMVCBaseController {
     @RequestMapping(value = "/checkMessageInbox", method = RequestMethod.POST)
     public ResponseEntity<?> checkMessageInbox(HttpServletRequest request) {
         try {
-            String userName = (String) request.getSession().getAttribute("username");
+            String userName = null;
+            Set<String> roles = getCurrentUser().getRoles();
+            if (!roles.contains("DepartmentManager")){
+                userName = (String) request.getSession().getAttribute("username");
+            }
             Integer messageInboxCount = userMessageListService.checkMessageInboxCount(userName);
             return new ResponseEntity<Object>(messageInboxCount, HttpStatus.OK);
         } catch (Exception e) {
