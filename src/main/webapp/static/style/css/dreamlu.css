@@ -86,6 +86,7 @@ td .tree-title {
 #userMessageListTable tfoot tr {
     float: right;
     margin-right: 115px;
+    margin-top: 3px;
 }
 #userMessageListTable tfoot {
     position: absolute !important;
@@ -95,6 +96,9 @@ td .tree-title {
 }
 #userMessageListTable tr {
     height: 20px;
+}
+#userMessageListTable tbody td {
+   border-bottom: 1px solid dimgrey;
 }
 #userMessageListTable .user-message-content {
     width: 220px !important;

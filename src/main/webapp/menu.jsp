@@ -66,9 +66,6 @@
 	<form id="showUserMessageListForm">
 		<table id="userMessageListConditionTable" cellpadding="10" style="font-size: 12px; background-color: white;border-collapse: collapse; width: 100%;">
 			<tr>
-				<td style="width: 40px;">
-					<span class="fi-comment" style="font-size: 12px;color: green;">&nbsp;</span><a href="javascript:void(0)" onclick="openMessageBox('new')" style="text-decoration: none;font-size: 12px; color: black">留言</a>
-				</td>
 				<td>
 					<span style="font-size: 12px;">状态: </span>
                     <select id="message_status_select" multiple="multiple" size="5">
@@ -90,6 +87,9 @@
 				<td>
 					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="searchUserMessageList()" value=" 查询 " >
 				</td>
+                <td style="width: 40px;">
+                    <span class="fi-comment" style="font-size: 12px;color: green;">&nbsp;</span><a href="javascript:void(0)" onclick="openMessageBox('new')" style="text-decoration: none;font-size: 12px; color: black">留言</a>
+                </td>
 			</tr>
 		</table>
 		<table id="userMessageStatus">
@@ -360,7 +360,7 @@
             return this.value;
         }).get();
         var pageNumber = showUserMessageListForm.find("#current-page-number label").text();
-        if (pageNumber == ""){
+        if (pageNumber == "" || pageNumber == 0 || targetUserName.length > 0){
             pageNumber = 1;
         }
         var postData = {};
@@ -377,6 +377,9 @@
 				"Content-Type": "application/json"
 			},
 			success: function (data) {
+                if (data.pageTotalNumber == 0) {
+                    data.pageNumber = 0;
+                }
                 $("#showUserMessageListForm").find("input[name='messageStatus']").val(data.messageStatus);
                 $("#showUserMessageListForm").find("#current-page-number label").text(data.pageNumber);
                 $("#showUserMessageListForm").find("#total-page-number label").text(data.pageTotalNumber);
@@ -479,6 +482,7 @@
                 if (data) {
                     $().toastmessage("showSuccessToast", "保存成功！");
                     $("#showUserMessageDialog").dialog("close");
+                    searchUserMessageList();
                 } else {
                     $().toastmessage("showErrorToast", "保存失败！");
                 }
