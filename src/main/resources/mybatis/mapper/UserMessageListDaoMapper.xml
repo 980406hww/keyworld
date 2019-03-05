@@ -21,8 +21,9 @@
                 <foreach collection="userMessageListCriteria.status" item="status" index="index" open="(" close=")" separator=",">
                     #{status}
                 </foreach>
+                AND
             </if>
-            AND (fStatus !=2 || (fStatus = 2 &amp;&amp; HOUR(timediff( now(), fUpdateTime)) &lt;= 24))
+            (fStatus !=2 || (fStatus = 2 &amp;&amp; HOUR(timediff( now(), fUpdateTime)) &lt;= 24))
             <if test="userMessageListCriteria.messageStatus == 1">
                 <choose>
                     <when test="userMessageListCriteria.userName != null">
