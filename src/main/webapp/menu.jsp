@@ -399,7 +399,7 @@
                             status = "处理完毕";
                             break;
                     }
-                    $("#userMessageListTable tbody").append("<tr messageUuid='"+ val.uuid +"' onclick='updateUserMessage(1, this)' ondblclick='updateUserMessage(0, this)'>" +
+                    $("#userMessageListTable tbody").append("<tr messageUuid='"+ val.uuid +"' onclick='updateUserMessage(this)' ondblclick='updateUserMessageStatus(this)'>" +
                         "<td>" +
                         "<span class='user-message-content'>"+ val.content +"</span>" +
                         "</td>" +
@@ -500,21 +500,22 @@
         searchUserMessageList();
     }
 
-    function updateUserMessage(status, tr) {
-        var TimeFn = null;
+    var TimeFn = null;
+    function updateUserMessage(tr) {
         var uuid = $(tr).attr("messageuuid");
         $("#showUserMessageForm").find("input[name='messageUuid']").val(uuid);
-        if (status) {
             // 取消上次延时未执行的方法
-            clearTimeout(TimeFn);
-            // 执行延时
-            TimeFn = setTimeout(function () {
-                openMessageBox("update");
-            }, 300);
-        } else {
-            clearTimeout(TimeFn);
-            flag = true;
-            saveUserMessage("update", 1);
-        }
+		clearTimeout(TimeFn);
+		// 执行延时
+		TimeFn = setTimeout(function () {
+			openMessageBox("update");
+		}, 300);
+    }
+
+    function updateUserMessageStatus(tr) {
+        var uuid = $(tr).attr("messageuuid");
+        $("#showUserMessageForm").find("input[name='messageUuid']").val(uuid);
+		clearTimeout(TimeFn);
+		saveUserMessage("update", 1);
     }
 </script>
