@@ -120,10 +120,14 @@
             <tbody style="height: 200px;">
             </tbody>
             <tfoot>
-                <span><a href="javascript:void(0)" onclick="changeUserMessagePaging(-1)" style="text-decoration: none; font-size: 12px; color: black"> 上一页 </a></span>
-                <span id="current-page-number">第 <label></label> 页</span>
-                <span id="total-page-number"> / 共 <label>0</label> 页</span>
-                <span><a href="javascript:void(0)" onclick="changeUserMessagePaging(1)" style="text-decoration: none;font-size: 12px; color: black"> 下一页 </a></span>
+                <tr>
+                    <td colspan="3">
+                        <span><a href="javascript:void(0)" onclick="changeUserMessagePaging(-1)" style="text-decoration: none; font-size: 12px; color: black"> 上一页 </a></span>
+                        <span id="current-page-number">第 <label></label> 页</span>
+                        <span id="total-page-number"> / 共 <label>0</label> 页</span>
+                        <span><a href="javascript:void(0)" onclick="changeUserMessagePaging(1)" style="text-decoration: none;font-size: 12px; color: black"> 下一页 </a></span>
+                    </td>
+                </tr>
             </tfoot>
 		</table>
 	</form>
@@ -263,7 +267,7 @@
         showUserMessageListDialog.show();
         showUserMessageListDialog.dialog({
 			resizable: false,
-			height: 330,
+			height: 318,
 			width: 394,
 			title: '留言列表',
 			modal: false,

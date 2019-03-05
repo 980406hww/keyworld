@@ -83,10 +83,13 @@ td .tree-title {
 #userMessageListTable thead {
     background-color: #eeeeee !important;
 }
+#userMessageListTable tfoot tr {
+    float: right;
+    margin-right: 115px;
+}
 #userMessageListTable tfoot {
-    position: fixed !important;
+    position: absolute !important;
     bottom: 0px !important;
-    align-self: center !important;
     background: #ADD1FF !important;
     width: 100% !important;
 }
