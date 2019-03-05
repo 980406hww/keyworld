@@ -22,13 +22,14 @@ import java.util.List;
  * @Date 2019/2/28 17:05
  **/
 @RestController
-@RequestMapping(value = "/usermessage")
+@RequestMapping(value = "/internal/usermessage")
 public class UserMessageListRestController extends SpringMVCBaseController {
 
     private static Logger logger = LoggerFactory.getLogger(UserMessageListRestController.class);
 
     @Autowired
     private UserMessageListService userMessageListService;
+
     @Autowired
     private IUserInfoService userInfoService;
 
@@ -48,7 +49,7 @@ public class UserMessageListRestController extends SpringMVCBaseController {
     public ResponseEntity<?> getUserMessage(@PathVariable Integer uuid,HttpServletRequest request) {
         try {
             UserMessageList userMessageList = userMessageListService.getUserMessageByUuid(uuid);
-            return new ResponseEntity<Object>(userMessageList,HttpStatus.OK);
+            return new ResponseEntity<Object>(userMessageList, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
@@ -71,7 +72,7 @@ public class UserMessageListRestController extends SpringMVCBaseController {
         try {
             String userName = (String) request.getSession().getAttribute("username");
             userMessageListService.saveUserMessages(userMessageListCriteria, userName);
-            return new ResponseEntity<Object>(HttpStatus.OK);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);

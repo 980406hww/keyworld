@@ -68,8 +68,44 @@ td .tree-title {
 	line-height: 28px;
 }
 #userMessageStatus thead th {
-    background-color: dimgrey;
+    background-color: dimgrey !important;
 }
 #userMessageStatus thead th.statusAlive {
-    background-color: #0c7df5;
+    background-color: #0c7df5 !important;
+}
+.ui-multiselect{
+    line-height: 20px;
+    height: 25px;
+}
+#userMessageListTable {
+    text-align: center;
+}
+#userMessageListTable thead {
+    background-color: #eeeeee !important;
+}
+#userMessageListTable tfoot {
+    position: fixed !important;
+    bottom: 0px !important;
+    align-self: center !important;
+    background: #ADD1FF !important;
+    width: 100% !important;
+}
+#userMessageListTable tr {
+    height: 20px;
+}
+#userMessageListTable .user-message-content {
+    width: 220px !important;
+}
+#userMessageListTable span.user-message-content {
+    max-width: 220px !important;
+    float: left !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+}
+#userMessageListTable .user-message-targetName {
+    width: 84px !important;
+}
+#userMessageListTable .user-message-status {
+    width: 80px !important;
 }

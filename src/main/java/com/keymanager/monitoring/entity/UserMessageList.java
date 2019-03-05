@@ -11,10 +11,10 @@ import com.baomidou.mybatisplus.annotations.TableName;
 public class UserMessageList extends BaseEntity {
 
     @TableField(value = "fSenderUserName")
-    private String fSenderUserName;
+    private String senderUserName;
 
     @TableField(value = "fReceiverUserName")
-    private String fReceiverUserName;
+    private String receiverUserName;
 
     @TableField(value = "fStatus")
     private String status;
@@ -22,20 +22,20 @@ public class UserMessageList extends BaseEntity {
     @TableField(value = "fContent")
     private String content;
 
-    public String getfSenderUserName() {
-        return fSenderUserName;
+    public String getSenderUserName () {
+        return senderUserName;
     }
 
-    public void setfSenderUserName(String fSenderUserName) {
-        this.fSenderUserName = fSenderUserName;
+    public void setSenderUserName (String senderUserName) {
+        this.senderUserName = senderUserName;
     }
 
-    public String getfReceiverUserName() {
-        return fReceiverUserName;
+    public String getReceiverUserName () {
+        return receiverUserName;
     }
 
-    public void setfReceiverUserName(String fReceiverUserName) {
-        this.fReceiverUserName = fReceiverUserName;
+    public void setReceiverUserName (String receiverUserName) {
+        this.receiverUserName = receiverUserName;
     }
 
     public String getStatus () {

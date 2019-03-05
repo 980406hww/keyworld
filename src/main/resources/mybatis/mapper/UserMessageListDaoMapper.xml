@@ -4,14 +4,15 @@
 
     <select id="getUserMessageLists" resultType="com.keymanager.monitoring.entity.UserMessageList">
         SELECT
-            fUuid,
+            fUuid AS 'uuid',
             <if test="userMessageListCriteria.messageStatus == 1">
-                fSenderUserName,
+                fSenderUserName AS 'senderUserName',
             </if>
             <if test="userMessageListCriteria.messageStatus == 2">
-                fReceiverUserName,
+                fReceiverUserName AS 'receiverUserName',
             </if>
-            fStatus,fContent
+            fStatus AS 'status',
+            fContent AS 'content'
         FROM
             t_user_message_list
         WHERE
@@ -46,7 +47,10 @@
 
     <select id="getUserMessageByUuid" resultType="com.keymanager.monitoring.entity.UserMessageList">
         SELECT
-            fSenderUserName,fReceiverUserName,fStatus,fContent
+            fSenderUserName AS 'senderUserName',
+            fReceiverUserName AS 'receiverUserName',
+            fStatus AS 'status',
+            fContent AS 'content'
         FROM
             t_user_message_list
         WHERE
@@ -62,12 +66,12 @@
             fContent,
             fUpdateTime)
         VALUES
-        <foreach collection="userMessageListCriteria.targetUserName" item="targetUserName" index="index" open="(" close=")" separator=",">
-            #{userName},
+        <foreach collection="userMessageListCriteria.targetUserName" item="targetUserName" index="index" separator=",">
+            (#{userName},
             #{targetUserName},
-            0,
+            #{userMessageListCriteria.status[0]},
             #{userMessageListCriteria.content},
-            #{now}
+            #{now})
         </foreach>
     </insert>
 
@@ -75,10 +79,10 @@
         UPDATE
             t_user_message_list
         SET
-            <if test="userMessageListCriteria.status == null">
-                fStatus = #{userMessageListCriteria.status},
+            <if test="userMessageListCriteria.status != null">
+                fStatus = #{userMessageListCriteria.status[0]},
             </if>
-            <if test="userMessageListCriteria.content == null">
+            <if test="userMessageListCriteria.content != null">
                 fContent = #{userMessageListCriteria.content},
             </if>
             fUpdateTime = #{now}
