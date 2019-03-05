@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @Author zhoukai
@@ -36,9 +37,14 @@ public class UserMessageListRestController extends SpringMVCBaseController {
     @RequestMapping(value = "/getUserMessageList", method = RequestMethod.POST)
     public ResponseEntity<?> getUserMessageList(@RequestBody UserMessageListCriteria userMessageListCriteria, HttpServletRequest request) {
         try {
-            String userName = (String) request.getSession().getAttribute("username");
-            UserMessageListVO userMessageListVO = userMessageListService.getUserMessageListVO(userMessageListCriteria, userName);
-            return new ResponseEntity<Object>(userMessageListVO, HttpStatus.OK);
+            Set<String> roles = getCurrentUser().getRoles();
+            if (!roles.contains("DepartmentManager")){
+                userMessageListCriteria.setUserName((String) request.getSession().getAttribute("username"));
+            }
+            UserMessageListVO userMessageListVo = userMessageListService.getUserMessageList(userMessageListCriteria);
+            List<UserInfo> userInfoList = userInfoService.findActiveUsers();
+            userMessageListVo.setUserInfoList(userInfoList);
+            return new ResponseEntity<Object>(userMessageListVo, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
@@ -46,21 +52,10 @@ public class UserMessageListRestController extends SpringMVCBaseController {
     }
 
     @RequestMapping(value = "/getUserMessage/{uuid}", method = RequestMethod.POST)
-    public ResponseEntity<?> getUserMessage(@PathVariable Integer uuid,HttpServletRequest request) {
+    public ResponseEntity<?> getUserMessage(@PathVariable Integer uuid) {
         try {
             UserMessageList userMessageList = userMessageListService.getUserMessageByUuid(uuid);
             return new ResponseEntity<Object>(userMessageList, HttpStatus.OK);
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @RequestMapping(value = "/getAllUsers", method = RequestMethod.POST)
-    public ResponseEntity<?> getAllUsers() {
-        try {
-            List<UserInfo> userInfoList = userInfoService.findActiveUsers();
-            return new ResponseEntity<Object>(userInfoList, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
@@ -82,7 +77,11 @@ public class UserMessageListRestController extends SpringMVCBaseController {
     @RequestMapping(value = "/checkMessageInbox", method = RequestMethod.POST)
     public ResponseEntity<?> checkMessageInbox(HttpServletRequest request) {
         try {
-            String userName = (String) request.getSession().getAttribute("username");
+            String userName = null;
+            Set<String> roles = getCurrentUser().getRoles();
+            if (!roles.contains("DepartmentManager")){
+                userName = (String) request.getSession().getAttribute("username");
+            }
             Integer messageInboxCount = userMessageListService.checkMessageInboxCount(userName);
             return new ResponseEntity<Object>(messageInboxCount, HttpStatus.OK);
         } catch (Exception e) {
