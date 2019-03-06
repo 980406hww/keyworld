@@ -50,7 +50,7 @@
 			</span>|
 				<span class="fi-web icon-black" style="font-size: 12px;color: red;"></span><span style="color: black">&nbsp;${sessionScope.get("terminalType")}端&nbsp;|</span>&nbsp;
 				<span class="fi-comments" style="font-size: 12px;color: green;"></span>
-				<a href="javascript:void(0)" onclick="OpenMessageList()" style="text-decoration: none;font-size: 12px; color: black">留言列表</a>|
+				<a href="javascript:void(0)" onclick="OpenMessageList(1)" id="userMessageText" style="text-decoration: none;font-size: 12px; color: black">留言列表</a>|
 				<shiro:hasPermission name="/user/editPwdPage">
 					<span class="fi-unlock icon-green" style="font-size: 12px;color: green"></span>
 					<a href="javascript:void(0)" onclick="editUserPwd()"  style="text-decoration: none;font-size: 12px;color: black">修改密码</a>|
@@ -69,19 +69,14 @@
 				<td>
 					<span style="font-size: 12px;">状态: </span>
                     <select id="message_status_select" multiple="multiple" size="5">
-                        <option value="0" selected="selected">未处理</option>
-                        <option value="1" selected="selected">处理中</option>
+                        <option value="0" selected>未处理</option>
+                        <option value="1" selected>处理中</option>
                         <option value="2">处理完毕</option>
                     </select>
 				</td>
 				<td>
-					<span style="font-size: 12px;">用户名称: </span>
+					<span style="font-size: 12px;">用户: </span>
 					<select id="user_list_select" multiple="multiple" size="5">
-						<optgroup label="收信人">
-							<option value="zhoukai">周凯</option>
-							<option value="duchengfu">杜成福</option>
-							<option value="wangke">王柯</option>
-						</optgroup>
 					</select>
 				</td>
 				<td>
@@ -142,9 +137,6 @@
 				<td id="userMessageTargetStatus"><span style="width: 60px">收信人：</span></td>
 				<td>
                     <select id="user_select" multiple="multiple" size="5">
-                        <option value="duchengfu">杜成福</option>
-                        <option value="zhoukai">周凯</option>
-                        <option value="wangke">王柯</option>
                     </select>
 				</td>
 			</tr>
@@ -258,12 +250,10 @@
         parent.$.modalDialog.handler.window("resize",{top:$(document).scrollTop() + 100});
     }
 
-    function OpenMessageList() {
-        getUserMessage(1);
+    function OpenMessageList(start) {
         var showUserMessageListDialog = $("#showUserMessageListDialog");
         $("#userMessageStatus").find("thead th:first-child").addClass("statusAlive");
         $("#userMessageStatus").find("thead th:last-child").removeClass("statusAlive");
-        // 初始赋值
         showUserMessageListDialog.show();
         showUserMessageListDialog.dialog({
 			resizable: false,
@@ -276,12 +266,13 @@
             }
 		});
         showUserMessageListDialog.dialog("open");
-        showUserMessageListDialog.window("resize", {top: $(document).scrollTop() + 100, left: $(document).scrollLeft() + (($(document).width() > 1920 ? 1920 : $(document).width()) - 394) / 2});
+        showUserMessageListDialog.window("resize", {top: $(document).scrollTop() + 100, left: $(document).scrollLeft() + 755});
+		getUserMessage(1, start)
     }
 
-    function getUserMessage(messageStatus) {
+    function getUserMessage(messageStatus, start) {
         $("#userMessageStatus").find("input[name='messageStatus']").val(messageStatus);
-        searchUserMessageList();
+        searchUserMessageList(start);
     }
 
     function openMessageBox(status) {
@@ -343,22 +334,29 @@
 					$("#showUserMessageDialog").dialog("close");
 					$("#showUserMessageForm")[0].reset();
                 }
-			}]
+			}],
+			onClose: function() {
+                $("#showUserMessageForm")[0].reset();
+			}
 		});
 		showUserMessageDialog.dialog("open");
-		showUserMessageDialog.window("resize", {top: $(document).scrollTop() + 150, left: $(document).scrollLeft() + (($(document).width() > 1920 ? 1920 : $(document).width()) - 200) / 2});
+		showUserMessageDialog.window("resize", {top: $(document).scrollTop() + 150 , left: 852});
     }
 
-    function searchUserMessageList() {
+    function searchUserMessageList(start) {
         $("#userMessageListTable tbody").empty();
         var showUserMessageListForm = $("#showUserMessageListForm");
         var messageStatus = $("#userMessageStatus").find("input[name='messageStatus']").val();
-        var status = showUserMessageListForm.find("#message_status_select").multiselect("getChecked").map(function () {
-			return this.value;
-        }).get();
-        var targetUserName = showUserMessageListForm.find("#user_list_select").multiselect("getChecked").map(function () {
-            return this.value;
-        }).get();
+        var status = ['0', '1'];
+        var targetUserName = [];
+        if (!start) {
+            status = showUserMessageListForm.find("#message_status_select").multiselect("getChecked").map(function () {
+                return this.value;
+            }).get();
+            targetUserName = showUserMessageListForm.find("#user_list_select").multiselect("getChecked").map(function () {
+                return this.value;
+            }).get();
+		}
         var pageNumber = showUserMessageListForm.find("#current-page-number label").text();
         if (pageNumber == "" || pageNumber == 0 || targetUserName.length > 0){
             pageNumber = 1;
@@ -413,6 +411,32 @@
                         "<span class='user-message-status'>"+ status +"</span>" +
                         "</td>" +
                         "</tr>")
+                });
+                $("#user_list_select").empty();
+                $("#user_select").empty();
+                $.each(data.userInfoList, function (idx, val) {
+                    $("#user_list_select").append("<option value='"+ val.loginName +"'>"+ val.userName +"</option>");
+                    $("#user_select").append("<option value='"+ val.loginName +"'>"+ val.userName +"</option>");
+                });
+                $("#user_list_select").multiselect({
+                    header: true,
+                    noneSelectedText: "请选择",
+                    checkAllText: "全选",
+                    uncheckAllText: "全不选",
+                    selectedText: "# 人",
+                    minWidth: 142,
+                    height: 100,
+                    selectedList: 2
+                });
+                $("#user_select").multiselect({
+                    header: true,
+                    noneSelectedText: "请选择",
+                    checkAllText: "全选",
+                    uncheckAllText: "全不选",
+                    selectedText: "# 人",
+                    minWidth: 142,
+                    height: 100,
+                    selectedList: 3
                 });
             },
 			error: function () {

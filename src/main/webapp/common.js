@@ -8,20 +8,7 @@ $(function () {
         height: 100,
         selectedList: 2
     });
-    $("#user_list_select").multiselect({
-        header: false,
-        noneSelectedText: "请选择",
-        minWidth: 100,
-        height: 100,
-        selectedList: 2
-    });
-    $("#user_select").multiselect({
-        header: false,
-        noneSelectedText: "请选择",
-        minWidth: 140,
-        height: 100,
-        selectedList: 3
-    });
+    checkMessageInbox();
 });
 function doOver(obj) {
 	obj.style.backgroundColor = "green";
@@ -34,4 +21,21 @@ function doOut(obj) {
 	} else {
 		obj.style.backgroundColor = "#ffffff";
 	}
+}
+function checkMessageInbox() {
+    var text = $("#userMessageText").text();
+    $.ajax({
+        url: '/internal/usermessage/checkMessageInbox',
+        type: 'POST',
+        headers: {
+            "Accept": 'application/json',
+            "Content-Type": 'application/json'
+        },
+        success: function (result) {
+            $("#userMessageText").text(text + "(" + result + ")");
+        },
+        error: function () {
+            $().toastmessage("showErrorToast", "获取信息量失败");
+        }
+    });
 }

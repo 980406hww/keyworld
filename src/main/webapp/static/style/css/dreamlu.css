@@ -86,7 +86,9 @@ td .tree-title {
 #userMessageListTable tfoot tr {
     float: right;
     margin-right: 115px;
-    margin-top: 3px;
+}
+#userMessageListTable tfoot td {
+    padding: 2px 0px;
 }
 #userMessageListTable tfoot {
     position: absolute !important;
@@ -118,4 +120,22 @@ td .tree-title {
 }
 #userMessageListTable .user-message-status {
     width: 80px !important;
+}
+.ui-multiselect-menu {
+    z-index: 9999 !important;
+}
+.ui-multiselect-menu {
+    position: relative !important;
+    top: 16px !important;
+    left: 789px !important;
+}
+.ui-multiselect-menu:last-child {
+    position: relative !important;
+    top: 74px !important;
+    left: 904px !important;
+}
+.ui-multiselect-menu:nth-last-child(2) {
+    position: relative !important;
+    top: 16px !important;
+    left: 922px !important;
 }
