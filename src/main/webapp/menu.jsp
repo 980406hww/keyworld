@@ -254,6 +254,7 @@
         var showUserMessageListDialog = $("#showUserMessageListDialog");
         $("#userMessageStatus").find("thead th:first-child").addClass("statusAlive");
         $("#userMessageStatus").find("thead th:last-child").removeClass("statusAlive");
+        getUserMessage(1, start)
         showUserMessageListDialog.show();
         showUserMessageListDialog.dialog({
 			resizable: false,
@@ -267,7 +268,6 @@
 		});
         showUserMessageListDialog.dialog("open");
         showUserMessageListDialog.window("resize", {top: $(document).scrollTop() + 100, left: $(document).scrollLeft() + 755});
-		getUserMessage(1, start)
     }
 
     function getUserMessage(messageStatus, start) {
@@ -358,7 +358,7 @@
             }).get();
 		}
         var pageNumber = showUserMessageListForm.find("#current-page-number label").text();
-        if (pageNumber == "" || pageNumber == 0 || targetUserName.length > 0){
+        if (pageNumber == "" || pageNumber == 0 || ((pageNumber == "" || pageNumber == 0) && targetUserName.length > 0)){
             pageNumber = 1;
         }
         var postData = {};
@@ -375,13 +375,13 @@
 				"Content-Type": "application/json"
 			},
 			success: function (data) {
-                if (data.pageTotalNumber == 0) {
-                    data.pageNumber = 0;
+                if (data.page.pages == 0) {
+                    data.page.current = 0;
                 }
                 $("#showUserMessageListForm").find("input[name='messageStatus']").val(data.messageStatus);
-                $("#showUserMessageListForm").find("#current-page-number label").text(data.pageNumber);
-                $("#showUserMessageListForm").find("#total-page-number label").text(data.pageTotalNumber);
-                $.each(data.userMessages, function (idx, val) {
+                $("#showUserMessageListForm").find("#current-page-number label").text(data.page.current);
+                $("#showUserMessageListForm").find("#total-page-number label").text(data.page.pages);
+                $.each(data.page.records, function (idx, val) {
                     var userName = '';
                     var status = '';
                     if (data.messageStatus == "1") {

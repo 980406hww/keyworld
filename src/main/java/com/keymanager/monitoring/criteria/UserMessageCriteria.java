@@ -6,10 +6,10 @@ public class UserMessageCriteria {
     private Integer uuid;
     private Integer messageStatus;
     private String userName;
+    private String content;
+    private Integer pageNumber;
     private List<Integer> status;
     private List<String> targetUserName;
-    private Integer pageNumber;
-    private String content;
 
     public Integer getUuid() {
         return uuid;

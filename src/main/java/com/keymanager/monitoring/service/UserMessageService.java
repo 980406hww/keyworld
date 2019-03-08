@@ -24,13 +24,9 @@ public class UserMessageService extends ServiceImpl<UserMessageDao, UserMessage>
     public UserMessageVO getUserMessageList(UserMessageCriteria userMessageCriteria) {
         UserMessageVO userMessageVo = new UserMessageVO();
         userMessageVo.setMessageStatus(userMessageCriteria.getMessageStatus());
-        userMessageVo.setPageNumber(userMessageCriteria.getPageNumber());
-        userMessageVo.setStatus(userMessageCriteria.getStatus());
-        userMessageVo.setTargetUserName(userMessageCriteria.getTargetUserName());
         Page<UserMessage> page = new Page<UserMessage>(userMessageCriteria.getPageNumber(), 10);
         page.setRecords(userMessageDao.getUserMessageLists(page, userMessageCriteria));
-        userMessageVo.setPageTotalNumber(page.getPages());
-        userMessageVo.setUserMessages(page.getRecords());
+        userMessageVo.setPage(page);
         return userMessageVo;
     }
 
