@@ -100,9 +100,6 @@ td .tree-title {
 #userMessageStatus li.active a {
     color: #0c7df5;
 }
-#userMessageStatus li a:hover {
-    color: #00a0e9;
-}
 #userMessageStatus li:after {
     clear: both;
 }
@@ -172,7 +169,7 @@ td .tree-title {
 .ui-multiselect-menu:last-child {
     position: absolute !important;
     top: 208px !important;
-    left: 902px !important;
+    left: 851px !important;
 }
 .ui-multiselect-menu:nth-last-child(2) {
     position: absolute !important;

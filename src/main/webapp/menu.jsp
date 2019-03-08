@@ -137,9 +137,9 @@
 				</td>
 			</tr>
 			<tr>
-				<td><span style="width: 60px">状态：</span></td>
+				<td><span style="width: 60px;">状态：</span></td>
 				<td>
-					<select id="messageStatusSelect" style="width: 140px;">
+					<select id="messageStatusSelect" style="width: 180px;">
 						<option value="0">未处理</option>
 						<option value="1">处理中</option>
 						<option value="2">处理完毕</option>
@@ -147,9 +147,9 @@
 				</td>
 			</tr>
 			<tr>
-				<td><span style="width: 60px">内容：</span></td>
+				<td><span style="width: 60px;">内容：</span></td>
 				<td>
-					<textarea rows="5" style="width: 140px"></textarea>
+					<textarea rows="7" style="width: 240px"></textarea>
 				</td>
 			</tr>
 		</table>
@@ -257,7 +257,7 @@
 			height: 320,
 			width: 394,
 			title: '留言列表',
-			modal: false,
+			modal: true,
 			onClose: function () {
 				$("#showUserMessageListForm")[0].reset();
             }
@@ -313,10 +313,10 @@
 		showUserMessageDialog.show();
 		showUserMessageDialog.dialog({
 			resizable: false,
-			height: 240,
-			width: 200,
+			height: 260,
+			width: 300,
 			title: '留言框',
-			modal: false,
+			modal: true,
 			buttons: [{
 			    text: buttonText,
 				iconCls: "icon-ok",
@@ -336,7 +336,7 @@
 			}
 		});
 		showUserMessageDialog.dialog("open");
-		showUserMessageDialog.window("resize", {top: $(document).scrollTop() + 150 , left: 852});
+		showUserMessageDialog.window("resize", {top: $(document).scrollTop() + 150 , left: 801});
     }
 
     function searchUserMessageList(start, btn) {
@@ -436,7 +436,7 @@
                     checkAllText: "全选",
                     uncheckAllText: "全不选",
                     selectedText: "# 人",
-                    minWidth: 142,
+                    minWidth: 182,
                     height: 100,
                     selectedList: 3
                 });
