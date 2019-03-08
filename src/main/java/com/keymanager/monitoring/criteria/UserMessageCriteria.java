@@ -9,7 +9,7 @@ public class UserMessageCriteria {
     private String content;
     private Integer pageNumber;
     private List<Integer> status;
-    private List<String> targetUserName;
+    private List<String> targetUserNames;
 
     public Integer getUuid() {
         return uuid;
@@ -43,12 +43,12 @@ public class UserMessageCriteria {
         this.status = status;
     }
 
-    public List<String> getTargetUserName() {
-        return targetUserName;
+    public List<String> getTargetUserNames () {
+        return targetUserNames;
     }
 
-    public void setTargetUserName(List<String> targetUserName) {
-        this.targetUserName = targetUserName;
+    public void setTargetUserNames (List<String> targetUserNames) {
+        this.targetUserNames = targetUserNames;
     }
 
     public Integer getPageNumber() {

@@ -8,7 +8,7 @@ import java.util.List;
 public class UserMessageVO {
     private Integer messageStatus;
     private Page page;
-    private List<UserInfo> userInfoList;
+    private List<UserInfo> userInfos;
 
     public Integer getMessageStatus () {
         return messageStatus;
@@ -26,11 +26,11 @@ public class UserMessageVO {
         this.page = page;
     }
 
-    public List<UserInfo> getUserInfoList () {
-        return userInfoList;
+    public List<UserInfo> getUserInfos () {
+        return userInfos;
     }
 
-    public void setUserInfoList (List<UserInfo> userInfoList) {
-        this.userInfoList = userInfoList;
+    public void setUserInfos (List<UserInfo> userInfos) {
+        this.userInfos = userInfos;
     }
 }

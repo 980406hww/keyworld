@@ -344,26 +344,26 @@
         var showUserMessageListForm = $("#showUserMessageListForm");
         var messageStatus = $("#userMessageStatus").find("input[name='messageStatus']").val();
         var status = ['0', '1'];
-        var targetUserName = [];
+        var targetUserNames = [];
         if (!start) {
             status = showUserMessageListForm.find("#message_status_select").multiselect("getChecked").map(function () {
                 return this.value;
             }).get();
-            targetUserName = showUserMessageListForm.find("#user_list_select").multiselect("getChecked").map(function () {
+            targetUserNames = showUserMessageListForm.find("#user_list_select").multiselect("getChecked").map(function () {
                 return this.value;
             }).get();
 		}
         var pageNumber = 1;
         if (!btn) {
             pageNumber = showUserMessageListForm.find("#current-page-number label").text();
-            if (pageNumber == "" || pageNumber == 0 || ((pageNumber == "" || pageNumber == 0) && targetUserName.length > 0)){
+            if (pageNumber == "" || pageNumber == 0 || ((pageNumber == "" || pageNumber == 0) && targetUserNames.length > 0)){
                 pageNumber = 1;
             }
 		}
         var postData = {};
         postData.messageStatus = messageStatus;
         postData.status = status;
-        postData.targetUserName = targetUserName;
+        postData.targetUserNames = targetUserNames;
         postData.pageNumber = pageNumber;
         $.ajax({
 			url: "/internal/usermessage/getUserMessageList",
@@ -416,7 +416,7 @@
                 });
                 $("#user_list_select").empty();
                 $("#user_select").empty();
-                $.each(data.userInfoList, function (idx, val) {
+                $.each(data.userInfos, function (idx, val) {
                     $("#user_list_select").append("<option value='"+ val.loginName +"'>"+ val.userName +"</option>");
                     $("#user_select").append("<option value='"+ val.loginName +"'>"+ val.userName +"</option>");
                 });
@@ -475,14 +475,14 @@
     function saveUserMessage(status, type) {
         var postData = {};
         if (status == "new") {
-            var targetUserName = $("#showUserMessageForm").find("#user_select").multiselect("getChecked").map(function () {
+            var targetUserNames = $("#showUserMessageForm").find("#user_select").multiselect("getChecked").map(function () {
                 return this.value;
             }).get();
-            if (targetUserName.length < 1) {
+            if (targetUserNames.length < 1) {
                 alert("请选择目标人");
                 return;
 			}
-            postData.targetUserName = targetUserName;
+            postData.targetUserNames = targetUserNames;
         }
         if (status == "update") {
             var uuid = $("#showUserMessageForm").find("input[name='messageUuid']").val();

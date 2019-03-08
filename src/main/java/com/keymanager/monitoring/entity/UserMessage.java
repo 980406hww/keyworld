@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.annotations.TableName;
  * @Author zhoukai
  * @Date 2019/2/28 16:42
  **/
-@TableName(value = "t_user_message_list")
+@TableName(value = "t_user_message")
 public class UserMessage extends BaseEntity {
 
     @TableField(value = "fSenderUserName")

@@ -42,8 +42,8 @@ public class UserMessageRestController extends SpringMVCBaseController {
                 userMessageCriteria.setUserName((String) request.getSession().getAttribute("username"));
             }
             UserMessageVO userMessageVo = userMessageService.getUserMessageList(userMessageCriteria);
-            List<UserInfo> userInfoList = userInfoService.findActiveUsers();
-            userMessageVo.setUserInfoList(userInfoList);
+            List<UserInfo> userInfos = userInfoService.findActiveUsers();
+            userMessageVo.setUserInfos(userInfos);
             return new ResponseEntity<Object>(userMessageVo, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());

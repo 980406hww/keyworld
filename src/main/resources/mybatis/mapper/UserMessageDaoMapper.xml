@@ -14,7 +14,7 @@
             fStatus AS 'status',
             fContent AS 'content'
         FROM
-            t_user_message_list
+            t_user_message
         WHERE 1 = 1
             <if test="userMessageCriteria.status.size() > 0">
                 AND fStatus IN
@@ -29,9 +29,9 @@
                         AND fReceiverUserName = #{userMessageCriteria.userName}
                     </when>
                 </choose>
-                <if test="userMessageCriteria.targetUserName.size() > 0">
+                <if test="userMessageCriteria.targetUserNames.size() > 0">
                     AND fSenderUserName IN
-                    <foreach collection="userMessageCriteria.targetUserName" item="targetUserName" index="index" open="(" close=")" separator=",">
+                    <foreach collection="userMessageCriteria.targetUserNames" item="targetUserName" index="index" open="(" close=")" separator=",">
                         #{targetUserName}
                     </foreach>
                 </if>
@@ -42,9 +42,9 @@
                         AND fSenderUserName = #{userMessageCriteria.userName}
                     </when>
                 </choose>
-                <if test="userMessageCriteria.targetUserName.size() > 0">
+                <if test="userMessageCriteria.targetUserNames.size() > 0">
                     AND fReceiverUserName IN
-                    <foreach collection="userMessageCriteria.targetUserName" item="targetUserName" index="index" open="(" close=")" separator=",">
+                    <foreach collection="userMessageCriteria.targetUserNames" item="targetUserName" index="index" open="(" close=")" separator=",">
                         #{targetUserName}
                     </foreach>
                 </if>
@@ -59,24 +59,22 @@
             fStatus AS 'status',
             fContent AS 'content'
         FROM
-            t_user_message_list
+            t_user_message
         WHERE
             fUuid = #{uuid}
     </select>
 
     <insert id="saveUserMessages">
-        INSERT INTO
-            t_user_message_list
-            (fSenderUserName, fReceiverUserName, fStatus, fContent, fUpdateTime)
+        INSERT INTO t_user_message (fSenderUserName, fReceiverUserName, fStatus, fContent, fUpdateTime)
         VALUES
-        <foreach collection="userMessageCriteria.targetUserName" item="targetUserName" index="index" separator=",">
+        <foreach collection="userMessageCriteria.targetUserNames" item="targetUserName" index="index" separator=",">
             (#{userName}, #{targetUserName}, #{userMessageCriteria.status[0]}, #{userMessageCriteria.content}, #{now})
         </foreach>
     </insert>
 
     <update id="updateUserMessages">
         UPDATE
-            t_user_message_list
+            t_user_message
         SET
             <if test="userMessageCriteria.status != null">
                 fStatus = #{userMessageCriteria.status[0]},
@@ -93,7 +91,7 @@
         SELECT
             COUNT(*)
         FROM
-            t_user_message_list
+            t_user_message
         <where>
             fStatus IN (0, 1)
             <if test="userName != null">
