@@ -37,6 +37,9 @@ public class Customer extends BaseEntity{
 	@TableField(value = "fPaidFee")
 	private int paidFee;
 
+	@TableField(value = "fSaleRemark")
+	private String saleRemark;
+
 	@TableField(value = "fRemark")
 	private String remark;
 
@@ -139,6 +142,14 @@ public class Customer extends BaseEntity{
 
 	public void setPaidFee(int paidFee) {
 		this.paidFee = paidFee;
+	}
+
+	public String getSaleRemark() {
+		return saleRemark;
+	}
+
+	public void setSaleRemark(String saleRemark) {
+		this.saleRemark = saleRemark;
 	}
 
 	public String getRemark() {

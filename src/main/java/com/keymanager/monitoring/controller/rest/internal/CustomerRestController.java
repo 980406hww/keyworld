@@ -95,9 +95,11 @@ public class CustomerRestController {
 
     @RequiresPermissions("/internal/customer/saveCustomer")
     @RequestMapping(value = "/saveCustomer", method = RequestMethod.POST)
-    public ResponseEntity<?> saveCustomer(@RequestBody Customer customer) {
+    public ResponseEntity<?> saveCustomer(@RequestBody Customer customer, HttpServletRequest request) {
         try {
-            customerService.saveCustomer(customer);
+            HttpSession session = request.getSession();
+            String loginName = (String) session.getAttribute("username");
+            customerService.saveCustomer(customer, loginName);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -109,8 +111,9 @@ public class CustomerRestController {
     public ResponseEntity<?> getCustomer(HttpServletRequest request, @PathVariable("uuid")Long uuid){
         HttpSession session = request.getSession();
         String entryType = (String) session.getAttribute("entryType");
+        String loginName = (String) session.getAttribute("username");
         String terminalType = TerminalTypeMapping.getTerminalType(request);
-        return new ResponseEntity<Object>(customerService.getCustomerWithKeywordCount(terminalType, entryType, uuid), HttpStatus.OK);
+        return new ResponseEntity<Object>(customerService.getCustomerWithKeywordCount(terminalType, entryType, uuid, loginName), HttpStatus.OK);
     }
 
     @RequiresPermissions("/internal/customer/delCustomer")

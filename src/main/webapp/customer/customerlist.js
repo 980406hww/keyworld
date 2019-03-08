@@ -633,7 +633,7 @@ function showCustomerDialog(uuid, loginName) {
     $("#customerDialog").dialog({
         resizable: false,
         width: 280,
-        height: 280,
+        height: 380,
         modal: true,
         buttons: [{
             text: '保存',
@@ -865,6 +865,7 @@ function initCustomerDialog(customer) {
     customerForm.find("#telphone").val(customer.telphone);
     customerForm.find("#type").val(customer.type);
     customerForm.find("#status").val(customer.status);
+    customerForm.find("#saleRemark").val(customer.saleRemark);
     customerForm.find("#remark").val(customer.remark);
     customerForm.find("#entryTypeHidden").val(customer.entryType);
 }
@@ -881,6 +882,7 @@ function resetPageNumber() {
     var type = searchCustomerFormObj.find("#type").val();
     var qq = searchCustomerFormObj.find("#qq").val();
     var telphone = searchCustomerFormObj.find("#telphone").val();
+    var saleRemark = searchCustomerFormObj.find("#saleRemark").val();
     var remark = searchCustomerFormObj.find("#remark").val();
     if(contactPerson != "") {
         searchCustomerFormObj.find("#contactPerson").val($.trim(contactPerson));
@@ -893,6 +895,9 @@ function resetPageNumber() {
     }
     if(telphone != "") {
         searchCustomerFormObj.find("#telphone").val($.trim(telphone));
+    }
+    if(saleRemark != "") {
+        searchCustomerFormObj.find("#saleRemark").val($.trim(saleRemark));
     }
     if(remark != "") {
         searchCustomerFormObj.find("#remark").val($.trim(remark));
