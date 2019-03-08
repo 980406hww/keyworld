@@ -67,11 +67,51 @@ td .tree-title {
 	height: 28px;
 	line-height: 28px;
 }
-#userMessageStatus thead th {
-    background-color: dimgrey !important;
+#userMessageStatus ul {
+    display: block;
+    list-style: none;
+    padding: 0;
+    margin-bottom: -1px;
+    border-left: 1px solid #e6e6e6;
+    border-right: 1px solid #e6e6e6;
+    background-color: #f6f6f6;
 }
-#userMessageStatus thead th.statusAlive {
-    background-color: #0c7df5 !important;
+#userMessageStatus ul:before {
+    content: " ";
+    display: table;
+}
+#userMessageStatus ul:after {
+    clear: both;
+}
+#userMessageStatus li {
+    float: left;
+    height: 30px;
+    line-height: 30px;
+    display: list-item;
+    text-align: -webkit-match-parent;
+}
+#userMessageStatus li.active {
+    border-left: 1px solid #e6e6e6;
+    border-right: 1px solid #e6e6e6;
+    border-bottom: 2px solid #0c7df5;
+    box-sizing: border-box;
+    background-color: #fff;
+}
+#userMessageStatus li.active a {
+    color: #0c7df5;
+}
+#userMessageStatus li a:hover {
+    color: #00a0e9;
+}
+#userMessageStatus li:after {
+    clear: both;
+}
+#userMessageStatus li a {
+    display: inline-block;
+    text-decoration: none;
+    padding: 0 80px;
+    color: #555;
+    background-color: transparent;
 }
 .ui-multiselect{
     line-height: 20px;

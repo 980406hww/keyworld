@@ -63,7 +63,7 @@
 
 <%--留言列表Dialog--%>
 <div id="showUserMessageListDialog" class="easyui-dialog" style="display: none">
-	<form id="showUserMessageListForm">
+	<form id="showUserMessageListForm" style="width: 388px;">
 		<table id="userMessageListConditionTable" cellpadding="10" style="font-size: 12px; background-color: white;border-collapse: collapse; width: 100%;">
 			<tr>
 				<td>
@@ -87,17 +87,13 @@
                 </td>
 			</tr>
 		</table>
-		<table id="userMessageStatus">
+		<div id="userMessageStatus">
 			<input type="hidden" name="messageStatus" value="1">
-			<thead style="align-items: center;">
-				<th style="width: 197px;" messageStatus="接收" onclick="changeUserMessageStatus(1, this)">
-					<a href="javascript:void(0);" class="btn btn-primary btn-block btn-flat" style="text-decoration: none; font-size: 18px; color: white; clear: both;">接收</a>
-				</th>
-				<th style="width: 197px;" messageStatus="发送" onclick="changeUserMessageStatus(2, this)">
-					<a href="javascript:void(0);" class="btn btn-primary btn-block btn-flat" style="text-decoration: none; font-size: 18px; color: white; clear: both;">发送</a>
-				</th>
-			</thead>
-		</table>
+			<ul>
+				<li class="active" messageStatus="接收" onclick="changeUserMessageStatus(1, this)"><a href="javascript:void(0);" style="font-size: 16px;">接收</a></li>
+				<li messageStatus="发送" onclick="changeUserMessageStatus(2, this)"><a href="javascript:void(0);" style="font-size: 16px;">发送</a></li>
+			</ul>
+		</div>
 		<table id="userMessageListTable" cellpadding="10" style="font-size: 12px; background-color: white;border-collapse: collapse; width: 100%;">
 			<thead>
                 <tr>
@@ -252,13 +248,13 @@
 
     function OpenMessageList(start) {
         var showUserMessageListDialog = $("#showUserMessageListDialog");
-        $("#userMessageStatus").find("thead th:first-child").addClass("statusAlive");
-        $("#userMessageStatus").find("thead th:last-child").removeClass("statusAlive");
+        $("#userMessageStatus").find("ul li:first-child").addClass("active");
+        $("#userMessageStatus").find("ul li:last-child").removeClass("active");
         getUserMessage(1, start)
         showUserMessageListDialog.show();
         showUserMessageListDialog.dialog({
 			resizable: false,
-			height: 318,
+			height: 320,
 			width: 394,
 			title: '留言列表',
 			modal: false,
@@ -453,7 +449,7 @@
 
     function changeUserMessageStatus(status, self) {
         var userMessageStatus = $("#userMessageStatus");
-        var color = $(self).css("background-color");
+        var color = $(self).find("a").css("color");
         if (color == "rgb(12, 125, 245)"){
             return false;
         }
@@ -461,14 +457,14 @@
         var message = $(self).attr("messageStatus");
         switch (message) {
             case "发送":
-                $(self).parent().find("th:last-child").addClass("statusAlive");
-                $(self).parent().find("th:first-child").removeClass("statusAlive");
+                $(self).parent().find("li:last-child").addClass("active");
+                $(self).parent().find("li:first-child").removeClass("active");
                 $("#userMessageListTable td.user-message-targetName span").text("接收人");
                 $("#showUserMessageListForm").find("#current-page-number label").text(1);
                 break;
             case "接收":
-                $(self).parent().find("th:first-child").addClass("statusAlive");
-                $(self).parent().find("th:last-child").removeClass("statusAlive");
+                $(self).parent().find("li:first-child").addClass("active");
+                $(self).parent().find("li:last-child").removeClass("active");
                 $("#userMessageListTable td.user-message-targetName span").text("发送人");
                 $("#showUserMessageListForm").find("#current-page-number label").text(1);
                 break;
