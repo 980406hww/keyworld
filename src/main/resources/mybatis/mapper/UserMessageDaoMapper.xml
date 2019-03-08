@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.UserMessageDao">
+
+    <select id="getUserMessageLists" resultType="com.keymanager.monitoring.entity.UserMessage">
+        SELECT
+            fUuid AS 'uuid',
+            <if test="userMessageCriteria.messageStatus == 1">
+                fSenderUserName AS 'senderUserName',
+            </if>
+            <if test="userMessageCriteria.messageStatus == 2">
+                fReceiverUserName AS 'receiverUserName',
+            </if>
+            fStatus AS 'status',
+            fContent AS 'content'
+        FROM
+            t_user_message_list
+        WHERE 1 = 1
+            <if test="userMessageCriteria.status.size() > 0">
+                fStatus IN
+                <foreach collection="userMessageCriteria.status" item="status" index="index" open="(" close=")" separator=",">
+                    #{status}
+                </foreach>
+            </if>
+            AND (fStatus != 2 || (fStatus = 2 &amp;&amp; fUpdateTime &gt;= DATE_SUB(NOW(), INTERVAL 1 DAY)))
+            <if test="userMessageCriteria.messageStatus == 1">
+                <choose>
+                    <when test="userMessageCriteria.userName != null">
+                        AND fReceiverUserName = #{userMessageCriteria.userName}
+                    </when>
+                </choose>
+                <if test="userMessageCriteria.targetUserName.size() > 0">
+                    AND fSenderUserName IN
+                    <foreach collection="userMessageCriteria.targetUserName" item="targetUserName" index="index" open="(" close=")" separator=",">
+                        #{targetUserName}
+                    </foreach>
+                </if>
+            </if>
+            <if test="userMessageCriteria.messageStatus == 2">
+                <choose>
+                    <when test="userMessageCriteria.userName != null">
+                        AND fSenderUserName = #{userMessageCriteria.userName}
+                    </when>
+                </choose>
+                <if test="userMessageCriteria.targetUserName.size() > 0">
+                    AND fReceiverUserName IN
+                    <foreach collection="userMessageCriteria.targetUserName" item="targetUserName" index="index" open="(" close=")" separator=",">
+                        #{targetUserName}
+                    </foreach>
+                </if>
+            </if>
+        ORDER BY fUpdateTime DESC
+    </select>
+
+    <select id="getUserMessageByUuid" resultType="com.keymanager.monitoring.entity.UserMessage">
+        SELECT
+            fSenderUserName AS 'senderUserName',
+            fReceiverUserName AS 'receiverUserName',
+            fStatus AS 'status',
+            fContent AS 'content'
+        FROM
+            t_user_message_list
+        WHERE
+            fUuid = #{uuid}
+    </select>
+
+    <insert id="saveUserMessages">
+        INSERT INTO
+            t_user_message_list
+            (fSenderUserName, fReceiverUserName, fStatus, fContent, fUpdateTime)
+        VALUES
+        <foreach collection="userMessageCriteria.targetUserName" item="targetUserName" index="index" separator=",">
+            (#{userName}, #{targetUserName}, #{userMessageCriteria.status[0]}, #{userMessageCriteria.content}, #{now})
+        </foreach>
+    </insert>
+
+    <update id="updateUserMessages">
+        UPDATE
+            t_user_message_list
+        SET
+            <if test="userMessageCriteria.status != null">
+                fStatus = #{userMessageCriteria.status[0]},
+            </if>
+            <if test="userMessageCriteria.content != null">
+                fContent = #{userMessageCriteria.content},
+            </if>
+            fUpdateTime = #{now}
+        WHERE
+            fUuid = #{userMessageCriteria.uuid}
+    </update>
+
+    <select id="checkMessageInboxCount" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT
+            COUNT(*)
+        FROM
+            t_user_message_list
+        <where>
+            fStatus IN (0, 1)
+            <if test="userName != null">
+                AND fReceiverUserName = #{userName}
+            </if>
+        </where>
+    </select>
+</mapper>

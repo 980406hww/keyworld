@@ -1,23 +1,18 @@
-package com.keymanager.monitoring.criteria;
+package com.keymanager.monitoring.vo;
+
+import com.keymanager.monitoring.entity.UserInfo;
+import com.keymanager.monitoring.entity.UserMessage;
 
 import java.util.List;
 
-public class UserMessageListCriteria {
-    private Integer uuid;
+public class UserMessageVO {
     private Integer messageStatus;
-    private String userName;
     private List<Integer> status;
     private List<String> targetUserName;
     private Integer pageNumber;
-    private String content;
-
-    public Integer getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(Integer uuid) {
-        this.uuid = uuid;
-    }
+    private Integer pageTotalNumber;
+    private List<UserMessage> userMessages;
+    private List<UserInfo> userInfoList;
 
     public Integer getMessageStatus() {
         return messageStatus;
@@ -25,14 +20,6 @@ public class UserMessageListCriteria {
 
     public void setMessageStatus(Integer messageStatus) {
         this.messageStatus = messageStatus;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
     }
 
     public List<Integer> getStatus() {
@@ -59,11 +46,27 @@ public class UserMessageListCriteria {
         this.pageNumber = pageNumber;
     }
 
-    public String getContent() {
-        return content;
+    public Integer getPageTotalNumber() {
+        return pageTotalNumber;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setPageTotalNumber(Integer pageTotalNumber) {
+        this.pageTotalNumber = pageTotalNumber;
+    }
+
+    public List<UserMessage> getUserMessages () {
+        return userMessages;
+    }
+
+    public void setUserMessages (List<UserMessage> userMessages) {
+        this.userMessages = userMessages;
+    }
+
+    public List<UserInfo> getUserInfoList() {
+        return userInfoList;
+    }
+
+    public void setUserInfoList(List<UserInfo> userInfoList) {
+        this.userInfoList = userInfoList;
     }
 }

@@ -1,12 +1,12 @@
 package com.keymanager.monitoring.controller.rest.internal;
 
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
-import com.keymanager.monitoring.criteria.UserMessageListCriteria;
+import com.keymanager.monitoring.criteria.UserMessageCriteria;
 import com.keymanager.monitoring.entity.UserInfo;
-import com.keymanager.monitoring.entity.UserMessageList;
+import com.keymanager.monitoring.entity.UserMessage;
 import com.keymanager.monitoring.service.IUserInfoService;
-import com.keymanager.monitoring.service.UserMessageListService;
-import com.keymanager.monitoring.vo.UserMessageListVO;
+import com.keymanager.monitoring.service.UserMessageService;
+import com.keymanager.monitoring.vo.UserMessageVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,27 +24,27 @@ import java.util.Set;
  **/
 @RestController
 @RequestMapping(value = "/internal/usermessage")
-public class UserMessageListRestController extends SpringMVCBaseController {
+public class UserMessageRestController extends SpringMVCBaseController {
 
-    private static Logger logger = LoggerFactory.getLogger(UserMessageListRestController.class);
+    private static Logger logger = LoggerFactory.getLogger(UserMessageRestController.class);
 
     @Autowired
-    private UserMessageListService userMessageListService;
+    private UserMessageService userMessageService;
 
     @Autowired
     private IUserInfoService userInfoService;
 
     @RequestMapping(value = "/getUserMessageList", method = RequestMethod.POST)
-    public ResponseEntity<?> getUserMessageList(@RequestBody UserMessageListCriteria userMessageListCriteria, HttpServletRequest request) {
+    public ResponseEntity<?> getUserMessageList(@RequestBody UserMessageCriteria userMessageCriteria, HttpServletRequest request) {
         try {
             Set<String> roles = getCurrentUser().getRoles();
             if (!roles.contains("DepartmentManager")){
-                userMessageListCriteria.setUserName((String) request.getSession().getAttribute("username"));
+                userMessageCriteria.setUserName((String) request.getSession().getAttribute("username"));
             }
-            UserMessageListVO userMessageListVo = userMessageListService.getUserMessageList(userMessageListCriteria);
+            UserMessageVO userMessageVo = userMessageService.getUserMessageList(userMessageCriteria);
             List<UserInfo> userInfoList = userInfoService.findActiveUsers();
-            userMessageListVo.setUserInfoList(userInfoList);
-            return new ResponseEntity<Object>(userMessageListVo, HttpStatus.OK);
+            userMessageVo.setUserInfoList(userInfoList);
+            return new ResponseEntity<Object>(userMessageVo, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
@@ -54,8 +54,8 @@ public class UserMessageListRestController extends SpringMVCBaseController {
     @RequestMapping(value = "/getUserMessage/{uuid}", method = RequestMethod.POST)
     public ResponseEntity<?> getUserMessage(@PathVariable Integer uuid) {
         try {
-            UserMessageList userMessageList = userMessageListService.getUserMessageByUuid(uuid);
-            return new ResponseEntity<Object>(userMessageList, HttpStatus.OK);
+            UserMessage userMessage = userMessageService.getUserMessageByUuid(uuid);
+            return new ResponseEntity<Object>(userMessage, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
@@ -63,10 +63,10 @@ public class UserMessageListRestController extends SpringMVCBaseController {
     }
 
     @RequestMapping(value = "/saveUserMessages", method = RequestMethod.POST)
-    public ResponseEntity<?> saveUserMessages(@RequestBody UserMessageListCriteria userMessageListCriteria, HttpServletRequest request) {
+    public ResponseEntity<?> saveUserMessages(@RequestBody UserMessageCriteria userMessageCriteria, HttpServletRequest request) {
         try {
             String userName = (String) request.getSession().getAttribute("username");
-            userMessageListService.saveUserMessages(userMessageListCriteria, userName);
+            userMessageService.saveUserMessages(userMessageCriteria, userName);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -82,7 +82,7 @@ public class UserMessageListRestController extends SpringMVCBaseController {
             if (!roles.contains("DepartmentManager")){
                 userName = (String) request.getSession().getAttribute("username");
             }
-            Integer messageInboxCount = userMessageListService.checkMessageInboxCount(userName);
+            Integer messageInboxCount = userMessageService.checkMessageInboxCount(userName);
             return new ResponseEntity<Object>(messageInboxCount, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());

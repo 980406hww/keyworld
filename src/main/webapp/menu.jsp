@@ -381,7 +381,7 @@
                 $("#showUserMessageListForm").find("input[name='messageStatus']").val(data.messageStatus);
                 $("#showUserMessageListForm").find("#current-page-number label").text(data.pageNumber);
                 $("#showUserMessageListForm").find("#total-page-number label").text(data.pageTotalNumber);
-                $.each(data.userMessageLists, function (idx, val) {
+                $.each(data.userMessages, function (idx, val) {
                     var userName = '';
                     var status = '';
                     if (data.messageStatus == "1") {
