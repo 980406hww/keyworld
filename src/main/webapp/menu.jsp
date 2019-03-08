@@ -366,7 +366,7 @@
         postData.targetUserNames = targetUserNames;
         postData.pageNumber = pageNumber;
         $.ajax({
-			url: "/internal/usermessage/getUserMessageList",
+			url: "/internal/usermessage/getUserMessages",
 			type: "POST",
 			data: JSON.stringify(postData),
 			headers: {

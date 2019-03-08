@@ -353,7 +353,7 @@
 			<td width=80>
 				<c:choose>
 					<c:when test="${null != clientStatus.host and '' != clientStatus.host}">
-						<shiro:hasPermission name="/internal/clientstatus/saveClientStatus">
+						<shiro:hasPermission name="/internal/clientstatus/downloadVNCFile">
 							<a href="javascript:connectVNC('${clientStatus.host}', '${clientStatus.port}', '${clientStatus.userName}', '${clientStatus.password}')">VNC</a>
 						</shiro:hasPermission>
 					</c:when>

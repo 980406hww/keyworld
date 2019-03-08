@@ -34,14 +34,11 @@ public class UserMessageRestController extends SpringMVCBaseController {
     @Autowired
     private IUserInfoService userInfoService;
 
-    @RequestMapping(value = "/getUserMessageList", method = RequestMethod.POST)
-    public ResponseEntity<?> getUserMessageList(@RequestBody UserMessageCriteria userMessageCriteria, HttpServletRequest request) {
+    @RequestMapping(value = "/getUserMessages", method = RequestMethod.POST)
+    public ResponseEntity<?> getUserMessages(@RequestBody UserMessageCriteria userMessageCriteria, HttpServletRequest request) {
         try {
-            Set<String> roles = getCurrentUser().getRoles();
-            if (!roles.contains("DepartmentManager")){
-                userMessageCriteria.setUserName((String) request.getSession().getAttribute("username"));
-            }
-            UserMessageVO userMessageVo = userMessageService.getUserMessageList(userMessageCriteria);
+            userMessageCriteria.setUserName((String) request.getSession().getAttribute("username"));
+            UserMessageVO userMessageVo = userMessageService.getUserMessages(userMessageCriteria);
             List<UserInfo> userInfos = userInfoService.findActiveUsers();
             userMessageVo.setUserInfos(userInfos);
             return new ResponseEntity<Object>(userMessageVo, HttpStatus.OK);
@@ -77,11 +74,7 @@ public class UserMessageRestController extends SpringMVCBaseController {
     @RequestMapping(value = "/checkMessageInbox", method = RequestMethod.POST)
     public ResponseEntity<?> checkMessageInbox(HttpServletRequest request) {
         try {
-            String userName = null;
-            Set<String> roles = getCurrentUser().getRoles();
-            if (!roles.contains("DepartmentManager")){
-                userName = (String) request.getSession().getAttribute("username");
-            }
+            String userName = (String) request.getSession().getAttribute("username");
             Integer messageInboxCount = userMessageService.checkMessageInboxCount(userName);
             return new ResponseEntity<Object>(messageInboxCount, HttpStatus.OK);
         } catch (Exception e) {

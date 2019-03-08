@@ -85,7 +85,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		UserInfo user = userInfoService.getUserInfo(loginName);
 		String entryType = (String) session.getAttribute("entryType");
 		String terminalType = TerminalTypeMapping.getTerminalType(request);
-		Customer customer = customerService.getCustomerWithKeywordCount(terminalType, entryType, customerKeywordCriteria.getCustomerUuid());
+		Customer customer = customerService.getCustomerWithKeywordCount(terminalType, entryType, customerKeywordCriteria.getCustomerUuid(), loginName);
 		String orderElement = request.getParameter("orderingElement");
 		initOrderElemnet(orderElement, customerKeywordCriteria);
 		customerKeywordCriteria.setEntryType(entryType);

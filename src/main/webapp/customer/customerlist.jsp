@@ -109,6 +109,7 @@
                 <td align="center" width=120>关键字<br>启停间隔天数</td>
             </c:if>
             <td align="center" width=60>QQ</td>
+            <td align="center" width=140>销售备注</td>
             <td align="center" width=140>备注</td>
             <td align="center" width=40>客户状态</td>
             <td align="center" width=50>创建时间</td>
@@ -174,6 +175,7 @@
                     </td>
                 </c:if>
                 <td width=60>${customer.qq}</td>
+                <td width=140>${customer.saleRemark}</td>
                 <td width=140>${customer.remark}</td>
                 <td width=40 style="text-align: center">
                     <c:choose>
@@ -370,6 +372,11 @@
                         <option value="2">暂停</option>
                     </select>
                 </td>
+            </tr>
+            <tr>
+                <td align="right">销售备注:</td>
+                <td><textarea name="saleRemark" id="saleRemark" value="" placeholder="销售人员自己用的备注!"
+                              style="width:200px;height:100px;resize: none"></textarea></td>
             </tr>
             <tr>
                 <td align="right">备注:</td>

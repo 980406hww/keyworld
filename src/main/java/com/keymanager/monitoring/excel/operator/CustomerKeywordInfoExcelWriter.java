@@ -58,7 +58,7 @@ public class CustomerKeywordInfoExcelWriter {
 		writer.addLabelCell(CustomerKeywordInfoDefinition.URL.getColumnIndex(), rowIndex, view.getUrl());
 		writer.addLabelCell(CustomerKeywordInfoDefinition.OriginalUrl.getColumnIndex(), rowIndex, view.getOriginalUrl());
 		writer.addLabelCell(CustomerKeywordInfoDefinition.Title.getColumnIndex(), rowIndex, view.getTitle());
-		writer.addLabelCell(CustomerKeywordInfoDefinition.BearPawNumber.getColumnIndex(), rowIndex, view.getTitle());
+		writer.addLabelCell(CustomerKeywordInfoDefinition.BearPawNumber.getColumnIndex(), rowIndex, view.getBearPawNumber());
 		writer.addLabelCell(CustomerKeywordInfoDefinition.OriginalPosition.getColumnIndex(), rowIndex, view.getInitialPosition()==null?0:view.getInitialPosition());
 		writer.addLabelCell(CustomerKeywordInfoDefinition.CurrentPosition.getColumnIndex(), rowIndex, view.getCurrentPosition()==null?0:view.getCurrentPosition());
 		writer.addLabelCell(CustomerKeywordInfoDefinition.PlannedOptimizeCount.getColumnIndex(), rowIndex, view.getOptimizePlanCount());
