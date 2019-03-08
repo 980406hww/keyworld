@@ -125,17 +125,17 @@ td .tree-title {
     z-index: 9999 !important;
 }
 .ui-multiselect-menu {
-    position: relative !important;
-    top: 16px !important;
+    position: absolute !important;
+    top: 148px !important;
     left: 789px !important;
 }
 .ui-multiselect-menu:last-child {
-    position: relative !important;
-    top: 74px !important;
-    left: 904px !important;
+    position: absolute !important;
+    top: 208px !important;
+    left: 902px !important;
 }
 .ui-multiselect-menu:nth-last-child(2) {
-    position: relative !important;
-    top: 16px !important;
+    position: absolute !important;
+    top: 148px !important;
     left: 922px !important;
 }

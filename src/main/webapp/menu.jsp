@@ -80,7 +80,7 @@
 					</select>
 				</td>
 				<td>
-					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="searchUserMessageList()" value=" 查询 " >
+					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="searchUserMessageList(0, 1)" value=" 查询 " >
 				</td>
                 <td style="width: 40px;">
                     <span class="fi-comment" style="font-size: 12px;color: green;">&nbsp;</span><a href="javascript:void(0)" onclick="openMessageBox('new')" style="text-decoration: none;font-size: 12px; color: black">留言</a>
@@ -343,7 +343,7 @@
 		showUserMessageDialog.window("resize", {top: $(document).scrollTop() + 150 , left: 852});
     }
 
-    function searchUserMessageList(start) {
+    function searchUserMessageList(start, btn) {
         $("#userMessageListTable tbody").empty();
         var showUserMessageListForm = $("#showUserMessageListForm");
         var messageStatus = $("#userMessageStatus").find("input[name='messageStatus']").val();
@@ -357,10 +357,13 @@
                 return this.value;
             }).get();
 		}
-        var pageNumber = showUserMessageListForm.find("#current-page-number label").text();
-        if (pageNumber == "" || pageNumber == 0 || ((pageNumber == "" || pageNumber == 0) && targetUserName.length > 0)){
-            pageNumber = 1;
-        }
+        var pageNumber = 1;
+        if (!btn) {
+            pageNumber = showUserMessageListForm.find("#current-page-number label").text();
+            if (pageNumber == "" || pageNumber == 0 || ((pageNumber == "" || pageNumber == 0) && targetUserName.length > 0)){
+                pageNumber = 1;
+            }
+		}
         var postData = {};
         postData.messageStatus = messageStatus;
         postData.status = status;
@@ -378,6 +381,9 @@
                 if (data.page.pages == 0) {
                     data.page.current = 0;
                 }
+                if (data.page.current > data.page.pages) {
+                    data.page.current = data.page.pages;
+				}
                 $("#showUserMessageListForm").find("input[name='messageStatus']").val(data.messageStatus);
                 $("#showUserMessageListForm").find("#current-page-number label").text(data.page.current);
                 $("#showUserMessageListForm").find("#total-page-number label").text(data.page.pages);
@@ -476,6 +482,10 @@
             var targetUserName = $("#showUserMessageForm").find("#user_select").multiselect("getChecked").map(function () {
                 return this.value;
             }).get();
+            if (targetUserName.length < 1) {
+                alert("请选择目标人");
+                return;
+			}
             postData.targetUserName = targetUserName;
         }
         if (status == "update") {
@@ -489,6 +499,10 @@
         } else {
             messageStatus = $("#showUserMessageForm").find("#messageStatusSelect").val();
             var content = $("#showUserMessageForm").find("textarea").val();
+            if (content == "") {
+                alert("内容不能为空");
+                return;
+            }
             content = content.replace(/\n/g, " ");
             postData.content = content;
         }
@@ -532,9 +546,7 @@
     function updateUserMessage(tr) {
         var uuid = $(tr).attr("messageuuid");
         $("#showUserMessageForm").find("input[name='messageUuid']").val(uuid);
-            // 取消上次延时未执行的方法
 		clearTimeout(TimeFn);
-		// 执行延时
 		TimeFn = setTimeout(function () {
 			openMessageBox("update");
 		}, 300);
