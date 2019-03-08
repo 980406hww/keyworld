@@ -34,14 +34,14 @@ public class UserMessageRestController extends SpringMVCBaseController {
     @Autowired
     private IUserInfoService userInfoService;
 
-    @RequestMapping(value = "/getUserMessageList", method = RequestMethod.POST)
-    public ResponseEntity<?> getUserMessageList(@RequestBody UserMessageCriteria userMessageCriteria, HttpServletRequest request) {
+    @RequestMapping(value = "/getUserMessages", method = RequestMethod.POST)
+    public ResponseEntity<?> getUserMessages(@RequestBody UserMessageCriteria userMessageCriteria, HttpServletRequest request) {
         try {
             Set<String> roles = getCurrentUser().getRoles();
             if (!roles.contains("DepartmentManager")){
                 userMessageCriteria.setUserName((String) request.getSession().getAttribute("username"));
             }
-            UserMessageVO userMessageVo = userMessageService.getUserMessageList(userMessageCriteria);
+            UserMessageVO userMessageVo = userMessageService.getUserMessages(userMessageCriteria);
             List<UserInfo> userInfos = userInfoService.findActiveUsers();
             userMessageVo.setUserInfos(userInfos);
             return new ResponseEntity<Object>(userMessageVo, HttpStatus.OK);

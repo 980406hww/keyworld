@@ -15,7 +15,7 @@ import java.util.List;
  **/
 public interface UserMessageDao extends BaseMapper<UserMessage> {
 
-    List<UserMessage> getUserMessageLists(Page<UserMessage> page, @Param("userMessageCriteria") UserMessageCriteria userMessageCriteria);
+    List<UserMessage> getUserMessages(Page<UserMessage> page, @Param("userMessageCriteria") UserMessageCriteria userMessageCriteria);
 
     UserMessage getUserMessageByUuid(@Param("uuid")Integer uuid);
 
