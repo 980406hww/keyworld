@@ -1,13 +1,6 @@
 $(function () {
     $("#showUserMessageListDialog").dialog("close");
     $("#showUserMessageDialog").dialog("close");
-    $("#message_status_select").multiselect({
-        header: false,
-        noneSelectedText: "请选择",
-        minWidth: 100,
-        height: 100,
-        selectedList: 2
-    });
     checkMessageInbox();
 });
 function doOver(obj) {
@@ -32,7 +25,15 @@ function checkMessageInbox() {
             "Content-Type": 'application/json'
         },
         success: function (result) {
+            var bgColor = 1;
+            if (result == 0) {
+                bgColor = 0;
+            }
             $("#userMessageText").text(text + "(" + result + ")");
+            if (bgColor) {
+                var userMessageText = document.getElementById("userMessageText");
+                userMessageText.style.backgroundColor = "red";
+            }
         },
         error: function () {
             $().toastmessage("showErrorToast", "获取信息量失败");

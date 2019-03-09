@@ -69,9 +69,6 @@
 				<td>
 					<span style="font-size: 12px;">状态: </span>
                     <select id="message_status_select" multiple="multiple" size="5">
-                        <option value="0" selected>未处理</option>
-                        <option value="1" selected>处理中</option>
-                        <option value="2">处理完毕</option>
                     </select>
 				</td>
 				<td>
@@ -339,6 +336,7 @@
 		showUserMessageDialog.window("resize", {top: $(document).scrollTop() + 150 , left: 801});
     }
 
+    var messageStatusSelect = [{"statusName":"未处理"}, {"statusName":"处理中"}, {"statusName":"处理完毕"}];
     function searchUserMessageList(start, btn) {
         $("#userMessageListTable tbody").empty();
         var showUserMessageListForm = $("#showUserMessageListForm");
@@ -414,11 +412,25 @@
                         "</td>" +
                         "</tr>")
                 });
+                $('#message_status_select').empty();
                 $("#user_list_select").empty();
                 $("#user_select").empty();
+                $.each(messageStatusSelect, function(idx, val){
+                    $('#message_status_select').append("<option value='"+ idx +"'>"+ val.statusName +"</option>");
+				});
                 $.each(data.userInfos, function (idx, val) {
-                    $("#user_list_select").append("<option value='"+ val.loginName +"'>"+ val.userName +"</option>");
-                    $("#user_select").append("<option value='"+ val.loginName +"'>"+ val.userName +"</option>");
+                    if (val.userName != "外部账号") {
+                        $("#user_list_select").append("<option value='"+ val.loginName +"'>"+ val.userName +"</option>");
+                        $("#user_select").append("<option value='"+ val.loginName +"'>"+ val.userName +"</option>");
+                    }
+                });
+                $("#message_status_select").multiselect({
+                    header: false,
+                    noneSelectedText: "请选择",
+                    minWidth: 100,
+                    height: 100,
+                    selectedText: "# 项",
+                    selectedList: 2
                 });
                 $("#user_list_select").multiselect({
                     header: true,
@@ -440,6 +452,9 @@
                     height: 100,
                     selectedList: 3
                 });
+                $("#ui-multiselect-0-message_status_select-option-0").parent().parent().parent().parent().addClass("ui-multiselect-menu1");
+                $("#ui-multiselect-1-user_list_select-option-0").parent().parent().parent().parent().addClass("ui-multiselect-menu2");
+                $("#ui-multiselect-2-user_select-option-0").parent().parent().parent().parent().addClass("ui-multiselect-menu3");
             },
 			error: function () {
 				$().toastmessage("showErrorToast", "查询失败！");
@@ -514,9 +529,9 @@
             data: JSON.stringify(postData),
             success: function(data) {
                 if (data) {
+                    searchUserMessageList();
                     $().toastmessage("showSuccessToast", "保存成功！");
                     $("#showUserMessageDialog").dialog("close");
-                    searchUserMessageList();
                 } else {
                     $().toastmessage("showErrorToast", "保存失败！");
                 }

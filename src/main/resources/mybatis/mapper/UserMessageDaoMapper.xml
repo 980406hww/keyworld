@@ -4,33 +4,41 @@
 
     <select id="getUserMessages" resultType="com.keymanager.monitoring.entity.UserMessage">
         SELECT
-            fUuid AS 'uuid',
+            um.fUuid AS 'uuid',
             <if test="userMessageCriteria.messageStatus == 1">
-                fSenderUserName AS 'senderUserName',
+                u.fUserName AS 'senderUserName',
             </if>
             <if test="userMessageCriteria.messageStatus == 2">
-                fReceiverUserName AS 'receiverUserName',
+                u.fUserName AS 'receiverUserName',
             </if>
-            fStatus AS 'status',
-            fContent AS 'content'
+            um.fStatus AS 'status',
+            um.fContent AS 'content'
         FROM
-            t_user_message
+            t_user_message um
+        LEFT JOIN t_userInfo u
+        ON
+        <if test="userMessageCriteria.messageStatus == 1">
+            u.fLoginName = um.fSenderUserName
+        </if>
+        <if test="userMessageCriteria.messageStatus == 2">
+            u.fLoginName = um.fReceiverUserName
+        </if>
         WHERE 1 = 1
             <if test="userMessageCriteria.status.size() > 0">
-                AND fStatus IN
+                AND um.fStatus IN
                 <foreach collection="userMessageCriteria.status" item="status" index="index" open="(" close=")" separator=",">
                     #{status}
                 </foreach>
             </if>
-            AND (fStatus != 2 || (fStatus = 2 &amp;&amp; fUpdateTime &gt;= DATE_SUB(NOW(), INTERVAL 1 DAY)))
+            AND (um.fStatus != 2 || (um.fStatus = 2 &amp;&amp; um.fUpdateTime &gt;= DATE_SUB(NOW(), INTERVAL 1 DAY)))
             <if test="userMessageCriteria.messageStatus == 1">
                 <choose>
                     <when test="userMessageCriteria.userName != null">
-                        AND fReceiverUserName = #{userMessageCriteria.userName}
+                        AND um.fReceiverUserName = #{userMessageCriteria.userName}
                     </when>
                 </choose>
                 <if test="userMessageCriteria.targetUserNames.size() > 0">
-                    AND fSenderUserName IN
+                    AND um.fSenderUserName IN
                     <foreach collection="userMessageCriteria.targetUserNames" item="targetUserName" index="index" open="(" close=")" separator=",">
                         #{targetUserName}
                     </foreach>
@@ -39,17 +47,17 @@
             <if test="userMessageCriteria.messageStatus == 2">
                 <choose>
                     <when test="userMessageCriteria.userName != null">
-                        AND fSenderUserName = #{userMessageCriteria.userName}
+                        AND um.fSenderUserName = #{userMessageCriteria.userName}
                     </when>
                 </choose>
                 <if test="userMessageCriteria.targetUserNames.size() > 0">
-                    AND fReceiverUserName IN
+                    AND um.fReceiverUserName IN
                     <foreach collection="userMessageCriteria.targetUserNames" item="targetUserName" index="index" open="(" close=")" separator=",">
                         #{targetUserName}
                     </foreach>
                 </if>
             </if>
-        ORDER BY fUpdateTime DESC
+        ORDER BY um.fUpdateTime DESC
     </select>
 
     <select id="getUserMessageByUuid" resultType="com.keymanager.monitoring.entity.UserMessage">
