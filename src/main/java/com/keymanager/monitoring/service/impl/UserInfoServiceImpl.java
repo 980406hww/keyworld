@@ -8,10 +8,13 @@ import com.keymanager.monitoring.common.utils.BeanUtils;
 import com.keymanager.monitoring.common.utils.StringUtils;
 import com.keymanager.monitoring.dao.UserInfoDao;
 import com.keymanager.monitoring.dao.UserRoleDao;
+import com.keymanager.monitoring.entity.Config;
 import com.keymanager.monitoring.entity.UserInfo;
 import com.keymanager.monitoring.entity.UserRole;
+import com.keymanager.monitoring.service.ConfigService;
 import com.keymanager.monitoring.service.IUserInfoService;
 import com.keymanager.monitoring.vo.UserVO;
+import com.keymanager.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +33,8 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoDao, UserInfo> impl
     private UserInfoDao userInfoDao;
     @Autowired
     private UserRoleDao userRoleDao;
+    @Autowired
+    private ConfigService configService;
 
     @Override
     public UserInfo getUserInfo(String loginName) {
@@ -38,7 +43,8 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoDao, UserInfo> impl
 
     @Override
     public List<UserInfo> findActiveUsers() {
-        return userInfoDao.findActiveUsers();
+        Config config = configService.getConfig(Constants.CONFIG_TYPE_EXTERNALUSER, Constants.CONFIG_KEY_EXTERNALUSER);
+        return userInfoDao.findActiveUsers(config.getValue());
     }
 
     public List<UserInfo> selectByLoginName(UserVO userVo) {

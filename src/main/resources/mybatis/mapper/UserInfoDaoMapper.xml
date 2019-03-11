@@ -124,6 +124,7 @@
         FROM
         t_userinfo u
         WHERE u.fStatus = 0
+        AND u.fLoginName != #{externalLoginName};
     </select>
 
 </mapper>

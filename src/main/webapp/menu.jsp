@@ -419,10 +419,8 @@
                     $('#message_status_select').append("<option value='"+ idx +"'>"+ val.statusName +"</option>");
 				});
                 $.each(data.userInfos, function (idx, val) {
-                    if (val.userName != "外部账号") {
-                        $("#user_list_select").append("<option value='"+ val.loginName +"'>"+ val.userName +"</option>");
-                        $("#user_select").append("<option value='"+ val.loginName +"'>"+ val.userName +"</option>");
-                    }
+					$("#user_list_select").append("<option value='"+ val.loginName +"'>"+ val.userName +"</option>");
+					$("#user_select").append("<option value='"+ val.loginName +"'>"+ val.userName +"</option>");
                 });
                 $("#message_status_select").multiselect({
                     header: false,

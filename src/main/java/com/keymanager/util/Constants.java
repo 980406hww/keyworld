@@ -80,6 +80,9 @@ public class Constants {
     public final static String CONFIG_KEY_CRAWLER_HOUR = "CrawlerHour";
     public final static String CONFIG_TYPE_QZSETTING = "QZSetting";
     public final static String CONFIG_KEY_QZ_TASKNUMBER = "TaskNumber";
+    public final static String CONFIG_TYPE_EXTERNALUSER = "ExternalUser";
+    public final static String CONFIG_KEY_EXTERNALUSER = "ExternalUser";
+    public final static String CONFIG_VALUE_EXTERNALUSER = "externaluser";
 
     public final static Map<String, String> ACCOUNT_LOG_STATUS_MAP = new HashMap<String, String>();
     static {
