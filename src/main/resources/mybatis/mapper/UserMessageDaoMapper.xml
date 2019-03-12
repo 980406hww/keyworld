@@ -15,7 +15,7 @@
             um.fContent AS 'content'
         FROM
             t_user_message um
-        LEFT JOIN t_userInfo u
+        LEFT JOIN t_userinfo u
         ON
         <if test="userMessageCriteria.messageStatus == 1">
             u.fLoginName = um.fSenderUserName
