@@ -60,16 +60,20 @@
         ORDER BY um.fUpdateTime DESC
     </select>
 
-    <select id="getUserMessageByUuid" resultType="com.keymanager.monitoring.entity.UserMessage">
+    <select id="getUserMessage" resultType="com.keymanager.monitoring.entity.UserMessage">
         SELECT
-            fSenderUserName AS 'senderUserName',
-            fReceiverUserName AS 'receiverUserName',
-            fStatus AS 'status',
-            fContent AS 'content'
+            um.fUuid AS 'uuid',
+            um.fSenderUserName AS 'senderUserName',
+            um.fReceiverUserName AS 'receiverUserName',
+            um.fStatus AS 'status',
+            um.fContent AS 'content',
+            um.fUpdateTime AS 'updateTime'
         FROM
-            t_user_message
-        WHERE
-            fUuid = #{uuid}
+            t_user_message um
+        WHERE 1 = 1
+            <if test="type != null">AND um.fType = #{type}</if>
+            <if test="customerUuid != null">AND um.fCustomerUuid = #{customerUuid}</if>
+            limit 1
     </select>
 
     <insert id="saveUserMessages">

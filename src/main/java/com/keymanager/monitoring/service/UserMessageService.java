@@ -30,8 +30,8 @@ public class UserMessageService extends ServiceImpl<UserMessageDao, UserMessage>
         return userMessageVo;
     }
 
-    public UserMessage getUserMessageByUuid(Integer uuid){
-        return userMessageDao.getUserMessageByUuid(uuid);
+    public UserMessage getUserMessage(String type, long customerUuid){
+        return userMessageDao.getUserMessage(type, customerUuid);
     }
 
     public void saveUserMessages(UserMessageCriteria userMessageCriteria, String userName){

@@ -230,7 +230,12 @@
 							<span class="to-5118"><a  href="https://www.5118.com/seo/${qzSetting.domain}" target="_blank" title="查看5118,需要登录">5118</a></span>
 							<span class="tagNames" ondblclick="editTagNameStr($(this).find('label.tagNameStr')[0], true)"><label>分组标签:</label>&nbsp;&nbsp;<label class="tagNameStr">暂无</label></span>
 							<div class="handle">
-								<a class="blue" href="javascript:showKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain}','${qzSetting.pcGroup}')">指定关键字</a>
+                                <shiro:hasPermission name="/internal/qzsetting/save">
+                                    <a class="blue" href="javascript:openMessageBox('qzSetting', '${qzSetting.customerUuid}', '${qzSetting.contactPerson}')">留言</a>
+                                </shiro:hasPermission>
+                                <shiro:hasPermission name="/internal/qzsetting/save">
+                                    <a class="blue" href="javascript:showKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain}','${qzSetting.pcGroup}')">指定关键字</a>
+                                </shiro:hasPermission>
 								<shiro:hasPermission name="/internal/qzchargelog/save">
 									<a class="blue" href="javascript:showChargeDialog('${qzSetting.uuid}','${qzSetting.contactPerson}','${qzSetting.domain}',this)">收费</a>
 								</shiro:hasPermission>
@@ -1188,6 +1193,37 @@
 			<td>创建时间</td>
 		</tr>
 	</table>
+</div>
+<%--留言栏Dialog--%>
+<div id="showUserMessageDialog" class="easyui-dialog" style="display: none">
+    <form id="showUserMessageForm">
+        <table cellpadding="10" style="font-size: 12px; background-color: white; border-collapse:separate; border-spacing:0px 10px;">
+            <input type="hidden" name="messageUuid" value="">
+            <tr>
+                <td width="60px"><span style="width: 60px">写信人:</span></td>
+                <td><span style="width: 80px;" id="senderUserName">${sessionScope.get("username")}</span></td>
+                <td><span style="width: 60px">收信人:</span></td>
+                <td width="180px">
+                    <select id="user_select" multiple="multiple">
+                        <option value="duchengfu">杜成福</option>
+                        <option value="zhoukai">周凯</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td><span style="width: 40px">时&nbsp;&nbsp;间:</span></td>
+                <td width="70px"><label></label></td>
+                <td width="60px"><span style="width: 60px">客&nbsp;&nbsp;户:</span></td>
+                <td><span style="width: 200px;" id="contactPerson"></span></td>
+            </tr>
+            <tr>
+                <td width="60px"><span style="width: 60px">内&nbsp;&nbsp;容:</span></td>
+                <td colspan="3">
+                    <textarea rows="1" style="width: 320px"></textarea>
+                </td>
+            </tr>
+        </table>
+    </form>
 </div>
 <%--达标信息详情DIV--%>
 <div id="chargeRulesDiv" style="display:none;width:300px;">

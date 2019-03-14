@@ -48,10 +48,10 @@ public class UserMessageRestController extends SpringMVCBaseController {
         }
     }
 
-    @RequestMapping(value = "/getUserMessage/{uuid}", method = RequestMethod.POST)
-    public ResponseEntity<?> getUserMessage(@PathVariable Integer uuid) {
+    @RequestMapping(value = "/getUserMessage", method = RequestMethod.POST)
+    public ResponseEntity<?> getUserMessage(@RequestBody UserMessageCriteria userMessageCriteria) {
         try {
-            UserMessage userMessage = userMessageService.getUserMessageByUuid(uuid);
+            UserMessage userMessage = userMessageService.getUserMessage(userMessageCriteria.getType(), userMessageCriteria.getCustomerUuid());
             return new ResponseEntity<Object>(userMessage, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());

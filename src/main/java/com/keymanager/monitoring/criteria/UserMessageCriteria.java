@@ -7,8 +7,10 @@ public class UserMessageCriteria {
     private Integer messageStatus;
     private String userName;
     private String content;
+    private String type;
+    private long customerUuid;
     private Integer pageNumber;
-    private List<Integer> status;
+    private Integer status;
     private List<String> targetUserNames;
 
     public Integer getUuid() {
@@ -35,11 +37,11 @@ public class UserMessageCriteria {
         this.userName = userName;
     }
 
-    public List<Integer> getStatus() {
+    public Integer getStatus () {
         return status;
     }
 
-    public void setStatus(List<Integer> status) {
+    public void setStatus (Integer status) {
         this.status = status;
     }
 
@@ -65,5 +67,21 @@ public class UserMessageCriteria {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getType () {
+        return type;
+    }
+
+    public void setType (String type) {
+        this.type = type;
+    }
+
+    public long getCustomerUuid () {
+        return customerUuid;
+    }
+
+    public void setCustomerUuid (long customerUuid) {
+        this.customerUuid = customerUuid;
     }
 }

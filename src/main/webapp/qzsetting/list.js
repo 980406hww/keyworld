@@ -1661,3 +1661,109 @@ function getAvailableQZSettings() {
     $("#getAvailableQZSettings").dialog("open");
     $("#getAvailableQZSettings").window("resize",{top:$(document).scrollTop() + 100});
 }
+// 留言
+function openMessageBox(type, customerUuid, contactPerson) {
+    var showUserMessageDialog = $("#showUserMessageDialog");
+    getUserMessage(type, customerUuid, contactPerson);
+    showUserMessageDialog.show();
+    showUserMessageDialog.dialog({
+        resizable: false,
+        height: 170,
+        width: 390,
+        title: '留言框',
+        modal: false,
+        buttons: [{
+            text: '处理完毕',
+            iconCls: 'fi-save',
+            handler: function() {
+                saveUserMessage(type, customerUuid, 1);
+            }
+        }, {
+            text: '保存',
+            iconCls: "icon-ok",
+            handler: function () {
+                saveUserMessage(type, customerUuid);
+            }
+        }, {
+            text: '取消',
+            iconCls: 'icon-cancel',
+            handler: function () {
+                $("#showUserMessageDialog").dialog("close");
+                $("#showUserMessageForm")[0].reset();
+            }
+        }],
+        onClose: function() {
+            $("#showUserMessageForm")[0].reset();
+        }
+    });
+    showUserMessageDialog.dialog("open");
+    showUserMessageDialog.window("resize", {top: $(document).scrollTop() + 150 , left: 801});
+}
+function getUserMessage(type, customerUuid, contactPerson) {
+    var postData = {};
+    postData.type = type;
+    postData.type = customerUuid;
+    $.ajax({
+        url: '/internal/usermessage/getUserMessage',
+        type: 'POST',
+        data: JSON.stringify(postData),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        success: function (data) {
+            $("#user_select").multiselect({
+                header: true,
+                noneSelectedText: "请选择",
+                checkAllText: "全选",
+                uncheckAllText: "全不选",
+                selectedText: "# 人",
+                minWidth: 182,
+                height: 100,
+                selectedList: 3
+            });
+            var showUserMessageForm = $("#showUserMessageForm");
+            showUserMessageForm.find("#contactPerson").text(contactPerson);
+            var date = data.updateTime != null ? toDateFormat(data.updateTime) : toDateFormat(new Date());
+            showUserMessageForm.find("label").text(date);
+            if (data != null) {
+                showUserMessageForm.find("input[name='messageUuid']").val(data.uuid);
+                showUserMessageForm.find("#senderUserName").text(data.senderUserName);
+                showUserMessageForm.find("#user_select option").each(function () {
+                    if ($(this).val() == data.receiverUserName) {
+                        this.selected = true;
+                        $("#user_select_ms span:last-child").text($(this).text());
+                    }
+                });
+                showUserMessageForm.find("textarea").text(data.content);
+            }
+        },
+        error: function () {
+            $().toastmessage("showErrorToast", '获取失败');
+        }
+    });
+}
+function saveUserMessage(type, customerUuid, status) {
+    var showUserMessageForm = $("#showUserMessageForm");
+    var postData = {};
+    var uuid = showUserMessageForm.find("input[name='messageUuid']").val();
+    if (status) {
+        if (uuid == "") {
+            alert("新增留言，不能修改处理状态");
+            return false;
+        }
+        if(confirm("确定修改处理状态？") == false) {
+            return false;
+        }
+        postData.status = status;
+    } else {
+        if (uuid != "") {
+            postData.uuid = uuid;
+        } else {
+
+        }
+    }
+    var content = showUserMessageForm.find("textarea").text();
+    content = content.replace(/\n/g, ";");
+    postData.content = content;
+}
