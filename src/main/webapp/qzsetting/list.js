@@ -1675,13 +1675,11 @@ function openMessageBox(type, customerUuid, contactPerson) {
         modal: false,
         buttons: [{
             text: '处理完毕',
-            iconCls: 'fi-save',
             handler: function() {
                 saveUserMessage(type, customerUuid, 1);
             }
         }, {
             text: '历史留言',
-            iconCls: 'fi-info',
             handler: function () {
                 findHistoryUserMessages(type, customerUuid);
             }
