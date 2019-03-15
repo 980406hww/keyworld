@@ -5,6 +5,7 @@ import java.util.List;
 public class UserMessageCriteria {
     private Integer uuid;
     private Integer messageStatus;
+    private boolean updateStatus;
     private String userName;
     private String content;
     private String type;
@@ -27,6 +28,14 @@ public class UserMessageCriteria {
 
     public void setMessageStatus(Integer messageStatus) {
         this.messageStatus = messageStatus;
+    }
+
+    public boolean isUpdateStatus () {
+        return updateStatus;
+    }
+
+    public void setUpdateStatus (boolean updateStatus) {
+        this.updateStatus = updateStatus;
     }
 
     public String getUserName() {

@@ -231,7 +231,7 @@
 							<span class="tagNames" ondblclick="editTagNameStr($(this).find('label.tagNameStr')[0], true)"><label>分组标签:</label>&nbsp;&nbsp;<label class="tagNameStr">暂无</label></span>
 							<div class="handle">
                                 <shiro:hasPermission name="/internal/qzsetting/save">
-                                    <a class="blue" href="javascript:openMessageBox('qzSetting', '${qzSetting.customerUuid}', '${qzSetting.contactPerson}')">留言</a>
+                                    <a class="blue" href="javascript:openMessageBox('全站设置', '${qzSetting.customerUuid}', '${qzSetting.contactPerson}')">留言</a>
                                 </shiro:hasPermission>
                                 <shiro:hasPermission name="/internal/qzsetting/save">
                                     <a class="blue" href="javascript:showKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain}','${qzSetting.pcGroup}')">指定关键字</a>
@@ -1196,7 +1196,7 @@
 </div>
 <%--留言栏Dialog--%>
 <div id="showUserMessageDialog" class="easyui-dialog" style="display: none">
-    <form id="showUserMessageForm">
+    <form id="showUserMessageForm" onsubmit="return false">
         <table cellpadding="10" style="font-size: 12px; background-color: white; border-collapse:separate; border-spacing:0px 10px;">
             <input type="hidden" name="messageUuid" value="">
             <tr>
@@ -1204,10 +1204,7 @@
                 <td><span style="width: 80px;" id="senderUserName">${sessionScope.get("username")}</span></td>
                 <td><span style="width: 60px">收信人:</span></td>
                 <td width="180px">
-                    <select id="user_select" multiple="multiple">
-                        <option value="duchengfu">杜成福</option>
-                        <option value="zhoukai">周凯</option>
-                    </select>
+                    <select id="user_select" multiple="multiple"></select>
                 </td>
             </tr>
             <tr>
@@ -1216,11 +1213,13 @@
                 <td width="60px"><span style="width: 60px">客&nbsp;&nbsp;户:</span></td>
                 <td><span style="width: 200px;" id="contactPerson"></span></td>
             </tr>
+			<tr>
+				<td><span style="width: 40px">状&nbsp;&nbsp;态:</span></td>
+				<td><span style="width: 100px;" id="messageStatus"></span></td>
+			</tr>
             <tr>
                 <td width="60px"><span style="width: 60px">内&nbsp;&nbsp;容:</span></td>
-                <td colspan="3">
-                    <textarea rows="1" style="width: 320px"></textarea>
-                </td>
+                <td colspan="3"><input type="text" name="content" style="width: 320px;"></td>
             </tr>
         </table>
     </form>

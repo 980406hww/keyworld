@@ -30,16 +30,23 @@ public class UserMessageService extends ServiceImpl<UserMessageDao, UserMessage>
         return userMessageVo;
     }
 
-    public UserMessage getUserMessage(String type, long customerUuid){
-        return userMessageDao.getUserMessage(type, customerUuid);
+    public UserMessage getUserMessage(UserMessageCriteria userMessageCriteria){
+        return userMessageDao.getUserMessage(userMessageCriteria);
     }
 
-    public void saveUserMessages(UserMessageCriteria userMessageCriteria, String userName){
+    public void saveUserMessages(UserMessageCriteria userMessageCriteria){
         Date now = new Date();
-        if (userMessageCriteria.getUuid() == null){
-            userMessageDao.saveUserMessages(userMessageCriteria, userName, now);
-        }else {
-            userMessageDao.updateUserMessages(userMessageCriteria, now);
+        if (null == userMessageCriteria.getUuid()) {
+            userMessageDao.saveUserMessages(userMessageCriteria, now);
+        } else {
+            if (userMessageCriteria.isUpdateStatus()) {
+                userMessageDao.updateUserMessages(userMessageCriteria, now);
+            } else {
+                UserMessage userMessage = userMessageDao.getUserMessage(userMessageCriteria);
+                if (null == userMessage) {
+                    userMessageDao.saveUserMessages(userMessageCriteria, now);
+                }
+            }
         }
     }
 

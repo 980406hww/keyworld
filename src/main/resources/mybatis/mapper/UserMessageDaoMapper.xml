@@ -71,16 +71,27 @@
         FROM
             t_user_message um
         WHERE 1 = 1
-            <if test="type != null">AND um.fType = #{type}</if>
-            <if test="customerUuid != null">AND um.fCustomerUuid = #{customerUuid}</if>
-            limit 1
+            <if test="userMessageCriteria.userName != null">AND um.fSenderUserName = #{userMessageCriteria.userName}</if>
+            <if test="userMessageCriteria.targetUserNames != null">AND um.fReceiverUserName = #{userMessageCriteria.targetUserNames[0]}</if>
+            <if test="userMessageCriteria.type != null">AND um.fType = #{userMessageCriteria.type}</if>
+            <if test="userMessageCriteria.customerUuid != null">AND um.fCustomerUuid = #{userMessageCriteria.customerUuid}</if>
+            <choose>
+                <when test="userMessageCriteria.content != null">
+                    AND um.fContent = #{userMessageCriteria.content}
+                </when>
+                <otherwise>
+                    AND um.fStatus = 0
+                </otherwise>
+            </choose>
+        ORDER BY um.fUpdateTime DESC
+        LIMIT 1
     </select>
 
     <insert id="saveUserMessages">
-        INSERT INTO t_user_message (fSenderUserName, fReceiverUserName, fStatus, fContent, fUpdateTime)
+        INSERT INTO t_user_message (fSenderUserName, fReceiverUserName, fType, fCustomerUuid, fContent, fUpdateTime)
         VALUES
         <foreach collection="userMessageCriteria.targetUserNames" item="targetUserName" index="index" separator=",">
-            (#{userName}, #{targetUserName}, #{userMessageCriteria.status[0]}, #{userMessageCriteria.content}, #{now})
+            (#{userMessageCriteria.userName}, #{targetUserName}, #{userMessageCriteria.type}, #{userMessageCriteria.customerUuid}, #{userMessageCriteria.content}, #{now})
         </foreach>
     </insert>
 
@@ -89,7 +100,7 @@
             t_user_message
         SET
             <if test="userMessageCriteria.status != null">
-                fStatus = #{userMessageCriteria.status[0]},
+                fStatus = #{userMessageCriteria.status},
             </if>
             <if test="userMessageCriteria.content != null">
                 fContent = #{userMessageCriteria.content},

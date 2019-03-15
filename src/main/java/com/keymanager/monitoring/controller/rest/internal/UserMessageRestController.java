@@ -51,7 +51,7 @@ public class UserMessageRestController extends SpringMVCBaseController {
     @RequestMapping(value = "/getUserMessage", method = RequestMethod.POST)
     public ResponseEntity<?> getUserMessage(@RequestBody UserMessageCriteria userMessageCriteria) {
         try {
-            UserMessage userMessage = userMessageService.getUserMessage(userMessageCriteria.getType(), userMessageCriteria.getCustomerUuid());
+            UserMessage userMessage = userMessageService.getUserMessage(userMessageCriteria);
             return new ResponseEntity<Object>(userMessage, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -62,8 +62,8 @@ public class UserMessageRestController extends SpringMVCBaseController {
     @RequestMapping(value = "/saveUserMessages", method = RequestMethod.POST)
     public ResponseEntity<?> saveUserMessages(@RequestBody UserMessageCriteria userMessageCriteria, HttpServletRequest request) {
         try {
-            String userName = (String) request.getSession().getAttribute("username");
-            userMessageService.saveUserMessages(userMessageCriteria, userName);
+            userMessageCriteria.setUserName((String) request.getSession().getAttribute("username"));
+            userMessageService.saveUserMessages(userMessageCriteria);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());

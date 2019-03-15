@@ -17,9 +17,9 @@ public interface UserMessageDao extends BaseMapper<UserMessage> {
 
     List<UserMessage> getUserMessages(Page<UserMessage> page, @Param("userMessageCriteria") UserMessageCriteria userMessageCriteria);
 
-    UserMessage getUserMessage(@Param("type")String type, @Param("customerUuid")long customerUuid);
+    UserMessage getUserMessage(@Param("userMessageCriteria")UserMessageCriteria userMessageCriteria);
 
-    void saveUserMessages(@Param("userMessageCriteria") UserMessageCriteria userMessageCriteria, @Param("userName") String userName, @Param("now") Date now);
+    void saveUserMessages(@Param("userMessageCriteria") UserMessageCriteria userMessageCriteria, @Param("now") Date now);
 
     void updateUserMessages(@Param("userMessageCriteria") UserMessageCriteria userMessageCriteria, @Param("now") Date now);
 
