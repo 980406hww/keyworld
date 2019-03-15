@@ -1669,7 +1669,7 @@ function openMessageBox(type, customerUuid, contactPerson) {
     showUserMessageDialog.show();
     showUserMessageDialog.dialog({
         resizable: false,
-        height: 200,
+        height: 280,
         width: 390,
         title: '留言框',
         modal: false,
@@ -1683,7 +1683,7 @@ function openMessageBox(type, customerUuid, contactPerson) {
             text: '历史留言',
             iconCls: 'fi-info',
             handler: function () {
-                // 显示历史
+                findHistoryUserMessages(type, customerUuid);
             }
         }, {
             text: '保存',
@@ -1696,17 +1696,18 @@ function openMessageBox(type, customerUuid, contactPerson) {
             iconCls: 'icon-cancel',
             handler: function () {
                 $("#showUserMessageDialog").dialog("close");
-                $("#showUserMessageForm")[0].reset();
             }
         }],
         onClose: function() {
             $("#showUserMessageForm")[0].reset();
+            $("#userMessageListTable tr:not(:first)").remove();
         }
     });
     showUserMessageDialog.dialog("open");
     showUserMessageDialog.window("resize", {top: $(document).scrollTop() + 150 , left: 801});
 }
 function getActiveUsers(){
+    $("#user_select option").remove();
     $.ajax({
         url: '/internal/user/findActiveUsers',
         type: 'POST',
@@ -1731,6 +1732,7 @@ function getActiveUsers(){
         }
     });
 }
+
 function getUserMessage(type, customerUuid, contactPerson) {
     var postData = {};
     postData.type = type;
@@ -1754,8 +1756,10 @@ function getUserMessage(type, customerUuid, contactPerson) {
                 showUserMessageForm.find("input[name='messageUuid']").val(data.uuid);
                 showUserMessageForm.find("#senderUserName").text(data.senderUserName);
                 showUserMessageForm.find("#user_select option").each(function () {
+                    console.log($(this.val));
                     if ($(this).val() == data.receiverUserName) {
                         this.selected = true;
+                        console.log($(this).text());
                         $("#user_select_ms span:last-child").text($(this).text());
                     }
                 });
@@ -1764,6 +1768,43 @@ function getUserMessage(type, customerUuid, contactPerson) {
         },
         error: function () {
             $().toastmessage("showErrorToast", '获取用户留言失败');
+        }
+    });
+}
+
+function findHistoryUserMessages(type, customerUuid) {
+    $("#userMessageListTable tr:not(:first)").remove();
+    var postData = {};
+    postData.type = type;
+    postData.customerUuid = customerUuid;
+    $.ajax({
+        url: '/internal/usermessage/getHistoryUserMessages',
+        type: 'POST',
+        data: JSON.stringify(postData),
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        },
+        success: function (userMessages) {
+            if (userMessages != null && userMessages.length > 0) {
+                $.each(userMessages, function (idx, val) {
+                    var newTr = document.createElement("tr");
+                    var userMessageElements = [
+                        idx+1,
+                        val.content,
+                        val.status == 1 ? "处理完毕" : "未处理"
+                    ];
+                    $.each(userMessageElements, function (id, v) {
+                        var newTd = document.createElement("td");
+                        newTr.appendChild(newTd);
+                        newTd.innerHTML = v;
+                    });
+                    $("#userMessageListTable")[0].lastChild.appendChild(newTr);
+                });
+            }
+        },
+        error: function () {
+            $().toastmessage("showErrorToast", "获取历史留言失败");
         }
     });
 }
@@ -1803,7 +1844,6 @@ function saveUserMessage(type, customerUuid, status) {
         postData.type = type;
         postData.customerUuid = customerUuid;
     }
-    console.log(postData);
     $.ajax({
         url: '/internal/usermessage/saveUserMessages',
         type: 'POST',
@@ -1823,6 +1863,7 @@ function saveUserMessage(type, customerUuid, status) {
         }
     });
 }
+
 Date.prototype.format = function (format) {
     var o = {
         "M+": this.getMonth() + 1, //month

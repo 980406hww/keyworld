@@ -91,7 +91,7 @@
 				<li messageStatus="发送" onclick="changeUserMessageStatus(2, this)"><a href="javascript:void(0);" style="font-size: 16px;">发送</a></li>
 			</ul>
 		</div>
-		<table id="userMessageListTable" cellpadding="10" style="font-size: 12px; background-color: white;border-collapse: collapse; width: 100%;">
+		<%--<table id="userMessageListTable" cellpadding="10" style="font-size: 12px; background-color: white;border-collapse: collapse; width: 100%;">
 			<thead>
                 <tr>
                     <td class="user-message-content">
@@ -117,7 +117,7 @@
                     </td>
                 </tr>
             </tfoot>
-		</table>
+		</table>--%>
 	</form>
 </div>
 

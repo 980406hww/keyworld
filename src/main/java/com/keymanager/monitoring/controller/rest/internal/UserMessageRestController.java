@@ -82,4 +82,15 @@ public class UserMessageRestController extends SpringMVCBaseController {
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @RequestMapping(value = "/getHistoryUserMessages", method = RequestMethod.POST)
+    public ResponseEntity<?> getHistoryUserMessages(@RequestBody UserMessageCriteria userMessageCriteria) {
+        try {
+            List<UserMessage> userMessages = userMessageService.getHistoryUserMessages(userMessageCriteria.getCustomerUuid(), userMessageCriteria.getType());
+            return new ResponseEntity<Object>(userMessages, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        }
+    }
 }

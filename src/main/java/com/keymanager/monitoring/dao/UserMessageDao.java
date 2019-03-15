@@ -24,4 +24,6 @@ public interface UserMessageDao extends BaseMapper<UserMessage> {
     void updateUserMessages(@Param("userMessageCriteria") UserMessageCriteria userMessageCriteria, @Param("now") Date now);
 
     Integer checkMessageInboxCount(@Param("userName") String userName);
+
+    List<UserMessage> getHistoryUserMessages (@Param("customerUuid") long customerUuid, @Param("type") String type);
 }

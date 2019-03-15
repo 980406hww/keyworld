@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Author zhoukai
@@ -52,5 +53,9 @@ public class UserMessageService extends ServiceImpl<UserMessageDao, UserMessage>
 
     public Integer checkMessageInboxCount(String userName){
         return userMessageDao.checkMessageInboxCount(userName);
+    }
+
+    public List<UserMessage> getHistoryUserMessages (long customerUuid, String type) {
+        return userMessageDao.getHistoryUserMessages(customerUuid, type);
     }
 }

@@ -1222,6 +1222,19 @@
                 <td colspan="3"><input type="text" name="content" style="width: 320px;"></td>
             </tr>
         </table>
+		<table id="userMessageListTable" border="1" cellpadding="10"  style="font-size: 12px;background-color: white;border-collapse: collapse;width:100%;">
+			<tr>
+				<td class="user-message-targetName">
+					<span>序号</span>
+				</td>
+				<td class="user-message-content">
+					<span>留言内容</span>
+				</td>
+				<td class="user-message-status">
+					<span>处理状态</span>
+				</td>
+			</tr>
+		</table>
     </form>
 </div>
 <%--达标信息详情DIV--%>
