@@ -1669,10 +1669,12 @@ function openMessageBox(type, customerUuid, contactPerson) {
     showUserMessageDialog.show();
     showUserMessageDialog.dialog({
         resizable: false,
+        bgiframe: true,
+        draggable: false, // 对话框是否可被拖动
         height: 280,
         width: 390,
         title: '留言框',
-        modal: false,
+        modal: true,
         buttons: [{
             text: '处理完毕',
             handler: function() {
@@ -1723,7 +1725,7 @@ function getActiveUsers(){
                 height: 100,
                 selectedList: 3
             });
-            $("#ui-multiselect-1-user_select-option-0").parent().parent().parent().parent().addClass("ui-multiselect-menu3");
+            $("#ui-multiselect-0-user_select-option-0").parent().parent().parent().parent().addClass("ui-multiselect-menu3");
         },
         error: function () {
             $().toastmessage("showErrorToast", "获取用户列表失败");
