@@ -16,15 +16,18 @@
             SUM(ck.fOptimizedCount) AS "totalOptimizedCount",
             SUM(ck.fOptimizeRemainingCount) AS "needOptimizeCount",
             SUM(ck.fQueryCount) AS "queryCount"
-        FROM t_customer_keyword ck, t_customer c
-        <if test="customerKeywordRefreshStatInfoCriteria.categoryTag != null and customerKeywordRefreshStatInfoCriteria.categoryTag != ''">
-            JOIN t_qz_setting qs
-            ON qs.fCustomerUuid = c.fUuid
-            JOIN t_qz_category_tag qc
-            ON qs.fUuid = qc.fQZSettingUuid
+        FROM t_customer_keyword ck
+        <if test="customerKeywordRefreshStatInfoCriteria.userName!=null and customerKeywordRefreshStatInfoCriteria.userName!=''">
+            JOIN t_customer c
+            ON ck.fCustomerUuid = c.fUuid
         </if>
-        WHERE ck.fCustomerUuid = c.fUuid
-        AND ck.fStatus = 1
+        <if test="customerKeywordRefreshStatInfoCriteria.categoryTag != null and customerKeywordRefreshStatInfoCriteria.categoryTag != ''">
+            JOIN t_qz_operation_type ot
+            ON ot.fGroup = ck.fOptimizeGroupName
+            JOIN t_qz_category_tag qc
+            ON ot.fQZSettingUuid = qc.fQZSettingUuid
+        </if>
+        WHERE ck.fStatus = 1
         <if test="customerKeywordRefreshStatInfoCriteria.entryType!=null and customerKeywordRefreshStatInfoCriteria.entryType!=''">AND ck.fType = #{customerKeywordRefreshStatInfoCriteria.entryType}</if>
         <if test="customerKeywordRefreshStatInfoCriteria.terminalType!=null and customerKeywordRefreshStatInfoCriteria.terminalType!=''">AND ck.fTerminalType = #{customerKeywordRefreshStatInfoCriteria.terminalType}</if>
         <if test="customerKeywordRefreshStatInfoCriteria.groupName!=null and customerKeywordRefreshStatInfoCriteria.groupName!=''">AND ck.fOptimizeGroupName like concat('%', #{customerKeywordRefreshStatInfoCriteria.groupName}, "%")</if>
