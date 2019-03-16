@@ -1,18 +1,37 @@
 $(function () {
     $("#uploadCSVDialog").dialog("close");
     $("#showRefreshStatInfoDiv").css("margin-top",$("#topDiv").height()-5);
+    $.ajax({
+        url: "/internal/qzcategorytag/getAllCategoryTagNames",
+        type: "GET",
+        success: function (categoryTagNames) {
+            $("#categoryTag_list").find('option').remove();
+            if (categoryTagNames != null) {
+                $.each(categoryTagNames, function (idx, val) {
+                    $("#categoryTag_list").append("<option value='" + val.tagName + "'></option>")
+                });
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "获取标签信息失败！");
+        }
+    });
 });
 
 function trimSearchCondition() {
     var searchRefreshStatInfoForm = $("#searchRefreshStatInfoForm");
     var groupName = searchRefreshStatInfoForm.find("#groupName").val();
     var customerName = searchRefreshStatInfoForm.find("#customerName").val();
+    var categoryTag = searchRefreshStatInfoForm.find("#categoryTag").val();
     var dayNum = searchRefreshStatInfoForm.find("#dayNum").val();
     if(groupName != "") {
         searchRefreshStatInfoForm.find("#groupName").val($.trim(groupName));
     }
     if(customerName != "") {
         searchRefreshStatInfoForm.find("#customerName").val($.trim(customerName));
+    }
+    if(categoryTag != "") {
+        searchRefreshStatInfoForm.find("#categoryTag").val($.trim(categoryTag));
     }
     if (dayNum != ""){
         searchRefreshStatInfoForm.find("#dayNum").val(dayNum);
