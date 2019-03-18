@@ -144,17 +144,17 @@ td .tree-title {
     background-color: #eeeeee;
 }
 #userMessageListTable .user-message-content {
-    width: 280px !important;
+    width: 200px !important;
 }
 #userMessageListTable span.user-message-content {
-    max-width: 280px !important;
+    max-width: 200px !important;
     float: left !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
     white-space: nowrap !important;
 }
 #userMessageListTable .user-message-targetName {
-    width: 30px !important;
+    width: 40px !important;
 }
 #userMessageListTable .user-message-status {
     width: 80px !important;

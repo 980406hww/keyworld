@@ -134,9 +134,12 @@
 
     <select id="getHistoryUserMessages" resultType="com.keymanager.monitoring.entity.UserMessage">
         SELECT
+            u.fUserName AS 'receiverUserName',
             um.fContent AS 'content',
             um.fStatus AS 'status'
         FROM t_user_message um
+        LEFT JOIN t_userinfo u
+        ON u.fLoginName = um.fReceiverUserName
         WHERE 1 = 1
         AND (um.fSenderUserName = #{userName} OR um.fReceiverUserName = #{userName})
         AND um.fCustomerUuid = #{customerUuid}

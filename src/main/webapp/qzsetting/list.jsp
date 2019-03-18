@@ -231,11 +231,11 @@
 							<span class="tagNames" ondblclick="editTagNameStr($(this).find('label.tagNameStr')[0], true)"><label>分组标签:</label>&nbsp;&nbsp;<label class="tagNameStr">暂无</label></span>
 							<div class="handle">
                                 <shiro:hasPermission name="/internal/qzsetting/save">
-                                    <a class="blue" href="javascript:openMessageBox('全站设置', '${qzSetting.customerUuid}', '${qzSetting.contactPerson}')">留言</a>
-                                </shiro:hasPermission>
-                                <shiro:hasPermission name="/internal/qzsetting/save">
                                     <a class="blue" href="javascript:showKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain}','${qzSetting.pcGroup}')">指定关键字</a>
                                 </shiro:hasPermission>
+								<shiro:hasPermission name="/internal/qzsetting/save">
+									<a class="blue" href="javascript:openMessageBox('全站设置', '${qzSetting.customerUuid}', '${qzSetting.contactPerson}')">用户留言</a>
+								</shiro:hasPermission>
 								<shiro:hasPermission name="/internal/qzchargelog/save">
 									<a class="blue" href="javascript:showChargeDialog('${qzSetting.uuid}','${qzSetting.contactPerson}','${qzSetting.domain}',this)">收费</a>
 								</shiro:hasPermission>
@@ -505,10 +505,10 @@
 							<span class="tagNames" ondblclick="editTagNameStr($(this).find('label.tagNameStr')[0], true)"><label>分组标签:</label>&nbsp;&nbsp;<label class="tagNameStr">暂无</label></span>
 							<div class="handle">
 								<shiro:hasPermission name="/internal/qzsetting/save">
-									<a class="blue" href="javascript:openMessageBox('全站设置', '${qzSetting.customerUuid}', '${qzSetting.contactPerson}')">留言</a>
+									<a class="blue" href="javascript:showKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain}','${qzSetting.phoneGroup}')">指定关键字</a>
 								</shiro:hasPermission>
 								<shiro:hasPermission name="/internal/qzsetting/save">
-									<a class="blue" href="javascript:showKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain}','${qzSetting.phoneGroup}')">指定关键字</a>
+									<a class="blue" href="javascript:openMessageBox('全站设置', '${qzSetting.customerUuid}', '${qzSetting.contactPerson}')">用户留言</a>
 								</shiro:hasPermission>
 								<shiro:hasPermission name="/internal/qzchargelog/save">
 									<a class="blue" href="javascript:showChargeDialog('${qzSetting.uuid}','${qzSetting.contactPerson}','${qzSetting.domain}',this)">收费</a>
@@ -1236,6 +1236,9 @@
 					<span>留言内容</span>
 				</td>
 				<td class="user-message-status">
+					<span>收信人</span>
+				</td>
+				<td class="user-message-status">
 					<span>处理状态</span>
 				</td>
 			</tr>
@@ -1256,6 +1259,7 @@
 <%@ include file="/commons/loadjs.jsp" %>
 <script src="${staticPath}/js/echarts.min.js"></script>
 <script src="${staticPath }/qzsetting/list.js"></script>
+<script src="${staticPath }/static/UserMessageCommon.js"></script>
 <script language="javascript">
     var dateStr = new Date(); // 当天日期
     var m = dateStr.getMonth() + 1 < 10 ? "0" + (dateStr.getMonth() + 1) : (dateStr.getMonth() + 1);
