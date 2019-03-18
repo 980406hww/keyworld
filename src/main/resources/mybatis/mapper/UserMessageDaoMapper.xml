@@ -71,8 +71,17 @@
         FROM
             t_user_message um
         WHERE 1 = 1
-            <if test="userMessageCriteria.userName != null">AND um.fSenderUserName = #{userMessageCriteria.userName}</if>
-            <if test="userMessageCriteria.targetUserNames != null">AND um.fReceiverUserName = #{userMessageCriteria.targetUserNames[0]}</if>
+            <choose>
+                <when test="type == 1">
+                    <if test="userMessageCriteria.userName != null">
+                        AND (um.fSenderUserName = #{userMessageCriteria.userName} OR um.fReceiverUserName = #{userMessageCriteria.userName})
+                    </if>
+                </when>
+                <otherwise>
+                    <if test="userMessageCriteria.userName != null">AND um.fSenderUserName = #{userMessageCriteria.userName}</if>
+                    <if test="userMessageCriteria.targetUserNames != null">AND um.fReceiverUserName = #{userMessageCriteria.targetUserNames[0]}</if>
+                </otherwise>
+            </choose>
             <if test="userMessageCriteria.type != null">AND um.fType = #{userMessageCriteria.type}</if>
             <if test="userMessageCriteria.customerUuid != null">AND um.fCustomerUuid = #{userMessageCriteria.customerUuid}</if>
             <choose>
@@ -129,6 +138,7 @@
             um.fStatus AS 'status'
         FROM t_user_message um
         WHERE 1 = 1
+        AND (um.fSenderUserName = #{userName} OR um.fReceiverUserName = #{userName})
         AND um.fCustomerUuid = #{customerUuid}
         AND um.fType = #{type}
         ORDER BY um.fUpdateTime DESC

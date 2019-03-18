@@ -17,7 +17,7 @@ public interface UserMessageDao extends BaseMapper<UserMessage> {
 
     List<UserMessage> getUserMessages(Page<UserMessage> page, @Param("userMessageCriteria") UserMessageCriteria userMessageCriteria);
 
-    UserMessage getUserMessage(@Param("userMessageCriteria")UserMessageCriteria userMessageCriteria);
+    UserMessage getUserMessage(@Param("userMessageCriteria")UserMessageCriteria userMessageCriteria, @Param("type") boolean type);
 
     void saveUserMessages(@Param("userMessageCriteria") UserMessageCriteria userMessageCriteria, @Param("now") Date now);
 
@@ -25,5 +25,5 @@ public interface UserMessageDao extends BaseMapper<UserMessage> {
 
     Integer checkMessageInboxCount(@Param("userName") String userName);
 
-    List<UserMessage> getHistoryUserMessages (@Param("customerUuid") long customerUuid, @Param("type") String type);
+    List<UserMessage> getHistoryUserMessages (@Param("userName") String userName, @Param("customerUuid") long customerUuid, @Param("type") String type);
 }

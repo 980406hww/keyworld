@@ -49,9 +49,10 @@ public class UserMessageRestController extends SpringMVCBaseController {
     }
 
     @RequestMapping(value = "/getUserMessage", method = RequestMethod.POST)
-    public ResponseEntity<?> getUserMessage(@RequestBody UserMessageCriteria userMessageCriteria) {
+    public ResponseEntity<?> getUserMessage(@RequestBody UserMessageCriteria userMessageCriteria, HttpServletRequest request) {
         try {
-            UserMessage userMessage = userMessageService.getUserMessage(userMessageCriteria);
+            userMessageCriteria.setUserName((String) request.getSession().getAttribute("username"));
+            UserMessage userMessage = userMessageService.getUserMessage(userMessageCriteria, true);
             return new ResponseEntity<Object>(userMessage, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -84,9 +85,10 @@ public class UserMessageRestController extends SpringMVCBaseController {
     }
 
     @RequestMapping(value = "/getHistoryUserMessages", method = RequestMethod.POST)
-    public ResponseEntity<?> getHistoryUserMessages(@RequestBody UserMessageCriteria userMessageCriteria) {
+    public ResponseEntity<?> getHistoryUserMessages(@RequestBody UserMessageCriteria userMessageCriteria, HttpServletRequest request) {
         try {
-            List<UserMessage> userMessages = userMessageService.getHistoryUserMessages(userMessageCriteria.getCustomerUuid(), userMessageCriteria.getType());
+            userMessageCriteria.setUserName((String) request.getSession().getAttribute("username"));
+            List<UserMessage> userMessages = userMessageService.getHistoryUserMessages(userMessageCriteria.getUserName(), userMessageCriteria.getCustomerUuid(), userMessageCriteria.getType());
             return new ResponseEntity<Object>(userMessages, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());

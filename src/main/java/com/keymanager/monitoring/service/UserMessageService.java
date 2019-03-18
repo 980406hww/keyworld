@@ -31,8 +31,8 @@ public class UserMessageService extends ServiceImpl<UserMessageDao, UserMessage>
         return userMessageVo;
     }
 
-    public UserMessage getUserMessage(UserMessageCriteria userMessageCriteria){
-        return userMessageDao.getUserMessage(userMessageCriteria);
+    public UserMessage getUserMessage(UserMessageCriteria userMessageCriteria, boolean type){
+        return userMessageDao.getUserMessage(userMessageCriteria, type);
     }
 
     public void saveUserMessages(UserMessageCriteria userMessageCriteria){
@@ -43,7 +43,7 @@ public class UserMessageService extends ServiceImpl<UserMessageDao, UserMessage>
             if (userMessageCriteria.isUpdateStatus()) {
                 userMessageDao.updateUserMessages(userMessageCriteria, now);
             } else {
-                UserMessage userMessage = userMessageDao.getUserMessage(userMessageCriteria);
+                UserMessage userMessage = userMessageDao.getUserMessage(userMessageCriteria, false);
                 if (null == userMessage) {
                     userMessageDao.saveUserMessages(userMessageCriteria, now);
                 }
@@ -55,7 +55,7 @@ public class UserMessageService extends ServiceImpl<UserMessageDao, UserMessage>
         return userMessageDao.checkMessageInboxCount(userName);
     }
 
-    public List<UserMessage> getHistoryUserMessages (long customerUuid, String type) {
-        return userMessageDao.getHistoryUserMessages(customerUuid, type);
+    public List<UserMessage> getHistoryUserMessages (String userName, long customerUuid, String type) {
+        return userMessageDao.getHistoryUserMessages(userName, customerUuid, type);
     }
 }

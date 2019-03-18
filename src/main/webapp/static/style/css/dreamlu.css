@@ -140,6 +140,9 @@ td .tree-title {
 #userMessageListTable tbody tr:hover {
     background-color: green;
 }
+#userMessageListTable tbody tr:first-child:hover {
+    background-color: #eeeeee;
+}
 #userMessageListTable .user-message-content {
     width: 280px !important;
 }

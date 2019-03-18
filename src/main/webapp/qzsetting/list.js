@@ -1672,7 +1672,7 @@ function openMessageBox(type, customerUuid, contactPerson) {
         bgiframe: true,
         draggable: false, // 对话框是否可被拖动
         height: 280,
-        width: 390,
+        width: 405,
         title: '留言框',
         modal: true,
         buttons: [{
