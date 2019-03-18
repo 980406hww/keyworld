@@ -230,6 +230,7 @@
 							<span class="to-5118"><a  href="https://www.5118.com/seo/${qzSetting.domain}" target="_blank" title="查看5118,需要登录">5118</a></span>
 							<span class="tagNames" ondblclick="editTagNameStr($(this).find('label.tagNameStr')[0], true)"><label>分组标签:</label>&nbsp;&nbsp;<label class="tagNameStr">暂无</label></span>
 							<div class="handle">
+                                <a class="blue" href="javascript:showExcludeCustomerKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain}','${qzSetting.pcGroup}','PC')">排除关键字</a>
 								<a class="blue" href="javascript:showKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain}','${qzSetting.pcGroup}')">指定关键字</a>
 								<shiro:hasPermission name="/internal/qzchargelog/save">
 									<a class="blue" href="javascript:showChargeDialog('${qzSetting.uuid}','${qzSetting.contactPerson}','${qzSetting.domain}',this)">收费</a>
@@ -499,6 +500,7 @@
 							<span class="to-5118"><a  href="https://www.5118.com/seo/${qzSetting.domain}" target="_blank" title="查看5118,需要登录">5118</a></span>
 							<span class="tagNames" ondblclick="editTagNameStr($(this).find('label.tagNameStr')[0], true)"><label>分组标签:</label>&nbsp;&nbsp;<label class="tagNameStr">暂无</label></span>
 							<div class="handle">
+                                <a class="blue" href="javascript:showExcludeCustomerKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain}','${qzSetting.phoneGroup}','Phone')">排除关键字</a>
 								<a class="blue" href="javascript:showKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain}','${qzSetting.phoneGroup}')">指定关键字</a>
 								<shiro:hasPermission name="/internal/qzchargelog/save">
 									<a class="blue" href="javascript:showChargeDialog('${qzSetting.uuid}','${qzSetting.contactPerson}','${qzSetting.domain}',this)">收费</a>
@@ -1176,6 +1178,47 @@
 			</tr>
 		</table>
 	</form>
+</div>
+<div id="excludeCustomerKeywordDialog" class="easyui-dialog" style="display: none">
+    <form id="excludeCustomerKeywordForm">
+        <table style="font-size:12px" id="excludeCustomerKeywordTable" align="center" cellspacing="5">
+            <tr>
+                <td style="width:60px" align="right">域名</td>
+                <td>
+                    <input type="hidden" name="qzSettingUuid" id="qzSettingUuid" />
+                    <input type="hidden" name="customerUuid" id="customerUuid" />
+                    <input type="text" name="domain" id="domain" style="width:240px" readonly/>
+                </td>
+            </tr>
+			<tr>
+				<td align="right" style="margin-right:4px;">引擎</td>
+				<td>
+					<select name="searchEngine" id="searchEngine" style="width:240px">
+						<option value="百度" selected>百度</option>
+						<option value="360">360</option>
+						<option value="UC">UC</option>
+						<option value="搜狗">搜狗</option>
+					</select>
+				</td>
+			</tr>
+            <tr>
+                <td align="right" style="margin-right:4px;">终端类型</td>
+                <td>
+                    <select name="terminalType" id="terminalType" style="width:240px">
+                        <option value="PC">PC</option>
+                        <option value="Phone">Phone</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td style="width:60px" align="right">关键字</td>
+            </tr>
+            <tr>
+                <td style="width:60px" align="right"></td>
+                <td><textarea id="customerKeywordDialogContent" style="width:240px; height: 260px; resize: none"></textarea></td>
+            </tr>
+        </table>
+    </form>
 </div>
 <%--收费详情列表--%>
 <div id="chargeLogListDiv" class="easyui-dialog" style="display:none;left: 40%;">

@@ -108,10 +108,14 @@ function checkTerminalType(terminalType, isManualSwitch) {
     if (terminalType == "PC") {
         $(".mytabs .link").find("li[name='PC']").addClass("active");
         $("#chargeForm").find("#terminalType").val($.trim(terminalType));
+        $("#excludeCustomerKeywordForm").find("#terminalType").val($.trim(terminalType));
+        console.log($("#excludeCustomerKeywordForm").find("#terminalType").val());
     }
     if (terminalType == "Phone") {
         $(".mytabs .link").find("li[name='Phone']").addClass("active");
         $("#chargeForm").find("#terminalType").val($.trim(terminalType));
+        $("#excludeCustomerKeywordForm").find("#terminalType").val($.trim(terminalType));
+        console.log($("#excludeCustomerKeywordForm").find("#terminalType").val());
     }
     if (isManualSwitch) {
         trimSearchCondition('1');
@@ -1660,4 +1664,78 @@ function getAvailableQZSettings() {
     });
     $("#getAvailableQZSettings").dialog("open");
     $("#getAvailableQZSettings").window("resize",{top:$(document).scrollTop() + 100});
+}
+
+function showExcludeCustomerKeywordDialog(qzSettingUuid, customerUuid, domain, optimizedGroupName, terminalType) {
+    var excludeCustomerKeywordDialog = $("#excludeCustomerKeywordDialog");
+    excludeCustomerKeywordDialog.find('#excludeCustomerKeywordForm')[0].reset();
+    excludeCustomerKeywordDialog.find("#qzSettingUuid").val(qzSettingUuid);
+    excludeCustomerKeywordDialog.find("#customerUuid").val(customerUuid);
+    excludeCustomerKeywordDialog.find("#terminalType").val(terminalType);
+    excludeCustomerKeywordDialog.find("#domain").val(domain);
+    excludeCustomerKeywordDialog.show();
+    excludeCustomerKeywordDialog.dialog({
+        resizable: false,
+        height: 450,
+        width: 340,
+        title: '排除关键字',
+        modal: false,
+        buttons: [{
+            text: '保存',
+            iconCls: 'icon-ok',
+            handler: function () {
+                excludeCustomerKeywords(qzSettingUuid, customerUuid, domain, optimizedGroupName);
+            }
+        }, {
+            text: '取消',
+            iconCls: 'icon-cancel',
+            handler: function () {
+                $("#excludeCustomerKeywordDialog").dialog("close");
+                $('#excludeCustomerKeywordForm')[0].reset();
+            }
+        }]
+    });
+    excludeCustomerKeywordDialog.dialog("open");
+    excludeCustomerKeywordDialog.window("resize",{top:$(document).scrollTop() + 100});
+}
+function excludeCustomerKeywords(qzSettingUuid, customerUuid, domain, optimizedGroupName) {
+    var excludeCustomerKeywordDialog = $("#excludeCustomerKeywordDialog");
+    var terminalType = excludeCustomerKeywordDialog.find("#terminalType").val();
+    var keywordStr = excludeCustomerKeywordDialog.find("#customerKeywordDialogContent").val();
+    if (keywordStr == "") {
+        alert("请输入关键字");
+        excludeCustomerKeywordDialog.find("#customerKeywordDialogContent").focus();
+        return;
+    }
+    var keywords = keywordStr.replace(/[，|\r\n]/g, ",").replace(/[\s+]/g, "").split(',');
+    keywords = Array.from(new Set(keywords));
+    var searchEngine = excludeCustomerKeywordDialog.find("#searchEngine").val();
+    var postData = {};
+    postData.qzSettingUuid = qzSettingUuid;
+    postData.customerUuid = customerUuid;
+    postData.domain = $.trim(domain);
+    postData.optimizeGroupName = optimizedGroupName;
+    postData.searchEngine = searchEngine;
+    postData.terminalType = $.trim(terminalType);
+    postData.keywords = keywords;
+    $.ajax({
+        url: '/internal/qzsetting/excludeQZSettingCustomerKeywords',
+        type: 'POST',
+        data: JSON.stringify(postData),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        success: function (data) {
+            if (data) {
+                $().toastmessage('showSuccessToast', "保存成功！");
+                $("#excludeCustomerKeywordDialog").dialog("close");
+            } else {
+                $().toastmessage('showErrorToast', "保存失败！");
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "保存失败！");
+        }
+    });
 }
