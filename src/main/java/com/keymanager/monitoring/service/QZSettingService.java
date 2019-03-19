@@ -595,12 +595,15 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
         if (null != customerExcludeKeywords) {
         	excludeKeyword.addAll(Arrays.asList(customerExcludeKeywords.substring(0, customerExcludeKeywords.length() - 1).split(",")));
         }
-        customerKeyword.setOptimizeGroupName(qzSettingSaveCustomerKeywordsCriteria.getOptimizeGroupName());
         for (String keyword : qzSettingSaveCustomerKeywordsCriteria.getKeywords()) {
             if (!excludeKeyword.isEmpty()){
 				if (excludeKeyword.contains(keyword)){
 					customerKeyword.setOptimizeGroupName("zanting");
+				} else {
+					customerKeyword.setOptimizeGroupName(qzSettingSaveCustomerKeywordsCriteria.getOptimizeGroupName());
 				}
+			} else {
+				customerKeyword.setOptimizeGroupName(qzSettingSaveCustomerKeywordsCriteria.getOptimizeGroupName());
 			}
 			customerKeyword.setKeyword(keyword);
 			customerKeywordService.addCustomerKeyword(customerKeyword, userName);
