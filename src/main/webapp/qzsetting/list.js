@@ -108,14 +108,10 @@ function checkTerminalType(terminalType, isManualSwitch) {
     if (terminalType == "PC") {
         $(".mytabs .link").find("li[name='PC']").addClass("active");
         $("#chargeForm").find("#terminalType").val($.trim(terminalType));
-        $("#excludeCustomerKeywordForm").find("#terminalType").val($.trim(terminalType));
-        console.log($("#excludeCustomerKeywordForm").find("#terminalType").val());
     }
     if (terminalType == "Phone") {
         $(".mytabs .link").find("li[name='Phone']").addClass("active");
         $("#chargeForm").find("#terminalType").val($.trim(terminalType));
-        $("#excludeCustomerKeywordForm").find("#terminalType").val($.trim(terminalType));
-        console.log($("#excludeCustomerKeywordForm").find("#terminalType").val());
     }
     if (isManualSwitch) {
         trimSearchCondition('1');

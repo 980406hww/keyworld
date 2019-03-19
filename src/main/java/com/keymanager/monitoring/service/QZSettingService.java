@@ -466,7 +466,6 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 					}
 
 					if (CollectionUtils.isNotEmpty(insertingCustomerKeywords)) {
-						customerKeywordService.addCustomerKeywords(insertingCustomerKeywords, qzSettingCriteria.getUserName());
                         for (CustomerKeyword customerKeyword : insertingCustomerKeywords) {
                             int checkCustomerExcludeKeywordResult = customerExcludeKeywordService.checkCustomerExcludeKeyword(customerKeyword.getCustomerUuid(), customerKeyword.getQzSettingUuid(), customerKeyword.getTerminalType(), customerKeyword.getKeyword()+",");
                             if (checkCustomerExcludeKeywordResult > 0){
