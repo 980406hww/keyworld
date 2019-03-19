@@ -735,7 +735,11 @@ function saveCustomerKeywords(qzSettingUuid, customerUuid, optimizedGroupName) {
         customerKeywordDialog.find("#customerKeywordDialogContent").focus();
         return;
     }
-    var keywords = keywordStr.replace(/[，|\r\n]/g, ",").replace(/[\s+]/g, "").split(',');
+    keywordStr = keywordStr.replace(/[，|\r\n]/g, ",").replace(/[\s+]/g, "");
+    if (keywordStr.substring(keywordStr.length - 1) == ','){
+        keywordStr = keywordStr.substring(0, keywordStr.length - 1);
+    }
+    var keywords = keywordStr.split(',');
     var type = customerKeywordDialog.find("#qzSettingEntryType").val();
     var searchEngine = customerKeywordDialog.find("#searchEngine").val();
     var postData = {};
@@ -1703,7 +1707,11 @@ function excludeCustomerKeywords(qzSettingUuid, customerUuid, domain, optimizedG
         excludeCustomerKeywordDialog.find("#customerKeywordDialogContent").focus();
         return;
     }
-    var keywords = keywordStr.replace(/[，|\r\n]/g, ",").replace(/[\s+]/g, "").split(',');
+    keywordStr = keywordStr.replace(/[，|\r\n]/g, ",").replace(/[\s+]/g, "");
+    if (keywordStr.substring(keywordStr.length - 1) == ','){
+        keywordStr = keywordStr.substring(0, keywordStr.length - 1);
+    }
+    var keywords = keywordStr.split(',');
     keywords = Array.from(new Set(keywords));
     var searchEngine = excludeCustomerKeywordDialog.find("#searchEngine").val();
     var postData = {};
