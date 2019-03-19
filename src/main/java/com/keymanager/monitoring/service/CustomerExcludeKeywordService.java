@@ -35,7 +35,7 @@ public class CustomerExcludeKeywordService extends ServiceImpl<CustomerExcludeKe
         }
     }
 
-    public int checkCustomerExcludeKeyword(Long customerUuid, Long qzSettingUuid, String terminalType, String keyword){
-        return customerExcludeKeywordDao.checkCustomerExcludeKeyword(customerUuid, qzSettingUuid, terminalType, keyword);
+    public String getCustomerExcludeKeyword(Long customerUuid, Long qzSettingUuid, String terminalType){
+        return customerExcludeKeywordDao.getCustomerExcludeKeyword(customerUuid, qzSettingUuid, terminalType);
     }
 }

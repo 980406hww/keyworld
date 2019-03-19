@@ -1242,20 +1242,23 @@
 
     <update id="excludeCustomerKeyword" parameterType="com.keymanager.monitoring.entity.CustomerKeyword">
         UPDATE  t_customer_keyword ck
-        LEFT JOIN t_qz_setting qs
-        <choose>
-            <when test="qzSettingExcludeCustomerKeywordsCriteria.terminalType == 'PC'">
-                ON qs.fPcGroup = ck.fOptimizeGroupName
-            </when>
-            <otherwise>
-                ON qs.fPhoneGroup = ck.fOptimizeGroupName
-            </otherwise>
-        </choose>
         SET ck.fOptimizeGroupName = 'zanting'
-        WHERE qs.fUuid = #{qzSettingExcludeCustomerKeywordsCriteria.qzSettingUuid}
-        AND ck.fType = #{qzSettingExcludeCustomerKeywordsCriteria.type}
-        AND ck.fSearchEngine = #{qzSettingExcludeCustomerKeywordsCriteria.searchEngine}
-        AND ck.fTerminalType = #{qzSettingExcludeCustomerKeywordsCriteria.terminalType}
+        WHERE 1=1
+        <if test="qzSettingExcludeCustomerKeywordsCriteria.customerUuid != null and qzSettingExcludeCustomerKeywordsCriteria.customerUuid != ''">
+          AND ck.fCustomerUuid = #{qzSettingExcludeCustomerKeywordsCriteria.customerUuid}
+        </if>
+        <if test="qzSettingExcludeCustomerKeywordsCriteria.qzSettingUuid != null and qzSettingExcludeCustomerKeywordsCriteria.qzSettingUuid != ''">
+            AND ck.fQZSettingUuid = #{qzSettingExcludeCustomerKeywordsCriteria.qzSettingUuid}
+        </if>
+        <if test="qzSettingExcludeCustomerKeywordsCriteria.type != null and qzSettingExcludeCustomerKeywordsCriteria.type != ''">
+            AND ck.fType = #{qzSettingExcludeCustomerKeywordsCriteria.type}
+        </if>
+        <if test="qzSettingExcludeCustomerKeywordsCriteria.searchEngine != null and qzSettingExcludeCustomerKeywordsCriteria.searchEngine != ''">
+            AND ck.fSearchEngine = #{qzSettingExcludeCustomerKeywordsCriteria.searchEngine}
+        </if>
+        <if test="qzSettingExcludeCustomerKeywordsCriteria.terminalType != null and qzSettingExcludeCustomerKeywordsCriteria.terminalType != ''">
+            AND ck.fTerminalType = #{qzSettingExcludeCustomerKeywordsCriteria.terminalType}
+        </if>
         AND ck.fKeyword IN
         <foreach item = "keyword" collection = "qzSettingExcludeCustomerKeywordsCriteria.keywords" open="(" separator="," close=")">
             #{keyword}

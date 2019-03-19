@@ -467,10 +467,6 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 					if (CollectionUtils.isNotEmpty(insertingCustomerKeywords)) {
                         for (CustomerKeyword customerKeyword : insertingCustomerKeywords) {
-                            int checkCustomerExcludeKeywordResult = customerExcludeKeywordService.checkCustomerExcludeKeyword(customerKeyword.getCustomerUuid(), customerKeyword.getQzSettingUuid(), customerKeyword.getTerminalType(), customerKeyword.getKeyword()+",");
-                            if (checkCustomerExcludeKeywordResult > 0){
-                                customerKeyword.setOptimizeGroupName("zanting");
-                            }
                             customerKeywordService.addCustomerKeyword(customerKeyword, qzSettingCriteria.getUserName());
                         }
 					}
@@ -594,16 +590,20 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		customerKeyword.setCollectMethod(CollectMethod.PerMonth.name());
         customerKeyword.setCurrentIndexCount(-1);
         customerKeyword.setPositionFirstFee(-1d);
-		for (String keyword : qzSettingSaveCustomerKeywordsCriteria.getKeywords()) {
-			customerKeyword.setKeyword(keyword);
-            int checkCustomerExcludeKeywordResult = customerExcludeKeywordService.checkCustomerExcludeKeyword(qzSettingSaveCustomerKeywordsCriteria.getCustomerUuid(), qzSettingSaveCustomerKeywordsCriteria.getQzSettingUuid(), qzSettingSaveCustomerKeywordsCriteria.getTerminalType(), keyword+",");
-            if (checkCustomerExcludeKeywordResult > 0){
-                customerKeyword.setOptimizeGroupName("zanting");
-            }else {
-                customerKeyword.setOptimizeGroupName(qzSettingSaveCustomerKeywordsCriteria.getOptimizeGroupName());
+        String customerExcludeKeywords = customerExcludeKeywordService.getCustomerExcludeKeyword(customerKeyword.getCustomerUuid(), customerKeyword.getQzSettingUuid(), customerKeyword.getTerminalType());
+        customerExcludeKeywords = customerExcludeKeywords.substring(0,customerExcludeKeywords.length()-1);
+        Set excludeKeyword = new HashSet();
+        excludeKeyword.addAll(Arrays.asList(customerExcludeKeywords.split(",")));
+        customerKeyword.setOptimizeGroupName(qzSettingSaveCustomerKeywordsCriteria.getOptimizeGroupName());
+        for (String keyword : qzSettingSaveCustomerKeywordsCriteria.getKeywords()) {
+            customerKeyword.setKeyword(keyword);
+            if (!excludeKeyword.isEmpty()){
+                if (excludeKeyword.contains(keyword)){
+                    customerKeyword.setOptimizeGroupName("zanting");
+                }
             }
-			customerKeywordService.addCustomerKeyword(customerKeyword, userName);
-		}
+            customerKeywordService.addCustomerKeyword(customerKeyword, userName);
+        }
     }
 
 	public void excludeQZSettingCustomerKeywords (QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria) {
