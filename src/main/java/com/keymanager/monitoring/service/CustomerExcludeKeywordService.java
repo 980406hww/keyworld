@@ -37,7 +37,7 @@ public class CustomerExcludeKeywordService extends ServiceImpl<CustomerExcludeKe
 
     public String getCustomerExcludeKeyword(Long customerUuid, Long qzSettingUuid, String terminalType, String url){
         if (url.indexOf("www.") > -1) {
-            url = url.substring(url.indexOf("www."));
+            url = url.substring(url.indexOf("www.") + 4);
         }
         return customerExcludeKeywordDao.getCustomerExcludeKeyword(customerUuid, qzSettingUuid, terminalType, url);
     }
