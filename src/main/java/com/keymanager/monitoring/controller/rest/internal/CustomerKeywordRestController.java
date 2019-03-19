@@ -276,7 +276,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 				String customerExcludeKeywords = customerExcludeKeywordService.getCustomerExcludeKeyword(customerKeyword.getCustomerUuid(), customerKeyword.getQzSettingUuid(), customerKeyword.getTerminalType(), customerKeyword.getUrl());
 				if (null != customerExcludeKeywords) {
 					Set excludeKeyword = new HashSet();
-					excludeKeyword.addAll(Arrays.asList(customerExcludeKeywords.substring(0, customerExcludeKeywords.length() - 1).split(",")));
+					excludeKeyword.addAll(Arrays.asList(customerExcludeKeywords.split(",")));
 					if (!excludeKeyword.isEmpty()){
 						if (excludeKeyword.contains(customerKeyword.getKeyword())){
 							customerKeyword.setOptimizeGroupName("zanting");

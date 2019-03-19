@@ -15,6 +15,7 @@ import com.keymanager.monitoring.vo.QZSettingSearchClientGroupInfoVO;
 import com.keymanager.util.Constants;
 import com.keymanager.util.Utils;
 import com.keymanager.value.CustomerKeywordVO;
+import jdk.nashorn.internal.ir.Terminal;
 import net.sf.json.JSONObject;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -464,19 +465,31 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 							qzSettingCriteria.getQzSetting().setPhoneKeywordExceedMaxCount(true);
 						}
 					}
-
+                    String pcCustomerExcludeKeywords = customerExcludeKeywordService.getCustomerExcludeKeyword(Long.valueOf(qzSettingCriteria.getQzSetting().getCustomerUuid()), qzSettingCriteria.getQzSetting().getUuid(), TerminalTypeEnum.PC.toString(), qzSettingCriteria.getQzSetting().getDomain());
+                    String phoneCustomerExcludeKeywords = customerExcludeKeywordService.getCustomerExcludeKeyword(Long.valueOf(qzSettingCriteria.getQzSetting().getCustomerUuid()), qzSettingCriteria.getQzSetting().getUuid(), TerminalTypeEnum.Phone.toString(), qzSettingCriteria.getQzSetting().getDomain());
+                    Set pcExcludeKeyword = new HashSet();
+                    Set phoneExcludeKeyword = new HashSet();
+                    if (null != pcCustomerExcludeKeywords) {
+                        pcExcludeKeyword.addAll(Arrays.asList(pcCustomerExcludeKeywords.split(",")));
+                    }
+                    if (null != phoneCustomerExcludeKeywords) {
+                        phoneExcludeKeyword.addAll(Arrays.asList(phoneCustomerExcludeKeywords.split(",")));
+                    }
 					if (CollectionUtils.isNotEmpty(insertingCustomerKeywords)) {
                         for (CustomerKeyword customerKeyword : insertingCustomerKeywords) {
-							String customerExcludeKeywords = customerExcludeKeywordService.getCustomerExcludeKeyword(customerKeyword.getCustomerUuid(), customerKeyword.getQzSettingUuid(), customerKeyword.getTerminalType(), customerKeyword.getUrl());
-							if (null != customerExcludeKeywords) {
-								Set excludeKeyword = new HashSet();
-								excludeKeyword.addAll(Arrays.asList(customerExcludeKeywords.substring(0, customerExcludeKeywords.length() - 1).split(",")));
-								if (!excludeKeyword.isEmpty()){
-									if (excludeKeyword.contains(customerKeyword.getKeyword())){
-										customerKeyword.setOptimizeGroupName("zanting");
-									}
-								}
-							}
+                            if ("PC".equals(customerKeyword.getTerminalType())){
+                                if (!pcExcludeKeyword.isEmpty()){
+                                    if (pcExcludeKeyword.contains(customerKeyword.getKeyword())){
+                                        customerKeyword.setOptimizeGroupName("zanting");
+                                    }
+                                }
+                            } else {
+                                if (!phoneExcludeKeyword.isEmpty()){
+                                    if (phoneExcludeKeyword.contains(customerKeyword.getKeyword())){
+                                        customerKeyword.setOptimizeGroupName("zanting");
+                                    }
+                                }
+                            }
                             customerKeywordService.addCustomerKeyword(customerKeyword, qzSettingCriteria.getUserName());
                         }
 					}
@@ -603,7 +616,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
         String customerExcludeKeywords = customerExcludeKeywordService.getCustomerExcludeKeyword(customerKeyword.getCustomerUuid(), customerKeyword.getQzSettingUuid(), customerKeyword.getTerminalType(), customerKeyword.getUrl());
         Set excludeKeyword = new HashSet();
         if (null != customerExcludeKeywords) {
-        	excludeKeyword.addAll(Arrays.asList(customerExcludeKeywords.substring(0, customerExcludeKeywords.length() - 1).split(",")));
+        	excludeKeyword.addAll(Arrays.asList(customerExcludeKeywords.split(",")));
         }
         for (String keyword : qzSettingSaveCustomerKeywordsCriteria.getKeywords()) {
             if (!excludeKeyword.isEmpty()){
@@ -621,9 +634,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
     }
 
 	public void excludeQZSettingCustomerKeywords (QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria) {
-		if (qzSettingExcludeCustomerKeywordsCriteria.getDomain().indexOf("www.") != -1) {
-            qzSettingExcludeCustomerKeywordsCriteria.setDomain(qzSettingExcludeCustomerKeywordsCriteria.getDomain().substring(qzSettingExcludeCustomerKeywordsCriteria.getDomain().indexOf("www.")+4));
-		}
+        qzSettingExcludeCustomerKeywordsCriteria.setDomain(qzSettingExcludeCustomerKeywordsCriteria.getDomain().replace("http://","").replace("www.",""));
 		customerKeywordService.excludeCustomerKeyword(qzSettingExcludeCustomerKeywordsCriteria);
         customerExcludeKeywordService.excludeCustomerKeywords(qzSettingExcludeCustomerKeywordsCriteria);
 	}
