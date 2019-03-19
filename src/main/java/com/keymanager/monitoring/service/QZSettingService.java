@@ -590,19 +590,20 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		customerKeyword.setCollectMethod(CollectMethod.PerMonth.name());
         customerKeyword.setCurrentIndexCount(-1);
         customerKeyword.setPositionFirstFee(-1d);
-        String customerExcludeKeywords = customerExcludeKeywordService.getCustomerExcludeKeyword(customerKeyword.getCustomerUuid(), customerKeyword.getQzSettingUuid(), customerKeyword.getTerminalType());
-        customerExcludeKeywords = customerExcludeKeywords.substring(0,customerExcludeKeywords.length()-1);
+        String customerExcludeKeywords = customerExcludeKeywordService.getCustomerExcludeKeyword(customerKeyword.getCustomerUuid(), customerKeyword.getQzSettingUuid(), customerKeyword.getTerminalType(), customerKeyword.getUrl());
         Set excludeKeyword = new HashSet();
-        excludeKeyword.addAll(Arrays.asList(customerExcludeKeywords.split(",")));
+        if (null != customerExcludeKeywords) {
+        	excludeKeyword.addAll(Arrays.asList(customerExcludeKeywords.substring(0, customerExcludeKeywords.length() - 1).split(",")));
+        }
         customerKeyword.setOptimizeGroupName(qzSettingSaveCustomerKeywordsCriteria.getOptimizeGroupName());
         for (String keyword : qzSettingSaveCustomerKeywordsCriteria.getKeywords()) {
-            customerKeyword.setKeyword(keyword);
             if (!excludeKeyword.isEmpty()){
-                if (excludeKeyword.contains(keyword)){
-                    customerKeyword.setOptimizeGroupName("zanting");
-                }
-            }
-            customerKeywordService.addCustomerKeyword(customerKeyword, userName);
+				if (excludeKeyword.contains(keyword)){
+					customerKeyword.setOptimizeGroupName("zanting");
+				}
+			}
+			customerKeyword.setKeyword(keyword);
+			customerKeywordService.addCustomerKeyword(customerKeyword, userName);
         }
     }
 

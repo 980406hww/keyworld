@@ -9,16 +9,17 @@
         AND fTerminalType = #{terminalType}
     </select>
 
-    <select id="checkCustomerExcludeKeyword" resultType="java.lang.Integer">
-        SELECT COUNT(1)
-        FROM t_exclude_keyword
-        WHERE fTerminalType = #{terminalType}
-        <if test="qzSettingUuid == 0">
-          AND fCustomerUuid = #{customerUuid}
-        </if>
-        <if test="qzSettingUuid != 0">
-          AND fQZSettingUuid = #{qzSettingUuid}
-        </if>
-        AND fKeyword like '%${keyword}%'
+    <select id="getCustomerExcludeKeyword" resultType="java.lang.String">
+        SELECT ek.fKeyword
+        FROM t_exclude_keyword ek
+        WHERE ek.fTerminalType = #{terminalType}
+        <choose>
+            <when test="qzSettingUuid != 0">
+                AND ek.fQZSettingUuid = #{qzSettingUuid}
+            </when>
+            <otherwise>
+                AND ek.fQZSettingUuid IN (SELECT qs.fUuid FROM t_qz_setting qs WHERE qs.fCustomerUuid = #{customerUuid} AND qs.fDomain LIKE '%${url}')
+            </otherwise>
+        </choose>
     </select>
 </mapper>
