@@ -1243,7 +1243,14 @@
     <update id="excludeCustomerKeyword" parameterType="com.keymanager.monitoring.entity.CustomerKeyword">
         UPDATE  t_customer_keyword ck
         LEFT JOIN t_qz_setting qs
-        ON qs.fPcGroup = ck.fOptimizeGroupName
+        <choose>
+            <when test="qzSettingExcludeCustomerKeywordsCriteria.terminalType == 'PC'">
+                ON qs.fPcGroup = ck.fOptimizeGroupName
+            </when>
+            <otherwise>
+                ON qs.fPhoneGroup = ck.fOptimizeGroupName
+            </otherwise>
+        </choose>
         SET ck.fOptimizeGroupName = 'zanting'
         WHERE qs.fUuid = #{qzSettingExcludeCustomerKeywordsCriteria.qzSettingUuid}
         AND ck.fType = #{qzSettingExcludeCustomerKeywordsCriteria.type}

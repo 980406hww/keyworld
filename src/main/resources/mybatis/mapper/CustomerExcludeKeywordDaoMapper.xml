@@ -12,14 +12,13 @@
     <select id="checkCustomerExcludeKeyword" resultType="java.lang.Integer">
         SELECT COUNT(1)
         FROM t_exclude_keyword
-        WHERE 1=1
+        WHERE fTerminalType = #{terminalType}
         <if test="qzSettingUuid == 0">
           AND fCustomerUuid = #{customerUuid}
         </if>
         <if test="qzSettingUuid != 0">
           AND fQZSettingUuid = #{qzSettingUuid}
         </if>
-        AND fTerminalType = #{terminalType}
         AND fKeyword like '%${keyword}%'
     </select>
 </mapper>
