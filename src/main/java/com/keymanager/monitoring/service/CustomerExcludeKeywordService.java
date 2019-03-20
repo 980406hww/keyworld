@@ -17,26 +17,29 @@ public class CustomerExcludeKeywordService extends ServiceImpl<CustomerExcludeKe
 
     public void excludeCustomerKeywords(QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria){
         StringBuffer jointKeyword = new StringBuffer();
-        for (String keyword: qzSettingExcludeCustomerKeywordsCriteria.getKeywords()) {
-            jointKeyword.append(keyword+",");
-        }
         CustomerExcludeKeyword customerExcludeKeyword = customerExcludeKeywordDao.searchCustomerExcludeKeyword(qzSettingExcludeCustomerKeywordsCriteria.getQzSettingUuid(),qzSettingExcludeCustomerKeywordsCriteria.getTerminalType());
-        if (null  == customerExcludeKeyword){
+        if (null == customerExcludeKeyword){
             customerExcludeKeyword = new CustomerExcludeKeyword();
             customerExcludeKeyword.setCustomerUuid(qzSettingExcludeCustomerKeywordsCriteria.getCustomerUuid());
             customerExcludeKeyword.setQzSettingUuid(qzSettingExcludeCustomerKeywordsCriteria.getQzSettingUuid());
             customerExcludeKeyword.setTerminalType(qzSettingExcludeCustomerKeywordsCriteria.getTerminalType());
-            customerExcludeKeyword.setKeyword(jointKeyword.toString());
+            for (String keyword: qzSettingExcludeCustomerKeywordsCriteria.getKeywords()) {
+                jointKeyword.append(keyword + ",");
+            }
+            customerExcludeKeyword.setKeyword(jointKeyword.toString().substring(0, jointKeyword.toString().length() - 1));
             customerExcludeKeywordDao.insert(customerExcludeKeyword);
-        }else {
-            customerExcludeKeyword.setKeyword(customerExcludeKeyword.getKeyword()+jointKeyword);
+        } else {
+            for (String keyword: qzSettingExcludeCustomerKeywordsCriteria.getKeywords()) {
+                jointKeyword.append("," + keyword);
+            }
+            customerExcludeKeyword.setKeyword(customerExcludeKeyword.getKeyword() + jointKeyword);
             customerExcludeKeyword.setUpdateTime(new Date());
             customerExcludeKeywordDao.updateById(customerExcludeKeyword);
         }
     }
 
     public String getCustomerExcludeKeyword(Long customerUuid, Long qzSettingUuid, String terminalType, String url){
-        url = url.replace("www.","");
+        url = url.replace("www.", "");
         return customerExcludeKeywordDao.getCustomerExcludeKeyword(customerUuid, qzSettingUuid, terminalType, url);
     }
 }
