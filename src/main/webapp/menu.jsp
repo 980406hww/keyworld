@@ -61,97 +61,51 @@
 	</div>
 </nav>
 
-<%--留言列表Dialog--%>
+<%--留言队列Dialog--%>
 <div id="showUserMessageListDialog" class="easyui-dialog" style="display: none">
-	<form id="showUserMessageListForm" style="width: 388px;">
+	<form id="showUserMessageListForm">
 		<table id="userMessageListConditionTable" cellpadding="10" style="font-size: 12px; background-color: white;border-collapse: collapse; width: 100%;">
 			<tr>
 				<td>
-					<span style="font-size: 12px;">状态: </span>
-                    <select id="message_status_select" multiple="multiple" size="5">
-                    </select>
+					<span style="font-size: 12px;">跳转类型:</span>
+					<select id="message_type_select" style="width: 80px">
+						<option value="">所有</option>
+						<option value="全站设置">全站设置</option>
+						<option value="关键字列表">关键字列表</option>
+					</select>
 				</td>
 				<td>
-					<span style="font-size: 12px;">用户: </span>
-					<select id="user_list_select" multiple="multiple" size="5">
+					<span style="font-size: 12px;">状态:</span>
+					<select id="message_status_select">
+						<option value="">所有</option>
+						<option value="0">未处理</option>
+						<option value="1">处理完毕</option>
 					</select>
+				</td>
+				<td>
+					<span style="font-size: 12px;">时间:</span>
+					<input name="messageCreateTime" id="messageCreateTime" class="Wdate" style="width: 80px" type="text" onclick="WdatePicker()">
 				</td>
 				<td>
 					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="searchUserMessageList(0, 1)" value=" 查询 " >
 				</td>
-                <td style="width: 40px;">
-                    <span class="fi-comment" style="font-size: 12px;color: green;">&nbsp;</span><a href="javascript:void(0)" onclick="openMessageBox('new')" style="text-decoration: none;font-size: 12px; color: black">留言</a>
-                </td>
+			</tr>
+			<tr>
+				<td colspan="4">
+					<span style="font-size: 12px; width: 80px;">搜索栏:</span>
+					<input name="searchUserMessage" id="searchUserMessage" style="width: 320px;" type="text">
+				</td>
 			</tr>
 		</table>
-		<div id="userMessageStatus">
-			<input type="hidden" name="messageStatus" value="1">
-			<ul>
-				<li class="active" messageStatus="接收" onclick="changeUserMessageStatus(1, this)"><a href="javascript:void(0);" style="font-size: 16px;">接收</a></li>
-				<li messageStatus="发送" onclick="changeUserMessageStatus(2, this)"><a href="javascript:void(0);" style="font-size: 16px;">发送</a></li>
-			</ul>
-		</div>
-		<%--<table id="userMessageListTable" cellpadding="10" style="font-size: 12px; background-color: white;border-collapse: collapse; width: 100%;">
-			<thead>
-                <tr>
-                    <td class="user-message-content">
-                        <span>消息内容</span>
-                    </td>
-                    <td class="user-message-targetName">
-                        <span>发送人</span>
-                    </td>
-                    <td class="user-message-status">
-                        <span>处理状态</span>
-                    </td>
-                </tr>
-            </thead>
-            <tbody style="height: 200px;">
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="3">
-                        <span><a href="javascript:void(0)" onclick="changeUserMessagePaging(-1)" style="text-decoration: none; font-size: 12px; color: black"> 上一页 </a></span>
-                        <span id="current-page-number">第 <label></label> 页</span>
-                        <span id="total-page-number"> / 共 <label>0</label> 页</span>
-                        <span><a href="javascript:void(0)" onclick="changeUserMessagePaging(1)" style="text-decoration: none;font-size: 12px; color: black"> 下一页 </a></span>
-                    </td>
-                </tr>
-            </tfoot>
-		</table>--%>
+		<table id="userMessageResultTable" cellpadding="10" style="font-size: 12px; background-color: white;border-collapse: collapse; width: 100%;">
+			<tr>
+				<a>
+					<div></div>
+				</a>
+			</tr>
+		</table>
 	</form>
 </div>
-
-<%--留言栏Dialog--%>
-<%--<div id="showUserMessageDialog" class="easyui-dialog" style="display: none">
-	<form id="showUserMessageForm">
-		<table cellpadding="10" style="font-size: 12px; background-color: white; border-collapse:separate; border-spacing:0px 10px;">
-			<tr>
-                <input type="hidden" name="messageUuid" value="">
-				<td id="userMessageTargetStatus"><span style="width: 60px">收信人：</span></td>
-				<td>
-                    <select id="user_select" multiple="multiple" size="5">
-                    </select>
-				</td>
-			</tr>
-			<tr>
-				<td><span style="width: 60px;">状态：</span></td>
-				<td>
-					<select id="messageStatusSelect" style="width: 180px;">
-						<option value="0">未处理</option>
-						<option value="1">处理中</option>
-						<option value="2">处理完毕</option>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td><span style="width: 60px;">内容：</span></td>
-				<td>
-					<textarea rows="7" style="width: 240px"></textarea>
-				</td>
-			</tr>
-		</table>
-	</form>
-</div>--%>
 
 <script type="text/javascript">
     $(function () {
@@ -243,222 +197,143 @@
         parent.$.modalDialog.handler.window("resize",{top:$(document).scrollTop() + 100});
     }
 
-    // function OpenMessageList(start) {
-    //     var showUserMessageListDialog = $("#showUserMessageListDialog");
-    //     $("#userMessageStatus").find("ul li:first-child").addClass("active");
-    //     $("#userMessageStatus").find("ul li:last-child").removeClass("active");
-    //     getUserMessage(1, start)
-    //     showUserMessageListDialog.show();
-    //     showUserMessageListDialog.dialog({
-	// 		resizable: false,
-	// 		height: 320,
-	// 		width: 394,
-	// 		title: '留言列表',
-	// 		modal: true,
-	// 		onClose: function () {
-	// 			$("#showUserMessageListForm")[0].reset();
-    //         }
-	// 	});
-    //     showUserMessageListDialog.dialog("open");
-    //     showUserMessageListDialog.window("resize", {top: $(document).scrollTop() + 100, left: $(document).scrollLeft() + 755});
-    // }
+    function OpenMessageList(start) {
+        var showUserMessageListDialog = $("#showUserMessageListDialog");
+        showUserMessageListDialog.show();
+        showUserMessageListDialog.dialog({
+			resizable: false,
+			height: 320,
+			width: 400,
+			title: '查看留言队列',
+			modal: true,
+			onClose: function () {
+				$("#showUserMessageListForm")[0].reset();
+            }
+		});
+        showUserMessageListDialog.dialog("open");
+        showUserMessageListDialog.window("resize", {top: $(document).scrollTop() + 100, left: $(document).scrollLeft() + 755});
+    }
 
-    // function getUserMessage(messageStatus, start) {
-    //     $("#userMessageStatus").find("input[name='messageStatus']").val(messageStatus);
-    //     searchUserMessageList(start);
-    // }
-
-    // function openMessageBox(status) {
-	// 	var showUserMessageDialog = $("#showUserMessageDialog");
-	// 	var buttonText = "发送";
-    //     if (status == "update") {
-    //         buttonText = "保存";
-    //         var uuid = $("#showUserMessageForm").find("input[name='messageUuid']").val();
-    //         $.ajax({
-    //             url: "/internal/usermessage/getUserMessage/" + uuid,
-    //             type: "POST",
-    //             headers: {
-    //                 "Accept": "application/json",
-    //                 "Content-Type": "application/json"
-    //             },
-    //             success: function(data) {
-    //                 var messageStatus = $("#userMessageStatus").find("input[name='messageStatus']").val();
-    //                 var text = "";
-    //                 var targetName = "";
-    //                 if (messageStatus == "1") {
-    //                     text = "写信人：";
-    //                     targetName = data.senderUserName;
-    //                 } else {
-    //                     text = "收信人：";
-    //                     targetName = data.receiverUserName;
-    //                 }
-    //                 $("#showUserMessageForm").find("#userMessageTargetStatus").text(text);
-    //                 $("#showUserMessageForm").find("#user_select option").each(function () {
-    //                     if ($(this).val() == targetName) {
-    //                         this.selected = true;
-    //                         $("#user_select_ms span:last-child").text($(this).text());
-    //                     }
-    //                 });
-    //                 $("#showUserMessageForm").find("#messageStatusSelect option[value='"+ data.status +"']").prop("selected", true);
-    //                 $("#showUserMessageForm textarea").text(data.content);
-    //             },
-    //             error: function () {
-    //                 $().toastmessage("showErrorToast", "获取失败！")
-    //             }
-    //         });
-    //     }
-	// 	showUserMessageDialog.show();
-	// 	showUserMessageDialog.dialog({
-	// 		resizable: false,
-	// 		height: 260,
-	// 		width: 300,
-	// 		title: '留言框',
-	// 		modal: true,
-	// 		buttons: [{
-	// 		    text: buttonText,
-	// 			iconCls: "icon-ok",
-	// 			handler: function () {
-	// 				saveUserMessage(status);
-    //             }
-	// 		}, {
-	// 		    text: '取消',
-	// 			iconCls: 'icon-cancel',
-	// 			handler: function () {
-	// 				$("#showUserMessageDialog").dialog("close");
-	// 				$("#showUserMessageForm")[0].reset();
-    //             }
-	// 		}],
-	// 		onClose: function() {
-    //             $("#showUserMessageForm")[0].reset();
-	// 		}
-	// 	});
-	// 	showUserMessageDialog.dialog("open");
-	// 	showUserMessageDialog.window("resize", {top: $(document).scrollTop() + 150 , left: 801});
-    // }
-
-    // var messageStatusSelect = [{"statusName":"未处理"}, {"statusName":"处理中"}, {"statusName":"处理完毕"}];
-    // function searchUserMessageList(start, btn) {
-    //     $("#userMessageListTable tbody").empty();
-    //     var showUserMessageListForm = $("#showUserMessageListForm");
-    //     var messageStatus = $("#userMessageStatus").find("input[name='messageStatus']").val();
-    //     var status = ['0', '1'];
-    //     var targetUserNames = [];
-    //     if (!start) {
-    //         status = showUserMessageListForm.find("#message_status_select").multiselect("getChecked").map(function () {
-    //             return this.value;
-    //         }).get();
-    //         targetUserNames = showUserMessageListForm.find("#user_list_select").multiselect("getChecked").map(function () {
-    //             return this.value;
-    //         }).get();
-	// 	}
-    //     var pageNumber = 1;
-    //     if (!btn) {
-    //         pageNumber = showUserMessageListForm.find("#current-page-number label").text();
-    //         if (pageNumber == "" || pageNumber == 0 || ((pageNumber == "" || pageNumber == 0) && targetUserNames.length > 0)){
-    //             pageNumber = 1;
-    //         }
-	// 	}
-    //     var postData = {};
-    //     postData.messageStatus = messageStatus;
-    //     postData.status = status;
-    //     postData.targetUserNames = targetUserNames;
-    //     postData.pageNumber = pageNumber;
-    //     $.ajax({
-	// 		url: "/internal/usermessage/getUserMessages",
-	// 		type: "POST",
-	// 		data: JSON.stringify(postData),
-	// 		headers: {
-	// 		    "Accept": "application/json",
-	// 			"Content-Type": "application/json"
-	// 		},
-	// 		success: function (data) {
-    //             if (data.page.pages == 0) {
-    //                 data.page.current = 0;
-    //             }
-    //             if (data.page.current > data.page.pages) {
-    //                 data.page.current = data.page.pages;
-	// 			}
-    //             $("#showUserMessageListForm").find("input[name='messageStatus']").val(data.messageStatus);
-    //             $("#showUserMessageListForm").find("#current-page-number label").text(data.page.current);
-    //             $("#showUserMessageListForm").find("#total-page-number label").text(data.page.pages);
-    //             $.each(data.page.records, function (idx, val) {
-    //                 var userName = '';
-    //                 var status = '';
-    //                 if (data.messageStatus == "1") {
-    //                     userName = val.senderUserName;
-    //                 } else {
-    //                     userName = val.receiverUserName;
-    //                 }
-    //                 switch (val.status) {
-    //                     case '0':
-    //                         status = '未处理';
-    //                         break;
-    //                     case '1':
-    //                         status = '处理中';
-    //                         break;
-    //                     case '2':
-    //                         status = "处理完毕";
-    //                         break;
-    //                 }
-    //                 $("#userMessageListTable tbody").append("<tr messageUuid='"+ val.uuid +"' onclick='updateUserMessage(this)' ondblclick='updateUserMessageStatus(this)'>" +
-    //                     "<td>" +
-    //                     "<span class='user-message-content'>"+ val.content +"</span>" +
-    //                     "</td>" +
-    //                     "<td>" +
-    //                     "<span class='user-message-targetName'>"+ userName +"</span>" +
-    //                     "</td>" +
-    //                     "<td>" +
-    //                     "<span class='user-message-status'>"+ status +"</span>" +
-    //                     "</td>" +
-    //                     "</tr>")
-    //             });
-    //             $('#message_status_select').empty();
-    //             $("#user_list_select").empty();
-    //             $("#user_select").empty();
-    //             $.each(messageStatusSelect, function(idx, val){
-    //                 $('#message_status_select').append("<option value='"+ idx +"'>"+ val.statusName +"</option>");
-	// 			});
-    //             $.each(data.userInfos, function (idx, val) {
-	// 				$("#user_list_select").append("<option value='"+ val.loginName +"'>"+ val.userName +"</option>");
-	// 				$("#user_select").append("<option value='"+ val.loginName +"'>"+ val.userName +"</option>");
-    //             });
-    //             $("#message_status_select").multiselect({
-    //                 header: false,
-    //                 noneSelectedText: "请选择",
-    //                 minWidth: 100,
-    //                 height: 100,
-    //                 selectedText: "# 项",
-    //                 selectedList: 2
-    //             });
-    //             $("#user_list_select").multiselect({
-    //                 header: true,
-    //                 noneSelectedText: "请选择",
-    //                 checkAllText: "全选",
-    //                 uncheckAllText: "全不选",
-    //                 selectedText: "# 人",
-    //                 minWidth: 142,
-    //                 height: 100,
-    //                 selectedList: 2
-    //             });
-    //             $("#user_select").multiselect({
-    //                 header: true,
-    //                 noneSelectedText: "请选择",
-    //                 checkAllText: "全选",
-    //                 uncheckAllText: "全不选",
-    //                 selectedText: "# 人",
-    //                 minWidth: 182,
-    //                 height: 100,
-    //                 selectedList: 3
-    //             });
-    //             $("#ui-multiselect-0-message_status_select-option-0").parent().parent().parent().parent().addClass("ui-multiselect-menu1");
-    //             $("#ui-multiselect-1-user_list_select-option-0").parent().parent().parent().parent().addClass("ui-multiselect-menu2");
-    //             $("#ui-multiselect-2-user_select-option-0").parent().parent().parent().parent().addClass("ui-multiselect-menu3");
-    //         },
-	// 		error: function () {
-	// 			$().toastmessage("showErrorToast", "查询失败！");
-    //         }
-	// 	});
-    // }
+    var messageStatusSelect = [{"statusName":"未处理"}, {"statusName":"处理完毕"}];
+    function searchUserMessageList(start, btn) {
+        $("#userMessageListTable tbody").empty();
+        var showUserMessageListForm = $("#showUserMessageListForm");
+        var messageStatus = $("#userMessageStatus").find("input[name='messageStatus']").val();
+        var status = ['0', '1'];
+        var targetUserNames = [];
+        if (!start) {
+            status = showUserMessageListForm.find("#message_status_select").multiselect("getChecked").map(function () {
+                return this.value;
+            }).get();
+            targetUserNames = showUserMessageListForm.find("#user_list_select").multiselect("getChecked").map(function () {
+                return this.value;
+            }).get();
+		}
+        var pageNumber = 1;
+        if (!btn) {
+            pageNumber = showUserMessageListForm.find("#current-page-number label").text();
+            if (pageNumber == "" || pageNumber == 0 || ((pageNumber == "" || pageNumber == 0) && targetUserNames.length > 0)){
+                pageNumber = 1;
+            }
+		}
+        var postData = {};
+        postData.messageStatus = messageStatus;
+        postData.status = status;
+        postData.targetUserNames = targetUserNames;
+        postData.pageNumber = pageNumber;
+        $.ajax({
+			url: "/internal/usermessage/getUserMessages",
+			type: "POST",
+			data: JSON.stringify(postData),
+			headers: {
+			    "Accept": "application/json",
+				"Content-Type": "application/json"
+			},
+			success: function (data) {
+                if (data.page.pages == 0) {
+                    data.page.current = 0;
+                }
+                if (data.page.current > data.page.pages) {
+                    data.page.current = data.page.pages;
+				}
+                $("#showUserMessageListForm").find("input[name='messageStatus']").val(data.messageStatus);
+                $("#showUserMessageListForm").find("#current-page-number label").text(data.page.current);
+                $("#showUserMessageListForm").find("#total-page-number label").text(data.page.pages);
+                $.each(data.page.records, function (idx, val) {
+                    var userName = '';
+                    var status = '';
+                    if (data.messageStatus == "1") {
+                        userName = val.senderUserName;
+                    } else {
+                        userName = val.receiverUserName;
+                    }
+                    switch (val.status) {
+                        case '0':
+                            status = '未处理';
+                            break;
+                        case '1':
+                            status = '处理完毕';
+                            break;
+                    }
+                    $("#userMessageListTable tbody").append("<tr messageUuid='"+ val.uuid +"' onclick='updateUserMessage(this)' ondblclick='updateUserMessageStatus(this)'>" +
+                        "<td>" +
+                        "<span class='user-message-content'>"+ val.content +"</span>" +
+                        "</td>" +
+                        "<td>" +
+                        "<span class='user-message-targetName'>"+ userName +"</span>" +
+                        "</td>" +
+                        "<td>" +
+                        "<span class='user-message-status'>"+ status +"</span>" +
+                        "</td>" +
+                        "</tr>")
+                });
+                $('#message_status_select').empty();
+                $("#user_list_select").empty();
+                $("#user_select").empty();
+                $.each(messageStatusSelect, function(idx, val){
+                    $('#message_status_select').append("<option value='"+ idx +"'>"+ val.statusName +"</option>");
+				});
+                $.each(data.userInfos, function (idx, val) {
+					$("#user_list_select").append("<option value='"+ val.loginName +"'>"+ val.userName +"</option>");
+					$("#user_select").append("<option value='"+ val.loginName +"'>"+ val.userName +"</option>");
+                });
+                $("#message_status_select").multiselect({
+                    header: false,
+                    noneSelectedText: "请选择",
+                    minWidth: 100,
+                    height: 100,
+                    selectedText: "# 项",
+                    selectedList: 2
+                });
+                $("#user_list_select").multiselect({
+                    header: true,
+                    noneSelectedText: "请选择",
+                    checkAllText: "全选",
+                    uncheckAllText: "全不选",
+                    selectedText: "# 人",
+                    minWidth: 142,
+                    height: 100,
+                    selectedList: 2
+                });
+                $("#user_select").multiselect({
+                    header: true,
+                    noneSelectedText: "请选择",
+                    checkAllText: "全选",
+                    uncheckAllText: "全不选",
+                    selectedText: "# 人",
+                    minWidth: 182,
+                    height: 100,
+                    selectedList: 3
+                });
+                $("#ui-multiselect-0-message_status_select-option-0").parent().parent().parent().parent().addClass("ui-multiselect-menu1");
+                $("#ui-multiselect-1-user_list_select-option-0").parent().parent().parent().parent().addClass("ui-multiselect-menu2");
+                $("#ui-multiselect-2-user_select-option-0").parent().parent().parent().parent().addClass("ui-multiselect-menu3");
+            },
+			error: function () {
+				$().toastmessage("showErrorToast", "查询失败！");
+            }
+		});
+    }
 
     function changeUserMessageStatus(status, self) {
         var userMessageStatus = $("#userMessageStatus");
