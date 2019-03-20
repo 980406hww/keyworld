@@ -741,6 +741,7 @@ function saveCustomerKeywords(qzSettingUuid, customerUuid, optimizedGroupName) {
         keywordStr = keywordStr.substring(0, keywordStr.length - 1);
     }
     var keywords = keywordStr.split(',');
+    keywords = Array.from(new Set(keywords)).filter(d=>d);
     var type = customerKeywordDialog.find("#qzSettingEntryType").val();
     var searchEngine = customerKeywordDialog.find("#searchEngine").val();
     var postData = {};
@@ -1713,7 +1714,7 @@ function excludeCustomerKeywords(qzSettingUuid, customerUuid, domain, optimizedG
         keywordStr = keywordStr.substring(0, keywordStr.length - 1);
     }
     var keywords = keywordStr.split(',');
-    keywords = Array.from(new Set(keywords));
+    keywords = Array.from(new Set(keywords)).filter(d=>d);
     var searchEngine = excludeCustomerKeywordDialog.find("#searchEngine").val();
     var postData = {};
     postData.qzSettingUuid = qzSettingUuid;
