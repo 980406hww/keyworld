@@ -3,7 +3,7 @@ package com.keymanager.monitoring.criteria;
 import java.util.List;
 
 public class QZSettingExcludeCustomerKeywordsCriteria {
-    private long excludeKeywordUuid;
+    private Long excludeKeywordUuid;
     private long customerUuid;
     private long qzSettingUuid;
     private String domain;
@@ -12,11 +12,11 @@ public class QZSettingExcludeCustomerKeywordsCriteria {
     private String terminalType;
     private List<String> keywords;
 
-    public long getExcludeKeywordUuid() {
+    public Long getExcludeKeywordUuid () {
         return excludeKeywordUuid;
     }
 
-    public void setExcludeKeywordUuid(long excludeKeywordUuid) {
+    public void setExcludeKeywordUuid (Long excludeKeywordUuid) {
         this.excludeKeywordUuid = excludeKeywordUuid;
     }
 

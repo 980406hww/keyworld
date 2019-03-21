@@ -22,10 +22,10 @@ public class CustomerExcludeKeywordService extends ServiceImpl<CustomerExcludeKe
         customerExcludeKeyword.setTerminalType(qzSettingExcludeCustomerKeywordsCriteria.getTerminalType());
         StringBuffer jointKeyword = new StringBuffer();
         for (String keyword: qzSettingExcludeCustomerKeywordsCriteria.getKeywords()) {
-            jointKeyword.append(keyword+",");
+            jointKeyword.append(keyword + ",");
         }
-        customerExcludeKeyword.setKeyword(jointKeyword.toString());
-        if (qzSettingExcludeCustomerKeywordsCriteria.getExcludeKeywordUuid() == 0){
+        customerExcludeKeyword.setKeyword(jointKeyword.toString().substring(0, jointKeyword.toString().length() - 1));
+        if (null == qzSettingExcludeCustomerKeywordsCriteria.getExcludeKeywordUuid()){
             customerExcludeKeywordDao.insert(customerExcludeKeyword);
         }else {
             customerExcludeKeyword.setUuid(qzSettingExcludeCustomerKeywordsCriteria.getExcludeKeywordUuid());

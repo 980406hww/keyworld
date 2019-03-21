@@ -741,7 +741,9 @@ function saveCustomerKeywords(qzSettingUuid, customerUuid, optimizedGroupName) {
         keywordStr = keywordStr.substring(0, keywordStr.length - 1);
     }
     var keywords = keywordStr.split(',');
-    keywords = Array.from(new Set(keywords)).filter(d=>d);
+    keywords = keywords.filter(function (keyword, index) {
+        return keywords.indexOf(keyword) === index && keyword != '';
+    });
     var type = customerKeywordDialog.find("#qzSettingEntryType").val();
     var searchEngine = customerKeywordDialog.find("#searchEngine").val();
     var postData = {};
@@ -1716,7 +1718,9 @@ function excludeCustomerKeywords(qzSettingUuid, customerUuid, domain, optimizedG
         keywordStr = keywordStr.substring(0, keywordStr.length - 1);
     }
     var keywords = keywordStr.split(',');
-    keywords = Array.from(new Set(keywords)).filter(d=>d);
+    keywords = keywords.filter(function (keyword, index) {
+        return keywords.indexOf(keyword) === index && keyword != '';
+    });
     var postData = {};
     postData.excludeKeywordUuid = excludeKeywordUuid;
     postData.qzSettingUuid = qzSettingUuid;
@@ -1763,6 +1767,7 @@ function echoExcludeKeyword() {
         },
         success: function (data) {
             if (data != null) {
+                data.keyword = data.keyword.replace(/[,]/g, "\n");
                 $("#excludeCustomerKeywordDialog").find("#excludeKeywordUuid").val(data.uuid);
                 $("#excludeCustomerKeywordDialog").find("#customerKeywordDialogContent").val(data.keyword);
             }

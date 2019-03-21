@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.enums.CollectMethod;
 import com.keymanager.monitoring.common.email.ObserveOptimizationCountMailService;
 import com.keymanager.monitoring.criteria.*;
-import com.keymanager.monitoring.dao.CustomerExcludeKeywordDao;
 import com.keymanager.monitoring.dao.CustomerKeywordDao;
 import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.enums.*;
