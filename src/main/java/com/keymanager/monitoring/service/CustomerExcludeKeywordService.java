@@ -16,27 +16,30 @@ public class CustomerExcludeKeywordService extends ServiceImpl<CustomerExcludeKe
     private CustomerExcludeKeywordDao customerExcludeKeywordDao;
 
     public void excludeCustomerKeywords(QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria){
+        CustomerExcludeKeyword customerExcludeKeyword = new CustomerExcludeKeyword();
+        customerExcludeKeyword.setCustomerUuid(qzSettingExcludeCustomerKeywordsCriteria.getCustomerUuid());
+        customerExcludeKeyword.setQzSettingUuid(qzSettingExcludeCustomerKeywordsCriteria.getQzSettingUuid());
+        customerExcludeKeyword.setTerminalType(qzSettingExcludeCustomerKeywordsCriteria.getTerminalType());
         StringBuffer jointKeyword = new StringBuffer();
         for (String keyword: qzSettingExcludeCustomerKeywordsCriteria.getKeywords()) {
             jointKeyword.append(keyword+",");
         }
-        CustomerExcludeKeyword customerExcludeKeyword = customerExcludeKeywordDao.searchCustomerExcludeKeyword(qzSettingExcludeCustomerKeywordsCriteria.getQzSettingUuid(),qzSettingExcludeCustomerKeywordsCriteria.getTerminalType());
-        if (null  == customerExcludeKeyword){
-            customerExcludeKeyword = new CustomerExcludeKeyword();
-            customerExcludeKeyword.setCustomerUuid(qzSettingExcludeCustomerKeywordsCriteria.getCustomerUuid());
-            customerExcludeKeyword.setQzSettingUuid(qzSettingExcludeCustomerKeywordsCriteria.getQzSettingUuid());
-            customerExcludeKeyword.setTerminalType(qzSettingExcludeCustomerKeywordsCriteria.getTerminalType());
-            customerExcludeKeyword.setKeyword(jointKeyword.toString());
+        customerExcludeKeyword.setKeyword(jointKeyword.toString());
+        if (qzSettingExcludeCustomerKeywordsCriteria.getExcludeKeywordUuid() == 0){
             customerExcludeKeywordDao.insert(customerExcludeKeyword);
         }else {
-            customerExcludeKeyword.setKeyword(customerExcludeKeyword.getKeyword()+jointKeyword);
+            customerExcludeKeyword.setUuid(qzSettingExcludeCustomerKeywordsCriteria.getExcludeKeywordUuid());
             customerExcludeKeyword.setUpdateTime(new Date());
             customerExcludeKeywordDao.updateById(customerExcludeKeyword);
         }
     }
 
     public String getCustomerExcludeKeyword(Long customerUuid, Long qzSettingUuid, String terminalType, String url){
-        url = url.replace("www.","");
+        url = url.replace("www.","").replace("http://","").replace("https://","").split("/")[0];
         return customerExcludeKeywordDao.getCustomerExcludeKeyword(customerUuid, qzSettingUuid, terminalType, url);
+    }
+
+    public CustomerExcludeKeyword echoExcludeKeyword(QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria){
+        return customerExcludeKeywordDao.searchCustomerExcludeKeyword(qzSettingExcludeCustomerKeywordsCriteria.getQzSettingUuid(), qzSettingExcludeCustomerKeywordsCriteria.getTerminalType());
     }
 }

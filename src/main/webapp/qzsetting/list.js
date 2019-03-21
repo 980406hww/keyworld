@@ -1674,6 +1674,7 @@ function showExcludeCustomerKeywordDialog(qzSettingUuid, customerUuid, domain, o
     excludeCustomerKeywordDialog.find("#customerUuid").val(customerUuid);
     excludeCustomerKeywordDialog.find("#terminalType").val(terminalType);
     excludeCustomerKeywordDialog.find("#domain").val(domain);
+    getExcludeKeyword();
     excludeCustomerKeywordDialog.show();
     excludeCustomerKeywordDialog.dialog({
         resizable: false,
@@ -1702,6 +1703,7 @@ function showExcludeCustomerKeywordDialog(qzSettingUuid, customerUuid, domain, o
 function excludeCustomerKeywords(qzSettingUuid, customerUuid, domain, optimizedGroupName) {
     var excludeCustomerKeywordDialog = $("#excludeCustomerKeywordDialog");
     var terminalType = excludeCustomerKeywordDialog.find("#terminalType").val();
+    var excludeKeywordUuid = excludeCustomerKeywordDialog.find("#excludeKeywordUuid").val();
     var keywordStr = excludeCustomerKeywordDialog.find("#customerKeywordDialogContent").val();
     if (keywordStr == "") {
         alert("请输入关键字");
@@ -1714,13 +1716,12 @@ function excludeCustomerKeywords(qzSettingUuid, customerUuid, domain, optimizedG
     }
     var keywords = keywordStr.split(',');
     keywords = Array.from(new Set(keywords)).filter(d=>d);
-    var searchEngine = excludeCustomerKeywordDialog.find("#searchEngine").val();
     var postData = {};
+    postData.excludeKeywordUuid = excludeKeywordUuid;
     postData.qzSettingUuid = qzSettingUuid;
     postData.customerUuid = customerUuid;
     postData.domain = $.trim(domain);
     postData.optimizeGroupName = optimizedGroupName;
-    postData.searchEngine = searchEngine;
     postData.terminalType = $.trim(terminalType);
     postData.keywords = keywords;
     $.ajax({
@@ -1737,6 +1738,32 @@ function excludeCustomerKeywords(qzSettingUuid, customerUuid, domain, optimizedG
                 $("#excludeCustomerKeywordDialog").dialog("close");
             } else {
                 $().toastmessage('showErrorToast', "保存失败！");
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "保存失败！");
+        }
+    });
+}
+function getExcludeKeyword() {
+    var excludeCustomerKeywordDialog = $("#excludeCustomerKeywordDialog");
+    var qzSettingUuid = excludeCustomerKeywordDialog.find("#qzSettingUuid").val();
+    var terminalType = excludeCustomerKeywordDialog.find("#terminalType").val();
+    var postData = {};
+    postData.qzSettingUuid = qzSettingUuid;
+    postData.terminalType = $.trim(terminalType);
+    $.ajax({
+        url: '/internal/qzsetting/getExcludeKeywordByQZSettingUuid',
+        type: 'POST',
+        data: JSON.stringify(postData),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        success: function (data) {
+            if (data != null) {
+                $("#excludeCustomerKeywordDialog").find("#excludeKeywordUuid").val(data.uuid);
+                $("#excludeCustomerKeywordDialog").find("#customerKeywordDialogContent").val(data.keyword);
             }
         },
         error: function () {

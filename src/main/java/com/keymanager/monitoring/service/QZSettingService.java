@@ -477,7 +477,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
                     }
 					if (CollectionUtils.isNotEmpty(insertingCustomerKeywords)) {
                         for (CustomerKeyword customerKeyword : insertingCustomerKeywords) {
-                            if ("PC".equals(customerKeyword.getTerminalType())){
+                            if (TerminalTypeEnum.PC.equals(customerKeyword.getTerminalType())){
                                 if (!pcExcludeKeyword.isEmpty()){
                                     if (pcExcludeKeyword.contains(customerKeyword.getKeyword())){
                                         customerKeyword.setOptimizeGroupName("zanting");
@@ -634,8 +634,12 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
     }
 
 	public void excludeQZSettingCustomerKeywords (QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria) {
-        qzSettingExcludeCustomerKeywordsCriteria.setDomain(qzSettingExcludeCustomerKeywordsCriteria.getDomain().replace("http://","").replace("www.",""));
+        qzSettingExcludeCustomerKeywordsCriteria.setDomain(qzSettingExcludeCustomerKeywordsCriteria.getDomain().replace("http://","").replace("https://","").replace("www.","").split("/")[0]);
 		customerKeywordService.excludeCustomerKeyword(qzSettingExcludeCustomerKeywordsCriteria);
         customerExcludeKeywordService.excludeCustomerKeywords(qzSettingExcludeCustomerKeywordsCriteria);
 	}
+
+	public CustomerExcludeKeyword echoExcludeKeyword(QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria){
+        return customerExcludeKeywordService.echoExcludeKeyword(qzSettingExcludeCustomerKeywordsCriteria);
+    }
 }

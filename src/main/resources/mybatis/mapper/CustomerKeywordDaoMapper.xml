@@ -1251,7 +1251,6 @@
             AND ck.fQZSettingUuid = #{qzSettingExcludeCustomerKeywordsCriteria.qzSettingUuid}
         </if>
         AND ck.fType = #{qzSettingExcludeCustomerKeywordsCriteria.type}
-        AND ck.fSearchEngine = #{qzSettingExcludeCustomerKeywordsCriteria.searchEngine}
         AND ck.fTerminalType = #{qzSettingExcludeCustomerKeywordsCriteria.terminalType}
         AND ck.fKeyword IN
         <foreach item = "keyword" collection = "qzSettingExcludeCustomerKeywordsCriteria.keywords" open="(" separator="," close=")">

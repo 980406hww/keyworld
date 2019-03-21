@@ -1185,26 +1185,16 @@
             <tr>
                 <td style="width:60px" align="right">域名</td>
                 <td>
+					<input type="hidden" name="excludeKeywordUuid" id="excludeKeywordUuid" />
                     <input type="hidden" name="qzSettingUuid" id="qzSettingUuid" />
                     <input type="hidden" name="customerUuid" id="customerUuid" />
                     <input type="text" name="domain" id="domain" style="width:240px" readonly/>
                 </td>
             </tr>
-			<tr>
-				<td align="right" style="margin-right:4px;">引擎</td>
-				<td>
-					<select name="searchEngine" id="searchEngine" style="width:240px">
-						<option value="百度" selected>百度</option>
-						<option value="360">360</option>
-						<option value="UC">UC</option>
-						<option value="搜狗">搜狗</option>
-					</select>
-				</td>
-			</tr>
             <tr>
                 <td align="right" style="margin-right:4px;">终端类型</td>
                 <td>
-                    <select name="terminalType" id="terminalType" style="width:240px">
+                    <select name="terminalType" id="terminalType" style="width:240px" onchange="getExcludeKeyword()">
                         <option value="PC">PC</option>
                         <option value="Phone">Phone</option>
                     </select>

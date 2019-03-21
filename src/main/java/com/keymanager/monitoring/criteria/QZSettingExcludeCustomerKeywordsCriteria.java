@@ -3,14 +3,22 @@ package com.keymanager.monitoring.criteria;
 import java.util.List;
 
 public class QZSettingExcludeCustomerKeywordsCriteria {
+    private long excludeKeywordUuid;
     private long customerUuid;
     private long qzSettingUuid;
     private String domain;
     private String optimizeGroupName;
     private String type;
-    private String searchEngine;
     private String terminalType;
     private List<String> keywords;
+
+    public long getExcludeKeywordUuid() {
+        return excludeKeywordUuid;
+    }
+
+    public void setExcludeKeywordUuid(long excludeKeywordUuid) {
+        this.excludeKeywordUuid = excludeKeywordUuid;
+    }
 
     public long getCustomerUuid() {
         return customerUuid;
@@ -50,14 +58,6 @@ public class QZSettingExcludeCustomerKeywordsCriteria {
 
     public void setType (String type) {
         this.type = type;
-    }
-
-    public String getSearchEngine () {
-        return searchEngine;
-    }
-
-    public void setSearchEngine (String searchEngine) {
-        this.searchEngine = searchEngine;
     }
 
     public String getTerminalType () {
