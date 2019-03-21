@@ -1239,4 +1239,57 @@
     <select id="getCustomerUuids" resultType="Long">
         SELECT DISTINCT ck.fCustomerUuid FROM t_customer_keyword ck WHERE ck.fType = #{entryType} AND ck.fTerminalType = #{terminalType} AND ck.fStatus = 1
     </select>
+
+
+    <update id="updateNoEnteredKeywordGroupName">
+        UPDATE t_customer_keyword ck
+        SET ck.fOptimizeGroupName = CONCAT('no_', fOptimizeGroupName)
+        WHERE
+            ck.fOptimizedCount = 0
+        AND ck.fStatus = 1
+        AND ck.fOptimizeGroupName &lt;&gt; 'sotp'
+        AND ck.fOptimizeGroupName &lt;&gt; 'zanting'
+    </update>
+
+    <select id="getNoEnteredKeywords" resultType="com.keymanager.monitoring.vo.CustomerKeywordEnteredVO">
+        SELECT
+            ck.fUuid AS	'uuid',
+            ck.fTerminalType AS	'terminalType',
+            ck.fTitle AS 'title',
+            ck.fOptimizeGroupName AS 'optimizeGroupName',
+            ck.fKeyword	AS 'keyword',
+            ck.fUrl	AS 'url',
+            ck.fSearchEngine AS	'searchEngine',
+            CK.fCaptureTitleQueryTime AS 'captureTitleQueryTime'
+        FROM
+            t_customer_keyword ck
+        WHERE
+            ck.fOptimizeGroupName like 'no_%'
+        AND ck.fStatus = 1
+        <if test="fVerifyEnteredKeywordTime != null and fVerifyEnteredKeywordTime != ''">
+            AND DATE_SUB(CURDATE(), INTERVAL 7 DAY) &gt;= date(ck.fVerifyEnteredKeywordTime)
+        </if>
+        ORDER BY ck.fVerifyEnteredKeywordTime LIMIT 10
+    </select>
+
+
+    <update id="updateNoEnteredKeywords">
+        <foreach collection="customerKeywordList" item="item" open="" separator=";" close="">
+            UPDATE t_customer_keyword
+            <set>
+                <if test="item.remarks != null and item.remarks !='' and item.capturedTitle != 1">
+                    fRemarks = CONCAT(IFNULL(fRemarks,''), #{item.remarks}),
+                </if>
+                <if test="item.capturedTitle == 1">
+                    fCapturedTitle = 1,
+                    fOptimizeGroupName = #{item.optimizeGroupName},
+                </if>
+                <if test="item.uuid != null">
+                    fVerifyEnteredKeywordTime = NOW(),
+                </if>
+            </set>
+            WHERE fUuid = #{item.uuid}
+        </foreach>
+    </update>
+
 </mapper>

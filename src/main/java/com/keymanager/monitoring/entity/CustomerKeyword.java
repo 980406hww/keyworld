@@ -262,6 +262,10 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(value = "fCapturePositionCity")
     private String capturePositionCity;
 
+    @TableField(value = "fVerifyEnteredKeywordTime")
+    private Date verifyEnteredKeywordTime;
+
+
     public long getCustomerUuid() {
         return customerUuid;
     }
@@ -1000,5 +1004,13 @@ public class CustomerKeyword extends BaseEntity {
 
     public void setCapturePositionCity(String capturePositionCity) {
         this.capturePositionCity = capturePositionCity;
+    }
+
+    public Date getVerifyEnteredKeywordTime() {
+        return verifyEnteredKeywordTime;
+    }
+
+    public void setVerifyEnteredKeywordTime(Date verifyEnteredKeywordTime) {
+        this.verifyEnteredKeywordTime = verifyEnteredKeywordTime;
     }
 }

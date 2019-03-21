@@ -17,11 +17,14 @@ import com.keymanager.util.*;
 import com.keymanager.util.common.StringUtil;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
+import com.keymanager.value.CustomerKeywordVO;
+import net.sf.json.JSONArray;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,10 +33,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = "/external/customerkeyword")
@@ -536,4 +536,43 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
+
+
+    @RequestMapping(value = "getNoEnteredKeywords", method = RequestMethod.POST)
+    public ResponseEntity<?> getNoEnteredKeywords(@RequestBody Map<String, Object> requestMap) throws Exception {
+        try {
+            String userName = (String) requestMap.get("userName");
+            String password = (String) requestMap.get("password");
+            if (validUser(userName, password)) {
+                List<CustomerKeywordEnteredVO> customerKeywordList = customerKeywordService.getNoEnteredKeywords();
+                return new ResponseEntity<Object>(customerKeywordList, HttpStatus.OK);
+            }
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        }catch (Exception ex){
+            logger.error(ex.getMessage());
+        }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+    }
+
+    @RequestMapping(value = "updateNoEnteredKeywords", method = RequestMethod.POST)
+    public ResponseEntity<?> updateNoEnteredKeywords(@RequestBody Map<String, Object> requestMap) throws Exception {
+        try {
+            String userName = (String) requestMap.get("userName");
+            String password = (String) requestMap.get("password");
+            if (validUser(userName, password)) {
+                List customerKeywordEnteredVOList = (List) requestMap.get("customerKeywordList");
+                JSONArray jsonArray = JSONArray.fromObject(customerKeywordEnteredVOList);
+                List<CustomerKeywordEnteredVO> customerKeywordList = (List<CustomerKeywordEnteredVO>)JSONArray.toCollection(jsonArray, CustomerKeywordEnteredVO.class);
+                customerKeywordService.updateNoEnteredKeywords(customerKeywordList);
+                 return new ResponseEntity<Object>(true, HttpStatus.OK);
+            }
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        }catch (Exception ex){
+            logger.error(ex.getMessage());
+        }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+    }
+
+
+
 }

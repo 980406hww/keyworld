@@ -15,6 +15,7 @@ import com.keymanager.util.Utils;
 import com.keymanager.util.common.StringUtil;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
+import com.keymanager.value.CustomerKeywordVO;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -23,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sun.util.resources.ga.LocaleNames_ga;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -1556,4 +1558,37 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     public List<Long> getCustomerUuids(String entryType, String terminalType){
         return customerKeywordDao.getCustomerUuids(entryType, terminalType);
     }
+
+    public void updateNoEnteredKeywordGroupName(){
+        customerKeywordDao.updateNoEnteredKeywordGroupName();
+
+    }
+
+    public List<CustomerKeywordEnteredVO> getNoEnteredKeywords(){
+        return customerKeywordDao.getNoEnteredKeywords();
+    }
+
+    public void updateNoEnteredKeywords(List<CustomerKeywordEnteredVO> customerKeywordVOList){
+        if (customerKeywordVOList.size() > 0) {
+            List<CustomerKeyword> customerKeywordList = new ArrayList<>();
+            for (CustomerKeywordEnteredVO customerKeywordEnteredVO:customerKeywordVOList) {
+                CustomerKeyword customerKeyword = new CustomerKeyword();
+                if ("超过7天".equals(customerKeywordEnteredVO.getRemarks())) {
+                    customerKeyword.setOptimizeGroupName(customerKeywordEnteredVO.getOptimizeGroupName().substring(3));
+                    customerKeyword.setCapturedTitle(1);
+                }
+                customerKeyword.setUuid(customerKeywordEnteredVO.getUuid());
+                customerKeyword.setRemarks(customerKeywordEnteredVO.getRemarks());
+                customerKeywordList.add(customerKeyword);
+            }
+            if (customerKeywordList.size() > 0) {
+                customerKeywordDao.updateNoEnteredKeywords(customerKeywordList);
+            }
+        }
+    }
+
+
+
+
+
 }

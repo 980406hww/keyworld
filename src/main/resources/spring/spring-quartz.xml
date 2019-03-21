@@ -29,6 +29,7 @@
 				<ref bean="cronTriggerRefreshStatInfo" />
 				<ref bean="cronAutoTriggerDailyReport" />
 				<ref bean="cronAutoTriggerResetInfoDaily" />
+				<ref bean="cronAutoTriggerChangeNoEnteredKeywordGroupName"/>
 			</list>
 		</property>
 		<!-- Quartz配置, 本地运行无需单独的quartz.properties文件，在此简单配置即可 -->
@@ -297,6 +298,18 @@
 		<property name="concurrent" value="false" />
 	</bean>
 
+	<!--终端未录入词修改分组-->
+	<bean id="cronAutoTriggerChangeNoEnteredKeywordGroupName" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="cronAutoTriggerChangeNoEnteredKeywordGroupNameSchedule"/>
+		<property name="cronExpression" value="0 45 23 * * ?" />
+	</bean>
+
+	<bean id="cronAutoTriggerChangeNoEnteredKeywordGroupNameSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="autoTriggerChangeNoEnteredKeywordGroupNameSchedule" />
+		<property name="targetMethod" value="runTask" />
+		<property name="concurrent" value="false" />
+	</bean>
+
 	<!--自动触发每天的报表-->
 	<bean id="cronAutoTriggerDailyReport" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="cronAutoTriggerDailyReportSchedule"/>
@@ -321,4 +334,6 @@
 		<property name="targetMethod" value="runTask" />
 		<property name="concurrent" value="false" />
 	</bean>
+
+
 </beans>
