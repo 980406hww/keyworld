@@ -277,14 +277,14 @@
         var senderUserName = userMessageQueueTr.find("input[name='senderUserName']").val();
         if (senderUserName != '') {
             senderUserNames = senderUserName.replace(/[，]/g, ",").replace(/[\s+]/g, "").split(',');
-            senderUserNames = Array.from(new Set(senderUserNames)).filter(b=>b);
+            senderUserNames = Array.from(new Set(senderUserNames)).filter(function(name) { return name; });
             postData.senderUserNames = senderUserNames;
 		}
 		var receiverUserNames = [];
         var receiverUserName = userMessageQueueTr.find("input[name='receiverUserName']").val();
         if (receiverUserName != '') {
             receiverUserNames = receiverUserName.replace(/[，]/g, ",").replace(/[\s+]/g, "").split(',');
-            receiverUserNames = Array.from(new Set(receiverUserNames)).filter(b=>b);
+            receiverUserNames = Array.from(new Set(receiverUserNames)).filter(function(name) { return name; });;
             postData.receiverUserNames = receiverUserNames;
         }
         var pageNumber = $("#showUserMessageQueueForm").find("#current-page-number label").text();
@@ -307,7 +307,7 @@
                     var status = val.status == 0 ? '未处理' : '处理完毕';
                     tbody.append("<tr onclick=''>" +
 						"<td>"+ val.type +"</td>" +
-						"<td title='"+ val.contactPerson +"'><span class='user-message-contactPerson'>"+ val.contactPerson + "__" + val.customerUuid +"</span></td>" +
+						"<td title='"+ val.contactPerson + "__" + val.customerUuid +"'><span class='user-message-contactPerson'>"+ val.contactPerson + "__" + val.customerUuid +"</span></td>" +
 						"<td title='"+ val.senderUserName +"'><sapn>"+ val.senderUserName +"</sapn></td>" +
 						"<td title='"+ val.receiverUserName +"'><sapn>"+ val.receiverUserName +"</sapn></td>" +
 						"<td>"+ status +"</td>" +
@@ -336,5 +336,6 @@
             return false;
         }
         $("#showUserMessageQueueForm").find("#current-page-number label").text(pageNumber);
+        searchUserMessageQueue();
     }
 </script>
