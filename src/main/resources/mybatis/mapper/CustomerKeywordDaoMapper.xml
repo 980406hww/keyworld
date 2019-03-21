@@ -1247,9 +1247,6 @@
         <if test="qzSettingExcludeCustomerKeywordsCriteria.customerUuid != null and qzSettingExcludeCustomerKeywordsCriteria.customerUuid != ''">
           AND ck.fCustomerUuid = #{qzSettingExcludeCustomerKeywordsCriteria.customerUuid}
         </if>
-        <if test="qzSettingExcludeCustomerKeywordsCriteria.qzSettingUuid != null and qzSettingExcludeCustomerKeywordsCriteria.qzSettingUuid != ''">
-            AND ck.fQZSettingUuid = #{qzSettingExcludeCustomerKeywordsCriteria.qzSettingUuid}
-        </if>
         AND ck.fType = #{qzSettingExcludeCustomerKeywordsCriteria.type}
         AND ck.fTerminalType = #{qzSettingExcludeCustomerKeywordsCriteria.terminalType}
         AND ck.fKeyword IN
