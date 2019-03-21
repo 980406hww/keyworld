@@ -1194,7 +1194,7 @@
             <tr>
                 <td align="right" style="margin-right:4px;">终端类型</td>
                 <td>
-                    <select name="terminalType" id="terminalType" style="width:240px" onchange="getExcludeKeyword()">
+                    <select name="terminalType" id="terminalType" style="width:240px" onchange="echoExcludeKeyword()">
                         <option value="PC">PC</option>
                         <option value="Phone">Phone</option>
                     </select>

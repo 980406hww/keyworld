@@ -232,8 +232,8 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		}
 	}
 
-    @RequestMapping(value = "getExcludeKeywordByQZSettingUuid", method = RequestMethod.POST)
-    public ResponseEntity<?> getExcludeKeywordByQZSettingUuid(HttpServletRequest request, @RequestBody QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria) {
+    @RequestMapping(value = "echoExcludeKeyword", method = RequestMethod.POST)
+    public ResponseEntity<?> echoExcludeKeyword(HttpServletRequest request, @RequestBody QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria) {
         try {
             CustomerExcludeKeyword customerExcludeKeyword = qzSettingService.echoExcludeKeyword(qzSettingExcludeCustomerKeywordsCriteria);
             return new ResponseEntity<Object>(customerExcludeKeyword, HttpStatus.OK);

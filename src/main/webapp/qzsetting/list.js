@@ -1675,7 +1675,7 @@ function showExcludeCustomerKeywordDialog(qzSettingUuid, customerUuid, domain, o
     excludeCustomerKeywordDialog.find("#customerUuid").val(customerUuid);
     excludeCustomerKeywordDialog.find("#terminalType").val(terminalType);
     excludeCustomerKeywordDialog.find("#domain").val(domain);
-    getExcludeKeyword();
+    echoExcludeKeyword();
     excludeCustomerKeywordDialog.show();
     excludeCustomerKeywordDialog.dialog({
         resizable: false,
@@ -1746,7 +1746,7 @@ function excludeCustomerKeywords(qzSettingUuid, customerUuid, domain, optimizedG
         }
     });
 }
-function getExcludeKeyword() {
+function echoExcludeKeyword() {
     var excludeCustomerKeywordDialog = $("#excludeCustomerKeywordDialog");
     var qzSettingUuid = excludeCustomerKeywordDialog.find("#qzSettingUuid").val();
     var terminalType = excludeCustomerKeywordDialog.find("#terminalType").val();
@@ -1754,7 +1754,7 @@ function getExcludeKeyword() {
     postData.qzSettingUuid = qzSettingUuid;
     postData.terminalType = $.trim(terminalType);
     $.ajax({
-        url: '/internal/qzsetting/getExcludeKeywordByQZSettingUuid',
+        url: '/internal/qzsetting/echoExcludeKeyword',
         type: 'POST',
         data: JSON.stringify(postData),
         headers: {
