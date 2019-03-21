@@ -1,6 +1,5 @@
 $(function () {
-    $("#showUserMessageListDialog").dialog("close");
-    $("#showUserMessageDialog").dialog("close");
+    $("#showUserMessageQueueDialog").dialog("close");
     checkMessageInbox();
 });
 function doOver(obj) {

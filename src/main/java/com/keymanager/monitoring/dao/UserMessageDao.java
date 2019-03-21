@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.criteria.UserMessageCriteria;
 import com.keymanager.monitoring.entity.UserMessage;
+import com.keymanager.monitoring.vo.UserMessageVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
@@ -15,7 +16,7 @@ import java.util.List;
  **/
 public interface UserMessageDao extends BaseMapper<UserMessage> {
 
-    List<UserMessage> getUserMessages(Page<UserMessage> page, @Param("userMessageCriteria") UserMessageCriteria userMessageCriteria);
+    List<UserMessageVO> getUserMessages(Page<UserMessageVO> page, @Param("userMessageCriteria") UserMessageCriteria userMessageCriteria);
 
     UserMessage getUserMessage(@Param("userMessageCriteria")UserMessageCriteria userMessageCriteria, @Param("type") boolean type);
 

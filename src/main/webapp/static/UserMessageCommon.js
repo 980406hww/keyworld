@@ -170,14 +170,14 @@ function saveUserMessage(type, customerUuid, status) {
         if (uuid != "") {
             postData.uuid = uuid;
         }
-        var targetUserNames = showUserMessageForm.find("#user_select").multiselect("getChecked").map(function () {
+        var receiverUserNames = showUserMessageForm.find("#user_select").multiselect("getChecked").map(function () {
             return this.value;
         }).get();
-        if (targetUserNames.length < 1) {
+        if (receiverUserNames.length < 1) {
             alert("请选择收信人");
             return false;
         }
-        postData.targetUserNames = targetUserNames;
+        postData.receiverUserNames = receiverUserNames;
         var content = showUserMessageForm.find("input[name='content']").val();
         if (content == '') {
             alert("请输入处理内容");

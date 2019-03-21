@@ -2,60 +2,55 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.monitoring.dao.UserMessageDao">
 
-    <select id="getUserMessages" resultType="com.keymanager.monitoring.entity.UserMessage">
+    <select id="getUserMessages" resultType="com.keymanager.monitoring.vo.UserMessageVO">
         SELECT
             um.fUuid AS 'uuid',
-            <if test="userMessageCriteria.messageStatus == 1">
-                u.fUserName AS 'senderUserName',
-            </if>
-            <if test="userMessageCriteria.messageStatus == 2">
-                u.fUserName AS 'receiverUserName',
-            </if>
-            um.fStatus AS 'status',
-            um.fContent AS 'content'
+            um.fCustomerUuid AS 'customerUuid',
+            um.fType AS 'type',
+            c.fContactPerson AS 'conTactPerson',
+            um.fSenderUserName AS 'senderUserName',
+            um.fReceiverUserName AS 'receiverUserName',
+            um.fStatus AS 'status'
         FROM
             t_user_message um
-        LEFT JOIN t_userinfo u
-        ON
-        <if test="userMessageCriteria.messageStatus == 1">
-            u.fLoginName = um.fSenderUserName
-        </if>
-        <if test="userMessageCriteria.messageStatus == 2">
-            u.fLoginName = um.fReceiverUserName
-        </if>
+        LEFT JOIN t_customer c
+        ON um.fCustomerUuid = c.fUuid
         WHERE 1 = 1
-            <if test="userMessageCriteria.status.size() > 0">
-                AND um.fStatus IN
-                <foreach collection="userMessageCriteria.status" item="status" index="index" open="(" close=")" separator=",">
-                    #{status}
-                </foreach>
+            <if test="userMessageCriteria.type != null">
+                AND um.fType = #{userMessageCriteria.type}
             </if>
-            AND (um.fStatus != 2 || (um.fStatus = 2 &amp;&amp; um.fUpdateTime &gt;= DATE_SUB(NOW(), INTERVAL 1 DAY)))
-            <if test="userMessageCriteria.messageStatus == 1">
-                <choose>
-                    <when test="userMessageCriteria.userName != null">
-                        AND um.fReceiverUserName = #{userMessageCriteria.userName}
-                    </when>
-                </choose>
-                <if test="userMessageCriteria.targetUserNames.size() > 0">
-                    AND um.fSenderUserName IN
-                    <foreach collection="userMessageCriteria.targetUserNames" item="targetUserName" index="index" open="(" close=")" separator=",">
-                        #{targetUserName}
-                    </foreach>
-                </if>
+            <if test="userMessageCriteria.status != null">
+                AND um.fStatus = #{userMessageCriteria.status}
             </if>
-            <if test="userMessageCriteria.messageStatus == 2">
-                <choose>
-                    <when test="userMessageCriteria.userName != null">
-                        AND um.fSenderUserName = #{userMessageCriteria.userName}
-                    </when>
-                </choose>
-                <if test="userMessageCriteria.targetUserNames.size() > 0">
-                    AND um.fReceiverUserName IN
-                    <foreach collection="userMessageCriteria.targetUserNames" item="targetUserName" index="index" open="(" close=")" separator=",">
-                        #{targetUserName}
-                    </foreach>
-                </if>
+            <choose>
+                <when test="userMessageCriteria.date != null">
+                    AND um.fCreateTime BETWEEN #{userMessageCriteria.date} AND DATE_ADD(#{userMessageCriteria.date},INTERVAL 1 DAY)
+                </when>
+                <otherwise>
+
+                </otherwise>
+            </choose>
+            <choose>
+                <when test="userMessageCriteria.senderUserNames != null or userMessageCriteria.receiverUserNames != null">
+                    <if test="userMessageCriteria.senderUserNames != null">
+                        AND um.fSenderUserName IN
+                        <foreach collection="userMessageCriteria.senderUserNames" item="senderUserName" separator="," open="(" close=")">
+                            #{senderUserName}
+                        </foreach>
+                    </if>
+                    <if test="userMessageCriteria.receiverUserNames != null">
+                        AND um.fReceiverUserName IN
+                        <foreach collection="userMessageCriteria.receiverUserNames" item="receiverUserName" separator="," open="(" close=")">
+                            #{receiverUserName}
+                        </foreach>
+                    </if>
+                </when>
+                <otherwise>
+                    AND (um.fSenderUserName = #{userMessageCriteria.userName} OR um.fReceiverUserName = #{userMessageCriteria.userName})
+                </otherwise>
+            </choose>
+            <if test="userMessageCriteria.contactPerson != null">
+                AND c.fContactPerson LIKE '${userMessageCriteria.contactPerson}%'
             </if>
         ORDER BY um.fUpdateTime DESC
     </select>
@@ -79,7 +74,7 @@
                 </when>
                 <otherwise>
                     <if test="userMessageCriteria.userName != null">AND um.fSenderUserName = #{userMessageCriteria.userName}</if>
-                    <if test="userMessageCriteria.targetUserNames != null">AND um.fReceiverUserName = #{userMessageCriteria.targetUserNames[0]}</if>
+                    <if test="userMessageCriteria.receiverUserNames != null">AND um.fReceiverUserName = #{userMessageCriteria.receiverUserNames[0]}</if>
                 </otherwise>
             </choose>
             <if test="userMessageCriteria.type != null">AND um.fType = #{userMessageCriteria.type}</if>
@@ -99,8 +94,8 @@
     <insert id="saveUserMessages">
         INSERT INTO t_user_message (fSenderUserName, fReceiverUserName, fType, fCustomerUuid, fContent, fUpdateTime)
         VALUES
-        <foreach collection="userMessageCriteria.targetUserNames" item="targetUserName" index="index" separator=",">
-            (#{userMessageCriteria.userName}, #{targetUserName}, #{userMessageCriteria.type}, #{userMessageCriteria.customerUuid}, #{userMessageCriteria.content}, #{now})
+        <foreach collection="userMessageCriteria.receiverUserNames" item="receiverUserName" separator=",">
+            (#{userMessageCriteria.userName}, #{receiverUserName}, #{userMessageCriteria.type}, #{userMessageCriteria.customerUuid}, #{userMessageCriteria.content}, #{now})
         </foreach>
     </insert>
 
@@ -120,16 +115,9 @@
     </update>
 
     <select id="checkMessageInboxCount" resultType="java.lang.Integer" parameterType="java.lang.String">
-        SELECT
-            COUNT(*)
-        FROM
-            t_user_message
-        <where>
-            fStatus IN (0, 1)
-            <if test="userName != null">
-                AND fReceiverUserName = #{userName}
-            </if>
-        </where>
+        SELECT COUNT(*)
+        FROM t_user_message
+        WHERE fSenderUserName = #{userName} OR fReceiverUserName = #{userName}
     </select>
 
     <select id="getHistoryUserMessages" resultType="com.keymanager.monitoring.entity.UserMessage">

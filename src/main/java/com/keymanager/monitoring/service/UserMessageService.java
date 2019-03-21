@@ -22,13 +22,10 @@ public class UserMessageService extends ServiceImpl<UserMessageDao, UserMessage>
     @Autowired
     private UserMessageDao userMessageDao;
 
-    public UserMessageVO getUserMessages(UserMessageCriteria userMessageCriteria) {
-        UserMessageVO userMessageVo = new UserMessageVO();
-        userMessageVo.setMessageStatus(userMessageCriteria.getMessageStatus());
-        Page<UserMessage> page = new Page<UserMessage>(userMessageCriteria.getPageNumber(), 10);
+    public Page<UserMessageVO> getUserMessages(UserMessageCriteria userMessageCriteria) {
+        Page<UserMessageVO> page = new Page<UserMessageVO>(userMessageCriteria.getPageNumber(), 10);
         page.setRecords(userMessageDao.getUserMessages(page, userMessageCriteria));
-        userMessageVo.setPage(page);
-        return userMessageVo;
+        return page;
     }
 
     public UserMessage getUserMessage(UserMessageCriteria userMessageCriteria, boolean type){

@@ -1,10 +1,10 @@
 package com.keymanager.monitoring.criteria;
 
+import java.util.Date;
 import java.util.List;
 
 public class UserMessageCriteria {
     private Integer uuid;
-    private Integer messageStatus;
     private boolean updateStatus;
     private String userName;
     private String content;
@@ -12,7 +12,10 @@ public class UserMessageCriteria {
     private long customerUuid;
     private Integer pageNumber;
     private Integer status;
-    private List<String> targetUserNames;
+    private List<String> senderUserNames;
+    private List<String> receiverUserNames;
+    private Date date;
+    private String contactPerson;
 
     public Integer getUuid() {
         return uuid;
@@ -20,14 +23,6 @@ public class UserMessageCriteria {
 
     public void setUuid(Integer uuid) {
         this.uuid = uuid;
-    }
-
-    public Integer getMessageStatus() {
-        return messageStatus;
-    }
-
-    public void setMessageStatus(Integer messageStatus) {
-        this.messageStatus = messageStatus;
     }
 
     public boolean isUpdateStatus () {
@@ -54,12 +49,20 @@ public class UserMessageCriteria {
         this.status = status;
     }
 
-    public List<String> getTargetUserNames () {
-        return targetUserNames;
+    public List<String> getSenderUserNames () {
+        return senderUserNames;
     }
 
-    public void setTargetUserNames (List<String> targetUserNames) {
-        this.targetUserNames = targetUserNames;
+    public void setSenderUserNames (List<String> senderUserNames) {
+        this.senderUserNames = senderUserNames;
+    }
+
+    public List<String> getReceiverUserNames () {
+        return receiverUserNames;
+    }
+
+    public void setReceiverUserNames (List<String> receiverUserNames) {
+        this.receiverUserNames = receiverUserNames;
     }
 
     public Integer getPageNumber() {
@@ -92,5 +95,21 @@ public class UserMessageCriteria {
 
     public void setCustomerUuid (long customerUuid) {
         this.customerUuid = customerUuid;
+    }
+
+    public Date getDate () {
+        return date;
+    }
+
+    public void setDate (Date date) {
+        this.date = date;
+    }
+
+    public String getContactPerson () {
+        return contactPerson;
+    }
+
+    public void setContactPerson (String contactPerson) {
+        this.contactPerson = contactPerson;
     }
 }

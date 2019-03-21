@@ -5,6 +5,7 @@ $(function () {
     $("#getAvailableQZSettings").dialog("close");
     $("#showAllOperationType").dialog("close");
     $("#customerKeywordDialog").dialog("close");
+    $("#showUserMessageDialog").dialog("close");
 
     var searchCustomerForm = $("#chargeForm");
     var pageSize = searchCustomerForm.find('#pageSizeHidden').val();

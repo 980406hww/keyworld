@@ -1,5 +1,6 @@
 package com.keymanager.monitoring.controller.rest.internal;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.UserMessageCriteria;
 import com.keymanager.monitoring.entity.UserInfo;
@@ -31,17 +32,12 @@ public class UserMessageRestController extends SpringMVCBaseController {
     @Autowired
     private UserMessageService userMessageService;
 
-    @Autowired
-    private IUserInfoService userInfoService;
-
     @RequestMapping(value = "/getUserMessages", method = RequestMethod.POST)
     public ResponseEntity<?> getUserMessages(@RequestBody UserMessageCriteria userMessageCriteria, HttpServletRequest request) {
         try {
             userMessageCriteria.setUserName((String) request.getSession().getAttribute("username"));
-            UserMessageVO userMessageVo = userMessageService.getUserMessages(userMessageCriteria);
-            List<UserInfo> userInfos = userInfoService.findActiveUsers();
-            userMessageVo.setUserInfos(userInfos);
-            return new ResponseEntity<Object>(userMessageVo, HttpStatus.OK);
+            Page<UserMessageVO> page = userMessageService.getUserMessages(userMessageCriteria);
+            return new ResponseEntity<Object>(page, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
