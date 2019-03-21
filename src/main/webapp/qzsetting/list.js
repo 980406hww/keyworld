@@ -1768,7 +1768,7 @@ function echoExcludeKeyword() {
             }
         },
         error: function () {
-            $().toastmessage('showErrorToast', "保存失败！");
+            $().toastmessage('showErrorToast', "显示已添加排除词失败！");
         }
     });
 }
