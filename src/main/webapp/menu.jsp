@@ -87,7 +87,7 @@
 					<input name="messageCreateDate" id="messageCreateDate" class="Wdate" style="width: 80px" type="text" onclick="WdatePicker()">
 				</td>
 				<td>
-					<a href="javascript:void(0)" onclick="showConditionTr();"><span class="fi-magnifying-glass" style="font-size: 12px;color: black;"> 搜索 </span></a>&nbsp;
+					<a href="javascript:void(0)" onclick="showConditionTr();"><span class="fi-magnifying-glass" style="font-size: 12px;color: black;">更多搜索</span></a>&nbsp;
 				</td>
 				<td>
 					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="searchUserMessageQueue()" value=" 查询 " >
@@ -116,8 +116,8 @@
 				<tr style="display: none;">
 					<td class="user-message-type"><input type="text" name="type" style="width: 75px;" readonly="readonly"></td>
 					<td class="user-message-contactPerson"><input type="text" name="contactPerson" style="width: 150px;"></td>
-					<td class="user-message-userName"><input type="text" name="senderUserName" style="width: 76px;"></td>
-					<td class="user-message-userName"><input type="text" name="receiverUserName" style="width: 76px;"></td>
+					<td class="user-message-userName"><input type="text" name="senderUserName" style="width: 81px;"></td>
+					<td class="user-message-userName"><input type="text" name="receiverUserName" style="width: 81px;"></td>
 					<td class="user-message-status"><input type="text" name="messageStatus" style="width: 60px;" readonly="readonly"></td>
 				</tr>
 			</thead>
@@ -135,6 +135,15 @@
 		</table>
 	</form>
 </div>
+
+<form id="searchCustomerKeywordForm_jump" method="post" target="_blank" action="/internal/customerKeyword/searchCustomerKeywords" style="display: none;">
+    <input type="text" name="customerUuid" id="customerUuid">
+    <input type="text" name="status" id="status">
+</form>
+
+<form id="searchQZSettingForm_jump" method="post" target="_blank" action="/internal/qzsetting/searchQZSettings" style="display: none;">
+    <input type="text" name="customerUuid" id="customerUuid">
+</form>
 
 <script type="text/javascript">
     $(function () {
@@ -233,7 +242,7 @@
         showUserMessageQueueDialog.dialog({
 			resizable: false,
 			height: 320,
-			width: 450,
+			width: 460,
 			title: '查看留言队列',
 			modal: true,
 			onClose: function () {
@@ -277,14 +286,18 @@
         var senderUserName = userMessageQueueTr.find("input[name='senderUserName']").val();
         if (senderUserName != '') {
             senderUserNames = senderUserName.replace(/[，]/g, ",").replace(/[\s+]/g, "").split(',');
-            senderUserNames = Array.from(new Set(senderUserNames)).filter(function(name) { return name; });
+            senderUserNames = senderUserNames.filter(function(name, index) {
+                return senderUserNames.indexOf(name) === index && name != '';
+            });
             postData.senderUserNames = senderUserNames;
 		}
 		var receiverUserNames = [];
         var receiverUserName = userMessageQueueTr.find("input[name='receiverUserName']").val();
         if (receiverUserName != '') {
             receiverUserNames = receiverUserName.replace(/[，]/g, ",").replace(/[\s+]/g, "").split(',');
-            receiverUserNames = Array.from(new Set(receiverUserNames)).filter(function(name) { return name; });;
+            receiverUserNames = receiverUserNames.filter(function(name, index) {
+                return senderUserNames.indexOf(name) === index && name != '';
+            });
             postData.receiverUserNames = receiverUserNames;
         }
         var pageNumber = $("#showUserMessageQueueForm").find("#current-page-number label").text();
@@ -305,7 +318,7 @@
                 tbody.empty();
                 $.each(data.records, function (idx, val) {
                     var status = val.status == 0 ? '未处理' : '处理完毕';
-                    tbody.append("<tr onclick=''>" +
+                    tbody.append("<tr title='点击跳转此行' onclick='jumpToCorrespondJspPage("+ JSON.stringify(val) +")'>" +
 						"<td>"+ val.type +"</td>" +
 						"<td title='"+ val.contactPerson + "__" + val.customerUuid +"'><span class='user-message-contactPerson'>"+ val.contactPerson + "__" + val.customerUuid +"</span></td>" +
 						"<td title='"+ val.senderUserName +"'><sapn>"+ val.senderUserName +"</sapn></td>" +
@@ -337,5 +350,27 @@
         }
         $("#showUserMessageQueueForm").find("#current-page-number label").text(pageNumber);
         searchUserMessageQueue();
+    }
+
+    function jumpToCorrespondJspPage(result) {
+        console.log(result);
+        if (result.type == '全站设置') {
+            jumpsearchQZSettings(result.customerUuid);
+        } else {
+            jumpSearchCustomerKeywords(result.customerUuid);
+        }
+    }
+
+    function jumpSearchCustomerKeywords(customerUuid) {
+        var searchCustomerKeywordForm_jump = $("#searchCustomerKeywordForm_jump");
+        searchCustomerKeywordForm_jump.find("#customerUuid").val(customerUuid);
+        searchCustomerKeywordForm_jump.find("#status").val(1);
+        searchCustomerKeywordForm_jump.submit();
+    }
+
+    function jumpsearchQZSettings(customerUuid) {searchQZSettingForm_jump
+        var searchQZSettingForm_jump = $("#searchQZSettingForm_jump");
+        searchQZSettingForm_jump.find("#customerUuid").val(customerUuid);
+        searchQZSettingForm_jump.submit();
     }
 </script>
