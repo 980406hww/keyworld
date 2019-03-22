@@ -14,6 +14,8 @@
 											  value="${refreshStatInfoCriteria.groupName}"></td>
 				<td align="right">客户名称:<input name="customerName" id="customerName" type="text" style="width:200px;"
 											  value="${refreshStatInfoCriteria.customerName}"></td>
+				<td align="right">分类标签:<input name="categoryTag" list="categoryTag_list" type="text" style="width:200px;"
+											  value="${refreshStatInfoCriteria.categoryTag}"></td>
 				<td>
 					&nbsp;&nbsp;
 					<select id="dayNum" name="dayNum" value="${refreshStatInfoCriteria.dayNum}">
@@ -71,7 +73,8 @@
 		</tr>
 	</table>
 </div>
-
+<datalist id="categoryTag_list">
+</datalist>
 <div id="showRefreshStatInfoDiv">
 	<table id="showRefreshStatInfoTable" width=100%">
 		<thead>

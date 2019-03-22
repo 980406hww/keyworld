@@ -15,6 +15,8 @@ public class CustomerKeywordRefreshStatInfoCriteria extends BaseCriteria {
 
     private int dayNum;
 
+    private String categoryTag;
+
     public int getDayNum () {
         return dayNum > 0 ? dayNum : 0;
     }
@@ -69,5 +71,13 @@ public class CustomerKeywordRefreshStatInfoCriteria extends BaseCriteria {
 
     public void setFullMatchGroup(boolean fullMatchGroup) {
         this.fullMatchGroup = fullMatchGroup;
+    }
+
+    public String getCategoryTag() {
+        return categoryTag;
+    }
+
+    public void setCategoryTag(String categoryTag) {
+        this.categoryTag = categoryTag;
     }
 }
