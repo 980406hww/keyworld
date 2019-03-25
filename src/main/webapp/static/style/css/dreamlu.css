@@ -134,11 +134,16 @@ td .tree-title {
 #userMessageQueueTable a {
     text-decoration: none;
 }
+#userMessageQueueTable a:hover {
+    color: #00a0e9 !important;
+}
 #userMessageQueueTable thead {
     background-color: #eeeeee !important;
 }
 #userMessageQueueTable tr {
     height: 20px;
+}
+#userMessageQueueTable tbody tr {
     border-bottom: 1px solid black;
 }
 #userMessageQueueTable tbody tr td {
@@ -179,4 +184,7 @@ td .tree-title {
     bottom: 0px !important;
     background: #ADD1FF !important;
     width: 100% !important;
+}
+#userMessageQueueTable tfoot td {
+    padding: 4px 8px;
 }

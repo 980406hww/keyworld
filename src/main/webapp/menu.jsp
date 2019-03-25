@@ -243,7 +243,7 @@
         showUserMessageQueueDialog.show();
         showUserMessageQueueDialog.dialog({
 			resizable: false,
-			height: 320,
+			height: 290,
 			width: 460,
 			title: '查看留言队列',
 			modal: true,
@@ -303,7 +303,7 @@
             postData.receiverUserNames = receiverUserNames;
         }
         var pageNumber = $("#showUserMessageQueueForm").find("#current-page-number label").text();
-        if (pageNumber == "" || pageNumber == 0 || ((pageNumber == "" || pageNumber == 0))){
+        if (pageNumber == "" || pageNumber == 0 || ((pageNumber == "" || pageNumber == 0)) || type != "" || status != "" || date != ""){
             pageNumber = 1;
         }
         postData.pageNumber = pageNumber;
