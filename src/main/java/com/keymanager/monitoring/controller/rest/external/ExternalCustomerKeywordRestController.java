@@ -537,15 +537,14 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
-
     @RequestMapping(value = "getNoEnteredKeywords", method = RequestMethod.POST)
     public ResponseEntity<?> getNoEnteredKeywords(@RequestBody Map<String, Object> requestMap) throws Exception {
         try {
             String userName = (String) requestMap.get("userName");
             String password = (String) requestMap.get("password");
             if (validUser(userName, password)) {
-                List<CustomerKeywordEnteredVO> customerKeywordList = customerKeywordService.getNoEnteredKeywords();
-                return new ResponseEntity<Object>(customerKeywordList, HttpStatus.OK);
+                List<CustomerKeywordEnteredVO> customerKeywordEnteredVos = customerKeywordService.getNoEnteredKeywords();
+                return new ResponseEntity<Object>(customerKeywordEnteredVos, HttpStatus.OK);
             }
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }catch (Exception ex){
@@ -560,9 +559,9 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             String userName = (String) requestMap.get("userName");
             String password = (String) requestMap.get("password");
             if (validUser(userName, password)) {
-                JSONArray jsonArray = JSONArray.fromObject(requestMap.get("customerKeywordList"));
-                List<CustomerKeywordEnteredVO> customerKeywordList = (List<CustomerKeywordEnteredVO>)JSONArray.toCollection(jsonArray, CustomerKeywordEnteredVO.class);
-                customerKeywordService.updateNoEnteredKeywords(customerKeywordList);
+                JSONArray jsonArray = JSONArray.fromObject(requestMap.get("customerKeywordEnteredVos"));
+                List<CustomerKeywordEnteredVO> customerKeywordEnteredVos = (List<CustomerKeywordEnteredVO>)JSONArray.toCollection(jsonArray, CustomerKeywordEnteredVO.class);
+                customerKeywordService.updateNoEnteredKeywords(customerKeywordEnteredVos);
                  return new ResponseEntity<Object>(true, HttpStatus.OK);
             }
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
@@ -571,7 +570,4 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
-
-
-
 }
