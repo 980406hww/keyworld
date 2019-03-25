@@ -1560,8 +1560,14 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void updateNoEnteredKeywordGroupName(){
-        customerKeywordDao.updateNoEnteredKeywordGroupName();
-
+        Long NoEnteredKeywordAmount = customerKeywordDao.getNoEnteredKeywordAmount();
+        if (NoEnteredKeywordAmount > 0) {
+            int i = 0 ;
+            while (i < (Math.ceil((double)NoEnteredKeywordAmount/10000))) {
+                customerKeywordDao.updateNoEnteredKeywordGroupName();
+                i++;
+            }
+        }
     }
 
     public List<CustomerKeywordEnteredVO> getNoEnteredKeywords(){
@@ -1569,26 +1575,24 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void updateNoEnteredKeywords(List<CustomerKeywordEnteredVO> customerKeywordVOList){
-        if (customerKeywordVOList.size() > 0) {
+        if (!customerKeywordVOList.isEmpty()) {
             List<CustomerKeyword> customerKeywordList = new ArrayList<>();
-            for (CustomerKeywordEnteredVO customerKeywordEnteredVO:customerKeywordVOList) {
-                CustomerKeyword customerKeyword = new CustomerKeyword();
-                if ("超过7天".equals(customerKeywordEnteredVO.getRemarks())) {
-                    customerKeyword.setOptimizeGroupName(customerKeywordEnteredVO.getOptimizeGroupName().substring(3));
-                    customerKeyword.setCapturedTitle(1);
+            Config configCustomerKeywordRemarks = configService.getConfig(Constants.CONFIG_TYPE_NO_ENTERED_KEYWORD, Constants.CONFIG_KEY_NO_ENTERED_KEYWORD_REMARKS);
+            if (configCustomerKeywordRemarks != null){
+                for (CustomerKeywordEnteredVO customerKeywordEnteredVO:customerKeywordVOList) {
+                    CustomerKeyword customerKeyword = new CustomerKeyword();
+                    if (configCustomerKeywordRemarks.getValue().equals(customerKeywordEnteredVO.getRemarks())) {
+                        customerKeyword.setOptimizeGroupName(customerKeywordEnteredVO.getOptimizeGroupName().substring(3));
+                        customerKeyword.setCapturedTitle(1);
+                    }
+                    customerKeyword.setUuid(customerKeywordEnteredVO.getUuid());
+                    customerKeyword.setRemarks(customerKeywordEnteredVO.getRemarks());
+                    customerKeywordList.add(customerKeyword);
                 }
-                customerKeyword.setUuid(customerKeywordEnteredVO.getUuid());
-                customerKeyword.setRemarks(customerKeywordEnteredVO.getRemarks());
-                customerKeywordList.add(customerKeyword);
             }
-            if (customerKeywordList.size() > 0) {
+            if (!customerKeywordList.isEmpty()) {
                 customerKeywordDao.updateNoEnteredKeywords(customerKeywordList);
             }
         }
     }
-
-
-
-
-
 }

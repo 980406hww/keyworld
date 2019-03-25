@@ -1,6 +1,7 @@
 package com.keymanager.util;
 
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
+import org.omg.CORBA.PUBLIC_MEMBER;
 
 import java.util.*;
 
@@ -155,4 +156,8 @@ public class Constants {
         SEARCH_STYLE_LIST.add("百度电脑");
         SEARCH_STYLE_LIST.add("百度手机");
     }
+
+    public final static String CONFIG_TYPE_NO_ENTERED_KEYWORD = "NoEnteredKeyword";
+    public final static String CONFIG_KEY_NO_ENTERED_KEYWORD_REMARKS = "Remarks";
+
 }

@@ -560,8 +560,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             String userName = (String) requestMap.get("userName");
             String password = (String) requestMap.get("password");
             if (validUser(userName, password)) {
-                List customerKeywordEnteredVOList = (List) requestMap.get("customerKeywordList");
-                JSONArray jsonArray = JSONArray.fromObject(customerKeywordEnteredVOList);
+                JSONArray jsonArray = JSONArray.fromObject(requestMap.get("customerKeywordList"));
                 List<CustomerKeywordEnteredVO> customerKeywordList = (List<CustomerKeywordEnteredVO>)JSONArray.toCollection(jsonArray, CustomerKeywordEnteredVO.class);
                 customerKeywordService.updateNoEnteredKeywords(customerKeywordList);
                  return new ResponseEntity<Object>(true, HttpStatus.OK);

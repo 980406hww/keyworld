@@ -1240,16 +1240,31 @@
         SELECT DISTINCT ck.fCustomerUuid FROM t_customer_keyword ck WHERE ck.fType = #{entryType} AND ck.fTerminalType = #{terminalType} AND ck.fStatus = 1
     </select>
 
-
     <update id="updateNoEnteredKeywordGroupName">
         UPDATE t_customer_keyword ck
-        SET ck.fOptimizeGroupName = CONCAT('no_', fOptimizeGroupName)
+        SET
+        ck.fOptimizeGroupName = CONCAT('no_', fOptimizeGroupName)
         WHERE
             ck.fOptimizedCount = 0
         AND ck.fStatus = 1
-        AND ck.fOptimizeGroupName &lt;&gt; 'sotp'
-        AND ck.fOptimizeGroupName &lt;&gt; 'zanting'
+        AND ck.fCapturedTitle = 0
+        AND fOptimizeGroupName NOT LIKE 'no_%'
+        AND t3.fOptimizeGroupName NOT IN ('sotp', 'znating')
+        LIMIT 10000
     </update>
+
+    <select id="getNoEnteredKeywordAmount" resultType="java.lang.Long">
+        SELECT
+          COUNT(1)
+        FROM
+          t_customer_keyword ck
+        WHERE ck.fOptimizedCount = 0
+        AND ck.fStatus = 1
+        AND ck.fCapturedTitle = 0
+        AND ck.fOptimizeGroupName NOT LIKE 'no_%'
+        AND ck.fOptimizeGroupName NOT IN ('sotp', 'zanting')
+    </select>
+
 
     <select id="getNoEnteredKeywords" resultType="com.keymanager.monitoring.vo.CustomerKeywordEnteredVO">
         SELECT
@@ -1260,32 +1275,28 @@
             ck.fKeyword	AS 'keyword',
             ck.fUrl	AS 'url',
             ck.fSearchEngine AS	'searchEngine',
-            CK.fCaptureTitleQueryTime AS 'captureTitleQueryTime'
+            ck.fCaptureTitleQueryTime AS 'captureTitleQueryTime'
         FROM
             t_customer_keyword ck
         WHERE
             ck.fOptimizeGroupName like 'no_%'
         AND ck.fStatus = 1
-        <if test="fVerifyEnteredKeywordTime != null and fVerifyEnteredKeywordTime != ''">
-            AND DATE_SUB(CURDATE(), INTERVAL 7 DAY) &gt;= date(ck.fVerifyEnteredKeywordTime)
-        </if>
-        ORDER BY ck.fVerifyEnteredKeywordTime LIMIT 10
+        AND ck.fVerifyEnteredKeywordTime &lt;= DATE_ADD(CURDATE(),INTERVAL 7 DAY)
+        ORDER BY ck.fVerifyEnteredKeywordTime
+        LIMIT 10
     </select>
 
-
     <update id="updateNoEnteredKeywords">
-        <foreach collection="customerKeywordList" item="item" open="" separator=";" close="">
+        <foreach collection="customerKeywordList" item="item" separator=";">
             UPDATE t_customer_keyword
             <set>
+                fVerifyEnteredKeywordTime = NOW()
                 <if test="item.remarks != null and item.remarks !='' and item.capturedTitle != 1">
-                    fRemarks = CONCAT(IFNULL(fRemarks,''), #{item.remarks}),
+                    ,fRemarks = CONCAT(IFNULL(fRemarks,''), #{item.remarks})
                 </if>
                 <if test="item.capturedTitle == 1">
-                    fCapturedTitle = 1,
-                    fOptimizeGroupName = #{item.optimizeGroupName},
-                </if>
-                <if test="item.uuid != null">
-                    fVerifyEnteredKeywordTime = NOW(),
+                    ,fCapturedTitle = 1
+                    ,fOptimizeGroupName = #{item.optimizeGroupName}
                 </if>
             </set>
             WHERE fUuid = #{item.uuid}

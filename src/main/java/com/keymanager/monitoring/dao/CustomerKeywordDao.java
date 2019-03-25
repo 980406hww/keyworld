@@ -207,6 +207,8 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     List<Long> getCustomerUuids(@Param("entryType")String entryType, @Param("terminalType")String terminalType);
 
+    Long getNoEnteredKeywordAmount();
+
     void updateNoEnteredKeywordGroupName();
 
     List<CustomerKeywordEnteredVO> getNoEnteredKeywords();
