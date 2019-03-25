@@ -1,6 +1,5 @@
 package com.keymanager.monitoring.controller.rest.external;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.BaiduIndexCriteria;
 import com.keymanager.monitoring.criteria.BaseCriteria;
@@ -17,14 +16,13 @@ import com.keymanager.util.*;
 import com.keymanager.util.common.StringUtil;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
-import com.keymanager.value.CustomerKeywordVO;
 import net.sf.json.JSONArray;
+import net.sf.json.JsonConfig;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -560,7 +558,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             String password = (String) requestMap.get("password");
             if (validUser(userName, password)) {
                 JSONArray jsonArray = JSONArray.fromObject(requestMap.get("customerKeywordEnteredVos"));
-                List<CustomerKeywordEnteredVO> customerKeywordEnteredVos = (List<CustomerKeywordEnteredVO>)JSONArray.toCollection(jsonArray, CustomerKeywordEnteredVO.class);
+                List<CustomerKeywordEnteredVO> customerKeywordEnteredVos = JSONArray.toList(jsonArray, CustomerKeywordEnteredVO.class, new JsonConfig());
                 customerKeywordService.updateNoEnteredKeywords(customerKeywordEnteredVos);
                  return new ResponseEntity<Object>(true, HttpStatus.OK);
             }
