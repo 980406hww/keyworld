@@ -115,9 +115,9 @@
 				</tr>
 				<tr style="display: none;">
 					<td class="user-message-type"><input type="text" name="type" style="width: 75px;" readonly="readonly"></td>
-					<td class="user-message-contactPerson"><input type="text" name="contactPerson" style="width: 150px;"></td>
-					<td class="user-message-userName"><input type="text" name="senderUserName" style="width: 81px;"></td>
-					<td class="user-message-userName"><input type="text" name="receiverUserName" style="width: 81px;"></td>
+					<td class="user-message-contactPerson"><input type="text" name="contactPerson" onkeyup="searchUserMessageQueue()" style="width: 150px;"></td>
+					<td class="user-message-userName"><input type="text" name="senderUserName" onkeydown="enterInUserMessage()" style="width: 81px;"></td>
+					<td class="user-message-userName"><input type="text" name="receiverUserName" onkeydown="enterInUserMessage()" style="width: 81px;"></td>
 					<td class="user-message-status"><input type="text" name="messageStatus" style="width: 60px;" readonly="readonly"></td>
 				</tr>
 			</thead>
@@ -139,10 +139,12 @@
 <form id="searchCustomerKeywordForm_jump" method="post" target="_blank" action="/internal/customerKeyword/searchCustomerKeywords" style="display: none;">
     <input type="text" name="customerUuid" id="customerUuid">
     <input type="text" name="status" id="status">
+    <input type="text" name="openDialogStatus" id="openDialogStatus">
 </form>
 
 <form id="searchQZSettingForm_jump" method="post" target="_blank" action="/internal/qzsetting/searchQZSettings" style="display: none;">
     <input type="text" name="customerUuid" id="customerUuid">
+    <input type="text" name="openDialogStatus" id="openDialogStatus">
 </form>
 
 <script type="text/javascript">
@@ -280,7 +282,7 @@
         var userMessageQueueTr = $("#userMessageQueueTable").find("thead tr:last-child");
         var contactPerson = userMessageQueueTr.find("input[name='contactPerson']").val();
         if (contactPerson != '') {
-            postData.contacPerson = contactPerson.trim();
+            postData.contactPerson = contactPerson.trim();
 		}
 		var senderUserNames = [];
         var senderUserName = userMessageQueueTr.find("input[name='senderUserName']").val();
@@ -296,7 +298,7 @@
         if (receiverUserName != '') {
             receiverUserNames = receiverUserName.replace(/[，]/g, ",").replace(/[\s+]/g, "").split(',');
             receiverUserNames = receiverUserNames.filter(function(name, index) {
-                return senderUserNames.indexOf(name) === index && name != '';
+                return receiverUserNames.indexOf(name) === index && name != '';
             });
             postData.receiverUserNames = receiverUserNames;
         }
@@ -341,6 +343,14 @@
 		});
     }
 
+    function enterInUserMessage(e) {
+        var e = e || event,
+            keyCode = e.which || e.keyCode;
+        if (keyCode == 13) {
+            searchUserMessageQueue();
+        }
+    }
+
     function changeUserMessagePaging(number) {
         var pageNumber = $("#showUserMessageQueueForm").find("#current-page-number label").text();
         var pageTotalNumber = $("#showUserMessageQueueForm").find("#total-page-number label").text();
@@ -355,7 +365,7 @@
     function jumpToCorrespondJspPage(result) {
         console.log(result);
         if (result.type == '全站设置') {
-            jumpsearchQZSettings(result.customerUuid);
+            jumpSearchQZSettings(result.customerUuid);
         } else {
             jumpSearchCustomerKeywords(result.customerUuid);
         }
@@ -365,12 +375,14 @@
         var searchCustomerKeywordForm_jump = $("#searchCustomerKeywordForm_jump");
         searchCustomerKeywordForm_jump.find("#customerUuid").val(customerUuid);
         searchCustomerKeywordForm_jump.find("#status").val(1);
+        searchCustomerKeywordForm_jump.find("#openDialogStatus").val(1);
         searchCustomerKeywordForm_jump.submit();
     }
 
-    function jumpsearchQZSettings(customerUuid) {searchQZSettingForm_jump
+    function jumpSearchQZSettings(customerUuid) {
         var searchQZSettingForm_jump = $("#searchQZSettingForm_jump");
         searchQZSettingForm_jump.find("#customerUuid").val(customerUuid);
+        searchQZSettingForm_jump.find("#openDialogStatus").val(2);
         searchQZSettingForm_jump.submit();
     }
 </script>

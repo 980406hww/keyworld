@@ -221,6 +221,7 @@
 					<c:when test="${qzSetting.pcGroup != null and (qzSetting.crawlerStatus != 'finish' or qzSetting.qzKeywordRankInfoMap['PC'] != null)}">
 					<li>
 						<div class="header">
+							<input type="hidden" name="contactPerson" value="${qzSetting.contactPerson}">
 							<span>
 								<input type="checkbox" name="uuid" value="${qzSetting.uuid}" onclick="decideSelectAll();"/>
 							</span>
@@ -1204,6 +1205,8 @@
     <form id="showUserMessageForm" onsubmit="return false">
         <table cellpadding="10" style="font-size: 12px; background-color: white; border-collapse:separate; border-spacing:0px 10px;">
             <input type="hidden" name="messageUuid" value="">
+			<input type="hidden" name="openDialogStatus" value="${qzSettingSearchCriteria.openDialogStatus}">
+			<input type="hidden" name="customerUuid" value="${qzSettingSearchCriteria.customerUuid}"/>
             <tr>
                 <td width="60px"><span style="width: 60px">写信人:</span></td>
                 <td width="80px"><span style="width: 80px;" id="senderUserName">${sessionScope.get("username")}</span></td>

@@ -42,6 +42,7 @@ public class CustomerKeywordCriteria extends BaseCriteria{
     private Integer sevenDaysNoReachStandard;
     private Integer fifteenDaysNoReachStandard;
     private Integer thirtyDaysNoReachStandard;
+    private Integer openDialogStatus;
 
     public String getBearPawNumber() {
         return bearPawNumber;
@@ -349,5 +350,13 @@ public class CustomerKeywordCriteria extends BaseCriteria{
 
     public void setTargetBearPawNumber(String targetBearPawNumber) {
         this.targetBearPawNumber = targetBearPawNumber;
+    }
+
+    public Integer getOpenDialogStatus () {
+        return openDialogStatus;
+    }
+
+    public void setOpenDialogStatus (Integer openDialogStatus) {
+        this.openDialogStatus = openDialogStatus;
     }
 }

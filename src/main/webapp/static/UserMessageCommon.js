@@ -1,3 +1,15 @@
+$(function () {
+    var showUserMessageDialog = $("#showUserMessageDialog");
+    var openDialogStatus =  showUserMessageDialog.find("input[name='openDialogStatus']").val();
+    if (openDialogStatus == 1) {
+        $("#customerKeywordBtnInput").click();
+    } else if (openDialogStatus == 2) {
+        var customerUuid =  showUserMessageDialog.find("input[name='customerUuid']").val();
+        var contactPerson =  $("div.datalist ul li:first-child").find("input[name='contactPerson']").val();
+        openMessageBox("全站设置", customerUuid, contactPerson);
+    }
+});
+
 function openMessageBox(type, customerUuid, contactPerson) {
     var showUserMessageDialog = $("#showUserMessageDialog");
     getActiveUsers();
@@ -14,7 +26,7 @@ function openMessageBox(type, customerUuid, contactPerson) {
         buttons: [{
             text: '处理完毕',
             handler: function() {
-                saveUserMessage(type, customerUuid, 1);
+                saveUserMessage(type, 1);
             }
         }, {
             text: '历史留言',
@@ -25,7 +37,7 @@ function openMessageBox(type, customerUuid, contactPerson) {
             text: '保存',
             iconCls: "icon-ok",
             handler: function () {
-                saveUserMessage(type, customerUuid);
+                saveUserMessage(type);
             }
         }, {
             text: '取消',
@@ -151,9 +163,10 @@ function findHistoryUserMessages(type, customerUuid) {
     });
 }
 
-function saveUserMessage(type, customerUuid, status) {
+function saveUserMessage(type, status) {
     var showUserMessageForm = $("#showUserMessageForm");
     var postData = {};
+    var customerUuid = showUserMessageForm.find("input[name='customerUuid']").val();
     var uuid = showUserMessageForm.find("input[name='messageUuid']").val();
     if (status) {
         if (uuid == "") {

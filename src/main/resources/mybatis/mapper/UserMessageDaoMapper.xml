@@ -46,9 +46,10 @@
                     </if>
                 </when>
                 <otherwise>
-                    AND (um.fSenderUserName = #{userMessageCriteria.userName} OR um.fReceiverUserName = #{userMessageCriteria.userName})
+
                 </otherwise>
             </choose>
+            AND (um.fSenderUserName = #{userMessageCriteria.userName} OR um.fReceiverUserName = #{userMessageCriteria.userName})
             <if test="userMessageCriteria.contactPerson != null">
                 AND c.fContactPerson LIKE '${userMessageCriteria.contactPerson}%'
             </if>

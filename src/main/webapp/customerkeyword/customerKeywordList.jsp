@@ -200,7 +200,7 @@
                 </c:if>
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/qzsetting/save">
-                <input type="button" onclick="openMessageBox('关键字列表', '${customerKeywordCriteria.customerUuid}', '${customer.contactPerson}')" value=" 用户留言 ">
+                <input type="button" id="customerKeywordBtnInput" onclick="openMessageBox('关键字列表', '${customerKeywordCriteria.customerUuid}', '${customer.contactPerson}')" value=" 用户留言 ">
             </shiro:hasPermission>
         </div>
     </form>
@@ -391,6 +391,8 @@
     <form id="showUserMessageForm" onsubmit="return false">
         <table cellpadding="10" style="font-size: 12px; background-color: white; border-collapse:separate; border-spacing:0px 10px;">
             <input type="hidden" name="messageUuid" value="">
+            <input type="hidden" name="openDialogStatus" value="${customerKeywordCriteria.openDialogStatus}">
+            <input type="hidden" name="customerUuid" value="${customerKeywordCriteria.customerUuid}"/>
             <tr>
                 <td width="60px"><span style="width: 60px">写信人:</span></td>
                 <td width="80px"><span style="width: 80px;" id="senderUserName">${sessionScope.get("username")}</span></td>
