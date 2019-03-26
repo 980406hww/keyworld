@@ -119,6 +119,7 @@
             <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
             <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
             <input id="customerUuid" name="customerUuid" type="hidden" value="${customerKeywordCriteria.customerUuid}">
+            <input id="queryStatus" name="queryStatus" type="hidden" value="${customerKeywordCriteria.queryStatus}">
             关键字:<input type="text" name="keyword" id="keyword" value="${customerKeywordCriteria.keyword}"
                        style="width:80px;">
             URL:<input type="text" name="url" id="url" value="${customerKeywordCriteria.url}"
@@ -199,9 +200,13 @@
                     <input type="button" onclick="deleteDuplicateCustomerKeyword(${customerKeywordCriteria.customerUuid})" value="删除重复关键字">
                 </c:if>
             </shiro:hasPermission>
+            <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
+                <c:if test="${sessionScope.get('entryType') eq 'qz'}">
+                    <input type="button" onclick="resetPageNumber(1)" value=" 查找非指定URL关键字 ">&nbsp;&nbsp;
+                </c:if>
+            </shiro:hasPermission>
         </div>
     </form>
-    <%--</c:if>--%>
     <table style="font-size:12px; width: 100%;" id="headerTable">
         <tr bgcolor="#eeeeee" height=30>
             <td width=10 style="

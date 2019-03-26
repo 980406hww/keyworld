@@ -28,7 +28,16 @@
     <sql id="searchCustomerKeywordsCriteria">
         <if test="customerKeywordCriteria.customerUuid != null and customerKeywordCriteria.customerUuid != ''">AND ck.fCustomerUuid = #{customerKeywordCriteria.customerUuid}</if>
         <if test="customerKeywordCriteria.keyword != null and customerKeywordCriteria.keyword != ''">AND ck.fKeyword like '${customerKeywordCriteria.keyword}%'</if>
-        <if test="customerKeywordCriteria.url != null and customerKeywordCriteria.url != ''">AND ck.fUrl like '%${customerKeywordCriteria.url}%'</if>
+        <if test="customerKeywordCriteria.url != null and customerKeywordCriteria.url != ''">
+            <choose>
+                <when test="customerKeywordCriteria.queryStatus == null">
+                    AND ck.fUrl LIKE '%${customerKeywordCriteria.url}%'
+                </when>
+                <otherwise>
+                    AND ck.fUrl NOT LIKE '%${customerKeywordCriteria.url}%'
+                </otherwise>
+            </choose>
+        </if>
         <if test="customerKeywordCriteria.bearPawNumber != null and customerKeywordCriteria.bearPawNumber != ''">AND ck.fBearPawNumber like '${customerKeywordCriteria.bearPawNumber}%'</if>
         <if test="customerKeywordCriteria.status != null and customerKeywordCriteria.status != ''">AND ck.fStatus = #{customerKeywordCriteria.status}</if>
         <if test="customerKeywordCriteria.invalidRefreshCount != null and customerKeywordCriteria.invalidRefreshCount != ''">AND ck.fInvalidRefreshCount &gt;= #{customerKeywordCriteria.invalidRefreshCount}</if>

@@ -26,6 +26,7 @@ public class CustomerKeywordCriteria extends BaseCriteria{
     private Integer ltOptimizePlanCount;
     private Integer gtCurrentIndexCount;
     private Integer ltCurrentIndexCount;
+    private Integer queryStatus;
 
     private String qq;
     private String userName;
@@ -67,6 +68,14 @@ public class CustomerKeywordCriteria extends BaseCriteria{
 
     public void setLtCurrentIndexCount(Integer ltCurrentIndexCount) {
         this.ltCurrentIndexCount = ltCurrentIndexCount;
+    }
+
+    public Integer getQueryStatus () {
+        return queryStatus;
+    }
+
+    public void setQueryStatus (Integer queryStatus) {
+        this.queryStatus = queryStatus;
     }
 
     public String getRemarks() {
