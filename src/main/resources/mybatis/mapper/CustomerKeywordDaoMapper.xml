@@ -1246,6 +1246,7 @@
            ck.fOptimizeGroupName = CONCAT('no_', fOptimizeGroupName)
         WHERE ck.fOptimizedCount = 0
         AND ck.fStatus = 1
+        AND ck.fType = 'qz'
         AND ck.fCapturedTitle = 0
         AND ck.fOptimizeGroupName NOT LIKE 'no_%'
         AND ck.fOptimizeGroupName NOT IN ('sotp', 'zanting')
@@ -1280,7 +1281,7 @@
                 <if test="customerKeyword.remarks != null and customerKeyword.remarks !='' and customerKeyword.capturedTitle != 1">
                     ,fRemarks = CONCAT(IFNULL(fRemarks,''), #{customerKeyword.remarks})
                 </if>
-                <if test="item.capturedTitle == 1">
+                <if test="customerKeyword.capturedTitle == 1">
                     ,fCapturedTitle = 1
                     ,fOptimizeGroupName = #{customerKeyword.optimizeGroupName}
                 </if>
