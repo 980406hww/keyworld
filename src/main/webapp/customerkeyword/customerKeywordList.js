@@ -6,6 +6,7 @@ $(function () {
     $("#saveCustomerKeywordDialog").dialog("close");
     $("#optimizePlanCountDialog").dialog("close");
     $('#customerList').dialog("close");
+    $("#showUserMessageDialog").dialog("close");
 });
 
 function delItem(customerKeywordUuid) {

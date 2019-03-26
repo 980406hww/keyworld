@@ -5,6 +5,7 @@ $(function () {
     $("#getAvailableQZSettings").dialog("close");
     $("#showAllOperationType").dialog("close");
     $("#customerKeywordDialog").dialog("close");
+    $("#showUserMessageDialog").dialog("close");
     $("#excludeCustomerKeywordDialog").dialog("close");
 
     var searchCustomerForm = $("#chargeForm");
@@ -39,7 +40,7 @@ $(function () {
 });
 function enterIn(e) {
     var e = e || event,
-    keyCode = e.which || e.keyCode;
+        keyCode = e.which || e.keyCode;
     if (keyCode == 13) {
         trimSearchCondition('1');
     }
