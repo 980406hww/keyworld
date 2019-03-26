@@ -26,7 +26,7 @@ function openMessageBox(type, customerUuid, contactPerson) {
         buttons: [{
             text: '处理完毕',
             handler: function() {
-                saveUserMessage(type, 1);
+                saveUserMessage(type, customerUuid, 1);
             }
         }, {
             text: '历史留言',
@@ -37,7 +37,7 @@ function openMessageBox(type, customerUuid, contactPerson) {
             text: '保存',
             iconCls: "icon-ok",
             handler: function () {
-                saveUserMessage(type);
+                saveUserMessage(type, customerUuid);
             }
         }, {
             text: '取消',
@@ -163,10 +163,9 @@ function findHistoryUserMessages(type, customerUuid) {
     });
 }
 
-function saveUserMessage(type, status) {
+function saveUserMessage(type, customerUuid, status) {
     var showUserMessageForm = $("#showUserMessageForm");
     var postData = {};
-    var customerUuid = showUserMessageForm.find("input[name='customerUuid']").val();
     var uuid = showUserMessageForm.find("input[name='messageUuid']").val();
     if (status) {
         if (uuid == "") {
