@@ -90,7 +90,7 @@
 					<a href="javascript:void(0)" onclick="showConditionTr();"><span class="fi-magnifying-glass" style="font-size: 12px;color: black;">更多搜索</span></a>&nbsp;
 				</td>
 				<td>
-					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="searchUserMessageQueue()" value=" 查询 " >
+					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="searchUserMessageQueue(0, 1)" value=" 查询 " >
 				</td>
 			</tr>
 		</table>
@@ -264,7 +264,7 @@
         $("#userMessageQueueTable").find("thead tr:last-child").toggle();
     }
 
-    function searchUserMessageQueue(openStatus) {
+    function searchUserMessageQueue(openStatus, query) {
         var postData = {};
         var showUserMessageQueueForm = $("#showUserMessageQueueForm");
         var type = showUserMessageQueueForm.find("#message_type_select").val();
@@ -309,7 +309,7 @@
             postData.receiverUserNames = receiverUserNames;
         }
         var pageNumber = $("#showUserMessageQueueForm").find("#current-page-number label").text();
-        if (pageNumber == "" || pageNumber == 0 || ((pageNumber == "" || pageNumber == 0)) || type != "" || status != "" || date != ""){
+        if (query || pageNumber == "" || pageNumber == 0 || ((pageNumber == "" || pageNumber == 0))){
             pageNumber = 1;
         }
         postData.pageNumber = pageNumber;
