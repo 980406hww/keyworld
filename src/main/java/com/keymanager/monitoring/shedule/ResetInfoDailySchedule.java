@@ -37,7 +37,7 @@ public class ResetInfoDailySchedule {
 			performanceService.addPerformanceLog("ResetInfoDailySchedule", System.currentTimeMillis() - startMilleSeconds, "starting 2");
 			configService.updateOptimizationDateAsToday();
 			performanceService.addPerformanceLog("ResetInfoDailySchedule", System.currentTimeMillis() - startMilleSeconds, "starting 3");
-			for(int i = 0; i < 10; i++) {
+			for(int i = 0; i < 20; i++) {
 				customerKeywordService.resetOptimizationInfo();
 			}
 			performanceService.addPerformanceLog("ResetInfoDailySchedule", System.currentTimeMillis() - startMilleSeconds, "starting 4");

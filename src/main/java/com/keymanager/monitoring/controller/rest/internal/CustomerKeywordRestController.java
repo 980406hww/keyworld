@@ -51,6 +51,9 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	@Autowired
 	private PerformanceService performanceService;
 
+	@Autowired
+    private CustomerExcludeKeywordService customerExcludeKeywordService;
+
 	@RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
 	@RequestMapping(value="/searchCustomerKeywords/{customerUuid}" , method=RequestMethod.GET)
 	public ModelAndView searchCustomerKeywords(@PathVariable("customerUuid") Long customerUuid,@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request){
@@ -270,6 +273,16 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 				String entryType = (String) request.getSession().getAttribute("entryType");
 				customerKeyword.setTerminalType(terminalType);
 				customerKeyword.setType(entryType);
+				String customerExcludeKeywords = customerExcludeKeywordService.getCustomerExcludeKeyword(customerKeyword.getCustomerUuid(), customerKeyword.getQzSettingUuid(), customerKeyword.getTerminalType(), customerKeyword.getUrl());
+				if (null != customerExcludeKeywords) {
+					Set excludeKeyword = new HashSet();
+					excludeKeyword.addAll(Arrays.asList(customerExcludeKeywords.split(",")));
+					if (!excludeKeyword.isEmpty()){
+						if (excludeKeyword.contains(customerKeyword.getKeyword())){
+							customerKeyword.setOptimizeGroupName("zanting");
+						}
+					}
+				}
 				customerKeywordService.addCustomerKeyword(customerKeyword, userName);
 				return new ResponseEntity<Object>(true, HttpStatus.OK);
 			} else {

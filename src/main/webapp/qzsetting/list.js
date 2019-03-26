@@ -6,6 +6,7 @@ $(function () {
     $("#showAllOperationType").dialog("close");
     $("#customerKeywordDialog").dialog("close");
     $("#showUserMessageDialog").dialog("close");
+    $("#excludeCustomerKeywordDialog").dialog("close");
 
     var searchCustomerForm = $("#chargeForm");
     var pageSize = searchCustomerForm.find('#pageSizeHidden').val();
@@ -254,7 +255,7 @@ function generateQZKeywordTrendCharts(domElement, data) {
     var option = {
         color: ['#228B22', '#0000FF', '#FF6100', '#000000', '#FF0000'],
         title : {
-            text: '关键词排名趋势',
+            text: '关键词排名趋�,
             textStyle: {
                 color: '#999',
                 fontFamily: "Arial",
@@ -322,7 +323,7 @@ function generateQZKeywordTrendCharts(domElement, data) {
             type: 'value'
         },
         series: [{
-            name: '前10名',
+            name: '�0�,
             smooth: true,
             type: 'line',
             symbolSize: 1,
@@ -333,7 +334,7 @@ function generateQZKeywordTrendCharts(domElement, data) {
                 width: 1
             }
         }, {
-            name: '前20名',
+            name: '�0�,
             smooth: true,
             type: 'line',
             symbolSize: 1,
@@ -344,7 +345,7 @@ function generateQZKeywordTrendCharts(domElement, data) {
                 width: 1
             }
         }, {
-            name: '前30名',
+            name: '�0�,
             smooth: true,
             type: 'line',
             symbolSize: 1,
@@ -355,7 +356,7 @@ function generateQZKeywordTrendCharts(domElement, data) {
                 width: 1
             }
         }, {
-            name: '前40名',
+            name: '�0�,
             smooth: true,
             type: 'line',
             symbolSize: 1,
@@ -366,7 +367,7 @@ function generateQZKeywordTrendCharts(domElement, data) {
                 width: 1
             }
         }, {
-            name: '前50名',
+            name: '�0�,
             smooth: true,
             type: 'line',
             symbolSize: 1,
@@ -458,7 +459,7 @@ function editTagNameStr(o, edit){
     } else {
         var isChange = true;
         var qzCategoryTags = [];
-        var categoryTagNames = o.value.replace(/( )+/g,"").replace(/(，)+|(,)+/g, ",").split(",");
+        var categoryTagNames = o.value.replace(/( )+/g,"").replace(/(�+|(,)+/g, ",").split(",");
         categoryTagNames = unique(categoryTagNames);
         if (o.value != "") {
             o.value = "";
@@ -491,14 +492,14 @@ function editTagNameStr(o, edit){
                 },
                 success: function (data) {
                     if (data) {
-                        $().toastmessage('showSuccessToast', "保存成功！");
+                        $().toastmessage('showSuccessToast', "保存成功�);
                     } else {
-                        $().toastmessage('showErrorToast', "保存失败！");
+                        $().toastmessage('showErrorToast', "保存失败�);
                         o.value = $.trim(label);
                     }
                 },
                 error: function () {
-                    $().toastmessage('showErrorToast', "保存失败！");
+                    $().toastmessage('showErrorToast', "保存失败�);
                     o.value = $.trim(label);
                 }
             });
@@ -565,7 +566,7 @@ function showMoreSearchCondition() {
             }
         },
         error: function () {
-            $().toastmessage('showErrorToast', "获取标签信息失败！");
+            $().toastmessage('showErrorToast', "获取标签信息失败�);
         }
     });
 }
@@ -637,7 +638,7 @@ function showChargeRulesDiv(self, e) {
             }
         },
         error: function () {
-            $().toastmessage('showErrorToast', "获取信息失败！");
+            $().toastmessage('showErrorToast', "获取信息失败�);
         }
     });
     var chargeRulesDiv = document.getElementById('chargeRulesDiv');
@@ -701,7 +702,7 @@ function showKeywordDialog(qzSettingUuid, customerUuid, domain, optimizedGroupNa
         resizable: false,
         height: 450,
         width: 340,
-        title: '指定关键字',
+        title: '指定关键�,
         modal: false,
         buttons: [{
             text: '保存',
@@ -726,7 +727,7 @@ function saveCustomerKeywords(qzSettingUuid, customerUuid, optimizedGroupName) {
     var customerKeywordDialog = $("#customerKeywordDialog");
     var domain = customerKeywordDialog.find("#domain").val();
     if (domain == '') {
-        alert("请输入域名");
+        alert("请输入域�);
         customerKeywordDialog.find("#domain").focus();
         return;
     }
@@ -736,7 +737,14 @@ function saveCustomerKeywords(qzSettingUuid, customerUuid, optimizedGroupName) {
         customerKeywordDialog.find("#customerKeywordDialogContent").focus();
         return;
     }
-    var keywords = keywordStr.replace(/[，|\r\n]/g, ",").replace(/[\s+]/g, "").split(',');
+    keywordStr = keywordStr.replace(/[，|\r\n]/g, ",").replace(/[\s+]/g, "");
+    if (keywordStr.substring(keywordStr.length - 1) == ','){
+        keywordStr = keywordStr.substring(0, keywordStr.length - 1);
+    }
+    var keywords = keywordStr.split(',');
+    keywords = keywords.filter(function (keyword, index) {
+        return keywords.indexOf(keyword) === index && keyword != '';
+    });
     var type = customerKeywordDialog.find("#qzSettingEntryType").val();
     var searchEngine = customerKeywordDialog.find("#searchEngine").val();
     var postData = {};
@@ -758,14 +766,14 @@ function saveCustomerKeywords(qzSettingUuid, customerUuid, optimizedGroupName) {
         },
         success: function (data) {
             if (data) {
-                $().toastmessage('showSuccessToast', "保存成功！");
+                $().toastmessage('showSuccessToast', "保存成功�);
                 $("#customerKeywordDialog").dialog("close");
             } else {
-                $().toastmessage('showErrorToast', "保存失败！");
+                $().toastmessage('showErrorToast', "保存失败�);
             }
         },
         error: function () {
-            $().toastmessage('showErrorToast', "保存失败！");
+            $().toastmessage('showErrorToast', "保存失败�);
         }
     });
 }
@@ -826,7 +834,7 @@ function delQZSetting(uuid) {
         type: 'Get',
         success: function (data) {
             if(data){
-                $().toastmessage('showSuccessToast', "删除成功！", true);
+                $().toastmessage('showSuccessToast', "删除成功�, true);
             }else{
                 $().toastmessage('showErrorToast', "删除失败");
             }
@@ -850,10 +858,10 @@ function getSelectedIDs() {
 function delSelectedQZSettings(self) {
     var uuids = getSelectedIDs();
     if(uuids === ''){
-        alert('请选择要操作的设置信息！');
+        alert('请选择要操作的设置信息�);
         return ;
     }
-    if (confirm("确实要删除这些关键字吗?") == false) return;
+    if (confirm("确实要删除这些关键字�") == false) return;
     var postData = {};
     postData.uuids = uuids.split(",");
     $.ajax({
@@ -880,10 +888,10 @@ function delSelectedQZSettings(self) {
 function updateImmediately(self) {
     var uuids = getSelectedIDs();
     if(uuids === ''){
-        alert('请选择要操作的设置信息！');
+        alert('请选择要操作的设置信息�);
         return;
     }
-    if (confirm("确实要马上更新这些设置吗？") == false) return;
+    if (confirm("确实要马上更新这些设置吗�) == false) return;
     var postData = {};
     postData.uuids = uuids;
     $.ajax({
@@ -910,15 +918,15 @@ function updateImmediately(self) {
 function updateQZSettingStatus(status) {
     var uuids = getSelectedIDs();
     if(uuids === ''){
-        alert('请选择要操作的整站！');
+        alert('请选择要操作的整站�);
         return ;
     }
     if(status == 1) {
-        if (confirm("确认要激活选中的整站吗？") == false) return;
+        if (confirm("确认要激活选中的整站吗�) == false) return;
     } else if (status == 2) {
-        if (confirm("确认要暂停收费选中的整站吗？") == false) return;
+        if (confirm("确认要暂停收费选中的整站吗�) == false) return;
     } else {
-        if (confirm("确认要暂停选中的整站吗？") == false) return;
+        if (confirm("确认要暂停选中的整站吗�) == false) return;
     }
 
     var postData = {};
@@ -977,13 +985,13 @@ function saveChargeLog(self) {
         chargeLog.actualAmount = chargeDialog.find("#actualAmount" + val.id).val();
         chargeLog.nextChargeDate = chargeDialog.find("#nextChargeDate" + val.id).val();
         if (chargeLog.nextChargeDate == "" || chargeLog.nextChargeDate == null) {
-            alert("下次收费日期为必填");
+            alert("下次收费日期为必�);
             chargeDialog.find("#nextChargeDate" + val.id).focus();
             saveChargeLogFlag = false;
             return;
         }
         if (chargeLog.actualAmount == "" || chargeLog.actualAmount == null) {
-            alert("实收金额为必填");
+            alert("实收金额为必�);
             chargeDialog.find("#actualAmount" + val.id).focus();
             saveChargeLogFlag = false;
             return;
@@ -995,7 +1003,7 @@ function saveChargeLog(self) {
             return;
         }
         if (chargeLog.actualChargeDate == "" || chargeLog.actualChargeDate == null) {
-            alert("实际收费日期为必填");
+            alert("实际收费日期为必�);
             chargeDialog.find("#actualChargeDate" + val.id).focus();
             saveChargeLogFlag = false;
             return;
@@ -1016,7 +1024,7 @@ function saveChargeLog(self) {
                 success: function (data) {
                     resetChargeDialog();
                     if (data != null && data != "") {
-                        $().toastmessage('showSuccessToast', "收费成功！", true);
+                        $().toastmessage('showSuccessToast', "收费成功�, true);
                         $("#chargeDialog").dialog("close");
                     } else {
                         $().toastmessage('showErrorToast', "收费失败");
@@ -1039,7 +1047,7 @@ function calTotalAmount() {
     });
     var str = new String(totalAmount);
     var total = str.replace( /\B(?=(?:\d{3})+$)/g, ',' );
-    chargeDialog.find("#totalAmount").html(total + "元");
+    chargeDialog.find("#totalAmount").html(total + "�);
 }
 function showChargeLog(uuid, self) {
     $("#chargeLogListTable  tr:not(:first)").remove();
@@ -1085,7 +1093,7 @@ function showChargeLog(uuid, self) {
             }
         },
         error: function () {
-            $().toastmessage('showErrorToast', "获取信息失败！");
+            $().toastmessage('showErrorToast', "获取信息失败�);
         }
     });
 }
@@ -1150,7 +1158,7 @@ function showChargeDialog(uuid,contactPerson,domain,self) {
 
                 var s = new String(totalAmount);
                 var total = s.replace(/\B(?=(?:\d{3})+$)/g, ',');
-                chargeDialogObj.find("#totalAmount").html(total+"元");
+                chargeDialogObj.find("#totalAmount").html(total+"�);
                 $("#chargeDialog").show();
                 $("#chargeDialog").dialog({
                     resizable: false,
@@ -1175,11 +1183,11 @@ function showChargeDialog(uuid,contactPerson,domain,self) {
                 $("#chargeDialog").dialog("open");
                 $("#chargeDialog").window("resize",{top:$(document).scrollTop() + 100});
             }else{
-                $().toastmessage('showErrorToast', "获取信息失败！");
+                $().toastmessage('showErrorToast', "获取信息失败�);
             }
         },
         error: function () {
-            $().toastmessage('showErrorToast', "获取信息失败！");
+            $().toastmessage('showErrorToast', "获取信息失败�);
         }
     });
 }
@@ -1296,11 +1304,11 @@ function showSettingDialog(uuid, self) {
                 initSettingDialog(qzSetting, self);
                 createSettingDialog();
             }else{
-                $().toastmessage('showErrorToast', "获取信息失败！");
+                $().toastmessage('showErrorToast', "获取信息失败�);
             }
         },
         error: function () {
-            $().toastmessage('showErrorToast', "获取信息失败！");
+            $().toastmessage('showErrorToast', "获取信息失败�);
         }
     });
 }
@@ -1321,7 +1329,7 @@ function initSettingDialog(qzSetting, self) {
         qzSetting.updateInterval != null ? qzSetting.updateInterval : "");
     settingDialogDiv.find("#qzSettingEntryType").val(
         qzSetting.type != null ? qzSetting.type : "");
-    // 操作类型表填充数据
+    // 操作类型表填充数�
     $.each(qzSetting.qzOperationTypes, function (idx, val) {
         settingDialogDiv.find("#group" + val.operationType).val(val.group);
         settingDialogDiv.find("#subDomainName" + val.operationType).val(val.subDomainName);
@@ -1329,7 +1337,7 @@ function initSettingDialog(qzSetting, self) {
             val.initialKeywordCount);
         settingDialogDiv.find("#currentKeywordCount" + val.operationType).val(
             val.currentKeywordCount);
-        /* 限制最大词数 */
+        /* 限制最大词�*/
         settingDialogDiv.find("#maxKeywordCount" + val.operationType).val(val.maxKeywordCount);
         settingDialogDiv.find("#qzSettingUuid" + val.operationType).val(val.uuid);
         // 构造规则表
@@ -1357,7 +1365,7 @@ function initSettingDialog(qzSetting, self) {
         dealSettingTable("Phone");
     }
 }
-//规则表验证
+//规则表验�
 var reg = /^[1-9]\d*$/;
 function saveChangeSetting(self) {
     var settingDialogDiv = $("#changeSettingDialog");
@@ -1372,7 +1380,7 @@ function saveChangeSetting(self) {
     }
     qzSetting.domain = settingDialogDiv.find("#qzSettingDomain").val();
     if (qzSetting.domain == null || qzSetting.domain === "") {
-        alert("请输入域名");
+        alert("请输入域�);
         settingDialogDiv.find("#qzSettingDomain").focus();
         return;
     }
@@ -1402,11 +1410,11 @@ function saveChangeSetting(self) {
     }
     var entryType = settingDialogDiv.find("#qzSettingEntryType").val();
     qzSetting.type = entryType;
-    qzSetting.qzOperationTypes = [];//操作类型表
+    qzSetting.qzOperationTypes = [];//操作类型�
     qzSetting.qzOperationTypes.qzChargeRules = [];//收费规则
-    qzSetting.qzCategoryTags = []; //分类标签表
+    qzSetting.qzCategoryTags = []; //分类标签�
 
-    var tagNames = settingDialogDiv.find("#qzCategoryTagNames").val().replace(/(，)+/g, ",");
+    var tagNames = settingDialogDiv.find("#qzCategoryTagNames").val().replace(/(�+/g, ",");
     if (tagNames != "") {
         var tagNameArr = tagNames.split(",");
         tagNameArr = unique(tagNameArr);
@@ -1431,18 +1439,18 @@ function saveChangeSetting(self) {
         operationType.maxKeywordCount = settingDialogDiv.find("#maxKeywordCount" + val.id).val();
         operationType.subDomainName = settingDialogDiv.find("#subDomainName" + val.id).val();
         if (operationType.group == null || operationType.group === "") {
-            alert("请输入分组");
+            alert("请输入分�);
             settingDialogDiv.find("#group" + val.id).focus();
             validationFlag = false;
             return false;
         }else if(operationType.group.length>20){
-            alert(operationType.operationType+"分组大于20位，请重新输入");
+            alert(operationType.operationType+"分组大于20位，请重新输�);
             settingDialogDiv.find("#group" + val.id).focus();
             validationFlag = false;
             return false;
         }
 //        if (operationType.initialKeywordCount == null || operationType.initialKeywordCount === "") {
-//          alert("请输入初始词量");
+//          alert("请输入初始词�);
 //          settingDialogDiv.find("#initialKeywordCount" + val.id).focus();
 //          validationFlag = false;
 //          return false;
@@ -1474,13 +1482,13 @@ function saveChangeSetting(self) {
             operationType.qzChargeRules.push(chargeRule);
 
             if (startKeywordCountObj.val() == null || startKeywordCountObj.val() == "") {
-                alert("请输入起始词数");
+                alert("请输入起始词�);
                 startKeywordCountObj[0].focus();
                 validationFlag = false;
                 return false;
             }
             if (!reg.test(startKeywordCountObj.val())) {
-                alert("请输入数字");
+                alert("请输入数�);
                 startKeywordCountObj.focus();
                 validationFlag = false;
                 return false;
@@ -1494,14 +1502,14 @@ function saveChangeSetting(self) {
             }
             if (idx < (trObjs.length - 1)) {
                 if (endKeywordCountObj.val() == null || endKeywordCountObj.val() == "") {
-                    alert("请输入终止词数");
+                    alert("请输入终止词�);
                     endKeywordCountObj.focus();
                     validationFlag = false;
                     return false;
                 }
             } else {
                 if(endKeywordCountObj.val() != "" && operationType.currentKeywordCount>Number(endKeywordCountObj.val())){
-                    alert("最后一条规则中的终止词量必须大于当前词量");
+                    alert("最后一条规则中的终止词量必须大于当前词�);
                     endKeywordCountObj.focus();
                     validationFlag = false;
                     return false;
@@ -1509,7 +1517,7 @@ function saveChangeSetting(self) {
             }
             if (endKeywordCountObj.val() != "") {
                 if (!reg.test(endKeywordCountObj.val())) {
-                    alert("请输入数字");
+                    alert("请输入数�);
                     endKeywordCountObj.focus();
                     validationFlag = false;
                     return false;
@@ -1522,7 +1530,7 @@ function saveChangeSetting(self) {
                 }
             }
             if (amountObj.val() == null || amountObj.val() == "") {
-                alert("请输入价格");
+                alert("请输入价�);
                 amountObj.focus();
                 validationFlag = false;
                 return false;
@@ -1543,7 +1551,7 @@ function saveChangeSetting(self) {
 
     if (validationFlag) {
         if (checkedObjs.length == 0) {
-            alert("保存失败，必须要增加一条规则");
+            alert("保存失败，必须要增加一条规�);
             return;
         }
         $.ajax({
@@ -1559,12 +1567,12 @@ function saveChangeSetting(self) {
                 if (data != null && data != "") {
                     $().toastmessage('showSuccessToast', "更新成功", true);
                 } else {
-                    $().toastmessage('showErrorToast', "更新失败！");
+                    $().toastmessage('showErrorToast', "更新失败�);
                 }
                 $("#changeSettingDialog").dialog("close");
             },
             error: function () {
-                $().toastmessage('showErrorToast', "更新失败！");
+                $().toastmessage('showErrorToast', "更新失败�);
             }
         });
     }
@@ -1597,7 +1605,7 @@ function deleteCurrentRow(currentRow) {
             $(val).val(idx + 1);
         });
     } else {
-        alert("删除失败，规则表不允许为空");
+        alert("删除失败，规则表不允许为�);
     }
 }
 function dealSettingTable(operationType) {
@@ -1608,7 +1616,7 @@ function dealSettingTable(operationType) {
     var checkboxObj = settingDialogDiv.find('#' + operationType);
 
     if (ruleObj.css("display") == "none" || checkboxObj[0].checked == true) {
-        // 保证必须有一条规则
+        // 保证必须有一条规�
         if (chargeRuleRowCount <= 2) {
             addRow("chargeRule" + operationType);
         }
@@ -1661,4 +1669,112 @@ function getAvailableQZSettings() {
     });
     $("#getAvailableQZSettings").dialog("open");
     $("#getAvailableQZSettings").window("resize",{top:$(document).scrollTop() + 100});
+}
+
+function showExcludeCustomerKeywordDialog(qzSettingUuid, customerUuid, domain, optimizedGroupName, terminalType) {
+    var excludeCustomerKeywordDialog = $("#excludeCustomerKeywordDialog");
+    excludeCustomerKeywordDialog.find('#excludeCustomerKeywordForm')[0].reset();
+    excludeCustomerKeywordDialog.find("#qzSettingUuid").val(qzSettingUuid);
+    excludeCustomerKeywordDialog.find("#customerUuid").val(customerUuid);
+    excludeCustomerKeywordDialog.find("#terminalType").val(terminalType);
+    excludeCustomerKeywordDialog.find("#domain").val(domain);
+    echoExcludeKeyword();
+    excludeCustomerKeywordDialog.show();
+    excludeCustomerKeywordDialog.dialog({
+        resizable: false,
+        height: 450,
+        width: 340,
+        title: '排除关键�,
+        modal: false,
+        buttons: [{
+            text: '保存',
+            iconCls: 'icon-ok',
+            handler: function () {
+                excludeCustomerKeywords(qzSettingUuid, customerUuid, domain, optimizedGroupName);
+            }
+        }, {
+            text: '取消',
+            iconCls: 'icon-cancel',
+            handler: function () {
+                $("#excludeCustomerKeywordDialog").dialog("close");
+                $('#excludeCustomerKeywordForm')[0].reset();
+            }
+        }]
+    });
+    excludeCustomerKeywordDialog.dialog("open");
+    excludeCustomerKeywordDialog.window("resize",{top:$(document).scrollTop() + 100});
+}
+function excludeCustomerKeywords(qzSettingUuid, customerUuid, domain, optimizedGroupName) {
+    var excludeCustomerKeywordDialog = $("#excludeCustomerKeywordDialog");
+    var terminalType = excludeCustomerKeywordDialog.find("#terminalType").val();
+    var excludeKeywordUuid = excludeCustomerKeywordDialog.find("#excludeKeywordUuid").val();
+    var keywordStr = excludeCustomerKeywordDialog.find("#customerKeywordDialogContent").val();
+    if (keywordStr == "") {
+        alert("请输入关键字");
+        excludeCustomerKeywordDialog.find("#customerKeywordDialogContent").focus();
+        return;
+    }
+    keywordStr = keywordStr.replace(/[，|\r\n]/g, ",").replace(/[\s+]/g, "");
+    if (keywordStr.substring(keywordStr.length - 1) == ','){
+        keywordStr = keywordStr.substring(0, keywordStr.length - 1);
+    }
+    var keywords = keywordStr.split(',');
+    keywords = keywords.filter(function (keyword, index) {
+        return keywords.indexOf(keyword) === index && keyword != '';
+    });
+    var postData = {};
+    postData.excludeKeywordUuid = excludeKeywordUuid;
+    postData.qzSettingUuid = qzSettingUuid;
+    postData.customerUuid = customerUuid;
+    postData.domain = $.trim(domain);
+    postData.optimizeGroupName = optimizedGroupName;
+    postData.terminalType = $.trim(terminalType);
+    postData.keywords = keywords;
+    $.ajax({
+        url: '/internal/qzsetting/excludeQZSettingCustomerKeywords',
+        type: 'POST',
+        data: JSON.stringify(postData),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        success: function (data) {
+            if (data) {
+                $().toastmessage('showSuccessToast', "保存成功�);
+                $("#excludeCustomerKeywordDialog").dialog("close");
+            } else {
+                $().toastmessage('showErrorToast', "保存失败�);
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "保存失败�);
+        }
+    });
+}
+function echoExcludeKeyword() {
+    var excludeCustomerKeywordDialog = $("#excludeCustomerKeywordDialog");
+    var qzSettingUuid = excludeCustomerKeywordDialog.find("#qzSettingUuid").val();
+    var terminalType = excludeCustomerKeywordDialog.find("#terminalType").val();
+    var postData = {};
+    postData.qzSettingUuid = qzSettingUuid;
+    postData.terminalType = $.trim(terminalType);
+    $.ajax({
+        url: '/internal/qzsetting/echoExcludeKeyword',
+        type: 'POST',
+        data: JSON.stringify(postData),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        success: function (data) {
+            if (data != null) {
+                data.keyword = data.keyword.replace(/[,]/g, "\n");
+                $("#excludeCustomerKeywordDialog").find("#excludeKeywordUuid").val(data.uuid);
+                $("#excludeCustomerKeywordDialog").find("#customerKeywordDialogContent").val(data.keyword);
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "显示已添加排除词失败�);
+        }
+    });
 }

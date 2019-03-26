@@ -57,6 +57,9 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 	@Autowired
 	private QZCategoryTagService qzCategoryTagService;
 
+	@Autowired
+    private CustomerExcludeKeywordService customerExcludeKeywordService;
+
 	public QZSetting getAvailableQZSetting(){
 		List<QZSetting> qzSettings = qzSettingDao.getAvailableQZSettings();
 		QZSetting qzSetting = null;
@@ -461,9 +464,33 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 							qzSettingCriteria.getQzSetting().setPhoneKeywordExceedMaxCount(true);
 						}
 					}
-
+                    String pcCustomerExcludeKeywords = customerExcludeKeywordService.getCustomerExcludeKeyword(Long.valueOf(qzSettingCriteria.getQzSetting().getCustomerUuid()), qzSettingCriteria.getQzSetting().getUuid(), TerminalTypeEnum.PC.toString(), qzSettingCriteria.getQzSetting().getDomain());
+                    String phoneCustomerExcludeKeywords = customerExcludeKeywordService.getCustomerExcludeKeyword(Long.valueOf(qzSettingCriteria.getQzSetting().getCustomerUuid()), qzSettingCriteria.getQzSetting().getUuid(), TerminalTypeEnum.Phone.toString(), qzSettingCriteria.getQzSetting().getDomain());
+                    Set pcExcludeKeyword = new HashSet();
+                    Set phoneExcludeKeyword = new HashSet();
+                    if (null != pcCustomerExcludeKeywords) {
+                        pcExcludeKeyword.addAll(Arrays.asList(pcCustomerExcludeKeywords.split(",")));
+                    }
+                    if (null != phoneCustomerExcludeKeywords) {
+                        phoneExcludeKeyword.addAll(Arrays.asList(phoneCustomerExcludeKeywords.split(",")));
+                    }
 					if (CollectionUtils.isNotEmpty(insertingCustomerKeywords)) {
-						customerKeywordService.addCustomerKeywords(insertingCustomerKeywords, qzSettingCriteria.getUserName());
+                        for (CustomerKeyword customerKeyword : insertingCustomerKeywords) {
+                            if (TerminalTypeEnum.PC.equals(customerKeyword.getTerminalType())){
+                                if (!pcExcludeKeyword.isEmpty()){
+                                    if (pcExcludeKeyword.contains(customerKeyword.getKeyword())){
+                                        customerKeyword.setOptimizeGroupName("zanting");
+                                    }
+                                }
+                            } else {
+                                if (!phoneExcludeKeyword.isEmpty()){
+                                    if (phoneExcludeKeyword.contains(customerKeyword.getKeyword())){
+                                        customerKeyword.setOptimizeGroupName("zanting");
+                                    }
+                                }
+                            }
+                            customerKeywordService.addCustomerKeyword(customerKeyword, qzSettingCriteria.getUserName());
+                        }
 					}
 				}
 			}
@@ -580,15 +607,38 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		customerKeyword.setSearchEngine(qzSettingSaveCustomerKeywordsCriteria.getSearchEngine());
 		customerKeyword.setTerminalType(qzSettingSaveCustomerKeywordsCriteria.getTerminalType());
 		customerKeyword.setUrl(qzSettingSaveCustomerKeywordsCriteria.getDomain());
-		customerKeyword.setOptimizeGroupName(qzSettingSaveCustomerKeywordsCriteria.getOptimizeGroupName());
 		customerKeyword.setServiceProvider("baidutop123");
 		customerKeyword.setManualCleanTitle(true);
 		customerKeyword.setCollectMethod(CollectMethod.PerMonth.name());
         customerKeyword.setCurrentIndexCount(-1);
         customerKeyword.setPositionFirstFee(-1d);
-		for (String keyword : qzSettingSaveCustomerKeywordsCriteria.getKeywords()) {
+        String customerExcludeKeywords = customerExcludeKeywordService.getCustomerExcludeKeyword(customerKeyword.getCustomerUuid(), customerKeyword.getQzSettingUuid(), customerKeyword.getTerminalType(), customerKeyword.getUrl());
+        Set excludeKeyword = new HashSet();
+        if (null != customerExcludeKeywords) {
+        	excludeKeyword.addAll(Arrays.asList(customerExcludeKeywords.split(",")));
+        }
+        for (String keyword : qzSettingSaveCustomerKeywordsCriteria.getKeywords()) {
+            if (!excludeKeyword.isEmpty()){
+				if (excludeKeyword.contains(keyword)){
+					customerKeyword.setOptimizeGroupName("zanting");
+				} else {
+					customerKeyword.setOptimizeGroupName(qzSettingSaveCustomerKeywordsCriteria.getOptimizeGroupName());
+				}
+			} else {
+				customerKeyword.setOptimizeGroupName(qzSettingSaveCustomerKeywordsCriteria.getOptimizeGroupName());
+			}
 			customerKeyword.setKeyword(keyword);
 			customerKeywordService.addCustomerKeyword(customerKeyword, userName);
-		}
+        }
+    }
+
+	public void excludeQZSettingCustomerKeywords (QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria) {
+        qzSettingExcludeCustomerKeywordsCriteria.setDomain(qzSettingExcludeCustomerKeywordsCriteria.getDomain().replace("http://","").replace("https://","").replace("www.","").split("/")[0]);
+		customerKeywordService.excludeCustomerKeyword(qzSettingExcludeCustomerKeywordsCriteria);
+        customerExcludeKeywordService.excludeCustomerKeywords(qzSettingExcludeCustomerKeywordsCriteria);
+	}
+
+	public CustomerExcludeKeyword echoExcludeKeyword(QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria){
+        return customerExcludeKeywordService.echoExcludeKeyword(qzSettingExcludeCustomerKeywordsCriteria);
     }
 }

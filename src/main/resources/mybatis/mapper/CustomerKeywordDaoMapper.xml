@@ -1239,4 +1239,20 @@
     <select id="getCustomerUuids" resultType="Long">
         SELECT DISTINCT ck.fCustomerUuid FROM t_customer_keyword ck WHERE ck.fType = #{entryType} AND ck.fTerminalType = #{terminalType} AND ck.fStatus = 1
     </select>
+
+    <update id="excludeCustomerKeyword" parameterType="com.keymanager.monitoring.entity.CustomerKeyword">
+        UPDATE  t_customer_keyword ck
+        SET ck.fOptimizeGroupName = 'zanting'
+        WHERE 1=1
+        <if test="qzSettingExcludeCustomerKeywordsCriteria.customerUuid != null and qzSettingExcludeCustomerKeywordsCriteria.customerUuid != ''">
+          AND ck.fCustomerUuid = #{qzSettingExcludeCustomerKeywordsCriteria.customerUuid}
+        </if>
+        AND ck.fType = #{qzSettingExcludeCustomerKeywordsCriteria.type}
+        AND ck.fTerminalType = #{qzSettingExcludeCustomerKeywordsCriteria.terminalType}
+        AND ck.fKeyword IN
+        <foreach item = "keyword" collection = "qzSettingExcludeCustomerKeywordsCriteria.keywords" open="(" separator="," close=")">
+            #{keyword}
+        </foreach>
+        AND ck.fUrl like '%${qzSettingExcludeCustomerKeywordsCriteria.domain}%'
+    </update>
 </mapper>
