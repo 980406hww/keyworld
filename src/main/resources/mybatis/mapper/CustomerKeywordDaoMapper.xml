@@ -1277,7 +1277,7 @@
             UPDATE t_customer_keyword
             <set>
                 fVerifyEnteredKeywordTime = NOW()
-                <if test="item.remarks != null and item.remarks !='' and item.capturedTitle != 1">
+                <if test="customerKeyword.remarks != null and customerKeyword.remarks !='' and customerKeyword.capturedTitle != 1">
                     ,fRemarks = CONCAT(IFNULL(fRemarks,''), #{customerKeyword.remarks})
                 </if>
                 <if test="item.capturedTitle == 1">
