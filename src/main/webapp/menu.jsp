@@ -50,7 +50,7 @@
 			</span>|
 				<span class="fi-web icon-black" style="font-size: 12px;color: red;"></span><span style="color: black">&nbsp;${sessionScope.get("terminalType")}端&nbsp;|</span>&nbsp;
 				<span class="fi-comments" style="font-size: 12px;color: green;"></span>
-				<a href="javascript:void(0)" onclick="OpenMessageList()" id="userMessageText" style="text-decoration: none;font-size: 12px; color: black">留言列表</a>|
+				<a href="javascript:void(0)" onclick="OpenMessageList(1)" id="userMessageText" style="text-decoration: none;font-size: 12px; color: black">留言列表</a>|
 				<shiro:hasPermission name="/user/editPwdPage">
 					<span class="fi-unlock icon-green" style="font-size: 12px;color: green"></span>
 					<a href="javascript:void(0)" onclick="editUserPwd()"  style="text-decoration: none;font-size: 12px;color: black">修改密码</a>|
@@ -237,8 +237,8 @@
         parent.$.modalDialog.handler.window("resize",{top:$(document).scrollTop() + 100});
     }
 
-    function OpenMessageList() {
-        searchUserMessageQueue();
+    function OpenMessageList(openStatus) {
+        searchUserMessageQueue(openStatus);
         var showUserMessageQueueDialog = $("#showUserMessageQueueDialog");
         showUserMessageQueueDialog.show();
         showUserMessageQueueDialog.dialog({
@@ -264,7 +264,7 @@
         $("#userMessageQueueTable").find("thead tr:last-child").toggle();
     }
 
-    function searchUserMessageQueue() {
+    function searchUserMessageQueue(openStatus) {
         var postData = {};
         var showUserMessageQueueForm = $("#showUserMessageQueueForm");
         var type = showUserMessageQueueForm.find("#message_type_select").val();
@@ -274,7 +274,13 @@
         var status = showUserMessageQueueForm.find("#message_status_select").val();
         if (status != '') {
             postData.status = status;
-		}
+		} else {
+            if (openStatus){
+                status = 0;
+                showUserMessageQueueForm.find("#message_status_select").val(status);
+            }
+            postData.status = status;
+        }
         var date = showUserMessageQueueForm.find("#messageCreateDate").val();
         if (date != '') {
             postData.date = date.trim();
