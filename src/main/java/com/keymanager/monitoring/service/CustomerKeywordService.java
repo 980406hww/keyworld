@@ -102,7 +102,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     private CustomerExcludeKeywordService customerExcludeKeywordService;
 
     public Page<CustomerKeyword> searchCustomerKeywords(Page<CustomerKeyword> page, CustomerKeywordCriteria customerKeywordCriteria){
-        customerKeywordCriteria.setUrl(customerKeywordCriteria.getUrl().replace("https://", "").replace("http://", "").replace("www.", ""));
+        if (null != customerKeywordCriteria.getUrl()) {
+            customerKeywordCriteria.setUrl(customerKeywordCriteria.getUrl().replace("https://", "").replace("http://", "").replace("www.", ""));
+        }
         page.setRecords(customerKeywordDao.searchCustomerKeywordsPageForCustomer(page, customerKeywordCriteria));
         return page;
     }
