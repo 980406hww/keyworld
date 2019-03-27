@@ -44,6 +44,7 @@ function selectAll(self) {
 }
 function deleteBatchScreenedWebsite(self) {
     var uuids = getSelectedIDs();
+    var optimizeGroupNameList = getSelectedOptimizeGroupNameList();
     if (uuids === '') {
         alert('请选择要删除屏蔽网站的优化组');
         return;
@@ -51,6 +52,7 @@ function deleteBatchScreenedWebsite(self) {
     if (confirm("确实要删除这些优化组的屏蔽网站吗?") == false) return;
     var postData = {};
     postData.uuids = uuids.split(",");
+    postData.optimizeGroupNameList = optimizeGroupNameList.split(",");
     $.ajax({
         url: '/internal/screenedWebsite/deleteBatchScreenedWebsite',
         data: JSON.stringify(postData),
@@ -192,12 +194,21 @@ function getScreenedWebsite(uuid, callback) {
         }
     });
 }
-function delScreenedWebsite(uuid) {
+function delScreenedWebsite(uuid, optimizeGroupName) {
     if (confirm("确实要删除这个组的屏蔽网站吗?") == false)
         return;
+    var postDate = {};
+    postDate.uuid = uuid;
+    postDate.optimizeGroupName = optimizeGroupName;
     $.ajax({
-        url: '/internal/screenedWebsite/delScreenedWebsite/' + uuid,
-        type: 'Get',
+        url: '/internal/screenedWebsite/delScreenedWebsite',
+        data: JSON.stringify(postDate),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        type: 'POST',
+        timeout: 5000,
         success: function (result) {
             if (result) {
                 $().toastmessage('showSuccessToast', "删除成功",true);
@@ -229,4 +240,15 @@ function resetPageNumber() {
         searchScreenedWebsiteForm.find("#optimizeGroupName").val($.trim(optimizeGroupName));
     }
     searchScreenedWebsiteForm.submit();
+}
+function getSelectedOptimizeGroupNameList() {
+    var optimizeGroupNameList = '';
+    $.each($("input[name=uuid]:checkbox:checked"), function () {
+        if (optimizeGroupNameList === '') {
+            optimizeGroupNameList = $(this).parent().parent().find("td:eq(1)").text();
+        } else {
+            optimizeGroupNameList = optimizeGroupNameList + "," + $(this).parent().parent().find("td:eq(1)").text();
+        }
+    });
+    return optimizeGroupNameList;
 }

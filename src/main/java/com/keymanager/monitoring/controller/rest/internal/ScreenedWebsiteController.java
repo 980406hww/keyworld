@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -24,6 +23,8 @@ public class ScreenedWebsiteController extends SpringMVCBaseController {
 
     @Autowired
     private ScreenedWebsiteService screenedWebsiteService;
+    @Autowired
+    private ScreenedWebsiteListCacheService screenedWebsiteListCacheService;
 
     @RequestMapping(value = "/searchScreenedWebsiteLists", method = RequestMethod.GET)
     public ModelAndView searchscreenedWebsiteLists(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize) {
@@ -58,8 +59,7 @@ public class ScreenedWebsiteController extends SpringMVCBaseController {
     @RequestMapping(value = "/deleteBatchScreenedWebsite" , method = RequestMethod.POST)
     public ResponseEntity<?> deleteBatchScreenedWebsite(@RequestBody Map<String, Object> requestMap){
         try {
-            List<String> uuids = (List<String>) requestMap.get("uuids");
-            screenedWebsiteService.deleteBatchScreenedWebsite(uuids);
+            screenedWebsiteService.deleteBatchScreenedWebsite(requestMap);
             return new ResponseEntity<Object>(true , HttpStatus.OK);
         }catch (Exception e){
             logger.error(e.getMessage());
@@ -77,10 +77,10 @@ public class ScreenedWebsiteController extends SpringMVCBaseController {
         }
     }
 
-    @RequestMapping(value = "/delScreenedWebsite/{uuid}", method = RequestMethod.GET)
-    public ResponseEntity<?> delScreenedWebsite(@PathVariable("uuid") Long uuid) {
+    @RequestMapping(value = "/delScreenedWebsite", method = RequestMethod.POST)
+    public ResponseEntity<?> delScreenedWebsite(@RequestBody Map<String, Object> requestMap) {
         try {
-            screenedWebsiteService.delScreenedWebsite(uuid);
+            screenedWebsiteService.delScreenedWebsite(requestMap);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());

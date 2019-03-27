@@ -57,7 +57,7 @@
                 <td width=80 style="text-align: center"><fmt:formatDate value="${screenedWebsite.createTime}" pattern="yyyy-MM-dd"/></td>
                 <td width=80>
                         <a href="javascript:modifyScreenedWebsite(${screenedWebsite.uuid})">修改</a>
-                        | <a href="javascript:delScreenedWebsite('${screenedWebsite.uuid}')">删除</a>
+                        | <a href="javascript:delScreenedWebsite('${screenedWebsite.uuid}','${screenedWebsite.optimizeGroupName}')">删除</a>
                 </td>
             </tr>
         </c:forEach>

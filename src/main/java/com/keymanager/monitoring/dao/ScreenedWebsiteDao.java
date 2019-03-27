@@ -11,4 +11,6 @@ import java.util.List;
 public interface ScreenedWebsiteDao extends BaseMapper<ScreenedWebsite> {
 
     List<ScreenedWebsite> searchCustomerKeywordListsPage(Page<CustomerKeyword> page, @Param("screenedWebsite") ScreenedWebsite screenedWebsite);
+
+    String getScreenedWebsiteByOptimizeGroupName(@Param("optimizeGroupName") String optimizeGroupName);
 }

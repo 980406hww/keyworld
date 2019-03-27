@@ -16,4 +16,10 @@
         </if>
     </select>
 
+    <select id="getScreenedWebsiteByOptimizeGroupName" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT
+        fScreenedWebsite AS 'screenedWebsite'
+        FROM t_screened_website
+        WHERE fOptimizeGroupName = #{optimizeGroupName}
+    </select>
 </mapper>
