@@ -119,11 +119,12 @@
             <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
             <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
             <input id="customerUuid" name="customerUuid" type="hidden" value="${customerKeywordCriteria.customerUuid}">
-            <input id="queryStatus" name="queryStatus" type="hidden" value="${customerKeywordCriteria.queryStatus}">
             关键字:<input type="text" name="keyword" id="keyword" value="${customerKeywordCriteria.keyword}"
                        style="width:80px;">
             URL:<input type="text" name="url" id="url" value="${customerKeywordCriteria.url}"
                        style="width:80px;">
+            指定取非URL:<input type="text" name="excludeUrl" id="excludeUrl" value="${customerKeywordCriteria.excludeUrl}"
+                               style="width:80px;">
             熊掌号:<input type="text" name="bearPawNumber" id="bearPawNumber" value="${customerKeywordCriteria.bearPawNumber}"
                        style="width:80px;">
             关键字状态:
@@ -202,11 +203,6 @@
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/qzsetting/save">
                 <input type="button" id="customerKeywordBtnInput" onclick="openMessageBox('关键字列表', '${customerKeywordCriteria.customerUuid}', '${customer.contactPerson}')" value=" 用户留言 ">
-            </shiro:hasPermission>
-            <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
-                <c:if test="${sessionScope.get('entryType') eq 'qz'}">
-                    <input type="button" onclick="resetPageNumber(1)" value=" 查找非指定URL关键字 ">&nbsp;&nbsp;
-                </c:if>
             </shiro:hasPermission>
         </div>
     </form>

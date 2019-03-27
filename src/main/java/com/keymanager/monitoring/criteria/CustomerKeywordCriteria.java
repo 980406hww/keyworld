@@ -6,6 +6,7 @@ public class CustomerKeywordCriteria extends BaseCriteria{
     private List<Long> uuids;
     private Long customerUuid;
     private String url;
+    private String excludeUrl; // 需排除的url
     private String bearPawNumber;
     private String keyword;
     private String creationFromTime;//添加时间
@@ -26,7 +27,6 @@ public class CustomerKeywordCriteria extends BaseCriteria{
     private Integer ltOptimizePlanCount;
     private Integer gtCurrentIndexCount;
     private Integer ltCurrentIndexCount;
-    private Integer queryStatus;
 
     private String qq;
     private String userName;
@@ -69,14 +69,6 @@ public class CustomerKeywordCriteria extends BaseCriteria{
 
     public void setLtCurrentIndexCount(Integer ltCurrentIndexCount) {
         this.ltCurrentIndexCount = ltCurrentIndexCount;
-    }
-
-    public Integer getQueryStatus () {
-        return queryStatus;
-    }
-
-    public void setQueryStatus (Integer queryStatus) {
-        this.queryStatus = queryStatus;
     }
 
     public String getRemarks() {
@@ -367,5 +359,13 @@ public class CustomerKeywordCriteria extends BaseCriteria{
 
     public void setOpenDialogStatus (Integer openDialogStatus) {
         this.openDialogStatus = openDialogStatus;
+    }
+
+    public String getExcludeUrl () {
+        return excludeUrl;
+    }
+
+    public void setExcludeUrl (String excludeUrl) {
+        this.excludeUrl = excludeUrl;
     }
 }

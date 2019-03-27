@@ -134,10 +134,11 @@ function changePaging(currentPage, pageSize) {
     searchCustomerKeywordForm.find("#pageSizeHidden").val(pageSize);
     searchCustomerKeywordForm.submit();
 }
-function resetPageNumber(queryStatus) {
+function resetPageNumber() {
     var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
     var keyword = searchCustomerKeywordForm.find("#keyword").val();
     var url = searchCustomerKeywordForm.find("#url").val();
+    var excludeUrl = searchCustomerKeywordForm.find("#excludeUrl").val();
     var bearPawNumber = searchCustomerKeywordForm.find("#bearPawNumber").val();
     var optimizeGroupName = searchCustomerKeywordForm.find("#optimizeGroupName").val();
     var gtOptimizedCount = searchCustomerKeywordForm.find("#gtOptimizedCount").val();
@@ -155,16 +156,9 @@ function resetPageNumber(queryStatus) {
     }
     if(url != "") {
         searchCustomerKeywordForm.find("#url").val($.trim(url));
-        if (queryStatus) {
-            searchCustomerKeywordForm.find("#queryStatus").val(queryStatus);
-        } else {
-            searchCustomerKeywordForm.find("#queryStatus").val(null);
-        }
-    } else {
-        if (queryStatus) {
-            alert("请输入指定URL");
-            return false;
-        }
+    }
+    if(excludeUrl != "") {
+        searchCustomerKeywordForm.find("#excludeUrl").val($.trim(excludeUrl));
     }
     if(bearPawNumber != "") {
         searchCustomerKeywordForm.find("#bearPawNumber").val($.trim(bearPawNumber));
@@ -203,9 +197,6 @@ function resetPageNumber(queryStatus) {
         searchCustomerKeywordForm.find("#remarks").val($.trim(remarks));
     }
     searchCustomerKeywordForm.find("#currentPageNumberHidden").val(1);
-    if (queryStatus) {
-        searchCustomerKeywordForm.submit();
-    }
 }
 function showGroupNameChangeByRankDialog(customerUuid) {
     $('#groupNameChangeByRankFrom')[0].reset();
