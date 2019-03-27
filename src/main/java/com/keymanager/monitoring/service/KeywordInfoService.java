@@ -74,6 +74,7 @@ public class KeywordInfoService extends ServiceImpl<KeywordInfoDao, KeywordInfo>
 								url = url.substring(0, url.length() - 1);
 							}
 							customerKeyword.setUrl(url);
+							customerKeyword.setOriginalUrl(url);
 							customerKeyword.setOptimizeGroupName(config.getValue());
 							customerKeyword.setManualCleanTitle(true);
 							customerKeyword.setServiceProvider("baidutop123");

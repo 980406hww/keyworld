@@ -1767,7 +1767,7 @@ function echoExcludeKeyword() {
             'Content-Type': 'application/json'
         },
         success: function (data) {
-            if (data != null) {
+            if (data != null && data != "") {
                 data.keyword = data.keyword.replace(/[,]/g, "\n");
                 $("#excludeCustomerKeywordDialog").find("#excludeKeywordUuid").val(data.uuid);
                 $("#excludeCustomerKeywordDialog").find("#customerKeywordDialogContent").val(data.keyword);
