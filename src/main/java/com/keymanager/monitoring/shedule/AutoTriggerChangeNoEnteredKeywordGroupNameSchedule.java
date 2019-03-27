@@ -18,7 +18,7 @@ public class AutoTriggerChangeNoEnteredKeywordGroupNameSchedule {
         try {
             customerKeywordService.updateNoEnteredKeywordGroupName();
         } catch (Exception e) {
-            logger.error(" Allot Cookie is error" + e.getMessage());
+            logger.error(" Change No Entered Keyword Group Name is error" + e.getMessage());
         }
     }
 

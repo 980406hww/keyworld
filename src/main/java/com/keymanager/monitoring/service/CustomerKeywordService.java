@@ -1590,12 +1590,12 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             if (null != configCustomerKeywordRemarks){
                 for (CustomerKeywordEnteredVO customerKeywordEnteredVo : customerKeywordEnteredVos) {
                     CustomerKeyword customerKeyword = new CustomerKeyword();
-                    if (configCustomerKeywordRemarks.getValue().equals(customerKeywordEnteredVo.getRemarks())) {
+                    if (configCustomerKeywordRemarks.getValue().equals(customerKeywordEnteredVo.getEnteredKeywordRemarks())) {
                         customerKeyword.setOptimizeGroupName(customerKeywordEnteredVo.getOptimizeGroupName().substring(3));
                         customerKeyword.setCapturedTitle(1);
                     }
                     customerKeyword.setUuid(customerKeywordEnteredVo.getUuid());
-                    customerKeyword.setRemarks(customerKeywordEnteredVo.getRemarks());
+                    customerKeyword.setRemarks(customerKeywordEnteredVo.getEnteredKeywordRemarks());
                     customerKeywords.add(customerKeyword);
                 }
             }

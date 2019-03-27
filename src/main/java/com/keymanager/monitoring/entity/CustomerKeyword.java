@@ -265,6 +265,8 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(value = "fVerifyEnteredKeywordTime")
     private Date verifyEnteredKeywordTime;
 
+    @TableField(value = "fEnteredKeywordRemarks")
+    private String enteredKeywordRemarks;
 
     public long getCustomerUuid() {
         return customerUuid;
@@ -1012,5 +1014,11 @@ public class CustomerKeyword extends BaseEntity {
 
     public void setVerifyEnteredKeywordTime(Date verifyEnteredKeywordTime) {
         this.verifyEnteredKeywordTime = verifyEnteredKeywordTime;
+    }
+
+    public String getEnteredKeywordRemarks() {  return enteredKeywordRemarks; }
+
+    public void setEnteredKeywordRemarks(String enteredKeywordRemarks) {
+        this.enteredKeywordRemarks = enteredKeywordRemarks;
     }
 }

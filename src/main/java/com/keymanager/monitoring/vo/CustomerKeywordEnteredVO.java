@@ -11,7 +11,7 @@ public class CustomerKeywordEnteredVO {
     private String keyword;
     private String url;
     private Date captureTitleQueryTime;
-    private String remarks;
+    private String enteredKeywordRemarks;
 
 
     public String getTitle() {
@@ -41,12 +41,12 @@ public class CustomerKeywordEnteredVO {
         this.optimizeGroupName = optimizeGroupName;
     }
 
-    public String getRemarks() {
-        return remarks;
+    public String getEnteredKeywordRemarks() {
+        return enteredKeywordRemarks;
     }
 
-    public void setRemarks(String remarks) {
-        this.remarks = remarks;
+    public void setEnteredKeywordRemarks(String enteredKeywordRemarks) {
+        this.enteredKeywordRemarks = enteredKeywordRemarks;
     }
 
     public long getUuid() {
