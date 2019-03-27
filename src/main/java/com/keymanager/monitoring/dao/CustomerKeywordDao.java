@@ -215,4 +215,5 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void updateNoEnteredKeywords(@Param("customerKeywords") List<CustomerKeyword> customerKeywords);
 
+    void updateVerifyEnteredKeywordTimeByUuids (@Param("uuids")List<Long> uuids);
 }

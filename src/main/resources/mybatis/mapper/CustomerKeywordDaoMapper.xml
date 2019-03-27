@@ -1285,10 +1285,19 @@
         WHERE
             ck.fOptimizeGroupName like 'no_%'
         AND ck.fStatus = 1
-        AND (ck.fVerifyEnteredKeywordTime IS NULL OR ck.fVerifyEnteredKeywordTime &lt;= DATE_SUB(CURDATE(),INTERVAL 7 DAY))
+        AND ck.fVerifyEnteredKeywordTime &lt;= DATE_SUB(CURDATE(),INTERVAL 7 DAY)
         ORDER BY ck.fVerifyEnteredKeywordTime
         LIMIT 10
     </select>
+
+    <update id="updateVerifyEnteredKeywordTimeByUuids">
+        UPDATE t_customer_keyword
+        SET fVerifyEnteredKeywordTime = NOW()
+        WHERE fUuid IN
+        <foreach collection="uuids" item="uuid" open="(" separator="," close=")">
+            #{uuid}
+        </foreach>
+    </update>
 
     <update id="updateNoEnteredKeywords">
         <foreach collection="customerKeywords" item="customerKeyword" separator=";">

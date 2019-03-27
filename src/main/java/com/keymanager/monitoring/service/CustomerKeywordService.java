@@ -1573,8 +1573,14 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         } while(customerKeywordDao.updateNoEnteredKeywordGroupName() == 10000);
     }
 
-    public List<CustomerKeywordEnteredVO> getNoEnteredKeywords(){
-        return customerKeywordDao.getNoEnteredKeywords();
+    public synchronized List<CustomerKeywordEnteredVO> getNoEnteredKeywords(){
+        List<CustomerKeywordEnteredVO> noEnteredKeywords = customerKeywordDao.getNoEnteredKeywords();
+        List<Long> uuids = new ArrayList<>();
+        for (CustomerKeywordEnteredVO customerKeywordEnteredVo : noEnteredKeywords) {
+            uuids.add(customerKeywordEnteredVo.getUuid());
+        }
+        customerKeywordDao.updateVerifyEnteredKeywordTimeByUuids(uuids);
+        return noEnteredKeywords;
     }
 
     public void updateNoEnteredKeywords(List<CustomerKeywordEnteredVO> customerKeywordEnteredVos){
