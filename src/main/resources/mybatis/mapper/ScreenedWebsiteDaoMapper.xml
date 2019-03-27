@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.ScreenedWebsiteDao">
+
+    <select id="searchCustomerKeywordListsPage" parameterType="com.keymanager.monitoring.entity.ScreenedWebsite" resultType="com.keymanager.monitoring.entity.ScreenedWebsite">
+        SELECT
+        fUuid	AS	'uuid',
+        fOptimizeGroupName AS 'optimizeGroupName',
+        fScreenedWebsite AS 'screenedWebsite',
+        fCreateTime AS 'createTime',
+        fUpdateTime AS 'updateTime'
+        FROM t_screened_website
+        WHERE 1=1
+        <if test="screenedWebsite.optimizeGroupName != null and screenedWebsite.optimizeGroupName != ''">
+            AND fOptimizeGroupName like '%${screenedWebsite.optimizeGroupName}%'
+        </if>
+    </select>
+
+</mapper>
