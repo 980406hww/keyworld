@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Author zhoukai
@@ -21,29 +22,37 @@ public class UserMessageService extends ServiceImpl<UserMessageDao, UserMessage>
     @Autowired
     private UserMessageDao userMessageDao;
 
-    public UserMessageVO getUserMessages(UserMessageCriteria userMessageCriteria) {
-        UserMessageVO userMessageVo = new UserMessageVO();
-        userMessageVo.setMessageStatus(userMessageCriteria.getMessageStatus());
-        Page<UserMessage> page = new Page<UserMessage>(userMessageCriteria.getPageNumber(), 10);
+    public Page<UserMessageVO> getUserMessages(UserMessageCriteria userMessageCriteria) {
+        Page<UserMessageVO> page = new Page<UserMessageVO>(userMessageCriteria.getPageNumber(), 10);
         page.setRecords(userMessageDao.getUserMessages(page, userMessageCriteria));
-        userMessageVo.setPage(page);
-        return userMessageVo;
+        return page;
     }
 
-    public UserMessage getUserMessageByUuid(Integer uuid){
-        return userMessageDao.getUserMessageByUuid(uuid);
+    public UserMessage getUserMessage(UserMessageCriteria userMessageCriteria, boolean type){
+        return userMessageDao.getUserMessage(userMessageCriteria, type);
     }
 
-    public void saveUserMessages(UserMessageCriteria userMessageCriteria, String userName){
+    public void saveUserMessages(UserMessageCriteria userMessageCriteria){
         Date now = new Date();
-        if (userMessageCriteria.getUuid() == null){
-            userMessageDao.saveUserMessages(userMessageCriteria, userName, now);
-        }else {
-            userMessageDao.updateUserMessages(userMessageCriteria, now);
+        if (null == userMessageCriteria.getUuid()) {
+            userMessageDao.saveUserMessages(userMessageCriteria, now);
+        } else {
+            if (userMessageCriteria.isUpdateStatus()) {
+                userMessageDao.updateUserMessages(userMessageCriteria, now);
+            } else {
+                UserMessage userMessage = userMessageDao.getUserMessage(userMessageCriteria, false);
+                if (null == userMessage) {
+                    userMessageDao.saveUserMessages(userMessageCriteria, now);
+                }
+            }
         }
     }
 
     public Integer checkMessageInboxCount(String userName){
         return userMessageDao.checkMessageInboxCount(userName);
+    }
+
+    public List<UserMessage> getHistoryUserMessages (String userName, long customerUuid, String type) {
+        return userMessageDao.getHistoryUserMessages(userName, customerUuid, type);
     }
 }

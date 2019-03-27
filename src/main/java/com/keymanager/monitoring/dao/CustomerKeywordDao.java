@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.criteria.CustomerKeywordCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordUpdateCriteria;
+import com.keymanager.monitoring.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.vo.*;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
@@ -207,6 +208,7 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     List<Long> getCustomerUuids(@Param("entryType")String entryType, @Param("terminalType")String terminalType);
 
+    void excludeCustomerKeyword(@Param("qzSettingExcludeCustomerKeywordsCriteria") QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria);
     int updateNoEnteredKeywordGroupName();
 
     List<CustomerKeywordEnteredVO> getNoEnteredKeywords();

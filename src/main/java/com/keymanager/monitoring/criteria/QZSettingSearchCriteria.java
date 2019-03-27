@@ -25,6 +25,7 @@ public class QZSettingSearchCriteria{
     private Integer unchangedDifferenceNum;
     private Integer upDifferenceNum;
     private Integer downDifferenceNum;
+    private Integer openDialogStatus;
 
     public String getLoginName() {
         return loginName;
@@ -216,5 +217,13 @@ public class QZSettingSearchCriteria{
 
     public void setDownDifferenceNum (Integer downDifferenceNum) {
         this.downDifferenceNum = downDifferenceNum;
+    }
+
+    public Integer getOpenDialogStatus () {
+        return openDialogStatus;
+    }
+
+    public void setOpenDialogStatus (Integer openDialogStatus) {
+        this.openDialogStatus = openDialogStatus;
     }
 }

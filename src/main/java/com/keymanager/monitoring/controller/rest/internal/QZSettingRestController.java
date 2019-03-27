@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.*;
 import com.keymanager.monitoring.entity.Customer;
+import com.keymanager.monitoring.entity.CustomerExcludeKeyword;
 import com.keymanager.monitoring.entity.QZSetting;
 import com.keymanager.monitoring.service.*;
 import com.keymanager.monitoring.vo.QZSettingSearchClientGroupInfoVO;
@@ -217,4 +218,28 @@ public class QZSettingRestController extends SpringMVCBaseController {
 			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
 		}
 	}
+
+	@RequestMapping(value = "excludeQZSettingCustomerKeywords", method = RequestMethod.POST)
+	public ResponseEntity<?> excludeQZSettingCustomerKeywords(HttpServletRequest request, @RequestBody QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria) {
+		try {
+			String entryType = (String) request.getSession().getAttribute("entryType");
+            qzSettingExcludeCustomerKeywordsCriteria.setType(entryType);
+			qzSettingService.excludeQZSettingCustomerKeywords(qzSettingExcludeCustomerKeywordsCriteria);
+			return new ResponseEntity<Object>(true, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+		}
+	}
+
+    @RequestMapping(value = "echoExcludeKeyword", method = RequestMethod.POST)
+    public ResponseEntity<?> echoExcludeKeyword(HttpServletRequest request, @RequestBody QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria) {
+        try {
+            CustomerExcludeKeyword customerExcludeKeyword = qzSettingService.echoExcludeKeyword(qzSettingExcludeCustomerKeywordsCriteria);
+            return new ResponseEntity<Object>(customerExcludeKeyword, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
 }

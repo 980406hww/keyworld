@@ -22,6 +22,12 @@ public class UserMessage extends BaseEntity {
     @TableField(value = "fContent")
     private String content;
 
+    @TableField(value = "fType")
+    private String type;
+
+    @TableField(value = "fCustomerUuid")
+    private Long customerUuid;
+
     public String getSenderUserName () {
         return senderUserName;
     }
@@ -52,5 +58,21 @@ public class UserMessage extends BaseEntity {
 
     public void setContent (String content) {
         this.content = content;
+    }
+
+    public String getType () {
+        return type;
+    }
+
+    public void setType (String type) {
+        this.type = type;
+    }
+
+    public Long getCustomerUuid () {
+        return customerUuid;
+    }
+
+    public void setCustomerUuid (Long customerUuid) {
+        this.customerUuid = customerUuid;
     }
 }

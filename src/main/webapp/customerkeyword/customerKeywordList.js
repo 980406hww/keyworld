@@ -6,6 +6,7 @@ $(function () {
     $("#saveCustomerKeywordDialog").dialog("close");
     $("#optimizePlanCountDialog").dialog("close");
     $('#customerList').dialog("close");
+    $("#showUserMessageDialog").dialog("close");
 });
 
 function delItem(customerKeywordUuid) {
@@ -137,6 +138,7 @@ function resetPageNumber() {
     var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
     var keyword = searchCustomerKeywordForm.find("#keyword").val();
     var url = searchCustomerKeywordForm.find("#url").val();
+    var excludeUrl = searchCustomerKeywordForm.find("#excludeUrl").val();
     var bearPawNumber = searchCustomerKeywordForm.find("#bearPawNumber").val();
     var optimizeGroupName = searchCustomerKeywordForm.find("#optimizeGroupName").val();
     var gtOptimizedCount = searchCustomerKeywordForm.find("#gtOptimizedCount").val();
@@ -154,6 +156,9 @@ function resetPageNumber() {
     }
     if(url != "") {
         searchCustomerKeywordForm.find("#url").val($.trim(url));
+    }
+    if(excludeUrl != "") {
+        searchCustomerKeywordForm.find("#excludeUrl").val($.trim(excludeUrl));
     }
     if(bearPawNumber != "") {
         searchCustomerKeywordForm.find("#bearPawNumber").val($.trim(bearPawNumber));

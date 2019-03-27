@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,6 +29,9 @@ public class UserInfoRestController {
 
     @Autowired
     private UserInfoDao userInfoDao;
+
+    @Autowired
+    private IUserInfoService userInfoService;
 
     @Autowired
     private PasswordHash passwordHash;
@@ -97,6 +101,16 @@ public class UserInfoRestController {
             return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
         } catch (Exception ex) {
             return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/findActiveUsers", method = RequestMethod.POST)
+    public ResponseEntity<?> findActiveUsers() {
+        try {
+            List<UserInfo> userInfos = userInfoService.findActiveUsers();
+            return new ResponseEntity<Object>(userInfos, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
     }
 }

@@ -221,6 +221,7 @@
 					<c:when test="${qzSetting.pcGroup != null and (qzSetting.crawlerStatus != 'finish' or qzSetting.qzKeywordRankInfoMap['PC'] != null)}">
 					<li>
 						<div class="header">
+							<input type="hidden" name="contactPerson" value="${qzSetting.contactPerson}">
 							<span>
 								<input type="checkbox" name="uuid" value="${qzSetting.uuid}" onclick="decideSelectAll();"/>
 							</span>
@@ -230,7 +231,13 @@
 							<span class="to-5118"><a  href="https://www.5118.com/seo/${qzSetting.domain}" target="_blank" title="查看5118,需要登录">5118</a></span>
 							<span class="tagNames" ondblclick="editTagNameStr($(this).find('label.tagNameStr')[0], true)"><label>分组标签:</label>&nbsp;&nbsp;<label class="tagNameStr">暂无</label></span>
 							<div class="handle">
-								<a class="blue" href="javascript:showKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain}','${qzSetting.pcGroup}')">指定关键字</a>
+                                <a class="blue" href="javascript:showExcludeCustomerKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain}','${qzSetting.pcGroup}','PC')">排除关键字</a>
+                                <shiro:hasPermission name="/internal/qzsetting/save">
+                                    <a class="blue" href="javascript:showKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain}','${qzSetting.pcGroup}')">指定关键字</a>
+                                </shiro:hasPermission>
+								<shiro:hasPermission name="/internal/qzsetting/save">
+									<a class="blue" href="javascript:openMessageBox('全站设置', '${qzSetting.customerUuid}', '${qzSetting.contactPerson}')">用户留言</a>
+								</shiro:hasPermission>
 								<shiro:hasPermission name="/internal/qzchargelog/save">
 									<a class="blue" href="javascript:showChargeDialog('${qzSetting.uuid}','${qzSetting.contactPerson}','${qzSetting.domain}',this)">收费</a>
 								</shiro:hasPermission>
@@ -499,7 +506,13 @@
 							<span class="to-5118"><a  href="https://www.5118.com/seo/${qzSetting.domain}" target="_blank" title="查看5118,需要登录">5118</a></span>
 							<span class="tagNames" ondblclick="editTagNameStr($(this).find('label.tagNameStr')[0], true)"><label>分组标签:</label>&nbsp;&nbsp;<label class="tagNameStr">暂无</label></span>
 							<div class="handle">
-								<a class="blue" href="javascript:showKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain}','${qzSetting.phoneGroup}')">指定关键字</a>
+                                <a class="blue" href="javascript:showExcludeCustomerKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain}','${qzSetting.phoneGroup}','Phone')">排除关键字</a>
+								<shiro:hasPermission name="/internal/qzsetting/save">
+									<a class="blue" href="javascript:showKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain}','${qzSetting.phoneGroup}')">指定关键字</a>
+								</shiro:hasPermission>
+								<shiro:hasPermission name="/internal/qzsetting/save">
+									<a class="blue" href="javascript:openMessageBox('全站设置', '${qzSetting.customerUuid}', '${qzSetting.contactPerson}')">用户留言</a>
+								</shiro:hasPermission>
 								<shiro:hasPermission name="/internal/qzchargelog/save">
 									<a class="blue" href="javascript:showChargeDialog('${qzSetting.uuid}','${qzSetting.contactPerson}','${qzSetting.domain}',this)">收费</a>
 								</shiro:hasPermission>
@@ -1177,6 +1190,37 @@
 		</table>
 	</form>
 </div>
+<div id="excludeCustomerKeywordDialog" class="easyui-dialog" style="display: none">
+    <form id="excludeCustomerKeywordForm">
+        <table style="font-size:12px" id="excludeCustomerKeywordTable" align="center" cellspacing="5">
+            <tr>
+                <td style="width:60px" align="right">域名</td>
+                <td>
+					<input type="hidden" name="excludeKeywordUuid" id="excludeKeywordUuid" />
+                    <input type="hidden" name="qzSettingUuid" id="qzSettingUuid" />
+                    <input type="hidden" name="customerUuid" id="customerUuid" />
+                    <input type="text" name="domain" id="domain" style="width:240px" readonly/>
+                </td>
+            </tr>
+            <tr>
+                <td align="right" style="margin-right:4px;">终端类型</td>
+                <td>
+                    <select name="terminalType" id="terminalType" style="width:240px" onchange="echoExcludeKeyword()">
+                        <option value="PC">PC</option>
+                        <option value="Phone">Phone</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td style="width:60px" align="right">关键字</td>
+            </tr>
+            <tr>
+                <td style="width:60px" align="right"></td>
+                <td><textarea id="customerKeywordDialogContent" style="width:240px; height: 260px; resize: none"></textarea></td>
+            </tr>
+        </table>
+    </form>
+</div>
 <%--收费详情列表--%>
 <div id="chargeLogListDiv" class="easyui-dialog" style="display:none;left: 40%;">
 	<table id="chargeLogListTable" border="1" cellpadding="10" style="font-size: 12px;background-color: white;border-collapse: collapse;margin: 10px 10px;width:92%;">
@@ -1188,6 +1232,54 @@
 			<td>创建时间</td>
 		</tr>
 	</table>
+</div>
+<%--留言栏Dialog--%>
+<div id="showUserMessageDialog" class="easyui-dialog" style="display: none">
+    <form id="showUserMessageForm" onsubmit="return false">
+        <table cellpadding="10" style="font-size: 12px; background-color: white; border-collapse:separate; border-spacing:0px 10px;">
+            <input type="hidden" name="messageUuid" value="">
+			<input type="hidden" name="openDialogStatus" value="${qzSettingSearchCriteria.openDialogStatus}">
+			<input type="hidden" name="customerUuid" value="${qzSettingSearchCriteria.customerUuid}"/>
+            <tr>
+                <td width="60px"><span style="width: 60px">写信人:</span></td>
+                <td width="80px"><span style="width: 80px;" id="senderUserName">${sessionScope.get("username")}</span></td>
+                <td><span style="width: 60px">收信人:</span></td>
+                <td width="180px">
+                    <select id="user_select" multiple="multiple"></select>
+                </td>
+            </tr>
+            <tr>
+                <td><span style="width: 40px">时&nbsp;&nbsp;间:</span></td>
+                <td width="80px"><label style="width: 80px;"></label></td>
+                <td width="60px"><span style="width: 60px">客&nbsp;&nbsp;户:</span></td>
+                <td><span style="width: 200px;" id="contactPerson"></span></td>
+            </tr>
+			<tr>
+				<td><span style="width: 40px">状&nbsp;&nbsp;态:</span></td>
+				<td><span style="width: 100px;" id="messageStatus"></span></td>
+			</tr>
+            <tr>
+                <td width="60px"><span style="width: 60px">内&nbsp;&nbsp;容:</span></td>
+                <td colspan="3"><input type="text" name="content" style="width: 320px;"></td>
+            </tr>
+        </table>
+		<table id="userMessageListTable" border="1" cellpadding="10"  style="font-size: 12px;background-color: white;border-collapse: collapse;width:100%;">
+			<tr>
+				<td class="user-message-targetName">
+					<span>序号</span>
+				</td>
+				<td class="user-message-content">
+					<span>留言内容</span>
+				</td>
+				<td class="user-message-status">
+					<span>收信人</span>
+				</td>
+				<td class="user-message-status">
+					<span>处理状态</span>
+				</td>
+			</tr>
+		</table>
+    </form>
 </div>
 <%--达标信息详情DIV--%>
 <div id="chargeRulesDiv" style="display:none;width:300px;">
@@ -1203,6 +1295,7 @@
 <%@ include file="/commons/loadjs.jsp" %>
 <script src="${staticPath}/js/echarts.min.js"></script>
 <script src="${staticPath }/qzsetting/list.js"></script>
+<script src="${staticPath }/static/UserMessageCommon.js"></script>
 <script language="javascript">
     var dateStr = new Date(); // 当天日期
     var m = dateStr.getMonth() + 1 < 10 ? "0" + (dateStr.getMonth() + 1) : (dateStr.getMonth() + 1);

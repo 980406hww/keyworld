@@ -40,7 +40,7 @@
         where
         (
         c.fExectionStatus='New' or
-        (c.fExectionStatus='Complete' and c.fExectionType='Everyday' and c.fLastExecutionDate &lt; curdate())
+        (c.fExectionStatus='Complete' and c.fExectionType='Everyday' and (c.fLastExecutionDate &lt; curdate() OR c.fLastExecutionDate is null))
         )
         and c.fExectionTime &lt;= curtime()
         AND c.fCaptureRankJobStatus = 1

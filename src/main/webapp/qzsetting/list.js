@@ -5,6 +5,8 @@ $(function () {
     $("#getAvailableQZSettings").dialog("close");
     $("#showAllOperationType").dialog("close");
     $("#customerKeywordDialog").dialog("close");
+    $("#showUserMessageDialog").dialog("close");
+    $("#excludeCustomerKeywordDialog").dialog("close");
 
     var searchCustomerForm = $("#chargeForm");
     var pageSize = searchCustomerForm.find('#pageSizeHidden').val();
@@ -38,7 +40,7 @@ $(function () {
 });
 function enterIn(e) {
     var e = e || event,
-    keyCode = e.which || e.keyCode;
+        keyCode = e.which || e.keyCode;
     if (keyCode == 13) {
         trimSearchCondition('1');
     }
@@ -735,7 +737,14 @@ function saveCustomerKeywords(qzSettingUuid, customerUuid, optimizedGroupName) {
         customerKeywordDialog.find("#customerKeywordDialogContent").focus();
         return;
     }
-    var keywords = keywordStr.replace(/[，|\r\n]/g, ",").replace(/[\s+]/g, "").split(',');
+    keywordStr = keywordStr.replace(/[，|\r\n]/g, ",").replace(/[\s+]/g, "");
+    if (keywordStr.substring(keywordStr.length - 1) == ','){
+        keywordStr = keywordStr.substring(0, keywordStr.length - 1);
+    }
+    var keywords = keywordStr.split(',');
+    keywords = keywords.filter(function (keyword, index) {
+        return keywords.indexOf(keyword) === index && keyword != '';
+    });
     var type = customerKeywordDialog.find("#qzSettingEntryType").val();
     var searchEngine = customerKeywordDialog.find("#searchEngine").val();
     var postData = {};
@@ -1660,4 +1669,112 @@ function getAvailableQZSettings() {
     });
     $("#getAvailableQZSettings").dialog("open");
     $("#getAvailableQZSettings").window("resize",{top:$(document).scrollTop() + 100});
+}
+
+function showExcludeCustomerKeywordDialog(qzSettingUuid, customerUuid, domain, optimizedGroupName, terminalType) {
+    var excludeCustomerKeywordDialog = $("#excludeCustomerKeywordDialog");
+    excludeCustomerKeywordDialog.find('#excludeCustomerKeywordForm')[0].reset();
+    excludeCustomerKeywordDialog.find("#qzSettingUuid").val(qzSettingUuid);
+    excludeCustomerKeywordDialog.find("#customerUuid").val(customerUuid);
+    excludeCustomerKeywordDialog.find("#terminalType").val(terminalType);
+    excludeCustomerKeywordDialog.find("#domain").val(domain);
+    echoExcludeKeyword();
+    excludeCustomerKeywordDialog.show();
+    excludeCustomerKeywordDialog.dialog({
+        resizable: false,
+        height: 450,
+        width: 340,
+        title: '排除关键字',
+        modal: false,
+        buttons: [{
+            text: '保存',
+            iconCls: 'icon-ok',
+            handler: function () {
+                excludeCustomerKeywords(qzSettingUuid, customerUuid, domain, optimizedGroupName);
+            }
+        }, {
+            text: '取消',
+            iconCls: 'icon-cancel',
+            handler: function () {
+                $("#excludeCustomerKeywordDialog").dialog("close");
+                $('#excludeCustomerKeywordForm')[0].reset();
+            }
+        }]
+    });
+    excludeCustomerKeywordDialog.dialog("open");
+    excludeCustomerKeywordDialog.window("resize",{top:$(document).scrollTop() + 100});
+}
+function excludeCustomerKeywords(qzSettingUuid, customerUuid, domain, optimizedGroupName) {
+    var excludeCustomerKeywordDialog = $("#excludeCustomerKeywordDialog");
+    var terminalType = excludeCustomerKeywordDialog.find("#terminalType").val();
+    var excludeKeywordUuid = excludeCustomerKeywordDialog.find("#excludeKeywordUuid").val();
+    var keywordStr = excludeCustomerKeywordDialog.find("#customerKeywordDialogContent").val();
+    if (keywordStr == "") {
+        alert("请输入关键字");
+        excludeCustomerKeywordDialog.find("#customerKeywordDialogContent").focus();
+        return;
+    }
+    keywordStr = keywordStr.replace(/[，|\r\n]/g, ",").replace(/[\s+]/g, "");
+    if (keywordStr.substring(keywordStr.length - 1) == ','){
+        keywordStr = keywordStr.substring(0, keywordStr.length - 1);
+    }
+    var keywords = keywordStr.split(',');
+    keywords = keywords.filter(function (keyword, index) {
+        return keywords.indexOf(keyword) === index && keyword != '';
+    });
+    var postData = {};
+    postData.excludeKeywordUuid = excludeKeywordUuid;
+    postData.qzSettingUuid = qzSettingUuid;
+    postData.customerUuid = customerUuid;
+    postData.domain = $.trim(domain);
+    postData.optimizeGroupName = optimizedGroupName;
+    postData.terminalType = $.trim(terminalType);
+    postData.keywords = keywords;
+    $.ajax({
+        url: '/internal/qzsetting/excludeQZSettingCustomerKeywords',
+        type: 'POST',
+        data: JSON.stringify(postData),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        success: function (data) {
+            if (data) {
+                $().toastmessage('showSuccessToast', "保存成功！");
+                $("#excludeCustomerKeywordDialog").dialog("close");
+            } else {
+                $().toastmessage('showErrorToast', "保存失败！");
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "保存失败！");
+        }
+    });
+}
+function echoExcludeKeyword() {
+    var excludeCustomerKeywordDialog = $("#excludeCustomerKeywordDialog");
+    var qzSettingUuid = excludeCustomerKeywordDialog.find("#qzSettingUuid").val();
+    var terminalType = excludeCustomerKeywordDialog.find("#terminalType").val();
+    var postData = {};
+    postData.qzSettingUuid = qzSettingUuid;
+    postData.terminalType = $.trim(terminalType);
+    $.ajax({
+        url: '/internal/qzsetting/echoExcludeKeyword',
+        type: 'POST',
+        data: JSON.stringify(postData),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        success: function (data) {
+            if (data != null && data != "") {
+                data.keyword = data.keyword.replace(/[,]/g, "\n");
+                $("#excludeCustomerKeywordDialog").find("#excludeKeywordUuid").val(data.uuid);
+                $("#excludeCustomerKeywordDialog").find("#customerKeywordDialogContent").val(data.keyword);
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "显示已添加排除词失败！");
+        }
+    });
 }

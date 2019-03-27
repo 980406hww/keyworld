@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.CustomerExcludeKeywordDao">
+
+    <select id="searchCustomerExcludeKeyword" resultType="com.keymanager.monitoring.entity.CustomerExcludeKeyword">
+        SELECT fUuid AS 'uuid',fKeyword AS 'keyword'
+        FROM t_exclude_keyword
+        WHERE fQZSettingUuid = #{qzSettingUuid}
+        AND fTerminalType = #{terminalType}
+    </select>
+
+    <select id="getCustomerExcludeKeyword" resultType="java.lang.String">
+        SELECT ek.fKeyword
+        FROM t_exclude_keyword ek
+        WHERE ek.fTerminalType = #{terminalType}
+        <choose>
+            <when test="qzSettingUuid != 0">
+                AND ek.fQZSettingUuid = #{qzSettingUuid}
+            </when>
+            <otherwise>
+                AND ek.fQZSettingUuid IN (SELECT qs.fUuid FROM t_qz_setting qs WHERE qs.fCustomerUuid = #{customerUuid} AND qs.fDomain LIKE '%${url}')
+            </otherwise>
+        </choose>
+    </select>
+</mapper>
