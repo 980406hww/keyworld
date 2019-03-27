@@ -123,7 +123,7 @@
                        style="width:80px;">
             URL:<input type="text" name="url" id="url" value="${customerKeywordCriteria.url}"
                        style="width:80px;">
-            指定取非URL:<input type="text" name="excludeUrl" id="excludeUrl" value="${customerKeywordCriteria.excludeUrl}"
+            排除URL:<input type="text" name="excludeUrl" id="excludeUrl" value="${customerKeywordCriteria.excludeUrl}"
                                style="width:80px;">
             熊掌号:<input type="text" name="bearPawNumber" id="bearPawNumber" value="${customerKeywordCriteria.bearPawNumber}"
                        style="width:80px;">
