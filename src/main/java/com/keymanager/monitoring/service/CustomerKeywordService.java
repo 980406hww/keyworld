@@ -1579,7 +1579,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         for (CustomerKeywordEnteredVO customerKeywordEnteredVo : noEnteredKeywords) {
             uuids.add(customerKeywordEnteredVo.getUuid());
         }
-        customerKeywordDao.updateVerifyEnteredKeywordTimeByUuids(uuids);
+        if (!uuids.isEmpty()) {
+            customerKeywordDao.updateVerifyEnteredKeywordTimeByUuids(uuids);
+        }
         return noEnteredKeywords;
     }
 
