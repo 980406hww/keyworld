@@ -1571,8 +1571,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         } while(customerKeywordDao.updateNoEnteredKeywordGroupName() == 10000);
     }
 
-    public synchronized List<CustomerKeywordEnteredVO> getNoEnteredKeywords(){
-        List<CustomerKeywordEnteredVO> noEnteredKeywords = customerKeywordDao.getNoEnteredKeywords();
+    public synchronized List<CustomerKeywordEnteredVO> getNoEnteredKeywords(String searchEngine){
+        List<CustomerKeywordEnteredVO> noEnteredKeywords = customerKeywordDao.getNoEnteredKeywords(searchEngine);
         List<Long> uuids = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(noEnteredKeywords)) {
             for (CustomerKeywordEnteredVO customerKeywordEnteredVo : noEnteredKeywords) {

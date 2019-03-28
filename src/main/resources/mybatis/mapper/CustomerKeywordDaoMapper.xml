@@ -1288,6 +1288,7 @@
         WHERE
             ck.fOptimizeGroupName like 'no_%'
         AND ck.fStatus = 1
+        AND ck.fSearchEngine = #{searchEngine}
         AND ck.fVerifyEnteredKeywordTime &lt;= DATE_SUB(CURDATE(),INTERVAL 7 DAY)
         ORDER BY ck.fVerifyEnteredKeywordTime
         LIMIT 10
