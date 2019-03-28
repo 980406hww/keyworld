@@ -221,7 +221,7 @@
             <td align="center" width=50>原排名</td>
             <td align="center" width=50>现排名</td>
             <td align="center" width=50>搜索引擎</td>
-            <td align="center" width=30>计价方式</td>
+            <td align="center" width=40>计价方式</td>
             <td align="center" width=30>要刷</td>
             <td align="center" width=30>已刷</td>
             <td align="center" width=30>无效</td>
@@ -272,7 +272,7 @@
                     </div>
                 </td>
                 <td align="center" width=50>${customerKeyword.searchEngine}</td>
-                <td align="center" width=30 class="floatTd" title="优化日期：<fmt:formatDate value="${customerKeyword.optimizeDate}" pattern="yyyy-MM-dd"/> ，要刷：${customerKeyword.optimizePlanCount}，已刷：${customerKeyword.optimizedCount})">${customerKeyword.collectMethodName}</td>
+                <td align="center" width=40 class="floatTd" title="优化日期：<fmt:formatDate value="${customerKeyword.optimizeDate}" pattern="yyyy-MM-dd"/> ，要刷：${customerKeyword.optimizePlanCount}，已刷：${customerKeyword.optimizedCount})">${customerKeyword.collectMethodName}</td>
                 <td align="center" width=30>${customerKeyword.optimizePlanCount}</td>
                 <td align="center" width=30>${customerKeyword.optimizedCount} </td>
                 <td align="center" width=30>${customerKeyword.invalidRefreshCount}</td>

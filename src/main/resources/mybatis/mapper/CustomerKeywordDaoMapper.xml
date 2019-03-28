@@ -333,7 +333,8 @@
         ck.fPositionFirstPageFee	AS	'positionFirstPageFee',
         ck.fPaymentStatus	AS	'paymentStatus',
         ck.fOrderNumber	AS	'orderNumber',
-        ck.fRemarks	AS	'remarks'
+        ck.fRemarks	AS	'remarks',
+        ck.fEnteredKeywordRemarks AS 'enteredKeywordRemarks'
         FROM
         t_customer_keyword ck,
         t_customer c

@@ -1595,7 +1595,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                         customerKeyword.setCapturedTitle(1);
                     }
                     customerKeyword.setUuid(customerKeywordEnteredVo.getUuid());
-                    customerKeyword.setRemarks(customerKeywordEnteredVo.getEnteredKeywordRemarks());
+                    customerKeyword.setEnteredKeywordRemarks(customerKeywordEnteredVo.getEnteredKeywordRemarks());
                     customerKeywords.add(customerKeyword);
                 }
             }
