@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 @RestController
@@ -46,9 +47,12 @@ public class ScreenedWebsiteController extends SpringMVCBaseController {
     }
 
     @RequestMapping(value = "/saveScreenedWebsite", method = RequestMethod.POST)
-    public ResponseEntity<?> saveScreenedWebsite(@RequestBody ScreenedWebsite screenedWebsite) {
+    public ResponseEntity<?> saveScreenedWebsite(@RequestBody ScreenedWebsite screenedWebsite, HttpServletRequest request) {
         try {
-            screenedWebsiteService.saveScreenedWebsite(screenedWebsite);
+            HttpSession session = request.getSession();
+            String userName = (String) session.getAttribute("username");
+            String password = (String) session.getAttribute("password");
+            screenedWebsiteService.saveScreenedWebsite(screenedWebsite, userName, password);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -57,9 +61,12 @@ public class ScreenedWebsiteController extends SpringMVCBaseController {
     }
 
     @RequestMapping(value = "/deleteBatchScreenedWebsite" , method = RequestMethod.POST)
-    public ResponseEntity<?> deleteBatchScreenedWebsite(@RequestBody Map<String, Object> requestMap){
+    public ResponseEntity<?> deleteBatchScreenedWebsite(@RequestBody Map<String, Object> requestMap, HttpServletRequest request){
         try {
-            screenedWebsiteService.deleteBatchScreenedWebsite(requestMap);
+            HttpSession session = request.getSession();
+            String userName = (String) session.getAttribute("username");
+            String password = (String) session.getAttribute("password");
+            screenedWebsiteService.deleteBatchScreenedWebsite(requestMap, userName, password);
             return new ResponseEntity<Object>(true , HttpStatus.OK);
         }catch (Exception e){
             logger.error(e.getMessage());
@@ -78,9 +85,12 @@ public class ScreenedWebsiteController extends SpringMVCBaseController {
     }
 
     @RequestMapping(value = "/delScreenedWebsite", method = RequestMethod.POST)
-    public ResponseEntity<?> delScreenedWebsite(@RequestBody Map<String, Object> requestMap) {
+    public ResponseEntity<?> delScreenedWebsite(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
         try {
-            screenedWebsiteService.delScreenedWebsite(requestMap);
+            HttpSession session = request.getSession();
+            String userName = (String) session.getAttribute("username");
+            String password = (String) session.getAttribute("password");
+            screenedWebsiteService.delScreenedWebsite(requestMap, userName, password);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
