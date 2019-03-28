@@ -15,7 +15,6 @@ import com.keymanager.util.Utils;
 import com.keymanager.util.common.StringUtil;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
-import com.keymanager.value.CustomerKeywordVO;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -24,7 +23,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sun.util.resources.ga.LocaleNames_ga;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -1576,10 +1574,10 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     public synchronized List<CustomerKeywordEnteredVO> getNoEnteredKeywords(){
         List<CustomerKeywordEnteredVO> noEnteredKeywords = customerKeywordDao.getNoEnteredKeywords();
         List<Long> uuids = new ArrayList<>();
-        for (CustomerKeywordEnteredVO customerKeywordEnteredVo : noEnteredKeywords) {
-            uuids.add(customerKeywordEnteredVo.getUuid());
-        }
-        if (!uuids.isEmpty()) {
+        if (CollectionUtils.isNotEmpty(noEnteredKeywords)) {
+            for (CustomerKeywordEnteredVO customerKeywordEnteredVo : noEnteredKeywords) {
+                uuids.add(customerKeywordEnteredVo.getUuid());
+            }
             customerKeywordDao.updateVerifyEnteredKeywordTimeByUuids(uuids);
         }
         return noEnteredKeywords;
