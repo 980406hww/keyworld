@@ -54,7 +54,7 @@ function deleteBatchScreenedWebsite(self) {
     postData.uuids = uuids.split(",");
     postData.optimizeGroupNameList = optimizeGroupNameList.split(",");
     $.ajax({
-        url: '/internal/screenedWebsite/deleteBatchScreenedWebsite',
+        url: '/internal/screenedWebsite/delScreenedWebsite',
         data: JSON.stringify(postData),
         headers: {
             'Accept': 'application/json',
@@ -200,6 +200,7 @@ function delScreenedWebsite(uuid, optimizeGroupName) {
     var postDate = {};
     postDate.uuid = uuid;
     postDate.optimizeGroupName = optimizeGroupName;
+    postDate.deleteType = "delScreenedWebsite";
     $.ajax({
         url: '/internal/screenedWebsite/delScreenedWebsite',
         data: JSON.stringify(postDate),

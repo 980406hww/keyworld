@@ -60,20 +60,6 @@ public class ScreenedWebsiteController extends SpringMVCBaseController {
         }
     }
 
-    @RequestMapping(value = "/deleteBatchScreenedWebsite" , method = RequestMethod.POST)
-    public ResponseEntity<?> deleteBatchScreenedWebsite(@RequestBody Map<String, Object> requestMap, HttpServletRequest request){
-        try {
-            HttpSession session = request.getSession();
-            String userName = (String) session.getAttribute("username");
-            String password = (String) session.getAttribute("password");
-            screenedWebsiteService.deleteBatchScreenedWebsite(requestMap, userName, password);
-            return new ResponseEntity<Object>(true , HttpStatus.OK);
-        }catch (Exception e){
-            logger.error(e.getMessage());
-            return new ResponseEntity<Object>(false , HttpStatus.OK);
-        }
-    }
-
     @RequestMapping(value = "/getScreenedWebsite/{uuid}" , method = RequestMethod.GET)
     public ResponseEntity<?> getScreenedWebsite(HttpServletRequest request, @PathVariable("uuid")Long uuid){
         try {
