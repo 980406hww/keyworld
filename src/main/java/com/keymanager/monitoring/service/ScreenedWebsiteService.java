@@ -8,10 +8,14 @@ import com.keymanager.monitoring.entity.CustomerKeyword;
 import com.keymanager.monitoring.entity.ScreenedWebsite;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.nio.charset.Charset;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,6 +41,7 @@ public class ScreenedWebsiteService extends ServiceImpl<ScreenedWebsiteDao, Scre
             screenedWebsite.setUpdateTime(new Date());
             screenedWebsiteDao.updateById(screenedWebsite);
             screenedWebsiteListCacheService.screenedWebsiteListCacheEvict(screenedWebsite.getOptimizeGroupName());
+            postScreenedWebsiteRequest(screenedWebsite.getOptimizeGroupName());
         } else {
             screenedWebsiteDao.insert(screenedWebsite);
         }
@@ -48,6 +53,7 @@ public class ScreenedWebsiteService extends ServiceImpl<ScreenedWebsiteDao, Scre
         List<String> optimizeGroupNameList = (List<String>) requestMap.get("optimizeGroupNameList");
         for (String optimizeGroupName: optimizeGroupNameList) {
             screenedWebsiteListCacheService.screenedWebsiteListCacheEvict(optimizeGroupName);
+            postScreenedWebsiteRequest(optimizeGroupName);
         }
     }
 
@@ -58,10 +64,17 @@ public class ScreenedWebsiteService extends ServiceImpl<ScreenedWebsiteDao, Scre
     public void delScreenedWebsite(Map map){
         screenedWebsiteDao.deleteById(Long.valueOf((String)map.get("uuid")));
         screenedWebsiteListCacheService.screenedWebsiteListCacheEvict((String) map.get("optimizeGroupName"));
+        postScreenedWebsiteRequest((String) map.get("optimizeGroupName"));
     }
 
     @Cacheable(value = "screenedWebsiteList", key = "#optimizeGroupName")
     public String getScreenedWebsiteByOptimizeGroupName(String optimizeGroupName){
         return screenedWebsiteDao.getScreenedWebsiteByOptimizeGroupName(optimizeGroupName);
+    }
+
+    public void postScreenedWebsiteRequest(String optimizeGroupName){
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getMessageConverters().add(new StringHttpMessageConverter(Charset.forName("utf-8")));
+        restTemplate.postForObject("http://pcsskj.shunshikj.com/external/screenedWebsite/evictScreenedWebsiteCache", optimizeGroupName, Boolean.class);
     }
 }
