@@ -34,6 +34,7 @@ public class CustomerKeywordCriteria extends BaseCriteria{
     private String displayStop;//显示下架
     private String orderNumber;//订单号
     private String remarks;//备注
+    private String enteredKeywordRemarks; //收录备注
 
     private String orderingElement;
     private String orderingRule;
@@ -367,5 +368,13 @@ public class CustomerKeywordCriteria extends BaseCriteria{
 
     public void setExcludeUrl (String excludeUrl) {
         this.excludeUrl = excludeUrl;
+    }
+
+    public String getEnteredKeywordRemarks () {
+        return enteredKeywordRemarks;
+    }
+
+    public void setEnteredKeywordRemarks (String enteredKeywordRemarks) {
+        this.enteredKeywordRemarks = enteredKeywordRemarks;
     }
 }

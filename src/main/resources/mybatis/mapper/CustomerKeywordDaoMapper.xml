@@ -47,6 +47,7 @@
         <if test="customerKeywordCriteria.gtOptimizePlanCount != null">AND ck.fOptimizePlanCount &gt;= #{customerKeywordCriteria.gtOptimizePlanCount} </if>
         <if test="customerKeywordCriteria.ltOptimizePlanCount != null">AND ck.fOptimizePlanCount &lt;= #{customerKeywordCriteria.ltOptimizePlanCount} </if>
         <if test="customerKeywordCriteria.remarks != null and customerKeywordCriteria.remarks != ''">AND ck.fRemarks like '%${customerKeywordCriteria.remarks}%' </if>
+        <if test="customerKeywordCriteria.enteredKeywordRemarks != null and customerKeywordCriteria.enteredKeywordRemarks != ''">AND ck.fEnteredKeywordRemarks like '%${customerKeywordCriteria.enteredKeywordRemarks}%' </if>
         <if test="customerKeywordCriteria.gtCurrentIndexCount != null">AND ck.fCurrentIndexCount &gt;= #{customerKeywordCriteria.gtCurrentIndexCount} </if>
         <if test="customerKeywordCriteria.ltCurrentIndexCount != null">AND ck.fCurrentIndexCount &lt;= #{customerKeywordCriteria.ltCurrentIndexCount} </if>
         <if test="customerKeywordCriteria.qq != null and customerKeywordCriteria.qq != ''">
@@ -394,7 +395,8 @@
         ck.fPositionFirstPageFee	AS	'positionFirstPageFee',
         ck.fCollectMethod	AS	'collectMethod',
         ck.fOrderNumber	AS	'orderNumber',
-        ck.fRemarks	AS	'remarks'
+        ck.fRemarks	AS	'remarks',
+        ck.fEnteredKeywordRemarks AS 'enteredKeywordRemarks'
         FROM
         t_customer_keyword ck,
         t_customer c

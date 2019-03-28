@@ -176,7 +176,8 @@
             指数:<input type="text" id="gtCurrentIndexCount" name="gtCurrentIndexCount" placeholder=">=" value="${customerKeywordCriteria.gtCurrentIndexCount}" style="width: 40px;">
             <input type="text" id="ltCurrentIndexCount" name="ltCurrentIndexCount" placeholder="<=" value="${customerKeywordCriteria.ltCurrentIndexCount}" style="width: 40px;">
             备注:<input type="text" id="remarks" name="remarks" value="${customerKeywordCriteria.remarks}" style="width: 90px;">
-            <%--</c:if>--%>
+            &nbsp;&nbsp;
+            收录备注:<input type="text" id="enteredKeywordRemarks" name="enteredKeywordRemarks" value="${customerKeywordCriteria.enteredKeywordRemarks}" style="width: 90px;">
             &nbsp;&nbsp;
             <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
             <input type="submit" onclick="resetPageNumber()"
@@ -229,6 +230,7 @@
             <td align="center" width=80>最后优化时间</td>
             <td align="center" width=50>订单号</td>
             <td align="center" width=100>备注</td>
+            <td align="center" width=100>收录备注</td>
             <td align="center" width=60>优化组名</td>
             <td align="center" width=80>操作</td>
         </tr>
@@ -279,6 +281,7 @@
                 <td align="center" width=80><fmt:formatDate value="${customerKeyword.lastOptimizeDateTime}" pattern="yyyy-MM-dd HH:mm"/></td>
                 <td align="center" width=50>${customerKeyword.orderNumber}</td>
                 <td align="center" width=100>${customerKeyword.remarks==null?"":customerKeyword.remarks} </td>
+                <td align="center" width=100>${customerKeyword.enteredKeywordRemarks == null ? "" : customerKeyword.enteredKeywordRemarks}</td>
                 <td align="center" width=60>${customerKeyword.optimizeGroupName == ''? "" : customerKeyword.optimizeGroupName}
                 </td>
                 <td align="center" width=80>
