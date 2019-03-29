@@ -24,8 +24,6 @@ public class ScreenedWebsiteController extends SpringMVCBaseController {
 
     @Autowired
     private ScreenedWebsiteService screenedWebsiteService;
-    @Autowired
-    private ScreenedWebsiteListCacheService screenedWebsiteListCacheService;
 
     @RequestMapping(value = "/searchScreenedWebsiteLists", method = RequestMethod.GET)
     public ModelAndView searchscreenedWebsiteLists(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize) {
@@ -52,11 +50,10 @@ public class ScreenedWebsiteController extends SpringMVCBaseController {
             HttpSession session = request.getSession();
             String userName = (String) session.getAttribute("username");
             String password = (String) session.getAttribute("password");
-            screenedWebsiteService.saveScreenedWebsite(screenedWebsite, userName, password);
-            return new ResponseEntity<Object>(true, HttpStatus.OK);
+            return new ResponseEntity<Object>(screenedWebsiteService.saveScreenedWebsite(screenedWebsite, userName, password), HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return new ResponseEntity<Object>(false, HttpStatus.OK);
+            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -66,7 +63,7 @@ public class ScreenedWebsiteController extends SpringMVCBaseController {
             return new ResponseEntity<Object>(screenedWebsiteService.getScreenedWebsite(uuid), HttpStatus.OK);
         }catch (Exception e){
             logger.error(e.getMessage());
-            return new ResponseEntity<Object>(false , HttpStatus.OK);
+            return new ResponseEntity<Object>(false , HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -76,11 +73,10 @@ public class ScreenedWebsiteController extends SpringMVCBaseController {
             HttpSession session = request.getSession();
             String userName = (String) session.getAttribute("username");
             String password = (String) session.getAttribute("password");
-            screenedWebsiteService.delScreenedWebsite(requestMap, userName, password);
-            return new ResponseEntity<Object>(true, HttpStatus.OK);
+            return new ResponseEntity<Object>(screenedWebsiteService.delScreenedWebsite(requestMap, userName, password) , HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return new ResponseEntity<Object>(false, HttpStatus.OK);
+            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
         }
     }
 }

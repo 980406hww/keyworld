@@ -39,15 +39,17 @@ public class ScreenedWebsiteService extends ServiceImpl<ScreenedWebsiteDao, Scre
         return modelAndView;
     }
 
-    public void saveScreenedWebsite(ScreenedWebsite screenedWebsite, String userName, String password) {
+    public Boolean saveScreenedWebsite(ScreenedWebsite screenedWebsite, String userName, String password) {
+        Boolean result = true;
         if (null != screenedWebsite.getUuid()) {
             screenedWebsite.setUpdateTime(new Date());
             screenedWebsiteDao.updateById(screenedWebsite);
             screenedWebsiteListCacheService.screenedWebsiteListCacheEvict(screenedWebsite.getOptimizeGroupName());
-            postScreenedWebsiteRequest(screenedWebsite.getOptimizeGroupName(), userName, password);
+            result = postScreenedWebsiteRequest(screenedWebsite.getOptimizeGroupName(), userName, password);
         } else {
             screenedWebsiteDao.insert(screenedWebsite);
         }
+        return result;
     }
 
 
@@ -55,21 +57,25 @@ public class ScreenedWebsiteService extends ServiceImpl<ScreenedWebsiteDao, Scre
         return screenedWebsiteDao.selectById(uuid);
     }
 
-    public void delScreenedWebsite(Map map, String userName, String password){
+    public Boolean delScreenedWebsite(Map map, String userName, String password){
+        Boolean result = true;
         if (null == map.get("deleteType")){
             List<String> uuids = (List<String>) map.get("uuids");
             screenedWebsiteDao.deleteBatchIds(uuids);
             List<String> optimizeGroupNameList = (List<String>) map.get("optimizeGroupNameList");
             for (String optimizeGroupName: optimizeGroupNameList) {
                 screenedWebsiteListCacheService.screenedWebsiteListCacheEvict(optimizeGroupName);
-                postScreenedWebsiteRequest(optimizeGroupName, userName, password);
+                Boolean type = postScreenedWebsiteRequest(optimizeGroupName, userName, password);
+                if (false == type){
+                    result = false;
+                }
             }
         }else {
             screenedWebsiteDao.deleteById(Long.valueOf((String)map.get("uuid")));
             screenedWebsiteListCacheService.screenedWebsiteListCacheEvict((String) map.get("optimizeGroupName"));
-            postScreenedWebsiteRequest((String) map.get("optimizeGroupName"), userName, password);
+            result = postScreenedWebsiteRequest((String) map.get("optimizeGroupName"), userName, password);
         }
-
+        return result;
     }
 
     @Cacheable(value = "screenedWebsiteList", key = "#optimizeGroupName")

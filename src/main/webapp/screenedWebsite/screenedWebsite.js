@@ -64,11 +64,9 @@ function deleteBatchScreenedWebsite(self) {
         type: 'POST',
         success: function (data) {
             if (data) {
-                $().toastmessage('showSuccessToast', "操作成功",true);
-
+                $().toastmessage('showSuccessToast', "删除成功",true);
             } else {
-                $().toastmessage('showErrorToast', "操作失败",true);
-
+                $().toastmessage('showErrorToast', "删除失败或清除缓存失败",true);
             }
         },
         error: function () {
@@ -161,7 +159,7 @@ function savaScreenedWebsite(uuid) {
             if (result) {
                 $().toastmessage('showSuccessToast', "保存成功",true);
             } else {
-                $().toastmessage('showErrorToast', "保存失败");
+                $().toastmessage('showErrorToast', "清除缓存失败");
 
             }
         },
@@ -214,7 +212,7 @@ function delScreenedWebsite(uuid, optimizeGroupName) {
             if (result) {
                 $().toastmessage('showSuccessToast', "删除成功",true);
             } else {
-                $().toastmessage('showErrorToast', "删除失败");
+                $().toastmessage('showErrorToast', "清除缓存失败",true);
             }
         },
         error: function () {
