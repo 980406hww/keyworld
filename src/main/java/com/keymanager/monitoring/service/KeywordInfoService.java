@@ -46,13 +46,17 @@ public class KeywordInfoService extends ServiceImpl<KeywordInfoDao, KeywordInfo>
 		String username = configService.getConfig(Constants.CONFIG_TYPE_KEYWORD_INFO_SYNCHRONIZE, Constants.CONFIG_KEY_USERNAME).getValue();
 		String password = configService.getConfig(Constants.CONFIG_TYPE_KEYWORD_INFO_SYNCHRONIZE, Constants.CONFIG_KEY_PASSWORD).getValue();
 		String webPath = configService.getConfig(Constants.CONFIG_TYPE_KEYWORD_INFO_SYNCHRONIZE, Constants.CONFIG_KEY_WEBPATH).getValue();
+		String intervalMinutes = configService.getConfig(Constants.CONFIG_TYPE_KEYWORD_INFO_SYNCHRONIZE, Constants.CONFIG_KEY_INTERVAL_MINUTES).getValue();
 		if(StringUtils.isNotBlank(webPath)) {
 			Map map = new HashMap();
 			map.put("username", username);
 			map.put("password", password);
+			map.put("minutes", intervalMinutes);
 
 			KeywordInfoVO keywordInfoVO = keywordInfoSynchronizeService.getKeywordList(webPath, map);
+			List<Long> uuids = new ArrayList<Long>();
 			for (KeywordInfo keyword : keywordInfoVO) {
+				uuids.add(keyword.getId());
 				String spliterStr = keyword.getSpliterStr();
 				String[] searchEngineInfo = keyword.getSearchEngine().split("_");
 				String[] keywordInfos = keyword.getKeywordInfo().split("\n");
@@ -110,6 +114,7 @@ public class KeywordInfoService extends ServiceImpl<KeywordInfoDao, KeywordInfo>
 
 			// 同步数据库
 			if (keywordInfoVO.size() > 0) {
+				map.put("uuids", uuids);
 				keywordInfoDao.batchInsertKeyword(keywordInfoVO);
 				keywordInfoSynchronizeService.deleteKeywordList(webPath, map);
 			}

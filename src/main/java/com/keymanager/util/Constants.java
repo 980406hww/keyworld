@@ -59,6 +59,7 @@ public class Constants {
     public final static String CONFIG_KEY_MOBILE = "Mobile";
     public final static String CONFIG_KEY_USERNAME = "UserName";
     public final static String CONFIG_KEY_PASSWORD = "Password";
+    public final static String CONFIG_KEY_INTERVAL_MINUTES = "IntervalMinutes";
     public final static String CONFIG_KEY_WEBPATH = "WebPath";
     public final static String CONFIG_TYPE_ZIP_ENCRYPTION = "ZipEncryption";
     public final static String CONFIG_TYPE_MONITOR_OPTIMIZE_GROUPNAME = "MonitorOptimizeGroupName";
