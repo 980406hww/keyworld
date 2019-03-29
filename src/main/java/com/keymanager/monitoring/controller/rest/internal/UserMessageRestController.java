@@ -1,5 +1,6 @@
 package com.keymanager.monitoring.controller.rest.internal;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.UserMessageCriteria;
 import com.keymanager.monitoring.entity.UserInfo;
@@ -31,27 +32,23 @@ public class UserMessageRestController extends SpringMVCBaseController {
     @Autowired
     private UserMessageService userMessageService;
 
-    @Autowired
-    private IUserInfoService userInfoService;
-
     @RequestMapping(value = "/getUserMessages", method = RequestMethod.POST)
     public ResponseEntity<?> getUserMessages(@RequestBody UserMessageCriteria userMessageCriteria, HttpServletRequest request) {
         try {
             userMessageCriteria.setUserName((String) request.getSession().getAttribute("username"));
-            UserMessageVO userMessageVo = userMessageService.getUserMessages(userMessageCriteria);
-            List<UserInfo> userInfos = userInfoService.findActiveUsers();
-            userMessageVo.setUserInfos(userInfos);
-            return new ResponseEntity<Object>(userMessageVo, HttpStatus.OK);
+            Page<UserMessageVO> page = userMessageService.getUserMessages(userMessageCriteria);
+            return new ResponseEntity<Object>(page, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
     }
 
-    @RequestMapping(value = "/getUserMessage/{uuid}", method = RequestMethod.POST)
-    public ResponseEntity<?> getUserMessage(@PathVariable Integer uuid) {
+    @RequestMapping(value = "/getUserMessage", method = RequestMethod.POST)
+    public ResponseEntity<?> getUserMessage(@RequestBody UserMessageCriteria userMessageCriteria, HttpServletRequest request) {
         try {
-            UserMessage userMessage = userMessageService.getUserMessageByUuid(uuid);
+            userMessageCriteria.setUserName((String) request.getSession().getAttribute("username"));
+            UserMessage userMessage = userMessageService.getUserMessage(userMessageCriteria, true);
             return new ResponseEntity<Object>(userMessage, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -62,8 +59,8 @@ public class UserMessageRestController extends SpringMVCBaseController {
     @RequestMapping(value = "/saveUserMessages", method = RequestMethod.POST)
     public ResponseEntity<?> saveUserMessages(@RequestBody UserMessageCriteria userMessageCriteria, HttpServletRequest request) {
         try {
-            String userName = (String) request.getSession().getAttribute("username");
-            userMessageService.saveUserMessages(userMessageCriteria, userName);
+            userMessageCriteria.setUserName((String) request.getSession().getAttribute("username"));
+            userMessageService.saveUserMessages(userMessageCriteria);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -77,6 +74,18 @@ public class UserMessageRestController extends SpringMVCBaseController {
             String userName = (String) request.getSession().getAttribute("username");
             Integer messageInboxCount = userMessageService.checkMessageInboxCount(userName);
             return new ResponseEntity<Object>(messageInboxCount, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/getHistoryUserMessages", method = RequestMethod.POST)
+    public ResponseEntity<?> getHistoryUserMessages(@RequestBody UserMessageCriteria userMessageCriteria, HttpServletRequest request) {
+        try {
+            userMessageCriteria.setUserName((String) request.getSession().getAttribute("username"));
+            List<UserMessage> userMessages = userMessageService.getHistoryUserMessages(userMessageCriteria.getUserName(), userMessageCriteria.getCustomerUuid(), userMessageCriteria.getType());
+            return new ResponseEntity<Object>(userMessages, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);

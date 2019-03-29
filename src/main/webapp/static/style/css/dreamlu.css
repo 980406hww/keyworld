@@ -67,49 +67,7 @@ td .tree-title {
 	height: 28px;
 	line-height: 28px;
 }
-#userMessageStatus ul {
-    display: block;
-    list-style: none;
-    padding: 0;
-    margin-bottom: -1px;
-    border-left: 1px solid #e6e6e6;
-    border-right: 1px solid #e6e6e6;
-    background-color: #f6f6f6;
-}
-#userMessageStatus ul:before {
-    content: " ";
-    display: table;
-}
-#userMessageStatus ul:after {
-    clear: both;
-}
-#userMessageStatus li {
-    float: left;
-    height: 30px;
-    line-height: 30px;
-    display: list-item;
-    text-align: -webkit-match-parent;
-}
-#userMessageStatus li.active {
-    border-left: 1px solid #e6e6e6;
-    border-right: 1px solid #e6e6e6;
-    border-bottom: 2px solid #0c7df5;
-    box-sizing: border-box;
-    background-color: #fff;
-}
-#userMessageStatus li.active a {
-    color: #0c7df5;
-}
-#userMessageStatus li:after {
-    clear: both;
-}
-#userMessageStatus li a {
-    display: inline-block;
-    text-decoration: none;
-    padding: 0 80px;
-    color: #555;
-    background-color: transparent;
-}
+
 .ui-multiselect{
     line-height: 20px;
     height: 25px;
@@ -120,40 +78,31 @@ td .tree-title {
 #userMessageListTable thead {
     background-color: #eeeeee !important;
 }
-#userMessageListTable tfoot tr {
-    float: right;
-    margin-right: 115px;
-}
-#userMessageListTable tfoot td {
-    padding: 2px 0px;
-}
-#userMessageListTable tfoot {
-    position: absolute !important;
-    bottom: 0px !important;
-    background: #ADD1FF !important;
-    width: 100% !important;
+#userMessageListTable tr:first-child {
+    background-color: #eeeeee;
 }
 #userMessageListTable tr {
     height: 20px;
-}
-#userMessageListTable tbody td {
-   border-bottom: 1px solid dimgrey;
+    border-bottom: 1px solid black;
 }
 #userMessageListTable tbody tr:hover {
     background-color: green;
 }
+#userMessageListTable tbody tr:first-child:hover {
+    background-color: #eeeeee;
+}
 #userMessageListTable .user-message-content {
-    width: 220px !important;
+    width: 200px !important;
 }
 #userMessageListTable span.user-message-content {
-    max-width: 220px !important;
+    max-width: 200px !important;
     float: left !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
     white-space: nowrap !important;
 }
 #userMessageListTable .user-message-targetName {
-    width: 84px !important;
+    width: 40px !important;
 }
 #userMessageListTable .user-message-status {
     width: 80px !important;
@@ -169,10 +118,73 @@ td .tree-title {
 .ui-multiselect-menu3 {
     position: absolute !important;
     top: 208px !important;
-    left: 851px !important;
+    left: 1004px !important;
 }
 .ui-multiselect-menu2 {
     position: absolute !important;
     top: 148px !important;
     left: 922px !important;
+}
+#userMessageQueueTable {
+    text-align: center;
+}
+#userMessageListConditionTable a {
+    text-decoration: none;
+}
+#userMessageQueueTable a {
+    text-decoration: none;
+}
+#userMessageQueueTable a:hover {
+    color: #00a0e9 !important;
+}
+#userMessageQueueTable thead {
+    background-color: #eeeeee !important;
+}
+#userMessageQueueTable tr {
+    height: 20px;
+}
+#userMessageQueueTable tbody tr {
+    border-bottom: 1px solid black;
+}
+#userMessageQueueTable tbody tr td {
+    max-height: 20px;
+    border-right: 1px solid #eeeeee;
+}
+#userMessageQueueTable tbody tr td span {
+    padding: 0px 1px;
+}
+#userMessageQueueTable tbody tr:hover {
+    background-color: green;
+}
+#userMessageListTable .user-message-contactPerson {
+    width: 150px !important;
+}
+#userMessageQueueTable span.user-message-contactPerson {
+    max-width: 150px !important;
+    float: left !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+}
+#userMessageQueueTable .user-message-userName {
+    width: 85px !important;
+}
+#userMessageQueueTable .user-message-type {
+    width: 75px !important;
+}
+#userMessageQueueTable .user-message-status {
+    width: 65px !important;
+}
+#userMessageQueueTable tfoot tr {
+    float: right;
+    margin-right: 115px;
+}
+#userMessageQueueTable tfoot {
+    position: absolute !important;
+    bottom: 0px !important;
+    background: #ADD1FF !important;
+    width: 100% !important;
+}
+#userMessageQueueTable tfoot td {
+    padding: 4px 8px;
 }

@@ -6,6 +6,7 @@ public class CustomerKeywordCriteria extends BaseCriteria{
     private List<Long> uuids;
     private Long customerUuid;
     private String url;
+    private String excludeUrl; // 需排除的url
     private String bearPawNumber;
     private String keyword;
     private String creationFromTime;//添加时间
@@ -42,6 +43,7 @@ public class CustomerKeywordCriteria extends BaseCriteria{
     private Integer sevenDaysNoReachStandard;
     private Integer fifteenDaysNoReachStandard;
     private Integer thirtyDaysNoReachStandard;
+    private Integer openDialogStatus;
 
     public String getBearPawNumber() {
         return bearPawNumber;
@@ -349,5 +351,21 @@ public class CustomerKeywordCriteria extends BaseCriteria{
 
     public void setTargetBearPawNumber(String targetBearPawNumber) {
         this.targetBearPawNumber = targetBearPawNumber;
+    }
+
+    public Integer getOpenDialogStatus () {
+        return openDialogStatus;
+    }
+
+    public void setOpenDialogStatus (Integer openDialogStatus) {
+        this.openDialogStatus = openDialogStatus;
+    }
+
+    public String getExcludeUrl () {
+        return excludeUrl;
+    }
+
+    public void setExcludeUrl (String excludeUrl) {
+        this.excludeUrl = excludeUrl;
     }
 }
