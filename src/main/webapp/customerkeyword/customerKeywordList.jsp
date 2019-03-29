@@ -59,7 +59,7 @@
     <div style="text-align: right;margin-bottom: 5px">
         <div style="margin-bottom: 5px">
     <shiro:hasPermission name="/internal/customerKeyword/uploadCustomerKeywords">
-        <a target="_blank" href="javascript:uploadCustomerKeywords('${customerKeywordCriteria.customerUuid}', 'SuperUserSimple')"/>Excel上传(简化版)</a>
+        <a target="_blank" href="javascript:uploadCustomerKeywords('${customerKeywordCriteria.customerUuid}', 'SuperUserSimple')">Excel上传(简化版)</a>
     </shiro:hasPermission>
     <shiro:hasPermission name="/SuperUserSimpleKeywordList.xls">
         | <a target="_blank" href="/SuperUserSimpleKeywordList.xls">简化版下载</a>
@@ -123,6 +123,8 @@
                        style="width:80px;">
             URL:<input type="text" name="url" id="url" value="${customerKeywordCriteria.url}"
                        style="width:80px;">
+            排除URL:<input type="text" name="excludeUrl" id="excludeUrl" value="${customerKeywordCriteria.excludeUrl}"
+                               style="width:80px;">
             熊掌号:<input type="text" name="bearPawNumber" id="bearPawNumber" value="${customerKeywordCriteria.bearPawNumber}"
                        style="width:80px;">
             关键字状态:
@@ -199,9 +201,11 @@
                     <input type="button" onclick="deleteDuplicateCustomerKeyword(${customerKeywordCriteria.customerUuid})" value="删除重复关键字">
                 </c:if>
             </shiro:hasPermission>
+            <shiro:hasPermission name="/internal/qzsetting/save">
+                <input type="button" id="customerKeywordBtnInput" onclick="openMessageBox('关键字列表', '${customerKeywordCriteria.customerUuid}', '${customer.contactPerson}')" value=" 用户留言 ">
+            </shiro:hasPermission>
         </div>
     </form>
-    <%--</c:if>--%>
     <table style="font-size:12px; width: 100%;" id="headerTable">
         <tr bgcolor="#eeeeee" height=30>
             <td width=10 style="
@@ -383,6 +387,55 @@
     </datalist>
 </div>
 
+<%--留言栏Dialog--%>
+<div id="showUserMessageDialog" class="easyui-dialog" style="display: none">
+    <form id="showUserMessageForm" onsubmit="return false">
+        <table cellpadding="10" style="font-size: 12px; background-color: white; border-collapse:separate; border-spacing:0px 10px;">
+            <input type="hidden" name="messageUuid" value="">
+            <input type="hidden" name="openDialogStatus" value="${customerKeywordCriteria.openDialogStatus}">
+            <input type="hidden" name="customerUuid" value="${customerKeywordCriteria.customerUuid}"/>
+            <tr>
+                <td width="60px"><span style="width: 60px">写信人:</span></td>
+                <td width="80px"><span style="width: 80px;" id="senderUserName">${sessionScope.get("username")}</span></td>
+                <td><span style="width: 60px">收信人:</span></td>
+                <td width="180px">
+                    <select id="user_select" multiple="multiple"></select>
+                </td>
+            </tr>
+            <tr>
+                <td><span style="width: 40px">时&nbsp;&nbsp;间:</span></td>
+                <td width="80px"><label style="width: 80px;"></label></td>
+                <td width="60px"><span style="width: 60px">客&nbsp;&nbsp;户:</span></td>
+                <td><span style="width: 200px;" id="contactPerson"></span></td>
+            </tr>
+            <tr>
+                <td><span style="width: 40px">状&nbsp;&nbsp;态:</span></td>
+                <td><span style="width: 100px;" id="messageStatus"></span></td>
+            </tr>
+            <tr>
+                <td width="60px"><span style="width: 60px">内&nbsp;&nbsp;容:</span></td>
+                <td colspan="3"><input type="text" name="content" style="width: 320px;"></td>
+            </tr>
+        </table>
+        <table id="userMessageListTable" border="1" cellpadding="10"  style="font-size: 12px;background-color: white;border-collapse: collapse;width:100%;">
+            <tr>
+                <td class="user-message-targetName">
+                    <span>序号</span>
+                </td>
+                <td class="user-message-content">
+                    <span>留言内容</span>
+                </td>
+                <td class="user-message-status">
+                    <span>收信人</span>
+                </td>
+                <td class="user-message-status">
+                    <span>处理状态</span>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+
 <%@ include file="/customerkeyword/customerKeywordCommon.jsp" %>
 
 <form id="downloadCustomerKeywordInfoForm" method="post" action="/internal/customerKeyword/downloadCustomerKeywordInfo">
@@ -411,6 +464,7 @@
 <%@ include file="/commons/loadjs.jsp" %>
 <script src="${staticPath }/customerkeyword/customerKeywordList.js"></script>
 <script src="${staticPath }/customerkeyword/customerKeywordCommon.js"></script>
+<script src="${staticPath }/static/UserMessageCommon.js"></script>
 <script language="javascript">
     $(function () {
         initPaging();

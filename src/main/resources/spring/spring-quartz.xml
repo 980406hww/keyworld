@@ -204,7 +204,7 @@
 	<!--同步关键词-->
 	<bean id="cronTriggerKeywordInfoSynchronize" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="cronTriggerKeywordInfoSynchronizeSchedule" />
-		<property name="cronExpression" value="0 0 3 * * ?" />
+		<property name="cronExpression" value="0 0/30 * * * ?" />
 	</bean>
 
 	<bean id="cronTriggerKeywordInfoSynchronizeSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -264,7 +264,7 @@
 	<!--机器自动升级-->
 	<bean id="cronTriggerClientUpgrade" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="cronTriggerClientUpgradeSchedule"/>
-		<property name="cronExpression" value="0 0/2 * * * ?" />
+		<property name="cronExpression" value="0 0/5 * * * ?" />
 	</bean>
 
 	<bean id="cronTriggerClientUpgradeSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
