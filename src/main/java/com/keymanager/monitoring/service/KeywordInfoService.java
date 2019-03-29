@@ -43,11 +43,12 @@ public class KeywordInfoService extends ServiceImpl<KeywordInfoDao, KeywordInfo>
 	private KeywordInfoSynchronizeService keywordInfoSynchronizeService;
 	public void synchronizeKeyword() throws Exception {
 		boolean hasRequireDeleteKeyword = false;
-		String username = configService.getConfig(Constants.CONFIG_TYPE_KEYWORD_INFO_SYNCHRONIZE, Constants.CONFIG_KEY_USERNAME).getValue();
-		String password = configService.getConfig(Constants.CONFIG_TYPE_KEYWORD_INFO_SYNCHRONIZE, Constants.CONFIG_KEY_PASSWORD).getValue();
-		String webPath = configService.getConfig(Constants.CONFIG_TYPE_KEYWORD_INFO_SYNCHRONIZE, Constants.CONFIG_KEY_WEBPATH).getValue();
-		String intervalMinutes = configService.getConfig(Constants.CONFIG_TYPE_KEYWORD_INFO_SYNCHRONIZE, Constants.CONFIG_KEY_INTERVAL_MINUTES).getValue();
-		if(StringUtils.isNotBlank(webPath)) {
+		Config webPathConfig = configService.getConfig(Constants.CONFIG_TYPE_KEYWORD_INFO_SYNCHRONIZE, Constants.CONFIG_KEY_WEBPATH);
+		if(webPathConfig != null) {
+			String webPath = webPathConfig.getValue();
+			String username = configService.getConfig(Constants.CONFIG_TYPE_KEYWORD_INFO_SYNCHRONIZE, Constants.CONFIG_KEY_USERNAME).getValue();
+			String password = configService.getConfig(Constants.CONFIG_TYPE_KEYWORD_INFO_SYNCHRONIZE, Constants.CONFIG_KEY_PASSWORD).getValue();
+			String intervalMinutes = configService.getConfig(Constants.CONFIG_TYPE_KEYWORD_INFO_SYNCHRONIZE, Constants.CONFIG_KEY_INTERVAL_MINUTES).getValue();
 			Map map = new HashMap();
 			map.put("username", username);
 			map.put("password", password);
@@ -139,7 +140,4 @@ public class KeywordInfoService extends ServiceImpl<KeywordInfoDao, KeywordInfo>
 		page.setRecords(keywordInfos);
 		return page;
 	}
-
-
-
 }

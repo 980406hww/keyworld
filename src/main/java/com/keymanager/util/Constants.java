@@ -57,7 +57,6 @@ public class Constants {
     public final static String CONFIG_TYPE_DAILY_REPORT_AUTO_TRIGGER = "AutoTrigger";
     public final static String CONFIG_TYPE_DEFAULT_OPTIMIZE_GROUPNAME = "DefaultOptimizeGroupName";
     public final static String CONFIG_TYPE_KEYWORD_INFO_SYNCHRONIZE = "KeywordInfoSynchronize";
-    public final static String CONFIG_KEY_MOBILE = "Mobile";
     public final static String CONFIG_KEY_USERNAME = "UserName";
     public final static String CONFIG_KEY_PASSWORD = "Password";
     public final static String CONFIG_KEY_INTERVAL_MINUTES = "IntervalMinutes";
