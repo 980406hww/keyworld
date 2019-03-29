@@ -814,10 +814,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                     List<KeywordSimpleVO> qzKeywords = customerKeywordDao.getQZCustomerKeywordSummaryInfos(terminalType, customerKeyword.getOptimizeGroupName());
                     customerKeywordForOptimization.setRelatedQZKeywords(qzKeywords);
                 }
-                /*Config configDisableVisitUrl = configService.getConfig(Constants.CONFIG_TYPE_DISABLE_VISIT_URL, customerKeywordForOptimization.getGroup());
-                if(configDisableVisitUrl != null){
-                    customerKeywordForOptimization.setDisableVisitUrl(configDisableVisitUrl.getValue());
-                }*/
                 String screenedWebsite = screenedWebsiteService.getScreenedWebsiteByOptimizeGroupName(customerKeywordForOptimization.getGroup());
                 if(screenedWebsite != null){
                     customerKeywordForOptimization.setDisableVisitUrl(screenedWebsite);
@@ -991,10 +987,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                     List<KeywordSimpleVO> qzKeywords = customerKeywordDao.getQZCustomerKeywordSummaryInfos(terminalType, customerKeyword.getOptimizeGroupName());
                     customerKeywordForOptimization.setRelatedQZKeywords(qzKeywords);
                 }
-                /*Config configDisableVisitUrl = configService.getConfig(Constants.CONFIG_TYPE_DISABLE_VISIT_URL, customerKeywordForOptimization.getGroup());
-                if(configDisableVisitUrl != null){
-                    customerKeywordForOptimization.setDisableVisitUrl(configDisableVisitUrl.getValue());
-                }*/
                 String screenedWebsite = screenedWebsiteService.getScreenedWebsiteByOptimizeGroupName(customerKeywordForOptimization.getGroup());
                 if(screenedWebsite != null){
                     customerKeywordForOptimization.setDisableVisitUrl(screenedWebsite);
