@@ -93,8 +93,8 @@ function showScreenedWebsiteDialog(uuid) {
     $("#screenedWebsiteDialog").show();
     $("#screenedWebsiteDialog").dialog({
         resizable: false,
-        width: 280,
-        height: 380,
+        width: 340,
+        height: 400,
         modal: true,
         buttons: [{
             text: '保存',
@@ -159,12 +159,12 @@ function savaScreenedWebsite(uuid) {
             if (result) {
                 $().toastmessage('showSuccessToast', "保存成功",true);
             } else {
-                $().toastmessage('showErrorToast', "清除缓存失败");
+                $().toastmessage('showErrorToast', "清除缓存失败", true);
 
             }
         },
         error: function () {
-            $().toastmessage('showErrorToast', "保存失败");
+            $().toastmessage('showErrorToast', "保存失败", true);
         }
     });
     $("#screenedWebsiteDialog").dialog("close");
