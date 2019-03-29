@@ -1291,7 +1291,7 @@
         AND ck.fSearchEngine = #{searchEngine}
         AND ck.fVerifyEnteredKeywordTime &lt;= DATE_SUB(CURDATE(),INTERVAL 7 DAY)
         ORDER BY ck.fVerifyEnteredKeywordTime
-        LIMIT 10
+        LIMIT 100
     </select>
 
     <update id="updateVerifyEnteredKeywordTimeByUuids">
