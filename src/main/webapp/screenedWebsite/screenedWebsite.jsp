@@ -64,20 +64,22 @@
     </table>
 </div>
 </div>
-<div id="screenedWebsiteDialog" title="屏蔽网站信息" class="easyui-dialog" style="display:none;left: 40%;">
-    <form id="screenedWebsiteForm" method="post" action="/internal/screenedWebsite/searchBadClientStatus">
-        <table style="font-size:14px;" cellpadding=5>
-            <input type="hidden" name="screenedWebsiteUuid" id="screenedWebsiteUuid" style="width:200px;">
+<div id="screenedWebsiteDialog" title="屏蔽网站信息" class="easyui-dialog" style="display: none">
+    <form id="screenedWebsiteForm">
+        <table style="font-size:12px" id="screenedWebsiteTable" align="center" cellspacing="8">
             <tr>
                 <td style="width:80px"  align="right">优化组名称:</td>
-                <td><input type="text" name="optimizeGroupName" id="optimizeGroupName" style="width:180px;"></td>
+                <td>
+                    <input type="hidden" name="screenedWebsiteUuid" id="screenedWebsiteUuid" style="width:240px;">
+                    <input type="text" name="optimizeGroupName" id="optimizeGroupName" style="width:240px;">
+                </td>
             </tr>
             <tr>
                 <td style="width:80px" align="right">屏蔽网站:</td>
             </tr>
             <tr>
                 <td style="width:80px" align="right"></td>
-                <td><textarea id="screenedWebsite" style="width:180px; height: 200px; resize: none"></textarea></td>
+                <td><textarea id="screenedWebsite" style="width:240px; height: 260px; resize: none"></textarea></td>
             </tr>
         </table>
     </form>
