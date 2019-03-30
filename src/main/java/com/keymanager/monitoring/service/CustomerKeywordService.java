@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.enums.CollectMethod;
 import com.keymanager.monitoring.common.email.ObserveOptimizationCountMailService;
+import com.keymanager.monitoring.controller.rest.internal.ScreenedWebsiteListCacheService;
 import com.keymanager.monitoring.criteria.*;
 import com.keymanager.monitoring.dao.CustomerKeywordDao;
 import com.keymanager.monitoring.entity.*;
@@ -100,6 +101,12 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     @Autowired
     private CustomerExcludeKeywordService customerExcludeKeywordService;
+
+    @Autowired
+    private ScreenedWebsiteService screenedWebsiteService;
+
+    @Autowired
+    private ScreenedWebsiteListCacheService screenedWebsiteListCacheService;
 
     public Page<CustomerKeyword> searchCustomerKeywords(Page<CustomerKeyword> page, CustomerKeywordCriteria customerKeywordCriteria){
         page.setRecords(customerKeywordDao.searchCustomerKeywordsPageForCustomer(page, customerKeywordCriteria));
@@ -807,9 +814,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                     List<KeywordSimpleVO> qzKeywords = customerKeywordDao.getQZCustomerKeywordSummaryInfos(terminalType, customerKeyword.getOptimizeGroupName());
                     customerKeywordForOptimization.setRelatedQZKeywords(qzKeywords);
                 }
-                Config configDisableVisitUrl = configService.getConfig(Constants.CONFIG_TYPE_DISABLE_VISIT_URL, customerKeywordForOptimization.getGroup());
-                if(configDisableVisitUrl != null){
-                    customerKeywordForOptimization.setDisableVisitUrl(configDisableVisitUrl.getValue());
+                String screenedWebsite = screenedWebsiteService.getScreenedWebsiteByOptimizeGroupName(customerKeywordForOptimization.getGroup());
+                if(screenedWebsite != null){
+                    customerKeywordForOptimization.setDisableVisitUrl(screenedWebsite);
                 }
             }
             return customerKeywordForOptimization;
@@ -980,9 +987,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                     List<KeywordSimpleVO> qzKeywords = customerKeywordDao.getQZCustomerKeywordSummaryInfos(terminalType, customerKeyword.getOptimizeGroupName());
                     customerKeywordForOptimization.setRelatedQZKeywords(qzKeywords);
                 }
-                Config configDisableVisitUrl = configService.getConfig(Constants.CONFIG_TYPE_DISABLE_VISIT_URL, customerKeywordForOptimization.getGroup());
-                if(configDisableVisitUrl != null){
-                    customerKeywordForOptimization.setDisableVisitUrl(configDisableVisitUrl.getValue());
+                String screenedWebsite = screenedWebsiteService.getScreenedWebsiteByOptimizeGroupName(customerKeywordForOptimization.getGroup());
+                if(screenedWebsite != null){
+                    customerKeywordForOptimization.setDisableVisitUrl(screenedWebsite);
                 }
             }
             return customerKeywordForOptimization;

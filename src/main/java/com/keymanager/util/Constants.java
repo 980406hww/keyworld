@@ -1,5 +1,6 @@
 package com.keymanager.util;
 
+import com.keymanager.monitoring.entity.Website;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
 import org.omg.CORBA.PUBLIC_MEMBER;
 
@@ -45,7 +46,6 @@ public class Constants {
     public final static String CONFIG_TYPE_COUNT_PER_ELEMENT = "CountPerElement";
     public final static String CONFIG_KEY_NEGATIVE_KEYWORDS = "NegativeKeywords";
     public final static String CONFIG_TYPE_ZHANNEI_SOGOU = "zhannei_sogou";
-    public final static String CONFIG_TYPE_DISABLE_VISIT_URL = "DisableVisitUrl";
     public final static String CONFIG_KEY_NOPOSITION_MAX_INVALID_COUNT = "NoPositionMaxInvalidCount";
     public final static String CONFIG_TYPE_START_UP = "StartUp";
     public final static String CONFIG_KEY_DOWNLOADING_CLIENT_COUNT = "DownloadingClientCount";
@@ -57,7 +57,6 @@ public class Constants {
     public final static String CONFIG_TYPE_DAILY_REPORT_AUTO_TRIGGER = "AutoTrigger";
     public final static String CONFIG_TYPE_DEFAULT_OPTIMIZE_GROUPNAME = "DefaultOptimizeGroupName";
     public final static String CONFIG_TYPE_KEYWORD_INFO_SYNCHRONIZE = "KeywordInfoSynchronize";
-    public final static String CONFIG_KEY_MOBILE = "Mobile";
     public final static String CONFIG_KEY_USERNAME = "UserName";
     public final static String CONFIG_KEY_PASSWORD = "Password";
     public final static String CONFIG_KEY_INTERVAL_MINUTES = "IntervalMinutes";
@@ -85,6 +84,7 @@ public class Constants {
     public final static String CONFIG_TYPE_EXTERNALUSER = "ExternalUser";
     public final static String CONFIG_KEY_EXTERNALUSER = "ExternalUser";
     public final static String CONFIG_VALUE_EXTERNALUSER = "externaluser";
+    public final static String CONFIG_TYPE_SCREENED_WEBSITE = "ScreenedWebsite";
 
     public final static Map<String, String> ACCOUNT_LOG_STATUS_MAP = new HashMap<String, String>();
     static {
