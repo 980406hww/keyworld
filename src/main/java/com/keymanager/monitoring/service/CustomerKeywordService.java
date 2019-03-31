@@ -1580,8 +1580,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     public synchronized List<CustomerKeywordEnteredVO> getNoEnteredKeywords(String searchEngine){
         List<CustomerKeywordEnteredVO> noEnteredKeywords = customerKeywordDao.getNoEnteredKeywords(searchEngine);
-        List<Long> uuids = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(noEnteredKeywords)) {
+            List<Long> uuids = new ArrayList<>();
             for (CustomerKeywordEnteredVO customerKeywordEnteredVo : noEnteredKeywords) {
                 uuids.add(customerKeywordEnteredVo.getUuid());
             }
