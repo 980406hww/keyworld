@@ -23,7 +23,7 @@ public class AutoTriggerChangeNoEnteredKeywordGroupNameSchedule {
         logger.info("============= "+" Change No Entered Keyword Group Name Task  "+"===================");
         try {
             Config config = configService.getConfig(Constants.CONFIG_TYPE_NOENTEREDKEYWORDSCHEDULE_SWITCH, Constants.CONFIG_KEY_SWITCHNUMBER);
-            if (config.getValue().equals("1")) {
+            if (config != null && config.getValue().equals("1")) {
                 customerKeywordService.updateNoEnteredKeywordGroupName();
             }
         } catch (Exception e) {
