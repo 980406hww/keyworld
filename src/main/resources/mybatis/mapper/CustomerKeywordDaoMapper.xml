@@ -1309,7 +1309,7 @@
             <set>
                 fEnteredKeywordRemarks = #{customerKeyword.enteredKeywordRemarks}
                 <if test="customerKeyword.capturedTitle == 1">
-                    ,fCapturedTitle = 1
+                    ,fTitle = NULL, fCaptureTitleQueryTime = NULL, fCapturedTitle = 0
                     ,fOptimizeGroupName = #{customerKeyword.optimizeGroupName}
                 </if>
             </set>
