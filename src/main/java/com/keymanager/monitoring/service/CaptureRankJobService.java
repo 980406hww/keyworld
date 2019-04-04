@@ -26,7 +26,7 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
     @Autowired
     private CustomerService customerService;
 
-    public CaptureRankJob provideCaptureRankJob() {
+    public synchronized CaptureRankJob provideCaptureRankJob() {
         CaptureRankJob captureRankJob = captureRankJobDao.getProcessingJob();
         if (captureRankJob == null) {
             captureRankJob = captureRankJobDao.provideCaptureRankJob();
@@ -74,6 +74,7 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
 
     public void completeCaptureRankJob(CaptureRankJob captureRankJob)
     {
+        captureRankJob = captureRankJobDao.selectById(captureRankJob.getUuid());
         captureRankJob.setExectionStatus(CaptureRankExectionStatus.Complete.name());
         captureRankJob.setEndTime(new Date());
         captureRankJob.setLastExecutionDate(new java.sql.Date(new Date().getTime()));
