@@ -53,7 +53,7 @@ public class NegativeListService extends ServiceImpl<NegativeListDao, NegativeLi
             keywordNegativeCriteria.setNegativeList(negativeList);
             keywordNegativeCriteria.setNegative(true);
             negativeListDao.insert(negativeList);
-            negativeListsSynchronizeService.negativeListsSynchronize(keywordNegativeCriteria);
+            //negativeListsSynchronizeService.negativeListsSynchronize(keywordNegativeCriteria);
         }
         negativeListCacheService.negativeListCacheEvict(negativeList.getKeyword());
     }
