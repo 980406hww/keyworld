@@ -667,8 +667,12 @@
         ck.fUuid	AS	'uuid'
         FROM t_customer_keyword ck
         WHERE ck.fTerminalType = #{terminalType} and ck.fStatus = 1
-        <if test="startTime != null">
+        AND fCaptureStatus = #{captureStatus}
+        <if test="startTime != null and captureStatus = 0">
             AND ck.fCapturePositionQueryTime <![CDATA[<]]> #{startTime}
+        </if>
+        <if test="startTime != null and captureStatus = 1">
+            AND ck.fCapturePositionQueryTime <![CDATA[<]]> DATE_SUB(#{startTime}, INTERVAL 3 MINUTE )
         </if>
         <if test="customerUuid != null">
             AND ck.fCustomerUuid = #{customerUuid}
@@ -725,7 +729,8 @@
     </update>
 
     <update id="updateCapturePositionQueryTime">
-        UPDATE t_customer_keyword SET fCapturePositionQueryTime = NOW()
+        UPDATE t_customer_keyword SET fCaptureStatus = 1
+        AND fCapturePositionQueryTime = NOW()
         WHERE fUuid = #{uuid}
     </update>
 
@@ -862,6 +867,7 @@
             <if test="todayFee != null">
                 fLastReachStandardDate = CURRENT_DATE(),
             </if>
+            fCaptureStatus = 0,
             fUpdateTime = NOW()
         WHERE fUuid = #{uuid}
     </update>
@@ -1075,7 +1081,8 @@
 
     <update id="updateCustomerKeywordQueryTime">
         UPDATE t_customer_keyword
-        SET fCapturePositionQueryTime = #{capturePositionQueryTime}
+        SET fCaptureStatus = 0
+        AND fCapturePositionQueryTime = #{capturePositionQueryTime}
         WHERE fUuid = #{customerKeywordUuid}
     </update>
 
