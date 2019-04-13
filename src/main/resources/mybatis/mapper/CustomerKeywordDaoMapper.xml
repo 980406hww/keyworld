@@ -672,7 +672,7 @@
             AND ck.fCapturePositionQueryTime <![CDATA[<]]> #{startTime}
         </if>
         <if test="startTime != null and captureStatus = 1">
-            AND ck.fCapturePositionQueryTime <![CDATA[<]]> DATE_SUB(#{startTime}, INTERVAL 3 MINUTE )
+            AND ck.fCapturePositionQueryTime <![CDATA[<]]> DATE_SUB( NOW(), INTERVAL 3 MINUTE )
         </if>
         <if test="customerUuid != null">
             AND ck.fCustomerUuid = #{customerUuid}
@@ -728,9 +728,9 @@
         </foreach>
     </update>
 
-    <update id="updateCapturePositionQueryTime">
-        UPDATE t_customer_keyword SET fCaptureStatus = 1
-        AND fCapturePositionQueryTime = NOW()
+    <update id="updateCapturePositionQueryTimeAndCaptureStatus">
+        UPDATE t_customer_keyword SET fCaptureStatus = 1,
+        fCapturePositionQueryTime = NOW()
         WHERE fUuid = #{uuid}
     </update>
 
@@ -1081,8 +1081,8 @@
 
     <update id="updateCustomerKeywordQueryTime">
         UPDATE t_customer_keyword
-        SET fCaptureStatus = 0
-        AND fCapturePositionQueryTime = #{capturePositionQueryTime}
+        SET fCaptureStatus = 0,
+        fCapturePositionQueryTime = #{capturePositionQueryTime}
         WHERE fUuid = #{customerKeywordUuid}
     </update>
 

@@ -1195,13 +1195,20 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             Long customerKeywordUuid = customerKeywordDao.getCustomerKeywordUuidForCapturePosition(terminalType, groupNames, customerUuid, startTime, 0);
             if(null == customerKeywordUuid){
                 customerKeywordUuid = customerKeywordDao.getCustomerKeywordUuidForCapturePosition(terminalType, groupNames, customerUuid, startTime, 1);
-                if (null != customerKeywordUuid){
-                    return capturePositionSetCustomerKeywordForCapturePosition(customerKeywordForCapturePosition, customerKeywordUuid);
-                }
-                return null;
-            }else if (null != customerKeywordUuid){
-                return capturePositionSetCustomerKeywordForCapturePosition(customerKeywordForCapturePosition, customerKeywordUuid);
             }
+            if (null != customerKeywordUuid){
+                CustomerKeyword customerKeyword = customerKeywordDao.getCustomerKeywordForCapturePosition(customerKeywordUuid);
+                customerKeywordForCapturePosition.setUuid(customerKeyword.getUuid());
+                customerKeywordForCapturePosition.setKeyword(customerKeyword.getKeyword());
+                customerKeywordForCapturePosition.setUrl(customerKeyword.getUrl());
+                customerKeywordForCapturePosition.setTitle(customerKeyword.getTitle());
+                customerKeywordForCapturePosition.setSearchEngine(customerKeyword.getSearchEngine());
+                customerKeywordForCapturePosition.setTerminalType(customerKeyword.getTerminalType());
+                customerKeywordForCapturePosition.setBearPawNumber(customerKeyword.getBearPawNumber());
+                customerKeywordDao.updateCapturePositionQueryTimeAndCaptureStatus(customerKeyword.getUuid());
+                return customerKeywordForCapturePosition;
+            }
+            return null;
         }
         return customerKeywordForCapturePosition;
     }
@@ -1608,16 +1615,4 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
     }
 
-    public CustomerKeywordForCapturePosition capturePositionSetCustomerKeywordForCapturePosition(CustomerKeywordForCapturePosition customerKeywordForCapturePosition, Long customerKeywordUuid){
-        CustomerKeyword customerKeyword = customerKeywordDao.getCustomerKeywordForCapturePosition(customerKeywordUuid);
-        customerKeywordForCapturePosition.setUuid(customerKeyword.getUuid());
-        customerKeywordForCapturePosition.setKeyword(customerKeyword.getKeyword());
-        customerKeywordForCapturePosition.setUrl(customerKeyword.getUrl());
-        customerKeywordForCapturePosition.setTitle(customerKeyword.getTitle());
-        customerKeywordForCapturePosition.setSearchEngine(customerKeyword.getSearchEngine());
-        customerKeywordForCapturePosition.setTerminalType(customerKeyword.getTerminalType());
-        customerKeywordForCapturePosition.setBearPawNumber(customerKeyword.getBearPawNumber());
-        customerKeywordDao.updateCapturePositionQueryTime(customerKeyword.getUuid());
-        return customerKeywordForCapturePosition;
-    }
 }
