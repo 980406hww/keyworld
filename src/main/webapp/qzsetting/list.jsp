@@ -266,7 +266,7 @@
 									<div class="row">
 										<span class="line1">
 											<c:if test="${qzSetting.qzKeywordRankInfoMap['PC'].sumSeries > 0}">
-												<a href="javascript:;" id="${qzSetting.uuid}" level="${qzSetting.qzKeywordRankInfoMap['PC'].achieveLevel}" onmouseover="showChargeRulesDiv($(this))" onmouseout="closeChargeRulesDiv()">
+												<a href="javascript:;" qzsettinguuid="${qzSetting.uuid}" level="${qzSetting.qzKeywordRankInfoMap['PC'].achieveLevel}" onmouseover="showChargeRulesDiv($(this))" onmouseout="closeChargeRulesDiv()">
 													<c:choose>
 														<c:when test="${qzSetting.qzKeywordRankInfoMap['PC'].achieveLevel == qzSetting.qzKeywordRankInfoMap['PC'].sumSeries}">
 															<font style="background-color: forestgreen;font-size: 14px;">${qzSetting.qzKeywordRankInfoMap['PC'].achieveLevel} / ${qzSetting.qzKeywordRankInfoMap['PC'].sumSeries} (${qzSetting.qzKeywordRankInfoMap['PC'].currentPrice})</font>
@@ -541,7 +541,7 @@
 									<div class="row">
 										<span class="line1">
 											<c:if test="${qzSetting.qzKeywordRankInfoMap['Phone'].sumSeries > 0}">
-												<a href="javascript:;" id="${qzSetting.uuid}" level="${qzSetting.qzKeywordRankInfoMap['Phone'].achieveLevel}" onmouseover="showChargeRulesDiv($(this))" onmouseout="closeChargeRulesDiv()">
+												<a href="javascript:;" qzsettinguuid="${qzSetting.uuid}" level="${qzSetting.qzKeywordRankInfoMap['Phone'].achieveLevel}" onmouseover="showChargeRulesDiv($(this))" onmouseout="closeChargeRulesDiv()">
 													<c:choose>
 														<c:when test="${qzSetting.qzKeywordRankInfoMap['Phone'].achieveLevel == qzSetting.qzKeywordRankInfoMap['Phone'].sumSeries}">
 															<font style="background-color: forestgreen;font-size: 14px;">${qzSetting.qzKeywordRankInfoMap['Phone'].achieveLevel} / ${qzSetting.qzKeywordRankInfoMap['Phone'].sumSeries} (${qzSetting.qzKeywordRankInfoMap['Phone'].currentPrice})</font>

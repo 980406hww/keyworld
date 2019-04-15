@@ -585,6 +585,7 @@ function searchCustomerKeywords(customerUuid, optimizeGroupName) {
     searchCustomerKeywordForm.find("#status").val(1);
     searchCustomerKeywordForm.submit();
 }
+var TimeFn = null;
 function showChargeRulesDiv(self, e) {
     var event = e||window.event;
     var pageX = event.pageX;
@@ -595,58 +596,61 @@ function showChargeRulesDiv(self, e) {
     if(pageY==undefined) {
         pageY = event.clientY+document.body.scrollTop||document.documentElement.scrollTop;
     }
-    var qzSettingUuid = $(self).attr("id");
-    var terminalType = $("#chargeForm").find("#terminalType").val();
     $("#chargeRulesDivTable  tr:not(:first)").remove();
-    var postData = {};
-    postData.qzSettingUuid = parseInt(qzSettingUuid);
-    postData.terminalType = terminalType;
-    $.ajax({
-        url: '/internal/qzsetting/getChargeRule',
-        type: 'POST',
-        data: JSON.stringify(postData),
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        success: function (qzChargeRules) {
-            $("#chargeRulesDivTable  tr:not(:first)").remove();
-            if(qzChargeRules != null && qzChargeRules.length > 0) {
-                var achieveLevel = $(self).attr("level");
-                $.each(qzChargeRules, function (idx, val) {
-                    var newTr = document.createElement("tr");
-                    var chargeRuleElements = [
-                        idx + 1,
-                        val.startKeywordCount,
-                        val.endKeywordCount,
-                        val.amount
-                    ];
-                    $.each(chargeRuleElements, function (index, v) {
-                        var newTd = document.createElement("td");
-                        newTr.appendChild(newTd);
-                        if (v == null) {
-                            newTd.innerHTML = "";
-                        } else {
-                            newTd.innerHTML = v;
+    clearTimeout(TimeFn);
+    TimeFn = setTimeout(function(){
+        var qzSettingUuid = $(self).attr("qzsettinguuid");
+        var terminalType = $("#chargeForm").find("#terminalType").val();
+        var postData = {};
+        postData.qzSettingUuid = parseInt(qzSettingUuid);
+        postData.terminalType = terminalType;
+        $.ajax({
+            url: '/internal/qzsetting/getChargeRule',
+            type: 'POST',
+            data: JSON.stringify(postData),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            success: function (qzChargeRules) {
+                $("#chargeRulesDivTable  tr:not(:first)").remove();
+                if(qzChargeRules != null && qzChargeRules.length > 0) {
+                    var achieveLevel = $(self).attr("level");
+                    $.each(qzChargeRules, function (idx, val) {
+                        var newTr = document.createElement("tr");
+                        var chargeRuleElements = [
+                            idx + 1,
+                            val.startKeywordCount,
+                            val.endKeywordCount,
+                            val.amount
+                        ];
+                        $.each(chargeRuleElements, function (index, v) {
+                            var newTd = document.createElement("td");
+                            newTr.appendChild(newTd);
+                            if (v == null) {
+                                newTd.innerHTML = "";
+                            } else {
+                                newTd.innerHTML = v;
+                            }
+                        });
+                        if (idx + 1 === parseInt(achieveLevel)) {
+                            $(newTr).css("background-color", "green");
                         }
+                        $("#chargeRulesDivTable")[0].lastChild.appendChild(newTr);
                     });
-                    if (idx + 1 === parseInt(achieveLevel)) {
-                        $(newTr).css("background-color", "green");
-                    }
-                    $("#chargeRulesDivTable")[0].lastChild.appendChild(newTr);
-                });
+                }
+            },
+            error: function () {
+                $().toastmessage('showErrorToast', "获取信息失败！");
             }
-        },
-        error: function () {
-            $().toastmessage('showErrorToast', "获取信息失败！");
-        }
-    });
-    var chargeRulesDiv = document.getElementById('chargeRulesDiv');
-    chargeRulesDiv.style.display="block";
-    chargeRulesDiv.style.left=(pageX) + "px";
-    chargeRulesDiv.style.top=(pageY) + "px";
-    chargeRulesDiv.style.zIndex=1000;
-    chargeRulesDiv.style.position="absolute";
+        });
+        var chargeRulesDiv = document.getElementById('chargeRulesDiv');
+        chargeRulesDiv.style.display="block";
+        chargeRulesDiv.style.left=(pageX) + "px";
+        chargeRulesDiv.style.top=(pageY) + "px";
+        chargeRulesDiv.style.zIndex=1000;
+        chargeRulesDiv.style.position="absolute";
+    }, 300);
 }
 function closeChargeRulesDiv() {
     $("#chargeRulesDiv").css("display", "none");
