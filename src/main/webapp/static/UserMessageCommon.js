@@ -22,7 +22,7 @@ function openMessageBox(type, customerUuid, contactPerson) {
         height: 280,
         width: 405,
         title: '留言框',
-        modal: true,
+        modal: false,
         buttons: [{
             text: '处理完毕',
             handler: function() {

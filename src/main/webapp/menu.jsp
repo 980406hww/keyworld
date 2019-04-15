@@ -246,7 +246,7 @@
 			height: 290,
 			width: 460,
 			title: '查看留言队列',
-			modal: true,
+			modal: false,
 			onClose: function () {
                 $("#userMessageQueueTable").find("thead tr:last-child").css("display", "none");
                 $("#showUserMessageQueueForm")[0].reset();
