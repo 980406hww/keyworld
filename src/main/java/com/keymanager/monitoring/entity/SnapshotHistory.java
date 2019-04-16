@@ -53,6 +53,17 @@ public class SnapshotHistory extends BaseEntity {
 	@TableField(value = "fIsExistPositiveList")
 	private Boolean isExistPositiveList;
 
+	@TableField(value = "fBearPawNumber")
+	private String bearPawNumber;
+
+	public String getBearPawNumber () {
+		return bearPawNumber;
+	}
+
+	public void setBearPawNumber (String bearPawNumber) {
+		this.bearPawNumber = bearPawNumber;
+	}
+
 	public Long getCustomerUuid() {
 		return customerUuid;
 	}
