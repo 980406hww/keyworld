@@ -570,3 +570,20 @@ ul {
     margin-top:3px;
     border-radius:10px;
 }
+
+#userNoteBookTable {
+    text-align: center;
+}
+#userNoteBookTable tr {
+    height: 20px;
+    border-bottom: 1px solid black;
+}
+#userNoteBookTable thead {
+    background-color: #eeeeee !important;
+}
+#userNoteBookTable tbody tr:hover {
+    background-color: green;
+}
+#userNoteBookTable tr td {
+    border-bottom: 1px solid black;
+}

@@ -238,6 +238,9 @@
 								<shiro:hasPermission name="/internal/qzsetting/save">
 									<a class="blue" href="javascript:openMessageBox('全站设置', '${qzSetting.customerUuid}', '${qzSetting.contactPerson}')">用户留言</a>
 								</shiro:hasPermission>
+								<shiro:hasPermission name="/internal/qzsetting/save">
+									<a class="blue" href="javascript:openNoteBookDialog('${qzSetting.customerUuid}')">记事本</a>
+								</shiro:hasPermission>
 								<shiro:hasPermission name="/internal/qzchargelog/save">
 									<a class="blue" href="javascript:showChargeDialog('${qzSetting.uuid}','${qzSetting.contactPerson}','${qzSetting.domain}',this)">收费</a>
 								</shiro:hasPermission>
@@ -512,6 +515,9 @@
 								</shiro:hasPermission>
 								<shiro:hasPermission name="/internal/qzsetting/save">
 									<a class="blue" href="javascript:openMessageBox('全站设置', '${qzSetting.customerUuid}', '${qzSetting.contactPerson}')">用户留言</a>
+								</shiro:hasPermission>
+								<shiro:hasPermission name="/internal/qzsetting/save">
+									<a class="blue" href="javascript:openNoteBookDialog('${qzSetting.customerUuid}')">记事本</a>
 								</shiro:hasPermission>
 								<shiro:hasPermission name="/internal/qzchargelog/save">
 									<a class="blue" href="javascript:showChargeDialog('${qzSetting.uuid}','${qzSetting.contactPerson}','${qzSetting.domain}',this)">收费</a>
@@ -1280,6 +1286,29 @@
 			</tr>
 		</table>
     </form>
+</div>
+<%--记事本Dialog--%>
+<div id="showUserNoteBookDialog" class="easyui-dialog" style="display: none">
+	<form id="showUserNoteBookForm" onsubmit="return false">
+		<div>
+			&nbsp;&nbsp;<input class="ui-button ui-widget ui-corner-all" type="button" onclick="trimSearchCondition('1')" value=" 增加 " >
+			&nbsp;&nbsp;<input class="ui-button ui-widget ui-corner-all" type="button" onclick="showMoreSearchCondition()" value=" 删除 " >
+			&nbsp;&nbsp;<input class="ui-button ui-widget ui-corner-all" type="button" onclick="showMoreSearchCondition()" value=" 查询历史 " >
+		</div>
+		<table id="userNoteBookTable" cellpadding="10" style="font-size: 12px; background-color: white; border-collapse:separate; border-spacing:0px 5px; width: 100%;">
+			<thead>
+				<tr>
+					<td><input type="checkbox" id="noteBookCheckAll"></td>
+					<td>序号</td>
+					<td>记事者</td>
+					<td>日期</td>
+					<td>内容</td>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+	</form>
 </div>
 <%--达标信息详情DIV--%>
 <div id="chargeRulesDiv" style="display:none;width:300px;">

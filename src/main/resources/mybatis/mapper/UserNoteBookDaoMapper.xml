@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.UserNoteBookDao">
+    <select id="findUserNoteBooksByCustomerUuid" resultType="com.keymanager.monitoring.entity.UserNoteBook">
+        SELECT
+            un.fUuid AS 'uuid',
+            un.fNotesPerson AS 'notesPerson',
+            un.fCustomerUuid AS 'customerUuid',
+            un.fContent AS 'content',
+            un.fCreateTime AS 'createTime'
+        FROM t_user_notebook un
+        WHERE un.fIsDeleted = 0
+        AND un.fCustomerUuid = #{customerUuid}
+        ORDER BY un.fCreateTime DESC
+        LIMIT 3
+    </select>
+</mapper>

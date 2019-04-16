@@ -1,4 +1,5 @@
 $(function () {
+    $("#showUserNoteBookDialog").dialog("close");
     var showUserMessageDialog = $("#showUserMessageDialog");
     var openDialogStatus =  showUserMessageDialog.find("input[name='openDialogStatus']").val();
     if (openDialogStatus == 1) {
@@ -217,6 +218,73 @@ function saveUserMessage(type, customerUuid, status) {
             $().toastmessage("showErrorToast", "保存失败");
         }
     });
+}
+
+function openNoteBookDialog(customerUuid) {
+    var showUserNoteBookDialog = $("#showUserNoteBookDialog");
+    getUserNoteBook(customerUuid);
+    showUserNoteBookDialog.show();
+    showUserNoteBookDialog.dialog({
+        resizable: false,
+        bgiframe: true,
+        draggable: false,
+        height: 280,
+        width: 400,
+        title: '记事本',
+        modal: false,
+        onClose: function() {
+            $("#showUserNoteBookForm")[0].reset();
+            $("#userNoteBookTable tr:not(:first)").remove();
+        }
+    });
+    showUserNoteBookDialog.dialog("open");
+    showUserNoteBookDialog.window("resize", {top: $(document).scrollTop() + 150 , left: 800});
+}
+
+function getUserNoteBook(customerUuid) {
+    $.ajax({
+        url: '/internal/usernotebook/searchUserNoteBooks/' + customerUuid,
+        type: 'POST',
+        header: {
+            "Accept": 'application/json',
+            "Content-Type": 'application/json'
+        },
+        success: function (data) {
+            if (data != null) {
+                $.each(data, function(idx, val){
+                    $("#userNoteBookTable tbody").append("<tr>" +
+                        "<td><input type='checkbox' id='noteBookCheckBox'></td>" +
+                        "<td name='index'>"+ (idx+1) +"</td>" +
+                        "<td>"+ val.notesPerson +"</td>" +
+                        "<td>"+ new Date(val.createTime).format("yyyy-MM-dd") +"</td>" +
+                        "<td><input class='ui-button ui-widget ui-corner-all' type='button' onclick='showUserNoteBookP(this)' value='展开' ></td>" +
+                    "</tr>" +
+                    "<tr id='note_book_"+ (idx+1) +"' style='display: none'>" +
+                        "<td colspan='5'>" +
+                        "<p>"+ val.content +"</p>" +
+                        "</td>" +
+                    "</tr>");
+                });
+            }
+        },
+        error: function () {
+            $().toastmessage("showErrorMessage", "查询失败");
+        }
+    });
+}
+
+function saveUserNoteBook(customerUuid) {
+
+}
+
+function showUserNoteBookP (self) {
+    if ($(self).val() == "展开") {
+        $(self).val("收起");
+    } else  if ($(self).val() == "收起") {
+        $(self).val("展开");
+    }
+    var index = $(self).parent().parent().find("td[name='index']").text();
+    $("#userNoteBookTable").find("#note_book_"+index).toggle();
 }
 
 Date.prototype.format = function (format) {
