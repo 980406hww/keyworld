@@ -12,6 +12,8 @@
         WHERE un.fIsDeleted = 0
         AND un.fCustomerUuid = #{customerUuid}
         ORDER BY un.fCreateTime DESC
-        LIMIT 3
+        <if test="searchAll == 0">
+            LIMIT 3
+        </if>
     </select>
 </mapper>

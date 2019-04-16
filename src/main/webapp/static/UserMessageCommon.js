@@ -222,7 +222,8 @@ function saveUserMessage(type, customerUuid, status) {
 
 function openNoteBookDialog(customerUuid) {
     var showUserNoteBookDialog = $("#showUserNoteBookDialog");
-    getUserNoteBook(customerUuid);
+    getUserNoteBooks(customerUuid, 0);
+    $("#userNoteBookDialogToolBar").find("input[name='customerUuid']").val(customerUuid);
     showUserNoteBookDialog.show();
     showUserNoteBookDialog.dialog({
         resizable: false,
@@ -235,25 +236,31 @@ function openNoteBookDialog(customerUuid) {
         onClose: function() {
             $("#showUserNoteBookForm")[0].reset();
             $("#userNoteBookTable tr:not(:first)").remove();
+            $("#showUserNoteBookDialog").find("#addUserNote").css("display", "none");
         }
     });
     showUserNoteBookDialog.dialog("open");
     showUserNoteBookDialog.window("resize", {top: $(document).scrollTop() + 150 , left: 800});
 }
 
-function getUserNoteBook(customerUuid) {
+function getUserNoteBooks(customerUuid, searchAll) {
+    $("#userNoteBookTable tr:not(:first)").remove();
+    var postData = {};
+    postData.customerUuid = customerUuid;
+    postData.searchAll = searchAll;
     $.ajax({
-        url: '/internal/usernotebook/searchUserNoteBooks/' + customerUuid,
+        url: '/internal/usernotebook/searchUserNoteBooks',
         type: 'POST',
-        header: {
+        headers: {
             "Accept": 'application/json',
             "Content-Type": 'application/json'
         },
+        data: JSON.stringify(postData),
         success: function (data) {
             if (data != null) {
                 $.each(data, function(idx, val){
                     $("#userNoteBookTable tbody").append("<tr>" +
-                        "<td><input type='checkbox' id='noteBookCheckBox'></td>" +
+                        "<td><input type='checkbox' id='noteBookCheckBox' uuid='"+ val.uuid +"'></td>" +
                         "<td name='index'>"+ (idx+1) +"</td>" +
                         "<td>"+ val.notesPerson +"</td>" +
                         "<td>"+ new Date(val.createTime).format("yyyy-MM-dd") +"</td>" +
@@ -268,13 +275,54 @@ function getUserNoteBook(customerUuid) {
             }
         },
         error: function () {
-            $().toastmessage("showErrorMessage", "查询失败");
+            $().toastmessage("showErrorToast", "查询失败");
         }
     });
 }
 
-function saveUserNoteBook(customerUuid) {
+function showAddUserNoteDiv() {
+    $("#showUserNoteBookDialog").find("#addUserNote").toggle();
+}
 
+function saveUserNoteBook() {
+    var postData = {};
+    var customerUuid = $("#userNoteBookDialogToolBar").find("input[name='customerUuid']").val();
+    postData.customerUuid = customerUuid;
+    var content = $("#addUserNoteTable").find("textarea").val();
+    if (content == '') {
+        alert("请输入内容");
+        return;
+    }
+    postData.content = content;
+    $.ajax({
+        url: '/internal/usernotebook/saveUserNoteBook',
+        type: 'POST',
+        headers: {
+            "Accept": 'application/json',
+            "Content-Type": 'application/json'
+        },
+        data: JSON.stringify(postData),
+        success: function (data) {
+            if (data) {
+                $().toastmessage("showSuccessToast", "保存成功");
+            } else {
+                $().toastmessage("showErrorToast", "保存失败");
+            }
+        },
+        error: function () {
+            $().toastmessage("showErrorToast", "保存失败");
+        }
+    });
+    $("#showUserNoteBookForm")[0].reset();
+    $("#showUserNoteBookDialog").find("#addUserNote").css("display", "none");
+    setTimeout(function () {
+        getUserNoteBooks(customerUuid, 0);
+    }, 300);
+}
+
+function searchUserNoteBooks(searchAll) {
+    var customerUuid = $("#userNoteBookDialogToolBar").find("input[name='customerUuid']").val();
+    getUserNoteBooks(customerUuid, searchAll);
 }
 
 function showUserNoteBookP (self) {

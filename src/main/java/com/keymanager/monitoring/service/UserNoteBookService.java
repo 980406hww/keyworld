@@ -18,7 +18,11 @@ public class UserNoteBookService extends ServiceImpl<UserNoteBookDao, UserNoteBo
     @Autowired
     private UserNoteBookDao userNoteBookDao;
 
-    public List<UserNoteBook> findUserNoteBooksByCustomerUuid (Long customerUuid) {
-        return userNoteBookDao.findUserNoteBooksByCustomerUuid(customerUuid);
+    public List<UserNoteBook> findUserNoteBooksByCustomerUuid (Long customerUuid, Integer searchAll) {
+        return userNoteBookDao.findUserNoteBooksByCustomerUuid(customerUuid, searchAll);
+    }
+
+    public int saveUserNoteBook (UserNoteBook userNoteBook) {
+        return userNoteBookDao.insert(userNoteBook);
     }
 }
