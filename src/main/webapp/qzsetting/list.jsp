@@ -227,19 +227,19 @@
 							</span>
 							<span class="contactPerson-name" title="${qzSetting.contactPerson}"><a href="javascript:;">${qzSetting.contactPerson}</a></span>
 							<span class="domain" title="${qzSetting.domain}"><a href="javascript:;">${qzSetting.domain}</a></span>
-							<span class="to-aizhan"><a href="https://www.aizhan.com/cha/${qzSetting.domain}/" target="_blank" title="查看爱站">爱站</a></span>
+							<span class="to-aizhan"><a href="https://www.aizhan.com/cha/${qzSetting.domain}" target="_blank" title="查看爱站">爱站</a></span>
 							<span class="to-5118"><a  href="https://www.5118.com/seo/${qzSetting.domain}" target="_blank" title="查看5118,需要登录">5118</a></span>
 							<span class="tagNames" ondblclick="editTagNameStr($(this).find('label.tagNameStr')[0], true)"><label>分组标签:</label>&nbsp;&nbsp;<label class="tagNameStr">暂无</label></span>
 							<div class="handle">
-                                <a class="blue" href="javascript:showExcludeCustomerKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain}','${qzSetting.pcGroup}','PC')">排除关键字</a>
+                                <a class="blue" href="javascript:showExcludeCustomerKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain.trim()}','${qzSetting.pcGroup}','PC')">排除关键字</a>
                                 <shiro:hasPermission name="/internal/qzsetting/save">
-                                    <a class="blue" href="javascript:showKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain}','${qzSetting.pcGroup}')">指定关键字</a>
+                                    <a class="blue" href="javascript:showKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain.trim()}','${qzSetting.pcGroup}')">指定关键字</a>
                                 </shiro:hasPermission>
 								<shiro:hasPermission name="/internal/qzsetting/save">
 									<a class="blue" href="javascript:openMessageBox('全站设置', '${qzSetting.customerUuid}', '${qzSetting.contactPerson}')">用户留言</a>
 								</shiro:hasPermission>
 								<shiro:hasPermission name="/internal/qzchargelog/save">
-									<a class="blue" href="javascript:showChargeDialog('${qzSetting.uuid}','${qzSetting.contactPerson}','${qzSetting.domain}',this)">收费</a>
+									<a class="blue" href="javascript:showChargeDialog('${qzSetting.uuid}','${qzSetting.contactPerson}','${qzSetting.domain.trim()}',this)">收费</a>
 								</shiro:hasPermission>
 								<shiro:hasPermission name="/internal/qzsetting/save">
 									<a class="blue" href="javascript:showSettingDialog('${qzSetting.uuid}', this)">修改</a>
@@ -266,7 +266,7 @@
 									<div class="row">
 										<span class="line1">
 											<c:if test="${qzSetting.qzKeywordRankInfoMap['PC'].sumSeries > 0}">
-												<a href="javascript:;" id="${qzSetting.uuid}" level="${qzSetting.qzKeywordRankInfoMap['PC'].achieveLevel}" onmouseover="showChargeRulesDiv($(this))" onmouseout="closeChargeRulesDiv()">
+												<a href="javascript:;" qzsettinguuid="${qzSetting.uuid}" level="${qzSetting.qzKeywordRankInfoMap['PC'].achieveLevel}" onmouseover="showChargeRulesDiv($(this))" onmouseout="closeChargeRulesDiv()">
 													<c:choose>
 														<c:when test="${qzSetting.qzKeywordRankInfoMap['PC'].achieveLevel == qzSetting.qzKeywordRankInfoMap['PC'].sumSeries}">
 															<font style="background-color: forestgreen;font-size: 14px;">${qzSetting.qzKeywordRankInfoMap['PC'].achieveLevel} / ${qzSetting.qzKeywordRankInfoMap['PC'].sumSeries} (${qzSetting.qzKeywordRankInfoMap['PC'].currentPrice})</font>
@@ -502,19 +502,19 @@
 							</span>
 							<span class="contactPerson-name"><a href="javascript:;">${qzSetting.contactPerson}</a></span>
 							<span class="domain"><a href="javascript:;">${qzSetting.domain}</a></span>
-							<span class="to-aizhan"><a href="https://www.aizhan.com/cha/${qzSetting.domain}/" target="_blank" title="查看爱站">爱站</a></span>
+							<span class="to-aizhan"><a href="https://www.aizhan.com/cha/${qzSetting.domain}" target="_blank" title="查看爱站">爱站</a></span>
 							<span class="to-5118"><a  href="https://www.5118.com/seo/${qzSetting.domain}" target="_blank" title="查看5118,需要登录">5118</a></span>
 							<span class="tagNames" ondblclick="editTagNameStr($(this).find('label.tagNameStr')[0], true)"><label>分组标签:</label>&nbsp;&nbsp;<label class="tagNameStr">暂无</label></span>
 							<div class="handle">
-                                <a class="blue" href="javascript:showExcludeCustomerKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain}','${qzSetting.phoneGroup}','Phone')">排除关键字</a>
+                                <a class="blue" href="javascript:showExcludeCustomerKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain.trim()}','${qzSetting.phoneGroup}','Phone')">排除关键字</a>
 								<shiro:hasPermission name="/internal/qzsetting/save">
-									<a class="blue" href="javascript:showKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain}','${qzSetting.phoneGroup}')">指定关键字</a>
+									<a class="blue" href="javascript:showKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain.trim()}','${qzSetting.phoneGroup}')">指定关键字</a>
 								</shiro:hasPermission>
 								<shiro:hasPermission name="/internal/qzsetting/save">
 									<a class="blue" href="javascript:openMessageBox('全站设置', '${qzSetting.customerUuid}', '${qzSetting.contactPerson}')">用户留言</a>
 								</shiro:hasPermission>
 								<shiro:hasPermission name="/internal/qzchargelog/save">
-									<a class="blue" href="javascript:showChargeDialog('${qzSetting.uuid}','${qzSetting.contactPerson}','${qzSetting.domain}',this)">收费</a>
+									<a class="blue" href="javascript:showChargeDialog('${qzSetting.uuid}','${qzSetting.contactPerson}','${qzSetting.domain.trim()}',this)">收费</a>
 								</shiro:hasPermission>
 								<shiro:hasPermission name="/internal/qzsetting/save">
 									<a class="blue" href="javascript:showSettingDialog('${qzSetting.uuid}', this)">修改</a>
@@ -541,7 +541,7 @@
 									<div class="row">
 										<span class="line1">
 											<c:if test="${qzSetting.qzKeywordRankInfoMap['Phone'].sumSeries > 0}">
-												<a href="javascript:;" id="${qzSetting.uuid}" level="${qzSetting.qzKeywordRankInfoMap['Phone'].achieveLevel}" onmouseover="showChargeRulesDiv($(this))" onmouseout="closeChargeRulesDiv()">
+												<a href="javascript:;" qzsettinguuid="${qzSetting.uuid}" level="${qzSetting.qzKeywordRankInfoMap['Phone'].achieveLevel}" onmouseover="showChargeRulesDiv($(this))" onmouseout="closeChargeRulesDiv()">
 													<c:choose>
 														<c:when test="${qzSetting.qzKeywordRankInfoMap['Phone'].achieveLevel == qzSetting.qzKeywordRankInfoMap['Phone'].sumSeries}">
 															<font style="background-color: forestgreen;font-size: 14px;">${qzSetting.qzKeywordRankInfoMap['Phone'].achieveLevel} / ${qzSetting.qzKeywordRankInfoMap['Phone'].sumSeries} (${qzSetting.qzKeywordRankInfoMap['Phone'].currentPrice})</font>
