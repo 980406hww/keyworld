@@ -585,6 +585,7 @@ function searchCustomerKeywords(customerUuid, optimizeGroupName) {
     searchCustomerKeywordForm.find("#status").val(1);
     searchCustomerKeywordForm.submit();
 }
+var TimeFn = null;
 function showChargeRulesDiv(self, e) {
     var event = e||window.event;
     var pageX = event.pageX;
@@ -595,60 +596,64 @@ function showChargeRulesDiv(self, e) {
     if(pageY==undefined) {
         pageY = event.clientY+document.body.scrollTop||document.documentElement.scrollTop;
     }
-    var qzSettingUuid = $(self).attr("id");
-    var terminalType = $("#chargeForm").find("#terminalType").val();
     $("#chargeRulesDivTable  tr:not(:first)").remove();
-    var postData = {};
-    postData.qzSettingUuid = parseInt(qzSettingUuid);
-    postData.terminalType = terminalType;
-    $.ajax({
-        url: '/internal/qzsetting/getChargeRule',
-        type: 'POST',
-        data: JSON.stringify(postData),
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        success: function (qzChargeRules) {
-            $("#chargeRulesDivTable  tr:not(:first)").remove();
-            if(qzChargeRules != null && qzChargeRules.length > 0) {
-                var achieveLevel = $(self).attr("level");
-                $.each(qzChargeRules, function (idx, val) {
-                    var newTr = document.createElement("tr");
-                    var chargeRuleElements = [
-                        idx + 1,
-                        val.startKeywordCount,
-                        val.endKeywordCount,
-                        val.amount
-                    ];
-                    $.each(chargeRuleElements, function (index, v) {
-                        var newTd = document.createElement("td");
-                        newTr.appendChild(newTd);
-                        if (v == null) {
-                            newTd.innerHTML = "";
-                        } else {
-                            newTd.innerHTML = v;
+    clearTimeout(TimeFn);
+    TimeFn = setTimeout(function(){
+        var qzSettingUuid = $(self).attr("qzsettinguuid");
+        var terminalType = $("#chargeForm").find("#terminalType").val();
+        var postData = {};
+        postData.qzSettingUuid = parseInt(qzSettingUuid);
+        postData.terminalType = terminalType;
+        $.ajax({
+            url: '/internal/qzsetting/getChargeRule',
+            type: 'POST',
+            data: JSON.stringify(postData),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            success: function (qzChargeRules) {
+                $("#chargeRulesDivTable  tr:not(:first)").remove();
+                if(qzChargeRules != null && qzChargeRules.length > 0) {
+                    var achieveLevel = $(self).attr("level");
+                    $.each(qzChargeRules, function (idx, val) {
+                        var newTr = document.createElement("tr");
+                        var chargeRuleElements = [
+                            idx + 1,
+                            val.startKeywordCount,
+                            val.endKeywordCount,
+                            val.amount
+                        ];
+                        $.each(chargeRuleElements, function (index, v) {
+                            var newTd = document.createElement("td");
+                            newTr.appendChild(newTd);
+                            if (v == null) {
+                                newTd.innerHTML = "";
+                            } else {
+                                newTd.innerHTML = v;
+                            }
+                        });
+                        if (idx + 1 === parseInt(achieveLevel)) {
+                            $(newTr).css("background-color", "green");
                         }
+                        $("#chargeRulesDivTable")[0].lastChild.appendChild(newTr);
                     });
-                    if (idx + 1 === parseInt(achieveLevel)) {
-                        $(newTr).css("background-color", "green");
-                    }
-                    $("#chargeRulesDivTable")[0].lastChild.appendChild(newTr);
-                });
+                }
+            },
+            error: function () {
+                $().toastmessage('showErrorToast', "获取信息失败！");
             }
-        },
-        error: function () {
-            $().toastmessage('showErrorToast', "获取信息失败！");
-        }
-    });
-    var chargeRulesDiv = document.getElementById('chargeRulesDiv');
-    chargeRulesDiv.style.display="block";
-    chargeRulesDiv.style.left=(pageX) + "px";
-    chargeRulesDiv.style.top=(pageY) + "px";
-    chargeRulesDiv.style.zIndex=1000;
-    chargeRulesDiv.style.position="absolute";
+        });
+        var chargeRulesDiv = document.getElementById('chargeRulesDiv');
+        chargeRulesDiv.style.display="block";
+        chargeRulesDiv.style.left=(pageX) + "px";
+        chargeRulesDiv.style.top=(pageY) + "px";
+        chargeRulesDiv.style.zIndex=1000;
+        chargeRulesDiv.style.position="absolute";
+    }, 300);
 }
 function closeChargeRulesDiv() {
+    clearTimeout(TimeFn);
     $("#chargeRulesDiv").css("display", "none");
 }
 function showAllOperationType(self, e) {
@@ -1370,27 +1375,27 @@ var reg = /^[1-9]\d*$/;
 function saveChangeSetting(self) {
     var settingDialogDiv = $("#changeSettingDialog");
     var qzSetting = {};
-    qzSetting.uuid = settingDialogDiv.find("#qzSettingUuid").val();
+    qzSetting.uuid = settingDialogDiv.find("#qzSettingUuid").val().trim();
 
-    var customer = settingDialogDiv.find("#qzSettingCustomer").val();
+    var customer = settingDialogDiv.find("#qzSettingCustomer").val().trim();
     if (customer == null || customer === "") {
         alert("请选择客户");
         settingDialogDiv.find("#qzSettingCustomer").focus();
         return;
     }
-    qzSetting.domain = settingDialogDiv.find("#qzSettingDomain").val();
+    qzSetting.domain = settingDialogDiv.find("#qzSettingDomain").val().trim();
     if (qzSetting.domain == null || qzSetting.domain === "") {
         alert("请输入域名");
         settingDialogDiv.find("#qzSettingDomain").focus();
         return;
     }
-    qzSetting.bearPawNumber = settingDialogDiv.find("#bearPawNumber").val();
+    qzSetting.bearPawNumber = settingDialogDiv.find("#bearPawNumber").val().trim();
     qzSetting.autoCrawlKeywordFlag = settingDialogDiv.find("#qzSettingAutoCrawlKeywordFlag").val() === "1" ? true : false;
     qzSetting.ignoreNoIndex = settingDialogDiv.find("#qzSettingIgnoreNoIndex").val() === "1" ? true : false;
     qzSetting.ignoreNoOrder = settingDialogDiv.find("#qzSettingIgnoreNoOrder").val() === "1" ? true : false;
     qzSetting.updateInterval = settingDialogDiv.find("#qzSettingInterval").val();
-    qzSetting.pcGroup = settingDialogDiv.find("#groupPC").val();
-    qzSetting.phoneGroup = settingDialogDiv.find("#groupPhone").val();
+    qzSetting.pcGroup = settingDialogDiv.find("#groupPC").val().trim();
+    qzSetting.phoneGroup = settingDialogDiv.find("#groupPhone").val().trim();
     if(qzSetting.pcGroup == "") {
         qzSetting.pcGroup = null;
     }
@@ -1431,13 +1436,13 @@ function saveChangeSetting(self) {
         var operationType = {};
         operationType.qzChargeRules = [];
         operationType.operationType = val.id;
-        operationType.group = settingDialogDiv.find("#group" + val.id).val();
+        operationType.group = settingDialogDiv.find("#group" + val.id).val().trim();
         operationType.initialKeywordCount = settingDialogDiv.find(
-            "#initialKeywordCount" + val.id).val();
+            "#initialKeywordCount" + val.id).val().trim();
         operationType.currentKeywordCount = settingDialogDiv.find(
-            "#currentKeywordCount" + val.id).val();
-        operationType.maxKeywordCount = settingDialogDiv.find("#maxKeywordCount" + val.id).val();
-        operationType.subDomainName = settingDialogDiv.find("#subDomainName" + val.id).val();
+            "#currentKeywordCount" + val.id).val().trim();
+        operationType.maxKeywordCount = settingDialogDiv.find("#maxKeywordCount" + val.id).val().trim();
+        operationType.subDomainName = settingDialogDiv.find("#subDomainName" + val.id).val().trim();
         if (operationType.group == null || operationType.group === "") {
             alert("请输入分组");
             settingDialogDiv.find("#group" + val.id).focus();
@@ -1476,24 +1481,24 @@ function saveChangeSetting(self) {
             var amountObj = $(val).find("input[name=amount]");
 
             var chargeRule = {};
-            chargeRule.startKeywordCount = startKeywordCountObj.val();
-            chargeRule.endKeywordCount = endKeywordCountObj.val();
-            chargeRule.amount = amountObj.val();
+            chargeRule.startKeywordCount = startKeywordCountObj.val().trim();
+            chargeRule.endKeywordCount = endKeywordCountObj.val().trim();
+            chargeRule.amount = amountObj.val().trim();
             operationType.qzChargeRules.push(chargeRule);
 
-            if (startKeywordCountObj.val() == null || startKeywordCountObj.val() == "") {
+            if (startKeywordCountObj.val() == null || startKeywordCountObj.val().trim() == "") {
                 alert("请输入起始词数");
                 startKeywordCountObj[0].focus();
                 validationFlag = false;
                 return false;
             }
-            if (!reg.test(startKeywordCountObj.val())) {
+            if (!reg.test(startKeywordCountObj.val().trim())) {
                 alert("请输入数字");
                 startKeywordCountObj.focus();
                 validationFlag = false;
                 return false;
             }
-            var skc = Number(startKeywordCountObj.val());
+            var skc = Number(startKeywordCountObj.val().trim());
             if (skc <= endKeyWordCountValue) {
                 alert("起始词数过小");
                 startKeywordCountObj.focus();
@@ -1501,7 +1506,7 @@ function saveChangeSetting(self) {
                 return false;
             }
             if (idx < (trObjs.length - 1)) {
-                if (endKeywordCountObj.val() == null || endKeywordCountObj.val() == "") {
+                if (endKeywordCountObj.val() == null || endKeywordCountObj.val().trim() == "") {
                     alert("请输入终止词数");
                     endKeywordCountObj.focus();
                     validationFlag = false;
@@ -1522,26 +1527,26 @@ function saveChangeSetting(self) {
                     validationFlag = false;
                     return false;
                 }
-                if (Number(endKeywordCountObj.val()) <= skc) {
+                if (Number(endKeywordCountObj.val().trim()) <= skc) {
                     alert("终止词数必须大于起始词数");
                     endKeywordCountObj.focus();
                     validationFlag = false;
                     return false;
                 }
             }
-            if (amountObj.val() == null || amountObj.val() == "") {
+            if (amountObj.val() == null || amountObj.val().trim() == "") {
                 alert("请输入价格");
                 amountObj.focus();
                 validationFlag = false;
                 return false;
             }
-            if (!reg.test(amountObj.val())) {
+            if (!reg.test(amountObj.val().trim())) {
                 alert("输入的价格不合理");
                 amountObj.focus();
                 validationFlag = false;
                 return false;
             }
-            endKeyWordCountValue = Number(endKeywordCountObj.val());
+            endKeyWordCountValue = Number(endKeywordCountObj.val().trim());
         });
         if (!validationFlag) {
             return false;
@@ -1677,7 +1682,7 @@ function showExcludeCustomerKeywordDialog(qzSettingUuid, customerUuid, domain, o
     excludeCustomerKeywordDialog.find("#qzSettingUuid").val(qzSettingUuid);
     excludeCustomerKeywordDialog.find("#customerUuid").val(customerUuid);
     excludeCustomerKeywordDialog.find("#terminalType").val(terminalType);
-    excludeCustomerKeywordDialog.find("#domain").val(domain);
+    excludeCustomerKeywordDialog.find("#domain").val(domain.trim());
     echoExcludeKeyword();
     excludeCustomerKeywordDialog.show();
     excludeCustomerKeywordDialog.dialog({
