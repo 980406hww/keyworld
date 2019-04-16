@@ -1192,8 +1192,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         Boolean captureRankJobStatus = captureRankJobService.getCaptureRankJobStatus(captureRankJobUuid);
         customerKeywordForCapturePosition.setCaptureRankJobStatus(captureRankJobStatus);
         if(captureRankJobStatus){
-            Long customerKeywordUuid = customerKeywordDao.getCustomerKeywordUuidForCapturePosition(terminalType, groupNames, customerUuid, startTime);
-            if(customerKeywordUuid != null){
+            Long customerKeywordUuid = customerKeywordDao.getCustomerKeywordUuidForCapturePosition(terminalType, groupNames, customerUuid, startTime, 0);
+            if(null == customerKeywordUuid){
+                customerKeywordUuid = customerKeywordDao.getCustomerKeywordUuidForCapturePosition(terminalType, groupNames, customerUuid, startTime, 1);
+            }
+            if (null != customerKeywordUuid){
                 CustomerKeyword customerKeyword = customerKeywordDao.getCustomerKeywordForCapturePosition(customerKeywordUuid);
                 customerKeywordForCapturePosition.setUuid(customerKeyword.getUuid());
                 customerKeywordForCapturePosition.setKeyword(customerKeyword.getKeyword());
@@ -1202,7 +1205,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                 customerKeywordForCapturePosition.setSearchEngine(customerKeyword.getSearchEngine());
                 customerKeywordForCapturePosition.setTerminalType(customerKeyword.getTerminalType());
                 customerKeywordForCapturePosition.setBearPawNumber(customerKeyword.getBearPawNumber());
-                customerKeywordDao.updateCapturePositionQueryTime(customerKeyword.getUuid());
+                customerKeywordDao.updateCapturePositionQueryTimeAndCaptureStatus(customerKeyword.getUuid());
                 return customerKeywordForCapturePosition;
             }
             return null;
@@ -1611,4 +1614,5 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             }
         }
     }
+
 }
