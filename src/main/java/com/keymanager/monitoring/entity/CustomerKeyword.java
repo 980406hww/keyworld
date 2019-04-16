@@ -268,6 +268,9 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(value = "fEnteredKeywordRemarks")
     private String enteredKeywordRemarks;
 
+    @TableField(value = "fCaptureStatus")
+    private int captureStatus;
+
     public long getCustomerUuid() {
         return customerUuid;
     }
@@ -1020,5 +1023,13 @@ public class CustomerKeyword extends BaseEntity {
 
     public void setEnteredKeywordRemarks(String enteredKeywordRemarks) {
         this.enteredKeywordRemarks = enteredKeywordRemarks;
+    }
+
+    public int getCaptureStatus() {
+        return captureStatus;
+    }
+
+    public void setCaptureStatus(int captureStatus) {
+        this.captureStatus = captureStatus;
     }
 }
