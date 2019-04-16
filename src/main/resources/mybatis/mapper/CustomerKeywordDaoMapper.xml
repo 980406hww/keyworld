@@ -1271,7 +1271,8 @@
         UPDATE t_customer_keyword ck
         SET
            ck.fOptimizeGroupName = CONCAT('no_', fOptimizeGroupName)
-        WHERE ck.fInvalidRefreshCount BETWEEN 1 AND ck.fOptimizePlanCount
+        WHERE ck.fOptimizedCount = 0
+        AND ck.fInvalidRefreshCount > 1
         AND ck.fStatus = 1
         AND ck.fType = 'qz'
         AND ck.fCapturedTitle = 0
