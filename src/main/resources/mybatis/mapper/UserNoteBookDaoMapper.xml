@@ -3,14 +3,14 @@
 <mapper namespace="com.keymanager.monitoring.dao.UserNoteBookDao">
     <select id="findUserNoteBooksByCustomerUuid" resultType="com.keymanager.monitoring.entity.UserNoteBook">
         SELECT
-            un.fUuid AS 'uuid',
-            un.fNotesPerson AS 'notesPerson',
+            u.fUserName AS 'notesPerson',
             un.fCustomerUuid AS 'customerUuid',
             un.fContent AS 'content',
             un.fCreateTime AS 'createTime'
         FROM t_user_notebook un
-        WHERE un.fIsDeleted = 0
-        AND un.fCustomerUuid = #{customerUuid}
+        LEFT JOIN t_userinfo u
+        ON u.fLoginName = un.fNotesPerson
+        WHERE un.fCustomerUuid = #{customerUuid}
         ORDER BY un.fCreateTime DESC
         <if test="searchAll == 0">
             LIMIT 3

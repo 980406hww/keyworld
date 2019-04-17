@@ -19,23 +19,12 @@ public class UserNoteBook extends BaseEntity {
     @TableField(value = "fContent")
     private String content;
 
-    @TableField(value = "fIsDeleted")
-    private int isDeleted;
-
     public String getNotesPerson () {
         return notesPerson;
     }
 
     public void setNotesPerson (String notesPerson) {
         this.notesPerson = notesPerson;
-    }
-
-    public int getIsDeleted () {
-        return isDeleted;
-    }
-
-    public void setIsDeleted (int isDeleted) {
-        this.isDeleted = isDeleted;
     }
 
     public Long getCustomerUuid () {

@@ -244,6 +244,7 @@ function openNoteBookDialog(customerUuid) {
 }
 
 function getUserNoteBooks(customerUuid, searchAll) {
+    $("#showUserNoteBookDialog").find("#addUserNote").css("display", "none");
     $("#userNoteBookTable tr:not(:first)").remove();
     var postData = {};
     postData.customerUuid = customerUuid;
@@ -260,14 +261,13 @@ function getUserNoteBooks(customerUuid, searchAll) {
             if (data != null) {
                 $.each(data, function(idx, val){
                     $("#userNoteBookTable tbody").append("<tr>" +
-                        "<td><input type='checkbox' id='noteBookCheckBox' uuid='"+ val.uuid +"'></td>" +
                         "<td name='index'>"+ (idx+1) +"</td>" +
                         "<td>"+ val.notesPerson +"</td>" +
                         "<td>"+ new Date(val.createTime).format("yyyy-MM-dd") +"</td>" +
                         "<td><input class='ui-button ui-widget ui-corner-all' type='button' onclick='showUserNoteBookP(this)' value='展开' ></td>" +
                     "</tr>" +
                     "<tr id='note_book_"+ (idx+1) +"' style='display: none'>" +
-                        "<td colspan='5'>" +
+                        "<td colspan='5' class='note_book'>" +
                         "<p>"+ val.content +"</p>" +
                         "</td>" +
                     "</tr>");
@@ -293,6 +293,7 @@ function saveUserNoteBook() {
         alert("请输入内容");
         return;
     }
+    content = content.replace(/[\r\n]/g, '');
     postData.content = content;
     $.ajax({
         url: '/internal/usernotebook/saveUserNoteBook',
@@ -314,7 +315,6 @@ function saveUserNoteBook() {
         }
     });
     $("#showUserNoteBookForm")[0].reset();
-    $("#showUserNoteBookDialog").find("#addUserNote").css("display", "none");
     setTimeout(function () {
         getUserNoteBooks(customerUuid, 0);
     }, 300);

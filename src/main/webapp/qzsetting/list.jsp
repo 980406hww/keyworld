@@ -1293,14 +1293,12 @@
 		<div id="userNoteBookDialogToolBar">
 			<input type="hidden" name="customerUuid" value="">
 			&nbsp;&nbsp;<input class="ui-button ui-widget ui-corner-all" type="button" onclick="showAddUserNoteDiv()" value=" 增加 " >
-			&nbsp;&nbsp;<input class="ui-button ui-widget ui-corner-all" type="button" onclick="showMoreSearchCondition()" value=" 删除 " >
 			&nbsp;&nbsp;<input class="ui-button ui-widget ui-corner-all" type="button" onclick="searchUserNoteBooks(1)" value=" 查询所有 " >
 			&nbsp;&nbsp;<input class="ui-button ui-widget ui-corner-all" type="button" onclick="searchUserNoteBooks(0)" value=" 查询 " >
 		</div>
 		<table id="userNoteBookTable" cellpadding="10" style="font-size: 12px; background-color: white; border-collapse:separate; border-spacing:0px 8px; width: 100%;">
 			<thead>
 				<tr>
-					<td><input type="checkbox" id="noteBookCheckAll"></td>
 					<td>序号</td>
 					<td>记事者</td>
 					<td>日期</td>
