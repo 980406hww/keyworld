@@ -8,7 +8,7 @@
             un.fContent AS 'content',
             un.fCreateTime AS 'createTime'
         FROM t_user_notebook un
-        LEFT JOIN t_userinfo u
+        JOIN t_userinfo u
         ON u.fLoginName = un.fNotesPerson
         WHERE un.fCustomerUuid = #{customerUuid}
         ORDER BY un.fCreateTime DESC

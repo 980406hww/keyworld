@@ -2,6 +2,7 @@ package com.keymanager.monitoring.controller.rest.internal;
 
 import com.keymanager.monitoring.entity.UserNoteBook;
 import com.keymanager.monitoring.service.UserNoteBookService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ public class UserNoteBookRestController {
     @Autowired
     private UserNoteBookService userNoteBookService;
 
+    @RequiresPermissions("/internal/usernotebook/searchUserNoteBooks")
     @RequestMapping(value = "/searchUserNoteBooks", method = RequestMethod.POST)
     public ResponseEntity<?> getUserNoteBooks(@RequestBody Map<String, Object> resultMap) {
         try {
@@ -39,7 +41,7 @@ public class UserNoteBookRestController {
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
-
+    @RequiresPermissions("/internal/usernotebook/searchUserNoteBooks")
     @RequestMapping(value = "/saveUserNoteBook", method = RequestMethod.POST)
     public ResponseEntity<?> saveUserNoteBook(@RequestBody Map<String, Object> resultMap, HttpServletRequest request) {
         try {
@@ -51,7 +53,7 @@ public class UserNoteBookRestController {
             if (affectedRows > 0) {
                 return new ResponseEntity<Object>(true, HttpStatus.OK);
             } else {
-                return new ResponseEntity<Object>(false, HttpStatus.OK);
+                return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
             }
         } catch (Exception e) {
             logger.error(e.getMessage());

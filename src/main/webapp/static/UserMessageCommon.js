@@ -267,7 +267,7 @@ function getUserNoteBooks(customerUuid, searchAll) {
                         "<td><input class='ui-button ui-widget ui-corner-all' type='button' onclick='showUserNoteBookP(this)' value='展开' ></td>" +
                     "</tr>" +
                     "<tr id='note_book_"+ (idx+1) +"' style='display: none'>" +
-                        "<td colspan='5' class='note_book'>" +
+                        "<td colspan='5'>" +
                         "<p>"+ val.content +"</p>" +
                         "</td>" +
                     "</tr>");

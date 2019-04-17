@@ -238,7 +238,7 @@
 								<shiro:hasPermission name="/internal/qzsetting/save">
 									<a class="blue" href="javascript:openMessageBox('全站设置', '${qzSetting.customerUuid}', '${qzSetting.contactPerson}')">用户留言</a>
 								</shiro:hasPermission>
-								<shiro:hasPermission name="/internal/qzsetting/save">
+								<shiro:hasPermission name="/internal/usernotebook/searchUserNoteBooks">
 									<a class="blue" href="javascript:openNoteBookDialog('${qzSetting.customerUuid}')">记事本</a>
 								</shiro:hasPermission>
 								<shiro:hasPermission name="/internal/qzchargelog/save">
@@ -516,7 +516,7 @@
 								<shiro:hasPermission name="/internal/qzsetting/save">
 									<a class="blue" href="javascript:openMessageBox('全站设置', '${qzSetting.customerUuid}', '${qzSetting.contactPerson}')">用户留言</a>
 								</shiro:hasPermission>
-								<shiro:hasPermission name="/internal/qzsetting/save">
+								<shiro:hasPermission name="/internal/usernotebook/searchUserNoteBooks">
 									<a class="blue" href="javascript:openNoteBookDialog('${qzSetting.customerUuid}')">记事本</a>
 								</shiro:hasPermission>
 								<shiro:hasPermission name="/internal/qzchargelog/save">

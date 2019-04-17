@@ -589,7 +589,6 @@ ul {
 }
 #userNoteBookTable p {
     float: left;
-}
-#userNoteBookTable .note_book {
+    text-align: left;
     padding: 0px 10px;
 }
