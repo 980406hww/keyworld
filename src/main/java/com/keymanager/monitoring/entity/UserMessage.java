@@ -17,7 +17,7 @@ public class UserMessage extends BaseEntity {
     private String receiverUserName;
 
     @TableField(value = "fStatus")
-    private String status;
+    private Integer status;
 
     @TableField(value = "fContent")
     private String content;
@@ -44,11 +44,11 @@ public class UserMessage extends BaseEntity {
         this.receiverUserName = receiverUserName;
     }
 
-    public String getStatus () {
+    public Integer getStatus () {
         return status;
     }
 
-    public void setStatus (String status) {
+    public void setStatus (Integer status) {
         this.status = status;
     }
 
