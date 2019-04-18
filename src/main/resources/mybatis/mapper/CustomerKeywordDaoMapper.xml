@@ -668,10 +668,10 @@
         FROM t_customer_keyword ck
         WHERE ck.fTerminalType = #{terminalType} and ck.fStatus = 1
         AND fCaptureStatus = #{captureStatus}
-        <if test="startTime != null and captureStatus = 0">
+        <if test="startTime != null and captureStatus == 0">
             AND ck.fCapturePositionQueryTime <![CDATA[<]]> #{startTime}
         </if>
-        <if test="startTime != null and captureStatus = 1">
+        <if test="startTime != null and captureStatus == 1">
             AND ck.fCapturePositionQueryTime <![CDATA[<]]> DATE_SUB( NOW(), INTERVAL 3 MINUTE )
         </if>
         <if test="customerUuid != null">
@@ -1272,6 +1272,7 @@
         SET
            ck.fOptimizeGroupName = CONCAT('no_', fOptimizeGroupName)
         WHERE ck.fOptimizedCount = 0
+        AND ck.fInvalidRefreshCount > 1
         AND ck.fStatus = 1
         AND ck.fType = 'qz'
         AND ck.fCapturedTitle = 0

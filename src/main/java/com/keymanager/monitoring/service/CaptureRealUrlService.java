@@ -71,7 +71,9 @@ public class CaptureRealUrlService {
                 String tmpUrl = hs.getValue();
                 if (tmpUrl.indexOf("http") == -1 || sourceUrl.equals(tmpUrl)) {
                     finalUrl = sourceUrl;
-                }else {
+                } else if (tmpUrl.indexOf("http") > -1 && !sourceUrl.equals(tmpUrl)) {
+                    finalUrl = tmpUrl;
+                } else {
                     finalUrl = (retryCount < 2) ? fetchRealUrl(tmpUrl, ++retryCount) : sourceUrl;
                 }
             } else {
