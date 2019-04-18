@@ -220,10 +220,11 @@ function saveUserMessage(type, customerUuid, status) {
     });
 }
 
-function openNoteBookDialog(customerUuid) {
+function openNoteBookDialog(customerUuid, terminalType) {
     var showUserNoteBookDialog = $("#showUserNoteBookDialog");
-    getUserNoteBooks(customerUuid, 0);
+    getUserNoteBooks(customerUuid, 0, terminalType);
     $("#userNoteBookDialogToolBar").find("input[name='customerUuid']").val(customerUuid);
+    $("#userNoteBookDialogToolBar").find("input[name='terminalType']").val(terminalType);
     showUserNoteBookDialog.show();
     showUserNoteBookDialog.dialog({
         resizable: false,
@@ -243,12 +244,13 @@ function openNoteBookDialog(customerUuid) {
     showUserNoteBookDialog.window("resize", {top: $(document).scrollTop() + 150 , left: 800});
 }
 
-function getUserNoteBooks(customerUuid, searchAll) {
+function getUserNoteBooks(customerUuid, searchAll, terminalType) {
     $("#showUserNoteBookDialog").find("#addUserNote").css("display", "none");
     $("#userNoteBookTable tr:not(:first)").remove();
     var postData = {};
     postData.customerUuid = customerUuid;
     postData.searchAll = searchAll;
+    postData.terminalType = terminalType;
     $.ajax({
         url: '/internal/usernotebook/searchUserNoteBooks',
         type: 'POST',
@@ -288,6 +290,8 @@ function saveUserNoteBook() {
     var postData = {};
     var customerUuid = $("#userNoteBookDialogToolBar").find("input[name='customerUuid']").val();
     postData.customerUuid = customerUuid;
+    var terminalType = $("#userNoteBookDialogToolBar").find("input[name='terminalType']").val();
+    postData.terminalType = terminalType;
     var content = $("#addUserNoteTable").find("textarea").val();
     if (content == '') {
         alert("请输入内容");
@@ -316,13 +320,14 @@ function saveUserNoteBook() {
     });
     $("#showUserNoteBookForm")[0].reset();
     setTimeout(function () {
-        getUserNoteBooks(customerUuid, 0);
+        getUserNoteBooks(customerUuid, 0, terminalType);
     }, 300);
 }
 
 function searchUserNoteBooks(searchAll) {
     var customerUuid = $("#userNoteBookDialogToolBar").find("input[name='customerUuid']").val();
-    getUserNoteBooks(customerUuid, searchAll);
+    var terminalType = $("#userNoteBookDialogToolBar").find("input[name='terminalType']").val();
+    getUserNoteBooks(customerUuid, searchAll, terminalType);
 }
 
 function showUserNoteBookP (self) {

@@ -228,7 +228,7 @@
                 <input type="button" id="customerKeywordBtnInput" onclick="openMessageBox('关键字列表', '${customerKeywordCriteria.customerUuid}', '${customer.contactPerson}')" value=" 用户留言 ">
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/usernotebook/searchUserNoteBooks">
-                <input type="button" id="customerKeywordNoteBookBtnInput" onclick="openNoteBookDialog('${customerKeywordCriteria.customerUuid}')" value=" 记事本 ">
+                <input type="button" id="customerKeywordNoteBookBtnInput" onclick="openNoteBookDialog('${customerKeywordCriteria.customerUuid}', '${customerKeywordCriteria.terminalType}')" value=" 记事本 ">
             </shiro:hasPermission>
         </div>
     </form>
@@ -469,6 +469,7 @@
     <form id="showUserNoteBookForm" onsubmit="return false">
         <div id="userNoteBookDialogToolBar">
             <input type="hidden" name="customerUuid" value="">
+            <input type="hidden" name="terminalType" value="">
             &nbsp;&nbsp;<input class="ui-button ui-widget ui-corner-all" type="button" onclick="showAddUserNoteDiv()" value=" 增加 " >
             &nbsp;&nbsp;<input class="ui-button ui-widget ui-corner-all" type="button" onclick="searchUserNoteBooks(1)" value=" 查询所有 " >
             &nbsp;&nbsp;<input class="ui-button ui-widget ui-corner-all" type="button" onclick="searchUserNoteBooks(0)" value=" 查询 " >

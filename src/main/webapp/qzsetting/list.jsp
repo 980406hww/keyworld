@@ -239,7 +239,7 @@
 									<a class="blue" href="javascript:openMessageBox('全站设置', '${qzSetting.customerUuid}', '${qzSetting.contactPerson}')">用户留言</a>
 								</shiro:hasPermission>
 								<shiro:hasPermission name="/internal/usernotebook/searchUserNoteBooks">
-									<a class="blue" href="javascript:openNoteBookDialog('${qzSetting.customerUuid}')">记事本</a>
+									<a class="blue" href="javascript:openNoteBookDialog('${qzSetting.customerUuid}', '${qzSettingSearchCriteria.terminalType}')">记事本</a>
 								</shiro:hasPermission>
 								<shiro:hasPermission name="/internal/qzchargelog/save">
 									<a class="blue" href="javascript:showChargeDialog('${qzSetting.uuid}','${qzSetting.contactPerson}','${qzSetting.domain}',this)">收费</a>
@@ -517,7 +517,7 @@
 									<a class="blue" href="javascript:openMessageBox('全站设置', '${qzSetting.customerUuid}', '${qzSetting.contactPerson}')">用户留言</a>
 								</shiro:hasPermission>
 								<shiro:hasPermission name="/internal/usernotebook/searchUserNoteBooks">
-									<a class="blue" href="javascript:openNoteBookDialog('${qzSetting.customerUuid}')">记事本</a>
+									<a class="blue" href="javascript:openNoteBookDialog('${qzSetting.customerUuid}', '${qzSettingSearchCriteria.terminalType}')">记事本</a>
 								</shiro:hasPermission>
 								<shiro:hasPermission name="/internal/qzchargelog/save">
 									<a class="blue" href="javascript:showChargeDialog('${qzSetting.uuid}','${qzSetting.contactPerson}','${qzSetting.domain}',this)">收费</a>
@@ -1292,6 +1292,7 @@
 	<form id="showUserNoteBookForm" onsubmit="return false">
 		<div id="userNoteBookDialogToolBar">
 			<input type="hidden" name="customerUuid" value="">
+			<input type="hidden" name="terminalType" value="">
 			&nbsp;&nbsp;<input class="ui-button ui-widget ui-corner-all" type="button" onclick="showAddUserNoteDiv()" value=" 增加 " >
 			&nbsp;&nbsp;<input class="ui-button ui-widget ui-corner-all" type="button" onclick="searchUserNoteBooks(1)" value=" 查询所有 " >
 			&nbsp;&nbsp;<input class="ui-button ui-widget ui-corner-all" type="button" onclick="searchUserNoteBooks(0)" value=" 查询 " >

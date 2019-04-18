@@ -34,7 +34,7 @@ public class UserNoteBookRestController {
         try {
             Long customerUuid = Long.parseLong((String) resultMap.get("customerUuid"));
             Integer searchAll = (Integer) resultMap.get("searchAll");
-            String terminalType = TerminalTypeMapping.getTerminalType(request);
+            String terminalType = (String) resultMap.get("terminalType");
             List<UserNoteBook> userNoteBooks = userNoteBookService.findUserNoteBooksByCustomerUuid(customerUuid, terminalType, searchAll);
             return new ResponseEntity<Object>(userNoteBooks, HttpStatus.OK);
         } catch (Exception e) {
@@ -51,7 +51,7 @@ public class UserNoteBookRestController {
             userNoteBook.setCustomerUuid(Long.parseLong((String) resultMap.get("customerUuid")));
             userNoteBook.setContent((String) resultMap.get("content"));
             userNoteBook.setNotesPerson((String) request.getSession().getAttribute("username"));
-            userNoteBook.setTerminalType(TerminalTypeMapping.getTerminalType(request));
+            userNoteBook.setTerminalType((String) resultMap.get("terminalType"));
             int affectedRows = userNoteBookService.saveUserNoteBook(userNoteBook);
             if (affectedRows > 0) {
                 return new ResponseEntity<Object>(true, HttpStatus.OK);
