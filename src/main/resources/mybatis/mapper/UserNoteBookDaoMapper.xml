@@ -11,6 +11,7 @@
         JOIN t_userinfo u
         ON u.fLoginName = un.fNotesPerson
         WHERE un.fCustomerUuid = #{customerUuid}
+        <if test="terminalType != null">AND UN.fTerminalType = #{terminalType}</if>
         ORDER BY un.fCreateTime DESC
         <if test="searchAll == 0">
             LIMIT 3

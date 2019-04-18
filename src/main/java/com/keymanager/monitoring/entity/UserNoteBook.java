@@ -16,6 +16,9 @@ public class UserNoteBook extends BaseEntity {
     @TableField(value = "fCustomerUuid")
     private Long customerUuid;
 
+    @TableField(value = "fTerminalType")
+    private String terminalType;
+
     @TableField(value = "fContent")
     private String content;
 
@@ -33,6 +36,14 @@ public class UserNoteBook extends BaseEntity {
 
     public void setCustomerUuid (Long customerUuid) {
         this.customerUuid = customerUuid;
+    }
+
+    public String getTerminalType () {
+        return terminalType;
+    }
+
+    public void setTerminalType (String terminalType) {
+        this.terminalType = terminalType;
     }
 
     public String getContent () {
