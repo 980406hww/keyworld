@@ -13,5 +13,5 @@ import java.util.List;
 
 public interface UserNoteBookDao extends BaseMapper<UserNoteBook> {
 
-    List<UserNoteBook> findUserNoteBooksByCustomerUuid (@Param("customerUuid") Long customerUuid, @Param("terminalType") String terminalType, @Param("searchAll") Integer searchAll);
+    List<UserNoteBook> findUserNoteBooks (@Param("customerUuid") Long customerUuid, @Param("terminalType") String terminalType, @Param("searchAll") Integer searchAll);
 }

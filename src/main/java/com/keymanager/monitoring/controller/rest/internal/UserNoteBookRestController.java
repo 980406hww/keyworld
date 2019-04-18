@@ -2,7 +2,6 @@ package com.keymanager.monitoring.controller.rest.internal;
 
 import com.keymanager.monitoring.entity.UserNoteBook;
 import com.keymanager.monitoring.service.UserNoteBookService;
-import com.keymanager.util.TerminalTypeMapping;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +34,7 @@ public class UserNoteBookRestController {
             Long customerUuid = Long.parseLong((String) resultMap.get("customerUuid"));
             Integer searchAll = (Integer) resultMap.get("searchAll");
             String terminalType = (String) resultMap.get("terminalType");
-            List<UserNoteBook> userNoteBooks = userNoteBookService.findUserNoteBooksByCustomerUuid(customerUuid, terminalType, searchAll);
+            List<UserNoteBook> userNoteBooks = userNoteBookService.findUserNoteBooks(customerUuid, terminalType, searchAll);
             return new ResponseEntity<Object>(userNoteBooks, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
