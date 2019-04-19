@@ -1325,4 +1325,69 @@
         </foreach>
     </update>
 
+    <insert id="addCustomerKeywords">
+        INSERT INTO t_customer_keyword (
+            fTerminalType,
+            fCustomerUuid,
+            fQZSettingUuid,
+            fKeyword,
+            fUrl,
+            fType,
+            fBearPawNumber,
+            fOriginalUrl,
+            fTitle,
+            fAutoUpdateNegativeDateTime,
+            fSearchEngine,
+            fCurrentIndexCount,
+            fCurrentPosition,
+            fQueryDate,
+            fQueryTime,
+            fServiceProvider,
+            fOptimizeGroupName,
+            fOptimizeRemainingCount,
+            fLastReachStandardDate,
+            fPositionFirstFee,
+            fCapturePositionQueryTime,
+            fCollectMethod,
+            fStartOptimizedTime,
+            fOrderNumber,
+            fStatus,
+            fManualCleanTitle,
+            fUpdateTime,
+            fCreateTime
+        )
+        VALUES
+        <foreach collection="customerKeywords" item="customerKeyword" separator=",">
+            (
+                #{customerKeyword.terminalType},
+                #{customerKeyword.customerUuid},
+                #{customerKeyword.qzSettingUuid},
+                #{customerKeyword.keyword},
+                #{customerKeyword.url},
+                #{customerKeyword.type},
+                #{customerKeyword.bearPawNumber},
+                #{customerKeyword.originalUrl},
+                #{customerKeyword.title},
+                #{customerKeyword.autoUpdateNegativeDateTime},
+                #{customerKeyword.searchEngine},
+                #{customerKeyword.currentIndexCount},
+                #{customerKeyword.currentPosition},
+                #{customerKeyword.queryDate},
+                #{customerKeyword.queryTime},
+                #{customerKeyword.serviceProvider},
+                #{customerKeyword.optimizeGroupName},
+                #{customerKeyword.optimizeRemainingCount},
+                #{customerKeyword.lastReachStandardDate},
+                #{customerKeyword.positionFirstFee},
+                #{customerKeyword.capturePositionQueryTime},
+                #{customerKeyword.collectMethod},
+                #{customerKeyword.startOptimizedTime},
+                #{customerKeyword.orderNumber},
+                #{customerKeyword.status},
+                #{customerKeyword.manualCleanTitle},
+                #{customerKeyword.updateTime},
+                #{customerKeyword.createTime}
+            )
+        </foreach>
+    </insert>
 </mapper>

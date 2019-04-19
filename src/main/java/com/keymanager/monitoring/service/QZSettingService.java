@@ -600,36 +600,41 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 	}
 
 	public void saveQZSettingCustomerKeywords (QZSettingSaveCustomerKeywordsCriteria qzSettingSaveCustomerKeywordsCriteria, String userName) {
-		CustomerKeyword customerKeyword = new CustomerKeyword();
-		customerKeyword.setQzSettingUuid(qzSettingSaveCustomerKeywordsCriteria.getQzSettingUuid());
-		customerKeyword.setCustomerUuid(qzSettingSaveCustomerKeywordsCriteria.getCustomerUuid());
-		customerKeyword.setType(qzSettingSaveCustomerKeywordsCriteria.getType());
-		customerKeyword.setSearchEngine(qzSettingSaveCustomerKeywordsCriteria.getSearchEngine());
-		customerKeyword.setTerminalType(qzSettingSaveCustomerKeywordsCriteria.getTerminalType());
-		customerKeyword.setUrl(qzSettingSaveCustomerKeywordsCriteria.getDomain());
-		customerKeyword.setServiceProvider("baidutop123");
-		customerKeyword.setManualCleanTitle(true);
-		customerKeyword.setCollectMethod(CollectMethod.PerMonth.name());
-        customerKeyword.setCurrentIndexCount(-1);
-        customerKeyword.setPositionFirstFee(-1d);
-        String customerExcludeKeywords = customerExcludeKeywordService.getCustomerExcludeKeyword(customerKeyword.getCustomerUuid(), customerKeyword.getQzSettingUuid(), customerKeyword.getTerminalType(), customerKeyword.getUrl());
-        Set excludeKeyword = new HashSet();
-        if (null != customerExcludeKeywords) {
-        	excludeKeyword.addAll(Arrays.asList(customerExcludeKeywords.split(",")));
-        }
-        for (String keyword : qzSettingSaveCustomerKeywordsCriteria.getKeywords()) {
-            if (!excludeKeyword.isEmpty()){
-				if (excludeKeyword.contains(keyword)){
-					customerKeyword.setOptimizeGroupName("zanting");
+		for (String terminalType : qzSettingSaveCustomerKeywordsCriteria.getTerminalTypes()) {
+			List<CustomerKeyword> customerKeywords = new ArrayList<>();
+			String customerExcludeKeywords = customerExcludeKeywordService.getCustomerExcludeKeyword(qzSettingSaveCustomerKeywordsCriteria.getCustomerUuid(), qzSettingSaveCustomerKeywordsCriteria.getQzSettingUuid(), terminalType, qzSettingSaveCustomerKeywordsCriteria.getDomain());
+			Set excludeKeyword = new HashSet();
+			if (null != customerExcludeKeywords) {
+				excludeKeyword.addAll(Arrays.asList(customerExcludeKeywords.split(",")));
+			}
+			for (String keyword : qzSettingSaveCustomerKeywordsCriteria.getKeywords()) {
+				CustomerKeyword customerKeyword = new CustomerKeyword();
+				customerKeyword.setQzSettingUuid(qzSettingSaveCustomerKeywordsCriteria.getQzSettingUuid());
+				customerKeyword.setCustomerUuid(qzSettingSaveCustomerKeywordsCriteria.getCustomerUuid());
+				customerKeyword.setType(qzSettingSaveCustomerKeywordsCriteria.getType());
+				customerKeyword.setSearchEngine(qzSettingSaveCustomerKeywordsCriteria.getSearchEngine());
+				customerKeyword.setTerminalType(terminalType);
+				customerKeyword.setUrl(qzSettingSaveCustomerKeywordsCriteria.getDomain());
+				customerKeyword.setServiceProvider("baidutop123");
+				customerKeyword.setManualCleanTitle(true);
+				customerKeyword.setCollectMethod(CollectMethod.PerMonth.name());
+				customerKeyword.setCurrentIndexCount(-1);
+				customerKeyword.setPositionFirstFee(-1d);
+				customerKeyword.setBearPawNumber(qzSettingSaveCustomerKeywordsCriteria.getBearPawNumber());
+				if (!excludeKeyword.isEmpty()){
+					if (excludeKeyword.contains(keyword)){
+						customerKeyword.setOptimizeGroupName("zanting");
+					} else {
+						customerKeyword.setOptimizeGroupName(qzSettingSaveCustomerKeywordsCriteria.getOptimizeGroupName());
+					}
 				} else {
 					customerKeyword.setOptimizeGroupName(qzSettingSaveCustomerKeywordsCriteria.getOptimizeGroupName());
 				}
-			} else {
-				customerKeyword.setOptimizeGroupName(qzSettingSaveCustomerKeywordsCriteria.getOptimizeGroupName());
+				customerKeyword.setKeyword(keyword);
+				customerKeywords.add(customerKeyword);
 			}
-			customerKeyword.setKeyword(keyword);
-			customerKeywordService.addCustomerKeyword(customerKeyword, userName);
-        }
+			customerKeywordService.addCustomerKeyword(customerKeywords, userName);
+		}
     }
 
 	public void excludeQZSettingCustomerKeywords (QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria) {

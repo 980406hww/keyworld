@@ -728,15 +728,22 @@ function showKeywordDialog(qzSettingUuid, customerUuid, domain, optimizedGroupNa
     customerKeywordDialog.window("resize",{top:$(document).scrollTop() + 100});
 }
 function saveCustomerKeywords(qzSettingUuid, customerUuid, optimizedGroupName) {
-    var terminalType = $("#chargeForm").find("#terminalType").val();
+    var postData = {};
+    var terminalTypes = [];
     var customerKeywordDialog = $("#customerKeywordDialog");
-    var domain = customerKeywordDialog.find("#domain").val();
-    if (domain == '') {
-        alert("请输入域名");
-        customerKeywordDialog.find("#domain").focus();
-        return;
+    var checkbox = customerKeywordDialog.find(":checkbox[name='synchronousAddition']:checked");
+    if (checkbox.length > 0) {
+        terminalTypes = ['PC', 'Phone'];
+    } else {
+        var terminalType = $("#chargeForm").find("#terminalType").val();
+        terminalTypes.push($.trim(terminalType));
     }
-    var keywordStr = customerKeywordDialog.find("#customerKeywordDialogContent").val()
+    var domain = customerKeywordDialog.find("#domain").val();
+    var bearPawNumber = customerKeywordDialog.find("#bearPawNumber").val();
+    if (bearPawNumber != "") {
+        postData.bearPawNumber = bearPawNumber;
+    }
+    var keywordStr = customerKeywordDialog.find("#customerKeywordDialogContent").val();
     if (keywordStr == "") {
         alert("请输入关键字");
         customerKeywordDialog.find("#customerKeywordDialogContent").focus();
@@ -752,14 +759,13 @@ function saveCustomerKeywords(qzSettingUuid, customerUuid, optimizedGroupName) {
     });
     var type = customerKeywordDialog.find("#qzSettingEntryType").val();
     var searchEngine = customerKeywordDialog.find("#searchEngine").val();
-    var postData = {};
     postData.qzSettingUuid = qzSettingUuid;
     postData.customerUuid = customerUuid;
     postData.domain = $.trim(domain);
     postData.optimizeGroupName = optimizedGroupName;
     postData.type = type;
     postData.searchEngine = searchEngine;
-    postData.terminalType = $.trim(terminalType);
+    postData.terminalTypes = terminalTypes;
     postData.keywords = keywords;
     $.ajax({
         url: '/internal/qzsetting/saveQZSettingCustomerKeywords',

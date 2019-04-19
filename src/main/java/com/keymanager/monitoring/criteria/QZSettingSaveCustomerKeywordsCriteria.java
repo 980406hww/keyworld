@@ -13,7 +13,8 @@ public class QZSettingSaveCustomerKeywordsCriteria {
     private String optimizeGroupName;
     private String type;
     private String searchEngine;
-    private String terminalType;
+    private String bearPawNumber;
+    private List<String> terminalTypes;
     private List<String> keywords;
 
     public long getQzSettingUuid () {
@@ -64,12 +65,20 @@ public class QZSettingSaveCustomerKeywordsCriteria {
         this.searchEngine = searchEngine;
     }
 
-    public String getTerminalType () {
-        return terminalType;
+    public String getBearPawNumber () {
+        return bearPawNumber;
     }
 
-    public void setTerminalType (String terminalType) {
-        this.terminalType = terminalType;
+    public void setBearPawNumber (String bearPawNumber) {
+        this.bearPawNumber = bearPawNumber;
+    }
+
+    public List<String> getTerminalTypes () {
+        return terminalTypes;
+    }
+
+    public void setTerminalTypes (List<String> terminalTypes) {
+        this.terminalTypes = terminalTypes;
     }
 
     public List<String> getKeywords () {

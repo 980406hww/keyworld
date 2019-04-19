@@ -1161,7 +1161,7 @@
 				<td>
 					<input type="hidden" name="qzSettingUuid" id="qzSettingUuid" />
 					<input type="hidden" name="customerUuid" id="customerUuid" />
-					<input type="text" name="domain" id="domain" style="width:240px" />
+					<input type="text" name="domain" id="domain" style="width:240px" readonly="readonly" />
 				</td>
 			</tr>
 			<tr>
@@ -1187,15 +1187,28 @@
 				</td>
 			</tr>
 			<tr>
+				<td style="width:60px" align="right">熊掌号</td>
+				<td>
+					<input type="text" name="bearPawNumber" id="bearPawNumber" style="width:240px" placeholder="网站若有熊掌号，请输入熊掌号" />
+				</td>
+			</tr>
+			<tr>
+				<td style="width:60px" align="right"><input type="checkbox" name="synchronousAddition" id="synchronousAddition"></td>
+				<td>
+					<label style="width: 240px;">PC和Phone同步加词</label>
+				</td>
+			</tr>
+			<tr>
 				<td style="width:60px" align="right">关键字</td>
 			</tr>
 			<tr>
 				<td style="width:60px" align="right"></td>
-				<td><textarea id="customerKeywordDialogContent" style="width:240px; height: 260px; resize: none"></textarea></td>
+				<td><textarea id="customerKeywordDialogContent" style="width:240px; height: 250px; resize: none"></textarea></td>
 			</tr>
 		</table>
 	</form>
 </div>
+<%--指定排除词Dialog--%>
 <div id="excludeCustomerKeywordDialog" class="easyui-dialog" style="display: none">
     <form id="excludeCustomerKeywordForm">
         <table style="font-size:12px" id="excludeCustomerKeywordTable" align="center" cellspacing="5">
