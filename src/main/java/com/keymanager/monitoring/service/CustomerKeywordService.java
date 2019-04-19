@@ -222,6 +222,26 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
 
     public void addCustomerKeyword(CustomerKeyword customerKeyword, String userName) {
+        checkCustomerKeyword(customerKeyword, userName);
+        customerKeywordDao.insert(customerKeyword);
+    }
+
+    public void addCustomerKeyword(List<CustomerKeyword> customerKeywords, String userName) {
+        for (CustomerKeyword customerKeyword : customerKeywords) {
+            checkCustomerKeyword(customerKeyword, userName);
+        }
+        List<CustomerKeyword> addCustomerKeywords = new ArrayList<>();
+        for (CustomerKeyword customerKeyword : customerKeywords) {
+            if (null != customerKeyword.getAutoUpdateNegativeDateTime()) {
+                addCustomerKeywords.add(customerKeyword);
+            }
+        }
+        if (CollectionUtils.isNotEmpty(addCustomerKeywords)) {
+            customerKeywordDao.addCustomerKeywords(addCustomerKeywords);
+        }
+    }
+
+    public void checkCustomerKeyword (CustomerKeyword customerKeyword, String userName) {
         if (StringUtil.isNullOrEmpty(customerKeyword.getOriginalUrl())) {
             customerKeyword.setOriginalUrl(customerKeyword.getUrl());
         }
@@ -276,74 +296,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeyword.setQueryDate(new Date());
         customerKeyword.setUpdateTime(new Date());
         customerKeyword.setCreateTime(new Date());
-        customerKeywordDao.insert(customerKeyword);
-    }
-
-    public void addCustomerKeyword(List<CustomerKeyword> customerKeywords, String userName) {
-        Iterator<CustomerKeyword> iterator = customerKeywords.iterator();
-        while (iterator.hasNext()) {
-            CustomerKeyword customerKeyword = iterator.next();
-            if (StringUtil.isNullOrEmpty(customerKeyword.getOriginalUrl())) {
-                customerKeyword.setOriginalUrl(customerKeyword.getUrl());
-            }
-
-            String originalUrl = customerKeyword.getOriginalUrl();
-            if (!StringUtil.isNullOrEmpty(originalUrl)) {
-                if (originalUrl.indexOf("www.") == 0) {
-                    originalUrl = originalUrl.substring(4);
-                } else if (originalUrl.indexOf("m.") == 0) {
-                    originalUrl = originalUrl.substring(2);
-                }
-            } else {
-                originalUrl = null;
-            }
-
-            if(!EntryTypeEnum.fm.name().equals(customerKeyword.getType())) {
-                Integer sameCustomerKeywordCount = customerKeywordDao.getSameCustomerKeywordCount(customerKeyword.getTerminalType(), customerKeyword.getCustomerUuid(), customerKeyword.getKeyword(), customerKeyword.getUrl(), customerKeyword.getTitle());
-                if(sameCustomerKeywordCount != null && sameCustomerKeywordCount > 0) {
-                    iterator.remove();
-                    continue;
-                }
-            }
-            if (!EntryTypeEnum.fm.name().equals(customerKeyword.getType()) && haveDuplicatedCustomerKeyword(customerKeyword.getTerminalType(),
-                    customerKeyword.getCustomerUuid(), customerKeyword.getKeyword(), originalUrl, customerKeyword.getTitle())) {
-                iterator.remove();
-                continue;
-            }
-
-            customerKeyword.setKeyword(customerKeyword.getKeyword().trim());
-            customerKeyword.setUrl(customerKeyword.getUrl() != null ? customerKeyword.getUrl().trim() : null);
-            customerKeyword.setTitle(customerKeyword.getTitle() != null ? customerKeyword.getTitle().trim() : null);
-            customerKeyword.setOriginalUrl(customerKeyword.getOriginalUrl() != null ? customerKeyword.getOriginalUrl().trim() : null);
-            customerKeyword.setOrderNumber(customerKeyword.getOrderNumber() != null ? customerKeyword.getOrderNumber().trim() : null);
-            customerKeyword.setOptimizeRemainingCount(customerKeyword.getOptimizePlanCount() != null ? customerKeyword.getOptimizePlanCount() : 0);
-
-            if(StringUtils.isNotBlank(userName)) {
-                boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
-                if(isDepartmentManager) {
-                    customerKeyword.setStatus(1);
-                } else {
-                    customerKeyword.setStatus(2);
-                }
-            } else {
-                customerKeyword.setStatus(1);
-            }
-
-            if(customerKeyword.getCurrentPosition() == null){
-                customerKeyword.setCurrentPosition(10);
-            }
-            customerKeyword.setAutoUpdateNegativeDateTime(Utils.getCurrentTimestamp());
-            customerKeyword.setCapturePositionQueryTime(Utils.addDay(Utils.getCurrentTimestamp(), -2));
-            customerKeyword.setStartOptimizedTime(new Date());
-            customerKeyword.setLastReachStandardDate(Utils.yesterday());
-            customerKeyword.setQueryTime(new Date());
-            customerKeyword.setQueryDate(new Date());
-            customerKeyword.setUpdateTime(new Date());
-            customerKeyword.setCreateTime(new Date());
-        }
-        if (CollectionUtils.isNotEmpty(customerKeywords)) {
-            customerKeywordDao.addCustomerKeywords(customerKeywords);
-        }
     }
 
     public void updateCustomerKeywordFromUI(CustomerKeyword customerKeyword, String userName){
