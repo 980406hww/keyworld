@@ -1027,6 +1027,7 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
     public String[] getOperationTypeValues(String terminalType) {
         Config config = configService.getConfig(Constants.CONFIG_TYPE_OPTIMIZATION_TYPE,terminalType);
         String [] operationTypeValues = config.getValue().split(",");
+        Arrays.sort(operationTypeValues);
         return operationTypeValues;
     }
 
