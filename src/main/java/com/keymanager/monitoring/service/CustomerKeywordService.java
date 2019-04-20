@@ -222,17 +222,17 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
 
     public void addCustomerKeyword(CustomerKeyword customerKeyword, String userName) {
-        checkCustomerKeyword(customerKeyword, userName);
-        customerKeywordDao.insert(customerKeyword);
+        customerKeyword = checkCustomerKeyword(customerKeyword, userName);
+        if(customerKeyword != null) {
+            customerKeywordDao.insert(customerKeyword);
+        }
     }
 
     public void addCustomerKeyword(List<CustomerKeyword> customerKeywords, String userName) {
-        for (CustomerKeyword customerKeyword : customerKeywords) {
-            checkCustomerKeyword(customerKeyword, userName);
-        }
         List<CustomerKeyword> addCustomerKeywords = new ArrayList<>();
         for (CustomerKeyword customerKeyword : customerKeywords) {
-            if (null != customerKeyword.getAutoUpdateNegativeDateTime()) {
+            CustomerKeyword tmpCustomerKeyword = checkCustomerKeyword(customerKeyword, userName);
+            if(tmpCustomerKeyword != null){
                 addCustomerKeywords.add(customerKeyword);
             }
         }
@@ -241,7 +241,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
     }
 
-    public void checkCustomerKeyword (CustomerKeyword customerKeyword, String userName) {
+    public CustomerKeyword checkCustomerKeyword (CustomerKeyword customerKeyword, String userName) {
         if (StringUtil.isNullOrEmpty(customerKeyword.getOriginalUrl())) {
             customerKeyword.setOriginalUrl(customerKeyword.getUrl());
         }
@@ -259,12 +259,12 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         if(!EntryTypeEnum.fm.name().equals(customerKeyword.getType())) {
             Integer sameCustomerKeywordCount = customerKeywordDao.getSameCustomerKeywordCount(customerKeyword.getTerminalType(), customerKeyword.getCustomerUuid(), customerKeyword.getKeyword(), customerKeyword.getUrl(), customerKeyword.getTitle());
             if(sameCustomerKeywordCount != null && sameCustomerKeywordCount > 0) {
-                return;
+                return null;
             }
         }
         if (!EntryTypeEnum.fm.name().equals(customerKeyword.getType()) && haveDuplicatedCustomerKeyword(customerKeyword.getTerminalType(),
                 customerKeyword.getCustomerUuid(), customerKeyword.getKeyword(), originalUrl, customerKeyword.getTitle())) {
-            return;
+            return null;
         }
 
         customerKeyword.setKeyword(customerKeyword.getKeyword().trim());
@@ -296,6 +296,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeyword.setQueryDate(new Date());
         customerKeyword.setUpdateTime(new Date());
         customerKeyword.setCreateTime(new Date());
+        return customerKeyword;
     }
 
     public void updateCustomerKeywordFromUI(CustomerKeyword customerKeyword, String userName){
