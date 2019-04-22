@@ -475,6 +475,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
                         phoneExcludeKeyword.addAll(Arrays.asList(phoneCustomerExcludeKeywords.split(",")));
                     }
 					if (CollectionUtils.isNotEmpty(insertingCustomerKeywords)) {
+						List<CustomerKeyword> customerKeywords = new ArrayList<>();
                         for (CustomerKeyword customerKeyword : insertingCustomerKeywords) {
                             if (TerminalTypeEnum.PC.equals(customerKeyword.getTerminalType())){
                                 if (!pcExcludeKeyword.isEmpty()){
@@ -489,8 +490,9 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
                                     }
                                 }
                             }
-                            customerKeywordService.addCustomerKeyword(customerKeyword, qzSettingCriteria.getUserName());
+                            customerKeywords.add(customerKeyword);
                         }
+						customerKeywordService.addCustomerKeyword(customerKeywords, qzSettingCriteria.getUserName());
 					}
 				}
 			}

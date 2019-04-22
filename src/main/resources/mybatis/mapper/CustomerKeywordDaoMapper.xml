@@ -1337,17 +1337,25 @@
             fBearPawNumber,
             fOriginalUrl,
             fTitle,
+            fSequence,
             fAutoUpdateNegativeDateTime,
             fSearchEngine,
+            fInitialIndexCount,
             fCurrentIndexCount,
             fCurrentPosition,
             fQueryDate,
             fQueryTime,
             fServiceProvider,
             fOptimizeGroupName,
+            fOptimizePlanCount,
             fOptimizeRemainingCount,
             fLastReachStandardDate,
             fPositionFirstFee,
+            fPositionSecondFee,
+            fPositionThirdFee,
+            fPositionForthFee,
+            fPositionFifthFee,
+            fPositionFirstPageFee,
             fCapturePositionQueryTime,
             fCollectMethod,
             fStartOptimizedTime,
@@ -1369,23 +1377,55 @@
                 #{customerKeyword.bearPawNumber},
                 #{customerKeyword.originalUrl},
                 #{customerKeyword.title},
+                #{customerKeyword.sequence},
                 #{customerKeyword.autoUpdateNegativeDateTime},
                 #{customerKeyword.searchEngine},
+                #{customerKeyword.initialIndexCount},
                 #{customerKeyword.currentIndexCount},
                 #{customerKeyword.currentPosition},
                 #{customerKeyword.queryDate},
                 #{customerKeyword.queryTime},
                 #{customerKeyword.serviceProvider},
                 #{customerKeyword.optimizeGroupName},
+                <choose>
+                    <when test="customerKeyword.optimizePlanCount != null">#{customerKeyword.optimizePlanCount},</when>
+                    <when test="customerKeyword.optimizePlanCount == null">0,</when>
+                </choose>
                 #{customerKeyword.optimizeRemainingCount},
                 #{customerKeyword.lastReachStandardDate},
-                #{customerKeyword.positionFirstFee},
+                <choose>
+                    <when test="customerKeyword.positionFirstFee != null">#{customerKeyword.positionFirstFee},</when>
+                    <when test="customerKeyword.positionFirstFee == null">0.00,</when>
+                </choose>
+                <choose>
+                    <when test="customerKeyword.positionSecondFee != null">#{customerKeyword.positionSecondFee},</when>
+                    <when test="customerKeyword.positionSecondFee == null">0.00,</when>
+                </choose>
+                <choose>
+                    <when test="customerKeyword.positionThirdFee != null">#{customerKeyword.positionThirdFee},</when>
+                    <when test="customerKeyword.positionThirdFee == null">0.00,</when>
+                </choose>
+                <choose>
+                    <when test="customerKeyword.positionForthFee != null">#{customerKeyword.positionForthFee},</when>
+                    <when test="customerKeyword.positionForthFee == null">0.00,</when>
+                </choose>
+                <choose>
+                    <when test="customerKeyword.positionFifthFee != null">#{customerKeyword.positionFifthFee},</when>
+                    <when test="customerKeyword.positionFifthFee == null">0.00,</when>
+                </choose>
+                <choose>
+                    <when test="customerKeyword.positionFirstPageFee != null">#{customerKeyword.positionFirstPageFee},</when>
+                    <when test="customerKeyword.positionFirstPageFee == null">0.00,</when>
+                </choose>
                 #{customerKeyword.capturePositionQueryTime},
                 #{customerKeyword.collectMethod},
                 #{customerKeyword.startOptimizedTime},
                 #{customerKeyword.orderNumber},
                 #{customerKeyword.status},
-                #{customerKeyword.manualCleanTitle},
+                <choose>
+                    <when test="customerKeyword.manualCleanTitle != null">#{customerKeyword.manualCleanTitle},</when>
+                    <when test="customerKeyword.manualCleanTitle == null">0,</when>
+                </choose>
                 #{customerKeyword.updateTime},
                 #{customerKeyword.createTime}
             )

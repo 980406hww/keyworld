@@ -66,6 +66,7 @@ public class KeywordInfoService extends ServiceImpl<KeywordInfoDao, KeywordInfo>
 					if (keyword.getOperationType().equals("add")) {
 						int maxSequence = customerKeywordService.getMaxSequence(searchEngineInfo[1], customer.getEntryType(), customer.getUuid());
 						Config config = configService.getConfig(Constants.CONFIG_TYPE_DEFAULT_OPTIMIZE_GROUPNAME, keyword.getSearchEngine());
+						List<CustomerKeyword> customerKeywords = new ArrayList<>();
 						for (String keywordInfo : keywordInfos) {
 							String[] info = keywordInfo.split(spliterStr);
 							CustomerKeyword customerKeyword = new CustomerKeyword();
@@ -90,8 +91,9 @@ public class KeywordInfoService extends ServiceImpl<KeywordInfoDao, KeywordInfo>
 								customerKeyword.setCurrentIndexCount(-1);
 								customerKeyword.setPositionFirstFee(-1d);
 							}
-							customerKeywordService.addCustomerKeyword(customerKeyword, null);
+							customerKeywords.add(customerKeyword);
 						}
+						customerKeywordService.addCustomerKeyword(customerKeywords, null);
 					} else if (keyword.getOperationType().equals("delete")) {
 						List<RequireDeleteKeywordVO> requireDeleteKeywordVOs = new ArrayList<RequireDeleteKeywordVO>();
 						hasRequireDeleteKeyword = true;
