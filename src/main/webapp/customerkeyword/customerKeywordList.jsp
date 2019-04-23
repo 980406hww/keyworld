@@ -56,11 +56,6 @@
             #userNoteBookTable tr td {
                 border-bottom: 1px solid black;
             }
-            #userNoteBookTable p {
-                float: left;
-                text-align: left;
-                padding: 0px 10px;
-            }
         </style>
         <script type="text/javascript" src="${staticPath}/static/My97DatePicker/WdatePicker.js"></script>
     </head>
@@ -480,7 +475,7 @@
                 <td>序号</td>
                 <td>记事者</td>
                 <td>日期</td>
-                <td>内容</td>
+                <td>操作</td>
             </tr>
             </thead>
             <tbody>
@@ -488,6 +483,7 @@
         </table>
         <div id="addUserNote" style="display: none;">
             <table id="addUserNoteTable" cellpadding="10" style="font-size: 12px; background-color: white; border-collapse:separate; border-spacing:0px 5px; width: 100%;">
+                <input type="hidden" name="userNoteBookUuid" id="userNoteBookUuid" value="">
                 <tr>
                     <td>内容:</td>
                 </tr>

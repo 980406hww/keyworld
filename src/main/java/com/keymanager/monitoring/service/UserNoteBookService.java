@@ -23,6 +23,10 @@ public class UserNoteBookService extends ServiceImpl<UserNoteBookDao, UserNoteBo
     }
 
     public int saveUserNoteBook (UserNoteBook userNoteBook) {
-        return userNoteBookDao.insert(userNoteBook);
+        if(null == userNoteBook.getUuid()) {
+            return userNoteBookDao.insert(userNoteBook);
+        } else {
+            return userNoteBookDao.updateById(userNoteBook);
+        }
     }
 }

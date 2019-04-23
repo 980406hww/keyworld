@@ -587,8 +587,3 @@ ul {
 #userNoteBookTable tr td {
     border-bottom: 1px solid black;
 }
-#userNoteBookTable p {
-    float: left;
-    text-align: left;
-    padding: 0px 10px;
-}

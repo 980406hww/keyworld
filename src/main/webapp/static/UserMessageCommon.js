@@ -266,10 +266,13 @@ function getUserNoteBooks(customerUuid, searchAll, terminalType) {
                         "<td name='index'>"+ (idx+1) +"</td>" +
                         "<td>"+ val.notesPerson +"</td>" +
                         "<td>"+ new Date(val.createTime).format("yyyy-MM-dd") +"</td>" +
-                        "<td><input class='ui-button ui-widget ui-corner-all' type='button' onclick='showUserNoteBookP(this)' value='展开' ></td>" +
+                        "<td>" +
+                        "<input class='ui-button ui-widget ui-corner-all' type='button' onclick='showUserNoteBookP(this)' value='展开内容' >" +
+                        "&nbsp;&nbsp;<input class='ui-button ui-widget ui-corner-all' type='button' onclick='updateUserNoteBook(this)' idx='"+ (idx+1) +"' uuid='"+ val.uuid +"' value='修改内容' >" +
+                        "</td>" +
                     "</tr>" +
                     "<tr id='note_book_"+ (idx+1) +"' style='display: none'>" +
-                        "<td colspan='5'>" +
+                        "<td colspan='4'>" +
                         "<p>"+ val.content +"</p>" +
                         "</td>" +
                     "</tr>");
@@ -283,7 +286,14 @@ function getUserNoteBooks(customerUuid, searchAll, terminalType) {
 }
 
 function showAddUserNoteDiv() {
-    $("#showUserNoteBookDialog").find("#addUserNote").toggle();
+    var uuid = $("#addUserNote").find("input[name='userNoteBookUuid']").val();
+    if (uuid != "") {
+        $("#addUserNote").find("input[name='userNoteBookUuid']").val("");
+        $("#addUserNote").find("textarea").val("");
+        $("#showUserNoteBookDialog").find("#addUserNote").css("display", "block");
+    } else {
+        $("#showUserNoteBookDialog").find("#addUserNote").toggle();
+    }
 }
 
 function saveUserNoteBook() {
@@ -292,6 +302,11 @@ function saveUserNoteBook() {
     postData.customerUuid = customerUuid;
     var terminalType = $("#userNoteBookDialogToolBar").find("input[name='terminalType']").val();
     postData.terminalType = terminalType;
+    var uuid = $("#addUserNoteTable").find("input[name='userNoteBookUuid']").val();
+    if (uuid == "") {
+        uuid = null;
+    }
+    postData.uuid = uuid;
     var content = $("#addUserNoteTable").find("textarea").val();
     if (content == '') {
         alert("请输入内容");
@@ -318,6 +333,7 @@ function saveUserNoteBook() {
             $().toastmessage("showErrorToast", "保存失败");
         }
     });
+    $("#showUserNoteBookDialog").find("#addUserNote").css("display", "none");
     $("#showUserNoteBookForm")[0].reset();
     setTimeout(function () {
         getUserNoteBooks(customerUuid, 0, terminalType);
@@ -331,13 +347,43 @@ function searchUserNoteBooks(searchAll) {
 }
 
 function showUserNoteBookP (self) {
-    if ($(self).val() == "展开") {
-        $(self).val("收起");
-    } else  if ($(self).val() == "收起") {
-        $(self).val("展开");
+    var index;
+    if ($(self).val() == "展开内容") {
+        var btn = $(self).parent().parent().parent().find("input[value='收起内容']");
+        if (btn.length > 0) {
+            btn[0].value = "展开内容";
+            index = $(btn).parent().parent().find("td[name='index']").text();
+            $("#userNoteBookTable").find("#note_book_"+index).css("display", "none");
+        }
+        $(self).val("收起内容");
+        index = $(self).parent().parent().find("td[name='index']").text();
+        $("#userNoteBookTable").find("#note_book_"+index).css("display", "block");
+    } else  if ($(self).val() == "收起内容") {
+        $(self).val("展开内容");
+        index = $(self).parent().parent().find("td[name='index']").text();
+        $("#userNoteBookTable").find("#note_book_"+index).css("display", "none");
     }
-    var index = $(self).parent().parent().find("td[name='index']").text();
-    $("#userNoteBookTable").find("#note_book_"+index).toggle();
+}
+
+function updateUserNoteBook(self) {
+    if ($(self).val() == "修改内容") {
+        var btn = $(self).parent().parent().parent().find("input[value='取消修改']");
+        if (btn.length > 0) {
+            btn[0].value = "修改内容";
+        }
+        $(self).val("取消修改");
+        var idx = $(self).attr("idx");
+        var uuid = $(self).attr("uuid");
+        var content = $(self).parent().parent().parent().find("#note_book_" + idx).find("p")[0].innerText;
+        $("#addUserNote").find("input[name='userNoteBookUuid']").val(uuid);
+        $("#showUserNoteBookDialog").find("#addUserNote").css("display", "block");
+        $("#addUserNote").find("textarea").val(content);
+    } else  if ($(self).val() == "取消修改") {
+        $(self).val("修改内容");
+        $("#showUserNoteBookDialog").find("#addUserNote").css("display", "none");
+        $("#showUserNoteBookForm")[0].reset();
+        $("#addUserNote").find("input[name='userNoteBookUuid']").val("");
+    }
 }
 
 Date.prototype.format = function (format) {
