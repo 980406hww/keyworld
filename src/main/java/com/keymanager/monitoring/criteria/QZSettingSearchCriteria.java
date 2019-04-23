@@ -26,6 +26,7 @@ public class QZSettingSearchCriteria{
     private Integer upDifferenceNum;
     private Integer downDifferenceNum;
     private Integer openDialogStatus;
+    private String createTime;
 
     public String getLoginName() {
         return loginName;
@@ -225,5 +226,13 @@ public class QZSettingSearchCriteria{
 
     public void setOpenDialogStatus (Integer openDialogStatus) {
         this.openDialogStatus = openDialogStatus;
+    }
+
+    public String getCreateTime () {
+        return createTime;
+    }
+
+    public void setCreateTime (String createTime) {
+        this.createTime = createTime;
     }
 }
