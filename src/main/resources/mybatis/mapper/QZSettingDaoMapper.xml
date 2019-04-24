@@ -193,6 +193,19 @@
         <if test="qzSettingSearchCriteria.categoryTag != null and qzSettingSearchCriteria.categoryTag != ''">
             AND qc.fTagName = #{qzSettingSearchCriteria.categoryTag}
         </if>
+        <if test="qzSettingSearchCriteria.uuids != null">
+            <choose>
+                <when test="qzSettingSearchCriteria.uuids.size() > 0">
+                    AND qs.fUuid IN
+                    <foreach collection="qzSettingSearchCriteria.uuids" item="uuid" open="(" close=")" separator=",">
+                        #{uuid}
+                    </foreach>
+                </when>
+                <otherwise>
+                    AND qs.fUuid IS NULL
+                </otherwise>
+            </choose>
+        </if>
         <choose>
             <when test="qzSettingSearchCriteria.dateRangeType == 0">
                 AND EXISTS (select qs.fUuid from t_qz_operation_type ot where qs.fUuid = ot.fQZSettingUuid and ot.fNextChargeDate = CURDATE())
@@ -351,4 +364,20 @@
         <if test="qzSettingSearchClientGroupInfoCriteria.optimizeGroupName != ''">AND ck.fOptimizeGroupName LIKE '${qzSettingSearchClientGroupInfoCriteria.optimizeGroupName}%'</if>
     </select>
 
+    <select id="getQZSettingUuids" resultType="java.lang.Long">
+        SELECT
+          DISTINCT(qs.fUuid) AS 'uuid'
+        FROM t_client_status cs
+        JOIN t_qz_setting qs
+        <choose>
+            <when test="terminalType == 'PC'">
+                ON qs.fPcGroup = cs.fGroup
+            </when>
+            <otherwise>
+                ON qs.fPhoneGroup = cs.fGroup
+            </otherwise>
+        </choose>
+        WHERE cs.fTerminalType = #{terminalType}
+        AND cs.fOperationType = #{operationType};
+    </select>
 </mapper>

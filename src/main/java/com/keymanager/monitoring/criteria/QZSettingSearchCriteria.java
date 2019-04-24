@@ -1,5 +1,7 @@
 package com.keymanager.monitoring.criteria;
 
+import java.util.List;
+
 public class QZSettingSearchCriteria{
     private String loginName;
     private String customerUuid;
@@ -26,6 +28,8 @@ public class QZSettingSearchCriteria{
     private Integer upDifferenceNum;
     private Integer downDifferenceNum;
     private Integer openDialogStatus;
+    private String operationType;
+    private List<Long> uuids;
 
     public String getLoginName() {
         return loginName;
@@ -225,5 +229,21 @@ public class QZSettingSearchCriteria{
 
     public void setOpenDialogStatus (Integer openDialogStatus) {
         this.openDialogStatus = openDialogStatus;
+    }
+
+    public String getOperationType () {
+        return operationType;
+    }
+
+    public void setOperationType (String operationType) {
+        this.operationType = operationType;
+    }
+
+    public List<Long> getUuids () {
+        return uuids;
+    }
+
+    public void setUuids (List<Long> uuids) {
+        this.uuids = uuids;
     }
 }

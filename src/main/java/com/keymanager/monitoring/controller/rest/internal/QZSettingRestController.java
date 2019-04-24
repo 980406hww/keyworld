@@ -45,6 +45,9 @@ public class QZSettingRestController extends SpringMVCBaseController {
 	@Autowired
 	private QZCategoryTagService qzCategoryTagService;
 
+	@Autowired
+	private ClientStatusService clientStatusService;
+
 	@RequiresPermissions("/internal/qzsetting/updateStatus")
 	@RequestMapping(value = "/updateQZSettingStatus", method = RequestMethod.POST)
 	public ResponseEntity<?> updateQZSettingStatus(@RequestBody Map<String, Object> requestMap) throws Exception{
@@ -173,6 +176,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		Page<QZSetting> page = qzSettingService.searchQZSetting(new Page<QZSetting>(currentPageNumber, pageSize), qzSettingSearchCriteria);
 		List<Customer> customerList = customerService.getActiveCustomerSimpleInfo(customerCriteria);
 		Integer availableQZSettingCount = qzSettingService.getAvailableQZSettings().size();
+		String [] operationTypeValues = clientStatusService.getOperationTypeValues(qzSettingSearchCriteria.getTerminalType());
 		modelAndView.addObject("chargeRemindDataMap", chargeRemindDataMap);
 		modelAndView.addObject("customerList", customerList);
 		modelAndView.addObject("qzSettingSearchCriteria", qzSettingSearchCriteria);
@@ -180,6 +184,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		modelAndView.addObject("page", page);
 		modelAndView.addObject("isDepartmentManager", isDepartmentManager);
 		modelAndView.addObject("availableQZSettingCount", availableQZSettingCount);
+		modelAndView.addObject("operationTypeValues", operationTypeValues);
 		return modelAndView;
 	}
 

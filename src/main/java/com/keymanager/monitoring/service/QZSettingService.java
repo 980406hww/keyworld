@@ -265,6 +265,10 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 	}
 
 	public Page<QZSetting> searchQZSetting(Page<QZSetting> page, QZSettingSearchCriteria qzSettingSearchCriteria){
+		if (null != qzSettingSearchCriteria.getOperationType() && !"".equals(qzSettingSearchCriteria.getOperationType())) {
+			List<Long> uuids = qzSettingDao.getQZSettingUuids(qzSettingSearchCriteria.getTerminalType(), qzSettingSearchCriteria.getOperationType());
+			qzSettingSearchCriteria.setUuids(uuids);
+		}
 		page.setRecords(qzSettingDao.searchQZSettings(page, qzSettingSearchCriteria));
 		addingQZKeywordRankInfo(page, qzSettingSearchCriteria);
 		return page;

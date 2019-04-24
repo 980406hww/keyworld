@@ -93,10 +93,11 @@ function detectedMoreSearchConditionDivShow() {
     var customerInfo = moreSearchCondition.find("ul li.customerInfo input").val();
     var categoryTag = moreSearchCondition.find("ul li.category input").val();
     var group =  moreSearchCondition.find("ul li.group input").val();
+    var operationType = moreSearchCondition.find("select[name='operationType']").val();
     var status = moreSearchCondition.find("select[name='status']").val();
     var updateStatus = moreSearchCondition.find("select[name='updateStatus']").val();
     var baiduWeight = moreSearchCondition.find("select[name='weight']").val();
-    var values = customerInfo + categoryTag + group + status + updateStatus + baiduWeight;
+    var values = customerInfo + categoryTag + group + operationType + status + updateStatus + baiduWeight;
     if (values != "") {
         moreSearchCondition.css("display", "block");
     }
@@ -529,12 +530,18 @@ function trimSearchCondition(days) {
     var domain = $(".conn").find("li:first-child input[name='domain']").val();
     var categoryTag = $(".conn").find(".category").find("input[name='categoryTag']").val();
     var group = $(".conn").find(".group").find("input[name='group']").val();
+    var operationType = $(".conn").find("select[name='operationType']").val();
     var status = $(".conn").find("select[name='status']").val();
     var updateStatus = $(".conn").find("select[name='updateStatus']").val();
     var baiduWeight = $(".conn").find("select[name='weight']").val();
     chargeForm.find("#domain").val($.trim(domain));
     chargeForm.find("#categoryTag").val($.trim(categoryTag));
     chargeForm.find("#group").val($.trim(group));
+    if (operationType != ""){
+        chargeForm.find("#operationType").val($.trim(operationType));
+    } else {
+        chargeForm.find("#operationType").val(null);
+    }
     if (status != "") {
         chargeForm.find("#status").val($.trim(status));
     } else {
