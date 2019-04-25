@@ -55,7 +55,9 @@
             </td>
             <td align="center" width=80>操作类型名称</td>
             <td align="center" width=80>终端类型</td>
-            <td align="center" width=80>操作类型描述</td>
+            <shiro:hasRole name="AlgorithmGroup">
+                <td align="center" width=80>操作类型描述</td>
+            </shiro:hasRole>
             <td align="center" width=80>备注</td>
             <td align="center" width=80>创建时间</td>
             <td align="center" width=80>是否有效</td>
@@ -89,17 +91,19 @@
                 </td>
             </tr>
             <tr>
-                <td style="width:100px" align="right">备注:</td>
+                <td style="width:100px;vertical-align:top" align="right">备注:</td>
                 <td>
-                    <input type="text" name="remark" id="remark" style="width:240px;">
+                    <textarea id="remark" style="width:240px; height: 50px; resize: none"></textarea>
                 </td>
             </tr>
-            <tr>
-                <td style="width:100px;vertical-align:top" align="right">操作类型描述</td>
-                <td>
-                    <textarea id="description" style="width:240px; height: 150px; resize: none"></textarea>
-                </td>
-            </tr>
+            <shiro:hasRole name="AlgorithmGroup">
+                <tr>
+                    <td style="width:100px;vertical-align:top" align="right">操作类型描述:</td>
+                    <td>
+                        <textarea id="description" style="width:240px; height: 130px; resize: none"></textarea>
+                    </td>
+                </tr>
+            </shiro:hasRole>
         </table>
     </form>
 </div>
@@ -113,7 +117,9 @@
                 </td>
                 <td width=80>${operationType.operationTypeName}</td>
                 <td width=80>${operationType.terminalType}</td>
-                <td width=80>${operationType.description}</td>
+                <shiro:hasRole name="AlgorithmGroup">
+                    <td width=80>${operationType.description}</td>
+                </shiro:hasRole>
                 <td width=80>${operationType.remark}</td>
                 <td width=80 style="text-align: center">
                     <fmt:formatDate value="${operationType.createTime}" pattern="yyyy-MM-dd"/>

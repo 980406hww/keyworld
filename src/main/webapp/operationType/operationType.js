@@ -38,7 +38,7 @@ function initOperationTypeDialog(operationType) {
     operationTypeForm.find("#operationTypeName").val(operationType.operationTypeName);
     operationTypeForm.find("input[name='terminalType'][value='" + operationType.terminalType + "']").prop("checked", "checked");
     operationTypeForm.find("#terminalType").val(operationType.terminalType);
-    operationTypeForm.find("#description").val(operationType.description.replace(/[,]/g, "\n"));
+    operationTypeForm.find("#description").val(operationType.description);
     operationTypeForm.find("#remark").val(operationType.remark);
     operationTypeForm.find("input[name='status'][value='" + operationType.status + "']").prop("checked", "checked");
 }
@@ -66,7 +66,7 @@ function showOperationTypeDialog(uuid) {
     $("#operationTypeDialog").dialog({
         resizable: false,
         width: 360,
-        height: 360,
+        height: $("#operationTypeForm").find("#description").val() === undefined ? 220 : 360,
         modal: true,
         buttons: [
             {
@@ -114,14 +114,17 @@ function saveOperationType(uuid) {
         operationTypeForm.find("#terminalType").focus();
         return;
     }
-    var description = operationTypeForm.find("#description").val();
     var remark = operationTypeForm.find("#remark").val();
     var status = operationTypeForm.find("input[name='status']:checked").val();
     var operationType = {};
     operationType.uuid = uuid;
     operationType.operationTypeName = $.trim(operationTypeName);
     operationType.terminalType = $.trim(terminalType);
-    operationType.description = $.trim(description);
+    if (operationTypeForm.find("#description").val() === undefined) {
+        operationType.description = null
+    } else {
+        operationType.description = $.trim(operationTypeForm.find("#description").val())
+    }
     operationType.remark = $.trim(remark);
     operationType.status = $.trim(status);
     $.ajax({
