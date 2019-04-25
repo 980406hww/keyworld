@@ -161,7 +161,6 @@ public class QZSettingRestController extends SpringMVCBaseController {
             String terminalType = TerminalTypeMapping.getTerminalType(request);
             qzSettingSearchCriteria.setTerminalType(terminalType);
         }
-        qzKeywordRankInfoService.getCountNumOfRankInfo(qzSettingSearchCriteria);
 		CustomerCriteria customerCriteria = new CustomerCriteria();
 		String entryType = (String) request.getSession().getAttribute("entryType");
 		customerCriteria.setEntryType(entryType);
@@ -173,6 +172,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
 			customerCriteria.setLoginName(loginName);
 			qzSettingSearchCriteria.setLoginName(loginName);
 		}
+		qzKeywordRankInfoService.getCountNumOfRankInfo(qzSettingSearchCriteria);
 		Page<QZSetting> page = qzSettingService.searchQZSetting(new Page<QZSetting>(currentPageNumber, pageSize), qzSettingSearchCriteria);
 		List<Customer> customerList = customerService.getActiveCustomerSimpleInfo(customerCriteria);
 		Integer availableQZSettingCount = qzSettingService.getAvailableQZSettings().size();
