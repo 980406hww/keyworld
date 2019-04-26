@@ -198,7 +198,7 @@
 				</li>
 				<li class="createTime condition">
 					<span>创建时间: </span>
-					<input type="text" name="createTime" id="createTime" class="Wdate" onclick="WdatePicker({skin:'whyGreen',dateFmt: 'yyyy-MM-dd HH:mm:ss', maxDate: '%y-%M-%d %H:%m:%s' })" placeholder=">=" value="${qzSettingSearchCriteria.createTime}">
+					<input type="text" name="createTime" id="createTime" class="Wdate" onclick="WdatePicker({skin:'whyGreen',dateFmt: 'yyyy-MM-dd', maxDate: '%y-%M-%d' })" placeholder=">=" value="${qzSettingSearchCriteria.createTime}">
 				</li>
 				<shiro:hasPermission name="/internal/qzsetting/searchQZSettings">
 					<li><a href="javascript:resetSearchCondition('-1')">过期未收费(${chargeRemindDataMap['expiredChargeSize']})</a></li>
