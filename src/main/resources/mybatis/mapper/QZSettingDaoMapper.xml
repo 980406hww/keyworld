@@ -198,6 +198,7 @@
             </choose>
             AND cs.fTerminalType = #{qzSettingSearchCriteria.terminalType})
         </if>
+        <if test="qzSettingSearchCriteria.createTime != null and qzSettingSearchCriteria.createTime != ''">AND qs.fCreateTime &gt;= #{qzSettingSearchCriteria.createTime}</if>
         <choose>
             <when test="qzSettingSearchCriteria.dateRangeType == 0">
                 AND EXISTS (select qs.fUuid from t_qz_operation_type ot where qs.fUuid = ot.fQZSettingUuid and ot.fNextChargeDate = CURDATE())

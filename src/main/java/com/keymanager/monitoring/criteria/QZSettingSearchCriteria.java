@@ -27,6 +27,7 @@ public class QZSettingSearchCriteria{
     private Integer downDifferenceNum;
     private Integer openDialogStatus;
     private String operationType;
+    private String createTime;
 
     public String getLoginName() {
         return loginName;
@@ -228,6 +229,10 @@ public class QZSettingSearchCriteria{
         this.openDialogStatus = openDialogStatus;
     }
 
+    public String getCreateTime () {
+        return createTime;
+    }
+            
     public String getOperationType () {
         return operationType;
     }
@@ -235,4 +240,8 @@ public class QZSettingSearchCriteria{
     public void setOperationType (String operationType) {
         this.operationType = operationType;
     }
+    
+    public void setCreateTime (String createTime) {
+        this.createTime = createTime;
+    }    
 }
