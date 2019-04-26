@@ -47,6 +47,10 @@ public class UserNoteBookRestController {
     public ResponseEntity<?> saveUserNoteBook(@RequestBody Map<String, Object> resultMap, HttpServletRequest request) {
         try {
             UserNoteBook userNoteBook = new UserNoteBook();
+            String uuid = (String) resultMap.get("uuid");
+            if (null != uuid) {
+                userNoteBook.setUuid(Long.parseLong(uuid));
+            }
             userNoteBook.setCustomerUuid(Long.parseLong((String) resultMap.get("customerUuid")));
             userNoteBook.setContent((String) resultMap.get("content"));
             userNoteBook.setNotesPerson((String) request.getSession().getAttribute("username"));

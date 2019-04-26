@@ -3,6 +3,7 @@
 <mapper namespace="com.keymanager.monitoring.dao.UserNoteBookDao">
     <select id="findUserNoteBooks" resultType="com.keymanager.monitoring.entity.UserNoteBook">
         SELECT
+            un.fUuid AS 'uuid',
             u.fUserName AS 'notesPerson',
             un.fCustomerUuid AS 'customerUuid',
             un.fContent AS 'content',

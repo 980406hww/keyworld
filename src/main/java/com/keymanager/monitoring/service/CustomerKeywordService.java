@@ -1278,7 +1278,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                 CustomerKeyword customerKeyword = convert(searchEngineResultItemVO, terminalType, searchEngineResultVO.getGroup(), searchEngineResultVO.getCustomerUuid(),searchEngine);
                 customerKeywords.add(customerKeyword);
             }
-            this.addCustomerKeywords(customerKeywords, userName);
+            this.addCustomerKeyword(customerKeywords, userName);
         }
     }
 
@@ -1308,13 +1308,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         if(searchEngine.equals(Constants.SEARCH_ENGINE_SM)){
             customerKeyword.setSearchEngine(Constants.SEARCH_ENGINE_SM);
         }
-        //customerKeyword.setSearchEngine(Constants.SEARCH_ENGINE_BAIDU);
         customerKeyword.setUrl(searchEngineResultItemVO.getUrl());
         customerKeyword.setStartOptimizedTime(Utils.getCurrentTimestamp());
         customerKeyword.setCollectMethod(CollectMethod.PerMonth.getCode());
-//                customerKeyword.setPositionFirstFee(0);
-//                customerKeyword.setPositionSecondFee(0);
-//                customerKeyword.setPositionThirdFee(0);
         customerKeyword.setCurrentIndexCount(20);
         customerKeyword.setCustomerUuid(customerUuid);
         customerKeyword.setAutoUpdateNegativeTime(Utils.getCurrentTimestamp());
@@ -1355,7 +1351,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             }
             customerKeywordDao.deleteCustomerKeywords(terminalType, searchEngineResultVO.getGroup(), searchEngineResultVO.getKeyword());
             logger.info("autoUpdateNegativeCustomerKeywords:" + terminalType + "-" + searchEngineResultVO.getGroup() + "-" + searchEngineResultVO.getKeyword());
-            this.addCustomerKeywords(customerKeywords, loginName);
+            this.addCustomerKeyword(customerKeywords, loginName);
         }
     }
 
