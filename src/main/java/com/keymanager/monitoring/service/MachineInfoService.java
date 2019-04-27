@@ -3,11 +3,8 @@ package com.keymanager.monitoring.service;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.mail.MailHelper;
-import com.keymanager.monitoring.criteria.ClientStatusBatchUpdateCriteria;
-import com.keymanager.monitoring.criteria.ClientStatusCriteria;
-import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
-import com.keymanager.monitoring.criteria.QZSettingSearchClientGroupInfoCriteria;
-import com.keymanager.monitoring.dao.ClientStatusDao;
+import com.keymanager.monitoring.criteria.*;
+import com.keymanager.monitoring.dao.MachineInfoDao;
 import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.enums.ClientStartUpStatusEnum;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
@@ -31,12 +28,12 @@ import java.sql.Timestamp;
 import java.util.*;
 
 @Service
-public class MachineInfoService extends ServiceImpl<ClientStatusDao, ClientStatus>{
+public class MachineInfoService extends ServiceImpl<MachineInfoDao, ClientStatus>{
 
     private static Logger logger = LoggerFactory.getLogger(MachineInfoService.class);
 
     @Autowired
-    private ClientStatusDao clientStatusDao;
+    private MachineInfoDao machineInfoDao;
 
     @Autowired
     private CustomerKeywordService customerKeywordService;
@@ -48,10 +45,10 @@ public class MachineInfoService extends ServiceImpl<ClientStatusDao, ClientStatu
     private ClientStatusRestartLogService clientStatusRestartLogService;
 
     public void changeTerminalType(String clientID, String terminalType){
-        ClientStatus clientStatus = clientStatusDao.selectById(clientID);
+        ClientStatus clientStatus = machineInfoDao.selectById(clientID);
         if(clientStatus != null){
             clientStatus.setTerminalType(terminalType);
-            clientStatusDao.updateById(clientStatus);
+            machineInfoDao.updateById(clientStatus);
         }
     }
 
@@ -64,76 +61,76 @@ public class MachineInfoService extends ServiceImpl<ClientStatusDao, ClientStatu
         clientStatus.setCity(city);
         clientStatus.setClientIDPrefix(Utils.removeDigital(clientID));
         supplementDefaultValue(clientStatus);
-        clientStatusDao.insert(clientStatus);
+        machineInfoDao.insert(clientStatus);
     }
 
     public void updatePageNo(String clientID, int pageNo){
-        clientStatusDao.updatePageNo(clientID, pageNo);
+        machineInfoDao.updatePageNo(clientID, pageNo);
     }
 
     public  void updateClientVersion(String clientID, String version, boolean hasKeyword){
-        clientStatusDao.updateClientVersion(clientID, version, hasKeyword);
+        machineInfoDao.updateClientVersion(clientID, version, hasKeyword);
     }
 
     public void logClientStatusTime(String terminalType, String clientID, String status, String freeSpace, String version, String
             city, int updateCount, String runningProgramType){
-        ClientStatus clientStatus = clientStatusDao.selectById(clientID);
+        ClientStatus clientStatus = machineInfoDao.selectById(clientID);
         if(clientStatus == null){
             addSummaryClientStatus(terminalType, clientID, freeSpace, version, city);
         }else{
-            clientStatusDao.updateOptimizationResult(clientID, status, version, freeSpace, city, updateCount, runningProgramType);
+            machineInfoDao.updateOptimizationResult(clientID, status, version, freeSpace, city, updateCount, runningProgramType);
         }
     }
 
     public List<CustomerKeywordTerminalRefreshStatRecord> searchClientStatusForRefreshStat(CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria) {
-        return clientStatusDao.searchClientStatusForRefreshStat(customerKeywordRefreshStatInfoCriteria);
+        return machineInfoDao.searchClientStatusForRefreshStat(customerKeywordRefreshStatInfoCriteria);
     }
 
-    public Page<ClientStatus> searchClientStatuses(Page<ClientStatus> page, ClientStatusCriteria clientStatusCriteria, boolean normalSearchFlag) {
+    public Page<MachineInfo> searchMachineInfos(Page<MachineInfo> page, MachineInfoCriteria machineInfoCriteria, boolean normalSearchFlag) {
         if(normalSearchFlag) {
-            page.setRecords(clientStatusDao.searchClientStatuses(page, clientStatusCriteria));
+            page.setRecords(machineInfoDao.searchMachineInfos(page, machineInfoCriteria));
         } else {
-            page.setRecords(clientStatusDao.searchBadClientStatus(page, clientStatusCriteria));
+            page.setRecords(machineInfoDao.searchBadMachineInfo(page, machineInfoCriteria));
         }
         Map<String, String> passwordMap = new HashMap<String, String>();
-        for(ClientStatus clientStatus : page.getRecords()) {
-            String password = passwordMap.get(clientStatus.getPassword());
+        for(MachineInfo machineInfo : page.getRecords()) {
+            String password = passwordMap.get(machineInfo.getPassword());
             if (password == null) {
-                if (StringUtil.isNullOrEmpty(clientStatus.getPassword())) {
+                if (StringUtil.isNullOrEmpty(machineInfo.getPassword())) {
                     password = "";
-                } else if (clientStatus.getPassword().equals("doshows123")) {
+                } else if (machineInfo.getPassword().equals("doshows123")) {
                     password = "8e587919308fcab0c34af756358b9053";
                 } else {
-                    password = DES.vncPasswordEncode(clientStatus.getPassword());
+                    password = DES.vncPasswordEncode(machineInfo.getPassword());
                 }
-                passwordMap.put(clientStatus.getPassword(), password);
+                passwordMap.put(machineInfo.getPassword(), password);
             }
-            clientStatus.setPassword(password);
+            machineInfo.setPassword(password);
         }
         return page;
     }
 
     public void updateClientStatus(ClientStatus clientStatus) {
-        clientStatusDao.updateById(clientStatus);
+        machineInfoDao.updateById(clientStatus);
     }
 
     public void updateClientStatusForCapturePosition(String clientID) {
-        clientStatusDao.updateClientStatusForCapturePosition(clientID);
+        machineInfoDao.updateClientStatusForCapturePosition(clientID);
     }
 
     public void updateClientStatusTargetVersion(List<String> clientIDs, String targetVersion) throws Exception {
-        clientStatusDao.updateClientStatusTargetVersion(clientIDs, targetVersion);
+        machineInfoDao.updateClientStatusTargetVersion(clientIDs, targetVersion);
     }
 
     public void updateClientStatusTargetVPSPassword(List<String> clientIDs, String targetVPSPassword) throws Exception {
-        clientStatusDao.updateClientStatusTargetVPSPassword(clientIDs, targetVPSPassword);
+        machineInfoDao.updateClientStatusTargetVPSPassword(clientIDs, targetVPSPassword);
     }
 
     public void updateRenewalDate(String clientIDs,String settingType,String renewalDate) throws Exception {
         String[] clientIDArray = clientIDs.split(",");
 
         for (String clientID : clientIDArray) {
-            ClientStatus clientStatus = clientStatusDao.selectById(clientID);
+            ClientStatus clientStatus = machineInfoDao.selectById(clientID);
             if("increaseOneMonth".equals(settingType)) {
                 if(clientStatus.getRenewalDate() != null) {
                     clientStatus.setRenewalDate(Utils.addMonth(clientStatus.getRenewalDate(), 1));
@@ -143,26 +140,26 @@ public class MachineInfoService extends ServiceImpl<ClientStatusDao, ClientStatu
             } else {
                 clientStatus.setRenewalDate(Utils.string2Timestamp(renewalDate));
             }
-            clientStatusDao.updateById(clientStatus);
+            machineInfoDao.updateById(clientStatus);
         }
     }
 
     public ClientStatus getClientStatus(String clientID, String terminalType) {
-        ClientStatus clientStatus = clientStatusDao.getClientStatusByClientID(clientID, terminalType);
+        ClientStatus clientStatus = machineInfoDao.getClientStatusByClientID(clientID, terminalType);
         return clientStatus;
     }
 
     public void deleteClientStatus(String clientID) {
-        clientStatusDao.deleteById(clientID);
+        machineInfoDao.deleteById(clientID);
     }
 
     public void deleteAll(List<String> clientIDs) {
-        clientStatusDao.deleteClientStatus(clientIDs);
+        machineInfoDao.deleteClientStatus(clientIDs);
     }
 
     public void saveClientStatus(ClientStatus clientStatus) {
         if (null != clientStatus.getClientID()) {
-            ClientStatus oldClientStatus = clientStatusDao.selectById(clientStatus.getClientID());
+            ClientStatus oldClientStatus = machineInfoDao.selectById(clientStatus.getClientID());
             oldClientStatus.setGroup(clientStatus.getGroup());
             oldClientStatus.setOperationType(clientStatus.getOperationType());
             oldClientStatus.setPageSize(clientStatus.getPageSize());
@@ -218,21 +215,21 @@ public class MachineInfoService extends ServiceImpl<ClientStatusDao, ClientStatu
             oldClientStatus.setOptimizeRelatedKeyword(clientStatus.getOptimizeRelatedKeyword());
             oldClientStatus.setSwitchGroupName(clientStatus.getSwitchGroupName());
             oldClientStatus.setUpdateSettingTime(Utils.getCurrentTimestamp());
-            clientStatusDao.updateById(oldClientStatus);
+            machineInfoDao.updateById(oldClientStatus);
         } else {
             supplementAdditionalValue(clientStatus);
-            clientStatusDao.insert(clientStatus);
+            machineInfoDao.insert(clientStatus);
         }
     }
 
     public void resetRestartStatusForProcessing() {
-        clientStatusDao.resetRestartStatusForProcessing();
+        machineInfoDao.resetRestartStatusForProcessing();
     }
 
     public void changeStatus(String clientID) {
-        ClientStatus clientStatus = clientStatusDao.selectById(clientID);
+        ClientStatus clientStatus = machineInfoDao.selectById(clientID);
         clientStatus.setValid(!clientStatus.getValid());
-        clientStatusDao.updateById(clientStatus);
+        machineInfoDao.updateById(clientStatus);
     }
 
     public void uploadVNCFile(InputStream inputStream, String terminalType) throws Exception {
@@ -240,7 +237,7 @@ public class MachineInfoService extends ServiceImpl<ClientStatusDao, ClientStatu
             VNCAddressBookParser vncAddressBookParser = new VNCAddressBookParser();
             Map<String, String> vncInfoMap = vncAddressBookParser.extractVNCInfo(inputStream);
             Map<String, String> passwordMap = new HashMap<String, String>();
-            List<ClientStatus> clientStatuses = clientStatusDao.searchClientStatusesOrByHost(terminalType,null);
+            List<ClientStatus> clientStatuses = machineInfoDao.searchClientStatusesOrByHost(terminalType,null);
             for (ClientStatus clientStatus : clientStatuses) {
                 String vncInfo = vncInfoMap.get(clientStatus.getClientID());
                 if (!Utils.isNullOrEmpty(vncInfo)) {
@@ -273,9 +270,9 @@ public class MachineInfoService extends ServiceImpl<ClientStatusDao, ClientStatu
 
     public void reopenClientStatus(List<String> clientIDs, String downloadProgramType) {
         if("New".equals(downloadProgramType)){
-            clientStatusDao.reopenClientStatus(clientIDs, downloadProgramType, "laodu");
+            machineInfoDao.reopenClientStatus(clientIDs, downloadProgramType, "laodu");
         }else{
-            clientStatusDao.reopenClientStatus(clientIDs, downloadProgramType, "Default");
+            machineInfoDao.reopenClientStatus(clientIDs, downloadProgramType, "Default");
         }
     }
 
@@ -283,7 +280,7 @@ public class MachineInfoService extends ServiceImpl<ClientStatusDao, ClientStatu
         List<String> vpsInfos = FileUtil.readTxtFile(file,"UTF-8");
         for (String vpsInfo : vpsInfos) {
             String[] clientStatusInfo = vpsInfo.split("===");
-            ClientStatus existingClientStatus = clientStatusDao.selectById(clientStatusInfo[0]);
+            ClientStatus existingClientStatus = machineInfoDao.selectById(clientStatusInfo[0]);
             if(null != existingClientStatus) {
                 saveClientStatusByVPSFile(existingClientStatus, clientStatusInfo);
                 if("New".equals(downloadProgramType)){
@@ -298,7 +295,7 @@ public class MachineInfoService extends ServiceImpl<ClientStatusDao, ClientStatu
                     existingClientStatus.setStartUpStatus(ClientStartUpStatusEnum.Completed.name());
                     existingClientStatus.setDownloadProgramType(null);
                 }
-                clientStatusDao.updateById(existingClientStatus);
+                machineInfoDao.updateById(existingClientStatus);
             } else {
                 ClientStatus clientStatus = new ClientStatus();
                 clientStatus.setTerminalType(terminalType);
@@ -307,7 +304,7 @@ public class MachineInfoService extends ServiceImpl<ClientStatusDao, ClientStatu
                 clientStatus.setValid(true);
                 saveClientStatusByVPSFile(clientStatus, clientStatusInfo);
                 if(!Character.isDigit(clientStatusInfo[0].charAt(clientStatusInfo[0].length() - 1))) {
-                    Integer maxClientID = clientStatusDao.selectMaxIdByClientID(clientStatusInfo[0]);
+                    Integer maxClientID = machineInfoDao.selectMaxIdByClientID(clientStatusInfo[0]);
                     maxClientID = maxClientID == null ? 1 : maxClientID + 1;
                     clientStatus.setClientID(clientStatusInfo[0] + maxClientID);
                 }
@@ -323,7 +320,7 @@ public class MachineInfoService extends ServiceImpl<ClientStatusDao, ClientStatu
                 }else{
                     clientStatus.setStartUpStatus(ClientStartUpStatusEnum.Completed.name());
                 }
-                clientStatusDao.insert(clientStatus);
+                machineInfoDao.insert(clientStatus);
             }
         }
     }
@@ -395,7 +392,7 @@ public class MachineInfoService extends ServiceImpl<ClientStatusDao, ClientStatu
     }
 
     public void getVNCFileInfo(String terminalType) throws Exception {
-        List<ClientStatus> clientStatuses = clientStatusDao.searchClientStatusesOrByHost(terminalType,"yes");
+        List<ClientStatus> clientStatuses = machineInfoDao.searchClientStatusesOrByHost(terminalType,"yes");
         if(CollectionUtils.isNotEmpty(clientStatuses)) {
             Utils.removeDir(Thread.currentThread().getContextClassLoader().getResource("").toURI().getPath() + "vnc");
             Utils.createDir(Thread.currentThread().getContextClassLoader().getResource("").toURI().getPath() + "vnc/");
@@ -418,7 +415,7 @@ public class MachineInfoService extends ServiceImpl<ClientStatusDao, ClientStatu
     }
 
     public void getFullVNCFileInfo(String terminalType) throws Exception {
-        List<ClientStatus> clientStatuses = clientStatusDao.searchClientStatusesOrByHost(terminalType,null);
+        List<ClientStatus> clientStatuses = machineInfoDao.searchClientStatusesOrByHost(terminalType,null);
         writeFullTxtFile(clientStatuses);
     }
 
@@ -600,26 +597,26 @@ public class MachineInfoService extends ServiceImpl<ClientStatusDao, ClientStatu
     }
 
     public void updateGroup(String clientID, String groupName) {
-        ClientStatus clientStatus = clientStatusDao.selectById(clientID);
+        ClientStatus clientStatus = machineInfoDao.selectById(clientID);
         clientStatus.setGroup(groupName);
-        clientStatusDao.updateById(clientStatus);
+        machineInfoDao.updateById(clientStatus);
     }
 
     public void updateOperationType(String clientID, String operationType) {
-        ClientStatus clientStatus = clientStatusDao.selectById(clientID);
+        ClientStatus clientStatus = machineInfoDao.selectById(clientID);
         clientStatus.setOperationType(operationType);
-        clientStatusDao.updateById(clientStatus);
+        machineInfoDao.updateById(clientStatus);
     }
 
     public void updateUpgradeFailedReason(String clientID, String upgradeFailedReason) {
-        ClientStatus clientStatus = clientStatusDao.selectById(clientID);
+        ClientStatus clientStatus = machineInfoDao.selectById(clientID);
         clientStatus.setUpgradeFailedReason(upgradeFailedReason);
-        clientStatusDao.updateById(clientStatus);
+        machineInfoDao.updateById(clientStatus);
     }
 
 
     public List<ClientStatusSummaryVO> searchClientStatusSummaryVO(String clientIDPrefix, String city, String switchGroupName) throws Exception {
-        List<ClientStatusSummaryVO> pcClientStatusSummaryVOs = clientStatusDao.searchClientStatusSummaryVO(clientIDPrefix, city, switchGroupName);
+        List<ClientStatusSummaryVO> pcClientStatusSummaryVOs = machineInfoDao.searchClientStatusSummaryVO(clientIDPrefix, city, switchGroupName);
         Collections.sort(pcClientStatusSummaryVOs);
         ClientStatusSummaryVO previousClientIDPrefix = null;
         ClientStatusSummaryVO previousType = null;
@@ -662,11 +659,11 @@ public class MachineInfoService extends ServiceImpl<ClientStatusDao, ClientStatu
     }
 
     public List<ClientStatusGroupSummaryVO> searchClientStatusGroupSummaryVO(String group, String terminalType) {
-        return clientStatusDao.searchClientStatusGroupSummaryVO(group,terminalType);
+        return machineInfoDao.searchClientStatusGroupSummaryVO(group,terminalType);
     }
 
     public String checkUpgrade(String clientID){
-        ClientStatus clientStatus = clientStatusDao.selectById(clientID);
+        ClientStatus clientStatus = machineInfoDao.selectById(clientID);
         if(clientStatus != null){
             if(clientStatus.getTargetVersion() != null){
                 return clientStatus.getTargetVersion().equals(clientStatus.getVersion()) ? "" : clientStatus.getTargetVersion();
@@ -678,7 +675,7 @@ public class MachineInfoService extends ServiceImpl<ClientStatusDao, ClientStatu
     }
 
     public String checkPassword(String clientID){
-        ClientStatus clientStatus = clientStatusDao.selectById(clientID);
+        ClientStatus clientStatus = machineInfoDao.selectById(clientID);
         if(clientStatus != null){
             if(clientStatus.getTargetVPSPassword() != null){
                 return clientStatus.getTargetVPSPassword().equals(clientStatus.getPassword()) ? "" : clientStatus.getTargetVPSPassword();
@@ -688,11 +685,11 @@ public class MachineInfoService extends ServiceImpl<ClientStatusDao, ClientStatu
     }
 
     public String updatePassword(String clientID){
-        ClientStatus clientStatus = clientStatusDao.selectById(clientID);
+        ClientStatus clientStatus = machineInfoDao.selectById(clientID);
         if(clientStatus != null){
             if(clientStatus.getTargetVPSPassword() != null){
                 clientStatus.setPassword(clientStatus.getTargetVPSPassword());
-                clientStatusDao.updateById(clientStatus);
+                machineInfoDao.updateById(clientStatus);
                 return "1";
             }
         }
@@ -701,7 +698,7 @@ public class MachineInfoService extends ServiceImpl<ClientStatusDao, ClientStatu
 
     public ClientStatus getStoppedClientStatuses(){
         ClientStatus tmpClientStatus = null;
-//        List<ClientStatus> clientStatuses = clientStatusDao.searchRestartingClientStatuses();
+//        List<ClientStatus> clientStatuses = machineInfoDao.searchRestartingClientStatuses();
 //        for(ClientStatus clientStatus : clientStatuses){
 ////			if(customerKeywordService.haveCustomerKeywordForOptimization(clientStatus.getTerminalType(), clientStatus.getClientID())){
 //            tmpClientStatus = clientStatus;
@@ -710,7 +707,7 @@ public class MachineInfoService extends ServiceImpl<ClientStatusDao, ClientStatu
 ////			}
 //        }
         if(tmpClientStatus == null) {
-            List<ClientStatus> clientStatuses = clientStatusDao.searchWaitingRestartingClientStatuses();
+            List<ClientStatus> clientStatuses = machineInfoDao.searchWaitingRestartingClientStatuses();
             for (ClientStatus clientStatus : clientStatuses) {
 //				if (customerKeywordService.haveCustomerKeywordForOptimization(clientStatus.getTerminalType(), clientStatus.getClientID())) {
                 tmpClientStatus = clientStatus;
@@ -745,17 +742,17 @@ public class MachineInfoService extends ServiceImpl<ClientStatusDao, ClientStatu
     }
 
     private void updateRestartStatus(String clientID, String restartStatus){
-        clientStatusDao.updateRestartStatus(clientID, restartStatus);
+        machineInfoDao.updateRestartStatus(clientID, restartStatus);
     }
 
     public void updateClientStatusRestartStatus(String clientID, String restartStatus){
-        ClientStatus clientStatus = clientStatusDao.selectById(clientID);
+        ClientStatus clientStatus = machineInfoDao.selectById(clientID);
         if(clientStatus != null){
             clientStatus.setRestartTime(Utils.getCurrentTimestamp());
             clientStatus.setRestartOrderingTime(Utils.getCurrentTimestamp());
             clientStatus.setRestartCount(clientStatus.getRestartCount() + 1);
             clientStatus.setRestartStatus(restartStatus);
-            clientStatusDao.updateById(clientStatus);
+            machineInfoDao.updateById(clientStatus);
 
             ClientStatusRestartLog clientStatusRestartLog = new ClientStatusRestartLog();
             clientStatusRestartLog.setClientID(clientStatus.getClientID());
@@ -772,7 +769,7 @@ public class MachineInfoService extends ServiceImpl<ClientStatusDao, ClientStatu
     }
 
     private void switchGroup(String terminalType) throws Exception{
-        List<ClientStatus> clientStatuses = clientStatusDao.getClientStatusesForSwitchGroup(terminalType);
+        List<ClientStatus> clientStatuses = machineInfoDao.getClientStatusesForSwitchGroup(terminalType);
         if(CollectionUtils.isNotEmpty(clientStatuses)) {
             Map<String, List<ClientStatus>> clientStatusMap = new HashMap<String, List<ClientStatus>>();
             for(ClientStatus clientStatus : clientStatuses){
@@ -806,7 +803,7 @@ public class MachineInfoService extends ServiceImpl<ClientStatusDao, ClientStatu
 
         for (ClientStatus clientStatus : clientStatuses) {
             clientStatus.setUpdateSettingTime(Utils.getCurrentTimestamp());
-            clientStatusDao.updateById(clientStatus);
+            machineInfoDao.updateById(clientStatus);
         }
     }
 
@@ -1006,7 +1003,7 @@ public class MachineInfoService extends ServiceImpl<ClientStatusDao, ClientStatu
 
     public void sendNotificationForRenewal() throws Exception{
         String condition = " and DATE_ADD(fRenewalDate, INTERVAL -3 DAY ) < NOW() and fValid = 1 ORDER BY fRenewalDate ";
-        List<ClientStatus> clientStatuses = clientStatusDao.getClientStatusesForRenewal();
+        List<ClientStatus> clientStatuses = machineInfoDao.getClientStatusesForRenewal();
 
         if(!Utils.isEmpty(clientStatuses)){
             Config notificationEmail = configService.getConfig("NotificationEmail", "EmailAddress");
@@ -1032,93 +1029,93 @@ public class MachineInfoService extends ServiceImpl<ClientStatusDao, ClientStatu
     }
 
     public void updateRemainingKeywordIndicator(List<String> groupNames, int indicator){
-        clientStatusDao.updateRemainingKeywordIndicator(groupNames, indicator);
+        machineInfoDao.updateRemainingKeywordIndicator(groupNames, indicator);
     }
 
     public void updateAllRemainingKeywordIndicator(int indicator){
-        clientStatusDao.updateAllRemainingKeywordIndicator(indicator);
+        machineInfoDao.updateAllRemainingKeywordIndicator(indicator);
     }
 
     public ClientStatus getClientStatusForStartUp() {
-        ClientStatus clientStatus = clientStatusDao.getClientStatusForStartUp();
+        ClientStatus clientStatus = machineInfoDao.getClientStatusForStartUp();
         if(clientStatus != null) {
             clientStatus.setStartUpTime(Utils.getCurrentTimestamp());
             clientStatus.setStartUpStatus(ClientStartUpStatusEnum.Processing.name());
-            clientStatusDao.updateById(clientStatus);
+            machineInfoDao.updateById(clientStatus);
         }
         return clientStatus;
     }
 
     public String getClientStartUpStatus(String clientID) {
-        ClientStatus clientStatus = clientStatusDao.selectById(clientID);
+        ClientStatus clientStatus = machineInfoDao.selectById(clientID);
         return clientStatus.getStartUpStatus();
     }
 
     public String getClientStatusID(String vpsBackendSystemComputerID) {
-        return clientStatusDao.getClientStatusID(vpsBackendSystemComputerID);
+        return machineInfoDao.getClientStatusID(vpsBackendSystemComputerID);
     }
 
     public void updateClientStartUpStatus(String clientID, String status) {
-        ClientStatus clientStatus = clientStatusDao.selectById(clientID);
+        ClientStatus clientStatus = machineInfoDao.selectById(clientID);
         if(clientStatus != null) {
             clientStatus.setStartUpStatus(status);
-            clientStatusDao.updateById(clientStatus);
+            machineInfoDao.updateById(clientStatus);
         }
     }
 
     public Integer getDownloadingClientCount() {
-        return clientStatusDao.getDownloadingClientCount();
+        return machineInfoDao.getDownloadingClientCount();
     }
 
     public void updateStartUpStatusForCompleted(List<String> clientIDs) {
-        clientStatusDao.updateStartUpStatusForCompleted(clientIDs);
+        machineInfoDao.updateStartUpStatusForCompleted(clientIDs);
     }
 
     public void batchUpdateClientStatus(ClientStatusBatchUpdateCriteria clientStatusBatchUpdateCriteria) {
         String[] clientIDs = clientStatusBatchUpdateCriteria.getClientStatus().getClientID().split(",");
-        clientStatusDao.batchUpdateClientStatus(clientIDs, clientStatusBatchUpdateCriteria.getCs(), clientStatusBatchUpdateCriteria.getClientStatus());
+        machineInfoDao.batchUpdateClientStatus(clientIDs, clientStatusBatchUpdateCriteria.getCs(), clientStatusBatchUpdateCriteria.getClientStatus());
     }
 
     public List<CookieVO> searchClientForAllotCookie(int clientCookieCount, String cookieGroupForBaidu, String cookieGroupFor360) {
-        List<CookieVO> clientCookieCountList = clientStatusDao.searchClientForAllotCookie(clientCookieCount, cookieGroupForBaidu, cookieGroupFor360);
+        List<CookieVO> clientCookieCountList = machineInfoDao.searchClientForAllotCookie(clientCookieCount, cookieGroupForBaidu, cookieGroupFor360);
         return clientCookieCountList;
     }
 
     public void batchChangeStatus(String clientIDs,Boolean status) {
         String[] clientIds = clientIDs.split(",");
-        clientStatusDao.batchChangeStatus(clientIds,status);
+        machineInfoDao.batchChangeStatus(clientIds,status);
     }
 
     public void batchChangeTerminalType(String[] clientIds, String terminalType) {
-        clientStatusDao.batchChangeTerminalType(clientIds, terminalType);
+        machineInfoDao.batchChangeTerminalType(clientIds, terminalType);
     }
 
     public Integer getUpgradingClientCount(ClientUpgrade clientUpgrade) {
-        return clientStatusDao.getUpgradingClientCount(clientUpgrade);
+        return machineInfoDao.getUpgradingClientCount(clientUpgrade);
     }
 
     public void updateClientTargetVersion(ClientUpgrade clientUpgrade) {
-        clientStatusDao.updateClientTargetVersion(clientUpgrade);
+        machineInfoDao.updateClientTargetVersion(clientUpgrade);
     }
 
     public Integer getResidualClientCount(ClientUpgrade clientUpgrade) {
-        return clientStatusDao.getResidualClientCount(clientUpgrade);
+        return machineInfoDao.getResidualClientCount(clientUpgrade);
     }
 
     public void resetOptimizationInfo() {
-        clientStatusDao.resetOptimizationInfo();
+        machineInfoDao.resetOptimizationInfo();
     }
 
     public void updateVersion(String clientID, String version){
-        clientStatusDao.updateVersion(clientID, version);
+        machineInfoDao.updateVersion(clientID, version);
     }
 
     public List<ClientStatusVO> getClientStatusVOs (QZSettingSearchClientGroupInfoCriteria qzSettingSearchClientGroupInfoCriteria) {
-        return clientStatusDao.getClientStatusVOs(qzSettingSearchClientGroupInfoCriteria);
+        return machineInfoDao.getClientStatusVOs(qzSettingSearchClientGroupInfoCriteria);
     }
 
     public ClientStatusForOptimization getClientStatusForOptimization(String clientID){
-        ClientStatusForOptimization clientStatusForOptimization = clientStatusDao.getClientStatusForOptimization(clientID);
+        ClientStatusForOptimization clientStatusForOptimization = machineInfoDao.getClientStatusForOptimization(clientID);
         if(clientStatusForOptimization != null){
             clientStatusForOptimization.setOpenStatistics(clientStatusForOptimization.getDisableStatistics() == 1 ? 0 : 1);
             clientStatusForOptimization.setCurrentTime(Utils.formatDate(new Date(), Utils.TIME_FORMAT));

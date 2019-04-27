@@ -19,7 +19,7 @@
 
 });
 function pageLoad() {
-    var searchCustomerForm = $("#searchClientStatusForm");
+    var searchCustomerForm = $("#searchMachineInfoForm");
     var pageSize = searchCustomerForm.find('#pageSizeHidden').val();
     var pages = searchCustomerForm.find('#pagesHidden').val();
     var currentPageNumber = searchCustomerForm.find('#currentPageNumberHidden').val();
@@ -53,63 +53,63 @@ function alignTableHeader(){
             $("#headerTable tr").each(function () {
                 $(this).find("td").eq(value).css("display", "none");
             });
-            $("#clientStatusTable tr").each(function () {
+            $("#machineInfoTable tr").each(function () {
                 $(this).find("td").eq(value).css("display", "none");
             });
         }
     });
-    var td = $("#clientStatusTable tr:first td");
+    var td = $("#machineInfoTable tr:first td");
     var ctd = $("#headerTable tr:first td");
     $.each(td, function (idx, val) {
         ctd.eq(idx).width($(val).width());
     });
-    $("#clientStatusDiv").css("margin-top",$("#topDiv").height());
+    $("#machineInfoDiv").css("margin-top",$("#topDiv").height());
 }
 function changePaging(currentPageNumber, pageSize) {
-    var searchClientStatusForm = $("#searchClientStatusForm");
-    searchClientStatusForm.find("#currentPageNumberHidden").val(currentPageNumber);
-    searchClientStatusForm.find("#pageSizeHidden").val(pageSize);
-    searchClientStatusForm.submit();
+    var searchMachineInfoForm = $("#searchMachineInfoForm");
+    searchMachineInfoForm.find("#currentPageNumberHidden").val(currentPageNumber);
+    searchMachineInfoForm.find("#pageSizeHidden").val(pageSize);
+    searchMachineInfoForm.submit();
 }
 function resetPageNumber() {
-    var clientStatusFormObj = $("#searchClientStatusForm");
-    var clientId = clientStatusFormObj.find("#clientID").val();
-    var groupName = clientStatusFormObj.find("#groupName").val();
-    var version = clientStatusFormObj.find("#version").val();
-    var targetVersion = clientStatusFormObj.find("#targetVersion").val();
-    var city = clientStatusFormObj.find("#city").val();
-    var upgradeFailedReason = clientStatusFormObj.find("#upgradeFailedReason").val();
-    var vpsBackendSystemComputerID = clientStatusFormObj.find("#vpsBackendSystemComputerID").val();
-    var switchGroupName = clientStatusFormObj.find("#switchGroupName").val();
-    var startUpStatus = clientStatusFormObj.find("#startUpStatus").val();
+    var machineInfoFormObj = $("#searchMachineInfoForm");
+    var clientId = machineInfoFormObj.find("#clientID").val();
+    var groupName = machineInfoFormObj.find("#groupName").val();
+    var version = machineInfoFormObj.find("#version").val();
+    var targetVersion = machineInfoFormObj.find("#targetVersion").val();
+    var city = machineInfoFormObj.find("#city").val();
+    var upgradeFailedReason = machineInfoFormObj.find("#upgradeFailedReason").val();
+    var vpsBackendSystemComputerID = machineInfoFormObj.find("#vpsBackendSystemComputerID").val();
+    var switchGroupName = machineInfoFormObj.find("#switchGroupName").val();
+    var startUpStatus = machineInfoFormObj.find("#startUpStatus").val();
     if(clientId != "") {
-        clientStatusFormObj.find("#clientID").val($.trim(clientId));
+        machineInfoFormObj.find("#clientID").val($.trim(clientId));
     }
     if(groupName != "") {
-        clientStatusFormObj.find("#groupName").val($.trim(groupName));
+        machineInfoFormObj.find("#groupName").val($.trim(groupName));
     }
     if(version != "") {
-        clientStatusFormObj.find("#version").val($.trim(version));
+        machineInfoFormObj.find("#version").val($.trim(version));
     }
     if(targetVersion != "") {
-        clientStatusFormObj.find("#targetVersion").val($.trim(targetVersion));
+        machineInfoFormObj.find("#targetVersion").val($.trim(targetVersion));
     }
     if(city != "") {
-        clientStatusFormObj.find("#city").val($.trim(city));
+        machineInfoFormObj.find("#city").val($.trim(city));
     }
     if(upgradeFailedReason != "") {
-        clientStatusFormObj.find("#upgradeFailedReason").val($.trim(upgradeFailedReason));
+        machineInfoFormObj.find("#upgradeFailedReason").val($.trim(upgradeFailedReason));
     }
     if(vpsBackendSystemComputerID != "") {
-        clientStatusFormObj.find("#vpsBackendSystemComputerID").val($.trim(vpsBackendSystemComputerID));
+        machineInfoFormObj.find("#vpsBackendSystemComputerID").val($.trim(vpsBackendSystemComputerID));
     }
     if(switchGroupName != "") {
-        clientStatusFormObj.find("#switchGroupName").val($.trim(switchGroupName));
+        machineInfoFormObj.find("#switchGroupName").val($.trim(switchGroupName));
     }
     if(startUpStatus != "") {
-        clientStatusFormObj.find("#startUpStatus").val($.trim(startUpStatus));
+        machineInfoFormObj.find("#startUpStatus").val($.trim(startUpStatus));
     }
-    $("#searchClientStatusForm").find("#currentPageNumberHidden").val(1);
+    $("#searchMachineInfoForm").find("#currentPageNumberHidden").val(1);
 }
 function checkItem(self) {
     var color = $(self).css("color");
@@ -129,7 +129,7 @@ function resetTrItemColor() {
 }
 function downloadVNCFile() {
     $.ajax({
-        url: '/internal/clientstatus/downloadVNCFile',
+        url: '/internal/machineInfo/downloadVNCFile',
         type: 'POST',
         success: function (result) {
             if (result) {
@@ -145,7 +145,7 @@ function downloadVNCFile() {
 }
 function downloadFullVNCFile() {
     $.ajax({
-        url: '/internal/clientstatus/downloadFullVNCFile',
+        url: '/internal/machineInfo/downloadFullVNCFile',
         type: 'POST',
         success: function (result) {
             if (result) {
@@ -195,7 +195,7 @@ function showUploadVNCDialog() {
                 var formData = new FormData();
                 formData.append('file', $("#uploadVNCDialog").find("#file")[0].files[0]);
                 $.ajax({
-                    url: '/internal/clientstatus/uploadVNCFile',
+                    url: '/internal/machineInfo/uploadVNCFile',
                     type: 'POST',
                     cache: false,
                     data: formData,
@@ -233,9 +233,9 @@ function showUploadVNCDialog() {
     });
     $('#uploadVNCDialog').window("resize",{top:$(document).scrollTop() + 100});
 }
-function showUploadVPSDialog(clientStatusType) {
+function showUploadVPSDialog(machineInfoType) {
     $("#uploadVPSDialog").show();
-    if(clientStatusType == "startUp") {
+    if(machineInfoType == "startUp") {
         $("#uploadVPSDialog").find("#programType").css("display", "block");
     } else {
         $("#uploadVPSDialog").find("#programType").css("display", "none");
@@ -262,13 +262,13 @@ function showUploadVPSDialog(clientStatusType) {
 
                 var formData = new FormData();
                 formData.append('file', $("#uploadVPSDialog").find("#file")[0].files[0]);
-                formData.append('clientStatusType', clientStatusType);
-                if(clientStatusType == "startUp") {
+                formData.append('machineInfoType', machineInfoType);
+                if(machineInfoType == "startUp") {
                     var downloadProgramType = $("#programType").find("input[name=downloadProgramType]:checked").val();
                     formData.append('downloadProgramType', downloadProgramType);
                 }
                 $.ajax({
-                    url: '/internal/clientstatus/uploadVPSFile',
+                    url: '/internal/machineInfo/uploadVPSFile',
                     type: 'POST',
                     cache: false,
                     data: formData,
@@ -320,7 +320,7 @@ function showReopenClientDialog() {
                 postData.clientIDs = clientIDs.split(",");
                 postData.downloadProgramType = downloadProgramType;
                 $.ajax({
-                    url: '/internal/clientstatus/reopenClientStatus',
+                    url: '/internal/machineInfo/reopenMachineInfo',
                     data: JSON.stringify(postData),
                     headers: {
                         'Accept': 'application/json',
@@ -370,7 +370,7 @@ function decideSelectAll() {
 function delItem(clientID) {
     if (confirm("确定要删除这台终端吗?") == false) return;
     $.ajax({
-        url: '/internal/clientstatus/deleteClientStatus/' + clientID,
+        url: '/internal/machineInfo/deleteMachineInfo/' + clientID,
         type: 'POST',
         success: function (result) {
             if (result) {
@@ -395,7 +395,7 @@ function delAllItems(self) {
     var postData = {};
     postData.clientIDs = clientIDs.split(",");
     $.ajax({
-        url: '/internal/clientstatus/deleteClientStatuses',
+        url: '/internal/machineInfo/deleteMachineInfos',
         data: JSON.stringify(postData),
         headers: {
             'Accept': 'application/json',
@@ -430,7 +430,7 @@ function getSelectedClientIDs() {
 function resetRestartStatus() {
     if (confirm("确实要重设状态为Processing或者Logging终端的重启状态吗?") == false) return;
     $.ajax({
-        url: '/internal/clientstatus/resetRestartStatusForProcessing' ,
+        url: '/internal/machineInfo/resetRestartStatusForProcessing' ,
         type: 'POST',
         success: function (result) {
             if(result){
@@ -456,7 +456,7 @@ function changeStatus(clientID, status) {
         }
     }
     $.ajax({
-        url: '/internal/clientstatus/changeStatus/' + clientID,
+        url: '/internal/machineInfo/changeStatus/' + clientID,
         type: 'POST',
         success: function (result) {
             if (result) {
@@ -473,12 +473,12 @@ function changeStatus(clientID, status) {
 }
 
 function updateGroup(self){
-    var clientStatus = {};
-    clientStatus.clientID = self.id;
-    clientStatus.group = self.value.trim();
+    var machineInfo = {};
+    machineInfo.clientID = self.id;
+    machineInfo.group = self.value.trim();
     $.ajax({
-        url: '/internal/clientstatus/updateGroup',
-        data: JSON.stringify(clientStatus),
+        url: '/internal/machineInfo/updateGroup',
+        data: JSON.stringify(machineInfo),
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
@@ -502,7 +502,7 @@ function changeTerminalType(clientID){
     var postData = {};
     postData.clientID = clientID;
     $.ajax({
-        url: '/internal/clientstatus/changeTerminalType',
+        url: '/internal/machineInfo/changeTerminalType',
         data: JSON.stringify(postData),
         headers: {
             'Accept': 'application/json',
@@ -524,12 +524,12 @@ function changeTerminalType(clientID){
     });
 }
 function updateOperationType(self){
-    var clientStatus = {};
-    clientStatus.clientID = self.id.replace("operationType", "");
-    clientStatus.operationType = self.value.trim();
+    var machineInfo = {};
+    machineInfo.clientID = self.id.replace("operationType", "");
+    machineInfo.operationType = self.value.trim();
     $.ajax({
-        url: '/internal/clientstatus/updateOperationType',
-        data: JSON.stringify(clientStatus),
+        url: '/internal/machineInfo/updateOperationType',
+        data: JSON.stringify(machineInfo),
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
@@ -552,13 +552,13 @@ function updateOperationType(self){
 function showSettingDialog(clientID, self){
     resetTrItemColor();
     $.ajax({
-        url: '/internal/clientstatus/getClientStatus/' + clientID,
+        url: '/internal/machineInfo/getMachineInfo/' + clientID,
         type: 'POST',
-        success: function (clientStatus) {
-            if(clientStatus == null) {
+        success: function (machineInfo) {
+            if(machineInfo == null) {
                 $().toastmessage('showErrorToast', "获取信息失败");
             } else {
-                initSettingDialog(clientStatus, self);
+                initSettingDialog(machineInfo, self);
                 $("#changeSettingDialog").show();
                 $("#changeSettingDialog").dialog({
                     resizable: false,
@@ -589,93 +589,93 @@ function showSettingDialog(clientID, self){
         }
     });
 }
-function initSettingDialog(clientStatus, self){
+function initSettingDialog(machineInfo, self){
     var settingDialogDiv = $("#changeSettingDialog");
-    settingDialogDiv.find("#settingClientID").val(clientStatus.clientID);
-    settingDialogDiv.find("#settingGroup").val(clientStatus.group != null ? clientStatus.group : "");
-    settingDialogDiv.find("#settingOperationType").val(clientStatus.operationType != null ? clientStatus.operationType : "");
-    if(clientStatus.pageSize != null){
-        settingDialogDiv.find("#pageSize").val(clientStatus.pageSize);
+    settingDialogDiv.find("#settingClientID").val(machineInfo.clientID);
+    settingDialogDiv.find("#settingGroup").val(machineInfo.group != null ? machineInfo.group : "");
+    settingDialogDiv.find("#settingOperationType").val(machineInfo.operationType != null ? machineInfo.operationType : "");
+    if(machineInfo.pageSize != null){
+        settingDialogDiv.find("#pageSize").val(machineInfo.pageSize);
     }
-    if(clientStatus.page != null){
-        settingDialogDiv.find("#page").val(clientStatus.page);
+    if(machineInfo.page != null){
+        settingDialogDiv.find("#page").val(machineInfo.page);
     }
-    if(clientStatus.zhanneiPercent != null){
-        settingDialogDiv.find("#zhanneiPercent").val(clientStatus.zhanneiPercent);
+    if(machineInfo.zhanneiPercent != null){
+        settingDialogDiv.find("#zhanneiPercent").val(machineInfo.zhanneiPercent);
     }
-    if(clientStatus.zhanwaiPercent != null){
-        settingDialogDiv.find("#zhanwaiPercent").val(clientStatus.zhanwaiPercent);
+    if(machineInfo.zhanwaiPercent != null){
+        settingDialogDiv.find("#zhanwaiPercent").val(machineInfo.zhanwaiPercent);
     }
-    if(clientStatus.dragPercent  != null){
-        settingDialogDiv.find("#dragPercent").val(clientStatus.dragPercent );
+    if(machineInfo.dragPercent  != null){
+        settingDialogDiv.find("#dragPercent").val(machineInfo.dragPercent );
     }
-    if(clientStatus.kuaizhaoPercent != null){
-        settingDialogDiv.find("#kuaizhaoPercent").val(clientStatus.kuaizhaoPercent);
+    if(machineInfo.kuaizhaoPercent != null){
+        settingDialogDiv.find("#kuaizhaoPercent").val(machineInfo.kuaizhaoPercent);
     }
-    if(clientStatus.baiduSemPercent != null){
-        settingDialogDiv.find("#baiduSemPercent").val(clientStatus.baiduSemPercent);
+    if(machineInfo.baiduSemPercent != null){
+        settingDialogDiv.find("#baiduSemPercent").val(machineInfo.baiduSemPercent);
     }
-    if(clientStatus.specialCharPercent != null){
-        settingDialogDiv.find("#specialCharPercent").val(clientStatus.specialCharPercent);
+    if(machineInfo.specialCharPercent != null){
+        settingDialogDiv.find("#specialCharPercent").val(machineInfo.specialCharPercent);
     }
 
-    if(clientStatus.multiBrowser != null){
-        settingDialogDiv.find("#multiBrowser").val(clientStatus.multiBrowser);
+    if(machineInfo.multiBrowser != null){
+        settingDialogDiv.find("#multiBrowser").val(machineInfo.multiBrowser);
     }
-    if(clientStatus.clearCookie != null){
-        settingDialogDiv.find("#clearCookie").val(clientStatus.clearCookie);
+    if(machineInfo.clearCookie != null){
+        settingDialogDiv.find("#clearCookie").val(machineInfo.clearCookie);
     }
-    settingDialogDiv.find("#allowSwitchGroup ").val(clientStatus.allowSwitchGroup );
-    settingDialogDiv.find("#disableStatistics ").val(clientStatus.disableStatistics );
-    settingDialogDiv.find("#disableVisitWebsite ").val(clientStatus.disableVisitWebsite );
+    settingDialogDiv.find("#allowSwitchGroup ").val(machineInfo.allowSwitchGroup );
+    settingDialogDiv.find("#disableStatistics ").val(machineInfo.disableStatistics );
+    settingDialogDiv.find("#disableVisitWebsite ").val(machineInfo.disableVisitWebsite );
 
-    settingDialogDiv.find("#entryPageMinCount").val(clientStatus.entryPageMinCount);
-    settingDialogDiv.find("#entryPageMaxCount").val(clientStatus.entryPageMaxCount);
-    settingDialogDiv.find("#pageRemainMinTime").val(clientStatus.pageRemainMinTime);
-    settingDialogDiv.find("#pageRemainMaxTime").val(clientStatus.pageRemainMaxTime);
-    settingDialogDiv.find("#inputDelayMinTime").val(clientStatus.inputDelayMinTime);
-    settingDialogDiv.find("#inputDelayMaxTime").val(clientStatus.inputDelayMaxTime);
-    settingDialogDiv.find("#slideDelayMinTime").val(clientStatus.slideDelayMinTime);
-    settingDialogDiv.find("#slideDelayMaxTime").val(clientStatus.slideDelayMaxTime);
-    settingDialogDiv.find("#titleRemainMinTime").val(clientStatus.titleRemainMinTime);
-    settingDialogDiv.find("#titleRemainMaxTime").val(clientStatus.titleRemainMaxTime);
-    settingDialogDiv.find("#waitTimeAfterOpenBaidu").val(clientStatus.waitTimeAfterOpenBaidu);
-    settingDialogDiv.find("#waitTimeBeforeClick").val(clientStatus.waitTimeBeforeClick);
-    settingDialogDiv.find("#waitTimeAfterClick").val(clientStatus.waitTimeAfterClick);
-    settingDialogDiv.find("#maxUserCount").val(clientStatus.maxUserCount);
-    settingDialogDiv.find("#optimizeKeywordCountPerIP").val(clientStatus.optimizeKeywordCountPerIP);
+    settingDialogDiv.find("#entryPageMinCount").val(machineInfo.entryPageMinCount);
+    settingDialogDiv.find("#entryPageMaxCount").val(machineInfo.entryPageMaxCount);
+    settingDialogDiv.find("#pageRemainMinTime").val(machineInfo.pageRemainMinTime);
+    settingDialogDiv.find("#pageRemainMaxTime").val(machineInfo.pageRemainMaxTime);
+    settingDialogDiv.find("#inputDelayMinTime").val(machineInfo.inputDelayMinTime);
+    settingDialogDiv.find("#inputDelayMaxTime").val(machineInfo.inputDelayMaxTime);
+    settingDialogDiv.find("#slideDelayMinTime").val(machineInfo.slideDelayMinTime);
+    settingDialogDiv.find("#slideDelayMaxTime").val(machineInfo.slideDelayMaxTime);
+    settingDialogDiv.find("#titleRemainMinTime").val(machineInfo.titleRemainMinTime);
+    settingDialogDiv.find("#titleRemainMaxTime").val(machineInfo.titleRemainMaxTime);
+    settingDialogDiv.find("#waitTimeAfterOpenBaidu").val(machineInfo.waitTimeAfterOpenBaidu);
+    settingDialogDiv.find("#waitTimeBeforeClick").val(machineInfo.waitTimeBeforeClick);
+    settingDialogDiv.find("#waitTimeAfterClick").val(machineInfo.waitTimeAfterClick);
+    settingDialogDiv.find("#maxUserCount").val(machineInfo.maxUserCount);
+    settingDialogDiv.find("#optimizeKeywordCountPerIP").val(machineInfo.optimizeKeywordCountPerIP);
 
-    settingDialogDiv.find("#oneIPOneUser")[0].checked = (clientStatus.oneIPOneUser == 1) ? true : false;
-    settingDialogDiv.find("#randomlyClickNoResult")[0].checked = (clientStatus.randomlyClickNoResult == 1) ? true : false;
-    settingDialogDiv.find("#justVisitSelfPage")[0].checked = (clientStatus.justVisitSelfPage == 1) ? true : false;
-    settingDialogDiv.find("#sleepPer2Words")[0].checked = (clientStatus.sleepPer2Words == 1) ? true : false;
-    settingDialogDiv.find("#supportPaste")[0].checked = (clientStatus.supportPaste == 1) ? true : false;
-    settingDialogDiv.find("#moveRandomly")[0].checked = (clientStatus.moveRandomly == 1) ? true : false;
-    settingDialogDiv.find("#parentSearchEntry")[0].checked = (clientStatus.parentSearchEntry == 1) ? true : false;
-    settingDialogDiv.find("#clearLocalStorage")[0].checked = (clientStatus.clearLocalStorage == 1) ? true : false;
-    settingDialogDiv.find("#lessClickAtNight")[0].checked = (clientStatus.lessClickAtNight == 1) ? true : false;
-    settingDialogDiv.find("#sameCityUser")[0].checked = (clientStatus.sameCityUser == 1) ? true : false;
-    settingDialogDiv.find("#locateTitlePosition")[0].checked = (clientStatus.locateTitlePosition == 1) ? true : false;
-    settingDialogDiv.find("#baiduAllianceEntry")[0].checked = (clientStatus.baiduAllianceEntry == 1) ? true : false;
-    settingDialogDiv.find("#justClickSpecifiedTitle")[0].checked = (clientStatus.justClickSpecifiedTitle == 1) ? true : false;
-    settingDialogDiv.find("#randomlyClickMoreLink")[0].checked = (clientStatus.randomlyClickMoreLink == 1) ? true : false;
-    settingDialogDiv.find("#moveUp20")[0].checked = (clientStatus.moveUp20 == 1) ? true : false;
-    settingDialogDiv.find("#optimizeRelatedKeyword")[0].checked = (clientStatus.optimizeRelatedKeyword == 1) ? true : false;
+    settingDialogDiv.find("#oneIPOneUser")[0].checked = (machineInfo.oneIPOneUser == 1) ? true : false;
+    settingDialogDiv.find("#randomlyClickNoResult")[0].checked = (machineInfo.randomlyClickNoResult == 1) ? true : false;
+    settingDialogDiv.find("#justVisitSelfPage")[0].checked = (machineInfo.justVisitSelfPage == 1) ? true : false;
+    settingDialogDiv.find("#sleepPer2Words")[0].checked = (machineInfo.sleepPer2Words == 1) ? true : false;
+    settingDialogDiv.find("#supportPaste")[0].checked = (machineInfo.supportPaste == 1) ? true : false;
+    settingDialogDiv.find("#moveRandomly")[0].checked = (machineInfo.moveRandomly == 1) ? true : false;
+    settingDialogDiv.find("#parentSearchEntry")[0].checked = (machineInfo.parentSearchEntry == 1) ? true : false;
+    settingDialogDiv.find("#clearLocalStorage")[0].checked = (machineInfo.clearLocalStorage == 1) ? true : false;
+    settingDialogDiv.find("#lessClickAtNight")[0].checked = (machineInfo.lessClickAtNight == 1) ? true : false;
+    settingDialogDiv.find("#sameCityUser")[0].checked = (machineInfo.sameCityUser == 1) ? true : false;
+    settingDialogDiv.find("#locateTitlePosition")[0].checked = (machineInfo.locateTitlePosition == 1) ? true : false;
+    settingDialogDiv.find("#baiduAllianceEntry")[0].checked = (machineInfo.baiduAllianceEntry == 1) ? true : false;
+    settingDialogDiv.find("#justClickSpecifiedTitle")[0].checked = (machineInfo.justClickSpecifiedTitle == 1) ? true : false;
+    settingDialogDiv.find("#randomlyClickMoreLink")[0].checked = (machineInfo.randomlyClickMoreLink == 1) ? true : false;
+    settingDialogDiv.find("#moveUp20")[0].checked = (machineInfo.moveUp20 == 1) ? true : false;
+    settingDialogDiv.find("#optimizeRelatedKeyword")[0].checked = (machineInfo.optimizeRelatedKeyword == 1) ? true : false;
 
-    settingDialogDiv.find("#waitTimeAfterOpenBaidu").val(clientStatus.waitTimeAfterOpenBaidu);
-    settingDialogDiv.find("#waitTimeBeforeClick").val(clientStatus.waitTimeBeforeClick);
-    settingDialogDiv.find("#waitTimeAfterClick").val(clientStatus.waitTimeAfterClick);
-    settingDialogDiv.find("#maxUserCount").val(clientStatus.maxUserCount);
+    settingDialogDiv.find("#waitTimeAfterOpenBaidu").val(machineInfo.waitTimeAfterOpenBaidu);
+    settingDialogDiv.find("#waitTimeBeforeClick").val(machineInfo.waitTimeBeforeClick);
+    settingDialogDiv.find("#waitTimeAfterClick").val(machineInfo.waitTimeAfterClick);
+    settingDialogDiv.find("#maxUserCount").val(machineInfo.maxUserCount);
 
-    settingDialogDiv.find("#switchGroupName").val(clientStatus.switchGroupName != null ? clientStatus.switchGroupName : "");
-    settingDialogDiv.find("#host").val(clientStatus.host != null ? clientStatus.host : "");
-    settingDialogDiv.find("#port").val(clientStatus.port != null ? clientStatus.port : "");
-    settingDialogDiv.find("#csUserName").val(clientStatus.userName != null ? clientStatus.userName : "Administrator");
-    settingDialogDiv.find("#broadbandAccount").val(clientStatus.broadbandAccount != null ? clientStatus.broadbandAccount : "");
-    settingDialogDiv.find("#broadbandPassword").val(clientStatus.broadbandPassword != null ? clientStatus.broadbandPassword : "");
-    settingDialogDiv.find("#vpsBackendSystemComputerID").val(clientStatus.vpsBackendSystemComputerID != null ? clientStatus.vpsBackendSystemComputerID :
+    settingDialogDiv.find("#switchGroupName").val(machineInfo.switchGroupName != null ? machineInfo.switchGroupName : "");
+    settingDialogDiv.find("#host").val(machineInfo.host != null ? machineInfo.host : "");
+    settingDialogDiv.find("#port").val(machineInfo.port != null ? machineInfo.port : "");
+    settingDialogDiv.find("#csUserName").val(machineInfo.userName != null ? machineInfo.userName : "Administrator");
+    settingDialogDiv.find("#broadbandAccount").val(machineInfo.broadbandAccount != null ? machineInfo.broadbandAccount : "");
+    settingDialogDiv.find("#broadbandPassword").val(machineInfo.broadbandPassword != null ? machineInfo.broadbandPassword : "");
+    settingDialogDiv.find("#vpsBackendSystemComputerID").val(machineInfo.vpsBackendSystemComputerID != null ? machineInfo.vpsBackendSystemComputerID :
         "");
-    settingDialogDiv.find("#vpsBackendSystemPassword").val(clientStatus.vpsBackendSystemPassword != null ? clientStatus.vpsBackendSystemPassword : "doshows123");
+    settingDialogDiv.find("#vpsBackendSystemPassword").val(machineInfo.vpsBackendSystemPassword != null ? machineInfo.vpsBackendSystemPassword : "doshows123");
     settingDialogDiv.show();
 }
 function isChecked(id) {
@@ -688,67 +688,67 @@ function isChecked(id) {
 }
 function saveChangeSetting(clientIDs){
     var settingDialogDiv = $("#changeSettingDialog");
-    var clientStatus = {};
-    clientStatus.group = settingDialogDiv.find("#settingGroup").val();
-    clientStatus.operationType = settingDialogDiv.find("#settingOperationType").val();
-    clientStatus.pageSize = settingDialogDiv.find("#pageSize").val();
-    clientStatus.page = settingDialogDiv.find("#page").val();
-    clientStatus.dragPercent = settingDialogDiv.find("#dragPercent").val();
-    clientStatus.zhanneiPercent = settingDialogDiv.find("#zhanneiPercent").val();
-    clientStatus.zhanwaiPercent = settingDialogDiv.find("#zhanwaiPercent").val();
-    clientStatus.kuaizhaoPercent = settingDialogDiv.find("#kuaizhaoPercent").val();
-    clientStatus.baiduSemPercent = settingDialogDiv.find("#baiduSemPercent").val();
-    clientStatus.specialCharPercent = settingDialogDiv.find("#specialCharPercent").val();
-    clientStatus.multiBrowser = settingDialogDiv.find("#multiBrowser").val();
-    clientStatus.clearCookie = settingDialogDiv.find("#clearCookie").val();
-    clientStatus.allowSwitchGroup = settingDialogDiv.find("#allowSwitchGroup").val();
-    clientStatus.disableStatistics = settingDialogDiv.find("#disableStatistics").val();
-    clientStatus.disableVisitWebsite = settingDialogDiv.find("#disableVisitWebsite").val();
+    var machineInfo = {};
+    machineInfo.group = settingDialogDiv.find("#settingGroup").val();
+    machineInfo.operationType = settingDialogDiv.find("#settingOperationType").val();
+    machineInfo.pageSize = settingDialogDiv.find("#pageSize").val();
+    machineInfo.page = settingDialogDiv.find("#page").val();
+    machineInfo.dragPercent = settingDialogDiv.find("#dragPercent").val();
+    machineInfo.zhanneiPercent = settingDialogDiv.find("#zhanneiPercent").val();
+    machineInfo.zhanwaiPercent = settingDialogDiv.find("#zhanwaiPercent").val();
+    machineInfo.kuaizhaoPercent = settingDialogDiv.find("#kuaizhaoPercent").val();
+    machineInfo.baiduSemPercent = settingDialogDiv.find("#baiduSemPercent").val();
+    machineInfo.specialCharPercent = settingDialogDiv.find("#specialCharPercent").val();
+    machineInfo.multiBrowser = settingDialogDiv.find("#multiBrowser").val();
+    machineInfo.clearCookie = settingDialogDiv.find("#clearCookie").val();
+    machineInfo.allowSwitchGroup = settingDialogDiv.find("#allowSwitchGroup").val();
+    machineInfo.disableStatistics = settingDialogDiv.find("#disableStatistics").val();
+    machineInfo.disableVisitWebsite = settingDialogDiv.find("#disableVisitWebsite").val();
 
-    clientStatus.switchGroupName = settingDialogDiv.find("#switchGroupName").val();
-    clientStatus.host = settingDialogDiv.find("#host").val();
-    clientStatus.port = settingDialogDiv.find("#port").val();
-    clientStatus.userName = settingDialogDiv.find("#csUserName").val();
-    clientStatus.broadbandAccount = settingDialogDiv.find("#broadbandAccount").val();
-    clientStatus.broadbandPassword = settingDialogDiv.find("#broadbandPassword").val();
-    clientStatus.vpsBackendSystemComputerID = settingDialogDiv.find("#vpsBackendSystemComputerID").val();
-    clientStatus.vpsBackendSystemPassword = settingDialogDiv.find("#vpsBackendSystemPassword").val();
+    machineInfo.switchGroupName = settingDialogDiv.find("#switchGroupName").val();
+    machineInfo.host = settingDialogDiv.find("#host").val();
+    machineInfo.port = settingDialogDiv.find("#port").val();
+    machineInfo.userName = settingDialogDiv.find("#csUserName").val();
+    machineInfo.broadbandAccount = settingDialogDiv.find("#broadbandAccount").val();
+    machineInfo.broadbandPassword = settingDialogDiv.find("#broadbandPassword").val();
+    machineInfo.vpsBackendSystemComputerID = settingDialogDiv.find("#vpsBackendSystemComputerID").val();
+    machineInfo.vpsBackendSystemPassword = settingDialogDiv.find("#vpsBackendSystemPassword").val();
 
-    clientStatus.entryPageMinCount = settingDialogDiv.find("#entryPageMinCount").val();
-    clientStatus.entryPageMaxCount = settingDialogDiv.find("#entryPageMaxCount").val();
-    clientStatus.disableVisitWebsite = settingDialogDiv.find("#disableVisitWebsite").val();
-    clientStatus.pageRemainMinTime = settingDialogDiv.find("#pageRemainMinTime").val();
-    clientStatus.pageRemainMaxTime = settingDialogDiv.find("#pageRemainMaxTime").val();
-    clientStatus.inputDelayMinTime = settingDialogDiv.find("#inputDelayMinTime").val();
-    clientStatus.inputDelayMaxTime = settingDialogDiv.find("#inputDelayMaxTime").val();
-    clientStatus.slideDelayMinTime = settingDialogDiv.find("#slideDelayMinTime").val();
-    clientStatus.slideDelayMaxTime = settingDialogDiv.find("#slideDelayMaxTime").val();
-    clientStatus.titleRemainMinTime = settingDialogDiv.find("#titleRemainMinTime").val();
-    clientStatus.titleRemainMaxTime = settingDialogDiv.find("#titleRemainMaxTime").val();
-    clientStatus.waitTimeAfterOpenBaidu = settingDialogDiv.find("#waitTimeAfterOpenBaidu").val();
-    clientStatus.waitTimeBeforeClick = settingDialogDiv.find("#waitTimeBeforeClick").val();
-    clientStatus.waitTimeAfterClick = settingDialogDiv.find("#waitTimeAfterClick").val();
-    clientStatus.maxUserCount = settingDialogDiv.find("#maxUserCount").val();
-    clientStatus.optimizeKeywordCountPerIP = settingDialogDiv.find("#optimizeKeywordCountPerIP").val();
+    machineInfo.entryPageMinCount = settingDialogDiv.find("#entryPageMinCount").val();
+    machineInfo.entryPageMaxCount = settingDialogDiv.find("#entryPageMaxCount").val();
+    machineInfo.disableVisitWebsite = settingDialogDiv.find("#disableVisitWebsite").val();
+    machineInfo.pageRemainMinTime = settingDialogDiv.find("#pageRemainMinTime").val();
+    machineInfo.pageRemainMaxTime = settingDialogDiv.find("#pageRemainMaxTime").val();
+    machineInfo.inputDelayMinTime = settingDialogDiv.find("#inputDelayMinTime").val();
+    machineInfo.inputDelayMaxTime = settingDialogDiv.find("#inputDelayMaxTime").val();
+    machineInfo.slideDelayMinTime = settingDialogDiv.find("#slideDelayMinTime").val();
+    machineInfo.slideDelayMaxTime = settingDialogDiv.find("#slideDelayMaxTime").val();
+    machineInfo.titleRemainMinTime = settingDialogDiv.find("#titleRemainMinTime").val();
+    machineInfo.titleRemainMaxTime = settingDialogDiv.find("#titleRemainMaxTime").val();
+    machineInfo.waitTimeAfterOpenBaidu = settingDialogDiv.find("#waitTimeAfterOpenBaidu").val();
+    machineInfo.waitTimeBeforeClick = settingDialogDiv.find("#waitTimeBeforeClick").val();
+    machineInfo.waitTimeAfterClick = settingDialogDiv.find("#waitTimeAfterClick").val();
+    machineInfo.maxUserCount = settingDialogDiv.find("#maxUserCount").val();
+    machineInfo.optimizeKeywordCountPerIP = settingDialogDiv.find("#optimizeKeywordCountPerIP").val();
 
-    clientStatus.oneIPOneUser = settingDialogDiv.find("#oneIPOneUser:checked").val() === '1' ? 1 : 0;
-    clientStatus.randomlyClickNoResult = settingDialogDiv.find("#randomlyClickNoResult:checked").val() === '1' ? 1 : 0;
-    clientStatus.justVisitSelfPage = settingDialogDiv.find("#justVisitSelfPage:checked").val() === '1' ? 1 : 0;
-    clientStatus.sleepPer2Words = settingDialogDiv.find("#sleepPer2Words:checked").val() === '1' ? 1 : 0;
-    clientStatus.supportPaste = settingDialogDiv.find("#supportPaste:checked").val() === '1' ? 1 : 0;
-    clientStatus.moveRandomly = settingDialogDiv.find("#moveRandomly:checked").val() === '1' ? 1 : 0;
-    clientStatus.parentSearchEntry = settingDialogDiv.find("#parentSearchEntry:checked").val() === '1' ? 1 : 0;
-    clientStatus.clearLocalStorage = settingDialogDiv.find("#clearLocalStorage:checked").val() === '1' ? 1 : 0;
-    clientStatus.lessClickAtNight = settingDialogDiv.find("#lessClickAtNight:checked").val() === '1' ? 1 : 0;
-    clientStatus.sameCityUser = settingDialogDiv.find("#sameCityUser:checked").val() === '1' ? 1 : 0;
-    clientStatus.locateTitlePosition = settingDialogDiv.find("#locateTitlePosition:checked").val() === '1' ? 1 : 0;
-    clientStatus.baiduAllianceEntry = settingDialogDiv.find("#baiduAllianceEntry:checked").val() === '1' ? 1 : 0;
-    clientStatus.justClickSpecifiedTitle = settingDialogDiv.find("#justClickSpecifiedTitle:checked").val() === '1' ? 1 : 0;
-    clientStatus.randomlyClickMoreLink = settingDialogDiv.find("#randomlyClickMoreLink:checked").val() === '1' ? 1 : 0;
-    clientStatus.moveUp20 = settingDialogDiv.find("#moveUp20:checked").val() === '1' ? 1 : 0;
-    clientStatus.optimizeRelatedKeyword = settingDialogDiv.find("#optimizeRelatedKeyword:checked").val() === '1' ? 1 : 0;
+    machineInfo.oneIPOneUser = settingDialogDiv.find("#oneIPOneUser:checked").val() === '1' ? 1 : 0;
+    machineInfo.randomlyClickNoResult = settingDialogDiv.find("#randomlyClickNoResult:checked").val() === '1' ? 1 : 0;
+    machineInfo.justVisitSelfPage = settingDialogDiv.find("#justVisitSelfPage:checked").val() === '1' ? 1 : 0;
+    machineInfo.sleepPer2Words = settingDialogDiv.find("#sleepPer2Words:checked").val() === '1' ? 1 : 0;
+    machineInfo.supportPaste = settingDialogDiv.find("#supportPaste:checked").val() === '1' ? 1 : 0;
+    machineInfo.moveRandomly = settingDialogDiv.find("#moveRandomly:checked").val() === '1' ? 1 : 0;
+    machineInfo.parentSearchEntry = settingDialogDiv.find("#parentSearchEntry:checked").val() === '1' ? 1 : 0;
+    machineInfo.clearLocalStorage = settingDialogDiv.find("#clearLocalStorage:checked").val() === '1' ? 1 : 0;
+    machineInfo.lessClickAtNight = settingDialogDiv.find("#lessClickAtNight:checked").val() === '1' ? 1 : 0;
+    machineInfo.sameCityUser = settingDialogDiv.find("#sameCityUser:checked").val() === '1' ? 1 : 0;
+    machineInfo.locateTitlePosition = settingDialogDiv.find("#locateTitlePosition:checked").val() === '1' ? 1 : 0;
+    machineInfo.baiduAllianceEntry = settingDialogDiv.find("#baiduAllianceEntry:checked").val() === '1' ? 1 : 0;
+    machineInfo.justClickSpecifiedTitle = settingDialogDiv.find("#justClickSpecifiedTitle:checked").val() === '1' ? 1 : 0;
+    machineInfo.randomlyClickMoreLink = settingDialogDiv.find("#randomlyClickMoreLink:checked").val() === '1' ? 1 : 0;
+    machineInfo.moveUp20 = settingDialogDiv.find("#moveUp20:checked").val() === '1' ? 1 : 0;
+    machineInfo.optimizeRelatedKeyword = settingDialogDiv.find("#optimizeRelatedKeyword:checked").val() === '1' ? 1 : 0;
     if(clientIDs != null) {
-        clientStatus.clientID = clientIDs;
+        machineInfo.clientID = clientIDs;
         var cs = {};
         cs.group = isChecked("settingGroup");
         cs.operationType = isChecked("settingOperationType");
@@ -810,9 +810,9 @@ function saveChangeSetting(clientIDs){
         cs.optimizeRelatedKeyword = isChecked("optimizeRelatedKeyword") === '1' ? 1 : 0;
         var postData = {};
         postData.cs = cs;
-        postData.clientStatus = clientStatus;
+        postData.machineInfo = machineInfo;
         $.ajax({
-            url: '/internal/clientstatus/batchUpdateClientStatus',
+            url: '/internal/machineInfo/batchUpdateMachineInfo',
             data: JSON.stringify(postData),
             headers: {
                 'Accept': 'application/json',
@@ -834,10 +834,10 @@ function saveChangeSetting(clientIDs){
             }
         });
     } else {
-        clientStatus.clientID = settingDialogDiv.find("#settingClientID").val();
+        machineInfo.clientID = settingDialogDiv.find("#settingClientID").val();
         $.ajax({
-            url: '/internal/clientstatus/saveClientStatus',
-            data: JSON.stringify(clientStatus),
+            url: '/internal/machineInfo/saveMachineInfo',
+            data: JSON.stringify(machineInfo),
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
@@ -921,17 +921,17 @@ function showTargetVPSPasswordSettingDialog(self){
 }
 function saveTargetVersionSetting(self){
     var settingDialogDiv = $("#targetVersionSettingDialog");
-    var clientStatus = {};
-    clientStatus.clientIDs = getSelectedClientIDs();
-    clientStatus.targetVersion = settingDialogDiv.find("#settingTargetVersion").val();
-    if(clientStatus.targetVersion.trim() === ''){
+    var machineInfo = {};
+    machineInfo.clientIDs = getSelectedClientIDs();
+    machineInfo.targetVersion = settingDialogDiv.find("#settingTargetVersion").val();
+    if(machineInfo.targetVersion.trim() === ''){
         alert("请输入目标版1本！");
         return;
     }
-    clientStatus.clientIDs = clientStatus.clientIDs.split(",");
+    machineInfo.clientIDs = machineInfo.clientIDs.split(",");
     $.ajax({
-        url: '/internal/clientstatus/updateClientStatusTargetVersion',
-        data: JSON.stringify(clientStatus),
+        url: '/internal/machineInfo/updateMachineInfoTargetVersion',
+        data: JSON.stringify(machineInfo),
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
@@ -956,21 +956,21 @@ function saveTargetVersionSetting(self){
 
 function saveTargetVPSPasswordSetting(self){
     var settingDialogDiv = $("#targetVPSPasswordSettingDialog");
-    var clientStatus = {};
-    clientStatus.clientIDs = getSelectedClientIDs();
-    clientStatus.targetVPSPassword = settingDialogDiv.find("#settingTargetVPSPassword").val();
-    if(clientStatus.targetVPSPassword.trim() === ''){
+    var machineInfo = {};
+    machineInfo.clientIDs = getSelectedClientIDs();
+    machineInfo.targetVPSPassword = settingDialogDiv.find("#settingTargetVPSPassword").val();
+    if(machineInfo.targetVPSPassword.trim() === ''){
         alert("请输入目标密码！");
         return;
     }
-    if(clientStatus.targetVPSPassword.trim().length != 8){
+    if(machineInfo.targetVPSPassword.trim().length != 8){
         alert("请输入8位密码！");
         return;
     }
-    clientStatus.clientIDs = clientStatus.clientIDs.split(",");
+    machineInfo.clientIDs = machineInfo.clientIDs.split(",");
     $.ajax({
-        url: '/internal/clientstatus/updateClientStatusTargetVPSPassword',
-        data: JSON.stringify(clientStatus),
+        url: '/internal/machineInfo/updateMachineInfoTargetVPSPassword',
+        data: JSON.stringify(machineInfo),
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
@@ -1031,23 +1031,23 @@ function isDate(s) {
 }
 function saveRenewalSetting(self){
     var settingDialogDiv = $("#renewalSettingDialog");
-    var clientStatus = {};
-    clientStatus.clientIDs = getSelectedClientIDs();
-    clientStatus.settingType = settingDialogDiv.find("input[name=settingType]:checked").val();
-    clientStatus.renewalDate = settingDialogDiv.find("#renewalDate").val();
-    if(clientStatus.settingType.trim() === 'specificDate'){
-        if(clientStatus.renewalDate.trim() === ''){
+    var machineInfo = {};
+    machineInfo.clientIDs = getSelectedClientIDs();
+    machineInfo.settingType = settingDialogDiv.find("input[name=settingType]:checked").val();
+    machineInfo.renewalDate = settingDialogDiv.find("#renewalDate").val();
+    if(machineInfo.settingType.trim() === 'specificDate'){
+        if(machineInfo.renewalDate.trim() === ''){
             alert("请输入日期！");
             return;
         }
-        if(!isDate(clientStatus.renewalDate.trim())){
+        if(!isDate(machineInfo.renewalDate.trim())){
             alert("日期格式不对！");
             return;
         }
     }
     $.ajax({
-        url: '/internal/clientstatus/updateClientStatusRenewalDate',
-        data: JSON.stringify(clientStatus),
+        url: '/internal/machineInfo/updateMachineInfoRenewalDate',
+        data: JSON.stringify(machineInfo),
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
@@ -1069,7 +1069,7 @@ function saveRenewalSetting(self){
         }
     });
 }
-function clientStatusBatchUpdate() {
+function machineInfoBatchUpdate() {
     var clientIDs = getSelectedClientIDs();
     if (clientIDs.indexOf(",") == -1) {
         alert('请选择多个终端进行设置');
@@ -1139,7 +1139,7 @@ function headerTableSetting() {
                 }
                 $("#hiddenColumns").val(columns);
                 $("#haveHiddenColumns").val(true);
-                $("#searchClientStatusForm").submit();
+                $("#searchMachineInfoForm").submit();
             }
         },
             {
@@ -1213,7 +1213,7 @@ function finishStartUp() {
     var postData = {};
     postData.clientIDs = clientIDs.split(",");
     $.ajax({
-        url: '/internal/clientstatus/updateStartUpStatusForCompleted',
+        url: '/internal/machineInfo/updateStartUpStatusForCompleted',
         data: JSON.stringify(postData),
         headers: {
             'Accept': 'application/json',
@@ -1244,7 +1244,7 @@ function batchChangeTerminalType(){
     var postData = {};
     postData.clientID = clientIDs;
     $.ajax({
-        url: '/internal/clientstatus/batchChangeTerminalType',
+        url: '/internal/machineInfo/batchChangeTerminalType',
         data: JSON.stringify(postData),
         headers: {
             'Accept': 'application/json',
@@ -1334,7 +1334,7 @@ function batchChangeStatus(status) {
     }
 
     $.ajax({
-        url: '/internal/clientstatus/batchChangeStatus',
+        url: '/internal/machineInfo/batchChangeStatus',
         type: 'POST',
         data: {"clientIDs":clientIDs,"status":status},
         success: function (result) {

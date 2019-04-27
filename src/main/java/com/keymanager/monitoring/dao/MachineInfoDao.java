@@ -2,12 +2,13 @@ package com.keymanager.monitoring.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
-import com.keymanager.monitoring.criteria.ClientStatusCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
+import com.keymanager.monitoring.criteria.MachineInfoCriteria;
 import com.keymanager.monitoring.criteria.QZSettingSearchClientGroupInfoCriteria;
 import com.keymanager.monitoring.entity.ClientStatus;
 import com.keymanager.monitoring.entity.ClientUpgrade;
 import com.keymanager.monitoring.entity.CustomerKeywordTerminalRefreshStatRecord;
+import com.keymanager.monitoring.entity.MachineInfo;
 import com.keymanager.monitoring.vo.ClientStatusForOptimization;
 import com.keymanager.monitoring.vo.ClientStatusVO;
 import com.keymanager.monitoring.vo.CookieVO;
@@ -37,7 +38,7 @@ public interface MachineInfoDao extends BaseMapper<ClientStatus> {
 
     List<ClientStatusSummaryVO> searchClientStatusSummaryVO(@Param("clientIDPrefix") String clientIDPrefix, @Param("city") String city, @Param("switchGroupName") String switchGroupName);
 
-    List<ClientStatus> searchClientStatuses(Page<ClientStatus> page, @Param("clientStatusCriteria") ClientStatusCriteria clientStatusCriteria);
+    List<MachineInfo> searchMachineInfos(Page<MachineInfo> page, @Param("machineInfoCriteria") MachineInfoCriteria machineInfoCriteria);
 
     List<ClientStatus> getClientStatusesForSwitchGroup(@Param("terminalType") String terminalType);
 
@@ -45,7 +46,7 @@ public interface MachineInfoDao extends BaseMapper<ClientStatus> {
 
     List<ClientStatusGroupSummaryVO> searchClientStatusGroupSummaryVO(@Param("group") String group, @Param("terminalType") String terminalType);
 
-    List<ClientStatus> searchBadClientStatus(Page<ClientStatus> page, @Param("clientStatusCriteria") ClientStatusCriteria clientStatusCriteria);
+    List<MachineInfo> searchBadMachineInfo(Page<MachineInfo> page, @Param("machineInfoCriteria") MachineInfoCriteria machineInfoCriteria);
 
     List<ClientStatus> searchRestartingClientStatuses();
 

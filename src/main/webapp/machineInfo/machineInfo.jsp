@@ -1,7 +1,7 @@
 ﻿<%@ include file="/commons/global.jsp" %>
 <html>
 <head>
-<title>终端监控</title>
+<title>机器管理</title>
 <style>
 #topDiv {
 	position: fixed;
@@ -42,11 +42,11 @@
 	margin: 15px 0px 0px 5px;
 }
 
-#clientStatusDiv {
+#machineInfoDiv {
 	width: 100%;
 }
 
-#showClientStatusBottomDiv {
+#showCustomerBottomDiv {
 	float: right;
 	width: 580px;
 }
@@ -58,7 +58,7 @@
 <%@ include file="/commons/basejs.jsp" %>
 <div id="topDiv">
 	<%@ include file="/menu.jsp"%>
-				<form id="searchClientStatusForm" method="post" action="/internal/clientstatus/searchClientStatuses" style="font-size: 12px;" cellpadding=3>
+				<form id="searchMachineInfoForm" method="post" action="/internal/machineInfo/searchMachineInfos" style="font-size: 12px;" cellpadding=3>
 					<table style="font-size: 12px;width:100%">
 						<tr>
 							<td align="left" colspan="2">
@@ -66,41 +66,34 @@
 								<input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
 								<input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
 								<input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
-								<input type="hidden" name="startUpStatusHidden" id="startUpStatusHidden" value="${clientStatusCriteria.startUpStatus}"/>
-								<input type="hidden" name="runningProgramTypeHidden" id="runningProgramTypeHidden" value="${clientStatusCriteria.runningProgramType}"/>
-								<input type="hidden" name="hiddenColumns" id="hiddenColumns" value="${clientStatusCriteria.hiddenColumns}"/>
-								<input type="hidden" name="haveHiddenColumns" id="haveHiddenColumns" value="${clientStatusCriteria.haveHiddenColumns}"/>
-								客户端ID:<input type="text" name="clientID" id="clientID" value="${clientStatusCriteria.clientID}" style="width: 90px;">
+								<input type="hidden" name="startUpStatusHidden" id="startUpStatusHidden" value="${machineInfoCriteria.startUpStatus}"/>
+								<input type="hidden" name="runningProgramTypeHidden" id="runningProgramTypeHidden" value="${machineInfoCriteria.runningProgramType}"/>
+								<input type="hidden" name="hiddenColumns" id="hiddenColumns" value="${machineInfoCriteria.hiddenColumns}"/>
+								<input type="hidden" name="haveHiddenColumns" id="haveHiddenColumns" value="${machineInfoCriteria.haveHiddenColumns}"/>
+								客户端ID:<input type="text" name="clientID" id="clientID" value="${machineInfoCriteria.clientID}" style="width: 90px;">
 								&nbsp;&nbsp;
-								优化组:<input type="text" name="groupName" id="groupName" value="${clientStatusCriteria.groupName}" style="width: 120px;">
+								优化组:<input type="text" name="groupName" id="groupName" value="${machineInfoCriteria.groupName}" style="width: 120px;">
 								&nbsp;&nbsp;
-								版本:<input type="text" name="version" id="version" value="${clientStatusCriteria.version}" style="width: 20px;">
+								版本:<input type="text" name="version" id="version" value="${machineInfoCriteria.version}" style="width: 20px;">
 								&nbsp;&nbsp;
-								目标版本:<input type="text" name="targetVersion" id="targetVersion" value="${clientStatusCriteria.targetVersion}" style="width: 20px;">
+								目标版本:<input type="text" name="targetVersion" id="targetVersion" value="${machineInfoCriteria.targetVersion}" style="width: 20px;">
 								&nbsp;&nbsp;
-								城市:<input type="text" name="city" id="city" value="${clientStatusCriteria.city}" style="width: 120px;">
+								城市:<input type="text" name="city" id="city" value="${machineInfoCriteria.city}" style="width: 120px;">
 								&nbsp;&nbsp;
-								失败原因:<input type="text" name="upgradeFailedReason" id="upgradeFailedReason" value="${clientStatusCriteria.upgradeFailedReason}"
+								失败原因:<input type="text" name="upgradeFailedReason" id="upgradeFailedReason" value="${machineInfoCriteria.upgradeFailedReason}"
 											  style="width: 50px;">
 							&nbsp;&nbsp;
-							操作类型:<select name="operationType" id="operationType">
-								<c:forEach items="${operationTypeValues}" var="operationType">
-									<c:choose>
-										<c:when test="${operationType eq clientStatusCriteria.operationType}"><option selected value="${operationType}">${operationType}</option></c:when>
-										<c:otherwise><option value="${operationType}">${operationType}</option></c:otherwise>
-									</c:choose>
-								</c:forEach>
 							</select>
 							&nbsp;&nbsp;
-							服务器ID:<input type="text" name="vpsBackendSystemComputerID" id="vpsBackendSystemComputerID" value="${clientStatusCriteria.vpsBackendSystemComputerID}" style="width: 80px;">
+							服务器ID:<input type="text" name="vpsBackendSystemComputerID" id="vpsBackendSystemComputerID" value="${machineInfoCriteria.vpsBackendSystemComputerID}" style="width: 80px;">
 							&nbsp;&nbsp;
-							流转分组:<input type="text" name="switchGroupName" id="switchGroupName" value="${clientStatusCriteria.switchGroupName}" style="width: 100px;">
+							流转分组:<input type="text" name="switchGroupName" id="switchGroupName" value="${machineInfoCriteria.switchGroupName}" style="width: 100px;">
 							&nbsp;&nbsp;
 							排序:<select name="orderBy" id="orderBy">
 							<option value=""></option>
 							<c:forEach items="${orderByMap}" var="entry">
 								<c:choose>
-									<c:when test="${entry.key eq clientStatusCriteria.orderBy}"><option selected value="${entry.key}">${entry.value}</option></c:when>
+									<c:when test="${entry.key eq machineInfoCriteria.orderBy}"><option selected value="${entry.key}">${entry.value}</option></c:when>
 									<c:otherwise><option value="${entry.key}">${entry.value}</option></c:otherwise>
 								</c:choose>
 							</c:forEach>
@@ -109,31 +102,31 @@
 						</tr>
 						<tr>
 						<td align="left">
-							<input id="hasProblem" name="hasProblem" type="checkbox" value="hasProblem" ${clientStatusCriteria.hasProblem != null ? "checked=true" : ""}>停了</input>
+							<input id="hasProblem" name="hasProblem" type="checkbox" value="hasProblem" ${machineInfoCriteria.hasProblem != null ? "checked=true" : ""}>停了</input>
 							&nbsp;&nbsp;
-							<input id="renewal" name="renewal" type="checkbox" value="renewal" ${clientStatusCriteria.renewal != null ? "checked=true" : ""}>续费</input>
+							<input id="renewal" name="renewal" type="checkbox" value="renewal" ${machineInfoCriteria.renewal != null ? "checked=true" : ""}>续费</input>
 							&nbsp;&nbsp;
-							<input id="hasGroup" name="hasGroup" type="checkbox" value="hasGroup" ${clientStatusCriteria.hasGroup != null ? "checked=true" : ""}>有分组</input>
+							<input id="hasGroup" name="hasGroup" type="checkbox" value="hasGroup" ${machineInfoCriteria.hasGroup != null ? "checked=true" : ""}>有分组</input>
 							&nbsp;&nbsp;
-							<input id="noGroup" name="noGroup" type="checkbox" value="noGroup" ${clientStatusCriteria.noGroup != null ? "checked=true" : ""}>没分组</input>
+							<input id="noGroup" name="noGroup" type="checkbox" value="noGroup" ${machineInfoCriteria.noGroup != null ? "checked=true" : ""}>没分组</input>
 							&nbsp;&nbsp;
-							<input id="noOperationType" name="noOperationType" type="checkbox" value="noOperationType" ${clientStatusCriteria.noOperationType != null ? "checked=true" : ""}>没操作类型</input>
+							<input id="noOperationType" name="noOperationType" type="checkbox" value="noOperationType" ${machineInfoCriteria.noOperationType != null ? "checked=true" : ""}>没操作类型</input>
 							&nbsp;&nbsp;
-							<input id="noVNC" name="noVNC" type="checkbox" value="noVNC" ${clientStatusCriteria.noVNC != null ? "checked=true" : ""}>没VNC</input>
+							<input id="noVNC" name="noVNC" type="checkbox" value="noVNC" ${machineInfoCriteria.noVNC != null ? "checked=true" : ""}>没VNC</input>
 							&nbsp;&nbsp;
-							<input id="noUpgrade" name="noUpgrade" type="checkbox" value="noUpgrade" ${clientStatusCriteria.noUpgrade != null ? "checked=true" : ""}>没升级</input>
+							<input id="noUpgrade" name="noUpgrade" type="checkbox" value="noUpgrade" ${machineInfoCriteria.noUpgrade != null ? "checked=true" : ""}>没升级</input>
 							&nbsp;&nbsp;
-							<input id="noChangePassword" name="noChangePassword" type="checkbox" value="noChangePassword" ${clientStatusCriteria.noChangePassword != null ? "checked=true" : ""}>没修改密码</input>
+							<input id="noChangePassword" name="noChangePassword" type="checkbox" value="noChangePassword" ${machineInfoCriteria.noChangePassword != null ? "checked=true" : ""}>没修改密码</input>
 							&nbsp;&nbsp;
-							<input id="startUpClient" name="startUpClient" type="checkbox" value="startUpClient" ${clientStatusCriteria.startUpClient != null ? "checked=true" : ""}>开机机器</input>
+							<input id="startUpClient" name="startUpClient" type="checkbox" value="startUpClient" ${machineInfoCriteria.startUpClient != null ? "checked=true" : ""}>开机机器</input>
 							&nbsp;&nbsp;
 							<input id="showFetchKeywordStatus" name="showFetchKeywordStatus" type="checkbox" value="showFetchKeywordStatus"
-							${clientStatusCriteria.showFetchKeywordStatus != null ? "checked=true" : ""}>显示取词状态</input>
+							${machineInfoCriteria.showFetchKeywordStatus != null ? "checked=true" : ""}>显示取词状态</input>
 							&nbsp;&nbsp;
 							状态:<select name="valid" id="valid">
 							<c:forEach items="${validMap}" var="entry">
 								<c:choose>
-									<c:when test="${entry.value eq clientStatusCriteria.valid}"><option selected value="${entry.value}">${entry.key}</option></c:when>
+									<c:when test="${entry.value eq machineInfoCriteria.valid}"><option selected value="${entry.value}">${entry.key}</option></c:when>
 									<c:otherwise><option value="${entry.value}">${entry.key}</option></c:otherwise>
 								</c:choose>
 							</c:forEach>
@@ -156,55 +149,55 @@
 								<option value='Old'>Old</option>
 							</select>
 
-							<shiro:hasPermission name="/internal/clientstatus/searchClientStatuses">
+							<%--<shiro:hasPermission name="/internal/machineInfo/searchMachineInfos">--%>
 								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" onclick="resetPageNumber()" value=" 查询 ">
-							</shiro:hasPermission>
-							<shiro:hasPermission name="/internal/clientstatus/deleteClientStatuses">
+							<%--</shiro:hasPermission>
+							<shiro:hasPermission name="/internal/machineInfo/deleteMachineInfos">--%>
 								&nbsp;&nbsp;<input type="button" onclick="delAllItems(this)" value=" 删除 ">
-							</shiro:hasPermission>
-							<shiro:hasPermission name="/internal/clientstatus/saveClientStatus">
+							<%--</shiro:hasPermission>
+							<shiro:hasPermission name="/internal/machineInfo/saveMachineInfo">--%>
 								&nbsp;&nbsp;<input type="button" onclick="showReopenClientDialog()" value=" 重开机器 ">
 								&nbsp;&nbsp;<input type="button" onclick="finishStartUp()" value=" 完成开机 ">
-							</shiro:hasPermission>
-							<shiro:hasPermission name="/internal/clientstatus/uploadVPSFile">
+							<%--</shiro:hasPermission>
+							<shiro:hasPermission name="/internal/machineInfo/uploadVPSFile">--%>
 								&nbsp;&nbsp;<input type="button" name="btnFilter" onclick="showUploadVPSDialog('common')" value=" 导入普通终端 ">
 								&nbsp;&nbsp;<input type="button" onclick="showUploadVPSDialog('startUp')" value=" 导入开机终端 ">
-							</shiro:hasPermission>
+							<%--</shiro:hasPermission>--%>
 							&nbsp;&nbsp;<input type="button" onclick="headerTableSetting()" value="表格设置">
 						</td>
 						</tr>
 						<tr>
 							<td colspan="2" align="right">
-							<shiro:hasPermission name="/internal/clientstatus/updateClientStatusTargetVersion">
+							<%--<shiro:hasPermission name="/internal/machineInfo/updateMachineInfoTargetVersion">--%>
 								<a target="_blank" href="javascript:showTargetVersionSettingDialog(this)">设定目标版本</a>
-							</shiro:hasPermission>
-							<shiro:hasPermission name="/internal/clientstatus/saveClientStatus">
+							<%--</shiro:hasPermission>
+							<shiro:hasPermission name="/internal/machineInfo/saveMachineInfo">--%>
 								<a target="_blank" href="javascript:showTargetVPSPasswordSettingDialog(this)">设定目标密码</a>
-							</shiro:hasPermission>
-							<shiro:hasPermission name="/internal/clientstatus/updateClientStatusRenewalDate">
+							<%--</shiro:hasPermission>
+							<shiro:hasPermission name="/internal/machineInfo/updateMachineInfoRenewalDate">--%>
 								|<a target="_blank" href="javascript:showRenewalSettingDialog(this)">续费</a>
-							</shiro:hasPermission>
-							<shiro:hasPermission name="/internal/clientstatus/resetRestartStatusForProcessing">
+							<%--</shiro:hasPermission>
+							<shiro:hasPermission name="/internal/machineInfo/resetRestartStatusForProcessing">--%>
 								|<a target="_blank" href="javascript:resetRestartStatus()">重置重启状态</a>
-							</shiro:hasPermission>
-							<shiro:hasPermission name="/internal/clientstatus/uploadVNCFile">
+							<%--</shiro:hasPermission>
+							<shiro:hasPermission name="/internal/machineInfo/uploadVNCFile">--%>
 								|<a target="_blank" href="javascript:showUploadVNCDialog()">上传VNC文件</a>
-							</shiro:hasPermission>
-							<shiro:hasPermission name="/internal/clientstatus/downloadVNCFile">
+							<%--</shiro:hasPermission>
+							<shiro:hasPermission name="/internal/machineInfo/downloadVNCFile">--%>
 								|<a target="_blank" href="javascript:downloadVNCFile()">下载VNC连接压缩文件</a>
-							</shiro:hasPermission>
-							<shiro:hasPermission name="/internal/clientstatus/saveClientStatus">
-								|<a target="_blank" href="javascript:clientStatusBatchUpdate()">批量设置</a>
-							</shiro:hasPermission>
-							<shiro:hasPermission name="/internal/clientstatus/changeStatus">
+							<%--</shiro:hasPermission>
+							<shiro:hasPermission name="/internal/machineInfo/saveMachineInfo">--%>
+								|<a target="_blank" href="javascript:MachineInfoBatchUpdate()">批量设置</a>
+							<%--</shiro:hasPermission>
+							<shiro:hasPermission name="/internal/machineInfo/changeStatus">--%>
 								|<a target="_blank" href="javascript:batchChangeStatus(true)">批量开始</a>
-							</shiro:hasPermission>
-							<shiro:hasPermission name="/internal/clientstatus/changeStatus">
+							<%--</shiro:hasPermission>
+							<shiro:hasPermission name="/internal/machineInfo/changeStatus">--%>
 								|<a target="_blank" href="javascript:batchChangeStatus(false)">批量暂停</a>
-							</shiro:hasPermission>
-							<shiro:hasPermission name="/internal/clientstatus/changeTerminalType">
+							<%--</shiro:hasPermission>
+							<shiro:hasPermission name="/internal/machineInfo/changeTerminalType">--%>
 								|<a target="_blank" href="javascript:batchChangeTerminalType()">批量变更终端类型</a>
-							</shiro:hasPermission>
+							<%--</shiro:hasPermission>--%>
 							</td>
 						</tr>
 					</table>
@@ -214,10 +207,9 @@
 			<td align="center" width=10><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
 			<td align="center" width=40>客户端ID</td>
 			<td align="center" width=60>优化组</td>
-			<td align="center" width=60>操作类型</td>
 			<td align="center" width=20>续费<br>日期</td>
 			<td align="center" width=30>现版本<br>目标版本</td>
-			<td align="center" width=40>重启数/重启状态<br>页码/失败次数</td>
+			<td align="center" width=40>重启数/重启状态<br>失败次数</td>
 			<td align="center" width=60>所在城市<br>终端状态</td>
 			<td align="center" width=30>剩余空间</td>
 			<td align="center" width=40>最新工作时间<br>重启时间</td>
@@ -227,29 +219,28 @@
 			<td align="center" width=30>运行程序<br>类型</td>
 			<td align="center" width=40>开机状态<br>下载程序类型</td>
 			<td align="center" width=20>状态</td>
-			<td align="center" width=30>停留时间</td>
 			<td align="center" width=40>失败原因</td>
 			<td align="center" width=40>服务器ID</td>
 			<td align="center" width=80>操作</td>
 		</tr>
 	</table>
 </div>
-<div id="clientStatusDiv" style="margin-bottom: 30px;">
-	<table width=100% style="font-size: 12px" id="clientStatusTable">
-		<c:forEach items="${page.records}" var="clientStatus" varStatus="tr">
+<div id="machineInfoDiv" style="margin-bottom: 30px;">
+	<table width=100% style="font-size: 12px" id="machineInfoTable">
+		<c:forEach items="${page.records}" var="machineInfo" varStatus="tr">
 			<c:set var="isValidClient" value="true"/>
 			<c:choose>
-				<c:when test="${clientStatus.valid}">
+				<c:when test="${machineInfo.valid}">
 					<c:choose>
-						<c:when test="${clientStatus.red}">
+						<c:when test="${machineInfo.red}">
 							<c:set var="keywordColor" value="#FF0000"/>
 							<c:set var="isValidClient" value="false"/>
 						</c:when>
-						<c:when test="${clientStatus.orange}">
+						<c:when test="${machineInfo.orange}">
 							<c:set var="keywordColor" value="#e86e33"/>
 							<c:set var="isValidClient" value="false"/>
 						</c:when>
-						<c:when test="${clientStatus.yellow}">
+						<c:when test="${machineInfo.yellow}">
 							<c:set var="keywordColor" value="#ef00ff"/>
 							<c:set var="isValidClient" value="false"/>
 						</c:when>
@@ -270,120 +261,97 @@
 					<tr onmouseover="doOver(this);" onmouseout="doOut(this);">
 				</c:otherwise>
 			</c:choose>
-			<td align="center" width=10><input type="checkbox" name="clientID" value="${clientStatus.clientID}" onclick="decideSelectAll()"/></td>
+			<td align="center" width=10><input type="checkbox" name="clientID" value="${machineInfo.clientID}" onclick="decideSelectAll()"/></td>
 			<td width=40>
-				<font color="${keywordColor}">${clientStatus.clientID}</font>
+				<font color="${keywordColor}">${machineInfo.clientID}</font>
 				<c:if test="${!isValidClient}">
-					<span name="invalidClient" id="span_${clientStatus.clientID}"></span>
+					<span name="invalidClient" id="span_${machineInfo.clientID}"></span>
 				</c:if>
 			</td>
 			<td width=60>
-				<shiro:hasPermission name="/internal/clientstatus/updateGroup">
-					<input type="text" value="${clientStatus.group == null ? "" : clientStatus.group}"
-						   name="group" id="${clientStatus.clientID}" onBlur="updateGroup(this)" style="width: 100%;"/>
-				</shiro:hasPermission>
-				<shiro:lacksPermission name="/internal/clientstatus/updateGroup">
-					<input type="text" value="${clientStatus.group == null ? "" : clientStatus.group}"
-						   name="group" id="${clientStatus.clientID}" disabled style="width: 100%;"/>
-				</shiro:lacksPermission>
+				<%--<shiro:hasPermission name="/internal/machineInfo/updateGroup">--%>
+					<input type="text" value="${machineInfo.group == null ? "" : machineInfo.group}"
+						   name="group" id="${machineInfo.clientID}" onBlur="updateGroup(this)" style="width: 100%;"/>
+				<%--</shiro:hasPermission>
+				<shiro:lacksPermission name="/internal/machineInfo/updateGroup">--%>
+					<input type="text" value="${machineInfo.group == null ? "" : machineInfo.group}"
+						   name="group" id="${machineInfo.clientID}" disabled style="width: 100%;"/>
+				<%--</shiro:lacksPermission>--%>
 			</td>
-			<td width=60>
-				<shiro:hasPermission name="/internal/clientstatus/updateOperationType">
-					<select name="operationType${clientStatus.clientID}" id="operationType${clientStatus.clientID}"
-							onChange="updateOperationType(this)" style="width: 100%;" />
-				</shiro:hasPermission>
-
-				<shiro:lacksPermission name="/internal/clientstatus/updateOperationType">
-					<select name="operationType${clientStatus.clientID}" id="operationType${clientStatus.clientID}"
-							disabled style="width: 100%;" />
-				</shiro:lacksPermission>
-				<c:forEach items="${operationTypeValues}" var="operationType">
-					<c:choose>
-						<c:when test="${operationType eq clientStatus.operationType}">
-							<option selected value="${operationType}">${operationType}</option>
-						</c:when>
-						<c:otherwise>
-							<option value="${operationType}">${operationType}</option>
-						</c:otherwise>
-					</c:choose>
-				</c:forEach>
-				</select>
-			</td>
-			<td width=20><font color="${keywordColor}"><fmt:formatDate value="${clientStatus.renewalDate}"
+			<td width=20><font color="${keywordColor}"><fmt:formatDate value="${machineInfo.renewalDate}"
 															  pattern="MM-dd"/></font></td>
 			<td width=30><font
-					color="${keywordColor}">${clientStatus.version == null ? "" : clientStatus.version}<br>${clientStatus.targetVersion == null ? "" : clientStatus.targetVersion}</font>
+					color="${keywordColor}">${machineInfo.version == null ? "" : machineInfo.version}<br>${machineInfo.targetVersion == null ? "" : machineInfo.targetVersion}</font>
 			</td>
 			<td width=40><font
-					color="${keywordColor}">${clientStatus.restartCount}/${clientStatus.restartStatus == null ? "" : clientStatus.restartStatus}<br>${clientStatus.pageNo}/${clientStatus.continuousFailCount}</font>
+					color="${keywordColor}">${machineInfo.restartCount}/${machineInfo.restartStatus == null ? "" : machineInfo.restartStatus}<br>${machineInfo.continuousFailCount}</font>
 			</td>
 			<td width=60 style="word-break: break-all;"><font
-					color="${keywordColor}">${clientStatus.city == null ? "" : clientStatus.city}<br>${clientStatus.status == null ? "" : clientStatus.status}</font>
+					color="${keywordColor}">${machineInfo.city == null ? "" : machineInfo.city}<br>${machineInfo.status == null ? "" : machineInfo.status}</font>
 			</td>
-			<td width=30><font color="${keywordColor}">${clientStatus.freeSpace}</font></td>
-			<td width=40><font color="${keywordColor}"><fmt:formatDate value="${clientStatus.lastVisitTime}"
+			<td width=30><font color="${keywordColor}">${machineInfo.freeSpace}</font></td>
+			<td width=40><font color="${keywordColor}"><fmt:formatDate value="${machineInfo.lastVisitTime}"
 															  pattern="MM-dd HH:mm"/><br><fmt:formatDate
-					value="${clientStatus.restartTime}" pattern="MM-dd HH:mm"/></font></td>
-			<td width=40><font color="${keywordColor}"><fmt:formatDate value="${clientStatus.restartOrderingTime}"
+					value="${machineInfo.restartTime}" pattern="MM-dd HH:mm"/></font></td>
+			<td width=40><font color="${keywordColor}"><fmt:formatDate value="${machineInfo.restartOrderingTime}"
 															  pattern="MM-dd HH:mm"/><br><fmt:formatDate
-					value="${clientStatus.lastSendNotificationTime}" pattern="MM-dd HH:mm"/></font></td>
+					value="${machineInfo.lastSendNotificationTime}" pattern="MM-dd HH:mm"/></font></td>
 			<td width=30><font
-					color="${keywordColor}">${clientStatus.optimizationSucceedCount}<br>${clientStatus.optimizationTotalCount}</font>
+					color="${keywordColor}">${machineInfo.optimizationSucceedCount}<br>${machineInfo.optimizationTotalCount}</font>
 			</td>
-			<td width=50><font color="${keywordColor}">${clientStatus.broadbandAccount}<br>${clientStatus.broadbandPassword}</font></td>
-			<td width=30><font color="${keywordColor}">${clientStatus.runningProgramType}</font></td>
-			<td width=40><font color="${keywordColor}">${clientStatus.startUpStatus}<br>${clientStatus.downloadProgramType}</font></td>
-			<td width=20><font color="${keywordColor}">${clientStatus.valid ? "监控中" : "暂停监控"}</font></td>
-			<td width=30><font color="${keywordColor}">${clientStatus.pageRemainMinTime}<br>${clientStatus.pageRemainMaxTime}</font></td>
+			<td width=50><font color="${keywordColor}">${machineInfo.broadbandAccount}<br>${machineInfo.broadbandPassword}</font></td>
+			<td width=30><font color="${keywordColor}">${machineInfo.runningProgramType}</font></td>
+			<td width=40><font color="${keywordColor}">${machineInfo.startUpStatus}<br>${machineInfo.downloadProgramType}</font></td>
+			<td width=20><font color="${keywordColor}">${machineInfo.valid ? "监控中" : "暂停监控"}</font></td>
 			<td width=40>
-				<shiro:hasPermission name="/internal/clientstatus/updateUpgradeFailedReason">
+				<%--<shiro:hasPermission name="/internal/machineInfo/updateUpgradeFailedReason">--%>
 					<input type="text"
-						   value="${clientStatus.upgradeFailedReason == null ? "" : clientStatus.upgradeFailedReason}"
-						   name="upgradeFailedReason" id="${clientStatus.clientID}" onBlur="updateUpgradeFailedReason(this)"
+						   value="${machineInfo.upgradeFailedReason == null ? "" : machineInfo.upgradeFailedReason}"
+						   name="upgradeFailedReason" id="${machineInfo.clientID}" onBlur="updateUpgradeFailedReason(this)"
 						   style="width: 100%;"/>
-				</shiro:hasPermission>
-				<shiro:lacksPermission name="/internal/clientstatus/updateUpgradeFailedReason">
+				<%--</shiro:hasPermission>
+				<shiro:lacksPermission name="/internal/machineInfo/updateUpgradeFailedReason">--%>
 					<input type="text"
-						   value="${clientStatus.upgradeFailedReason == null ? "" : clientStatus.upgradeFailedReason}"
-						   name="upgradeFailedReason" id="${clientStatus.clientID}" disabled
+						   value="${machineInfo.upgradeFailedReason == null ? "" : machineInfo.upgradeFailedReason}"
+						   name="upgradeFailedReason" id="${machineInfo.clientID}" disabled
 						   style="width: 100%;"/>
-				</shiro:lacksPermission>
+				<%--</shiro:lacksPermission>--%>
 			</td>
-			<td width=40><font color="${keywordColor}">${clientStatus.vpsBackendSystemComputerID}</font></td>
+			<td width=40><font color="${keywordColor}">${machineInfo.vpsBackendSystemComputerID}</font></td>
 			<td width=80>
 				<c:choose>
-					<c:when test="${null != clientStatus.host and '' != clientStatus.host}">
-						<shiro:hasPermission name="/internal/clientstatus/downloadVNCFile">
-							<a href="javascript:connectVNC('${clientStatus.host}', '${clientStatus.port}', '${clientStatus.userName}', '${clientStatus.password}')">VNC</a>
-						</shiro:hasPermission>
+					<c:when test="${null != machineInfo.host and '' != machineInfo.host}">
+						<%--<shiro:hasPermission name="/internal/machineInfo/downloadVNCFile">--%>
+							<a href="javascript:connectVNC('${machineInfo.host}', '${machineInfo.port}', '${machineInfo.userName}', '${machineInfo.password}')">VNC</a>
+						<%--</shiro:hasPermission>--%>
 					</c:when>
 					<c:otherwise>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					</c:otherwise>
 				</c:choose>
 				&nbsp;
-				<shiro:hasPermission name="/internal/clientstatus/saveClientStatus">
-					<a href="javascript:showSettingDialog('${clientStatus.clientID}', this)">设置</a>
-				</shiro:hasPermission>
+				<%--<shiro:hasPermission name="/internal/machineInfo/saveMachineInfo">--%>
+					<a href="javascript:showSettingDialog('${machineInfo.clientID}', this)">设置</a>
+				<%--</shiro:hasPermission>--%>
 				&nbsp;
-				<shiro:hasPermission name="/internal/clientstatus/deleteClientStatus">
-					<a href="javascript:delItem('${clientStatus.clientID}')">删除</a>
-				</shiro:hasPermission>
+				<%--<shiro:hasPermission name="/internal/machineInfo/deleteMachineInfo">--%>
+					<a href="javascript:delItem('${machineInfo.clientID}')">删除</a>
+				<%--</shiro:hasPermission>--%>
 				<br>
-				<shiro:hasPermission name="/internal/clientstatus/changeStatus">
+				<%--<shiro:hasPermission name="/internal/machineInfo/changeStatus">--%>
 				<c:choose>
-					<c:when test="${clientStatus.valid}">
-						<a href="javascript:changeStatus('${clientStatus.clientID}',false)">暂停监控</a>
+					<c:when test="${machineInfo.valid}">
+						<a href="javascript:changeStatus('${machineInfo.clientID}',false)">暂停监控</a>
 					</c:when>
 					<c:otherwise>
-						<a href="javascript:changeStatus('${clientStatus.clientID}',true)">开始监控</a>
+						<a href="javascript:changeStatus('${machineInfo.clientID}',true)">开始监控</a>
 					</c:otherwise>
 				</c:choose>
-				</shiro:hasPermission>
+				<%--</shiro:hasPermission>--%>
 				&nbsp;
-				<shiro:hasPermission name="/internal/clientstatus/changeTerminalType">
-				<a href="javascript:changeTerminalType('${clientStatus.clientID}')">变更终端类型</a>
-				</shiro:hasPermission>
+				<%--<shiro:hasPermission name="/internal/machineInfo/changeTerminalType">--%>
+				<a href="javascript:changeTerminalType('${machineInfo.clientID}')">变更终端类型</a>
+				<%--</shiro:hasPermission>--%>
 			</td>
 			</tr>
 		</c:forEach>
@@ -439,153 +407,8 @@
 								</select>
 							</td>
 						</tr>
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>网站统计</th>
-							<td>
-								<select name="disableStatistics" id="disableStatistics">
-									<option value="0">开放</option>
-									<option value="1">关闭</option>
-								</select>
-							</td>
-						</tr>
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>目标网站</th>
-							<td>
-								<select name="disableVisitWebsite" id="disableVisitWebsite">
-									<option value="0">访问</option>
-									<option value="1">不访问</option>
-								</select>
-							</td>
-						</tr>
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>操作类型</th>
-							<td>
-								<select name="settingOperationType" id="settingOperationType">
-								<c:forEach items="${operationTypeValues}" var="operationType">
-										<option value="${operationType}">${operationType}</option>
-								</c:forEach>
-								</select>
-							</td>
-						</tr>
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>页数</th>
-							<td>
-								<c:choose>
-									<c:when test="${terminalType eq 'Phone'}">
-										<input type="text" name="page" id="page" value="3"/>
-									</c:when>
-									<c:otherwise>
-										<input type="text" name="page" id="page" value="5"/>
-									</c:otherwise>
-								</c:choose>
-							</td>
-						</tr>
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>每页</th>
-							<td>
-								<select name="pageSize" id="pageSize">
-									<option value="0">10</option>
-									<option value="1">20</option>
-									<option value="2">50</option>
-								</select>条
-							</td>
-						</tr>
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>站内搜索</th>
-							<td>
-								<select name="zhanneiPercent" id="zhanneiPercent">
-									<option value="0">0%</option>
-									<option value="1">10%</option>
-									<option value="2">30%</option>
-									<option value="3">50%</option>
-									<option value="4">100%</option>
-								</select>
-							</td>
-						</tr>
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>外链检索</th>
-							<td>
-								<select name="zhanwaiPercent" id="zhanwaiPercent">
-									<option value="0">0%</option>
-									<option value="1">10%</option>
-									<option value="2">30%</option>
-									<option value="3">50%</option>
-									<option value="4">100%</option>
-								</select>
-							</td>
-						</tr>
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>快照点击比例</th>
-							<td>
-								<select name="kuaizhaoPercent" id="kuaizhaoPercent">
-									<option value="0">0%</option>
-									<option value="1">10%</option>
-									<option value="2">30%</option>
-									<option value="3">50%</option>
-									<option value="4">100%</option>
-								</select>
-							</td>
-						</tr>
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>竞价点击比例</th>
-							<td>
-								<select name="baiduSemPercent" id="baiduSemPercent">
-									<option value="0">0%</option>
-									<option value="1">10%</option>
-									<option value="2">30%</option>
-									<option value="3">50%</option>
-									<option value="4">100%</option>
-								</select>
-							</td>
-						</tr>
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>特殊字符比例</th>
-							<td>
-								<select name="specialCharPercent" id="specialCharPercent">
-									<option value="0">0%</option>
-									<option value="1">10%</option>
-									<option value="2">30%</option>
-									<option value="3">50%</option>
-									<option value="4">100%</option>
-								</select>
-							</td>
-						</tr>
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>拖动标题的点击比例</th>
-							<td>
-								<select name="dragPercent" id="dragPercent">
-									<option value="0">0%</option>
-									<option value="1">10%</option>
-									<option value="2">30%</option>
-									<option value="3">50%</option>
-									<option value="4">100%</option>
-								</select>
-							</td>
-						</tr>
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>浏览器设置</th>
-							<td>
-								<select name="multiBrowser" id="multiBrowser">
-									<option value="0">命令多浏览器</option>
-									<option value="1"  selected>模拟多浏览器</option>
-									<option value="2">单个浏览器</option>
-								</select>
-							</td>
-						</tr>
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>Cookie设置</th>
-							<td>
-								<select name="clearCookie" id="clearCookie">
-									<option value="0">不清理Cookie</option>
-									<option value="1">每次都清理Cookie</option>
-									<option value="2">随机清理Cookie</option>
-									<option value="3">N次操作清理Cookie</option>
-								</select>
-							</td>
-						</tr>
 					</table>
 				</td>
-
 
 				<td style="vertical-align:top;">
 					<table id="td_2" style="font-size:12px">
@@ -643,145 +466,8 @@
 								<input type="text" name="broadbandPassword" id="broadbandPassword" value="" style="width:110px;"/>
 							</td>
 						</tr>
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>进入页</th>
-							<td>
-								<input type="text" name="entryPageMinCount" id="entryPageMinCount" value="0" /> -
-								<input type="text" name="entryPageMaxCount" id="entryPageMaxCount" value="0" />次
-							</td>
-						</tr>
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>页面停留</th>
-							<td>
-								<input type="text" name="pageRemainMinTime" id="pageRemainMinTime" value="3000"/> -
-								<input type="text" name="pageRemainMaxTime" id="pageRemainMaxTime" value="5000"/>毫秒
-							</td>
-						</tr>
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>输入延时</th>
-							<td>
-								<input type="text" name="inputDelayMinTime" id="inputDelayMinTime" value="50"/> -
-								<input type="text" name="inputDelayMaxTime" id="inputDelayMaxTime" value="80"/>毫秒
-							</td>
-						</tr>
-
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>滑动延时</th>
-							<td>
-								<input type="text" name="slideDelayMinTime" id="slideDelayMinTime" value="700"/> -
-								<input type="text" name="slideDelayMaxTime" id="slideDelayMaxTime" value="1500"/>毫秒
-							</td>
-						</tr>
 					</table>
 				</td>
-
-				<td style="vertical-align:top;">
-					<table id="td_2" style="font-size:12px">
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>标题停留</th>
-							<td>
-								<input type="text" name="titleRemainMinTime" id="titleRemainMinTime" value="1000"/> -
-								<input type="text" name="titleRemainMaxTime" id="titleRemainMaxTime" value="3000"/>毫秒
-							</td>
-						</tr>
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>刷多少</th>
-							<td>
-								<input type="text" name="optimizeKeywordCountPerIP" id="optimizeKeywordCountPerIP" value="1"/>个词换IP
-							</td>
-						</tr>
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>打开百度等待</th>
-							<td>
-								<input type="text" name="waitTimeAfterOpenBaidu" id="waitTimeAfterOpenBaidu" value="1000"/>秒
-							</td>
-						</tr>
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>点击目标等待</th>
-							<td>
-								<input type="text" name="waitTimeBeforeClick" id="waitTimeBeforeClick" value="1000"/>秒
-							</td>
-						</tr>
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>点击目标后等待</th>
-							<td>
-								<input type="text" name="waitTimeAfterClick" id="waitTimeAfterClick" value="5000"/>秒
-							</td>
-						</tr>
-
-						<tr>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="oneIPOneUser" name="oneIPOneUser" type="checkbox" value="1">每IP对每用户</input>
-							</td>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="randomlyClickNoResult" name="randomlyClickNoResult" type="checkbox" value="1">没结果则随机点</input>
-							</td>
-						</tr>
-						<tr>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="justVisitSelfPage" name="justVisitSelfPage" type="checkbox" value="1">在域名下访问</input>
-							</td>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="sleepPer2Words" name="sleepPer2Words" type="checkbox" value="1">输入2字稍微停顿</input>
-							</td>
-						</tr>
-
-						<tr>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="supportPaste" name="supportPaste" type="checkbox" value="1">支持粘贴输入</input>
-							</td>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="moveRandomly" name="moveRandomly" type="checkbox" value="1">随机移动</input>
-							</td>
-						</tr>
-
-						<tr>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="parentSearchEntry" name="parentSearchEntry" type="checkbox" value="1">爸妈搜索入口</input>
-							</td>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="clearLocalStorage" name="clearLocalStorage" type="checkbox" value="1">清除LocalStorage</input>
-							</td>
-						</tr>
-
-						<tr>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="lessClickAtNight" name="lessClickAtNight" type="checkbox" value="1">晚上减少点击</input>
-							</td>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="sameCityUser" name="sameCityUser" type="checkbox" value="1">同城用户</input>
-							</td>
-						</tr>
-
-						<tr>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="locateTitlePosition" name="locateTitlePosition" type="checkbox" value="1">直接获取标题位置</input>
-							</td>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="baiduAllianceEntry" name="baiduAllianceEntry" type="checkbox" value="1">百度联盟入口</input>
-							</td>
-						</tr>
-
-						<tr>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="justClickSpecifiedTitle" name="justClickSpecifiedTitle" type="checkbox" value="1">随机只点指定标题</input>
-							</td>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="randomlyClickMoreLink" name="randomlyClickMoreLink" type="checkbox" value="1">随机多点一些链接</input>
-							</td>
-						</tr>
-
-						<tr>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="moveUp20" name="moveUp20" type="checkbox" value="1">向上偏移20</input>
-							</td>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="optimizeRelatedKeyword" name="optimizeRelatedKeyword" type="checkbox" value="1">操作相关词</input>
-							</td>
-						</tr>
-					</table>
-				</td>
-
 			</tr>
 		</table>
 	</div>
@@ -896,16 +582,16 @@
 		</table>
 	</div>
 <%@ include file="/commons/loadjs.jsp" %>
-<script src="${staticPath }/client/list.js"></script>
+<script src="${staticPath }/machineInfo/machineInfo.js"></script>
 <script language="javascript">
-    <shiro:hasPermission name="/internal/clientstatus/updateUpgradeFailedReason">
+    <%--<shiro:hasPermission name="/internal/machineInfo/updateUpgradeFailedReason">--%>
     function updateUpgradeFailedReason(self){
-        var clientStatus = {};
-        clientStatus.clientID = self.id;
-        clientStatus.upgradeFailedReason = self.value.trim();
+        var machineInfo = {};
+        machineInfo.clientID = self.id;
+        machineInfo.upgradeFailedReason = self.value.trim();
         $.ajax({
-            url: '/internal/clientstatus/updateUpgradeFailedReason',
-            data: JSON.stringify(clientStatus),
+            url: '/internal/machineInfo/updateUpgradeFailedReason',
+            data: JSON.stringify(machineInfo),
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
@@ -925,7 +611,7 @@
             }
         });
     }
-    </shiro:hasPermission>
+    <%--</shiro:hasPermission>--%>
 </script>
 </body>
 </html>
