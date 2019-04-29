@@ -8,13 +8,8 @@ import com.keymanager.monitoring.dao.MachineInfoDao;
 import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.enums.ClientStartUpStatusEnum;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
-import com.keymanager.monitoring.vo.ClientStatusForOptimization;
-import com.keymanager.monitoring.vo.ClientStatusVO;
-import com.keymanager.monitoring.vo.CookieVO;
 import com.keymanager.util.*;
 import com.keymanager.util.common.StringUtil;
-import com.keymanager.value.ClientStatusGroupSummaryVO;
-import com.keymanager.value.ClientStatusSummaryVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +23,7 @@ import java.sql.Timestamp;
 import java.util.*;
 
 @Service
-public class MachineInfoService extends ServiceImpl<MachineInfoDao, ClientStatus>{
+public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>{
 
     private static Logger logger = LoggerFactory.getLogger(MachineInfoService.class);
 
@@ -45,45 +40,37 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, ClientStatus
     private ClientStatusRestartLogService clientStatusRestartLogService;
 
     public void changeTerminalType(String clientID, String terminalType){
-        ClientStatus clientStatus = machineInfoDao.selectById(clientID);
-        if(clientStatus != null){
-            clientStatus.setTerminalType(terminalType);
-            machineInfoDao.updateById(clientStatus);
+        MachineInfo machineInfo = machineInfoDao.selectById(clientID);
+        if(machineInfo != null){
+            machineInfo.setTerminalType(terminalType);
+            machineInfoDao.updateById(machineInfo);
         }
     }
 
-    public void addSummaryClientStatus(String terminalType, String clientID, String freeSpace, String version, String city){
-        ClientStatus clientStatus = new ClientStatus();
-        clientStatus.setTerminalType(terminalType);
-        clientStatus.setClientID(clientID);
-        clientStatus.setFreeSpace(StringUtil.isNumeric(freeSpace) ? Double.parseDouble(freeSpace) : 0);
-        clientStatus.setVersion(version);
-        clientStatus.setCity(city);
-        clientStatus.setClientIDPrefix(Utils.removeDigital(clientID));
-        supplementDefaultValue(clientStatus);
-        machineInfoDao.insert(clientStatus);
+    public void addSummaryMachineInfo(String terminalType, String clientID, String freeSpace, String version, String city){
+        MachineInfo machineInfo = new MachineInfo();
+        machineInfo.setTerminalType(terminalType);
+        machineInfo.setClientID(clientID);
+        machineInfo.setFreeSpace(StringUtil.isNumeric(freeSpace) ? Double.parseDouble(freeSpace) : 0);
+        machineInfo.setVersion(version);
+        machineInfo.setCity(city);
+        machineInfo.setClientIDPrefix(Utils.removeDigital(clientID));
+        supplementDefaultValue(machineInfo);
+        machineInfoDao.insert(machineInfo);
     }
 
-    public void updatePageNo(String clientID, int pageNo){
-        machineInfoDao.updatePageNo(clientID, pageNo);
+    public  void updateMachineVersion(String clientID, String version, boolean hasKeyword){
+        machineInfoDao.updateMachineVersion(clientID, version, hasKeyword);
     }
 
-    public  void updateClientVersion(String clientID, String version, boolean hasKeyword){
-        machineInfoDao.updateClientVersion(clientID, version, hasKeyword);
-    }
-
-    public void logClientStatusTime(String terminalType, String clientID, String status, String freeSpace, String version, String
+    public void logMachineInfoTime(String terminalType, String clientID, String status, String freeSpace, String version, String
             city, int updateCount, String runningProgramType){
-        ClientStatus clientStatus = machineInfoDao.selectById(clientID);
-        if(clientStatus == null){
-            addSummaryClientStatus(terminalType, clientID, freeSpace, version, city);
+        MachineInfo machineInfo = machineInfoDao.selectById(clientID);
+        if(machineInfo == null){
+            addSummaryMachineInfo(terminalType, clientID, freeSpace, version, city);
         }else{
             machineInfoDao.updateOptimizationResult(clientID, status, version, freeSpace, city, updateCount, runningProgramType);
         }
-    }
-
-    public List<CustomerKeywordTerminalRefreshStatRecord> searchClientStatusForRefreshStat(CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria) {
-        return machineInfoDao.searchClientStatusForRefreshStat(customerKeywordRefreshStatInfoCriteria);
     }
 
     public Page<MachineInfo> searchMachineInfos(Page<MachineInfo> page, MachineInfoCriteria machineInfoCriteria, boolean normalSearchFlag) {
@@ -110,115 +97,70 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, ClientStatus
         return page;
     }
 
-    public void updateClientStatus(ClientStatus clientStatus) {
-        machineInfoDao.updateById(clientStatus);
+    public void updateMachineInfo(MachineInfo machineInfo) {
+        machineInfoDao.updateById(machineInfo);
     }
 
-    public void updateClientStatusForCapturePosition(String clientID) {
-        machineInfoDao.updateClientStatusForCapturePosition(clientID);
+    public void updateMachineInfoForCapturePosition(String clientID) {
+        machineInfoDao.updateMachineInfoForCapturePosition(clientID);
     }
 
-    public void updateClientStatusTargetVersion(List<String> clientIDs, String targetVersion) throws Exception {
-        machineInfoDao.updateClientStatusTargetVersion(clientIDs, targetVersion);
+    public void updateMachineInfoTargetVersion(List<String> clientIDs, String targetVersion) throws Exception {
+        machineInfoDao.updateMachineInfoTargetVersion(clientIDs, targetVersion);
     }
 
-    public void updateClientStatusTargetVPSPassword(List<String> clientIDs, String targetVPSPassword) throws Exception {
-        machineInfoDao.updateClientStatusTargetVPSPassword(clientIDs, targetVPSPassword);
+    public void updateMachineInfoTargetVPSPassword(List<String> clientIDs, String targetVPSPassword) throws Exception {
+        machineInfoDao.updateMachineInfoTargetVPSPassword(clientIDs, targetVPSPassword);
     }
 
     public void updateRenewalDate(String clientIDs,String settingType,String renewalDate) throws Exception {
         String[] clientIDArray = clientIDs.split(",");
-
         for (String clientID : clientIDArray) {
-            ClientStatus clientStatus = machineInfoDao.selectById(clientID);
+            MachineInfo machineInfo = machineInfoDao.selectById(clientID);
             if("increaseOneMonth".equals(settingType)) {
-                if(clientStatus.getRenewalDate() != null) {
-                    clientStatus.setRenewalDate(Utils.addMonth(clientStatus.getRenewalDate(), 1));
+                if(machineInfo.getRenewalDate() != null) {
+                    machineInfo.setRenewalDate(Utils.addMonth(machineInfo.getRenewalDate(), 1));
                 } else {
-                    clientStatus.setRenewalDate(Utils.addMonth(Utils.getCurrentTimestamp(), 1));
+                    machineInfo.setRenewalDate(Utils.addMonth(Utils.getCurrentTimestamp(), 1));
                 }
             } else {
-                clientStatus.setRenewalDate(Utils.string2Timestamp(renewalDate));
+                machineInfo.setRenewalDate(Utils.string2Timestamp(renewalDate));
             }
-            machineInfoDao.updateById(clientStatus);
+            machineInfoDao.updateById(machineInfo);
         }
     }
 
-    public ClientStatus getClientStatus(String clientID, String terminalType) {
-        ClientStatus clientStatus = machineInfoDao.getClientStatusByClientID(clientID, terminalType);
-        return clientStatus;
+    public MachineInfo getMachineInfo(String clientID, String terminalType) {
+        MachineInfo machineInfo = machineInfoDao.getMachineInfoByMachineID(clientID, terminalType);
+        return machineInfo;
     }
 
-    public void deleteClientStatus(String clientID) {
+    public void deleteMachineInfo(String clientID) {
         machineInfoDao.deleteById(clientID);
     }
 
     public void deleteAll(List<String> clientIDs) {
-        machineInfoDao.deleteClientStatus(clientIDs);
+        machineInfoDao.deleteMachineInfos(clientIDs);
     }
 
-    public void saveClientStatus(ClientStatus clientStatus) {
-        if (null != clientStatus.getClientID()) {
-            ClientStatus oldClientStatus = machineInfoDao.selectById(clientStatus.getClientID());
-            oldClientStatus.setGroup(clientStatus.getGroup());
-            oldClientStatus.setOperationType(clientStatus.getOperationType());
-            oldClientStatus.setPageSize(clientStatus.getPageSize());
-            oldClientStatus.setPage(clientStatus.getPage());
-            oldClientStatus.setDragPercent(clientStatus.getDragPercent());
-            oldClientStatus.setZhanneiPercent(clientStatus.getZhanneiPercent());
-            oldClientStatus.setZhanwaiPercent(clientStatus.getZhanwaiPercent());
-            oldClientStatus.setKuaizhaoPercent(clientStatus.getKuaizhaoPercent());
-            oldClientStatus.setBaiduSemPercent(clientStatus.getBaiduSemPercent());
-            oldClientStatus.setSpecialCharPercent(clientStatus.getSpecialCharPercent());
-            oldClientStatus.setMultiBrowser(clientStatus.getMultiBrowser());
-            oldClientStatus.setClearCookie(clientStatus.getClearCookie());
-            oldClientStatus.setAllowSwitchGroup(clientStatus.getAllowSwitchGroup());
-            oldClientStatus.setDisableStatistics(clientStatus.getDisableStatistics());
-            oldClientStatus.setHost(clientStatus.getHost());
-            oldClientStatus.setPort(clientStatus.getPort());
-            oldClientStatus.setUserName(clientStatus.getUserName());
-            oldClientStatus.setBroadbandAccount(clientStatus.getBroadbandAccount());
-            oldClientStatus.setBroadbandPassword(clientStatus.getBroadbandPassword());
-            oldClientStatus.setVpsBackendSystemComputerID(clientStatus.getVpsBackendSystemComputerID());
-            oldClientStatus.setVpsBackendSystemPassword(clientStatus.getVpsBackendSystemPassword());
-            oldClientStatus.setEntryPageMinCount(clientStatus.getEntryPageMinCount());
-            oldClientStatus.setEntryPageMaxCount(clientStatus.getEntryPageMaxCount());
-            oldClientStatus.setDisableVisitWebsite(clientStatus.getDisableVisitWebsite());
-            oldClientStatus.setPageRemainMinTime(clientStatus.getPageRemainMinTime());
-            oldClientStatus.setPageRemainMaxTime(clientStatus.getPageRemainMaxTime());
-            oldClientStatus.setInputDelayMinTime(clientStatus.getInputDelayMinTime());
-            oldClientStatus.setInputDelayMaxTime(clientStatus.getInputDelayMaxTime());
-            oldClientStatus.setSlideDelayMinTime(clientStatus.getSlideDelayMinTime());
-            oldClientStatus.setSlideDelayMaxTime(clientStatus.getSlideDelayMaxTime());
-            oldClientStatus.setTitleRemainMinTime(clientStatus.getTitleRemainMinTime());
-            oldClientStatus.setTitleRemainMaxTime(clientStatus.getTitleRemainMaxTime());
-            oldClientStatus.setWaitTimeAfterOpenBaidu(clientStatus.getWaitTimeAfterOpenBaidu());
-            oldClientStatus.setWaitTimeBeforeClick(clientStatus.getWaitTimeBeforeClick());
-            oldClientStatus.setWaitTimeAfterClick(clientStatus.getWaitTimeAfterClick());
-            oldClientStatus.setMaxUserCount(clientStatus.getMaxUserCount());
-            oldClientStatus.setOptimizeKeywordCountPerIP(clientStatus.getOptimizeKeywordCountPerIP());
-            oldClientStatus.setOneIPOneUser(clientStatus.getOneIPOneUser());
-            oldClientStatus.setRandomlyClickNoResult(clientStatus.getRandomlyClickNoResult());
-            oldClientStatus.setJustVisitSelfPage(clientStatus.getJustVisitSelfPage());
-            oldClientStatus.setSleepPer2Words(clientStatus.getSleepPer2Words());
-            oldClientStatus.setSupportPaste(clientStatus.getSupportPaste());
-            oldClientStatus.setMoveRandomly(clientStatus.getMoveRandomly());
-            oldClientStatus.setParentSearchEntry(clientStatus.getParentSearchEntry());
-            oldClientStatus.setClearLocalStorage(clientStatus.getClearLocalStorage());
-            oldClientStatus.setLessClickAtNight(clientStatus.getLessClickAtNight());
-            oldClientStatus.setSameCityUser(clientStatus.getSameCityUser());
-            oldClientStatus.setLocateTitlePosition(clientStatus.getLocateTitlePosition());
-            oldClientStatus.setBaiduAllianceEntry(clientStatus.getBaiduAllianceEntry());
-            oldClientStatus.setJustClickSpecifiedTitle(clientStatus.getJustClickSpecifiedTitle());
-            oldClientStatus.setRandomlyClickMoreLink(clientStatus.getRandomlyClickMoreLink());
-            oldClientStatus.setMoveUp20(clientStatus.getMoveUp20());
-            oldClientStatus.setOptimizeRelatedKeyword(clientStatus.getOptimizeRelatedKeyword());
-            oldClientStatus.setSwitchGroupName(clientStatus.getSwitchGroupName());
-            oldClientStatus.setUpdateSettingTime(Utils.getCurrentTimestamp());
-            machineInfoDao.updateById(oldClientStatus);
+    public void saveMachineInfo(MachineInfo machineInfo) {
+        if (null != machineInfo.getClientID()) {
+            MachineInfo oldMachineInfo = machineInfoDao.selectById(machineInfo.getClientID());
+            oldMachineInfo.setGroup(machineInfo.getGroup());
+            oldMachineInfo.setAllowSwitchGroup(machineInfo.getAllowSwitchGroup());
+            oldMachineInfo.setHost(machineInfo.getHost());
+            oldMachineInfo.setPort(machineInfo.getPort());
+            oldMachineInfo.setUserName(machineInfo.getUserName());
+            oldMachineInfo.setBroadbandAccount(machineInfo.getBroadbandAccount());
+            oldMachineInfo.setBroadbandPassword(machineInfo.getBroadbandPassword());
+            oldMachineInfo.setVpsBackendSystemComputerID(machineInfo.getVpsBackendSystemComputerID());
+            oldMachineInfo.setVpsBackendSystemPassword(machineInfo.getVpsBackendSystemPassword());
+            oldMachineInfo.setSwitchGroupName(machineInfo.getSwitchGroupName());
+            oldMachineInfo.setUpdateSettingTime(Utils.getCurrentTimestamp());
+            machineInfoDao.updateById(oldMachineInfo);
         } else {
-            supplementAdditionalValue(clientStatus);
-            machineInfoDao.insert(clientStatus);
+            supplementAdditionalValue(machineInfo);
+            machineInfoDao.insert(machineInfo);
         }
     }
 
@@ -227,9 +169,9 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, ClientStatus
     }
 
     public void changeStatus(String clientID) {
-        ClientStatus clientStatus = machineInfoDao.selectById(clientID);
-        clientStatus.setValid(!clientStatus.getValid());
-        machineInfoDao.updateById(clientStatus);
+        MachineInfo machineInfo = machineInfoDao.selectById(clientID);
+        machineInfo.setValid(!machineInfo.getValid());
+        machineInfoDao.updateById(machineInfo);
     }
 
     public void uploadVNCFile(InputStream inputStream, String terminalType) throws Exception {
@@ -237,186 +179,147 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, ClientStatus
             VNCAddressBookParser vncAddressBookParser = new VNCAddressBookParser();
             Map<String, String> vncInfoMap = vncAddressBookParser.extractVNCInfo(inputStream);
             Map<String, String> passwordMap = new HashMap<String, String>();
-            List<ClientStatus> clientStatuses = machineInfoDao.searchClientStatusesOrByHost(terminalType,null);
-            for (ClientStatus clientStatus : clientStatuses) {
-                String vncInfo = vncInfoMap.get(clientStatus.getClientID());
+            List<MachineInfo> machineInfos = machineInfoDao.searchMachineInfosOrByHost(terminalType,null);
+            for (MachineInfo machineInfo : machineInfos) {
+                String vncInfo = vncInfoMap.get(machineInfo.getClientID());
                 if (!Utils.isNullOrEmpty(vncInfo)) {
                     String vncInfos[] = vncInfo.split(":");
                     if (vncInfos.length == 3) {
-                        clientStatus.setHost(vncInfos[0]);
-                        clientStatus.setPort(vncInfos[1]);
-                        clientStatus.setVpsBackendSystemComputerID(vncInfos[2]);
+                        machineInfo.setHost(vncInfos[0]);
+                        machineInfo.setPort(vncInfos[1]);
+                        machineInfo.setVpsBackendSystemComputerID(vncInfos[2]);
                     } else {
                         System.out.println(vncInfo);
                     }
-                    updateClientStatus(clientStatus);
+                    updateMachineInfo(machineInfo);
 
-                    String password = passwordMap.get(clientStatus.getPassword());
+                    String password = passwordMap.get(machineInfo.getPassword());
                     if(password == null) {
-                        if (StringUtil.isNullOrEmpty(clientStatus.getPassword())) {
+                        if (StringUtil.isNullOrEmpty(machineInfo.getPassword())) {
                             password = "";
-                        } else if (clientStatus.getPassword().equals("doshows123")) {
+                        } else if (machineInfo.getPassword().equals("doshows123")) {
                             password = "8e587919308fcab0c34af756358b9053";
                         } else {
-                            password = DES.vncPasswordEncode(clientStatus.getPassword());
+                            password = DES.vncPasswordEncode(machineInfo.getPassword());
                         }
-                        passwordMap.put(clientStatus.getPassword(), password);
+                        passwordMap.put(machineInfo.getPassword(), password);
                     }
-                    writeTxtFile(clientStatus, password);
+                    writeTxtFile(machineInfo, password);
                 }
             }
         }
     }
 
-    public void reopenClientStatus(List<String> clientIDs, String downloadProgramType) {
+    public void reopenMachineInfo(List<String> clientIDs, String downloadProgramType) {
         if("New".equals(downloadProgramType)){
-            machineInfoDao.reopenClientStatus(clientIDs, downloadProgramType, "laodu");
+            machineInfoDao.reopenMachineInfo(clientIDs, downloadProgramType, "laodu");
         }else{
-            machineInfoDao.reopenClientStatus(clientIDs, downloadProgramType, "Default");
+            machineInfoDao.reopenMachineInfo(clientIDs, downloadProgramType, "Default");
         }
     }
 
-    public void uploadVPSFile(String clientStatusType, String downloadProgramType, File file, String terminalType) throws Exception {
+    public void uploadVPSFile(String machineInfoType, String downloadProgramType, File file, String terminalType) throws Exception {
         List<String> vpsInfos = FileUtil.readTxtFile(file,"UTF-8");
         for (String vpsInfo : vpsInfos) {
-            String[] clientStatusInfo = vpsInfo.split("===");
-            ClientStatus existingClientStatus = machineInfoDao.selectById(clientStatusInfo[0]);
-            if(null != existingClientStatus) {
-                saveClientStatusByVPSFile(existingClientStatus, clientStatusInfo);
+            String[] machineInfos = vpsInfo.split("===");
+            MachineInfo existingMachineInfo = machineInfoDao.selectById(machineInfos[0]);
+            if(null != existingMachineInfo) {
+                saveMachineInfoByVPSFile(existingMachineInfo, machineInfos);
                 if("New".equals(downloadProgramType)){
-                    existingClientStatus.setSwitchGroupName("laodu");
+                    existingMachineInfo.setSwitchGroupName("laodu");
                 }else{
-                    existingClientStatus.setSwitchGroupName("Default");
+                    existingMachineInfo.setSwitchGroupName("Default");
                 }
-                if(clientStatusType.equals("startUp")) {
-                    existingClientStatus.setStartUpStatus(ClientStartUpStatusEnum.New.name());
-                    existingClientStatus.setDownloadProgramType(downloadProgramType);
+                if(machineInfoType.equals("startUp")) {
+                    existingMachineInfo.setStartUpStatus(ClientStartUpStatusEnum.New.name());
+                    existingMachineInfo.setDownloadProgramType(downloadProgramType);
                 } else {
-                    existingClientStatus.setStartUpStatus(ClientStartUpStatusEnum.Completed.name());
-                    existingClientStatus.setDownloadProgramType(null);
+                    existingMachineInfo.setStartUpStatus(ClientStartUpStatusEnum.Completed.name());
+                    existingMachineInfo.setDownloadProgramType(null);
                 }
-                machineInfoDao.updateById(existingClientStatus);
+                machineInfoDao.updateById(existingMachineInfo);
             } else {
-                ClientStatus clientStatus = new ClientStatus();
-                clientStatus.setTerminalType(terminalType);
-                clientStatus.setFreeSpace(500.00);
-                clientStatus.setDisableStatistics(0);
-                clientStatus.setValid(true);
-                saveClientStatusByVPSFile(clientStatus, clientStatusInfo);
-                if(!Character.isDigit(clientStatusInfo[0].charAt(clientStatusInfo[0].length() - 1))) {
-                    Integer maxClientID = machineInfoDao.selectMaxIdByClientID(clientStatusInfo[0]);
+                MachineInfo machineInfo = new MachineInfo();
+                machineInfo.setTerminalType(terminalType);
+                machineInfo.setFreeSpace(500.00);
+                machineInfo.setValid(true);
+                saveMachineInfoByVPSFile(machineInfo, machineInfos);
+                if(!Character.isDigit(machineInfos[0].charAt(machineInfos[0].length() - 1))) {
+                    Integer maxClientID = machineInfoDao.selectMaxIdByMachineID(machineInfos[0]);
                     maxClientID = maxClientID == null ? 1 : maxClientID + 1;
-                    clientStatus.setClientID(clientStatusInfo[0] + maxClientID);
+                    machineInfo.setClientID(machineInfos[0] + maxClientID);
                 }
-                supplementDefaultValue(clientStatus);
+                supplementDefaultValue(machineInfo);
                 if("New".equals(downloadProgramType)){
-                    clientStatus.setSwitchGroupName("laodu");
+                    machineInfo.setSwitchGroupName("laodu");
                 }else{
-                    clientStatus.setSwitchGroupName("Default");
+                    machineInfo.setSwitchGroupName("Default");
                 }
-                if(clientStatusType.equals("startUp")) {
-                    clientStatus.setStartUpStatus(ClientStartUpStatusEnum.New.name());
-                    clientStatus.setDownloadProgramType(downloadProgramType);
+                if(machineInfoType.equals("startUp")) {
+                    machineInfo.setStartUpStatus(ClientStartUpStatusEnum.New.name());
+                    machineInfo.setDownloadProgramType(downloadProgramType);
                 }else{
-                    clientStatus.setStartUpStatus(ClientStartUpStatusEnum.Completed.name());
+                    machineInfo.setStartUpStatus(ClientStartUpStatusEnum.Completed.name());
                 }
-                machineInfoDao.insert(clientStatus);
+                machineInfoDao.insert(machineInfo);
             }
         }
     }
 
-    private void saveClientStatusByVPSFile(ClientStatus clientStatus, String[] clientStatusInfo) {
-        String[] vncInfos = clientStatusInfo[2].split(":");
-        clientStatus.setClientID(clientStatusInfo[0]);
-        clientStatus.setVpsBackendSystemComputerID(clientStatusInfo[1]);
-        clientStatus.setHost(vncInfos[0]);
-        clientStatus.setPort(vncInfos[1]);
-        clientStatus.setUserName(clientStatusInfo[3]);
-        clientStatus.setPassword(clientStatusInfo[4]);
-        clientStatus.setTargetVPSPassword(clientStatusInfo[4]);
-        clientStatus.setBroadbandAccount(clientStatusInfo[5]);
-        clientStatus.setBroadbandPassword(clientStatusInfo[6]);
-        clientStatus.setClientIDPrefix(Utils.removeDigital(clientStatusInfo[0]));
+    private void saveMachineInfoByVPSFile(MachineInfo machineInfo, String[] MachineInfos) {
+        String[] vncInfos = MachineInfos[2].split(":");
+        machineInfo.setClientID(MachineInfos[0]);
+        machineInfo.setVpsBackendSystemComputerID(MachineInfos[1]);
+        machineInfo.setHost(vncInfos[0]);
+        machineInfo.setPort(vncInfos[1]);
+        machineInfo.setUserName(MachineInfos[3]);
+        machineInfo.setPassword(MachineInfos[4]);
+        machineInfo.setTargetVPSPassword(MachineInfos[4]);
+        machineInfo.setBroadbandAccount(MachineInfos[5]);
+        machineInfo.setBroadbandPassword(MachineInfos[6]);
+        machineInfo.setClientIDPrefix(Utils.removeDigital(MachineInfos[0]));
     }
 
-    private void supplementDefaultValue(ClientStatus clientStatus){
-        clientStatus.setAllowSwitchGroup(0);
-        clientStatus.setDisableStatistics(0);
-        if(TerminalTypeEnum.PC.name().equalsIgnoreCase(clientStatus.getTerminalType())){
-            clientStatus.setPage(5);
-        }else{
-            clientStatus.setPage(3);
-        }
-        clientStatus.setPageSize(0);
-        clientStatus.setZhanneiPercent(0);
-        clientStatus.setZhanwaiPercent(0);
-        clientStatus.setKuaizhaoPercent(0);
-        clientStatus.setBaiduSemPercent(0);
-        clientStatus.setDragPercent(0);
-        clientStatus.setSpecialCharPercent(0);
-        clientStatus.setMultiBrowser(1);
-        clientStatus.setClearCookie(0);
-        clientStatus.setEntryPageMinCount(0);
-        clientStatus.setEntryPageMaxCount(0);
-        clientStatus.setPageRemainMinTime(3000);
-        clientStatus.setPageRemainMaxTime(5000);
-        clientStatus.setInputDelayMinTime(50);
-        clientStatus.setInputDelayMaxTime(80);
-        clientStatus.setSlideDelayMinTime(700);
-        clientStatus.setSlideDelayMaxTime(1500);
-        clientStatus.setTitleRemainMinTime(1000);
-        clientStatus.setTitleRemainMaxTime(3000);
-        clientStatus.setOptimizeKeywordCountPerIP(1);
-        clientStatus.setMaxUserCount(300);
-        clientStatus.setWaitTimeAfterOpenBaidu(1000);
-        clientStatus.setWaitTimeBeforeClick(1000);
-        clientStatus.setWaitTimeAfterClick(5000);
-//		clientStatus.setOneIPOneUser(1);
-//		clientStatus.setRandomlyClickNoResult(1);
-        clientStatus.setJustVisitSelfPage(1);
-        clientStatus.setSleepPer2Words(1);
-        clientStatus.setSupportPaste(1);
-        clientStatus.setMoveRandomly(1);
-        clientStatus.setClearLocalStorage(1);
-        clientStatus.setOptimizeRelatedKeyword(0);
-        supplementAdditionalValue(clientStatus);
+    private void supplementDefaultValue(MachineInfo machineInfo){
+        machineInfo.setAllowSwitchGroup(0);
+        supplementAdditionalValue(machineInfo);
     }
 
 
-    private void supplementAdditionalValue(ClientStatus clientStatus){
-        clientStatus.setLastVisitTime(Utils.getCurrentTimestamp());
-        clientStatus.setTenMinsLastVisitTime(Utils.addMinutes(Utils.getCurrentTimestamp(), 10));
-        clientStatus.setRestartTime(Utils.getCurrentTimestamp());
-        clientStatus.setThreeMinsRestartTime(Utils.addMinutes(Utils.getCurrentTimestamp(), 3));
-        clientStatus.setTenMinsRestartTime(Utils.addMinutes(Utils.getCurrentTimestamp(), 10));
+    private void supplementAdditionalValue(MachineInfo machineInfo){
+        machineInfo.setLastVisitTime(Utils.getCurrentTimestamp());
+        machineInfo.setTenMinsLastVisitTime(Utils.addMinutes(Utils.getCurrentTimestamp(), 10));
+        machineInfo.setRestartTime(Utils.getCurrentTimestamp());
+        machineInfo.setThreeMinsRestartTime(Utils.addMinutes(Utils.getCurrentTimestamp(), 3));
+        machineInfo.setTenMinsRestartTime(Utils.addMinutes(Utils.getCurrentTimestamp(), 10));
     }
 
     public void getVNCFileInfo(String terminalType) throws Exception {
-        List<ClientStatus> clientStatuses = machineInfoDao.searchClientStatusesOrByHost(terminalType,"yes");
-        if(CollectionUtils.isNotEmpty(clientStatuses)) {
+        List<MachineInfo> machineInfos = machineInfoDao.searchMachineInfosOrByHost(terminalType,"yes");
+        if(CollectionUtils.isNotEmpty(machineInfos)) {
             Utils.removeDir(Thread.currentThread().getContextClassLoader().getResource("").toURI().getPath() + "vnc");
             Utils.createDir(Thread.currentThread().getContextClassLoader().getResource("").toURI().getPath() + "vnc/");
             Map<String, String> passwordMap = new HashMap<String, String>();
-            for (ClientStatus clientStatus : clientStatuses) {
-                String password = passwordMap.get(clientStatus.getPassword());
+            for (MachineInfo machineInfo : machineInfos) {
+                String password = passwordMap.get(machineInfo.getPassword());
                 if (password == null) {
-                    if (StringUtil.isNullOrEmpty(clientStatus.getPassword())) {
+                    if (StringUtil.isNullOrEmpty(machineInfo.getPassword())) {
                         password = "";
-                    } else if (clientStatus.getPassword().equals("doshows123")) {
+                    } else if (machineInfo.getPassword().equals("doshows123")) {
                         password = "8e587919308fcab0c34af756358b9053";
                     } else {
-                        password = DES.vncPasswordEncode(clientStatus.getPassword());
+                        password = DES.vncPasswordEncode(machineInfo.getPassword());
                     }
-                    passwordMap.put(clientStatus.getPassword(), password);
+                    passwordMap.put(machineInfo.getPassword(), password);
                 }
-                writeTxtFile(clientStatus, password);
+                writeTxtFile(machineInfo, password);
             }
         }
     }
 
     public void getFullVNCFileInfo(String terminalType) throws Exception {
-        List<ClientStatus> clientStatuses = machineInfoDao.searchClientStatusesOrByHost(terminalType,null);
-        writeFullTxtFile(clientStatuses);
+        List<MachineInfo> machineInfos = machineInfoDao.searchMachineInfosOrByHost(terminalType,null);
+        writeFullTxtFile(machineInfos);
     }
 
     public void writeXMLDTD(FileOutputStream o) throws Exception {
@@ -452,7 +355,7 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, ClientStatus
         o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
     }
 
-    public void writeFullTxtFile(List<ClientStatus> clientStatuses) throws Exception {
+    public void writeFullTxtFile(List<MachineInfo> machineInfos) throws Exception {
         FileOutputStream o = null;
         Utils.createDir(Thread.currentThread().getContextClassLoader().getResource("").toURI().getPath() + "vncAll/");
         String fileName = Thread.currentThread().getContextClassLoader().getResource("").toURI().getPath() + "vncAll/vncAll.xml";
@@ -462,12 +365,12 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, ClientStatus
         o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
         o.write("<folder name=\"263互联\">".getBytes("UTF-8"));
         o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
-        for (ClientStatus clientStatus : clientStatuses) {
-            o.write(String.format("<file name=\"%s--%s-%s--%s--%s\">",clientStatus.getClientID(),clientStatus.getHost(),clientStatus.getPort(),clientStatus.getPort(),clientStatus.getVpsBackendSystemComputerID()).getBytes("UTF-8"));
+        for (MachineInfo machineInfo : machineInfos) {
+            o.write(String.format("<file name=\"%s--%s-%s--%s--%s\">",machineInfo.getClientID(),machineInfo.getHost(),machineInfo.getPort(),machineInfo.getPort(),machineInfo.getVpsBackendSystemComputerID()).getBytes("UTF-8"));
             o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
             o.write("<section name=\"Connection\">".getBytes("UTF-8"));
             o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
-            o.write(String.format("<param name=\"Host\" value=\"%s\" />",clientStatus.getHost()).getBytes("UTF-8"));
+            o.write(String.format("<param name=\"Host\" value=\"%s\" />",machineInfo.getHost()).getBytes("UTF-8"));
             o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
             o.write("</section>".getBytes("UTF-8"));
             o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
@@ -495,7 +398,7 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, ClientStatus
             o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
             o.write("<param name=\"Encryption\" value=\"Server\" />".getBytes("UTF-8"));
             o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
-            o.write(String.format("<param name=\"UserName\" value=\"%s\" />",clientStatus.getUserName()).getBytes("UTF-8"));
+            o.write(String.format("<param name=\"UserName\" value=\"%s\" />",machineInfo.getUserName()).getBytes("UTF-8"));
             o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
             o.write("<param name=\"Scaling\" value=\"None\" />".getBytes("UTF-8"));
             o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
@@ -546,17 +449,17 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, ClientStatus
         o.close();
     }
 
-    public void writeTxtFile(ClientStatus clientStatus, String password) throws Exception {
+    public void writeTxtFile(MachineInfo machineInfo, String password) throws Exception {
         FileOutputStream o = null;
-        String fileName = Thread.currentThread().getContextClassLoader().getResource("").toURI().getPath() + "vnc/" + clientStatus.getClientID() + ".vnc";
+        String fileName = Thread.currentThread().getContextClassLoader().getResource("").toURI().getPath() + "vnc/" + machineInfo.getClientID() + ".vnc";
         o = new FileOutputStream(fileName);
         o.write("[Connection]".getBytes("UTF-8"));
         o.write(((String)java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
-        o.write(String.format("Host=%s", clientStatus.getHost()).getBytes("UTF-8"));
+        o.write(String.format("Host=%s", machineInfo.getHost()).getBytes("UTF-8"));
         o.write(((String)java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
-        o.write(String.format("Port=%s", clientStatus.getPort()).getBytes("UTF-8"));
+        o.write(String.format("Port=%s", machineInfo.getPort()).getBytes("UTF-8"));
         o.write(((String)java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
-        o.write(String.format("Username=%s", clientStatus.getUserName()).getBytes("UTF-8"));
+        o.write(String.format("Username=%s", machineInfo.getUserName()).getBytes("UTF-8"));
         o.write(((String)java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
         o.write(("Password="+password).getBytes("UTF-8"));
         o.write(((String)java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
@@ -597,167 +500,64 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, ClientStatus
     }
 
     public void updateGroup(String clientID, String groupName) {
-        ClientStatus clientStatus = machineInfoDao.selectById(clientID);
-        clientStatus.setGroup(groupName);
-        machineInfoDao.updateById(clientStatus);
-    }
-
-    public void updateOperationType(String clientID, String operationType) {
-        ClientStatus clientStatus = machineInfoDao.selectById(clientID);
-        clientStatus.setOperationType(operationType);
-        machineInfoDao.updateById(clientStatus);
+        MachineInfo machineInfo = machineInfoDao.selectById(clientID);
+        machineInfo.setGroup(groupName);
+        machineInfoDao.updateById(machineInfo);
     }
 
     public void updateUpgradeFailedReason(String clientID, String upgradeFailedReason) {
-        ClientStatus clientStatus = machineInfoDao.selectById(clientID);
-        clientStatus.setUpgradeFailedReason(upgradeFailedReason);
-        machineInfoDao.updateById(clientStatus);
-    }
-
-
-    public List<ClientStatusSummaryVO> searchClientStatusSummaryVO(String clientIDPrefix, String city, String switchGroupName) throws Exception {
-        List<ClientStatusSummaryVO> pcClientStatusSummaryVOs = machineInfoDao.searchClientStatusSummaryVO(clientIDPrefix, city, switchGroupName);
-        Collections.sort(pcClientStatusSummaryVOs);
-        ClientStatusSummaryVO previousClientIDPrefix = null;
-        ClientStatusSummaryVO previousType = null;
-        for(ClientStatusSummaryVO clientStatusSummaryVO : pcClientStatusSummaryVOs){
-            if(previousClientIDPrefix == null){
-                previousClientIDPrefix = clientStatusSummaryVO;
-                previousClientIDPrefix.setClientIDPrefixCount(previousClientIDPrefix.getClientIDPrefixCount() + 1);
-                previousClientIDPrefix.setClientIDPrefixTotalCount(previousClientIDPrefix.getClientIDPrefixTotalCount() +
-                        clientStatusSummaryVO.getCount());
-            }else if(previousClientIDPrefix.getClientIDPrefix().equals(clientStatusSummaryVO.getClientIDPrefix())){
-                previousClientIDPrefix.setClientIDPrefixCount(previousClientIDPrefix.getClientIDPrefixCount() + 1);
-                previousClientIDPrefix.setClientIDPrefixTotalCount(previousClientIDPrefix.getClientIDPrefixTotalCount() +
-                        clientStatusSummaryVO.getCount());
-            }else{
-                previousClientIDPrefix = clientStatusSummaryVO;
-                previousClientIDPrefix.setClientIDPrefixCount(previousClientIDPrefix.getClientIDPrefixCount() + 1);
-                previousClientIDPrefix.setClientIDPrefixTotalCount(previousClientIDPrefix.getClientIDPrefixTotalCount() +
-                        clientStatusSummaryVO.getCount());
-
-                previousType = null;
-            }
-
-            if(previousType == null){
-                previousType = clientStatusSummaryVO;
-                previousType.setTypeCount(previousType.getTypeCount() + 1);
-                previousType.setTypeTotalCount(previousType.getTypeTotalCount() +
-                        clientStatusSummaryVO.getCount());
-            }else if(previousType.getType().equals(clientStatusSummaryVO.getType())){
-                previousType.setTypeCount(previousType.getTypeCount() + 1);
-                previousType.setTypeTotalCount(previousType.getTypeTotalCount() +
-                        clientStatusSummaryVO.getCount());
-            }else{
-                previousType = clientStatusSummaryVO;
-                previousType.setTypeCount(previousType.getTypeCount() + 1);
-                previousType.setTypeTotalCount(previousType.getTypeTotalCount() +
-                        clientStatusSummaryVO.getCount());
-            }
-        }
-        return pcClientStatusSummaryVOs;
-    }
-
-    public List<ClientStatusGroupSummaryVO> searchClientStatusGroupSummaryVO(String group, String terminalType) {
-        return machineInfoDao.searchClientStatusGroupSummaryVO(group,terminalType);
+        MachineInfo machineInfo = machineInfoDao.selectById(clientID);
+        machineInfo.setUpgradeFailedReason(upgradeFailedReason);
+        machineInfoDao.updateById(machineInfo);
     }
 
     public String checkUpgrade(String clientID){
-        ClientStatus clientStatus = machineInfoDao.selectById(clientID);
-        if(clientStatus != null){
-            if(clientStatus.getTargetVersion() != null){
-                return clientStatus.getTargetVersion().equals(clientStatus.getVersion()) ? "" : clientStatus.getTargetVersion();
+        MachineInfo machineInfo = machineInfoDao.selectById(clientID);
+        if(machineInfo != null){
+            if(machineInfo.getTargetVersion() != null){
+                return machineInfo.getTargetVersion().equals(machineInfo.getVersion()) ? "" : machineInfo.getTargetVersion();
             }else{
-                return "New".equalsIgnoreCase(clientStatus.getStartUpStatus()) ? "reopen" : "";
+                return "New".equalsIgnoreCase(machineInfo.getStartUpStatus()) ? "reopen" : "";
             }
         }
         return "0";
     }
 
     public String checkPassword(String clientID){
-        ClientStatus clientStatus = machineInfoDao.selectById(clientID);
-        if(clientStatus != null){
-            if(clientStatus.getTargetVPSPassword() != null){
-                return clientStatus.getTargetVPSPassword().equals(clientStatus.getPassword()) ? "" : clientStatus.getTargetVPSPassword();
+        MachineInfo machineInfo = machineInfoDao.selectById(clientID);
+        if(machineInfo != null){
+            if(machineInfo.getTargetVPSPassword() != null){
+                return machineInfo.getTargetVPSPassword().equals(machineInfo.getPassword()) ? "" : machineInfo.getTargetVPSPassword();
             }
         }
         return "0";
     }
 
     public String updatePassword(String clientID){
-        ClientStatus clientStatus = machineInfoDao.selectById(clientID);
-        if(clientStatus != null){
-            if(clientStatus.getTargetVPSPassword() != null){
-                clientStatus.setPassword(clientStatus.getTargetVPSPassword());
-                machineInfoDao.updateById(clientStatus);
+        MachineInfo machineInfo = machineInfoDao.selectById(clientID);
+        if(machineInfo != null){
+            if(machineInfo.getTargetVPSPassword() != null){
+                machineInfo.setPassword(machineInfo.getTargetVPSPassword());
+                machineInfoDao.updateById(machineInfo);
                 return "1";
             }
         }
         return "0";
     }
 
-    public ClientStatus getStoppedClientStatuses(){
-        ClientStatus tmpClientStatus = null;
-//        List<ClientStatus> clientStatuses = machineInfoDao.searchRestartingClientStatuses();
-//        for(ClientStatus clientStatus : clientStatuses){
-////			if(customerKeywordService.haveCustomerKeywordForOptimization(clientStatus.getTerminalType(), clientStatus.getClientID())){
-//            tmpClientStatus = clientStatus;
-//            updateRestartStatus(clientStatus.getClientID(), "Logging");
-//            break;
-////			}
-//        }
-        if(tmpClientStatus == null) {
-            List<ClientStatus> clientStatuses = machineInfoDao.searchWaitingRestartingClientStatuses();
-            for (ClientStatus clientStatus : clientStatuses) {
-//				if (customerKeywordService.haveCustomerKeywordForOptimization(clientStatus.getTerminalType(), clientStatus.getClientID())) {
-                tmpClientStatus = clientStatus;
-                updateRestartStatus(clientStatus.getClientID(), "Processing");
-                String vpsServiceProvideName = this.detectVPSServiceProvider(clientStatus.getVpsBackendSystemComputerID());
-                Config vpsBackendAccount = configService.getConfig(Constants.CONFIG_TYPE_VPS_BACKEND_ACCOUNT, vpsServiceProvideName);
-                if(vpsBackendAccount != null){
-                    clientStatus.setUserName(vpsBackendAccount.getValue());
-                }
-                Config vpsBackendPassword = configService.getConfig(Constants.CONFIG_TYPE_VPS_BACKEND_PASSWORD, vpsServiceProvideName);
-                if(vpsBackendPassword != null){
-                    clientStatus.setPassword(vpsBackendPassword.getValue());
-                }
-                break;
-//				}
-            }
-        }
-        return tmpClientStatus;
-    }
-
-    private String detectVPSServiceProvider(String backendComputerID){
-        backendComputerID = backendComputerID.toLowerCase();
-        if(backendComputerID.matches("^[0-9]*$")){
-            return "nuobin";
-        }else if(backendComputerID.indexOf("k") == 0){
-            return "yongtian";
-        }else if(backendComputerID.indexOf("y") == 0){
-            return "yiyang";
-        }else{
-            return "263";
-        }
-    }
-
-    private void updateRestartStatus(String clientID, String restartStatus){
-        machineInfoDao.updateRestartStatus(clientID, restartStatus);
-    }
-
-    public void updateClientStatusRestartStatus(String clientID, String restartStatus){
-        ClientStatus clientStatus = machineInfoDao.selectById(clientID);
-        if(clientStatus != null){
-            clientStatus.setRestartTime(Utils.getCurrentTimestamp());
-            clientStatus.setRestartOrderingTime(Utils.getCurrentTimestamp());
-            clientStatus.setRestartCount(clientStatus.getRestartCount() + 1);
-            clientStatus.setRestartStatus(restartStatus);
-            machineInfoDao.updateById(clientStatus);
+    public void updateMachineInfoRestartStatus(String clientID, String restartStatus){
+        MachineInfo machineInfo = machineInfoDao.selectById(clientID);
+        if(machineInfo != null){
+            machineInfo.setRestartTime(Utils.getCurrentTimestamp());
+            machineInfo.setRestartOrderingTime(Utils.getCurrentTimestamp());
+            machineInfo.setRestartCount(machineInfo.getRestartCount() + 1);
+            machineInfo.setRestartStatus(restartStatus);
+            machineInfoDao.updateById(machineInfo);
 
             ClientStatusRestartLog clientStatusRestartLog = new ClientStatusRestartLog();
-            clientStatusRestartLog.setClientID(clientStatus.getClientID());
-            clientStatusRestartLog.setGroup(clientStatus.getGroup());
-            clientStatusRestartLog.setRestartCount(clientStatus.getRestartCount() + 1);
+            clientStatusRestartLog.setClientID(machineInfo.getClientID());
+            clientStatusRestartLog.setGroup(machineInfo.getGroup());
+            clientStatusRestartLog.setRestartCount(machineInfo.getRestartCount() + 1);
             clientStatusRestartLog.setRestartStatus(restartStatus);
             clientStatusRestartLogService.insert(clientStatusRestartLog);
         }
@@ -769,248 +569,68 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, ClientStatus
     }
 
     private void switchGroup(String terminalType) throws Exception{
-        List<ClientStatus> clientStatuses = machineInfoDao.getClientStatusesForSwitchGroup(terminalType);
-        if(CollectionUtils.isNotEmpty(clientStatuses)) {
-            Map<String, List<ClientStatus>> clientStatusMap = new HashMap<String, List<ClientStatus>>();
-            for(ClientStatus clientStatus : clientStatuses){
-                String key = clientStatus.getSwitchGroupName().toLowerCase();
-                List<ClientStatus> tmpClientStatuses = clientStatusMap.get(key);
-                if(tmpClientStatuses == null){
-                    tmpClientStatuses = new ArrayList<ClientStatus>();
-                    clientStatusMap.put(key, tmpClientStatuses);
+        List<MachineInfo> machineInfos = machineInfoDao.getMachineInfosForSwitchGroup(terminalType);
+        if(CollectionUtils.isNotEmpty(machineInfos)) {
+            Map<String, List<MachineInfo>> machineInfoMap = new HashMap<String, List<MachineInfo>>();
+            for(MachineInfo machineInfo : machineInfos){
+                String key = machineInfo.getSwitchGroupName().toLowerCase();
+                List<MachineInfo> tmpMachineInfos = machineInfoMap.get(key);
+                if(tmpMachineInfos == null){
+                    tmpMachineInfos = new ArrayList<MachineInfo>();
+                    machineInfoMap.put(key, tmpMachineInfos);
                 }
-                tmpClientStatuses.add(clientStatus);
+                tmpMachineInfos.add(machineInfo);
             }
 
-            for(String key : clientStatusMap.keySet()){
-                this.switchClientStatuses(clientStatusMap.get(key));
+            for(String key : machineInfoMap.keySet()){
+                this.switchMachineInfos(machineInfoMap.get(key));
             }
         }
     }
 
-    private void switchClientStatuses(List<ClientStatus> clientStatuses){
-        List<ClientStatus> cloneClientStatuses = new ArrayList<ClientStatus>(clientStatuses);
-        Collections.shuffle(clientStatuses);
-        Collections.shuffle(clientStatuses);
-        Collections.shuffle(cloneClientStatuses);
-        Collections.shuffle(cloneClientStatuses);
-        Collections.shuffle(cloneClientStatuses);
-        for (int i = 0; i < clientStatuses.size(); i++) {
-            ClientStatus sourceClientStatus = clientStatuses.get(i);
-            ClientStatus targetClientStatus = cloneClientStatuses.get(i);
-            switchClientStatusInfo(sourceClientStatus, targetClientStatus);
+    private void switchMachineInfos(List<MachineInfo> machineInfos){
+        List<MachineInfo> cloneMachineInfos = new ArrayList<MachineInfo>(machineInfos);
+        Collections.shuffle(machineInfos);
+        Collections.shuffle(machineInfos);
+        Collections.shuffle(cloneMachineInfos);
+        Collections.shuffle(cloneMachineInfos);
+        Collections.shuffle(cloneMachineInfos);
+        for (int i = 0; i < machineInfos.size(); i++) {
+            MachineInfo sourceMachineInfo = machineInfos.get(i);
+            MachineInfo targetMachineInfo = cloneMachineInfos.get(i);
+            switchMachineInfoInfo(sourceMachineInfo, targetMachineInfo);
         }
 
-        for (ClientStatus clientStatus : clientStatuses) {
-            clientStatus.setUpdateSettingTime(Utils.getCurrentTimestamp());
-            machineInfoDao.updateById(clientStatus);
+        for (MachineInfo machineInfo : machineInfos) {
+            machineInfo.setUpdateSettingTime(Utils.getCurrentTimestamp());
+            machineInfoDao.updateById(machineInfo);
         }
     }
 
-    private void switchClientStatusInfo(ClientStatus sourceClientStatus, ClientStatus targetClientStatus){
-        Integer baiduSemPercent = sourceClientStatus.getBaiduSemPercent();
-        sourceClientStatus.setBaiduSemPercent(targetClientStatus.getBaiduSemPercent());
-        targetClientStatus.setBaiduSemPercent(baiduSemPercent);
+    private void switchMachineInfoInfo(MachineInfo sourceMachineInfo, MachineInfo targetMachineInfo){
+        String group = sourceMachineInfo.getGroup();
+        sourceMachineInfo.setGroup(targetMachineInfo.getGroup());
+        targetMachineInfo.setGroup(group);
 
-        Integer specialCharPercent = sourceClientStatus.getSpecialCharPercent();
-        sourceClientStatus.setSpecialCharPercent(targetClientStatus.getSpecialCharPercent());
-        targetClientStatus.setSpecialCharPercent(specialCharPercent);
+        Timestamp idleStartTime = sourceMachineInfo.getIdleStartTime();
+        sourceMachineInfo.setIdleStartTime(targetMachineInfo.getIdleStartTime());
+        targetMachineInfo.setIdleStartTime(idleStartTime);
 
-        int clearCookie = sourceClientStatus.getClearCookie();
-        sourceClientStatus.setClearCookie(targetClientStatus.getClearCookie());
-        targetClientStatus.setClearCookie(clearCookie);
-
-        Integer dragPercent = sourceClientStatus.getDragPercent();
-        sourceClientStatus.setDragPercent(targetClientStatus.getDragPercent());
-        targetClientStatus.setDragPercent(dragPercent);
-
-        Integer kuaizhaoPercent = sourceClientStatus.getKuaizhaoPercent();
-        sourceClientStatus.setKuaizhaoPercent(targetClientStatus.getKuaizhaoPercent());
-        targetClientStatus.setKuaizhaoPercent(kuaizhaoPercent);
-
-        Integer multiBrowser = sourceClientStatus.getMultiBrowser();
-        sourceClientStatus.setMultiBrowser(targetClientStatus.getMultiBrowser());
-        targetClientStatus.setMultiBrowser(multiBrowser);
-
-        String operationType = sourceClientStatus.getOperationType();
-        sourceClientStatus.setOperationType(targetClientStatus.getOperationType());
-        targetClientStatus.setOperationType(operationType);
-
-        int page = sourceClientStatus.getPage();
-        sourceClientStatus.setPage(targetClientStatus.getPage());
-        targetClientStatus.setPage(page);
-
-        Integer pageSize = sourceClientStatus.getPageSize();
-        sourceClientStatus.setPageSize(targetClientStatus.getPageSize());
-        targetClientStatus.setPageSize(pageSize);
-
-        Integer zhanneiPercent = sourceClientStatus.getZhanneiPercent();
-        sourceClientStatus.setZhanneiPercent(targetClientStatus.getZhanneiPercent());
-        targetClientStatus.setZhanneiPercent(zhanneiPercent);
-
-        Integer zhanwaiPercent = sourceClientStatus.getZhanwaiPercent();
-        sourceClientStatus.setZhanwaiPercent(targetClientStatus.getZhanwaiPercent());
-        targetClientStatus.setZhanwaiPercent(zhanwaiPercent);
-
-        String group = sourceClientStatus.getGroup();
-        sourceClientStatus.setGroup(targetClientStatus.getGroup());
-        targetClientStatus.setGroup(group);
-
-        int disableStatistics = sourceClientStatus.getDisableStatistics();
-        sourceClientStatus.setDisableStatistics(targetClientStatus.getDisableStatistics());
-        targetClientStatus.setDisableStatistics(disableStatistics);
-
-        int disableVisiteWebsite = sourceClientStatus.getDisableVisitWebsite();
-        sourceClientStatus.setDisableVisitWebsite(targetClientStatus.getDisableVisitWebsite());
-        targetClientStatus.setDisableVisitWebsite(disableVisiteWebsite);
-
-        int entryPageMinCount = sourceClientStatus.getEntryPageMinCount();
-        sourceClientStatus.setEntryPageMinCount(targetClientStatus.getEntryPageMinCount());
-        targetClientStatus.setEntryPageMinCount(entryPageMinCount);
-
-        int entryPageMaxCount = sourceClientStatus.getEntryPageMaxCount();
-        sourceClientStatus.setEntryPageMaxCount(targetClientStatus.getEntryPageMaxCount());
-        targetClientStatus.setEntryPageMaxCount(entryPageMaxCount);
-
-        int disableVisitWebsite = sourceClientStatus.getDisableVisitWebsite();
-        sourceClientStatus.setDisableVisitWebsite(targetClientStatus.getDisableVisitWebsite());
-        targetClientStatus.setDisableVisitWebsite(disableVisitWebsite);
-
-        int pageRemainMinTime = sourceClientStatus.getPageRemainMinTime();
-        sourceClientStatus.setPageRemainMinTime(targetClientStatus.getPageRemainMinTime());
-        targetClientStatus.setPageRemainMinTime(pageRemainMinTime);
-
-        int pageRemainMaxTime = sourceClientStatus.getPageRemainMaxTime();
-        sourceClientStatus.setPageRemainMaxTime(targetClientStatus.getPageRemainMaxTime());
-        targetClientStatus.setPageRemainMaxTime(pageRemainMaxTime);
-
-        int inputDelayMinTime = sourceClientStatus.getInputDelayMinTime();
-        sourceClientStatus.setInputDelayMinTime(targetClientStatus.getInputDelayMinTime());
-        targetClientStatus.setInputDelayMinTime(inputDelayMinTime);
-
-        int inputDelayMaxTime = sourceClientStatus.getInputDelayMaxTime();
-        sourceClientStatus.setInputDelayMaxTime(targetClientStatus.getInputDelayMaxTime());
-        targetClientStatus.setInputDelayMaxTime(inputDelayMaxTime);
-
-        int slideDelayMinTime = sourceClientStatus.getSlideDelayMinTime();
-        sourceClientStatus.setSlideDelayMinTime(targetClientStatus.getSlideDelayMinTime());
-        targetClientStatus.setSlideDelayMinTime(slideDelayMinTime);
-
-        int slideDelayMaxTime = sourceClientStatus.getSlideDelayMaxTime();
-        sourceClientStatus.setSlideDelayMaxTime(targetClientStatus.getSlideDelayMaxTime());
-        targetClientStatus.setSlideDelayMaxTime(slideDelayMaxTime);
-
-        int titleRemainMinTime = sourceClientStatus.getTitleRemainMinTime();
-        sourceClientStatus.setTitleRemainMinTime(targetClientStatus.getTitleRemainMinTime());
-        targetClientStatus.setTitleRemainMinTime(titleRemainMinTime);
-
-        int titleRemainMaxTime = sourceClientStatus.getTitleRemainMaxTime();
-        sourceClientStatus.setTitleRemainMaxTime(targetClientStatus.getTitleRemainMaxTime());
-        targetClientStatus.setTitleRemainMaxTime(titleRemainMaxTime);
-
-        int optimizeKeywordCountPerIP = sourceClientStatus.getOptimizeKeywordCountPerIP();
-        sourceClientStatus.setOptimizeKeywordCountPerIP(targetClientStatus.getOptimizeKeywordCountPerIP());
-        targetClientStatus.setOptimizeKeywordCountPerIP(optimizeKeywordCountPerIP);
-
-        int oneIPOneUser = sourceClientStatus.getOneIPOneUser();
-        sourceClientStatus.setOneIPOneUser(targetClientStatus.getOneIPOneUser());
-        targetClientStatus.setOneIPOneUser(oneIPOneUser);
-
-        int randomlyClickNoResult = sourceClientStatus.getRandomlyClickNoResult();
-        sourceClientStatus.setRandomlyClickNoResult(targetClientStatus.getRandomlyClickNoResult());
-        targetClientStatus.setRandomlyClickNoResult(randomlyClickNoResult);
-
-        int justVisitSelfPage = sourceClientStatus.getJustVisitSelfPage();
-        sourceClientStatus.setJustVisitSelfPage(targetClientStatus.getJustVisitSelfPage());
-        targetClientStatus.setJustVisitSelfPage(justVisitSelfPage);
-
-        int sleepPer2Words = sourceClientStatus.getSleepPer2Words();
-        sourceClientStatus.setSleepPer2Words(targetClientStatus.getSleepPer2Words());
-        targetClientStatus.setSleepPer2Words(sleepPer2Words);
-
-        int supportPaste = sourceClientStatus.getSupportPaste();
-        sourceClientStatus.setSupportPaste(targetClientStatus.getSupportPaste());
-        targetClientStatus.setSupportPaste(supportPaste);
-
-        int moveRandomly = sourceClientStatus.getMoveRandomly();
-        sourceClientStatus.setMoveRandomly(targetClientStatus.getMoveRandomly());
-        targetClientStatus.setMoveRandomly(moveRandomly);
-
-        int parentSearchEntry = sourceClientStatus.getParentSearchEntry();
-        sourceClientStatus.setParentSearchEntry(targetClientStatus.getParentSearchEntry());
-        targetClientStatus.setParentSearchEntry(parentSearchEntry);
-
-        int clearLocalStorage = sourceClientStatus.getClearLocalStorage();
-        sourceClientStatus.setClearLocalStorage(targetClientStatus.getClearLocalStorage());
-        targetClientStatus.setClearLocalStorage(clearLocalStorage);
-
-        int lessClickAtNight = sourceClientStatus.getLessClickAtNight();
-        sourceClientStatus.setLessClickAtNight(targetClientStatus.getLessClickAtNight());
-        targetClientStatus.setLessClickAtNight(lessClickAtNight);
-
-        int sameCityUser = sourceClientStatus.getSameCityUser();
-        sourceClientStatus.setSameCityUser(targetClientStatus.getSameCityUser());
-        targetClientStatus.setSameCityUser(sameCityUser);
-
-        int locateTitlePosition = sourceClientStatus.getLocateTitlePosition();
-        sourceClientStatus.setLocateTitlePosition(targetClientStatus.getLocateTitlePosition());
-        targetClientStatus.setLocateTitlePosition(locateTitlePosition);
-
-        int baiduAllianceEntry = sourceClientStatus.getBaiduAllianceEntry();
-        sourceClientStatus.setBaiduAllianceEntry(targetClientStatus.getBaiduAllianceEntry());
-        targetClientStatus.setBaiduAllianceEntry(baiduAllianceEntry);
-
-        int justClickSpecifiedTitle = sourceClientStatus.getJustClickSpecifiedTitle();
-        sourceClientStatus.setJustClickSpecifiedTitle(targetClientStatus.getJustClickSpecifiedTitle());
-        targetClientStatus.setJustClickSpecifiedTitle(justClickSpecifiedTitle);
-
-        int randomlyClickMoreLink = sourceClientStatus.getRandomlyClickMoreLink();
-        sourceClientStatus.setRandomlyClickMoreLink(targetClientStatus.getRandomlyClickMoreLink());
-        targetClientStatus.setRandomlyClickMoreLink(randomlyClickMoreLink);
-
-        int moveUp20 = sourceClientStatus.getMoveUp20();
-        sourceClientStatus.setMoveUp20(targetClientStatus.getMoveUp20());
-        targetClientStatus.setMoveUp20(moveUp20);
-
-        int waitTimeAfterOpenBaidu = sourceClientStatus.getWaitTimeAfterOpenBaidu();
-        sourceClientStatus.setWaitTimeAfterOpenBaidu(targetClientStatus.getWaitTimeAfterOpenBaidu());
-        targetClientStatus.setWaitTimeAfterOpenBaidu(waitTimeAfterOpenBaidu);
-
-        int waitTimeBeforeClick = sourceClientStatus.getWaitTimeBeforeClick();
-        sourceClientStatus.setWaitTimeBeforeClick(targetClientStatus.getWaitTimeBeforeClick());
-        targetClientStatus.setWaitTimeBeforeClick(waitTimeBeforeClick);
-
-        int waitTimeAfterClick = sourceClientStatus.getWaitTimeAfterClick();
-        sourceClientStatus.setWaitTimeAfterClick(targetClientStatus.getWaitTimeAfterClick());
-        targetClientStatus.setWaitTimeAfterClick(waitTimeAfterClick);
-
-        int maxUserCount = sourceClientStatus.getMaxUserCount();
-        sourceClientStatus.setMaxUserCount(targetClientStatus.getMaxUserCount());
-        targetClientStatus.setMaxUserCount(maxUserCount);
-
-        int optimizeRelatedKeyword = sourceClientStatus.getOptimizeRelatedKeyword();
-        sourceClientStatus.setOptimizeRelatedKeyword(targetClientStatus.getOptimizeRelatedKeyword());
-        targetClientStatus.setOptimizeRelatedKeyword(optimizeRelatedKeyword);
-
-        Timestamp idleStartTime = sourceClientStatus.getIdleStartTime();
-        sourceClientStatus.setIdleStartTime(targetClientStatus.getIdleStartTime());
-        targetClientStatus.setIdleStartTime(idleStartTime);
-
-        long idleTotalMinutes = sourceClientStatus.getIdleTotalMinutes();
-        sourceClientStatus.setIdleTotalMinutes(targetClientStatus.getIdleTotalMinutes());
-        targetClientStatus.setIdleTotalMinutes(idleTotalMinutes);
+        long idleTotalMinutes = sourceMachineInfo.getIdleTotalMinutes();
+        sourceMachineInfo.setIdleTotalMinutes(targetMachineInfo.getIdleTotalMinutes());
+        targetMachineInfo.setIdleTotalMinutes(idleTotalMinutes);
     }
 
     public void sendNotificationForRenewal() throws Exception{
         String condition = " and DATE_ADD(fRenewalDate, INTERVAL -3 DAY ) < NOW() and fValid = 1 ORDER BY fRenewalDate ";
-        List<ClientStatus> clientStatuses = machineInfoDao.getClientStatusesForRenewal();
+        List<MachineInfo> machineInfos = machineInfoDao.getMachineInfosForRenewal();
 
-        if(!Utils.isEmpty(clientStatuses)){
+        if(!Utils.isEmpty(machineInfos)){
             Config notificationEmail = configService.getConfig("NotificationEmail", "EmailAddress");
             StringBuilder sb = new StringBuilder();
             sb.append("<table><tr><td>客户端ID</td><td>续费日期</td></tr>");
-            for(ClientStatus clientStatus : clientStatuses){
-                sb.append(String.format("<tr><td>%s</td><td>%s</td>", clientStatus.getClientID(), Utils.formatDatetime(clientStatus.getRenewalDate(),
+            for(MachineInfo machineInfo : machineInfos){
+                sb.append(String.format("<tr><td>%s</td><td>%s</td>", machineInfo.getClientID(), Utils.formatDatetime(machineInfo.getRenewalDate(),
                         "yyyy-MM-dd")));
             }
             sb.append("</table>");
@@ -1021,49 +641,34 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, ClientStatus
         }
     }
 
-    public String[] getOperationTypeValues(String terminalType) {
-        Config config = configService.getConfig(Constants.CONFIG_TYPE_OPTIMIZATION_TYPE,terminalType);
-        String [] operationTypeValues = config.getValue().split(",");
-        Arrays.sort(operationTypeValues);
-        return operationTypeValues;
-    }
-
-    public void updateRemainingKeywordIndicator(List<String> groupNames, int indicator){
-        machineInfoDao.updateRemainingKeywordIndicator(groupNames, indicator);
-    }
-
-    public void updateAllRemainingKeywordIndicator(int indicator){
-        machineInfoDao.updateAllRemainingKeywordIndicator(indicator);
-    }
-
-    public ClientStatus getClientStatusForStartUp() {
-        ClientStatus clientStatus = machineInfoDao.getClientStatusForStartUp();
-        if(clientStatus != null) {
-            clientStatus.setStartUpTime(Utils.getCurrentTimestamp());
-            clientStatus.setStartUpStatus(ClientStartUpStatusEnum.Processing.name());
-            machineInfoDao.updateById(clientStatus);
+    public MachineInfo getMachineInfoForStartUp() {
+        MachineInfo machineInfo = machineInfoDao.getMachineInfoForStartUp();
+        if(machineInfo != null) {
+            machineInfo.setStartUpTime(Utils.getCurrentTimestamp());
+            machineInfo.setStartUpStatus(ClientStartUpStatusEnum.Processing.name());
+            machineInfoDao.updateById(machineInfo);
         }
-        return clientStatus;
+        return machineInfo;
     }
 
-    public String getClientStartUpStatus(String clientID) {
-        ClientStatus clientStatus = machineInfoDao.selectById(clientID);
-        return clientStatus.getStartUpStatus();
+    public String getMachineStartUpStatus(String clientID) {
+        MachineInfo machineInfo = machineInfoDao.selectById(clientID);
+        return machineInfo.getStartUpStatus();
     }
 
-    public String getClientStatusID(String vpsBackendSystemComputerID) {
-        return machineInfoDao.getClientStatusID(vpsBackendSystemComputerID);
+    public String getMachineInfoID(String vpsBackendSystemComputerID) {
+        return machineInfoDao.getMachineInfoID(vpsBackendSystemComputerID);
     }
 
-    public void updateClientStartUpStatus(String clientID, String status) {
-        ClientStatus clientStatus = machineInfoDao.selectById(clientID);
-        if(clientStatus != null) {
-            clientStatus.setStartUpStatus(status);
-            machineInfoDao.updateById(clientStatus);
+    public void updateMachineStartUpStatus(String clientID, String status) {
+        MachineInfo machineInfo = machineInfoDao.selectById(clientID);
+        if(machineInfo != null) {
+            machineInfo.setStartUpStatus(status);
+            machineInfoDao.updateById(machineInfo);
         }
     }
 
-    public Integer getDownloadingClientCount() {
+    public Integer getDownloadingMachineCount() {
         return machineInfoDao.getDownloadingClientCount();
     }
 
@@ -1071,14 +676,9 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, ClientStatus
         machineInfoDao.updateStartUpStatusForCompleted(clientIDs);
     }
 
-    public void batchUpdateClientStatus(ClientStatusBatchUpdateCriteria clientStatusBatchUpdateCriteria) {
-        String[] clientIDs = clientStatusBatchUpdateCriteria.getClientStatus().getClientID().split(",");
-        machineInfoDao.batchUpdateClientStatus(clientIDs, clientStatusBatchUpdateCriteria.getCs(), clientStatusBatchUpdateCriteria.getClientStatus());
-    }
-
-    public List<CookieVO> searchClientForAllotCookie(int clientCookieCount, String cookieGroupForBaidu, String cookieGroupFor360) {
-        List<CookieVO> clientCookieCountList = machineInfoDao.searchClientForAllotCookie(clientCookieCount, cookieGroupForBaidu, cookieGroupFor360);
-        return clientCookieCountList;
+    public void batchUpdateMachineInfo(MachineInfoBatchUpdateCriteria machineInfoBatchUpdateCriteria) {
+        String[] clientIDs = machineInfoBatchUpdateCriteria.getMachineInfo().getClientID().split(",");
+        machineInfoDao.batchUpdateMachineInfo(clientIDs, machineInfoBatchUpdateCriteria.getMi(), machineInfoBatchUpdateCriteria.getMachineInfo());
     }
 
     public void batchChangeStatus(String clientIDs,Boolean status) {
@@ -1090,36 +690,19 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, ClientStatus
         machineInfoDao.batchChangeTerminalType(clientIds, terminalType);
     }
 
-    public Integer getUpgradingClientCount(ClientUpgrade clientUpgrade) {
-        return machineInfoDao.getUpgradingClientCount(clientUpgrade);
+    public Integer getUpgradingMachineCount(ClientUpgrade clientUpgrade) {
+        return machineInfoDao.getUpgradingMachineCount(clientUpgrade);
     }
 
-    public void updateClientTargetVersion(ClientUpgrade clientUpgrade) {
-        machineInfoDao.updateClientTargetVersion(clientUpgrade);
+    public void updateMachineTargetVersion(ClientUpgrade clientUpgrade) {
+        machineInfoDao.updateMachineTargetVersion(clientUpgrade);
     }
 
-    public Integer getResidualClientCount(ClientUpgrade clientUpgrade) {
-        return machineInfoDao.getResidualClientCount(clientUpgrade);
-    }
-
-    public void resetOptimizationInfo() {
-        machineInfoDao.resetOptimizationInfo();
+    public Integer getResidualMachineCount(ClientUpgrade clientUpgrade) {
+        return machineInfoDao.getResidualMachineCount(clientUpgrade);
     }
 
     public void updateVersion(String clientID, String version){
         machineInfoDao.updateVersion(clientID, version);
-    }
-
-    public List<ClientStatusVO> getClientStatusVOs (QZSettingSearchClientGroupInfoCriteria qzSettingSearchClientGroupInfoCriteria) {
-        return machineInfoDao.getClientStatusVOs(qzSettingSearchClientGroupInfoCriteria);
-    }
-
-    public ClientStatusForOptimization getClientStatusForOptimization(String clientID){
-        ClientStatusForOptimization clientStatusForOptimization = machineInfoDao.getClientStatusForOptimization(clientID);
-        if(clientStatusForOptimization != null){
-            clientStatusForOptimization.setOpenStatistics(clientStatusForOptimization.getDisableStatistics() == 1 ? 0 : 1);
-            clientStatusForOptimization.setCurrentTime(Utils.formatDate(new Date(), Utils.TIME_FORMAT));
-        }
-        return clientStatusForOptimization;
     }
 }

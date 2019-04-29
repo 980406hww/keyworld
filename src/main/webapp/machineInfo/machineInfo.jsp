@@ -110,8 +110,6 @@
 							&nbsp;&nbsp;
 							<input id="noGroup" name="noGroup" type="checkbox" value="noGroup" ${machineInfoCriteria.noGroup != null ? "checked=true" : ""}>没分组</input>
 							&nbsp;&nbsp;
-							<input id="noOperationType" name="noOperationType" type="checkbox" value="noOperationType" ${machineInfoCriteria.noOperationType != null ? "checked=true" : ""}>没操作类型</input>
-							&nbsp;&nbsp;
 							<input id="noVNC" name="noVNC" type="checkbox" value="noVNC" ${machineInfoCriteria.noVNC != null ? "checked=true" : ""}>没VNC</input>
 							&nbsp;&nbsp;
 							<input id="noUpgrade" name="noUpgrade" type="checkbox" value="noUpgrade" ${machineInfoCriteria.noUpgrade != null ? "checked=true" : ""}>没升级</input>
@@ -149,55 +147,55 @@
 								<option value='Old'>Old</option>
 							</select>
 
-							<%--<shiro:hasPermission name="/internal/machineInfo/searchMachineInfos">--%>
+							<shiro:hasPermission name="/internal/machineInfo/searchMachineInfos">
 								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" onclick="resetPageNumber()" value=" 查询 ">
-							<%--</shiro:hasPermission>
-							<shiro:hasPermission name="/internal/machineInfo/deleteMachineInfos">--%>
+							</shiro:hasPermission>
+							<shiro:hasPermission name="/internal/machineInfo/deleteMachineInfos">
 								&nbsp;&nbsp;<input type="button" onclick="delAllItems(this)" value=" 删除 ">
-							<%--</shiro:hasPermission>
-							<shiro:hasPermission name="/internal/machineInfo/saveMachineInfo">--%>
+							</shiro:hasPermission>
+							<shiro:hasPermission name="/internal/machineInfo/saveMachineInfo">
 								&nbsp;&nbsp;<input type="button" onclick="showReopenClientDialog()" value=" 重开机器 ">
 								&nbsp;&nbsp;<input type="button" onclick="finishStartUp()" value=" 完成开机 ">
-							<%--</shiro:hasPermission>
-							<shiro:hasPermission name="/internal/machineInfo/uploadVPSFile">--%>
+							</shiro:hasPermission>
+							<shiro:hasPermission name="/internal/machineInfo/uploadVPSFile">
 								&nbsp;&nbsp;<input type="button" name="btnFilter" onclick="showUploadVPSDialog('common')" value=" 导入普通终端 ">
 								&nbsp;&nbsp;<input type="button" onclick="showUploadVPSDialog('startUp')" value=" 导入开机终端 ">
-							<%--</shiro:hasPermission>--%>
+							</shiro:hasPermission>
 							&nbsp;&nbsp;<input type="button" onclick="headerTableSetting()" value="表格设置">
 						</td>
 						</tr>
 						<tr>
 							<td colspan="2" align="right">
-							<%--<shiro:hasPermission name="/internal/machineInfo/updateMachineInfoTargetVersion">--%>
+							<shiro:hasPermission name="/internal/machineInfo/updateMachineInfoTargetVersion">
 								<a target="_blank" href="javascript:showTargetVersionSettingDialog(this)">设定目标版本</a>
-							<%--</shiro:hasPermission>
-							<shiro:hasPermission name="/internal/machineInfo/saveMachineInfo">--%>
+							</shiro:hasPermission>
+							<shiro:hasPermission name="/internal/machineInfo/saveMachineInfo">
 								<a target="_blank" href="javascript:showTargetVPSPasswordSettingDialog(this)">设定目标密码</a>
-							<%--</shiro:hasPermission>
-							<shiro:hasPermission name="/internal/machineInfo/updateMachineInfoRenewalDate">--%>
+							</shiro:hasPermission>
+							<shiro:hasPermission name="/internal/machineInfo/updateMachineInfoRenewalDate">
 								|<a target="_blank" href="javascript:showRenewalSettingDialog(this)">续费</a>
-							<%--</shiro:hasPermission>
-							<shiro:hasPermission name="/internal/machineInfo/resetRestartStatusForProcessing">--%>
+							</shiro:hasPermission>
+							<shiro:hasPermission name="/internal/machineInfo/resetRestartStatusForProcessing">
 								|<a target="_blank" href="javascript:resetRestartStatus()">重置重启状态</a>
-							<%--</shiro:hasPermission>
-							<shiro:hasPermission name="/internal/machineInfo/uploadVNCFile">--%>
+							</shiro:hasPermission>
+							<shiro:hasPermission name="/internal/machineInfo/uploadVNCFile">
 								|<a target="_blank" href="javascript:showUploadVNCDialog()">上传VNC文件</a>
-							<%--</shiro:hasPermission>
-							<shiro:hasPermission name="/internal/machineInfo/downloadVNCFile">--%>
+							</shiro:hasPermission>
+							<shiro:hasPermission name="/internal/machineInfo/downloadVNCFile">
 								|<a target="_blank" href="javascript:downloadVNCFile()">下载VNC连接压缩文件</a>
-							<%--</shiro:hasPermission>
-							<shiro:hasPermission name="/internal/machineInfo/saveMachineInfo">--%>
-								|<a target="_blank" href="javascript:MachineInfoBatchUpdate()">批量设置</a>
-							<%--</shiro:hasPermission>
-							<shiro:hasPermission name="/internal/machineInfo/changeStatus">--%>
+							</shiro:hasPermission>
+							<shiro:hasPermission name="/internal/machineInfo/saveMachineInfo">
+								|<a target="_blank" href="javascript:machineInfoBatchUpdate()">批量设置</a>
+							</shiro:hasPermission>
+							<shiro:hasPermission name="/internal/machineInfo/changeStatus">
 								|<a target="_blank" href="javascript:batchChangeStatus(true)">批量开始</a>
-							<%--</shiro:hasPermission>
-							<shiro:hasPermission name="/internal/machineInfo/changeStatus">--%>
+							</shiro:hasPermission>
+							<shiro:hasPermission name="/internal/machineInfo/changeStatus">
 								|<a target="_blank" href="javascript:batchChangeStatus(false)">批量暂停</a>
-							<%--</shiro:hasPermission>
-							<shiro:hasPermission name="/internal/machineInfo/changeTerminalType">--%>
+							</shiro:hasPermission>
+							<shiro:hasPermission name="/internal/machineInfo/changeTerminalType">
 								|<a target="_blank" href="javascript:batchChangeTerminalType()">批量变更终端类型</a>
-							<%--</shiro:hasPermission>--%>
+							</shiro:hasPermission>
 							</td>
 						</tr>
 					</table>
@@ -269,14 +267,10 @@
 				</c:if>
 			</td>
 			<td width=60>
-				<%--<shiro:hasPermission name="/internal/machineInfo/updateGroup">--%>
+				<shiro:hasPermission name="/internal/machineInfo/updateGroup">
 					<input type="text" value="${machineInfo.group == null ? "" : machineInfo.group}"
 						   name="group" id="${machineInfo.clientID}" onBlur="updateGroup(this)" style="width: 100%;"/>
-				<%--</shiro:hasPermission>
-				<shiro:lacksPermission name="/internal/machineInfo/updateGroup">--%>
-					<input type="text" value="${machineInfo.group == null ? "" : machineInfo.group}"
-						   name="group" id="${machineInfo.clientID}" disabled style="width: 100%;"/>
-				<%--</shiro:lacksPermission>--%>
+				</shiro:hasPermission>
 			</td>
 			<td width=20><font color="${keywordColor}"><fmt:formatDate value="${machineInfo.renewalDate}"
 															  pattern="MM-dd"/></font></td>
@@ -304,41 +298,35 @@
 			<td width=40><font color="${keywordColor}">${machineInfo.startUpStatus}<br>${machineInfo.downloadProgramType}</font></td>
 			<td width=20><font color="${keywordColor}">${machineInfo.valid ? "监控中" : "暂停监控"}</font></td>
 			<td width=40>
-				<%--<shiro:hasPermission name="/internal/machineInfo/updateUpgradeFailedReason">--%>
+				<shiro:hasPermission name="/internal/machineInfo/updateUpgradeFailedReason">
 					<input type="text"
 						   value="${machineInfo.upgradeFailedReason == null ? "" : machineInfo.upgradeFailedReason}"
 						   name="upgradeFailedReason" id="${machineInfo.clientID}" onBlur="updateUpgradeFailedReason(this)"
 						   style="width: 100%;"/>
-				<%--</shiro:hasPermission>
-				<shiro:lacksPermission name="/internal/machineInfo/updateUpgradeFailedReason">--%>
-					<input type="text"
-						   value="${machineInfo.upgradeFailedReason == null ? "" : machineInfo.upgradeFailedReason}"
-						   name="upgradeFailedReason" id="${machineInfo.clientID}" disabled
-						   style="width: 100%;"/>
-				<%--</shiro:lacksPermission>--%>
+				</shiro:hasPermission>
 			</td>
 			<td width=40><font color="${keywordColor}">${machineInfo.vpsBackendSystemComputerID}</font></td>
 			<td width=80>
 				<c:choose>
 					<c:when test="${null != machineInfo.host and '' != machineInfo.host}">
-						<%--<shiro:hasPermission name="/internal/machineInfo/downloadVNCFile">--%>
+						<shiro:hasPermission name="/internal/machineInfo/downloadVNCFile">
 							<a href="javascript:connectVNC('${machineInfo.host}', '${machineInfo.port}', '${machineInfo.userName}', '${machineInfo.password}')">VNC</a>
-						<%--</shiro:hasPermission>--%>
+						</shiro:hasPermission>
 					</c:when>
 					<c:otherwise>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					</c:otherwise>
 				</c:choose>
 				&nbsp;
-				<%--<shiro:hasPermission name="/internal/machineInfo/saveMachineInfo">--%>
+				<shiro:hasPermission name="/internal/machineInfo/saveMachineInfo">
 					<a href="javascript:showSettingDialog('${machineInfo.clientID}', this)">设置</a>
-				<%--</shiro:hasPermission>--%>
+				</shiro:hasPermission>
 				&nbsp;
-				<%--<shiro:hasPermission name="/internal/machineInfo/deleteMachineInfo">--%>
+				<shiro:hasPermission name="/internal/machineInfo/deleteMachineInfo">
 					<a href="javascript:delItem('${machineInfo.clientID}')">删除</a>
-				<%--</shiro:hasPermission>--%>
+				</shiro:hasPermission>
 				<br>
-				<%--<shiro:hasPermission name="/internal/machineInfo/changeStatus">--%>
+				<shiro:hasPermission name="/internal/machineInfo/changeStatus">
 				<c:choose>
 					<c:when test="${machineInfo.valid}">
 						<a href="javascript:changeStatus('${machineInfo.clientID}',false)">暂停监控</a>
@@ -347,11 +335,11 @@
 						<a href="javascript:changeStatus('${machineInfo.clientID}',true)">开始监控</a>
 					</c:otherwise>
 				</c:choose>
-				<%--</shiro:hasPermission>--%>
+				</shiro:hasPermission>
 				&nbsp;
-				<%--<shiro:hasPermission name="/internal/machineInfo/changeTerminalType">--%>
+				<shiro:hasPermission name="/internal/machineInfo/changeTerminalType">
 				<a href="javascript:changeTerminalType('${machineInfo.clientID}')">变更终端类型</a>
-				<%--</shiro:hasPermission>--%>
+				</shiro:hasPermission>
 			</td>
 			</tr>
 		</c:forEach>
@@ -407,11 +395,6 @@
 								</select>
 							</td>
 						</tr>
-					</table>
-				</td>
-
-				<td style="vertical-align:top;">
-					<table id="td_2" style="font-size:12px">
 						<tr name="trItem" onclick="checkItem(this)">
 							<th>流转分组</th>
 							<td>
@@ -446,12 +429,6 @@
 							<th>VPS后台系统密码</th>
 							<td>
 								<input type="text" name="vpsBackendSystemPassword" id="vpsBackendSystemPassword"  style="width:110px;"/>
-							</td>
-						</tr>
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>最大用户数</th>
-							<td>
-								<input type="text" name="maxUserCount" id="maxUserCount" value="300"  style="width:110px;"/>
 							</td>
 						</tr>
 						<tr name="trItem" onclick="checkItem(this)">
@@ -562,29 +539,27 @@
 		<table>
 			<tr><td><input type="checkbox" name="columnName" id="1">客户端ID</td></tr>
 			<tr><td><input type="checkbox" name="columnName" id="2">优化组</td></tr>
-			<tr><td><input type="checkbox" name="columnName" id="3">操作类型</td></tr>
-			<tr><td><input type="checkbox" name="columnName" id="4">续费日期</td></tr>
-			<tr><td><input type="checkbox" name="columnName" id="5">现版本-目标版本</td></tr>
-			<tr><td><input type="checkbox" name="columnName" id="6">重启数/重启状态-页码/失败次数</td></tr>
-			<tr><td><input type="checkbox" name="columnName" id="7">所在城市-终端状态</td></tr>
-			<tr><td><input type="checkbox" name="columnName" id="8">剩余空间</td></tr>
-			<tr><td><input type="checkbox" name="columnName" id="9">最新工作时间-重启时间</td></tr>
-			<tr><td><input type="checkbox" name="columnName" id="10">重启排序时间-发通知时间</td></tr>
-			<tr><td><input type="checkbox" name="columnName" id="11">成功次数-操作次数</td></tr>
-			<tr><td><input type="checkbox" name="columnName" id="12">宽带账号-宽带密码</td></tr>
-			<tr><td><input type="checkbox" name="columnName" id="13">运行程序-类型</td></tr>
-			<tr><td><input type="checkbox" name="columnName" id="14">开机状态-下载程序类型</td></tr>
-			<tr><td><input type="checkbox" name="columnName" id="15">状态</td></tr>
-			<tr><td><input type="checkbox" name="columnName" id="16">停留时间</td></tr>
-			<tr><td><input type="checkbox" name="columnName" id="17">失败原因</td></tr>
-			<tr><td><input type="checkbox" name="columnName" id="18">服务器ID</td></tr>
-			<tr><td><input type="checkbox" name="columnName" id="19">操作</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="3">续费日期</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="4">现版本-目标版本</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="5">重启数/重启状态-失败次数</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="6">所在城市-终端状态</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="7">剩余空间</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="8">最新工作时间-重启时间</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="9">重启排序时间-发通知时间</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="10">成功次数-操作次数</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="11">宽带账号-宽带密码</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="12">运行程序-类型</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="13">开机状态-下载程序类型</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="14">状态</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="15">失败原因</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="16">服务器ID</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="17">操作</td></tr>
 		</table>
 	</div>
 <%@ include file="/commons/loadjs.jsp" %>
 <script src="${staticPath }/machineInfo/machineInfo.js"></script>
 <script language="javascript">
-    <%--<shiro:hasPermission name="/internal/machineInfo/updateUpgradeFailedReason">--%>
+    <shiro:hasPermission name="/internal/machineInfo/updateUpgradeFailedReason">
     function updateUpgradeFailedReason(self){
         var machineInfo = {};
         machineInfo.clientID = self.id;
@@ -600,7 +575,7 @@
             type: 'POST',
             success: function (result) {
                 if(result){
-                    $().toastmessage('showSuccessToast', "更新成功");
+                    $().toastmessage('showSuccessToast', "更新成功", true);
 
                 }else{
                     $().toastmessage('showErrorToast', "更新失败");
@@ -611,7 +586,7 @@
             }
         });
     }
-    <%--</shiro:hasPermission>--%>
+    </shiro:hasPermission>
 </script>
 </body>
 </html>

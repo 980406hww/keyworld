@@ -1,119 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.monitoring.dao.MachineInfoDao">
-    <select id="searchClientStatusForRefreshStat" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria" resultType="com.keymanager.monitoring.entity.CustomerKeywordTerminalRefreshStatRecord">
-        SELECT
-        cs.fGroup AS "group",
-        cs.fTerminalType AS "terminalType",
-        SUM(IF(DATE_ADD(cs.fLastVisitTime, INTERVAL IF(10 > cs.fPageNo * 3, 15, cs.fPageNo * 3 + 5) MINUTE) &lt; NOW(), 1, 0)) AS 'unworkMachineCount',
-        SUM(cs.fIdleTotalMinutes) AS "idleTotalMinutes",
-        COUNT(1)  AS 'totalMachineCount'
-        FROM t_client_status cs
-        WHERE cs.fValid = 1
-        <if test="customerKeywordRefreshStatInfoCriteria.terminalType!=null and customerKeywordRefreshStatInfoCriteria.terminalType!=''">AND cs.fTerminalType = #{customerKeywordRefreshStatInfoCriteria.terminalType}</if>
-        <if test="customerKeywordRefreshStatInfoCriteria.groupName!=null and customerKeywordRefreshStatInfoCriteria.groupName!=''">
-            AND cs.fGroup like '${customerKeywordRefreshStatInfoCriteria.groupName}%'
-            AND EXISTS (SELECT 1 FROM t_customer_keyword ck WHERE ck.fType = #{customerKeywordRefreshStatInfoCriteria.entryType} AND ck.fOptimizeGroupName like '${customerKeywordRefreshStatInfoCriteria.groupName}%')
-        </if>
-        GROUP BY cs.fGroup, cs.fTerminalType
-        ORDER BY cs.fGroup
-    </select>
 
     <sql id="selectCol">
-        cs.fClientID AS "clientID",
-        cs.fTerminalType AS "terminalType",
-        cs.fClientIDPrefix AS "clientIDPrefix",
-        cs.fVersion AS "version",
-        cs.fTargetVersion AS "targetVersion",
-        cs.fPageNo AS "pageNo",
-        cs.fContinuousFailCount AS "continuousFailCount",
-        cs.fCity AS "city",
-        cs.fGroup AS "group",
-        cs.fOperationType AS "operationType",
-        cs.fPage AS "page",
-        cs.fPageSize AS "pageSize",
-        cs.fZhanneiPercent AS "zhanneiPercent",
-        cs.fZhanwaiPercent AS "zhanwaiPercent",
-        cs.fSpecialCharPercent AS "specialCharPercent",
-        cs.fKuaizhaoPercent AS "kuaizhaoPercent",
-        cs.fBaiduSemPercent AS "baiduSemPercent",
-        cs.fDragPercent AS "dragPercent",
-        cs.fMultiBrowser AS "multiBrowser",
-        cs.fClearCookie AS "clearCookie",
-        cs.fDisableStatistics AS "disableStatistics",
-        cs.fDisableVisitWebsite AS "disableVisitWebsite",
-        cs.fAllowSwitchGroup AS "allowSwitchGroup",
-        cs.fEntryPageMinCount AS "entryPageMinCount",
-        cs.fEntryPageMaxCount AS "entryPageMaxCount",
-        cs.fSwitchGroupName AS "switchGroupName",
-        cs.fPageRemainMinTime AS "pageRemainMinTime",
-        cs.fPageRemainMaxTime AS "pageRemainMaxTime",
-        cs.fInputDelayMinTime AS "inputDelayMinTime",
-        cs.fInputDelayMaxTime AS "inputDelayMaxTime",
-        cs.fSlideDelayMinTime AS "slideDelayMinTime",
-        cs.fSlideDelayMaxTime AS "slideDelayMaxTime",
-        cs.fTitleRemainMinTime AS "titleRemainMinTime",
-        cs.fTitleRemainMaxTime AS "titleRemainMaxTime",
-        cs.fOptimizeKeywordCountPerIP AS "optimizeKeywordCountPerIP",
-        cs.fOneIPOneUser AS "oneIPOneUser",
-        cs.fRandomlyClickNoResult AS "randomlyClickNoResult",
-        cs.fJustVisitSelfPage AS "justVisitSelfPage",
-        cs.fSleepPer2Words AS "sleepPer2Words",
-        cs.fSupportPaste AS "supportPaste",
-        cs.fMoveRandomly AS "moveRandomly",
-        cs.fParentSearchEntry AS "parentSearchEntry",
-        cs.fClearLocalStorage AS "clearLocalStorage",
-        cs.fLessClickAtNight AS "lessClickAtNight",
-        cs.fSameCityUser AS "sameCityUser",
-        cs.fLocateTitlePosition AS "locateTitlePosition",
-        cs.fBaiduAllianceEntry AS "baiduAllianceEntry",
-        cs.fJustClickSpecifiedTitle AS "justClickSpecifiedTitle",
-        cs.fRandomlyClickMoreLink AS "randomlyClickMoreLink",
-        cs.fMoveUp20 AS "moveUp20",
-        cs.fWaitTimeAfterOpenBaidu AS "waitTimeAfterOpenBaidu",
-        cs.fWaitTimeBeforeClick AS "waitTimeBeforeClick",
-        cs.fWaitTimeAfterClick AS "waitTimeAfterClick",
-        cs.fMaxUserCount AS "maxUserCount",
-        cs.fOptimizeRelatedKeyword AS "optimizeRelatedKeyword",
-        cs.fHost AS "host",
-        cs.fPort AS "port",
-        cs.fUserName AS "userName",
-        cs.fPassword AS "password",
-        cs.fBroadbandAccount AS "broadbandAccount",
-        cs.fBroadbandPassword AS "broadbandPassword",
-        cs.fFreeSpace AS "freeSpace",
-        cs.fVPSBackendSystemComputerID AS "vPSBackendSystemComputerID",
-        cs.fVPSBackendSystemPassword AS "vPSBackendSystemPassword",
-        cs.fLastVisitTime AS "lastVisitTime",
-        cs.fLastSendNotificationTime AS "lastSendNotificationTime",
-        cs.fRestartCount AS "restartCount",
-        cs.fRestartStatus AS "restartStatus",
-        cs.fRestartTime AS "restartTime",
-        cs.fValid AS "valid",
-        cs.fRestartOrderingTime AS "restartOrderingTime",
-        cs.fOptimizationStartDate AS "optimizationStartDate",
-        cs.fOptimizationTotalCount AS "optimizationTotalCount",
-        cs.fOptimizationSucceedCount AS "optimizationSucceedCount",
-        cs.fRenewalDate AS "renewalDate",
-        cs.fDownloadProgramType AS "downloadProgramType",
-        cs.fStartUpStatus AS "startUpStatus",
-        cs.fStartUpTime AS "startUpTime",
-        cs.fStatus AS "status",
-        cs.fRunningProgramType AS "runningProgramType",
-        cs.fUpgradeFailedReason AS "upgradeFailedReason",
-        cs.fCreateTime AS "createTime"
+        mi.fClientID AS "clientID",
+        mi.fTerminalType AS "terminalType",
+        mi.fClientIDPrefix AS "clientIDPrefix",
+        mi.fVersion AS "version",
+        mi.fTargetVersion AS "targetVersion",
+        mi.fContinuousFailCount AS "continuousFailCount",
+        mi.fCity AS "city",
+        mi.fGroup AS "group",
+        mi.fAllowSwitchGroup AS "allowSwitchGroup",
+        mi.fSwitchGroupName AS "switchGroupName",
+        mi.fHost AS "host",
+        mi.fPort AS "port",
+        mi.fUserName AS "userName",
+        mi.fPassword AS "password",
+        mi.fBroadbandAccount AS "broadbandAccount",
+        mi.fBroadbandPassword AS "broadbandPassword",
+        mi.fFreeSpace AS "freeSpace",
+        mi.fVPSBackendSystemComputerID AS "vPSBackendSystemComputerID",
+        mi.fVPSBackendSystemPassword AS "vPSBackendSystemPassword",
+        mi.fLastVisitTime AS "lastVisitTime",
+        mi.fLastSendNotificationTime AS "lastSendNotificationTime",
+        mi.fRestartCount AS "restartCount",
+        mi.fRestartStatus AS "restartStatus",
+        mi.fRestartTime AS "restartTime",
+        mi.fValid AS "valid",
+        mi.fRestartOrderingTime AS "restartOrderingTime",
+        mi.fOptimizationStartDate AS "optimizationStartDate",
+        mi.fOptimizationTotalCount AS "optimizationTotalCount",
+        mi.fOptimizationSucceedCount AS "optimizationSucceedCount",
+        mi.fRenewalDate AS "renewalDate",
+        mi.fDownloadProgramType AS "downloadProgramType",
+        mi.fStartUpStatus AS "startUpStatus",
+        mi.fStartUpTime AS "startUpTime",
+        mi.fStatus AS "status",
+        mi.fRunningProgramType AS "runningProgramType",
+        mi.fUpgradeFailedReason AS "upgradeFailedReason",
+        mi.fCreateTime AS "createTime"
     </sql>
 
-    <update id="updateClientStatusTargetVersion">
-        UPDATE t_client_status SET fTargetVersion = #{targetVersion}
+    <update id="updateMachineInfoTargetVersion">
+        UPDATE t_machine_info SET fTargetVersion = #{targetVersion}
         WHERE fClientID IN
         <foreach item="item" collection="clientIDs" open="(" separator="," close=")">
             #{item}
         </foreach>
     </update>
     
-    <update id="updateClientStatusTargetVPSPassword">
-        UPDATE t_client_status SET fTargetVPSPassword = #{targetVPSPassword}
+    <update id="updateMachineInfoTargetVPSPassword">
+        UPDATE t_machine_info SET fTargetVPSPassword = #{targetVPSPassword}
         WHERE fClientID IN
         <foreach item="item" collection="clientIDs" open="(" separator="," close=")">
             #{item}
@@ -121,8 +59,8 @@
     </update>
     
 
-    <delete id="deleteClientStatus">
-        DELETE FROM t_client_status WHERE fClientID IN
+    <delete id="deleteMachineInfos">
+        DELETE FROM t_machine_info WHERE fClientID IN
         <foreach item="item" collection="clientIDs" open="(" separator="," close=")">
             #{item}
         </foreach>
@@ -132,32 +70,28 @@
         SELECT
         <include refid="selectCol" />
         FROM
-        t_client_status cs
-        WHERE cs.fTerminalType = #{machineInfoCriteria.terminalType}
-        <if test="machineInfoCriteria.clientID != null and machineInfoCriteria.clientID != ''"> AND cs.fClientID like '%${machineInfoCriteria.clientID}%'</if>
-        <if test="machineInfoCriteria.groupName != null and machineInfoCriteria.groupName != ''"> AND cs.fGroup like '%${machineInfoCriteria.groupName}%'</if>
-        <if test="machineInfoCriteria.upgradeFailedReason != null and machineInfoCriteria.upgradeFailedReason != ''"> AND cs.fUpgradeFailedReason like '%${machineInfoCriteria.upgradeFailedReason}%'</if>
-        <if test="machineInfoCriteria.version != null and machineInfoCriteria.version != ''"> AND cs.fVersion like concat(#{machineInfoCriteria.version},'%')</if>
-        <if test="machineInfoCriteria.targetVersion != null and machineInfoCriteria.targetVersion != ''"> AND cs.fTargetVersion like concat(#{machineInfoCriteria.targetVersion},'%')</if>
-        <if test="machineInfoCriteria.noOperationType != null and machineInfoCriteria.noOperationType != ''"> AND (cs.fOperationType is null or cs.fOperationType = '')</if>
-        <if test="machineInfoCriteria.noOperationType == null and machineInfoCriteria.operationType != null and machineInfoCriteria.operationType != ''">
-            AND cs.fOperationType = #{machineInfoCriteria.operationType}
-        </if>
-        <if test="machineInfoCriteria.city != null and machineInfoCriteria.city != ''"> AND cs.fCity like concat(#{machineInfoCriteria.city},'%')</if>
-        <if test="machineInfoCriteria.valid != null and machineInfoCriteria.valid != ''"> AND cs.fValid = #{machineInfoCriteria.valid}</if>
-        <if test="machineInfoCriteria.hasProblem != null"> AND (cs.fContinuousFailCount &gt; 5 OR cs.fTenMinsLastVisitTime &lt; NOW()) and cs.fValid = 1</if>
-        <if test="machineInfoCriteria.renewal != null"> AND DATE_ADD(cs.fRenewalDate, INTERVAL -3 DAY) &lt; CURRENT_DATE() and cs.fValid = 1</if>
-        <if test="machineInfoCriteria.noGroup != null"> AND (cs.fGroup is null or cs.fGroup = '')</if>
-        <if test="machineInfoCriteria.hasGroup != null"> AND cs.fGroup > ''</if>
-        <if test="machineInfoCriteria.startUpStatus != null and machineInfoCriteria.startUpStatus != ''"> AND cs.fStartUpStatus = #{machineInfoCriteria.startUpStatus}</if>
-        <if test="machineInfoCriteria.runningProgramType != null and machineInfoCriteria.runningProgramType != ''"> AND cs.fRunningProgramType = #{machineInfoCriteria.runningProgramType}</if>
-        <if test="machineInfoCriteria.noVNC != null"> AND (cs.fHost is null or cs.fHost = '')</if>
-        <if test="machineInfoCriteria.noUpgrade != null"> AND (cs.fVersion &lt;&gt; cs.fTargetVersion)</if>
-        <if test="machineInfoCriteria.noChangePassword != null"> AND (cs.fPassword &lt;&gt; cs.fTargetVPSPassword)</if>
-        <if test="machineInfoCriteria.startUpClient != null"> AND cs.fDownloadProgramType > ''</if>
-        <if test="machineInfoCriteria.vpsBackendSystemComputerID != null and machineInfoCriteria.vpsBackendSystemComputerID != ''"> AND (cs.fVPSBackendSystemComputerID = #{machineInfoCriteria.vpsBackendSystemComputerID})</if>
-        <if test="machineInfoCriteria.switchGroupName != null and machineInfoCriteria.switchGroupName != ''"> AND cs.fSwitchGroupName = #{machineInfoCriteria.switchGroupName}</if>
-        <if test="machineInfoCriteria.switchGroups != null"> AND cs.fSwitchGroupName IN
+        t_machine_info mi
+        WHERE mi.fTerminalType = #{machineInfoCriteria.terminalType}
+        <if test="machineInfoCriteria.clientID != null and machineInfoCriteria.clientID != ''"> AND mi.fClientID like '%${machineInfoCriteria.clientID}%'</if>
+        <if test="machineInfoCriteria.groupName != null and machineInfoCriteria.groupName != ''"> AND mi.fGroup like '%${machineInfoCriteria.groupName}%'</if>
+        <if test="machineInfoCriteria.upgradeFailedReason != null and machineInfoCriteria.upgradeFailedReason != ''"> AND mi.fUpgradeFailedReason like '%${machineInfoCriteria.upgradeFailedReason}%'</if>
+        <if test="machineInfoCriteria.version != null and machineInfoCriteria.version != ''"> AND mi.fVersion like concat(#{machineInfoCriteria.version},'%')</if>
+        <if test="machineInfoCriteria.targetVersion != null and machineInfoCriteria.targetVersion != ''"> AND mi.fTargetVersion like concat(#{machineInfoCriteria.targetVersion},'%')</if>
+        <if test="machineInfoCriteria.city != null and machineInfoCriteria.city != ''"> AND mi.fCity like concat(#{machineInfoCriteria.city},'%')</if>
+        <if test="machineInfoCriteria.valid != null and machineInfoCriteria.valid != ''"> AND mi.fValid = #{machineInfoCriteria.valid}</if>
+        <if test="machineInfoCriteria.hasProblem != null"> AND (mi.fContinuousFailCount &gt; 5 OR mi.fTenMinsLastVisitTime &lt; NOW()) and mi.fValid = 1</if>
+        <if test="machineInfoCriteria.renewal != null"> AND DATE_ADD(mi.fRenewalDate, INTERVAL -3 DAY) &lt; CURRENT_DATE() and mi.fValid = 1</if>
+        <if test="machineInfoCriteria.noGroup != null"> AND (mi.fGroup is null or mi.fGroup = '')</if>
+        <if test="machineInfoCriteria.hasGroup != null"> AND mi.fGroup > ''</if>
+        <if test="machineInfoCriteria.startUpStatus != null and machineInfoCriteria.startUpStatus != ''"> AND mi.fStartUpStatus = #{machineInfoCriteria.startUpStatus}</if>
+        <if test="machineInfoCriteria.runningProgramType != null and machineInfoCriteria.runningProgramType != ''"> AND mi.fRunningProgramType = #{machineInfoCriteria.runningProgramType}</if>
+        <if test="machineInfoCriteria.noVNC != null"> AND (mi.fHost is null or mi.fHost = '')</if>
+        <if test="machineInfoCriteria.noUpgrade != null"> AND (mi.fVersion &lt;&gt; mi.fTargetVersion)</if>
+        <if test="machineInfoCriteria.noChangePassword != null"> AND (mi.fPassword &lt;&gt; mi.fTargetVPSPassword)</if>
+        <if test="machineInfoCriteria.startUpClient != null"> AND mi.fDownloadProgramType > ''</if>
+        <if test="machineInfoCriteria.vpsBackendSystemComputerID != null and machineInfoCriteria.vpsBackendSystemComputerID != ''"> AND (mi.fVPSBackendSystemComputerID = #{machineInfoCriteria.vpsBackendSystemComputerID})</if>
+        <if test="machineInfoCriteria.switchGroupName != null and machineInfoCriteria.switchGroupName != ''"> AND mi.fSwitchGroupName = #{machineInfoCriteria.switchGroupName}</if>
+        <if test="machineInfoCriteria.switchGroups != null"> AND mi.fSwitchGroupName IN
             <foreach collection="machineInfoCriteria.switchGroups" item="switchGroup" open="(" close=")" separator=",">
                 #{switchGroup}
             </foreach>
@@ -166,118 +100,66 @@
 
     </select>
 
-    <select id="getClientStatusForOptimization" resultType="com.keymanager.monitoring.vo.ClientStatusForOptimization">
-        SELECT
-            cs.fGroup AS "group",
-            cs.fOperationType AS "operationType",
-            cs.fKuaizhaoPercent AS "kuaizhaoPercent",
-            cs.fBaiduSemPercent AS "baiduSemPercent",
-            cs.fDragPercent AS "dragPercent",
-            cs.fMultiBrowser AS "multiBrowser",
-            cs.fClearCookie AS "clearCookie",
-            cs.fZhanneiPercent AS "zhanneiPercent",
-            cs.fZhanwaiPercent AS "zhanwaiPercent",
-            cs.fSpecialCharPercent AS "specialCharPercent",
-            cs.fDisableStatistics AS "disableStatistics",
-            cs.fEntryPageMinCount AS "entryPageMinCount",
-            cs.fEntryPageMaxCount AS "entryPageMaxCount",
-            cs.fDisableVisitWebsite AS "disableVisitWebsite",
-            cs.fPageRemainMinTime AS "pageRemainMinTime",
-            cs.fPageRemainMaxTime AS "pageRemainMaxTime",
-            cs.fInputDelayMinTime AS "inputDelayMinTime",
-            cs.fInputDelayMaxTime AS "inputDelayMaxTime",
-            cs.fSlideDelayMinTime AS "slideDelayMinTime",
-            cs.fSlideDelayMaxTime AS "slideDelayMaxTime",
-            cs.fTitleRemainMinTime AS "titleRemainMinTime",
-            cs.fTitleRemainMaxTime AS "titleRemainMaxTime",
-            cs.fOptimizeKeywordCountPerIP AS "optimizeKeywordCountPerIP",
-            cs.fOneIPOneUser AS "oneIPOneUser",
-            cs.fRandomlyClickNoResult AS "randomlyClickNoResult",
-            cs.fJustVisitSelfPage AS "justVisitSelfPage",
-            cs.fSleepPer2Words AS "sleepPer2Words",
-            cs.fSupportPaste AS "supportPaste",
-            cs.fMoveRandomly AS "moveRandomly",
-            cs.fParentSearchEntry AS "parentSearchEntry",
-            cs.fClearLocalStorage AS "clearLocalStorage",
-            cs.fLessClickAtNight AS "lessClickAtNight",
-            cs.fSameCityUser AS "sameCityUser",
-            cs.fLocateTitlePosition AS "locateTitlePosition",
-            cs.fBaiduAllianceEntry AS "baiduAllianceEntry",
-            cs.fJustClickSpecifiedTitle AS "justClickSpecifiedTitle",
-            cs.fRandomlyClickMoreLink AS "randomlyClickMoreLink",
-            cs.fMoveUp20 AS "moveUp20",
-            cs.fWaitTimeAfterOpenBaidu AS "waitTimeAfterOpenBaidu",
-            cs.fWaitTimeBeforeClick AS "waitTimeBeforeClick",
-            cs.fWaitTimeAfterClick AS "waitTimeAfterClick",
-            cs.fMaxUserCount AS "maxUserCount",
-            cs.fSwitchGroupName AS "switchGroupName",
-            cs.fBroadbandAccount AS "broadbandAccount",
-            cs.fBroadbandPassword AS "broadbandPassword"
-        FROM
-        t_client_status cs
-        WHERE cs.fClientID = #{clientID}
-    </select>
-
-    <select id="getClientStatusesForSwitchGroup" resultType="com.keymanager.monitoring.entity.ClientStatus">
+    <select id="getMachineInfosForSwitchGroup" resultType="com.keymanager.monitoring.entity.MachineInfo">
         SELECT
         <include refid="selectCol" />
         FROM
-        t_client_status cs
-        WHERE cs.fTerminalType = #{terminalType}
-        AND cs.fValid = 1
-        AND  cs.fAllowSwitchGroup = 1
+        t_machine_info mi
+        WHERE mi.fTerminalType = #{terminalType}
+        AND mi.fValid = 1
+        AND  mi.fAllowSwitchGroup = 1
     </select>
 
-    <select id="getClientStatusesForRenewal" resultType="com.keymanager.monitoring.entity.ClientStatus">
+    <select id="getMachineInfosForRenewal" resultType="com.keymanager.monitoring.entity.MachineInfo">
         SELECT
-            cs.fClientID as 'clientID',
-            cs.fRenewalDate AS "renewalDate"
+            mi.fClientID as 'clientID',
+            mi.fRenewalDate AS "renewalDate"
         FROM
-        t_client_status cs
+        t_machine_info mi
         WHERE DATE_ADD(fRenewalDate, INTERVAL -3 DAY ) &lt; NOW()
         AND fValid = 1
         ORDER BY fRenewalDate
     </select>
 
-    <select id="searchBadClientStatus" parameterType="com.keymanager.monitoring.criteria.ClientStatusCriteria" resultType="com.keymanager.monitoring.entity.ClientStatus">
+    <select id="searchBadMachineInfo" parameterType="com.keymanager.monitoring.criteria.MachineInfoCriteria" resultType="com.keymanager.monitoring.entity.MachineInfo">
         SELECT
         <include refid="selectCol" />
         FROM
-        t_client_status cs
-        WHERE cs.fTerminalType = #{clientStatusCriteria.terminalType}
-        AND (cs.fContinuousFailCount &gt; 5 OR cs.fTenMinsLastVisitTime &lt; NOW()) and cs.fValid = 1
-        <if test="clientStatusCriteria.groupName != null and clientStatusCriteria.groupName != ''">AND cs.fGroup = #{clientStatusCriteria.groupName}</if>
-        <if test="clientStatusCriteria.switchGroups != null"> AND cs.fSwitchGroupName IN
-            <foreach collection="clientStatusCriteria.switchGroups" item="switchGroup" open="(" close=")" separator=",">
+        t_machine_info mi
+        WHERE mi.fTerminalType = #{machineInfoCriteria.terminalType}
+        AND (mi.fContinuousFailCount &gt; 5 OR mi.fTenMinsLastVisitTime &lt; NOW()) and mi.fValid = 1
+        <if test="machineInfoCriteria.groupName != null and machineInfoCriteria.groupName != ''">AND mi.fGroup = #{machineInfoCriteria.groupName}</if>
+        <if test="machineInfoCriteria.switchGroups != null"> AND mi.fSwitchGroupName IN
+            <foreach collection="machineInfoCriteria.switchGroups" item="switchGroup" open="(" close=")" separator=",">
                 #{switchGroup}
             </foreach>
         </if>
     </select>
 
-    <select id="getClientStatusByClientID" parameterType="java.lang.String" resultType="com.keymanager.monitoring.entity.ClientStatus">
+    <select id="getMachineInfoByMachineID" parameterType="java.lang.String" resultType="com.keymanager.monitoring.entity.MachineInfo">
         SELECT
         <include refid="selectCol" />
         FROM
-        t_client_status cs
-        WHERE cs.fTerminalType = #{terminalType}
-        AND cs.fClientID = #{clientID}
+        t_machine_info mi
+        WHERE mi.fTerminalType = #{terminalType}
+        AND mi.fClientID = #{clientID}
     </select>
 
     <update id="resetRestartStatusForProcessing">
-        UPDATE t_client_status SET fRestartStatus = NULL WHERE (fRestartStatus = 'Processing' or fRestartStatus = 'Logging')
+        UPDATE t_machine_info SET fRestartStatus = NULL WHERE (fRestartStatus = 'Processing' or fRestartStatus = 'Logging')
     </update>
 
-    <select id="searchClientStatusesOrByHost" parameterType="java.lang.String" resultType="com.keymanager.monitoring.entity.ClientStatus">
+    <select id="searchMachineInfosOrByHost" parameterType="java.lang.String" resultType="com.keymanager.monitoring.entity.MachineInfo">
         SELECT
         <include refid="selectCol" />
         FROM
-        t_client_status cs
-        WHERE cs.fTerminalType = #{terminalType}
-        <if test="comfirm != null"> and (cs.fHost is not null or cs.fHost &lt;&gt; '')</if>
+        t_machine_info mi
+        WHERE mi.fTerminalType = #{terminalType}
+        <if test="comfirm != null"> and (mi.fHost is not null or mi.fHost &lt;&gt; '')</if>
     </select>
 
-    <update id="updateClientVersion">
-        UPDATE t_client_status
+    <update id="updateMachineVersion">
+        UPDATE t_machine_info
         SET fVersion = #{version}, fRestartCount = 0, fRestartStatus = null
         <choose>
             <when test="hasKeyword == 1">
@@ -290,96 +172,8 @@
         WHERE fClientID = #{clientID}
     </update>
 
-    <insert id="addSummaryClientStatus" parameterType="com.keymanager.monitoring.entity.ClientStatus">
-        INSERT INTO t_client_status
-        (fTerminalType,
-        fFreeSpace,
-        fVersion,
-        fCity,
-        fClientID,
-        fClientIDPrefix,
-        fHost,
-        fPort,
-        fUserName,
-        fPassword,
-        fVPSBackendSystemComputerID,
-        fLastVisitTime,
-        fTenMinsLastVisitTime,
-        fRestartTime,
-        fThreeMinsRestartTime,
-        fTenMinsRestartTime,
-        fLastSendNotificationTime,
-        fRenewalDate,
-        fCreateTime)
-        VALUES (#{clientStatus.terminalType},
-        #{clientStatus.freeSpace},
-        #{clientStatus.version},
-        #{clientStatus.city},
-        #{clientStatus.clientID},
-        #{clientStatus.clientIDPrefix},
-        #{clientStatus.host},
-        #{clientStatus.port},
-        #{clientStatus.userName},
-        #{clientStatus.password},
-        #{clientStatus.vpsBackendSystemComputerID},
-        NOW(),
-        DATE_ADD(NOW(), INTERVAL 10 MINUTE ),
-        NOW(),
-        DATE_ADD(NOW(), INTERVAL 3 MINUTE ),
-        DATE_ADD(NOW(), INTERVAL 10 MINUTE ),
-        NULL,
-        DATE_ADD(CURRENT_DATE(), INTERVAL - 1 DAY),
-        NOW())
-    </insert>
-
-    <insert id="addClientStatusByVPSFile" parameterType="com.keymanager.monitoring.entity.ClientStatus">
-        INSERT INTO t_client_status
-        (fTerminalType,
-        fFreeSpace,
-        fClientID,
-        fClientIDPrefix,
-        fHost,
-        fPort,
-        fUserName,
-        fPassword,
-        fVPSBackendSystemComputerID,
-        fDisableStatistics,
-        fValid,
-        fBroadbandAccount,
-        fBroadbandPassword,
-        fLastVisitTime,
-        fTenMinsLastVisitTime,
-        fRestartTime,
-        fThreeMinsRestartTime,
-        fTenMinsRestartTime,
-        fLastSendNotificationTime,
-        fRenewalDate,
-        fCreateTime)
-        VALUES (#{clientStatus.terminalType},
-        #{clientStatus.freeSpace},
-        #{clientStatus.clientID},
-        #{clientStatus.clientIDPrefix},
-        #{clientStatus.host},
-        #{clientStatus.port},
-        #{clientStatus.userName},
-        #{clientStatus.password},
-        #{clientStatus.vpsBackendSystemComputerID},
-        #{clientStatus.disableStatistics},
-        #{clientStatus.valid},
-        #{clientStatus.broadbandAccount},
-        #{clientStatus.broadbandPassword},
-        NOW(),
-        DATE_ADD(NOW(), INTERVAL 10 MINUTE ),
-        NOW(),
-        DATE_ADD(NOW(), INTERVAL 3 MINUTE ),
-        DATE_ADD(NOW(), INTERVAL 10 MINUTE ),
-        NULL,
-        DATE_ADD(CURRENT_DATE(), INTERVAL - 1 DAY),
-        NOW())
-    </insert>
-
     <update id="updateOptimizationResult">
-        UPDATE t_client_status
+        UPDATE t_machine_info
         SET fRestartOrderingTime = NOW(),
         fOptimizationStartDate = IF(fOptimizationStartDate IS NULL, CURRENT_DATE(), fOptimizationStartDate),
         fOptimizationTotalCount = fOptimizationTotalCount + 1,
@@ -403,8 +197,8 @@
         WHERE fClientID = #{clientID}
     </update>
 
-    <update id="updateClientStatusForCapturePosition">
-        UPDATE t_client_status
+    <update id="updateMachineInfoForCapturePosition">
+        UPDATE t_machine_info
         SET fRestartOrderingTime = NOW(),
         fOptimizationStartDate = IF(fOptimizationStartDate IS NULL, CURRENT_DATE(), fOptimizationStartDate),
         fOptimizationTotalCount = fOptimizationTotalCount + 1,
@@ -414,126 +208,42 @@
         WHERE fClientID = #{clientID}
     </update>
 
-    <update id="updatePageNo">
-        UPDATE t_client_status
-        SET
-        fLastVisitTime = NOW(),
-        fTenMinsLastVisitTime = DATE_ADD(NOW(), INTERVAL 10 MINUTE ),
-        fPageNo = #{pageNo}
-        WHERE fClientID = #{clientID}
-    </update>
-
-    <update id="updateRestartStatus">
-        UPDATE t_client_status
-        SET fRestartStatus = #{restartStatus}, fRestartTime = now(), fThreeMinsRestartTime = DATE_ADD(NOW(), INTERVAL 3 MINUTE ), fTenMinsRestartTime = DATE_ADD(NOW(), INTERVAL 10 MINUTE ), fRestartOrderingTime = now()
-        WHERE fClientID = #{clientID}
-    </update>
-
-    <select id="searchClientStatusSummaryVO" resultType="com.keymanager.value.ClientStatusSummaryVO">
-        SELECT cs.fClientIDPrefix as clientIDPrefix, cs.fTerminalType as type, cs.fCity as city, COUNT(1) as 'count', fSwitchGroupName as 'switchGroupName'
-        FROM t_client_status cs
-        <where> cs.fValid = 1
-            <if test="clientIDPrefix!=null and clientIDPrefix!=''">and cs.fClientIDPrefix LIKE '%${clientIDPrefix}%'</if>
-            <if test="city!=null and city!=''">and cs.fCity LIKE '%${city}%'</if>
-            <if test="switchGroupName!=null and switchGroupName!=''">and cs.fSwitchGroupName LIKE '%${switchGroupName}%'</if>
-        </where>
-        GROUP BY cs.fClientIDPrefix, cs.fTerminalType, cs.fCity ORDER BY cs.fClientIDPrefix
-    </select>
-
-    <select id="searchClientStatusGroupSummaryVO" resultType="com.keymanager.value.ClientStatusGroupSummaryVO">
-        SELECT cs.fGroup as 'group', cs.fTerminalType as terminalType, COUNT(1) AS 'count' FROM t_client_status cs
-        <where>
-            <if test="group!=null and group!=''">and cs.fGroup LIKE '%${group}%'</if>
-            <if test="terminalType!=null and terminalType!=''">and cs.fTerminalType = #{terminalType}</if>
-        </where>
-        GROUP BY cs.fGroup, cs.fTerminalType ORDER BY cs.fGroup
-    </select>
-
-    <select id="searchRestartingClientStatuses" resultType="com.keymanager.monitoring.entity.ClientStatus">
-        SELECT
-        cs.fClientID AS "clientID",
-        cs.fTerminalType AS "terminalType",
-        cs.fVPSBackendSystemComputerID AS "vPSBackendSystemComputerID",
-        cs.fContinuousFailCount AS "continuousFailCount",
-        cs.fLastVisitTime AS "lastVisitTime",
-        cs.fPageNo AS "pageNo",
-        cs.fHost AS "host",
-        cs.fPort AS "port",
-        cs.fUserName AS "userName",
-        cs.fPassword AS "password",
-        cs.fRestartStatus AS "restartStatus"
-        FROM t_client_status cs
-        WHERE fTenMinsLastVisitTime &lt; NOW() and fValid = 1
-        AND fRestartStatus = 'restarting' AND fThreeMinsRestartTime &lt; NOW()
-        AND fStartUpStatus = 'Completed'
-        AND fHost &gt; '' order by fRestartOrderingTime limit 1
-    </select>
-
-
-    <select id="searchWaitingRestartingClientStatuses" resultType="com.keymanager.monitoring.entity.ClientStatus">
-        SELECT
-        cs.fClientID AS "clientID",
-        cs.fTerminalType AS "terminalType",
-        cs.fVPSBackendSystemComputerID AS "vPSBackendSystemComputerID",
-        cs.fContinuousFailCount AS "continuousFailCount",
-        cs.fLastVisitTime AS "lastVisitTime",
-        cs.fPageNo AS "pageNo",
-        cs.fRestartStatus AS "restartStatus"
-        FROM t_client_status cs
-        WHERE (fContinuousFailCount > 5 OR fTenMinsLastVisitTime &lt; NOW())
-        AND fTenMinsRestartTime &lt; NOW() and fRemainingKeyword = 1
-        AND fStartUpStatus = 'Completed'
-        AND fGroup &gt; ''
-        AND fValid = 1 AND fHost &gt; '' order by fRestartOrderingTime limit 1
-    </select>
-
-    <update id="updateRemainingKeywordIndicator">
-        UPDATE t_client_status SET fRemainingKeyword = #{indicator} WHERE fGroup in
-        <foreach item="item" collection="groupNames" open="(" separator="," close=")">
-            #{item}
-        </foreach>
-    </update>
-
-    <update id="updateAllRemainingKeywordIndicator">
-        UPDATE t_client_status SET fRemainingKeyword = #{indicator}
-    </update>
-
-    <select id="getClientStatusForStartUp" resultType="com.keymanager.monitoring.entity.ClientStatus">
+    <select id="getMachineInfoForStartUp" resultType="com.keymanager.monitoring.entity.MachineInfo">
         SELECT
         <include refid="selectCol" />
-        FROM t_client_status cs
-        WHERE (cs.fStartUpStatus = 'New' OR (cs.fStartUpStatus = 'Processing' AND DATE_ADD(cs.fStartUpTime, INTERVAL 30 MINUTE) &lt; NOW()))
-        ORDER BY cs.fStartUpTime
+        FROM t_machine_info mi
+        WHERE (mi.fStartUpStatus = 'New' OR (mi.fStartUpStatus = 'Processing' AND DATE_ADD(mi.fStartUpTime, INTERVAL 30 MINUTE) &lt; NOW()))
+        ORDER BY mi.fStartUpTime
         LIMIT 1
     </select>
 
-    <select id="getClientStatusID" parameterType="java.lang.String" resultType="java.lang.String">
-        SELECT fClientID as 'clientID' FROM t_client_status WHERE fVPSBackendSystemComputerID = #{vpsBackendSystemComputerID}
+    <select id="getMachineInfoIDID" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT fClientID as 'clientID' FROM t_machine_info WHERE fVPSBackendSystemComputerID = #{vpsBackendSystemComputerID}
     </select>
 
     <select id="getDownloadingClientCount" resultType="java.lang.Integer">
-        SELECT COUNT(1) FROM t_client_status WHERE fStartUpStatus = "Downloading"
+        SELECT COUNT(1) FROM t_machine_info WHERE fStartUpStatus = "Downloading"
     </select>
 
-    <select id="getUpgradingClientCount" parameterType="com.keymanager.monitoring.entity.ClientUpgrade" resultType="int">
-        SELECT COUNT(1) FROM t_client_status
+    <select id="getUpgradingMachineCount" parameterType="com.keymanager.monitoring.entity.ClientUpgrade" resultType="int">
+        SELECT COUNT(1) FROM t_machine_info
         WHERE fVersion = #{clientUpgrade.version}
         AND fRunningProgramType = #{clientUpgrade.programType}
         AND fTargetVersion = #{clientUpgrade.targetVersion}
         AND fTerminalType = #{clientUpgrade.terminalType}
     </select>
 
-    <select id="getResidualClientCount" parameterType="com.keymanager.monitoring.entity.ClientUpgrade" resultType="int">
-        SELECT COUNT(1) FROM t_client_status
+    <select id="getResidualMachineCount" parameterType="com.keymanager.monitoring.entity.ClientUpgrade" resultType="int">
+        SELECT COUNT(1) FROM t_machine_info
         WHERE fVersion = #{clientUpgrade.version}
         AND fRunningProgramType = #{clientUpgrade.programType}
         AND (fTargetVersion is null or fTargetVersion &lt;&gt; #{clientUpgrade.targetVersion})
         AND fTerminalType = #{clientUpgrade.terminalType}
     </select>
 
-    <update id="reopenClientStatus">
+    <update id="reopenMachineInfo">
         UPDATE
-            t_client_status
+            t_machine_info
         SET
             fDownloadProgramType = #{downloadProgramType},
             fSwitchGroupName = #{switchGroupName},
@@ -548,108 +258,38 @@
     </update>
 
     <update id="updateStartUpStatusForCompleted">
-        UPDATE t_client_status SET fStartUpStatus = 'Completed'
+        UPDATE t_machine_info SET fStartUpStatus = 'Completed'
         WHERE fClientID IN
         <foreach item="clientID" collection="clientIDs" open="(" separator="," close=")">
             #{clientID}
         </foreach>
     </update>
 
-    <select id="selectMaxIdByClientID" resultType="java.lang.Integer" parameterType="java.lang.String">
+    <select id="selectMaxIdByMachineID" resultType="java.lang.Integer" parameterType="java.lang.String">
         SELECT MAX(CAST(TRIM(LEADING #{clientID} FROM fClientID) AS DECIMAL)) AS clientID
-        FROM t_client_status
+        FROM t_machine_info
         WHERE fClientID LIKE '${clientID}%'
     </select>
 
-    <update id="batchUpdateClientStatus">
-        UPDATE t_client_status
+    <update id="batchUpdateMachineInfo">
+        UPDATE t_machine_info
         SET fTerminalType = fTerminalType
-        <if test="cs.group==1"> ,fGroup = #{clientStatus.group}</if>
-        <if test="cs.allowSwitchGroup==1"> ,fAllowSwitchGroup = #{clientStatus.allowSwitchGroup}</if>
-        <if test="cs.disableStatistics==1"> ,fDisableStatistics = #{clientStatus.disableStatistics}</if>
-        <if test="cs.disableVisitWebsite==1"> ,fDisableVisitWebsite = #{clientStatus.disableVisitWebsite}</if>
-        <if test="cs.operationType==1"> ,fOperationType = #{clientStatus.operationType}</if>
-        <if test="cs.page==1"> ,fPage = #{clientStatus.page}</if>
-        <if test="cs.pageSize==1"> ,fPageSize = #{clientStatus.pageSize}</if>
-        <if test="cs.zhanneiPercent==1"> ,fZhanneiPercent = #{clientStatus.zhanneiPercent}</if>
-        <if test="cs.zhanwaiPercent==1"> ,fZhanwaiPercent = #{clientStatus.zhanwaiPercent}</if>
-        <if test="cs.kuaizhaoPercent==1"> ,fKuaizhaoPercent = #{clientStatus.kuaizhaoPercent}</if>
-        <if test="cs.baiduSemPercent==1"> ,fBaiduSemPercent = #{clientStatus.baiduSemPercent}</if>
-        <if test="cs.specialCharPercent==1"> ,fSpecialCharPercent = #{clientStatus.specialCharPercent}</if>
-        <if test="cs.dragPercent==1"> ,fDragPercent = #{clientStatus.dragPercent}</if>
-        <if test="cs.multiBrowser==1"> ,fMultiBrowser = #{clientStatus.multiBrowser}</if>
-        <if test="cs.clearCookie==1"> ,fClearCookie = #{clientStatus.clearCookie}</if>
-        <if test="cs.switchGroupName==1"> ,fSwitchGroupName = #{clientStatus.switchGroupName}</if>
-        <if test="cs.host==1"> ,fHost = #{clientStatus.host}</if>
-        <if test="cs.port==1"> ,fPort = #{clientStatus.port}</if>
-        <if test="cs.userName==1"> ,fUserName = #{clientStatus.userName}</if>
-        <if test="cs.vpsBackendSystemComputerID==1"> ,fVpsBackendSystemComputerID = #{clientStatus.vpsBackendSystemComputerID}</if>
-        <if test="cs.vpsBackendSystemPassword==1"> ,fVpsBackendSystemPassword = #{clientStatus.vpsBackendSystemPassword}</if>
-        <if test="cs.maxUserCount==1"> ,fMaxUserCount = #{clientStatus.maxUserCount}</if>
-        <if test="cs.broadbandAccount==1"> ,fBroadbandAccount = #{clientStatus.broadbandAccount}</if>
-        <if test="cs.broadbandPassword==1"> ,fBroadbandPassword = #{clientStatus.broadbandPassword}</if>
-        <if test="cs.entryPageMinCount==1"> ,fEntryPageMinCount = #{clientStatus.entryPageMinCount}</if>
-        <if test="cs.entryPageMaxCount==1"> ,fEntryPageMaxCount = #{clientStatus.entryPageMaxCount}</if>
-        <if test="cs.pageRemainMinTime==1"> ,fPageRemainMinTime = #{clientStatus.pageRemainMinTime}</if>
-        <if test="cs.pageRemainMaxTime==1"> ,fPageRemainMaxTime = #{clientStatus.pageRemainMaxTime}</if>
-        <if test="cs.inputDelayMinTime==1"> ,fInputDelayMinTime = #{clientStatus.inputDelayMinTime}</if>
-        <if test="cs.inputDelayMaxTime==1"> ,fInputDelayMaxTime = #{clientStatus.inputDelayMaxTime}</if>
-        <if test="cs.slideDelayMinTime==1"> ,fSlideDelayMinTime = #{clientStatus.slideDelayMinTime}</if>
-        <if test="cs.slideDelayMaxTime==1"> ,fSlideDelayMaxTime = #{clientStatus.slideDelayMaxTime}</if>
-        <if test="cs.titleRemainMinTime==1"> ,fTitleRemainMinTime = #{clientStatus.titleRemainMinTime}</if>
-        <if test="cs.titleRemainMaxTime==1"> ,fTitleRemainMaxTime = #{clientStatus.titleRemainMaxTime}</if>
-        <if test="cs.optimizeKeywordCountPerIP==1"> ,fOptimizeKeywordCountPerIP = #{clientStatus.optimizeKeywordCountPerIP}</if>
-        <if test="cs.waitTimeAfterOpenBaidu==1"> ,fWaitTimeAfterOpenBaidu = #{clientStatus.waitTimeAfterOpenBaidu}</if>
-        <if test="cs.waitTimeBeforeClick==1"> ,fWaitTimeBeforeClick = #{clientStatus.waitTimeBeforeClick}</if>
-        <if test="cs.waitTimeAfterClick==1"> ,fWaitTimeAfterClick = #{clientStatus.waitTimeAfterClick}</if>
-        <if test="cs.oneIPOneUser==1"> ,fOneIPOneUser = #{clientStatus.oneIPOneUser}</if>
-        <if test="cs.randomlyClickNoResult==1"> ,fRandomlyClickNoResult = #{clientStatus.randomlyClickNoResult}</if>
-        <if test="cs.justVisitSelfPage==1"> ,fJustVisitSelfPage = #{clientStatus.justVisitSelfPage}</if>
-        <if test="cs.sleepPer2Words==1"> ,fSleepPer2Words = #{clientStatus.sleepPer2Words}</if>
-        <if test="cs.supportPaste==1"> ,fSupportPaste = #{clientStatus.supportPaste}</if>
-        <if test="cs.moveRandomly==1"> ,fMoveRandomly = #{clientStatus.moveRandomly}</if>
-        <if test="cs.parentSearchEntry==1"> ,fParentSearchEntry = #{clientStatus.parentSearchEntry}</if>
-        <if test="cs.clearLocalStorage==1"> ,fClearLocalStorage = #{clientStatus.clearLocalStorage}</if>
-        <if test="cs.lessClickAtNight==1"> ,fLessClickAtNight = #{clientStatus.lessClickAtNight}</if>
-        <if test="cs.sameCityUser==1"> ,fSameCityUser = #{clientStatus.sameCityUser}</if>
-        <if test="cs.locateTitlePosition==1"> ,fLocateTitlePosition = #{clientStatus.locateTitlePosition}</if>
-        <if test="cs.baiduAllianceEntry==1"> ,fBaiduAllianceEntry = #{clientStatus.baiduAllianceEntry}</if>
-        <if test="cs.justClickSpecifiedTitle==1"> ,fJustClickSpecifiedTitle = #{clientStatus.justClickSpecifiedTitle}</if>
-        <if test="cs.randomlyClickMoreLink==1"> ,fRandomlyClickMoreLink = #{clientStatus.randomlyClickMoreLink}</if>
-        <if test="cs.moveUp20==1"> ,fMoveUp20 = #{clientStatus.moveUp20}</if>
-        <if test="cs.optimizeRelatedKeyword==1"> ,fOptimizeRelatedKeyword = #{clientStatus.optimizeRelatedKeyword}</if>
+        <if test="mi.group==1"> ,fGroup = #{machineInfo.group}</if>
+        <if test="mi.allowSwitchGroup==1"> ,fAllowSwitchGroup = #{machineInfo.allowSwitchGroup}</if>
+        <if test="mi.switchGroupName==1"> ,fSwitchGroupName = #{machineInfo.switchGroupName}</if>
+        <if test="mi.host==1"> ,fHost = #{machineInfo.host}</if>
+        <if test="mi.port==1"> ,fPort = #{machineInfo.port}</if>
+        <if test="mi.userName==1"> ,fUserName = #{machineInfo.userName}</if>
+        <if test="mi.vpsBackendSystemComputerID==1"> ,fVpsBackendSystemComputerID = #{machineInfo.vpsBackendSystemComputerID}</if>
+        <if test="mi.vpsBackendSystemPassword==1"> ,fVpsBackendSystemPassword = #{machineInfo.vpsBackendSystemPassword}</if>
         WHERE fClientID IN
         <foreach item="clientID" collection="clientIDs" open="(" separator="," close=")">
             #{clientID}
         </foreach>
     </update>
 
-    <select id="searchClientForAllotCookie" resultType="com.keymanager.monitoring.vo.CookieVO">
-        SELECT
-            cs.fClientID AS 'clientID',
-            cs.fSwitchGroupName AS 'switchGroupName',
-            cc.fCookieCount AS 'cookieCount',
-            cc.fCookieStr AS 'cookieStr'
-        FROM t_client_status cs
-        LEFT JOIN t_client_cookie cc
-        ON cs.fClientID = cc.fClientID
-        WHERE cs.fSwitchGroupName LIKE '${cookieGroupForBaidu}%'
-        AND (cc.fCookieCount &lt; #{clientCookieCount} OR cc.fCookieCount IS NULL)
-        UNION ALL
-        SELECT
-            cs.fClientID AS 'clientID',
-            cs.fSwitchGroupName AS 'switchGroupName',
-            cc.fCookieCount AS 'cookieCount',
-            cc.fCookieStr AS 'cookieStr'
-        FROM t_client_status cs
-        LEFT JOIN t_client_cookie cc
-        ON cs.fClientID = cc.fClientID
-        WHERE cs.fSwitchGroupName LIKE '${cookieGroupFor360}%'
-        AND (cc.fCookieCount &lt; #{clientCookieCount} OR cc.fCookieCount IS NULL)
-    </select>
-
     <update id="batchChangeStatus">
-        UPDATE t_client_status
+        UPDATE t_machine_info
         SET fValid = #{valid}
         WHERE fClientID IN
         <foreach collection="clientIds" item="clientID" open="(" close=")" separator=",">
@@ -658,7 +298,7 @@
     </update>
 
     <update id="batchChangeTerminalType">
-        UPDATE t_client_status
+        UPDATE t_machine_info
         SET fTerminalType = #{terminalType}
         WHERE fClientID IN
         <foreach collection="clientIds" item="clientID" open="(" close=")" separator=",">
@@ -666,8 +306,8 @@
         </foreach>
     </update>
     
-    <update id="updateClientTargetVersion" parameterType="com.keymanager.monitoring.entity.ClientUpgrade">
-        UPDATE t_client_status
+    <update id="updateMachineTargetVersion" parameterType="com.keymanager.monitoring.entity.ClientUpgrade">
+        UPDATE t_machine_info
         SET fTargetVersion = #{clientUpgrade.targetVersion}
         WHERE fVersion = #{clientUpgrade.version}
         AND fRunningProgramType = #{clientUpgrade.programType}
@@ -676,23 +316,9 @@
         LIMIT #{clientUpgrade.maxUpgradeCount}
     </update>
 
-    <update id="resetOptimizationInfo">
-        UPDATE t_client_status SET fRemainingKeyword = 1, fIdleStartTime = null, fIdleTotalMinutes = 0
-    </update>
-
     <update id="updateVersion">
-        UPDATE t_client_status SET fVersion = #{version}
+        UPDATE t_machine_info SET fVersion = #{version}
         WHERE fClientID = #{clientID}
     </update>
-    
-    <select id="getClientStatusVOs" resultType="com.keymanager.monitoring.vo.ClientStatusVO" parameterType="com.keymanager.monitoring.criteria.QZSettingSearchClientGroupInfoCriteria">
-        SELECT
-            cs.fOperationType AS 'operationType',
-            COUNT(cs.fOperationType) AS 'operationTypeCount'
-        FROM t_client_status cs
-        WHERE cs.fTerminalType = #{qzSettingSearchClientGroupInfoCriteria.terminalType}
-        AND cs.fGroup = #{qzSettingSearchClientGroupInfoCriteria.optimizeGroupName}
-        GROUP BY cs.fOperationType;
-    </select>
 
 </mapper>

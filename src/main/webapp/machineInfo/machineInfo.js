@@ -143,22 +143,6 @@ function downloadVNCFile() {
         }
     });
 }
-function downloadFullVNCFile() {
-    $.ajax({
-        url: '/internal/machineInfo/downloadFullVNCFile',
-        type: 'POST',
-        success: function (result) {
-            if (result) {
-                window.location.href="/vncAll.zip?t=" + new Date().getTime();
-            } else {
-                $().toastmessage('showErrorToast', "下载失败");
-            }
-        },
-        error: function () {
-            $().toastmessage('showErrorToast', "下载失败");
-        }
-    });
-}
 function selectAll(self){
     var a = document.getElementsByName("clientID");
     if(self.checked){
@@ -406,7 +390,6 @@ function delAllItems(self) {
         success: function (result) {
             if (result) {
                 $().toastmessage('showSuccessToast', "操作成功",true);
-                /* window.location.reload();*/
             } else {
                 $().toastmessage('showErrorToast', "操作失败");
             }
@@ -434,7 +417,7 @@ function resetRestartStatus() {
         type: 'POST',
         success: function (result) {
             if(result){
-                $().toastmessage('showSuccessToast', "更新成功");
+                $().toastmessage('showSuccessToast', "更新成功", true);
                 /* window.location.reload();*/
             }else{
                 $().toastmessage('showErrorToast', "更新失败");
@@ -487,7 +470,7 @@ function updateGroup(self){
         type: 'POST',
         success: function (result) {
             if(result){
-                $().toastmessage('showSuccessToast', "更新成功");
+                $().toastmessage('showSuccessToast', "更新成功", true);
             }else{
                 $().toastmessage('showErrorToast', "更新失败");
             }
@@ -563,7 +546,7 @@ function showSettingDialog(clientID, self){
                 $("#changeSettingDialog").dialog({
                     resizable: false,
                     title: "设置",
-                    width: 820,
+                    width: 390,
                     maxHeight: 534,
                     modal: true,
                     buttons: [{
@@ -593,79 +576,7 @@ function initSettingDialog(machineInfo, self){
     var settingDialogDiv = $("#changeSettingDialog");
     settingDialogDiv.find("#settingClientID").val(machineInfo.clientID);
     settingDialogDiv.find("#settingGroup").val(machineInfo.group != null ? machineInfo.group : "");
-    settingDialogDiv.find("#settingOperationType").val(machineInfo.operationType != null ? machineInfo.operationType : "");
-    if(machineInfo.pageSize != null){
-        settingDialogDiv.find("#pageSize").val(machineInfo.pageSize);
-    }
-    if(machineInfo.page != null){
-        settingDialogDiv.find("#page").val(machineInfo.page);
-    }
-    if(machineInfo.zhanneiPercent != null){
-        settingDialogDiv.find("#zhanneiPercent").val(machineInfo.zhanneiPercent);
-    }
-    if(machineInfo.zhanwaiPercent != null){
-        settingDialogDiv.find("#zhanwaiPercent").val(machineInfo.zhanwaiPercent);
-    }
-    if(machineInfo.dragPercent  != null){
-        settingDialogDiv.find("#dragPercent").val(machineInfo.dragPercent );
-    }
-    if(machineInfo.kuaizhaoPercent != null){
-        settingDialogDiv.find("#kuaizhaoPercent").val(machineInfo.kuaizhaoPercent);
-    }
-    if(machineInfo.baiduSemPercent != null){
-        settingDialogDiv.find("#baiduSemPercent").val(machineInfo.baiduSemPercent);
-    }
-    if(machineInfo.specialCharPercent != null){
-        settingDialogDiv.find("#specialCharPercent").val(machineInfo.specialCharPercent);
-    }
-
-    if(machineInfo.multiBrowser != null){
-        settingDialogDiv.find("#multiBrowser").val(machineInfo.multiBrowser);
-    }
-    if(machineInfo.clearCookie != null){
-        settingDialogDiv.find("#clearCookie").val(machineInfo.clearCookie);
-    }
     settingDialogDiv.find("#allowSwitchGroup ").val(machineInfo.allowSwitchGroup );
-    settingDialogDiv.find("#disableStatistics ").val(machineInfo.disableStatistics );
-    settingDialogDiv.find("#disableVisitWebsite ").val(machineInfo.disableVisitWebsite );
-
-    settingDialogDiv.find("#entryPageMinCount").val(machineInfo.entryPageMinCount);
-    settingDialogDiv.find("#entryPageMaxCount").val(machineInfo.entryPageMaxCount);
-    settingDialogDiv.find("#pageRemainMinTime").val(machineInfo.pageRemainMinTime);
-    settingDialogDiv.find("#pageRemainMaxTime").val(machineInfo.pageRemainMaxTime);
-    settingDialogDiv.find("#inputDelayMinTime").val(machineInfo.inputDelayMinTime);
-    settingDialogDiv.find("#inputDelayMaxTime").val(machineInfo.inputDelayMaxTime);
-    settingDialogDiv.find("#slideDelayMinTime").val(machineInfo.slideDelayMinTime);
-    settingDialogDiv.find("#slideDelayMaxTime").val(machineInfo.slideDelayMaxTime);
-    settingDialogDiv.find("#titleRemainMinTime").val(machineInfo.titleRemainMinTime);
-    settingDialogDiv.find("#titleRemainMaxTime").val(machineInfo.titleRemainMaxTime);
-    settingDialogDiv.find("#waitTimeAfterOpenBaidu").val(machineInfo.waitTimeAfterOpenBaidu);
-    settingDialogDiv.find("#waitTimeBeforeClick").val(machineInfo.waitTimeBeforeClick);
-    settingDialogDiv.find("#waitTimeAfterClick").val(machineInfo.waitTimeAfterClick);
-    settingDialogDiv.find("#maxUserCount").val(machineInfo.maxUserCount);
-    settingDialogDiv.find("#optimizeKeywordCountPerIP").val(machineInfo.optimizeKeywordCountPerIP);
-
-    settingDialogDiv.find("#oneIPOneUser")[0].checked = (machineInfo.oneIPOneUser == 1) ? true : false;
-    settingDialogDiv.find("#randomlyClickNoResult")[0].checked = (machineInfo.randomlyClickNoResult == 1) ? true : false;
-    settingDialogDiv.find("#justVisitSelfPage")[0].checked = (machineInfo.justVisitSelfPage == 1) ? true : false;
-    settingDialogDiv.find("#sleepPer2Words")[0].checked = (machineInfo.sleepPer2Words == 1) ? true : false;
-    settingDialogDiv.find("#supportPaste")[0].checked = (machineInfo.supportPaste == 1) ? true : false;
-    settingDialogDiv.find("#moveRandomly")[0].checked = (machineInfo.moveRandomly == 1) ? true : false;
-    settingDialogDiv.find("#parentSearchEntry")[0].checked = (machineInfo.parentSearchEntry == 1) ? true : false;
-    settingDialogDiv.find("#clearLocalStorage")[0].checked = (machineInfo.clearLocalStorage == 1) ? true : false;
-    settingDialogDiv.find("#lessClickAtNight")[0].checked = (machineInfo.lessClickAtNight == 1) ? true : false;
-    settingDialogDiv.find("#sameCityUser")[0].checked = (machineInfo.sameCityUser == 1) ? true : false;
-    settingDialogDiv.find("#locateTitlePosition")[0].checked = (machineInfo.locateTitlePosition == 1) ? true : false;
-    settingDialogDiv.find("#baiduAllianceEntry")[0].checked = (machineInfo.baiduAllianceEntry == 1) ? true : false;
-    settingDialogDiv.find("#justClickSpecifiedTitle")[0].checked = (machineInfo.justClickSpecifiedTitle == 1) ? true : false;
-    settingDialogDiv.find("#randomlyClickMoreLink")[0].checked = (machineInfo.randomlyClickMoreLink == 1) ? true : false;
-    settingDialogDiv.find("#moveUp20")[0].checked = (machineInfo.moveUp20 == 1) ? true : false;
-    settingDialogDiv.find("#optimizeRelatedKeyword")[0].checked = (machineInfo.optimizeRelatedKeyword == 1) ? true : false;
-
-    settingDialogDiv.find("#waitTimeAfterOpenBaidu").val(machineInfo.waitTimeAfterOpenBaidu);
-    settingDialogDiv.find("#waitTimeBeforeClick").val(machineInfo.waitTimeBeforeClick);
-    settingDialogDiv.find("#waitTimeAfterClick").val(machineInfo.waitTimeAfterClick);
-    settingDialogDiv.find("#maxUserCount").val(machineInfo.maxUserCount);
 
     settingDialogDiv.find("#switchGroupName").val(machineInfo.switchGroupName != null ? machineInfo.switchGroupName : "");
     settingDialogDiv.find("#host").val(machineInfo.host != null ? machineInfo.host : "");
@@ -690,20 +601,6 @@ function saveChangeSetting(clientIDs){
     var settingDialogDiv = $("#changeSettingDialog");
     var machineInfo = {};
     machineInfo.group = settingDialogDiv.find("#settingGroup").val();
-    machineInfo.operationType = settingDialogDiv.find("#settingOperationType").val();
-    machineInfo.pageSize = settingDialogDiv.find("#pageSize").val();
-    machineInfo.page = settingDialogDiv.find("#page").val();
-    machineInfo.dragPercent = settingDialogDiv.find("#dragPercent").val();
-    machineInfo.zhanneiPercent = settingDialogDiv.find("#zhanneiPercent").val();
-    machineInfo.zhanwaiPercent = settingDialogDiv.find("#zhanwaiPercent").val();
-    machineInfo.kuaizhaoPercent = settingDialogDiv.find("#kuaizhaoPercent").val();
-    machineInfo.baiduSemPercent = settingDialogDiv.find("#baiduSemPercent").val();
-    machineInfo.specialCharPercent = settingDialogDiv.find("#specialCharPercent").val();
-    machineInfo.multiBrowser = settingDialogDiv.find("#multiBrowser").val();
-    machineInfo.clearCookie = settingDialogDiv.find("#clearCookie").val();
-    machineInfo.allowSwitchGroup = settingDialogDiv.find("#allowSwitchGroup").val();
-    machineInfo.disableStatistics = settingDialogDiv.find("#disableStatistics").val();
-    machineInfo.disableVisitWebsite = settingDialogDiv.find("#disableVisitWebsite").val();
 
     machineInfo.switchGroupName = settingDialogDiv.find("#switchGroupName").val();
     machineInfo.host = settingDialogDiv.find("#host").val();
@@ -714,102 +611,22 @@ function saveChangeSetting(clientIDs){
     machineInfo.vpsBackendSystemComputerID = settingDialogDiv.find("#vpsBackendSystemComputerID").val();
     machineInfo.vpsBackendSystemPassword = settingDialogDiv.find("#vpsBackendSystemPassword").val();
 
-    machineInfo.entryPageMinCount = settingDialogDiv.find("#entryPageMinCount").val();
-    machineInfo.entryPageMaxCount = settingDialogDiv.find("#entryPageMaxCount").val();
-    machineInfo.disableVisitWebsite = settingDialogDiv.find("#disableVisitWebsite").val();
-    machineInfo.pageRemainMinTime = settingDialogDiv.find("#pageRemainMinTime").val();
-    machineInfo.pageRemainMaxTime = settingDialogDiv.find("#pageRemainMaxTime").val();
-    machineInfo.inputDelayMinTime = settingDialogDiv.find("#inputDelayMinTime").val();
-    machineInfo.inputDelayMaxTime = settingDialogDiv.find("#inputDelayMaxTime").val();
-    machineInfo.slideDelayMinTime = settingDialogDiv.find("#slideDelayMinTime").val();
-    machineInfo.slideDelayMaxTime = settingDialogDiv.find("#slideDelayMaxTime").val();
-    machineInfo.titleRemainMinTime = settingDialogDiv.find("#titleRemainMinTime").val();
-    machineInfo.titleRemainMaxTime = settingDialogDiv.find("#titleRemainMaxTime").val();
-    machineInfo.waitTimeAfterOpenBaidu = settingDialogDiv.find("#waitTimeAfterOpenBaidu").val();
-    machineInfo.waitTimeBeforeClick = settingDialogDiv.find("#waitTimeBeforeClick").val();
-    machineInfo.waitTimeAfterClick = settingDialogDiv.find("#waitTimeAfterClick").val();
-    machineInfo.maxUserCount = settingDialogDiv.find("#maxUserCount").val();
-    machineInfo.optimizeKeywordCountPerIP = settingDialogDiv.find("#optimizeKeywordCountPerIP").val();
-
-    machineInfo.oneIPOneUser = settingDialogDiv.find("#oneIPOneUser:checked").val() === '1' ? 1 : 0;
-    machineInfo.randomlyClickNoResult = settingDialogDiv.find("#randomlyClickNoResult:checked").val() === '1' ? 1 : 0;
-    machineInfo.justVisitSelfPage = settingDialogDiv.find("#justVisitSelfPage:checked").val() === '1' ? 1 : 0;
-    machineInfo.sleepPer2Words = settingDialogDiv.find("#sleepPer2Words:checked").val() === '1' ? 1 : 0;
-    machineInfo.supportPaste = settingDialogDiv.find("#supportPaste:checked").val() === '1' ? 1 : 0;
-    machineInfo.moveRandomly = settingDialogDiv.find("#moveRandomly:checked").val() === '1' ? 1 : 0;
-    machineInfo.parentSearchEntry = settingDialogDiv.find("#parentSearchEntry:checked").val() === '1' ? 1 : 0;
-    machineInfo.clearLocalStorage = settingDialogDiv.find("#clearLocalStorage:checked").val() === '1' ? 1 : 0;
-    machineInfo.lessClickAtNight = settingDialogDiv.find("#lessClickAtNight:checked").val() === '1' ? 1 : 0;
-    machineInfo.sameCityUser = settingDialogDiv.find("#sameCityUser:checked").val() === '1' ? 1 : 0;
-    machineInfo.locateTitlePosition = settingDialogDiv.find("#locateTitlePosition:checked").val() === '1' ? 1 : 0;
-    machineInfo.baiduAllianceEntry = settingDialogDiv.find("#baiduAllianceEntry:checked").val() === '1' ? 1 : 0;
-    machineInfo.justClickSpecifiedTitle = settingDialogDiv.find("#justClickSpecifiedTitle:checked").val() === '1' ? 1 : 0;
-    machineInfo.randomlyClickMoreLink = settingDialogDiv.find("#randomlyClickMoreLink:checked").val() === '1' ? 1 : 0;
-    machineInfo.moveUp20 = settingDialogDiv.find("#moveUp20:checked").val() === '1' ? 1 : 0;
-    machineInfo.optimizeRelatedKeyword = settingDialogDiv.find("#optimizeRelatedKeyword:checked").val() === '1' ? 1 : 0;
     if(clientIDs != null) {
         machineInfo.clientID = clientIDs;
-        var cs = {};
-        cs.group = isChecked("settingGroup");
-        cs.operationType = isChecked("settingOperationType");
-        cs.pageSize = isChecked("pageSize");
-        cs.page = isChecked("page");
-        cs.dragPercent = isChecked("dragPercent");
-        cs.zhanneiPercent = isChecked("zhanneiPercent");
-        cs.zhanwaiPercent = isChecked("zhanwaiPercent");
-        cs.kuaizhaoPercent = isChecked("kuaizhaoPercent");
-        cs.baiduSemPercent = isChecked("baiduSemPercent");
-        cs.specialCharPercent = isChecked("specialCharPercent");
-        cs.multiBrowser = isChecked("multiBrowser");
-        cs.clearCookie = isChecked("clearCookie");
-        cs.allowSwitchGroup = isChecked("allowSwitchGroup");
-        cs.disableStatistics = isChecked("disableStatistics");
-        cs.disableVisitWebsite = isChecked("disableVisitWebsite");
+        var mi = {};
+        mi.group = isChecked("settingGroup");
 
-        cs.switchGroupName = isChecked("switchGroupName");
-        cs.host = isChecked("host");
-        cs.port = isChecked("port");
-        cs.userName = isChecked("csUserName");
-        cs.broadbandAccount = isChecked("broadbandAccount");
-        cs.broadbandPassword = isChecked("broadbandPassword");
-        cs.vpsBackendSystemComputerID = isChecked("vpsBackendSystemComputerID");
-        cs.vpsBackendSystemPassword = isChecked("vpsBackendSystemPassword");
+        mi.switchGroupName = isChecked("switchGroupName");
+        mi.host = isChecked("host");
+        mi.port = isChecked("port");
+        mi.userName = isChecked("csUserName");
+        mi.broadbandAccount = isChecked("broadbandAccount");
+        mi.broadbandPassword = isChecked("broadbandPassword");
+        mi.vpsBackendSystemComputerID = isChecked("vpsBackendSystemComputerID");
+        mi.vpsBackendSystemPassword = isChecked("vpsBackendSystemPassword");
 
-        cs.entryPageMinCount = isChecked("entryPageMinCount");
-        cs.entryPageMaxCount = isChecked("entryPageMaxCount");
-        cs.disableVisitWebsite = isChecked("disableVisitWebsite");
-        cs.pageRemainMinTime = isChecked("pageRemainMinTime");
-        cs.pageRemainMaxTime = isChecked("pageRemainMaxTime");
-        cs.inputDelayMinTime = isChecked("inputDelayMinTime");
-        cs.inputDelayMaxTime = isChecked("inputDelayMaxTime");
-        cs.slideDelayMinTime = isChecked("slideDelayMinTime");
-        cs.slideDelayMaxTime = isChecked("slideDelayMaxTime");
-        cs.titleRemainMinTime = isChecked("titleRemainMinTime");
-        cs.titleRemainMaxTime = isChecked("titleRemainMaxTime");
-        cs.waitTimeAfterOpenBaidu = isChecked("waitTimeAfterOpenBaidu");
-        cs.waitTimeBeforeClick = isChecked("waitTimeBeforeClick");
-        cs.waitTimeAfterClick = isChecked("waitTimeAfterClick");
-        cs.maxUserCount = isChecked("maxUserCount");
-        cs.optimizeKeywordCountPerIP = isChecked("optimizeKeywordCountPerIP");
-
-        cs.oneIPOneUser = isChecked("oneIPOneUser") === '1' ? 1 : 0;
-        cs.randomlyClickNoResult = isChecked("randomlyClickNoResult") === '1' ? 1 : 0;
-        cs.justVisitSelfPage = isChecked("justVisitSelfPage") === '1' ? 1 : 0;
-        cs.sleepPer2Words = isChecked("sleepPer2Words") === '1' ? 1 : 0;
-        cs.supportPaste = isChecked("supportPaste") === '1' ? 1 : 0;
-        cs.moveRandomly = isChecked("moveRandomly") === '1' ? 1 : 0;
-        cs.parentSearchEntry = isChecked("parentSearchEntry") === '1' ? 1 : 0;
-        cs.clearLocalStorage = isChecked("clearLocalStorage") === '1' ? 1 : 0;
-        cs.lessClickAtNight = isChecked("lessClickAtNight") === '1' ? 1 : 0;
-        cs.sameCityUser = isChecked("sameCityUser") === '1' ? 1 : 0;
-        cs.locateTitlePosition = isChecked("locateTitlePosition") === '1' ? 1 : 0;
-        cs.baiduAllianceEntry = isChecked("baiduAllianceEntry") === '1' ? 1 : 0;
-        cs.justClickSpecifiedTitle = isChecked("justClickSpecifiedTitle") === '1' ? 1 : 0;
-        cs.randomlyClickMoreLink = isChecked("randomlyClickMoreLink") === '1' ? 1 : 0;
-        cs.moveUp20 = isChecked("moveUp20") === '1' ? 1 : 0;
-        cs.optimizeRelatedKeyword = isChecked("optimizeRelatedKeyword") === '1' ? 1 : 0;
         var postData = {};
-        postData.cs = cs;
+        postData.mi = mi;
         postData.machineInfo = machineInfo;
         $.ajax({
             url: '/internal/machineInfo/batchUpdateMachineInfo',
@@ -822,7 +639,7 @@ function saveChangeSetting(clientIDs){
             type: 'POST',
             success: function (result) {
                 if(result){
-                    $().toastmessage('showSuccessToast', "更新成功");
+                    $().toastmessage('showSuccessToast', "更新成功", true);
                 }else{
                     $().toastmessage('showErrorToast', "更新失败");
                 }
@@ -925,7 +742,7 @@ function saveTargetVersionSetting(self){
     machineInfo.clientIDs = getSelectedClientIDs();
     machineInfo.targetVersion = settingDialogDiv.find("#settingTargetVersion").val();
     if(machineInfo.targetVersion.trim() === ''){
-        alert("请输入目标版1本！");
+        alert("请输入目标版本！");
         return;
     }
     machineInfo.clientIDs = machineInfo.clientIDs.split(",");
@@ -1056,7 +873,7 @@ function saveRenewalSetting(self){
         type: 'POST',
         success: function (result) {
             if(result){
-                $().toastmessage('showSuccessToast', "更新成功");
+                $().toastmessage('showSuccessToast', "更新成功", true);
 
             }else{
                 $().toastmessage('showErrorToast', "更新失败");
@@ -1086,7 +903,7 @@ function machineInfoBatchUpdate() {
     $("#changeSettingDialog").dialog({
         resizable: false,
         title: "终端批量设置(请将需要修改的字段点击标记为红色)",
-        width: 820,
+        width: 400,
         maxHeight: 534,
         modal: true,
         buttons: [{
@@ -1152,11 +969,6 @@ function headerTableSetting() {
     });
     $('#headerTableDialog').window("resize",{top:$(document).scrollTop() + 100});
 }
-// function connectVNC(clientID, urlPrefix){
-//     var obj = new ActiveXObject("wscript.shell");
-//     obj.run("file:///C:/vnc/" + urlPrefix + "/" + clientID + ".vnc");
-//     obj = null;
-// }
 
 $(document).ready(function(){
     if($("#showFetchKeywordStatus").attr("checked") === "checked"){

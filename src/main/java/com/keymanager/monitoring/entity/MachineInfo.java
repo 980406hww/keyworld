@@ -9,7 +9,7 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import java.sql.Timestamp;
 
-@TableName(value = "t_client_status")
+@TableName(value = "t_machine_info")
 public class MachineInfo {
 
 	private static final long serialVersionUID = -7590694637780491359L;

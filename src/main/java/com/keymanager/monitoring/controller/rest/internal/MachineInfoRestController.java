@@ -2,9 +2,8 @@ package com.keymanager.monitoring.controller.rest.internal;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
-import com.keymanager.monitoring.criteria.ClientStatusBatchUpdateCriteria;
+import com.keymanager.monitoring.criteria.MachineInfoBatchUpdateCriteria;
 import com.keymanager.monitoring.criteria.MachineInfoCriteria;
-import com.keymanager.monitoring.entity.ClientStatus;
 import com.keymanager.monitoring.entity.Config;
 import com.keymanager.monitoring.entity.MachineInfo;
 import com.keymanager.monitoring.entity.UserPageSetup;
@@ -14,9 +13,8 @@ import com.keymanager.util.Constants;
 import com.keymanager.util.FileUtil;
 import com.keymanager.util.TerminalTypeMapping;
 import com.keymanager.util.Utils;
-import com.keymanager.value.ClientStatusGroupSummaryVO;
-import com.keymanager.value.ClientStatusSummaryVO;
 import org.apache.ibatis.annotations.Param;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +48,7 @@ public class MachineInfoRestController extends SpringMVCBaseController {
     @Autowired
     private ConfigService configService;
 
-//    @RequiresPermissions("/internal/clientstatus/changeTerminalType")
+    @RequiresPermissions("/internal/machineInfo/changeTerminalType")
     @RequestMapping(value = "/changeTerminalType", method = RequestMethod.POST)
     public ResponseEntity<?> changeTerminalType(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) throws Exception {
         String terminalType = TerminalTypeMapping.getTerminalType(request);
@@ -64,9 +62,9 @@ public class MachineInfoRestController extends SpringMVCBaseController {
         }
     }
 
-//    @RequiresPermissions("/internal/clientstatus/searchMachineInfos")
+    @RequiresPermissions("/internal/machineInfo/searchMachineInfos")
     @RequestMapping(value = "/searchMachineInfos", method = RequestMethod.GET)
-    public ModelAndView searchClientStatuses(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request) {
+    public ModelAndView searchMachineInfos(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request) {
         String loginName = getCurrentUser().getLoginName();
         String requestURI = request.getRequestURI();
         MachineInfoCriteria machineInfoCriteria = new MachineInfoCriteria();
@@ -79,9 +77,9 @@ public class MachineInfoRestController extends SpringMVCBaseController {
         return constructMachineInfoModelAndView(request,machineInfoCriteria, currentPageNumber, pageSize, true);
     }
 
-//    @RequiresPermissions("/internal/clientstatus/searchMachineInfos")
+    @RequiresPermissions("/internal/machineInfo/searchMachineInfos")
     @RequestMapping(value = "/searchMachineInfos", method = RequestMethod.POST)
-    public ModelAndView searchClientStatusesPost(HttpServletRequest request, MachineInfoCriteria machineInfoCriteria) {
+    public ModelAndView searchMachineInfosPost(HttpServletRequest request, MachineInfoCriteria machineInfoCriteria) {
         try {
             String loginName = getCurrentUser().getLoginName();
             String requestURI = request.getRequestURI();
@@ -98,18 +96,18 @@ public class MachineInfoRestController extends SpringMVCBaseController {
             return constructMachineInfoModelAndView(request, machineInfoCriteria, Integer.parseInt(currentPageNumber), Integer.parseInt(pageSize), true);
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return new ModelAndView("/client/list");
+            return new ModelAndView("/machineInfo/machineInfo");
         }
     }
 
-//    @RequiresPermissions("/internal/clientstatus/searchBadClientStatus")
+    @RequiresPermissions("/internal/machineInfo/searchBadMachineInfo")
     @RequestMapping(value = "/searchBadMachineInfo", method = RequestMethod.POST)
-    public ModelAndView searchBadClientStatus(HttpServletRequest request, MachineInfoCriteria machineInfoCriteria) {
+    public ModelAndView searchBadMachineInfo(HttpServletRequest request, MachineInfoCriteria machineInfoCriteria) {
         try {
             return constructMachineInfoModelAndView(request, machineInfoCriteria, 1, 50, false);
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return new ModelAndView("/client/list");
+            return new ModelAndView("/machineInfo/machineInfo");
         }
     }
 
@@ -124,12 +122,10 @@ public class MachineInfoRestController extends SpringMVCBaseController {
             machineInfoCriteria.setSwitchGroups(switchGroups);
         }
         Page<MachineInfo> page = machineInfoService.searchMachineInfos(new Page<MachineInfo>(currentPageNumber, pageSize), machineInfoCriteria, normalSearchFlag);
-        String [] operationTypeValues = machineInfoService.getOperationTypeValues(terminalType);
         modelAndView.addObject("terminalType", terminalType);
         modelAndView.addObject("machineInfoCriteria", machineInfoCriteria);
         modelAndView.addObject("validMap", Constants.CLIENT_STATUS_VALID_MAP);
         modelAndView.addObject("orderByMap", Constants.CLIENT_STATUS_ORDERBY_MAP);
-        modelAndView.addObject("operationTypeValues", operationTypeValues);
         modelAndView.addObject("urlPrefix", getUrlPrefix(request));
         modelAndView.addObject("page", page);
         performanceService.addPerformanceLog(terminalType + ":searchCustomerKeywords", System.currentTimeMillis() - startMilleSeconds, null);
@@ -142,13 +138,13 @@ public class MachineInfoRestController extends SpringMVCBaseController {
         return urlPrefix.replace("http://", "");
     }
 
-//    @RequiresPermissions("/internal/clientstatus/updateClientStatusTargetVersion")
-    @RequestMapping(value = "/updateClientStatusTargetVersion", method = RequestMethod.POST)
-    public ResponseEntity<?> updateClientStatusTargetVersion(@RequestBody Map<String, Object> requestMap) {
+    @RequiresPermissions("/internal/machineInfo/updateMachineInfoTargetVersion")
+    @RequestMapping(value = "/updateMachineInfoTargetVersion", method = RequestMethod.POST)
+    public ResponseEntity<?> updateMachineInfoTargetVersion(@RequestBody Map<String, Object> requestMap) {
         try {
             List<String> clientIDs = (List<String>) requestMap.get("clientIDs");
             String targetVersion = (String) requestMap.get("targetVersion");
-            machineInfoService.updateClientStatusTargetVersion(clientIDs, targetVersion);
+            machineInfoService.updateMachineInfoTargetVersion(clientIDs, targetVersion);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -156,13 +152,13 @@ public class MachineInfoRestController extends SpringMVCBaseController {
         }
     }
     
-//    @RequiresPermissions("/internal/clientstatus/saveClientStatus")
-    @RequestMapping(value = "/updateClientStatusTargetVPSPassword", method = RequestMethod.POST)
-    public ResponseEntity<?> updateClientStatusTargetVPSPassword(@RequestBody Map<String, Object> requestMap) {
+    @RequiresPermissions("/internal/machineInfo/saveMachineInfo")
+    @RequestMapping(value = "/updateMachineInfoTargetVPSPassword", method = RequestMethod.POST)
+    public ResponseEntity<?> updateMachineInfoTargetVPSPassword(@RequestBody Map<String, Object> requestMap) {
         try {
             List<String> clientIDs = (List<String>) requestMap.get("clientIDs");
             String targetVPSPassword = (String) requestMap.get("targetVPSPassword");
-            machineInfoService.updateClientStatusTargetVPSPassword(clientIDs, targetVPSPassword);
+            machineInfoService.updateMachineInfoTargetVPSPassword(clientIDs, targetVPSPassword);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -170,9 +166,9 @@ public class MachineInfoRestController extends SpringMVCBaseController {
         }
     }
 
-//    @RequiresPermissions("/internal/clientstatus/updateClientStatusRenewalDate")
-    @RequestMapping(value = "/updateClientStatusRenewalDate", method = RequestMethod.POST)
-    public ResponseEntity<?> updateClientStatusRenewalDate(@RequestBody Map<String, Object> requestMap) {
+    @RequiresPermissions("/internal/machineInfo/updateMachineInfoRenewalDate")
+    @RequestMapping(value = "/updateMachineInfoRenewalDate", method = RequestMethod.POST)
+    public ResponseEntity<?> updateMachineInfoRenewalDate(@RequestBody Map<String, Object> requestMap) {
         try {
             String clientIDs = (String) requestMap.get("clientIDs");
             String settingType = (String) requestMap.get("settingType");
@@ -185,11 +181,11 @@ public class MachineInfoRestController extends SpringMVCBaseController {
         }
     }
 
-//    @RequiresPermissions("/internal/clientstatus/saveClientStatus")
-    @RequestMapping(value = "/saveClientStatus", method = RequestMethod.POST)
-    public ResponseEntity<?> saveClientStatus(@RequestBody ClientStatus clientStatus) {
+    @RequiresPermissions("/internal/machineInfo/saveMachineInfo")
+    @RequestMapping(value = "/saveMachineInfo", method = RequestMethod.POST)
+    public ResponseEntity<?> saveMachineInfo(@RequestBody MachineInfo machineInfo) {
         try {
-            machineInfoService.saveClientStatus(clientStatus);
+            machineInfoService.saveMachineInfo(machineInfo);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -197,11 +193,11 @@ public class MachineInfoRestController extends SpringMVCBaseController {
         }
     }
 
-//    @RequiresPermissions("/internal/clientstatus/saveClientStatus")
-    @RequestMapping(value = "/batchUpdateClientStatus", method = RequestMethod.POST)
-    public ResponseEntity<?> batchUpdateClientStatus(@RequestBody ClientStatusBatchUpdateCriteria clientStatusBatchUpdateCriteria) {
+    @RequiresPermissions("/internal/machineInfo/saveMachineInfo")
+    @RequestMapping(value = "/batchUpdateMachineInfo", method = RequestMethod.POST)
+    public ResponseEntity<?> batchUpdateMachineInfo(@RequestBody MachineInfoBatchUpdateCriteria machineInfoBatchUpdateCriteria) {
         try {
-            machineInfoService.batchUpdateClientStatus(clientStatusBatchUpdateCriteria);
+            machineInfoService.batchUpdateMachineInfo(machineInfoBatchUpdateCriteria);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -209,7 +205,7 @@ public class MachineInfoRestController extends SpringMVCBaseController {
         }
     }
 
-//    @RequiresPermissions("/internal/clientstatus/updateGroup")
+    @RequiresPermissions("/internal/machineInfo/updateGroup")
     @RequestMapping(value = "/updateGroup", method = RequestMethod.POST)
     public ResponseEntity<?> updateGroup(@RequestBody Map<String, Object> requestMap) {
         try {
@@ -223,21 +219,7 @@ public class MachineInfoRestController extends SpringMVCBaseController {
         }
     }
 
-//    @RequiresPermissions("/internal/clientstatus/updateOperationType")
-    @RequestMapping(value = "/updateOperationType", method = RequestMethod.POST)
-    public ResponseEntity<?> updateOperationType(@RequestBody Map<String, Object> requestMap) {
-        try {
-            String clientID = (String)requestMap.get("clientID");
-            String operationType = (String)requestMap.get("operationType");
-            machineInfoService.updateOperationType(clientID, operationType);
-            return new ResponseEntity<Object>(true, HttpStatus.OK);
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
-        }
-    }
-
-//    @RequiresPermissions("/internal/clientstatus/updateUpgradeFailedReason")
+    @RequiresPermissions("/internal/machineInfo/updateUpgradeFailedReason")
     @RequestMapping(value = "/updateUpgradeFailedReason", method = RequestMethod.POST)
     public ResponseEntity<?> updateUpgradeFailedReason(@RequestBody Map<String, Object> requestMap) {
         try {
@@ -251,23 +233,23 @@ public class MachineInfoRestController extends SpringMVCBaseController {
         }
     }
 
-//    @RequestMapping(value = "/getClientStatus/{clientID}", method = RequestMethod.POST)
-    public ResponseEntity<?> getClientStatus(@PathVariable("clientID") String clientID, HttpServletRequest request) {
+    @RequestMapping(value = "/getMachineInfo/{clientID}", method = RequestMethod.POST)
+    public ResponseEntity<?> getMachineInfo(@PathVariable("clientID") String clientID, HttpServletRequest request) {
         try {
             String terminalType = TerminalTypeMapping.getTerminalType(request);
-            ClientStatus clientStatus = machineInfoService.getClientStatus(clientID, terminalType);
-            return new ResponseEntity<Object>(clientStatus, HttpStatus.OK);
+            MachineInfo machineInfo = machineInfoService.getMachineInfo(clientID, terminalType);
+            return new ResponseEntity<Object>(machineInfo, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
             return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
         }
     }
 
-//    @RequiresPermissions("/internal/clientstatus/deleteClientStatus")
-    @RequestMapping(value = "/deleteClientStatus/{clientID}", method = RequestMethod.POST)
-    public ResponseEntity<?> deleteClientStatus(@PathVariable("clientID") String clientID) {
+    @RequiresPermissions("/internal/machineInfo/deleteMachineInfo")
+    @RequestMapping(value = "/deleteMachineInfo/{clientID}", method = RequestMethod.POST)
+    public ResponseEntity<?> deleteMachineInfo(@PathVariable("clientID") String clientID) {
         try {
-            machineInfoService.deleteClientStatus(clientID);
+            machineInfoService.deleteMachineInfo(clientID);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -275,9 +257,9 @@ public class MachineInfoRestController extends SpringMVCBaseController {
         }
     }
 
-//    @RequiresPermissions("/internal/clientstatus/deleteClientStatuses")
-    @RequestMapping(value = "/deleteClientStatuses", method = RequestMethod.POST)
-    public ResponseEntity<?> deleteClientStatuses(@RequestBody Map<String, Object> requestMap) {
+    @RequiresPermissions("/internal/machineInfo/deleteMachineInfos")
+    @RequestMapping(value = "/deleteMachineInfos", method = RequestMethod.POST)
+    public ResponseEntity<?> deleteMachineInfos(@RequestBody Map<String, Object> requestMap) {
         try {
             List<String> clientIDs = (List<String>) requestMap.get("clientIDs");
             machineInfoService.deleteAll(clientIDs);
@@ -288,7 +270,7 @@ public class MachineInfoRestController extends SpringMVCBaseController {
         }
     }
 
-//    @RequiresPermissions("/internal/clientstatus/resetRestartStatusForProcessing")
+    @RequiresPermissions("/internal/machineInfo/resetRestartStatusForProcessing")
     @RequestMapping(value = "/resetRestartStatusForProcessing", method = RequestMethod.POST)
     public ResponseEntity<?> resetRestartStatusForProcessing() {
         try {
@@ -300,7 +282,7 @@ public class MachineInfoRestController extends SpringMVCBaseController {
         }
     }
 
-//    @RequiresPermissions("/internal/clientstatus/changeStatus")
+    @RequiresPermissions("/internal/machineInfo/changeStatus")
     @RequestMapping(value = "/changeStatus/{clientID}", method = RequestMethod.POST)
     public ResponseEntity<?> changeStatus(@PathVariable("clientID") String clientID) {
         try {
@@ -312,7 +294,7 @@ public class MachineInfoRestController extends SpringMVCBaseController {
         }
     }
 
-//    @RequiresPermissions("/internal/clientstatus/uploadVNCFile")
+    @RequiresPermissions("/internal/machineInfo/uploadVNCFile")
     @RequestMapping(value = "/uploadVNCFile", method = RequestMethod.POST)
     public ResponseEntity<?> uploadVNCFile(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request) {
         try {
@@ -325,10 +307,10 @@ public class MachineInfoRestController extends SpringMVCBaseController {
         }
     }
 
-//    @RequiresPermissions("/internal/clientstatus/uploadVPSFile")
+    @RequiresPermissions("/internal/machineInfo/uploadVPSFile")
     @RequestMapping(value = "/uploadVPSFile", method = RequestMethod.POST)
     public ResponseEntity<?> uploadVPSFile(@RequestParam(value = "file", required = false) MultipartFile file,
-                                           @RequestParam(defaultValue = "common", name = "clientStatusType") String clientStatusType,
+                                           @RequestParam(defaultValue = "common", name = "machineInfoType") String machineInfoType,
                                            @RequestParam(defaultValue = "no", name = "downloadProgramType") String downloadProgramType, HttpServletRequest request) {
         try {
             String terminalType = TerminalTypeMapping.getTerminalType(request);
@@ -338,7 +320,7 @@ public class MachineInfoRestController extends SpringMVCBaseController {
                 targetFile.mkdirs();
             }
             file.transferTo(targetFile);
-            machineInfoService.uploadVPSFile(clientStatusType, downloadProgramType, targetFile, terminalType);
+            machineInfoService.uploadVPSFile(machineInfoType, downloadProgramType, targetFile, terminalType);
             FileUtil.delFolder(path);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
@@ -347,7 +329,7 @@ public class MachineInfoRestController extends SpringMVCBaseController {
         }
     }
 
-//    @RequiresPermissions("/internal/clientstatus/downloadVNCFile")
+    @RequiresPermissions("/internal/machineInfo/downloadVNCFile")
     @RequestMapping(value = "/downloadVNCFile", method = RequestMethod.POST)
     public ResponseEntity<?> downloadVNCFile(HttpServletRequest request, HttpServletResponse response) {
         try {
@@ -362,67 +344,14 @@ public class MachineInfoRestController extends SpringMVCBaseController {
 
     }
 
-//    @RequiresPermissions("/internal/clientstatus/downloadFullVNCFile")
-    @RequestMapping(value = "/downloadFullVNCFile", method = RequestMethod.POST)
-    public ResponseEntity<?> downloadFullVNCFile(HttpServletRequest request, HttpServletResponse response) {
-        try {
-            machineInfoService.getFullVNCFileInfo(TerminalTypeMapping.getTerminalType(request));
-            Config config = configService.getConfig(Constants.CONFIG_TYPE_ZIP_ENCRYPTION, Constants.CONFIG_KEY_PASSWORD);
-            downFile("vncAll.zip", config.getValue() + Utils.getCurrentDate());
-            return new ResponseEntity<Object>(true, HttpStatus.OK);
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
-        }
-    }
 
-//    @RequiresPermissions("/internal/clientstatus/clientStatusStat")
-    @RequestMapping(value = "/clientStatusStat", method = {RequestMethod.GET, RequestMethod.POST})
-    public ModelAndView clientStatusStat(String clientIDPrefix, String city, String switchGroupName, HttpServletRequest request) {
-        ModelAndView modelAndView = new ModelAndView("client/clientStatusStat");
-        try {
-            if(request.getMethod().equals("GET")){
-                return modelAndView;
-            }
-            List<ClientStatusSummaryVO> clientStatusSummaryVOs = machineInfoService.searchClientStatusSummaryVO(clientIDPrefix, city, switchGroupName);
-            modelAndView.addObject("clientIDPrefix", clientIDPrefix);
-            modelAndView.addObject("city", city);
-            modelAndView.addObject("switchGroupName", switchGroupName);
-            modelAndView.addObject("clientStatusSummaryVOs", clientStatusSummaryVOs);
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-        }
-        return modelAndView;
-    }
-
-//    @RequiresPermissions("/internal/clientstatus/clientStatusGroupStat")
-    @RequestMapping(value = "/clientStatusGroupStat", method = {RequestMethod.POST, RequestMethod.GET})
-    public ModelAndView clientStatusGroupStat(String group, String terminalType, HttpServletRequest request) {
-        ModelAndView modelAndView = new ModelAndView("client/clientStatusGroupStat");
-        try {
-            if(request.getMethod().equals("GET")){
-                return modelAndView;
-            }
-            if (null != group) {
-                group = group.trim();
-            }
-            List<ClientStatusGroupSummaryVO> clientStatusGroupSummaryVOs = machineInfoService.searchClientStatusGroupSummaryVO(group, terminalType);
-            modelAndView.addObject("group", group);
-            modelAndView.addObject("terminalType", terminalType);
-            modelAndView.addObject("clientStatusGroupSummaryVOs", clientStatusGroupSummaryVOs);
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-        }
-        return modelAndView;
-    }
-
-//    @RequiresPermissions("/internal/clientstatus/saveClientStatus")
-    @RequestMapping(value = "/reopenClientStatus", method = RequestMethod.POST)
-    public ResponseEntity<?> reopenClientStatus(@RequestBody Map<String, Object> requestMap) {
+    @RequiresPermissions("/internal/machineInfo/saveMachineInfo")
+    @RequestMapping(value = "/reopenMachineInfo", method = RequestMethod.POST)
+    public ResponseEntity<?> reopenMachineInfo(@RequestBody Map<String, Object> requestMap) {
         try {
             List<String> clientIDs = (List<String>) requestMap.get("clientIDs");
             String downloadProgramType = (String) requestMap.get("downloadProgramType");
-            machineInfoService.reopenClientStatus(clientIDs, downloadProgramType);
+            machineInfoService.reopenMachineInfo(clientIDs, downloadProgramType);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -430,7 +359,7 @@ public class MachineInfoRestController extends SpringMVCBaseController {
         }
     }
 
-//    @RequiresPermissions("/internal/clientstatus/saveClientStatus")
+    @RequiresPermissions("/internal/machineInfo/saveMachineInfo")
     @RequestMapping(value = "/updateStartUpStatusForCompleted", method = RequestMethod.POST)
     public ResponseEntity<?> updateStartUpStatusForCompleted(@RequestBody Map<String, Object> requestMap) {
         try {
@@ -443,7 +372,7 @@ public class MachineInfoRestController extends SpringMVCBaseController {
         }
     }
 
-//    @RequiresPermissions("/internal/clientstatus/changeTerminalType")
+    @RequiresPermissions("/internal/machineInfo/changeTerminalType")
     @RequestMapping(value = "/batchChangeTerminalType", method = RequestMethod.POST)
     public ResponseEntity<?> batchChangeTerminalType(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) throws Exception {
         String terminalType = TerminalTypeMapping.getTerminalType(request);
@@ -458,7 +387,7 @@ public class MachineInfoRestController extends SpringMVCBaseController {
         }
     }
 
-//    @RequiresPermissions("/internal/clientstatus/changeStatus")
+    @RequiresPermissions("/internal/machineInfo/changeStatus")
     @RequestMapping(value = "/batchChangeStatus", method = RequestMethod.POST)
     public ResponseEntity<?> batchChangeStatus(@Param("clientIDs") String clientIDs,@Param("status")Boolean status) {
         try {

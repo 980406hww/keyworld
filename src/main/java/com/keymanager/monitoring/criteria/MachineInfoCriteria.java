@@ -15,8 +15,6 @@ public class MachineInfoCriteria extends BaseCriteria {
     private String showFetchKeywordStatus; // 显示取词状态
 
     private String renewal; // 续费
-    private String operationType; // 操作类型
-    private String noOperationType; // 没操作类型
     private String noVNC; // 没VNC
     private String noUpgrade; // 没升级
     private String noChangePassword;
@@ -122,22 +120,6 @@ public class MachineInfoCriteria extends BaseCriteria {
 
     public void setRenewal(String renewal) {
         this.renewal = renewal;
-    }
-
-    public String getOperationType() {
-        return operationType;
-    }
-
-    public void setOperationType(String operationType) {
-        this.operationType = operationType;
-    }
-
-    public String getNoOperationType() {
-        return noOperationType;
-    }
-
-    public void setNoOperationType(String noOperationType) {
-        this.noOperationType = noOperationType;
     }
 
     public String getNoVNC() {
