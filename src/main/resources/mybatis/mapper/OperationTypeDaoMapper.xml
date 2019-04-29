@@ -16,9 +16,11 @@
         FROM
         t_operation_type
         WHERE 1 = 1
+        AND fTerminalType = '%${operationType.terminalType}%'
         <if test="operationType.operationTypeName != null and operationType.operationTypeName != ''">
             AND fOperationTypeName like '%${operationType.operationTypeName}%'
         </if>
+
     </select>
 
     <select id="getOperationTypeByTerminalType" resultType="java.lang.String" parameterType="java.lang.String">

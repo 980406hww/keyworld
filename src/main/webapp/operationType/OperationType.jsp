@@ -28,21 +28,29 @@
     <table width="100%" style="font-size:12px;" cellpadding=3>
         <tr>
             <td colspan=13>
-                <form method="post" id="searchOperationTypeForm" action="/internal/operationType/searchOperationTypeLists"
+                <form method="post" id="searchOperationTypeForm"
+                      action="/internal/operationType/searchOperationTypeLists"
                       style="margin-bottom:0 ">
                     <div>
-                        <input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}"/>
+                        <input type="hidden" name="currentPageNumber" id="currentPageNumberHidden"
+                               value="${page.current}"/>
                         <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
                         <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
                         <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
                         操作类型名称:
-                        <input type="text" name="operationTypeName" id="searchOperationTypeName" style="width: 160px;" value="${operationType.operationTypeName}">
+                        <input type="text" name="operationTypeName" id="searchOperationTypeName" style="width: 160px;"
+                               value="${operationType.operationTypeName}">
                         &nbsp;&nbsp;
-                        <input type="submit" class="ui-button ui-widget ui-corner-all" onclick="resetPageNumber()" value=" 查询 ">
+                        <input type="submit" class="ui-button ui-widget ui-corner-all" onclick="resetPageNumber()"
+                               value=" 查询 ">
                         &nbsp;&nbsp;
-                        <input type="button" class="ui-button ui-widget ui-corner-all" value=" 添加 " onclick="showOperationTypeDialog(null)"/>
-                        &nbsp;&nbsp;
-                        <input type="button" class="ui-button ui-widget ui-corner-all" value=" 删除所选 " onclick="deleteBatchOperationType(this)"/>
+                        <shiro:hasRole name="AlgorithmGroup">
+                            <input type="button" class="ui-button ui-widget ui-corner-all" value=" 添加 "
+                                   onclick="showOperationTypeDialog(null)"/>
+                            &nbsp;&nbsp;
+                            <input type="button" class="ui-button ui-widget ui-corner-all" value=" 删除所选 "
+                                   onclick="deleteBatchOperationType(this)"/>
+                        </shiro:hasRole>
                     </div>
                 </form>
             </td>
@@ -60,8 +68,11 @@
             </shiro:hasRole>
             <td align="center" width=80>备注</td>
             <td align="center" width=80>创建时间</td>
-            <td align="center" width=80>是否有效</td>
-            <td align="center" width=80>操作</td>
+            <td align="center" width=80>更新时间</td>
+            <td align="center" width=80>状态</td>
+            <shiro:hasRole name="AlgorithmGroup">
+                <td align="center" width=80>操作</td>
+            </shiro:hasRole>
         </tr>
     </table>
 </div>
@@ -84,10 +95,11 @@
                 </td>
             </tr>
             <tr>
-                <td style="width:100px" align="right">是否有效:</td>
+                <td style="width:100px" align="right">状态:</td>
                 <td>
                     <input type="radio" name="status" value="1" checked="checked"/>&nbsp;有效&emsp;&emsp;
-                    <input type="radio" name="status" value="0"/>&nbsp;无效
+                    <input type="radio" name="status" value="0"/>&nbsp;无效&emsp;&emsp;
+                    <input type="radio" name="status" value="2"/>&nbsp;测试中
                 </td>
             </tr>
             <tr>
@@ -96,14 +108,12 @@
                     <textarea id="remark" style="width:240px; height: 50px; resize: none"></textarea>
                 </td>
             </tr>
-            <shiro:hasRole name="AlgorithmGroup">
-                <tr>
-                    <td style="width:100px;vertical-align:top" align="right">操作类型描述:</td>
-                    <td>
-                        <textarea id="description" style="width:240px; height: 130px; resize: none"></textarea>
-                    </td>
-                </tr>
-            </shiro:hasRole>
+            <tr>
+                <td style="width:100px;vertical-align:top" align="right">操作类型描述:</td>
+                <td>
+                    <textarea id="description" style="width:240px; height: 130px; resize: none"></textarea>
+                </td>
+            </tr>
         </table>
     </form>
 </div>
@@ -125,12 +135,19 @@
                     <td width=80 style="text-align: center">
                         <fmt:formatDate value="${operationType.createTime}" pattern="yyyy-MM-dd"/>
                     </td>
-                    <td width=80 style="text-align: center">${operationType.status == 1 ? "有效" : "无效"}</td>
-                    <td width=80>
-                        <a href="javascript:modifyOperationType(${operationType.uuid})">修改</a>
-                        |
-                        <a href="javascript:deleteOperationType('${operationType.uuid}','${operationType.operationTypeName}')">删除</a>
+                    <td width=80 style="text-align: center">
+                        <fmt:formatDate value="${operationType.updateTime}" pattern="yyyy-MM-dd"/>
                     </td>
+                    <td width=80 style="text-align: center">
+                            ${operationType.status == 1 ? "有效" : operationType.status == 0 ? "无效" : "测试中"}
+                    </td>
+                    <shiro:hasRole name="AlgorithmGroup">
+                        <td width=80>
+                            <a href="javascript:modifyOperationType(${operationType.uuid})">修改</a>
+                            |
+                            <a href="javascript:deleteOperationType('${operationType.uuid}','${operationType.operationTypeName}')">删除</a>
+                        </td>
+                    </shiro:hasRole>
                 </tr>
             </c:forEach>
         </shiro:hasRole>
@@ -150,12 +167,19 @@
                         <td width=80 style="text-align: center">
                             <fmt:formatDate value="${operationType.createTime}" pattern="yyyy-MM-dd"/>
                         </td>
-                        <td width=80 style="text-align: center">${operationType.status == 1 ? "有效" : "无效"}</td>
-                        <td width=80>
-                            <a href="javascript:modifyOperationType(${operationType.uuid})">修改</a>
-                            |
-                            <a href="javascript:deleteOperationType('${operationType.uuid}','${operationType.operationTypeName}')">删除</a>
+                        <td width=80 style="text-align: center">
+                            <fmt:formatDate value="${operationType.updateTime}" pattern="yyyy-MM-dd"/>
                         </td>
+                        <td width=80 style="text-align: center">
+                                ${operationType.status == 1 ? "有效" : operationType.status == 0 ? "无效" : "测试中"}
+                        </td>
+                        <shiro:hasRole name="AlgorithmGroup">
+                            <td width=80>
+                                <a href="javascript:modifyOperationType(${operationType.uuid})">修改</a>
+                                |
+                                <a href="javascript:deleteOperationType('${operationType.uuid}','${operationType.operationTypeName}')">删除</a>
+                            </td>
+                        </shiro:hasRole>
                     </tr>
                 </c:if>
             </c:forEach>

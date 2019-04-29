@@ -3,6 +3,7 @@ package com.keymanager.monitoring.controller.rest.internal;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.entity.OperationType;
 import com.keymanager.monitoring.service.OperationTypeService;
+import com.keymanager.util.TerminalTypeMapping;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,8 +31,10 @@ public class OperationTypeController extends SpringMVCBaseController {
 
 
     @RequestMapping(value = "/searchOperationTypeLists", method = RequestMethod.GET)
-    public ModelAndView searchOperationTypeLists(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize) {
+    public ModelAndView searchOperationTypeLists(HttpServletRequest request, @RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize) {
         OperationType operationType = new OperationType();
+        String terminalType = TerminalTypeMapping.getTerminalType(request);
+        operationType.setTerminalType(terminalType);
         return operationTypeService.constructSearchOperationTypeListsModelAndView(currentPageNumber, pageSize, operationType);
     }
 
@@ -39,6 +42,8 @@ public class OperationTypeController extends SpringMVCBaseController {
     public ModelAndView searchOperationTypeLists(OperationType operationType, HttpServletRequest request) {
         String currentPageNumber = request.getParameter("currentPageNumber");
         String pageSize = request.getParameter("pageSize");
+        String terminalType = TerminalTypeMapping.getTerminalType(request);
+        operationType.setTerminalType(terminalType);
         if (StringUtils.isEmpty(currentPageNumber)) {
             currentPageNumber = "1";
         }
