@@ -4,6 +4,30 @@
 	<title>分组设置</title>
 	<script type="text/javascript" src="${staticPath}/static/My97DatePicker/WdatePicker.js"></script>
 	<link rel="stylesheet" href="${staticPath}/groupsetting/groupsetting.css">
+	<style>
+		#changeSettingDialog {
+			display: none;
+			margin: 5px 0px 0px 5px;
+		}
+		#changeSettingDialog tr {
+			height : 24px;
+		}
+		#changeSettingDialog th {
+			text-align : right;
+		}
+
+		#changeSettingDialog select {
+			width : 152px;
+		}
+
+		#changeSettingDialog input[type=text] {
+			width : 152px;
+		}
+
+		#td_2 input[type=text] {
+			width : 50px;
+		}
+	</style>
 </head>
 <body>
 <%@ include file="/commons/basejs.jsp" %>
@@ -67,8 +91,9 @@
 						<span class="groupName" title="${groupVo.groupName}"><a href="javascript:;">${groupVo.groupName}</a></span>
 						<span class="userName" title="${groupVo.userName}"><a href="javascript:;"></a>${groupVo.userName}</span>
 						<div class="handle">
-							<a class="blue" href="javascript:showGroupSettingDialog(${groupVo.uuid})">修改</a>
-							<a class="blue" href="javascript:delGroupSetting()">删除</a>
+							<a class="blue" href="javascript:showGroupSettingDialog('add', '${groupVo.uuid}', '${groupVo.groupName}')">新增操作类型</a>
+							<a class="blue" href="javascript:showGroupDialog(${groupVo.uuid})">修改优化分组</a>
+							<a class="blue" href="javascript:delGroup(${groupVo.uuid})">删除优化分组</a>
 						</div>
 					</div>
 
@@ -259,10 +284,10 @@
 
 										<div>
 											<span>
-												<input class="ui-button ui-widget ui-corner-all" type="button" onclick="trimSearchCondition('1')" value=" 修改 " >
+												<input class="ui-button ui-widget ui-corner-all" type="button" title="修改操作类型" onclick="showGroupSettingDialog('update', '${groupSetting.uuid}', '${groupVo.groupName}')" value=" 修改 " >
 											</span>
 											<span>
-												<input class="ui-button ui-widget ui-corner-all" type="button" onclick="trimSearchCondition('1')" value=" 删除 " >
+												<input class="ui-button ui-widget ui-corner-all" type="button" title="删除操作类型" onclick="delGroupSetting(${groupSetting.uuid})" value=" 删除 " >
 											</span>
 										</div>
 									</div>
@@ -299,6 +324,316 @@
         <option>1000</option>
 	</select>
 	</div>
+</div>
+
+<%--增加、修改操作类型--%>
+<div id="changeSettingDialog" class="easyui-dialog" style="display: none;left: 30%;">
+	<form id="changeSettingDialogForm" onsubmit="return false">
+		<table>
+			<tr>
+				<input type="hidden" name="groupUuid" id="groupUuid" value="" >
+				<input type="hidden" name="groupSettingUuid" id="groupSettingUuid" value="" >
+				<td>
+					<table id="td_1" style="font-size:12px">
+						<tr name="trItem" onclick="checkItem(this)">
+							<th>分组</th>
+							<td>
+								<input type="text" name="settingGroup" id="settingGroup" readonly />
+							</td>
+						</tr>
+						<tr name="trItem" onclick="checkItem(this)">
+							<th>操作类型</th>
+							<td>
+								<select name="settingOperationType" id="settingOperationType">
+									<c:forEach items="${operationTypeValues}" var="operationType">
+										<option value="${operationType}">${operationType}</option>
+									</c:forEach>
+								</select>
+							</td>
+						</tr>
+						<tr name="trItem" onclick="checkItem(this)">
+							<th>网站统计</th>
+							<td>
+								<select name="disableStatistics" id="disableStatistics">
+									<option value="0">开放</option>
+									<option value="1">关闭</option>
+								</select>
+							</td>
+						</tr>
+						<tr name="trItem" onclick="checkItem(this)">
+							<th>目标网站</th>
+							<td>
+								<select name="disableVisitWebsite" id="disableVisitWebsite">
+									<option value="0">访问</option>
+									<option value="1">不访问</option>
+								</select>
+							</td>
+						</tr>
+						<tr name="trItem" onclick="checkItem(this)">
+							<th>页数</th>
+							<td>
+								<c:choose>
+									<c:when test="${terminalType eq 'Phone'}">
+										<input type="text" name="page" id="page" value="3"/>
+									</c:when>
+									<c:otherwise>
+										<input type="text" name="page" id="page" value="5"/>
+									</c:otherwise>
+								</c:choose>
+							</td>
+						</tr>
+						<tr name="trItem" onclick="checkItem(this)">
+							<th>每页</th>
+							<td>
+								<select name="pageSize" id="pageSize">
+									<option value="0">10</option>
+									<option value="1">20</option>
+									<option value="2">50</option>
+								</select>条
+							</td>
+						</tr>
+						<tr name="trItem" onclick="checkItem(this)">
+							<th>站内搜索</th>
+							<td>
+								<select name="zhanneiPercent" id="zhanneiPercent">
+									<option value="0">0%</option>
+									<option value="1">10%</option>
+									<option value="2">30%</option>
+									<option value="3">50%</option>
+									<option value="4">100%</option>
+								</select>
+							</td>
+						</tr>
+						<tr name="trItem" onclick="checkItem(this)">
+							<th>外链检索</th>
+							<td>
+								<select name="zhanwaiPercent" id="zhanwaiPercent">
+									<option value="0">0%</option>
+									<option value="1">10%</option>
+									<option value="2">30%</option>
+									<option value="3">50%</option>
+									<option value="4">100%</option>
+								</select>
+							</td>
+						</tr>
+						<tr name="trItem" onclick="checkItem(this)">
+							<th>快照点击比例</th>
+							<td>
+								<select name="kuaizhaoPercent" id="kuaizhaoPercent">
+									<option value="0">0%</option>
+									<option value="1">10%</option>
+									<option value="2">30%</option>
+									<option value="3">50%</option>
+									<option value="4">100%</option>
+								</select>
+							</td>
+						</tr>
+						<tr name="trItem" onclick="checkItem(this)">
+							<th>竞价点击比例</th>
+							<td>
+								<select name="baiduSemPercent" id="baiduSemPercent">
+									<option value="0">0%</option>
+									<option value="1">10%</option>
+									<option value="2">30%</option>
+									<option value="3">50%</option>
+									<option value="4">100%</option>
+								</select>
+							</td>
+						</tr>
+						<tr name="trItem" onclick="checkItem(this)">
+							<th>特殊字符比例</th>
+							<td>
+								<select name="specialCharPercent" id="specialCharPercent">
+									<option value="0">0%</option>
+									<option value="1">10%</option>
+									<option value="2">30%</option>
+									<option value="3">50%</option>
+									<option value="4">100%</option>
+								</select>
+							</td>
+						</tr>
+						<tr name="trItem" onclick="checkItem(this)">
+							<th>拖动标题的点击比例</th>
+							<td>
+								<select name="dragPercent" id="dragPercent">
+									<option value="0">0%</option>
+									<option value="1">10%</option>
+									<option value="2">30%</option>
+									<option value="3">50%</option>
+									<option value="4">100%</option>
+								</select>
+							</td>
+						</tr>
+					</table>
+				</td>
+
+
+				<td style="vertical-align:top;">
+					<table id="td_2" style="font-size:12px">
+						<tr name="trItem" onclick="checkItem(this)">
+							<th>浏览器设置</th>
+							<td>
+								<select name="multiBrowser" id="multiBrowser">
+									<option value="0">命令多浏览器</option>
+									<option value="1"  selected>模拟多浏览器</option>
+									<option value="2">单个浏览器</option>
+								</select>
+							</td>
+						</tr>
+						<tr name="trItem" onclick="checkItem(this)">
+							<th>Cookie设置</th>
+							<td>
+								<select name="clearCookie" id="clearCookie">
+									<option value="0">不清理Cookie</option>
+									<option value="1">每次都清理Cookie</option>
+									<option value="2">随机清理Cookie</option>
+									<option value="3">N次操作清理Cookie</option>
+								</select>
+							</td>
+						</tr>
+						<tr name="trItem" onclick="checkItem(this)">
+							<th>最大用户数</th>
+							<td>
+								<input type="text" name="maxUserCount" id="maxUserCount" value="300"  style="width:110px;"/>
+							</td>
+						</tr>
+						<tr name="trItem" onclick="checkItem(this)">
+							<th>进入页</th>
+							<td>
+								<input type="text" name="entryPageMinCount" id="entryPageMinCount" value="0" /> - <input type="text" name="entryPageMaxCount" id="entryPageMaxCount" value="0" />次
+							</td>
+						</tr>
+						<tr name="trItem" onclick="checkItem(this)">
+							<th>页面停留</th>
+							<td>
+								<input type="text" name="pageRemainMinTime" id="pageRemainMinTime" value="3000"/> - <input type="text" name="pageRemainMaxTime" id="pageRemainMaxTime" value="5000"/>毫秒
+							</td>
+						</tr>
+						<tr name="trItem" onclick="checkItem(this)">
+							<th>输入延时</th>
+							<td>
+								<input type="text" name="inputDelayMinTime" id="inputDelayMinTime" value="50"/> - <input type="text" name="inputDelayMaxTime" id="inputDelayMaxTime" value="80"/>毫秒
+							</td>
+						</tr>
+
+						<tr name="trItem" onclick="checkItem(this)">
+							<th>滑动延时</th>
+							<td>
+								<input type="text" name="slideDelayMinTime" id="slideDelayMinTime" value="700"/> -
+								<input type="text" name="slideDelayMaxTime" id="slideDelayMaxTime" value="1500"/>毫秒
+							</td>
+						</tr>
+						<tr name="trItem" onclick="checkItem(this)">
+							<th>标题停留</th>
+							<td>
+								<input type="text" name="titleRemainMinTime" id="titleRemainMinTime" value="1000"/> - <input type="text" name="titleRemainMaxTime" id="titleRemainMaxTime" value="3000"/>毫秒
+							</td>
+						</tr>
+						<tr name="trItem" onclick="checkItem(this)">
+							<th>刷多少</th>
+							<td>
+								<input type="text" name="optimizeKeywordCountPerIP" id="optimizeKeywordCountPerIP" value="1"/>个词换IP
+							</td>
+						</tr>
+						<tr name="trItem" onclick="checkItem(this)">
+							<th>打开百度等待</th>
+							<td>
+								<input type="text" name="waitTimeAfterOpenBaidu" id="waitTimeAfterOpenBaidu" value="1000"/>秒
+							</td>
+						</tr>
+						<tr name="trItem" onclick="checkItem(this)">
+							<th>点击目标等待</th>
+							<td>
+								<input type="text" name="waitTimeBeforeClick" id="waitTimeBeforeClick" value="1000"/>秒
+							</td>
+						</tr>
+						<tr name="trItem" onclick="checkItem(this)">
+							<th>点击目标后等待</th>
+							<td>
+								<input type="text" name="waitTimeAfterClick" id="waitTimeAfterClick" value="5000"/>秒
+							</td>
+						</tr>
+					</table>
+				</td>
+
+				<td style="vertical-align:top;">
+					<table id="td_2" style="font-size:12px">
+						<tr>
+							<td name="trItem" onclick="checkItem(this)">
+								<input id="oneIPOneUser" name="oneIPOneUser" type="checkbox" value="1">每IP对每用户</input>
+							</td>
+							<td name="trItem" onclick="checkItem(this)">
+								<input id="randomlyClickNoResult" name="randomlyClickNoResult" type="checkbox" value="1">没结果则随机点</input>
+							</td>
+						</tr>
+						<tr>
+							<td name="trItem" onclick="checkItem(this)">
+								<input id="justVisitSelfPage" name="justVisitSelfPage" type="checkbox" value="1">在域名下访问</input>
+							</td>
+							<td name="trItem" onclick="checkItem(this)">
+								<input id="sleepPer2Words" name="sleepPer2Words" type="checkbox" value="1">输入2字稍微停顿</input>
+							</td>
+						</tr>
+
+						<tr>
+							<td name="trItem" onclick="checkItem(this)">
+								<input id="supportPaste" name="supportPaste" type="checkbox" value="1">支持粘贴输入</input>
+							</td>
+							<td name="trItem" onclick="checkItem(this)">
+								<input id="moveRandomly" name="moveRandomly" type="checkbox" value="1">随机移动</input>
+							</td>
+						</tr>
+
+						<tr>
+							<td name="trItem" onclick="checkItem(this)">
+								<input id="parentSearchEntry" name="parentSearchEntry" type="checkbox" value="1">爸妈搜索入口</input>
+							</td>
+							<td name="trItem" onclick="checkItem(this)">
+								<input id="clearLocalStorage" name="clearLocalStorage" type="checkbox" value="1">清除LocalStorage</input>
+							</td>
+						</tr>
+
+						<tr>
+							<td name="trItem" onclick="checkItem(this)">
+								<input id="lessClickAtNight" name="lessClickAtNight" type="checkbox" value="1">晚上减少点击</input>
+							</td>
+							<td name="trItem" onclick="checkItem(this)">
+								<input id="sameCityUser" name="sameCityUser" type="checkbox" value="1">同城用户</input>
+							</td>
+						</tr>
+
+						<tr>
+							<td name="trItem" onclick="checkItem(this)">
+								<input id="locateTitlePosition" name="locateTitlePosition" type="checkbox" value="1">直接获取标题位置</input>
+							</td>
+							<td name="trItem" onclick="checkItem(this)">
+								<input id="baiduAllianceEntry" name="baiduAllianceEntry" type="checkbox" value="1">百度联盟入口</input>
+							</td>
+						</tr>
+
+						<tr>
+							<td name="trItem" onclick="checkItem(this)">
+								<input id="justClickSpecifiedTitle" name="justClickSpecifiedTitle" type="checkbox" value="1">随机只点指定标题</input>
+							</td>
+							<td name="trItem" onclick="checkItem(this)">
+								<input id="randomlyClickMoreLink" name="randomlyClickMoreLink" type="checkbox" value="1">随机多点一些链接</input>
+							</td>
+						</tr>
+
+						<tr>
+							<td name="trItem" onclick="checkItem(this)">
+								<input id="moveUp20" name="moveUp20" type="checkbox" value="1">向上偏移20</input>
+							</td>
+							<td name="trItem" onclick="checkItem(this)">
+								<input id="optimizeRelatedKeyword" name="optimizeRelatedKeyword" type="checkbox" value="1">操作相关词</input>
+							</td>
+						</tr>
+					</table>
+				</td>
+
+			</tr>
+		</table>
+	</form>
 </div>
 
 <%@ include file="/commons/loadjs.jsp" %>

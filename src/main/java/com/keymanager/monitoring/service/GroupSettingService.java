@@ -3,6 +3,7 @@ package com.keymanager.monitoring.service;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.criteria.GroupSettingCriteria;
+import com.keymanager.monitoring.criteria.UpdateGroupSettingCriteria;
 import com.keymanager.monitoring.dao.GroupDao;
 import com.keymanager.monitoring.dao.GroupSettingDao;
 import com.keymanager.monitoring.entity.GroupSetting;
@@ -32,5 +33,21 @@ public class GroupSettingService extends ServiceImpl<GroupSettingDao, GroupSetti
             groupVo.setGroupSettings(groupSettings);
         }
         return page;
+    }
+
+    public void deleteGroupSetting (long uuid) {
+        groupSettingDao.deleteById(uuid);
+    }
+
+    public GroupSetting findGroupSetting (long uuid) {
+        return groupSettingDao.selectById(uuid);
+    }
+
+    public void saveGroupSetting (GroupSetting groupSetting) {
+        groupSettingDao.saveGroupSetting(groupSetting);
+    }
+
+    public void updateGroupSetting (UpdateGroupSettingCriteria updateGroupSettingCriteria) {
+        groupSettingDao.updateGroupSetting(updateGroupSettingCriteria.getGs(), updateGroupSettingCriteria.getGroupSetting());
     }
 }

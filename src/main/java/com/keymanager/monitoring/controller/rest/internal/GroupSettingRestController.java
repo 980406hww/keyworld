@@ -3,12 +3,16 @@ package com.keymanager.monitoring.controller.rest.internal;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.GroupSettingCriteria;
+import com.keymanager.monitoring.criteria.UpdateGroupSettingCriteria;
+import com.keymanager.monitoring.entity.GroupSetting;
 import com.keymanager.monitoring.service.*;
 import com.keymanager.monitoring.vo.GroupVO;
 import com.keymanager.util.TerminalTypeMapping;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -63,5 +67,49 @@ public class GroupSettingRestController extends SpringMVCBaseController {
         modelAndView.addObject("page", page);
         performanceService.addPerformanceLog(groupSettingCriteria.getTerminalType() + ":searchGroupSettings", System.currentTimeMillis() - startMilleSeconds, null);
         return modelAndView;
+    }
+
+    @PostMapping("/delGroupSetting/{uuid}")
+    public ResponseEntity<?> delGroupSetting(@PathVariable("uuid") long uuid) {
+        try {
+            groupSettingService.deleteGroupSetting(uuid);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false , HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/findGroupSetting/{uuid}")
+    public ResponseEntity<?> findGroupSetting(@PathVariable("uuid") long uuid) {
+        try {
+            GroupSetting groupSetting = groupSettingService.findGroupSetting(uuid);
+            return new ResponseEntity<Object>(groupSetting, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(null , HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/saveGroupSetting")
+    public ResponseEntity<?> saveGroupSetting(@RequestBody GroupSetting groupSetting) {
+        try {
+            groupSettingService.saveGroupSetting(groupSetting);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/updateGroupSetting")
+    public ResponseEntity<?> updateGroupSetting(@RequestBody UpdateGroupSettingCriteria updateGroupSettingCriteria) {
+        try {
+            groupSettingService.updateGroupSetting(updateGroupSettingCriteria);
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+        }
     }
 }
