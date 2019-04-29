@@ -110,28 +110,56 @@
 
 <div id="showOperationTypeTableDiv" style="margin-bottom: 30px">
     <table style="font-size:12px; width: 100%;" id="showOperationTypeTable">
-        <c:forEach items="${page.records}" var="operationType">
-            <tr onmouseover="doOver(this);" onmouseout="doOut(this);" height=30>
-                <td width=10 style="padding-left: 7px;">
-                    <input type="checkbox" name="uuid" value="${operationType.uuid}"/>
-                </td>
-                <td width=80>${operationType.operationTypeName}</td>
-                <td width=80>${operationType.terminalType}</td>
-                <shiro:hasRole name="AlgorithmGroup">
-                    <td width=80>${operationType.description}</td>
-                </shiro:hasRole>
-                <td width=80>${operationType.remark}</td>
-                <td width=80 style="text-align: center">
-                    <fmt:formatDate value="${operationType.createTime}" pattern="yyyy-MM-dd"/>
-                </td>
-                <td width=80 style="text-align: center">${operationType.status == 1 ? "有效" : "无效"}</td>
-                <td width=80>
-                    <a href="javascript:modifyOperationType(${operationType.uuid})">修改</a>
-                    |
-                    <a href="javascript:deleteOperationType('${operationType.uuid}','${operationType.operationTypeName}')">删除</a>
-                </td>
-            </tr>
-        </c:forEach>
+        <shiro:hasRole name="AlgorithmGroup">
+            <c:forEach items="${page.records}" var="operationType">
+                <tr onmouseover="doOver(this);" onmouseout="doOut(this);" height=30>
+                    <td width=10 style="padding-left: 7px;">
+                        <input type="checkbox" name="uuid" value="${operationType.uuid}"/>
+                    </td>
+                    <td width=80>${operationType.operationTypeName}</td>
+                    <td width=80>${operationType.terminalType}</td>
+                    <shiro:hasRole name="AlgorithmGroup">
+                        <td width=80>${operationType.description}</td>
+                    </shiro:hasRole>
+                    <td width=80>${operationType.remark}</td>
+                    <td width=80 style="text-align: center">
+                        <fmt:formatDate value="${operationType.createTime}" pattern="yyyy-MM-dd"/>
+                    </td>
+                    <td width=80 style="text-align: center">${operationType.status == 1 ? "有效" : "无效"}</td>
+                    <td width=80>
+                        <a href="javascript:modifyOperationType(${operationType.uuid})">修改</a>
+                        |
+                        <a href="javascript:deleteOperationType('${operationType.uuid}','${operationType.operationTypeName}')">删除</a>
+                    </td>
+                </tr>
+            </c:forEach>
+        </shiro:hasRole>
+        <shiro:lacksRole name="AlgorithmGroup">
+            <c:forEach items="${page.records}" var="operationType">
+                <c:if test="${operationType.status == 1}">
+                    <tr onmouseover="doOver(this);" onmouseout="doOut(this);" height=30>
+                        <td width=10 style="padding-left: 7px;">
+                            <input type="checkbox" name="uuid" value="${operationType.uuid}"/>
+                        </td>
+                        <td width=80>${operationType.operationTypeName}</td>
+                        <td width=80>${operationType.terminalType}</td>
+                        <shiro:hasRole name="AlgorithmGroup">
+                            <td width=80>${operationType.description}</td>
+                        </shiro:hasRole>
+                        <td width=80>${operationType.remark}</td>
+                        <td width=80 style="text-align: center">
+                            <fmt:formatDate value="${operationType.createTime}" pattern="yyyy-MM-dd"/>
+                        </td>
+                        <td width=80 style="text-align: center">${operationType.status == 1 ? "有效" : "无效"}</td>
+                        <td width=80>
+                            <a href="javascript:modifyOperationType(${operationType.uuid})">修改</a>
+                            |
+                            <a href="javascript:deleteOperationType('${operationType.uuid}','${operationType.operationTypeName}')">删除</a>
+                        </td>
+                    </tr>
+                </c:if>
+            </c:forEach>
+        </shiro:lacksRole>
     </table>
 </div>
 <div id="showCustomerBottomPositioneDiv">
