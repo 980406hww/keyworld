@@ -207,4 +207,8 @@
         <if test="gs.optimizeRelatedKeyword==1"> ,fOptimizeRelatedKeyword = #{groupSetting.optimizeRelatedKeyword}</if>
         WHERE fUuid = #{groupSetting.uuid}
     </update>
+
+    <delete id="deleteByGroupUuid">
+        DELETE FROM t_group_setting WHERE fGroupUuid = #{groupUuid}
+    </delete>
 </mapper>

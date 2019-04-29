@@ -16,4 +16,8 @@ import java.util.List;
 public interface GroupDao extends BaseMapper<Group> {
 
     List<GroupVO> searchGroups (Page<GroupVO> page, @Param("groupSettingCriteria") GroupSettingCriteria groupSettingCriteria);
+
+    void saveGroup (@Param("groupName") String groupName, @Param("terminalType") String terminalType, @Param("createBy") String createBy);
+
+    long lastInsertID();
 }

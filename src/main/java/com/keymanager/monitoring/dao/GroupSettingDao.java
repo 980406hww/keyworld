@@ -1,8 +1,6 @@
 package com.keymanager.monitoring.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
-import com.baomidou.mybatisplus.plugins.Page;
-import com.keymanager.monitoring.criteria.GroupSettingCriteria;
 import com.keymanager.monitoring.entity.GroupSetting;
 import org.apache.ibatis.annotations.Param;
 
@@ -15,4 +13,6 @@ public interface GroupSettingDao extends BaseMapper<GroupSetting> {
     void saveGroupSetting (@Param("groupSetting") GroupSetting groupSetting);
 
     void updateGroupSetting (@Param("gs") GroupSetting gs, @Param("groupSetting") GroupSetting groupSetting);
+
+    void deleteByGroupUuid (@Param("groupUuid") long groupUuid);
 }

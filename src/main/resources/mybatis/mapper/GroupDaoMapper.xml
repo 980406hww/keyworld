@@ -24,5 +24,12 @@
         )
         ORDER BY g.fCreateTime DESC
     </select>
-    
+
+    <insert id="saveGroup">
+        INSERT INTO t_group(fGroupName, fTerminalType, fCreateBy) VALUES(#{groupName}, #{terminalType}, #{createBy});
+    </insert>
+
+    <select id="lastInsertID" resultType="java.lang.Long">
+        SELECT LAST_INSERT_ID();
+    </select>
 </mapper>
