@@ -98,7 +98,7 @@ function detectedMoreSearchConditionDivShow() {
     var updateStatus = moreSearchCondition.find("select[name='updateStatus']").val();
     var baiduWeight = moreSearchCondition.find("select[name='weight']").val();
     var createTime = moreSearchCondition.find("ul li.createTime input").val();
-    var values = customerInfo + categoryTag + group + status + updateStatus + baiduWeight + createTime;
+    var values = customerInfo + categoryTag + group + operationType + status + updateStatus + baiduWeight + createTime;
     if (values != "") {
         moreSearchCondition.css("display", "block");
     }
@@ -524,6 +524,10 @@ function trimSearchCondition(days) {
     var chargeForm = $("#chargeForm");
     var customerInfo = $(".conn").find(".customerInfo").find("input[name='customerInfo']").val();
     var customerUuid = customerInfo.substr(customerInfo.lastIndexOf("_") + 1);
+    var currentPage = chargeForm.find("#currentPageNumberHidden").val();
+    if (currentPage != '1') {
+        chargeForm.find("#currentPageNumberHidden").val(1);
+    }
     chargeForm.find("#customerInfo").val($.trim(customerInfo));
     chargeForm.find("#customerUuid").val(customerUuid);
     chargeForm.find("#dateRangeType").val(days);
