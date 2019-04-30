@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.monitoring.dao.CustomerKeywordInvalidCountLogDao">
 
-    <select id="addCustomerKeywordInvalidCountLog">
+    <select id="addCustomerKeywordInvalidCountLog" timeout="200000">
         INSERT INTO t_ck_invalid_count_log(fCustomerKeywordUuid, fInvalidCount, fOptimizedDate)
         SELECT fUuid AS 'fCustomerKeywordUuid', (fQueryCount - fOptimizedCount), DATE_SUB(CURRENT_DATE(),INTERVAL 1 DAY)
         FROM t_customer_keyword
