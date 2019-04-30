@@ -3,18 +3,12 @@ package com.keymanager.monitoring.dao;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.criteria.MachineInfoCriteria;
-import com.keymanager.monitoring.entity.ClientUpgrade;
 import com.keymanager.monitoring.entity.MachineInfo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 public interface MachineInfoDao extends BaseMapper<MachineInfo> {
-
-    void updateMachineVersion(@Param("clientID") String clientID, @Param("version") String version, @Param("hasKeyword") boolean hasKeyword);
-
-    void updateOptimizationResult(@Param("clientID") String clientID, @Param("status") String status, @Param("version") String version,
-                                  @Param("freeSpace") String freeSpace, @Param("city") String city, @Param("count") int count, @Param("runningProgramType") String runningProgramType);
 
     List<MachineInfo> searchMachineInfosOrByHost(@Param("terminalType") String terminalType, @Param("comfirm") String comfirm);
 
@@ -24,10 +18,6 @@ public interface MachineInfoDao extends BaseMapper<MachineInfo> {
 
     List<MachineInfo> searchMachineInfos(Page<MachineInfo> page, @Param("machineInfoCriteria") MachineInfoCriteria machineInfoCriteria);
 
-    List<MachineInfo> getMachineInfosForSwitchGroup(@Param("terminalType") String terminalType);
-
-    List<MachineInfo> getMachineInfosForRenewal();
-
     List<MachineInfo> searchBadMachineInfo(Page<MachineInfo> page, @Param("machineInfoCriteria") MachineInfoCriteria machineInfoCriteria);
 
     void updateMachineInfoTargetVersion(@Param("clientIDs") List<String> clientIDs, @Param("targetVersion") String targetVersion);
@@ -35,14 +25,6 @@ public interface MachineInfoDao extends BaseMapper<MachineInfo> {
     void updateMachineInfoTargetVPSPassword(@Param("clientIDs") List<String> clientIDs, @Param("targetVPSPassword") String targetVPSPassword);
 
     void deleteMachineInfos(@Param("clientIDs") List<String> clientIDs);
-
-    MachineInfo getMachineInfoForStartUp();
-
-    Integer getDownloadingClientCount();
-
-    Integer getUpgradingMachineCount(@Param("clientUpgrade") ClientUpgrade clientUpgrade);
-
-    Integer getResidualMachineCount(@Param("clientUpgrade") ClientUpgrade clientUpgrade);
 
     void reopenMachineInfo(@Param("clientIDs") List<String> clientIDs, @Param("downloadProgramType") String downloadProgramType, @Param("switchGroupName") String switchGroupName);
 
@@ -53,14 +35,7 @@ public interface MachineInfoDao extends BaseMapper<MachineInfo> {
     void batchUpdateMachineInfo(@Param("clientIDs") String[] clientIDs, @Param("mi") MachineInfo mi, @Param("machineInfo") MachineInfo machineInfo);
 
     void batchChangeStatus(@Param("clientIds") String[] clientIds, @Param("valid") Boolean valid);
-    void updateMachineTargetVersion(@Param("clientUpgrade") ClientUpgrade clientUpgrade);
 
     void batchChangeTerminalType(@Param("clientIds") String[] clientIds, @Param("terminalType") String terminalType);
-
-    String getMachineInfoID(@Param("vpsBackendSystemComputerID") String vpsBackendSystemComputerID);
-
-    void updateMachineInfoForCapturePosition(@Param("clientID") String clientID);
-
-    void updateVersion(@Param("clientID") String clientID, @Param("version") String version);
 
 }
