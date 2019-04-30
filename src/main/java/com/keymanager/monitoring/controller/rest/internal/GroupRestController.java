@@ -3,6 +3,7 @@ package com.keymanager.monitoring.controller.rest.internal;
 import com.keymanager.monitoring.criteria.GroupCriteria;
 import com.keymanager.monitoring.service.GroupService;
 import com.keymanager.monitoring.vo.GroupSettingVO;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ public class GroupRestController {
     @Autowired
     private GroupService groupService;
 
+    @RequiresPermissions("/internal/group/saveGroup")
     @PostMapping("/saveGroup")
     public ResponseEntity<?> saveGroup(@RequestBody GroupCriteria groupCriteria, HttpServletRequest request) {
         try {
@@ -37,6 +39,7 @@ public class GroupRestController {
         }
     }
 
+    @RequiresPermissions("/internal/group/findGroup")
     @PostMapping("/findGroup/{groupUuid}")
     public ResponseEntity<?> findGroup(@PathVariable("groupUuid") long groupUuid) {
         try {
@@ -48,6 +51,7 @@ public class GroupRestController {
         }
     }
 
+    @RequiresPermissions("/internal/group/delGroup")
     @PostMapping("/delGroup/{uuid}")
     public ResponseEntity<?> deleteGroup(@PathVariable("uuid") long uuid) {
         try {

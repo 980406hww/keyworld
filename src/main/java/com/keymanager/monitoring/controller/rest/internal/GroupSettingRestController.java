@@ -8,6 +8,7 @@ import com.keymanager.monitoring.entity.GroupSetting;
 import com.keymanager.monitoring.service.*;
 import com.keymanager.monitoring.vo.GroupVO;
 import com.keymanager.util.TerminalTypeMapping;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +33,13 @@ public class GroupSettingRestController extends SpringMVCBaseController {
     @Autowired
     private PerformanceService performanceService;
 
+    @RequiresPermissions("/internal/groupsetting/searchGroupSettings")
     @RequestMapping(value = "/searchGroupSettings", method = RequestMethod.GET)
     public ModelAndView searchGroupSettingsGet(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "10") int pageSize, HttpServletRequest request) {
         return constructGroupSettingModelAndView(request, new GroupSettingCriteria(), currentPageNumber, pageSize);
     }
 
+    @RequiresPermissions("/internal/groupsetting/searchGroupSettings")
     @RequestMapping(value = "/searchGroupSettings", method = RequestMethod.POST)
     public ModelAndView searchClientStatusesPost(HttpServletRequest request, GroupSettingCriteria groupSettingCriteria) {
         try {
@@ -69,6 +72,7 @@ public class GroupSettingRestController extends SpringMVCBaseController {
         return modelAndView;
     }
 
+    @RequiresPermissions("/internal/groupsetting/delGroupSetting")
     @PostMapping("/delGroupSetting/{uuid}")
     public ResponseEntity<?> delGroupSetting(@PathVariable("uuid") long uuid) {
         try {
@@ -80,6 +84,7 @@ public class GroupSettingRestController extends SpringMVCBaseController {
         }
     }
 
+    @RequiresPermissions("/internal/groupsetting/findGroupSetting")
     @PostMapping("/findGroupSetting/{uuid}")
     public ResponseEntity<?> findGroupSetting(@PathVariable("uuid") long uuid) {
         try {
@@ -91,6 +96,7 @@ public class GroupSettingRestController extends SpringMVCBaseController {
         }
     }
 
+    @RequiresPermissions("/internal/groupsetting/saveGroupSetting")
     @PostMapping("/saveGroupSetting")
     public ResponseEntity<?> saveGroupSetting(@RequestBody GroupSetting groupSetting) {
         try {
@@ -102,6 +108,7 @@ public class GroupSettingRestController extends SpringMVCBaseController {
         }
     }
 
+    @RequiresPermissions("/internal/groupsetting/updateGroupSetting")
     @PostMapping("/updateGroupSetting")
     public ResponseEntity<?> updateGroupSetting(@RequestBody UpdateGroupSettingCriteria updateGroupSettingCriteria) {
         try {

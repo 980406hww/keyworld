@@ -64,7 +64,9 @@
 					&nbsp;&nbsp;
 				</li>
 				<li>
-					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="showGroupDialog()" value=" 增加 " >&nbsp;
+					<shiro:hasPermission name="/internal/group/saveGroup">
+						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="showGroupDialog()" value=" 增加 " >&nbsp;
+					</shiro:hasPermission>
 				</li>
 			</ul>
 		</div>
@@ -94,9 +96,15 @@
 						<span class="groupName" title="${groupVo.groupName}"><a href="javascript:;">${groupVo.groupName}</a></span>
 						<span class="userName" title="${groupVo.userName}"><a href="javascript:;"></a>${groupVo.userName}</span>
 						<div class="handle">
-							<a class="blue" href="javascript:showGroupSettingDialog('add', '${groupVo.uuid}', '${groupVo.groupName}')">新增操作类型</a>
-							<a class="blue" href="javascript:showUpdateGroupDialog('${groupVo.uuid}', '${groupVo.groupName}')">修改优化分组</a>
-							<a class="blue" href="javascript:delGroup(${groupVo.uuid})">删除优化分组</a>
+							<shiro:hasPermission name="/internal/groupsetting/saveGroupSetting">
+								<a class="blue" href="javascript:showGroupSettingDialog('add', '${groupVo.uuid}', '${groupVo.groupName}')">新增操作类型</a>
+							</shiro:hasPermission>
+							<shiro:hasPermission name="/internal/groupsetting/updateGroupSetting">
+								<a class="blue" href="javascript:showUpdateGroupDialog('${groupVo.uuid}', '${groupVo.groupName}')">修改优化分组</a>
+							</shiro:hasPermission>
+							<shiro:hasPermission name="/internal/group/delGroup">
+								<a class="blue" href="javascript:delGroup(${groupVo.uuid})">删除优化分组</a>
+							</shiro:hasPermission>
 						</div>
 					</div>
 
@@ -287,10 +295,14 @@
 
 										<div>
 											<span>
-												<input class="ui-button ui-widget ui-corner-all" type="button" title="修改操作类型" onclick="showGroupSettingDialog('update', '${groupSetting.uuid}', '${groupVo.groupName}')" value=" 修改 " >
+												<shiro:hasPermission name="/internal/groupsetting/updateGroupSetting">
+													<input class="ui-button ui-widget ui-corner-all" type="button" title="修改操作类型" onclick="showGroupSettingDialog('update', '${groupSetting.uuid}', '${groupVo.groupName}')" value=" 修改 " >
+												</shiro:hasPermission>
 											</span>
 											<span>
-												<input class="ui-button ui-widget ui-corner-all" type="button" title="删除操作类型" onclick="delGroupSetting(${groupSetting.uuid})" value=" 删除 " >
+												<shiro:hasPermission name="/internal/groupsetting/delGroupSetting">
+													<input class="ui-button ui-widget ui-corner-all" type="button" title="删除操作类型" onclick="delGroupSetting(${groupSetting.uuid})" value=" 删除 " >
+												</shiro:hasPermission>
 											</span>
 										</div>
 									</div>
