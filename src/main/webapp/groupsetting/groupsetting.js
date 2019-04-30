@@ -113,7 +113,7 @@ function showUpdateGroupDialog(groupUuid, groupName) {
         resizable: false,
         width: 820,
         maxHeight: 534,
-        title: "修改优化分组(需要修改的信息请标红!!!)",
+        title: "修改优化分组下的操作类型(需要修改的信息请标红!!!)",
         modal: false,
         buttons: [{
             text: '修改',
