@@ -534,11 +534,11 @@
     </select>
 
     <update id="resetOptimizationInfoForNoOptimizeDate" timeout="200000">
-        UPDATE t_customer_keyword SET fOptimizedCount = 0, fOptimizeRemainingCount = fOptimizePlanCount, fInvalidRefreshCount = 0, fOptimizeDate = CURRENT_DATE(), fQueryCount = 0, fQueryDate = CURRENT_DATE(), fQueryTime = NOW() WHERE fOptimizeDate IS NULL
+        UPDATE t_customer_keyword SET fOptimizedCount = 0, fOptimizeRemainingCount = fOptimizePlanCount, fInvalidRefreshCount = 0, fInvalidFlag = 0, fOptimizeDate = CURRENT_DATE(), fQueryCount = 0, fQueryDate = CURRENT_DATE(), fQueryTime = NOW() WHERE fOptimizeDate IS NULL
     </update>
 
     <update id="resetOptimizationInfo">
-        UPDATE t_customer_keyword SET fOptimizedCount = 0, fOptimizeRemainingCount = fOptimizePlanCount, fInvalidRefreshCount = 0, fOptimizeDate = CURRENT_DATE(), fQueryCount = 0, fQueryDate = CURRENT_DATE(), fQueryTime = NOW() WHERE fOptimizeDate <![CDATA[<]]> CURRENT_DATE() LIMIT 200000
+        UPDATE t_customer_keyword SET fOptimizedCount = 0, fOptimizeRemainingCount = fOptimizePlanCount, fInvalidRefreshCount = 0, fInvalidFlag = 0, fOptimizeDate = CURRENT_DATE(), fQueryCount = 0, fQueryDate = CURRENT_DATE(), fQueryTime = NOW() WHERE fOptimizeDate <![CDATA[<]]> CURRENT_DATE() LIMIT 200000
     </update>
 
     <select id="searchRemainingOptimizationCount" resultType="java.util.Map">
@@ -554,8 +554,7 @@
         FROM t_customer_keyword ck
         WHERE ck.fOptimizeGroupName = #{groupName} and ck.fStatus = 1 and ck.fTerminalType = #{terminalType}
         and ck.fQueryTime <![CDATA[<]]> NOW()
-        and ck.fInvalidRefreshCount <![CDATA[<]]> #{maxInvalidCount}
-        and (ck.fOptimizeRemainingCount > 1)
+        and ck.fInvalidFlag = 0
         <if test="bigKeyword == true">
             and ck.fBigKeyword = 1
         </if>
@@ -607,21 +606,21 @@
     </select>
 
     <update id="updateOptimizationQueryTime">
-        UPDATE t_customer_keyword set fQueryDate = CURRENT_DATE(), fQueryCount = fQueryCount + 1, fInvalidRefreshCount = fInvalidRefreshCount + 1, fQueryTime = DATE_ADD(NOW(), INTERVAL fQueryInterval MINUTE)
+        UPDATE t_customer_keyword set fQueryDate = CURRENT_DATE(), fQueryCount = fQueryCount + 1, fInvalidRefreshCount = fInvalidRefreshCount + 1, fQueryTime = DATE_ADD(NOW(), INTERVAL fQueryInterval MINUTE),fInvalidFlag = if(fInvalidRefreshCount > #{maxInvalidRefreshCount}, 1, 0)
         WHERE fUuid = #{customerKeywordUuid}
     </update>
 
     <update id="updateOptimizationResult">
         UPDATE t_customer_keyword
         SET fLastOptimizeDateTime = now(), fOptimizedCount = fOptimizedCount + #{count}, fQueryTime = if(fOptimizePlanCount > fOptimizedCount, fQueryTime, DATE_ADD(NOW(), INTERVAL 1 DAY)),
-        <if test="count > 0">fInvalidRefreshCount = 0, fOptimizeRemainingCount = fOptimizeRemainingCount - 1, </if>
+        <if test="count > 0">fInvalidRefreshCount = 0, fInvalidFlag = 0, fOptimizeRemainingCount = fOptimizeRemainingCount - 1, </if>
         fUpdateTime = NOW()
 		WHERE fUuid = #{customerKeywordUuid}
     </update>
 
     <update id="batchUpdateOptimizedCount">
         UPDATE t_customer_keyword
-        SET fLastOptimizeDateTime = now(), fOptimizedCount = fOptimizedCount + 1, fOptimizeRemainingCount = fOptimizeRemainingCount - 1, fInvalidRefreshCount = 0,
+        SET fLastOptimizeDateTime = now(), fOptimizedCount = fOptimizedCount + 1, fOptimizeRemainingCount = fOptimizeRemainingCount - 1, fInvalidRefreshCount = 0, fInvalidFlag = 0,
         fUpdateTime = NOW(), fQueryTime = if(fOptimizePlanCount > fOptimizedCount, fQueryTime, DATE_ADD(NOW(), INTERVAL 1 DAY))
         WHERE fUuid IN
         <foreach item="uuid" index="index" collection="customerKeywordUuids" open="(" separator="," close=")">
@@ -707,7 +706,7 @@
     </select>
 
     <update id="resetInvalidRefreshCount" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria">
-        UPDATE t_customer_keyword SET fInvalidRefreshCount = 0 WHERE fType = #{customerKeywordRefreshStatInfoCriteria.entryType} and fTerminalType = #{customerKeywordRefreshStatInfoCriteria.terminalType}
+        UPDATE t_customer_keyword SET fInvalidRefreshCount = 0, fInvalidFlag = 0 WHERE fType = #{customerKeywordRefreshStatInfoCriteria.entryType} and fTerminalType = #{customerKeywordRefreshStatInfoCriteria.terminalType}
         <if test="customerKeywordRefreshStatInfoCriteria.customerName!=null and customerKeywordRefreshStatInfoCriteria.customerName!=''">AND EXISTS (SELECT 1 FROM t_customer c WHERE c.fUuid = fCustomerUuid AND c.fContactPerson LIKE concat('%', #{customerKeywordRefreshStatInfoCriteria.customerName}, '%'))</if>
         <if test="customerKeywordRefreshStatInfoCriteria.groupName!=null and customerKeywordRefreshStatInfoCriteria.groupName!=''">
             <choose>

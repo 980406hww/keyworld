@@ -32,6 +32,7 @@ import java.util.*;
 @Service
 public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, CustomerKeyword> {
     private static Logger logger = LoggerFactory.getLogger(CustomerKeywordService.class);
+    private static Map<String, Integer> groupMaxInvalidCountMap = new HashMap<String, Integer>();
 
     @Autowired
     private QZCaptureTitleLogService qzCaptureTitleLogService;
@@ -623,13 +624,25 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             return null;
         }
 
-        String typeName = "all";
-        List<String> entryTypes = customerKeywordDao.getEntryTypes(clientStatus.getGroup());
-        if(!Utils.isEmpty(entryTypes) && entryTypes.size() == 1){
-            typeName = entryTypes.get(0);
+        Integer maxInvalidCount = groupMaxInvalidCountMap.get(clientStatus.getGroup());
+        if(maxInvalidCount == null){
+            synchronized (this){
+                maxInvalidCount = groupMaxInvalidCountMap.get(clientStatus.getGroup());
+                if(maxInvalidCount == null){
+                    String typeName = "all";
+                    List<String> entryTypes = customerKeywordDao.getEntryTypes(clientStatus.getGroup());
+                    if(!Utils.isEmpty(entryTypes) && entryTypes.size() == 1){
+                        typeName = entryTypes.get(0);
+                    }
+                    Config maxInvalidCountConfig = configService.getConfig(Constants.CONFIG_KEY_MAX_INVALID_COUNT, typeName);
+                    if(maxInvalidCountConfig != null) {
+                        maxInvalidCount = Integer.parseInt(maxInvalidCountConfig.getValue());
+                        groupMaxInvalidCountMap.put(clientStatus.getGroup(), maxInvalidCount);
+                    }
+                }
+            }
         }
 
-        Config maxInvalidCountConfig = configService.getConfig(Constants.CONFIG_KEY_MAX_INVALID_COUNT, typeName);
         if(keywordOptimizationCountService.resetBigKeywordIndicator(clientStatus.getGroup())) {
             keywordOptimizationCountService.init(clientStatus.getGroup());
 //            resetBigKeywordIndicator(clientStatus.getGroup(), Integer.parseInt(maxInvalidCountConfig.getValue()));
@@ -646,23 +659,21 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
         do{
             boolean isNormalKeyword = keywordOptimizationCountService.optimizeNormalKeyword(clientStatus.getGroup());
-            customerKeywordUuid = customerKeywordDao.getCustomerKeywordUuidForOptimization(terminalType, clientStatus.getGroup(),
-                    Integer.parseInt(maxInvalidCountConfig.getValue()), noPositionMaxInvalidCount, !isNormalKeyword);
+            customerKeywordUuid = customerKeywordDao.getCustomerKeywordUuidForOptimization(terminalType, clientStatus.getGroup(), !isNormalKeyword);
 
             if(customerKeywordUuid == null){
                 if(keywordOptimizationCountService.resetBigKeywordIndicator(clientStatus.getGroup())) {
                     keywordOptimizationCountService.init(clientStatus.getGroup());
                 }
-                customerKeywordUuid = customerKeywordDao.getCustomerKeywordUuidForOptimization(terminalType, clientStatus.getGroup(),
-                        Integer.parseInt(maxInvalidCountConfig.getValue()), noPositionMaxInvalidCount, false);
+                customerKeywordUuid = customerKeywordDao.getCustomerKeywordUuidForOptimization(terminalType, clientStatus.getGroup(), false);
             }
             if(keywordOptimizationCountService.allowResetBigKeywordIndicator(clientStatus.getGroup())){
                 keywordOptimizationCountService.setLastVisitTime(clientStatus.getGroup());
-                resetBigKeywordIndicator(clientStatus.getGroup(), Integer.parseInt(maxInvalidCountConfig.getValue()), noPositionMaxInvalidCount);
+                resetBigKeywordIndicator(clientStatus.getGroup(), maxInvalidCount, noPositionMaxInvalidCount);
             }
             retryCount++;
             if(customerKeywordUuid != null && updateQueryInfo){
-                updateOptimizationQueryTime(customerKeywordUuid);
+                updateOptimizationQueryTime(customerKeywordUuid, maxInvalidCount);
             }
         }while(customerKeywordUuid == null && retryCount < 2);
 
@@ -855,13 +866,26 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             return null;
         }
 
-        String typeName = "all";
-        List<String> entryTypes = customerKeywordDao.getEntryTypes(clientStatus.getGroup());
-        if(!Utils.isEmpty(entryTypes) && entryTypes.size() == 1){
-            typeName = entryTypes.get(0);
+
+        Integer maxInvalidCount = groupMaxInvalidCountMap.get(clientStatus.getGroup());
+        if(maxInvalidCount == null){
+            synchronized (this){
+                maxInvalidCount = groupMaxInvalidCountMap.get(clientStatus.getGroup());
+                if(maxInvalidCount == null){
+                    String typeName = "all";
+                    List<String> entryTypes = customerKeywordDao.getEntryTypes(clientStatus.getGroup());
+                    if(!Utils.isEmpty(entryTypes) && entryTypes.size() == 1){
+                        typeName = entryTypes.get(0);
+                    }
+                    Config maxInvalidCountConfig = configService.getConfig(Constants.CONFIG_KEY_MAX_INVALID_COUNT, typeName);
+                    if(maxInvalidCountConfig != null) {
+                        maxInvalidCount = Integer.parseInt(maxInvalidCountConfig.getValue());
+                        groupMaxInvalidCountMap.put(clientStatus.getGroup(), maxInvalidCount);
+                    }
+                }
+            }
         }
 
-        Config maxInvalidCountConfig = configService.getConfig(Constants.CONFIG_KEY_MAX_INVALID_COUNT, typeName);
         if(keywordOptimizationCountService.resetBigKeywordIndicator(clientStatus.getGroup())) {
             keywordOptimizationCountService.init(clientStatus.getGroup());
 //            resetBigKeywordIndicator(clientStatus.getGroup(), Integer.parseInt(maxInvalidCountConfig.getValue()));
@@ -878,23 +902,21 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
         do{
             boolean isNormalKeyword = keywordOptimizationCountService.optimizeNormalKeyword(clientStatus.getGroup());
-            customerKeywordUuid = customerKeywordDao.getCustomerKeywordUuidForOptimization(terminalType, clientStatus.getGroup(),
-                    Integer.parseInt(maxInvalidCountConfig.getValue()), noPositionMaxInvalidCount, !isNormalKeyword);
+            customerKeywordUuid = customerKeywordDao.getCustomerKeywordUuidForOptimization(terminalType, clientStatus.getGroup(), !isNormalKeyword);
 
             if(customerKeywordUuid == null){
                 if(keywordOptimizationCountService.resetBigKeywordIndicator(clientStatus.getGroup())) {
                     keywordOptimizationCountService.init(clientStatus.getGroup());
                 }
-                customerKeywordUuid = customerKeywordDao.getCustomerKeywordUuidForOptimization(terminalType, clientStatus.getGroup(),
-                        Integer.parseInt(maxInvalidCountConfig.getValue()), noPositionMaxInvalidCount, false);
+                customerKeywordUuid = customerKeywordDao.getCustomerKeywordUuidForOptimization(terminalType, clientStatus.getGroup(), false);
             }
             if(keywordOptimizationCountService.allowResetBigKeywordIndicator(clientStatus.getGroup())){
                 keywordOptimizationCountService.setLastVisitTime(clientStatus.getGroup());
-                resetBigKeywordIndicator(clientStatus.getGroup(), Integer.parseInt(maxInvalidCountConfig.getValue()), noPositionMaxInvalidCount);
+                resetBigKeywordIndicator(clientStatus.getGroup(), maxInvalidCount, noPositionMaxInvalidCount);
             }
             retryCount++;
             if(customerKeywordUuid != null && updateQueryInfo){
-                updateOptimizationQueryTime(customerKeywordUuid);
+                updateOptimizationQueryTime(customerKeywordUuid, maxInvalidCount);
             }
         }while(customerKeywordUuid == null && retryCount < 2);
 
@@ -1108,8 +1130,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeywordDao.resetOptimizationInfoForNoOptimizeDate();
     }
 
-    public void updateOptimizationQueryTime(Long customerKeywordUuid){
-        customerKeywordDao.updateOptimizationQueryTime(customerKeywordUuid);
+    public void updateOptimizationQueryTime(Long customerKeywordUuid, int maxInvalidRefreshCount){
+        customerKeywordDao.updateOptimizationQueryTime(customerKeywordUuid, maxInvalidRefreshCount);
     }
 
     public boolean haveCustomerKeywordForOptimization(String terminalType, String clientID){
