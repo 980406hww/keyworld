@@ -23,4 +23,9 @@ public class KeywordInfoSynchronizeService {
 		return restTemplate.postForObject(webPath + "/external/delteCustomerKeyword", map, Boolean.class);
 	}
 
+	public String getUserReportInfo(String webPath, Map map) throws Exception {
+		String reportPassword = restTemplate.postForObject(webPath + "/external/getUserReportInfo", map, String.class);
+		return reportPassword;
+	}
+
 }
