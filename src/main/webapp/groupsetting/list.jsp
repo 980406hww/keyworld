@@ -60,8 +60,19 @@
 					</span>
 				</li>
 				<li>
-					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="trimSearchCondition('1')" value=" 搜索 " >
-					&nbsp;&nbsp;
+					<label name="hasOperation" title="有操作类型">
+						<input type="checkbox" name="checkbox" <c:if test="${groupSettingCriteria.hasOperation == true}">checked</c:if>>
+						有操作类型
+					</label>
+				</li>
+				<li>
+					<label name="noOperation" title="无操作类型">
+						<input type="checkbox" name="checkbox" <c:if test="${groupSettingCriteria.hasOperation == false}">checked</c:if>>
+						无操作类型
+					</label>
+				</li>
+				<li>
+					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="trimSearchCondition('1')" value=" 搜索 " >&nbsp;
 				</li>
 				<li>
 					<shiro:hasPermission name="/internal/group/saveGroup">
@@ -81,6 +92,7 @@
 	<input type="hidden" name="optimizedGroupName" id="optimizedGroupName" value="${groupSettingCriteria.optimizedGroupName}"/>
 	<input type="hidden" name="operationType" id="operationType" value="${groupSettingCriteria.operationType}"/>
 	<input type="hidden" name="terminalType" id="terminalType" value="${groupSettingCriteria.terminalType}"/>
+	<input type="hidden" name="hasOperation" id="hasOperation" value="${groupSettingCriteria.hasOperation}"/>
 </form>
 
 <div class="datalist">
@@ -90,9 +102,6 @@
 				<li>
 					<div class="header">
 						<input type="hidden" name="groupUuid" value="${groupVo.uuid}">
-						<span>
-							<input type="checkbox" name="uuid" value="" onclick="decideSelectAll();"/>
-						</span>
 						<span class="groupName" title="${groupVo.groupName}"><a href="javascript:;">${groupVo.groupName}</a></span>
 						<span class="userName" title="${groupVo.userName}"><a href="javascript:;"></a>${groupVo.userName}</span>
 						<div class="handle">
@@ -109,206 +118,235 @@
 					</div>
 
 					<div class="body" listsize="${groupVo.groupSettings.size()}">
+						<div class="data-info-head">
+							<div class="other-rank">
+								<div class="row1">
+									<div>
+										<span>
+											<a href="javascript:;">操作类型</a>
+										</span>
+									</div>
+									<div>
+										<span>
+											<a href="javascript:;">网站统计</a>
+										</span>
+									</div>
+									<div>
+										<span>
+											<a href="javascript:;">目标网站</a>
+										</span>
+									</div>
+									<div>
+										<span>
+											<a href="javascript:;">页数</a>
+										</span>
+									</div>
+									<div>
+										<span>
+											<a href="javascript:;">每页条数</a>
+										</span>
+									</div>
+									<div>
+										<span>
+											<a href="javascript:;">站内搜索比例</a>
+										</span>
+									</div>
+									<div>
+										<span>
+											<a href="javascript:;">外链检索比例</a>
+										</span>
+									</div>
+									<div>
+										<span>
+											<a href="javascript:;">快照点击比例</a>
+										</span>
+									</div>
+									<div>
+										<span>
+											<a href="javascript:;">竞价点击比例</a>
+										</span>
+									</div>
+									<div>
+										<span>
+											<a href="javascript:;">标题拖动比例</a>
+										</span>
+									</div>
+									<div>
+										<span>
+											<a href="javascript:;">特殊字符比例</a>
+										</span>
+									</div>
+									<div>
+										<span>
+											<a href="javascript:;">浏览器设置</a>
+										</span>
+									</div>
+									<div>
+										<span>
+											<a href="javascript:;">Cookie设置</a>
+										</span>
+									</div>
+									<div>
+										<span>
+											<a href="javascript:;">最大用户数</a>
+										</span>
+									</div>
+									<div>
+										<span>
+											<a href="javascript:;">进入页次数</a>
+										</span>
+									</div>
+									<div>
+										<span>
+											<a href="javascript:;">每IP对每用户</a>
+										</span>
+									</div>
+									<div>
+										<span>
+											<a href="javascript:;">在域名下访问</a>
+										</span>
+									</div>
+									<div>
+										<span>
+											<a href="javascript:;">没结果随机点</a>
+										</span>
+									</div>
+									<div>
+										<span>
+											<a href="javascript:;">支持粘贴输入</a>
+										</span>
+									</div>
+									<div>
+										<span>
+											<a href="javascript:;">清除本地存储</a>
+										</span>
+									</div>
+									<div>
+										<span>
+											<a href="javascript:;">操作</a>
+										</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<c:forEach items="${groupVo.groupSettings}" var="groupSetting">
 						<div class="data-info-wrap">
-							<c:forEach items="${groupVo.groupSettings}" var="groupSetting">
 								<div class="other-rank">
 									<div class="row">
 										<div>
 											<span class="line1">
-												<a href="javascript:;">${groupSetting.operationType}</a>
-											</span>
-											<span>
-												<a href="javascript:;">操作类型</a>
+												<a href="javascript:;" title="${groupSetting.operationType}">${groupSetting.operationType}</a>
 											</span>
 										</div>
-
 										<div>
 											<span class="line1">
 												<a href="javascript:;">${groupSetting.disableStatistics == 1 ? "开放" : "关闭"}</a>
 											</span>
-												<span>
-												<a href="javascript:;">网站统计</a>
-											</span>
 										</div>
-
 										<div>
 											<span class="line1">
 												<a href="javascript:;">${groupSetting.disableVisitWebsite == 1 ? "访问" : "不访问"}</a>
 											</span>
-											<span>
-												<a href="javascript:;">目标网站</a>
-											</span>
 										</div>
-
 										<div>
 											<span class="line1">
 												<a href="javascript:;">${groupSetting.pageNo}</a>
 											</span>
-												<span>
-												<a href="javascript:;">页数</a>
-											</span>
 										</div>
-
 										<div>
 											<span class="line1">
 												<a href="javascript:;">${groupSetting.pageSize}</a>
 											</span>
-												<span>
-												<a href="javascript:;">每页条数</a>
-											</span>
 										</div>
-
 										<div>
 											<span class="line1">
-												<a href="javascript:;">${groupSetting.zhanneiPercent}</a>
-											</span>
-											<span>
-												<a href="javascript:;">站内搜索比例</a>
+												<a href="javascript:;">${groupSetting.zhanneiPercent == 0 ? '0%' : groupSetting.zhanneiPercent == 1 ? '10%' : groupSetting.zhanneiPercent == 2 ? '30%' : groupSetting.zhanneiPercent == 3 ? '50%' : groupSetting.zhanneiPercent == 4 ? '100%' : '无'}</a>
 											</span>
 										</div>
-
 										<div>
 											<span class="line1">
-												<a href="javascript:;">${groupSetting.zhanwaiPercent}</a>
-											</span>
-											<span>
-												<a href="javascript:;">外链检索比例</a>
+												<a href="javascript:;">${groupSetting.zhanwaiPercent == 0 ? '0%' : groupSetting.zhanwaiPercent == 1 ? '10%' : groupSetting.zhanwaiPercent == 2 ? '30%' : groupSetting.zhanwaiPercent == 3 ? '50%' : groupSetting.zhanwaiPercent == 4 ? '100%' : '无'}</a>
 											</span>
 										</div>
-
 										<div>
 											<span class="line1">
-												<a href="javascript:;">${groupSetting.kuaizhaoPercent}</a>
-											</span>
-											<span>
-												<a href="javascript:;">快照点击比例</a>
+												<a href="javascript:;">${groupSetting.kuaizhaoPercent == 0 ? '0%' : groupSetting.kuaizhaoPercent == 1 ? '10%' : groupSetting.kuaizhaoPercent == 2 ? '30%' : groupSetting.kuaizhaoPercent == 3 ? '50%' : groupSetting.kuaizhaoPercent == 4 ? '100%' : '无'}</a>
 											</span>
 										</div>
-
 										<div>
 											<span class="line1">
-												<a href="javascript:;">${groupSetting.baiduSemPercent}</a>
-											</span>
-											<span>
-												<a href="javascript:;">竞价点击比例</a>
+												<a href="javascript:;">${groupSetting.baiduSemPercent == 0 ? '0%' : groupSetting.baiduSemPercent == 1 ? '10%' : groupSetting.baiduSemPercent == 2 ? '30%' : groupSetting.baiduSemPercent == 3 ? '50%' : groupSetting.baiduSemPercent == 4 ? '100%' : '无'}</a>
 											</span>
 										</div>
-
 										<div>
 											<span class="line1">
-												<a href="javascript:;">${groupSetting.dragPercent}</a>
-											</span>
-											<span>
-												<a href="javascript:;">标题拖动比例</a>
+												<a href="javascript:;">${groupSetting.dragPercent == 0 ? '0%' : groupSetting.dragPercent == 1 ? '10%' : groupSetting.dragPercent == 2 ? '30%' : groupSetting.dragPercent == 3 ? '50%' : groupSetting.dragPercent == 4 ? '100%' : '无'}</a>
 											</span>
 										</div>
-
 										<div>
 											<span class="line1">
-												<a href="javascript:;">${groupSetting.specialCharPercent}</a>
-											</span>
-											<span>
-												<a href="javascript:;">特殊字符比例</a>
+												<a href="javascript:;">${groupSetting.specialCharPercent == 0 ? '0%' : groupSetting.specialCharPercent == 1 ? '10%' : groupSetting.specialCharPercent == 2 ? '30%' : groupSetting.specialCharPercent == 3 ? '50%' : groupSetting.specialCharPercent == null ? '无' : '100%'}</a>
 											</span>
 										</div>
-
 										<div>
 											<span class="line1">
-												<a href="javascript:;">${groupSetting.multiBrowser == 0 ? "命令多浏览器" : groupSetting.multiBrowser == 1 ? "模拟多浏览器" : "单个浏览器"}</a>
-											</span>
-												<span>
-												<a href="javascript:;">浏览器设置</a>
+												<a href="javascript:;" title="${groupSetting.multiBrowser == 0 ? "命令多浏览器" : groupSetting.multiBrowser == 1 ? "模拟多浏览器" : "单个浏览器"}">${groupSetting.multiBrowser == 0 ? "命令多浏览器" : groupSetting.multiBrowser == 1 ? "模拟多浏览器" : "单个浏览器"}</a>
 											</span>
 										</div>
-
 										<div>
 											<span class="line1">
-												<a href="javascript:;">${groupSetting.clearCookie == 0 ? "不清理" : groupSetting.clearCookie == 1 ? "每次都清理" : groupSetting.clearCookie == 2 ? "随机操作清理" : "N次操作清理"}</a>
-											</span>
-												<span>
-												<a href="javascript:;">Cookie设置</a>
+												<a href="javascript:;" title="${groupSetting.clearCookie == 0 ? "不清理Cookie" : groupSetting.clearCookie == 1 ? "每次都清理Cookie" : groupSetting.clearCookie == 2 ? "随机操作清理Cookie" : "N次操作清理Cookie"}">${groupSetting.clearCookie == 0 ? "不清理Cookie" : groupSetting.clearCookie == 1 ? "每次都清理Cookie" : groupSetting.clearCookie == 2 ? "随机操作清理Cookie" : "N次操作清理Cookie"}</a>
 											</span>
 										</div>
-
 										<div>
 											<span class="line1">
 												<a href="javascript:;">${groupSetting.maxUserCount}</a>
 											</span>
-											<span>
-												<a href="javascript:;">最大用户数</a>
-											</span>
 										</div>
-
 										<div>
 											<span class="line1">
 												<a href="javascript:;">${groupSetting.entryPageMinCount} - ${groupSetting.entryPageMaxCount}</a>
 											</span>
-											<span>
-												<a href="javascript:;">进入页次数</a>
-											</span>
 										</div>
-
 										<div>
 											<span class="line1">
 												<a href="javascript:;">${groupSetting.oneIPOneUser == 1 ? "是" : "否"}</a>
 											</span>
-												<span>
-												<a href="javascript:;">每IP对每用户</a>
-											</span>
 										</div>
-
 										<div>
 											<span class="line1">
 												<a href="javascript:;">${groupSetting.justVisitSelfPage == 1 ? "是" : "否"}</a>
 											</span>
-												<span>
-												<a href="javascript:;">在域名下访问</a>
-											</span>
 										</div>
-
 										<div>
 											<span class="line1">
 												<a href="javascript:;">${groupSetting.randomlyClickNoResult == 1 ? "是" : "否"}</a>
 											</span>
-												<span>
-												<a href="javascript:;">没结果随机点</a>
-											</span>
 										</div>
-
 										<div>
 											<span class="line1">
 												<a href="javascript:;">${groupSetting.supportPaste == 1 ? "是" : "否"}</a>
 											</span>
-											<span>
-												<a href="javascript:;">支持粘贴输入</a>
-											</span>
 										</div>
-
 										<div>
 											<span class="line1">
 												<a href="javascript:;">${groupSetting.clearLocalStorage == 1 ? "是" : "否"}</a>
 											</span>
-												<span title="清除LocalStorage">
-												<a href="javascript:;">清除本地存储</a>
-											</span>
 										</div>
-
 										<div>
-											<span>
+											<span class="operation">
 												<shiro:hasPermission name="/internal/groupsetting/updateGroupSetting">
-													<input class="ui-button ui-widget ui-corner-all" type="button" title="修改操作类型" onclick="showGroupSettingDialog('update', '${groupSetting.uuid}', '${groupVo.groupName}')" value=" 修改 " >
+													<a href="javascript:showGroupSettingDialog('update', '${groupSetting.uuid}', '${groupVo.groupName}')" title="修改操作类型">修改</a>
 												</shiro:hasPermission>
-											</span>
-											<span>
 												<shiro:hasPermission name="/internal/groupsetting/delGroupSetting">
-													<input class="ui-button ui-widget ui-corner-all" type="button" title="删除操作类型" onclick="delGroupSetting(${groupSetting.uuid})" value=" 删除 " >
+													<a href="javascript:delGroupSetting(${groupSetting.uuid})" title="删除操作类型">删除</a>
 												</shiro:hasPermission>
 											</span>
 										</div>
 									</div>
 								</div>
-							</c:forEach>
 						</div>
+						</c:forEach>
 					</div>
 				</li>
 			</c:forEach>

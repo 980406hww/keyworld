@@ -4,10 +4,11 @@
 
     $(".datalist-list li").find("div.body").each(function (index, self) {
         var listsize = $(self).attr("listsize");
-        var height = listsize * 75;
+        var height = listsize * 30 + 20;
         $(self).css("height", height);
     });
     loadingCheckTerminalType();
+    checkHasOperation();
 });
 
 function loadingCheckTerminalType() {
@@ -42,6 +43,28 @@ function enterIn(e) {
     }
 }
 
+function checkHasOperation() {
+    $(".mytabs div:eq(0)").find("input:checkbox").click(function () {
+        var hasOperation;
+        if (!$(this).prop("checked")) {
+            hasOperation = null;
+        } else {
+            var parentName = $(this).parent().attr("name");
+            switch (parentName) {
+                case 'hasOperation':
+                    hasOperation = true;
+                    break;
+                case 'noOperation':
+                    hasOperation = false;
+                    break;
+                default:
+                    break;
+            }
+        }
+        $("#chargeForm").find("#hasOperation").val(hasOperation);
+        trimSearchCondition();
+    });
+}
 function changePaging(currentPage, pageSize) {
     var chargeForm = $("#chargeForm");
     chargeForm.find("#currentPageNumberHidden").val(currentPage);

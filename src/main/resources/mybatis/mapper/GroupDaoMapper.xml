@@ -15,13 +15,21 @@
             AND g.fGroupName = #{groupSettingCriteria.optimizedGroupName}
         </if>
         AND g.fTerminalType = #{groupSettingCriteria.terminalType}
-        AND EXISTS (SELECT 1 FROM t_group_setting gs
-            WHERE
-              gs.fGroupUuid = g.fUuid
-            <if test="groupSettingCriteria.operationType != null and groupSettingCriteria.operationType != ''">
-                AND gs.fOperationType = #{groupSettingCriteria.operationType}
-            </if>
-        )
+        <if test="groupSettingCriteria.hasOperation != null">
+            <choose>
+                <when test="groupSettingCriteria.hasOperation == 1">
+                    AND EXISTS (SELECT 1 FROM t_group_setting gs
+                    WHERE gs.fGroupUuid = g.fUuid
+                    <if test="groupSettingCriteria.operationType != null and groupSettingCriteria.operationType != ''">
+                        AND gs.fOperationType = #{groupSettingCriteria.operationType}
+                    </if>
+                    )
+                </when>
+                <otherwise>
+                    AND NOT EXISTS (SELECT 1 FROM t_group_setting gs WHERE gs.fGroupUuid = g.fUuid)
+                </otherwise>
+            </choose>
+        </if>
         ORDER BY g.fCreateTime DESC
     </select>
 
