@@ -555,9 +555,7 @@
         WHERE ck.fOptimizeGroupName = #{groupName} and ck.fStatus = 1 and ck.fTerminalType = #{terminalType}
         and ck.fQueryTime <![CDATA[<]]> NOW()
         and ck.fInvalidFlag = 0
-        <if test="bigKeyword == true">
-            and ck.fBigKeyword = 1
-        </if>
+        and ck.fBigKeyword = #{bigKeyword}
         order by ck.fQueryTime limit 1
     </select>
 
