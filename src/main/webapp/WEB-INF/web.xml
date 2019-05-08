@@ -72,53 +72,13 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
 
-    <servlet>
-        <servlet-name>DownloadCustomerCollectFeeList</servlet-name>
-        <servlet-class>com.keymanager.servlet.DownloadCustomerCollectFeeList</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>DownloadPositionHistoryLog</servlet-name>
-        <servlet-class>com.keymanager.servlet.DownloadPositionHistoryLog</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>DownloadCustomerCollectFeeListWithLog</servlet-name>
-        <servlet-class>com.keymanager.servlet.DownloadCustomerCollectFeeListWithLog</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>DownloadKeywordPositionResult</servlet-name>
-        <servlet-class>com.keymanager.servlet.DownloadKeywordPositionResult</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>DownloadCustomerKeywordInfo</servlet-name>
-        <servlet-class>com.keymanager.servlet.DownloadCustomerKeywordInfo</servlet-class>
-    </servlet>
 
     <servlet-mapping>
         <servlet-name>springmvc</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
 
-    <servlet-mapping>
-        <servlet-name>DownloadCustomerCollectFeeList</servlet-name>
-        <url-pattern>/customerkeyword/DownloadCustomerCollectFeeList.jsp</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>DownloadPositionHistoryLog</servlet-name>
-        <url-pattern>/customerkeyword/DownloadPositionHistoryLog.jsp</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>DownloadCustomerCollectFeeListWithLog</servlet-name>
-        <url-pattern>/customerkeyword/DownloadCustomerCollectFeeListWithLog.jsp</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>DownloadKeywordPositionResult</servlet-name>
-        <url-pattern>/weibo/DownloadKeywordPositionResult.jsp</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>DownloadCustomerKeywordInfo</servlet-name>
-        <url-pattern>/customerkeyword/DownloadCustomerKeywordInfo.jsp</url-pattern>
-    </servlet-mapping>
+
 
     <!-- druid监控 -->
     <servlet>
