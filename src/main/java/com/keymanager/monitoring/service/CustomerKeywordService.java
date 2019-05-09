@@ -1592,9 +1592,10 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void updateNoEnteredKeywordGroupName(){
+        int i = 0;
         do {
-            customerKeywordDao.updateNoEnteredKeywordGroupName();
-        } while(customerKeywordDao.updateNoEnteredKeywordGroupName() == 10000);
+            i = customerKeywordDao.updateNoEnteredKeywordGroupName();
+        } while(i == 1000);
     }
 
     public synchronized List<CustomerKeywordEnteredVO> getNoEnteredKeywords(String searchEngine){
