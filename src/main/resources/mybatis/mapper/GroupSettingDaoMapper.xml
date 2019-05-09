@@ -6,7 +6,6 @@
         SELECT
             gs.fUuid AS "uuid",
             gs.fOperationType AS "operationType",
-            gs.fPageNo AS "pageNo",
             gs.fPage AS "page",
             gs.fPageSize AS "pageSize",
             gs.fZhanneiPercent AS "zhanneiPercent",

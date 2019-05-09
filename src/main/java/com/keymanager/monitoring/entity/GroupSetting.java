@@ -13,9 +13,6 @@ public class GroupSetting extends BaseEntity {
 	@TableField(value = "fOperationType", strategy = FieldStrategy.IGNORED)
 	private String operationType;
 
-	@TableField(value = "fPageNo")
-	private int pageNo;
-
 	@TableField(value = "fPage")
 	private int page;
 
@@ -171,14 +168,6 @@ public class GroupSetting extends BaseEntity {
 
 	public void setOperationType (String operationType) {
 		this.operationType = operationType;
-	}
-
-	public int getPageNo () {
-		return pageNo;
-	}
-
-	public void setPageNo (int pageNo) {
-		this.pageNo = pageNo;
 	}
 
 	public int getPage () {

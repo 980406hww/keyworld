@@ -250,7 +250,7 @@
 										</div>
 										<div>
 											<span class="line1">
-												<a href="javascript:;">${groupSetting.pageNo}</a>
+												<a href="javascript:;">${groupSetting.page}</a>
 											</span>
 										</div>
 										<div>
