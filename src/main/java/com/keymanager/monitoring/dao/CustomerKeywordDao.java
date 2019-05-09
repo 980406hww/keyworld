@@ -90,12 +90,11 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void resetOptimizationInfoForNoOptimizeDate();
 
-    Long getCustomerKeywordUuidForOptimization(@Param("terminalType")String terminalType, @Param("groupName")String groupName,
-                                               @Param("maxInvalidCount")int maxInvalidCount, @Param("noPositionMaxInvalidCount") int noPositionMaxInvalidCount, @Param("bigKeyword")boolean bigKeyword);
+    Long getCustomerKeywordUuidForOptimization(@Param("terminalType")String terminalType, @Param("groupName")String groupName, @Param("bigKeyword")boolean bigKeyword);
 
     CustomerKeyword getCustomerKeywordForOptimization(@Param("uuid")Long uuid);
 
-    void updateOptimizationQueryTime(@Param("customerKeywordUuid")Long customerKeywordUuid);
+    void updateOptimizationQueryTime(@Param("customerKeywordUuid")Long customerKeywordUuid, @Param("maxInvalidRefreshCount")int maxInvalidRefreshCount);
 
     void updateOptimizationResult(@Param("customerKeywordUuid")Long customerKeywordUuid, @Param("count")int count);
 
@@ -209,6 +208,7 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     List<Long> getCustomerUuids(@Param("entryType")String entryType, @Param("terminalType")String terminalType);
 
     void excludeCustomerKeyword(@Param("qzSettingExcludeCustomerKeywordsCriteria") QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria);
+
     int updateNoEnteredKeywordGroupName();
 
     List<CustomerKeywordEnteredVO> getNoEnteredKeywords(@Param("searchEngine") String searchEngine);

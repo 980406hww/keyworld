@@ -1,7 +1,5 @@
 package com.keymanager.monitoring.shedule;
 
-import com.keymanager.manager.ClientStatusManager;
-import com.keymanager.manager.CustomerKeywordManager;
 import com.keymanager.monitoring.service.ClientStatusService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

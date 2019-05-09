@@ -1,8 +1,6 @@
 package com.keymanager.monitoring.shedule;
 
-import com.keymanager.manager.SwitchClientStatusGroupManager;
 import com.keymanager.monitoring.service.ClientStatusService;
-import com.keymanager.monitoring.service.DailyReportService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

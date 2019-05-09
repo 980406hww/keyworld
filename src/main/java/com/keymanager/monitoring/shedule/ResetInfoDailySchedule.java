@@ -29,25 +29,30 @@ public class ResetInfoDailySchedule {
 
 	public void runTask(){
 		logger.info("============= "+" Reset informaiton Daily Task "+"===================");
+		long startMilleSeconds = System.currentTimeMillis();
 		try {
-			long startMilleSeconds = System.currentTimeMillis();
 			performanceService.addPerformanceLog("ResetInfoDailySchedule", System.currentTimeMillis() - startMilleSeconds, "starting");
-
+			logger.info("============= Reset informaiton Daily Task starting ===================");
 			customerKeywordInvalidCountLogService.addCustomerKeywordInvalidCountLog();
 			performanceService.addPerformanceLog("ResetInfoDailySchedule", System.currentTimeMillis() - startMilleSeconds, "starting 2");
+			logger.info("============= Reset informaiton Daily Task starting 2===================");
 			configService.updateOptimizationDateAsToday();
 			performanceService.addPerformanceLog("ResetInfoDailySchedule", System.currentTimeMillis() - startMilleSeconds, "starting 3");
+			logger.info("============= Reset informaiton Daily Task starting 3===================");
 			for(int i = 0; i < 20; i++) {
 				customerKeywordService.resetOptimizationInfo();
 			}
 			performanceService.addPerformanceLog("ResetInfoDailySchedule", System.currentTimeMillis() - startMilleSeconds, "starting 4");
+			logger.info("============= Reset informaiton Daily Task starting 4===================");
 			customerKeywordService.resetOptimizationInfoForNoOptimizeDate();
 			performanceService.addPerformanceLog("ResetInfoDailySchedule", System.currentTimeMillis() - startMilleSeconds, "starting 5");
+			logger.info("============= Reset informaiton Daily Task starting 5===================");
 			clientStatusService.resetOptimizationInfo();
 
 			performanceService.addPerformanceLog("ResetInfoDailySchedule", System.currentTimeMillis() - startMilleSeconds, "ended");
 			logger.info("============= "+" End Reset informaiton Daily Task "+"===================");
 		} catch (Exception e) {
+			performanceService.addPerformanceLog("ResetInfoDailySchedule", System.currentTimeMillis() - startMilleSeconds, "error occured");
 			e.printStackTrace();
 			logger.error("Reset informaiton Daily Task is error" + e.getMessage());
 		}

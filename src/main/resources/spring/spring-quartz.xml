@@ -29,7 +29,6 @@
 				<ref bean="cronTriggerRefreshStatInfo" />
 				<ref bean="cronAutoTriggerDailyReport" />
 				<ref bean="cronAutoTriggerResetInfoDaily" />
-				<ref bean="cronAutoTriggerChangeNoEnteredKeywordGroupName"/>
 			</list>
 		</property>
 		<!-- Quartz配置, 本地运行无需单独的quartz.properties文件，在此简单配置即可 -->

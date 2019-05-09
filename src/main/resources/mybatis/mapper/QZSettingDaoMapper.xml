@@ -94,7 +94,7 @@
     <select id="searchQZSettings" parameterType="com.keymanager.monitoring.criteria.QZSettingSearchCriteria"
             resultType="com.keymanager.monitoring.entity.QZSetting">
         SELECT
-        DISTINCT(qs.fUuid) AS 'uuid',
+        qs.fUuid AS 'uuid',
         c.fUserID AS 'userID',
         qs.fCustomerUuid AS 'customerUuid',
         c.fContactPerson AS 'contactPerson',
@@ -130,14 +130,6 @@
         FROM t_qz_setting qs
         JOIN t_customer c
         ON qs.fCustomerUuid = c.fUuid
-        <if test="qzSettingSearchCriteria.checkStatus != null or qzSettingSearchCriteria.baiduWeight != null">
-            JOIN t_qz_keyword_rank_info qk
-            ON qs.fUuid = qk.fQZSettingUuid
-        </if>
-        <if test="qzSettingSearchCriteria.categoryTag != null and qzSettingSearchCriteria.categoryTag != ''">
-            JOIN t_qz_category_tag qc
-            ON qs.fUuid = qc.fQZSettingUuid
-        </if>
         WHERE 1 = 1
         <if test="qzSettingSearchCriteria.loginName != null and qzSettingSearchCriteria.loginName != ''">AND c.fUserID = #{qzSettingSearchCriteria.loginName}</if>
         <if test="qzSettingSearchCriteria.customerUuid != null and qzSettingSearchCriteria.customerUuid != ''">AND qs.fCustomerUuid = #{qzSettingSearchCriteria.customerUuid}</if>
@@ -156,6 +148,7 @@
             </choose>
         </if>
         <if test="qzSettingSearchCriteria.checkStatus != null or qzSettingSearchCriteria.baiduWeight != null">
+            AND EXISTS (SELECT 1 FROM t_qz_keyword_rank_info qk WHERE qk.fQZSettingUuid = qs.fUuid
             <choose>
                 <when test="qzSettingSearchCriteria.baiduWeight != null">
                     AND qk.fBaiduWeight = #{qzSettingSearchCriteria.baiduWeight}
@@ -188,11 +181,24 @@
                     AND qk.fTodayDifference &gt; 0
                 </when>
             </choose>
-            AND qk.fTerminalType = #{qzSettingSearchCriteria.terminalType}
+            AND qk.fTerminalType = #{qzSettingSearchCriteria.terminalType})
         </if>
         <if test="qzSettingSearchCriteria.categoryTag != null and qzSettingSearchCriteria.categoryTag != ''">
-            AND qc.fTagName = #{qzSettingSearchCriteria.categoryTag}
+            AND EXISTS (SELECT 1 FROM t_qz_category_tag qc WHERE qc.fQZSettingUuid = qs.fUuid AND qc.fTagName = #{qzSettingSearchCriteria.categoryTag})
         </if>
+        <if test="qzSettingSearchCriteria.operationType != null and qzSettingSearchCriteria.operationType != ''">
+            AND EXISTS (SELECT 1 FROM t_client_status cs WHERE cs.fOperationType = #{qzSettingSearchCriteria.operationType}
+            <choose>
+                <when test="qzSettingSearchCriteria.terminalType == 'PC'">
+                    AND cs.fGroup = qs.fPcGroup
+                </when>
+                <otherwise>
+                    AND cs.fGroup = qs.fPhoneGroup
+                </otherwise>
+            </choose>
+            AND cs.fTerminalType = #{qzSettingSearchCriteria.terminalType})
+        </if>
+        <if test="qzSettingSearchCriteria.createTime != null and qzSettingSearchCriteria.createTime != ''">AND qs.fCreateTime &gt;= #{qzSettingSearchCriteria.createTime}</if>
         <choose>
             <when test="qzSettingSearchCriteria.dateRangeType == 0">
                 AND EXISTS (select qs.fUuid from t_qz_operation_type ot where qs.fUuid = ot.fQZSettingUuid and ot.fNextChargeDate = CURDATE())
@@ -350,5 +356,4 @@
         <if test="qzSettingSearchClientGroupInfoCriteria.type != ''">AND ck.fType = #{qzSettingSearchClientGroupInfoCriteria.type}</if>
         <if test="qzSettingSearchClientGroupInfoCriteria.optimizeGroupName != ''">AND ck.fOptimizeGroupName LIKE '${qzSettingSearchClientGroupInfoCriteria.optimizeGroupName}%'</if>
     </select>
-
 </mapper>
