@@ -27,14 +27,8 @@ public class OperationTypeService extends ServiceImpl<OperationTypeDao, Operatio
     @Autowired
     private OperationTypeDao operationTypeDao;
 
-    public ModelAndView constructSearchOperationTypeListsModelAndView(int currentPageNumber, int pageSize, OperationType operationType) {
-        ModelAndView modelAndView = new ModelAndView("/operationType/operationType");
-        Page<OperationType> page = new Page<>(currentPageNumber, pageSize);
-        List<OperationType> list = operationTypeDao.searchOperationTypeListsPage(page, operationType);
-        page.setRecords(list);
-        modelAndView.addObject("operationType", operationType);
-        modelAndView.addObject("page", page);
-        return modelAndView;
+    public List<OperationType> getOperationTypes(OperationType operationType, Page<OperationType> page) {
+        return operationTypeDao.searchOperationTypeListsPage(page, operationType);
     }
 
     public OperationType getOperationType(Long uuid) {

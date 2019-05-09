@@ -1,5 +1,6 @@
 package com.keymanager.monitoring.controller.rest.internal;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.entity.OperationType;
 import com.keymanager.monitoring.service.OperationTypeService;
@@ -15,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -35,7 +37,7 @@ public class OperationTypeController extends SpringMVCBaseController {
         OperationType operationType = new OperationType();
         String terminalType = TerminalTypeMapping.getTerminalType(request);
         operationType.setTerminalType(terminalType);
-        return operationTypeService.constructSearchOperationTypeListsModelAndView(currentPageNumber, pageSize, operationType);
+        return constructSearchOperationTypeListsModelAndView(currentPageNumber, pageSize, operationType);
     }
 
     @RequestMapping(value = "/searchOperationTypeLists", method = RequestMethod.POST)
@@ -50,7 +52,17 @@ public class OperationTypeController extends SpringMVCBaseController {
         if (StringUtils.isEmpty(pageSize)) {
             pageSize = "50";
         }
-        return operationTypeService.constructSearchOperationTypeListsModelAndView(Integer.parseInt(currentPageNumber), Integer.parseInt(pageSize), operationType);
+        return constructSearchOperationTypeListsModelAndView(Integer.parseInt(currentPageNumber), Integer.parseInt(pageSize), operationType);
+    }
+
+    private ModelAndView constructSearchOperationTypeListsModelAndView(int currentPageNumber, int pageSize, OperationType operationType) {
+        ModelAndView modelAndView = new ModelAndView("operationType/operationType");
+        Page<OperationType> page = new Page<>(currentPageNumber, pageSize);
+        List<OperationType> list = operationTypeService.getOperationTypes(operationType, page);
+        page.setRecords(list);
+        modelAndView.addObject("operationType", operationType);
+        modelAndView.addObject("page", page);
+        return modelAndView;
     }
 
     @RequestMapping(value = "/getOperationType/{uuid}", method = RequestMethod.GET)
