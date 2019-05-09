@@ -294,29 +294,6 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
         machineInfo.setTenMinsRestartTime(Utils.addMinutes(Utils.getCurrentTimestamp(), 10));
     }
 
-    public void getVNCFileInfo(String terminalType) throws Exception {
-        List<MachineInfo> machineInfos = machineInfoDao.searchMachineInfosOrByHost(terminalType,"yes");
-        if(CollectionUtils.isNotEmpty(machineInfos)) {
-            Utils.removeDir(Thread.currentThread().getContextClassLoader().getResource("").toURI().getPath() + "vnc");
-            Utils.createDir(Thread.currentThread().getContextClassLoader().getResource("").toURI().getPath() + "vnc/");
-            Map<String, String> passwordMap = new HashMap<String, String>();
-            for (MachineInfo machineInfo : machineInfos) {
-                String password = passwordMap.get(machineInfo.getPassword());
-                if (password == null) {
-                    if (StringUtil.isNullOrEmpty(machineInfo.getPassword())) {
-                        password = "";
-                    } else if (machineInfo.getPassword().equals("doshows123")) {
-                        password = "8e587919308fcab0c34af756358b9053";
-                    } else {
-                        password = DES.vncPasswordEncode(machineInfo.getPassword());
-                    }
-                    passwordMap.put(machineInfo.getPassword(), password);
-                }
-                writeTxtFile(machineInfo, password);
-            }
-        }
-    }
-
     public void getFullVNCFileInfo(String terminalType) throws Exception {
         List<MachineInfo> machineInfos = machineInfoDao.searchMachineInfosOrByHost(terminalType,null);
         writeFullTxtFile(machineInfos);

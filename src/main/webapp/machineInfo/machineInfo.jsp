@@ -181,9 +181,6 @@
 							<shiro:hasPermission name="/internal/machineInfo/uploadVNCFile">
 								|<a target="_blank" href="javascript:showUploadVNCDialog()">上传VNC文件</a>
 							</shiro:hasPermission>
-							<shiro:hasPermission name="/internal/machineInfo/downloadVNCFile">
-								|<a target="_blank" href="javascript:downloadVNCFile()">下载VNC连接压缩文件</a>
-							</shiro:hasPermission>
 							<shiro:hasPermission name="/internal/machineInfo/saveMachineInfo">
 								|<a target="_blank" href="javascript:machineInfoBatchUpdate()">批量设置</a>
 							</shiro:hasPermission>
@@ -319,7 +316,7 @@
 				</c:choose>
 				&nbsp;
 				<shiro:hasPermission name="/internal/machineInfo/saveMachineInfo">
-					<a href="javascript:showSettingDialog('${machineInfo.clientID}', this)">设置</a>
+					<a href="javascript:showSettingDialog('${machineInfo.clientID}', this)">修改</a>
 				</shiro:hasPermission>
 				&nbsp;
 				<shiro:hasPermission name="/internal/machineInfo/deleteMachineInfo">
@@ -374,7 +371,7 @@
 	<div style="display: none;">
 		<script src="http://s84.cnzz.com/stat.php?id=4204660&web_id=4204660" language="JavaScript"></script>
 	</div>
-	<div id="changeSettingDialog" class="easyui-dialog" style="display: none;left: 30%;">
+	<div id="changeSettingDialog" class="easyui-dialog" style="display: none;left: 40%;">
 		<table>
 			<tr>
 				<td>
@@ -398,49 +395,49 @@
 						<tr name="trItem" onclick="checkItem(this)">
 							<th>流转分组</th>
 							<td>
-								<input type="text" name="switchGroupName" id="switchGroupName"  style="width:110px;"/>
+								<input type="text" name="switchGroupName" id="switchGroupName"/>
 							</td>
 						</tr>
 						<tr name="trItem" onclick="checkItem(this)">
 							<th>主机</th>
 							<td>
-								<input type="text" name="host" id="host"  style="width:110px;"/>
+								<input type="text" name="host" id="host"/>
 							</td>
 						</tr>
 						<tr name="trItem" onclick="checkItem(this)">
 							<th>端口</th>
 							<td>
-								<input type="text" name="port" id="port"  style="width:110px;"/>
+								<input type="text" name="port" id="port"/>
 							</td>
 						</tr>
 						<tr name="trItem" onclick="checkItem(this)">
 							<th>VNC和操作系统用户名</th>
 							<td>
-								<input type="text" name="csUserName" id="csUserName" value="Administrator"  style="width:110px;"/>
+								<input type="text" name="csUserName" id="csUserName" value="Administrator"/>
 							</td>
 						</tr>
 						<tr name="trItem" onclick="checkItem(this)">
 							<th>VPS后台系统电脑ID</th>
 							<td>
-								<input type="text" name="vpsBackendSystemComputerID" id="vpsBackendSystemComputerID"  style="width:110px;"/>
+								<input type="text" name="vpsBackendSystemComputerID" id="vpsBackendSystemComputerID"/>
 							</td>
 						</tr>
 						<tr name="trItem" onclick="checkItem(this)">
 							<th>VPS后台系统密码</th>
 							<td>
-								<input type="text" name="vpsBackendSystemPassword" id="vpsBackendSystemPassword"  style="width:110px;"/>
+								<input type="text" name="vpsBackendSystemPassword" id="vpsBackendSystemPassword"/>
 							</td>
 						</tr>
 						<tr name="trItem" onclick="checkItem(this)">
 							<th>宽带账号</th>
 							<td>
-								<input type="text" name="broadbandAccount" id="broadbandAccount" value="" style="width:110px;"/>
+								<input type="text" name="broadbandAccount" id="broadbandAccount" value=""/>
 							</td>
 						</tr>
 						<tr name="trItem" onclick="checkItem(this)">
 							<th>宽带密码</th>
 							<td>
-								<input type="text" name="broadbandPassword" id="broadbandPassword" value="" style="width:110px;"/>
+								<input type="text" name="broadbandPassword" id="broadbandPassword" value=""/>
 							</td>
 						</tr>
 					</table>
