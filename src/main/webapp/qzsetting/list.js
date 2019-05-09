@@ -56,32 +56,36 @@ function searchRiseOrFall() {
             checkStatus = null;
         } else {
             var parentName = $(this).parent().attr("name");
-            if (parentName == "lower") {
-                checkStatus = 1;
-            }
-            if (parentName == "upper") {
-                checkStatus = 2;
-            }
-            if (parentName == "atLeastStandard") {
-                checkStatus = 3;
-            }
-            if (parentName == "neverStandard") {
-                checkStatus = 4;
-            }
-            if (parentName == "closeStandard") {
-                checkStatus = 5;
-            }
-            if (parentName == "unchanged") {
-                checkStatus = 6;
-            }
-            if (parentName =="lowerDifference") {
-                checkStatus = 7;
-            }
-            if (parentName =="unchangedDifference") {
-                checkStatus = 8;
-            }
-            if (parentName =="upperDifference") {
-                checkStatus = 9;
+            switch (parentName) {
+                case 'lower':
+                    checkStatus = 1;
+                    break;
+                case 'upper':
+                    checkStatus = 2;
+                    break;
+                case "atLeastStandard":
+                    checkStatus = 3;
+                    break;
+                case 'neverStandard':
+                    checkStatus = 4;
+                    break;
+                case 'closeStandard':
+                    checkStatus = 5;
+                    break;
+                case "unchanged":
+                    checkStatus = 6;
+                    break;
+                case 'lowerDifference':
+                    checkStatus = 7;
+                    break;
+                case 'unchangedDifference':
+                    checkStatus = 8;
+                    break;
+                case 'upperDifference':
+                    checkStatus = 9;
+                    break;
+                default:
+                    break;
             }
         }
         $("#chargeForm").find("#checkStatus").val(checkStatus);
