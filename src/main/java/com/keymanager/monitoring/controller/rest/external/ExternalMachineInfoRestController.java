@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping(value = "/external/clientstatus")
+@RequestMapping(value = "/external/machineInfo")
 public class ExternalMachineInfoRestController extends SpringMVCBaseController {
     private static Logger logger = LoggerFactory.getLogger(ExternalMachineInfoRestController.class);
 
