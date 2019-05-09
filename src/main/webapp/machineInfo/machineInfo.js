@@ -127,22 +127,6 @@ function resetTrItemColor() {
         $(this).css("color", "black");
     });
 }
-function downloadVNCFile() {
-    $.ajax({
-        url: '/internal/machineInfo/downloadVNCFile',
-        type: 'POST',
-        success: function (result) {
-            if (result) {
-                window.location.href="/vnc.zip?t=" + new Date().getTime();
-            } else {
-                $().toastmessage('showErrorToast', "下载失败");
-            }
-        },
-        error: function () {
-            $().toastmessage('showErrorToast', "下载失败");
-        }
-    });
-}
 function selectAll(self){
     var a = document.getElementsByName("clientID");
     if(self.checked){
@@ -545,8 +529,8 @@ function showSettingDialog(clientID, self){
                 $("#changeSettingDialog").show();
                 $("#changeSettingDialog").dialog({
                     resizable: false,
-                    title: "设置",
-                    width: 390,
+                    title: "修改",
+                    width: 325,
                     maxHeight: 534,
                     modal: true,
                     buttons: [{
@@ -601,7 +585,7 @@ function saveChangeSetting(clientIDs){
     var settingDialogDiv = $("#changeSettingDialog");
     var machineInfo = {};
     machineInfo.group = settingDialogDiv.find("#settingGroup").val();
-
+    machineInfo.allowSwitchGroup = settingDialogDiv.find("#allowSwitchGroup").val();
     machineInfo.switchGroupName = settingDialogDiv.find("#switchGroupName").val();
     machineInfo.host = settingDialogDiv.find("#host").val();
     machineInfo.port = settingDialogDiv.find("#port").val();
@@ -663,7 +647,7 @@ function saveChangeSetting(clientIDs){
             type: 'POST',
             success: function (result) {
                 if(result){
-                    $().toastmessage('showSuccessToast', "更新成功");
+                    $().toastmessage('showSuccessToast', "更新成功", true);
                 }else{
                     $().toastmessage('showErrorToast', "更新失败");
                 }

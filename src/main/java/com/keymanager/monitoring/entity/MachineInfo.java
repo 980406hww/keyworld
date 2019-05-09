@@ -146,6 +146,9 @@ public class MachineInfo {
 	@TableField(value = "fCreateTime")
 	private Timestamp createTime;
 
+    @TableField(value = "fPageNo")
+    private int pageNo;
+
     @TableField(exist=false)
     private boolean red;
 
@@ -508,12 +511,12 @@ public class MachineInfo {
     }
 
     public boolean getRed(){
-        return (Utils.addMinutes(this.lastVisitTime, 10)
+        return (Utils.addMinutes(this.lastVisitTime, (10 > (this.getPageNo() * 3) ? (10 + 5) : (this.getPageNo() * 3 + 5)))
                 .compareTo(Utils.getCurrentTimestamp()) < 0);
     }
 
     public boolean getYellow(){
-        Timestamp time = Utils.addMinutes(this.lastVisitTime, 10);
+        Timestamp time = Utils.addMinutes(this.lastVisitTime, (10 > (this.getPageNo() * 3) ? 10 : (this.getPageNo() * 3)));
         return time.compareTo(Utils.getCurrentTimestamp()) < 0 && (Utils.addMinutes(time, 5)).compareTo(Utils.getCurrentTimestamp()) > 0;
     }
 
@@ -533,4 +536,11 @@ public class MachineInfo {
         this.yellow = yellow;
     }
 
+    public int getPageNo() {
+        return pageNo;
+    }
+
+    public void setPageNo(int pageNo) {
+        this.pageNo = pageNo;
+    }
 }

@@ -329,22 +329,6 @@ public class MachineInfoRestController extends SpringMVCBaseController {
         }
     }
 
-    @RequiresPermissions("/internal/machineInfo/downloadVNCFile")
-    @RequestMapping(value = "/downloadVNCFile", method = RequestMethod.POST)
-    public ResponseEntity<?> downloadVNCFile(HttpServletRequest request, HttpServletResponse response) {
-        try {
-            machineInfoService.getVNCFileInfo(TerminalTypeMapping.getTerminalType(request));
-            Config config = configService.getConfig(Constants.CONFIG_TYPE_ZIP_ENCRYPTION, Constants.CONFIG_KEY_PASSWORD);
-            downFile("vnc.zip", config.getValue() + Utils.getCurrentDate());
-            return new ResponseEntity<Object>(true, HttpStatus.OK);
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
-        }
-
-    }
-
-
     @RequiresPermissions("/internal/machineInfo/saveMachineInfo")
     @RequestMapping(value = "/reopenMachineInfo", method = RequestMethod.POST)
     public ResponseEntity<?> reopenMachineInfo(@RequestBody Map<String, Object> requestMap) {
