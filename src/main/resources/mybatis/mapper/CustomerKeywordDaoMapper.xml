@@ -1279,7 +1279,7 @@
         AND ck.fCapturedTitle = 0
         AND ck.fOptimizeGroupName NOT LIKE 'no_%'
         AND ck.fOptimizeGroupName NOT IN ('sotp', 'zanting')
-        LIMIT 1000
+        LIMIT 10000
     </update>
 
     <select id="getNoEnteredKeywords" resultType="com.keymanager.monitoring.vo.CustomerKeywordEnteredVO">

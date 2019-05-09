@@ -209,7 +209,6 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     List<Long> getCustomerUuids(@Param("entryType")String entryType, @Param("terminalType")String terminalType);
 
     void excludeCustomerKeyword(@Param("qzSettingExcludeCustomerKeywordsCriteria") QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria);
-
     int updateNoEnteredKeywordGroupName();
 
     List<CustomerKeywordEnteredVO> getNoEnteredKeywords(@Param("searchEngine") String searchEngine);

@@ -119,7 +119,7 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
         double upperValue = Double.parseDouble(upperConfig.getValue());
         double lowerValue = Double.parseDouble(lowerConfig.getValue());
         double differenceValue = Double.parseDouble(differenceValueConfig.getValue());
-        QZSettingSearchCriteria countNumOfRankInfoQZSettingSearchCriteria = qzKeywordRankInfoDao.getCountNumOfRankInfo(upperValue, lowerValue, differenceValue, qzSettingSearchCriteria.getTerminalType(), qzSettingSearchCriteria.getLoginName());
+        QZSettingSearchCriteria countNumOfRankInfoQZSettingSearchCriteria = qzKeywordRankInfoDao.getCountNumOfRankInfo(upperValue, lowerValue, differenceValue, qzSettingSearchCriteria.getTerminalType());
         qzSettingSearchCriteria.setUpperValue(upperValue);
         qzSettingSearchCriteria.setLowerValue(lowerValue);
         qzSettingSearchCriteria.setDifferenceValue(differenceValue);

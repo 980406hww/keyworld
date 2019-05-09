@@ -22,5 +22,5 @@ public interface QZKeywordRankInfoDao extends BaseMapper<QZKeywordRankInfo> {
 
     List<Long> getQzKeywordRankInfos(@Param("qzSettingUuid") Long qzSettingUuid, @Param("terminalType") String terminalType);
 
-    QZSettingSearchCriteria getCountNumOfRankInfo(@Param("upper")double upper, @Param("lower")double lower, @Param("differenceValue") double differenceValue, @Param("terminalType") String terminalType, @Param("loginName") String loginName);
+    QZSettingSearchCriteria getCountNumOfRankInfo(@Param("upper")double upper, @Param("lower")double lower, @Param("differenceValue") double differenceValue, @Param("terminalType") String terminalType);
 }

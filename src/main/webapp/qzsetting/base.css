@@ -141,7 +141,7 @@ ul {
     font-size: 14px;
 }
 
-.mytabs .conn:last-child li.category input, .mytabs .conn:last-child li.group input, .mytabs .conn:last-child li.createTime input {
+.mytabs .conn:last-child li.category input, .mytabs .conn:last-child li.group input {
     width: 150px;
     height: 25px;
     line-height: 25px;
