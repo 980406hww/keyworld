@@ -2,10 +2,12 @@ package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.keymanager.mail.MailHelper;
 import com.keymanager.monitoring.criteria.*;
 import com.keymanager.monitoring.dao.MachineInfoDao;
 import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.enums.ClientStartUpStatusEnum;
+import com.keymanager.monitoring.enums.TerminalTypeEnum;
 import com.keymanager.util.*;
 import com.keymanager.util.common.StringUtil;
 import org.apache.commons.collections.CollectionUtils;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.sql.Timestamp;
 import java.util.*;
 
 @Service
@@ -26,6 +29,9 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
 
     @Autowired
     private MachineInfoDao machineInfoDao;
+
+    @Autowired
+    private CustomerKeywordService customerKeywordService;
 
     @Autowired
     private ConfigService configService;
@@ -38,6 +44,32 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
         if(machineInfo != null){
             machineInfo.setTerminalType(terminalType);
             machineInfoDao.updateById(machineInfo);
+        }
+    }
+
+    public void addSummaryMachineInfo(String terminalType, String clientID, String freeSpace, String version, String city){
+        MachineInfo machineInfo = new MachineInfo();
+        machineInfo.setTerminalType(terminalType);
+        machineInfo.setClientID(clientID);
+        machineInfo.setFreeSpace(StringUtil.isNumeric(freeSpace) ? Double.parseDouble(freeSpace) : 0);
+        machineInfo.setVersion(version);
+        machineInfo.setCity(city);
+        machineInfo.setClientIDPrefix(Utils.removeDigital(clientID));
+        supplementDefaultValue(machineInfo);
+        machineInfoDao.insert(machineInfo);
+    }
+
+    public  void updateMachineVersion(String clientID, String version, boolean hasKeyword){
+        machineInfoDao.updateMachineVersion(clientID, version, hasKeyword);
+    }
+
+    public void logMachineInfoTime(String terminalType, String clientID, String status, String freeSpace, String version, String
+            city, int updateCount, String runningProgramType){
+        MachineInfo machineInfo = machineInfoDao.selectById(clientID);
+        if(machineInfo == null){
+            addSummaryMachineInfo(terminalType, clientID, freeSpace, version, city);
+        }else{
+            machineInfoDao.updateOptimizationResult(clientID, status, version, freeSpace, city, updateCount, runningProgramType);
         }
     }
 
@@ -67,6 +99,10 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
 
     public void updateMachineInfo(MachineInfo machineInfo) {
         machineInfoDao.updateById(machineInfo);
+    }
+
+    public void updateMachineInfoForCapturePosition(String clientID) {
+        machineInfoDao.updateMachineInfoForCapturePosition(clientID);
     }
 
     public void updateMachineInfoTargetVersion(List<String> clientIDs, String targetVersion) throws Exception {
@@ -281,6 +317,11 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
         }
     }
 
+    public void getFullVNCFileInfo(String terminalType) throws Exception {
+        List<MachineInfo> machineInfos = machineInfoDao.searchMachineInfosOrByHost(terminalType,null);
+        writeFullTxtFile(machineInfos);
+    }
+
     public void writeXMLDTD(FileOutputStream o) throws Exception {
         o.write("<?xml version=\"1.0\"?>".getBytes("UTF-8"));
         o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
@@ -312,6 +353,100 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
         o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
         o.write("]>".getBytes("UTF-8"));
         o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+    }
+
+    public void writeFullTxtFile(List<MachineInfo> machineInfos) throws Exception {
+        FileOutputStream o = null;
+        Utils.createDir(Thread.currentThread().getContextClassLoader().getResource("").toURI().getPath() + "vncAll/");
+        String fileName = Thread.currentThread().getContextClassLoader().getResource("").toURI().getPath() + "vncAll/vncAll.xml";
+        o = new FileOutputStream(fileName);
+        writeXMLDTD(o);
+        o.write("<vncaddressbook password=\"cf73063bbf04432f43bba536d4a5f96017c5798fb8acc9xf67f8acf1945d85c\">".getBytes("UTF-8"));
+        o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+        o.write("<folder name=\"263互联\">".getBytes("UTF-8"));
+        o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+        for (MachineInfo machineInfo : machineInfos) {
+            o.write(String.format("<file name=\"%s--%s-%s--%s--%s\">",machineInfo.getClientID(),machineInfo.getHost(),machineInfo.getPort(),machineInfo.getPort(),machineInfo.getVpsBackendSystemComputerID()).getBytes("UTF-8"));
+            o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+            o.write("<section name=\"Connection\">".getBytes("UTF-8"));
+            o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+            o.write(String.format("<param name=\"Host\" value=\"%s\" />",machineInfo.getHost()).getBytes("UTF-8"));
+            o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+            o.write("</section>".getBytes("UTF-8"));
+            o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+            o.write("<section name=\"Options\">".getBytes("UTF-8"));
+            o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+            o.write("<param name=\"MenuKey\" value=\"F8\" />".getBytes("UTF-8"));
+            o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+            o.write("<param name=\"SingleSignOn\" value=\"1\" />".getBytes("UTF-8"));
+            o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+            o.write("<param name=\"ShareFiles\" value=\"1\" />".getBytes("UTF-8"));
+            o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+            o.write("<param name=\"Monitor\" value=\"\\\\.\\DISPLAY1\" />".getBytes("UTF-8"));
+            o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+            o.write("<param name=\"SendSpecialKeys\" value=\"1\" />".getBytes("UTF-8"));
+            o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+            o.write("<param name=\"UseAllMonitors\" value=\"0\" />".getBytes("UTF-8"));
+            o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+            o.write("<param name=\"FullScreenChangeResolution\" value=\"0\" />".getBytes("UTF-8"));
+            o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+            o.write("<param name=\"VerifyId\" value=\"2\" />".getBytes("UTF-8"));
+            o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+            o.write("<param name=\"AutoReconnect\" value=\"1\" />".getBytes("UTF-8"));
+            o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+            o.write("<param name=\"PreferredEncoding\" value=\"ZRLE\" />".getBytes("UTF-8"));
+            o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+            o.write("<param name=\"Encryption\" value=\"Server\" />".getBytes("UTF-8"));
+            o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+            o.write(String.format("<param name=\"UserName\" value=\"%s\" />",machineInfo.getUserName()).getBytes("UTF-8"));
+            o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+            o.write("<param name=\"Scaling\" value=\"None\" />".getBytes("UTF-8"));
+            o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+            o.write("<param name=\"AcceptBell\" value=\"1\" />".getBytes("UTF-8"));
+            o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+            o.write("<param name=\"ProtocolVersion\" value=\"\" />".getBytes("UTF-8"));
+            o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+            o.write("<param name=\"Emulate3\" value=\"0\" />".getBytes("UTF-8"));
+            o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+            o.write("<param name=\"PointerEventInterval\" value=\"0\" />".getBytes("UTF-8"));
+            o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+            o.write("<param name=\"ServerCutText\" value=\"1\" />".getBytes("UTF-8"));
+            o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+            o.write("<param name=\"ClientCutText\" value=\"1\" />".getBytes("UTF-8"));
+            o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+            o.write("<param name=\"SendKeyEvents\" value=\"1\" />".getBytes("UTF-8"));
+            o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+            o.write("<param name=\"SendPointerEvents\" value=\"1\" />".getBytes("UTF-8"));
+            o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+            o.write("<param name=\"Shared\" value=\"0\" />".getBytes("UTF-8"));
+            o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+            o.write("<param name=\"AutoSelect\" value=\"1\" />".getBytes("UTF-8"));
+            o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+            o.write("<param name=\"ColorLevel\" value=\"rgb222\" />".getBytes("UTF-8"));
+            o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+            o.write("<param name=\"FullColor\" value=\"0\" />".getBytes("UTF-8"));
+            o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+            o.write("<param name=\"RelativePtr\" value=\"0\" />".getBytes("UTF-8"));
+            o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+            o.write("<param name=\"FullScreen\" value=\"0\" />".getBytes("UTF-8"));
+            o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+            o.write("<param name=\"UseLocalCursor\" value=\"1\" />".getBytes("UTF-8"));
+            o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+            o.write("</section>".getBytes("UTF-8"));
+            o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+            o.write("<section name=\"Signature\">".getBytes("UTF-8"));
+            o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+            o.write("<param name=\"DotVncFileSignature\" value=\"d513e6046201f276d46513a72ecc7c74889ddacd90dd83c3ce8351f5f8c54d677a46ed7ce4c3c54e065f70bb3aef7e53da8e6882886581377365ff1f84efdff8f0971970b8b25fca736cf32fdf712bd50a6490c5fdfba5c79e951ee9b9b86e96e34076d44d0df456818509f050c8323e315429dcc675e012a003b4acx9f959c6822ca2133\" />".getBytes("UTF-8"));
+            o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+            o.write("</section>".getBytes("UTF-8"));
+            o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+            o.write("</file>".getBytes("UTF-8"));
+            o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+        }
+        o.write("</folder>".getBytes("UTF-8"));
+        o.write(((String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator"))).getBytes("UTF-8"));
+        o.write("</vncaddressbook>".getBytes("UTF-8"));
+        o.close();
     }
 
     public void writeTxtFile(MachineInfo machineInfo, String password) throws Exception {
@@ -376,6 +511,167 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
         machineInfoDao.updateById(machineInfo);
     }
 
+    public String checkUpgrade(String clientID){
+        MachineInfo machineInfo = machineInfoDao.selectById(clientID);
+        if(machineInfo != null){
+            if(machineInfo.getTargetVersion() != null){
+                return machineInfo.getTargetVersion().equals(machineInfo.getVersion()) ? "" : machineInfo.getTargetVersion();
+            }else{
+                return "New".equalsIgnoreCase(machineInfo.getStartUpStatus()) ? "reopen" : "";
+            }
+        }
+        return "0";
+    }
+
+    public String checkPassword(String clientID){
+        MachineInfo machineInfo = machineInfoDao.selectById(clientID);
+        if(machineInfo != null){
+            if(machineInfo.getTargetVPSPassword() != null){
+                return machineInfo.getTargetVPSPassword().equals(machineInfo.getPassword()) ? "" : machineInfo.getTargetVPSPassword();
+            }
+        }
+        return "0";
+    }
+
+    public String updatePassword(String clientID){
+        MachineInfo machineInfo = machineInfoDao.selectById(clientID);
+        if(machineInfo != null){
+            if(machineInfo.getTargetVPSPassword() != null){
+                machineInfo.setPassword(machineInfo.getTargetVPSPassword());
+                machineInfoDao.updateById(machineInfo);
+                return "1";
+            }
+        }
+        return "0";
+    }
+
+    public void updateMachineInfoRestartStatus(String clientID, String restartStatus){
+        MachineInfo machineInfo = machineInfoDao.selectById(clientID);
+        if(machineInfo != null){
+            machineInfo.setRestartTime(Utils.getCurrentTimestamp());
+            machineInfo.setRestartOrderingTime(Utils.getCurrentTimestamp());
+            machineInfo.setRestartCount(machineInfo.getRestartCount() + 1);
+            machineInfo.setRestartStatus(restartStatus);
+            machineInfoDao.updateById(machineInfo);
+
+            ClientStatusRestartLog clientStatusRestartLog = new ClientStatusRestartLog();
+            clientStatusRestartLog.setClientID(machineInfo.getClientID());
+            clientStatusRestartLog.setGroup(machineInfo.getGroup());
+            clientStatusRestartLog.setRestartCount(machineInfo.getRestartCount() + 1);
+            clientStatusRestartLog.setRestartStatus(restartStatus);
+            clientStatusRestartLogService.insert(clientStatusRestartLog);
+        }
+    }
+
+    public void switchGroup() throws Exception{
+        switchGroup(TerminalTypeEnum.PC.name());
+        switchGroup(TerminalTypeEnum.Phone.name());
+    }
+
+    private void switchGroup(String terminalType) throws Exception{
+        List<MachineInfo> machineInfos = machineInfoDao.getMachineInfosForSwitchGroup(terminalType);
+        if(CollectionUtils.isNotEmpty(machineInfos)) {
+            Map<String, List<MachineInfo>> machineInfoMap = new HashMap<String, List<MachineInfo>>();
+            for(MachineInfo machineInfo : machineInfos){
+                String key = machineInfo.getSwitchGroupName().toLowerCase();
+                List<MachineInfo> tmpMachineInfos = machineInfoMap.get(key);
+                if(tmpMachineInfos == null){
+                    tmpMachineInfos = new ArrayList<MachineInfo>();
+                    machineInfoMap.put(key, tmpMachineInfos);
+                }
+                tmpMachineInfos.add(machineInfo);
+            }
+
+            for(String key : machineInfoMap.keySet()){
+                this.switchMachineInfos(machineInfoMap.get(key));
+            }
+        }
+    }
+
+    private void switchMachineInfos(List<MachineInfo> machineInfos){
+        List<MachineInfo> cloneMachineInfos = new ArrayList<MachineInfo>(machineInfos);
+        Collections.shuffle(machineInfos);
+        Collections.shuffle(machineInfos);
+        Collections.shuffle(cloneMachineInfos);
+        Collections.shuffle(cloneMachineInfos);
+        Collections.shuffle(cloneMachineInfos);
+        for (int i = 0; i < machineInfos.size(); i++) {
+            MachineInfo sourceMachineInfo = machineInfos.get(i);
+            MachineInfo targetMachineInfo = cloneMachineInfos.get(i);
+            switchMachineInfoInfo(sourceMachineInfo, targetMachineInfo);
+        }
+
+        for (MachineInfo machineInfo : machineInfos) {
+            machineInfo.setUpdateSettingTime(Utils.getCurrentTimestamp());
+            machineInfoDao.updateById(machineInfo);
+        }
+    }
+
+    private void switchMachineInfoInfo(MachineInfo sourceMachineInfo, MachineInfo targetMachineInfo){
+        String group = sourceMachineInfo.getGroup();
+        sourceMachineInfo.setGroup(targetMachineInfo.getGroup());
+        targetMachineInfo.setGroup(group);
+
+        Timestamp idleStartTime = sourceMachineInfo.getIdleStartTime();
+        sourceMachineInfo.setIdleStartTime(targetMachineInfo.getIdleStartTime());
+        targetMachineInfo.setIdleStartTime(idleStartTime);
+
+        long idleTotalMinutes = sourceMachineInfo.getIdleTotalMinutes();
+        sourceMachineInfo.setIdleTotalMinutes(targetMachineInfo.getIdleTotalMinutes());
+        targetMachineInfo.setIdleTotalMinutes(idleTotalMinutes);
+    }
+
+    public void sendNotificationForRenewal() throws Exception{
+        String condition = " and DATE_ADD(fRenewalDate, INTERVAL -3 DAY ) < NOW() and fValid = 1 ORDER BY fRenewalDate ";
+        List<MachineInfo> machineInfos = machineInfoDao.getMachineInfosForRenewal();
+
+        if(!Utils.isEmpty(machineInfos)){
+            Config notificationEmail = configService.getConfig("NotificationEmail", "EmailAddress");
+            StringBuilder sb = new StringBuilder();
+            sb.append("<table><tr><td>客户端ID</td><td>续费日期</td></tr>");
+            for(MachineInfo machineInfo : machineInfos){
+                sb.append(String.format("<tr><td>%s</td><td>%s</td>", machineInfo.getClientID(), Utils.formatDatetime(machineInfo.getRenewalDate(),
+                        "yyyy-MM-dd")));
+            }
+            sb.append("</table>");
+            String[] emailAddresses = notificationEmail.getValue().split(";");
+            for(String emailAddress : emailAddresses) {
+                MailHelper.sendClientDownNotification(emailAddress, sb.toString(), "续费通知");
+            }
+        }
+    }
+
+    public MachineInfo getMachineInfoForStartUp() {
+        MachineInfo machineInfo = machineInfoDao.getMachineInfoForStartUp();
+        if(machineInfo != null) {
+            machineInfo.setStartUpTime(Utils.getCurrentTimestamp());
+            machineInfo.setStartUpStatus(ClientStartUpStatusEnum.Processing.name());
+            machineInfoDao.updateById(machineInfo);
+        }
+        return machineInfo;
+    }
+
+    public String getMachineStartUpStatus(String clientID) {
+        MachineInfo machineInfo = machineInfoDao.selectById(clientID);
+        return machineInfo.getStartUpStatus();
+    }
+
+    public String getMachineInfoID(String vpsBackendSystemComputerID) {
+        return machineInfoDao.getMachineInfoID(vpsBackendSystemComputerID);
+    }
+
+    public void updateMachineStartUpStatus(String clientID, String status) {
+        MachineInfo machineInfo = machineInfoDao.selectById(clientID);
+        if(machineInfo != null) {
+            machineInfo.setStartUpStatus(status);
+            machineInfoDao.updateById(machineInfo);
+        }
+    }
+
+    public Integer getDownloadingMachineCount() {
+        return machineInfoDao.getDownloadingClientCount();
+    }
+
     public void updateStartUpStatusForCompleted(List<String> clientIDs) {
         machineInfoDao.updateStartUpStatusForCompleted(clientIDs);
     }
@@ -394,4 +690,19 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
         machineInfoDao.batchChangeTerminalType(clientIds, terminalType);
     }
 
+    public Integer getUpgradingMachineCount(ClientUpgrade clientUpgrade) {
+        return machineInfoDao.getUpgradingMachineCount(clientUpgrade);
+    }
+
+    public void updateMachineTargetVersion(ClientUpgrade clientUpgrade) {
+        machineInfoDao.updateMachineTargetVersion(clientUpgrade);
+    }
+
+    public Integer getResidualMachineCount(ClientUpgrade clientUpgrade) {
+        return machineInfoDao.getResidualMachineCount(clientUpgrade);
+    }
+
+    public void updateVersion(String clientID, String version){
+        machineInfoDao.updateVersion(clientID, version);
+    }
 }

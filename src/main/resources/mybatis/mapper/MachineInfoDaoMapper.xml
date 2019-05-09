@@ -100,6 +100,27 @@
 
     </select>
 
+    <select id="getMachineInfosForSwitchGroup" resultType="com.keymanager.monitoring.entity.MachineInfo">
+        SELECT
+        <include refid="selectCol" />
+        FROM
+        t_machine_info mi
+        WHERE mi.fTerminalType = #{terminalType}
+        AND mi.fValid = 1
+        AND  mi.fAllowSwitchGroup = 1
+    </select>
+
+    <select id="getMachineInfosForRenewal" resultType="com.keymanager.monitoring.entity.MachineInfo">
+        SELECT
+            mi.fClientID as 'clientID',
+            mi.fRenewalDate AS "renewalDate"
+        FROM
+        t_machine_info mi
+        WHERE DATE_ADD(fRenewalDate, INTERVAL -3 DAY ) &lt; NOW()
+        AND fValid = 1
+        ORDER BY fRenewalDate
+    </select>
+
     <select id="searchBadMachineInfo" parameterType="com.keymanager.monitoring.criteria.MachineInfoCriteria" resultType="com.keymanager.monitoring.entity.MachineInfo">
         SELECT
         <include refid="selectCol" />
@@ -135,6 +156,89 @@
         t_machine_info mi
         WHERE mi.fTerminalType = #{terminalType}
         <if test="comfirm != null"> and (mi.fHost is not null or mi.fHost &lt;&gt; '')</if>
+    </select>
+
+    <update id="updateMachineVersion">
+        UPDATE t_machine_info
+        SET fVersion = #{version}, fRestartCount = 0, fRestartStatus = null
+        <choose>
+            <when test="hasKeyword == 1">
+                ,fIdleTotalMinutes = IF(fIdleStartTime IS NULL, fIdleTotalMinutes, fIdleTotalMinutes + TIMESTAMPDIFF(MINUTE, fIdleStartTime, NOW())), fIdleStartTime = NULL
+            </when>
+            <when test="hasKeyword == 0">
+                ,fIdleStartTime = IF(fIdleStartTime IS NULL, NOW(), fIdleStartTime)
+            </when>
+        </choose>
+        WHERE fClientID = #{clientID}
+    </update>
+
+    <update id="updateOptimizationResult">
+        UPDATE t_machine_info
+        SET fRestartOrderingTime = NOW(),
+        fOptimizationStartDate = IF(fOptimizationStartDate IS NULL, CURRENT_DATE(), fOptimizationStartDate),
+        fOptimizationTotalCount = fOptimizationTotalCount + 1,
+        fOptimizationSucceedCount = fOptimizationSucceedCount + #{count},
+        fLastVisitTime = NOW(),
+        fTenMinsLastVisitTime = DATE_ADD(NOW(), INTERVAL 10 MINUTE ),
+        <choose>
+            <when test="count == 0">
+                fContinuousFailCount = fContinuousFailCount + 1,
+            </when>
+            <when test="count == 1">
+                fContinuousFailCount = 0,
+            </when>
+        </choose>
+        fLastSendNotificationTime = NULL,
+        fStatus = #{status},
+        fFreeSpace = #{freeSpace},
+        fVersion = #{version},
+        fCity = #{city},
+        fRunningProgramType = #{runningProgramType}
+        WHERE fClientID = #{clientID}
+    </update>
+
+    <update id="updateMachineInfoForCapturePosition">
+        UPDATE t_machine_info
+        SET fRestartOrderingTime = NOW(),
+        fOptimizationStartDate = IF(fOptimizationStartDate IS NULL, CURRENT_DATE(), fOptimizationStartDate),
+        fOptimizationTotalCount = fOptimizationTotalCount + 1,
+        fLastVisitTime = NOW(),
+        fTenMinsLastVisitTime = DATE_ADD(NOW(), INTERVAL 10 MINUTE ),
+        fLastSendNotificationTime = NULL
+        WHERE fClientID = #{clientID}
+    </update>
+
+    <select id="getMachineInfoForStartUp" resultType="com.keymanager.monitoring.entity.MachineInfo">
+        SELECT
+        <include refid="selectCol" />
+        FROM t_machine_info mi
+        WHERE (mi.fStartUpStatus = 'New' OR (mi.fStartUpStatus = 'Processing' AND DATE_ADD(mi.fStartUpTime, INTERVAL 30 MINUTE) &lt; NOW()))
+        ORDER BY mi.fStartUpTime
+        LIMIT 1
+    </select>
+
+    <select id="getMachineInfoIDID" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT fClientID as 'clientID' FROM t_machine_info WHERE fVPSBackendSystemComputerID = #{vpsBackendSystemComputerID}
+    </select>
+
+    <select id="getDownloadingClientCount" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM t_machine_info WHERE fStartUpStatus = "Downloading"
+    </select>
+
+    <select id="getUpgradingMachineCount" parameterType="com.keymanager.monitoring.entity.ClientUpgrade" resultType="int">
+        SELECT COUNT(1) FROM t_machine_info
+        WHERE fVersion = #{clientUpgrade.version}
+        AND fRunningProgramType = #{clientUpgrade.programType}
+        AND fTargetVersion = #{clientUpgrade.targetVersion}
+        AND fTerminalType = #{clientUpgrade.terminalType}
+    </select>
+
+    <select id="getResidualMachineCount" parameterType="com.keymanager.monitoring.entity.ClientUpgrade" resultType="int">
+        SELECT COUNT(1) FROM t_machine_info
+        WHERE fVersion = #{clientUpgrade.version}
+        AND fRunningProgramType = #{clientUpgrade.programType}
+        AND (fTargetVersion is null or fTargetVersion &lt;&gt; #{clientUpgrade.targetVersion})
+        AND fTerminalType = #{clientUpgrade.terminalType}
     </select>
 
     <update id="reopenMachineInfo">
@@ -200,6 +304,21 @@
         <foreach collection="clientIds" item="clientID" open="(" close=")" separator=",">
             #{clientID}
         </foreach>
+    </update>
+    
+    <update id="updateMachineTargetVersion" parameterType="com.keymanager.monitoring.entity.ClientUpgrade">
+        UPDATE t_machine_info
+        SET fTargetVersion = #{clientUpgrade.targetVersion}
+        WHERE fVersion = #{clientUpgrade.version}
+        AND fRunningProgramType = #{clientUpgrade.programType}
+        AND fTerminalType = #{clientUpgrade.terminalType}
+        AND (fTargetVersion is null or fTargetVersion &lt;&gt; #{clientUpgrade.targetVersion})
+        LIMIT #{clientUpgrade.maxUpgradeCount}
+    </update>
+
+    <update id="updateVersion">
+        UPDATE t_machine_info SET fVersion = #{version}
+        WHERE fClientID = #{clientID}
     </update>
 
 </mapper>
