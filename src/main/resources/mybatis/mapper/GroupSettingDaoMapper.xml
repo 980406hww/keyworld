@@ -6,6 +6,7 @@
         SELECT
             gs.fUuid AS "uuid",
             gs.fOperationType AS "operationType",
+            gs.fMachineUsedPercent AS "machineUsedPercent",
             gs.fPage AS "page",
             gs.fPageSize AS "pageSize",
             gs.fZhanneiPercent AS "zhanneiPercent",
@@ -60,6 +61,7 @@
         INSERT INTO t_group_setting(
             fGroupUuid,
             fOperationType,
+            fMachineUsedPercent,
             fPage,
             fPageSize,
             fZhanneiPercent,
@@ -109,6 +111,7 @@
           VALUES (
             #{groupSetting.groupUuid},
             #{groupSetting.operationType},
+            #{groupSetting.machineUsedPercent},
             #{groupSetting.page},
             #{groupSetting.pageSize},
             #{groupSetting.zhanneiPercent},
@@ -161,6 +164,7 @@
         UPDATE t_group_setting
         SET fUpdateTime = NOW()
         <if test="gs.operationType==1"> ,fOperationType = #{groupSetting.operationType}</if>
+        <if test="gs.machineUsedPercent==1"> ,fMachineUsedPercent = #{groupSetting.machineUsedPercent}</if>
         <if test="gs.disableStatistics==1"> ,fDisableStatistics = #{groupSetting.disableStatistics}</if>
         <if test="gs.disableVisitWebsite==1"> ,fDisableVisitWebsite = #{groupSetting.disableVisitWebsite}</if>
         <if test="gs.page==1"> ,fPage = #{groupSetting.page}</if>

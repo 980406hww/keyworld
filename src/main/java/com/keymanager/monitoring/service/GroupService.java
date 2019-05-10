@@ -29,7 +29,7 @@ public class GroupService extends ServiceImpl<GroupDao, Group> {
     private GroupSettingDao groupSettingDao;
 
     public void saveGroup (GroupCriteria groupCriteria) {
-        groupDao.saveGroup(groupCriteria.getGroupName(), groupCriteria.getTerminalType(), groupCriteria.getCreateBy());
+        groupDao.saveGroup(groupCriteria.getGroupName(), groupCriteria.getTerminalType(), groupCriteria.getCreateBy(), groupCriteria.getGroupSetting().getRemainingAccount());
         long lastInsertID = groupDao.lastInsertID();
         groupCriteria.getGroupSetting().setGroupUuid(lastInsertID);
         groupSettingDao.saveGroupSetting(groupCriteria.getGroupSetting());

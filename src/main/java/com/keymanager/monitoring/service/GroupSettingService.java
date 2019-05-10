@@ -6,6 +6,7 @@ import com.keymanager.monitoring.criteria.GroupSettingCriteria;
 import com.keymanager.monitoring.criteria.UpdateGroupSettingCriteria;
 import com.keymanager.monitoring.dao.GroupDao;
 import com.keymanager.monitoring.dao.GroupSettingDao;
+import com.keymanager.monitoring.entity.Group;
 import com.keymanager.monitoring.entity.GroupSetting;
 import com.keymanager.monitoring.vo.GroupVO;
 import org.slf4j.Logger;
@@ -36,6 +37,10 @@ public class GroupSettingService extends ServiceImpl<GroupSettingDao, GroupSetti
     }
 
     public void deleteGroupSetting (long uuid) {
+        GroupSetting groupSetting = groupSettingDao.selectById(uuid);
+        Group group = groupDao.selectById(groupSetting.getGroupUuid());
+        group.setRemainingAccount(group.getRemainingAccount() + groupSetting.getMachineUsedPercent());
+        groupDao.updateById(group);
         groupSettingDao.deleteById(uuid);
     }
 
@@ -45,9 +50,13 @@ public class GroupSettingService extends ServiceImpl<GroupSettingDao, GroupSetti
 
     public void saveGroupSetting (GroupSetting groupSetting) {
         groupSettingDao.saveGroupSetting(groupSetting);
+        groupDao.updateGroupRemainingAccount(groupSetting.getGroupUuid(), groupSetting.getRemainingAccount());
     }
 
     public void updateGroupSetting (UpdateGroupSettingCriteria updateGroupSettingCriteria) {
         groupSettingDao.updateGroupSetting(updateGroupSettingCriteria.getGs(), updateGroupSettingCriteria.getGroupSetting());
+        if (1 == updateGroupSettingCriteria.getGs().getMachineUsedPercent()) {
+            groupDao.updateGroupRemainingAccount(updateGroupSettingCriteria.getGroupSetting().getGroupUuid(), updateGroupSettingCriteria.getGroupSetting().getRemainingAccount());
+        }
     }
 }
