@@ -1,6 +1,5 @@
 package com.keymanager.monitoring.service;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.dao.ClientUpgradeDao;
@@ -18,7 +17,7 @@ public class ClientUpgradeService extends ServiceImpl<ClientUpgradeDao, ClientUp
     private ClientUpgradeDao clientUpgradeDao;
 
     @Autowired
-    private ClientStatusService clientStatusService;
+    private MachineInfoService machineInfoService;
 
     public Page<ClientUpgrade> searchClientUpgrades(Page<ClientUpgrade> page, String terminalType) {
         page.setRecords(clientUpgradeDao.searchClientUpgrades(page, terminalType));
@@ -40,9 +39,9 @@ public class ClientUpgradeService extends ServiceImpl<ClientUpgradeDao, ClientUp
         List<ClientUpgrade> clientUpgradeList = clientUpgradeDao.findClientUpgradeJobs();
         for (ClientUpgrade clientUpgrade : clientUpgradeList) {
             // 获取正在升级的机器数量
-            Integer upgradingCount = clientStatusService.getUpgradingClientCount(clientUpgrade);
+            Integer upgradingCount = machineInfoService.getUpgradingMachineCount(clientUpgrade);
             // 获取剩余升级机器数量
-            Integer residualCount = clientStatusService.getResidualClientCount(clientUpgrade);
+            Integer residualCount = machineInfoService.getResidualMachineCount(clientUpgrade);
 
             upgradingCount = clientUpgrade.getMaxUpgradeCount() - upgradingCount;
             if(upgradingCount > 0 && residualCount > 0) {
@@ -50,7 +49,7 @@ public class ClientUpgradeService extends ServiceImpl<ClientUpgradeDao, ClientUp
                 clientUpgradeDao.updateById(clientUpgrade);
                 // 修改目标版本号
                 clientUpgrade.setMaxUpgradeCount(upgradingCount);
-                clientStatusService.updateClientTargetVersion(clientUpgrade);
+                machineInfoService.updateTargetVersion(clientUpgrade);
             } else {
                 clientUpgrade.setResidualUpgradeCount(residualCount);
                 clientUpgradeDao.updateById(clientUpgrade);

@@ -56,4 +56,5 @@ public class GroupService extends ServiceImpl<GroupDao, Group> {
         }
         return groupSettingVo;
     }
+
 }

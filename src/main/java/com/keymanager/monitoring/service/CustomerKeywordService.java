@@ -46,7 +46,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     private CustomerChargeTypeService customerChargeTypeService;
 
     @Autowired
-    private ClientStatusService clientStatusService;
+    private MachineInfoService machineInfoService;
 
     @Autowired
     private CustomerKeywordIPService customerKeywordIPService;

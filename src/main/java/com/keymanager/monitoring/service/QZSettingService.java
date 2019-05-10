@@ -49,7 +49,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 	private CustomerKeywordService customerKeywordService;
 
 	@Autowired
-	private ClientStatusService clientStatusService;
+	private MachineInfoService machineInfoService;
 
 	@Autowired
 	private QZKeywordRankInfoService qzKeywordRankInfoService;
@@ -596,7 +596,8 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 	public QZSettingSearchClientGroupInfoVO getQZSettingClientGroupInfo (QZSettingSearchClientGroupInfoCriteria qzSettingSearchClientGroupInfoCriteria) {
 		QZSettingSearchClientGroupInfoVO qzSettingSearchClientGroupInfoVO = new QZSettingSearchClientGroupInfoVO();
 		qzSettingSearchClientGroupInfoVO.setCustomerKeywordCount(qzSettingDao.getQZSettingClientGroupInfo(qzSettingSearchClientGroupInfoCriteria));
-		qzSettingSearchClientGroupInfoVO.setClientStatusVOs(clientStatusService.getClientStatusVOs(qzSettingSearchClientGroupInfoCriteria));
+		//TODO clientStatus refactor
+		//qzSettingSearchClientGroupInfoVO.setClientStatusVOs(clientStatusService.getClientStatusVOs(qzSettingSearchClientGroupInfoCriteria));
 		qzSettingSearchClientGroupInfoVO.setCategoryTagNames(qzCategoryTagService.findTagNamesByQZSettingUuid(qzSettingSearchClientGroupInfoCriteria.getQzSettingUuid()));
 		return qzSettingSearchClientGroupInfoVO;
 	}

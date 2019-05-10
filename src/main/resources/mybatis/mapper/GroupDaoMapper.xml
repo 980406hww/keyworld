@@ -40,4 +40,6 @@
     <select id="lastInsertID" resultType="java.lang.Long">
         SELECT LAST_INSERT_ID();
     </select>
+
+
 </mapper>

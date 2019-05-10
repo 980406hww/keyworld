@@ -815,10 +815,6 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
         return clientCookieCountList;
     }
 
-    public Integer getUpgradingClientCount(ClientUpgrade clientUpgrade) {
-        return machineInfoDao.getUpgradingMachineCount(clientUpgrade);
-    }
-
     public void resetOptimizationInfo() {
         machineInfoDao.resetOptimizationInfo();
     }
