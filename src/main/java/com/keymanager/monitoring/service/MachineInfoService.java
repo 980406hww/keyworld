@@ -8,8 +8,13 @@ import com.keymanager.monitoring.dao.MachineInfoDao;
 import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.enums.ClientStartUpStatusEnum;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
+import com.keymanager.monitoring.vo.ClientStatusForOptimization;
+import com.keymanager.monitoring.vo.CookieVO;
+import com.keymanager.monitoring.vo.MachineInfoVO;
 import com.keymanager.util.*;
 import com.keymanager.util.common.StringUtil;
+import com.keymanager.value.ClientStatusGroupSummaryVO;
+import com.keymanager.value.ClientStatusSummaryVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -681,5 +686,153 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
 
     public void updateVersion(String clientID, String version){
         machineInfoDao.updateVersion(clientID, version);
+    }
+
+    public void updatePageNo(String clientID, int pageNo){
+        machineInfoDao.updatePageNo(clientID, pageNo);
+    }
+
+    public List<CustomerKeywordTerminalRefreshStatRecord> searchClientStatusForRefreshStat(CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria) {
+        return machineInfoDao.searchClientStatusForRefreshStat(customerKeywordRefreshStatInfoCriteria);
+    }
+
+    public List<ClientStatusSummaryVO> searchClientStatusSummaryVO(String clientIDPrefix, String city, String switchGroupName) throws Exception {
+        List<ClientStatusSummaryVO> pcClientStatusSummaryVOs = machineInfoDao.searchClientStatusSummaryVO(clientIDPrefix, city, switchGroupName);
+        Collections.sort(pcClientStatusSummaryVOs);
+        ClientStatusSummaryVO previousClientIDPrefix = null;
+        ClientStatusSummaryVO previousType = null;
+        for(ClientStatusSummaryVO clientStatusSummaryVO : pcClientStatusSummaryVOs){
+            if(previousClientIDPrefix == null){
+                previousClientIDPrefix = clientStatusSummaryVO;
+                previousClientIDPrefix.setClientIDPrefixCount(previousClientIDPrefix.getClientIDPrefixCount() + 1);
+                previousClientIDPrefix.setClientIDPrefixTotalCount(previousClientIDPrefix.getClientIDPrefixTotalCount() +
+                        clientStatusSummaryVO.getCount());
+            }else if(previousClientIDPrefix.getClientIDPrefix().equals(clientStatusSummaryVO.getClientIDPrefix())){
+                previousClientIDPrefix.setClientIDPrefixCount(previousClientIDPrefix.getClientIDPrefixCount() + 1);
+                previousClientIDPrefix.setClientIDPrefixTotalCount(previousClientIDPrefix.getClientIDPrefixTotalCount() +
+                        clientStatusSummaryVO.getCount());
+            }else{
+                previousClientIDPrefix = clientStatusSummaryVO;
+                previousClientIDPrefix.setClientIDPrefixCount(previousClientIDPrefix.getClientIDPrefixCount() + 1);
+                previousClientIDPrefix.setClientIDPrefixTotalCount(previousClientIDPrefix.getClientIDPrefixTotalCount() +
+                        clientStatusSummaryVO.getCount());
+
+                previousType = null;
+            }
+
+            if(previousType == null){
+                previousType = clientStatusSummaryVO;
+                previousType.setTypeCount(previousType.getTypeCount() + 1);
+                previousType.setTypeTotalCount(previousType.getTypeTotalCount() +
+                        clientStatusSummaryVO.getCount());
+            }else if(previousType.getType().equals(clientStatusSummaryVO.getType())){
+                previousType.setTypeCount(previousType.getTypeCount() + 1);
+                previousType.setTypeTotalCount(previousType.getTypeTotalCount() +
+                        clientStatusSummaryVO.getCount());
+            }else{
+                previousType = clientStatusSummaryVO;
+                previousType.setTypeCount(previousType.getTypeCount() + 1);
+                previousType.setTypeTotalCount(previousType.getTypeTotalCount() +
+                        clientStatusSummaryVO.getCount());
+            }
+        }
+        return pcClientStatusSummaryVOs;
+    }
+
+    public List<ClientStatusGroupSummaryVO> searchClientStatusGroupSummaryVO(String group, String terminalType) {
+        return machineInfoDao.searchClientStatusGroupSummaryVO(group,terminalType);
+    }
+
+    public ClientStatus getStoppedClientStatuses(){
+        ClientStatus tmpClientStatus = null;
+//        List<ClientStatus> clientStatuses = clientStatusDao.searchRestartingClientStatuses();
+//        for(ClientStatus clientStatus : clientStatuses){
+////			if(customerKeywordService.haveCustomerKeywordForOptimization(clientStatus.getTerminalType(), clientStatus.getClientID())){
+//            tmpClientStatus = clientStatus;
+//            updateRestartStatus(clientStatus.getClientID(), "Logging");
+//            break;
+////			}
+//        }
+        if(tmpClientStatus == null) {
+            List<ClientStatus> clientStatuses = machineInfoDao.searchWaitingRestartingClientStatuses();
+            for (ClientStatus clientStatus : clientStatuses) {
+//				if (customerKeywordService.haveCustomerKeywordForOptimization(clientStatus.getTerminalType(), clientStatus.getClientID())) {
+                tmpClientStatus = clientStatus;
+                updateRestartStatus(clientStatus.getClientID(), "Processing");
+                String vpsServiceProvideName = this.detectVPSServiceProvider(clientStatus.getVpsBackendSystemComputerID());
+                Config vpsBackendAccount = configService.getConfig(Constants.CONFIG_TYPE_VPS_BACKEND_ACCOUNT, vpsServiceProvideName);
+                if(vpsBackendAccount != null){
+                    clientStatus.setUserName(vpsBackendAccount.getValue());
+                }
+                Config vpsBackendPassword = configService.getConfig(Constants.CONFIG_TYPE_VPS_BACKEND_PASSWORD, vpsServiceProvideName);
+                if(vpsBackendPassword != null){
+                    clientStatus.setPassword(vpsBackendPassword.getValue());
+                }
+                break;
+//				}
+            }
+        }
+        return tmpClientStatus;
+    }
+
+    private String detectVPSServiceProvider(String backendComputerID){
+        backendComputerID = backendComputerID.toLowerCase();
+        if(backendComputerID.matches("^[0-9]*$")){
+            return "nuobin";
+        }else if(backendComputerID.indexOf("k") == 0){
+            return "yongtian";
+        }else if(backendComputerID.indexOf("y") == 0){
+            return "yiyang";
+        }else{
+            return "263";
+        }
+    }
+
+    private void updateRestartStatus(String clientID, String restartStatus){
+        machineInfoDao.updateRestartStatus(clientID, restartStatus);
+    }
+
+    public void updateRemainingKeywordIndicator(List<String> groupNames, int indicator){
+        machineInfoDao.updateRemainingKeywordIndicator(groupNames, indicator);
+    }
+
+    public void updateAllRemainingKeywordIndicator(int indicator){
+        machineInfoDao.updateAllRemainingKeywordIndicator(indicator);
+    }
+
+    public MachineInfo getClientStatusForStartUp() {
+        MachineInfo machineInfo = machineInfoDao.getMachineInfoForStartUp();
+        if (machineInfo != null) {
+            machineInfo.setStartUpTime(Utils.getCurrentTimestamp());
+            machineInfo.setStartUpStatus(ClientStartUpStatusEnum.Processing.name());
+            machineInfoDao.updateById(machineInfo);
+        }
+        return machineInfo;
+    }
+
+    public List<CookieVO> searchClientForAllotCookie(int clientCookieCount, String cookieGroupForBaidu, String cookieGroupFor360) {
+        List<CookieVO> clientCookieCountList = machineInfoDao.searchClientForAllotCookie(clientCookieCount, cookieGroupForBaidu, cookieGroupFor360);
+        return clientCookieCountList;
+    }
+
+    public Integer getUpgradingClientCount(ClientUpgrade clientUpgrade) {
+        return machineInfoDao.getUpgradingMachineCount(clientUpgrade);
+    }
+
+    public void resetOptimizationInfo() {
+        machineInfoDao.resetOptimizationInfo();
+    }
+
+    public List<MachineInfoVO> getClientStatusVOs (QZSettingSearchClientGroupInfoCriteria qzSettingSearchClientGroupInfoCriteria) {
+        return machineInfoDao.getClientStatusVOs(qzSettingSearchClientGroupInfoCriteria);
+    }
+
+    public ClientStatusForOptimization getClientStatusForOptimization(String clientID) {
+        ClientStatusForOptimization clientStatusForOptimization = machineInfoDao.getClientStatusForOptimization(clientID);
+        if (clientStatusForOptimization != null) {
+            clientStatusForOptimization.setOpenStatistics(clientStatusForOptimization.getDisableStatistics() == 1 ? 0 : 1);
+            clientStatusForOptimization.setCurrentTime(Utils.formatDate(new Date(), Utils.TIME_FORMAT));
+        }
+        return clientStatusForOptimization;
     }
 }

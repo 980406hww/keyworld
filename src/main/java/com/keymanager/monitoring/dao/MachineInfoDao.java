@@ -2,9 +2,20 @@ package com.keymanager.monitoring.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
+import com.keymanager.monitoring.criteria.ClientStatusCriteria;
+import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
 import com.keymanager.monitoring.criteria.MachineInfoCriteria;
+import com.keymanager.monitoring.criteria.QZSettingSearchClientGroupInfoCriteria;
+import com.keymanager.monitoring.entity.ClientStatus;
 import com.keymanager.monitoring.entity.ClientUpgrade;
+import com.keymanager.monitoring.entity.CustomerKeywordTerminalRefreshStatRecord;
 import com.keymanager.monitoring.entity.MachineInfo;
+import com.keymanager.monitoring.vo.ClientStatusForOptimization;
+import com.keymanager.monitoring.vo.ClientStatusVO;
+import com.keymanager.monitoring.vo.CookieVO;
+import com.keymanager.monitoring.vo.MachineInfoVO;
+import com.keymanager.value.ClientStatusGroupSummaryVO;
+import com.keymanager.value.ClientStatusSummaryVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -63,4 +74,33 @@ public interface MachineInfoDao extends BaseMapper<MachineInfo> {
 
     void updateVersion(@Param("clientID") String clientID, @Param("version") String version);
 
+    List<CustomerKeywordTerminalRefreshStatRecord> searchClientStatusForRefreshStat(@Param("customerKeywordRefreshStatInfoCriteria") CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria);
+
+    void addSummaryClientStatus(@Param("clientStatus") ClientStatus clientStatus);
+
+    void addClientStatusByVPSFile(@Param("clientStatus") ClientStatus clientStatus);
+
+    List<ClientStatusSummaryVO> searchClientStatusSummaryVO(@Param("clientIDPrefix") String clientIDPrefix, @Param("city") String city, @Param("switchGroupName") String switchGroupName);
+
+    List<ClientStatusGroupSummaryVO> searchClientStatusGroupSummaryVO(@Param("group") String group, @Param("terminalType") String terminalType);
+
+    List<ClientStatus> searchRestartingClientStatuses();
+
+    List<ClientStatus> searchWaitingRestartingClientStatuses();
+
+    void updatePageNo(@Param("clientID") String clientID, @Param("pageNo") int pageNo);
+
+    void updateRestartStatus(@Param("clientID") String clientID, @Param("restartStatus") String restartStatus);
+
+    void updateRemainingKeywordIndicator(@Param("groupNames") List<String> groupNames, @Param("indicator") int indicator);
+
+    void updateAllRemainingKeywordIndicator(@Param("indicator") int indicator);
+
+    List<CookieVO> searchClientForAllotCookie(@Param("clientCookieCount") int clientCookieCount, @Param("cookieGroupForBaidu") String cookieGroupForBaidu, @Param("cookieGroupFor360") String cookieGroupFor360);
+
+    void resetOptimizationInfo();
+
+    List<MachineInfoVO> getClientStatusVOs(@Param("qzSettingSearchClientGroupInfoCriteria") QZSettingSearchClientGroupInfoCriteria qzSettingSearchClientGroupInfoCriteria);
+
+    ClientStatusForOptimization getClientStatusForOptimization(@Param("clientID") String clientID);
 }
