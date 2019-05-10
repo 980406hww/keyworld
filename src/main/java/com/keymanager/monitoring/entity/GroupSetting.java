@@ -145,9 +145,6 @@ public class GroupSetting extends BaseEntity {
 	@TableField(value = "fOptimizeRelatedKeyword")
 	private int optimizeRelatedKeyword;
 
-	@TableField(value = "fRemainingKeyword")
-	private int remainingKeyword;
-
 	@TableField(exist = false)
 	private boolean red;
 
@@ -526,14 +523,6 @@ public class GroupSetting extends BaseEntity {
 
 	public void setOptimizeRelatedKeyword (int optimizeRelatedKeyword) {
 		this.optimizeRelatedKeyword = optimizeRelatedKeyword;
-	}
-
-	public int getRemainingKeyword () {
-		return remainingKeyword;
-	}
-
-	public void setRemainingKeyword (int remainingKeyword) {
-		this.remainingKeyword = remainingKeyword;
 	}
 
 	public boolean isRed () {

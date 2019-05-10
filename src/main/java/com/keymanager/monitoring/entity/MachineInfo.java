@@ -149,6 +149,9 @@ public class MachineInfo {
     @TableField(value = "fPageNo")
     private int pageNo;
 
+	@TableField(value = "fRemainingKeyword")
+	private int remainingKeyword;
+
     @TableField(exist=false)
     private boolean red;
 
@@ -543,4 +546,12 @@ public class MachineInfo {
     public void setPageNo(int pageNo) {
         this.pageNo = pageNo;
     }
+
+	public int getRemainingKeyword () {
+		return remainingKeyword;
+	}
+
+	public void setRemainingKeyword (int remainingKeyword) {
+		this.remainingKeyword = remainingKeyword;
+	}
 }

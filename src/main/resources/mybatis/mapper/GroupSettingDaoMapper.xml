@@ -105,7 +105,6 @@
             fWaitTimeAfterClick,
             fMaxUserCount,
             fOptimizeRelatedKeyword,
-            fRemainingKeyword,
             fCreateTime
           )
           VALUES (
@@ -155,7 +154,6 @@
             #{groupSetting.waitTimeAfterClick},
             #{groupSetting.maxUserCount},
             #{groupSetting.optimizeRelatedKeyword},
-            #{groupSetting.remainingKeyword},
             NOW()
           )
     </insert>
