@@ -129,7 +129,7 @@ public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport>
 				map.put("userID", externalAccount);
 				String reportPassword = keywordInfoSynchronizeService.getUserReportInfo(webPath, map);
 				ZipCompressor.createEncryptionZip(loginUserReportFolder, dailyReportFolder + String.format("%s_%s.zip", externalAccount, Utils.formatDatetime(Utils.getCurrentTimestamp(),
-						"yyyy.MM.dd")), StringUtils.isNotEmpty(reportPassword) ? AESUtils.decrypt(reportPassword) : externalAccount + Utils.getCurrentDate());
+						"yyyy.MM.dd")), (StringUtils.isNotEmpty(reportPassword) ? AESUtils.decrypt(reportPassword) : externalAccount) + Utils.getCurrentDate());
 				FileUtil.delFolder(loginUserReportFolder);
 
 				totalExcelWriter.initSheet(externalAccount);
