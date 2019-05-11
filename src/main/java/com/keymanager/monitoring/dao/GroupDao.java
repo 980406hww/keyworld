@@ -22,4 +22,6 @@ public interface GroupDao extends BaseMapper<Group> {
     long lastInsertID ();
 
     void updateGroupRemainingAccount (@Param("uuid") Long uuid, @Param("remainingAccount") int remainingAccount);
+
+    List<Group> getAvailableOptimizationGroups (@Param("terminalType") String terminalType);
 }

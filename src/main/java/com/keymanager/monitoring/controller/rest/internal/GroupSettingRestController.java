@@ -4,10 +4,12 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.GroupSettingCriteria;
 import com.keymanager.monitoring.criteria.UpdateGroupSettingCriteria;
+import com.keymanager.monitoring.entity.Group;
 import com.keymanager.monitoring.entity.GroupSetting;
 import com.keymanager.monitoring.service.*;
 import com.keymanager.monitoring.vo.GroupVO;
 import com.keymanager.util.TerminalTypeMapping;
+import com.sun.xml.internal.xsom.impl.Ref;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +20,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/internal/groupsetting")
@@ -26,7 +31,6 @@ public class GroupSettingRestController extends SpringMVCBaseController {
 
     @Autowired
     private GroupSettingService groupSettingService;
-
 
     @Autowired
     private ConfigService configService;
@@ -66,9 +70,11 @@ public class GroupSettingRestController extends SpringMVCBaseController {
         }
         Page<GroupVO> page = groupSettingService.searchGroupSettings(new Page<GroupVO>(currentPageNumber, pageSize), groupSettingCriteria);
         String [] operationTypeValues = configService.getOperationTypeValues(groupSettingCriteria.getTerminalType());
+        int availableOptimizationGroupCount = groupSettingService.getAvailableOptimizationGroups(groupSettingCriteria.getTerminalType()).size();
         modelAndView.addObject("groupSettingCriteria", groupSettingCriteria);
         modelAndView.addObject("operationTypeValues", operationTypeValues);
         modelAndView.addObject("page", page);
+        modelAndView.addObject("availableOptimizationGroupCount", availableOptimizationGroupCount);
         performanceService.addPerformanceLog(groupSettingCriteria.getTerminalType() + ":searchGroupSettings", System.currentTimeMillis() - startMilleSeconds, null);
         return modelAndView;
     }
@@ -118,6 +124,21 @@ public class GroupSettingRestController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/getAvailableOptimizationGroups")
+    public ResponseEntity<?> getAvailableOptimizationGroups(HttpServletRequest request) {
+        try {
+            String terminalType = (String) request.getAttribute("terminalType");
+            if (null == terminalType) {
+                terminalType = TerminalTypeMapping.getTerminalType(request);
+            }
+            Map<String, Date> availableOptimizationGroups = groupSettingService.getAvailableOptimizationGroups(terminalType);
+            return new ResponseEntity<Object>(availableOptimizationGroups, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
         }
     }
 }

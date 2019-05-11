@@ -80,10 +80,13 @@
 				<li>
 					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="trimSearchCondition('1')" value=" 搜索 " >&nbsp;
 				</li>
-				<li>
-					<shiro:hasPermission name="/internal/group/saveGroup">
+				<shiro:hasPermission name="/internal/group/saveGroup">
+					<li>
 						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="showGroupDialog()" value=" 增加 " >&nbsp;
-					</shiro:hasPermission>
+					</li>
+				</shiro:hasPermission>
+				<li>
+					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="getAvailableOptimizationGroups()" value="查看需要增加的分组队列(${availableOptimizationGroupCount})">&nbsp;
 				</li>
 			</ul>
 		</div>
@@ -1021,6 +1024,10 @@
 			</tr>
 		</table>
 	</form>
+</div>
+<%--查看需要增加的分组队列--%>
+<div id="getAvailableOptimizationGroups" class="easyui-dialog" style="display: none">
+	<textarea id="getAvailableOptimizationGroupsContent"  style="width:100%;height:100%;resize: none"></textarea>
 </div>
 
 <%@ include file="/commons/loadjs.jsp" %>

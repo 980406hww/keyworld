@@ -1,6 +1,7 @@
 ﻿$(function () {
     $("#changeSettingDialog").dialog("close");
     $("#updateGroupSettingDialog").dialog("close");
+    $("#getAvailableOptimizationGroups").dialog("close");
 
     $(".datalist-list li").find("div.body").each(function (index, self) {
         var listsize = $(self).attr("listsize");
@@ -653,3 +654,49 @@ function changeRemainingAccount(self) {
     }
     $(self).parent().find("i").text(result);
 }
+
+function getAvailableOptimizationGroups() {
+    var terminalType = $("#chargeForm").find("#terminalType").val();
+    $.ajax({
+        url:'/internal/groupsetting/getAvailableOptimizationGroups',
+        headers:{
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        type:'POST',
+        data: terminalType,
+        success: function (data) {
+            var text = "";
+            $.each(data, function(index, element) {
+                text += index;
+                if(element != null && element != ''){
+                    text += '______'+ toTimeFormat(new Date(element));
+                }
+                text += '\r';
+            });
+            $("#getAvailableOptimizationGroupsContent").val(text);
+        }
+    });
+    $("#getAvailableOptimizationGroups").show();
+    $("#getAvailableOptimizationGroups").dialog({
+        resizable: false,
+        height: 450,
+        width: 340,
+        title: '查看需要增加的分组队列',
+        modal: true
+    });
+    $("#getAvailableOptimizationGroups").dialog("open");
+    $("#getAvailableOptimizationGroups").window("resize",{top:$(document).scrollTop() + 100});
+}
+function toTimeFormat(time) {
+    var date = toDateFormat(time);
+    var hours = time.getHours() < 10 ? ("0" + time.getHours()) : time.getHours();
+    var minutes = time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes();
+    var seconds = time.getSeconds() < 10 ? "0" + time.getSeconds() : time.getSeconds();
+    return date + " " + hours + ":" + minutes + ":" + seconds;
+};
+function toDateFormat (time) {
+    var m = (time.getMonth() + 1) > 9 ? (time.getMonth() + 1) : "0" + (time.getMonth() + 1);
+    var d = time.getDate() > 9 ? time.getDate() : "0" + time.getDate();
+    return time.getFullYear() + "-" + m + "-" + d;
+};

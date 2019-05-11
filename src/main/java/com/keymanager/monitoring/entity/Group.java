@@ -13,6 +13,9 @@ public class Group extends BaseEntity {
     @TableField(value = "fGroupName")
     private String groupName;
 
+    @TableField(value = "fTerminalType")
+    private String terminalType;
+
     @TableField(value = "fCreateBy")
     private String createBy;
 
@@ -25,6 +28,14 @@ public class Group extends BaseEntity {
 
     public void setGroupName (String groupName) {
         this.groupName = groupName;
+    }
+
+    public String getTerminalType () {
+        return terminalType;
+    }
+
+    public void setTerminalType (String terminalType) {
+        this.terminalType = terminalType;
     }
 
     public String getCreateBy () {

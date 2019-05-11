@@ -218,4 +218,6 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void updateVerifyEnteredKeywordTimeByUuids (@Param("uuids")List<Long> uuids);
 
     void addCustomerKeywords (@Param("customerKeywords") List<CustomerKeyword> customerKeywords);
+
+    List<Group> getAvailableOptimizationGroups (String terminalType);
 }
