@@ -27,8 +27,9 @@ public class GroupSettingRestController extends SpringMVCBaseController {
     @Autowired
     private GroupSettingService groupSettingService;
 
+
     @Autowired
-    private ClientStatusService clientStatusService;
+    private ConfigService configService;
 
     @Autowired
     private PerformanceService performanceService;
@@ -64,7 +65,7 @@ public class GroupSettingRestController extends SpringMVCBaseController {
             groupSettingCriteria.setTerminalType(terminalType);
         }
         Page<GroupVO> page = groupSettingService.searchGroupSettings(new Page<GroupVO>(currentPageNumber, pageSize), groupSettingCriteria);
-        String [] operationTypeValues = clientStatusService.getOperationTypeValues(groupSettingCriteria.getTerminalType());
+        String [] operationTypeValues = configService.getOperationTypeValues(groupSettingCriteria.getTerminalType());
         modelAndView.addObject("groupSettingCriteria", groupSettingCriteria);
         modelAndView.addObject("operationTypeValues", operationTypeValues);
         modelAndView.addObject("page", page);

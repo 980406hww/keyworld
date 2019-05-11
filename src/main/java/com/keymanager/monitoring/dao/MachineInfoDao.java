@@ -22,7 +22,7 @@ import java.util.List;
 
 public interface MachineInfoDao extends BaseMapper<MachineInfo> {
 
-    void updateMachineVersion(@Param("clientID") String clientID, @Param("version") String version, @Param("hasKeyword") boolean hasKeyword);
+    void updateMachineInfoVersion(@Param("clientID") String clientID, @Param("version") String version, @Param("hasKeyword") boolean hasKeyword);
 
     void updateOptimizationResult(@Param("clientID") String clientID, @Param("status") String status, @Param("version") String version,
                                   @Param("freeSpace") String freeSpace, @Param("city") String city, @Param("count") int count, @Param("runningProgramType") String runningProgramType);

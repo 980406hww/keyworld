@@ -141,4 +141,11 @@ public class ConfigService extends ServiceImpl<ClientStatusDao, ClientStatus>{
         }
         return sameCustomerKeywordCountMap;
     }
+
+    public String[] getOperationTypeValues(String terminalType) {
+        Config config = getConfig(Constants.CONFIG_TYPE_OPTIMIZATION_TYPE,terminalType);
+        String [] operationTypeValues = config.getValue().split(",");
+        Arrays.sort(operationTypeValues);
+        return operationTypeValues;
+    }
 }

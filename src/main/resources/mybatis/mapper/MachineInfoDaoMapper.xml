@@ -160,7 +160,7 @@
         <if test="comfirm != null"> and (mi.fHost is not null or mi.fHost &lt;&gt; '')</if>
     </select>
 
-    <update id="updateMachineVersion">
+    <update id="updateMachineInfoVersion">
         UPDATE t_machine_info
         SET fVersion = #{version}, fRestartCount = 0, fRestartStatus = null
         <choose>

@@ -64,8 +64,8 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
         machineInfoDao.insert(machineInfo);
     }
 
-    public  void updateMachineVersion(String clientID, String version, boolean hasKeyword){
-        machineInfoDao.updateMachineVersion(clientID, version, hasKeyword);
+    public  void updateMachineInfoVersion(String clientID, String version, boolean hasKeyword){
+        machineInfoDao.updateMachineInfoVersion(clientID, version, hasKeyword);
     }
 
     public void logMachineInfoTime(String terminalType, String clientID, String status, String freeSpace, String version, String

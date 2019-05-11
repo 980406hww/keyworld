@@ -31,7 +31,7 @@ import java.util.Map;
 @Controller
 @RequestMapping(value = "/external/classification")
 public class ExternalClassificationRestController extends SpringMVCBaseController {
-    private static Logger logger = LoggerFactory.getLogger(ExternalClientStatusRestController.class);
+    private static Logger logger = LoggerFactory.getLogger(ExternalClassificationRestController.class);
 
     @Autowired
     private ClassificationRestService classificationRestService;
