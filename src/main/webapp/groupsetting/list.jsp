@@ -106,7 +106,7 @@
 	<div class="datalist-list">
 		<ul>
 			<c:forEach items="${page.records}" var="groupVo" varStatus="status">
-				<li title="请把分组下的机器分配完成！" groupUuid="${groupVo.uuid}">
+				<li title="请把分组下的机器分配完成！">
 					<div class="header">
 						<input type="hidden" name="groupUuid" value="${groupVo.uuid}">
 						<span class="groupName" title="${groupVo.remainingAccount}%"><a href="javascript:;">${groupVo.groupName}</a></span>

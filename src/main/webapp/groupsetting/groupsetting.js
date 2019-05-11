@@ -501,6 +501,7 @@ function saveGroupSetting(type, status, isUpdateGroup, groupUuid){
         gs.entryPageMinCount = isChecked("entryPageMinCount", dialogDiv);
         gs.entryPageMaxCount = isChecked("entryPageMaxCount", dialogDiv);
         gs.pageRemainMinTime = isChecked("pageRemainMinTime", dialogDiv);
+        gs.pageRemainMaxTime = isChecked("pageRemainMaxTime", dialogDiv);
         gs.inputDelayMinTime = isChecked("inputDelayMinTime", dialogDiv);
         gs.inputDelayMaxTime = isChecked("inputDelayMaxTime", dialogDiv);
         gs.slideDelayMinTime = isChecked("slideDelayMinTime", dialogDiv);
