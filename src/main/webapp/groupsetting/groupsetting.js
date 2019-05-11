@@ -96,6 +96,7 @@ function trimSearchCondition() {
 function showGroupDialog() {
     var changeSettingDialog = $("#changeSettingDialog");
     changeSettingDialog.find('#changeSettingDialogForm')[0].reset();
+    $("#changeSettingDialog").find("i").text(100);
     changeSettingDialog.show();
     changeSettingDialog.dialog({
         resizable: false,
@@ -115,11 +116,13 @@ function showGroupDialog() {
             handler: function () {
                 $("#changeSettingDialog").dialog("close");
                 $('#changeSettingDialogForm')[0].reset();
+                $("#changeSettingDialog").find("i").text(100);
                 resetTrItemColor();
             }
         }],
         onClose: function () {
             $('#changeSettingDialogForm')[0].reset();
+            $("#changeSettingDialog").find("i").text(100);
             resetTrItemColor();
         }
     });
@@ -127,9 +130,11 @@ function showGroupDialog() {
     changeSettingDialog.window("resize", {top: $(document).scrollTop() + 150});
 }
 
-function showUpdateGroupDialog(groupUuid, groupName) {
+function showUpdateGroupDialog(groupUuid, groupName, remainingAccount) {
     var updateGroupSettingDialog = $("#updateGroupSettingDialog");
     updateGroupSettingDialog.find('#updateGroupSettingDialogForm')[0].reset();
+    updateGroupSettingDialog.find('#remainAccount').val(remainingAccount);
+    updateGroupSettingDialog.find("i").text(remainingAccount);
     findGroup(groupUuid, groupName);
     updateGroupSettingDialog.show();
     updateGroupSettingDialog.dialog({
@@ -143,6 +148,7 @@ function showUpdateGroupDialog(groupUuid, groupName) {
             iconCls: 'icon-ok',
             handler: function () {
                 saveGroupSetting('update', 0, 1);
+                updateGroupSettingDialog.find('#remainAccount').val(updateGroupSettingDialog.find("i").text());
             }
         }, {
             text: '取消',
@@ -211,10 +217,12 @@ function coverGroupSettingDialog(id) {
     resetTrItemColor();
 }
 
-function showGroupSettingDialog(type, id, groupName) {
+function showGroupSettingDialog(type, id, groupName, remainingAccount) {
     var changeSettingDialog = $("#changeSettingDialog");
     changeSettingDialog.find('#changeSettingDialogForm')[0].reset();
     changeSettingDialog.find('#settingGroup').val(groupName);
+    changeSettingDialog.find('#remainAccount').val(remainingAccount);
+    changeSettingDialog.find("i").text(remainingAccount);
     var title;
     if (type == "add") {
         title = "新增操作类型";
@@ -243,11 +251,13 @@ function showGroupSettingDialog(type, id, groupName) {
             handler: function () {
                 $("#changeSettingDialog").dialog("close");
                 $('#changeSettingDialogForm')[0].reset();
+                $("#changeSettingDialog").find("i").text(100);
                 resetTrItemColor();
             }
         }],
         onClose: function () {
             $('#changeSettingDialogForm')[0].reset();
+            $("#changeSettingDialog").find("i").text(100);
             resetTrItemColor();
         }
     });
@@ -299,6 +309,8 @@ function initSettingDialog(groupSetting, status){
         dialogDiv = $("#changeSettingDialog");
     }
     dialogDiv.find("#settingOperationType").val(groupSetting.operationType != null ? groupSetting.operationType : "");
+    dialogDiv.find("#currentAccount").val(groupSetting.machineUsedPercent);
+    dialogDiv.find("#machineUsedPercent").val(groupSetting.machineUsedPercent);
     if(groupSetting.page != null){
         dialogDiv.find("#page").val(groupSetting.page);
     }
@@ -396,7 +408,15 @@ function saveGroupSetting(type, status, isUpdateGroup){
         type = "groupadd";
     }
     var groupSetting = {};
+    groupSetting.groupUuid = $(".datalist-list .header").find("input[name='groupUuid']").val();
+    var operationType = dialogDiv.find("#settingOperationType").val();
+    if (operationType == '') {
+        alert("请选择操作类型！！！");
+        return false;
+    }
     groupSetting.operationType = dialogDiv.find("#settingOperationType").val();
+    groupSetting.machineUsedPercent = dialogDiv.find("#machineUsedPercent").val();
+    groupSetting.remainingAccount = dialogDiv.find("#machineUsedPercent").parent().find("i").text();
     groupSetting.disableStatistics = dialogDiv.find("#disableStatistics").val();
     groupSetting.disableVisitWebsite = dialogDiv.find("#disableVisitWebsite").val();
     groupSetting.page = dialogDiv.find("#page").val();
@@ -448,6 +468,7 @@ function saveGroupSetting(type, status, isUpdateGroup){
         groupSetting.uuid = groupSettingUuid;
         var gs = {};
         gs.operationType = isChecked("settingOperationType", dialogDiv);
+        gs.machineUsedPercent = isChecked("machineUsedPercent", dialogDiv);
         gs.disableStatistics = isChecked("disableStatistics", dialogDiv);
         gs.disableVisitWebsite = isChecked("disableVisitWebsite", dialogDiv);
         gs.page = isChecked("page", dialogDiv);
@@ -592,4 +613,27 @@ function resetTrItemColor() {
     $("td[name='trItem']").each(function () {
         $(this).css("color", "black");
     });
+}
+
+function showRemainingAccount(self) {
+    $(self).parent().find("label").toggle();
+}
+
+function hiddenRemainingAccount(self) {
+    $(self).parent().find("label").toggle();
+}
+
+function changeRemainingAccount(self) {
+    var remainAccount = $(self).parent().find("input[name='remainAccount']").val();
+    var machineAccount = $(self).parent().find("input[name='currentAccount']").val();
+    var totalCount = parseInt(remainAccount) + parseInt(machineAccount);
+    var machineUsedPercent = $(self).parent().find("input[name='machineUsedPercent']").val();
+    if (machineUsedPercent === '') {
+        machineUsedPercent = '0';
+    }
+    var result = parseInt(totalCount) - parseInt(machineUsedPercent);
+    if (result < 0) {
+        alert("机器占比超出范围，请修改");
+    }
+    $(self).parent().find("i").text(result);
 }

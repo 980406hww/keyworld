@@ -17,7 +17,9 @@ public interface GroupDao extends BaseMapper<Group> {
 
     List<GroupVO> searchGroups (Page<GroupVO> page, @Param("groupSettingCriteria") GroupSettingCriteria groupSettingCriteria);
 
-    void saveGroup (@Param("groupName") String groupName, @Param("terminalType") String terminalType, @Param("createBy") String createBy);
+    void saveGroup (@Param("groupName") String groupName, @Param("terminalType") String terminalType, @Param("createBy") String createBy, @Param("remainingAccount") int remainingAccount);
 
     long lastInsertID ();
+
+    void updateGroupRemainingAccount (@Param("uuid") Long uuid, @Param("remainingAccount") int remainingAccount);
 }

@@ -6,7 +6,8 @@
         SELECT
             g.fUuid AS "uuid",
             g.fGroupName AS "groupName",
-            u.fUserName AS "userName"
+            u.fUserName AS "userName",
+            g.fRemainingAccount AS "remainingAccount"
         FROM t_group g
         LEFT JOIN t_userinfo u
         ON u.fLoginName = g.fCreateBy
@@ -34,12 +35,14 @@
     </select>
 
     <insert id="saveGroup">
-        INSERT INTO t_group(fGroupName, fTerminalType, fCreateBy) VALUES(#{groupName}, #{terminalType}, #{createBy});
+        INSERT INTO t_group(fGroupName, fTerminalType, fCreateBy, fRemainingAccount) VALUES(#{groupName}, #{terminalType}, #{createBy}, #{remainingAccount});
     </insert>
 
     <select id="lastInsertID" resultType="java.lang.Long">
         SELECT LAST_INSERT_ID();
     </select>
-
-
+    
+    <update id="updateGroupRemainingAccount">
+        UPDATE t_group SET fRemainingAccount = #{remainingAccount}, fUpdateTime = NOW() WHERE fUuid = #{uuid}
+    </update>
 </mapper>

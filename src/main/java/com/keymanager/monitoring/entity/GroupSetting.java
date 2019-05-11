@@ -13,6 +13,9 @@ public class GroupSetting extends BaseEntity {
 	@TableField(value = "fOperationType", strategy = FieldStrategy.IGNORED)
 	private String operationType;
 
+	@TableField(value = "fMachineUsedPercent")
+	private int machineUsedPercent;
+
 	@TableField(value = "fPage")
 	private int page;
 
@@ -142,9 +145,6 @@ public class GroupSetting extends BaseEntity {
 	@TableField(value = "fOptimizeRelatedKeyword")
 	private int optimizeRelatedKeyword;
 
-	@TableField(value = "fRemainingKeyword")
-	private int remainingKeyword;
-
 	@TableField(exist = false)
 	private boolean red;
 
@@ -153,6 +153,9 @@ public class GroupSetting extends BaseEntity {
 
 	@TableField(exist = false)
 	private boolean orange;
+
+	@TableField(exist = false)
+	private int remainingAccount;
 
 	public long getGroupUuid () {
 		return groupUuid;
@@ -168,6 +171,14 @@ public class GroupSetting extends BaseEntity {
 
 	public void setOperationType (String operationType) {
 		this.operationType = operationType;
+	}
+
+	public int getMachineUsedPercent () {
+		return machineUsedPercent;
+	}
+
+	public void setMachineUsedPercent (int machineUsedPercent) {
+		this.machineUsedPercent = machineUsedPercent;
 	}
 
 	public int getPage () {
@@ -514,14 +525,6 @@ public class GroupSetting extends BaseEntity {
 		this.optimizeRelatedKeyword = optimizeRelatedKeyword;
 	}
 
-	public int getRemainingKeyword () {
-		return remainingKeyword;
-	}
-
-	public void setRemainingKeyword (int remainingKeyword) {
-		this.remainingKeyword = remainingKeyword;
-	}
-
 	public boolean isRed () {
 		return red;
 	}
@@ -544,5 +547,13 @@ public class GroupSetting extends BaseEntity {
 
 	public void setOrange (boolean orange) {
 		this.orange = orange;
+	}
+
+	public int getRemainingAccount () {
+		return remainingAccount;
+	}
+
+	public void setRemainingAccount (int remainingAccount) {
+		this.remainingAccount = remainingAccount;
 	}
 }

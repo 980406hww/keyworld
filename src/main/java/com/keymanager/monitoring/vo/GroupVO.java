@@ -16,6 +16,8 @@ public class GroupVO {
 
     private String groupName;
 
+    private int remainingAccount;
+
     private List<GroupSetting> groupSettings;
 
     public long getUuid () {
@@ -40,6 +42,14 @@ public class GroupVO {
 
     public void setGroupName (String groupName) {
         this.groupName = groupName;
+    }
+
+    public int getRemainingAccount () {
+        return remainingAccount;
+    }
+
+    public void setRemainingAccount (int remainingAccount) {
+        this.remainingAccount = remainingAccount;
     }
 
     public List<GroupSetting> getGroupSettings () {

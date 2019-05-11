@@ -102,14 +102,14 @@
 				<li>
 					<div class="header">
 						<input type="hidden" name="groupUuid" value="${groupVo.uuid}">
-						<span class="groupName" title="${groupVo.groupName}"><a href="javascript:;">${groupVo.groupName}</a></span>
-						<span class="userName" title="${groupVo.userName}"><a href="javascript:;"></a>${groupVo.userName}</span>
+						<span class="groupName" title="${groupVo.remainingAccount}%"><a href="javascript:;">${groupVo.groupName}</a></span>
+						<span class="userName"><a href="javascript:;"></a>${groupVo.userName}</span>
 						<div class="handle">
 							<shiro:hasPermission name="/internal/groupsetting/saveGroupSetting">
-								<a class="blue" href="javascript:showGroupSettingDialog('add', '${groupVo.uuid}', '${groupVo.groupName}')">新增操作类型</a>
+								<a class="blue" href="javascript:showGroupSettingDialog('add', '${groupVo.uuid}', '${groupVo.groupName}', '${groupVo.remainingAccount}')">新增操作类型</a>
 							</shiro:hasPermission>
 							<shiro:hasPermission name="/internal/groupsetting/updateGroupSetting">
-								<a class="blue" href="javascript:showUpdateGroupDialog('${groupVo.uuid}', '${groupVo.groupName}')">修改优化分组</a>
+								<a class="blue" href="javascript:showUpdateGroupDialog('${groupVo.uuid}', '${groupVo.groupName}', '${groupVo.remainingAccount}')">修改优化分组</a>
 							</shiro:hasPermission>
 							<shiro:hasPermission name="/internal/group/delGroup">
 								<a class="blue" href="javascript:delGroup(${groupVo.uuid})">删除优化分组</a>
@@ -124,6 +124,11 @@
 									<div>
 										<span>
 											<a href="javascript:;">操作类型</a>
+										</span>
+									</div>
+									<div>
+										<span>
+											<a href="javascript:;">机器使用占比</a>
 										</span>
 									</div>
 									<div>
@@ -213,11 +218,6 @@
 									</div>
 									<div>
 										<span>
-											<a href="javascript:;">支持粘贴输入</a>
-										</span>
-									</div>
-									<div>
-										<span>
 											<a href="javascript:;">清除本地存储</a>
 										</span>
 									</div>
@@ -236,6 +236,11 @@
 										<div>
 											<span class="line1">
 												<a href="javascript:;" title="${groupSetting.operationType}">${groupSetting.operationType}</a>
+											</span>
+										</div>
+										<div>
+											<span class="line1">
+												<a href="javascript:;">${groupSetting.machineUsedPercent == null ? 0 : groupSetting.machineUsedPercent}%</a>
 											</span>
 										</div>
 										<div>
@@ -325,18 +330,13 @@
 										</div>
 										<div>
 											<span class="line1">
-												<a href="javascript:;">${groupSetting.supportPaste == 1 ? "是" : "否"}</a>
-											</span>
-										</div>
-										<div>
-											<span class="line1">
 												<a href="javascript:;">${groupSetting.clearLocalStorage == 1 ? "是" : "否"}</a>
 											</span>
 										</div>
 										<div>
 											<span class="operation">
 												<shiro:hasPermission name="/internal/groupsetting/updateGroupSetting">
-													<a href="javascript:showGroupSettingDialog('update', '${groupSetting.uuid}', '${groupVo.groupName}')" title="修改操作类型">修改</a>
+													<a href="javascript:showGroupSettingDialog('update', '${groupSetting.uuid}', '${groupVo.groupName}', '${groupVo.remainingAccount}')" title="修改操作类型">修改</a>
 												</shiro:hasPermission>
 												<shiro:hasPermission name="/internal/groupsetting/delGroupSetting">
 													<a href="javascript:delGroupSetting(${groupSetting.uuid})" title="删除操作类型">删除</a>
@@ -402,6 +402,14 @@
 										<option value="${operationType}">${operationType}</option>
 									</c:forEach>
 								</select>
+							</td>
+						</tr>
+						<tr name="trItem" onclick="checkItem(this)">
+							<th>机器使用占比</th>
+							<td>
+								<input type="hidden" name="remainAccount" id="remainAccount" value="100">
+								<input type="hidden" name="currentAccount" id="currentAccount" value="0">
+								<input type="text" name="machineUsedPercent" id="machineUsedPercent" value="0" onmouseover="showRemainingAccount(this)" onmouseout="hiddenRemainingAccount(this)" onkeyup="changeRemainingAccount(this)" style="width:152px;"/>%&nbsp;<label style="display:none;">剩余<i>100</i>%</label>
 							</td>
 						</tr>
 						<tr name="trItem" onclick="checkItem(this)">
@@ -713,6 +721,14 @@
 										<option value="${operationType}">${operationType}</option>
 									</c:forEach>
 								</select>
+							</td>
+						</tr>
+						<tr name="trItem" onclick="checkItem(this)">
+							<th>机器使用占比</th>
+							<td>
+								<input type="hidden" name="remainAccount" id="remainAccount" value="100">
+								<input type="hidden" name="currentAccount" id="currentAccount" value="0">
+								<input type="text" name="machineUsedPercent" id="machineUsedPercent" value="0" onmouseover="showRemainingAccount(this)" onmouseout="hiddenRemainingAccount(this)" onkeyup="changeRemainingAccount(this)" style="width:152px;"/>%&nbsp;<label style="display:none;">剩余<i>100</i>%</label>
 							</td>
 						</tr>
 						<tr name="trItem" onclick="checkItem(this)">
