@@ -7,7 +7,7 @@ import com.keymanager.monitoring.entity.ClientStatus;
 import com.keymanager.monitoring.entity.Config;
 import com.keymanager.monitoring.entity.CustomerKeyword;
 import com.keymanager.monitoring.entity.NegativeList;
-import com.keymanager.monitoring.service.ClientStatusService;
+import com.keymanager.monitoring.service.MachineInfoService;
 import com.keymanager.monitoring.service.ConfigService;
 import com.keymanager.monitoring.service.CustomerKeywordService;
 import com.keymanager.monitoring.service.PerformanceService;
@@ -43,7 +43,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
     private CustomerKeywordService customerKeywordService;
 
     @Autowired
-    private ClientStatusService clientStatusService;
+    private MachineInfoService machineInfoService;
 
     @Autowired
     private PerformanceService performanceService;
@@ -241,11 +241,11 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         String version = request.getParameter("version");
         try {
             if (validUser(userName, password)) {
-                ClientStatus clientStatus = clientStatusService.selectById(clientID);
+                ClientStatus clientStatus = machineInfoService.selectById(clientID);
                 String terminalType = clientStatus.getTerminalType();
 
                 CustomerKeywordForOptimization customerKeywordForOptimization = customerKeywordService.searchCustomerKeywordsForOptimization(terminalType, clientID, version, true);
-                clientStatusService.updateClientVersion(clientID, version, customerKeywordForOptimization != null);
+                machineInfoService.updateClientVersion(clientID, version, customerKeywordForOptimization != null);
                 performanceService.addPerformanceLog(terminalType + ":getCustomerKeyword", System.currentTimeMillis() - startMilleSeconds, null);
                 return ResponseEntity.status(HttpStatus.OK).body(customerKeywordForOptimization);
             }
@@ -267,11 +267,11 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         String version = request.getParameter("version");
         try {
             if (validUser(userName, password)) {
-                ClientStatus clientStatus = clientStatusService.selectById(clientID);
+                ClientStatus clientStatus = machineInfoService.selectById(clientID);
                 String terminalType = clientStatus.getTerminalType();
 
                 CustomerKeywordForOptimizationSimple customerKeywordForOptimization = customerKeywordService.searchCustomerKeywordsForOptimizationZip(terminalType, clientID, version, true);
-                clientStatusService.updateClientVersion(clientID, version, customerKeywordForOptimization != null);
+                machineInfoService.updateClientVersion(clientID, version, customerKeywordForOptimization != null);
                 byte[] compress = AESUtils.compress(AESUtils.encrypt(customerKeywordForOptimization).getBytes());
                 String s = AESUtils.parseByte2HexStr(compress);
                 performanceService.addPerformanceLog(terminalType + ":getCustomerKeyword", System.currentTimeMillis() - startMilleSeconds, null);
@@ -306,7 +306,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
 
         try {
             if (validUser(userName, password)) {
-                ClientStatus clientStatus = clientStatusService.selectById(clientID);
+                ClientStatus clientStatus = machineInfoService.selectById(clientID);
                 String terminalType = clientStatus.getTerminalType();
                 if(StringUtils.isNotBlank(position)) {
                     customerKeywordService.updateCustomerKeywordPosition(customerKeywordUuid, Integer.parseInt(position), null, null, null);
@@ -373,7 +373,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                     customerKeywordService.updateCustomerKeywordQueryTime(customerKeywordUuid, startTime);
                 }
                 if(StringUtil.isNotNullNorEmpty(clientID)) {
-                    clientStatusService.updateClientStatusForCapturePosition(clientID);
+                    machineInfoService.updateClientStatusForCapturePosition(clientID);
                 }
                 return new ResponseEntity<Object>(true, HttpStatus.OK);
             }

@@ -4,7 +4,8 @@ import com.keymanager.monitoring.common.utils.StringUtils;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.entity.ClientStatus;
 import com.keymanager.monitoring.entity.Config;
-import com.keymanager.monitoring.service.ClientStatusService;
+import com.keymanager.monitoring.entity.MachineInfo;
+import com.keymanager.monitoring.service.MachineInfoService;
 import com.keymanager.monitoring.service.ConfigService;
 import com.keymanager.monitoring.service.PerformanceService;
 import com.keymanager.monitoring.service.VMwareService;
@@ -31,7 +32,7 @@ public class ExternalMachineInfoRestController extends SpringMVCBaseController {
     private VMwareService vMwareService;
 
     @Autowired
-    private ClientStatusService clientStatusService;
+    private MachineInfoService machineInfoService;
 
     @Autowired
     private ConfigService configService;
@@ -50,7 +51,7 @@ public class ExternalMachineInfoRestController extends SpringMVCBaseController {
         String pageNo = request.getParameter("pageNo");
         try {
             if (validUser(userName, password)) {
-                clientStatusService.updatePageNo(clientID, Integer.parseInt(pageNo.trim()));
+                machineInfoService.updatePageNo(clientID, Integer.parseInt(pageNo.trim()));
                 return new ResponseEntity<Object>(1, HttpStatus.OK);
             }
         } catch (Exception ex) {
@@ -70,7 +71,7 @@ public class ExternalMachineInfoRestController extends SpringMVCBaseController {
         String clientID = request.getParameter("clientID");
         try {
             if (validUser(userName, password)) {
-                String returnValue = clientStatusService.checkUpgrade(clientID);
+                String returnValue = machineInfoService.checkUpgrade(clientID);
                 return new ResponseEntity<Object>(returnValue, HttpStatus.OK);
             }
         } catch (Exception ex) {
@@ -89,7 +90,7 @@ public class ExternalMachineInfoRestController extends SpringMVCBaseController {
         String clientID = request.getParameter("clientID");
         try {
             if (validUser(userName, password)) {
-                String returnValue = clientStatusService.checkPassword(clientID);
+                String returnValue = machineInfoService.checkPassword(clientID);
                 return new ResponseEntity<Object>(returnValue, HttpStatus.OK);
             }
         } catch (Exception ex) {
@@ -108,7 +109,7 @@ public class ExternalMachineInfoRestController extends SpringMVCBaseController {
         String clientID = request.getParameter("clientID");
         try {
             if (validUser(userName, password)) {
-                String returnValue = clientStatusService.updatePassword(clientID);
+                String returnValue = machineInfoService.updatePassword(clientID);
                 return new ResponseEntity<Object>(returnValue, HttpStatus.OK);
             }
         } catch (Exception ex) {
@@ -126,8 +127,8 @@ public class ExternalMachineInfoRestController extends SpringMVCBaseController {
         String password = request.getParameter("password");
         try {
             if (validUser(userName, password)) {
-                ClientStatus clientStatus = clientStatusService.getStoppedClientStatuses();
-                return new ResponseEntity<Object>(clientStatus, HttpStatus.OK);
+                MachineInfo machineInfo = machineInfoService.getStoppedMachineInfo();
+                return new ResponseEntity<Object>(machineInfo, HttpStatus.OK);
             }
         } catch (Exception ex) {
             logger.error(ex.getMessage());
@@ -144,8 +145,8 @@ public class ExternalMachineInfoRestController extends SpringMVCBaseController {
         String password = request.getParameter("password");
         try {
             if (validUser(userName, password)) {
-                ClientStatus clientStatus = clientStatusService.getStoppedClientStatuses();
-                byte[] compress = AESUtils.compress(AESUtils.encrypt(clientStatus).getBytes());
+                MachineInfo machineInfo = machineInfoService.getStoppedMachineInfo();
+                byte[] compress = AESUtils.compress(AESUtils.encrypt(machineInfo).getBytes());
                 String s = AESUtils.parseByte2HexStr(compress);
                 return new ResponseEntity<Object>(s, HttpStatus.OK);
             }
@@ -166,7 +167,7 @@ public class ExternalMachineInfoRestController extends SpringMVCBaseController {
         String status = request.getParameter("status");
         try {
             if (validUser(userName, password)) {
-                clientStatusService.updateClientStatusRestartStatus(clientID, status);
+                machineInfoService.updateMachineInfoRestartStatus(clientID, status);
                 return new ResponseEntity<Object>(1, HttpStatus.OK);
             }
         } catch (Exception ex) {
@@ -222,14 +223,14 @@ public class ExternalMachineInfoRestController extends SpringMVCBaseController {
         String password = request.getParameter("password");
         try {
             if (validUser(userName, password)) {
-                Integer downloadingClientCount = clientStatusService.getDownloadingClientCount();
+                Integer downloadingClientCount = machineInfoService.getDownloadingMachineCount();
                 Config config = configService.getConfig(Constants.CONFIG_TYPE_START_UP, Constants.CONFIG_KEY_DOWNLOADING_CLIENT_COUNT);
                 int maxDownloadingClientCount = Integer.parseInt(config.getValue());
                 if (downloadingClientCount >= maxDownloadingClientCount) {
                     return new ResponseEntity<Object>(null, HttpStatus.OK);
                 } else {
-                    ClientStatus clientStatus = clientStatusService.getClientStatusForStartUp();
-                    return new ResponseEntity<Object>(clientStatus, HttpStatus.OK);
+                    MachineInfo machineInfo = machineInfoService.getMachineInfoForStartUp();
+                    return new ResponseEntity<Object>(machineInfo, HttpStatus.OK);
                 }
             }
         } catch (Exception ex) {
@@ -249,7 +250,7 @@ public class ExternalMachineInfoRestController extends SpringMVCBaseController {
         try {
             if (validUser(userName, password)) {
                 long startMilleSeconds = System.currentTimeMillis();
-                String clientOpenStatus = clientStatusService.getClientStartUpStatus(clientID);
+                String clientOpenStatus = machineInfoService.getMachineStartUpStatus(clientID);
                 performanceService.addPerformanceLog("getClientStartUpStatus", System.currentTimeMillis() - startMilleSeconds, "");
                 return new ResponseEntity<Object>(clientOpenStatus, HttpStatus.OK);
             }
@@ -270,7 +271,7 @@ public class ExternalMachineInfoRestController extends SpringMVCBaseController {
         String status = request.getParameter("status");
         try {
             if (validUser(userName, password)) {
-                clientStatusService.updateClientStartUpStatus(clientID, status);
+                machineInfoService.updateMachineStartUpStatus(clientID, status);
                 return new ResponseEntity<Object>(true, HttpStatus.OK);
             }
         } catch (Exception ex) {
@@ -289,7 +290,7 @@ public class ExternalMachineInfoRestController extends SpringMVCBaseController {
         String computerID = request.getParameter("computerID");
         try {
             if (validUser(userName, password)) {
-                String clientStatusID = clientStatusService.getClientStatusID(computerID);
+                String clientStatusID = machineInfoService.getMachineInfoID(computerID);
                 return new ResponseEntity<Object>(clientStatusID, HttpStatus.OK);
             }
         } catch (Exception ex) {
@@ -310,7 +311,7 @@ public class ExternalMachineInfoRestController extends SpringMVCBaseController {
         String version = request.getParameter("version");
         try {
             if (validUser(userName, password)) {
-                clientStatusService.updateVersion(clientID, version);
+                machineInfoService.updateVersion(clientID, version);
                 return new ResponseEntity<Object>(true, HttpStatus.OK);
             }
         } catch (Exception ex) {
@@ -329,7 +330,8 @@ public class ExternalMachineInfoRestController extends SpringMVCBaseController {
         String clientID = request.getParameter("clientID");
         try {
             if (validUser(userName, password)) {
-                ClientStatusForOptimization clientStatus = clientStatusService.getClientStatusForOptimization(clientID);
+                //TODO clientStatus refactor (after percentage done)
+                ClientStatusForOptimization clientStatus = machineInfoService.getClientStatusForOptimization(clientID);
                 byte[] compress = AESUtils.compress(AESUtils.encrypt(clientStatus).getBytes());
                 String s = AESUtils.parseByte2HexStr(compress);
                 return new ResponseEntity<Object>(s, HttpStatus.OK);

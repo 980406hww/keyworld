@@ -32,7 +32,7 @@ public class CustomerKeywordRefreshStatInfoService extends ServiceImpl<CustomerK
     private ConfigService configService;
 
     @Autowired
-    private ClientStatusService clientStatusService;
+    private MachineInfoService machineInfoService;
 
     @Autowired
     private CustomerKeywordDao customerKeywordDao;
@@ -50,7 +50,7 @@ public class CustomerKeywordRefreshStatInfoService extends ServiceImpl<CustomerK
             customerKeywordRefreshStatInfoRecordMap.put(customerKeywordTerminalRefreshStatRecord.getGroup(), customerKeywordTerminalRefreshStatRecord);
         }
 
-        List<CustomerKeywordTerminalRefreshStatRecord> csCustomerKeywordTerminalRefreshStatRecords = clientStatusService.searchClientStatusForRefreshStat(customerKeywordRefreshStatInfoCriteria);
+        List<CustomerKeywordTerminalRefreshStatRecord> csCustomerKeywordTerminalRefreshStatRecords = machineInfoService.searchMachineInfoForRefreshStat(customerKeywordRefreshStatInfoCriteria);
         for (CustomerKeywordTerminalRefreshStatRecord csCustomerKeywordTerminalRefreshStatRecord : csCustomerKeywordTerminalRefreshStatRecords) {
             CustomerKeywordTerminalRefreshStatRecord customerKeywordTerminalRefreshStatRecord = customerKeywordRefreshStatInfoRecordMap.get(csCustomerKeywordTerminalRefreshStatRecord.getGroup());
             if (null != customerKeywordTerminalRefreshStatRecord) {
@@ -184,7 +184,7 @@ public class CustomerKeywordRefreshStatInfoService extends ServiceImpl<CustomerK
             refreshStatInfoRecordGroupMap.put(customerKeywordTerminalRefreshStatRecord.getGroup(), refreshStatInfoRecordTerminalTypeMap);
         }
 
-        List<CustomerKeywordTerminalRefreshStatRecord> searchClientStatusForRefreshStatRecords = clientStatusService.searchClientStatusForRefreshStat(customerKeywordRefreshStatInfoCriteria);
+        List<CustomerKeywordTerminalRefreshStatRecord> searchClientStatusForRefreshStatRecords = machineInfoService.searchMachineInfoForRefreshStat(customerKeywordRefreshStatInfoCriteria);
         for (CustomerKeywordTerminalRefreshStatRecord csCustomerKeywordTerminalRefreshStatRecord : searchClientStatusForRefreshStatRecords) {
             Map<String, Map<String, CustomerKeywordTerminalRefreshStatRecord>> csCustomerKeywordRefreshStatInfoRecordTerminalTypeMap = refreshStatInfoRecordGroupMap.get(csCustomerKeywordTerminalRefreshStatRecord.getGroup());
             if (null != csCustomerKeywordRefreshStatInfoRecordTerminalTypeMap) {

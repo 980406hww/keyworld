@@ -1,7 +1,5 @@
 package com.keymanager.monitoring.shedule;
 
-import com.keymanager.monitoring.entity.ClientCookie;
-import com.keymanager.monitoring.entity.CustomerKeyword;
 import com.keymanager.monitoring.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +20,7 @@ public class ResetInfoDailySchedule {
 	private CustomerKeywordService customerKeywordService;
 
 	@Autowired
-	private ClientStatusService clientStatusService;
+	private MachineInfoService machineInfoService;
 
 	@Autowired
 	private PerformanceService performanceService;
@@ -43,7 +41,7 @@ public class ResetInfoDailySchedule {
 			performanceService.addPerformanceLog("ResetInfoDailySchedule", System.currentTimeMillis() - startMilleSeconds, "starting 4");
 			customerKeywordService.resetOptimizationInfoForNoOptimizeDate();
 			performanceService.addPerformanceLog("ResetInfoDailySchedule", System.currentTimeMillis() - startMilleSeconds, "starting 5");
-			clientStatusService.resetOptimizationInfo();
+			machineInfoService.resetOptimizationInfo();
 
 			performanceService.addPerformanceLog("ResetInfoDailySchedule", System.currentTimeMillis() - startMilleSeconds, "ended");
 			logger.info("============= "+" End Reset informaiton Daily Task "+"===================");

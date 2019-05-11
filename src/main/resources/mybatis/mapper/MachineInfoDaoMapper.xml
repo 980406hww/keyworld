@@ -324,14 +324,14 @@
         WHERE fClientID = #{clientID}
     </update>
 
-    <select id="searchClientStatusForRefreshStat" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria" resultType="com.keymanager.monitoring.entity.CustomerKeywordTerminalRefreshStatRecord">
+    <select id="searchMachineInfoForRefreshStat" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria" resultType="com.keymanager.monitoring.entity.CustomerKeywordTerminalRefreshStatRecord">
         SELECT
         cs.fGroup AS "group",
         cs.fTerminalType AS "terminalType",
         SUM(IF(DATE_ADD(cs.fLastVisitTime, INTERVAL IF(10 > cs.fPageNo * 3, 15, cs.fPageNo * 3 + 5) MINUTE) &lt; NOW(), 1, 0)) AS 'unworkMachineCount',
         SUM(cs.fIdleTotalMinutes) AS "idleTotalMinutes",
         COUNT(1)  AS 'totalMachineCount'
-        FROM t_client_status cs
+        FROM t_machine_info cs
         WHERE cs.fValid = 1
         <if test="customerKeywordRefreshStatInfoCriteria.terminalType!=null and customerKeywordRefreshStatInfoCriteria.terminalType!=''">AND cs.fTerminalType = #{customerKeywordRefreshStatInfoCriteria.terminalType}</if>
         <if test="customerKeywordRefreshStatInfoCriteria.groupName!=null and customerKeywordRefreshStatInfoCriteria.groupName!=''">
@@ -431,7 +431,7 @@
     </insert>
 
     <update id="updatePageNo">
-        UPDATE t_client_status
+        UPDATE t_machine_info
         SET
         fLastVisitTime = NOW(),
         fTenMinsLastVisitTime = DATE_ADD(NOW(), INTERVAL 10 MINUTE ),
@@ -440,7 +440,7 @@
     </update>
 
     <update id="updateRestartStatus">
-        UPDATE t_client_status
+        UPDATE t_machine_info
         SET fRestartStatus = #{restartStatus}, fRestartTime = now(), fThreeMinsRestartTime = DATE_ADD(NOW(), INTERVAL 3 MINUTE ), fTenMinsRestartTime = DATE_ADD(NOW(), INTERVAL 10 MINUTE ), fRestartOrderingTime = now()
         WHERE fClientID = #{clientID}
     </update>
@@ -465,7 +465,7 @@
         GROUP BY cs.fGroup, cs.fTerminalType ORDER BY cs.fGroup
     </select>
 
-    <select id="searchRestartingClientStatuses" resultType="com.keymanager.monitoring.entity.ClientStatus">
+    <select id="searchRestartingClientStatuses" resultType="com.keymanager.monitoring.entity.MachineInfo">
         SELECT
         cs.fClientID AS "clientID",
         cs.fTerminalType AS "terminalType",
@@ -478,14 +478,14 @@
         cs.fUserName AS "userName",
         cs.fPassword AS "password",
         cs.fRestartStatus AS "restartStatus"
-        FROM t_client_status cs
+        FROM t_machine_info cs
         WHERE fTenMinsLastVisitTime &lt; NOW() and fValid = 1
         AND fRestartStatus = 'restarting' AND fThreeMinsRestartTime &lt; NOW()
         AND fStartUpStatus = 'Completed'
         AND fHost &gt; '' order by fRestartOrderingTime limit 1
     </select>
 
-    <select id="searchWaitingRestartingClientStatuses" resultType="com.keymanager.monitoring.entity.ClientStatus">
+    <select id="searchWaitingRestartingMachineInfos" resultType="com.keymanager.monitoring.entity.MachineInfo">
         SELECT
         cs.fClientID AS "clientID",
         cs.fTerminalType AS "terminalType",
@@ -494,7 +494,7 @@
         cs.fLastVisitTime AS "lastVisitTime",
         cs.fPageNo AS "pageNo",
         cs.fRestartStatus AS "restartStatus"
-        FROM t_client_status cs
+        FROM t_machine_info cs
         WHERE (fContinuousFailCount > 5 OR fTenMinsLastVisitTime &lt; NOW())
         AND fTenMinsRestartTime &lt; NOW() and fRemainingKeyword = 1
         AND fStartUpStatus = 'Completed'
@@ -503,14 +503,14 @@
     </select>
 
     <update id="updateRemainingKeywordIndicator">
-        UPDATE t_client_status SET fRemainingKeyword = #{indicator} WHERE fGroup in
+        UPDATE t_machine_info SET fRemainingKeyword = #{indicator} WHERE fGroup in
         <foreach item="item" collection="groupNames" open="(" separator="," close=")">
             #{item}
         </foreach>
     </update>
 
     <update id="updateAllRemainingKeywordIndicator">
-        UPDATE t_client_status SET fRemainingKeyword = #{indicator}
+        UPDATE t_machine_info SET fRemainingKeyword = #{indicator}
     </update>
 
     <select id="searchClientForAllotCookie" resultType="com.keymanager.monitoring.vo.CookieVO">
@@ -519,7 +519,7 @@
             cs.fSwitchGroupName AS 'switchGroupName',
             cc.fCookieCount AS 'cookieCount',
             cc.fCookieStr AS 'cookieStr'
-        FROM t_client_status cs
+        FROM t_machine_info cs
         LEFT JOIN t_client_cookie cc
         ON cs.fClientID = cc.fClientID
         WHERE cs.fSwitchGroupName LIKE '${cookieGroupForBaidu}%'
@@ -538,7 +538,7 @@
     </select>
 
     <update id="resetOptimizationInfo">
-        UPDATE t_client_status SET fRemainingKeyword = 1, fIdleStartTime = null, fIdleTotalMinutes = 0
+        UPDATE t_machine_info SET fRemainingKeyword = 1, fIdleStartTime = null, fIdleTotalMinutes = 0
     </update>
 
     <select id="getClientStatusVOs" resultType="com.keymanager.monitoring.vo.ClientStatusVO" parameterType="com.keymanager.monitoring.criteria.QZSettingSearchClientGroupInfoCriteria">

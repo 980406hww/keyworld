@@ -74,7 +74,7 @@ public interface MachineInfoDao extends BaseMapper<MachineInfo> {
 
     void updateVersion(@Param("clientID") String clientID, @Param("version") String version);
 
-    List<CustomerKeywordTerminalRefreshStatRecord> searchClientStatusForRefreshStat(@Param("customerKeywordRefreshStatInfoCriteria") CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria);
+    List<CustomerKeywordTerminalRefreshStatRecord> searchMachineInfoForRefreshStat(@Param("customerKeywordRefreshStatInfoCriteria") CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria);
 
     void addSummaryClientStatus(@Param("clientStatus") ClientStatus clientStatus);
 
@@ -84,9 +84,9 @@ public interface MachineInfoDao extends BaseMapper<MachineInfo> {
 
     List<ClientStatusGroupSummaryVO> searchClientStatusGroupSummaryVO(@Param("group") String group, @Param("terminalType") String terminalType);
 
-    List<ClientStatus> searchRestartingClientStatuses();
+    List<MachineInfo> searchRestartingMachineInfos();
 
-    List<ClientStatus> searchWaitingRestartingClientStatuses();
+    List<MachineInfo> searchWaitingRestartingMachineInfos();
 
     void updatePageNo(@Param("clientID") String clientID, @Param("pageNo") int pageNo);
 

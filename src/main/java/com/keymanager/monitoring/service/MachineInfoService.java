@@ -692,8 +692,8 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
         machineInfoDao.updatePageNo(clientID, pageNo);
     }
 
-    public List<CustomerKeywordTerminalRefreshStatRecord> searchClientStatusForRefreshStat(CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria) {
-        return machineInfoDao.searchClientStatusForRefreshStat(customerKeywordRefreshStatInfoCriteria);
+    public List<CustomerKeywordTerminalRefreshStatRecord> searchMachineInfoForRefreshStat(CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria) {
+        return machineInfoDao.searchMachineInfoForRefreshStat(customerKeywordRefreshStatInfoCriteria);
     }
 
     public List<ClientStatusSummaryVO> searchClientStatusSummaryVO(String clientIDPrefix, String city, String switchGroupName) throws Exception {
@@ -743,36 +743,36 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
         return machineInfoDao.searchClientStatusGroupSummaryVO(group,terminalType);
     }
 
-    public ClientStatus getStoppedClientStatuses(){
-        ClientStatus tmpClientStatus = null;
+    public MachineInfo getStoppedMachineInfo(){
+        MachineInfo tmpMachineInfo = null;
 //        List<ClientStatus> clientStatuses = clientStatusDao.searchRestartingClientStatuses();
 //        for(ClientStatus clientStatus : clientStatuses){
 ////			if(customerKeywordService.haveCustomerKeywordForOptimization(clientStatus.getTerminalType(), clientStatus.getClientID())){
-//            tmpClientStatus = clientStatus;
+//            tmpMachineInfo = clientStatus;
 //            updateRestartStatus(clientStatus.getClientID(), "Logging");
 //            break;
 ////			}
 //        }
-        if(tmpClientStatus == null) {
-            List<ClientStatus> clientStatuses = machineInfoDao.searchWaitingRestartingClientStatuses();
-            for (ClientStatus clientStatus : clientStatuses) {
-//				if (customerKeywordService.haveCustomerKeywordForOptimization(clientStatus.getTerminalType(), clientStatus.getClientID())) {
-                tmpClientStatus = clientStatus;
-                updateRestartStatus(clientStatus.getClientID(), "Processing");
-                String vpsServiceProvideName = this.detectVPSServiceProvider(clientStatus.getVpsBackendSystemComputerID());
+        if(tmpMachineInfo == null) {
+            List<MachineInfo> machineInfos = machineInfoDao.searchWaitingRestartingMachineInfos();
+            for (MachineInfo machineInfo : machineInfos) {
+//				if (customerKeywordService.haveCustomerKeywordForOptimization(machineInfo.getTerminalType(), machineInfo.getClientID())) {
+                tmpMachineInfo = machineInfo;
+                updateRestartStatus(machineInfo.getClientID(), "Processing");
+                String vpsServiceProvideName = this.detectVPSServiceProvider(machineInfo.getVpsBackendSystemComputerID());
                 Config vpsBackendAccount = configService.getConfig(Constants.CONFIG_TYPE_VPS_BACKEND_ACCOUNT, vpsServiceProvideName);
                 if(vpsBackendAccount != null){
-                    clientStatus.setUserName(vpsBackendAccount.getValue());
+                    machineInfo.setUserName(vpsBackendAccount.getValue());
                 }
                 Config vpsBackendPassword = configService.getConfig(Constants.CONFIG_TYPE_VPS_BACKEND_PASSWORD, vpsServiceProvideName);
                 if(vpsBackendPassword != null){
-                    clientStatus.setPassword(vpsBackendPassword.getValue());
+                    machineInfo.setPassword(vpsBackendPassword.getValue());
                 }
                 break;
 //				}
             }
         }
-        return tmpClientStatus;
+        return tmpMachineInfo;
     }
 
     private String detectVPSServiceProvider(String backendComputerID){

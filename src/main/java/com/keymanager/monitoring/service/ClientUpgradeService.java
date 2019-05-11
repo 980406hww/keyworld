@@ -49,7 +49,7 @@ public class ClientUpgradeService extends ServiceImpl<ClientUpgradeDao, ClientUp
                 clientUpgradeDao.updateById(clientUpgrade);
                 // 修改目标版本号
                 clientUpgrade.setMaxUpgradeCount(upgradingCount);
-                machineInfoService.updateTargetVersion(clientUpgrade);
+                machineInfoService.updateMachineTargetVersion(clientUpgrade);
             } else {
                 clientUpgrade.setResidualUpgradeCount(residualCount);
                 clientUpgradeDao.updateById(clientUpgrade);
