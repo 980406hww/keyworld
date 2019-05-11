@@ -72,6 +72,12 @@
 					</label>
 				</li>
 				<li>
+					<label name="hasRemainingAccount" title="分组下机器未分配完成">
+						<input type="checkbox" name="checkbox" <c:if test="${groupSettingCriteria.hasRemainingAccount == true}">checked</c:if>>
+						剩机器
+					</label>
+				</li>
+				<li>
 					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="trimSearchCondition('1')" value=" 搜索 " >&nbsp;
 				</li>
 				<li>
@@ -93,20 +99,21 @@
 	<input type="hidden" name="operationType" id="operationType" value="${groupSettingCriteria.operationType}"/>
 	<input type="hidden" name="terminalType" id="terminalType" value="${groupSettingCriteria.terminalType}"/>
 	<input type="hidden" name="hasOperation" id="hasOperation" value="${groupSettingCriteria.hasOperation}"/>
+	<input type="hidden" name="hasRemainingAccount" id="hasRemainingAccount" value="${groupSettingCriteria.hasRemainingAccount}"/>
 </form>
 
 <div class="datalist">
 	<div class="datalist-list">
 		<ul>
 			<c:forEach items="${page.records}" var="groupVo" varStatus="status">
-				<li>
+				<li title="请把分组下的机器分配完成！" groupUuid="${groupVo.uuid}">
 					<div class="header">
 						<input type="hidden" name="groupUuid" value="${groupVo.uuid}">
 						<span class="groupName" title="${groupVo.remainingAccount}%"><a href="javascript:;">${groupVo.groupName}</a></span>
 						<span class="userName"><a href="javascript:;"></a>${groupVo.userName}</span>
 						<div class="handle">
 							<shiro:hasPermission name="/internal/groupsetting/saveGroupSetting">
-								<a class="blue" href="javascript:showGroupSettingDialog('add', '${groupVo.uuid}', '${groupVo.groupName}', '${groupVo.remainingAccount}')">新增操作类型</a>
+								<a class="blue" href="javascript:showGroupSettingDialog('add', '${groupVo.uuid}', '${groupVo.groupName}', '${groupVo.remainingAccount}', '${groupVo.uuid}')">新增操作类型</a>
 							</shiro:hasPermission>
 							<shiro:hasPermission name="/internal/groupsetting/updateGroupSetting">
 								<a class="blue" href="javascript:showUpdateGroupDialog('${groupVo.uuid}', '${groupVo.groupName}', '${groupVo.remainingAccount}')">修改优化分组</a>
@@ -118,117 +125,119 @@
 					</div>
 
 					<div class="body" listsize="${groupVo.groupSettings.size()}">
-						<div class="data-info-head">
-							<div class="other-rank">
-								<div class="row1">
-									<div>
+						<c:if test="${groupVo.groupSettings.size() > 0}">
+							<div class="data-info-head">
+								<div class="other-rank">
+									<div class="row1">
+										<div>
 										<span>
 											<a href="javascript:;">操作类型</a>
 										</span>
-									</div>
-									<div>
+										</div>
+										<div>
 										<span>
 											<a href="javascript:;">机器使用占比</a>
 										</span>
-									</div>
-									<div>
+										</div>
+										<div>
 										<span>
 											<a href="javascript:;">网站统计</a>
 										</span>
-									</div>
-									<div>
+										</div>
+										<div>
 										<span>
 											<a href="javascript:;">目标网站</a>
 										</span>
-									</div>
-									<div>
+										</div>
+										<div>
 										<span>
 											<a href="javascript:;">页数</a>
 										</span>
-									</div>
-									<div>
+										</div>
+										<div>
 										<span>
 											<a href="javascript:;">每页条数</a>
 										</span>
-									</div>
-									<div>
+										</div>
+										<div>
 										<span>
 											<a href="javascript:;">站内搜索比例</a>
 										</span>
-									</div>
-									<div>
+										</div>
+										<div>
 										<span>
 											<a href="javascript:;">外链检索比例</a>
 										</span>
-									</div>
-									<div>
+										</div>
+										<div>
 										<span>
 											<a href="javascript:;">快照点击比例</a>
 										</span>
-									</div>
-									<div>
+										</div>
+										<div>
 										<span>
 											<a href="javascript:;">竞价点击比例</a>
 										</span>
-									</div>
-									<div>
+										</div>
+										<div>
 										<span>
 											<a href="javascript:;">标题拖动比例</a>
 										</span>
-									</div>
-									<div>
+										</div>
+										<div>
 										<span>
 											<a href="javascript:;">特殊字符比例</a>
 										</span>
-									</div>
-									<div>
+										</div>
+										<div>
 										<span>
 											<a href="javascript:;">浏览器设置</a>
 										</span>
-									</div>
-									<div>
+										</div>
+										<div>
 										<span>
 											<a href="javascript:;">Cookie设置</a>
 										</span>
-									</div>
-									<div>
+										</div>
+										<div>
 										<span>
 											<a href="javascript:;">最大用户数</a>
 										</span>
-									</div>
-									<div>
+										</div>
+										<div>
 										<span>
 											<a href="javascript:;">进入页次数</a>
 										</span>
-									</div>
-									<div>
+										</div>
+										<div>
 										<span>
 											<a href="javascript:;">每IP对每用户</a>
 										</span>
-									</div>
-									<div>
+										</div>
+										<div>
 										<span>
 											<a href="javascript:;">在域名下访问</a>
 										</span>
-									</div>
-									<div>
+										</div>
+										<div>
 										<span>
 											<a href="javascript:;">没结果随机点</a>
 										</span>
-									</div>
-									<div>
+										</div>
+										<div>
 										<span>
 											<a href="javascript:;">清除本地存储</a>
 										</span>
-									</div>
-									<div>
+										</div>
+										<div>
 										<span>
 											<a href="javascript:;">操作</a>
 										</span>
+										</div>
 									</div>
 								</div>
 							</div>
-						</div>
+						</c:if>
 						<c:forEach items="${groupVo.groupSettings}" var="groupSetting">
 						<div class="data-info-wrap">
 								<div class="other-rank">
@@ -336,7 +345,7 @@
 										<div>
 											<span class="operation">
 												<shiro:hasPermission name="/internal/groupsetting/updateGroupSetting">
-													<a href="javascript:showGroupSettingDialog('update', '${groupSetting.uuid}', '${groupVo.groupName}', '${groupVo.remainingAccount}')" title="修改操作类型">修改</a>
+													<a href="javascript:showGroupSettingDialog('update', '${groupSetting.uuid}', '${groupVo.groupName}', '${groupVo.remainingAccount}', '${groupVo.uuid}')" title="修改操作类型">修改</a>
 												</shiro:hasPermission>
 												<shiro:hasPermission name="/internal/groupsetting/delGroupSetting">
 													<a href="javascript:delGroupSetting(${groupSetting.uuid})" title="删除操作类型">删除</a>

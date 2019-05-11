@@ -31,6 +31,9 @@
                 </otherwise>
             </choose>
         </if>
+        <if test="groupSettingCriteria.hasRemainingAccount == 1">
+            AND g.fRemainingAccount <![CDATA[>]]> 0
+        </if>
         ORDER BY g.fCreateTime DESC
     </select>
 

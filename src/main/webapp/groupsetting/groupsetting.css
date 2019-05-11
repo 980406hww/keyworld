@@ -201,10 +201,6 @@ ul {
     color: #f60;
 }
 
-.datalist-list .body {
-    min-height: 30px;
-}
-
 .datalist-list .body .data-info-head {
     width: 1750px;
     float: left;

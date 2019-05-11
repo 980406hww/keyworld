@@ -36,7 +36,7 @@ public class GroupService extends ServiceImpl<GroupDao, Group> {
     }
 
     public void deleteGroup (long uuid) {
-        groupSettingDao.deleteById(uuid);
+        groupDao.deleteById(uuid);
         groupSettingDao.deleteByGroupUuid(uuid);
     }
 

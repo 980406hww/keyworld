@@ -5,6 +5,7 @@ public class GroupSettingCriteria extends BaseCriteria {
     private String operationType; // 操作类型
     private String terminalType; // 终端类型
     private Boolean hasOperation = true; // 有/无 操作类型。 默认值true
+    private Boolean hasRemainingAccount; // 分组下机器是否分配完成
 
     public String getOptimizedGroupName () {
         return optimizedGroupName;
@@ -36,5 +37,13 @@ public class GroupSettingCriteria extends BaseCriteria {
 
     public void setHasOperation (Boolean hasOperation) {
         this.hasOperation = hasOperation;
+    }
+
+    public Boolean getHasRemainingAccount () {
+        return hasRemainingAccount;
+    }
+
+    public void setHasRemainingAccount (Boolean hasRemainingAccount) {
+        this.hasRemainingAccount = hasRemainingAccount;
     }
 }
