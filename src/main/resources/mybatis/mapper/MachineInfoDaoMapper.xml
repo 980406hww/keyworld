@@ -454,7 +454,7 @@
         UPDATE t_machine_info SET fRemainingKeyword = 1, fIdleStartTime = null, fIdleTotalMinutes = 0
     </update>
 
-    <select id="getMachineInfoVos" resultType="com.keymanager.monitoring.vo.ClientStatusVO" parameterType="com.keymanager.monitoring.criteria.QZSettingSearchClientGroupInfoCriteria">
+    <select id="getMachineInfoVos" resultType="com.keymanager.monitoring.vo.MachineInfoVO" parameterType="com.keymanager.monitoring.criteria.QZSettingSearchClientGroupInfoCriteria">
         SELECT
             gs.fOperationType AS 'operationType',
             COUNT(gs.fOperationType) AS 'operationTypeCount'
