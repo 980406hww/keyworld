@@ -4,12 +4,12 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.GroupSettingCriteria;
 import com.keymanager.monitoring.criteria.UpdateGroupSettingCriteria;
-import com.keymanager.monitoring.entity.Group;
 import com.keymanager.monitoring.entity.GroupSetting;
-import com.keymanager.monitoring.service.*;
+import com.keymanager.monitoring.service.ConfigService;
+import com.keymanager.monitoring.service.GroupSettingService;
+import com.keymanager.monitoring.service.PerformanceService;
 import com.keymanager.monitoring.vo.GroupVO;
 import com.keymanager.util.TerminalTypeMapping;
-import com.sun.xml.internal.xsom.impl.Ref;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +21,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 @RestController
