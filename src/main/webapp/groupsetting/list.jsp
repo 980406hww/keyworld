@@ -23,9 +23,14 @@
 		#changeSettingDialog input[type=text], #updateGroupSettingDialog input[type=text] {
 			width : 152px;
 		}
-
+		#td_2, #td_3 {
+			margin-right: 10px;
+		}
 		#td_2 input[type=text] {
 			width : 50px;
+		}
+		#groupSettingVos {
+			height: 24px;
 		}
 		#groupSettingVos tr a {
 			margin: 0px 0px 0px 10px;
@@ -116,17 +121,16 @@
 						<span class="userName"><a href="javascript:;"></a>${groupVo.userName}</span>
 						<div class="handle">
 							<shiro:hasPermission name="/internal/groupsetting/saveGroupSetting">
-								<a class="blue" href="javascript:showGroupSettingDialog('add', '${groupVo.uuid}', '${groupVo.groupName}', '${groupVo.remainingAccount}', '${groupVo.uuid}')">新增操作类型</a>
+								<a class="blue" href="javascript:showGroupSettingDialog('add', '${groupVo.uuid}', '${groupVo.groupName}', '${groupVo.remainingAccount}', '${groupVo.uuid}')">新增优化组设置</a>
 							</shiro:hasPermission>
 							<shiro:hasPermission name="/internal/groupsetting/updateGroupSetting">
-								<a class="blue" href="javascript:showUpdateGroupDialog('${groupVo.uuid}', '${groupVo.groupName}', '${groupVo.remainingAccount}')">修改优化分组</a>
+								<a class="blue" href="javascript:showUpdateGroupDialog('${groupVo.uuid}', '${groupVo.groupName}', '${groupVo.remainingAccount}')">批量修改优化组设置</a>
 							</shiro:hasPermission>
 							<shiro:hasPermission name="/internal/group/delGroup">
-								<a class="blue" href="javascript:delGroup(${groupVo.uuid})">删除优化分组</a>
+								<a class="blue" href="javascript:delGroup(${groupVo.uuid})">删除优化组</a>
 							</shiro:hasPermission>
 						</div>
 					</div>
-
 					<div class="body" listsize="${groupVo.groupSettings.size()}">
 						<c:if test="${groupVo.groupSettings.size() > 0}">
 							<div class="data-info-head">
@@ -351,7 +355,7 @@
 													<a href="javascript:showGroupSettingDialog('update', '${groupSetting.uuid}', '${groupVo.groupName}', '${groupVo.remainingAccount}', '${groupVo.uuid}')" title="修改操作类型">修改</a>
 												</shiro:hasPermission>
 												<shiro:hasPermission name="/internal/groupsetting/delGroupSetting">
-													<a href="javascript:delGroupSetting(${groupSetting.uuid})" title="删除操作类型">删除</a>
+													<a href="javascript: void(0);" onclick="delGroupSetting(this, ${groupSetting.uuid})" title="删除操作类型">删除</a>
 												</shiro:hasPermission>
 											</span>
 										</div>
@@ -421,7 +425,8 @@
 							<td>
 								<input type="hidden" name="remainAccount" id="remainAccount" value="100">
 								<input type="hidden" name="currentAccount" id="currentAccount" value="0">
-								<input type="text" name="machineUsedPercent" id="machineUsedPercent" value="0" onmouseover="showRemainingAccount(this)" onmouseout="hiddenRemainingAccount(this)" onkeyup="changeRemainingAccount(this)" style="width:152px;"/>%&nbsp;<label style="display:none;">剩余<i>100</i>%</label>
+								<input type="text" name="machineUsedPercent" id="machineUsedPercent" value="0" onmouseover="showRemainingAccount(this)" onmouseout="hiddenRemainingAccount(this)" onkeyup="changeRemainingAccount(this)" style="width:152px;"/>%<br>
+								<label style="display:none;">剩余<i>100</i>%</label>
 							</td>
 						</tr>
 						<tr name="trItem" onclick="checkItem(this)">
@@ -539,7 +544,6 @@
 						</tr>
 					</table>
 				</td>
-
 				<td style="vertical-align:top;">
 					<table id="td_2" style="font-size:12px">
 						<tr name="trItem" onclick="checkItem(this)">
@@ -627,82 +631,94 @@
 						</tr>
 					</table>
 				</td>
-
 				<td style="vertical-align:top;">
-					<table id="td_2" style="font-size:12px">
+					<table id="td_3" style="font-size:12px">
 						<tr>
 							<td name="trItem" onclick="checkItem(this)">
 								<input id="oneIPOneUser" name="oneIPOneUser" type="checkbox" value="1">每IP对每用户</input>
-							</td>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="randomlyClickNoResult" name="randomlyClickNoResult" type="checkbox" value="1">没结果则随机点</input>
 							</td>
 						</tr>
 						<tr>
 							<td name="trItem" onclick="checkItem(this)">
 								<input id="justVisitSelfPage" name="justVisitSelfPage" type="checkbox" value="1">在域名下访问</input>
 							</td>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="sleepPer2Words" name="sleepPer2Words" type="checkbox" value="1">输入2字稍微停顿</input>
-							</td>
 						</tr>
-
 						<tr>
 							<td name="trItem" onclick="checkItem(this)">
 								<input id="supportPaste" name="supportPaste" type="checkbox" value="1">支持粘贴输入</input>
 							</td>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="moveRandomly" name="moveRandomly" type="checkbox" value="1">随机移动</input>
-							</td>
 						</tr>
-
 						<tr>
 							<td name="trItem" onclick="checkItem(this)">
 								<input id="parentSearchEntry" name="parentSearchEntry" type="checkbox" value="1">爸妈搜索入口</input>
 							</td>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="clearLocalStorage" name="clearLocalStorage" type="checkbox" value="1">清除LocalStorage</input>
-							</td>
 						</tr>
-
 						<tr>
 							<td name="trItem" onclick="checkItem(this)">
 								<input id="lessClickAtNight" name="lessClickAtNight" type="checkbox" value="1">晚上减少点击</input>
 							</td>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="sameCityUser" name="sameCityUser" type="checkbox" value="1">同城用户</input>
-							</td>
 						</tr>
-
 						<tr>
 							<td name="trItem" onclick="checkItem(this)">
 								<input id="locateTitlePosition" name="locateTitlePosition" type="checkbox" value="1">直接获取标题位置</input>
 							</td>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="baiduAllianceEntry" name="baiduAllianceEntry" type="checkbox" value="1">百度联盟入口</input>
-							</td>
 						</tr>
-
 						<tr>
 							<td name="trItem" onclick="checkItem(this)">
 								<input id="justClickSpecifiedTitle" name="justClickSpecifiedTitle" type="checkbox" value="1">随机只点指定标题</input>
 							</td>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="randomlyClickMoreLink" name="randomlyClickMoreLink" type="checkbox" value="1">随机多点一些链接</input>
-							</td>
 						</tr>
-
 						<tr>
 							<td name="trItem" onclick="checkItem(this)">
 								<input id="moveUp20" name="moveUp20" type="checkbox" value="1">向上偏移20</input>
 							</td>
+						</tr>
+					</table>
+				</td>
+				<td style="vertical-align:top;">
+					<table id="td_4" style="font-size:12px">
+						<tr>
+							<td name="trItem" onclick="checkItem(this)">
+								<input id="randomlyClickNoResult" name="randomlyClickNoResult" type="checkbox" value="1">没结果则随机点</input>
+							</td>
+						</tr>
+						<tr>
+							<td name="trItem" onclick="checkItem(this)">
+								<input id="sleepPer2Words" name="sleepPer2Words" type="checkbox" value="1">输入2字稍微停顿</input>
+							</td>
+						</tr>
+						<tr>
+							<td name="trItem" onclick="checkItem(this)">
+								<input id="moveRandomly" name="moveRandomly" type="checkbox" value="1">随机移动</input>
+							</td>
+						</tr>
+						<tr>
+							<td name="trItem" onclick="checkItem(this)">
+								<input id="clearLocalStorage" name="clearLocalStorage" type="checkbox" value="1">清除LocalStorage</input>
+							</td>
+						</tr>
+						<tr>
+							<td name="trItem" onclick="checkItem(this)">
+								<input id="sameCityUser" name="sameCityUser" type="checkbox" value="1">同城用户</input>
+							</td>
+						</tr>
+						<tr>
+							<td name="trItem" onclick="checkItem(this)">
+								<input id="baiduAllianceEntry" name="baiduAllianceEntry" type="checkbox" value="1">百度联盟入口</input>
+							</td>
+						</tr>
+						<tr>
+							<td name="trItem" onclick="checkItem(this)">
+								<input id="randomlyClickMoreLink" name="randomlyClickMoreLink" type="checkbox" value="1">随机多点一些链接</input>
+							</td>
+						</tr>
+						<tr>
 							<td name="trItem" onclick="checkItem(this)">
 								<input id="optimizeRelatedKeyword" name="optimizeRelatedKeyword" type="checkbox" value="1">操作相关词</input>
 							</td>
 						</tr>
 					</table>
 				</td>
-
 			</tr>
 		</table>
 	</form>
@@ -740,7 +756,8 @@
 							<td>
 								<input type="hidden" name="remainAccount" id="remainAccount" value="100">
 								<input type="hidden" name="currentAccount" id="currentAccount" value="0">
-								<input type="text" name="machineUsedPercent" id="machineUsedPercent" value="0" onmouseover="showRemainingAccount(this)" onmouseout="hiddenRemainingAccount(this)" onkeyup="changeRemainingAccount(this)" style="width:152px;"/>%&nbsp;<label style="display:none;">剩余<i>100</i>%</label>
+								<input type="text" name="machineUsedPercent" id="machineUsedPercent" value="0" onmouseover="showRemainingAccount(this)" onmouseout="hiddenRemainingAccount(this)" onkeyup="changeRemainingAccount(this)" style="width:152px;"/>%<br>
+								<label style="display:none;">剩余<i>100</i>%</label>
 							</td>
 						</tr>
 						<tr name="trItem" onclick="checkItem(this)">
@@ -858,7 +875,6 @@
 						</tr>
 					</table>
 				</td>
-
 				<td style="vertical-align:top;">
 					<table id="td_2" style="font-size:12px">
 						<tr name="trItem" onclick="checkItem(this)">
@@ -946,75 +962,88 @@
 						</tr>
 					</table>
 				</td>
-
 				<td style="vertical-align:top;">
-					<table id="td_2" style="font-size:12px">
+					<table id="td_3" style="font-size:12px">
 						<tr>
 							<td name="trItem" onclick="checkItem(this)">
 								<input id="oneIPOneUser" name="oneIPOneUser" type="checkbox" value="1">每IP对每用户</input>
-							</td>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="randomlyClickNoResult" name="randomlyClickNoResult" type="checkbox" value="1">没结果则随机点</input>
 							</td>
 						</tr>
 						<tr>
 							<td name="trItem" onclick="checkItem(this)">
 								<input id="justVisitSelfPage" name="justVisitSelfPage" type="checkbox" value="1">在域名下访问</input>
 							</td>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="sleepPer2Words" name="sleepPer2Words" type="checkbox" value="1">输入2字稍微停顿</input>
-							</td>
 						</tr>
-
 						<tr>
 							<td name="trItem" onclick="checkItem(this)">
 								<input id="supportPaste" name="supportPaste" type="checkbox" value="1">支持粘贴输入</input>
 							</td>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="moveRandomly" name="moveRandomly" type="checkbox" value="1">随机移动</input>
-							</td>
 						</tr>
-
 						<tr>
 							<td name="trItem" onclick="checkItem(this)">
 								<input id="parentSearchEntry" name="parentSearchEntry" type="checkbox" value="1">爸妈搜索入口</input>
 							</td>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="clearLocalStorage" name="clearLocalStorage" type="checkbox" value="1">清除LocalStorage</input>
-							</td>
 						</tr>
-
 						<tr>
 							<td name="trItem" onclick="checkItem(this)">
 								<input id="lessClickAtNight" name="lessClickAtNight" type="checkbox" value="1">晚上减少点击</input>
 							</td>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="sameCityUser" name="sameCityUser" type="checkbox" value="1">同城用户</input>
-							</td>
 						</tr>
-
 						<tr>
 							<td name="trItem" onclick="checkItem(this)">
 								<input id="locateTitlePosition" name="locateTitlePosition" type="checkbox" value="1">直接获取标题位置</input>
 							</td>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="baiduAllianceEntry" name="baiduAllianceEntry" type="checkbox" value="1">百度联盟入口</input>
-							</td>
 						</tr>
-
 						<tr>
 							<td name="trItem" onclick="checkItem(this)">
 								<input id="justClickSpecifiedTitle" name="justClickSpecifiedTitle" type="checkbox" value="1">随机只点指定标题</input>
 							</td>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="randomlyClickMoreLink" name="randomlyClickMoreLink" type="checkbox" value="1">随机多点一些链接</input>
-							</td>
 						</tr>
-
 						<tr>
 							<td name="trItem" onclick="checkItem(this)">
 								<input id="moveUp20" name="moveUp20" type="checkbox" value="1">向上偏移20</input>
 							</td>
+						</tr>
+					</table>
+				</td>
+				<td style="vertical-align:top;">
+					<table id="td_4" style="font-size:12px">
+						<tr>
+							<td name="trItem" onclick="checkItem(this)">
+								<input id="randomlyClickNoResult" name="randomlyClickNoResult" type="checkbox" value="1">没结果则随机点</input>
+							</td>
+						</tr>
+						<tr>
+							<td name="trItem" onclick="checkItem(this)">
+								<input id="sleepPer2Words" name="sleepPer2Words" type="checkbox" value="1">输入2字稍微停顿</input>
+							</td>
+						</tr>
+						<tr>
+							<td name="trItem" onclick="checkItem(this)">
+								<input id="moveRandomly" name="moveRandomly" type="checkbox" value="1">随机移动</input>
+							</td>
+						</tr>
+						<tr>
+							<td name="trItem" onclick="checkItem(this)">
+								<input id="clearLocalStorage" name="clearLocalStorage" type="checkbox" value="1">清除LocalStorage</input>
+							</td>
+						</tr>
+						<tr>
+							<td name="trItem" onclick="checkItem(this)">
+								<input id="sameCityUser" name="sameCityUser" type="checkbox" value="1">同城用户</input>
+							</td>
+						</tr>
+						<tr>
+							<td name="trItem" onclick="checkItem(this)">
+								<input id="baiduAllianceEntry" name="baiduAllianceEntry" type="checkbox" value="1">百度联盟入口</input>
+							</td>
+						</tr>
+						<tr>
+							<td name="trItem" onclick="checkItem(this)">
+								<input id="randomlyClickMoreLink" name="randomlyClickMoreLink" type="checkbox" value="1">随机多点一些链接</input>
+							</td>
+						</tr>
+						<tr>
 							<td name="trItem" onclick="checkItem(this)">
 								<input id="optimizeRelatedKeyword" name="optimizeRelatedKeyword" type="checkbox" value="1">操作相关词</input>
 							</td>

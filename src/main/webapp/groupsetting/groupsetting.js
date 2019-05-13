@@ -109,8 +109,8 @@ function showGroupDialog() {
     changeSettingDialog.show();
     changeSettingDialog.dialog({
         resizable: false,
-        width: 820,
-        maxHeight: 534,
+        width: 790,
+        maxHeight: 550,
         title: "新增优化分组(只需指定一个操作类型, 如果还有其他操作类型，后续添加即可)",
         modal: false,
         buttons: [{
@@ -148,8 +148,8 @@ function showUpdateGroupDialog(groupUuid, groupName, remainingAccount) {
     updateGroupSettingDialog.show();
     updateGroupSettingDialog.dialog({
         resizable: false,
-        width: 820,
-        maxHeight: 534,
+        width: 790,
+        maxHeight: 550,
         title: "修改优化分组下的操作类型(需要修改的信息请标红!!!)",
         modal: false,
         buttons: [{
@@ -246,8 +246,8 @@ function showGroupSettingDialog(type, id, groupName, remainingAccount, groupUuid
     changeSettingDialog.show();
     changeSettingDialog.dialog({
         resizable: false,
-        width: 820,
-        maxHeight: 534,
+        width: 790,
+        maxHeight: 550,
         title: title,
         modal: false,
         buttons: [{
@@ -276,7 +276,12 @@ function showGroupSettingDialog(type, id, groupName, remainingAccount, groupUuid
     changeSettingDialog.window("resize", {top: $(document).scrollTop() + 150});
 }
 
-function delGroupSetting(operationTypeUuid) {
+function delGroupSetting(self, operationTypeUuid) {
+    var operationSpans = $($(self).parents()[6]).find("span.operation");
+    if (operationSpans.length === 1) {
+        alert("这是最后一个优化组设置，请直接删除优化组！！！");
+        return false;
+    }
     if (confirm("确定删除此操作类型？")) {
         $.ajax({
             url: '/internal/groupsetting/delGroupSetting/' + operationTypeUuid,
