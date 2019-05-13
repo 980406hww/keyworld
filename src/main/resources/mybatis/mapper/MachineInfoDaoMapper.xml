@@ -343,94 +343,6 @@
         ORDER BY cs.fGroup
     </select>
 
-    <insert id="addSummaryClientStatus" parameterType="com.keymanager.monitoring.entity.ClientStatus">
-        INSERT INTO t_client_status
-        (fTerminalType,
-        fFreeSpace,
-        fVersion,
-        fCity,
-        fClientID,
-        fClientIDPrefix,
-        fHost,
-        fPort,
-        fUserName,
-        fPassword,
-        fVPSBackendSystemComputerID,
-        fLastVisitTime,
-        fTenMinsLastVisitTime,
-        fRestartTime,
-        fThreeMinsRestartTime,
-        fTenMinsRestartTime,
-        fLastSendNotificationTime,
-        fRenewalDate,
-        fCreateTime)
-        VALUES (#{clientStatus.terminalType},
-        #{clientStatus.freeSpace},
-        #{clientStatus.version},
-        #{clientStatus.city},
-        #{clientStatus.clientID},
-        #{clientStatus.clientIDPrefix},
-        #{clientStatus.host},
-        #{clientStatus.port},
-        #{clientStatus.userName},
-        #{clientStatus.password},
-        #{clientStatus.vpsBackendSystemComputerID},
-        NOW(),
-        DATE_ADD(NOW(), INTERVAL 10 MINUTE ),
-        NOW(),
-        DATE_ADD(NOW(), INTERVAL 3 MINUTE ),
-        DATE_ADD(NOW(), INTERVAL 10 MINUTE ),
-        NULL,
-        DATE_ADD(CURRENT_DATE(), INTERVAL - 1 DAY),
-        NOW())
-    </insert>
-
-    <insert id="addClientStatusByVPSFile" parameterType="com.keymanager.monitoring.entity.ClientStatus">
-        INSERT INTO t_client_status
-        (fTerminalType,
-        fFreeSpace,
-        fClientID,
-        fClientIDPrefix,
-        fHost,
-        fPort,
-        fUserName,
-        fPassword,
-        fVPSBackendSystemComputerID,
-        fDisableStatistics,
-        fValid,
-        fBroadbandAccount,
-        fBroadbandPassword,
-        fLastVisitTime,
-        fTenMinsLastVisitTime,
-        fRestartTime,
-        fThreeMinsRestartTime,
-        fTenMinsRestartTime,
-        fLastSendNotificationTime,
-        fRenewalDate,
-        fCreateTime)
-        VALUES (#{clientStatus.terminalType},
-        #{clientStatus.freeSpace},
-        #{clientStatus.clientID},
-        #{clientStatus.clientIDPrefix},
-        #{clientStatus.host},
-        #{clientStatus.port},
-        #{clientStatus.userName},
-        #{clientStatus.password},
-        #{clientStatus.vpsBackendSystemComputerID},
-        #{clientStatus.disableStatistics},
-        #{clientStatus.valid},
-        #{clientStatus.broadbandAccount},
-        #{clientStatus.broadbandPassword},
-        NOW(),
-        DATE_ADD(NOW(), INTERVAL 10 MINUTE ),
-        NOW(),
-        DATE_ADD(NOW(), INTERVAL 3 MINUTE ),
-        DATE_ADD(NOW(), INTERVAL 10 MINUTE ),
-        NULL,
-        DATE_ADD(CURRENT_DATE(), INTERVAL - 1 DAY),
-        NOW())
-    </insert>
-
     <update id="updatePageNo">
         UPDATE t_machine_info
         SET
@@ -448,7 +360,7 @@
 
     <select id="searchClientStatusSummaryVO" resultType="com.keymanager.value.ClientStatusSummaryVO">
         SELECT cs.fClientIDPrefix as clientIDPrefix, cs.fTerminalType as type, cs.fCity as city, COUNT(1) as 'count', fSwitchGroupName as 'switchGroupName'
-        FROM t_client_status cs
+        FROM t_machine_info cs
         <where> cs.fValid = 1
             <if test="clientIDPrefix!=null and clientIDPrefix!=''">and cs.fClientIDPrefix LIKE '%${clientIDPrefix}%'</if>
             <if test="city!=null and city!=''">and cs.fCity LIKE '%${city}%'</if>

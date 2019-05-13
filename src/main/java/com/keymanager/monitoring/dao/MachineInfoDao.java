@@ -76,10 +76,6 @@ public interface MachineInfoDao extends BaseMapper<MachineInfo> {
 
     List<CustomerKeywordTerminalRefreshStatRecord> searchMachineInfoForRefreshStat(@Param("customerKeywordRefreshStatInfoCriteria") CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria);
 
-    void addSummaryClientStatus(@Param("clientStatus") ClientStatus clientStatus);
-
-    void addClientStatusByVPSFile(@Param("clientStatus") ClientStatus clientStatus);
-
     List<ClientStatusSummaryVO> searchClientStatusSummaryVO(@Param("clientIDPrefix") String clientIDPrefix, @Param("city") String city, @Param("switchGroupName") String switchGroupName);
 
     List<ClientStatusGroupSummaryVO> searchClientStatusGroupSummaryVO(@Param("group") String group, @Param("terminalType") String terminalType);
