@@ -423,11 +423,11 @@ function getQZSettingClientGroupInfo(terminalType) {
                     });
                     $(span).find("label.tagNameStr").html(tagNameStr.substring(0, tagNameStr.length-1));
                 }
-                if (data.clientStatusVOs.length > 0) {
+                if (data.machineInfoVos.length > 0) {
                     showSomeOperationType.empty();
                     var allOperationType = '';
                     var flag = false;
-                    $.each(data.clientStatusVOs, function (idx, val) {
+                    $.each(data.machineInfoVos, function (idx, val) {
                         allOperationType += optimizeGroupName + " " +val.operationType + "(" + val.operationTypeCount + ")"  + ",";
                         clientCount += val.operationTypeCount;
                         if (idx < 2) {

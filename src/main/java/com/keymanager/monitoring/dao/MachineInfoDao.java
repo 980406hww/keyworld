@@ -96,7 +96,7 @@ public interface MachineInfoDao extends BaseMapper<MachineInfo> {
 
     void resetOptimizationInfo();
 
-    List<MachineInfoVO> getClientStatusVOs(@Param("qzSettingSearchClientGroupInfoCriteria") QZSettingSearchClientGroupInfoCriteria qzSettingSearchClientGroupInfoCriteria);
+    List<MachineInfoVO> getMachineInfoVos(@Param("qzSettingSearchClientGroupInfoCriteria") QZSettingSearchClientGroupInfoCriteria qzSettingSearchClientGroupInfoCriteria);
 
     ClientStatusForOptimization getClientStatusForOptimization(@Param("clientID") String clientID);
 }

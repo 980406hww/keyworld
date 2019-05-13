@@ -454,14 +454,14 @@
         UPDATE t_machine_info SET fRemainingKeyword = 1, fIdleStartTime = null, fIdleTotalMinutes = 0
     </update>
 
-    <select id="getClientStatusVOs" resultType="com.keymanager.monitoring.vo.ClientStatusVO" parameterType="com.keymanager.monitoring.criteria.QZSettingSearchClientGroupInfoCriteria">
+    <select id="getMachineInfoVos" resultType="com.keymanager.monitoring.vo.ClientStatusVO" parameterType="com.keymanager.monitoring.criteria.QZSettingSearchClientGroupInfoCriteria">
         SELECT
             gs.fOperationType AS 'operationType',
             COUNT(gs.fOperationType) AS 'operationTypeCount'
         FROM t_group_setting gs
         LEFT JOIN t_group g
         ON g.fUuid = gs.fGroupUuid
-        WHERE g.fGroupName = #{qzSettingSearchClientGroupInfoCriteria.terminalType}
+        WHERE g.fGroupName = #{qzSettingSearchClientGroupInfoCriteria.optimizeGroupName}
         AND g.fTerminalType = #{qzSettingSearchClientGroupInfoCriteria.terminalType}
         GROUP BY gs.fOperationType
     </select>
