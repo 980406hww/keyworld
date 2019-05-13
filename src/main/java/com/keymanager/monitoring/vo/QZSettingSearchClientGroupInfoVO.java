@@ -8,7 +8,7 @@ import java.util.List;
  **/
 public class QZSettingSearchClientGroupInfoVO {
     private int customerKeywordCount;
-    private List<ClientStatusVO> clientStatusVOs;
+    private List<MachineInfoVO> machineInfoVos;
     private List<String> categoryTagNames;
 
     public int getCustomerKeywordCount () {
@@ -19,12 +19,12 @@ public class QZSettingSearchClientGroupInfoVO {
         this.customerKeywordCount = customerKeywordCount;
     }
 
-    public List<ClientStatusVO> getClientStatusVOs () {
-        return clientStatusVOs;
+    public List<MachineInfoVO> getMachineInfoVos () {
+        return machineInfoVos;
     }
 
-    public void setClientStatusVOs (List<ClientStatusVO> clientStatusVOs) {
-        this.clientStatusVOs = clientStatusVOs;
+    public void setMachineInfoVos (List<MachineInfoVO> machineInfoVos) {
+        this.machineInfoVos = machineInfoVos;
     }
 
     public List<String> getCategoryTagNames () {

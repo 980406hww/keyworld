@@ -219,7 +219,7 @@
         LIMIT 1
     </select>
 
-    <select id="getMachineInfoIDID" parameterType="java.lang.String" resultType="java.lang.String">
+    <select id="getMachineInfoID" parameterType="java.lang.String" resultType="java.lang.String">
         SELECT fClientID as 'clientID' FROM t_machine_info WHERE fVPSBackendSystemComputerID = #{vpsBackendSystemComputerID}
     </select>
 
@@ -531,7 +531,7 @@
             cs.fSwitchGroupName AS 'switchGroupName',
             cc.fCookieCount AS 'cookieCount',
             cc.fCookieStr AS 'cookieStr'
-        FROM t_client_status cs
+        FROM t_machine_info cs
         LEFT JOIN t_client_cookie cc
         ON cs.fClientID = cc.fClientID
         WHERE cs.fSwitchGroupName LIKE '${cookieGroupFor360}%'
@@ -544,12 +544,14 @@
 
     <select id="getClientStatusVOs" resultType="com.keymanager.monitoring.vo.ClientStatusVO" parameterType="com.keymanager.monitoring.criteria.QZSettingSearchClientGroupInfoCriteria">
         SELECT
-            cs.fOperationType AS 'operationType',
-            COUNT(cs.fOperationType) AS 'operationTypeCount'
-        FROM t_client_status cs
-        WHERE cs.fTerminalType = #{qzSettingSearchClientGroupInfoCriteria.terminalType}
-        AND cs.fGroup = #{qzSettingSearchClientGroupInfoCriteria.optimizeGroupName}
-        GROUP BY cs.fOperationType;
+            gs.fOperationType AS 'operationType',
+            COUNT(gs.fOperationType) AS 'operationTypeCount'
+        FROM t_group_setting gs
+        LEFT JOIN t_group g
+        ON g.fUuid = gs.fGroupUuid
+        WHERE g.fGroupName = #{qzSettingSearchClientGroupInfoCriteria.terminalType}
+        AND g.fTerminalType = #{qzSettingSearchClientGroupInfoCriteria.terminalType}
+        GROUP BY gs.fOperationType
     </select>
 
     <select id="getClientStatusForOptimization" resultType="com.keymanager.monitoring.vo.ClientStatusForOptimization">

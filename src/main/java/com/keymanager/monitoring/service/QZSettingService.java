@@ -597,7 +597,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		QZSettingSearchClientGroupInfoVO qzSettingSearchClientGroupInfoVO = new QZSettingSearchClientGroupInfoVO();
 		qzSettingSearchClientGroupInfoVO.setCustomerKeywordCount(qzSettingDao.getQZSettingClientGroupInfo(qzSettingSearchClientGroupInfoCriteria));
 		//TODO clientStatus refactor
-		//qzSettingSearchClientGroupInfoVO.setClientStatusVOs(clientStatusService.getClientStatusVOs(qzSettingSearchClientGroupInfoCriteria));
+		qzSettingSearchClientGroupInfoVO.setMachineInfoVos(machineInfoService.getClientStatusVOs(qzSettingSearchClientGroupInfoCriteria));
 		qzSettingSearchClientGroupInfoVO.setCategoryTagNames(qzCategoryTagService.findTagNamesByQZSettingUuid(qzSettingSearchClientGroupInfoCriteria.getQzSettingUuid()));
 		return qzSettingSearchClientGroupInfoVO;
 	}
