@@ -604,9 +604,7 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
     }
 
     public void sendNotificationForRenewal() throws Exception{
-        String condition = " and DATE_ADD(fRenewalDate, INTERVAL -3 DAY ) < NOW() and fValid = 1 ORDER BY fRenewalDate ";
         List<MachineInfo> machineInfos = machineInfoDao.getMachineInfosForRenewal();
-
         if(!Utils.isEmpty(machineInfos)){
             Config notificationEmail = configService.getConfig("NotificationEmail", "EmailAddress");
             StringBuilder sb = new StringBuilder();
