@@ -4,10 +4,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.criteria.GroupSettingCriteria;
 import com.keymanager.monitoring.criteria.UpdateGroupSettingCriteria;
-import com.keymanager.monitoring.dao.CustomerKeywordDao;
-import com.keymanager.monitoring.dao.GroupDao;
 import com.keymanager.monitoring.dao.GroupSettingDao;
-import com.keymanager.monitoring.dao.QZSettingDao;
 import com.keymanager.monitoring.entity.Group;
 import com.keymanager.monitoring.entity.GroupSetting;
 import com.keymanager.monitoring.vo.GroupVO;
@@ -28,16 +25,16 @@ public class GroupSettingService extends ServiceImpl<GroupSettingDao, GroupSetti
     private GroupSettingDao groupSettingDao;
 
     @Autowired
-    private GroupDao groupDao;
+    private GroupService groupService;
 
     @Autowired
-    private QZSettingDao qzSettingDao;
+    private QZSettingService qzSettingService;
 
     @Autowired
-    private CustomerKeywordDao customerKeywordDao;
+    private CustomerKeywordService customerKeywordService;
 
     public Page<GroupVO> searchGroupSettings(Page<GroupVO> page, GroupSettingCriteria groupSettingCriteria) {
-        page.setRecords(groupDao.searchGroups(page, groupSettingCriteria));
+        page.setRecords(groupService.searchGroups(page, groupSettingCriteria));
         for (GroupVO groupVo : page.getRecords()) {
             List<GroupSetting> groupSettings = groupSettingDao.searchGroupSettings(groupVo.getUuid(), groupSettingCriteria.getOperationType());
             groupVo.setGroupSettings(groupSettings);
@@ -47,9 +44,9 @@ public class GroupSettingService extends ServiceImpl<GroupSettingDao, GroupSetti
 
     public void deleteGroupSetting (long uuid) {
         GroupSetting groupSetting = groupSettingDao.selectById(uuid);
-        Group group = groupDao.selectById(groupSetting.getGroupUuid());
+        Group group = groupService.selectById(groupSetting.getGroupUuid());
         group.setRemainingAccount(group.getRemainingAccount() + groupSetting.getMachineUsedPercent());
-        groupDao.updateById(group);
+        groupService.updateById(group);
         groupSettingDao.deleteById(uuid);
     }
 
@@ -59,25 +56,25 @@ public class GroupSettingService extends ServiceImpl<GroupSettingDao, GroupSetti
 
     public void saveGroupSetting (GroupSetting groupSetting) {
         groupSettingDao.saveGroupSetting(groupSetting);
-        groupDao.updateGroupRemainingAccount(groupSetting.getGroupUuid(), groupSetting.getRemainingAccount());
+        groupService.updateGroupRemainingAccount(groupSetting.getGroupUuid(), groupSetting.getRemainingAccount());
     }
 
     public void updateGroupSetting (UpdateGroupSettingCriteria updateGroupSettingCriteria) {
         groupSettingDao.updateGroupSetting(updateGroupSettingCriteria.getGs(), updateGroupSettingCriteria.getGroupSetting());
         if (1 == updateGroupSettingCriteria.getGs().getMachineUsedPercent()) {
-            groupDao.updateGroupRemainingAccount(updateGroupSettingCriteria.getGroupSetting().getGroupUuid(), updateGroupSettingCriteria.getGroupSetting().getRemainingAccount());
+            groupService.updateGroupRemainingAccount(updateGroupSettingCriteria.getGroupSetting().getGroupUuid(), updateGroupSettingCriteria.getGroupSetting().getRemainingAccount());
         }
     }
 
     public Map<String, Date> getAvailableOptimizationGroups (String terminalType) {
-        List<Group> availableCustomerKeywordOptimizationGroups = customerKeywordDao.getAvailableOptimizationGroups(terminalType);
+        List<Group> availableCustomerKeywordOptimizationGroups = qzSettingService.getAvailableOptimizationGroups(terminalType);
         Map<String, Date> groupMap = new HashMap<>();
         if (CollectionUtils.isNotEmpty(availableCustomerKeywordOptimizationGroups)) {
             for (Group group : availableCustomerKeywordOptimizationGroups) {
                 groupMap.put(group.getGroupName(), group.getCreateTime());
             }
         }
-        List<Group> availableQZSettingOptimizationGroups = qzSettingDao.getAvailableOptimizationGroups(terminalType);
+        List<Group> availableQZSettingOptimizationGroups = customerKeywordService.getAvailableOptimizationGroups(terminalType);
         if (CollectionUtils.isNotEmpty(availableQZSettingOptimizationGroups)) {
             for (Group group : availableQZSettingOptimizationGroups) {
                 if (null != group.getGroupName() && !groupMap.containsKey(group.getGroupName())){

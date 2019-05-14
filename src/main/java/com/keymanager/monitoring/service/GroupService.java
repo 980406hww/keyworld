@@ -1,13 +1,16 @@
 package com.keymanager.monitoring.service;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.criteria.GroupCriteria;
+import com.keymanager.monitoring.criteria.GroupSettingCriteria;
 import com.keymanager.monitoring.dao.GroupDao;
 import com.keymanager.monitoring.dao.GroupSettingDao;
 import com.keymanager.monitoring.entity.Group;
 import com.keymanager.monitoring.entity.GroupSetting;
 import com.keymanager.monitoring.vo.GroupResultVO;
 import com.keymanager.monitoring.vo.GroupSettingVO;
+import com.keymanager.monitoring.vo.GroupVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,4 +60,11 @@ public class GroupService extends ServiceImpl<GroupDao, Group> {
         return groupSettingVo;
     }
 
+    public List<GroupVO> searchGroups (Page<GroupVO> page, GroupSettingCriteria groupSettingCriteria) {
+        return groupDao.searchGroups(page, groupSettingCriteria);
+    }
+
+    public void updateGroupRemainingAccount (long groupUuid, int remainingAccount) {
+        groupDao.updateGroupRemainingAccount(groupUuid, remainingAccount);
+    }
 }

@@ -1633,4 +1633,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
     }
 
+    public List<Group> getAvailableOptimizationGroups (String terminalType) {
+        return customerKeywordDao.getAvailableOptimizationGroups(terminalType);
+    }
 }
