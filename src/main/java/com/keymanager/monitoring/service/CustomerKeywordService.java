@@ -88,6 +88,12 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     private PerformanceService performanceService;
 
     @Autowired
+    private GroupService groupService;
+
+    @Autowired
+    private GroupSettingService groupSettingService;
+
+    @Autowired
     private ObserveOptimizationCountMailService observeOptimizationCountMailService;
 
     @Autowired
@@ -639,8 +645,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
         int retryCount = 0;
         int noPositionMaxInvalidCount = 2;
-        //TODO clientStatus refactor
-        GroupSetting groupSetting = null;
+        GroupSetting groupSetting = groupSettingService.getGroupSettingViaPercentage(machineInfo.getGroup(), machineInfo.getTerminalType());
         if(groupSetting.getOperationType().contains(Constants.CONFIG_TYPE_ZHANNEI_SOGOU)) {
             Config configInvalidRefreshCount = configService.getConfig(Constants.CONFIG_TYPE_ZHANNEI_SOGOU, Constants.CONFIG_KEY_NOPOSITION_MAX_INVALID_COUNT);
             noPositionMaxInvalidCount = Integer.parseInt(configInvalidRefreshCount.getValue());
@@ -873,8 +878,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         int retryCount = 0;
         int noPositionMaxInvalidCount = 2;
         //TODO clientStatus refactor
-        GroupSetting groupSetting = null;
-        if(groupSetting.getOperationType().contains(Constants.CONFIG_TYPE_ZHANNEI_SOGOU)) {
+        Group group = groupService.findGroup(machineInfo.getGroup(), machineInfo.getTerminalType());
+        if(group.getUsingOperationType().contains(Constants.CONFIG_TYPE_ZHANNEI_SOGOU)) {
             Config configInvalidRefreshCount = configService.getConfig(Constants.CONFIG_TYPE_ZHANNEI_SOGOU, Constants.CONFIG_KEY_NOPOSITION_MAX_INVALID_COUNT);
             noPositionMaxInvalidCount = Integer.parseInt(configInvalidRefreshCount.getValue());
         }
@@ -917,7 +922,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeywordForOptimization.setTitle(customerKeyword.getTitle());
 
             customerKeywordForOptimization.setGroup(machineInfo.getGroup());
-            customerKeywordForOptimization.setOperationType(groupSetting.getOperationType());
+            customerKeywordForOptimization.setOperationType(group.getUsingOperationType());
             customerKeywordForOptimization.setUpdateSettingTime(machineInfo.getUpdateSettingTime());
 
             NegativeListUpdateInfo negativeListUpdateInfo = negativeListUpdateInfoService.getNegativeListUpdateInfo(customerKeyword.getKeyword());
@@ -925,27 +930,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                 customerKeywordForOptimization.setNegativeListUpdateTime(negativeListUpdateInfo.getNegativeListUpdateTime());
             }
 
-            Set<String> specialGruupNames = new HashSet<String>();
-            specialGruupNames.add("pc_pm_xiaowu");
-            specialGruupNames.add("pc_pm_learner");
-            specialGruupNames.add("pc_pm_51yza");
-            specialGruupNames.add("pc_pm_yilufa");
+            //TODO clientStatus refacto, move to clientSetting
+            customerKeywordForOptimization.setPage(2);
+            customerKeywordForOptimization.setPageSize(50);
 
-            if(specialGruupNames.contains(customerKeyword.getOptimizeGroupName()) && (customerKeyword.getCurrentPosition() == 0 ||
-                    customerKeyword.getCurrentPosition() > 20)) {
-                customerKeywordForOptimization.setPage(2);
-            }else{
-                customerKeywordForOptimization.setPage(groupSetting.getPage());
-            }
 
-            if(groupSetting.getPageSize() != null) {
-                if(specialGruupNames.contains(customerKeyword.getOptimizeGroupName()) && (customerKeyword.getCurrentPosition() == 0 ||
-                        customerKeyword.getCurrentPosition() > 20)){
-                    customerKeywordForOptimization.setPageSize(50);
-                }else {
-                    customerKeywordForOptimization.setPageSize(groupSetting.getPageSize());
-                }
-            }
             customerKeywordForOptimization.setRemarks(customerKeyword.getRemarks());
             if(StringUtils.isNotBlank(customerKeywordForOptimization.getOperationType())) {
                 if(customerKeywordForOptimization.getOperationType().contains(Constants.CONFIG_TYPE_TJ_XG)) {

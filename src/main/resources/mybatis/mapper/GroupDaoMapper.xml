@@ -48,4 +48,20 @@
     <update id="updateGroupRemainingAccount">
         UPDATE t_group SET fRemainingAccount = #{remainingAccount}, fUpdateTime = NOW() WHERE fUuid = #{uuid}
     </update>
+
+    <select id="findGroup" resultType="com.keymanager.monitoring.entity.Group">
+        SELECT
+        g.fUuid             AS "uuid",
+        g.fGroupName        AS "groupName",
+        g.fTerminalType     AS "terminalType",
+        g.fCreateBy         AS "createBy",
+        g.fRemainingAccount AS "remainingAccount",
+        g.fUpdateTime       AS "updateTime",
+        g.fCreateTime       AS "createTime"
+        FROM t_group g
+        WHERE g.fGroupName = #{groupName}
+        AND g.fTerminalType = #{terminalType}
+        limit 1
+    </select>
+
 </mapper>

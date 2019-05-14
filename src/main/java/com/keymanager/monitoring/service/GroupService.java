@@ -57,4 +57,8 @@ public class GroupService extends ServiceImpl<GroupDao, Group> {
         return groupSettingVo;
     }
 
+
+    public Group findGroup(String groupName, String terminalType){
+        return groupDao.findGroup(groupName, terminalType);
+    }
 }

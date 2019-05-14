@@ -36,6 +36,12 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
     private MachineInfoDao machineInfoDao;
 
     @Autowired
+    private GroupService groupService;
+
+    @Autowired
+    private GroupSettingService groupSettingService;
+
+    @Autowired
     private CustomerKeywordService customerKeywordService;
 
     @Autowired
@@ -824,8 +830,14 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
     }
 
     public ClientStatusForOptimization getClientStatusForOptimization(String clientID) {
-        ClientStatusForOptimization clientStatusForOptimization = machineInfoDao.getClientStatusForOptimization(clientID);
-        if (clientStatusForOptimization != null) {
+        MachineInfo machineInfo = this.selectById(clientID);
+        ClientStatusForOptimization clientStatusForOptimization = null;
+        if(machineInfo != null){
+            Group group = groupService.findGroup(machineInfo.getGroup(), machineInfo.getTerminalType());
+            GroupSetting groupSetting = groupSettingService.getGroupSettingViaPercentage(machineInfo.getGroup(), machineInfo.getTerminalType());
+            clientStatusForOptimization = new ClientStatusForOptimization();
+
+
             clientStatusForOptimization.setOpenStatistics(clientStatusForOptimization.getDisableStatistics() == 1 ? 0 : 1);
             clientStatusForOptimization.setCurrentTime(Utils.formatDate(new Date(), Utils.TIME_FORMAT));
         }
