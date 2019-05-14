@@ -31,9 +31,6 @@ public class GroupSettingService extends ServiceImpl<GroupSettingDao, GroupSetti
     private QZSettingService qzSettingService;
 
     @Autowired
-    private QZSettingDao qzSettingDao;
-
-    @Autowired
     private CustomerKeywordService customerKeywordService;
 
     public Page<GroupVO> searchGroupSettings(Page<GroupVO> page, GroupSettingCriteria groupSettingCriteria) {

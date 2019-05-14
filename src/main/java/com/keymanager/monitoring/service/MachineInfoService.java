@@ -834,10 +834,54 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
             Group group = groupService.findGroup(machineInfo.getGroup(), machineInfo.getTerminalType());
             GroupSetting groupSetting = groupSettingService.getGroupSettingViaPercentage(machineInfo.getGroup(), machineInfo.getTerminalType());
             clientStatusForOptimization = new ClientStatusForOptimization();
-
-
+            clientStatusForOptimization.setKuaizhaoPercent(groupSetting.getKuaizhaoPercent());
+            clientStatusForOptimization.setBaiduSemPercent(groupSetting.getBaiduSemPercent());
+            clientStatusForOptimization.setDragPercent(groupSetting.getDragPercent());
+            clientStatusForOptimization.setMultiBrowser(groupSetting.getMultiBrowser());
+            clientStatusForOptimization.setClearCookie(groupSetting.getClearCookie());
+            clientStatusForOptimization.setZhanneiPercent(groupSetting.getZhanneiPercent());
+            clientStatusForOptimization.setZhanwaiPercent(groupSetting.getZhanwaiPercent());
+            clientStatusForOptimization.setSpecialCharPercent(groupSetting.getSpecialCharPercent());
+            clientStatusForOptimization.setDisableStatistics(groupSetting.getDisableStatistics());
+            clientStatusForOptimization.setEntryPageMinCount(groupSetting.getEntryPageMinCount());
+            clientStatusForOptimization.setEntryPageMaxCount(groupSetting.getEntryPageMaxCount());
+            clientStatusForOptimization.setDisableVisitWebsite(groupSetting.getDisableVisitWebsite());
+            clientStatusForOptimization.setPageRemainMinTime(groupSetting.getPageRemainMinTime());
+            clientStatusForOptimization.setPageRemainMaxTime(groupSetting.getPageRemainMaxTime());
+            clientStatusForOptimization.setInputDelayMinTime(groupSetting.getInputDelayMinTime());
+            clientStatusForOptimization.setInputDelayMaxTime(groupSetting.getInputDelayMaxTime());
+            clientStatusForOptimization.setSlideDelayMinTime(groupSetting.getSlideDelayMinTime());
+            clientStatusForOptimization.setSlideDelayMaxTime(groupSetting.getSlideDelayMaxTime());
+            clientStatusForOptimization.setTitleRemainMinTime(groupSetting.getTitleRemainMinTime());
+            clientStatusForOptimization.setTitleRemainMaxTime(groupSetting.getTitleRemainMaxTime());
+            clientStatusForOptimization.setOptimizeKeywordCountPerIP(groupSetting.getOptimizeKeywordCountPerIP());
+            clientStatusForOptimization.setOneIPOneUser(groupSetting.getOneIPOneUser());
+            clientStatusForOptimization.setRandomlyClickNoResult(groupSetting.getRandomlyClickNoResult());
+            clientStatusForOptimization.setJustVisitSelfPage(groupSetting.getJustVisitSelfPage());
+            clientStatusForOptimization.setSleepPer2Words(groupSetting.getSleepPer2Words());
+            clientStatusForOptimization.setSupportPaste(groupSetting.getSupportPaste());
+            clientStatusForOptimization.setMoveRandomly(groupSetting.getMoveRandomly());
+            clientStatusForOptimization.setParentSearchEntry(groupSetting.getParentSearchEntry());
+            clientStatusForOptimization.setClearLocalStorage(groupSetting.getClearLocalStorage());
+            clientStatusForOptimization.setLessClickAtNight(groupSetting.getLessClickAtNight());
+            clientStatusForOptimization.setSameCityUser(groupSetting.getSameCityUser());
+            clientStatusForOptimization.setLocateTitlePosition(groupSetting.getLocateTitlePosition());
+            clientStatusForOptimization.setBaiduAllianceEntry(groupSetting.getBaiduAllianceEntry());
+            clientStatusForOptimization.setJustClickSpecifiedTitle(groupSetting.getJustClickSpecifiedTitle());
+            clientStatusForOptimization.setRandomlyClickMoreLink(groupSetting.getRandomlyClickMoreLink());
+            clientStatusForOptimization.setMoveUp20(groupSetting.getMoveUp20());
+            clientStatusForOptimization.setWaitTimeAfterOpenBaidu(groupSetting.getWaitTimeAfterOpenBaidu());
+            clientStatusForOptimization.setWaitTimeBeforeClick(groupSetting.getWaitTimeBeforeClick());
+            clientStatusForOptimization.setWaitTimeAfterClick(groupSetting.getWaitTimeAfterClick());
+            clientStatusForOptimization.setMaxUserCount(groupSetting.getMaxUserCount());
+            clientStatusForOptimization.setSwitchGroupName(machineInfo.getSwitchGroupName());
+            clientStatusForOptimization.setBroadbandAccount(machineInfo.getBroadbandAccount());
+            clientStatusForOptimization.setBroadbandPassword(machineInfo.getBroadbandPassword());
             clientStatusForOptimization.setOpenStatistics(clientStatusForOptimization.getDisableStatistics() == 1 ? 0 : 1);
             clientStatusForOptimization.setCurrentTime(Utils.formatDate(new Date(), Utils.TIME_FORMAT));
+            
+            group.setUsingOperationType(groupSetting.getOperationType());
+            groupService.updateById(group);
         }
         return clientStatusForOptimization;
     }
