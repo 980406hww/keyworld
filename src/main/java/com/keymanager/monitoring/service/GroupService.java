@@ -63,7 +63,11 @@ public class GroupService extends ServiceImpl<GroupDao, Group> {
     public List<GroupVO> searchGroups (Page<GroupVO> page, GroupSettingCriteria groupSettingCriteria) {
         return groupDao.searchGroups(page, groupSettingCriteria);
     }
-
+    
+    public Group findGroup(String groupName, String terminalType){
+        return groupDao.findGroup(groupName, terminalType);
+    }
+    
     public void updateGroupRemainingAccount (long groupUuid, int remainingAccount) {
         groupDao.updateGroupRemainingAccount(groupUuid, remainingAccount);
     }

@@ -31,6 +31,9 @@ public class GroupSettingService extends ServiceImpl<GroupSettingDao, GroupSetti
     private QZSettingService qzSettingService;
 
     @Autowired
+    private QZSettingDao qzSettingDao;
+
+    @Autowired
     private CustomerKeywordService customerKeywordService;
 
     public Page<GroupVO> searchGroupSettings(Page<GroupVO> page, GroupSettingCriteria groupSettingCriteria) {
@@ -83,5 +86,24 @@ public class GroupSettingService extends ServiceImpl<GroupSettingDao, GroupSetti
             }
         }
         return groupMap;
+    }
+
+    public GroupSetting getGroupSettingViaPercentage(String groupName, String terminalType){
+        Group group = groupService.findGroup(groupName, terminalType);
+        if(group != null){
+            List<GroupSetting> groupSettings = groupSettingDao.searchGroupSettingsSortingPercentage(group.getUuid());
+            if(CollectionUtils.isNotEmpty(groupSettings)){
+                Random ra = new Random();
+                int randomValue = ra.nextInt(100 - group.getRemainingAccount()) + 1;
+                int totalPercentage = 0;
+                for(GroupSetting groupSetting : groupSettings){
+                    totalPercentage = totalPercentage + groupSetting.getMachineUsedPercent();
+                    if(randomValue <= totalPercentage){
+                        return groupSetting;
+                    }
+                }
+            }
+        }
+        return null;
     }
 }
