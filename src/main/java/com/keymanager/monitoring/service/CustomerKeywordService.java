@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.*;
 
 @Service
@@ -922,7 +923,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
             customerKeywordForOptimization.setGroup(machineInfo.getGroup());
             customerKeywordForOptimization.setOperationType(group.getUsingOperationType());
-            customerKeywordForOptimization.setUpdateSettingTime(machineInfo.getUpdateSettingTime());
+            Calendar calendar = Calendar.getInstance();
+            customerKeywordForOptimization.setUpdateSettingTime((machineInfo.getUpdateSettingTime().getTime()> group.getUpdateTime().getTime()) ? machineInfo.getUpdateSettingTime() : new Timestamp(group.getUpdateTime().getTime()));
 
             NegativeListUpdateInfo negativeListUpdateInfo = negativeListUpdateInfoService.getNegativeListUpdateInfo(customerKeyword.getKeyword());
             if(negativeListUpdateInfo != null) {
