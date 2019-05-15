@@ -649,6 +649,10 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             }
         }
 
+        if(keywordOptimizationCountService.resetBigKeywordIndicator(machineInfo.getGroup())) {
+            keywordOptimizationCountService.init(machineInfo.getGroup());
+        }
+
         Long customerKeywordUuid = null;
         CustomerKeyword customerKeyword = null;
 
@@ -885,6 +889,10 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                     }
                 }
             }
+        }
+
+        if(keywordOptimizationCountService.resetBigKeywordIndicator(machineInfo.getGroup())) {
+            keywordOptimizationCountService.init(machineInfo.getGroup());
         }
 
         Long customerKeywordUuid = null;

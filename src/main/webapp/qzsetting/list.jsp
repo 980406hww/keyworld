@@ -149,6 +149,19 @@
 					<input type="text" name="group" value="${qzSettingSearchCriteria.group}">
 				</li>
 				<li>
+					<span>操作类型: </span>
+					<span>
+						<select name="operationType" style="width: 150px;">
+							<c:forEach items="${operationTypeValues}" var="operationType">
+								<c:choose>
+									<c:when test="${operationType eq qzSettingSearchCriteria.operationType}"><option selected>${operationType}</option></c:when>
+									<c:otherwise><option>${operationType}</option></c:otherwise>
+								</c:choose>
+							</c:forEach>
+						</select>
+					</span>
+				</li>
+				<li>
 					<span>权重: </span>
 					<span>
 						<select name="weight" style="width: 50px;">
@@ -209,12 +222,14 @@
 	<input type="hidden" name="customerUuid" id="customerUuid" value="${qzSettingSearchCriteria.customerUuid}"/>
 	<input type="hidden" name="statusHidden" id="statusHidden" value="${qzSettingSearchCriteria.status}"/>
 	<input type="hidden" name="customerInfo" id="customerInfo" value="${qzSettingSearchCriteria.customerInfo}">
+	<input type="hidden" name="operationType" id="operationType" value="${qzSettingSearchCriteria.operationType}"/>
 	<input type="hidden" name="status" id="status" value="${qzSettingSearchCriteria.status}"/>
 	<input type="hidden" name="updateStatus" id="updateStatus" value="${qzSettingSearchCriteria.updateStatus}"/>
 	<input type="hidden" name="checkStatus" id="checkStatus" value="${qzSettingSearchCriteria.checkStatus}"/>
 	<input type="hidden" name="terminalType" id="terminalType" value="${qzSettingSearchCriteria.terminalType}"/>
 	<input type="hidden" name="categoryTag" id="categoryTag" value="${qzSettingSearchCriteria.categoryTag}"/>
 	<input type="hidden" name="baiduWeight" id="baiduWeight" value="${qzSettingSearchCriteria.baiduWeight}"/>
+	<input type="hidden" name="createTime" id="createTime" value="${qzSettingSearchCriteria.createTime}"/>
 </form>
 
 <div class="datalist">
