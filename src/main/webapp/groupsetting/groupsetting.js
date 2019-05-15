@@ -663,20 +663,16 @@ function changeRemainingAccount(self) {
 function getAvailableOptimizationGroups() {
     var terminalType = $("#chargeForm").find("#terminalType").val();
     $.ajax({
-        url:'/internal/groupsetting/getAvailableOptimizationGroups',
+        url:'/internal/groupsetting/getAvailableOptimizationGroups/' + terminalType,
         headers:{
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
         type:'POST',
-        data: terminalType,
         success: function (data) {
             var text = "";
             $.each(data, function(index, element) {
-                text += index;
-                if(element != null && element != ''){
-                    text += '______'+ toTimeFormat(new Date(element));
-                }
+                text += element;
                 text += '\r';
             });
             $("#getAvailableOptimizationGroupsContent").val(text);
@@ -686,7 +682,7 @@ function getAvailableOptimizationGroups() {
     $("#getAvailableOptimizationGroups").dialog({
         resizable: false,
         height: 450,
-        width: 340,
+        width: 200,
         title: '查看需要增加的分组队列',
         modal: true
     });

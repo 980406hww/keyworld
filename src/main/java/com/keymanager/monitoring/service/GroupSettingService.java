@@ -66,23 +66,12 @@ public class GroupSettingService extends ServiceImpl<GroupSettingDao, GroupSetti
         }
     }
 
-    public Map<String, Date> getAvailableOptimizationGroups (String terminalType) {
-        List<Group> availableCustomerKeywordOptimizationGroups = qzSettingService.getAvailableOptimizationGroups(terminalType);
-        Map<String, Date> groupMap = new HashMap<>();
-        if (CollectionUtils.isNotEmpty(availableCustomerKeywordOptimizationGroups)) {
-            for (Group group : availableCustomerKeywordOptimizationGroups) {
-                groupMap.put(group.getGroupName(), group.getCreateTime());
-            }
-        }
-        List<Group> availableQZSettingOptimizationGroups = customerKeywordService.getAvailableOptimizationGroups(terminalType);
-        if (CollectionUtils.isNotEmpty(availableQZSettingOptimizationGroups)) {
-            for (Group group : availableQZSettingOptimizationGroups) {
-                if (null != group.getGroupName() && !groupMap.containsKey(group.getGroupName())){
-                    groupMap.put(group.getGroupName(), group.getCreateTime());
-                }
-            }
-        }
-        return groupMap;
+    public List<String> getAvailableOptimizationGroups (String terminalType) {
+        List<String> availableCustomerKeywordOptimizationGroups = customerKeywordService.getAvailableOptimizationGroups(terminalType);
+        List<String> availableQZSettingOptimizationGroups = qzSettingService.getAvailableOptimizationGroups(terminalType);
+        availableCustomerKeywordOptimizationGroups.addAll(availableQZSettingOptimizationGroups);
+        Set<String> middleLinkedHashSet = new LinkedHashSet<>(availableCustomerKeywordOptimizationGroups);
+        return new ArrayList<>(middleLinkedHashSet);
     }
 
     public GroupSetting getGroupSettingViaPercentage(String groupName, String terminalType){

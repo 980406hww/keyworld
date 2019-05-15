@@ -351,23 +351,30 @@
         <if test="qzSettingSearchClientGroupInfoCriteria.optimizeGroupName != ''">AND ck.fOptimizeGroupName LIKE '${qzSettingSearchClientGroupInfoCriteria.optimizeGroupName}%'</if>
     </select>
 
-    <select id="getAvailableOptimizationGroups" resultType="com.keymanager.monitoring.entity.Group">
+    <select id="getAvailableOptimizationGroups" resultType="java.lang.String">
         SELECT
         <choose>
             <when test="terminalType =='PC'">
-                qs.fPcGroup AS 'groupName',
+                qs.fPcGroup AS 'groupName'
             </when>
             <otherwise>
-                qs.fPhoneGroup AS 'groupName',
+                qs.fPhoneGroup AS 'groupName'
             </otherwise>
         </choose>
-            qs.fCreateTime AS 'createTime'
         FROM t_qz_setting qs
-        WHERE
-        NOT EXISTS (
+        WHERE qs.fStatus = 1
+        <choose>
+            <when test="terminalType =='PC'">
+                AND qs.fPcGroup > ''
+            </when>
+            <otherwise>
+                AND qs.fPhoneGroup > ''
+            </otherwise>
+        </choose>
+        AND NOT EXISTS (
                 SELECT 1
                 FROM t_group g
-                WHERE 1 = 1
+                WHERE g.fTerminalType = #{terminalType}
                 <choose>
                     <when test="terminalType =='PC'">
                         AND g.fGroupName = qs.fPcGroup
@@ -376,9 +383,16 @@
                         AND g.fGroupName = qs.fPhoneGroup
                     </otherwise>
                 </choose>
-                AND g.fTerminalType = #{terminalType}
             )
-        GROUP BY qs.fPcGroup
+        GROUP BY
+        <choose>
+            <when test="terminalType =='PC'">
+                qs.fPcGroup
+            </when>
+            <otherwise>
+                qs.fPhoneGroup
+            </otherwise>
+        </choose>
         ORDER BY qs.fCreateTime DESC
     </select>
 </mapper>

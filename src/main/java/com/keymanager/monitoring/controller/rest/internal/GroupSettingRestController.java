@@ -20,8 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.Map;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/internal/groupsetting")
@@ -126,14 +125,10 @@ public class GroupSettingRestController extends SpringMVCBaseController {
         }
     }
 
-    @PostMapping("/getAvailableOptimizationGroups")
-    public ResponseEntity<?> getAvailableOptimizationGroups(HttpServletRequest request) {
+    @PostMapping("/getAvailableOptimizationGroups/{terminalType}")
+    public ResponseEntity<?> getAvailableOptimizationGroups(@PathVariable("terminalType") String terminalType) {
         try {
-            String terminalType = (String) request.getAttribute("terminalType");
-            if (null == terminalType) {
-                terminalType = TerminalTypeMapping.getTerminalType(request);
-            }
-            Map<String, Date> availableOptimizationGroups = groupSettingService.getAvailableOptimizationGroups(terminalType);
+            List<String> availableOptimizationGroups = groupSettingService.getAvailableOptimizationGroups(terminalType);
             return new ResponseEntity<Object>(availableOptimizationGroups, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
