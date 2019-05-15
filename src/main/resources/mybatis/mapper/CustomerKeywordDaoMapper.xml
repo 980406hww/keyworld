@@ -1278,7 +1278,7 @@
         AND ck.fType = 'qz'
         AND ck.fCapturedTitle = 0
         AND ck.fOptimizeGroupName NOT LIKE 'no_%'
-        AND ck.fOptimizeGroupName NOT IN ('sotp', 'zanting')
+        AND ck.fOptimizeGroupName NOT IN ('stop','zanting','ZANTING','sotp')
         LIMIT 10000
     </update>
 
@@ -1437,7 +1437,7 @@
             ck.fOptimizeGroupName AS 'groupName'
         FROM t_customer_keyword ck
         WHERE ck.fOptimizeGroupName NOT LIKE 'no_%'
-        AND ck.fOptimizeGroupName NOT IN ('stop','zanting')
+        AND ck.fOptimizeGroupName NOT IN ('stop','zanting','ZANTING','sotp')
         AND ck.fTerminalType = #{terminalType}
         AND ck.fStatus = 1
         AND NOT EXISTS (
