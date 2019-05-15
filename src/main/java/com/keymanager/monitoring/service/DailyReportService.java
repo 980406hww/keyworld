@@ -13,10 +13,7 @@ import com.keymanager.monitoring.enums.EntryTypeEnum;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
 import com.keymanager.monitoring.excel.operator.CustomerKeywordDailyReportSummaryExcelWriter;
 import com.keymanager.monitoring.excel.operator.CustomerKeywordDailyReportTotalExcelWriter;
-import com.keymanager.util.Constants;
-import com.keymanager.util.FileUtil;
-import com.keymanager.util.Utils;
-import com.keymanager.util.ZipCompressor;
+import com.keymanager.util.*;
 import com.keymanager.util.common.StringUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
@@ -47,6 +44,9 @@ public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport>
 
 	@Autowired
 	private DailyReportItemService dailyReportItemService;
+
+	@Autowired
+	private KeywordInfoSynchronizeService keywordInfoSynchronizeService;
 
 	public void autoTriggerDailyReport(){
 		if(!captureRankJobService.hasCaptureRankJob() && dailyReportDao.fetchDailyReportTriggeredInToday(DailyReportTriggerModeEnum.Auto.name()) == null){
@@ -106,6 +106,14 @@ public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport>
 		if(dailyReportItem != null){
 			dailyReportItemService.generateDailyReport(dailyReport.getUuid(), dailyReportItem.getUuid());
 		}else{
+			Config webPathConfig = configService.getConfig(Constants.CONFIG_TYPE_KEYWORD_INFO_SYNCHRONIZE, Constants.CONFIG_KEY_WEBPATH);
+			String webPath = webPathConfig.getValue();
+			String username = configService.getConfig(Constants.CONFIG_TYPE_KEYWORD_INFO_SYNCHRONIZE, Constants.CONFIG_KEY_USERNAME).getValue();
+			String password = configService.getConfig(Constants.CONFIG_TYPE_KEYWORD_INFO_SYNCHRONIZE, Constants.CONFIG_KEY_PASSWORD).getValue();
+			Map map = new HashMap();
+			map.put("username", username);
+			map.put("password", password);
+
 			dailyReport.setStatus(DailyReportStatusEnum.Completed.name());
 			dailyReport.setCompleteTime(new Date());
 			Map<String, Map<String, String>> externalAccountAndSummaryFeeMap = generateDailyReportSummaryData(dailyReport.getUuid());
@@ -118,8 +126,10 @@ public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport>
 				excelWriter.writeDataToExcel(externalAccount);
 				String dailyReportFolder = String.format("%sdailyreport/%d/", path, dailyReport.getUuid());
 				String loginUserReportFolder = dailyReportFolder + externalAccount + "/";
+				map.put("userID", externalAccount);
+				String reportPassword = keywordInfoSynchronizeService.getUserReportInfo(webPath, map);
 				ZipCompressor.createEncryptionZip(loginUserReportFolder, dailyReportFolder + String.format("%s_%s.zip", externalAccount, Utils.formatDatetime(Utils.getCurrentTimestamp(),
-						"yyyy.MM.dd")), externalAccount + Utils.getCurrentDate());
+						"yyyy.MM.dd")), (StringUtils.isNotEmpty(reportPassword) ? AESUtils.decrypt(reportPassword) : externalAccount) + Utils.getCurrentDate());
 				FileUtil.delFolder(loginUserReportFolder);
 
 				totalExcelWriter.initSheet(externalAccount);

@@ -64,11 +64,11 @@ public class KeywordOptimizationCountService extends ServiceImpl<ClientStatusDao
 		private Timestamp lastResetTime;
 
 		public boolean fetchNormalKeyword(){
-			return this.normalKeywordOptimizedCount < 30;
+			return this.normalKeywordOptimizedCount < 60;
 		}
 
 		public boolean fetchBigKeyword(){
-			return this.bigKeywordOptimizedCount < 20;
+			return this.bigKeywordOptimizedCount < 40;
 		}
 
 		public String getGroup() {

@@ -89,6 +89,16 @@
            overflowToDisk="false"
            diskPersistent="false" />
 
+    <!--operationType操作类型缓存-->
+    <cache name="operationTypeList"
+           maxElementsInMemory="10000"
+           maxElementsOnDisk="100000"
+           eternal="false"
+           timeToIdleSeconds="604800"
+           timeToLiveSeconds="604800"
+           overflowToDisk="false"
+           diskPersistent="false" />
+
     <!--
         name:缓存名称。
         maxElementsInMemory：缓存最大个数。

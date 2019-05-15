@@ -8,7 +8,6 @@
         ck.fPositionNumber AS `positionNumber`,
         ck.fIndexCount AS `indexCount`,
         ck.fIP AS `ip`,
-        ck.fUpdateTime AS `updateTime`,
         ck.fCreateTime AS `createTime`
     </sql>
     <select id="searchCustomerKeywordPositionIndexLogs" resultType="com.keymanager.monitoring.entity.CustomerKeywordPositionIndexLog">

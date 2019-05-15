@@ -2,16 +2,13 @@ package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.criteria.CustomerKeywordCriteria;
+import com.keymanager.monitoring.dao.DailyReportItemDao;
 import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.CustomerKeyword;
-import com.keymanager.monitoring.entity.Performance;
-import com.keymanager.monitoring.excel.operator.CustomerKeywordDailyReportExcelWriter;
-import com.keymanager.manager.CustomerKeywordManager;
-import com.keymanager.monitoring.dao.DailyReportItemDao;
 import com.keymanager.monitoring.entity.DailyReportItem;
 import com.keymanager.monitoring.enums.DailyReportStatusEnum;
+import com.keymanager.monitoring.excel.operator.CustomerKeywordDailyReportExcelWriter;
 import com.keymanager.util.Utils;
-import com.keymanager.value.CustomerKeywordVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
