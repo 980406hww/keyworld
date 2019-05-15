@@ -143,7 +143,7 @@
 										</div>
 										<div>
 										<span>
-											<a href="javascript:;">机器使用占比</a>
+											<a href="javascript:;">分组设置占比</a>
 										</span>
 										</div>
 										<div>
@@ -261,12 +261,12 @@
 										</div>
 										<div>
 											<span class="line1">
-												<a href="javascript:;">${groupSetting.disableStatistics == 1 ? "开放" : "关闭"}</a>
+												<a href="javascript:;">${groupSetting.disableStatistics == 0 ? "开放" : "关闭"}</a>
 											</span>
 										</div>
 										<div>
 											<span class="line1">
-												<a href="javascript:;">${groupSetting.disableVisitWebsite == 1 ? "访问" : "不访问"}</a>
+												<a href="javascript:;">${groupSetting.disableVisitWebsite == 0 ? "访问" : "不访问"}</a>
 											</span>
 										</div>
 										<div>
@@ -276,7 +276,7 @@
 										</div>
 										<div>
 											<span class="line1">
-												<a href="javascript:;">${groupSetting.pageSize}</a>
+												<a href="javascript:;">${groupSetting.pageSize == 0 ? 10 : groupSetting.pageSize == 1 ? 20 : 50}</a>
 											</span>
 										</div>
 										<div>
@@ -421,7 +421,7 @@
 							</td>
 						</tr>
 						<tr name="trItem" onclick="checkItem(this)">
-							<th>机器使用占比</th>
+							<th>分组设置占比</th>
 							<td>
 								<input type="hidden" name="remainAccount" id="remainAccount" value="100">
 								<input type="hidden" name="currentAccount" id="currentAccount" value="0">
@@ -752,7 +752,7 @@
 							</td>
 						</tr>
 						<tr name="trItem" onclick="checkItem(this)">
-							<th>机器使用占比</th>
+							<th>分组设置占比</th>
 							<td>
 								<input type="hidden" name="remainAccount" id="remainAccount" value="100">
 								<input type="hidden" name="currentAccount" id="currentAccount" value="0">

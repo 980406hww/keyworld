@@ -17,6 +17,7 @@
         gs.fMultiBrowser AS "multiBrowser",
         gs.fClearCookie AS "clearCookie",
         gs.fDisableStatistics AS "disableStatistics",
+        gs.fDisableVisitWebsite AS "disableVisitWebsite",
         gs.fEntryPageMinCount AS "entryPageMinCount",
         gs.fEntryPageMaxCount AS "entryPageMaxCount",
         gs.fPageRemainMinTime AS "pageRemainMinTime",
