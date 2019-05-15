@@ -49,6 +49,6 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
 
     int getQZSettingClientGroupInfo (@Param("qzSettingSearchClientGroupInfoCriteria") QZSettingSearchClientGroupInfoCriteria qzSettingSearchClientGroupInfoCriteria);
 
-    List<Group> getAvailableOptimizationGroups (@Param("terminalType") String terminalType);
+    List<String> getAvailableOptimizationGroups (@Param("terminalType") String terminalType);
 }
 

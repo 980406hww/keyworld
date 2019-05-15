@@ -219,5 +219,5 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void addCustomerKeywords (@Param("customerKeywords") List<CustomerKeyword> customerKeywords);
 
-    List<Group> getAvailableOptimizationGroups (String terminalType);
+    List<String> getAvailableOptimizationGroups (String terminalType);
 }

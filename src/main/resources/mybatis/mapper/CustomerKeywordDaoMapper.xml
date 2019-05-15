@@ -1432,15 +1432,14 @@
         </foreach>
     </insert>
 
-    <select id="getAvailableOptimizationGroups" resultType="com.keymanager.monitoring.entity.Group">
+    <select id="getAvailableOptimizationGroups" resultType="java.lang.String">
         SELECT
-            ck.fOptimizeGroupName AS 'groupName',
-            ck.fCreateTime AS 'createTime'
+            ck.fOptimizeGroupName AS 'groupName'
         FROM t_customer_keyword ck
-        WHERE 1 = 1
-        AND ck.fOptimizeGroupName NOT LIKE 'no_%'
+        WHERE ck.fOptimizeGroupName NOT LIKE 'no_%'
         AND ck.fOptimizeGroupName NOT IN ('stop','zanting')
         AND ck.fTerminalType = #{terminalType}
+        AND ck.fStatus = 1
         AND NOT EXISTS (
             SELECT 1
             FROM t_group g
