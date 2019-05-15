@@ -73,6 +73,7 @@ public class GroupSettingRestController extends SpringMVCBaseController {
         modelAndView.addObject("operationTypeValues", operationTypeValues);
         modelAndView.addObject("page", page);
         modelAndView.addObject("availableOptimizationGroupCount", availableOptimizationGroupCount);
+        modelAndView.addObject("terminalType", groupSettingCriteria.getTerminalType());
         performanceService.addPerformanceLog(groupSettingCriteria.getTerminalType() + ":searchGroupSettings", System.currentTimeMillis() - startMilleSeconds, null);
         return modelAndView;
     }

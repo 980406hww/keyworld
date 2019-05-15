@@ -608,19 +608,19 @@
 						<tr name="trItem" onclick="checkItem(this)">
 							<th>打开百度等待</th>
 							<td>
-								<input type="text" name="waitTimeAfterOpenBaidu" id="waitTimeAfterOpenBaidu" value="1000"/>秒
+								<input type="text" name="waitTimeAfterOpenBaidu" id="waitTimeAfterOpenBaidu" value="1000"/>毫秒
 							</td>
 						</tr>
 						<tr name="trItem" onclick="checkItem(this)">
 							<th>点击目标等待</th>
 							<td>
-								<input type="text" name="waitTimeBeforeClick" id="waitTimeBeforeClick" value="1000"/>秒
+								<input type="text" name="waitTimeBeforeClick" id="waitTimeBeforeClick" value="1000"/>毫秒
 							</td>
 						</tr>
 						<tr name="trItem" onclick="checkItem(this)">
 							<th>点击目标后等待</th>
 							<td>
-								<input type="text" name="waitTimeAfterClick" id="waitTimeAfterClick" value="5000"/>秒
+								<input type="text" name="waitTimeAfterClick" id="waitTimeAfterClick" value="5000"/>毫秒
 							</td>
 						</tr>
 					</table>
@@ -634,12 +634,12 @@
 						</tr>
 						<tr>
 							<td name="trItem" onclick="checkItem(this)">
-								<input id="justVisitSelfPage" name="justVisitSelfPage" type="checkbox" value="1">在域名下访问</input>
+								<input id="justVisitSelfPage" name="justVisitSelfPage" type="checkbox" value="1" checked>在域名下访问</input>
 							</td>
 						</tr>
 						<tr>
 							<td name="trItem" onclick="checkItem(this)">
-								<input id="supportPaste" name="supportPaste" type="checkbox" value="1">支持粘贴输入</input>
+								<input id="supportPaste" name="supportPaste" type="checkbox" value="1" checked>支持粘贴输入</input>
 							</td>
 						</tr>
 						<tr>
@@ -678,17 +678,17 @@
 						</tr>
 						<tr>
 							<td name="trItem" onclick="checkItem(this)">
-								<input id="sleepPer2Words" name="sleepPer2Words" type="checkbox" value="1">输入2字稍微停顿</input>
+								<input id="sleepPer2Words" name="sleepPer2Words" type="checkbox" value="1" checked>输入2字稍微停顿</input>
 							</td>
 						</tr>
 						<tr>
 							<td name="trItem" onclick="checkItem(this)">
-								<input id="moveRandomly" name="moveRandomly" type="checkbox" value="1">随机移动</input>
+								<input id="moveRandomly" name="moveRandomly" type="checkbox" value="1" checked>随机移动</input>
 							</td>
 						</tr>
 						<tr>
 							<td name="trItem" onclick="checkItem(this)">
-								<input id="clearLocalStorage" name="clearLocalStorage" type="checkbox" value="1">清除LocalStorage</input>
+								<input id="clearLocalStorage" name="clearLocalStorage" type="checkbox" value="1" checked>清除LocalStorage</input>
 							</td>
 						</tr>
 						<tr>
@@ -936,19 +936,19 @@
 						<tr name="trItem" onclick="checkItem(this)">
 							<th>打开百度等待</th>
 							<td>
-								<input type="text" name="waitTimeAfterOpenBaidu" id="waitTimeAfterOpenBaidu" value="1000"/>秒
+								<input type="text" name="waitTimeAfterOpenBaidu" id="waitTimeAfterOpenBaidu" value="1000"/>毫秒
 							</td>
 						</tr>
 						<tr name="trItem" onclick="checkItem(this)">
 							<th>点击目标等待</th>
 							<td>
-								<input type="text" name="waitTimeBeforeClick" id="waitTimeBeforeClick" value="1000"/>秒
+								<input type="text" name="waitTimeBeforeClick" id="waitTimeBeforeClick" value="1000"/>毫秒
 							</td>
 						</tr>
 						<tr name="trItem" onclick="checkItem(this)">
 							<th>点击目标后等待</th>
 							<td>
-								<input type="text" name="waitTimeAfterClick" id="waitTimeAfterClick" value="5000"/>秒
+								<input type="text" name="waitTimeAfterClick" id="waitTimeAfterClick" value="5000"/>毫秒
 							</td>
 						</tr>
 					</table>
@@ -962,12 +962,12 @@
 						</tr>
 						<tr>
 							<td name="trItem" onclick="checkItem(this)">
-								<input id="justVisitSelfPage" name="justVisitSelfPage" type="checkbox" value="1">在域名下访问</input>
+								<input id="justVisitSelfPage" name="justVisitSelfPage" type="checkbox" value="1" checked>在域名下访问</input>
 							</td>
 						</tr>
 						<tr>
 							<td name="trItem" onclick="checkItem(this)">
-								<input id="supportPaste" name="supportPaste" type="checkbox" value="1">支持粘贴输入</input>
+								<input id="supportPaste" name="supportPaste" type="checkbox" value="1" checked>支持粘贴输入</input>
 							</td>
 						</tr>
 						<tr>
@@ -1006,17 +1006,17 @@
 						</tr>
 						<tr>
 							<td name="trItem" onclick="checkItem(this)">
-								<input id="sleepPer2Words" name="sleepPer2Words" type="checkbox" value="1">输入2字稍微停顿</input>
+								<input id="sleepPer2Words" name="sleepPer2Words" type="checkbox" value="1" checked>输入2字稍微停顿</input>
 							</td>
 						</tr>
 						<tr>
 							<td name="trItem" onclick="checkItem(this)">
-								<input id="moveRandomly" name="moveRandomly" type="checkbox" value="1">随机移动</input>
+								<input id="moveRandomly" name="moveRandomly" type="checkbox" value="1" checked>随机移动</input>
 							</td>
 						</tr>
 						<tr>
 							<td name="trItem" onclick="checkItem(this)">
-								<input id="clearLocalStorage" name="clearLocalStorage" type="checkbox" value="1">清除LocalStorage</input>
+								<input id="clearLocalStorage" name="clearLocalStorage" type="checkbox" value="1" checked>清除LocalStorage</input>
 							</td>
 						</tr>
 						<tr>

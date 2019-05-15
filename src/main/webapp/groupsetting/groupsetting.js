@@ -405,6 +405,10 @@ function saveGroupSetting(type, status, isUpdateGroup, groupUuid){
         }
         group.groupName = groupName;
         type = "groupadd";
+        if (dialogDiv.find("#machineUsedPercent").val() === '0' || dialogDiv.find("#machineUsedPercent").val() === '') {
+            alert("每个操作的机器占比都应该大于0！！！");
+            return false;
+        }
     }
     var groupSetting = {}
     var operationType = dialogDiv.find("#settingOperationType").val();
@@ -573,6 +577,10 @@ function saveGroupSetting(type, status, isUpdateGroup, groupUuid){
             $("#updateGroupSettingDialog").dialog("close");
         }
     } else if (type === "add") {
+        if (groupSetting.machineUsedPercent === '0' || groupSetting.machineUsedPercent === '') {
+            alert("每个操作的机器占比都应该大于0！！！");
+            return false;
+        }
         var groupUuid = dialogDiv.find('#groupUuid').val();
         groupSetting.groupUuid = groupUuid;
         $.ajax({
