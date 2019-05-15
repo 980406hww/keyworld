@@ -17,4 +17,6 @@ public interface GroupSettingDao extends BaseMapper<GroupSetting> {
     void updateGroupSetting (@Param("gs") GroupSetting gs, @Param("groupSetting") GroupSetting groupSetting);
 
     void deleteByGroupUuid (@Param("groupUuid") long groupUuid);
+
+    List<Long> getGroupSettingUuids (@Param("groupUuid") long groupUuid);
 }

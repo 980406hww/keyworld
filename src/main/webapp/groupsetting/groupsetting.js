@@ -74,6 +74,7 @@ function checkHasOperation() {
         trimSearchCondition();
     });
 }
+
 function changePaging(currentPage, pageSize) {
     var chargeForm = $("#chargeForm");
     chargeForm.find("#currentPageNumberHidden").val(currentPage);
@@ -105,6 +106,7 @@ function trimSearchCondition() {
 function showGroupDialog() {
     var changeSettingDialog = $("#changeSettingDialog");
     changeSettingDialog.find('#changeSettingDialogForm')[0].reset();
+    $("#changeSettingDialog").find("#settingGroup").removeAttr("disabled");
     $("#changeSettingDialog").find("i").text(100);
     changeSettingDialog.show();
     changeSettingDialog.dialog({
@@ -124,7 +126,7 @@ function showGroupDialog() {
             iconCls: 'icon-cancel',
             handler: function () {
                 $("#changeSettingDialog").dialog("close");
-                $('#changeSettingDialogForm')[0].reset();
+                $("#changeSettingDialogForm")[0].reset();
                 $("#changeSettingDialog").find("i").text(100);
                 resetTrItemColor();
             }
@@ -139,40 +141,34 @@ function showGroupDialog() {
     changeSettingDialog.window("resize", {top: $(document).scrollTop() + 150});
 }
 
-function showUpdateGroupDialog(groupUuid, groupName, remainingAccount) {
+function showUpdateGroupDialog(groupUuid, groupName) {
     var updateGroupSettingDialog = $("#updateGroupSettingDialog");
     updateGroupSettingDialog.find('#updateGroupSettingDialogForm')[0].reset();
-    updateGroupSettingDialog.find('#remainAccount').val(remainingAccount);
-    updateGroupSettingDialog.find("i").text(remainingAccount);
+    updateGroupSettingDialog.find("#settingGroup").attr("disabled", true);
     findGroup(groupUuid, groupName);
     updateGroupSettingDialog.show();
     updateGroupSettingDialog.dialog({
         resizable: false,
         width: 790,
         maxHeight: 550,
-        title: "修改优化分组下的操作类型(需要修改的信息请标红!!!)",
+        title: "批量修改优化组设置(需要修改的信息请标红!!!)",
         modal: false,
         buttons: [{
             text: '修改',
             iconCls: 'icon-ok',
             handler: function () {
                 saveGroupSetting('update', 0, 1, groupUuid);
-                updateGroupSettingDialog.find('#remainAccount').val(updateGroupSettingDialog.find("i").text());
             }
         }, {
             text: '取消',
             iconCls: 'icon-cancel',
             handler: function () {
                 $("#updateGroupSettingDialog").dialog("close");
-                $('#updateGroupSettingDialogForm')[0].reset();
-                resetTrItemColor();
-                location.reload();
             }
         }],
         onClose: function () {
             $('#updateGroupSettingDialogForm')[0].reset();
             resetTrItemColor();
-            location.reload();
         }
     });
     updateGroupSettingDialog.dialog("open");
@@ -200,37 +196,24 @@ function delGroup(groupUuid) {
 
 function findGroup(groupUuid, groupName) {
     $.ajax({
-        url: '/internal/group/findGroup/' + groupUuid,
+        url: '/internal/groupsetting/getGroupSettingCount/' + groupUuid,
         type: 'POST',
         success: function (result) {
             if(null !== result) {
-                var tableTr = $("#updateGroupSettingDialog").find("#groupSettingVos tr");
-                $(tableTr).find("td").remove();
-                $.each(result.groupResultVos, function (idx, val) {
-                    tableTr.append("<td>" +
-                        "<a class='blue' href='javascript:coverGroupSettingDialog("+ val.uuid +")'>"+ val.operationType +"</a>" +
-                        "</td>");
-                });
+                $("#updateGroupSettingDialog").find("strong").text(result);
                 $("#updateGroupSettingDialog").find("#settingGroup").val(groupName != null ? groupName : "");
-                $("#updateGroupSettingDialog").find('#groupSettingUuid').val(result.groupSetting.uuid);
-                initSettingDialog(result.groupSetting, 1);
             }
         },
         error: function () {
-            $().toastmessage('showErrorToast', "查询失败");
+            $().toastmessage('showErrorToast', "获取操作数失败");
         }
     });
-}
-
-function coverGroupSettingDialog(id) {
-    $("#updateGroupSettingDialog").find('#groupSettingUuid').val(id);
-    findGroupSetting(id, 1);
-    resetTrItemColor();
 }
 
 function showGroupSettingDialog(type, id, groupName, remainingAccount, groupUuid) {
     var changeSettingDialog = $("#changeSettingDialog");
     changeSettingDialog.find('#changeSettingDialogForm')[0].reset();
+    $("#changeSettingDialog").find("#settingGroup").attr("disabled", true);
     changeSettingDialog.find('#settingGroup').val(groupName);
     changeSettingDialog.find('#remainAccount').val(remainingAccount);
     changeSettingDialog.find("i").text(remainingAccount);
@@ -357,8 +340,8 @@ function initSettingDialog(groupSetting, status){
     if(groupSetting.clearCookie != null){
         dialogDiv.find("#clearCookie").val(groupSetting.clearCookie);
     }
-    dialogDiv.find("#disableStatistics ").val(groupSetting.disableStatistics );
-    dialogDiv.find("#disableVisitWebsite ").val(groupSetting.disableVisitWebsite );
+    dialogDiv.find("#disableStatistics").val(groupSetting.disableStatistics);
+    dialogDiv.find("#disableVisitWebsite").val(groupSetting.disableVisitWebsite);
 
     dialogDiv.find("#entryPageMinCount").val(groupSetting.entryPageMinCount);
     dialogDiv.find("#entryPageMaxCount").val(groupSetting.entryPageMaxCount);
@@ -425,7 +408,7 @@ function saveGroupSetting(type, status, isUpdateGroup, groupUuid){
     }
     var groupSetting = {}
     var operationType = dialogDiv.find("#settingOperationType").val();
-    if (operationType == '') {
+    if (isUpdateGroup === 0 && operationType == '') {
         alert("请选择操作类型！！！");
         return false;
     }
@@ -489,6 +472,12 @@ function saveGroupSetting(type, status, isUpdateGroup, groupUuid){
         groupSetting.groupUuid = groupUuid;
         var gs = {};
         gs.operationType = isChecked("settingOperationType", dialogDiv);
+        if (isChecked("machineUsedPercent", dialogDiv) === "1") {
+            if (groupSetting.machineUsedPercent === "0" || groupSetting.machineUsedPercent === ''){
+                alert("每个操作的机器占比都应该大于0！！！");
+                return false;
+            }
+        }
         gs.machineUsedPercent = isChecked("machineUsedPercent", dialogDiv);
         gs.disableStatistics = isChecked("disableStatistics", dialogDiv);
         gs.disableVisitWebsite = isChecked("disableVisitWebsite", dialogDiv);
@@ -539,32 +528,50 @@ function saveGroupSetting(type, status, isUpdateGroup, groupUuid){
         var postData = {};
         postData.gs = gs;
         postData.groupSetting = groupSetting;
-        $.ajax({
-            url: '/internal/groupsetting/updateGroupSetting',
-            data: JSON.stringify(postData),
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            timeout: 5000,
-            type: 'POST',
-            success: function (result) {
-                if(result){
-                    if (isUpdateGroup) {
-                        $().toastmessage('showSuccessToast', "更新成功");
-                    } else{
+        if (isUpdateGroup === 1) {
+            $.ajax({
+                url: '/internal/group/updateGroup/' + groupUuid,
+                data: JSON.stringify(postData),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                type: 'POST',
+                success: function (result) {
+                    if(result){
                         $().toastmessage('showSuccessToast', "更新成功", true);
+                    } else {
+                        $().toastmessage('showErrorToast', "更新失败");
                     }
-                }else{
+                },
+                error: function () {
                     $().toastmessage('showErrorToast', "更新失败");
                 }
-                $("#changeSettingDialog").dialog("close");
-            },
-            error: function () {
-                $().toastmessage('showErrorToast', "更新失败");
-                $("#changeSettingDialog").dialog("close");
-            }
-        });
+            });
+            $("#changeSettingDialog").dialog("close");
+        } else {
+            $.ajax({
+                url: '/internal/groupsetting/updateGroupSetting',
+                data: JSON.stringify(postData),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                type: 'POST',
+                success: function (result) {
+                    if(result){
+                        $().toastmessage('showSuccessToast', "更新成功", true);
+                    }else{
+                        $().toastmessage('showErrorToast', "更新失败");
+                    }
+                },
+                error: function () {
+                    $().toastmessage('showErrorToast', "更新失败");
+
+                }
+            });
+            $("#updateGroupSettingDialog").dialog("close");
+        }
     } else if (type === "add") {
         var groupUuid = dialogDiv.find('#groupUuid').val();
         groupSetting.groupUuid = groupUuid;
@@ -653,7 +660,11 @@ function changeRemainingAccount(self) {
     if (machineUsedPercent === '') {
         machineUsedPercent = '0';
     }
-    var result = parseInt(totalCount) - parseInt(machineUsedPercent);
+    var count = $(self).parent().find("strong").text();
+    if (count === '' || count === undefined) {
+        count = 1;
+    }
+    var result = parseInt(totalCount) - parseInt(machineUsedPercent) * parseInt(count);
     if (result < 0) {
         alert("机器占比超出范围，请修改");
     }
@@ -689,15 +700,3 @@ function getAvailableOptimizationGroups() {
     $("#getAvailableOptimizationGroups").dialog("open");
     $("#getAvailableOptimizationGroups").window("resize",{top:$(document).scrollTop() + 100});
 }
-function toTimeFormat(time) {
-    var date = toDateFormat(time);
-    var hours = time.getHours() < 10 ? ("0" + time.getHours()) : time.getHours();
-    var minutes = time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes();
-    var seconds = time.getSeconds() < 10 ? "0" + time.getSeconds() : time.getSeconds();
-    return date + " " + hours + ":" + minutes + ":" + seconds;
-};
-function toDateFormat (time) {
-    var m = (time.getMonth() + 1) > 9 ? (time.getMonth() + 1) : "0" + (time.getMonth() + 1);
-    var d = time.getDate() > 9 ? time.getDate() : "0" + time.getDate();
-    return time.getFullYear() + "-" + m + "-" + d;
-};

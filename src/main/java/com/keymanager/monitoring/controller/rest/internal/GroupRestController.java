@@ -1,8 +1,8 @@
 package com.keymanager.monitoring.controller.rest.internal;
 
 import com.keymanager.monitoring.criteria.GroupCriteria;
+import com.keymanager.monitoring.criteria.UpdateGroupSettingCriteria;
 import com.keymanager.monitoring.service.GroupService;
-import com.keymanager.monitoring.vo.GroupSettingVO;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,14 +40,14 @@ public class GroupRestController {
     }
 
     @RequiresPermissions("/internal/group/findGroup")
-    @PostMapping("/findGroup/{groupUuid}")
-    public ResponseEntity<?> findGroup(@PathVariable("groupUuid") long groupUuid) {
+    @PostMapping("/updateGroup/{groupUuid}")
+    public ResponseEntity<?> updateGroup(@PathVariable("groupUuid") long groupUuid, @RequestBody UpdateGroupSettingCriteria updateGroupSettingCriteria) {
         try {
-            GroupSettingVO groupSettingVo = groupService.findGroupSettings(groupUuid);
-            return new ResponseEntity<Object>(groupSettingVo, HttpStatus.OK);
+            groupService.updateGroupSettings(groupUuid, updateGroupSettingCriteria);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
         }
     }
 
