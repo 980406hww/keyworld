@@ -636,7 +636,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                 maxInvalidCount = groupMaxInvalidCountMap.get(machineInfo.getGroup());
                 if(maxInvalidCount == null){
                     String typeName = "all";
-        List<String> entryTypes = customerKeywordDao.getEntryTypes(machineInfo.getGroup());
+                    List<String> entryTypes = customerKeywordDao.getEntryTypes(machineInfo.getGroup());
                     if(!Utils.isEmpty(entryTypes) && entryTypes.size() == 1){
                         typeName = entryTypes.get(0);
                     }
@@ -647,8 +647,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                     }
                 }
             }
-        }
-
         }
 
         Long customerKeywordUuid = null;
@@ -887,8 +885,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                     }
                 }
             }
-        }
-
         }
 
         Long customerKeywordUuid = null;
