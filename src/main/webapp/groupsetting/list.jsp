@@ -137,7 +137,7 @@
 										</div>
 										<div>
 										<span>
-											<a href="javascript:;">机器使用占比</a>
+											<a href="javascript:;">分组设置占比</a>
 										</span>
 										</div>
 										<div>
@@ -415,7 +415,7 @@
 							</td>
 						</tr>
 						<tr name="trItem" onclick="checkItem(this)">
-							<th>机器使用占比</th>
+							<th>分组设置占比</th>
 							<td>
 								<input type="hidden" name="remainAccount" id="remainAccount" value="100">
 								<input type="hidden" name="currentAccount" id="currentAccount" value="0">
@@ -743,7 +743,7 @@
 							</td>
 						</tr>
 						<tr name="trItem" onclick="checkItem(this)">
-							<th>机器使用占比</th>
+							<th>分组设置占比</th>
 							<td>
 								<input type="hidden" name="remainAccount" id="remainAccount" value="100">
 								<input type="hidden" name="currentAccount" id="currentAccount" value="0">
