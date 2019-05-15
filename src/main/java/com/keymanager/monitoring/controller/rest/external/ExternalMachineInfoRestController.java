@@ -330,7 +330,6 @@ public class ExternalMachineInfoRestController extends SpringMVCBaseController {
         String clientID = request.getParameter("clientID");
         try {
             if (validUser(userName, password)) {
-                //TODO clientStatus refactor (after percentage done)
                 ClientStatusForOptimization clientStatus = machineInfoService.getClientStatusForOptimization(clientID);
                 byte[] compress = AESUtils.compress(AESUtils.encrypt(clientStatus).getBytes());
                 String s = AESUtils.parseByte2HexStr(compress);

@@ -214,7 +214,7 @@
         SELECT
         <include refid="selectCol" />
         FROM t_machine_info mi
-        WHERE (mi.fStartUpStatus = 'New' OR (mi.fStartUpStatus = 'Processing' AND DATE_ADD(mi.fStartUpTime, INTERVAL 30 MINUTE) &lt; NOW()))
+        WHERE (mi.fStartUpStatus = 'New' OR (mi.fStartUpStatus = 'Processing' AND mi.fStartUpTime &lt; DATE_SUB(NOW(), INTERVAL 30 MINUTE)))
         ORDER BY mi.fStartUpTime
         LIMIT 1
     </select>

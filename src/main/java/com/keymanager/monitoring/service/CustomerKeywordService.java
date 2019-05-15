@@ -877,7 +877,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
         int retryCount = 0;
         int noPositionMaxInvalidCount = 2;
-        //TODO clientStatus refactor
         Group group = groupService.findGroup(machineInfo.getGroup(), machineInfo.getTerminalType());
         if(group.getUsingOperationType().contains(Constants.CONFIG_TYPE_ZHANNEI_SOGOU)) {
             Config configInvalidRefreshCount = configService.getConfig(Constants.CONFIG_TYPE_ZHANNEI_SOGOU, Constants.CONFIG_KEY_NOPOSITION_MAX_INVALID_COUNT);
