@@ -17,19 +17,20 @@
         </if>
         AND g.fTerminalType = #{groupSettingCriteria.terminalType}
         <if test="groupSettingCriteria.hasOperation != null">
+            AND EXISTS (SELECT 1 FROM t_group_setting gs
+            WHERE gs.fGroupUuid = g.fUuid
             <choose>
                 <when test="groupSettingCriteria.hasOperation == 1">
-                    AND EXISTS (SELECT 1 FROM t_group_setting gs
-                    WHERE gs.fGroupUuid = g.fUuid
+                    AND gs.fOperationType > ''
                     <if test="groupSettingCriteria.operationType != null and groupSettingCriteria.operationType != ''">
                         AND gs.fOperationType = #{groupSettingCriteria.operationType}
                     </if>
-                    )
                 </when>
                 <otherwise>
-                    AND NOT EXISTS (SELECT 1 FROM t_group_setting gs WHERE gs.fGroupUuid = g.fUuid)
+                    AND gs.fOperationType IS NULL
                 </otherwise>
             </choose>
+            )
         </if>
         <if test="groupSettingCriteria.hasRemainingAccount == 1">
             AND g.fRemainingAccount <![CDATA[>]]> 0
