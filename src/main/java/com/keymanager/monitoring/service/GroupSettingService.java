@@ -91,12 +91,14 @@ public class GroupSettingService extends ServiceImpl<GroupSettingDao, GroupSetti
             List<GroupSetting> groupSettings = groupSettingDao.searchGroupSettingsSortingPercentage(group.getUuid());
             if(CollectionUtils.isNotEmpty(groupSettings)){
                 Random ra = new Random();
-                int randomValue = ra.nextInt(100 - group.getRemainingAccount()) + 1;
-                int totalPercentage = 0;
-                for(GroupSetting groupSetting : groupSettings){
-                    totalPercentage = totalPercentage + groupSetting.getMachineUsedPercent();
-                    if(randomValue <= totalPercentage){
-                        return groupSetting;
+                if(group.getRemainingAccount() < 100) {
+                    int randomValue = ra.nextInt(100 - group.getRemainingAccount()) + 1;
+                    int totalPercentage = 0;
+                    for (GroupSetting groupSetting : groupSettings) {
+                        totalPercentage = totalPercentage + groupSetting.getMachineUsedPercent();
+                        if (randomValue <= totalPercentage) {
+                            return groupSetting;
+                        }
                     }
                 }
             }
