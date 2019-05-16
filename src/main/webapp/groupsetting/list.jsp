@@ -1047,7 +1047,25 @@
 </div>
 <%--查看需要增加的分组队列--%>
 <div id="getAvailableOptimizationGroups" class="easyui-dialog" style="display: none">
-	<textarea id="getAvailableOptimizationGroupsContent"  style="width:100%;height:100%;resize: none"></textarea>
+	<table cellpadding="10" style="font-size: 12px; background-color: white;border-collapse: collapse; width: 100%;">
+        <thead style="background-color: #eeeeee !important;">
+			<tr>
+				<th colspan="2">操作类型:<select name="operationType" style="width: 150px;">
+						<c:forEach items="${operationTypeValues}" var="operationType">
+							<c:choose>
+								<c:when test="${operationType eq groupSettingCriteria.operationType}"><option selected>${operationType}</option></c:when>
+								<c:otherwise><option>${operationType}</option></c:otherwise>
+							</c:choose>
+						</c:forEach>
+					</select></th>
+			</tr>
+			<tr>
+				<th><input type="checkbox" name="checkAllOptimizationGroup" id="checkAllOptimizationGroup" onclick="selectAllChecked(this);" checked='checked'></th>
+				<th style="width: 190px;">优化组</th>
+			</tr>
+        </thead>
+		<tbody></tbody>
+    </table>
 </div>
 
 <%@ include file="/commons/loadjs.jsp" %>

@@ -97,6 +97,7 @@ function trimSearchCondition() {
     }
     if (operationType != ""){
         chargeForm.find("#operationType").val($.trim(operationType));
+        chargeForm.find("#hasOperation").val(true);
     } else {
         chargeForm.find("#operationType").val(null);
     }
@@ -417,12 +418,12 @@ function saveGroupSetting(type, status, isUpdateGroup, groupUuid){
         return false;
     }
     var remainingAccount = dialogDiv.find("#machineUsedPercent").parent().find("i").text();
-    if (remainingAccount < 0) {
-        alert("机器占比超出范围，请修改");
+    if (remainingAccount < 0 || remainingAccount >= 100) {
+        alert("机器占比不合理，请修改");
         return false;
     }
     groupSetting.operationType = operationType;
-    groupSetting.machineUsedPercent = dialogDiv.find("#machineUsedPercent").val();
+    groupSetting.machineUsedPercent = parseInt(dialogDiv.find("#machineUsedPercent").val() == '' ? 0 : dialogDiv.find("#machineUsedPercent").val());
     groupSetting.remainingAccount = remainingAccount;
     groupSetting.disableStatistics = dialogDiv.find("#disableStatistics").val();
     groupSetting.disableVisitWebsite = dialogDiv.find("#disableVisitWebsite").val();
@@ -477,7 +478,7 @@ function saveGroupSetting(type, status, isUpdateGroup, groupUuid){
         var gs = {};
         gs.operationType = isChecked("settingOperationType", dialogDiv);
         if (isChecked("machineUsedPercent", dialogDiv) === "1") {
-            if (groupSetting.machineUsedPercent === "0" || groupSetting.machineUsedPercent === ''){
+            if (groupSetting.machineUsedPercent === 0){
                 alert("每个操作的机器占比都应该大于0！！！");
                 return false;
             }
@@ -577,7 +578,7 @@ function saveGroupSetting(type, status, isUpdateGroup, groupUuid){
             $("#updateGroupSettingDialog").dialog("close");
         }
     } else if (type === "add") {
-        if (groupSetting.machineUsedPercent === '0' || groupSetting.machineUsedPercent === '') {
+        if (groupSetting.machineUsedPercent === 0) {
             alert("每个操作的机器占比都应该大于0！！！");
             return false;
         }
@@ -673,13 +674,14 @@ function changeRemainingAccount(self) {
         count = 1;
     }
     var result = parseInt(totalCount) - parseInt(machineUsedPercent) * parseInt(count);
-    if (result < 0) {
-        alert("机器占比超出范围，请修改");
+    if (result < 0 || result >= 100) {
+        $().toastmessage("showErrorToast", "机器占比不合理，请修改！！！");
     }
     $(self).parent().find("i").text(result);
 }
 
 function getAvailableOptimizationGroups() {
+    $("#getAvailableOptimizationGroups tbody tr").remove();
     var terminalType = $("#chargeForm").find("#terminalType").val();
     $.ajax({
         url:'/internal/groupsetting/getAvailableOptimizationGroups/' + terminalType,
@@ -688,23 +690,91 @@ function getAvailableOptimizationGroups() {
             'Content-Type': 'application/json'
         },
         type:'POST',
-        success: function (data) {
-            var text = "";
-            $.each(data, function(index, element) {
-                text += element;
-                text += '\r';
-            });
-            $("#getAvailableOptimizationGroupsContent").val(text);
+        success: function (result) {
+            if (result !== null) {
+                var tbody = $("#getAvailableOptimizationGroups").find("table tbody");
+                $.each(result, function(index, element) {
+                    tbody.append("<tr>" +
+                        "<td width='15px'><input type='checkbox' name='checkOptimizationGroup' checked='checked'></td>" +
+                        "<td width='190px'><input type='text' style='width: 190px;' name='optimizationGroup' disabled='disabled' value='"+ element +"'/></td>" +
+                        "</tr>");
+                });
+            }
         }
     });
     $("#getAvailableOptimizationGroups").show();
     $("#getAvailableOptimizationGroups").dialog({
         resizable: false,
         height: 450,
-        width: 200,
+        width: 230,
         title: '查看需要增加的分组队列',
-        modal: true
+        modal: true,
+        buttons: [{
+            text: '一键创建分组设置',
+            iconCls: 'icon-ok',
+            handler: function(){
+                batchAddGroups();
+            }
+        }, {
+            text: '取消',
+            iconCls: 'icon-cancel',
+            handler: function () {
+                $("#getAvailableOptimizationGroups").dialog("close");
+            }
+        }]
     });
     $("#getAvailableOptimizationGroups").dialog("open");
     $("#getAvailableOptimizationGroups").window("resize",{top:$(document).scrollTop() + 100});
+}
+
+function selectAllChecked(self) {
+    var a = document.getElementsByName("checkOptimizationGroup");
+    if (self.checked) {
+        for (var i = 0; i < a.length; i++) {
+            a[i].checked = true;
+        }
+    } else {
+        for (var i = 0; i < a.length; i++) {
+            a[i].checked = false;
+        }
+    }
+}
+
+function batchAddGroups() {
+    var postData = {};
+    postData.optimizationGroupList = [];
+    var terminalType = $("#chargeForm").find("#terminalType").val();
+    var operationType = $("#getAvailableOptimizationGroups").find("select[name='operationType']").val();
+    var a = document.getElementsByName("checkOptimizationGroup");
+    for (var i = 0; i < a.length; i++) {
+        if (a[i].checked === true) {
+            var optimizationGroup = {};
+            optimizationGroup.optimizedGroupName = $(a[i]).parent().parent().find("input[name='optimizationGroup']").val();
+            if (operationType !== "") {
+                optimizationGroup.operationType = operationType;
+            }
+            optimizationGroup.terminalType = terminalType;
+            postData.optimizationGroupList.push(optimizationGroup);
+        }
+    }
+    $.ajax({
+        url: '/internal/group/batchAddGroups',
+        headers: {
+            "Accept": 'application/json',
+            "Content-Type": 'application/json'
+        },
+        type: 'POST',
+        data: JSON.stringify(postData),
+        success: function (result) {
+            if (result) {
+                $().toastmessage("showSuccessToast", "批量添加分组成功！！！", true);
+            } else {
+                $().toastmessage("showErrorToast", "批量添加分组失败！！！")
+            }
+        },
+        error: function () {
+            $().toastmessage("showErrorToast", "批量添加分组失败！！！")
+        }
+    });
+    $("#getAvailableOptimizationGroups").dialog("close");
 }

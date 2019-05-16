@@ -1,5 +1,6 @@
 package com.keymanager.monitoring.controller.rest.internal;
 
+import com.keymanager.monitoring.criteria.GroupBatchCriteria;
 import com.keymanager.monitoring.criteria.GroupCriteria;
 import com.keymanager.monitoring.criteria.UpdateGroupSettingCriteria;
 import com.keymanager.monitoring.service.GroupService;
@@ -56,6 +57,18 @@ public class GroupRestController {
     public ResponseEntity<?> deleteGroup(@PathVariable("uuid") long uuid) {
         try {
             groupService.deleteGroup(uuid);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/batchAddGroups")
+    public ResponseEntity<?> batchAddGroups(@RequestBody GroupBatchCriteria groupBatchCriteria, HttpServletRequest request) {
+        try {
+            String userName = (String) request.getSession().getAttribute("username");
+            groupService.batchAddGroups(groupBatchCriteria, userName);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
