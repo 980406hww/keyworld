@@ -29,12 +29,6 @@
 		#td_2 input[type=text] {
 			width : 50px;
 		}
-		#groupSettingVos {
-			height: 24px;
-		}
-		#groupSettingVos tr a {
-			margin: 0px 0px 0px 10px;
-		}
 	</style>
 </head>
 <body>
@@ -124,7 +118,7 @@
 								<a class="blue" href="javascript:showGroupSettingDialog('add', '${groupVo.uuid}', '${groupVo.groupName}', '${groupVo.remainingAccount}', '${groupVo.uuid}')">新增优化组设置</a>
 							</shiro:hasPermission>
 							<shiro:hasPermission name="/internal/groupsetting/updateGroupSetting">
-								<a class="blue" href="javascript:showUpdateGroupDialog('${groupVo.uuid}', '${groupVo.groupName}', '${groupVo.remainingAccount}')">批量修改优化组设置</a>
+								<a class="blue" href="javascript:showUpdateGroupDialog('${groupVo.uuid}', '${groupVo.groupName}')">批量修改优化组设置</a>
 							</shiro:hasPermission>
 							<shiro:hasPermission name="/internal/group/delGroup">
 								<a class="blue" href="javascript:delGroup(${groupVo.uuid})">删除优化组</a>
@@ -276,7 +270,7 @@
 										</div>
 										<div>
 											<span class="line1">
-												<a href="javascript:;">${groupSetting.pageSize == 0 ? 10 : groupSetting.pageSize == 1 ? 20 : 50}</a>
+												<a href="javascript:;">${groupSetting.pageSize == 0 ? "10" : groupSetting.pageSize == 1 ? "20" : "50"}</a>
 											</span>
 										</div>
 										<div>
@@ -407,7 +401,7 @@
 						<tr name="trItem" onclick="checkItem(this)">
 							<th>分组</th>
 							<td>
-								<input type="text" name="settingGroup" id="settingGroup"/>
+								<input type="text" name="settingGroup" id="settingGroup" disabled="disabled"/>
 							</td>
 						</tr>
 						<tr name="trItem" onclick="checkItem(this)">
@@ -614,19 +608,19 @@
 						<tr name="trItem" onclick="checkItem(this)">
 							<th>打开百度等待</th>
 							<td>
-								<input type="text" name="waitTimeAfterOpenBaidu" id="waitTimeAfterOpenBaidu" value="1000"/>秒
+								<input type="text" name="waitTimeAfterOpenBaidu" id="waitTimeAfterOpenBaidu" value="1000"/>毫秒
 							</td>
 						</tr>
 						<tr name="trItem" onclick="checkItem(this)">
 							<th>点击目标等待</th>
 							<td>
-								<input type="text" name="waitTimeBeforeClick" id="waitTimeBeforeClick" value="1000"/>秒
+								<input type="text" name="waitTimeBeforeClick" id="waitTimeBeforeClick" value="1000"/>毫秒
 							</td>
 						</tr>
 						<tr name="trItem" onclick="checkItem(this)">
 							<th>点击目标后等待</th>
 							<td>
-								<input type="text" name="waitTimeAfterClick" id="waitTimeAfterClick" value="5000"/>秒
+								<input type="text" name="waitTimeAfterClick" id="waitTimeAfterClick" value="5000"/>毫秒
 							</td>
 						</tr>
 					</table>
@@ -640,12 +634,12 @@
 						</tr>
 						<tr>
 							<td name="trItem" onclick="checkItem(this)">
-								<input id="justVisitSelfPage" name="justVisitSelfPage" type="checkbox" value="1">在域名下访问</input>
+								<input id="justVisitSelfPage" name="justVisitSelfPage" type="checkbox" value="1" checked>在域名下访问</input>
 							</td>
 						</tr>
 						<tr>
 							<td name="trItem" onclick="checkItem(this)">
-								<input id="supportPaste" name="supportPaste" type="checkbox" value="1">支持粘贴输入</input>
+								<input id="supportPaste" name="supportPaste" type="checkbox" value="1" checked>支持粘贴输入</input>
 							</td>
 						</tr>
 						<tr>
@@ -684,17 +678,17 @@
 						</tr>
 						<tr>
 							<td name="trItem" onclick="checkItem(this)">
-								<input id="sleepPer2Words" name="sleepPer2Words" type="checkbox" value="1">输入2字稍微停顿</input>
+								<input id="sleepPer2Words" name="sleepPer2Words" type="checkbox" value="1" checked>输入2字稍微停顿</input>
 							</td>
 						</tr>
 						<tr>
 							<td name="trItem" onclick="checkItem(this)">
-								<input id="moveRandomly" name="moveRandomly" type="checkbox" value="1">随机移动</input>
+								<input id="moveRandomly" name="moveRandomly" type="checkbox" value="1" checked>随机移动</input>
 							</td>
 						</tr>
 						<tr>
 							<td name="trItem" onclick="checkItem(this)">
-								<input id="clearLocalStorage" name="clearLocalStorage" type="checkbox" value="1">清除LocalStorage</input>
+								<input id="clearLocalStorage" name="clearLocalStorage" type="checkbox" value="1" checked>清除LocalStorage</input>
 							</td>
 						</tr>
 						<tr>
@@ -723,12 +717,9 @@
 		</table>
 	</form>
 </div>
-<%--修改优化分组的操作类型--%>
+<%--批量修改优化组设置信息--%>
 <div id="updateGroupSettingDialog" class="easyui-dialog" style="display: none; left: 30%;">
 	<form id="updateGroupSettingDialogForm" onsubmit="return false">
-		<table id="groupSettingVos">
-			<tr></tr>
-		</table>
 		<table>
 			<tr>
 				<input type="hidden" name="groupUuid" id="groupUuid" value="" >
@@ -757,7 +748,7 @@
 								<input type="hidden" name="remainAccount" id="remainAccount" value="100">
 								<input type="hidden" name="currentAccount" id="currentAccount" value="0">
 								<input type="text" name="machineUsedPercent" id="machineUsedPercent" value="0" onmouseover="showRemainingAccount(this)" onmouseout="hiddenRemainingAccount(this)" onkeyup="changeRemainingAccount(this)" style="width:152px;"/>%<br>
-								<label style="display:none;">剩余<i>100</i>%</label>
+								<label style="display:none;">剩余<i>100</i>%</label>&nbsp;<label style="display:none;">修改<strong>2</strong>种类型</label>
 							</td>
 						</tr>
 						<tr name="trItem" onclick="checkItem(this)">
@@ -945,19 +936,19 @@
 						<tr name="trItem" onclick="checkItem(this)">
 							<th>打开百度等待</th>
 							<td>
-								<input type="text" name="waitTimeAfterOpenBaidu" id="waitTimeAfterOpenBaidu" value="1000"/>秒
+								<input type="text" name="waitTimeAfterOpenBaidu" id="waitTimeAfterOpenBaidu" value="1000"/>毫秒
 							</td>
 						</tr>
 						<tr name="trItem" onclick="checkItem(this)">
 							<th>点击目标等待</th>
 							<td>
-								<input type="text" name="waitTimeBeforeClick" id="waitTimeBeforeClick" value="1000"/>秒
+								<input type="text" name="waitTimeBeforeClick" id="waitTimeBeforeClick" value="1000"/>毫秒
 							</td>
 						</tr>
 						<tr name="trItem" onclick="checkItem(this)">
 							<th>点击目标后等待</th>
 							<td>
-								<input type="text" name="waitTimeAfterClick" id="waitTimeAfterClick" value="5000"/>秒
+								<input type="text" name="waitTimeAfterClick" id="waitTimeAfterClick" value="5000"/>毫秒
 							</td>
 						</tr>
 					</table>
@@ -971,12 +962,12 @@
 						</tr>
 						<tr>
 							<td name="trItem" onclick="checkItem(this)">
-								<input id="justVisitSelfPage" name="justVisitSelfPage" type="checkbox" value="1">在域名下访问</input>
+								<input id="justVisitSelfPage" name="justVisitSelfPage" type="checkbox" value="1" checked>在域名下访问</input>
 							</td>
 						</tr>
 						<tr>
 							<td name="trItem" onclick="checkItem(this)">
-								<input id="supportPaste" name="supportPaste" type="checkbox" value="1">支持粘贴输入</input>
+								<input id="supportPaste" name="supportPaste" type="checkbox" value="1" checked>支持粘贴输入</input>
 							</td>
 						</tr>
 						<tr>
@@ -1015,17 +1006,17 @@
 						</tr>
 						<tr>
 							<td name="trItem" onclick="checkItem(this)">
-								<input id="sleepPer2Words" name="sleepPer2Words" type="checkbox" value="1">输入2字稍微停顿</input>
+								<input id="sleepPer2Words" name="sleepPer2Words" type="checkbox" value="1" checked>输入2字稍微停顿</input>
 							</td>
 						</tr>
 						<tr>
 							<td name="trItem" onclick="checkItem(this)">
-								<input id="moveRandomly" name="moveRandomly" type="checkbox" value="1">随机移动</input>
+								<input id="moveRandomly" name="moveRandomly" type="checkbox" value="1" checked>随机移动</input>
 							</td>
 						</tr>
 						<tr>
 							<td name="trItem" onclick="checkItem(this)">
-								<input id="clearLocalStorage" name="clearLocalStorage" type="checkbox" value="1">清除LocalStorage</input>
+								<input id="clearLocalStorage" name="clearLocalStorage" type="checkbox" value="1" checked>清除LocalStorage</input>
 							</td>
 						</tr>
 						<tr>

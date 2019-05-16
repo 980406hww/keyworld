@@ -225,4 +225,10 @@
     <delete id="deleteByGroupUuid">
         DELETE FROM t_group_setting WHERE fGroupUuid = #{groupUuid}
     </delete>
+
+    <select id="getGroupSettingUuids" resultType="java.lang.Long">
+        SELECT gs.fUuid
+        FROM t_group_setting gs
+        WHERE gs.fGroupUuid = #{groupUuid};
+    </select>
 </mapper>

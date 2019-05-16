@@ -73,6 +73,7 @@ public class GroupSettingRestController extends SpringMVCBaseController {
         modelAndView.addObject("operationTypeValues", operationTypeValues);
         modelAndView.addObject("page", page);
         modelAndView.addObject("availableOptimizationGroupCount", availableOptimizationGroupCount);
+        modelAndView.addObject("terminalType", groupSettingCriteria.getTerminalType());
         performanceService.addPerformanceLog(groupSettingCriteria.getTerminalType() + ":searchGroupSettings", System.currentTimeMillis() - startMilleSeconds, null);
         return modelAndView;
     }
@@ -105,7 +106,7 @@ public class GroupSettingRestController extends SpringMVCBaseController {
     @PostMapping("/saveGroupSetting")
     public ResponseEntity<?> saveGroupSetting(@RequestBody GroupSetting groupSetting) {
         try {
-            groupSettingService.saveGroupSetting(groupSetting);
+            groupSettingService.saveGroupSetting(groupSetting, true);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -122,6 +123,17 @@ public class GroupSettingRestController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/getGroupSettingCount/{groupUuid}")
+    public ResponseEntity<?> getGroupSettingCount(@PathVariable("groupUuid") long groupUuid) {
+        try {
+            int groupSettingCount = groupSettingService.getGroupSettingUuids(groupUuid).size();
+            return new ResponseEntity<Object>(groupSettingCount, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 

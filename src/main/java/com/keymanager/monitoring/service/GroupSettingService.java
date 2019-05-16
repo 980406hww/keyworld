@@ -54,9 +54,11 @@ public class GroupSettingService extends ServiceImpl<GroupSettingDao, GroupSetti
         return groupSettingDao.selectById(uuid);
     }
 
-    public void saveGroupSetting (GroupSetting groupSetting) {
+    public void saveGroupSetting (GroupSetting groupSetting, Boolean needUpdateRemainingAccount) {
         groupSettingDao.saveGroupSetting(groupSetting);
-        groupService.updateGroupRemainingAccount(groupSetting.getGroupUuid(), groupSetting.getRemainingAccount());
+        if (needUpdateRemainingAccount) {
+            groupService.updateGroupRemainingAccount(groupSetting.getGroupUuid(), groupSetting.getRemainingAccount());
+        }
     }
 
     public void updateGroupSetting (UpdateGroupSettingCriteria updateGroupSettingCriteria) {
@@ -93,5 +95,17 @@ public class GroupSettingService extends ServiceImpl<GroupSettingDao, GroupSetti
             }
         }
         return null;
+    }
+
+    public void deleteByGroupUuid (long uuid) {
+        groupSettingDao.deleteByGroupUuid(uuid);
+    }
+
+    public List<Long> getGroupSettingUuids (long groupUuid) {
+        return groupSettingDao.getGroupSettingUuids(groupUuid);
+    }
+
+    public void updateGroupSetting(GroupSetting gs, GroupSetting groupSetting){
+        groupSettingDao.updateGroupSetting(gs, groupSetting);
     }
 }

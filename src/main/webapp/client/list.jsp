@@ -693,19 +693,19 @@
 						<tr name="trItem" onclick="checkItem(this)">
 							<th>打开百度等待</th>
 							<td>
-								<input type="text" name="waitTimeAfterOpenBaidu" id="waitTimeAfterOpenBaidu" value="1000"/>秒
+								<input type="text" name="waitTimeAfterOpenBaidu" id="waitTimeAfterOpenBaidu" value="1000"/>毫秒
 							</td>
 						</tr>
 						<tr name="trItem" onclick="checkItem(this)">
 							<th>点击目标等待</th>
 							<td>
-								<input type="text" name="waitTimeBeforeClick" id="waitTimeBeforeClick" value="1000"/>秒
+								<input type="text" name="waitTimeBeforeClick" id="waitTimeBeforeClick" value="1000"/>毫秒
 							</td>
 						</tr>
 						<tr name="trItem" onclick="checkItem(this)">
 							<th>点击目标后等待</th>
 							<td>
-								<input type="text" name="waitTimeAfterClick" id="waitTimeAfterClick" value="5000"/>秒
+								<input type="text" name="waitTimeAfterClick" id="waitTimeAfterClick" value="5000"/>毫秒
 							</td>
 						</tr>
 

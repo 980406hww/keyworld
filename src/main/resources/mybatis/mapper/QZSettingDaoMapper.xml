@@ -94,50 +94,42 @@
     <select id="searchQZSettings" parameterType="com.keymanager.monitoring.criteria.QZSettingSearchCriteria"
             resultType="com.keymanager.monitoring.entity.QZSetting">
         SELECT
-        DISTINCT(qs.fUuid) AS 'uuid',
-        c.fUserID AS 'userID',
-        qs.fCustomerUuid AS 'customerUuid',
-        c.fContactPerson AS 'contactPerson',
-        qs.fDomain AS 'domain',
-        <if test="qzSettingSearchCriteria.terminalType != null">
-            <choose>
-                <when test="qzSettingSearchCriteria.terminalType == 'PC'">
-                    qs.fPcGroup AS 'pcGroup',
-                </when>
-                <when test="qzSettingSearchCriteria.terminalType == 'Phone'">
-                    qs.fPhoneGroup AS 'phoneGroup',
-                </when>
-            </choose>
-        </if>
-        qs.fType AS 'type',
-        qs.fIgnoreNoIndex AS 'ignoreNoIndex',
-        qs.fIgnoreNoOrder AS 'ignoreNoOrder',
-        qs.fUpdateInterval AS 'updateInterval',
-        qs.fUpdateStatus AS 'updateStatus',
-        qs.fUpdateStartTime AS 'updateStartTime',
-        qs.fUpdateEndTime AS 'updateEndTime',
-        qs.fUpdateTime AS 'updateTime',
-        qs.fCreateTime AS 'createTime',
-        qs.fCaptureCurrentKeywordCountTime AS 'captureCurrentKeywordCountTime',
-        qs.fCaptureCurrentKeywordStatus AS 'captureCurrentKeywordStatus',
-        qs.fStatus AS 'status',
-        qs.fPcCreateTopTenNum AS 'pcCreateTopTenNum',
-        qs.fPcCreateTopFiftyNum AS 'pcCreateTopFiftyNum',
-        qs.fPhoneCreateTopTenNum AS 'phoneCreateTopTenNum',
-        qs.fPhoneCreateTopFiftyNum AS 'phoneCreateTopFiftyNum',
-        qs.fCrawlerStatus AS 'crawlerStatus',
-        qs.fAutoCrawlKeywordFlag AS 'autoCrawlKeywordFlag'
+            qs.fUuid AS 'uuid',
+            c.fUserID AS 'userID',
+            qs.fCustomerUuid AS 'customerUuid',
+            c.fContactPerson AS 'contactPerson',
+            qs.fDomain AS 'domain',
+            <if test="qzSettingSearchCriteria.terminalType != null">
+                <choose>
+                    <when test="qzSettingSearchCriteria.terminalType == 'PC'">
+                        qs.fPcGroup AS 'pcGroup',
+                    </when>
+                    <when test="qzSettingSearchCriteria.terminalType == 'Phone'">
+                        qs.fPhoneGroup AS 'phoneGroup',
+                    </when>
+                </choose>
+            </if>
+            qs.fType AS 'type',
+            qs.fIgnoreNoIndex AS 'ignoreNoIndex',
+            qs.fIgnoreNoOrder AS 'ignoreNoOrder',
+            qs.fUpdateInterval AS 'updateInterval',
+            qs.fUpdateStatus AS 'updateStatus',
+            qs.fUpdateStartTime AS 'updateStartTime',
+            qs.fUpdateEndTime AS 'updateEndTime',
+            qs.fUpdateTime AS 'updateTime',
+            qs.fCreateTime AS 'createTime',
+            qs.fCaptureCurrentKeywordCountTime AS 'captureCurrentKeywordCountTime',
+            qs.fCaptureCurrentKeywordStatus AS 'captureCurrentKeywordStatus',
+            qs.fStatus AS 'status',
+            qs.fPcCreateTopTenNum AS 'pcCreateTopTenNum',
+            qs.fPcCreateTopFiftyNum AS 'pcCreateTopFiftyNum',
+            qs.fPhoneCreateTopTenNum AS 'phoneCreateTopTenNum',
+            qs.fPhoneCreateTopFiftyNum AS 'phoneCreateTopFiftyNum',
+            qs.fCrawlerStatus AS 'crawlerStatus',
+            qs.fAutoCrawlKeywordFlag AS 'autoCrawlKeywordFlag'
         FROM t_qz_setting qs
         JOIN t_customer c
         ON qs.fCustomerUuid = c.fUuid
-        <if test="qzSettingSearchCriteria.checkStatus != null or qzSettingSearchCriteria.baiduWeight != null">
-            JOIN t_qz_keyword_rank_info qk
-            ON qs.fUuid = qk.fQZSettingUuid
-        </if>
-        <if test="qzSettingSearchCriteria.categoryTag != null and qzSettingSearchCriteria.categoryTag != ''">
-            JOIN t_qz_category_tag qc
-            ON qs.fUuid = qc.fQZSettingUuid
-        </if>
         WHERE 1 = 1
         <if test="qzSettingSearchCriteria.loginName != null and qzSettingSearchCriteria.loginName != ''">AND c.fUserID = #{qzSettingSearchCriteria.loginName}</if>
         <if test="qzSettingSearchCriteria.customerUuid != null and qzSettingSearchCriteria.customerUuid != ''">AND qs.fCustomerUuid = #{qzSettingSearchCriteria.customerUuid}</if>
@@ -156,6 +148,7 @@
             </choose>
         </if>
         <if test="qzSettingSearchCriteria.checkStatus != null or qzSettingSearchCriteria.baiduWeight != null">
+            AND EXISTS (SELECT 1 FROM t_qz_keyword_rank_info qk WHERE qk.fQZSettingUuid = qs.fUuid
             <choose>
                 <when test="qzSettingSearchCriteria.baiduWeight != null">
                     AND qk.fBaiduWeight = #{qzSettingSearchCriteria.baiduWeight}
@@ -188,11 +181,24 @@
                     AND qk.fTodayDifference &gt; 0
                 </when>
             </choose>
-            AND qk.fTerminalType = #{qzSettingSearchCriteria.terminalType}
+            AND qk.fTerminalType = #{qzSettingSearchCriteria.terminalType})
         </if>
         <if test="qzSettingSearchCriteria.categoryTag != null and qzSettingSearchCriteria.categoryTag != ''">
-            AND qc.fTagName = #{qzSettingSearchCriteria.categoryTag}
+            AND EXISTS (SELECT 1 FROM t_qz_category_tag qc WHERE qc.fQZSettingUuid = qs.fUuid AND qc.fTagName = #{qzSettingSearchCriteria.categoryTag})
         </if>
+        <if test="qzSettingSearchCriteria.operationType != null and qzSettingSearchCriteria.operationType != ''">
+            AND EXISTS (SELECT 1 FROM t_client_status cs WHERE cs.fOperationType = #{qzSettingSearchCriteria.operationType}
+            <choose>
+                <when test="qzSettingSearchCriteria.terminalType == 'PC'">
+                    AND cs.fGroup = qs.fPcGroup
+                </when>
+                <otherwise>
+                    AND cs.fGroup = qs.fPhoneGroup
+                </otherwise>
+            </choose>
+            AND cs.fTerminalType = #{qzSettingSearchCriteria.terminalType})
+        </if>
+        <if test="qzSettingSearchCriteria.createTime != null and qzSettingSearchCriteria.createTime != ''">AND qs.fCreateTime &gt;= #{qzSettingSearchCriteria.createTime}</if>
         <choose>
             <when test="qzSettingSearchCriteria.dateRangeType == 0">
                 AND EXISTS (select qs.fUuid from t_qz_operation_type ot where qs.fUuid = ot.fQZSettingUuid and ot.fNextChargeDate = CURDATE())
