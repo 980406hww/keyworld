@@ -804,16 +804,6 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
         machineInfoDao.updateAllRemainingKeywordIndicator(indicator);
     }
 
-    public MachineInfo getClientStatusForStartUp() {
-        MachineInfo machineInfo = machineInfoDao.getMachineInfoForStartUp();
-        if (machineInfo != null) {
-            machineInfo.setStartUpTime(Utils.getCurrentTimestamp());
-            machineInfo.setStartUpStatus(ClientStartUpStatusEnum.Processing.name());
-            machineInfoDao.updateById(machineInfo);
-        }
-        return machineInfo;
-    }
-
     public List<CookieVO> searchClientForAllotCookie(int clientCookieCount, String cookieGroupForBaidu, String cookieGroupFor360) {
         List<CookieVO> clientCookieCountList = machineInfoDao.searchClientForAllotCookie(clientCookieCount, cookieGroupForBaidu, cookieGroupFor360);
         return clientCookieCountList;
