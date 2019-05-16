@@ -39,7 +39,7 @@
     </select>
 
     <insert id="saveGroup">
-        INSERT INTO t_group(fGroupName, fTerminalType, fCreateBy, fRemainingAccount) VALUES(#{groupName}, #{terminalType}, #{createBy}, #{remainingAccount});
+        INSERT INTO t_group(fGroupName, fTerminalType, fCreateBy, fRemainingAccount, fUpdateTime) VALUES(#{groupName}, #{terminalType}, #{createBy}, #{remainingAccount}, NOW());
     </insert>
 
     <select id="lastInsertID" resultType="java.lang.Long">
@@ -54,6 +54,7 @@
         SELECT
         g.fUuid             AS "uuid",
         g.fGroupName        AS "groupName",
+        g.fUsingOperationType AS "usingOperationType",
         g.fTerminalType     AS "terminalType",
         g.fCreateBy         AS "createBy",
         g.fRemainingAccount AS "remainingAccount",
