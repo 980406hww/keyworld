@@ -824,14 +824,28 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
             Group group = groupService.findGroup(machineInfo.getGroup(), machineInfo.getTerminalType());
             GroupSetting groupSetting = groupSettingService.getGroupSettingViaPercentage(machineInfo.getGroup(), machineInfo.getTerminalType());
             clientStatusForOptimization = new ClientStatusForOptimization();
-            clientStatusForOptimization.setKuaizhaoPercent(groupSetting.getKuaizhaoPercent());
-            clientStatusForOptimization.setBaiduSemPercent(groupSetting.getBaiduSemPercent());
-            clientStatusForOptimization.setDragPercent(groupSetting.getDragPercent());
-            clientStatusForOptimization.setMultiBrowser(groupSetting.getMultiBrowser());
+            if(groupSetting.getKuaizhaoPercent() != null) {
+                clientStatusForOptimization.setKuaizhaoPercent(groupSetting.getKuaizhaoPercent());
+            }
+            if(groupSetting.getBaiduSemPercent() != null) {
+                clientStatusForOptimization.setBaiduSemPercent(groupSetting.getBaiduSemPercent());
+            }
+            if(groupSetting.getDragPercent() != null) {
+                clientStatusForOptimization.setDragPercent(groupSetting.getDragPercent());
+            }
+            if(groupSetting.getMultiBrowser() != null) {
+                clientStatusForOptimization.setMultiBrowser(groupSetting.getMultiBrowser());
+            }
             clientStatusForOptimization.setClearCookie(groupSetting.getClearCookie());
-            clientStatusForOptimization.setZhanneiPercent(groupSetting.getZhanneiPercent());
-            clientStatusForOptimization.setZhanwaiPercent(groupSetting.getZhanwaiPercent());
-            clientStatusForOptimization.setSpecialCharPercent(groupSetting.getSpecialCharPercent());
+            if(groupSetting.getZhanneiPercent() != null) {
+                clientStatusForOptimization.setZhanneiPercent(groupSetting.getZhanneiPercent());
+            }
+            if(groupSetting.getZhanwaiPercent() != null) {
+                clientStatusForOptimization.setZhanwaiPercent(groupSetting.getZhanwaiPercent());
+            }
+            if(groupSetting.getSpecialCharPercent() != null) {
+                clientStatusForOptimization.setSpecialCharPercent(groupSetting.getSpecialCharPercent());
+            }
             clientStatusForOptimization.setDisableStatistics(groupSetting.getDisableStatistics());
             clientStatusForOptimization.setEntryPageMinCount(groupSetting.getEntryPageMinCount());
             clientStatusForOptimization.setEntryPageMaxCount(groupSetting.getEntryPageMaxCount());
