@@ -1437,6 +1437,7 @@
         <if test="groupSettingCriteria.optimizedGroupName != null and groupSettingCriteria.optimizedGroupName != ''">
             AND ck.fOptimizeGroupName LIKE '${groupSettingCriteria.optimizedGroupName}%'
         </if>
+        AND ck.fOptimizeGroupName > ''
         AND ck.fStatus = 1
         GROUP BY ck.fOptimizeGroupName
     </select>

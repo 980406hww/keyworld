@@ -128,12 +128,13 @@ public class GroupService extends ServiceImpl<GroupDao, Group> {
             availableOptimizationGroups.remove("zanting");
             availableOptimizationGroups.remove("ZANTING");
             availableOptimizationGroups.remove("sotp");
+            List<String> needToRemoves = new ArrayList<String>();
             for (int i = 0; i < availableOptimizationGroups.size(); i++) {
-                if (availableOptimizationGroups.get(i) != null && availableOptimizationGroups.get(i).startsWith("no_")){
-                    availableOptimizationGroups.remove(i);
-                    i--;
+                if (availableOptimizationGroups.get(i).startsWith("no_")){
+                    needToRemoves.add(availableOptimizationGroups.get(i));
                 }
             }
+            availableOptimizationGroups.removeAll(needToRemoves);
         }else {
             availableOptimizationGroups = qzSettingService.getAvailableOptimizationGroups(groupSettingCriteria);
         }
