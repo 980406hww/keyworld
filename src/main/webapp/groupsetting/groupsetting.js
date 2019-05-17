@@ -713,10 +713,10 @@ function getAvailableOptimizationGroups() {
         resizable: false,
         height: 450,
         width: 230,
-        title: '查看需要增加的分组队列',
+        title: '查询需要添加的优化组',
         modal: true,
         buttons: [{
-            text: '一键创建分组设置',
+            text: '批量添加优化组',
             iconCls: 'icon-ok',
             handler: function(){
                 batchAddGroups();

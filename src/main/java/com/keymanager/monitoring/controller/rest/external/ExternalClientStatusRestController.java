@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping(value = "/external/clientstatus")
+@RequestMapping(value = "/external/clientstatusbak")
 public class ExternalClientStatusRestController extends SpringMVCBaseController {
     private static Logger logger = LoggerFactory.getLogger(ExternalClientStatusRestController.class);
 

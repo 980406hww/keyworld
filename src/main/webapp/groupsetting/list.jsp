@@ -88,7 +88,7 @@
 				</shiro:hasPermission>
 				<shiro:hasPermission name="/internal/group/getAvailableOptimizationGroups">
 					<li>
-						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="getAvailableOptimizationGroups()" value="查看需要增加的分组队列(${availableOptimizationGroupCount})">&nbsp;
+						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="getAvailableOptimizationGroups()" value="查询需要添加的优化组(${availableOptimizationGroupCount})">&nbsp;
 					</li>
 				</shiro:hasPermission>
 			</ul>
@@ -1049,7 +1049,7 @@
 		</table>
 	</form>
 </div>
-<%--查看需要增加的分组队列--%>
+<%--查询需要添加的优化组--%>
 <div id="getAvailableOptimizationGroups" class="easyui-dialog" style="display: none">
 	<table cellpadding="10" style="font-size: 12px; background-color: white;border-collapse: collapse; width: 100%;">
         <thead style="background-color: #eeeeee !important;">
