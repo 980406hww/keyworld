@@ -14,10 +14,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @Author zhoukai
@@ -123,11 +120,25 @@ public class GroupService extends ServiceImpl<GroupDao, Group> {
         }
     }
 
-    public List<String> getAvailableOptimizationGroups (String terminalType) {
-        List<String> availableCustomerKeywordOptimizationGroups = customerKeywordService.getAvailableOptimizationGroups(terminalType);
-        List<String> availableQZSettingOptimizationGroups = qzSettingService.getAvailableOptimizationGroups(terminalType);
-        availableCustomerKeywordOptimizationGroups.addAll(availableQZSettingOptimizationGroups);
-        Set<String> middleLinkedHashSet = new LinkedHashSet<>(availableCustomerKeywordOptimizationGroups);
-        return new ArrayList<>(middleLinkedHashSet);
+    public List<String> getAvailableOptimizationGroups (GroupSettingCriteria groupSettingCriteria) {
+        List<String> availableOptimizationGroups = new ArrayList<String>();
+        if (groupSettingCriteria.getOptimizedGroupNameSearchSource()){
+            availableOptimizationGroups = customerKeywordService.getAvailableOptimizationGroups(groupSettingCriteria);
+            availableOptimizationGroups.remove("stop");
+            availableOptimizationGroups.remove("zanting");
+            availableOptimizationGroups.remove("ZANTING");
+            availableOptimizationGroups.remove("sotp");
+            for (int i = 0; i < availableOptimizationGroups.size(); i++) {
+                if (availableOptimizationGroups.get(i) != null && availableOptimizationGroups.get(i).startsWith("no_")){
+                    availableOptimizationGroups.remove(i);
+                    i--;
+                }
+            }
+        }else {
+            availableOptimizationGroups = qzSettingService.getAvailableOptimizationGroups(groupSettingCriteria);
+        }
+        List<String> optimizationGroups = groupDao.getOptimizationGroups(groupSettingCriteria.getTerminalType());
+        availableOptimizationGroups.removeAll(optimizationGroups);
+        return new ArrayList<>(availableOptimizationGroups);
     }
 }

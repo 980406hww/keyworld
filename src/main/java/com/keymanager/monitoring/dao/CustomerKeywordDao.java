@@ -2,10 +2,7 @@ package com.keymanager.monitoring.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
-import com.keymanager.monitoring.criteria.CustomerKeywordCriteria;
-import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
-import com.keymanager.monitoring.criteria.CustomerKeywordUpdateCriteria;
-import com.keymanager.monitoring.criteria.QZSettingExcludeCustomerKeywordsCriteria;
+import com.keymanager.monitoring.criteria.*;
 import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.vo.*;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
@@ -218,5 +215,5 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void addCustomerKeywords (@Param("customerKeywords") List<CustomerKeyword> customerKeywords);
 
-    List<String> getAvailableOptimizationGroups (String terminalType);
+    List<String> getAvailableOptimizationGroups (@Param("groupSettingCriteria") GroupSettingCriteria groupSettingCriteria);
 }

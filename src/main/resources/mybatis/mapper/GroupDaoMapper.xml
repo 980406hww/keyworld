@@ -66,4 +66,12 @@
         limit 1
     </select>
 
+
+    <select id="getOptimizationGroups" resultType="java.lang.String">
+        SELECT
+           g.fGroupName AS 'groupName'
+        FROM t_group g
+        WHERE g.fTerminalType = #{terminalType}
+        GROUP BY g.fGroupName
+    </select>
 </mapper>

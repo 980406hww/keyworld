@@ -6,6 +6,7 @@ public class GroupSettingCriteria extends BaseCriteria {
     private String terminalType; // 终端类型
     private Boolean hasOperation = true; // 有/无 操作类型。 默认值true
     private Boolean hasRemainingAccount; // 分组下机器是否分配完成
+    private Boolean optimizedGroupNameSearchSource; // 查询来源 关键字 true/全站 false
 
     public String getOptimizedGroupName () {
         return optimizedGroupName;
@@ -45,5 +46,13 @@ public class GroupSettingCriteria extends BaseCriteria {
 
     public void setHasRemainingAccount (Boolean hasRemainingAccount) {
         this.hasRemainingAccount = hasRemainingAccount;
+    }
+
+    public Boolean getOptimizedGroupNameSearchSource() {
+        return optimizedGroupNameSearchSource;
+    }
+
+    public void setOptimizedGroupNameSearchSource(Boolean optimizedGroupNameSearchSource) {
+        this.optimizedGroupNameSearchSource = optimizedGroupNameSearchSource;
     }
 }

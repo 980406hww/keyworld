@@ -88,7 +88,7 @@
 				</shiro:hasPermission>
 				<shiro:hasPermission name="/internal/group/getAvailableOptimizationGroups">
 					<li>
-						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="getAvailableOptimizationGroups()" value="查询需要添加的优化组(${availableOptimizationGroupCount})">&nbsp;
+						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="getAvailableOptimizationGroups()" value="查询需要添加的优化组">&nbsp;
 					</li>
 				</shiro:hasPermission>
 			</ul>
@@ -1053,22 +1053,38 @@
 <div id="getAvailableOptimizationGroups" class="easyui-dialog" style="display: none">
 	<table cellpadding="10" style="font-size: 12px; background-color: white;border-collapse: collapse; width: 100%;">
         <thead style="background-color: #eeeeee !important;">
-			<tr>
-				<th colspan="2">操作类型:<select name="operationType" style="width: 150px;">
-						<c:forEach items="${operationTypeValues}" var="operationType">
-							<c:choose>
-								<c:when test="${operationType eq groupSettingCriteria.operationType}"><option selected>${operationType}</option></c:when>
-								<c:otherwise><option>${operationType}</option></c:otherwise>
-							</c:choose>
-						</c:forEach>
-					</select></th>
-			</tr>
+            <tr>
+                <th colspan="2" style="text-align: left;">组名来源：<input type="radio" name="sourceRadio" value="true">关键字
+                    &nbsp;&nbsp;&nbsp;<input type="radio" name="sourceRadio" value="false">全站
+                </th>
+            </tr>
+            <tr>
+                <th colspan="2" style="text-align: left;">优化组名：<input type="text" title="请输入优化组名" name="optimizedGroupName" placeholder="请输入优化组名" style="width: 100px;">&nbsp;
+                    <input  type="button" onclick="searchAvailableOptimizationGroups()" value="搜索"  style="width: 45px;">
+                </th>
+            </tr>
 			<tr>
 				<th><input type="checkbox" name="checkAllOptimizationGroup" id="checkAllOptimizationGroup" onclick="selectAllChecked(this);" checked='checked'></th>
-				<th style="width: 190px;">优化组</th>
+				<th>优化组</th>
 			</tr>
         </thead>
-		<tbody></tbody>
+		<tbody>
+            <div style="width:350px;">
+
+            </div>
+        </tbody>
+        <tfoot style="padding-bottom: 0px">
+            <tr>
+                <th colspan="2" style="text-align: left;">操作类型：<select name="operationType" style="width: 150px;">
+                    <c:forEach items="${operationTypeValues}" var="operationType">
+                        <c:choose>
+                            <c:when test="${operationType eq groupSettingCriteria.operationType}"><option selected>${operationType}</option></c:when>
+                            <c:otherwise><option>${operationType}</option></c:otherwise>
+                        </c:choose>
+                    </c:forEach>
+                </select></th>
+            </tr>
+        </tfoot>
     </table>
 </div>
 

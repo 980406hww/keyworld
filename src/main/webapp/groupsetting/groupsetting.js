@@ -688,31 +688,11 @@ function changeRemainingAccount(self) {
 
 function getAvailableOptimizationGroups() {
     $("#getAvailableOptimizationGroups tbody tr").remove();
-    var terminalType = $("#chargeForm").find("#terminalType").val();
-    $.ajax({
-        url:'/internal/group/getAvailableOptimizationGroups/' + terminalType,
-        headers:{
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        type:'POST',
-        success: function (result) {
-            if (result !== null) {
-                var tbody = $("#getAvailableOptimizationGroups").find("table tbody");
-                $.each(result, function(index, element) {
-                    tbody.append("<tr>" +
-                        "<td width='15px'><input type='checkbox' name='checkOptimizationGroup' checked='checked'></td>" +
-                        "<td width='190px'><input type='text' style='width: 190px;' name='optimizationGroup' disabled='disabled' value='"+ element +"'/></td>" +
-                        "</tr>");
-                });
-            }
-        }
-    });
     $("#getAvailableOptimizationGroups").show();
     $("#getAvailableOptimizationGroups").dialog({
         resizable: false,
         height: 450,
-        width: 230,
+        width: 240,
         title: '查询需要添加的优化组',
         modal: true,
         buttons: [{
@@ -783,4 +763,39 @@ function batchAddGroups() {
         }
     });
     $("#getAvailableOptimizationGroups").dialog("close");
+}
+
+function searchAvailableOptimizationGroups() {
+    $("#getAvailableOptimizationGroups").find("table tbody").empty();
+    var terminalType = $("#chargeForm").find("#terminalType").val();
+    var optimizedGroupNameSearchSource = $("#getAvailableOptimizationGroups").find('input:radio[name="sourceRadio"]:checked').val();
+    if (optimizedGroupNameSearchSource == null){
+        alert("请选择查询来源！");
+        return false;
+    }
+    var optimizedGroupName = $("#getAvailableOptimizationGroups").find($("input[name='optimizedGroupName']")).val();
+    var groupSetting = {};
+    groupSetting.terminalType = terminalType;
+    groupSetting.optimizedGroupNameSearchSource = optimizedGroupNameSearchSource;
+    groupSetting.optimizedGroupName = optimizedGroupName;
+    $.ajax({
+        url: '/internal/group/getAvailableOptimizationGroups',
+        headers: {
+            "Accept": 'application/json',
+            "Content-Type": 'application/json'
+        },
+        type: 'POST',
+        data: JSON.stringify(groupSetting),
+        success: function (result) {
+            if (result !== null) {
+                var tbody = $("#getAvailableOptimizationGroups").find("table tbody");
+                $.each(result, function(index, element) {
+                    tbody.append("<tr>" +
+                        "<td width='20px'  style=\"text-align: center;\"><input type='checkbox' name='checkOptimizationGroup' checked='checked'></td>" +
+                        "<td width='208px'><input type='text' style='width: 200px;' name='optimizationGroup' disabled='disabled' value='"+ element +"'/></td>" +
+                        "</tr>");
+                });
+            }
+        }
+    });
 }

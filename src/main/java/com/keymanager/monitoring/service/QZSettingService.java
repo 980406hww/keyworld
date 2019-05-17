@@ -649,7 +649,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
         return customerExcludeKeywordService.echoExcludeKeyword(qzSettingExcludeCustomerKeywordsCriteria);
     }
 
-    public List<String> getAvailableOptimizationGroups (String terminalType) {
-		return qzSettingDao.getAvailableOptimizationGroups(terminalType);
+    public List<String> getAvailableOptimizationGroups (GroupSettingCriteria groupSettingCriteria) {
+		return qzSettingDao.getAvailableOptimizationGroups(groupSettingCriteria);
     }
 }

@@ -1643,7 +1643,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
     }
 
-    public List<String> getAvailableOptimizationGroups (String terminalType) {
-        return customerKeywordDao.getAvailableOptimizationGroups(terminalType);
+    public List<String> getAvailableOptimizationGroups (GroupSettingCriteria groupSettingCriteria) {
+        return customerKeywordDao.getAvailableOptimizationGroups(groupSettingCriteria);
     }
 }

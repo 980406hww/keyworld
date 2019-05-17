@@ -2,7 +2,9 @@ package com.keymanager.monitoring.controller.rest.internal;
 
 import com.keymanager.monitoring.criteria.GroupBatchCriteria;
 import com.keymanager.monitoring.criteria.GroupCriteria;
+import com.keymanager.monitoring.criteria.GroupSettingCriteria;
 import com.keymanager.monitoring.criteria.UpdateGroupSettingCriteria;
+import com.keymanager.monitoring.entity.GroupSetting;
 import com.keymanager.monitoring.service.GroupService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
@@ -79,10 +81,10 @@ public class GroupRestController {
     }
     
     @RequiresPermissions("/internal/group/getAvailableOptimizationGroups")
-    @PostMapping("/getAvailableOptimizationGroups/{terminalType}")
-    public ResponseEntity<?> getAvailableOptimizationGroups(@PathVariable("terminalType") String terminalType) {
+    @PostMapping("/getAvailableOptimizationGroups")
+    public ResponseEntity<?> getAvailableOptimizationGroups(@RequestBody GroupSettingCriteria groupSettingCriteria) {
         try {
-            List<String> availableOptimizationGroups = groupService.getAvailableOptimizationGroups(terminalType);
+            List<String> availableOptimizationGroups = groupService.getAvailableOptimizationGroups(groupSettingCriteria);
             return new ResponseEntity<Object>(availableOptimizationGroups, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());

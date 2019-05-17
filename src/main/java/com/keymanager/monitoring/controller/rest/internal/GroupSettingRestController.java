@@ -6,7 +6,6 @@ import com.keymanager.monitoring.criteria.GroupSettingCriteria;
 import com.keymanager.monitoring.criteria.UpdateGroupSettingCriteria;
 import com.keymanager.monitoring.entity.GroupSetting;
 import com.keymanager.monitoring.service.ConfigService;
-import com.keymanager.monitoring.service.GroupService;
 import com.keymanager.monitoring.service.GroupSettingService;
 import com.keymanager.monitoring.service.PerformanceService;
 import com.keymanager.monitoring.vo.GroupVO;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/internal/groupsetting")
@@ -36,9 +34,6 @@ public class GroupSettingRestController extends SpringMVCBaseController {
 
     @Autowired
     private PerformanceService performanceService;
-
-    @Autowired
-    private GroupService groupService;
 
     @RequiresPermissions("/internal/groupsetting/searchGroupSettings")
     @RequestMapping(value = "/searchGroupSettings", method = RequestMethod.GET)
@@ -72,11 +67,9 @@ public class GroupSettingRestController extends SpringMVCBaseController {
         }
         Page<GroupVO> page = groupSettingService.searchGroupSettings(new Page<GroupVO>(currentPageNumber, pageSize), groupSettingCriteria);
         String [] operationTypeValues = configService.getOperationTypeValues(groupSettingCriteria.getTerminalType());
-        int availableOptimizationGroupCount = groupService.getAvailableOptimizationGroups(groupSettingCriteria.getTerminalType()).size();
         modelAndView.addObject("groupSettingCriteria", groupSettingCriteria);
         modelAndView.addObject("operationTypeValues", operationTypeValues);
         modelAndView.addObject("page", page);
-        modelAndView.addObject("availableOptimizationGroupCount", availableOptimizationGroupCount);
         modelAndView.addObject("terminalType", groupSettingCriteria.getTerminalType());
         performanceService.addPerformanceLog(groupSettingCriteria.getTerminalType() + ":searchGroupSettings", System.currentTimeMillis() - startMilleSeconds, null);
         return modelAndView;

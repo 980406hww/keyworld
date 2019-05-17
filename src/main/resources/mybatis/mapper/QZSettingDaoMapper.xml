@@ -360,7 +360,7 @@
     <select id="getAvailableOptimizationGroups" resultType="java.lang.String">
         SELECT
         <choose>
-            <when test="terminalType =='PC'">
+            <when test="groupSettingCriteria.terminalType =='PC'">
                 qs.fPcGroup AS 'groupName'
             </when>
             <otherwise>
@@ -370,35 +370,31 @@
         FROM t_qz_setting qs
         WHERE qs.fStatus = 1
         <choose>
-            <when test="terminalType =='PC'">
+            <when test="groupSettingCriteria.terminalType =='PC'">
                 AND qs.fPcGroup > ''
             </when>
             <otherwise>
                 AND qs.fPhoneGroup > ''
             </otherwise>
         </choose>
-        AND NOT EXISTS (
-                SELECT 1
-                FROM t_group g
-                WHERE g.fTerminalType = #{terminalType}
-                <choose>
-                    <when test="terminalType =='PC'">
-                        AND g.fGroupName = qs.fPcGroup
-                    </when>
-                    <otherwise>
-                        AND g.fGroupName = qs.fPhoneGroup
-                    </otherwise>
-                </choose>
-            )
+        <if test="groupSettingCriteria.optimizedGroupName != null and groupSettingCriteria.optimizedGroupName != ''">
+            <choose>
+                <when test="groupSettingCriteria.terminalType =='PC'">
+                    AND qs.fPcGroup LIKE '${groupSettingCriteria.optimizedGroupName}%'
+                </when>
+                <otherwise>
+                    AND qs.fPhoneGroup LIKE '${groupSettingCriteria.optimizedGroupName}%'
+                </otherwise>
+            </choose>
+        </if>
         GROUP BY
         <choose>
-            <when test="terminalType =='PC'">
+            <when test="groupSettingCriteria.terminalType =='PC'">
                 qs.fPcGroup
             </when>
             <otherwise>
                 qs.fPhoneGroup
             </otherwise>
         </choose>
-        ORDER BY qs.fCreateTime DESC
     </select>
 </mapper>

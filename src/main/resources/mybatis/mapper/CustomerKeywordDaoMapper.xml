@@ -1433,17 +1433,11 @@
         SELECT
             ck.fOptimizeGroupName AS 'groupName'
         FROM t_customer_keyword ck
-        WHERE ck.fOptimizeGroupName NOT LIKE 'no_%'
-        AND ck.fOptimizeGroupName NOT IN ('stop','zanting','ZANTING','sotp')
-        AND ck.fTerminalType = #{terminalType}
+        WHERE ck.fTerminalType = #{groupSettingCriteria.terminalType}
+        <if test="groupSettingCriteria.optimizedGroupName != null and groupSettingCriteria.optimizedGroupName != ''">
+            AND ck.fOptimizeGroupName LIKE '${groupSettingCriteria.optimizedGroupName}%'
+        </if>
         AND ck.fStatus = 1
-        AND NOT EXISTS (
-            SELECT 1
-            FROM t_group g
-            WHERE g.fGroupName = ck.fOptimizeGroupName
-            AND g.fTerminalType = #{terminalType}
-        )
         GROUP BY ck.fOptimizeGroupName
-        ORDER BY ck.fCreateTime DESC
     </select>
 </mapper>
