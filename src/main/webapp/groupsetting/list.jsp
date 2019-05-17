@@ -48,7 +48,7 @@
 				<li>
 					<span>操作类型: </span>
 					<span>
-						<select name="operationType" style="width: 150px;">
+						<select name="operationType" onchange="changeOperationType();" style="width: 150px;">
 							<c:forEach items="${operationTypeValues}" var="operationType">
 								<c:choose>
 									<c:when test="${operationType eq groupSettingCriteria.operationType}"><option selected>${operationType}</option></c:when>

@@ -130,7 +130,6 @@ public class GroupSettingRestController extends SpringMVCBaseController {
         }
     }
 
-    @RequiresPermissions("/internal/groupsetting/getGroupSettingCount")
     @PostMapping("/getGroupSettingCount/{groupUuid}")
     public ResponseEntity<?> getGroupSettingCount(@PathVariable("groupUuid") long groupUuid) {
         try {

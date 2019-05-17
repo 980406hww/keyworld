@@ -75,6 +75,13 @@ function checkHasOperation() {
     });
 }
 
+function changeOperationType() {
+    $("div.conn label[name='hasOperation'] > input").attr("checked", true);
+    $("div.conn label[name='noOperation'] > input").attr("checked", false);
+    $("div.conn label[name='hasRemainingAccount'] > input").attr("checked", false);
+    $("#chargeForm").find("#hasOperation").val(true);
+}
+
 function changePaging(currentPage, pageSize) {
     var chargeForm = $("#chargeForm");
     chargeForm.find("#currentPageNumberHidden").val(currentPage);
@@ -97,7 +104,6 @@ function trimSearchCondition() {
     }
     if (operationType != ""){
         chargeForm.find("#operationType").val($.trim(operationType));
-        chargeForm.find("#hasOperation").val(true);
     } else {
         chargeForm.find("#operationType").val(null);
     }
@@ -146,7 +152,7 @@ function showUpdateGroupDialog(groupUuid, groupName) {
     var updateGroupSettingDialog = $("#updateGroupSettingDialog");
     updateGroupSettingDialog.find('#updateGroupSettingDialogForm')[0].reset();
     updateGroupSettingDialog.find("#settingGroup").attr("disabled", true);
-    findGroup(groupUuid, groupName);
+    getGroupSettingCount(groupUuid, groupName);
     updateGroupSettingDialog.show();
     updateGroupSettingDialog.dialog({
         resizable: false,
@@ -195,7 +201,7 @@ function delGroup(groupUuid) {
     }
 }
 
-function findGroup(groupUuid, groupName) {
+function getGroupSettingCount(groupUuid, groupName) {
     $.ajax({
         url: '/internal/groupsetting/getGroupSettingCount/' + groupUuid,
         type: 'POST',
