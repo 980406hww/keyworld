@@ -1052,7 +1052,7 @@
 <%--查询需要添加的优化组--%>
 <div id="getAvailableOptimizationGroups" class="easyui-dialog" style="display: none">
 	<table cellpadding="10" style="font-size: 12px; background-color: white;border-collapse: collapse; width: 100%;">
-        <thead style="background-color: #eeeeee !important;">
+        <thead style="background-color: #eeeeee !important;position: absolute !important;top: 24px !important;width: 100% !important;">
             <tr>
                 <th colspan="2" style="text-align: left;">组名来源：<input type="radio" name="sourceRadio" value="true">关键字
                     &nbsp;&nbsp;&nbsp;<input type="radio" name="sourceRadio" value="false">全站
@@ -1064,16 +1064,13 @@
                 </th>
             </tr>
 			<tr>
-				<th><input type="checkbox" name="checkAllOptimizationGroup" id="checkAllOptimizationGroup" onclick="selectAllChecked(this);" checked='checked'></th>
+				<th style="width: 15px;text-align: center;"><input type="checkbox" name="checkAllOptimizationGroup" id="checkAllOptimizationGroup" onclick="selectAllChecked(this);" checked='checked'></th>
 				<th>优化组</th>
 			</tr>
         </thead>
-		<tbody>
-            <div style="width:350px;">
-
-            </div>
+		<tbody style="position: absolute !important;bottom: 60px !important;background-color: #eeeeee !important;width: 100% !important;height: 309px;overflow-y: scroll;">
         </tbody>
-        <tfoot style="padding-bottom: 0px">
+        <tfoot style="position: absolute !important;bottom: 40px !important;background-color: #eeeeee !important;width: 100% !important;">
             <tr>
                 <th colspan="2" style="text-align: left;">操作类型：<select name="operationType" style="width: 150px;">
                     <c:forEach items="${operationTypeValues}" var="operationType">
