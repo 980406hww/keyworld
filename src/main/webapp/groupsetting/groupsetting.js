@@ -684,7 +684,7 @@ function getAvailableOptimizationGroups() {
     $("#getAvailableOptimizationGroups tbody tr").remove();
     var terminalType = $("#chargeForm").find("#terminalType").val();
     $.ajax({
-        url:'/internal/groupsetting/getAvailableOptimizationGroups/' + terminalType,
+        url:'/internal/group/getAvailableOptimizationGroups/' + terminalType,
         headers:{
             'Accept': 'application/json',
             'Content-Type': 'application/json'

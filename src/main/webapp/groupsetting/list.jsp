@@ -76,17 +76,21 @@
 						剩机器
 					</label>
 				</li>
-				<li>
-					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="trimSearchCondition('1')" value=" 搜索 " >&nbsp;
-				</li>
+				<shiro:hasPermission name="/internal/groupsetting/searchGroupSettings">
+					<li>
+						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="trimSearchCondition('1')" value=" 搜索 " >&nbsp;
+					</li>
+				</shiro:hasPermission>
 				<shiro:hasPermission name="/internal/group/saveGroup">
 					<li>
 						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="showGroupDialog()" value=" 增加 " >&nbsp;
 					</li>
 				</shiro:hasPermission>
-				<li>
-					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="getAvailableOptimizationGroups()" value="查看需要增加的分组队列(${availableOptimizationGroupCount})">&nbsp;
-				</li>
+				<shiro:hasPermission name="/internal/group/getAvailableOptimizationGroups">
+					<li>
+						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="getAvailableOptimizationGroups()" value="查看需要增加的分组队列(${availableOptimizationGroupCount})">&nbsp;
+					</li>
+				</shiro:hasPermission>
 			</ul>
 		</div>
 	</div>
@@ -117,7 +121,7 @@
 							<shiro:hasPermission name="/internal/groupsetting/saveGroupSetting">
 								<a class="blue" href="javascript:showGroupSettingDialog('add', '${groupVo.uuid}', '${groupVo.groupName}', '${groupVo.remainingAccount}', '${groupVo.uuid}')">新增优化组设置</a>
 							</shiro:hasPermission>
-							<shiro:hasPermission name="/internal/groupsetting/updateGroupSetting">
+							<shiro:hasPermission name="/internal/group/updateGroup">
 								<a class="blue" href="javascript:showUpdateGroupDialog('${groupVo.uuid}', '${groupVo.groupName}')">批量修改优化组设置</a>
 							</shiro:hasPermission>
 							<shiro:hasPermission name="/internal/group/delGroup">

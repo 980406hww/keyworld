@@ -14,7 +14,10 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @Author zhoukai
@@ -28,6 +31,12 @@ public class GroupService extends ServiceImpl<GroupDao, Group> {
 
     @Autowired
     private GroupSettingService groupSettingService;
+
+    @Autowired
+    private CustomerKeywordService customerKeywordService;
+
+    @Autowired
+    private QZSettingService qzSettingService;
 
     public void saveGroup (GroupCriteria groupCriteria) {
         groupDao.saveGroup(groupCriteria.getGroupName(), groupCriteria.getTerminalType(), groupCriteria.getCreateBy(), groupCriteria.getGroupSetting().getRemainingAccount());
@@ -112,5 +121,13 @@ public class GroupService extends ServiceImpl<GroupDao, Group> {
             groupSetting.setMachineUsedPercent(100);
             groupSettingService.saveGroupSetting(groupSetting, false);
         }
+    }
+
+    public List<String> getAvailableOptimizationGroups (String terminalType) {
+        List<String> availableCustomerKeywordOptimizationGroups = customerKeywordService.getAvailableOptimizationGroups(terminalType);
+        List<String> availableQZSettingOptimizationGroups = qzSettingService.getAvailableOptimizationGroups(terminalType);
+        availableCustomerKeywordOptimizationGroups.addAll(availableQZSettingOptimizationGroups);
+        Set<String> middleLinkedHashSet = new LinkedHashSet<>(availableCustomerKeywordOptimizationGroups);
+        return new ArrayList<>(middleLinkedHashSet);
     }
 }

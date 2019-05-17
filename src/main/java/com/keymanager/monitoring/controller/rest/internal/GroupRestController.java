@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @Author zhoukai
@@ -40,7 +41,7 @@ public class GroupRestController {
         }
     }
 
-    @RequiresPermissions("/internal/group/findGroup")
+    @RequiresPermissions("/internal/group/updateGroup")
     @PostMapping("/updateGroup/{groupUuid}")
     public ResponseEntity<?> updateGroup(@PathVariable("groupUuid") long groupUuid, @RequestBody UpdateGroupSettingCriteria updateGroupSettingCriteria) {
         try {
@@ -64,6 +65,7 @@ public class GroupRestController {
         }
     }
 
+    @RequiresPermissions("/internal/group/batchAddGroups")
     @PostMapping("/batchAddGroups")
     public ResponseEntity<?> batchAddGroups(@RequestBody GroupBatchCriteria groupBatchCriteria, HttpServletRequest request) {
         try {
@@ -73,6 +75,18 @@ public class GroupRestController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
+    
+    @RequiresPermissions("/internal/group/getAvailableOptimizationGroups")
+    @PostMapping("/getAvailableOptimizationGroups/{terminalType}")
+    public ResponseEntity<?> getAvailableOptimizationGroups(@PathVariable("terminalType") String terminalType) {
+        try {
+            List<String> availableOptimizationGroups = groupService.getAvailableOptimizationGroups(terminalType);
+            return new ResponseEntity<Object>(availableOptimizationGroups, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
         }
     }
 }

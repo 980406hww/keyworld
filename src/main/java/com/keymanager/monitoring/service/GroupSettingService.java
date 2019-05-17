@@ -27,12 +27,6 @@ public class GroupSettingService extends ServiceImpl<GroupSettingDao, GroupSetti
     @Autowired
     private GroupService groupService;
 
-    @Autowired
-    private QZSettingService qzSettingService;
-
-    @Autowired
-    private CustomerKeywordService customerKeywordService;
-
     public Page<GroupVO> searchGroupSettings(Page<GroupVO> page, GroupSettingCriteria groupSettingCriteria) {
         page.setRecords(groupService.searchGroups(page, groupSettingCriteria));
         for (GroupVO groupVo : page.getRecords()) {
@@ -66,14 +60,6 @@ public class GroupSettingService extends ServiceImpl<GroupSettingDao, GroupSetti
         if (1 == updateGroupSettingCriteria.getGs().getMachineUsedPercent()) {
             groupService.updateGroupRemainingAccount(updateGroupSettingCriteria.getGroupSetting().getGroupUuid(), updateGroupSettingCriteria.getGroupSetting().getRemainingAccount());
         }
-    }
-
-    public List<String> getAvailableOptimizationGroups (String terminalType) {
-        List<String> availableCustomerKeywordOptimizationGroups = customerKeywordService.getAvailableOptimizationGroups(terminalType);
-        List<String> availableQZSettingOptimizationGroups = qzSettingService.getAvailableOptimizationGroups(terminalType);
-        availableCustomerKeywordOptimizationGroups.addAll(availableQZSettingOptimizationGroups);
-        Set<String> middleLinkedHashSet = new LinkedHashSet<>(availableCustomerKeywordOptimizationGroups);
-        return new ArrayList<>(middleLinkedHashSet);
     }
 
     public GroupSetting getGroupSettingViaPercentage(String groupName, String terminalType){
