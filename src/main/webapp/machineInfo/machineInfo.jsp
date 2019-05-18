@@ -74,6 +74,8 @@
 								&nbsp;&nbsp;
 								优化组:<input type="text" name="groupName" id="groupName" value="${machineInfoCriteria.groupName}" style="width: 120px;">
 								&nbsp;&nbsp;
+								当前操作类型:<input type="text" name="operationType" id="operationType" value="${machineInfoCriteria.operationType}" style="width: 120px;">
+								&nbsp;&nbsp;
 								版本:<input type="text" name="version" id="version" value="${machineInfoCriteria.version}" style="width: 20px;">
 								&nbsp;&nbsp;
 								目标版本:<input type="text" name="targetVersion" id="targetVersion" value="${machineInfoCriteria.targetVersion}" style="width: 20px;">
@@ -202,6 +204,7 @@
 			<td align="center" width=10><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
 			<td align="center" width=40>客户端ID</td>
 			<td align="center" width=60>优化组</td>
+			<td align="center" width=60>当前操作类型</td>
 			<td align="center" width=20>续费<br>日期</td>
 			<td align="center" width=30>现版本<br>目标版本</td>
 			<td align="center" width=40>重启数/重启状态<br>失败次数</td>
@@ -269,6 +272,7 @@
 						   name="group" id="${machineInfo.clientID}" onBlur="updateGroup(this)" style="width: 100%;"/>
 				</shiro:hasPermission>
 			</td>
+			<td width="60">${machineInfo.usingOperationType}</td>
 			<td width=20><font color="${keywordColor}"><fmt:formatDate value="${machineInfo.renewalDate}"
 															  pattern="MM-dd"/></font></td>
 			<td width=30><font
@@ -536,21 +540,22 @@
 		<table>
 			<tr><td><input type="checkbox" name="columnName" id="1">客户端ID</td></tr>
 			<tr><td><input type="checkbox" name="columnName" id="2">优化组</td></tr>
-			<tr><td><input type="checkbox" name="columnName" id="3">续费日期</td></tr>
-			<tr><td><input type="checkbox" name="columnName" id="4">现版本-目标版本</td></tr>
-			<tr><td><input type="checkbox" name="columnName" id="5">重启数/重启状态-失败次数</td></tr>
-			<tr><td><input type="checkbox" name="columnName" id="6">所在城市-终端状态</td></tr>
-			<tr><td><input type="checkbox" name="columnName" id="7">剩余空间</td></tr>
-			<tr><td><input type="checkbox" name="columnName" id="8">最新工作时间-重启时间</td></tr>
-			<tr><td><input type="checkbox" name="columnName" id="9">重启排序时间-发通知时间</td></tr>
-			<tr><td><input type="checkbox" name="columnName" id="10">成功次数-操作次数</td></tr>
-			<tr><td><input type="checkbox" name="columnName" id="11">宽带账号-宽带密码</td></tr>
-			<tr><td><input type="checkbox" name="columnName" id="12">运行程序-类型</td></tr>
-			<tr><td><input type="checkbox" name="columnName" id="13">开机状态-下载程序类型</td></tr>
-			<tr><td><input type="checkbox" name="columnName" id="14">状态</td></tr>
-			<tr><td><input type="checkbox" name="columnName" id="15">失败原因</td></tr>
-			<tr><td><input type="checkbox" name="columnName" id="16">服务器ID</td></tr>
-			<tr><td><input type="checkbox" name="columnName" id="17">操作</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="3">当前操作类型</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="4">续费日期</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="5">现版本-目标版本</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="6">重启数/重启状态-失败次数</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="7">所在城市-终端状态</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="8">剩余空间</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="9">最新工作时间-重启时间</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="10">重启排序时间-发通知时间</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="11">成功次数-操作次数</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="12">宽带账号-宽带密码</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="13">运行程序-类型</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="14">开机状态-下载程序类型</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="15">状态</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="16">失败原因</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="17">服务器ID</td></tr>
+			<tr><td><input type="checkbox" name="columnName" id="18">操作</td></tr>
 		</table>
 	</div>
 <%@ include file="/commons/loadjs.jsp" %>

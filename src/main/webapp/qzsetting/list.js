@@ -588,13 +588,16 @@ function showMoreSearchCondition() {
         }
     });
 }
-function searchClientStatus(optimizeGroup, operationType) {
+function searchClientStatus(optimizeGroup) {
     var searchClientStatusFrom = $("#searchClientStatusForm");
     searchClientStatusFrom.find("#groupName").val($.trim(optimizeGroup));
-    if (operationType != null) {
-        searchClientStatusFrom.find("#operationType").val($.trim(operationType));
-    }
     searchClientStatusFrom.submit();
+}
+function searchGroupSettings(optimizedGroupName, operationType) {
+    var searchGroupSettingForm = $("#searchGroupSettingForm");
+    searchGroupSettingForm.find("#optimizedGroupName").val($.trim(optimizedGroupName));
+    searchGroupSettingForm.find("#operationType").val($.trim(operationType));
+    searchGroupSettingForm.submit();
 }
 function searchCustomerKeywords(customerUuid, optimizeGroupName) {
     var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
@@ -712,7 +715,7 @@ function showAllOperationType(self, e) {
 function findOptimizeGroupAndOperationType(self) {
     var name = $(self).parent().attr("name");
     var args = name.split(" ");
-    searchClientStatus(args[0], args[1]);
+    searchGroupSettings(args[0], args[1]);
 }
 function showKeywordDialog(qzSettingUuid, customerUuid, domain, optimizedGroupName) {
     var customerKeywordDialog = $("#customerKeywordDialog");

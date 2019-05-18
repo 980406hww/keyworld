@@ -116,7 +116,6 @@ public class MachineInfoRestController extends SpringMVCBaseController {
         ModelAndView modelAndView = new ModelAndView("/machineInfo/machineInfo");
         String terminalType = TerminalTypeMapping.getTerminalType(request);
         machineInfoCriteria.setTerminalType(terminalType);
-        boolean isDepartmentManager = false;
         Set<String> switchGroups = getCurrentUser().getRoles();
         if(!switchGroups.contains("DepartmentManager")) {
             machineInfoCriteria.setSwitchGroups(switchGroups);

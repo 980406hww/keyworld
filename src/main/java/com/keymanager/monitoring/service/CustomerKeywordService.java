@@ -901,7 +901,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         int retryCount = 0;
         int noPositionMaxInvalidCount = 2;
         Group group = groupService.findGroup(machineInfo.getGroup(), machineInfo.getTerminalType());
-        if(group.getUsingOperationType().contains(Constants.CONFIG_TYPE_ZHANNEI_SOGOU)) {
+        if(machineInfo.getUsingOperationType().contains(Constants.CONFIG_TYPE_ZHANNEI_SOGOU)) {
             Config configInvalidRefreshCount = configService.getConfig(Constants.CONFIG_TYPE_ZHANNEI_SOGOU, Constants.CONFIG_KEY_NOPOSITION_MAX_INVALID_COUNT);
             noPositionMaxInvalidCount = Integer.parseInt(configInvalidRefreshCount.getValue());
         }
@@ -942,7 +942,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeywordForOptimization.setTitle(customerKeyword.getTitle());
 
             customerKeywordForOptimization.setGroup(machineInfo.getGroup());
-            customerKeywordForOptimization.setOperationType(group.getUsingOperationType());
+            customerKeywordForOptimization.setOperationType(machineInfo.getUsingOperationType());
             Calendar calendar = Calendar.getInstance();
             customerKeywordForOptimization.setUpdateSettingTime((machineInfo.getUpdateSettingTime().getTime()> group.getUpdateTime().getTime()) ? machineInfo.getUpdateSettingTime() : new Timestamp(group.getUpdateTime().getTime()));
 

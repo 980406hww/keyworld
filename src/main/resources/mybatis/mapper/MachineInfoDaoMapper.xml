@@ -12,6 +12,7 @@
         mi.fContinuousFailCount AS "continuousFailCount",
         mi.fCity AS "city",
         mi.fGroup AS "group",
+        mi.fUsingOperationType AS "usingOperationType",
         mi.fAllowSwitchGroup AS "allowSwitchGroup",
         mi.fSwitchGroupName AS "switchGroupName",
         mi.fHost AS "host",
@@ -76,6 +77,7 @@
         WHERE mi.fTerminalType = #{machineInfoCriteria.terminalType}
         <if test="machineInfoCriteria.clientID != null and machineInfoCriteria.clientID != ''"> AND mi.fClientID like '%${machineInfoCriteria.clientID}%'</if>
         <if test="machineInfoCriteria.groupName != null and machineInfoCriteria.groupName != ''"> AND mi.fGroup like '%${machineInfoCriteria.groupName}%'</if>
+        <if test="machineInfoCriteria.operationType != null and machineInfoCriteria.operationType != ''"> AND mi.fUsingOperationType like '${machineInfoCriteria.operationType}%'</if>
         <if test="machineInfoCriteria.upgradeFailedReason != null and machineInfoCriteria.upgradeFailedReason != ''"> AND mi.fUpgradeFailedReason like '%${machineInfoCriteria.upgradeFailedReason}%'</if>
         <if test="machineInfoCriteria.version != null and machineInfoCriteria.version != ''"> AND mi.fVersion like concat(#{machineInfoCriteria.version},'%')</if>
         <if test="machineInfoCriteria.targetVersion != null and machineInfoCriteria.targetVersion != ''"> AND mi.fTargetVersion like concat(#{machineInfoCriteria.targetVersion},'%')</if>

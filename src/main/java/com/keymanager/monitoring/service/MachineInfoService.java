@@ -821,7 +821,6 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
         MachineInfo machineInfo = this.selectById(clientID);
         ClientStatusForOptimization clientStatusForOptimization = null;
         if(machineInfo != null){
-            Group group = groupService.findGroup(machineInfo.getGroup(), machineInfo.getTerminalType());
             GroupSetting groupSetting = groupSettingService.getGroupSettingViaPercentage(machineInfo.getGroup(), machineInfo.getTerminalType());
             clientStatusForOptimization = new ClientStatusForOptimization();
             if(groupSetting.getKuaizhaoPercent() != null) {
@@ -883,10 +882,10 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
             clientStatusForOptimization.setBroadbandPassword(machineInfo.getBroadbandPassword());
             clientStatusForOptimization.setOpenStatistics(clientStatusForOptimization.getDisableStatistics() == 1 ? 0 : 1);
             clientStatusForOptimization.setCurrentTime(Utils.formatDate(new Date(), Utils.TIME_FORMAT));
-            
-            group.setUsingOperationType(groupSetting.getOperationType());
-            group.setUpdateTime(new Date());
-            groupService.updateById(group);
+
+            machineInfo.setUsingOperationType(groupSetting.getOperationType());
+            machineInfo.setUpdateSettingTime(Utils.getCurrentTimestamp());
+            machineInfoDao.updateById(machineInfo);
         }
         return clientStatusForOptimization;
     }

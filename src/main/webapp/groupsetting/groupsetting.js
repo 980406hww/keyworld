@@ -743,6 +743,10 @@ function batchAddGroups() {
             postData.optimizationGroupList.push(optimizationGroup);
         }
     }
+    if (postData.optimizationGroupList.length === 0) {
+        $().toastmessage("showErrorToast", "请选择需要添加的优化组！！！");
+        return false;
+    }
     $.ajax({
         url: '/internal/group/batchAddGroups',
         headers: {
@@ -770,7 +774,7 @@ function searchAvailableOptimizationGroups() {
     var terminalType = $("#chargeForm").find("#terminalType").val();
     var optimizedGroupNameSearchSource = $("#getAvailableOptimizationGroups").find('input:radio[name="sourceRadio"]:checked').val();
     if (optimizedGroupNameSearchSource == null){
-        alert("请选择查询来源！");
+        alert("请选择组名来源！");
         return false;
     }
     var optimizedGroupName = $("#getAvailableOptimizationGroups").find($("input[name='optimizedGroupName']")).val();
@@ -796,6 +800,9 @@ function searchAvailableOptimizationGroups() {
                         "</tr>");
                 });
             }
+        },
+        error: function () {
+            $().toastmessage("showErrorToast", "查询失败！！！");
         }
     });
 }

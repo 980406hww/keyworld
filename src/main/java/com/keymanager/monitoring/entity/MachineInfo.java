@@ -32,6 +32,9 @@ public class MachineInfo {
 	@TableField(value = "fGroup", strategy = FieldStrategy.IGNORED)
 	private String group;
 
+	@TableField(value = "fUsingOperationType")
+	private String usingOperationType;
+
 	@TableField(value = "fContinuousFailCount")
 	private int continuousFailCount;
 
@@ -207,6 +210,14 @@ public class MachineInfo {
 
 	public void setGroup(String group) {
 		this.group = group;
+	}
+
+	public String getUsingOperationType () {
+		return usingOperationType;
+	}
+
+	public void setUsingOperationType (String usingOperationType) {
+		this.usingOperationType = usingOperationType;
 	}
 
 	public int getContinuousFailCount() {

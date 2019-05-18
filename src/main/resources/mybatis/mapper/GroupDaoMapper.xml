@@ -54,7 +54,6 @@
         SELECT
         g.fUuid             AS "uuid",
         g.fGroupName        AS "groupName",
-        g.fUsingOperationType AS "usingOperationType",
         g.fTerminalType     AS "terminalType",
         g.fCreateBy         AS "createBy",
         g.fRemainingAccount AS "remainingAccount",

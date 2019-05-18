@@ -75,6 +75,7 @@ function resetPageNumber() {
     var machineInfoFormObj = $("#searchMachineInfoForm");
     var clientId = machineInfoFormObj.find("#clientID").val();
     var groupName = machineInfoFormObj.find("#groupName").val();
+    var operationType = machineInfoFormObj.find("#operationType").val();
     var version = machineInfoFormObj.find("#version").val();
     var targetVersion = machineInfoFormObj.find("#targetVersion").val();
     var city = machineInfoFormObj.find("#city").val();
@@ -87,6 +88,9 @@ function resetPageNumber() {
     }
     if(groupName != "") {
         machineInfoFormObj.find("#groupName").val($.trim(groupName));
+    }
+    if(operationType != "") {
+        machineInfoFormObj.find("#operationType").val($.trim(operationType));
     }
     if(version != "") {
         machineInfoFormObj.find("#version").val($.trim(version));

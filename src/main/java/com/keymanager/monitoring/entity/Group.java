@@ -16,9 +16,6 @@ public class Group extends BaseEntity {
     @TableField(value = "fTerminalType")
     private String terminalType;
 
-    @TableField(value = "fUsingOperationType")
-    private String usingOperationType;
-
     @TableField(value = "fCreateBy")
     private String createBy;
 
@@ -55,13 +52,5 @@ public class Group extends BaseEntity {
 
     public void setRemainingAccount (int remainingAccount) {
         this.remainingAccount = remainingAccount;
-    }
-
-    public String getUsingOperationType() {
-        return usingOperationType;
-    }
-
-    public void setUsingOperationType(String usingOperationType) {
-        this.usingOperationType = usingOperationType;
     }
 }

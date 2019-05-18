@@ -5,6 +5,7 @@ import java.util.Set;
 public class MachineInfoCriteria extends BaseCriteria {
     private String clientID; // 客户端ID
     private String groupName; // 优化组
+    private String operationType; // 操作类型
     private String noGroup; // 没分组
     private String version; // 版本
     private String targetVersion;
@@ -56,6 +57,14 @@ public class MachineInfoCriteria extends BaseCriteria {
 
     public void setGroupName(String groupName) {
         this.groupName = groupName;
+    }
+
+    public String getOperationType () {
+        return operationType;
+    }
+
+    public void setOperationType (String operationType) {
+        this.operationType = operationType;
     }
 
     public String getNoGroup() {

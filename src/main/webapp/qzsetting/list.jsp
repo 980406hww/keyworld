@@ -423,7 +423,7 @@
 									<div class="row">
 										<div title="该站下该分组所有机器数, 点击链接跳转到终端监控">
 										<span class="line1">
-											<a target="_blank" href="javascript:searchClientStatus('${qzSetting.pcGroup}', null)">${qzSetting.pcGroup == null or qzSetting.pcGroup == "" ? "暂无" : qzSetting.pcGroup}</a>
+											<a target="_blank" href="javascript:searchClientStatus('${qzSetting.pcGroup}')">${qzSetting.pcGroup == null or qzSetting.pcGroup == "" ? "暂无" : qzSetting.pcGroup}</a>
 										</span>
 											<span>
 											<a href="javascript:;">优化分组</a>
@@ -704,7 +704,7 @@
 									<div class="row">
 										<div title="该站下该分组所有机器数, 点击链接跳转到终端监控">
 										<span class="line1">
-											<a target="_blank" href="javascript:searchClientStatus('${qzSetting.phoneGroup}', null)">${qzSetting.phoneGroup == null or qzSetting.phoneGroup == "" ? "暂无" : qzSetting.phoneGroup}</a>
+											<a target="_blank" href="javascript:searchClientStatus('${qzSetting.phoneGroup}')">${qzSetting.phoneGroup == null or qzSetting.phoneGroup == "" ? "暂无" : qzSetting.phoneGroup}</a>
 										</span>
 											<span>
 											<a href="javascript:;">优化分组</a>
@@ -828,9 +828,13 @@
 	</div>
 </div>
 
-<form id="searchClientStatusForm" method="post" target="_blank" action="/internal/clientstatus/searchClientStatuses" style="display: none">
+<form id="searchClientStatusForm" method="post" target="_blank" action="/internal/machineInfo/searchMachineInfos" style="display: none">
     <input type="text" name="groupName" id="groupName">
-    <input type="text" name="operationType" id="operationType">
+</form>
+
+<form id="searchGroupSettingForm" method="post" target="_blank" action="/internal/groupsetting/searchGroupSettings" style="display: none">
+	<input type="text" name="optimizedGroupName" id="optimizedGroupName">
+	<input type="text" name="operationType" id="operationType">
 </form>
 
 <form id="searchCustomerKeywordForm" method="post" target="_blank" action="/internal/customerKeyword/searchCustomerKeywords" style="display: none;">
