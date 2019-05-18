@@ -884,7 +884,6 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
             clientStatusForOptimization.setCurrentTime(Utils.formatDate(new Date(), Utils.TIME_FORMAT));
 
             machineInfo.setUsingOperationType(groupSetting.getOperationType());
-            machineInfo.setUpdateSettingTime(Utils.getCurrentTimestamp());
             machineInfoDao.updateById(machineInfo);
         }
         return clientStatusForOptimization;

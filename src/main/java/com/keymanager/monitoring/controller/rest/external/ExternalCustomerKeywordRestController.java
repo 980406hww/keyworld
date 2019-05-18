@@ -99,6 +99,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 return new ResponseEntity<Object>(customerKeywordForCaptureTitle, HttpStatus.OK);
             }
         }catch (Exception ex){
+            ex.printStackTrace();
             logger.error(ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
@@ -112,6 +113,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 return new ResponseEntity<Object>(1, HttpStatus.OK);
             }
         }catch (Exception ex){
+            ex.printStackTrace();
             logger.error(ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
@@ -126,6 +128,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 return new ResponseEntity<Object>(1, HttpStatus.OK);
             }
         }catch (Exception ex){
+            ex.printStackTrace();
             logger.error(ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
@@ -163,6 +166,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 return new ResponseEntity<Object>(customerKeywordForCaptureTitles, HttpStatus.OK);
             }
         }catch (Exception ex){
+            ex.printStackTrace();
             logger.error(ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
@@ -176,6 +180,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 return new ResponseEntity<Object>(customerKeyword, HttpStatus.OK);
             }
         }catch (Exception ex){
+            ex.printStackTrace();
             logger.error(ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
@@ -189,6 +194,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 return new ResponseEntity<Object>(true, HttpStatus.OK);
             }
         }catch (Exception ex){
+            ex.printStackTrace();
             logger.error(ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
@@ -202,6 +208,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 return new ResponseEntity<Object>(groups, HttpStatus.OK);
             }
         }catch (Exception ex){
+            ex.printStackTrace();
             logger.error(ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
@@ -221,6 +228,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 return new ResponseEntity<Object>(customerKeywordList, HttpStatus.OK);
             }
         }catch (Exception ex){
+            ex.printStackTrace();
             logger.error(ex.getMessage());
         }
         return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
@@ -247,6 +255,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 return ResponseEntity.status(HttpStatus.OK).body(customerKeywordForOptimization);
             }
         }catch (Exception ex){
+            ex.printStackTrace();
             logger.error(ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
@@ -275,6 +284,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 return ResponseEntity.status(HttpStatus.OK).body(s);
             }
         }catch (Exception ex){
+            ex.printStackTrace();
             logger.error(ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
@@ -315,6 +325,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 return new ResponseEntity<Object>(1, HttpStatus.OK);
             }
         }catch (Exception ex){
+            ex.printStackTrace();
             logger.error(ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
@@ -331,6 +342,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 return new ResponseEntity<Object>(true, HttpStatus.OK);
             }
         }catch (Exception ex){
+            ex.printStackTrace();
             logger.error(ex.getMessage());
         }
         return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
@@ -346,6 +358,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 return new ResponseEntity<Object>(1, HttpStatus.OK);
             }
         }catch (Exception ex){
+            ex.printStackTrace();
             logger.error(ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
@@ -375,6 +388,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 return new ResponseEntity<Object>(true, HttpStatus.OK);
             }
         }catch (Exception ex){
+            ex.printStackTrace();
             logger.error(ex.getMessage());
         }
         return new ResponseEntity<Object>(false,HttpStatus.BAD_REQUEST);
@@ -402,6 +416,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 return new ResponseEntity<Object>(capturePosition, HttpStatus.OK);
             }
         }catch (Exception ex){
+            ex.printStackTrace();
             logger.error(ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
@@ -416,6 +431,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 return new ResponseEntity<Object>(true, HttpStatus.OK);
             }
         }catch (Exception ex){
+            ex.printStackTrace();
             logger.error(ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
@@ -430,6 +446,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 return new ResponseEntity<Object>(true, HttpStatus.OK);
             }
         }catch (Exception ex){
+            ex.printStackTrace();
             logger.error(ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
@@ -444,6 +461,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 return new ResponseEntity<Object>(result, HttpStatus.OK);
             }
         }catch (Exception ex){
+            ex.printStackTrace();
             logger.error(ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
@@ -458,6 +476,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 return new ResponseEntity<Object>(true, HttpStatus.OK);
             }
         }catch (Exception ex){
+            ex.printStackTrace();
             logger.error(ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
@@ -479,6 +498,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             }
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }catch (Exception ex){
+            ex.printStackTrace();
             logger.error(ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
@@ -494,6 +514,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             }
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }catch (Exception ex){
+            ex.printStackTrace();
             logger.error(ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
@@ -509,6 +530,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 return new ResponseEntity<Object>(customerSources, HttpStatus.OK);
             }
         } catch(Exception ex) {
+            ex.printStackTrace();
             logger.error(ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
@@ -527,6 +549,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             }
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }catch (Exception ex){
+            ex.printStackTrace();
             logger.error(ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
@@ -544,6 +567,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             }
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }catch (Exception ex){
+            ex.printStackTrace();
             logger.error(ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
@@ -562,6 +586,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             }
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }catch (Exception ex){
+            ex.printStackTrace();
             logger.error(ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);

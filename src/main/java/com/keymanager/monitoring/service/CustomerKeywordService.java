@@ -871,6 +871,13 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             return null;
         }
 
+        String usingOperationType = machineInfo.getUsingOperationType();
+        if(usingOperationType == null){
+            GroupSetting groupSetting = groupSettingService.getGroupSettingViaPercentage(machineInfo.getGroup(), machineInfo.getTerminalType());
+            usingOperationType = groupSetting.getOperationType();
+            machineInfo.setUsingOperationType(usingOperationType);
+            machineInfoService.updateById(machineInfo);
+        }
 
         Integer maxInvalidCount = groupMaxInvalidCountMap.get(machineInfo.getGroup());
         if(maxInvalidCount == null){
@@ -901,7 +908,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         int retryCount = 0;
         int noPositionMaxInvalidCount = 2;
         Group group = groupService.findGroup(machineInfo.getGroup(), machineInfo.getTerminalType());
-        if(machineInfo.getUsingOperationType().contains(Constants.CONFIG_TYPE_ZHANNEI_SOGOU)) {
+        if(usingOperationType.contains(Constants.CONFIG_TYPE_ZHANNEI_SOGOU)) {
             Config configInvalidRefreshCount = configService.getConfig(Constants.CONFIG_TYPE_ZHANNEI_SOGOU, Constants.CONFIG_KEY_NOPOSITION_MAX_INVALID_COUNT);
             noPositionMaxInvalidCount = Integer.parseInt(configInvalidRefreshCount.getValue());
         }
@@ -942,7 +949,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeywordForOptimization.setTitle(customerKeyword.getTitle());
 
             customerKeywordForOptimization.setGroup(machineInfo.getGroup());
-            customerKeywordForOptimization.setOperationType(machineInfo.getUsingOperationType());
+            customerKeywordForOptimization.setOperationType(usingOperationType);
             Calendar calendar = Calendar.getInstance();
             customerKeywordForOptimization.setUpdateSettingTime((machineInfo.getUpdateSettingTime().getTime()> group.getUpdateTime().getTime()) ? machineInfo.getUpdateSettingTime() : new Timestamp(group.getUpdateTime().getTime()));
 
@@ -1222,8 +1229,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                                                                                   Date startTime,Long captureRankJobUuid){
         CustomerKeywordForCapturePosition customerKeywordForCapturePosition = new CustomerKeywordForCapturePosition();
         Boolean captureRankJobStatus = captureRankJobService.getCaptureRankJobStatus(captureRankJobUuid);
-        customerKeywordForCapturePosition.setCaptureRankJobStatus(captureRankJobStatus);
-        if(captureRankJobStatus){
+        if(captureRankJobStatus != null){
+            customerKeywordForCapturePosition.setCaptureRankJobStatus(captureRankJobStatus);
             Long customerKeywordUuid = customerKeywordDao.getCustomerKeywordUuidForCapturePosition(terminalType, groupNames, customerUuid, startTime, 0);
             if(null == customerKeywordUuid){
                 customerKeywordUuid = customerKeywordDao.getCustomerKeywordUuidForCapturePosition(terminalType, groupNames, customerUuid, startTime, 1);
