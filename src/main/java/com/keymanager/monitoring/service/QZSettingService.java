@@ -623,6 +623,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 				customerKeyword.setCurrentIndexCount(-1);
 				customerKeyword.setPositionFirstFee(-1d);
 				customerKeyword.setBearPawNumber(qzSettingSaveCustomerKeywordsCriteria.getBearPawNumber());
+                customerKeyword.setCustomerKeywordSource(1);
 				if (!excludeKeyword.isEmpty()){
 					if (excludeKeyword.contains(keyword)){
 						customerKeyword.setOptimizeGroupName("zanting");

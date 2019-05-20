@@ -1359,6 +1359,7 @@
             fOrderNumber,
             fStatus,
             fManualCleanTitle,
+            fCustomerKeywordSource,
             fUpdateTime,
             fCreateTime
         )
@@ -1423,6 +1424,7 @@
                     <when test="customerKeyword.manualCleanTitle != null">#{customerKeyword.manualCleanTitle},</when>
                     <when test="customerKeyword.manualCleanTitle == null">0,</when>
                 </choose>
+                #{customerKeyword.customerKeywordSource},
                 #{customerKeyword.updateTime},
                 #{customerKeyword.createTime}
             )
