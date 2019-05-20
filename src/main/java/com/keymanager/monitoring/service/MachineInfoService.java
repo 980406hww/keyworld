@@ -272,6 +272,7 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
                 }else{
                     machineInfo.setStartUpStatus(ClientStartUpStatusEnum.Completed.name());
                 }
+                machineInfo.setUpdateSettingTime(Utils.getCurrentTimestamp());
                 machineInfoDao.insert(machineInfo);
             }
         }
