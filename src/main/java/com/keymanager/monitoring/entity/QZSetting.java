@@ -16,6 +16,9 @@ public class QZSetting extends BaseEntity{
 	@TableField(value = "fCustomerUuid")
 	private int customerUuid;
 
+	@TableField(value = "fOrganizationName")
+	private String organizationName;
+
 	@TableField(exist=false)
 	private String contactPerson;
 
@@ -114,6 +117,14 @@ public class QZSetting extends BaseEntity{
 
 	public void setCustomerUuid(int customerUuid) {
 		this.customerUuid = customerUuid;
+	}
+
+	public String getOrganizationName () {
+		return organizationName;
+	}
+
+	public void setOrganizationName (String organizationName) {
+		this.organizationName = organizationName;
 	}
 
 	public String getDomain() {

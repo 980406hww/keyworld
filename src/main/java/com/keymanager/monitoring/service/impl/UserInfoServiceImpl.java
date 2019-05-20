@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.common.result.PageInfo;
+import com.keymanager.monitoring.common.result.Tree;
 import com.keymanager.monitoring.common.utils.BeanUtils;
 import com.keymanager.monitoring.common.utils.StringUtils;
 import com.keymanager.monitoring.dao.UserInfoDao;
@@ -12,12 +13,15 @@ import com.keymanager.monitoring.entity.Config;
 import com.keymanager.monitoring.entity.UserInfo;
 import com.keymanager.monitoring.entity.UserRole;
 import com.keymanager.monitoring.service.ConfigService;
+import com.keymanager.monitoring.service.IOrganizationService;
 import com.keymanager.monitoring.service.IUserInfoService;
 import com.keymanager.monitoring.vo.UserVO;
 import com.keymanager.util.Constants;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -35,6 +39,8 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoDao, UserInfo> impl
     private UserRoleDao userRoleDao;
     @Autowired
     private ConfigService configService;
+    @Autowired
+    private IOrganizationService organizationService;
 
     @Override
     public UserInfo getUserInfo(String loginName) {
@@ -130,6 +136,32 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoDao, UserInfo> impl
     @Override
     public Long getUuidByLoginName(String loginName) {
         return userInfoDao.getUuidByLoginName(loginName);
+    }
+
+    @Override
+    public List<Tree> selectUserInfoTrees () {
+        List<Tree> trees = organizationService.selectTree();
+        for (Tree tree : trees) {
+            List<UserInfo> userInfos = userInfoDao.selectUserInfos(tree.getId());
+            if (CollectionUtils.isNotEmpty(userInfos)) {
+                List<Tree> userInfoTreeList = new ArrayList<>();
+                for (UserInfo userInfo : userInfos) {
+                    Tree userInfoTree = new Tree();
+                    userInfoTree.setId(userInfo.getUuid());
+                    userInfoTree.setText(userInfo.getUserName());
+                    userInfoTree.setPid(tree.getId());
+                    userInfoTreeList.add(userInfoTree);
+                }
+                tree.setState(0);
+                tree.setChildren(userInfoTreeList);
+            }
+        }
+        return trees;
+    }
+
+    @Override
+    public String getUserOrganizationName (Long id) {
+        return userInfoDao.getUserOrganizationName(id);
     }
 
 }

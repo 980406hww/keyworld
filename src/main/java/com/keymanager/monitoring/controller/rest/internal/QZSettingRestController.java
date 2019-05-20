@@ -6,6 +6,7 @@ import com.keymanager.monitoring.criteria.*;
 import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.CustomerExcludeKeyword;
 import com.keymanager.monitoring.entity.QZSetting;
+import com.keymanager.monitoring.entity.UserInfo;
 import com.keymanager.monitoring.service.*;
 import com.keymanager.monitoring.vo.QZSettingSearchClientGroupInfoVO;
 import com.keymanager.util.Constants;
@@ -48,6 +49,9 @@ public class QZSettingRestController extends SpringMVCBaseController {
 	@Autowired
 	private ConfigService configService;
 
+	@Autowired
+	private IUserInfoService userInfoService;
+
 	@RequiresPermissions("/internal/qzsetting/updateStatus")
 	@RequestMapping(value = "/updateQZSettingStatus", method = RequestMethod.POST)
 	public ResponseEntity<?> updateQZSettingStatus(@RequestBody Map<String, Object> requestMap) throws Exception{
@@ -88,6 +92,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
 					qzSetting.setStatus(2);
 				}
 			}
+			qzSetting.setOrganizationName(userInfoService.getUserOrganizationName(getCurrentUser().getId()));
 			qzSettingService.saveQZSetting(qzSetting);
 			return new ResponseEntity<Object>(qzSetting, HttpStatus.OK);
 		} catch (Exception e) {
@@ -161,18 +166,32 @@ public class QZSettingRestController extends SpringMVCBaseController {
             String terminalType = TerminalTypeMapping.getTerminalType(request);
             qzSettingSearchCriteria.setTerminalType(terminalType);
         }
-        qzKeywordRankInfoService.getCountNumOfRankInfo(qzSettingSearchCriteria);
 		CustomerCriteria customerCriteria = new CustomerCriteria();
 		String entryType = (String) request.getSession().getAttribute("entryType");
 		customerCriteria.setEntryType(entryType);
 		boolean isDepartmentManager = true;
+		boolean hasFilterUserName = false;
 		Set<String> roles = getCurrentUser().getRoles();
 		if(!roles.contains("DepartmentManager")) {
 			isDepartmentManager = false;
-			String loginName = (String) request.getSession().getAttribute("username");
-			customerCriteria.setLoginName(loginName);
-			qzSettingSearchCriteria.setLoginName(loginName);
+			if (roles.contains("Operation") || roles.contains("Technical")) {
+                hasFilterUserName = true;
+			} else {
+				String loginName = (String) request.getSession().getAttribute("username");
+				customerCriteria.setLoginName(loginName);
+				qzSettingSearchCriteria.setLoginName(loginName);
+			}
+		} else {
+            hasFilterUserName = true;
 		}
+		if (hasFilterUserName) {
+			if (qzSettingSearchCriteria.getUserInfoID() != null) {
+                UserInfo userInfo = userInfoService.selectById(qzSettingSearchCriteria.getUserInfoID());
+                customerCriteria.setLoginName(userInfo.getLoginName());
+				qzSettingSearchCriteria.setLoginName(userInfo.getLoginName());
+			}
+		}
+		qzKeywordRankInfoService.getCountNumOfRankInfo(qzSettingSearchCriteria);
 		Page<QZSetting> page = qzSettingService.searchQZSetting(new Page<QZSetting>(currentPageNumber, pageSize), qzSettingSearchCriteria);
 		List<Customer> customerList = customerService.getActiveCustomerSimpleInfo(customerCriteria);
 		Integer availableQZSettingCount = qzSettingService.getAvailableQZSettings().size();

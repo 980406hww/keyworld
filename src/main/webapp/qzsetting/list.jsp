@@ -140,6 +140,14 @@
 					<span>客户: </span>
 					<input type="text" list="customer_list" name="customerInfo" value="${qzSettingSearchCriteria.customerInfo}">
 				</li>
+				<shiro:hasPermission name="/internal/qzsetting/delete">
+				<li class="userName condition">
+					<span>用户名称: </span>
+					<span>
+						<select id="userNameTree" name="userName" style="width: 140px; height: 29px;" class="easyui-validatebox" data-options="required:true"></select>
+					</span>
+				</li>
+				</shiro:hasPermission>
 				<li class="category condition">
 					<span>分类标签: </span>
 					<input type="text" list="categoryTag_list" name="categoryTag" value="${qzSettingSearchCriteria.categoryTag}">
@@ -222,6 +230,8 @@
 	<input type="hidden" name="customerUuid" id="customerUuid" value="${qzSettingSearchCriteria.customerUuid}"/>
 	<input type="hidden" name="statusHidden" id="statusHidden" value="${qzSettingSearchCriteria.status}"/>
 	<input type="hidden" name="customerInfo" id="customerInfo" value="${qzSettingSearchCriteria.customerInfo}">
+	<input type="hidden" name="userInfoID" id="userInfoID" value="${qzSettingSearchCriteria.userInfoID}">
+	<input type="hidden" name="organizationID" id="organizationID" value="${qzSettingSearchCriteria.organizationID}">
 	<input type="hidden" name="operationType" id="operationType" value="${qzSettingSearchCriteria.operationType}"/>
 	<input type="hidden" name="status" id="status" value="${qzSettingSearchCriteria.status}"/>
 	<input type="hidden" name="updateStatus" id="updateStatus" value="${qzSettingSearchCriteria.updateStatus}"/>
