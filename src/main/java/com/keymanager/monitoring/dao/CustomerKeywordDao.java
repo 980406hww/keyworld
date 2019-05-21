@@ -102,8 +102,13 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void adjustOptimizePlanCount(@Param("customerKeywordUuid")Long customerKeywordUuid, @Param("optimizationPlanCount")int optimizationPlanCount,
                                  @Param("queryInterval")int queryInterval);
 
-    Long getCustomerKeywordUuidForCapturePosition(@Param("terminalType")String terminalType, @Param("groupNames")List<String> groupNames,
-                                                  @Param("customerUuid")Long customerUuid, @Param("startTime")Date startTime, @Param("captureStatus") Integer captureStatus);
+    Long getCustomerKeywordUuidForCapturePosition(@Param("terminalType") String terminalType, @Param("groupNames") List<String> groupNames,
+                                                  @Param("customerUuid") Long customerUuid, @Param("startTime") Date startTime,
+                                                  @Param("captureStatus") Integer captureStatus);
+
+    List<Long> getCustomerKeywordUuidForCapturePositionTemp(@Param("terminalType") String terminalType, @Param("groupName") String groupName,
+                                                            @Param("customerUuid") Long customerUuid, @Param("startTime") Date startTime,
+                                                            @Param("captureStatus") Integer captureStatus);
 
     CustomerKeyword getCustomerKeywordForCapturePosition(@Param("uuid")Long uuid);
 

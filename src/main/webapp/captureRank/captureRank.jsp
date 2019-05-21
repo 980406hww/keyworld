@@ -1,6 +1,7 @@
 ﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <html>
 <head>
+    <link rel="stylesheet" href="${staticPath}/static/select2/select2-4.0.6.min.css">
     <script type="text/javascript" src="${staticPath}/static/My97DatePicker/WdatePicker.js"></script>
     <%@ include file="/commons/basejs.jsp" %>
     <%@ include file="/commons/global.jsp" %>
@@ -10,13 +11,16 @@
         ul li > span{width: 100px;text-align: right;display: inline-block}
         input[type='radio']{ margin: 0 5px 0 10px;}
         input[type='checkbox']{ margin: 0 5px 0 10px;}
+        .panel.window {z-index: 1000 !important;}
+        .window-shadow {z-index: 999 !important;}
+        .window-mask {z-index: 998 !important;}
     </style>
     <title>抓排名任务管理</title>
 </head>
 <body>
 <div id="topDiv">
     <%@include file="/menu.jsp" %>
-    <div style="margin-top: 35px">
+    <div style="margin-top: 5px;margin-bottom: 5px">
         <form method="post" id="searchCaptureRankJobForm" action="/internal/captureRank/searchCaptureRankJobs" style="margin-bottom:0px ">
             <input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}" />
             <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
@@ -24,23 +28,25 @@
             <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
             组名:<input type="text" name="groupNames" id="groupNames" value="${captureRankJobSearchCriteria.groupNames}">
             客户ID:<input type="text" name="customerUuid" id="customerUuid" value="${captureRankJobSearchCriteria.customerUuid}">
-            操作类型:
-            <select name="operationType">
-                <option value="">请选择终端类型</option>
-                <option value="PC" <c:if test="${captureRankJobSearchCriteria.operationType.equals('PC')}">selected="selected"</c:if>>PC</option>
-                <option value="Phone" <c:if test="${captureRankJobSearchCriteria.operationType.equals('Phone')}">selected="selected"</c:if>>Phone</option>
-            </select>
             执行类型:
             <select name="exectionType">
                 <option value="">请选择执行类型</option>
                 <option value="Once" <c:if test="${captureRankJobSearchCriteria.exectionType.equals('Once')}">selected="selected"</c:if>>Once</option>
                 <option value="Everyday" <c:if test="${captureRankJobSearchCriteria.exectionType.equals('Everyday')}">selected="selected"</c:if>>Everyday</option>
+            </select>
+            执行状态:
+            <select name="exectionStatus">
+                <option value="">请选择执行状态</option>
+                <option value="New" <c:if test="${captureRankJobSearchCriteria.exectionStatus.equals('New')}">selected="selected"</c:if>>New</option>
+                <option value="Processing" <c:if test="${captureRankJobSearchCriteria.exectionStatus.equals('Processing')}">selected="selected"</c:if>>Processing</option>
+                <option value="Checking" <c:if test="${captureRankJobSearchCriteria.exectionStatus.equals('Checking')}">selected="selected"</c:if>>Checking</option>
+                <option value="Complete" <c:if test="${captureRankJobSearchCriteria.exectionStatus.equals('Complete')}">selected="selected"</c:if>>Complete</option>
             </select>&nbsp;&nbsp;
             <shiro:hasPermission name="/internal/captureRank/searchCaptureRankJobs">
             <input type="submit" value=" 查询 " onclick="resetPageNumber()">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/captureRank/saveCaptureRankJob">
-            <input type="button" value=" 添加 " onclick="showCrawlRankingForm()">&nbsp;&nbsp;
+            <input type="button" value=" 添加 " onclick="addCaptureRankJobs()">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/captureRank/deleteCaptureRankJobs">
             <input type="button" value=" 删除所选 " onclick="deleteCaptureRankJobs()">&nbsp;&nbsp;
@@ -100,7 +106,7 @@
             <td width=90><fmt:formatDate value="${captureRankJob.createTime}" pattern="yyyy-MM-dd HH:mm"/></td>
             <td width=80>
                 <shiro:hasPermission name="/internal/captureRank/saveCaptureRankJob">
-                <a href="javascript:modifyCaptureRankJob('${captureRankJob.uuid}')">修改</a>
+                <a href="javascript:updateCaptureRankJobs('${captureRankJob.uuid}')">修改</a>
                 </shiro:hasPermission>
                 <shiro:hasPermission name="/internal/captureRank/changeCaptureRankJobStatus">
                     <c:choose>
@@ -121,20 +127,45 @@
         </c:forEach>
     </table>
 </div>
-<div id="crawlRankingDialog" title="" class="easyui-dialog" style="display: none;left: 35%;">
-<form id="crawlRankingForm">
-    <ul>
-        <input type="hidden" name="captureRankJobUuid" id="captureRankJobUuid">
-        <li><span>优化组名:</span><input type="text" name="groupNames" id="groupNames" class="easyui-combobox" style="width: 200px"  required></li>
-        <li><span>客户名:</span><input type="text" name="customerUuid" id="customerUuid" style="width: 160px" class="easyui-combogrid" data-options="editable:false" placeholder="可以不做操作"><input type="button" value="清空" onclick="customerUuidReset()" style="margin-left: 10px"></input></li>
-        <li><span>执行方式:</span><input type="radio" name="exectionType" checked  value="Once">一次性</label><input type="radio" name="exectionType" value="Everyday">每天</li>
-        <li><span>执行时间:</span><input type="text" class="Wdate" name="exectionTime" id="exectionTime" onfocus="WdatePicker({lang:'zh-cn',dateFmt:'HH:mm:ss'})" required style="width: 200px"></li>
-        <li><span>抓取记录数:</span><input id="rowNumber" name="rowNumber" class="easyui-numberspinner"  data-options="min:0,max:1000,increment:50" required style="width: 200px"></li>
-        <li><span>抓取间隔(毫秒):</span><input id="captureInterval" name="captureInterval" class="easyui-numberspinner"  data-options="min:0,increment:500" required style="width: 200px"></li>
-        <li><span>每页条数:</span><input id="pageSize" name="pageSize" class="easyui-numberspinner"  data-options="min:0,max:50,increment:10" required style="width: 200px"></li>
-        <li><span>换IP间隔:</span><input id="executionCycle" name="executionCycle" class="easyui-numberspinner"  data-options="min:0,increment:50" required style="width: 200px"></li>
-    </ul>
-</form>
+<div id="select2DialogDiv" title="" class="easyui-dialog" style="display: none;">
+    <form id="crawlRankingForm">
+        <ul id="formData">
+            <input type="hidden" name="captureRankJobUuid" id="captureRankJobUuid">
+            <li>
+                <span>优化组名:</span>
+                <select id="groups" name="groups" title="优化组名" style="width: 200px;"></select>
+            </li>
+            <li>
+                <span>客户名:</span>
+                <select id="customers" name="customers" title="客户名" style="width: 200px;"></select>
+            </li>
+            <li>
+                <span>执行方式:</span>
+                <input type="radio" name="exectionType" checked  value="Once">一次性</label>
+                <input type="radio" name="exectionType" value="Everyday">每天</li>
+            <li id="start">
+                <span>执行时间:</span>
+                <input type="text" class="Wdate" id="exectionTime1" onfocus="WdatePicker({lang:'zh-cn',dateFmt:'HH:mm:ss'})" required style="width: 150px">
+                <input id="nextExecuteTimeBtn" type="button" value="添加" onclick="nextExecuteTime()" style="float: right;margin-right: 6px"/>
+            </li>
+            <li id="end">
+                <span>抓取记录数:</span>
+                <input id="rowNumber" name="rowNumber" class="easyui-numberspinner"  data-options="min:0,max:1000,increment:50" required style="width: 200px">
+            </li>
+            <li>
+                <span>抓取间隔(毫秒):</span>
+                <input id="captureInterval" name="captureInterval" class="easyui-numberspinner"  data-options="min:0,increment:500" required style="width: 200px">
+            </li>
+            <li>
+                <span>每页条数:</span>
+                <input id="pageSize" name="pageSize" class="easyui-numberspinner"  data-options="min:0,max:50,increment:10" required style="width: 200px">
+            </li>
+            <li>
+                <span>换IP间隔:</span>
+                <input id="executionCycle" name="executionCycle" class="easyui-numberspinner"  data-options="min:0,increment:50" required style="width: 200px">
+            </li>
+        </ul>
+    </form>
 </div>
 <div id="showCustomerBottomPositioneDiv">
     <div id="showCustomerBottomDiv">
@@ -161,6 +192,7 @@
     </div>
 </div>
 <%@ include file="/commons/loadjs.jsp" %>
+<script type="text/javascript" src="${staticPath}/static/select2/select2-4.0.6.min.js"></script>
 <script src="${staticPath}/captureRank/captureRank.js"></script>
 </body>
 </html>

@@ -1,5 +1,6 @@
 package com.keymanager.monitoring.service;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.criteria.CaptureRankJobSearchCriteria;
@@ -10,6 +11,8 @@ import com.keymanager.monitoring.enums.CaptureRankExectionStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -58,27 +61,60 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
         return page;
     }
 
-    public void saveCaptureRankJob(CaptureRankJob captureRankJob, String terminalType, String loginName)
-    {
+    public void saveCaptureRankJob(Map map, String terminalType, String loginName) {
+        CaptureRankJob captureRankJob = JSON.parseObject(JSON.toJSONString(map.get("captureRankJob")), CaptureRankJob.class);
         captureRankJob.setUpdateTime(new Date());
         captureRankJob.setUpdateBy(loginName);
         captureRankJob.setOperationType(terminalType);
-        if (captureRankJob.getUuid() == null) {
+
+        List list = (List) map.get("executeTimes");
+        for (Object strTime : list) {
+            SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+            try {
+                Date d = format.parse((String) strTime);
+                captureRankJob.setExectionTime(new Time(d.getTime()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (captureRankJob.getUuid() != null) {
+                captureRankJobDao.updateById(captureRankJob);
+                return;
+            }
             captureRankJob.setExectionStatus(CaptureRankExectionStatus.New.name());
             captureRankJob.setCreateBy(loginName);
             captureRankJobDao.insert(captureRankJob);
-        } else {
-            captureRankJobDao.updateById(captureRankJob);
+            captureRankJob.setUuid(null);
         }
     }
 
-    public void completeCaptureRankJob(CaptureRankJob captureRankJob)
-    {
+    public void completeCaptureRankJob(CaptureRankJob captureRankJob) {
         captureRankJob = captureRankJobDao.selectById(captureRankJob.getUuid());
         captureRankJob.setExectionStatus(CaptureRankExectionStatus.Complete.name());
         captureRankJob.setEndTime(new Date());
         captureRankJob.setLastExecutionDate(new java.sql.Date(new Date().getTime()));
         captureRankJobDao.updateById(captureRankJob);
+    }
+
+    public void checkComplete(CaptureRankJob captureRankJob) {
+        captureRankJob = captureRankJobDao.selectById(captureRankJob.getUuid());
+        captureRankJob.setExectionStatus(CaptureRankExectionStatus.Checking.name());
+        captureRankJob.setEndTime(new Date());
+        captureRankJob.setLastExecutionDate(new java.sql.Date(new Date().getTime()));
+        captureRankJobDao.updateById(captureRankJob);
+    }
+
+    public void searchFiveMiniSetCheckingJobs() {
+        List<CaptureRankJob> captureRankJobs = captureRankJobDao.searchFiveMiniSetCheckingJobs();
+        if (captureRankJobs != null && captureRankJobs.size() != 0) {
+            for (CaptureRankJob captureRank : captureRankJobs) {
+                if (captureRankJobDao.searchThreeMiniStatusEqualsOne(captureRank.getOperationType(), captureRank.getGroupNames()) > 0) {
+                    captureRank.setExectionStatus(CaptureRankExectionStatus.Processing.name());
+                } else {
+                    captureRank.setExectionStatus(CaptureRankExectionStatus.Complete.name());
+                }
+                captureRankJobDao.updateById(captureRank);
+            }
+        }
     }
 
     public Boolean getCaptureRankJobStatus(Long captureRankJobUuid) {

@@ -24,13 +24,25 @@
     </sql>
     <select id="searchCaptureRankJobs" resultType="com.keymanager.monitoring.entity.CaptureRankJob">
         select
-        <include refid="colID"/>
-        FROM t_capture_rank_job c
+            <include refid="colID"/>
+        FROM
+            t_capture_rank_job c
         <where>
-            <if test="captureRankJobSearchCriteria.groupNames!=null and captureRankJobSearchCriteria.groupNames!=''"> and c.fGroupNames like '%${captureRankJobSearchCriteria.groupNames}%'</if>
-            <if test="captureRankJobSearchCriteria.customerUuid!=null and captureRankJobSearchCriteria.customerUuid!=''"> and c.fcustomerUuid = #{captureRankJobSearchCriteria.customerUuid}</if>
-            <if test="captureRankJobSearchCriteria.operationType!=null and captureRankJobSearchCriteria.operationType!=''"> and c.fOperationType = #{captureRankJobSearchCriteria.operationType}</if>
-            <if test="captureRankJobSearchCriteria.exectionType!=null and captureRankJobSearchCriteria.exectionType!=''"> and c.fExectionType = #{captureRankJobSearchCriteria.exectionType}</if>
+            <if test="captureRankJobSearchCriteria.groupNames!=null and captureRankJobSearchCriteria.groupNames!=''">
+                and c.fGroupNames like '%${captureRankJobSearchCriteria.groupNames}%'
+            </if>
+            <if test="captureRankJobSearchCriteria.customerUuid!=null and captureRankJobSearchCriteria.customerUuid!=''">
+                and c.fcustomerUuid = #{captureRankJobSearchCriteria.customerUuid}
+            </if>
+            <if test="captureRankJobSearchCriteria.operationType!=null and captureRankJobSearchCriteria.operationType!=''">
+                and c.fOperationType = #{captureRankJobSearchCriteria.operationType}
+            </if>
+            <if test="captureRankJobSearchCriteria.exectionType!=null and captureRankJobSearchCriteria.exectionType!=''">
+                and c.fExectionType = #{captureRankJobSearchCriteria.exectionType}
+            </if>
+            <if test="captureRankJobSearchCriteria.exectionStatus!=null and captureRankJobSearchCriteria.exectionStatus!=''">
+                and c.fExectionStatus = #{captureRankJobSearchCriteria.exectionStatus}
+            </if>
         </where>
     </select>
     <select id="provideCaptureRankJob" resultType="com.keymanager.monitoring.entity.CaptureRankJob">
@@ -80,5 +92,35 @@
         )
         AND c.fCaptureRankJobStatus = 1
         LIMIT 1
+    </select>
+
+    <select id="searchFiveMiniSetCheckingJobs" resultType="com.keymanager.monitoring.entity.CaptureRankJob">
+        SELECT
+            c.fUuid as uuid,
+            c.fOperationType as `operationType`,
+            c.fGroupNames as `groupNames`
+        FROM
+            t_capture_rank_job c
+        WHERE
+            c.fExectionStatus = 'Checking'
+        AND
+            c.fEndTime &lt; (localtimestamp()-300)
+    </select>
+
+    <select id="searchThreeMiniStatusEqualsOne" resultType="java.lang.Integer">
+        SELECT
+            COUNT(*)
+        FROM
+            t_customer_keyword
+        WHERE
+            fTerminalType = #{terminalType}
+        AND
+            fOptimizeGroupName = #{groupName}
+        AND
+            fStatus = 1
+        AND
+            fCaptureStatus = 1
+        AND
+            fCapturePositionQueryTime &lt; DATE_SUB(NOW(),INTERVAL 3 MINUTE)
     </select>
 </mapper>

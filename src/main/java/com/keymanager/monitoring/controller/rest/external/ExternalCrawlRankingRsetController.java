@@ -36,6 +36,8 @@ public class ExternalCrawlRankingRsetController extends SpringMVCBaseController 
         String password = baseCriteria.getPassword();
         try {
             if (validUser(userName, password)) {
+                // 取任务的时候先检查checking状态的任务
+                captureRankJobService.searchFiveMiniSetCheckingJobs();
                 CaptureRankJob captureRankJob = captureRankJobService.provideCaptureRankJob();
                 if(captureRankJob == null) {
                     captureRankJob = new CaptureRankJob();
@@ -58,6 +60,23 @@ public class ExternalCrawlRankingRsetController extends SpringMVCBaseController 
         try {
             if (validUser(userName, password)) {
                 captureRankJobService.completeCaptureRankJob(captureRankJob);
+                return new ResponseEntity<Object>(HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+    }
+
+    @RequestMapping(value = "/checkCaptureRankJob", method = RequestMethod.POST)
+    public ResponseEntity<?> checkCaptureRankJob(@RequestBody CaptureRankJobCriteria captureRankJobCriteria) {
+        String userName = captureRankJobCriteria.getUserName();
+        String password = captureRankJobCriteria.getPassword();
+        CaptureRankJob captureRankJob = captureRankJobCriteria.getCaptureRankJob();
+        try {
+            if (validUser(userName, password)) {
+                captureRankJobService.checkComplete(captureRankJob);
                 return new ResponseEntity<Object>(HttpStatus.OK);
             }
         } catch (Exception e) {

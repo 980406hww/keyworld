@@ -690,6 +690,31 @@
         LIMIT 1
     </select>
 
+    <select id="getCustomerKeywordUuidForCapturePositionTemp" resultType="Long">
+        SELECT
+        ck.fUuid AS 'uuid'
+        FROM t_customer_keyword ck
+        WHERE ck.fTerminalType = #{terminalType} and ck.fStatus = 1
+        AND fCaptureStatus = #{captureStatus}
+        <if test="startTime != null and captureStatus == 0">
+            AND ck.fCapturePositionQueryTime <![CDATA[<]]> #{startTime}
+            AND !(ck.fCapturePositionQueryTime > CURRENT_DATE() AND ck.fCurrentPosition &lt; 4 AND ck.fCurrentPosition &gt; 0)
+        </if>
+        <if test="startTime != null and captureStatus == 1">
+            AND ck.fCapturePositionQueryTime <![CDATA[<]]> DATE_SUB( NOW(), INTERVAL 3 MINUTE )
+        </if>
+        <if test="customerUuid != null">
+            AND ck.fCustomerUuid = #{customerUuid}
+        </if>
+        <if test="groupName != null">
+            AND ck.fOptimizeGroupName = #{groupName}
+        </if>
+        <if test="groupName == null">
+            AND (ck.fOptimizeGroupName IS NULL OR ck.fOptimizeGroupName <![CDATA[<>]]> 'stop')
+        </if>
+        LIMIT 10
+    </select>
+
     <select id="getCustomerKeywordForCapturePosition" resultType="com.keymanager.monitoring.entity.CustomerKeyword">
         SELECT
         ck.fUuid	AS	'uuid',

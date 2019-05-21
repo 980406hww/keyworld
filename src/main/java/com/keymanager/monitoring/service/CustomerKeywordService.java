@@ -1252,6 +1252,38 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return customerKeywordForCapturePosition;
     }
 
+    public List<CustomerKeywordForCapturePosition> getCustomerKeywordForCapturePositionTemp(String terminalType, String groupName, Long customerUuid, Date startTime, Long captureRankJobUuid) {
+
+        List<CustomerKeywordForCapturePosition> customerKeywordForCapturePositions = new ArrayList<>();
+
+        synchronized (CustomerKeywordService.class) {
+            Boolean captureRankJobStatus = captureRankJobService.getCaptureRankJobStatus(captureRankJobUuid);
+            if (captureRankJobStatus != null) {
+                List<Long> customerKeywordUuids = customerKeywordDao.getCustomerKeywordUuidForCapturePositionTemp(terminalType, groupName, customerUuid, startTime, 0);
+                if (null == customerKeywordUuids || customerKeywordUuids.size() == 0) {
+                    customerKeywordUuids = customerKeywordDao.getCustomerKeywordUuidForCapturePositionTemp(terminalType, groupName, customerUuid, startTime, 1);
+                }
+                if (null != customerKeywordUuids && customerKeywordUuids.size() != 0) {
+                    for (Long customerKeywordUuid : customerKeywordUuids) {
+                        CustomerKeyword customerKeyword = customerKeywordDao.getCustomerKeywordForCapturePosition(customerKeywordUuid);
+                        CustomerKeywordForCapturePosition customerKeywordForCapturePosition = new CustomerKeywordForCapturePosition();
+                        customerKeywordForCapturePosition.setUuid(customerKeyword.getUuid());
+                        customerKeywordForCapturePosition.setCaptureRankJobStatus(captureRankJobStatus);
+                        customerKeywordForCapturePosition.setKeyword(customerKeyword.getKeyword());
+                        customerKeywordForCapturePosition.setUrl(customerKeyword.getUrl());
+                        customerKeywordForCapturePosition.setTitle(customerKeyword.getTitle());
+                        customerKeywordForCapturePosition.setSearchEngine(customerKeyword.getSearchEngine());
+                        customerKeywordForCapturePosition.setTerminalType(customerKeyword.getTerminalType());
+                        customerKeywordForCapturePosition.setBearPawNumber(customerKeyword.getBearPawNumber());
+                        customerKeywordDao.updateCapturePositionQueryTimeAndCaptureStatus(customerKeyword.getUuid());
+                        customerKeywordForCapturePositions.add(customerKeywordForCapturePosition);
+                    }
+                }
+            }
+        }
+        return customerKeywordForCapturePositions;
+    }
+
     public void resetInvalidRefreshCount(CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria) throws Exception {
         customerKeywordDao.resetInvalidRefreshCount(customerKeywordRefreshStatInfoCriteria);
     }

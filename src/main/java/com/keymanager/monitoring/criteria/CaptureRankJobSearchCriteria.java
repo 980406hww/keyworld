@@ -8,6 +8,7 @@ public class CaptureRankJobSearchCriteria{
     private String customerUuid;
     private String operationType;
     private String exectionType;
+    private String exectionStatus;
     private String createBy;
     private String updateBy;
 
@@ -37,6 +38,14 @@ public class CaptureRankJobSearchCriteria{
 
     public String getExectionType() {
         return exectionType;
+    }
+
+    public String getExectionStatus() {
+        return exectionStatus;
+    }
+
+    public void setExectionStatus(String exectionStatus) {
+        this.exectionStatus = exectionStatus;
     }
 
     public void setExectionType(String exectionType) {

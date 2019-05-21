@@ -1,7 +1,9 @@
 $(function () {
     $("#centerDiv").css("margin-top", $("#topDiv").height());
     pageLoad();
-})
+    $('#customers').select2({});
+    $('#groups').select2({});
+});
 function changePaging(currentPage, pageSize) {
     var searchCaptureRankJobForm = $("#searchCaptureRankJobForm");
     searchCaptureRankJobForm.find("#currentPageNumberHidden").val(currentPage);
@@ -33,238 +35,6 @@ function pageLoad() {
         showCustomerBottomDiv.find("#nextButton").attr("disabled", "disabled");
         showCustomerBottomDiv.find("#lastButton").attr("disabled", "disabled");
     }
-}
-function initcustomerUuid() {
-    var postData = {};
-    postData.groupNames = $('#crawlRankingForm #groupNames').val().split(",");
-    $.ajax({
-        url: '/internal/customer/searchCustomersWithKeyword',
-        data: JSON.stringify(postData),
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        timeout: 5000,
-        type: 'POST',
-        success: function (data) {
-            if (data) {
-                $('#crawlRankingForm #customerUuid').combogrid({
-                    panelWidth: 460,
-                    value: '',
-                    idField: 'uuid',
-                    textField: 'contactPerson',
-                    dataType: 'json',
-                    data: data,
-                    columns: [[
-                        {field: 'contactPerson', title: '联系人', width: 150},
-                        {field: 'telphone', title: '电话', width: 100},
-                        {field: 'qq', title: 'QQ', width: 100},
-                        {field: 'email', title: 'E-mail', width: 100}
-                    ]]
-                });
-            } else {
-                $().toastmessage('showErrorToast', "获取失败");
-            }
-        },
-        error: function () {
-            $().toastmessage('showErrorToast', "获取失败");
-        }
-    });
-
-}
-function initGroupNames(data) {
-    $('#crawlRankingForm #groupNames').combobox({
-        url: '/internal/customerKeyword/searchGroups', //后台获取下拉框数据的url
-        method: 'post',
-        //panelHeight:300,//设置为固定高度，combobox出现竖直滚动条
-        valueField: 'name',
-        textField: 'name',
-        multiple: true,
-        dataType: 'json',
-        editable: true,
-        formatter: function (row) { //formatter方法就是实现了在每个下拉选项前面增加checkbox框的方法
-            var opts = $(this).combobox('options');
-            return '<input type="checkbox" class="combobox-checkbox">' + row[opts.textField]
-        },
-        onLoadSuccess: function () {  //下拉框数据加载成功调用
-            if (data != null && data != '') {
-                var opts = $(this).combobox('options');
-                var target = this;
-                var values = data.groupNames.split(",");
-                $.map(values, function (value) {
-                    var el = opts.finder.getEl(target, value);
-                    el.find('input.combobox-checkbox')._propAttr('checked', true);
-                    el.click();
-                })
-                showCrawlRankingForm(data.uuid);
-                initcustomerUuid();
-                if (data.customerUuid != null && data.customerUuid != '') {
-                    $('#crawlRankingForm #customerUuid').combogrid("setValue", data.customerUuid);
-                }
-                $("#crawlRankingForm input[name=exectionType][value=" + data.exectionType + "]").attr("checked", true);
-                $("#crawlRankingForm #exectionTime").val(data.exectionTime);
-                $('#crawlRankingForm #rowNumber').spinner('setValue', data.rowNumber);
-                $('#crawlRankingForm #captureInterval').spinner('setValue', data.captureInterval);
-                $('#crawlRankingForm #executionCycle').spinner('setValue', data.executionCycle);
-                $('#crawlRankingForm #pageSize').spinner('setValue', data.pageSize);
-            }
-        },
-        onSelect: function (row) { //选中一个选项时调用
-            var opts = $(this).combobox('options');
-            //获取选中的值的values
-            $('#crawlRankingForm #groupNames').val($(this).combobox('getValues'));
-
-            //设置选中值所对应的复选框为选中状态
-            var el = opts.finder.getEl(this, row[opts.valueField]);
-            el.find('input.combobox-checkbox')._propAttr('checked', true);
-
-            initcustomerUuid();
-        },
-        onUnselect: function (row) {//不选中一个选项时调用
-            var opts = $(this).combobox('options');
-            //获取选中的值的values
-            $('#crawlRankingForm #groupNames').val($(this).combobox('getValues'));
-
-            var el = opts.finder.getEl(this, row[opts.valueField]);
-            el.find('input.combobox-checkbox')._propAttr('checked', false);
-
-            initcustomerUuid();
-        }
-    });
-}
-function showCrawlRankingForm(uuid) {
-    $("#crawlRankingDialog").show();
-    $("#crawlRankingDialog").dialog({
-        resizable: false,
-        title: "设置抓排名任务",
-        width: 320,
-        fitColumns: true,//自动大小
-        modal: true,
-        buttons: [{
-            text: '保存',
-            iconCls: 'icon-ok',
-            handler: function () {
-                saveCaptureRankJob(uuid);
-            }
-        },
-            {
-                text: '清空',
-                iconCls: 'fi-trash',
-                handler: function () {
-                    $('#crawlRankingForm')[0].reset();
-                }
-            },
-            {
-                text: '取消',
-                iconCls: 'icon-cancel',
-                handler: function () {
-                    $("#crawlRankingDialog").dialog("close");
-                    $('#crawlRankingForm')[0].reset();
-                }
-            }]
-    });
-    if (uuid == null || uuid == '') {
-        $('#crawlRankingForm')[0].reset();
-        initGroupNames();
-        initcustomerUuid();
-        $('#crawlRankingForm #rowNumber').spinner('setValue', 100);
-        $('#crawlRankingForm #captureInterval').spinner('setValue', 500);
-        $('#crawlRankingForm #executionCycle').spinner('setValue', 0);
-        if ("${sessionScope.terminalType}" == 'PC') {
-            $('#crawlRankingForm #pageSize').spinner('setValue', 10);
-        }
-        else {
-            $('#crawlRankingForm #pageSize').spinner('setValue', 50);
-        }
-    }
-    $('#crawlRankingDialog').window("resize", {top: $(document).scrollTop() + 100});
-}
-function saveCaptureRankJob(uuid) {
-    var CaptureRankJob = {};
-    if (uuid != null) {
-        CaptureRankJob.uuid = uuid;
-    }
-
-    CaptureRankJob.customerUuid = $('#crawlRankingForm #customerUuid').combogrid("getValue");
-    if ($("#crawlRankingForm #groupNames").val() == null || $("#crawlRankingForm #groupNames").val() === '') {
-        $().toastmessage('showWarningToast', "优化组名不能为空!");
-        return;
-    }
-    var groupNames=$(".combobox-item-selected");
-    var groupNamesSelected="";
-    $.each(groupNames,function(idx,val){
-        if(idx==0) {
-            groupNamesSelected=groupNamesSelected+$(val).text();
-        }
-        else {
-            groupNamesSelected=groupNamesSelected+","+$(val).text();
-        }
-    })
-    CaptureRankJob.groupNames = groupNamesSelected;
-    CaptureRankJob.exectionType = $("#crawlRankingForm input[name=exectionType]:checked").val();
-    if ($("#crawlRankingForm #exectionTime").val() == null || $("#crawlRankingForm #exectionTime").val() === '') {
-        $().toastmessage('showWarningToast', "执行时间不能为空!");
-        return;
-    }
-    CaptureRankJob.exectionTime = $("#crawlRankingForm #exectionTime").val();
-    CaptureRankJob.rowNumber = $("#crawlRankingForm #rowNumber").val();
-    CaptureRankJob.captureInterval = $("#crawlRankingForm #captureInterval").val();
-    CaptureRankJob.executionCycle = $("#crawlRankingForm #executionCycle").val();
-    CaptureRankJob.pageSize = $("#crawlRankingForm #pageSize").val();
-    $.ajax({
-        url: '/internal/captureRank/saveCaptureRankJob',
-        data: JSON.stringify(CaptureRankJob),
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        timeout: 5000,
-        type: 'POST',
-        success: function (data) {
-            if (data) {
-                $().toastmessage('showSuccessToast', "保存成功", true);
-            } else {
-                $().toastmessage('showErrorToast', "保存失败");
-            }
-        },
-        error: function () {
-            $().toastmessage('showErrorToast', "保存失败");
-        }
-    });
-}
-function initCrawlRankingForm(uuid) {
-    $.ajax({
-        url: '/internal/captureRank/getCaptureRankJob?uuid=' + uuid,
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        timeout: 5000,
-        type: 'POST',
-        success: function (data) {
-            if (data) {
-                if (data.customerUuid != null && data.customerUuid != '') {
-                    $('#crawlRankingForm #customerUuid').combogrid("setValue", data.customerUuid);
-                }
-                initGroupNames(data);
-            }
-            else {
-                $().toastmessage('showErrorToast', "获取失败");
-            }
-        },
-        error: function () {
-            $().toastmessage('showErrorToast', "获取失败");
-        }
-    });
-}
-function modifyCaptureRankJob(uuid) {
-    $.ajaxSetup({
-        async: false
-    });
-    initCrawlRankingForm(uuid);
-    $.ajaxSetup({
-        async: true
-    });
 }
 function deleteCaptureRankJob(uuid) {
     $.ajax({
@@ -360,9 +130,6 @@ function decideSelectAll() {
         $("#selectAllChecked").prop("checked", false);
     }
 }
-function customerUuidReset() {
-    $('#crawlRankingForm #customerUuid').combogrid("reset");
-}
 
 function changeCaptureRankJobStatus(uuid, status) {
     if(status == false) {
@@ -406,5 +173,344 @@ function resetPageNumber() {
     if(customerUuid != "") {
         captureRankJobFormObj.find("#customerUuid").val($.trim(customerUuid));
     }
-    $("#searchCaptureRankJobForm").find("#currentPageNumberHidden").val(1);
+    captureRankJobFormObj.find("#currentPageNumberHidden").val(1);
+}
+
+// 优化组名的Change事件
+$('#groups').on('change', function () {
+    var group = $('#groups option:selected').text();
+    var groupList = [];
+    groupList.push(group);
+    var postData = {};
+    postData.groupNames = groupList;
+    $.ajax({
+        url: '/internal/customer/searchCustomersWithKeyword',
+        method: 'post',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        data: JSON.stringify(postData),
+        success: function (data) {
+            var r = [];
+            if (data.length != 0) {
+                r[0] = {"id": "NaN", "text": "请选择客户"};
+                $.each(data, function () {
+                    r.push({
+                        "id": this.uuid,
+                        "contactPerson": this.contactPerson,
+                        "text": "<div class='select2-result-repository__title'>" +
+                            "客户名：<span style='color: green'>" + this.contactPerson + "</span></div> " +
+                            "<div class='select2-result-repository__description'>" +
+                            "手机号：<span style='color: red'>" + (this.telphone == null ? "空" : this.telphone) + "</span>" +
+                            " | QQ号：<span style='color: red'>" + (this.qq == null ? "空" : this.qq) + "</span>" +
+                            " | 邮箱号：<span style='color: red'>" + (this.email == null ? "空" : this.email) + "</span></div>"
+                    })
+                });
+            } else {
+                r[0] = {"id": "NaN", "text": "当前组无客户"};
+            }
+            $('#customers').empty().select2({
+                data: r,
+                dropdownAutoWidth: true,
+                escapeMarkup: function (markup) {
+                    return markup;
+                },
+                templateResult: function (repo) {
+                    if (repo.loading) {
+                        return repo.contactPerson;
+                    }
+                    return repo.text;
+                },
+                templateSelection: function (repo) {
+                    return repo.contactPerson || repo.text;
+                }
+            });
+        }
+    });
+});
+
+// 打开弹框
+function openDialog(uuid) {
+    $("#select2DialogDiv").show().dialog({
+        resizable: false,
+        title: "设置抓排名任务",
+        width: 320,
+        fitColumns: true,//自动大小
+        modal: true,
+        buttons: [
+            {
+                text: '保存',
+                iconCls: 'icon-ok',
+                handler: function () {
+                    saveData(uuid);
+                }
+            },
+            // {
+            //     text: '清空',
+            //     iconCls: 'fi-trash',
+            //     handler: function () {
+            //         clearFromDom();
+            //     }
+            // },
+            {
+                text: '取消',
+                iconCls: 'icon-cancel',
+                handler: function () {
+                    $("#select2DialogDiv").dialog("close");
+                    $('#groups').empty();
+                    $('#customers').empty();
+                    clearFromDom();
+                }
+            }
+        ]
+    }).window("resize", {
+        top: $(document).scrollTop() + $(window).height() / 2 - 200,
+        left: $(document).scrollLeft() + $(window).width() / 2 - 180
+    });
+}
+
+// 新增时的数据显示
+function addCaptureRankJobs() {
+    $("#exectionTime1").css("width", "150px"); // 时间选择框缩短
+    $("#nextExecuteTimeBtn").css('display', 'block'); // 增加时间框按钮
+    // 打开弹框
+    openDialog();
+    // 优化组名显示
+    $.ajax({
+        url: '/internal/customerKeyword/searchGroups',
+        method: 'post',
+        dataType: "json",
+        success: function (data) {
+            var r = [];
+            r[0] = {"id": "NaN", "text": "请选择优化组名"};
+            $.each(data, function (i, item) {
+                r.push({"id": i, "text": item.name})
+            });
+            $('#groups').empty().select2({
+                data: r,
+                dropdownAutoWidth: true
+            });
+            $('#customers').select2({
+                data: [{"id": "NaN", "text": "请选择客户"}]
+            });
+        }
+    });
+    // 初始化数据
+    $('#crawlRankingForm')[0].reset();
+    $("#customers").empty();
+    $('#crawlRankingForm #rowNumber').spinner('setValue', 100);
+    $('#crawlRankingForm #captureInterval').spinner('setValue', 500);
+    $('#crawlRankingForm #executionCycle').spinner('setValue', 0);
+    $('#crawlRankingForm #pageSize').spinner('setValue', "${sessionScope.terminalType}" == 'PC' ? 10 : 50);
+}
+
+// 修改时的数据显示
+function updateCaptureRankJobs(uuid) {
+    $("#exectionTime1").css("width", "200px"); // 恢复时间选择框长度
+    $("#nextExecuteTimeBtn").css('display', 'none'); // 隐藏增加时间选择器按钮
+    var globalData = {};
+    // 请求数据当前行数据（同步）
+    $.ajax({
+        url: '/internal/captureRank/getCaptureRankJob?uuid=' + uuid,
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        async: false,
+        timeout: 5000,
+        type: 'POST',
+        success: function (data) {
+            if (data) {
+                globalData = data;
+                $("#crawlRankingForm input[name=exectionType][value=" + data.exectionType + "]").attr("checked", true);
+                $("#crawlRankingForm #exectionTime1").val(data.exectionTime);
+                $('#crawlRankingForm #rowNumber').spinner('setValue', data.rowNumber);
+                $('#crawlRankingForm #captureInterval').spinner('setValue', data.captureInterval);
+                $('#crawlRankingForm #executionCycle').spinner('setValue', data.executionCycle);
+                $('#crawlRankingForm #pageSize').spinner('setValue', data.pageSize);
+            } else {
+                $().toastmessage('showErrorToast', "获取失败");
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "获取失败");
+        }
+    });
+    // 优化组名显示
+    $.ajax({
+        url: '/internal/customerKeyword/searchGroups',
+        method: 'post',
+        dataType: "json",
+        success: function (data) {
+            var r = [];
+            var index = null;
+            $.each(data, function (i, item) {
+                r.push({"id": i, "text": item.name});
+                if (globalData.groupNames == item.name) {
+                    index = i;
+                }
+            });
+            if (index == null) {
+                // 组名不存在，被删
+                r.splice(0, 0, {"id": "NaN", "text": "当前优化组名不存在"});
+            } else {
+                var temp = r[0];
+                r[0] = r[index];
+                r[index] = temp;
+            }
+            $('#groups').empty().select2({
+                data: r,
+                dropdownAutoWidth: true
+            });
+            // 显示当前组名的客户
+            $.ajax({
+                url: '/internal/customer/searchCustomersWithKeyword',
+                method: 'post',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                data: JSON.stringify({"groupNames": [globalData.groupNames]}),
+                success: function (data) {
+                    var r = [];
+                    if(data.length != 0){
+                        var index = null;
+                        $.each(data, function (i, item) {
+                            r.push({
+                                "id": item.uuid,
+                                "contactPerson": item.contactPerson,
+                                "text": "<div class='select2-result-repository__title'>" +
+                                    "客户名：<span style='color: green'>" + item.contactPerson + "</span></div> " +
+                                    "<div class='select2-result-repository__description'>" +
+                                    "手机号：<span style='color: red'>" + (item.telphone == null ? "空" : item.telphone) + "</span>" +
+                                    " | QQ号：<span style='color: red'>" + (item.qq == null ? "空" : item.qq) + "</span>" +
+                                    " | 邮箱号：<span style='color: red'>" + (item.email == null ? "空" : item.email) + "</span></div>"
+                            });
+                            if (globalData.customerUuid == this.uuid) {
+                                index = i;
+                            }
+                        });
+                        if (index == null) {
+                            r.splice(0, 0, {"id": "NaN", "text": "当前客户不存在"});
+                        } else {
+                            var temp = r[0];
+                            r[0] = r[index];
+                            r[index] = temp;
+                        }
+                        if (globalData.customerUuid == null) {
+                            r.splice(0, 0, {"id": "NaN", "text": "当前未选择客户"});
+                        } else {
+                            r.splice(1, 0, {"id": "NaN", "text": "置空"});
+                        }
+                    }else {
+                        r[0] = {"id": "NaN", "text": "当前组无客户"};
+                    }
+                    $('#customers').empty().select2({
+                        data: r,
+                        dropdownAutoWidth:true,
+                        escapeMarkup: function (markup) {
+                            return markup;
+                        },
+                        templateResult: function (repo) {
+                            if (repo.loading) {
+                                return repo.contactPerson;
+                            }
+                            return repo.text;
+                        },
+                        templateSelection: function (repo) {
+                            return repo.contactPerson || repo.text;
+                        }
+                    });
+                    // 打开弹框
+                    openDialog(uuid);
+                }
+            });
+        }
+    });
+}
+
+// 新增执行时间
+function nextExecuteTime() {
+    var liNum = $("#formData li").length;
+    var newLi = $("#formData li").eq(liNum - 5);
+    newLi.after('' +
+        '<li id="li' + (liNum - 6) + '">' +
+        '<span style="margin-left: 3px">执行时间:&nbsp;</span>' +
+        '<input type="text" class="Wdate" id="exectionTime' + (liNum - 6) + '" onfocus="WdatePicker({lang:\'zh-cn\',dateFmt:\'HH:mm:ss\'})" required style="width: 150px">' +
+        '<input type="button" value="取消" onclick="clearThisTime(' + (liNum - 6) + ')" style="margin-left: 14px;"/>' +
+        '</li>')
+}
+
+// 去除时间
+function clearThisTime(liNum) {
+    var index = $("#li" + liNum).index();
+    $("#formData li:eq(" + (index - 1) + ")").remove();
+}
+
+// 清空表单（针对多个执行时间）
+function clearFromDom() {
+    $('#crawlRankingForm')[0].reset();
+    var start = $("#start").index();
+    var end = $("#end").index();
+    while ((end - 1) !== start) {
+        $("#formData li:eq(4)").remove();
+        start += 1;
+    }
+}
+
+// 保存按钮
+function saveData(uuid) {
+    var CaptureRankJob = {};
+    if(uuid != null && uuid != ''){
+        CaptureRankJob.uuid = uuid;
+    }
+
+    var groupName = $('#groups option:selected').val();
+    if(groupName == null || groupName == 'NaN'){
+        $().toastmessage('showWarningToast', "优化组名不能为空!");
+        return;
+    }
+
+    CaptureRankJob.groupNames = $('#groups option:selected').text();
+    CaptureRankJob.customerUuid = $('#customers option:selected').val() == "NaN" ? null : $('#customers option:selected').val();
+
+    var start = $("#start").index();
+    var end = $("#end").index();
+    var executeTimes = [];
+    for (var i = 0; i < end - start; i++) {
+        var temp = $("#formData li:eq(" + (start - 1 + i) + ") input").val();
+        if(temp == '' || temp == null){
+            $().toastmessage('showWarningToast', "第" + (i + 1) + "个执行时间为空，请选择");
+            return;
+        }
+        executeTimes.push(temp);
+    }
+
+    CaptureRankJob.exectionType = $("#crawlRankingForm input[name=exectionType]:checked").val();
+    CaptureRankJob.rowNumber = $("#crawlRankingForm #rowNumber").val();
+    CaptureRankJob.captureInterval = $("#crawlRankingForm #captureInterval").val();
+    CaptureRankJob.executionCycle = $("#crawlRankingForm #executionCycle").val();
+    CaptureRankJob.pageSize = $("#crawlRankingForm #pageSize").val();
+
+    $.ajax({
+        url: '/internal/captureRank/saveCaptureRankJob',
+        data: JSON.stringify({"captureRankJob": CaptureRankJob, "executeTimes": executeTimes}),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        timeout: 5000,
+        type: 'POST',
+        success: function (data) {
+            if (data) {
+                $().toastmessage('showSuccessToast', "保存成功", true);
+            } else {
+                $().toastmessage('showErrorToast', "保存失败");
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "保存失败");
+        }
+    });
 }
