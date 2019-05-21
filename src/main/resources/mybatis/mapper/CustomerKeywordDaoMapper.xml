@@ -1443,4 +1443,37 @@
         AND ck.fStatus = 1
         GROUP BY ck.fOptimizeGroupName
     </select>
+
+    <update id="updateSameCustomerKeywordSource">
+        UPDATE t_customer_keyword
+        SET fCustomerKeywordSource = #{customerKeywordSource}
+        WHERE fKeyword = #{keyword}
+        AND fTerminalType = #{terminalType}
+        AND fCustomerUuid = #{customerUuid}
+        <choose>
+            <when test="url == 'NoUrl'">
+                AND fTitle = #{title}
+            </when>
+            <otherwise>
+                AND fUrl = #{url}
+            </otherwise>
+        </choose>
+    </update>
+
+    <update id="updateSimilarCustomerKeywordSource">
+        UPDATE t_customer_keyword
+        SET fCustomerKeywordSource = #{customerKeywordSource}
+        WHERE fKeyword = #{keyword}
+        AND fTerminalType = #{terminalType}
+        AND fCustomerUuid = #{customerUuid}
+        <choose>
+            <when test="originalUrl == 'NoUrl'">
+                AND fTitle = #{title}
+            </when>
+            <otherwise>
+                AND fOriginalUrl <![CDATA[ > ]]> ''
+                AND fOriginalUrl like concat('%', #{originalUrl});
+            </otherwise>
+        </choose>
+    </update>
 </mapper>

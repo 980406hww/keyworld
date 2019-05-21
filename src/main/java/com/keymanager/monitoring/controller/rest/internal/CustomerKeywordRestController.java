@@ -283,6 +283,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 						}
 					}
 				}
+				customerKeyword.setCustomerKeywordSource("UI");
 				customerKeywordService.addCustomerKeyword(customerKeyword, userName);
 				return new ResponseEntity<Object>(true, HttpStatus.OK);
 			} else {

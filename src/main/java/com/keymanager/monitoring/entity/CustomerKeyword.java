@@ -272,7 +272,7 @@ public class CustomerKeyword extends BaseEntity {
     private int captureStatus;
 
     @TableField(value = "fCustomerKeywordSource")
-    private int customerKeywordSource;
+    private String customerKeywordSource;
 
     public long getCustomerUuid() {
         return customerUuid;
@@ -1036,11 +1036,11 @@ public class CustomerKeyword extends BaseEntity {
         this.captureStatus = captureStatus;
     }
 
-    public int getCustomerKeywordSource() {
+    public String getCustomerKeywordSource() {
         return customerKeywordSource;
     }
 
-    public void setCustomerKeywordSource(int customerKeywordSource) {
+    public void setCustomerKeywordSource(String customerKeywordSource) {
         this.customerKeywordSource = customerKeywordSource;
     }
 }

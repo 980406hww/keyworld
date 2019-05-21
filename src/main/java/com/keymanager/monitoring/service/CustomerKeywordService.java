@@ -267,11 +267,17 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         if(!EntryTypeEnum.fm.name().equals(customerKeyword.getType())) {
             Integer sameCustomerKeywordCount = customerKeywordDao.getSameCustomerKeywordCount(customerKeyword.getTerminalType(), customerKeyword.getCustomerUuid(), customerKeyword.getKeyword(), customerKeyword.getUrl(), customerKeyword.getTitle());
             if(sameCustomerKeywordCount != null && sameCustomerKeywordCount > 0) {
+                if (!"capture".equals(customerKeyword.getCustomerKeywordSource())){
+                    customerKeywordDao.updateSameCustomerKeywordSource(customerKeyword.getTerminalType(), customerKeyword.getCustomerUuid(), customerKeyword.getKeyword(), customerKeyword.getUrl(), customerKeyword.getTitle(), customerKeyword.getCustomerKeywordSource());
+                }
                 return null;
             }
         }
         if (!EntryTypeEnum.fm.name().equals(customerKeyword.getType()) && haveDuplicatedCustomerKeyword(customerKeyword.getTerminalType(),
                 customerKeyword.getCustomerUuid(), customerKeyword.getKeyword(), originalUrl, customerKeyword.getTitle())) {
+            if (!"capture".equals(customerKeyword.getCustomerKeywordSource())){
+                customerKeywordDao.updateSimilarCustomerKeywordSource(customerKeyword.getTerminalType(), customerKeyword.getCustomerUuid(), customerKeyword.getKeyword(), customerKeyword.getUrl(), customerKeyword.getTitle(), customerKeyword.getCustomerKeywordSource());
+            }
             return null;
         }
 
@@ -362,6 +368,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeyword.setSequence(maxSequence);
         customerKeyword.setCreateTime(Utils.getCurrentTimestamp());
         customerKeyword.setUpdateTime(Utils.getCurrentTimestamp());
+        customerKeyword.setCustomerKeywordSource("UI");
     }
 
     public void supplementIndexAndPriceFromExisting(CustomerKeyword customerKeyword) {
@@ -596,6 +603,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeyword.setCreateTime(Utils.getCurrentTimestamp());
             customerKeyword.setUpdateTime(Utils.getCurrentTimestamp());
             customerKeyword.setTerminalType(terminalType);
+            customerKeyword.setCustomerKeywordSource("excel");
         }
     }
 
@@ -1335,6 +1343,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeyword.setAutoUpdateNegativeTime(Utils.getCurrentTimestamp());
         customerKeyword.setCreateTime(Utils.getCurrentTimestamp());
         customerKeyword.setUpdateTime(Utils.getCurrentTimestamp());
+        customerKeyword.setCustomerKeywordSource("plugin");
         return customerKeyword;
     }
 
