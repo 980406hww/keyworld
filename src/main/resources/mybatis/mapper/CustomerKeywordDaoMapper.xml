@@ -686,7 +686,6 @@
                 AND (ck.fOptimizeGroupName IS NULL OR ck.fOptimizeGroupName <![CDATA[<>]]> 'stop')
             </otherwise>
         </choose>
-        ORDER BY ck.fCapturePositionQueryTime DESC
         LIMIT 1
     </select>
 
