@@ -104,24 +104,25 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
         captureRankJobDao.updateById(captureRankJob);
     }
 
-    public void checkComplete(CaptureRankJob captureRankJob) {
+    public void completeCaptureRankJobTemp(CaptureRankJob captureRankJob) {
         captureRankJob = captureRankJobDao.selectById(captureRankJob.getUuid());
         captureRankJob.setExectionStatus(CaptureRankExectionStatus.Checking.name());
         captureRankJob.setEndTime(new Date());
-        captureRankJob.setLastExecutionDate(new java.sql.Date(new Date().getTime()));
         captureRankJobDao.updateById(captureRankJob);
     }
 
     public void searchFiveMiniSetCheckingJobs() {
         List<CaptureRankJob> captureRankJobs = captureRankJobDao.searchFiveMiniSetCheckingJobs();
         if (captureRankJobs != null && captureRankJobs.size() != 0) {
-            for (CaptureRankJob captureRank : captureRankJobs) {
-                if (captureRankJobDao.searchThreeMiniStatusEqualsOne(captureRank.getOperationType(), captureRank.getGroupNames()) > 0) {
-                    captureRank.setExectionStatus(CaptureRankExectionStatus.Processing.name());
+            for (CaptureRankJob captureRankJob : captureRankJobs) {
+                if (captureRankJobDao.searchThreeMiniStatusEqualsOne(captureRankJob.getOperationType(), captureRankJob.getGroupNames()) > 0) {
+                    captureRankJob.setExectionStatus(CaptureRankExectionStatus.Processing.name());
                 } else {
-                    captureRank.setExectionStatus(CaptureRankExectionStatus.Complete.name());
+                    captureRankJob.setEndTime(new Date());
+                    captureRankJob.setLastExecutionDate(new java.sql.Date(new Date().getTime()));
+                    captureRankJob.setExectionStatus(CaptureRankExectionStatus.Complete.name());
                 }
-                captureRankJobDao.updateById(captureRank);
+                captureRankJobDao.updateById(captureRankJob);
             }
         }
     }
