@@ -25,6 +25,9 @@ public class CaptureRankJob extends BaseEntity{
     @TableField(value = "fOperationType")
     private String operationType;
 
+    @TableField(value = "fCaptureDaysInterval")
+    private Integer captureDaysInterval;
+
     @TableField(value = "fExectionType")
     private String exectionType;
 
@@ -113,7 +116,13 @@ public class CaptureRankJob extends BaseEntity{
         this.groupNames = groupNames;
     }
 
+    public Integer getCaptureDaysInterval() {
+        return captureDaysInterval;
+    }
 
+    public void setCaptureDaysInterval(Integer captureDaysInterval) {
+        this.captureDaysInterval = captureDaysInterval;
+    }
 
     public String getOperationType() {
         return operationType;

@@ -63,6 +63,7 @@
             <td align="center" width=60>最后执行日期</td>
             <td align="center" width=50>状态</td>
             <td align="center" width=50>抓取记录数</td>
+            <td align="center" width=60>采集天数间隔(天)</td>
             <td align="center" width=60>抓取间隔(ms)</td>
             <td align="center" width=40>换IP间隔</td>
             <td align="center" width=40>每页条数</td>
@@ -93,6 +94,7 @@
             <td width=60>${captureRankJob.lastExecutionDate}</td>
             <td width=50>${captureRankJob.exectionStatus}<br><font color="red">${captureRankJob.captureRankJobStatus == false ? "暂停中" : ""}</font></td>
             <td width=50>${captureRankJob.rowNumber}</td>
+            <td width=60>${captureRankJob.captureDaysInterval}</td>
             <td width=60>${captureRankJob.captureInterval}</td>
             <td width=40>${captureRankJob.executionCycle}</td>
             <td width=40>${captureRankJob.pageSize}</td>
@@ -149,6 +151,10 @@
                 <input id="nextExecuteTimeBtn" type="button" value="添加" onclick="nextExecuteTime()" style="float: right;margin-right: 6px"/>
             </li>
             <li id="end">
+                <span>采集天数间隔:</span>
+                <input id="captureDaysInterval" name="captureDaysInterval" class="easyui-numberspinner"  data-options="min:0,increment:1" required style="width: 200px">
+            </li>
+            <li>
                 <span>抓取记录数:</span>
                 <input id="rowNumber" name="rowNumber" class="easyui-numberspinner"  data-options="min:0,max:1000,increment:50" required style="width: 200px">
             </li>

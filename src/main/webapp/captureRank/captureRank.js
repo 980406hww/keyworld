@@ -300,6 +300,7 @@ function addCaptureRankJobs() {
     $('#crawlRankingForm')[0].reset();
     $("#customers").empty();
     $('#crawlRankingForm #rowNumber').spinner('setValue', 100);
+    $('#crawlRankingForm #captureDaysInterval').spinner('setValue', 0);
     $('#crawlRankingForm #captureInterval').spinner('setValue', 500);
     $('#crawlRankingForm #executionCycle').spinner('setValue', 0);
     $('#crawlRankingForm #pageSize').spinner('setValue', "${sessionScope.terminalType}" == 'PC' ? 10 : 50);
@@ -326,6 +327,7 @@ function updateCaptureRankJobs(uuid) {
                 $("#crawlRankingForm input[name=exectionType][value=" + data.exectionType + "]").attr("checked", true);
                 $("#crawlRankingForm #exectionTime1").val(data.exectionTime);
                 $('#crawlRankingForm #rowNumber').spinner('setValue', data.rowNumber);
+                $('#crawlRankingForm #captureDaysInterval').spinner('setValue', data.captureDaysInterval);
                 $('#crawlRankingForm #captureInterval').spinner('setValue', data.captureInterval);
                 $('#crawlRankingForm #executionCycle').spinner('setValue', data.executionCycle);
                 $('#crawlRankingForm #pageSize').spinner('setValue', data.pageSize);
@@ -433,7 +435,7 @@ function updateCaptureRankJobs(uuid) {
 // 新增执行时间
 function nextExecuteTime() {
     var liNum = $("#formData li").length;
-    var newLi = $("#formData li").eq(liNum - 5);
+    var newLi = $("#formData li").eq(liNum - 6);
     newLi.after('' +
         '<li id="li' + (liNum - 6) + '">' +
         '<span style="margin-left: 3px">执行时间:&nbsp;</span>' +
@@ -490,6 +492,7 @@ function saveData(uuid) {
     CaptureRankJob.exectionType = $("#crawlRankingForm input[name=exectionType]:checked").val();
     CaptureRankJob.rowNumber = $("#crawlRankingForm #rowNumber").val();
     CaptureRankJob.captureInterval = $("#crawlRankingForm #captureInterval").val();
+    CaptureRankJob.captureDaysInterval = $("#crawlRankingForm #captureDaysInterval").val();
     CaptureRankJob.executionCycle = $("#crawlRankingForm #executionCycle").val();
     CaptureRankJob.pageSize = $("#crawlRankingForm #pageSize").val();
 

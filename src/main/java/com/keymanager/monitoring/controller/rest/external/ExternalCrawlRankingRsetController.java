@@ -27,9 +27,6 @@ public class ExternalCrawlRankingRsetController extends SpringMVCBaseController 
     @Autowired
     private CaptureRankJobService captureRankJobService;
 
-    @Autowired
-    private CustomerKeywordService customerKeywordService;
-
     @RequestMapping(value = "/getCaptureRankJob", method = RequestMethod.POST)
     public ResponseEntity<?> getCaptureRankJob(@RequestBody BaseCriteria baseCriteria) {
         String userName = baseCriteria.getUserName();
