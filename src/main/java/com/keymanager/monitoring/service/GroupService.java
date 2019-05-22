@@ -36,7 +36,7 @@ public class GroupService extends ServiceImpl<GroupDao, Group> {
     private QZSettingService qzSettingService;
 
     public void saveGroup (GroupCriteria groupCriteria) {
-        groupDao.saveGroup(groupCriteria.getGroupName(), groupCriteria.getTerminalType(), groupCriteria.getCreateBy(), groupCriteria.getGroupSetting().getRemainingAccount());
+        groupDao.saveGroup(groupCriteria.getGroupName(), groupCriteria.getTerminalType(), groupCriteria.getCreateBy(), groupCriteria.getGroupSetting().getRemainingAccount(), groupCriteria.getMaxInvalidCount());
         long lastInsertID = groupDao.lastInsertID();
         groupCriteria.getGroupSetting().setGroupUuid(lastInsertID);
         groupSettingService.saveGroupSetting(groupCriteria.getGroupSetting(), false);
@@ -57,6 +57,9 @@ public class GroupService extends ServiceImpl<GroupDao, Group> {
             if (1 == updateGroupSettingCriteria.getGs().getMachineUsedPercent()) {
                 this.updateGroupRemainingAccount(updateGroupSettingCriteria.getGroupSetting().getGroupUuid(), updateGroupSettingCriteria.getGroupSetting().getRemainingAccount());
             }
+            if (1 == updateGroupSettingCriteria.getGs().getMaxInvalidCount()) {
+                this.updateMaxInvalidCount(updateGroupSettingCriteria.getGroupSetting().getGroupUuid(), updateGroupSettingCriteria.getGroupSetting().getMaxInvalidCount());
+            }
         }
     }
 
@@ -72,9 +75,9 @@ public class GroupService extends ServiceImpl<GroupDao, Group> {
         groupDao.updateGroupRemainingAccount(groupUuid, remainingAccount);
     }
 
-    public void batchAddGroups (GroupBatchCriteria groupBatchCriteria, String userName) {
+    public void batchAddGroups (GroupBatchCriteria groupBatchCriteria, String userName, int maxInvalidCount) {
         for (GroupSettingCriteria groupSettingCriteria : groupBatchCriteria.getOptimizationGroupList()) {
-            groupDao.saveGroup(groupSettingCriteria.getOptimizedGroupName(), groupSettingCriteria.getTerminalType(), userName, 0);
+            groupDao.saveGroup(groupSettingCriteria.getOptimizedGroupName(), groupSettingCriteria.getTerminalType(), userName, 0, maxInvalidCount);
             long lastInsertID = groupDao.lastInsertID();
             GroupSetting groupSetting = new GroupSetting();
             groupSetting.setGroupUuid(lastInsertID);
@@ -141,5 +144,9 @@ public class GroupService extends ServiceImpl<GroupDao, Group> {
         List<String> optimizationGroups = groupDao.getOptimizationGroups(groupSettingCriteria.getTerminalType());
         availableOptimizationGroups.removeAll(optimizationGroups);
         return new ArrayList<>(availableOptimizationGroups);
+    }
+
+    public void updateMaxInvalidCount(long uuid, int maxInvalidCount){
+        groupDao.updateMaxInvalidCount(uuid, maxInvalidCount);
     }
 }
