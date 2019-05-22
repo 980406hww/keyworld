@@ -124,6 +124,8 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     List<CodeNameVo> searchGroups();
 
+    List<CodeNameVo> searchGroupsByTerminalType(@Param("terminalType") String terminalType);
+
     SearchEngineResultVO getCustomerKeywordForAutoUpdateNegative(@Param("terminalType")String terminalType, @Param("groupName")String groupName);
 
     void updateAutoUpdateNegativeTime(@Param("terminalType")String terminalType, @Param("groupName")String groupName, @Param("keyword")String keyword);

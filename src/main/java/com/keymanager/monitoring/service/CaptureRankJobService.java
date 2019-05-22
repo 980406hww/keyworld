@@ -61,6 +61,15 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
         return page;
     }
 
+    public CaptureRankJob getCaptureRankJobAndCustomerName(Long uuid){
+        CaptureRankJob captureRankJob = captureRankJobDao.selectById(uuid);
+        if (captureRankJob.getCustomerUuid() != null) {
+            Customer customer = customerService.selectById(captureRankJob.getCustomerUuid());
+            captureRankJob.setContactPerson(customer.getContactPerson());
+        }
+        return captureRankJob;
+    }
+
     public void saveCaptureRankJob(Map map, String terminalType, String loginName) {
         CaptureRankJob captureRankJob = JSON.parseObject(JSON.toJSONString(map.get("captureRankJob")), CaptureRankJob.class);
         captureRankJob.setUpdateTime(new Date());

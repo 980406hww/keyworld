@@ -76,7 +76,7 @@ public class CaptureRankRsetController {
     @RequiresPermissions("/internal/captureRank/saveCaptureRankJob")
     @RequestMapping(value = "/getCaptureRankJob", method = RequestMethod.POST)
     public CaptureRankJob getCaptureRankJob(Long uuid) {
-        return captureRankJobService.selectById(uuid);
+        return captureRankJobService.getCaptureRankJobAndCustomerName(uuid);
     }
 
     @RequiresPermissions("/internal/captureRank/deleteCaptureRankJob")

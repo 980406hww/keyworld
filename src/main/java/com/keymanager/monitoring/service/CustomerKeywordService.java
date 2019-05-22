@@ -1435,6 +1435,10 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return customerKeywordDao.searchGroups();
     }
 
+    public List<CodeNameVo> searchGroupsByTerminalType(String terminalType) {
+        return customerKeywordDao.searchGroupsByTerminalType(terminalType);
+    }
+
     public List<CustomerKeywordSummaryInfoVO> searchCustomerKeywordSummaryInfo(String entryType, Long customerUuid) {
         return customerKeywordDao.searchCustomerKeywordSummaryInfo(entryType, customerUuid);
     }

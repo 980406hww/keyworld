@@ -800,6 +800,21 @@
             GROUP BY fOptimizeGroupName
     </select>
 
+    <select id="searchGroupsByTerminalType" resultType="com.keymanager.monitoring.vo.CodeNameVo">
+        SELECT
+            fOptimizeGroupName as 'name'
+        FROM
+            t_customer_keyword
+        WHERE
+            fTerminalType = #{terminalType}
+        AND
+            fOptimizeGroupName IS NOT NULL
+        AND
+            fOptimizeGroupName != ''
+        GROUP BY
+            fOptimizeGroupName
+    </select>
+
     <select id="searchCustomerKeywordsUuidForCaptureTitle" resultType="Long">
         SELECT
         ck.fUuid  AS `uuid`

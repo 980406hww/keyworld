@@ -132,10 +132,10 @@ function decideSelectAll() {
 }
 
 function changeCaptureRankJobStatus(uuid, status) {
-    if(status == false) {
-        if (confirm("确认要激活选中的任务吗?") == false) return;
+    if(status == "false") {
+        if (confirm("确认要暂停的任务吗") == false) return;
     } else {
-        if (confirm("确认要暂停的任务吗?") == false) return;
+        if (confirm("确认要激活选中的任务吗?") == false) return;
     }
     var changeCaptureRankJobCriteria = {};
     changeCaptureRankJobCriteria.uuid = parseInt(uuid);
@@ -246,13 +246,6 @@ function openDialog(uuid) {
                     saveData(uuid);
                 }
             },
-            // {
-            //     text: '清空',
-            //     iconCls: 'fi-trash',
-            //     handler: function () {
-            //         clearFromDom();
-            //     }
-            // },
             {
                 text: '取消',
                 iconCls: 'icon-cancel',
@@ -276,9 +269,16 @@ function addCaptureRankJobs() {
     $("#nextExecuteTimeBtn").css('display', 'block'); // 增加时间框按钮
     // 打开弹框
     openDialog();
+    // 提前填充，显示不会停顿
+    $('#groups').empty().select2({
+        data: [{"id": "NaN", "text": "请选择优化组名"}]
+    });
+    $('#customers').empty().select2({
+        data: [{"id": "NaN", "text": "请选择客户"}]
+    });
     // 优化组名显示
     $.ajax({
-        url: '/internal/customerKeyword/searchGroups',
+        url: '/internal/customerKeyword/searchGroupsByTerminalType',
         method: 'post',
         dataType: "json",
         success: function (data) {
@@ -287,18 +287,14 @@ function addCaptureRankJobs() {
             $.each(data, function (i, item) {
                 r.push({"id": i, "text": item.name})
             });
-            $('#groups').empty().select2({
+            $('#groups').select2({
                 data: r,
                 dropdownAutoWidth: true
-            });
-            $('#customers').select2({
-                data: [{"id": "NaN", "text": "请选择客户"}]
             });
         }
     });
     // 初始化数据
     $('#crawlRankingForm')[0].reset();
-    $("#customers").empty();
     $('#crawlRankingForm #rowNumber').spinner('setValue', 100);
     $('#crawlRankingForm #captureDaysInterval').spinner('setValue', 0);
     $('#crawlRankingForm #captureInterval').spinner('setValue', 500);
@@ -324,6 +320,18 @@ function updateCaptureRankJobs(uuid) {
         success: function (data) {
             if (data) {
                 globalData = data;
+                $('#groups').empty().select2({
+                    data: (data.groupNames == null || data.groupNames == '') ? [{
+                        "id": "NaN",
+                        "text": "当前组不存在，重新选择"
+                    }] : [{"id": 0, "text": data.groupNames}]
+                });
+                $('#customers').empty().select2({
+                    data: data.customerUuid != null ? [{
+                        "id": data.customerUuid,
+                        "text": data.contactPerson
+                    }] : [{"id": "NaN", "text": "当前未选择客户"}]
+                });
                 $("#crawlRankingForm input[name=exectionType][value=" + data.exectionType + "]").attr("checked", true);
                 $("#crawlRankingForm #exectionTime1").val(data.exectionTime);
                 $('#crawlRankingForm #rowNumber').spinner('setValue', data.rowNumber);
@@ -331,6 +339,8 @@ function updateCaptureRankJobs(uuid) {
                 $('#crawlRankingForm #captureInterval').spinner('setValue', data.captureInterval);
                 $('#crawlRankingForm #executionCycle').spinner('setValue', data.executionCycle);
                 $('#crawlRankingForm #pageSize').spinner('setValue', data.pageSize);
+                // 打开弹框
+                openDialog(uuid);
             } else {
                 $().toastmessage('showErrorToast', "获取失败");
             }
@@ -341,27 +351,15 @@ function updateCaptureRankJobs(uuid) {
     });
     // 优化组名显示
     $.ajax({
-        url: '/internal/customerKeyword/searchGroups',
+        url: '/internal/customerKeyword/searchGroupsByTerminalType',
         method: 'post',
         dataType: "json",
         success: function (data) {
             var r = [];
-            var index = null;
             $.each(data, function (i, item) {
                 r.push({"id": i, "text": item.name});
-                if (globalData.groupNames == item.name) {
-                    index = i;
-                }
             });
-            if (index == null) {
-                // 组名不存在，被删
-                r.splice(0, 0, {"id": "NaN", "text": "当前优化组名不存在"});
-            } else {
-                var temp = r[0];
-                r[0] = r[index];
-                r[index] = temp;
-            }
-            $('#groups').empty().select2({
+            $('#groups').select2({
                 data: r,
                 dropdownAutoWidth: true
             });
@@ -377,7 +375,6 @@ function updateCaptureRankJobs(uuid) {
                 success: function (data) {
                     var r = [];
                     if(data.length != 0){
-                        var index = null;
                         $.each(data, function (i, item) {
                             r.push({
                                 "id": item.uuid,
@@ -389,17 +386,7 @@ function updateCaptureRankJobs(uuid) {
                                     " | QQ号：<span style='color: red'>" + (item.qq == null ? "空" : item.qq) + "</span>" +
                                     " | 邮箱号：<span style='color: red'>" + (item.email == null ? "空" : item.email) + "</span></div>"
                             });
-                            if (globalData.customerUuid == this.uuid) {
-                                index = i;
-                            }
                         });
-                        if (index == null) {
-                            r.splice(0, 0, {"id": "NaN", "text": "当前客户不存在"});
-                        } else {
-                            var temp = r[0];
-                            r[0] = r[index];
-                            r[index] = temp;
-                        }
                         if (globalData.customerUuid == null) {
                             r.splice(0, 0, {"id": "NaN", "text": "当前未选择客户"});
                         } else {
@@ -410,7 +397,7 @@ function updateCaptureRankJobs(uuid) {
                     }
                     $('#customers').empty().select2({
                         data: r,
-                        dropdownAutoWidth:true,
+                        dropdownAutoWidth: true,
                         escapeMarkup: function (markup) {
                             return markup;
                         },
@@ -424,8 +411,6 @@ function updateCaptureRankJobs(uuid) {
                             return repo.contactPerson || repo.text;
                         }
                     });
-                    // 打开弹框
-                    openDialog(uuid);
                 }
             });
         }
