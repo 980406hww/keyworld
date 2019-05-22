@@ -37,6 +37,4 @@ public interface IUserInfoService extends IService<UserInfo> {
      Long getUuidByLoginName(String loginName);
 
     List<Tree> selectUserInfoTrees ();
-
-    String getUserOrganizationName (Long id);
 }

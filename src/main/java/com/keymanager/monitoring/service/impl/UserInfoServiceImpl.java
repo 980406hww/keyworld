@@ -158,10 +158,4 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoDao, UserInfo> impl
         }
         return trees;
     }
-
-    @Override
-    public String getUserOrganizationName (Long id) {
-        return userInfoDao.getUserOrganizationName(id);
-    }
-
 }

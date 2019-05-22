@@ -16,7 +16,7 @@ public class QZSetting extends BaseEntity{
 	@TableField(value = "fCustomerUuid")
 	private int customerUuid;
 
-	@TableField(value = "fOrganizationName")
+	@TableField(exist = false)
 	private String organizationName;
 
 	@TableField(exist=false)

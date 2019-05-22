@@ -92,7 +92,6 @@ public class QZSettingRestController extends SpringMVCBaseController {
 					qzSetting.setStatus(2);
 				}
 			}
-			qzSetting.setOrganizationName(userInfoService.getUserOrganizationName(getCurrentUser().getId()));
 			qzSettingService.saveQZSetting(qzSetting);
 			return new ResponseEntity<Object>(qzSetting, HttpStatus.OK);
 		} catch (Exception e) {
