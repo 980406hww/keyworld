@@ -141,7 +141,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			//修改部分
 			List<QZOperationType> OldOperationTypes = qzOperationTypeService.searchQZOperationTypesIsDelete(qzSetting.getUuid());
 			List<QZOperationType> updOperationTypes = qzSetting.getQzOperationTypes();
-			updateOpretionTypeAndChargeRule(OldOperationTypes,updOperationTypes,qzSetting.getUuid());
+			updateOperationTypeAndChargeRule(OldOperationTypes, updOperationTypes, qzSetting.getUuid());
 			List<QZKeywordRankInfo> existingQZKeywordRankInfoList = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), new QZSettingSearchCriteria());
 			updateQZKeywordRankInfo(existingQZKeywordRankInfoList, updOperationTypes, existingQZSetting);
 			// 修改标签
@@ -156,15 +156,18 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			for (QZOperationType qzOperationType : qzSetting.getQzOperationTypes()){
 				qzOperationType.setQzSettingUuid(qzSettingUuid);
 				qzOperationTypeService.insert(qzOperationType);
-				// 在qzKeywordRankInfo表中插入对应终端类型的记录
-				QZKeywordRankInfo qzKeywordRankInfo = new QZKeywordRankInfo();
-				qzKeywordRankInfo.setQzSettingUuid(qzSettingUuid);
-				qzKeywordRankInfo.setTerminalType(qzOperationType.getOperationType());
-                qzKeywordRankInfoService.insert(qzKeywordRankInfo);
-
+				Set<String> standardSpeciesSet = new HashSet<>();
 				for(QZChargeRule qzChargeRule : qzOperationType.getQzChargeRules()){
+					standardSpeciesSet.add(qzChargeRule.getStandardSpecies());
 					qzChargeRule.setQzOperationTypeUuid(qzOperationType.getUuid());
 					qzChargeRuleService.insert(qzChargeRule);
+				}
+				for (String standardSpecies : standardSpeciesSet) {
+					QZKeywordRankInfo qzKeywordRankInfo = new QZKeywordRankInfo();
+					qzKeywordRankInfo.setQzSettingUuid(qzSettingUuid);
+					qzKeywordRankInfo.setTerminalType(qzOperationType.getOperationType());
+					qzKeywordRankInfo.setWebsiteType(standardSpecies);
+					qzKeywordRankInfoService.insert(qzKeywordRankInfo);
 				}
 			}
 			// 添加标签
@@ -175,18 +178,18 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		}
 	}
 
-	public void updateOpretionTypeAndChargeRule(List<QZOperationType> oldOperationTypes, List<QZOperationType> newOperationTypes, Long qzSettingUuid ){
-		Map<String,QZOperationType> oldOperationTypeMap = new HashMap<String, QZOperationType>();
+	public void updateOperationTypeAndChargeRule(List<QZOperationType> oldOperationTypes, List<QZOperationType> newOperationTypes, Long qzSettingUuid ){
+		Map<String, QZOperationType> oldOperationTypeMap = new HashMap<>();
 		for (QZOperationType qzOperationType : oldOperationTypes) {
-			oldOperationTypeMap.put(qzOperationType.getOperationType(), qzOperationType);
+		    oldOperationTypeMap.put(qzOperationType.getOperationType(), qzOperationType);
 		}
 
 		for(QZOperationType newOperationType : newOperationTypes) {
 			QZOperationType oldOperationType = oldOperationTypeMap.get(newOperationType.getOperationType());
 			if(oldOperationType != null) {
-				updateOpretionTypeAndChargeRuleEqual(oldOperationType, newOperationType);
+			    updateOperationTypeAndChargeRuleEqual(oldOperationType, newOperationType);
 				oldOperationTypeMap.remove(newOperationType.getOperationType());
-			}else {
+			} else {
 				//添加一条
 				newOperationType.setQzSettingUuid(qzSettingUuid);
 				qzOperationTypeService.insert(newOperationType);
@@ -209,58 +212,99 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			} else {
 				qzSetting.setPhoneGroup(null);
 			}
-			qzSettingDao.deleteQZSettingGroup(qzSetting);
+			qzSettingDao.updateById(qzSetting);
 		}
 	}
 
-	public void updateOpretionTypeAndChargeRuleEqual(QZOperationType oldOperationType,
-			QZOperationType newOperationType) {
-		oldOperationType.setUpdateTime(new Date());
-		oldOperationType.setOperationType(newOperationType.getOperationType());
-		oldOperationType.setInitialKeywordCount(newOperationType.getInitialKeywordCount());
-		oldOperationType.setCurrentKeywordCount(newOperationType.getCurrentKeywordCount());
-		oldOperationType.setGroup(newOperationType.getGroup());
-		oldOperationType.setSubDomainName(newOperationType.getSubDomainName());
-		oldOperationType.setMaxKeywordCount(newOperationType.getMaxKeywordCount());
-
-		oldOperationType.setIsDeleted(0); //只要是发生改变那么就让它的状态为0
-		qzOperationTypeService.updateById(oldOperationType);
-
-		//删除规则
-		qzChargeRuleService.deleteByQZOperationTypeUuid(oldOperationType.getUuid());
-		for (QZChargeRule qzChargeRule : newOperationType.getQzChargeRules()) {
-			qzChargeRule.setQzOperationTypeUuid(oldOperationType.getUuid());
-			qzChargeRuleService.insert(qzChargeRule);
-		}
+	public void updateOperationTypeAndChargeRuleEqual(QZOperationType oldOperationType, QZOperationType newOperationType) {
+        Map<String, QZChargeRule> oldQZChargeRuleMap = new HashMap<>();
+        for (QZChargeRule qzChargeRule : oldOperationType.getQzChargeRules()) {
+            oldQZChargeRuleMap.put(qzChargeRule.getStandardSpecies(), qzChargeRule);
+        }
+        List<QZChargeRule> qzChargeRules = new ArrayList<>();
+        for (QZChargeRule newQZChargeRule : newOperationType.getQzChargeRules()) {
+            QZChargeRule qzChargeRule = oldQZChargeRuleMap.get(newQZChargeRule.getStandardSpecies());
+            if (null == qzChargeRule) {
+                qzChargeRules.add(newQZChargeRule);
+            }
+        }
+        if (CollectionUtils.isNotEmpty(qzChargeRules)) {
+            oldOperationType.setUpdateTime(new Date());
+            oldOperationType.setOperationType(newOperationType.getOperationType());
+            oldOperationType.setInitialKeywordCount(newOperationType.getInitialKeywordCount());
+            oldOperationType.setCurrentKeywordCount(newOperationType.getCurrentKeywordCount());
+            oldOperationType.setGroup(newOperationType.getGroup());
+            oldOperationType.setSubDomainName(newOperationType.getSubDomainName());
+            oldOperationType.setMaxKeywordCount(newOperationType.getMaxKeywordCount());
+            oldOperationType.setIsDeleted(0); //只要是发生改变那么就让它的状态为0
+            qzOperationTypeService.updateById(oldOperationType);
+            //删除规则
+            qzChargeRuleService.deleteByQZOperationTypeUuid(oldOperationType.getUuid());
+            for (QZChargeRule qzChargeRule : newOperationType.getQzChargeRules()) {
+                qzChargeRule.setQzOperationTypeUuid(oldOperationType.getUuid());
+                qzChargeRuleService.insert(qzChargeRule);
+            }
+        }
 	}
 
 	public void updateQZKeywordRankInfo(List<QZKeywordRankInfo> existingQZKeywordRankInfoList, List<QZOperationType> qzOperationTypeList, QZSetting qzSetting){
-		Map<String, QZKeywordRankInfo> existingQZKeywordRankInfoMap = new HashMap<String, QZKeywordRankInfo>();
+		Map<String, Map<String, QZKeywordRankInfo>> existingQZKeywordRankInfoMap = new HashMap<>();
 		for (QZKeywordRankInfo qzKeywordRankInfo : existingQZKeywordRankInfoList) {
-            existingQZKeywordRankInfoMap.put(qzKeywordRankInfo.getTerminalType(), qzKeywordRankInfo);
+            Map<String, QZKeywordRankInfo> qzKeywordRankInfoMap = existingQZKeywordRankInfoMap.get(qzKeywordRankInfo.getTerminalType());
+            if (null != qzKeywordRankInfoMap){
+		        qzKeywordRankInfoMap.put(qzKeywordRankInfo.getWebsiteType(), qzKeywordRankInfo);
+            } else {
+                qzKeywordRankInfoMap = new HashMap<>();
+                qzKeywordRankInfoMap.put(qzKeywordRankInfo.getWebsiteType(), qzKeywordRankInfo);
+            }
+            existingQZKeywordRankInfoMap.put(qzKeywordRankInfo.getTerminalType(), qzKeywordRankInfoMap);
 		}
 		for (QZOperationType qzOperationType : qzOperationTypeList) {
-            QZKeywordRankInfo qzKeywordRankInfo = existingQZKeywordRankInfoMap.get(qzOperationType.getOperationType());
-            if (null != qzKeywordRankInfo) {
-                existingQZKeywordRankInfoMap.remove(qzOperationType.getOperationType());
+            Map<String, QZKeywordRankInfo> qzKeywordRankInfoMap = existingQZKeywordRankInfoMap.get(qzOperationType.getOperationType());
+            List<QZChargeRule> qzChargeRules = new ArrayList<>();
+            if (null != qzKeywordRankInfoMap) {
+                for (QZChargeRule qzChargeRule : qzOperationType.getQzChargeRules()) {
+                    QZKeywordRankInfo qzKeywordRankInfo = qzKeywordRankInfoMap.get(qzChargeRule.getStandardSpecies());
+                    if (null != qzKeywordRankInfo) {
+                        qzKeywordRankInfoMap.remove(qzChargeRule.getStandardSpecies());
+                    } else {
+                        qzChargeRules.add(qzChargeRule);
+                    }
+                }
             } else {
-                qzKeywordRankInfo = new QZKeywordRankInfo();
+                qzChargeRules.addAll(qzOperationType.getQzChargeRules());
+            }
+            for (QZChargeRule qzChargeRule : qzChargeRules) {
+                QZKeywordRankInfo qzKeywordRankInfo = new QZKeywordRankInfo();
                 qzKeywordRankInfo.setQzSettingUuid(qzSetting.getUuid());
+                qzKeywordRankInfo.setWebsiteType(qzChargeRule.getStandardSpecies());
                 qzKeywordRankInfo.setTerminalType(qzOperationType.getOperationType());
                 qzKeywordRankInfoService.insert(qzKeywordRankInfo);
             }
 		}
-
-		for (QZKeywordRankInfo qzKeywordRankInfo : existingQZKeywordRankInfoMap.values()) {
-			if (qzKeywordRankInfo.getTerminalType().equals("PC")) {
-				qzSetting.setPcCreateTopTenNum(null);
-				qzSetting.setPcCreateTopFiftyNum(null);
-			}
-			if (qzKeywordRankInfo.getTerminalType().equals("Phone")) {
-				qzSetting.setPhoneCreateTopTenNum(null);
-				qzSetting.setPhoneCreateTopFiftyNum(null);
-			}
-		    qzKeywordRankInfoService.deleteById(qzKeywordRankInfo);
+        for (Map<String, QZKeywordRankInfo> qzKeywordRankInfoMap : existingQZKeywordRankInfoMap.values()) {
+            String terminalType = null;
+            for (QZKeywordRankInfo qzKeywordRankInfo : qzKeywordRankInfoMap.values()) {
+                if (null == terminalType) {
+                    terminalType = qzKeywordRankInfo.getTerminalType();
+                }
+                qzKeywordRankInfoService.deleteById(qzKeywordRankInfo);
+            }
+            if (null != terminalType) {
+                QZSettingSearchCriteria qzSettingSearchCriteria = new QZSettingSearchCriteria();
+                qzSettingSearchCriteria.setTerminalType(terminalType);
+                List<QZKeywordRankInfo> qzKeywordRankInfoList = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), new QZSettingSearchCriteria());
+                if (!CollectionUtils.isNotEmpty(qzKeywordRankInfoList)) {
+                    if (terminalType.equals("PC")) {
+                        qzSetting.setPcCreateTopTenNum(null);
+                        qzSetting.setPcCreateTopFiftyNum(null);
+                    }
+                    if (terminalType.equals("Phone")) {
+                        qzSetting.setPhoneCreateTopTenNum(null);
+                        qzSetting.setPhoneCreateTopFiftyNum(null);
+                    }
+                }
+            }
         }
 	}
 
@@ -353,10 +397,6 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 				qzSetting.setContactPerson(customer.getContactPerson());
 			}
 			List<QZOperationType> qzOperationTypes = qzOperationTypeService.searchQZOperationTypesIsDelete(qzSetting.getUuid());
-			for (QZOperationType qzOperationType : qzOperationTypes) {
-				List<QZChargeRule> qzChargeRules = qzChargeRuleService.searchQZChargeRuleByqzOperationTypeUuids(qzOperationType.getUuid());
-				qzOperationType.setQzChargeRules(qzChargeRules);
-			}
 			qzSetting.setQzOperationTypes(qzOperationTypes);
 			qzSetting.setQzCategoryTags(qzCategoryTagService.searchCategoryTagByQZSettingUuid(qzSetting.getUuid()));
 		}

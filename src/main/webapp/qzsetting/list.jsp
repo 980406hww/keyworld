@@ -899,24 +899,89 @@
 						<td colspan="4"><input type="text" name="maxKeywordCount" id="maxKeywordCountPC" style="width:240px;margin-left: -6;"/></td>
 					</tr>
 					<input type="hidden" id="qzSettingUuidPC" name="qzOperationTypeUuid" value="" />
+					<tr>
+						<td align="right" style="width:72px">达标条件</td>
+						<td>
+							<input type="radio" name="standardType" value="satisfyOne">满足一个&nbsp;&nbsp;
+							<input type="radio" name="standardType" value="satisfyAll">满足全部&nbsp;&nbsp;
+						</td>
+					</tr>
+					<tr>
+						<td align="right" style="width:72px">达标类型</td>
+						<td title="爱站和5118不能同时选中">
+							<input type="checkbox" name="standardSpecies" id="aiZhanPCStandardSpecies" onclick="checkedStandardSpecies(this, 'PC')" value="aiZhan">爱站&nbsp;&nbsp;
+							<input type="checkbox" name="standardSpecies" id="5118PCStandardSpecies" onclick="checkedStandardSpecies(this, 'PC')" value="5118">5118&nbsp;&nbsp;
+							<input type="checkbox" name="standardSpecies" id="designationWordPCStandardSpecies" onclick="checkedStandardSpecies(this, 'PC')" value="designationWord">指定词&nbsp;&nbsp;
+						</td>
+					</tr>
 				</table>
 			</td>
 		</tr>
 		<%--电脑规则信息--%>
 		<tr id="pcChargeRuleTable">
 			<td colspan="2" id="ruleHeightPC">
-				<table border="1" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="chargeRulePC">
-					<tr>
-						<td style="width:50px">序号</td>
-						<td style="width:72px">起始词数</td>
-						<td style="width:72px">终止词数</td>
-						<td style="width:50px">价格</td>
-						<td style="width:46px">操作</td>
-					</tr>
-					<tr>
-						<td colspan="5">
-							<input name="addRule" type="button" value="增加规则" onclick="addRow('chargeRulePC')" /></td>
-					</tr>
+				<table border="1" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="chargeRuleaiZhanPC">
+					<thead>
+						<tr>
+							<td align="center" colspan="5">爱站</td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td style="width:50px">序号</td>
+							<td style="width:72px">起始词数</td>
+							<td style="width:72px">终止词数</td>
+							<td style="width:50px">价格</td>
+							<td style="width:46px">操作</td>
+						</tr>
+						<tr>
+							<td colspan="5">
+								<input name="addRule" type="button" value="增加规则" onclick="addRow('chargeRuleaiZhanPC')" />
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<table border="1" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="chargeRule5118PC">
+					<thead>
+						<tr>
+							<td align="center" colspan="5">5118</td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td style="width:50px">序号</td>
+							<td style="width:72px">起始词数</td>
+							<td style="width:72px">终止词数</td>
+							<td style="width:50px">价格</td>
+							<td style="width:46px">操作</td>
+						</tr>
+						<tr>
+							<td colspan="5">
+								<input name="addRule" type="button" value="增加规则" onclick="addRow('chargeRule5118PC')" />
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<table border="1" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="chargeRuledesignationWordPC">
+					<thead>
+						<tr>
+							<td align="center" colspan="5">指定词</td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td style="width:50px">序号</td>
+							<td style="width:72px">起始词数</td>
+							<td style="width:72px">终止词数</td>
+							<td style="width:50px">价格</td>
+							<td style="width:46px">操作</td>
+						</tr>
+						<tr>
+							<td colspan="5">
+								<input name="addRule" type="button" value="增加规则" onclick="addRow('chargeRuledesignationWordPC')" />
+							</td>
+						</tr>
+					</tbody>
 				</table>
 			</td>
 		</tr>
@@ -951,13 +1016,34 @@
 						<td colspan="4"><input type="text" name="maxKeywordCount" id="maxKeywordCountPhone" style="width:240px;margin-left: -6;"/></td>
 					</tr>
 					<input type="hidden" id="qzSettingUuidPhone" name="qzOperationTypeUuid" value="" />
+					<tr>
+						<td align="right" style="width:72px">达标条件</td>
+						<td>
+							<input type="radio" name="standardType" value="satisfyOne">满足一个&nbsp;&nbsp;
+							<input type="radio" name="standardType" value="satisfyAll">满足全部&nbsp;&nbsp;
+						</td>
+					</tr>
+					<tr>
+						<td align="right" style="width:72px">达标类型</td>
+						<td title="爱站和5118不能同时选中">
+							<input type="checkbox" name="standardSpecies" id="aiZhanPhoneStandardSpecies" onclick="checkedStandardSpecies(this, 'Phone')" value="aiZhan">爱站&nbsp;&nbsp;
+							<input type="checkbox" name="standardSpecies" id="5118PhoneStandardSpecies" onclick="checkedStandardSpecies(this, 'Phone')" value="5118">5118&nbsp;&nbsp;
+							<input type="checkbox" name="standardSpecies" id="designationWordPhoneStandardSpecies" onclick="checkedStandardSpecies(this, 'Phone')" value="designationWord">指定词&nbsp;&nbsp;
+						</td>
+					</tr>
 				</table>
 			</td>
 		</tr>
 		<%--手机规则信息--%>
 		<tr id="phoneChargeRuleTable">
 			<td colspan="2" id="ruleHeightPhone">
-				<table border="1" style="display:none;font-size:12px;" cellspacing="0" cellpadding="5" id="chargeRulePhone">
+				<table border="1" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="chargeRuleaiZhanPhone">
+					<thead>
+					<tr>
+						<td align="center" colspan="5">爱站</td>
+					</tr>
+					</thead>
+					<tbody>
 					<tr>
 						<td style="width:50px">序号</td>
 						<td style="width:72px">起始词数</td>
@@ -967,8 +1053,52 @@
 					</tr>
 					<tr>
 						<td colspan="5">
-							<input name="addRule" type="button" value="增加规则" onclick="addRow('chargeRulePhone')" /></td>
+							<input name="addRule" type="button" value="增加规则" onclick="addRow('chargeRuleaiZhanPhone')" />
+						</td>
 					</tr>
+					</tbody>
+				</table>
+				<table border="1" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="chargeRule5118Phone">
+					<thead>
+					<tr>
+						<td align="center" colspan="5">5118</td>
+					</tr>
+					</thead>
+					<tbody>
+					<tr>
+						<td style="width:50px">序号</td>
+						<td style="width:72px">起始词数</td>
+						<td style="width:72px">终止词数</td>
+						<td style="width:50px">价格</td>
+						<td style="width:46px">操作</td>
+					</tr>
+					<tr>
+						<td colspan="5">
+							<input name="addRule" type="button" value="增加规则" onclick="addRow('chargeRule5118Phone')" />
+						</td>
+					</tr>
+					</tbody>
+				</table>
+				<table border="1" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="chargeRuledesignationWordPhone">
+					<thead>
+					<tr>
+						<td align="center" colspan="5">指定词</td>
+					</tr>
+					</thead>
+					<tbody>
+					<tr>
+						<td style="width:50px">序号</td>
+						<td style="width:72px">起始词数</td>
+						<td style="width:72px">终止词数</td>
+						<td style="width:50px">价格</td>
+						<td style="width:46px">操作</td>
+					</tr>
+					<tr>
+						<td colspan="5">
+							<input name="addRule" type="button" value="增加规则" onclick="addRow('chargeRuledesignationWordPhone')" />
+						</td>
+					</tr>
+					</tbody>
 				</table>
 			</td>
 		</tr>

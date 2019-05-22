@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 /**
  * Created by shunshikj01 on 2017/7/7.
@@ -14,6 +13,9 @@ import java.util.Date;
 public class QZChargeRule extends  BaseEntity {
     @TableField(value = "fQZOperationTypeUuid")
     private Long qzOperationTypeUuid;// 整站操作类型信息ID
+
+    @TableField(value = "fStandardSpecies")
+    private String standardSpecies; // 达标种类
 
     @TableField(value = "fStartKeywordCount")
     private Long   startKeywordCount;//起始词数()
@@ -30,6 +32,14 @@ public class QZChargeRule extends  BaseEntity {
 
     public void setQzOperationTypeUuid(Long qzOperationTypeUuid) {
         this.qzOperationTypeUuid = qzOperationTypeUuid;
+    }
+
+    public String getStandardSpecies () {
+        return standardSpecies;
+    }
+
+    public void setStandardSpecies (String standardSpecies) {
+        this.standardSpecies = standardSpecies;
     }
 
     public Long getStartKeywordCount() {
@@ -56,11 +66,12 @@ public class QZChargeRule extends  BaseEntity {
         this.amount = amount;
     }
 
-    public QZChargeRule(Long qzOperationTypeUuid, Long startKeywordCount, Long endKeywordCount, BigDecimal amount) {
+    public QZChargeRule(Long qzOperationTypeUuid, Long startKeywordCount, Long endKeywordCount, BigDecimal amount, String standardSpecies) {
         this.qzOperationTypeUuid = qzOperationTypeUuid;
         this.startKeywordCount = startKeywordCount;
         this.endKeywordCount = endKeywordCount;
         this.amount = amount;
+        this.standardSpecies = standardSpecies;
     }
 
     public QZChargeRule() {

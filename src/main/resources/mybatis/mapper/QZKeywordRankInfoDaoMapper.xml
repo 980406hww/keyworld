@@ -38,6 +38,8 @@
                     AND qzkri.fIncrease &lt;= #{qzSettingSearchCriteria.lowerValue}
                 </when>
             </choose>
+        </if>
+        <if test="qzSettingSearchCriteria.terminalType != null">
             AND qzkri.fTerminalType = #{qzSettingSearchCriteria.terminalType}
         </if>
     </select>
