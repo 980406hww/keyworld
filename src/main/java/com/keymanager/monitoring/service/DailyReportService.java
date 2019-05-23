@@ -146,6 +146,8 @@ public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport>
 		if(dailyReportItem != null){
 			dailyReportItemService.generateDailyReport(dailyReport.getUuid(), dailyReportItem.getUuid());
 		}else{
+			Config dailyReportType = configService.getConfig(Constants.CONFIG_TYPE_DAILY_REPORT, Constants.CONFIG_TYPE_DAILY_REPORT_TYPE);
+
 			Config webPathConfig = configService.getConfig(Constants.CONFIG_TYPE_KEYWORD_INFO_SYNCHRONIZE, Constants.CONFIG_KEY_WEBPATH);
 			String webPath = webPathConfig.getValue();
 			String username = configService.getConfig(Constants.CONFIG_TYPE_KEYWORD_INFO_SYNCHRONIZE, Constants.CONFIG_KEY_USERNAME).getValue();
@@ -167,9 +169,13 @@ public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport>
 				String dailyReportFolder = String.format("%sdailyreport/%d/", path, dailyReport.getUuid());
 				String loginUserReportFolder = dailyReportFolder + externalAccount + "/";
 				map.put("userID", externalAccount);
-				String reportPassword = keywordInfoSynchronizeService.getUserReportInfo(webPath, map);
+				String reportPassword = "";
+				if(EntryTypeEnum.bc.name().equalsIgnoreCase(dailyReportType.getValue())){
+					reportPassword = keywordInfoSynchronizeService.getUserReportInfo(webPath, map);
+					reportPassword = (StringUtils.isNotEmpty(reportPassword) ? AESUtils.decrypt(reportPassword) : externalAccount) + Utils.getCurrentDate();
+				}
 				ZipCompressor.createEncryptionZip(loginUserReportFolder, dailyReportFolder + String.format("%s_%s.zip", externalAccount, Utils.formatDatetime(Utils.getCurrentTimestamp(),
-						"yyyy.MM.dd")), (StringUtils.isNotEmpty(reportPassword) ? AESUtils.decrypt(reportPassword) : externalAccount) + Utils.getCurrentDate());
+						"yyyy.MM.dd")), reportPassword);
 				FileUtil.delFolder(loginUserReportFolder);
 
 				totalExcelWriter.initSheet(externalAccount);
@@ -210,11 +216,12 @@ public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport>
 		Map<String, Map<String, String>> externalAccountAndSummaryFeeMap = new HashMap<String, Map<String, String>>();
 		for(DailyReportItem dailyReportItem : dailyReportItems){
 			Customer customer = customerService.getCustomer(dailyReportItem.getCustomerUuid());
-			if(customer != null && StringUtil.isNotNullNorEmpty(customer.getExternalAccount())) {
-				Map<String, String> summaryFeeMap = externalAccountAndSummaryFeeMap.get(customer.getExternalAccount());
+			if(customer != null) {
+				String externalAccount = StringUtil.isNotNullNorEmpty(customer.getExternalAccount()) ? customer.getExternalAccount() : customer.getContactPerson();
+				Map<String, String> summaryFeeMap = externalAccountAndSummaryFeeMap.get(externalAccount);
 				if (summaryFeeMap == null) {
 					summaryFeeMap = new HashMap<String, String>();
-					externalAccountAndSummaryFeeMap.put(customer.getExternalAccount(), summaryFeeMap);
+					externalAccountAndSummaryFeeMap.put(externalAccount, summaryFeeMap);
 				}
 				summaryFeeMap.put(customer.getSearchEngine() + "_" + dailyReportItem.getTerminalType(), dailyReportItem.getTodayFee() + "");
 			}
