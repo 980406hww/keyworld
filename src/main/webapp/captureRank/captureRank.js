@@ -296,7 +296,7 @@ function addCaptureRankJobs() {
     // 初始化数据
     $('#crawlRankingForm')[0].reset();
     $('#crawlRankingForm #rowNumber').spinner('setValue', 100);
-    $('#crawlRankingForm #captureDaysInterval').spinner('setValue', 0);
+    $('#crawlRankingForm #captureDaysInterval').spinner('setValue', 1);
     $('#crawlRankingForm #captureInterval').spinner('setValue', 500);
     $('#crawlRankingForm #executionCycle').spinner('setValue', 0);
     $('#crawlRankingForm #pageSize').spinner('setValue', "${sessionScope.terminalType}" == 'PC' ? 10 : 50);
