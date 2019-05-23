@@ -615,8 +615,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
     }
 
-    public List<String> getGroups(){
-        return customerKeywordDao.getGroups();
+    public List<String> getGroups(List<Long> customerUuids){
+        return customerKeywordDao.getGroups(customerUuids);
     }
 
 

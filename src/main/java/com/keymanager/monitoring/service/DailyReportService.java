@@ -48,17 +48,57 @@ public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport>
 	@Autowired
 	private KeywordInfoSynchronizeService keywordInfoSynchronizeService;
 
-	public void autoTriggerDailyReport(){
-		if(!captureRankJobService.hasCaptureRankJob() && dailyReportDao.fetchDailyReportTriggeredInToday(DailyReportTriggerModeEnum.Auto.name()) == null){
-			long dailyReportUuid = createDailyReport(null, DailyReportTriggerModeEnum.Auto.name());
-			List<Long> pcCustomerUuids = customerKeywordService.getCustomerUuids(EntryTypeEnum.bc.name(), TerminalTypeEnum.PC.name());
-			for(Long customerUuid : pcCustomerUuids){
-				dailyReportItemService.createDailyReportItem(dailyReportUuid, TerminalTypeEnum.PC.name(), customerUuid.intValue());
+	private boolean autoTriggerDailyReportCondition(){
+		Config dailyReportType = configService.getConfig(Constants.CONFIG_TYPE_DAILY_REPORT, Constants.CONFIG_TYPE_DAILY_REPORT_TYPE);
+		if(dailyReportType != null){
+			if(EntryTypeEnum.bc.name().equalsIgnoreCase(dailyReportType.getValue())){
+				return !captureRankJobService.hasUncompletedCaptureRankJob(null);
+			}else{
+				Config customerUuidConfig = configService.getConfig(Constants.CONFIG_TYPE_DAILY_REPORT, Constants.CONFIG_TYPE_DAILY_REPORT_CUSTOMER_UUID);
+				if(customerUuidConfig != null){
+					List<Long> customerUuids = new ArrayList<>();
+					for(String customerUuid : customerUuidConfig.getValue().split(",")){
+						customerUuids.add(Long.parseLong(customerUuid));
+					}
+					List<String> groupNames = customerKeywordService.getGroups(customerUuids);
+					return !captureRankJobService.hasUncompletedCaptureRankJob(groupNames);
+				}
 			}
+		}
+		return false;
+	}
 
-			List<Long> phoneCustomerUuids = customerKeywordService.getCustomerUuids(EntryTypeEnum.bc.name(), TerminalTypeEnum.Phone.name());
-			for(Long customerUuid : phoneCustomerUuids){
-				dailyReportItemService.createDailyReportItem(dailyReportUuid, TerminalTypeEnum.Phone.name(), customerUuid.intValue());
+	public void autoTriggerDailyReport(){
+		if(autoTriggerDailyReportCondition() && dailyReportDao.fetchDailyReportTriggeredInToday(DailyReportTriggerModeEnum.Auto.name()) == null){
+			long dailyReportUuid = createDailyReport(null, DailyReportTriggerModeEnum.Auto.name());
+
+			Config dailyReportType = configService.getConfig(Constants.CONFIG_TYPE_DAILY_REPORT, Constants.CONFIG_TYPE_DAILY_REPORT_TYPE);
+			if(dailyReportType != null) {
+				if (EntryTypeEnum.bc.name().equalsIgnoreCase(dailyReportType.getValue())) {
+					List<Long> pcCustomerUuids = customerKeywordService.getCustomerUuids(EntryTypeEnum.bc.name(), TerminalTypeEnum.PC.name());
+					for (Long customerUuid : pcCustomerUuids) {
+						dailyReportItemService.createDailyReportItem(dailyReportUuid, TerminalTypeEnum.PC.name(), customerUuid.intValue());
+					}
+
+					List<Long> phoneCustomerUuids = customerKeywordService.getCustomerUuids(EntryTypeEnum.bc.name(), TerminalTypeEnum.Phone.name());
+					for (Long customerUuid : phoneCustomerUuids) {
+						dailyReportItemService.createDailyReportItem(dailyReportUuid, TerminalTypeEnum.Phone.name(), customerUuid.intValue());
+					}
+				} else {
+					Config customerUuidConfig = configService.getConfig(Constants.CONFIG_TYPE_DAILY_REPORT, Constants.CONFIG_TYPE_DAILY_REPORT_CUSTOMER_UUID);
+					if (customerUuidConfig != null) {
+						List<Long> customerUuids = new ArrayList<>();
+						for (String customerUuid : customerUuidConfig.getValue().split(",")) {
+							customerUuids.add(Long.parseLong(customerUuid));
+						}
+						for (Long customerUuid : customerUuids) {
+							dailyReportItemService.createDailyReportItem(dailyReportUuid, TerminalTypeEnum.PC.name(), customerUuid.intValue());
+						}
+						for (Long customerUuid : customerUuids) {
+							dailyReportItemService.createDailyReportItem(dailyReportUuid, TerminalTypeEnum.Phone.name(), customerUuid.intValue());
+						}
+					}
+				}
 			}
 		}
 	}

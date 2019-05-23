@@ -3,11 +3,15 @@ package com.keymanager.monitoring.service;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.criteria.CustomerKeywordCriteria;
 import com.keymanager.monitoring.dao.DailyReportItemDao;
+import com.keymanager.monitoring.entity.Config;
 import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.CustomerKeyword;
 import com.keymanager.monitoring.entity.DailyReportItem;
 import com.keymanager.monitoring.enums.DailyReportStatusEnum;
+import com.keymanager.monitoring.enums.EntryTypeEnum;
 import com.keymanager.monitoring.excel.operator.CustomerKeywordDailyReportExcelWriter;
+import com.keymanager.monitoring.excel.operator.CustomerKeywordDailyReportSecondExcelWriter;
+import com.keymanager.util.Constants;
 import com.keymanager.util.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +30,9 @@ public class DailyReportItemService extends ServiceImpl<DailyReportItemDao, Dail
 
 	@Autowired
 	private CustomerService customerService;
+
+	@Autowired
+	private ConfigService configService;
 
 	@Autowired
 	private CustomerKeywordService customerKeywordService;
@@ -64,10 +71,20 @@ public class DailyReportItemService extends ServiceImpl<DailyReportItemDao, Dail
 		startMilleSeconds = System.currentTimeMillis();
 		if (!Utils.isEmpty(customerKeywords)) {
 			Customer customer = customerService.getCustomer(dailyReportItem.getCustomerUuid());
-			CustomerKeywordDailyReportExcelWriter excelWriter = new CustomerKeywordDailyReportExcelWriter(dailyReportItem.getTerminalType(), dailyReportItem
-					.getCustomerUuid() + "", dailyReportUuid);
-			double todayFee = excelWriter.writeDataToExcel(customerKeywords, customer.getExternalAccount(), customer.getContactPerson(), dailyReportItem.getTerminalType());
-			dailyReportItem.setTodayFee(todayFee);
+			Config dailyReportType = configService.getConfig(Constants.CONFIG_TYPE_DAILY_REPORT, Constants.CONFIG_TYPE_DAILY_REPORT_TYPE);
+			if(dailyReportType != null) {
+				double todayFee = 0;
+				if (EntryTypeEnum.bc.name().equalsIgnoreCase(dailyReportType.getValue())) {
+					CustomerKeywordDailyReportExcelWriter excelWriter = new CustomerKeywordDailyReportExcelWriter(dailyReportItem.getTerminalType(), dailyReportItem
+							.getCustomerUuid() + "", dailyReportUuid);
+					todayFee = excelWriter.writeDataToExcel(customerKeywords, customer.getExternalAccount(), customer.getContactPerson(), dailyReportItem.getTerminalType());
+				} else {
+					CustomerKeywordDailyReportSecondExcelWriter excelWriter = new CustomerKeywordDailyReportSecondExcelWriter(dailyReportItem.getTerminalType(), dailyReportItem
+							.getCustomerUuid() + "", dailyReportUuid);
+					todayFee = excelWriter.writeDataToExcel(customerKeywords, customer.getExternalAccount(), customer.getContactPerson(), dailyReportItem.getTerminalType());
+				}
+				dailyReportItem.setTodayFee(todayFee);
+			}
 		}
 		dailyReportItem.setStatus(DailyReportStatusEnum.Completed.name());
 		dailyReportItem.setUpdateTime(new Date());

@@ -68,9 +68,9 @@
         c.fUuid=#{captureRankJobUuid}
     </select>
 
-    <select id="fetchCaptureRankJob" resultType="com.keymanager.monitoring.entity.CaptureRankJob">
+    <select id="hasUncompletedCaptureRankJob" resultType="java.lang.Boolean">
         SELECT
-        <include refid="colID"/>
+        1
         FROM t_capture_rank_job c
         WHERE (
         c.fExectionStatus = 'New'
@@ -79,6 +79,11 @@
         AND c.fLastExecutionDate &lt; curdate())
         )
         AND c.fCaptureRankJobStatus = 1
+        <if test="groupNames!=null"> and c.fGroupNames IN
+            <foreach collection="groupNames" item="groupName" open="(" separator="," close=")">
+                #{groupName}
+            </foreach>
+        </if>
         LIMIT 1
     </select>
 </mapper>
