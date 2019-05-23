@@ -397,4 +397,11 @@
             </otherwise>
         </choose>
     </select>
+
+    <update id="stopMonitorImmediately" parameterType="java.lang.String">
+        UPDATE t_qz_setting  qs
+        SET qs.fIsMonitor = 0
+        WHERE qs.fUuid IN (${uuids})
+    </update>
+
 </mapper>

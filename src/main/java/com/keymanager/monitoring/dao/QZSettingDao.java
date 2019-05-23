@@ -51,5 +51,7 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
     int getQZSettingClientGroupInfo (@Param("qzSettingSearchClientGroupInfoCriteria") QZSettingSearchClientGroupInfoCriteria qzSettingSearchClientGroupInfoCriteria);
 
     List<String> getAvailableOptimizationGroups (@Param("groupSettingCriteria") GroupSettingCriteria groupSettingCriteria);
+
+    void stopMonitorImmediately (@Param("uuids") String uuids);
 }
 

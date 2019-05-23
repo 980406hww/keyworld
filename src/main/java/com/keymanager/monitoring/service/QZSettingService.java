@@ -744,4 +744,10 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
     public List<String> getAvailableOptimizationGroups (GroupSettingCriteria groupSettingCriteria) {
 		return qzSettingDao.getAvailableOptimizationGroups(groupSettingCriteria);
     }
+
+    public void stopMonitorImmediately(String uuids){
+        if(StringUtils.isNotEmpty(uuids)){
+            qzSettingDao.stopMonitorImmediately(uuids);
+        }
+    }
 }

@@ -248,4 +248,19 @@ public class QZSettingRestController extends SpringMVCBaseController {
             return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
         }
     }
+
+    @RequiresPermissions("/internal/qzsetting/stopMonitorImmediately")
+    @RequestMapping(value = "/stopMonitorImmediately", method = RequestMethod.POST)
+    public ResponseEntity<?> stopMonitorImmediately(@RequestBody Map<String, Object> requestMap) throws Exception{
+        String uuids = (String) requestMap.get("uuids");
+        boolean returnValue = false;
+        try {
+            qzSettingService.stopMonitorImmediately(uuids);
+            returnValue = true;
+        }catch(Exception ex){
+            logger.error(ex.getMessage());
+        }
+        return new ResponseEntity<Object>(returnValue, HttpStatus.OK);
+    }
+
 }

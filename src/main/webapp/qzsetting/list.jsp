@@ -56,7 +56,12 @@
 				</shiro:hasPermission>
 				<shiro:hasPermission name="/internal/qzsetting/updateImmediately">
 					<li>
-						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="updateImmediately(this)" value=" 马上更新 " >&nbsp;
+						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="immediatelyUpdateQZSettings('updateSettings')" value=" 马上更新 " >&nbsp;
+					</li>
+				</shiro:hasPermission>
+				<shiro:hasPermission name="/internal/qzsetting/stopMonitorImmediately">
+					<li>
+						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="immediatelyUpdateQZSettings('stopMonitor')" value=" 停止达标监控 " >&nbsp;
 					</li>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="/internal/qzsetting/updateStatus">

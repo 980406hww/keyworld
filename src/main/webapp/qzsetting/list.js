@@ -917,17 +917,53 @@ function delSelectedQZSettings(self) {
         }
     });
 }
-function updateImmediately(self) {
+function immediatelyUpdateQZSettings(type) {
     var uuids = getSelectedIDs();
     if(uuids === ''){
         alert('请选择要操作的设置信息！');
         return;
     }
+    switch (type) {
+        case "updateSettings":
+            updateImmediately(uuids);
+            break;
+        case "stopMonitor":
+            stopMonitorImmediately(uuids);
+        default:
+            break;
+    }
+}
+function updateImmediately(uuids) {
     if (confirm("确实要马上更新这些设置吗？") == false) return;
     var postData = {};
     postData.uuids = uuids;
     $.ajax({
         url: '/internal/qzsetting/updateImmediately',
+        data: JSON.stringify(postData),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        timeout: 5000,
+        type: 'POST',
+        success: function (data) {
+            if(data){
+                $().toastmessage('showSuccessToast', "操作成功", true);
+            }else{
+                $().toastmessage('showErrorToast', "操作失败");
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "操作失败");
+        }
+    });
+}
+function stopMonitorImmediately(uuids) {
+    if (confirm("确实要马上暂停这些设置的达标监控吗？") == false) return;
+    var postData = {};
+    postData.uuids = uuids;
+    $.ajax({
+        url: '/internal/qzsetting/stopMonitorImmediately',
         data: JSON.stringify(postData),
         headers: {
             'Accept': 'application/json',
