@@ -57,6 +57,7 @@
         <if test="customerKeywordCriteria.userName != null and customerKeywordCriteria.userName != ''">
             AND c.fUserID = #{customerKeywordCriteria.userName}
         </if>
+        <if test="customerKeywordCriteria.customerKeywordSource != null and customerKeywordCriteria.customerKeywordSource != ''">AND ck.fCustomerKeywordSource = #{customerKeywordCriteria.customerKeywordSource}</if>
         <if test="customerKeywordCriteria.noReachStandardDays != null and customerKeywordCriteria.noReachStandardDays > 0">
             AND ck.fLastReachStandardDate &lt;= DATE_SUB(CURRENT_DATE(), INTERVAL #{customerKeywordCriteria.noReachStandardDays} DAY)
         </if>

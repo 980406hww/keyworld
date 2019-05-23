@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.*;
 import com.keymanager.monitoring.entity.*;
+import com.keymanager.monitoring.enums.CustomerKeywordSourceEnum;
 import com.keymanager.monitoring.enums.EntryTypeEnum;
 import com.keymanager.monitoring.excel.operator.CustomerKeywordInfoExcelWriter;
 import com.keymanager.monitoring.service.*;
@@ -283,7 +284,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 						}
 					}
 				}
-				customerKeyword.setCustomerKeywordSource("UI");
+				customerKeyword.setCustomerKeywordSource(CustomerKeywordSourceEnum.UI.name());
 				customerKeywordService.addCustomerKeyword(customerKeyword, userName);
 				return new ResponseEntity<Object>(true, HttpStatus.OK);
 			} else {

@@ -6,6 +6,7 @@ import com.keymanager.enums.CollectMethod;
 import com.keymanager.monitoring.criteria.*;
 import com.keymanager.monitoring.dao.QZSettingDao;
 import com.keymanager.monitoring.entity.*;
+import com.keymanager.monitoring.enums.CustomerKeywordSourceEnum;
 import com.keymanager.monitoring.enums.QZCaptureTitleLogStatusEnum;
 import com.keymanager.monitoring.enums.QZSettingStatusEnum;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
@@ -490,7 +491,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
                                     }
                                 }
                             }
-							customerKeyword.setCustomerKeywordSource("capture");
+							customerKeyword.setCustomerKeywordSource(CustomerKeywordSourceEnum.Capture.name());
                             customerKeywords.add(customerKeyword);
                         }
 						customerKeywordService.addCustomerKeyword(customerKeywords, qzSettingCriteria.getUserName());
@@ -624,7 +625,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 				customerKeyword.setCurrentIndexCount(-1);
 				customerKeyword.setPositionFirstFee(-1d);
 				customerKeyword.setBearPawNumber(qzSettingSaveCustomerKeywordsCriteria.getBearPawNumber());
-                customerKeyword.setCustomerKeywordSource("specify");
+                customerKeyword.setCustomerKeywordSource(CustomerKeywordSourceEnum.Specify.name());
 				if (!excludeKeyword.isEmpty()){
 					if (excludeKeyword.contains(keyword)){
 						customerKeyword.setOptimizeGroupName("zanting");
