@@ -728,6 +728,24 @@
         WHERE ck.fUuid = #{uuid}
     </select>
 
+    <select id="getCustomerKeywordForCapturePositionTemp" resultType="com.keymanager.value.CustomerKeywordForCapturePosition">
+        SELECT
+            ck.fUuid AS 'uuid',
+            ck.fTerminalType AS	'terminalType',
+            ck.fKeyword	AS 'keyword',
+            ck.fUrl	AS 'url',
+            ck.fTitle AS 'title',
+            ck.fSearchEngine AS	'searchEngine',
+            ck.fBearPawNumber AS 'bearPawNumber'
+        FROM
+            t_customer_keyword ck
+        WHERE
+            ck.fUuid IN
+        <foreach item="uuid" collection="uuids" open="(" separator="," close=")">
+            #{uuid}
+        </foreach>
+    </select>
+
     <update id="resetInvalidRefreshCount" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria">
         UPDATE t_customer_keyword SET fInvalidRefreshCount = 0, fInvalidFlag = 0 WHERE fType = #{customerKeywordRefreshStatInfoCriteria.entryType} and fTerminalType = #{customerKeywordRefreshStatInfoCriteria.terminalType}
         <if test="customerKeywordRefreshStatInfoCriteria.customerName!=null and customerKeywordRefreshStatInfoCriteria.customerName!=''">AND EXISTS (SELECT 1 FROM t_customer c WHERE c.fUuid = fCustomerUuid AND c.fContactPerson LIKE concat('%', #{customerKeywordRefreshStatInfoCriteria.customerName}, '%'))</if>
@@ -755,6 +773,19 @@
         UPDATE t_customer_keyword SET fCaptureStatus = 1,
         fCapturePositionQueryTime = NOW()
         WHERE fUuid = #{uuid}
+    </update>
+
+    <update id="updateCapturePositionQueryTimeAndCaptureStatusTemp">
+        UPDATE
+            t_customer_keyword
+        SET
+            fCaptureStatus = 1,
+            fCapturePositionQueryTime = NOW()
+        WHERE
+            fUuid IN
+        <foreach item="uuid" collection="uuids" open="(" separator="," close=")">
+            #{uuid}
+        </foreach>
     </update>
 
     <select id="getCustomerKeywordForAutoUpdateNegative" resultType="com.keymanager.monitoring.vo.SearchEngineResultVO">

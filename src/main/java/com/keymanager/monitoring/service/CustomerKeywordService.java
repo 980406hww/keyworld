@@ -1264,20 +1264,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                     customerKeywordUuids = customerKeywordDao.getCustomerKeywordUuidForCapturePositionTemp(terminalType, groupName, customerUuid, startTime, 1);
                 }
                 if (null != customerKeywordUuids && customerKeywordUuids.size() != 0) {
-                    for (Long customerKeywordUuid : customerKeywordUuids) {
-                        CustomerKeyword customerKeyword = customerKeywordDao.getCustomerKeywordForCapturePosition(customerKeywordUuid);
-                        CustomerKeywordForCapturePosition customerKeywordForCapturePosition = new CustomerKeywordForCapturePosition();
-                        customerKeywordForCapturePosition.setUuid(customerKeyword.getUuid());
-                        customerKeywordForCapturePosition.setCaptureRankJobStatus(captureRankJobStatus);
-                        customerKeywordForCapturePosition.setKeyword(customerKeyword.getKeyword());
-                        customerKeywordForCapturePosition.setUrl(customerKeyword.getUrl());
-                        customerKeywordForCapturePosition.setTitle(customerKeyword.getTitle());
-                        customerKeywordForCapturePosition.setSearchEngine(customerKeyword.getSearchEngine());
-                        customerKeywordForCapturePosition.setTerminalType(customerKeyword.getTerminalType());
-                        customerKeywordForCapturePosition.setBearPawNumber(customerKeyword.getBearPawNumber());
-                        customerKeywordDao.updateCapturePositionQueryTimeAndCaptureStatus(customerKeyword.getUuid());
-                        customerKeywordForCapturePositions.add(customerKeywordForCapturePosition);
-                    }
+                    customerKeywordForCapturePositions = customerKeywordDao.getCustomerKeywordForCapturePositionTemp(customerKeywordUuids);
+                    customerKeywordDao.updateCapturePositionQueryTimeAndCaptureStatusTemp(customerKeywordUuids);
                 }
             }
         }

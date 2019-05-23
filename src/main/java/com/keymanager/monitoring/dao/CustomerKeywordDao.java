@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.criteria.*;
 import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.vo.*;
+import com.keymanager.value.CustomerKeywordForCapturePosition;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
 import org.apache.ibatis.annotations.Param;
 
@@ -112,7 +113,11 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     CustomerKeyword getCustomerKeywordForCapturePosition(@Param("uuid")Long uuid);
 
+    List<CustomerKeywordForCapturePosition> getCustomerKeywordForCapturePositionTemp(@Param("uuids") List uuids);
+
     void updateCapturePositionQueryTimeAndCaptureStatus(@Param("uuid")Long uuid);
+
+    void updateCapturePositionQueryTimeAndCaptureStatusTemp(@Param("uuids")List uuids);
 
     void resetInvalidRefreshCount(@Param("customerKeywordRefreshStatInfoCriteria")CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria);
 
