@@ -902,8 +902,8 @@
 					<tr>
 						<td align="right" style="width:72px">达标条件</td>
 						<td>
-							<input type="radio" name="standardType" value="satisfyOne">满足一个&nbsp;&nbsp;
-							<input type="radio" name="standardType" value="satisfyAll">满足全部&nbsp;&nbsp;
+							<input type="radio" name="standardTypePC" id="satisfyOnePC" value="satisfyOne" checked="checked">满足其中一个&nbsp;&nbsp;
+							<input type="radio" name="standardTypePC" id="satisfyAllPC" value="satisfyAll">满足全部&nbsp;&nbsp;
 						</td>
 					</tr>
 					<tr>
@@ -1019,8 +1019,8 @@
 					<tr>
 						<td align="right" style="width:72px">达标条件</td>
 						<td>
-							<input type="radio" name="standardType" value="satisfyOne">满足一个&nbsp;&nbsp;
-							<input type="radio" name="standardType" value="satisfyAll">满足全部&nbsp;&nbsp;
+							<input type="radio" name="standardTypePhone" id="satisfyOnePhone" value="satisfyOne" checked="checked">满足其中一个&nbsp;&nbsp;
+							<input type="radio" name="standardTypePhone" id="satisfyAllPhone" value="satisfyAll">满足全部&nbsp;&nbsp;
 						</td>
 					</tr>
 					<tr>

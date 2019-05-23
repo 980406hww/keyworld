@@ -212,7 +212,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			} else {
 				qzSetting.setPhoneGroup(null);
 			}
-			qzSettingDao.updateById(qzSetting);
+			qzSettingDao.updateQZSettingGroup(qzSetting);
 		}
 	}
 
@@ -222,15 +222,31 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
             oldQZChargeRuleMap.put(qzChargeRule.getStandardSpecies(), qzChargeRule);
         }
         List<QZChargeRule> qzChargeRules = new ArrayList<>();
+        Set<String> existingQZChargeRuleSet = new HashSet<>();
         for (QZChargeRule newQZChargeRule : newOperationType.getQzChargeRules()) {
             QZChargeRule qzChargeRule = oldQZChargeRuleMap.get(newQZChargeRule.getStandardSpecies());
             if (null == qzChargeRule) {
                 qzChargeRules.add(newQZChargeRule);
+            } else {
+                existingQZChargeRuleSet.add(newQZChargeRule.getStandardSpecies());
             }
         }
-        if (CollectionUtils.isNotEmpty(qzChargeRules)) {
+
+        for (String existingQZChargeRuleStandardSpecies : existingQZChargeRuleSet) {
+            oldQZChargeRuleMap.remove(existingQZChargeRuleStandardSpecies);
+        }
+
+        boolean isChangedRules = false;
+        if (!oldQZChargeRuleMap.isEmpty()) { // 规则修改
+            isChangedRules = true;
+        }
+        if (CollectionUtils.isNotEmpty(qzChargeRules)) { // 有新增
+            isChangedRules = true;
+        }
+        if (isChangedRules) {
             oldOperationType.setUpdateTime(new Date());
             oldOperationType.setOperationType(newOperationType.getOperationType());
+            oldOperationType.setStandardType(newOperationType.getStandardType());
             oldOperationType.setInitialKeywordCount(newOperationType.getInitialKeywordCount());
             oldOperationType.setCurrentKeywordCount(newOperationType.getCurrentKeywordCount());
             oldOperationType.setGroup(newOperationType.getGroup());
@@ -244,6 +260,13 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
                 qzChargeRule.setQzOperationTypeUuid(oldOperationType.getUuid());
                 qzChargeRuleService.insert(qzChargeRule);
             }
+        } else {
+            if (!oldOperationType.getStandardType().equals(newOperationType.getStandardType())) {
+                oldOperationType.setUpdateTime(new Date());
+                oldOperationType.setStandardType(newOperationType.getStandardType());
+                oldOperationType.setIsDeleted(0); //只要是发生改变那么就让它的状态为0
+                qzOperationTypeService.updateById(oldOperationType);
+            }
         }
 	}
 
@@ -251,7 +274,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		Map<String, Map<String, QZKeywordRankInfo>> existingQZKeywordRankInfoMap = new HashMap<>();
 		for (QZKeywordRankInfo qzKeywordRankInfo : existingQZKeywordRankInfoList) {
             Map<String, QZKeywordRankInfo> qzKeywordRankInfoMap = existingQZKeywordRankInfoMap.get(qzKeywordRankInfo.getTerminalType());
-            if (null != qzKeywordRankInfoMap){
+            if (null != qzKeywordRankInfoMap && !qzKeywordRankInfoMap.isEmpty()){
 		        qzKeywordRankInfoMap.put(qzKeywordRankInfo.getWebsiteType(), qzKeywordRankInfo);
             } else {
                 qzKeywordRankInfoMap = new HashMap<>();
@@ -259,50 +282,59 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
             }
             existingQZKeywordRankInfoMap.put(qzKeywordRankInfo.getTerminalType(), qzKeywordRankInfoMap);
 		}
+
+		Map<String, Set<String>> setMap = new HashMap<>();
 		for (QZOperationType qzOperationType : qzOperationTypeList) {
             Map<String, QZKeywordRankInfo> qzKeywordRankInfoMap = existingQZKeywordRankInfoMap.get(qzOperationType.getOperationType());
-            List<QZChargeRule> qzChargeRules = new ArrayList<>();
-            if (null != qzKeywordRankInfoMap) {
+            Set<String> standardSpeciesSet = new HashSet<>();
+            Set<String> existingStandardSpeciesSet = new HashSet<>();
+            if (null != qzKeywordRankInfoMap && !qzKeywordRankInfoMap.isEmpty()) {
                 for (QZChargeRule qzChargeRule : qzOperationType.getQzChargeRules()) {
                     QZKeywordRankInfo qzKeywordRankInfo = qzKeywordRankInfoMap.get(qzChargeRule.getStandardSpecies());
                     if (null != qzKeywordRankInfo) {
-                        qzKeywordRankInfoMap.remove(qzChargeRule.getStandardSpecies());
+                        existingStandardSpeciesSet.add(qzChargeRule.getStandardSpecies());
                     } else {
-                        qzChargeRules.add(qzChargeRule);
+                        standardSpeciesSet.add(qzChargeRule.getStandardSpecies());
                     }
+                }
+                for (String existingStandardSpecies: existingStandardSpeciesSet) {
+                    qzKeywordRankInfoMap.remove(existingStandardSpecies);
                 }
             } else {
-                qzChargeRules.addAll(qzOperationType.getQzChargeRules());
+                for (QZChargeRule qzChargeRule : qzOperationType.getQzChargeRules()) {
+                    standardSpeciesSet.add(qzChargeRule.getStandardSpecies());
+                }
             }
-            for (QZChargeRule qzChargeRule : qzChargeRules) {
-                QZKeywordRankInfo qzKeywordRankInfo = new QZKeywordRankInfo();
-                qzKeywordRankInfo.setQzSettingUuid(qzSetting.getUuid());
-                qzKeywordRankInfo.setWebsiteType(qzChargeRule.getStandardSpecies());
-                qzKeywordRankInfo.setTerminalType(qzOperationType.getOperationType());
-                qzKeywordRankInfoService.insert(qzKeywordRankInfo);
+            if (CollectionUtils.isNotEmpty(standardSpeciesSet)) {
+                setMap.put(qzOperationType.getOperationType(), standardSpeciesSet);
             }
 		}
-        for (Map<String, QZKeywordRankInfo> qzKeywordRankInfoMap : existingQZKeywordRankInfoMap.values()) {
-            String terminalType = null;
-            for (QZKeywordRankInfo qzKeywordRankInfo : qzKeywordRankInfoMap.values()) {
-                if (null == terminalType) {
-                    terminalType = qzKeywordRankInfo.getTerminalType();
-                }
+
+		for (Map.Entry<String, Set<String>> entry : setMap.entrySet()) {
+		    for (String standardSpecies : entry.getValue()) {
+                QZKeywordRankInfo qzKeywordRankInfo = new QZKeywordRankInfo();
+                qzKeywordRankInfo.setQzSettingUuid(qzSetting.getUuid());
+                qzKeywordRankInfo.setWebsiteType(standardSpecies);
+                qzKeywordRankInfo.setTerminalType(entry.getKey());
+                qzKeywordRankInfoService.insert(qzKeywordRankInfo);
+            }
+        }
+
+        for (Map.Entry<String, Map<String, QZKeywordRankInfo>> entry : existingQZKeywordRankInfoMap.entrySet()) {
+            for (QZKeywordRankInfo qzKeywordRankInfo : entry.getValue().values()) {
                 qzKeywordRankInfoService.deleteById(qzKeywordRankInfo);
             }
-            if (null != terminalType) {
-                QZSettingSearchCriteria qzSettingSearchCriteria = new QZSettingSearchCriteria();
-                qzSettingSearchCriteria.setTerminalType(terminalType);
-                List<QZKeywordRankInfo> qzKeywordRankInfoList = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), new QZSettingSearchCriteria());
-                if (!CollectionUtils.isNotEmpty(qzKeywordRankInfoList)) {
-                    if (terminalType.equals("PC")) {
-                        qzSetting.setPcCreateTopTenNum(null);
-                        qzSetting.setPcCreateTopFiftyNum(null);
-                    }
-                    if (terminalType.equals("Phone")) {
-                        qzSetting.setPhoneCreateTopTenNum(null);
-                        qzSetting.setPhoneCreateTopFiftyNum(null);
-                    }
+            QZSettingSearchCriteria qzSettingSearchCriteria = new QZSettingSearchCriteria();
+            qzSettingSearchCriteria.setTerminalType(entry.getKey());
+            List<QZKeywordRankInfo> qzKeywordRankInfoList = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), new QZSettingSearchCriteria());
+            if (!CollectionUtils.isNotEmpty(qzKeywordRankInfoList)) {
+                if (entry.getKey().equals("PC")) {
+                    qzSetting.setPcCreateTopTenNum(null);
+                    qzSetting.setPcCreateTopFiftyNum(null);
+                }
+                if (entry.getKey().equals("Phone")) {
+                    qzSetting.setPhoneCreateTopTenNum(null);
+                    qzSetting.setPhoneCreateTopFiftyNum(null);
                 }
             }
         }

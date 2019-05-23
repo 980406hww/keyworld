@@ -28,7 +28,7 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
 
     int selectLastId();
 
-    void deleteQZSettingGroup(@Param("qzSetting") QZSetting qzSetting);
+    void updateQZSettingGroup(@Param("qzSetting") QZSetting qzSetting);
 
     void updateQZSettingStatus(@Param("uuids") List<Long> uuids, @Param("status") Integer status);
 

@@ -26,6 +26,7 @@
        qopty.fUuid            AS 'uuid',
        qopty.fQZSettingUuid    AS 'qzsettingUuid',
        qopty.fOperationtype          AS 'operationType',
+       qopty.fStandardType  AS 'standardType',
        qopty.fInitialKeywordCount    AS 'initialKeywordCount',
        qopty.fCurrentKeywordCount    AS 'currentkeywordcount',
        qopty.fGroup            AS 'group',
@@ -37,7 +38,7 @@
        qopty.fIsDeleted        AS 'isDeleted',
        qopty.fMaxKeywordCount  AS 'maxKeywordCount'
       FROM t_qz_operation_type  qopty
-      WHERE  qopty.fQZSettingUuid  = #{qzSettingUuid}
+      WHERE  qopty.fQZSettingUuid  = #{qzSettingUuid} AND qopty.fIsDeleted = 0
     </select>
     <!--返回上一级插入的主键-->
     <select id="selectLastId" resultType="int">
@@ -58,7 +59,7 @@
     FROM t_qz_operation_type op
     JOIN t_qz_charge_rule cr
     ON op.fUuid = cr.fQZOperationTypeUuid
-    WHERE fQZSettingUuid = #{qzSettingUuid} and fOperationtype = #{operationType} and fGroup = #{group}
+    WHERE op.fQZSettingUuid = #{qzSettingUuid} and op.fOperationtype = #{operationType} and fGroup = #{group}
     ORDER BY cr.fStartKeywordCount
     </select>
 

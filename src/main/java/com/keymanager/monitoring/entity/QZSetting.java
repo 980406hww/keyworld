@@ -85,9 +85,6 @@ public class QZSetting extends BaseEntity{
 	@TableField(value = "fStatus")
 	private int status;
 
-	@TableField(value = "fStandardType")
-	private String standardType; // 达标类型
-
 	@TableField(exist = false)
 	private List<QZOperationType> qzOperationTypes; //qzOperationTypes为全站表子类  一对多
 
@@ -333,13 +330,5 @@ public class QZSetting extends BaseEntity{
 
 	public void setQzCategoryTags (List<QZCategoryTag> qzCategoryTags) {
 		this.qzCategoryTags = qzCategoryTags;
-	}
-
-	public String getStandardType () {
-		return standardType;
-	}
-
-	public void setStandardType (String standardType) {
-		this.standardType = standardType;
 	}
 }
