@@ -81,4 +81,12 @@
         AND c.fCaptureRankJobStatus = 1
         LIMIT 1
     </select>
+
+    <delete id="deleteCaptureRankJob">
+        DELETE FROM t_capture_rank_job
+        WHERE fQZSettingUuid = #{qzSettingUuid}
+        <if test="operationType != null">
+            AND fOperationType = #{operationType}
+        </if>
+    </delete>
 </mapper>

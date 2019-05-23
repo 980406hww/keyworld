@@ -13,13 +13,15 @@ import java.util.List;
  */
 
 public interface CaptureRankJobDao extends BaseMapper<CaptureRankJob> {
-   public List<CaptureRankJob> searchCaptureRankJobs(Page<CaptureRankJob> page, @Param("captureRankJobSearchCriteria") CaptureRankJobSearchCriteria captureRankJobSearchCriteria);
+   List<CaptureRankJob> searchCaptureRankJobs(Page<CaptureRankJob> page, @Param("captureRankJobSearchCriteria") CaptureRankJobSearchCriteria captureRankJobSearchCriteria);
 
-   public CaptureRankJob provideCaptureRankJob();
+   CaptureRankJob provideCaptureRankJob();
 
-   public CaptureRankJob getProcessingJob();
+   CaptureRankJob getProcessingJob();
 
    Boolean getCaptureRankJobStatus(@Param("captureRankJobUuid")Long captureRankJobUuid);
 
    CaptureRankJob fetchCaptureRankJob();
+
+   void deleteCaptureRankJob (@Param("qzSettingUuid") Long qzSettingUuid, @Param("operationType") String operationType);
 }

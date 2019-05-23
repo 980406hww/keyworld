@@ -19,6 +19,9 @@ public class CaptureRankJob extends BaseEntity{
     @TableField(value = "fCustomerUuid",strategy = FieldStrategy.IGNORED)
     private Long customerUuid;
 
+    @TableField(value = "fQZSettingUuid")
+    private Long qzSettingUuid;
+
     @TableField(exist=false)
     private String contactPerson;
 
@@ -113,7 +116,13 @@ public class CaptureRankJob extends BaseEntity{
         this.groupNames = groupNames;
     }
 
+    public Long getQzSettingUuid () {
+        return qzSettingUuid;
+    }
 
+    public void setQzSettingUuid (Long qzSettingUuid) {
+        this.qzSettingUuid = qzSettingUuid;
+    }
 
     public String getOperationType() {
         return operationType;

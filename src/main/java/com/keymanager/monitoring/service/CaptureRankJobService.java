@@ -10,6 +10,7 @@ import com.keymanager.monitoring.enums.CaptureRankExectionStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Time;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -93,5 +94,23 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
 
     public Boolean hasCaptureRankJob(){
         return captureRankJobDao.fetchCaptureRankJob() != null;
+    }
+
+    public void deleteCaptureRankJob (Long qzSettingUuid, String operationType) {
+        captureRankJobDao.deleteCaptureRankJob(qzSettingUuid, operationType);
+    }
+
+    public void qzAddCaptureRankJob (String group, Long qzSettingUuid, String operationType, String userName) {
+        CaptureRankJob captureRankJob = new CaptureRankJob();
+        captureRankJob.setGroupNames(group);
+        captureRankJob.setQzSettingUuid(qzSettingUuid);
+        captureRankJob.setOperationType(operationType);
+        captureRankJob.setExectionType("Everyday");
+        captureRankJob.setCaptureInterval(500);
+        captureRankJob.setPageSize(50);
+        captureRankJob.setExectionTime(Time.valueOf("00:05:00"));
+        captureRankJob.setExectionStatus("new");
+        captureRankJob.setCreateBy(userName);
+        captureRankJobDao.insert(captureRankJob);
     }
 }

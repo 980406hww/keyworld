@@ -78,7 +78,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
 
 	@RequiresPermissions("/internal/qzsetting/save")
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
-	public ResponseEntity<?> saveQZSetting(@RequestBody QZSetting qzSetting){
+	public ResponseEntity<?> saveQZSetting(@RequestBody QZSetting qzSetting, HttpServletRequest request){
 		try {
 			if(qzSetting.getUuid() == null) {
 				Set<String> roles = getCurrentUser().getRoles();
@@ -88,7 +88,8 @@ public class QZSettingRestController extends SpringMVCBaseController {
 					qzSetting.setStatus(2);
 				}
 			}
-			qzSettingService.saveQZSetting(qzSetting);
+			String userName = (String) request.getSession().getAttribute("username");
+			qzSettingService.saveQZSetting(qzSetting, userName);
 			return new ResponseEntity<Object>(qzSetting, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
