@@ -33,26 +33,26 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
         CaptureRankJob captureRankJob = captureRankJobDao.getProcessingJob();
         if (captureRankJob == null) {
             captureRankJob = captureRankJobDao.provideCaptureRankJob();
-           if(captureRankJob != null){
-               captureRankJob.setStartTime(new Date());
-               captureRankJob.setExectionStatus(CaptureRankExectionStatus.Processing.name());
-               captureRankJobDao.updateById(captureRankJob);
-           }
+            if (captureRankJob != null) {
+                captureRankJob.setStartTime(new Date());
+                captureRankJob.setExectionStatus(CaptureRankExectionStatus.Processing.name());
+                captureRankJobDao.updateById(captureRankJob);
+            }
         }
         return captureRankJob;
     }
 
     public Page<CaptureRankJob> searchCaptureRankJob(Page<CaptureRankJob> page, CaptureRankJobSearchCriteria captureRankJobSearchCriteria) {
         List<CaptureRankJob> captureRankJobs = captureRankJobDao.searchCaptureRankJobs(page, captureRankJobSearchCriteria);
-        Map<Long,Customer> customerMap = new HashMap<Long,Customer>();
-        for(CaptureRankJob captureRankJob : captureRankJobs){
-            if(captureRankJob.getCustomerUuid() != null &&  !captureRankJob.getCustomerUuid() .equals("")) {
+        Map<Long, Customer> customerMap = new HashMap<Long, Customer>();
+        for (CaptureRankJob captureRankJob : captureRankJobs) {
+            if (captureRankJob.getCustomerUuid() != null && !captureRankJob.getCustomerUuid().equals("")) {
                 Customer customer = customerMap.get(captureRankJob.getCustomerUuid());
-                if(customer == null) {
+                if (customer == null) {
                     customer = customerService.selectById(captureRankJob.getCustomerUuid());
-                    customerMap.put(captureRankJob.getCustomerUuid(),customer);
+                    customerMap.put(captureRankJob.getCustomerUuid(), customer);
                 }
-                if(customer != null) {
+                if (customer != null) {
                     captureRankJob.setContactPerson(customer.getContactPerson());
                 }
             }
@@ -61,7 +61,7 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
         return page;
     }
 
-    public CaptureRankJob getCaptureRankJobAndCustomerName(Long uuid){
+    public CaptureRankJob getCaptureRankJobAndCustomerName(Long uuid) {
         CaptureRankJob captureRankJob = captureRankJobDao.selectById(uuid);
         if (captureRankJob.getCustomerUuid() != null) {
             Customer customer = customerService.selectById(captureRankJob.getCustomerUuid());
@@ -111,7 +111,7 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
         captureRankJobDao.updateById(captureRankJob);
     }
 
-    public void searchFiveMiniSetCheckingJobs() {
+    public synchronized void searchFiveMiniSetCheckingJobs() {
         List<CaptureRankJob> captureRankJobs = captureRankJobDao.searchFiveMiniSetCheckingJobs();
         if (captureRankJobs != null && captureRankJobs.size() != 0) {
             for (CaptureRankJob captureRankJob : captureRankJobs) {
@@ -133,11 +133,11 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
 
     public void changeCaptureRankJobStatus(Long uuid, String status) {
         CaptureRankJob captureRankJob = captureRankJobDao.selectById(uuid);
-        captureRankJob.setCaptureRankJobStatus(status.equals("true")?true:false);
+        captureRankJob.setCaptureRankJobStatus(status.equals("true") ? true : false);
         captureRankJobDao.updateById(captureRankJob);
     }
 
-    public Boolean hasCaptureRankJob(){
+    public Boolean hasCaptureRankJob() {
         return captureRankJobDao.fetchCaptureRankJob() != null;
     }
 }

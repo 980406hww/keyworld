@@ -1258,7 +1258,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
         synchronized (CustomerKeywordService.class) {
             Boolean captureRankJobStatus = captureRankJobService.getCaptureRankJobStatus(captureRankJobUuid);
-            if (captureRankJobStatus != null) {
+            if (captureRankJobStatus) {
                 List<Long> customerKeywordUuids = customerKeywordDao.getCustomerKeywordUuidForCapturePositionTemp(terminalType, groupName, customerUuid, startTime, 0);
                 if (null == customerKeywordUuids || customerKeywordUuids.size() == 0) {
                     customerKeywordUuids = customerKeywordDao.getCustomerKeywordUuidForCapturePositionTemp(terminalType, groupName, customerUuid, startTime, 1);
