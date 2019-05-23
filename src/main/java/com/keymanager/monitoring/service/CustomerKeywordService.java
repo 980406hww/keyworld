@@ -1229,7 +1229,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                                                                                   Date startTime,Long captureRankJobUuid){
         CustomerKeywordForCapturePosition customerKeywordForCapturePosition = new CustomerKeywordForCapturePosition();
         Boolean captureRankJobStatus = captureRankJobService.getCaptureRankJobStatus(captureRankJobUuid);
-        if(captureRankJobStatus != null){
+        if(captureRankJobStatus){
             customerKeywordForCapturePosition.setCaptureRankJobStatus(captureRankJobStatus);
             Long customerKeywordUuid = customerKeywordDao.getCustomerKeywordUuidForCapturePosition(terminalType, groupNames, customerUuid, startTime, 0);
             if(null == customerKeywordUuid){
