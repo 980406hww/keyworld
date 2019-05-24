@@ -5,7 +5,6 @@ import com.alibaba.druid.support.logging.LogFactory;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.criteria.QZSettingSearchCriteria;
 import com.keymanager.monitoring.dao.QZKeywordRankInfoDao;
-import com.keymanager.monitoring.dao.QZSettingDao;
 import com.keymanager.monitoring.entity.Config;
 import com.keymanager.monitoring.entity.QZKeywordRankInfo;
 import com.keymanager.monitoring.entity.QZSetting;
@@ -36,7 +35,7 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
     private QZKeywordRankInfoDao qzKeywordRankInfoDao;
 
     @Autowired
-    private QZSettingDao qzSettingDao;
+    private QZSettingService qzSettingService;
 
     @Autowired
     private ConfigService configService;
@@ -55,15 +54,19 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
     public List<ExternalQzSettingVO> getQZSettingTask(){
         Config taskNumber = configService.getConfig(Constants.CONFIG_TYPE_QZSETTING, Constants.CONFIG_KEY_QZ_TASKNUMBER);
         Config config = configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK, Constants.CONFIG_KEY_CRAWLER_HOUR);
-        List<ExternalQzSettingVO> qzSettingTasks = qzKeywordRankInfoDao.getQZSettingTask(Integer.parseInt(config.getValue()),Integer.parseInt(taskNumber.getValue()));
+        List<ExternalQzSettingVO> qzSettingTasks = qzSettingService.getQZSettingTask(Integer.parseInt(config.getValue()),Integer.parseInt(taskNumber.getValue()));
         if (CollectionUtils.isNotEmpty(qzSettingTasks)){
             Long[] uuids = new Long[qzSettingTasks.size()];
-            int index = 0;
-            for (ExternalQzSettingVO qzSettingTask : qzSettingTasks) {
-                uuids[index] = qzSettingTask.getUuid();
-                index++;
+            for (int i = 0; i < qzSettingTasks.size(); i++) {
+                uuids[i] = qzSettingTasks.get(i).getUuid();
             }
-            qzSettingDao.updateCrawlerStatus(uuids);
+            qzSettingService.updateCrawlerStatus(uuids);
+            for (ExternalQzSettingVO qzSettingVO : qzSettingTasks) {
+                List<String> types = qzKeywordRankInfoDao.getQZKeywordRankInfoTypes(qzSettingVO.getUuid());
+                if (CollectionUtils.isNotEmpty(types)) {
+                    qzSettingVO.setTypeList(types);
+                }
+            }
         }
         return qzSettingTasks;
     }
@@ -78,10 +81,10 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
         } else {
             qzKeywordRankInfoDao.insert(rankInfo);
         }
-        qzSettingDao.updateQzSetting(qzSetting);
+        qzSettingService.updateQzSetting(qzSetting);
     }
 
-    public QZKeywordRankInfo getQZKeywordRankInfo(ExternalQzKeywordRankInfoVO externalQzKeywordRankInfoVO) throws Exception{
+    private QZKeywordRankInfo getQZKeywordRankInfo(ExternalQzKeywordRankInfoVO externalQzKeywordRankInfoVO) throws Exception{
         QZKeywordRankInfo qzKeywordRankInfo = new QZKeywordRankInfo();
         List<QZOperationTypeVO> operationTypes = qzOperationTypeService.findQZOperationTypes(externalQzKeywordRankInfoVO.getQzSettingUuid(), externalQzKeywordRankInfoVO.getTerminalType(),externalQzKeywordRankInfoVO.getGroup());
 
@@ -135,8 +138,8 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
         return qzSettingSearchCriteria;
     }
 
-    public QZSetting getQZSetting(ExternalQzKeywordRankInfoVO externalQzKeywordRankInfoVO) throws Exception{
-        QZSetting qzSetting = qzSettingDao.findQzSetting(externalQzKeywordRankInfoVO.getQzSettingUuid());
+    private QZSetting getQZSetting(ExternalQzKeywordRankInfoVO externalQzKeywordRankInfoVO) throws Exception{
+        QZSetting qzSetting = qzSettingService.findQzSetting(externalQzKeywordRankInfoVO.getQzSettingUuid());
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         qzSetting.setUuid(externalQzKeywordRankInfoVO.getQzSettingUuid());
@@ -157,7 +160,7 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
         return qzSetting;
     }
 
-    public Map standardCalculation(List<QZOperationTypeVO> operationTypes, ExternalQzKeywordRankInfoVO externalQzKeywordRankInfoVO) throws Exception{
+    private Map standardCalculation(List<QZOperationTypeVO> operationTypes, ExternalQzKeywordRankInfoVO externalQzKeywordRankInfoVO) throws Exception{
         Map<String, Object> standardInformation = new HashMap<String, Object>(4);
         DecimalFormat decimalFormat = new DecimalFormat("0.0000");
 

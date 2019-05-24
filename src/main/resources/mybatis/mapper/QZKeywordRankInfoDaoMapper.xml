@@ -47,21 +47,6 @@
         WHERE fQZSettingUuid = #{qzSettingUuid}
     </delete>
 
-    <select id="getQZSettingTask" resultType="com.keymanager.monitoring.vo.ExternalQzSettingVO">
-        SELECT
-            qs.fUuid AS 'uuid',
-            qs.fDomain AS 'domain',
-            qs.fPcGroup AS 'pcGroup',
-            qs.fPhoneGroup AS 'phoneGroup',
-            qs.fCreateTime AS 'createTime'
-        FROM t_qz_setting qs
-        WHERE qs.fCrawlerStatus = 'new'
-        OR qs.fCrawlerTime IS NULL
-        OR qs.fCrawlerTime &lt;= DATE_SUB(NOW(), INTERVAL 8 HOUR)
-        ORDER BY qs.fCreateTime DESC
-        limit #{taskNumber}
-    </select>
-
     <select id="getQzKeywordRankInfos" resultType="java.lang.Long">
         SELECT
             tqkri.fUuid AS 'uuid'
@@ -91,5 +76,12 @@
         <if test="terminalType != null and terminalType !=''">
             AND qk.fTerminalType = #{terminalType}
         </if>
+    </select>
+
+    <select id="getQZKeywordRankInfoTypes" resultType="java.lang.String">
+        SELECT
+        CONCAT(qk.fTerminalType, '_', qk.fWebsiteType)
+        FROM t_qz_keyword_rank_info qk
+        WHERE qk.fQZSettingUuid = #{qzSettingUuid};
     </select>
 </mapper>

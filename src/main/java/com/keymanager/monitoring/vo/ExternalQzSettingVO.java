@@ -1,16 +1,14 @@
 package com.keymanager.monitoring.vo;
 
+import java.util.List;
+
 public class ExternalQzSettingVO {
 
     private Long uuid;
 
     private String domain;
 
-    private String pcGroup;
-
-    private String phoneGroup;
-
-    private String createTime;
+    private List<String> typeList;
 
     public Long getUuid() {
         return uuid;
@@ -28,27 +26,11 @@ public class ExternalQzSettingVO {
         this.domain = domain;
     }
 
-    public String getPcGroup() {
-        return pcGroup;
+    public List<String> getTypeList () {
+        return typeList;
     }
 
-    public void setPcGroup(String pcGroup) {
-        this.pcGroup = pcGroup;
-    }
-
-    public String getPhoneGroup() {
-        return phoneGroup;
-    }
-
-    public void setPhoneGroup(String phoneGroup) {
-        this.phoneGroup = phoneGroup;
-    }
-
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
+    public void setTypeList (List<String> typeList) {
+        this.typeList = typeList;
     }
 }

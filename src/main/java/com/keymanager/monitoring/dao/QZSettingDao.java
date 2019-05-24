@@ -9,6 +9,7 @@ import com.keymanager.monitoring.criteria.QZSettingSearchCriteria;
 import com.keymanager.monitoring.entity.Group;
 import com.keymanager.monitoring.entity.QZSetting;
 import com.keymanager.monitoring.vo.DateRangeTypeVO;
+import com.keymanager.monitoring.vo.ExternalQzSettingVO;
 import com.keymanager.monitoring.vo.QZSettingVO;
 import org.apache.ibatis.annotations.Param;
 
@@ -51,5 +52,7 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
     int getQZSettingClientGroupInfo (@Param("qzSettingSearchClientGroupInfoCriteria") QZSettingSearchClientGroupInfoCriteria qzSettingSearchClientGroupInfoCriteria);
 
     List<String> getAvailableOptimizationGroups (@Param("groupSettingCriteria") GroupSettingCriteria groupSettingCriteria);
+
+    List<ExternalQzSettingVO> getQZSettingTask(@Param("crawlerHour")Integer crawlerHour, @Param("taskNumber")Integer taskNumber);
 }
 

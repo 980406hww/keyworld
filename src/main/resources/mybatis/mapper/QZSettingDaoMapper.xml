@@ -336,9 +336,23 @@
         WHERE fUuid = #{fUuid}
     </select>
 
+    <select id="getQZSettingTask" resultType="com.keymanager.monitoring.vo.ExternalQzSettingVO">
+        SELECT
+        qs.fUuid AS 'uuid',
+        qs.fDomain AS 'domain'
+        FROM t_qz_setting qs
+        WHERE qs.fCrawlerStatus = 'new'
+        OR (qs.fCrawlerStatus = 'processing' AND qs.fCrawlerTime &lt;= DATE_SUB(NOW(), INTERVAL 30 MINUTE))
+        OR qs.fCrawlerTime IS NULL
+        OR qs.fCrawlerTime &lt;= DATE_SUB(NOW(), INTERVAL #{crawlerHour} HOUR)
+        ORDER BY qs.fCreateTime DESC
+        LIMIT #{taskNumber}
+    </select>
+
     <update id="updateCrawlerStatus">
         update t_qz_setting
-        SET fCrawlerStatus = 'processing'
+        SET fCrawlerStatus = 'processing',
+        AND fCrawlerTime = NOW()
         WHERE fUuid IN
         <foreach collection="uuids" item="uuid" index="index"  open="(" separator="," close=")">
             #{uuid}

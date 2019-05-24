@@ -11,6 +11,7 @@ import com.keymanager.monitoring.enums.QZSettingStatusEnum;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
 import com.keymanager.monitoring.vo.CustomerKeywordSummaryInfoVO;
 import com.keymanager.monitoring.vo.DateRangeTypeVO;
+import com.keymanager.monitoring.vo.ExternalQzSettingVO;
 import com.keymanager.monitoring.vo.QZSettingSearchClientGroupInfoVO;
 import com.keymanager.util.Constants;
 import com.keymanager.util.Utils;
@@ -652,4 +653,20 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
     public List<String> getAvailableOptimizationGroups (GroupSettingCriteria groupSettingCriteria) {
 		return qzSettingDao.getAvailableOptimizationGroups(groupSettingCriteria);
     }
+
+	public void updateCrawlerStatus (Long[] uuids) {
+		qzSettingDao.updateCrawlerStatus(uuids);
+	}
+
+	public List<ExternalQzSettingVO> getQZSettingTask (int crawlerHour, int taskNumber) {
+		return qzSettingDao.getQZSettingTask(crawlerHour, taskNumber);
+	}
+
+	public void updateQzSetting (QZSetting qzSetting) {
+		qzSettingDao.updateQzSetting(qzSetting);
+	}
+
+	public QZSetting findQzSetting (Long qzSettingUuid) {
+		return qzSettingDao.findQzSetting(qzSettingUuid);
+	}
 }

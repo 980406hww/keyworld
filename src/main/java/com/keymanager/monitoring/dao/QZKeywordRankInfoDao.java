@@ -18,9 +18,9 @@ public interface QZKeywordRankInfoDao extends BaseMapper<QZKeywordRankInfo> {
 
     void deleteByQZSettingUuid (@Param("qzSettingUuid") Long qzSettingUuid);
 
-    List<ExternalQzSettingVO> getQZSettingTask(@Param("crawlerHour")Integer crawlerHour,@Param("taskNumber")Integer taskNumber);
-
     List<Long> getQzKeywordRankInfos(@Param("qzSettingUuid") Long qzSettingUuid, @Param("terminalType") String terminalType);
 
     QZSettingSearchCriteria getCountNumOfRankInfo(@Param("upper")double upper, @Param("lower")double lower, @Param("differenceValue") double differenceValue, @Param("terminalType") String terminalType);
+
+    List<String> getQZKeywordRankInfoTypes (@Param("qzSettingUuid") Long qzSettingUuid);
 }
