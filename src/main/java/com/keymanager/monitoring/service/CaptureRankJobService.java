@@ -8,6 +8,8 @@ import com.keymanager.monitoring.dao.CaptureRankJobDao;
 import com.keymanager.monitoring.entity.CaptureRankJob;
 import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.enums.CaptureRankExectionStatus;
+import com.keymanager.util.Utils;
+import com.sun.xml.internal.bind.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -77,22 +79,19 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
         captureRankJob.setOperationType(terminalType);
 
         List list = (List) map.get("executeTimes");
-        for (Object strTime : list) {
-            SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
-            try {
-                Date d = format.parse((String) strTime);
-                captureRankJob.setExectionTime(new Time(d.getTime()));
-            } catch (Exception e) {
-                e.printStackTrace();
+        if (captureRankJob.getUuid() != null) {
+            Date date = Utils.parseDate((String) list.get(0),"HH:mm:ss");
+            captureRankJob.setExectionTime(new Time(date != null ? date.getTime() : 0));
+            captureRankJobDao.updateById(captureRankJob);
+        } else {
+            for (Object strTime : list) {
+                Date date = Utils.parseDate((String) strTime,"HH:mm:ss");
+                captureRankJob.setExectionTime(new Time(date != null ? date.getTime() : 0));
+                captureRankJob.setExectionStatus(CaptureRankExectionStatus.New.name());
+                captureRankJob.setCreateBy(loginName);
+                captureRankJobDao.insert(captureRankJob);
+                captureRankJob.setUuid(null);
             }
-            if (captureRankJob.getUuid() != null) {
-                captureRankJobDao.updateById(captureRankJob);
-                return;
-            }
-            captureRankJob.setExectionStatus(CaptureRankExectionStatus.New.name());
-            captureRankJob.setCreateBy(loginName);
-            captureRankJobDao.insert(captureRankJob);
-            captureRankJob.setUuid(null);
         }
     }
 
