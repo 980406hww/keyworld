@@ -49,17 +49,18 @@
     </delete>
 
     <select id="findQZOperationTypes" resultType="com.keymanager.monitoring.vo.QZOperationTypeVO">
-      SELECT
-        op.fQZSettingUuid AS 'qzSettingUuid',
-        op.fOperationtype AS 'operationType',
-        cr.fStartKeywordCount AS 'startKeywordCount',
-        cr.fEndKeywordCount AS 'endKeywordCount',
-        cr.fAmount AS 'amount'
-    FROM t_qz_operation_type op
-    JOIN t_qz_charge_rule cr
-    ON op.fUuid = cr.fQZOperationTypeUuid
-    WHERE fQZSettingUuid = #{qzSettingUuid} and fOperationtype = #{operationType} and fGroup = #{group}
-    ORDER BY cr.fStartKeywordCount
+        SELECT
+            op.fQZSettingUuid AS 'qzSettingUuid',
+            op.fOperationtype AS 'operationType',
+            cr.fStartKeywordCount AS 'startKeywordCount',
+            cr.fEndKeywordCount AS 'endKeywordCount',
+            cr.fAmount AS 'amount'
+        FROM t_qz_operation_type op
+        JOIN t_qz_charge_rule cr
+        ON op.fUuid = cr.fQZOperationTypeUuid
+        WHERE op.fQZSettingUuid = #{qzSettingUuid}
+        AND op.fOperationtype = #{operationType}
+        ORDER BY cr.fStartKeywordCount
     </select>
 
 </mapper>

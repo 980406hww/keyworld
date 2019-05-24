@@ -42,6 +42,16 @@ public class QZKeywordRankInfo extends BaseEntity {
     @TableField(value = "fTopFifty")
     private String topFifty;
 
+    /* 前100 */
+    @TableField(value = "fTopHundred")
+    private String topHundred;
+
+    @TableField(value = "fCreateTopTenNum")
+    private Integer createTopTenNum;
+
+    @TableField(value = "fCreateTopFiftyNum")
+    private Integer createTopFiftyNum;
+
     /* 月日 （横坐标）对应爬取的data */
     @TableField(value = "fDate")
     private String date;
@@ -109,6 +119,10 @@ public class QZKeywordRankInfo extends BaseEntity {
     /* 前50的增长数 */
     @TableField(exist = false)
     private int topFiftyIncrement;
+
+    /* 前100的增长数 */
+    @TableField(exist = false)
+    private int topHundredIncrement;
 
     /* 前10数 */
     @TableField(exist = false)
@@ -332,5 +346,37 @@ public class QZKeywordRankInfo extends BaseEntity {
 
     public void setTodayDifference(Integer todayDifference) {
         this.todayDifference = todayDifference;
+    }
+
+    public String getTopHundred () {
+        return topHundred;
+    }
+
+    public void setTopHundred (String topHundred) {
+        this.topHundred = topHundred;
+    }
+
+    public int getTopHundredIncrement () {
+        return topHundredIncrement;
+    }
+
+    public void setTopHundredIncrement (int topHundredIncrement) {
+        this.topHundredIncrement = topHundredIncrement;
+    }
+
+    public Integer getCreateTopTenNum () {
+        return createTopTenNum;
+    }
+
+    public void setCreateTopTenNum (Integer createTopTenNum) {
+        this.createTopTenNum = createTopTenNum;
+    }
+
+    public Integer getCreateTopFiftyNum () {
+        return createTopFiftyNum;
+    }
+
+    public void setCreateTopFiftyNum (Integer createTopFiftyNum) {
+        this.createTopFiftyNum = createTopFiftyNum;
     }
 }

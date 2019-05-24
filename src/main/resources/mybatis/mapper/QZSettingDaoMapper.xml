@@ -316,11 +316,7 @@
         update t_qz_setting
         <set>
             <if test="qzSetting.crawlerTime != null">fCrawlerTime = #{qzSetting.crawlerTime},</if>
-            <if test="qzSetting.crawlerStatus != null and qzSetting.crawlerStatus != ''">fCrawlerStatus = #{qzSetting.crawlerStatus},</if>
-            <if test="qzSetting.pcCreateTopTenNum != null">fPcCreateTopTenNum = #{qzSetting.pcCreateTopTenNum},</if>
-            <if test="qzSetting.pcCreateTopFiftyNum != null">fPcCreateTopFiftyNum = #{qzSetting.pcCreateTopFiftyNum},</if>
-            <if test="qzSetting.phoneCreateTopTenNum != null">fPhoneCreateTopTenNum = #{qzSetting.phoneCreateTopTenNum},</if>
-            <if test="qzSetting.phoneCreateTopFiftyNum != null">fPhoneCreateTopFiftyNum = #{qzSetting.phoneCreateTopFiftyNum}</if>
+            <if test="qzSetting.crawlerStatus != null and qzSetting.crawlerStatus != ''">fCrawlerStatus = #{qzSetting.crawlerStatus}</if>
         </set>
         WHERE fUuid = #{qzSetting.uuid}
     </update>
@@ -341,18 +337,20 @@
         qs.fUuid AS 'uuid',
         qs.fDomain AS 'domain'
         FROM t_qz_setting qs
-        WHERE qs.fCrawlerStatus = 'new'
-        OR (qs.fCrawlerStatus = 'processing' AND qs.fCrawlerTime &lt;= DATE_SUB(NOW(), INTERVAL 30 MINUTE))
-        OR qs.fCrawlerTime IS NULL
-        OR qs.fCrawlerTime &lt;= DATE_SUB(NOW(), INTERVAL #{crawlerHour} HOUR)
+        WHERE qs.fIsMonitor = 1
+        AND (qs.fCrawlerStatus = 'new'
+            OR (qs.fCrawlerStatus = 'processing' AND qs.fCrawlerTime &lt;= DATE_SUB(NOW(), INTERVAL 10 MINUTE))
+            OR qs.fCrawlerTime IS NULL
+            OR (qs.fCrawlerStatus = 'finish' AND qs.fCrawlerTime &lt;= DATE_SUB(NOW(), INTERVAL #{crawlerHour} HOUR))
+        )
+        AND EXISTS(SELECT 1 FROM t_qz_keyword_rank_info qk WHERE qk.fQZSettingUuid = qs.fUuid AND qk.fWebsiteType <![CDATA[<>]]> 'designationWord')
         ORDER BY qs.fCreateTime DESC
         LIMIT #{taskNumber}
     </select>
 
     <update id="updateCrawlerStatus">
         update t_qz_setting
-        SET fCrawlerStatus = 'processing',
-        AND fCrawlerTime = NOW()
+        SET fCrawlerStatus = 'processing', fCrawlerTime = NOW()
         WHERE fUuid IN
         <foreach collection="uuids" item="uuid" index="index"  open="(" separator="," close=")">
             #{uuid}

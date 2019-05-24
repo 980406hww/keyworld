@@ -8,6 +8,7 @@ import com.keymanager.monitoring.dao.QZKeywordRankInfoDao;
 import com.keymanager.monitoring.entity.Config;
 import com.keymanager.monitoring.entity.QZKeywordRankInfo;
 import com.keymanager.monitoring.entity.QZSetting;
+import com.keymanager.monitoring.vo.ExternalQZKeywordRankInfoResultVO;
 import com.keymanager.monitoring.vo.ExternalQzKeywordRankInfoVO;
 import com.keymanager.monitoring.vo.ExternalQzSettingVO;
 import com.keymanager.monitoring.vo.QZOperationTypeVO;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,30 +73,33 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
         return qzSettingTasks;
     }
 
-    public void updateQzKeywordRankInfo(ExternalQzKeywordRankInfoVO externalQzKeywordRankInfoVO) throws Exception {
-        QZKeywordRankInfo rankInfo = getQZKeywordRankInfo(externalQzKeywordRankInfoVO);
-        QZSetting qzSetting = getQZSetting(externalQzKeywordRankInfoVO);
-        List<Long> rankInfoUuids = qzKeywordRankInfoDao.getQzKeywordRankInfos(rankInfo.getQzSettingUuid(), rankInfo.getTerminalType());
-        if (CollectionUtils.isNotEmpty(rankInfoUuids)){
-            rankInfo.setUuid(rankInfoUuids.get(0));
-            qzKeywordRankInfoDao.updateById(rankInfo);
-        } else {
-            qzKeywordRankInfoDao.insert(rankInfo);
+    public void updateQzKeywordRankInfo(ExternalQZKeywordRankInfoResultVO externalQzKeywordRankInfoResultVo) {
+        for (ExternalQzKeywordRankInfoVO externalQzKeywordRankInfoVo : externalQzKeywordRankInfoResultVo.getQzKeywordRankInfoVos()) {
+            QZKeywordRankInfo rankInfo = this.getQZKeywordRankInfo(externalQzKeywordRankInfoVo, externalQzKeywordRankInfoResultVo.getQzSettingUuid());
+            QZKeywordRankInfo qzKeywordRankInfo = qzKeywordRankInfoDao.getQZKeywordRankInfo(rankInfo.getQzSettingUuid(), rankInfo.getTerminalType(), rankInfo.getWebsiteType());
+            if (null != qzKeywordRankInfo){
+                rankInfo.setUuid(qzKeywordRankInfo.getUuid());
+                qzKeywordRankInfoDao.updateById(rankInfo);
+            } else {
+                qzKeywordRankInfoDao.insert(rankInfo);
+            }
         }
-        qzSettingService.updateQzSetting(qzSetting);
+        QZSetting qzSetting = this.getQZSetting(externalQzKeywordRankInfoResultVo.getQzSettingUuid(), externalQzKeywordRankInfoResultVo.getCrawlerStatus());
+        qzSettingService.updateById(qzSetting);
     }
 
-    private QZKeywordRankInfo getQZKeywordRankInfo(ExternalQzKeywordRankInfoVO externalQzKeywordRankInfoVO) throws Exception{
+    private QZKeywordRankInfo getQZKeywordRankInfo(ExternalQzKeywordRankInfoVO externalQzKeywordRankInfoVO, Long qzSettingUuid) {
         QZKeywordRankInfo qzKeywordRankInfo = new QZKeywordRankInfo();
-        List<QZOperationTypeVO> operationTypes = qzOperationTypeService.findQZOperationTypes(externalQzKeywordRankInfoVO.getQzSettingUuid(), externalQzKeywordRankInfoVO.getTerminalType(),externalQzKeywordRankInfoVO.getGroup());
-
-        qzKeywordRankInfo.setQzSettingUuid(externalQzKeywordRankInfoVO.getQzSettingUuid());
+        qzKeywordRankInfo.setQzSettingUuid(qzSettingUuid);
         qzKeywordRankInfo.setTerminalType(externalQzKeywordRankInfoVO.getTerminalType());
+        qzKeywordRankInfo.setTopHundred(externalQzKeywordRankInfoVO.getTopHundred());
         qzKeywordRankInfo.setTopFifty(externalQzKeywordRankInfoVO.getTopFifty());
         qzKeywordRankInfo.setTopForty(externalQzKeywordRankInfoVO.getTopForty());
         qzKeywordRankInfo.setTopThirty(externalQzKeywordRankInfoVO.getTopThirty());
         qzKeywordRankInfo.setTopTwenty(externalQzKeywordRankInfoVO.getTopTwenty());
         qzKeywordRankInfo.setTopTen(externalQzKeywordRankInfoVO.getTopTen());
+        qzKeywordRankInfo.setCreateTopTenNum(externalQzKeywordRankInfoVO.getCreateTopTenNum());
+        qzKeywordRankInfo.setCreateTopFiftyNum(externalQzKeywordRankInfoVO.getCreateTopFiftyNum());
         qzKeywordRankInfo.setFullDate(externalQzKeywordRankInfoVO.getFullDate());
         qzKeywordRankInfo.setDate(externalQzKeywordRankInfoVO.getDate());
         qzKeywordRankInfo.setWebsiteType(externalQzKeywordRankInfoVO.getWebsiteType());
@@ -103,10 +108,12 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
         qzKeywordRankInfo.setBaiduRecord(externalQzKeywordRankInfoVO.getBaiduRecord());
         qzKeywordRankInfo.setBaiduRecordFullDate(externalQzKeywordRankInfoVO.getBaiduRecordFullDate());
         if (StringUtils.isNotBlank(externalQzKeywordRankInfoVO.getTopTen())) {
-            setIncreaseAndTodayDifference(qzKeywordRankInfo);
+            this.setIncreaseAndTodayDifference(qzKeywordRankInfo);
         }
+
+        List<QZOperationTypeVO> operationTypes = qzOperationTypeService.findQZOperationTypes(qzSettingUuid, externalQzKeywordRankInfoVO.getTerminalType());
         if (CollectionUtils.isNotEmpty(operationTypes)) {
-            Map standard = standardCalculation(operationTypes,externalQzKeywordRankInfoVO);
+            Map standard = this.standardCalculation(operationTypes, externalQzKeywordRankInfoVO);
             qzKeywordRankInfo.setDifferenceValue(Double.parseDouble(standard.get("differenceValue").toString()));
             qzKeywordRankInfo.setAchieveLevel(Integer.parseInt(standard.get("achieveLevel").toString()));
             qzKeywordRankInfo.setSumSeries(Integer.parseInt(standard.get("sumSeries").toString()));
@@ -138,34 +145,19 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
         return qzSettingSearchCriteria;
     }
 
-    private QZSetting getQZSetting(ExternalQzKeywordRankInfoVO externalQzKeywordRankInfoVO) throws Exception{
-        QZSetting qzSetting = qzSettingService.findQzSetting(externalQzKeywordRankInfoVO.getQzSettingUuid());
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-        qzSetting.setUuid(externalQzKeywordRankInfoVO.getQzSettingUuid());
-        qzSetting.setCrawlerStatus(externalQzKeywordRankInfoVO.getCrawlerStatus());
-        qzSetting.setCrawlerTime(simpleDateFormat.parse(externalQzKeywordRankInfoVO.getCrawlerTime()));
-        if (qzSetting.getPcCreateTopTenNum() == null || qzSetting.getPcCreateTopTenNum() == 0) {
-            qzSetting.setPcCreateTopTenNum(externalQzKeywordRankInfoVO.getPcCreateTopTenNum());
-        }
-        if (qzSetting.getPcCreateTopFiftyNum() == null || qzSetting.getPcCreateTopFiftyNum() == 0) {
-            qzSetting.setPcCreateTopFiftyNum(externalQzKeywordRankInfoVO.getPcCreateTopFiftyNum());
-        }
-        if (qzSetting.getPhoneCreateTopFiftyNum() == null || qzSetting.getPhoneCreateTopFiftyNum() == 0) {
-            qzSetting.setPhoneCreateTopFiftyNum(externalQzKeywordRankInfoVO.getPhoneCreateTopFiftyNum());
-        }
-        if (qzSetting.getPhoneCreateTopTenNum() == null || qzSetting.getPhoneCreateTopTenNum() == 0) {
-            qzSetting.setPhoneCreateTopTenNum(externalQzKeywordRankInfoVO.getPhoneCreateTopTenNum());
-        }
+    private QZSetting getQZSetting(Long qzSettingUuid, String crawlerStatus) {
+        QZSetting qzSetting = qzSettingService.findQzSetting(qzSettingUuid);
+        qzSetting.setUuid(qzSettingUuid);
+        qzSetting.setCrawlerStatus(crawlerStatus);
+        qzSetting.setCrawlerTime(new Date());
         return qzSetting;
     }
 
-    private Map standardCalculation(List<QZOperationTypeVO> operationTypes, ExternalQzKeywordRankInfoVO externalQzKeywordRankInfoVO) throws Exception{
-        Map<String, Object> standardInformation = new HashMap<String, Object>(4);
+    private Map standardCalculation(List<QZOperationTypeVO> operationTypes, ExternalQzKeywordRankInfoVO externalQzKeywordRankInfoVO) {
+        Map<String, Object> standardInformation = new HashMap<>(4);
         DecimalFormat decimalFormat = new DecimalFormat("0.0000");
 
-        double topTen = Integer.parseInt(externalQzKeywordRankInfoVO.getTopTen().
-                replace("[", "").replace("]", "").split(",")[0]);
+        double topTen = Integer.parseInt(externalQzKeywordRankInfoVO.getTopTen().replace("[", "").replace("]", "").split(",")[0]);
         int beginStartKeywordCount = Integer.parseInt(operationTypes.get(0).getStartKeywordCount());
         int lastStartKeywordCount = Integer.parseInt(operationTypes.get(operationTypes.size() - 1).getStartKeywordCount());
 

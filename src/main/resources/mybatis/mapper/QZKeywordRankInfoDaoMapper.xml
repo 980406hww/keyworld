@@ -13,6 +13,7 @@
             qzkri.fTopThirty AS "topThirty",
             qzkri.fTopForty AS "topForty",
             qzkri.fTopFifty AS "topFifty",
+            qzkri.fTopHundred AS "topHundred",
             qzkri.fDate AS "date",
             qzkri.fFullDate AS "fullDate",
             qzkri.fIncrease AS "increase",
@@ -47,13 +48,14 @@
         WHERE fQZSettingUuid = #{qzSettingUuid}
     </delete>
 
-    <select id="getQzKeywordRankInfos" resultType="java.lang.Long">
+    <select id="getQZKeywordRankInfo" resultType="java.lang.Long">
         SELECT
             tqkri.fUuid AS 'uuid'
         FROM t_qz_keyword_rank_info tqkri
         WHERE 1 = 1
         <if test="qzSettingUuid != null"> AND tqkri.fQZSettingUuid = #{qzSettingUuid} </if>
         <if test="terminalType != null and terminalType != ''"> AND tqkri.fTerminalType = #{terminalType} </if>
+        <if test="websiteType != null and websiteType != ''"> AND tqkri.fWebsiteType = #{websiteType} </if>
     </select>
 
     <select id="getCountNumOfRankInfo" resultType="com.keymanager.monitoring.criteria.QZSettingSearchCriteria">
@@ -82,6 +84,7 @@
         SELECT
         CONCAT(qk.fTerminalType, '_', qk.fWebsiteType)
         FROM t_qz_keyword_rank_info qk
-        WHERE qk.fQZSettingUuid = #{qzSettingUuid};
+        WHERE qk.fQZSettingUuid = #{qzSettingUuid}
+        AND qk.fWebsiteType <![CDATA[<>]]> 'designationWord'
     </select>
 </mapper>
