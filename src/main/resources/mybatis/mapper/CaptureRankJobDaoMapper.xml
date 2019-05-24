@@ -68,7 +68,7 @@
         c.fUuid=#{captureRankJobUuid}
     </select>
 
-    <select id="hasUncompletedCaptureRankJob" resultType="java.lang.Boolean">
+    <select id="hasUncompletedCaptureRankJob" resultType="Long">
         SELECT
         1
         FROM t_capture_rank_job c

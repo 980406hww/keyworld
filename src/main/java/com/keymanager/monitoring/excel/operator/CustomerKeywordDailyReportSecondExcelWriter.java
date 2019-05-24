@@ -86,7 +86,7 @@ public class CustomerKeywordDailyReportSecondExcelWriter {
 				}
 			}
 
-			writer.addFormulanCell(CustomerKeywordDailyReportSecondDefinition.TodayPrice.getColumnIndex(), rowIndex, "SUM(H2:H" + rowIndex + ")");
+			writer.addFormulanCell(CustomerKeywordDailyReportSecondDefinition.TodayPrice.getColumnIndex(), rowIndex, "SUM(E2:E" + rowIndex + ")");
 			writer.setColumnView(CustomerKeywordDailyReportSecondDefinition.Keyword.getColumnIndex(), keywordWidth + 6);
 			writer.setColumnView(CustomerKeywordDailyReportSecondDefinition.URL.getColumnIndex(), urlWidth + 6);
 			writer.setColumnView(CustomerKeywordDailyReportSecondDefinition.Price1.getColumnIndex(), price1Width + 6);
@@ -152,7 +152,7 @@ public class CustomerKeywordDailyReportSecondExcelWriter {
 		int day = calendar.get(Calendar.DAY_OF_MONTH);
 		int endOfMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
 		writer.addLabelCell(0, day, day);
-		writer.addFormulanCell(1, day, "'" + day + "'!H" + (rowIndex + 1));
+		writer.addFormulanCell(1, day, "'" + day + "'!F" + (rowIndex + 1));
 
 		if(day == endOfMonth){
 			writer.addFormulanCell(2, day, "SUM(B2:B" + (day + 1) + ")");

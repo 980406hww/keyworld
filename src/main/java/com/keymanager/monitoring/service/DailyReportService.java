@@ -11,6 +11,7 @@ import com.keymanager.monitoring.enums.DailyReportStatusEnum;
 import com.keymanager.monitoring.enums.DailyReportTriggerModeEnum;
 import com.keymanager.monitoring.enums.EntryTypeEnum;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
+import com.keymanager.monitoring.excel.operator.CustomerKeywordDailyReportSecondSummaryExcelWriter;
 import com.keymanager.monitoring.excel.operator.CustomerKeywordDailyReportSummaryExcelWriter;
 import com.keymanager.monitoring.excel.operator.CustomerKeywordDailyReportTotalExcelWriter;
 import com.keymanager.util.*;
@@ -147,54 +148,90 @@ public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport>
 			dailyReportItemService.generateDailyReport(dailyReport.getUuid(), dailyReportItem.getUuid());
 		}else{
 			Config dailyReportType = configService.getConfig(Constants.CONFIG_TYPE_DAILY_REPORT, Constants.CONFIG_TYPE_DAILY_REPORT_TYPE);
-
-			Config webPathConfig = configService.getConfig(Constants.CONFIG_TYPE_KEYWORD_INFO_SYNCHRONIZE, Constants.CONFIG_KEY_WEBPATH);
-			String webPath = webPathConfig.getValue();
-			String username = configService.getConfig(Constants.CONFIG_TYPE_KEYWORD_INFO_SYNCHRONIZE, Constants.CONFIG_KEY_USERNAME).getValue();
-			String password = configService.getConfig(Constants.CONFIG_TYPE_KEYWORD_INFO_SYNCHRONIZE, Constants.CONFIG_KEY_PASSWORD).getValue();
-			Map map = new HashMap();
-			map.put("username", username);
-			map.put("password", password);
-
-			dailyReport.setStatus(DailyReportStatusEnum.Completed.name());
-			dailyReport.setCompleteTime(new Date());
-			Map<String, Map<String, String>> externalAccountAndSummaryFeeMap = generateDailyReportSummaryData(dailyReport.getUuid());
-			String path = Utils.getWebRootPath();
-			CustomerKeywordDailyReportTotalExcelWriter totalExcelWriter = new CustomerKeywordDailyReportTotalExcelWriter(dailyReport.getUuid());
-			for(String externalAccount : externalAccountAndSummaryFeeMap.keySet()){
-				Config config = configService.getConfig(Constants.DAILY_REPORT_PERCENTAGE, externalAccount);
-				CustomerKeywordDailyReportSummaryExcelWriter excelWriter = new CustomerKeywordDailyReportSummaryExcelWriter(dailyReport.getUuid(), externalAccount);
-				excelWriter.writeDailySummaryRow(externalAccountAndSummaryFeeMap.get(externalAccount), config == null ? 1d : Double.parseDouble(config.getValue()));
-				excelWriter.writeDataToExcel(externalAccount);
-				String dailyReportFolder = String.format("%sdailyreport/%d/", path, dailyReport.getUuid());
-				String loginUserReportFolder = dailyReportFolder + externalAccount + "/";
-				map.put("userID", externalAccount);
-				String reportPassword = "";
-				if(EntryTypeEnum.bc.name().equalsIgnoreCase(dailyReportType.getValue())){
-					reportPassword = keywordInfoSynchronizeService.getUserReportInfo(webPath, map);
-					reportPassword = (StringUtils.isNotEmpty(reportPassword) ? AESUtils.decrypt(reportPassword) : externalAccount) + Utils.getCurrentDate();
-				}
-				ZipCompressor.createEncryptionZip(loginUserReportFolder, dailyReportFolder + String.format("%s_%s.zip", externalAccount, Utils.formatDatetime(Utils.getCurrentTimestamp(),
-						"yyyy.MM.dd")), reportPassword);
-				FileUtil.delFolder(loginUserReportFolder);
-
-				totalExcelWriter.initSheet(externalAccount);
-				totalExcelWriter.writeDailyTotalTitle(0);
-				totalExcelWriter.writeDailyTotalRow(externalAccountAndSummaryFeeMap.get(externalAccount), config == null ? 1d : Double.parseDouble(config.getValue()));
+			if(EntryTypeEnum.bc.name().equalsIgnoreCase(dailyReportType.getValue())) {
+				generateReportForBC(dailyReport);
+			}else{
+				generateReportForOther(dailyReport);
 			}
-			totalExcelWriter.writeDataToExcel();
-			String zipFileName = String.format("/dailyreport/TotalReport_%s_%d.zip", Utils.formatDatetime(Utils.getCurrentTimestamp(),
-					"yyyy.MM.dd"), dailyReport.getUuid());
-			String reportFolder = String.format("%sdailyreport/%d/", path, dailyReport.getUuid());
-
-			dailyReport.setReportPath(zipFileName);
-			dailyReportDao.updateById(dailyReport);
-			Config config = configService.getConfig(Constants.CONFIG_TYPE_ZIP_ENCRYPTION, Constants.CONFIG_KEY_PASSWORD);
-			ZipCompressor.createEncryptionZip(reportFolder, path + zipFileName, config.getValue() + Utils.getCurrentDate());
-
-			FileUtil.delFolder(reportFolder);
 		}
 	}
+
+	private void generateReportForBC(DailyReport dailyReport) throws Exception {
+		Map map = new HashMap();
+		Config webPathConfig = configService.getConfig(Constants.CONFIG_TYPE_KEYWORD_INFO_SYNCHRONIZE, Constants.CONFIG_KEY_WEBPATH);
+		String webPath = webPathConfig.getValue();
+		String username = configService.getConfig(Constants.CONFIG_TYPE_KEYWORD_INFO_SYNCHRONIZE, Constants.CONFIG_KEY_USERNAME).getValue();
+		String password = configService.getConfig(Constants.CONFIG_TYPE_KEYWORD_INFO_SYNCHRONIZE, Constants.CONFIG_KEY_PASSWORD).getValue();
+		map.put("username", username);
+		map.put("password", password);
+
+		dailyReport.setStatus(DailyReportStatusEnum.Completed.name());
+		dailyReport.setCompleteTime(new Date());
+		Map<String, Map<String, String>> externalAccountAndSummaryFeeMap = generateDailyReportSummaryData(dailyReport.getUuid());
+		String path = Utils.getWebRootPath();
+		CustomerKeywordDailyReportTotalExcelWriter totalExcelWriter = new CustomerKeywordDailyReportTotalExcelWriter(dailyReport.getUuid());
+		for(String externalAccount : externalAccountAndSummaryFeeMap.keySet()){
+            Config config = configService.getConfig(Constants.DAILY_REPORT_PERCENTAGE, externalAccount);
+            CustomerKeywordDailyReportSummaryExcelWriter excelWriter = new CustomerKeywordDailyReportSummaryExcelWriter(dailyReport.getUuid(), externalAccount);
+            excelWriter.writeDailySummaryRow(externalAccountAndSummaryFeeMap.get(externalAccount), config == null ? 1d : Double.parseDouble(config.getValue()));
+            excelWriter.writeDataToExcel(externalAccount);
+            String dailyReportFolder = String.format("%sdailyreport/%d/", path, dailyReport.getUuid());
+            String loginUserReportFolder = dailyReportFolder + externalAccount + "/";
+            map.put("userID", externalAccount);
+            String reportPassword = "";
+			reportPassword = keywordInfoSynchronizeService.getUserReportInfo(webPath, map);
+			reportPassword = (StringUtils.isNotEmpty(reportPassword) ? AESUtils.decrypt(reportPassword) : externalAccount) + Utils.getCurrentDate();
+            ZipCompressor.createEncryptionZip(loginUserReportFolder, dailyReportFolder + String.format("%s_%s.zip", externalAccount, Utils.formatDatetime(Utils.getCurrentTimestamp(),
+                    "yyyy.MM.dd")), reportPassword);
+            FileUtil.delFolder(loginUserReportFolder);
+
+            totalExcelWriter.initSheet(externalAccount);
+            totalExcelWriter.writeDailyTotalTitle(0);
+            totalExcelWriter.writeDailyTotalRow(externalAccountAndSummaryFeeMap.get(externalAccount), config == null ? 1d : Double.parseDouble(config.getValue()));
+        }
+		totalExcelWriter.writeDataToExcel();
+		String zipFileName = String.format("/dailyreport/TotalReport_%s_%d.zip", Utils.formatDatetime(Utils.getCurrentTimestamp(),
+                "yyyy.MM.dd"), dailyReport.getUuid());
+		String reportFolder = String.format("%sdailyreport/%d/", path, dailyReport.getUuid());
+
+		dailyReport.setReportPath(zipFileName);
+		dailyReportDao.updateById(dailyReport);
+		Config config = configService.getConfig(Constants.CONFIG_TYPE_ZIP_ENCRYPTION, Constants.CONFIG_KEY_PASSWORD);
+		ZipCompressor.createEncryptionZip(reportFolder, path + zipFileName, config.getValue() + Utils.getCurrentDate());
+
+		FileUtil.delFolder(reportFolder);
+	}
+
+	private void generateReportForOther(DailyReport dailyReport) throws Exception {
+		dailyReport.setStatus(DailyReportStatusEnum.Completed.name());
+		dailyReport.setCompleteTime(new Date());
+		Map<String, Map<String, String>> externalAccountAndSummaryFeeMap = generateDailyReportSummaryData(dailyReport.getUuid());
+		String path = Utils.getWebRootPath();
+		for(String externalAccount : externalAccountAndSummaryFeeMap.keySet()){
+			Config config = configService.getConfig(Constants.DAILY_REPORT_PERCENTAGE, externalAccount);
+			CustomerKeywordDailyReportSecondSummaryExcelWriter excelWriter = new CustomerKeywordDailyReportSecondSummaryExcelWriter(dailyReport.getUuid(), externalAccount);
+			excelWriter.writeDailySummaryRow(externalAccountAndSummaryFeeMap.get(externalAccount), config == null ? 1d : Double.parseDouble(config.getValue()));
+			excelWriter.writeDataToExcel(externalAccount);
+			String dailyReportFolder = String.format("%sdailyreport/%d/", path, dailyReport.getUuid());
+			String loginUserReportFolder = dailyReportFolder + externalAccount + "/";
+			String reportPassword = "";
+			ZipCompressor.createEncryptionZip(loginUserReportFolder, dailyReportFolder + String.format("%s_%s.zip", externalAccount, Utils.formatDatetime(Utils.getCurrentTimestamp(),
+					"yyyy.MM.dd")), reportPassword);
+			FileUtil.delFolder(loginUserReportFolder);
+
+		}
+		String zipFileName = String.format("/dailyreport/TotalReport_%s_%d.zip", Utils.formatDatetime(Utils.getCurrentTimestamp(),
+				"yyyy.MM.dd"), dailyReport.getUuid());
+		String reportFolder = String.format("%sdailyreport/%d/", path, dailyReport.getUuid());
+
+		dailyReport.setReportPath(zipFileName);
+		dailyReportDao.updateById(dailyReport);
+		Config config = configService.getConfig(Constants.CONFIG_TYPE_ZIP_ENCRYPTION, Constants.CONFIG_KEY_PASSWORD);
+		ZipCompressor.createEncryptionZip(reportFolder, path + zipFileName, "");
+
+		FileUtil.delFolder(reportFolder);
+	}
+
 
 	public List<DailyReport> searchCurrentDateCompletedReports(String terminalType){
 		return dailyReportDao.searchCurrentDateCompletedReports(terminalType);
