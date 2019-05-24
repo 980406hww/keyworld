@@ -424,7 +424,7 @@ function nextExecuteTime() {
     newLi.after('' +
         '<li id="li' + (liNum - 6) + '">' +
         '<span style="margin-left: 3px">执行时间:&nbsp;</span>' +
-        '<input type="text" class="Wdate" id="exectionTime' + (liNum - 6) + '" onfocus="WdatePicker({lang:\'zh-cn\',dateFmt:\'HH:mm:ss\'})" required style="width: 150px">' +
+        '<input type="text" class="Wdate" id="exectionTime' + (liNum - 6) + '" autocomplete="off" onfocus="WdatePicker({lang:\'zh-cn\',dateFmt:\'HH:mm:ss\'})" required style="width: 150px">' +
         '<input type="button" value="取消" onclick="clearThisTime(' + (liNum - 6) + ')" style="margin-left: 14px;"/>' +
         '</li>')
 }

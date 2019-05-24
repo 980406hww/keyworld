@@ -142,11 +142,11 @@
             </li>
             <li>
                 <span>执行方式:</span>
-                <input type="radio" name="exectionType" checked  value="Once">一次性</label>
-                <input type="radio" name="exectionType" value="Everyday">每天</li>
+                <input type="radio" name="exectionType" checked  value="Once">一次</label>
+                <input type="radio" name="exectionType" value="Everyday">多次</li>
             <li id="start">
                 <span>执行时间:</span>
-                <input type="text" class="Wdate" id="exectionTime1" onfocus="WdatePicker({lang:'zh-cn',dateFmt:'HH:mm:ss'})" required style="width: 150px">
+                <input type="text" class="Wdate" id="exectionTime1" autocomplete="off" onfocus="WdatePicker({lang:'zh-cn',dateFmt:'HH:mm:ss'})" required style="width: 150px">
                 <input id="nextExecuteTimeBtn" type="button" value="添加" onclick="nextExecuteTime()" style="float: right;margin-right: 6px"/>
             </li>
             <li id="end">

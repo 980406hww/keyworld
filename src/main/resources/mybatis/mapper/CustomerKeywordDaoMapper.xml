@@ -838,7 +838,7 @@
         AND
             fOptimizeGroupName IS NOT NULL
         AND
-            fOptimizeGroupName != ''
+            fOptimizeGroupName &gt; ''
         GROUP BY
             fOptimizeGroupName
     </select>
