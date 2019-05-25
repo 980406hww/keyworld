@@ -14,7 +14,6 @@ public class ExternalQzKeywordRankInfoVO {
     private Integer createTopTenNum;
     private Integer createTopFiftyNum;
     private String ipRoute;
-    private Integer baiduWeight;
     private String baiduRecord;
     private String baiduRecordFullDate;
 
@@ -32,14 +31,6 @@ public class ExternalQzKeywordRankInfoVO {
 
     public void setIpRoute(String ipRoute) {
         this.ipRoute = ipRoute;
-    }
-
-    public Integer getBaiduWeight() {
-        return baiduWeight;
-    }
-
-    public void setBaiduWeight(Integer baiduWeight) {
-        this.baiduWeight = baiduWeight;
     }
 
     public String getBaiduRecord() {

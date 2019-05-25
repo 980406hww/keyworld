@@ -18,7 +18,6 @@
             qzkri.fFullDate AS "fullDate",
             qzkri.fIncrease AS "increase",
             qzkri.fIpRoute AS "ipRoute",
-            qzkri.fBaiduWeight AS "baiduWeight",
             qzkri.fRecord AS "baiduRecord",
             qzkri.fAchieveLevel AS "achieveLevel",
             qzkri.fSumSeries AS "sumSeries",
@@ -27,11 +26,8 @@
             qzkri.fBaiduRecordFullDate AS "baiduRecordFullDate"
         FROM t_qz_keyword_rank_info qzkri
         WHERE qzkri.fQZSettingUuid = #{qzSettingUuid}
-        <if test="qzSettingSearchCriteria.checkStatus != null or qzSettingSearchCriteria.baiduWeight != null">
+        <if test="qzSettingSearchCriteria.checkStatus != null">
             <choose>
-                <when test="qzSettingSearchCriteria.baiduWeight != null">
-                    AND qzkri.fBaiduWeight = #{qzSettingSearchCriteria.baiduWeight}
-                </when>
                 <when test="qzSettingSearchCriteria.checkStatus == 2">
                     AND qzkri.fIncrease &gt;= #{qzSettingSearchCriteria.upperValue}
                 </when>

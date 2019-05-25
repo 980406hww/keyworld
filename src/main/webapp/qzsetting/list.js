@@ -100,9 +100,8 @@ function detectedMoreSearchConditionDivShow() {
     var operationType = moreSearchCondition.find("select[name='operationType']").val();
     var status = moreSearchCondition.find("select[name='status']").val();
     var updateStatus = moreSearchCondition.find("select[name='updateStatus']").val();
-    var baiduWeight = moreSearchCondition.find("select[name='weight']").val();
     var createTime = moreSearchCondition.find("ul li.createTime input").val();
-    var values = customerInfo + categoryTag + group + status + updateStatus + baiduWeight + createTime + operationType;
+    var values = customerInfo + categoryTag + group + status + updateStatus + createTime + operationType;
     if (values != "") {
         moreSearchCondition.css("display", "block");
     }
@@ -133,6 +132,7 @@ function checkTerminalType(terminalType, isManualSwitch) {
 }
 function detectedTopNum() {
     $(".body").find(".rank-wrap").each(function () {
+        generateQZKeywordRecordCharts($(this).find("#designationWordCharts")[0], $(this).find("div[name='rankInfo'] span").text());
         generateQZKeywordRecordCharts($(this).find("#keywordRecordCharts")[0], $(this).find("div[name='rankInfo'] span").text());
         generateQZKeywordTrendCharts($(this).find("#keywordTrendCharts")[0], $(this).find("div[name='rankInfo'] span").text());
         $(this).find(".row4").each(function () {
@@ -538,7 +538,6 @@ function trimSearchCondition(days) {
     var operationType = $(".conn").find("select[name='operationType']").val();
     var status = $(".conn").find("select[name='status']").val();
     var updateStatus = $(".conn").find("select[name='updateStatus']").val();
-    var baiduWeight = $(".conn").find("select[name='weight']").val();
     var createTime = $(".conn").find(".createTime").find("input[name='createTime']").val();
     chargeForm.find("#domain").val($.trim(domain));
     chargeForm.find("#categoryTag").val($.trim(categoryTag));
@@ -557,11 +556,6 @@ function trimSearchCondition(days) {
         chargeForm.find("#updateStatus").val($.trim(updateStatus));
     } else {
         chargeForm.find("#updateStatus").val(null);
-    }
-    if (baiduWeight != "") {
-        chargeForm.find("#baiduWeight").val($.trim(baiduWeight));
-    } else {
-        chargeForm.find("#baiduWeight").val(null);
     }
     if (createTime != "") {
         chargeForm.find("#createTime").val($.trim(createTime));

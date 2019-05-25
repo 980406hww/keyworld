@@ -147,12 +147,9 @@
                 </when>
             </choose>
         </if>
-        <if test="qzSettingSearchCriteria.checkStatus != null or qzSettingSearchCriteria.baiduWeight != null">
+        <if test="qzSettingSearchCriteria.checkStatus != null">
             AND EXISTS (SELECT 1 FROM t_qz_keyword_rank_info qk WHERE qk.fQZSettingUuid = qs.fUuid
             <choose>
-                <when test="qzSettingSearchCriteria.baiduWeight != null">
-                    AND qk.fBaiduWeight = #{qzSettingSearchCriteria.baiduWeight}
-                </when>
                 <when test="qzSettingSearchCriteria.checkStatus == 1">
                     AND qk.fIncrease &lt;= #{qzSettingSearchCriteria.lowerValue}
                 </when>

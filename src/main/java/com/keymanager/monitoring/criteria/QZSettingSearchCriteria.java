@@ -9,7 +9,6 @@ public class QZSettingSearchCriteria{
     private String updateStatus;
     private Integer dateRangeType;
     private Integer status;
-    private Integer baiduWeight;
     private Integer unchangedNum;
     private Integer downNum;
     private Integer upNum;
@@ -187,14 +186,6 @@ public class QZSettingSearchCriteria{
 
     public void setDifferenceValue (double differenceValue) {
         this.differenceValue = differenceValue;
-    }
-
-    public Integer getBaiduWeight () {
-        return baiduWeight;
-    }
-
-    public void setBaiduWeight (Integer baiduWeight) {
-        this.baiduWeight = baiduWeight;
     }
 
     public Integer getUnchangedDifferenceNum () {

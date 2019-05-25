@@ -167,20 +167,6 @@
 					</span>
 				</li>
 				<li>
-					<span>权重: </span>
-					<span>
-						<select name="weight" style="width: 50px;">
-							<option></option>
-							<c:forEach begin="0" end="9" step="1" var="weight">
-								<c:choose>
-									<c:when test="${weight eq qzSettingSearchCriteria.baiduWeight}"><option selected>${weight}</option></c:when>
-									<c:otherwise><option>${weight}</option></c:otherwise>
-								</c:choose>
-							</c:forEach>
-						</select>
-					</span>
-				</li>
-				<li>
 					<span>状态: </span>
 					<select name="status">
 						<option value="" <c:if test="${qzSettingSearchCriteria.status == null}">selected</c:if>></option>
@@ -233,7 +219,6 @@
 	<input type="hidden" name="checkStatus" id="checkStatus" value="${qzSettingSearchCriteria.checkStatus}"/>
 	<input type="hidden" name="terminalType" id="terminalType" value="${qzSettingSearchCriteria.terminalType}"/>
 	<input type="hidden" name="categoryTag" id="categoryTag" value="${qzSettingSearchCriteria.categoryTag}"/>
-	<input type="hidden" name="baiduWeight" id="baiduWeight" value="${qzSettingSearchCriteria.baiduWeight}"/>
 	<input type="hidden" name="createTime" id="createTime" value="${qzSettingSearchCriteria.createTime}"/>
 </form>
 
@@ -340,14 +325,6 @@
 											<a href="javascript:;">前50</a>
 										</span>
 										</div>
-
-										<div name="baiduWeight">
-										<span class="line1">
-											<a href="javascript:;">${qzSetting.qzKeywordRankInfoMap["PC"] == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["PC"].baiduWeight}</a>
-										</span>
-											<span><a href="javascript:;">百度权重</a></span>
-										</div>
-
 										<div>
 										<span class="line1">
 											<a href="javascript:;">
@@ -418,9 +395,6 @@
 											<a href="javascript:;">状态</a>
 										</span>
 										</div>
-
-										<div>
-										</div>
 									</div>
 								</div>
 
@@ -457,8 +431,9 @@
 										<div name="rankInfo" style="display: none;">
 											<span>${qzSetting.qzKeywordRankInfoMap["PC"]}</span>
 										</div>
-										<div class="col-1" id="keywordRecordCharts" style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
-										<div class="col-2" id="keywordTrendCharts" style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
+										<div class="col-1" id="designationWordCharts" style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
+										<div class="col-2" id="keywordRecordCharts" style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
+										<div class="col-3" id="keywordTrendCharts" style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
 									</c:when>
 									<c:otherwise>
 										<div class="col-1">
@@ -467,17 +442,29 @@
 										<div class="col-2">
 											<h1>暂无数据</h1>
 										</div>
+										<div class="col-3">
+											<h1>暂无数据</h1>
+										</div>
 									</c:otherwise>
 								</c:choose>
 
-								<div class="col-3 top50-link">
+								<div class="col-4 top50-link">
+									<div class="row4">
+										<span>前100</span>
+										<span class="top50">
+											<a href="javascript:;">
+													${qzSetting.qzKeywordRankInfoMap["PC"].topFiftyIncrement == null ? '暂无' : qzSetting.qzKeywordRankInfoMap["PC"].topFiftyIncrement}
+											</a>
+										</span>
+									</div>
+
 									<div class="row4">
 										<span>前50</span>
 										<span class="top50">
-										<a href="javascript:;">
-												${qzSetting.qzKeywordRankInfoMap["PC"].topFiftyIncrement == null ? '暂无' : qzSetting.qzKeywordRankInfoMap["PC"].topFiftyIncrement}
-										</a>
-									</span>
+											<a href="javascript:;">
+													${qzSetting.qzKeywordRankInfoMap["PC"].topFiftyIncrement == null ? '暂无' : qzSetting.qzKeywordRankInfoMap["PC"].topFiftyIncrement}
+											</a>
+										</span>
 									</div>
 
 									<div class="row4">
@@ -619,13 +606,6 @@
 										</span>
 										</div>
 
-										<div name="baiduWeight">
-										<span class="line1">
-											<a href="javascript:;">${qzSetting.qzKeywordRankInfoMap["Phone"] == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["Phone"].baiduWeight}</a>
-										</span>
-											<span><a href="javascript:;">百度权重</a></span>
-										</div>
-
 										<div>
 										<span class="line1">
 											<a href="javascript:;">
@@ -645,7 +625,6 @@
 											<a href="javascript:;">操作词数</a>
 										</span>
 										</div>
-
 									</div>
 
 									<div class="row">
@@ -697,11 +676,6 @@
 											<a href="javascript:;">状态</a>
 										</span>
 										</div>
-
-										<div>
-
-										</div>
-
 									</div>
 								</div>
 
@@ -738,8 +712,9 @@
 										<div name="rankInfo" style="display: none;">
 											<span>${qzSetting.qzKeywordRankInfoMap["Phone"]}</span>
 										</div>
-										<div class="col-1" id="keywordRecordCharts" style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
-										<div class="col-2" id="keywordTrendCharts" style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
+										<div class="col-1" id="designationWordCharts" style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
+										<div class="col-2" id="keywordRecordCharts" style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
+										<div class="col-3" id="keywordTrendCharts" style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
 									</c:when>
 									<c:otherwise>
 										<div class="col-1">
@@ -748,10 +723,13 @@
 										<div class="col-2">
 											<h1>暂无数据</h1>
 										</div>
+										<div class="col-3">
+											<h1>暂无数据</h1>
+										</div>
 									</c:otherwise>
 								</c:choose>
 
-								<div class="col-3 top50-link">
+								<div class="col-4 top50-link">
 									<div class="row4">
 										<span>前50</span>
 										<span class="top50">
