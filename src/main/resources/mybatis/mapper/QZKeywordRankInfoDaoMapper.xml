@@ -13,6 +13,7 @@
             qzkri.fTopThirty AS "topThirty",
             qzkri.fTopForty AS "topForty",
             qzkri.fTopFifty AS "topFifty",
+            qzkri.fTopHundred AS "topHundred",
             qzkri.fDate AS "date",
             qzkri.fFullDate AS "fullDate",
             qzkri.fIncrease AS "increase",
@@ -49,28 +50,14 @@
         WHERE fQZSettingUuid = #{qzSettingUuid}
     </delete>
 
-    <select id="getQZSettingTask" resultType="com.keymanager.monitoring.vo.ExternalQzSettingVO">
-        SELECT
-            qs.fUuid AS 'uuid',
-            qs.fDomain AS 'domain',
-            qs.fPcGroup AS 'pcGroup',
-            qs.fPhoneGroup AS 'phoneGroup',
-            qs.fCreateTime AS 'createTime'
-        FROM t_qz_setting qs
-        WHERE qs.fCrawlerStatus = 'new'
-        OR qs.fCrawlerTime IS NULL
-        OR qs.fCrawlerTime &lt;= DATE_SUB(NOW(), INTERVAL 8 HOUR)
-        ORDER BY qs.fCreateTime DESC
-        limit #{taskNumber}
-    </select>
-
-    <select id="getQzKeywordRankInfos" resultType="java.lang.Long">
+    <select id="getQZKeywordRankInfo" resultType="java.lang.Long">
         SELECT
             tqkri.fUuid AS 'uuid'
         FROM t_qz_keyword_rank_info tqkri
         WHERE 1 = 1
         <if test="qzSettingUuid != null"> AND tqkri.fQZSettingUuid = #{qzSettingUuid} </if>
         <if test="terminalType != null and terminalType != ''"> AND tqkri.fTerminalType = #{terminalType} </if>
+        <if test="websiteType != null and websiteType != ''"> AND tqkri.fWebsiteType = #{websiteType} </if>
     </select>
 
     <select id="getCountNumOfRankInfo" resultType="com.keymanager.monitoring.criteria.QZSettingSearchCriteria">
@@ -93,5 +80,13 @@
         <if test="terminalType != null and terminalType !=''">
             AND qk.fTerminalType = #{terminalType}
         </if>
+    </select>
+
+    <select id="getQZKeywordRankInfoTypes" resultType="java.lang.String">
+        SELECT
+        CONCAT(qk.fTerminalType, '_', qk.fWebsiteType)
+        FROM t_qz_keyword_rank_info qk
+        WHERE qk.fQZSettingUuid = #{qzSettingUuid}
+        AND qk.fWebsiteType <![CDATA[<>]]> 'designationWord'
     </select>
 </mapper>
