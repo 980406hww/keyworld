@@ -424,9 +424,17 @@ function saveGroupSetting(type, status, isUpdateGroup, groupUuid){
         return false;
     }
     var remainingAccount = dialogDiv.find("#machineUsedPercent").parent().find("i").text();
-    if (remainingAccount < 0 || remainingAccount >= 100) {
-        alert("机器占比不合理，请修改");
-        return false;
+    var hasChangedZhanbi = true;
+    if (isUpdateGroup === 1) {
+        if (isChecked("machineUsedPercent", dialogDiv) !== "1") {
+            hasChangedZhanbi = false;
+        }
+    }
+    if (hasChangedZhanbi) {
+        if (remainingAccount < 0 || remainingAccount >= 100) {
+            alert("机器占比不合理，请修改");
+            return false;
+        }
     }
     groupSetting.operationType = operationType;
     groupSetting.machineUsedPercent = parseInt(dialogDiv.find("#machineUsedPercent").val() == '' ? 0 : dialogDiv.find("#machineUsedPercent").val());
