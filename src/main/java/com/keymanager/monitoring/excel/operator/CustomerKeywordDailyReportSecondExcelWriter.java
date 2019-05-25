@@ -86,7 +86,7 @@ public class CustomerKeywordDailyReportSecondExcelWriter {
 				}
 			}
 
-			writer.addFormulanCell(CustomerKeywordDailyReportSecondDefinition.TodayPrice.getColumnIndex(), rowIndex, "SUM(E2:E" + rowIndex + ")");
+			writer.addFormulanCell(CustomerKeywordDailyReportSecondDefinition.TodayPrice.getColumnIndex(), rowIndex, "SUM(F2:F" + rowIndex + ")");
 			writer.setColumnView(CustomerKeywordDailyReportSecondDefinition.Keyword.getColumnIndex(), keywordWidth + 6);
 			writer.setColumnView(CustomerKeywordDailyReportSecondDefinition.URL.getColumnIndex(), urlWidth + 6);
 			writer.setColumnView(CustomerKeywordDailyReportSecondDefinition.Price1.getColumnIndex(), price1Width + 6);

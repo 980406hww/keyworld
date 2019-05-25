@@ -248,13 +248,14 @@ public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport>
 		}
 	}
 
-	private Map<String, Map<String, String>> generateDailyReportSummaryData(long dailyReportUuid){
+	private Map<String, Map<String, String>> generateDailyReportSummaryData(long dailyReportUuid) throws Exception{
 		List<DailyReportItem> dailyReportItems = dailyReportItemService.searchDailyReportItems(dailyReportUuid);
 		Map<String, Map<String, String>> externalAccountAndSummaryFeeMap = new HashMap<String, Map<String, String>>();
 		for(DailyReportItem dailyReportItem : dailyReportItems){
 			Customer customer = customerService.getCustomer(dailyReportItem.getCustomerUuid());
 			if(customer != null) {
 				String externalAccount = StringUtil.isNotNullNorEmpty(customer.getExternalAccount()) ? customer.getExternalAccount() : customer.getContactPerson();
+				externalAccount = new String(externalAccount.getBytes(),"utf-8");
 				Map<String, String> summaryFeeMap = externalAccountAndSummaryFeeMap.get(externalAccount);
 				if (summaryFeeMap == null) {
 					summaryFeeMap = new HashMap<String, String>();
