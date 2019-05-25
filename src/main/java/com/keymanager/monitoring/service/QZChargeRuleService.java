@@ -27,4 +27,8 @@ public class QZChargeRuleService extends ServiceImpl<QZChargeRuleDao, QZChargeRu
     public List<QZChargeRule> searchChargeRules (QZSettingSearchChargeRuleCriteria qzSettingSearchChargeRuleCriteria) {
 		return qzChargeRuleDao.searchQZChargeRules(qzSettingSearchChargeRuleCriteria);
     }
+
+    public List<String> getAllStandardSpecies (Long qzSettingUuid) {
+		return qzChargeRuleDao.getAllStandardSpecies(qzSettingUuid);
+    }
 }

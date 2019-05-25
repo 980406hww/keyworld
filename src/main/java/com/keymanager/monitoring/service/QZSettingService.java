@@ -67,8 +67,19 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		List<QZSetting> qzSettings = qzSettingDao.getAvailableQZSettings();
 		QZSetting qzSetting = null;
 		if(CollectionUtils.isNotEmpty(qzSettings)){
-			qzSetting = qzSettings.get(0);
-			startQZSettingForUpdateKeyword(qzSetting.getUuid());
+            boolean nullFlag = true;
+            int i = 0;
+            while (nullFlag && i < qzSettings.size()) {
+                qzSetting = qzSettings.get(i);
+                List<String> allStandardSpecies = qzChargeRuleService.getAllStandardSpecies(qzSetting.getUuid());
+                if (CollectionUtils.isNotEmpty(allStandardSpecies)) {
+                    nullFlag = false;
+                    qzSetting.setStandardSpecies(allStandardSpecies);
+                } else {
+                    i++;
+                }
+                startQZSettingForUpdateKeyword(qzSetting.getUuid());
+            }
 		}
 		return qzSetting;
 	}

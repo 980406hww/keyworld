@@ -100,6 +100,9 @@ public class QZSetting extends BaseEntity{
 	@TableField(exist = false)
 	private List<QZCategoryTag> qzCategoryTags; // QZCategoryTag为全站表子类 一对多
 
+	@TableField(exist = false)
+	private List<String> standardSpecies; // 达标种类 (PC_aiZhan 或者 PC_5118), (Phone_aiZhan 或者 Phone_5118)
+
 	public String getUserID() {
 		return userID;
 	}
@@ -330,5 +333,13 @@ public class QZSetting extends BaseEntity{
 
 	public void setQzCategoryTags (List<QZCategoryTag> qzCategoryTags) {
 		this.qzCategoryTags = qzCategoryTags;
+	}
+
+	public List<String> getStandardSpecies () {
+		return standardSpecies;
+	}
+
+	public void setStandardSpecies (List<String> standardSpecies) {
+		this.standardSpecies = standardSpecies;
 	}
 }
