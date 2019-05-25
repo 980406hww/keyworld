@@ -216,4 +216,6 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void addCustomerKeywords (@Param("customerKeywords") List<CustomerKeyword> customerKeywords);
 
     List<String> getAvailableOptimizationGroups (@Param("groupSettingCriteria") GroupSettingCriteria groupSettingCriteria);
+
+    List<CustomerKeywordOptimizeGroupCriteria> searchOptimizeGroupNameAndCount(@Param("optimizeGroupName") String optimizeGroupName);
 }

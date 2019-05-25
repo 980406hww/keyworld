@@ -397,4 +397,18 @@
             </otherwise>
         </choose>
     </select>
+
+    <select id="searchMaxCustomerKeywordCount" resultType="com.keymanager.monitoring.entity.QZSetting">
+        SELECT qs.fMaxCustomerKeywordCount AS 'maxCustomerKeywordCount',
+        <choose>
+            <when test="terminalType == 'PC'">
+                qs.fPcGroup AS 'pcGroup'
+            </when>
+            <otherwise>
+                qs.fPhoneGroup AS 'phoneGroup'
+            </otherwise>
+        </choose>
+        FROM t_qz_setting qs
+        WHERE qs.fCustomerUuid = #{customerUuid} AND qs.fDomain LIKE '%${url}'
+    </select>
 </mapper>

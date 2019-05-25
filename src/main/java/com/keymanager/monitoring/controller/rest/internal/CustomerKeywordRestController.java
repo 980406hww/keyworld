@@ -5,6 +5,7 @@ import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.*;
 import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.enums.EntryTypeEnum;
+import com.keymanager.monitoring.enums.TerminalTypeEnum;
 import com.keymanager.monitoring.excel.operator.CustomerKeywordInfoExcelWriter;
 import com.keymanager.monitoring.service.*;
 import com.keymanager.monitoring.vo.CodeNameVo;
@@ -53,6 +54,9 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 
 	@Autowired
     private CustomerExcludeKeywordService customerExcludeKeywordService;
+
+    @Autowired
+    private QZSettingService qzSettingService;
 
 	@RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
 	@RequestMapping(value="/searchCustomerKeywords/{customerUuid}" , method=RequestMethod.GET)
@@ -273,6 +277,10 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 				String entryType = (String) request.getSession().getAttribute("entryType");
 				customerKeyword.setTerminalType(terminalType);
 				customerKeyword.setType(entryType);
+                QZSetting qzSetting = qzSettingService.searchMaxCustomerKeywordCount(customerKeyword.getCustomerUuid(), customerKeyword.getTerminalType(), customerKeyword.getUrl());
+                if (null != qzSetting){
+                    customerKeywordService.checkOptimizeGroupName(customerKeyword, qzSetting);
+                }
 				String customerExcludeKeywords = customerExcludeKeywordService.getCustomerExcludeKeyword(customerKeyword.getCustomerUuid(), customerKeyword.getQzSettingUuid(), customerKeyword.getTerminalType(), customerKeyword.getUrl());
 				if (null != customerExcludeKeywords) {
 					Set excludeKeyword = new HashSet();

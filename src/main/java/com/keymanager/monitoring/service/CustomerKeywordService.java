@@ -214,9 +214,13 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         if (CollectionUtils.isNotEmpty(customerKeywords)) {
             long customerUuid = customerKeywords.get(0).getCustomerUuid();
             int maxSequence = getMaxSequence(terminalType, entryType, customerUuid);
+            QZSetting qzSetting = qzSettingService.searchMaxCustomerKeywordCount(customerUuid, terminalType, customerKeywords.get(0).getUrl());
             for (CustomerKeyword customerKeyword : customerKeywords) {
                 supplementInfoFromSimpleUI(customerKeyword, terminalType, entryType, ++maxSequence);
                 supplementIndexAndPriceFromExisting(customerKeyword);
+                if (null != qzSetting){
+                    checkOptimizeGroupName(customerKeyword, qzSetting);
+                }
                 addCustomerKeyword(customerKeyword, userName);
             }
         }
@@ -596,6 +600,10 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeyword.setCreateTime(Utils.getCurrentTimestamp());
             customerKeyword.setUpdateTime(Utils.getCurrentTimestamp());
             customerKeyword.setTerminalType(terminalType);
+            QZSetting qzSetting = qzSettingService.searchMaxCustomerKeywordCount(customerKeyword.getCustomerUuid(), customerKeyword.getTerminalType(), customerKeyword.getUrl());
+            if (null != qzSetting){
+                checkOptimizeGroupName(customerKeyword, qzSetting);
+            }
         }
     }
 
@@ -1335,6 +1343,10 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeyword.setAutoUpdateNegativeTime(Utils.getCurrentTimestamp());
         customerKeyword.setCreateTime(Utils.getCurrentTimestamp());
         customerKeyword.setUpdateTime(Utils.getCurrentTimestamp());
+        QZSetting qzSetting = qzSettingService.searchMaxCustomerKeywordCount(customerKeyword.getCustomerUuid(), customerKeyword.getTerminalType(), customerKeyword.getUrl());
+        if (null != qzSetting){
+            checkOptimizeGroupName(customerKeyword, qzSetting);
+        }
         return customerKeyword;
     }
 
@@ -1652,5 +1664,34 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     public List<String> getAvailableOptimizationGroups (GroupSettingCriteria groupSettingCriteria) {
         return customerKeywordDao.getAvailableOptimizationGroups(groupSettingCriteria);
+    }
+
+    public CustomerKeyword checkOptimizeGroupName(CustomerKeyword customerKeyword,QZSetting qzSetting){
+        if (null == customerKeyword.getOptimizeGroupName()){
+            if (TerminalTypeEnum.PC.name().equals(customerKeyword.getTerminalType())){
+                customerKeyword.setOptimizeGroupName(qzSetting.getPcGroup());
+            }else {
+                customerKeyword.setOptimizeGroupName(qzSetting.getPhoneGroup());
+            }
+        }
+        List<CustomerKeywordOptimizeGroupCriteria> customerKeywordOptimizeGroupCriteriaList = searchOptimizeGroupNameAndCount(customerKeyword.getOptimizeGroupName());
+        if (customerKeywordOptimizeGroupCriteriaList.size() > 0){
+            int tempNum = 0;
+            for (CustomerKeywordOptimizeGroupCriteria customerKeywordOptimizeGroupCriteria: customerKeywordOptimizeGroupCriteriaList) {
+                if (customerKeywordOptimizeGroupCriteria.getSameGroupCustomerKeywordCount() < qzSetting.getMaxCustomerKeywordCount()){
+                    customerKeyword.setOptimizeGroupName(customerKeywordOptimizeGroupCriteria.getOptimizeGroupName());
+                    tempNum = 1;
+                    break;
+                }
+            }
+            if (tempNum == 0){
+                customerKeyword.setOptimizeGroupName(customerKeyword.getOptimizeGroupName() + "_" + (customerKeywordOptimizeGroupCriteriaList.size() + 1));
+            }
+        }
+        return customerKeyword;
+    }
+
+    public List<CustomerKeywordOptimizeGroupCriteria> searchOptimizeGroupNameAndCount(String optimizeGroupName){
+        return customerKeywordDao.searchOptimizeGroupNameAndCount(optimizeGroupName);
     }
 }

@@ -97,6 +97,9 @@ public class QZSetting extends BaseEntity{
 	@TableField(value = "fCrawlerStatus")
 	private String crawlerStatus;
 
+    @TableField(value = "fMaxCustomerKeywordCount")
+    private int maxCustomerKeywordCount;
+
 	@TableField(exist = false)
 	private List<QZCategoryTag> qzCategoryTags; // QZCategoryTag为全站表子类 一对多
 
@@ -331,4 +334,12 @@ public class QZSetting extends BaseEntity{
 	public void setQzCategoryTags (List<QZCategoryTag> qzCategoryTags) {
 		this.qzCategoryTags = qzCategoryTags;
 	}
+
+    public int getMaxCustomerKeywordCount() {
+        return maxCustomerKeywordCount;
+    }
+
+    public void setMaxCustomerKeywordCount(int maxCustomerKeywordCount) {
+        this.maxCustomerKeywordCount = maxCustomerKeywordCount;
+    }
 }

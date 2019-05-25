@@ -1440,4 +1440,14 @@
         AND ck.fStatus = 1
         GROUP BY ck.fOptimizeGroupName
     </select>
+
+    <select id="searchOptimizeGroupNameAndCount" resultType="com.keymanager.monitoring.criteria.CustomerKeywordOptimizeGroupCriteria">
+        SELECT fOptimizeGroupName AS 'optimizeGroupName',
+        COUNT(1) AS 'sameGroupCustomerKeywordCount'
+        FROM t_customer_keyword
+        WHERE fOptimizeGroupName = #{optimizeGroupName}
+		OR fOptimizeGroupName LIKE '${optimizeGroupName}%'
+        GROUP BY fOptimizeGroupName
+        ORDER BY fOptimizeGroupName
+    </select>
 </mapper>

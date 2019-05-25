@@ -1298,6 +1298,7 @@ function resetSettingDialog() {
     settingDialogDiv.find("#qzSettingCustomer").val("");
     settingDialogDiv.find("#qzSettingDomain").val("");
     settingDialogDiv.find("#qzCategoryTagNames").val("");
+    settingDialogDiv.find("#maxCustomerKeywordCount").val("5000");
     settingDialogDiv.find("#qzSettingAutoCrawlKeywordFlag").val("1");
     settingDialogDiv.find("#qzSettingIgnoreNoIndex").val("1");
     settingDialogDiv.find("#qzSettingIgnoreNoOrder").val("1");
@@ -1349,6 +1350,7 @@ function initSettingDialog(qzSetting, self) {
     var PhoneType = false;
     var settingDialogDiv = $("#changeSettingDialog");
     settingDialogDiv.find("#qzSettingUuid").val(qzSetting.uuid);
+    settingDialogDiv.find("#maxCustomerKeywordCount").val(qzSetting.maxCustomerKeywordCount);
     settingDialogDiv.find("#bearPawNumber").val(qzSetting.bearPawNumber);
     settingDialogDiv.find("#qzSettingCustomer").val(
         qzSetting.contactPerson + "_____" + qzSetting.customerUuid);
@@ -1421,6 +1423,7 @@ function saveChangeSetting(self) {
     qzSetting.ignoreNoIndex = settingDialogDiv.find("#qzSettingIgnoreNoIndex").val() === "1" ? true : false;
     qzSetting.ignoreNoOrder = settingDialogDiv.find("#qzSettingIgnoreNoOrder").val() === "1" ? true : false;
     qzSetting.updateInterval = settingDialogDiv.find("#qzSettingInterval").val();
+    qzSetting.maxCustomerKeywordCount = settingDialogDiv.find("#maxCustomerKeywordCount").val();
     qzSetting.pcGroup = settingDialogDiv.find("#groupPC").val().trim();
     qzSetting.phoneGroup = settingDialogDiv.find("#groupPhone").val().trim();
     if(qzSetting.pcGroup == "") {
