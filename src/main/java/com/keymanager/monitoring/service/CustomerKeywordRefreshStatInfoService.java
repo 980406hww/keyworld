@@ -86,16 +86,7 @@ public class CustomerKeywordRefreshStatInfoService extends ServiceImpl<CustomerK
     }
 
     private List<CustomerKeywordTerminalRefreshStatRecord> getCustomerKeywordStatInfoRecords(CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria) {
-        Config config = configService.getConfig(Constants.CONFIG_KEY_MAX_INVALID_COUNT, customerKeywordRefreshStatInfoCriteria.getEntryType());
-        if (null != config){
-            customerKeywordRefreshStatInfoCriteria.setConfigValue(config.getValue());
-        } else {
-            customerKeywordRefreshStatInfoCriteria.setConfigValue(Constants.CUSTOMER_KEYWORD_REFRESH_STAT_INFO_CONFIG_VALUE);
-        }
         List<CustomerKeywordTerminalRefreshStatRecord> customerKeywordTerminalRefreshStatRecords = customerKeywordRefreshStatInfoDao.searchCustomerKeywordStatInfos(customerKeywordRefreshStatInfoCriteria);
-        for(CustomerKeywordTerminalRefreshStatRecord customerKeywordTerminalRefreshStatRecord : customerKeywordTerminalRefreshStatRecords) {
-            customerKeywordTerminalRefreshStatRecord.setMaxInvalidCount(Integer.parseInt(customerKeywordRefreshStatInfoCriteria.getConfigValue()));
-        }
         return customerKeywordTerminalRefreshStatRecords;
     }
 

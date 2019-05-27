@@ -503,7 +503,13 @@
 
     <select id="getGroups" resultType="String">
         SELECT DISTINCT ck.fOptimizeGroupName as 'group' FROM t_customer_keyword ck WHERE ck.fStatus = 1
-        AND ck.fOptimizeGroupName <![CDATA[>]]>'' ORDER BY ck.fOptimizeGroupName
+        <if test="customerUuids != null">
+            AND ck.fCustomerUuid IN
+            <foreach item="item" index="index" collection="customerUuids" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        AND ck.fOptimizeGroupName &gt; '' ORDER BY ck.fOptimizeGroupName
     </select>
 
     <update id="cleanBigKeywordIndicator">
@@ -689,6 +695,28 @@
         LIMIT 1
     </select>
 
+    <select id="getCustomerKeywordUuidForCapturePositionTemp" resultType="Long">
+        SELECT
+        ck.fUuid AS 'uuid'
+        FROM t_customer_keyword ck
+        WHERE ck.fTerminalType = #{terminalType} and ck.fStatus = 1
+        AND fCaptureStatus = #{captureStatus}
+        <if test="startTime != null and captureStatus == 0">
+            AND ck.fCapturePositionQueryTime <![CDATA[<]]> #{startTime}
+            AND !(ck.fCapturePositionQueryTime > CURRENT_DATE() AND ck.fCurrentPosition &lt; 4 AND ck.fCurrentPosition &gt; 0)
+        </if>
+        <if test="customerUuid != null">
+            AND ck.fCustomerUuid = #{customerUuid}
+        </if>
+        <if test="groupName != null">
+            AND ck.fOptimizeGroupName = #{groupName}
+        </if>
+        <if test="groupName == null">
+            AND (ck.fOptimizeGroupName IS NULL OR ck.fOptimizeGroupName <![CDATA[<>]]> 'stop')
+        </if>
+        LIMIT 10
+    </select>
+
     <select id="getCustomerKeywordForCapturePosition" resultType="com.keymanager.monitoring.entity.CustomerKeyword">
         SELECT
         ck.fUuid	AS	'uuid',
@@ -700,6 +728,24 @@
         ck.fBearPawNumber AS 'bearPawNumber'
         FROM t_customer_keyword ck
         WHERE ck.fUuid = #{uuid}
+    </select>
+
+    <select id="getCustomerKeywordForCapturePositionTemp" resultType="com.keymanager.value.CustomerKeywordForCapturePosition">
+        SELECT
+            ck.fUuid AS 'uuid',
+            ck.fTerminalType AS	'terminalType',
+            ck.fKeyword	AS 'keyword',
+            ck.fUrl	AS 'url',
+            ck.fTitle AS 'title',
+            ck.fSearchEngine AS	'searchEngine',
+            ck.fBearPawNumber AS 'bearPawNumber'
+        FROM
+            t_customer_keyword ck
+        WHERE
+            ck.fUuid IN
+        <foreach item="uuid" collection="uuids" open="(" separator="," close=")">
+            #{uuid}
+        </foreach>
     </select>
 
     <update id="resetInvalidRefreshCount" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria">
@@ -729,6 +775,19 @@
         UPDATE t_customer_keyword SET fCaptureStatus = 1,
         fCapturePositionQueryTime = NOW()
         WHERE fUuid = #{uuid}
+    </update>
+
+    <update id="updateCapturePositionQueryTimeAndCaptureStatusTemp">
+        UPDATE
+            t_customer_keyword
+        SET
+            fCaptureStatus = 1,
+            fCapturePositionQueryTime = NOW()
+        WHERE
+            fUuid IN
+        <foreach item="uuid" collection="uuids" open="(" separator="," close=")">
+            #{uuid}
+        </foreach>
     </update>
 
     <select id="getCustomerKeywordForAutoUpdateNegative" resultType="com.keymanager.monitoring.vo.SearchEngineResultVO">
@@ -772,6 +831,21 @@
             fOptimizeGroupName is not null
             and fOptimizeGroupName != ''
             GROUP BY fOptimizeGroupName
+    </select>
+
+    <select id="searchGroupsByTerminalType" resultType="com.keymanager.monitoring.vo.CodeNameVo">
+        SELECT
+            fOptimizeGroupName as 'name'
+        FROM
+            t_customer_keyword
+        WHERE
+            fTerminalType = #{terminalType}
+        AND
+            fOptimizeGroupName IS NOT NULL
+        AND
+            fOptimizeGroupName &gt; ''
+        GROUP BY
+            fOptimizeGroupName
     </select>
 
     <select id="searchCustomerKeywordsUuidForCaptureTitle" resultType="Long">

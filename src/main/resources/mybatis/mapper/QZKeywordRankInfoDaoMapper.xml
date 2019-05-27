@@ -73,12 +73,13 @@
         FROM t_qz_keyword_rank_info qk
         JOIN t_qz_setting qs
         ON qs.fUuid = qk.fQZSettingUuid
-        JOIN t_customer c
-        ON c.fUuid = qs.fCustomerUuid
-        WHERE 1=1
-        <if test="terminalType != null and terminalType !=''">
-            AND qk.fTerminalType = #{terminalType}
-        </if>
+        WHERE qk.fTerminalType = #{terminalType}
+        AND EXISTS (
+            SELECT 1 FROM t_customer c WHERE qs.fCustomerUuid = c.fUuid
+            <if test="loginName != null and loginName != ''">
+                AND c.fUserID = #{loginName}
+            </if>
+        )
     </select>
 
     <select id="getQZKeywordRankInfoTypes" resultType="java.lang.String">

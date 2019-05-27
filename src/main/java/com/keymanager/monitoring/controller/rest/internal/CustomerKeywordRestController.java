@@ -458,6 +458,12 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		return customerKeywordService.searchGroups();
 	}
 
+    @RequestMapping(value = "/searchGroupsByTerminalType", method = RequestMethod.POST)
+    public List<CodeNameVo> searchGroupsByTerminalType(HttpServletRequest request) {
+        String terminalType = TerminalTypeMapping.getTerminalType(request);
+        return customerKeywordService.searchGroupsByTerminalType(terminalType);
+    }
+
 	@RequiresPermissions("/internal/customerKeyword/editOptimizePlanCount")
 	@RequestMapping(value = "/editOptimizePlanCount" , method = RequestMethod.POST)
 	public ResponseEntity<?> editOptimizePlanCount(@RequestBody Map<String, Object> requestMap, HttpServletRequest request){

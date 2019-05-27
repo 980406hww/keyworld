@@ -1,7 +1,9 @@
 package com.keymanager.util;
 
+import com.keymanager.monitoring.common.utils.StringUtils;
 import com.keymanager.monitoring.entity.Config;
 import com.keymanager.monitoring.service.ConfigService;
+import com.keymanager.util.common.StringUtil;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.model.ZipParameters;
 import net.lingala.zip4j.util.Zip4jConstants;
@@ -66,10 +68,12 @@ public class ZipCompressor {
 				ZipParameters parameters = new ZipParameters();
 				parameters.setCompressionMethod(Zip4jConstants.COMP_DEFLATE);
 				parameters.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_NORMAL);
-				parameters.setEncryptFiles(true);
 				parameters.setEncryptionMethod(Zip4jConstants.ENC_METHOD_AES);
 				parameters.setAesKeyStrength(Zip4jConstants.AES_STRENGTH_256);
-				parameters.setPassword(password);
+				if(StringUtils.isNotBlank(password)) {
+					parameters.setEncryptFiles(true);
+					parameters.setPassword(password);
+				}
 
 				//添加文件到压缩文件
 				zipFile.addFiles(fileList, parameters);

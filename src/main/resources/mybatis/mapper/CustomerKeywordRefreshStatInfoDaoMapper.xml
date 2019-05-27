@@ -6,9 +6,10 @@
             ck.fOptimizeGroupName AS "group",
             ck.fType AS "type",
             ck.fTerminalType AS "terminalType",
+            g.fMaxInvalidCount  AS "maxInvalidCount",
             COUNT(1) AS "totalKeywordCount",
             SUM(IF(ck.fOptimizeRemainingCount > 0, 1, 0)) AS "needOptimizeKeywordCount",
-            SUM(IF(ck.fInvalidRefreshCount > (#{customerKeywordRefreshStatInfoCriteria.configValue} - 1), 1, 0)) AS "invalidKeywordCount",
+            SUM(IF(ck.fInvalidRefreshCount >= g.fMaxInvalidCount, 1, 0)) AS "invalidKeywordCount",
             SUM(IF(ck.fOptimizedCount = 0, 1, 0)) AS "zeroOptimizedCount",
             SUM(IF(ck.fLastReachStandardDate = CURRENT_DATE(), 1, 0)) AS "reachStandardKeywordCount",
             SUM(IF(ck.fLastReachStandardDate = CURRENT_DATE(),ck.fTodayFee, 0)) as "todaySubTotal",
@@ -17,6 +18,8 @@
             SUM(ck.fOptimizeRemainingCount) AS "needOptimizeCount",
             SUM(ck.fQueryCount) AS "queryCount"
         FROM t_customer_keyword ck
+        JOIN t_group g
+        ON ck.fOptimizeGroupName like concat(g.fGroupName, '%') AND ck.fTerminalType = g.fTerminalType
         <if test="customerKeywordRefreshStatInfoCriteria.userName!=null and customerKeywordRefreshStatInfoCriteria.userName!=''">
             JOIN t_customer c
             ON ck.fCustomerUuid = c.fUuid

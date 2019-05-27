@@ -56,6 +56,8 @@ public class Constants {
     public final static String CONFIG_KEY_360 = "360";
     public final static String CONFIG_TYPE_DAILY_REPORT = "DailyReport";
     public final static String CONFIG_TYPE_DAILY_REPORT_AUTO_TRIGGER = "AutoTrigger";
+    public final static String CONFIG_TYPE_DAILY_REPORT_TYPE = "DailyReportType";
+    public final static String CONFIG_TYPE_DAILY_REPORT_CUSTOMER_UUID = "DailyReportCustomerUuid";
     public final static String CONFIG_TYPE_DEFAULT_OPTIMIZE_GROUPNAME = "DefaultOptimizeGroupName";
     public final static String CONFIG_TYPE_KEYWORD_INFO_SYNCHRONIZE = "KeywordInfoSynchronize";
     public final static String CONFIG_KEY_USERNAME = "UserName";
@@ -88,6 +90,7 @@ public class Constants {
     public final static String CONFIG_TYPE_SCREENED_WEBSITE = "ScreenedWebsite";
     public final static String CONFIG_TYPE_NOENTEREDKEYWORDSCHEDULE_SWITCH = "NoEnteredKeywordScheduleSwitch";
     public final static String CONFIG_KEY_SWITCHNUMBER = "SwitchNumber";
+    public final static String CONFIG_TYPE_MAX_INVALID_COUNT = "MaxInvalidCount";
 
     public final static Map<String, String> ACCOUNT_LOG_STATUS_MAP = new HashMap<String, String>();
     static {

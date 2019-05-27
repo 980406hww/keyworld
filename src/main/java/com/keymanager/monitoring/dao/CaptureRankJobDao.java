@@ -13,15 +13,21 @@ import java.util.List;
  */
 
 public interface CaptureRankJobDao extends BaseMapper<CaptureRankJob> {
-   List<CaptureRankJob> searchCaptureRankJobs(Page<CaptureRankJob> page, @Param("captureRankJobSearchCriteria") CaptureRankJobSearchCriteria captureRankJobSearchCriteria);
+    List<CaptureRankJob> searchCaptureRankJobs(Page<CaptureRankJob> page, @Param("captureRankJobSearchCriteria") CaptureRankJobSearchCriteria captureRankJobSearchCriteria);
 
-   CaptureRankJob provideCaptureRankJob();
+    CaptureRankJob provideCaptureRankJob();
 
-   CaptureRankJob getProcessingJob();
+    CaptureRankJob getProcessingJob();
 
-   Boolean getCaptureRankJobStatus(@Param("captureRankJobUuid")Long captureRankJobUuid);
+    Boolean getCaptureRankJobStatus(@Param("captureRankJobUuid")Long captureRankJobUuid);
 
-   CaptureRankJob fetchCaptureRankJob();
+    Long hasUncompletedCaptureRankJob(@Param("groupNames")List<String> groupNames);
+    
+    CaptureRankJob fetchCaptureRankJob();
 
-   void deleteCaptureRankJob (@Param("qzSettingUuid") Long qzSettingUuid, @Param("operationType") String operationType);
+    void deleteCaptureRankJob (@Param("qzSettingUuid") Long qzSettingUuid, @Param("operationType") String operationType);
+    
+    List<CaptureRankJob> searchFiveMiniSetCheckingJobs();
+    
+    int searchThreeMiniStatusEqualsOne(@Param("terminalType") String terminalType, @Param("groupName") String groupName);
 }
