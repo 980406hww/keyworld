@@ -427,27 +427,27 @@
                                     <div class="row4">
                                         <span>前10</span>
                                         <span class="top10">
-                                            <a href="javascript:;" name="PCTop10">0</a>
+                                            <a href="javascript:;" id="PCTop10">0</a>
                                         </span>
                                     </div>
 
 									<div class="row4">
 										<span>前50</span>
 										<span class="top50">
-											<a href="javascript:;" name="PCTop50">0</a>
+											<a href="javascript:;" id="PCTop50">0</a>
 										</span>
 									</div>
                                     <div class="row4">
                                         <span>初始前10</span>
                                         <span class="top10">
-                                            <a href="javascript:;" name="PCTopCreate10">0</a>
+                                            <a href="javascript:;" id="PCTopCreate10">0</a>
                                         </span>
                                     </div>
 
                                     <div class="row4">
                                         <span>初始前50</span>
                                         <span class="top50">
-                                            <a href="javascript:;" name="PCTopCreate50">0</a>
+                                            <a href="javascript:;" id="PCTopCreate50">0</a>
                                         </span>
                                     </div>
 							    </div>
@@ -476,28 +476,28 @@
 									<div class="row4">
 										<span>前10</span>
 										<span class="top10">
-											<a href="javascript:;" name="PCTop10">0</a>
+											<a href="javascript:;" id="PCTop10">0</a>
 										</span>
 									</div>
 
 									<div class="row4">
 										<span>前50</span>
 										<span class="top50">
-                                            <a href="javascript:;" name="PCTop50">0</a>
+                                            <a href="javascript:;" id="PCTop50">0</a>
                                         </span>
 									</div>
 
 									<div class="row4">
 										<span>初始前10</span>
 										<span class="top10">
-                                            <a href="javascript:;" name="PCTopCreate10">0</a>
+                                            <a href="javascript:;" id="PCTopCreate10">0</a>
                                         </span>
 									</div>
 
 									<div class="row4">
 										<span>初始前50</span>
 										<span class="top50">
-                                            <a href="javascript:;" name="PCTopCreate50">0</a>
+                                            <a href="javascript:;" id="PCTopCreate50">0</a>
                                         </span>
 									</div>
 								</div>
@@ -732,13 +732,13 @@
                                     <div class="row4">
                                         <span>前10</span>
                                         <span class="top10">
-                                            <a href="javascript:;" name="PhoneTop10">0</a>
+                                            <a href="javascript:;" id="PhoneTop10">0</a>
                                         </span>
                                     </div>
 									<div class="row4">
 										<span>前50</span>
 										<span class="top50">
-                                            <a href="javascript:;" name="PhoneTop50">0</a>
+                                            <a href="javascript:;" id="PhoneTop50">0</a>
                                         </span>
 									</div>
 
@@ -746,14 +746,14 @@
                                     <div class="row4">
                                         <span>初始前10</span>
                                         <span class="top10">
-                                            <a href="javascript:;" name="PhoneTopCreate10">0</a>
+                                            <a href="javascript:;" id="PhoneTopCreate10">0</a>
                                         </span>
                                     </div>
 
                                     <div class="row4">
                                         <span>初始前50</span>
                                         <span class="top50">
-                                            <a href="javascript:;" name="PhoneTopCreate50">0</a>
+                                            <a href="javascript:;" id="PhoneTopCreate50">0</a>
                                         </span>
                                     </div>
 								</div>
@@ -782,28 +782,28 @@
                                     <div class="row4">
                                         <span>前10</span>
                                         <span class="top10">
-											<a href="javascript:;" name="PhoneTop10">0</a>
+											<a href="javascript:;" id="PhoneTop10">0</a>
 										</span>
                                     </div>
 
                                     <div class="row4">
                                         <span>前50</span>
                                         <span class="top50">
-                                            <a href="javascript:;" name="PhoneTop50">0</a>
+                                            <a href="javascript:;" id="PhoneTop50">0</a>
                                         </span>
                                     </div>
 
                                     <div class="row4">
                                         <span>初始前10</span>
                                         <span class="top10">
-                                            <a href="javascript:;" name="PhoneTopCreate10">0</a>
+                                            <a href="javascript:;" id="PhoneTopCreate10">0</a>
                                         </span>
                                     </div>
 
                                     <div class="row4">
                                         <span>初始前50</span>
                                         <span class="top50">
-                                            <a href="javascript:;" name="PhoneTopCreate50">0</a>
+                                            <a href="javascript:;" id="PhoneTopCreate50">0</a>
                                         </span>
                                     </div>
                                 </div>

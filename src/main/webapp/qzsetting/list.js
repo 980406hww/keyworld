@@ -146,7 +146,7 @@ function detectedTopNum() {
     $(".body").find(".rank-wrap1").each(function () {
         // 指定词曲线
         generateQZDesignationWordTrendCharts($(this).find("#designationWordCharts")[0], $(this).find("div[name='rankInfo'] span").text());
-        $(this).find(".row5").each(function () {
+        $(this).find(".row4").each(function () {
             var a = $(this).find("span:last-child a");
             if (a[0].innerHTML.trim() >= 0) {
                 $(a).addClass("green");
@@ -157,10 +157,10 @@ function detectedTopNum() {
     });
 }
 function generateQZKeywordRecordCharts(domElement, data) {
-    if (domElement === undefined || data === '') {
+    if (domElement === undefined) {
         return;
     }
-    if (JSON.parse(data).date === '') {
+    if (data === '' || JSON.parse(data).date === '') {
         domElement.innerHTML = "<h1 style='text-align: center'> 暂无数据 </h1>";
         return;
     }
@@ -171,7 +171,7 @@ function generateQZKeywordRecordCharts(domElement, data) {
     var option = {
         color: ['#0000FF'],
         title : {
-            text: '爱站 - 百度收录趋势',
+            text: (result.websiteType === 'aiZhan' ? '爱站' : '5118') + ' - 百度收录趋势',
             textStyle: {
                 color: '#999',
                 fontFamily: "Arial",
@@ -254,10 +254,10 @@ function generateQZKeywordRecordCharts(domElement, data) {
     keywordRecordCharts.setOption(option);
 }
 function generateQZKeywordTrendCharts(domElement, data) {
-    if (domElement === undefined|| data === '') {
+    if (domElement === undefined) {
         return;
     }
-    if (JSON.parse(data).date === '') {
+    if (data === '' || JSON.parse(data).date === '') {
         domElement.innerHTML = "<h1 style='text-align: center'> 暂无数据 </h1>";
         return;
     }
@@ -271,6 +271,11 @@ function generateQZKeywordTrendCharts(domElement, data) {
     var topThirty;
     var topForty;
     var topHundred;
+    var parentElement = $(domElement).parent()[0];
+    $(parentElement).find("#" + result.terminalType + "Top10").text(topTen[topTen.length-1] - topTen[topTen.length-2]);
+    $(parentElement).find("#" + result.terminalType + "Top50").text(topFifty[topFifty.length-1] - topFifty[topFifty.length-2]);
+    $(parentElement).find("#" + result.terminalType + "TopCreate10").text(result.createTopTenNum);
+    $(parentElement).parent().find("#" + result.terminalType + "TopCreate50").text(result.createTopFiftyNum);
     if (result.websiteType === "aiZhan") {
         topThirty = stringToArray(result.topThirty);
         topForty = stringToArray(result.topForty);
@@ -523,10 +528,10 @@ function generateQZKeywordTrendCharts(domElement, data) {
     keywordTrendCharts.setOption(option);
 }
 function generateQZDesignationWordTrendCharts(domElement, data) {
-    if (domElement === undefined|| data === '') {
+    if (domElement === undefined ) {
         return;
     }
-    if (JSON.parse(data).date === '') {
+    if (data === '' || JSON.parse(data).date === '') {
         domElement.innerHTML = "<h1 style='text-align: center'> 暂无数据 </h1>";
         return;
     }
@@ -539,10 +544,15 @@ function generateQZDesignationWordTrendCharts(domElement, data) {
     var topFifty = stringToArray(result.topFifty);
     var topThirty = stringToArray(result.topThirty);
     var topForty = stringToArray(result.topForty);
+    var parentElement = $(domElement).parent()[0];
+    $(parentElement).find("#" + result.terminalType + "Top10").text(topTen[topTen.length-1] - topTen[topTen.length-2]);
+    $(parentElement).find("#" + result.terminalType + "Top50").text(topFifty[topFifty.length-1] - topFifty[topFifty.length-2]);
+    $(parentElement).find("#" + result.terminalType + "TopCreate10").text(result.createTopTenNum);
+    $(parentElement).parent().find("#" + result.terminalType + "TopCreate50").text(result.createTopFiftyNum);
     option = {
         color: ['#228B22', '#0000FF', '#FF6100', '#000000', '#FF0000'],
         title : {
-            text: result.websiteType + ' - 指定词排名趋势',
+            text: '指定词排名趋势',
             textStyle: {
                 color: '#999',
                 fontFamily: "Arial",
