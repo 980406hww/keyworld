@@ -601,6 +601,10 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
         sourceMachineInfo.setGroup(targetMachineInfo.getGroup());
         targetMachineInfo.setGroup(group);
 
+        String usingOperationType = sourceMachineInfo.getUsingOperationType();
+        sourceMachineInfo.setUsingOperationType(targetMachineInfo.getUsingOperationType());
+        targetMachineInfo.setUsingOperationType(usingOperationType);
+
         Timestamp idleStartTime = sourceMachineInfo.getIdleStartTime();
         sourceMachineInfo.setIdleStartTime(targetMachineInfo.getIdleStartTime());
         targetMachineInfo.setIdleStartTime(idleStartTime);
@@ -823,6 +827,8 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
         ClientStatusForOptimization clientStatusForOptimization = null;
         if(machineInfo != null){
             GroupSetting groupSetting = groupSettingService.getGroupSettingViaPercentage(machineInfo.getGroup(), machineInfo.getTerminalType());
+            machineInfo.setUsingOperationType(groupSetting.getOperationType());
+            machineInfoDao.updateById(machineInfo);
             clientStatusForOptimization = new ClientStatusForOptimization();
             if(groupSetting.getKuaizhaoPercent() != null) {
                 clientStatusForOptimization.setKuaizhaoPercent(groupSetting.getKuaizhaoPercent());
@@ -883,9 +889,6 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
             clientStatusForOptimization.setBroadbandPassword(machineInfo.getBroadbandPassword());
             clientStatusForOptimization.setOpenStatistics(clientStatusForOptimization.getDisableStatistics() == 1 ? 0 : 1);
             clientStatusForOptimization.setCurrentTime(Utils.formatDate(new Date(), Utils.TIME_FORMAT));
-
-            machineInfo.setUsingOperationType(groupSetting.getOperationType());
-            machineInfoDao.updateById(machineInfo);
         }
         return clientStatusForOptimization;
     }
