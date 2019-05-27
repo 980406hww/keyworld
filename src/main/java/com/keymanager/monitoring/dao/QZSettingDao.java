@@ -52,6 +52,6 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
 
     List<String> getAvailableOptimizationGroups (@Param("groupSettingCriteria") GroupSettingCriteria groupSettingCriteria);
 
-    QZSetting searchMaxCustomerKeywordCount(@Param("customerUuid") Long customerUuid, @Param("terminalType") String terminalType, @Param("url") String url);
+    QZSetting searchGroupMaxCustomerKeywordCount(@Param("customerUuid") Long customerUuid, @Param("terminalType") String terminalType, @Param("url") String url);
 }
 

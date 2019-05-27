@@ -17,6 +17,7 @@ import com.keymanager.util.Utils;
 import com.keymanager.value.CustomerKeywordVO;
 import net.sf.json.JSONObject;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
@@ -132,7 +133,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			existingQZSetting.setAutoCrawlKeywordFlag(qzSetting.isAutoCrawlKeywordFlag());
 			existingQZSetting.setIgnoreNoIndex(qzSetting.isIgnoreNoIndex());
             existingQZSetting.setIgnoreNoOrder(qzSetting.isIgnoreNoOrder());
-            existingQZSetting.setMaxCustomerKeywordCount(qzSetting.getMaxCustomerKeywordCount());
+            existingQZSetting.setGroupMaxCustomerKeywordCount(qzSetting.getGroupMaxCustomerKeywordCount());
 			existingQZSetting.setUpdateInterval(qzSetting.getUpdateInterval());
 			existingQZSetting.setUpdateTime(new Date());
 			existingQZSetting.setCaptureCurrentKeywordCountTime(qzSetting.getCaptureCurrentKeywordCountTime());
@@ -478,8 +479,9 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 					if (CollectionUtils.isNotEmpty(insertingCustomerKeywords)) {
 						List<CustomerKeyword> customerKeywords = new ArrayList<>();
                         QZSetting qzSetting = qzSettingDao.selectById(qzSettingCriteria.getQzSetting().getUuid());
+                        List<CustomerKeywordOptimizeGroupCriteria> customerKeywordOptimizeGroupCriteriaList = customerKeywordService.searchOptimizeGroupNameAndCount(insertingCustomerKeywords.get(0).getOptimizeGroupName());
                         for (CustomerKeyword customerKeyword : insertingCustomerKeywords) {
-                            customerKeyword = customerKeywordService.checkOptimizeGroupName(customerKeyword, qzSetting);
+                            customerKeyword = customerKeywordService.checkOptimizeGroupNameBatchAddKeyword(customerKeyword, qzSetting, customerKeywordOptimizeGroupCriteriaList);
                             if (TerminalTypeEnum.PC.equals(customerKeyword.getTerminalType())){
                                 if (!pcExcludeKeyword.isEmpty()){
                                     if (pcExcludeKeyword.contains(customerKeyword.getKeyword())){
@@ -612,6 +614,8 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			if (null != customerExcludeKeywords) {
 				excludeKeyword.addAll(Arrays.asList(customerExcludeKeywords.split(",")));
 			}
+            QZSetting qzSetting = qzSettingDao.searchGroupMaxCustomerKeywordCount(qzSettingSaveCustomerKeywordsCriteria.getCustomerUuid(), terminalType,  qzSettingSaveCustomerKeywordsCriteria.getDomain());
+            List<CustomerKeywordOptimizeGroupCriteria> customerKeywordOptimizeGroupCriteriaList = customerKeywordService.searchOptimizeGroupNameAndCount(qzSettingSaveCustomerKeywordsCriteria.getOptimizeGroupName());
 			for (String keyword : qzSettingSaveCustomerKeywordsCriteria.getKeywords()) {
 				CustomerKeyword customerKeyword = new CustomerKeyword();
 				customerKeyword.setQzSettingUuid(qzSettingSaveCustomerKeywordsCriteria.getQzSettingUuid());
@@ -627,9 +631,8 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 				customerKeyword.setPositionFirstFee(-1d);
 				customerKeyword.setBearPawNumber(qzSettingSaveCustomerKeywordsCriteria.getBearPawNumber());
 				customerKeyword.setOptimizeGroupName(qzSettingSaveCustomerKeywordsCriteria.getOptimizeGroupName());
-                QZSetting qzSetting = qzSettingDao.searchMaxCustomerKeywordCount(customerKeyword.getCustomerUuid(), customerKeyword.getTerminalType(), customerKeyword.getUrl());
                 if (null != qzSetting){
-                    customerKeywordService.checkOptimizeGroupName(customerKeyword, qzSetting);
+                    customerKeywordService.checkOptimizeGroupNameBatchAddKeyword(customerKeyword, qzSetting, customerKeywordOptimizeGroupCriteriaList);
                 }
 				if (!excludeKeyword.isEmpty()){
 					if (excludeKeyword.contains(keyword)){
@@ -657,8 +660,8 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		return qzSettingDao.getAvailableOptimizationGroups(groupSettingCriteria);
     }
 
-    public QZSetting searchMaxCustomerKeywordCount(Long customerUuid, String terminalType, String url){
+    public QZSetting searchGroupMaxCustomerKeywordCount(Long customerUuid, String terminalType, String url){
         url = url.replace("www.","").replace("http://","").replace("https://","").split("/")[0];
-        return qzSettingDao.searchMaxCustomerKeywordCount(customerUuid, terminalType,  url);
+        return qzSettingDao.searchGroupMaxCustomerKeywordCount(customerUuid, terminalType,  url);
     }
 }

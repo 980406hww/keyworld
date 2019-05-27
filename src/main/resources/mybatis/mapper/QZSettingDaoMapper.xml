@@ -398,8 +398,8 @@
         </choose>
     </select>
 
-    <select id="searchMaxCustomerKeywordCount" resultType="com.keymanager.monitoring.entity.QZSetting">
-        SELECT qs.fMaxCustomerKeywordCount AS 'maxCustomerKeywordCount',
+    <select id="searchGroupMaxCustomerKeywordCount" resultType="com.keymanager.monitoring.entity.QZSetting">
+        SELECT qs.fGroupMaxCustomerKeywordCount AS 'groupMaxCustomerKeywordCount',
         <choose>
             <when test="terminalType == 'PC'">
                 qs.fPcGroup AS 'pcGroup'
