@@ -18,7 +18,7 @@
             SUM(ck.fOptimizeRemainingCount) AS "needOptimizeCount",
             SUM(ck.fQueryCount) AS "queryCount"
         FROM t_customer_keyword ck
-        JOIN t_group g
+        LEFT JOIN t_group g
         ON ck.fOptimizeGroupName like concat(g.fGroupName, '%') AND ck.fTerminalType = g.fTerminalType
         <if test="customerKeywordRefreshStatInfoCriteria.userName!=null and customerKeywordRefreshStatInfoCriteria.userName!=''">
             JOIN t_customer c
