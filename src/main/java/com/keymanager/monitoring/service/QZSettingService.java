@@ -481,7 +481,6 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
                         QZSetting qzSetting = qzSettingDao.selectById(qzSettingCriteria.getQzSetting().getUuid());
                         List<CustomerKeywordOptimizeGroupCriteria> customerKeywordOptimizeGroupCriteriaList = customerKeywordService.searchOptimizeGroupNameAndCount(insertingCustomerKeywords.get(0).getOptimizeGroupName());
                         for (CustomerKeyword customerKeyword : insertingCustomerKeywords) {
-                            customerKeyword = customerKeywordService.checkOptimizeGroupNameBatchAddKeyword(customerKeyword, qzSetting, customerKeywordOptimizeGroupCriteriaList);
                             if (TerminalTypeEnum.PC.equals(customerKeyword.getTerminalType())){
                                 if (!pcExcludeKeyword.isEmpty()){
                                     if (pcExcludeKeyword.contains(customerKeyword.getKeyword())){
@@ -494,6 +493,10 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
                                         customerKeyword.setOptimizeGroupName("zanting");
                                     }
                                 }
+                            }
+                            if (!"zanting".equals(customerKeyword.getOptimizeGroupName())){
+                                CustomerKeywordOptimizeGroupCriteria customerKeywordOptimizeGroupCriteria = customerKeywordService.switchOptimizeGroup(customerKeywordOptimizeGroupCriteriaList, customerKeyword.getOptimizeGroupName(), qzSetting.getGroupMaxCustomerKeywordCount());
+                                customerKeyword.setOptimizeGroupName(customerKeywordOptimizeGroupCriteria.getOptimizeGroupName());
                             }
                             customerKeywords.add(customerKeyword);
                         }
@@ -631,14 +634,15 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 				customerKeyword.setPositionFirstFee(-1d);
 				customerKeyword.setBearPawNumber(qzSettingSaveCustomerKeywordsCriteria.getBearPawNumber());
 				customerKeyword.setOptimizeGroupName(qzSettingSaveCustomerKeywordsCriteria.getOptimizeGroupName());
-                if (null != qzSetting){
-                    customerKeywordService.checkOptimizeGroupNameBatchAddKeyword(customerKeyword, qzSetting, customerKeywordOptimizeGroupCriteriaList);
-                }
 				if (!excludeKeyword.isEmpty()){
 					if (excludeKeyword.contains(keyword)){
 						customerKeyword.setOptimizeGroupName("zanting");
 					}
 				}
+				if (!"zanting".equals(customerKeyword.getOptimizeGroupName())){
+                    CustomerKeywordOptimizeGroupCriteria customerKeywordOptimizeGroupCriteria = customerKeywordService.switchOptimizeGroup(customerKeywordOptimizeGroupCriteriaList, customerKeyword.getOptimizeGroupName(), qzSetting.getGroupMaxCustomerKeywordCount());
+                    customerKeyword.setOptimizeGroupName(customerKeywordOptimizeGroupCriteria.getOptimizeGroupName());
+                }
 				customerKeyword.setKeyword(keyword);
 				customerKeywords.add(customerKeyword);
 			}

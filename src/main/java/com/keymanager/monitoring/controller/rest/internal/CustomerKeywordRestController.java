@@ -277,7 +277,6 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 				String entryType = (String) request.getSession().getAttribute("entryType");
 				customerKeyword.setTerminalType(terminalType);
 				customerKeyword.setType(entryType);
-				customerKeywordService.checkOptimizeGroupName(customerKeyword);
 				String customerExcludeKeywords = customerExcludeKeywordService.getCustomerExcludeKeyword(customerKeyword.getCustomerUuid(), customerKeyword.getQzSettingUuid(), customerKeyword.getTerminalType(), customerKeyword.getUrl());
 				if (null != customerExcludeKeywords) {
 					Set excludeKeyword = new HashSet();
@@ -288,6 +287,9 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 						}
 					}
 				}
+				if (!"zanting".equals(customerKeyword.getOptimizeGroupName())){
+                    customerKeywordService.checkOptimizeGroupName(customerKeyword);
+                }
 				customerKeywordService.addCustomerKeyword(customerKeyword, userName);
 				return new ResponseEntity<Object>(true, HttpStatus.OK);
 			} else {
