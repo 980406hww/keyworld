@@ -16,6 +16,8 @@ public class GroupCriteria {
 
     private GroupSetting groupSetting;
 
+    private int maxInvalidCount;
+
     public String getGroupName () {
         return groupName;
     }
@@ -46,5 +48,13 @@ public class GroupCriteria {
 
     public void setGroupSetting (GroupSetting groupSetting) {
         this.groupSetting = groupSetting;
+    }
+
+    public int getMaxInvalidCount() {
+        return maxInvalidCount;
+    }
+
+    public void setMaxInvalidCount(int maxInvalidCount) {
+        this.maxInvalidCount = maxInvalidCount;
     }
 }

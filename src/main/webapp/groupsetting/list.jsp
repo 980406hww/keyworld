@@ -117,6 +117,8 @@
 						<input type="hidden" name="groupUuid" value="${groupVo.uuid}">
 						<span class="groupName" title="${groupVo.remainingAccount}%"><a href="javascript:;">${groupVo.groupName}</a></span>
 						<span class="userName"><a href="javascript:;"></a>${groupVo.userName}</span>
+                        <span><a href="javascript:;"></a>&nbsp;&nbsp;&nbsp;</span>
+                        &nbsp;&nbsp;<span class="maxInvalidCount" ondblclick="editMaxInvalidCountStr($(this).find('label.maxInvalidCountStr')[0], true)"><label>最大无效点击数:</label>&nbsp;&nbsp;<label class="maxInvalidCountStr" id="${groupVo.uuid}">${groupVo.maxInvalidCount}</label></span>
 						<div class="handle">
 							<shiro:hasPermission name="/internal/groupsetting/saveGroupSetting">
 								<a class="blue" href="javascript:showGroupSettingDialog('add', '${groupVo.uuid}', '${groupVo.groupName}', '${groupVo.remainingAccount}', '${groupVo.uuid}')">新增优化组设置</a>
@@ -627,6 +629,12 @@
 								<input type="text" name="waitTimeAfterClick" id="waitTimeAfterClick" value="5000"/>毫秒
 							</td>
 						</tr>
+                        <tr name="trItem" onclick="checkItem(this)">
+                            <th>无效点击数限制</th>
+                            <td>
+                                <input type="text" name="maxInvalidCount" id="maxInvalidCount" value="${maxInvalidCount}"/>
+                            </td>
+                        </tr>
 					</table>
 				</td>
 				<td style="vertical-align:top;">
@@ -955,6 +963,12 @@
 								<input type="text" name="waitTimeAfterClick" id="waitTimeAfterClick" value="5000"/>毫秒
 							</td>
 						</tr>
+                        <tr name="trItem" onclick="checkItem(this)">
+                            <th>无效点击数限制</th>
+                            <td>
+                                <input type="text" name="maxInvalidCount" id="maxInvalidCount" value="${maxInvalidCount}"/>
+                            </td>
+                        </tr>
 					</table>
 				</td>
 				<td style="vertical-align:top;">

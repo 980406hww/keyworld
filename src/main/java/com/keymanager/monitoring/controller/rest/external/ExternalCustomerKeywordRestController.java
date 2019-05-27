@@ -204,7 +204,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
     public ResponseEntity<?> getGroups(@RequestBody BaseCriteria baseCriteria) throws Exception {
         try {
             if (validUser(baseCriteria.getUserName(), baseCriteria.getPassword())) {
-                List<String> groups = customerKeywordService.getGroups();
+                List<String> groups = customerKeywordService.getGroups(null);
                 return new ResponseEntity<Object>(groups, HttpStatus.OK);
             }
         }catch (Exception ex){

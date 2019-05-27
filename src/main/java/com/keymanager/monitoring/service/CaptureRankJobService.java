@@ -91,7 +91,7 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
         captureRankJobDao.updateById(captureRankJob);
     }
 
-    public Boolean hasCaptureRankJob(){
-        return captureRankJobDao.fetchCaptureRankJob() != null;
+    public Boolean hasUncompletedCaptureRankJob(List<String> groupNames){
+        return captureRankJobDao.hasUncompletedCaptureRankJob(groupNames) != null;
     }
 }

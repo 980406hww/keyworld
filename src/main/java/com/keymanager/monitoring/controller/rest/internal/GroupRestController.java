@@ -5,7 +5,9 @@ import com.keymanager.monitoring.criteria.GroupCriteria;
 import com.keymanager.monitoring.criteria.GroupSettingCriteria;
 import com.keymanager.monitoring.criteria.UpdateGroupSettingCriteria;
 import com.keymanager.monitoring.entity.GroupSetting;
+import com.keymanager.monitoring.service.ConfigService;
 import com.keymanager.monitoring.service.GroupService;
+import com.keymanager.util.Constants;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +17,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author zhoukai
@@ -29,6 +33,9 @@ public class GroupRestController {
 
     @Autowired
     private GroupService groupService;
+
+    @Autowired
+    private ConfigService configService;
 
     @RequiresPermissions("/internal/group/saveGroup")
     @PostMapping("/saveGroup")
@@ -72,7 +79,10 @@ public class GroupRestController {
     public ResponseEntity<?> batchAddGroups(@RequestBody GroupBatchCriteria groupBatchCriteria, HttpServletRequest request) {
         try {
             String userName = (String) request.getSession().getAttribute("username");
-            groupService.batchAddGroups(groupBatchCriteria, userName);
+            HttpSession session = request.getSession();
+            String entryType = (String) session.getAttribute("entryType");
+            String maxInvalidCount = configService.getConfig(Constants.CONFIG_TYPE_MAX_INVALID_COUNT, entryType).getValue();
+            groupService.batchAddGroups(groupBatchCriteria, userName, Integer.valueOf(maxInvalidCount));
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -89,6 +99,19 @@ public class GroupRestController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping("/updateMaxInvalidCount")
+    public ResponseEntity<?> updateMaxInvalidCount(@RequestBody Map<String, Object> requestMap) {
+        try {
+            long uuid = Long.valueOf((String) requestMap.get("id"));
+            int maxInvalidCount = Integer.valueOf((String) requestMap.get("maxInvalidCount"));
+            groupService.updateMaxInvalidCount(uuid, maxInvalidCount);
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
         }
     }
 }
