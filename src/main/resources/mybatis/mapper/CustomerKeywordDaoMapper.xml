@@ -1446,7 +1446,7 @@
         COUNT(1) AS 'sameGroupCustomerKeywordCount'
         FROM t_customer_keyword
         WHERE fOptimizeGroupName = #{optimizeGroupName}
-		OR CONCAT(#{optimizeGroupName}, '__', '%')
+		OR fOptimizeGroupName LIKE CONCAT(#{optimizeGroupName}, '__', '%')
         GROUP BY fOptimizeGroupName
         ORDER BY fOptimizeGroupName
     </select>
