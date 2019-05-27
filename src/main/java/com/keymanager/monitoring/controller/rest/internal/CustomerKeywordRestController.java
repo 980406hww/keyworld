@@ -10,6 +10,7 @@ import com.keymanager.monitoring.excel.operator.CustomerKeywordInfoExcelWriter;
 import com.keymanager.monitoring.service.*;
 import com.keymanager.monitoring.vo.CodeNameVo;
 import com.keymanager.monitoring.vo.KeywordStatusBatchUpdateVO;
+import com.keymanager.util.Constants;
 import com.keymanager.util.TerminalTypeMapping;
 import com.keymanager.util.Utils;
 import org.apache.commons.lang3.StringUtils;
@@ -107,6 +108,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		modelAndView.addObject("page", page);
 		modelAndView.addObject("user", user);
 		modelAndView.addObject("customer", customer);
+        modelAndView.addObject("CustomerKeywordSourceMap", Constants.CUSTOMER_KEYWORD_SOURCE_ENUM_MAP);
 		modelAndView.addObject("serviceProviders",serviceProviders);
 		modelAndView.addObject("orderElement",orderElement);
 		performanceService.addPerformanceLog(terminalType + ":searchCustomerKeywords", System.currentTimeMillis() - startMilleSeconds, null);
@@ -421,6 +423,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		modelAndView.addObject("user", user);
 		modelAndView.addObject("activeUsers", activeUsers);
 		modelAndView.addObject("orderElement",orderElement);
+        modelAndView.addObject("CustomerKeywordSourceMap", Constants.CUSTOMER_KEYWORD_SOURCE_ENUM_MAP);
 		modelAndView.addObject("isDepartmentManager",isDepartmentManager);
 		performanceService.addPerformanceLog(terminalType + ":searchCustomerKeywordLists", (System.currentTimeMillis() - startMilleSeconds), null);
 		return modelAndView;

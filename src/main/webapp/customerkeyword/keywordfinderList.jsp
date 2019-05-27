@@ -71,12 +71,9 @@
             </c:if>
             关键字来源:
             <select name="customerKeywordSource" id="customerKeywordSource">
-                <option value="">所有</option>
-                <option value="Capture">机器采集词</option>
-                <option value="Excel">表格上传词</option>
-                <option value="UI">页面添加词</option>
-                <option value="Specify">全站指定词</option>
-                <option value="Plugin">插件添加词</option>
+                <c:forEach items="${CustomerKeywordSourceMap}" var="entry">
+                    <option value="${entry.value}">${entry.key}</option>
+                </c:forEach>
             </select>
             排序:
             <select name="orderingElement" id="orderingElement">

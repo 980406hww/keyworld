@@ -156,12 +156,9 @@
                    value="${customerKeywordCriteria.optimizeGroupName}" style="width:100px;">
             关键字来源:
             <select name="customerKeywordSource" id="customerKeywordSource">
-                <option value="">所有</option>
-                <option value="Capture">机器采集词</option>
-                <option value="Excel">表格上传词</option>
-                <option value="UI">页面添加词</option>
-                <option value="Specify">全站指定词</option>
-                <option value="Plugin">插件添加词</option>
+                <c:forEach items="${CustomerKeywordSourceMap}" var="entry">
+                    <option value="${entry.value}">${entry.key}</option>
+                </c:forEach>
             </select>
             要刷:<input type="text" name="gtOptimizePlanCount" id="gtOptimizePlanCount" placeholder=">=" value="${customerKeywordCriteria.gtOptimizePlanCount}" style="width:40px;"/>
             <input type="text" name="ltOptimizePlanCount" id="ltOptimizePlanCount" placeholder="<="  value="${customerKeywordCriteria.ltOptimizePlanCount}" style="width:40px;"/>

@@ -1,6 +1,7 @@
 package com.keymanager.util;
 
 import com.keymanager.monitoring.entity.Website;
+import com.keymanager.monitoring.enums.CustomerKeywordSourceEnum;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
 import org.omg.CORBA.PUBLIC_MEMBER;
 
@@ -163,4 +164,12 @@ public class Constants {
     public final static String CONFIG_TYPE_NO_ENTERED_KEYWORD = "NoEnteredKeyword";
     public final static String CONFIG_KEY_NO_ENTERED_KEYWORD_REMARKS = "Remarks";
 
+    public final static Map<String, String> CUSTOMER_KEYWORD_SOURCE_ENUM_MAP = new LinkedHashMap<String, String>();
+    static {
+        CUSTOMER_KEYWORD_SOURCE_ENUM_MAP.put("机器采集词", CustomerKeywordSourceEnum.Capture.name());
+        CUSTOMER_KEYWORD_SOURCE_ENUM_MAP.put("表格上传词", CustomerKeywordSourceEnum.Excel.name());
+        CUSTOMER_KEYWORD_SOURCE_ENUM_MAP.put("页面添加词", CustomerKeywordSourceEnum.UI.name());
+        CUSTOMER_KEYWORD_SOURCE_ENUM_MAP.put("全站指定词", CustomerKeywordSourceEnum.Specify.name());
+        CUSTOMER_KEYWORD_SOURCE_ENUM_MAP.put("插件添加词", CustomerKeywordSourceEnum.Plugin.name());
+    }
 }
