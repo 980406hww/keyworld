@@ -57,6 +57,8 @@ public class GroupSettingService extends ServiceImpl<GroupSettingDao, GroupSetti
 
     public void updateGroupSetting (UpdateGroupSettingCriteria updateGroupSettingCriteria) {
         groupSettingDao.updateGroupSetting(updateGroupSettingCriteria.getGs(), updateGroupSettingCriteria.getGroupSetting());
+        GroupSetting groupSetting = groupSettingDao.selectById(updateGroupSettingCriteria.getGroupSetting().getUuid());
+        groupService.updateGroupUpdateTime(groupSetting.getGroupUuid());
         if (1 == updateGroupSettingCriteria.getGs().getMachineUsedPercent()) {
             groupService.updateGroupRemainingAccount(updateGroupSettingCriteria.getGroupSetting().getGroupUuid(), updateGroupSettingCriteria.getGroupSetting().getRemainingAccount());
         }

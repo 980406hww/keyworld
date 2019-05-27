@@ -21,6 +21,7 @@ public interface CaptureRankJobDao extends BaseMapper<CaptureRankJob> {
 
    Boolean getCaptureRankJobStatus(@Param("captureRankJobUuid")Long captureRankJobUuid);
 
+   Long hasUncompletedCaptureRankJob(@Param("groupNames")List<String> groupNames);
    CaptureRankJob fetchCaptureRankJob();
 
    List<CaptureRankJob> searchFiveMiniSetCheckingJobs();

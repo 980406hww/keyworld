@@ -329,7 +329,6 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		return new ResponseEntity<Object>(true,HttpStatus.OK);
 	}
 
-	@RequiresPermissions("/internal/customerKeyword/haveCustomerKeywordForOptimization")
 	@RequestMapping(value = "/haveCustomerKeywordForOptimization", method = RequestMethod.POST)
 	public ResponseEntity<?> haveCustomerKeywordForOptimization(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) throws Exception{
 		List<String> clientIDs = (List<String>) requestMap.get("clientIDs");

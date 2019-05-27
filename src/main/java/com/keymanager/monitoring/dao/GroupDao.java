@@ -17,7 +17,7 @@ public interface GroupDao extends BaseMapper<Group> {
 
     List<GroupVO> searchGroups (Page<GroupVO> page, @Param("groupSettingCriteria") GroupSettingCriteria groupSettingCriteria);
 
-    void saveGroup (@Param("groupName") String groupName, @Param("terminalType") String terminalType, @Param("createBy") String createBy, @Param("remainingAccount") int remainingAccount);
+    void saveGroup (@Param("groupName") String groupName, @Param("terminalType") String terminalType, @Param("createBy") String createBy, @Param("remainingAccount") int remainingAccount, @Param("maxInvalidCount") int maxInvalidCount);
 
     long lastInsertID ();
 
@@ -26,4 +26,6 @@ public interface GroupDao extends BaseMapper<Group> {
     Group findGroup(@Param("groupName") String groupName, @Param("terminalType") String terminalType);
 
     List<String> getOptimizationGroups(@Param("terminalType") String terminalType);
+
+    void updateMaxInvalidCount(@Param("uuid") long uuid,@Param("maxInvalidCount") int maxInvalidCount);
 }

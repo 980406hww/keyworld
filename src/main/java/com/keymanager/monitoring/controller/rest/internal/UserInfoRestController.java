@@ -8,7 +8,6 @@ import com.keymanager.monitoring.entity.UserInfo;
 import com.keymanager.monitoring.service.IUserInfoService;
 import com.keymanager.util.PropertiesUtil;
 import com.keymanager.util.Utils;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -113,4 +112,10 @@ public class UserInfoRestController {
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PostMapping("/tree")
+    public Object tree(){
+        return userInfoService.selectUserInfoTrees();
+    }
+
 }

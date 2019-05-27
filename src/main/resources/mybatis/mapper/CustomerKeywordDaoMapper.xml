@@ -503,7 +503,13 @@
 
     <select id="getGroups" resultType="String">
         SELECT DISTINCT ck.fOptimizeGroupName as 'group' FROM t_customer_keyword ck WHERE ck.fStatus = 1
-        AND ck.fOptimizeGroupName <![CDATA[>]]>'' ORDER BY ck.fOptimizeGroupName
+        <if test="customerUuids != null">
+            AND ck.fCustomerUuid IN
+            <foreach item="item" index="index" collection="customerUuids" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        AND ck.fOptimizeGroupName &gt; '' ORDER BY ck.fOptimizeGroupName
     </select>
 
     <update id="cleanBigKeywordIndicator">
@@ -686,7 +692,6 @@
                 AND (ck.fOptimizeGroupName IS NULL OR ck.fOptimizeGroupName <![CDATA[<>]]> 'stop')
             </otherwise>
         </choose>
-        ORDER BY ck.fCapturePositionQueryTime DESC
         LIMIT 1
     </select>
 

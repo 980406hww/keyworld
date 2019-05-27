@@ -22,6 +22,7 @@ public class GenerateDailyReportSchedule {
     public void runTask(){
         logger.info("============= "+" Generate Report Task "+"===================");
         try {
+            System.setProperty("sun.jnu.encoding", "utf-8");
             Config config = configService.getConfig(Constants.CONFIG_TYPE_DAILY_REPORT, Constants.CONFIG_TYPE_DAILY_REPORT_AUTO_TRIGGER);
             if("1".equals(config.getValue())) {
                 dailyReportService.generateReport();

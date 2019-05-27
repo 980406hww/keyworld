@@ -74,7 +74,7 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void deleteCustomerKeywords(@Param("terminalType")String terminalType, @Param("groupName")String groupName, @Param("keyword")String keyword);
 
-    List<String> getGroups();
+    List<String> getGroups(@Param("customerUuids")List<Long> customerUuids);
 
     List<Map> searchRemainingOptimizationCount(@Param("groupName")String groupName, @Param("maxInvalidCount")int maxInvalidCount, @Param("noPositionMaxInvalidCount")int noPositionMaxInvalidCount);
 

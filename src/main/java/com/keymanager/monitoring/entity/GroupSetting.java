@@ -157,6 +157,9 @@ public class GroupSetting extends BaseEntity {
 	@TableField(exist = false)
 	private int remainingAccount;
 
+	@TableField(exist = false)
+	private int maxInvalidCount;
+
 	public long getGroupUuid () {
 		return groupUuid;
 	}
@@ -556,4 +559,12 @@ public class GroupSetting extends BaseEntity {
 	public void setRemainingAccount (int remainingAccount) {
 		this.remainingAccount = remainingAccount;
 	}
+
+    public int getMaxInvalidCount() {
+        return maxInvalidCount;
+    }
+
+    public void setMaxInvalidCount(int maxInvalidCount) {
+        this.maxInvalidCount = maxInvalidCount;
+    }
 }
