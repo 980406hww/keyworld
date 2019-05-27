@@ -380,12 +380,21 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 	public Page<QZSetting> addingQZKeywordRankInfo (Page<QZSetting> page, QZSettingSearchCriteria qzSettingSearchCriteria){
         for(QZSetting qzSetting : page.getRecords()){
             List<QZKeywordRankInfo> qzKeywordRankInfos = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), qzSettingSearchCriteria);
-            Map<String, JSONObject> qzKeywordRankInfoMap = new HashMap<String, JSONObject>();
-            for (QZKeywordRankInfo qzKeywordRankInfo : qzKeywordRankInfos) {
-				calculatedQZKeywordRankInfo(qzKeywordRankInfo);
-				qzKeywordRankInfoMap.put(qzKeywordRankInfo.getTerminalType(), new JSONObject().fromObject(qzKeywordRankInfo));
-            }
-            qzSetting.setQzKeywordRankInfoMap(qzKeywordRankInfoMap);
+            if (CollectionUtils.isNotEmpty(qzKeywordRankInfos)) {
+				Map<String, Map<String, JSONObject>> qzKeywordRankInfoMap = new HashMap<>();
+				for (QZKeywordRankInfo qzKeywordRankInfo : qzKeywordRankInfos) {
+					calculatedQZKeywordRankInfo(qzKeywordRankInfo);
+					Map<String, JSONObject> jSONObjectMap = qzKeywordRankInfoMap.get(qzKeywordRankInfo.getTerminalType());
+					if (null != jSONObjectMap && !jSONObjectMap.isEmpty()) {
+						jSONObjectMap.put(qzKeywordRankInfo.getWebsiteType(), new JSONObject().fromObject(qzKeywordRankInfo));
+					} else {
+						jSONObjectMap = new HashMap<>();
+						jSONObjectMap.put(qzKeywordRankInfo.getWebsiteType(), new JSONObject().fromObject(qzKeywordRankInfo));
+					}
+					qzKeywordRankInfoMap.put(qzKeywordRankInfo.getTerminalType(), jSONObjectMap);
+				}
+				qzSetting.setQzKeywordRankInfoMap(qzKeywordRankInfoMap);
+			}
         }
         return page;
     }
@@ -394,33 +403,18 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
         Map<String, Object> map;
         if (!StringUtils.isBlank(qzKeywordRankInfo.getTopTen())) {
             map = calculate(qzKeywordRankInfo.getTopTen());
-            qzKeywordRankInfo.setTopTenIncrement((Integer) map.get("increment"));
             qzKeywordRankInfo.setTopTenNum((Integer) map.get("topNum"));
-        }
-        if (!StringUtils.isBlank(qzKeywordRankInfo.getTopTwenty())) {
-            map = calculate(qzKeywordRankInfo.getTopTwenty());
-            qzKeywordRankInfo.setTopTwentyIncrement((Integer) map.get("increment"));
-        }
-        if (!StringUtils.isBlank(qzKeywordRankInfo.getTopThirty())) {
-            map = calculate(qzKeywordRankInfo.getTopThirty());
-            qzKeywordRankInfo.setTopThirtyIncrement((Integer) map.get("increment"));
-        }
-        if (!StringUtils.isBlank(qzKeywordRankInfo.getTopForty())) {
-            map = calculate(qzKeywordRankInfo.getTopForty());
-            qzKeywordRankInfo.setTopFortyIncrement((Integer) map.get("increment"));
         }
         if (!StringUtils.isBlank(qzKeywordRankInfo.getTopFifty())) {
             map = calculate(qzKeywordRankInfo.getTopFifty());
-            qzKeywordRankInfo.setTopFiftyIncrement((Integer) map.get("increment"));
             qzKeywordRankInfo.setTopFiftyNum((Integer) map.get("topNum"));
         }
 	    return qzKeywordRankInfo;
     }
 
     public Map<String, Object> calculate(String topString) {
-	    Map<String, Object> map = new HashMap<String, Object>();
+	    Map<String, Object> map = new HashMap<>();
         String[] topArr = topString.replace("[", "").replace("]", "").split(", ");
-        map.put("increment", Integer.parseInt(topArr[0]) - Integer.parseInt(topArr[1]));
         map.put("topNum", Integer.parseInt(topArr[0]));
         return map;
     }
@@ -773,9 +767,5 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 	public void updateQzSetting (QZSetting qzSetting) {
 		qzSettingDao.updateQzSetting(qzSetting);
-	}
-
-	public QZSetting findQzSetting (Long qzSettingUuid) {
-		return qzSettingDao.findQzSetting(qzSettingUuid);
 	}
 }

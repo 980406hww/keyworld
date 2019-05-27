@@ -69,10 +69,6 @@ public class QZKeywordRankInfo extends BaseEntity {
     @TableField(value = "fIpRoute", strategy = FieldStrategy.IGNORED)
     private String ipRoute;
 
-    /* 百度权重 */
-    @TableField(value = "fBaiduWeight", strategy = FieldStrategy.IGNORED)
-    private int baiduWeight;
-
     /* 百度收录 */
     @TableField(value = "fRecord", strategy = FieldStrategy.IGNORED)
     private String baiduRecord;
@@ -100,30 +96,6 @@ public class QZKeywordRankInfo extends BaseEntity {
     /* 今日top10差值 */
     @TableField(value = "fTodayDifference")
     private Integer todayDifference;
-
-    /* 前10的增长数（有正负） */
-    @TableField(exist = false)
-    private int topTenIncrement;
-
-    /* 前20的增长数 */
-    @TableField(exist = false)
-    private int topTwentyIncrement;
-
-    /* 前30的增长数 */
-    @TableField(exist = false)
-    private int topThirtyIncrement;
-
-    /* 前40的增长数 */
-    @TableField(exist = false)
-    private int topFortyIncrement;
-
-    /* 前50的增长数 */
-    @TableField(exist = false)
-    private int topFiftyIncrement;
-
-    /* 前100的增长数 */
-    @TableField(exist = false)
-    private int topHundredIncrement;
 
     /* 前10数 */
     @TableField(exist = false)
@@ -171,14 +143,6 @@ public class QZKeywordRankInfo extends BaseEntity {
 
     public void setIpRoute(String ipRoute) {
         this.ipRoute = ipRoute;
-    }
-
-    public int getBaiduWeight() {
-        return baiduWeight;
-    }
-
-    public void setBaiduWeight(int baiduWeight) {
-        this.baiduWeight = baiduWeight;
     }
 
     public String getBaiduRecord() {
@@ -277,46 +241,6 @@ public class QZKeywordRankInfo extends BaseEntity {
         this.increase = increase;
     }
 
-    public int getTopTenIncrement () {
-        return topTenIncrement;
-    }
-
-    public void setTopTenIncrement (int topTenIncrement) {
-        this.topTenIncrement = topTenIncrement;
-    }
-
-    public int getTopTwentyIncrement () {
-        return topTwentyIncrement;
-    }
-
-    public void setTopTwentyIncrement (int topTwentyIncrement) {
-        this.topTwentyIncrement = topTwentyIncrement;
-    }
-
-    public int getTopThirtyIncrement () {
-        return topThirtyIncrement;
-    }
-
-    public void setTopThirtyIncrement (int topThirtyIncrement) {
-        this.topThirtyIncrement = topThirtyIncrement;
-    }
-
-    public int getTopFortyIncrement () {
-        return topFortyIncrement;
-    }
-
-    public void setTopFortyIncrement (int topFortyIncrement) {
-        this.topFortyIncrement = topFortyIncrement;
-    }
-
-    public int getTopFiftyIncrement () {
-        return topFiftyIncrement;
-    }
-
-    public void setTopFiftyIncrement (int topFiftyIncrement) {
-        this.topFiftyIncrement = topFiftyIncrement;
-    }
-
     public int getTopTenNum () {
         return topTenNum;
     }
@@ -355,14 +279,6 @@ public class QZKeywordRankInfo extends BaseEntity {
 
     public void setTopHundred (String topHundred) {
         this.topHundred = topHundred;
-    }
-
-    public int getTopHundredIncrement () {
-        return topHundredIncrement;
-    }
-
-    public void setTopHundredIncrement (int topHundredIncrement) {
-        this.topHundredIncrement = topHundredIncrement;
     }
 
     public Integer getCreateTopTenNum () {

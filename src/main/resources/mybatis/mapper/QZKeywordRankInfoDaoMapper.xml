@@ -26,6 +26,7 @@
             qzkri.fBaiduRecordFullDate AS "baiduRecordFullDate"
         FROM t_qz_keyword_rank_info qzkri
         WHERE qzkri.fQZSettingUuid = #{qzSettingUuid}
+        AND EXISTS(SELECT 1 FROM t_qz_setting qs WHERE qs.fUuid = qzkri.fQZSettingUuid AND qs.fIsMonitor = 1)
         <if test="qzSettingSearchCriteria.checkStatus != null">
             <choose>
                 <when test="qzSettingSearchCriteria.checkStatus == 2">
@@ -46,9 +47,11 @@
         WHERE fQZSettingUuid = #{qzSettingUuid}
     </delete>
 
-    <select id="getQZKeywordRankInfo" resultType="java.lang.Long">
+    <select id="getQZKeywordRankInfo" resultType="com.keymanager.monitoring.entity.QZKeywordRankInfo">
         SELECT
-            tqkri.fUuid AS 'uuid'
+            tqkri.fUuid AS 'uuid',
+            tqkri.fCreateTopTenNum AS 'createTopTenNum',
+            tqkri.fCreateTopFiftyNum AS 'createTopFiftyNum'
         FROM t_qz_keyword_rank_info tqkri
         WHERE 1 = 1
         <if test="qzSettingUuid != null"> AND tqkri.fQZSettingUuid = #{qzSettingUuid} </if>

@@ -89,7 +89,7 @@ public class QZSetting extends BaseEntity{
 	private List<QZOperationType> qzOperationTypes; //qzOperationTypes为全站表子类  一对多
 
 	@TableField(exist = false)
-	private Map<String, JSONObject> qzKeywordRankInfoMap; // QZKeywordRankInfo为全站表子类 一对多
+	private Map<String, Map<String, JSONObject>> qzKeywordRankInfoMap; // QZKeywordRankInfo为全站表子类 一对多
 
 	@TableField(value = "fCrawlerTime")
 	private Date crawlerTime;
@@ -303,11 +303,11 @@ public class QZSetting extends BaseEntity{
 		this.phoneCreateTopFiftyNum = phoneCreateTopFiftyNum;
 	}
 
-	public Map<String, JSONObject> getQzKeywordRankInfoMap () {
+	public Map<String, Map<String, JSONObject>> getQzKeywordRankInfoMap () {
 		return qzKeywordRankInfoMap;
 	}
 
-	public void setQzKeywordRankInfoMap (Map<String, JSONObject> qzKeywordRankInfoMap) {
+	public void setQzKeywordRankInfoMap (Map<String, Map<String, JSONObject>> qzKeywordRankInfoMap) {
 		this.qzKeywordRankInfoMap = qzKeywordRankInfoMap;
 	}
 

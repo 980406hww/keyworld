@@ -307,27 +307,6 @@
 										<div>
 										<span class="line1">
 											<a href="javascript:;">
-													${qzSetting.qzKeywordRankInfoMap["PC"].topTenNum == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["PC"].topTenNum}
-											</a>
-										</span>
-											<span>
-											<a href="javascript:;">前10</a>
-										</span>
-										</div>
-
-										<div>
-										<span class="line1">
-											<a href="javascript:;">
-													${qzSetting.qzKeywordRankInfoMap["PC"].topFiftyNum == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["PC"].topFiftyNum}
-											</a>
-										</span>
-											<span>
-											<a href="javascript:;">前50</a>
-										</span>
-										</div>
-										<div>
-										<span class="line1">
-											<a href="javascript:;">
 													${qzSetting.updateStatus == null ? "暂无" : qzSetting.updateStatus}
 											</a>
 										</span>
@@ -348,52 +327,35 @@
 
 									<div class="row">
 										<div>
-										<span class="line1">
-											<a href="javascript:;">${qzSetting.pcCreateTopTenNum == null ? "暂无" : qzSetting.pcCreateTopTenNum}</a>
-										</span>
-											<span>
-											<a href="javascript:;">初始前10</a>
-										</span>
-										</div>
-										<div>
-										<span class="line1">
-											<a href="javascript:;">${qzSetting.pcCreateTopFiftyNum == null ? "暂无" : qzSetting.pcCreateTopFiftyNum}</a>
-										</span>
-											<span>
-											<a href="javascript:;">初始前50</a>
-										</span>
+                                            <span class="line1">
+                                                <input type="hidden" name="type" value="${qzSetting.type}">
+                                                <a href="javascript:;">${qzSetting.autoCrawlKeywordFlag == true ? "是" : "否"}</a>
+                                            </span>
+                                                <span>
+                                                <a href="javascript:;">爬取关键字</a>
+                                            </span>
 										</div>
 
 										<div>
-										<span class="line1">
-											<input type="hidden" name="type" value="${qzSetting.type}">
-											<a href="javascript:;">${qzSetting.autoCrawlKeywordFlag == true ? "是" : "否"}</a>
-										</span>
+                                            <span class="line1">
+                                                <a href="javascript:;" status="${qzSetting.status}">
+                                                   <c:choose>
+                                                       <c:when test="${qzSetting.status == 1}">激活</c:when>
+                                                       <c:when test="${qzSetting.status == 2}">
+                                                           <span style="color: green;">新增</span>
+                                                       </c:when>
+                                                       <c:when test="${qzSetting.status == 3}">
+                                                           <span style="color: red;">暂停续费</span>
+                                                       </c:when>
+                                                       <c:otherwise>
+                                                           <span style="color: red;">暂停</span>
+                                                       </c:otherwise>
+                                                   </c:choose>
+                                                </a>
+                                            </span>
 											<span>
-											<a href="javascript:;">爬取关键字</a>
-										</span>
-										</div>
-
-										<div>
-										<span class="line1">
-											<a href="javascript:;" status="${qzSetting.status}">
-											   <c:choose>
-												   <c:when test="${qzSetting.status == 1}">激活</c:when>
-												   <c:when test="${qzSetting.status == 2}">
-													   <span style="color: green;">新增</span>
-												   </c:when>
-												   <c:when test="${qzSetting.status == 3}">
-													   <span style="color: red;">暂停续费</span>
-												   </c:when>
-												   <c:otherwise>
-													   <span style="color: red;">暂停</span>
-												   </c:otherwise>
-											   </c:choose>
-											</a>
-										</span>
-											<span>
-											<a href="javascript:;">状态</a>
-										</span>
+                                                <a href="javascript:;">状态</a>
+                                            </span>
 										</div>
 									</div>
 								</div>
@@ -428,12 +390,17 @@
 							<div class="rank-wrap">
 								<c:choose>
 									<c:when test="${qzSetting.qzKeywordRankInfoMap['PC'] != null}">
-										<div name="rankInfo" style="display: none;">
-											<span>${qzSetting.qzKeywordRankInfoMap["PC"]}</span>
+                                        <div name="rankInfo" style="display: none;">
+                                            <c:forEach items="${qzSetting.qzKeywordRankInfoMap['PC'].entrySet()}" var="rankInfo">
+                                                <c:if test="${rankInfo.getKey() != 'designationWord'}">
+                                                    <c:if test="${rankInfo.getKey() != 'designationWord'}">
+                                                        <span name="${rankInfo.getKey()}">${rankInfo.getValue()}</span>
+                                                    </c:if>
+                                                </c:if>
+                                            </c:forEach>
 										</div>
-										<div class="col-1" id="designationWordCharts" style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
-										<div class="col-2" id="keywordRecordCharts" style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
-										<div class="col-3" id="keywordTrendCharts" style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
+										<div class="col-1" id="keywordRecordCharts" style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
+										<div class="col-2" id="keywordTrendCharts" style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
 									</c:when>
 									<c:otherwise>
 										<div class="col-1">
@@ -442,65 +409,85 @@
 										<div class="col-2">
 											<h1>暂无数据</h1>
 										</div>
-										<div class="col-3">
+									</c:otherwise>
+								</c:choose>
+
+								<div class="col-4 top50-link">
+                                    <div class="row4">
+                                        <span>前10</span>
+                                        <span class="top10">
+                                            <a href="javascript:;" name="PCTop10">0</a>
+                                        </span>
+                                    </div>
+
+									<div class="row4">
+										<span>前50</span>
+										<span class="top50">
+											<a href="javascript:;" name="PCTop50">0</a>
+										</span>
+									</div>
+                                    <div class="row4">
+                                        <span>初始前10</span>
+                                        <span class="top10">
+                                            <a href="javascript:;" name="PCTopCreate10">0</a>
+                                        </span>
+                                    </div>
+
+                                    <div class="row4">
+                                        <span>初始前50</span>
+                                        <span class="top50">
+                                            <a href="javascript:;" name="PCTopCreate50">0</a>
+                                        </span>
+                                    </div>
+							    </div>
+                            </div>
+
+							<div class="rank-wrap1">
+								<c:choose>
+									<c:when test="${qzSetting.qzKeywordRankInfoMap['PC'] != null}">
+										<div name="rankInfo" style="display: none;">
+                                            <c:forEach items="${qzSetting.qzKeywordRankInfoMap['PC'].entrySet()}" var="rankInfo">
+                                                <c:if test="${rankInfo.getKey() == 'designationWord'}">
+                                                    <span name="${rankInfo.getKey()}">${rankInfo.getValue()}</span>
+                                                </c:if>
+                                            </c:forEach>
+										</div>
+										<div class="col-1" id="designationWordCharts" style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
+									</c:when>
+									<c:otherwise>
+										<div class="col-1">
 											<h1>暂无数据</h1>
 										</div>
 									</c:otherwise>
 								</c:choose>
 
-								<div class="col-4 top50-link">
+								<div class="col-5 top50-link">
 									<div class="row4">
-										<span>前100</span>
-										<span class="top50">
-											<a href="javascript:;">
-													${qzSetting.qzKeywordRankInfoMap["PC"].topFiftyIncrement == null ? '暂无' : qzSetting.qzKeywordRankInfoMap["PC"].topFiftyIncrement}
-											</a>
+										<span>前10</span>
+										<span class="top10">
+											<a href="javascript:;" name="PCTop10">0</a>
 										</span>
 									</div>
 
 									<div class="row4">
 										<span>前50</span>
 										<span class="top50">
-											<a href="javascript:;">
-													${qzSetting.qzKeywordRankInfoMap["PC"].topFiftyIncrement == null ? '暂无' : qzSetting.qzKeywordRankInfoMap["PC"].topFiftyIncrement}
-											</a>
-										</span>
+                                            <a href="javascript:;" name="PCTop50">0</a>
+                                        </span>
 									</div>
 
 									<div class="row4">
-										<span>前40</span>
-										<span class="top40">
-										<a href="javascript:;">
-												${qzSetting.qzKeywordRankInfoMap["PC"].topFortyIncrement == null ? '暂无' : qzSetting.qzKeywordRankInfoMap["PC"].topFortyIncrement}
-										</a>
-									</span>
-									</div>
-
-									<div class="row4">
-										<span>前30</span>
-										<span class="top30">
-								<a href="javascript:;">
-										${qzSetting.qzKeywordRankInfoMap["PC"].topThirtyIncrement == null ? '暂无' : qzSetting.qzKeywordRankInfoMap["PC"].topThirtyIncrement}
-								</a>
-							</span>
-									</div>
-
-									<div class="row4">
-										<span>前20</span>
-										<span class="top20">
-								<a href="javascript:;">
-										${qzSetting.qzKeywordRankInfoMap["PC"].topTwentyIncrement == null ? '暂无' : qzSetting.qzKeywordRankInfoMap["PC"].topTwentyIncrement}
-								</a>
-							</span>
-									</div>
-
-									<div class="row4">
-										<span>前10</span>
+										<span>初始前10</span>
 										<span class="top10">
-								<a href="javascript:;">
-										${qzSetting.qzKeywordRankInfoMap["PC"].topTenIncrement == null ? '暂无' : qzSetting.qzKeywordRankInfoMap["PC"].topTenIncrement}
-								</a>
-							</span>
+                                            <a href="javascript:;" name="PCTopCreate10">0</a>
+                                        </span>
+									</div>
+
+									<div class="row4">
+										<span>初始前50</span>
+										<span class="top50">
+                                            <a href="javascript:;" name="PCTopCreate50">0</a>
+                                        </span>
 									</div>
 								</div>
 							</div>
@@ -584,7 +571,7 @@
 
 								<div class="other-rank">
 									<div class="row">
-										<div>
+										<%--<div>
 										<span class="line1">
 											<a href="javascript:;">
 													${qzSetting.qzKeywordRankInfoMap["Phone"].topTenNum == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["Phone"].topTenNum}
@@ -604,7 +591,7 @@
 											<span>
 											<a href="javascript:;">前50</a>
 										</span>
-										</div>
+										</div>--%>
 
 										<div>
 										<span class="line1">
@@ -628,7 +615,7 @@
 									</div>
 
 									<div class="row">
-										<div>
+										<%--<div>
 										<span class="line1">
 											<a href="javascript:;">${qzSetting.phoneCreateTopTenNum == null ? "暂无" : qzSetting.phoneCreateTopTenNum}</a>
 										</span>
@@ -643,7 +630,7 @@
 											<span>
 											<a href="javascript:;">初始前50</a>
 										</span>
-										</div>
+										</div>--%>
 
 										<div>
 										<span class="line1">
@@ -709,12 +696,15 @@
 							<div class="rank-wrap">
 								<c:choose>
 									<c:when test="${qzSetting.qzKeywordRankInfoMap['Phone'] != null}">
-										<div name="rankInfo" style="display: none;">
-											<span>${qzSetting.qzKeywordRankInfoMap["Phone"]}</span>
-										</div>
-										<div class="col-1" id="designationWordCharts" style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
-										<div class="col-2" id="keywordRecordCharts" style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
-										<div class="col-3" id="keywordTrendCharts" style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
+                                        <div name="rankInfo" style="display: none;">
+                                            <c:forEach items="${qzSetting.qzKeywordRankInfoMap['Phone'].entrySet()}" var="rankInfo">
+                                                <c:if test="${rankInfo.getKey() != 'designationWord'}">
+                                                    <span name="${rankInfo.getKey()}">${rankInfo.getValue()}</span>
+                                                </c:if>
+                                            </c:forEach>
+                                        </div>
+										<div class="col-1" id="keywordRecordCharts" style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
+										<div class="col-2" id="keywordTrendCharts" style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
 									</c:when>
 									<c:otherwise>
 										<div class="col-1">
@@ -723,59 +713,89 @@
 										<div class="col-2">
 											<h1>暂无数据</h1>
 										</div>
-										<div class="col-3">
-											<h1>暂无数据</h1>
-										</div>
 									</c:otherwise>
 								</c:choose>
 
 								<div class="col-4 top50-link">
+                                    <div class="row4">
+                                        <span>前10</span>
+                                        <span class="top10">
+                                            <a href="javascript:;" name="PhoneTop10">0</a>
+                                        </span>
+                                    </div>
 									<div class="row4">
 										<span>前50</span>
 										<span class="top50">
-										<a href="javascript:;">
-												${qzSetting.qzKeywordRankInfoMap["Phone"].topFiftyIncrement == null ? '暂无' : qzSetting.qzKeywordRankInfoMap["Phone"].topFiftyIncrement}
-										</a>
-									</span>
+                                            <a href="javascript:;" name="PhoneTop50">0</a>
+                                        </span>
 									</div>
 
-									<div class="row4">
-										<span>前40</span>
-										<span class="top40">
-								<a href="javascript:;">
-										${qzSetting.qzKeywordRankInfoMap["Phone"].topFortyIncrement == null ? '暂无' : qzSetting.qzKeywordRankInfoMap["Phone"].topFortyIncrement}
-								</a>
-							</span>
-									</div>
 
-									<div class="row4">
-										<span>前30</span>
-										<span class="top30">
-								<a href="javascript:;">
-										${qzSetting.qzKeywordRankInfoMap["Phone"].topThirtyIncrement == null ? '暂无' : qzSetting.qzKeywordRankInfoMap["Phone"].topThirtyIncrement}
-								</a>
-							</span>
-									</div>
+                                    <div class="row4">
+                                        <span>初始前10</span>
+                                        <span class="top10">
+                                            <a href="javascript:;" name="PhoneTopCreate10">0</a>
+                                        </span>
+                                    </div>
 
-									<div class="row4">
-										<span>前20</span>
-										<span class="top20">
-								<a href="javascript:;">
-										${qzSetting.qzKeywordRankInfoMap["Phone"].topTwentyIncrement == null ? '暂无' : qzSetting.qzKeywordRankInfoMap["Phone"].topTwentyIncrement}
-								</a>
-							</span>
-									</div>
-
-									<div class="row4">
-										<span>前10</span>
-										<span class="top10">
-								<a href="javascript:;">
-										${qzSetting.qzKeywordRankInfoMap["Phone"].topTenIncrement == null ? '暂无' : qzSetting.qzKeywordRankInfoMap["Phone"].topTenIncrement}
-								</a>
-							</span>
-									</div>
+                                    <div class="row4">
+                                        <span>初始前50</span>
+                                        <span class="top50">
+                                            <a href="javascript:;" name="PhoneTopCreate50">0</a>
+                                        </span>
+                                    </div>
 								</div>
 							</div>
+
+                            <div class="rank-wrap1">
+                                <c:choose>
+                                    <c:when test="${qzSetting.qzKeywordRankInfoMap['Phone'] != null}">
+                                        <div name="rankInfo" style="display: none;">
+                                            <c:forEach items="${qzSetting.qzKeywordRankInfoMap['Phone'].entrySet()}" var="rankInfo">
+                                                <c:if test="${rankInfo.getKey() == 'designationWord'}">
+                                                    <span name="${rankInfo.getKey()}">${rankInfo.getValue()}</span>
+                                                </c:if>
+                                            </c:forEach>
+                                        </div>
+                                        <div class="col-1" id="designationWordCharts" style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <div class="col-1">
+                                            <h1>暂无数据</h1>
+                                        </div>
+                                    </c:otherwise>
+                                </c:choose>
+
+                                <div class="col-5 top50-link">
+                                    <div class="row4">
+                                        <span>前10</span>
+                                        <span class="top10">
+											<a href="javascript:;" name="PhoneTop10">0</a>
+										</span>
+                                    </div>
+
+                                    <div class="row4">
+                                        <span>前50</span>
+                                        <span class="top50">
+                                            <a href="javascript:;" name="PhoneTop50">0</a>
+                                        </span>
+                                    </div>
+
+                                    <div class="row4">
+                                        <span>初始前10</span>
+                                        <span class="top10">
+                                            <a href="javascript:;" name="PhoneTopCreate10">0</a>
+                                        </span>
+                                    </div>
+
+                                    <div class="row4">
+                                        <span>初始前50</span>
+                                        <span class="top50">
+                                            <a href="javascript:;" name="PhoneTopCreate50">0</a>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
 						</div>
 					</li>
 					<!--li-end-phone-->

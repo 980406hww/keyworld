@@ -132,7 +132,6 @@ function checkTerminalType(terminalType, isManualSwitch) {
 }
 function detectedTopNum() {
     $(".body").find(".rank-wrap").each(function () {
-        generateQZKeywordRecordCharts($(this).find("#designationWordCharts")[0], $(this).find("div[name='rankInfo'] span").text());
         generateQZKeywordRecordCharts($(this).find("#keywordRecordCharts")[0], $(this).find("div[name='rankInfo'] span").text());
         generateQZKeywordTrendCharts($(this).find("#keywordTrendCharts")[0], $(this).find("div[name='rankInfo'] span").text());
         $(this).find(".row4").each(function () {
@@ -144,12 +143,24 @@ function detectedTopNum() {
             }
         });
     });
+    $(".body").find(".rank-wrap1").each(function () {
+        // 指定词曲线
+        generateQZDesignationWordTrendCharts($(this).find("#designationWordCharts")[0], $(this).find("div[name='rankInfo'] span").text());
+        $(this).find(".row5").each(function () {
+            var a = $(this).find("span:last-child a");
+            if (a[0].innerHTML.trim() >= 0) {
+                $(a).addClass("green");
+            } else if (a[0].innerHTML.trim() < 0) {
+                $(a).addClass("red");
+            }
+        });
+    });
 }
 function generateQZKeywordRecordCharts(domElement, data) {
-    if (domElement == undefined) {
+    if (domElement === undefined || data === '') {
         return;
     }
-    if (JSON.parse(data).date == '') {
+    if (JSON.parse(data).date === '') {
         domElement.innerHTML = "<h1 style='text-align: center'> 暂无数据 </h1>";
         return;
     }
@@ -160,7 +171,7 @@ function generateQZKeywordRecordCharts(domElement, data) {
     var option = {
         color: ['#0000FF'],
         title : {
-            text: '百度收录趋势',
+            text: '爱站 - 百度收录趋势',
             textStyle: {
                 color: '#999',
                 fontFamily: "Arial",
@@ -243,25 +254,295 @@ function generateQZKeywordRecordCharts(domElement, data) {
     keywordRecordCharts.setOption(option);
 }
 function generateQZKeywordTrendCharts(domElement, data) {
-    if (domElement == undefined) {
+    if (domElement === undefined|| data === '') {
         return;
     }
-    if (JSON.parse(data).date == '') {
+    if (JSON.parse(data).date === '') {
         domElement.innerHTML = "<h1 style='text-align: center'> 暂无数据 </h1>";
         return;
     }
     var result = JSON.parse(data);
     var date = result.date.replace("['", "").replace("']", "").split("', '").reverse();
+    var keywordTrendCharts = echarts.init(domElement);
+    var option;
     var topTen = stringToArray(result.topTen);
     var topTwenty = stringToArray(result.topTwenty);
+    var topFifty = stringToArray(result.topFifty);
+    var topThirty;
+    var topForty;
+    var topHundred;
+    if (result.websiteType === "aiZhan") {
+        topThirty = stringToArray(result.topThirty);
+        topForty = stringToArray(result.topForty);
+        option = {
+            color: ['#228B22', '#0000FF', '#FF6100', '#000000', '#FF0000'],
+            title : {
+                text: '爱站 - 关键词排名趋势',
+                textStyle: {
+                    color: '#999',
+                    fontFamily: "Arial",
+                    fontWeight: 400,
+                    fontSize: 12
+                },
+                x:'center',
+                bottom: -3
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            grid: {
+                left: '0%',
+                right: '1%',
+                top: '3%',
+                bottom: '0%',
+                containLabel: true
+            },
+            toolbox: {
+                show: false,
+                feature: {
+                    saveAsImage: {}
+                }
+            },
+            xAxis: {
+                show: false,
+                type: 'category',
+                axisLine: {
+                    show: false,
+                    lineStyle: {
+                        color: '#404A59'
+                    }
+                },
+                axisTick: {
+                    show: false
+                },
+                boundaryGap: true,
+                data: date
+            },
+            yAxis: {
+                axisLine: {
+                    show: false,
+                    lineStyle: {
+                        color: '#404A59'
+                    }
+                },
+                splitLine: {
+                    show: true,
+                    lineStyle: {
+                        color: '#DCDCDC',
+                        width: 1,
+                        type: 'solid'
+                    }
+                },
+                axisTick: {
+                    show: false
+                },
+                axisLabel: {
+                    fontStyle: 'italic',
+                    textStyle: {
+                        color: '#000'
+                    }
+                },
+                type: 'value'
+            },
+            series: [{
+                name: '前10名',
+                smooth: true,
+                type: 'line',
+                symbolSize: 1,
+                symbol: 'none',
+                data: topTen,
+                lineStyle:{
+                    type:"solid",
+                    width: 1
+                }
+            }, {
+                name: '前20名',
+                smooth: true,
+                type: 'line',
+                symbolSize: 1,
+                symbol: 'none',
+                data: topTwenty,
+                lineStyle:{
+                    type:"solid",
+                    width: 1
+                }
+            }, {
+                name: '前30名',
+                smooth: true,
+                type: 'line',
+                symbolSize: 1,
+                symbol: 'none',
+                data: topThirty,
+                lineStyle:{
+                    type:"solid",
+                    width: 1
+                }
+            }, {
+                name: '前40名',
+                smooth: true,
+                type: 'line',
+                symbolSize: 1,
+                symbol: 'none',
+                data: topForty,
+                lineStyle:{
+                    type:"solid",
+                    width: 1
+                }
+            }, {
+                name: '前50名',
+                smooth: true,
+                type: 'line',
+                symbolSize: 1,
+                symbol: 'none',
+                data: topFifty,
+                lineStyle:{
+                    type:"solid",
+                    width: 1
+                }
+            }]
+        };
+    } else if (result.websiteType === "5118") {
+        topHundred = stringToArray(result.topHundred);
+        option = {
+            color: ['#228B22', '#0000FF', '#FF6100', '#FF0000'],
+            title : {
+                text: result.websiteType + ' - 关键词排名趋势',
+                textStyle: {
+                    color: '#999',
+                    fontFamily: "Arial",
+                    fontWeight: 400,
+                    fontSize: 12
+                },
+                x:'center',
+                bottom: -3
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            grid: {
+                left: '0%',
+                right: '1%',
+                top: '3%',
+                bottom: '0%',
+                containLabel: true
+            },
+            toolbox: {
+                show: false,
+                feature: {
+                    saveAsImage: {}
+                }
+            },
+            xAxis: {
+                show: false,
+                type: 'category',
+                axisLine: {
+                    show: false,
+                    lineStyle: {
+                        color: '#404A59'
+                    }
+                },
+                axisTick: {
+                    show: false
+                },
+                boundaryGap: true,
+                data: date
+            },
+            yAxis: {
+                axisLine: {
+                    show: false,
+                    lineStyle: {
+                        color: '#404A59'
+                    }
+                },
+                splitLine: {
+                    show: true,
+                    lineStyle: {
+                        color: '#DCDCDC',
+                        width: 1,
+                        type: 'solid'
+                    }
+                },
+                axisTick: {
+                    show: false
+                },
+                axisLabel: {
+                    fontStyle: 'italic',
+                    textStyle: {
+                        color: '#000'
+                    }
+                },
+                type: 'value'
+            },
+            series: [{
+                name: '前10名',
+                smooth: true,
+                type: 'line',
+                symbolSize: 1,
+                symbol: 'none',
+                data: topTen,
+                lineStyle:{
+                    type:"solid",
+                    width: 1
+                }
+            }, {
+                name: '前20名',
+                smooth: true,
+                type: 'line',
+                symbolSize: 1,
+                symbol: 'none',
+                data: topTwenty,
+                lineStyle:{
+                    type:"solid",
+                    width: 1
+                }
+            }, {
+                name: '前50名',
+                smooth: true,
+                type: 'line',
+                symbolSize: 1,
+                symbol: 'none',
+                data: topFifty,
+                lineStyle:{
+                    type:"solid",
+                    width: 1
+                }
+            }, {
+                name: '前100名',
+                smooth: true,
+                type: 'line',
+                symbolSize: 1,
+                symbol: 'none',
+                data: topHundred,
+                lineStyle:{
+                    type:"solid",
+                    width: 1
+                }
+            }]
+        };
+    }
+    keywordTrendCharts.setOption(option);
+}
+function generateQZDesignationWordTrendCharts(domElement, data) {
+    if (domElement === undefined|| data === '') {
+        return;
+    }
+    if (JSON.parse(data).date === '') {
+        domElement.innerHTML = "<h1 style='text-align: center'> 暂无数据 </h1>";
+        return;
+    }
+    var result = JSON.parse(data);
+    var date = result.date.replace("['", "").replace("']", "").split("', '").reverse();
+    var designationWordTrendCharts = echarts.init(domElement);
+    var option;
+    var topTen = stringToArray(result.topTen);
+    var topTwenty = stringToArray(result.topTwenty);
+    var topFifty = stringToArray(result.topFifty);
     var topThirty = stringToArray(result.topThirty);
     var topForty = stringToArray(result.topForty);
-    var topFifty = stringToArray(result.topFifty);
-    var keywordTrendCharts = echarts.init(domElement);
-    var option = {
+    option = {
         color: ['#228B22', '#0000FF', '#FF6100', '#000000', '#FF0000'],
         title : {
-            text: '关键词排名趋势',
+            text: result.websiteType + ' - 指定词排名趋势',
             textStyle: {
                 color: '#999',
                 fontFamily: "Arial",
@@ -385,7 +666,7 @@ function generateQZKeywordTrendCharts(domElement, data) {
             }
         }]
     };
-    keywordTrendCharts.setOption(option);
+    designationWordTrendCharts.setOption(option);
 }
 function stringToArray(str) {
     return str.replace('[', '').replace(']', '').split(', ').reverse();

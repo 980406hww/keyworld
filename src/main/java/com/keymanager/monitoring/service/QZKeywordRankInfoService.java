@@ -75,9 +75,13 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
     public void updateQzKeywordRankInfo(ExternalQZKeywordRankInfoResultVO externalQzKeywordRankInfoResultVo) {
         for (ExternalQzKeywordRankInfoVO externalQzKeywordRankInfoVo : externalQzKeywordRankInfoResultVo.getQzKeywordRankInfoVos()) {
             QZKeywordRankInfo rankInfo = this.getQZKeywordRankInfo(externalQzKeywordRankInfoVo, externalQzKeywordRankInfoResultVo.getQzSettingUuid());
-            Long uuid = qzKeywordRankInfoDao.getQZKeywordRankInfo(rankInfo.getQzSettingUuid(), rankInfo.getTerminalType(), rankInfo.getWebsiteType());
-            if (null != uuid){
-                rankInfo.setUuid(uuid);
+            QZKeywordRankInfo qzKeywordRankInfo = qzKeywordRankInfoDao.getQZKeywordRankInfo(rankInfo.getQzSettingUuid(), rankInfo.getTerminalType(), rankInfo.getWebsiteType());
+            if (null != qzKeywordRankInfo){
+                if (null == qzKeywordRankInfo.getCreateTopTenNum()) {
+                    rankInfo.setCreateTopTenNum(externalQzKeywordRankInfoVo.getCreateTopTenNum());
+                    rankInfo.setCreateTopFiftyNum(externalQzKeywordRankInfoVo.getCreateTopTenNum());
+                }
+                rankInfo.setUuid(qzKeywordRankInfo.getUuid());
                 qzKeywordRankInfoDao.updateById(rankInfo);
             } else {
                 rankInfo.setCreateTopTenNum(externalQzKeywordRankInfoVo.getCreateTopTenNum());
@@ -86,7 +90,7 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
             }
         }
         QZSetting qzSetting = this.getQZSetting(externalQzKeywordRankInfoResultVo.getQzSettingUuid(), externalQzKeywordRankInfoResultVo.getCrawlerStatus());
-        qzSettingService.updateById(qzSetting);
+        qzSettingService.updateQzSetting(qzSetting);
     }
 
     private QZKeywordRankInfo getQZKeywordRankInfo(ExternalQzKeywordRankInfoVO externalQzKeywordRankInfoVO, Long qzSettingUuid) {
@@ -143,7 +147,7 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
     }
 
     private QZSetting getQZSetting(Long qzSettingUuid, String crawlerStatus) {
-        QZSetting qzSetting = qzSettingService.findQzSetting(qzSettingUuid);
+        QZSetting qzSetting = new QZSetting();
         qzSetting.setUuid(qzSettingUuid);
         qzSetting.setCrawlerStatus(crawlerStatus);
         qzSetting.setCrawlerTime(new Date());

@@ -45,8 +45,6 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
 
     void updateQzSetting(@Param("qzSetting") QZSetting qzSetting);
 
-    QZSetting findQzSetting(@Param("fUuid") Long fUuid);
-
     void updateCrawlerStatus(@Param("uuids")Long[] uuids);
 
     int getQZSettingClientGroupInfo (@Param("qzSettingSearchClientGroupInfoCriteria") QZSettingSearchClientGroupInfoCriteria qzSettingSearchClientGroupInfoCriteria);
