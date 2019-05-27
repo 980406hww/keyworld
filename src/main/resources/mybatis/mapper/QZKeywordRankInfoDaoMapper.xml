@@ -14,6 +14,8 @@
             qzkri.fTopForty AS "topForty",
             qzkri.fTopFifty AS "topFifty",
             qzkri.fTopHundred AS "topHundred",
+            qzkri.fCreateTopTenNum AS "createTopTenNum",
+            qzkri.fCreateTopFiftyNum AS "createTopFiftyNum",
             qzkri.fDate AS "date",
             qzkri.fFullDate AS "fullDate",
             qzkri.fIncrease AS "increase",

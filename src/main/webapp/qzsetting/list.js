@@ -275,7 +275,7 @@ function generateQZKeywordTrendCharts(domElement, data) {
     $(parentElement).find("#" + result.terminalType + "Top10").text(topTen[topTen.length-1] - topTen[topTen.length-2]);
     $(parentElement).find("#" + result.terminalType + "Top50").text(topFifty[topFifty.length-1] - topFifty[topFifty.length-2]);
     $(parentElement).find("#" + result.terminalType + "TopCreate10").text(result.createTopTenNum);
-    $(parentElement).parent().find("#" + result.terminalType + "TopCreate50").text(result.createTopFiftyNum);
+    $(parentElement).find("#" + result.terminalType + "TopCreate50").text(result.createTopFiftyNum);
     if (result.websiteType === "aiZhan") {
         topThirty = stringToArray(result.topThirty);
         topForty = stringToArray(result.topForty);
@@ -548,7 +548,7 @@ function generateQZDesignationWordTrendCharts(domElement, data) {
     $(parentElement).find("#" + result.terminalType + "Top10").text(topTen[topTen.length-1] - topTen[topTen.length-2]);
     $(parentElement).find("#" + result.terminalType + "Top50").text(topFifty[topFifty.length-1] - topFifty[topFifty.length-2]);
     $(parentElement).find("#" + result.terminalType + "TopCreate10").text(result.createTopTenNum);
-    $(parentElement).parent().find("#" + result.terminalType + "TopCreate50").text(result.createTopFiftyNum);
+    $(parentElement).find("#" + result.terminalType + "TopCreate50").text(result.createTopFiftyNum);
     option = {
         color: ['#228B22', '#0000FF', '#FF6100', '#000000', '#FF0000'],
         title : {
