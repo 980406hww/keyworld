@@ -17,7 +17,6 @@ import com.keymanager.util.Utils;
 import com.keymanager.value.CustomerKeywordVO;
 import net.sf.json.JSONObject;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
@@ -495,7 +494,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
                                 }
                             }
                             if (!"zanting".equals(customerKeyword.getOptimizeGroupName())){
-                                CustomerKeywordOptimizeGroupCriteria customerKeywordOptimizeGroupCriteria = customerKeywordService.switchOptimizeGroup(customerKeywordOptimizeGroupCriteriaList, customerKeyword.getOptimizeGroupName(), qzSetting.getGroupMaxCustomerKeywordCount());
+                                CustomerKeywordOptimizeGroupCriteria customerKeywordOptimizeGroupCriteria = customerKeywordService.matchOptimizeGroupName(customerKeywordOptimizeGroupCriteriaList, customerKeyword.getOptimizeGroupName(), qzSetting.getGroupMaxCustomerKeywordCount());
                                 customerKeyword.setOptimizeGroupName(customerKeywordOptimizeGroupCriteria.getOptimizeGroupName());
                             }
                             customerKeywords.add(customerKeyword);
@@ -640,7 +639,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 					}
 				}
 				if (!"zanting".equals(customerKeyword.getOptimizeGroupName())){
-                    CustomerKeywordOptimizeGroupCriteria customerKeywordOptimizeGroupCriteria = customerKeywordService.switchOptimizeGroup(customerKeywordOptimizeGroupCriteriaList, customerKeyword.getOptimizeGroupName(), qzSetting.getGroupMaxCustomerKeywordCount());
+                    CustomerKeywordOptimizeGroupCriteria customerKeywordOptimizeGroupCriteria = customerKeywordService.matchOptimizeGroupName(customerKeywordOptimizeGroupCriteriaList, customerKeyword.getOptimizeGroupName(), qzSetting.getGroupMaxCustomerKeywordCount());
                     customerKeyword.setOptimizeGroupName(customerKeywordOptimizeGroupCriteria.getOptimizeGroupName());
                 }
 				customerKeyword.setKeyword(keyword);
