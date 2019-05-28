@@ -101,9 +101,18 @@
 
     <select id="selectByQZSettingUuid" resultType="com.keymanager.monitoring.entity.QZKeywordRankInfo">
         SELECT
-            fUuid AS uuid,fDate AS `date`,fFullDate AS fullDate,
-            fTopTen AS topTen,fTopTwenty AS topTwenty,fTopThirty AS topThirty,fTopForty AS topForty,fTopFifty AS topFifty,
-            fCreateTopTenNum AS createTopTenNum,fCreateTopFiftyNum AS createTopFiftyNum
+            fUuid AS uuid,
+            fQZSettingUuid AS qzSettingUuid,
+            fTerminalType AS terminalType,
+            fWebsiteType AS websiteType,
+            fDate AS `date`,
+            fTopTen AS topTen,
+            fTopTwenty AS topTwenty,
+            fTopThirty AS topThirty,
+            fTopForty AS topForty,
+            fTopFifty AS topFifty,
+            fCreateTopTenNum AS createTopTenNum,
+            fCreateTopFiftyNum AS createTopFiftyNum
         FROM
             t_qz_keyword_rank_info
         WHERE
@@ -112,5 +121,22 @@
             fTerminalType = #{terminalType}
         AND
             fWebsiteType = 'designationWord'
+    </select>
+
+    <select id="standardCountByQZSettingUuid" resultType="java.lang.Integer">
+        SELECT
+            COUNT(1)
+        FROM
+            t_qz_keyword_rank_info
+        WHERE
+            fQZSettingUuid = #{qzSettingUuid}
+        AND
+            fTerminalType = #{terminalType}
+        AND
+            (fWebsiteType = 'aiZhan' OR fWebsiteType = '5118')
+        AND
+            fAchieveLevel &gt; 0
+        AND
+            fAchieveLevel IS NOT NULL
     </select>
 </mapper>

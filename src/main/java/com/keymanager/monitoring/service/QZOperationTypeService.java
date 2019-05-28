@@ -48,4 +48,8 @@ public class QZOperationTypeService extends ServiceImpl<QZOperationTypeDao, QZOp
 	public void updateQZOperationTypeStandardTime (Long qzSettingUuid, String operationType, boolean isStandardFlag) {
 		qzOperationTypeDao.updateQZOperationTypeStandardTime(qzSettingUuid, operationType, isStandardFlag);
 	}
+
+    public QZOperationType searchQZOperationTypeByQZSettingAndTerminalType(Long qzSettingUuid, String operationType) {
+        return qzOperationTypeDao.searchQZOperationTypeByQZSettingAndTerminalType(qzSettingUuid, operationType);
+    }
 }

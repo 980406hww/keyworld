@@ -15,6 +15,7 @@
             qopty.fNextChargeDate   AS 'nextChargeDate',
             qopty.fUpdateTime       AS 'updateTime',
             qopty.fCreateTime       AS 'createTime',
+            qopty.fStandardTime     AS 'standardTime',
             qopty.fIsDeleted        AS 'isDeleted',
             qopty.fMaxKeywordCount  AS 'maxKeywordCount'
         FROM t_qz_operation_type  qopty
@@ -35,6 +36,7 @@
        qopty.fNextChargeDate   AS 'nextChargeDate',
        qopty.fUpdateTime       AS 'updateTime',
        qopty.fCreateTime       AS 'createTime',
+       qopty.fStandardTime     AS 'standardTime',
        qopty.fIsDeleted        AS 'isDeleted',
        qopty.fMaxKeywordCount  AS 'maxKeywordCount'
       FROM t_qz_operation_type  qopty
@@ -70,4 +72,16 @@
         WHERE fQZSettingUuid = #{qzSettingUuid}
         AND fOperationtype = #{operationType}
     </update>
+
+    <select id="searchQZOperationTypeByQZSettingAndTerminalType" resultType="com.keymanager.monitoring.entity.QZOperationType">
+        SELECT
+            fUuid AS 'uuid',
+            fStandardType AS 'standardType'
+        FROM
+            t_qz_operation_type
+        WHERE
+            fQZSettingUuid = #{qzSettingUuid}
+        AND
+            fOperationType = #{operationType}
+    </select>
 </mapper>

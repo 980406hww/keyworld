@@ -47,6 +47,9 @@ public class QZOperationType extends BaseEntity {
   @TableField(value = "fStandardType")
   private String standardType; // 达标类型
 
+  @TableField(value = "fStandardTime")
+  private Date standardTime; // 达标时间
+
   @TableField(exist = false)
   protected List<QZChargeRule> qzChargeRules;//一个操作类型对应多个规则
 
@@ -145,4 +148,12 @@ public class QZOperationType extends BaseEntity {
   public void setStandardType (String standardType) {
     this.standardType = standardType;
   }
+
+    public Date getStandardTime() {
+        return standardTime;
+    }
+
+    public void setStandardTime(Date standardTime) {
+        this.standardTime = standardTime;
+    }
 }

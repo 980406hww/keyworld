@@ -152,6 +152,8 @@
             fStatus = 1
         AND
             fCaptureStatus = 1
+        AND
+            fCapturePositionQueryTime &lt; DATE_SUB(NOW(),INTERVAL 2 MINUTE)
     </select>
 
     <delete id="deleteCaptureRankJob">
