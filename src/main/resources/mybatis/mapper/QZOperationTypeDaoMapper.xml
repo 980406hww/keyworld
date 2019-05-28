@@ -53,6 +53,8 @@
         SELECT
             op.fQZSettingUuid AS 'qzSettingUuid',
             op.fOperationtype AS 'operationType',
+            op.fStandardType AS 'standardType',
+		    cr.fStandardSpecies AS 'standardSpecies',
             cr.fStartKeywordCount AS 'startKeywordCount',
             cr.fEndKeywordCount AS 'endKeywordCount',
             cr.fAmount AS 'amount'
@@ -61,7 +63,8 @@
         ON op.fUuid = cr.fQZOperationTypeUuid
         WHERE op.fQZSettingUuid = #{qzSettingUuid}
         AND op.fOperationtype = #{operationType}
-        ORDER BY cr.fStartKeywordCount
+        AND cr.fStandardSpecies = #{websiteType}
+        ORDER BY cr.fStandardSpecies
     </select>
 
 </mapper>

@@ -4,7 +4,6 @@ import com.keymanager.monitoring.common.utils.StringUtils;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.service.QZKeywordRankInfoService;
 import com.keymanager.monitoring.vo.ExternalQZKeywordRankInfoResultVO;
-import com.keymanager.monitoring.vo.ExternalQzKeywordRankInfoVO;
 import com.keymanager.monitoring.vo.ExternalQzSettingVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

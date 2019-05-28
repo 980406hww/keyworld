@@ -52,7 +52,7 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
         qzKeywordRankInfoDao.deleteByQZSettingUuid(uuid);
     }
 
-    public List<ExternalQzSettingVO> getQZSettingTask(){
+    public synchronized List<ExternalQzSettingVO> getQZSettingTask(){
         Config taskNumber = configService.getConfig(Constants.CONFIG_TYPE_QZSETTING, Constants.CONFIG_KEY_QZ_TASKNUMBER);
         Config config = configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK, Constants.CONFIG_KEY_CRAWLER_HOUR);
         List<ExternalQzSettingVO> qzSettingTasks = qzSettingService.getQZSettingTask(Integer.parseInt(config.getValue()),Integer.parseInt(taskNumber.getValue()));
@@ -112,8 +112,9 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
         if (StringUtils.isNotBlank(externalQzKeywordRankInfoVO.getTopTen())) {
             this.setIncreaseAndTodayDifference(qzKeywordRankInfo);
         }
-        List<QZOperationTypeVO> operationTypes = qzOperationTypeService.findQZOperationTypes(qzSettingUuid, externalQzKeywordRankInfoVO.getTerminalType());
+        List<QZOperationTypeVO> operationTypes = qzOperationTypeService.findQZOperationTypes(qzSettingUuid, externalQzKeywordRankInfoVO.getTerminalType(), externalQzKeywordRankInfoVO.getWebsiteType());
         if (CollectionUtils.isNotEmpty(operationTypes)) {
+            // TODO standard update
             Map standard = this.standardCalculation(operationTypes, externalQzKeywordRankInfoVO);
             qzKeywordRankInfo.setDifferenceValue(Double.parseDouble(standard.get("differenceValue").toString()));
             qzKeywordRankInfo.setAchieveLevel(Integer.parseInt(standard.get("achieveLevel").toString()));
