@@ -4,12 +4,14 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.*;
 import com.keymanager.monitoring.entity.*;
+import com.keymanager.monitoring.enums.CustomerKeywordSourceEnum;
 import com.keymanager.monitoring.enums.EntryTypeEnum;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
 import com.keymanager.monitoring.excel.operator.CustomerKeywordInfoExcelWriter;
 import com.keymanager.monitoring.service.*;
 import com.keymanager.monitoring.vo.CodeNameVo;
 import com.keymanager.monitoring.vo.KeywordStatusBatchUpdateVO;
+import com.keymanager.util.Constants;
 import com.keymanager.util.TerminalTypeMapping;
 import com.keymanager.util.Utils;
 import org.apache.commons.lang3.StringUtils;
@@ -110,6 +112,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		modelAndView.addObject("page", page);
 		modelAndView.addObject("user", user);
 		modelAndView.addObject("customer", customer);
+        modelAndView.addObject("CustomerKeywordSourceMap", CustomerKeywordSourceEnum.toMap());
 		modelAndView.addObject("serviceProviders",serviceProviders);
 		modelAndView.addObject("orderElement",orderElement);
 		performanceService.addPerformanceLog(terminalType + ":searchCustomerKeywords", System.currentTimeMillis() - startMilleSeconds, null);
@@ -287,6 +290,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 						}
 					}
 				}
+				customerKeyword.setCustomerKeywordSource(CustomerKeywordSourceEnum.UI.name());
 				if (!"zanting".equals(customerKeyword.getOptimizeGroupName())){
                     customerKeywordService.checkOptimizeGroupName(customerKeyword);
                 }
@@ -425,6 +429,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		modelAndView.addObject("user", user);
 		modelAndView.addObject("activeUsers", activeUsers);
 		modelAndView.addObject("orderElement",orderElement);
+        modelAndView.addObject("CustomerKeywordSourceMap", CustomerKeywordSourceEnum.toMap());
 		modelAndView.addObject("isDepartmentManager",isDepartmentManager);
 		performanceService.addPerformanceLog(terminalType + ":searchCustomerKeywordLists", (System.currentTimeMillis() - startMilleSeconds), null);
 		return modelAndView;
@@ -464,6 +469,12 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	public List<CodeNameVo> searchGroups() {
 		return customerKeywordService.searchGroups();
 	}
+
+    @RequestMapping(value = "/searchGroupsByTerminalType", method = RequestMethod.POST)
+    public List<CodeNameVo> searchGroupsByTerminalType(HttpServletRequest request) {
+        String terminalType = TerminalTypeMapping.getTerminalType(request);
+        return customerKeywordService.searchGroupsByTerminalType(terminalType);
+    }
 
 	@RequiresPermissions("/internal/customerKeyword/editOptimizePlanCount")
 	@RequestMapping(value = "/editOptimizePlanCount" , method = RequestMethod.POST)

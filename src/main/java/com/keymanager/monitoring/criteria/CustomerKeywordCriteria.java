@@ -45,6 +45,7 @@ public class CustomerKeywordCriteria extends BaseCriteria{
     private Integer fifteenDaysNoReachStandard;
     private Integer thirtyDaysNoReachStandard;
     private Integer openDialogStatus;
+    private String customerKeywordSource;
 
     public String getBearPawNumber() {
         return bearPawNumber;
@@ -376,5 +377,13 @@ public class CustomerKeywordCriteria extends BaseCriteria{
 
     public void setEnteredKeywordRemarks (String enteredKeywordRemarks) {
         this.enteredKeywordRemarks = enteredKeywordRemarks;
+    }
+
+    public String getCustomerKeywordSource() {
+        return customerKeywordSource;
+    }
+
+    public void setCustomerKeywordSource(String customerKeywordSource) {
+        this.customerKeywordSource = customerKeywordSource;
     }
 }

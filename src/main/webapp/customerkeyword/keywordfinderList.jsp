@@ -69,6 +69,12 @@
                     </c:forEach>
                 </select>
             </c:if>
+            关键字来源:
+            <select name="customerKeywordSource" id="customerKeywordSource">
+                <c:forEach items="${CustomerKeywordSourceMap}" var="entry">
+                    <option value="${entry.value}">${entry.key}</option>
+                </c:forEach>
+            </select>
             排序:
             <select name="orderingElement" id="orderingElement">
                 <option value="0">关键字</option>
@@ -341,6 +347,7 @@
         var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
         var searchCustomerKeywordTable = searchCustomerKeywordForm.find("#searchCustomerKeywordTable");
         searchCustomerKeywordTable.find("#searchEngine").val('${customerKeywordCriteria.searchEngine}');
+        searchCustomerKeywordTable.find("#customerKeywordSource").val('${customerKeywordCriteria.customerKeywordSource}');
         searchCustomerKeywordTable.find("#orderingElement").val("${orderElement == null ? '0' : orderElement}");
         searchCustomerKeywordTable.find("#status").val(${customerKeywordCriteria.status});
         var pages = searchCustomerKeywordForm.find('#pagesHidden').val();

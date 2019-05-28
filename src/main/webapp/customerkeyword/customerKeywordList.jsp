@@ -154,6 +154,12 @@
             优化组名:
             <input type="text" name="optimizeGroupName" id="optimizeGroupName"
                    value="${customerKeywordCriteria.optimizeGroupName}" style="width:100px;">
+            关键字来源:
+            <select name="customerKeywordSource" id="customerKeywordSource">
+                <c:forEach items="${CustomerKeywordSourceMap}" var="entry">
+                    <option value="${entry.value}">${entry.key}</option>
+                </c:forEach>
+            </select>
             要刷:<input type="text" name="gtOptimizePlanCount" id="gtOptimizePlanCount" placeholder=">=" value="${customerKeywordCriteria.gtOptimizePlanCount}" style="width:40px;"/>
             <input type="text" name="ltOptimizePlanCount" id="ltOptimizePlanCount" placeholder="<="  value="${customerKeywordCriteria.ltOptimizePlanCount}" style="width:40px;"/>
             已刷:<input type="text" name="gtOptimizedCount" id="gtOptimizedCount" placeholder=">=" value="${customerKeywordCriteria.gtOptimizedCount}" style="width:40px;"/>
@@ -556,6 +562,7 @@
         searchCustomerKeywordTable.find("#orderingElement").val("${orderElement == null ? '0' : orderElement}");
         searchCustomerKeywordTable.find("#titleFlag").val(${customerKeywordCriteria.titleFlag});
         searchCustomerKeywordTable.find("#searchEngine").val('${customerKeywordCriteria.searchEngine}');
+        searchCustomerKeywordTable.find("#customerKeywordSource").val('${customerKeywordCriteria.customerKeywordSource}');
         searchCustomerKeywordTable.find("#status").val(${customerKeywordCriteria.status});
         var pages = searchCustomerKeywordForm.find('#pagesHidden').val();
         var currentPageNumber = searchCustomerKeywordForm.find('#currentPageNumberHidden').val();

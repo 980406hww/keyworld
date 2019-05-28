@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.criteria.*;
 import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.vo.*;
+import com.keymanager.value.CustomerKeywordForCapturePosition;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
 import org.apache.ibatis.annotations.Param;
 
@@ -73,7 +74,7 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void deleteCustomerKeywords(@Param("terminalType")String terminalType, @Param("groupName")String groupName, @Param("keyword")String keyword);
 
-    List<String> getGroups();
+    List<String> getGroups(@Param("customerUuids")List<Long> customerUuids);
 
     List<Map> searchRemainingOptimizationCount(@Param("groupName")String groupName, @Param("maxInvalidCount")int maxInvalidCount, @Param("noPositionMaxInvalidCount")int noPositionMaxInvalidCount);
 
@@ -102,12 +103,21 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void adjustOptimizePlanCount(@Param("customerKeywordUuid")Long customerKeywordUuid, @Param("optimizationPlanCount")int optimizationPlanCount,
                                  @Param("queryInterval")int queryInterval);
 
-    Long getCustomerKeywordUuidForCapturePosition(@Param("terminalType")String terminalType, @Param("groupNames")List<String> groupNames,
-                                                  @Param("customerUuid")Long customerUuid, @Param("startTime")Date startTime, @Param("captureStatus") Integer captureStatus);
+    Long getCustomerKeywordUuidForCapturePosition(@Param("terminalType") String terminalType, @Param("groupNames") List<String> groupNames,
+                                                  @Param("customerUuid") Long customerUuid, @Param("startTime") Date startTime,
+                                                  @Param("captureStatus") Integer captureStatus);
+
+    List<Long> getCustomerKeywordUuidForCapturePositionTemp(@Param("terminalType") String terminalType, @Param("groupName") String groupName,
+                                                            @Param("customerUuid") Long customerUuid, @Param("startTime") Date startTime,
+                                                            @Param("captureStatus") Integer captureStatus);
 
     CustomerKeyword getCustomerKeywordForCapturePosition(@Param("uuid")Long uuid);
 
+    List<CustomerKeywordForCapturePosition> getCustomerKeywordForCapturePositionTemp(@Param("uuids") List uuids);
+
     void updateCapturePositionQueryTimeAndCaptureStatus(@Param("uuid")Long uuid);
+
+    void updateCapturePositionQueryTimeAndCaptureStatusTemp(@Param("uuids")List uuids);
 
     void resetInvalidRefreshCount(@Param("customerKeywordRefreshStatInfoCriteria")CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria);
 
@@ -118,6 +128,8 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     CustomerKeyword searchTitleAndUrl(@Param("groupNames") String[] groupNames,@Param("customerUuid") Long customerUuid);
 
     List<CodeNameVo> searchGroups();
+
+    List<CodeNameVo> searchGroupsByTerminalType(@Param("terminalType") String terminalType);
 
     SearchEngineResultVO getCustomerKeywordForAutoUpdateNegative(@Param("terminalType")String terminalType, @Param("groupName")String groupName);
 
@@ -218,4 +230,7 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     List<String> getAvailableOptimizationGroups (@Param("groupSettingCriteria") GroupSettingCriteria groupSettingCriteria);
 
     List<CustomerKeywordOptimizeGroupCriteria> searchOptimizeGroupNameAndCount(@Param("optimizeGroupName") String optimizeGroupName);
+    void updateSameCustomerKeywordSource(@Param("terminalType")String terminalType, @Param("customerUuid") long customerUuid, @Param("keyword") String keyword, @Param("url")String url, @Param("title")String title, @Param("customerKeywordSource") String customerKeywordSource);
+
+    void updateSimilarCustomerKeywordSource(@Param("terminalType") String terminalType, @Param("customerUuid") long customerUuid, @Param("keyword") String keyword, @Param("originalUrl") String originalUrl, @Param("title") String title, @Param("customerKeywordSource") String customerKeywordSource);
 }

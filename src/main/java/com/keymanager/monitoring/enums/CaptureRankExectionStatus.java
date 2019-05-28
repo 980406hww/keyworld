@@ -6,5 +6,6 @@ package com.keymanager.monitoring.enums;
 public enum CaptureRankExectionStatus {
     New,
     Processing,
-    Complete;
+    Checking,
+    Complete
 }

@@ -618,7 +618,7 @@
     }
     </shiro:hasPermission>
 
-    <c:if test="${'bc'.equalsIgnoreCase(entryType)}">
+    <c:if test="${'bc'.equalsIgnoreCase(entryType) || 'pt'.equalsIgnoreCase(entryType)}">
     <shiro:hasPermission name="/internal/dailyReport/triggerReportGeneration">
     function searchCurrentDateCompletedReports() {
         var span = $("#dailyReportSpan");

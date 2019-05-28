@@ -7,7 +7,8 @@
             g.fUuid AS "uuid",
             g.fGroupName AS "groupName",
             u.fUserName AS "userName",
-            g.fRemainingAccount AS "remainingAccount"
+            g.fRemainingAccount AS "remainingAccount",
+            g.fMaxInvalidCount AS "maxInvalidCount"
         FROM t_group g
         LEFT JOIN t_userinfo u
         ON u.fLoginName = g.fCreateBy
@@ -39,7 +40,7 @@
     </select>
 
     <insert id="saveGroup">
-        INSERT INTO t_group(fGroupName, fTerminalType, fCreateBy, fRemainingAccount, fUpdateTime) VALUES(#{groupName}, #{terminalType}, #{createBy}, #{remainingAccount}, NOW());
+        INSERT INTO t_group(fGroupName, fTerminalType, fCreateBy, fRemainingAccount, fMaxInvalidCount, fUpdateTime) VALUES(#{groupName}, #{terminalType}, #{createBy}, #{remainingAccount}, #{maxInvalidCount}, NOW());
     </insert>
 
     <select id="lastInsertID" resultType="java.lang.Long">
@@ -57,6 +58,7 @@
         g.fTerminalType     AS "terminalType",
         g.fCreateBy         AS "createBy",
         g.fRemainingAccount AS "remainingAccount",
+        g.fMaxInvalidCount  AS "maxInvalidCount",
         g.fUpdateTime       AS "updateTime",
         g.fCreateTime       AS "createTime"
         FROM t_group g
@@ -73,4 +75,11 @@
         WHERE g.fTerminalType = #{terminalType}
         GROUP BY g.fGroupName
     </select>
+
+
+    <update id="updateMaxInvalidCount">
+        UPDATE t_group
+        SET fMaxInvalidCount = #{maxInvalidCount}
+        WHERE fUuid = #{uuid}
+    </update>
 </mapper>

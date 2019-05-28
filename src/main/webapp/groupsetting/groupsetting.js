@@ -224,6 +224,7 @@ function showGroupSettingDialog(type, id, groupName, remainingAccount, groupUuid
     changeSettingDialog.find('#settingGroup').val(groupName);
     changeSettingDialog.find('#remainAccount').val(remainingAccount);
     changeSettingDialog.find("i").text(remainingAccount);
+    changeSettingDialog.find("#maxInvalidCount").parent().parent().hide();
     var title;
     if (type == "add") {
         title = "新增操作类型";
@@ -424,9 +425,17 @@ function saveGroupSetting(type, status, isUpdateGroup, groupUuid){
         return false;
     }
     var remainingAccount = dialogDiv.find("#machineUsedPercent").parent().find("i").text();
-    if (remainingAccount < 0 || remainingAccount >= 100) {
-        alert("机器占比不合理，请修改");
-        return false;
+    var hasChangedZhanbi = true;
+    if (isUpdateGroup === 1) {
+        if (isChecked("machineUsedPercent", dialogDiv) !== "1") {
+            hasChangedZhanbi = false;
+        }
+    }
+    if (hasChangedZhanbi) {
+        if (remainingAccount < 0 || remainingAccount >= 100) {
+            alert("机器占比不合理，请修改");
+            return false;
+        }
     }
     groupSetting.operationType = operationType;
     groupSetting.machineUsedPercent = parseInt(dialogDiv.find("#machineUsedPercent").val() == '' ? 0 : dialogDiv.find("#machineUsedPercent").val());
@@ -459,6 +468,7 @@ function saveGroupSetting(type, status, isUpdateGroup, groupUuid){
     groupSetting.waitTimeAfterOpenBaidu = dialogDiv.find("#waitTimeAfterOpenBaidu").val();
     groupSetting.waitTimeBeforeClick = dialogDiv.find("#waitTimeBeforeClick").val();
     groupSetting.waitTimeAfterClick = dialogDiv.find("#waitTimeAfterClick").val();
+    groupSetting.maxInvalidCount = dialogDiv.find("#maxInvalidCount").val();
 
     groupSetting.oneIPOneUser = dialogDiv.find("#oneIPOneUser:checked").val() === '1' ? 1 : 0;
     groupSetting.randomlyClickNoResult = dialogDiv.find("#randomlyClickNoResult:checked").val() === '1' ? 1 : 0;
@@ -518,6 +528,7 @@ function saveGroupSetting(type, status, isUpdateGroup, groupUuid){
         gs.waitTimeAfterOpenBaidu = isChecked("waitTimeAfterOpenBaidu", dialogDiv);
         gs.waitTimeBeforeClick = isChecked("waitTimeBeforeClick", dialogDiv);
         gs.waitTimeAfterClick = isChecked("waitTimeAfterClick", dialogDiv);
+        gs.maxInvalidCount = isChecked("maxInvalidCount", dialogDiv);
 
         gs.oneIPOneUser = isChecked("oneIPOneUser", dialogDiv) === '1' ? 1 : 0;
         gs.randomlyClickNoResult = isChecked("randomlyClickNoResult", dialogDiv) === '1' ? 1 : 0;
@@ -614,8 +625,10 @@ function saveGroupSetting(type, status, isUpdateGroup, groupUuid){
         });
     } else if (type === "groupadd") {
         var terminalType = $("#chargeForm").find("#terminalType").val();
+        var maxInvalidCount = dialogDiv.find("#maxInvalidCount").val();
         group.terminalType = terminalType;
         group.groupSetting = groupSetting;
+        group.maxInvalidCount = maxInvalidCount;
         $.ajax({
             url: '/internal/group/saveGroup',
             data: JSON.stringify(group),
@@ -805,4 +818,50 @@ function searchAvailableOptimizationGroups() {
             $().toastmessage("showErrorToast", "查询失败！！！");
         }
     });
+}
+
+function editMaxInvalidCountStr(self, edit){
+    var groupSetting = {};
+    groupSetting.id = self.id;
+    if (edit) {
+        groupSetting.maxInvalidCount = self.textContent;
+        self.innerHTML = '<input class="nostyle" type="text" value="' + groupSetting.maxInvalidCount + '" label="' +groupSetting.maxInvalidCount+ '" name="maxInvalidCount" id= "'+ groupSetting.id +'" onBlur="editMaxInvalidCountStr(this)" />';
+        self.getElementsByTagName('input')[0].focus();
+    } else {
+        var isChange = true;
+        var label = $(self).attr("label");
+        if ($.trim(self.value) == $.trim(label)) {
+            isChange = false;
+        }
+        if (isChange) {
+            groupSetting.maxInvalidCount = $.trim(self.value);
+            $.ajax({
+                url: "/internal/group/updateMaxInvalidCount",
+                type: "POST",
+                data: JSON.stringify(groupSetting),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                success: function (data) {
+                    if (data) {
+                        $().toastmessage('showSuccessToast', "保存成功！", true);
+                    } else {
+                        $().toastmessage('showErrorToast', "保存失败！");
+                        self.value = $.trim(label);
+                    }
+                },
+                error: function () {
+                    $().toastmessage('showErrorToast', "保存失败！");
+                    self.value = $.trim(label);
+                }
+            });
+        }
+        setTimeout(function(){
+            if ($.trim(self.value) == "") {
+                self.value = "暂无";
+            }
+            self.parentNode.innerHTML = $.trim(self.value);
+        }, 100);
+    }
 }

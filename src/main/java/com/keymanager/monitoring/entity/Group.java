@@ -22,6 +22,9 @@ public class Group extends BaseEntity {
     @TableField(value = "fRemainingAccount")
     private int remainingAccount;
 
+    @TableField(value = "fMaxInvalidCount")
+    private int maxInvalidCount;
+
     public String getGroupName () {
         return groupName;
     }
@@ -52,5 +55,13 @@ public class Group extends BaseEntity {
 
     public void setRemainingAccount (int remainingAccount) {
         this.remainingAccount = remainingAccount;
+    }
+
+    public int getMaxInvalidCount() {
+        return maxInvalidCount;
+    }
+
+    public void setMaxInvalidCount(int maxInvalidCount) {
+        this.maxInvalidCount = maxInvalidCount;
     }
 }
