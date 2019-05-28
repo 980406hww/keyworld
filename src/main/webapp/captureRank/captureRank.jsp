@@ -40,6 +40,11 @@
                 <option value="Processing" <c:if test="${captureRankJobSearchCriteria.exectionStatus.equals('Processing')}">selected="selected"</c:if>>Processing</option>
                 <option value="Checking" <c:if test="${captureRankJobSearchCriteria.exectionStatus.equals('Checking')}">selected="selected"</c:if>>Checking</option>
                 <option value="Complete" <c:if test="${captureRankJobSearchCriteria.exectionStatus.equals('Complete')}">selected="selected"</c:if>>Complete</option>
+            </select>
+            任务类型:
+            <select name="jobType">
+                <option value="Common" <c:if test="${captureRankJobSearchCriteria.jobType.equals('Common')}">selected="selected"</c:if>>普通任务</option>
+                <option value="Specify" <c:if test="${captureRankJobSearchCriteria.jobType.equals('Specify')}">selected="selected"</c:if>>整站任务</option>
             </select>&nbsp;&nbsp;
             <shiro:hasPermission name="/internal/captureRank/searchCaptureRankJobs">
             <input type="submit" value=" 查询 " onclick="resetPageNumber()">&nbsp;&nbsp;

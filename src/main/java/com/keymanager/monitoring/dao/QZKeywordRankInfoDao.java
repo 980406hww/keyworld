@@ -3,6 +3,7 @@ package com.keymanager.monitoring.dao;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.keymanager.monitoring.criteria.QZSettingSearchCriteria;
 import com.keymanager.monitoring.entity.QZKeywordRankInfo;
+import com.keymanager.monitoring.entity.QZSetting;
 import com.keymanager.monitoring.vo.ExternalQzSettingVO;
 import org.apache.ibatis.annotations.Param;
 
@@ -27,4 +28,6 @@ public interface QZKeywordRankInfoDao extends BaseMapper<QZKeywordRankInfo> {
     QZSettingSearchCriteria getCountNumOfRankInfo(@Param("upper")double upper, @Param("lower")double lower, @Param("differenceValue") double differenceValue, @Param("terminalType") String terminalType, @Param("loginName") String loginName);
 
     List<String> getQZKeywordRankInfoTypes (@Param("qzSettingUuid") Long qzSettingUuid);
+
+    QZKeywordRankInfo selectByQZSettingUuid(@Param("qzSettingUuid") Long qzSettingUuid, @Param("terminalType") String terminalType);
 }

@@ -15,7 +15,7 @@ import java.util.List;
 public interface CaptureRankJobDao extends BaseMapper<CaptureRankJob> {
     List<CaptureRankJob> searchCaptureRankJobs(Page<CaptureRankJob> page, @Param("captureRankJobSearchCriteria") CaptureRankJobSearchCriteria captureRankJobSearchCriteria);
 
-    CaptureRankJob provideCaptureRankJob();
+    CaptureRankJob provideCaptureRankJob(@Param("jobType") String jobType);
 
     CaptureRankJob getProcessingJob();
 
@@ -30,4 +30,6 @@ public interface CaptureRankJobDao extends BaseMapper<CaptureRankJob> {
     List<CaptureRankJob> searchFiveMiniSetCheckingJobs();
     
     int searchThreeMiniStatusEqualsOne(@Param("terminalType") String terminalType, @Param("groupName") String groupName);
+
+    int searchCountByPosition(@Param("captureRankJob") CaptureRankJob captureRankJob, @Param("position") int position);
 }

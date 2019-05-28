@@ -428,9 +428,10 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         Date startTime = new Date((Long) requestMap.get("startTime"));
         Integer customerUuid = (requestMap.get("customerUuid") == null) ? null : (Integer) requestMap.get("customerUuid");
         Integer captureRankJobUuid = (Integer) requestMap.get("captureRankJobUuid");
+        Integer qzSettingUuid = (Integer) requestMap.get("qzSettingUuid");
         try {
             if (validUser(userName, password)) {
-                List<CustomerKeywordForCapturePosition> customerKeywordForCapturePositions = customerKeywordService.getCustomerKeywordForCapturePositionTemp(terminalType, groupName, customerUuid != null ? customerUuid.longValue() : null, startTime, captureRankJobUuid.longValue());
+                List<CustomerKeywordForCapturePosition> customerKeywordForCapturePositions = customerKeywordService.getCustomerKeywordForCapturePositionTemp(qzSettingUuid != null ? qzSettingUuid.longValue() : null, terminalType, groupName, customerUuid != null ? customerUuid.longValue() : null, startTime, captureRankJobUuid.longValue());
                 if (customerKeywordForCapturePositions.size() == 0) {
                     CustomerKeywordForCapturePosition customerKeywordForCapturePosition = new CustomerKeywordForCapturePosition();
                     customerKeywordForCapturePosition.setKeyword("end");

@@ -5,6 +5,7 @@
         c.fUuid AS `uuid`,
         c.fGroupNames AS `groupNames`,
         c.fCustomerUuid AS `customerUuid`,
+        c.fQZSettingUuid AS `qzSettingUuid`,
         c.fOperationType AS `operationType`,
         c.fExectionType AS `exectionType`,
         c.fExectionTime AS `exectionTime`,
@@ -45,6 +46,12 @@
             <if test="captureRankJobSearchCriteria.exectionStatus!=null and captureRankJobSearchCriteria.exectionStatus!=''">
                 AND c.fExectionStatus = #{captureRankJobSearchCriteria.exectionStatus}
             </if>
+            <if test="captureRankJobSearchCriteria.jobType == 'Specify'">
+                AND c.fQZSettingUuid > 0
+            </if>
+            <if test="captureRankJobSearchCriteria.jobType == 'Common'">
+                AND c.fQZSettingUuid IS NULL
+            </if>
         </where>
     </select>
 
@@ -54,6 +61,13 @@
         FROM
             t_capture_rank_job c
         WHERE
+        <if test="jobType == 'Common'">
+            c.fQZSettingUuid IS NULL
+        </if>
+        <if test="jobType == 'Specify'">
+            c.fQZSettingUuid &gt; 0
+        </if>
+        AND
         (
             c.fExectionStatus='New' OR
             (
@@ -113,7 +127,8 @@
 
     <select id="searchFiveMiniSetCheckingJobs" resultType="com.keymanager.monitoring.entity.CaptureRankJob">
         SELECT
-            c.fUuid as uuid,
+            c.fUuid as `uuid`,
+            c.fQZSettingUuid as `qzSettingUuid`,
             c.fOperationType as `operationType`,
             c.fGroupNames as `groupNames`
         FROM
@@ -146,4 +161,23 @@
             AND fOperationType = #{operationType}
         </if>
     </delete>
+
+    <select id="searchCountByPosition" resultType="java.lang.Integer">
+        SELECT
+            COUNT(1)
+        FROM
+            t_customer_keyword
+        WHERE
+            fTerminalType = #{captureRankJob.operationType}
+        AND
+            fOptimizeGroupName = #{captureRankJob.groupNames}
+        AND
+            fCustomerKeywordSource = 'specify'
+        AND
+            fStatus = 1
+        AND
+            fCurrentPosition &lt;= #{position}
+        AND
+            fCurrentPosition &gt; 0
+    </select>
 </mapper>

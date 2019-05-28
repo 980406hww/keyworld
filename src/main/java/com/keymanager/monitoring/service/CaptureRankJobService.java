@@ -5,8 +5,10 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.criteria.CaptureRankJobSearchCriteria;
 import com.keymanager.monitoring.dao.CaptureRankJobDao;
+import com.keymanager.monitoring.dao.QZKeywordRankInfoDao;
 import com.keymanager.monitoring.entity.CaptureRankJob;
 import com.keymanager.monitoring.entity.Customer;
+import com.keymanager.monitoring.entity.QZKeywordRankInfo;
 import com.keymanager.monitoring.enums.CaptureRankExectionStatus;
 import com.keymanager.util.Utils;
 import com.sun.xml.internal.bind.Util;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Time;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -31,10 +34,18 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
     @Autowired
     private CustomerService customerService;
 
+    @Autowired
+    private QZKeywordRankInfoDao qzKeywordRankInfoDao;
+
     public synchronized CaptureRankJob provideCaptureRankJob() {
         CaptureRankJob captureRankJob = captureRankJobDao.getProcessingJob();
         if (captureRankJob == null) {
-            captureRankJob = captureRankJobDao.provideCaptureRankJob();
+            // 取普通任务
+            captureRankJob = captureRankJobDao.provideCaptureRankJob("Common");
+            if(captureRankJob == null){
+                // 普通任务为空取全站任务
+                captureRankJob = captureRankJobDao.provideCaptureRankJob("Specify");
+            }
             if (captureRankJob != null) {
                 captureRankJob.setStartTime(new Date());
                 captureRankJob.setExectionStatus(CaptureRankExectionStatus.Processing.name());
@@ -117,6 +128,9 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
                 if (captureRankJobDao.searchThreeMiniStatusEqualsOne(captureRankJob.getOperationType(), captureRankJob.getGroupNames()) > 0) {
                     captureRankJob.setExectionStatus(CaptureRankExectionStatus.Processing.name());
                 } else {
+                    if (captureRankJob.getQzSettingUuid() != null) {
+                        updateGenerationCurve(captureRankJob);
+                    }
                     captureRankJob.setEndTime(new Date());
                     captureRankJob.setLastExecutionDate(new java.sql.Date(new Date().getTime()));
                     captureRankJob.setExectionStatus(CaptureRankExectionStatus.Complete.name());
@@ -124,6 +138,103 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
                 captureRankJobDao.updateById(captureRankJob);
             }
         }
+    }
+
+    public void updateGenerationCurve(CaptureRankJob captureRankJob) {
+        QZKeywordRankInfo qzKeywordRankInfo = qzKeywordRankInfoDao.selectByQZSettingUuid(captureRankJob.getQzSettingUuid(), captureRankJob.getOperationType());
+        int topTenNum = captureRankJobDao.searchCountByPosition(captureRankJob, 10);
+        int topTwentyNum = captureRankJobDao.searchCountByPosition(captureRankJob, 20);
+        int topThirtyNum = captureRankJobDao.searchCountByPosition(captureRankJob, 30);
+        int topFortyNum = captureRankJobDao.searchCountByPosition(captureRankJob, 40);
+        int topFiftyNum = captureRankJobDao.searchCountByPosition(captureRankJob, 50);
+
+        String dateString = qzKeywordRankInfo.getDate();
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd");
+
+        if (dateString == null || "".equals(dateString)) {
+            // 首次任务，直接添加
+            qzKeywordRankInfo.setTopTen("[" + topTenNum + "]");
+            qzKeywordRankInfo.setTopTwenty("[" + topTwentyNum + "]");
+            qzKeywordRankInfo.setTopThirty("[" + topThirtyNum + "]");
+            qzKeywordRankInfo.setTopForty("[" + topFortyNum + "]");
+            qzKeywordRankInfo.setTopFifty("[" + topFiftyNum + "]");
+            qzKeywordRankInfo.setDate("['" + sdf.format(date) + "']");
+        } else {
+            // 非首次，累加或者替换
+            String[] dateStrings = dateString.substring(1, dateString.length() - 1).split(", ");
+            String nowDate = dateStrings[0];
+            if (nowDate.equals("'" + sdf.format(date) + "'")) {
+                // 为当天时间，替换数据
+                if(dateStrings.length == 1) {
+                    // 只有一个数据
+                    qzKeywordRankInfo.setTopTen("[" + topTenNum + "]");
+                    qzKeywordRankInfo.setTopTwenty("[" + topTwentyNum + "]");
+                    qzKeywordRankInfo.setTopThirty("[" + topThirtyNum + "]");
+                    qzKeywordRankInfo.setTopForty("[" + topFortyNum + "]");
+                    qzKeywordRankInfo.setTopFifty("[" + topFiftyNum + "]");
+                } else {
+                    qzKeywordRankInfo.setTopTen(replaceData(qzKeywordRankInfo.getTopTen(), topTenNum + ""));
+                    qzKeywordRankInfo.setTopTwenty(replaceData(qzKeywordRankInfo.getTopTwenty(), topTwentyNum + ""));
+                    qzKeywordRankInfo.setTopThirty(replaceData(qzKeywordRankInfo.getTopThirty(), topThirtyNum + ""));
+                    qzKeywordRankInfo.setTopForty(replaceData(qzKeywordRankInfo.getTopForty(), topFortyNum + ""));
+                    qzKeywordRankInfo.setTopFifty(replaceData(qzKeywordRankInfo.getTopFifty(), topFiftyNum + ""));
+                }
+            } else {
+                // 不为当天，添加数据
+                qzKeywordRankInfo.setTopTen(addData(qzKeywordRankInfo.getTopTen(), topTenNum + ""));
+                qzKeywordRankInfo.setTopTwenty(addData(qzKeywordRankInfo.getTopTwenty(), topTwentyNum + ""));
+                qzKeywordRankInfo.setTopThirty(addData(qzKeywordRankInfo.getTopThirty(), topThirtyNum + ""));
+                qzKeywordRankInfo.setTopForty(addData(qzKeywordRankInfo.getTopForty(), topFortyNum + ""));
+                qzKeywordRankInfo.setTopFifty(addData(qzKeywordRankInfo.getTopFifty(), topFiftyNum + ""));
+                qzKeywordRankInfo.setDate(addData(qzKeywordRankInfo.getDate(), "'" + sdf.format(date) + "'"));
+            }
+        }
+
+        if (qzKeywordRankInfo.getCreateTopTenNum() == null) {
+            qzKeywordRankInfo.setCreateTopTenNum(topTenNum);
+        }
+        if (qzKeywordRankInfo.getCreateTopFiftyNum() == null) {
+            qzKeywordRankInfo.setCreateTopFiftyNum(topFiftyNum);
+        }
+
+        String weekDataString = qzKeywordRankInfo.getTopTen().substring(1, qzKeywordRankInfo.getTopTen().length() - 1);
+        String[] weekData = weekDataString.split(", ");
+        DecimalFormat decimalFormat = new DecimalFormat("0.0000");
+
+        String increase;
+        if (weekData.length < 7) {
+            increase = decimalFormat.format((double) (topTenNum - Integer.parseInt(weekData[weekData.length - 1])) / weekData.length);
+        } else {
+            increase = decimalFormat.format((double) (topTenNum - Integer.parseInt(weekData[6])) / 7);
+        }
+        qzKeywordRankInfo.setIncrease(Double.parseDouble(increase));
+        qzKeywordRankInfo.setTodayDifference(weekData.length > 1 ? topTenNum - Integer.parseInt(weekData[1]) : 0);
+
+        qzKeywordRankInfo.setUpdateTime(new Date());
+        qzKeywordRankInfoDao.updateById(qzKeywordRankInfo);
+    }
+
+    public String addData(String string, String num) {
+        if (string == null) {
+            return "[" + num + "]";
+        } else {
+            String[] topTenStrings = string.split(", ");
+            StringBuilder sb = new StringBuilder(string);
+            sb.replace(0, 1, "[" + num + ", ");
+            if (topTenStrings.length >= 90) {
+                int end = sb.lastIndexOf(",");
+                sb.replace(end, sb.length(), "]");
+            }
+            return sb.toString();
+        }
+    }
+
+    public String replaceData(String string, String num) {
+        StringBuilder sb = new StringBuilder(string);
+        int index = sb.indexOf(",");
+        sb.replace(0, index, "[" + num);
+        return sb.toString();
     }
 
     public Boolean getCaptureRankJobStatus(Long captureRankJobUuid) {

@@ -89,4 +89,19 @@
         WHERE qk.fQZSettingUuid = #{qzSettingUuid}
         AND qk.fWebsiteType <![CDATA[<>]]> 'designationWord'
     </select>
+
+    <select id="selectByQZSettingUuid" resultType="com.keymanager.monitoring.entity.QZKeywordRankInfo">
+        SELECT
+            fUuid AS uuid,fDate AS `date`,fFullDate AS fullDate,
+            fTopTen AS topTen,fTopTwenty AS topTwenty,fTopThirty AS topThirty,fTopForty AS topForty,fTopFifty AS topFifty,
+            fCreateTopTenNum AS createTopTenNum,fCreateTopFiftyNum AS createTopFiftyNum
+        FROM
+            t_qz_keyword_rank_info
+        WHERE
+            fQZSettingUuid = #{qzSettingUuid}
+        AND
+            fTerminalType = #{terminalType}
+        AND
+            fWebsiteType = 'designationWord'
+    </select>
 </mapper>

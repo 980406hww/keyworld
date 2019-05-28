@@ -107,9 +107,9 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
                                                   @Param("customerUuid") Long customerUuid, @Param("startTime") Date startTime,
                                                   @Param("captureStatus") Integer captureStatus);
 
-    List<Long> getCustomerKeywordUuidForCapturePositionTemp(@Param("terminalType") String terminalType, @Param("groupName") String groupName,
-                                                            @Param("customerUuid") Long customerUuid, @Param("startTime") Date startTime,
-                                                            @Param("captureStatus") Integer captureStatus);
+    List<Long> getCustomerKeywordUuidForCapturePositionTemp(@Param("qzSettingUuid") Long qzSettingUuid, @Param("terminalType") String terminalType,
+                                                            @Param("groupName") String groupName, @Param("customerUuid") Long customerUuid,
+                                                            @Param("startTime") Date startTime, @Param("captureStatus") Integer captureStatus);
 
     CustomerKeyword getCustomerKeywordForCapturePosition(@Param("uuid")Long uuid);
 

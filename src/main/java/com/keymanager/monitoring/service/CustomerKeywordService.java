@@ -1196,7 +1196,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                                                                                   Date startTime,Long captureRankJobUuid){
         CustomerKeywordForCapturePosition customerKeywordForCapturePosition = new CustomerKeywordForCapturePosition();
         Boolean captureRankJobStatus = captureRankJobService.getCaptureRankJobStatus(captureRankJobUuid);
-        if(captureRankJobStatus){
+        if(captureRankJobStatus != null){
             customerKeywordForCapturePosition.setCaptureRankJobStatus(captureRankJobStatus);
             Long customerKeywordUuid = customerKeywordDao.getCustomerKeywordUuidForCapturePosition(terminalType, groupNames, customerUuid, startTime, 0);
             if(null == customerKeywordUuid){
@@ -1219,16 +1219,16 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return customerKeywordForCapturePosition;
     }
 
-    public List<CustomerKeywordForCapturePosition> getCustomerKeywordForCapturePositionTemp(String terminalType, String groupName, Long customerUuid, Date startTime, Long captureRankJobUuid) {
+    public List<CustomerKeywordForCapturePosition> getCustomerKeywordForCapturePositionTemp(Long qzSettingUuid, String terminalType, String groupName, Long customerUuid, Date startTime, Long captureRankJobUuid) {
 
         List<CustomerKeywordForCapturePosition> customerKeywordForCapturePositions = new ArrayList<>();
 
         synchronized (CustomerKeywordService.class) {
             Boolean captureRankJobStatus = captureRankJobService.getCaptureRankJobStatus(captureRankJobUuid);
             if (captureRankJobStatus) {
-                List<Long> customerKeywordUuids = customerKeywordDao.getCustomerKeywordUuidForCapturePositionTemp(terminalType, groupName, customerUuid, startTime, 0);
+                List<Long> customerKeywordUuids = customerKeywordDao.getCustomerKeywordUuidForCapturePositionTemp(qzSettingUuid, terminalType, groupName, customerUuid, startTime, 0);
                 if (null == customerKeywordUuids || customerKeywordUuids.size() == 0) {
-                    customerKeywordUuids = customerKeywordDao.getCustomerKeywordUuidForCapturePositionTemp(terminalType, groupName, customerUuid, startTime, 1);
+                    customerKeywordUuids = customerKeywordDao.getCustomerKeywordUuidForCapturePositionTemp(qzSettingUuid, terminalType, groupName, customerUuid, startTime, 1);
                 }
                 if (null != customerKeywordUuids && customerKeywordUuids.size() != 0) {
                     customerKeywordForCapturePositions = customerKeywordDao.getCustomerKeywordForCapturePositionTemp(customerKeywordUuids);

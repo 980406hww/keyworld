@@ -67,6 +67,7 @@ public class CaptureRankRsetController {
     private ModelAndView constructCaptureRankJobModelAndView(HttpServletRequest request, CaptureRankJobSearchCriteria captureRankJobSearchCriteria, String currentPage, String pageSize) {
         ModelAndView modelAndView = new ModelAndView("captureRank/captureRank");
         captureRankJobSearchCriteria.setOperationType(TerminalTypeMapping.getTerminalType(request));
+        captureRankJobSearchCriteria.setJobType(captureRankJobSearchCriteria.getJobType() == null ? "Common" : captureRankJobSearchCriteria.getJobType());
         Page<CaptureRankJob> page = captureRankJobService.searchCaptureRankJob(new Page<CaptureRankJob>(Integer.parseInt(currentPage), Integer.parseInt(pageSize)), captureRankJobSearchCriteria);
         modelAndView.addObject("page", page);
         modelAndView.addObject("captureRankJobSearchCriteria", captureRankJobSearchCriteria);
