@@ -3,6 +3,8 @@ package com.keymanager.monitoring.vo;
 public class QZOperationTypeVO {
      private Long qzSettingUuid;
      private String operationType;
+     private String standardType;
+     private String standardSpecies;
      private String startKeywordCount;
      private String endKeywordCount;
      private String amount;
@@ -21,6 +23,22 @@ public class QZOperationTypeVO {
 
     public void setOperationType(String operationType) {
         this.operationType = operationType;
+    }
+
+    public String getStandardType () {
+        return standardType;
+    }
+
+    public void setStandardType (String standardType) {
+        this.standardType = standardType;
+    }
+
+    public String getStandardSpecies () {
+        return standardSpecies;
+    }
+
+    public void setStandardSpecies (String standardSpecies) {
+        this.standardSpecies = standardSpecies;
     }
 
     public String getStartKeywordCount() {

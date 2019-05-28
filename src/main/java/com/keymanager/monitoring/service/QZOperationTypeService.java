@@ -40,7 +40,7 @@ public class QZOperationTypeService extends ServiceImpl<QZOperationTypeDao, QZOp
 		qzOperationTypeDao.deleteByQZSettingUuid(qzSettingUuid);
 	}
 
-	public List<QZOperationTypeVO> findQZOperationTypes(Long qzSettingUuid, String operationType){
-		return qzOperationTypeDao.findQZOperationTypes(qzSettingUuid, operationType);
+	public List<QZOperationTypeVO> findQZOperationTypes(Long qzSettingUuid, String operationType, String websiteType){
+		return qzOperationTypeDao.findQZOperationTypes(qzSettingUuid, operationType, websiteType);
 	}
 }

@@ -349,11 +349,19 @@ ul {
     line-height: 2;
 }
 
-.datalist-list .body .rank-wrap > div span, .datalist-list .body .rank-wrap1 > div span {
-    font-size: 10px;
+.datalist-list .body .rank-wrap > div span:first-child, .datalist-list .body .rank-wrap1 > div span:first-child {
+    font-size: 12px;
     display: block;
     float: left;
-    width: 50%;
+    width: 70%;
+    text-align: left;
+}
+
+.datalist-list .body .rank-wrap > div span:last-child, .datalist-list .body .rank-wrap1 > div span:last-child {
+    font-size: 12px;
+    display: block;
+    float: left;
+    width: 30%;
     text-align: left;
 }
 
@@ -370,7 +378,7 @@ ul {
 }
 
 .datalist-list .body .rank-wrap > div span a, .datalist-list .body .rank-wrap1 > div span a {
-    font-size: 10px;
+    font-size: 12px;
     text-decoration: none;
 }
 
@@ -572,6 +580,11 @@ ul {
 .rank-wrap1 .col-1 {
     width: 70%;
     text-align: left;
+}
+
+.rank-wrap1 .col-1 h1 {
+    text-align: center;
+    padding-top: 65px;
 }
 
 #moreSearchCondition {
