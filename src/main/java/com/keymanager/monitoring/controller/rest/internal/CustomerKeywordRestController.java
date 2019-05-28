@@ -108,7 +108,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		modelAndView.addObject("page", page);
 		modelAndView.addObject("user", user);
 		modelAndView.addObject("customer", customer);
-        modelAndView.addObject("CustomerKeywordSourceMap", Constants.CUSTOMER_KEYWORD_SOURCE_ENUM_MAP);
+        modelAndView.addObject("CustomerKeywordSourceMap", CustomerKeywordSourceEnum.toMap());
 		modelAndView.addObject("serviceProviders",serviceProviders);
 		modelAndView.addObject("orderElement",orderElement);
 		performanceService.addPerformanceLog(terminalType + ":searchCustomerKeywords", System.currentTimeMillis() - startMilleSeconds, null);
@@ -423,7 +423,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		modelAndView.addObject("user", user);
 		modelAndView.addObject("activeUsers", activeUsers);
 		modelAndView.addObject("orderElement",orderElement);
-        modelAndView.addObject("CustomerKeywordSourceMap", Constants.CUSTOMER_KEYWORD_SOURCE_ENUM_MAP);
+        modelAndView.addObject("CustomerKeywordSourceMap", CustomerKeywordSourceEnum.toMap());
 		modelAndView.addObject("isDepartmentManager",isDepartmentManager);
 		performanceService.addPerformanceLog(terminalType + ":searchCustomerKeywordLists", (System.currentTimeMillis() - startMilleSeconds), null);
 		return modelAndView;
