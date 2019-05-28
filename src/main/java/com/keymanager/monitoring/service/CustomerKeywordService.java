@@ -600,7 +600,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeyword.setTerminalType(terminalType);
             if (null != qzSetting){
                 String optimizeGroupName = customerKeyword.getOptimizeGroupName();
-                if (null == optimizeGroupName || "".equals(optimizeGroupName)){
+                if (StringUtils.isEmpty(optimizeGroupName)){
                     optimizeGroupName = TerminalTypeEnum.PC.name().equals(customerKeyword.getTerminalType()) ? qzSetting.getPcGroup() : qzSetting.getPhoneGroup();
                 }
                 CustomerKeywordOptimizeGroupCriteria customerKeywordOptimizeGroupCriteria = matchOptimizeGroupName(customerKeywordOptimizeGroupCriteriaList, optimizeGroupName, qzSetting.getGroupMaxCustomerKeywordCount());
@@ -1667,7 +1667,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     public void checkOptimizeGroupName(CustomerKeyword customerKeyword){
         QZSetting qzSetting = qzSettingService.searchGroupMaxCustomerKeywordCount(customerKeyword.getCustomerUuid(), customerKeyword.getTerminalType(), customerKeyword.getUrl());
         String optimizeGroupName = customerKeyword.getOptimizeGroupName();
-        if (null == optimizeGroupName || "".equals(optimizeGroupName)){
+        if (StringUtils.isEmpty(optimizeGroupName)){
             optimizeGroupName = TerminalTypeEnum.PC.name().equals(customerKeyword.getTerminalType()) ? qzSetting.getPcGroup() : qzSetting.getPhoneGroup();
         }
         List<CustomerKeywordOptimizeGroupCriteria> customerKeywordOptimizeGroupCriteriaList = searchOptimizeGroupNameAndCount(optimizeGroupName);
