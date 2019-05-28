@@ -600,7 +600,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeyword.setTerminalType(terminalType);
             if (null != qzSetting){
                 String optimizeGroupName = customerKeyword.getOptimizeGroupName();
-                if (null == optimizeGroupName){
+                if (null == optimizeGroupName || "".equals(optimizeGroupName)){
                     optimizeGroupName = TerminalTypeEnum.PC.name().equals(customerKeyword.getTerminalType()) ? qzSetting.getPcGroup() : qzSetting.getPhoneGroup();
                 }
                 CustomerKeywordOptimizeGroupCriteria customerKeywordOptimizeGroupCriteria = matchOptimizeGroupName(customerKeywordOptimizeGroupCriteriaList, optimizeGroupName, qzSetting.getGroupMaxCustomerKeywordCount());
@@ -1666,34 +1666,27 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     public void checkOptimizeGroupName(CustomerKeyword customerKeyword){
         QZSetting qzSetting = qzSettingService.searchGroupMaxCustomerKeywordCount(customerKeyword.getCustomerUuid(), customerKeyword.getTerminalType(), customerKeyword.getUrl());
-        if (null == customerKeyword.getOptimizeGroupName()){
-            if (TerminalTypeEnum.PC.name().equals(customerKeyword.getTerminalType())){
-                customerKeyword.setOptimizeGroupName(qzSetting.getPcGroup());
-            }else {
-                customerKeyword.setOptimizeGroupName(qzSetting.getPhoneGroup());
-            }
+        String optimizeGroupName = customerKeyword.getOptimizeGroupName();
+        if (null == optimizeGroupName || "".equals(optimizeGroupName)){
+            optimizeGroupName = TerminalTypeEnum.PC.name().equals(customerKeyword.getTerminalType()) ? qzSetting.getPcGroup() : qzSetting.getPhoneGroup();
         }
-        List<CustomerKeywordOptimizeGroupCriteria> customerKeywordOptimizeGroupCriteriaList = searchOptimizeGroupNameAndCount(customerKeyword.getOptimizeGroupName());
+        List<CustomerKeywordOptimizeGroupCriteria> customerKeywordOptimizeGroupCriteriaList = searchOptimizeGroupNameAndCount(optimizeGroupName);
+        int maxGroupNameSuffix = 1;
+        String tmpOptimizeGroupName = optimizeGroupName;
         if (customerKeywordOptimizeGroupCriteriaList.size() > 0){
-            int tempNum = 0;
-            int maxGroupNameSuffix = 1;
             for (CustomerKeywordOptimizeGroupCriteria customerKeywordOptimizeGroupCriteria: customerKeywordOptimizeGroupCriteriaList) {
                 if (customerKeywordOptimizeGroupCriteria.getSameGroupCustomerKeywordCount() < qzSetting.getGroupMaxCustomerKeywordCount()){
                     customerKeyword.setOptimizeGroupName(customerKeywordOptimizeGroupCriteria.getOptimizeGroupName());
-                    tempNum = 1;
-                    break;
+                    return;
                 }
                 String optimizeGroupNameSuffix = customerKeywordOptimizeGroupCriteria.getOptimizeGroupName().replaceAll(".*_", "");
                 if (StringUtils.isNumeric(optimizeGroupNameSuffix)){
-                    if (maxGroupNameSuffix < Integer.parseInt(optimizeGroupNameSuffix)){
-                        maxGroupNameSuffix = Integer.parseInt(optimizeGroupNameSuffix) + 1;
-                    }
+                    maxGroupNameSuffix = maxGroupNameSuffix < Integer.parseInt(optimizeGroupNameSuffix) ? Integer.parseInt(optimizeGroupNameSuffix) : maxGroupNameSuffix;
                 }
             }
-            if (tempNum == 0){
-                customerKeyword.setOptimizeGroupName(customerKeyword.getOptimizeGroupName() + "_" + maxGroupNameSuffix);
-            }
+            tmpOptimizeGroupName = optimizeGroupName + "_" + (maxGroupNameSuffix + 1);
         }
+        customerKeyword.setOptimizeGroupName(tmpOptimizeGroupName);
     }
 
     public List<CustomerKeywordOptimizeGroupCriteria> searchOptimizeGroupNameAndCount(String optimizeGroupName){
@@ -1713,7 +1706,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                 if (StringUtils.isNumeric(optimizeGroupNameSuffix)) {
                     maxGroupNameSuffix = maxGroupNameSuffix < Integer.parseInt(optimizeGroupNameSuffix) ? Integer.parseInt(optimizeGroupNameSuffix) : maxGroupNameSuffix;
                 }
-                tmpOptimizeGroupName = optimizeGroupName + "_" + maxGroupNameSuffix + 1;
+                tmpOptimizeGroupName = optimizeGroupName + "_" + (maxGroupNameSuffix + 1);
             }
         }
         CustomerKeywordOptimizeGroupCriteria customerKeywordOptimizeGroupCriteria = new CustomerKeywordOptimizeGroupCriteria();
