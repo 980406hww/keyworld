@@ -288,22 +288,9 @@
 								<div class="other-rank_1">
 									<div class="row">
 										<span class="line1">
-											<c:if test="${qzSetting.qzKeywordRankInfoMap['PC'].sumSeries > 0}">
-												<a href="javascript:;" qzsettinguuid="${qzSetting.uuid}" level="${qzSetting.qzKeywordRankInfoMap['PC'].achieveLevel}" onmouseover="showChargeRulesDiv($(this))" onmouseout="closeChargeRulesDiv()">
-													<c:choose>
-														<c:when test="${qzSetting.qzKeywordRankInfoMap['PC'].achieveLevel == qzSetting.qzKeywordRankInfoMap['PC'].sumSeries}">
-															<font style="background-color: forestgreen;font-size: 14px;">${qzSetting.qzKeywordRankInfoMap['PC'].achieveLevel} / ${qzSetting.qzKeywordRankInfoMap['PC'].sumSeries} (${qzSetting.qzKeywordRankInfoMap['PC'].currentPrice})</font>
-														</c:when>
-														<c:when test="${qzSetting.qzKeywordRankInfoMap['PC'].achieveLevel == 0}">
-															<font style="background-color: red;font-size: 14px;">${qzSetting.qzKeywordRankInfoMap['PC'].achieveLevel} / ${qzSetting.qzKeywordRankInfoMap['PC'].sumSeries} (${qzSetting.qzKeywordRankInfoMap['PC'].currentPrice})</font>
-														</c:when>
-														<c:when test="${qzSetting.qzKeywordRankInfoMap['PC'].achieveLevel >= 1 and qzSetting.qzKeywordRankInfoMap['PC'].differenceValue < 1}">
-															<font style="background-color: orange;font-size: 14px;">${qzSetting.qzKeywordRankInfoMap['PC'].achieveLevel} / ${qzSetting.qzKeywordRankInfoMap['PC'].sumSeries} (${qzSetting.qzKeywordRankInfoMap['PC'].currentPrice})</font>
-														</c:when>
-													</c:choose>
-												</a>
-											</c:if>
-											<c:if test="${qzSetting.qzKeywordRankInfoMap['PC'].sumSeries == 0}"><a href="javascript:;">暂无</a></c:if>
+											<a href="javascript:;" qzsettinguuid="${qzSetting.uuid}" onmouseover="showChargeRulesDiv($(this))" onmouseout="closeChargeRulesDiv()">
+												<font style="background-color: orange;font-size: 14px;">￥ ${qzSetting.totalPrice}</font>
+											</a>
 										</span>
 										<span><a href="javascript:;">全站达标信息</a></span>
 									</div>
@@ -556,22 +543,9 @@
 								<div class="other-rank_1">
 									<div class="row">
 										<span class="line1">
-											<c:if test="${qzSetting.qzKeywordRankInfoMap['Phone'].sumSeries > 0}">
-												<a href="javascript:;" qzsettinguuid="${qzSetting.uuid}" level="${qzSetting.qzKeywordRankInfoMap['Phone'].achieveLevel}" onmouseover="showChargeRulesDiv($(this))" onmouseout="closeChargeRulesDiv()">
-													<c:choose>
-														<c:when test="${qzSetting.qzKeywordRankInfoMap['Phone'].achieveLevel == qzSetting.qzKeywordRankInfoMap['Phone'].sumSeries}">
-															<font style="background-color: forestgreen;font-size: 14px;">${qzSetting.qzKeywordRankInfoMap['Phone'].achieveLevel} / ${qzSetting.qzKeywordRankInfoMap['Phone'].sumSeries} (${qzSetting.qzKeywordRankInfoMap['Phone'].currentPrice})</font>
-														</c:when>
-														<c:when test="${qzSetting.qzKeywordRankInfoMap['Phone'].achieveLevel == 0}">
-															<font style="background-color: red;font-size: 14px;">${qzSetting.qzKeywordRankInfoMap['Phone'].achieveLevel} / ${qzSetting.qzKeywordRankInfoMap['Phone'].sumSeries} (${qzSetting.qzKeywordRankInfoMap['Phone'].currentPrice})</font>
-														</c:when>
-														<c:when test="${qzSetting.qzKeywordRankInfoMap['Phone'].achieveLevel >= 1 and qzSetting.qzKeywordRankInfoMap['Phone'].differenceValue < 1}">
-															<font style="background-color: orange;font-size: 14px;">${qzSetting.qzKeywordRankInfoMap['Phone'].achieveLevel} / ${qzSetting.qzKeywordRankInfoMap['Phone'].sumSeries} (${qzSetting.qzKeywordRankInfoMap['Phone'].currentPrice})</font>
-														</c:when>
-													</c:choose>
-												</a>
-											</c:if>
-											<c:if test="${qzSetting.qzKeywordRankInfoMap['Phone'].sumSeries == 0}"><a href="javascript:;">暂无</a></c:if>
+											<a href="javascript:;" qzsettinguuid="${qzSetting.uuid}" onmouseover="showChargeRulesDiv($(this))" onmouseout="closeChargeRulesDiv()">
+												<font style="background-color: orange;font-size: 14px;">￥ ${qzSetting.totalPrice}</font>
+											</a>
 										</span>
 										<span><a href="javascript:;">全站达标信息</a></span>
 									</div>
@@ -583,28 +557,6 @@
 
 								<div class="other-rank">
 									<div class="row">
-										<%--<div>
-										<span class="line1">
-											<a href="javascript:;">
-													${qzSetting.qzKeywordRankInfoMap["Phone"].topTenNum == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["Phone"].topTenNum}
-											</a>
-										</span>
-											<span>
-											<a href="javascript:;">前10</a>
-										</span>
-										</div>
-
-										<div>
-										<span class="line1">
-											<a href="javascript:;">
-													${qzSetting.qzKeywordRankInfoMap["Phone"].topFiftyNum == null ? "暂无" : qzSetting.qzKeywordRankInfoMap["Phone"].topFiftyNum}
-											</a>
-										</span>
-											<span>
-											<a href="javascript:;">前50</a>
-										</span>
-										</div>--%>
-
 										<div>
 										<span class="line1">
 											<a href="javascript:;">
@@ -627,23 +579,6 @@
 									</div>
 
 									<div class="row">
-										<%--<div>
-										<span class="line1">
-											<a href="javascript:;">${qzSetting.phoneCreateTopTenNum == null ? "暂无" : qzSetting.phoneCreateTopTenNum}</a>
-										</span>
-											<span>
-											<a href="javascript:;">初始前10</a>
-										</span>
-										</div>
-										<div>
-										<span class="line1">
-											<a href="javascript:;">${qzSetting.phoneCreateTopFiftyNum == null ? "暂无" : qzSetting.phoneCreateTopFiftyNum}</a>
-										</span>
-											<span>
-											<a href="javascript:;">初始前50</a>
-										</span>
-										</div>--%>
-
 										<div>
 										<span class="line1">
 											<input type="hidden" name="type" value="${qzSetting.type}">
@@ -1512,14 +1447,7 @@
 </div>
 <%--达标信息详情DIV--%>
 <div id="chargeRulesDiv" style="display:none;width:300px;">
-	<table id="chargeRulesDivTable" border="1" cellpadding="10" style="font-size: 12px;background-color: white;border-collapse: collapse;margin: 10px 10px;width:92%;">
-		<tr>
-			<td>序号</td>
-			<td>起始词量</td>
-			<td>终止词量</td>
-			<td>价格</td>
-		</tr>
-	</table>
+	<table id="chargeRulesDivTable" border="1" cellpadding="10" style="font-size: 12px;background-color: white;border-collapse: collapse;margin: 10px 10px;width:92%;"></table>
 </div>
 <%@ include file="/commons/loadjs.jsp" %>
 <script src="${staticPath}/js/echarts.min.js"></script>

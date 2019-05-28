@@ -272,8 +272,8 @@ function generateQZKeywordTrendCharts(domElement, data) {
     var topForty;
     var topHundred;
     var parentElement = $(domElement).parent()[0];
-    $(parentElement).find("#" + result.terminalType + "Top10").text(topTen[topTen.length-1] - topTen[topTen.length-2]);
-    $(parentElement).find("#" + result.terminalType + "Top50").text(topFifty[topFifty.length-1] - topFifty[topFifty.length-2]);
+    $(parentElement).find("#" + result.terminalType + "Top10").text(topTen[topTen.length-1]);
+    $(parentElement).find("#" + result.terminalType + "Top50").text(topFifty[topFifty.length-1]);
     $(parentElement).find("#" + result.terminalType + "TopCreate10").text(result.createTopTenNum);
     $(parentElement).find("#" + result.terminalType + "TopCreate50").text(result.createTopFiftyNum);
     if (result.websiteType === "aiZhan") {
@@ -545,8 +545,8 @@ function generateQZDesignationWordTrendCharts(domElement, data) {
     var topThirty = stringToArray(result.topThirty);
     var topForty = stringToArray(result.topForty);
     var parentElement = $(domElement).parent()[0];
-    $(parentElement).find("#" + result.terminalType + "Top10").text(topTen[topTen.length-1] - topTen[topTen.length-2]);
-    $(parentElement).find("#" + result.terminalType + "Top50").text(topFifty[topFifty.length-1] - topFifty[topFifty.length-2]);
+    $(parentElement).find("#" + result.terminalType + "Top10").text(topTen[topTen.length-1]);
+    $(parentElement).find("#" + result.terminalType + "Top50").text(topFifty[topFifty.length-1]);
     $(parentElement).find("#" + result.terminalType + "TopCreate10").text(result.createTopTenNum);
     $(parentElement).find("#" + result.terminalType + "TopCreate50").text(result.createTopFiftyNum);
     option = {
@@ -933,7 +933,7 @@ function showChargeRulesDiv(self, e) {
     if(pageY==undefined) {
         pageY = event.clientY+document.body.scrollTop||document.documentElement.scrollTop;
     }
-    $("#chargeRulesDivTable  tr:not(:first)").remove();
+    $("#chargeRulesDivTable tr").remove();
     clearTimeout(TimeFn);
     TimeFn = setTimeout(function(){
         var qzSettingUuid = $(self).attr("qzsettinguuid");
@@ -949,10 +949,41 @@ function showChargeRulesDiv(self, e) {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            success: function (qzChargeRules) {
-                $("#chargeRulesDivTable  tr:not(:first)").remove();
-                if(qzChargeRules != null && qzChargeRules.length > 0) {
-                    var achieveLevel = $(self).attr("level");
+            success: function (result) {
+                $("#chargeRulesDivTable tr").remove();
+                if(result != null && result.qzChargeRuleMap != null) {
+                    if (result.standardType.indexOf("One") > -1) {
+                        result.standardType = "满足其中一个";
+                    } else {
+                        result.standardType = "满足全部";
+                    }
+                    $("#chargeRulesDivTable").append("<tr>" +
+                        "<td colspan='4'>达标类型: "+ result.standardType +"</td>" +
+                        "</tr>");
+                    var qzChargeRules;
+                    if (result.qzChargeRuleMap["aiZhan"] !== undefined) {
+                        $("#chargeRulesDivTable").append("<tr>" +
+                            "<td colspan='4'>"+ "爱站" +"</td>" +
+                            "</tr>"+
+                            "<tr>" +
+                            "<td>序号</td>" +
+                            "<td>起始词量</td>" +
+                            "<td>终止词量</td>" +
+                            "<td>价格</td>" +
+                            "</tr>");
+                        qzChargeRules = result.qzChargeRuleMap["aiZhan"];
+                    } else if (result.qzChargeRuleMap["5118"] !== undefined) {
+                        $("#chargeRulesDivTable").append("<tr>" +
+                            "<td colspan='4'>"+ "5118" +"</td>" +
+                            "</tr>"+
+                            "<tr>" +
+                            "<td>序号</td>" +
+                            "<td>起始词量</td>" +
+                            "<td>终止词量</td>" +
+                            "<td>价格</td>" +
+                            "</tr>");
+                        qzChargeRules = result.qzChargeRuleMap["5118"];
+                    }
                     $.each(qzChargeRules, function (idx, val) {
                         var newTr = document.createElement("tr");
                         var chargeRuleElements = [
@@ -970,7 +1001,41 @@ function showChargeRulesDiv(self, e) {
                                 newTd.innerHTML = v;
                             }
                         });
-                        if (idx + 1 === parseInt(achieveLevel)) {
+                        if (idx + 1 === parseInt(val.achieveLevel)) {
+                            $(newTr).css("background-color", "green");
+                        }
+                        $("#chargeRulesDivTable")[0].lastChild.appendChild(newTr);
+                    });
+                    if (result.qzChargeRuleMap["designationWord"] !== undefined) {
+                        $("#chargeRulesDivTable").append("<tr>" +
+                            "<td colspan='4'>"+ "指定词" +"</td>" +
+                            "</tr>"+
+                            "<tr>" +
+                            "<td>序号</td>" +
+                            "<td>起始词量</td>" +
+                            "<td>终止词量</td>" +
+                            "<td>价格</td>" +
+                            "</tr>");
+                        qzChargeRules = result.qzChargeRuleMap["designationWord"];
+                    }
+                    $.each(qzChargeRules, function (idx, val) {
+                        var newTr = document.createElement("tr");
+                        var chargeRuleElements = [
+                            idx + 1,
+                            val.startKeywordCount,
+                            val.endKeywordCount,
+                            val.amount
+                        ];
+                        $.each(chargeRuleElements, function (index, v) {
+                            var newTd = document.createElement("td");
+                            newTr.appendChild(newTd);
+                            if (v == null) {
+                                newTd.innerHTML = "";
+                            } else {
+                                newTd.innerHTML = v;
+                            }
+                        });
+                        if (idx + 1 === parseInt(val.achieveLevel)) {
                             $(newTr).css("background-color", "green");
                         }
                         $("#chargeRulesDivTable")[0].lastChild.appendChild(newTr);

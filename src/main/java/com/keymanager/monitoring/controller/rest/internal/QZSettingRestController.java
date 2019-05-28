@@ -137,7 +137,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
             return new ResponseEntity<Object>(qzChargeRuleService.searchChargeRules(qzSettingSearchChargeRuleCriteria), HttpStatus.OK);
         } catch (Exception e) {
 	        logger.error(e.getMessage());
-            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
         }
     }
 

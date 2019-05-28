@@ -27,16 +27,22 @@
         DELETE  FROM  t_qz_charge_rule WHERE  fQZOperationTypeUuid  = #{qzOperationTypeUuid}
     </delete>
 
-    <select id="searchQZChargeRules" parameterType="com.keymanager.monitoring.criteria.QZSettingSearchChargeRuleCriteria" resultType="com.keymanager.monitoring.entity.QZChargeRule">
+    <select id="searchQZChargeRuleStandardInfoVos" resultType="com.keymanager.monitoring.vo.QZChargeRuleStandardInfoVO">
         SELECT
+            qot.fStandardType AS "standardType",
+            qk.fAchieveLevel AS "achieveLevel",
+            qk.fDifferenceValue AS "differenceValue",
+            qc.fStandardSpecies AS "standardSpecies",
             qc.fStartKeywordCount AS "startKeywordCount",
             qc.fEndKeywordCount AS "endKeywordCount",
             qc.fAmount AS "amount"
         FROM t_qz_charge_rule qc
-        JOIN t_qz_operation_type qo
-        ON qo.fUuid = qc.fQZOperationTypeUuid
-        WHERE qo.fQZSettingUuid = #{qzSettingSearchChargeRuleCriteria.qzSettingUuid}
-        AND qo.fOperationtype = #{qzSettingSearchChargeRuleCriteria.terminalType}
+        LEFT JOIN t_qz_operation_type qot
+        ON qot.fUuid = qc.fQZOperationTypeUuid
+        LEFT JOIN t_qz_keyword_rank_info qk
+        ON qk.fQZSettingUuid = qot.fQZSettingUuid AND qk.fWebsiteType = qc.fStandardSpecies
+        WHERE qot.fQZSettingUuid = #{qzSettingSearchChargeRuleCriteria.qzSettingUuid}
+        AND qot.fOperationtype = #{qzSettingSearchChargeRuleCriteria.terminalType}
         ORDER BY qc.fUuid
     </select>
 

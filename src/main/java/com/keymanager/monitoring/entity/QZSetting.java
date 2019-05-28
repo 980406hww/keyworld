@@ -106,6 +106,9 @@ public class QZSetting extends BaseEntity{
 	@TableField(exist = false)
 	private List<String> standardSpecies; // 达标种类 (PC_aiZhan 或者 PC_5118), (Phone_aiZhan 或者 Phone_5118)
 
+	@TableField(exist = false)
+	private Integer totalPrice;
+
 	public String getUserID() {
 		return userID;
 	}
@@ -352,5 +355,13 @@ public class QZSetting extends BaseEntity{
 
 	public void setStandardSpecies (List<String> standardSpecies) {
 		this.standardSpecies = standardSpecies;
+	}
+
+	public Integer getTotalPrice () {
+		return totalPrice;
+	}
+
+	public void setTotalPrice (Integer totalPrice) {
+		this.totalPrice = totalPrice;
 	}
 }

@@ -394,6 +394,12 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 					qzKeywordRankInfoMap.put(qzKeywordRankInfo.getTerminalType(), jSONObjectMap);
 				}
 				qzSetting.setQzKeywordRankInfoMap(qzKeywordRankInfoMap);
+
+				QZSettingSearchChargeRuleCriteria qzSettingSearchChargeRuleCriteria = new QZSettingSearchChargeRuleCriteria();
+				qzSettingSearchChargeRuleCriteria.setQzSettingUuid(qzSetting.getUuid());
+				qzSettingSearchChargeRuleCriteria.setTerminalType(qzSettingSearchCriteria.getTerminalType());
+				int chargeRuleTotalPrice = qzChargeRuleService.getChargeRuleTotalPrice(qzSettingSearchChargeRuleCriteria);
+				qzSetting.setTotalPrice(chargeRuleTotalPrice);
 			}
         }
         return page;

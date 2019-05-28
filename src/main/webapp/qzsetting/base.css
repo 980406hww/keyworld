@@ -618,3 +618,6 @@ ul {
 #userNoteBookTable tr td {
     border-bottom: 1px solid black;
 }
+#chargeRulesDivTable {
+    text-align: center;
+}
