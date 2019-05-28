@@ -4,6 +4,8 @@ public class QZSettingSearchCriteria{
     private String loginName;
     private String customerUuid;
     private String customerInfo;
+    private Long userInfoID;
+    private Long organizationID;
     private String domain;
     private String group;
     private String updateStatus;
@@ -51,6 +53,22 @@ public class QZSettingSearchCriteria{
 
     public void setCustomerInfo(String customerInfo) {
         this.customerInfo = customerInfo;
+    }
+
+    public Long getUserInfoID () {
+        return userInfoID;
+    }
+
+    public void setUserInfoID (Long userInfoID) {
+        this.userInfoID = userInfoID;
+    }
+
+    public Long getOrganizationID () {
+        return organizationID;
+    }
+
+    public void setOrganizationID (Long organizationID) {
+        this.organizationID = organizationID;
     }
 
     public String getDomain() {

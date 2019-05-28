@@ -4,10 +4,7 @@ import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.BaiduIndexCriteria;
 import com.keymanager.monitoring.criteria.BaseCriteria;
 import com.keymanager.monitoring.entity.*;
-import com.keymanager.monitoring.service.MachineInfoService;
-import com.keymanager.monitoring.service.ConfigService;
-import com.keymanager.monitoring.service.CustomerKeywordService;
-import com.keymanager.monitoring.service.PerformanceService;
+import com.keymanager.monitoring.service.*;
 import com.keymanager.monitoring.vo.*;
 import com.keymanager.util.*;
 import com.keymanager.util.common.StringUtil;
@@ -204,7 +201,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
     public ResponseEntity<?> getGroups(@RequestBody BaseCriteria baseCriteria) throws Exception {
         try {
             if (validUser(baseCriteria.getUserName(), baseCriteria.getPassword())) {
-                List<String> groups = customerKeywordService.getGroups();
+                List<String> groups = customerKeywordService.getGroups(null);
                 return new ResponseEntity<Object>(groups, HttpStatus.OK);
             }
         }catch (Exception ex){
@@ -416,6 +413,32 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 return new ResponseEntity<Object>(capturePosition, HttpStatus.OK);
             }
         }catch (Exception ex){
+            ex.printStackTrace();
+            logger.error(ex.getMessage());
+        }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+    }
+
+    @RequestMapping(value = "/getCustomerKeywordForCapturePositionTemp", method = RequestMethod.POST)
+    public ResponseEntity<?> getCustomerKeywordForCapturePositionTemp(@RequestBody Map<String, Object> requestMap) {
+        String userName = (String) requestMap.get("userName");
+        String password = (String) requestMap.get("password");
+        String terminalType = (String) requestMap.get("terminalType");
+        String groupName = (String) requestMap.get("groupName");
+        Date startTime = new Date((Long) requestMap.get("startTime"));
+        Integer customerUuid = (requestMap.get("customerUuid") == null) ? null : (Integer) requestMap.get("customerUuid");
+        Integer captureRankJobUuid = (Integer) requestMap.get("captureRankJobUuid");
+        try {
+            if (validUser(userName, password)) {
+                List<CustomerKeywordForCapturePosition> customerKeywordForCapturePositions = customerKeywordService.getCustomerKeywordForCapturePositionTemp(terminalType, groupName, customerUuid != null ? customerUuid.longValue() : null, startTime, captureRankJobUuid.longValue());
+                if (customerKeywordForCapturePositions.size() == 0) {
+                    CustomerKeywordForCapturePosition customerKeywordForCapturePosition = new CustomerKeywordForCapturePosition();
+                    customerKeywordForCapturePosition.setKeyword("end");
+                    customerKeywordForCapturePositions.add(customerKeywordForCapturePosition);
+                }
+                return new ResponseEntity<Object>(customerKeywordForCapturePositions, HttpStatus.OK);
+            }
+        } catch (Exception ex) {
             ex.printStackTrace();
             logger.error(ex.getMessage());
         }

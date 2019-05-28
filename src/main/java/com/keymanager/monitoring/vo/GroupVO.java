@@ -18,6 +18,8 @@ public class GroupVO {
 
     private int remainingAccount;
 
+    private int maxInvalidCount;
+
     private List<GroupSetting> groupSettings;
 
     public long getUuid () {
@@ -58,5 +60,13 @@ public class GroupVO {
 
     public void setGroupSettings (List<GroupSetting> groupSettings) {
         this.groupSettings = groupSettings;
+    }
+
+    public int getMaxInvalidCount() {
+        return maxInvalidCount;
+    }
+
+    public void setMaxInvalidCount(int maxInvalidCount) {
+        this.maxInvalidCount = maxInvalidCount;
     }
 }

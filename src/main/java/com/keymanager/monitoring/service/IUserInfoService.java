@@ -2,6 +2,7 @@ package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.service.IService;
 import com.keymanager.monitoring.common.result.PageInfo;
+import com.keymanager.monitoring.common.result.Tree;
 import com.keymanager.monitoring.entity.UserInfo;
 import com.keymanager.monitoring.vo.UserVO;
 
@@ -34,4 +35,6 @@ public interface IUserInfoService extends IService<UserInfo> {
     void deleteUserById(Long id);
 
      Long getUuidByLoginName(String loginName);
+
+    List<Tree> selectUserInfoTrees ();
 }

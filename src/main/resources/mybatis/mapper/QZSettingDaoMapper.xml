@@ -98,6 +98,7 @@
             c.fUserID AS 'userID',
             qs.fCustomerUuid AS 'customerUuid',
             c.fContactPerson AS 'contactPerson',
+            o.fOrganizationName AS 'organizationName',
             qs.fDomain AS 'domain',
             <if test="qzSettingSearchCriteria.terminalType != null">
                 <choose>
@@ -130,8 +131,13 @@
         FROM t_qz_setting qs
         JOIN t_customer c
         ON qs.fCustomerUuid = c.fUuid
+        LEFT JOIN t_userinfo u
+        ON u.fLoginName = c.fUserID
+        LEFT JOIN t_organization o
+        ON o.fUuid = u.fOrganizationID
         WHERE 1 = 1
         <if test="qzSettingSearchCriteria.loginName != null and qzSettingSearchCriteria.loginName != ''">AND c.fUserID = #{qzSettingSearchCriteria.loginName}</if>
+        <if test="qzSettingSearchCriteria.organizationID != null and qzSettingSearchCriteria.organizationID != ''">AND o.fUuid = #{qzSettingSearchCriteria.organizationID}</if>
         <if test="qzSettingSearchCriteria.customerUuid != null and qzSettingSearchCriteria.customerUuid != ''">AND qs.fCustomerUuid = #{qzSettingSearchCriteria.customerUuid}</if>
         <if test="qzSettingSearchCriteria.domain != null and qzSettingSearchCriteria.domain != ''">AND qs.fDomain = #{qzSettingSearchCriteria.domain}</if>
         <if test="qzSettingSearchCriteria.group != null and qzSettingSearchCriteria.group != ''">AND (qs.fPcGroup = #{qzSettingSearchCriteria.group} or qs.fPhoneGroup = #{qzSettingSearchCriteria.group})</if>
