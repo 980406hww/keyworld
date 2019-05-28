@@ -27,15 +27,14 @@ public class ExternalCrawlRankingRsetController extends SpringMVCBaseController 
     @Autowired
     private CaptureRankJobService captureRankJobService;
 
-    @Autowired
-    private CustomerKeywordService customerKeywordService;
-
     @RequestMapping(value = "/getCaptureRankJob", method = RequestMethod.POST)
     public ResponseEntity<?> getCaptureRankJob(@RequestBody BaseCriteria baseCriteria) {
         String userName = baseCriteria.getUserName();
         String password = baseCriteria.getPassword();
         try {
             if (validUser(userName, password)) {
+                // 取任务的时候先检查checking状态的任务
+                captureRankJobService.searchFiveMiniSetCheckingJobs();
                 CaptureRankJob captureRankJob = captureRankJobService.provideCaptureRankJob();
                 if(captureRankJob == null) {
                     captureRankJob = new CaptureRankJob();
@@ -58,6 +57,23 @@ public class ExternalCrawlRankingRsetController extends SpringMVCBaseController 
         try {
             if (validUser(userName, password)) {
                 captureRankJobService.completeCaptureRankJob(captureRankJob);
+                return new ResponseEntity<Object>(HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+    }
+
+    @RequestMapping(value = "/updateCaptureRankJobTemp", method = RequestMethod.POST)
+    public ResponseEntity<?> updateCaptureRankJobTemp(@RequestBody CaptureRankJobCriteria captureRankJobCriteria) {
+        String userName = captureRankJobCriteria.getUserName();
+        String password = captureRankJobCriteria.getPassword();
+        CaptureRankJob captureRankJob = captureRankJobCriteria.getCaptureRankJob();
+        try {
+            if (validUser(userName, password)) {
+                captureRankJobService.completeCaptureRankJobTemp(captureRankJob);
                 return new ResponseEntity<Object>(HttpStatus.OK);
             }
         } catch (Exception e) {

@@ -333,7 +333,6 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		return new ResponseEntity<Object>(true,HttpStatus.OK);
 	}
 
-	@RequiresPermissions("/internal/customerKeyword/haveCustomerKeywordForOptimization")
 	@RequestMapping(value = "/haveCustomerKeywordForOptimization", method = RequestMethod.POST)
 	public ResponseEntity<?> haveCustomerKeywordForOptimization(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) throws Exception{
 		List<String> clientIDs = (List<String>) requestMap.get("clientIDs");
@@ -463,6 +462,12 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	public List<CodeNameVo> searchGroups() {
 		return customerKeywordService.searchGroups();
 	}
+
+    @RequestMapping(value = "/searchGroupsByTerminalType", method = RequestMethod.POST)
+    public List<CodeNameVo> searchGroupsByTerminalType(HttpServletRequest request) {
+        String terminalType = TerminalTypeMapping.getTerminalType(request);
+        return customerKeywordService.searchGroupsByTerminalType(terminalType);
+    }
 
 	@RequiresPermissions("/internal/customerKeyword/editOptimizePlanCount")
 	@RequestMapping(value = "/editOptimizePlanCount" , method = RequestMethod.POST)

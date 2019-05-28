@@ -265,7 +265,7 @@
 <div id="customerKeywordDiv" style="margin-bottom: 30px">
     <table id="customerKeywordTable">
         <c:forEach items="${page.records}" var="customerKeyword">
-            <tr style="" height=30 onmouseover="doOver(this);" onmouseout="doOut(this);" ondblclick="modifyCustomerKeyword('${customerKeyword.uuid}')" height=30>
+            <tr style="" height=30 onmouseover="doOver(this);" onmouseout="doOut(this);" ondblclick="modifyCustomerKeyword('${customerKeyword.uuid}', '${customerKeyword.customerUuid}')" height=30>
                 <td width=10 style="padding-left:7px;"><input type="checkbox" name="uuid" value="${customerKeyword.uuid}" onclick="decideSelectAll()"/></td>
                 <td align="center" width=100>
                     <font color="<%--<%=keywordColor%>--%>">${customerKeyword.keyword}</font>

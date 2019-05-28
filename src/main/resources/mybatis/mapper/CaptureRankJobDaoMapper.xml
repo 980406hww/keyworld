@@ -20,31 +20,55 @@
         c.fRowNumber AS `rowNumber`,
         c.fExecutionCycle AS `executionCycle`,
         c.fCaptureInterval AS `captureInterval`,
+        c.fCaptureDaysInterval AS `captureDaysInterval`,
         c.fPageSize AS `pageSize`
     </sql>
+
     <select id="searchCaptureRankJobs" resultType="com.keymanager.monitoring.entity.CaptureRankJob">
-        select
-        <include refid="colID"/>
-        FROM t_capture_rank_job c
+        SELECT
+            <include refid="colID"/>
+        FROM
+            t_capture_rank_job c
         <where>
-            <if test="captureRankJobSearchCriteria.groupNames!=null and captureRankJobSearchCriteria.groupNames!=''"> and c.fGroupNames like '%${captureRankJobSearchCriteria.groupNames}%'</if>
-            <if test="captureRankJobSearchCriteria.customerUuid!=null and captureRankJobSearchCriteria.customerUuid!=''"> and c.fcustomerUuid = #{captureRankJobSearchCriteria.customerUuid}</if>
-            <if test="captureRankJobSearchCriteria.operationType!=null and captureRankJobSearchCriteria.operationType!=''"> and c.fOperationType = #{captureRankJobSearchCriteria.operationType}</if>
-            <if test="captureRankJobSearchCriteria.exectionType!=null and captureRankJobSearchCriteria.exectionType!=''"> and c.fExectionType = #{captureRankJobSearchCriteria.exectionType}</if>
+            <if test="captureRankJobSearchCriteria.groupNames!=null and captureRankJobSearchCriteria.groupNames!=''">
+                AND c.fGroupNames LIKE '%${captureRankJobSearchCriteria.groupNames}%'
+            </if>
+            <if test="captureRankJobSearchCriteria.customerUuid!=null and captureRankJobSearchCriteria.customerUuid!=''">
+                AND c.fcustomerUuid = #{captureRankJobSearchCriteria.customerUuid}
+            </if>
+            <if test="captureRankJobSearchCriteria.operationType!=null and captureRankJobSearchCriteria.operationType!=''">
+                AND c.fOperationType = #{captureRankJobSearchCriteria.operationType}
+            </if>
+            <if test="captureRankJobSearchCriteria.exectionType!=null and captureRankJobSearchCriteria.exectionType!=''">
+                AND c.fExectionType = #{captureRankJobSearchCriteria.exectionType}
+            </if>
+            <if test="captureRankJobSearchCriteria.exectionStatus!=null and captureRankJobSearchCriteria.exectionStatus!=''">
+                AND c.fExectionStatus = #{captureRankJobSearchCriteria.exectionStatus}
+            </if>
         </where>
     </select>
+
     <select id="provideCaptureRankJob" resultType="com.keymanager.monitoring.entity.CaptureRankJob">
-        select
-        <include refid="colID"/>
-        from t_capture_rank_job c
-        where
+        SELECT
+            <include refid="colID"/>
+        FROM
+            t_capture_rank_job c
+        WHERE
         (
-        c.fExectionStatus='New' or
-        (c.fExectionStatus='Complete' and c.fExectionType='Everyday' and (c.fLastExecutionDate &lt; curdate() OR c.fLastExecutionDate is null))
+            c.fExectionStatus='New' OR
+            (
+                c.fExectionStatus='Complete'
+                AND c.fExectionType='Everyday'
+                AND (c.fLastExecutionDate &lt; curdate() OR c.fLastExecutionDate IS NULL)
+                AND DATEDIFF(NOW(),fLastExecutionDate) &gt;= fCaptureDaysInterval
+            )
         )
-        and c.fExectionTime &lt;= curtime()
-        AND c.fCaptureRankJobStatus = 1
-        order By c.fExectionTime
+        AND
+            c.fExectionTime &lt;= curtime()
+        AND
+            c.fCaptureRankJobStatus = 1
+        ORDER BY
+            c.fExectionTime
         limit 1;
     </select>
 
@@ -68,9 +92,9 @@
         c.fUuid=#{captureRankJobUuid}
     </select>
 
-    <select id="fetchCaptureRankJob" resultType="com.keymanager.monitoring.entity.CaptureRankJob">
+    <select id="hasUncompletedCaptureRankJob" resultType="Long">
         SELECT
-        <include refid="colID"/>
+        1
         FROM t_capture_rank_job c
         WHERE (
         c.fExectionStatus = 'New'
@@ -79,6 +103,39 @@
         AND c.fLastExecutionDate &lt; curdate())
         )
         AND c.fCaptureRankJobStatus = 1
+        <if test="groupNames!=null"> and c.fGroupNames IN
+            <foreach collection="groupNames" item="groupName" open="(" separator="," close=")">
+                #{groupName}
+            </foreach>
+        </if>
         LIMIT 1
+    </select>
+
+    <select id="searchFiveMiniSetCheckingJobs" resultType="com.keymanager.monitoring.entity.CaptureRankJob">
+        SELECT
+            c.fUuid as uuid,
+            c.fOperationType as `operationType`,
+            c.fGroupNames as `groupNames`
+        FROM
+            t_capture_rank_job c
+        WHERE
+            c.fExectionStatus = 'Checking'
+        AND
+            c.fEndTime &lt; DATE_SUB(NOW(),INTERVAL 5 MINUTE)
+    </select>
+
+    <select id="searchThreeMiniStatusEqualsOne" resultType="java.lang.Integer">
+        SELECT
+            COUNT(*)
+        FROM
+            t_customer_keyword
+        WHERE
+            fTerminalType = #{terminalType}
+        AND
+            fOptimizeGroupName = #{groupName}
+        AND
+            fStatus = 1
+        AND
+            fCaptureStatus = 1
     </select>
 </mapper>

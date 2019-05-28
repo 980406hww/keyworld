@@ -127,4 +127,12 @@
         AND u.fLoginName != #{externalLoginName};
     </select>
 
+    <select id="selectUserInfos" resultType="com.keymanager.monitoring.entity.UserInfo">
+        SELECT
+            ui.fUuid AS 'uuid',
+            ui.fUserName AS "userName"
+        FROM t_userinfo ui
+        WHERE ui.fOrganizationID = #{organizationID}
+    </select>
+
 </mapper>

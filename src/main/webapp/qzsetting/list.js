@@ -527,6 +527,27 @@ function unique(a) {
 function trimSearchCondition(days) {
     var chargeForm = $("#chargeForm");
     var customerInfo = $(".conn").find(".customerInfo").find("input[name='customerInfo']").val();
+    var treeInput = $("#userNameTree").parent().find("input[name='userName']");
+    var text = "";
+    var id;
+    if (treeInput.length > 0) {
+        if (treeInput.val() !== "") {
+            id = $("#userNameTree").textbox('getValue');
+            text = $("#userNameTree").textbox('getText');
+        }
+    }
+    if (text !== "") {
+        if (text.indexOf('部') === text.length-1 || text.indexOf('办') === text.length-1) {
+            chargeForm.find("#userInfoID").val(null);
+            chargeForm.find("#organizationID").val(id);
+        } else {
+            chargeForm.find("#userInfoID").val(id);
+            chargeForm.find("#organizationID").val(null);
+        }
+    } else {
+        chargeForm.find("#userInfoID").val(null);
+        chargeForm.find("#organizationID").val(null);
+    }
     var customerUuid = customerInfo.substr(customerInfo.lastIndexOf("_") + 1);
     chargeForm.find("#customerInfo").val($.trim(customerInfo));
     chargeForm.find("#customerUuid").val(customerUuid);
@@ -572,21 +593,31 @@ function trimSearchCondition(days) {
 }
 function showMoreSearchCondition() {
     $(".mytabs").find("div[name='moreSearchCondition']").toggle();
-    $.ajax({
-        url: "/internal/qzcategorytag/getAllCategoryTagNames",
-        type: "GET",
-        success: function (categoryTagNames) {
-            $("#categoryTag_list").find('option').remove();
-            if (categoryTagNames != null) {
-                $.each(categoryTagNames, function (idx, val) {
-                    $("#categoryTag_list").append("<option value='" + val.tagName + "'></option>")
-                });
+    if ($(".mytabs").find("div[name='moreSearchCondition']").css("display") === "block") {
+        $.ajax({
+            url: "/internal/qzcategorytag/getAllCategoryTagNames",
+            type: "GET",
+            success: function (categoryTagNames) {
+                $("#categoryTag_list").find('option').remove();
+                if (categoryTagNames != null) {
+                    $.each(categoryTagNames, function (idx, val) {
+                        $("#categoryTag_list").append("<option value='" + val.tagName + "'></option>")
+                    });
+                }
+            },
+            error: function () {
+                $().toastmessage('showErrorToast', "获取标签信息失败！");
             }
-        },
-        error: function () {
-            $().toastmessage('showErrorToast', "获取标签信息失败！");
-        }
-    });
+        });
+        $('#userNameTree').combotree({
+            url : '/internal/user/tree',
+            idFiled: 'id',
+            treeField: 'name',
+            parentField : 'pid',
+            lines : true,
+            panelHeight : 'auto'
+        });
+    }
 }
 function searchClientStatus(optimizeGroup) {
     var searchClientStatusFrom = $("#searchClientStatusForm");

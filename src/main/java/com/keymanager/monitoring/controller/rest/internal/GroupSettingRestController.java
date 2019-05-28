@@ -9,6 +9,7 @@ import com.keymanager.monitoring.service.ConfigService;
 import com.keymanager.monitoring.service.GroupSettingService;
 import com.keymanager.monitoring.service.PerformanceService;
 import com.keymanager.monitoring.vo.GroupVO;
+import com.keymanager.util.Constants;
 import com.keymanager.util.TerminalTypeMapping;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping(value = "/internal/groupsetting")
@@ -67,10 +69,14 @@ public class GroupSettingRestController extends SpringMVCBaseController {
         }
         Page<GroupVO> page = groupSettingService.searchGroupSettings(new Page<GroupVO>(currentPageNumber, pageSize), groupSettingCriteria);
         String [] operationTypeValues = configService.getOperationTypeValues(groupSettingCriteria.getTerminalType());
+        HttpSession session = request.getSession();
+        String entryType = (String) session.getAttribute("entryType");
+        String maxInvalidCount = configService.getConfig(Constants.CONFIG_TYPE_MAX_INVALID_COUNT, entryType).getValue();
         modelAndView.addObject("groupSettingCriteria", groupSettingCriteria);
         modelAndView.addObject("operationTypeValues", operationTypeValues);
         modelAndView.addObject("page", page);
         modelAndView.addObject("terminalType", groupSettingCriteria.getTerminalType());
+        modelAndView.addObject("maxInvalidCount", maxInvalidCount);
         performanceService.addPerformanceLog(groupSettingCriteria.getTerminalType() + ":searchGroupSettings", System.currentTimeMillis() - startMilleSeconds, null);
         return modelAndView;
     }
