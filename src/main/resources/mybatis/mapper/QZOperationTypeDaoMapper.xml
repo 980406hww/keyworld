@@ -49,22 +49,25 @@
         DELETE FROM t_qz_operation_type WHERE fQZSettingUuid = #{qzSettingUuid}
     </delete>
 
-    <select id="findQZOperationTypes" resultType="com.keymanager.monitoring.vo.QZOperationTypeVO">
-        SELECT
-            op.fQZSettingUuid AS 'qzSettingUuid',
-            op.fOperationtype AS 'operationType',
-            op.fStandardType AS 'standardType',
-		    cr.fStandardSpecies AS 'standardSpecies',
-            cr.fStartKeywordCount AS 'startKeywordCount',
-            cr.fEndKeywordCount AS 'endKeywordCount',
-            cr.fAmount AS 'amount'
+    <select id="getStandardType" resultType="java.lang.String">
+        SELECT op.fStandardType
         FROM t_qz_operation_type op
-        JOIN t_qz_charge_rule cr
-        ON op.fUuid = cr.fQZOperationTypeUuid
         WHERE op.fQZSettingUuid = #{qzSettingUuid}
         AND op.fOperationtype = #{operationType}
-        AND cr.fStandardSpecies = #{websiteType}
-        ORDER BY cr.fStandardSpecies
     </select>
 
+    <update id="updateQZOperationTypeStandardTime">
+        UPDATE t_qz_operation_type
+        SET fUpdateTime = NOW()
+        <choose>
+            <when test="isStandardFlag == true">
+                , fStandardTime = NOW()
+            </when>
+            <when test="isStandardFlag == false">
+                , fStandardTime = NULL
+            </when>
+        </choose>
+        WHERE fQZSettingUuid = #{qzSettingUuid}
+        AND fOperationtype = #{operationType}
+    </update>
 </mapper>

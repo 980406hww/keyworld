@@ -1,10 +1,11 @@
 package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.keymanager.monitoring.dao.OperationTypeDao;
 import com.keymanager.monitoring.dao.QZOperationTypeDao;
+import com.keymanager.monitoring.entity.OperationType;
 import com.keymanager.monitoring.entity.QZChargeRule;
 import com.keymanager.monitoring.entity.QZOperationType;
-import com.keymanager.monitoring.vo.QZOperationTypeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,7 +41,11 @@ public class QZOperationTypeService extends ServiceImpl<QZOperationTypeDao, QZOp
 		qzOperationTypeDao.deleteByQZSettingUuid(qzSettingUuid);
 	}
 
-	public List<QZOperationTypeVO> findQZOperationTypes(Long qzSettingUuid, String operationType, String websiteType){
-		return qzOperationTypeDao.findQZOperationTypes(qzSettingUuid, operationType, websiteType);
+	public String getStandardType (Long qzSettingUuid, String operationType) {
+		return qzOperationTypeDao.getStandardType(qzSettingUuid, operationType);
+	}
+
+	public void updateQZOperationTypeStandardTime (Long qzSettingUuid, String operationType, boolean isStandardFlag) {
+		qzOperationTypeDao.updateQZOperationTypeStandardTime(qzSettingUuid, operationType, isStandardFlag);
 	}
 }

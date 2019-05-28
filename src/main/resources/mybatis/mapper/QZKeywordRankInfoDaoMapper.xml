@@ -58,7 +58,14 @@
         WHERE 1 = 1
         <if test="qzSettingUuid != null"> AND tqkri.fQZSettingUuid = #{qzSettingUuid} </if>
         <if test="terminalType != null and terminalType != ''"> AND tqkri.fTerminalType = #{terminalType} </if>
-        <if test="websiteType != null and websiteType != ''"> AND tqkri.fWebsiteType = #{websiteType} </if>
+        <choose>
+            <when test="websiteType != null and websiteType != ''">
+                AND tqkri.fWebsiteType = #{websiteType}
+            </when>
+            <otherwise>
+                AND tqkri.fWebsiteType = 'designationWord'
+            </otherwise>
+        </choose>
     </select>
 
     <select id="getCountNumOfRankInfo" resultType="com.keymanager.monitoring.criteria.QZSettingSearchCriteria">

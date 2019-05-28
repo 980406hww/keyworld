@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.criteria.QZSettingSearchChargeRuleCriteria;
 import com.keymanager.monitoring.dao.QZChargeRuleDao;
 import com.keymanager.monitoring.entity.QZChargeRule;
+import com.keymanager.monitoring.vo.QZChargeRuleVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,4 +32,8 @@ public class QZChargeRuleService extends ServiceImpl<QZChargeRuleDao, QZChargeRu
     public List<String> getAllStandardSpecies (Long qzSettingUuid) {
 		return qzChargeRuleDao.getAllStandardSpecies(qzSettingUuid);
     }
+
+	public List<QZChargeRuleVO> findQZChargeRules (Long qzSettingUuid, String operationType, String websiteType) {
+		return qzChargeRuleDao.findQZChargeRules(qzSettingUuid, operationType, websiteType);
+	}
 }

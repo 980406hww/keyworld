@@ -3,6 +3,7 @@ package com.keymanager.monitoring.dao;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.keymanager.monitoring.criteria.QZSettingSearchChargeRuleCriteria;
 import com.keymanager.monitoring.entity.QZChargeRule;
+import com.keymanager.monitoring.vo.QZChargeRuleVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -20,4 +21,6 @@ public interface QZChargeRuleDao extends BaseMapper<QZChargeRule> {
     List<QZChargeRule> searchQZChargeRules (@Param("qzSettingSearchChargeRuleCriteria") QZSettingSearchChargeRuleCriteria qzSettingSearchChargeRuleCriteria);
 
     List<String> getAllStandardSpecies (@Param("qzSettingUuid") Long qzSettingUuid);
+
+    List<QZChargeRuleVO> findQZChargeRules (@Param("qzSettingUuid")Long qzSettingUuid, @Param("operationType")String operationType, @Param("websiteType")String websiteType);
 }

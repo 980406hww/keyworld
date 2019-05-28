@@ -54,4 +54,20 @@
         )
         GROUP BY qot.fOperationtype, qcr.fStandardSpecies
     </select>
+
+    <select id="findQZChargeRules" resultType="com.keymanager.monitoring.vo.QZChargeRuleVO">
+        SELECT
+            cr.fStartKeywordCount AS 'startKeywordCount',
+            cr.fAmount AS 'amount'
+        FROM t_qz_charge_rule cr
+        WHERE EXISTS(
+            SELECT 1
+            FROM t_qz_operation_type op
+            WHERE op.fUuid = cr.fQZOperationTypeUuid
+            AND op.fQZSettingUuid = #{qzSettingUuid}
+            AND op.fOperationtype = #{operationType}
+        )
+        AND cr.fStandardSpecies = #{websiteType}
+        ORDER BY cr.fStandardSpecies
+    </select>
 </mapper>
