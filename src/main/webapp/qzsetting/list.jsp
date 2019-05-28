@@ -993,7 +993,7 @@
 		<tr>
 			<td style="width:60px" align="right">组最大词数</td>
             <td>
-                <input type="text" name="maxCustomerKeywordCount" id="maxCustomerKeywordCount" placeholder="请输入数字：" value="5000" style="width:240px">
+                <input type="text" name="groupMaxCustomerKeywordCount" id="groupMaxCustomerKeywordCount" placeholder="请输入数字：" value="5000" style="width:240px">
             </td>
 		</tr>
 		<tr>
