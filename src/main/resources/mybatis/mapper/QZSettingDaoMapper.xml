@@ -164,10 +164,13 @@
                 </when>
                 <when test="qzSettingSearchCriteria.checkStatus == 3">
                     AND qk.fAchieveLevel &gt; 0
-                    AND EXISTS (SELECT 1 FROM t_qz_operation_type qot
+                    AND EXISTS (
+                            SELECT 1
+                            FROM t_qz_operation_type qot
                             WHERE qot.fQZSettingUuid = qk.fQZSettingUuid
                             AND qot.fOperationtype = qk.fTerminalType
-                            AND qot.fStandardTime > '')
+                            AND qot.fStandardTime > ''
+                    )
                 </when>
                 <when test="qzSettingSearchCriteria.checkStatus == 4">
                     AND qk.fAchieveLevel = 0

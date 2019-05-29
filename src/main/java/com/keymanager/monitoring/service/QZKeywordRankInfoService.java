@@ -152,19 +152,21 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
         double upperValue = Double.parseDouble(upperConfig.getValue());
         double lowerValue = Double.parseDouble(lowerConfig.getValue());
         double differenceValue = Double.parseDouble(differenceValueConfig.getValue());
-        QZSettingSearchCriteria countNumOfRankInfoQZSettingSearchCriteria = qzKeywordRankInfoDao.getCountNumOfRankInfo(upperValue, lowerValue, differenceValue, qzSettingSearchCriteria.getTerminalType(), qzSettingSearchCriteria.getLoginName());
+        List<QZSettingSearchCriteria> countNumOfRankInfos = qzKeywordRankInfoDao.getCountNumOfRankInfo(upperValue, lowerValue, differenceValue, qzSettingSearchCriteria.getTerminalType(), qzSettingSearchCriteria.getLoginName());
+        for (QZSettingSearchCriteria countNumOfQZSettingRankInfo : countNumOfRankInfos) {
+            qzSettingSearchCriteria.setUnchangedNum(qzSettingSearchCriteria.getUnchangedNum() + countNumOfQZSettingRankInfo.getUnchangedNum());
+            qzSettingSearchCriteria.setUpNum(qzSettingSearchCriteria.getUpNum() + countNumOfQZSettingRankInfo.getUpNum());
+            qzSettingSearchCriteria.setDownNum(qzSettingSearchCriteria.getDownNum() + countNumOfQZSettingRankInfo.getDownNum());
+            qzSettingSearchCriteria.setAtLeastStandardNum(qzSettingSearchCriteria.getAtLeastStandardNum() + (countNumOfQZSettingRankInfo.getAtLeastStandardNum() == 2 ? 1 : countNumOfQZSettingRankInfo.getAtLeastStandardNum()));
+            qzSettingSearchCriteria.setNeverStandardNum(qzSettingSearchCriteria.getNeverStandardNum() + countNumOfQZSettingRankInfo.getNeverStandardNum());
+            qzSettingSearchCriteria.setCloseStandardNum(qzSettingSearchCriteria.getCloseStandardNum() + countNumOfQZSettingRankInfo.getCloseStandardNum());
+            qzSettingSearchCriteria.setUnchangedDifferenceNum(qzSettingSearchCriteria.getUpDifferenceNum() + countNumOfQZSettingRankInfo.getUnchangedDifferenceNum());
+            qzSettingSearchCriteria.setUpDifferenceNum(qzSettingSearchCriteria.getUpDifferenceNum() + countNumOfQZSettingRankInfo.getUpDifferenceNum());
+            qzSettingSearchCriteria.setDownDifferenceNum(qzSettingSearchCriteria.getDownDifferenceNum() + countNumOfQZSettingRankInfo.getDownDifferenceNum());
+        }
         qzSettingSearchCriteria.setUpperValue(upperValue);
         qzSettingSearchCriteria.setLowerValue(lowerValue);
         qzSettingSearchCriteria.setDifferenceValue(differenceValue);
-        qzSettingSearchCriteria.setUnchangedNum(countNumOfRankInfoQZSettingSearchCriteria.getUnchangedNum());
-        qzSettingSearchCriteria.setUpNum(countNumOfRankInfoQZSettingSearchCriteria.getUpNum());
-        qzSettingSearchCriteria.setDownNum(countNumOfRankInfoQZSettingSearchCriteria.getDownNum());
-        qzSettingSearchCriteria.setAtLeastStandardNum(countNumOfRankInfoQZSettingSearchCriteria.getAtLeastStandardNum());
-        qzSettingSearchCriteria.setNeverStandardNum(countNumOfRankInfoQZSettingSearchCriteria.getNeverStandardNum());
-        qzSettingSearchCriteria.setCloseStandardNum(countNumOfRankInfoQZSettingSearchCriteria.getCloseStandardNum());
-        qzSettingSearchCriteria.setUnchangedDifferenceNum(countNumOfRankInfoQZSettingSearchCriteria.getUnchangedDifferenceNum());
-        qzSettingSearchCriteria.setUpDifferenceNum(countNumOfRankInfoQZSettingSearchCriteria.getUpDifferenceNum());
-        qzSettingSearchCriteria.setDownDifferenceNum(countNumOfRankInfoQZSettingSearchCriteria.getDownDifferenceNum());
         return qzSettingSearchCriteria;
     }
 

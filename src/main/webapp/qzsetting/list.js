@@ -952,15 +952,16 @@ function showChargeRulesDiv(self, e) {
             success: function (result) {
                 $("#chargeRulesDivTable tr").remove();
                 if(result != null && result.qzChargeRuleMap != null) {
+                    var standardType;
                     if (result.standardType.indexOf("One") > -1) {
-                        result.standardType = "满足其中一个";
+                        standardType = "满足其中一个";
                     } else {
-                        result.standardType = "满足全部";
+                        standardType = "满足全部";
                     }
                     $("#chargeRulesDivTable").append("<tr>" +
-                        "<td colspan='4'>达标类型: "+ result.standardType +"</td>" +
+                        "<td colspan='4'>达标类型: "+ standardType +"</td>" +
                         "</tr>");
-                    var qzChargeRules;
+                    var qzChargeRules = {};
                     if (result.qzChargeRuleMap["aiZhan"] !== undefined) {
                         $("#chargeRulesDivTable").append("<tr>" +
                             "<td colspan='4'>"+ "爱站" +"</td>" +

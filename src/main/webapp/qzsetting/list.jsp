@@ -86,19 +86,19 @@
 				<li>
 					<label name="lower" title="网站关键词(PC,Phone)一星期排名趋势涨幅&lt;${qzSettingSearchCriteria.lowerValue}">
 						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.checkStatus == 1}">checked</c:if>>
-						<i class="icon-rank-down"></i>骤降 (${qzSettingSearchCriteria.downNum == null ? 0 : qzSettingSearchCriteria.downNum})
+						<i class="icon-rank-down"></i>骤降 (${qzSettingSearchCriteria.downNum})
 					</label>
 				</li>
 				<li>
 					<label name="unchanged" title="网站关键词(PC,Phone)一星期排名趋势涨幅不变">
 						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.checkStatus == 6}">checked</c:if>>
-						无变化 (${qzSettingSearchCriteria.unchangedNum == null ? 0 : qzSettingSearchCriteria.unchangedNum})
+						无变化 (${qzSettingSearchCriteria.unchangedNum})
 					</label>
 				</li>
 				<li>
 					<label name="upper" title="网站关键词(PC,Phone)一星期排名趋势涨幅&gt;${qzSettingSearchCriteria.upperValue}">
 						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.checkStatus == 2}">checked</c:if>>
-						<i class="icon-rank-up"></i>暴涨 (${qzSettingSearchCriteria.upNum == null ? 0 : qzSettingSearchCriteria.upNum})
+						<i class="icon-rank-up"></i>暴涨 (${qzSettingSearchCriteria.upNum})
 					</label>
 				</li>
 				<li>
@@ -110,31 +110,31 @@
 				<li>
 					<label name="unchangedDifference" title="网站关键词(PC,Phone)今天前10不变">
 						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.checkStatus == 8}">checked</c:if>>
-						不变 (${qzSettingSearchCriteria.unchangedDifferenceNum == null ? 0 : qzSettingSearchCriteria.unchangedDifferenceNum})
+						不变 (${qzSettingSearchCriteria.unchangedDifferenceNum})
 					</label>
 				</li>
 				<li>
 					<label name="upperDifference" title="网站关键词(PC,Phone)今天前10上升">
 						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.checkStatus == 9}">checked</c:if>>
-						上升 (${qzSettingSearchCriteria.upDifferenceNum == null ? 0 : qzSettingSearchCriteria.upDifferenceNum})
+						上升 (${qzSettingSearchCriteria.upDifferenceNum})
 					</label>
 				</li>
 				<li>
 					<label name="atLeastStandard" title="标识最少有一条规则达标">
 						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.checkStatus == 3}">checked</c:if>>
-						达标 (${qzSettingSearchCriteria.atLeastStandardNum == null ? 0 : qzSettingSearchCriteria.atLeastStandardNum})
+						达标 (${qzSettingSearchCriteria.atLeastStandardNum})
 					</label>
 				</li>
 				<li>
 					<label name="neverStandard" title="标识一条规则都未达标">
 						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.checkStatus == 4}">checked</c:if>>
-						未达标 (${qzSettingSearchCriteria.neverStandardNum == null ? 0 : qzSettingSearchCriteria.neverStandardNum})
+						未达标 (${qzSettingSearchCriteria.neverStandardNum})
 					</label>
 				</li>
 				<li>
 					<label name="closeStandard" title="标识下条规则接近达标,未完成度&lt;${qzSettingSearchCriteria.differenceValue}">
 						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.checkStatus == 5}">checked</c:if>>
-						接近达标 (${qzSettingSearchCriteria.closeStandardNum == null ? 0 :qzSettingSearchCriteria.closeStandardNum})
+						接近达标 (${qzSettingSearchCriteria.closeStandardNum})
 					</label>
 				</li>
 			</ul>
@@ -289,7 +289,12 @@
 									<div class="row">
 										<span class="line1">
 											<a href="javascript:;" qzsettinguuid="${qzSetting.uuid}" onmouseover="showChargeRulesDiv($(this))" onmouseout="closeChargeRulesDiv()">
-												<font style="background-color: orange;font-size: 14px;">￥ ${qzSetting.totalPrice}</font>
+												<c:if test="${qzSetting.totalPrice > 0}">
+													<font style="background-color: green;font-size: 14px;">￥ ${qzSetting.totalPrice}</font>
+												</c:if>
+												<c:if test="${qzSetting.totalPrice == 0}">
+													<font style="background-color: red;font-size: 14px;">￥ ${qzSetting.totalPrice}</font>
+												</c:if>
 											</a>
 										</span>
 										<span><a href="javascript:;">全站达标信息</a></span>
@@ -544,7 +549,12 @@
 									<div class="row">
 										<span class="line1">
 											<a href="javascript:;" qzsettinguuid="${qzSetting.uuid}" onmouseover="showChargeRulesDiv($(this))" onmouseout="closeChargeRulesDiv()">
-												<font style="background-color: orange;font-size: 14px;">￥ ${qzSetting.totalPrice}</font>
+												<c:if test="${qzSetting.totalPrice > 0}">
+													<font style="background-color: green;font-size: 14px;">￥ ${qzSetting.totalPrice}</font>
+												</c:if>
+												<c:if test="${qzSetting.totalPrice == 0}">
+													<font style="background-color: red;font-size: 14px;">￥ ${qzSetting.totalPrice}</font>
+												</c:if>
 											</a>
 										</span>
 										<span><a href="javascript:;">全站达标信息</a></span>
