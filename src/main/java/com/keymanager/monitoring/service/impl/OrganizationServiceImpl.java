@@ -1,6 +1,5 @@
 package com.keymanager.monitoring.service.impl;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.common.result.Tree;
 import com.keymanager.monitoring.dao.OrganizationDao;
@@ -13,16 +12,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * Organization 表数据服务层接口实现类
- *
  */
 @Service
 public class OrganizationServiceImpl extends ServiceImpl<OrganizationDao, Organization> implements IOrganizationService {
 
     @Autowired
     private OrganizationDao organizationDao;
-    
+
     @Override
     public List<Tree> selectTree() {
         List<Organization> organizationList = selectTreeGrid();
@@ -42,10 +39,6 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationDao, Organi
 
     @Override
     public List<Organization> selectTreeGrid() {
-        EntityWrapper<Organization> wrapper = new EntityWrapper<Organization>();
-        wrapper.orderBy("fSequence");
-        return organizationDao.selectList(wrapper);
+        return organizationDao.selectOrganization();
     }
-
-
 }
