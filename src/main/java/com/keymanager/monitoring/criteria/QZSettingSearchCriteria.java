@@ -11,21 +11,21 @@ public class QZSettingSearchCriteria{
     private String updateStatus;
     private Integer dateRangeType;
     private Integer status;
-    private Integer unchangedNum;
-    private Integer downNum;
-    private Integer upNum;
-    private Integer atLeastStandardNum;
-    private Integer neverStandardNum;
-    private Integer closeStandardNum;
+    private int unchangedNum;
+    private int downNum;
+    private int upNum;
+    private int atLeastStandardNum;
+    private int neverStandardNum;
+    private int closeStandardNum;
     private double upperValue;
     private double lowerValue;
     private double differenceValue;
     private Integer checkStatus;
     private String terminalType;
     private String categoryTag;
-    private Integer unchangedDifferenceNum;
-    private Integer upDifferenceNum;
-    private Integer downDifferenceNum;
+    private int unchangedDifferenceNum;
+    private int upDifferenceNum;
+    private int downDifferenceNum;
     private Integer openDialogStatus;
     private String operationType;
     private String createTime;
@@ -111,7 +111,7 @@ public class QZSettingSearchCriteria{
         this.status = status;
     }
 
-    public Integer getDownNum() {
+    public int getDownNum() {
         return downNum;
     }
 
@@ -119,7 +119,7 @@ public class QZSettingSearchCriteria{
         this.upperValue = upperValue;
     }
 
-    public Integer getUpNum() {
+    public int getUpNum() {
         return upNum;
     }
 
@@ -143,19 +143,19 @@ public class QZSettingSearchCriteria{
         this.terminalType = terminalType;
     }
 
-    public Integer getUnchangedNum () {
+    public int getUnchangedNum () {
         return unchangedNum;
     }
 
-    public void setUnchangedNum (Integer unchangedNum) {
+    public void setUnchangedNum (int unchangedNum) {
         this.unchangedNum = unchangedNum;
     }
 
-    public void setDownNum(Integer downNum) {
+    public void setDownNum(int downNum) {
         this.downNum = downNum;
     }
 
-    public void setUpNum(Integer upNum) {
+    public void setUpNum(int upNum) {
         this.upNum = upNum;
     }
 
@@ -175,27 +175,27 @@ public class QZSettingSearchCriteria{
         this.categoryTag = categoryTag;
     }
 
-    public Integer getAtLeastStandardNum () {
+    public int getAtLeastStandardNum () {
         return atLeastStandardNum;
     }
 
-    public void setAtLeastStandardNum (Integer atLeastStandardNum) {
+    public void setAtLeastStandardNum (int atLeastStandardNum) {
         this.atLeastStandardNum = atLeastStandardNum;
     }
 
-    public Integer getNeverStandardNum () {
+    public int getNeverStandardNum () {
         return neverStandardNum;
     }
 
-    public void setNeverStandardNum (Integer neverStandardNum) {
+    public void setNeverStandardNum (int neverStandardNum) {
         this.neverStandardNum = neverStandardNum;
     }
 
-    public Integer getCloseStandardNum () {
+    public int getCloseStandardNum () {
         return closeStandardNum;
     }
 
-    public void setCloseStandardNum (Integer closeStandardNum) {
+    public void setCloseStandardNum (int closeStandardNum) {
         this.closeStandardNum = closeStandardNum;
     }
 
@@ -207,27 +207,27 @@ public class QZSettingSearchCriteria{
         this.differenceValue = differenceValue;
     }
 
-    public Integer getUnchangedDifferenceNum () {
+    public int getUnchangedDifferenceNum () {
         return unchangedDifferenceNum;
     }
 
-    public void setUnchangedDifferenceNum (Integer unchangedDifferenceNum) {
+    public void setUnchangedDifferenceNum (int unchangedDifferenceNum) {
         this.unchangedDifferenceNum = unchangedDifferenceNum;
     }
 
-    public Integer getUpDifferenceNum () {
+    public int getUpDifferenceNum () {
         return upDifferenceNum;
     }
 
-    public void setUpDifferenceNum (Integer upDifferenceNum) {
+    public void setUpDifferenceNum (int upDifferenceNum) {
         this.upDifferenceNum = upDifferenceNum;
     }
 
-    public Integer getDownDifferenceNum () {
+    public int getDownDifferenceNum () {
         return downDifferenceNum;
     }
 
-    public void setDownDifferenceNum (Integer downDifferenceNum) {
+    public void setDownDifferenceNum (int downDifferenceNum) {
         this.downDifferenceNum = downDifferenceNum;
     }
 
