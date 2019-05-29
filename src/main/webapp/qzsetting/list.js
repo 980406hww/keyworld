@@ -100,8 +100,9 @@ function detectedMoreSearchConditionDivShow() {
     var operationType = moreSearchCondition.find("select[name='operationType']").val();
     var status = moreSearchCondition.find("select[name='status']").val();
     var updateStatus = moreSearchCondition.find("select[name='updateStatus']").val();
-    var createTime = moreSearchCondition.find("ul li.createTime input").val();
-    var values = customerInfo + categoryTag + group + status + updateStatus + createTime + operationType;
+    var createTime = moreSearchCondition.find("ul li.createTime input[name='createTime']").val();
+    var createTimePrefix = moreSearchCondition.find("ul li.createTime input[name='createTimePrefix']").val();
+    var values = customerInfo + categoryTag + group + status + updateStatus + createTime + createTimePrefix + operationType;
     if (values != "") {
         moreSearchCondition.css("display", "block");
     }
@@ -851,6 +852,7 @@ function trimSearchCondition(days) {
     var status = $(".conn").find("select[name='status']").val();
     var updateStatus = $(".conn").find("select[name='updateStatus']").val();
     var createTime = $(".conn").find(".createTime").find("input[name='createTime']").val();
+    var createTimePrefix = $(".conn").find(".createTime").find("input[name='createTimePrefix']").val();
     chargeForm.find("#domain").val($.trim(domain));
     chargeForm.find("#categoryTag").val($.trim(categoryTag));
     chargeForm.find("#group").val($.trim(group));
@@ -873,6 +875,11 @@ function trimSearchCondition(days) {
         chargeForm.find("#createTime").val($.trim(createTime));
     } else {
         chargeForm.find("#createTime").val(null);
+    }
+    if (createTimePrefix != "") {
+        chargeForm.find("#createTimePrefix").val($.trim(createTimePrefix));
+    } else {
+        chargeForm.find("#createTimePrefix").val(null);
     }
     chargeForm.submit();
 }
