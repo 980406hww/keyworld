@@ -20,7 +20,7 @@ public interface QZOperationTypeDao extends BaseMapper<QZOperationType> {
     //上一级的主键
     int selectLastId();
 
-    String getStandardType (Long qzSettingUuid, String operationType);
+    String getStandardType (@Param("qzSettingUuid") Long qzSettingUuid, @Param("operationType") String operationType);
 
     void updateQZOperationTypeStandardTime (@Param("qzSettingUuid") Long qzSettingUuid, @Param("operationType") String operationType, @Param("isStandardFlag") boolean isStandardFlag);
 

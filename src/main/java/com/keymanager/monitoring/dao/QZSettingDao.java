@@ -20,8 +20,6 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
 
     List<QZSetting> captureCurrentKeyword();
 
-    List<QZSetting> searchQZSettingsByUuids(@Param("uuids") String uuids);
-
     List<QZSetting> searchQZSettings(Page<QZSetting> page, @Param("qzSettingSearchCriteria")QZSettingSearchCriteria qzSettingSearchCriteria);
 
     int selectLastId();
