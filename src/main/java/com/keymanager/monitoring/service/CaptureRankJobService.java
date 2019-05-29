@@ -261,7 +261,7 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
                 qzKeywordRankInfo.setCurrentPrice(Integer.parseInt(qzChargeRules.get(i).getAmount()));
             } else {
                 DecimalFormat decimalFormat = new DecimalFormat("0.0000");
-                int target = Integer.parseInt(qzChargeRules.get(i + 1).getStartKeywordCount());
+                int target = Integer.parseInt(qzChargeRules.get(i).getStartKeywordCount());
                 String diffValue = decimalFormat.format((double) (target - topTenNum) / target);
                 qzKeywordRankInfo.setDifferenceValue(Double.parseDouble(diffValue));
                 break;
