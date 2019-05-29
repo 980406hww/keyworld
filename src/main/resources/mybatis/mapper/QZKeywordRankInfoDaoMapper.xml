@@ -4,28 +4,28 @@
 
     <select id="searchExistingQZKeywordRankInfo" resultType="com.keymanager.monitoring.entity.QZKeywordRankInfo">
         SELECT
-            qzkri.fUuid AS "uuid",
-            qzkri.fQZSettingUuid AS "qzSettingUuid",
-            qzkri.fTerminalType AS "terminalType",
-            qzkri.fWebSiteType AS "websiteType",
-            qzkri.fTopTen AS "topTen",
-            qzkri.fTopTwenty AS "topTwenty",
-            qzkri.fTopThirty AS "topThirty",
-            qzkri.fTopForty AS "topForty",
-            qzkri.fTopFifty AS "topFifty",
-            qzkri.fTopHundred AS "topHundred",
-            qzkri.fCreateTopTenNum AS "createTopTenNum",
-            qzkri.fCreateTopFiftyNum AS "createTopFiftyNum",
-            qzkri.fDate AS "date",
-            qzkri.fFullDate AS "fullDate",
-            qzkri.fIncrease AS "increase",
-            qzkri.fIpRoute AS "ipRoute",
-            qzkri.fRecord AS "baiduRecord",
-            qzkri.fAchieveLevel AS "achieveLevel",
-            qzkri.fSumSeries AS "sumSeries",
-            qzkri.fDifferenceValue AS "differenceValue",
-            qzkri.fCurrentPrice AS "currentPrice",
-            qzkri.fBaiduRecordFullDate AS "baiduRecordFullDate"
+            qzkri.fUuid AS 'uuid',
+            qzkri.fQZSettingUuid AS 'qzSettingUuid',
+            qzkri.fTerminalType AS 'terminalType',
+            qzkri.fWebSiteType AS 'websiteType',
+            qzkri.fTopTen AS 'topTen',
+            qzkri.fTopTwenty AS 'topTwenty',
+            qzkri.fTopThirty AS 'topThirty',
+            qzkri.fTopForty AS 'topForty',
+            qzkri.fTopFifty AS 'topFifty',
+            qzkri.fTopHundred AS 'topHundred',
+            qzkri.fCreateTopTenNum AS 'createTopTenNum',
+            qzkri.fCreateTopFiftyNum AS 'createTopFiftyNum',
+            qzkri.fDate AS 'date',
+            qzkri.fFullDate AS 'fullDate',
+            qzkri.fIncrease AS 'increase',
+            qzkri.fIpRoute AS 'ipRoute',
+            qzkri.fRecord AS 'baiduRecord',
+            qzkri.fAchieveLevel AS 'achieveLevel',
+            qzkri.fSumSeries AS 'sumSeries',
+            qzkri.fDifferenceValue AS 'differenceValue',
+            qzkri.fCurrentPrice AS 'currentPrice',
+            qzkri.fBaiduRecordFullDate AS 'baiduRecordFullDate'
         FROM t_qz_keyword_rank_info qzkri
         WHERE qzkri.fQZSettingUuid = #{qzSettingUuid}
         AND EXISTS(SELECT 1 FROM t_qz_setting qs WHERE qs.fUuid = qzkri.fQZSettingUuid AND qs.fIsMonitor = 1)
@@ -70,15 +70,15 @@
 
     <select id="getCountNumOfRankInfo" resultType="com.keymanager.monitoring.criteria.QZSettingSearchCriteria">
         SELECT
-            COUNT(qk.fIncrease = 0 OR NULL) AS unchangedNum,
-            COUNT(qk.fIncrease &lt;= #{lower} OR NULL) AS downNum,
-            COUNT(qk.fIncrease &gt;= #{upper} OR NULL) AS upNum,
-            COUNT(((qk.fAchieveLevel &gt; 0 OR NULL) AND qot.fStandardTime > '')) AS atLeastStandardNum,
-            COUNT(qk.fAchieveLevel = 0 OR NULL) AS neverStandardNum,
-            COUNT(qk.fDifferenceValue &lt;= #{differenceValue} OR NULL) AS closeStandardNum,
-            COUNT(qk.fTodayDifference = 0 OR NULL) AS unchangedDifferenceNum,
-            COUNT(qk.fTodayDifference &gt;0 OR NULL) AS upDifferenceNum,
-            COUNT(qk.fTodayDifference &lt;0 OR NULL) AS downDifferenceNum
+            COUNT(qk.fIncrease = 0 OR NULL) AS 'unchangedNum',
+            COUNT(qk.fIncrease &lt;= #{lower} OR NULL) AS 'downNum',
+            COUNT(qk.fIncrease &gt;= #{upper} OR NULL) AS 'upNum',
+            COUNT(((qk.fAchieveLevel &gt; 0 OR NULL) AND qot.fStandardTime > '')) AS 'atLeastStandardNum',
+            COUNT(qk.fAchieveLevel = 0 OR NULL) AS 'neverStandardNum',
+            COUNT(qk.fDifferenceValue &lt;= #{differenceValue} OR NULL) AS 'closeStandardNum',
+            COUNT(qk.fTodayDifference = 0 OR NULL) AS 'unchangedDifferenceNum',
+            COUNT(qk.fTodayDifference &gt;0 OR NULL) AS 'upDifferenceNum',
+            COUNT(qk.fTodayDifference &lt;0 OR NULL) AS 'downDifferenceNum'
         FROM t_qz_keyword_rank_info qk
         LEFT JOIN t_qz_setting qs
         ON qs.fUuid = qk.fQZSettingUuid
@@ -104,42 +104,31 @@
 
     <select id="selectByQZSettingUuid" resultType="com.keymanager.monitoring.entity.QZKeywordRankInfo">
         SELECT
-            fUuid AS uuid,
-            fQZSettingUuid AS qzSettingUuid,
-            fTerminalType AS terminalType,
-            fWebsiteType AS websiteType,
-            fDate AS `date`,
-            fTopTen AS topTen,
-            fTopTwenty AS topTwenty,
-            fTopThirty AS topThirty,
-            fTopForty AS topForty,
-            fTopFifty AS topFifty,
-            fCreateTopTenNum AS createTopTenNum,
-            fCreateTopFiftyNum AS createTopFiftyNum
-        FROM
-            t_qz_keyword_rank_info
-        WHERE
-            fQZSettingUuid = #{qzSettingUuid}
-        AND
-            fTerminalType = #{terminalType}
-        AND
-            fWebsiteType = 'designationWord'
+            qk.fUuid AS 'uuid',
+            qk.fQZSettingUuid AS 'qzSettingUuid',
+            qk.fTerminalType AS 'terminalType',
+            qk.fWebsiteType AS 'websiteType',
+            qk.fDate AS 'date',
+            qk.fTopTen AS 'topTen',
+            qk.fTopTwenty AS 'topTwenty',
+            qk.fTopThirty AS 'topThirty',
+            qk.fTopForty AS 'topForty',
+            qk.fTopFifty AS 'topFifty',
+            qk.fCreateTopTenNum AS 'createTopTenNum',
+            qk.fCreateTopFiftyNum AS 'createTopFiftyNum'
+        FROM t_qz_keyword_rank_info qk
+        WHERE qk.fQZSettingUuid = #{qzSettingUuid}
+        AND qk.fTerminalType = #{terminalType}
+        AND qk.fWebsiteType = 'designationWord'
     </select>
 
     <select id="standardCountByQZSettingUuid" resultType="java.lang.Integer">
-        SELECT
-            COUNT(1)
-        FROM
-            t_qz_keyword_rank_info
-        WHERE
-            fQZSettingUuid = #{qzSettingUuid}
-        AND
-            fTerminalType = #{terminalType}
-        AND
-            (fWebsiteType = 'aiZhan' OR fWebsiteType = '5118')
-        AND
-            fAchieveLevel &gt; 0
-        AND
-            fAchieveLevel IS NOT NULL
+        SELECT COUNT(1)
+        FROM t_qz_keyword_rank_info qk
+        WHERE qk.fQZSettingUuid = #{qzSettingUuid}
+        AND qk.fTerminalType = #{terminalType}
+        AND (qk.fWebsiteType = 'aiZhan' OR qk.fWebsiteType = '5118')
+        AND qk.fAchieveLevel &gt; 0
+        AND qk.fAchieveLevel &gt; ''
     </select>
 </mapper>

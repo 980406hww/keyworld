@@ -29,13 +29,13 @@
 
     <select id="searchQZChargeRuleStandardInfoVos" resultType="com.keymanager.monitoring.vo.QZChargeRuleStandardInfoVO">
         SELECT
-            qot.fStandardType AS "standardType",
-            qk.fAchieveLevel AS "achieveLevel",
-            qk.fDifferenceValue AS "differenceValue",
-            qc.fStandardSpecies AS "standardSpecies",
-            qc.fStartKeywordCount AS "startKeywordCount",
-            qc.fEndKeywordCount AS "endKeywordCount",
-            qc.fAmount AS "amount"
+            qot.fStandardType AS 'standardType',
+            qk.fAchieveLevel AS 'achieveLevel',
+            qk.fDifferenceValue AS 'differenceValue',
+            qc.fStandardSpecies AS 'standardSpecies',
+            qc.fStartKeywordCount AS 'startKeywordCount',
+            qc.fEndKeywordCount AS 'endKeywordCount',
+            qc.fAmount AS 'amount'
         FROM t_qz_charge_rule qc
         LEFT JOIN t_qz_operation_type qot
         ON qot.fUuid = qc.fQZOperationTypeUuid

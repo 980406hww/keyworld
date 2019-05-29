@@ -6,10 +6,10 @@
     <select id="searchQZOperationTypesByQZSettingUuid" resultType="com.keymanager.monitoring.entity.QZOperationType">
         SELECT
             qopty.fUuid             AS 'uuid',
-            qopty.fQZSettingUuid    AS 'qzsettingUuid',
+            qopty.fQZSettingUuid    AS 'qzSettingUuid',
             qopty.fOperationtype          AS 'operationType',
             qopty.fInitialKeywordCount    AS 'initialKeywordCount',
-            qopty.fCurrentKeywordCount    AS 'currentkeywordcount',
+            qopty.fCurrentKeywordCount    AS 'currentKeywordCount',
             qopty.fGroup            AS 'group',
             qopty.fReachTargetDate  AS 'reachTargetDate',
             qopty.fNextChargeDate   AS 'nextChargeDate',
@@ -25,11 +25,11 @@
     <select id="searchQZOperationTypesIsDelete" resultType="com.keymanager.monitoring.entity.QZOperationType">
       SELECT
        qopty.fUuid            AS 'uuid',
-       qopty.fQZSettingUuid    AS 'qzsettingUuid',
+       qopty.fQZSettingUuid    AS 'qzSettingUuid',
        qopty.fOperationtype          AS 'operationType',
        qopty.fStandardType  AS 'standardType',
        qopty.fInitialKeywordCount    AS 'initialKeywordCount',
-       qopty.fCurrentKeywordCount    AS 'currentkeywordcount',
+       qopty.fCurrentKeywordCount    AS 'currentKeywordCount',
        qopty.fGroup            AS 'group',
        qopty.fSubDomainName  AS 'subDomainName',
        qopty.fReachTargetDate  AS 'reachTargetDate',

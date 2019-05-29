@@ -1018,6 +1018,8 @@ function showChargeRulesDiv(self, e) {
                             "<td>价格</td>" +
                             "</tr>");
                         qzChargeRules = result.qzChargeRuleMap["designationWord"];
+                    } else {
+                        qzChargeRules = {};
                     }
                     $.each(qzChargeRules, function (idx, val) {
                         var newTr = document.createElement("tr");
