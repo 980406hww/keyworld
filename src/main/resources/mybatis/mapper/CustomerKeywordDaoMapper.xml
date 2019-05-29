@@ -75,7 +75,12 @@
         </if>
         <choose>
             <when test="customerKeywordCriteria.optimizeGroupName != null and customerKeywordCriteria.optimizeGroupName != ''">
-                AND ck.fOptimizeGroupName  like '${customerKeywordCriteria.optimizeGroupName}%'
+                <if test="customerKeywordCriteria.groupNameFuzzyQuery == null or customerKeywordCriteria.groupNameFuzzyQuery == ''">
+                    AND ck.fOptimizeGroupName = #{customerKeywordCriteria.optimizeGroupName}
+                </if>
+                <if test="customerKeywordCriteria.groupNameFuzzyQuery == 1">
+                    AND ck.fOptimizeGroupName like '${customerKeywordCriteria.optimizeGroupName}%'
+                </if>
             </when>
             <otherwise>
                 <if test="customerKeywordCriteria.displayStop == null or customerKeywordCriteria.displayStop == ''">

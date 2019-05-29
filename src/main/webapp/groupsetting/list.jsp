@@ -58,6 +58,12 @@
 						</select>
 					</span>
 				</li>
+                <li>
+                    <label name="groupNameFuzzyQuery" title="组名模糊查询">
+                        <input id="groupNameFuzzyQuery" name="groupNameFuzzyQuery" type="checkbox" value="groupNameFuzzyQuery" ${groupSettingCriteria.groupNameFuzzyQuery == "1" ? "checked=true" : ""}/>
+                        组名模糊查询
+                    </label>
+                </li>
 				<li>
 					<label name="hasOperation" title="有操作类型">
 						<input type="checkbox" name="checkbox" <c:if test="${groupSettingCriteria.hasOperation == true}">checked</c:if>>
@@ -104,7 +110,8 @@
 	<input type="hidden" name="optimizedGroupName" id="optimizedGroupName" value="${groupSettingCriteria.optimizedGroupName}"/>
 	<input type="hidden" name="operationType" id="operationType" value="${groupSettingCriteria.operationType}"/>
 	<input type="hidden" name="terminalType" id="terminalType" value="${groupSettingCriteria.terminalType}"/>
-	<input type="hidden" name="hasOperation" id="hasOperation" value="${groupSettingCriteria.hasOperation}"/>
+    <input type="hidden" name="hasOperation" id="hasOperation" value="${groupSettingCriteria.hasOperation}"/>
+    <input type="hidden" name="groupNameFuzzyQuery" id="groupNameFuzzyQuery" value="${groupSettingCriteria.groupNameFuzzyQuery}"/>
 	<input type="hidden" name="hasRemainingAccount" id="hasRemainingAccount" value="${groupSettingCriteria.hasRemainingAccount}"/>
 </form>
 

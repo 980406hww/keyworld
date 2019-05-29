@@ -3,6 +3,7 @@ package com.keymanager.monitoring.service;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.controller.rest.internal.ScreenedWebsiteListCacheService;
+import com.keymanager.monitoring.criteria.ScreenedWebsiteCriteria;
 import com.keymanager.monitoring.dao.ScreenedWebsiteDao;
 import com.keymanager.monitoring.entity.CustomerKeyword;
 import com.keymanager.monitoring.entity.ScreenedWebsite;
@@ -30,11 +31,11 @@ public class ScreenedWebsiteService extends ServiceImpl<ScreenedWebsiteDao, Scre
     @Autowired
     private ConfigService configService;
 
-    public ModelAndView constructSearchScreenedWebsiteListsModelAndView(int currentPageNumber, int pageSize, ScreenedWebsite screenedWebsite) {
+    public ModelAndView constructSearchScreenedWebsiteListsModelAndView(int currentPageNumber, int pageSize, ScreenedWebsiteCriteria screenedWebsiteCriteria) {
         ModelAndView modelAndView = new ModelAndView("/screenedWebsite/screenedWebsite");
         Page<ScreenedWebsite> page = new Page<>();
-        page.setRecords(screenedWebsiteDao.searchCustomerKeywordListsPage(new Page<CustomerKeyword>(currentPageNumber, pageSize), screenedWebsite));
-        modelAndView.addObject("screenedWebsite", screenedWebsite);
+        page.setRecords(screenedWebsiteDao.searchCustomerKeywordListsPage(new Page<ScreenedWebsite>(currentPageNumber, pageSize), screenedWebsiteCriteria));
+        modelAndView.addObject("screenedWebsiteCriteria", screenedWebsiteCriteria);
         modelAndView.addObject("page", page);
         return modelAndView;
     }

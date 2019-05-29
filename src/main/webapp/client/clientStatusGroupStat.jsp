@@ -19,13 +19,14 @@
 <div id="topDiv">
     <%@include file="/menu.jsp"%>
     <form action="/internal/clientstatus/clientStatusGroupStat" method="post" id="searchClientStatusSummaryVOForm" style="margin: 35px 0 5px 10px;">
-        分组名称:<input type="text" name="group" id="group" value="${group}">&nbsp;&nbsp;
+        分组名称:<input type="text" name="groupName" id="groupName" value="${clientStatusGroupStatCriteria.groupName}">&nbsp;&nbsp;
         终端类型:
         <select name="terminalType">
             <option value="">请选择终端类型</option>
-            <option value="PC" <c:if test="${requestScope.terminalType.equals('PC')}">selected="selected"</c:if>>PC</option>
-            <option value="Phone" <c:if test="${requestScope.terminalType.equals('Phone')}">selected="selected"</c:if>>Phone</option>
+            <option value="PC" <c:if test="${clientStatusGroupStatCriteria.terminalType.equals('PC')}">selected="selected"</c:if>>PC</option>
+            <option value="Phone" <c:if test="${clientStatusGroupStatCriteria.terminalType.equals('Phone')}">selected="selected"</c:if>>Phone</option>
         </select>&nbsp;&nbsp;
+        <input id="groupNameFuzzyQuery" name="groupNameFuzzyQuery" type="checkbox" value="groupNameFuzzyQuery" ${clientStatusGroupStatCriteria.groupNameFuzzyQuery != null ? "checked=true" : ""}/>组名模糊查询 &nbsp;&nbsp;
         <shiro:hasPermission name="/internal/clientstatus/clientStatusGroupStat">
             <input type="submit" value=" 查询 " onclick="trimSearchCondition()">
         </shiro:hasPermission>

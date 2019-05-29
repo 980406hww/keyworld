@@ -76,7 +76,16 @@
         t_machine_info mi
         WHERE mi.fTerminalType = #{machineInfoCriteria.terminalType}
         <if test="machineInfoCriteria.clientID != null and machineInfoCriteria.clientID != ''"> AND mi.fClientID like '%${machineInfoCriteria.clientID}%'</if>
-        <if test="machineInfoCriteria.groupName != null and machineInfoCriteria.groupName != ''"> AND mi.fGroup like '%${machineInfoCriteria.groupName}%'</if>
+        <if test="machineInfoCriteria.groupName != null and machineInfoCriteria.groupName != ''">
+            <choose>
+                <when test="machineInfoCriteria.groupNameFuzzyQuery == null or machineInfoCriteria.groupNameFuzzyQuery == ''">
+                    AND mi.fGroup = #{machineInfoCriteria.groupName}
+                </when>
+                <otherwise>
+                    AND mi.fGroup like '%${machineInfoCriteria.groupName}%'
+                </otherwise>
+            </choose>
+        </if>
         <if test="machineInfoCriteria.operationType != null and machineInfoCriteria.operationType != ''"> AND mi.fUsingOperationType like '${machineInfoCriteria.operationType}%'</if>
         <if test="machineInfoCriteria.upgradeFailedReason != null and machineInfoCriteria.upgradeFailedReason != ''"> AND mi.fUpgradeFailedReason like '%${machineInfoCriteria.upgradeFailedReason}%'</if>
         <if test="machineInfoCriteria.version != null and machineInfoCriteria.version != ''"> AND mi.fVersion like concat(#{machineInfoCriteria.version},'%')</if>

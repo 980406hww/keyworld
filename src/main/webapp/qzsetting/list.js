@@ -748,12 +748,13 @@ function findOptimizeGroupAndOperationType(self) {
     var args = name.split(" ");
     searchGroupSettings(args[0], args[1]);
 }
-function showKeywordDialog(qzSettingUuid, customerUuid, domain, optimizedGroupName) {
+function showKeywordDialog(qzSettingUuid, customerUuid, domain, optimizeGroupName) {
     var customerKeywordDialog = $("#customerKeywordDialog");
     customerKeywordDialog.find('#customerKeywordForm')[0].reset();
     customerKeywordDialog.find("#qzSettingUuid").val(qzSettingUuid);
     customerKeywordDialog.find("#customerUuid").val(customerUuid);
     customerKeywordDialog.find("#domain").val(domain);
+    customerKeywordDialog.find("#optimizeGroupName").val(optimizeGroupName);
     customerKeywordDialog.show();
     customerKeywordDialog.dialog({
         resizable: false,
@@ -765,7 +766,7 @@ function showKeywordDialog(qzSettingUuid, customerUuid, domain, optimizedGroupNa
             text: '保存',
             iconCls: 'icon-ok',
             handler: function () {
-                saveCustomerKeywords(qzSettingUuid, customerUuid, optimizedGroupName);
+                saveCustomerKeywords(qzSettingUuid, customerUuid, optimizeGroupName);
             }
         }, {
             text: '取消',
@@ -779,7 +780,7 @@ function showKeywordDialog(qzSettingUuid, customerUuid, domain, optimizedGroupNa
     customerKeywordDialog.dialog("open");
     customerKeywordDialog.window("resize",{top:$(document).scrollTop() + 100});
 }
-function saveCustomerKeywords(qzSettingUuid, customerUuid, optimizedGroupName) {
+function saveCustomerKeywords(qzSettingUuid, customerUuid, tempOptimizeGroupName) {
     var postData = {};
     var terminalTypes = [];
     var customerKeywordDialog = $("#customerKeywordDialog");
@@ -811,10 +812,14 @@ function saveCustomerKeywords(qzSettingUuid, customerUuid, optimizedGroupName) {
     });
     var type = customerKeywordDialog.find("#qzSettingEntryType").val();
     var searchEngine = customerKeywordDialog.find("#searchEngine").val();
+    var optimizeGroupName = customerKeywordDialog.find("#optimizeGroupName").val();
+    if (optimizeGroupName == "") {
+        optimizeGroupName = tempOptimizeGroupName;
+    }
     postData.qzSettingUuid = qzSettingUuid;
     postData.customerUuid = customerUuid;
     postData.domain = $.trim(domain);
-    postData.optimizeGroupName = optimizedGroupName;
+    postData.optimizeGroupName = optimizeGroupName;
     postData.type = type;
     postData.searchEngine = searchEngine;
     postData.terminalTypes = terminalTypes;

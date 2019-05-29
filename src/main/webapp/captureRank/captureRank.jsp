@@ -41,6 +41,7 @@
                 <option value="Checking" <c:if test="${captureRankJobSearchCriteria.exectionStatus.equals('Checking')}">selected="selected"</c:if>>Checking</option>
                 <option value="Complete" <c:if test="${captureRankJobSearchCriteria.exectionStatus.equals('Complete')}">selected="selected"</c:if>>Complete</option>
             </select>&nbsp;&nbsp;
+            <input id="groupNameFuzzyQuery" name="groupNameFuzzyQuery" type="checkbox" value="groupNameFuzzyQuery" ${captureRankJobSearchCriteria.groupNameFuzzyQuery != null ? "checked=true" : ""}/>组名模糊查询 &nbsp;&nbsp;
             <shiro:hasPermission name="/internal/captureRank/searchCaptureRankJobs">
             <input type="submit" value=" 查询 " onclick="resetPageNumber()">&nbsp;&nbsp;
             </shiro:hasPermission>

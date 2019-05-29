@@ -17,6 +17,8 @@ public class CustomerKeywordRefreshStatInfoCriteria extends BaseCriteria {
 
     private String categoryTag;
 
+    private String groupNameFuzzyQuery;
+
     public int getDayNum () {
         return dayNum > 0 ? dayNum : 0;
     }
@@ -79,5 +81,13 @@ public class CustomerKeywordRefreshStatInfoCriteria extends BaseCriteria {
 
     public void setCategoryTag(String categoryTag) {
         this.categoryTag = categoryTag;
+    }
+
+    public String getGroupNameFuzzyQuery() {
+        return groupNameFuzzyQuery;
+    }
+
+    public void setGroupNameFuzzyQuery(String groupNameFuzzyQuery) {
+        this.groupNameFuzzyQuery = groupNameFuzzyQuery;
     }
 }

@@ -1234,6 +1234,12 @@
 				</td>
 			</tr>
 			<tr>
+				<td style="width:60px" align="right">分组</td>
+				<td>
+					<input type="text" name="optimizeGroupName" id="optimizeGroupName" style="width:240px" placeholder="可不填写，默认这个站的分组" />
+				</td>
+			</tr>
+			<tr>
 				<td style="width:60px" align="right"><input type="checkbox" name="synchronousAddition" id="synchronousAddition"></td>
 				<td>
 					<label style="width: 240px;">PC和Phone同步加词</label>

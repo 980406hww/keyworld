@@ -28,7 +28,8 @@
                         <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
                         <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
                         <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
-                        优化组名称:<input type="text" name="optimizeGroupName" id="optimizeGroupName" style="width: 160px;" value="${screenedWebsite.optimizeGroupName}">
+                        优化组名:<input type="text" name="optimizeGroupName" id="optimizeGroupName" style="width: 160px;" value="${screenedWebsiteCriteria.optimizeGroupName}">
+                        <input id="groupNameFuzzyQuery" name="groupNameFuzzyQuery" type="checkbox"  onclick="groupNameFuzzyQueryValue()" value="${screenedWebsiteCriteria.groupNameFuzzyQuery}"/>组名模糊查询 &nbsp;
                             &nbsp;&nbsp;<input type="submit" class="ui-button ui-widget ui-corner-all" onclick="resetPageNumber()" name="btnQuery" id="btnQuery" value=" 查询 ">
                             &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 添加 " onclick="showScreenedWebsiteDialog(null)"/>
                             &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 删除所选 " onclick="deleteBatchScreenedWebsite(this)"/>
@@ -112,10 +113,27 @@
 <script src="${staticPath }/screenedWebsite/screenedWebsite.js"></script>
 <script type="text/javascript">
     $(function () {
+        initGroupNameFuzzyQueryChecked();
         window.onresize = function(){
             $("#showScreenedWebsiteDiv").css("margin-top",$("#topDiv").height());
         }
     });
+
+    function initGroupNameFuzzyQueryChecked() {
+        if(${screenedWebsite.groupNameFuzzyQuery == 1}){
+            $("#groupNameFuzzyQuery").prop("checked",true);
+        }else{
+            $("#groupNameFuzzyQuery").prop("checked",false);
+        }
+    }
+
+    function groupNameFuzzyQueryValue() {
+        if ($("#groupNameFuzzyQuery").is(":checked")){
+            $("#groupNameFuzzyQuery").val("1");
+        } else {
+            $("#groupNameFuzzyQuery").val("0");
+        }
+    }
 </script>
 </body>
 </html>

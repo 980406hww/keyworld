@@ -32,6 +32,7 @@
 				<td align="right">
 					&nbsp;
 					<shiro:hasPermission name="/internal/refreshstatinfo/searchRefreshStatInfos">
+						<input id="groupNameFuzzyQuery" name="groupNameFuzzyQuery" type="checkbox" value="groupNameFuzzyQuery" ${refreshStatInfoCriteria.groupNameFuzzyQuery != null ? "checked=true" : ""}/>组名模糊查询 &nbsp;&nbsp;
 						<input type="submit" name="btnQuery" id="btnQuery" value=" 查询 " onclick="trimSearchCondition()">&nbsp;&nbsp;
 					</shiro:hasPermission>
 					<shiro:hasPermission name="/internal/customerKeyword/uploadCustomerKeywords">

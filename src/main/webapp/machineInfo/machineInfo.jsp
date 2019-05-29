@@ -104,6 +104,7 @@
 						</tr>
 						<tr>
 						<td align="left">
+							<input id="groupNameFuzzyQuery" name="groupNameFuzzyQuery" type="checkbox" value="groupNameFuzzyQuery" ${machineInfoCriteria.groupNameFuzzyQuery != null ? "checked=true" : ""}/>组名模糊查询 &nbsp;&nbsp;
 							<input id="hasProblem" name="hasProblem" type="checkbox" value="hasProblem" ${machineInfoCriteria.hasProblem != null ? "checked=true" : ""}>停了</input>
 							&nbsp;&nbsp;
 							<input id="renewal" name="renewal" type="checkbox" value="renewal" ${machineInfoCriteria.renewal != null ? "checked=true" : ""}>续费</input>

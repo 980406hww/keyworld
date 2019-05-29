@@ -31,7 +31,14 @@
             t_capture_rank_job c
         <where>
             <if test="captureRankJobSearchCriteria.groupNames!=null and captureRankJobSearchCriteria.groupNames!=''">
-                AND c.fGroupNames LIKE '%${captureRankJobSearchCriteria.groupNames}%'
+                <choose>
+                    <when test="captureRankJobSearchCriteria.groupNameFuzzyQuery == null or captureRankJobSearchCriteria.groupNameFuzzyQuery == ''">
+                        AND c.fGroupNames = #{captureRankJobSearchCriteria.groupNames}
+                    </when>
+                    <otherwise>
+                        AND c.fGroupNames LIKE '%${captureRankJobSearchCriteria.groupNames}%'
+                    </otherwise>
+                </choose>
             </if>
             <if test="captureRankJobSearchCriteria.customerUuid!=null and captureRankJobSearchCriteria.customerUuid!=''">
                 AND c.fcustomerUuid = #{captureRankJobSearchCriteria.customerUuid}

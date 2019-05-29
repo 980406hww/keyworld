@@ -30,6 +30,7 @@ public class MachineInfoCriteria extends BaseCriteria {
 
     private String terminalType;
     private Set<String> switchGroups;
+    private String groupNameFuzzyQuery;
 
     private boolean haveHiddenColumns; //是否为设置隐藏弹窗提交的
 
@@ -241,5 +242,13 @@ public class MachineInfoCriteria extends BaseCriteria {
 
     public void setNoChangePassword(String noChangePassword) {
         this.noChangePassword = noChangePassword;
+    }
+
+    public String getGroupNameFuzzyQuery() {
+        return groupNameFuzzyQuery;
+    }
+
+    public void setGroupNameFuzzyQuery(String groupNameFuzzyQuery) {
+        this.groupNameFuzzyQuery = groupNameFuzzyQuery;
     }
 }

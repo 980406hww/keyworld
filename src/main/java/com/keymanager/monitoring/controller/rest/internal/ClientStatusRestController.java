@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.ClientStatusBatchUpdateCriteria;
 import com.keymanager.monitoring.criteria.ClientStatusCriteria;
+import com.keymanager.monitoring.criteria.ClientStatusGroupStatCriteria;
 import com.keymanager.monitoring.entity.ClientStatus;
 import com.keymanager.monitoring.entity.Config;
 import com.keymanager.monitoring.entity.UserPageSetup;
@@ -401,18 +402,17 @@ public class ClientStatusRestController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/clientstatus/clientStatusGroupStat")
     @RequestMapping(value = "/clientStatusGroupStat", method = {RequestMethod.POST, RequestMethod.GET})
-    public ModelAndView clientStatusGroupStat(String group, String terminalType, HttpServletRequest request) {
+    public ModelAndView clientStatusGroupStat(ClientStatusGroupStatCriteria clientStatusGroupStatCriteria, HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView("client/clientStatusGroupStat");
         try {
             if(request.getMethod().equals("GET")){
                 return modelAndView;
             }
-            if (null != group) {
-                group = group.trim();
+            if (null != clientStatusGroupStatCriteria.getGroupName()) {
+                clientStatusGroupStatCriteria.setGroupName(clientStatusGroupStatCriteria.getGroupName().trim());
             }
-            List<ClientStatusGroupSummaryVO> clientStatusGroupSummaryVOs = clientStatusService.searchClientStatusGroupSummaryVO(group, terminalType);
-            modelAndView.addObject("group", group);
-            modelAndView.addObject("terminalType", terminalType);
+            List<ClientStatusGroupSummaryVO> clientStatusGroupSummaryVOs = clientStatusService.searchClientStatusGroupSummaryVO(clientStatusGroupStatCriteria);
+            modelAndView.addObject("clientStatusGroupStatCriteria", clientStatusGroupStatCriteria);
             modelAndView.addObject("clientStatusGroupSummaryVOs", clientStatusGroupSummaryVOs);
         } catch (Exception e) {
             logger.error(e.getMessage());

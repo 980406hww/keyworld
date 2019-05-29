@@ -641,7 +641,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 						customerKeyword.setOptimizeGroupName("zanting");
 					}
 				}
-				if (!"zanting".equals(customerKeyword.getOptimizeGroupName())){
+				if (!"zanting".equals(customerKeyword.getOptimizeGroupName()) && customerKeyword.getOptimizeGroupName().equals(TerminalTypeEnum.PC.name().equals(terminalType) ? qzSetting.getPcGroup() : qzSetting.getPhoneGroup())){
                     CustomerKeywordOptimizeGroupCriteria customerKeywordOptimizeGroupCriteria = customerKeywordService.matchOptimizeGroupName(customerKeywordOptimizeGroupCriteriaList, customerKeyword.getOptimizeGroupName(), qzSetting.getGroupMaxCustomerKeywordCount());
                     customerKeyword.setOptimizeGroupName(customerKeywordOptimizeGroupCriteria.getOptimizeGroupName());
                 }

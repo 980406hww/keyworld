@@ -291,7 +291,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 					}
 				}
 				customerKeyword.setCustomerKeywordSource(CustomerKeywordSourceEnum.UI.name());
-				if (!"zanting".equals(customerKeyword.getOptimizeGroupName())){
+				if (!"zanting".equals(customerKeyword.getOptimizeGroupName()) && StringUtils.isEmpty(customerKeyword.getOptimizeGroupName())){
                     customerKeywordService.checkOptimizeGroupName(customerKeyword);
                 }
 				customerKeywordService.addCustomerKeyword(customerKeyword, userName);
