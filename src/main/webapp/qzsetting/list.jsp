@@ -59,7 +59,7 @@
 						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="immediatelyUpdateQZSettings('updateSettings')" value=" 马上更新 " >&nbsp;
 					</li>
 				</shiro:hasPermission>
-				<shiro:hasPermission name="/internal/qzsetting/stopMonitorImmediately">
+				<shiro:hasPermission name="/internal/qzsetting/startMonitorImmediately">
 					<li>
 						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="immediatelyUpdateQZSettings('startMonitor')" value=" 达标监控 " >&nbsp;
 					</li>
@@ -104,7 +104,7 @@
 				<li>
 					<label name="lowerDifference" title="网站关键词(PC,Phone)今天前10下降">
 						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.checkStatus == 7}">checked</c:if>>
-						下降 (${qzSettingSearchCriteria.downDifferenceNum == null ? 0 : qzSettingSearchCriteria.downDifferenceNum})
+						下降 (${qzSettingSearchCriteria.downDifferenceNum})
 					</label>
 				</li>
 				<li>
@@ -457,7 +457,7 @@
 									<div class="row4">
 										<span>达标时间</span>
 										<span class="standardTime">
-                                            <a href="javascript:;" id="PCStandardTime">null</a>
+                                            <a href="javascript:;" id="PCStandardTime">无</a>
                                         </span>
 									</div>
 							    </div>
@@ -516,7 +516,7 @@
 									<div class="row4">
 										<span>达标时间</span>
 										<span class="standardTime">
-                                            <a href="javascript:;" id="PCStandardTime">null</a>
+                                            <a href="javascript:;" id="PCStandardTime">无</a>
                                         </span>
 									</div>
 								</div>
@@ -739,7 +739,7 @@
 									<div class="row4">
 										<span>达标时间</span>
 										<span class="standardTime">
-                                            <a href="javascript:;" id="PhoneStandardTime">null</a>
+                                            <a href="javascript:;" id="PhoneStandardTime">无</a>
                                         </span>
 									</div>
 								</div>
@@ -798,7 +798,7 @@
 									<div class="row4">
 										<span>达标时间</span>
 										<span class="standardTime">
-                                            <a href="javascript:;" id="PhoneStandardTime">null</a>
+                                            <a href="javascript:;" id="PhoneStandardTime">无</a>
                                         </span>
 									</div>
                                 </div>

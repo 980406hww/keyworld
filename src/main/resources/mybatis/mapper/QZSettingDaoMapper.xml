@@ -337,7 +337,7 @@
         qs.fUuid AS 'uuid',
         qs.fDomain AS 'domain'
         FROM t_qz_setting qs
-        WHERE qs.fIsMonitor = 1
+        WHERE 1 = 1
         AND (qs.fCrawlerStatus = 'new'
             OR (qs.fCrawlerStatus = 'processing' AND qs.fCrawlerTime &lt;= DATE_SUB(NOW(), INTERVAL 10 MINUTE))
             OR qs.fCrawlerTime IS NULL

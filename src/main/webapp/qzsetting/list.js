@@ -278,7 +278,7 @@ function generateQZKeywordTrendCharts(domElement, data) {
     $(parentElement).find("#" + result.terminalType + "TopCreate10").text(result.createTopTenNum);
     $(parentElement).find("#" + result.terminalType + "TopCreate50").text(result.createTopFiftyNum);
     $(parentElement).find("#" + result.terminalType + "IsStandard").text(result.achieveLevel == 0 ? "否" : "是");
-    $(parentElement).find("#" + result.terminalType + "StandardTime").text(toDateFormat(result.achieveTime));
+    $(parentElement).find("#" + result.terminalType + "StandardTime").text(result.achieveTime == null ? "无" : toDateFormat(new Date(result.achieveTime)));
     if (result.websiteType === "aiZhan") {
         topThirty = stringToArray(result.topThirty);
         topForty = stringToArray(result.topForty);
@@ -553,7 +553,7 @@ function generateQZDesignationWordTrendCharts(domElement, data) {
     $(parentElement).find("#" + result.terminalType + "TopCreate10").text(result.createTopTenNum);
     $(parentElement).find("#" + result.terminalType + "TopCreate50").text(result.createTopFiftyNum);
     $(parentElement).find("#" + result.terminalType + "IsStandard").text(result.achieveLevel == 0 ? "否" : "是");
-    $(parentElement).find("#" + result.terminalType + "StandardTime").text(toDateFormat(result.achieveTime));
+    $(parentElement).find("#" + result.terminalType + "StandardTime").text(result.achieveTime == null ? "无" : toDateFormat(new Date(result.achieveTime)));
     option = {
         color: ['#228B22', '#0000FF', '#FF6100', '#000000', '#FF0000'],
         title : {
