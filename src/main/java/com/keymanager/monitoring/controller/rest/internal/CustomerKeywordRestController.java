@@ -6,6 +6,7 @@ import com.keymanager.monitoring.criteria.*;
 import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.enums.CustomerKeywordSourceEnum;
 import com.keymanager.monitoring.enums.EntryTypeEnum;
+import com.keymanager.monitoring.enums.TerminalTypeEnum;
 import com.keymanager.monitoring.excel.operator.CustomerKeywordInfoExcelWriter;
 import com.keymanager.monitoring.service.*;
 import com.keymanager.monitoring.vo.CodeNameVo;
@@ -55,6 +56,9 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 
 	@Autowired
     private CustomerExcludeKeywordService customerExcludeKeywordService;
+
+    @Autowired
+    private QZSettingService qzSettingService;
 
 	@RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
 	@RequestMapping(value="/searchCustomerKeywords/{customerUuid}" , method=RequestMethod.GET)
@@ -287,6 +291,9 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 					}
 				}
 				customerKeyword.setCustomerKeywordSource(CustomerKeywordSourceEnum.UI.name());
+				if (!"zanting".equals(customerKeyword.getOptimizeGroupName())){
+                    customerKeywordService.checkOptimizeGroupName(customerKeyword);
+                }
 				customerKeywordService.addCustomerKeyword(customerKeyword, userName);
 				return new ResponseEntity<Object>(true, HttpStatus.OK);
 			} else {

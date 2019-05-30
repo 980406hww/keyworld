@@ -597,6 +597,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void supplementInfo(List<CustomerKeyword> customerKeywords, int customerUuid, String type, String terminalType) {
+        QZSetting qzSetting = qzSettingService.searchGroupMaxCustomerKeywordCount(Long.valueOf(customerUuid), terminalType, customerKeywords.get(0).getUrl());
+        List<CustomerKeywordOptimizeGroupCriteria> customerKeywordOptimizeGroupCriteriaList = searchOptimizeGroupNameAndCount(customerKeywords.get(0).getOptimizeGroupName());
         for (CustomerKeyword customerKeyword : customerKeywords) {
             customerKeyword.setCustomerUuid(customerUuid);
             customerKeyword.setType(type);
@@ -604,6 +606,14 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeyword.setUpdateTime(Utils.getCurrentTimestamp());
             customerKeyword.setTerminalType(terminalType);
             customerKeyword.setCustomerKeywordSource(CustomerKeywordSourceEnum.Excel.name());
+            if (null != qzSetting){
+                String optimizeGroupName = customerKeyword.getOptimizeGroupName();
+                if (StringUtils.isEmpty(optimizeGroupName)){
+                    optimizeGroupName = TerminalTypeEnum.PC.name().equals(customerKeyword.getTerminalType()) ? qzSetting.getPcGroup() : qzSetting.getPhoneGroup();
+                }
+                CustomerKeywordOptimizeGroupCriteria customerKeywordOptimizeGroupCriteria = matchOptimizeGroupName(customerKeywordOptimizeGroupCriteriaList, optimizeGroupName, qzSetting.getGroupMaxCustomerKeywordCount());
+                customerKeyword.setOptimizeGroupName(customerKeywordOptimizeGroupCriteria.getOptimizeGroupName());
+            }
         }
     }
 
@@ -1652,5 +1662,57 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     public List<String> getAvailableOptimizationGroups (GroupSettingCriteria groupSettingCriteria) {
         return customerKeywordDao.getAvailableOptimizationGroups(groupSettingCriteria);
+    }
+
+    public void checkOptimizeGroupName(CustomerKeyword customerKeyword){
+        QZSetting qzSetting = qzSettingService.searchGroupMaxCustomerKeywordCount(customerKeyword.getCustomerUuid(), customerKeyword.getTerminalType(), customerKeyword.getUrl());
+        String optimizeGroupName = customerKeyword.getOptimizeGroupName();
+        if (StringUtils.isEmpty(optimizeGroupName)){
+            optimizeGroupName = TerminalTypeEnum.PC.name().equals(customerKeyword.getTerminalType()) ? qzSetting.getPcGroup() : qzSetting.getPhoneGroup();
+        }
+        List<CustomerKeywordOptimizeGroupCriteria> customerKeywordOptimizeGroupCriteriaList = searchOptimizeGroupNameAndCount(optimizeGroupName);
+        int maxGroupNameSuffix = 1;
+        String tmpOptimizeGroupName = optimizeGroupName;
+        if (customerKeywordOptimizeGroupCriteriaList.size() > 0){
+            for (CustomerKeywordOptimizeGroupCriteria customerKeywordOptimizeGroupCriteria: customerKeywordOptimizeGroupCriteriaList) {
+                if (customerKeywordOptimizeGroupCriteria.getSameGroupCustomerKeywordCount() < qzSetting.getGroupMaxCustomerKeywordCount()){
+                    customerKeyword.setOptimizeGroupName(customerKeywordOptimizeGroupCriteria.getOptimizeGroupName());
+                    return;
+                }
+                String optimizeGroupNameSuffix = customerKeywordOptimizeGroupCriteria.getOptimizeGroupName().replaceAll(optimizeGroupName + "_", "");
+                if (StringUtils.isNumeric(optimizeGroupNameSuffix)){
+                    maxGroupNameSuffix = maxGroupNameSuffix < Integer.parseInt(optimizeGroupNameSuffix) ? Integer.parseInt(optimizeGroupNameSuffix) : maxGroupNameSuffix;
+                }
+            }
+            tmpOptimizeGroupName = optimizeGroupName + "_" + (maxGroupNameSuffix + 1);
+        }
+        customerKeyword.setOptimizeGroupName(tmpOptimizeGroupName);
+    }
+
+    public List<CustomerKeywordOptimizeGroupCriteria> searchOptimizeGroupNameAndCount(String optimizeGroupName){
+        return customerKeywordDao.searchOptimizeGroupNameAndCount(optimizeGroupName);
+    }
+
+    public CustomerKeywordOptimizeGroupCriteria matchOptimizeGroupName(List<CustomerKeywordOptimizeGroupCriteria> customerKeywordOptimizeGroupCriteriaList, String optimizeGroupName, int groupMaxCustomerKeywordCount) {
+        int maxGroupNameSuffix = 1;
+        String tmpOptimizeGroupName = optimizeGroupName;
+        if (customerKeywordOptimizeGroupCriteriaList.size() > 0) {
+            for (CustomerKeywordOptimizeGroupCriteria tempCustomerKeywordOptimizeGroupCriteria : customerKeywordOptimizeGroupCriteriaList) {
+                if (tempCustomerKeywordOptimizeGroupCriteria.getSameGroupCustomerKeywordCount() < groupMaxCustomerKeywordCount) {
+                    tempCustomerKeywordOptimizeGroupCriteria.setSameGroupCustomerKeywordCount(tempCustomerKeywordOptimizeGroupCriteria.getSameGroupCustomerKeywordCount() + 1);
+                    return tempCustomerKeywordOptimizeGroupCriteria;
+                }
+                String optimizeGroupNameSuffix = tempCustomerKeywordOptimizeGroupCriteria.getOptimizeGroupName().replaceAll(optimizeGroupName + "_", "");
+                if (StringUtils.isNumeric(optimizeGroupNameSuffix)) {
+                    maxGroupNameSuffix = maxGroupNameSuffix < Integer.parseInt(optimizeGroupNameSuffix) ? Integer.parseInt(optimizeGroupNameSuffix) : maxGroupNameSuffix;
+                }
+                tmpOptimizeGroupName = optimizeGroupName + "_" + (maxGroupNameSuffix + 1);
+            }
+        }
+        CustomerKeywordOptimizeGroupCriteria customerKeywordOptimizeGroupCriteria = new CustomerKeywordOptimizeGroupCriteria();
+        customerKeywordOptimizeGroupCriteria.setOptimizeGroupName(tmpOptimizeGroupName);
+        customerKeywordOptimizeGroupCriteria.setSameGroupCustomerKeywordCount(1);
+        customerKeywordOptimizeGroupCriteriaList.add(customerKeywordOptimizeGroupCriteria);
+        return customerKeywordOptimizeGroupCriteria;
     }
 }
