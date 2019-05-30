@@ -410,9 +410,9 @@
         </choose>
     </select>
 
-    <update id="stopMonitorImmediately" parameterType="java.lang.String">
+    <update id="startMonitorImmediately" parameterType="java.lang.String">
         UPDATE t_qz_setting  qs
-        SET qs.fIsMonitor = 0
+        SET qs.fIsMonitor = 1
         WHERE qs.fUuid IN (${uuids})
     </update>
 

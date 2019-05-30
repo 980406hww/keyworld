@@ -41,7 +41,7 @@
         LEFT JOIN t_qz_operation_type qot
         ON qot.fUuid = qc.fQZOperationTypeUuid
         LEFT JOIN t_qz_keyword_rank_info qk
-        ON qk.fQZSettingUuid = qot.fQZSettingUuid AND qk.fWebsiteType = qc.fStandardSpecies
+        ON qk.fQZSettingUuid = qot.fQZSettingUuid AND qk.fTerminalType = qot.fOperationtype AND qk.fWebsiteType = qc.fStandardSpecies
         WHERE qot.fQZSettingUuid = #{qzSettingUuid}
         AND qot.fOperationtype = #{terminalType}
         ORDER BY qc.fUuid

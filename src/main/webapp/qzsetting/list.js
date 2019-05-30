@@ -1322,8 +1322,8 @@ function immediatelyUpdateQZSettings(type) {
         case "updateSettings":
             updateImmediately(uuids);
             break;
-        case "stopMonitor":
-            stopMonitorImmediately(uuids);
+        case "startMonitor":
+            startMonitorImmediately(uuids);
         default:
             break;
     }
@@ -1353,12 +1353,12 @@ function updateImmediately(uuids) {
         }
     });
 }
-function stopMonitorImmediately(uuids) {
+function startMonitorImmediately(uuids) {
     if (confirm("确实要马上暂停这些设置的达标监控吗？") == false) return;
     var postData = {};
     postData.uuids = uuids;
     $.ajax({
-        url: '/internal/qzsetting/stopMonitorImmediately',
+        url: '/internal/qzsetting/startMonitorImmediately',
         data: JSON.stringify(postData),
         headers: {
             'Accept': 'application/json',
