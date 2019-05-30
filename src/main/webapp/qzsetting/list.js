@@ -276,6 +276,8 @@ function generateQZKeywordTrendCharts(domElement, data) {
     $(parentElement).find("#" + result.terminalType + "Top50").text(topFifty[topFifty.length-1]);
     $(parentElement).find("#" + result.terminalType + "TopCreate10").text(result.createTopTenNum);
     $(parentElement).find("#" + result.terminalType + "TopCreate50").text(result.createTopFiftyNum);
+    $(parentElement).find("#" + result.terminalType + "IsStandard").text(result.achieveLevel == 0 ? "否" : "是");
+    $(parentElement).find("#" + result.terminalType + "StandardTime").text(result.achieveTime);
     if (result.websiteType === "aiZhan") {
         topThirty = stringToArray(result.topThirty);
         topForty = stringToArray(result.topForty);
@@ -1718,7 +1720,7 @@ function resetSettingDialog() {
     settingDialogDiv.find("#qzSettingCustomer").val("");
     settingDialogDiv.find("#qzSettingDomain").val("");
     settingDialogDiv.find("#qzCategoryTagNames").val("");
-    settingDialogDiv.find("#qzSettingAutoCrawlKeywordFlag").val("1");
+    settingDialogDiv.find("#qzSettingAutoCrawlKeywordFlag").val("0");
     settingDialogDiv.find("#qzSettingIgnoreNoIndex").val("1");
     settingDialogDiv.find("#qzSettingIgnoreNoOrder").val("1");
     settingDialogDiv.find("#qzSettingInterval").val("2");
@@ -1899,7 +1901,10 @@ function saveChangeSetting() {
         operationType.group = settingDialogDiv.find("#group" + val.id).val().trim();
         operationType.initialKeywordCount = settingDialogDiv.find("#initialKeywordCount" + val.id).val().trim();
         operationType.currentKeywordCount = settingDialogDiv.find("#currentKeywordCount" + val.id).val().trim();
-        operationType.maxKeywordCount = settingDialogDiv.find("#maxKeywordCount" + val.id).val().trim();
+        var maxKeywordCount = settingDialogDiv.find("#maxKeywordCount" + val.id).val();
+        if (maxKeywordCount !== undefined) {
+            operationType.maxKeywordCount = maxKeywordCount.trim();
+        }
         operationType.subDomainName = settingDialogDiv.find("#subDomainName" + val.id).val().trim();
         operationType.standardType = settingDialogDiv.find("input[name='standardType"+ val.id +"']:radio:checked").val();
         if (operationType.group == null || operationType.group === "") {
@@ -1919,8 +1924,8 @@ function saveChangeSetting() {
             validationFlag = false;
             return false;
         }
-        if (qzSetting.autoCrawlKeywordFlag && (operationType.maxKeywordCount == "" || !reg.test(operationType.maxKeywordCount))){
-            alert("请输入PC限制词量");
+        if (qzSetting.autoCrawlKeywordFlag && maxKeywordCount !== undefined && (operationType.maxKeywordCount == "" || !reg.test(operationType.maxKeywordCount))){
+            alert("请输入限制词量");
             settingDialogDiv.find("#maxKeywordCount" + val.id).focus();
             validationFlag = false;
             return false;

@@ -248,7 +248,12 @@
 							<span class="domain" title="${qzSetting.domain}"><a href="javascript:;">${qzSetting.domain}</a></span>
 							<span class="contactPerson-name" title="${qzSetting.organizationName}"><a href="javascript:;">${qzSetting.organizationName}</a></span>
 							<span class="to-aizhan"><a href="https://www.aizhan.com/cha/${qzSetting.domain}" target="_blank" title="查看爱站">爱站</a></span>
-							<span class="to-5118"><a  href="https://www.5118.com/seo/${qzSetting.domain}" target="_blank" title="查看5118,需要登录">5118</a></span>
+							<span class="to-5118"><a href="https://www.5118.com/seo/${qzSetting.domain}" target="_blank" title="查看5118,需要登录">5118</a></span>
+							<span class="fmtDate" title="<fmt:formatDate value="${qzSetting.createTime}" pattern="yyyy-MM-dd"></fmt:formatDate>">创建时间:<a href="javascript:;"><fmt:formatDate value="${qzSetting.createTime}" pattern="yyyy-MM-dd"></fmt:formatDate></a></span>
+							<span class="fmtDate" title="<fmt:formatDate value="${qzSetting.standardTime}" pattern="yyyy-MM-dd"></fmt:formatDate>">达标时间:<a href="javascript:;">
+								<c:if test="${qzSetting.standardTime == null}">无</c:if>
+								<c:if test="${qzSetting.standardTime != null}"><fmt:formatDate value="${qzSetting.standardTime}" pattern="yyyy-MM-dd"></fmt:formatDate></c:if>
+							</a></span>
 							<span class="tagNames" ondblclick="editTagNameStr($(this).find('label.tagNameStr')[0], true)"><label>分组标签:</label>&nbsp;&nbsp;<label class="tagNameStr">暂无</label></span>
 							<div class="handle">
                                 <a class="blue" href="javascript:showExcludeCustomerKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain.trim()}','${qzSetting.pcGroup}','PC')">排除关键字</a>
@@ -422,7 +427,6 @@
                                             <a href="javascript:;" id="PCTop10">0</a>
                                         </span>
                                     </div>
-
 									<div class="row4">
 										<span>前50</span>
 										<span class="top50">
@@ -435,13 +439,24 @@
                                             <a href="javascript:;" id="PCTopCreate10">0</a>
                                         </span>
                                     </div>
-
                                     <div class="row4">
                                         <span>初始前50</span>
                                         <span class="top50">
                                             <a href="javascript:;" id="PCTopCreate50">0</a>
                                         </span>
                                     </div>
+									<div class="row4">
+										<span>曲线达标</span>
+										<span class="isStandard">
+                                            <a href="javascript:;" id="PCIsStandard">是</a>
+                                        </span>
+									</div>
+									<div class="row4">
+										<span>达标时间</span>
+										<span class="standardTime">
+                                            <a href="javascript:;" id="PCStandardTime">null</a>
+                                        </span>
+									</div>
 							    </div>
                             </div>
 
@@ -471,25 +486,34 @@
 											<a href="javascript:;" id="PCTop10">0</a>
 										</span>
 									</div>
-
 									<div class="row4">
 										<span>前50</span>
 										<span class="top50">
                                             <a href="javascript:;" id="PCTop50">0</a>
                                         </span>
 									</div>
-
 									<div class="row4">
 										<span>初始前10</span>
 										<span class="top10">
                                             <a href="javascript:;" id="PCTopCreate10">0</a>
                                         </span>
 									</div>
-
 									<div class="row4">
 										<span>初始前50</span>
 										<span class="top50">
                                             <a href="javascript:;" id="PCTopCreate50">0</a>
+                                        </span>
+									</div>
+									<div class="row4">
+										<span>曲线达标</span>
+										<span class="isStandard">
+                                            <a href="javascript:;" id="PCIsStandard">是</a>
+                                        </span>
+									</div>
+									<div class="row4">
+										<span>达标时间</span>
+										<span class="standardTime">
+                                            <a href="javascript:;" id="PCStandardTime">null</a>
                                         </span>
 									</div>
 								</div>
@@ -509,6 +533,11 @@
 							<span class="contactPerson-name" title="${qzSetting.organizationName}"><a href="javascript:;">${qzSetting.organizationName}</a></span>
 							<span class="to-aizhan"><a href="https://www.aizhan.com/cha/${qzSetting.domain}" target="_blank" title="查看爱站">爱站</a></span>
 							<span class="to-5118"><a  href="https://www.5118.com/seo/${qzSetting.domain}" target="_blank" title="查看5118,需要登录">5118</a></span>
+							<span class="fmtDate" title="<fmt:formatDate value="${qzSetting.createTime}" pattern="yyyy-MM-dd"></fmt:formatDate>">创建时间:<a href="javascript:;"><fmt:formatDate value="${qzSetting.createTime}" pattern="yyyy-MM-dd"></fmt:formatDate></a></span>
+							<span class="fmtDate" title="<fmt:formatDate value="${qzSetting.standardTime}" pattern="yyyy-MM-dd"></fmt:formatDate>">达标时间:<a href="javascript:;">
+								<c:if test="${qzSetting.standardTime == null}">无</c:if>
+								<c:if test="${qzSetting.standardTime != null}"><fmt:formatDate value="${qzSetting.standardTime}" pattern="yyyy-MM-dd"></fmt:formatDate></c:if>
+							</a></span>
 							<span class="tagNames" ondblclick="editTagNameStr($(this).find('label.tagNameStr')[0], true)"><label>分组标签:</label>&nbsp;&nbsp;<label class="tagNameStr">暂无</label></span>
 							<div class="handle">
                                 <a class="blue" href="javascript:showExcludeCustomerKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain.trim()}','${qzSetting.phoneGroup}','Phone')">排除关键字</a>
@@ -686,21 +715,30 @@
                                             <a href="javascript:;" id="PhoneTop50">0</a>
                                         </span>
 									</div>
-
-
                                     <div class="row4">
                                         <span>初始前10</span>
                                         <span class="top10">
                                             <a href="javascript:;" id="PhoneTopCreate10">0</a>
                                         </span>
                                     </div>
-
                                     <div class="row4">
                                         <span>初始前50</span>
                                         <span class="top50">
                                             <a href="javascript:;" id="PhoneTopCreate50">0</a>
                                         </span>
                                     </div>
+									<div class="row4">
+										<span>曲线达标</span>
+										<span class="isStandard">
+                                            <a href="javascript:;" id="PhoneIsStandard">是</a>
+                                        </span>
+									</div>
+									<div class="row4">
+										<span>达标时间</span>
+										<span class="standardTime">
+                                            <a href="javascript:;" id="PhoneStandardTime">null</a>
+                                        </span>
+									</div>
 								</div>
 							</div>
 
@@ -730,27 +768,36 @@
 											<a href="javascript:;" id="PhoneTop10">0</a>
 										</span>
                                     </div>
-
                                     <div class="row4">
                                         <span>前50</span>
                                         <span class="top50">
                                             <a href="javascript:;" id="PhoneTop50">0</a>
                                         </span>
                                     </div>
-
                                     <div class="row4">
                                         <span>初始前10</span>
                                         <span class="top10">
                                             <a href="javascript:;" id="PhoneTopCreate10">0</a>
                                         </span>
                                     </div>
-
                                     <div class="row4">
                                         <span>初始前50</span>
                                         <span class="top50">
                                             <a href="javascript:;" id="PhoneTopCreate50">0</a>
                                         </span>
                                     </div>
+									<div class="row4">
+										<span>曲线达标</span>
+										<span class="isStandard">
+                                            <a href="javascript:;" id="PhoneIsStandard">是</a>
+                                        </span>
+									</div>
+									<div class="row4">
+										<span>达标时间</span>
+										<span class="standardTime">
+                                            <a href="javascript:;" id="PhoneStandardTime">null</a>
+                                        </span>
+									</div>
                                 </div>
                             </div>
 						</div>
@@ -854,10 +901,12 @@
 						<td align="right" style="width:72px">当前词量</td>
 						<td colspan="4"><input type="text" name="currentKeywordCount" id="currentKeywordCountPC" style="width:240px;margin-left: -6;" readonly/></td>
 					</tr>
+					<shiro:hasPermission name="/internal/qzsetting/delete">
 					<tr>
 						<td align="right" style="width:72px">限制词量</td>
 						<td colspan="4"><input type="text" name="maxKeywordCount" id="maxKeywordCountPC" style="width:240px;margin-left: -6;"/></td>
 					</tr>
+					</shiro:hasPermission>
 					<input type="hidden" id="qzSettingUuidPC" name="qzOperationTypeUuid" value="" />
 					<tr>
 						<td align="right" style="width:72px">达标条件</td>
@@ -971,10 +1020,12 @@
 						<td align="right" style="width:72px">当前词量</td>
 						<td colspan="4"><input type="text" name="currentKeywordCount" id="currentKeywordCountPhone"  style="width:240px;margin-left: -6;" readonly/></td>
 					</tr>
+					<shiro:hasPermission name="/internal/qzsetting/delete">
 					<tr>
 						<td align="right" style="width:72px">限制词量</td>
 						<td colspan="4"><input type="text" name="maxKeywordCount" id="maxKeywordCountPhone" style="width:240px;margin-left: -6;"/></td>
 					</tr>
+					</shiro:hasPermission>
 					<input type="hidden" id="qzSettingUuidPhone" name="qzOperationTypeUuid" value="" />
 					<tr>
 						<td align="right" style="width:72px">达标条件</td>
@@ -1084,8 +1135,8 @@
 			<td style="width:60px" align="right">爬取关键字</td>
 			<td>
 				<select name="qzSettingAutoCrawlKeywordFlag" id="qzSettingAutoCrawlKeywordFlag" style="width:240px">
-					<option value="1" selected>是</option>
-					<option value="0">否</option>
+                    <option value="1">是</option>
+					<option value="0" selected>否</option>
 				</select>
 			</td>
 		</tr>

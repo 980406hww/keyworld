@@ -35,14 +35,15 @@
             qc.fStandardSpecies AS 'standardSpecies',
             qc.fStartKeywordCount AS 'startKeywordCount',
             qc.fEndKeywordCount AS 'endKeywordCount',
-            qc.fAmount AS 'amount'
+            qc.fAmount AS 'amount',
+            qot.fStandardTime AS 'standardTime'
         FROM t_qz_charge_rule qc
         LEFT JOIN t_qz_operation_type qot
         ON qot.fUuid = qc.fQZOperationTypeUuid
         LEFT JOIN t_qz_keyword_rank_info qk
         ON qk.fQZSettingUuid = qot.fQZSettingUuid AND qk.fWebsiteType = qc.fStandardSpecies
-        WHERE qot.fQZSettingUuid = #{qzSettingSearchChargeRuleCriteria.qzSettingUuid}
-        AND qot.fOperationtype = #{qzSettingSearchChargeRuleCriteria.terminalType}
+        WHERE qot.fQZSettingUuid = #{qzSettingUuid}
+        AND qot.fOperationtype = #{terminalType}
         ORDER BY qc.fUuid
     </select>
 

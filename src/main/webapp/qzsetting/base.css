@@ -275,9 +275,24 @@ ul {
     color: #000000;
 }
 
+.datalist-list .header span.fmtDate {
+    max-width: 130px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.datalist-list .header span.fmtDate a {
+    color: #000000;
+}
+
+.datalist-list .header span.fmtDate a:hover {
+    color: #0c7df5;
+}
+
 .datalist-list .header span.tagNames {
     position: absolute;
-    left: 450px;
+    left: 700px;
     z-index: 1;
     width: 600px;
     color: #000000;

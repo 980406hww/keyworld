@@ -1,5 +1,7 @@
 package com.keymanager.monitoring.vo;
 
+import java.util.Date;
+
 /**
  * @Author zhoukai
  * @Date 2019/5/28 16:03
@@ -12,6 +14,7 @@ public class QZChargeRuleStandardInfoVO {
     private Integer startKeywordCount;
     private Integer endKeywordCount;
     private Integer amount;
+    private Date standardTime;
 
     public String getStandardType () {
         return standardType;
@@ -67,5 +70,13 @@ public class QZChargeRuleStandardInfoVO {
 
     public void setAmount (Integer amount) {
         this.amount = amount;
+    }
+
+    public Date getStandardTime () {
+        return standardTime;
+    }
+
+    public void setStandardTime (Date standardTime) {
+        this.standardTime = standardTime;
     }
 }

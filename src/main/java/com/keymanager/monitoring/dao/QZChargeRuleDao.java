@@ -19,7 +19,7 @@ public interface QZChargeRuleDao extends BaseMapper<QZChargeRule> {
 
     void  deleteByQZOperationTypeUuid(@Param("qzOperationTypeUuid") Long QZOperationTypeUuid);
 
-    List<QZChargeRuleStandardInfoVO> searchQZChargeRuleStandardInfoVos (@Param("qzSettingSearchChargeRuleCriteria") QZSettingSearchChargeRuleCriteria qzSettingSearchChargeRuleCriteria);
+    List<QZChargeRuleStandardInfoVO> searchQZChargeRuleStandardInfoVos (@Param("qzSettingUuid") Long qzSettingUuid, @Param("terminalType") String terminalType);
 
     List<String> getAllStandardSpecies (@Param("qzSettingUuid") Long qzSettingUuid);
 

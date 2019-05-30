@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.criteria.QZSettingSearchChargeRuleCriteria;
 import com.keymanager.monitoring.dao.QZChargeRuleDao;
 import com.keymanager.monitoring.entity.QZChargeRule;
+import com.keymanager.monitoring.entity.QZSetting;
 import com.keymanager.monitoring.vo.QZChargeRuleStandardInfoVO;
 import com.keymanager.monitoring.vo.QZChargeRuleStandardResultVO;
 import com.keymanager.monitoring.vo.QZChargeRuleVO;
@@ -30,7 +31,7 @@ public class QZChargeRuleService extends ServiceImpl<QZChargeRuleDao, QZChargeRu
 
     public QZChargeRuleStandardResultVO searchChargeRules (QZSettingSearchChargeRuleCriteria qzSettingSearchChargeRuleCriteria) {
 	    QZChargeRuleStandardResultVO qzChargeRuleStandardResultVo = new QZChargeRuleStandardResultVO();
-        List<QZChargeRuleStandardInfoVO> qzChargeRuleStandardInfoVos = qzChargeRuleDao.searchQZChargeRuleStandardInfoVos(qzSettingSearchChargeRuleCriteria);
+        List<QZChargeRuleStandardInfoVO> qzChargeRuleStandardInfoVos = qzChargeRuleDao.searchQZChargeRuleStandardInfoVos(qzSettingSearchChargeRuleCriteria.getQzSettingUuid(), qzSettingSearchChargeRuleCriteria.getTerminalType());
         if (CollectionUtils.isNotEmpty(qzChargeRuleStandardInfoVos)) {
             qzChargeRuleStandardResultVo.setStandardType(qzChargeRuleStandardInfoVos.get(0).getStandardType());
             Map<String, List<QZChargeRule>> qzChargeRuleMap = new HashMap<>();
@@ -57,10 +58,11 @@ public class QZChargeRuleService extends ServiceImpl<QZChargeRuleDao, QZChargeRu
         return qzChargeRuleStandardResultVo;
     }
 
-    public int getChargeRuleTotalPrice (QZSettingSearchChargeRuleCriteria qzSettingSearchChargeRuleCriteria) {
-        List<QZChargeRuleStandardInfoVO> qzChargeRuleStandardInfoVos = qzChargeRuleDao.searchQZChargeRuleStandardInfoVos(qzSettingSearchChargeRuleCriteria);
+    public void getChargeRuleTotalPrice (QZSetting qzSetting, Long qzSettingUuid, String terminalType) {
+        List<QZChargeRuleStandardInfoVO> qzChargeRuleStandardInfoVos = qzChargeRuleDao.searchQZChargeRuleStandardInfoVos(qzSettingUuid, terminalType);
         int totalPrice = 0;
         if (CollectionUtils.isNotEmpty(qzChargeRuleStandardInfoVos)) {
+            qzSetting.setStandardTime(qzChargeRuleStandardInfoVos.get(0).getStandardTime());
             Map<String, Integer> qzChargeRuleStandardInfoMap = new HashMap<>();
             int index = 1;
             for (QZChargeRuleStandardInfoVO qzChargeRuleStandardInfoVo : qzChargeRuleStandardInfoVos) {
@@ -86,7 +88,7 @@ public class QZChargeRuleService extends ServiceImpl<QZChargeRuleDao, QZChargeRu
                 totalPrice += price;
             }
         }
-        return totalPrice;
+        qzSetting.setTotalPrice(totalPrice);
     }
 
     public List<String> getAllStandardSpecies (Long qzSettingUuid) {

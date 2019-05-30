@@ -109,6 +109,9 @@ public class QZSetting extends BaseEntity{
 	@TableField(exist = false)
 	private Integer totalPrice;
 
+	@TableField(exist = false)
+	private Date standardTime;
+
 	public String getUserID() {
 		return userID;
 	}
@@ -363,5 +366,13 @@ public class QZSetting extends BaseEntity{
 
 	public void setTotalPrice (Integer totalPrice) {
 		this.totalPrice = totalPrice;
+	}
+
+	public Date getStandardTime () {
+		return standardTime;
+	}
+
+	public void setStandardTime (Date standardTime) {
+		this.standardTime = standardTime;
 	}
 }
