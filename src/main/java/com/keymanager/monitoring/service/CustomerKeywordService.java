@@ -1666,7 +1666,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                     customerKeyword.setOptimizeGroupName(customerKeywordOptimizeGroupCriteria.getOptimizeGroupName());
                     return;
                 }
-                String optimizeGroupNameSuffix = customerKeywordOptimizeGroupCriteria.getOptimizeGroupName().replaceAll(".*_", "");
+                String optimizeGroupNameSuffix = customerKeywordOptimizeGroupCriteria.getOptimizeGroupName().replaceAll(optimizeGroupName + "_", "");
                 if (StringUtils.isNumeric(optimizeGroupNameSuffix)){
                     maxGroupNameSuffix = maxGroupNameSuffix < Integer.parseInt(optimizeGroupNameSuffix) ? Integer.parseInt(optimizeGroupNameSuffix) : maxGroupNameSuffix;
                 }
@@ -1689,7 +1689,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                     tempCustomerKeywordOptimizeGroupCriteria.setSameGroupCustomerKeywordCount(tempCustomerKeywordOptimizeGroupCriteria.getSameGroupCustomerKeywordCount() + 1);
                     return tempCustomerKeywordOptimizeGroupCriteria;
                 }
-                String optimizeGroupNameSuffix = tempCustomerKeywordOptimizeGroupCriteria.getOptimizeGroupName().replaceAll(".*_", "");
+                String optimizeGroupNameSuffix = tempCustomerKeywordOptimizeGroupCriteria.getOptimizeGroupName().replaceAll(optimizeGroupName + "_", "");
                 if (StringUtils.isNumeric(optimizeGroupNameSuffix)) {
                     maxGroupNameSuffix = maxGroupNameSuffix < Integer.parseInt(optimizeGroupNameSuffix) ? Integer.parseInt(optimizeGroupNameSuffix) : maxGroupNameSuffix;
                 }
