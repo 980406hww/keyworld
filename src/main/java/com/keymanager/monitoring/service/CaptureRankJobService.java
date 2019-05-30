@@ -256,7 +256,7 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
         qzKeywordRankInfo.setSumSeries(qzChargeRules.size());
         qzKeywordRankInfo.setDifferenceValue(1.0);
         for (int i = 0; i < qzChargeRules.size(); i++) {
-            if (topTenNum > Integer.parseInt(qzChargeRules.get(i).getStartKeywordCount())) {
+            if (topTenNum >= Integer.parseInt(qzChargeRules.get(i).getStartKeywordCount())) {
                 qzKeywordRankInfo.setAchieveLevel(i + 1);
                 qzKeywordRankInfo.setCurrentPrice(Integer.parseInt(qzChargeRules.get(i).getAmount()));
             } else {
