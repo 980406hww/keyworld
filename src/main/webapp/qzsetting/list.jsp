@@ -451,7 +451,7 @@
 									<div class="row4">
 										<span>曲线达标</span>
 										<span class="isStandard">
-                                            <a href="javascript:;" id="PCIsStandard">是</a>
+                                            <a href="javascript:;" id="PCIsStandard">否</a>
                                         </span>
 									</div>
 									<div class="row4">
@@ -510,7 +510,7 @@
 									<div class="row4">
 										<span>曲线达标</span>
 										<span class="isStandard">
-                                            <a href="javascript:;" id="PCIsStandard">是</a>
+                                            <a href="javascript:;" id="PCIsStandard">否</a>
                                         </span>
 									</div>
 									<div class="row4">
@@ -733,7 +733,7 @@
 									<div class="row4">
 										<span>曲线达标</span>
 										<span class="isStandard">
-                                            <a href="javascript:;" id="PhoneIsStandard">是</a>
+                                            <a href="javascript:;" id="PhoneIsStandard">否</a>
                                         </span>
 									</div>
 									<div class="row4">
@@ -792,7 +792,7 @@
 									<div class="row4">
 										<span>曲线达标</span>
 										<span class="isStandard">
-                                            <a href="javascript:;" id="PhoneIsStandard">是</a>
+                                            <a href="javascript:;" id="PhoneIsStandard">否</a>
                                         </span>
 									</div>
 									<div class="row4">

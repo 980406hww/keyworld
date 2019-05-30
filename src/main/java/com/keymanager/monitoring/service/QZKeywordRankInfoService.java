@@ -120,12 +120,17 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
             Map standard = this.standardCalculation(chargeRuleVos, qzKeywordRankInfo);
             qzKeywordRankInfo.setDifferenceValue(Double.parseDouble(standard.get("differenceValue").toString()));
             qzKeywordRankInfo.setAchieveLevel(Integer.parseInt(standard.get("achieveLevel").toString()));
+            if (qzKeywordRankInfo.getAchieveLevel() > 0) {
+                qzKeywordRankInfo.setAchieveTime(new Date());
+            } else {
+                qzKeywordRankInfo.setAchieveTime(null);
+            }
             qzKeywordRankInfo.setSumSeries(Integer.parseInt(standard.get("sumSeries").toString()));
             qzKeywordRankInfo.setCurrentPrice(Integer.parseInt(standard.get("currentPrice").toString()));
             String standardType = qzOperationTypeService.getStandardType(qzSettingUuid, externalQzKeywordRankInfoVO.getTerminalType());
             QZKeywordRankInfo otherRankInfo = qzKeywordRankInfoDao.getQZKeywordRankInfo(qzSettingUuid, externalQzKeywordRankInfoVO.getTerminalType(), null);
             boolean isStandardFlag = false;
-            if (Integer.parseInt(standard.get("achieveLevel").toString()) > 0) {
+            if (qzKeywordRankInfo.getAchieveLevel() > 0) {
                 if (standardType.equals("satisfyAll")) {
                     if (null == otherRankInfo){
                         isStandardFlag = true;
