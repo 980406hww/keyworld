@@ -154,6 +154,7 @@
             优化组名:
             <input type="text" name="optimizeGroupName" id="optimizeGroupName"
                    value="${customerKeywordCriteria.optimizeGroupName}" style="width:100px;">
+            <input id="groupNameFuzzyQuery" name="groupNameFuzzyQuery" type="checkbox"  onclick="groupNameFuzzyQueryValue()" value="${customerKeywordCriteria.groupNameFuzzyQuery}"/>模糊查询 &nbsp;
             关键字来源:
             <select name="customerKeywordSource" id="customerKeywordSource">
                 <c:forEach items="${CustomerKeywordSourceMap}" var="entry">
@@ -167,7 +168,6 @@
             排名:
             <input type="text" name="gtPosition" id="gtPosition" placeholder=">=" value="${customerKeywordCriteria.gtPosition}" style="width:40px;"/>
             <input type="text" name="ltPosition" id="ltPosition" placeholder="<=" value="${customerKeywordCriteria.ltPosition}" style="width:40px;"/>
-            <input id="groupNameFuzzyQuery" name="groupNameFuzzyQuery" type="checkbox"  onclick="groupNameFuzzyQueryValue()" value="${customerKeywordCriteria.groupNameFuzzyQuery}"/>组名模糊查询 &nbsp;
             <input id="noPosition" name="noPosition" type="checkbox"  onclick="noPositionValue()" />显示0 &nbsp;
             <input id="displayStop" name="displayStop" type="checkbox"  onclick="displayStopValue()" value="${customerKeywordCriteria.displayStop}" <c:if test="${customerKeywordCriteria.displayStop=='1'}">checked</c:if>/>显示下架 &nbsp;
             无效点击数:

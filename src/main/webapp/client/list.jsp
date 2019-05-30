@@ -73,6 +73,7 @@
 								客户端ID:<input type="text" name="clientID" id="clientID" value="${clientStatusCriteria.clientID}" style="width: 90px;">
 								&nbsp;&nbsp;
 								优化组:<input type="text" name="groupName" id="groupName" value="${clientStatusCriteria.groupName}" style="width: 120px;">
+								<input id="groupNameFuzzyQuery" name="groupNameFuzzyQuery" type="checkbox" value="groupNameFuzzyQuery" ${clientStatusCriteria.groupNameFuzzyQuery != null ? "checked=true" : ""}/>模糊查询 &nbsp;&nbsp;
 								&nbsp;&nbsp;
 								版本:<input type="text" name="version" id="version" value="${clientStatusCriteria.version}" style="width: 20px;">
 								&nbsp;&nbsp;
@@ -109,7 +110,6 @@
 						</tr>
 						<tr>
 						<td align="left">
-							<input id="groupNameFuzzyQuery" name="groupNameFuzzyQuery" type="checkbox" value="groupNameFuzzyQuery" ${clientStatusCriteria.groupNameFuzzyQuery != null ? "checked=true" : ""}/>组名模糊查询 &nbsp;&nbsp;
 							<input id="hasProblem" name="hasProblem" type="checkbox" value="hasProblem" ${clientStatusCriteria.hasProblem != null ? "checked=true" : ""}>停了</input>
 							&nbsp;&nbsp;
 							<input id="renewal" name="renewal" type="checkbox" value="renewal" ${clientStatusCriteria.renewal != null ? "checked=true" : ""}>续费</input>

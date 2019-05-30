@@ -29,7 +29,7 @@
                         <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
                         <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
                         优化组名:<input type="text" name="optimizeGroupName" id="optimizeGroupName" style="width: 160px;" value="${screenedWebsiteCriteria.optimizeGroupName}">
-                        <input id="groupNameFuzzyQuery" name="groupNameFuzzyQuery" type="checkbox"  onclick="groupNameFuzzyQueryValue()" value="${screenedWebsiteCriteria.groupNameFuzzyQuery}"/>组名模糊查询 &nbsp;
+                        <input id="groupNameFuzzyQuery" name="groupNameFuzzyQuery" type="checkbox"  onclick="groupNameFuzzyQueryValue()" value="${screenedWebsiteCriteria.groupNameFuzzyQuery}"/>模糊查询
                             &nbsp;&nbsp;<input type="submit" class="ui-button ui-widget ui-corner-all" onclick="resetPageNumber()" name="btnQuery" id="btnQuery" value=" 查询 ">
                             &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 添加 " onclick="showScreenedWebsiteDialog(null)"/>
                             &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 删除所选 " onclick="deleteBatchScreenedWebsite(this)"/>
@@ -120,7 +120,7 @@
     });
 
     function initGroupNameFuzzyQueryChecked() {
-        if(${screenedWebsite.groupNameFuzzyQuery == 1}){
+        if(${screenedWebsiteCriteria.groupNameFuzzyQuery == 1}){
             $("#groupNameFuzzyQuery").prop("checked",true);
         }else{
             $("#groupNameFuzzyQuery").prop("checked",false);

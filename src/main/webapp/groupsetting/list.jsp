@@ -46,6 +46,12 @@
 					优化组名: <input type="text" title="请输入优化分组名" name="optimizedGroupName" placeholder="请输入优化分组名" onkeydown="enterIn(event);" value="${groupSettingCriteria.optimizedGroupName}">
 				</li>
 				<li>
+					<label name="groupNameFuzzyQuery" title="模糊查询">
+						<input id="groupNameFuzzyQuery" name="groupNameFuzzyQuery" type="checkbox" value="groupNameFuzzyQuery" ${groupSettingCriteria.groupNameFuzzyQuery == "1" ? "checked=true" : ""}/>
+						模糊查询
+					</label>
+				</li>
+				<li>
 					<span>操作类型: </span>
 					<span>
 						<select name="operationType" onchange="changeOperationType();" style="width: 150px;">
@@ -58,12 +64,6 @@
 						</select>
 					</span>
 				</li>
-                <li>
-                    <label name="groupNameFuzzyQuery" title="组名模糊查询">
-                        <input id="groupNameFuzzyQuery" name="groupNameFuzzyQuery" type="checkbox" value="groupNameFuzzyQuery" ${groupSettingCriteria.groupNameFuzzyQuery == "1" ? "checked=true" : ""}/>
-                        组名模糊查询
-                    </label>
-                </li>
 				<li>
 					<label name="hasOperation" title="有操作类型">
 						<input type="checkbox" name="checkbox" <c:if test="${groupSettingCriteria.hasOperation == true}">checked</c:if>>

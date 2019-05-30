@@ -11,7 +11,10 @@
 		<table style="font-size:12px;">
 			<tr>
 				<td align="right">分组名称:<input name="groupName" id="groupName" type="text" style="width:200px;"
-											  value="${refreshStatInfoCriteria.groupName}"></td>
+											  value="${refreshStatInfoCriteria.groupName}">
+					<input id="groupNameFuzzyQuery" name="groupNameFuzzyQuery" type="checkbox" value="groupNameFuzzyQuery" ${refreshStatInfoCriteria.groupNameFuzzyQuery != null ? "checked=true" : ""}/>模糊查询
+                    &nbsp;&nbsp;
+				</td>
 				<td align="right">客户名称:<input name="customerName" id="customerName" type="text" style="width:200px;"
 											  value="${refreshStatInfoCriteria.customerName}"></td>
 				<td align="right">分类标签:<input name="categoryTag" list="categoryTag_list" type="text" style="width:200px;"
@@ -32,7 +35,6 @@
 				<td align="right">
 					&nbsp;
 					<shiro:hasPermission name="/internal/refreshstatinfo/searchRefreshStatInfos">
-						<input id="groupNameFuzzyQuery" name="groupNameFuzzyQuery" type="checkbox" value="groupNameFuzzyQuery" ${refreshStatInfoCriteria.groupNameFuzzyQuery != null ? "checked=true" : ""}/>组名模糊查询 &nbsp;&nbsp;
 						<input type="submit" name="btnQuery" id="btnQuery" value=" 查询 " onclick="trimSearchCondition()">&nbsp;&nbsp;
 					</shiro:hasPermission>
 					<shiro:hasPermission name="/internal/customerKeyword/uploadCustomerKeywords">

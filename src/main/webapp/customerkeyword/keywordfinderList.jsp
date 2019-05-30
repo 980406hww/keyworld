@@ -59,6 +59,7 @@
             优化组名:
             <input type="text" name="optimizeGroupName" id="optimizeGroupName"
                    value="${customerKeywordCriteria.optimizeGroupName}" style="width:100px;">&nbsp;
+            <input id="groupNameFuzzyQuery" name="groupNameFuzzyQuery" type="checkbox"  onclick="groupNameFuzzyQueryValue()" value="${customerKeywordCriteria.groupNameFuzzyQuery}"/>模糊查询 &nbsp;
             <c:if test="${isDepartmentManager}">
                 用户名称:
                 <select name="userName" id="userName">
@@ -85,7 +86,6 @@
             &nbsp;
             备注:<input type="text" id="remarks" name="remarks" style="width: 90px;" value="${customerKeywordCriteria.remarks}">&nbsp;
             收录备注:<input type="text" id="enteredKeywordRemarks" name="enteredKeywordRemarks" style="width: 90px;" value="${customerKeywordCriteria.enteredKeywordRemarks}">&nbsp;
-            <input id="groupNameFuzzyQuery" name="groupNameFuzzyQuery" type="checkbox"  onclick="groupNameFuzzyQueryValue()" value="${customerKeywordCriteria.groupNameFuzzyQuery}"/>组名模糊查询 &nbsp;
             <input id="pushPay" name="pushPay" type="checkbox"  onclick="pushPayValue()" value="${customerKeywordCriteria.pushPay}"/>催缴 &nbsp;
             <input id="displayStop" name="displayStop" type="checkbox"  onclick="displayStopValue()" value="${customerKeywordCriteria.displayStop}"/>显示下架 &nbsp;
             <input id="requireDelete" name="requireDelete" type="checkbox"  ${customerKeywordCriteria.requireDelete == true ? "checked=true" : ""}/>要求删除 &nbsp;

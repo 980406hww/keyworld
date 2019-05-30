@@ -27,6 +27,7 @@
             <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
             <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
             组名:<input type="text" name="groupNames" id="groupNames" value="${captureRankJobSearchCriteria.groupNames}">
+            <input id="groupNameFuzzyQuery" name="groupNameFuzzyQuery" type="checkbox" value="groupNameFuzzyQuery" ${captureRankJobSearchCriteria.groupNameFuzzyQuery != null ? "checked=true" : ""}/>模糊查询 &nbsp;
             执行类型:
             <select name="exectionType">
                 <option value="">请选择执行类型</option>
@@ -41,7 +42,6 @@
                 <option value="Checking" <c:if test="${captureRankJobSearchCriteria.exectionStatus.equals('Checking')}">selected="selected"</c:if>>Checking</option>
                 <option value="Complete" <c:if test="${captureRankJobSearchCriteria.exectionStatus.equals('Complete')}">selected="selected"</c:if>>Complete</option>
             </select>&nbsp;&nbsp;
-            <input id="groupNameFuzzyQuery" name="groupNameFuzzyQuery" type="checkbox" value="groupNameFuzzyQuery" ${captureRankJobSearchCriteria.groupNameFuzzyQuery != null ? "checked=true" : ""}/>组名模糊查询 &nbsp;&nbsp;
             <shiro:hasPermission name="/internal/captureRank/searchCaptureRankJobs">
             <input type="submit" value=" 查询 " onclick="resetPageNumber()">&nbsp;&nbsp;
             </shiro:hasPermission>
