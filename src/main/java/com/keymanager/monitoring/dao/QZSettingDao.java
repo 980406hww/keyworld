@@ -49,5 +49,7 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
     void startMonitorImmediately (@Param("uuids") String uuids);
     
     List<ExternalQzSettingVO> getQZSettingTask(@Param("crawlerHour")Integer crawlerHour, @Param("taskNumber")Integer taskNumber);
+
+    void joinReadyImmediately (@Param("uuids") String uuids);
 }
 

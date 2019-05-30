@@ -61,17 +61,11 @@ public class QZSetting extends BaseEntity{
 	@TableField(value = "fUpdateStatus", strategy = FieldStrategy.IGNORED)
 	private String updateStatus;
 
-	@TableField(value = "fPcCreateTopTenNum", strategy = FieldStrategy.IGNORED)
-	private Integer pcCreateTopTenNum;
+	@TableField(value = "fIsMonitor")
+	private boolean isMonitor;
 
-	@TableField(value = "fPcCreateTopFiftyNum", strategy = FieldStrategy.IGNORED)
-	private Integer pcCreateTopFiftyNum;
-
-	@TableField(value = "fPhoneCreateTopTenNum", strategy = FieldStrategy.IGNORED)
-	private Integer phoneCreateTopTenNum;
-
-	@TableField(value = "fPhoneCreateTopFiftyNum", strategy = FieldStrategy.IGNORED)
-	private Integer phoneCreateTopFiftyNum;
+	@TableField(value = "fIsReady")
+	private boolean isReady;
 
 	@TableField(value = "fUpdateStartTime")
 	private Date updateStartTime;
@@ -288,38 +282,6 @@ public class QZSetting extends BaseEntity{
 		this.phoneKeywordExceedMaxCount = phoneKeywordExceedMaxCount;
 	}
 
-	public Integer getPcCreateTopTenNum () {
-		return pcCreateTopTenNum;
-	}
-
-	public void setPcCreateTopTenNum (Integer pcCreateTopTenNum) {
-		this.pcCreateTopTenNum = pcCreateTopTenNum;
-	}
-
-	public Integer getPcCreateTopFiftyNum () {
-		return pcCreateTopFiftyNum;
-	}
-
-	public void setPcCreateTopFiftyNum (Integer pcCreateTopFiftyNum) {
-		this.pcCreateTopFiftyNum = pcCreateTopFiftyNum;
-	}
-
-	public Integer getPhoneCreateTopTenNum () {
-		return phoneCreateTopTenNum;
-	}
-
-	public void setPhoneCreateTopTenNum (Integer phoneCreateTopTenNum) {
-		this.phoneCreateTopTenNum = phoneCreateTopTenNum;
-	}
-
-	public Integer getPhoneCreateTopFiftyNum () {
-		return phoneCreateTopFiftyNum;
-	}
-
-	public void setPhoneCreateTopFiftyNum (Integer phoneCreateTopFiftyNum) {
-		this.phoneCreateTopFiftyNum = phoneCreateTopFiftyNum;
-	}
-
 	public Map<String, Map<String, JSONObject>> getQzKeywordRankInfoMap () {
 		return qzKeywordRankInfoMap;
 	}
@@ -374,5 +336,21 @@ public class QZSetting extends BaseEntity{
 
 	public void setStandardTime (Date standardTime) {
 		this.standardTime = standardTime;
+	}
+
+	public boolean isMonitor () {
+		return isMonitor;
+	}
+
+	public void setMonitor (boolean monitor) {
+		isMonitor = monitor;
+	}
+
+	public boolean isReady () {
+		return isReady;
+	}
+
+	public void setReady (boolean ready) {
+		isReady = ready;
 	}
 }

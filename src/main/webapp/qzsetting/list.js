@@ -84,6 +84,12 @@ function searchRiseOrFall() {
                 case 'upperDifference':
                     checkStatus = 9;
                     break;
+                case 'isMonitor':
+                    checkStatus = 10;
+                    break;
+                case 'isReady':
+                    checkStatus = 11;
+                    break;
                 default:
                     break;
             }
@@ -278,7 +284,7 @@ function generateQZKeywordTrendCharts(domElement, data) {
     $(parentElement).find("#" + result.terminalType + "TopCreate10").text(result.createTopTenNum);
     $(parentElement).find("#" + result.terminalType + "TopCreate50").text(result.createTopFiftyNum);
     $(parentElement).find("#" + result.terminalType + "IsStandard").text(result.achieveLevel == 0 ? "否" : "是");
-    $(parentElement).find("#" + result.terminalType + "StandardTime").text(result.achieveTime == null ? "无" : toDateFormat(new Date(result.achieveTime)));
+    $(parentElement).find("#" + result.terminalType + "StandardTime").text(result.achieveTime == null ? "无" : toDateFormat(new Date(result.achieveTime.time)));
     if (result.websiteType === "aiZhan") {
         topThirty = stringToArray(result.topThirty);
         topForty = stringToArray(result.topForty);
@@ -553,7 +559,7 @@ function generateQZDesignationWordTrendCharts(domElement, data) {
     $(parentElement).find("#" + result.terminalType + "TopCreate10").text(result.createTopTenNum);
     $(parentElement).find("#" + result.terminalType + "TopCreate50").text(result.createTopFiftyNum);
     $(parentElement).find("#" + result.terminalType + "IsStandard").text(result.achieveLevel == 0 ? "否" : "是");
-    $(parentElement).find("#" + result.terminalType + "StandardTime").text(result.achieveTime == null ? "无" : toDateFormat(new Date(result.achieveTime)));
+    $(parentElement).find("#" + result.terminalType + "StandardTime").text(result.achieveTime == null ? "无" : toDateFormat(new Date(result.achieveTime.time)));
     option = {
         color: ['#228B22', '#0000FF', '#FF6100', '#000000', '#FF0000'],
         title : {
@@ -1318,22 +1324,40 @@ function immediatelyUpdateQZSettings(type) {
         alert('请选择要操作的设置信息！');
         return;
     }
+    var urlType = '';
     switch (type) {
         case "updateSettings":
-            updateImmediately(uuids);
+            urlType = "updateImmediately";
             break;
         case "startMonitor":
-            startMonitorImmediately(uuids);
+            urlType = "startMonitorImmediately";
+            break;
+        case "joinReady":
+            urlType = "joinReadyImmediately";
+            break;
         default:
             break;
     }
+    updateImmediately(uuids, urlType)
 }
-function updateImmediately(uuids) {
-    if (confirm("确实要马上更新这些设置吗？") == false) return;
+function updateImmediately(uuids, urlType) {
+    switch (urlType) {
+        case "updateImmediately":
+            if (confirm("确实要马上更新这些站点设置吗？") == false) return;
+            break;
+        case "startMonitorImmediately":
+            if (confirm("确实要启动这些站点的达标监控吗？") == false) return;
+            break;
+        case "joinReadyImmediately":
+            if (confirm("确实这些站点要加入达标计划吗？") == false) return;
+            break;
+        default:
+            break;
+    }
     var postData = {};
     postData.uuids = uuids;
     $.ajax({
-        url: '/internal/qzsetting/updateImmediately',
+        url: '/internal/qzsetting/' + urlType,
         data: JSON.stringify(postData),
         headers: {
             'Accept': 'application/json',
@@ -1353,31 +1377,7 @@ function updateImmediately(uuids) {
         }
     });
 }
-function startMonitorImmediately(uuids) {
-    if (confirm("确实要马上暂停这些设置的达标监控吗？") == false) return;
-    var postData = {};
-    postData.uuids = uuids;
-    $.ajax({
-        url: '/internal/qzsetting/startMonitorImmediately',
-        data: JSON.stringify(postData),
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        timeout: 5000,
-        type: 'POST',
-        success: function (data) {
-            if(data){
-                $().toastmessage('showSuccessToast', "操作成功", true);
-            }else{
-                $().toastmessage('showErrorToast', "操作失败");
-            }
-        },
-        error: function () {
-            $().toastmessage('showErrorToast', "操作失败");
-        }
-    });
-}
+
 function updateQZSettingStatus(status) {
     var uuids = getSelectedIDs();
     if(uuids === ''){

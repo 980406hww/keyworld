@@ -29,26 +29,8 @@ ul {
     padding: 0
 }
 
-.icon-rank-up {
-    display: inline-block;
-    font-size: 0;
-    background-image: url(/qzsetting/images/rank.up.icon.png);
-    background-position:-325px -258px;
-    width: 16px;
-    height: 16px;
-}
-
-.icon-rank-down {
-    display: inline-block;
-    font-size: 0;
-    background-image: url(/qzsetting/images/rank.down.icon.png);
-    background-position: -325px -205px;
-    width: 16px;
-    height: 16px;
-}
-
 .mytabs {
-    width: 1800px;
+    width: 1820px;
     margin: 15px auto 0px auto;
     box-shadow: 0 0 2px 2px hsla(0, 0%, 89%, .2);
 }
@@ -141,8 +123,15 @@ ul {
     font-size: 14px;
 }
 
-.mytabs .conn:last-child li.category input, .mytabs .conn:last-child li.userName input, .mytabs .conn:last-child li.group input, .mytabs .conn:last-child li.createTime input {
+.mytabs .conn:last-child li.category input, .mytabs .conn:last-child li.userName input, .mytabs .conn:last-child li.group input {
     width: 150px;
+    height: 25px;
+    line-height: 25px;
+    font-size: 14px;
+}
+
+.mytabs .conn:last-child li.createTime input {
+    width: 100px;
     height: 25px;
     line-height: 25px;
     font-size: 14px;
@@ -158,7 +147,7 @@ ul {
 }
 
 .datalist {
-    width: 1800px;
+    width: 1820px;
     margin: 0px auto 40px auto;
     overflow: visible;
 }
@@ -339,7 +328,7 @@ ul {
 }
 
 .datalist-list .body .rank-wrap1 {
-    width: 431px;
+    width: 451px;
     float: left;
     height: 150px;
     border-left: 1px solid #e6e6e6;
@@ -368,7 +357,7 @@ ul {
     font-size: 12px;
     display: block;
     float: left;
-    width: 70%;
+    width: 50%;
     text-align: left;
 }
 
@@ -376,7 +365,7 @@ ul {
     font-size: 12px;
     display: block;
     float: left;
-    width: 30%;
+    width: 50%;
     text-align: left;
 }
 

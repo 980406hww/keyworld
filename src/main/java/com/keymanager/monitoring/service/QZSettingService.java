@@ -334,19 +334,6 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
             for (QZKeywordRankInfo qzKeywordRankInfo : entry.getValue().values()) {
                 qzKeywordRankInfoService.deleteById(qzKeywordRankInfo);
             }
-            QZSettingSearchCriteria qzSettingSearchCriteria = new QZSettingSearchCriteria();
-            qzSettingSearchCriteria.setTerminalType(entry.getKey());
-            List<QZKeywordRankInfo> qzKeywordRankInfoList = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), new QZSettingSearchCriteria());
-            if (!CollectionUtils.isNotEmpty(qzKeywordRankInfoList)) {
-                if (entry.getKey().equals("PC")) {
-                    qzSetting.setPcCreateTopTenNum(null);
-                    qzSetting.setPcCreateTopFiftyNum(null);
-                }
-                if (entry.getKey().equals("Phone")) {
-                    qzSetting.setPhoneCreateTopTenNum(null);
-                    qzSetting.setPhoneCreateTopFiftyNum(null);
-                }
-            }
         }
 	}
 
@@ -747,5 +734,11 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 	public void updateQzSetting (QZSetting qzSetting) {
 		qzSettingDao.updateQzSetting(qzSetting);
+	}
+
+	public void joinReadyImmediately (String uuids) {
+		if(StringUtils.isNotEmpty(uuids)){
+			qzSettingDao.joinReadyImmediately(uuids);
+		}
 	}
 }

@@ -29,7 +29,7 @@
             qzkri.fAchieveTime AS 'achieveTime'
         FROM t_qz_keyword_rank_info qzkri
         WHERE qzkri.fQZSettingUuid = #{qzSettingUuid}
-        AND EXISTS(SELECT 1 FROM t_qz_setting qs WHERE qs.fUuid = qzkri.fQZSettingUuid AND qs.fIsMonitor = 1)
+        AND EXISTS(SELECT 1 FROM t_qz_setting qs WHERE qs.fUuid = qzkri.fQZSettingUuid)
         <if test="qzSettingSearchCriteria.checkStatus != null">
             <choose>
                 <when test="qzSettingSearchCriteria.checkStatus == 2">

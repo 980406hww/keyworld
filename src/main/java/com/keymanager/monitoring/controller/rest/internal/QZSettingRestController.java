@@ -269,16 +269,29 @@ public class QZSettingRestController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/qzsetting/startMonitorImmediately")
     @RequestMapping(value = "/startMonitorImmediately", method = RequestMethod.POST)
-    public ResponseEntity<?> startMonitorImmediately(@RequestBody Map<String, Object> requestMap) throws Exception{
+    public ResponseEntity<?> startMonitorImmediately(@RequestBody Map<String, Object> requestMap) {
         String uuids = (String) requestMap.get("uuids");
         boolean returnValue = false;
         try {
             qzSettingService.startMonitorImmediately(uuids);
             returnValue = true;
-        }catch(Exception ex){
+        } catch(Exception ex) {
             logger.error(ex.getMessage());
         }
         return new ResponseEntity<Object>(returnValue, HttpStatus.OK);
     }
 
+	@RequiresPermissions("/internal/qzsetting/joinReadyImmediately")
+	@RequestMapping(value = "/joinReadyImmediately", method = RequestMethod.POST)
+	public ResponseEntity<?> joinReadyImmediately(@RequestBody Map<String, Object> requestMap) {
+		String uuids = (String) requestMap.get("uuids");
+		boolean returnValue = false;
+		try {
+			qzSettingService.joinReadyImmediately(uuids);
+			returnValue = true;
+		} catch(Exception ex) {
+			logger.error(ex.getMessage());
+		}
+		return new ResponseEntity<Object>(returnValue, HttpStatus.OK);
+	}
 }

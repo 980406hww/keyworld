@@ -47,7 +47,7 @@
 				<li>
 					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="trimSearchCondition('1')" value=" 搜索 " >
 					&nbsp;&nbsp;
-					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="showMoreSearchCondition()" value=" 更多搜索条件 " >
+					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="showMoreSearchCondition()" value=" 更多搜索 " >
 				</li>
 				<shiro:hasPermission name="/internal/qzsetting/save">
 					<li>
@@ -62,6 +62,11 @@
 				<shiro:hasPermission name="/internal/qzsetting/startMonitorImmediately">
 					<li>
 						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="immediatelyUpdateQZSettings('startMonitor')" value=" 达标监控 " >&nbsp;
+					</li>
+				</shiro:hasPermission>
+				<shiro:hasPermission name="/internal/qzsetting/joinReadyImmediately">
+					<li>
+						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="immediatelyUpdateQZSettings('joinReady')" value=" 加入达标计划 " >&nbsp;
 					</li>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="/internal/qzsetting/updateStatus">
@@ -83,10 +88,24 @@
 						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="getAvailableQZSettings()" value="查看更新队列(${availableQZSettingCount})">&nbsp;
 					</li>
 				</shiro:hasPermission>
+				<shiro:hasPermission name="/internal/qzsetting/startMonitorImmediately">
+                <li>
+                    <label name="isMonitor" title="达标监控的站点">
+                        <input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.checkStatus == 10}">checked</c:if>>
+                        达标监控
+                    </label>
+                </li>
+				</shiro:hasPermission>
+				<li>
+					<label name="isReady" title="加入达标计划的站点">
+						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.checkStatus == 11}">checked</c:if>>
+						达标计划
+					</label>
+				</li>
 				<li>
 					<label name="lower" title="网站关键词(PC,Phone)一星期排名趋势涨幅&lt;${qzSettingSearchCriteria.lowerValue}">
 						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.checkStatus == 1}">checked</c:if>>
-						<i class="icon-rank-down"></i>骤降 (${qzSettingSearchCriteria.downNum})
+						骤降 (${qzSettingSearchCriteria.downNum})
 					</label>
 				</li>
 				<li>
@@ -98,7 +117,7 @@
 				<li>
 					<label name="upper" title="网站关键词(PC,Phone)一星期排名趋势涨幅&gt;${qzSettingSearchCriteria.upperValue}">
 						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.checkStatus == 2}">checked</c:if>>
-						<i class="icon-rank-up"></i>暴涨 (${qzSettingSearchCriteria.upNum})
+						暴涨 (${qzSettingSearchCriteria.upNum})
 					</label>
 				</li>
 				<li>
@@ -196,7 +215,7 @@
 					</select>
 				</li>
 				<li class="createTime condition">
-					<span>创建时间区间: </span>
+					<span>创建时间: </span>
 					<input type="text" name="createTime" id="createTime" class="Wdate" onclick="WdatePicker({skin:'whyGreen',dateFmt: 'yyyy-MM-dd', maxDate: '%y-%M-%d' })" placeholder=">=" value="${qzSettingSearchCriteria.createTime}">
                     <span>--</span>
                     <input type="text" name="createTimePrefix" id="createTimePrefix" class="Wdate" onclick="WdatePicker({skin:'whyGreen',dateFmt: 'yyyy-MM-dd', maxDate: '%y-%M-%d' })" placeholder="<=" value="${qzSettingSearchCriteria.createTimePrefix}">
