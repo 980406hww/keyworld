@@ -371,7 +371,6 @@
         WHERE qs.fUuid = #{qzSettingSearchClientGroupInfoCriteria.qzSettingUuid}
         AND ck.fStatus = 1
         <if test="qzSettingSearchClientGroupInfoCriteria.terminalType != ''">AND ck.fTerminalType = #{qzSettingSearchClientGroupInfoCriteria.terminalType}</if>
-        <if test="qzSettingSearchClientGroupInfoCriteria.type != ''">AND ck.fType = #{qzSettingSearchClientGroupInfoCriteria.type}</if>
         <if test="qzSettingSearchClientGroupInfoCriteria.optimizeGroupName != ''">AND ck.fOptimizeGroupName LIKE '${qzSettingSearchClientGroupInfoCriteria.optimizeGroupName}%'</if>
     </select>
 

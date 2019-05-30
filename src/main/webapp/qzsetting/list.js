@@ -705,7 +705,6 @@ function getQZSettingClientGroupInfo(terminalType) {
         var postData = {};
         postData.qzSettingUuid = uuid;
         postData.terminalType = terminalType;
-        postData.type = $.trim(div.parent().find(".other-rank .row:last-child").find("div:eq(2) span.line1 input[name='type']").val());
         postData.optimizeGroupName = optimizeGroupName;
         $.ajax({
             url: '/internal/qzsetting/getQZSettingClientGroupInfo',
@@ -746,7 +745,7 @@ function getQZSettingClientGroupInfo(terminalType) {
                         $(showSomeOperationType).parent().find("input[name='allOperationType']").val(allOperationType);
                     }
                 }
-                var status = div.parent().find(".other-rank .row:last-child").find("div:eq(3) span.line1 a").attr("status");
+                var status = div.parent().find(".other-rank .row:last-child").find("div:eq(1) span.line1 a").attr("status");
                 div.find(".row:first-child").find("div:eq(0) span.line1 a").text(optimizeGroupName+" ("+clientCount+")");
                 if (status == "3") {
                     div.find(".row:first-child").find("div:eq(0) span.line1 a").css("color", "red");
@@ -1020,7 +1019,7 @@ function showChargeRulesDiv(self, e) {
                             }
                         });
                         if (idx + 1 === parseInt(val.achieveLevel)) {
-                            $(newTr).css("background-color", "green");
+                            $(newTr).css("background-color", "mediumseagreen");
                         }
                         $("#chargeRulesDivTable")[0].lastChild.appendChild(newTr);
                     });
@@ -1056,7 +1055,7 @@ function showChargeRulesDiv(self, e) {
                             }
                         });
                         if (idx + 1 === parseInt(val.achieveLevel)) {
-                            $(newTr).css("background-color", "green");
+                            $(newTr).css("background-color", "mediumseagreen");
                         }
                         $("#chargeRulesDivTable")[0].lastChild.appendChild(newTr);
                     });

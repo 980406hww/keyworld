@@ -317,17 +317,27 @@
 										<span class="line1">
 											<a href="javascript:;" qzsettinguuid="${qzSetting.uuid}" onmouseover="showChargeRulesDiv($(this))" onmouseout="closeChargeRulesDiv()">
 												<c:if test="${qzSetting.totalPrice > 0}">
-													<font style="background-color: green;font-size: 14px;">￥ ${qzSetting.totalPrice}</font>
+													<font style="background-color: mediumseagreen;font-size: 14px;">￥ ${qzSetting.totalPrice}</font>
 												</c:if>
 												<c:if test="${qzSetting.totalPrice == 0}">
-													<font style="background-color: red;font-size: 14px;">￥ ${qzSetting.totalPrice}</font>
+													<font style="background-color: palevioletred;font-size: 14px;">￥ ${qzSetting.totalPrice}</font>
 												</c:if>
 											</a>
 										</span>
 										<span><a href="javascript:;">全站达标信息</a></span>
 									</div>
 									<div class="row" title="预计百度来路,点击可跳转到详情页面查看变动">
-										<span class="line1"><a href="https://www.5118.com/seo/baidupc/ip/${qzSetting.domain}" target="_blank">${qzSetting.qzKeywordRankInfoMap["PC"].ipRoute == "" ? "暂无" : qzSetting.qzKeywordRankInfoMap["PC"].ipRoute}</a> <sub>IP</sub></span>
+										<span class="line1">
+											<a href="https://www.5118.com/seo/baidupc/ip/${qzSetting.domain}" target="_blank">
+												<c:if test="${qzSetting.qzKeywordRankInfoMap['PC']['aiZhan'] != null}">
+													${qzSetting.qzKeywordRankInfoMap["PC"]["aiZhan"].ipRoute == null or qzSetting.qzKeywordRankInfoMap["PC"]["aiZhan"].ipRoute == "" ? "暂无" : qzSetting.qzKeywordRankInfoMap["PC"]["aiZhan"].ipRoute}
+												</c:if>
+												<c:if test="${qzSetting.qzKeywordRankInfoMap['PC']['5118'] != null}">
+													${qzSetting.qzKeywordRankInfoMap["PC"]["5118"].ipRoute == null or qzSetting.qzKeywordRankInfoMap["PC"]["5118"].ipRoute == "" ? "暂无" : qzSetting.qzKeywordRankInfoMap["PC"]["5118"].ipRoute}
+												</c:if>
+												<c:if test="${qzSetting.qzKeywordRankInfoMap['PC']['designationWord'] != null}"> 暂无 </c:if>
+											</a><sub>IP</sub>
+										</span>
 										<span><a href="javascript:;">预计百度来路</a></span>
 									</div>
 								</div>
@@ -601,17 +611,27 @@
 										<span class="line1">
 											<a href="javascript:;" qzsettinguuid="${qzSetting.uuid}" onmouseover="showChargeRulesDiv($(this))" onmouseout="closeChargeRulesDiv()">
 												<c:if test="${qzSetting.totalPrice > 0}">
-													<font style="background-color: green;font-size: 14px;">￥ ${qzSetting.totalPrice}</font>
+													<font style="background-color: mediumseagreen;font-size: 14px;">￥ ${qzSetting.totalPrice}</font>
 												</c:if>
 												<c:if test="${qzSetting.totalPrice == 0}">
-													<font style="background-color: red;font-size: 14px;">￥ ${qzSetting.totalPrice}</font>
+													<font style="background-color: palevioletred;font-size: 14px;">￥ ${qzSetting.totalPrice}</font>
 												</c:if>
 											</a>
 										</span>
 										<span><a href="javascript:;">全站达标信息</a></span>
 									</div>
 									<div class="row">
-										<span class="line1"><a href="javascript:;">${qzSetting.qzKeywordRankInfoMap["Phone"].ipRoute == "" ? "暂无" : qzSetting.qzKeywordRankInfoMap["Phone"].ipRoute}</a> <sub>IP</sub></span>
+										<span class="line1">
+											<a href="javascript:;">
+												<c:if test="${qzSetting.qzKeywordRankInfoMap['Phone']['aiZhan'] != null}">
+													${qzSetting.qzKeywordRankInfoMap["Phone"]["aiZhan"].ipRoute == null or qzSetting.qzKeywordRankInfoMap["Phone"]["aiZhan"].ipRoute == "" ? "暂无" : qzSetting.qzKeywordRankInfoMap["Phone"]["aiZhan"].ipRoute}
+												</c:if>
+												<c:if test="${qzSetting.qzKeywordRankInfoMap['Phone']['5118'] != null}">
+													${qzSetting.qzKeywordRankInfoMap["Phone"]["5118"].ipRoute == null or qzSetting.qzKeywordRankInfoMap["Phone"]["5118"].ipRoute == "" ? "暂无" : qzSetting.qzKeywordRankInfoMap["Phone"]["5118"].ipRoute}
+												</c:if>
+												<c:if test="${qzSetting.qzKeywordRankInfoMap['Phone']['designationWord'] != null}"> 暂无 </c:if>
+											</a><sub>IP</sub>
+										</span>
 										<span><a href="javascript:;">预计百度来路</a></span>
 									</div>
 								</div>

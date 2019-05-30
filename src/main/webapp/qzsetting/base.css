@@ -374,11 +374,11 @@ ul {
 }
 
 .datalist-list .body .rank-wrap > div span.red, .datalist-list .body .rank-wrap1 > div span.red {
-    color: #ff3d3d;
+    color: palevioletred;
 }
 
 .datalist-list .body .rank-wrap > div span.green, .datalist-list .body .rank-wrap1 > div span.green {
-    color: #60c54b;
+    color: mediumseagreen;
 }
 
 .datalist-list .body .rank-wrap > div span a, .datalist-list .body .rank-wrap1 > div span a {
@@ -387,19 +387,19 @@ ul {
 }
 
 .datalist-list .body .rank-wrap > div span a.red, .datalist-list .body .rank-wrap1 > div span a.red {
-    color: #ff3d3d;
+    color: palevioletred;
 }
 
 .datalist-list .body .rank-wrap > div span a.green, .datalist-list .body .rank-wrap1 > div span a.green {
-    color: #60c54b;
+    color: mediumseagreen;
 }
 
 .datalist-list .body .rank-wrap > div span .red, .datalist-list .body .rank-wrap1 > div span .red {
-    color: #ff3d3d;
+    color: palevioletred;
 }
 
 .datalist-list .body .rank-wrap > div span .green, .datalist-list .body .rank-wrap1 > div span .green {
-    color: #60c54b;
+    color: mediumseagreen;
 }
 
 .datalist-list .body .baidu-rank {
