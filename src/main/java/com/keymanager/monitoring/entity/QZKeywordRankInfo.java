@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.FieldStrategy;
 
+import java.util.Date;
+
 /**
  * @Author zhoukai
  * @Date 2018/12/6 10:56
@@ -76,6 +78,10 @@ public class QZKeywordRankInfo extends BaseEntity {
     /* 百度收录日期 */
     @TableField(value = "fBaiduRecordFullDate", strategy = FieldStrategy.IGNORED)
     private String baiduRecordFullDate;
+
+    /* 曲线达标时间 */
+    @TableField(value = "fAchieveTime", strategy = FieldStrategy.IGNORED)
+    private Date achieveTime;
 
     /* 达到等级 */
     @TableField(value = "fAchieveLevel")
@@ -295,5 +301,13 @@ public class QZKeywordRankInfo extends BaseEntity {
 
     public void setCreateTopFiftyNum (Integer createTopFiftyNum) {
         this.createTopFiftyNum = createTopFiftyNum;
+    }
+
+    public Date getAchieveTime() {
+        return achieveTime;
+    }
+
+    public void setAchieveTime(Date achieveTime) {
+        this.achieveTime = achieveTime;
     }
 }

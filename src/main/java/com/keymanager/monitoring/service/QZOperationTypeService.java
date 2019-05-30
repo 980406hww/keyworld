@@ -52,4 +52,8 @@ public class QZOperationTypeService extends ServiceImpl<QZOperationTypeDao, QZOp
     public QZOperationType searchQZOperationTypeByQZSettingAndTerminalType(Long qzSettingUuid, String operationType) {
         return qzOperationTypeDao.searchQZOperationTypeByQZSettingAndTerminalType(qzSettingUuid, operationType);
     }
+
+    public void updateStandardTimeByUuid(Long uuid, int updateFlag, int lastAchieve) {
+        qzOperationTypeDao.updateStandardTimeByUuid(uuid, updateFlag, lastAchieve);
+    }
 }
