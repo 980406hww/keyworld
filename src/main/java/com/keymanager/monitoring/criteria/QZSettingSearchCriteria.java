@@ -29,6 +29,7 @@ public class QZSettingSearchCriteria{
     private Integer openDialogStatus;
     private String operationType;
     private String createTime;
+    private String createTimePrefix;
 
     public String getLoginName() {
         return loginName;
@@ -252,5 +253,13 @@ public class QZSettingSearchCriteria{
 
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
+    }
+
+    public String getCreateTimePrefix() {
+        return createTimePrefix;
+    }
+
+    public void setCreateTimePrefix(String createTimePrefix) {
+        this.createTimePrefix = createTimePrefix;
     }
 }
