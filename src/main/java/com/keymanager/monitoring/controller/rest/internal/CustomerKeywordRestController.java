@@ -370,7 +370,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	@RequestMapping(value="/searchCustomerKeywordLists" , method= RequestMethod.GET)
 	public ModelAndView searchCustomerKeywordLists(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request){
 		String entryType = (String)request.getSession().getAttribute("entryType");
-		if(EntryTypeEnum.bc.name().equalsIgnoreCase(entryType) && !SecurityUtils.getSubject().hasRole("BCSpecial")){
+		if(!SecurityUtils.getSubject().hasRole(entryType.toUpperCase() + "Special")){
 			SecurityUtils.getSubject().logout();
 		}
 		CustomerKeywordCriteria customerKeywordCriteria = new CustomerKeywordCriteria();
