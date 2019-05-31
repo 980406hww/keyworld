@@ -72,6 +72,7 @@
             </c:if>
             关键字来源:
             <select name="customerKeywordSource" id="customerKeywordSource">
+                <option value="">所有</option>
                 <c:forEach items="${CustomerKeywordSourceMap}" var="entry">
                     <option value="${entry.value}">${entry.key}</option>
                 </c:forEach>

@@ -157,6 +157,7 @@
             <input id="groupNameFuzzyQuery" name="groupNameFuzzyQuery" type="checkbox"  onclick="groupNameFuzzyQueryValue()" value="${customerKeywordCriteria.groupNameFuzzyQuery}"/>模糊查询 &nbsp;
             关键字来源:
             <select name="customerKeywordSource" id="customerKeywordSource">
+                <option value="">所有</option>
                 <c:forEach items="${CustomerKeywordSourceMap}" var="entry">
                     <option value="${entry.value}">${entry.key}</option>
                 </c:forEach>
