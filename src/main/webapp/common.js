@@ -3,7 +3,7 @@ $(function () {
     checkMessageInbox();
 });
 function doOver(obj) {
-	obj.style.backgroundColor = "green";
+	obj.style.backgroundColor = "#c3dfb7";
 }
 
 function doOut(obj) {

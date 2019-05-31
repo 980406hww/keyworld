@@ -109,7 +109,6 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
         qzKeywordRankInfo.setFullDate(externalQzKeywordRankInfoVO.getFullDate());
         qzKeywordRankInfo.setDate(externalQzKeywordRankInfoVO.getDate());
         qzKeywordRankInfo.setWebsiteType(externalQzKeywordRankInfoVO.getWebsiteType());
-        qzKeywordRankInfo.setIpRoute(externalQzKeywordRankInfoVO.getIpRoute() == null ? externalQzKeywordRankInfoVO.getIpRoute() : externalQzKeywordRankInfoVO.getIpRoute().replaceAll(",", ""));
         qzKeywordRankInfo.setBaiduRecord(externalQzKeywordRankInfoVO.getBaiduRecord());
         qzKeywordRankInfo.setBaiduRecordFullDate(externalQzKeywordRankInfoVO.getBaiduRecordFullDate());
         if (StringUtils.isNotBlank(externalQzKeywordRankInfoVO.getTopTen())) {

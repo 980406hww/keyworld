@@ -305,15 +305,15 @@
 
 						<div class="body">
 							<div class="data-info-wrap">
-								<div class="baidu-rank">
+								<div class="user-id">
 									<a href="javascript:;">
 										<span class="line1" title="${qzSetting.userID}">${qzSetting.userID}</span>
 										<span>用户名称</span>
 									</a>
 								</div>
 
-								<div class="other-rank_1">
-									<div class="row">
+								<div class="standard-info">
+									<a href="javascript:;">
 										<span class="line1">
 											<a href="javascript:;" qzsettinguuid="${qzSetting.uuid}" onmouseover="showChargeRulesDiv($(this))" onmouseout="closeChargeRulesDiv()">
 												<c:if test="${qzSetting.totalPrice > 0}">
@@ -324,22 +324,8 @@
 												</c:if>
 											</a>
 										</span>
-										<span><a href="javascript:;">全站达标信息</a></span>
-									</div>
-									<div class="row" title="预计百度来路,点击可跳转到详情页面查看变动">
-										<span class="line1">
-											<a href="https://www.5118.com/seo/baidupc/ip/${qzSetting.domain}" target="_blank">
-												<c:if test="${qzSetting.qzKeywordRankInfoMap['PC']['aiZhan'] != null}">
-													${qzSetting.qzKeywordRankInfoMap["PC"]["aiZhan"].ipRoute == null or qzSetting.qzKeywordRankInfoMap["PC"]["aiZhan"].ipRoute == "" ? "暂无" : qzSetting.qzKeywordRankInfoMap["PC"]["aiZhan"].ipRoute}
-												</c:if>
-												<c:if test="${qzSetting.qzKeywordRankInfoMap['PC']['5118'] != null}">
-													${qzSetting.qzKeywordRankInfoMap["PC"]["5118"].ipRoute == null or qzSetting.qzKeywordRankInfoMap["PC"]["5118"].ipRoute == "" ? "暂无" : qzSetting.qzKeywordRankInfoMap["PC"]["5118"].ipRoute}
-												</c:if>
-												<c:if test="${qzSetting.qzKeywordRankInfoMap['PC']['designationWord'] != null}"> 暂无 </c:if>
-											</a><sub>IP</sub>
-										</span>
-										<span><a href="javascript:;">预计百度来路</a></span>
-									</div>
+										<span>全站达标信息</span>
+									</a>
 								</div>
 
 								<div class="other-rank">
@@ -606,8 +592,8 @@
 									</a>
 								</div>
 
-								<div class="other-rank_1">
-									<div class="row">
+								<div class="standard-info">
+									<a href="javascript:;">
 										<span class="line1">
 											<a href="javascript:;" qzsettinguuid="${qzSetting.uuid}" onmouseover="showChargeRulesDiv($(this))" onmouseout="closeChargeRulesDiv()">
 												<c:if test="${qzSetting.totalPrice > 0}">
@@ -618,22 +604,8 @@
 												</c:if>
 											</a>
 										</span>
-										<span><a href="javascript:;">全站达标信息</a></span>
-									</div>
-									<div class="row">
-										<span class="line1">
-											<a href="javascript:;">
-												<c:if test="${qzSetting.qzKeywordRankInfoMap['Phone']['aiZhan'] != null}">
-													${qzSetting.qzKeywordRankInfoMap["Phone"]["aiZhan"].ipRoute == null or qzSetting.qzKeywordRankInfoMap["Phone"]["aiZhan"].ipRoute == "" ? "暂无" : qzSetting.qzKeywordRankInfoMap["Phone"]["aiZhan"].ipRoute}
-												</c:if>
-												<c:if test="${qzSetting.qzKeywordRankInfoMap['Phone']['5118'] != null}">
-													${qzSetting.qzKeywordRankInfoMap["Phone"]["5118"].ipRoute == null or qzSetting.qzKeywordRankInfoMap["Phone"]["5118"].ipRoute == "" ? "暂无" : qzSetting.qzKeywordRankInfoMap["Phone"]["5118"].ipRoute}
-												</c:if>
-												<c:if test="${qzSetting.qzKeywordRankInfoMap['Phone']['designationWord'] != null}"> 暂无 </c:if>
-											</a><sub>IP</sub>
-										</span>
-										<span><a href="javascript:;">预计百度来路</a></span>
-									</div>
+										<span>全站达标信息</span>
+									</a>
 								</div>
 
 								<div class="other-rank">

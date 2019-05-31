@@ -200,6 +200,12 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
             }
         }
 
+        if (qzKeywordRankInfo.getCreateTopTenNum() == null) {
+            qzKeywordRankInfo.setCreateTopTenNum(topTenNum);
+        }
+        if (qzKeywordRankInfo.getCreateTopFiftyNum() == null) {
+            qzKeywordRankInfo.setCreateTopFiftyNum(topFiftyNum);
+        }
         String weekDataString = qzKeywordRankInfo.getTopTen().substring(1, qzKeywordRankInfo.getTopTen().length() - 1);
         String[] weekData = weekDataString.split(", ");
         DecimalFormat decimalFormat = new DecimalFormat("0.0000");

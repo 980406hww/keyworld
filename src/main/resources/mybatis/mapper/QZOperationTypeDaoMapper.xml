@@ -71,6 +71,9 @@
         </choose>
         WHERE fQZSettingUuid = #{qzSettingUuid}
         AND fOperationtype = #{operationType}
+        <if test="isStandardFlag == true">
+            AND fStandardTime &gt; ''
+        </if>
     </update>
 
     <select id="searchQZOperationTypeByQZSettingAndTerminalType" resultType="com.keymanager.monitoring.entity.QZOperationType">

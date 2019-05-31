@@ -314,21 +314,21 @@ ul {
 }
 
 .datalist-list .body .data-info-wrap {
-    width: 596px;
+    width: 556px;
     float: left;
     height: 150px;
     text-align: center
 }
 
 .datalist-list .body .rank-wrap {
-    width: 741px;
+    width: 771px;
     float: left;
     height: 150px;
     border-left: 1px solid #e6e6e6;
 }
 
 .datalist-list .body .rank-wrap1 {
-    width: 451px;
+    width: 481px;
     float: left;
     height: 150px;
     border-left: 1px solid #e6e6e6;
@@ -402,28 +402,35 @@ ul {
     color: mediumseagreen;
 }
 
-.datalist-list .body .baidu-rank {
-    float: left;
+.datalist-list .body .user-id {
     width: 84px;
+}
+
+.datalist-list .body .standard-info {
+    width: 99px;
+}
+
+.datalist-list .body .user-id, .datalist-list .body .standard-info {
+    float: left;
     border-right: 1px solid #e6e6e6;
     height: 150px;
     display: block;
 }
 
-.datalist-list .body .baidu-rank a {
+.datalist-list .body .user-id a, .datalist-list .body .standard-info a {
     clear: both;
 }
 
-.datalist-list .body .baidu-rank span {
+.datalist-list .body .user-id span, .datalist-list .body .standard-info span {
     display: block;
 }
 
-.datalist-list .body .baidu-rank span:last-child {
+.datalist-list .body .user-id span:last-child, .datalist-list .body .standard-info span:last-child {
     margin-top: 10px;
     color: #999;
 }
 
-.datalist-list .body .baidu-rank span.line1 {
+.datalist-list .body .user-id span.line1, .datalist-list .body .standard-info span.line1 {
     font-size: 14px;
     margin-top: 45px;
     overflow: hidden;
@@ -431,19 +438,12 @@ ul {
     color: #000;
 }
 
-.datalist-list .body .baidu-rank span.line1:hover {
+.datalist-list .body .user-id span.line1:hover {
     color: #0c7df5;
 }
 
-.datalist-list .body .baidu-rank span.line1 sub {
-    font-weight: 400;
-    color: #999;
-}
-
-.datalist-list .body .other-rank_1 {
-    float: left;
-    width: 160px;
-    border-right: 1px solid #e6e6e6;
+.datalist-list .body .standard-info a {
+    color: #000;
 }
 
 .datalist-list .body .other-rank {
@@ -457,31 +457,27 @@ ul {
     border-left: 1px solid #e6e6e6;
 }
 
-.datalist-list .body .other-rank .row, .datalist-list .body .other-rank_1 .row, .datalist-list .body .other-rank_2 .row {
+.datalist-list .body .other-rank .row, .datalist-list .body .other-rank_2 .row {
     height: 75px;
 }
 
-.datalist-list .body .other-rank .row .line1, .datalist-list .body .other-rank_1 .row .line1, .datalist-list .body .other-rank_2 .row .line1 {
+.datalist-list .body .other-rank .row .line1, .datalist-list .body .other-rank_2 .row .line1 {
     display: inline-block;
     width: 100%;
     word-wrap: break-word;
     white-space: normal;
 }
 
-.datalist-list .body .other-rank .row .line1 a, .datalist-list .body .other-rank_1 .row .line1 a, .datalist-list .body .other-rank_2 .row .line1 a {
+.datalist-list .body .other-rank .row .line1 a, .datalist-list .body .other-rank_2 .row .line1 a {
     font-size: 14px;
     color: #000;
 }
 
-.datalist-list .body .other-rank .row .line1 a:hover, .datalist-list .body .other-rank_1 .row .line1 a:hover, .datalist-list .body .other-rank_2 .row .line1 a:hover {
+.datalist-list .body .other-rank .row .line1 a:hover, .datalist-list .body .other-rank_2 .row .line1 a:hover {
     color: #0c7df5;
 }
 
-.datalist-list .body .other-rank_1 .row:first-child .line1 a:hover {
-    color: #000;
-}
-
-.datalist-list .body .other-rank .row span:last-child a, .datalist-list .body .other-rank_1 .row span:last-child a, .datalist-list .body .other-rank_2 .row span:last-child a {
+.datalist-list .body .other-rank .row span:last-child a, .datalist-list .body .other-rank_2 .row span:last-child a {
     display: inline-block;
     width: 90%;
     word-wrap: break-word;
@@ -489,13 +485,13 @@ ul {
     color: #999;
 }
 
-.datalist-list .body .other-rank .row:last-child, .datalist-list .body .other-rank_1 .row:last-child, .datalist-list .body .other-rank_2 .row:last-child {
+.datalist-list .body .other-rank .row:last-child, .datalist-list .body .other-rank_2 .row:last-child {
     display: block;
     height: 74px;
     border-top: 1px solid #e6e6e6;
 }
 
-.datalist-list .body .other-rank .row > div, .datalist-list .body .other-rank_1 .row > div, .datalist-list .body .other-rank_2 .row > div {
+.datalist-list .body .other-rank .row > div, .datalist-list .body .other-rank_2 .row > div {
     display: block;
     float: left;
     height: 74px;
@@ -506,33 +502,29 @@ ul {
     width: 84px;
 }
 
-.datalist-list .body .other-rank_1 .row > div {
-    width: 90px;
-}
-
 .datalist-list .body .other-rank_2 .row > div {
     width: 180px;
 }
 
-.datalist-list .body .other-rank .row > div:last-child, .datalist-list .body .other-rank_1 .row > div:last-child, .datalist-list .body .other-rank_2 .row > div:last-child {
+.datalist-list .body .other-rank .row > div:last-child, .datalist-list .body .other-rank_2 .row > div:last-child {
     border: 0;
 }
 
-.datalist-list .body .other-rank .row span, .datalist-list .body .other-rank_1 .row span, .datalist-list .body .other-rank_2 .row span {
+.datalist-list .body .other-rank .row span, .datalist-list .body .other-rank_2 .row span {
     display: block;
 }
 
-.datalist-list .body .other-rank .row span.line1, .datalist-list .body .other-rank_1 .row span.line1, .datalist-list .body .other-rank_2 .row span.line1 {
+.datalist-list .body .other-rank .row span.line1, .datalist-list .body .other-rank_2 .row span.line1 {
     font-size: 18px;
     margin-top: 10px;
     height: 60%;
 }
 
-.datalist-list .body .other-rank .row span:last-child, .datalist-list .body .other-rank_1 .row span:last-child, .datalist-list .body .other-rank_2 .row span:last-child {
+.datalist-list .body .other-rank .row span:last-child, .datalist-list .body .other-rank_2 .row span:last-child {
     height: 30%;
 }
 
-.datalist-list .body .other-rank .row span.line1:hover, .datalist-list .body .other-rank_1 .row span.line1:hover, .datalist-list .body .other-rank_2 .row span.line1:hover {
+.datalist-list .body .other-rank .row span.line1:hover, .datalist-list .body .other-rank_2 .row span.line1:hover {
     color: #0c7df5;
 }
 
@@ -552,11 +544,6 @@ ul {
 
 .datalist-list .body .other-rank_2 .row:last-child div.operationTypeSpan span {
     height: 30%;
-}
-
-.datalist-list .body .other-rank_1 .row span sub {
-    font-weight: 400;
-    padding-left: 5px;
 }
 
 .rank-wrap .col-4 {
