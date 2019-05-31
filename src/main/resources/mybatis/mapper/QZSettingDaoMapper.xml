@@ -100,6 +100,7 @@
             c.fContactPerson AS 'contactPerson',
             o.fOrganizationName AS 'organizationName',
             qs.fDomain AS 'domain',
+            qs.fBearPawNumber AS 'bearPawNumber',
             <if test="qzSettingSearchCriteria.terminalType != null">
                 <choose>
                     <when test="qzSettingSearchCriteria.terminalType == 'PC'">

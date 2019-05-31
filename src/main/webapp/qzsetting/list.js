@@ -748,13 +748,14 @@ function findOptimizeGroupAndOperationType(self) {
     var args = name.split(" ");
     searchGroupSettings(args[0], args[1]);
 }
-function showKeywordDialog(qzSettingUuid, customerUuid, domain, optimizeGroupName) {
+function showKeywordDialog(qzSettingUuid, customerUuid, domain, optimizeGroupName, bearPawNumber) {
     var customerKeywordDialog = $("#customerKeywordDialog");
     customerKeywordDialog.find('#customerKeywordForm')[0].reset();
     customerKeywordDialog.find("#qzSettingUuid").val(qzSettingUuid);
     customerKeywordDialog.find("#customerUuid").val(customerUuid);
     customerKeywordDialog.find("#domain").val(domain);
     customerKeywordDialog.find("#optimizeGroupName").val(optimizeGroupName);
+    customerKeywordDialog.find("#bearPawNumber").val(bearPawNumber);
     customerKeywordDialog.show();
     customerKeywordDialog.dialog({
         resizable: false,
