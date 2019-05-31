@@ -117,4 +117,15 @@ public class CaptureRankRsetController {
             return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
         }
     }
+
+    @RequestMapping(value = "/resetCaptureRankJobs", method = RequestMethod.POST)
+    public ResponseEntity<?> resetCaptureRankJobs(@RequestBody Map<String, Object> requestMap) {
+        try {
+            captureRankJobService.resetCaptureRankJobs((List) requestMap.get("uuids"));
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
 }

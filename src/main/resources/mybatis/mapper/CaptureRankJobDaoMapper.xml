@@ -106,6 +106,15 @@
         c.fUuid=#{captureRankJobUuid}
     </select>
 
+    <select id="resetCaptureRankJobs">
+        UPDATE t_capture_rank_job c
+        SET c.fExectionStatus = 'New'
+        WHERE c.fUuid IN
+        <foreach collection="uuids" item="uuid" separator="," open="(" close=")">
+            #{uuid}
+        </foreach>
+    </select>
+
     <select id="hasUncompletedCaptureRankJob" resultType="Long">
         SELECT
         1
