@@ -64,11 +64,6 @@
 						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="immediatelyUpdateQZSettings('startMonitor')" value=" 达标监控 " >&nbsp;
 					</li>
 				</shiro:hasPermission>
-				<shiro:hasPermission name="/internal/qzsetting/joinReadyImmediately">
-					<li>
-						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="immediatelyUpdateQZSettings('joinReady')" value=" 加入达标计划 " >&nbsp;
-					</li>
-				</shiro:hasPermission>
 				<shiro:hasPermission name="/internal/qzsetting/updateStatus">
 					<li>
 						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="updateQZSettingStatus(0)" value=" 暂停整站 " >
@@ -89,12 +84,12 @@
 					</li>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="/internal/qzsetting/startMonitorImmediately">
-                <li>
-                    <label name="isMonitor" title="达标监控的站点">
-                        <input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.checkStatus == 10}">checked</c:if>>
-                        达标监控
-                    </label>
-                </li>
+					<li>
+						<label name="isMonitor" title="达标监控的站点">
+							<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.checkStatus == 10}">checked</c:if>>
+							达标监控
+						</label>
+					</li>
 				</shiro:hasPermission>
 				<li>
 					<label name="isReady" title="加入达标计划的站点">
@@ -271,12 +266,12 @@
 							<span class="contactPerson-name" title="${qzSetting.organizationName}"><a href="javascript:;">${qzSetting.organizationName}</a></span>
 							<span class="to-aizhan"><a href="https://www.aizhan.com/cha/${qzSetting.domain}" target="_blank" title="查看爱站">爱站</a></span>
 							<span class="to-5118"><a href="https://www.5118.com/seo/${qzSetting.domain}" target="_blank" title="查看5118,需要登录">5118</a></span>
-							<span class="fmtDate" title="<fmt:formatDate value="${qzSetting.createTime}" pattern="yyyy-MM-dd"></fmt:formatDate>">创建时间:<a href="javascript:;"><fmt:formatDate value="${qzSetting.createTime}" pattern="yyyy-MM-dd"></fmt:formatDate></a></span>
-							<span class="fmtDate" title="<fmt:formatDate value="${qzSetting.standardTime}" pattern="yyyy-MM-dd"></fmt:formatDate>">达标时间:<a href="javascript:;">
+							<span class="fmtStandardDate" title="<fmt:formatDate value="${qzSetting.standardTime}" pattern="yyyy-MM-dd"></fmt:formatDate>">达标日期:<a href="javascript:;">
 								<c:if test="${qzSetting.standardTime == null}">无</c:if>
 								<c:if test="${qzSetting.standardTime != null}"><fmt:formatDate value="${qzSetting.standardTime}" pattern="yyyy-MM-dd"></fmt:formatDate></c:if>
 							</a></span>
 							<span class="tagNames" ondblclick="editTagNameStr($(this).find('label.tagNameStr')[0], true)"><label>分组标签:</label>&nbsp;&nbsp;<label class="tagNameStr">暂无</label></span>
+							<span class="fmtCreateDate" title="<fmt:formatDate value="${qzSetting.createTime}" pattern="yyyy-MM-dd"></fmt:formatDate>">创建日期:<a href="javascript:;"><fmt:formatDate value="${qzSetting.createTime}" pattern="yyyy-MM-dd"></fmt:formatDate></a></span>
 							<div class="handle">
                                 <a class="blue" href="javascript:showExcludeCustomerKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain.trim()}','${qzSetting.pcGroup}','PC')">排除关键字</a>
                                 <shiro:hasPermission name="/internal/qzsetting/save">
@@ -551,12 +546,12 @@
 							<span class="contactPerson-name" title="${qzSetting.organizationName}"><a href="javascript:;">${qzSetting.organizationName}</a></span>
 							<span class="to-aizhan"><a href="https://www.aizhan.com/cha/${qzSetting.domain}" target="_blank" title="查看爱站">爱站</a></span>
 							<span class="to-5118"><a  href="https://www.5118.com/seo/${qzSetting.domain}" target="_blank" title="查看5118,需要登录">5118</a></span>
-							<span class="fmtDate" title="<fmt:formatDate value="${qzSetting.createTime}" pattern="yyyy-MM-dd"></fmt:formatDate>">创建时间:<a href="javascript:;"><fmt:formatDate value="${qzSetting.createTime}" pattern="yyyy-MM-dd"></fmt:formatDate></a></span>
-							<span class="fmtDate" title="<fmt:formatDate value="${qzSetting.standardTime}" pattern="yyyy-MM-dd"></fmt:formatDate>">达标时间:<a href="javascript:;">
+							<span class="fmtStandardDate" title="<fmt:formatDate value="${qzSetting.standardTime}" pattern="yyyy-MM-dd"></fmt:formatDate>">达标时间:<a href="javascript:;">
 								<c:if test="${qzSetting.standardTime == null}">无</c:if>
 								<c:if test="${qzSetting.standardTime != null}"><fmt:formatDate value="${qzSetting.standardTime}" pattern="yyyy-MM-dd"></fmt:formatDate></c:if>
 							</a></span>
 							<span class="tagNames" ondblclick="editTagNameStr($(this).find('label.tagNameStr')[0], true)"><label>分组标签:</label>&nbsp;&nbsp;<label class="tagNameStr">暂无</label></span>
+							<span class="fmtCreateDate" title="<fmt:formatDate value="${qzSetting.createTime}" pattern="yyyy-MM-dd"></fmt:formatDate>">创建时间:<a href="javascript:;"><fmt:formatDate value="${qzSetting.createTime}" pattern="yyyy-MM-dd"></fmt:formatDate></a></span>
 							<div class="handle">
                                 <a class="blue" href="javascript:showExcludeCustomerKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain.trim()}','${qzSetting.phoneGroup}','Phone')">排除关键字</a>
 								<shiro:hasPermission name="/internal/qzsetting/save">
@@ -585,7 +580,7 @@
 
 						<div class="body">
 							<div class="data-info-wrap">
-								<div class="baidu-rank">
+								<div class="user-id">
 									<a href="javascript:;">
 										<span class="line1">${qzSetting.userID}</span>
 										<span>用户名称</span>
@@ -1145,45 +1140,65 @@
 				</select>
 			</td>
 		</tr>
+		<shiro:hasPermission name="/internal/qzsetting/startMonitorImmediately">
+			<tr>
+				<td style="width:60px" align="right">爬取关键字</td>
+				<td>
+					<select name="qzSettingAutoCrawlKeywordFlag" id="qzSettingAutoCrawlKeywordFlag" style="width:240px">
+						<option value="1">是</option>
+						<option value="0" selected>否</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td style="width:60px" align="right">去掉没指数</td>
+				<td>
+					<select name="qzSettingIgnoreNoIndex" id="qzSettingIgnoreNoIndex"  style="width:240px">
+						<option value="1" selected>是</option>
+						<option value="0">否</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td style="width:60px" align="right">去掉没排名</td>
+				<td>
+					<select name="qzSettingIgnoreNoOrder" id="qzSettingIgnoreNoOrder"  style="width:240px">
+						<option value="1" selected>是</option>
+						<option value="0">否</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td style="width:60px" align="right">更新间隔</td>
+				<td>
+					<select name="qzSettingInterval" id="qzSettingInterval"  style="width:240px">
+						<option value="1">1天</option>
+						<option value="2">2天</option>
+						<option value="3">3天</option>
+						<option value="5">5天</option>
+						<option value="7">7天</option>
+						<option value="10">10天</option>
+						<option value="12">12天</option>
+						<option value="15" selected>15天</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td style="width:60px" align="right">达标监控</td>
+				<td>
+					<select name="qzSettingStartMonitor" id="qzSettingStartMonitor"  style="width:240px">
+						<option value="1">是</option>
+						<option value="0" selected>否</option>
+					</select>
+				</td>
+			</tr>
+		</shiro:hasPermission>
 		<tr>
-			<td style="width:60px" align="right">爬取关键字</td>
+			<td style="width:60px" align="right">加入达标计划</td>
 			<td>
-				<select name="qzSettingAutoCrawlKeywordFlag" id="qzSettingAutoCrawlKeywordFlag" style="width:240px">
-                    <option value="1">是</option>
+				<select name="qzSettingJoinReady" id="qzSettingJoinReady"  style="width:240px">
+					<option value="1">是</option>
 					<option value="0" selected>否</option>
-				</select>
-			</td>
-		</tr>
-		<tr>
-			<td style="width:60px" align="right">去掉没指数</td>
-			<td>
-				<select name="qzSettingIgnoreNoIndex" id="qzSettingIgnoreNoIndex"  style="width:240px">
-					<option value="1" selected>是</option>
-					<option value="0">否</option>
-				</select>
-			</td>
-		</tr>
-		<tr>
-			<td style="width:60px" align="right">去掉没排名</td>
-			<td>
-				<select name="qzSettingIgnoreNoOrder" id="qzSettingIgnoreNoOrder"  style="width:240px">
-					<option value="1" selected>是</option>
-					<option value="0">否</option>
-				</select>
-			</td>
-		</tr>
-		<tr>
-			<td style="width:60px" align="right">更新间隔</td>
-			<td>
-				<select name="qzSettingInterval" id="qzSettingInterval"  style="width:240px">
-					<option value="1">1天</option>
-					<option value="2">2天</option>
-					<option value="3">3天</option>
-					<option value="5">5天</option>
-					<option value="7">7天</option>
-					<option value="10">10天</option>
-					<option value="12">12天</option>
-					<option value="15" selected>15天</option>
 				</select>
 			</td>
 		</tr>

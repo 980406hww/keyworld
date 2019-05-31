@@ -264,26 +264,32 @@ ul {
     color: #000000;
 }
 
-.datalist-list .header span.fmtDate {
+.datalist-list .header span.fmtStandardDate, .datalist-list .header span.fmtCreateDate {
     max-width: 130px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
-.datalist-list .header span.fmtDate a {
+.datalist-list .header span.fmtStandardDate a, .datalist-list .header span.fmtCreateDate a {
     color: #000000;
 }
 
-.datalist-list .header span.fmtDate a:hover {
+.datalist-list .header span.fmtStandardDate a:hover, .datalist-list .header span.fmtCreateDate a:hover {
     color: #0c7df5;
+}
+
+.datalist-list .header span.fmtCreateDate {
+    position: absolute;
+    left: 900px;
+    z-index: 1;
 }
 
 .datalist-list .header span.tagNames {
     position: absolute;
-    left: 700px;
+    left: 570px;
     z-index: 1;
-    width: 600px;
+    width: 330px;
     color: #000000;
     max-width: 600px;
     overflow: hidden;
@@ -314,7 +320,7 @@ ul {
 }
 
 .datalist-list .body .data-info-wrap {
-    width: 556px;
+    width: 536px;
     float: left;
     height: 150px;
     text-align: center

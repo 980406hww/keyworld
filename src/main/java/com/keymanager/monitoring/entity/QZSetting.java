@@ -62,10 +62,10 @@ public class QZSetting extends BaseEntity{
 	private String updateStatus;
 
 	@TableField(value = "fIsMonitor")
-	private boolean isMonitor;
+	private boolean fIsMonitor;
 
 	@TableField(value = "fIsReady")
-	private boolean isReady;
+	private boolean fIsReady;
 
 	@TableField(value = "fUpdateStartTime")
 	private Date updateStartTime;
@@ -338,19 +338,19 @@ public class QZSetting extends BaseEntity{
 		this.standardTime = standardTime;
 	}
 
-	public boolean isMonitor () {
-		return isMonitor;
+	public boolean getfIsMonitor () {
+		return fIsMonitor;
 	}
 
-	public void setMonitor (boolean monitor) {
-		isMonitor = monitor;
+	public void setfIsMonitor (boolean fIsMonitor) {
+		this.fIsMonitor = fIsMonitor;
 	}
 
-	public boolean isReady () {
-		return isReady;
+	public boolean getfIsReady () {
+		return fIsReady;
 	}
 
-	public void setReady (boolean ready) {
-		isReady = ready;
+	public void setfIsReady (boolean fIsReady) {
+		this.fIsReady = fIsReady;
 	}
 }

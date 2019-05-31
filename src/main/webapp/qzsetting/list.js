@@ -761,7 +761,7 @@ function editTagNameStr(o, edit){
     if (edit) {
         o.innerHTML = o.innerHTML.replace(/(暂无)/g, '');
         var uuid = $(o).parent().parent().find("input[name='uuid']").val();
-        o.innerHTML = '<input type="text" label="'+ o.innerHTML +'" uuid="'+ uuid +'" style="width: 400px;" value="' + o.innerHTML + '" onblur="editTagNameStr(this)">';
+        o.innerHTML = '<input type="text" label="'+ o.innerHTML +'" uuid="'+ uuid +'" style="width: 250px;" value="' + o.innerHTML + '" onblur="editTagNameStr(this)">';
         o.getElementsByTagName('input')[0].focus();
     } else {
         var isChange = true;
@@ -1331,9 +1331,6 @@ function immediatelyUpdateQZSettings(type) {
         case "startMonitor":
             urlType = "startMonitorImmediately";
             break;
-        case "joinReady":
-            urlType = "joinReadyImmediately";
-            break;
         default:
             break;
     }
@@ -1346,9 +1343,6 @@ function updateImmediately(uuids, urlType) {
             break;
         case "startMonitorImmediately":
             if (confirm("确实要启动这些站点的达标监控吗？") == false) return;
-            break;
-        case "joinReadyImmediately":
-            if (confirm("确实这些站点要加入达标计划吗？") == false) return;
             break;
         default:
             break;
@@ -1732,6 +1726,8 @@ function resetSettingDialog() {
     settingDialogDiv.find("#qzSettingIgnoreNoIndex").val("1");
     settingDialogDiv.find("#qzSettingIgnoreNoOrder").val("1");
     settingDialogDiv.find("#qzSettingInterval").val("2");
+    settingDialogDiv.find("#qzSettingStartMonitor").val("0");
+    settingDialogDiv.find("#qzSettingJoinReady").val("0");
     clearInfo("Both");
 }
 function clearInfo(type) {
@@ -1773,6 +1769,7 @@ function showSettingDialog(uuid, self) {
         type: 'Get',
         success: function (qzSetting) {
             if(qzSetting != null){
+                console.log(qzSetting);
                 initSettingDialog(qzSetting);
                 createSettingDialog();
             }else{
@@ -1785,6 +1782,7 @@ function showSettingDialog(uuid, self) {
     });
 }
 function initSettingDialog(qzSetting) {
+    console.log(qzSetting);
     var PCType = false;
     var PhoneType = false;
     var settingDialogDiv = $("#changeSettingDialog");
@@ -1799,6 +1797,8 @@ function initSettingDialog(qzSetting) {
     settingDialogDiv.find("#qzSettingIgnoreNoOrder").val(qzSetting.ignoreNoOrder ? "1" : "0");
     settingDialogDiv.find("#qzSettingInterval").val(
         qzSetting.updateInterval != null ? qzSetting.updateInterval : "");
+    settingDialogDiv.find("#qzSettingStartMonitor").val(qzSetting.fIsMonitor ? "1" : "0");
+    settingDialogDiv.find("#qzSettingJoinReady").val(qzSetting.fIsReady ? "1" : "0");
     settingDialogDiv.find("#qzSettingEntryType").val(
         qzSetting.type != null ? qzSetting.type : "");
     // 操作类型表填充数据
@@ -1865,6 +1865,8 @@ function saveChangeSetting() {
     qzSetting.ignoreNoIndex = settingDialogDiv.find("#qzSettingIgnoreNoIndex").val() === "1" ? true : false;
     qzSetting.ignoreNoOrder = settingDialogDiv.find("#qzSettingIgnoreNoOrder").val() === "1" ? true : false;
     qzSetting.updateInterval = settingDialogDiv.find("#qzSettingInterval").val();
+    qzSetting.fIsMonitor = settingDialogDiv.find("#qzSettingStartMonitor").val() === "1" ? true : false;
+    qzSetting.fIsReady = settingDialogDiv.find("#qzSettingJoinReady").val() === "1" ? true : false;
     qzSetting.pcGroup = settingDialogDiv.find("#groupPC").val().trim();
     qzSetting.phoneGroup = settingDialogDiv.find("#groupPhone").val().trim();
     if(qzSetting.pcGroup == "") {

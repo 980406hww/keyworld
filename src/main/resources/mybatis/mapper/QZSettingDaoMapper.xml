@@ -422,11 +422,4 @@
         WHERE qs.fUuid IN (${uuids})
     </update>
 
-    <update id="joinReadyImmediately" parameterType="java.lang.String">
-        UPDATE t_qz_setting  qs
-        SET qs.fUpdateTime = NOW(),
-        qs.fIsReady = 1
-        WHERE qs.fUuid IN (${uuids})
-    </update>
-
 </mapper>

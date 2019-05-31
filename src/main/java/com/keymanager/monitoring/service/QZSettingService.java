@@ -148,6 +148,8 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			existingQZSetting.setIgnoreNoIndex(qzSetting.isIgnoreNoIndex());
 			existingQZSetting.setIgnoreNoOrder(qzSetting.isIgnoreNoOrder());
 			existingQZSetting.setUpdateInterval(qzSetting.getUpdateInterval());
+			existingQZSetting.setfIsMonitor(qzSetting.getfIsMonitor());
+			existingQZSetting.setfIsReady(qzSetting.getfIsReady());
 			existingQZSetting.setUpdateTime(new Date());
 			existingQZSetting.setCaptureCurrentKeywordCountTime(qzSetting.getCaptureCurrentKeywordCountTime());
 			existingQZSetting.setCaptureCurrentKeywordStatus(qzSetting.getCaptureCurrentKeywordStatus());
@@ -734,11 +736,5 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 	public void updateQzSetting (QZSetting qzSetting) {
 		qzSettingDao.updateQzSetting(qzSetting);
-	}
-
-	public void joinReadyImmediately (String uuids) {
-		if(StringUtils.isNotEmpty(uuids)){
-			qzSettingDao.joinReadyImmediately(uuids);
-		}
 	}
 }
