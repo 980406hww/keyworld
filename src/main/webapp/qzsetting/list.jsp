@@ -251,6 +251,7 @@
 
 <div class="datalist">
 	<div class="datalist-list">
+		<input type="hidden" id="isSEO" value="${isSEO}">
 		<ul>
 			<c:forEach items="${page.records}" var="qzSetting" varStatus="status">
 				<c:choose>
@@ -911,40 +912,45 @@
 						<td colspan="4"><input type="text" name="currentKeywordCount" id="currentKeywordCountPC" style="width:240px;margin-left: -6;" readonly/></td>
 					</tr>
 					<shiro:hasPermission name="/internal/qzsetting/delete">
-					<tr>
-						<td align="right" style="width:72px">限制词量</td>
-						<td colspan="4"><input type="text" name="maxKeywordCount" id="maxKeywordCountPC" style="width:240px;margin-left: -6;"/></td>
-					</tr>
+						<c:if test="${not isSEO}">
+							<tr>
+								<td align="right" style="width:72px">限制词量</td>
+								<td colspan="4"><input type="text" name="maxKeywordCount" id="maxKeywordCountPC" style="width:240px;margin-left: -6;"/></td>
+							</tr>
+						</c:if>
 					</shiro:hasPermission>
 					<input type="hidden" id="qzSettingUuidPC" name="qzOperationTypeUuid" value="" />
-					<tr>
-						<td align="right" style="width:72px">达标条件</td>
-						<td>
-							<input type="radio" name="standardTypePC" id="satisfyOnePC" value="satisfyOne" checked="checked">满足其中一个&nbsp;&nbsp;
-							<input type="radio" name="standardTypePC" id="satisfyAllPC" value="satisfyAll">满足全部&nbsp;&nbsp;
-						</td>
-					</tr>
-					<tr>
-						<td align="right" style="width:72px">达标类型</td>
-						<td title="爱站和5118不能同时选中">
-							<input type="checkbox" name="standardSpecies" id="aiZhanPCStandardSpecies" onclick="checkedStandardSpecies(this, 'PC')" value="aiZhan">爱站&nbsp;&nbsp;
-							<input type="checkbox" name="standardSpecies" id="5118PCStandardSpecies" onclick="checkedStandardSpecies(this, 'PC')" value="5118">5118&nbsp;&nbsp;
-							<input type="checkbox" name="standardSpecies" id="designationWordPCStandardSpecies" onclick="checkedStandardSpecies(this, 'PC')" value="designationWord">指定词&nbsp;&nbsp;
-						</td>
-					</tr>
+					<c:if test="${not isSEO}">
+						<tr>
+							<td align="right" style="width:72px">达标条件</td>
+							<td>
+								<input type="radio" name="standardTypePC" id="satisfyOnePC" value="satisfyOne" checked="checked">满足其中一个&nbsp;&nbsp;
+								<input type="radio" name="standardTypePC" id="satisfyAllPC" value="satisfyAll">满足全部&nbsp;&nbsp;
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width:72px">达标类型</td>
+							<td title="爱站和5118不能同时选中">
+								<input type="checkbox" name="standardSpecies" id="aiZhanPCStandardSpecies" onclick="checkedStandardSpecies(this, 'PC')" value="aiZhan">爱站&nbsp;&nbsp;
+								<input type="checkbox" name="standardSpecies" id="5118PCStandardSpecies" onclick="checkedStandardSpecies(this, 'PC')" value="5118">5118&nbsp;&nbsp;
+								<input type="checkbox" name="standardSpecies" id="designationWordPCStandardSpecies" onclick="checkedStandardSpecies(this, 'PC')" value="designationWord">指定词&nbsp;&nbsp;
+							</td>
+						</tr>
+					</c:if>
 				</table>
 			</td>
 		</tr>
 		<%--电脑规则信息--%>
-		<tr id="pcChargeRuleTable">
-			<td colspan="2" id="ruleHeightPC">
-				<table border="1" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="chargeRuleaiZhanPC">
-					<thead>
+		<c:if test="${not isSEO}">
+			<tr id="pcChargeRuleTable">
+				<td colspan="2" id="ruleHeightPC">
+					<table border="1" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="chargeRuleaiZhanPC">
+						<thead>
 						<tr>
 							<td align="center" colspan="5">爱站</td>
 						</tr>
-					</thead>
-					<tbody>
+						</thead>
+						<tbody>
 						<tr>
 							<td style="width:50px">序号</td>
 							<td style="width:72px">起始词数</td>
@@ -957,15 +963,15 @@
 								<input name="addRule" type="button" value="增加规则" onclick="addRow('chargeRuleaiZhanPC')" />
 							</td>
 						</tr>
-					</tbody>
-				</table>
-				<table border="1" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="chargeRule5118PC">
-					<thead>
+						</tbody>
+					</table>
+					<table border="1" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="chargeRule5118PC">
+						<thead>
 						<tr>
 							<td align="center" colspan="5">5118</td>
 						</tr>
-					</thead>
-					<tbody>
+						</thead>
+						<tbody>
 						<tr>
 							<td style="width:50px">序号</td>
 							<td style="width:72px">起始词数</td>
@@ -978,15 +984,15 @@
 								<input name="addRule" type="button" value="增加规则" onclick="addRow('chargeRule5118PC')" />
 							</td>
 						</tr>
-					</tbody>
-				</table>
-				<table border="1" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="chargeRuledesignationWordPC">
-					<thead>
+						</tbody>
+					</table>
+					<table border="1" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="chargeRuledesignationWordPC">
+						<thead>
 						<tr>
 							<td align="center" colspan="5">指定词</td>
 						</tr>
-					</thead>
-					<tbody>
+						</thead>
+						<tbody>
 						<tr>
 							<td style="width:50px">序号</td>
 							<td style="width:72px">起始词数</td>
@@ -999,10 +1005,11 @@
 								<input name="addRule" type="button" value="增加规则" onclick="addRow('chargeRuledesignationWordPC')" />
 							</td>
 						</tr>
-					</tbody>
-				</table>
-			</td>
-		</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+		</c:if>
 
 		<tr>
 			<td colspan="2">
@@ -1030,98 +1037,104 @@
 						<td colspan="4"><input type="text" name="currentKeywordCount" id="currentKeywordCountPhone"  style="width:240px;margin-left: -6;" readonly/></td>
 					</tr>
 					<shiro:hasPermission name="/internal/qzsetting/delete">
-					<tr>
-						<td align="right" style="width:72px">限制词量</td>
-						<td colspan="4"><input type="text" name="maxKeywordCount" id="maxKeywordCountPhone" style="width:240px;margin-left: -6;"/></td>
-					</tr>
+					<c:if test="${not isSEO}">
+						<tr>
+							<td align="right" style="width:72px">限制词量</td>
+							<td colspan="4"><input type="text" name="maxKeywordCount" id="maxKeywordCountPhone" style="width:240px;margin-left: -6;"/></td>
+						</tr>
+					</c:if>
 					</shiro:hasPermission>
 					<input type="hidden" id="qzSettingUuidPhone" name="qzOperationTypeUuid" value="" />
-					<tr>
-						<td align="right" style="width:72px">达标条件</td>
-						<td>
-							<input type="radio" name="standardTypePhone" id="satisfyOnePhone" value="satisfyOne" checked="checked">满足其中一个&nbsp;&nbsp;
-							<input type="radio" name="standardTypePhone" id="satisfyAllPhone" value="satisfyAll">满足全部&nbsp;&nbsp;
-						</td>
-					</tr>
-					<tr>
-						<td align="right" style="width:72px">达标类型</td>
-						<td title="爱站和5118不能同时选中">
-							<input type="checkbox" name="standardSpecies" id="aiZhanPhoneStandardSpecies" onclick="checkedStandardSpecies(this, 'Phone')" value="aiZhan">爱站&nbsp;&nbsp;
-							<input type="checkbox" name="standardSpecies" id="5118PhoneStandardSpecies" onclick="checkedStandardSpecies(this, 'Phone')" value="5118">5118&nbsp;&nbsp;
-							<input type="checkbox" name="standardSpecies" id="designationWordPhoneStandardSpecies" onclick="checkedStandardSpecies(this, 'Phone')" value="designationWord">指定词&nbsp;&nbsp;
-						</td>
-					</tr>
+					<c:if test="${not isSEO}">
+						<tr>
+							<td align="right" style="width:72px">达标条件</td>
+							<td>
+								<input type="radio" name="standardTypePhone" id="satisfyOnePhone" value="satisfyOne" checked="checked">满足其中一个&nbsp;&nbsp;
+								<input type="radio" name="standardTypePhone" id="satisfyAllPhone" value="satisfyAll">满足全部&nbsp;&nbsp;
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width:72px">达标类型</td>
+							<td title="爱站和5118不能同时选中">
+								<input type="checkbox" name="standardSpecies" id="aiZhanPhoneStandardSpecies" onclick="checkedStandardSpecies(this, 'Phone')" value="aiZhan">爱站&nbsp;&nbsp;
+								<input type="checkbox" name="standardSpecies" id="5118PhoneStandardSpecies" onclick="checkedStandardSpecies(this, 'Phone')" value="5118">5118&nbsp;&nbsp;
+								<input type="checkbox" name="standardSpecies" id="designationWordPhoneStandardSpecies" onclick="checkedStandardSpecies(this, 'Phone')" value="designationWord">指定词&nbsp;&nbsp;
+							</td>
+						</tr>
+					</c:if>
 				</table>
 			</td>
 		</tr>
 		<%--手机规则信息--%>
-		<tr id="phoneChargeRuleTable">
-			<td colspan="2" id="ruleHeightPhone">
-				<table border="1" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="chargeRuleaiZhanPhone">
-					<thead>
-					<tr>
-						<td align="center" colspan="5">爱站</td>
-					</tr>
-					</thead>
-					<tbody>
-					<tr>
-						<td style="width:50px">序号</td>
-						<td style="width:72px">起始词数</td>
-						<td style="width:72px">终止词数</td>
-						<td style="width:50px">价格</td>
-						<td style="width:46px">操作</td>
-					</tr>
-					<tr>
-						<td colspan="5">
-							<input name="addRule" type="button" value="增加规则" onclick="addRow('chargeRuleaiZhanPhone')" />
-						</td>
-					</tr>
-					</tbody>
-				</table>
-				<table border="1" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="chargeRule5118Phone">
-					<thead>
-					<tr>
-						<td align="center" colspan="5">5118</td>
-					</tr>
-					</thead>
-					<tbody>
-					<tr>
-						<td style="width:50px">序号</td>
-						<td style="width:72px">起始词数</td>
-						<td style="width:72px">终止词数</td>
-						<td style="width:50px">价格</td>
-						<td style="width:46px">操作</td>
-					</tr>
-					<tr>
-						<td colspan="5">
-							<input name="addRule" type="button" value="增加规则" onclick="addRow('chargeRule5118Phone')" />
-						</td>
-					</tr>
-					</tbody>
-				</table>
-				<table border="1" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="chargeRuledesignationWordPhone">
-					<thead>
-					<tr>
-						<td align="center" colspan="5">指定词</td>
-					</tr>
-					</thead>
-					<tbody>
-					<tr>
-						<td style="width:50px">序号</td>
-						<td style="width:72px">起始词数</td>
-						<td style="width:72px">终止词数</td>
-						<td style="width:50px">价格</td>
-						<td style="width:46px">操作</td>
-					</tr>
-					<tr>
-						<td colspan="5">
-							<input name="addRule" type="button" value="增加规则" onclick="addRow('chargeRuledesignationWordPhone')" />
-						</td>
-					</tr>
-					</tbody>
-				</table>
-			</td>
-		</tr>
+		<c:if test="${not isSEO}">
+			<tr id="phoneChargeRuleTable">
+				<td colspan="2" id="ruleHeightPhone">
+					<table border="1" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="chargeRuleaiZhanPhone">
+						<thead>
+						<tr>
+							<td align="center" colspan="5">爱站</td>
+						</tr>
+						</thead>
+						<tbody>
+						<tr>
+							<td style="width:50px">序号</td>
+							<td style="width:72px">起始词数</td>
+							<td style="width:72px">终止词数</td>
+							<td style="width:50px">价格</td>
+							<td style="width:46px">操作</td>
+						</tr>
+						<tr>
+							<td colspan="5">
+								<input name="addRule" type="button" value="增加规则" onclick="addRow('chargeRuleaiZhanPhone')" />
+							</td>
+						</tr>
+						</tbody>
+					</table>
+					<table border="1" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="chargeRule5118Phone">
+						<thead>
+						<tr>
+							<td align="center" colspan="5">5118</td>
+						</tr>
+						</thead>
+						<tbody>
+						<tr>
+							<td style="width:50px">序号</td>
+							<td style="width:72px">起始词数</td>
+							<td style="width:72px">终止词数</td>
+							<td style="width:50px">价格</td>
+							<td style="width:46px">操作</td>
+						</tr>
+						<tr>
+							<td colspan="5">
+								<input name="addRule" type="button" value="增加规则" onclick="addRow('chargeRule5118Phone')" />
+							</td>
+						</tr>
+						</tbody>
+					</table>
+					<table border="1" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="chargeRuledesignationWordPhone">
+						<thead>
+						<tr>
+							<td align="center" colspan="5">指定词</td>
+						</tr>
+						</thead>
+						<tbody>
+						<tr>
+							<td style="width:50px">序号</td>
+							<td style="width:72px">起始词数</td>
+							<td style="width:72px">终止词数</td>
+							<td style="width:50px">价格</td>
+							<td style="width:46px">操作</td>
+						</tr>
+						<tr>
+							<td colspan="5">
+								<input name="addRule" type="button" value="增加规则" onclick="addRow('chargeRuledesignationWordPhone')" />
+							</td>
+						</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+		</c:if>
 
         <tr>
             <td style="width:60px" align="right">标签</td>
@@ -1141,67 +1154,71 @@
 			</td>
 		</tr>
 		<shiro:hasPermission name="/internal/qzsetting/startMonitorImmediately">
-			<tr>
-				<td style="width:60px" align="right">爬取关键字</td>
-				<td>
-					<select name="qzSettingAutoCrawlKeywordFlag" id="qzSettingAutoCrawlKeywordFlag" style="width:240px">
-						<option value="1">是</option>
-						<option value="0" selected>否</option>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td style="width:60px" align="right">去掉没指数</td>
-				<td>
-					<select name="qzSettingIgnoreNoIndex" id="qzSettingIgnoreNoIndex"  style="width:240px">
-						<option value="1" selected>是</option>
-						<option value="0">否</option>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td style="width:60px" align="right">去掉没排名</td>
-				<td>
-					<select name="qzSettingIgnoreNoOrder" id="qzSettingIgnoreNoOrder"  style="width:240px">
-						<option value="1" selected>是</option>
-						<option value="0">否</option>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td style="width:60px" align="right">更新间隔</td>
-				<td>
-					<select name="qzSettingInterval" id="qzSettingInterval"  style="width:240px">
-						<option value="1">1天</option>
-						<option value="2">2天</option>
-						<option value="3">3天</option>
-						<option value="5">5天</option>
-						<option value="7">7天</option>
-						<option value="10">10天</option>
-						<option value="12">12天</option>
-						<option value="15" selected>15天</option>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td style="width:60px" align="right">达标监控</td>
-				<td>
-					<select name="qzSettingStartMonitor" id="qzSettingStartMonitor"  style="width:240px">
-						<option value="1">是</option>
-						<option value="0" selected>否</option>
-					</select>
-				</td>
-			</tr>
+			<c:if test="${not isSEO}">
+				<tr>
+					<td style="width:60px" align="right">爬取关键字</td>
+					<td>
+						<select name="qzSettingAutoCrawlKeywordFlag" id="qzSettingAutoCrawlKeywordFlag" style="width:240px">
+							<option value="1">是</option>
+							<option value="0" selected>否</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td style="width:60px" align="right">去掉没指数</td>
+					<td>
+						<select name="qzSettingIgnoreNoIndex" id="qzSettingIgnoreNoIndex"  style="width:240px">
+							<option value="1" selected>是</option>
+							<option value="0">否</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td style="width:60px" align="right">去掉没排名</td>
+					<td>
+						<select name="qzSettingIgnoreNoOrder" id="qzSettingIgnoreNoOrder"  style="width:240px">
+							<option value="1" selected>是</option>
+							<option value="0">否</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td style="width:60px" align="right">更新间隔</td>
+					<td>
+						<select name="qzSettingInterval" id="qzSettingInterval"  style="width:240px">
+							<option value="1">1天</option>
+							<option value="2">2天</option>
+							<option value="3">3天</option>
+							<option value="5">5天</option>
+							<option value="7">7天</option>
+							<option value="10">10天</option>
+							<option value="12">12天</option>
+							<option value="15" selected>15天</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td style="width:60px" align="right">达标监控</td>
+					<td>
+						<select name="qzSettingStartMonitor" id="qzSettingStartMonitor"  style="width:240px">
+							<option value="1">是</option>
+							<option value="0" selected>否</option>
+						</select>
+					</td>
+				</tr>
+			</c:if>
 		</shiro:hasPermission>
-		<tr>
-			<td style="width:60px" align="right">加入达标计划</td>
-			<td>
-				<select name="qzSettingJoinReady" id="qzSettingJoinReady"  style="width:240px">
-					<option value="1">是</option>
-					<option value="0" selected>否</option>
-				</select>
-			</td>
-		</tr>
+		<c:if test="${not isSEO}">
+			<tr>
+				<td style="width:60px" align="right">加入达标计划</td>
+				<td>
+					<select name="qzSettingJoinReady" id="qzSettingJoinReady"  style="width:240px">
+						<option value="1">是</option>
+						<option value="0" selected>否</option>
+					</select>
+				</td>
+			</tr>
+		</c:if>
 	</table>
 	</form>
 </div>

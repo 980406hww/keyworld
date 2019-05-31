@@ -1771,7 +1771,6 @@ function showSettingDialog(uuid, self) {
         type: 'Get',
         success: function (qzSetting) {
             if(qzSetting != null){
-                console.log(qzSetting);
                 initSettingDialog(qzSetting);
                 createSettingDialog();
             }else{
@@ -1784,7 +1783,6 @@ function showSettingDialog(uuid, self) {
     });
 }
 function initSettingDialog(qzSetting) {
-    console.log(qzSetting);
     var PCType = false;
     var PhoneType = false;
     var settingDialogDiv = $("#changeSettingDialog");
@@ -1863,12 +1861,27 @@ function saveChangeSetting() {
         return;
     }
     qzSetting.bearPawNumber = settingDialogDiv.find("#bearPawNumber").val().trim();
-    qzSetting.autoCrawlKeywordFlag = settingDialogDiv.find("#qzSettingAutoCrawlKeywordFlag").val() === "1" ? true : false;
-    qzSetting.ignoreNoIndex = settingDialogDiv.find("#qzSettingIgnoreNoIndex").val() === "1" ? true : false;
-    qzSetting.ignoreNoOrder = settingDialogDiv.find("#qzSettingIgnoreNoOrder").val() === "1" ? true : false;
-    qzSetting.updateInterval = settingDialogDiv.find("#qzSettingInterval").val();
-    qzSetting.fIsMonitor = settingDialogDiv.find("#qzSettingStartMonitor").val() === "1" ? true : false;
-    qzSetting.fIsReady = settingDialogDiv.find("#qzSettingJoinReady").val() === "1" ? true : false;
+    if (settingDialogDiv.find("#qzSettingAutoCrawlKeywordFlag").length > 0) {
+        qzSetting.autoCrawlKeywordFlag = settingDialogDiv.find("#qzSettingAutoCrawlKeywordFlag").val() === "1" ? true : false;
+        qzSetting.ignoreNoIndex = settingDialogDiv.find("#qzSettingIgnoreNoIndex").val() === "1" ? true : false;
+        qzSetting.ignoreNoOrder = settingDialogDiv.find("#qzSettingIgnoreNoOrder").val() === "1" ? true : false;
+        qzSetting.updateInterval = settingDialogDiv.find("#qzSettingInterval").val();
+    } else {
+        qzSetting.autoCrawlKeywordFlag = false;
+        qzSetting.ignoreNoIndex = true;
+        qzSetting.ignoreNoOrder = true;
+        qzSetting.updateInterval = 2;
+    }
+    if (settingDialogDiv.find("#qzSettingStartMonitor").length > 0) {
+        qzSetting.fIsMonitor = settingDialogDiv.find("#qzSettingStartMonitor").val() === "1" ? true : false;
+    } else {
+        qzSetting.fIsMonitor = false;
+    }
+    if (settingDialogDiv.find("#qzSettingJoinReady").length > 0) {
+        qzSetting.fIsReady = settingDialogDiv.find("#qzSettingJoinReady").val() === "1" ? true : false;
+    } else {
+        qzSetting.fIsReady = false;
+    }
     qzSetting.pcGroup = settingDialogDiv.find("#groupPC").val().trim();
     qzSetting.phoneGroup = settingDialogDiv.find("#groupPhone").val().trim();
     if(qzSetting.pcGroup == "") {
@@ -1916,9 +1929,10 @@ function saveChangeSetting() {
         var maxKeywordCount = settingDialogDiv.find("#maxKeywordCount" + val.id).val();
         if (maxKeywordCount !== undefined) {
             operationType.maxKeywordCount = maxKeywordCount.trim();
+        } else {
+            operationType.maxKeywordCount = 1000;
         }
         operationType.subDomainName = settingDialogDiv.find("#subDomainName" + val.id).val().trim();
-        operationType.standardType = settingDialogDiv.find("input[name='standardType"+ val.id +"']:radio:checked").val();
         if (operationType.group == null || operationType.group === "") {
             alert("请输入分组");
             settingDialogDiv.find("#group" + val.id).focus();
@@ -1942,88 +1956,100 @@ function saveChangeSetting() {
             validationFlag = false;
             return false;
         }
-        var standardSpeciesObjs = $("#operationTypeSummaryInfo"+val.id).find("input[name='standardSpecies']:checkbox:checked");
-        $.each(standardSpeciesObjs, function (i, v) {
-            var endKeyWordCountValue = -1;
-            //多条规则
-            var ruleObj = settingDialogDiv.find("#chargeRule" + $(v).val() + val.id);
-            var trObjs = ruleObj.find("tbody tr:not(:first,:last)");
-            $.each(trObjs, function (idx, val) {
-                var startKeywordCountObj = $(val).find("input[name=startKeywordCount]");
-                var endKeywordCountObj = $(val).find("input[name=endKeywordCount]");
-                var amountObj = $(val).find("input[name=amount]");
 
-                var chargeRule = {};
-                chargeRule.standardSpecies = $(v).val();
-                chargeRule.startKeywordCount = startKeywordCountObj.val().trim();
-                chargeRule.endKeywordCount = endKeywordCountObj.val().trim();
-                chargeRule.amount = amountObj.val().trim();
-                operationType.qzChargeRules.push(chargeRule);
+        var isSEO = $(".datalist-list #isSEO").val();
+        if (isSEO === "true") {
+            operationType.standardType = "satisfyOne";
+            var chargeRule = {};
+            chargeRule.standardSpecies = 'aiZhan';
+            chargeRule.startKeywordCount = 1;
+            chargeRule.endKeywordCount = 2;
+            chargeRule.amount = 3;
+            operationType.qzChargeRules.push(chargeRule);
+        } else {
+            operationType.standardType = settingDialogDiv.find("input[name='standardType"+ val.id +"']:radio:checked").val();
+            var standardSpeciesObjs = $("#operationTypeSummaryInfo"+val.id).find("input[name='standardSpecies']:checkbox:checked");
+            $.each(standardSpeciesObjs, function (i, v) {
+                var endKeyWordCountValue = -1;
+                //多条规则
+                var ruleObj = settingDialogDiv.find("#chargeRule" + $(v).val() + val.id);
+                var trObjs = ruleObj.find("tbody tr:not(:first,:last)");
+                $.each(trObjs, function (idx, val) {
+                    var startKeywordCountObj = $(val).find("input[name=startKeywordCount]");
+                    var endKeywordCountObj = $(val).find("input[name=endKeywordCount]");
+                    var amountObj = $(val).find("input[name=amount]");
 
-                if (startKeywordCountObj.val() == null || startKeywordCountObj.val().trim() == "") {
-                    alert("请输入起始词数");
-                    startKeywordCountObj[0].focus();
-                    validationFlag = false;
-                    return false;
-                }
-                if (!reg.test(startKeywordCountObj.val().trim())) {
-                    alert("请输入数字");
-                    startKeywordCountObj.focus();
-                    validationFlag = false;
-                    return false;
-                }
-                var skc = Number(startKeywordCountObj.val().trim());
-                if (skc <= endKeyWordCountValue) {
-                    alert("起始词数过小");
-                    startKeywordCountObj.focus();
-                    validationFlag = false;
-                    return false;
-                }
-                if (idx < (trObjs.length - 1)) {
-                    if (endKeywordCountObj.val() == null || endKeywordCountObj.val().trim() == "") {
-                        alert("请输入终止词数");
-                        endKeywordCountObj.focus();
+                    var chargeRule = {};
+                    chargeRule.standardSpecies = $(v).val();
+                    chargeRule.startKeywordCount = startKeywordCountObj.val().trim();
+                    chargeRule.endKeywordCount = endKeywordCountObj.val().trim();
+                    chargeRule.amount = amountObj.val().trim();
+                    operationType.qzChargeRules.push(chargeRule);
+
+                    if (startKeywordCountObj.val() == null || startKeywordCountObj.val().trim() == "") {
+                        alert("请输入起始词数");
+                        startKeywordCountObj[0].focus();
                         validationFlag = false;
                         return false;
                     }
-                } else {
-                    if(endKeywordCountObj.val() != "" && operationType.currentKeywordCount>Number(endKeywordCountObj.val())){
-                        alert("最后一条规则中的终止词量必须大于当前词量");
-                        endKeywordCountObj.focus();
-                        validationFlag = false;
-                        return false;
-                    }
-                }
-                if (endKeywordCountObj.val() != "") {
-                    if (!reg.test(endKeywordCountObj.val())) {
+                    if (!reg.test(startKeywordCountObj.val().trim())) {
                         alert("请输入数字");
-                        endKeywordCountObj.focus();
+                        startKeywordCountObj.focus();
                         validationFlag = false;
                         return false;
                     }
-                    if (Number(endKeywordCountObj.val().trim()) <= skc) {
-                        alert("终止词数必须大于起始词数");
-                        endKeywordCountObj.focus();
+                    var skc = Number(startKeywordCountObj.val().trim());
+                    if (skc <= endKeyWordCountValue) {
+                        alert("起始词数过小");
+                        startKeywordCountObj.focus();
                         validationFlag = false;
                         return false;
                     }
-                }
-                if (amountObj.val() == null || amountObj.val().trim() == "") {
-                    alert("请输入价格");
-                    amountObj.focus();
-                    validationFlag = false;
-                    return false;
-                }
-                if (!reg.test(amountObj.val().trim())) {
-                    alert("输入的价格不合理");
-                    amountObj.focus();
-                    validationFlag = false;
-                    return false;
-                }
-                endKeyWordCountValue = Number(endKeywordCountObj.val().trim());
+                    if (idx < (trObjs.length - 1)) {
+                        if (endKeywordCountObj.val() == null || endKeywordCountObj.val().trim() == "") {
+                            alert("请输入终止词数");
+                            endKeywordCountObj.focus();
+                            validationFlag = false;
+                            return false;
+                        }
+                    } else {
+                        if(endKeywordCountObj.val() != "" && operationType.currentKeywordCount>Number(endKeywordCountObj.val())){
+                            alert("最后一条规则中的终止词量必须大于当前词量");
+                            endKeywordCountObj.focus();
+                            validationFlag = false;
+                            return false;
+                        }
+                    }
+                    if (endKeywordCountObj.val() != "") {
+                        if (!reg.test(endKeywordCountObj.val())) {
+                            alert("请输入数字");
+                            endKeywordCountObj.focus();
+                            validationFlag = false;
+                            return false;
+                        }
+                        if (Number(endKeywordCountObj.val().trim()) <= skc) {
+                            alert("终止词数必须大于起始词数");
+                            endKeywordCountObj.focus();
+                            validationFlag = false;
+                            return false;
+                        }
+                    }
+                    if (amountObj.val() == null || amountObj.val().trim() == "") {
+                        alert("请输入价格");
+                        amountObj.focus();
+                        validationFlag = false;
+                        return false;
+                    }
+                    if (!reg.test(amountObj.val().trim())) {
+                        alert("输入的价格不合理");
+                        amountObj.focus();
+                        validationFlag = false;
+                        return false;
+                    }
+                    endKeyWordCountValue = Number(endKeywordCountObj.val().trim());
+                });
             });
-        });
-
+        }
         if (!validationFlag) {
             return false;
         }
@@ -2063,19 +2089,21 @@ function addRow(tableID){
 }
 function addRow(tableID, chargeRule){
     var tableObj = $("#" + tableID + " tbody");
-    var rowCount = tableObj.find("tr").length;
-    var newRow = tableObj[0].insertRow(rowCount - 1); //插入新行
+    if (tableObj.length > 0) {
+        var rowCount = tableObj.find("tr").length;
+        var newRow = tableObj[0].insertRow(rowCount - 1); //插入新行
 
-    var col1 = newRow.insertCell(0);
-    col1.innerHTML="<input type='text' name='sequenceID' value='"+(rowCount - 1)+"' style='width:100%'/>";
-    var col2 = newRow.insertCell(1);
-    col2.innerHTML = "<input type='text' name='startKeywordCount' value='"+(chargeRule != null ? chargeRule.startKeywordCount : '')+"' style='width:100%'/>";
-    var col3 = newRow.insertCell(2);
-    col3.innerHTML = "<input type='text' name='endKeywordCount' value='"+((chargeRule != null && chargeRule.endKeywordCount != null) ? chargeRule.endKeywordCount : '')+"'  style='width:100%'/>";
-    var col4 = newRow.insertCell(3);
-    col4.innerHTML = "<input type='text' name='amount' value='"+(chargeRule != null ? chargeRule.amount : '')+"'  style='width:100%'/>";
-    var col5 = newRow.insertCell(4);
-    col5.innerHTML = "<input style='width:100%' type='button' value='删除' onclick='deleteCurrentRow(this.parentNode.parentNode)' />";
+        var col1 = newRow.insertCell(0);
+        col1.innerHTML="<input type='text' name='sequenceID' value='"+(rowCount - 1)+"' style='width:100%'/>";
+        var col2 = newRow.insertCell(1);
+        col2.innerHTML = "<input type='text' name='startKeywordCount' value='"+(chargeRule != null ? chargeRule.startKeywordCount : '')+"' style='width:100%'/>";
+        var col3 = newRow.insertCell(2);
+        col3.innerHTML = "<input type='text' name='endKeywordCount' value='"+((chargeRule != null && chargeRule.endKeywordCount != null) ? chargeRule.endKeywordCount : '')+"'  style='width:100%'/>";
+        var col4 = newRow.insertCell(3);
+        col4.innerHTML = "<input type='text' name='amount' value='"+(chargeRule != null ? chargeRule.amount : '')+"'  style='width:100%'/>";
+        var col5 = newRow.insertCell(4);
+        col5.innerHTML = "<input style='width:100%' type='button' value='删除' onclick='deleteCurrentRow(this.parentNode.parentNode)' />";
+    }
 }
 function deleteCurrentRow(currentRow) {
     var index = currentRow.rowIndex;
@@ -2091,18 +2119,23 @@ function deleteCurrentRow(currentRow) {
 }
 function dealSettingTable(operationType) {
     var settingDialogDiv = $("#changeSettingDialog");
+    var isSEO = $(".datalist-list #isSEO").val();
     var groupObj = settingDialogDiv.find('#operationTypeSummaryInfo' + operationType);
     var checkboxObj = settingDialogDiv.find('#' + operationType);
     if (checkboxObj[0].checked == true) {
         groupObj.css("display","block");
-        $("#chargeRuleaiZhan" + operationType).css("display", "block");
-        addRow("chargeRuleaiZhan" + operationType);
-        $("#aiZhan"+ operationType +"StandardSpecies")[0].checked = true;
+        if (isSEO === "false") {
+            $("#chargeRuleaiZhan" + operationType).css("display", "block");
+            addRow("chargeRuleaiZhan" + operationType);
+            $("#aiZhan"+ operationType +"StandardSpecies")[0].checked = true;
+        }
     } else {
         clearInfo(operationType);
-        clearStandardInfo(operationType, "AiZhan");
-        clearStandardInfo(operationType, "5118");
-        clearStandardInfo(operationType, "DesignationWord");
+        if (!isSEO === "false") {
+            clearStandardInfo(operationType, "AiZhan");
+            clearStandardInfo(operationType, "5118");
+            clearStandardInfo(operationType, "DesignationWord");
+        }
         groupObj.css("display","none");
     }
 }

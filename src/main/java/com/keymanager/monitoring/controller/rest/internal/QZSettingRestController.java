@@ -169,11 +169,10 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		CustomerCriteria customerCriteria = new CustomerCriteria();
 		String entryType = (String) request.getSession().getAttribute("entryType");
 		customerCriteria.setEntryType(entryType);
-		boolean isDepartmentManager = true;
+		boolean isSEO = false;
 		boolean hasFilterUserName = false;
 		Set<String> roles = getCurrentUser().getRoles();
 		if(!roles.contains("DepartmentManager")) {
-			isDepartmentManager = false;
 			if (roles.contains("Operation") || roles.contains("Technical")) {
                 hasFilterUserName = true;
 			} else {
@@ -191,6 +190,9 @@ public class QZSettingRestController extends SpringMVCBaseController {
 				qzSettingSearchCriteria.setLoginName(userInfo.getLoginName());
 			}
 		}
+		if (roles.contains("SEO")) {
+			isSEO = true;
+		}
 		qzKeywordRankInfoService.getCountNumOfRankInfo(qzSettingSearchCriteria);
 		Page<QZSetting> page = qzSettingService.searchQZSetting(new Page<QZSetting>(currentPageNumber, pageSize), qzSettingSearchCriteria);
 		List<Customer> customerList = customerService.getActiveCustomerSimpleInfo(customerCriteria);
@@ -201,7 +203,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		modelAndView.addObject("qzSettingSearchCriteria", qzSettingSearchCriteria);
 		modelAndView.addObject("statusList", Constants.QZSETTING_STATUS_LIST);
 		modelAndView.addObject("page", page);
-		modelAndView.addObject("isDepartmentManager", isDepartmentManager);
+		modelAndView.addObject("isSEO", isSEO);
 		modelAndView.addObject("availableQZSettingCount", availableQZSettingCount);
 		modelAndView.addObject("operationTypeValues", operationTypeValues);
 		return modelAndView;
