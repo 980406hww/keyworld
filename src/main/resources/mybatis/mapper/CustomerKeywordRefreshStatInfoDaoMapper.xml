@@ -32,14 +32,15 @@
         </if>
         WHERE ck.fStatus = 1
         <if test="customerKeywordRefreshStatInfoCriteria.entryType!=null and customerKeywordRefreshStatInfoCriteria.entryType!=''">AND ck.fType = #{customerKeywordRefreshStatInfoCriteria.entryType}</if>
-        <if test="customerKeywordRefreshStatInfoCriteria.terminalType!=null and customerKeywordRefreshStatInfoCriteria.terminalType!=''">AND ck.fTerminalType = #{customerKeywordRefreshStatInfoCriteria.terminalType}</if>
+        <if test="customerKeywordRefreshStatInfoCriteria.terminalType!=null and customerKeywordRefreshStatInfoCriteria.terminalType!=''">AND ck.fTerminalType = #{customerKeywordRefreshStatInfoCriteria.terminalType} AND g.fTerminalType = #{customerKeywordRefreshStatInfoCriteria.terminalType}</if>
         <if test="customerKeywordRefreshStatInfoCriteria.groupName!=null and customerKeywordRefreshStatInfoCriteria.groupName!=''">
             <choose>
                 <when test="customerKeywordRefreshStatInfoCriteria.groupNameFuzzyQuery == null or customerKeywordRefreshStatInfoCriteria.groupNameFuzzyQuery == ''">
                     AND ck.fOptimizeGroupName =#{customerKeywordRefreshStatInfoCriteria.groupName}
                 </when>
                 <otherwise>
-                    AND ck.fOptimizeGroupName like concat('%', #{customerKeywordRefreshStatInfoCriteria.groupName}, "%")
+                    AND ck.fOptimizeGroupName like concat(#{customerKeywordRefreshStatInfoCriteria.groupName}, "%")
+                    AND g.fGroupName like concat(#{customerKeywordRefreshStatInfoCriteria.groupName}, "%")
                 </otherwise>
             </choose>
         </if>
