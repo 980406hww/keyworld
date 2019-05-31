@@ -1812,12 +1812,17 @@ function initSettingDialog(qzSetting) {
         /* 限制最大词数 */
         settingDialogDiv.find("#maxKeywordCount" + val.operationType).val(val.maxKeywordCount);
         settingDialogDiv.find("#qzSettingUuid" + val.operationType).val(val.uuid);
-        settingDialogDiv.find("#"+ val.standardType + val.operationType)[0].checked = true;
+        var isSEO = $(".datalist-list #isSEO").val();
+        if (isSEO !== "true") {
+            settingDialogDiv.find("#"+ val.standardType + val.operationType)[0].checked = true;
+        }
         // 构造规则表
         $.each(val.qzChargeRules, function (chargeRuleIdx, chargeRuleVal) {
-            settingDialogDiv.find("#" + chargeRuleVal.standardSpecies + val.operationType + "StandardSpecies")[0].checked = true;
-            settingDialogDiv.find("#chargeRule" + chargeRuleVal.standardSpecies + val.operationType).css("display", "block");
-            addRow("chargeRule" + chargeRuleVal.standardSpecies + val.operationType, chargeRuleVal);
+            if (isSEO !== "true") {
+                settingDialogDiv.find("#" + chargeRuleVal.standardSpecies + val.operationType + "StandardSpecies")[0].checked = true;
+                settingDialogDiv.find("#chargeRule" + chargeRuleVal.standardSpecies + val.operationType).css("display", "block");
+                addRow("chargeRule" + chargeRuleVal.standardSpecies + val.operationType, chargeRuleVal);
+            }
             if (val.operationType === 'PC') {
                 PCType = true;
             }
