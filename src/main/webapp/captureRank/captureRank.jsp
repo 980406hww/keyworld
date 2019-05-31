@@ -55,6 +55,7 @@
             <shiro:hasPermission name="/internal/captureRank/deleteCaptureRankJobs">
             <input type="button" value=" 删除所选 " onclick="deleteCaptureRankJobs()">&nbsp;&nbsp;
             </shiro:hasPermission>
+            <input type="button" value=" 重置任务 " onclick="resetCaptureRankJobs()">&nbsp;&nbsp;
         </form>
     </div>
     <table style="font-size:12px; width: 100%;" id="headerTable">

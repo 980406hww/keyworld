@@ -300,6 +300,10 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
         captureRankJobDao.updateById(captureRankJob);
     }
 
+    public void resetCaptureRankJobs(List uuids) {
+        captureRankJobDao.resetCaptureRankJobs(uuids);
+    }
+
     public Boolean hasUncompletedCaptureRankJob(List<String> groupNames){
         return captureRankJobDao.hasUncompletedCaptureRankJob(groupNames) != null;
     }
