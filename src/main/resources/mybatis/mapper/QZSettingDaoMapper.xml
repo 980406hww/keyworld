@@ -139,6 +139,8 @@
         <if test="qzSettingSearchCriteria.group != null and qzSettingSearchCriteria.group != ''">AND (qs.fPcGroup = #{qzSettingSearchCriteria.group} or qs.fPhoneGroup = #{qzSettingSearchCriteria.group})</if>
         <if test="qzSettingSearchCriteria.updateStatus != null and qzSettingSearchCriteria.updateStatus != ''">AND qs.fUpdateStatus = #{qzSettingSearchCriteria.updateStatus}</if>
         <if test="qzSettingSearchCriteria.status != null">AND qs.fStatus = #{qzSettingSearchCriteria.status}</if>
+        <if test="qzSettingSearchCriteria.hasMonitor != null and qzSettingSearchCriteria.hasMonitor == true">AND qs.fIsMonitor = 1</if>
+        <if test="qzSettingSearchCriteria.hasReady != null and qzSettingSearchCriteria.hasReady == true">AND qs.fIsReady = 1</if>
         <if test="qzSettingSearchCriteria.terminalType != null">
             <choose>
                 <when test="qzSettingSearchCriteria.terminalType == 'PC'">
@@ -150,54 +152,44 @@
             </choose>
         </if>
         <if test="qzSettingSearchCriteria.checkStatus != null">
+            AND EXISTS (SELECT 1 FROM t_qz_keyword_rank_info qk WHERE qk.fQZSettingUuid = qs.fUuid
             <choose>
-                <when test="qzSettingSearchCriteria.checkStatus == 10">
-                    AND qs.fIsMonitor = 1
+                <when test="qzSettingSearchCriteria.checkStatus == 1">
+                    AND qk.fIncrease &lt;= #{qzSettingSearchCriteria.lowerValue}
                 </when>
-                <when test="qzSettingSearchCriteria.checkStatus == 11">
-                    AND qs.fIsReady = 1
+                <when test="qzSettingSearchCriteria.checkStatus == 2">
+                    AND qk.fIncrease &gt;= #{qzSettingSearchCriteria.upperValue}
                 </when>
-                <otherwise>
-                    AND EXISTS (SELECT 1 FROM t_qz_keyword_rank_info qk WHERE qk.fQZSettingUuid = qs.fUuid
-                    <choose>
-                        <when test="qzSettingSearchCriteria.checkStatus == 1">
-                            AND qk.fIncrease &lt;= #{qzSettingSearchCriteria.lowerValue}
-                        </when>
-                        <when test="qzSettingSearchCriteria.checkStatus == 2">
-                            AND qk.fIncrease &gt;= #{qzSettingSearchCriteria.upperValue}
-                        </when>
-                        <when test="qzSettingSearchCriteria.checkStatus == 3">
-                            AND qk.fAchieveLevel &gt; 0
-                            AND EXISTS (
-                            SELECT 1
-                            FROM t_qz_operation_type qot
-                            WHERE qot.fQZSettingUuid = qk.fQZSettingUuid
-                            AND qot.fOperationtype = qk.fTerminalType
-                            AND qot.fStandardTime > ''
-                            )
-                        </when>
-                        <when test="qzSettingSearchCriteria.checkStatus == 4">
-                            AND qk.fAchieveLevel = 0
-                        </when>
-                        <when test="qzSettingSearchCriteria.checkStatus == 5">
-                            AND qk.fDifferenceValue &lt;= #{qzSettingSearchCriteria.differenceValue}
-                        </when>
-                        <when test="qzSettingSearchCriteria.checkStatus == 6">
-                            AND qk.fIncrease = 0
-                        </when>
-                        <when test="qzSettingSearchCriteria.checkStatus == 7">
-                            AND qk.fTodayDifference &lt; 0
-                        </when>
-                        <when test="qzSettingSearchCriteria.checkStatus == 8">
-                            AND qk.fTodayDifference = 0
-                        </when>
-                        <when test="qzSettingSearchCriteria.checkStatus == 9">
-                            AND qk.fTodayDifference &gt; 0
-                        </when>
-                    </choose>
-                    AND qk.fTerminalType = #{qzSettingSearchCriteria.terminalType})
-                </otherwise>
+                <when test="qzSettingSearchCriteria.checkStatus == 3">
+                    AND qk.fAchieveLevel &gt; 0
+                    AND EXISTS (
+                    SELECT 1
+                    FROM t_qz_operation_type qot
+                    WHERE qot.fQZSettingUuid = qk.fQZSettingUuid
+                    AND qot.fOperationtype = qk.fTerminalType
+                    AND qot.fStandardTime > ''
+                    )
+                </when>
+                <when test="qzSettingSearchCriteria.checkStatus == 4">
+                    AND qk.fAchieveLevel = 0
+                </when>
+                <when test="qzSettingSearchCriteria.checkStatus == 5">
+                    AND qk.fDifferenceValue &lt;= #{qzSettingSearchCriteria.differenceValue}
+                </when>
+                <when test="qzSettingSearchCriteria.checkStatus == 6">
+                    AND qk.fIncrease = 0
+                </when>
+                <when test="qzSettingSearchCriteria.checkStatus == 7">
+                    AND qk.fTodayDifference &lt; 0
+                </when>
+                <when test="qzSettingSearchCriteria.checkStatus == 8">
+                    AND qk.fTodayDifference = 0
+                </when>
+                <when test="qzSettingSearchCriteria.checkStatus == 9">
+                    AND qk.fTodayDifference &gt; 0
+                </when>
             </choose>
+            AND qk.fTerminalType = #{qzSettingSearchCriteria.terminalType})
         </if>
         <if test="qzSettingSearchCriteria.categoryTag != null and qzSettingSearchCriteria.categoryTag != ''">
             AND EXISTS (SELECT 1 FROM t_qz_category_tag qc WHERE qc.fQZSettingUuid = qs.fUuid AND qc.fTagName = #{qzSettingSearchCriteria.categoryTag})

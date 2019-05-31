@@ -85,69 +85,69 @@
 				</shiro:hasPermission>
 				<shiro:hasPermission name="/internal/qzsetting/startMonitorImmediately">
 					<li>
-						<label name="isMonitor" title="达标监控的站点">
-							<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.checkStatus == 10}">checked</c:if>>
+						<label title="达标监控的站点">
+							<input type="checkbox" name="hasMonitor" <c:if test="${qzSettingSearchCriteria.hasMonitor}">checked</c:if>>
 							达标监控
 						</label>
 					</li>
 				</shiro:hasPermission>
 				<li>
-					<label name="isReady" title="加入达标计划的站点">
-						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.checkStatus == 11}">checked</c:if>>
+					<label title="加入达标计划的站点">
+						<input type="checkbox" name="hasReady" <c:if test="${qzSettingSearchCriteria.hasReady}">checked</c:if>>
 						达标计划
 					</label>
 				</li>
 				<li>
 					<label name="lower" title="网站关键词(PC,Phone)一星期排名趋势涨幅&lt;${qzSettingSearchCriteria.lowerValue}">
-						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.checkStatus == 1}">checked</c:if>>
+						<input type="radio" <c:if test="${qzSettingSearchCriteria.checkStatus == 1}">checked</c:if>>
 						骤降 (${qzSettingSearchCriteria.downNum})
 					</label>
 				</li>
 				<li>
 					<label name="unchanged" title="网站关键词(PC,Phone)一星期排名趋势涨幅不变">
-						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.checkStatus == 6}">checked</c:if>>
+						<input type="radio" <c:if test="${qzSettingSearchCriteria.checkStatus == 6}">checked</c:if>>
 						无变化 (${qzSettingSearchCriteria.unchangedNum})
 					</label>
 				</li>
 				<li>
 					<label name="upper" title="网站关键词(PC,Phone)一星期排名趋势涨幅&gt;${qzSettingSearchCriteria.upperValue}">
-						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.checkStatus == 2}">checked</c:if>>
+						<input type="radio" <c:if test="${qzSettingSearchCriteria.checkStatus == 2}">checked</c:if>>
 						暴涨 (${qzSettingSearchCriteria.upNum})
 					</label>
 				</li>
 				<li>
 					<label name="lowerDifference" title="网站关键词(PC,Phone)今天前10下降">
-						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.checkStatus == 7}">checked</c:if>>
+						<input type="radio" name="checkbox" <c:if test="${qzSettingSearchCriteria.checkStatus == 7}">checked</c:if>>
 						下降 (${qzSettingSearchCriteria.downDifferenceNum})
 					</label>
 				</li>
 				<li>
 					<label name="unchangedDifference" title="网站关键词(PC,Phone)今天前10不变">
-						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.checkStatus == 8}">checked</c:if>>
+						<input type="radio" <c:if test="${qzSettingSearchCriteria.checkStatus == 8}">checked</c:if>>
 						不变 (${qzSettingSearchCriteria.unchangedDifferenceNum})
 					</label>
 				</li>
 				<li>
 					<label name="upperDifference" title="网站关键词(PC,Phone)今天前10上升">
-						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.checkStatus == 9}">checked</c:if>>
+						<input type="radio" <c:if test="${qzSettingSearchCriteria.checkStatus == 9}">checked</c:if>>
 						上升 (${qzSettingSearchCriteria.upDifferenceNum})
 					</label>
 				</li>
 				<li>
 					<label name="atLeastStandard" title="标识最少有一条规则达标">
-						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.checkStatus == 3}">checked</c:if>>
+						<input type="radio" <c:if test="${qzSettingSearchCriteria.checkStatus == 3}">checked</c:if>>
 						达标 (${qzSettingSearchCriteria.atLeastStandardNum})
 					</label>
 				</li>
 				<li>
 					<label name="neverStandard" title="标识一条规则都未达标">
-						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.checkStatus == 4}">checked</c:if>>
+						<input type="radio" <c:if test="${qzSettingSearchCriteria.checkStatus == 4}">checked</c:if>>
 						未达标 (${qzSettingSearchCriteria.neverStandardNum})
 					</label>
 				</li>
 				<li>
 					<label name="closeStandard" title="标识下条规则接近达标,未完成度&lt;${qzSettingSearchCriteria.differenceValue}">
-						<input type="checkbox" name="checkbox" <c:if test="${qzSettingSearchCriteria.checkStatus == 5}">checked</c:if>>
+						<input type="radio" <c:if test="${qzSettingSearchCriteria.checkStatus == 5}">checked</c:if>>
 						接近达标 (${qzSettingSearchCriteria.closeStandardNum})
 					</label>
 				</li>
@@ -247,6 +247,8 @@
 	<input type="hidden" name="categoryTag" id="categoryTag" value="${qzSettingSearchCriteria.categoryTag}"/>
 	<input type="hidden" name="createTime" id="createTime" value="${qzSettingSearchCriteria.createTime}"/>
     <input type="hidden" name="createTimePrefix" id="createTimePrefix" value="${qzSettingSearchCriteria.createTimePrefix}"/>
+    <input type="hidden" name="hasReady" id="hasReady" value="${qzSettingSearchCriteria.hasReady}"/>
+    <input type="hidden" name="hasMonitor" id="hasMonitor" value="${qzSettingSearchCriteria.hasMonitor}"/>
 </form>
 
 <div class="datalist">
@@ -1210,7 +1212,7 @@
 		</shiro:hasPermission>
 		<c:if test="${not isSEO}">
 			<tr>
-				<td style="width:60px" align="right">加入达标计划</td>
+				<td style="width:60px" align="right">达标计划</td>
 				<td>
 					<select name="qzSettingJoinReady" id="qzSettingJoinReady"  style="width:240px">
 						<option value="1">是</option>

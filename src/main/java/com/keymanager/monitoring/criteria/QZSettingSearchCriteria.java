@@ -30,6 +30,8 @@ public class QZSettingSearchCriteria{
     private String operationType;
     private String createTime;
     private String createTimePrefix;
+    private Boolean hasMonitor;
+    private Boolean hasReady;
 
     public String getLoginName() {
         return loginName;
@@ -261,5 +263,21 @@ public class QZSettingSearchCriteria{
 
     public void setCreateTimePrefix(String createTimePrefix) {
         this.createTimePrefix = createTimePrefix;
+    }
+
+    public Boolean getHasMonitor () {
+        return hasMonitor;
+    }
+
+    public void setHasMonitor (Boolean hasMonitor) {
+        this.hasMonitor = hasMonitor;
+    }
+
+    public Boolean getHasReady () {
+        return hasReady;
+    }
+
+    public void setHasReady (Boolean hasReady) {
+        this.hasReady = hasReady;
     }
 }

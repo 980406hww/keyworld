@@ -316,10 +316,11 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
         captureRankJobDao.deleteCaptureRankJob(qzSettingUuid, operationType);
     }
 
-    public void qzAddCaptureRankJob (String group, Long qzSettingUuid, String operationType, String userName) {
+    public void qzAddCaptureRankJob (String group, long qzSettingUuid, long customerUuid, String operationType, String userName) {
         CaptureRankJob captureRankJob = new CaptureRankJob();
         captureRankJob.setGroupNames(group);
         captureRankJob.setQzSettingUuid(qzSettingUuid);
+        captureRankJob.setCustomerUuid(customerUuid);
         captureRankJob.setOperationType(operationType);
         captureRankJob.setExectionType("Everyday");
         captureRankJob.setCaptureInterval(500);

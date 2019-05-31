@@ -50,12 +50,13 @@ function loadingCheckTerminalType() {
     checkTerminalType(terminalType, false);
 }
 function searchRiseOrFall() {
-    $(".mytabs div:eq(0)").find("input:checkbox").click(function () {
+    var checkedRadio = $(".mytabs div:eq(0)").find("input:radio[checked='checked']");
+    $(".mytabs div:eq(0)").find("input:radio").click(function () {
         var checkStatus;
-        if (!$(this).prop("checked")) {
+        var parentName = $(this).parent().attr("name");
+        if (checkedRadio.length > 0 && checkedRadio.parent().attr("name") === parentName) {
             checkStatus = null;
         } else {
-            var parentName = $(this).parent().attr("name");
             switch (parentName) {
                 case 'lower':
                     checkStatus = 1;
@@ -83,12 +84,6 @@ function searchRiseOrFall() {
                     break;
                 case 'upperDifference':
                     checkStatus = 9;
-                    break;
-                case 'isMonitor':
-                    checkStatus = 10;
-                    break;
-                case 'isReady':
-                    checkStatus = 11;
                     break;
                 default:
                     break;
@@ -864,33 +859,45 @@ function trimSearchCondition(days) {
     var updateStatus = $(".conn").find("select[name='updateStatus']").val();
     var createTime = $(".conn").find(".createTime").find("input[name='createTime']").val();
     var createTimePrefix = $(".conn").find(".createTime").find("input[name='createTimePrefix']").val();
+    var hasMonitor = $(".conn li").find("input[name='hasMonitor']")[0].checked;
+    var hasReady = $(".conn li").find("input[name='hasReady']")[0].checked;
     chargeForm.find("#domain").val($.trim(domain));
     chargeForm.find("#categoryTag").val($.trim(categoryTag));
     chargeForm.find("#group").val($.trim(group));
-    if (operationType != ""){
+    if (operationType !== ""){
         chargeForm.find("#operationType").val($.trim(operationType));
     } else {
         chargeForm.find("#operationType").val(null);
     }
-    if (status != "") {
+    if (status !== "") {
         chargeForm.find("#status").val($.trim(status));
     } else {
         chargeForm.find("#status").val(null);
     }
-    if (updateStatus != "") {
+    if (updateStatus !== "") {
         chargeForm.find("#updateStatus").val($.trim(updateStatus));
     } else {
         chargeForm.find("#updateStatus").val(null);
     }
-    if (createTime != "") {
+    if (createTime !== "") {
         chargeForm.find("#createTime").val($.trim(createTime));
     } else {
         chargeForm.find("#createTime").val(null);
     }
-    if (createTimePrefix != "") {
+    if (createTimePrefix !== "") {
         chargeForm.find("#createTimePrefix").val($.trim(createTimePrefix));
     } else {
         chargeForm.find("#createTimePrefix").val(null);
+    }
+    if (hasMonitor !== "") {
+        chargeForm.find("#hasMonitor").val(hasMonitor);
+    } else {
+        chargeForm.find("#hasMonitor").val(null);
+    }
+    if (hasReady !== "") {
+        chargeForm.find("#hasReady").val(hasReady);
+    } else {
+        chargeForm.find("#hasReady").val(null);
     }
     chargeForm.submit();
 }
@@ -1723,6 +1730,7 @@ function resetSettingDialog() {
     settingDialogDiv.find("#qzSettingUuid").val("");
     settingDialogDiv.find("#qzSettingCustomer").val("");
     settingDialogDiv.find("#qzSettingDomain").val("");
+    settingDialogDiv.find("#bearPawNumber").val("");
     settingDialogDiv.find("#qzCategoryTagNames").val("");
     settingDialogDiv.find("#qzSettingAutoCrawlKeywordFlag").val("0");
     settingDialogDiv.find("#qzSettingIgnoreNoIndex").val("1");

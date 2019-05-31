@@ -158,7 +158,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			//修改部分
 			List<QZOperationType> OldOperationTypes = qzOperationTypeService.searchQZOperationTypesIsDelete(qzSetting.getUuid());
 			List<QZOperationType> updOperationTypes = qzSetting.getQzOperationTypes();
-			this.updateOperationTypeAndChargeRule(OldOperationTypes, updOperationTypes, qzSetting.getUuid(), userName);
+			this.updateOperationTypeAndChargeRule(OldOperationTypes, updOperationTypes, qzSetting.getUuid(), qzSetting.getCustomerUuid(), userName);
 			List<QZKeywordRankInfo> existingQZKeywordRankInfoList = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), new QZSettingSearchCriteria());
 			this.updateQZKeywordRankInfo(existingQZKeywordRankInfoList, updOperationTypes, existingQZSetting);
 			// 修改标签
@@ -186,7 +186,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 					qzKeywordRankInfo.setWebsiteType(standardSpecies);
 					qzKeywordRankInfoService.insert(qzKeywordRankInfo);
 					if (standardSpecies.equals(Constants.QZ_CHARGE_RULE_STANDARD_SPECIES)) {
-                        captureRankJobService.qzAddCaptureRankJob(qzOperationType.getGroup(), qzSettingUuid, qzOperationType.getOperationType(), userName);
+                        captureRankJobService.qzAddCaptureRankJob(qzOperationType.getGroup(), qzSettingUuid, qzSetting.getCustomerUuid(), qzOperationType.getOperationType(), userName);
                     }
 				}
 			}
@@ -198,7 +198,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		}
 	}
 
-	public void updateOperationTypeAndChargeRule(List<QZOperationType> oldOperationTypes, List<QZOperationType> newOperationTypes, Long qzSettingUuid, String userName){
+	public void updateOperationTypeAndChargeRule(List<QZOperationType> oldOperationTypes, List<QZOperationType> newOperationTypes, Long qzSettingUuid, long customerUuid, String userName){
 		Map<String, QZOperationType> oldOperationTypeMap = new HashMap<>();
 		for (QZOperationType qzOperationType : oldOperationTypes) {
 		    oldOperationTypeMap.put(qzOperationType.getOperationType(), qzOperationType);
@@ -207,7 +207,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		for(QZOperationType newOperationType : newOperationTypes) {
 			QZOperationType oldOperationType = oldOperationTypeMap.get(newOperationType.getOperationType());
 			if(oldOperationType != null) {
-			    this.updateOperationTypeAndChargeRuleEqual(oldOperationType, newOperationType, qzSettingUuid, userName);
+			    this.updateOperationTypeAndChargeRuleEqual(oldOperationType, newOperationType, qzSettingUuid, customerUuid, userName);
 				oldOperationTypeMap.remove(newOperationType.getOperationType());
 			} else {
 				//添加一条
@@ -218,7 +218,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 					qzChargeRule.setQzOperationTypeUuid(uuid);
 					qzChargeRuleService.insert(qzChargeRule);
 					if (qzChargeRule.getStandardSpecies().equals(Constants.QZ_CHARGE_RULE_STANDARD_SPECIES)) {
-                        captureRankJobService.qzAddCaptureRankJob(newOperationType.getGroup(), qzSettingUuid, newOperationType.getOperationType(), userName);
+                        captureRankJobService.qzAddCaptureRankJob(newOperationType.getGroup(), qzSettingUuid, customerUuid, newOperationType.getOperationType(), userName);
                     }
 				}
 			}
@@ -244,7 +244,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		}
 	}
 
-	private void updateOperationTypeAndChargeRuleEqual(QZOperationType oldOperationType, QZOperationType newOperationType, Long qzSettingUuid, String userName) {
+	private void updateOperationTypeAndChargeRuleEqual(QZOperationType oldOperationType, QZOperationType newOperationType, Long qzSettingUuid, long customerUuid, String userName) {
 		oldOperationType.setUpdateTime(new Date());
 		oldOperationType.setOperationType(newOperationType.getOperationType());
 		oldOperationType.setStandardType(newOperationType.getStandardType());
@@ -278,7 +278,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			qzChargeRuleService.insert(qzChargeRule);
 		}
 		if (hasDesignationWord) {
-			captureRankJobService.qzAddCaptureRankJob(newOperationType.getGroup(), qzSettingUuid, newOperationType.getOperationType(), userName);
+			captureRankJobService.qzAddCaptureRankJob(newOperationType.getGroup(), qzSettingUuid, customerUuid, newOperationType.getOperationType(), userName);
 		}
 	}
 
