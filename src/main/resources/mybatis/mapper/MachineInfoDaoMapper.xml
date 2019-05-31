@@ -458,11 +458,14 @@
 
     <select id="getMachineInfoVos" resultType="com.keymanager.monitoring.vo.MachineInfoVO" parameterType="com.keymanager.monitoring.criteria.QZSettingSearchClientGroupInfoCriteria">
         SELECT
+            COUNT(mi.fGroup) AS 'machineCount',
             gs.fOperationType AS 'operationType',
-            COUNT(gs.fOperationType) AS 'operationTypeCount'
-        FROM t_group_setting gs
+            gs.fMachineUsedPercent AS 'machineUserPercent'
+        FROM t_machine_info mi
         LEFT JOIN t_group g
-        ON g.fUuid = gs.fGroupUuid
+        ON g.fGroupName = mi.fGroup AND g.fTerminalType = mi.fTerminalType
+        LEFT JOIN t_group_setting gs
+        ON gs.fGroupUuid = g.fUuid
         WHERE g.fGroupName = #{qzSettingSearchClientGroupInfoCriteria.optimizeGroupName}
         AND g.fTerminalType = #{qzSettingSearchClientGroupInfoCriteria.terminalType}
         GROUP BY gs.fOperationType

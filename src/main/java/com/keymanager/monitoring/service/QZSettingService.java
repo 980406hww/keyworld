@@ -661,11 +661,11 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 	}
 
 	public QZSettingSearchClientGroupInfoVO getQZSettingClientGroupInfo (QZSettingSearchClientGroupInfoCriteria qzSettingSearchClientGroupInfoCriteria) {
-		QZSettingSearchClientGroupInfoVO qzSettingSearchClientGroupInfoVO = new QZSettingSearchClientGroupInfoVO();
-		qzSettingSearchClientGroupInfoVO.setCustomerKeywordCount(qzSettingDao.getQZSettingClientGroupInfo(qzSettingSearchClientGroupInfoCriteria));
-		qzSettingSearchClientGroupInfoVO.setMachineInfoVos(machineInfoService.getMachineInfoVos(qzSettingSearchClientGroupInfoCriteria));
-		qzSettingSearchClientGroupInfoVO.setCategoryTagNames(qzCategoryTagService.findTagNamesByQZSettingUuid(qzSettingSearchClientGroupInfoCriteria.getQzSettingUuid()));
-		return qzSettingSearchClientGroupInfoVO;
+		QZSettingSearchClientGroupInfoVO qzSettingSearchClientGroupInfoVo = new QZSettingSearchClientGroupInfoVO();
+		qzSettingSearchClientGroupInfoVo.setCustomerKeywordCount(qzSettingDao.getQZSettingClientGroupInfo(qzSettingSearchClientGroupInfoCriteria));
+		qzSettingSearchClientGroupInfoVo.setMachineInfoVos(machineInfoService.getMachineInfoVos(qzSettingSearchClientGroupInfoCriteria));
+		qzSettingSearchClientGroupInfoVo.setCategoryTagNames(qzCategoryTagService.findTagNamesByQZSettingUuid(qzSettingSearchClientGroupInfoCriteria.getQzSettingUuid()));
+		return qzSettingSearchClientGroupInfoVo;
 	}
 
 	public void saveQZSettingCustomerKeywords (QZSettingSaveCustomerKeywordsCriteria qzSettingSaveCustomerKeywordsCriteria, String userName) {

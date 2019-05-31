@@ -731,10 +731,12 @@ function getQZSettingClientGroupInfo(terminalType) {
                     var allOperationType = '';
                     var flag = false;
                     $.each(data.machineInfoVos, function (idx, val) {
-                        allOperationType += optimizeGroupName + " " +val.operationType + "(" + val.operationTypeCount + ")"  + ",";
-                        clientCount += val.operationTypeCount;
+                        allOperationType += optimizeGroupName + " " +val.operationType + "(" + val.machineUserPercent + "%)"  + ",";
+                        if (clientCount === 0) {
+                            clientCount = val.machineCount;
+                        }
                         if (idx < 2) {
-                            $(showSomeOperationType).append("<span name='"+ optimizeGroupName + " " + val.operationType +"'><a href='javascript:;' onclick='findOptimizeGroupAndOperationType($(this))'>"+ val.operationType + "(" + val.operationTypeCount + ")" +"</a></span>");
+                            $(showSomeOperationType).append("<span name='"+ optimizeGroupName + " " + val.operationType +"'><a href='javascript:;' onclick='findOptimizeGroupAndOperationType($(this))'>"+ val.operationType + "(" + val.machineUserPercent + "%)" +"</a></span>");
                         } else {
                             flag = true;
                         }
