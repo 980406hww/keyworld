@@ -54,7 +54,8 @@
         SELECT
             tqkri.fUuid AS 'uuid',
             tqkri.fCreateTopTenNum AS 'createTopTenNum',
-            tqkri.fCreateTopFiftyNum AS 'createTopFiftyNum'
+            tqkri.fCreateTopFiftyNum AS 'createTopFiftyNum',
+            tqkri.fAchieveLevel AS 'achieveLevel'
         FROM t_qz_keyword_rank_info tqkri
         WHERE 1 = 1
         <if test="qzSettingUuid != null"> AND tqkri.fQZSettingUuid = #{qzSettingUuid} </if>
@@ -75,7 +76,6 @@
             COUNT(qk.fIncrease &lt;= #{qzSettingSearchCriteria.lowerValue} OR NULL) AS 'downNum',
             COUNT(qk.fIncrease &gt;= #{qzSettingSearchCriteria.upperValue} OR NULL) AS 'upNum',
             COUNT(((qk.fAchieveLevel &gt; 0 OR NULL) AND qot.fStandardTime &gt; '')) AS 'atLeastStandardNum',
-            COUNT(qk.fAchieveLevel = 0 OR NULL) AS 'neverStandardNum',
             COUNT(qk.fDifferenceValue &lt;= #{qzSettingSearchCriteria.differenceValue} OR NULL) AS 'closeStandardNum'
         FROM t_qz_keyword_rank_info qk
         LEFT JOIN t_qz_setting qs

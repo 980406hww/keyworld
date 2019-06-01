@@ -162,13 +162,17 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
         qzSettingSearchCriteria.setUpperValue(upperValue);
         qzSettingSearchCriteria.setLowerValue(lowerValue);
         qzSettingSearchCriteria.setDifferenceValue(differenceValue);
+
         List<QZSettingSearchCriteria> countNumOfRankInfos = qzKeywordRankInfoDao.getCountNumOfRankInfo(qzSettingSearchCriteria);
         for (QZSettingSearchCriteria countNumOfQZSettingRankInfo : countNumOfRankInfos) {
             qzSettingSearchCriteria.setUnchangedNum(qzSettingSearchCriteria.getUnchangedNum() + (countNumOfQZSettingRankInfo.getUnchangedNum() == 2 ? 1 : countNumOfQZSettingRankInfo.getUnchangedNum()));
             qzSettingSearchCriteria.setUpNum(qzSettingSearchCriteria.getUpNum() + (countNumOfQZSettingRankInfo.getUpNum() == 2 ? 1 : countNumOfQZSettingRankInfo.getUpNum()));
             qzSettingSearchCriteria.setDownNum(qzSettingSearchCriteria.getDownNum() + (countNumOfQZSettingRankInfo.getDownNum() == 2 ? 1 : countNumOfQZSettingRankInfo.getDownNum()));
-            qzSettingSearchCriteria.setAtLeastStandardNum(qzSettingSearchCriteria.getAtLeastStandardNum() + (countNumOfQZSettingRankInfo.getAtLeastStandardNum() == 2 ? 1 : countNumOfQZSettingRankInfo.getAtLeastStandardNum()));
-            qzSettingSearchCriteria.setNeverStandardNum(qzSettingSearchCriteria.getNeverStandardNum() + (countNumOfQZSettingRankInfo.getNeverStandardNum() == 2 ? 1 : countNumOfQZSettingRankInfo.getNeverStandardNum()));
+            if (countNumOfQZSettingRankInfo.getAtLeastStandardNum() > 0) {
+                qzSettingSearchCriteria.setAtLeastStandardNum(qzSettingSearchCriteria.getAtLeastStandardNum() + 1);
+            } else {
+                qzSettingSearchCriteria.setNeverStandardNum(qzSettingSearchCriteria.getNeverStandardNum() + 1);
+            }
             qzSettingSearchCriteria.setCloseStandardNum(qzSettingSearchCriteria.getCloseStandardNum() + (countNumOfQZSettingRankInfo.getCloseStandardNum() == 2 ? 1: countNumOfQZSettingRankInfo.getCloseStandardNum()));
         }
         return qzSettingSearchCriteria;

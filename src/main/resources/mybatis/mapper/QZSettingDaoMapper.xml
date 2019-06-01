@@ -172,6 +172,13 @@
                 </when>
                 <when test="qzSettingSearchCriteria.checkStatus == 4">
                     AND qk.fAchieveLevel = 0
+                    AND EXISTS (
+                    SELECT 1
+                    FROM t_qz_operation_type qot
+                    WHERE qot.fQZSettingUuid = qk.fQZSettingUuid
+                    AND qot.fOperationtype = qk.fTerminalType
+                    AND qot.fStandardTime IS NULL
+                    )
                 </when>
                 <when test="qzSettingSearchCriteria.checkStatus == 5">
                     AND qk.fDifferenceValue &lt;= #{qzSettingSearchCriteria.differenceValue}
