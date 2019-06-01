@@ -326,7 +326,7 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
         captureRankJob.setCaptureInterval(500);
         captureRankJob.setPageSize(50);
         captureRankJob.setExectionTime(Time.valueOf("00:05:00"));
-        captureRankJob.setExectionStatus("new");
+        captureRankJob.setExectionStatus(CaptureRankExectionStatus.New.name());
         captureRankJob.setCreateBy(userName);
         captureRankJob.setUpdateBy(userName);
         captureRankJob.setUpdateTime(new Date());
