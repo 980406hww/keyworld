@@ -211,9 +211,9 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
         DecimalFormat decimalFormat = new DecimalFormat("0.0000");
         String increase;
         if (weekData.length < 7) {
-            increase = decimalFormat.format((double) (topTenNum - Integer.parseInt(weekData[weekData.length - 1])) / weekData.length);
+            increase = decimalFormat.format((double) (topTenNum - Integer.parseInt(weekData[weekData.length - 1])) / Integer.parseInt(weekData[weekData.length - 1]));
         } else {
-            increase = decimalFormat.format((double) (topTenNum - Integer.parseInt(weekData[6])) / 7);
+            increase = decimalFormat.format((double) (topTenNum - Integer.parseInt(weekData[6])) / Integer.parseInt(weekData[6]));
         }
         qzKeywordRankInfo.setIncrease(Double.parseDouble(increase));
         qzKeywordRankInfo.setTodayDifference(weekData.length > 1 ? topTenNum - Integer.parseInt(weekData[1]) : 0);
