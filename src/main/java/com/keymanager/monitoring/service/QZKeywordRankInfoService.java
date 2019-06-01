@@ -7,6 +7,7 @@ import com.keymanager.monitoring.criteria.QZSettingSearchCriteria;
 import com.keymanager.monitoring.dao.QZKeywordRankInfoDao;
 import com.keymanager.monitoring.entity.Config;
 import com.keymanager.monitoring.entity.QZKeywordRankInfo;
+import com.keymanager.monitoring.entity.QZOperationType;
 import com.keymanager.monitoring.entity.QZSetting;
 import com.keymanager.monitoring.vo.ExternalQZKeywordRankInfoResultVO;
 import com.keymanager.monitoring.vo.ExternalQzKeywordRankInfoVO;
@@ -96,25 +97,25 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
         qzSettingService.updateQzSetting(qzSetting);
     }
 
-    private QZKeywordRankInfo getQZKeywordRankInfo(ExternalQzKeywordRankInfoVO externalQzKeywordRankInfoVO, Long qzSettingUuid) {
+    private QZKeywordRankInfo getQZKeywordRankInfo(ExternalQzKeywordRankInfoVO externalQzKeywordRankInfoVo, Long qzSettingUuid) {
         QZKeywordRankInfo qzKeywordRankInfo = new QZKeywordRankInfo();
         qzKeywordRankInfo.setQzSettingUuid(qzSettingUuid);
-        qzKeywordRankInfo.setTerminalType(externalQzKeywordRankInfoVO.getTerminalType());
-        qzKeywordRankInfo.setTopHundred(externalQzKeywordRankInfoVO.getTopHundred());
-        qzKeywordRankInfo.setTopFifty(externalQzKeywordRankInfoVO.getTopFifty());
-        qzKeywordRankInfo.setTopForty(externalQzKeywordRankInfoVO.getTopForty());
-        qzKeywordRankInfo.setTopThirty(externalQzKeywordRankInfoVO.getTopThirty());
-        qzKeywordRankInfo.setTopTwenty(externalQzKeywordRankInfoVO.getTopTwenty());
-        qzKeywordRankInfo.setTopTen(externalQzKeywordRankInfoVO.getTopTen());
-        qzKeywordRankInfo.setFullDate(externalQzKeywordRankInfoVO.getFullDate());
-        qzKeywordRankInfo.setDate(externalQzKeywordRankInfoVO.getDate());
-        qzKeywordRankInfo.setWebsiteType(externalQzKeywordRankInfoVO.getWebsiteType());
-        qzKeywordRankInfo.setBaiduRecord(externalQzKeywordRankInfoVO.getBaiduRecord());
-        qzKeywordRankInfo.setBaiduRecordFullDate(externalQzKeywordRankInfoVO.getBaiduRecordFullDate());
-        if (StringUtils.isNotBlank(externalQzKeywordRankInfoVO.getTopTen())) {
+        qzKeywordRankInfo.setTerminalType(externalQzKeywordRankInfoVo.getTerminalType());
+        qzKeywordRankInfo.setTopHundred(externalQzKeywordRankInfoVo.getTopHundred());
+        qzKeywordRankInfo.setTopFifty(externalQzKeywordRankInfoVo.getTopFifty());
+        qzKeywordRankInfo.setTopForty(externalQzKeywordRankInfoVo.getTopForty());
+        qzKeywordRankInfo.setTopThirty(externalQzKeywordRankInfoVo.getTopThirty());
+        qzKeywordRankInfo.setTopTwenty(externalQzKeywordRankInfoVo.getTopTwenty());
+        qzKeywordRankInfo.setTopTen(externalQzKeywordRankInfoVo.getTopTen());
+        qzKeywordRankInfo.setFullDate(externalQzKeywordRankInfoVo.getFullDate());
+        qzKeywordRankInfo.setDate(externalQzKeywordRankInfoVo.getDate());
+        qzKeywordRankInfo.setWebsiteType(externalQzKeywordRankInfoVo.getWebsiteType());
+        qzKeywordRankInfo.setBaiduRecord(externalQzKeywordRankInfoVo.getBaiduRecord());
+        qzKeywordRankInfo.setBaiduRecordFullDate(externalQzKeywordRankInfoVo.getBaiduRecordFullDate());
+        if (StringUtils.isNotBlank(externalQzKeywordRankInfoVo.getTopTen())) {
             this.setIncreaseAndTodayDifference(qzKeywordRankInfo);
         }
-        List<QZChargeRuleVO> chargeRuleVos = qzChargeRuleService.findQZChargeRules(qzSettingUuid, externalQzKeywordRankInfoVO.getTerminalType(), externalQzKeywordRankInfoVO.getWebsiteType());
+        List<QZChargeRuleVO> chargeRuleVos = qzChargeRuleService.findQZChargeRules(qzSettingUuid, externalQzKeywordRankInfoVo.getTerminalType(), externalQzKeywordRankInfoVo.getWebsiteType());
         if (CollectionUtils.isNotEmpty(chargeRuleVos)) {
             Map standard = this.standardCalculation(chargeRuleVos, qzKeywordRankInfo);
             qzKeywordRankInfo.setDifferenceValue(Double.parseDouble(standard.get("differenceValue").toString()));
@@ -126,25 +127,30 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
             }
             qzKeywordRankInfo.setSumSeries(Integer.parseInt(standard.get("sumSeries").toString()));
             qzKeywordRankInfo.setCurrentPrice(Integer.parseInt(standard.get("currentPrice").toString()));
-            String standardType = qzOperationTypeService.getStandardType(qzSettingUuid, externalQzKeywordRankInfoVO.getTerminalType());
-            QZKeywordRankInfo otherRankInfo = qzKeywordRankInfoDao.getQZKeywordRankInfo(qzSettingUuid, externalQzKeywordRankInfoVO.getTerminalType(), null);
-            boolean isStandardFlag = false;
+            QZOperationType qzOperationType = qzOperationTypeService.searchQZOperationTypeByQZSettingAndTerminalType(qzSettingUuid, externalQzKeywordRankInfoVo.getTerminalType());
+            QZKeywordRankInfo otherRankInfo = qzKeywordRankInfoDao.getQZKeywordRankInfo(qzSettingUuid, externalQzKeywordRankInfoVo.getTerminalType(), null);
+            int isStandardFlag = 0;
             if (qzKeywordRankInfo.getAchieveLevel() > 0) {
-                if (standardType.equals("satisfyAll")) {
+                if (qzOperationType.getStandardType().equals("satisfyAll")) {
                     if (null == otherRankInfo){
-                        isStandardFlag = true;
+                        isStandardFlag = 1;
                     } else if (null != otherRankInfo.getAchieveLevel() && otherRankInfo.getAchieveLevel() > 0) {
-                        isStandardFlag = true;
+                        isStandardFlag = 1;
                     }
+                } else if (qzOperationType.getStandardType().equals("satisfyOne")) {
+                    isStandardFlag = 1;
                 }
             } else {
-                if (standardType.equals("satisfyOne")) {
+                if (qzOperationType.getStandardType().equals("satisfyOne")) {
                     if (null != otherRankInfo && null != otherRankInfo.getAchieveLevel() && otherRankInfo.getAchieveLevel() > 0) {
-                        isStandardFlag = true;
+                        isStandardFlag = 1;
                     }
                 }
             }
-            qzOperationTypeService.updateQZOperationTypeStandardTime(qzSettingUuid, externalQzKeywordRankInfoVO.getTerminalType(), isStandardFlag);
+            if (isStandardFlag == 1 && null == qzOperationType.getStandardTime()) {
+                isStandardFlag = 2;
+            }
+            qzOperationTypeService.updateQZOperationTypeStandardTime(qzSettingUuid, externalQzKeywordRankInfoVo.getTerminalType(), isStandardFlag);
         }
         return qzKeywordRankInfo;
     }

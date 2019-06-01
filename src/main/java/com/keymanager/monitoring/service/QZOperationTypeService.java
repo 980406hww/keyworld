@@ -41,11 +41,7 @@ public class QZOperationTypeService extends ServiceImpl<QZOperationTypeDao, QZOp
 		qzOperationTypeDao.deleteByQZSettingUuid(qzSettingUuid);
 	}
 
-	public String getStandardType (Long qzSettingUuid, String operationType) {
-		return qzOperationTypeDao.getStandardType(qzSettingUuid, operationType);
-	}
-
-	public void updateQZOperationTypeStandardTime (Long qzSettingUuid, String operationType, boolean isStandardFlag) {
+	public void updateQZOperationTypeStandardTime (Long qzSettingUuid, String operationType, int isStandardFlag) {
 		qzOperationTypeDao.updateQZOperationTypeStandardTime(qzSettingUuid, operationType, isStandardFlag);
 	}
 

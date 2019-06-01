@@ -22,7 +22,22 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationDao, Organi
 
     @Override
     public List<Tree> selectTree() {
+        List<Organization> organizationList = selectTreeGrid();
+        return this.treeFixDataInfo(organizationList);
+    }
+
+    @Override
+    public List<Organization> selectTreeGrid() {
+        return organizationDao.selectOrganization();
+    }
+
+    @Override
+    public List<Tree> selectUserFulTree () {
         List<Organization> organizationList = organizationDao.selectOrganizationUserFul();
+        return this.treeFixDataInfo(organizationList);
+    }
+
+    private List<Tree> treeFixDataInfo(List<Organization> organizationList) {
         List<Tree> trees = new ArrayList<>();
         if (organizationList != null) {
             for (Organization organization : organizationList) {
@@ -35,10 +50,5 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationDao, Organi
             }
         }
         return trees;
-    }
-
-    @Override
-    public List<Organization> selectTreeGrid() {
-        return organizationDao.selectOrganization();
     }
 }

@@ -17,4 +17,5 @@ public interface IOrganizationService extends IService<Organization> {
 
     List<Organization> selectTreeGrid();
 
+    List<Tree> selectUserFulTree();
 }

@@ -317,7 +317,7 @@
 								<div class="standard-info">
 									<a href="javascript:;">
 										<span class="line1">
-											<a href="javascript:;" qzsettinguuid="${qzSetting.uuid}" onmouseover="showChargeRulesDiv($(this))" onmouseout="closeChargeRulesDiv()">
+											<a href="javascript:;" qzsettinguuid="${qzSetting.uuid}" <c:if test="${!isSEO}">onmouseover="showChargeRulesDiv($(this))" onmouseout="closeChargeRulesDiv()"</c:if>>
 												<c:if test="${qzSetting.totalPrice > 0}">
 													<font style="background-color: mediumseagreen;font-size: 14px;">￥ ${qzSetting.totalPrice}</font>
 												</c:if>
@@ -726,7 +726,7 @@
 								<div class="standard-info">
 									<a href="javascript:;">
 										<span class="line1">
-											<a href="javascript:;" qzsettinguuid="${qzSetting.uuid}" onmouseover="showChargeRulesDiv($(this))" onmouseout="closeChargeRulesDiv()">
+											<a href="javascript:;" qzsettinguuid="${qzSetting.uuid}" <c:if test="${!isSEO}">onmouseover="showChargeRulesDiv($(this))" onmouseout="closeChargeRulesDiv()"</c:if>>
 												<c:if test="${qzSetting.totalPrice > 0}">
 													<font style="background-color: mediumseagreen;font-size: 14px;">￥ ${qzSetting.totalPrice}</font>
 												</c:if>

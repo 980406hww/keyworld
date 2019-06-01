@@ -140,7 +140,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoDao, UserInfo> impl
 
     @Override
     public List<Tree> selectUserInfoTrees () {
-        List<Tree> trees = organizationService.selectTree();
+        List<Tree> trees = organizationService.selectUserFulTree();
         for (Tree tree : trees) {
             List<UserInfo> userInfos = userInfoDao.selectUserInfos(tree.getId());
             if (CollectionUtils.isNotEmpty(userInfos)) {

@@ -51,27 +51,20 @@
         DELETE FROM t_qz_operation_type WHERE fQZSettingUuid = #{qzSettingUuid}
     </delete>
 
-    <select id="getStandardType" resultType="java.lang.String">
-        SELECT op.fStandardType
-        FROM t_qz_operation_type op
-        WHERE op.fQZSettingUuid = #{qzSettingUuid}
-        AND op.fOperationtype = #{operationType}
-    </select>
-
     <update id="updateQZOperationTypeStandardTime">
         UPDATE t_qz_operation_type
         SET fUpdateTime = NOW()
         <choose>
-            <when test="isStandardFlag == true">
+            <when test="isStandardFlag == 1 or isStandardFlag == 2">
                 , fStandardTime = NOW()
             </when>
-            <when test="isStandardFlag == false">
+            <when test="isStandardFlag == 0">
                 , fStandardTime = NULL
             </when>
         </choose>
         WHERE fQZSettingUuid = #{qzSettingUuid}
         AND fOperationtype = #{operationType}
-        <if test="isStandardFlag == true">
+        <if test="isStandardFlag == 1">
             AND fStandardTime &gt; ''
         </if>
     </update>
