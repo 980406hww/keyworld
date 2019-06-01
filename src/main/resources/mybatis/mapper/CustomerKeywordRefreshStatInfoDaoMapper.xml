@@ -33,7 +33,7 @@
             AND fTerminalType = #{customerKeywordRefreshStatInfoCriteria.terminalType}
         </if>
         ) AS g
-        ON ck.fOptimizeGroupName like concat(g.fGroupName, '%') AND ck.fTerminalType = g.fTerminalType
+        ON ck.fOptimizeGroupName = g.fGroupName AND ck.fTerminalType = g.fTerminalType
         <if test="customerKeywordRefreshStatInfoCriteria.userName!=null and customerKeywordRefreshStatInfoCriteria.userName!=''">
             JOIN t_customer c
             ON ck.fCustomerUuid = c.fUuid
