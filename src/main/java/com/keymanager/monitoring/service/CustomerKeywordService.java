@@ -1662,7 +1662,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         String tmpOptimizeGroupName = optimizeGroupName;
         if (customerKeywordOptimizeGroupCriteriaList.size() > 0){
             for (CustomerKeywordOptimizeGroupCriteria customerKeywordOptimizeGroupCriteria: customerKeywordOptimizeGroupCriteriaList) {
-                if (customerKeywordOptimizeGroupCriteria.getSameGroupCustomerKeywordCount() < qzSetting.getGroupMaxCustomerKeywordCount()){
+                if (customerKeywordOptimizeGroupCriteria.getSameGroupCustomerKeywordCount() < qzSetting.getGroupMaxCustomerKeywordCount() && (customerKeywordOptimizeGroupCriteria.getOptimizeGroupName().equalsIgnoreCase(optimizeGroupName))){
                     customerKeyword.setOptimizeGroupName(customerKeywordOptimizeGroupCriteria.getOptimizeGroupName());
                     return;
                 }
@@ -1677,7 +1677,14 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public List<CustomerKeywordOptimizeGroupCriteria> searchOptimizeGroupNameAndCount(String optimizeGroupName){
-        return customerKeywordDao.searchOptimizeGroupNameAndCount(optimizeGroupName);
+        List<CustomerKeywordOptimizeGroupCriteria> customerKeywordOptimizeGroupCriterias = customerKeywordDao.searchOptimizeGroupNameAndCount(optimizeGroupName);
+        List<CustomerKeywordOptimizeGroupCriteria> tmpGroupCriterias = new ArrayList<CustomerKeywordOptimizeGroupCriteria>();
+        for(CustomerKeywordOptimizeGroupCriteria customerKeywordOptimizeGroupCriteria : customerKeywordOptimizeGroupCriterias){
+            if(customerKeywordOptimizeGroupCriteria.getOptimizeGroupName().equalsIgnoreCase(optimizeGroupName) || customerKeywordOptimizeGroupCriteria.getOptimizeGroupName().matches(optimizeGroupName + "_\\d{1,}")){
+                tmpGroupCriterias.add(customerKeywordOptimizeGroupCriteria);
+            }
+        }
+        return tmpGroupCriterias;
     }
 
     public CustomerKeywordOptimizeGroupCriteria matchOptimizeGroupName(List<CustomerKeywordOptimizeGroupCriteria> customerKeywordOptimizeGroupCriteriaList, String optimizeGroupName, int groupMaxCustomerKeywordCount) {
