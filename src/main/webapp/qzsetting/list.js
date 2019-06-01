@@ -103,7 +103,31 @@ function detectedMoreSearchConditionDivShow() {
     var updateStatus = moreSearchCondition.find("select[name='updateStatus']").val();
     var createTime = moreSearchCondition.find("ul li.createTime input[name='createTime']").val();
     var createTimePrefix = moreSearchCondition.find("ul li.createTime input[name='createTimePrefix']").val();
-    var values = customerInfo + categoryTag + group + status + updateStatus + createTime + createTimePrefix + operationType;
+    var hasMonitor = moreSearchCondition.find("select[name='hasMonitor']").val();
+    var hasReady = moreSearchCondition.find("select[name='hasReady']").val();
+    var userInfoID = $("#chargeForm").find("#userInfoID").val();
+    var organizationID = $("#chargeForm").find("#organizationID").val();
+    var hasText = false;
+    var treeValue;
+    if (userInfoID !== "") {
+        hasText = true;
+        treeValue = userInfoID;
+    } else if (organizationID !== "") {
+        hasText = true;
+        treeValue = organizationID;
+    }
+    if (hasText) {
+        $('#userNameTree').combotree({
+            url : '/internal/user/tree',
+            idFiled: 'id',
+            treeField: 'name',
+            parentField : 'pid',
+            lines : true,
+            panelHeight : 'auto'
+        });
+        $("#userNameTree").textbox('setValue', treeValue);
+    }
+    var values = customerInfo + categoryTag + group + status + updateStatus + createTime + createTimePrefix + operationType + hasMonitor + hasReady + userInfoID + organizationID;
     if (values != "") {
         moreSearchCondition.css("display", "block");
     }
@@ -859,8 +883,9 @@ function trimSearchCondition(days) {
     var updateStatus = $(".conn").find("select[name='updateStatus']").val();
     var createTime = $(".conn").find(".createTime").find("input[name='createTime']").val();
     var createTimePrefix = $(".conn").find(".createTime").find("input[name='createTimePrefix']").val();
-    var hasMonitor = $(".conn li").find("input[name='hasMonitor']")[0].checked;
-    var hasReady = $(".conn li").find("input[name='hasReady']")[0].checked;
+    var hasMonitor = $(".conn li").find("select[name='hasMonitor']").val();;
+    var hasReady = $(".conn li").find("select[name='hasReady']").val();;
+
     chargeForm.find("#domain").val($.trim(domain));
     chargeForm.find("#categoryTag").val($.trim(categoryTag));
     chargeForm.find("#group").val($.trim(group));
@@ -889,12 +914,12 @@ function trimSearchCondition(days) {
     } else {
         chargeForm.find("#createTimePrefix").val(null);
     }
-    if (hasMonitor !== "") {
+    if (hasMonitor !== "" && hasMonitor !== undefined) {
         chargeForm.find("#hasMonitor").val(hasMonitor);
     } else {
         chargeForm.find("#hasMonitor").val(null);
     }
-    if (hasReady !== "") {
+    if (hasReady !== "" && hasReady !== undefined) {
         chargeForm.find("#hasReady").val(hasReady);
     } else {
         chargeForm.find("#hasReady").val(null);

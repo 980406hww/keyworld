@@ -139,8 +139,8 @@
         <if test="qzSettingSearchCriteria.group != null and qzSettingSearchCriteria.group != ''">AND (qs.fPcGroup = #{qzSettingSearchCriteria.group} or qs.fPhoneGroup = #{qzSettingSearchCriteria.group})</if>
         <if test="qzSettingSearchCriteria.updateStatus != null and qzSettingSearchCriteria.updateStatus != ''">AND qs.fUpdateStatus = #{qzSettingSearchCriteria.updateStatus}</if>
         <if test="qzSettingSearchCriteria.status != null">AND qs.fStatus = #{qzSettingSearchCriteria.status}</if>
-        <if test="qzSettingSearchCriteria.hasMonitor != null and qzSettingSearchCriteria.hasMonitor == true">AND qs.fIsMonitor = 1</if>
-        <if test="qzSettingSearchCriteria.hasReady != null and qzSettingSearchCriteria.hasReady == true">AND qs.fIsReady = 1</if>
+        <if test="qzSettingSearchCriteria.hasMonitor != null">AND qs.fIsMonitor = #{qzSettingSearchCriteria.hasMonitor}</if>
+        <if test="qzSettingSearchCriteria.hasReady != null">AND qs.fIsReady = #{qzSettingSearchCriteria.hasReady}</if>
         <if test="qzSettingSearchCriteria.terminalType != null">
             <choose>
                 <when test="qzSettingSearchCriteria.terminalType == 'PC'">
@@ -167,7 +167,7 @@
                     FROM t_qz_operation_type qot
                     WHERE qot.fQZSettingUuid = qk.fQZSettingUuid
                     AND qot.fOperationtype = qk.fTerminalType
-                    AND qot.fStandardTime > ''
+                    AND qot.fStandardTime &gt; ''
                     )
                 </when>
                 <when test="qzSettingSearchCriteria.checkStatus == 4">

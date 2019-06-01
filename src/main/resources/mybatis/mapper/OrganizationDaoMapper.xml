@@ -25,4 +25,18 @@
         ORDER BY fSequence
     </select>
 
+    <select id="selectOrganizationUserFul" resultType="com.keymanager.monitoring.entity.Organization">
+        SELECT
+            fUuid AS 'id',
+            fOrganizationName AS 'organizationName',
+            fIcon AS 'icon',
+            fParentId AS 'pid'
+        FROM t_organization
+        WHERE fOrganizationName &lt;&gt; '总经办'
+        AND fOrganizationName &lt;&gt; '负面销售部'
+        AND fOrganizationName &lt;&gt; '财务部'
+        AND fOrganizationName &lt;&gt; '运维部'
+        AND fOrganizationName &lt;&gt; '外部'
+        ORDER BY fSequence
+    </select>
 </mapper>

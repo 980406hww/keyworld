@@ -11,4 +11,6 @@ import java.util.List;
 public interface OrganizationDao extends BaseMapper<Organization> {
 
     List<Organization> selectOrganization();
+
+    List<Organization> selectOrganizationUserFul ();
 }
