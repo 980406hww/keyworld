@@ -112,18 +112,8 @@
                 </choose>
             </if>
             qs.fType AS 'type',
-            qs.fIgnoreNoIndex AS 'ignoreNoIndex',
-            qs.fIgnoreNoOrder AS 'ignoreNoOrder',
-            qs.fUpdateInterval AS 'updateInterval',
-            qs.fUpdateStatus AS 'updateStatus',
-            qs.fUpdateStartTime AS 'updateStartTime',
-            qs.fUpdateEndTime AS 'updateEndTime',
-            qs.fUpdateTime AS 'updateTime',
             qs.fCreateTime AS 'createTime',
-            qs.fCaptureCurrentKeywordCountTime AS 'captureCurrentKeywordCountTime',
-            qs.fCaptureCurrentKeywordStatus AS 'captureCurrentKeywordStatus',
             qs.fStatus AS 'status',
-            qs.fCrawlerStatus AS 'crawlerStatus',
             qs.fAutoCrawlKeywordFlag AS 'autoCrawlKeywordFlag'
         FROM t_qz_setting qs
         JOIN t_customer c

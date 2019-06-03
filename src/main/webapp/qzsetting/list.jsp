@@ -219,12 +219,12 @@
 						<option value="0" <c:if test="${qzSettingSearchCriteria.hasReady == false}">selected</c:if>>否</option>
 					</select>
 				</li>
-				<shiro:hasPermission name="/internal/qzsetting/searchQZSettings">
+				<%--<shiro:hasPermission name="/internal/qzsetting/searchQZSettings">
 					<li><a href="javascript:resetSearchCondition('-1')">过期未收费(${chargeRemindDataMap['expiredChargeSize']})</a></li>
 					<li><a target="_blank" href="javascript:resetSearchCondition('0')">当天收费提醒(${chargeRemindDataMap['nowChargeSize']})</a></li>
 					<li><a target="_blank" href="javascript:resetSearchCondition('3')">三天收费提醒(${chargeRemindDataMap['threeChargeSize']})</a></li>
 					<li><a target="_blank" href="javascript:resetSearchCondition('7')">七天收费提醒(${chargeRemindDataMap['sevenChargeSize']})</a></li>
-				</shiro:hasPermission>
+				</shiro:hasPermission>--%>
 			</ul>
 		</div>
 	</div>
@@ -261,7 +261,7 @@
 		<ul>
 			<c:forEach items="${page.records}" var="qzSetting" varStatus="status">
 				<c:choose>
-					<c:when test="${qzSetting.pcGroup != null and (qzSetting.crawlerStatus != 'finish' or qzSetting.qzKeywordRankInfoMap['PC'] != null)}">
+					<c:when test="${qzSetting.pcGroup != null and qzSetting.qzKeywordRankInfoMap['PC'] != null}">
 					<li>
 						<div class="header">
 							<input type="hidden" name="contactPerson" value="${qzSetting.contactPerson}">
@@ -673,7 +673,7 @@
 					</li>
 					<!--li-end-pc-->
 					</c:when>
-					<c:when test="${qzSetting.phoneGroup != null and (qzSetting.crawlerStatus != 'finish' or qzSetting.qzKeywordRankInfoMap['Phone'] != null)}">
+					<c:when test="${qzSetting.phoneGroup != null and qzSetting.qzKeywordRankInfoMap['Phone'] != null}">
 					<li>
 						<div class="header">
 							<span>

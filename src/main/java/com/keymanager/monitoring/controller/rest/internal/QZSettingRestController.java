@@ -161,7 +161,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
 
 	private ModelAndView constructQZSettingModelAndView(HttpServletRequest request, QZSettingSearchCriteria qzSettingSearchCriteria, int currentPageNumber, int pageSize) {
 		ModelAndView modelAndView = new ModelAndView("/qzsetting/list");
-		Map<String, Integer> chargeRemindDataMap = qzSettingService.getChargeRemindData();
+		// Map<String, Integer> chargeRemindDataMap = qzSettingService.getChargeRemindData();
 		if (null == qzSettingSearchCriteria.getTerminalType()) {
             String terminalType = TerminalTypeMapping.getTerminalType(request);
             qzSettingSearchCriteria.setTerminalType(terminalType);
@@ -198,7 +198,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		List<Customer> customerList = customerService.getActiveCustomerSimpleInfo(customerCriteria);
 		Integer availableQZSettingCount = qzSettingService.getAvailableQZSettings().size();
 		String [] operationTypeValues = configService.getOperationTypeValues(qzSettingSearchCriteria.getTerminalType());
-		modelAndView.addObject("chargeRemindDataMap", chargeRemindDataMap);
+		// modelAndView.addObject("chargeRemindDataMap", chargeRemindDataMap);
 		modelAndView.addObject("customerList", customerList);
 		modelAndView.addObject("qzSettingSearchCriteria", qzSettingSearchCriteria);
 		modelAndView.addObject("statusList", Constants.QZSETTING_STATUS_LIST);
