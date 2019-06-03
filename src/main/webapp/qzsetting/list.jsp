@@ -51,7 +51,7 @@
 				</li>
 				<shiro:hasPermission name="/internal/qzsetting/save">
 					<li>
-						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="showSettingDialog(null, this)" value=" 增加 " >&nbsp;
+						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="showSettingDialog($(this))" value=" 增加 " >&nbsp;
 					</li>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="/internal/qzsetting/updateImmediately">
@@ -270,7 +270,7 @@
 							</span>
 							<span class="contactPerson-name" title="${qzSetting.contactPerson}"><a href="javascript:;">${qzSetting.contactPerson}</a></span>
 							<span class="domain" title="${qzSetting.domain}"><a href="javascript:;">${qzSetting.domain}</a></span>
-							<span class="contactPerson-name" title="${qzSetting.organizationName}"><a href="javascript:;">${qzSetting.organizationName}</a></span>
+							<span class="organization-name" title="${qzSetting.organizationName}"><a href="javascript:;">${qzSetting.organizationName}</a></span>
 							<span class="to-aizhan"><a href="https://www.aizhan.com/cha/${qzSetting.domain}" target="_blank" title="查看爱站">爱站</a></span>
 							<span class="to-5118"><a href="https://www.5118.com/seo/${qzSetting.domain}" target="_blank" title="查看5118,需要登录">5118</a></span>
 							<span class="fmtStandardDate" title="<fmt:formatDate value="${qzSetting.standardTime}" pattern="yyyy-MM-dd"></fmt:formatDate>">达标日期:<a href="javascript:;">
@@ -294,7 +294,7 @@
 									<a class="blue" href="javascript:showChargeDialog('${qzSetting.uuid}','${qzSetting.contactPerson}','${qzSetting.domain.trim()}',this)">收费</a>
 								</shiro:hasPermission>
 								<shiro:hasPermission name="/internal/qzsetting/save">
-									<a class="blue" href="javascript:showSettingDialog('${qzSetting.uuid}', this)">修改</a>
+									<a class="blue" href="javascript:;" onclick="showSettingDialog($(this))">修改</a>
 								</shiro:hasPermission>
 								<shiro:hasPermission name="/internal/qzsetting/delete">
 									<a class="blue" href="javascript:delQZSetting(${qzSetting.uuid})">删除</a>
@@ -318,11 +318,13 @@
 									<a href="javascript:;">
 										<span class="line1">
 											<a href="javascript:;" qzsettinguuid="${qzSetting.uuid}" <c:if test="${!isSEO}">onmouseover="showChargeRulesDiv($(this))" onmouseout="closeChargeRulesDiv()"</c:if>>
-												<c:if test="${qzSetting.totalPrice > 0}">
-													<font style="background-color: mediumseagreen;font-size: 14px;">￥ ${qzSetting.totalPrice}</font>
-												</c:if>
-												<c:if test="${qzSetting.totalPrice == 0}">
-													<font style="background-color: palevioletred;font-size: 14px;">￥ ${qzSetting.totalPrice}</font>
+												<c:if test="${qzSetting.organizationName != '优化部'}">
+													<c:if test="${qzSetting.totalPrice > 0}">
+														<font style="background-color: mediumseagreen;font-size: 14px;">￥ ${qzSetting.totalPrice}</font>
+													</c:if>
+													<c:if test="${qzSetting.totalPrice == 0}">
+														<font style="background-color: palevioletred;font-size: 14px;">￥ ${qzSetting.totalPrice}</font>
+													</c:if>
 												</c:if>
 											</a>
 										</span>
@@ -703,7 +705,7 @@
 									<a class="blue" href="javascript:showChargeDialog('${qzSetting.uuid}','${qzSetting.contactPerson}','${qzSetting.domain.trim()}',this)">收费</a>
 								</shiro:hasPermission>
 								<shiro:hasPermission name="/internal/qzsetting/save">
-									<a class="blue" href="javascript:showSettingDialog('${qzSetting.uuid}', this)">修改</a>
+									<a class="blue" href="javascript:;" onclick="showSettingDialog($(this))">修改</a>
 								</shiro:hasPermission>
 								<shiro:hasPermission name="/internal/qzsetting/delete">
 									<a class="blue" href="javascript:delQZSetting(${qzSetting.uuid})">删除</a>
@@ -727,11 +729,13 @@
 									<a href="javascript:;">
 										<span class="line1">
 											<a href="javascript:;" qzsettinguuid="${qzSetting.uuid}" <c:if test="${!isSEO}">onmouseover="showChargeRulesDiv($(this))" onmouseout="closeChargeRulesDiv()"</c:if>>
-												<c:if test="${qzSetting.totalPrice > 0}">
-													<font style="background-color: mediumseagreen;font-size: 14px;">￥ ${qzSetting.totalPrice}</font>
-												</c:if>
-												<c:if test="${qzSetting.totalPrice == 0}">
-													<font style="background-color: palevioletred;font-size: 14px;">￥ ${qzSetting.totalPrice}</font>
+												<c:if test="${qzSetting.organizationName != '优化部'}">
+													<c:if test="${qzSetting.totalPrice > 0}">
+														<font style="background-color: mediumseagreen;font-size: 14px;">￥ ${qzSetting.totalPrice}</font>
+													</c:if>
+													<c:if test="${qzSetting.totalPrice == 0}">
+														<font style="background-color: palevioletred;font-size: 14px;">￥ ${qzSetting.totalPrice}</font>
+													</c:if>
 												</c:if>
 											</a>
 										</span>
