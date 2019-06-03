@@ -1155,7 +1155,11 @@
 			</td>
 		</tr>
 	</table>
+
 	<table style="font-size:12px" cellspacing="5">
+		<tr>
+			<td colspan="2" class="split_line"></td>
+		</tr>
 		<tr>
 			<td colspan="2">
 				<input type="checkbox" name="operationType" id="PC" status="1" onclick="dealSettingTable('PC')" style=""/>电脑
@@ -1194,8 +1198,8 @@
 						<tr id="satisfyPC">
 							<td align="right" style="width:72px">达标条件</td>
 							<td>
-								<input type="radio" name="standardTypePC" id="satisfyOnePC" value="satisfyOne" checked="checked">满足其中一个&nbsp;&nbsp;
-								<input type="radio" name="standardTypePC" id="satisfyAllPC" value="satisfyAll">满足全部&nbsp;&nbsp;
+								<input type="radio" name="standardTypePC" id="satisfyAllPC" value="satisfyAll" checked="checked">满足全部&nbsp;&nbsp;
+								<input type="radio" name="standardTypePC" id="satisfyOnePC" value="satisfyOne">满足其中一个&nbsp;&nbsp;
 							</td>
 						</tr>
 						<tr id="standardSpeciesPC">
@@ -1319,8 +1323,8 @@
 						<tr id="satisfyPhone">
 							<td align="right" style="width:72px">达标条件</td>
 							<td>
-								<input type="radio" name="standardTypePhone" id="satisfyOnePhone" value="satisfyOne" checked="checked">满足其中一个&nbsp;&nbsp;
-								<input type="radio" name="standardTypePhone" id="satisfyAllPhone" value="satisfyAll">满足全部&nbsp;&nbsp;
+								<input type="radio" name="standardTypePhone" id="satisfyAllPhone" value="satisfyAll" checked="checked">满足全部&nbsp;&nbsp;
+								<input type="radio" name="standardTypePhone" id="satisfyOnePhone" value="satisfyOne">满足其中一个&nbsp;&nbsp;
 							</td>
 						</tr>
 						<tr id="standardSpeciesPhone">
@@ -1406,6 +1410,9 @@
 			</tr>
 		</c:if>
 
+		<tr>
+			<td colspan="2" class="split_line"></td>
+		</tr>
         <tr>
             <td style="width:60px" align="right">标签</td>
             <td>
