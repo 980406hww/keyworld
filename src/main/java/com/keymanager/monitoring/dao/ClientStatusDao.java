@@ -3,6 +3,7 @@ package com.keymanager.monitoring.dao;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.criteria.ClientStatusCriteria;
+import com.keymanager.monitoring.criteria.ClientStatusGroupStatCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
 import com.keymanager.monitoring.criteria.QZSettingSearchClientGroupInfoCriteria;
 import com.keymanager.monitoring.entity.ClientStatus;
@@ -43,7 +44,7 @@ public interface ClientStatusDao extends BaseMapper<ClientStatus> {
 
     List<ClientStatus> getClientStatusesForRenewal();
 
-    List<ClientStatusGroupSummaryVO> searchClientStatusGroupSummaryVO(@Param("group") String group, @Param("terminalType") String terminalType);
+    List<ClientStatusGroupSummaryVO> searchClientStatusGroupSummaryVO(@Param("clientStatusGroupStatCriteria") ClientStatusGroupStatCriteria clientStatusGroupStatCriteria);
 
     List<ClientStatus> searchBadClientStatus(Page<ClientStatus> page,  @Param("clientStatusCriteria") ClientStatusCriteria clientStatusCriteria);
 

@@ -12,6 +12,7 @@ public class CaptureRankJobSearchCriteria{
     private String exectionStatus;
     private String createBy;
     private String updateBy;
+    private String groupNameFuzzyQuery;
 
     public String getGroupNames() {
         return groupNames;
@@ -75,5 +76,13 @@ public class CaptureRankJobSearchCriteria{
 
     public void setUpdateBy(String updateBy) {
         this.updateBy = updateBy;
+    }
+
+    public String getGroupNameFuzzyQuery() {
+        return groupNameFuzzyQuery;
+    }
+
+    public void setGroupNameFuzzyQuery(String groupNameFuzzyQuery) {
+        this.groupNameFuzzyQuery = groupNameFuzzyQuery;
     }
 }

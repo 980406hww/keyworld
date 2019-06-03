@@ -3,10 +3,7 @@ package com.keymanager.monitoring.service;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.mail.MailHelper;
-import com.keymanager.monitoring.criteria.ClientStatusBatchUpdateCriteria;
-import com.keymanager.monitoring.criteria.ClientStatusCriteria;
-import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
-import com.keymanager.monitoring.criteria.QZSettingSearchClientGroupInfoCriteria;
+import com.keymanager.monitoring.criteria.*;
 import com.keymanager.monitoring.dao.ClientStatusDao;
 import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.enums.ClientStartUpStatusEnum;
@@ -661,8 +658,8 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
         return pcClientStatusSummaryVOs;
     }
 
-    public List<ClientStatusGroupSummaryVO> searchClientStatusGroupSummaryVO(String group, String terminalType) {
-        return clientStatusDao.searchClientStatusGroupSummaryVO(group,terminalType);
+    public List<ClientStatusGroupSummaryVO> searchClientStatusGroupSummaryVO(ClientStatusGroupStatCriteria clientStatusGroupStatCriteria) {
+        return clientStatusDao.searchClientStatusGroupSummaryVO(clientStatusGroupStatCriteria);
     }
 
     public String checkUpgrade(String clientID){

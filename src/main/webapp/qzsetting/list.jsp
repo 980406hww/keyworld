@@ -282,7 +282,7 @@
 							<div class="handle">
                                 <a class="blue" href="javascript:showExcludeCustomerKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain.trim()}','${qzSetting.pcGroup}','PC')">排除关键字</a>
                                 <shiro:hasPermission name="/internal/qzsetting/save">
-                                    <a class="blue" href="javascript:showKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain.trim()}','${qzSetting.pcGroup}')">指定关键字</a>
+                                    <a class="blue" href="javascript:showKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain.trim()}','${qzSetting.pcGroup}','${qzSetting.bearPawNumber}')">指定关键字</a>
                                 </shiro:hasPermission>
 								<shiro:hasPermission name="/internal/qzsetting/save">
 									<a class="blue" href="javascript:openMessageBox('全站设置', '${qzSetting.customerUuid}', '${qzSetting.contactPerson}')">用户留言</a>
@@ -693,7 +693,7 @@
 							<div class="handle">
                                 <a class="blue" href="javascript:showExcludeCustomerKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain.trim()}','${qzSetting.phoneGroup}','Phone')">排除关键字</a>
 								<shiro:hasPermission name="/internal/qzsetting/save">
-									<a class="blue" href="javascript:showKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain.trim()}','${qzSetting.phoneGroup}')">指定关键字</a>
+									<a class="blue" href="javascript:showKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain.trim()}','${qzSetting.phoneGroup}','${qzSetting.bearPawNumber}')">指定关键字</a>
 								</shiro:hasPermission>
 								<shiro:hasPermission name="/internal/qzsetting/save">
 									<a class="blue" href="javascript:openMessageBox('全站设置', '${qzSetting.customerUuid}', '${qzSetting.contactPerson}')">用户留言</a>
@@ -1426,6 +1426,12 @@
 		<shiro:hasPermission name="/internal/qzsetting/startMonitorImmediately">
 			<c:if test="${not isSEO}">
 				<tr>
+			<td style="width:60px" align="right">组最大词数</td>
+            <td>
+                <input type="text" name="groupMaxCustomerKeywordCount" id="groupMaxCustomerKeywordCount" placeholder="请输入数字：" value="5000" style="width:240px">
+            </td>
+		</tr>
+		<tr>
 					<td style="width:60px" align="right">爬取关键字</td>
 					<td>
 						<select name="qzSettingAutoCrawlKeywordFlag" id="qzSettingAutoCrawlKeywordFlag" style="width:240px">
@@ -1670,6 +1676,12 @@
 				<td style="width:60px" align="right">熊掌号</td>
 				<td>
 					<input type="text" name="bearPawNumber" id="bearPawNumber" style="width:240px" placeholder="网站若有熊掌号，请输入熊掌号" />
+				</td>
+			</tr>
+			<tr>
+				<td style="width:60px" align="right">分组</td>
+				<td>
+					<input type="text" name="optimizeGroupName" id="optimizeGroupName" style="width:240px" placeholder="可不填写，默认这个站的分组" />
 				</td>
 			</tr>
 			<tr>

@@ -14,7 +14,14 @@
         ON u.fLoginName = g.fCreateBy
         WHERE 1 = 1
         <if test="groupSettingCriteria.optimizedGroupName != null and groupSettingCriteria.optimizedGroupName != ''">
-            AND g.fGroupName = #{groupSettingCriteria.optimizedGroupName}
+            <choose>
+                <when test="groupSettingCriteria.groupNameFuzzyQuery == null or groupSettingCriteria.groupNameFuzzyQuery == ''">
+                    AND g.fGroupName = #{groupSettingCriteria.optimizedGroupName}
+                </when>
+                <otherwise>
+                    AND g.fGroupName LIKE '${groupSettingCriteria.optimizedGroupName}%'
+                </otherwise>
+            </choose>
         </if>
         AND g.fTerminalType = #{groupSettingCriteria.terminalType}
         <if test="groupSettingCriteria.hasOperation != null">

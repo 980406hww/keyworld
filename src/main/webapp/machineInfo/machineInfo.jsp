@@ -73,7 +73,8 @@
 								客户端ID:<input type="text" name="clientID" id="clientID" value="${machineInfoCriteria.clientID}" style="width: 90px;">
 								&nbsp;&nbsp;
 								优化组:<input type="text" name="groupName" id="groupName" value="${machineInfoCriteria.groupName}" style="width: 120px;">
-								&nbsp;&nbsp;
+								<input id="groupNameFuzzyQuery" name="groupNameFuzzyQuery" type="checkbox" value="groupNameFuzzyQuery" ${machineInfoCriteria.groupNameFuzzyQuery != null ? "checked=true" : ""}/>模糊查询
+                                &nbsp;&nbsp;
 								当前操作类型:<input type="text" name="operationType" id="operationType" value="${machineInfoCriteria.operationType}" style="width: 120px;">
 								&nbsp;&nbsp;
 								版本:<input type="text" name="version" id="version" value="${machineInfoCriteria.version}" style="width: 20px;">

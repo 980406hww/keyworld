@@ -17,9 +17,7 @@
             SUM(ck.fOptimizedCount) AS "totalOptimizedCount",
             SUM(ck.fOptimizeRemainingCount) AS "needOptimizeCount",
             SUM(ck.fQueryCount) AS "queryCount"
-        FROM t_customer_keyword ck
-        JOIN t_group g
-        ON ck.fOptimizeGroupName like concat(g.fGroupName, '%') AND ck.fTerminalType = g.fTerminalType
+        FROM t_customer_keyword ck, t_group g
         <if test="customerKeywordRefreshStatInfoCriteria.userName!=null and customerKeywordRefreshStatInfoCriteria.userName!=''">
             JOIN t_customer c
             ON ck.fCustomerUuid = c.fUuid
@@ -31,9 +29,22 @@
             ON ot.fQZSettingUuid = qc.fQZSettingUuid
         </if>
         WHERE ck.fStatus = 1
+        AND ck.fOptimizeGroupName = g.fGroupName
+        AND ck.fTerminalType = g.fTerminalType
         <if test="customerKeywordRefreshStatInfoCriteria.entryType!=null and customerKeywordRefreshStatInfoCriteria.entryType!=''">AND ck.fType = #{customerKeywordRefreshStatInfoCriteria.entryType}</if>
         <if test="customerKeywordRefreshStatInfoCriteria.terminalType!=null and customerKeywordRefreshStatInfoCriteria.terminalType!=''">AND ck.fTerminalType = #{customerKeywordRefreshStatInfoCriteria.terminalType}</if>
-        <if test="customerKeywordRefreshStatInfoCriteria.groupName!=null and customerKeywordRefreshStatInfoCriteria.groupName!=''">AND ck.fOptimizeGroupName like concat('%', #{customerKeywordRefreshStatInfoCriteria.groupName}, "%")</if>
+        <if test="customerKeywordRefreshStatInfoCriteria.groupName!=null and customerKeywordRefreshStatInfoCriteria.groupName!=''">
+            <choose>
+                <when test="customerKeywordRefreshStatInfoCriteria.groupNameFuzzyQuery == null or customerKeywordRefreshStatInfoCriteria.groupNameFuzzyQuery == ''">
+                    AND ck.fOptimizeGroupName = #{customerKeywordRefreshStatInfoCriteria.groupName}
+                    AND g.fGroupName = #{customerKeywordRefreshStatInfoCriteria.groupName}
+                </when>
+                <otherwise>
+                    AND ck.fOptimizeGroupName like concat(#{customerKeywordRefreshStatInfoCriteria.groupName}, "%")
+                    AND g.fGroupName like concat(#{customerKeywordRefreshStatInfoCriteria.groupName}, "%")
+                </otherwise>
+            </choose>
+        </if>
         <if test="customerKeywordRefreshStatInfoCriteria.customerName!=null and customerKeywordRefreshStatInfoCriteria.customerName!=''">AND c.fContactPerson like concat('%', #{customerKeywordRefreshStatInfoCriteria.customerName}, "%")</if>
         <if test="customerKeywordRefreshStatInfoCriteria.userName!=null and customerKeywordRefreshStatInfoCriteria.userName!=''">AND c.fUserID = #{customerKeywordRefreshStatInfoCriteria.userName}</if>
         <if test="customerKeywordRefreshStatInfoCriteria.categoryTag != null and customerKeywordRefreshStatInfoCriteria.categoryTag != ''">AND qc.fTagName = #{customerKeywordRefreshStatInfoCriteria.categoryTag} </if>
