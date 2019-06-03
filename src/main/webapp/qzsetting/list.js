@@ -1850,6 +1850,19 @@ function initSettingDialog(qzSetting) {
     settingDialogDiv.find("#qzSettingJoinReady").val(qzSetting.fIsReady ? "1" : "0");
     settingDialogDiv.find("#qzSettingEntryType").val(
         qzSetting.type != null ? qzSetting.type : "");
+
+    var flag = true;
+    var treeInput = $("#userNameTree").parent().find("input[name='userName']");
+    var text = "";
+    if (treeInput.length > 0) {
+        if (treeInput.val() !== "") {
+            text = $("#userNameTree").textbox('getText');
+        }
+    }
+    if (text === '优化部') {
+        flag = false;
+    }
+
     // 操作类型表填充数据
     $.each(qzSetting.qzOperationTypes, function (idx, val) {
         settingDialogDiv.find("#group" + val.operationType).val(val.group);
@@ -1889,10 +1902,20 @@ function initSettingDialog(qzSetting) {
     if (PCType) {
         settingDialogDiv.find("#PC")[0].checked = true;
         settingDialogDiv.find("#operationTypeSummaryInfoPC").css("display", "block");
+        if (!flag) {
+            settingDialogDiv.find("#satisfyPC").css("display", "none");
+            settingDialogDiv.find("#standardSpeciesPC").css("display", "none");
+            settingDialogDiv.find("#pcChargeRuleTable").css("display", "none");
+        }
     }
     if (PhoneType) {
         settingDialogDiv.find("#Phone")[0].checked = true;
         settingDialogDiv.find("#operationTypeSummaryInfoPhone").css("display", "block");
+        if (!flag) {
+            settingDialogDiv.find("#satisfyPhone").css("display", "none");
+            settingDialogDiv.find("#standardSpeciesPhone").css("display", "none");
+            settingDialogDiv.find("#phoneChargeRuleTable").css("display", "none");
+        }
     }
 }
 //规则表验证

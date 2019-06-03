@@ -204,7 +204,7 @@
 				<shiro:hasPermission name="/internal/qzsetting/startMonitorImmediately">
 					<li>
 						<span>达标监控: </span>
-						<select name="hasMonitor">
+						<select name="hasMonitor" style="width: 80px;">
 							<option value="" <c:if test="${qzSettingSearchCriteria.hasMonitor == null}">selected</c:if>></option>
 							<option value="1" <c:if test="${qzSettingSearchCriteria.hasMonitor == true}">selected</c:if>>是</option>
 							<option value="0" <c:if test="${qzSettingSearchCriteria.hasMonitor == false}">selected</c:if>>否</option>
@@ -213,7 +213,7 @@
 				</shiro:hasPermission>
 				<li>
 					<span>达标计划: </span>
-					<select name="hasReady">
+					<select name="hasReady" style="width: 80px;">
 						<option value="" <c:if test="${qzSettingSearchCriteria.hasReady == null}">selected</c:if>></option>
 						<option value="1" <c:if test="${qzSettingSearchCriteria.hasReady == true}">selected</c:if>>是</option>
 						<option value="0" <c:if test="${qzSettingSearchCriteria.hasReady == false}">selected</c:if>>否</option>
@@ -1187,14 +1187,14 @@
 					</shiro:hasPermission>
 					<input type="hidden" id="qzSettingUuidPC" name="qzOperationTypeUuid" value="" />
 					<c:if test="${not isSEO}">
-						<tr>
+						<tr id="satisfyPC">
 							<td align="right" style="width:72px">达标条件</td>
 							<td>
 								<input type="radio" name="standardTypePC" id="satisfyOnePC" value="satisfyOne" checked="checked">满足其中一个&nbsp;&nbsp;
 								<input type="radio" name="standardTypePC" id="satisfyAllPC" value="satisfyAll">满足全部&nbsp;&nbsp;
 							</td>
 						</tr>
-						<tr>
+						<tr id="standardSpeciesPC">
 							<td align="right" style="width:72px">达标类型</td>
 							<td title="爱站和5118不能同时选中">
 								<input type="checkbox" name="standardSpecies" id="aiZhanPCStandardSpecies" onclick="checkedStandardSpecies(this, 'PC')" value="aiZhan">爱站&nbsp;&nbsp;
@@ -1312,14 +1312,14 @@
 					</shiro:hasPermission>
 					<input type="hidden" id="qzSettingUuidPhone" name="qzOperationTypeUuid" value="" />
 					<c:if test="${not isSEO}">
-						<tr>
+						<tr id="satisfyPhone">
 							<td align="right" style="width:72px">达标条件</td>
 							<td>
 								<input type="radio" name="standardTypePhone" id="satisfyOnePhone" value="satisfyOne" checked="checked">满足其中一个&nbsp;&nbsp;
 								<input type="radio" name="standardTypePhone" id="satisfyAllPhone" value="satisfyAll">满足全部&nbsp;&nbsp;
 							</td>
 						</tr>
-						<tr>
+						<tr id="standardSpeciesPhone">
 							<td align="right" style="width:72px">达标类型</td>
 							<td title="爱站和5118不能同时选中">
 								<input type="checkbox" name="standardSpecies" id="aiZhanPhoneStandardSpecies" onclick="checkedStandardSpecies(this, 'Phone')" value="aiZhan">爱站&nbsp;&nbsp;
