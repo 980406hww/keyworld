@@ -1158,7 +1158,7 @@
 	<table style="font-size:12px" cellspacing="5">
 		<tr>
 			<td colspan="2">
-				<input type="checkbox" name="operationType" id="PC" onclick="dealSettingTable('PC')" style=""/>电脑
+				<input type="checkbox" name="operationType" id="PC" status="1" onclick="dealSettingTable('PC')" style=""/>电脑
 			</td>
 		</tr>
 		<%--电脑分组信息--%>
@@ -1283,7 +1283,7 @@
 
 		<tr>
 			<td colspan="2">
-				<input type="checkbox" name="operationType" id="Phone" onclick="dealSettingTable('Phone')" style=""/>手机
+				<input type="checkbox" name="operationType" id="Phone" status="1" onclick="dealSettingTable('Phone')" style=""/>手机
 			</td>
 		</tr>
 		<%--手机分组信息--%>

@@ -1748,7 +1748,11 @@ function createSettingDialog() {
                     $("#changeSettingDialog").dialog("close");
                     $('#changeSettingForm')[0].reset();
                 }
-            }]
+            }],
+        onClose: function () {
+            $("#changeSettingDialog").find("#PC").attr("status", 1);
+            $("#changeSettingDialog").find("#Phone").attr("status", 1);
+        }
     });
     $("#changeSettingDialog").dialog("open");
     $("#changeSettingDialog").window("resize",{top:$(document).scrollTop() + 100});
@@ -1898,6 +1902,10 @@ function initSettingDialog(qzSetting, self) {
             settingDialogDiv.find("#standardSpeciesPhone").css("display", "none");
             settingDialogDiv.find("#phoneChargeRuleTable").css("display", "none");
         }
+    }
+    if (!flag) {
+        settingDialogDiv.find("#PC").attr("status", 0);
+        settingDialogDiv.find("#Phone").attr("status", 0);
     }
 }
 //规则表验证
@@ -2181,12 +2189,22 @@ function dealSettingTable(operationType) {
     var isSEO = $(".datalist-list #isSEO").val();
     var groupObj = settingDialogDiv.find('#operationTypeSummaryInfo' + operationType);
     var checkboxObj = settingDialogDiv.find('#' + operationType);
+    var status = $(checkboxObj).attr("status");
     if (checkboxObj[0].checked == true) {
         groupObj.css("display","block");
         if (isSEO === "false") {
             $("#chargeRuleaiZhan" + operationType).css("display", "block");
             addRow("chargeRuleaiZhan" + operationType);
             $("#aiZhan"+ operationType +"StandardSpecies")[0].checked = true;
+        }
+        if (status === '1') {
+            settingDialogDiv.find("#satisfy" + operationType).css("display", "block");
+            settingDialogDiv.find("#standardSpecies" + operationType).css("display", "block");
+            settingDialogDiv.find("#"+ operationType.toLowerCase() +"ChargeRuleTable").css("display", "block");
+        } else {
+            settingDialogDiv.find("#satisfy" + operationType).css("display", "none");
+            settingDialogDiv.find("#standardSpecies" + operationType).css("display", "none");
+            settingDialogDiv.find("#"+ operationType.toLowerCase() +"ChargeRuleTable").css("display", "none");
         }
     } else {
         clearInfo(operationType);
