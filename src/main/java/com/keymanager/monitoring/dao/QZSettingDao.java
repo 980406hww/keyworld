@@ -46,6 +46,7 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
 
     List<String> getAvailableOptimizationGroups (@Param("groupSettingCriteria") GroupSettingCriteria groupSettingCriteria);
 
+    QZSetting searchGroupMaxCustomerKeywordCount(@Param("customerUuid") Long customerUuid, @Param("terminalType") String terminalType, @Param("url") String url);
     void startMonitorImmediately (@Param("uuids") String uuids);
     
     List<ExternalQzSettingVO> getQZSettingTask(@Param("crawlerHour")Integer crawlerHour, @Param("taskNumber")Integer taskNumber);

@@ -27,6 +27,7 @@
             <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
             <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
             组名:<input type="text" name="groupNames" id="groupNames" value="${captureRankJobSearchCriteria.groupNames}">
+            <input id="groupNameFuzzyQuery" name="groupNameFuzzyQuery" type="checkbox" value="groupNameFuzzyQuery" ${captureRankJobSearchCriteria.groupNameFuzzyQuery != null ? "checked=true" : ""}/>模糊查询 &nbsp;
             执行类型:
             <select name="exectionType">
                 <option value="">请选择执行类型</option>

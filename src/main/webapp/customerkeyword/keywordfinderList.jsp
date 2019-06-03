@@ -59,6 +59,7 @@
             优化组名:
             <input type="text" name="optimizeGroupName" id="optimizeGroupName"
                    value="${customerKeywordCriteria.optimizeGroupName}" style="width:100px;">&nbsp;
+            <input id="groupNameFuzzyQuery" name="groupNameFuzzyQuery" type="checkbox"  onclick="groupNameFuzzyQueryValue()" value="${customerKeywordCriteria.groupNameFuzzyQuery}"/>模糊查询 &nbsp;
             <c:if test="${isDepartmentManager}">
                 用户名称:
                 <select name="userName" id="userName">
@@ -69,6 +70,13 @@
                     </c:forEach>
                 </select>
             </c:if>
+            关键字来源:
+            <select name="customerKeywordSource" id="customerKeywordSource">
+                <option value="">所有</option>
+                <c:forEach items="${CustomerKeywordSourceMap}" var="entry">
+                    <option value="${entry.value}">${entry.key}</option>
+                </c:forEach>
+            </select>
             排序:
             <select name="orderingElement" id="orderingElement">
                 <option value="0">关键字</option>
@@ -306,9 +314,15 @@
         }else{
             $("#pushPay").prop("checked",false);
         }
+        if(${customerKeywordCriteria.groupNameFuzzyQuery == 1}){
+            $("#groupNameFuzzyQuery").prop("checked",true);
+        }else{
+            $("#groupNameFuzzyQuery").prop("checked",false);
+        }
         noPositionValue();
         displayStopValue();
         pushPayValue();
+        groupNameFuzzyQueryValue();
     }
 
     //催缴
@@ -328,6 +342,14 @@
         }
     }
 
+    function groupNameFuzzyQueryValue() {
+        if ($("#groupNameFuzzyQuery").is(":checked")){
+            $("#groupNameFuzzyQuery").val("1");
+        } else {
+            $("#groupNameFuzzyQuery").val("0");
+        }
+    }
+
     //显示排名为0
     function noPositionValue() {
         if($("#noPosition").is(":checked")){
@@ -341,6 +363,7 @@
         var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
         var searchCustomerKeywordTable = searchCustomerKeywordForm.find("#searchCustomerKeywordTable");
         searchCustomerKeywordTable.find("#searchEngine").val('${customerKeywordCriteria.searchEngine}');
+        searchCustomerKeywordTable.find("#customerKeywordSource").val('${customerKeywordCriteria.customerKeywordSource}');
         searchCustomerKeywordTable.find("#orderingElement").val("${orderElement == null ? '0' : orderElement}");
         searchCustomerKeywordTable.find("#status").val(${customerKeywordCriteria.status});
         var pages = searchCustomerKeywordForm.find('#pagesHidden').val();

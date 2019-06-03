@@ -11,8 +11,15 @@
         fUpdateTime AS 'updateTime'
         FROM t_screened_website
         WHERE 1=1
-        <if test="screenedWebsite.optimizeGroupName != null and screenedWebsite.optimizeGroupName != ''">
-            AND fOptimizeGroupName like '%${screenedWebsite.optimizeGroupName}%'
+        <if test="ScreenedWebsiteCriteria.optimizeGroupName != null and ScreenedWebsiteCriteria.optimizeGroupName != ''">
+            <choose>
+                <when test="ScreenedWebsiteCriteria.groupNameFuzzyQuery == 1">
+                    AND fOptimizeGroupName like '${ScreenedWebsiteCriteria.optimizeGroupName}%'
+                </when>
+                <otherwise>
+                    AND fOptimizeGroupName = #{ScreenedWebsiteCriteria.optimizeGroupName}
+                </otherwise>
+            </choose>
         </if>
     </select>
 

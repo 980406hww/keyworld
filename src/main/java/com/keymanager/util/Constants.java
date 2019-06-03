@@ -166,5 +166,4 @@ public class Constants {
 
     public final static String CONFIG_TYPE_NO_ENTERED_KEYWORD = "NoEnteredKeyword";
     public final static String CONFIG_KEY_NO_ENTERED_KEYWORD_REMARKS = "Remarks";
-
 }

@@ -49,29 +49,34 @@ function enterIn(e) {
 
 function checkHasOperation() {
     $(".mytabs div:eq(0)").find("input:checkbox").click(function () {
-        var hasOperation, hasRemainingAccount;
-        if (!$(this).prop("checked")) {
-            hasOperation = null;
-            hasRemainingAccount = null;
-        } else {
-            var parentName = $(this).parent().attr("name");
-            switch (parentName) {
-                case 'hasOperation':
-                    hasOperation = true;
-                    break;
-                case 'noOperation':
-                    hasOperation = false;
-                    break;
-                case 'hasRemainingAccount':
-                    hasRemainingAccount = true;
-                    break;
-                default:
-                    break;
+        var parentName = $(this).parent().attr("name");
+        if (parentName == "groupNameFuzzyQuery") {
+            var groupNameFuzzyQuery = 1;
+            $("#chargeForm").find("#groupNameFuzzyQuery").val(groupNameFuzzyQuery);
+        }else {
+            var hasOperation, hasRemainingAccount;
+            if (!$(this).prop("checked")) {
+                hasOperation = null;
+                hasRemainingAccount = null;
+            } else {
+                switch (parentName) {
+                    case 'hasOperation':
+                        hasOperation = true;
+                        break;
+                    case 'noOperation':
+                        hasOperation = false;
+                        break;
+                    case 'hasRemainingAccount':
+                        hasRemainingAccount = true;
+                        break;
+                    default:
+                        break;
+                }
             }
+            $("#chargeForm").find("#hasOperation").val(hasOperation);
+            $("#chargeForm").find("#hasRemainingAccount").val(hasRemainingAccount);
+            trimSearchCondition();
         }
-        $("#chargeForm").find("#hasOperation").val(hasOperation);
-        $("#chargeForm").find("#hasRemainingAccount").val(hasRemainingAccount);
-        trimSearchCondition();
     });
 }
 
@@ -94,6 +99,7 @@ function trimSearchCondition() {
     var currentPage = chargeForm.find("#currentPageNumberHidden").val();
     var optimizedGroupName = $(".conn").find("li:first-child input[name='optimizedGroupName']").val();
     var operationType = $(".conn").find("select[name='operationType']").val();
+    var groupNameFuzzyQuery = $(".conn").find("input[name='groupNameFuzzyQuery']").prop('checked');
     if (currentPage != '1') {
         chargeForm.find("#currentPageNumberHidden").val(1);
     }
@@ -106,6 +112,11 @@ function trimSearchCondition() {
         chargeForm.find("#operationType").val($.trim(operationType));
     } else {
         chargeForm.find("#operationType").val(null);
+    }
+    if (groupNameFuzzyQuery){
+        chargeForm.find("#groupNameFuzzyQuery").val(1);
+    } else {
+        chargeForm.find("#groupNameFuzzyQuery").val(null);
     }
     chargeForm.submit();
 }

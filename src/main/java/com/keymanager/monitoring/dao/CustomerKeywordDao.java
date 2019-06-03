@@ -228,4 +228,9 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void addCustomerKeywords (@Param("customerKeywords") List<CustomerKeyword> customerKeywords);
 
     List<String> getAvailableOptimizationGroups (@Param("groupSettingCriteria") GroupSettingCriteria groupSettingCriteria);
+
+    List<CustomerKeywordOptimizeGroupCriteria> searchOptimizeGroupNameAndCount(@Param("optimizeGroupName") String optimizeGroupName);
+    void updateSameCustomerKeywordSource(@Param("terminalType")String terminalType, @Param("customerUuid") long customerUuid, @Param("keyword") String keyword, @Param("url")String url, @Param("title")String title, @Param("customerKeywordSource") String customerKeywordSource);
+
+    void updateSimilarCustomerKeywordSource(@Param("terminalType") String terminalType, @Param("customerUuid") long customerUuid, @Param("keyword") String keyword, @Param("originalUrl") String originalUrl, @Param("title") String title, @Param("customerKeywordSource") String customerKeywordSource);
 }

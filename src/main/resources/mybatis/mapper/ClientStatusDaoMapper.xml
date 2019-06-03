@@ -135,7 +135,17 @@
         t_client_status cs
         WHERE cs.fTerminalType = #{clientStatusCriteria.terminalType}
         <if test="clientStatusCriteria.clientID != null and clientStatusCriteria.clientID != ''"> AND cs.fClientID like '%${clientStatusCriteria.clientID}%'</if>
-        <if test="clientStatusCriteria.groupName != null and clientStatusCriteria.groupName != ''"> AND cs.fGroup like '%${clientStatusCriteria.groupName}%'</if>
+        <if test="clientStatusCriteria.groupName != null and clientStatusCriteria.groupName != ''">
+            <choose>
+                <when test="clientStatusCriteria.groupNameFuzzyQuery == null or clientStatusCriteria.groupNameFuzzyQuery == ''">
+                    AND cs.fGroup = #{clientStatusCriteria.groupName}
+                </when>
+                <otherwise>
+                    AND cs.fGroup like '%${clientStatusCriteria.groupName}%'
+                </otherwise>
+            </choose>
+            AND cs.fGroup like '%${clientStatusCriteria.groupName}%'
+        </if>
         <if test="clientStatusCriteria.upgradeFailedReason != null and clientStatusCriteria.upgradeFailedReason != ''"> AND cs.fUpgradeFailedReason like '%${clientStatusCriteria.upgradeFailedReason}%'</if>
         <if test="clientStatusCriteria.version != null and clientStatusCriteria.version != ''"> AND cs.fVersion like concat(#{clientStatusCriteria.version},'%')</if>
         <if test="clientStatusCriteria.targetVersion != null and clientStatusCriteria.targetVersion != ''"> AND cs.fTargetVersion like concat(#{clientStatusCriteria.targetVersion},'%')</if>
@@ -443,8 +453,17 @@
     <select id="searchClientStatusGroupSummaryVO" resultType="com.keymanager.value.ClientStatusGroupSummaryVO">
         SELECT cs.fGroup as 'group', cs.fTerminalType as terminalType, COUNT(1) AS 'count' FROM t_client_status cs
         <where>
-            <if test="group!=null and group!=''">and cs.fGroup LIKE '%${group}%'</if>
-            <if test="terminalType!=null and terminalType!=''">and cs.fTerminalType = #{terminalType}</if>
+            <if test="clientStatusGroupStatCriteria.groupName != null and clientStatusGroupStatCriteria.groupName != ''">
+                <choose>
+                    <when test="clientStatusGroupStatCriteria.groupNameFuzzyQuery == null or clientStatusGroupStatCriteria.groupNameFuzzyQuery == ''">
+                        AND cs.fGroup =#{clientStatusGroupStatCriteria.groupName}
+                    </when>
+                    <otherwise>
+                        AND cs.fGroup LIKE '%${clientStatusGroupStatCriteria.groupName}%'
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="clientStatusGroupStatCriteria.terminalType!=null and clientStatusGroupStatCriteria.terminalType!=''">and cs.fTerminalType = #{clientStatusGroupStatCriteria.terminalType}</if>
         </where>
         GROUP BY cs.fGroup, cs.fTerminalType ORDER BY cs.fGroup
     </select>

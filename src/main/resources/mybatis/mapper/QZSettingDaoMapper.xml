@@ -100,6 +100,7 @@
             c.fContactPerson AS 'contactPerson',
             o.fOrganizationName AS 'organizationName',
             qs.fDomain AS 'domain',
+            qs.fBearPawNumber AS 'bearPawNumber',
             <if test="qzSettingSearchCriteria.terminalType != null">
                 <choose>
                     <when test="qzSettingSearchCriteria.terminalType == 'PC'">
@@ -412,6 +413,20 @@
                 qs.fPhoneGroup
             </otherwise>
         </choose>
+    </select>
+
+    <select id="searchGroupMaxCustomerKeywordCount" resultType="com.keymanager.monitoring.entity.QZSetting">
+        SELECT qs.fGroupMaxCustomerKeywordCount AS 'groupMaxCustomerKeywordCount',
+        <choose>
+            <when test="terminalType == 'PC'">
+                qs.fPcGroup AS 'pcGroup'
+            </when>
+            <otherwise>
+                qs.fPhoneGroup AS 'phoneGroup'
+            </otherwise>
+        </choose>
+        FROM t_qz_setting qs
+        WHERE qs.fCustomerUuid = #{customerUuid} AND qs.fDomain LIKE '%${url}'
     </select>
 
     <update id="startMonitorImmediately" parameterType="java.lang.String">
