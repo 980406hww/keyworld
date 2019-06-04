@@ -39,7 +39,7 @@
                 <option value="">请选择执行状态</option>
                 <option value="New" <c:if test="${captureRankJobSearchCriteria.exectionStatus.equals('New')}">selected="selected"</c:if>>New</option>
                 <option value="Processing" <c:if test="${captureRankJobSearchCriteria.exectionStatus.equals('Processing')}">selected="selected"</c:if>>Processing</option>
-                <option value="Checking" <c:if test="${captureRankJobSearchCriteria.exectionStatus.equals('Checking')}">selected="selected"</c:if>>Checking</option>
+                <%--<option value="Checking" <c:if test="${captureRankJobSearchCriteria.exectionStatus.equals('Checking')}">selected="selected"</c:if>>Checking</option>--%>
                 <option value="Complete" <c:if test="${captureRankJobSearchCriteria.exectionStatus.equals('Complete')}">selected="selected"</c:if>>Complete</option>
             </select>
             任务类型:
@@ -50,12 +50,14 @@
             <shiro:hasPermission name="/internal/captureRank/searchCaptureRankJobs">
             <input type="submit" value=" 查询 " onclick="resetPageNumber()">&nbsp;&nbsp;
             </shiro:hasPermission>
-            <shiro:hasPermission name="/internal/captureRank/saveCaptureRankJob">
-            <input type="button" value=" 添加 " onclick="addCaptureRankJobs()">&nbsp;&nbsp;
-            </shiro:hasPermission>
-            <shiro:hasPermission name="/internal/captureRank/deleteCaptureRankJobs">
-            <input type="button" value=" 删除所选 " onclick="deleteCaptureRankJobs()">&nbsp;&nbsp;
-            </shiro:hasPermission>
+            <c:if test="${captureRankJobSearchCriteria.jobType.equals('Common')}">
+                <shiro:hasPermission name="/internal/captureRank/saveCaptureRankJob">
+                    <input type="button" value=" 添加 " onclick="addCaptureRankJobs()">&nbsp;&nbsp;
+                </shiro:hasPermission>
+                <shiro:hasPermission name="/internal/captureRank/deleteCaptureRankJobs">
+                    <input type="button" value=" 删除所选 " onclick="deleteCaptureRankJobs()">&nbsp;&nbsp;
+                </shiro:hasPermission>
+            </c:if>
             <input type="button" value=" 重置任务 " onclick="resetCaptureRankJobs()">&nbsp;&nbsp;
         </form>
     </div>

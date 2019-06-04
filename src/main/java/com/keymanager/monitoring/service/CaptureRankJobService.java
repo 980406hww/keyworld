@@ -125,8 +125,13 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
 
     public void completeCaptureRankJobTemp(CaptureRankJob captureRankJob) {
         captureRankJob = captureRankJobDao.selectById(captureRankJob.getUuid());
-        captureRankJob.setExectionStatus(CaptureRankExectionStatus.Checking.name());
+        if (captureRankJob.getQzSettingUuid() != null) {
+            // 生成曲线
+            updateGenerationCurve(captureRankJob);
+        }
+        captureRankJob.setExectionStatus(CaptureRankExectionStatus.Complete.name());
         captureRankJob.setEndTime(new Date());
+        captureRankJob.setLastExecutionDate(new java.sql.Date(new Date().getTime()));
         captureRankJobDao.updateById(captureRankJob);
     }
 
