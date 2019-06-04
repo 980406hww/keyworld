@@ -34,4 +34,6 @@ public interface CaptureRankJobDao extends BaseMapper<CaptureRankJob> {
     int searchThreeMiniStatusEqualsOne(@Param("terminalType") String terminalType, @Param("groupName") String groupName);
 
     int searchCountByPosition(@Param("captureRankJob") CaptureRankJob captureRankJob, @Param("position") int position);
+
+    CaptureRankJob findExistCaptureRankJob (@Param("qzSettingUuid") Long qzSettingUuid, @Param("operationType") String operationType);
 }

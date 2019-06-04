@@ -347,4 +347,8 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
         captureRankJob.setUpdateTime(new Date());
         captureRankJobDao.insert(captureRankJob);
     }
+
+    public CaptureRankJob findExistCaptureRankJob (Long qzSettingUuid, String operationType) {
+        return captureRankJobDao.findExistCaptureRankJob(qzSettingUuid, operationType);
+    }
 }

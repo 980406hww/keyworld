@@ -112,6 +112,8 @@
                 </choose>
             </if>
             qs.fType AS 'type',
+            qs.fIsMonitor AS 'fIsMonitor',
+            qs.fIsReady AS 'fIsReady',
             qs.fCreateTime AS 'createTime',
             qs.fStatus AS 'status',
             qs.fAutoCrawlKeywordFlag AS 'autoCrawlKeywordFlag'

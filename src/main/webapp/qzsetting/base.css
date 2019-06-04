@@ -320,21 +320,21 @@ ul {
 }
 
 .datalist-list .body .data-info-wrap {
-    width: 536px;
+    width: 621px;
     float: left;
     height: 150px;
     text-align: center
 }
 
 .datalist-list .body .rank-wrap {
-    width: 771px;
+    width: 741px;
     float: left;
     height: 150px;
     border-left: 1px solid #e6e6e6;
 }
 
 .datalist-list .body .rank-wrap1 {
-    width: 481px;
+    width: 456px;
     float: left;
     height: 150px;
     border-left: 1px solid #e6e6e6;
@@ -454,7 +454,7 @@ ul {
 
 .datalist-list .body .other-rank {
     float: left;
-    width: 170px;
+    width: 255px;
 }
 
 .datalist-list .body .other-rank_2 {

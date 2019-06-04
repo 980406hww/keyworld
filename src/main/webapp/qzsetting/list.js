@@ -190,7 +190,7 @@ function generateQZKeywordRecordCharts(domElement, data) {
         return;
     }
     if (data === '' || JSON.parse(data).date === '') {
-        domElement.innerHTML = "<h1 style='text-align: center'> 暂无数据 </h1>";
+        domElement.innerHTML = "<h1 style='text-align: center'> 请进行达标监控 </h1>";
         return;
     }
     var result = JSON.parse(data);
@@ -287,7 +287,7 @@ function generateQZKeywordTrendCharts(domElement, data) {
         return;
     }
     if (data === '' || JSON.parse(data).date === '') {
-        domElement.innerHTML = "<h1 style='text-align: center'> 暂无数据 </h1>";
+        domElement.innerHTML = "<h1 style='text-align: center'> 请进行达标监控 </h1>";
         return;
     }
     var result = JSON.parse(data);
@@ -563,7 +563,7 @@ function generateQZDesignationWordTrendCharts(domElement, data) {
         return;
     }
     if (data === '' || JSON.parse(data).date === '') {
-        domElement.innerHTML = "<h1 style='text-align: center'> 暂无数据 </h1>";
+        domElement.innerHTML = "<h1 style='text-align: center'> 请进行达标监控 </h1>";
         return;
     }
     var result = JSON.parse(data);

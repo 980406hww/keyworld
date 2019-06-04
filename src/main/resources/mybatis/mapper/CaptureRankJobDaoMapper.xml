@@ -198,4 +198,14 @@
         AND
             fCurrentPosition &gt; 0
     </select>
+
+    <select id="findExistCaptureRankJob" resultType="com.keymanager.monitoring.entity.CaptureRankJob">
+        SELECT
+            crj.fUuid AS 'uuid',
+            crj.fGroupNames AS 'groupNames'
+        FROM t_capture_rank_job crj
+        WHERE crj.fQZSettingUuid = #{qzSettingUuid}
+        AND crj.fOperationType = #{operationType};
+    </select>
+
 </mapper>
