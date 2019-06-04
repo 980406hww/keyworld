@@ -51,7 +51,7 @@
 				</li>
 				<shiro:hasPermission name="/internal/qzsetting/save">
 					<li>
-						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="showSettingDialog(null, this)" value=" 增加 " >&nbsp;
+						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="showSettingDialog($(this))" value=" 增加 " >&nbsp;
 					</li>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="/internal/qzsetting/updateImmediately">
@@ -204,7 +204,7 @@
 				<shiro:hasPermission name="/internal/qzsetting/startMonitorImmediately">
 					<li>
 						<span>达标监控: </span>
-						<select name="hasMonitor">
+						<select name="hasMonitor" style="width: 80px;">
 							<option value="" <c:if test="${qzSettingSearchCriteria.hasMonitor == null}">selected</c:if>></option>
 							<option value="1" <c:if test="${qzSettingSearchCriteria.hasMonitor == true}">selected</c:if>>是</option>
 							<option value="0" <c:if test="${qzSettingSearchCriteria.hasMonitor == false}">selected</c:if>>否</option>
@@ -213,18 +213,18 @@
 				</shiro:hasPermission>
 				<li>
 					<span>达标计划: </span>
-					<select name="hasReady">
+					<select name="hasReady" style="width: 80px;">
 						<option value="" <c:if test="${qzSettingSearchCriteria.hasReady == null}">selected</c:if>></option>
 						<option value="1" <c:if test="${qzSettingSearchCriteria.hasReady == true}">selected</c:if>>是</option>
 						<option value="0" <c:if test="${qzSettingSearchCriteria.hasReady == false}">selected</c:if>>否</option>
 					</select>
 				</li>
-				<shiro:hasPermission name="/internal/qzsetting/searchQZSettings">
+				<%--<shiro:hasPermission name="/internal/qzsetting/searchQZSettings">
 					<li><a href="javascript:resetSearchCondition('-1')">过期未收费(${chargeRemindDataMap['expiredChargeSize']})</a></li>
 					<li><a target="_blank" href="javascript:resetSearchCondition('0')">当天收费提醒(${chargeRemindDataMap['nowChargeSize']})</a></li>
 					<li><a target="_blank" href="javascript:resetSearchCondition('3')">三天收费提醒(${chargeRemindDataMap['threeChargeSize']})</a></li>
 					<li><a target="_blank" href="javascript:resetSearchCondition('7')">七天收费提醒(${chargeRemindDataMap['sevenChargeSize']})</a></li>
-				</shiro:hasPermission>
+				</shiro:hasPermission>--%>
 			</ul>
 		</div>
 	</div>
@@ -261,7 +261,7 @@
 		<ul>
 			<c:forEach items="${page.records}" var="qzSetting" varStatus="status">
 				<c:choose>
-					<c:when test="${qzSetting.pcGroup != null and (qzSetting.crawlerStatus != 'finish' or qzSetting.qzKeywordRankInfoMap['PC'] != null)}">
+					<c:when test="${qzSetting.pcGroup != null and qzSetting.qzKeywordRankInfoMap['PC'] != null}">
 					<li>
 						<div class="header">
 							<input type="hidden" name="contactPerson" value="${qzSetting.contactPerson}">
@@ -270,7 +270,7 @@
 							</span>
 							<span class="contactPerson-name" title="${qzSetting.contactPerson}"><a href="javascript:;">${qzSetting.contactPerson}</a></span>
 							<span class="domain" title="${qzSetting.domain}"><a href="javascript:;">${qzSetting.domain}</a></span>
-							<span class="contactPerson-name" title="${qzSetting.organizationName}"><a href="javascript:;">${qzSetting.organizationName}</a></span>
+							<span class="organization-name" title="${qzSetting.organizationName}"><a href="javascript:;">${qzSetting.organizationName}</a></span>
 							<span class="to-aizhan"><a href="https://www.aizhan.com/cha/${qzSetting.domain}" target="_blank" title="查看爱站">爱站</a></span>
 							<span class="to-5118"><a href="https://www.5118.com/seo/${qzSetting.domain}" target="_blank" title="查看5118,需要登录">5118</a></span>
 							<span class="fmtStandardDate" title="<fmt:formatDate value="${qzSetting.standardTime}" pattern="yyyy-MM-dd"></fmt:formatDate>">达标日期:<a href="javascript:;">
@@ -282,7 +282,7 @@
 							<div class="handle">
                                 <a class="blue" href="javascript:showExcludeCustomerKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain.trim()}','${qzSetting.pcGroup}','PC')">排除关键字</a>
                                 <shiro:hasPermission name="/internal/qzsetting/save">
-                                    <a class="blue" href="javascript:showKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain.trim()}','${qzSetting.pcGroup}')">指定关键字</a>
+                                    <a class="blue" href="javascript:showKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain.trim()}','${qzSetting.pcGroup}','${qzSetting.bearPawNumber}')">指定关键字</a>
                                 </shiro:hasPermission>
 								<shiro:hasPermission name="/internal/qzsetting/save">
 									<a class="blue" href="javascript:openMessageBox('全站设置', '${qzSetting.customerUuid}', '${qzSetting.contactPerson}')">用户留言</a>
@@ -294,7 +294,7 @@
 									<a class="blue" href="javascript:showChargeDialog('${qzSetting.uuid}','${qzSetting.contactPerson}','${qzSetting.domain.trim()}',this)">收费</a>
 								</shiro:hasPermission>
 								<shiro:hasPermission name="/internal/qzsetting/save">
-									<a class="blue" href="javascript:showSettingDialog('${qzSetting.uuid}', this)">修改</a>
+									<a class="blue" href="javascript:;" onclick="showSettingDialog($(this))">修改</a>
 								</shiro:hasPermission>
 								<shiro:hasPermission name="/internal/qzsetting/delete">
 									<a class="blue" href="javascript:delQZSetting(${qzSetting.uuid})">删除</a>
@@ -318,11 +318,13 @@
 									<a href="javascript:;">
 										<span class="line1">
 											<a href="javascript:;" qzsettinguuid="${qzSetting.uuid}" <c:if test="${!isSEO}">onmouseover="showChargeRulesDiv($(this))" onmouseout="closeChargeRulesDiv()"</c:if>>
-												<c:if test="${qzSetting.totalPrice > 0}">
-													<font style="background-color: mediumseagreen;font-size: 14px;">￥ ${qzSetting.totalPrice}</font>
-												</c:if>
-												<c:if test="${qzSetting.totalPrice == 0}">
-													<font style="background-color: palevioletred;font-size: 14px;">￥ ${qzSetting.totalPrice}</font>
+												<c:if test="${qzSetting.organizationName != '优化部'}">
+													<c:if test="${qzSetting.totalPrice > 0}">
+														<font style="background-color: mediumseagreen;font-size: 14px;">￥ ${qzSetting.totalPrice}</font>
+													</c:if>
+													<c:if test="${qzSetting.totalPrice == 0}">
+														<font style="background-color: palevioletred;font-size: 14px;">￥ ${qzSetting.totalPrice}</font>
+													</c:if>
 												</c:if>
 											</a>
 										</span>
@@ -671,7 +673,7 @@
 					</li>
 					<!--li-end-pc-->
 					</c:when>
-					<c:when test="${qzSetting.phoneGroup != null and (qzSetting.crawlerStatus != 'finish' or qzSetting.qzKeywordRankInfoMap['Phone'] != null)}">
+					<c:when test="${qzSetting.phoneGroup != null and qzSetting.qzKeywordRankInfoMap['Phone'] != null}">
 					<li>
 						<div class="header">
 							<span>
@@ -691,7 +693,7 @@
 							<div class="handle">
                                 <a class="blue" href="javascript:showExcludeCustomerKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain.trim()}','${qzSetting.phoneGroup}','Phone')">排除关键字</a>
 								<shiro:hasPermission name="/internal/qzsetting/save">
-									<a class="blue" href="javascript:showKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain.trim()}','${qzSetting.phoneGroup}')">指定关键字</a>
+									<a class="blue" href="javascript:showKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain.trim()}','${qzSetting.phoneGroup}','${qzSetting.bearPawNumber}')">指定关键字</a>
 								</shiro:hasPermission>
 								<shiro:hasPermission name="/internal/qzsetting/save">
 									<a class="blue" href="javascript:openMessageBox('全站设置', '${qzSetting.customerUuid}', '${qzSetting.contactPerson}')">用户留言</a>
@@ -703,7 +705,7 @@
 									<a class="blue" href="javascript:showChargeDialog('${qzSetting.uuid}','${qzSetting.contactPerson}','${qzSetting.domain.trim()}',this)">收费</a>
 								</shiro:hasPermission>
 								<shiro:hasPermission name="/internal/qzsetting/save">
-									<a class="blue" href="javascript:showSettingDialog('${qzSetting.uuid}', this)">修改</a>
+									<a class="blue" href="javascript:;" onclick="showSettingDialog($(this))">修改</a>
 								</shiro:hasPermission>
 								<shiro:hasPermission name="/internal/qzsetting/delete">
 									<a class="blue" href="javascript:delQZSetting(${qzSetting.uuid})">删除</a>
@@ -727,11 +729,13 @@
 									<a href="javascript:;">
 										<span class="line1">
 											<a href="javascript:;" qzsettinguuid="${qzSetting.uuid}" <c:if test="${!isSEO}">onmouseover="showChargeRulesDiv($(this))" onmouseout="closeChargeRulesDiv()"</c:if>>
-												<c:if test="${qzSetting.totalPrice > 0}">
-													<font style="background-color: mediumseagreen;font-size: 14px;">￥ ${qzSetting.totalPrice}</font>
-												</c:if>
-												<c:if test="${qzSetting.totalPrice == 0}">
-													<font style="background-color: palevioletred;font-size: 14px;">￥ ${qzSetting.totalPrice}</font>
+												<c:if test="${qzSetting.organizationName != '优化部'}">
+													<c:if test="${qzSetting.totalPrice > 0}">
+														<font style="background-color: mediumseagreen;font-size: 14px;">￥ ${qzSetting.totalPrice}</font>
+													</c:if>
+													<c:if test="${qzSetting.totalPrice == 0}">
+														<font style="background-color: palevioletred;font-size: 14px;">￥ ${qzSetting.totalPrice}</font>
+													</c:if>
 												</c:if>
 											</a>
 										</span>
@@ -1151,10 +1155,14 @@
 			</td>
 		</tr>
 	</table>
+
 	<table style="font-size:12px" cellspacing="5">
 		<tr>
+			<td colspan="2" class="split_line"></td>
+		</tr>
+		<tr>
 			<td colspan="2">
-				<input type="checkbox" name="operationType" id="PC" onclick="dealSettingTable('PC')" style=""/>电脑
+				<input type="checkbox" name="operationType" id="PC" status="1" onclick="dealSettingTable('PC')" style=""/>电脑
 			</td>
 		</tr>
 		<%--电脑分组信息--%>
@@ -1187,14 +1195,14 @@
 					</shiro:hasPermission>
 					<input type="hidden" id="qzSettingUuidPC" name="qzOperationTypeUuid" value="" />
 					<c:if test="${not isSEO}">
-						<tr>
+						<tr id="satisfyPC">
 							<td align="right" style="width:72px">达标条件</td>
 							<td>
-								<input type="radio" name="standardTypePC" id="satisfyOnePC" value="satisfyOne" checked="checked">满足其中一个&nbsp;&nbsp;
-								<input type="radio" name="standardTypePC" id="satisfyAllPC" value="satisfyAll">满足全部&nbsp;&nbsp;
+								<input type="radio" name="standardTypePC" id="satisfyAllPC" value="satisfyAll" checked="checked">满足全部&nbsp;&nbsp;
+								<input type="radio" name="standardTypePC" id="satisfyOnePC" value="satisfyOne">满足其中一个&nbsp;&nbsp;
 							</td>
 						</tr>
-						<tr>
+						<tr id="standardSpeciesPC">
 							<td align="right" style="width:72px">达标类型</td>
 							<td title="爱站和5118不能同时选中">
 								<input type="checkbox" name="standardSpecies" id="aiZhanPCStandardSpecies" onclick="checkedStandardSpecies(this, 'PC')" value="aiZhan">爱站&nbsp;&nbsp;
@@ -1279,7 +1287,7 @@
 
 		<tr>
 			<td colspan="2">
-				<input type="checkbox" name="operationType" id="Phone" onclick="dealSettingTable('Phone')" style=""/>手机
+				<input type="checkbox" name="operationType" id="Phone" status="1" onclick="dealSettingTable('Phone')" style=""/>手机
 			</td>
 		</tr>
 		<%--手机分组信息--%>
@@ -1312,14 +1320,14 @@
 					</shiro:hasPermission>
 					<input type="hidden" id="qzSettingUuidPhone" name="qzOperationTypeUuid" value="" />
 					<c:if test="${not isSEO}">
-						<tr>
+						<tr id="satisfyPhone">
 							<td align="right" style="width:72px">达标条件</td>
 							<td>
-								<input type="radio" name="standardTypePhone" id="satisfyOnePhone" value="satisfyOne" checked="checked">满足其中一个&nbsp;&nbsp;
-								<input type="radio" name="standardTypePhone" id="satisfyAllPhone" value="satisfyAll">满足全部&nbsp;&nbsp;
+								<input type="radio" name="standardTypePhone" id="satisfyAllPhone" value="satisfyAll" checked="checked">满足全部&nbsp;&nbsp;
+								<input type="radio" name="standardTypePhone" id="satisfyOnePhone" value="satisfyOne">满足其中一个&nbsp;&nbsp;
 							</td>
 						</tr>
-						<tr>
+						<tr id="standardSpeciesPhone">
 							<td align="right" style="width:72px">达标类型</td>
 							<td title="爱站和5118不能同时选中">
 								<input type="checkbox" name="standardSpecies" id="aiZhanPhoneStandardSpecies" onclick="checkedStandardSpecies(this, 'Phone')" value="aiZhan">爱站&nbsp;&nbsp;
@@ -1402,6 +1410,9 @@
 			</tr>
 		</c:if>
 
+		<tr>
+			<td colspan="2" class="split_line"></td>
+		</tr>
         <tr>
             <td style="width:60px" align="right">标签</td>
             <td>
@@ -1422,6 +1433,12 @@
 		<shiro:hasPermission name="/internal/qzsetting/startMonitorImmediately">
 			<c:if test="${not isSEO}">
 				<tr>
+			<td style="width:60px" align="right">组最大词数</td>
+            <td>
+                <input type="text" name="groupMaxCustomerKeywordCount" id="groupMaxCustomerKeywordCount" placeholder="请输入数字：" value="5000" style="width:240px">
+            </td>
+		</tr>
+		<tr>
 					<td style="width:60px" align="right">爬取关键字</td>
 					<td>
 						<select name="qzSettingAutoCrawlKeywordFlag" id="qzSettingAutoCrawlKeywordFlag" style="width:240px">
@@ -1679,6 +1696,12 @@
                     </select>
                 </td>
             </tr>
+			<tr>
+				<td style="width:60px" align="right">分组</td>
+				<td>
+					<input type="text" name="optimizeGroupName" id="optimizeGroupName" style="width:240px" placeholder="可不填写，默认这个站的分组" />
+				</td>
+			</tr>
 			<tr>
 				<td style="width:60px" align="right"><input type="checkbox" name="synchronousAddition" id="synchronousAddition"></td>
 				<td>

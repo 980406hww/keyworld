@@ -100,6 +100,7 @@
             c.fContactPerson AS 'contactPerson',
             o.fOrganizationName AS 'organizationName',
             qs.fDomain AS 'domain',
+            qs.fBearPawNumber AS 'bearPawNumber',
             <if test="qzSettingSearchCriteria.terminalType != null">
                 <choose>
                     <when test="qzSettingSearchCriteria.terminalType == 'PC'">
@@ -111,18 +112,8 @@
                 </choose>
             </if>
             qs.fType AS 'type',
-            qs.fIgnoreNoIndex AS 'ignoreNoIndex',
-            qs.fIgnoreNoOrder AS 'ignoreNoOrder',
-            qs.fUpdateInterval AS 'updateInterval',
-            qs.fUpdateStatus AS 'updateStatus',
-            qs.fUpdateStartTime AS 'updateStartTime',
-            qs.fUpdateEndTime AS 'updateEndTime',
-            qs.fUpdateTime AS 'updateTime',
             qs.fCreateTime AS 'createTime',
-            qs.fCaptureCurrentKeywordCountTime AS 'captureCurrentKeywordCountTime',
-            qs.fCaptureCurrentKeywordStatus AS 'captureCurrentKeywordStatus',
             qs.fStatus AS 'status',
-            qs.fCrawlerStatus AS 'crawlerStatus',
             qs.fAutoCrawlKeywordFlag AS 'autoCrawlKeywordFlag'
         FROM t_qz_setting qs
         JOIN t_customer c
@@ -412,6 +403,20 @@
                 qs.fPhoneGroup
             </otherwise>
         </choose>
+    </select>
+
+    <select id="searchGroupMaxCustomerKeywordCount" resultType="com.keymanager.monitoring.entity.QZSetting">
+        SELECT qs.fGroupMaxCustomerKeywordCount AS 'groupMaxCustomerKeywordCount',
+        <choose>
+            <when test="terminalType == 'PC'">
+                qs.fPcGroup AS 'pcGroup'
+            </when>
+            <otherwise>
+                qs.fPhoneGroup AS 'phoneGroup'
+            </otherwise>
+        </choose>
+        FROM t_qz_setting qs
+        WHERE qs.fCustomerUuid = #{customerUuid} AND qs.fDomain LIKE '%${url}'
     </select>
 
     <update id="startMonitorImmediately" parameterType="java.lang.String">

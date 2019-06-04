@@ -1,6 +1,7 @@
 package com.keymanager.monitoring.controller.rest.internal;
 
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
+import com.keymanager.monitoring.criteria.ScreenedWebsiteCriteria;
 import com.keymanager.monitoring.entity.ScreenedWebsite;
 import com.keymanager.monitoring.service.ScreenedWebsiteService;
 import org.apache.commons.lang3.StringUtils;
@@ -27,12 +28,11 @@ public class ScreenedWebsiteController extends SpringMVCBaseController {
 
     @RequestMapping(value = "/searchScreenedWebsiteLists", method = RequestMethod.GET)
     public ModelAndView searchscreenedWebsiteLists(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize) {
-        ScreenedWebsite screenedWebsite = new ScreenedWebsite();
-        return screenedWebsiteService.constructSearchScreenedWebsiteListsModelAndView(currentPageNumber, pageSize, screenedWebsite);
+        return screenedWebsiteService.constructSearchScreenedWebsiteListsModelAndView(currentPageNumber, pageSize, new ScreenedWebsiteCriteria());
     }
 
     @RequestMapping(value = "/searchScreenedWebsiteLists", method = RequestMethod.POST)
-    public ModelAndView searchscreenedWebsiteLists(ScreenedWebsite screenedWebsite, HttpServletRequest request) {
+    public ModelAndView searchscreenedWebsiteLists(ScreenedWebsiteCriteria screenedWebsiteCriteria, HttpServletRequest request) {
         String currentPageNumber = request.getParameter("currentPageNumber");
         String pageSize = request.getParameter("pageSize");
         if(StringUtils.isEmpty(currentPageNumber)){
@@ -41,7 +41,7 @@ public class ScreenedWebsiteController extends SpringMVCBaseController {
         if(StringUtils.isEmpty(pageSize)){
             pageSize = "50";
         }
-        return screenedWebsiteService.constructSearchScreenedWebsiteListsModelAndView(Integer.parseInt(currentPageNumber), Integer.parseInt(pageSize), screenedWebsite);
+        return screenedWebsiteService.constructSearchScreenedWebsiteListsModelAndView(Integer.parseInt(currentPageNumber), Integer.parseInt(pageSize), screenedWebsiteCriteria);
     }
 
     @RequestMapping(value = "/saveScreenedWebsite", method = RequestMethod.POST)

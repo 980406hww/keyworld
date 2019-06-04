@@ -6,6 +6,7 @@ import com.keymanager.enums.CollectMethod;
 import com.keymanager.monitoring.criteria.*;
 import com.keymanager.monitoring.dao.QZSettingDao;
 import com.keymanager.monitoring.entity.*;
+import com.keymanager.monitoring.enums.CustomerKeywordSourceEnum;
 import com.keymanager.monitoring.enums.QZCaptureTitleLogStatusEnum;
 import com.keymanager.monitoring.enums.QZSettingStatusEnum;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
@@ -146,7 +147,8 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			existingQZSetting.setType(qzSetting.getType());
 			existingQZSetting.setAutoCrawlKeywordFlag(qzSetting.isAutoCrawlKeywordFlag());
 			existingQZSetting.setIgnoreNoIndex(qzSetting.isIgnoreNoIndex());
-			existingQZSetting.setIgnoreNoOrder(qzSetting.isIgnoreNoOrder());
+            existingQZSetting.setIgnoreNoOrder(qzSetting.isIgnoreNoOrder());
+            existingQZSetting.setGroupMaxCustomerKeywordCount(qzSetting.getGroupMaxCustomerKeywordCount());
 			existingQZSetting.setUpdateInterval(qzSetting.getUpdateInterval());
 			existingQZSetting.setfIsMonitor(qzSetting.getfIsMonitor());
 			existingQZSetting.setfIsReady(qzSetting.getfIsReady());
@@ -542,6 +544,8 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
                     }
 					if (CollectionUtils.isNotEmpty(insertingCustomerKeywords)) {
 						List<CustomerKeyword> customerKeywords = new ArrayList<>();
+                        QZSetting qzSetting = qzSettingDao.selectById(qzSettingCriteria.getQzSetting().getUuid());
+                        List<CustomerKeywordOptimizeGroupCriteria> customerKeywordOptimizeGroupCriteriaList = customerKeywordService.searchOptimizeGroupNameAndCount(insertingCustomerKeywords.get(0).getOptimizeGroupName());
                         for (CustomerKeyword customerKeyword : insertingCustomerKeywords) {
                             if (TerminalTypeEnum.PC.equals(customerKeyword.getTerminalType())){
                                 if (!pcExcludeKeyword.isEmpty()){
@@ -555,6 +559,11 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
                                         customerKeyword.setOptimizeGroupName("zanting");
                                     }
                                 }
+                            }
+							customerKeyword.setCustomerKeywordSource(CustomerKeywordSourceEnum.Capture.name());
+                            if (!"zanting".equals(customerKeyword.getOptimizeGroupName())){
+                                CustomerKeywordOptimizeGroupCriteria customerKeywordOptimizeGroupCriteria = customerKeywordService.matchOptimizeGroupName(customerKeywordOptimizeGroupCriteriaList, customerKeyword.getOptimizeGroupName(), qzSetting.getGroupMaxCustomerKeywordCount());
+                                customerKeyword.setOptimizeGroupName(customerKeywordOptimizeGroupCriteria.getOptimizeGroupName());
                             }
                             customerKeywords.add(customerKeyword);
                         }
@@ -676,6 +685,8 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			if (null != customerExcludeKeywords) {
 				excludeKeyword.addAll(Arrays.asList(customerExcludeKeywords.split(",")));
 			}
+            QZSetting qzSetting = qzSettingDao.searchGroupMaxCustomerKeywordCount(qzSettingSaveCustomerKeywordsCriteria.getCustomerUuid(), terminalType,  qzSettingSaveCustomerKeywordsCriteria.getDomain());
+            List<CustomerKeywordOptimizeGroupCriteria> customerKeywordOptimizeGroupCriteriaList = customerKeywordService.searchOptimizeGroupNameAndCount(qzSettingSaveCustomerKeywordsCriteria.getOptimizeGroupName());
 			for (String keyword : qzSettingSaveCustomerKeywordsCriteria.getKeywords()) {
 				CustomerKeyword customerKeyword = new CustomerKeyword();
 				customerKeyword.setQzSettingUuid(qzSettingSaveCustomerKeywordsCriteria.getQzSettingUuid());
@@ -691,15 +702,17 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 				customerKeyword.setCurrentIndexCount(-1);
 				customerKeyword.setPositionFirstFee(-1d);
 				customerKeyword.setBearPawNumber(qzSettingSaveCustomerKeywordsCriteria.getBearPawNumber());
+                customerKeyword.setCustomerKeywordSource(CustomerKeywordSourceEnum.Specify.name());
+				customerKeyword.setOptimizeGroupName(qzSettingSaveCustomerKeywordsCriteria.getOptimizeGroupName());
 				if (!excludeKeyword.isEmpty()){
 					if (excludeKeyword.contains(keyword)){
 						customerKeyword.setOptimizeGroupName("zanting");
-					} else {
-						customerKeyword.setOptimizeGroupName(qzSettingSaveCustomerKeywordsCriteria.getOptimizeGroupName());
 					}
-				} else {
-					customerKeyword.setOptimizeGroupName(qzSettingSaveCustomerKeywordsCriteria.getOptimizeGroupName());
 				}
+				if (!"zanting".equals(customerKeyword.getOptimizeGroupName()) && customerKeyword.getOptimizeGroupName().equals(TerminalTypeEnum.PC.name().equals(terminalType) ? qzSetting.getPcGroup() : qzSetting.getPhoneGroup())){
+                    CustomerKeywordOptimizeGroupCriteria customerKeywordOptimizeGroupCriteria = customerKeywordService.matchOptimizeGroupName(customerKeywordOptimizeGroupCriteriaList, customerKeyword.getOptimizeGroupName(), qzSetting.getGroupMaxCustomerKeywordCount());
+                    customerKeyword.setOptimizeGroupName(customerKeywordOptimizeGroupCriteria.getOptimizeGroupName());
+                }
 				customerKeyword.setKeyword(keyword);
 				customerKeywords.add(customerKeyword);
 			}
@@ -719,6 +732,11 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
     public List<String> getAvailableOptimizationGroups (GroupSettingCriteria groupSettingCriteria) {
 		return qzSettingDao.getAvailableOptimizationGroups(groupSettingCriteria);
+    }
+
+    public QZSetting searchGroupMaxCustomerKeywordCount(Long customerUuid, String terminalType, String url){
+        url = url.replace("www.","").replace("http://","").replace("https://","").split("/")[0];
+        return qzSettingDao.searchGroupMaxCustomerKeywordCount(customerUuid, terminalType,  url);
     }
 
     public void startMonitorImmediately(String uuids){

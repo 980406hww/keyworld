@@ -217,14 +217,14 @@ ul {
     margin: 0 5px;
 }
 
-.datalist-list .header span.contactPerson-name {
+.datalist-list .header span.contactPerson-name, .datalist-list .header span.organization-name {
     max-width: 110px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
-.datalist-list .header span.contactPerson-name a {
+.datalist-list .header span.contactPerson-name a, .datalist-list .header span.organization-name a {
     font-weight: 700;
     color: #000000;
 }
@@ -617,4 +617,8 @@ ul {
 }
 #chargeRulesDivTable {
     text-align: center;
+}
+#changeSettingForm tr .split_line {
+    border-top: 1px dashed black;
+    width: 80%;
 }

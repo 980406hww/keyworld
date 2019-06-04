@@ -46,6 +46,8 @@ public class CustomerKeywordCriteria extends BaseCriteria{
     private Integer fifteenDaysNoReachStandard;
     private Integer thirtyDaysNoReachStandard;
     private Integer openDialogStatus;
+    private String customerKeywordSource;
+    private String groupNameFuzzyQuery;
 
     public String getBearPawNumber() {
         return bearPawNumber;
@@ -385,5 +387,21 @@ public class CustomerKeywordCriteria extends BaseCriteria{
 
     public void setEnteredKeywordRemarks (String enteredKeywordRemarks) {
         this.enteredKeywordRemarks = enteredKeywordRemarks;
+    }
+
+    public String getCustomerKeywordSource() {
+        return customerKeywordSource;
+    }
+
+    public void setCustomerKeywordSource(String customerKeywordSource) {
+        this.customerKeywordSource = customerKeywordSource;
+    }
+
+    public String getGroupNameFuzzyQuery() {
+        return groupNameFuzzyQuery;
+    }
+
+    public void setGroupNameFuzzyQuery(String groupNameFuzzyQuery) {
+        this.groupNameFuzzyQuery = groupNameFuzzyQuery;
     }
 }

@@ -58,6 +58,7 @@
         <if test="customerKeywordCriteria.userName != null and customerKeywordCriteria.userName != ''">
             AND c.fUserID = #{customerKeywordCriteria.userName}
         </if>
+        <if test="customerKeywordCriteria.customerKeywordSource != null and customerKeywordCriteria.customerKeywordSource != ''">AND ck.fCustomerKeywordSource = #{customerKeywordCriteria.customerKeywordSource}</if>
         <if test="customerKeywordCriteria.noReachStandardDays != null and customerKeywordCriteria.noReachStandardDays > 0">
             AND ck.fLastReachStandardDate &lt;= DATE_SUB(CURRENT_DATE(), INTERVAL #{customerKeywordCriteria.noReachStandardDays} DAY)
         </if>
@@ -75,7 +76,12 @@
         </if>
         <choose>
             <when test="customerKeywordCriteria.optimizeGroupName != null and customerKeywordCriteria.optimizeGroupName != ''">
-                AND ck.fOptimizeGroupName  like '${customerKeywordCriteria.optimizeGroupName}%'
+                <if test="customerKeywordCriteria.groupNameFuzzyQuery == null or customerKeywordCriteria.groupNameFuzzyQuery == ''">
+                    AND ck.fOptimizeGroupName = #{customerKeywordCriteria.optimizeGroupName}
+                </if>
+                <if test="customerKeywordCriteria.groupNameFuzzyQuery == 1">
+                    AND ck.fOptimizeGroupName like '${customerKeywordCriteria.optimizeGroupName}%'
+                </if>
             </when>
             <otherwise>
                 <if test="customerKeywordCriteria.displayStop == null or customerKeywordCriteria.displayStop == ''">
@@ -1438,6 +1444,7 @@
             fStatus,
             fManualCleanTitle,
             fKeywordEffect,
+            fCustomerKeywordSource,
             fUpdateTime,
             fCreateTime
         )
@@ -1503,6 +1510,7 @@
                     <when test="customerKeyword.manualCleanTitle == null">0,</when>
                 </choose>
                 #{customerKeyword.keywordEffect},
+                #{customerKeyword.customerKeywordSource},
                 #{customerKeyword.updateTime},
                 #{customerKeyword.createTime}
             )
@@ -1521,4 +1529,45 @@
         AND ck.fStatus = 1
         GROUP BY ck.fOptimizeGroupName
     </select>
+
+    <select id="searchOptimizeGroupNameAndCount" resultType="com.keymanager.monitoring.criteria.CustomerKeywordOptimizeGroupCriteria">
+        SELECT fOptimizeGroupName AS 'optimizeGroupName',
+        COUNT(1) AS 'sameGroupCustomerKeywordCount'
+        FROM t_customer_keyword
+        WHERE fOptimizeGroupName LIKE '${optimizeGroupName}%'
+        GROUP BY fOptimizeGroupName
+        ORDER BY fOptimizeGroupName
+    </select>
+    <update id="updateSameCustomerKeywordSource">
+        UPDATE t_customer_keyword
+        SET fCustomerKeywordSource = #{customerKeywordSource}
+        WHERE fKeyword = #{keyword}
+        AND fTerminalType = #{terminalType}
+        AND fCustomerUuid = #{customerUuid}
+        <choose>
+            <when test="url == 'NoUrl'">
+                AND fTitle = #{title}
+            </when>
+            <otherwise>
+                AND fUrl = #{url}
+            </otherwise>
+        </choose>
+    </update>
+
+    <update id="updateSimilarCustomerKeywordSource">
+        UPDATE t_customer_keyword
+        SET fCustomerKeywordSource = #{customerKeywordSource}
+        WHERE fKeyword = #{keyword}
+        AND fTerminalType = #{terminalType}
+        AND fCustomerUuid = #{customerUuid}
+        <choose>
+            <when test="originalUrl == 'NoUrl'">
+                AND fTitle = #{title}
+            </when>
+            <otherwise>
+                AND fOriginalUrl <![CDATA[ > ]]> ''
+                AND fOriginalUrl like concat('%', #{originalUrl});
+            </otherwise>
+        </choose>
+    </update>
 </mapper>

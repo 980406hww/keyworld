@@ -986,142 +986,130 @@ function showChargeRulesDiv(self, e) {
     if(pageY==undefined) {
         pageY = event.clientY+document.body.scrollTop||document.documentElement.scrollTop;
     }
-    var flag = true;
-    var treeInput = $("#userNameTree").parent().find("input[name='userName']");
-    var text = "";
-    if (treeInput.length > 0) {
-        if (treeInput.val() !== "") {
-            text = $("#userNameTree").textbox('getText');
-        }
-    }
-    if (text === '优化部') {
-        flag = false;
-    }
-    if (flag) {
-        $("#chargeRulesDivTable tr").remove();
-        clearTimeout(TimeFn);
-        TimeFn = setTimeout(function(){
-            var qzSettingUuid = $(self).attr("qzsettinguuid");
-            var terminalType = $("#chargeForm").find("#terminalType").val();
-            var postData = {};
-            postData.qzSettingUuid = parseInt(qzSettingUuid);
-            postData.terminalType = terminalType;
-            $.ajax({
-                url: '/internal/qzsetting/getChargeRule',
-                type: 'POST',
-                data: JSON.stringify(postData),
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                success: function (result) {
-                    $("#chargeRulesDivTable tr").remove();
-                    if(result != null && result.qzChargeRuleMap != null) {
-                        var standardType;
-                        if (result.standardType.indexOf("One") > -1) {
-                            standardType = "满足其中一个";
-                        } else {
-                            standardType = "满足全部";
-                        }
-                        $("#chargeRulesDivTable").append("<tr>" +
-                            "<td colspan='4'>达标类型: "+ standardType +"</td>" +
-                            "</tr>");
-                        var qzChargeRules = {};
-                        if (result.qzChargeRuleMap["aiZhan"] !== undefined) {
-                            $("#chargeRulesDivTable").append("<tr>" +
-                                "<td colspan='4'>"+ "爱站" +"</td>" +
-                                "</tr>"+
-                                "<tr>" +
-                                "<td>序号</td>" +
-                                "<td>起始词量</td>" +
-                                "<td>终止词量</td>" +
-                                "<td>价格</td>" +
-                                "</tr>");
-                            qzChargeRules = result.qzChargeRuleMap["aiZhan"];
-                        } else if (result.qzChargeRuleMap["5118"] !== undefined) {
-                            $("#chargeRulesDivTable").append("<tr>" +
-                                "<td colspan='4'>"+ "5118" +"</td>" +
-                                "</tr>"+
-                                "<tr>" +
-                                "<td>序号</td>" +
-                                "<td>起始词量</td>" +
-                                "<td>终止词量</td>" +
-                                "<td>价格</td>" +
-                                "</tr>");
-                            qzChargeRules = result.qzChargeRuleMap["5118"];
-                        }
-                        $.each(qzChargeRules, function (idx, val) {
-                            var newTr = document.createElement("tr");
-                            var chargeRuleElements = [
-                                idx + 1,
-                                val.startKeywordCount,
-                                val.endKeywordCount,
-                                val.amount
-                            ];
-                            $.each(chargeRuleElements, function (index, v) {
-                                var newTd = document.createElement("td");
-                                newTr.appendChild(newTd);
-                                if (v == null) {
-                                    newTd.innerHTML = "";
-                                } else {
-                                    newTd.innerHTML = v;
-                                }
-                            });
-                            if (idx + 1 === parseInt(val.achieveLevel)) {
-                                $(newTr).css("background-color", "mediumseagreen");
-                            }
-                            $("#chargeRulesDivTable")[0].lastChild.appendChild(newTr);
-                        });
-                        if (result.qzChargeRuleMap["designationWord"] !== undefined) {
-                            $("#chargeRulesDivTable").append("<tr>" +
-                                "<td colspan='4'>"+ "指定词" +"</td>" +
-                                "</tr>"+
-                                "<tr>" +
-                                "<td>序号</td>" +
-                                "<td>起始词量</td>" +
-                                "<td>终止词量</td>" +
-                                "<td>价格</td>" +
-                                "</tr>");
-                            qzChargeRules = result.qzChargeRuleMap["designationWord"];
-                        } else {
-                            qzChargeRules = {};
-                        }
-                        $.each(qzChargeRules, function (idx, val) {
-                            var newTr = document.createElement("tr");
-                            var chargeRuleElements = [
-                                idx + 1,
-                                val.startKeywordCount,
-                                val.endKeywordCount,
-                                val.amount
-                            ];
-                            $.each(chargeRuleElements, function (index, v) {
-                                var newTd = document.createElement("td");
-                                newTr.appendChild(newTd);
-                                if (v == null) {
-                                    newTd.innerHTML = "";
-                                } else {
-                                    newTd.innerHTML = v;
-                                }
-                            });
-                            if (idx + 1 === parseInt(val.achieveLevel)) {
-                                $(newTr).css("background-color", "mediumseagreen");
-                            }
-                            $("#chargeRulesDivTable")[0].lastChild.appendChild(newTr);
-                        });
+
+    $("#chargeRulesDivTable tr").remove();
+    clearTimeout(TimeFn);
+    TimeFn = setTimeout(function(){
+        var qzSettingUuid = $(self).attr("qzsettinguuid");
+        var terminalType = $("#chargeForm").find("#terminalType").val();
+        var postData = {};
+        postData.qzSettingUuid = parseInt(qzSettingUuid);
+        postData.terminalType = terminalType;
+        $.ajax({
+            url: '/internal/qzsetting/getChargeRule',
+            type: 'POST',
+            data: JSON.stringify(postData),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            success: function (result) {
+                $("#chargeRulesDivTable tr").remove();
+                if(result != null && result.qzChargeRuleMap != null) {
+                    var standardType;
+                    if (result.standardType.indexOf("One") > -1) {
+                        standardType = "满足其中一个";
+                    } else {
+                        standardType = "满足全部";
                     }
-                },
-                error: function () {
-                    $().toastmessage('showErrorToast', "获取信息失败！");
+                    $("#chargeRulesDivTable").append("<tr>" +
+                        "<td colspan='4'>达标类型: "+ standardType +"</td>" +
+                        "</tr>");
+                    var qzChargeRules = {};
+                    if (result.qzChargeRuleMap["aiZhan"] !== undefined) {
+                        $("#chargeRulesDivTable").append("<tr>" +
+                            "<td colspan='4'>"+ "爱站" +"</td>" +
+                            "</tr>"+
+                            "<tr>" +
+                            "<td>序号</td>" +
+                            "<td>起始词量</td>" +
+                            "<td>终止词量</td>" +
+                            "<td>价格</td>" +
+                            "</tr>");
+                        qzChargeRules = result.qzChargeRuleMap["aiZhan"];
+                    } else if (result.qzChargeRuleMap["5118"] !== undefined) {
+                        $("#chargeRulesDivTable").append("<tr>" +
+                            "<td colspan='4'>"+ "5118" +"</td>" +
+                            "</tr>"+
+                            "<tr>" +
+                            "<td>序号</td>" +
+                            "<td>起始词量</td>" +
+                            "<td>终止词量</td>" +
+                            "<td>价格</td>" +
+                            "</tr>");
+                        qzChargeRules = result.qzChargeRuleMap["5118"];
+                    }
+                    $.each(qzChargeRules, function (idx, val) {
+                        var newTr = document.createElement("tr");
+                        var chargeRuleElements = [
+                            idx + 1,
+                            val.startKeywordCount,
+                            val.endKeywordCount,
+                            val.amount
+                        ];
+                        $.each(chargeRuleElements, function (index, v) {
+                            var newTd = document.createElement("td");
+                            newTr.appendChild(newTd);
+                            if (v == null) {
+                                newTd.innerHTML = "";
+                            } else {
+                                newTd.innerHTML = v;
+                            }
+                        });
+                        if (idx + 1 === parseInt(val.achieveLevel)) {
+                            $(newTr).css("background-color", "mediumseagreen");
+                        }
+                        $("#chargeRulesDivTable")[0].lastChild.appendChild(newTr);
+                    });
+                    if (result.qzChargeRuleMap["designationWord"] !== undefined) {
+                        $("#chargeRulesDivTable").append("<tr>" +
+                            "<td colspan='4'>"+ "指定词" +"</td>" +
+                            "</tr>"+
+                            "<tr>" +
+                            "<td>序号</td>" +
+                            "<td>起始词量</td>" +
+                            "<td>终止词量</td>" +
+                            "<td>价格</td>" +
+                            "</tr>");
+                        qzChargeRules = result.qzChargeRuleMap["designationWord"];
+                    } else {
+                        qzChargeRules = {};
+                    }
+                    $.each(qzChargeRules, function (idx, val) {
+                        var newTr = document.createElement("tr");
+                        var chargeRuleElements = [
+                            idx + 1,
+                            val.startKeywordCount,
+                            val.endKeywordCount,
+                            val.amount
+                        ];
+                        $.each(chargeRuleElements, function (index, v) {
+                            var newTd = document.createElement("td");
+                            newTr.appendChild(newTd);
+                            if (v == null) {
+                                newTd.innerHTML = "";
+                            } else {
+                                newTd.innerHTML = v;
+                            }
+                        });
+                        if (idx + 1 === parseInt(val.achieveLevel)) {
+                            $(newTr).css("background-color", "mediumseagreen");
+                        }
+                        $("#chargeRulesDivTable")[0].lastChild.appendChild(newTr);
+                    });
                 }
-            });
-            var chargeRulesDiv = document.getElementById('chargeRulesDiv');
-            chargeRulesDiv.style.display="block";
-            chargeRulesDiv.style.left=(pageX) + "px";
-            chargeRulesDiv.style.top=(pageY) + "px";
-            chargeRulesDiv.style.zIndex=1000;
-            chargeRulesDiv.style.position="absolute";
-        }, 300);
-    }
+            },
+            error: function () {
+                $().toastmessage('showErrorToast', "获取信息失败！");
+            }
+        });
+        var chargeRulesDiv = document.getElementById('chargeRulesDiv');
+        chargeRulesDiv.style.display="block";
+        chargeRulesDiv.style.left=(pageX) + "px";
+        chargeRulesDiv.style.top=(pageY) + "px";
+        chargeRulesDiv.style.zIndex=1000;
+        chargeRulesDiv.style.position="absolute";
+    }, 300);
 }
 function closeChargeRulesDiv() {
     clearTimeout(TimeFn);
@@ -1167,12 +1155,14 @@ function findOptimizeGroupAndOperationType(self) {
     var args = name.split(" ");
     searchGroupSettings(args[0], args[1]);
 }
-function showKeywordDialog(qzSettingUuid, customerUuid, domain, optimizedGroupName) {
+function showKeywordDialog(qzSettingUuid, customerUuid, domain, optimizeGroupName, bearPawNumber) {
     var customerKeywordDialog = $("#customerKeywordDialog");
     customerKeywordDialog.find('#customerKeywordForm')[0].reset();
     customerKeywordDialog.find("#qzSettingUuid").val(qzSettingUuid);
     customerKeywordDialog.find("#customerUuid").val(customerUuid);
     customerKeywordDialog.find("#domain").val(domain);
+    customerKeywordDialog.find("#optimizeGroupName").val(optimizeGroupName);
+    customerKeywordDialog.find("#bearPawNumber").val(bearPawNumber);
     customerKeywordDialog.show();
     customerKeywordDialog.dialog({
         resizable: false,
@@ -1184,7 +1174,7 @@ function showKeywordDialog(qzSettingUuid, customerUuid, domain, optimizedGroupNa
             text: '保存',
             iconCls: 'icon-ok',
             handler: function () {
-                saveCustomerKeywords(qzSettingUuid, customerUuid, optimizedGroupName);
+                saveCustomerKeywords(qzSettingUuid, customerUuid, optimizeGroupName);
             }
         }, {
             text: '取消',
@@ -1201,7 +1191,7 @@ function showKeywordDialog(qzSettingUuid, customerUuid, domain, optimizedGroupNa
         left: $(document).scrollLeft() + $(window).width() / 2 - 170
     });
 }
-function saveCustomerKeywords(qzSettingUuid, customerUuid, optimizedGroupName) {
+function saveCustomerKeywords(qzSettingUuid, customerUuid, tempOptimizeGroupName) {
     var postData = {};
     var terminalTypes = [];
     var customerKeywordDialog = $("#customerKeywordDialog");
@@ -1234,10 +1224,14 @@ function saveCustomerKeywords(qzSettingUuid, customerUuid, optimizedGroupName) {
     var type = customerKeywordDialog.find("#qzSettingEntryType").val();
     var searchEngine = customerKeywordDialog.find("#searchEngine").val();
     var keywordEffect = customerKeywordDialog.find("#keywordEffect").val();
+    var optimizeGroupName = customerKeywordDialog.find("#optimizeGroupName").val();
+    if (optimizeGroupName == "") {
+        optimizeGroupName = tempOptimizeGroupName;
+    }
     postData.qzSettingUuid = qzSettingUuid;
     postData.customerUuid = customerUuid;
     postData.domain = $.trim(domain);
-    postData.optimizeGroupName = optimizedGroupName;
+    postData.optimizeGroupName = optimizeGroupName;
     postData.type = type;
     postData.searchEngine = searchEngine;
     postData.terminalTypes = terminalTypes;
@@ -1765,7 +1759,11 @@ function createSettingDialog() {
                     $("#changeSettingDialog").dialog("close");
                     $('#changeSettingForm')[0].reset();
                 }
-            }]
+            }],
+        onClose: function () {
+            $("#changeSettingDialog").find("#PC").attr("status", 1);
+            $("#changeSettingDialog").find("#Phone").attr("status", 1);
+        }
     });
     $("#changeSettingDialog").dialog("open");
     $("#changeSettingDialog").window("resize",{top:$(document).scrollTop() + 100});
@@ -1778,6 +1776,7 @@ function resetSettingDialog() {
     settingDialogDiv.find("#qzSettingDomain").val("");
     settingDialogDiv.find("#bearPawNumber").val("");
     settingDialogDiv.find("#qzCategoryTagNames").val("");
+    settingDialogDiv.find("#groupMaxCustomerKeywordCount").val("5000");
     settingDialogDiv.find("#qzSettingAutoCrawlKeywordFlag").val("0");
     settingDialogDiv.find("#qzSettingIgnoreNoIndex").val("1");
     settingDialogDiv.find("#qzSettingIgnoreNoOrder").val("1");
@@ -1814,9 +1813,10 @@ function clearStandardInfo(type, standardSpecies) {
     settingDialogObj.find("#chargeRule" + standardSpecies + type).css("display","none");
     settingDialogObj.find("#" + standardSpecies + type + "StandardSpecies").prop("checked", false);
 }
-function showSettingDialog(uuid, self) {
+function showSettingDialog(self) {
     resetSettingDialog();
-    if(uuid == null){
+    var uuid = $(self).parent().parent().find("input:checkbox[name='uuid']").val();
+    if(uuid === undefined){
         createSettingDialog();
         return;
     }
@@ -1825,7 +1825,7 @@ function showSettingDialog(uuid, self) {
         type: 'Get',
         success: function (qzSetting) {
             if(qzSetting != null){
-                initSettingDialog(qzSetting);
+                initSettingDialog(qzSetting, self);
                 createSettingDialog();
             }else{
                 $().toastmessage('showErrorToast', "获取信息失败！");
@@ -1836,11 +1836,12 @@ function showSettingDialog(uuid, self) {
         }
     });
 }
-function initSettingDialog(qzSetting) {
+function initSettingDialog(qzSetting, self) {
     var PCType = false;
     var PhoneType = false;
     var settingDialogDiv = $("#changeSettingDialog");
     settingDialogDiv.find("#qzSettingUuid").val(qzSetting.uuid);
+    settingDialogDiv.find("#groupMaxCustomerKeywordCount").val(qzSetting.groupMaxCustomerKeywordCount);
     settingDialogDiv.find("#bearPawNumber").val(qzSetting.bearPawNumber);
     settingDialogDiv.find("#qzSettingCustomer").val(
         qzSetting.contactPerson + "_____" + qzSetting.customerUuid);
@@ -1855,6 +1856,12 @@ function initSettingDialog(qzSetting) {
     settingDialogDiv.find("#qzSettingJoinReady").val(qzSetting.fIsReady ? "1" : "0");
     settingDialogDiv.find("#qzSettingEntryType").val(
         qzSetting.type != null ? qzSetting.type : "");
+    var organizationName = $(self).parent().parent().find("span.organization-name a").text();
+    var flag = true;
+    if (organizationName === '优化部') {
+        flag = false;
+    }
+
     // 操作类型表填充数据
     $.each(qzSetting.qzOperationTypes, function (idx, val) {
         settingDialogDiv.find("#group" + val.operationType).val(val.group);
@@ -1894,10 +1901,24 @@ function initSettingDialog(qzSetting) {
     if (PCType) {
         settingDialogDiv.find("#PC")[0].checked = true;
         settingDialogDiv.find("#operationTypeSummaryInfoPC").css("display", "block");
+        if (!flag) {
+            settingDialogDiv.find("#satisfyPC").css("display", "none");
+            settingDialogDiv.find("#standardSpeciesPC").css("display", "none");
+            settingDialogDiv.find("#pcChargeRuleTable").css("display", "none");
+        }
     }
     if (PhoneType) {
         settingDialogDiv.find("#Phone")[0].checked = true;
         settingDialogDiv.find("#operationTypeSummaryInfoPhone").css("display", "block");
+        if (!flag) {
+            settingDialogDiv.find("#satisfyPhone").css("display", "none");
+            settingDialogDiv.find("#standardSpeciesPhone").css("display", "none");
+            settingDialogDiv.find("#phoneChargeRuleTable").css("display", "none");
+        }
+    }
+    if (!flag) {
+        settingDialogDiv.find("#PC").attr("status", 0);
+        settingDialogDiv.find("#Phone").attr("status", 0);
     }
 }
 //规则表验证
@@ -1925,6 +1946,7 @@ function saveChangeSetting() {
         qzSetting.ignoreNoIndex = settingDialogDiv.find("#qzSettingIgnoreNoIndex").val() === "1" ? true : false;
         qzSetting.ignoreNoOrder = settingDialogDiv.find("#qzSettingIgnoreNoOrder").val() === "1" ? true : false;
         qzSetting.updateInterval = settingDialogDiv.find("#qzSettingInterval").val();
+        qzSetting.groupMaxCustomerKeywordCount = settingDialogDiv.find("#groupMaxCustomerKeywordCount").val();
     } else {
         qzSetting.autoCrawlKeywordFlag = false;
         qzSetting.ignoreNoIndex = true;
@@ -2181,12 +2203,22 @@ function dealSettingTable(operationType) {
     var isSEO = $(".datalist-list #isSEO").val();
     var groupObj = settingDialogDiv.find('#operationTypeSummaryInfo' + operationType);
     var checkboxObj = settingDialogDiv.find('#' + operationType);
+    var status = $(checkboxObj).attr("status");
     if (checkboxObj[0].checked == true) {
         groupObj.css("display","block");
         if (isSEO === "false") {
             $("#chargeRuleaiZhan" + operationType).css("display", "block");
             addRow("chargeRuleaiZhan" + operationType);
             $("#aiZhan"+ operationType +"StandardSpecies")[0].checked = true;
+        }
+        if (status === '1') {
+            settingDialogDiv.find("#satisfy" + operationType).css("display", "block");
+            settingDialogDiv.find("#standardSpecies" + operationType).css("display", "block");
+            settingDialogDiv.find("#"+ operationType.toLowerCase() +"ChargeRuleTable").css("display", "block");
+        } else {
+            settingDialogDiv.find("#satisfy" + operationType).css("display", "none");
+            settingDialogDiv.find("#standardSpecies" + operationType).css("display", "none");
+            settingDialogDiv.find("#"+ operationType.toLowerCase() +"ChargeRuleTable").css("display", "none");
         }
     } else {
         clearInfo(operationType);
