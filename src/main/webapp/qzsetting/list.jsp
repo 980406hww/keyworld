@@ -1689,8 +1689,8 @@
                 <td style="width:60px" align="right">关键词作用</td>
                 <td>
                     <select name="keywordEffect" id="keywordEffect" style="width: 100px" title="">
-                        <option value="指定词" selected="selected">指定词</option>
-                        <option value="一般词">一般词</option>
+						<option value="一般词" selected="selected">一般词</option>
+						<option value="指定词">指定词</option>
                         <option value="曲线词">曲线词</option>
                         <option value="赠送词">赠送词</option>
                     </select>
