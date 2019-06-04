@@ -535,10 +535,10 @@
 												<c:if test="${qzSetting.qzKeywordRankInfoMap['PC']['aiZhan'] != null or qzSetting.qzKeywordRankInfoMap['PC']['5118'] != null}">
 													<div name="rankInfo" style="display: none;"></div>
 													<div class="col-1">
-														<h1><c:if test="${qzSetting.fIsMonitor == false}">请进行达标监控</c:if></h1>
+														<h1>暂无数据</h1>
 													</div>
 													<div class="col-2">
-														<h1><c:if test="${qzSetting.fIsMonitor == false}">请进行达标监控</c:if></h1>
+														<h1>暂无数据</h1>
 													</div>
 													<div class="col-4 top50-link">
 														<div class="row4">
@@ -640,7 +640,7 @@
 												<c:if test="${qzSetting.qzKeywordRankInfoMap['PC']['designationWord'] != null}">
 													<div name="rankInfo" style="display: none;"></div>
 													<div class="col-1">
-														<h1><c:if test="${qzSetting.fIsMonitor == false}">请进行达标监控</c:if></h1>
+														<h1>暂无数据</h1>
 													</div>
 													<div class="col-5 top50-link">
 														<div class="row4">
@@ -966,10 +966,10 @@
 												<c:if test="${qzSetting.qzKeywordRankInfoMap['Phone']['aiZhan'] != null or qzSetting.qzKeywordRankInfoMap['Phone']['5118'] != null}">
 													<div name="rankInfo" style="display: none;"></div>
 													<div class="col-1">
-														<h1><c:if test="${qzSetting.fIsMonitor == false}">请进行达标监控</c:if></h1>
+														<h1>暂无数据</h1>
 													</div>
 													<div class="col-2">
-														<h1><c:if test="${qzSetting.fIsMonitor == false}">请进行达标监控</c:if></h1>
+														<h1>暂无数据</h1>
 													</div>
 													<div class="col-4 top50-link">
 														<div class="row4">
@@ -1071,7 +1071,7 @@
 												<c:if test="${qzSetting.qzKeywordRankInfoMap['Phone']['designationWord'] != null}">
 													<div name="rankInfo" style="display: none;"></div>
 													<div class="col-1">
-														<h1><c:if test="${qzSetting.fIsMonitor == false}">请进行达标监控</c:if></h1>
+														<h1>暂无数据</h1>
 													</div>
 													<div class="col-5 top50-link">
 														<div class="row4">
