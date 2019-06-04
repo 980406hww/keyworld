@@ -20,7 +20,18 @@
             </li>
             <li onclick="checkItem(this)"><span class="customerKeywordSpanClass" >优化组名:</span><input name="optimizeGroupName" id="optimizeGroupName" type="text" style="width:300px;"   value=""></li>
             <li onclick="checkItem(this)"><span class="customerKeywordSpanClass" >指数:</span><input type="text" id="initialIndexCount" size="5" name="initialIndexCount" value="100" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)"></li>
-            <li onclick="checkItem(this)"><span class="customerKeywordSpanClass" >排名:</span><input type="text" id="initialPosition" size="5" name="initialPosition" value="10" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)" >
+            <li onclick="checkItem(this)"><span class="customerKeywordSpanClass" >排名:</span><input type="text" id="initialPosition" size="5" name="initialPosition" value="10" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)" ></li>
+            <li onclick="checkItem(this)"><span style="margin-left: 3px">关键词作用:</span>
+                <select name="keywordEffect" id="keywordEffect" style="width: 100px" title="">
+                    <c:forEach items="${keywordEffects}" var="keywordEffect">
+                        <option value="${keywordEffect}" <c:if test="${keywordEffect=='Common'}">selected="selected"</c:if>>
+                            <c:if test="${keywordEffect=='Common'}">一般词</c:if>
+                            <c:if test="${keywordEffect=='Curve'}">曲线词</c:if>
+                            <c:if test="${keywordEffect=='Appointment'}">指定词</c:if>
+                            <c:if test="${keywordEffect=='Present'}">赠送词</c:if>
+                        </option>
+                    </c:forEach>
+                </select>
             </li>
 
             <li onclick="checkItem(this)">

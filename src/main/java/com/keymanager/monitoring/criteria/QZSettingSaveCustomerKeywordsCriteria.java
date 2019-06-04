@@ -14,6 +14,7 @@ public class QZSettingSaveCustomerKeywordsCriteria {
     private String type;
     private String searchEngine;
     private String bearPawNumber;
+    private String keywordEffect;
     private List<String> terminalTypes;
     private List<String> keywords;
 
@@ -71,6 +72,14 @@ public class QZSettingSaveCustomerKeywordsCriteria {
 
     public void setBearPawNumber (String bearPawNumber) {
         this.bearPawNumber = bearPawNumber;
+    }
+
+    public String getKeywordEffect() {
+        return keywordEffect;
+    }
+
+    public void setKeywordEffect(String keywordEffect) {
+        this.keywordEffect = keywordEffect;
     }
 
     public List<String> getTerminalTypes () {

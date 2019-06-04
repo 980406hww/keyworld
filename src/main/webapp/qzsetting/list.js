@@ -1176,7 +1176,7 @@ function showKeywordDialog(qzSettingUuid, customerUuid, domain, optimizedGroupNa
     customerKeywordDialog.show();
     customerKeywordDialog.dialog({
         resizable: false,
-        height: 450,
+        height: 470,
         width: 340,
         title: '指定关键字',
         modal: false,
@@ -1196,7 +1196,10 @@ function showKeywordDialog(qzSettingUuid, customerUuid, domain, optimizedGroupNa
         }]
     });
     customerKeywordDialog.dialog("open");
-    customerKeywordDialog.window("resize",{top:$(document).scrollTop() + 100});
+    customerKeywordDialog.window("resize", {
+        top: $(document).scrollTop() + $(window).height() / 4 - 235,
+        left: $(document).scrollLeft() + $(window).width() / 2 - 170
+    });
 }
 function saveCustomerKeywords(qzSettingUuid, customerUuid, optimizedGroupName) {
     var postData = {};
@@ -1230,6 +1233,7 @@ function saveCustomerKeywords(qzSettingUuid, customerUuid, optimizedGroupName) {
     });
     var type = customerKeywordDialog.find("#qzSettingEntryType").val();
     var searchEngine = customerKeywordDialog.find("#searchEngine").val();
+    var keywordEffect = customerKeywordDialog.find("#keywordEffect").val();
     postData.qzSettingUuid = qzSettingUuid;
     postData.customerUuid = customerUuid;
     postData.domain = $.trim(domain);
@@ -1238,6 +1242,7 @@ function saveCustomerKeywords(qzSettingUuid, customerUuid, optimizedGroupName) {
     postData.searchEngine = searchEngine;
     postData.terminalTypes = terminalTypes;
     postData.keywords = keywords;
+    postData.keywordEffect = keywordEffect;
     $.ajax({
         url: '/internal/qzsetting/saveQZSettingCustomerKeywords',
         type: 'POST',

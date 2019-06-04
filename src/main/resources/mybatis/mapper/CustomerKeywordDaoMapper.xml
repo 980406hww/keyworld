@@ -48,6 +48,7 @@
         <if test="customerKeywordCriteria.ltOptimizePlanCount != null">AND ck.fOptimizePlanCount &lt;= #{customerKeywordCriteria.ltOptimizePlanCount} </if>
         <if test="customerKeywordCriteria.remarks != null and customerKeywordCriteria.remarks != ''">AND ck.fRemarks like '%${customerKeywordCriteria.remarks}%' </if>
         <if test="customerKeywordCriteria.enteredKeywordRemarks != null and customerKeywordCriteria.enteredKeywordRemarks != ''">AND ck.fEnteredKeywordRemarks like '%${customerKeywordCriteria.enteredKeywordRemarks}%' </if>
+        <if test="customerKeywordCriteria.keywordEffect != null and customerKeywordCriteria.keywordEffect != ''">AND ck.fKeywordEffect = #{customerKeywordCriteria.keywordEffect} </if>
         <if test="customerKeywordCriteria.gtCurrentIndexCount != null">AND ck.fCurrentIndexCount &gt;= #{customerKeywordCriteria.gtCurrentIndexCount} </if>
         <if test="customerKeywordCriteria.ltCurrentIndexCount != null">AND ck.fCurrentIndexCount &lt;= #{customerKeywordCriteria.ltCurrentIndexCount} </if>
         <if test="customerKeywordCriteria.qq != null and customerKeywordCriteria.qq != ''">
@@ -702,7 +703,7 @@
         WHERE ck.fTerminalType = #{terminalType} and ck.fStatus = 1
         AND fCaptureStatus = #{captureStatus}
         <if test="qzSettingUuid != null">
-            AND ck.fCustomerKeywordSource = 'Specify'
+            AND ck.fKeywordEffect = 'Appointment'
         </if>
         <if test="startTime != null and captureStatus == 0">
             AND ck.fCapturePositionQueryTime <![CDATA[<]]> #{startTime}
@@ -1294,6 +1295,7 @@
         <if test="keywordChecks.positionFifthFee==1"> ,fPositionFifthFee = #{keywordStatus.positionFifthFee}</if>
         <if test="keywordChecks.positionFirstPageFee==1"> ,fPositionFirstPageFee = #{keywordStatus.positionFirstPageFee}</if>
         <if test="keywordChecks.serviceProvider==1"> ,fServiceProvider = #{keywordStatus.serviceProvider}</if>
+        <if test="keywordChecks.keywordEffect==1"> ,fKeywordEffect = #{keywordStatus.keywordEffect}</if>
         <if test="keywordChecks.collectMethod==1"> ,fCollectMethod = #{keywordStatus.collectMethod}</if>
         <if test="keywordChecks.searchEngine==1"> ,fSearchEngine = #{keywordStatus.searchEngine}</if>
         <if test="keywordChecks.sequence==1"> ,fSequence = #{keywordStatus.sequence}</if>
@@ -1435,6 +1437,7 @@
             fOrderNumber,
             fStatus,
             fManualCleanTitle,
+            fKeywordEffect,
             fUpdateTime,
             fCreateTime
         )
@@ -1499,6 +1502,7 @@
                     <when test="customerKeyword.manualCleanTitle != null">#{customerKeyword.manualCleanTitle},</when>
                     <when test="customerKeyword.manualCleanTitle == null">0,</when>
                 </choose>
+                #{customerKeyword.keywordEffect},
                 #{customerKeyword.updateTime},
                 #{customerKeyword.createTime}
             )

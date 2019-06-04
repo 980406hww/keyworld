@@ -9,6 +9,7 @@ import com.keymanager.monitoring.criteria.*;
 import com.keymanager.monitoring.dao.CustomerKeywordDao;
 import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.enums.*;
+import com.keymanager.monitoring.excel.definition.SuperUserSimpleKeywordDefinition;
 import com.keymanager.monitoring.excel.operator.AbstractExcelReader;
 import com.keymanager.monitoring.vo.*;
 import com.keymanager.util.Constants;
@@ -273,6 +274,20 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         if (!EntryTypeEnum.fm.name().equals(customerKeyword.getType()) && haveDuplicatedCustomerKeyword(customerKeyword.getTerminalType(),
                 customerKeyword.getCustomerUuid(), customerKeyword.getKeyword(), originalUrl, customerKeyword.getTitle())) {
             return null;
+        }
+
+        if (customerKeyword.getKeywordEffect() == null || customerKeyword.getKeywordEffect().equals("")) {
+            customerKeyword.setKeywordEffect(KeywordEffectEnum.Common.name());
+        } else {
+            if (customerKeyword.getKeywordEffect().trim().equals("曲线词")) {
+                customerKeyword.setKeywordEffect(KeywordEffectEnum.Curve.name());
+            } else if (customerKeyword.getKeywordEffect().trim().equals("指定词")) {
+                customerKeyword.setKeywordEffect(KeywordEffectEnum.Appointment.name());
+            } else if (customerKeyword.getKeywordEffect().trim().equals("赠送词")) {
+                customerKeyword.setKeywordEffect(KeywordEffectEnum.Present.name());
+            } else {
+                customerKeyword.setKeywordEffect(KeywordEffectEnum.Common.name());
+            }
         }
 
         customerKeyword.setKeyword(customerKeyword.getKeyword().trim());

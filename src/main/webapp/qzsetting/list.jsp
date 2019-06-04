@@ -1668,6 +1668,17 @@
 					<input type="text" name="bearPawNumber" id="bearPawNumber" style="width:240px" placeholder="网站若有熊掌号，请输入熊掌号" />
 				</td>
 			</tr>
+            <tr>
+                <td style="width:60px" align="right">关键词作用</td>
+                <td>
+                    <select name="keywordEffect" id="keywordEffect" style="width: 100px" title="">
+                        <option value="指定词" selected="selected">指定词</option>
+                        <option value="一般词">一般词</option>
+                        <option value="曲线词">曲线词</option>
+                        <option value="赠送词">赠送词</option>
+                    </select>
+                </td>
+            </tr>
 			<tr>
 				<td style="width:60px" align="right"><input type="checkbox" name="synchronousAddition" id="synchronousAddition"></td>
 				<td>
@@ -1675,10 +1686,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td style="width:60px" align="right">关键字</td>
-			</tr>
-			<tr>
-				<td style="width:60px" align="right"></td>
+				<td style="width:60px;vertical-align:top" align="right">关键字</td>
 				<td><textarea id="customerKeywordDialogContent" style="width:240px; height: 250px; resize: none"></textarea></td>
 			</tr>
 		</table>
