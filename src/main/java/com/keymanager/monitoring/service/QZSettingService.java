@@ -267,11 +267,13 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
                 } else {
                     isDeleteDesignationWord = true;
                 }
-			}
+			} else {
+			    isDeleteDesignationWord = true;
+            }
 		}
-		if (isDeleteDesignationWord) {
-			captureRankJobService.deleteCaptureRankJob(qzSettingUuid, newOperationType.getOperationType());
-		}
+        if (isDeleteDesignationWord) {
+            captureRankJobService.deleteCaptureRankJob(qzSettingUuid, newOperationType.getOperationType());
+        }
 		//删除规则
 		qzChargeRuleService.deleteByQZOperationTypeUuid(oldOperationType.getUuid());
 
@@ -284,7 +286,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			qzChargeRule.setQzOperationTypeUuid(oldOperationType.getUuid());
 			qzChargeRuleService.insert(qzChargeRule);
 		}
-		if (isMonitor && hasDesignationWord && isDeleteDesignationWord) {
+		if (isMonitor && hasDesignationWord) {
 			captureRankJobService.qzAddCaptureRankJob(newOperationType.getGroup(), qzSettingUuid, customerUuid, newOperationType.getOperationType(), userName);
 		}
 	}
