@@ -190,13 +190,16 @@
         AND
             fOptimizeGroupName = #{captureRankJob.groupNames}
         AND
-            fCustomerKeywordSource = 'specify'
+            fKeywordEffect = 'Appointment'
         AND
             fStatus = 1
         AND
             fCurrentPosition &lt;= #{position}
         AND
             fCurrentPosition &gt; 0
+        <if test="captureRankJob.customerUuid != null and captureRankJob.customerUuid != ''">
+            AND fCustomerUuid = #{captureRankJob.customerUuid}
+        </if>
     </select>
 
     <select id="findExistCaptureRankJob" resultType="com.keymanager.monitoring.entity.CaptureRankJob">

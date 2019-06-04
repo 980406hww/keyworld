@@ -282,20 +282,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             return null;
         }
 
-        if (customerKeyword.getKeywordEffect() == null || customerKeyword.getKeywordEffect().equals("")) {
-            customerKeyword.setKeywordEffect(KeywordEffectEnum.Common.name());
-        } else {
-            if (customerKeyword.getKeywordEffect().trim().equals("曲线词")) {
-                customerKeyword.setKeywordEffect(KeywordEffectEnum.Curve.name());
-            } else if (customerKeyword.getKeywordEffect().trim().equals("指定词")) {
-                customerKeyword.setKeywordEffect(KeywordEffectEnum.Appointment.name());
-            } else if (customerKeyword.getKeywordEffect().trim().equals("赠送词")) {
-                customerKeyword.setKeywordEffect(KeywordEffectEnum.Present.name());
-            } else {
-                customerKeyword.setKeywordEffect(KeywordEffectEnum.Common.name());
-            }
-        }
-
         customerKeyword.setKeyword(customerKeyword.getKeyword().trim());
         customerKeyword.setUrl(customerKeyword.getUrl() != null ? customerKeyword.getUrl().trim() : null);
         customerKeyword.setTitle(customerKeyword.getTitle() != null ? customerKeyword.getTitle().trim() : null);
@@ -624,6 +610,19 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     public void addCustomerKeywords(List<CustomerKeyword> customerKeywords, String loginName) throws Exception {
         for (CustomerKeyword customerKeyword : customerKeywords) {
+            if (customerKeyword.getKeywordEffect() == null || customerKeyword.getKeywordEffect().equals("")) {
+                customerKeyword.setKeywordEffect(KeywordEffectEnum.Common.name());
+            } else {
+                if (customerKeyword.getKeywordEffect().trim().equals("曲线词")) {
+                    customerKeyword.setKeywordEffect(KeywordEffectEnum.Curve.name());
+                } else if (customerKeyword.getKeywordEffect().trim().equals("指定词")) {
+                    customerKeyword.setKeywordEffect(KeywordEffectEnum.Appointment.name());
+                } else if (customerKeyword.getKeywordEffect().trim().equals("赠送词")) {
+                    customerKeyword.setKeywordEffect(KeywordEffectEnum.Present.name());
+                } else {
+                    customerKeyword.setKeywordEffect(KeywordEffectEnum.Common.name());
+                }
+            }
             addCustomerKeyword(customerKeyword, loginName);
         }
     }
