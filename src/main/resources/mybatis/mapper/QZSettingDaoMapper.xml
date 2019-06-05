@@ -417,5 +417,14 @@
         </choose>
         FROM t_qz_setting qs
         WHERE qs.fCustomerUuid = #{customerUuid} AND qs.fDomain LIKE '%${url}'
+        AND qs.fStatus = 1
+        <choose>
+            <when test="terminalType == 'PC'">
+                AND qs.fPcGroup > ''
+            </when>
+            <otherwise>
+                AND qs.fPhoneGroup > ''
+            </otherwise>
+        </choose>
     </select>
 </mapper>
