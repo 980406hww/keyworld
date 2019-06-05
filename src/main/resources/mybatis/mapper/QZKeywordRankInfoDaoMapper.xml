@@ -137,6 +137,5 @@
         AND qk.fTerminalType = #{terminalType}
         AND (qk.fWebsiteType = 'aiZhan' OR qk.fWebsiteType = '5118')
         AND qk.fAchieveLevel &gt; 0
-        AND qk.fAchieveLevel &gt; ''
     </select>
 </mapper>
