@@ -24,7 +24,7 @@
         </if>
         <if test="customerKeywordRefreshStatInfoCriteria.categoryTag != null and customerKeywordRefreshStatInfoCriteria.categoryTag != ''">
             JOIN t_qz_operation_type ot
-            ON ot.fGroup = ck.fOptimizeGroupName
+            ON ot.fGroup = g.fGroupName
             JOIN t_qz_category_tag qc
             ON ot.fQZSettingUuid = qc.fQZSettingUuid
         </if>
