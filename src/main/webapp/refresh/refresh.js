@@ -22,7 +22,7 @@ function trimSearchCondition() {
     var searchRefreshStatInfoForm = $("#searchRefreshStatInfoForm");
     var groupName = searchRefreshStatInfoForm.find("#groupName").val();
     var customerName = searchRefreshStatInfoForm.find("#customerName").val();
-    var categoryTag = searchRefreshStatInfoForm.find("input[name='categoryTag']").val();
+    var categoryTag = searchRefreshStatInfoForm.find("#categoryTag").val();
     var dayNum = searchRefreshStatInfoForm.find("#dayNum").val();
     if(groupName != "") {
         searchRefreshStatInfoForm.find("#groupName").val($.trim(groupName));
