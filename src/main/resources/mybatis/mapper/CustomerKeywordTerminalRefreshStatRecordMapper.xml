@@ -5,7 +5,7 @@
         SELECT
           ckrsr.fUuid AS 'uuid'
         FROM t_ck_refresh_stat_record ckrsr
-        WHERE DATE_SUB(CURDATE(), INTERVAL 6 DAY) = ckrsr.fCreateDate
+        WHERE DATE_SUB(CURDATE(), INTERVAL 6 DAY) <![CDATA[>=]]> ckrsr.fCreateDate
         GROUP BY ckrsr.fUuid
     </select>
 
