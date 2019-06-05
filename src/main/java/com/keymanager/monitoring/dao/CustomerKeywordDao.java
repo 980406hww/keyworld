@@ -233,4 +233,6 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void updateSameCustomerKeywordSource(@Param("terminalType")String terminalType, @Param("customerUuid") long customerUuid, @Param("keyword") String keyword, @Param("url")String url, @Param("title")String title, @Param("customerKeywordSource") String customerKeywordSource);
 
     void updateSimilarCustomerKeywordSource(@Param("terminalType") String terminalType, @Param("customerUuid") long customerUuid, @Param("keyword") String keyword, @Param("originalUrl") String originalUrl, @Param("title") String title, @Param("customerKeywordSource") String customerKeywordSource);
+
+    void updateCustomerKeywordEffect (@Param("customerUuid") long customerUuid, @Param("terminalType") String terminalType, @Param("optimizeGroupName") String optimizeGroupName);
 }

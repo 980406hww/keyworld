@@ -290,7 +290,6 @@ function generateQZKeywordTrendCharts(domElement, data) {
         domElement.innerHTML = "<h1 style='text-align: center'> 暂无数据 </h1>";
         return;
     }
-    console.log(domElement);
     var result = JSON.parse(data);
     var date = result.date.replace("['", "").replace("']", "").split("', '").reverse();
     var keywordTrendCharts = echarts.init(domElement);
@@ -564,6 +563,10 @@ function generateQZDesignationWordTrendCharts(domElement, data) {
         return;
     }
     if (data === '' || JSON.parse(data).date === '') {
+        domElement.innerHTML = "<h1 style='text-align: center'> 暂无数据 </h1>";
+        return;
+    }
+    if ($.trim($(domElement).parent().parent().find("a[name='fIsMonitor']").text()) === "否") {
         domElement.innerHTML = "<h1 style='text-align: center'> 请进行达标监控 </h1>";
         return;
     }
@@ -1381,6 +1384,9 @@ function immediatelyUpdateQZSettings(type) {
         case "startMonitor":
             urlType = "startMonitorImmediately";
             break;
+        case "updateQZKeywordEffect":
+            urlType = "updateQZKeywordEffectImmediately";
+            break;
         default:
             break;
     }
@@ -1389,16 +1395,23 @@ function immediatelyUpdateQZSettings(type) {
 function updateImmediately(uuids, urlType) {
     switch (urlType) {
         case "updateImmediately":
-            if (confirm("确实要马上更新这些站点设置吗？") == false) return;
+            if (confirm("确实要马上更新这些站点设置吗？") === false) return;
             break;
         case "startMonitorImmediately":
-            if (confirm("确实要启动这些站点的达标监控吗？") == false) return;
+            if (confirm("确实要启动这些站点的达标监控吗？") === false) return;
+            break;
+        case "updateQZKeywordEffectImmediately":
+            if (confirm("确认修改这些站点下操作的关键词的作用为指定词吗？") === false) return;
             break;
         default:
             break;
     }
     var postData = {};
     postData.uuids = uuids;
+    if (urlType === "updateQZKeywordEffectImmediately") {
+        var terminalType = $("#chargeForm").find("#terminalType").val();
+        postData.terminalType = terminalType;
+    }
     $.ajax({
         url: '/internal/qzsetting/' + urlType,
         data: JSON.stringify(postData),
@@ -1406,7 +1419,6 @@ function updateImmediately(uuids, urlType) {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        timeout: 5000,
         type: 'POST',
         success: function (data) {
             if(data){

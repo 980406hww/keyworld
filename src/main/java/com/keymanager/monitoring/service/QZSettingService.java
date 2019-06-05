@@ -287,7 +287,10 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			qzChargeRuleService.insert(qzChargeRule);
 		}
 		if (isMonitor && hasDesignationWord) {
-			captureRankJobService.qzAddCaptureRankJob(newOperationType.getGroup(), qzSettingUuid, customerUuid, newOperationType.getOperationType(), userName);
+			CaptureRankJob existCaptureRankJob = captureRankJobService.findExistCaptureRankJob(qzSettingUuid, newOperationType.getOperationType());
+			if (null == existCaptureRankJob) {
+				captureRankJobService.qzAddCaptureRankJob(newOperationType.getGroup(), qzSettingUuid, customerUuid, newOperationType.getOperationType(), userName);
+			}
 		}
 	}
 
@@ -762,5 +765,23 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 	public void updateQzSetting (QZSetting qzSetting) {
 		qzSettingDao.updateQzSetting(qzSetting);
+	}
+
+	public void updateQZKeywordEffectImmediately (String uuids, String terminalType) {
+		if(StringUtils.isNotEmpty(uuids)) {
+            String[] qzSettingUuids = uuids.split(",");
+            for (String uuid : qzSettingUuids) {
+                QZSetting qzSetting = qzSettingDao.selectById(Long.valueOf(uuid));
+                if (TerminalTypeEnum.PC.name().equals(terminalType)) {
+                    if (null != qzSetting.getPcGroup()) {
+                        customerKeywordService.updateCustomerKeywordEffect(qzSetting.getCustomerUuid(), terminalType, qzSetting.getPcGroup());
+                    }
+                } else {
+                    if (null != qzSetting.getPhoneGroup()) {
+                        customerKeywordService.updateCustomerKeywordEffect(qzSetting.getCustomerUuid(), terminalType, qzSetting.getPhoneGroup());
+                    }
+                }
+            }
+		}
 	}
 }

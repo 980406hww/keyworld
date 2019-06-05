@@ -340,6 +340,7 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
         captureRankJob.setExectionType("Everyday");
         captureRankJob.setCaptureInterval(500);
         captureRankJob.setPageSize(50);
+        captureRankJob.setRowNumber(50);
         captureRankJob.setExectionTime(Time.valueOf("00:05:00"));
         captureRankJob.setExectionStatus(CaptureRankExectionStatus.New.name());
         captureRankJob.setCreateBy(userName);

@@ -64,6 +64,11 @@
 						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="immediatelyUpdateQZSettings('startMonitor')" value=" 达标监控 " >&nbsp;
 					</li>
 				</shiro:hasPermission>
+				<shiro:hasPermission name="/internal/qzsetting/updateQZKeywordEffectImmediately">
+					<li>
+						<input class="ui-button ui-widget ui-corner-all" type="button" title="更改操作词的作用为指定词" onclick="immediatelyUpdateQZSettings('updateQZKeywordEffect')" value=" 更改为指定词 " >&nbsp;
+					</li>
+				</shiro:hasPermission>
 				<shiro:hasPermission name="/internal/qzsetting/updateStatus">
 					<li>
 						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="updateQZSettingStatus(0)" value=" 暂停整站 " >
@@ -336,7 +341,7 @@
 									<div class="row">
 										<div>
 											<span class="line1">
-												<a href="javascript:;">
+												<a href="javascript:;" name="fIsMonitor">
 														${qzSetting.fIsMonitor == true ? "是" : "否"}
 												</a>
 											</span>
@@ -767,7 +772,7 @@
 									<div class="row">
 										<div>
 											<span class="line1">
-												<a href="javascript:;">
+												<a href="javascript:;" name="fIsMonitor">
 														${qzSetting.fIsMonitor == true ? "是" : "否"}
 												</a>
 											</span>
