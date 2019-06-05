@@ -115,9 +115,12 @@
             <td width=60>${captureRankJob.createBy}</td>
             <td width=90><fmt:formatDate value="${captureRankJob.createTime}" pattern="yyyy-MM-dd HH:mm"/></td>
             <td width=80>
-                <shiro:hasPermission name="/internal/captureRank/saveCaptureRankJob">
-                <a href="javascript:updateCaptureRankJobs('${captureRankJob.uuid}')">修改</a>
-                </shiro:hasPermission>
+                <c:if test="${captureRankJobSearchCriteria.jobType.equals('Common')}">
+                    <shiro:hasPermission name="/internal/captureRank/saveCaptureRankJob">
+                        <a href="javascript:updateCaptureRankJobs('${captureRankJob.uuid}')">修改</a>
+                    </shiro:hasPermission>
+                </c:if>
+
                 <shiro:hasPermission name="/internal/captureRank/changeCaptureRankJobStatus">
                     <c:choose>
                         <c:when test="${captureRankJob.captureRankJobStatus}">
@@ -128,9 +131,11 @@
                         </c:otherwise>
                     </c:choose>
                 </shiro:hasPermission>
-                <shiro:hasPermission name="/internal/captureRank/deleteCaptureRankJob">
-                <a href="javascript:deleteCaptureRankJob('${captureRankJob.uuid}')">删除</a>
-                </shiro:hasPermission>
+                <c:if test="${captureRankJobSearchCriteria.jobType.equals('Common')}">
+                    <shiro:hasPermission name="/internal/captureRank/deleteCaptureRankJob">
+                        <a href="javascript:deleteCaptureRankJob('${captureRankJob.uuid}')">删除</a>
+                    </shiro:hasPermission>
+                </c:if>
 
             </td>
         </tr>
