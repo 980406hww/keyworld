@@ -1241,18 +1241,43 @@
 					<input type="hidden" id="qzSettingUuidPC" name="qzOperationTypeUuid" value="" />
 					<c:if test="${not isSEO}">
 						<tr id="satisfyPC">
-							<td align="right" style="width:72px">达标条件</td>
+							<td align="right" style="width:72px"><label>达标条件</label></td>
 							<td>
-								<input type="radio" name="standardTypePC" id="satisfyAllPC" value="satisfyAll" checked="checked">满足全部&nbsp;&nbsp;
-								<input type="radio" name="standardTypePC" id="satisfyOnePC" value="satisfyOne">满足其中一个&nbsp;&nbsp;
+								<div style="display: inline-block;">
+									<input type="radio" name="standardTypePC" id="satisfyAllPC" value="satisfyAll" checked="checked">
+								</div>
+								<div style="display: inline-block; margin-right: 10px;">
+									<label>满足全部</label>
+								</div>
+								<div style="display: inline-block;">
+									<input type="radio" name="standardTypePC" id="satisfyOnePC" value="satisfyOne">
+								</div>
+								<div style="display: inline-block;">
+									<label>满足其中一个</label>
+								</div>
 							</td>
 						</tr>
 						<tr id="standardSpeciesPC">
-							<td align="right" style="width:72px">达标类型</td>
+							<td align="right" style="width:72px"><label>达标类型</label></td>
 							<td title="爱站和5118不能同时选中">
-								<input type="checkbox" name="standardSpecies" id="aiZhanPCStandardSpecies" onclick="checkedStandardSpecies(this, 'PC')" value="aiZhan">爱站&nbsp;&nbsp;
-								<input type="checkbox" name="standardSpecies" id="5118PCStandardSpecies" onclick="checkedStandardSpecies(this, 'PC')" value="5118">5118&nbsp;&nbsp;
-								<input type="checkbox" name="standardSpecies" id="designationWordPCStandardSpecies" onclick="checkedStandardSpecies(this, 'PC')" value="designationWord">指定词&nbsp;&nbsp;
+								<div style="display: inline-block">
+									<input type="checkbox" name="standardSpecies" id="aiZhanPCStandardSpecies" onclick="checkedStandardSpecies(this, 'PC')" value="aiZhan" checked="checked">
+								</div>
+								<div style="display: inline-block; margin-right: 10px;">
+									<label>爱站</label>
+								</div>
+								<div style="display: inline-block">
+									<input type="checkbox" name="standardSpecies" id="5118PCStandardSpecies" onclick="checkedStandardSpecies(this, 'PC')" value="5118">
+								</div>
+								<div style="display: inline-block; margin-right: 10px;">
+									<label>5118</label>
+								</div>
+								<div style="display: inline-block">
+									<input type="checkbox" name="standardSpecies" id="designationWordPCStandardSpecies" onclick="checkedStandardSpecies(this, 'PC')" value="designationWord">
+								</div>
+								<div style="display: inline-block; margin-right: 10px;">
+									<label>指定词</label>
+								</div>
 							</td>
 						</tr>
 					</c:if>
@@ -1368,16 +1393,41 @@
 						<tr id="satisfyPhone">
 							<td align="right" style="width:72px">达标条件</td>
 							<td>
-								<input type="radio" name="standardTypePhone" id="satisfyAllPhone" value="satisfyAll" checked="checked">满足全部&nbsp;&nbsp;
-								<input type="radio" name="standardTypePhone" id="satisfyOnePhone" value="satisfyOne">满足其中一个&nbsp;&nbsp;
+								<div style="display: inline-block;">
+									<input type="radio" name="standardTypePhone" id="satisfyAllPhone" value="satisfyAll" checked="checked">
+								</div>
+								<div style="display: inline-block; margin-right: 10px;">
+									<label>满足全部</label>
+								</div>
+								<div style="display: inline-block;">
+									<input type="radio" name="standardTypePhone" id="satisfyOnePhone" value="satisfyOne">
+								</div>
+								<div style="display: inline-block;">
+									<label>满足其中一个</label>
+								</div>
 							</td>
 						</tr>
 						<tr id="standardSpeciesPhone">
 							<td align="right" style="width:72px">达标类型</td>
 							<td title="爱站和5118不能同时选中">
-								<input type="checkbox" name="standardSpecies" id="aiZhanPhoneStandardSpecies" onclick="checkedStandardSpecies(this, 'Phone')" value="aiZhan">爱站&nbsp;&nbsp;
-								<input type="checkbox" name="standardSpecies" id="5118PhoneStandardSpecies" onclick="checkedStandardSpecies(this, 'Phone')" value="5118">5118&nbsp;&nbsp;
-								<input type="checkbox" name="standardSpecies" id="designationWordPhoneStandardSpecies" onclick="checkedStandardSpecies(this, 'Phone')" value="designationWord">指定词&nbsp;&nbsp;
+								<div style="display: inline-block">
+									<input type="checkbox" name="standardSpecies" id="aiZhanPhoneStandardSpecies" onclick="checkedStandardSpecies(this, 'Phone')" value="aiZhan" checked="checked">
+								</div>
+								<div style="display: inline-block; margin-right: 10px;">
+									<label>爱站</label>
+								</div>
+								<div style="display: inline-block">
+									<input type="checkbox" name="standardSpecies" id="5118PhoneStandardSpecies" onclick="checkedStandardSpecies(this, 'Phone')" value="5118">
+								</div>
+								<div style="display: inline-block; margin-right: 10px;">
+									<label>5118</label>
+								</div>
+								<div style="display: inline-block">
+									<input type="checkbox" name="standardSpecies" id="designationWordPhoneStandardSpecies" onclick="checkedStandardSpecies(this, 'Phone')" value="designationWord">
+								</div>
+								<div style="display: inline-block; margin-right: 10px;">
+									<label>指定词</label>
+								</div>
 							</td>
 						</tr>
 					</c:if>

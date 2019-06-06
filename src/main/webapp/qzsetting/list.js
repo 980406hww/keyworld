@@ -1914,22 +1914,30 @@ function initSettingDialog(qzSetting, self) {
     if (PCType) {
         settingDialogDiv.find("#PC")[0].checked = true;
         settingDialogDiv.find("#operationTypeSummaryInfoPC").css("display", "block");
-        if (!flag) {
-            settingDialogDiv.find("#satisfyPC").css("display", "none");
-            settingDialogDiv.find("#standardSpeciesPC").css("display", "none");
-            settingDialogDiv.find("#pcChargeRuleTable").css("display", "none");
+        if (flag === false) {
+            settingDialogDiv.find("#satisfyPC label").css("display", "none");
+            settingDialogDiv.find("#satisfyPC input").css("display", "none");
+            settingDialogDiv.find("#standardSpeciesPC label").css("display", "none");
+            settingDialogDiv.find("#standardSpeciesPC input").css("display", "none");
+            settingDialogDiv.find("#chargeRuleaiZhanPC").css("display", "none");
+            settingDialogDiv.find("#chargeRule5118PC").css("display", "none");
+            settingDialogDiv.find("#chargeRuledesignationWordPC").css("display", "none");
         }
     }
     if (PhoneType) {
         settingDialogDiv.find("#Phone")[0].checked = true;
         settingDialogDiv.find("#operationTypeSummaryInfoPhone").css("display", "block");
-        if (!flag) {
-            settingDialogDiv.find("#satisfyPhone").css("display", "none");
-            settingDialogDiv.find("#standardSpeciesPhone").css("display", "none");
-            settingDialogDiv.find("#phoneChargeRuleTable").css("display", "none");
+        if (flag === false) {
+            settingDialogDiv.find("#satisfyPhone label").css("display", "none");
+            settingDialogDiv.find("#satisfyPhone input").css("display", "none");
+            settingDialogDiv.find("#standardSpeciesPhone label").css("display", "none");
+            settingDialogDiv.find("#standardSpeciesPhone input").css("display", "none");
+            settingDialogDiv.find("#chargeRuleaiZhanPhone").css("display", "none");
+            settingDialogDiv.find("#chargeRule5118Phone").css("display", "none");
+            settingDialogDiv.find("#chargeRuledesignationWordPhone").css("display", "none");
         }
     }
-    if (!flag) {
+    if (flag === false) {
         settingDialogDiv.find("#PC").attr("status", 0);
         settingDialogDiv.find("#Phone").attr("status", 0);
     }
@@ -2225,13 +2233,19 @@ function dealSettingTable(operationType) {
             $("#aiZhan"+ operationType +"StandardSpecies")[0].checked = true;
         }
         if (status === '1') {
-            settingDialogDiv.find("#satisfy" + operationType).css("display", "block");
-            settingDialogDiv.find("#standardSpecies" + operationType).css("display", "block");
-            settingDialogDiv.find("#"+ operationType.toLowerCase() +"ChargeRuleTable").css("display", "block");
+            settingDialogDiv.find("#satisfy" + operationType + " label").css("display", "block");
+            settingDialogDiv.find("#satisfy" + operationType + " input").css("display", "block");
+            settingDialogDiv.find("#standardSpecies" + operationType + " label").css("display", "block");
+            settingDialogDiv.find("#standardSpecies" + operationType + " input").css("display", "block");
+            settingDialogDiv.find("#chargeRuleaiZhan" + operationType).css("display", "block");
         } else {
-            settingDialogDiv.find("#satisfy" + operationType).css("display", "none");
-            settingDialogDiv.find("#standardSpecies" + operationType).css("display", "none");
-            settingDialogDiv.find("#"+ operationType.toLowerCase() +"ChargeRuleTable").css("display", "none");
+            settingDialogDiv.find("#satisfy" + operationType + " label").css("display", "none");
+            settingDialogDiv.find("#satisfy" + operationType + " input").css("display", "none");
+            settingDialogDiv.find("#standardSpecies" + operationType + " label").css("display", "none");
+            settingDialogDiv.find("#standardSpecies" + operationType + " input").css("display", "none");
+            settingDialogDiv.find("#chargeRuleaiZhan" + operationType).css("display", "none");
+            settingDialogDiv.find("#chargeRule5118" + operationType).css("display", "none");
+            settingDialogDiv.find("#chargeRuledesignationWord" + operationType).css("display", "none");
         }
     } else {
         clearInfo(operationType);
@@ -2395,7 +2409,7 @@ function echoExcludeKeyword() {
 function checkedStandardSpecies(self, terminalType) {
     if ($(self)[0].checked) {
         var checkFlag = 0;
-        $(self).parent().find("input:checked").each(function (idx, input) {
+        $(self).parent().parent().find("input:checked").each(function (idx, input) {
             if ($(input).val() === "aiZhan" || $(input).val() === "5118") {
                 checkFlag += 1;
             }
