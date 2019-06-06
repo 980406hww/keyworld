@@ -32,8 +32,7 @@
             fIcon AS 'icon',
             fParentId AS 'pid'
         FROM t_organization
-        WHERE fOrganizationName &lt;&gt; '总经办'
-        AND fOrganizationName &lt;&gt; '负面销售部'
+        WHERE fOrganizationName &lt;&gt; '负面销售部'
         AND fOrganizationName &lt;&gt; '财务部'
         AND fOrganizationName &lt;&gt; '运维部'
         AND fOrganizationName &lt;&gt; '外部'

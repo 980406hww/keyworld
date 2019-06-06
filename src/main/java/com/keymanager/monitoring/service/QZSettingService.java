@@ -749,8 +749,22 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
         return qzSettingDao.searchGroupMaxCustomerKeywordCount(customerUuid, terminalType,  url);
     }
 
-    public void startMonitorImmediately(String uuids){
+    public void startMonitorImmediately(String uuids, String terminalType, String userName){
         if(StringUtils.isNotEmpty(uuids)){
+            String[] qzSettingUuids = uuids.split(",");
+            for (String uuid : qzSettingUuids) {
+                CaptureRankJob existCaptureRankJob = captureRankJobService.findExistCaptureRankJob(Long.valueOf(uuid), terminalType);
+                if (null == existCaptureRankJob) {
+                    QZSetting qzSetting = qzSettingDao.selectById(Long.valueOf(uuid));
+                    String groupName;
+                    if (TerminalTypeEnum.PC.name().equals(terminalType)) {
+                        groupName = qzSetting.getPcGroup();
+                    } else {
+                        groupName = qzSetting.getPhoneGroup();
+                    }
+                    captureRankJobService.qzAddCaptureRankJob(groupName, Long.valueOf(uuid), qzSetting.getCustomerUuid(), terminalType, userName);
+                }
+            }
             qzSettingDao.startMonitorImmediately(uuids);
         }
     }
