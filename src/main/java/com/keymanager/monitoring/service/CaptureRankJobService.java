@@ -283,23 +283,14 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
 
         QZOperationType qzOperationType = qzOperationTypeService.searchQZOperationTypeByQZSettingAndTerminalType(qzKeywordRankInfo.getQzSettingUuid(), qzKeywordRankInfo.getTerminalType());
         int lastAchieve = qzOperationType.getStandardTime() == null ? 0 : 1; // 1代表上次达标过，0为未达标或者掉过
-        int updateFlag = 0; // 1为要更新成最新达标时间，0为本次未达标时间置空
+        int updateFlag; // 1为要更新成最新达标时间，0为本次未达标时间置空
         int standardCount = qzKeywordRankInfoDao.standardCountByQZSettingUuid(qzKeywordRankInfo.getQzSettingUuid(), qzKeywordRankInfo.getTerminalType());
         if (qzKeywordRankInfo.getAchieveLevel() != null && qzKeywordRankInfo.getAchieveLevel() > 0) {
-            // 指定词已达标
             qzKeywordRankInfo.setAchieveTime(new Date());
-            if (qzOperationType.getStandardType().equals("satisfyOne")) {
-                updateFlag = 1;
-            } else {
-                updateFlag = standardCount > 0 ? 1 : 0;
-            }
         } else {
-            // 指定词未达标
             qzKeywordRankInfo.setAchieveTime(null);
-            if (qzOperationType.getStandardType().equals("satisfyOne")) {
-                updateFlag = standardCount > 0 ? 1 : 0;
-            }
         }
+        updateFlag = standardCount > 0 ? 1 : 0;
         qzOperationType.setUpdateTime(new Date());
         qzOperationTypeService.updateStandardTimeByUuid(qzOperationType.getUuid(), updateFlag, lastAchieve);
         return qzKeywordRankInfo;

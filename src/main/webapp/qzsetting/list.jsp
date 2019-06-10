@@ -1240,26 +1240,9 @@
 					</shiro:hasPermission>
 					<input type="hidden" id="qzSettingUuidPC" name="qzOperationTypeUuid" value="" />
 					<c:if test="${not isSEO}">
-						<tr id="satisfyPC">
-							<td align="right" style="width:72px"><label>达标条件</label></td>
-							<td>
-								<div style="display: inline-block;">
-									<input type="radio" name="standardTypePC" id="satisfyAllPC" value="satisfyAll" checked="checked">
-								</div>
-								<div style="display: inline-block; margin-right: 10px;">
-									<label>满足全部</label>
-								</div>
-								<div style="display: inline-block;">
-									<input type="radio" name="standardTypePC" id="satisfyOnePC" value="satisfyOne">
-								</div>
-								<div style="display: inline-block;">
-									<label>满足其中一个</label>
-								</div>
-							</td>
-						</tr>
 						<tr id="standardSpeciesPC">
 							<td align="right" style="width:72px"><label>达标类型</label></td>
-							<td title="爱站和5118不能同时选中">
+							<td title="爱站, 5118和指定词, 三选一">
 								<div style="display: inline-block">
 									<input type="checkbox" name="standardSpecies" id="aiZhanPCStandardSpecies" onclick="checkedStandardSpecies(this, 'PC')" value="aiZhan" checked="checked">
 								</div>
@@ -1278,6 +1261,12 @@
 								<div style="display: inline-block; margin-right: 10px;">
 									<label>指定词</label>
 								</div>
+								<%--<div style="display: inline-block">
+									<input type="checkbox" name="standardSpecies" id="otherPCStandardSpecies" onclick="checkedStandardSpecies(this, 'PC')" value="other">
+								</div>
+								<div style="display: inline-block; margin-right: 10px;">
+									<label>其他</label>
+								</div>--%>
 							</td>
 						</tr>
 					</c:if>
@@ -1390,23 +1379,6 @@
 					</shiro:hasPermission>
 					<input type="hidden" id="qzSettingUuidPhone" name="qzOperationTypeUuid" value="" />
 					<c:if test="${not isSEO}">
-						<tr id="satisfyPhone">
-							<td align="right" style="width:72px">达标条件</td>
-							<td>
-								<div style="display: inline-block;">
-									<input type="radio" name="standardTypePhone" id="satisfyAllPhone" value="satisfyAll" checked="checked">
-								</div>
-								<div style="display: inline-block; margin-right: 10px;">
-									<label>满足全部</label>
-								</div>
-								<div style="display: inline-block;">
-									<input type="radio" name="standardTypePhone" id="satisfyOnePhone" value="satisfyOne">
-								</div>
-								<div style="display: inline-block;">
-									<label>满足其中一个</label>
-								</div>
-							</td>
-						</tr>
 						<tr id="standardSpeciesPhone">
 							<td align="right" style="width:72px">达标类型</td>
 							<td title="爱站和5118不能同时选中">
@@ -1428,6 +1400,12 @@
 								<div style="display: inline-block; margin-right: 10px;">
 									<label>指定词</label>
 								</div>
+								<%--<div style="display: inline-block">
+									<input type="checkbox" name="standardSpecies" id="otherPhoneStandardSpecies" onclick="checkedStandardSpecies(this, 'Phone')" value="other">
+								</div>
+								<div style="display: inline-block; margin-right: 10px;">
+									<label>其他</label>
+								</div>--%>
 							</td>
 						</tr>
 					</c:if>

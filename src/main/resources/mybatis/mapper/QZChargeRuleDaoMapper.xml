@@ -29,7 +29,6 @@
 
     <select id="searchQZChargeRuleStandardInfoVos" resultType="com.keymanager.monitoring.vo.QZChargeRuleStandardInfoVO">
         SELECT
-            qot.fStandardType AS 'standardType',
             qk.fAchieveLevel AS 'achieveLevel',
             qk.fDifferenceValue AS 'differenceValue',
             qc.fStandardSpecies AS 'standardSpecies',

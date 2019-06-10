@@ -33,7 +33,6 @@ public class QZChargeRuleService extends ServiceImpl<QZChargeRuleDao, QZChargeRu
 	    QZChargeRuleStandardResultVO qzChargeRuleStandardResultVo = new QZChargeRuleStandardResultVO();
         List<QZChargeRuleStandardInfoVO> qzChargeRuleStandardInfoVos = qzChargeRuleDao.searchQZChargeRuleStandardInfoVos(qzSettingSearchChargeRuleCriteria.getQzSettingUuid(), qzSettingSearchChargeRuleCriteria.getTerminalType());
         if (CollectionUtils.isNotEmpty(qzChargeRuleStandardInfoVos)) {
-            qzChargeRuleStandardResultVo.setStandardType(qzChargeRuleStandardInfoVos.get(0).getStandardType());
             Map<String, List<QZChargeRule>> qzChargeRuleMap = new HashMap<>();
             for (QZChargeRuleStandardInfoVO qzChargeRuleStandardInfoVo : qzChargeRuleStandardInfoVos) {
                 QZChargeRule qzChargeRule = new QZChargeRule();

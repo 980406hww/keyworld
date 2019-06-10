@@ -1010,14 +1010,8 @@ function showChargeRulesDiv(self, e) {
             success: function (result) {
                 $("#chargeRulesDivTable tr").remove();
                 if(result != null && result.qzChargeRuleMap != null) {
-                    var standardType;
-                    if (result.standardType.indexOf("One") > -1) {
-                        standardType = "满足其中一个";
-                    } else {
-                        standardType = "满足全部";
-                    }
                     $("#chargeRulesDivTable").append("<tr>" +
-                        "<td colspan='4'>达标类型: "+ standardType +"</td>" +
+                        "<td colspan='4'>达标类型: 满足全部</td>" +
                         "</tr>");
                     var qzChargeRules = {};
                     if (result.qzChargeRuleMap["aiZhan"] !== undefined) {
@@ -1887,9 +1881,7 @@ function initSettingDialog(qzSetting, self) {
         settingDialogDiv.find("#maxKeywordCount" + val.operationType).val(val.maxKeywordCount);
         settingDialogDiv.find("#qzSettingUuid" + val.operationType).val(val.uuid);
         var isSEO = $(".datalist-list #isSEO").val();
-        if (isSEO !== "true") {
-            settingDialogDiv.find("#"+ val.standardType + val.operationType)[0].checked = true;
-        }
+
         // 构造规则表
         $.each(val.qzChargeRules, function (chargeRuleIdx, chargeRuleVal) {
             if (isSEO !== "true") {
@@ -1915,8 +1907,6 @@ function initSettingDialog(qzSetting, self) {
         settingDialogDiv.find("#PC")[0].checked = true;
         settingDialogDiv.find("#operationTypeSummaryInfoPC").css("display", "block");
         if (flag === false) {
-            settingDialogDiv.find("#satisfyPC label").css("display", "none");
-            settingDialogDiv.find("#satisfyPC input").css("display", "none");
             settingDialogDiv.find("#standardSpeciesPC label").css("display", "none");
             settingDialogDiv.find("#standardSpeciesPC input").css("display", "none");
             settingDialogDiv.find("#chargeRuleaiZhanPC").css("display", "none");
@@ -1928,8 +1918,6 @@ function initSettingDialog(qzSetting, self) {
         settingDialogDiv.find("#Phone")[0].checked = true;
         settingDialogDiv.find("#operationTypeSummaryInfoPhone").css("display", "block");
         if (flag === false) {
-            settingDialogDiv.find("#satisfyPhone label").css("display", "none");
-            settingDialogDiv.find("#satisfyPhone input").css("display", "none");
             settingDialogDiv.find("#standardSpeciesPhone label").css("display", "none");
             settingDialogDiv.find("#standardSpeciesPhone input").css("display", "none");
             settingDialogDiv.find("#chargeRuleaiZhanPhone").css("display", "none");
@@ -2058,10 +2046,10 @@ function saveChangeSetting() {
             validationFlag = false;
             return false;
         }
+        operationType.standardType = "satisfyAll";
 
         var isSEO = $(".datalist-list #isSEO").val();
         if (isSEO === "true") {
-            operationType.standardType = "satisfyOne";
             var chargeRule = {};
             chargeRule.standardSpecies = 'aiZhan';
             chargeRule.startKeywordCount = 1;
@@ -2069,7 +2057,6 @@ function saveChangeSetting() {
             chargeRule.amount = 3;
             operationType.qzChargeRules.push(chargeRule);
         } else {
-            operationType.standardType = settingDialogDiv.find("input[name='standardType"+ val.id +"']:radio:checked").val();
             var standardSpeciesObjs = $("#operationTypeSummaryInfo"+val.id).find("input[name='standardSpecies']:checkbox:checked");
             $.each(standardSpeciesObjs, function (i, v) {
                 var endKeyWordCountValue = -1;
@@ -2233,14 +2220,10 @@ function dealSettingTable(operationType) {
             $("#aiZhan"+ operationType +"StandardSpecies")[0].checked = true;
         }
         if (status === '1') {
-            settingDialogDiv.find("#satisfy" + operationType + " label").css("display", "block");
-            settingDialogDiv.find("#satisfy" + operationType + " input").css("display", "block");
             settingDialogDiv.find("#standardSpecies" + operationType + " label").css("display", "block");
             settingDialogDiv.find("#standardSpecies" + operationType + " input").css("display", "block");
             settingDialogDiv.find("#chargeRuleaiZhan" + operationType).css("display", "block");
         } else {
-            settingDialogDiv.find("#satisfy" + operationType + " label").css("display", "none");
-            settingDialogDiv.find("#satisfy" + operationType + " input").css("display", "none");
             settingDialogDiv.find("#standardSpecies" + operationType + " label").css("display", "none");
             settingDialogDiv.find("#standardSpecies" + operationType + " input").css("display", "none");
             settingDialogDiv.find("#chargeRuleaiZhan" + operationType).css("display", "none");
@@ -2410,16 +2393,19 @@ function checkedStandardSpecies(self, terminalType) {
     if ($(self)[0].checked) {
         var checkFlag = 0;
         $(self).parent().parent().find("input:checked").each(function (idx, input) {
-            if ($(input).val() === "aiZhan" || $(input).val() === "5118") {
-                checkFlag += 1;
-            }
+            checkFlag += 1;
         });
-        if (checkFlag >= 2) {
+        if (checkFlag >= 1) {
             checkFlag = 0;
             if ($(self).val() === "aiZhan") {
                 clearStandardInfo(terminalType, "5118");
+                clearStandardInfo(terminalType, "designationWord");
             } else if ($(self).val() === "5118") {
                 clearStandardInfo(terminalType, "aiZhan");
+                clearStandardInfo(terminalType, "designationWord");
+            } else if ($(self).val() === 'designationWord') {
+                clearStandardInfo(terminalType, "aiZhan");
+                clearStandardInfo(terminalType, "5118");
             }
         }
         $("#chargeRule" + $(self).val() + terminalType).css("display", "block");
@@ -2427,5 +2413,4 @@ function checkedStandardSpecies(self, terminalType) {
     }  else {
         clearStandardInfo(terminalType, $(self).val());
     }
-
 }

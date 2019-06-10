@@ -120,32 +120,21 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
             Map standard = this.standardCalculation(chargeRuleVos, qzKeywordRankInfo);
             qzKeywordRankInfo.setDifferenceValue(Double.parseDouble(standard.get("differenceValue").toString()));
             qzKeywordRankInfo.setAchieveLevel(Integer.parseInt(standard.get("achieveLevel").toString()));
-            if (qzKeywordRankInfo.getAchieveLevel() > 0) {
-                qzKeywordRankInfo.setAchieveTime(new Date());
-            } else {
-                qzKeywordRankInfo.setAchieveTime(null);
-            }
             qzKeywordRankInfo.setSumSeries(Integer.parseInt(standard.get("sumSeries").toString()));
             qzKeywordRankInfo.setCurrentPrice(Integer.parseInt(standard.get("currentPrice").toString()));
+
             QZOperationType qzOperationType = qzOperationTypeService.searchQZOperationTypeByQZSettingAndTerminalType(qzSettingUuid, externalQzKeywordRankInfoVo.getTerminalType());
             QZKeywordRankInfo otherRankInfo = qzKeywordRankInfoDao.getQZKeywordRankInfo(qzSettingUuid, externalQzKeywordRankInfoVo.getTerminalType(), null);
             int isStandardFlag = 0;
             if (qzKeywordRankInfo.getAchieveLevel() > 0) {
-                if (qzOperationType.getStandardType().equals("satisfyAll")) {
-                    if (null == otherRankInfo){
-                        isStandardFlag = 1;
-                    } else if (null != otherRankInfo.getAchieveLevel() && otherRankInfo.getAchieveLevel() > 0) {
-                        isStandardFlag = 1;
-                    }
-                } else if (qzOperationType.getStandardType().equals("satisfyOne")) {
+                qzKeywordRankInfo.setAchieveTime(new Date());
+                if (null == otherRankInfo){
+                    isStandardFlag = 1;
+                } else if (null != otherRankInfo.getAchieveLevel() && otherRankInfo.getAchieveLevel() > 0) {
                     isStandardFlag = 1;
                 }
             } else {
-                if (qzOperationType.getStandardType().equals("satisfyOne")) {
-                    if (null != otherRankInfo && null != otherRankInfo.getAchieveLevel() && otherRankInfo.getAchieveLevel() > 0) {
-                        isStandardFlag = 1;
-                    }
-                }
+                qzKeywordRankInfo.setAchieveTime(null);
             }
             if (isStandardFlag == 1 && null == qzOperationType.getStandardTime()) {
                 isStandardFlag = 2;

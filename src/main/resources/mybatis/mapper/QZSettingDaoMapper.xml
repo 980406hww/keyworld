@@ -137,10 +137,10 @@
         <if test="qzSettingSearchCriteria.terminalType != null">
             <choose>
                 <when test="qzSettingSearchCriteria.terminalType == 'PC'">
-                    AND qs.fPcGroup IS NOT NULL
+                    AND qs.fPcGroup &gt; ''
                 </when>
                 <when test="qzSettingSearchCriteria.terminalType == 'Phone'">
-                    AND qs.fPhoneGroup IS NOT NULL
+                    AND qs.fPhoneGroup &gt; ''
                 </when>
             </choose>
         </if>
@@ -178,15 +178,6 @@
                 </when>
                 <when test="qzSettingSearchCriteria.checkStatus == 6">
                     AND qk.fIncrease = 0
-                </when>
-                <when test="qzSettingSearchCriteria.checkStatus == 7">
-                    AND qk.fTodayDifference &lt; 0
-                </when>
-                <when test="qzSettingSearchCriteria.checkStatus == 8">
-                    AND qk.fTodayDifference = 0
-                </when>
-                <when test="qzSettingSearchCriteria.checkStatus == 9">
-                    AND qk.fTodayDifference &gt; 0
                 </when>
             </choose>
             AND qk.fTerminalType = #{qzSettingSearchCriteria.terminalType})
@@ -247,7 +238,7 @@
           qs.fUpdateTime      AS 'updateTime',
           qs.fCreateTime      AS 'createTime',
           qs.fCaptureCurrentKeywordCountTime AS 'captureCurrentKeywordCountTime',
-        qs.fCaptureCurrentKeywordStatus      AS 'captureCurrentKeywordStatus'
+          qs.fCaptureCurrentKeywordStatus      AS 'captureCurrentKeywordStatus'
         FROM t_qz_setting qs
         WHERE qs.fUuid IN (#{uuids})
     </select>
