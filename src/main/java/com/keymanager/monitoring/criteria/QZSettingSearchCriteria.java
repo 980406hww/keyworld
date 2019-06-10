@@ -32,6 +32,7 @@ public class QZSettingSearchCriteria{
     private String createTimePrefix;
     private Boolean hasMonitor;
     private Boolean hasReady;
+    private String standardSpecies;
 
     public String getLoginName() {
         return loginName;
@@ -279,5 +280,13 @@ public class QZSettingSearchCriteria{
 
     public void setHasReady (Boolean hasReady) {
         this.hasReady = hasReady;
+    }
+
+    public String getStandardSpecies () {
+        return standardSpecies;
+    }
+
+    public void setStandardSpecies (String standardSpecies) {
+        this.standardSpecies = standardSpecies;
     }
 }

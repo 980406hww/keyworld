@@ -190,6 +190,17 @@
 					</select>
 				</li>
 				<li>
+					<span>达标种类: </span>
+					<select name="standardSpecies">
+						<c:forEach items="${standardSpeciesMap}" var="entry">
+							<c:choose>
+								<c:when test="${entry.value eq qzSettingSearchCriteria.standardSpecies}"><option selected value="${entry.value}">${entry.key}</option></c:when>
+								<c:otherwise><option value="${entry.value}">${entry.key}</option></c:otherwise>
+							</c:choose>
+						</c:forEach>
+					</select>
+				</li>
+				<li>
 					<span>更新状态: </span>
 					<select name="updateStatus">
 						<c:forEach items="${statusList}" var="status">
@@ -258,6 +269,7 @@
     <input type="hidden" name="createTimePrefix" id="createTimePrefix" value="${qzSettingSearchCriteria.createTimePrefix}"/>
     <input type="hidden" name="hasReady" id="hasReady" value="${qzSettingSearchCriteria.hasReady}"/>
     <input type="hidden" name="hasMonitor" id="hasMonitor" value="${qzSettingSearchCriteria.hasMonitor}"/>
+    <input type="hidden" name="standardSpecies" id="standardSpecies" value="${qzSettingSearchCriteria.standardSpecies}"/>
 </form>
 
 <div class="datalist">

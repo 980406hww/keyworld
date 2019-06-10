@@ -166,4 +166,13 @@ public class Constants {
 
     public final static String CONFIG_TYPE_NO_ENTERED_KEYWORD = "NoEnteredKeyword";
     public final static String CONFIG_KEY_NO_ENTERED_KEYWORD_REMARKS = "Remarks";
+
+    public final static Map<String, String> QZ_RANK_STANDARD_SPECIES_MAP = new LinkedHashMap<>();
+    static {
+        QZ_RANK_STANDARD_SPECIES_MAP.put("全部", "");
+        QZ_RANK_STANDARD_SPECIES_MAP.put("爱站", "aiZhan");
+        QZ_RANK_STANDARD_SPECIES_MAP.put("5118", "5118");
+        QZ_RANK_STANDARD_SPECIES_MAP.put("指定词", "designationWord");
+        QZ_RANK_STANDARD_SPECIES_MAP.put("其他", "other");
+    }
 }

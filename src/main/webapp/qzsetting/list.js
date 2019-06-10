@@ -100,6 +100,7 @@ function detectedMoreSearchConditionDivShow() {
     var group =  moreSearchCondition.find("ul li.group input").val();
     var operationType = moreSearchCondition.find("select[name='operationType']").val();
     var status = moreSearchCondition.find("select[name='status']").val();
+    var standardSpecies = moreSearchCondition.find("select[name='standardSpecies']").val();
     var updateStatus = moreSearchCondition.find("select[name='updateStatus']").val();
     var createTime = moreSearchCondition.find("ul li.createTime input[name='createTime']").val();
     var createTimePrefix = moreSearchCondition.find("ul li.createTime input[name='createTimePrefix']").val();
@@ -130,7 +131,7 @@ function detectedMoreSearchConditionDivShow() {
         });
         $("#userNameTree").textbox('setValue', treeValue);
     }
-    var values = customerInfo + categoryTag + group + status + updateStatus + createTime + createTimePrefix + operationType + hasMonitor + hasReady + userInfoID + organizationID;
+    var values = customerInfo + categoryTag + group + status + standardSpecies + updateStatus + createTime + createTimePrefix + operationType + hasMonitor + hasReady + userInfoID + organizationID;
     if (values != "") {
         moreSearchCondition.css("display", "block");
     }
@@ -887,6 +888,7 @@ function trimSearchCondition(days) {
     var group = $(".conn").find(".group").find("input[name='group']").val();
     var operationType = $(".conn").find("select[name='operationType']").val();
     var status = $(".conn").find("select[name='status']").val();
+    var standardSpecies = $(".conn").find("select[name='standardSpecies']").val();
     var updateStatus = $(".conn").find("select[name='updateStatus']").val();
     var createTime = $(".conn").find(".createTime").find("input[name='createTime']").val();
     var createTimePrefix = $(".conn").find(".createTime").find("input[name='createTimePrefix']").val();
@@ -905,6 +907,11 @@ function trimSearchCondition(days) {
         chargeForm.find("#status").val($.trim(status));
     } else {
         chargeForm.find("#status").val(null);
+    }
+    if (standardSpecies !== '') {
+        chargeForm.find("#standardSpecies").val(standardSpecies);
+    } else {
+        chargeForm.find("#standardSpecies").val(null);
     }
     if (updateStatus !== "") {
         chargeForm.find("#updateStatus").val($.trim(updateStatus));
@@ -1770,6 +1777,12 @@ function createSettingDialog() {
         onClose: function () {
             $("#changeSettingDialog").find("#PC").attr("status", 1);
             $("#changeSettingDialog").find("#Phone").attr("status", 1);
+            $("#changeSettingDialog").find("#standardSpeciesPC").find("input:checked").each(function() {
+                $("#changeSettingDialog").find("#" + $(this).val() + "PCStandardSpecies").prop("checked", false);
+            });
+            $("#changeSettingDialog").find("#standardSpeciesPhone").find("input:checked").each(function() {
+                $("#changeSettingDialog").find("#" + $(this).val() + "PhoneStandardSpecies").prop("checked", false);
+            });
         }
     });
     $("#changeSettingDialog").dialog("open");
@@ -1899,6 +1912,7 @@ function initSettingDialog(qzSetting, self) {
         // 构造规则表
         $.each(val.qzChargeRules, function (chargeRuleIdx, chargeRuleVal) {
             if (isSEO !== "true") {
+                settingDialogDiv.find('#aiZhan' + val.operationType + 'StandardSpecies')[0].checked = false;
                 settingDialogDiv.find("#" + chargeRuleVal.standardSpecies + val.operationType + "StandardSpecies")[0].checked = true;
                 settingDialogDiv.find("#chargeRule" + val.operationType).css("display", "block");
                 addRow("chargeRule" + val.operationType, chargeRuleVal);
@@ -2400,7 +2414,7 @@ function echoExcludeKeyword() {
 function checkedStandardSpecies(self, terminalType) {
     var inputValue = $(self).val();
     if ($(self)[0].checked) {
-        $(self).parent().parent().find("input:checked").each(function (idx, input) {
+        $(self).parent().parent().find("input:checked").each(function () {
             if ($(this).val() !== inputValue) {
                 $("#changeSettingDialog").find("#" + $(this).val() + terminalType + "StandardSpecies").prop("checked", false);
             } else {
