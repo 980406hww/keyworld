@@ -32,10 +32,7 @@
             fIcon AS 'icon',
             fParentId AS 'pid'
         FROM t_organization
-        WHERE fOrganizationName &lt;&gt; '负面销售部'
-        AND fOrganizationName &lt;&gt; '财务部'
-        AND fOrganizationName &lt;&gt; '运维部'
-        AND fOrganizationName &lt;&gt; '外部'
+        WHERE fOrganizationName NOT IN ('负面销售部', '财务部', '运维部', '外部')
         ORDER BY fSequence
     </select>
 </mapper>
