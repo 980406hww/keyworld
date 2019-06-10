@@ -1797,12 +1797,8 @@ function clearInfo(type) {
     if(type === "Both") {
         clearInfo("PC");
         clearInfo("Phone");
-        clearStandardInfo("PC", "AiZhan");
-        clearStandardInfo("PC", "5118");
-        clearStandardInfo("PC", "DesignationWord");
-        clearStandardInfo("Phone", "AiZhan");
-        clearStandardInfo("Phone", "5118");
-        clearStandardInfo("Phone", "DesignationWord");
+        clearStandardInfo("PC", "aiZhan", 1);
+        clearStandardInfo("Phone", "aiZhan", 1);
     } else {
         // 清空分组表格信息
         settingDialogObj.find("#group" + type).val("");
@@ -1813,12 +1809,30 @@ function clearInfo(type) {
         settingDialogObj.find("#operationTypeSummaryInfo" + type).css("display","none");
     }
 }
-function clearStandardInfo(type, standardSpecies) {
+function clearStandardInfo(type, standardSpecies, hideStatus) {
     var settingDialogObj = $("#changeSettingDialog");
+    switch (standardSpecies) {
+        case 'aiZhan':
+            standardSpecies = '爱站';
+            break;
+        case '5118':
+            break;
+        case 'designationWord':
+            standardSpecies = '指定词';
+            break;
+        case 'other':
+            standardSpecies = '其他';
+            break;
+        default:
+            break;
+    }
+    // 修改表头信息
+    settingDialogObj.find("#chargeRule" + type).find("thead tr td").text(standardSpecies);
     // 清空规则表格信息
-    settingDialogObj.find("#chargeRule" + standardSpecies + type).find("tbody tr:not(:first,:last)").remove();
-    settingDialogObj.find("#chargeRule" + standardSpecies + type).css("display","none");
-    settingDialogObj.find("#" + standardSpecies + type + "StandardSpecies").prop("checked", false);
+    settingDialogObj.find("#chargeRule" + type).find("tbody tr:not(:first,:last)").remove();
+    if (hideStatus) {
+        settingDialogObj.find("#chargeRule" + type).css("display","none");
+    }
 }
 function showSettingDialog(self) {
     resetSettingDialog();
@@ -1880,14 +1894,14 @@ function initSettingDialog(qzSetting, self) {
         /* 限制最大词数 */
         settingDialogDiv.find("#maxKeywordCount" + val.operationType).val(val.maxKeywordCount);
         settingDialogDiv.find("#qzSettingUuid" + val.operationType).val(val.uuid);
-        var isSEO = $(".datalist-list #isSEO").val();
 
+        var isSEO = $(".datalist-list #isSEO").val();
         // 构造规则表
         $.each(val.qzChargeRules, function (chargeRuleIdx, chargeRuleVal) {
             if (isSEO !== "true") {
                 settingDialogDiv.find("#" + chargeRuleVal.standardSpecies + val.operationType + "StandardSpecies")[0].checked = true;
-                settingDialogDiv.find("#chargeRule" + chargeRuleVal.standardSpecies + val.operationType).css("display", "block");
-                addRow("chargeRule" + chargeRuleVal.standardSpecies + val.operationType, chargeRuleVal);
+                settingDialogDiv.find("#chargeRule" + val.operationType).css("display", "block");
+                addRow("chargeRule" + val.operationType, chargeRuleVal);
             }
             if (val.operationType === 'PC') {
                 PCType = true;
@@ -1909,9 +1923,7 @@ function initSettingDialog(qzSetting, self) {
         if (flag === false) {
             settingDialogDiv.find("#standardSpeciesPC label").css("display", "none");
             settingDialogDiv.find("#standardSpeciesPC input").css("display", "none");
-            settingDialogDiv.find("#chargeRuleaiZhanPC").css("display", "none");
-            settingDialogDiv.find("#chargeRule5118PC").css("display", "none");
-            settingDialogDiv.find("#chargeRuledesignationWordPC").css("display", "none");
+            settingDialogDiv.find("#chargeRulePC").css("display", "none");
         }
     }
     if (PhoneType) {
@@ -1920,9 +1932,7 @@ function initSettingDialog(qzSetting, self) {
         if (flag === false) {
             settingDialogDiv.find("#standardSpeciesPhone label").css("display", "none");
             settingDialogDiv.find("#standardSpeciesPhone input").css("display", "none");
-            settingDialogDiv.find("#chargeRuleaiZhanPhone").css("display", "none");
-            settingDialogDiv.find("#chargeRule5118Phone").css("display", "none");
-            settingDialogDiv.find("#chargeRuledesignationWordPhone").css("display", "none");
+            settingDialogDiv.find("#chargeRulePhone").css("display", "none");
         }
     }
     if (flag === false) {
@@ -2061,7 +2071,7 @@ function saveChangeSetting() {
             $.each(standardSpeciesObjs, function (i, v) {
                 var endKeyWordCountValue = -1;
                 //多条规则
-                var ruleObj = settingDialogDiv.find("#chargeRule" + $(v).val() + val.id);
+                var ruleObj = settingDialogDiv.find("#chargeRule" + val.id);
                 var trObjs = ruleObj.find("tbody tr:not(:first,:last)");
                 $.each(trObjs, function (idx, val) {
                     var startKeywordCountObj = $(val).find("input[name=startKeywordCount]");
@@ -2157,7 +2167,6 @@ function saveChangeSetting() {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            timeout: 5000,
             type: 'POST',
             success: function (data) {
                 if (data != null && data != "") {
@@ -2197,7 +2206,7 @@ function addRow(tableID, chargeRule){
 function deleteCurrentRow(currentRow) {
     var index = currentRow.rowIndex;
     var tableObj = currentRow.parentNode.parentNode;
-    if(tableObj.rows.length > 3) {
+    if(tableObj.rows.length > 4) {
         tableObj.deleteRow(index);
         $.each($("#"+tableObj.id).find("input[name=sequenceID]"), function(idx, val){
             $(val).val(idx + 1);
@@ -2215,27 +2224,26 @@ function dealSettingTable(operationType) {
     if (checkboxObj[0].checked == true) {
         groupObj.css("display","block");
         if (isSEO === "false") {
-            $("#chargeRuleaiZhan" + operationType).css("display", "block");
-            addRow("chargeRuleaiZhan" + operationType);
+            $("#chargeRule" + operationType).css("display", "block");
+            addRow("chargeRule" + operationType);
             $("#aiZhan"+ operationType +"StandardSpecies")[0].checked = true;
         }
         if (status === '1') {
             settingDialogDiv.find("#standardSpecies" + operationType + " label").css("display", "block");
             settingDialogDiv.find("#standardSpecies" + operationType + " input").css("display", "block");
-            settingDialogDiv.find("#chargeRuleaiZhan" + operationType).css("display", "block");
+            settingDialogDiv.find("#chargeRule" + operationType).css("display", "block");
         } else {
             settingDialogDiv.find("#standardSpecies" + operationType + " label").css("display", "none");
             settingDialogDiv.find("#standardSpecies" + operationType + " input").css("display", "none");
-            settingDialogDiv.find("#chargeRuleaiZhan" + operationType).css("display", "none");
-            settingDialogDiv.find("#chargeRule5118" + operationType).css("display", "none");
-            settingDialogDiv.find("#chargeRuledesignationWord" + operationType).css("display", "none");
+            settingDialogDiv.find("#chargeRule" + operationType).css("display", "none");
         }
     } else {
         clearInfo(operationType);
         if (isSEO === "false") {
-            clearStandardInfo(operationType, "AiZhan");
-            clearStandardInfo(operationType, "5118");
-            clearStandardInfo(operationType, "DesignationWord");
+            groupObj.find("input:checked").each(function (idx, input) {
+                $("#changeSettingDialog").find("#" + $(this).val() + operationType + "StandardSpecies").prop("checked", false);
+            });
+            clearStandardInfo(operationType, "aiZhan", 1);
         }
         groupObj.css("display","none");
     }
@@ -2390,27 +2398,19 @@ function echoExcludeKeyword() {
 }
 
 function checkedStandardSpecies(self, terminalType) {
+    var inputValue = $(self).val();
     if ($(self)[0].checked) {
-        var checkFlag = 0;
         $(self).parent().parent().find("input:checked").each(function (idx, input) {
-            checkFlag += 1;
-        });
-        if (checkFlag >= 1) {
-            checkFlag = 0;
-            if ($(self).val() === "aiZhan") {
-                clearStandardInfo(terminalType, "5118");
-                clearStandardInfo(terminalType, "designationWord");
-            } else if ($(self).val() === "5118") {
-                clearStandardInfo(terminalType, "aiZhan");
-                clearStandardInfo(terminalType, "designationWord");
-            } else if ($(self).val() === 'designationWord') {
-                clearStandardInfo(terminalType, "aiZhan");
-                clearStandardInfo(terminalType, "5118");
+            if ($(this).val() !== inputValue) {
+                $("#changeSettingDialog").find("#" + $(this).val() + terminalType + "StandardSpecies").prop("checked", false);
+            } else {
+                clearStandardInfo(terminalType, inputValue, 0);
             }
-        }
-        $("#chargeRule" + $(self).val() + terminalType).css("display", "block");
-        addRow("chargeRule" + $(self).val() + terminalType);
+        });
+        $("#chargeRule" + terminalType).css("display", "block");
+        addRow("chargeRule" + terminalType);
     }  else {
-        clearStandardInfo(terminalType, $(self).val());
+        $(self)[0].checked = true;
+        alert("必须选中达一种达标种类！！");
     }
 }

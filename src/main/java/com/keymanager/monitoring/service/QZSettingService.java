@@ -318,7 +318,9 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
                     if (null != qzKeywordRankInfo) {
                         existingStandardSpeciesSet.add(qzChargeRule.getStandardSpecies());
                     } else {
-                        standardSpeciesSet.add(qzChargeRule.getStandardSpecies());
+                        if (!"other".equals(qzChargeRule.getStandardSpecies())) {
+                            standardSpeciesSet.add(qzChargeRule.getStandardSpecies());
+                        }
                     }
                 }
                 for (String existingStandardSpecies: existingStandardSpeciesSet) {
@@ -326,7 +328,9 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
                 }
             } else {
                 for (QZChargeRule qzChargeRule : qzOperationType.getQzChargeRules()) {
-                    standardSpeciesSet.add(qzChargeRule.getStandardSpecies());
+                    if (!"other".equals(qzChargeRule.getStandardSpecies())) {
+                        standardSpeciesSet.add(qzChargeRule.getStandardSpecies());
+                    }
                 }
             }
             if (CollectionUtils.isNotEmpty(standardSpeciesSet)) {
