@@ -190,8 +190,6 @@
         AND
             fOptimizeGroupName = #{captureRankJob.groupNames}
         AND
-            fKeywordEffect = 'Appointment'
-        AND
             fStatus = 1
         AND
             fCurrentPosition &lt;= #{position}

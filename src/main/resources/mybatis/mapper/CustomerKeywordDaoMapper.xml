@@ -708,9 +708,6 @@
         FROM t_customer_keyword ck
         WHERE ck.fTerminalType = #{terminalType} and ck.fStatus = 1
         AND fCaptureStatus = #{captureStatus}
-        <if test="qzSettingUuid != null">
-            AND ck.fKeywordEffect = 'Appointment'
-        </if>
         <if test="startTime != null and captureStatus == 0">
             AND ck.fCapturePositionQueryTime <![CDATA[<]]> #{startTime}
             AND !(ck.fCapturePositionQueryTime > CURRENT_DATE() AND ck.fCurrentPosition &lt; 4 AND ck.fCurrentPosition &gt; 0)
