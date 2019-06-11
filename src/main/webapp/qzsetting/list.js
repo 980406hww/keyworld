@@ -90,6 +90,11 @@ function searchRiseOrFall() {
             }
         }
         $("#chargeForm").find("#checkStatus").val(checkStatus);
+        $(".mytabs div:eq(0)").find("input:radio").each(function() {
+            if ($(this).parent().attr("name") != parentName) {
+                $(this).prop("checked", false);
+            }
+        });
         trimSearchCondition('1');
     });
 }
@@ -1409,10 +1414,8 @@ function updateImmediately(uuids, urlType) {
     }
     var postData = {};
     postData.uuids = uuids;
-    if (urlType === "updateQZKeywordEffectImmediately") {
-        var terminalType = $("#chargeForm").find("#terminalType").val();
-        postData.terminalType = terminalType;
-    }
+    var terminalType = $("#chargeForm").find("#terminalType").val();
+    postData.terminalType = terminalType;
     $.ajax({
         url: '/internal/qzsetting/' + urlType,
         data: JSON.stringify(postData),
@@ -2174,6 +2177,9 @@ function saveChangeSetting() {
             alert("保存失败，必须要增加一条规则");
             return;
         }
+        $("#changeSettingDialog").parent().find("div.dialog-button a:first-child").removeAttr('href');
+        $("#changeSettingDialog").parent().find("div.dialog-button a:first-child").removeAttr('onclick');
+        $("#changeSettingDialog").parent().find("div.dialog-button a:first-child").css("opacity", "0.5");
         $.ajax({
             url: '/internal/qzsetting/save',
             data: JSON.stringify(qzSetting),
@@ -2186,11 +2192,17 @@ function saveChangeSetting() {
                 if (data != null && data != "") {
                     $().toastmessage('showSuccessToast', "更新成功", true);
                 } else {
+                    $("#changeSettingDialog").parent().find("div.dialog-button a:first-child").attr("href", "javascript:void(0);");
+                    $("#changeSettingDialog").parent().find("div.dialog-button a:first-child").attr("onclick", "saveChangeSetting();");
+                    $("#changeSettingDialog").parent().find("div.dialog-button a:first-child").removeAttr("opacity");
                     $().toastmessage('showErrorToast', "更新失败！");
                 }
                 $("#changeSettingDialog").dialog("close");
             },
             error: function () {
+                $("#changeSettingDialog").parent().find("div.dialog-button a:first-child").attr("href", "javascript:javascript:void(0);");
+                $("#changeSettingDialog").parent().find("div.dialog-button a:first-child").attr("onclick", "saveChangeSetting();");
+                $("#changeSettingDialog").parent().find("div.dialog-button a:first-child").removeAttr("opacity");
                 $().toastmessage('showErrorToast', "更新失败！");
             }
         });
