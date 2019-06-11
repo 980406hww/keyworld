@@ -2,36 +2,42 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.monitoring.dao.WebsiteDao">
 	<sql id="selectCol">
-		fUuid AS "uuid",
-		fWebsiteName AS "websiteName",
-		fDomain AS "domain",
-		fIndustry AS "industry",
-		fRegistrar AS "registrar",
-		fAnalysis AS "analysis",
-		fExpiryTime AS "expiryTime",
-		fDatabaseName AS "databaseName",
-		fDatabaseUserName AS "databaseUserName",
-		fDatabasePassword AS "databasePassword",
-		fServerIP AS "serverIP",
-		fServerUserName AS "serverUserName",
-		fServerPassword AS "serverPassword",
-		fAccessFailCount AS "accessFailCount",
-		fLastAccessTime AS "lastAccessTime",
-		fAccessFailTime AS "accessFailTime",
-		fUpdateTime AS "updateTime",
-		fCreateTime AS "createTime"
+		w.fUuid AS "uuid",
+		w.fWebsiteName AS "websiteName",
+		w.fDomain AS "domain",
+		w.fIndustry AS "industry",
+		w.fRegistrar AS "registrar",
+		w.fAnalysis AS "analysis",
+		w.fExpiryTime AS "expiryTime",
+		w.fDatabaseName AS "databaseName",
+		w.fDatabaseUserName AS "databaseUserName",
+		w.fDatabasePassword AS "databasePassword",
+		w.fBackgroundDomain AS "backgroundDomain",
+		w.fBackgroundUserName AS "backgroundUserName",
+		w.fBackgroundPassword AS "backgroundPassword",
+		w.fServerIP AS "serverIP",
+		w.fServerUserName AS "serverUserName",
+		w.fServerPassword AS "serverPassword",
+		w.fAccessFailCount AS "accessFailCount",
+		w.fLastAccessTime AS "lastAccessTime",
+		w.fAccessFailTime AS "accessFailTime",
+		w.fUpdateTime AS "updateTime",
+		w.fCreateTime AS "createTime"
 	</sql>
 
-	<select id="searchWebsites" parameterType="com.keymanager.monitoring.criteria.WebsiteCriteria" resultType="com.keymanager.monitoring.entity.Website">
+	<select id="searchWebsites" parameterType="com.keymanager.monitoring.criteria.WebsiteCriteria" resultType="com.keymanager.monitoring.vo.WebsiteVO">
 		SELECT
+			COUNT(fl.fUuid) AS friendlyLinkCount,
 			<include refid="selectCol" />
 		FROM
 			t_website w
+		LEFT JOIN t_friendly_link fl ON w.fUuid = fl.fWebsiteUuid
 		WHERE 1 = 1
 		<if test="websiteCriteria.websiteName != null and websiteCriteria.websiteName != ''">AND w.fWebsiteName LIKE '%${websiteCriteria.websiteName}%'</if>
 		<if test="websiteCriteria.domain != null and websiteCriteria.domain != ''">AND w.fDomain LIKE '%${websiteCriteria.domain}%'</if>
 		<if test="websiteCriteria.accessFailCount != null">AND w.fAccessFailCount = #{websiteCriteria.accessFailCount}</if>
-		ORDER BY fLastAccessTime
+		GROUP BY w.fUuid
+		ORDER BY w.fLastAccessTime
 	</select>
 
 	<select id="takeWebsitesForAccess" resultType="com.keymanager.monitoring.entity.Website">

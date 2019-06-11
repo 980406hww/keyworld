@@ -5,6 +5,7 @@ import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.WebsiteCriteria;
 import com.keymanager.monitoring.entity.Website;
 import com.keymanager.monitoring.service.WebsiteService;
+import com.keymanager.monitoring.vo.WebsiteVO;
 import com.keymanager.util.FileUtil;
 import com.keymanager.util.Utils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -53,7 +54,7 @@ public class WebsiteRestController extends SpringMVCBaseController {
 
     private ModelAndView constructWebsiteModelAndView(WebsiteCriteria websiteCriteria, int currentPageNumber, int pageSize) {
         ModelAndView modelAndView = new ModelAndView("/website/website");
-        Page<Website> page = websiteService.searchWebsites(new Page<Website>(currentPageNumber,pageSize), websiteCriteria);
+        Page<WebsiteVO> page = websiteService.searchWebsites(new Page<WebsiteVO>(currentPageNumber,pageSize), websiteCriteria);
         modelAndView.addObject("websiteCriteria", websiteCriteria);
         modelAndView.addObject("page", page);
         return modelAndView;

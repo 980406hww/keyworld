@@ -53,16 +53,21 @@
                 <td width="80" align="center" rowspan="2">发现故障时间</td>
                 <td width="80" align="center" rowspan="2">最近访问时间</td>
                 <td width="80" align="center" rowspan="2">更新时间</td>
-                <td width="270" align="center" colspan="4">域名信息</td>
+                <td width="270" align="center" colspan="5">域名信息</td>
+                <td width="210" colspan="3" align="center">域名信息</td>
                 <td width="210" colspan="3" align="center">数据库信息</td>
                 <td width="210" colspan="3" align="center">服务器信息</td>
                 <td width="80" align="center" rowspan="2">操作</td>
             </tr>
             <tr height="23">
                 <td width="70" align="center">网站域名</td>
+                <td width="70" align="center">友情链接</td>
                 <td width="70" align="center">注册商</td>
                 <td width="70" align="center">解析商</td>
                 <td width="70" align="center">到期时间</td>
+                <td width="70" align="center">后台链接</td>
+                <td width="70" align="center">后台用户名</td>
+                <td width="70" align="center">后台密码</td>
                 <td width="70" align="center">数据库名称</td>
                 <td width="70" align="center">用户名</td>
                 <td width="70" align="center">密码</td>
@@ -84,9 +89,13 @@
             <td width=80><fmt:formatDate value="${website.lastAccessTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
             <td width=80><fmt:formatDate value="${website.updateTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
             <td width=70><a target="_blank" href="http://${website.domain}">${website.domain}</a></td>
+            <td width=70><a href="#" onclick="searchFriendlyLinks('/internal/friendlyLink/searchFriendlyLinkLists/${website.uuid}')">${website.friendlyLinkCount}</a></td>
             <td width=70>${website.registrar}</td>
             <td width=70>${website.analysis}</td>
             <td width=70><fmt:formatDate value="${website.expiryTime}" pattern="yyyy-MM-dd"/></td>
+            <td width=70>${website.backgroundDomain}</td>
+            <td width=70>${website.backgroundUserName}</td>
+            <td width=70>${website.backgroundPassword}</td>
             <td width=70>${website.databaseName}</td>
             <td width=70>${website.databaseUserName}</td>
             <td width=70>${website.databasePassword}</td>
@@ -159,6 +168,18 @@
                 </td>
             </tr>
             <tr>
+                <td align="right">后台链接路径:</td>
+                <td><input type="text" name="backgroundDomain" id="backgroundDomain" style="width:200px;"></td>
+            </tr>
+            <tr>
+                <td align="right">后台用户名:</td>
+                <td><input type="text" name="backgroundUserName" id="backgroundUserName" style="width:200px;"></td>
+            </tr>
+            <tr>
+                <td align="right">后台密码:</td>
+                <td><input type="text" name="backgroundPassword" id="backgroundPassword" style="width:200px;"></td>
+            </tr>
+            <tr>
                 <td align="right">数据库名称:</td>
                 <td><input type="text" name="databaseName" id="databaseName" style="width:200px;"></td>
             </tr>
@@ -187,5 +208,10 @@
 </div>
 <%@ include file="/commons/loadjs.jsp" %>
 <script src="${staticPath }/website/website.js"></script>
+<script language="javascript">
+    function searchFriendlyLinks(url) {
+        window.open(url);
+    }
+</script>
 </body>
 </html>

@@ -48,6 +48,15 @@ public class Website extends BaseEntity {
     @TableField(value = "fServerPassword")
     private String serverPassword;
 
+    @TableField(value = "fBackgroundDomain")
+    private String backgroundDomain;
+
+    @TableField(value = "fBackgroundUserName")
+    private String backgroundUserName;
+
+    @TableField(value = "fBackgroundPassword")
+    private String backgroundPassword;
+
     @TableField(value = "fAccessFailCount")
     private Integer accessFailCount;
 
@@ -175,5 +184,29 @@ public class Website extends BaseEntity {
 
     public void setServerPassword(String serverPassword) {
         this.serverPassword = serverPassword;
+    }
+
+    public String getBackgroundDomain() {
+        return backgroundDomain;
+    }
+
+    public void setBackgroundDomain(String backgroundDomain) {
+        this.backgroundDomain = backgroundDomain;
+    }
+
+    public String getBackgroundUserName() {
+        return backgroundUserName;
+    }
+
+    public void setBackgroundUserName(String backgroundUserName) {
+        this.backgroundUserName = backgroundUserName;
+    }
+
+    public String getBackgroundPassword() {
+        return backgroundPassword;
+    }
+
+    public void setBackgroundPassword(String backgroundPassword) {
+        this.backgroundPassword = backgroundPassword;
     }
 }
