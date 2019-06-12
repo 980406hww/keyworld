@@ -1751,15 +1751,21 @@ function createSettingDialog() {
     $("#changeSettingDialog").show();
     $("#changeSettingDialog").dialog({
         resizable: false,
-        height: 580,
-        width: 340,
+        height: 500,
+        width: 680,
         title: '全站设置',
         modal: true,
         buttons: [{
+            text: '保存不刷新',
+            iconCls: 'icon-ok',
+            handler: function () {
+                saveChangeSetting(this, false);
+            }
+        }, {
             text: '保存',
             iconCls: 'icon-ok',
             handler: function () {
-                saveChangeSetting(this);
+                saveChangeSetting(this, true);
             }
         },
             {
@@ -1959,7 +1965,7 @@ function initSettingDialog(qzSetting, self) {
 }
 //规则表验证
 var reg = /^[1-9]\d*$/;
-function saveChangeSetting() {
+function saveChangeSetting(self, refresh) {
     var settingDialogDiv = $("#changeSettingDialog");
     var qzSetting = {};
     qzSetting.uuid = settingDialogDiv.find("#qzSettingUuid").val().trim();
@@ -2191,7 +2197,7 @@ function saveChangeSetting() {
             type: 'POST',
             success: function (data) {
                 if (data != null && data != "") {
-                    $().toastmessage('showSuccessToast', "更新成功", true);
+                    $().toastmessage('showSuccessToast', "更新成功", refresh);
                 } else {
                     $("#changeSettingDialog").parent().find("div.dialog-button a:first-child").attr("href", "javascript:void(0);");
                     $("#changeSettingDialog").parent().find("div.dialog-button a:first-child").attr("onclick", "saveChangeSetting();");

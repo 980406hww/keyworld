@@ -1198,11 +1198,24 @@
 				<input type="hidden" id="qzSettingUuid" />
 				<input type="text" list="customer_list" name="qzSettingCustomer" id="qzSettingCustomer" style="width:240px" />
 			</td>
+			<td style="width:60px" align="right">标签</td>
+			<td>
+				<input type="text" name="qzCategoryTagNames" id="qzCategoryTagNames" placeholder="按正确方式输入：阿卡索,MBA,算法" style="width:240px">
+			</td>
 		</tr>
 		<tr>
 			<td style="width:60px" align="right">域名</td>
 			<td>
 				<input type="text" name="qzSettingDomain" id="qzSettingDomain" style="width:240px" />
+			</td>
+			<td style="width:60px" align="right">入口</td>
+			<td>
+				<select name="qzSettingEntryType" id="qzSettingEntryType" style="width:240px">
+					<option value="qz" selected>全站</option>
+					<option value="pt">普通</option>
+					<option value="fm">负面</option>
+					<option value="bc">其他</option>
+				</select>
 			</td>
 		</tr>
 		<tr>
@@ -1210,21 +1223,33 @@
 			<td>
 				<input type="text" name="bearPawNumber" id="bearPawNumber" style="width:240px" />
 			</td>
+			<td style="width:60px" align="right"><c:if test="${not isSEO}">达标计划</c:if></td>
+			<td>
+				<c:if test="${not isSEO}">
+					<select name="qzSettingJoinReady" id="qzSettingJoinReady" style="width:240px">
+						<option value="1">是</option>
+						<option value="0" selected>否</option>
+					</select>
+				</c:if>
+			</td>
 		</tr>
 	</table>
 
 	<table style="font-size:12px" cellspacing="5">
 		<tr>
-			<td colspan="2" class="split_line"></td>
+			<td colspan="4" class="split_line"></td>
 		</tr>
 		<tr>
-			<td colspan="2">
+			<td colspan="2" width="325px">
 				<input type="checkbox" name="operationType" id="PC" status="1" onclick="dealSettingTable('PC')" style=""/>电脑
 			</td>
+			<td colspan="2" width="325px">
+				<input type="checkbox" name="operationType" id="Phone" status="1" onclick="dealSettingTable('Phone')" style=""/>手机
+			</td>
 		</tr>
-		<%--电脑分组信息--%>
 		<tr>
-			<td colspan="2" id="groupHeightPC">
+			<%--电脑分组信息--%>
+			<td colspan="2" id="groupHeightPC" width="325px">
 				<table border="0" style="display:none;font-size:12px;" cellspacing="5" cellpadding="0" id="operationTypeSummaryInfoPC">
 					<tr>
 						<td align="right" style="width:72px">分组</td>
@@ -1284,44 +1309,8 @@
 					</c:if>
 				</table>
 			</td>
-		</tr>
-		<%--电脑规则信息--%>
-		<c:if test="${not isSEO}">
-			<tr id="pcChargeRuleTable">
-				<td colspan="2" id="ruleHeightPC">
-					<table border="1" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="chargeRulePC">
-						<thead>
-						<tr>
-							<td align="center" colspan="5">爱站</td>
-						</tr>
-						</thead>
-						<tbody>
-						<tr>
-							<td style="width:50px">序号</td>
-							<td style="width:72px">起始词数</td>
-							<td style="width:72px">终止词数</td>
-							<td style="width:50px">价格</td>
-							<td style="width:46px">操作</td>
-						</tr>
-						<tr>
-							<td colspan="5">
-								<input name="addRule" type="button" value="增加规则" onclick="addRow('chargeRulePC')" />
-							</td>
-						</tr>
-						</tbody>
-					</table>
-				</td>
-			</tr>
-		</c:if>
-
-		<tr>
-			<td colspan="2">
-				<input type="checkbox" name="operationType" id="Phone" status="1" onclick="dealSettingTable('Phone')" style=""/>手机
-			</td>
-		</tr>
-		<%--手机分组信息--%>
-		<tr>
-			<td colspan="2" id="groupHeightPhone">
+			<%--手机分组信息--%>
+			<td colspan="2" id="groupHeightPhone" width="325px">
 				<table border="0" style="display:none;font-size:12px;" cellspacing="5" cellpadding="0" id="operationTypeSummaryInfoPhone">
 					<tr>
 						<td align="right" style="width:72px;">分组</td>
@@ -1340,12 +1329,12 @@
 						<td colspan="4"><input type="text" name="currentKeywordCount" id="currentKeywordCountPhone"  style="width:240px;margin-left: -6;" readonly/></td>
 					</tr>
 					<shiro:hasPermission name="/internal/qzsetting/delete">
-					<c:if test="${not isSEO}">
-						<tr>
-							<td align="right" style="width:72px">限制词量</td>
-							<td colspan="4"><input type="text" name="maxKeywordCount" id="maxKeywordCountPhone" style="width:240px;margin-left: -6;"/></td>
-						</tr>
-					</c:if>
+						<c:if test="${not isSEO}">
+							<tr>
+								<td align="right" style="width:72px">限制词量</td>
+								<td colspan="4"><input type="text" name="maxKeywordCount" id="maxKeywordCountPhone" style="width:240px;margin-left: -6;"/></td>
+							</tr>
+						</c:if>
 					</shiro:hasPermission>
 					<input type="hidden" id="qzSettingUuidPhone" name="qzOperationTypeUuid" value="" />
 					<c:if test="${not isSEO}">
@@ -1382,11 +1371,35 @@
 				</table>
 			</td>
 		</tr>
-		<%--手机规则信息--%>
 		<c:if test="${not isSEO}">
-			<tr id="phoneChargeRuleTable">
-				<td colspan="2" id="ruleHeightPhone">
-					<table border="1" style="display:none;font-size:12px;" cellspacing="0" cellpadding="0" id="chargeRulePhone">
+			<tr id="chargeRuleTable">
+				<%--电脑规则信息--%>
+				<td colspan="2" id="ruleHeightPC" style="width: 325px; ">
+					<table border="1" style="display:none; font-size:12px;" cellspacing="0" cellpadding="0" id="chargeRulePC">
+						<thead>
+						<tr>
+							<td align="center" colspan="5">爱站</td>
+						</tr>
+						</thead>
+						<tbody>
+						<tr>
+							<td style="width:50px">序号</td>
+							<td style="width:72px">起始词数</td>
+							<td style="width:72px">终止词数</td>
+							<td style="width:50px">价格</td>
+							<td style="width:46px">操作</td>
+						</tr>
+						<tr>
+							<td colspan="5">
+								<input name="addRule" type="button" value="增加规则" onclick="addRow('chargeRulePC')" />
+							</td>
+						</tr>
+						</tbody>
+					</table>
+				</td>
+				<%--手机规则信息--%>
+				<td colspan="2" id="ruleHeightPhone" style="width: 325px;">
+					<table border="1" style="display:none; font-size:12px;" cellspacing="0" cellpadding="0" id="chargeRulePhone">
 						<thead>
 						<tr>
 							<td align="center" colspan="5">爱站</td>
@@ -1410,36 +1423,16 @@
 				</td>
 			</tr>
 		</c:if>
-
 		<tr>
-			<td colspan="2" class="split_line"></td>
-		</tr>
-        <tr>
-            <td style="width:60px" align="right">标签</td>
-            <td>
-                <input type="text" name="qzCategoryTagNames" id="qzCategoryTagNames" placeholder="按正确方式输入：阿卡索,MBA,算法" style="width:240px">
-            </td>
-        </tr>
-		<tr>
-			<td style="width:60px" align="right">入口</td>
-			<td>
-				<select name="qzSettingEntryType" id="qzSettingEntryType" style="width:240px">
-					<option value="qz" selected>全站</option>
-					<option value="pt">普通</option>
-					<option value="fm">负面</option>
-					<option value="bc">其他</option>
-				</select>
-			</td>
+			<td colspan="4" class="split_line"></td>
 		</tr>
 		<shiro:hasPermission name="/internal/qzsetting/startMonitorImmediately">
 			<c:if test="${not isSEO}">
 				<tr>
-			<td style="width:60px" align="right">组最大词数</td>
-            <td>
-                <input type="text" name="groupMaxCustomerKeywordCount" id="groupMaxCustomerKeywordCount" placeholder="请输入数字：" value="5000" style="width:240px">
-            </td>
-		</tr>
-		<tr>
+					<td style="width:60px" align="right">组最大词数</td>
+					<td>
+						<input type="text" name="groupMaxCustomerKeywordCount" id="groupMaxCustomerKeywordCount" placeholder="请输入数字：" value="5000" style="width:240px">
+					</td>
 					<td style="width:60px" align="right">爬取关键字</td>
 					<td>
 						<select name="qzSettingAutoCrawlKeywordFlag" id="qzSettingAutoCrawlKeywordFlag" style="width:240px">
@@ -1456,8 +1449,6 @@
 							<option value="0">否</option>
 						</select>
 					</td>
-				</tr>
-				<tr>
 					<td style="width:60px" align="right">去掉没排名</td>
 					<td>
 						<select name="qzSettingIgnoreNoOrder" id="qzSettingIgnoreNoOrder"  style="width:240px">
@@ -1480,8 +1471,6 @@
 							<option value="15" selected>15天</option>
 						</select>
 					</td>
-				</tr>
-				<tr>
 					<td style="width:60px" align="right">达标监控</td>
 					<td>
 						<select name="qzSettingStartMonitor" id="qzSettingStartMonitor"  style="width:240px">
@@ -1492,17 +1481,6 @@
 				</tr>
 			</c:if>
 		</shiro:hasPermission>
-		<c:if test="${not isSEO}">
-			<tr>
-				<td style="width:60px" align="right">达标计划</td>
-				<td>
-					<select name="qzSettingJoinReady" id="qzSettingJoinReady"  style="width:240px">
-						<option value="1">是</option>
-						<option value="0" selected>否</option>
-					</select>
-				</td>
-			</tr>
-		</c:if>
 	</table>
 	</form>
 </div>
