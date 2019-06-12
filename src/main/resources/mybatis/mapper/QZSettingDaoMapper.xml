@@ -127,16 +127,20 @@
         <if test="qzSettingSearchCriteria.organizationID != null and qzSettingSearchCriteria.organizationID != ''">AND o.fUuid = #{qzSettingSearchCriteria.organizationID}</if>
         <if test="qzSettingSearchCriteria.customerUuid != null and qzSettingSearchCriteria.customerUuid != ''">AND qs.fCustomerUuid = #{qzSettingSearchCriteria.customerUuid}</if>
         <if test="qzSettingSearchCriteria.domain != null and qzSettingSearchCriteria.domain != ''">AND qs.fDomain = #{qzSettingSearchCriteria.domain}</if>
-        <if test="qzSettingSearchCriteria.group != null and qzSettingSearchCriteria.group != ''">
-            <choose>
-                <when test="qzSettingSearchCriteria.terminalType == 'PC'">
-                    AND qs.fPcGroup = #{qzSettingSearchCriteria.group}
-                </when>
-                <when test="qzSettingSearchCriteria.terminalType == 'Phone'">
-                    AND qs.fPhoneGroup = #{qzSettingSearchCriteria.group}
-                </when>
-            </choose>
-        </if>
+        <choose>
+            <when test="qzSettingSearchCriteria.terminalType == 'PC' and (qzSettingSearchCriteria.group == null or qzSettingSearchCriteria.group == '')">
+                AND qs.fPcGroup &gt; ''
+            </when>
+            <when test="qzSettingSearchCriteria.terminalType == 'PC' and qzSettingSearchCriteria.group != null and qzSettingSearchCriteria.group != ''">
+                AND qs.fPcGroup = #{qzSettingSearchCriteria.group}
+            </when>
+            <when test="qzSettingSearchCriteria.terminalType == 'Phone' and (qzSettingSearchCriteria.group == null or qzSettingSearchCriteria.group == '')">
+                AND qs.fPhoneGroup &gt; ''
+            </when>
+            <when test="qzSettingSearchCriteria.terminalType == 'Phone' and qzSettingSearchCriteria.group != null and qzSettingSearchCriteria.group != ''">
+                AND qs.fPhoneGroup = #{qzSettingSearchCriteria.group}
+            </when>
+        </choose>
         <if test="qzSettingSearchCriteria.updateStatus != null and qzSettingSearchCriteria.updateStatus != ''">AND qs.fUpdateStatus = #{qzSettingSearchCriteria.updateStatus}</if>
         <if test="qzSettingSearchCriteria.status != null">AND qs.fStatus = #{qzSettingSearchCriteria.status}</if>
         <if test="qzSettingSearchCriteria.hasMonitor != null">AND qs.fIsMonitor = #{qzSettingSearchCriteria.hasMonitor}</if>

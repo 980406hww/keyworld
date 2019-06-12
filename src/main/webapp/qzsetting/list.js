@@ -1988,6 +1988,7 @@ function saveChangeSetting() {
         qzSetting.ignoreNoIndex = true;
         qzSetting.ignoreNoOrder = true;
         qzSetting.updateInterval = 2;
+        qzSetting.groupMaxCustomerKeywordCount = 5000;
     }
     if (settingDialogDiv.find("#qzSettingStartMonitor").length > 0) {
         qzSetting.fIsMonitor = settingDialogDiv.find("#qzSettingStartMonitor").val() === "1" ? true : false;
