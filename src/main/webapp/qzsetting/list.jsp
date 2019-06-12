@@ -1193,22 +1193,22 @@
 	<form id="changeSettingForm">
 	<table style="font-size:12px" id="settingTable" align="center" cellspacing="5">
 		<tr>
-			<td style="width:60px" align="right">客户</td>
+			<td style="width:65px" align="right">客户</td>
 			<td>
 				<input type="hidden" id="qzSettingUuid" />
 				<input type="text" list="customer_list" name="qzSettingCustomer" id="qzSettingCustomer" style="width:240px" />
 			</td>
-			<td style="width:60px" align="right">标签</td>
+			<td style="width:65px" align="right">标签</td>
 			<td>
 				<input type="text" name="qzCategoryTagNames" id="qzCategoryTagNames" placeholder="按正确方式输入：阿卡索,MBA,算法" style="width:240px">
 			</td>
 		</tr>
 		<tr>
-			<td style="width:60px" align="right">域名</td>
+			<td style="width:65px" align="right">域名</td>
 			<td>
 				<input type="text" name="qzSettingDomain" id="qzSettingDomain" style="width:240px" />
 			</td>
-			<td style="width:60px" align="right">入口</td>
+			<td style="width:65px" align="right">入口</td>
 			<td>
 				<select name="qzSettingEntryType" id="qzSettingEntryType" style="width:240px">
 					<option value="qz" selected>全站</option>
@@ -1219,11 +1219,11 @@
 			</td>
 		</tr>
 		<tr>
-			<td style="width:60px" align="right">熊掌号</td>
+			<td style="width:65px" align="right">熊掌号</td>
 			<td>
 				<input type="text" name="bearPawNumber" id="bearPawNumber" style="width:240px" />
 			</td>
-			<td style="width:60px" align="right"><c:if test="${not isSEO}">达标计划</c:if></td>
+			<td style="width:65px" align="right"><c:if test="${not isSEO}">达标计划</c:if></td>
 			<td>
 				<c:if test="${not isSEO}">
 					<select name="qzSettingJoinReady" id="qzSettingJoinReady" style="width:240px">
@@ -1374,7 +1374,7 @@
 		<c:if test="${not isSEO}">
 			<tr id="chargeRuleTable">
 				<%--电脑规则信息--%>
-				<td colspan="2" id="ruleHeightPC" style="width: 325px; ">
+				<td colspan="2" id="ruleHeightPC" style="width: 325px;" valign="top">
 					<table border="1" style="display:none; font-size:12px;" cellspacing="0" cellpadding="0" id="chargeRulePC">
 						<thead>
 						<tr>
@@ -1398,7 +1398,7 @@
 					</table>
 				</td>
 				<%--手机规则信息--%>
-				<td colspan="2" id="ruleHeightPhone" style="width: 325px;">
+				<td colspan="2" id="ruleHeightPhone" style="width: 325px;" valign="top">
 					<table border="1" style="display:none; font-size:12px;" cellspacing="0" cellpadding="0" id="chargeRulePhone">
 						<thead>
 						<tr>
@@ -1429,11 +1429,11 @@
 		<shiro:hasPermission name="/internal/qzsetting/startMonitorImmediately">
 			<c:if test="${not isSEO}">
 				<tr>
-					<td style="width:60px" align="right">组最大词数</td>
+					<td style="width:65px" align="right">组最大词数</td>
 					<td>
 						<input type="text" name="groupMaxCustomerKeywordCount" id="groupMaxCustomerKeywordCount" placeholder="请输入数字：" value="5000" style="width:240px">
 					</td>
-					<td style="width:60px" align="right">爬取关键字</td>
+					<td style="width:65px" align="right">爬取关键字</td>
 					<td>
 						<select name="qzSettingAutoCrawlKeywordFlag" id="qzSettingAutoCrawlKeywordFlag" style="width:240px">
 							<option value="1">是</option>
@@ -1442,14 +1442,14 @@
 					</td>
 				</tr>
 				<tr>
-					<td style="width:60px" align="right">去掉没指数</td>
+					<td style="width:65px" align="right">去掉没指数</td>
 					<td>
 						<select name="qzSettingIgnoreNoIndex" id="qzSettingIgnoreNoIndex"  style="width:240px">
 							<option value="1" selected>是</option>
 							<option value="0">否</option>
 						</select>
 					</td>
-					<td style="width:60px" align="right">去掉没排名</td>
+					<td style="width:65px" align="right">去掉没排名</td>
 					<td>
 						<select name="qzSettingIgnoreNoOrder" id="qzSettingIgnoreNoOrder"  style="width:240px">
 							<option value="1" selected>是</option>
@@ -1458,7 +1458,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td style="width:60px" align="right">更新间隔</td>
+					<td style="width:65px" align="right">更新间隔</td>
 					<td>
 						<select name="qzSettingInterval" id="qzSettingInterval"  style="width:240px">
 							<option value="1">1天</option>
@@ -1471,7 +1471,7 @@
 							<option value="15" selected>15天</option>
 						</select>
 					</td>
-					<td style="width:60px" align="right">达标监控</td>
+					<td style="width:65px" align="right">达标监控</td>
 					<td>
 						<select name="qzSettingStartMonitor" id="qzSettingStartMonitor"  style="width:240px">
 							<option value="1">是</option>

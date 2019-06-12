@@ -1751,7 +1751,7 @@ function createSettingDialog() {
     $("#changeSettingDialog").show();
     $("#changeSettingDialog").dialog({
         resizable: false,
-        height: 500,
+        minHeight: 440,
         width: 680,
         title: '全站设置',
         modal: true,
@@ -1796,7 +1796,6 @@ function createSettingDialog() {
     });
     $("#changeSettingDialog").dialog("open");
     $("#changeSettingDialog").window("resize",{top:$(document).scrollTop() + 100});
-
 }
 function resetSettingDialog() {
     var settingDialogDiv = $("#changeSettingDialog");
@@ -2234,6 +2233,8 @@ function addRow(tableID, chargeRule){
         col4.innerHTML = "<input type='text' name='amount' value='"+(chargeRule != null ? chargeRule.amount : '')+"'  style='width:100%'/>";
         var col5 = newRow.insertCell(4);
         col5.innerHTML = "<input style='width:100%' type='button' value='删除' onclick='deleteCurrentRow(this.parentNode.parentNode)' />";
+
+        $("#changeSettingDialog").css("height", $("#changeSettingForm").height() + 21);
     }
 }
 function deleteCurrentRow(currentRow) {
@@ -2244,6 +2245,9 @@ function deleteCurrentRow(currentRow) {
         $.each($("#"+tableObj.id).find("input[name=sequenceID]"), function(idx, val){
             $(val).val(idx + 1);
         });
+        if ($("#changeSettingDialog").height() >= "412") {
+            $("#changeSettingDialog").css("height", $("#changeSettingForm").height());
+        }
     } else {
         alert("删除失败，规则表不允许为空");
     }
