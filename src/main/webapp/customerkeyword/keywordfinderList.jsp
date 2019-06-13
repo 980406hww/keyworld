@@ -114,6 +114,8 @@
                 <option value="360">360</option>
                 <option value="搜狗">搜狗</option>
                 <option value="神马">神马</option>
+                <option value="必应">必应</option>
+                <option value="谷歌">谷歌</option>
             </select>
             创建日期:<input name="creationFromTime" id="creationFromTime" class="Wdate" type="text" style="width:90px;" onClick="WdatePicker()"
             value="${customerKeywordCriteria.creationFromTime}">

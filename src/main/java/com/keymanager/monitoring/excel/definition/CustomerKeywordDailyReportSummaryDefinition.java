@@ -7,7 +7,7 @@ public enum CustomerKeywordDailyReportSummaryDefinition {
 	SogouPC(3, "搜狗电脑"),
 	SogouPhone(4, "搜狗手机"),
 	So(5, "360"),
-	UC(6, "UC"),
+	UC(6, "神马"),
 	TodayFee(7, "当日合计");
 
 	private int columnIndex;

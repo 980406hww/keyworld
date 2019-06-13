@@ -250,7 +250,10 @@
 					<select name="searchEngine" id="searchEngine" style="width: 150px;">
 						<option value="百度">百度</option>
 						<option value="搜狗">搜狗</option>
-						<option value="神马">神马</option>
+						<option value="360">360</option>
+						<option value=" 神马">神马</option>
+						<option value="必应">必应</option>
+						<option value="谷歌">谷歌</option>
 					</select>
 				</td>
 			</tr>

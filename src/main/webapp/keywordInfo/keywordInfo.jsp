@@ -22,6 +22,9 @@
                             <option value="百度">百度</option>
                             <option value="搜狗">搜狗</option>
                             <option value="360">360</option>
+                            <option value="神马">神马</option>
+                            <option value="必应">必应</option>
+                            <option value="谷歌">谷歌</option>
                         </select>
                         &nbsp;&nbsp;
                 操作类型:<select type="text" name="operationType" class="select" id="operationType" >

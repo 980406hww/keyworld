@@ -76,9 +76,9 @@ public class CustomerKeywordDailyReportSecondSummaryExcelWriter {
 			writer.addLabelCell(CustomerKeywordDailyReportSummaryDefinition.So.getColumnIndex(), rowIndex, summaryMap.get("360_PC"));
 			total = total + Double.parseDouble(summaryMap.get("360_PC"));
 		}
-		if(summaryMap.get("UC_Phone") != null) {
-			writer.addLabelCell(CustomerKeywordDailyReportSummaryDefinition.UC.getColumnIndex(), rowIndex, summaryMap.get("UC_Phone"));
-			total = total + Double.parseDouble(summaryMap.get("UC_Phone"));
+		if(summaryMap.get("神马_Phone") != null) {
+			writer.addLabelCell(CustomerKeywordDailyReportSummaryDefinition.UC.getColumnIndex(), rowIndex, summaryMap.get("神马_Phone"));
+			total = total + Double.parseDouble(summaryMap.get("神马_Phone"));
 		}
 		writer.addLabelCell(CustomerKeywordDailyReportSummaryDefinition.TodayFee.getColumnIndex(), rowIndex, total);
 

@@ -162,6 +162,8 @@
                             <option value="搜狗" ${customer.searchEngine eq '搜狗' ? "selected" : ""}>搜狗</option>
                             <option value="360" ${customer.searchEngine eq '360' ? "selected" : ""}>360</option>
                             <option value="神马" ${customer.searchEngine eq '神马' ? "selected" : ""}>神马</option>
+                            <option value="必应" ${customer.searchEngine eq '必应' ? "selected" : ""}>必应</option>
+                            <option value="谷歌" ${customer.searchEngine eq '谷歌' ? "selected" : ""}>谷歌</option>
                         </select>
                     </td>
                 </c:if>

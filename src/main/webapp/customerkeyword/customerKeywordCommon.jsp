@@ -102,6 +102,8 @@
                     <option value="搜狗">搜狗</option>
                     <option value="360">360</option>
                     <option value="神马">神马</option>
+                    <option value="必应">必应</option>
+                    <option value="谷歌">谷歌</option>
                 </select>
                 </span>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
