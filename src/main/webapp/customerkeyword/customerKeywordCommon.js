@@ -142,11 +142,11 @@ function saveCustomerKeyword(customerKeyword, customerUuid) {
     customerKeyword.negativeKeywords = negativeKeywords;
     var excludeKeywords = $.trim(saveCustomerKeywordDialog.find("#excludeKeywords").val());
     customerKeyword.excludeKeywords = excludeKeywords;
-    var url = $.trim(saveCustomerKeywordDialog.find("#url").val())
+    var url = $.trim(saveCustomerKeywordDialog.find("#url").val());
     customerKeyword.url = url;
     var originalUrl = $.trim(saveCustomerKeywordDialog.find("#originalUrl").val());
     customerKeyword.originalUrl = originalUrl;
-    var bearPawNumber = $.trim(saveCustomerKeywordDialog.find("#bearPawNumber").val())
+    var bearPawNumber = $.trim(saveCustomerKeywordDialog.find("#bearPawNumber").val());
     customerKeyword.bearPawNumber = bearPawNumber;
     var optimizePlanCount = $.trim(saveCustomerKeywordDialog.find("#optimizePlanCount").val());
     customerKeyword.optimizePlanCount = optimizePlanCount;
@@ -176,6 +176,7 @@ function saveCustomerKeyword(customerKeyword, customerUuid) {
     var initialPosition = $.trim(saveCustomerKeywordDialog.find("#initialPosition").val());
     customerKeyword.initialPosition = initialPosition;
     customerKeyword.currentPosition = initialPosition;
+    customerKeyword.keywordEffect = $.trim(saveCustomerKeywordDialog.find("#keywordEffect").val());
     var initialIndexCount = $.trim(saveCustomerKeywordDialog.find("#initialIndexCount").val());
     customerKeyword.initialIndexCount = initialIndexCount;
     customerKeyword.currentIndexCount = initialIndexCount;
@@ -278,6 +279,7 @@ function modifyCustomerKeyword(customerKeywordUuid, customerUuid) {
                 saveCustomerKeywordDialog.find("#positionForthCost").val(customerKeyword.positionForthCost);
                 saveCustomerKeywordDialog.find("#positionFifthCost").val(customerKeyword.positionFifthCost);
                 saveCustomerKeywordDialog.find("#serviceProvider").val(customerKeyword.serviceProvider);
+                saveCustomerKeywordDialog.find("#keywordEffect").val(customerKeyword.keywordEffect);
                 saveCustomerKeywordDialog.find("#sequence").val(customerKeyword.sequence);
                 saveCustomerKeywordDialog.find("#title").val(customerKeyword.title);
                 saveCustomerKeywordDialog.find("#optimizeGroupName").val(customerKeyword.optimizeGroupName);
@@ -418,6 +420,7 @@ function saveChangeSetting(CustomerUuids){
     keywordStatus.positionFifthFee = KeywordDialogDiv.find("#positionFifthFee").val();
     keywordStatus.positionFirstPageFee = KeywordDialogDiv.find("#positionFirstPageFee").val();
     keywordStatus.serviceProvider = KeywordDialogDiv.find("#serviceProvider").val();
+    keywordStatus.keywordEffect = KeywordDialogDiv.find("#keywordEffect").val();
     keywordStatus.collectMethod = KeywordDialogDiv.find("#collectMethod").val();
     keywordStatus.searchEngine = KeywordDialogDiv.find("#searchEngine").val();
     keywordStatus.sequence = KeywordDialogDiv.find("#sequence").val();
@@ -458,6 +461,7 @@ function saveChangeSetting(CustomerUuids){
         keywordChecks.positionFifthFee = isChecked("positionFifthFee");
         keywordChecks.positionFirstPageFee =isChecked("positionFirstPageFee");
         keywordChecks.serviceProvider = isChecked("serviceProvider");
+        keywordChecks.keywordEffect = isChecked("keywordEffect");
         keywordChecks.collectMethod =isChecked("collectMethod");
         keywordChecks.searchEngine =isChecked("searchEngine");
         keywordChecks.sequence =isChecked("sequence");

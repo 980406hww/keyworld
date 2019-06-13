@@ -3,9 +3,6 @@ package com.keymanager.monitoring.entity;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
 /**
  * Created by shunshikj01 on 2017/7/7.
  * 收费规则
@@ -15,14 +12,23 @@ public class QZChargeRule extends  BaseEntity {
     @TableField(value = "fQZOperationTypeUuid")
     private Long qzOperationTypeUuid;// 整站操作类型信息ID
 
+    @TableField(value = "fStandardSpecies")
+    private String standardSpecies; // 达标种类
+
     @TableField(value = "fStartKeywordCount")
-    private Long   startKeywordCount;//起始词数()
+    private Integer startKeywordCount;//起始词数()
 
     @TableField(value = "fEndKeywordCount")
-    private Long   endKeywordCount;// 终止词数()
+    private Integer endKeywordCount;// 终止词数()
 
     @TableField(value = "fAmount")
-    private BigDecimal amount;//金额(fAmount)
+    private Integer amount;//金额(fAmount)
+
+    @TableField(exist = false)
+    private Integer achieveLevel;
+
+    @TableField(exist = false)
+    private Double differenceValue;
 
     public Long getQzOperationTypeUuid() {
         return qzOperationTypeUuid;
@@ -32,35 +38,60 @@ public class QZChargeRule extends  BaseEntity {
         this.qzOperationTypeUuid = qzOperationTypeUuid;
     }
 
-    public Long getStartKeywordCount() {
+    public String getStandardSpecies () {
+        return standardSpecies;
+    }
+
+    public void setStandardSpecies (String standardSpecies) {
+        this.standardSpecies = standardSpecies;
+    }
+
+    public Integer getStartKeywordCount() {
         return startKeywordCount;
     }
 
-    public void setStartKeywordCount(Long startKeywordCount) {
+    public void setStartKeywordCount(Integer startKeywordCount) {
         this.startKeywordCount = startKeywordCount;
     }
 
-    public Long getEndKeywordCount() {
+    public Integer getEndKeywordCount() {
         return endKeywordCount;
     }
 
-    public void setEndKeywordCount(Long endKeywordCount) {
+    public void setEndKeywordCount(Integer endKeywordCount) {
         this.endKeywordCount = endKeywordCount;
     }
 
-    public BigDecimal getAmount() {
+    public Integer getAmount() {
         return amount;
     }
 
-    public void setAmount(BigDecimal amount) {
+    public void setAmount(Integer amount) {
         this.amount = amount;
     }
 
-    public QZChargeRule(Long qzOperationTypeUuid, Long startKeywordCount, Long endKeywordCount, BigDecimal amount) {
+    public Integer getAchieveLevel () {
+        return achieveLevel;
+    }
+
+    public void setAchieveLevel (Integer achieveLevel) {
+        this.achieveLevel = achieveLevel;
+    }
+
+    public Double getDifferenceValue () {
+        return differenceValue;
+    }
+
+    public void setDifferenceValue (Double differenceValue) {
+        this.differenceValue = differenceValue;
+    }
+
+    public QZChargeRule(Long qzOperationTypeUuid, Integer startKeywordCount, Integer endKeywordCount, Integer amount, String standardSpecies) {
         this.qzOperationTypeUuid = qzOperationTypeUuid;
         this.startKeywordCount = startKeywordCount;
         this.endKeywordCount = endKeywordCount;
         this.amount = amount;
+        this.standardSpecies = standardSpecies;
     }
 
     public QZChargeRule() {

@@ -1,9 +1,11 @@
 package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.keymanager.monitoring.dao.OperationTypeDao;
 import com.keymanager.monitoring.dao.QZOperationTypeDao;
+import com.keymanager.monitoring.entity.OperationType;
+import com.keymanager.monitoring.entity.QZChargeRule;
 import com.keymanager.monitoring.entity.QZOperationType;
-import com.keymanager.monitoring.vo.QZOperationTypeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,12 +17,20 @@ public class QZOperationTypeService extends ServiceImpl<QZOperationTypeDao, QZOp
 	@Autowired
 	private QZOperationTypeDao qzOperationTypeDao;
 
+	@Autowired
+	private QZChargeRuleService qzChargeRuleService;
+
 	public List<QZOperationType> searchQZOperationTypesByQZSettingUuid(Long uuid){
 		return  qzOperationTypeDao.searchQZOperationTypesByQZSettingUuid(uuid);
 	}
 
 	public List<QZOperationType> searchQZOperationTypesIsDelete(Long uuid){
-		return  qzOperationTypeDao.searchQZOperationTypesIsDelete(uuid);
+		List<QZOperationType> qzOperationTypes = qzOperationTypeDao.searchQZOperationTypesIsDelete(uuid);
+		for (QZOperationType qzOperationType : qzOperationTypes) {
+			List<QZChargeRule> qzChargeRules = qzChargeRuleService.searchQZChargeRuleByqzOperationTypeUuids(qzOperationType.getUuid());
+			qzOperationType.setQzChargeRules(qzChargeRules);
+		}
+		return  qzOperationTypes;
 	}
 
 	public int selectLastId(){
@@ -31,7 +41,15 @@ public class QZOperationTypeService extends ServiceImpl<QZOperationTypeDao, QZOp
 		qzOperationTypeDao.deleteByQZSettingUuid(qzSettingUuid);
 	}
 
-	public List<QZOperationTypeVO> findQZOperationTypes(Long qzSettingUuid, String operationType, String group){
-		return qzOperationTypeDao.findQZOperationTypes(qzSettingUuid, operationType, group);
+	public void updateQZOperationTypeStandardTime (Long qzSettingUuid, String operationType, int isStandardFlag) {
+		qzOperationTypeDao.updateQZOperationTypeStandardTime(qzSettingUuid, operationType, isStandardFlag);
 	}
+
+    public QZOperationType searchQZOperationTypeByQZSettingAndTerminalType(Long qzSettingUuid, String operationType) {
+        return qzOperationTypeDao.searchQZOperationTypeByQZSettingAndTerminalType(qzSettingUuid, operationType);
+    }
+
+    public void updateStandardTimeByUuid(Long uuid, int updateFlag, int lastAchieve) {
+        qzOperationTypeDao.updateStandardTimeByUuid(uuid, updateFlag, lastAchieve);
+    }
 }

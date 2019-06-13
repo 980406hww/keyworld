@@ -26,7 +26,7 @@ import java.util.Map;
 @RequestMapping(value = "/internal/operationType")
 public class OperationTypeController extends SpringMVCBaseController {
 
-    private static Logger logger = LoggerFactory.getLogger(ScreenedWebsiteController.class);
+    private static Logger logger = LoggerFactory.getLogger(OperationType.class);
 
     @Autowired
     private OperationTypeService operationTypeService;

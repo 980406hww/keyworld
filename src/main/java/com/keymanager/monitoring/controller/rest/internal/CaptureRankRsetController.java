@@ -67,6 +67,7 @@ public class CaptureRankRsetController {
     private ModelAndView constructCaptureRankJobModelAndView(HttpServletRequest request, CaptureRankJobSearchCriteria captureRankJobSearchCriteria, String currentPage, String pageSize) {
         ModelAndView modelAndView = new ModelAndView("captureRank/captureRank");
         captureRankJobSearchCriteria.setOperationType(TerminalTypeMapping.getTerminalType(request));
+        captureRankJobSearchCriteria.setJobType(captureRankJobSearchCriteria.getJobType() == null ? "Common" : captureRankJobSearchCriteria.getJobType());
         Page<CaptureRankJob> page = captureRankJobService.searchCaptureRankJob(new Page<CaptureRankJob>(Integer.parseInt(currentPage), Integer.parseInt(pageSize)), captureRankJobSearchCriteria);
         modelAndView.addObject("page", page);
         modelAndView.addObject("captureRankJobSearchCriteria", captureRankJobSearchCriteria);
@@ -110,6 +111,17 @@ public class CaptureRankRsetController {
             Long uuid = ((Integer) requestMap.get("uuid")).longValue();
             String status = (String) requestMap.get("status");
             captureRankJobService.changeCaptureRankJobStatus(uuid, status);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/resetCaptureRankJobs", method = RequestMethod.POST)
+    public ResponseEntity<?> resetCaptureRankJobs(@RequestBody Map<String, Object> requestMap) {
+        try {
+            captureRankJobService.resetCaptureRankJobs((List) requestMap.get("uuids"));
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());

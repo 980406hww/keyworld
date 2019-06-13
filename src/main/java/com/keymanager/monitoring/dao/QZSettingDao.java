@@ -7,6 +7,7 @@ import com.keymanager.monitoring.criteria.QZSettingSearchClientGroupInfoCriteria
 import com.keymanager.monitoring.criteria.QZSettingSearchCriteria;
 import com.keymanager.monitoring.entity.QZSetting;
 import com.keymanager.monitoring.vo.DateRangeTypeVO;
+import com.keymanager.monitoring.vo.ExternalQzSettingVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -19,13 +20,11 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
 
     List<QZSetting> captureCurrentKeyword();
 
-    List<QZSetting> searchQZSettingsByUuids(@Param("uuids") String uuids);
-
     List<QZSetting> searchQZSettings(Page<QZSetting> page, @Param("qzSettingSearchCriteria")QZSettingSearchCriteria qzSettingSearchCriteria);
 
     int selectLastId();
 
-    void deleteQZSettingGroup(@Param("qzSetting") QZSetting qzSetting);
+    void updateQZSettingGroup(@Param("qzSetting") QZSetting qzSetting);
 
     void updateQZSettingStatus(@Param("uuids") List<Long> uuids, @Param("status") Integer status);
 
@@ -41,8 +40,6 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
 
     void updateQzSetting(@Param("qzSetting") QZSetting qzSetting);
 
-    QZSetting findQzSetting(@Param("fUuid") Long fUuid);
-
     void updateCrawlerStatus(@Param("uuids")Long[] uuids);
 
     int getQZSettingClientGroupInfo (@Param("qzSettingSearchClientGroupInfoCriteria") QZSettingSearchClientGroupInfoCriteria qzSettingSearchClientGroupInfoCriteria);
@@ -50,5 +47,8 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
     List<String> getAvailableOptimizationGroups (@Param("groupSettingCriteria") GroupSettingCriteria groupSettingCriteria);
 
     QZSetting searchGroupMaxCustomerKeywordCount(@Param("customerUuid") Long customerUuid, @Param("terminalType") String terminalType, @Param("url") String url);
+    void startMonitorImmediately (@Param("uuids") String uuids);
+    
+    List<ExternalQzSettingVO> getQZSettingTask(@Param("crawlerHour")Integer crawlerHour, @Param("taskNumber")Integer taskNumber);
 }
 

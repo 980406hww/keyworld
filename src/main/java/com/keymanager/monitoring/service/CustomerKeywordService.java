@@ -9,6 +9,7 @@ import com.keymanager.monitoring.criteria.*;
 import com.keymanager.monitoring.dao.CustomerKeywordDao;
 import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.enums.*;
+import com.keymanager.monitoring.excel.definition.SuperUserSimpleKeywordDefinition;
 import com.keymanager.monitoring.excel.operator.AbstractExcelReader;
 import com.keymanager.monitoring.vo.*;
 import com.keymanager.util.Constants;
@@ -609,6 +610,19 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     public void addCustomerKeywords(List<CustomerKeyword> customerKeywords, String loginName) throws Exception {
         for (CustomerKeyword customerKeyword : customerKeywords) {
+            if (customerKeyword.getKeywordEffect() == null || customerKeyword.getKeywordEffect().equals("")) {
+                customerKeyword.setKeywordEffect(KeywordEffectEnum.Common.name());
+            } else {
+                if (customerKeyword.getKeywordEffect().trim().equals("曲线词")) {
+                    customerKeyword.setKeywordEffect(KeywordEffectEnum.Curve.name());
+                } else if (customerKeyword.getKeywordEffect().trim().equals("指定词")) {
+                    customerKeyword.setKeywordEffect(KeywordEffectEnum.Appointment.name());
+                } else if (customerKeyword.getKeywordEffect().trim().equals("赠送词")) {
+                    customerKeyword.setKeywordEffect(KeywordEffectEnum.Present.name());
+                } else {
+                    customerKeyword.setKeywordEffect(KeywordEffectEnum.Common.name());
+                }
+            }
             addCustomerKeyword(customerKeyword, loginName);
         }
     }
@@ -1204,7 +1218,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                                                                                   Date startTime,Long captureRankJobUuid){
         CustomerKeywordForCapturePosition customerKeywordForCapturePosition = new CustomerKeywordForCapturePosition();
         Boolean captureRankJobStatus = captureRankJobService.getCaptureRankJobStatus(captureRankJobUuid);
-        if(captureRankJobStatus){
+        if(captureRankJobStatus != null){
             customerKeywordForCapturePosition.setCaptureRankJobStatus(captureRankJobStatus);
             Long customerKeywordUuid = customerKeywordDao.getCustomerKeywordUuidForCapturePosition(terminalType, groupNames, customerUuid, startTime, 0);
             if(null == customerKeywordUuid){
@@ -1227,16 +1241,16 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return customerKeywordForCapturePosition;
     }
 
-    public List<CustomerKeywordForCapturePosition> getCustomerKeywordForCapturePositionTemp(String terminalType, String groupName, Long customerUuid, Date startTime, Long captureRankJobUuid) {
+    public List<CustomerKeywordForCapturePosition> getCustomerKeywordForCapturePositionTemp(Long qzSettingUuid, String terminalType, String groupName, Long customerUuid, Date startTime, Long captureRankJobUuid) {
 
         List<CustomerKeywordForCapturePosition> customerKeywordForCapturePositions = new ArrayList<>();
 
         synchronized (CustomerKeywordService.class) {
             Boolean captureRankJobStatus = captureRankJobService.getCaptureRankJobStatus(captureRankJobUuid);
             if (captureRankJobStatus) {
-                List<Long> customerKeywordUuids = customerKeywordDao.getCustomerKeywordUuidForCapturePositionTemp(terminalType, groupName, customerUuid, startTime, 0);
+                List<Long> customerKeywordUuids = customerKeywordDao.getCustomerKeywordUuidForCapturePositionTemp(qzSettingUuid, terminalType, groupName, customerUuid, startTime, 0);
                 if (null == customerKeywordUuids || customerKeywordUuids.size() == 0) {
-                    customerKeywordUuids = customerKeywordDao.getCustomerKeywordUuidForCapturePositionTemp(terminalType, groupName, customerUuid, startTime, 1);
+                    customerKeywordUuids = customerKeywordDao.getCustomerKeywordUuidForCapturePositionTemp(qzSettingUuid, terminalType, groupName, customerUuid, startTime, 1);
                 }
                 if (null != customerKeywordUuids && customerKeywordUuids.size() != 0) {
                     customerKeywordForCapturePositions = customerKeywordDao.getCustomerKeywordForCapturePositionTemp(customerKeywordUuids);
@@ -1708,5 +1722,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeywordOptimizeGroupCriteria.setSameGroupCustomerKeywordCount(1);
         customerKeywordOptimizeGroupCriteriaList.add(customerKeywordOptimizeGroupCriteria);
         return customerKeywordOptimizeGroupCriteria;
+    }
+
+    public void updateCustomerKeywordEffect (long customerUuid, String terminalType, String optimizeGroupName) {
+        customerKeywordDao.updateCustomerKeywordEffect(customerUuid, terminalType, optimizeGroupName);
     }
 }

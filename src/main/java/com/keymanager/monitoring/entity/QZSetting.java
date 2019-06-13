@@ -61,17 +61,11 @@ public class QZSetting extends BaseEntity{
 	@TableField(value = "fUpdateStatus", strategy = FieldStrategy.IGNORED)
 	private String updateStatus;
 
-	@TableField(value = "fPcCreateTopTenNum", strategy = FieldStrategy.IGNORED)
-	private Integer pcCreateTopTenNum;
+	@TableField(value = "fIsMonitor")
+	private boolean fIsMonitor;
 
-	@TableField(value = "fPcCreateTopFiftyNum", strategy = FieldStrategy.IGNORED)
-	private Integer pcCreateTopFiftyNum;
-
-	@TableField(value = "fPhoneCreateTopTenNum", strategy = FieldStrategy.IGNORED)
-	private Integer phoneCreateTopTenNum;
-
-	@TableField(value = "fPhoneCreateTopFiftyNum", strategy = FieldStrategy.IGNORED)
-	private Integer phoneCreateTopFiftyNum;
+	@TableField(value = "fIsReady")
+	private boolean fIsReady;
 
 	@TableField(value = "fUpdateStartTime")
 	private Date updateStartTime;
@@ -92,7 +86,7 @@ public class QZSetting extends BaseEntity{
 	private List<QZOperationType> qzOperationTypes; //qzOperationTypes为全站表子类  一对多
 
 	@TableField(exist = false)
-	private Map<String, JSONObject> qzKeywordRankInfoMap; // QZKeywordRankInfo为全站表子类 一对多
+	private Map<String, Map<String, JSONObject>> qzKeywordRankInfoMap; // QZKeywordRankInfo为全站表子类 一对多
 
 	@TableField(value = "fCrawlerTime")
 	private Date crawlerTime;
@@ -105,6 +99,15 @@ public class QZSetting extends BaseEntity{
 
 	@TableField(exist = false)
 	private List<QZCategoryTag> qzCategoryTags; // QZCategoryTag为全站表子类 一对多
+
+	@TableField(exist = false)
+	private List<String> standardSpecies; // 达标种类 (PC_aiZhan 或者 PC_5118), (Phone_aiZhan 或者 Phone_5118)
+
+	@TableField(exist = false)
+	private Integer totalPrice;
+
+	@TableField(exist = false)
+	private Date standardTime;
 
 	public String getUserID() {
 		return userID;
@@ -282,43 +285,11 @@ public class QZSetting extends BaseEntity{
 		this.phoneKeywordExceedMaxCount = phoneKeywordExceedMaxCount;
 	}
 
-	public Integer getPcCreateTopTenNum () {
-		return pcCreateTopTenNum;
-	}
-
-	public void setPcCreateTopTenNum (Integer pcCreateTopTenNum) {
-		this.pcCreateTopTenNum = pcCreateTopTenNum;
-	}
-
-	public Integer getPcCreateTopFiftyNum () {
-		return pcCreateTopFiftyNum;
-	}
-
-	public void setPcCreateTopFiftyNum (Integer pcCreateTopFiftyNum) {
-		this.pcCreateTopFiftyNum = pcCreateTopFiftyNum;
-	}
-
-	public Integer getPhoneCreateTopTenNum () {
-		return phoneCreateTopTenNum;
-	}
-
-	public void setPhoneCreateTopTenNum (Integer phoneCreateTopTenNum) {
-		this.phoneCreateTopTenNum = phoneCreateTopTenNum;
-	}
-
-	public Integer getPhoneCreateTopFiftyNum () {
-		return phoneCreateTopFiftyNum;
-	}
-
-	public void setPhoneCreateTopFiftyNum (Integer phoneCreateTopFiftyNum) {
-		this.phoneCreateTopFiftyNum = phoneCreateTopFiftyNum;
-	}
-
-	public Map<String, JSONObject> getQzKeywordRankInfoMap () {
+	public Map<String, Map<String, JSONObject>> getQzKeywordRankInfoMap () {
 		return qzKeywordRankInfoMap;
 	}
 
-	public void setQzKeywordRankInfoMap (Map<String, JSONObject> qzKeywordRankInfoMap) {
+	public void setQzKeywordRankInfoMap (Map<String, Map<String, JSONObject>> qzKeywordRankInfoMap) {
 		this.qzKeywordRankInfoMap = qzKeywordRankInfoMap;
 	}
 
@@ -344,6 +315,46 @@ public class QZSetting extends BaseEntity{
 
 	public void setQzCategoryTags (List<QZCategoryTag> qzCategoryTags) {
 		this.qzCategoryTags = qzCategoryTags;
+	}
+
+	public List<String> getStandardSpecies () {
+		return standardSpecies;
+	}
+
+	public void setStandardSpecies (List<String> standardSpecies) {
+		this.standardSpecies = standardSpecies;
+	}
+
+	public Integer getTotalPrice () {
+		return totalPrice;
+	}
+
+	public void setTotalPrice (Integer totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+
+	public Date getStandardTime () {
+		return standardTime;
+	}
+
+	public void setStandardTime (Date standardTime) {
+		this.standardTime = standardTime;
+	}
+
+	public boolean getfIsMonitor () {
+		return fIsMonitor;
+	}
+
+	public void setfIsMonitor (boolean fIsMonitor) {
+		this.fIsMonitor = fIsMonitor;
+	}
+
+	public boolean getfIsReady () {
+		return fIsReady;
+	}
+
+	public void setfIsReady (boolean fIsReady) {
+		this.fIsReady = fIsReady;
 	}
 
     public int getGroupMaxCustomerKeywordCount() {

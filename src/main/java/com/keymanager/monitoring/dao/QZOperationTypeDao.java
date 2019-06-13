@@ -2,12 +2,9 @@ package com.keymanager.monitoring.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.keymanager.monitoring.entity.QZOperationType;
-import com.keymanager.monitoring.entity.QZSetting;
-import com.keymanager.monitoring.vo.QZOperationTypeVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
-import java.util.Map;
 
 public interface QZOperationTypeDao extends BaseMapper<QZOperationType> {
 
@@ -23,5 +20,9 @@ public interface QZOperationTypeDao extends BaseMapper<QZOperationType> {
     //上一级的主键
     int selectLastId();
 
-    List<QZOperationTypeVO> findQZOperationTypes(@Param("qzSettingUuid")Long qzSettingUuid,@Param("operationType")String operationType,@Param("group")String group);
+    void updateQZOperationTypeStandardTime (@Param("qzSettingUuid") Long qzSettingUuid, @Param("operationType") String operationType, @Param("isStandardFlag") int isStandardFlag);
+
+    QZOperationType searchQZOperationTypeByQZSettingAndTerminalType(@Param("qzSettingUuid") Long qzSettingUuid, @Param("operationType") String operationType);
+
+    void updateStandardTimeByUuid(@Param("uuid") Long uuid, @Param("updateFlag") int updateFlag, @Param("lastAchieve") int lastAchieve);
 }

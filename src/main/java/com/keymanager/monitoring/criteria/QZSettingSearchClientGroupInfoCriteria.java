@@ -7,7 +7,6 @@ package com.keymanager.monitoring.criteria;
 public class QZSettingSearchClientGroupInfoCriteria {
     private int qzSettingUuid;
     private String terminalType;
-    private String type;
     private String optimizeGroupName;
 
     public int getQzSettingUuid () {
@@ -24,14 +23,6 @@ public class QZSettingSearchClientGroupInfoCriteria {
 
     public void setTerminalType (String terminalType) {
         this.terminalType = terminalType;
-    }
-
-    public String getType () {
-        return type;
-    }
-
-    public void setType (String type) {
-        this.type = type;
     }
 
     public String getOptimizeGroupName () {

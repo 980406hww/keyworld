@@ -29,26 +29,8 @@ ul {
     padding: 0
 }
 
-.icon-rank-up {
-    display: inline-block;
-    font-size: 0;
-    background-image: url(/qzsetting/images/rank.up.icon.png);
-    background-position:-325px -258px;
-    width: 16px;
-    height: 16px;
-}
-
-.icon-rank-down {
-    display: inline-block;
-    font-size: 0;
-    background-image: url(/qzsetting/images/rank.down.icon.png);
-    background-position: -325px -205px;
-    width: 16px;
-    height: 16px;
-}
-
 .mytabs {
-    width: 1728px;
+    width: 1820px;
     margin: 15px auto 0px auto;
     box-shadow: 0 0 2px 2px hsla(0, 0%, 89%, .2);
 }
@@ -141,8 +123,15 @@ ul {
     font-size: 14px;
 }
 
-.mytabs .conn:last-child li.category input, .mytabs .conn:last-child li.userName input, .mytabs .conn:last-child li.group input, .mytabs .conn:last-child li.createTime input {
+.mytabs .conn:last-child li.category input, .mytabs .conn:last-child li.userName input, .mytabs .conn:last-child li.group input {
     width: 150px;
+    height: 25px;
+    line-height: 25px;
+    font-size: 14px;
+}
+
+.mytabs .conn:last-child li.createTime input {
+    width: 100px;
     height: 25px;
     line-height: 25px;
     font-size: 14px;
@@ -158,7 +147,7 @@ ul {
 }
 
 .datalist {
-    width: 1728px;
+    width: 1820px;
     margin: 0px auto 40px auto;
     overflow: visible;
 }
@@ -228,14 +217,14 @@ ul {
     margin: 0 5px;
 }
 
-.datalist-list .header span.contactPerson-name {
+.datalist-list .header span.contactPerson-name, .datalist-list .header span.organization-name {
     max-width: 110px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
-.datalist-list .header span.contactPerson-name a {
+.datalist-list .header span.contactPerson-name a, .datalist-list .header span.organization-name a {
     font-weight: 700;
     color: #000000;
 }
@@ -275,11 +264,32 @@ ul {
     color: #000000;
 }
 
+.datalist-list .header span.fmtStandardDate, .datalist-list .header span.fmtCreateDate {
+    max-width: 130px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.datalist-list .header span.fmtStandardDate a, .datalist-list .header span.fmtCreateDate a {
+    color: #000000;
+}
+
+.datalist-list .header span.fmtStandardDate a:hover, .datalist-list .header span.fmtCreateDate a:hover {
+    color: #0c7df5;
+}
+
+.datalist-list .header span.fmtCreateDate {
+    position: absolute;
+    left: 900px;
+    z-index: 1;
+}
+
 .datalist-list .header span.tagNames {
     position: absolute;
-    left: 450px;
+    left: 570px;
     z-index: 1;
-    width: 600px;
+    width: 330px;
     color: #000000;
     max-width: 600px;
     overflow: hidden;
@@ -310,101 +320,123 @@ ul {
 }
 
 .datalist-list .body .data-info-wrap {
-    width: 872px;
+    width: 621px;
     float: left;
     height: 150px;
     text-align: center
 }
 
 .datalist-list .body .rank-wrap {
-    width: 690px;
+    width: 741px;
     float: left;
     height: 150px;
     border-left: 1px solid #e6e6e6;
 }
 
-.datalist-list .body .rank-wrap > div {
+.datalist-list .body .rank-wrap1 {
+    width: 456px;
+    float: left;
+    height: 150px;
+    border-left: 1px solid #e6e6e6;
+}
+
+.datalist-list .body .rank-wrap > div, .datalist-list .body .rank-wrap1 > div {
     float: left;
     font-size: 12px;
     height: 150px;
     display: block;
 }
 
-.datalist-list .body .rank-wrap > div {
+.datalist-list .body .rank-wrap > div, .datalist-list .body .rank-wrap1 > div {
     padding: 0 5px;
 }
 
-.datalist-list .body .rank-wrap > div:last-child {
+.datalist-list .body .rank-wrap > div:last-child, .datalist-list .body .rank-wrap1 > div:last-child {
     border-left: 1px dashed #e6e6e6;
 }
 
-.datalist-list .body .rank-wrap > div .row4 {
+.datalist-list .body .rank-wrap > div .row4, .datalist-list .body .rank-wrap1 > div .row4 {
     line-height: 2;
 }
 
-.datalist-list .body .rank-wrap > div span {
-    font-size: 10px;
+.datalist-list .body .rank-wrap > div span:first-child, .datalist-list .body .rank-wrap1 > div span:first-child {
+    font-size: 12px;
     display: block;
     float: left;
     width: 50%;
     text-align: left;
 }
 
-.datalist-list .body .rank-wrap > div span:last-child {
+.datalist-list .body .rank-wrap > div span:last-child, .datalist-list .body .rank-wrap1 > div span:last-child {
+    font-size: 12px;
+    display: block;
+    float: left;
+    width: 50%;
+    text-align: left;
+}
+
+.datalist-list .body .rank-wrap > div span:last-child, .datalist-list .body .rank-wrap1 > div span:last-child {
     text-align: center;
 }
 
-.datalist-list .body .rank-wrap > div span.red {
-    color: #ff3d3d;
+.datalist-list .body .rank-wrap > div span.red, .datalist-list .body .rank-wrap1 > div span.red {
+    color: palevioletred;
 }
 
-.datalist-list .body .rank-wrap > div span.green {
-    color: #60c54b;
+.datalist-list .body .rank-wrap > div span.green, .datalist-list .body .rank-wrap1 > div span.green {
+    color: mediumseagreen;
 }
 
-.datalist-list .body .rank-wrap > div span a {
-    font-size: 10px;
+.datalist-list .body .rank-wrap > div span a, .datalist-list .body .rank-wrap1 > div span a {
+    font-size: 12px;
     text-decoration: none;
 }
 
-.datalist-list .body .rank-wrap > div span a.red {
-    color: #ff3d3d;
+.datalist-list .body .rank-wrap > div span a.red, .datalist-list .body .rank-wrap1 > div span a.red {
+    color: palevioletred;
 }
 
-.datalist-list .body .rank-wrap > div span a.green {
-    color: #60c54b;
+.datalist-list .body .rank-wrap > div span a.green, .datalist-list .body .rank-wrap1 > div span a.green {
+    color: mediumseagreen;
 }
 
-.datalist-list .body .rank-wrap > div span .red {
-    color: #ff3d3d;
+.datalist-list .body .rank-wrap > div span .red, .datalist-list .body .rank-wrap1 > div span .red {
+    color: palevioletred;
 }
 
-.datalist-list .body .rank-wrap > div span .green {
-    color: #60c54b;
+.datalist-list .body .rank-wrap > div span .green, .datalist-list .body .rank-wrap1 > div span .green {
+    color: mediumseagreen;
 }
 
-.datalist-list .body .baidu-rank {
-    float: left;
+.datalist-list .body .user-id {
     width: 84px;
+}
+
+.datalist-list .body .standard-info {
+    width: 99px;
+}
+
+.datalist-list .body .user-id, .datalist-list .body .standard-info {
+    float: left;
     border-right: 1px solid #e6e6e6;
     height: 150px;
     display: block;
 }
 
-.datalist-list .body .baidu-rank a {
+.datalist-list .body .user-id a, .datalist-list .body .standard-info a {
     clear: both;
 }
 
-.datalist-list .body .baidu-rank span {
+.datalist-list .body .user-id span, .datalist-list .body .standard-info span {
     display: block;
 }
 
-.datalist-list .body .baidu-rank span:last-child {
+.datalist-list .body .user-id span:last-child, .datalist-list .body .standard-info span:last-child {
     margin-top: 10px;
     color: #999;
 }
 
-.datalist-list .body .baidu-rank span.line1 {
+.datalist-list .body .user-id span.line1, .datalist-list .body .standard-info span.line1 {
     font-size: 14px;
     margin-top: 45px;
     overflow: hidden;
@@ -412,24 +444,17 @@ ul {
     color: #000;
 }
 
-.datalist-list .body .baidu-rank span.line1:hover {
+.datalist-list .body .user-id span.line1:hover {
     color: #0c7df5;
 }
 
-.datalist-list .body .baidu-rank span.line1 sub {
-    font-weight: 400;
-    color: #999;
-}
-
-.datalist-list .body .other-rank_1 {
-    float: left;
-    width: 182px;
-    border-right: 1px solid #e6e6e6;
+.datalist-list .body .standard-info a {
+    color: #000;
 }
 
 .datalist-list .body .other-rank {
     float: left;
-    width: 424px;
+    width: 255px;
 }
 
 .datalist-list .body .other-rank_2 {
@@ -438,31 +463,27 @@ ul {
     border-left: 1px solid #e6e6e6;
 }
 
-.datalist-list .body .other-rank .row, .datalist-list .body .other-rank_1 .row, .datalist-list .body .other-rank_2 .row {
+.datalist-list .body .other-rank .row, .datalist-list .body .other-rank_2 .row {
     height: 75px;
 }
 
-.datalist-list .body .other-rank .row .line1, .datalist-list .body .other-rank_1 .row .line1, .datalist-list .body .other-rank_2 .row .line1 {
+.datalist-list .body .other-rank .row .line1, .datalist-list .body .other-rank_2 .row .line1 {
     display: inline-block;
     width: 100%;
     word-wrap: break-word;
     white-space: normal;
 }
 
-.datalist-list .body .other-rank .row .line1 a, .datalist-list .body .other-rank_1 .row .line1 a, .datalist-list .body .other-rank_2 .row .line1 a {
+.datalist-list .body .other-rank .row .line1 a, .datalist-list .body .other-rank_2 .row .line1 a {
     font-size: 14px;
     color: #000;
 }
 
-.datalist-list .body .other-rank .row .line1 a:hover, .datalist-list .body .other-rank_1 .row .line1 a:hover, .datalist-list .body .other-rank_2 .row .line1 a:hover {
+.datalist-list .body .other-rank .row .line1 a:hover, .datalist-list .body .other-rank_2 .row .line1 a:hover {
     color: #0c7df5;
 }
 
-.datalist-list .body .other-rank_1 .row:first-child .line1 a:hover {
-    color: #000;
-}
-
-.datalist-list .body .other-rank .row span:last-child a, .datalist-list .body .other-rank_1 .row span:last-child a, .datalist-list .body .other-rank_2 .row span:last-child a {
+.datalist-list .body .other-rank .row span:last-child a, .datalist-list .body .other-rank_2 .row span:last-child a {
     display: inline-block;
     width: 90%;
     word-wrap: break-word;
@@ -470,13 +491,13 @@ ul {
     color: #999;
 }
 
-.datalist-list .body .other-rank .row:last-child, .datalist-list .body .other-rank_1 .row:last-child, .datalist-list .body .other-rank_2 .row:last-child {
+.datalist-list .body .other-rank .row:last-child, .datalist-list .body .other-rank_2 .row:last-child {
     display: block;
     height: 74px;
     border-top: 1px solid #e6e6e6;
 }
 
-.datalist-list .body .other-rank .row > div, .datalist-list .body .other-rank_1 .row > div, .datalist-list .body .other-rank_2 .row > div {
+.datalist-list .body .other-rank .row > div, .datalist-list .body .other-rank_2 .row > div {
     display: block;
     float: left;
     height: 74px;
@@ -487,33 +508,29 @@ ul {
     width: 84px;
 }
 
-.datalist-list .body .other-rank_1 .row > div {
-    width: 90px;
-}
-
 .datalist-list .body .other-rank_2 .row > div {
     width: 180px;
 }
 
-.datalist-list .body .other-rank .row > div:last-child, .datalist-list .body .other-rank_1 .row > div:last-child, .datalist-list .body .other-rank_2 .row > div:last-child {
+.datalist-list .body .other-rank .row > div:last-child, .datalist-list .body .other-rank_2 .row > div:last-child {
     border: 0;
 }
 
-.datalist-list .body .other-rank .row span, .datalist-list .body .other-rank_1 .row span, .datalist-list .body .other-rank_2 .row span {
+.datalist-list .body .other-rank .row span, .datalist-list .body .other-rank_2 .row span {
     display: block;
 }
 
-.datalist-list .body .other-rank .row span.line1, .datalist-list .body .other-rank_1 .row span.line1, .datalist-list .body .other-rank_2 .row span.line1 {
+.datalist-list .body .other-rank .row span.line1, .datalist-list .body .other-rank_2 .row span.line1 {
     font-size: 18px;
     margin-top: 10px;
     height: 60%;
 }
 
-.datalist-list .body .other-rank .row span:last-child, .datalist-list .body .other-rank_1 .row span:last-child, .datalist-list .body .other-rank_2 .row span:last-child {
+.datalist-list .body .other-rank .row span:last-child, .datalist-list .body .other-rank_2 .row span:last-child {
     height: 30%;
 }
 
-.datalist-list .body .other-rank .row span.line1:hover, .datalist-list .body .other-rank_1 .row span.line1:hover, .datalist-list .body .other-rank_2 .row span.line1:hover {
+.datalist-list .body .other-rank .row span.line1:hover, .datalist-list .body .other-rank_2 .row span.line1:hover {
     color: #0c7df5;
 }
 
@@ -535,23 +552,34 @@ ul {
     height: 30%;
 }
 
-.datalist-list .body .other-rank_1 .row span sub {
-    font-weight: 400;
-    padding-left: 5px;
-}
-
-.rank-wrap .col-3 {
+.rank-wrap .col-4 {
     float: left;
-    width: 10%;
+    width: 18%;
     text-align: left;
 }
 
 .rank-wrap .col-1, .rank-wrap .col-2 {
-    width: 45%;
+    width: 41%;
     text-align: left;
 }
 
 .rank-wrap .col-1 h1, .rank-wrap .col-2 h1 {
+    text-align: center;
+    padding-top: 65px;
+}
+
+.rank-wrap1 .col-5 {
+    float: left;
+    width: 30%;
+    text-align: left;
+}
+
+.rank-wrap1 .col-1 {
+    width: 70%;
+    text-align: left;
+}
+
+.rank-wrap1 .col-1 h1 {
     text-align: center;
     padding-top: 65px;
 }
@@ -586,4 +614,11 @@ ul {
 }
 #userNoteBookTable tr td {
     border-bottom: 1px solid black;
+}
+#chargeRulesDivTable {
+    text-align: center;
+}
+#changeSettingForm tr .split_line {
+    border-top: 1px dashed black;
+    width: 80%;
 }

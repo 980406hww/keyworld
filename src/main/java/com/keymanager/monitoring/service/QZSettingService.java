@@ -12,6 +12,7 @@ import com.keymanager.monitoring.enums.QZSettingStatusEnum;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
 import com.keymanager.monitoring.vo.CustomerKeywordSummaryInfoVO;
 import com.keymanager.monitoring.vo.DateRangeTypeVO;
+import com.keymanager.monitoring.vo.ExternalQzSettingVO;
 import com.keymanager.monitoring.vo.QZSettingSearchClientGroupInfoVO;
 import com.keymanager.util.Constants;
 import com.keymanager.util.Utils;
@@ -61,12 +62,26 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 	@Autowired
     private CustomerExcludeKeywordService customerExcludeKeywordService;
 
+	@Autowired
+	private CaptureRankJobService captureRankJobService;
+
 	public QZSetting getAvailableQZSetting(){
 		List<QZSetting> qzSettings = qzSettingDao.getAvailableQZSettings();
 		QZSetting qzSetting = null;
 		if(CollectionUtils.isNotEmpty(qzSettings)){
-			qzSetting = qzSettings.get(0);
-			startQZSettingForUpdateKeyword(qzSetting.getUuid());
+            boolean nullFlag = true;
+            int i = 0;
+            while (nullFlag && i < qzSettings.size()) {
+                qzSetting = qzSettings.get(i);
+                List<String> allStandardSpecies = qzChargeRuleService.getAllStandardSpecies(qzSetting.getUuid());
+                if (CollectionUtils.isNotEmpty(allStandardSpecies)) {
+                    nullFlag = false;
+                    qzSetting.setStandardSpecies(allStandardSpecies);
+                } else {
+                    i++;
+                }
+                startQZSettingForUpdateKeyword(qzSetting.getUuid());
+            }
 		}
 		return qzSetting;
 	}
@@ -119,7 +134,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		}
 	}
 
-	public void saveQZSetting(QZSetting qzSetting){
+	public void saveQZSetting(QZSetting qzSetting, String userName){
 		if(qzSetting.getUuid() != null){
 			//修改qzSetting表
 			QZSetting existingQZSetting = qzSettingDao.selectById(qzSetting.getUuid());
@@ -135,6 +150,8 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
             existingQZSetting.setIgnoreNoOrder(qzSetting.isIgnoreNoOrder());
             existingQZSetting.setGroupMaxCustomerKeywordCount(qzSetting.getGroupMaxCustomerKeywordCount());
 			existingQZSetting.setUpdateInterval(qzSetting.getUpdateInterval());
+			existingQZSetting.setfIsMonitor(qzSetting.getfIsMonitor());
+			existingQZSetting.setfIsReady(qzSetting.getfIsReady());
 			existingQZSetting.setUpdateTime(new Date());
 			existingQZSetting.setCaptureCurrentKeywordCountTime(qzSetting.getCaptureCurrentKeywordCountTime());
 			existingQZSetting.setCaptureCurrentKeywordStatus(qzSetting.getCaptureCurrentKeywordStatus());
@@ -143,9 +160,9 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			//修改部分
 			List<QZOperationType> OldOperationTypes = qzOperationTypeService.searchQZOperationTypesIsDelete(qzSetting.getUuid());
 			List<QZOperationType> updOperationTypes = qzSetting.getQzOperationTypes();
-			updateOpretionTypeAndChargeRule(OldOperationTypes,updOperationTypes,qzSetting.getUuid());
+			this.updateOperationTypeAndChargeRule(OldOperationTypes, updOperationTypes, qzSetting.getUuid(), qzSetting.getCustomerUuid(), qzSetting.getfIsMonitor(), userName);
 			List<QZKeywordRankInfo> existingQZKeywordRankInfoList = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), new QZSettingSearchCriteria());
-			updateQZKeywordRankInfo(existingQZKeywordRankInfoList, updOperationTypes, existingQZSetting);
+			this.updateQZKeywordRankInfo(existingQZKeywordRankInfoList, updOperationTypes, existingQZSetting);
 			// 修改标签
 			List<QZCategoryTag> existingQZCategoryTags = qzCategoryTagService.searchCategoryTagByQZSettingUuid(qzSetting.getUuid());
 			List<QZCategoryTag> updateQZCategoryTags = qzSetting.getQzCategoryTags();
@@ -158,15 +175,21 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			for (QZOperationType qzOperationType : qzSetting.getQzOperationTypes()){
 				qzOperationType.setQzSettingUuid(qzSettingUuid);
 				qzOperationTypeService.insert(qzOperationType);
-				// 在qzKeywordRankInfo表中插入对应终端类型的记录
-				QZKeywordRankInfo qzKeywordRankInfo = new QZKeywordRankInfo();
-				qzKeywordRankInfo.setQzSettingUuid(qzSettingUuid);
-				qzKeywordRankInfo.setTerminalType(qzOperationType.getOperationType());
-                qzKeywordRankInfoService.insert(qzKeywordRankInfo);
-
+				Set<String> standardSpeciesSet = new HashSet<>();
 				for(QZChargeRule qzChargeRule : qzOperationType.getQzChargeRules()){
+					standardSpeciesSet.add(qzChargeRule.getStandardSpecies());
 					qzChargeRule.setQzOperationTypeUuid(qzOperationType.getUuid());
 					qzChargeRuleService.insert(qzChargeRule);
+				}
+				for (String standardSpecies : standardSpeciesSet) {
+					QZKeywordRankInfo qzKeywordRankInfo = new QZKeywordRankInfo();
+					qzKeywordRankInfo.setQzSettingUuid(qzSettingUuid);
+					qzKeywordRankInfo.setTerminalType(qzOperationType.getOperationType());
+					qzKeywordRankInfo.setWebsiteType(standardSpecies);
+					qzKeywordRankInfoService.insert(qzKeywordRankInfo);
+					if (qzSetting.getfIsMonitor() && standardSpecies.equals(Constants.QZ_CHARGE_RULE_STANDARD_SPECIES)) {
+                        captureRankJobService.qzAddCaptureRankJob(qzOperationType.getGroup(), qzSettingUuid, qzSetting.getCustomerUuid(), qzOperationType.getOperationType(), userName);
+                    }
 				}
 			}
 			// 添加标签
@@ -177,18 +200,18 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		}
 	}
 
-	public void updateOpretionTypeAndChargeRule(List<QZOperationType> oldOperationTypes, List<QZOperationType> newOperationTypes, Long qzSettingUuid ){
-		Map<String,QZOperationType> oldOperationTypeMap = new HashMap<String, QZOperationType>();
+	public void updateOperationTypeAndChargeRule(List<QZOperationType> oldOperationTypes, List<QZOperationType> newOperationTypes, Long qzSettingUuid, long customerUuid, boolean isMonitor, String userName){
+		Map<String, QZOperationType> oldOperationTypeMap = new HashMap<>();
 		for (QZOperationType qzOperationType : oldOperationTypes) {
-			oldOperationTypeMap.put(qzOperationType.getOperationType(), qzOperationType);
+		    oldOperationTypeMap.put(qzOperationType.getOperationType(), qzOperationType);
 		}
 
 		for(QZOperationType newOperationType : newOperationTypes) {
 			QZOperationType oldOperationType = oldOperationTypeMap.get(newOperationType.getOperationType());
 			if(oldOperationType != null) {
-				updateOpretionTypeAndChargeRuleEqual(oldOperationType, newOperationType);
+			    this.updateOperationTypeAndChargeRuleEqual(oldOperationType, newOperationType, qzSettingUuid, customerUuid, isMonitor, userName);
 				oldOperationTypeMap.remove(newOperationType.getOperationType());
-			}else {
+			} else {
 				//添加一条
 				newOperationType.setQzSettingUuid(qzSettingUuid);
 				qzOperationTypeService.insert(newOperationType);
@@ -196,11 +219,19 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 				for (QZChargeRule qzChargeRule : newOperationType.getQzChargeRules()){
 					qzChargeRule.setQzOperationTypeUuid(uuid);
 					qzChargeRuleService.insert(qzChargeRule);
+					if (isMonitor && qzChargeRule.getStandardSpecies().equals(Constants.QZ_CHARGE_RULE_STANDARD_SPECIES)) {
+                        captureRankJobService.qzAddCaptureRankJob(newOperationType.getGroup(), qzSettingUuid, customerUuid, newOperationType.getOperationType(), userName);
+                    }
 				}
 			}
 		}
 
 		for(QZOperationType oldOperationType : oldOperationTypeMap.values()) {
+            for (QZChargeRule qzChargeRule : oldOperationType.getQzChargeRules()) {
+                if (qzChargeRule.getStandardSpecies().equals(Constants.QZ_CHARGE_RULE_STANDARD_SPECIES)) {
+                    captureRankJobService.deleteCaptureRankJob(qzSettingUuid, oldOperationType.getOperationType());
+                }
+            }
 			qzChargeRuleService.deleteByQZOperationTypeUuid(oldOperationType.getUuid());
 			oldOperationType.setUpdateTime(new Date());
 			oldOperationType.setIsDeleted(1);
@@ -211,111 +242,160 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			} else {
 				qzSetting.setPhoneGroup(null);
 			}
-			qzSettingDao.deleteQZSettingGroup(qzSetting);
+			qzSettingDao.updateQZSettingGroup(qzSetting);
 		}
 	}
 
-	public void updateOpretionTypeAndChargeRuleEqual(QZOperationType oldOperationType,
-			QZOperationType newOperationType) {
+	private void updateOperationTypeAndChargeRuleEqual(QZOperationType oldOperationType, QZOperationType newOperationType, Long qzSettingUuid, long customerUuid, boolean isMonitor, String userName) {
 		oldOperationType.setUpdateTime(new Date());
 		oldOperationType.setOperationType(newOperationType.getOperationType());
+		oldOperationType.setStandardType(newOperationType.getStandardType());
 		oldOperationType.setInitialKeywordCount(newOperationType.getInitialKeywordCount());
 		oldOperationType.setCurrentKeywordCount(newOperationType.getCurrentKeywordCount());
 		oldOperationType.setGroup(newOperationType.getGroup());
 		oldOperationType.setSubDomainName(newOperationType.getSubDomainName());
 		oldOperationType.setMaxKeywordCount(newOperationType.getMaxKeywordCount());
-
 		oldOperationType.setIsDeleted(0); //只要是发生改变那么就让它的状态为0
 		qzOperationTypeService.updateById(oldOperationType);
 
+		boolean isDeleteDesignationWord = false;
+		for (QZChargeRule chargeRule : oldOperationType.getQzChargeRules()) {
+			if (!isDeleteDesignationWord && chargeRule.getStandardSpecies().equals(Constants.QZ_CHARGE_RULE_STANDARD_SPECIES)){
+                CaptureRankJob existCaptureRankJob = captureRankJobService.findExistCaptureRankJob(qzSettingUuid, newOperationType.getOperationType());
+                if (null != existCaptureRankJob && isMonitor) {
+                    isDeleteDesignationWord = false;
+                } else {
+                    isDeleteDesignationWord = true;
+                }
+			} else {
+			    isDeleteDesignationWord = true;
+            }
+		}
+        if (isDeleteDesignationWord) {
+            captureRankJobService.deleteCaptureRankJob(qzSettingUuid, newOperationType.getOperationType());
+        }
 		//删除规则
 		qzChargeRuleService.deleteByQZOperationTypeUuid(oldOperationType.getUuid());
+
+		// 保存新规则
+		boolean hasDesignationWord = false;
 		for (QZChargeRule qzChargeRule : newOperationType.getQzChargeRules()) {
+			if (!hasDesignationWord && qzChargeRule.getStandardSpecies().equals(Constants.QZ_CHARGE_RULE_STANDARD_SPECIES)) {
+				hasDesignationWord = true;
+			}
 			qzChargeRule.setQzOperationTypeUuid(oldOperationType.getUuid());
 			qzChargeRuleService.insert(qzChargeRule);
 		}
+		if (isMonitor && hasDesignationWord) {
+			CaptureRankJob existCaptureRankJob = captureRankJobService.findExistCaptureRankJob(qzSettingUuid, newOperationType.getOperationType());
+			if (null == existCaptureRankJob) {
+				captureRankJobService.qzAddCaptureRankJob(newOperationType.getGroup(), qzSettingUuid, customerUuid, newOperationType.getOperationType(), userName);
+			}
+		}
 	}
 
-	public void updateQZKeywordRankInfo(List<QZKeywordRankInfo> existingQZKeywordRankInfoList, List<QZOperationType> qzOperationTypeList, QZSetting qzSetting){
-		Map<String, QZKeywordRankInfo> existingQZKeywordRankInfoMap = new HashMap<String, QZKeywordRankInfo>();
+	private void updateQZKeywordRankInfo(List<QZKeywordRankInfo> existingQZKeywordRankInfoList, List<QZOperationType> qzOperationTypeList, QZSetting qzSetting){
+		Map<String, Map<String, QZKeywordRankInfo>> existingQZKeywordRankInfoMap = new HashMap<>();
 		for (QZKeywordRankInfo qzKeywordRankInfo : existingQZKeywordRankInfoList) {
-            existingQZKeywordRankInfoMap.put(qzKeywordRankInfo.getTerminalType(), qzKeywordRankInfo);
-		}
-		for (QZOperationType qzOperationType : qzOperationTypeList) {
-            QZKeywordRankInfo qzKeywordRankInfo = existingQZKeywordRankInfoMap.get(qzOperationType.getOperationType());
-            if (null != qzKeywordRankInfo) {
-                existingQZKeywordRankInfoMap.remove(qzOperationType.getOperationType());
+            Map<String, QZKeywordRankInfo> qzKeywordRankInfoMap = existingQZKeywordRankInfoMap.get(qzKeywordRankInfo.getTerminalType());
+            if (null != qzKeywordRankInfoMap && !qzKeywordRankInfoMap.isEmpty()){
+		        qzKeywordRankInfoMap.put(qzKeywordRankInfo.getWebsiteType(), qzKeywordRankInfo);
             } else {
-                qzKeywordRankInfo = new QZKeywordRankInfo();
-                qzKeywordRankInfo.setQzSettingUuid(qzSetting.getUuid());
-                qzKeywordRankInfo.setTerminalType(qzOperationType.getOperationType());
-                qzKeywordRankInfoService.insert(qzKeywordRankInfo);
+                qzKeywordRankInfoMap = new HashMap<>();
+                qzKeywordRankInfoMap.put(qzKeywordRankInfo.getWebsiteType(), qzKeywordRankInfo);
+            }
+            existingQZKeywordRankInfoMap.put(qzKeywordRankInfo.getTerminalType(), qzKeywordRankInfoMap);
+		}
+
+		Map<String, Set<String>> setMap = new HashMap<>();
+		for (QZOperationType qzOperationType : qzOperationTypeList) {
+            Map<String, QZKeywordRankInfo> qzKeywordRankInfoMap = existingQZKeywordRankInfoMap.get(qzOperationType.getOperationType());
+            Set<String> standardSpeciesSet = new HashSet<>();
+            Set<String> existingStandardSpeciesSet = new HashSet<>();
+            if (null != qzKeywordRankInfoMap && !qzKeywordRankInfoMap.isEmpty()) {
+                for (QZChargeRule qzChargeRule : qzOperationType.getQzChargeRules()) {
+                    QZKeywordRankInfo qzKeywordRankInfo = qzKeywordRankInfoMap.get(qzChargeRule.getStandardSpecies());
+                    if (null != qzKeywordRankInfo) {
+                        existingStandardSpeciesSet.add(qzChargeRule.getStandardSpecies());
+                    } else {
+                        standardSpeciesSet.add(qzChargeRule.getStandardSpecies());
+                    }
+                }
+                for (String existingStandardSpecies: existingStandardSpeciesSet) {
+                    qzKeywordRankInfoMap.remove(existingStandardSpecies);
+                }
+            } else {
+                for (QZChargeRule qzChargeRule : qzOperationType.getQzChargeRules()) {
+                    standardSpeciesSet.add(qzChargeRule.getStandardSpecies());
+                }
+            }
+            if (CollectionUtils.isNotEmpty(standardSpeciesSet)) {
+                setMap.put(qzOperationType.getOperationType(), standardSpeciesSet);
             }
 		}
 
-		for (QZKeywordRankInfo qzKeywordRankInfo : existingQZKeywordRankInfoMap.values()) {
-			if (qzKeywordRankInfo.getTerminalType().equals("PC")) {
-				qzSetting.setPcCreateTopTenNum(null);
-				qzSetting.setPcCreateTopFiftyNum(null);
-			}
-			if (qzKeywordRankInfo.getTerminalType().equals("Phone")) {
-				qzSetting.setPhoneCreateTopTenNum(null);
-				qzSetting.setPhoneCreateTopFiftyNum(null);
-			}
-		    qzKeywordRankInfoService.deleteById(qzKeywordRankInfo);
+		for (Map.Entry<String, Set<String>> entry : setMap.entrySet()) {
+		    for (String standardSpecies : entry.getValue()) {
+                QZKeywordRankInfo qzKeywordRankInfo = new QZKeywordRankInfo();
+                qzKeywordRankInfo.setQzSettingUuid(qzSetting.getUuid());
+                qzKeywordRankInfo.setWebsiteType(standardSpecies);
+                qzKeywordRankInfo.setTerminalType(entry.getKey());
+                qzKeywordRankInfoService.insert(qzKeywordRankInfo);
+            }
+        }
+
+        for (Map.Entry<String, Map<String, QZKeywordRankInfo>> entry : existingQZKeywordRankInfoMap.entrySet()) {
+            for (QZKeywordRankInfo qzKeywordRankInfo : entry.getValue().values()) {
+                qzKeywordRankInfoService.deleteById(qzKeywordRankInfo);
+            }
         }
 	}
 
 	public Page<QZSetting> searchQZSetting(Page<QZSetting> page, QZSettingSearchCriteria qzSettingSearchCriteria){
 		page.setRecords(qzSettingDao.searchQZSettings(page, qzSettingSearchCriteria));
-		addingQZKeywordRankInfo(page, qzSettingSearchCriteria);
+		this.addingQZKeywordRankInfo(page, qzSettingSearchCriteria);
 		return page;
 	}
 
-	public Page<QZSetting> addingQZKeywordRankInfo (Page<QZSetting> page, QZSettingSearchCriteria qzSettingSearchCriteria){
+	private Page<QZSetting> addingQZKeywordRankInfo (Page<QZSetting> page, QZSettingSearchCriteria qzSettingSearchCriteria){
         for(QZSetting qzSetting : page.getRecords()){
             List<QZKeywordRankInfo> qzKeywordRankInfos = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), qzSettingSearchCriteria);
-            Map<String, JSONObject> qzKeywordRankInfoMap = new HashMap<String, JSONObject>();
-            for (QZKeywordRankInfo qzKeywordRankInfo : qzKeywordRankInfos) {
-				calculatedQZKeywordRankInfo(qzKeywordRankInfo);
-				qzKeywordRankInfoMap.put(qzKeywordRankInfo.getTerminalType(), new JSONObject().fromObject(qzKeywordRankInfo));
-            }
-            qzSetting.setQzKeywordRankInfoMap(qzKeywordRankInfoMap);
+            if (CollectionUtils.isNotEmpty(qzKeywordRankInfos)) {
+				Map<String, Map<String, JSONObject>> qzKeywordRankInfoMap = new HashMap<>();
+				for (QZKeywordRankInfo qzKeywordRankInfo : qzKeywordRankInfos) {
+					this.calculatedQZKeywordRankInfo(qzKeywordRankInfo);
+					Map<String, JSONObject> jSONObjectMap = qzKeywordRankInfoMap.get(qzKeywordRankInfo.getTerminalType());
+					if (null != jSONObjectMap && !jSONObjectMap.isEmpty()) {
+						jSONObjectMap.put(qzKeywordRankInfo.getWebsiteType(), new JSONObject().fromObject(qzKeywordRankInfo));
+					} else {
+						jSONObjectMap = new HashMap<>();
+						jSONObjectMap.put(qzKeywordRankInfo.getWebsiteType(), new JSONObject().fromObject(qzKeywordRankInfo));
+					}
+					qzKeywordRankInfoMap.put(qzKeywordRankInfo.getTerminalType(), jSONObjectMap);
+				}
+				qzSetting.setQzKeywordRankInfoMap(qzKeywordRankInfoMap);
+				qzChargeRuleService.getChargeRuleTotalPrice(qzSetting, qzSetting.getUuid(), qzSettingSearchCriteria.getTerminalType());
+			}
         }
         return page;
     }
 
-    public QZKeywordRankInfo calculatedQZKeywordRankInfo(QZKeywordRankInfo qzKeywordRankInfo) {
+    private QZKeywordRankInfo calculatedQZKeywordRankInfo(QZKeywordRankInfo qzKeywordRankInfo) {
         Map<String, Object> map;
         if (!StringUtils.isBlank(qzKeywordRankInfo.getTopTen())) {
             map = calculate(qzKeywordRankInfo.getTopTen());
-            qzKeywordRankInfo.setTopTenIncrement((Integer) map.get("increment"));
             qzKeywordRankInfo.setTopTenNum((Integer) map.get("topNum"));
-        }
-        if (!StringUtils.isBlank(qzKeywordRankInfo.getTopTwenty())) {
-            map = calculate(qzKeywordRankInfo.getTopTwenty());
-            qzKeywordRankInfo.setTopTwentyIncrement((Integer) map.get("increment"));
-        }
-        if (!StringUtils.isBlank(qzKeywordRankInfo.getTopThirty())) {
-            map = calculate(qzKeywordRankInfo.getTopThirty());
-            qzKeywordRankInfo.setTopThirtyIncrement((Integer) map.get("increment"));
-        }
-        if (!StringUtils.isBlank(qzKeywordRankInfo.getTopForty())) {
-            map = calculate(qzKeywordRankInfo.getTopForty());
-            qzKeywordRankInfo.setTopFortyIncrement((Integer) map.get("increment"));
         }
         if (!StringUtils.isBlank(qzKeywordRankInfo.getTopFifty())) {
             map = calculate(qzKeywordRankInfo.getTopFifty());
-            qzKeywordRankInfo.setTopFiftyIncrement((Integer) map.get("increment"));
             qzKeywordRankInfo.setTopFiftyNum((Integer) map.get("topNum"));
         }
 	    return qzKeywordRankInfo;
     }
 
     public Map<String, Object> calculate(String topString) {
-	    Map<String, Object> map = new HashMap<String, Object>();
+	    Map<String, Object> map = new HashMap<>();
         String[] topArr = topString.replace("[", "").replace("]", "").split(", ");
-        map.put("increment", Integer.parseInt(topArr[0]) - Integer.parseInt(topArr[1]));
         map.put("topNum", Integer.parseInt(topArr[0]));
         return map;
     }
@@ -355,10 +435,6 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 				qzSetting.setContactPerson(customer.getContactPerson());
 			}
 			List<QZOperationType> qzOperationTypes = qzOperationTypeService.searchQZOperationTypesIsDelete(qzSetting.getUuid());
-			for (QZOperationType qzOperationType : qzOperationTypes) {
-				List<QZChargeRule> qzChargeRules = qzChargeRuleService.searchQZChargeRuleByqzOperationTypeUuids(qzOperationType.getUuid());
-				qzOperationType.setQzChargeRules(qzChargeRules);
-			}
 			qzSetting.setQzOperationTypes(qzOperationTypes);
 			qzSetting.setQzCategoryTags(qzCategoryTagService.searchCategoryTagByQZSettingUuid(qzSetting.getUuid()));
 		}
@@ -572,6 +648,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 				qzCategoryTagService.deleteById(qzCategoryTag.getUuid());
 			}
 		}
+		captureRankJobService.deleteCaptureRankJob(uuid, null);
 		qzSettingDao.deleteById(uuid);
 	}
 
@@ -603,11 +680,11 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 	}
 
 	public QZSettingSearchClientGroupInfoVO getQZSettingClientGroupInfo (QZSettingSearchClientGroupInfoCriteria qzSettingSearchClientGroupInfoCriteria) {
-		QZSettingSearchClientGroupInfoVO qzSettingSearchClientGroupInfoVO = new QZSettingSearchClientGroupInfoVO();
-		qzSettingSearchClientGroupInfoVO.setCustomerKeywordCount(qzSettingDao.getQZSettingClientGroupInfo(qzSettingSearchClientGroupInfoCriteria));
-		qzSettingSearchClientGroupInfoVO.setMachineInfoVos(machineInfoService.getMachineInfoVos(qzSettingSearchClientGroupInfoCriteria));
-		qzSettingSearchClientGroupInfoVO.setCategoryTagNames(qzCategoryTagService.findTagNamesByQZSettingUuid(qzSettingSearchClientGroupInfoCriteria.getQzSettingUuid()));
-		return qzSettingSearchClientGroupInfoVO;
+		QZSettingSearchClientGroupInfoVO qzSettingSearchClientGroupInfoVo = new QZSettingSearchClientGroupInfoVO();
+		qzSettingSearchClientGroupInfoVo.setCustomerKeywordCount(qzSettingDao.getQZSettingClientGroupInfo(qzSettingSearchClientGroupInfoCriteria));
+		qzSettingSearchClientGroupInfoVo.setMachineInfoVos(machineInfoService.getMachineInfoVos(qzSettingSearchClientGroupInfoCriteria));
+		qzSettingSearchClientGroupInfoVo.setCategoryTagNames(qzCategoryTagService.findTagNamesByQZSettingUuid(qzSettingSearchClientGroupInfoCriteria.getQzSettingUuid()));
+		return qzSettingSearchClientGroupInfoVo;
 	}
 
 	public void saveQZSettingCustomerKeywords (QZSettingSaveCustomerKeywordsCriteria qzSettingSaveCustomerKeywordsCriteria, String userName) {
@@ -628,6 +705,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 				customerKeyword.setSearchEngine(qzSettingSaveCustomerKeywordsCriteria.getSearchEngine());
 				customerKeyword.setTerminalType(terminalType);
 				customerKeyword.setUrl(qzSettingSaveCustomerKeywordsCriteria.getDomain());
+				customerKeyword.setKeywordEffect(qzSettingSaveCustomerKeywordsCriteria.getKeywordEffect());
 				customerKeyword.setServiceProvider("baidutop123");
 				customerKeyword.setManualCleanTitle(true);
 				customerKeyword.setCollectMethod(CollectMethod.PerMonth.name());
@@ -670,4 +748,40 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
         url = url.replace("www.","").replace("http://","").replace("https://","").split("/")[0];
         return qzSettingDao.searchGroupMaxCustomerKeywordCount(customerUuid, terminalType,  url);
     }
+
+    public void startMonitorImmediately(String uuids){
+        if(StringUtils.isNotEmpty(uuids)){
+            qzSettingDao.startMonitorImmediately(uuids);
+        }
+    }
+
+	public void updateCrawlerStatus (Long[] uuids) {
+		qzSettingDao.updateCrawlerStatus(uuids);
+	}
+
+	public List<ExternalQzSettingVO> getQZSettingTask (int crawlerHour, int taskNumber) {
+		return qzSettingDao.getQZSettingTask(crawlerHour, taskNumber);
+	}
+
+	public void updateQzSetting (QZSetting qzSetting) {
+		qzSettingDao.updateQzSetting(qzSetting);
+	}
+
+	public void updateQZKeywordEffectImmediately (String uuids, String terminalType) {
+		if(StringUtils.isNotEmpty(uuids)) {
+            String[] qzSettingUuids = uuids.split(",");
+            for (String uuid : qzSettingUuids) {
+                QZSetting qzSetting = qzSettingDao.selectById(Long.valueOf(uuid));
+                if (TerminalTypeEnum.PC.name().equals(terminalType)) {
+                    if (null != qzSetting.getPcGroup()) {
+                        customerKeywordService.updateCustomerKeywordEffect(qzSetting.getCustomerUuid(), terminalType, qzSetting.getPcGroup());
+                    }
+                } else {
+                    if (null != qzSetting.getPhoneGroup()) {
+                        customerKeywordService.updateCustomerKeywordEffect(qzSetting.getCustomerUuid(), terminalType, qzSetting.getPhoneGroup());
+                    }
+                }
+            }
+		}
+	}
 }

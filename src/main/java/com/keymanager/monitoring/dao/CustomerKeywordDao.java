@@ -107,9 +107,9 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
                                                   @Param("customerUuid") Long customerUuid, @Param("startTime") Date startTime,
                                                   @Param("captureStatus") Integer captureStatus);
 
-    List<Long> getCustomerKeywordUuidForCapturePositionTemp(@Param("terminalType") String terminalType, @Param("groupName") String groupName,
-                                                            @Param("customerUuid") Long customerUuid, @Param("startTime") Date startTime,
-                                                            @Param("captureStatus") Integer captureStatus);
+    List<Long> getCustomerKeywordUuidForCapturePositionTemp(@Param("qzSettingUuid") Long qzSettingUuid, @Param("terminalType") String terminalType,
+                                                            @Param("groupName") String groupName, @Param("customerUuid") Long customerUuid,
+                                                            @Param("startTime") Date startTime, @Param("captureStatus") Integer captureStatus);
 
     CustomerKeyword getCustomerKeywordForCapturePosition(@Param("uuid")Long uuid);
 
@@ -233,4 +233,6 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void updateSameCustomerKeywordSource(@Param("terminalType")String terminalType, @Param("customerUuid") long customerUuid, @Param("keyword") String keyword, @Param("url")String url, @Param("title")String title, @Param("customerKeywordSource") String customerKeywordSource);
 
     void updateSimilarCustomerKeywordSource(@Param("terminalType") String terminalType, @Param("customerUuid") long customerUuid, @Param("keyword") String keyword, @Param("originalUrl") String originalUrl, @Param("title") String title, @Param("customerKeywordSource") String customerKeywordSource);
+
+    void updateCustomerKeywordEffect (@Param("customerUuid") long customerUuid, @Param("terminalType") String terminalType, @Param("optimizeGroupName") String optimizeGroupName);
 }

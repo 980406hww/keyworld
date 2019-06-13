@@ -5,6 +5,7 @@
         c.fUuid AS `uuid`,
         c.fGroupNames AS `groupNames`,
         c.fCustomerUuid AS `customerUuid`,
+        c.fQZSettingUuid AS `qzSettingUuid`,
         c.fOperationType AS `operationType`,
         c.fExectionType AS `exectionType`,
         c.fExectionTime AS `exectionTime`,
@@ -52,6 +53,12 @@
             <if test="captureRankJobSearchCriteria.exectionStatus!=null and captureRankJobSearchCriteria.exectionStatus!=''">
                 AND c.fExectionStatus = #{captureRankJobSearchCriteria.exectionStatus}
             </if>
+            <if test="captureRankJobSearchCriteria.jobType == 'Specify'">
+                AND c.fQZSettingUuid > 0
+            </if>
+            <if test="captureRankJobSearchCriteria.jobType == 'Common'">
+                AND c.fQZSettingUuid IS NULL
+            </if>
         </where>
     </select>
 
@@ -61,6 +68,13 @@
         FROM
             t_capture_rank_job c
         WHERE
+        <if test="jobType == 'Common'">
+            c.fQZSettingUuid IS NULL
+        </if>
+        <if test="jobType == 'Specify'">
+            c.fQZSettingUuid &gt; 0
+        </if>
+        AND
         (
             c.fExectionStatus='New' OR
             (
@@ -99,6 +113,15 @@
         c.fUuid=#{captureRankJobUuid}
     </select>
 
+    <select id="resetCaptureRankJobs">
+        UPDATE t_capture_rank_job c
+        SET c.fExectionStatus = 'New'
+        WHERE c.fUuid IN
+        <foreach collection="uuids" item="uuid" separator="," open="(" close=")">
+            #{uuid}
+        </foreach>
+    </select>
+
     <select id="hasUncompletedCaptureRankJob" resultType="Long">
         SELECT
         1
@@ -120,7 +143,8 @@
 
     <select id="searchFiveMiniSetCheckingJobs" resultType="com.keymanager.monitoring.entity.CaptureRankJob">
         SELECT
-            c.fUuid as uuid,
+            c.fUuid as `uuid`,
+            c.fQZSettingUuid as `qzSettingUuid`,
             c.fOperationType as `operationType`,
             c.fGroupNames as `groupNames`
         FROM
@@ -144,5 +168,47 @@
             fStatus = 1
         AND
             fCaptureStatus = 1
+        AND
+            fCapturePositionQueryTime &lt; DATE_SUB(NOW(),INTERVAL 2 MINUTE)
     </select>
+
+    <delete id="deleteCaptureRankJob">
+        DELETE FROM t_capture_rank_job
+        WHERE fQZSettingUuid = #{qzSettingUuid}
+        <if test="operationType != null">
+            AND fOperationType = #{operationType}
+        </if>
+    </delete>
+
+    <select id="searchCountByPosition" resultType="java.lang.Integer">
+        SELECT
+            COUNT(1)
+        FROM
+            t_customer_keyword
+        WHERE
+            fTerminalType = #{captureRankJob.operationType}
+        AND
+            fOptimizeGroupName = #{captureRankJob.groupNames}
+        AND
+            fKeywordEffect = 'Appointment'
+        AND
+            fStatus = 1
+        AND
+            fCurrentPosition &lt;= #{position}
+        AND
+            fCurrentPosition &gt; 0
+        <if test="captureRankJob.customerUuid != null and captureRankJob.customerUuid != ''">
+            AND fCustomerUuid = #{captureRankJob.customerUuid}
+        </if>
+    </select>
+
+    <select id="findExistCaptureRankJob" resultType="com.keymanager.monitoring.entity.CaptureRankJob">
+        SELECT
+            crj.fUuid AS 'uuid',
+            crj.fGroupNames AS 'groupNames'
+        FROM t_capture_rank_job crj
+        WHERE crj.fQZSettingUuid = #{qzSettingUuid}
+        AND crj.fOperationType = #{operationType};
+    </select>
+
 </mapper>

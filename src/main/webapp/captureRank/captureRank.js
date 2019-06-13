@@ -502,3 +502,36 @@ function saveData(uuid) {
         }
     });
 }
+
+// 重置任务为New（方便测试）
+function resetCaptureRankJobs(){
+    var uuids = getUuids();
+    if (uuids == null || uuids == '') {
+        alert("至少选择一条数据!");
+        return;
+    }
+    if (confirm("确实要重置所选任务吗?") == false) return;
+    var postData = {};
+    postData.uuids = uuids.split(",");
+    $.ajax({
+        url: '/internal/captureRank/resetCaptureRankJobs',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        data: JSON.stringify(postData),
+        timeout: 5000,
+        type: 'POST',
+        success: function (data) {
+            if (data) {
+                $().toastmessage('showSuccessToast', "重置成功", true);
+            }
+            else {
+                $().toastmessage('showErrorToast', "重置失败", true);
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "重置失败", true);
+        }
+    });
+}

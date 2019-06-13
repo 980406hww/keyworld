@@ -203,6 +203,15 @@
             &nbsp;&nbsp;
             收录备注:<input type="text" id="enteredKeywordRemarks" name="enteredKeywordRemarks" value="${customerKeywordCriteria.enteredKeywordRemarks}" style="width: 90px;">
             &nbsp;&nbsp;
+            关键词作用:
+            <select name="keywordEffect" id="keywordEffect" style="width: 80px;" title="">
+                <option value="" <c:if test="${customerKeywordCriteria.keywordEffect.equals('')}">selected="selected"</c:if>>全部</option>
+                <option value="Common" <c:if test="${customerKeywordCriteria.keywordEffect.equals('Common')}">selected="selected"</c:if>>一般词</option>
+                <option value="Curve" <c:if test="${customerKeywordCriteria.keywordEffect.equals('Curve')}">selected="selected"</c:if>>曲线词</option>
+                <option value="Appointment" <c:if test="${customerKeywordCriteria.keywordEffect.equals('Appointment')}">selected="selected"</c:if>>指定词</option>
+                <option value="Present" <c:if test="${customerKeywordCriteria.keywordEffect.equals('Present')}">selected="selected"</c:if>>赠送词</option>
+            </select>
+            &nbsp;&nbsp;
             <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
             <input type="submit" onclick="resetPageNumber()"
                    value=" 查询 ">&nbsp;&nbsp;

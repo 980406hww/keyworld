@@ -14,7 +14,8 @@ public enum SuperUserSimpleKeywordDefinition {
 	BearPawNumber(10),
 	Title(11),
 	OrderNumber(12),
-	Remarks(13);
+	Remarks(13),
+	KeywordEffect(14);
 	private int columnIndex;
 	
 	private SuperUserSimpleKeywordDefinition(int columnIndex){

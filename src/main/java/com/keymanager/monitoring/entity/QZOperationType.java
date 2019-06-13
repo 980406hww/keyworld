@@ -44,6 +44,12 @@ public class QZOperationType extends BaseEntity {
   @TableField(value = "fMaxKeywordCount")
   private Integer maxKeywordCount; // 最大限制词数
 
+  @TableField(value = "fStandardType")
+  private String standardType; // 达标类型
+
+  @TableField(value = "fStandardTime")
+  private Date standardTime; // 达标时间
+
   @TableField(exist = false)
   protected List<QZChargeRule> qzChargeRules;//一个操作类型对应多个规则
 
@@ -134,4 +140,20 @@ public class QZOperationType extends BaseEntity {
   public void setMaxKeywordCount (Integer maxKeywordCount) {
     this.maxKeywordCount = maxKeywordCount;
   }
+
+  public String getStandardType () {
+    return standardType;
+  }
+
+  public void setStandardType (String standardType) {
+    this.standardType = standardType;
+  }
+
+    public Date getStandardTime() {
+        return standardTime;
+    }
+
+    public void setStandardTime(Date standardTime) {
+        this.standardTime = standardTime;
+    }
 }

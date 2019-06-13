@@ -82,7 +82,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
 
 	@RequiresPermissions("/internal/qzsetting/save")
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
-	public ResponseEntity<?> saveQZSetting(@RequestBody QZSetting qzSetting){
+	public ResponseEntity<?> saveQZSetting(@RequestBody QZSetting qzSetting, HttpServletRequest request){
 		try {
 			if(qzSetting.getUuid() == null) {
 				Set<String> roles = getCurrentUser().getRoles();
@@ -92,7 +92,8 @@ public class QZSettingRestController extends SpringMVCBaseController {
 					qzSetting.setStatus(2);
 				}
 			}
-			qzSettingService.saveQZSetting(qzSetting);
+			String userName = (String) request.getSession().getAttribute("username");
+			qzSettingService.saveQZSetting(qzSetting, userName);
 			return new ResponseEntity<Object>(qzSetting, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
@@ -136,7 +137,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
             return new ResponseEntity<Object>(qzChargeRuleService.searchChargeRules(qzSettingSearchChargeRuleCriteria), HttpStatus.OK);
         } catch (Exception e) {
 	        logger.error(e.getMessage());
-            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -160,7 +161,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
 
 	private ModelAndView constructQZSettingModelAndView(HttpServletRequest request, QZSettingSearchCriteria qzSettingSearchCriteria, int currentPageNumber, int pageSize) {
 		ModelAndView modelAndView = new ModelAndView("/qzsetting/list");
-		Map<String, Integer> chargeRemindDataMap = qzSettingService.getChargeRemindData();
+		// Map<String, Integer> chargeRemindDataMap = qzSettingService.getChargeRemindData();
 		if (null == qzSettingSearchCriteria.getTerminalType()) {
             String terminalType = TerminalTypeMapping.getTerminalType(request);
             qzSettingSearchCriteria.setTerminalType(terminalType);
@@ -168,11 +169,10 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		CustomerCriteria customerCriteria = new CustomerCriteria();
 		String entryType = (String) request.getSession().getAttribute("entryType");
 		customerCriteria.setEntryType(entryType);
-		boolean isDepartmentManager = true;
+		boolean isSEO = false;
 		boolean hasFilterUserName = false;
 		Set<String> roles = getCurrentUser().getRoles();
 		if(!roles.contains("DepartmentManager")) {
-			isDepartmentManager = false;
 			if (roles.contains("Operation") || roles.contains("Technical")) {
                 hasFilterUserName = true;
 			} else {
@@ -190,17 +190,20 @@ public class QZSettingRestController extends SpringMVCBaseController {
 				qzSettingSearchCriteria.setLoginName(userInfo.getLoginName());
 			}
 		}
+		if (roles.contains("SEO")) {
+			isSEO = true;
+		}
 		qzKeywordRankInfoService.getCountNumOfRankInfo(qzSettingSearchCriteria);
 		Page<QZSetting> page = qzSettingService.searchQZSetting(new Page<QZSetting>(currentPageNumber, pageSize), qzSettingSearchCriteria);
 		List<Customer> customerList = customerService.getActiveCustomerSimpleInfo(customerCriteria);
 		Integer availableQZSettingCount = qzSettingService.getAvailableQZSettings().size();
 		String [] operationTypeValues = configService.getOperationTypeValues(qzSettingSearchCriteria.getTerminalType());
-		modelAndView.addObject("chargeRemindDataMap", chargeRemindDataMap);
+		// modelAndView.addObject("chargeRemindDataMap", chargeRemindDataMap);
 		modelAndView.addObject("customerList", customerList);
 		modelAndView.addObject("qzSettingSearchCriteria", qzSettingSearchCriteria);
 		modelAndView.addObject("statusList", Constants.QZSETTING_STATUS_LIST);
 		modelAndView.addObject("page", page);
-		modelAndView.addObject("isDepartmentManager", isDepartmentManager);
+		modelAndView.addObject("isSEO", isSEO);
 		modelAndView.addObject("availableQZSettingCount", availableQZSettingCount);
 		modelAndView.addObject("operationTypeValues", operationTypeValues);
 		return modelAndView;
@@ -222,8 +225,8 @@ public class QZSettingRestController extends SpringMVCBaseController {
 	@RequestMapping(value = "/getQZSettingClientGroupInfo", method = RequestMethod.POST)
 	public ResponseEntity<?> getQZSettingClientGroupInfo(@RequestBody QZSettingSearchClientGroupInfoCriteria qzSettingSearchClientGroupInfoCriteria) {
 		try {
-			QZSettingSearchClientGroupInfoVO qzSettingSearchClientGroupInfoVO = qzSettingService.getQZSettingClientGroupInfo(qzSettingSearchClientGroupInfoCriteria);
-			return new ResponseEntity<Object>(qzSettingSearchClientGroupInfoVO, HttpStatus.OK);
+			QZSettingSearchClientGroupInfoVO qzSettingSearchClientGroupInfoVo = qzSettingService.getQZSettingClientGroupInfo(qzSettingSearchClientGroupInfoCriteria);
+			return new ResponseEntity<Object>(qzSettingSearchClientGroupInfoVo, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
@@ -265,4 +268,32 @@ public class QZSettingRestController extends SpringMVCBaseController {
             return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
         }
     }
+
+    @RequiresPermissions("/internal/qzsetting/startMonitorImmediately")
+    @RequestMapping(value = "/startMonitorImmediately", method = RequestMethod.POST)
+    public ResponseEntity<?> startMonitorImmediately(@RequestBody Map<String, Object> requestMap) {
+        String uuids = (String) requestMap.get("uuids");
+        boolean returnValue = false;
+        try {
+            qzSettingService.startMonitorImmediately(uuids);
+            returnValue = true;
+        } catch(Exception ex) {
+            logger.error(ex.getMessage());
+        }
+        return new ResponseEntity<Object>(returnValue, HttpStatus.OK);
+    }
+
+    @RequiresPermissions("/internal/qzsetting/updateQZKeywordEffectImmediately")
+    @RequestMapping(value = "/updateQZKeywordEffectImmediately", method = RequestMethod.POST)
+    public ResponseEntity<?> updateQZKeywordEffectImmediately (@RequestBody Map<String, Object> requestMap) {
+		String uuids = (String) requestMap.get("uuids");
+		String terminalType = (String) requestMap.get("terminalType");
+		try {
+			qzSettingService.updateQZKeywordEffectImmediately(uuids, terminalType);
+			return new ResponseEntity<Object>(true, HttpStatus.OK);
+		} catch (Exception ex) {
+			logger.error(ex.getMessage());
+			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+		}
+	}
 }

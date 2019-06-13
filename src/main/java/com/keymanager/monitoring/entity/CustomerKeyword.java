@@ -268,6 +268,9 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(value = "fEnteredKeywordRemarks")
     private String enteredKeywordRemarks;
 
+    @TableField(value = "fKeywordEffect")
+    private String keywordEffect;
+
     @TableField(value = "fCaptureStatus")
     private int captureStatus;
 
@@ -1026,6 +1029,14 @@ public class CustomerKeyword extends BaseEntity {
 
     public void setEnteredKeywordRemarks(String enteredKeywordRemarks) {
         this.enteredKeywordRemarks = enteredKeywordRemarks;
+    }
+
+    public String getKeywordEffect() {
+        return keywordEffect;
+    }
+
+    public void setKeywordEffect(String keywordEffect) {
+        this.keywordEffect = keywordEffect;
     }
 
     public int getCaptureStatus() {

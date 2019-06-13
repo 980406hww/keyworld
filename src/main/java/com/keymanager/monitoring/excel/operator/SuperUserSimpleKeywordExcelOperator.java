@@ -54,6 +54,13 @@ public class SuperUserSimpleKeywordExcelOperator extends AbstractExcelReader {
 		customerKeyword.setManualCleanTitle(true);
 		customerKeyword.setServiceProvider("baidutop123");
 
+        try {
+            String keywordEffect = getStringValue(SuperUserSimpleKeywordDefinition.KeywordEffect.getColumnIndex(), rowIndex);
+            customerKeyword.setKeywordEffect(keywordEffect);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            customerKeyword.setKeywordEffect("一般词");
+        }
+
 		Double pcFee = getDoubleValue(SuperUserSimpleKeywordDefinition.Fee.getColumnIndex(), rowIndex);
 		customerKeyword.setPositionFirstFee(pcFee);
 		customerKeyword.setPositionSecondFee(pcFee);

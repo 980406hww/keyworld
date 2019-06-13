@@ -34,7 +34,7 @@ public class ExternalCrawlRankingRsetController extends SpringMVCBaseController 
         try {
             if (validUser(userName, password)) {
                 // 取任务的时候先检查checking状态的任务
-                captureRankJobService.searchFiveMiniSetCheckingJobs();
+                // captureRankJobService.searchFiveMiniSetCheckingJobs();
                 CaptureRankJob captureRankJob = captureRankJobService.provideCaptureRankJob();
                 if(captureRankJob == null) {
                     captureRankJob = new CaptureRankJob();

@@ -6,6 +6,7 @@ import com.keymanager.monitoring.criteria.*;
 import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.enums.CustomerKeywordSourceEnum;
 import com.keymanager.monitoring.enums.EntryTypeEnum;
+import com.keymanager.monitoring.enums.KeywordEffectEnum;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
 import com.keymanager.monitoring.excel.operator.CustomerKeywordInfoExcelWriter;
 import com.keymanager.monitoring.service.*;
@@ -114,6 +115,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		modelAndView.addObject("customer", customer);
         modelAndView.addObject("CustomerKeywordSourceMap", CustomerKeywordSourceEnum.toMap());
 		modelAndView.addObject("serviceProviders",serviceProviders);
+        modelAndView.addObject("keywordEffects", KeywordEffectEnum.values());
 		modelAndView.addObject("orderElement",orderElement);
 		performanceService.addPerformanceLog(terminalType + ":searchCustomerKeywords", System.currentTimeMillis() - startMilleSeconds, null);
 		return modelAndView;
@@ -214,7 +216,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 			boolean uploaded = customerKeywordService.handleExcel(file.getInputStream(), excelType, Integer.parseInt(customerUuid),  entry, terminalType, userName);
 			if (uploaded){
 				return true;
-			};
+			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return false;

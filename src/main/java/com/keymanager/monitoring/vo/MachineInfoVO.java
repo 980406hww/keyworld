@@ -5,8 +5,9 @@ package com.keymanager.monitoring.vo;
  * @Date 2018/12/18 15:09
  **/
 public class MachineInfoVO {
+    private int machineCount;
     private String operationType;
-    private int operationTypeCount;
+    private int machineUserPercent;
 
     public String getOperationType () {
         return operationType;
@@ -16,11 +17,19 @@ public class MachineInfoVO {
         this.operationType = operationType;
     }
 
-    public int getOperationTypeCount () {
-        return operationTypeCount;
+    public int getMachineCount () {
+        return machineCount;
     }
 
-    public void setOperationTypeCount (int operationTypeCount) {
-        this.operationTypeCount = operationTypeCount;
+    public void setMachineCount (int machineCount) {
+        this.machineCount = machineCount;
+    }
+
+    public int getMachineUserPercent () {
+        return machineUserPercent;
+    }
+
+    public void setMachineUserPercent (int machineUserPercent) {
+        this.machineUserPercent = machineUserPercent;
     }
 }

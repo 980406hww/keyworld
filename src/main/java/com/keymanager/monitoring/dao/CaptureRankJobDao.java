@@ -13,18 +13,27 @@ import java.util.List;
  */
 
 public interface CaptureRankJobDao extends BaseMapper<CaptureRankJob> {
-   public List<CaptureRankJob> searchCaptureRankJobs(Page<CaptureRankJob> page, @Param("captureRankJobSearchCriteria") CaptureRankJobSearchCriteria captureRankJobSearchCriteria);
+    List<CaptureRankJob> searchCaptureRankJobs(Page<CaptureRankJob> page, @Param("captureRankJobSearchCriteria") CaptureRankJobSearchCriteria captureRankJobSearchCriteria);
 
-   public CaptureRankJob provideCaptureRankJob();
+    CaptureRankJob provideCaptureRankJob(@Param("jobType") String jobType);
 
-   public CaptureRankJob getProcessingJob();
+    CaptureRankJob getProcessingJob();
 
-   Boolean getCaptureRankJobStatus(@Param("captureRankJobUuid")Long captureRankJobUuid);
+    Boolean getCaptureRankJobStatus(@Param("captureRankJobUuid")Long captureRankJobUuid);
 
-   Long hasUncompletedCaptureRankJob(@Param("groupNames")List<String> groupNames);
-   CaptureRankJob fetchCaptureRankJob();
+    void resetCaptureRankJobs(@Param("uuids") List uuids);
 
-   List<CaptureRankJob> searchFiveMiniSetCheckingJobs();
+    Long hasUncompletedCaptureRankJob(@Param("groupNames")List<String> groupNames);
+    
+    CaptureRankJob fetchCaptureRankJob();
 
+    void deleteCaptureRankJob (@Param("qzSettingUuid") Long qzSettingUuid, @Param("operationType") String operationType);
+    
+    List<CaptureRankJob> searchFiveMiniSetCheckingJobs();
+    
     int searchThreeMiniStatusEqualsOne(@Param("terminalType") String terminalType, @Param("groupName") String groupName);
+
+    int searchCountByPosition(@Param("captureRankJob") CaptureRankJob captureRankJob, @Param("position") int position);
+
+    CaptureRankJob findExistCaptureRankJob (@Param("qzSettingUuid") Long qzSettingUuid, @Param("operationType") String operationType);
 }

@@ -1,9 +1,6 @@
 package com.keymanager.monitoring.vo;
 
 public class ExternalQzKeywordRankInfoVO {
-    private String userName;
-    private String password;
-    private Long qzSettingUuid;
     private String terminalType;
     private String websiteType;
     private String topTen;
@@ -11,27 +8,14 @@ public class ExternalQzKeywordRankInfoVO {
     private String topThirty;
     private String topForty;
     private String topFifty;
+    private String topHundred;
     private String date;
     private String fullDate;
-    private Integer pcCreateTopTenNum;
-    private Integer pcCreateTopFiftyNum;
-    private Integer phoneCreateTopTenNum;
-    private Integer phoneCreateTopFiftyNum;
-    private String crawlerTime;
-    private String crawlerStatus;
+    private Integer createTopTenNum;
+    private Integer createTopFiftyNum;
     private String ipRoute;
-    private Integer baiduWeight;
     private String baiduRecord;
     private String baiduRecordFullDate;
-    private String group;
-
-    public String getGroup() {
-        return group;
-    }
-
-    public void setGroup(String group) {
-        this.group = group;
-    }
 
     public String getBaiduRecordFullDate() {
         return baiduRecordFullDate;
@@ -49,60 +33,12 @@ public class ExternalQzKeywordRankInfoVO {
         this.ipRoute = ipRoute;
     }
 
-    public Integer getBaiduWeight() {
-        return baiduWeight;
-    }
-
-    public void setBaiduWeight(Integer baiduWeight) {
-        this.baiduWeight = baiduWeight;
-    }
-
     public String getBaiduRecord() {
         return baiduRecord;
     }
 
     public void setBaiduRecord(String baiduRecord) {
         this.baiduRecord = baiduRecord;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getCrawlerTime() {
-        return crawlerTime;
-    }
-
-    public void setCrawlerTime(String crawlerTime) {
-        this.crawlerTime = crawlerTime;
-    }
-
-    public String getCrawlerStatus() {
-        return crawlerStatus;
-    }
-
-    public void setCrawlerStatus(String crawlerStatus) {
-        this.crawlerStatus = crawlerStatus;
-    }
-
-    public Long getQzSettingUuid() {
-        return qzSettingUuid;
-    }
-
-    public void setQzSettingUuid(Long qzSettingUuid) {
-        this.qzSettingUuid = qzSettingUuid;
     }
 
     public String getTerminalType() {
@@ -161,6 +97,14 @@ public class ExternalQzKeywordRankInfoVO {
         this.topFifty = topFifty;
     }
 
+    public String getTopHundred () {
+        return topHundred;
+    }
+
+    public void setTopHundred (String topHundred) {
+        this.topHundred = topHundred;
+    }
+
     public String getDate() {
         return date;
     }
@@ -177,35 +121,19 @@ public class ExternalQzKeywordRankInfoVO {
         this.fullDate = fullDate;
     }
 
-    public Integer getPcCreateTopTenNum() {
-        return pcCreateTopTenNum;
+    public Integer getCreateTopTenNum () {
+        return createTopTenNum;
     }
 
-    public void setPcCreateTopTenNum(Integer pcCreateTopTenNum) {
-        this.pcCreateTopTenNum = pcCreateTopTenNum;
+    public void setCreateTopTenNum (Integer createTopTenNum) {
+        this.createTopTenNum = createTopTenNum;
     }
 
-    public Integer getPcCreateTopFiftyNum() {
-        return pcCreateTopFiftyNum;
+    public Integer getCreateTopFiftyNum () {
+        return createTopFiftyNum;
     }
 
-    public void setPcCreateTopFiftyNum(Integer pcCreateTopFiftyNum) {
-        this.pcCreateTopFiftyNum = pcCreateTopFiftyNum;
-    }
-
-    public Integer getPhoneCreateTopTenNum() {
-        return phoneCreateTopTenNum;
-    }
-
-    public void setPhoneCreateTopTenNum(Integer phoneCreateTopTenNum) {
-        this.phoneCreateTopTenNum = phoneCreateTopTenNum;
-    }
-
-    public Integer getPhoneCreateTopFiftyNum() {
-        return phoneCreateTopFiftyNum;
-    }
-
-    public void setPhoneCreateTopFiftyNum(Integer phoneCreateTopFiftyNum) {
-        this.phoneCreateTopFiftyNum = phoneCreateTopFiftyNum;
+    public void setCreateTopFiftyNum (Integer createTopFiftyNum) {
+        this.createTopFiftyNum = createTopFiftyNum;
     }
 }

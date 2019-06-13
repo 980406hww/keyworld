@@ -39,18 +39,26 @@
                 <option value="">请选择执行状态</option>
                 <option value="New" <c:if test="${captureRankJobSearchCriteria.exectionStatus.equals('New')}">selected="selected"</c:if>>New</option>
                 <option value="Processing" <c:if test="${captureRankJobSearchCriteria.exectionStatus.equals('Processing')}">selected="selected"</c:if>>Processing</option>
-                <option value="Checking" <c:if test="${captureRankJobSearchCriteria.exectionStatus.equals('Checking')}">selected="selected"</c:if>>Checking</option>
+                <%--<option value="Checking" <c:if test="${captureRankJobSearchCriteria.exectionStatus.equals('Checking')}">selected="selected"</c:if>>Checking</option>--%>
                 <option value="Complete" <c:if test="${captureRankJobSearchCriteria.exectionStatus.equals('Complete')}">selected="selected"</c:if>>Complete</option>
+            </select>
+            任务类型:
+            <select name="jobType">
+                <option value="Common" <c:if test="${captureRankJobSearchCriteria.jobType.equals('Common')}">selected="selected"</c:if>>普通任务</option>
+                <option value="Specify" <c:if test="${captureRankJobSearchCriteria.jobType.equals('Specify')}">selected="selected"</c:if>>整站任务</option>
             </select>&nbsp;&nbsp;
             <shiro:hasPermission name="/internal/captureRank/searchCaptureRankJobs">
             <input type="submit" value=" 查询 " onclick="resetPageNumber()">&nbsp;&nbsp;
             </shiro:hasPermission>
-            <shiro:hasPermission name="/internal/captureRank/saveCaptureRankJob">
-            <input type="button" value=" 添加 " onclick="addCaptureRankJobs()">&nbsp;&nbsp;
-            </shiro:hasPermission>
-            <shiro:hasPermission name="/internal/captureRank/deleteCaptureRankJobs">
-            <input type="button" value=" 删除所选 " onclick="deleteCaptureRankJobs()">&nbsp;&nbsp;
-            </shiro:hasPermission>
+            <c:if test="${captureRankJobSearchCriteria.jobType.equals('Common')}">
+                <shiro:hasPermission name="/internal/captureRank/saveCaptureRankJob">
+                    <input type="button" value=" 添加 " onclick="addCaptureRankJobs()">&nbsp;&nbsp;
+                </shiro:hasPermission>
+                <shiro:hasPermission name="/internal/captureRank/deleteCaptureRankJobs">
+                    <input type="button" value=" 删除所选 " onclick="deleteCaptureRankJobs()">&nbsp;&nbsp;
+                </shiro:hasPermission>
+            </c:if>
+            <input type="button" value=" 重置任务 " onclick="resetCaptureRankJobs()">&nbsp;&nbsp;
         </form>
     </div>
     <table style="font-size:12px; width: 100%;" id="headerTable">
@@ -107,9 +115,12 @@
             <td width=60>${captureRankJob.createBy}</td>
             <td width=90><fmt:formatDate value="${captureRankJob.createTime}" pattern="yyyy-MM-dd HH:mm"/></td>
             <td width=80>
-                <shiro:hasPermission name="/internal/captureRank/saveCaptureRankJob">
-                <a href="javascript:updateCaptureRankJobs('${captureRankJob.uuid}')">修改</a>
-                </shiro:hasPermission>
+                <c:if test="${captureRankJobSearchCriteria.jobType.equals('Common')}">
+                    <shiro:hasPermission name="/internal/captureRank/saveCaptureRankJob">
+                        <a href="javascript:updateCaptureRankJobs('${captureRankJob.uuid}')">修改</a>
+                    </shiro:hasPermission>
+                </c:if>
+
                 <shiro:hasPermission name="/internal/captureRank/changeCaptureRankJobStatus">
                     <c:choose>
                         <c:when test="${captureRankJob.captureRankJobStatus}">
@@ -120,9 +131,11 @@
                         </c:otherwise>
                     </c:choose>
                 </shiro:hasPermission>
-                <shiro:hasPermission name="/internal/captureRank/deleteCaptureRankJob">
-                <a href="javascript:deleteCaptureRankJob('${captureRankJob.uuid}')">删除</a>
-                </shiro:hasPermission>
+                <c:if test="${captureRankJobSearchCriteria.jobType.equals('Common')}">
+                    <shiro:hasPermission name="/internal/captureRank/deleteCaptureRankJob">
+                        <a href="javascript:deleteCaptureRankJob('${captureRankJob.uuid}')">删除</a>
+                    </shiro:hasPermission>
+                </c:if>
 
             </td>
         </tr>

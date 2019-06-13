@@ -21,6 +21,7 @@ public class CustomerKeywordCriteria extends BaseCriteria{
     private String terminalType;//8088 PC  8089  phone
     private String searchEngine;
     private String titleFlag;
+    private String keywordEffect;
     private Integer gtOptimizedCount;
     private Integer ltOptimizedCount;
     private Integer gtOptimizePlanCount;
@@ -80,6 +81,14 @@ public class CustomerKeywordCriteria extends BaseCriteria{
 
     public void setRemarks(String remarks) {
         this.remarks = remarks;
+    }
+
+    public String getKeywordEffect() {
+        return keywordEffect;
+    }
+
+    public void setKeywordEffect(String keywordEffect) {
+        this.keywordEffect = keywordEffect;
     }
 
     public Integer getGtOptimizedCount() {

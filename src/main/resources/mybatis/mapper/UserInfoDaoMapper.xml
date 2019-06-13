@@ -132,7 +132,8 @@
             ui.fUuid AS 'uuid',
             ui.fUserName AS "userName"
         FROM t_userinfo ui
-        WHERE ui.fOrganizationID = #{organizationID}
+        WHERE ui.fStatus = 0
+        AND ui.fOrganizationID = #{organizationID}
     </select>
 
 </mapper>
