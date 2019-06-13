@@ -156,6 +156,15 @@
                 AND qcr.fStandardSpecies = #{qzSettingSearchCriteria.standardSpecies}
             )
         </if>
+        <if test="qzSettingSearchCriteria.optimizationType != null">
+            AND EXISTS (
+                SELECT 1
+                FROM t_qz_operation_type qot
+                WHERE qs.fUuid = qot.fQZSettingUuid
+                AND qot.fOperationtype = #{qzSettingSearchCriteria.terminalType}
+                AND qot.fOptimizationType = #{qzSettingSearchCriteria.optimizationType}
+            )
+        </if>
         <if test="qzSettingSearchCriteria.checkStatus != null">
             AND EXISTS (SELECT 1 FROM t_qz_keyword_rank_info qk WHERE qk.fQZSettingUuid = qs.fUuid
             <choose>

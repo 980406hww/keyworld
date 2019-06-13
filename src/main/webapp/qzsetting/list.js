@@ -106,6 +106,7 @@ function detectedMoreSearchConditionDivShow() {
     var operationType = moreSearchCondition.find("select[name='operationType']").val();
     var status = moreSearchCondition.find("select[name='status']").val();
     var standardSpecies = moreSearchCondition.find("select[name='standardSpecies']").val();
+    var optimizationType = moreSearchCondition.find("select[name='optimizationType']").val();
     var updateStatus = moreSearchCondition.find("select[name='updateStatus']").val();
     var createTime = moreSearchCondition.find("ul li.createTime input[name='createTime']").val();
     var createTimePrefix = moreSearchCondition.find("ul li.createTime input[name='createTimePrefix']").val();
@@ -136,7 +137,7 @@ function detectedMoreSearchConditionDivShow() {
         });
         $("#userNameTree").textbox('setValue', treeValue);
     }
-    var values = customerInfo + categoryTag + group + status + standardSpecies + updateStatus + createTime + createTimePrefix + operationType + hasMonitor + hasReady + userInfoID + organizationID;
+    var values = customerInfo + categoryTag + group + status + standardSpecies + optimizationType + updateStatus + createTime + createTimePrefix + operationType + hasMonitor + hasReady + userInfoID + organizationID;
     if (values != "") {
         moreSearchCondition.css("display", "block");
     }
@@ -894,6 +895,7 @@ function trimSearchCondition(days) {
     var operationType = $(".conn").find("select[name='operationType']").val();
     var status = $(".conn").find("select[name='status']").val();
     var standardSpecies = $(".conn").find("select[name='standardSpecies']").val();
+    var optimizationType = $(".conn").find("select[name='optimizationType']").val();
     var updateStatus = $(".conn").find("select[name='updateStatus']").val();
     var createTime = $(".conn").find(".createTime").find("input[name='createTime']").val();
     var createTimePrefix = $(".conn").find(".createTime").find("input[name='createTimePrefix']").val();
@@ -917,6 +919,11 @@ function trimSearchCondition(days) {
         chargeForm.find("#standardSpecies").val(standardSpecies);
     } else {
         chargeForm.find("#standardSpecies").val(null);
+    }
+    if (optimizationType !== '') {
+        chargeForm.find("#optimizationType").val(optimizationType);
+    } else {
+        chargeForm.find("#optimizationType").val(null);
     }
     if (updateStatus !== "") {
         chargeForm.find("#updateStatus").val($.trim(updateStatus));
@@ -1852,7 +1859,7 @@ function clearStandardInfo(type, standardSpecies, hideStatus) {
             break;
     }
     // 修改表头信息
-    settingDialogObj.find("#chargeRule" + type).find("thead tr td").text(standardSpecies);
+    settingDialogObj.find("#chargeRule" + type).find("thead tr td").text(standardSpecies + "收费规则");
     // 清空规则表格信息
     settingDialogObj.find("#chargeRule" + type).find("tbody tr:not(:first,:last)").remove();
     if (hideStatus) {
@@ -2237,15 +2244,15 @@ function addRow(tableID, chargeRule){
         var newRow = tableObj[0].insertRow(rowCount - 1); //插入新行
 
         var col1 = newRow.insertCell(0);
-        col1.innerHTML="<input type='text' name='sequenceID' value='"+(rowCount - 1)+"' style='width:100%'/>";
+        col1.innerHTML="<input type='text' name='sequenceID' value='"+(rowCount - 1)+"' style='width:40px'/>";
         var col2 = newRow.insertCell(1);
-        col2.innerHTML = "<input type='text' name='startKeywordCount' value='"+(chargeRule != null ? chargeRule.startKeywordCount : '')+"' style='width:100%'/>";
+        col2.innerHTML = "<input type='text' name='startKeywordCount' value='"+(chargeRule != null ? chargeRule.startKeywordCount : '')+"' style='width:86px'/>";
         var col3 = newRow.insertCell(2);
-        col3.innerHTML = "<input type='text' name='endKeywordCount' value='"+((chargeRule != null && chargeRule.endKeywordCount != null) ? chargeRule.endKeywordCount : '')+"'  style='width:100%'/>";
+        col3.innerHTML = "<input type='text' name='endKeywordCount' value='"+((chargeRule != null && chargeRule.endKeywordCount != null) ? chargeRule.endKeywordCount : '')+"'  style='width:86px'/>";
         var col4 = newRow.insertCell(3);
-        col4.innerHTML = "<input type='text' name='amount' value='"+(chargeRule != null ? chargeRule.amount : '')+"'  style='width:100%'/>";
+        col4.innerHTML = "<input type='text' name='amount' value='"+(chargeRule != null ? chargeRule.amount : '')+"'  style='width:52px'/>";
         var col5 = newRow.insertCell(4);
-        col5.innerHTML = "<input style='width:100%' type='button' value='删除' onclick='deleteCurrentRow(this.parentNode.parentNode)' />";
+        col5.innerHTML = "<input style='width:50px' type='button' value='删除' onclick='deleteCurrentRow(this.parentNode.parentNode)' />";
 
         $("#changeSettingDialog").css("height", $("#changeSettingForm").height() + 22);
     }

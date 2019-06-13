@@ -33,6 +33,7 @@ public class QZSettingSearchCriteria{
     private Boolean hasMonitor;
     private Boolean hasReady;
     private String standardSpecies;
+    private Integer optimizationType;
 
     public String getLoginName() {
         return loginName;
@@ -288,5 +289,13 @@ public class QZSettingSearchCriteria{
 
     public void setStandardSpecies (String standardSpecies) {
         this.standardSpecies = standardSpecies;
+    }
+
+    public Integer getOptimizationType () {
+        return optimizationType;
+    }
+
+    public void setOptimizationType (Integer optimizationType) {
+        this.optimizationType = optimizationType;
     }
 }

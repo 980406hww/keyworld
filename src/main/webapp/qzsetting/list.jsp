@@ -217,6 +217,17 @@
                     <span>--</span>
                     <input type="text" name="createTimePrefix" id="createTimePrefix" class="Wdate" onclick="WdatePicker({skin:'whyGreen',dateFmt: 'yyyy-MM-dd', maxDate: '%y-%M-%d' })" placeholder="<=" value="${qzSettingSearchCriteria.createTimePrefix}">
 				</li>
+				<li>
+					<span>达标优化类型: </span>
+					<select name="optimizationType">
+						<c:forEach items="${optimizationTypeMap}" var="entry">
+							<c:choose>
+								<c:when test="${entry.value eq (qzSettingSearchCriteria.optimizationType == null ? '' : qzSettingSearchCriteria.optimizationType)}"><option selected value="${entry.value}">${entry.key}</option></c:when>
+								<c:otherwise><option value="${entry.value}">${entry.key}</option></c:otherwise>
+							</c:choose>
+						</c:forEach>
+					</select>
+				</li>
 				<shiro:hasPermission name="/internal/qzsetting/startMonitorImmediately">
 					<li>
 						<span>达标监控: </span>
@@ -270,6 +281,7 @@
     <input type="hidden" name="hasReady" id="hasReady" value="${qzSettingSearchCriteria.hasReady}"/>
     <input type="hidden" name="hasMonitor" id="hasMonitor" value="${qzSettingSearchCriteria.hasMonitor}"/>
     <input type="hidden" name="standardSpecies" id="standardSpecies" value="${qzSettingSearchCriteria.standardSpecies}"/>
+    <input type="hidden" name="optimizationType" id="optimizationType" value="${qzSettingSearchCriteria.optimizationType}"/>
 </form>
 
 <div class="datalist">
@@ -1379,23 +1391,23 @@
 			<tr id="chargeRuleTable">
 				<%--电脑规则信息--%>
 				<td colspan="2" id="ruleHeightPC" style="width: 325px;" valign="top">
-					<table border="1" style="display:none; font-size:12px;" cellspacing="0" cellpadding="0" id="chargeRulePC">
+					<table border="1" style="display:none; width: 325px; font-size:12px;" cellspacing="0" cellpadding="0" id="chargeRulePC">
 						<thead>
 						<tr>
-							<td align="center" colspan="5">爱站</td>
+							<td align="center" colspan="5">爱站收费规则</td>
 						</tr>
 						</thead>
 						<tbody>
 						<tr>
-							<td style="width:50px">序号</td>
-							<td style="width:72px">起始词数</td>
-							<td style="width:72px">终止词数</td>
+							<td style="width:36px">序号</td>
+							<td style="width:84px">起始达标词数</td>
+							<td style="width:84px">终止达标词数</td>
 							<td style="width:50px">价格</td>
 							<td style="width:46px">操作</td>
 						</tr>
 						<tr>
 							<td colspan="5">
-								<input name="addRule" type="button" value="增加规则" onclick="addRow('chargeRulePC')" />
+								<input name="addRule" type="button" value="增加收费规则" onclick="addRow('chargeRulePC')" />
 							</td>
 						</tr>
 						</tbody>
@@ -1403,23 +1415,23 @@
 				</td>
 				<%--手机规则信息--%>
 				<td colspan="2" id="ruleHeightPhone" style="width: 325px;" valign="top">
-					<table border="1" style="display:none; font-size:12px;" cellspacing="0" cellpadding="0" id="chargeRulePhone">
+					<table border="1" style="display:none; width: 325px; font-size:12px;" cellspacing="0" cellpadding="0" id="chargeRulePhone">
 						<thead>
 						<tr>
-							<td align="center" colspan="5">爱站</td>
+							<td align="center" colspan="5">爱站收费规则</td>
 						</tr>
 						</thead>
 						<tbody>
 						<tr>
-							<td style="width:50px">序号</td>
-							<td style="width:72px">起始词数</td>
-							<td style="width:72px">终止词数</td>
+							<td style="width:36px">序号</td>
+							<td style="width:84px">起始达标词数</td>
+							<td style="width:84px">终止达标词数</td>
 							<td style="width:50px">价格</td>
 							<td style="width:46px">操作</td>
 						</tr>
 						<tr>
 							<td colspan="5">
-								<input name="addRule" type="button" value="增加规则" onclick="addRow('chargeRulePhone')" />
+								<input name="addRule" type="button" value="增加收费规则" onclick="addRow('chargeRulePhone')" />
 							</td>
 						</tr>
 						</tbody>
@@ -1430,6 +1442,8 @@
 		<tr>
 			<td colspan="4" class="split_line"></td>
 		</tr>
+	</table>
+	<table style="font-size:12px" cellspacing="5">
 		<shiro:hasPermission name="/internal/qzsetting/startMonitorImmediately">
 			<c:if test="${not isSEO}">
 				<tr>

@@ -628,3 +628,6 @@ ul {
 #operationTypeSummaryInfoPhone tr td {
     padding: 0px 3px;
 }
+#chargeRuleTable table tr td:not:last-child {
+    text-align: center;
+}

@@ -170,4 +170,12 @@ public class Constants {
         QZ_RANK_STANDARD_SPECIES_MAP.put("指定词", "designationWord");
         QZ_RANK_STANDARD_SPECIES_MAP.put("其他", "other");
     }
+
+    public final static Map<String, String> QZ_OPERATION_OPTIMIZATION_TYPE_MAP = new LinkedHashMap<>();
+    static {
+        QZ_OPERATION_OPTIMIZATION_TYPE_MAP.put("全部", "");
+        QZ_OPERATION_OPTIMIZATION_TYPE_MAP.put("主优化", "1");
+        QZ_OPERATION_OPTIMIZATION_TYPE_MAP.put("次优化", "2");
+        QZ_OPERATION_OPTIMIZATION_TYPE_MAP.put("附加优化", "0");
+    }
 }
