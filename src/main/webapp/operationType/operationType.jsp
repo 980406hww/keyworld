@@ -63,9 +63,9 @@
             </td>
             <td align="center" width=80>操作类型名称</td>
             <td align="center" width=80>终端类型</td>
-            <shiro:hasRole name="AlgorithmGroup">
-                <td align="center" width=80>操作类型描述</td>
-            </shiro:hasRole>
+            <%--<shiro:hasRole name="AlgorithmGroup">--%>
+                <%--<td align="center" width=80>操作类型描述</td>--%>
+            <%--</shiro:hasRole>--%>
             <td align="center" width=80>备注</td>
             <td align="center" width=80>创建时间</td>
             <td align="center" width=80>更新时间</td>
@@ -90,15 +90,17 @@
             <tr>
                 <td style="width:100px" align="right">终端类型:</td>
                 <td>
-                    <input type="radio" name="terminalType" value="PC"/>&nbsp;PC&emsp;&emsp;&nbsp;&nbsp;
-                    <input type="radio" name="terminalType" value="Phone"/>&nbsp;Phone
+                    <input type="radio" name="terminalType" value="PC" title="" <c:if test="${operationType.terminalType == 'PC'}">checked="checked"</c:if>/>
+                    &nbsp;PC&emsp;&nbsp;&nbsp;
+                    <input type="radio" name="terminalType" value="Phone" title="" <c:if test="${operationType.terminalType == 'Phone'}">checked="checked"</c:if>/>
+                    &nbsp;Phone
                 </td>
             </tr>
             <tr>
                 <td style="width:100px" align="right">状态:</td>
                 <td>
-                    <input type="radio" name="status" value="1" checked="checked"/>&nbsp;有效&emsp;&emsp;
-                    <input type="radio" name="status" value="0"/>&nbsp;无效&emsp;&emsp;
+                    <input type="radio" name="status" value="1" checked="checked"/>&nbsp;有效&emsp;
+                    <input type="radio" name="status" value="0"/>&nbsp;无效&emsp;
                     <input type="radio" name="status" value="2"/>&nbsp;测试中
                 </td>
             </tr>
@@ -128,9 +130,9 @@
                     </td>
                     <td width=80>${operationType.operationTypeName}</td>
                     <td width=80>${operationType.terminalType}</td>
-                    <shiro:hasRole name="AlgorithmGroup">
-                        <td width=80>${operationType.description}</td>
-                    </shiro:hasRole>
+                    <%--<shiro:hasRole name="AlgorithmGroup">--%>
+                        <%--<td width=80>${operationType.description}</td>--%>
+                    <%--</shiro:hasRole>--%>
                     <td width=80>${operationType.remark}</td>
                     <td width=80 style="text-align: center">
                         <fmt:formatDate value="${operationType.createTime}" pattern="yyyy-MM-dd"/>
@@ -160,9 +162,9 @@
                         </td>
                         <td width=80>${operationType.operationTypeName}</td>
                         <td width=80>${operationType.terminalType}</td>
-                        <shiro:hasRole name="AlgorithmGroup">
-                            <td width=80>${operationType.description}</td>
-                        </shiro:hasRole>
+                        <%--<shiro:hasRole name="AlgorithmGroup">--%>
+                            <%--<td width=80>${operationType.description}</td>--%>
+                        <%--</shiro:hasRole>--%>
                         <td width=80>${operationType.remark}</td>
                         <td width=80 style="text-align: center">
                             <fmt:formatDate value="${operationType.createTime}" pattern="yyyy-MM-dd"/>
