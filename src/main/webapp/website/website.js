@@ -262,3 +262,33 @@ function saveWebsite(uuid) {
     });
 
 }
+function updateSalesInfo() {
+    var uuids = getSelectedIDs();
+    if (uuids === '') {
+        alert('请选择要更新的网站');
+        return;
+    }
+    if (confirm("确定要更新销售信息到这些网站吗?") == false) return;
+    var postData = {};
+    postData.uuids = uuids.split(",");
+    $.ajax({
+        url: '/internal/website/updateSalesInfo',
+        data: JSON.stringify(postData),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        timeout: 5000,
+        type: 'POST',
+        success: function (data) {
+            if (data) {
+                $().toastmessage('showSuccessToast', "操作成功",true);
+            } else {
+                $().toastmessage('showErrorToast', "操作失败");
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "操作失败");
+        }
+    });
+}

@@ -2,6 +2,7 @@ package com.keymanager.monitoring.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
+import com.keymanager.monitoring.criteria.SalesManageCriteria;
 import com.keymanager.monitoring.entity.SalesManage;
 import org.apache.ibatis.annotations.Param;
 
@@ -13,7 +14,7 @@ import java.util.Map;
  */
 public interface SalesManageDao extends BaseMapper<SalesManage> {
 
-    List<Map> selectAllSalesInfo();
+    List<SalesManageCriteria> selectAllSalesInfo();
 
     List<SalesManage> getSalesManages(Page<SalesManage> page, @Param("salesManage") SalesManage salesManage);
 }

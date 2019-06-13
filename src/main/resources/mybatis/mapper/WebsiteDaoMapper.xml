@@ -59,4 +59,14 @@
 		fExpiryTime <![CDATA[<=]]> date_add(NOW(), interval 1 MONTH)
 	</select>
 
+	<select id="selectBackGroundInfoForUpdateSalesInfo" resultType="com.keymanager.monitoring.criteria.WebsiteBackGroundInfoCriteria">
+		SELECT
+		fBackgroundDomain AS 'backgroundDomain',
+		fBackgroundUserName AS 'backgroundUserName',
+		fBackgroundPassword AS 'backgroundPassword',
+		fWebsiteType AS 'websiteType'
+		FROM
+		t_website
+	</select>
+
 </mapper>

@@ -2,6 +2,7 @@ package com.keymanager.monitoring.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
+import com.keymanager.monitoring.criteria.WebsiteBackGroundInfoCriteria;
 import com.keymanager.monitoring.criteria.WebsiteCriteria;
 import com.keymanager.monitoring.entity.Website;
 import com.keymanager.monitoring.vo.WebsiteVO;
@@ -16,4 +17,6 @@ public interface WebsiteDao extends BaseMapper<Website> {
     List<Website> takeWebsitesForAccess();
 
     List<Website> searchExpireTime();
+
+    List<WebsiteBackGroundInfoCriteria> selectBackGroundInfoForUpdateSalesInfo(@Param("uuids") List uuids);
 }

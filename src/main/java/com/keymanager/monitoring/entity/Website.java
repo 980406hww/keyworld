@@ -66,6 +66,12 @@ public class Website extends BaseEntity {
     @TableField(value = "fLastAccessTime")
     private Date lastAccessTime;
 
+    @TableField(value = "fWebsiteType")
+    private String websiteType;
+
+    @TableField(value = "fUpdateSalesInfoSign")
+    private Integer updateSalesInfoSign;
+
     public String getWebsiteName() {
         return websiteName;
     }
@@ -208,5 +214,21 @@ public class Website extends BaseEntity {
 
     public void setBackgroundPassword(String backgroundPassword) {
         this.backgroundPassword = backgroundPassword;
+    }
+
+    public String getWebsiteType() {
+        return websiteType;
+    }
+
+    public void setWebsiteType(String websiteType) {
+        this.websiteType = websiteType;
+    }
+
+    public Integer getUpdateSalesInfoSign() {
+        return updateSalesInfoSign;
+    }
+
+    public void setUpdateSalesInfoSign(Integer updateSalesInfoSign) {
+        this.updateSalesInfoSign = updateSalesInfoSign;
     }
 }

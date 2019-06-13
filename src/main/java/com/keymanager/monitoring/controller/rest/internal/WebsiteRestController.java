@@ -2,8 +2,12 @@ package com.keymanager.monitoring.controller.rest.internal;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
+import com.keymanager.monitoring.criteria.SalesManageCriteria;
+import com.keymanager.monitoring.criteria.WebsiteBackGroundInfoCriteria;
 import com.keymanager.monitoring.criteria.WebsiteCriteria;
+import com.keymanager.monitoring.entity.SalesManage;
 import com.keymanager.monitoring.entity.Website;
+import com.keymanager.monitoring.service.SalesManageService;
 import com.keymanager.monitoring.service.WebsiteService;
 import com.keymanager.monitoring.vo.WebsiteVO;
 import com.keymanager.util.FileUtil;
@@ -12,14 +16,20 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.util.concurrent.FailureCallback;
+import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.util.concurrent.SuccessCallback;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +43,9 @@ public class WebsiteRestController extends SpringMVCBaseController {
 
     @Autowired
     private WebsiteService websiteService;
+
+    @Autowired
+    private SalesManageService salesManageService;
 
     @RequiresPermissions("/internal/website/searchWebsites")
     @RequestMapping(value = "/searchWebsites", method = RequestMethod.GET)
@@ -100,6 +113,52 @@ public class WebsiteRestController extends SpringMVCBaseController {
         try {
             List<String> uuids = (List<String>) requestMap.get("uuids");
             websiteService.deleteWebsites(uuids);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/deleteWebsites", method = RequestMethod.POST)
+    public ResponseEntity<?> updateSalesInfo(@RequestBody Map<String, Object> requestMap) {
+        try {
+            List uuids = (List) requestMap.get("uuids");
+
+            List<SalesManageCriteria> salesManages = salesManageService.getAllSalesInfo();
+            List<WebsiteBackGroundInfoCriteria> websites = websiteService.getBackGroundInfoForUpdateSalesInfo(uuids);
+
+            AsyncRestTemplate asyncRestTemplate = new AsyncRestTemplate();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.add("Accept", MediaType.APPLICATION_JSON_UTF8_VALUE);
+
+            MultiValueMap<String, Object> params = new LinkedMultiValueMap<>();
+            Map<String, Object> postMap = new HashMap<>();
+            postMap.put("sale_list", salesManages);
+            for (WebsiteBackGroundInfoCriteria website : websites) {
+                try {
+                    String url = "http://" + website.getBackgroundDomain() + "/dede/sales_management.php";
+                    postMap.put("username", website.getBackgroundUserName());
+                    postMap.put("password", website.getBackgroundPassword());
+                    params.set("params", postMap);
+                    HttpEntity<MultiValueMap> requestEntity = new HttpEntity<MultiValueMap>(params, headers);
+                    ListenableFuture<ResponseEntity<String>> forEntity = asyncRestTemplate.postForEntity(url, requestEntity, String.class);
+                    forEntity.addCallback(new SuccessCallback<ResponseEntity<String>>() {
+                        @Override
+                        public void onSuccess(ResponseEntity<String> stringResponseEntity) {
+                            System.out.println(stringResponseEntity.getBody());
+                        }
+                    }, new FailureCallback() {
+                        @Override
+                        public void onFailure(Throwable throwable) {
+                            System.out.println("basdbashdbsadsadsada");
+                        }
+                    });
+                } catch (Exception e) {
+                    continue;
+                }
+            }
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());

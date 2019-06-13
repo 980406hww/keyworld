@@ -2,6 +2,7 @@ package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.keymanager.monitoring.criteria.SalesManageCriteria;
 import com.keymanager.monitoring.dao.SalesManageDao;
 import com.keymanager.monitoring.entity.SalesManage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ public class SalesManageService extends ServiceImpl<SalesManageDao, SalesManage>
     @Autowired
     private SalesManageDao salesManageDao;
 
-    public List<Map> getAllSalesInfo() {
+    public List<SalesManageCriteria> getAllSalesInfo() {
         return salesManageDao.selectAllSalesInfo();
     }
 

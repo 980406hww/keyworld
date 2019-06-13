@@ -3,6 +3,7 @@ package com.keymanager.monitoring.service;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.common.email.AccessWebsiteFailMailService;
+import com.keymanager.monitoring.criteria.WebsiteBackGroundInfoCriteria;
 import com.keymanager.monitoring.criteria.WebsiteCriteria;
 import com.keymanager.monitoring.dao.WebsiteDao;
 import com.keymanager.monitoring.entity.Website;
@@ -118,5 +119,9 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
     public List<Website> accessExpireTimeURL() {
         List<Website> websites = websiteDao.searchExpireTime();
         return websites;
+    }
+
+    public List<WebsiteBackGroundInfoCriteria> getBackGroundInfoForUpdateSalesInfo(List uuids) {
+        return websiteDao.selectBackGroundInfoForUpdateSalesInfo(uuids);
     }
 }
