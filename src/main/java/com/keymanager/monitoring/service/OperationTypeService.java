@@ -2,8 +2,11 @@ package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.keymanager.monitoring.common.shiro.ShiroUser;
 import com.keymanager.monitoring.dao.OperationTypeDao;
 import com.keymanager.monitoring.entity.OperationType;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +52,18 @@ public class OperationTypeService extends ServiceImpl<OperationTypeDao, Operatio
     @Cacheable(value = "operationTypeList", key = "#terminalType")
     public List getOperationTypeValues(String terminalType) {
         List<String> list = operationTypeDao.getOperationTypeByTerminalType(terminalType);
+        list.add("");
+        Collections.sort(list);
+        return list;
+    }
+
+    public List getOperationTypeValuesByRole(String terminalType) {
+        Subject subject = SecurityUtils.getSubject();
+        int flag = 0;
+        if (subject.hasRole("AlgorithmGroup")) {
+            flag = 1;
+        }
+        List<String> list = operationTypeDao.getOperationTypeByTerminalTypeAndRole(terminalType, flag);
         list.add("");
         Collections.sort(list);
         return list;

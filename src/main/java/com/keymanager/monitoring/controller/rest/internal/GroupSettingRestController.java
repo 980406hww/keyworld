@@ -74,7 +74,8 @@ public class GroupSettingRestController extends SpringMVCBaseController {
         }
         Page<GroupVO> page = groupSettingService.searchGroupSettings(new Page<GroupVO>(currentPageNumber, pageSize), groupSettingCriteria);
         // String [] operationTypeValues = configService.getOperationTypeValues(groupSettingCriteria.getTerminalType());
-        List operationTypeValues =  operationTypeService.getOperationTypeValues(groupSettingCriteria.getTerminalType());
+        List operationTypeValues =  operationTypeService.getOperationTypeValuesByRole(groupSettingCriteria.getTerminalType());
+
         HttpSession session = request.getSession();
         String entryType = (String) session.getAttribute("entryType");
         String maxInvalidCount = configService.getConfig(Constants.CONFIG_TYPE_MAX_INVALID_COUNT, entryType).getValue();
