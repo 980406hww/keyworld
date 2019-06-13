@@ -20,6 +20,10 @@ public class QZOperationType extends BaseEntity {
   @TableField(value = "fOperationtype")
   private String operationType;//操作类型()
 
+  /* 达标优化类型 */
+  @TableField(value = "fOptimizationType")
+  private int optimizationType;
+
   @TableField(value = "fInitialKeywordCount")
   private Long initialKeywordCount;//起始首页词数()
 
@@ -156,4 +160,12 @@ public class QZOperationType extends BaseEntity {
     public void setStandardTime(Date standardTime) {
         this.standardTime = standardTime;
     }
+
+  public int getOptimizationType () {
+    return optimizationType;
+  }
+
+  public void setOptimizationType (int optimizationType) {
+    this.optimizationType = optimizationType;
+  }
 }

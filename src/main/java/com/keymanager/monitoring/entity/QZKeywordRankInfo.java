@@ -25,6 +25,10 @@ public class QZKeywordRankInfo extends BaseEntity {
     @TableField(value = "fWebsiteType")
     private String websiteType;
 
+    /* 数据处理状态 0 不处理 1 处理 */
+    @TableField(value = "fDataProcessingStatus")
+    private boolean dataProcessingStatus;
+
     /* 前10 对应爬取的t1 */
     @TableField(value = "fTopTen")
     private String topTen;
@@ -309,5 +313,13 @@ public class QZKeywordRankInfo extends BaseEntity {
 
     public void setAchieveTime(Date achieveTime) {
         this.achieveTime = achieveTime;
+    }
+
+    public boolean getDataProcessingStatus () {
+        return dataProcessingStatus;
+    }
+
+    public void setDataProcessingStatus (boolean dataProcessingStatus) {
+        this.dataProcessingStatus = dataProcessingStatus;
     }
 }

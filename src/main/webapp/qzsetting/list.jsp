@@ -1239,12 +1239,24 @@
 		<tr>
 			<td colspan="4" class="split_line"></td>
 		</tr>
-		<tr>
+		<tr id="optimizationType">
 			<td colspan="2" width="325px">
-				<input type="checkbox" name="operationType" id="PC" status="1" onclick="dealSettingTable('PC')" style=""/>电脑
+				<input type="checkbox" name="operationType" id="PC" status="1" onclick="showOptimizationType('PC')" style=""/>&nbsp;电脑&nbsp;
+				<div style="display: none" id="optimizationTypePC">
+					达标优化类型&nbsp;&nbsp;
+					<input type="checkbox" name="optimizationType" onclick="dealSettingTable(this, 'PC', 1)" value="1" />&nbsp;主优化&nbsp;
+					<input type="checkbox" name="optimizationType" onclick="dealSettingTable(this, 'PC', 1)" value="2" />&nbsp;次优化&nbsp;
+					<input type="checkbox" name="optimizationType" onclick="dealSettingTable(this, 'PC', 1)" value="0" />&nbsp;附带优化&nbsp;
+				</div>
 			</td>
 			<td colspan="2" width="325px">
-				<input type="checkbox" name="operationType" id="Phone" status="1" onclick="dealSettingTable('Phone')" style=""/>手机
+				<input type="checkbox" name="operationType" id="Phone" status="1" onclick="showOptimizationType('Phone')" style=""/>&nbsp;手机&nbsp;
+				<div style="display: none;" id="optimizationTypePhone">
+					达标优化类型&nbsp;&nbsp;
+					<input type="checkbox" name="optimizationType" onclick="dealSettingTable(this, 'Phone', 1)" value="1" />&nbsp;主优化&nbsp;
+					<input type="checkbox" name="optimizationType" onclick="dealSettingTable(this, 'Phone', 1)" value="2" />&nbsp;次优化&nbsp;
+					<input type="checkbox" name="optimizationType" onclick="dealSettingTable(this, 'Phone', 1)" value="0" />&nbsp;附带优化&nbsp;
+				</div>
 			</td>
 		</tr>
 		<tr>
@@ -1258,10 +1270,6 @@
 					<tr>
 						<td align="right" style="width:72px">电脑域名</td>
 						<td><input type="text" name="subDomainName" id="subDomainNamePC"  style="width:240px;margin-left: -6;"/></td>
-					</tr>
-					<tr>
-						<td align="right" style="width:72px">初始词量</td>
-						<td colspan="4"><input type="text" name="initialKeywordCount" id="initialKeywordCountPC" style="width:240px;margin-left: -6;"/></td>
 					</tr>
 					<tr>
 						<td align="right" style="width:72px">当前词量</td>
@@ -1319,10 +1327,6 @@
 					<tr>
 						<td align="right" style="width:72px;">手机域名</td>
 						<td><input type="text" name="subDomainName" id="subDomainNamePhone" style="width:240px;margin-left: -6;"/></td>
-					</tr>
-					<tr>
-						<td align="right" style="width:72px">初始词量</td>
-						<td colspan="4"><input type="text" name="initialKeywordCount" id="initialKeywordCountPhone"  style="width:240px;margin-left: -6;"/></td>
 					</tr>
 					<tr>
 						<td align="right" style="width:72px">当前词量</td>

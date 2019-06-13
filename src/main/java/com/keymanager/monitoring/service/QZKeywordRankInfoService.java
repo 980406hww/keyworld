@@ -110,36 +110,41 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
         qzKeywordRankInfo.setFullDate(externalQzKeywordRankInfoVo.getFullDate());
         qzKeywordRankInfo.setDate(externalQzKeywordRankInfoVo.getDate());
         qzKeywordRankInfo.setWebsiteType(externalQzKeywordRankInfoVo.getWebsiteType());
+        qzKeywordRankInfo.setDataProcessingStatus(externalQzKeywordRankInfoVo.getDataProcessingStatus());
         qzKeywordRankInfo.setBaiduRecord(externalQzKeywordRankInfoVo.getBaiduRecord());
         qzKeywordRankInfo.setBaiduRecordFullDate(externalQzKeywordRankInfoVo.getBaiduRecordFullDate());
-        if (StringUtils.isNotBlank(externalQzKeywordRankInfoVo.getTopTen())) {
-            this.setIncreaseAndTodayDifference(qzKeywordRankInfo);
-        }
-        List<QZChargeRuleVO> chargeRuleVos = qzChargeRuleService.findQZChargeRules(qzSettingUuid, externalQzKeywordRankInfoVo.getTerminalType(), externalQzKeywordRankInfoVo.getWebsiteType());
-        if (CollectionUtils.isNotEmpty(chargeRuleVos)) {
-            Map standard = this.standardCalculation(chargeRuleVos, qzKeywordRankInfo);
-            qzKeywordRankInfo.setDifferenceValue(Double.parseDouble(standard.get("differenceValue").toString()));
-            qzKeywordRankInfo.setAchieveLevel(Integer.parseInt(standard.get("achieveLevel").toString()));
-            qzKeywordRankInfo.setSumSeries(Integer.parseInt(standard.get("sumSeries").toString()));
-            qzKeywordRankInfo.setCurrentPrice(Integer.parseInt(standard.get("currentPrice").toString()));
 
-            QZOperationType qzOperationType = qzOperationTypeService.searchQZOperationTypeByQZSettingAndTerminalType(qzSettingUuid, externalQzKeywordRankInfoVo.getTerminalType());
-            QZKeywordRankInfo otherRankInfo = qzKeywordRankInfoDao.getQZKeywordRankInfo(qzSettingUuid, externalQzKeywordRankInfoVo.getTerminalType(), null);
-            int isStandardFlag = 0;
-            if (qzKeywordRankInfo.getAchieveLevel() > 0) {
-                qzKeywordRankInfo.setAchieveTime(new Date());
-                if (null == otherRankInfo){
-                    isStandardFlag = 1;
-                } else if (null != otherRankInfo.getAchieveLevel() && otherRankInfo.getAchieveLevel() > 0) {
-                    isStandardFlag = 1;
+        if (qzKeywordRankInfo.getDataProcessingStatus()) {
+            if (StringUtils.isNotBlank(externalQzKeywordRankInfoVo.getTopTen())) {
+                this.setIncreaseAndTodayDifference(qzKeywordRankInfo);
+            }
+
+            List<QZChargeRuleVO> chargeRuleVos = qzChargeRuleService.findQZChargeRules(qzSettingUuid, externalQzKeywordRankInfoVo.getTerminalType(), externalQzKeywordRankInfoVo.getWebsiteType());
+            if (CollectionUtils.isNotEmpty(chargeRuleVos)) {
+                Map standard = this.standardCalculation(chargeRuleVos, qzKeywordRankInfo);
+                qzKeywordRankInfo.setDifferenceValue(Double.parseDouble(standard.get("differenceValue").toString()));
+                qzKeywordRankInfo.setAchieveLevel(Integer.parseInt(standard.get("achieveLevel").toString()));
+                qzKeywordRankInfo.setSumSeries(Integer.parseInt(standard.get("sumSeries").toString()));
+                qzKeywordRankInfo.setCurrentPrice(Integer.parseInt(standard.get("currentPrice").toString()));
+
+                QZOperationType qzOperationType = qzOperationTypeService.searchQZOperationTypeByQZSettingAndTerminalType(qzSettingUuid, externalQzKeywordRankInfoVo.getTerminalType());
+                QZKeywordRankInfo otherRankInfo = qzKeywordRankInfoDao.getQZKeywordRankInfo(qzSettingUuid, externalQzKeywordRankInfoVo.getTerminalType(), null);
+                int isStandardFlag = 0;
+                if (qzKeywordRankInfo.getAchieveLevel() > 0) {
+                    qzKeywordRankInfo.setAchieveTime(new Date());
+                    if (null == otherRankInfo){
+                        isStandardFlag = 1;
+                    } else if (null != otherRankInfo.getAchieveLevel() && otherRankInfo.getAchieveLevel() > 0) {
+                        isStandardFlag = 1;
+                    }
+                } else {
+                    qzKeywordRankInfo.setAchieveTime(null);
                 }
-            } else {
-                qzKeywordRankInfo.setAchieveTime(null);
+                if (isStandardFlag == 1 && null == qzOperationType.getStandardTime()) {
+                    isStandardFlag = 2;
+                }
+                qzOperationTypeService.updateQZOperationTypeStandardTime(qzSettingUuid, externalQzKeywordRankInfoVo.getTerminalType(), isStandardFlag);
             }
-            if (isStandardFlag == 1 && null == qzOperationType.getStandardTime()) {
-                isStandardFlag = 2;
-            }
-            qzOperationTypeService.updateQZOperationTypeStandardTime(qzSettingUuid, externalQzKeywordRankInfoVo.getTerminalType(), isStandardFlag);
         }
         return qzKeywordRankInfo;
     }
