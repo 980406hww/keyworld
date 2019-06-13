@@ -39,6 +39,7 @@ function initSalesManageDialog(salesManage) {
     salesManageForm.find("#telephone").val(salesManage.telephone);
     salesManageForm.find("#qq").val(salesManage.qq);
     salesManageForm.find("#weChat").val(salesManage.weChat);
+    salesManageForm.find("#quickResponseCode").val(salesManage.quickResponseCode);
     salesManageForm.find("#email").val(salesManage.email);
     salesManageForm.find("#managePart").find("option[value='" + salesManage.managePart + "']").attr("selected", true);
 }
@@ -66,7 +67,8 @@ function showSalesManageDialog(uuid) {
     $("#salesManageDialog").dialog({
         resizable: false,
         width: 300,
-        height: 240,
+        height: 260,
+        title: uuid == null ? "新建销售" : "修改信息",
         modal: true,
         buttons: [
             {
@@ -104,19 +106,28 @@ function saveOperationType(uuid) {
     var salesManageForm = $("#salesManageDialog").find("#salesManageForm");
     var salesName = salesManageForm.find("#formSalesName").val();
     if (salesName == null || salesName == "") {
-        alert("请输入销售名称");
-        salesName.find("#formSalesName").focus();
+        $().toastmessage('showErrorToast', "请输入销售名称！", false);
         return;
     }
 
     var telephone = salesManageForm.find("#telephone").val();
     var qq = salesManageForm.find("#qq").val();
     var weChat = salesManageForm.find("#weChat").val();
+    var quickResponseCode = salesManageForm.find("#quickResponseCode").val();
     var email = salesManageForm.find("#email").val();
     var managePart = salesManageForm.find("#managePart").val();
 
-    if (telephone == "" || qq == "" || weChat == "" || email == "") {
-        $().toastmessage('showSuccessToast', "手机号，QQ号，微信号，邮箱须填一个以上", true);
+    if (telephone == "") {
+        $().toastmessage('showErrorToast', "请输入手机号码！", false);
+        return;
+    }
+    if (!/^1[34578][0-9]{9}$/.test(telephone)) {
+        $().toastmessage('showErrorToast', "手机号码格式不正确！", false);
+        return;
+    }
+
+    if (managePart == "") {
+        $().toastmessage('showErrorToast', "请选择销售负责的部分！", false);
         return;
     }
 
@@ -129,6 +140,7 @@ function saveOperationType(uuid) {
     salesManage.email = $.trim(email);
     salesManage.weChat = $.trim(weChat);
     salesManage.managePart = $.trim(managePart);
+    salesManage.quickResponseCode = $.trim(quickResponseCode);
     $.ajax({
         url: '/internal/salesManage/saveSalesManage',
         data: JSON.stringify(salesManage),
@@ -229,6 +241,9 @@ function deleteBatchOperationType() {
 
 // 更新至SEO站点
 function updateInfoToOther() {
+    if (confirm("确实要将信息更新至各个站点吗?") == false) {
+        return;
+    }
     $.ajax({
         url: '/internal/salesManage/updateInfoToOther',
         headers: {

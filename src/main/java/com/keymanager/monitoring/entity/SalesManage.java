@@ -21,6 +21,9 @@ public class SalesManage extends BaseEntity {
     @TableField(value = "fWeChat")
     private String weChat;
 
+    @TableField(value = "fQuickResponseCode")
+    private String quickResponseCode;
+
     @TableField(value = "fEmail")
     private String email;
 
@@ -57,6 +60,14 @@ public class SalesManage extends BaseEntity {
 
     public void setWeChat(String weChat) {
         this.weChat = weChat;
+    }
+
+    public String getQuickResponseCode() {
+        return quickResponseCode;
+    }
+
+    public void setQuickResponseCode(String quickResponseCode) {
+        this.quickResponseCode = quickResponseCode;
     }
 
     public String getEmail() {

@@ -10,6 +10,7 @@
         fTelephone AS 'telephone',
         fQQ AS 'qq',
         fWeChat AS 'weChat',
+        fQuickResponseCode AS 'quickResponseCode',
         fEmail AS 'email',
         fManagePart AS 'managePart',
         fCreateTime AS 'createTime',
@@ -22,36 +23,17 @@
         </if>
     </select>
 
-    <select id="searchOperationTypeListsPage" parameterType="com.keymanager.monitoring.entity.OperationType"
-            resultType="com.keymanager.monitoring.entity.OperationType">
+    <select id="selectAllSalesInfo" resultType="java.util.Map">
         SELECT
-        fUuid AS 'uuid',
-        fOperationTypeName AS 'operationTypeName',
-        fTerminalType AS 'terminalType',
-        fDescription AS 'description',
-        fRemark AS 'remark',
-        fStatus AS 'status',
-        fCreateTime AS 'createTime',
-        fUpdateTime AS 'updateTime'
+        fSalesName AS 'salesName',
+        fTelephone AS 'telephone',
+        fQQ AS 'qq',
+        fWeChat AS 'weChat',
+        fQuickResponseCode AS 'quickResponseCode',
+        fEmail AS 'email',
+        fManagePart AS 'managePart'
         FROM
-        t_operation_type
-        WHERE 1 = 1
-        AND fTerminalType = #{operationType.terminalType}
-        <if test="operationType.operationTypeName != null and operationType.operationTypeName != ''">
-            AND fOperationTypeName like '%${operationType.operationTypeName}%'
-        </if>
-    </select>
-
-    <select id="getOperationTypeByTerminalType" resultType="java.lang.String" parameterType="java.lang.String">
-        SELECT
-        fOperationTypeName AS 'operationTypeName'
-        FROM
-        t_operation_type
-        WHERE 1 = 1
-        AND
-        fTerminalType = #{terminalType}
-        AND
-        fStatus = 1
+        t_sales_manage
     </select>
 
 </mapper>

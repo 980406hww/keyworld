@@ -54,12 +54,13 @@
             <td style="padding-left: 7px;" width=10>
                 <input type="checkbox" onclick="selectAll(this)" id="selectAllChecked" title=""/>
             </td>
-            <td align="center" width=80>销售人员名称</td>
-            <td align="center" width=80>电话号码</td>
-            <td align="center" width=80>QQ号码</td>
+            <td align="center" width=70>销售人员名称</td>
+            <td align="center" width=70>电话号码</td>
+            <td align="center" width=70>QQ号码</td>
             <td align="center" width=80>微信号</td>
+            <td align="center" width=120>二维码链接</td>
             <td align="center" width=80>邮箱号</td>
-            <td align="center" width=80>负责部分</td>
+            <td align="center" width=70>负责部分</td>
             <td align="center" width=80>创建时间</td>
             <td align="center" width=80>更新时间</td>
             <td align="center" width=80>操作</td>
@@ -67,38 +68,44 @@
     </table>
 </div>
 
-<div id="salesManageDialog" title="保存" class="easyui-dialog" style="display: none">
+<div id="salesManageDialog" class="easyui-dialog" style="display: none">
     <form id="salesManageForm">
         <table style="font-size:12px" id="operationTypeTable" align="center" cellspacing="8">
             <tr>
                 <td style="width:80px" align="right">销售名称:</td>
                 <td>
                     <input type="hidden" name="uuid" id="uuid" style="width:180px;">
-                    <input type="text" name="formSalesName" id="formSalesName" style="width:180px;" title="">
+                    <input type="text" name="formSalesName" id="formSalesName" style="width:180px;" title="" autocomplete="off">
                 </td>
             </tr>
             <tr>
                 <td style="width:80px" align="right">电话号码:</td>
                 <td>
-                    <input type="text" name="telephone" id="telephone" style="width:180px;" title="">
+                    <input type="text" name="telephone" id="telephone" style="width:180px;" title="" autocomplete="off">
                 </td>
             </tr>
             <tr>
                 <td style="width:80px" align="right">QQ号:</td>
                 <td>
-                    <input type="text" name="qq" id="qq" style="width:180px;" title="">
+                    <input type="text" name="qq" id="qq" style="width:180px;" title="" autocomplete="off">
                 </td>
             </tr>
             <tr>
                 <td style="width:80px" align="right">微信号:</td>
                 <td>
-                    <input type="text" name="weChat" id="weChat" style="width:180px;" title="">
+                    <input type="text" name="weChat" id="weChat" style="width:180px;" title="" autocomplete="off">
+                </td>
+            </tr>
+            <tr>
+                <td style="width:80px" align="right">二维码链接:</td>
+                <td>
+                    <input type="text" name="quickResponseCode" id="quickResponseCode" style="width:180px;" title="" autocomplete="off">
                 </td>
             </tr>
             <tr>
                 <td style="width:80px" align="right">邮箱:</td>
                 <td>
-                    <input type="text" name="email" id="email" style="width:180px;" title="">
+                    <input type="text" name="email" id="email" style="width:180px;" title="" autocomplete="off">
                 </td>
             </tr>
             <tr>
@@ -124,12 +131,13 @@
                 <td width=10 style="padding-left: 7px;">
                     <input type="checkbox" name="uuid" value="${salesManage.uuid}" title=""/>
                 </td>
-                <td width=80>${salesManage.salesName}</td>
-                <td width=80>${salesManage.telephone}</td>
-                <td width=80>${salesManage.qq}</td>
+                <td width=70>${salesManage.salesName}</td>
+                <td width=70>${salesManage.telephone}</td>
+                <td width=70>${salesManage.qq}</td>
                 <td width=80>${salesManage.weChat}</td>
+                <td width=120>${salesManage.quickResponseCode}</td>
                 <td width=80>${salesManage.email}</td>
-                <td width=80>${salesManage.managePart}</td>
+                <td style="text-align: center" width=70>${salesManage.managePart}</td>
                 <td width=80 style="text-align: center">
                     <fmt:formatDate value="${salesManage.createTime}" pattern="yyyy-MM-dd"/>
                 </td>
