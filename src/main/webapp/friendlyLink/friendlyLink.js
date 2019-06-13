@@ -312,7 +312,7 @@ function initFriendlyLinkDialog(friendlyLink) {
 }
 
 function changePaging(currentPage, pageSize) {
-    var searchFriendlyLinkForm = $("#searchScreenedWebsiteForm");
+    var searchFriendlyLinkForm = $("#searchFriendlyLinkForm");
     searchFriendlyLinkForm.find("#currentPageNumberHidden").val(currentPage);
     searchFriendlyLinkForm.find("#pageSizeHidden").val(pageSize);
     searchFriendlyLinkForm.submit();
@@ -320,9 +320,9 @@ function changePaging(currentPage, pageSize) {
 
 function resetPageNumber() {
     var searchFriendlyLinkForm = $("#searchFriendlyLinkForm");
-    var friendlyLinkCustomer = searchFriendlyLinkForm.find("#friendlyLinkCustomer").val();
-    if(friendlyLinkCustomer != "") {
-        searchFriendlyLinkForm.find("#friendlyLinkCustomer").val($.trim(friendlyLinkCustomer));
+    var customerInfo = searchFriendlyLinkForm.find("#customerInfo").val();
+    if(customerInfo != "") {
+        searchFriendlyLinkForm.find("#customerInfo").val($.trim(customerInfo));
     }
     var friendlyLinkName = searchFriendlyLinkForm.find("#friendlyLinkName").val();
     if(friendlyLinkName != "") {

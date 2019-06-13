@@ -28,10 +28,12 @@
 	<select id="searchWebsites" parameterType="com.keymanager.monitoring.criteria.WebsiteCriteria" resultType="com.keymanager.monitoring.vo.WebsiteVO">
 		SELECT
 			COUNT(fl.fUuid) AS friendlyLinkCount,
+			COUNT(a.fUuid) AS advertisingCount,
 			<include refid="selectCol" />
 		FROM
 			t_website w
 		LEFT JOIN t_friendly_link fl ON w.fUuid = fl.fWebsiteUuid
+		LEFT JOIN t_advertising a ON w.fUuid = a.fWebsiteUuid
 		WHERE 1 = 1
 		<if test="websiteCriteria.websiteName != null and websiteCriteria.websiteName != ''">AND w.fWebsiteName LIKE '%${websiteCriteria.websiteName}%'</if>
 		<if test="websiteCriteria.domain != null and websiteCriteria.domain != ''">AND w.fDomain LIKE '%${websiteCriteria.domain}%'</if>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.AdvertisingDao">
+
+    <sql id="advertisingColID">
+        a.fUuid	AS	'uuid',
+        a.fWebsiteUuid AS 'websiteUuid',
+        a.fCustomerUuid AS 'customerUuid',
+        a.fAdvertisingId AS 'advertisingId',
+        a.fAdvertisingAdName AS 'advertisingAdName',
+        a.fAdvertisingTagname AS 'advertisingTagname',
+        a.fAdvertisingType AS 'advertisingType',
+        a.fAdvertisingArcType AS 'advertisingArcType',
+        a.fAdvertisingTimeSet AS 'advertisingTimeSet',
+        a.fAdvertisingStarttime AS 'advertisingStarttime',
+        a.fAdvertisingEndtime AS 'advertisingEndtime',
+        a.fAdvertisingNormbody AS 'advertisingNormbody',
+        a.fAdvertisingExpbody AS 'advertisingExpbody',
+        a.fRenewTime AS 'renewTime',
+        a.fCreateTime AS 'createTime',
+        a.fUpdateTime AS 'updateTime'
+    </sql>
+
+    <select id="searchAdvertisingListsPage" parameterType="com.keymanager.monitoring.entity.Advertising" resultType="com.keymanager.monitoring.entity.Advertising">
+        SELECT
+        c.fContactPerson AS 'customerInfo',
+        <include refid="advertisingColID"/>
+        FROM t_advertising a
+        JOIN t_customer c
+        ON a.fCustomerUuid = c.fUuid
+        WHERE a.fWebsiteUuid = #{advertisingCriteria.websiteUuid}
+        <if test="advertisingCriteria.advertisingAdName != null and advertisingCriteria.advertisingAdName != ''">
+            AND a.fAdvertisingAdName LIKE '${advertisingCriteria.advertisingAdName}%'
+        </if>
+        <if test="advertisingCriteria.customerInfo != null and advertisingCriteria.customerInfo != ''">
+            AND c.fContactPerson LIKE '${advertisingCriteria.customerInfo}%'
+        </if>
+        <if test="advertisingCriteria.expire != null and advertisingCriteria.expire != ''">
+            AND a.fAdvertisingEndtime <![CDATA[<]]> NOW()
+        </if>
+    </select>
+
+    <select id="getAdvertising" parameterType="com.keymanager.monitoring.entity.Advertising" resultType="com.keymanager.monitoring.entity.Advertising">
+        SELECT
+        c.fContactPerson AS 'customerInfo',
+        <include refid="advertisingColID"/>
+        FROM t_advertising a
+        JOIN t_customer c
+        ON a.fCustomerUuid = c.fUuid
+        WHERE a.fUuid = #{uuid}
+    </select>
+
+    <select id="searchAdvertisingIds" resultType="java.lang.String">
+        SELECT
+        fAdvertisingId
+        FROM t_advertising
+        WHERE fWebsiteUuid = #{websiteUuid}
+        AND fUuid IN
+        <foreach collection="uuids" item="uuid" open="(" separator="," close=")">
+            #{uuid}
+        </foreach>
+    </select>
+</mapper>

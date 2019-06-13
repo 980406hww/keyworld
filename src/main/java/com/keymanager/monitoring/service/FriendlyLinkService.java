@@ -120,13 +120,11 @@ public class FriendlyLinkService extends ServiceImpl<FriendlyLinkDao, FriendlyLi
         if ("add".equals(type)){
             requestMap.add("dopost", "add");
             JSONObject jsonObject = JSONObject.fromObject(connectionCMS(requestMap, "add", website.getBackgroundDomain()));
-            Map result = new HashedMap();
-            result.put("id", jsonObject.get("id"));
-            result.put("logo", jsonObject.get("logo"));
             friendlyLink.setFriendlyLinkId((Integer) jsonObject.get("id"));
             friendlyLink.setFriendlyLinkLogo((String) jsonObject.get("logo"));
         }else {
             requestMap.add("dopost", "saveedit");
+            requestMap.add("id", friendlyLink.getFriendlyLinkId());
             JSONObject jsonObject = JSONObject.fromObject(connectionCMS(requestMap, "saveedit", website.getBackgroundDomain()));
             if (!StringUtils.isEmpty(jsonObject.get("logo"))){
                 friendlyLink.setFriendlyLinkLogo((String) jsonObject.get("logo"));
@@ -148,8 +146,8 @@ public class FriendlyLinkService extends ServiceImpl<FriendlyLinkDao, FriendlyLi
     public List<FriendlyLinkVO> selectConnectionCMS(Long websiteUuid, String ip){
         Website website = websiteService.getWebsite(websiteUuid);
         MultiValueMap requestMap = new LinkedMultiValueMap();
-        requestMap.add("username", "admin");
-        requestMap.add("password", "admin");
+        requestMap.add("username", website.getBackgroundUserName());
+        requestMap.add("password", website.getBackgroundPassword());
         requestMap.add("ip", ip);
         requestMap.add("dopost", "select");
         String resultJsonString = connectionCMS(requestMap,"select", website.getBackgroundDomain());

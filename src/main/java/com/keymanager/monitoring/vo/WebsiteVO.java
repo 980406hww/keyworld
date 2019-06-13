@@ -24,6 +24,7 @@ public class WebsiteVO{
     private Date accessFailTime;
     private Date lastAccessTime;
     private int friendlyLinkCount;
+    private int advertisingCount;
     private Date updateTime;
     private Date createTime;
 
@@ -201,5 +202,13 @@ public class WebsiteVO{
 
     public void setBackgroundPassword(String backgroundPassword) {
         this.backgroundPassword = backgroundPassword;
+    }
+
+    public int getAdvertisingCount() {
+        return advertisingCount;
+    }
+
+    public void setAdvertisingCount(int advertisingCount) {
+        this.advertisingCount = advertisingCount;
     }
 }
