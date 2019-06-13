@@ -56,9 +56,6 @@
         <include refid="selectCol" />
         FROM t_group_setting gs
         WHERE gs.fGroupUuid = #{groupUuid}
-        <if test="operationType != null and operationType != ''">
-            AND gs.fOperationType = #{operationType}
-        </if>
         ORDER BY gs.fCreateTime DESC
     </select>
 
