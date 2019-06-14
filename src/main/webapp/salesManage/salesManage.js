@@ -152,7 +152,7 @@ function saveOperationType(uuid) {
         return;
     }
     if(salesManage.quickResponseCode == "error decoding QR Code" || salesManage.quickResponseCode == "Failed to load the image"){
-        salesManage.quickResponseCode = "";
+        salesManage.quickResponseCode = null;
     }
     $.ajax({
         url: '/internal/salesManage/saveSalesManage',

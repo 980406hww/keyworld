@@ -62,7 +62,7 @@
             </tr>
             <tr height="23">
                 <td width="70" align="center">网站域名</td>
-                <td width="70" align="center">网站类别</td>
+                <td width="70" align="center">网站类型</td>
                 <td width="70" align="center">友情链接</td>
                 <td width="70" align="center">广告</td>
                 <td width="70" align="center">注册商</td>
@@ -93,7 +93,7 @@
             <td width=80><fmt:formatDate value="${website.lastAccessTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
             <td width=80><fmt:formatDate value="${website.updateTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
             <td width=70><a target="_blank" href="http://${website.domain}">${website.domain}</a></td>
-            <td width=70>${websiteTypeMap.get(website.websiteType)}</td>
+            <td width=70 align="center">${websiteTypeMap.get(website.websiteType)}</td>
             <td width=70><a href="#" onclick="searchFriendlyLinks('/internal/friendlyLink/searchFriendlyLinkLists/${website.uuid}')">${website.friendlyLinkCount}</a></td>
             <td width=70><a href="#" onclick="searchAdvertisings('/internal/advertising/searchAdvertisingLists/${website.uuid}')">${website.advertisingCount}</a></td>
             <td width=70>${website.registrar}</td>
@@ -102,7 +102,7 @@
             <td width=70>${website.backgroundDomain}</td>
             <td width=70>${website.backgroundUserName}</td>
             <td width=70>${website.backgroundPassword}</td>
-            <td width=70>${(website.updateSalesInfoSign == 1 || website.updateSalesInfoSign == 0) ? "正常" : website.updateSalesInfoSign == 2 ? "操作失败" : "请求异常"}</td>
+            <td width=70 align="center">${(website.updateSalesInfoSign == 1 || website.updateSalesInfoSign == 0) ? "正常" : website.updateSalesInfoSign == 2 ? "操作失败" : "请求异常"}</td>
             <td width=70>${website.databaseName}</td>
             <td width=70>${website.databaseUserName}</td>
             <td width=70>${website.databasePassword}</td>
