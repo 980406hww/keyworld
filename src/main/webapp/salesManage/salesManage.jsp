@@ -42,8 +42,6 @@
                         <input type="button" class="ui-button ui-widget ui-corner-all" value=" 添加 " onclick="showSalesManageDialog(null)"/>
                         &nbsp;
                         <input type="button" class="ui-button ui-widget ui-corner-all" value=" 删除所选 " onclick="deleteBatchOperationType(this)"/>
-                        &nbsp;
-                        <input type="button" class="ui-button ui-widget ui-corner-all" value=" 更新至SEO站点 " onclick="updateInfoToOther()"/>
                     </div>
                 </form>
             </td>
@@ -113,10 +111,9 @@
                 <td>
                     <select id="managePart" name="managePart" style="width: 180px" title="">
                         <option value="" selected="selected">请选择</option>
-                        <option value="ASO">ASO</option>
-                        <option value="整站">整站</option>
-                        <option value="负面">负面</option>
-                        <option value="亚马逊">亚马逊</option>
+                        <c:forEach items="${websiteTypeMap}" var="websiteType">
+                            <option value="${websiteType.key}">${websiteType.value}</option>
+                        </c:forEach>
                     </select>
                 </td>
             </tr>
@@ -137,7 +134,7 @@
                 <td width=80>${salesManage.weChat}</td>
                 <td width=120>${salesManage.quickResponseCode}</td>
                 <td width=80>${salesManage.email}</td>
-                <td style="text-align: center" width=70>${salesManage.managePart}</td>
+                <td style="text-align: center" width=70>${websiteTypeMap[salesManage.managePart]}</td>
                 <td width=80 style="text-align: center">
                     <fmt:formatDate value="${salesManage.createTime}" pattern="yyyy-MM-dd"/>
                 </td>

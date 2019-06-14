@@ -239,32 +239,6 @@ function deleteBatchOperationType() {
     });
 }
 
-// 更新至SEO站点
-function updateInfoToOther() {
-    if (confirm("确实要将信息更新至各个站点吗?") == false) {
-        return;
-    }
-    $.ajax({
-        url: '/internal/salesManage/updateInfoToOther',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        timeout: 5000,
-        type: 'POST',
-        success: function (data) {
-            if (data) {
-                $().toastmessage('showSuccessToast', "更新成功", true);
-            } else {
-                $().toastmessage('showErrorToast', "更新失败", true);
-            }
-        },
-        error: function () {
-            $().toastmessage('showErrorToast', "更新失败");
-        }
-    });
-}
-
 // 获取选中的UUID
 function getSelectedIDs() {
     var uuids = '';

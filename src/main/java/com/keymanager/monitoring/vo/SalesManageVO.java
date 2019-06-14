@@ -1,9 +1,9 @@
-package com.keymanager.monitoring.criteria;
+package com.keymanager.monitoring.vo;
 
 /**
- * @author wjianwu 2019/6/13 13:59
+ * @author wjianwu 2019/6/14 11:32
  */
-public class SalesManageCriteria {
+public class SalesManageVO {
 
     private String salesName;
     private String telephone;

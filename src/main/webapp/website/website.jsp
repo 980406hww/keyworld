@@ -27,7 +27,7 @@
             <shiro:hasPermission name="/internal/website/deleteWebsites">
             <input type="button" onclick="deleteWebsites()" value=" 删除所选 ">&nbsp;&nbsp;
             </shiro:hasPermission>
-            <input type="button" onclick="updateSalesInfo()" value=" 更新销售信息 ">&nbsp;&nbsp;
+            <input type="button" onclick="putSalesInfoToWebsite()" value=" 推送销售信息至站点 ">&nbsp;&nbsp;
         </form>
     </div>
     <table style="font-size:12px; width: 100%;" id="headerTable">
@@ -54,14 +54,15 @@
                 <td width="80" align="center" rowspan="2">发现故障时间</td>
                 <td width="80" align="center" rowspan="2">最近访问时间</td>
                 <td width="80" align="center" rowspan="2">更新时间</td>
-                <td width="270" align="center" colspan="6">域名信息</td>
-                <td width="210" colspan="3" align="center">域名信息</td>
+                <td width="270" align="center" colspan="7">域名信息</td>
+                <td width="210" colspan="4" align="center">后台信息</td>
                 <td width="210" colspan="3" align="center">数据库信息</td>
                 <td width="210" colspan="3" align="center">服务器信息</td>
                 <td width="80" align="center" rowspan="2">操作</td>
             </tr>
             <tr height="23">
                 <td width="70" align="center">网站域名</td>
+                <td width="70" align="center">网站类别</td>
                 <td width="70" align="center">友情链接</td>
                 <td width="70" align="center">广告</td>
                 <td width="70" align="center">注册商</td>
@@ -70,6 +71,7 @@
                 <td width="70" align="center">后台链接</td>
                 <td width="70" align="center">后台用户名</td>
                 <td width="70" align="center">后台密码</td>
+                <td width="70" align="center">更新销售信息状态</td>
                 <td width="70" align="center">数据库名称</td>
                 <td width="70" align="center">用户名</td>
                 <td width="70" align="center">密码</td>
@@ -91,6 +93,7 @@
             <td width=80><fmt:formatDate value="${website.lastAccessTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
             <td width=80><fmt:formatDate value="${website.updateTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
             <td width=70><a target="_blank" href="http://${website.domain}">${website.domain}</a></td>
+            <td width=70>${websiteTypeMap.get(website.websiteType)}</td>
             <td width=70><a href="#" onclick="searchFriendlyLinks('/internal/friendlyLink/searchFriendlyLinkLists/${website.uuid}')">${website.friendlyLinkCount}</a></td>
             <td width=70><a href="#" onclick="searchAdvertisings('/internal/advertising/searchAdvertisingLists/${website.uuid}')">${website.advertisingCount}</a></td>
             <td width=70>${website.registrar}</td>
@@ -99,6 +102,7 @@
             <td width=70>${website.backgroundDomain}</td>
             <td width=70>${website.backgroundUserName}</td>
             <td width=70>${website.backgroundPassword}</td>
+            <td width=70>${(website.updateSalesInfoSign == 1 || website.updateSalesInfoSign == 0) ? "正常" : website.updateSalesInfoSign == 2 ? "操作失败" : "请求异常"}</td>
             <td width=70>${website.databaseName}</td>
             <td width=70>${website.databaseUserName}</td>
             <td width=70>${website.databasePassword}</td>
@@ -209,10 +213,10 @@
             <tr>
                 <td align="right">网站类型:</td>
                 <td>
-                    <select name="websiteType" style="width: 150px;" title="">
-                        <option value="" selected="selected"></option>
-                        <c:forEach items="${websiteTypeList}" var="websiteType">
-                            <option value="${websiteType}">${websiteTypeMap[websiteType]}</option>
+                    <select id="websiteType" name="websiteType" style="width: 150px;" title="">
+                        <option value="" selected="selected">请选择</option>
+                        <c:forEach items="${websiteTypeMap}" var="websiteType">
+                            <option value="${websiteType.key}">${websiteType.value}</option>
                         </c:forEach>
                     </select>
                 </td>

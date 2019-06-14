@@ -58,7 +58,6 @@ public class WebsiteRestController extends SpringMVCBaseController {
         ModelAndView modelAndView = new ModelAndView("/website/website");
         Page<WebsiteVO> page = websiteService.searchWebsites(new Page<WebsiteVO>(currentPageNumber, pageSize), websiteCriteria);
         modelAndView.addObject("websiteCriteria", websiteCriteria);
-        modelAndView.addObject("websiteTypeList", WebsiteTypeEnum.changeToMap().keySet());
         modelAndView.addObject("websiteTypeMap", WebsiteTypeEnum.changeToMap());
         modelAndView.addObject("page", page);
         return modelAndView;
@@ -111,8 +110,8 @@ public class WebsiteRestController extends SpringMVCBaseController {
         }
     }
 
-    @RequestMapping(value = "/updateSalesInfo", method = RequestMethod.POST)
-    public ResponseEntity<?> updateSalesInfo(@RequestBody Map<String, Object> requestMap) {
+    @RequestMapping(value = "/putSalesInfoToWebsite", method = RequestMethod.POST)
+    public ResponseEntity<?> putSalesInfoToWebsite(@RequestBody Map<String, Object> requestMap) {
         try {
             List uuids = (List) requestMap.get("uuids");
             websiteService.putSalesInfoToWebsite(uuids);

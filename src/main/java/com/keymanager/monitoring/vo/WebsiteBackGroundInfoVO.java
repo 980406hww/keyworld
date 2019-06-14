@@ -1,9 +1,9 @@
-package com.keymanager.monitoring.criteria;
+package com.keymanager.monitoring.vo;
 
 /**
- * @author wjianwu 2019/6/13 14:04
+ * @author wjianwu 2019/6/14 11:29
  */
-public class WebsiteBackGroundInfoCriteria {
+public class WebsiteBackGroundInfoVO {
 
     private Long uuid;
     private String backgroundDomain;

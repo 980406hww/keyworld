@@ -3,12 +3,11 @@ package com.keymanager.monitoring.service;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.keymanager.monitoring.common.email.AccessWebsiteFailMailService;
-import com.keymanager.monitoring.criteria.SalesManageCriteria;
-import com.keymanager.monitoring.criteria.WebsiteBackGroundInfoCriteria;
 import com.keymanager.monitoring.criteria.WebsiteCriteria;
 import com.keymanager.monitoring.dao.WebsiteDao;
 import com.keymanager.monitoring.entity.Website;
+import com.keymanager.monitoring.vo.SalesManageVO;
+import com.keymanager.monitoring.vo.WebsiteBackGroundInfoVO;
 import com.keymanager.monitoring.vo.WebsiteVO;
 import com.keymanager.util.Utils;
 import org.slf4j.Logger;
@@ -137,7 +136,7 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
     }
 
     public void putSalesInfoToWebsite(List uuids){
-        List<WebsiteBackGroundInfoCriteria> websites = websiteDao.selectBackGroundInfoForUpdateSalesInfo(uuids);
+        List<WebsiteBackGroundInfoVO> websites = websiteDao.selectBackGroundInfoForUpdateSalesInfo(uuids);
 
         AsyncRestTemplate asyncRestTemplate = new AsyncRestTemplate();
         HttpHeaders headers = new HttpHeaders();
@@ -146,8 +145,8 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
 
         MultiValueMap<String, Object> params = new LinkedMultiValueMap<>();
         Map<String, Object> postMap = new HashMap<>();
-        for (final WebsiteBackGroundInfoCriteria website : websites) {
-            List<SalesManageCriteria> salesManages = salesManageService.getAllSalesInfo(website.getWebsiteType());
+        for (final WebsiteBackGroundInfoVO website : websites) {
+            List<SalesManageVO> salesManages = salesManageService.getAllSalesInfo(website.getWebsiteType());
             postMap.put("sale_list", salesManages);
             postMap.put("sign", website.getUuid());
             postMap.put("username", website.getBackgroundUserName());

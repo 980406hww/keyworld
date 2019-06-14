@@ -123,6 +123,7 @@ function assignment(websiteInfo) {
     websiteForm.find("#serverUserName").val(websiteInfo.serverUserName);
     websiteForm.find("#serverPassword").val(websiteInfo.serverPassword);
     websiteForm.find("#expiryTime").val(userDate(websiteInfo.expiryTime));
+    $("#websiteForm #websiteType option[value='" + websiteInfo.websiteType + "']").prop("selected", "selected");
 }
 function userDate(uData){
     var myDate = new Date(uData);
@@ -230,7 +231,7 @@ function saveWebsite(uuid) {
     websiteObj.backgroundDomain = $.trim($("#websiteForm").find("#backgroundDomain").val());
     websiteObj.backgroundUserName = $.trim($("#websiteForm").find("#backgroundUserName").val());
     websiteObj.backgroundPassword = $.trim($("#websiteForm").find("#backgroundPassword").val());
-    websiteObj.websiteType = $.trim($("#websiteForm").find("#websiteType").text());
+    websiteObj.websiteType = $.trim($("#websiteForm").find("#websiteType").val());
     websiteObj.databaseName = $.trim($("#websiteForm").find("#databaseName").val());
     websiteObj.databaseUserName = $.trim($("#websiteForm").find("#databaseUserName").val());
     websiteObj.databasePassword = $.trim($("#websiteForm").find("#databasePassword").val());
@@ -239,6 +240,10 @@ function saveWebsite(uuid) {
     websiteObj.serverPassword = $.trim($("#websiteForm").find("#serverPassword").val());
     if(websiteObj.domain == null || websiteObj.domain=="" || websiteObj.domain ==''){
         alert("域名不能为空");
+        return;
+    }
+    if(websiteObj.websiteType == null || websiteObj.websiteType == ""){
+        alert("请选择网站类型");
         return;
     }
     $.ajax({
@@ -263,17 +268,17 @@ function saveWebsite(uuid) {
     });
 
 }
-function updateSalesInfo() {
+function putSalesInfoToWebsite() {
     var uuids = getSelectedIDs();
     if (uuids === '') {
-        alert('请选择要更新的网站');
+        alert('请选择要推送的网站');
         return;
     }
     if (confirm("确定要更新销售信息到这些网站吗?") == false) return;
     var postData = {};
     postData.uuids = uuids.split(",");
     $.ajax({
-        url: '/internal/website/updateSalesInfo',
+        url: '/internal/website/putSalesInfoToWebsite',
         data: JSON.stringify(postData),
         headers: {
             'Accept': 'application/json',

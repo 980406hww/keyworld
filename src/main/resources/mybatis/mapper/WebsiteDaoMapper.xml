@@ -21,6 +21,8 @@
 		w.fAccessFailCount AS "accessFailCount",
 		w.fLastAccessTime AS "lastAccessTime",
 		w.fAccessFailTime AS "accessFailTime",
+		w.fWebsiteType AS "websiteType",
+		w.fUpdateSalesInfoSign AS "updateSalesInfoSign",
 		w.fUpdateTime AS "updateTime",
 		w.fCreateTime AS "createTime"
 	</sql>
@@ -59,7 +61,7 @@
 		fExpiryTime <![CDATA[<=]]> date_add(NOW(), interval 1 MONTH)
 	</select>
 
-	<select id="selectBackGroundInfoForUpdateSalesInfo" resultType="com.keymanager.monitoring.criteria.WebsiteBackGroundInfoCriteria">
+	<select id="selectBackGroundInfoForUpdateSalesInfo" resultType="com.keymanager.monitoring.vo.WebsiteBackGroundInfoVO">
 		SELECT
 		fUuid AS 'uuid',
 		fBackgroundDomain AS 'backgroundDomain',

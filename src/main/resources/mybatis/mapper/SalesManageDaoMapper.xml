@@ -23,7 +23,7 @@
         </if>
     </select>
 
-    <select id="selectAllSalesInfo" parameterType="java.lang.String" resultType="com.keymanager.monitoring.criteria.SalesManageCriteria">
+    <select id="selectAllSalesInfo" parameterType="java.lang.String" resultType="com.keymanager.monitoring.vo.SalesManageVO">
         SELECT
         fSalesName AS 'salesName',
         fTelephone AS 'telephone',
