@@ -34,4 +34,6 @@ public interface FriendlyLinkDao extends BaseMapper<FriendlyLink> {
     List<Integer> selectByWebsiteId(@Param("websiteUuid") Long websiteUuid);
 
     Long selectIdByFriendlyLinkId(@Param("websiteUuid") Long websiteUuid, @Param("friendlyLinkId") int friendlyLinkId);
+
+    int searchFriendlyLinkCount(@Param("websiteUuid") Long websiteUuid);
 }

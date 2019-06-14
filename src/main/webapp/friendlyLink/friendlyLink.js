@@ -105,7 +105,7 @@ function showFriendlyLinkDialog(websiteUuid, uuid) {
             }
         });
         $.ajax({
-            url: "/internal/friendlyLink/searchFriendlyLinkTypeList",
+            url: "/internal/friendlyLink/searchFriendlyLinkTypeList/" + websiteUuid,
             type: "GET",
             success: function (friendlyLinkTypeList) {
                 $("#friendlyLinkType_list").find('option').remove();
@@ -215,6 +215,8 @@ function saveFriendlyLink(websiteUuid, uuid) {
     formData.append('friendlyLinkIsCheck', $.trim(friendlyLinkIsCheck));
     formData.append('friendlyLinkSortRank', $.trim(friendlyLinkSortRank));
     formData.append('friendlyLinkType', $.trim(friendlyLinkType));
+    var friendlyLinkTypeId = friendlyLinkType.split('_')[friendlyLinkType.split('_').length - 1];
+    formData.append('friendlyLinkTypeId', $.trim(friendlyLinkTypeId));
     formData.append('friendlyLinkMsg', $.trim(friendlyLinkMsg));
     formData.append('expirationTime', $.trim(expirationTime));
     formData.append('friendlyLinkEmail', $.trim(friendlyLinkEmail));
@@ -322,6 +324,7 @@ function initFriendlyLinkDialog(friendlyLink) {
     friendlyLinkForm.find("#friendlyLinkEmail").val(friendlyLink.friendlyLinkEmail);
     friendlyLinkForm.find("#friendlyLinkType").val(friendlyLink.friendlyLinkType);
     friendlyLinkForm.find($('input:radio[name="friendlyLinkIsCheck"]:checked').val(friendlyLink.friendlyLinkIsCheck));
+    $("input[type=radio][name=friendlyLinkIsCheck][value="+friendlyLink.friendlyLinkIsCheck+"]").attr("checked",true);
     friendlyLinkForm.find("#expirationTime").val(userDate(friendlyLink.expirationTime));
     friendlyLinkForm.find("#friendlyLinkMsg").val(friendlyLink.friendlyLinkMsg);
 }

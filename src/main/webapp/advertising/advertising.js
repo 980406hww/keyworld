@@ -88,37 +88,36 @@ function getSelectedIDs() {
 function showAdvertisingDialog(websiteUuid, uuid) {
     if (websiteUuid == null) {
         $('#advertisingForm')[0].reset();
-    }else {
-        $.ajax({
-            url: "/internal/advertising/searchAdvertisingAllTypeAndCustomerList/" + websiteUuid,
-            type: "GET",
-            success: function (advertisingAllTypeAndCustomerList) {
-                $("#customer_list").find('option').remove();
-                $("#advertisingType_list").find('option').remove();
-                $("#advertisingArcType_list").find('option').remove();
-                if (advertisingAllTypeAndCustomerList.customerList != null) {
-                    $.each(advertisingAllTypeAndCustomerList.customerList, function (idx, val) {
-                        $("#customer_list").append("<option value='" + val.contactPerson + "_" + val.uuid + "'></option>")
-                    });
-                }
-                if (advertisingAllTypeAndCustomerList.advertisingType != null) {
-                    $("#advertisingType_list").append("<option value='默认分类_0'></option>");
-                    $.each(advertisingAllTypeAndCustomerList.advertisingType, function (idx, val) {
-                        $("#advertisingType_list").append("<option value='"  +val.typename + "_"  + val.id + "'></option>")
-                    });
-                }
-                if (advertisingAllTypeAndCustomerList.advertisingArcType != null) {
-                    $("#advertisingArcType_list").append("<option value='没有同名标识所有栏目_0'></option>");
-                    $.each(advertisingAllTypeAndCustomerList.advertisingArcType, function (idx, val) {
-                        $("#advertisingArcType_list").append("<option value='" + val.typename + "_" + val.id + "'></option>")
-                    });
-                }
-            },
-            error: function () {
-                $().toastmessage('showErrorToast', "获取信息失败！");
-            }
-        });
     }
+    $.ajax({
+        url: "/internal/advertising/searchAdvertisingAllTypeAndCustomerList/" + websiteUuid,
+        type: "GET",
+        success: function (advertisingAllTypeAndCustomerList) {
+            $("#customer_list").find('option').remove();
+            $("#advertisingType_list").find('option').remove();
+            $("#advertisingArcType_list").find('option').remove();
+            if (advertisingAllTypeAndCustomerList.customerList != null) {
+                $.each(advertisingAllTypeAndCustomerList.customerList, function (idx, val) {
+                    $("#customer_list").append("<option value='" + val.contactPerson + "_" + val.uuid + "'></option>")
+                });
+            }
+            if (advertisingAllTypeAndCustomerList.advertisingType != null) {
+                $("#advertisingType_list").append("<option value='默认分类_0'></option>");
+                $.each(advertisingAllTypeAndCustomerList.advertisingType, function (idx, val) {
+                    $("#advertisingType_list").append("<option value='"  +val.typename + "_"  + val.id + "'></option>")
+                });
+            }
+            if (advertisingAllTypeAndCustomerList.advertisingArcType != null) {
+                $("#advertisingArcType_list").append("<option value='没有同名标识所有栏目_0'></option>");
+                $.each(advertisingAllTypeAndCustomerList.advertisingArcType, function (idx, val) {
+                    $("#advertisingArcType_list").append("<option value='" + val.typename + "_" + val.id + "'></option>")
+                });
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "获取信息失败！");
+        }
+    });
     if (uuid == 0){
         changeAdvertisingBodySubmit("code");
     }else {
@@ -330,6 +329,7 @@ function initAdvertisingDialog(advertising) {
     advertisingForm.find("#advertisingType").val(advertising.advertisingType);
     advertisingForm.find("#advertisingArcType").val(advertising.advertisingArcType);
     advertisingForm.find($('input:radio[name="advertisingTimeSet"]:checked').val(advertising.advertisingTimeSet));
+    $("input[type=radio][name=advertisingTimeSet][value="+advertising.advertisingTimeSet+"]").attr("checked",true);
     advertisingForm.find("#advertisingStarttime").val(userDate(advertising.advertisingStarttime));
     advertisingForm.find("#advertisingEndtime").val(userDate(advertising.advertisingEndtime));
     advertisingForm.find("#advertisingNormbody").val(advertising.advertisingNormbody);

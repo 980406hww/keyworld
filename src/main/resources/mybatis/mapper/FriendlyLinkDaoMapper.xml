@@ -65,7 +65,7 @@
     </select>
 
     <select id="selectMaxSortRank" resultType="java.lang.Integer">
-        SELECT MAX(fFriendlyLinkSortRank)
+        SELECT IFNULL(MAX(fFriendlyLinkSortRank),0)
         FROM t_friendly_link
         WHERE fWebsiteUuid = #{websiteUuid}
     </select>
@@ -150,5 +150,11 @@
         FROM t_friendly_link
         WHERE fWebsiteUuid = #{websiteUuid}
         AND fFriendlyLinkId = #{friendlyLinkId}
+    </select>
+
+    <select id="searchFriendlyLinkCount" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM t_friendly_link
+        WHERE fWebsiteUuid = #{websiteUuid}
     </select>
 </mapper>

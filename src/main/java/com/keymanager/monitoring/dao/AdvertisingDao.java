@@ -28,4 +28,6 @@ public interface AdvertisingDao extends BaseMapper<Advertising> {
     List<Integer> selectByWebsiteId(@Param("websiteUuid") Long websiteUuid);
 
     Long selectIdByAdvertisingId(@Param("websiteUuid") Long websiteUuid, @Param("advertisingId") int advertisingId);
+
+    int searchAdvertisingCount(@Param("websiteUuid") Long websiteUuid);
 }

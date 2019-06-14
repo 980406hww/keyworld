@@ -14,6 +14,8 @@ public class AdvertisingVO {
     private Date endtime;
     private String normbody;
     private String expbody;
+    private String typename;
+    private String r_typename;
 
     public int getAid() {
         return aid;
@@ -93,5 +95,21 @@ public class AdvertisingVO {
 
     public void setTagname(String tagname) {
         this.tagname = tagname;
+    }
+
+    public String getTypename() {
+        return typename;
+    }
+
+    public void setTypename(String typename) {
+        this.typename = typename;
+    }
+
+    public String getR_typename() {
+        return r_typename;
+    }
+
+    public void setR_typename(String r_typename) {
+        this.r_typename = r_typename;
     }
 }

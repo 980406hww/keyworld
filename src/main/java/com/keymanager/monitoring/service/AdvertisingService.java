@@ -10,6 +10,7 @@ import com.keymanager.monitoring.dao.FriendlyLinkDao;
 import com.keymanager.monitoring.entity.Advertising;
 import com.keymanager.monitoring.entity.FriendlyLink;
 import com.keymanager.monitoring.entity.Website;
+import com.keymanager.monitoring.enums.PutSalesInfoSignEnum;
 import com.keymanager.monitoring.vo.AdvertisingVO;
 import com.keymanager.monitoring.vo.FriendlyLinkVO;
 import net.sf.json.JSONArray;
@@ -140,7 +141,11 @@ public class AdvertisingService extends ServiceImpl<AdvertisingDao, Advertising>
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new StringHttpMessageConverter(Charset.forName("utf-8")));
         String resultJsonString;
-        backgroundDomain = "http://".equals(backgroundDomain.substring(0,7).toLowerCase()) ? backgroundDomain : "http://" + backgroundDomain;
+        if (backgroundDomain.length() > 7){
+            backgroundDomain = "http://".equals(backgroundDomain.substring(0,7).toLowerCase()) ? backgroundDomain : "http://" + backgroundDomain;
+        }else {
+            backgroundDomain = "http://" + backgroundDomain;
+        }
         if ("add".equals(type)){
             resultJsonString = restTemplate.postForObject(backgroundDomain + "ad_m_add.php",  requestMap, String.class);
         }else if ("select".equals(type)){
@@ -155,7 +160,11 @@ public class AdvertisingService extends ServiceImpl<AdvertisingDao, Advertising>
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new StringHttpMessageConverter(Charset.forName("utf-8")));
         String resultJsonString;
-        backgroundDomain = "http://".equals(backgroundDomain.substring(0,7).toLowerCase()) ? backgroundDomain : "http://" + backgroundDomain;
+        if (backgroundDomain.length() > 7){
+            backgroundDomain = "http://".equals(backgroundDomain.substring(0,7).toLowerCase()) ? backgroundDomain : "http://" + backgroundDomain;
+        }else {
+            backgroundDomain = "http://" + backgroundDomain;
+        }
         if ("add".equals(type)){
             resultJsonString = restTemplate.postForObject(backgroundDomain + "adtype_m_add.php",  requestMap, String.class);
         }else if ("select".equals(type)){
@@ -170,7 +179,11 @@ public class AdvertisingService extends ServiceImpl<AdvertisingDao, Advertising>
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new StringHttpMessageConverter(Charset.forName("utf-8")));
         String resultJsonString;
-        backgroundDomain = "http://".equals(backgroundDomain.substring(0,7).toLowerCase()) ? backgroundDomain : "http://" + backgroundDomain;
+        if (backgroundDomain.length() > 7){
+            backgroundDomain = "http://".equals(backgroundDomain.substring(0,7).toLowerCase()) ? backgroundDomain : "http://" + backgroundDomain;
+        }else {
+            backgroundDomain = "http://" + backgroundDomain;
+        }
         resultJsonString = restTemplate.postForObject(backgroundDomain + "ad_m_arctype.php",  requestMap, String.class);
         return resultJsonString;
     }
@@ -223,13 +236,17 @@ public class AdvertisingService extends ServiceImpl<AdvertisingDao, Advertising>
     }
 
     public void initSynchronousAdvertising(Advertising advertising, AdvertisingVO advertisingVO){
-        advertising.setAdvertisingArcType("" + advertisingVO.getClsid());
-        advertising.setAdvertisingType("" + advertisingVO.getTypeid());
+        advertising.setAdvertisingArcType(advertisingVO.getR_typename() + advertisingVO.getClsid());
+        advertising.setAdvertisingType(advertisingVO.getTypename() + advertisingVO.getTypeid());
         advertising.setAdvertisingAdName(advertisingVO.getAdname());
         advertising.setAdvertisingTimeSet(advertisingVO.getTimeset());
         advertising.setAdvertisingStarttime(advertisingVO.getStarttime());
         advertising.setAdvertisingEndtime(advertisingVO.getEndtime());
         advertising.setAdvertisingNormbody(advertisingVO.getNormbody());
         advertising.setAdvertisingExpbody(advertisingVO.getExpbody());
+    }
+
+    public int searchAdvertisingCount(Long websiteUuid){
+        return advertisingDao.searchAdvertisingCount(websiteUuid);
     }
 }

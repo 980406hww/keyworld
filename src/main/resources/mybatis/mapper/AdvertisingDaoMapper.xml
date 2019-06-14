@@ -105,8 +105,14 @@
 
     <select id="selectIdByAdvertisingId" resultType="java.lang.Long">
         SELECT fUuid
-        FROM fAdvertisingId
+        FROM t_advertising
         WHERE fWebsiteUuid = #{websiteUuid}
         AND fAdvertisingId = #{advertisingId}
+    </select>
+
+    <select id="searchAdvertisingCount" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM t_advertising
+        WHERE fWebsiteUuid = #{websiteUuid}
     </select>
 </mapper>

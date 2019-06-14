@@ -71,7 +71,7 @@
                 <td width="80" align="center" rowspan="2">最近访问时间</td>
                 <td width="80" align="center" rowspan="2">更新时间</td>
                 <td width="270" align="center" colspan="7">域名信息</td>
-                <td width="210" colspan="4" align="center">后台信息</td>
+                <td width="210" colspan="6" align="center">后台信息</td>
                 <td width="210" colspan="3" align="center">数据库信息</td>
                 <td width="210" colspan="3" align="center">服务器信息</td>
                 <td width="80" align="center" rowspan="2">操作</td>
@@ -88,6 +88,8 @@
                 <td width="70" align="center">后台用户名</td>
                 <td width="70" align="center">后台密码</td>
                 <td width="70" align="center">更新销售信息状态</td>
+                <td width="70" align="center">更新友链信息状态</td>
+                <td width="70" align="center">更新广告信息状态</td>
                 <td width="70" align="center">数据库名称</td>
                 <td width="70" align="center">用户名</td>
                 <td width="70" align="center">密码</td>
@@ -119,6 +121,8 @@
             <td width=70>${website.backgroundUserName}</td>
             <td width=70>${website.backgroundPassword}</td>
             <td width=70 align="center">${putSalesInfoSignMap.get(website.updateSalesInfoSign)}</td>
+            <td width=70 align="center">${putSalesInfoSignMap.get(website.synchronousFriendlyLinkSign)}</td>
+            <td width=70 align="center">${putSalesInfoSignMap.get(website.synchronousAdvertisingSign)}</td>
             <td width=70>${website.databaseName}</td>
             <td width=70>${website.databaseUserName}</td>
             <td width=70>${website.databasePassword}</td>
@@ -266,6 +270,7 @@
                 <td style="width:60px;"  align="right">网站排序:</td>
                 <td>
                     <input type="hidden" name="originalSortRank" id="originalSortRank">
+                    <input type="hidden" name="friendlyLinkType" id="friendlyLinkType" style="width:180px;" value="综合网站_0">
                     <input type="text" name="friendlyLinkSortRank" id="friendlyLinkSortRank" style="width:180px;" placeholder="不填写则排在最后面">
                 </td>
             </tr>
@@ -273,12 +278,6 @@
                 <td style="width:60px;"  align="right">站长Email:</td>
                 <td>
                     <input type="text" name="friendlyLinkEmail" id="friendlyLinkEmail" style="width:180px;" placeholder="不填写默认为空">
-                </td>
-            </tr>
-            <tr>
-                <td style="width:60px;"  align="right">网站类型:</td>
-                <td>
-                    <input type="text" name="friendlyLinkType" id="friendlyLinkType" style="width:180px;">
                 </td>
             </tr>
             <tr>
@@ -319,6 +318,8 @@
                 <td style="width:80px;"  align="right">广告标识:</td>
                 <td>
                     <input type="hidden" name="advertisingId" id="advertisingId">
+                    <input type="hidden" name="advertisingType" id="advertisingType" list="advertisingType_list" style="width:180px;"  value="默认分类_0">
+                    <input type="hidden" name="advertisingArcType" id="advertisingArcType" list="advertisingArcType_list"  style="width:180px;"  value="无同名标识所有网站_0">
                     <input type="text" name="advertisingTagname" id="advertisingTagname" style="width:180px;" placeholder="唯一，不可进行更改，查询条件">
                 </td>
             </tr>
@@ -329,21 +330,9 @@
                 </td>
             </tr>
             <tr>
-                <td style="width:80px;"  align="right">广告位名称:</td>
+                <td style="width:80px;"  align="right">广告名称:</td>
                 <td>
                     <input type="text" name="advertisingAdName" id="advertisingAdName" style="width:180px;">
-                </td>
-            </tr>
-            <tr>
-                <td style="width:80px;"  align="right">广告分类:</td>
-                <td>
-                    <input type="text" name="advertisingType" id="advertisingType" list="advertisingType_list" style="width:180px;">
-                </td>
-            </tr>
-            <tr>
-                <td style="width:80px;"  align="right">广告投放范围:</td>
-                <td>
-                    <input type="text" name="advertisingArcType" id="advertisingArcType" list="advertisingArcType_list"  style="width:180px;">
                 </td>
             </tr>
             <tr>

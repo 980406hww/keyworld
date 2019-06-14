@@ -7,6 +7,7 @@ import com.keymanager.monitoring.criteria.FriendlyLinkCriteria;
 import com.keymanager.monitoring.dao.FriendlyLinkDao;
 import com.keymanager.monitoring.entity.FriendlyLink;
 import com.keymanager.monitoring.entity.Website;
+import com.keymanager.monitoring.enums.PutSalesInfoSignEnum;
 import com.keymanager.monitoring.vo.FriendlyLinkVO;
 import com.keymanager.util.common.StringUtil;
 import net.sf.json.JSONArray;
@@ -99,7 +100,14 @@ public class FriendlyLinkService extends ServiceImpl<FriendlyLinkDao, FriendlyLi
         requestMap.add("username", website.getBackgroundUserName());
         requestMap.add("password", website.getBackgroundPassword());
         requestMap.add("ip", ip);
-        requestMap.add("url", friendlyLink.getFriendlyLinkUrl());
+        String url = "";
+        if (friendlyLink.getFriendlyLinkUrl().length() > 7){
+            url = "http://".equals(friendlyLink.getFriendlyLinkUrl().substring(0,7).toLowerCase()) ? friendlyLink.getFriendlyLinkUrl() : "http://" + friendlyLink.getFriendlyLinkUrl();
+        }else {
+            url = "http://" + friendlyLink.getFriendlyLinkUrl();
+        }
+        friendlyLink.setFriendlyLinkUrl(url);
+        requestMap.add("url", url);
         requestMap.add("webname", friendlyLink.getFriendlyLinkWebName());
         requestMap.add("sortrank", friendlyLink.getFriendlyLinkSortRank());
         requestMap.add("logo", "");
@@ -118,7 +126,7 @@ public class FriendlyLinkService extends ServiceImpl<FriendlyLinkDao, FriendlyLi
         }
         requestMap.add("msg", friendlyLink.getFriendlyLinkMsg());
         requestMap.add("email", friendlyLink.getFriendlyLinkEmail());
-        requestMap.add("typeid", friendlyLink.getFriendlyLinkType());
+        requestMap.add("typeid", friendlyLink.getFriendlyLinkTypeId());
         requestMap.add("ischeck", friendlyLink.getFriendlyLinkIsCheck());
         if ("add".equals(type)){
             requestMap.add("dopost", "add");
@@ -165,7 +173,11 @@ public class FriendlyLinkService extends ServiceImpl<FriendlyLinkDao, FriendlyLi
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new StringHttpMessageConverter(Charset.forName("utf-8")));
         String resultJsonString;
-        backgroundDomain = "http://".equals(backgroundDomain.substring(0,7).toLowerCase()) ? backgroundDomain : "http://" + backgroundDomain;
+        if (backgroundDomain.length() > 7){
+            backgroundDomain = "http://".equals(backgroundDomain.substring(0,7).toLowerCase()) ? backgroundDomain : "http://" + backgroundDomain;
+        }else {
+            backgroundDomain = "http://" + backgroundDomain;
+        }
         if ("add".equals(type)){
             resultJsonString = restTemplate.postForObject(backgroundDomain + "friendlink_m_add.php",  requestMap, String.class);
         }else if ("select".equals(type)){
@@ -187,6 +199,7 @@ public class FriendlyLinkService extends ServiceImpl<FriendlyLinkDao, FriendlyLi
         friendlyLink.setFriendlyLinkIsCheck(Integer.valueOf(request.getParameter("friendlyLinkIsCheck")));
         friendlyLink.setFriendlyLinkSortRank(Integer.valueOf(request.getParameter("friendlyLinkSortRank")));
         friendlyLink.setFriendlyLinkType(request.getParameter("friendlyLinkType"));
+        friendlyLink.setFriendlyLinkTypeId(Integer.valueOf(request.getParameter("friendlyLinkTypeId")));
         friendlyLink.setFriendlyLinkMsg(request.getParameter("friendlyLinkMsg"));
         friendlyLink.setExpirationTime(format.parse(request.getParameter("expirationTime")));
         friendlyLink.setFriendlyLinkEmail(request.getParameter("friendlyLinkEmail"));
@@ -202,7 +215,12 @@ public class FriendlyLinkService extends ServiceImpl<FriendlyLinkDao, FriendlyLi
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new StringHttpMessageConverter(Charset.forName("utf-8")));
         String resultJsonString;
-        String backgroundDomain = "http://".equals(website.getBackgroundDomain().substring(0,7).toLowerCase()) ? website.getBackgroundDomain() : "http://" + website.getBackgroundDomain();
+        String backgroundDomain;
+        if (website.getBackgroundDomain().length() > 7){
+            backgroundDomain = "http://".equals(website.getBackgroundDomain().substring(0,7).toLowerCase()) ? website.getBackgroundDomain() : "http://" + website.getBackgroundDomain();
+        }else {
+            backgroundDomain = "http://" + website.getBackgroundDomain();
+        }
         MultiValueMap requestMap = new LinkedMultiValueMap();
         requestMap.add("username", website.getBackgroundUserName());
         requestMap.add("password", website.getBackgroundPassword());
@@ -255,7 +273,8 @@ public class FriendlyLinkService extends ServiceImpl<FriendlyLinkDao, FriendlyLi
         friendlyLink.setFriendlyLinkSortRank(friendlyLinkVO.getSortrank());
         friendlyLink.setFriendlyLinkUrl(friendlyLinkVO.getUrl());
         friendlyLink.setFriendlyLinkWebName(friendlyLinkVO.getWebname());
-        friendlyLink.setFriendlyLinkType("" + friendlyLinkVO.getTypeid());
+        friendlyLink.setFriendlyLinkType(friendlyLinkVO.getTypename() + "_" + friendlyLinkVO.getTypeid());
+        friendlyLink.setFriendlyLinkTypeId(friendlyLinkVO.getTypeid());
         friendlyLink.setFriendlyLinkMsg(friendlyLinkVO.getMsg());
         friendlyLink.setFriendlyLinkEmail(friendlyLinkVO.getEmail());
         friendlyLink.setFriendlyLinkLogo(friendlyLinkVO.getLogo());
@@ -265,5 +284,9 @@ public class FriendlyLinkService extends ServiceImpl<FriendlyLinkDao, FriendlyLi
 
     public Long selectIdByFriendlyLinkId(Long websiteUuid, int friendlyLinkId){
         return friendlyLinkDao.selectIdByFriendlyLinkId(websiteUuid, friendlyLinkId);
+    }
+
+    public int searchFriendlyLinkCount(Long websiteUuid){
+        return friendlyLinkDao.searchFriendlyLinkCount(websiteUuid);
     }
 }

@@ -31,6 +31,8 @@ public class WebsiteVO{
     private String advertising;
     private Date updateTime;
     private Date createTime;
+    private String synchronousFriendlyLinkSign;
+    private String synchronousAdvertisingSign;
 
     public String getWebsiteName() {
         return websiteName;
@@ -246,5 +248,21 @@ public class WebsiteVO{
 
     public void setAdvertising(String advertising) {
         this.advertising = advertising;
+    }
+
+    public String getSynchronousFriendlyLinkSign() {
+        return synchronousFriendlyLinkSign;
+    }
+
+    public void setSynchronousFriendlyLinkSign(String synchronousFriendlyLinkSign) {
+        this.synchronousFriendlyLinkSign = synchronousFriendlyLinkSign;
+    }
+
+    public String getSynchronousAdvertisingSign() {
+        return synchronousAdvertisingSign;
+    }
+
+    public void setSynchronousAdvertisingSign(String synchronousAdvertisingSign) {
+        this.synchronousAdvertisingSign = synchronousAdvertisingSign;
     }
 }

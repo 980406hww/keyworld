@@ -434,6 +434,8 @@ function saveFriendlyLink(uuids, originalFriendlyLinkUrl) {
     formData.append('friendlyLinkIsCheck', $.trim(friendlyLinkIsCheck));
     formData.append('friendlyLinkSortRank', $.trim(friendlyLinkSortRank));
     formData.append('friendlyLinkType', $.trim(friendlyLinkType));
+    var friendlyLinkTypeId = friendlyLinkType.split('_')[friendlyLinkType.split('_').length - 1];
+    formData.append('friendlyLinkTypeId', $.trim(friendlyLinkTypeId));
     formData.append('friendlyLinkMsg', $.trim(friendlyLinkMsg));
     formData.append('expirationTime', $.trim(expirationTime));
     formData.append('friendlyLinkEmail', $.trim(friendlyLinkEmail));
@@ -538,7 +540,6 @@ function initFriendlyLinkDialog(friendlyLink) {
     friendlyLinkForm.find("#friendlyLinkSortRank").val(friendlyLink.friendlyLinkSortRank);
     friendlyLinkForm.find("#originalSortRank").val(friendlyLink.friendlyLinkSortRank);
     friendlyLinkForm.find("#friendlyLinkEmail").val(friendlyLink.friendlyLinkEmail);
-    friendlyLinkForm.find("#friendlyLinkType").val(friendlyLink.friendlyLinkType);
     friendlyLinkForm.find($('input:radio[name="friendlyLinkIsCheck"]:checked').val(friendlyLink.friendlyLinkIsCheck));
     friendlyLinkForm.find("#expirationTime").val(userDate(friendlyLink.expirationTime));
     friendlyLinkForm.find("#friendlyLinkMsg").val(friendlyLink.friendlyLinkMsg);
@@ -849,8 +850,6 @@ function initAdvertisingDialog(advertising) {
     advertisingForm.find("#advertisingId").val(advertising.advertisingId);
     advertisingForm.find("#advertisingTagname").val(advertising.advertisingTagname);
     advertisingForm.find("#advertisingAdName").val(advertising.advertisingAdName);
-    advertisingForm.find("#advertisingType").val(advertising.advertisingType);
-    advertisingForm.find("#advertisingArcType").val(advertising.advertisingArcType);
     advertisingForm.find($('input:radio[name="advertisingTimeSet"]:checked').val(advertising.advertisingTimeSet));
     advertisingForm.find("#advertisingStarttime").val(userDate(advertising.advertisingStarttime));
     advertisingForm.find("#advertisingEndtime").val(userDate(advertising.advertisingEndtime));

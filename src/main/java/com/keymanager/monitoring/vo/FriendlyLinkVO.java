@@ -14,6 +14,7 @@ public class FriendlyLinkVO{
     private Date dtime;
     private int typeid;
     private int ischeck;
+    private String typename;
 
     public int getId() {
         return id;
@@ -93,5 +94,13 @@ public class FriendlyLinkVO{
 
     public void setIscheck(int ischeck) {
         this.ischeck = ischeck;
+    }
+
+    public String getTypename() {
+        return typename;
+    }
+
+    public void setTypename(String typename) {
+        this.typename = typename;
     }
 }

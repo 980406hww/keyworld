@@ -72,6 +72,12 @@ public class Website extends BaseEntity {
     @TableField(value = "fUpdateSalesInfoSign")
     private String updateSalesInfoSign;
 
+    @TableField(value = "fSynchronousFriendlyLinkSign")
+    private String synchronousFriendlyLinkSign;
+
+    @TableField(value = "fSynchronousAdvertisingSign")
+    private String synchronousAdvertisingSign;
+
     public String getWebsiteName() {
         return websiteName;
     }
@@ -230,5 +236,21 @@ public class Website extends BaseEntity {
 
     public void setUpdateSalesInfoSign(String updateSalesInfoSign) {
         this.updateSalesInfoSign = updateSalesInfoSign;
+    }
+
+    public String getSynchronousFriendlyLinkSign() {
+        return synchronousFriendlyLinkSign;
+    }
+
+    public void setSynchronousFriendlyLinkSign(String synchronousFriendlyLinkSign) {
+        this.synchronousFriendlyLinkSign = synchronousFriendlyLinkSign;
+    }
+
+    public String getSynchronousAdvertisingSign() {
+        return synchronousAdvertisingSign;
+    }
+
+    public void setSynchronousAdvertisingSign(String synchronousAdvertisingSign) {
+        this.synchronousAdvertisingSign = synchronousAdvertisingSign;
     }
 }

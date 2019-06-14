@@ -63,7 +63,12 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
     private FriendlyLinkService friendlyLinkService;
     
     public Page<WebsiteVO> searchWebsites(Page<WebsiteVO> page, WebsiteCriteria websiteCriteria) {
-        page.setRecords(websiteDao.searchWebsites(page, websiteCriteria));
+        List<WebsiteVO> websiteVOS = websiteDao.searchWebsites(page, websiteCriteria);
+        for (WebsiteVO websiteVO: websiteVOS) {
+            websiteVO.setFriendlyLinkCount(friendlyLinkService.searchFriendlyLinkCount(websiteVO.getUuid()));
+            websiteVO.setAdvertisingCount(advertisingService.searchAdvertisingCount(websiteVO.getUuid()));
+        }
+        page.setRecords(websiteVOS);
         return page;
     }
 
@@ -213,6 +218,7 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
         friendlyLink.setFriendlyLinkIsCheck(Integer.valueOf(request.getParameter("friendlyLinkIsCheck")));
         friendlyLink.setFriendlyLinkSortRank(Integer.valueOf(request.getParameter("friendlyLinkSortRank")));
         friendlyLink.setFriendlyLinkType(request.getParameter("friendlyLinkType"));
+        friendlyLink.setFriendlyLinkTypeId(Integer.valueOf(request.getParameter("friendlyLinkTypeId")));
         friendlyLink.setFriendlyLinkMsg(request.getParameter("friendlyLinkMsg"));
         friendlyLink.setExpirationTime(format.parse(request.getParameter("expirationTime")));
         friendlyLink.setFriendlyLinkEmail(request.getParameter("friendlyLinkEmail"));
@@ -322,6 +328,10 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
                     }
                 }
             } catch (Exception e) {
+                Website website = new Website();
+                website.setUuid(Long.valueOf(uuidStr));
+                website.setSynchronousFriendlyLinkSign(PutSalesInfoSignEnum.RequestException.getValue());
+                websiteDao.updateById(website);
                 e.printStackTrace();
                 continue;
             }
@@ -352,7 +362,10 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                Website website = new Website();
+                website.setUuid(Long.valueOf(uuidStr));
+                website.setSynchronousAdvertisingSign(PutSalesInfoSignEnum.RequestException.getValue());
+                websiteDao.updateById(website);
                 continue;
             }
         }

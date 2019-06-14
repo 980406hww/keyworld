@@ -41,6 +41,9 @@ public class FriendlyLink extends BaseEntity {
     @TableField(value = "fFriendlyLinkType")
     private String friendlyLinkType;
 
+    @TableField(exist=false)
+    private int friendlyLinkTypeId;
+
     @TableField(value = "fFriendlyLinkDtime")
     private Date friendlyLinkDtime;
 
@@ -171,5 +174,13 @@ public class FriendlyLink extends BaseEntity {
 
     public void setRenewTime(Date renewTime) {
         this.renewTime = renewTime;
+    }
+
+    public int getFriendlyLinkTypeId() {
+        return friendlyLinkTypeId;
+    }
+
+    public void setFriendlyLinkTypeId(int friendlyLinkTypeId) {
+        this.friendlyLinkTypeId = friendlyLinkTypeId;
     }
 }
