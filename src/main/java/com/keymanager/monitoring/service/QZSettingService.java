@@ -176,17 +176,27 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 				qzOperationType.setQzSettingUuid(qzSettingUuid);
 				qzOperationTypeService.insert(qzOperationType);
 				Set<String> standardSpeciesSet = new HashSet<>();
-				for(QZChargeRule qzChargeRule : qzOperationType.getQzChargeRules()){
-					standardSpeciesSet.add(qzChargeRule.getStandardSpecies());
-					qzChargeRule.setQzOperationTypeUuid(qzOperationType.getUuid());
-					qzChargeRuleService.insert(qzChargeRule);
+				boolean isExtraRankInfo = false;
+				if (CollectionUtils.isNotEmpty(qzOperationType.getQzChargeRules())) {
+					for(QZChargeRule qzChargeRule : qzOperationType.getQzChargeRules()){
+						standardSpeciesSet.add(qzChargeRule.getStandardSpecies());
+						qzChargeRule.setQzOperationTypeUuid(qzOperationType.getUuid());
+						qzChargeRuleService.insert(qzChargeRule);
+					}
+				} else {
+					isExtraRankInfo = true;
+					standardSpeciesSet.add("aiZhan");
 				}
 				for (String standardSpecies : standardSpeciesSet) {
 					QZKeywordRankInfo qzKeywordRankInfo = new QZKeywordRankInfo();
 					qzKeywordRankInfo.setQzSettingUuid(qzSettingUuid);
 					qzKeywordRankInfo.setTerminalType(qzOperationType.getOperationType());
 					qzKeywordRankInfo.setWebsiteType(standardSpecies);
-					qzKeywordRankInfo.setDataProcessingStatus(true);
+					if ("aiZhan".equals(standardSpecies) && isExtraRankInfo) {
+						qzKeywordRankInfo.setDataProcessingStatus(false);
+					} else {
+						qzKeywordRankInfo.setDataProcessingStatus(true);
+					}
 					qzKeywordRankInfoService.insert(qzKeywordRankInfo);
 					if (standardSpecies.equals(Constants.QZ_CHARGE_RULE_STANDARD_SPECIES_DESIGNATION_WORD)) {
 						QZKeywordRankInfo otherQZKeywordRankInfo = new QZKeywordRankInfo();
@@ -236,11 +246,13 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		}
 
 		for(QZOperationType oldOperationType : oldOperationTypeMap.values()) {
-            for (QZChargeRule qzChargeRule : oldOperationType.getQzChargeRules()) {
-                if (qzChargeRule.getStandardSpecies().equals(Constants.QZ_CHARGE_RULE_STANDARD_SPECIES_DESIGNATION_WORD)) {
-                    captureRankJobService.deleteCaptureRankJob(qzSettingUuid, oldOperationType.getOperationType());
-                }
-            }
+			if (CollectionUtils.isNotEmpty(oldOperationType.getQzChargeRules())) {
+				for (QZChargeRule qzChargeRule : oldOperationType.getQzChargeRules()) {
+					if (qzChargeRule.getStandardSpecies().equals(Constants.QZ_CHARGE_RULE_STANDARD_SPECIES_DESIGNATION_WORD)) {
+						captureRankJobService.deleteCaptureRankJob(qzSettingUuid, oldOperationType.getOperationType());
+					}
+				}
+			}
 			qzChargeRuleService.deleteByQZOperationTypeUuid(oldOperationType.getUuid());
 			oldOperationType.setUpdateTime(new Date());
 			oldOperationType.setIsDeleted(1);
@@ -267,18 +279,21 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		qzOperationTypeService.updateById(oldOperationType);
 
 		boolean isDeleteDesignationWord = false;
-		for (QZChargeRule chargeRule : oldOperationType.getQzChargeRules()) {
-			if (!isDeleteDesignationWord && chargeRule.getStandardSpecies().equals(Constants.QZ_CHARGE_RULE_STANDARD_SPECIES_DESIGNATION_WORD)){
-                CaptureRankJob existCaptureRankJob = captureRankJobService.findExistCaptureRankJob(qzSettingUuid, newOperationType.getOperationType());
-                if (null != existCaptureRankJob && isMonitor) {
-                    isDeleteDesignationWord = false;
-                } else {
-                    isDeleteDesignationWord = true;
-                }
-			} else {
-			    isDeleteDesignationWord = true;
-            }
+		if (CollectionUtils.isNotEmpty(oldOperationType.getQzChargeRules())) {
+			for (QZChargeRule chargeRule : oldOperationType.getQzChargeRules()) {
+				if (!isDeleteDesignationWord && chargeRule.getStandardSpecies().equals(Constants.QZ_CHARGE_RULE_STANDARD_SPECIES_DESIGNATION_WORD)){
+					CaptureRankJob existCaptureRankJob = captureRankJobService.findExistCaptureRankJob(qzSettingUuid, newOperationType.getOperationType());
+					if (null != existCaptureRankJob && isMonitor) {
+						isDeleteDesignationWord = false;
+					} else {
+						isDeleteDesignationWord = true;
+					}
+				} else {
+					isDeleteDesignationWord = true;
+				}
+			}
 		}
+
         if (isDeleteDesignationWord) {
             captureRankJobService.deleteCaptureRankJob(qzSettingUuid, newOperationType.getOperationType());
         }
@@ -321,26 +336,39 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
             Set<String> standardSpeciesSet = new HashSet<>();
             Set<String> existingStandardSpeciesSet = new HashSet<>();
             if (null != qzKeywordRankInfoMap && !qzKeywordRankInfoMap.isEmpty()) {
-                for (QZChargeRule qzChargeRule : qzOperationType.getQzChargeRules()) {
-                    QZKeywordRankInfo qzKeywordRankInfo = qzKeywordRankInfoMap.get(qzChargeRule.getStandardSpecies());
-                    if (null != qzKeywordRankInfo && qzKeywordRankInfo.getDataProcessingStatus()) {
-                    	existingStandardSpeciesSet.add(qzChargeRule.getStandardSpecies());
-                    	existingStandardSpeciesSet.add("aiZhan");
-                    } else {
-                        if (!"other".equals(qzChargeRule.getStandardSpecies())) {
-                            standardSpeciesSet.add(qzChargeRule.getStandardSpecies());
-                        }
-                    }
-                }
+				if (CollectionUtils.isNotEmpty(qzOperationType.getQzChargeRules())) {
+					for (QZChargeRule qzChargeRule : qzOperationType.getQzChargeRules()) {
+						QZKeywordRankInfo qzKeywordRankInfo = qzKeywordRankInfoMap.get(qzChargeRule.getStandardSpecies());
+						if (null != qzKeywordRankInfo && qzKeywordRankInfo.getDataProcessingStatus()) {
+							existingStandardSpeciesSet.add(qzChargeRule.getStandardSpecies());
+							existingStandardSpeciesSet.add("aiZhan");
+						} else {
+							if (!"other".equals(qzChargeRule.getStandardSpecies())) {
+								standardSpeciesSet.add(qzChargeRule.getStandardSpecies());
+							}
+						}
+					}
+				} else {
+					existingStandardSpeciesSet.add("aiZhan");
+				}
                 for (String existingStandardSpecies: existingStandardSpeciesSet) {
                     qzKeywordRankInfoMap.remove(existingStandardSpecies);
                 }
             } else {
-                for (QZChargeRule qzChargeRule : qzOperationType.getQzChargeRules()) {
-                    if (!"other".equals(qzChargeRule.getStandardSpecies())) {
-                        standardSpeciesSet.add(qzChargeRule.getStandardSpecies());
-                    }
-                }
+            	if (CollectionUtils.isNotEmpty(qzOperationType.getQzChargeRules())) {
+					for (QZChargeRule qzChargeRule : qzOperationType.getQzChargeRules()) {
+						if (!"other".equals(qzChargeRule.getStandardSpecies())) {
+							standardSpeciesSet.add(qzChargeRule.getStandardSpecies());
+						}
+					}
+				} else {
+					QZKeywordRankInfo otherQZKeywordRankInfo = new QZKeywordRankInfo();
+					otherQZKeywordRankInfo.setQzSettingUuid(qzSetting.getUuid());
+					otherQZKeywordRankInfo.setTerminalType(qzOperationType.getOperationType());
+					otherQZKeywordRankInfo.setWebsiteType("aiZhan");
+					otherQZKeywordRankInfo.setDataProcessingStatus(false);
+					qzKeywordRankInfoService.insert(otherQZKeywordRankInfo);
+				}
             }
             if (CollectionUtils.isNotEmpty(standardSpeciesSet)) {
                 setMap.put(qzOperationType.getOperationType(), standardSpeciesSet);

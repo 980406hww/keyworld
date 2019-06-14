@@ -84,6 +84,7 @@
         LEFT JOIN t_qz_operation_type qot
         ON qot.fQZSettingUuid = qk.fQZSettingUuid AND qot.fOperationtype = qk.fTerminalType
         WHERE qk.fTerminalType = #{qzSettingSearchCriteria.terminalType}
+        AND qot.fIsDeleted = 0
         AND EXISTS (
             SELECT 1 FROM t_customer c
             LEFT JOIN t_userinfo ui
