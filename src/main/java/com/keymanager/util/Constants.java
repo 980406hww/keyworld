@@ -176,6 +176,6 @@ public class Constants {
         QZ_OPERATION_OPTIMIZATION_TYPE_MAP.put("全部", "");
         QZ_OPERATION_OPTIMIZATION_TYPE_MAP.put("主优化", "1");
         QZ_OPERATION_OPTIMIZATION_TYPE_MAP.put("次优化", "2");
-        QZ_OPERATION_OPTIMIZATION_TYPE_MAP.put("附加优化", "0");
+        QZ_OPERATION_OPTIMIZATION_TYPE_MAP.put("辅助优化", "0");
     }
 }

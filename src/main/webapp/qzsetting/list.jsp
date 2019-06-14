@@ -1258,7 +1258,7 @@
 					达标优化类型&nbsp;&nbsp;
 					<input type="checkbox" name="optimizationType" onclick="dealSettingTable(this, 'PC', 1)" value="1" />&nbsp;主优化&nbsp;
 					<input type="checkbox" name="optimizationType" onclick="dealSettingTable(this, 'PC', 1)" value="2" />&nbsp;次优化&nbsp;
-					<input type="checkbox" name="optimizationType" onclick="dealSettingTable(this, 'PC', 1)" value="0" />&nbsp;附带优化&nbsp;
+					<input type="checkbox" name="optimizationType" onclick="dealSettingTable(this, 'PC', 1)" value="0" />&nbsp;辅助优化&nbsp;
 				</div>
 			</td>
 			<td colspan="2" width="325px">
@@ -1267,7 +1267,7 @@
 					达标优化类型&nbsp;&nbsp;
 					<input type="checkbox" name="optimizationType" onclick="dealSettingTable(this, 'Phone', 1)" value="1" />&nbsp;主优化&nbsp;
 					<input type="checkbox" name="optimizationType" onclick="dealSettingTable(this, 'Phone', 1)" value="2" />&nbsp;次优化&nbsp;
-					<input type="checkbox" name="optimizationType" onclick="dealSettingTable(this, 'Phone', 1)" value="0" />&nbsp;附带优化&nbsp;
+					<input type="checkbox" name="optimizationType" onclick="dealSettingTable(this, 'Phone', 1)" value="0" />&nbsp;辅助优化&nbsp;
 				</div>
 			</td>
 		</tr>
@@ -1355,7 +1355,7 @@
 					<input type="hidden" id="qzSettingUuidPhone" name="qzOperationTypeUuid" value="" />
 					<c:if test="${not isSEO}">
 						<tr id="standardSpeciesPhone">
-							<td align="right" style="width:72px">达标种类</td>
+							<td align="right" style="width:72px"><label>达标种类</label></td>
 							<td title="爱站, 5118, 指定词和其他, 四选一">
 								<div style="display: inline-block">
 									<input type="checkbox" name="standardSpecies" id="aiZhanPhoneStandardSpecies" onclick="checkedStandardSpecies(this, 'Phone')" value="aiZhan" checked="checked">
@@ -1399,10 +1399,10 @@
 						</thead>
 						<tbody>
 						<tr>
-							<td style="width:36px">序号</td>
-							<td style="width:84px">起始达标词数</td>
-							<td style="width:84px">终止达标词数</td>
-							<td style="width:50px">价格</td>
+							<td style="width:56px">达标阶段</td>
+							<td style="width:76px">起始达标词数</td>
+							<td style="width:76px">终止达标词数</td>
+							<td style="width:46px">价格</td>
 							<td style="width:46px">操作</td>
 						</tr>
 						<tr>
@@ -1423,10 +1423,10 @@
 						</thead>
 						<tbody>
 						<tr>
-							<td style="width:36px">序号</td>
-							<td style="width:84px">起始达标词数</td>
-							<td style="width:84px">终止达标词数</td>
-							<td style="width:50px">价格</td>
+							<td style="width:56px">达标阶段</td>
+							<td style="width:76px">起始达标词数</td>
+							<td style="width:76px">终止达标词数</td>
+							<td style="width:46px">价格</td>
 							<td style="width:46px">操作</td>
 						</tr>
 						<tr>

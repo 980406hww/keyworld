@@ -1758,7 +1758,7 @@ function createSettingDialog() {
     $("#changeSettingDialog").show();
     $("#changeSettingDialog").dialog({
         resizable: false,
-        minHeight: 440,
+        height: 580,
         width: 680,
         title: '全站设置',
         modal: true,
@@ -1892,6 +1892,8 @@ function showSettingDialog(self) {
 function initSettingDialog(qzSetting, self) {
     var PCType = false;
     var PhoneType = false;
+    var PCOptimizationType = false;
+    var PhoneOptimizationType = false;
     var settingDialogDiv = $("#changeSettingDialog");
     settingDialogDiv.find("#qzSettingUuid").val(qzSetting.uuid);
     settingDialogDiv.find("#groupMaxCustomerKeywordCount").val(qzSetting.groupMaxCustomerKeywordCount);
@@ -1924,20 +1926,28 @@ function initSettingDialog(qzSetting, self) {
 
         var isSEO = $(".datalist-list #isSEO").val();
         // 构造规则表
-        $.each(val.qzChargeRules, function (chargeRuleIdx, chargeRuleVal) {
-            if (isSEO !== "true") {
-                settingDialogDiv.find('#aiZhan' + val.operationType + 'StandardSpecies')[0].checked = false;
-                settingDialogDiv.find("#" + chargeRuleVal.standardSpecies + val.operationType + "StandardSpecies")[0].checked = true;
-                settingDialogDiv.find("#chargeRule" + val.operationType).css("display", "block");
-                addRow("chargeRule" + val.operationType, chargeRuleVal);
+        if (val.qzChargeRules !== null) {
+            $.each(val.qzChargeRules, function (chargeRuleIdx, chargeRuleVal) {
+                if (isSEO !== "true") {
+                    settingDialogDiv.find('#aiZhan' + val.operationType + 'StandardSpecies')[0].checked = false;
+                    settingDialogDiv.find("#" + chargeRuleVal.standardSpecies + val.operationType + "StandardSpecies")[0].checked = true;
+                    settingDialogDiv.find("#chargeRule" + val.operationType).css("display", "block");
+                    addRow("chargeRule" + val.operationType, chargeRuleVal);
+                }
+            });
+        }
+        if (val.operationType === 'PC') {
+            PCType = true;
+            if (val.optimizationType === 0) {
+                PCOptimizationType = true;
             }
-            if (val.operationType === 'PC') {
-                PCType = true;
+        }
+        if (val.operationType === 'Phone') {
+            PhoneType = true;
+            if (val.optimizationType === 0) {
+                PhoneOptimizationType = true;
             }
-            if (val.operationType === 'Phone') {
-                PhoneType = true;
-            }
-        });
+        }
     });
     // 分类标签
     var tagNames = "";
@@ -1948,7 +1958,7 @@ function initSettingDialog(qzSetting, self) {
     if (PCType) {
         settingDialogDiv.find("#PC")[0].checked = true;
         settingDialogDiv.find("#operationTypeSummaryInfoPC").css("display", "block");
-        if (flag === false) {
+        if (!flag || PCOptimizationType) {
             settingDialogDiv.find("#standardSpeciesPC label").css("display", "none");
             settingDialogDiv.find("#standardSpeciesPC input").css("display", "none");
             settingDialogDiv.find("#chargeRulePC").css("display", "none");
@@ -1957,13 +1967,13 @@ function initSettingDialog(qzSetting, self) {
     if (PhoneType) {
         settingDialogDiv.find("#Phone")[0].checked = true;
         settingDialogDiv.find("#operationTypeSummaryInfoPhone").css("display", "block");
-        if (flag === false) {
+        if (!flag || PhoneOptimizationType) {
             settingDialogDiv.find("#standardSpeciesPhone label").css("display", "none");
             settingDialogDiv.find("#standardSpeciesPhone input").css("display", "none");
             settingDialogDiv.find("#chargeRulePhone").css("display", "none");
         }
     }
-    if (flag === false) {
+    if (!flag) {
         settingDialogDiv.find("#PC").attr("status", 0);
         settingDialogDiv.find("#Phone").attr("status", 0);
     }
@@ -2097,87 +2107,89 @@ function saveChangeSetting(self, refresh) {
             chargeRule.amount = 3;
             operationType.qzChargeRules.push(chargeRule);
         } else {
-            var standardSpeciesObjs = $("#operationTypeSummaryInfo"+val.id).find("input[name='standardSpecies']:checkbox:checked");
-            $.each(standardSpeciesObjs, function (i, v) {
-                var endKeyWordCountValue = -1;
-                //多条规则
-                var ruleObj = settingDialogDiv.find("#chargeRule" + val.id);
-                var trObjs = ruleObj.find("tbody tr:not(:first,:last)");
-                $.each(trObjs, function (idx, val) {
-                    var startKeywordCountObj = $(val).find("input[name=startKeywordCount]");
-                    var endKeywordCountObj = $(val).find("input[name=endKeywordCount]");
-                    var amountObj = $(val).find("input[name=amount]");
+            if (operationType.optimizationType !== '0') {
+                var standardSpeciesObjs = $("#operationTypeSummaryInfo"+val.id).find("input[name='standardSpecies']:checkbox:checked");
+                $.each(standardSpeciesObjs, function (i, v) {
+                    var endKeyWordCountValue = -1;
+                    //多条规则
+                    var ruleObj = settingDialogDiv.find("#chargeRule" + val.id);
+                    var trObjs = ruleObj.find("tbody tr:not(:first,:last)");
+                    $.each(trObjs, function (idx, val) {
+                        var startKeywordCountObj = $(val).find("input[name=startKeywordCount]");
+                        var endKeywordCountObj = $(val).find("input[name=endKeywordCount]");
+                        var amountObj = $(val).find("input[name=amount]");
 
-                    var chargeRule = {};
-                    chargeRule.standardSpecies = $(v).val();
-                    chargeRule.startKeywordCount = startKeywordCountObj.val().trim();
-                    chargeRule.endKeywordCount = endKeywordCountObj.val().trim();
-                    chargeRule.amount = amountObj.val().trim();
-                    operationType.qzChargeRules.push(chargeRule);
+                        var chargeRule = {};
+                        chargeRule.standardSpecies = $(v).val();
+                        chargeRule.startKeywordCount = startKeywordCountObj.val().trim();
+                        chargeRule.endKeywordCount = endKeywordCountObj.val().trim();
+                        chargeRule.amount = amountObj.val().trim();
+                        operationType.qzChargeRules.push(chargeRule);
 
-                    if (startKeywordCountObj.val() == null || startKeywordCountObj.val().trim() == "") {
-                        alert("请输入起始词数");
-                        startKeywordCountObj[0].focus();
-                        validationFlag = false;
-                        return false;
-                    }
-                    if (!reg.test(startKeywordCountObj.val().trim())) {
-                        alert("请输入数字");
-                        startKeywordCountObj.focus();
-                        validationFlag = false;
-                        return false;
-                    }
-                    var skc = Number(startKeywordCountObj.val().trim());
-                    if (skc <= endKeyWordCountValue) {
-                        alert("起始词数过小");
-                        startKeywordCountObj.focus();
-                        validationFlag = false;
-                        return false;
-                    }
-                    if (idx < (trObjs.length - 1)) {
-                        if (endKeywordCountObj.val() == null || endKeywordCountObj.val().trim() == "") {
-                            alert("请输入终止词数");
-                            endKeywordCountObj.focus();
+                        if (startKeywordCountObj.val() == null || startKeywordCountObj.val().trim() == "") {
+                            alert("请输入起始达标词数");
+                            startKeywordCountObj[0].focus();
                             validationFlag = false;
                             return false;
                         }
-                    } else {
-                        if(endKeywordCountObj.val() != "" && operationType.currentKeywordCount>Number(endKeywordCountObj.val())){
-                            alert("最后一条规则中的终止词量必须大于当前词量");
-                            endKeywordCountObj.focus();
-                            validationFlag = false;
-                            return false;
-                        }
-                    }
-                    if (endKeywordCountObj.val() != "") {
-                        if (!reg.test(endKeywordCountObj.val())) {
+                        if (!reg.test(startKeywordCountObj.val().trim())) {
                             alert("请输入数字");
-                            endKeywordCountObj.focus();
+                            startKeywordCountObj.focus();
                             validationFlag = false;
                             return false;
                         }
-                        if (Number(endKeywordCountObj.val().trim()) <= skc) {
-                            alert("终止词数必须大于起始词数");
-                            endKeywordCountObj.focus();
+                        var skc = Number(startKeywordCountObj.val().trim());
+                        if (skc <= endKeyWordCountValue) {
+                            alert("起始达标词数过小");
+                            startKeywordCountObj.focus();
                             validationFlag = false;
                             return false;
                         }
-                    }
-                    if (amountObj.val() == null || amountObj.val().trim() == "") {
-                        alert("请输入价格");
-                        amountObj.focus();
-                        validationFlag = false;
-                        return false;
-                    }
-                    if (!reg.test(amountObj.val().trim())) {
-                        alert("输入的价格不合理");
-                        amountObj.focus();
-                        validationFlag = false;
-                        return false;
-                    }
-                    endKeyWordCountValue = Number(endKeywordCountObj.val().trim());
+                        if (idx < (trObjs.length - 1)) {
+                            if (endKeywordCountObj.val() == null || endKeywordCountObj.val().trim() == "") {
+                                alert("请输入终止达标词数");
+                                endKeywordCountObj.focus();
+                                validationFlag = false;
+                                return false;
+                            }
+                        } else {
+                            if(endKeywordCountObj.val() != "" && operationType.currentKeywordCount>Number(endKeywordCountObj.val())){
+                                alert("最后一条规则中的终止达标词量必须大于当前词量");
+                                endKeywordCountObj.focus();
+                                validationFlag = false;
+                                return false;
+                            }
+                        }
+                        if (endKeywordCountObj.val() != "") {
+                            if (!reg.test(endKeywordCountObj.val())) {
+                                alert("请输入数字");
+                                endKeywordCountObj.focus();
+                                validationFlag = false;
+                                return false;
+                            }
+                            if (Number(endKeywordCountObj.val().trim()) <= skc) {
+                                alert("终止达标词数必须大于起始达标词数");
+                                endKeywordCountObj.focus();
+                                validationFlag = false;
+                                return false;
+                            }
+                        }
+                        if (amountObj.val() == null || amountObj.val().trim() == "") {
+                            alert("请输入价格");
+                            amountObj.focus();
+                            validationFlag = false;
+                            return false;
+                        }
+                        if (!reg.test(amountObj.val().trim())) {
+                            alert("输入的价格不合理");
+                            amountObj.focus();
+                            validationFlag = false;
+                            return false;
+                        }
+                        endKeyWordCountValue = Number(endKeywordCountObj.val().trim());
+                    });
                 });
-            });
+            }
         }
         if (!validationFlag) {
             return false;
@@ -2244,17 +2256,17 @@ function addRow(tableID, chargeRule){
         var newRow = tableObj[0].insertRow(rowCount - 1); //插入新行
 
         var col1 = newRow.insertCell(0);
-        col1.innerHTML="<input type='text' name='sequenceID' value='"+(rowCount - 1)+"' style='width:40px'/>";
+        col1.innerHTML="<input type='text' name='sequenceID' value='"+(rowCount - 1)+"' style='width:58px'/>";
         var col2 = newRow.insertCell(1);
-        col2.innerHTML = "<input type='text' name='startKeywordCount' value='"+(chargeRule != null ? chargeRule.startKeywordCount : '')+"' style='width:86px'/>";
+        col2.innerHTML = "<input type='text' name='startKeywordCount' value='"+(chargeRule != null ? chargeRule.startKeywordCount : '')+"' style='width:78px'/>";
         var col3 = newRow.insertCell(2);
-        col3.innerHTML = "<input type='text' name='endKeywordCount' value='"+((chargeRule != null && chargeRule.endKeywordCount != null) ? chargeRule.endKeywordCount : '')+"'  style='width:86px'/>";
+        col3.innerHTML = "<input type='text' name='endKeywordCount' value='"+((chargeRule != null && chargeRule.endKeywordCount != null) ? chargeRule.endKeywordCount : '')+"'  style='width:78px'/>";
         var col4 = newRow.insertCell(3);
-        col4.innerHTML = "<input type='text' name='amount' value='"+(chargeRule != null ? chargeRule.amount : '')+"'  style='width:52px'/>";
+        col4.innerHTML = "<input type='text' name='amount' value='"+(chargeRule != null ? chargeRule.amount : '')+"'  style='width:48px'/>";
         var col5 = newRow.insertCell(4);
-        col5.innerHTML = "<input style='width:50px' type='button' value='删除' onclick='deleteCurrentRow(this.parentNode.parentNode)' />";
+        col5.innerHTML = "<input style='width:48px' type='button' value='删除' onclick='deleteCurrentRow(this.parentNode.parentNode)' />";
 
-        $("#changeSettingDialog").css("height", $("#changeSettingForm").height() + 22);
+        $("#changeSettingDialog").css("height", $("#changeSettingDialog").height() + 25);
     }
 }
 function deleteCurrentRow(currentRow) {
@@ -2266,7 +2278,7 @@ function deleteCurrentRow(currentRow) {
             $(val).val(idx + 1);
         });
         if ($("#changeSettingDialog").height() > "412") {
-            $("#changeSettingDialog").css("height", $("#changeSettingForm").height() + 2);
+            $("#changeSettingDialog").css("height", $("#changeSettingDialog").height() + 2);
         }
     } else {
         alert("删除失败，规则表不允许为空");
@@ -2277,8 +2289,13 @@ function dealSettingTable(self, operationType, type) {
     var settingDialogDiv = $("#changeSettingDialog");
     // 控制唯一选中和不重复显示
     var display = true;
+
     if ($(self).parent().find("input:checkbox:checked").length > 1) {
-        display = false;
+        if ($(self).parent().find("input[value='0']:checkbox:checked").length > 0) {
+            display = true;
+        } else {
+            display = false;
+        }
     }
 
     var optimizationType = $(self).val();
@@ -2303,12 +2320,12 @@ function dealSettingTable(self, operationType, type) {
         var status = $(checkboxObj).attr("status");
         if (checkboxObj[0].checked == true) {
             groupObj.css("display","block");
-            if (isSEO === "false") {
+            if (isSEO === "false" && optimizationType !== '0') {
                 $("#chargeRule" + operationType).css("display", "block");
                 addRow("chargeRule" + operationType);
                 $("#aiZhan"+ operationType +"StandardSpecies")[0].checked = true;
             }
-            if (status === '1') {
+            if (status === '1' && optimizationType !== '0') {
                 settingDialogDiv.find("#standardSpecies" + operationType + " label").css("display", "block");
                 settingDialogDiv.find("#standardSpecies" + operationType + " input").css("display", "block");
                 settingDialogDiv.find("#chargeRule" + operationType).css("display", "block");
