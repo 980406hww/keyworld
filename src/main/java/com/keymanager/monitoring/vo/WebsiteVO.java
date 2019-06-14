@@ -23,6 +23,8 @@ public class WebsiteVO{
     private Integer accessFailCount;
     private Date accessFailTime;
     private Date lastAccessTime;
+    private String websiteType;
+    private String updateSalesInfoSign;
     private int friendlyLinkCount;
     private int advertisingCount;
     private String friendlyLink;
@@ -180,6 +182,22 @@ public class WebsiteVO{
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public String getWebsiteType() {
+        return websiteType;
+    }
+
+    public void setWebsiteType(String websiteType) {
+        this.websiteType = websiteType;
+    }
+
+    public String getUpdateSalesInfoSign() {
+        return updateSalesInfoSign;
+    }
+
+    public void setUpdateSalesInfoSign(String updateSalesInfoSign) {
+        this.updateSalesInfoSign = updateSalesInfoSign;
     }
 
     public String getBackgroundDomain() {

@@ -16,6 +16,7 @@ function changePaging(currentPage, pageSize) {
 function resetPageNumber() {
     var searchWebsiteForm = $("#searchWebsiteForm");
     var websiteName = searchWebsiteForm.find("#websiteName").val();
+    var updateSalesInfoSign = searchWebsiteForm.find("#updateSalesInfoSign").val();
     var domain = searchWebsiteForm.find("#domain").val();
     var accessFailCount = searchWebsiteForm.find("#accessFailCount").val();
     var friendlyLinkUrl = searchWebsiteForm.find("#friendlyLinkUrl").val();
@@ -25,6 +26,9 @@ function resetPageNumber() {
     }
     if(domain != "") {
         searchWebsiteForm.find("#domain").val($.trim(domain));
+    }
+    if(updateSalesInfoSign != "") {
+        searchWebsiteForm.find("#updateSalesInfoSign").val($.trim(updateSalesInfoSign));
     }
     if(accessFailCount != "") {
         searchWebsiteForm.find("#accessFailCount").val($.trim(accessFailCount));
@@ -135,6 +139,7 @@ function assignment(websiteInfo) {
     websiteForm.find("#serverUserName").val(websiteInfo.serverUserName);
     websiteForm.find("#serverPassword").val(websiteInfo.serverPassword);
     websiteForm.find("#expiryTime").val(userDate(websiteInfo.expiryTime));
+    $("#websiteForm #websiteType option[value='" + websiteInfo.websiteType + "']").prop("selected", "selected");
 }
 function userDate(uData){
     var myDate = new Date(uData);
@@ -197,7 +202,7 @@ function showWebsiteDialog(uuid) {
     $("#websiteDialog").show();
     $("#websiteDialog").dialog({
         resizable: false,
-        width: 300,
+        width: 320,
         height: 365,
         modal: true,
         title: '网站信息',
@@ -242,6 +247,7 @@ function saveWebsite(uuid) {
     websiteObj.backgroundDomain = $.trim($("#websiteForm").find("#backgroundDomain").val());
     websiteObj.backgroundUserName = $.trim($("#websiteForm").find("#backgroundUserName").val());
     websiteObj.backgroundPassword = $.trim($("#websiteForm").find("#backgroundPassword").val());
+    websiteObj.websiteType = $.trim($("#websiteForm").find("#websiteType").val());
     websiteObj.databaseName = $.trim($("#websiteForm").find("#databaseName").val());
     websiteObj.databaseUserName = $.trim($("#websiteForm").find("#databaseUserName").val());
     websiteObj.databasePassword = $.trim($("#websiteForm").find("#databasePassword").val());
@@ -250,6 +256,10 @@ function saveWebsite(uuid) {
     websiteObj.serverPassword = $.trim($("#websiteForm").find("#serverPassword").val());
     if(websiteObj.domain == null || websiteObj.domain=="" || websiteObj.domain ==''){
         alert("域名不能为空");
+        return;
+    }
+    if(websiteObj.websiteType == null || websiteObj.websiteType == ""){
+        alert("请选择网站类型");
         return;
     }
     $.ajax({
@@ -273,6 +283,36 @@ function saveWebsite(uuid) {
         }
     });
 
+}
+function putSalesInfoToWebsite() {
+    var uuids = getSelectedIDs();
+    if (uuids === '') {
+        alert('请选择要推送的网站');
+        return;
+    }
+    if (confirm("确定要更新销售信息到这些网站吗?") == false) return;
+    var postData = {};
+    postData.uuids = uuids.split(",");
+    $.ajax({
+        url: '/internal/website/putSalesInfoToWebsite',
+        data: JSON.stringify(postData),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        timeout: 5000,
+        type: 'POST',
+        success: function (data) {
+            if (data) {
+                $().toastmessage('showSuccessToast', "操作成功",true);
+            } else {
+                $().toastmessage('showErrorToast', "操作失败");
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "操作失败");
+        }
+    });
 }
 
 function showBatchAddFriendlyLinkDialog(friendlyLinkUrl) {

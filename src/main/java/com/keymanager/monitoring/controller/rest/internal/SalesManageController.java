@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.entity.OperationType;
 import com.keymanager.monitoring.entity.SalesManage;
+import com.keymanager.monitoring.enums.WebsiteTypeEnum;
 import com.keymanager.monitoring.service.OperationTypeService;
 import com.keymanager.monitoring.service.SalesManageService;
 import com.keymanager.util.AESUtils;
@@ -63,6 +64,7 @@ public class SalesManageController extends SpringMVCBaseController {
         List<SalesManage> list = salesManageService.SearchSalesManages(salesManage, page);
         page.setRecords(list);
         modelAndView.addObject("salesManage", salesManage);
+        modelAndView.addObject("websiteTypeMap", WebsiteTypeEnum.changeToMap());
         modelAndView.addObject("page", page);
         return modelAndView;
     }

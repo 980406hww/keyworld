@@ -42,8 +42,6 @@
                         <input type="button" class="ui-button ui-widget ui-corner-all" value=" 添加 " onclick="showSalesManageDialog(null)"/>
                         &nbsp;
                         <input type="button" class="ui-button ui-widget ui-corner-all" value=" 删除所选 " onclick="deleteBatchOperationType(this)"/>
-                        &nbsp;
-                        <input type="button" class="ui-button ui-widget ui-corner-all" value=" 更新至SEO站点 " onclick="updateInfoToOther()"/>
                     </div>
                 </form>
             </td>
@@ -72,51 +70,51 @@
     <form id="salesManageForm">
         <table style="font-size:12px" id="operationTypeTable" align="center" cellspacing="8">
             <tr>
-                <td style="width:80px" align="right">销售名称:</td>
+                <td style="width:70px" align="right">销售名称:</td>
                 <td>
                     <input type="hidden" name="uuid" id="uuid" style="width:180px;">
                     <input type="text" name="formSalesName" id="formSalesName" style="width:180px;" title="" autocomplete="off">
                 </td>
             </tr>
             <tr>
-                <td style="width:80px" align="right">电话号码:</td>
+                <td style="width:70px" align="right">电话号码:</td>
                 <td>
                     <input type="text" name="telephone" id="telephone" style="width:180px;" title="" autocomplete="off">
                 </td>
             </tr>
             <tr>
-                <td style="width:80px" align="right">QQ号:</td>
+                <td style="width:70px" align="right">QQ号:</td>
                 <td>
                     <input type="text" name="qq" id="qq" style="width:180px;" title="" autocomplete="off">
                 </td>
             </tr>
             <tr>
-                <td style="width:80px" align="right">微信号:</td>
+                <td style="width:70px" align="right">微信号:</td>
                 <td>
                     <input type="text" name="weChat" id="weChat" style="width:180px;" title="" autocomplete="off">
                 </td>
             </tr>
             <tr>
-                <td style="width:80px" align="right">二维码链接:</td>
+                <td style="width:70px" align="right">二维码链接:</td>
                 <td>
+                    <input type="file" id="qrCode" style="filter:alpha(opacity=0);opacity:1;width: 0;height: 0;display: none">
                     <input type="text" name="quickResponseCode" id="quickResponseCode" style="width:180px;" title="" autocomplete="off">
                 </td>
             </tr>
             <tr>
-                <td style="width:80px" align="right">邮箱:</td>
+                <td style="width:70px" align="right">邮箱:</td>
                 <td>
                     <input type="text" name="email" id="email" style="width:180px;" title="" autocomplete="off">
                 </td>
             </tr>
             <tr>
-                <td style="width:80px" align="right">负责部分:</td>
+                <td style="width:70px" align="right">负责部分:</td>
                 <td>
                     <select id="managePart" name="managePart" style="width: 180px" title="">
                         <option value="" selected="selected">请选择</option>
-                        <option value="ASO">ASO</option>
-                        <option value="整站">整站</option>
-                        <option value="负面">负面</option>
-                        <option value="亚马逊">亚马逊</option>
+                        <c:forEach items="${websiteTypeMap}" var="websiteType">
+                            <option value="${websiteType.key}">${websiteType.value}</option>
+                        </c:forEach>
                     </select>
                 </td>
             </tr>
@@ -137,7 +135,7 @@
                 <td width=80>${salesManage.weChat}</td>
                 <td width=120>${salesManage.quickResponseCode}</td>
                 <td width=80>${salesManage.email}</td>
-                <td style="text-align: center" width=70>${salesManage.managePart}</td>
+                <td style="text-align: center" width=70>${websiteTypeMap[salesManage.managePart]}</td>
                 <td width=80 style="text-align: center">
                     <fmt:formatDate value="${salesManage.createTime}" pattern="yyyy-MM-dd"/>
                 </td>
@@ -175,6 +173,7 @@
     </div>
 </div>
 <%@ include file="/commons/loadjs.jsp" %>
+<script src="${staticPath}/static/qrCode/reqrcode.js"></script>
 <script src="${staticPath}/salesManage/salesManage.js"></script>
 <script type="text/javascript">
     $(function () {

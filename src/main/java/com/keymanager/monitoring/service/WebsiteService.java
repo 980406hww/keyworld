@@ -1,5 +1,6 @@
 package com.keymanager.monitoring.service;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.criteria.WebsiteCriteria;
@@ -9,13 +10,27 @@ import com.keymanager.monitoring.entity.FriendlyLink;
 import com.keymanager.monitoring.entity.Website;
 import com.keymanager.monitoring.vo.AdvertisingVO;
 import com.keymanager.monitoring.vo.FriendlyLinkVO;
+import com.keymanager.monitoring.enums.PutSalesInfoSignEnum;
+import com.keymanager.monitoring.vo.SalesManageVO;
+import com.keymanager.monitoring.vo.WebsiteBackGroundInfoVO;
 import com.keymanager.monitoring.vo.WebsiteVO;
+import com.keymanager.util.AESUtils;
 import com.keymanager.util.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.util.MultiValueMap;
+import org.springframework.util.concurrent.FailureCallback;
+import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.util.concurrent.SuccessCallback;
+import org.springframework.web.client.AsyncRestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -39,11 +54,14 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
     private KeywordInfoService keywordInfoService;
 
     @Autowired
-    private FriendlyLinkService friendlyLinkService;
+    private SalesManageService salesManageService;
 
     @Autowired
     private AdvertisingService advertisingService;
 
+    @Autowired
+    private FriendlyLinkService friendlyLinkService;
+    
     public Page<WebsiteVO> searchWebsites(Page<WebsiteVO> page, WebsiteCriteria websiteCriteria) {
         page.setRecords(websiteDao.searchWebsites(page, websiteCriteria));
         return page;
@@ -133,6 +151,58 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
         return websites;
     }
 
+    public void putSalesInfoToWebsite(List uuids){
+        final List<WebsiteBackGroundInfoVO> websites = websiteDao.selectBackGroundInfoForUpdateSalesInfo(uuids);
+
+        AsyncRestTemplate asyncRestTemplate = new AsyncRestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Accept", MediaType.APPLICATION_JSON_UTF8_VALUE);
+
+        MultiValueMap<String, Object> params = new LinkedMultiValueMap<>();
+        Map<String, Object> postMap = new HashMap<>();
+        for (final WebsiteBackGroundInfoVO website : websites) {
+            List<SalesManageVO> salesManages = salesManageService.getAllSalesInfo(website.getWebsiteType());
+            postMap.put("sale_list", salesManages);
+            postMap.put("username", AESUtils.encrypt(website.getBackgroundUserName()));
+            postMap.put("password", AESUtils.encrypt(website.getBackgroundPassword()));
+            String url = "http://" + website.getBackgroundDomain() + "sales_management.php";
+            params.set("params", postMap);
+            HttpEntity<MultiValueMap> requestEntity = new HttpEntity<MultiValueMap>(params, headers);
+            ListenableFuture<ResponseEntity<String>> forEntity = asyncRestTemplate.postForEntity(url, requestEntity, String.class);
+            forEntity.addCallback(new SuccessCallback<ResponseEntity<String>>() {
+                @Override
+                public void onSuccess(ResponseEntity<String> response) {
+                    Website websiteInfo = new Website();
+                    websiteInfo.setUuid(website.getUuid());
+                    if (!response.getStatusCode().toString().equals("200")) {
+                        websiteInfo.setUpdateSalesInfoSign(PutSalesInfoSignEnum.Refuse.getValue());
+                        websiteDao.updateById(websiteInfo);
+                    } else {
+                        try {
+                            Map map = JSON.parseObject(response.getBody());
+                            String status = (String) map.get("status");
+                            websiteInfo.setUpdateSalesInfoSign(status.equals("success") ? PutSalesInfoSignEnum.Normal.getValue() : PutSalesInfoSignEnum.OperatingFail.getValue());
+                        } catch (Exception e) {
+                            websiteInfo.setUpdateSalesInfoSign(PutSalesInfoSignEnum.UpdateException.getValue());
+                        }
+                    }
+                    websiteInfo.setUpdateTime(new Date());
+                    websiteDao.updateById(websiteInfo);
+                }
+            }, new FailureCallback() {
+                @Override
+                public void onFailure(Throwable throwable) {
+                    Website websiteInfo = new Website();
+                    websiteInfo.setUuid(website.getUuid());
+                    websiteInfo.setUpdateSalesInfoSign(PutSalesInfoSignEnum.RequestException.getValue()); // 请求异常
+                    websiteInfo.setUpdateTime(new Date());
+                    websiteDao.updateById(websiteInfo);
+                }
+            });
+        }    
+    }
+    
     public FriendlyLink initFriendlyLink(HttpServletRequest request) throws Exception{
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         FriendlyLink friendlyLink = new FriendlyLink();

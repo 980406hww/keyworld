@@ -17,7 +17,7 @@ public class Website extends BaseEntity {
     @TableField(value = "fDomain")
     private String domain;
 
-    @TableField(value = "fIndustry", strategy = FieldStrategy.IGNORED)
+    @TableField(value = "fIndustry")
     private String industry;
 
     @TableField(value = "fRegistrar")//注册商
@@ -65,6 +65,12 @@ public class Website extends BaseEntity {
 
     @TableField(value = "fLastAccessTime")
     private Date lastAccessTime;
+
+    @TableField(value = "fWebsiteType")
+    private String websiteType;
+
+    @TableField(value = "fUpdateSalesInfoSign")
+    private String updateSalesInfoSign;
 
     public String getWebsiteName() {
         return websiteName;
@@ -208,5 +214,21 @@ public class Website extends BaseEntity {
 
     public void setBackgroundPassword(String backgroundPassword) {
         this.backgroundPassword = backgroundPassword;
+    }
+
+    public String getWebsiteType() {
+        return websiteType;
+    }
+
+    public void setWebsiteType(String websiteType) {
+        this.websiteType = websiteType;
+    }
+
+    public String getUpdateSalesInfoSign() {
+        return updateSalesInfoSign;
+    }
+
+    public void setUpdateSalesInfoSign(String updateSalesInfoSign) {
+        this.updateSalesInfoSign = updateSalesInfoSign;
     }
 }

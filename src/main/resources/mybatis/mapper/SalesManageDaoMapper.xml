@@ -23,7 +23,7 @@
         </if>
     </select>
 
-    <select id="selectAllSalesInfo" resultType="java.util.Map">
+    <select id="selectAllSalesInfo" parameterType="java.lang.String" resultType="com.keymanager.monitoring.vo.SalesManageVO">
         SELECT
         fSalesName AS 'salesName',
         fTelephone AS 'telephone',
@@ -34,6 +34,8 @@
         fManagePart AS 'managePart'
         FROM
         t_sales_manage
+        WHERE
+        fManagePart = #{websiteType}
     </select>
 
 </mapper>

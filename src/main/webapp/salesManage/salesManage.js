@@ -2,6 +2,28 @@ $(function () {
     $("#salesManageDialog").dialog("close");
     $("#showOperationTypeTableDiv").css("margin-top", $("#topDiv").height());
     pageLoad();
+    $("#quickResponseCode").on("click", function () {
+        $("#qrCode").trigger("click");
+    });
+
+    $("#qrCode").on("change", function () {
+        qrcode.decode(getObjectURL(this.files[0]));
+        qrcode.callback = function (imgMsg) {
+            $("#quickResponseCode").val(imgMsg);
+        }
+    });
+
+    var getObjectURL = function (file) {
+        var url = null;
+        if (window.createObjectURL != undefined) { // basic
+            url = window.createObjectURL(file);
+        } else if (window.URL != undefined) { // mozilla(firefox)
+            url = window.URL.createObjectURL(file);
+        } else if (window.webkitURL != undefined) { // webkit or chrome
+            url = window.webkitURL.createObjectURL(file);
+        }
+        return url;
+    };
 });
 
 function pageLoad() {
@@ -104,43 +126,34 @@ function showSalesManageDialog(uuid) {
 // 添加
 function saveOperationType(uuid) {
     var salesManageForm = $("#salesManageDialog").find("#salesManageForm");
-    var salesName = salesManageForm.find("#formSalesName").val();
-    if (salesName == null || salesName == "") {
+    var salesManage = {};
+    salesManage.uuid = uuid;
+    salesManage.salesName = $.trim(salesManageForm.find("#formSalesName").val());
+    salesManage.telephone = $.trim(salesManageForm.find("#telephone").val());
+    salesManage.qq = $.trim(salesManageForm.find("#qq").val());
+    salesManage.weChat = $.trim(salesManageForm.find("#weChat").val());
+    salesManage.email = $.trim(salesManageForm.find("#email").val());
+    salesManage.managePart = $.trim(salesManageForm.find("#managePart").val());
+    salesManage.quickResponseCode = $.trim(salesManageForm.find("#quickResponseCode").val());
+    if (salesManage.salesName == null || salesManage.salesName == "") {
         $().toastmessage('showErrorToast', "请输入销售名称！", false);
         return;
     }
-
-    var telephone = salesManageForm.find("#telephone").val();
-    var qq = salesManageForm.find("#qq").val();
-    var weChat = salesManageForm.find("#weChat").val();
-    var quickResponseCode = salesManageForm.find("#quickResponseCode").val();
-    var email = salesManageForm.find("#email").val();
-    var managePart = salesManageForm.find("#managePart").val();
-
-    if (telephone == "") {
+    if (salesManage.telephone == "") {
         $().toastmessage('showErrorToast', "请输入手机号码！", false);
         return;
     }
-    if (!/^1[34578][0-9]{9}$/.test(telephone)) {
+    if (!/^1[34578][0-9]{9}$/.test(salesManage.telephone)) {
         $().toastmessage('showErrorToast', "手机号码格式不正确！", false);
         return;
     }
-
-    if (managePart == "") {
+    if (salesManage.managePart == "") {
         $().toastmessage('showErrorToast', "请选择销售负责的部分！", false);
         return;
     }
-
-    var salesManage = {};
-    salesManage.uuid = uuid;
-    salesManage.salesName = $.trim(salesName);
-    salesManage.telephone = $.trim(telephone);
-    salesManage.qq = $.trim(qq);
-    salesManage.weChat = $.trim(weChat);
-    salesManage.email = $.trim(email);
-    salesManage.weChat = $.trim(weChat);
-    salesManage.managePart = $.trim(managePart);
-    salesManage.quickResponseCode = $.trim(quickResponseCode);
+    if(salesManage.quickResponseCode == "error decoding QR Code" || salesManage.quickResponseCode == "Failed to load the image"){
+        salesManage.quickResponseCode = null;
+    }
     $.ajax({
         url: '/internal/salesManage/saveSalesManage',
         data: JSON.stringify(salesManage),
@@ -235,32 +248,6 @@ function deleteBatchOperationType() {
         },
         error: function () {
             $().toastmessage('showErrorToast', "操作失败");
-        }
-    });
-}
-
-// 更新至SEO站点
-function updateInfoToOther() {
-    if (confirm("确实要将信息更新至各个站点吗?") == false) {
-        return;
-    }
-    $.ajax({
-        url: '/internal/salesManage/updateInfoToOther',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        timeout: 5000,
-        type: 'POST',
-        success: function (data) {
-            if (data) {
-                $().toastmessage('showSuccessToast', "更新成功", true);
-            } else {
-                $().toastmessage('showErrorToast', "更新失败", true);
-            }
-        },
-        error: function () {
-            $().toastmessage('showErrorToast', "更新失败");
         }
     });
 }

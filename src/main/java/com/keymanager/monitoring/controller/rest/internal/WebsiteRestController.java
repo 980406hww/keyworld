@@ -8,6 +8,10 @@ import com.keymanager.monitoring.entity.FriendlyLink;
 import com.keymanager.monitoring.entity.Website;
 import com.keymanager.monitoring.service.AdvertisingService;
 import com.keymanager.monitoring.service.FriendlyLinkService;
+import com.keymanager.monitoring.enums.PutSalesInfoSignEnum;
+import com.keymanager.monitoring.enums.QZSettingOperationTypeEnum;
+import com.keymanager.monitoring.enums.WebsiteTypeEnum;
+import com.keymanager.monitoring.service.SalesManageService;
 import com.keymanager.monitoring.service.WebsiteService;
 import com.keymanager.monitoring.vo.WebsiteVO;
 import com.keymanager.util.FileUtil;
@@ -53,6 +57,9 @@ public class WebsiteRestController extends SpringMVCBaseController {
     @Autowired
     private AdvertisingService advertisingService;
 
+    @Autowired
+    private SalesManageService salesManageService;
+
     @RequiresPermissions("/internal/website/searchWebsites")
     @RequestMapping(value = "/searchWebsites", method = RequestMethod.GET)
     public ModelAndView searchWebsites(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request) {
@@ -73,8 +80,10 @@ public class WebsiteRestController extends SpringMVCBaseController {
 
     private ModelAndView constructWebsiteModelAndView(WebsiteCriteria websiteCriteria, int currentPageNumber, int pageSize) {
         ModelAndView modelAndView = new ModelAndView("/website/website");
-        Page<WebsiteVO> page = websiteService.searchWebsites(new Page<WebsiteVO>(currentPageNumber,pageSize), websiteCriteria);
+        Page<WebsiteVO> page = websiteService.searchWebsites(new Page<WebsiteVO>(currentPageNumber, pageSize), websiteCriteria);
         modelAndView.addObject("websiteCriteria", websiteCriteria);
+        modelAndView.addObject("websiteTypeMap", WebsiteTypeEnum.changeToMap());
+        modelAndView.addObject("putSalesInfoSignMap", PutSalesInfoSignEnum.changeToMap());
         modelAndView.addObject("page", page);
         return modelAndView;
     }
@@ -234,6 +243,18 @@ public class WebsiteRestController extends SpringMVCBaseController {
     public ResponseEntity<?> synchronousAdvertising(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
         try {
             websiteService.synchronousAdvertising(requestMap, GetIpUtil.getIP(request));
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/putSalesInfoToWebsite", method = RequestMethod.POST)
+    public ResponseEntity<?> putSalesInfoToWebsite(@RequestBody Map<String, Object> requestMap) {
+        try {
+            List uuids = (List) requestMap.get("uuids");
+            websiteService.putSalesInfoToWebsite(uuids);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
