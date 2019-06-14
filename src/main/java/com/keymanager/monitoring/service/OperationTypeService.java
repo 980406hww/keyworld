@@ -63,10 +63,7 @@ public class OperationTypeService extends ServiceImpl<OperationTypeDao, Operatio
         if (subject.hasRole("AlgorithmGroup")) {
             flag = 1;
         }
-        List<String> list = operationTypeDao.getOperationTypeByTerminalTypeAndRole(terminalType, flag);
-        list.add("");
-        Collections.sort(list);
-        return list;
+        return operationTypeDao.getOperationTypeByTerminalTypeAndRole(terminalType, flag);
     }
 
     @CacheEvict(value = "operationTypeList", key = "#terminalType")

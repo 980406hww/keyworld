@@ -46,6 +46,7 @@
         <if test="flag == 0">
             AND fStatus = 1
         </if>
+        ORDER BY fOperationTypeName
     </select>
 
 </mapper>

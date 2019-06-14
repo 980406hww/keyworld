@@ -55,10 +55,15 @@
 					<span>操作类型: </span>
 					<span>
 						<select name="operationType" onchange="changeOperationType();" style="width: 150px;">
+                            <option value=""></option>
 							<c:forEach items="${operationTypeValues}" var="operationType">
 								<c:choose>
-									<c:when test="${operationType eq groupSettingCriteria.operationType}"><option selected>${operationType}</option></c:when>
-									<c:otherwise><option>${operationType}</option></c:otherwise>
+									<c:when test="${operationType eq groupSettingCriteria.operationType}">
+                                        <option selected>${operationType}</option>
+                                    </c:when>
+									<c:otherwise>
+                                        <option>${operationType}</option>
+                                    </c:otherwise>
 								</c:choose>
 							</c:forEach>
 						</select>
@@ -421,6 +426,7 @@
 							<th>操作类型</th>
 							<td>
 								<select name="settingOperationType" id="settingOperationType">
+									<option value=""></option>
 									<c:forEach items="${operationTypeValues}" var="operationType">
 										<option value="${operationType}">${operationType}</option>
 									</c:forEach>
