@@ -163,6 +163,7 @@
                 WHERE qs.fUuid = qot.fQZSettingUuid
                 AND qot.fOperationtype = #{qzSettingSearchCriteria.terminalType}
                 AND qot.fOptimizationType = #{qzSettingSearchCriteria.optimizationType}
+                AND qot.fIsDeleted = 0
             )
         </if>
         <if test="qzSettingSearchCriteria.checkStatus != null">
@@ -181,6 +182,7 @@
                     FROM t_qz_operation_type qot
                     WHERE qot.fQZSettingUuid = qk.fQZSettingUuid
                     AND qot.fOperationtype = qk.fTerminalType
+                    AND qot.fIsDeleted = 0
                     AND qot.fStandardTime &gt; ''
                     )
                 </when>
@@ -191,6 +193,7 @@
                     FROM t_qz_operation_type qot
                     WHERE qot.fQZSettingUuid = qk.fQZSettingUuid
                     AND qot.fOperationtype = qk.fTerminalType
+                    AND qot.fIsDeleted = 0
                     AND qot.fStandardTime IS NULL
                     )
                 </when>
@@ -328,6 +331,7 @@
             WHERE ck.fType = 'qz'
             AND ck.fTerminalType = #{operationType}
             AND ck.fStatus > 0
+            AND qot.fIsDeleted = 0
             GROUP BY qot.fUuid
             HAVING COUNT(1) > qot.fMaxKeywordCount
         ) qz;
