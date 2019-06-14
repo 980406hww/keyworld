@@ -185,7 +185,7 @@ function showWebsiteDialog(uuid) {
     $("#websiteDialog").show();
     $("#websiteDialog").dialog({
         resizable: false,
-        width: 300,
+        width: 320,
         height: 365,
         modal: true,
         title: '网站信息',
@@ -230,6 +230,7 @@ function saveWebsite(uuid) {
     websiteObj.backgroundDomain = $.trim($("#websiteForm").find("#backgroundDomain").val());
     websiteObj.backgroundUserName = $.trim($("#websiteForm").find("#backgroundUserName").val());
     websiteObj.backgroundPassword = $.trim($("#websiteForm").find("#backgroundPassword").val());
+    websiteObj.websiteType = $.trim($("#websiteForm").find("#websiteType").text());
     websiteObj.databaseName = $.trim($("#websiteForm").find("#databaseName").val());
     websiteObj.databaseUserName = $.trim($("#websiteForm").find("#databaseUserName").val());
     websiteObj.databasePassword = $.trim($("#websiteForm").find("#databasePassword").val());

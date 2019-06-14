@@ -20,8 +20,8 @@ public class SalesManageService extends ServiceImpl<SalesManageDao, SalesManage>
     @Autowired
     private SalesManageDao salesManageDao;
 
-    public List<SalesManageCriteria> getAllSalesInfo() {
-        return salesManageDao.selectAllSalesInfo();
+    public List<SalesManageCriteria> getAllSalesInfo(String websiteType) {
+        return salesManageDao.selectAllSalesInfo(websiteType);
     }
 
     public void deleteSalesManage(Long uuid) {

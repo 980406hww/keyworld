@@ -206,6 +206,17 @@
                 <td align="right">服务器密码:</td>
                 <td><input type="text" name="serverPassword" id="serverPassword" style="width:200px;"></td>
             </tr>
+            <tr>
+                <td align="right">网站类型:</td>
+                <td>
+                    <select name="websiteType" style="width: 150px;" title="">
+                        <option value="" selected="selected"></option>
+                        <c:forEach items="${websiteTypeList}" var="websiteType">
+                            <option value="${websiteType}">${websiteTypeMap[websiteType]}</option>
+                        </c:forEach>
+                    </select>
+                </td>
+            </tr>
         </table>
     </form>
 </div>

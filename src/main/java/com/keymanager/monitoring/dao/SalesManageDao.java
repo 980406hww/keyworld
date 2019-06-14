@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public interface SalesManageDao extends BaseMapper<SalesManage> {
 
-    List<SalesManageCriteria> selectAllSalesInfo();
+    List<SalesManageCriteria> selectAllSalesInfo(@Param("websiteType") String websiteType);
 
     List<SalesManage> getSalesManages(Page<SalesManage> page, @Param("salesManage") SalesManage salesManage);
 }

@@ -17,7 +17,7 @@ public class Website extends BaseEntity {
     @TableField(value = "fDomain")
     private String domain;
 
-    @TableField(value = "fIndustry", strategy = FieldStrategy.IGNORED)
+    @TableField(value = "fIndustry")
     private String industry;
 
     @TableField(value = "fRegistrar")//注册商

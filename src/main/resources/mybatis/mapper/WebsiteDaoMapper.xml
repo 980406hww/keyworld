@@ -61,12 +61,18 @@
 
 	<select id="selectBackGroundInfoForUpdateSalesInfo" resultType="com.keymanager.monitoring.criteria.WebsiteBackGroundInfoCriteria">
 		SELECT
+		fUuid AS 'uuid',
 		fBackgroundDomain AS 'backgroundDomain',
 		fBackgroundUserName AS 'backgroundUserName',
 		fBackgroundPassword AS 'backgroundPassword',
 		fWebsiteType AS 'websiteType'
 		FROM
 		t_website
+		WHERE
+		fUuid IN
+		<foreach collection="uuids" item="uuid" open="(" separator="," close=")">
+			#{uuid}
+		</foreach>
 	</select>
 
 </mapper>

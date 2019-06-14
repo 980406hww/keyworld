@@ -5,10 +5,19 @@ package com.keymanager.monitoring.criteria;
  */
 public class WebsiteBackGroundInfoCriteria {
 
+    private Long uuid;
     private String backgroundDomain;
     private String backgroundUserName;
     private String backgroundPassword;
     private String websiteType;
+
+    public Long getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(Long uuid) {
+        this.uuid = uuid;
+    }
 
     public String getBackgroundDomain() {
         return backgroundDomain;
