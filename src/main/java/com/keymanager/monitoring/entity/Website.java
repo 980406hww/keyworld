@@ -70,7 +70,7 @@ public class Website extends BaseEntity {
     private String websiteType;
 
     @TableField(value = "fUpdateSalesInfoSign")
-    private Integer updateSalesInfoSign;
+    private String updateSalesInfoSign;
 
     public String getWebsiteName() {
         return websiteName;
@@ -224,11 +224,11 @@ public class Website extends BaseEntity {
         this.websiteType = websiteType;
     }
 
-    public Integer getUpdateSalesInfoSign() {
+    public String getUpdateSalesInfoSign() {
         return updateSalesInfoSign;
     }
 
-    public void setUpdateSalesInfoSign(Integer updateSalesInfoSign) {
+    public void setUpdateSalesInfoSign(String updateSalesInfoSign) {
         this.updateSalesInfoSign = updateSalesInfoSign;
     }
 }

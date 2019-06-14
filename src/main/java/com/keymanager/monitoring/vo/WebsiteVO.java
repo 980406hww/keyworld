@@ -24,7 +24,7 @@ public class WebsiteVO{
     private Date accessFailTime;
     private Date lastAccessTime;
     private String websiteType;
-    private Integer updateSalesInfoSign;
+    private String updateSalesInfoSign;
     private int friendlyLinkCount;
     private int advertisingCount;
     private Date updateTime;
@@ -190,11 +190,11 @@ public class WebsiteVO{
         this.websiteType = websiteType;
     }
 
-    public Integer getUpdateSalesInfoSign() {
+    public String getUpdateSalesInfoSign() {
         return updateSalesInfoSign;
     }
 
-    public void setUpdateSalesInfoSign(Integer updateSalesInfoSign) {
+    public void setUpdateSalesInfoSign(String updateSalesInfoSign) {
         this.updateSalesInfoSign = updateSalesInfoSign;
     }
 

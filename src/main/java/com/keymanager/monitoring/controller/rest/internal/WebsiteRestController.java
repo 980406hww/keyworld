@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.WebsiteCriteria;
 import com.keymanager.monitoring.entity.Website;
+import com.keymanager.monitoring.enums.PutSalesInfoSignEnum;
 import com.keymanager.monitoring.enums.QZSettingOperationTypeEnum;
 import com.keymanager.monitoring.enums.WebsiteTypeEnum;
 import com.keymanager.monitoring.service.SalesManageService;
@@ -59,6 +60,7 @@ public class WebsiteRestController extends SpringMVCBaseController {
         Page<WebsiteVO> page = websiteService.searchWebsites(new Page<WebsiteVO>(currentPageNumber, pageSize), websiteCriteria);
         modelAndView.addObject("websiteCriteria", websiteCriteria);
         modelAndView.addObject("websiteTypeMap", WebsiteTypeEnum.changeToMap());
+        modelAndView.addObject("putSalesInfoSignMap", PutSalesInfoSignEnum.changeToMap());
         modelAndView.addObject("page", page);
         return modelAndView;
     }

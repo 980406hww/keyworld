@@ -102,7 +102,7 @@
             <td width=70>${website.backgroundDomain}</td>
             <td width=70>${website.backgroundUserName}</td>
             <td width=70>${website.backgroundPassword}</td>
-            <td width=70 align="center">${(website.updateSalesInfoSign == 1 || website.updateSalesInfoSign == 0) ? "正常" : website.updateSalesInfoSign == 2 ? "操作失败" : "请求异常"}</td>
+            <td width=70 align="center">${putSalesInfoSignMap.get(website.updateSalesInfoSign)}</td>
             <td width=70>${website.databaseName}</td>
             <td width=70>${website.databaseUserName}</td>
             <td width=70>${website.databasePassword}</td>

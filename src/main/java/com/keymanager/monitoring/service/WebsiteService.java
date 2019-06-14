@@ -6,9 +6,11 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.criteria.WebsiteCriteria;
 import com.keymanager.monitoring.dao.WebsiteDao;
 import com.keymanager.monitoring.entity.Website;
+import com.keymanager.monitoring.enums.PutSalesInfoSignEnum;
 import com.keymanager.monitoring.vo.SalesManageVO;
 import com.keymanager.monitoring.vo.WebsiteBackGroundInfoVO;
 import com.keymanager.monitoring.vo.WebsiteVO;
+import com.keymanager.util.AESUtils;
 import com.keymanager.util.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -136,7 +138,7 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
     }
 
     public void putSalesInfoToWebsite(List uuids){
-        List<WebsiteBackGroundInfoVO> websites = websiteDao.selectBackGroundInfoForUpdateSalesInfo(uuids);
+        final List<WebsiteBackGroundInfoVO> websites = websiteDao.selectBackGroundInfoForUpdateSalesInfo(uuids);
 
         AsyncRestTemplate asyncRestTemplate = new AsyncRestTemplate();
         HttpHeaders headers = new HttpHeaders();
@@ -149,22 +151,29 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
             List<SalesManageVO> salesManages = salesManageService.getAllSalesInfo(website.getWebsiteType());
             postMap.put("sale_list", salesManages);
             postMap.put("sign", website.getUuid());
-            postMap.put("username", website.getBackgroundUserName());
-            postMap.put("password", website.getBackgroundPassword());
-            final String url = "http://" + website.getBackgroundDomain() + "sales_management.php";
+            postMap.put("username", AESUtils.encrypt(website.getBackgroundUserName()));
+            postMap.put("password", AESUtils.encrypt(website.getBackgroundPassword()));
+            String url = "http://" + website.getBackgroundDomain() + "sales_management.php";
             params.set("params", postMap);
             HttpEntity<MultiValueMap> requestEntity = new HttpEntity<MultiValueMap>(params, headers);
             ListenableFuture<ResponseEntity<String>> forEntity = asyncRestTemplate.postForEntity(url, requestEntity, String.class);
             forEntity.addCallback(new SuccessCallback<ResponseEntity<String>>() {
                 @Override
-                public void onSuccess(ResponseEntity<String> stringResponseEntity) {
-                    String body = stringResponseEntity.getBody();
-                    Map map = JSON.parseObject(body);
-                    String status = (String) map.get("status");
-                    Integer uuid = (Integer) map.get("sign");
+                public void onSuccess(ResponseEntity<String> response) {
                     Website websiteInfo = new Website();
-                    websiteInfo.setUuid(Long.valueOf(uuid));
-                    websiteInfo.setUpdateSalesInfoSign(status.equals("success") ? 1 : 2);// 成功，失败
+                    websiteInfo.setUuid(website.getUuid());
+                    if (response.getStatusCode().toString().equals("302")) {
+                        websiteInfo.setUpdateSalesInfoSign(PutSalesInfoSignEnum.Refuse.getValue());
+                        websiteDao.updateById(websiteInfo);
+                    } else {
+                        try {
+                            Map map = JSON.parseObject(response.getBody());
+                            String status = (String) map.get("status");
+                            websiteInfo.setUpdateSalesInfoSign(status.equals("success") ? PutSalesInfoSignEnum.Normal.getValue() : PutSalesInfoSignEnum.OperatingFail.getValue());
+                        } catch (Exception e) {
+                            websiteInfo.setUpdateSalesInfoSign(PutSalesInfoSignEnum.UpdateException.getValue());
+                        }
+                    }
                     websiteInfo.setUpdateTime(new Date());
                     websiteDao.updateById(websiteInfo);
                 }
@@ -173,7 +182,7 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
                 public void onFailure(Throwable throwable) {
                     Website websiteInfo = new Website();
                     websiteInfo.setUuid(website.getUuid());
-                    websiteInfo.setUpdateSalesInfoSign(3); // 异常
+                    websiteInfo.setUpdateSalesInfoSign(PutSalesInfoSignEnum.RequestException.getValue()); // 请求异常
                     websiteInfo.setUpdateTime(new Date());
                     websiteDao.updateById(websiteInfo);
                 }
