@@ -10,6 +10,7 @@ import com.keymanager.monitoring.dao.FriendlyLinkDao;
 import com.keymanager.monitoring.entity.Advertising;
 import com.keymanager.monitoring.entity.FriendlyLink;
 import com.keymanager.monitoring.entity.Website;
+import com.keymanager.monitoring.vo.AdvertisingVO;
 import com.keymanager.monitoring.vo.FriendlyLinkVO;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -30,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class AdvertisingService extends ServiceImpl<FriendlyLinkDao, FriendlyLink> {
+public class AdvertisingService extends ServiceImpl<AdvertisingDao, Advertising> {
 
     @Autowired
     private WebsiteService websiteService;
@@ -96,14 +97,18 @@ public class AdvertisingService extends ServiceImpl<FriendlyLinkDao, FriendlyLin
             requestMap.add("dopost", "save");
             requestMap.add("normbody", advertising.getNormbody());
             JSONObject jsonObject = JSONObject.fromObject(connectionAdvertisingCMS(requestMap, "add", website.getBackgroundDomain()));
-            advertising.setAdvertisingId((Integer) jsonObject.get("id"));
-            advertising.setAdvertisingNormbody((String) jsonObject.get("normbody"));
+            if (!"error".equals(jsonObject.get("status"))){
+                advertising.setAdvertisingId((Integer) jsonObject.get("id"));
+                advertising.setAdvertisingNormbody((String) jsonObject.get("normbody"));
+            }
         }else {
             requestMap.add("dopost", "saveedit");
             requestMap.add("aid", advertising.getAdvertisingId());
             requestMap.add("normbody", advertising.getAdvertisingNormbody());
             JSONObject jsonObject = JSONObject.fromObject(connectionAdvertisingCMS(requestMap, "saveedit", website.getBackgroundDomain()));
-            advertising.setAdvertisingNormbody((String) jsonObject.get("normbody"));
+            if (!"error".equals(jsonObject.get("status"))){
+                advertising.setAdvertisingNormbody((String) jsonObject.get("normbody"));
+            }
         }
     }
 
@@ -118,7 +123,7 @@ public class AdvertisingService extends ServiceImpl<FriendlyLinkDao, FriendlyLin
         connectionAdvertisingCMS(requestMap, "delete", website.getBackgroundDomain());
     }
 
-    public List<FriendlyLinkVO> selectConnectionCMS(Long websiteUuid, String ip){
+    public List<AdvertisingVO> selectConnectionCMS(Long websiteUuid, String ip){
         Website website = websiteService.getWebsite(websiteUuid);
         MultiValueMap requestMap = new LinkedMultiValueMap();
         requestMap.add("username", website.getBackgroundUserName());
@@ -127,8 +132,8 @@ public class AdvertisingService extends ServiceImpl<FriendlyLinkDao, FriendlyLin
         requestMap.add("dopost", "select");
         String resultJsonString = connectionAdvertisingCMS(requestMap,"select", website.getBackgroundDomain());
         JSONArray jsonArray = JSONArray.fromObject(resultJsonString);
-        List<FriendlyLinkVO> friendlyLinkVOS = JSONArray.toList(jsonArray, new FriendlyLinkVO(), new JsonConfig());
-        return friendlyLinkVOS;
+        List<AdvertisingVO> advertisingVOS = JSONArray.toList(jsonArray, new AdvertisingVO(), new JsonConfig());
+        return advertisingVOS;
     }
 
     public String connectionAdvertisingCMS(MultiValueMap requestMap, String type, String backgroundDomain){
@@ -139,7 +144,7 @@ public class AdvertisingService extends ServiceImpl<FriendlyLinkDao, FriendlyLin
         if ("add".equals(type)){
             resultJsonString = restTemplate.postForObject(backgroundDomain + "ad_m_add.php",  requestMap, String.class);
         }else if ("select".equals(type)){
-            resultJsonString = restTemplate.postForObject(backgroundDomain + "ad__m_main.php",  requestMap, String.class);
+            resultJsonString = restTemplate.postForObject(backgroundDomain + "ad_m_main.php",  requestMap, String.class);
         }else {
             resultJsonString = restTemplate.postForObject(backgroundDomain + "ad_m_edit.php",  requestMap, String.class);
         }
@@ -187,5 +192,44 @@ public class AdvertisingService extends ServiceImpl<FriendlyLinkDao, FriendlyLin
         advertisingAllTypeAndCustomerListCriteria.setAdvertisingType(advertisingType);
         advertisingAllTypeAndCustomerListCriteria.setAdvertisingArcType(advertisingArcType);
         return advertisingAllTypeAndCustomerListCriteria;
+    }
+
+    public void insertAdvertising(Advertising advertising){
+        advertisingDao.insert(advertising);
+    }
+
+    public List<Map> searchIdByOriginalAdvertisingTagname(int websiteUuid, String originalAdvertisingTagname){
+        return advertisingDao.searchIdByOriginalAdvertisingTagname(websiteUuid, originalAdvertisingTagname);
+    }
+
+    public Advertising getAdvertisingByAdvertisingTagname(int websiteUuid, String advertisingTagname ){
+        return advertisingDao.getAdvertisingByAdvertisingTagname(websiteUuid, advertisingTagname);
+    }
+
+    public List<String> searchAdvertisingidsByAdvertisingTagname(Long websiteUuid, String advertisingTagname){
+        return advertisingDao.searchAdvertisingidsByAdvertisingTagname(websiteUuid, advertisingTagname);
+    }
+
+    public void batchDeleteAdvertisingByAdvertisingTagname(String advertisingTagname, List<String> websiteUuids){
+        advertisingDao.batchDeleteAdvertisingByAdvertisingTagname(advertisingTagname, websiteUuids);
+    }
+
+    public List<Integer> selectByWebsiteId(Long websiteUuid){
+        return advertisingDao.selectByWebsiteId(websiteUuid);
+    }
+
+    public Long selectIdByAdvertisingId(Long websiteUuid, int advertisingId){
+        return advertisingDao.selectIdByAdvertisingId(websiteUuid, advertisingId);
+    }
+
+    public void initSynchronousAdvertising(Advertising advertising, AdvertisingVO advertisingVO){
+        advertising.setAdvertisingArcType("" + advertisingVO.getClsid());
+        advertising.setAdvertisingType("" + advertisingVO.getTypeid());
+        advertising.setAdvertisingAdName(advertisingVO.getAdname());
+        advertising.setAdvertisingTimeSet(advertisingVO.getTimeset());
+        advertising.setAdvertisingStarttime(advertisingVO.getStarttime());
+        advertising.setAdvertisingEndtime(advertisingVO.getEndtime());
+        advertising.setAdvertisingNormbody(advertisingVO.getNormbody());
+        advertising.setAdvertisingExpbody(advertisingVO.getExpbody());
     }
 }

@@ -4,9 +4,10 @@ import java.util.Date;
 
 public class AdvertisingVO {
 
-    private int id;
+    private int aid;
     private int clsid;
     private int typeid;
+    private String tagname;
     private String adname;
     private int timeset;
     private Date starttime;
@@ -14,12 +15,12 @@ public class AdvertisingVO {
     private String normbody;
     private String expbody;
 
-    public int getId() {
-        return id;
+    public int getAid() {
+        return aid;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setAid(int aid) {
+        this.aid = aid;
     }
 
     public int getClsid() {
@@ -84,5 +85,13 @@ public class AdvertisingVO {
 
     public void setExpbody(String expbody) {
         this.expbody = expbody;
+    }
+
+    public String getTagname() {
+        return tagname;
+    }
+
+    public void setTagname(String tagname) {
+        this.tagname = tagname;
     }
 }

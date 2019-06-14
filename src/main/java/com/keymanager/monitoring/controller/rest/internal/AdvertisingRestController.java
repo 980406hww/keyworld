@@ -7,6 +7,7 @@ import com.keymanager.monitoring.entity.Advertising;
 import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.service.AdvertisingService;
 import com.keymanager.monitoring.service.CustomerService;
+import com.keymanager.util.GetIpUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,7 +59,7 @@ public class AdvertisingRestController {
             String entryType = (String) request.getSession().getAttribute("entryType");
             customerCriteria.setEntryType(entryType);
             List<Customer> customerList = customerService.getActiveCustomerSimpleInfo(customerCriteria);
-            AdvertisingAllTypeAndCustomerListCriteria advertisingAllTypeAndCustomerListCriteria = advertisingService.searchAdvertisingAllTypeList(websiteUuid, getIP(request));
+            AdvertisingAllTypeAndCustomerListCriteria advertisingAllTypeAndCustomerListCriteria = advertisingService.searchAdvertisingAllTypeList(websiteUuid, GetIpUtil.getIP(request));
             advertisingAllTypeAndCustomerListCriteria.setCustomerList(customerList);
             return new ResponseEntity<Object>(advertisingAllTypeAndCustomerListCriteria, HttpStatus.OK);
         } catch (Exception e) {
@@ -70,7 +71,7 @@ public class AdvertisingRestController {
     @RequestMapping(value = "/saveAdvertising", method = RequestMethod.POST)
     public ResponseEntity<?> saveAdvertising(@RequestBody Advertising advertising, HttpServletRequest request){
         try{
-            advertisingService.saveAdvertising(advertising, getIP(request));
+            advertisingService.saveAdvertising(advertising, GetIpUtil.getIP(request));
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         }catch (Exception e){
             logger.error(e.getMessage());
@@ -81,7 +82,7 @@ public class AdvertisingRestController {
     @RequestMapping(value = "/updateAdvertising", method = RequestMethod.POST)
     public ResponseEntity<?> updateAdvertising(@RequestBody Advertising advertising, HttpServletRequest request){
         try{
-            advertisingService.updateAdvertising(advertising, getIP(request));
+            advertisingService.updateAdvertising(advertising, GetIpUtil.getIP(request));
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         }catch (Exception e){
             logger.error(e.getMessage());
@@ -103,7 +104,7 @@ public class AdvertisingRestController {
     @RequestMapping(value = "/delAdvertising/{uuid}", method = RequestMethod.GET)
     public ResponseEntity<?> delAdvertising(@PathVariable Long uuid, HttpServletRequest request){
         try{
-            advertisingService.delAdvertising(uuid, getIP(request));
+            advertisingService.delAdvertising(uuid, GetIpUtil.getIP(request));
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         }catch (Exception e){
             logger.error(e.getMessage());
@@ -114,34 +115,11 @@ public class AdvertisingRestController {
     @RequestMapping(value = "/delAdvertisings", method = RequestMethod.POST)
     public ResponseEntity<?> delAdvertisings(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
         try {
-            advertisingService.delAdvertisings(requestMap, getIP(request));
+            advertisingService.delAdvertisings(requestMap, GetIpUtil.getIP(request));
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
             return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
         }
-    }
-
-    private String getIP(HttpServletRequest request) {
-        String ip = request.getHeader("X-Forwarded-For");
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("Proxy-Client-IP");
-        }
-
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("WL-Proxy-Client-IP");
-        }
-
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("HTTP_CLIENT_IP");
-        }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("HTTP_X_FORWARDED_FOR");
-        }
-
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getRemoteAddr();
-        }
-        return ip;
     }
 }

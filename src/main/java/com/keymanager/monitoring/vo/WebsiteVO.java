@@ -25,6 +25,8 @@ public class WebsiteVO{
     private Date lastAccessTime;
     private int friendlyLinkCount;
     private int advertisingCount;
+    private String friendlyLink;
+    private String advertising;
     private Date updateTime;
     private Date createTime;
 
@@ -210,5 +212,21 @@ public class WebsiteVO{
 
     public void setAdvertisingCount(int advertisingCount) {
         this.advertisingCount = advertisingCount;
+    }
+
+    public String getFriendlyLink() {
+        return friendlyLink;
+    }
+
+    public void setFriendlyLink(String friendlyLink) {
+        this.friendlyLink = friendlyLink;
+    }
+
+    public String getAdvertising() {
+        return advertising;
+    }
+
+    public void setAdvertising(String advertising) {
+        this.advertising = advertising;
     }
 }

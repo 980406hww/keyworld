@@ -60,4 +60,53 @@
             #{uuid}
         </foreach>
     </select>
+
+    <select id="searchIdByOriginalAdvertisingTagname" resultType="java.util.Map">
+        SELECT fUuid AS 'uuid',
+        fAdvertisingId AS 'advertisingId'
+        FROM t_advertising
+        WHERE fWebsiteUuid = #{websiteUuid}
+        AND fAdvertisingTagname = #{originalAdvertisingTagname}
+    </select>
+
+    <select id="getAdvertisingByAdvertisingTagname" resultType="com.keymanager.monitoring.entity.Advertising">
+        SELECT
+        c.fContactPerson AS 'customerInfo',
+        <include refid="advertisingColID"/>
+        FROM t_advertising a
+        JOIN t_customer c
+        ON a.fCustomerUuid = c.fUuid
+        WHERE a.fWebsiteUuid = #{websiteUuid}
+        AND fAdvertisingTagname = #{advertisingTagname}
+        limit 1
+    </select>
+
+    <select id="searchAdvertisingidsByAdvertisingTagname" resultType="java.lang.String">
+        SELECT fAdvertisingId
+        FROM t_advertising
+        WHERE fWebsiteUuid = #{websiteUuid}
+        AND fAdvertisingTagname = #{advertisingTagname}
+    </select>
+
+    <delete id="batchDeleteAdvertisingByAdvertisingTagname">
+        DELETE FROM t_advertising
+        WHERE fAdvertisingTagname = #{advertisingTagname}
+        AND fWebsiteUuid IN
+        <foreach collection="websiteUuids" item="websiteUuid" open="(" separator="," close=")">
+            #{websiteUuid}
+        </foreach>
+    </delete>
+
+    <select id="selectByWebsiteId" resultType="java.lang.Integer">
+        SELECT fAdvertisingId
+        FROM t_advertising
+        WHERE fWebsiteUuid = #{websiteUuid}
+    </select>
+
+    <select id="selectIdByAdvertisingId" resultType="java.lang.Long">
+        SELECT fUuid
+        FROM fAdvertisingId
+        WHERE fWebsiteUuid = #{websiteUuid}
+        AND fAdvertisingId = #{advertisingId}
+    </select>
 </mapper>

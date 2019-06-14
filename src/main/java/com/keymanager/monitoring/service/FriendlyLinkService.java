@@ -8,10 +8,13 @@ import com.keymanager.monitoring.dao.FriendlyLinkDao;
 import com.keymanager.monitoring.entity.FriendlyLink;
 import com.keymanager.monitoring.entity.Website;
 import com.keymanager.monitoring.vo.FriendlyLinkVO;
+import com.keymanager.util.common.StringUtil;
 import net.sf.json.JSONArray;
+import net.sf.json.JSONNull;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 import org.apache.commons.collections.map.HashedMap;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.converter.StringHttpMessageConverter;
@@ -54,7 +57,7 @@ public class FriendlyLinkService extends ServiceImpl<FriendlyLinkDao, FriendlyLi
         if (friendlyLink.getFriendlyLinkSortRank() != -1){
             friendlyLinkDao.retreatSortRank(friendlyLink.getWebsiteUuid(), friendlyLink.getFriendlyLinkSortRank());
         }
-        friendlyLinkDao.insertFriendlyLink(friendlyLink);
+        insertFriendlyLink(friendlyLink);
     }
 
     public FriendlyLink getFriendlyLink(Long uuid) {
@@ -120,13 +123,15 @@ public class FriendlyLinkService extends ServiceImpl<FriendlyLinkDao, FriendlyLi
         if ("add".equals(type)){
             requestMap.add("dopost", "add");
             JSONObject jsonObject = JSONObject.fromObject(connectionCMS(requestMap, "add", website.getBackgroundDomain()));
-            friendlyLink.setFriendlyLinkId((Integer) jsonObject.get("id"));
-            friendlyLink.setFriendlyLinkLogo((String) jsonObject.get("logo"));
+            if (!"error".equals(jsonObject.get("status"))){
+                friendlyLink.setFriendlyLinkId((Integer) jsonObject.get("id"));
+                friendlyLink.setFriendlyLinkLogo((String) jsonObject.get("logo"));
+            }
         }else {
             requestMap.add("dopost", "saveedit");
             requestMap.add("id", friendlyLink.getFriendlyLinkId());
             JSONObject jsonObject = JSONObject.fromObject(connectionCMS(requestMap, "saveedit", website.getBackgroundDomain()));
-            if (!StringUtils.isEmpty(jsonObject.get("logo"))){
+            if (!"error".equals(jsonObject.get("status")) && !(jsonObject.get("logo") instanceof JSONNull)){
                 friendlyLink.setFriendlyLinkLogo((String) jsonObject.get("logo"));
             }
         }
@@ -190,5 +195,75 @@ public class FriendlyLinkService extends ServiceImpl<FriendlyLinkDao, FriendlyLi
             friendlyLink.setFriendlyLinkId(Integer.valueOf(request.getParameter("friendlyLinkId")));
         }
         return friendlyLink;
+    }
+
+    public List<Map> searchFriendlyLinkTypeList(Long websiteUuid, String ip){
+        Website website = websiteService.selectById(websiteUuid);
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getMessageConverters().add(new StringHttpMessageConverter(Charset.forName("utf-8")));
+        String resultJsonString;
+        String backgroundDomain = "http://".equals(website.getBackgroundDomain().substring(0,7).toLowerCase()) ? website.getBackgroundDomain() : "http://" + website.getBackgroundDomain();
+        MultiValueMap requestMap = new LinkedMultiValueMap();
+        requestMap.add("username", website.getBackgroundUserName());
+        requestMap.add("password", website.getBackgroundPassword());
+        requestMap.add("ip", ip);
+        requestMap.add("dopost", "select");
+        resultJsonString = restTemplate.postForObject(backgroundDomain + "friendlink_m_type.php",  requestMap, String.class);
+        JSONArray jsonArray = JSONArray.fromObject(resultJsonString);
+        List<Map> friendlyLinkTypeList = JSONArray.toList(jsonArray, new HashedMap(), new JsonConfig());
+        return friendlyLinkTypeList;
+    }
+
+    public void insertFriendlyLink(FriendlyLink friendlyLink){
+        friendlyLink.setFriendlyLinkSortRank(friendlyLinkDao.selectMaxSortRank(friendlyLink.getWebsiteUuid()) + 1);
+        friendlyLinkDao.insert(friendlyLink);
+    }
+
+    public void retreatSortRank(int websiteUuid, int friendlyLinkSortRank){
+        friendlyLinkDao.retreatSortRank(websiteUuid, friendlyLinkSortRank);
+    }
+
+    public void updateFriendlyLinkById(FriendlyLink friendlyLink){
+        friendlyLinkDao.updateById(friendlyLink);
+    }
+
+    public void updateCentreSortRank(int beginSortRank, int endSortRank, int websiteUuid){
+        friendlyLinkDao.updateCentreSortRank(beginSortRank, endSortRank, websiteUuid);
+    }
+
+    public List<Map> searchOriginalSortRank(int websiteUuid, String originalFriendlyLinkUrl){
+        return friendlyLinkDao.searchOriginalSortRank(websiteUuid, originalFriendlyLinkUrl);
+    }
+
+    public List<String> searchFriendlyLinkidsByUrl(Long websiteUuid, String originalFriendlyLinkUrl){
+        return friendlyLinkDao.searchFriendlyLinkidsByUrl(websiteUuid, originalFriendlyLinkUrl);
+    }
+
+    public void batchDeleteFriendlyLinkByUrl(String friendlyLinkUrl, List<String> websiteUuids){
+        friendlyLinkDao.batchDeleteFriendlyLinkByUrl(friendlyLinkUrl, websiteUuids);
+    }
+
+    public FriendlyLink getFriendlyLinkByUrl(int websiteUuid, String friendlyLinkUrl){
+        return friendlyLinkDao.getFriendlyLinkByUrl(websiteUuid, friendlyLinkUrl);
+    }
+
+    public List<Integer> selectByWebsiteId(Long websiteUuid){
+        return friendlyLinkDao.selectByWebsiteId(websiteUuid);
+    }
+
+    public void initSynchronousFriendlyLink(FriendlyLink friendlyLink, FriendlyLinkVO friendlyLinkVO){
+        friendlyLink.setFriendlyLinkSortRank(friendlyLinkVO.getSortrank());
+        friendlyLink.setFriendlyLinkUrl(friendlyLinkVO.getUrl());
+        friendlyLink.setFriendlyLinkWebName(friendlyLinkVO.getWebname());
+        friendlyLink.setFriendlyLinkType("" + friendlyLinkVO.getTypeid());
+        friendlyLink.setFriendlyLinkMsg(friendlyLinkVO.getMsg());
+        friendlyLink.setFriendlyLinkEmail(friendlyLinkVO.getEmail());
+        friendlyLink.setFriendlyLinkLogo(friendlyLinkVO.getLogo());
+        friendlyLink.setFriendlyLinkDtime(friendlyLinkVO.getDtime());
+        friendlyLink.setFriendlyLinkIsCheck(friendlyLinkVO.getIscheck());
+    }
+
+    public Long selectIdByFriendlyLinkId(Long websiteUuid, int friendlyLinkId){
+        return friendlyLinkDao.selectIdByFriendlyLinkId(websiteUuid, friendlyLinkId);
     }
 }

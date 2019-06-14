@@ -110,7 +110,7 @@
             <tr>
                 <td style="width:60px;"  align="right">网址:</td>
                 <td>
-                    <input type="text" name="friendlyLinkUrl" id="friendlyLinkUrl" style="width:180px;">
+                    <input type="text" name="friendlyLinkUrl" id="friendlyLinkUrl" style="width:180px;" placeholder="默认没有http://会加上">
                 </td>
             </tr>
             <tr>
@@ -129,7 +129,7 @@
             <tr>
                 <td style="width:60px;"  align="right">网站类型:</td>
                 <td>
-                    <input type="text" name="friendlyLinkType" id="friendlyLinkType" style="width:180px;">
+                    <input type="text" name="friendlyLinkType" id="friendlyLinkType" list="friendlyLinkType_list"  style="width:180px;">
                 </td>
             </tr>
             <tr>
@@ -164,6 +164,8 @@
     </form>
 </div>
 <datalist id="customer_list">
+</datalist>
+<datalist id="friendlyLinkType_list">
 </datalist>
 <div id="showCustomerBottomPositioneDiv">
     <div id="showCustomerBottomDiv">

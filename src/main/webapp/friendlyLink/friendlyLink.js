@@ -90,13 +90,28 @@ function showFriendlyLinkDialog(websiteUuid, uuid) {
         $('#friendlyLinkForm')[0].reset();
     }else {
         $.ajax({
-            url: "/internal/friendlyLink/searchCustomerList",
+            url: "/internal/customer/searchCustomerList",
             type: "GET",
             success: function (customerList) {
                 $("#customer_list").find('option').remove();
                 if (customerList != null) {
                     $.each(customerList, function (idx, val) {
                         $("#customer_list").append("<option value='" + val.contactPerson + "_" + val.uuid + "'></option>")
+                    });
+                }
+            },
+            error: function () {
+                $().toastmessage('showErrorToast', "获取信息失败！");
+            }
+        });
+        $.ajax({
+            url: "/internal/friendlyLink/searchFriendlyLinkTypeList",
+            type: "GET",
+            success: function (friendlyLinkTypeList) {
+                $("#friendlyLinkType_list").find('option').remove();
+                if (friendlyLinkTypeList != null) {
+                    $.each(friendlyLinkTypeList, function (idx, val) {
+                        $("#friendlyLinkType_list").append("<option value='" + val.typename + "_" + val.id + "'></option>")
                     });
                 }
             },

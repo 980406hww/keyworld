@@ -102,12 +102,13 @@ function showAdvertisingDialog(websiteUuid, uuid) {
                     });
                 }
                 if (advertisingAllTypeAndCustomerList.advertisingType != null) {
-                    $("#advertisingType_list").append("<option value='没有同名标识所有栏目_0'></option>");
+                    $("#advertisingType_list").append("<option value='默认分类_0'></option>");
                     $.each(advertisingAllTypeAndCustomerList.advertisingType, function (idx, val) {
                         $("#advertisingType_list").append("<option value='"  +val.typename + "_"  + val.id + "'></option>")
                     });
                 }
                 if (advertisingAllTypeAndCustomerList.advertisingArcType != null) {
+                    $("#advertisingArcType_list").append("<option value='没有同名标识所有栏目_0'></option>");
                     $.each(advertisingAllTypeAndCustomerList.advertisingArcType, function (idx, val) {
                         $("#advertisingArcType_list").append("<option value='" + val.typename + "_" + val.id + "'></option>")
                     });

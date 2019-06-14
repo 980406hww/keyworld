@@ -18,6 +18,9 @@ public class Advertising extends BaseEntity {
     @TableField(exist=false)
     private String customerInfo;
 
+    @TableField(exist=false)
+    private String uuids;
+
     @TableField(value = "fAdvertisingId")
     private int advertisingId;
 
@@ -26,6 +29,9 @@ public class Advertising extends BaseEntity {
 
     @TableField(value = "fAdvertisingTagname")
     private String advertisingTagname;
+
+    @TableField(exist=false)
+    private String originalAdvertisingTagname;
 
     @TableField(value = "fAdvertisingType")
     private String advertisingType;
@@ -205,5 +211,21 @@ public class Advertising extends BaseEntity {
 
     public void setAdvertisingArcTypeId(int advertisingArcTypeId) {
         this.advertisingArcTypeId = advertisingArcTypeId;
+    }
+
+    public String getOriginalAdvertisingTagname() {
+        return originalAdvertisingTagname;
+    }
+
+    public void setOriginalAdvertisingTagname(String originalAdvertisingTagname) {
+        this.originalAdvertisingTagname = originalAdvertisingTagname;
+    }
+
+    public String getUuids() {
+        return uuids;
+    }
+
+    public void setUuids(String uuids) {
+        this.uuids = uuids;
     }
 }

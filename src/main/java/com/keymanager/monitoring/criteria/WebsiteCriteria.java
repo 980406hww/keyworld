@@ -7,6 +7,8 @@ public class WebsiteCriteria {
     private String websiteName;
     private String domain;
     private Integer accessFailCount;
+    private String friendlyLinkUrl;
+    private String advertisingTagname;
 
     public String getWebsiteName() {
         return websiteName;
@@ -30,5 +32,21 @@ public class WebsiteCriteria {
 
     public void setAccessFailCount(Integer accessFailCount) {
         this.accessFailCount = accessFailCount;
+    }
+
+    public String getFriendlyLinkUrl() {
+        return friendlyLinkUrl;
+    }
+
+    public void setFriendlyLinkUrl(String friendlyLinkUrl) {
+        this.friendlyLinkUrl = friendlyLinkUrl;
+    }
+
+    public String getAdvertisingTagname() {
+        return advertisingTagname;
+    }
+
+    public void setAdvertisingTagname(String advertisingTagname) {
+        this.advertisingTagname = advertisingTagname;
     }
 }

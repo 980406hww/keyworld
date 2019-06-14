@@ -64,51 +64,11 @@
         WHERE fl.fUuid = #{uuid}
     </select>
 
-    <insert id="insertFriendlyLink">
-        INSERT INTO t_friendly_link (
-            fWebsiteUuid,
-            fCustomerUuid,
-            fFriendlyLinkId,
-            fFriendlyLinkWebName,
-            fFriendlyLinkUrl,
-            fFriendlyLinkSortRank,
-            fFriendlyLinkMsg,
-            fFriendlyLinkEmail,
-            fFriendlyLinkLogo,
-            fFriendlyLinkDtime,
-            fFriendlyLinkType,
-            fFriendlyLinkIsCheck,
-            fExpirationTime,
-            fRenewTime,
-            fCreateTime,
-            fUpdateTime
-        )
-        SELECT
-            #{friendlyLink.websiteUuid},
-            #{friendlyLink.customerUuid},
-            #{friendlyLink.friendlyLinkId},
-            #{friendlyLink.friendlyLinkWebName},
-            #{friendlyLink.friendlyLinkUrl},
-            <choose>
-                <when test="friendlyLink.friendlyLinkSortRank != -1">
-                    #{friendlyLink.friendlyLinkSortRank},
-                </when>
-                <otherwise>
-                    MAX(fFriendlyLinkSortRank) + 1,
-                </otherwise>
-            </choose>
-            #{friendlyLink.friendlyLinkMsg},
-            #{friendlyLink.friendlyLinkEmail},
-            #{friendlyLink.friendlyLinkLogo},
-            #{friendlyLink.friendlyLinkDtime},
-            #{friendlyLink.friendlyLinkType},
-            #{friendlyLink.friendlyLinkIsCheck},
-            #{friendlyLink.expirationTime},
-            #{friendlyLink.renewTime},
-            #{friendlyLink.createTime},
-            #{friendlyLink.updateTime}
+    <select id="selectMaxSortRank" resultType="java.lang.Integer">
+        SELECT MAX(fFriendlyLinkSortRank)
         FROM t_friendly_link
-    </insert>
+        WHERE fWebsiteUuid = #{websiteUuid}
+    </select>
 
     <update id="retreatSortRank">
         UPDATE
@@ -138,5 +98,57 @@
         <foreach collection="uuids" item="uuid" open="(" separator="," close=")">
             #{uuid}
         </foreach>
+    </select>
+
+    <select id="searchOriginalSortRank" resultType="java.util.Map">
+        SELECT
+            fUuid AS 'uuid',
+            fFriendlyLinkSortRank AS 'friendlyLinkSortRank'
+        FROM t_friendly_link
+        WHERE fWebsiteUuid = #{websiteUuid}
+        AND fFriendlyLinkUrl = #{originalFriendlyLinkUrl}
+    </select>
+
+    <select id="searchFriendlyLinkidsByUrl" resultType="java.lang.String">
+        SELECT
+            fFriendlyLinkId
+        FROM t_friendly_link
+        WHERE fWebsiteUuid = #{websiteUuid}
+        AND fFriendlyLinkUrl = #{originalFriendlyLinkUrl}
+    </select>
+
+    <delete id="batchDeleteFriendlyLinkByUrl">
+        DELETE FROM t_friendly_link
+        WHERE fFriendlyLinkUrl = #{friendlyLinkUrl}
+        AND fWebsiteUuid IN
+        <foreach collection="websiteUuids" item="websiteUuid" open="(" separator="," close=")">
+            #{websiteUuid}
+        </foreach>
+    </delete>
+
+    <select id="getFriendlyLinkByUrl" resultType="com.keymanager.monitoring.entity.FriendlyLink">
+        SELECT
+        c.fContactPerson AS 'customerInfo',
+        <include refid="friendlyLinkColID"/>
+        FROM t_friendly_link fl
+        JOIN t_customer c
+        ON fl.fCustomerUuid = c.fUuid
+        WHERE fl.fWebsiteUuid = #{websiteUuid}
+        AND fFriendlyLinkUrl = #{friendlyLinkUrl}
+        limit 1
+    </select>
+
+    <select id="selectByWebsiteId" resultType="java.lang.Integer">
+        SELECT
+        fFriendlyLinkId
+        FROM t_friendly_link fl
+        WHERE fl.fWebsiteUuid = #{websiteUuid}
+    </select>
+
+    <select id="selectIdByFriendlyLinkId" resultType="java.lang.Long">
+        SELECT fUuid
+        FROM t_friendly_link
+        WHERE fWebsiteUuid = #{websiteUuid}
+        AND fFriendlyLinkId = #{friendlyLinkId}
     </select>
 </mapper>
