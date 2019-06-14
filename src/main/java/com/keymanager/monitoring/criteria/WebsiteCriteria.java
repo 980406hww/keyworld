@@ -6,6 +6,7 @@ package com.keymanager.monitoring.criteria;
 public class WebsiteCriteria {
     private String websiteName;
     private String domain;
+    private String updateSalesInfoSign;
     private Integer accessFailCount;
 
     public String getWebsiteName() {
@@ -22,6 +23,14 @@ public class WebsiteCriteria {
 
     public void setDomain(String domain) {
         this.domain = domain;
+    }
+
+    public String getUpdateSalesInfoSign() {
+        return updateSalesInfoSign;
+    }
+
+    public void setUpdateSalesInfoSign(String updateSalesInfoSign) {
+        this.updateSalesInfoSign = updateSalesInfoSign;
     }
 
     public Integer getAccessFailCount() {

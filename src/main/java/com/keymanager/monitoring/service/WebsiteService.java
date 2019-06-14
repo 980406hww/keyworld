@@ -150,7 +150,6 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
         for (final WebsiteBackGroundInfoVO website : websites) {
             List<SalesManageVO> salesManages = salesManageService.getAllSalesInfo(website.getWebsiteType());
             postMap.put("sale_list", salesManages);
-            postMap.put("sign", website.getUuid());
             postMap.put("username", AESUtils.encrypt(website.getBackgroundUserName()));
             postMap.put("password", AESUtils.encrypt(website.getBackgroundPassword()));
             String url = "http://" + website.getBackgroundDomain() + "sales_management.php";
@@ -162,7 +161,7 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
                 public void onSuccess(ResponseEntity<String> response) {
                     Website websiteInfo = new Website();
                     websiteInfo.setUuid(website.getUuid());
-                    if (response.getStatusCode().toString().equals("302")) {
+                    if (!response.getStatusCode().toString().equals("200")) {
                         websiteInfo.setUpdateSalesInfoSign(PutSalesInfoSignEnum.Refuse.getValue());
                         websiteDao.updateById(websiteInfo);
                     } else {

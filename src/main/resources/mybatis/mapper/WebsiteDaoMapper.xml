@@ -39,6 +39,7 @@
 		WHERE 1 = 1
 		<if test="websiteCriteria.websiteName != null and websiteCriteria.websiteName != ''">AND w.fWebsiteName LIKE '%${websiteCriteria.websiteName}%'</if>
 		<if test="websiteCriteria.domain != null and websiteCriteria.domain != ''">AND w.fDomain LIKE '%${websiteCriteria.domain}%'</if>
+		<if test="websiteCriteria.updateSalesInfoSign != null and websiteCriteria.updateSalesInfoSign != ''">AND w.fUpdateSalesInfoSign = #{websiteCriteria.updateSalesInfoSign}</if>
 		<if test="websiteCriteria.accessFailCount != null">AND w.fAccessFailCount = #{websiteCriteria.accessFailCount}</if>
 		GROUP BY w.fUuid
 		ORDER BY w.fLastAccessTime

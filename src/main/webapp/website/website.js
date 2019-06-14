@@ -12,6 +12,7 @@ function changePaging(currentPage, pageSize) {
 function resetPageNumber() {
     var searchWebsiteForm = $("#searchWebsiteForm");
     var websiteName = searchWebsiteForm.find("#websiteName").val();
+    var updateSalesInfoSign = searchWebsiteForm.find("#updateSalesInfoSign").val();
     var domain = searchWebsiteForm.find("#domain").val();
     var accessFailCount = searchWebsiteForm.find("#accessFailCount").val();
     if(websiteName != "") {
@@ -19,6 +20,9 @@ function resetPageNumber() {
     }
     if(domain != "") {
         searchWebsiteForm.find("#domain").val($.trim(domain));
+    }
+    if(updateSalesInfoSign != "") {
+        searchWebsiteForm.find("#updateSalesInfoSign").val($.trim(updateSalesInfoSign));
     }
     if(accessFailCount != "") {
         searchWebsiteForm.find("#accessFailCount").val($.trim(accessFailCount));
