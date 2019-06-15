@@ -43,7 +43,9 @@
             <shiro:hasPermission name="/internal/website/deleteWebsites">
             <input type="button" onclick="deleteWebsites()" value=" 删除所选 ">&nbsp;&nbsp;
             </shiro:hasPermission>
+            <shiro:hasPermission name="/internal/website/putSalesInfoToWebsite">
             <input type="button" onclick="putSalesInfoToWebsite()" value=" 推送销售信息至站点 ">&nbsp;&nbsp;
+            </shiro:hasPermission>
         </form>
     </div>
     <table style="font-size:12px; width: 100%;" id="headerTable">

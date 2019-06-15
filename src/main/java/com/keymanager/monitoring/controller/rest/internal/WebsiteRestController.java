@@ -250,6 +250,7 @@ public class WebsiteRestController extends SpringMVCBaseController {
         }
     }
 
+    @RequiresPermissions("/internal/website/putSalesInfoToWebsite")
     @RequestMapping(value = "/putSalesInfoToWebsite", method = RequestMethod.POST)
     public ResponseEntity<?> putSalesInfoToWebsite(@RequestBody Map<String, Object> requestMap) {
         try {

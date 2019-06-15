@@ -34,14 +34,20 @@
                         <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
                         <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
                         <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
+                        <shiro:hasPermission name="/internal/salesManage/searchSalesInfo">
                         销售人员名称:
                         <input type="text" name="salesName" id="salesName" style="width: 160px;" value="${salesManage.salesName}" title="">
                         &nbsp;
                         <input type="submit" class="ui-button ui-widget ui-corner-all" onclick="resetPageNumber()" value=" 查询 ">
+                        </shiro:hasPermission>
                         &nbsp;
+                        <shiro:hasPermission name="/internal/salesManage/saveSalesInfo">
                         <input type="button" class="ui-button ui-widget ui-corner-all" value=" 添加 " onclick="showSalesManageDialog(null)"/>
+                        </shiro:hasPermission>
                         &nbsp;
+                        <shiro:hasPermission name="/internal/salesManage/deleteSalesInfo">
                         <input type="button" class="ui-button ui-widget ui-corner-all" value=" 删除所选 " onclick="deleteBatchOperationType(this)"/>
+                        </shiro:hasPermission>
                     </div>
                 </form>
             </td>
@@ -143,9 +149,13 @@
                     <fmt:formatDate value="${salesManage.updateTime}" pattern="yyyy-MM-dd"/>
                 </td>
                 <td width=80>
+                    <shiro:hasPermission name="/internal/salesManage/updateSalesInfo">
                     <a href="javascript:modifySalesManage(${salesManage.uuid})">修改</a>
+                    </shiro:hasPermission>
                     |
+                    <shiro:hasPermission name="/internal/salesManage/deleteSalesInfo">
                     <a href="javascript:deleteSalesManage('${salesManage.uuid}')">删除</a>
+                    </shiro:hasPermission>
                 </td>
             </tr>
         </c:forEach>

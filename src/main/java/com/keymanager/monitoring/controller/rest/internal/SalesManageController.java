@@ -11,6 +11,7 @@ import com.keymanager.util.AESUtils;
 import com.keymanager.util.Constants;
 import com.keymanager.util.TerminalTypeMapping;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,12 +40,14 @@ public class SalesManageController extends SpringMVCBaseController {
     @Autowired
     private SalesManageService salesManageService;
 
+    @RequiresPermissions("/internal/salesManage/searchSalesManageLists")
     @RequestMapping(value = "/searchSalesManageLists", method = RequestMethod.GET)
     public ModelAndView searchOperationTypeLists(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize) {
         SalesManage salesManage = new SalesManage();
         return constructSearchSalesManageListsModelAndView(currentPageNumber, pageSize, salesManage);
     }
 
+    @RequiresPermissions("/internal/salesManage/searchSalesManageLists")
     @RequestMapping(value = "/searchSalesManageLists", method = RequestMethod.POST)
     public ModelAndView searchOperationTypeLists(SalesManage salesManage, HttpServletRequest request) {
         String currentPageNumber = request.getParameter("currentPageNumber");
@@ -69,6 +72,7 @@ public class SalesManageController extends SpringMVCBaseController {
         return modelAndView;
     }
 
+    @RequiresPermissions("/internal/salesManage/updateSalesInfo")
     @RequestMapping(value = "/getSalesManage/{uuid}", method = RequestMethod.GET)
     public ResponseEntity<?> getSalesManage(@PathVariable("uuid") Long uuid) {
         try {
@@ -79,6 +83,7 @@ public class SalesManageController extends SpringMVCBaseController {
         }
     }
 
+    @RequiresPermissions("/internal/salesManage/saveSalesInfo")
     @RequestMapping(value = "/saveSalesManage", method = RequestMethod.POST)
     public ResponseEntity<?> saveOrUpdateSalesManage(@RequestBody SalesManage salesManage) {
         try {
@@ -93,6 +98,7 @@ public class SalesManageController extends SpringMVCBaseController {
         }
     }
 
+    @RequiresPermissions("/internal/salesManage/deleteSalesInfo")
     @RequestMapping(value = "/deleteSalesManage/{uuid}", method = RequestMethod.POST)
     public ResponseEntity<?> deleteSalesManage(@PathVariable("uuid") Long uuid) {
         try {
@@ -104,25 +110,12 @@ public class SalesManageController extends SpringMVCBaseController {
         }
     }
 
+    @RequiresPermissions("/internal/salesManage/deleteSalesInfo")
     @RequestMapping(value = "/deleteBeachSalesManage", method = RequestMethod.POST)
     public ResponseEntity<?> deleteBeachSalesManage(@RequestBody Map requestMap) {
         try {
             List uuids = (List) requestMap.get("uuids");
             salesManageService.deleteBeachSalesManage(uuids);
-            return new ResponseEntity<Object>(true, HttpStatus.OK);
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @RequestMapping(value = "/updateInfoToOther", method = RequestMethod.POST)
-    public ResponseEntity<?> updateInfoToOther() {
-        try {
-            List<SalesManage> salesManages = salesManageService.selectList(null);
-            RestTemplate restTemplate = new RestTemplate();
-            restTemplate.getMessageConverters().add(new StringHttpMessageConverter(Charset.forName("utf-8")));
-            restTemplate.postForObject("https://story.hhui.top", AESUtils.encrypt(salesManages), Boolean.class);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
