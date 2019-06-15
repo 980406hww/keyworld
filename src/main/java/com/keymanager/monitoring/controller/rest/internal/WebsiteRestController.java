@@ -223,7 +223,7 @@ public class WebsiteRestController extends SpringMVCBaseController {
         }
     }
 
-    @RequiresPermissions("/internal/advertising/synchronousFriendlyLink")
+    @RequiresPermissions("/internal/friendlyLink/synchronousFriendlyLink")
     @RequestMapping(value = "/synchronousFriendlyLink", method = RequestMethod.POST)
     public ResponseEntity<?> synchronousFriendlyLink(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
         try {
