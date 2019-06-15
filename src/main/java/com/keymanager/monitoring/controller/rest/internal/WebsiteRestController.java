@@ -9,36 +9,23 @@ import com.keymanager.monitoring.entity.Website;
 import com.keymanager.monitoring.service.AdvertisingService;
 import com.keymanager.monitoring.service.FriendlyLinkService;
 import com.keymanager.monitoring.enums.PutSalesInfoSignEnum;
-import com.keymanager.monitoring.enums.QZSettingOperationTypeEnum;
 import com.keymanager.monitoring.enums.WebsiteTypeEnum;
 import com.keymanager.monitoring.service.SalesManageService;
 import com.keymanager.monitoring.service.WebsiteService;
 import com.keymanager.monitoring.vo.WebsiteVO;
-import com.keymanager.util.FileUtil;
 import com.keymanager.util.GetIpUtil;
-import com.keymanager.util.Utils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.util.concurrent.FailureCallback;
-import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.util.concurrent.SuccessCallback;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -135,6 +122,7 @@ public class WebsiteRestController extends SpringMVCBaseController {
         }
     }
 
+    @RequiresPermissions("/internal/friendlyLink/saveFriendlyLinks")
     @RequestMapping(value = "/batchSaveFriendlyLink", method = RequestMethod.POST)
     public ResponseEntity<?> batchSaveFriendlyLink(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request) {
         try {
@@ -148,6 +136,7 @@ public class WebsiteRestController extends SpringMVCBaseController {
         }
     }
 
+    @RequiresPermissions("/internal/friendlyLink/saveFriendlyLink")
     @RequestMapping(value = "/getFriendlyLinkByUrl", method = RequestMethod.POST)
     public ResponseEntity<?> getFriendlyLinkByUrl(@RequestBody Map<String, Object> requestMap){
         try{
@@ -159,6 +148,7 @@ public class WebsiteRestController extends SpringMVCBaseController {
         }
     }
 
+    @RequiresPermissions("/internal/friendlyLink/saveFriendlyLink")
     @RequestMapping(value = "/batchUpdateFriendlyLink", method = RequestMethod.POST)
     public ResponseEntity<?> batchUpdateFriendlyLink(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request) {
         try {
@@ -173,6 +163,7 @@ public class WebsiteRestController extends SpringMVCBaseController {
         }
     }
 
+    @RequiresPermissions("/internal/friendlyLink/deleteFriendlyLinks")
     @RequestMapping(value = "/batchDelFriendlyLink", method = RequestMethod.POST)
     public ResponseEntity<?> batchDelFriendlyLink(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
         try {
@@ -184,6 +175,7 @@ public class WebsiteRestController extends SpringMVCBaseController {
         }
     }
 
+    @RequiresPermissions("/internal/advertising/saveAdvertisings")
     @RequestMapping(value = "/batchSaveAdvertising", method = RequestMethod.POST)
     public ResponseEntity<?> batchSaveAdvertising(@RequestBody Advertising advertising, HttpServletRequest request){
         try{
@@ -195,6 +187,7 @@ public class WebsiteRestController extends SpringMVCBaseController {
         }
     }
 
+    @RequiresPermissions("/internal/advertising/saveAdvertising")
     @RequestMapping(value = "/batchUpdateAdvertising", method = RequestMethod.POST)
     public ResponseEntity<?> batchUpdateAdvertising(@RequestBody Advertising advertising, HttpServletRequest request){
         try{
@@ -206,6 +199,7 @@ public class WebsiteRestController extends SpringMVCBaseController {
         }
     }
 
+    @RequiresPermissions("/internal/advertising/saveAdvertising")
     @RequestMapping(value = "/getAdvertisingByAdvertisingTagname", method = RequestMethod.POST)
     public ResponseEntity<?> getAdvertisingByAdvertisingTagname(@RequestBody Map<String, Object> requestMap){
         try{
@@ -217,6 +211,7 @@ public class WebsiteRestController extends SpringMVCBaseController {
         }
     }
 
+    @RequiresPermissions("/internal/advertising/deleteAdvertisings")
     @RequestMapping(value = "/batchDelAdvertising", method = RequestMethod.POST)
     public ResponseEntity<?> batchDelAdvertising(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
         try {
@@ -228,6 +223,7 @@ public class WebsiteRestController extends SpringMVCBaseController {
         }
     }
 
+    @RequiresPermissions("/internal/advertising/synchronousFriendlyLink")
     @RequestMapping(value = "/synchronousFriendlyLink", method = RequestMethod.POST)
     public ResponseEntity<?> synchronousFriendlyLink(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
         try {
@@ -239,6 +235,7 @@ public class WebsiteRestController extends SpringMVCBaseController {
         }
     }
 
+    @RequiresPermissions("/internal/advertising/synchronousAdvertising")
     @RequestMapping(value = "/synchronousAdvertising", method = RequestMethod.POST)
     public ResponseEntity<?> synchronousAdvertising(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
         try {

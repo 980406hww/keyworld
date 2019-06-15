@@ -33,9 +33,15 @@
                         用户名称:<input type="text" name="customerInfo" id="customerInfo" value="${advertisingCriteria.customerInfo}">&nbsp;&nbsp;
                         广告名称:<input type="text" name="advertisingAdName" id="advertisingAdName" value="${advertisingCriteria.advertisingAdName}">
                         &nbsp;&nbsp;<input id="expire" name="expire" type="checkbox"  onclick="expireValue()" value="${advertisingCriteria.expire}"/>过期广告
+                        <shiro:hasPermission name="/internal/advertising/searchAdvertisings">
                         &nbsp;&nbsp;<input type="submit" class="ui-button ui-widget ui-corner-all" onclick="resetPageNumber()" name="btnQuery" id="btnQuery" value=" 查询 ">
+                        </shiro:hasPermission>
+                        <shiro:hasPermission name="/internal/advertising/saveAdvertisings">
                         &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 添加 " onclick="showAdvertisingDialog(${advertisingCriteria.websiteUuid}, 0)"/>
+                        </shiro:hasPermission>
+                        <shiro:hasPermission name="/internal/advertising/deleteAdvertisings">
                         &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 删除所选 " onclick="deleteBatchAdvertising(${advertisingCriteria.websiteUuid})"/>
+                        </shiro:hasPermission>
                     </div>
                 </form>
             </td>
@@ -72,8 +78,12 @@
                 <td width=80 style="text-align: center"><fmt:formatDate value="${advertising.advertisingEndtime}" pattern="yyyy-MM-dd"/></td>
                 <td width=80 style="text-align: center"><fmt:formatDate value="${advertising.renewTime}" pattern="yyyy-MM-dd"/></td>
                 <td width=80>
+                    <shiro:hasPermission name="/internal/advertising/saveAdvertising">
                         <a href="javascript:modifyAdvertising(${advertising.uuid})">修改</a>
+                    </shiro:hasPermission>
+                    <shiro:hasPermission name="/internal/advertising/deleteAdvertising">
                         | <a href="javascript:delAdvertising(${advertising.uuid})">删除</a>
+                    </shiro:hasPermission>
                 </td>
             </tr>
         </c:forEach>
