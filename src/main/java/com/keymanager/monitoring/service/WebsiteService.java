@@ -306,6 +306,8 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
     public void synchronousFriendlyLink(Map<String, Object> requestMap, String ip){
         List<String> uuids = (List) requestMap.get("uuids");
         for (String uuidStr: uuids){
+            Website website = new Website();
+            website.setUuid(Long.valueOf(uuidStr));
             try {
                 List<FriendlyLinkVO> friendlyLinkVOS = friendlyLinkService.selectConnectionCMS(Long.valueOf(uuidStr), ip);
                 if(!friendlyLinkVOS.isEmpty()){
@@ -327,12 +329,11 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
                         }
                     }
                 }
+                website.setSynchronousFriendlyLinkSign(PutSalesInfoSignEnum.Normal.getValue());
+                websiteDao.updateById(website);
             } catch (Exception e) {
-                Website website = new Website();
-                website.setUuid(Long.valueOf(uuidStr));
                 website.setSynchronousFriendlyLinkSign(PutSalesInfoSignEnum.RequestException.getValue());
                 websiteDao.updateById(website);
-                e.printStackTrace();
                 continue;
             }
         }
@@ -341,6 +342,8 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
     public void synchronousAdvertising(Map<String, Object> requestMap, String ip){
         List<String> uuids = (List) requestMap.get("uuids");
         for (String uuidStr: uuids){
+            Website website = new Website();
+            website.setUuid(Long.valueOf(uuidStr));
             try {
                 List<AdvertisingVO> advertisingVOS = advertisingService.selectConnectionCMS(Long.valueOf(uuidStr), ip);
                 if(!advertisingVOS.isEmpty()){
@@ -361,9 +364,9 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
                         }
                     }
                 }
+                website.setSynchronousAdvertisingSign(PutSalesInfoSignEnum.Normal.getValue());
+                websiteDao.updateById(website);
             } catch (Exception e) {
-                Website website = new Website();
-                website.setUuid(Long.valueOf(uuidStr));
                 website.setSynchronousAdvertisingSign(PutSalesInfoSignEnum.RequestException.getValue());
                 websiteDao.updateById(website);
                 continue;
