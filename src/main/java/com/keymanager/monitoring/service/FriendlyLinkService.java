@@ -97,7 +97,6 @@ public class FriendlyLinkService extends ServiceImpl<FriendlyLinkDao, FriendlyLi
         MultiValueMap requestMap = new LinkedMultiValueMap();
         requestMap.add("username", AESUtils.encrypt(website.getBackgroundUserName()));
         requestMap.add("password", AESUtils.encrypt(website.getBackgroundPassword()));
-        requestMap.add("ip", AESUtils.encrypt(ip));
         String url = "";
         if (friendlyLink.getFriendlyLinkUrl().length() > 7){
             url = "http://".equals(friendlyLink.getFriendlyLinkUrl().substring(0,7).toLowerCase()) ? friendlyLink.getFriendlyLinkUrl() : "http://" + friendlyLink.getFriendlyLinkUrl();
@@ -148,7 +147,6 @@ public class FriendlyLinkService extends ServiceImpl<FriendlyLinkDao, FriendlyLi
         MultiValueMap requestMap = new LinkedMultiValueMap();
         requestMap.add("username", AESUtils.encrypt(website.getBackgroundUserName()));
         requestMap.add("password", AESUtils.encrypt(website.getBackgroundPassword()));
-        requestMap.add("ip", AESUtils.encrypt(ip));
         requestMap.add("id", StringUtils.join(uuids, ","));
         requestMap.add("dopost", "delete");
         connectionCMS(requestMap, "delete", website.getBackgroundDomain());
@@ -159,7 +157,6 @@ public class FriendlyLinkService extends ServiceImpl<FriendlyLinkDao, FriendlyLi
         MultiValueMap requestMap = new LinkedMultiValueMap();
         requestMap.add("username", AESUtils.encrypt(website.getBackgroundUserName()));
         requestMap.add("password", AESUtils.encrypt(website.getBackgroundPassword()));
-        requestMap.add("ip", AESUtils.encrypt(ip));
         requestMap.add("dopost", "select");
         String resultJsonString = connectionCMS(requestMap,"select", website.getBackgroundDomain());
         JSONArray jsonArray = JSONArray.fromObject(resultJsonString);
@@ -222,7 +219,6 @@ public class FriendlyLinkService extends ServiceImpl<FriendlyLinkDao, FriendlyLi
         MultiValueMap requestMap = new LinkedMultiValueMap();
         requestMap.add("username", AESUtils.encrypt(website.getBackgroundUserName()));
         requestMap.add("password", AESUtils.encrypt(website.getBackgroundPassword()));
-        requestMap.add("ip", AESUtils.encrypt(ip));
         requestMap.add("dopost", "select");
         resultJsonString = restTemplate.postForObject(backgroundDomain + "friendlink_m_type.php",  requestMap, String.class);
         JSONArray jsonArray = JSONArray.fromObject(resultJsonString);
