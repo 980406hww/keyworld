@@ -9,6 +9,7 @@ import com.keymanager.monitoring.service.AdvertisingService;
 import com.keymanager.monitoring.service.CustomerService;
 import com.keymanager.util.GetIpUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,7 @@ public class AdvertisingRestController {
     @Autowired
     private AdvertisingService advertisingService;
 
+    @RequiresPermissions("/internal/advertising/searchAdvertisings")
     @RequestMapping(value = "/searchAdvertisingLists/{websiteUuid}", method = RequestMethod.GET)
     public ModelAndView searchAdvertisingLists(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, @PathVariable("websiteUuid") Long websiteUuid) {
         AdvertisingCriteria advertisingCriteria = new AdvertisingCriteria();
@@ -39,6 +41,7 @@ public class AdvertisingRestController {
         return advertisingService.constructSearchAdvertisingListsModelAndView(currentPageNumber, pageSize, advertisingCriteria);
     }
 
+    @RequiresPermissions("/internal/advertising/searchAdvertisings")
     @RequestMapping(value = "/searchAdvertisingLists", method = RequestMethod.POST)
     public ModelAndView searchAdvertisingLists(AdvertisingCriteria advertisingCriteria, HttpServletRequest request) {
         String currentPageNumber = request.getParameter("currentPageNumber");
@@ -52,6 +55,7 @@ public class AdvertisingRestController {
         return advertisingService.constructSearchAdvertisingListsModelAndView(Integer.parseInt(currentPageNumber), Integer.parseInt(pageSize), advertisingCriteria);
     }
 
+    @RequiresPermissions("/internal/advertising/saveAdvertisings")
     @RequestMapping(value = "/searchAdvertisingAllTypeAndCustomerList/{websiteUuid}", method = RequestMethod.GET)
     public ResponseEntity<?> searchAdvertisingAllTypeAndCustomerList(@PathVariable Long websiteUuid, HttpServletRequest request) {
         try {
@@ -68,6 +72,7 @@ public class AdvertisingRestController {
         }
     }
 
+    @RequiresPermissions("/internal/advertising/saveAdvertisings")
     @RequestMapping(value = "/saveAdvertising", method = RequestMethod.POST)
     public ResponseEntity<?> saveAdvertising(@RequestBody Advertising advertising, HttpServletRequest request){
         try{
@@ -79,6 +84,7 @@ public class AdvertisingRestController {
         }
     }
 
+    @RequiresPermissions("/internal/advertising/saveAdvertising")
     @RequestMapping(value = "/updateAdvertising", method = RequestMethod.POST)
     public ResponseEntity<?> updateAdvertising(@RequestBody Advertising advertising, HttpServletRequest request){
         try{
@@ -90,6 +96,8 @@ public class AdvertisingRestController {
         }
     }
 
+
+    @RequiresPermissions("/internal/advertising/saveAdvertising")
     @RequestMapping(value = "/getAdvertising/{uuid}", method = RequestMethod.GET)
     public ResponseEntity<?> getAdvertising(@PathVariable Long uuid){
         try{
@@ -101,6 +109,7 @@ public class AdvertisingRestController {
         }
     }
 
+    @RequiresPermissions("/internal/advertising/deleteAdvertising")
     @RequestMapping(value = "/delAdvertising/{uuid}", method = RequestMethod.GET)
     public ResponseEntity<?> delAdvertising(@PathVariable Long uuid, HttpServletRequest request){
         try{
@@ -112,6 +121,7 @@ public class AdvertisingRestController {
         }
     }
 
+    @RequiresPermissions("/internal/advertising/deleteAdvertisings")
     @RequestMapping(value = "/delAdvertisings", method = RequestMethod.POST)
     public ResponseEntity<?> delAdvertisings(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
         try {

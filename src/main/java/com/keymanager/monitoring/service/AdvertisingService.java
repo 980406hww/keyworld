@@ -6,13 +6,10 @@ import com.keymanager.monitoring.common.utils.StringUtils;
 import com.keymanager.monitoring.criteria.AdvertisingAllTypeAndCustomerListCriteria;
 import com.keymanager.monitoring.criteria.AdvertisingCriteria;
 import com.keymanager.monitoring.dao.AdvertisingDao;
-import com.keymanager.monitoring.dao.FriendlyLinkDao;
 import com.keymanager.monitoring.entity.Advertising;
-import com.keymanager.monitoring.entity.FriendlyLink;
 import com.keymanager.monitoring.entity.Website;
-import com.keymanager.monitoring.enums.PutSalesInfoSignEnum;
 import com.keymanager.monitoring.vo.AdvertisingVO;
-import com.keymanager.monitoring.vo.FriendlyLinkVO;
+import com.keymanager.util.AESUtils;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
@@ -84,9 +81,8 @@ public class AdvertisingService extends ServiceImpl<AdvertisingDao, Advertising>
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Website website = websiteService.getWebsite(Long.valueOf(advertising.getWebsiteUuid()));
         MultiValueMap requestMap = new LinkedMultiValueMap();
-        requestMap.add("username", website.getBackgroundUserName());
-        requestMap.add("password", website.getBackgroundPassword());
-        requestMap.add("ip", ip);
+        requestMap.add("username", AESUtils.encrypt(website.getBackgroundUserName()));
+        requestMap.add("password", AESUtils.encrypt(website.getBackgroundPassword()));
         requestMap.add("adname", advertising.getAdvertisingAdName());
         requestMap.add("timeset", advertising.getAdvertisingTimeSet());
         requestMap.add("starttime", sdf.format(advertising.getAdvertisingStarttime()));
@@ -116,9 +112,8 @@ public class AdvertisingService extends ServiceImpl<AdvertisingDao, Advertising>
     public void deleteConnectionCMS(Long websiteUuid, String[] uuids, String ip){
         Website website = websiteService.getWebsite(websiteUuid);
         MultiValueMap requestMap = new LinkedMultiValueMap();
-        requestMap.add("username", website.getBackgroundUserName());
-        requestMap.add("password", website.getBackgroundPassword());
-        requestMap.add("ip", ip);
+        requestMap.add("username", AESUtils.encrypt(website.getBackgroundUserName()));
+        requestMap.add("password", AESUtils.encrypt(website.getBackgroundPassword()));
         requestMap.add("aid", StringUtils.join(uuids, ","));
         requestMap.add("dopost", "delete");
         connectionAdvertisingCMS(requestMap, "delete", website.getBackgroundDomain());
@@ -127,9 +122,8 @@ public class AdvertisingService extends ServiceImpl<AdvertisingDao, Advertising>
     public List<AdvertisingVO> selectConnectionCMS(Long websiteUuid, String ip){
         Website website = websiteService.getWebsite(websiteUuid);
         MultiValueMap requestMap = new LinkedMultiValueMap();
-        requestMap.add("username", website.getBackgroundUserName());
-        requestMap.add("password", website.getBackgroundPassword());
-        requestMap.add("ip", ip);
+        requestMap.add("username", AESUtils.encrypt(website.getBackgroundUserName()));
+        requestMap.add("password", AESUtils.encrypt(website.getBackgroundPassword()));
         requestMap.add("dopost", "select");
         String resultJsonString = connectionAdvertisingCMS(requestMap,"select", website.getBackgroundDomain());
         JSONArray jsonArray = JSONArray.fromObject(resultJsonString);
@@ -191,9 +185,8 @@ public class AdvertisingService extends ServiceImpl<AdvertisingDao, Advertising>
     public AdvertisingAllTypeAndCustomerListCriteria searchAdvertisingAllTypeList(Long websiteUuid, String ip){
         Website website = websiteService.getWebsite(websiteUuid);
         MultiValueMap requestMap = new LinkedMultiValueMap();
-        requestMap.add("username", website.getBackgroundUserName());
-        requestMap.add("password", website.getBackgroundPassword());
-        requestMap.add("ip", ip);
+        requestMap.add("username", AESUtils.encrypt(website.getBackgroundUserName()));
+        requestMap.add("password", AESUtils.encrypt(website.getBackgroundPassword()));
         requestMap.add("dopost", "select");
         String advertisingTypeStr = connectionAdvertisingTypeCMS(requestMap, "select", website.getBackgroundDomain());
         JSONArray advertisingTypeJsonArray = JSONArray.fromObject(advertisingTypeStr);

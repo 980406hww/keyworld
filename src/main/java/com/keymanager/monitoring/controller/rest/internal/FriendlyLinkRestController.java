@@ -1,13 +1,11 @@
 package com.keymanager.monitoring.controller.rest.internal;
 
-import com.keymanager.monitoring.criteria.CustomerCriteria;
 import com.keymanager.monitoring.criteria.FriendlyLinkCriteria;
-import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.FriendlyLink;
-import com.keymanager.monitoring.service.CustomerService;
 import com.keymanager.monitoring.service.FriendlyLinkService;
 import com.keymanager.util.GetIpUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +27,8 @@ public class FriendlyLinkRestController {
 
     @Autowired
     private FriendlyLinkService friendlyLinkService;
-    @Autowired
-    private CustomerService customerService;
 
+    @RequiresPermissions("/internal/friendlyLink/searchFriendlyLinks")
     @RequestMapping(value = "/searchFriendlyLinkLists/{websiteUuid}", method = RequestMethod.GET)
     public ModelAndView searchFriendlyLinkLists(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, @PathVariable("websiteUuid") Long websiteUuid) {
         FriendlyLinkCriteria friendlyLinkCriteria = new FriendlyLinkCriteria();
@@ -39,6 +36,7 @@ public class FriendlyLinkRestController {
         return friendlyLinkService.constructSearchFriendlyLinkListsModelAndView(currentPageNumber, pageSize, friendlyLinkCriteria);
     }
 
+    @RequiresPermissions("/internal/friendlyLink/searchFriendlyLinks")
     @RequestMapping(value = "/searchFriendlyLinkLists", method = RequestMethod.POST)
     public ModelAndView searchFriendlyLinkLists(FriendlyLinkCriteria friendlyLinkCriteria, HttpServletRequest request) {
         String currentPageNumber = request.getParameter("currentPageNumber");
@@ -52,6 +50,7 @@ public class FriendlyLinkRestController {
         return friendlyLinkService.constructSearchFriendlyLinkListsModelAndView(Integer.parseInt(currentPageNumber), Integer.parseInt(pageSize), friendlyLinkCriteria);
     }
 
+    @RequiresPermissions("/internal/friendlyLink/saveFriendlyLinks")
     @RequestMapping(value = "/saveFriendlyLink", method = RequestMethod.POST)
     public ResponseEntity<?> saveFriendlyLink(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request){
         try{
@@ -64,6 +63,7 @@ public class FriendlyLinkRestController {
         }
     }
 
+    @RequiresPermissions("/internal/friendlyLink/saveFriendlyLink")
     @RequestMapping(value = "/updateFriendlyLink", method = RequestMethod.POST)
     public ResponseEntity<?> updateFriendlyLink(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request){
         try{
@@ -77,6 +77,7 @@ public class FriendlyLinkRestController {
         }
     }
 
+    @RequiresPermissions("/internal/friendlyLink/saveFriendlyLink")
     @RequestMapping(value = "/getFriendlyLink/{uuid}", method = RequestMethod.GET)
     public ResponseEntity<?> getFriendlyLink(@PathVariable Long uuid, HttpServletRequest request){
         try{
@@ -88,6 +89,7 @@ public class FriendlyLinkRestController {
         }
     }
 
+    @RequiresPermissions("/internal/friendlyLink/deleteFriendlyLink")
     @RequestMapping(value = "/delFriendlyLink/{uuid}", method = RequestMethod.GET)
     public ResponseEntity<?> delFriendlyLink(@PathVariable Long uuid, HttpServletRequest request){
         try{
@@ -99,6 +101,7 @@ public class FriendlyLinkRestController {
         }
     }
 
+    @RequiresPermissions("/internal/friendlyLink/deleteFriendlyLinks")
     @RequestMapping(value = "/delFriendlyLinks", method = RequestMethod.POST)
     public ResponseEntity<?> delFriendlyLinks(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
         try {
@@ -110,6 +113,7 @@ public class FriendlyLinkRestController {
         }
     }
 
+    @RequiresPermissions("/internal/friendlyLink/saveFriendlyLink")
     @RequestMapping(value = "/searchFriendlyLinkTypeList/{websiteUuid}", method = RequestMethod.GET)
     public ResponseEntity<?>  searchFriendlyLinkTypeList(@PathVariable Long websiteUuid, HttpServletRequest request) {
         try {
