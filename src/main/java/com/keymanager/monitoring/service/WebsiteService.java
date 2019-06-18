@@ -169,10 +169,10 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
         for (final WebsiteBackGroundInfoVO website : websites) {
             List<SalesManageVO> salesManages = salesManageService.getAllSalesInfo(website.getWebsiteType());
             postMap.put("sale_list", salesManages);
-            postMap.put("username", AESUtils.encrypt(website.getBackgroundUserName()));
-            postMap.put("password", AESUtils.encrypt(website.getBackgroundPassword()));
+            postMap.put("username", website.getBackgroundUserName());
+            postMap.put("password", website.getBackgroundPassword());
             String url = "http://" + website.getBackgroundDomain() + "sales_management.php";
-            params.set("params", postMap);
+            params.set("params", AESUtils.encrypt(postMap));
             HttpEntity<MultiValueMap> requestEntity = new HttpEntity<MultiValueMap>(params, headers);
             ListenableFuture<ResponseEntity<String>> forEntity = asyncRestTemplate.postForEntity(url, requestEntity, String.class);
             forEntity.addCallback(new SuccessCallback<ResponseEntity<String>>() {
