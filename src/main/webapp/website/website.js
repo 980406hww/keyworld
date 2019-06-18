@@ -203,7 +203,7 @@ function showWebsiteDialog(uuid) {
     $("#websiteDialog").dialog({
         resizable: false,
         width: 320,
-        height: 365,
+        height: 445,
         modal: true,
         title: '网站信息',
         closed:true,
