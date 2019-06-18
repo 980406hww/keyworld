@@ -110,6 +110,7 @@ function showFriendlyLinkDialog(websiteUuid, uuid) {
             success: function (friendlyLinkTypeList) {
                 $("#friendlyLinkType_list").find('option').remove();
                 if (friendlyLinkTypeList != null) {
+                    $("#friendlyLinkType_list").append("<option value='默认分类_0'></option>");
                     $.each(friendlyLinkTypeList, function (idx, val) {
                         $("#friendlyLinkType_list").append("<option value='" + val.typename + "_" + val.id + "'></option>")
                     });
@@ -124,7 +125,7 @@ function showFriendlyLinkDialog(websiteUuid, uuid) {
     $("#friendlyLinkDialog").dialog({
         resizable: false,
         width: 290,
-        height: 500,
+        height: 530,
         modal: true,
         buttons: [{
             text: '保存',
@@ -200,6 +201,12 @@ function saveFriendlyLink(websiteUuid, uuid) {
         friendlyLinkForm.find("#expirationTime").focus();
         return;
     }
+    var renewTime = friendlyLinkForm.find("#renewTime").val();
+    if (renewTime == ""){
+        alert("请选择续费时间：");
+        friendlyLinkForm.find("#renewTime").focus();
+        return;
+    }
     var friendlyLinkMsg = friendlyLinkForm.find("#friendlyLinkMsg").val();
     var friendlyLinkEmail = friendlyLinkForm.find("#friendlyLinkEmail").val();
     var friendlyLinkType = friendlyLinkForm.find("#friendlyLinkType").val();
@@ -219,6 +226,7 @@ function saveFriendlyLink(websiteUuid, uuid) {
     formData.append('friendlyLinkTypeId', $.trim(friendlyLinkTypeId));
     formData.append('friendlyLinkMsg', $.trim(friendlyLinkMsg));
     formData.append('expirationTime', $.trim(expirationTime));
+    formData.append('renewTime', $.trim(renewTime));
     formData.append('friendlyLinkEmail', $.trim(friendlyLinkEmail));
     formData.append('friendlyLinkLogo', $.trim(friendlyLinkLogo));
     if (uuid == 0){
@@ -229,7 +237,6 @@ function saveFriendlyLink(websiteUuid, uuid) {
             data: formData,
             processData: false,
             contentType: false,
-            timeout: 5000,
             success: function (result) {
                 if (result) {
                     $().toastmessage('showSuccessToast', "保存成功",true);
@@ -326,6 +333,7 @@ function initFriendlyLinkDialog(friendlyLink) {
     friendlyLinkForm.find($('input:radio[name="friendlyLinkIsCheck"]:checked').val(friendlyLink.friendlyLinkIsCheck));
     $("input[type=radio][name=friendlyLinkIsCheck][value="+friendlyLink.friendlyLinkIsCheck+"]").attr("checked",true);
     friendlyLinkForm.find("#expirationTime").val(userDate(friendlyLink.expirationTime));
+    friendlyLinkForm.find("#renewTime").val(userDate(friendlyLink.renewTime));
     friendlyLinkForm.find("#friendlyLinkMsg").val(friendlyLink.friendlyLinkMsg);
 }
 
@@ -359,4 +367,36 @@ function userDate(uData){
     var month = myDate.getMonth() + 1;
     var day = myDate.getDate();
     return year + '-' + month + '-' + day;
+}
+
+function pushFriendlyLink() {
+    var uuids = getSelectedIDs();
+    if (uuids === '') {
+        alert('请选择要删除的友情链接');
+        return;
+    }
+    if (confirm("确实要删除这些友情链接吗?") == false) return;
+    var postData = {};
+    postData.uuids = uuids.split(",");
+    $.ajax({
+        url: '/internal/friendlyLink/pushFriendlyLink',
+        data: JSON.stringify(postData),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        timeout: 5000,
+        type: 'POST',
+        success: function (data) {
+            if (data) {
+                $().toastmessage('showSuccessToast', "推送成功",true);
+            } else {
+                $().toastmessage('showErrorToast', "推送失败",true);
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "操作失败");
+
+        }
+    });
 }

@@ -3,7 +3,6 @@ package com.keymanager.monitoring.controller.rest.internal;
 import com.keymanager.monitoring.criteria.FriendlyLinkCriteria;
 import com.keymanager.monitoring.entity.FriendlyLink;
 import com.keymanager.monitoring.service.FriendlyLinkService;
-import com.keymanager.util.GetIpUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
@@ -55,7 +54,7 @@ public class FriendlyLinkRestController {
     public ResponseEntity<?> saveFriendlyLink(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request){
         try{
             FriendlyLink friendlyLink = friendlyLinkService.initFriendlyLink(request);
-            friendlyLinkService.saveFriendlyLink(file, friendlyLink, GetIpUtil.getIP(request));
+            friendlyLinkService.saveFriendlyLink(file, friendlyLink);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         }catch (Exception e){
             logger.error(e.getMessage());
@@ -69,7 +68,7 @@ public class FriendlyLinkRestController {
         try{
             FriendlyLink friendlyLink = friendlyLinkService.initFriendlyLink(request);
             int originalSortRank = Integer.valueOf(request.getParameter("originalSortRank"));
-            friendlyLinkService.updateFriendlyLink(file, friendlyLink, GetIpUtil.getIP(request), originalSortRank);
+            friendlyLinkService.updateFriendlyLink(file, friendlyLink, originalSortRank);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         }catch (Exception e){
             logger.error(e.getMessage());
@@ -79,7 +78,7 @@ public class FriendlyLinkRestController {
 
     @RequiresPermissions("/internal/friendlyLink/saveFriendlyLink")
     @RequestMapping(value = "/getFriendlyLink/{uuid}", method = RequestMethod.GET)
-    public ResponseEntity<?> getFriendlyLink(@PathVariable Long uuid, HttpServletRequest request){
+    public ResponseEntity<?> getFriendlyLink(@PathVariable Long uuid){
         try{
             FriendlyLink friendlyLink = friendlyLinkService.getFriendlyLink(uuid);
             return new ResponseEntity<Object>(friendlyLink, HttpStatus.OK);
@@ -91,9 +90,9 @@ public class FriendlyLinkRestController {
 
     @RequiresPermissions("/internal/friendlyLink/deleteFriendlyLink")
     @RequestMapping(value = "/delFriendlyLink/{uuid}", method = RequestMethod.GET)
-    public ResponseEntity<?> delFriendlyLink(@PathVariable Long uuid, HttpServletRequest request){
+    public ResponseEntity<?> delFriendlyLink(@PathVariable Long uuid){
         try{
-            friendlyLinkService.delFriendlyLink(uuid, GetIpUtil.getIP(request));
+            friendlyLinkService.delFriendlyLink(uuid);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         }catch (Exception e){
             logger.error(e.getMessage());
@@ -103,9 +102,9 @@ public class FriendlyLinkRestController {
 
     @RequiresPermissions("/internal/friendlyLink/deleteFriendlyLinks")
     @RequestMapping(value = "/delFriendlyLinks", method = RequestMethod.POST)
-    public ResponseEntity<?> delFriendlyLinks(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
+    public ResponseEntity<?> delFriendlyLinks(@RequestBody Map<String, Object> requestMap) {
         try {
-            friendlyLinkService.delFriendlyLinks(requestMap, GetIpUtil.getIP(request));
+            friendlyLinkService.delFriendlyLinks(requestMap);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -115,13 +114,25 @@ public class FriendlyLinkRestController {
 
     @RequiresPermissions("/internal/friendlyLink/saveFriendlyLink")
     @RequestMapping(value = "/searchFriendlyLinkTypeList/{websiteUuid}", method = RequestMethod.GET)
-    public ResponseEntity<?>  searchFriendlyLinkTypeList(@PathVariable Long websiteUuid, HttpServletRequest request) {
+    public ResponseEntity<?>  searchFriendlyLinkTypeList(@PathVariable Long websiteUuid) {
         try {
-            List<Map> friendlyLinkTypeList = friendlyLinkService.searchFriendlyLinkTypeList(websiteUuid, GetIpUtil.getIP(request));
+            List<Map> friendlyLinkTypeList = friendlyLinkService.searchFriendlyLinkTypeList(websiteUuid);
             return new ResponseEntity<Object>(friendlyLinkTypeList, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
             return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequiresPermissions("/internal/friendlyLink/pushFriendlyLink")
+    @RequestMapping(value = "/pushFriendlyLink", method = RequestMethod.POST)
+    public ResponseEntity<?> pushFriendlyLink(@RequestBody Map<String, Object> requestMap) {
+        try {
+            friendlyLinkService.pushFriendlyLink(requestMap);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
         }
     }
 }

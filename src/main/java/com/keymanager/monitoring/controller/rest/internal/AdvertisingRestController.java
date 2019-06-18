@@ -7,7 +7,6 @@ import com.keymanager.monitoring.entity.Advertising;
 import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.service.AdvertisingService;
 import com.keymanager.monitoring.service.CustomerService;
-import com.keymanager.util.GetIpUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
@@ -63,7 +62,7 @@ public class AdvertisingRestController {
             String entryType = (String) request.getSession().getAttribute("entryType");
             customerCriteria.setEntryType(entryType);
             List<Customer> customerList = customerService.getActiveCustomerSimpleInfo(customerCriteria);
-            AdvertisingAllTypeAndCustomerListCriteria advertisingAllTypeAndCustomerListCriteria = advertisingService.searchAdvertisingAllTypeList(websiteUuid, GetIpUtil.getIP(request));
+            AdvertisingAllTypeAndCustomerListCriteria advertisingAllTypeAndCustomerListCriteria = advertisingService.searchAdvertisingAllTypeList(websiteUuid);
             advertisingAllTypeAndCustomerListCriteria.setCustomerList(customerList);
             return new ResponseEntity<Object>(advertisingAllTypeAndCustomerListCriteria, HttpStatus.OK);
         } catch (Exception e) {
@@ -74,9 +73,9 @@ public class AdvertisingRestController {
 
     @RequiresPermissions("/internal/advertising/saveAdvertisings")
     @RequestMapping(value = "/saveAdvertising", method = RequestMethod.POST)
-    public ResponseEntity<?> saveAdvertising(@RequestBody Advertising advertising, HttpServletRequest request){
+    public ResponseEntity<?> saveAdvertising(@RequestBody Advertising advertising){
         try{
-            advertisingService.saveAdvertising(advertising, GetIpUtil.getIP(request));
+            advertisingService.saveAdvertising(advertising);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         }catch (Exception e){
             logger.error(e.getMessage());
@@ -86,9 +85,9 @@ public class AdvertisingRestController {
 
     @RequiresPermissions("/internal/advertising/saveAdvertising")
     @RequestMapping(value = "/updateAdvertising", method = RequestMethod.POST)
-    public ResponseEntity<?> updateAdvertising(@RequestBody Advertising advertising, HttpServletRequest request){
+    public ResponseEntity<?> updateAdvertising(@RequestBody Advertising advertising){
         try{
-            advertisingService.updateAdvertising(advertising, GetIpUtil.getIP(request));
+            advertisingService.updateAdvertising(advertising);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         }catch (Exception e){
             logger.error(e.getMessage());
@@ -111,9 +110,9 @@ public class AdvertisingRestController {
 
     @RequiresPermissions("/internal/advertising/deleteAdvertising")
     @RequestMapping(value = "/delAdvertising/{uuid}", method = RequestMethod.GET)
-    public ResponseEntity<?> delAdvertising(@PathVariable Long uuid, HttpServletRequest request){
+    public ResponseEntity<?> delAdvertising(@PathVariable Long uuid){
         try{
-            advertisingService.delAdvertising(uuid, GetIpUtil.getIP(request));
+            advertisingService.delAdvertising(uuid);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         }catch (Exception e){
             logger.error(e.getMessage());
@@ -123,9 +122,21 @@ public class AdvertisingRestController {
 
     @RequiresPermissions("/internal/advertising/deleteAdvertisings")
     @RequestMapping(value = "/delAdvertisings", method = RequestMethod.POST)
-    public ResponseEntity<?> delAdvertisings(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
+    public ResponseEntity<?> delAdvertisings(@RequestBody Map<String, Object> requestMap) {
         try {
-            advertisingService.delAdvertisings(requestMap, GetIpUtil.getIP(request));
+            advertisingService.delAdvertisings(requestMap);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequiresPermissions("/internal/advertising/pushAdvertising")
+    @RequestMapping(value = "/pushAdvertising", method = RequestMethod.POST)
+    public ResponseEntity<?> pushAdvertising(@RequestBody Map<String, Object> requestMap) {
+        try {
+            advertisingService.pushAdvertising(requestMap);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());

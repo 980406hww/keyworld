@@ -8,6 +8,7 @@ import com.keymanager.monitoring.dao.WebsiteDao;
 import com.keymanager.monitoring.entity.Advertising;
 import com.keymanager.monitoring.entity.FriendlyLink;
 import com.keymanager.monitoring.entity.Website;
+import com.keymanager.monitoring.enums.WebsiteRemoteConnectionEnum;
 import com.keymanager.monitoring.vo.AdvertisingVO;
 import com.keymanager.monitoring.vo.FriendlyLinkVO;
 import com.keymanager.monitoring.enums.PutSalesInfoSignEnum;
@@ -73,6 +74,9 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
     }
 
     public void saveWebsite(Website website) {
+        if (website.getBackgroundDomain().endsWith("/")){
+            website.setBackgroundDomain(website.getBackgroundDomain() + "/");
+        }
         website.setUpdateTime(new Date());
         if (null != website.getUuid()) {
             websiteDao.updateById(website);
@@ -225,10 +229,10 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
         return friendlyLink;
     }
 
-    public void batchSaveFriendlyLink(MultipartFile file, FriendlyLink friendlyLink, String ip, List<String> uuids){
+    public void batchSaveFriendlyLink(MultipartFile file, FriendlyLink friendlyLink, List<String> uuids){
         for (String uuidstr : uuids) {
             friendlyLink.setWebsiteUuid(Integer.valueOf(uuidstr));
-            friendlyLinkService.saveOrUpdateConnectionCMS(friendlyLink, file, ip, "add");
+            friendlyLinkService.saveOrUpdateConnectionCMS(friendlyLink, file, WebsiteRemoteConnectionEnum.add.name());
             if (friendlyLink.getFriendlyLinkSortRank() != -1){
                 friendlyLinkService.retreatSortRank(friendlyLink.getWebsiteUuid(), friendlyLink.getFriendlyLinkSortRank());
             }
@@ -236,14 +240,15 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
         }
     }
 
-    public void batchUpdateFriendlyLink(MultipartFile file, FriendlyLink friendlyLink, String ip, List<String> uuids, String originalFriendlyLinkUrl){
+    public void batchUpdateFriendlyLink(MultipartFile file, FriendlyLink friendlyLink, List<String> uuids, String originalFriendlyLinkUrl){
         for (String uuidstr : uuids) {
             List<Map> friendlyLinkInfos = friendlyLinkService.searchOriginalSortRank(Integer.valueOf(uuidstr), originalFriendlyLinkUrl);
             for (Map friendlyLinkInfo: friendlyLinkInfos) {
                 friendlyLink.setWebsiteUuid(Integer.valueOf(uuidstr));
                 friendlyLink.setUuid(Long.valueOf((Integer)friendlyLinkInfo.get("uuid")));
+                friendlyLink.setFriendlyLinkId((Integer)friendlyLinkInfo.get("friendlyLinkId"));
                 friendlyLink.setUpdateTime(new Date());
-                friendlyLinkService.saveOrUpdateConnectionCMS(friendlyLink, file, ip, "saveedit");
+                friendlyLinkService.saveOrUpdateConnectionCMS(friendlyLink, file, WebsiteRemoteConnectionEnum.saveedit.name());
                 int originalSortRank = (Integer) friendlyLinkInfo.get("friendlyLinkSortRank");
                 if (originalSortRank < friendlyLink.getFriendlyLinkSortRank()){
                     friendlyLinkService.updateCentreSortRank(originalSortRank, friendlyLink.getFriendlyLinkSortRank(), friendlyLink.getWebsiteUuid());
@@ -255,7 +260,7 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
         }
     }
 
-    public void batchDelFriendlyLink(Map map, String ip){
+    public void batchDelFriendlyLink(Map map){
         String friendlyLinkUrl = (String) map.get("friendlyLinkUrl");
         List<String> uuids = (List<String>) map.get("uuids");
         for (String uuidStr: uuids) {
@@ -263,21 +268,21 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
             List<String> friendlyLinkids = friendlyLinkService.searchFriendlyLinkidsByUrl(uuid, friendlyLinkUrl);
             String[] uuidArrays = new String[friendlyLinkids.size()];
             friendlyLinkids.toArray(uuidArrays);
-            friendlyLinkService.deleteConnectionCMS(uuid, uuidArrays, ip);
+            friendlyLinkService.deleteConnectionCMS(uuid, uuidArrays);
         }
         friendlyLinkService.batchDeleteFriendlyLinkByUrl(friendlyLinkUrl, uuids);
     }
 
-    public void batchSaveAdvertising(Advertising advertising, String ip){
+    public void batchSaveAdvertising(Advertising advertising){
         List<String> uuids = Arrays.asList(advertising.getUuids().split(","));
         for (String uuidstr : uuids) {
             advertising.setWebsiteUuid(Integer.valueOf(uuidstr));
-            advertisingService.saveOrUpdateConnectionCMS(advertising, ip, "add");
+            advertisingService.saveOrUpdateConnectionCMS(advertising, WebsiteRemoteConnectionEnum.add.name());
             advertisingService.insertAdvertising(advertising);
         }
     }
 
-    public void batchUpdateAdvertising(Advertising advertising, String ip){
+    public void batchUpdateAdvertising(Advertising advertising){
         List<String> uuids = Arrays.asList(advertising.getUuids().split(","));
         for (String uuidStr : uuids) {
             advertising.setWebsiteUuid(Integer.valueOf(uuidStr));
@@ -285,12 +290,12 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
             for (Map advertisingIdMap: advertisingIds) {
                 advertising.setAdvertisingId((Integer) advertisingIdMap.get("advertisingId"));
                 advertising.setUuid(Long.valueOf((Integer)advertisingIdMap.get("uuid")));
-                advertisingService.updateAdvertising(advertising, ip);
+                advertisingService.updateAdvertising(advertising);
             }
         }
     }
 
-    public void batchDelAdvertising(Map map, String ip){
+    public void batchDelAdvertising(Map map){
         String advertisingTagname = (String) map.get("advertisingTagname");
         List<String> uuids = (List<String>) map.get("uuids");
         for (String uuidStr: uuids) {
@@ -298,18 +303,18 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
             List<String> advertisingIds = advertisingService.searchAdvertisingidsByAdvertisingTagname(uuid, advertisingTagname);
             String[] uuidArrays = new String[advertisingIds.size()];
             advertisingIds.toArray(uuidArrays);
-            advertisingService.deleteConnectionCMS(uuid, uuidArrays, ip);
+            advertisingService.deleteConnectionCMS(uuid, uuidArrays);
         }
         advertisingService.batchDeleteAdvertisingByAdvertisingTagname(advertisingTagname, uuids);
     }
 
-    public void synchronousFriendlyLink(Map<String, Object> requestMap, String ip){
+    public void synchronousFriendlyLink(Map<String, Object> requestMap){
         List<String> uuids = (List) requestMap.get("uuids");
         for (String uuidStr: uuids){
             Website website = new Website();
             website.setUuid(Long.valueOf(uuidStr));
             try {
-                List<FriendlyLinkVO> friendlyLinkVOS = friendlyLinkService.selectConnectionCMS(Long.valueOf(uuidStr), ip);
+                List<FriendlyLinkVO> friendlyLinkVOS = friendlyLinkService.selectConnectionCMS(Long.valueOf(uuidStr));
                 if(!friendlyLinkVOS.isEmpty()){
                     List<Integer> friendlyLinkIds = friendlyLinkService.selectByWebsiteId(Long.valueOf(uuidStr));
                     for (FriendlyLinkVO friendlyLinkVO: friendlyLinkVOS) {
@@ -339,13 +344,13 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
         }
     }
 
-    public void synchronousAdvertising(Map<String, Object> requestMap, String ip){
+    public void synchronousAdvertising(Map<String, Object> requestMap){
         List<String> uuids = (List) requestMap.get("uuids");
         for (String uuidStr: uuids){
             Website website = new Website();
             website.setUuid(Long.valueOf(uuidStr));
             try {
-                List<AdvertisingVO> advertisingVOS = advertisingService.selectConnectionCMS(Long.valueOf(uuidStr), ip);
+                List<AdvertisingVO> advertisingVOS = advertisingService.selectConnectionCMS(Long.valueOf(uuidStr));
                 if(!advertisingVOS.isEmpty()){
                     List<Integer> advertisingIds = advertisingService.selectByWebsiteId(Long.valueOf(uuidStr));
                     for (AdvertisingVO advertisingVO: advertisingVOS) {

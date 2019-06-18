@@ -8,6 +8,7 @@ import com.keymanager.monitoring.criteria.AdvertisingCriteria;
 import com.keymanager.monitoring.dao.AdvertisingDao;
 import com.keymanager.monitoring.entity.Advertising;
 import com.keymanager.monitoring.entity.Website;
+import com.keymanager.monitoring.enums.WebsiteRemoteConnectionEnum;
 import com.keymanager.monitoring.vo.AdvertisingVO;
 import com.keymanager.util.AESUtils;
 import net.sf.json.JSONArray;
@@ -24,9 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class AdvertisingService extends ServiceImpl<AdvertisingDao, Advertising> {
@@ -45,8 +44,8 @@ public class AdvertisingService extends ServiceImpl<AdvertisingDao, Advertising>
         return modelAndView;
     }
 
-    public void saveAdvertising(Advertising advertising, String ip){
-        saveOrUpdateConnectionCMS(advertising, ip, "add");
+    public void saveAdvertising(Advertising advertising){
+        saveOrUpdateConnectionCMS(advertising, WebsiteRemoteConnectionEnum.add.name());
         advertisingDao.insert(advertising);
     }
 
@@ -54,84 +53,89 @@ public class AdvertisingService extends ServiceImpl<AdvertisingDao, Advertising>
         return advertisingDao.getAdvertising(uuid);
     }
 
-    public void delAdvertisings(Map map, String ip){
+    public void delAdvertisings(Map map){
         Long websiteUuid = Long.valueOf((Integer)map.get("websiteUuid"));
         List<String> uuids = (List<String>) map.get("uuids");
         List<String> AdvertisingIds = advertisingDao.searchAdvertisingIds(websiteUuid, uuids);
         String[] uuidArrays = new String[AdvertisingIds.size()];
         AdvertisingIds.toArray(uuidArrays);
-        deleteConnectionCMS(websiteUuid, uuidArrays, ip);
+        deleteConnectionCMS(websiteUuid, uuidArrays);
         advertisingDao.deleteBatchIds(uuids);
     }
 
-    public void delAdvertising(Long uuid, String ip){
+    public void delAdvertising(Long uuid){
         Advertising advertising = advertisingDao.selectById(uuid);
         String[] uuidArrays = {String.valueOf(advertising.getAdvertisingId())};
-        deleteConnectionCMS(Long.valueOf(advertising.getWebsiteUuid()), uuidArrays, ip);
+        deleteConnectionCMS(Long.valueOf(advertising.getWebsiteUuid()), uuidArrays);
         advertisingDao.deleteById(uuid);
     }
 
-    public void updateAdvertising(Advertising advertising, String ip){
+    public void updateAdvertising(Advertising advertising){
         advertising.setUpdateTime(new Date());
-        saveOrUpdateConnectionCMS(advertising, ip, "saveedit");
+        saveOrUpdateConnectionCMS(advertising, WebsiteRemoteConnectionEnum.saveedit.name());
         advertisingDao.updateById(advertising);
     }
 
-    public void saveOrUpdateConnectionCMS(Advertising advertising, String ip, String type){
+    public void saveOrUpdateConnectionCMS(Advertising advertising, String type){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Website website = websiteService.getWebsite(Long.valueOf(advertising.getWebsiteUuid()));
-        MultiValueMap requestMap = new LinkedMultiValueMap();
-        requestMap.add("username", AESUtils.encrypt(website.getBackgroundUserName()));
-        requestMap.add("password", AESUtils.encrypt(website.getBackgroundPassword()));
-        requestMap.add("adname", advertising.getAdvertisingAdName());
-        requestMap.add("timeset", advertising.getAdvertisingTimeSet());
-        requestMap.add("starttime", sdf.format(advertising.getAdvertisingStarttime()));
-        requestMap.add("endtime", sdf.format(advertising.getAdvertisingEndtime()));
-        requestMap.add("expbody", advertising.getAdvertisingExpbody());
-        requestMap.add("typeid", advertising.getAdvertisingArcTypeId());
-        requestMap.add("clsid", advertising.getAdvertisingTypeId());
-        if ("add".equals(type)){
-            requestMap.add("dopost", "save");
-            requestMap.add("normbody", advertising.getNormbody());
-            JSONObject jsonObject = JSONObject.fromObject(connectionAdvertisingCMS(requestMap, "add", website.getBackgroundDomain()));
+        Map requestMap = new HashedMap();
+        requestMap.put("username", website.getBackgroundUserName());
+        requestMap.put("password", website.getBackgroundPassword());
+        requestMap.put("adname", advertising.getAdvertisingAdName());
+        requestMap.put("timeset", advertising.getAdvertisingTimeSet());
+        requestMap.put("starttime", sdf.format(advertising.getAdvertisingStarttime()));
+        requestMap.put("endtime", sdf.format(advertising.getAdvertisingEndtime()));
+        requestMap.put("expbody", advertising.getAdvertisingExpbody());
+        requestMap.put("typeid", advertising.getAdvertisingArcTypeId());
+        requestMap.put("clsid", advertising.getAdvertisingTypeId());
+        if (WebsiteRemoteConnectionEnum.add.name().equals(type)){
+            requestMap.put("dopost", WebsiteRemoteConnectionEnum.save.name());
+            requestMap.put("normbody", advertising.getNormbody());
+            JSONObject jsonObject = JSONObject.fromObject(connectionAdvertisingCMS(requestMap, WebsiteRemoteConnectionEnum.add.name(), website.getBackgroundDomain()));
             if (!"error".equals(jsonObject.get("status"))){
                 advertising.setAdvertisingId((Integer) jsonObject.get("id"));
                 advertising.setAdvertisingNormbody((String) jsonObject.get("normbody"));
             }
         }else {
-            requestMap.add("dopost", "saveedit");
-            requestMap.add("aid", advertising.getAdvertisingId());
-            requestMap.add("normbody", advertising.getAdvertisingNormbody());
-            JSONObject jsonObject = JSONObject.fromObject(connectionAdvertisingCMS(requestMap, "saveedit", website.getBackgroundDomain()));
+            requestMap.put("dopost", WebsiteRemoteConnectionEnum.saveedit.name());
+            requestMap.put("aid", advertising.getAdvertisingId());
+            requestMap.put("normbody", advertising.getAdvertisingNormbody());
+            JSONObject jsonObject = JSONObject.fromObject(connectionAdvertisingCMS(requestMap, WebsiteRemoteConnectionEnum.saveedit.name(), website.getBackgroundDomain()));
             if (!"error".equals(jsonObject.get("status"))){
                 advertising.setAdvertisingNormbody((String) jsonObject.get("normbody"));
             }
         }
     }
 
-    public void deleteConnectionCMS(Long websiteUuid, String[] uuids, String ip){
+    public void deleteConnectionCMS(Long websiteUuid, String[] uuids){
         Website website = websiteService.getWebsite(websiteUuid);
-        MultiValueMap requestMap = new LinkedMultiValueMap();
-        requestMap.add("username", AESUtils.encrypt(website.getBackgroundUserName()));
-        requestMap.add("password", AESUtils.encrypt(website.getBackgroundPassword()));
-        requestMap.add("aid", StringUtils.join(uuids, ","));
-        requestMap.add("dopost", "delete");
-        connectionAdvertisingCMS(requestMap, "delete", website.getBackgroundDomain());
+        Map requestMap = new HashMap();
+        requestMap.put("username", website.getBackgroundUserName());
+        requestMap.put("password", website.getBackgroundPassword());
+        requestMap.put("aid", StringUtils.join(uuids, ","));
+        requestMap.put("dopost", WebsiteRemoteConnectionEnum.delete.name());
+        connectionAdvertisingCMS(requestMap, WebsiteRemoteConnectionEnum.delete.name(), website.getBackgroundDomain());
     }
 
-    public List<AdvertisingVO> selectConnectionCMS(Long websiteUuid, String ip){
+    public List<AdvertisingVO> selectConnectionCMS(Long websiteUuid){
         Website website = websiteService.getWebsite(websiteUuid);
-        MultiValueMap requestMap = new LinkedMultiValueMap();
-        requestMap.add("username", AESUtils.encrypt(website.getBackgroundUserName()));
-        requestMap.add("password", AESUtils.encrypt(website.getBackgroundPassword()));
-        requestMap.add("dopost", "select");
-        String resultJsonString = connectionAdvertisingCMS(requestMap,"select", website.getBackgroundDomain());
-        JSONArray jsonArray = JSONArray.fromObject(resultJsonString);
-        List<AdvertisingVO> advertisingVOS = JSONArray.toList(jsonArray, new AdvertisingVO(), new JsonConfig());
+        Map requestMap = new HashMap();
+        requestMap.put("username", website.getBackgroundUserName());
+        requestMap.put("password", website.getBackgroundPassword());
+        requestMap.put("dopost", WebsiteRemoteConnectionEnum.select.name());
+        String resultJsonString = connectionAdvertisingCMS(requestMap,WebsiteRemoteConnectionEnum.select.name(), website.getBackgroundDomain());
+        List<AdvertisingVO> advertisingVOS = new ArrayList<>();
+        if (!"null".equals(resultJsonString)){
+            JSONArray jsonArray = JSONArray.fromObject(resultJsonString);
+            advertisingVOS = JSONArray.toList(jsonArray, new AdvertisingVO(), new JsonConfig());
+        }
         return advertisingVOS;
     }
 
-    public String connectionAdvertisingCMS(MultiValueMap requestMap, String type, String backgroundDomain){
+    public String connectionAdvertisingCMS(Map map, String type, String backgroundDomain){
+        MultiValueMap requestMap = new LinkedMultiValueMap();
+        requestMap.add("data",  AESUtils.encrypt(JSONObject.fromObject(map)));
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new StringHttpMessageConverter(Charset.forName("utf-8")));
         String resultJsonString;
@@ -140,9 +144,9 @@ public class AdvertisingService extends ServiceImpl<AdvertisingDao, Advertising>
         }else {
             backgroundDomain = "http://" + backgroundDomain;
         }
-        if ("add".equals(type)){
+        if (WebsiteRemoteConnectionEnum.add.name().equals(type)){
             resultJsonString = restTemplate.postForObject(backgroundDomain + "ad_m_add.php",  requestMap, String.class);
-        }else if ("select".equals(type)){
+        }else if (WebsiteRemoteConnectionEnum.select.name().equals(type)){
             resultJsonString = restTemplate.postForObject(backgroundDomain + "ad_m_main.php",  requestMap, String.class);
         }else {
             resultJsonString = restTemplate.postForObject(backgroundDomain + "ad_m_edit.php",  requestMap, String.class);
@@ -150,7 +154,9 @@ public class AdvertisingService extends ServiceImpl<AdvertisingDao, Advertising>
         return resultJsonString;
     }
 
-    public String connectionAdvertisingTypeCMS(MultiValueMap requestMap, String type, String backgroundDomain){
+    public String connectionAdvertisingTypeCMS(Map map, String type, String backgroundDomain){
+        MultiValueMap requestMap = new LinkedMultiValueMap();
+        requestMap.add("data", AESUtils.encrypt(JSONObject.fromObject(map)));
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new StringHttpMessageConverter(Charset.forName("utf-8")));
         String resultJsonString;
@@ -159,9 +165,9 @@ public class AdvertisingService extends ServiceImpl<AdvertisingDao, Advertising>
         }else {
             backgroundDomain = "http://" + backgroundDomain;
         }
-        if ("add".equals(type)){
+        if (WebsiteRemoteConnectionEnum.add.name().equals(type)){
             resultJsonString = restTemplate.postForObject(backgroundDomain + "adtype_m_add.php",  requestMap, String.class);
-        }else if ("select".equals(type)){
+        }else if (WebsiteRemoteConnectionEnum.select.name().equals(type)){
             resultJsonString = restTemplate.postForObject(backgroundDomain + "adtype_m_main.php",  requestMap, String.class);
         }else {
             resultJsonString = restTemplate.postForObject(backgroundDomain + "adtype_m_edit.php",  requestMap, String.class);
@@ -169,7 +175,9 @@ public class AdvertisingService extends ServiceImpl<AdvertisingDao, Advertising>
         return resultJsonString;
     }
 
-    public String connectionAdvertisingArcTypeCMS(MultiValueMap requestMap, String backgroundDomain){
+    public String connectionAdvertisingArcTypeCMS(Map map, String backgroundDomain){
+        MultiValueMap requestMap = new LinkedMultiValueMap();
+        requestMap.add("data", AESUtils.encrypt(JSONObject.fromObject(map)));
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new StringHttpMessageConverter(Charset.forName("utf-8")));
         String resultJsonString;
@@ -182,13 +190,13 @@ public class AdvertisingService extends ServiceImpl<AdvertisingDao, Advertising>
         return resultJsonString;
     }
 
-    public AdvertisingAllTypeAndCustomerListCriteria searchAdvertisingAllTypeList(Long websiteUuid, String ip){
+    public AdvertisingAllTypeAndCustomerListCriteria searchAdvertisingAllTypeList(Long websiteUuid){
         Website website = websiteService.getWebsite(websiteUuid);
-        MultiValueMap requestMap = new LinkedMultiValueMap();
-        requestMap.add("username", AESUtils.encrypt(website.getBackgroundUserName()));
-        requestMap.add("password", AESUtils.encrypt(website.getBackgroundPassword()));
-        requestMap.add("dopost", "select");
-        String advertisingTypeStr = connectionAdvertisingTypeCMS(requestMap, "select", website.getBackgroundDomain());
+        Map requestMap = new HashMap();
+        requestMap.put("username", website.getBackgroundUserName());
+        requestMap.put("password", website.getBackgroundPassword());
+        requestMap.put("dopost", WebsiteRemoteConnectionEnum.select.name());
+        String advertisingTypeStr = connectionAdvertisingTypeCMS(requestMap, WebsiteRemoteConnectionEnum.select.name(), website.getBackgroundDomain());
         JSONArray advertisingTypeJsonArray = JSONArray.fromObject(advertisingTypeStr);
         List<Map> advertisingType = JSONArray.toList(advertisingTypeJsonArray, new HashedMap(), new JsonConfig());
         String advertisingArcTypeStr = connectionAdvertisingArcTypeCMS(requestMap, website.getBackgroundDomain());
@@ -241,5 +249,22 @@ public class AdvertisingService extends ServiceImpl<AdvertisingDao, Advertising>
 
     public int searchAdvertisingCount(Long websiteUuid){
         return advertisingDao.searchAdvertisingCount(websiteUuid);
+    }
+
+    public void pushAdvertising(Map map){
+        List<String> uuids = (List<String>) map.get("uuids");
+        for (String uuid: uuids ) {
+            Advertising advertising = advertisingDao.selectById(Long.valueOf(uuid));
+            if (advertising.getAdvertisingId() == 0){
+                Map normBodyMap = new HashMap();
+                normBodyMap.put("style", "code");
+                normBodyMap.put("htmlcode", advertising.getAdvertisingNormbody());
+                advertising.setNormbody(normBodyMap);
+                saveOrUpdateConnectionCMS(advertising, WebsiteRemoteConnectionEnum.add.name());
+            }else {
+                saveOrUpdateConnectionCMS(advertising, WebsiteRemoteConnectionEnum.saveedit.name());
+            }
+            advertisingDao.updateById(advertising);
+        }
     }
 }

@@ -13,7 +13,6 @@ import com.keymanager.monitoring.enums.WebsiteTypeEnum;
 import com.keymanager.monitoring.service.SalesManageService;
 import com.keymanager.monitoring.service.WebsiteService;
 import com.keymanager.monitoring.vo.WebsiteVO;
-import com.keymanager.util.GetIpUtil;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -128,7 +127,7 @@ public class WebsiteRestController extends SpringMVCBaseController {
         try {
             FriendlyLink friendlyLink = websiteService.initFriendlyLink(request);
             List<String> uuids = Arrays.asList(request.getParameter("uuids").split(","));
-            websiteService.batchSaveFriendlyLink(file, friendlyLink, GetIpUtil.getIP(request), uuids);
+            websiteService.batchSaveFriendlyLink(file, friendlyLink, uuids);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -155,7 +154,7 @@ public class WebsiteRestController extends SpringMVCBaseController {
             FriendlyLink friendlyLink = websiteService.initFriendlyLink(request);
             List<String> uuids = Arrays.asList(request.getParameter("uuids").split(","));
             String originalFriendlyLinkUrl = request.getParameter("originalFriendlyLinkUrl");
-            websiteService.batchUpdateFriendlyLink(file, friendlyLink, GetIpUtil.getIP(request), uuids, originalFriendlyLinkUrl);
+            websiteService.batchUpdateFriendlyLink(file, friendlyLink, uuids, originalFriendlyLinkUrl);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -165,9 +164,9 @@ public class WebsiteRestController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/friendlyLink/deleteFriendlyLinks")
     @RequestMapping(value = "/batchDelFriendlyLink", method = RequestMethod.POST)
-    public ResponseEntity<?> batchDelFriendlyLink(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
+    public ResponseEntity<?> batchDelFriendlyLink(@RequestBody Map<String, Object> requestMap) {
         try {
-            websiteService.batchDelFriendlyLink(requestMap, GetIpUtil.getIP(request));
+            websiteService.batchDelFriendlyLink(requestMap);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -177,9 +176,9 @@ public class WebsiteRestController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/advertising/saveAdvertisings")
     @RequestMapping(value = "/batchSaveAdvertising", method = RequestMethod.POST)
-    public ResponseEntity<?> batchSaveAdvertising(@RequestBody Advertising advertising, HttpServletRequest request){
+    public ResponseEntity<?> batchSaveAdvertising(@RequestBody Advertising advertising){
         try{
-            websiteService.batchSaveAdvertising(advertising, GetIpUtil.getIP(request));
+            websiteService.batchSaveAdvertising(advertising);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         }catch (Exception e){
             logger.error(e.getMessage());
@@ -189,9 +188,9 @@ public class WebsiteRestController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/advertising/saveAdvertising")
     @RequestMapping(value = "/batchUpdateAdvertising", method = RequestMethod.POST)
-    public ResponseEntity<?> batchUpdateAdvertising(@RequestBody Advertising advertising, HttpServletRequest request){
+    public ResponseEntity<?> batchUpdateAdvertising(@RequestBody Advertising advertising){
         try{
-            websiteService.batchUpdateAdvertising(advertising, GetIpUtil.getIP(request));
+            websiteService.batchUpdateAdvertising(advertising);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         }catch (Exception e){
             logger.error(e.getMessage());
@@ -213,9 +212,9 @@ public class WebsiteRestController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/advertising/deleteAdvertisings")
     @RequestMapping(value = "/batchDelAdvertising", method = RequestMethod.POST)
-    public ResponseEntity<?> batchDelAdvertising(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
+    public ResponseEntity<?> batchDelAdvertising(@RequestBody Map<String, Object> requestMap) {
         try {
-            websiteService.batchDelAdvertising(requestMap, GetIpUtil.getIP(request));
+            websiteService.batchDelAdvertising(requestMap);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -227,7 +226,7 @@ public class WebsiteRestController extends SpringMVCBaseController {
     @RequestMapping(value = "/synchronousFriendlyLink", method = RequestMethod.POST)
     public ResponseEntity<?> synchronousFriendlyLink(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
         try {
-            websiteService.synchronousFriendlyLink(requestMap, GetIpUtil.getIP(request));
+            websiteService.synchronousFriendlyLink(requestMap);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -237,9 +236,9 @@ public class WebsiteRestController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/advertising/synchronousAdvertising")
     @RequestMapping(value = "/synchronousAdvertising", method = RequestMethod.POST)
-    public ResponseEntity<?> synchronousAdvertising(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
+    public ResponseEntity<?> synchronousAdvertising(@RequestBody Map<String, Object> requestMap) {
         try {
-            websiteService.synchronousAdvertising(requestMap, GetIpUtil.getIP(request));
+            websiteService.synchronousAdvertising(requestMap);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());

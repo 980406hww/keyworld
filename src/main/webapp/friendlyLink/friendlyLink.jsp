@@ -49,6 +49,9 @@
                         <shiro:hasPermission name="/internal/friendlyLink/deleteFriendlyLinks">
                             &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 删除所选 " onclick="deleteBatchFriendlyLink(${friendlyLinkCriteria.websiteUuid})"/>
                         </shiro:hasPermission>
+                        <shiro:hasPermission name="/internal/friendlyLink/pushFriendlyLink">
+                            &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 推送所选信息到远程服务 " onclick="pushFriendlyLink()"/>
+                        </shiro:hasPermission>
                     </div>
                 </form>
             </td>
@@ -89,10 +92,10 @@
                 <td width=80 style="text-align: center"><fmt:formatDate value="${friendlyLink.expirationTime}" pattern="yyyy-MM-dd"/></td>
                 <td width=80 style="text-align: center"><fmt:formatDate value="${friendlyLink.renewTime}" pattern="yyyy-MM-dd"/></td>
                 <td width=80>
-                    <shiro:hasPermission name="/internal/friendlyLink/saveWebsite">
+                    <shiro:hasPermission name="/internal/friendlyLink/saveFriendlyLink">
                         <a href="javascript:modifyFriendlyLink(${friendlyLink.uuid})">修改</a>
                     </shiro:hasPermission>
-                    <shiro:hasPermission name="/internal/friendlyLink/deleteWebsite">
+                    <shiro:hasPermission name="/internal/friendlyLink/deleteFriendlyLink">
                         | <a href="javascript:delFriendlyLink(${friendlyLink.uuid})">删除</a>
                     </shiro:hasPermission>
                 </td>
@@ -153,6 +156,12 @@
                 <td style="width:60px;"  align="right">到期时间:</td>
                 <td>
                     <input name="expirationTime" id="expirationTime" class="Wdate" type="text" onClick="WdatePicker()">
+                </td>
+            </tr>
+            <tr>
+                <td style="width:60px;"  align="right">续费时间:</td>
+                <td>
+                    <input name="renewTime" id="renewTime" class="Wdate" type="text" onClick="WdatePicker()">
                 </td>
             </tr>
             <tr>

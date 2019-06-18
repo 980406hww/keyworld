@@ -5,15 +5,20 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.common.utils.StringUtils;
 import com.keymanager.monitoring.criteria.FriendlyLinkCriteria;
 import com.keymanager.monitoring.dao.FriendlyLinkDao;
+import com.keymanager.monitoring.entity.Advertising;
 import com.keymanager.monitoring.entity.FriendlyLink;
 import com.keymanager.monitoring.entity.Website;
+import com.keymanager.monitoring.enums.WebsiteRemoteConnectionEnum;
 import com.keymanager.monitoring.vo.FriendlyLinkVO;
 import com.keymanager.util.AESUtils;
+import com.keymanager.util.FileUtil;
+import com.keymanager.util.common.StringUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONNull;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.converter.StringHttpMessageConverter;
@@ -30,6 +35,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -51,8 +57,8 @@ public class FriendlyLinkService extends ServiceImpl<FriendlyLinkDao, FriendlyLi
         return modelAndView;
     }
 
-    public void saveFriendlyLink(MultipartFile file, FriendlyLink friendlyLink, String ip){
-        saveOrUpdateConnectionCMS(friendlyLink, file, ip, "add");
+    public void saveFriendlyLink(MultipartFile file, FriendlyLink friendlyLink){
+        saveOrUpdateConnectionCMS(friendlyLink, file, WebsiteRemoteConnectionEnum.add.name());
         if (friendlyLink.getFriendlyLinkSortRank() != -1){
             friendlyLinkDao.retreatSortRank(friendlyLink.getWebsiteUuid(), friendlyLink.getFriendlyLinkSortRank());
         }
@@ -63,27 +69,27 @@ public class FriendlyLinkService extends ServiceImpl<FriendlyLinkDao, FriendlyLi
         return friendlyLinkDao.getFriendlyLink(uuid);
     }
 
-    public void delFriendlyLinks(Map map, String ip){
+    public void delFriendlyLinks(Map map){
         Long websiteUuid = Long.valueOf((Integer)map.get("websiteUuid"));
         List<String> uuids = (List<String>) map.get("uuids");
         List<String> friendlyLinkids = friendlyLinkDao.searchFriendlyLinkids(websiteUuid, uuids);
         String[] uuidArrays = new String[friendlyLinkids.size()];
         friendlyLinkids.toArray(uuidArrays);
-        deleteConnectionCMS(websiteUuid, uuidArrays, ip);
+        deleteConnectionCMS(websiteUuid, uuidArrays);
         friendlyLinkDao.deleteBatchIds(uuids);
     }
 
-    public void delFriendlyLink(Long uuid, String ip){
+    public void delFriendlyLink(Long uuid){
         FriendlyLink friendlyLink = friendlyLinkDao.selectById(uuid);
         String[] uuidArrays = {String.valueOf(friendlyLink.getFriendlyLinkId())};
-        deleteConnectionCMS(Long.valueOf(friendlyLink.getWebsiteUuid()), uuidArrays, ip);
+        deleteConnectionCMS(Long.valueOf(friendlyLink.getWebsiteUuid()), uuidArrays);
         friendlyLinkDao.deleteById(uuid);
     }
 
 
-    public void updateFriendlyLink(MultipartFile file, FriendlyLink friendlyLink, String ip, int originalSortRank){
+    public void updateFriendlyLink(MultipartFile file, FriendlyLink friendlyLink, int originalSortRank){
         friendlyLink.setUpdateTime(new Date());
-        saveOrUpdateConnectionCMS(friendlyLink, file, ip, "saveedit");
+        saveOrUpdateConnectionCMS(friendlyLink, file, WebsiteRemoteConnectionEnum.saveedit.name());
         if (originalSortRank < friendlyLink.getFriendlyLinkSortRank()){
             friendlyLinkDao.updateCentreSortRank(originalSortRank, friendlyLink.getFriendlyLinkSortRank(), friendlyLink.getWebsiteUuid());
         }else {
@@ -92,11 +98,11 @@ public class FriendlyLinkService extends ServiceImpl<FriendlyLinkDao, FriendlyLi
         friendlyLinkDao.updateById(friendlyLink);
     }
 
-    public void saveOrUpdateConnectionCMS(FriendlyLink friendlyLink, MultipartFile file, String ip, String type){
+    public void saveOrUpdateConnectionCMS(FriendlyLink friendlyLink, MultipartFile file, String type){
         Website website = websiteService.getWebsite(Long.valueOf(friendlyLink.getWebsiteUuid()));
-        MultiValueMap requestMap = new LinkedMultiValueMap();
-        requestMap.add("username", AESUtils.encrypt(website.getBackgroundUserName()));
-        requestMap.add("password", AESUtils.encrypt(website.getBackgroundPassword()));
+        Map requestMap = new HashedMap();
+        requestMap.put("username", website.getBackgroundUserName());
+        requestMap.put("password", website.getBackgroundPassword());
         String url = "";
         if (friendlyLink.getFriendlyLinkUrl().length() > 7){
             url = "http://".equals(friendlyLink.getFriendlyLinkUrl().substring(0,7).toLowerCase()) ? friendlyLink.getFriendlyLinkUrl() : "http://" + friendlyLink.getFriendlyLinkUrl();
@@ -104,12 +110,16 @@ public class FriendlyLinkService extends ServiceImpl<FriendlyLinkDao, FriendlyLi
             url = "http://" + friendlyLink.getFriendlyLinkUrl();
         }
         friendlyLink.setFriendlyLinkUrl(url);
-        requestMap.add("url", url);
-        requestMap.add("webname", friendlyLink.getFriendlyLinkWebName());
-        requestMap.add("sortrank", friendlyLink.getFriendlyLinkSortRank());
-        requestMap.add("logo", "");
+        requestMap.put("url", url);
+        requestMap.put("webname", friendlyLink.getFriendlyLinkWebName());
+        requestMap.put("sortrank", friendlyLink.getFriendlyLinkSortRank());
         if (file == null){
-            requestMap.add("logoimg", "(binary)");
+            if (!StringUtils.isEmpty(friendlyLink.getFriendlyLinkLogo())){
+                requestMap.put("logo", friendlyLink.getFriendlyLinkLogo());
+            }else {
+                requestMap.put("logo", "");
+            }
+            requestMap.put("logoimg", "(binary)");
         }else {
             File tempFile = new File(file.getOriginalFilename());
             try {
@@ -119,52 +129,61 @@ public class FriendlyLinkService extends ServiceImpl<FriendlyLinkDao, FriendlyLi
                 throw new RuntimeException("上传文件失败");
             }
             FileSystemResource fileSystemResource = new FileSystemResource(tempFile);
-            requestMap.add("logoimg", fileSystemResource);
+            requestMap.put("logoimg", fileSystemResource);
         }
-        requestMap.add("msg", friendlyLink.getFriendlyLinkMsg());
-        requestMap.add("email", friendlyLink.getFriendlyLinkEmail());
-        requestMap.add("typeid", friendlyLink.getFriendlyLinkTypeId());
-        requestMap.add("ischeck", friendlyLink.getFriendlyLinkIsCheck());
-        if ("add".equals(type)){
-            requestMap.add("dopost", "add");
-            JSONObject jsonObject = JSONObject.fromObject(connectionCMS(requestMap, "add", website.getBackgroundDomain()));
+        requestMap.put("msg", friendlyLink.getFriendlyLinkMsg());
+        requestMap.put("email", friendlyLink.getFriendlyLinkEmail());
+        requestMap.put("typeid", friendlyLink.getFriendlyLinkTypeId());
+        requestMap.put("ischeck", friendlyLink.getFriendlyLinkIsCheck());
+        if (WebsiteRemoteConnectionEnum.add.name().equals(type)){
+            requestMap.put("dopost", WebsiteRemoteConnectionEnum.add.name());
+            JSONObject jsonObject = JSONObject.fromObject(connectionCMS(requestMap, WebsiteRemoteConnectionEnum.add.name(), website.getBackgroundDomain()));
             if (!"error".equals(jsonObject.get("status"))){
                 friendlyLink.setFriendlyLinkId((Integer) jsonObject.get("id"));
                 friendlyLink.setFriendlyLinkLogo((String) jsonObject.get("logo"));
             }
         }else {
-            requestMap.add("dopost", "saveedit");
-            requestMap.add("id", friendlyLink.getFriendlyLinkId());
-            JSONObject jsonObject = JSONObject.fromObject(connectionCMS(requestMap, "saveedit", website.getBackgroundDomain()));
+            requestMap.put("dopost", WebsiteRemoteConnectionEnum.saveedit.name());
+            requestMap.put("id", friendlyLink.getFriendlyLinkId());
+            JSONObject jsonObject = JSONObject.fromObject(connectionCMS(requestMap, WebsiteRemoteConnectionEnum.saveedit.name(), website.getBackgroundDomain()));
             if (!"error".equals(jsonObject.get("status")) && !(jsonObject.get("logo") instanceof JSONNull)){
                 friendlyLink.setFriendlyLinkLogo((String) jsonObject.get("logo"));
             }
         }
     }
 
-    public void deleteConnectionCMS(Long websiteUuid, String[] uuids, String ip){
+    public void deleteConnectionCMS(Long websiteUuid, String[] uuids){
         Website website = websiteService.getWebsite(websiteUuid);
-        MultiValueMap requestMap = new LinkedMultiValueMap();
-        requestMap.add("username", AESUtils.encrypt(website.getBackgroundUserName()));
-        requestMap.add("password", AESUtils.encrypt(website.getBackgroundPassword()));
-        requestMap.add("id", StringUtils.join(uuids, ","));
-        requestMap.add("dopost", "delete");
-        connectionCMS(requestMap, "delete", website.getBackgroundDomain());
+        Map requestMap = new HashedMap();
+        requestMap.put("username", website.getBackgroundUserName());
+        requestMap.put("password", website.getBackgroundPassword());
+        requestMap.put("id", StringUtils.join(uuids, ","));
+        requestMap.put("dopost", WebsiteRemoteConnectionEnum.delete.name());
+        connectionCMS(requestMap, WebsiteRemoteConnectionEnum.delete.name(), website.getBackgroundDomain());
     }
 
-    public List<FriendlyLinkVO> selectConnectionCMS(Long websiteUuid, String ip){
+    public List<FriendlyLinkVO> selectConnectionCMS(Long websiteUuid){
         Website website = websiteService.getWebsite(websiteUuid);
-        MultiValueMap requestMap = new LinkedMultiValueMap();
-        requestMap.add("username", AESUtils.encrypt(website.getBackgroundUserName()));
-        requestMap.add("password", AESUtils.encrypt(website.getBackgroundPassword()));
-        requestMap.add("dopost", "select");
-        String resultJsonString = connectionCMS(requestMap,"select", website.getBackgroundDomain());
-        JSONArray jsonArray = JSONArray.fromObject(resultJsonString);
-        List<FriendlyLinkVO> friendlyLinkVOS = JSONArray.toList(jsonArray, new FriendlyLinkVO(), new JsonConfig());
+        Map requestMap = new HashedMap();
+        requestMap.put("username", website.getBackgroundUserName());
+        requestMap.put("password", website.getBackgroundPassword());
+        requestMap.put("dopost", WebsiteRemoteConnectionEnum.select.name());
+        String resultJsonString = connectionCMS(requestMap,WebsiteRemoteConnectionEnum.select.name(), website.getBackgroundDomain());
+        List<FriendlyLinkVO> friendlyLinkVOS = new ArrayList<>();
+        if (!"null".equals(resultJsonString)){
+            JSONArray jsonArray = JSONArray.fromObject(resultJsonString);
+            friendlyLinkVOS = JSONArray.toList(jsonArray, new FriendlyLinkVO(), new JsonConfig());
+        }
         return friendlyLinkVOS;
     }
 
-    public String connectionCMS(MultiValueMap requestMap, String type, String backgroundDomain){
+    public String connectionCMS(Map map, String type, String backgroundDomain){
+        MultiValueMap requestMap = new LinkedMultiValueMap();
+        if (!StringUtils.isEmpty(map.get("logoimg")) && !"(binary)".equals(map.get("logoimg"))){
+            requestMap.add("logoimg", map.get("logoimg"));
+            map.remove("logoimg");
+        }
+        requestMap.add("data", AESUtils.encrypt(JSONObject.fromObject(map)));
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new StringHttpMessageConverter(Charset.forName("utf-8")));
         String resultJsonString;
@@ -173,9 +192,9 @@ public class FriendlyLinkService extends ServiceImpl<FriendlyLinkDao, FriendlyLi
         }else {
             backgroundDomain = "http://" + backgroundDomain;
         }
-        if ("add".equals(type)){
+        if (WebsiteRemoteConnectionEnum.add.name().equals(type)){
             resultJsonString = restTemplate.postForObject(backgroundDomain + "friendlink_m_add.php",  requestMap, String.class);
-        }else if ("select".equals(type)){
+        }else if (WebsiteRemoteConnectionEnum.select.name().equals(type)){
             resultJsonString = restTemplate.postForObject(backgroundDomain + "friendlink_m_select.php",  requestMap, String.class);
         }else {
             resultJsonString = restTemplate.postForObject(backgroundDomain + "friendlink_m_edit.php",  requestMap, String.class);
@@ -197,6 +216,7 @@ public class FriendlyLinkService extends ServiceImpl<FriendlyLinkDao, FriendlyLi
         friendlyLink.setFriendlyLinkTypeId(Integer.valueOf(request.getParameter("friendlyLinkTypeId")));
         friendlyLink.setFriendlyLinkMsg(request.getParameter("friendlyLinkMsg"));
         friendlyLink.setExpirationTime(format.parse(request.getParameter("expirationTime")));
+        friendlyLink.setRenewTime(format.parse(request.getParameter("renewTime")));
         friendlyLink.setFriendlyLinkEmail(request.getParameter("friendlyLinkEmail"));
         if (!StringUtils.isEmpty(request.getParameter("uuid"))){
             friendlyLink.setUuid(Long.valueOf(request.getParameter("uuid")));
@@ -205,7 +225,7 @@ public class FriendlyLinkService extends ServiceImpl<FriendlyLinkDao, FriendlyLi
         return friendlyLink;
     }
 
-    public List<Map> searchFriendlyLinkTypeList(Long websiteUuid, String ip){
+    public List<Map> searchFriendlyLinkTypeList(Long websiteUuid){
         Website website = websiteService.selectById(websiteUuid);
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new StringHttpMessageConverter(Charset.forName("utf-8")));
@@ -216,10 +236,12 @@ public class FriendlyLinkService extends ServiceImpl<FriendlyLinkDao, FriendlyLi
         }else {
             backgroundDomain = "http://" + website.getBackgroundDomain();
         }
+        Map map = new HashedMap();
+        map.put("username", website.getBackgroundUserName());
+        map.put("password", website.getBackgroundPassword());
+        map.put("dopost", WebsiteRemoteConnectionEnum.select.name());
         MultiValueMap requestMap = new LinkedMultiValueMap();
-        requestMap.add("username", AESUtils.encrypt(website.getBackgroundUserName()));
-        requestMap.add("password", AESUtils.encrypt(website.getBackgroundPassword()));
-        requestMap.add("dopost", "select");
+        requestMap.add("data", AESUtils.encrypt(JSONObject.fromObject(map)));
         resultJsonString = restTemplate.postForObject(backgroundDomain + "friendlink_m_type.php",  requestMap, String.class);
         JSONArray jsonArray = JSONArray.fromObject(resultJsonString);
         List<Map> friendlyLinkTypeList = JSONArray.toList(jsonArray, new HashedMap(), new JsonConfig());
@@ -267,7 +289,11 @@ public class FriendlyLinkService extends ServiceImpl<FriendlyLinkDao, FriendlyLi
         friendlyLink.setFriendlyLinkSortRank(friendlyLinkVO.getSortrank());
         friendlyLink.setFriendlyLinkUrl(friendlyLinkVO.getUrl());
         friendlyLink.setFriendlyLinkWebName(friendlyLinkVO.getWebname());
-        friendlyLink.setFriendlyLinkType(friendlyLinkVO.getTypename() + "_" + friendlyLinkVO.getTypeid());
+        if (friendlyLinkVO.getTypeid() == 0){
+            friendlyLink.setFriendlyLinkType("默认分类_" + friendlyLinkVO.getTypeid());
+        }else {
+            friendlyLink.setFriendlyLinkType(friendlyLinkVO.getTypename() + "_" + friendlyLinkVO.getTypeid());
+        }
         friendlyLink.setFriendlyLinkTypeId(friendlyLinkVO.getTypeid());
         friendlyLink.setFriendlyLinkMsg(friendlyLinkVO.getMsg());
         friendlyLink.setFriendlyLinkEmail(friendlyLinkVO.getEmail());
@@ -282,5 +308,18 @@ public class FriendlyLinkService extends ServiceImpl<FriendlyLinkDao, FriendlyLi
 
     public int searchFriendlyLinkCount(Long websiteUuid){
         return friendlyLinkDao.searchFriendlyLinkCount(websiteUuid);
+    }
+
+    public void pushFriendlyLink(Map map){
+        List<String> uuids = (List<String>) map.get("uuids");
+        for (String uuid: uuids) {
+            FriendlyLink friendlyLink = friendlyLinkDao.selectById(Long.valueOf(uuid));
+            if (friendlyLink.getFriendlyLinkId() == 0){
+                saveOrUpdateConnectionCMS(friendlyLink, null, WebsiteRemoteConnectionEnum.add.name());
+            }else {
+                saveOrUpdateConnectionCMS(friendlyLink, null, WebsiteRemoteConnectionEnum.saveedit.name());
+            }
+            friendlyLinkDao.updateById(friendlyLink);
+        }
     }
 }

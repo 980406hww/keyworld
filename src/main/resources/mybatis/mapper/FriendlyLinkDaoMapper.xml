@@ -103,6 +103,7 @@
     <select id="searchOriginalSortRank" resultType="java.util.Map">
         SELECT
             fUuid AS 'uuid',
+            fFriendlyLinkId AS 'friendlyLinkId',
             fFriendlyLinkSortRank AS 'friendlyLinkSortRank'
         FROM t_friendly_link
         WHERE fWebsiteUuid = #{websiteUuid}

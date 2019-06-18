@@ -42,6 +42,9 @@
                         <shiro:hasPermission name="/internal/advertising/deleteAdvertisings">
                         &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 删除所选 " onclick="deleteBatchAdvertising(${advertisingCriteria.websiteUuid})"/>
                         </shiro:hasPermission>
+                        <shiro:hasPermission name="/internal/advertising/pushAdvertising">
+                            &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 推送所选信息到远程服务 " onclick="pushAdvertising()"/>
+                        </shiro:hasPermission>
                     </div>
                 </form>
             </td>

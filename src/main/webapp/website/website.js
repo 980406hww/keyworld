@@ -449,7 +449,6 @@ function saveFriendlyLink(uuids, originalFriendlyLinkUrl) {
             data: formData,
             processData: false,
             contentType: false,
-            timeout: 5000,
             success: function (result) {
                 if (result) {
                     $().toastmessage('showSuccessToast', "保存成功",true);
@@ -568,7 +567,6 @@ function batchDelFriendlyLink(friendlyLinkUrl) {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        timeout: 5000,
         type: 'POST',
         success: function (data) {
             if (data) {
@@ -721,7 +719,6 @@ function saveAdvertising(uuids, originalAdvertisingTagname) {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            timeout: 5000,
             type: 'POST',
             success: function (result) {
                 if (result) {
@@ -746,7 +743,6 @@ function saveAdvertising(uuids, originalAdvertisingTagname) {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            timeout: 5000,
             type: 'POST',
             success: function (result) {
                 if (result) {
@@ -797,7 +793,6 @@ function getAdvertising(uuid, advertisingTagname, callback) {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        timeout: 5000,
         type: 'POST',
         success: function (advertising) {
             callback(advertising);
@@ -830,7 +825,6 @@ function batchDelAdvertising(advertisingTagname) {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        timeout: 5000,
         type: 'POST',
         success: function (data) {
             if (data) {
@@ -946,7 +940,6 @@ function synchronousFriendlyLink() {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json'
                     },
-                    timeout: 10000,
                     type: 'POST',
                     success: function (data) {
                         if (data) {
@@ -1034,7 +1027,6 @@ function synchronousAdvertising() {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json'
                     },
-                    timeout: 10000,
                     type: 'POST',
                     success: function (data) {
                         if (data) {

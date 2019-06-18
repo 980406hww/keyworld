@@ -59,7 +59,6 @@ function deleteBatchAdvertising(websiteUuid) {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        timeout: 5000,
         type: 'POST',
         success: function (data) {
             if (data) {
@@ -232,7 +231,6 @@ function saveAdvertising(websiteUuid, uuid) {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            timeout: 5000,
             type: 'POST',
             success: function (result) {
                 if (result) {
@@ -258,7 +256,6 @@ function saveAdvertising(websiteUuid, uuid) {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            timeout: 5000,
             type: 'POST',
             success: function (result) {
                 if (result) {
@@ -396,4 +393,34 @@ function changeAdvertisingBodySubmit(type) {
         advertisingNormbodyTable.css("display","block");
         advertisingTagname.attr("readonly","readonly");
     }
+}
+
+function pushAdvertising() {
+    var uuids = getSelectedIDs();
+    if (uuids === '') {
+        alert('请选择要删除的友情链接');
+        return;
+    }
+    if (confirm("确实要删除这些友情链接吗?") == false) return;
+    var postData = {};
+    postData.uuids = uuids.split(",");
+    $.ajax({
+        url: '/internal/advertising/pushAdvertising',
+        data: JSON.stringify(postData),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        type: 'POST',
+        success: function (data) {
+            if (data) {
+                $().toastmessage('showSuccessToast', "推送成功",true);
+            } else {
+                $().toastmessage('showErrorToast', "推送失败",true);
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "操作失败");
+        }
+    });
 }
