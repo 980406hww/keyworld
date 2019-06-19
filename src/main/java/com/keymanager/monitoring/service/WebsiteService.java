@@ -74,7 +74,7 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
     }
 
     public void saveWebsite(Website website) {
-        if (website.getBackgroundDomain().endsWith("/")){
+        if (!website.getBackgroundDomain().endsWith("/")){
             website.setBackgroundDomain(website.getBackgroundDomain() + "/");
         }
         website.setUpdateTime(new Date());
