@@ -44,6 +44,8 @@
 		<if test="websiteCriteria.domain != null and websiteCriteria.domain != ''">AND w.fDomain LIKE '%${websiteCriteria.domain}%'</if>
 		<if test="websiteCriteria.friendlyLinkUrl != null and websiteCriteria.friendlyLinkUrl != ''">AND fl.fFriendlyLinkUrl = #{websiteCriteria.friendlyLinkUrl}</if>
 		<if test="websiteCriteria.updateSalesInfoSign != null and websiteCriteria.updateSalesInfoSign != ''">AND w.fUpdateSalesInfoSign = #{websiteCriteria.updateSalesInfoSign}</if>
+		<if test="websiteCriteria.synchronousFriendlyLinkSign != null and websiteCriteria.synchronousFriendlyLinkSign != ''">AND w.fSynchronousFriendlyLinkSign = #{websiteCriteria.synchronousFriendlyLinkSign}</if>
+		<if test="websiteCriteria.synchronousAdvertisingSign != null and websiteCriteria.synchronousAdvertisingSign != ''">AND w.fSynchronousAdvertisingSign = #{websiteCriteria.synchronousAdvertisingSign}</if>
 		<if test="websiteCriteria.advertisingTagname != null and websiteCriteria.advertisingTagname != ''">AND a.fAdvertisingTagname = #{websiteCriteria.advertisingTagname}</if>
 		<if test="websiteCriteria.accessFailCount != null">AND w.fAccessFailCount = #{websiteCriteria.accessFailCount}</if>
 		GROUP BY w.fUuid

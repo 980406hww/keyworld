@@ -6,6 +6,7 @@ import com.keymanager.monitoring.criteria.WebsiteCriteria;
 import com.keymanager.monitoring.entity.Advertising;
 import com.keymanager.monitoring.entity.FriendlyLink;
 import com.keymanager.monitoring.entity.Website;
+import com.keymanager.monitoring.enums.WebsiteSynchronousSignEnum;
 import com.keymanager.monitoring.service.AdvertisingService;
 import com.keymanager.monitoring.service.FriendlyLinkService;
 import com.keymanager.monitoring.enums.PutSalesInfoSignEnum;
@@ -70,6 +71,7 @@ public class WebsiteRestController extends SpringMVCBaseController {
         modelAndView.addObject("websiteCriteria", websiteCriteria);
         modelAndView.addObject("websiteTypeMap", WebsiteTypeEnum.changeToMap());
         modelAndView.addObject("putSalesInfoSignMap", PutSalesInfoSignEnum.changeToMap());
+        modelAndView.addObject("websiteSynchronousSignMap", WebsiteSynchronousSignEnum.changeToMap());
         modelAndView.addObject("page", page);
         return modelAndView;
     }

@@ -17,6 +17,8 @@ function resetPageNumber() {
     var searchWebsiteForm = $("#searchWebsiteForm");
     var websiteName = searchWebsiteForm.find("#websiteName").val();
     var updateSalesInfoSign = searchWebsiteForm.find("#updateSalesInfoSign").val();
+    var synchronousFriendlyLinkSign = searchWebsiteForm.find("#synchronousFriendlyLinkSign").val();
+    var synchronousAdvertisingSign = searchWebsiteForm.find("#synchronousAdvertisingSign").val();
     var domain = searchWebsiteForm.find("#domain").val();
     var accessFailCount = searchWebsiteForm.find("#accessFailCount").val();
     var friendlyLinkUrl = searchWebsiteForm.find("#friendlyLinkUrl").val();
@@ -30,11 +32,21 @@ function resetPageNumber() {
     if(updateSalesInfoSign != "") {
         searchWebsiteForm.find("#updateSalesInfoSign").val($.trim(updateSalesInfoSign));
     }
+    if(synchronousFriendlyLinkSign != "") {
+        searchWebsiteForm.find("#synchronousFriendlyLinkSign").val($.trim(synchronousFriendlyLinkSign));
+    }
+    if(synchronousAdvertisingSign != "") {
+        searchWebsiteForm.find("#synchronousAdvertisingSign").val($.trim(synchronousAdvertisingSign));
+    }
     if(accessFailCount != "") {
         searchWebsiteForm.find("#accessFailCount").val($.trim(accessFailCount));
     }
     if(friendlyLinkUrl != "") {
-        searchWebsiteForm.find("#friendlyLinkUrl").val($.trim(friendlyLinkUrl));
+        if ('http://' == friendlyLinkUrl) {
+            searchWebsiteForm.find("#friendlyLinkUrl").val("");
+        }else {
+            searchWebsiteForm.find("#friendlyLinkUrl").val($.trim(friendlyLinkUrl));
+        }
     }
     if(advertisingTagname != "") {
         searchWebsiteForm.find("#advertisingTagname").val($.trim(advertisingTagname));

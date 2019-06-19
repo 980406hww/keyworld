@@ -7,6 +7,8 @@ public class WebsiteCriteria {
     private String websiteName;
     private String domain;
     private String updateSalesInfoSign;
+    private String synchronousFriendlyLinkSign;
+    private String synchronousAdvertisingSign;
     private Integer accessFailCount;
     private String friendlyLinkUrl;
     private String advertisingTagname;
@@ -57,5 +59,21 @@ public class WebsiteCriteria {
 
     public void setAdvertisingTagname(String advertisingTagname) {
         this.advertisingTagname = advertisingTagname;
+    }
+
+    public String getSynchronousFriendlyLinkSign() {
+        return synchronousFriendlyLinkSign;
+    }
+
+    public void setSynchronousFriendlyLinkSign(String synchronousFriendlyLinkSign) {
+        this.synchronousFriendlyLinkSign = synchronousFriendlyLinkSign;
+    }
+
+    public String getSynchronousAdvertisingSign() {
+        return synchronousAdvertisingSign;
+    }
+
+    public void setSynchronousAdvertisingSign(String synchronousAdvertisingSign) {
+        this.synchronousAdvertisingSign = synchronousAdvertisingSign;
     }
 }

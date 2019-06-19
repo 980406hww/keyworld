@@ -18,12 +18,26 @@
             网站名称:<input type="text" name="websiteName" id="websiteName" value="${websiteCriteria.websiteName}">&nbsp;&nbsp;
             域名:<input type="text" name="domain" id="domain" value="${websiteCriteria.domain}">&nbsp;&nbsp;
             失败次数:<input type="text" name="accessFailCount" id="accessFailCount" value="${websiteCriteria.accessFailCount}">&nbsp;&nbsp;
-            含有指定友链:<input type="text" name="friendlyLinkUrl" id="friendlyLinkUrl" value="${websiteCriteria.friendlyLinkUrl}" placeholder="请填写准确友链链接url">&nbsp;&nbsp;
+            含有指定友链:<input type="text" name="friendlyLinkUrl" id="friendlyLinkUrl" value="${(websiteCriteria.friendlyLinkUrl == null || websiteCriteria.friendlyLinkUrl == '') ? 'http://': websiteCriteria.friendlyLinkUrl}" placeholder="请填写准确友链链接url">&nbsp;&nbsp;
             含有指定广告:<input type="text" name="advertisingTagname" id="advertisingTagname" value="${websiteCriteria.advertisingTagname}" placeholder="请填写准确广告标识">&nbsp;&nbsp;
             销售更新状态:<select id="updateSalesInfoSign" name="updateSalesInfoSign" style="width: 150px;" title="">
                 <option value="" selected="selected">请选择</option>
                 <c:forEach items="${putSalesInfoSignMap}" var="putSalesInfoSign">
                     <option value="${putSalesInfoSign.key}" <c:if test="${putSalesInfoSign.key eq websiteCriteria.updateSalesInfoSign}">selected="selected"</c:if>>${putSalesInfoSign.value}</option>
+                </c:forEach>
+            </select>
+            友链更新状态:
+            <select id="synchronousFriendlyLinkSign" name="synchronousFriendlyLinkSign" style="width: 150px;" title="">
+                <option value="" selected="selected">请选择</option>
+                <c:forEach items="${websiteSynchronousSignMap}" var="websiteSynchronousSign">
+                    <option value="${websiteSynchronousSign.key}" <c:if test="${websiteSynchronousSign.key eq websiteCriteria.synchronousFriendlyLinkSign}">selected="selected"</c:if>>${websiteSynchronousSign.value}</option>
+                </c:forEach>
+            </select>
+            广告更新状态:
+            <select id="synchronousAdvertisingSign" name="synchronousAdvertisingSign" style="width: 150px;" title="">
+                <option value="" selected="selected">请选择</option>
+                <c:forEach items="${websiteSynchronousSignMap}" var="websiteSynchronousSign">
+                    <option value="${websiteSynchronousSign.key}" <c:if test="${websiteSynchronousSign.key eq websiteCriteria.synchronousAdvertisingSign}">selected="selected"</c:if>>${websiteSynchronousSign.value}</option>
                 </c:forEach>
             </select>
             <shiro:hasPermission name="/internal/website/searchWebsites">
@@ -56,11 +70,11 @@
             <shiro:hasPermission name="/internal/advertising/deleteAdvertisings">
             <input type="button" value=" 指定网站删除广告 " onclick="batchDelAdvertising('${websiteCriteria.advertisingTagname}')">&nbsp;&nbsp;
             </shiro:hasPermission>
-            <shiro:hasPermission name="/internal/website/deleteWebsites">
-            <input type="button" onclick="deleteWebsites()" value=" 删除所选 ">&nbsp;&nbsp;
-            </shiro:hasPermission>
             <shiro:hasPermission name="/internal/website/putSalesInfoToWebsite">
             <input type="button" onclick="putSalesInfoToWebsite()" value=" 推送销售信息至站点 ">&nbsp;&nbsp;
+            </shiro:hasPermission>
+            <shiro:hasPermission name="/internal/website/deleteWebsites">
+                <input type="button" onclick="deleteWebsites()" value=" 删除所选 ">&nbsp;&nbsp;
             </shiro:hasPermission>
         </form>
     </div>
