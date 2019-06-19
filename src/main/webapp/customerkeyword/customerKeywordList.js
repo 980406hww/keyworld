@@ -545,7 +545,7 @@ function downloadCustomerKeywordInfo() {
     var customerKeywordCrilteriaArray = $("#searchCustomerKeywordForm").serializeArray();
     var downloadCustomerKeywordInfoForm = $("#downloadCustomerKeywordInfoForm");
     $.each(customerKeywordCrilteriaArray, function(idx, val){
-        downloadCustomerKeywordInfoForm.find("#"+val.name+"Hidden").val(val.value);
+        downloadCustomerKeywordInfoForm.find("#"+val.name+"Hidden").val(val.value == '' ? null : val.value);
     });
     downloadCustomerKeywordInfoForm.submit();
 }
