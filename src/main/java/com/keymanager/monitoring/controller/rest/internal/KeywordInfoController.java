@@ -2,6 +2,7 @@ package com.keymanager.monitoring.controller.rest.internal;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.criteria.KeywordInfoCriteria;
 import com.keymanager.monitoring.entity.KeywordInfo;
+import com.keymanager.monitoring.service.ConfigService;
 import com.keymanager.monitoring.service.KeywordInfoService;
 import com.keymanager.util.TerminalTypeMapping;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -23,6 +24,9 @@ public class KeywordInfoController {
 
     @Autowired
     private KeywordInfoService keywordInfoService;
+
+    @Autowired
+    private ConfigService configService;
 
     @RequiresPermissions("/internal/keywordInfo/searchKeywordInfos")
     @RequestMapping(value = "/searchKeywordInfos", method = RequestMethod.GET)
@@ -49,6 +53,7 @@ public class KeywordInfoController {
         ModelAndView modelAndView = new ModelAndView("keywordInfo/keywordInfo");
         Page<KeywordInfo> page = keywordInfoService.searchKeywordInfos(new Page<KeywordInfo>(currentPageNumber,pageSize), KeywordInfoCriteria);
         modelAndView.addObject("KeywordInfoCriteria", KeywordInfoCriteria);
+        modelAndView.addObject("searchEngineMap", configService.getSearchEngineMap(terminalType));
         modelAndView.addObject("page", page);
         return modelAndView;
     }

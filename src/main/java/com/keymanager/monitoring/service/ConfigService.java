@@ -8,6 +8,7 @@ import com.keymanager.monitoring.entity.Config;
 import com.keymanager.util.Constants;
 import com.keymanager.util.FileUtil;
 import com.keymanager.util.Utils;
+import freemarker.ext.beans.HashAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -145,5 +146,37 @@ public class ConfigService extends ServiceImpl<ClientStatusDao, ClientStatus>{
         String [] operationTypeValues = config.getValue().split(",");
         Arrays.sort(operationTypeValues);
         return operationTypeValues;
+    }
+
+    public String[] getSearchEngines(String terminalType) {
+        Config config = getConfig(Constants.CONFIG_TYPE_SEARCH_ENGINE, terminalType);
+        if(null != config) {
+            String[] searchEngines = config.getValue().split(",");
+            Arrays.sort(searchEngines);
+            return searchEngines;
+        }
+        return null;
+    }
+
+    public Map<String, String> getSearchEngineMap(String terminalType) {
+        Map<String, String> searchEngineMap = new HashMap<String, String>();
+        String[] searchEngines = getSearchEngines(terminalType);
+        if(null != searchEngines) {
+            for (String searchEngine : searchEngines) {
+                searchEngineMap.put(searchEngine, searchEngine);
+            }
+            return searchEngineMap;
+        }
+        return null;
+    }
+
+    public List<String> getCaptureXialaRankingGroups() {
+        Config config = getConfig(Constants.CONFIG_TYPE_CAPTURE_RANKING, "Xiala");
+        if(config != null) {
+            String[] groups = config.getValue().split(",");
+            Arrays.sort(groups);
+            return Arrays.asList(groups);
+        }
+        return null;
     }
 }

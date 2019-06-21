@@ -1445,6 +1445,7 @@
             fManualCleanTitle,
             fKeywordEffect,
             fCustomerKeywordSource,
+            fRemarks,
             fUpdateTime,
             fCreateTime
         )
@@ -1511,6 +1512,7 @@
                 </choose>
                 #{customerKeyword.keywordEffect},
                 #{customerKeyword.customerKeywordSource},
+                #{customerKeyword.remarks},
                 #{customerKeyword.updateTime},
                 #{customerKeyword.createTime}
             )

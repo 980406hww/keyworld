@@ -76,8 +76,12 @@ public class KeywordInfoService extends ServiceImpl<KeywordInfoDao, KeywordInfo>
 							customerKeyword.setTerminalType(searchEngineInfo[1]);
 							customerKeyword.setKeyword(info[0].trim());
 							String url = info[1].trim();
-							if (url.substring(url.length() - 1).equals("/")) {
-								url = url.substring(0, url.length() - 1);
+							if(searchEngineInfo[0].contains("下拉")){
+								customerKeyword.setRemarks(url);
+							}else {
+								if (url.substring(url.length() - 1).equals("/")) {
+									url = url.substring(0, url.length() - 1);
+								}
 							}
 							customerKeyword.setUrl(url);
 							customerKeyword.setOriginalUrl(url);

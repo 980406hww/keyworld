@@ -19,12 +19,9 @@
                 <input type="hidden" name="searchEngineHidden" id="searchEngineHidden" value="${KeywordInfoCriteria.searchEngine}">&nbsp;&nbsp;
                 搜索引擎:<select type="text" name="searchEngine" class="select" id="searchEngine" >
                             <option value="">全部搜索引擎</option>
-                            <option value="百度">百度</option>
-                            <option value="搜狗">搜狗</option>
-                            <option value="360">360</option>
-                            <option value="神马">神马</option>
-                            <option value="必应">必应</option>
-                            <option value="谷歌">谷歌</option>
+                            <c:forEach items="${searchEngineMap}" var="entry">
+                                <option value="${entry.value}">${entry.key}</option>
+                            </c:forEach>
                         </select>
                         &nbsp;&nbsp;
                 操作类型:<select type="text" name="operationType" class="select" id="operationType" >

@@ -206,6 +206,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		modelAndView.addObject("isSEO", isSEO);
 		modelAndView.addObject("availableQZSettingCount", availableQZSettingCount);
 		modelAndView.addObject("operationTypeValues", operationTypeValues);
+		modelAndView.addObject("searchEngineMap", configService.getSearchEngineMap(qzSettingSearchCriteria.getTerminalType()));
 		modelAndView.addObject("standardSpeciesMap", Constants.QZ_RANK_STANDARD_SPECIES_MAP);
 		return modelAndView;
 	}

@@ -35,6 +35,12 @@ public class MachineInfo {
 	@TableField(value = "fUsingOperationType")
 	private String usingOperationType;
 
+	@TableField(value = "fPage")
+	private int page;
+
+	@TableField(value = "fPageSize")
+	private Integer pageSize;
+
 	@TableField(value = "fContinuousFailCount")
 	private int continuousFailCount;
 
@@ -564,5 +570,21 @@ public class MachineInfo {
 
 	public void setRemainingKeyword (int remainingKeyword) {
 		this.remainingKeyword = remainingKeyword;
+	}
+
+	public int getPage() {
+		return page;
+	}
+
+	public void setPage(int page) {
+		this.page = page;
+	}
+
+	public Integer getPageSize() {
+		return pageSize;
+	}
+
+	public void setPageSize(Integer pageSize) {
+		this.pageSize = pageSize;
 	}
 }

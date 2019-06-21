@@ -88,6 +88,12 @@
             c.fExectionTime &lt;= curtime()
         AND
             c.fCaptureRankJobStatus = 1
+        <if test="groupNames!=null">
+            AND fGroupNames IN
+            <foreach collection="groupNames" item="groupName" separator="," open="(" close=")">
+                #{groupName}
+            </foreach>
+        </if>
         ORDER BY
             c.fExectionTime
         limit 1;
@@ -101,6 +107,12 @@
         c.fExectionStatus='Processing'
         AND
         c.fCaptureRankJobStatus = 1
+        <if test="groupNames!=null">
+        AND fGroupNames IN
+        <foreach collection="groupNames" item="groupName" separator="," open="(" close=")">
+            #{groupName}
+        </foreach>
+        </if>
         order By c.fExectionTime
         limit 1;
     </select>
