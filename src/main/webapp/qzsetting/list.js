@@ -2327,8 +2327,12 @@ function dealSettingTable(self, operationType, type) {
             groupObj.css("display","block");
             if (isSEO === "false" && optimizationType !== '0') {
                 $("#chargeRule" + operationType).css("display", "block");
-                addRow("chargeRule" + operationType);
-                $("#aiZhan"+ operationType +"StandardSpecies")[0].checked = true;
+                if ($("#standardSpecies" + operationType).find("input:checkbox:checked").length > 0) {
+                    $("#aiZhan"+ operationType +"StandardSpecies")[0].checked = false;
+                } else {
+                    $("#aiZhan"+ operationType +"StandardSpecies")[0].checked = true;
+                    addRow("chargeRule" + operationType);
+                }
             }
             if (status === '1' && optimizationType !== '0') {
                 settingDialogDiv.find("#standardSpecies" + operationType + " label").css("display", "block");
