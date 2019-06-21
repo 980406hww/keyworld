@@ -828,6 +828,8 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
         if(machineInfo != null){
             GroupSetting groupSetting = groupSettingService.getGroupSettingViaPercentage(machineInfo.getGroup(), machineInfo.getTerminalType());
             machineInfo.setUsingOperationType(groupSetting.getOperationType());
+            machineInfo.setPage(groupSetting.getPage());
+            machineInfo.setPageSize(groupSetting.getPageSize());
             machineInfoDao.updateById(machineInfo);
             clientStatusForOptimization = new ClientStatusForOptimization();
             if(groupSetting.getKuaizhaoPercent() != null) {

@@ -35,4 +35,18 @@
         fStatus = 1
     </select>
 
+    <select id="getOperationTypeByTerminalTypeAndRole" resultType="java.lang.String">
+        SELECT
+        fOperationTypeName AS 'operationTypeName'
+        FROM
+        t_operation_type
+        WHERE 1 = 1
+        AND
+        fTerminalType = #{terminalType}
+        <if test="flag == 0">
+            AND fStatus = 1
+        </if>
+        ORDER BY fOperationTypeName
+    </select>
+
 </mapper>

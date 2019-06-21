@@ -46,14 +46,14 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
     @Autowired
     private QZChargeRuleService qzChargeRuleService;
 
-    public synchronized CaptureRankJob provideCaptureRankJob() {
-        CaptureRankJob captureRankJob = captureRankJobDao.getProcessingJob();
+    public synchronized CaptureRankJob provideCaptureRankJob(List<String> groupNames) {
+        CaptureRankJob captureRankJob = captureRankJobDao.getProcessingJob(groupNames);
         if (captureRankJob == null) {
             // 取普通任务
-            captureRankJob = captureRankJobDao.provideCaptureRankJob("Common");
+            captureRankJob = captureRankJobDao.provideCaptureRankJob("Common", groupNames);
             if(captureRankJob == null){
                 // 普通任务为空取全站任务
-                captureRankJob = captureRankJobDao.provideCaptureRankJob("Specify");
+                captureRankJob = captureRankJobDao.provideCaptureRankJob("Specify", groupNames);
             }
             if (captureRankJob != null) {
                 captureRankJob.setStartTime(new Date());

@@ -30,7 +30,7 @@ public class GroupSettingService extends ServiceImpl<GroupSettingDao, GroupSetti
     public Page<GroupVO> searchGroupSettings(Page<GroupVO> page, GroupSettingCriteria groupSettingCriteria) {
         page.setRecords(groupService.searchGroups(page, groupSettingCriteria));
         for (GroupVO groupVo : page.getRecords()) {
-            List<GroupSetting> groupSettings = groupSettingDao.searchGroupSettings(groupVo.getUuid(), groupSettingCriteria.getOperationType());
+            List<GroupSetting> groupSettings = groupSettingDao.searchGroupSettings(groupVo.getUuid());
             groupVo.setGroupSettings(groupSettings);
         }
         return page;

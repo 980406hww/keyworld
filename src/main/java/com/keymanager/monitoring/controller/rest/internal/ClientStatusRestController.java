@@ -129,7 +129,7 @@ public class ClientStatusRestController extends SpringMVCBaseController {
         }
         Page<ClientStatus> page = clientStatusService.searchClientStatuses(new Page<ClientStatus>(currentPageNumber, pageSize), clientStatusCriteria, normalSearchFlag);
         String [] operationTypeValues = clientStatusService.getOperationTypeValues(terminalType);
-        // List operationTypeValues = operationTypeService.getOperationTypeValues(terminalType);
+        // List operationTypeValues = operationTypeService.getOperationTypeValuesByRole(terminalType);
         modelAndView.addObject("terminalType", terminalType);
         modelAndView.addObject("clientStatusCriteria", clientStatusCriteria);
         modelAndView.addObject("validMap", Constants.CLIENT_STATUS_VALID_MAP);

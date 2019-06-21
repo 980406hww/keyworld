@@ -7,6 +7,7 @@ import com.keymanager.monitoring.criteria.UpdateGroupSettingCriteria;
 import com.keymanager.monitoring.entity.GroupSetting;
 import com.keymanager.monitoring.service.ConfigService;
 import com.keymanager.monitoring.service.GroupSettingService;
+import com.keymanager.monitoring.service.OperationTypeService;
 import com.keymanager.monitoring.service.PerformanceService;
 import com.keymanager.monitoring.vo.GroupVO;
 import com.keymanager.util.Constants;
@@ -22,6 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/internal/groupsetting")
@@ -36,6 +38,9 @@ public class GroupSettingRestController extends SpringMVCBaseController {
 
     @Autowired
     private PerformanceService performanceService;
+
+    @Autowired
+    private OperationTypeService operationTypeService;
 
     @RequiresPermissions("/internal/groupsetting/searchGroupSettings")
     @RequestMapping(value = "/searchGroupSettings", method = RequestMethod.GET)
@@ -68,7 +73,9 @@ public class GroupSettingRestController extends SpringMVCBaseController {
             groupSettingCriteria.setTerminalType(terminalType);
         }
         Page<GroupVO> page = groupSettingService.searchGroupSettings(new Page<GroupVO>(currentPageNumber, pageSize), groupSettingCriteria);
-        String [] operationTypeValues = configService.getOperationTypeValues(groupSettingCriteria.getTerminalType());
+        // String [] operationTypeValues = configService.getOperationTypeValues(groupSettingCriteria.getTerminalType());
+        List operationTypeValues =  operationTypeService.getOperationTypeValuesByRole(groupSettingCriteria.getTerminalType());
+
         HttpSession session = request.getSession();
         String entryType = (String) session.getAttribute("entryType");
         String maxInvalidCount = configService.getConfig(Constants.CONFIG_TYPE_MAX_INVALID_COUNT, entryType).getValue();
