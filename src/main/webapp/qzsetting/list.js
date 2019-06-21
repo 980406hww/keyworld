@@ -1197,7 +1197,7 @@ function showKeywordDialog(qzSettingUuid, customerUuid, domain, optimizeGroupNam
     });
     customerKeywordDialog.dialog("open");
     customerKeywordDialog.window("resize", {
-        top: $(document).scrollTop() + $(window).height() / 4 - 235,
+        top: $(document).scrollTop() + 150,
         left: $(document).scrollLeft() + $(window).width() / 2 - 170
     });
 }
