@@ -88,6 +88,7 @@ public class AdvertisingService extends ServiceImpl<AdvertisingDao, Advertising>
         requestMap.put("password", website.getBackgroundPassword());
         requestMap.put("adname", advertising.getAdvertisingAdName());
         requestMap.put("timeset", advertising.getAdvertisingTimeSet());
+        requestMap.put("tagname", advertising.getAdvertisingTagname());
         requestMap.put("starttime", sdf.format(advertising.getAdvertisingStarttime()));
         requestMap.put("endtime", sdf.format(advertising.getAdvertisingEndtime()));
         requestMap.put("expbody", advertising.getAdvertisingExpbody());
