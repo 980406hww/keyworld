@@ -75,8 +75,7 @@ public class AdvertisingRestController {
     @RequestMapping(value = "/saveAdvertising", method = RequestMethod.POST)
     public ResponseEntity<?> saveAdvertising(@RequestBody Advertising advertising){
         try{
-            advertisingService.saveAdvertising(advertising);
-            return new ResponseEntity<Object>(true, HttpStatus.OK);
+            return new ResponseEntity<Object>(advertisingService.saveAdvertising(advertising), HttpStatus.OK);
         }catch (Exception e){
             logger.error(e.getMessage());
             return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);

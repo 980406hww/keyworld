@@ -736,7 +736,7 @@ function saveAdvertising(uuids, originalAdvertisingTagname) {
                 if (result) {
                     $().toastmessage('showSuccessToast', "保存成功",true);
                 } else {
-                    $().toastmessage('showErrorToast', "保存失败");
+                    $().toastmessage('showErrorToast', "保存失败, 请检查指定网站该广告标识是否唯一！");
 
                 }
             },

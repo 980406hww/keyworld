@@ -44,9 +44,13 @@ public class AdvertisingService extends ServiceImpl<AdvertisingDao, Advertising>
         return modelAndView;
     }
 
-    public void saveAdvertising(Advertising advertising){
-        saveOrUpdateConnectionCMS(advertising, WebsiteRemoteConnectionEnum.add.name());
-        advertisingDao.insert(advertising);
+    public Boolean saveAdvertising(Advertising advertising){
+        if (saveOrUpdateConnectionCMS(advertising, WebsiteRemoteConnectionEnum.add.name())){
+            advertisingDao.insert(advertising);
+            return true;
+        }else {
+            return false;
+        }
     }
 
     public Advertising getAdvertising(Long uuid) {
@@ -76,7 +80,7 @@ public class AdvertisingService extends ServiceImpl<AdvertisingDao, Advertising>
         advertisingDao.updateById(advertising);
     }
 
-    public void saveOrUpdateConnectionCMS(Advertising advertising, String type){
+    public Boolean saveOrUpdateConnectionCMS(Advertising advertising, String type){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Website website = websiteService.getWebsite(Long.valueOf(advertising.getWebsiteUuid()));
         Map requestMap = new HashedMap();
@@ -96,6 +100,8 @@ public class AdvertisingService extends ServiceImpl<AdvertisingDao, Advertising>
             if (!"error".equals(jsonObject.get("status"))){
                 advertising.setAdvertisingId((Integer) jsonObject.get("id"));
                 advertising.setAdvertisingNormbody((String) jsonObject.get("normbody"));
+            }else {
+                return false;
             }
         }else {
             requestMap.put("dopost", WebsiteRemoteConnectionEnum.saveedit.name());
@@ -106,6 +112,7 @@ public class AdvertisingService extends ServiceImpl<AdvertisingDao, Advertising>
                 advertising.setAdvertisingNormbody((String) jsonObject.get("normbody"));
             }
         }
+        return true;
     }
 
     public void deleteConnectionCMS(Long websiteUuid, String[] uuids){

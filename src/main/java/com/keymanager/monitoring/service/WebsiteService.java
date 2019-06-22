@@ -277,8 +277,9 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
         List<String> uuids = Arrays.asList(advertising.getUuids().split(","));
         for (String uuidstr : uuids) {
             advertising.setWebsiteUuid(Integer.valueOf(uuidstr));
-            advertisingService.saveOrUpdateConnectionCMS(advertising, WebsiteRemoteConnectionEnum.add.name());
-            advertisingService.insertAdvertising(advertising);
+            if (advertisingService.saveOrUpdateConnectionCMS(advertising, WebsiteRemoteConnectionEnum.add.name())){
+                advertisingService.insertAdvertising(advertising);
+            }
         }
     }
 

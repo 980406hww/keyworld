@@ -236,7 +236,7 @@ function saveAdvertising(websiteUuid, uuid) {
                 if (result) {
                     $().toastmessage('showSuccessToast', "保存成功",true);
                 } else {
-                    $().toastmessage('showErrorToast', "保存失败");
+                    $().toastmessage('showErrorToast', "保存失败, 请检查广告标识是否唯一！");
 
                 }
             },
@@ -398,10 +398,10 @@ function changeAdvertisingBodySubmit(type) {
 function pushAdvertising() {
     var uuids = getSelectedIDs();
     if (uuids === '') {
-        alert('请选择要删除的友情链接');
+        alert('请选择要推送的友情链接');
         return;
     }
-    if (confirm("确实要删除这些友情链接吗?") == false) return;
+    if (confirm("确实要推送这些友情链接到远程吗?") == false) return;
     var postData = {};
     postData.uuids = uuids.split(",");
     $.ajax({
