@@ -97,7 +97,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             }
         }catch (Exception ex){
             ex.printStackTrace();
-            logger.error(ex.getMessage());
+            logger.error("getKeywordForCaptureTitle:  " + ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
@@ -111,7 +111,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             }
         }catch (Exception ex){
             ex.printStackTrace();
-            logger.error(ex.getMessage());
+            logger.error("updateCustomerKeywordForCaptureTitle:    " + ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
@@ -126,7 +126,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             }
         }catch (Exception ex){
             ex.printStackTrace();
-            logger.error(ex.getMessage());
+            logger.error("updateCustomerKeywordsForCaptureTitle:     " + ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
@@ -164,7 +164,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             }
         }catch (Exception ex){
             ex.printStackTrace();
-            logger.error(ex.getMessage());
+            logger.error("getKeywordsForCaptureTitle:   " + ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
@@ -178,7 +178,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             }
         }catch (Exception ex){
             ex.printStackTrace();
-            logger.error(ex.getMessage());
+            logger.error("getCustomerKeywordsForCaptureIndex:     " + ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
@@ -192,7 +192,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             }
         }catch (Exception ex){
             ex.printStackTrace();
-            logger.error(ex.getMessage());
+            logger.error("updateKeywordIndex:    " + ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
@@ -206,7 +206,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             }
         }catch (Exception ex){
             ex.printStackTrace();
-            logger.error(ex.getMessage());
+            logger.error("getGroups:     " + ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
@@ -226,7 +226,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             }
         }catch (Exception ex){
             ex.printStackTrace();
-            logger.error(ex.getMessage());
+            logger.error("getCustomerKeywordSummaryInfos:      " + ex.getMessage());
         }
         return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
     }
@@ -253,7 +253,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             }
         }catch (Exception ex){
             ex.printStackTrace();
-            logger.error(ex.getMessage());
+            logger.error("getCustomerKeyword:    " + ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
@@ -274,15 +274,18 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 String terminalType = machineInfo.getTerminalType();
 
                 CustomerKeywordForOptimizationSimple customerKeywordForOptimization = customerKeywordService.searchCustomerKeywordsForOptimizationZip(terminalType, clientID, version, true);
-                machineInfoService.updateMachineInfoVersion(clientID, version, customerKeywordForOptimization != null);
-                byte[] compress = AESUtils.compress(AESUtils.encrypt(customerKeywordForOptimization).getBytes());
-                String s = AESUtils.parseByte2HexStr(compress);
-                performanceService.addPerformanceLog(terminalType + ":getCustomerKeyword", System.currentTimeMillis() - startMilleSeconds, null);
+                String s = "";
+                if(customerKeywordForOptimization != null) {
+                    machineInfoService.updateMachineInfoVersion(clientID, version, customerKeywordForOptimization != null);
+                    byte[] compress = AESUtils.compress(AESUtils.encrypt(customerKeywordForOptimization).getBytes());
+                    s = AESUtils.parseByte2HexStr(compress);
+                    performanceService.addPerformanceLog(terminalType + ":getCustomerKeyword", System.currentTimeMillis() - startMilleSeconds, null);
+                }
                 return ResponseEntity.status(HttpStatus.OK).body(s);
             }
         }catch (Exception ex){
             ex.printStackTrace();
-            logger.error(ex.getMessage());
+            logger.error("getCustomerKeywordZip:     " + clientID + ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
@@ -323,7 +326,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             }
         }catch (Exception ex){
             ex.printStackTrace();
-            logger.error(ex.getMessage());
+            logger.error("updateOptimizedCount:     " + ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
@@ -340,7 +343,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             }
         }catch (Exception ex){
             ex.printStackTrace();
-            logger.error(ex.getMessage());
+            logger.error("batchUpdateOptimizedCount:      " + ex.getMessage());
         }
         return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
     }
@@ -356,7 +359,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             }
         }catch (Exception ex){
             ex.printStackTrace();
-            logger.error(ex.getMessage());
+            logger.error("adjustOptimizationCount:     " + ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
@@ -386,7 +389,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             }
         }catch (Exception ex){
             ex.printStackTrace();
-            logger.error(ex.getMessage());
+            logger.error("updateCustomerKeywordPosition:        " + ex.getMessage());
         }
         return new ResponseEntity<Object>(false,HttpStatus.BAD_REQUEST);
     }
@@ -414,7 +417,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             }
         }catch (Exception ex){
             ex.printStackTrace();
-            logger.error(ex.getMessage());
+            logger.error("getCustomerKeywordForCapturePosition:        " + ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
@@ -441,7 +444,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            logger.error(ex.getMessage());
+            logger.error("getCustomerKeywordForCapturePositionTemp:" + ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
@@ -456,7 +459,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             }
         }catch (Exception ex){
             ex.printStackTrace();
-            logger.error(ex.getMessage());
+            logger.error("saveCustomerKeywords:    " + ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
@@ -471,7 +474,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             }
         }catch (Exception ex){
             ex.printStackTrace();
-            logger.error(ex.getMessage());
+            logger.error("autoUpdateCustomerKeywords:     " + ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
@@ -486,7 +489,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             }
         }catch (Exception ex){
             ex.printStackTrace();
-            logger.error(ex.getMessage());
+            logger.error("getCustomerKeywordForAutoUpdateNegative:      " + ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
@@ -501,7 +504,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             }
         }catch (Exception ex){
             ex.printStackTrace();
-            logger.error(ex.getMessage());
+            logger.error("updateAutoUpdateNegativeTimeAs4MinutesAgo:     " + ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
@@ -523,7 +526,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }catch (Exception ex){
             ex.printStackTrace();
-            logger.error(ex.getMessage());
+            logger.error("searchCustomerNegativeKeywords:     " + ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
@@ -539,7 +542,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }catch (Exception ex){
             ex.printStackTrace();
-            logger.error(ex.getMessage());
+            logger.error("getCustomerSource:     " + ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
@@ -555,7 +558,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             }
         } catch(Exception ex) {
             ex.printStackTrace();
-            logger.error(ex.getMessage());
+            logger.error("getCustomerSources:    " + ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
@@ -574,7 +577,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }catch (Exception ex){
             ex.printStackTrace();
-            logger.error(ex.getMessage());
+            logger.error("findAllNegativeCustomerKeyword:      " + ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
@@ -592,7 +595,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }catch (Exception ex){
             ex.printStackTrace();
-            logger.error(ex.getMessage());
+            logger.error("getNoEnteredKeywords:       " +  ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
@@ -611,7 +614,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }catch (Exception ex){
             ex.printStackTrace();
-            logger.error(ex.getMessage());
+            logger.error("updateNoEnteredKeywords:     " + ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }

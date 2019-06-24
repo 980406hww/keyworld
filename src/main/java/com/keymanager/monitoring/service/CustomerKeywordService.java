@@ -886,6 +886,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             machineInfo.setPage(groupSetting.getPage());
             machineInfo.setPageSize(groupSetting.getPageSize());
             machineInfoService.updateById(machineInfo);
+            machineInfo = machineInfoService.selectById(clientID);
         }
 
         if(keywordOptimizationCountService.resetBigKeywordIndicator(machineInfo.getGroup())) {
