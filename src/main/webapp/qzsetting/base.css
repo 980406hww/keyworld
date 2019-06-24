@@ -622,3 +622,12 @@ ul {
     border-top: 1px dashed black;
     width: 80%;
 }
+#operationTypeSummaryInfoPC tr td {
+    padding: 0px 3px;
+}
+#operationTypeSummaryInfoPhone tr td {
+    padding: 0px 3px;
+}
+#chargeRuleTable table tr td:not:last-child {
+    text-align: center;
+}

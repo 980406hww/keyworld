@@ -36,8 +36,8 @@
         <if test="customerKeywordCriteria.creationFromTime != null and customerKeywordCriteria.creationFromTime != ''">AND ck.fCreateTime &gt;= #{customerKeywordCriteria.creationFromTime}</if>
         <if test="customerKeywordCriteria.creationToTime != null and customerKeywordCriteria.creationToTime != ''">AND ck.fCreateTime &lt;= #{customerKeywordCriteria.creationToTime}</if>
         <if test="customerKeywordCriteria.entryType != null and customerKeywordCriteria.entryType != ''">AND ck.fType = #{customerKeywordCriteria.entryType}</if>
-        <if test="customerKeywordCriteria.gtPosition != null and customerKeywordCriteria.noPosition == null "> AND ck.fCurrentPosition &gt;= #{customerKeywordCriteria.gtPosition}</if>
-        <if test="customerKeywordCriteria.ltPosition != null and customerKeywordCriteria.noPosition == null "> AND ck.fCurrentPosition &lt;= #{customerKeywordCriteria.ltPosition}</if>
+        <if test="customerKeywordCriteria.gtPosition != null and (customerKeywordCriteria.noPosition == null or customerKeywordCriteria.noPosition == '') "> AND ck.fCurrentPosition &gt;= #{customerKeywordCriteria.gtPosition}</if>
+        <if test="customerKeywordCriteria.ltPosition != null and (customerKeywordCriteria.noPosition == null or customerKeywordCriteria.noPosition == '') "> AND ck.fCurrentPosition &lt;= #{customerKeywordCriteria.ltPosition}</if>
         <if test="customerKeywordCriteria.noPosition == 1 ">AND ck.fCurrentPosition =  0    </if>
         <if test="customerKeywordCriteria.orderNumber != null and customerKeywordCriteria.orderNumber != ''">AND ck.fOrderNumber  like '%${customerKeywordCriteria.orderNumber}%'</if>
         <if test="customerKeywordCriteria.pushPay != null and customerKeywordCriteria.pushPay != ''">AND ((ck.fCollectMethod = 'PerDay' AND ck.fEffectiveToTime is not null) OR (ck.fEffectiveToTime &lt;= DATE_ADD(CURDATE(),INTERVAL 3 DAY))) </if>
@@ -708,9 +708,6 @@
         FROM t_customer_keyword ck
         WHERE ck.fTerminalType = #{terminalType} and ck.fStatus = 1
         AND fCaptureStatus = #{captureStatus}
-        <if test="qzSettingUuid != null">
-            AND ck.fKeywordEffect = 'Appointment'
-        </if>
         <if test="startTime != null and captureStatus == 0">
             AND ck.fCapturePositionQueryTime <![CDATA[<]]> #{startTime}
             AND !(ck.fCapturePositionQueryTime > CURRENT_DATE() AND ck.fCurrentPosition &lt; 4 AND ck.fCurrentPosition &gt; 0)
@@ -1448,6 +1445,7 @@
             fManualCleanTitle,
             fKeywordEffect,
             fCustomerKeywordSource,
+            fRemarks,
             fUpdateTime,
             fCreateTime
         )
@@ -1514,6 +1512,7 @@
                 </choose>
                 #{customerKeyword.keywordEffect},
                 #{customerKeyword.customerKeywordSource},
+                #{customerKeyword.remarks},
                 #{customerKeyword.updateTime},
                 #{customerKeyword.createTime}
             )

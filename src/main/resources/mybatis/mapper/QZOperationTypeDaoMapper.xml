@@ -24,14 +24,14 @@
   <!--查询多条操作类型信息-->
     <select id="searchQZOperationTypesIsDelete" resultType="com.keymanager.monitoring.entity.QZOperationType">
       SELECT
-       qopty.fUuid            AS 'uuid',
-       qopty.fQZSettingUuid    AS 'qzSettingUuid',
+       qopty.fUuid                   AS 'uuid',
+       qopty.fQZSettingUuid          AS 'qzSettingUuid',
        qopty.fOperationtype          AS 'operationType',
-       qopty.fStandardType  AS 'standardType',
-       qopty.fInitialKeywordCount    AS 'initialKeywordCount',
+       qopty.fOptimizationType       AS 'optimizationType',
+       qopty.fStandardType           AS 'standardType',
        qopty.fCurrentKeywordCount    AS 'currentKeywordCount',
        qopty.fGroup            AS 'group',
-       qopty.fSubDomainName  AS 'subDomainName',
+       qopty.fSubDomainName    AS 'subDomainName',
        qopty.fReachTargetDate  AS 'reachTargetDate',
        qopty.fNextChargeDate   AS 'nextChargeDate',
        qopty.fUpdateTime       AS 'updateTime',

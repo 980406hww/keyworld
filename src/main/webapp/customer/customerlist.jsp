@@ -158,10 +158,9 @@
                     <td width=60>
                         <select style="width: 100%" onchange="updateCustomerSearchEngine('${customer.uuid}', this)">
                             <option value=""></option>
-                            <option value="百度" ${customer.searchEngine eq '百度' ? "selected" : ""}>百度</option>
-                            <option value="搜狗" ${customer.searchEngine eq '搜狗' ? "selected" : ""}>搜狗</option>
-                            <option value="360" ${customer.searchEngine eq '360' ? "selected" : ""}>360</option>
-                            <option value="神马" ${customer.searchEngine eq '神马' ? "selected" : ""}>神马</option>
+                            <c:forEach items="${searchEngineMap}" var="entry">
+                                <option value="${entry.value}" ${customer.searchEngine == entry.value ? "selected" : ""}>${entry.key}</option>
+                            </c:forEach>
                         </select>
                     </td>
                 </c:if>

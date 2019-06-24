@@ -178,10 +178,9 @@
             搜索引擎:
             <select name="searchEngine" id="searchEngine">
                 <option value="">全部</option>
-                <option value="百度">百度</option>
-                <option value="360">360</option>
-                <option value="搜狗">搜狗</option>
-                <option value="神马">神马</option>
+                <c:forEach items="${searchEngineMap}" var="entry">
+                    <option value="${entry.value}">${entry.key}</option>
+                </c:forEach>
             </select>
             排序:
             <select name="orderingElement" id="orderingElement">
@@ -369,10 +368,9 @@
     <form id="changeSearchEngineForm" style="text-align: center;margin-top: 10px;">
         目标搜索引擎:
         <select id="searchEngineSelect" style="width:70px;">
-            <option value="百度">百度</option>
-            <option value="搜狗">搜狗</option>
-            <option value="360">360</option>
-            <option value="神马">神马</option>
+            <c:forEach items="${searchEngineMap}" var="entry">
+                <option value="${entry.value}">${entry.key}</option>
+            </c:forEach>
         </select>
     </form>
 </div>

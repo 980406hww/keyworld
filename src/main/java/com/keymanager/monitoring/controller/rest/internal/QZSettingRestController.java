@@ -206,6 +206,9 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		modelAndView.addObject("isSEO", isSEO);
 		modelAndView.addObject("availableQZSettingCount", availableQZSettingCount);
 		modelAndView.addObject("operationTypeValues", operationTypeValues);
+		modelAndView.addObject("searchEngineMap", configService.getSearchEngineMap(qzSettingSearchCriteria.getTerminalType()));
+		modelAndView.addObject("standardSpeciesMap", Constants.QZ_RANK_STANDARD_SPECIES_MAP);
+		modelAndView.addObject("optimizationTypeMap", Constants.QZ_OPERATION_OPTIMIZATION_TYPE_MAP);
 		return modelAndView;
 	}
 
@@ -271,11 +274,13 @@ public class QZSettingRestController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/qzsetting/startMonitorImmediately")
     @RequestMapping(value = "/startMonitorImmediately", method = RequestMethod.POST)
-    public ResponseEntity<?> startMonitorImmediately(@RequestBody Map<String, Object> requestMap) {
+    public ResponseEntity<?> startMonitorImmediately(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
         String uuids = (String) requestMap.get("uuids");
+		String terminalType = (String) requestMap.get("terminalType");
+		String userName = (String) request.getSession().getAttribute("username");
         boolean returnValue = false;
         try {
-            qzSettingService.startMonitorImmediately(uuids);
+            qzSettingService.startMonitorImmediately(uuids, terminalType, userName);
             returnValue = true;
         } catch(Exception ex) {
             logger.error(ex.getMessage());

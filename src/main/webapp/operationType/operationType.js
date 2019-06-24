@@ -65,8 +65,8 @@ function showOperationTypeDialog(uuid) {
     $("#operationTypeDialog").show();
     $("#operationTypeDialog").dialog({
         resizable: false,
-        width: 360,
-        height: $("#operationTypeForm").find("#description").val() === undefined ? 220 : 360,
+        width: 350,
+        height: $("#operationTypeForm").find("#description").val() === undefined ? 220 : 350,
         modal: true,
         buttons: [
             {

@@ -98,10 +98,9 @@
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <span class="customerKeywordSpanClassa" onclick="checkItem(this)">搜索引擎:
                 <select name="searchEngine" id="searchEngine" onChange="searchEngineChanged()" >
-                    <option value="百度" selected>百度</option>
-                    <option value="搜狗">搜狗</option>
-                    <option value="360">360</option>
-                    <option value="神马">神马</option>
+                    <c:forEach items="${searchEngineMap}" var="entry">
+                        <option value="${entry.value}">${entry.key}</option>
+                    </c:forEach>
                 </select>
                 </span>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

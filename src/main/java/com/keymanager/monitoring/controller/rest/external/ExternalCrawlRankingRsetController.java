@@ -5,6 +5,7 @@ import com.keymanager.monitoring.criteria.BaseCriteria;
 import com.keymanager.monitoring.criteria.CaptureRankJobCriteria;
 import com.keymanager.monitoring.entity.CaptureRankJob;
 import com.keymanager.monitoring.service.CaptureRankJobService;
+import com.keymanager.monitoring.service.ConfigService;
 import com.keymanager.monitoring.service.CustomerKeywordService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * Created by shunshikj24 on 2017/9/27.
@@ -27,6 +30,9 @@ public class ExternalCrawlRankingRsetController extends SpringMVCBaseController 
     @Autowired
     private CaptureRankJobService captureRankJobService;
 
+    @Autowired
+    private ConfigService configService;
+
     @RequestMapping(value = "/getCaptureRankJob", method = RequestMethod.POST)
     public ResponseEntity<?> getCaptureRankJob(@RequestBody BaseCriteria baseCriteria) {
         String userName = baseCriteria.getUserName();
@@ -35,7 +41,30 @@ public class ExternalCrawlRankingRsetController extends SpringMVCBaseController 
             if (validUser(userName, password)) {
                 // 取任务的时候先检查checking状态的任务
                 // captureRankJobService.searchFiveMiniSetCheckingJobs();
-                CaptureRankJob captureRankJob = captureRankJobService.provideCaptureRankJob();
+                CaptureRankJob captureRankJob = captureRankJobService.provideCaptureRankJob(null);
+                if(captureRankJob == null) {
+                    captureRankJob = new CaptureRankJob();
+                    captureRankJob.setGroupNames("end");
+                }
+                return new ResponseEntity<Object>(captureRankJob, HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+    }
+
+    @RequestMapping(value = "/getCaptureRankJobForXiala", method = RequestMethod.POST)
+    public ResponseEntity<?> getCaptureRankJobForXiala(@RequestBody BaseCriteria baseCriteria) {
+        String userName = baseCriteria.getUserName();
+        String password = baseCriteria.getPassword();
+        try {
+            if (validUser(userName, password)) {
+                // 取任务的时候先检查checking状态的任务
+                // captureRankJobService.searchFiveMiniSetCheckingJobs();
+                List<String> captureXialaRankingGroups = configService.getCaptureXialaRankingGroups();
+                CaptureRankJob captureRankJob = captureRankJobService.provideCaptureRankJob(captureXialaRankingGroups);
                 if(captureRankJob == null) {
                     captureRankJob = new CaptureRankJob();
                     captureRankJob.setGroupNames("end");

@@ -61,6 +61,9 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
     @Autowired
     private QZSettingService qzSettingService;
 
+	@Autowired
+	private ConfigService configService;
+
 	@RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
 	@RequestMapping(value="/searchCustomerKeywords/{customerUuid}" , method=RequestMethod.GET)
 	public ModelAndView searchCustomerKeywords(@PathVariable("customerUuid") Long customerUuid,@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request){
@@ -114,6 +117,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		modelAndView.addObject("user", user);
 		modelAndView.addObject("customer", customer);
         modelAndView.addObject("CustomerKeywordSourceMap", CustomerKeywordSourceEnum.toMap());
+		modelAndView.addObject("searchEngineMap", configService.getSearchEngineMap(terminalType));
 		modelAndView.addObject("serviceProviders",serviceProviders);
         modelAndView.addObject("keywordEffects", KeywordEffectEnum.values());
 		modelAndView.addObject("orderElement",orderElement);
@@ -432,6 +436,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		modelAndView.addObject("activeUsers", activeUsers);
 		modelAndView.addObject("orderElement",orderElement);
         modelAndView.addObject("CustomerKeywordSourceMap", CustomerKeywordSourceEnum.toMap());
+		modelAndView.addObject("searchEngineMap", configService.getSearchEngineMap(terminalType));
 		modelAndView.addObject("isDepartmentManager",isDepartmentManager);
 		performanceService.addPerformanceLog(terminalType + ":searchCustomerKeywordLists", (System.currentTimeMillis() - startMilleSeconds), null);
 		return modelAndView;

@@ -603,7 +603,7 @@ function saveChangeSetting(clientIDs){
         machineInfo.clientID = clientIDs;
         var mi = {};
         mi.group = isChecked("settingGroup");
-
+        mi.allowSwitchGroup = isChecked("allowSwitchGroup");
         mi.switchGroupName = isChecked("switchGroupName");
         mi.host = isChecked("host");
         mi.port = isChecked("port");

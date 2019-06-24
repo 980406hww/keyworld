@@ -2,10 +2,7 @@ package com.keymanager.monitoring.controller.rest.internal;
 
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
-import com.keymanager.monitoring.service.CustomerKeywordRefreshStatInfoService;
-import com.keymanager.monitoring.service.CustomerKeywordTerminalRefreshStatRecordService;
-import com.keymanager.monitoring.service.IUserInfoService;
-import com.keymanager.monitoring.service.UserRoleService;
+import com.keymanager.monitoring.service.*;
 import com.keymanager.monitoring.entity.CustomerKeywordTerminalRefreshStatRecord;
 import com.keymanager.util.FileUtil;
 import com.keymanager.util.TerminalTypeMapping;
@@ -48,10 +45,15 @@ public class CustomerKeywordRefreshStatInfoController extends SpringMVCBaseContr
     @Autowired
     private UserRoleService userRoleService;
 
+    @Autowired
+    private ConfigService configService;
+
     @RequiresPermissions("/internal/refreshstatinfo/searchRefreshStatInfos")
     @RequestMapping(value = "/searchRefreshStatInfos", method = RequestMethod.GET)
     public ModelAndView searchRefreshStatInfos(HttpServletRequest request) {
+        String terminalType = TerminalTypeMapping.getTerminalType(request);
         ModelAndView modelAndView = new ModelAndView("/refresh/list");
+        modelAndView.addObject("searchEngineMap", configService.getSearchEngineMap(terminalType));
         return modelAndView;
     }
 
@@ -87,6 +89,7 @@ public class CustomerKeywordRefreshStatInfoController extends SpringMVCBaseContr
         }
         modelAndView.addObject("refreshStatInfoCriteria", refreshStatInfoCriteria);
         modelAndView.addObject("refreshStatInfos", refreshStatInfos);
+        modelAndView.addObject("searchEngineMap", configService.getSearchEngineMap(terminalType));
         return modelAndView;
     }
 

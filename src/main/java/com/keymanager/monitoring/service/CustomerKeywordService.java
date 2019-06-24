@@ -883,6 +883,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             GroupSetting groupSetting = groupSettingService.getGroupSettingViaPercentage(machineInfo.getGroup(), machineInfo.getTerminalType());
             usingOperationType = groupSetting.getOperationType();
             machineInfo.setUsingOperationType(usingOperationType);
+            machineInfo.setPage(groupSetting.getPage());
+            machineInfo.setPageSize(groupSetting.getPageSize());
             machineInfoService.updateById(machineInfo);
         }
 
@@ -947,9 +949,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                 customerKeywordForOptimization.setNegativeListUpdateTime(negativeListUpdateInfo.getNegativeListUpdateTime());
             }
 
-            //TODO clientStatus refacto, move to clientSetting
-            customerKeywordForOptimization.setPage(2);
-            customerKeywordForOptimization.setPageSize(50);
+            customerKeywordForOptimization.setPage(machineInfo.getPage());
+            customerKeywordForOptimization.setPageSize(machineInfo.getPageSize());
 
 
             customerKeywordForOptimization.setRemarks(customerKeyword.getRemarks());

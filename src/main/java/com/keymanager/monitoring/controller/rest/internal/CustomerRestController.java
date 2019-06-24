@@ -86,6 +86,7 @@ public class CustomerRestController {
         modelAndView.addObject("entryType", entryType);
         modelAndView.addObject("terminalType", terminalType);
         modelAndView.addObject("customerCriteria", customerCriteria);
+        modelAndView.addObject("searchEngineMap", configService.getSearchEngineMap(terminalType));
         modelAndView.addObject("page", page);
         modelAndView.addObject("user", user);
         modelAndView.addObject("isDepartmentManager", isDepartmentManager);

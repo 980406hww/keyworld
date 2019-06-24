@@ -20,7 +20,7 @@ public class Constants {
     public final static String CUSTOMER_KEYWORD_REFRESH_STAT_INFO_CONFIG_VALUE = "8";
 
     public final static String QZ_SETTING_CRAWLER_STATUS_NEW = "new";
-    public final static String QZ_CHARGE_RULE_STANDARD_SPECIES = "designationWord";
+    public final static String QZ_CHARGE_RULE_STANDARD_SPECIES_DESIGNATION_WORD = "designationWord";
 
     public final static String COLLECT_METHOD_ALL = "全收";
     public final static String COLLECT_METHOD_JUSTPC = "都有排名，只收电脑";
@@ -38,9 +38,12 @@ public class Constants {
     // new
     public final static String CONFIG_TYPE_CAPTURE_TITLE = "CaptureTitle";
 
+    public final static String CONFIG_TYPE_CAPTURE_RANKING = "CaptureRanking";
+
     public final static String CONFIG_KEY_VMWARE = "VMWARE";
     public final static String CONFIG_TYPE_OPTIMIZATION_DATE = "OptimizationDate";
     public final static String CONFIG_TYPE_OPTIMIZATION_TYPE = "OperationType";
+    public final static String CONFIG_TYPE_SEARCH_ENGINE = "SearchEngine";
     public final static String CONFIG_TYPE_TJ_XG = "tj_xg";
     public final static String CONFIG_TYPE_CT = "ct";
     public final static String CONFIG_TYPE_FROM_SOURCE = "src";
@@ -112,8 +115,9 @@ public class Constants {
     public final static String SEARCH_ENGINE_360 = "360";
     public final static String SEARCH_ENGINE_SM = "神马";
     public final static String SEARCH_ENGINE_GOOGLE = "谷歌";
+    public final static String SEARCH_ENGINE_BING = "必应";
 
-        public final static String DAILY_REPORT_PERCENTAGE = "DailyReportPercentage";
+    public final static String DAILY_REPORT_PERCENTAGE = "DailyReportPercentage";
 
     public final static Map<String, String> SEARCH_ENGINE_URL_MAP = new HashMap<String, String>();
     static {
@@ -121,11 +125,15 @@ public class Constants {
         SEARCH_ENGINE_URL_MAP.put(SEARCH_ENGINE_360 + "_" + TerminalTypeEnum.PC.name(), "http://www.so.com/s?q=");
         SEARCH_ENGINE_URL_MAP.put(SEARCH_ENGINE_SOGOU + "_" + TerminalTypeEnum.PC.name(), "https://www.sogou.com/sie?query=");
         SEARCH_ENGINE_URL_MAP.put(SEARCH_ENGINE_SM + "_" + TerminalTypeEnum.PC.name(), "http://m.sm.cn/s?q=");
+        SEARCH_ENGINE_URL_MAP.put(SEARCH_ENGINE_BING + "_" + TerminalTypeEnum.PC.name(), "http://m.sm.cn/s?q=");
+        SEARCH_ENGINE_URL_MAP.put(SEARCH_ENGINE_GOOGLE + "_" + TerminalTypeEnum.PC.name(), "http://m.sm.cn/s?q=");
 
         SEARCH_ENGINE_URL_MAP.put(SEARCH_ENGINE_BAIDU + "_" + TerminalTypeEnum.Phone.name(), "http://m.baidu.com/s?wd=");
         SEARCH_ENGINE_URL_MAP.put(SEARCH_ENGINE_360 + "_" + TerminalTypeEnum.Phone.name(), "http://www.so.com/s?q=");
         SEARCH_ENGINE_URL_MAP.put(SEARCH_ENGINE_SOGOU + "_" + TerminalTypeEnum.Phone.name(), "https://m.sogou.com/web/searchList.jsp?keyword=");
         SEARCH_ENGINE_URL_MAP.put(SEARCH_ENGINE_SM + "_" + TerminalTypeEnum.Phone.name(), "http://m.sm.cn/s?q=");
+        SEARCH_ENGINE_URL_MAP.put(SEARCH_ENGINE_BING + "_" + TerminalTypeEnum.Phone.name(), "http://m.sm.cn/s?q=");
+        SEARCH_ENGINE_URL_MAP.put(SEARCH_ENGINE_GOOGLE + "_" + TerminalTypeEnum.Phone.name(), "http://m.sm.cn/s?q=");
     }
 
 
@@ -154,16 +162,23 @@ public class Constants {
         QZSETTING_STATUS_LIST.add("DownloadTimesUsed");
     }
 
-    public final static List<String> SEARCH_STYLE_LIST = new ArrayList<String>();
-    static {
-        SEARCH_STYLE_LIST.add("神马");
-        SEARCH_STYLE_LIST.add("搜狗电脑");
-        SEARCH_STYLE_LIST.add("搜狗手机");
-        SEARCH_STYLE_LIST.add("360电脑");
-        SEARCH_STYLE_LIST.add("百度电脑");
-        SEARCH_STYLE_LIST.add("百度手机");
-    }
-
     public final static String CONFIG_TYPE_NO_ENTERED_KEYWORD = "NoEnteredKeyword";
     public final static String CONFIG_KEY_NO_ENTERED_KEYWORD_REMARKS = "Remarks";
+
+    public final static Map<String, String> QZ_RANK_STANDARD_SPECIES_MAP = new LinkedHashMap<>();
+    static {
+        QZ_RANK_STANDARD_SPECIES_MAP.put("全部", "");
+        QZ_RANK_STANDARD_SPECIES_MAP.put("爱站", "aiZhan");
+        QZ_RANK_STANDARD_SPECIES_MAP.put("5118", "5118");
+        QZ_RANK_STANDARD_SPECIES_MAP.put("指定词", "designationWord");
+        QZ_RANK_STANDARD_SPECIES_MAP.put("其他", "other");
+    }
+
+    public final static Map<String, String> QZ_OPERATION_OPTIMIZATION_TYPE_MAP = new LinkedHashMap<>();
+    static {
+        QZ_OPERATION_OPTIMIZATION_TYPE_MAP.put("全部", "");
+        QZ_OPERATION_OPTIMIZATION_TYPE_MAP.put("主优化", "1");
+        QZ_OPERATION_OPTIMIZATION_TYPE_MAP.put("次优化", "2");
+        QZ_OPERATION_OPTIMIZATION_TYPE_MAP.put("辅助优化", "0");
+    }
 }

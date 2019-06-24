@@ -4,29 +4,30 @@
 
     <select id="searchExistingQZKeywordRankInfo" resultType="com.keymanager.monitoring.entity.QZKeywordRankInfo">
         SELECT
-            qzkri.fUuid AS 'uuid',
+            qzkri.fUuid          AS 'uuid',
             qzkri.fQZSettingUuid AS 'qzSettingUuid',
-            qzkri.fTerminalType AS 'terminalType',
-            qzkri.fWebSiteType AS 'websiteType',
-            qzkri.fTopTen AS 'topTen',
-            qzkri.fTopTwenty AS 'topTwenty',
-            qzkri.fTopThirty AS 'topThirty',
-            qzkri.fTopForty AS 'topForty',
-            qzkri.fTopFifty AS 'topFifty',
-            qzkri.fTopHundred AS 'topHundred',
-            qzkri.fCreateTopTenNum AS 'createTopTenNum',
-            qzkri.fCreateTopFiftyNum AS 'createTopFiftyNum',
-            qzkri.fDate AS 'date',
-            qzkri.fFullDate AS 'fullDate',
-            qzkri.fIncrease AS 'increase',
-            qzkri.fIpRoute AS 'ipRoute',
-            qzkri.fRecord AS 'baiduRecord',
-            qzkri.fAchieveLevel AS 'achieveLevel',
-            qzkri.fSumSeries AS 'sumSeries',
-            qzkri.fDifferenceValue AS 'differenceValue',
-            qzkri.fCurrentPrice AS 'currentPrice',
-            qzkri.fBaiduRecordFullDate AS 'baiduRecordFullDate',
-            qzkri.fAchieveTime AS 'achieveTime'
+            qzkri.fTerminalType  AS 'terminalType',
+            qzkri.fWebSiteType   AS 'websiteType',
+            qzkri.fDataProcessingStatus AS 'dataProcessingStatus',
+            qzkri.fTopTen        AS 'topTen',
+            qzkri.fTopTwenty     AS 'topTwenty',
+            qzkri.fTopThirty     AS 'topThirty',
+            qzkri.fTopForty      AS 'topForty',
+            qzkri.fTopFifty      AS 'topFifty',
+            qzkri.fTopHundred    AS 'topHundred',
+            qzkri.fCreateTopTenNum      AS 'createTopTenNum',
+            qzkri.fCreateTopFiftyNum    AS 'createTopFiftyNum',
+            qzkri.fDate          AS 'date',
+            qzkri.fFullDate      AS 'fullDate',
+            qzkri.fIncrease      AS 'increase',
+            qzkri.fIpRoute       AS 'ipRoute',
+            qzkri.fRecord        AS 'baiduRecord',
+            qzkri.fAchieveLevel  AS 'achieveLevel',
+            qzkri.fSumSeries     AS 'sumSeries',
+            qzkri.fDifferenceValue      AS 'differenceValue',
+            qzkri.fCurrentPrice         AS 'currentPrice',
+            qzkri.fBaiduRecordFullDate  AS 'baiduRecordFullDate',
+            qzkri.fAchieveTime          AS 'achieveTime'
         FROM t_qz_keyword_rank_info qzkri
         WHERE qzkri.fQZSettingUuid = #{qzSettingUuid}
         AND EXISTS(SELECT 1 FROM t_qz_setting qs WHERE qs.fUuid = qzkri.fQZSettingUuid)
@@ -83,6 +84,7 @@
         LEFT JOIN t_qz_operation_type qot
         ON qot.fQZSettingUuid = qk.fQZSettingUuid AND qot.fOperationtype = qk.fTerminalType
         WHERE qk.fTerminalType = #{qzSettingSearchCriteria.terminalType}
+        AND qot.fIsDeleted = 0
         AND EXISTS (
             SELECT 1 FROM t_customer c
             LEFT JOIN t_userinfo ui
@@ -104,7 +106,7 @@
 
     <select id="getQZKeywordRankInfoTypes" resultType="java.lang.String">
         SELECT
-        CONCAT(qk.fTerminalType, '_', qk.fWebsiteType)
+        CONCAT(qk.fTerminalType, '_', qk.fWebsiteType, '_', qk.fDataProcessingStatus)
         FROM t_qz_keyword_rank_info qk
         WHERE qk.fQZSettingUuid = #{qzSettingUuid}
         AND qk.fWebsiteType <![CDATA[<>]]> 'designationWord'

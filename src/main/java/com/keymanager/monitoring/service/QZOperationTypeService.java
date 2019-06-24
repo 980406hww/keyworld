@@ -6,6 +6,7 @@ import com.keymanager.monitoring.dao.QZOperationTypeDao;
 import com.keymanager.monitoring.entity.OperationType;
 import com.keymanager.monitoring.entity.QZChargeRule;
 import com.keymanager.monitoring.entity.QZOperationType;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +29,9 @@ public class QZOperationTypeService extends ServiceImpl<QZOperationTypeDao, QZOp
 		List<QZOperationType> qzOperationTypes = qzOperationTypeDao.searchQZOperationTypesIsDelete(uuid);
 		for (QZOperationType qzOperationType : qzOperationTypes) {
 			List<QZChargeRule> qzChargeRules = qzChargeRuleService.searchQZChargeRuleByqzOperationTypeUuids(qzOperationType.getUuid());
-			qzOperationType.setQzChargeRules(qzChargeRules);
+			if (CollectionUtils.isNotEmpty(qzChargeRules)) {
+				qzOperationType.setQzChargeRules(qzChargeRules);
+			}
 		}
 		return  qzOperationTypes;
 	}

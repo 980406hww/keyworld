@@ -3,6 +3,7 @@ package com.keymanager.monitoring.vo;
 public class ExternalQzKeywordRankInfoVO {
     private String terminalType;
     private String websiteType;
+    private boolean dataProcessingStatus;
     private String topTen;
     private String topTwenty;
     private String topThirty;
@@ -55,6 +56,14 @@ public class ExternalQzKeywordRankInfoVO {
 
     public void setWebsiteType(String websiteType) {
         this.websiteType = websiteType;
+    }
+
+    public boolean getDataProcessingStatus () {
+        return dataProcessingStatus;
+    }
+
+    public void setDataProcessingStatus (boolean dataProcessingStatus) {
+        this.dataProcessingStatus = dataProcessingStatus;
     }
 
     public String getTopTen() {
