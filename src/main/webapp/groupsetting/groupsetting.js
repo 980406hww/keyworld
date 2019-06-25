@@ -2,6 +2,7 @@
     $("#changeSettingDialog").dialog("close");
     $("#updateGroupSettingDialog").dialog("close");
     $("#getAvailableOptimizationGroups").dialog("close");
+    $("#showGroupQueueDialog").dialog("close");
 
     $(".datalist-list li").find("div.body").each(function (index, self) {
         var listsize = $(self).attr("listsize");
@@ -37,6 +38,9 @@ function checkTerminalType(terminalType, isManualSwitch) {
     if (isManualSwitch) {
         trimSearchCondition();
     }
+    setTimeout(function (){
+        getGroupNames();
+    }, 200);
 }
 
 function enterIn(e) {
@@ -737,8 +741,8 @@ function getAvailableOptimizationGroups() {
     $("#getAvailableOptimizationGroups").window("resize",{top:$(document).scrollTop() + 100});
 }
 
-function selectAllChecked(self) {
-    var a = document.getElementsByName("checkOptimizationGroup");
+function selectAllChecked(self, elementName) {
+    var a = document.getElementsByName(elementName);
     if (self.checked) {
         for (var i = 0; i < a.length; i++) {
             a[i].checked = true;
@@ -833,10 +837,10 @@ function searchAvailableOptimizationGroups() {
 
 function editMaxInvalidCountStr(self, edit){
     var groupSetting = {};
-    groupSetting.id = self.id;
+    groupSetting.id = $(self).attr("operationCombineId");
     if (edit) {
         groupSetting.maxInvalidCount = self.textContent;
-        self.innerHTML = '<input class="nostyle" type="text" value="' + groupSetting.maxInvalidCount + '" label="' +groupSetting.maxInvalidCount+ '" name="maxInvalidCount" id= "'+ groupSetting.id +'" onBlur="editMaxInvalidCountStr(this)" />';
+        self.innerHTML = '<input type="text" value="' + groupSetting.maxInvalidCount + '" style="width: 40px;" label="' +groupSetting.maxInvalidCount+ '" name="maxInvalidCount" operationCombineId= "'+ groupSetting.id +'" onBlur="editMaxInvalidCountStr(this)" />';
         self.getElementsByTagName('input')[0].focus();
     } else {
         var isChange = true;
@@ -875,4 +879,133 @@ function editMaxInvalidCountStr(self, edit){
             self.parentNode.innerHTML = $.trim(self.value);
         }, 100);
     }
+}
+
+function getGroupNames() {
+    $(".datalist ul li").each(function () {
+        var li = $(this);
+        var uuid = li.find("input[name='operationCombineUuid']").val();
+        $.ajax({
+            url: '/internal/operationCombine/getGroupNames/' + uuid,
+            type: 'POST',
+            success: function (data) {
+                if (data != null) {
+                    var groupNameStr = "";
+                    $.each(JSON.parse(data), function (idx, value) {
+                        groupNameStr += value + ",";
+                    });
+                    $(li).find(".header span.groupNames").find("label.groupNameStr").html(groupNameStr.substring(0, groupNameStr.length-1));
+                } else {
+                    $().toastmessage('showErrorMessage', "获取操作组合下的分组数据失败！！");
+                }
+            },
+            error: function () {
+                $().toastmessage('showErrorMessage', "获取操作组合下的分组数据失败！！");
+            }
+        });
+    });
+}
+
+function editGroupNameStr(o, edit){
+    if (edit) {
+        o.innerHTML = o.innerHTML.replace(/(暂无)/g, '');
+        var uuid = $(o).parent().find("input[name='operationCombineUuid']").val();
+        o.innerHTML = '<input type="text" label="'+ o.innerHTML +'" uuid="'+ uuid +'" style="width: 800px;" value="' + o.innerHTML + '" onblur="editGroupNameStr(this)">';
+        o.getElementsByTagName('input')[0].focus();
+    } else {
+        var isChange = true;
+        var groups = [];
+        var groupNames = o.value.replace(/( )+/g,"").replace(/(，)+|(,)+/g, ",").split(",");
+        groupNames = unique(groupNames);
+        if (o.value != "") {
+            o.value = "";
+            $.each(groupNames, function (idx, val) {
+                if (val != "") {
+                    var group = {};
+                    group.groupName = $.trim(val);
+                    groups.push(group);
+                    o.value += val + ",";
+                }
+            });
+            o.value = o.value.substring(0, o.value.length-1);
+        }
+        var label = $(o).attr("label");
+        if ($.trim(o.value) === $.trim(label)) {
+            isChange = false;
+        }
+        if (isChange) {
+            var postData = {};
+            var operationCombineUuid = $(o).attr("uuid");
+            postData.operationCombineUuid = $.trim(operationCombineUuid);
+            postData.groups = groups;
+            $.ajax({
+                url: "/internal/operationCombine/saveGroupNames",
+                type: "POST",
+                data: JSON.stringify(postData),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                success: function (data) {
+                    if (data) {
+                        $().toastmessage('showSuccessToast', "保存成功！");
+                    } else {
+                        $().toastmessage('showErrorToast', "保存失败！");
+                        o.value = $.trim(label);
+                    }
+                },
+                error: function () {
+                    $().toastmessage('showErrorToast', "保存失败！");
+                    o.value = $.trim(label);
+                }
+            });
+        }
+        setTimeout(function(){
+            if ($.trim(o.value) == "") {
+                o.value = "暂无";
+            }
+            o.parentNode.innerHTML = $.trim(o.value);
+        }, 100);
+    }
+}
+
+function unique(a) {
+    var seen = {};
+    return a.filter(function(item) {
+        return seen.hasOwnProperty(item) ? false : (seen[item] = true);
+    });
+}
+
+function showGroupQueueDialog(operationCombineUuid) {
+    var showGroupQueueDialog = $("#showGroupQueueDialog");
+    showGroupQueueDialog.show();
+    showGroupQueueDialog.dialog({
+        resizable: false,
+        width: 300,
+        height: 550,
+        title: '分组详情',
+        modal: false,
+        buttons: [{
+            text: '保存',
+            iconCls: 'icon-ok',
+            handler: function () {
+
+            }
+        }, {
+            text: '取消',
+            iconCls: 'icon-cancel',
+            handler: function () {
+                $("#showGroupQueueDialog").dialog("close");
+                $('#showGroupQueueForm')[0].reset();
+            }
+        }],
+        onClose: function () {
+            $('#changeSettingDialogForm')[0].reset();
+        }
+    });
+    showGroupQueueDialog.dialog("open");
+    showGroupQueueDialog.window("resize", {
+        top: $(document).scrollTop() + 150,
+        left: $(document).scrollLeft() + $(window).width() / 2 - 150
+    });
 }

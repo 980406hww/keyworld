@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface GroupSettingDao extends BaseMapper<GroupSetting> {
 
-    List<GroupSetting> searchGroupSettings (@Param("groupUuid") long groupUuid);
+    List<GroupSetting> searchGroupSettings (@Param("operationCombineUuid") long operationCombineUuid);
 
     List<GroupSetting> searchGroupSettingsSortingPercentage (@Param("groupUuid") long groupUuid);
 

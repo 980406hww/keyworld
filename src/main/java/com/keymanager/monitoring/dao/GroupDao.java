@@ -28,4 +28,6 @@ public interface GroupDao extends BaseMapper<Group> {
     List<String> getOptimizationGroups(@Param("terminalType") String terminalType);
 
     void updateMaxInvalidCount(@Param("uuid") long uuid,@Param("maxInvalidCount") int maxInvalidCount);
+
+    List<String> getGroupNames (@Param("operationCombineUuid") Long operationCombineUuid);
 }

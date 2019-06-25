@@ -10,15 +10,15 @@ import java.util.List;
  **/
 public class GroupVO {
 
-    private long uuid;
+    private long uuid; // 操作组合ID
 
-    private String userName;
+    private String userName; // 分组创建者
 
-    private String groupName;
+    private String operationCombineName; // 操作组合名
 
-    private int remainingAccount;
+    private int remainingAccount; // 剩余百分比
 
-    private int maxInvalidCount;
+    private int maxInvalidCount; // 最大点击次数
 
     private List<GroupSetting> groupSettings;
 
@@ -38,12 +38,12 @@ public class GroupVO {
         this.userName = userName;
     }
 
-    public String getGroupName () {
-        return groupName;
+    public String getOperationCombineName () {
+        return operationCombineName;
     }
 
-    public void setGroupName (String groupName) {
-        this.groupName = groupName;
+    public void setOperationCombineName (String operationCombineName) {
+        this.operationCombineName = operationCombineName;
     }
 
     public int getRemainingAccount () {

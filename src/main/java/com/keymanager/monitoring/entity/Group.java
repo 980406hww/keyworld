@@ -13,6 +13,9 @@ public class Group extends BaseEntity {
     @TableField(value = "fGroupName")
     private String groupName;
 
+    @TableField(value = "fOperationCombineUuid")
+    private Long operationCombineUuid;
+
     @TableField(value = "fTerminalType")
     private String terminalType;
 
@@ -31,6 +34,14 @@ public class Group extends BaseEntity {
 
     public void setGroupName (String groupName) {
         this.groupName = groupName;
+    }
+
+    public Long getOperationCombineUuid () {
+        return operationCombineUuid;
+    }
+
+    public void setOperationCombineUuid (Long operationCombineUuid) {
+        this.operationCombineUuid = operationCombineUuid;
     }
 
     public String getTerminalType () {

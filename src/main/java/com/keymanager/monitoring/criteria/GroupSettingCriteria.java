@@ -1,6 +1,7 @@
 package com.keymanager.monitoring.criteria;
 
 public class GroupSettingCriteria extends BaseCriteria {
+    private String operationCombineName; //操作组合名称
     private String optimizedGroupName; // 优化分组
     private String operationType; // 操作类型
     private String terminalType; // 终端类型
@@ -8,6 +9,14 @@ public class GroupSettingCriteria extends BaseCriteria {
     private Boolean hasRemainingAccount; // 分组下机器是否分配完成
     private Boolean optimizedGroupNameSearchSource; // 查询来源 关键字 true/全站 false
     private String groupNameFuzzyQuery;
+
+    public String getOperationCombineName () {
+        return operationCombineName;
+    }
+
+    public void setOperationCombineName (String operationCombineName) {
+        this.operationCombineName = operationCombineName;
+    }
 
     public String getOptimizedGroupName () {
         return optimizedGroupName;

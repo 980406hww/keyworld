@@ -157,4 +157,8 @@ public class GroupService extends ServiceImpl<GroupDao, Group> {
         group.setUpdateTime(new Date());
         groupDao.updateById(group);
     }
+
+    public List<String> getGroupNames (Long operationCombineUuid) {
+        return groupDao.getGroupNames(operationCombineUuid);
+    }
 }

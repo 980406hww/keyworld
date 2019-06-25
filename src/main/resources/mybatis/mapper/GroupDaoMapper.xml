@@ -4,15 +4,25 @@
 
     <select id="searchGroups" resultType="com.keymanager.monitoring.vo.GroupVO">
         SELECT
-            g.fUuid AS "uuid",
-            g.fGroupName AS "groupName",
+            toc.fUuid AS "uuid",
+            toc.fOperationCombineName AS "operationCombineName",
             u.fUserName AS "userName",
             g.fRemainingAccount AS "remainingAccount",
             g.fMaxInvalidCount AS "maxInvalidCount"
         FROM t_group g
         LEFT JOIN t_userinfo u
         ON u.fLoginName = g.fCreateBy
+        LEFT JOIN t_operation_combine toc
+        ON toc.fUuid = g.fOperationCombineUuid
         WHERE 1 = 1
+        <choose>
+            <when test="groupSettingCriteria.optimizedGroupName != null and groupSettingCriteria.optimizedGroupName != ''">
+                AND toc.fOperationCombineName = #{groupSettingCriteria.operationCombineName}
+            </when>
+            <otherwise>
+                AND toc.fOperationCombineName <![CDATA[>]]> ''
+            </otherwise>
+        </choose>
         <if test="groupSettingCriteria.optimizedGroupName != null and groupSettingCriteria.optimizedGroupName != ''">
             <choose>
                 <when test="groupSettingCriteria.groupNameFuzzyQuery == null or groupSettingCriteria.groupNameFuzzyQuery == ''">
@@ -43,7 +53,8 @@
         <if test="groupSettingCriteria.hasRemainingAccount == 1">
             AND g.fRemainingAccount <![CDATA[>]]> 0
         </if>
-        ORDER BY g.fCreateTime DESC
+        GROUP BY g.fOperationCombineUuid
+        ORDER BY toc.fCreateTime DESC
     </select>
 
     <insert id="saveGroup">
@@ -74,7 +85,6 @@
         limit 1
     </select>
 
-
     <select id="getOptimizationGroups" resultType="java.lang.String">
         SELECT
            g.fGroupName AS 'groupName'
@@ -83,10 +93,19 @@
         GROUP BY g.fGroupName
     </select>
 
-
     <update id="updateMaxInvalidCount">
         UPDATE t_group
         SET fMaxInvalidCount = #{maxInvalidCount}
         WHERE fUuid = #{uuid}
     </update>
+
+    <select id="getGroupNames" resultType="java.lang.String">
+        SELECT
+          g.fGroupName AS 'groupName'
+        FROM t_group g
+        LEFT JOIN t_operation_combine toc
+        ON toc.fUuid = g.fOperationCombineUuid
+        WHERE g.fOperationCombineUuid = #{operationCombineUuid}
+        ORDER BY g.fCreateTime
+    </select>
 </mapper>
