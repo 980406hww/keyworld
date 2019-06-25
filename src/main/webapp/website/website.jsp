@@ -149,9 +149,9 @@
             <td width=70>${website.registrar}</td>
             <td width=70>${website.analysis}</td>
             <td width=70><fmt:formatDate value="${website.expiryTime}" pattern="yyyy-MM-dd"/></td>
-            <td width=70>${website.backgroundDomain}</td>
-            <td width=70>${website.backgroundUserName}</td>
-            <td width=70>${website.backgroundPassword}</td>
+            <td width=70>${website.backendDomain}</td>
+            <td width=70>${website.backendUserName}</td>
+            <td width=70>${website.backendPassword}</td>
             <td width=70 align="center">${putSalesInfoSignMap.get(website.updateSalesInfoSign)}</td>
             <td width=70 align="center">${putSalesInfoSignMap.get(website.synchronousFriendlyLinkSign)}</td>
             <td width=70 align="center">${putSalesInfoSignMap.get(website.synchronousAdvertisingSign)}</td>
@@ -228,15 +228,15 @@
             </tr>
             <tr>
                 <td align="right">后台链接路径:</td>
-                <td><input type="text" name="backgroundDomain" id="backgroundDomain" style="width:200px;"></td>
+                <td><input type="text" name="backendDomain" id="backendDomain" style="width:200px;"></td>
             </tr>
             <tr>
                 <td align="right">后台用户名:</td>
-                <td><input type="text" name="backgroundUserName" id="backgroundUserName" style="width:200px;"></td>
+                <td><input type="text" name="backendUserName" id="backendUserName" style="width:200px;"></td>
             </tr>
             <tr>
                 <td align="right">后台密码:</td>
-                <td><input type="text" name="backgroundPassword" id="backgroundPassword" style="width:200px;"></td>
+                <td><input type="text" name="backendPassword" id="backendPassword" style="width:200px;"></td>
             </tr>
             <tr>
                 <td align="right">数据库名称:</td>

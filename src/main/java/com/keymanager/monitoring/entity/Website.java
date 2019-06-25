@@ -48,14 +48,14 @@ public class Website extends BaseEntity {
     @TableField(value = "fServerPassword")
     private String serverPassword;
 
-    @TableField(value = "fBackgroundDomain")
-    private String backgroundDomain;
+    @TableField(value = "fBackendDomain")
+    private String backendDomain;
 
-    @TableField(value = "fBackgroundUserName")
-    private String backgroundUserName;
+    @TableField(value = "fBackendUserName")
+    private String backendUserName;
 
-    @TableField(value = "fBackgroundPassword")
-    private String backgroundPassword;
+    @TableField(value = "fBackendPassword")
+    private String backendPassword;
 
     @TableField(value = "fAccessFailCount")
     private Integer accessFailCount;
@@ -198,28 +198,28 @@ public class Website extends BaseEntity {
         this.serverPassword = serverPassword;
     }
 
-    public String getBackgroundDomain() {
-        return backgroundDomain;
+    public String getBackendDomain() {
+        return backendDomain;
     }
 
-    public void setBackgroundDomain(String backgroundDomain) {
-        this.backgroundDomain = backgroundDomain;
+    public void setBackendDomain(String backendDomain) {
+        this.backendDomain = backendDomain;
     }
 
-    public String getBackgroundUserName() {
-        return backgroundUserName;
+    public String getBackendUserName() {
+        return backendUserName;
     }
 
-    public void setBackgroundUserName(String backgroundUserName) {
-        this.backgroundUserName = backgroundUserName;
+    public void setBackendUserName(String backendUserName) {
+        this.backendUserName = backendUserName;
     }
 
-    public String getBackgroundPassword() {
-        return backgroundPassword;
+    public String getBackendPassword() {
+        return backendPassword;
     }
 
-    public void setBackgroundPassword(String backgroundPassword) {
-        this.backgroundPassword = backgroundPassword;
+    public void setBackendPassword(String backendPassword) {
+        this.backendPassword = backendPassword;
     }
 
     public String getWebsiteType() {

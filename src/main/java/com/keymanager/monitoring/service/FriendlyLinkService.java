@@ -101,8 +101,8 @@ public class FriendlyLinkService extends ServiceImpl<FriendlyLinkDao, FriendlyLi
     public void saveOrUpdateConnectionCMS(FriendlyLink friendlyLink, MultipartFile file, String type){
         Website website = websiteService.getWebsite(Long.valueOf(friendlyLink.getWebsiteUuid()));
         Map requestMap = new HashedMap();
-        requestMap.put("username", website.getBackgroundUserName());
-        requestMap.put("password", website.getBackgroundPassword());
+        requestMap.put("username", website.getBackendUserName());
+        requestMap.put("password", website.getBackendPassword());
         String url = "";
         if (friendlyLink.getFriendlyLinkUrl().length() > 7){
             url = "http://".equals(friendlyLink.getFriendlyLinkUrl().substring(0,7).toLowerCase()) ? friendlyLink.getFriendlyLinkUrl() : "http://" + friendlyLink.getFriendlyLinkUrl();
@@ -137,7 +137,7 @@ public class FriendlyLinkService extends ServiceImpl<FriendlyLinkDao, FriendlyLi
         requestMap.put("ischeck", friendlyLink.getFriendlyLinkIsCheck());
         if (WebsiteRemoteConnectionEnum.add.name().equals(type)){
             requestMap.put("dopost", WebsiteRemoteConnectionEnum.add.name());
-            JSONObject jsonObject = JSONObject.fromObject(connectionCMS(requestMap, WebsiteRemoteConnectionEnum.add.name(), website.getBackgroundDomain()));
+            JSONObject jsonObject = JSONObject.fromObject(connectionCMS(requestMap, WebsiteRemoteConnectionEnum.add.name(), website.getBackendDomain()));
             if (!"error".equals(jsonObject.get("status"))){
                 friendlyLink.setFriendlyLinkId((Integer) jsonObject.get("id"));
                 friendlyLink.setFriendlyLinkLogo((String) jsonObject.get("logo"));
@@ -145,7 +145,7 @@ public class FriendlyLinkService extends ServiceImpl<FriendlyLinkDao, FriendlyLi
         }else {
             requestMap.put("dopost", WebsiteRemoteConnectionEnum.saveedit.name());
             requestMap.put("id", friendlyLink.getFriendlyLinkId());
-            JSONObject jsonObject = JSONObject.fromObject(connectionCMS(requestMap, WebsiteRemoteConnectionEnum.saveedit.name(), website.getBackgroundDomain()));
+            JSONObject jsonObject = JSONObject.fromObject(connectionCMS(requestMap, WebsiteRemoteConnectionEnum.saveedit.name(), website.getBackendDomain()));
             if (!"error".equals(jsonObject.get("status")) && !(jsonObject.get("logo") instanceof JSONNull)){
                 friendlyLink.setFriendlyLinkLogo((String) jsonObject.get("logo"));
             }
@@ -155,20 +155,20 @@ public class FriendlyLinkService extends ServiceImpl<FriendlyLinkDao, FriendlyLi
     public void deleteConnectionCMS(Long websiteUuid, String[] uuids){
         Website website = websiteService.getWebsite(websiteUuid);
         Map requestMap = new HashedMap();
-        requestMap.put("username", website.getBackgroundUserName());
-        requestMap.put("password", website.getBackgroundPassword());
+        requestMap.put("username", website.getBackendUserName());
+        requestMap.put("password", website.getBackendPassword());
         requestMap.put("id", StringUtils.join(uuids, ","));
         requestMap.put("dopost", WebsiteRemoteConnectionEnum.delete.name());
-        connectionCMS(requestMap, WebsiteRemoteConnectionEnum.delete.name(), website.getBackgroundDomain());
+        connectionCMS(requestMap, WebsiteRemoteConnectionEnum.delete.name(), website.getBackendDomain());
     }
 
     public List<FriendlyLinkVO> selectConnectionCMS(Long websiteUuid){
         Website website = websiteService.getWebsite(websiteUuid);
         Map requestMap = new HashedMap();
-        requestMap.put("username", website.getBackgroundUserName());
-        requestMap.put("password", website.getBackgroundPassword());
+        requestMap.put("username", website.getBackendUserName());
+        requestMap.put("password", website.getBackendPassword());
         requestMap.put("dopost", WebsiteRemoteConnectionEnum.select.name());
-        String resultJsonString = connectionCMS(requestMap,WebsiteRemoteConnectionEnum.select.name(), website.getBackgroundDomain());
+        String resultJsonString = connectionCMS(requestMap,WebsiteRemoteConnectionEnum.select.name(), website.getBackendDomain());
         List<FriendlyLinkVO> friendlyLinkVOS = new ArrayList<>();
         if (!"null".equals(resultJsonString)){
             JSONArray jsonArray = JSONArray.fromObject(resultJsonString);
@@ -177,7 +177,7 @@ public class FriendlyLinkService extends ServiceImpl<FriendlyLinkDao, FriendlyLi
         return friendlyLinkVOS;
     }
 
-    public String connectionCMS(Map map, String type, String backgroundDomain){
+    public String connectionCMS(Map map, String type, String backendDomain){
         MultiValueMap requestMap = new LinkedMultiValueMap();
         if (!StringUtils.isEmpty(map.get("logoimg")) && !"(binary)".equals(map.get("logoimg"))){
             requestMap.add("logoimg", map.get("logoimg"));
@@ -187,17 +187,17 @@ public class FriendlyLinkService extends ServiceImpl<FriendlyLinkDao, FriendlyLi
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new StringHttpMessageConverter(Charset.forName("utf-8")));
         String resultJsonString;
-        if (backgroundDomain.length() > 7){
-            backgroundDomain = "http://".equals(backgroundDomain.substring(0,7).toLowerCase()) ? backgroundDomain : "http://" + backgroundDomain;
+        if (backendDomain.length() > 7){
+            backendDomain = "http://".equals(backendDomain.substring(0,7).toLowerCase()) ? backendDomain : "http://" + backendDomain;
         }else {
-            backgroundDomain = "http://" + backgroundDomain;
+            backendDomain = "http://" + backendDomain;
         }
         if (WebsiteRemoteConnectionEnum.add.name().equals(type)){
-            resultJsonString = restTemplate.postForObject(backgroundDomain + "friendlink_m_add.php",  requestMap, String.class);
+            resultJsonString = restTemplate.postForObject(backendDomain + "friendlink_m_add.php",  requestMap, String.class);
         }else if (WebsiteRemoteConnectionEnum.select.name().equals(type)){
-            resultJsonString = restTemplate.postForObject(backgroundDomain + "friendlink_m_select.php",  requestMap, String.class);
+            resultJsonString = restTemplate.postForObject(backendDomain + "friendlink_m_select.php",  requestMap, String.class);
         }else {
-            resultJsonString = restTemplate.postForObject(backgroundDomain + "friendlink_m_edit.php",  requestMap, String.class);
+            resultJsonString = restTemplate.postForObject(backendDomain + "friendlink_m_edit.php",  requestMap, String.class);
         }
         return resultJsonString;
     }
@@ -230,19 +230,19 @@ public class FriendlyLinkService extends ServiceImpl<FriendlyLinkDao, FriendlyLi
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new StringHttpMessageConverter(Charset.forName("utf-8")));
         String resultJsonString;
-        String backgroundDomain;
-        if (website.getBackgroundDomain().length() > 7){
-            backgroundDomain = "http://".equals(website.getBackgroundDomain().substring(0,7).toLowerCase()) ? website.getBackgroundDomain() : "http://" + website.getBackgroundDomain();
+        String backendDomain;
+        if (website.getBackendDomain().length() > 7){
+            backendDomain = "http://".equals(website.getBackendDomain().substring(0,7).toLowerCase()) ? website.getBackendDomain() : "http://" + website.getBackendDomain();
         }else {
-            backgroundDomain = "http://" + website.getBackgroundDomain();
+            backendDomain = "http://" + website.getBackendDomain();
         }
         Map map = new HashedMap();
-        map.put("username", website.getBackgroundUserName());
-        map.put("password", website.getBackgroundPassword());
+        map.put("username", website.getBackendUserName());
+        map.put("password", website.getBackendPassword());
         map.put("dopost", WebsiteRemoteConnectionEnum.select.name());
         MultiValueMap requestMap = new LinkedMultiValueMap();
         requestMap.add("data", AESUtils.encrypt(JSONObject.fromObject(map)));
-        resultJsonString = restTemplate.postForObject(backgroundDomain + "friendlink_m_type.php",  requestMap, String.class);
+        resultJsonString = restTemplate.postForObject(backendDomain + "friendlink_m_type.php",  requestMap, String.class);
         JSONArray jsonArray = JSONArray.fromObject(resultJsonString);
         List<Map> friendlyLinkTypeList = JSONArray.toList(jsonArray, new HashedMap(), new JsonConfig());
         return friendlyLinkTypeList;

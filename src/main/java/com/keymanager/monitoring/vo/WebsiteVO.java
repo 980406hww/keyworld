@@ -14,9 +14,9 @@ public class WebsiteVO{
     private String databaseName;
     private String databaseUserName;
     private String databasePassword;
-    private String backgroundDomain;
-    private String backgroundUserName;
-    private String backgroundPassword;
+    private String backendDomain;
+    private String backendUserName;
+    private String backendPassword;
     private String serverIP;
     private String serverUserName;
     private String serverPassword;
@@ -202,28 +202,28 @@ public class WebsiteVO{
         this.updateSalesInfoSign = updateSalesInfoSign;
     }
 
-    public String getBackgroundDomain() {
-        return backgroundDomain;
+    public String getBackendDomain() {
+        return backendDomain;
     }
 
-    public void setBackgroundDomain(String backgroundDomain) {
-        this.backgroundDomain = backgroundDomain;
+    public void setBackendDomain(String backendDomain) {
+        this.backendDomain = backendDomain;
     }
 
-    public String getBackgroundUserName() {
-        return backgroundUserName;
+    public String getBackendUserName() {
+        return backendUserName;
     }
 
-    public void setBackgroundUserName(String backgroundUserName) {
-        this.backgroundUserName = backgroundUserName;
+    public void setBackendUserName(String backendUserName) {
+        this.backendUserName = backendUserName;
     }
 
-    public String getBackgroundPassword() {
-        return backgroundPassword;
+    public String getBackendPassword() {
+        return backendPassword;
     }
 
-    public void setBackgroundPassword(String backgroundPassword) {
-        this.backgroundPassword = backgroundPassword;
+    public void setBackendPassword(String backendPassword) {
+        this.backendPassword = backendPassword;
     }
 
     public int getAdvertisingCount() {

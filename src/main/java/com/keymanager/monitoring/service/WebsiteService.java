@@ -13,7 +13,7 @@ import com.keymanager.monitoring.vo.AdvertisingVO;
 import com.keymanager.monitoring.vo.FriendlyLinkVO;
 import com.keymanager.monitoring.enums.PutSalesInfoSignEnum;
 import com.keymanager.monitoring.vo.SalesManageVO;
-import com.keymanager.monitoring.vo.WebsiteBackGroundInfoVO;
+import com.keymanager.monitoring.vo.WebsiteBackendInfoVO;
 import com.keymanager.monitoring.vo.WebsiteVO;
 import com.keymanager.util.AESUtils;
 import com.keymanager.util.Utils;
@@ -74,8 +74,8 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
     }
 
     public void saveWebsite(Website website) {
-        if (!website.getBackgroundDomain().endsWith("/")){
-            website.setBackgroundDomain(website.getBackgroundDomain() + "/");
+        if (!website.getBackendDomain().endsWith("/")){
+            website.setBackendDomain(website.getBackendDomain() + "/");
         }
         website.setUpdateTime(new Date());
         if (null != website.getUuid()) {
@@ -161,7 +161,7 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
     }
 
     public void putSalesInfoToWebsite(List uuids){
-        final List<WebsiteBackGroundInfoVO> websites = websiteDao.selectBackGroundInfoForUpdateSalesInfo(uuids);
+        final List<WebsiteBackendInfoVO> websites = websiteDao.selectBackEndInfoForUpdateSalesInfo(uuids);
 
         AsyncRestTemplate asyncRestTemplate = new AsyncRestTemplate();
         HttpHeaders headers = new HttpHeaders();
@@ -170,12 +170,12 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
 
         MultiValueMap<String, Object> params = new LinkedMultiValueMap<>();
         Map<String, Object> postMap = new HashMap<>();
-        for (final WebsiteBackGroundInfoVO website : websites) {
+        for (final WebsiteBackendInfoVO website : websites) {
             List<SalesManageVO> salesManages = salesManageService.getAllSalesInfo(website.getWebsiteType());
             postMap.put("sale_list", salesManages);
-            postMap.put("username", website.getBackgroundUserName());
-            postMap.put("password", website.getBackgroundPassword());
-            String url = "http://" + website.getBackgroundDomain() + "sales_management.php";
+            postMap.put("username", website.getBackendUserName());
+            postMap.put("password", website.getBackendPassword());
+            String url = "http://" + website.getBackendDomain() + "sales_management.php";
             params.set("params", AESUtils.encrypt(postMap));
             HttpEntity<MultiValueMap> requestEntity = new HttpEntity<MultiValueMap>(params, headers);
             ListenableFuture<ResponseEntity<String>> forEntity = asyncRestTemplate.postForEntity(url, requestEntity, String.class);
