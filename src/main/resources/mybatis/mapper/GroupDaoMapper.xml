@@ -58,7 +58,8 @@
     </select>
 
     <insert id="saveGroup">
-        INSERT INTO t_group(fGroupName, fTerminalType, fCreateBy, fRemainingAccount, fMaxInvalidCount, fUpdateTime) VALUES(#{groupName}, #{terminalType}, #{createBy}, #{remainingAccount}, #{maxInvalidCount}, NOW());
+        INSERT INTO t_group(fGroupName, fTerminalType, fCreateBy, fRemainingAccount, fMaxInvalidCount, fUpdateTime)
+        VALUES(#{groupName}, #{terminalType}, #{createBy}, #{remainingAccount}, #{maxInvalidCount}, NOW())
     </insert>
 
     <select id="lastInsertID" resultType="java.lang.Long">
@@ -108,4 +109,60 @@
         WHERE g.fOperationCombineUuid = #{operationCombineUuid}
         ORDER BY g.fCreateTime
     </select>
+    
+    <select id="searchGroupsBelowOperationCombine" resultType="com.keymanager.monitoring.vo.OperationCombineVO">
+        SELECT
+          g.fUuid AS 'groupUuid',
+          g.fGroupName AS 'groupName'
+        FROM t_group g
+        LEFT JOIN t_operation_combine toc
+        ON toc.fUuid = g.fOperationCombineUuid
+        WHERE g.fOperationCombineUuid = #{operationCombineUuid}
+        <if test="groupName != null and groupName != ''">
+            AND g.fGroupName LIKE '${groupName}%'
+        </if>
+        ORDER BY g.fCreateTime
+    </select>
+
+    <update id="updateGroupOperationUuid">
+        UPDATE t_group
+        SET fUpdateTime = NOW(),
+        <choose>
+            <when test="operationCombineUuid == null">
+                fOperationCombineUuid = NULL
+            </when>
+            <otherwise>
+                fOperationCombineUuid = #{operationCombineUuid}
+            </otherwise>
+        </choose>
+        WHERE fUuid IN
+        <foreach collection="groupUuids" item="uuid" open="(" separator="," close=")">
+            #{uuid}
+        </foreach>
+    </update>
+
+    <select id="searchExistingGroupUuid" resultType="java.lang.Long">
+        SELECT
+            g.fUuid AS 'groupUuid'
+        FROM t_group g
+        WHERE g.fGroupName = #{groupName}
+        AND g.fTerminalType = #{terminalType}
+        AND g.fOperationCombineUuid IS NULL
+        LIMIT 1
+    </select>
+
+    <insert id="insertBatchGroups">
+        INSERT INTO t_group(fGroupName, fOperationCombineUuid, fTerminalType, fCreateBy, fRemainingAccount, fMaxInvalidCount)
+        VALUES
+        <foreach collection="groupBatchAddCriteria.groupNames" item="groupName" separator=",">
+            (
+                #{groupName},
+                #{groupBatchAddCriteria.operationCombineUuid},
+                #{groupBatchAddCriteria.terminalType},
+                #{groupBatchAddCriteria.createBy},
+                #{groupBatchAddCriteria.remainingAccount},
+                #{groupBatchAddCriteria.maxInvalidCount}
+            )
+        </foreach>
+    </insert>
 </mapper>

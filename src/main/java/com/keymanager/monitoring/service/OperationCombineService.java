@@ -4,8 +4,7 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.common.utils.JsonUtils;
 import com.keymanager.monitoring.dao.OperationCombineDao;
 import com.keymanager.monitoring.entity.OperationCombine;
-import net.sf.json.JSON;
-import net.sf.json.JSONObject;
+import com.keymanager.monitoring.vo.OperationCombineVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,5 +31,9 @@ public class OperationCombineService extends ServiceImpl<OperationCombineDao, Op
     public String getGroupNames (Long uuid) {
         List<String> groupNameList =  groupService.getGroupNames(uuid);
         return JsonUtils.toJson(groupNameList);
+    }
+
+    public List<OperationCombineVO> searchGroupsBelowOperationCombine (Long uuid, String groupName) {
+        return groupService.searchGroupsBelowOperationCombine(uuid, groupName);
     }
 }

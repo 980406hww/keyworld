@@ -2,9 +2,11 @@ package com.keymanager.monitoring.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
+import com.keymanager.monitoring.criteria.GroupBatchAddCriteria;
 import com.keymanager.monitoring.criteria.GroupSettingCriteria;
 import com.keymanager.monitoring.entity.Group;
 import com.keymanager.monitoring.vo.GroupVO;
+import com.keymanager.monitoring.vo.OperationCombineVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -30,4 +32,14 @@ public interface GroupDao extends BaseMapper<Group> {
     void updateMaxInvalidCount(@Param("uuid") long uuid,@Param("maxInvalidCount") int maxInvalidCount);
 
     List<String> getGroupNames (@Param("operationCombineUuid") Long operationCombineUuid);
+
+    List<OperationCombineVO> searchGroupsBelowOperationCombine (@Param("operationCombineUuid")Long operationCombineUuid,
+                                                                @Param("groupName") String groupName);
+
+    void updateGroupOperationUuid (@Param("groupUuids") List<Long> groupUuids,
+                                   @Param("operationCombineUuid")Long operationCombineUuid);
+
+    Long searchExistingGroupUuid (@Param("terminalType") String terminalType, @Param("groupName") String groupName);
+
+    void insertBatchGroups (@Param("groupBatchAddCriteria") GroupBatchAddCriteria groupBatchAddCriteria);
 }

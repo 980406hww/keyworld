@@ -2,14 +2,12 @@ package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.keymanager.monitoring.criteria.GroupBatchCriteria;
-import com.keymanager.monitoring.criteria.GroupCriteria;
-import com.keymanager.monitoring.criteria.GroupSettingCriteria;
-import com.keymanager.monitoring.criteria.UpdateGroupSettingCriteria;
+import com.keymanager.monitoring.criteria.*;
 import com.keymanager.monitoring.dao.GroupDao;
 import com.keymanager.monitoring.entity.Group;
 import com.keymanager.monitoring.entity.GroupSetting;
 import com.keymanager.monitoring.vo.GroupVO;
+import com.keymanager.monitoring.vo.OperationCombineVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -160,5 +158,35 @@ public class GroupService extends ServiceImpl<GroupDao, Group> {
 
     public List<String> getGroupNames (Long operationCombineUuid) {
         return groupDao.getGroupNames(operationCombineUuid);
+    }
+
+    public List<OperationCombineVO> searchGroupsBelowOperationCombine (Long operationCombineUuid, String groupName) {
+        return groupDao.searchGroupsBelowOperationCombine(operationCombineUuid, groupName);
+    }
+
+    public void saveGroupsBelowOperationCombine (GroupBatchAddCriteria groupBatchAddCriteria) {
+        List<Long> groupUuids = new ArrayList<>();
+        List<String> notExistsGroupNames = new ArrayList<>();
+        for (String groupName : groupBatchAddCriteria.getGroupNames()) {
+            Long existingGroupUuid = groupDao.searchExistingGroupUuid(groupBatchAddCriteria.getTerminalType(), groupName);
+            if (null != existingGroupUuid) {
+                groupUuids.add(existingGroupUuid);
+            } else {
+                notExistsGroupNames.add(groupName);
+            }
+        }
+
+        if (CollectionUtils.isNotEmpty(groupUuids)) {
+            this.updateGroupsBelowOperationCombine(groupUuids, groupBatchAddCriteria.getOperationCombineUuid());
+        }
+
+        if (CollectionUtils.isNotEmpty(notExistsGroupNames)) {
+            groupBatchAddCriteria.setGroupNames(notExistsGroupNames);
+            groupDao.insertBatchGroups(groupBatchAddCriteria);
+        }
+    }
+
+    public void updateGroupsBelowOperationCombine (List<Long> groupUuids, Long operationCombineUuid) {
+        groupDao.updateGroupOperationUuid(groupUuids, operationCombineUuid);
     }
 }

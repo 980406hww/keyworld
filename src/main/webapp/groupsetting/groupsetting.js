@@ -312,13 +312,13 @@ function findGroupSetting(id, status) {
         type: 'POST',
         success: function (obj) {
             if (null === obj) {
-                $().toastmessage('showErrorMessage', "获取操作类型信息失败！");
+                $().toastmessage('showErrorToast', "获取操作类型信息失败！");
             } else {
                 initSettingDialog(obj, status);
             }
         },
         error: function () {
-            $().toastmessage('showErrorMessage', "获取操作类型信息失败！");
+            $().toastmessage('showErrorToast', "获取操作类型信息失败！");
         }
     });
 }
@@ -896,11 +896,11 @@ function getGroupNames() {
                     });
                     $(li).find(".header span.groupNames").find("label.groupNameStr").html(groupNameStr.substring(0, groupNameStr.length-1));
                 } else {
-                    $().toastmessage('showErrorMessage', "获取操作组合下的分组数据失败！！");
+                    $().toastmessage('showErrorToast', "获取操作组合下的分组数据失败！！");
                 }
             },
             error: function () {
-                $().toastmessage('showErrorMessage', "获取操作组合下的分组数据失败！！");
+                $().toastmessage('showErrorToast', "获取操作组合下的分组数据失败！！");
             }
         });
     });
@@ -976,12 +976,13 @@ function unique(a) {
     });
 }
 
-function showGroupQueueDialog(operationCombineUuid) {
+function showGroupQueueDialog(operationCombineUuid, maxInvalidCount, remainingAccount) {
     var showGroupQueueDialog = $("#showGroupQueueDialog");
+    showGroupQueueDialog.find("input[name='operationCombineUuid']").val(operationCombineUuid);
     showGroupQueueDialog.show();
     showGroupQueueDialog.dialog({
         resizable: false,
-        width: 300,
+        width: 250,
         height: 550,
         title: '分组详情',
         modal: false,
@@ -989,18 +990,19 @@ function showGroupQueueDialog(operationCombineUuid) {
             text: '保存',
             iconCls: 'icon-ok',
             handler: function () {
-
+                saveGroupsBelowOperationCombine(operationCombineUuid, maxInvalidCount, remainingAccount);
             }
         }, {
             text: '取消',
             iconCls: 'icon-cancel',
             handler: function () {
-                $("#showGroupQueueDialog").dialog("close");
+                $("#showGroupQueueDialog").dialog('close');
                 $('#showGroupQueueForm')[0].reset();
             }
         }],
         onClose: function () {
-            $('#changeSettingDialogForm')[0].reset();
+            $('#showGroupQueueForm')[0].reset();
+            $('#showGroupQueueForm tbody tr').remove();
         }
     });
     showGroupQueueDialog.dialog("open");
@@ -1008,4 +1010,115 @@ function showGroupQueueDialog(operationCombineUuid) {
         top: $(document).scrollTop() + 150,
         left: $(document).scrollLeft() + $(window).width() / 2 - 150
     });
+}
+
+function searchGroupsBelowOperationCombine() {
+    var showGroupQueueDialog = $("#showGroupQueueDialog");
+    showGroupQueueDialog.find("table tbody tr").remove();
+    var uuid = showGroupQueueDialog.find("input[name='operationCombineUuid']").val();
+    var optimizationGroupName = showGroupQueueDialog.find("input[name='optimizedGroupName']").val();
+    var operationCombine = {};
+    operationCombine.uuid = uuid;
+    operationCombine.groupName = $.trim(optimizationGroupName);
+    $.ajax({
+       url: '/internal/operationCombine/searchGroupsBelowOperationCombine',
+       type: 'POST',
+       data: JSON.stringify(operationCombine),
+       headers: {
+           'Accept': 'application/json',
+           'Content-Type': 'application/json'
+       },
+       success: function (result) {
+           if (result !== null) {
+               var tbody = $("#showGroupQueueDialog").find("table tbody");
+               $.each(result, function(index, element) {
+                   tbody.append("<tr>" +
+                       "<td width='20px'  style='text-align: center;'><input type='checkbox' name='checkGroup' groupUuid='"+ element.groupUuid +"' checked='checked'></td>" +
+                       "<td width='208px'><input type='text' style='width: 200px;' name='Group' disabled='disabled' value='"+ element.groupName +"'/></td>" +
+                       "</tr>");
+               });
+           } else {
+               $().toastmessage('showErrorToast', '没有数据！！');
+           }
+       },
+       error: function () {
+           $().toastmessage('showErrorToast', '获取优化组数据失败！！');
+       }
+    });
+}
+
+function saveGroupsBelowOperationCombine(operationCombineUuid, maxInvalidCount, remainingAccount) {
+    var showGroupQueueDialog = $("#showGroupQueueDialog");
+    var addFlag = true;
+    var updateFlag = true;
+    var groupNameArr = [];
+    var groupNames = showGroupQueueDialog.find("input[name='newOptimizationGroups']").val();
+    if (groupNames !== '') {
+        groupNames = groupNames.replace(/[，|\r\n]/g, ',').replace(/[\s+]/g, '');
+        if (groupNames.substring(groupNames.length - 1) === ',') {
+            groupNames = groupNames.substring(0, groupNames.length - 1);
+        }
+        groupNameArr = groupNames.split(',');
+        groupNameArr = groupNameArr.filter(function (groupName, index) {
+           return groupNameArr.indexOf(groupName) === index && groupName !== '';
+        });
+    } else {
+        addFlag = false;
+    }
+    var unChecked = showGroupQueueDialog.find("table tbody").find("input[name='checkGroup']:not(:checked)");
+    var groupUuids = [];
+    if (unChecked.length > 0) {
+        $.each(unChecked, function (idx, v) {
+            groupUuids.push($(v).attr("groupUuid"));
+        });
+    } else {
+        updateFlag = false;
+    }
+    var postData = {};
+    if (addFlag) {
+        postData.operationCombineUuid = operationCombineUuid;
+        postData.groupNames = groupNameArr;
+        postData.terminalType = $("#chargeForm").find("input[name='terminalType']").val();
+        postData.maxInvalidCount = maxInvalidCount;
+        postData.remainingAccount = remainingAccount;
+        $.ajax({
+            url: '/internal/group/saveGroupsBelowOperationCombine',
+            type: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            data: JSON.stringify(postData),
+            success: function(result) {
+                if (result) {
+                    $().toastmessage('showSuccessToast', '操作组合增加分组成功！！！', true);
+                }
+            },
+            error: function () {
+                $().toastmessage('showErrorToast', '操作组合增加分组失败！！！');
+                addFlag = false;
+            }
+        });
+    }
+    if (updateFlag) {
+        postData.groupUuids = groupUuids;
+        $.ajax({
+            url: '/internal/group/updateGroupsBelowOperationCombine',
+            type: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            data: JSON.stringify(postData),
+            success: function(result) {
+                if (result) {
+                    $().toastmessage('showSuccessToast', '操作组合移除分组成功！！！', true);
+                }
+            },
+            error: function () {
+                $().toastmessage('showErrorToast', '操作组合移除分组失败！！！');
+                updateFlag = false;
+            }
+        });
+    }
 }

@@ -141,7 +141,7 @@
 							<label>分组:&nbsp;&nbsp;</label><label class="groupNameStr">暂无</label>
 						</span>
 						<div class="handle">
-							<a class="blue" href="javascript:showGroupQueueDialog('${groupVo.uuid}')">分组详情</a>
+							<a class="blue" href="javascript:showGroupQueueDialog('${groupVo.uuid}', '${groupVo.maxInvalidCount}', '${groupVo.remainingAccount}')">分组详情</a>
 							<shiro:hasPermission name="/internal/groupsetting/saveGroupSetting">
 								<a class="blue" href="javascript:showGroupSettingDialog('add', '${groupVo.uuid}', '${groupVo.operationCombineName}', '${groupVo.remainingAccount}', '${groupVo.uuid}')">新增优化组设置</a>
 							</shiro:hasPermission>
@@ -422,22 +422,23 @@
     <form id="showGroupQueueForm">
         <table cellpadding="10" style="font-size: 12px; background-color: white;border-collapse: collapse; width: 100%;">
             <thead style="position: absolute !important;top: 24px !important;width: 100% !important;">
-            <tr>
-                <th colspan="2" style="text-align: left;">优化组名：<input type="text" title="请输入优化组名" name="optimizedGroupName" placeholder="请输入优化组名" style="width: 150px;">&nbsp;
-                    <input  type="button" onclick="searchAvailableOptimizationGroups()" value="搜索"  style="width: 45px;">
-                </th>
-            </tr>
-            <tr>
-                <th style="width: 15px;text-align: center;"><input type="checkbox" name="checkAllGroup" id="checkAllGroup" onclick="selectAllChecked(this, 'checkGroup');" checked='checked'></th>
-                <th>优化组</th>
-            </tr>
+                <tr>
+                    <th colspan="2" style="text-align: left;">优化组名: <input type="text" title="请输入优化组名" name="optimizedGroupName" placeholder="请输入优化组名" style="width: 130px;">&nbsp;
+                        <input type="hidden" name="operationCombineUuid" value="">
+                        <input type="button" onclick="searchGroupsBelowOperationCombine();" value="搜索"  style="width: 34px;">
+                    </th>
+                </tr>
+                <tr>
+                    <th style="width: 20px;text-align: center;"><input type="checkbox" name="checkAllGroup" id="checkAllGroup" onclick="selectAllChecked(this, 'checkGroup');" checked='checked'></th>
+                    <th>优化组名</th>
+                </tr>
             </thead>
-            <tbody style="position: absolute !important;bottom: 60px !important; width: 100% !important;height: 424px;overflow-y: scroll;">
+            <tbody style="position: absolute !important;bottom: 60px !important; width: 100% !important;height: 420px;overflow-y: scroll;">
             </tbody>
-            <tfoot style="position: absolute !important;bottom: 42px !important; width: 100% !important;">
-            <tr>
-                <th colspan="2" style="text-align: left;">新增优化组：<input type="text" placeholder="请正确输入：pc_pm_taobao,m_pm_taobao" name="newOptimizationGroups" style="width: 200px;"></th>
-            </tr>
+            <tfoot style="position: absolute !important;bottom: 45px !important; width: 100% !important;">
+                <tr>
+                    <th colspan="2" style="text-align: left;">新增优化组: <input type="text" placeholder="请正确输入:pc_pm,m_pm" name="newOptimizationGroups" style="width: 150px;"></th>
+                </tr>
             </tfoot>
         </table>
     </form>

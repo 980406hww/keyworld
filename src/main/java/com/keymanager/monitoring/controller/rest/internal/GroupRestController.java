@@ -1,10 +1,6 @@
 package com.keymanager.monitoring.controller.rest.internal;
 
-import com.keymanager.monitoring.criteria.GroupBatchCriteria;
-import com.keymanager.monitoring.criteria.GroupCriteria;
-import com.keymanager.monitoring.criteria.GroupSettingCriteria;
-import com.keymanager.monitoring.criteria.UpdateGroupSettingCriteria;
-import com.keymanager.monitoring.entity.GroupSetting;
+import com.keymanager.monitoring.criteria.*;
 import com.keymanager.monitoring.service.ConfigService;
 import com.keymanager.monitoring.service.GroupService;
 import com.keymanager.util.Constants;
@@ -112,6 +108,31 @@ public class GroupRestController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/saveGroupsBelowOperationCombine")
+    public ResponseEntity<?> saveGroupsBelowOperationCombine(@RequestBody GroupBatchAddCriteria groupBatchAddCriteria, HttpServletRequest request) {
+        try {
+            String userName = (String) request.getSession().getAttribute("username");
+            groupBatchAddCriteria.setCreateBy(userName);
+            groupService.saveGroupsBelowOperationCombine(groupBatchAddCriteria);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/updateGroupsBelowOperationCombine")
+    public ResponseEntity<?> updateGroupsBelowOperationCombine(@RequestBody Map<String, Object> requestMap) {
+        try {
+            List<Long> groupUuids = (List<Long>) requestMap.get("groupUuids");
+            groupService.updateGroupsBelowOperationCombine(groupUuids, null);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
         }
     }
 }
