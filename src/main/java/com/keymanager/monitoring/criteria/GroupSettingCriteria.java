@@ -8,7 +8,6 @@ public class GroupSettingCriteria extends BaseCriteria {
     private Boolean hasOperation = true; // 有/无 操作类型。 默认值true
     private Boolean hasRemainingAccount; // 分组下机器是否分配完成
     private Boolean optimizedGroupNameSearchSource; // 查询来源 关键字 true/全站 false
-    private String groupNameFuzzyQuery;
 
     public String getOperationCombineName () {
         return operationCombineName;
@@ -64,13 +63,5 @@ public class GroupSettingCriteria extends BaseCriteria {
 
     public void setOptimizedGroupNameSearchSource(Boolean optimizedGroupNameSearchSource) {
         this.optimizedGroupNameSearchSource = optimizedGroupNameSearchSource;
-    }
-
-    public String getGroupNameFuzzyQuery() {
-        return groupNameFuzzyQuery;
-    }
-
-    public void setGroupNameFuzzyQuery(String groupNameFuzzyQuery) {
-        this.groupNameFuzzyQuery = groupNameFuzzyQuery;
     }
 }

@@ -40,17 +40,11 @@
 		</ul>
 		<div class="conn">
 			<ul>
-				<li>
+				<li class="operationCombineName">
 					操作组合名称: <input type="text" title="请输入操作组合名称" name="operationCombineName" placeholder="请输入操作组合名称" onkeydown="enterIn(event);" value="${groupSettingCriteria.operationCombineName}">
 				</li>
-				<li>
+				<li class="optimizedGroupName">
 					优化组名: <input type="text" title="请输入优化分组名" name="optimizedGroupName" placeholder="请输入优化分组名" onkeydown="enterIn(event);" value="${groupSettingCriteria.optimizedGroupName}">
-				</li>
-				<li>
-					<label name="groupNameFuzzyQuery" title="模糊查询">
-						<input id="groupNameFuzzyQuery" name="groupNameFuzzyQuery" type="checkbox" value="groupNameFuzzyQuery" ${groupSettingCriteria.groupNameFuzzyQuery == "1" ? "checked=true" : ""}/>
-						模糊查询
-					</label>
 				</li>
 				<li>
 					<span>操作类型: </span>
@@ -118,7 +112,6 @@
 	<input type="hidden" name="operationType" id="operationType" value="${groupSettingCriteria.operationType}"/>
 	<input type="hidden" name="terminalType" id="terminalType" value="${groupSettingCriteria.terminalType}"/>
     <input type="hidden" name="hasOperation" id="hasOperation" value="${groupSettingCriteria.hasOperation}"/>
-    <input type="hidden" name="groupNameFuzzyQuery" id="groupNameFuzzyQuery" value="${groupSettingCriteria.groupNameFuzzyQuery}"/>
 	<input type="hidden" name="hasRemainingAccount" id="hasRemainingAccount" value="${groupSettingCriteria.hasRemainingAccount}"/>
 </form>
 

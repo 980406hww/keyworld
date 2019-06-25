@@ -16,22 +16,15 @@
         ON toc.fUuid = g.fOperationCombineUuid
         WHERE 1 = 1
         <choose>
-            <when test="groupSettingCriteria.optimizedGroupName != null and groupSettingCriteria.optimizedGroupName != ''">
-                AND toc.fOperationCombineName = #{groupSettingCriteria.operationCombineName}
+            <when test="groupSettingCriteria.operationCombineName != null and groupSettingCriteria.operationCombineName != ''">
+                AND toc.fOperationCombineName LIKE '${groupSettingCriteria.operationCombineName}%'
             </when>
             <otherwise>
                 AND toc.fOperationCombineName <![CDATA[>]]> ''
             </otherwise>
         </choose>
         <if test="groupSettingCriteria.optimizedGroupName != null and groupSettingCriteria.optimizedGroupName != ''">
-            <choose>
-                <when test="groupSettingCriteria.groupNameFuzzyQuery == null or groupSettingCriteria.groupNameFuzzyQuery == ''">
-                    AND g.fGroupName = #{groupSettingCriteria.optimizedGroupName}
-                </when>
-                <otherwise>
-                    AND g.fGroupName LIKE '${groupSettingCriteria.optimizedGroupName}%'
-                </otherwise>
-            </choose>
+            AND g.fGroupName LIKE '${groupSettingCriteria.optimizedGroupName}%'
         </if>
         AND g.fTerminalType = #{groupSettingCriteria.terminalType}
         <if test="groupSettingCriteria.hasOperation != null">

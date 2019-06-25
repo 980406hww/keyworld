@@ -111,8 +111,8 @@ ul {
     margin-left: 0
 }
 
-.mytabs .conn li:first-child input {
-    width: 180px;
+.mytabs .conn li.operationCombineName input, .mytabs .conn li.optimizedGroupName input {
+    width: 150px;
     height: 25px;
     line-height: 25px;
     font-size: 14px;
